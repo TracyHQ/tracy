@@ -74,3 +74,102 @@ rule (test first).
   cached per slot hash, so a slot whose sample changes is asked again.
 
 Every content map change (names, `--page-titles`, relabels) is a contract change: procedure W1.
+
+## 6. Recipes by symptom
+
+Each recipe is theme-neutral; JA Diner WP7 1.0.2 (TracyHQ/tracy#459) is only the example. Entry point: the red state
+code of the verdict (`coverage-holes`, `coverage-labels`, `coverage-judge`) or a red check of the release sweep. Every
+recipe ends in "verify": nothing a customer sees may move, and no demo business data may stay in a place the plugin
+writes. `scripts/test/hole-recipes.test.mjs` holds each detection to a deliberately broken fixture and holds this page
+to the same list.
+
+| Recipe | Symptom | Red state / check |
+|---|---|---|
+| H1 | Business words (phone, address, email, website) hard-coded in a theme pattern or part | `coverage-labels` R9, `coverage-holes` class `template` |
+| H2 | A fact inside a `core/html` block (a styled band: a phone in a reservation promotion) | `coverage-labels` R9, hole class `unknown` |
+| H3 | A menu or price list item whose name carries its price in one inline-markup block | `coverage-labels` R2 (priced sample without a price role) |
+| H4 | Cut-out or design pictures on an editorial role | `coverage-labels` R5, then `coverage-judge` |
+| H5 | Words in a template part (footer location, hours, contact lines) with no write door | `coverage-holes` class `capture`, evidence a `wp_template_part` row |
+| H6 | A style guide page whose samples read as facts (a sample address and phone) | `coverage-labels` R9 |
+| H7 | Visible text in an unnamed block, or markup the capture skips | `coverage-holes` class `capture` or `unknown` |
+| H8 | A markup change that moves heights (a rebuilt band, a longer text) | release sweep, check `heights` (also `scheme`), `patch-release.md` |
+
+### H1. Business words hard-coded in a theme pattern or part
+
+- **Confirm.** The hole has class `template` and `evidence` names a file under the theme's `patterns/`, `parts/` or
+  `templates/`; its value is a phone, an address, an email or a website. A customer cannot change a theme file.
+- **Fix.** Move the words to theme text options: names with the theme's own prefix (`wp_<theme>_contact_phone`), kept
+  by a small reader in the theme that returns `''` for an unset option and holds no default, and printed in the pattern
+  through it or through an identity token (`{contact.phone}`) that the theme's token filler replaces in paragraphs and
+  Custom HTML blocks. The quickstart database seeds each option with the demo words (a default left in a theme file
+  keeps the hole open). Declare them at capture with `--theme-text-options a,b,c`: `manifest.themeTexts`, an option
+  entity and one text slot each, which the Claude Cowork plugin (0.18.40 or later) reads and writes; then give each slot
+  a contact role and a group (`contact.phone`, `contact.address`, `contact.email`). Seed values exactly as the markup
+  printed them, including non-breaking spaces.
+- **Verify.** The rendered page is byte identical to before (diff the HTML of the page before and after); the next
+  release sweep shows no `heights` or `text` group on that page; measure again: the hole is gone and the slot is covered.
+
+### H2. A fact inside a `core/html` block
+
+- **Confirm.** The hole is class `unknown`, its page shows the words, and the page's markup holds them inside a
+  `wp:html` block. A rebuild of the band from core blocks is the tempting fix: on JA Diner it added 12 height groups and
+  3 dark scheme defects, so do not.
+- **Fix.** Keep the block and its wrapper markup exactly; replace only the text node with an identity token
+  (`{contact.phone}`) and give the token a theme text option as in H1. The token filler runs on `core/html` output.
+  Seed the option with the demo value **of that spot**: a value longer than the original wraps a heading at narrow
+  widths (JA Diner: `(084) 555-0110` for `413-305-7497` moved the band at 320 and 390 px). One business has one phone,
+  so two spots that showed two demo values show one after this fix; keep the value that fits both.
+- **Verify.** As H1, and the sweep has no group for that page's band.
+
+### H3. A priced item name in one inline-markup block
+
+- **Confirm.** R2 names a slot whose sample reads `Name ((span class="price"))$30((/span))`.
+- **Fix.** Capture with `--inline-markup`; name the block in the pattern and the demo content; give the slot the
+  `offering.name` role in a `menu_item` group. The label rules accept a price inside an inline-markup slot of a name
+  role (`offering.name`, `package.name`): the role is a fact role, so a build never keeps the demo's words and the
+  price goes with the name. A name with a price inside a plain text slot still fails R2: make it inline-markup.
+- **Verify.** R2 is 0; the plugin writes the slot back with the price span intact (`inline-markup.mjs` mirrors its
+  allowlist, a class outside the slot's demo classes is refused).
+
+### H4. Cut-out pictures on an editorial role
+
+- **Confirm.** R5 lists picture slots (a plate cut out of its photo, a brush stroke).
+- **Fix.** Read the crop of each (`label-judge/images/`) yourself: right as `editorial.illustration` or
+  `editorial.design_element` is recorded with `record-judge.mjs`; a person, quote or business picture gets its role in
+  the content map. No model call.
+- **Verify.** R5 is 0 after the judge is recorded on the **final** capture; a changed slot is asked again.
+
+### H5. Words in a template part
+
+- **Confirm.** Hole evidence names a `wp_template_part` row (`posts#97.post_content`); the plugin reads pages, posts
+  and options, and a `templatePart` entity (identity `{slug}`, lock = skeleton) from 0.18.x.
+- **Fix.** Give each text block of the part a `metadata.name` in the overlay part file and the demo database, then
+  capture with `--template-parts footer`; the inventory locks the part by its skeleton. Business words in the part
+  follow H1.
+- **Verify.** The part has slots in `content-map.json`; the part's rendered HTML is unchanged.
+
+### H6. A style guide page that reads as facts
+
+- **Confirm.** R9 names samples on the typography (style guide) page: a sample address with a phone number.
+- **Fix.** The page is demo-only and a customer never writes it, but R9 cannot be accepted. Change the samples so no
+  phone, address, email or price pattern is left, keeping the same length (`Folsom Avenue 795`, `(123) 456 789`).
+- **Verify.** R9 is 0. Record the change as a decision in the port's dossier: the sweep reports the sample as changed
+  text against the source.
+
+### H7. Visible text with no door
+
+- **Confirm.** Capture holes on blocks without a name, or text the capture skipped (`coverage.skipped` in the capture
+  output: a second block of a name, markup the plugin does not write).
+- **Fix.** Name the block (`metadata.name`) in the pattern and the demo content; make names unique per page (a
+  repeated section gets `menu-2.*`); inline markup follows H3. Never ship `--all-text` slots.
+- **Verify.** Measure again; skipped list empty or each entry accepted with a reason.
+
+### H8. A markup change that moves heights
+
+- **Confirm.** The release sweep (`patch-release.md`) fails `heights` or `scheme` with groups on the page you changed
+  and none in the baseline; read the group's `culprit` and `detail`.
+- **Fix.** Revert to the exact wrapper markup of the baseline and change only text; if the text is longer than the
+  original, use an original-length value or accept the group with a written decision (only for a difference nobody
+  sees). A group that changes width to width between runs on a page you did not touch is a flaky measure of the
+  source, not your change: compare two runs before accepting it.
+- **Verify.** Sweep again: all eleven checks pass.
