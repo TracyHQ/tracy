@@ -155,3 +155,33 @@ test('sweep 2: a revert names the change it takes back', opts, async () => {
   assert.deepEqual(revert.target, { reverts: 'api-abc-1' })
   assert.equal(revert.origin, 'api')
 })
+
+test(
+  '#477: a write made in a session the server opened for a setup run is that run’s; a header alone is not',
+  opts,
+  async () => {
+    const { pool } = db
+    const { overHttp } = await setup(pool)
+    const run = 'run-477'
+    await pool.query(`insert into setup_session (site_key, session_id, run_id) values ($1, 'repair-1', $2)`, [
+      SITE,
+      run
+    ])
+    const inRepair = await overHttp('repair-1', {
+      action: WRITE.action,
+      params: { ...WRITE.params, apply_id: 'a-4' }
+    })
+    assert.equal(inRepair.status, 200, await inRepair.text())
+    const stranger = await overHttp('chat-9', {
+      action: WRITE.action,
+      params: { ...WRITE.params, apply_id: 'a-5' }
+    })
+    assert.equal(stranger.status, 200, await stranger.text())
+    const [repair, chat] = await writes(pool)
+    assert.deepEqual(
+      { session: repair.session_id, actor: repair.actor, origin: repair.origin, ref: repair.origin_ref },
+      { session: 'repair-1', actor: 'owner@x.y', origin: 'setup', ref: run }
+    )
+    assert.equal(chat.origin, null, 'a session no run registered is the customer’s')
+  }
+)

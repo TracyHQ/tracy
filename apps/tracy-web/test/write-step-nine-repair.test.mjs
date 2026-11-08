@@ -178,6 +178,34 @@ test('a site check that cannot run after the turns hands over the written site w
   assert.match(saved.get('repair-pass.json').error, /500/)
 })
 
+test('a build’s agent retires every session of the pass once it is over, and the bench’s agent is never asked to', async () => {
+  const agent = fakeAgent({ canRetire: true })
+  const { result } = await stepNine({ checks: [checkOf([DEMO, ALT]), checkOf([])], agent })
+  assert.deepEqual(agent.sent.retired, result.repair.sessions)
+  assert.ok(agent.sent.retired.length > 0)
+  const plain = fakeAgent()
+  await stepNine({ checks: [checkOf([DEMO, ALT]), checkOf([])], agent: plain })
+  assert.deepEqual(plain.sent.retired, [])
+})
+
+test('the sessions are retired when the pass was taken back too, and a retire that fails is logged, not thrown', async () => {
+  const agent = fakeAgent({ canRetire: true })
+  agent.retire = async () => ({ ok: false })
+  const first = checkOf([DEMO, ALT])
+  const { result, logged } = await stepNine({
+    checks: [first],
+    agent,
+    input: {
+      checkSite: async (_report, options) => {
+        if (options?.pages) throw new Error('the site check answered 500')
+        return first
+      }
+    }
+  })
+  assert.equal(result.report.status, 'done')
+  assert.ok(logged.some((line) => /could not be retired/.test(line)))
+})
+
 test('a step 9 run with no site agent writes and checks, and says the repair pass did not run', async () => {
   const first = checkOf([DEMO])
   const { result } = await stepNine({ checks: [first], agent: null })

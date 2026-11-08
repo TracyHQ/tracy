@@ -14,10 +14,15 @@
 //           step's return;
 //   pageUrl a page's address as the preview frame names it: the site's public address and the path the site serves.
 // Every repair is so a Tracy turn of that session: it shows in Site changes and can be undone like any other.
+// With `setupRun` (a step chain build) the agent works for that build instead: each session is written down as the build's
+// before any prompt reaches it (sites/setup-session.js), so the writes it makes are recorded as Tracy setup under the run and
+// its turns stay out of the list, and `retire` archives the session once the pass is over, so the customer's chat list never
+// shows it. Without `setupRun` nothing changes.
 import { randomUUID } from 'node:crypto'
 import { promptSiteSession, siteSeatRpc, siteSessionAhead } from './lib/site-session-ahead.js'
 import { accountByEmail, grantFor } from './seats/store.js'
 import { designSystemSiteReaders } from './sites/design-system-site-readers.js'
+import { registerSetupSession } from './sites/setup-session.js'
 import { siteByKey } from './sites/store.js'
 
 /**
@@ -35,10 +40,21 @@ export function benchPageUrl(origin, page) {
 
 /**
  * @param {{ pool: import('pg').Pool, config: any, seatDoor: { mintSeatSession?: Function }, door: object,
- *   siteKey: string, email: string, fetchImpl?: typeof fetch, sleep?: (ms: number) => Promise<void> }} input `door` is the
- *   bench's site door (bench-site-door.js), signed in as `email`
+ *   siteKey: string, email: string, fetchImpl?: typeof fetch, sleep?: (ms: number) => Promise<void>,
+ *   setupRun?: string | null }} input `door` is the bench's site door (bench-site-door.js), signed in as `email`;
+ *   `setupRun` the step chain build the sessions work for
  */
-export function benchRepairAgent({ pool, config, seatDoor, door, siteKey, email, fetchImpl = fetch, sleep }) {
+export function benchRepairAgent({
+  pool,
+  config,
+  seatDoor,
+  door,
+  siteKey,
+  email,
+  fetchImpl = fetch,
+  sleep,
+  setupRun = null
+}) {
   let site = null
   let origin = null
   const wait = sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)))
@@ -51,9 +67,11 @@ export function benchRepairAgent({ pool, config, seatDoor, door, siteKey, email,
       if (grant?.role !== 'owner') return { reason: `the bench account holds no owner seat on ${siteKey}` }
       origin = new URL(designSystemSiteReaders({ config, fetchImpl }).publicOf(site)).origin
       const sessionId = await siteSessionAhead({ config, seatDoor, fetchImpl, site, email })
-      return sessionId
-        ? { sessionId }
-        : { reason: 'no session could be made for the site (no seat door, or its dsh refused)' }
+      if (!sessionId)
+        return { reason: 'no session could be made for the site (no seat door, or its dsh refused)' }
+      // Written down before the first prompt, so not one write of the session is recorded as the customer's.
+      if (setupRun) await registerSetupSession(pool, { siteKey, sessionId, runId: setupRun })
+      return { sessionId }
     },
     async request({ sessionId, requestId, items, timeLeftMs = Infinity }) {
       const body = {
@@ -124,6 +142,21 @@ export function benchRepairAgent({ pool, config, seatDoor, door, siteKey, email,
       }))
       return answer?.accepted === true ? { ok: true } : { ok: false, code: answer?.error ?? 'NOT_ACCEPTED' }
     },
+    // A build's session is archived once the pass is over: dsh lists it no more, so the customer's chat list shows none of
+    // the build's repair sessions. Fail open: a session that stays listed is better than a pass that stops.
+    ...(setupRun
+      ? {
+          async retire({ sessionId }) {
+            const rpc = site ? await siteSeatRpc({ config, seatDoor, fetchImpl, site, email }) : null
+            const answer = rpc
+              ? await rpc('workspace/archiveSession', { sessionId, stopActivity: true }).catch(() => null)
+              : null
+            return {
+              ok: Array.isArray(answer?.archivedSessionIds) && answer.archivedSessionIds.includes(sessionId)
+            }
+          }
+        }
+      : {}),
     undo: ({ sessionId, turnId }) =>
       door.undoTurn(siteKey, {
         session: sessionId,

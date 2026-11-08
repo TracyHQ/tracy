@@ -45,6 +45,15 @@ const pageAddressOf = (agent) => (page) => {
   return agent.pageUrl(page)
 }
 
+/** Ask the agent to retire each session of the pass (a build's agent offers it); one that cannot be is logged, never thrown. */
+async function retireSessions(agent, sessions, warn) {
+  if (typeof agent?.retire !== 'function') return
+  for (const sessionId of sessions) {
+    const done = await agent.retire({ sessionId }).catch(() => null)
+    if (!done?.ok) warn(`step 9b: the session ${sessionId} could not be retired`)
+  }
+}
+
 /** After a 9b error: every turn of the pass's request ids (a late one too) taken back, newest first, each undo kept. */
 async function takeBack(pass, reason, firstCheck) {
   const { ledger } = pass
@@ -142,6 +151,8 @@ export async function runStepNine(input) {
       log.warn(`step 9b failed, the site is handed over as written: ${reason}`)
       outcome = await takeBack(pass, reason, firstCheck)
     }
+  // The sessions of a build's repair pass are retired once it is over, whatever its outcome (a taken-back pass too).
+  await retireSessions(agent, pass.result?.sessions ?? [], (line) => log.warn(line))
   const handed = outcome.check
   const repair = repairSummary({ outcome, clock, site: write.siteKey, timeline })
   const report = withReadBack(written, handed)

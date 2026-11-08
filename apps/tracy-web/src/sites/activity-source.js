@@ -549,16 +549,17 @@ export const FOLDED_SEALS_SQL = `
 /**
  * The V2 `writes` row a `site_write` (alias `w`) belongs to — ONE expression for every query that
  * groups writes, so a page, its counts and its hydration can never disagree on a row's id:
+ *   - one Tracy setup run's writes (sweep #4): `setup:<run>` — one row per brief, not one per write, whether they were
+ *     written by the run itself or by the turns of its own repair sessions (`setup-session.js`, a step chain build);
  *   - a chat turn's writes: `turn:<turn>`;
- *   - one Tracy setup run's writes (sweep #4): `setup:<run>` — one row per brief, not one per write;
  *   - a revert a seat key asked for (`/v1 …/applies/:id/revert`, sweep #2): `write:<id>`, its own row,
  *     never folded into the key's writes it takes back;
  *   - a session's writes: `session:<session>`; anything else: `write:<id>`.
  * @param {string} w the `site_write` alias
  */
 export const writeGroupSql = (w) =>
-  `coalesce('turn:' || ${w}.turn_id,
-            case when ${w}.origin = 'setup' and ${w}.origin_ref is not null then 'setup:' || ${w}.origin_ref end,
+  `coalesce(case when ${w}.origin = 'setup' and ${w}.origin_ref is not null then 'setup:' || ${w}.origin_ref end,
+            'turn:' || ${w}.turn_id,
             case when ${w}.origin = 'api' and ${w}.action = 'apply.revert' then 'write:' || ${w}.id::text end,
             'session:' || ${w}.session_id, 'write:' || ${w}.id::text)`
 
@@ -622,6 +623,8 @@ export const V2_SOURCES_SQL = `
     from site_turn t
    where t.site_key = $1
      and (t.state in ('closed', 'stale') or (t.state = 'open' and t.opened_at < now() - interval '30 minutes'))
+     -- A turn of a session a setup run opened for its own repairs is part of that run's row, not a row of its own.
+     and not exists (select 1 from setup_session ss where ss.site_key = t.site_key and ss.session_id = t.session_id)
      and ((t.files > 0 and not t.turn_id = any($2::text[])) or exists (select 1 from site_write w
                                   where w.site_key = t.site_key and w.turn_id = t.turn_id and w.outcome <> 'refused'))
   union all
@@ -646,7 +649,8 @@ export const V2_SOURCES_SQL = `
                  (w.actor is not null and w.origin = 'api' and w.origin_ref is not null) as api
             from site_write w
            where w.site_key = $1 and w.outcome <> 'refused'
-             and (w.turn_id is null or not exists (select 1 from site_turn t where t.turn_id = w.turn_id))) g
+             and (w.turn_id is null or (w.origin = 'setup' and w.origin_ref is not null)
+                  or not exists (select 1 from site_turn t where t.turn_id = w.turn_id))) g
    group by g.id
   union all
   select 'outside-files', ${V2_RANK['outside-files']}, o.sha, o.at,
