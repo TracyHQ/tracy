@@ -4,7 +4,7 @@
   "contract": "ja-diner/wp7/1.0.2",
   "database": {
     "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-    "sha256": "918c4a1683c643e2b81c2d07e143bf81ed3399528e6b25dc58ea0342bb6a42a7"
+    "sha256": "c536f9cf394b28bae6c374ed6b9dd153c58777e4c75e2e7bbb86e5be4e708f92"
   },
   "stylesheet": "wp-ja-diner",
   "frontPage": 63,

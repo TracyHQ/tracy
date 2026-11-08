@@ -6,17 +6,17 @@
   },
   "contract": {
     "id": "ja-diner/wp7/1.0.2",
-    "contentMapSha256": "c082189c62ce2a62e667ab31643f12161b400480cc696014ce402a0e96d2000c",
-    "presentationLockSha256": "6fc369a8498d2118e147688c82b5f7c161e7463fcb63b67cdede0bcfcc061563"
+    "contentMapSha256": "ec41589ac2b382b92d4091f9052965fb960ce268cf7f973285f1c8c71615b548",
+    "presentationLockSha256": "c0a6bcdfdd869c8a6a560011c8b1b1e626917911a0be30b6ce72a859429e9816"
   },
-  "measuredAt": "2026-11-07T18:59:29.576Z",
+  "measuredAt": "2026-11-08T05:22:30.430Z",
   "viewports": [
     "desktop",
     "phone"
   ],
   "pages": {
-    "audited": 73,
-    "inMap": 20,
+    "audited": 78,
+    "inMap": 25,
     "notInMap": 53,
     "failed": 0,
     "failures": [],
@@ -24,22 +24,22 @@
   },
   "counts": {
     "text": {
-      "total": 582,
-      "matched": 141,
+      "total": 586,
+      "matched": 244,
       "locked": 0,
-      "capture": 245,
+      "capture": 170,
       "captureLocked": 0,
-      "template": 113,
-      "core": 19,
-      "unknown": 64,
+      "template": 118,
+      "core": 18,
+      "unknown": 36,
       "catalogue": 0,
       "ignored": 10
     },
     "images": {
       "total": 209,
-      "matched": 145,
+      "matched": 190,
       "locked": 10,
-      "capture": 54,
+      "capture": 9,
       "captureLocked": 0,
       "template": 0,
       "core": 0,
@@ -48,22 +48,22 @@
       "ignored": 0
     },
     "links": {
-      "total": 9,
-      "matched": 0,
+      "total": 13,
+      "matched": 7,
       "locked": 0,
-      "capture": 8,
+      "capture": 5,
       "captureLocked": 0,
       "template": 1,
       "core": 0,
       "unknown": 0,
       "catalogue": 0,
-      "ignored": 65
+      "ignored": 61
     }
   },
   "coverage": {
-    "text": 25,
-    "images": 72.9,
-    "links": 0
+    "text": 43,
+    "images": 95.5,
+    "links": 53.8
   },
   "holes": [
     {
@@ -76,66 +76,6 @@
       "pages": 2,
       "firstPage": "/?pagename=other-pages/error-page",
       "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/banner-1.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/banner-1.jpg",
-      "evidence": "wp-content/uploads/2026/10/banner-1.jpg",
-      "pages": 36,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/banner-categories-1024x544.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/banner-categories-1024x544.jpg",
-      "evidence": "wp-content/uploads/2026/10/banner-categories-1024x544.jpg",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/banner-categories-1536x816.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/banner-categories-1536x816.jpg",
-      "evidence": "wp-content/uploads/2026/10/banner-categories-1536x816.jpg",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/banner-categories-300x159.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/banner-categories-300x159.jpg",
-      "evidence": "wp-content/uploads/2026/10/banner-categories-300x159.jpg",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/banner-categories-768x408.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/banner-categories-768x408.jpg",
-      "evidence": "wp-content/uploads/2026/10/banner-categories-768x408.jpg",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/banner-categories.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/banner-categories.jpg",
-      "evidence": "wp-content/uploads/2026/10/banner-categories.jpg",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
     },
     {
       "kind": "image",
@@ -194,36 +134,6 @@
     },
     {
       "kind": "image",
-      "value": "wp-content/uploads/2026/10/bg-offer-1-252x300.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/bg-offer-1-252x300.jpg",
-      "evidence": "wp-content/uploads/2026/10/bg-offer-1-252x300.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/bg-offer-1-768x914.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/bg-offer-1-768x914.jpg",
-      "evidence": "wp-content/uploads/2026/10/bg-offer-1-768x914.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/bg-offer-1.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/bg-offer-1.jpg",
-      "evidence": "wp-content/uploads/2026/10/bg-offer-1.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "image",
       "value": "wp-content/uploads/2026/10/bg-offline.jpg",
       "class": "capture",
       "lock": "undeclared",
@@ -235,374 +145,14 @@
     },
     {
       "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-1-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-1-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-1-150x150.jpg",
-      "pages": 8,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-1.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-1.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-1.jpg",
-      "pages": 8,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-2.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-2.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-2.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-3-240x300.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-3-240x300.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-3-240x300.jpg",
-      "pages": 9,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-3.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-3.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-3.jpg",
-      "pages": 9,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-4-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-4-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-4-150x150.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-4.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-4.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-4.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/business-5.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/business-5.jpg",
-      "evidence": "wp-content/uploads/2026/10/business-5.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/guide-1-240x300.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/guide-1-240x300.jpg",
-      "evidence": "wp-content/uploads/2026/10/guide-1-240x300.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/guide-1.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/guide-1.jpg",
-      "evidence": "wp-content/uploads/2026/10/guide-1.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/guide-2.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/guide-2.jpg",
-      "evidence": "wp-content/uploads/2026/10/guide-2.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/guide-3-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/guide-3-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/guide-3-150x150.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/guide-3.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/guide-3.jpg",
-      "evidence": "wp-content/uploads/2026/10/guide-3.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
       "value": "wp-content/uploads/2026/10/jd-site-logo.png",
       "class": "capture",
       "lock": "undeclared",
       "cause": "DB: wp-content/uploads/2026/10/jd-site-logo.png",
       "evidence": "wp-content/uploads/2026/10/jd-site-logo.png",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
       "accepted": "Site logo (option site_logo, attachment 98): the brand step writes the customer’s logo through the template kit’s logo spot, not through a content slot."
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-1-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-1-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-1-150x150.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-1.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-1.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-1.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-2.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-2.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-2.jpg",
-      "pages": 9,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-3-240x300.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-3-240x300.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-3-240x300.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-3.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-3.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-3.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-4-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-4-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-4-150x150.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/marketing-4.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/marketing-4.jpg",
-      "evidence": "wp-content/uploads/2026/10/marketing-4.jpg",
-      "pages": 7,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-1-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-1-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-1-150x150.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-1.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-1.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-1.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-2.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-2.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-2.jpg",
-      "pages": 8,
-      "firstPage": "/?pagename=content/fetured-articles"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-3-240x300.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-3-240x300.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-3-240x300.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-3.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-3.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-3.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-4.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-4.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-4.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-5-150x150.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-5-150x150.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-5-150x150.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/news-5.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/news-5.jpg",
-      "evidence": "wp-content/uploads/2026/10/news-5.jpg",
-      "pages": 6,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-5-300x225.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-5-300x225.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-5-300x225.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-5.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-5.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-5.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-6-300x225.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-6-300x225.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-6-300x225.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-6.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-6.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-6.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-7-300x225.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-7-300x225.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-7-300x225.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-7.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-7.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-7.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-8-300x225.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-8-300x225.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-8-300x225.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "image",
-      "value": "wp-content/uploads/2026/10/picture-about-8.jpg",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "DB: wp-content/uploads/2026/10/picture-about-8.jpg",
-      "evidence": "wp-content/uploads/2026/10/picture-about-8.jpg",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
     },
     {
       "kind": "link",
@@ -628,57 +178,80 @@
     },
     {
       "kind": "text",
-      "value": "Log in",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table postmeta.meta_value (not a contract entity kind)",
-      "evidence": "postmeta#190.meta_value",
-      "pages": 2,
-      "firstPage": "/j-pages/login/",
-      "accepted": "Account interface label (header login link, login button, the login screen’s heading kept in tracy_page_heading): interface text of the account pages, not business words."
-    },
-    {
-      "kind": "attr:value",
-      "value": "Log in",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table postmeta.meta_value (not a contract entity kind)",
-      "evidence": "postmeta#190.meta_value",
-      "pages": 41,
-      "firstPage": "/?pagename=our-blog",
-      "accepted": "Account interface label (header login link, login button, the login screen’s heading kept in tracy_page_heading): interface text of the account pages, not business words."
-    },
-    {
-      "kind": "text",
-      "value": "Login",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table postmeta.meta_value (not a contract entity kind)",
-      "evidence": "postmeta#190.meta_value",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Account interface label (header login link, login button, the login screen’s heading kept in tracy_page_heading): interface text of the account pages, not business words."
-    },
-    {
-      "kind": "meta:title",
-      "value": "login -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table postmeta.meta_value (not a contract entity kind)",
-      "evidence": "postmeta#190.meta_value",
-      "pages": 2,
-      "firstPage": "/j-pages/login/",
-      "accepted": "Account interface label (header login link, login button, the login screen’s heading kept in tracy_page_heading): interface text of the account pages, not business words."
-    },
-    {
-      "kind": "text",
       "value": ". all rights reserved.",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#97.post_content (contains)",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Text of the footer template part (location, hours, contact lines, copyright). The Claude Cowork plugin reads and writes pages, posts and options only, a template part is not an entity kind of any WordPress contract, so these lines have no write door. Known gap, recorded as a plugin follow-up (a template part entity); the block names footer.* are in place for it."
+    },
+    {
+      "kind": "text",
+      "value": ".mute paragraph.",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
+    },
+    {
+      "kind": "text",
+      "value": ".text-danger paragraph.",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
+    },
+    {
+      "kind": "text",
+      "value": ".text-info paragraph.",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
+    },
+    {
+      "kind": "text",
+      "value": ".text-primary paragraph.",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
+    },
+    {
+      "kind": "text",
+      "value": ".text-success paragraph.",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
+    },
+    {
+      "kind": "text",
+      "value": ".text-warning paragraph.",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "link",
@@ -688,27 +261,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
-    },
-    {
-      "kind": "link",
-      "value": "/about-us",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content (contains)",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "link",
-      "value": "/reservation",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content (contains)",
-      "pages": 12,
-      "firstPage": "/?pagename=front-page"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -789,36 +343,6 @@
     },
     {
       "kind": "text",
-      "value": "35% OFF",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "text",
-      "value": "398 North 23th Dumbledore Street, Hogsmeade Village, Britain.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content (contains)",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "398 North 23th Dumbledore Street, Hogsmeade Village, Britain. Get Direction",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content (contains)",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Action",
       "class": "capture",
       "lock": "undeclared",
@@ -858,7 +382,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#41.post_content",
       "pages": 21,
-      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/"
+      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -868,7 +393,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#41.post_content",
       "pages": 21,
-      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/"
+      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -878,7 +404,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -888,7 +415,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -898,7 +426,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#41.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
+      "firstPage": "/?pagename=contact-us",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -935,6 +464,17 @@
     },
     {
       "kind": "text",
+      "value": "area of graphical user interfaces (gui), a tabbed document interface (tdi) or a tab is one that allows multiple documents to be contained within a single window, using tabs as a navigational widget...",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
+    },
+    {
+      "kind": "text",
       "value": "Badges",
       "class": "capture",
       "lock": "undeclared",
@@ -946,16 +486,6 @@
     },
     {
       "kind": "text",
-      "value": "Baked Squid",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Blockquotes",
       "class": "capture",
       "lock": "undeclared",
@@ -964,16 +494,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "Book a Table",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
     },
     {
       "kind": "text",
@@ -1076,43 +596,25 @@
     },
     {
       "kind": "text",
-      "value": "café & restaurant",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 12,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Call Now",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
-      "value": "Candied Fig",
+      "value": "center aligned text .text-center",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Candied Walnut Salad",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -1160,16 +662,6 @@
     },
     {
       "kind": "text",
-      "value": "Crisped Duck",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Danger Button",
       "class": "capture",
       "lock": "undeclared",
@@ -1200,16 +692,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "Dessert",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
     },
     {
       "kind": "text",
@@ -1257,26 +739,6 @@
     },
     {
       "kind": "text",
-      "value": "Discover our Story",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Disputando consectetuer ex vim, qui prima eleifend id. In qui affert persius molestiae. Usu et laudem facilisis.Ad est minim fuisset, blandit placerat ex duo.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "text",
       "value": "dolor sit amet, consectetur adipiscing elit. integer posuere erat a ante.",
       "class": "capture",
       "lock": "undeclared",
@@ -1285,26 +747,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "Don't wait",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "text",
-      "value": "Donec convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio interpretaris eu.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
     },
     {
       "kind": "text",
@@ -1336,7 +778,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#41.post_content",
       "pages": 21,
-      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/"
+      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -1357,7 +800,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -1378,7 +822,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -1388,7 +833,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -1409,7 +855,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -1418,8 +865,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
+      "pages": 2,
+      "firstPage": "/?pagename=content/all-categories",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -1431,26 +879,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "frequently,",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Fried Chocolate",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
     },
     {
       "kind": "text",
@@ -1471,37 +899,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
-    },
-    {
-      "kind": "text",
-      "value": "Gallery.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Get Direction",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "attr:title",
-      "value": "Get Direction",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -1582,14 +981,14 @@
     },
     {
       "kind": "text",
-      "value": "GUI tabs are modeled after traditional card tabs inserted in paper files or card indexes (in keeping with the desktop metaphor).",
+      "value": "gui tabs are modeled after traditional card tabs inserted in paper files or card indexes (in keeping with",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#275.post_content",
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -1680,34 +1079,15 @@
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
     },
     {
-      "kind": "link",
-      "value": "https://www.joomlart.com",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "text",
-      "value": "Imported Oysters Grill",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
       "kind": "text",
       "value": "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
+      "pages": 2,
+      "firstPage": "/?pagename=content/all-categories",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -1717,18 +1097,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#41.post_content",
       "pages": 21,
-      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/"
-    },
-    {
-      "kind": "text",
-      "value": "In the area of graphical user interfaces (GUI), a tabbed document interface (TDI) or a Tab is one that allows multiple documents to be contained within a single window, using tabs as a navigational...",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -1809,33 +1179,14 @@
     },
     {
       "kind": "text",
-      "value": "inspired",
+      "value": "justify aligned text which is often used in book design, magazine or special typo pages. create a justify aligned text with .text-justify class.",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "is your best",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Join now",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 4,
-      "firstPage": "/?pagename=offers"
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -1850,13 +1201,14 @@
     },
     {
       "kind": "text",
-      "value": "Latest News + Updates.",
+      "value": "left aligned text .text-left",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#75.post_content",
-      "pages": 41,
-      "firstPage": "/?pagename=our-blog"
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -1920,8 +1272,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#97.post_content (contains)",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Text of the footer template part (location, hours, contact lines, copyright). The Claude Cowork plugin reads and writes pages, posts and options only, a template part is not an entity kind of any WordPress contract, so these lines have no write door. Known gap, recorded as a plugin follow-up (a template part entity); the block names footer.* are in place for it."
     },
     {
       "kind": "text",
@@ -1952,8 +1305,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#97.post_content",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Text of the footer template part (location, hours, contact lines, copyright). The Claude Cowork plugin reads and writes pages, posts and options only, a template part is not an entity kind of any WordPress contract, so these lines have no write door. Known gap, recorded as a plugin follow-up (a template part entity); the block names footer.* are in place for it."
     },
     {
       "kind": "text",
@@ -1979,23 +1333,14 @@
     },
     {
       "kind": "text",
-      "value": "meet",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#67.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "text",
       "value": "Menu for Diner",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2005,7 +1350,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2047,18 +1393,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
-    },
-    {
-      "kind": "text",
-      "value": "Mon. Tue. Thu. & Sun 12 Noon to 11 PM",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=offers"
+      "firstPage": "/?pagename=content/all-categories",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -2073,33 +1410,14 @@
     },
     {
       "kind": "text",
-      "value": "More Articles …",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#75.post_content",
-      "pages": 4,
-      "firstPage": "/?pagename=our-blog"
-    },
-    {
-      "kind": "text",
-      "value": "Mud Crab Congee",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci ...",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#41.post_content",
       "pages": 21,
-      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/"
+      "firstPage": "/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -2142,7 +1460,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -2152,7 +1471,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -2167,34 +1487,25 @@
     },
     {
       "kind": "text",
-      "value": "Off 50%",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "text",
       "value": "online",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
-      "value": "Panel content",
+      "value": "panel",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#275.post_content",
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -2275,16 +1586,6 @@
     },
     {
       "kind": "text",
-      "value": "Poached Fruits",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Porta ac consectetur ac",
       "class": "capture",
       "lock": "undeclared",
@@ -2324,7 +1625,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 22,
-      "firstPage": "/?pagename=content/typography"
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -2334,7 +1636,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2344,7 +1647,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2354,7 +1658,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2364,7 +1669,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2373,8 +1679,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 37,
-      "firstPage": "/?pagename=our-blog"
+      "pages": 38,
+      "firstPage": "/?pagename=our-blog",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -2384,7 +1691,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
       "pages": 1,
-      "firstPage": "/category/our-blog/restaurant-business/"
+      "firstPage": "/category/our-blog/restaurant-business/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -2393,8 +1701,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 37,
-      "firstPage": "/?pagename=our-blog"
+      "pages": 38,
+      "firstPage": "/?pagename=our-blog",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -2404,7 +1713,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
       "pages": 1,
-      "firstPage": "/category/our-blog/restaurant-guide/"
+      "firstPage": "/category/our-blog/restaurant-guide/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -2414,7 +1724,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
       "pages": 1,
-      "firstPage": "/category/our-blog/restaurant-marketing/"
+      "firstPage": "/category/our-blog/restaurant-marketing/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -2423,8 +1734,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 37,
-      "firstPage": "/?pagename=our-blog"
+      "pages": 38,
+      "firstPage": "/?pagename=our-blog",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -2434,27 +1746,19 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
       "pages": 1,
-      "firstPage": "/category/our-blog/restaurant-news/"
+      "firstPage": "/category/our-blog/restaurant-news/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
-      "value": "Roasted Red Potatoes with Rosemary",
+      "value": "right aligned text .text-right",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Roasted Steak Roulade",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
+      "evidence": "posts#275.post_content (contains)",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -2474,39 +1778,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#96.post_content",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
       "accepted": "Title of the header drawer (template part header): interface text of the off-canvas panel, not business words."
-    },
-    {
-      "kind": "text",
-      "value": "Smoked Venison",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "soda consumption",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#67.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "text",
-      "value": "Soft Drinks",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
     },
     {
       "kind": "text",
@@ -2518,26 +1792,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "style 2",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
-    },
-    {
-      "kind": "text",
-      "value": "style 3",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#66.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=offers"
     },
     {
       "kind": "text",
@@ -2591,117 +1845,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
-    },
-    {
-      "kind": "text",
-      "value": "This is a .mute paragraph.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a .text-danger paragraph.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a .text-info paragraph.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a .text-primary paragraph.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a .text-success paragraph.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a .text-warning paragraph.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a center aligned text .text-center",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a justify aligned text which is often used in Book Design, Magazine or special Typo Pages. Create a justify aligned text with .text-justify class.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a left aligned text .text-left",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "This is a right aligned text .text-right",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content (contains)",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
@@ -2713,16 +1858,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "Tuesday - Saturday: 9a.m - Close. Sunday: 10a.m - Close. Monday: Closed.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content (contains)",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
     },
     {
       "kind": "text",
@@ -2743,7 +1878,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -2764,17 +1900,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#42.post_content",
       "pages": 20,
-      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/"
-    },
-    {
-      "kind": "text",
-      "value": "View full menu",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#63.post_content",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
+      "firstPage": "/we-ve-been-nominated-for-the-britain-restaurant-awards/",
+      "accepted": "Body paragraph of a demo blog post. The post is one of the demo posts that demo-trim-map.json lets a bound site hide, and a post body is a run of unnamed paragraphs the plugin cannot address; the post title, excerpt and picture are slots."
     },
     {
       "kind": "text",
@@ -2783,8 +1910,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#75.post_content",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
+      "pages": 2,
+      "firstPage": "/?pagename=content/all-categories",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -2827,69 +1955,30 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#68.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
-      "value": "Each JA template has its own matching 404 page. Below is the screenshot of 404 page style.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_excerpt (not a contract entity kind)",
-      "evidence": "posts#82.post_excerpt",
-      "pages": 2,
-      "firstPage": "/?pagename=other-pages/error-page",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Each JA template has its own matching Offline page. Below is the screenshot of Offline page style.",
+      "value": "each ja template has its own matching",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_excerpt (not a contract entity kind)",
       "evidence": "posts#83.post_excerpt",
       "pages": 2,
       "firstPage": "/?pagename=other-pages/offline-page",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
+      "accepted": "Page of the template showcase (404, offline, search screens) that showcase-nav-map.json takes out of every navigation of a customer site."
     },
     {
       "kind": "text",
-      "value": "All categories",
+      "value": "each ja template has its own matching 404 page. below is",
       "class": "capture",
       "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#273.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "all categories -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#273.post_title",
-      "pages": 1,
-      "firstPage": "/content/all-categories/"
-    },
-    {
-      "kind": "text",
-      "value": "Contact Us",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#65.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "contact us -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#65.post_title",
+      "cause": "table posts.post_excerpt (not a contract entity kind)",
+      "evidence": "posts#82.post_excerpt",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
+      "firstPage": "/?pagename=other-pages/error-page",
+      "accepted": "Page of the template showcase (404, offline, search screens) that showcase-nav-map.json takes out of every navigation of a customer site."
     },
     {
       "kind": "text",
@@ -2898,179 +1987,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_title (not a contract entity kind)",
       "evidence": "posts#39.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Content",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#267.post_title",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Edit User Profile",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#79.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Error Page",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#82.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "error page -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#82.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=other-pages/error-page",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Fetured Articles",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#274.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "fetured articles -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#274.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=content/fetured-articles"
-    },
-    {
-      "kind": "text",
-      "value": "Home",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#63.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Home - Blue",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#88.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "home - blue -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#88.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=home/home-blue",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Home - Green",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#87.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "home - green -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#87.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=home/home-green",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Home - Pink",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#86.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "home - pink -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#86.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=home/home-pink",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Home - Red",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#85.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "home - red -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#85.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=home/home-red",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "J! Pages",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#71.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
+      "accepted": "Title of a Contact Form 7 form record, an editor-side label that the theme does not print as page copy."
     },
     {
       "kind": "attr:aria-label",
@@ -3079,71 +1998,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_title (not a contract entity kind)",
       "evidence": "posts#93.post_title",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
       "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
-    },
-    {
-      "kind": "text",
-      "value": "Offline Page",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#83.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Label of a showcase link (a colour variant of the home page, the 404 or offline screen, an empty heading) that showcase-nav-map.json removes from every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "offline page -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#83.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=other-pages/offline-page",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Other Pages",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#73.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "password reset -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#69.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=password-reset"
-    },
-    {
-      "kind": "text",
-      "value": "Registration",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#77.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "registration -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#77.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=j-pages/registration"
     },
     {
       "kind": "attr:aria-label",
@@ -3152,7 +2009,7 @@
       "lock": "undeclared",
       "cause": "table posts.post_title (not a contract entity kind)",
       "evidence": "posts#278.post_title",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
       "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
     },
@@ -3163,70 +2020,9 @@
       "lock": "undeclared",
       "cause": "table posts.post_title (not a contract entity kind)",
       "evidence": "posts#89.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Tagged Items",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#277.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "tagged items -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#277.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=content/tagged-items"
-    },
-    {
-      "kind": "text",
-      "value": "Typography",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#275.post_title",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "meta:title",
-      "value": "typography -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#275.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "User Profile",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#78.post_title",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "meta:title",
-      "value": "username reminder request -",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#70.post_title",
-      "pages": 2,
-      "firstPage": "/?pagename=username-reminder-request"
+      "accepted": "Title of a utility page the theme keeps as a draft (Smart Search), not part of a customer site navigation."
     },
     {
       "kind": "text",
@@ -3236,7 +2032,8 @@
       "cause": "table terms.name (not a contract entity kind)",
       "evidence": "terms#9.name",
       "pages": 3,
-      "firstPage": "/?pagename=content/fetured-articles"
+      "firstPage": "/?pagename=content/fetured-articles",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -3246,7 +2043,8 @@
       "cause": "table terms.name (not a contract entity kind)",
       "evidence": "terms#9.name",
       "pages": 1,
-      "firstPage": "/tag/food/"
+      "firstPage": "/tag/food/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -3256,7 +2054,8 @@
       "cause": "table terms.name (not a contract entity kind)",
       "evidence": "terms#10.name",
       "pages": 3,
-      "firstPage": "/?pagename=content/fetured-articles"
+      "firstPage": "/?pagename=content/fetured-articles",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -3266,7 +2065,8 @@
       "cause": "table terms.name (not a contract entity kind)",
       "evidence": "terms#10.name",
       "pages": 1,
-      "firstPage": "/tag/meet/"
+      "firstPage": "/tag/meet/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "text",
@@ -3276,7 +2076,8 @@
       "cause": "table terms.name (not a contract entity kind)",
       "evidence": "terms#8.name",
       "pages": 2,
-      "firstPage": "/?pagename=content/fetured-articles"
+      "firstPage": "/?pagename=content/fetured-articles",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
     },
     {
       "kind": "meta:title",
@@ -3286,7 +2087,68 @@
       "cause": "table terms.name (not a contract entity kind)",
       "evidence": "terms#8.name",
       "pages": 1,
-      "firstPage": "/tag/menu/"
+      "firstPage": "/tag/menu/",
+      "accepted": "Name or description of a demo blog category or tag. The plugin has no write door for terms; they exist only to group the demo posts, which the demo trim hides."
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "close",
+      "class": "template",
+      "cause": "template: theme file (whole block, around slot text) (wp-content/themes/wp-ja-diner/inc)",
+      "evidence": "wp-content/themes/wp-ja-diner/inc/extra.php",
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Accessible name printed by the theme interface code (menu toggle, drawer button); an interface word, not demo content."
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "open",
+      "class": "template",
+      "cause": "template: theme file (whole block, around slot text) (wp-content/themes/wp-ja-diner/inc)",
+      "evidence": "wp-content/themes/wp-ja-diner/inc/extra.php",
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Accessible name printed by the theme interface code (menu toggle, drawer button); an interface word, not demo content."
+    },
+    {
+      "kind": "text",
+      "value": "email address associated with your user account. your username will be emailed to",
+      "class": "template",
+      "cause": "template: theme file (whole block, around slot text) (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/account-remind.php",
+      "pages": 2,
+      "firstPage": "/?pagename=username-reminder-request",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
+    },
+    {
+      "kind": "text",
+      "value": "email address for your account. a verification code will be sent to you. once you have received",
+      "class": "template",
+      "cause": "template: theme file (whole block, around slot text) (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/account-reset.php",
+      "pages": 2,
+      "firstPage": "/?pagename=password-reset",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
+    },
+    {
+      "kind": "text",
+      "value": "here are a few examples of how you can use",
+      "class": "template",
+      "cause": "template: theme file (whole block, around slot text) (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/part-search-form.php",
+      "pages": 1,
+      "firstPage": "/other-pages/smart-search/",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
+    },
+    {
+      "kind": "text",
+      "value": "user",
+      "class": "template",
+      "cause": "template: theme file (whole block, around slot text) (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/account-register.php",
+      "pages": 2,
+      "firstPage": "/?pagename=j-pages/registration",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
     },
     {
       "kind": "text",
@@ -3324,7 +2186,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/assets)",
       "evidence": "wp-content/themes/wp-ja-diner/assets/js/wp-ja-diner-dark.js",
-      "pages": 73,
+      "pages": 78,
       "firstPage": "/?pagename=front-page",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3364,7 +2226,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 73,
+      "pages": 74,
       "firstPage": "/?pagename=front-page",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3374,7 +2236,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 73,
+      "pages": 74,
       "firstPage": "/?pagename=front-page",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3384,7 +2246,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3394,7 +2256,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3404,7 +2266,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3444,7 +2306,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3454,7 +2316,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3464,7 +2326,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/docs)",
       "evidence": "wp-content/themes/wp-ja-diner/docs/generated/inventory.json",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3534,7 +2396,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/functions.php)",
       "evidence": "wp-content/themes/wp-ja-diner/functions.php",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3559,22 +2421,12 @@
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
     {
-      "kind": "attr:aria-label",
-      "value": "Close the menu",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
-      "evidence": "wp-content/themes/wp-ja-diner/inc/extra.php",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
-    },
-    {
       "kind": "text",
       "value": "Create an account",
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
       "evidence": "wp-content/themes/wp-ja-diner/inc/groups/account.php",
-      "pages": 41,
+      "pages": 42,
       "firstPage": "/?pagename=our-blog",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3624,7 +2476,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
       "evidence": "wp-content/themes/wp-ja-diner/inc/groups/blog.php",
-      "pages": 43,
+      "pages": 44,
       "firstPage": "/j-pages/login/",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3634,7 +2486,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
       "evidence": "wp-content/themes/wp-ja-diner/inc/groups/blog.php",
-      "pages": 43,
+      "pages": 44,
       "firstPage": "/j-pages/login/",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -3816,16 +2668,6 @@
       "evidence": "wp-content/themes/wp-ja-diner/inc/groups/blog.php",
       "pages": 1,
       "firstPage": "/how-restaurants-can-promote-a-james-beard-recognition/",
-      "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
-    },
-    {
-      "kind": "attr:aria-label",
-      "value": "Open the menu",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
-      "evidence": "wp-content/themes/wp-ja-diner/inc/extra.php",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
     {
@@ -4094,7 +2936,7 @@
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
       "evidence": "wp-content/themes/wp-ja-diner/inc/groups/blog.php",
-      "pages": 43,
+      "pages": 44,
       "firstPage": "/j-pages/login/",
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
@@ -4139,6 +2981,46 @@
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
     {
+      "kind": "attr:aria-label",
+      "value": "submenu",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
+      "evidence": "wp-content/themes/wp-ja-diner/inc/groups/chrome.php",
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Accessible name printed by the theme interface code (menu toggle, drawer button); an interface word, not demo content."
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "submenu",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
+      "evidence": "wp-content/themes/wp-ja-diner/inc/groups/chrome.php",
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Accessible name printed by the theme interface code (menu toggle, drawer button); an interface word, not demo content."
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "submenu",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
+      "evidence": "wp-content/themes/wp-ja-diner/inc/groups/chrome.php",
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Accessible name printed by the theme interface code (menu toggle, drawer button); an interface word, not demo content."
+    },
+    {
+      "kind": "attr:aria-label",
+      "value": "submenu",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/inc)",
+      "evidence": "wp-content/themes/wp-ja-diner/inc/groups/chrome.php",
+      "pages": 78,
+      "firstPage": "/?pagename=front-page",
+      "accepted": "Accessible name printed by the theme interface code (menu toggle, drawer button); an interface word, not demo content."
+    },
+    {
       "kind": "text",
       "value": "Website",
       "class": "template",
@@ -4155,25 +3037,8 @@
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
       "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
-    },
-    {
-      "kind": "text",
-      "value": "$29",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/pricing.php",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$30",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/acm-menu-style-1.php",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
+      "firstPage": "/?pagename=contact-us",
+      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
     },
     {
       "kind": "text",
@@ -4182,7 +3047,8 @@
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
       "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
+      "firstPage": "/?pagename=contact-us",
+      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
     },
     {
       "kind": "text",
@@ -4221,7 +3087,8 @@
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
       "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
+      "firstPage": "/?pagename=contact-us",
+      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
     },
     {
       "kind": "text",
@@ -4265,22 +3132,13 @@
     },
     {
       "kind": "text",
-      "value": "Here are a few examples of how you can use the search feature:",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/part-search-form.php",
-      "pages": 1,
-      "firstPage": "/other-pages/smart-search/",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
       "value": "http://joomlart.com",
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
       "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
+      "firstPage": "/?pagename=contact-us",
+      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
     },
     {
       "kind": "link",
@@ -4289,7 +3147,8 @@
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
       "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
       "pages": 2,
-      "firstPage": "/?pagename=contact-us"
+      "firstPage": "/?pagename=contact-us",
+      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
     },
     {
       "kind": "text",
@@ -4313,26 +3172,6 @@
     },
     {
       "kind": "text",
-      "value": "Please enter the email address associated with your User account. Your username will be emailed to the email address on file.",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/account-remind.php",
-      "pages": 2,
-      "firstPage": "/?pagename=username-reminder-request",
-      "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
-    },
-    {
-      "kind": "text",
-      "value": "Please enter the email address for your account. A verification code will be sent to you. Once you have received the verification code, you will be able to choose a new password for your account.",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/account-reset.php",
-      "pages": 2,
-      "firstPage": "/?pagename=password-reset",
-      "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
-    },
-    {
-      "kind": "text",
       "value": "Search Form",
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
@@ -4340,6 +3179,36 @@
       "pages": 1,
       "firstPage": "/other-pages/smart-search/",
       "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
+    },
+    {
+      "kind": "text",
+      "value": "search form will return results containing \"this\" and not \"that\".",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/part-search-form.php",
+      "pages": 1,
+      "firstPage": "/other-pages/smart-search/",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
+    },
+    {
+      "kind": "text",
+      "value": "search form will return results containing both \"this\" and \"that\".",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/part-search-form.php",
+      "pages": 1,
+      "firstPage": "/other-pages/smart-search/",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
+    },
+    {
+      "kind": "text",
+      "value": "search form will return results containing ei",
+      "class": "template",
+      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
+      "evidence": "wp-content/themes/wp-ja-diner/patterns/part-search-form.php",
+      "pages": 1,
+      "firstPage": "/other-pages/smart-search/",
+      "accepted": "Sample text of a theme pattern that no page of this site prints (the pattern file is a starting point a customer inserts); the same words on a page are matched by their own slot."
     },
     {
       "kind": "text",
@@ -4412,14 +3281,14 @@
       "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
     },
     {
-      "kind": "text",
-      "value": "User Registration",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/account-register.php",
-      "pages": 2,
-      "firstPage": "/?pagename=j-pages/registration",
-      "accepted": "Interface string printed by the theme (pagination, read more, account and contact form labels, buttons, accessible names) from its own files under the wp-ja-diner text domain; translated with the theme, not business words of the demo."
+      "kind": "meta:title",
+      "value": "- page 2 -",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 1,
+      "firstPage": "/our-blog/?paged=2",
+      "accepted": "Document title WordPress core prints for page 2 of a list (“<list> – Page 2 – <site>”): the list name is covered elsewhere, the rest is core interface text."
     },
     {
       "kind": "meta:title",
@@ -4428,7 +3297,7 @@
       "cause": "unknown source",
       "evidence": "",
       "pages": 1,
-      "firstPage": "/our-blog/?paged=2",
+      "firstPage": "/content/fetured-articles/?paged=2",
       "accepted": "Document title WordPress core prints for page 2 of a list (“<list> – Page 2 – <site>”): the list name is covered elsewhere, the rest is core interface text."
     },
     {
@@ -4473,157 +3342,13 @@
     },
     {
       "kind": "text",
-      "value": "$147",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$156",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$33",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$417",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$44",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$45",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$47",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$49",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$56",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$58",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$59",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$68",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$75",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$89",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "$96",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "413-305-7497",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
-    },
-    {
-      "kind": "text",
-      "value": "An abbreviation of the word attribute is attr.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "attr:title",
@@ -4631,8 +3356,8 @@
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
-      "pages": 1,
-      "firstPage": "/content/all-categories/",
+      "pages": 2,
+      "firstPage": "/?pagename=content/all-categories",
       "accepted": "Post count the theme computes for a category (“Article Count: N” tooltip): a number from the database, not stored words."
     },
     {
@@ -4641,8 +3366,8 @@
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
-      "pages": 1,
-      "firstPage": "/content/all-categories/",
+      "pages": 2,
+      "firstPage": "/?pagename=content/all-categories",
       "accepted": "Post count the theme computes for a category (“Article Count: N” tooltip): a number from the database, not stored words."
     },
     {
@@ -4651,8 +3376,8 @@
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
-      "pages": 1,
-      "firstPage": "/content/all-categories/",
+      "pages": 2,
+      "firstPage": "/?pagename=content/all-categories",
       "accepted": "Post count the theme computes for a category (“Article Count: N” tooltip): a number from the database, not stored words."
     },
     {
@@ -4666,25 +3391,6 @@
       "accepted": "Form label or helper printed with the form (required mark, password rules, honeypot field, search help): interface text of the theme’s account, contact and search forms, not business words."
     },
     {
-      "kind": "attr:aria-label",
-      "value": "Content submenu",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
-    },
-    {
-      "kind": "text",
-      "value": "Efforts to curb bring results on both coasts",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
       "kind": "text",
       "value": "Email Address *",
       "class": "unknown",
@@ -4696,53 +3402,33 @@
     },
     {
       "kind": "attr:title",
-      "value": "Enter all or part of the title to search for.",
+      "value": "enter all or part of",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
       "firstPage": "/?pagename=content/tagged-items",
-      "accepted": "Form label or helper printed with the form (required mark, password rules, honeypot field, search help): interface text of the theme’s account, contact and search forms, not business words."
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
-      "value": "Entering this and that into the search form will return results containing both \"this\" and \"that\".",
+      "value": "following snippet of text is rendered as bold text.",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
-      "pages": 1,
-      "firstPage": "/other-pages/smart-search/",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
-      "value": "Entering this not that into the search form will return results containing \"this\" and not \"that\".",
+      "value": "following snippet of text is rendered as italicized text.",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
-      "pages": 1,
-      "firstPage": "/other-pages/smart-search/",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Entering this or that into the search form will return results containing either \"this\" or \"that\".",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 1,
-      "firstPage": "/other-pages/smart-search/",
-      "accepted": "Template showcase page (the theme’s 404, offline or search screen, or a colour variant of the home page): it shows the template itself, and showcase-nav-map.json takes its links out of every navigation of a customer site."
-    },
-    {
-      "kind": "meta:title",
-      "value": "fetured articles - page 2 -",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 1,
-      "firstPage": "/content/fetured-articles/?paged=2",
-      "accepted": "Document title WordPress core prints for page 2 of a list (“<list> – Page 2 – <site>”): the list name is covered elsewhere, the rest is core interface text."
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "meta:title",
@@ -4806,16 +3492,6 @@
     },
     {
       "kind": "attr:aria-label",
-      "value": "Home submenu",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
-    },
-    {
-      "kind": "attr:aria-label",
       "value": "Instagram",
       "class": "unknown",
       "cause": "unknown source",
@@ -4825,14 +3501,14 @@
       "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
     },
     {
-      "kind": "attr:aria-label",
-      "value": "J! Pages submenu",
+      "kind": "text",
+      "value": "lead paragraph. make a paragraph stand out by adding .lead.",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "attr:aria-label",
@@ -4866,15 +3542,6 @@
     },
     {
       "kind": "text",
-      "value": "Menu changes here is a sample of what may be available.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
       "value": "Message *",
       "class": "unknown",
       "cause": "unknown source",
@@ -4892,34 +3559,6 @@
       "pages": 2,
       "firstPage": "/?pagename=j-pages/registration",
       "accepted": "Form label or helper printed with the form (required mark, password rules, honeypot field, search help): interface text of the theme’s account, contact and search forms, not business words."
-    },
-    {
-      "kind": "text",
-      "value": "Modern Wizard cuisine by traditional artisan methods.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "Newk’s Eatery a dinner from supermarkets",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=about-us"
-    },
-    {
-      "kind": "attr:aria-label",
-      "value": "Other Pages submenu",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 73,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Accessible name WordPress core or the theme script prints for a control (navigation submenu toggle, slider dot, social icon, the navigation’s own name): interface text, not business words."
     },
     {
       "kind": "text",
@@ -4953,70 +3592,23 @@
     },
     {
       "kind": "text",
-      "value": "The following snippet of text is rendered as bold text.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "The following snippet of text is rendered as italicized text.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
-      "value": "The Three Broomsticks is a nestled in the beautiful and quaint Hogsmeade Village.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "This is a lead paragraph. Make a paragraph stand out by adding .lead.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "text",
       "value": "This week’s 5 head-spinning moments for diner",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
     },
     {
       "kind": "text",
-      "value": "Three Broomsticks café & restaurant in the Hogsmeade.",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 10,
-      "firstPage": "/?pagename=front-page"
-    },
-    {
-      "kind": "text",
-      "value": "TIPS: Create lighter, secondary text in any heading with a generic <small> tag or the .small class.",
+      "value": "tips: create lighter, secondary text in any heading with a generic tag or",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     },
     {
       "kind": "text",
@@ -5030,12 +3622,23 @@
     },
     {
       "kind": "text",
-      "value": "We take for lunch and dinner efforts to curb soda consumption",
+      "value": "we take for lunch and dinner",
       "class": "unknown",
       "cause": "unknown source",
       "evidence": "",
       "pages": 2,
-      "firstPage": "/?pagename=reservation"
+      "firstPage": "/?pagename=reservation",
+      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
+    },
+    {
+      "kind": "text",
+      "value": "word attribute is attr.",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 2,
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Typography style guide sample or interface string; no business words replace it."
     }
   ],
   "hygiene": [],
@@ -5150,6 +3753,48 @@
       "opens": "live",
       "status": 200,
       "url": "/?pagename=username-reminder-request",
+      "inHeader": false
+    },
+    {
+      "entity": "page-j-pages",
+      "title": null,
+      "route": "j-pages",
+      "menu": null,
+      "level": null,
+      "parent": null,
+      "type": "page",
+      "inMainMenu": null,
+      "opens": "live",
+      "status": 200,
+      "url": "/?pagename=j-pages",
+      "inHeader": false
+    },
+    {
+      "entity": "page-other-pages",
+      "title": null,
+      "route": "other-pages",
+      "menu": null,
+      "level": null,
+      "parent": null,
+      "type": "page",
+      "inMainMenu": null,
+      "opens": "live",
+      "status": 200,
+      "url": "/?pagename=other-pages",
+      "inHeader": false
+    },
+    {
+      "entity": "page-home",
+      "title": null,
+      "route": "home",
+      "menu": null,
+      "level": null,
+      "parent": null,
+      "type": "page",
+      "inMainMenu": null,
+      "opens": "live",
+      "status": 200,
+      "url": "/?pagename=home",
       "inHeader": false
     },
     {
@@ -5307,6 +3952,34 @@
       "inHeader": false
     },
     {
+      "entity": "page-content",
+      "title": null,
+      "route": "content",
+      "menu": null,
+      "level": null,
+      "parent": null,
+      "type": "page",
+      "inMainMenu": null,
+      "opens": "live",
+      "status": 200,
+      "url": "/?pagename=content",
+      "inHeader": false
+    },
+    {
+      "entity": "page-all-categories",
+      "title": null,
+      "route": "content/all-categories",
+      "menu": null,
+      "level": null,
+      "parent": null,
+      "type": "page",
+      "inMainMenu": null,
+      "opens": "live",
+      "status": 200,
+      "url": "/?pagename=content/all-categories",
+      "inHeader": false
+    },
+    {
       "entity": "page-fetured-articles",
       "title": null,
       "route": "content/fetured-articles",
@@ -5368,15 +4041,28 @@
     "roleVocabularyVersion": "place-content-roles/3",
     "applies": true,
     "r1": {
-      "facts": 69,
-      "slots": 407,
-      "percent": 17
+      "facts": 111,
+      "slots": 559,
+      "percent": 19.9
     },
     "rules": {
       "R2": {
         "title": "fact-like sample without a contact or price role",
-        "count": 0,
-        "keys": []
+        "count": 33,
+        "keys": [
+          "front-page.menu.dish-name.1",
+          "front-page.menu.dish-name.2",
+          "front-page.menu.dish-name.3",
+          "front-page.menu.dish-name.4",
+          "front-page.menu.dish-name.5",
+          "front-page.menu.dish-name.6",
+          "front-page.menu.dish-name.7",
+          "front-page.menu.dish-name.8",
+          "front-page.menu.dish-name.9",
+          "front-page.menu.dish-name.10",
+          "front-page.menu-2.dish-name.1",
+          "front-page.menu-2.dish-name.2"
+        ]
       },
       "R3": {
         "title": "URL slot without a role",
@@ -5392,17 +4078,17 @@
         "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
         "count": 11,
         "keys": [
-          "front-page.container-tabs.image-intro",
-          "front-page.features-intro.img-features",
-          "reservation.features-intro.img-features",
-          "home-red.container-tabs.image-intro",
-          "home-red.features-intro.img-features",
-          "home-pink.container-tabs.image-intro",
-          "home-pink.features-intro.img-features",
-          "home-green.container-tabs.image-intro",
-          "home-green.features-intro.img-features",
-          "home-blue.container-tabs.image-intro",
-          "home-blue.features-intro.img-features"
+          "page-front-page.container-tabs.image-intro",
+          "page-front-page.features-intro.img-features",
+          "page-reservation.features-intro.img-features",
+          "page-home-red.container-tabs.image-intro",
+          "page-home-red.features-intro.img-features",
+          "page-home-pink.container-tabs.image-intro",
+          "page-home-pink.features-intro.img-features",
+          "page-home-green.container-tabs.image-intro",
+          "page-home-green.features-intro.img-features",
+          "page-home-blue.container-tabs.image-intro",
+          "page-home-blue.features-intro.img-features"
         ]
       },
       "R6": {
@@ -5422,20 +4108,13 @@
       },
       "R9": {
         "title": "fact-like hole",
-        "count": 23,
+        "count": 5,
         "keys": [
-          "$30",
-          "$47",
-          "$56",
-          "$33",
-          "$58",
-          "$89",
-          "$29",
-          "$96",
-          "$147",
-          "$156",
-          "$45",
-          "$417"
+          "M. +201 382 348 5327 P. +201 166 993 7763 Info@joomlart.com",
+          "(084) 555-0110",
+          "413-305-7497",
+          "Company Name 795 Folsom Ave, Suite 600 San Francisco, CA 94107 P: (123) 456-7890",
+          "Full Name P: (123) 456-7890 first.last@example.com"
         ]
       }
     }
@@ -5448,11 +4127,11 @@
     "state": "not-judged",
     "reason": "AWAITING_AGENT",
     "counts": {
-      "slots": 407,
-      "located": 350,
-      "notLocated": 57,
+      "slots": 559,
+      "located": 466,
+      "notLocated": 93,
       "judged": 0,
-      "notJudged": 350,
+      "notJudged": 466,
       "right": 0,
       "wrongGroup": 0,
       "mismatch": 0
