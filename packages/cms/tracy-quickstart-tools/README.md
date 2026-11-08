@@ -269,6 +269,16 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   (`coverage-judge-warn`); a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.
+- **Rebuild without the site (`--reclassify`, `--report-only`).** After a content-map-only change, run the same
+  command with `--reclassify` on the same `--out`: the items come from `findings.json` (per page and viewport: text,
+  images, links, boxes, selectors, looks, shots), and the label judge reuses `<out>/module-boxes.json` (the module
+  wrapper and article container boxes, `module-boxes/1`) instead of opening every page again. It reuses them only when
+  their input fingerprint matches this run's: site address, `--db-dump` sha256, `--webroot` tree hash, the audited
+  page list and the source of the code that reads them. No dump or webroot, no fingerprint (a run before this file
+  existed), a mismatch or a saved failed page: the boxes are read in the browser again and stderr says why
+  (`[modules] reading module boxes in the browser: ...`). `--trust-saved-boxes` skips the check (logged `TRUSTED`;
+  for one-off proofs only). A full run always reads the site and saves the file for the next one
+  (`content-coverage/lib/verify/module-boxes-saved.mjs`).
 - **Exit.** `0` the policy passes · `1` holes, page problems (or an incomplete run) hold Publish ·
   `2` usage or run error.
 - **When it is red.** The fix loop (capture class: fix the capture RULE for every template, never one
