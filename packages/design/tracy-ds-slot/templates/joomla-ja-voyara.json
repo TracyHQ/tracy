@@ -205,9 +205,25 @@
   "followRules": {
     ".voy-price": {
       "color": "accent-text"
+    },
+    ".voy-tour-cta__btn.btn-white": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
+    },
+    ".voy-tour-cta__btn.btn-white:hover": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
+    },
+    ".voy-art-cta .btn-white": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
+    },
+    ".voy-art-cta .btn-white:hover": {
+      "background-color": "on-accent-band",
+      "color": "accent-band"
     }
   },
-  "followNote": "the destination cards' prices (.voy-price) are text painted with the template's primary (--voy-primary), which follows the system's accent fill: they take the readable accent (MotherDuck's light blue on the white card 1.94, Apple's blue on its grey card 4.31; found 11/10/2026 once contrast kind card-text read the cards' texts)",
+  "followNote": "the destination cards' prices (.voy-price) are text painted with the template's primary (--voy-primary), which follows the system's accent fill: they take the readable accent (MotherDuck's light blue on the white card 1.94, Apple's blue on its grey card 4.31; found 11/10/2026 once contrast kind card-text read the cards' texts) 08/11/2026 (BTN-1, measurement of 1.0.12): the white pills of the accent call bands (the tour layout's Reserve, .voy-tour-cta__btn.btn-white in css/tour.css; the article band's .btn-white in css/single.css) fill with --ds-c-surface on a band painted --ds-c-accent-band. The surface role is not drawn apart from the band: under Figma's dark side the surface is #212121 and the band #151444 (1.07:1), so the preview lost the button on the four tour pages. The blog call band (.voy-cta-band) is a kept band: its buttons are the band machine's, not followed here. They take the band's own pair instead, rest and hover: the fill is the band's words colour (on-accent-band, 4.5:1 on the band by construction) and the label the band, the template's light pill with the band's colour as its words on every system and side.",
   "bands": {
     ".acm-statistics": {
       "ground": "#1f6f6b",
