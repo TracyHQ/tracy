@@ -137,6 +137,14 @@ test(
   }
 )
 
+test('a place logo the brief media does not list is still found in the place table', opts, async () => {
+  await addPlaceMedia(db.pool, logoPng)
+  const c = await caseWithLogo()
+  const { run } = await play(c, { logoObjects: { get: async () => new Response(logoPng) } })
+  assert.doesNotMatch(String(run.error ?? ''), /BRAND_LOGO_UNAVAILABLE/)
+  assert.deepEqual(run.logoSource, { kind: 'place-media', mediaId: LOGO_ID })
+})
+
 test('a revoked place logo fails the run with the reason and no model call', opts, async () => {
   const sha = await addPlaceMedia(db.pool, logoPng, { revoked: true })
   const c = await caseWithPlaceLogo(sha)

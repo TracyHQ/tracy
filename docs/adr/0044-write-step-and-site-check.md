@@ -607,6 +607,11 @@ site does not let the unit be emptied, its line fails and says the demo content 
 resolution is a line in the write report's `closing`. Not yet covered: a menu item whose target page is removed, and replacing a
 rejected picture with another accepted candidate; both stay with the site check's `dead-links` and `demo-pictures`.
 
+Amended 2026-11-08 (#483): a painted frame the write step could not draw (no brand file to colour it, a drawing that failed) is a
+frame with no picture too, and climbs the same ladder. Icons, cut-out backdrops (their figure is written bare) and pictures the
+template keeps on purpose are not. A step chain build whose brand step made no file writes a stand-in brand file that only names
+the business from the brief (`write-step/stand-in-files.js`), so the site never keeps the template's name or its label.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

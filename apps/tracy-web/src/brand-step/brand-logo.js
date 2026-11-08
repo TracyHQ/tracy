@@ -50,11 +50,15 @@ export async function stageLogo(files, id, bytes) {
 
 const fail = (reason) => ({ ok: false, reason })
 
-/** Where the brief says its logo is kept: the place's table when its media entry says `origin: 'place'`, else `wo_media`. */
-export const logoOriginOf = (brief, mediaId) =>
-  (Array.isArray(brief?.media) ? brief.media : []).find((m) => m?.id === mediaId)?.origin === 'place'
-    ? 'place'
-    : 'opportunity'
+/**
+ * Where the brief says its logo is kept: the place's table when its media entry says `origin: 'place'`, else `wo_media`; null
+ * when the brief's media does not list it, and then both tables are asked, the account's own first.
+ */
+export const logoOriginOf = (brief, mediaId) => {
+  const entry = (Array.isArray(brief?.media) ? brief.media : []).find((m) => m?.id === mediaId)
+  if (!entry) return null
+  return entry.origin === 'place' ? 'place' : 'opportunity'
+}
 
 const LOGO_ROW = {
   // A place picture is read only while it is not revoked, like every other reader of a place's pictures (brief-picture-bytes.js).
@@ -89,8 +93,17 @@ export async function mediaLogoBytes({ pool, objects, mediaId, origin = 'opportu
 export async function ensureLogo({ pool, files, brief, objects }) {
   const mediaId = logoIdOf(brief)
   if (!mediaId || logoStaged(files, mediaId)) return { ok: true, source: null }
-  const origin = logoOriginOf(brief, mediaId)
-  const got = await mediaLogoBytes({ pool, objects, mediaId, origin })
+  const named = logoOriginOf(brief, mediaId)
+  let origin = named ?? 'opportunity'
+  let got = await mediaLogoBytes({ pool, objects, mediaId, origin })
+  // Not in the account's table and not named by the brief: the place's table may hold it (its reason wins once it has a row).
+  if (!got.ok && !named && /does not exist/.test(got.reason)) {
+    const place = await mediaLogoBytes({ pool, objects, mediaId, origin: 'place' })
+    if (place.ok || !/does not exist/.test(place.reason)) {
+      origin = 'place'
+      got = place
+    }
+  }
   if (!got.ok) return got
   if (!(await stageLogo(files, mediaId, got.bytes))) return fail(`logo media ${mediaId} is not an image`)
   return { ok: true, source: { kind: origin === 'place' ? 'place-media' : 'media', mediaId } }
