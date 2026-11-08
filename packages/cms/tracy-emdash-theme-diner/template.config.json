@@ -1,0 +1,66 @@
+{
+  "id": "tracy-diner",
+  "label": "JA Diner",
+  "version": "0.1.0",
+  "locales": ["en"],
+  "defaultLocale": "en",
+  "site": {
+    "title": "JA Diner",
+    "tagline": ""
+  },
+  "contentOrder": [
+    "posts",
+    "pages",
+    "slideshow",
+    "features_intro",
+    "container_tabs",
+    "menu",
+    "happyhours",
+    "teams",
+    "modules"
+  ],
+  "forms": {
+    "file": "tools/forms.json",
+    "bindings": [
+      {
+        "form": "contact-{locale}",
+        "collection": "contact",
+        "slug": "contact",
+        "field": "form_id"
+      },
+      {
+        "form": "subscribe-{locale}",
+        "collection": "chrome",
+        "slug": "chrome",
+        "field": "form_id"
+      }
+    ]
+  },
+  "mail": {
+    "fromEmail": "no-reply@ja-diner.example",
+    "fromName": "JA Diner"
+  },
+  "audit": {
+    "indexable": ["^/(?!search)(?!404$).*"],
+    "noindex": ["^/search"],
+    "notFound": ["^/404$"],
+    "canonicalQuery": ["page"],
+    "unknownProbes": ["/our-blog/nope"],
+    "alternates": "all-locales"
+  },
+  "qa": {
+    "theme": {
+      "selector": "html",
+      "attribute": "data-theme",
+      "values": {
+        "light": null,
+        "dark": "dark"
+      },
+      "storageKey": "tracy-diner-theme"
+    },
+    "expectedStatus": {
+      "/404": 404
+    }
+  },
+  "$comment": "Template identity and site-specific wiring read by the generic tools. Demo content: the JA Diner sample site (Three Broomsticks, Hogsmeade)."
+}

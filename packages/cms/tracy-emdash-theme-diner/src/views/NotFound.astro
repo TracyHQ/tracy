@@ -1,0 +1,24 @@
+---
+import Base from '@/layouts/Base.astro'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+Astro.response.status = 404
+---
+
+<Base chrome={chrome} title={site.not_found_title ?? '404'} currentPath="/404" robots="noindex, nofollow" subscribe={false} bodyClass="dn-page-404">
+	<main id="main" class="dn-wrap dn-notfound">
+		<div class="dn-code" {...$c('not_found_code')}>{site.not_found_code}</div>
+		<h1 class="dn-display" {...$c('not_found_title')}>{site.not_found_title}</h1>
+		<p {...$c('not_found_text')}>{site.not_found_text}</p>
+		<a class="dn-btn" href={href(locale, '/')} {...$c('not_found_back_label')}>{site.not_found_back_label}</a>
+	</main>
+</Base>

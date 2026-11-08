@@ -1,0 +1,48 @@
+---
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+import { fill } from '@/lib/i18n'
+import { liveLinks } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+// the map link is free text: a same-site path to an unticked page is dropped, the words stay
+const live = await liveLinks(Astro.request, chrome.locale, [site.footer_map_url])
+const copyright = fill(site.copyright, { year: new Date().getUTCFullYear(), name: site.brand_name })
+const lines = (v: unknown) =>
+  String(v ?? '')
+    .split('\n')
+    .filter(Boolean)
+---
+
+<footer class="dn-footer">
+	<div class="dn-wrap">
+		<div class="dn-footer-cols">
+			<div>
+				<h3 {...$c('footer_location_title')}>{site.footer_location_title}.</h3>
+				<p {...$c('footer_address')}>{lines(site.footer_address).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+				{site.footer_map_url && live(site.footer_map_url) && <a class="dn-arrow" href={site.footer_map_url} {...$c('footer_map_label')}>{site.footer_map_label}</a>}
+			</div>
+			<div>
+				<h3 {...$c('footer_hours_title')}>{site.footer_hours_title}.</h3>
+				<p {...$c('footer_hours')}>{lines(site.footer_hours).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+			</div>
+			<div>
+				<h3 {...$c('footer_contact_title')}>{site.footer_contact_title}.</h3>
+				<p {...$c('footer_phone')}>{lines(site.footer_phone).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+				{site.footer_email && <a href={`mailto:${site.footer_email}`} {...$c('footer_email')}>{site.footer_email}</a>}
+			</div>
+		</div>
+	</div>
+	<div class="dn-wrap">
+		<div class="dn-copyright">
+			<div class="dn-copyright-inner">
+				<p {...$c('copyright')}>{copyright}</p>
+			</div>
+		</div>
+	</div>
+</footer>

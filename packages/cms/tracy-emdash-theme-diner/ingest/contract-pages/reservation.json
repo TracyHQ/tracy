@@ -1,0 +1,92 @@
+{
+  "layout": { "id": "Reservation", "view": "src/views/Reservation.astro", "family": "page" },
+  "rules": [
+    ["rsv-label", ".dn-rsv-text .dn-label", "index.php/reservation/index.html", false],
+    ["rsv-title", ".dn-rsv-text .dn-sub", "index.php/reservation/index.html", false],
+    ["rsv-text", ".dn-rsv-text p", "index.php/reservation/index.html", false],
+    ["rsv-button", ".dn-rsv-text .dn-btn", "index.php/reservation/index.html", false],
+    ["rsv-call-title", ".dn-rsv-card h2", "index.php/reservation/index.html", false],
+    ["rsv-call-phone", ".dn-rsv-card h3", "index.php/reservation/index.html", false],
+    ["rsv-call-button", ".dn-rsv-card .dn-btn", "index.php/reservation/index.html", false]
+  ],
+  "parity": {},
+  "pages": [
+    {
+      "id": "en-reservation",
+      "path": "/reservation",
+      "status": 200,
+      "source": ["index.php/reservation/index.html"],
+      "identity": ".dn-rsv-call",
+      "collections": ["chrome", "masthead", "reservation", "features_intro"],
+      "rules": [
+        "masthead-title",
+        "rsv-label",
+        "rsv-title",
+        "rsv-text",
+        "rsv-button",
+        "rsv-call-title",
+        "rsv-call-phone",
+        "rsv-call-button"
+      ],
+      "parity": ["nav", "footerTitle", "ground"],
+      "content": [
+        [
+          "masthead-title",
+          ".dn-masthead-title",
+          "index.php/reservation/index.html",
+          "field",
+          "masthead.title",
+          "Reservation"
+        ],
+        [
+          "rsv-label",
+          ".dn-rsv-text .dn-label",
+          "index.php/reservation/index.html",
+          "field",
+          "reservation.blocks[0].label",
+          "RESERVATIONS FOR LUNCH"
+        ],
+        [
+          "rsv-title",
+          ".dn-rsv-text .dn-sub",
+          "index.php/reservation/index.html",
+          "field",
+          "reservation.blocks[0].title",
+          "We take reservations for lunch and dinner efforts to curb soda consumption"
+        ],
+        [
+          "rsv-button",
+          ".dn-rsv-text .dn-btn",
+          "index.php/reservation/index.html",
+          "field",
+          "reservation.blocks[0].button_label",
+          "MENU FOR LUNCH"
+        ],
+        [
+          "rsv-call-title",
+          ".dn-rsv-card h2",
+          "index.php/reservation/index.html",
+          "field",
+          "reservation.online_title",
+          "Reservation Online"
+        ],
+        [
+          "rsv-call-phone",
+          ".dn-rsv-card h3",
+          "index.php/reservation/index.html",
+          "field",
+          "reservation.online_phone",
+          "413-305-7497"
+        ],
+        [
+          "rsv-call-button",
+          ".dn-rsv-card .dn-btn",
+          "index.php/reservation/index.html",
+          "field",
+          "reservation.online_button",
+          "CALL NOW"
+        ]
+      ]
+    }
+  ]
+}

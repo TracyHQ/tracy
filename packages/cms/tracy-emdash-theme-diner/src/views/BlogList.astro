@@ -1,0 +1,154 @@
+---
+/** The blog and its four categories: masthead · three-column card grid · "More Articles" · pagination · sidebar. Routes: /our-blog, /<category>. */
+import { getTaxonomyTerms } from 'emdash'
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import BlogListCard from '@/components/site/BlogListCard.astro'
+import { PortableText } from 'emdash/ui'
+import type { Chrome } from '@/lib/chrome'
+import { href, type Locale } from '@/lib/i18n'
+import { ui } from '@/lib/ui'
+import { fillWords } from '@/lib/ui-words'
+import { section } from '@/lib/content'
+import { mediaUrl } from '@/lib/media'
+import { stampFor } from '@/lib/stamps'
+import { BLOG_CATEGORIES, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { liveLinks, livePosts } from '@/lib/link-gate'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+  category: string | null
+}
+const { chrome, locale, category = null } = Astro.props
+const { site } = chrome
+const { w } = ui(locale)
+const PER_PAGE = 12
+const MORE = 4
+const base = category ? `/${category}` : '/our-blog'
+
+const [all, cats, banner, masthead, info] = await Promise.all([
+  loadPosts(locale),
+  getTaxonomyTerms('category', { locale }),
+  section('modules', 'banner-1', locale),
+  section('masthead', 'our-blog', locale),
+  category ? section('category_info', category, locale) : Promise.resolve(null)
+])
+const live = await livePosts(Astro.request, locale, blogPosts(all))
+// The blog lists category by category (the source's order), each newest first; a category page lists its own.
+const byCategory = (p: (typeof live)[number]) => BLOG_CATEGORIES.indexOf(p.category?.slug ?? '')
+const list = category
+  ? live.filter((p) => p.category?.slug === category)
+  : [...live].sort((a, b) => byCategory(a) - byCategory(b))
+
+// ?page=N: anything but a whole number inside 1..pages is another page that does not exist.
+// Like the source, the four posts after a page's cards are listed as titles, and the next page starts right after the cards.
+const pages = Math.max(1, Math.ceil(Math.max(list.length - MORE, 1) / PER_PAGE))
+const raw = Astro.url.searchParams.get('page')
+const page = raw === null ? 1 : /^[0-9]+$/.test(raw) ? Number(raw) : 0
+if (page < 1 || page > pages) {
+  Astro.response.status = 404
+  return Astro.rewrite(href(locale, '/404'))
+}
+const shown = list.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+// The source's masonry puts card n into column n mod 3.
+const columns = [0, 1, 2].map((c) => shown.map((p, i) => ({ p, i })).filter(({ i }) => i % 3 === c))
+const more = list.slice(page * PER_PAGE, page * PER_PAGE + MORE)
+const catLive = await liveLinks(
+  Astro.request,
+  locale,
+  (cats as any[]).map((c) => `/${c.slug}`)
+)
+const categories = (cats as any[]).filter((c) => BLOG_CATEGORIES.includes(c.slug) && catLive(`/${c.slug}`))
+const latest = live.slice(0, 5)
+const mastBg = mediaUrl(masthead?.background)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+const $ma = stampFor(Astro.request, 'masthead', masthead ? { id: masthead.id, slug: masthead.slug } : null)
+const $ci = stampFor(Astro.request, 'category_info', info ? { id: info.id, slug: info.slug } : null)
+const $owner = category ? $ci : $ma
+const infoImg = mediaUrl(info?.image)
+const pageUrl = (n: number) => href(locale, n === 1 ? base : `${base}?page=${n}`)
+const title = info?.title ?? masthead?.title ?? ''
+---
+
+<Base chrome={chrome} title={title} image={infoImg ?? mastBg} currentPath="/our-blog">
+	<main id="main">
+		<PageOwner stamp={$owner} />
+		<div class="dn-masthead" style={mastBg ? `background-image:url('${mastBg}')` : undefined}>
+			<div class="dn-wrap">
+				<h1 class="dn-masthead-title" {...$ma('title')}>{masthead?.title}</h1>
+				<div class="dn-masthead-desc" {...$ma('description')}>{masthead?.description}</div>
+			</div>
+		</div>
+		<div class="dn-wrap dn-main">
+			<div class="dn-main-grid">
+				<div class="dn-blog">
+					<div class="dn-post-grid">
+						{columns.map((col) => (
+							<div class="dn-post-col">
+								{col.map(({ p, i }) => <BlogListCard post={p} locale={locale} readMore={site.read_more} readMoreStamp={$c('read_more')} order={i} />)}
+							</div>
+						))}
+					</div>
+					{more.length > 0 && (
+						<section class="dn-more">
+							<h3 {...$c('more_label')}>{site.more_label}</h3>
+							<ol>{more.map((p) => <li><a href={href(locale, postPath(p))}>{p.title}</a></li>)}</ol>
+						</section>
+					)}
+					{pages > 1 && (
+						<div class="dn-pagination">
+							<ul>
+								{page > 1 && <li><a href={pageUrl(1)} aria-label={site.prev_label} {...$c('prev_label')}>{site.start_label ?? '|‹'}</a></li>}
+								{page > 1 && <li><a href={pageUrl(page - 1)} rel="prev" {...$c('prev_label')}>{site.prev_label}</a></li>}
+								{Array.from({ length: pages }, (_, k) => k + 1).map((n) => (
+									<li>{n === page ? <a class="is-active" aria-current="page">{n}</a> : <a href={pageUrl(n)}>{n}</a>}</li>
+								))}
+								{page < pages && <li><a href={pageUrl(page + 1)} rel="next" {...$c('next_label')}>{site.next_label}</a></li>}
+									{page < pages && <li><a href={pageUrl(pages)} aria-label={site.next_label} {...$c('next_label')}>{site.end_label ?? '›|'}</a></li>}
+							</ul>
+							<div class="dn-pagination-count">{fillWords(w.pageOf, { page, pages })}</div>
+						</div>
+					)}
+				</div>
+				<aside class="dn-aside">
+					{banner && <div class="dn-aside-banner"><PortableText value={banner.content} /></div>}
+					<h3 {...$c('categories_title')}>{site.categories_title}</h3>
+					<ul class="dn-aside-cats">{categories.map((c) => <li><a href={href(locale, `/${c.slug}`)}>{c.label}</a></li>)}</ul>
+					<h3 {...$c('latest_title')}>{site.latest_title}</h3>
+					<ul class="dn-aside-latest">{latest.map((p) => <li><a href={href(locale, postPath(p))}>{p.title}</a></li>)}</ul>
+				</aside>
+			</div>
+		</div>
+	</main>
+
+<script is:inline>
+	// The source's masonry: each card goes into the shortest column. The page is sent with the cards dealt out in turn; here they are
+	// dealt again by height for the number of columns the grid has at this width.
+	(function () {
+		const grid = document.querySelector('.dn-post-grid');
+		if (!grid) return;
+		const cols = [].slice.call(grid.querySelectorAll('.dn-post-col'));
+		const cards = [].slice.call(grid.querySelectorAll('.dn-blog-card')).sort(function (a, b) { return a.dataset.order - b.dataset.order; });
+		let last = 0;
+		function deal() {
+			const n = Math.min(getComputedStyle(grid).gridTemplateColumns.split(' ').length, cols.length);
+			const h = [];
+			cols.forEach(function (c, i) { c.style.display = i < n ? '' : 'none'; h[i] = 0; });
+			cards.forEach(function (card) {
+				let k = 0;
+				for (let i = 1; i < n; i++) if (h[i] < h[k]) k = i;
+				cols[k].appendChild(card);
+				h[k] += card.offsetHeight + 36;
+			});
+			last = n;
+		}
+		deal();
+		let t;
+		window.addEventListener('resize', function () {
+			clearTimeout(t);
+			t = setTimeout(function () { if (Math.min(getComputedStyle(grid).gridTemplateColumns.split(' ').length, cols.length) !== last) deal(); }, 120);
+		});
+	})();
+</script>
+</Base>

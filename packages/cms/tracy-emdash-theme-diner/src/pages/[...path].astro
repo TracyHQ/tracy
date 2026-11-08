@@ -1,0 +1,53 @@
+---
+/**
+ * One router for every locale. Astro resolves `Astro.currentLocale` from the URL, so a single catch-all serves the whole
+ * site; unknown paths render the 404 view with a 404 status. Route table: seed/site-model.json routes: the home, an article at
+ * `/<category>/<slug>`, the blog and its four categories, About Us, Offers, Reservation, Contact Us and the search.
+ */
+export const prerender = false
+import { splitPath } from '@/lib/i18n'
+import { loadChrome } from '@/lib/chrome'
+import Home from '@/views/Home.astro'
+import Post from '@/views/Post.astro'
+import BlogList from '@/views/BlogList.astro'
+import Search from '@/views/Search.astro'
+import About from '@/views/About.astro'
+import Offers from '@/views/Offers.astro'
+import Reservation from '@/views/Reservation.astro'
+import Contact from '@/views/Contact.astro'
+import { BLOG_CATEGORIES } from '@/lib/posts'
+import NotFound from '@/views/NotFound.astro'
+import { childLive } from '@/lib/link-gate'
+
+const { locale, path } = splitPath(Astro.url.pathname)
+const chrome = await loadChrome(locale)
+const segs = path.split('/').filter(Boolean)
+const SLUG = /^[a-z0-9][a-z0-9-]*$/
+const clean = segs.length === 0 ? '/' : `/${segs.join('/')}`
+
+type View = { component: any; props: Record<string, unknown> } | null
+let view: View = null
+// one segment: a page of the header menu, the blog, a blog category, or the search
+const PAGES: Record<string, any> = {
+  'about-us': About,
+  offers: Offers,
+  reservation: Reservation,
+  'contact-us': Contact,
+  search: Search
+}
+if (clean === '/') view = { component: Home, props: {} }
+else if (segs.length === 1 && PAGES[segs[0]]) view = { component: PAGES[segs[0]], props: {} }
+else if (segs.length === 1 && segs[0] === 'our-blog')
+  view = { component: BlogList, props: { category: null } }
+else if (segs.length === 1 && BLOG_CATEGORIES.includes(segs[0]))
+  view = { component: BlogList, props: { category: segs[0] } }
+else if (segs.length === 2 && SLUG.test(segs[0]) && SLUG.test(segs[1]))
+  view = { component: Post, props: { category: segs[0], slug: segs[1] } }
+
+// a page the customer unticked (its record is unpublished), and everything that hangs under it, answers 404
+if (view && !(await childLive(Astro.request, locale, clean))) view = null
+const Component = view?.component ?? NotFound
+if (!view) Astro.response.status = 404
+---
+
+<Component chrome={chrome} locale={locale} path={path} {...(view?.props ?? {})} />

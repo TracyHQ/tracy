@@ -1,0 +1,30 @@
+---
+/** The newsletter band printed under every page but the 404 (AcyMailing module 127 in the source). Its words are the `chrome` entry's. */
+import type { Chrome } from '@/lib/chrome'
+import { stampFor } from '@/lib/stamps'
+
+interface Props {
+  chrome: Chrome
+}
+const { chrome } = Astro.props
+const { site } = chrome
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
+// No form is bound yet (forms plugin, P5): the box is drawn complete and its button says it cannot send.
+const formId = site.form_id as string | undefined
+---
+
+<section class="dn-subscribe" aria-labelledby="dn-subscribe-title">
+	<div class="dn-wrap">
+		<h5 class="dn-label" {...$c('subscribe_label')}>{site.subscribe_label}</h5>
+		<h2 class="dn-sub" id="dn-subscribe-title" {...$c('subscribe_title')}>{site.subscribe_title}</h2>
+		<form class="dn-subscribe-form" method="post" action="/_emdash/api/plugins/emdash-forms/submit" data-form-id={formId}>
+			<input type="email" name="email" required placeholder={site.subscribe_placeholder} aria-label={site.subscribe_placeholder} />
+			<input type="text" name="_hp" tabindex="-1" autocomplete="off" class="dn-hp" aria-hidden="true" />
+			{formId && <input type="hidden" name="formId" value={formId} />}
+			<button type="submit" class="dn-btn" disabled={!formId} {...$c('subscribe_button')}>{site.subscribe_button}</button>
+		</form>
+		<p class="dn-subscribe-note" {...$c('subscribe_note')}>{site.subscribe_note}</p>
+		<p class="dn-subscribe-status" aria-live="polite"></p>
+	</div>
+</section>
+{formId && <script src="@/lib/newsletter-client.ts"></script>}

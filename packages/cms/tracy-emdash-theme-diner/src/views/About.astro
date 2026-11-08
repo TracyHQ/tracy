@@ -1,0 +1,43 @@
+---
+/** About Us: masthead · features style 4 · features style 5 · team. Composition = the spec-pack page-map for /about-us (modules 121, 122, 123). */
+import Base from '@/layouts/Base.astro'
+import PageOwner from '@/components/site/PageOwner.astro'
+import AboutMasthead from '@/components/site/AboutMasthead.astro'
+import AboutFeatures from '@/components/site/AboutFeatures.astro'
+import AboutTeam from '@/components/site/AboutTeam.astro'
+import type { Chrome } from '@/lib/chrome'
+import type { Locale } from '@/lib/i18n'
+import { section } from '@/lib/content'
+import { stampFor } from '@/lib/stamps'
+import { liveLinks } from '@/lib/link-gate'
+import { getEmDashEntry } from 'emdash'
+
+interface Props {
+  chrome: Chrome
+  locale: Locale
+}
+const { chrome, locale } = Astro.props
+const [{ entry: pageEntry }, masthead, f4, f5, team] = await Promise.all([
+  getEmDashEntry('pages', 'about-us', { locale }),
+  section('masthead', 'about-us', locale),
+  section('features_intro', 'features-style-4', locale),
+  section('features_intro', 'features-style-5', locale),
+  section('teams', 'teams-style-1', locale)
+])
+const page = (pageEntry?.data ?? {}) as Record<string, any>
+const stamp = (collection: string, row: Record<string, any> | null) =>
+  stampFor(Astro.request, collection, row ? { id: row.id, slug: row.slug } : null)
+const $page = stampFor(Astro.request, 'pages', pageEntry ? { id: page.id, slug: 'about-us' } : null)
+// a button whose page the customer switched off is not drawn
+const live = await liveLinks(Astro.request, locale, [f4?.button_link, f5?.button_link])
+---
+
+<Base chrome={chrome} title={page.title ?? masthead?.title ?? 'About Us'} currentPath="/about-us" content={pageEntry ? { collection: 'pages', id: page.id, slug: 'about-us', toPath: () => '/about-us' } : null}>
+	<main id="main">
+		<PageOwner stamp={$page} />
+		<AboutMasthead masthead={masthead} stamp={stamp('masthead', masthead)} />
+		{f4 && <AboutFeatures entry={f4} stamp={stamp('features_intro', f4)} order="pictures-first" locale={locale} live={live} />}
+		{f5 && <AboutFeatures entry={f5} stamp={stamp('features_intro', f5)} order="words-first" locale={locale} live={live} />}
+		{team && <AboutTeam entry={team} stamp={stamp('teams', team)} />}
+	</main>
+</Base>

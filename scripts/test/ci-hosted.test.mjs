@@ -426,7 +426,7 @@ test('plan marks every row that runs tests as a browser row, and `checks` only w
   assert.equal(opensBrowser({ group: 'x', args: '--only testsuite' }), false)
 })
 
-test('the Playwright versions come from the gated importers and the four template lockfiles', () => {
+test('the Playwright versions come from the gated importers and the five template lockfiles', () => {
   const lock = (importers) => JSON.stringify({ lockfileVersion: '9.0', importers })
   const pw = (version) => ({ specifier: version, version })
   const root = lock({
@@ -448,7 +448,8 @@ test('the Playwright versions come from the gated importers and the four templat
       '.': { devDependencies: { playwright: pw('1.63.0') } },
       sub: { dependencies: { playwright: pw('9.9.9') } }
     }),
-    [STANDALONE_LOCKS[3]]: lock({ '.': { devDependencies: { playwright: pw('1.63.0') } } })
+    [STANDALONE_LOCKS[3]]: lock({ '.': { devDependencies: { playwright: pw('1.63.0') } } }),
+    [STANDALONE_LOCKS[4]]: lock({ '.': { devDependencies: { playwright: pw('1.63.0') } } })
   }
   assert.deepEqual(
     playwrightVersions((rel) => files[rel]),
@@ -456,7 +457,7 @@ test('the Playwright versions come from the gated importers and the four templat
   )
   assert.deepEqual(
     STANDALONE_LOCKS,
-    ['base', 'business', 'saas', 'restaurant'].map(
+    ['base', 'business', 'saas', 'restaurant', 'diner'].map(
       (t) => `packages/cms/tracy-emdash-theme-${t}/pnpm-lock.yaml`
     )
   )

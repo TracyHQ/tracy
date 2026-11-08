@@ -1,0 +1,44 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "template": "emdash/tracy-diner",
+  "minVersion": {
+    "tracy-diner/emdash-0.x": "0.1.0"
+  },
+  "maxVersion": {
+    "tracy-diner/emdash-0.x": "0.1.0"
+  },
+  "maxVersionNote": "0.1.0 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius, --ds-input-radius) in the rules of the roles this contract declares, and every colour role systems define (styles/tokens.css and global.css; the roles the site has no place for are declared ds-not-used); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base.",
+  "release": "tracy-diner/emdash-0.x@0.1.0",
+  "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
+  "readsComponents": true,
+  "readsRoles": true,
+  "readsRolesNote": "src/styles/tokens.css and global.css read every standard role variable, or declare it unused with a reason (ds-not-used) or keep it (ds-keep); the type and shape tokens are read with the template's own value as the fallback",
+  "modes": true,
+  "modesNote": "the light/dark switch (data-theme on html, [data-theme-toggle] in Header.astro)",
+  "selectors": {
+    "themeToggle": "[data-theme-toggle]"
+  },
+  "roles": {
+    "page": "body",
+    "display": ".dn-slide h1",
+    "heading": "main .dn-sub",
+    "body": "main .dn-intro p",
+    "button-primary": "main a.dn-btn",
+    "card": "main .dn-card",
+    "container": "main .dn-wrap",
+    "input": ".dn-subscribe-form input[type=\"email\"]"
+  },
+  "contrast": {
+    "accent-text": "main .dn-label, main .dn-title",
+    "muted": "main .dn-card-meta",
+    "body": "main p",
+    "heading": "body :is(h1, h2, h3, h4, h5, h6)",
+    "text": "body :is(p, li, a, span, small, label, td, th, dd, dt, blockquote, figcaption, button)",
+    "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
+  },
+  "ready": true,
+  "readyNote": "measured 08/11/2026 with flow.mjs --cms emdash on a site built from the 0.1.0 package: the 15 featured systems at 1440 and 390, roles match on every view, page follows, every text reads at least as well as on the template, 4 controls 0 differences. With no system worn the site is pixel-identical (Fast Gate). Measurement: contracts/0.1.0/design-system-measurement.json",
+  "measureStill": true,
+  "discovered": {},
+  "measureNote": "Carousels (the home slideshow) are stopped on their first slide before each measure"
+}

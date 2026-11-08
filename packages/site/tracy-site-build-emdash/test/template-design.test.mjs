@@ -35,7 +35,7 @@ test("an Astro font variable resolves through the template's fonts.json to the f
 })
 
 test('every template Tracy ships resolves to a palette the check can judge by', () => {
-  for (const t of ['base', 'business', 'saas', 'coffee', 'restaurant']) {
+  for (const t of ['base', 'business', 'saas', 'coffee', 'restaurant', 'diner']) {
     let fonts = '[]'
     try {
       fonts = read(`tracy-emdash-theme-${t}/src/fonts.json`)

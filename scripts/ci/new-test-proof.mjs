@@ -155,7 +155,7 @@ export const SUITES = [
   {
     id: 'standalone',
     files:
-      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant)\/tests\/[^/]+\.test\.mjs$/,
+      /^packages\/cms\/tracy-emdash-theme-(base|business|saas|coffee|restaurant|diner)\/tests\/[^/]+\.test\.mjs$/,
     dir: (file) => file.split('/').slice(0, 3).join('/'),
     script: 'test',
     ownInstall: true

@@ -11,7 +11,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 
-const TEMPLATES = ['base', 'business', 'saas', 'coffee', 'restaurant']
+const TEMPLATES = ['base', 'business', 'saas', 'coffee', 'restaurant', 'diner']
 const root = new URL('../../', import.meta.url)
 const read = (path) => readFileSync(new URL(path, root), 'utf8')
 

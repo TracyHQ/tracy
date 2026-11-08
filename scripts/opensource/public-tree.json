@@ -1139,6 +1139,20 @@
       "reason": "fictional sample company of the Tracy Business template (Northgate Industrial) in seeds, translations and identity files"
     },
     {
+      "path": "packages/cms/tracy-emdash-theme-diner/seed/*.json",
+      "category": "email",
+      "match": "^Info@joomlart\\.com$",
+      "kind": "attribution",
+      "reason": "demo footer contact address of the JA Diner quickstart this template ports; the personalization step replaces it with the customer's own"
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/src/components/site/AboutTeam.astro",
+      "category": "ip",
+      "match": "^(2\\.3\\.6\\.8|1\\.8\\.1\\.5)$",
+      "kind": "false-positive",
+      "reason": "SVG path data of a social icon, not an address"
+    },
+    {
       "path": "packages/cms/tracy-emdash-theme-saas/**",
       "category": "email",
       "match": "@(acme\\.com|company\\.com|helix\\.dev|helixlabs\\.dev)$",

@@ -1,0 +1,39 @@
+---
+/** One Happy Hours offer (styles 1, 2, 3 of the source): a section title, then a photo with a card that holds the words. */
+import { mediaUrl } from '@/lib/media'
+import { dataHref } from '@/lib/data-links'
+import type { Stamp } from '@/lib/stamps'
+
+interface Props {
+  entry: Record<string, any>
+  stamp: Stamp
+  style: 1 | 2 | 3
+  live: (url: unknown) => boolean
+}
+const { entry, stamp: $h, style, live } = Astro.props
+const bg = mediaUrl(entry.hp_img)
+const lines = String(entry.hp_info ?? '')
+  .split('\n')
+  .filter(Boolean)
+const link = entry.hp_link ? dataHref(entry.hp_link, (p) => p) : null
+const showLink = Boolean(entry.hp_link_text && link && live(entry.hp_link))
+---
+
+<section class={`dn-section dn-hh is-style-${style}`}>
+	<div class="dn-wrap">
+		<h2 class="dn-hh-section" {...$h('title')}>{entry.title}</h2>
+		<div class="dn-hh-photo" style={bg ? `background-image:url('${bg}')` : undefined} {...$h('hp_img')}>
+			<div class="dn-hh-card">
+				<h3 class="dn-hh-heading"><span {...$h('hp_title')}>{entry.hp_title}</span></h3>
+				<p class="dn-hh-desc" {...$h('hp_desc')}>{entry.hp_desc}</p>
+				<div class="dn-hh-info">
+					<div class="dn-hh-info-inner">
+						{entry.hp_badge && <span class="dn-hh-badge" {...$h('hp_badge')}><span>{entry.hp_badge}</span></span>}
+						<span {...$h('hp_info')}>{lines.map((l, i) => <>{i > 0 && <br />}{l}</>)}</span>
+					</div>
+				</div>
+				{showLink && <a class="dn-btn" href={link!} {...$h('hp_link_text')}>{entry.hp_link_text}</a>}
+			</div>
+		</div>
+	</div>
+</section>
