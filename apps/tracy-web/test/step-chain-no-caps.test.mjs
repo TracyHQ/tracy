@@ -76,6 +76,7 @@ test('step 9b keeps its windows by default; in a chain build it runs to the dead
   }
   // test-quality: contract the default repair window stops new work at 10 minutes and returns by 12
   assert.equal(REPAIR_LIMITS.stopNewWorkMs, 10 * MIN)
+  // test-quality: contract the default repair window returns by 12 minutes
   assert.equal(REPAIR_LIMITS.returnByMs, 12 * MIN)
   // test-quality: contract the chain hands over 15 minutes after the deadline
   assert.equal(STEP_CHAIN_HANDOVER_MS, 15 * MIN)
