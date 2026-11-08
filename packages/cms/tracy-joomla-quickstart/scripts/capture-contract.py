@@ -69,6 +69,11 @@ p.add_argument('--skip-trashed-modules',action='store_true')
 # flag such rows are left out of the contract (entities, slots, pages). Off by default so every published profile
 # re-captures byte for byte.
 p.add_argument('--skip-trashed-menu-items',action='store_true')
+# An unpublished menu item (published = 0) opens no page: its route answers 404, so no crawl reaches it and every
+# measure that walks the map's pages counts it as a dead page (JA Voyara 1.0.12: four Experiences items kept for
+# later). With this flag it stays an entity of the contract (the lock still pins it, a customer may publish it) but is
+# no page of the map. Off by default so every published profile re-captures byte for byte.
+p.add_argument('--skip-unpublished-menu-pages',action='store_true')
 # A T3 template keeps its logos in the params of each template style (`logoimage`, `logoimage_sm`, `logofooterimage`,
 # `logoimage_dark`), not in a module or a settings file, so a T3 contract declared no slot for the logo every page prints
 # (JA Cagox 1.0.2: three logo pictures, no slot). With this flag each such param a captured style sets is an image slot
@@ -288,6 +293,8 @@ TECHNICAL=re.compile(r'color|(^|[-_])class(name)?($|[-_])|style|layout|icon|widt
 VISIBILITY_PARAMS={'moduleclass_sfx','module_tag','header_tag','header_class','style','bootstrap_size','cache','cache_time'}
 LINK_ROLE=re.compile(r'(link|url|href)[-_]?\d*$|^(link|url|href)[-_]')
 MARKUP=re.compile(r'<[a-zA-Z/!]')
+# An HTML character reference: named (`&amp;`), decimal (`&#8211;`) or hex (`&#x2019;`). A bare "&" is none.
+HTML_ENTITY=re.compile(r'&(?:[A-Za-z][A-Za-z0-9]{1,31}|#[0-9]{1,7}|#[xX][0-9A-Fa-f]{1,6});')
 # A `jaitems` field stores its rows under the keys "0", "1"… (an object, not a list: JA Masthead's `menuitem_config`
 # skips a deleted row's number), so a numeric key is a row, not a field name.
 row_key=lambda x:isinstance(x,int) or isinstance(x,str) and x.isdigit()
@@ -376,6 +383,8 @@ def declare_everything(kind,row,add):
   # images and attribs so their keys stay.
   declare_text(add,'metadesc',row.get('metadesc'),title+' / metadesc')
   declare_text(add,'created_by_alias',row.get('created_by_alias'),title+' / created_by_alias')
+  # The administrator's note, which a card can print as its label (JA Voyara's featured view: the label chip), last.
+  declare_text(add,'note',row.get('note'),title+' / note')
  elif kind=='module':
   if module_title_shown(row):declare_text(add,'title',row.get('title'),title+' / title')
   # mod_custom bodies outside the module prefix were never slots.
@@ -671,7 +680,10 @@ if a.full_coverage:
    sid=string_id(ext,tag,key);eid=f'languageString-{sid}';label=f'{key} (template string, {tag})'
    def add(column,typ,sample,**extra):
     slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
-   if MARKUP.search(value):declare_html(add,'value',value,label)
+   # A language string is HTML (Joomla prints it as it stands), so one written with an entity (`&amp;`, `&rsquo;`) is
+   # read as HTML too: its slot holds the words a visitor reads, the entity decoded, and the plugin writes it through
+   # its node. Kept as text, the sample would teach a model to write "&amp;" into a business name (rule NAME-4).
+   if MARKUP.search(value) or HTML_ENTITY.search(value):declare_html(add,'value',value,label)
    else:declare_text(add,'value',value,label)
    if not any(sl['entity']==eid for sl in slots):continue
    identity={'extension':ext,'key':key,'language':tag}
@@ -802,6 +814,7 @@ styles={int(r['id']):r for r in inv['template_styles']}
 for e in entities:
  if e['kind']!='menuItem':continue
  row=e['initial'];mid=e['sourceId'];sid=int(row['template_style_id'])
+ if a.skip_unpublished_menu_pages and str(row.get('published'))!='1':continue
  style=styles.get(sid) if sid else next((s for s in styles.values() if s['home']=='1' and s['client_id']=='0'),None)
  modules=[]
  for m in (v for v in entities if v['kind']=='module'):

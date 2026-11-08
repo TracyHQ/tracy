@@ -485,3 +485,35 @@ test('a frame only a phone shows is sized there; a picture field the demo leaves
   assert.deepEqual([empty.emptyInDemo, empty.canHide, empty.kind, empty.width], [true, true, null, null])
   assert.deepEqual(errors, [])
 })
+
+test('a picture the template hides on every captured width is no measurement to miss, one never found still is', () => {
+  const slots = [
+    { key: 'block-7.1', type: 'image', sample: 'images/people/ada.jpg', role: 'quote.author_image' },
+    { key: 'block-7.2', type: 'image', sample: 'images/gallery/two.jpg', role: 'business.gallery_image' }
+  ]
+  const hiddenEverywhere = { found: true, shown: false, box: { width: 0, height: 0 }, pixels: { share: 0 } }
+  const evidence = {
+    'block-7.1': { block: 'block-7', widths: { 1440: hiddenEverywhere, 390: hiddenEverywhere } }
+  }
+  const errors = []
+  const { frames } = buildFrames({
+    blockId: 'block-7',
+    slots,
+    evidence,
+    classes: {},
+    review: {},
+    widths: ['1440', '390'],
+    errors
+  })
+  const [hidden, never] = frames
+  assert.deepEqual([hidden.hiddenByTemplate, hidden.canHide], [true, true])
+  assert.equal(never.hiddenByTemplate, undefined)
+  assert.deepEqual(
+    errors.map((e) => e.field),
+    [
+      'blocks[block-7].frames[block-7.2].kind',
+      'blocks[block-7].frames[block-7.2].width',
+      'blocks[block-7].frames[block-7.2].canHide'
+    ]
+  )
+})

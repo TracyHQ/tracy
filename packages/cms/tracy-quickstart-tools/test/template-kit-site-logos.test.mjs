@@ -428,3 +428,95 @@ test('a logo with no slot is written by the template setting whose layout prints
     ]
   )
 })
+
+// A block layout of the template (a T4 ACM block) that prints the site profile logo itself, as a footer brand does.
+const ACM_BRAND = `<?php
+$fbSite = $doc->params->get('site-settings');
+$fbClean = function ($url) { return $url; };
+$fbLogo = $fbSite ? $fbClean($fbSite->get('site_logo')) : '';
+$fbText = '<span class="mark"><svg></svg></span>';
+?><a class="brand"><?php if ($fbLogo) : ?><img src="<?php echo $fbLogo; ?>"><?php else : ?><?php echo $fbText; ?><?php endif; ?></a>`
+
+function acmSource() {
+  const files = {
+    'configuration.php': "public $sitename = 'Wren Example Tours';",
+    'templates/demo_t4/etc/site/default.json': JSON.stringify({ site_logo: '' }),
+    'templates/demo_t4/html/layouts/t4/element/logo.php': LAYOUT,
+    'templates/demo_t4/acm/footer-brand/tmpl/style-1.php': ACM_BRAND,
+    'templates/demo_t4/acm/hero/tmpl/style-1.php': '<h1><?php echo $title; ?></h1>'
+  }
+  const dirs = {
+    'templates/demo_t4/acm': ['footer-brand', 'hero'],
+    'templates/demo_t4/acm/footer-brand/tmpl': ['style-1.php', 'style-1.xml'],
+    'templates/demo_t4/acm/hero/tmpl': ['style-1.php']
+  }
+  const acm = (type, style) =>
+    JSON.stringify({
+      'jatools-config': JSON.stringify({
+        ':type': `demo_t4:${type}`,
+        [type]: { [`jatools-layout-${type}`]: style }
+      })
+    })
+  const rows = {
+    'SHOW TABLES': [{ t: 'ab_extensions' }, { t: 'ab_menu' }],
+    template_styles: [{ template: 'demo_t4' }],
+    menu: [],
+    extensions: [],
+    modules: [
+      { id: '460', params: acm('footer-brand', 'style-1') },
+      { id: '461', params: acm('hero', 'style-1') },
+      { id: '462', params: '{}' }
+    ]
+  }
+  return {
+    readFile: (rel) => files[rel] ?? null,
+    listDir: (rel) => dirs[rel] ?? [],
+    query: (sql) => rows[sql === 'SHOW TABLES' ? sql : /FROM ab_(\w+)/.exec(sql)?.[1]] ?? []
+  }
+}
+
+test('a T4 block layout that prints the site profile logo is a place that setting prints, for the blocks using it', () => {
+  assert.equal(variableOf(ACM_BRAND, 'site_logo'), 'fbLogo')
+  assert.equal(emptyShowsOf(ACM_BRAND, 'fbLogo'), 'template-text')
+  const settings = joomlaAdapter(acmSource()).logoSettings()
+  const logo = settings.find((s) => s.key === 'site_logo')
+  assert.deepEqual(
+    logo.prints.filter((p) => p.blocks),
+    [
+      {
+        where: 'module',
+        layout: 'templates/demo_t4/acm/footer-brand/tmpl/style-1.php',
+        blocks: ['module-460'],
+        emptyShows: 'template-text'
+      }
+    ]
+  )
+  const reads = [
+    {
+      pageId: 'page-home',
+      theme: null,
+      opening: true,
+      logos: [
+        logo_('inline-svg', 'footer', 'module-460'),
+        logo_('images/demo/partner.png', 'footer', 'module-77')
+      ]
+    }
+  ]
+  const { logoSpots } = buildLogoSpots({
+    reads,
+    map: { entities: [], slots: [] },
+    settings,
+    isFreeHtml: () => false
+  })
+  assert.deepEqual(
+    logoSpots.map((s) => [s.block, s.setting, s.emptyShows]),
+    [
+      ['block-460', 'site_logo', 'template-text'],
+      ['block-77', null, null]
+    ]
+  )
+})
+
+function logo_(file, region, block) {
+  return logo(file, region, block, null, true, '#ffffff')
+}

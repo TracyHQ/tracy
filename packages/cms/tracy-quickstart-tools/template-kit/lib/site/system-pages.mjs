@@ -11,8 +11,22 @@ export const legalPagesOf = (pages) =>
     .map((p) => p.pageId)
 
 /**
+ * A link to the site itself as its path (a template that prints `Uri::root()` writes the full address of the stand it
+ * was read on, which no other site shares); any other link as it is.
+ */
+function sitePathOf(href, siteUrl) {
+  if (!siteUrl || typeof href !== 'string') return href
+  try {
+    const u = new URL(href)
+    return u.origin === new URL(siteUrl).origin ? `${u.pathname}${u.search}${u.hash}` : href
+  } catch {
+    return href
+  }
+}
+
+/**
  * What the not-found answer prints: its status, whether the template draws it (its header shows), and its words.
- * @param {{status: number|null, read?: {h1s?: object[], texts?: string[], links?: object[], hasHeader?: boolean}} | null} answer
+ * @param {{status: number|null, siteUrl?: string, read?: {h1s?: object[], texts?: string[], links?: object[], hasHeader?: boolean}} | null} answer
  */
 export function notFoundOf(answer) {
   if (!answer) return { pageId: null, status: null, rendersTemplate: null, slots: [] }
@@ -20,7 +34,11 @@ export function notFoundOf(answer) {
   const slots = [
     ...(r.h1s ?? []).filter((h) => h.text).map((h) => ({ kind: 'heading', text: h.text })),
     ...(r.texts ?? []).map((t) => ({ kind: 'message', text: t })),
-    ...(r.links ?? []).map((l) => ({ kind: 'link', text: l.label, target: l.href }))
+    ...(r.links ?? []).map((l) => ({
+      kind: 'link',
+      text: l.label,
+      target: sitePathOf(l.href, answer.siteUrl)
+    }))
   ]
   return { pageId: null, status: answer.status, rendersTemplate: r.hasHeader ?? null, slots }
 }

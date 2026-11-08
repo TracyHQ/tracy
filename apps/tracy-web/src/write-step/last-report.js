@@ -2,6 +2,7 @@
 // counts as done: a failed line, one the run never reached and one the site check found different are all sent again. The
 // report of every run keeps what the site holds, so the next run can compare with it, whatever way this one ended.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { stockScreensToDrop } from '../lib/stock-screens.js'
 import { droppedBlocks } from './hide-plan.js'
 import { goneRowSlots } from './hide-rows.js'
 import { NO_LAST } from './no-last-report.js'
@@ -104,9 +105,11 @@ const named = (list) =>
 /** What an earlier run took off the site and these files no longer take off, as words naming each. */
 function broughtBack(last, { plan, kit, owners, extras, changes }) {
   const blocks = new Set(droppedBlocks(plan, kit).keys())
-  const dropped = new Set(
-    (Array.isArray(plan?.pages) ? plan.pages : []).filter((p) => p?.decision === 'drop').map((p) => p.id)
-  )
+  // The plan's drops and the kit's stock screens the plan does not keep, which the write step drops too (lib/stock-screens.js).
+  const dropped = new Set([
+    ...(Array.isArray(plan?.pages) ? plan.pages : []).filter((p) => p?.decision === 'drop').map((p) => p.id),
+    ...stockScreensToDrop(kit, plan).map((p) => p.id)
+  ])
   const items = new Set((extras?.mainMenu?.hide ?? []).map((h) => h.item))
   const forms = new Set(
     (Array.isArray(plan?.site?.forms) ? plan.site.forms : [])

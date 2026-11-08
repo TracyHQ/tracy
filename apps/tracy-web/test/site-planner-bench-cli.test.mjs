@@ -9,8 +9,8 @@ import { runCli } from '../src/site-planner/bench-cli.js'
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { API_KEY, assignPlannerDoor, KIT_REF, MODEL, readyKitImages, SECRET } from './_site-planner-bench.mjs'
 import { brief, plan } from './_site-plan-check.mjs'
+import { API_KEY, assignPlannerDoor, KIT_REF, MODEL, readyKitImages, SECRET } from './_site-planner-bench.mjs'
 
 const db = fileDb()
 before(db.open)

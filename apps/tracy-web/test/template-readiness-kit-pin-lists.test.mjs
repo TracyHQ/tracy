@@ -1,7 +1,8 @@
 /**
  * Three small checks of the readiness verdict (ticket #437): the kit tool version, the pin behind the latest contract,
  * and the content map's item lists, item pages and menu blocks. Each is green on the latest JA Boxing and red on a
- * broken copy of it with the right code; the verdict flags JA Voyara's pin (JA Diner's kit was settled again in #439).
+ * broken copy of it with the right code; the verdict flags a JA Voyara pin one version behind its newest contract
+ * (JA Diner's kit was settled again in #439).
  */
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
@@ -68,7 +69,8 @@ test('kit tool: a T3 kit stamped 3.0.0 (JA Diner 1.0.5 before #439) is outdated;
 // ── pin behind the latest contract ───────────────────────────────────────────────────────────────────────────────────
 
 test('pin: the newest contract version of a template is read from the contract index', () => {
-  assert.equal(latestContractVersion(contracts, 'quickstart/ja-voyara/j6'), '1.0.11')
+  // test-quality: contract the newest committed JA Voyara contract is 1.0.12 (#473); a new capture moves this line
+  assert.equal(latestContractVersion(contracts, 'quickstart/ja-voyara/j6'), '1.0.12')
   assert.equal(latestContractVersion(contracts, 'quickstart/ja-unknown/j6'), null)
 })
 
@@ -84,10 +86,14 @@ test('pin: a Boxing release one version back is behind, with a fix', () => {
   assert.match(judged.params.fix, /move its pin/)
 })
 
-test('pin: the verdict flags the pin of JA Voyara (1.0.10, contract 1.0.11) in the release piece', () => {
-  const v = pieceOf(voyara, [PIN_BEHIND_CHECK], 'quickstart-release')
+test('pin: JA Voyara pinned at 1.0.12 is at its newest contract; one version back the release piece flags it', () => {
+  // test-quality: contract the committed JA Voyara pin is 1.0.12, its newest contract (#473)
+  assert.equal(voyara.setting.version, '1.0.12')
+  assert.equal(PIN_BEHIND_CHECK.judge(voyara, { contracts }, {}), null)
+  const back = { ...voyara, setting: { ...voyara.setting, version: '1.0.11' } }
+  const v = pieceOf(back, [PIN_BEHIND_CHECK], 'quickstart-release')
   assert.deepEqual([v.state, v.code], ['todo', 'pin-behind-contract'])
-  assert.deepEqual([v.params.pinned, v.params.latest], ['1.0.10', '1.0.11'])
+  assert.deepEqual([v.params.pinned, v.params.latest], ['1.0.11', '1.0.12'])
 })
 
 // ── content map lists ────────────────────────────────────────────────────────────────────────────────────────────────
@@ -125,9 +131,11 @@ test('lists: a map with no articles or menus is not flagged for them', () => {
   )
 })
 
-test('lists: JA Diner holds all three; JA Voyara 1.0.11 holds none of them', () => {
+test('lists: JA Diner and JA Voyara 1.0.12 hold all three; the JA Voyara 1.0.11 map holds none of them', () => {
   assert.equal(CONTENT_MAP_LISTS_CHECK.judge(diner, { contracts }, {}), null)
-  const v = CONTENT_MAP_LISTS_CHECK.judge(voyara, { contracts }, {})
+  assert.equal(CONTENT_MAP_LISTS_CHECK.judge(voyara, { contracts }, {}), null)
+  const old = jsonAt('ja-voyara/j6/1.0.11', 'content-map.json')
+  const v = CONTENT_MAP_LISTS_CHECK.judge(voyara, { contracts, contentMap: old }, {})
   assert.deepEqual([v.state, v.code], ['todo', 'content-map-missing-lists'])
   assert.deepEqual(v.params.missing, ['itemLists', 'itemPages', 'menuBlocks'])
   // In the verdict it joins the contract piece after the road steps, which may decide the piece first.

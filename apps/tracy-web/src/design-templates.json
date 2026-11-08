@@ -290,7 +290,7 @@
       "name": "JA Voyara",
       "base": {
         "quickstart": "quickstart/ja-voyara/j6",
-        "version": "1.0.10"
+        "version": "1.0.12"
       },
       "template": {
         "element": "ja_voyara",
@@ -299,15 +299,16 @@
       },
       "preparedTemplate": false,
       "multilingual": false,
-      "contractProfile": "ja-voyara/j6/1.0.10",
+      "contractProfile": "ja-voyara/j6/1.0.12",
       "contractFiles": {
-        "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
-        "design-system-measurement.json": "29d2fb6569974436a7a6c0d02b351cba2bb381da1161f3e669c008f76e6d2566",
-        "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
-        "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13",
-        "showcase-nav-map.json": "750443739beab176510698cf09681e69688d2f641b20659e78ddbc5a103cf0fd"
+        "content-map.json": "ac637fd80c8e235bf8c9c5deb4e723b3ab01888d46cd81eaa015c2b00aba5c99",
+        "design-system-measurement.json": "8206152747d6316bd1a016a0a9bbd3e807cd1120f50021c31baed91219ac3c3d",
+        "manifest.json": "897489b649536906753f46c8b9517cdc2cdd0e7b0c35af5fbd057623febcd5fe",
+        "presentation-lock.json": "425bf05cce746f39d266de4e351f2961e8519093fc35db4b5ebf1774d0b0add0",
+        "showcase-nav-map.json": "05c4ab9be911b00e8dd1104f6c202fd7190e3fedeeb9eb9936d63d5434c75a9e",
+        "template-kit.json": "df633cb92bc82e7e8737521d88efa987f2ccfac390df73fda63f6f8672dc067d"
       },
-      "coworkMinVersion": "0.24.37",
+      "coworkMinVersion": "0.24.90",
       "requires": [
         {
           "type": "plugin",
@@ -316,7 +317,7 @@
         }
       ],
       "activation": {
-        "id": "ja-voyara/j6/1.0.10",
+        "id": "ja-voyara/j6/1.0.12",
         "styles": [
           {
             "sourceStyleId": 14,

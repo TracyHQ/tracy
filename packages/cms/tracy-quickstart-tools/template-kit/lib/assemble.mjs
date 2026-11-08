@@ -6,24 +6,23 @@
 // stamp.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-
-import { readContractCoverage, readContractMap } from './contract-read.mjs'
 import { readCheckAccepts } from './check-accepts.mjs'
+import { readContractCoverage, readContractMap } from './contract-read.mjs'
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
-import { slotShapeChecks } from './slot-shape-checks.mjs'
-import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
-import { pairListRows, rowPairChecks } from './row-pairs.mjs'
 import { httpFetcher } from './crawl.mjs'
 import { buildKit } from './kit.mjs'
+import { mergeSite } from './kit-site.mjs'
 import { fixedLinkLabels, linkLabelChecks } from './link-label-reasons.mjs'
 import { keepLooks } from './looks.mjs'
-import { mergeSite } from './kit-site.mjs'
-import { slotOwnerChecks } from './slot-owners.mjs'
-import { templateGaps } from './template-gaps.mjs'
-import { fixesOf } from './template-fixes.mjs'
+import { keepEmbeddedMaps, reachChecks } from './reach-checks.mjs'
+import { pairListRows, rowPairChecks } from './row-pairs.mjs'
 import { showcaseViewFor, templateFileOf } from './site/adapters/index.mjs'
 import { logoFrameIds } from './site/logo-spots.mjs'
+import { slotOwnerChecks } from './slot-owners.mjs'
+import { slotShapeChecks } from './slot-shape-checks.mjs'
 import { buildStamp, imageChecksums } from './stamp.mjs'
+import { fixesOf } from './template-fixes.mjs'
+import { errorsBesideGaps, templateGaps } from './template-gaps.mjs'
 import { limitChecks } from './text-limits.mjs'
 
 export const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
@@ -83,7 +82,7 @@ export async function assembleKit(o, out, tool) {
     siteUrl: o.site,
     aliasHosts: host ? [host] : []
   })
-  mergeSite(kit, siteDoc, map, wordsLinks)
+  mergeSite(kit, siteDoc, map, wordsLinks, previous)
   // What the platform's content map does not declare (a WordPress map has no menu blocks or item lists): the kit
   // leaves those fields empty and says why, once each (wordpress-map.mjs).
   for (const g of map.platformGaps ?? [])
@@ -102,14 +101,20 @@ export async function assembleKit(o, out, tool) {
     readings,
     textFit: readIf(join(out, 'text-fit.json')) ?? {},
     rowFit: readIf(join(out, 'row-fit.json')) ?? {},
-    drives: readIf(join(out, 'field-drives.json')) ?? {}
+    drives: readIf(join(out, 'field-drives.json')) ?? {},
+    classes: readIf(join(out, 'icon-classes.json')) ?? {}
   })
   // Which text slots print in the same card as each list row's picture (row-pairs.mjs, from the frames pass).
   pairListRows(kit, frameEvidence)
   kit.errors = kit.errors.filter((e) => !/^(list-limits-differ|slot-in-two-blocks)$/.test(e.kind))
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
-  kit.checks.slotCoverage = coverageGate(kit, { map, readings })
+  kit.checks.slotCoverage = coverageGate(kit, {
+    map,
+    readings,
+    gapAccepts: readIf(join(out, 'gap-accepts.json')) ?? {},
+    accepts: reachAcceptsOf(out)
+  })
   // Text slot shape against the content map: whole samples, sentence groups, inline marks (slot-shape-checks.mjs).
   slotShapeChecks(kit, { map, contentCoverage: readIf(join(o.contract, 'content-coverage.json')) ?? null })
   // What a visitor reaches: a button with no door, a map no slot moves, a phone outside a link (reach-checks.mjs).
@@ -138,6 +143,7 @@ export async function assembleKit(o, out, tool) {
     fixes: fixesOf(readIf(join(out, 'template-fixes.json'))),
     accepts: readIf(join(out, 'gap-accepts.json')) ?? {}
   })
+  kit.errors = errorsBesideGaps(kit.errors, kit.templateGaps)
   if (!kit.template.version) kit.errors.push({ kind: 'missing', field: 'template.version', reason: tv.from })
   // A look (looks.mjs) is written by a person's Claude Code once per kit version: a shot that did not change keeps it.
   keepLooks(kit, previous)

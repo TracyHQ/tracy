@@ -1,6 +1,102 @@
 {
   "$comment": "Per-contract showcase-navigation decisions read by scripts/build-joomla-showcase-nav.mjs. hide/keep name a menu item by key (+ path and menutype, checked), optionally its whole subtree, or a whole menutype; every entry carries the reason. A subtree or menutype hide never takes a working screen inside it (users, smart search, tags, search, contact): such an item stays and is listed unresolved until an entry names it by its own key and reason. Contracts not listed use the automatic rule alone.",
   "contracts": {
+    "ja-boxing/j6/1.0.10": {
+      "hide": [
+        {
+          "key": "menuItem-152",
+          "path": "pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-156",
+          "path": "pages/users/login-form",
+          "menutype": "mainmenu",
+          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-157",
+          "path": "pages/users/registration-form",
+          "menutype": "mainmenu",
+          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-158",
+          "path": "pages/users/user-profile",
+          "menutype": "mainmenu",
+          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-162",
+          "path": "pages/j-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-163",
+          "path": "pages/j-content/category-blog",
+          "menutype": "mainmenu",
+          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-166",
+          "path": "pages/j-content/blog-detail",
+          "menutype": "mainmenu",
+          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
+    "ja-boxing/j6/1.0.11": {
+      "hide": [
+        {
+          "key": "menuItem-152",
+          "path": "pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-156",
+          "path": "pages/users/login-form",
+          "menutype": "mainmenu",
+          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-157",
+          "path": "pages/users/registration-form",
+          "menutype": "mainmenu",
+          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-158",
+          "path": "pages/users/user-profile",
+          "menutype": "mainmenu",
+          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-162",
+          "path": "pages/j-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-163",
+          "path": "pages/j-content/category-blog",
+          "menutype": "mainmenu",
+          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-166",
+          "path": "pages/j-content/blog-detail",
+          "menutype": "mainmenu",
+          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
     "ja-boxing/j6/1.0.3": {
       "hide": [
         {
@@ -242,102 +338,6 @@
       "keep": []
     },
     "ja-boxing/j6/1.0.8": {
-      "hide": [
-        {
-          "key": "menuItem-152",
-          "path": "pages",
-          "menutype": "mainmenu",
-          "subtree": true,
-          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-156",
-          "path": "pages/users/login-form",
-          "menutype": "mainmenu",
-          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-157",
-          "path": "pages/users/registration-form",
-          "menutype": "mainmenu",
-          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-158",
-          "path": "pages/users/user-profile",
-          "menutype": "mainmenu",
-          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-162",
-          "path": "pages/j-pages/smart-search",
-          "menutype": "mainmenu",
-          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-163",
-          "path": "pages/j-content/category-blog",
-          "menutype": "mainmenu",
-          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-166",
-          "path": "pages/j-content/blog-detail",
-          "menutype": "mainmenu",
-          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        }
-      ],
-      "keep": []
-    },
-    "ja-boxing/j6/1.0.10": {
-      "hide": [
-        {
-          "key": "menuItem-152",
-          "path": "pages",
-          "menutype": "mainmenu",
-          "subtree": true,
-          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-156",
-          "path": "pages/users/login-form",
-          "menutype": "mainmenu",
-          "reason": "\"Login Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-157",
-          "path": "pages/users/registration-form",
-          "menutype": "mainmenu",
-          "reason": "\"Registration Form\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-158",
-          "path": "pages/users/user-profile",
-          "menutype": "mainmenu",
-          "reason": "\"User Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-162",
-          "path": "pages/j-pages/smart-search",
-          "menutype": "mainmenu",
-          "reason": "\"Smart Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-163",
-          "path": "pages/j-content/category-blog",
-          "menutype": "mainmenu",
-          "reason": "\"Category Blog\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        },
-        {
-          "key": "menuItem-166",
-          "path": "pages/j-content/blog-detail",
-          "menutype": "mainmenu",
-          "reason": "\"Blog Detail\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
-        }
-      ],
-      "keep": []
-    },
-    "ja-boxing/j6/1.0.11": {
       "hide": [
         {
           "key": "menuItem-152",
@@ -1202,6 +1202,107 @@
         }
       ],
       "keep": []
+    },
+    "ja-voyara/j6/1.0.12": {
+      "hide": [
+        {
+          "key": "menuItem-224",
+          "path": "pages",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Pages\" branch is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-260",
+          "path": "pages/login",
+          "menutype": "mainmenu",
+          "reason": "\"Login\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-261",
+          "path": "pages/register",
+          "menutype": "mainmenu",
+          "reason": "\"Register\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-262",
+          "path": "pages/profile",
+          "menutype": "mainmenu",
+          "reason": "\"Profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-263",
+          "path": "pages/profile-edit",
+          "menutype": "mainmenu",
+          "reason": "\"Edit profile\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-264",
+          "path": "pages/reset-password",
+          "menutype": "mainmenu",
+          "reason": "\"Reset password\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-265",
+          "path": "pages/remind-username",
+          "menutype": "mainmenu",
+          "reason": "\"Remind username\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-347",
+          "path": "pages/2fa-methods",
+          "menutype": "mainmenu",
+          "reason": "\"Two-factor methods\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-272",
+          "path": "pages/tags-index",
+          "menutype": "mainmenu",
+          "reason": "\"Tags index\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-273",
+          "path": "pages/search",
+          "menutype": "mainmenu",
+          "reason": "\"Search\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-352",
+          "path": "pages/contact-directory",
+          "menutype": "mainmenu",
+          "reason": "\"Contact directory\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-353",
+          "path": "pages/news-feeds",
+          "menutype": "mainmenu",
+          "reason": "\"News feeds\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-354",
+          "path": "pages/submit-article",
+          "menutype": "mainmenu",
+          "reason": "\"Submit article\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-275",
+          "path": "pages/contact",
+          "menutype": "mainmenu",
+          "reason": "the contact page stays published and reachable from the footer Company menu and every call to action; only its entry in the demo kit's \"Pages\" dropdown leaves the main navigation, which Tracy customer sites never show (product decision, 25/10/2026)"
+        },
+        {
+          "key": "menuItem-277",
+          "path": "pages/about",
+          "menutype": "mainmenu",
+          "reason": "the About page stays published and reachable from the footer Company menu; only its entry in the demo kit's \"Pages\" dropdown leaves the main navigation, which Tracy customer sites never show (product decision, 25/10/2026)"
+        },
+        {
+          "key": "menuItem-351",
+          "path": "pages/component",
+          "menutype": "mainmenu",
+          "reason": "\"Component Wrapper\" sits in the \"Pages\" branch, which is the template's demo kit (sample user screens, Joomla's own pages, sample content views), not a page of the customer's business: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        }
+      ]
     }
   }
 }

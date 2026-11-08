@@ -1,0 +1,43 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-voyara/j6/1.0.12",
+  "platform": "joomla",
+  "template": "ja_voyara",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-voyara",
+    "id": "quickstart/ja-voyara/j6",
+    "version": "1.0.12",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.1.2"
+    },
+    "template": "ja_voyara",
+    "framework": "t4",
+    "prefix": "jav_",
+    "parts": {
+      "webroot": {
+        "file": "ja-voyara-j6-webroot-1.0.12.tar.gz",
+        "bytes": 196038507,
+        "sha256": "b74b04a08671fead170edf60d500d8c3cea1f35d52dea32d9e6b6c8510fd787a"
+      },
+      "database": {
+        "file": "ja-voyara-j6-database-1.0.12.sql.gz",
+        "bytes": 369378,
+        "sha256": "78e622660c3efc8619364be183c282ffe865d87778f7e95b26834fa81bddcab8"
+      }
+    },
+    "passwordsBlanked": true,
+    "createdAt": "2026-11-07T09:52:13.842Z",
+    "builtFrom": {
+      "from": "quickstart/ja-voyara/j6@1.0.11",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 26 files replaced (language/en-GB/en-GB.tpl_ja_voyara.ini, templates/ja_voyara/CHANGELOG.md, templates/ja_voyara/templateDetails.xml, templates/ja_voyara/css, templates/ja_voyara/language, templates/ja_voyara/acm, templates/ja_voyara/html); demo content: 25 edits (module-403, module-423, article-373, module-400, module-407, module-421, module-421, module-421, module-421, module-421, module-421, module-421, module-422, menuItem-235, menuItem-236, menuItem-237, menuItem-238, menuItem-239, menuItem-240, menuItem-241, menuItem-242, menuItem-243, article-201, article-201, menuItem-268); tag paths: 23 adventure-trekking, 24 food-culture, 25 beaches-islands, 26 wildlife-safari, 27 slow-rail-journeys; tags nested set rebuilt; ucm rows resynced from content: 58; user reviewer (id 891) removed: 1 users, 1 user_usergroup_map, 3 user_profiles, 1 privacy_consents; archived articles untagged: 100 (6), 101 (2), 102 (4), 103 (3), 104 (4), 105 (5), 106 (1), 107 (2), 109 (1), 110 (1), 111 (5), 112 (4); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-voyara/j6",
+    "repository": "JoomlArt-Products/ja-products"
+  },
+  "coworkContractVersion": "0.24.88",
+  "mode": "content-recommendation"
+}

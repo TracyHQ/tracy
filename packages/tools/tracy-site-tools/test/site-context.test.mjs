@@ -1865,9 +1865,7 @@ test('modes: per platform, a mode with a shell gets the shell roads; one without
         /A token for the whole site: ONE `tracy_site look\.set \{path, target:\{text\|selector\}, props:\{…\}, scope:"site"\}` changes it in `styles\/tokens\.css`/
       ],
       none: [
-        new RegExp(
-          `only a mode with a shell edits \\(${withShellModes.join(', ').replaceAll(/[()]/g, '\\$&')}\\): say so`
-        )
+        new RegExp(`only a mode with a shell edits \\(${RegExp.escape(withShellModes.join(', '))}\\): say so`)
       ]
     }
   ]
@@ -1973,7 +1971,7 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
         for (const other of others)
           assert.doesNotMatch(
             await bareText(`role-${platform}`, platform, `${other}-${platform}`),
-            new RegExp(`^${start.replaceAll(/[()/]/g, '\\$&')}`, 'm'),
+            new RegExp(`^${RegExp.escape(start)}`, 'm'),
             `${other}-${platform}`
           )
         const notInstalled = await siteContext(
@@ -1984,7 +1982,7 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
         )
         assert.doesNotMatch(
           notInstalled.text,
-          new RegExp(`^${start.replaceAll(/[()/]/g, '\\$&')}`, 'm'),
+          new RegExp(`^${RegExp.escape(start)}`, 'm'),
           'no webroot, nothing to read'
         )
       }

@@ -195,6 +195,17 @@ export function buildFrames({ blockId, slots, evidence, classes, review, widths,
       }
       continue
     }
+    // A picture the markup holds but the template paints at no captured width (an avatar hidden by a page's own
+    // CSS): the demo already shows the block without it, so there is nothing to size or empty.
+    const seenWidths = widths.map((w) => evidence[f.id]?.widths?.[w])
+    if (!f.kind && seenWidths.length && seenWidths.every((m) => m?.found && !m.shown) && f.canHide == null) {
+      f.hiddenByTemplate = true
+      f.canHide = true
+      f.hideEvidence = {
+        judgedBy: 'the template paints this picture at no captured width: the block shows without it'
+      }
+      continue
+    }
     if (!f.kind) missing(f.id, 'kind', 'the picture was not found shown in the block on any captured page')
     if (f.width == null) missing(f.id, 'width', 'the frame is not shown at any captured width')
     if (f.canHide == null)

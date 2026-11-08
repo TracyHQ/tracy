@@ -137,7 +137,7 @@ async function readMissing(ctx, siteUrl, siteName) {
       timeout: 60000
     })
     const read = await page.evaluate(readPage, { siteName, contactPattern: CONTACT_PATTERN })
-    return { status: resp?.status() ?? null, read }
+    return { status: resp?.status() ?? null, siteUrl, read }
   } catch (e) {
     return { status: null, error: String(e.message ?? e).split('\n')[0] }
   } finally {

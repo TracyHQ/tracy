@@ -1,0 +1,29 @@
+<!doctype html>
+<html class="js-reveal">
+<head>
+<meta charset="utf-8">
+<title>Harbor Lane Bakery</title>
+<style>
+  body { margin: 0; font: 16px sans-serif; }
+  section { height: 1400px; }
+  .js-reveal .reveal { opacity: 0; transition: opacity 0.6s; }
+  .js-reveal .reveal.is-revealed { opacity: 1; }
+  #Mod7 { height: 22px; }
+</style>
+</head>
+<body>
+  <section id="Mod5" class="reveal">Fresh loaves every morning.</section>
+  <section id="Mod6" class="reveal">Classes on Saturdays.</section>
+  <div id="Mod7" class="reveal">Harbor Lane Bakery, all rights reserved.</div>
+  <script>
+    // A scroll reveal whose observer skips the bottom 8% of the window, so the last line of the page never
+    // intersects; a timer reveals what is left, as such scripts do.
+    var left = [].slice.call(document.querySelectorAll('.reveal'))
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('is-revealed') })
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 })
+    left.forEach(function (el) { io.observe(el) })
+    setTimeout(function () { left.forEach(function (el) { el.classList.add('is-revealed') }) }, 3500)
+  </script>
+</body>
+</html>

@@ -3207,6 +3207,14 @@
         "framework": "t4",
         "profiles": ["default"],
         "note": "Same logos and content as 1.0.10; only the template's stylesheets changed: text painted with a status or page colour now reads its text role (var(--ds-c-<role>-text, <its own colour>)), so with no system worn every page computes as on 1.0.10."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "note": "Same logos as 1.0.11; the template logo keys are those of the T4 site profile, and the 1.0.12 cut edits demo content only where no Tracy step reaches it (menu items ask for the article layout, links carry index.php, one h1 per page, tag paths repaired, archived articles untagged). The demo leaves site_logo empty and prints its own mark, so the 1.0.12 kit reads two spots (header and footer brand) written through site_logo."
       }
     },
     "tracy-base/emdash-0.x": {

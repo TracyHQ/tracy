@@ -143,3 +143,14 @@ test('withFixes puts the registry fix on each red or warn step of a road, and no
   assert.equal(road[1].fix, undefined)
   assert.equal(withFixes(null), null)
 })
+
+test('the missing lists fix runs the audit that writes the lists, on a contract of the next version', () => {
+  // The lists (itemLists, itemPages, menuBlocks) are written into content-map.json only by the coverage audit's
+  // --fit pass; a capture alone, or the batch capture (which skips a version whose contract exists), adds none.
+  // JA Voyara 1.0.11, 06/11/2026: the batch command the registry named left the code as it was.
+  const fix = fixOf('content-map-missing-lists', { missing: ['itemLists'] })
+  assert.match(fix.command, /content-coverage\/cli\.mjs .*--fit/)
+  assert.match(fix.command, /--write/)
+  assert.doesNotMatch(fix.command, /batch-contracts/)
+  assert.match(fix.text, /next quickstart version/)
+})

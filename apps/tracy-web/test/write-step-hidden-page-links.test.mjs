@@ -13,12 +13,12 @@ import {
   livingPageFor,
   withHiddenLinkBlock
 } from '../src/lib/hidden-page-links.js'
+import { addressMoves, movedLinksIn } from '../src/lib/renamed-addresses.js'
+import { WRITE_STEP } from '../src/lib/site-build-steps.js'
+import { hiddenPageLinksGroup } from '../src/site-check/hidden-page-links.js'
 import { writeContract } from '../src/write-step/contract-write.js'
 import { hideHiddenPageLinks, relinkOrders } from '../src/write-step/hidden-page-links-stage.js'
 import { lookGuard } from '../src/write-step/look-guard.js'
-import { hiddenPageLinksGroup } from '../src/site-check/hidden-page-links.js'
-import { WRITE_STEP } from '../src/lib/site-build-steps.js'
-import { addressMoves, movedLinksIn } from '../src/lib/renamed-addresses.js'
 
 const CONTAINER = '.crew-card'
 const WHY = 'the invented team layout links each card name and photo to its profile page'
@@ -94,7 +94,8 @@ test('the inert rule names only hidden pages, in the kit containers', () => {
   const targets = deadTargetsOf({ rows: ROWS, droppedPaths: ['/team/ana-lima'], keptPaths: ['/', '/team'] })
   const selectors = hiddenLinkSelectorsFor(targets, [CONTAINER])
   assert.ok(selectors.includes('.crew-card a[href="index.php?Itemid=197"]'))
-  assert.ok(selectors.includes('.crew-card a[href="/index.php/team/ana-lima"]'))
+  // Any run of /index.php before the path: the rule matches the address by its end.
+  assert.ok(selectors.includes('.crew-card a[href$="/index.php/team/ana-lima"]'))
   for (const s of selectors) assert.ok(!/Itemid=(195|101|210)"|"\/team"|"\/contact"/.test(s), s)
   assert.match(INERT_RULE, /pointer-events:none/)
   assert.match(INERT_RULE, /cursor:default/)

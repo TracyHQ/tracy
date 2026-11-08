@@ -6,6 +6,7 @@
 import { deadTargetsOf, isDeadHref } from '../lib/hidden-page-links.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { WRITE_STEP } from '../lib/site-build-steps.js'
+import { stockScreenPagesOf } from '../lib/stock-screens.js'
 import { GroupUnmeasured } from './group-unmeasured.js'
 import { pagesRead, WIDTHS } from './host-pages.js'
 import { pathOfMeasure } from './page-faults.js'
@@ -24,9 +25,16 @@ export const hiddenPageLinksGroup = {
         'The host did not say which shown links take a click (`shownLinksClickable`), so this was not measured.'
       )
     const kitPages = new Map(each(context.kit?.pages).map((p) => [p?.id, p?.path]))
+    // A stock screen of the kit (lib/stock-screens.js) is hidden unless its drop failed: one with no menu item of its own (a
+    // profile that opens through its list's item) is skipped by the write step, and goes with that item.
+    const stock = new Map(stockScreenPagesOf(context.kit).map((p) => [p.id, p.path]))
     const droppedPaths = each(context.report?.slots)
-      .filter((l) => l?.part === 'page-drop' && l.status === 'hidden' && kitPages.has(l.slot))
-      .map((l) => kitPages.get(l.slot))
+      .filter(
+        (l) =>
+          l?.part === 'page-drop' &&
+          ((l.status === 'hidden' && kitPages.has(l.slot)) || (stock.has(l.slot) && l.status !== 'failed'))
+      )
+      .map((l) => stock.get(l.slot) ?? kitPages.get(l.slot))
     // The menu is read only when some shown link takes a click: a page with none has nothing to judge.
     const clickable = known.some((m) => each(m.shownLinks).some((l) => l?.clickable !== false))
     const rows = clickable ? await menuRows((action, params) => context.read(action, params)) : []

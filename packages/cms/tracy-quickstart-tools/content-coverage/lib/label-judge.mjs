@@ -195,8 +195,9 @@ export async function prepareLabelJudge({
       ? { id: contract.manifest?.id ?? null, contentMapSha256: contract.sha256?.contentMap ?? null }
       : null,
     howTo: [
-      'Open each component crop (path relative to this file) and read its slots table.',
-      'Answer every slot listed under "slots" of every component, by key, in a verdicts file shaped like "answerFormat".',
+      'Open each component crop (path relative to this file) as an image and look at it before reading its slots table: the verdict is about what each numbered slot shows on the page, so a judgement from the table alone is not one.',
+      'Answer every slot listed under "slots" of every component, by key, in a verdicts file shaped like "answerFormat", and name every crop under "crops" with one line of what it shows; record-judge refuses a file that leaves a crop out.',
+      'Splitting the request among helpers: give each one whole components with their crops, and the rule that it opens every crop before judging its slots.',
       'Slots under "alreadyJudged" are context only: their verdicts are cached, do not answer them.',
       'Then run record-judge.mjs with --request <this file> --verdicts <your file>.'
     ],
@@ -205,6 +206,7 @@ export async function prepareLabelJudge({
     allowedRoles: PLACE_CONTENT_ROLES_V3.map((role) => ({ role, group: roleGroupOf(role) })),
     answerFormat: {
       judgedBy: DEFAULT_JUDGE,
+      crops: [{ crop: 'images/module-12-p1-desktop.jpg', seen: 'a coaches card row with a phone line' }],
       slots: [
         { key: 'module-12.title', verdict: 'right' },
         { key: 'module-12.phone', verdict: 'wrong', suggestedRole: 'contact.phone', why: 'a phone number' }

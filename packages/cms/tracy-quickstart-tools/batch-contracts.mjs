@@ -182,7 +182,7 @@ export function validateOptions(command, values) {
     if (v.report && !path.isAbsolute(v.report)) errors.push('--report must be an absolute path')
     if (
       v.design !== undefined &&
-      !/^[a-z][a-z0-9-]*=(null|[a-z][a-z0-9-]*)(,[a-z][a-z0-9-]*=(null|[a-z][a-z0-9-]*))*$/.test(v.design)
+      !/^[a-z][a-z0-9-]*=[a-z][a-z0-9-]*(,[a-z][a-z0-9-]*=[a-z][a-z0-9-]*)*$/.test(v.design)
     )
       errors.push('--design must be slug=null or slug=<catalogue id>, comma separated')
     if (v['cowork-version'] && !/^\d+\.\d+\.\d+$/.test(v['cowork-version']))
@@ -1455,9 +1455,7 @@ async function joomlaTarget(card, ctx, log, t) {
       { timeoutMs: 60_000 }
     )
     const sql = path.join(work, 'database.sql')
-    await must('restore', 'sh', ['-c', 'gunzip -c "$1" > "$2"', 'sh', files.database, sql], {
-      timeoutMs: 300_000
-    })
+    await must('restore', 'gunzip', ['-c', files.database], { stdoutFile: sql, timeoutMs: 300_000 })
     await stand.must(
       'restore',
       ['exec', '-T', '-e', `MYSQL_PWD=${stand.password}`, 'db', 'mariadb', '-uroot', 'joomla'],
@@ -2059,9 +2057,7 @@ async function wordpressTarget(card, ctx, log, t) {
     stand.must(t.step, ['run', '--rm', '-T', 'cli', ...args], { timeoutMs: 600_000, ...o })
   step('restore')
   const sqlFile = path.join(work, 'database.sql')
-  await must('restore', 'sh', ['-c', 'gunzip -c "$1" > "$2"', 'sh', files.database, sqlFile], {
-    timeoutMs: 300_000
-  })
+  await must('restore', 'gunzip', ['-c', files.database], { stdoutFile: sqlFile, timeoutMs: 300_000 })
   await stand.must(
     'restore',
     ['exec', '-T', '-e', `MYSQL_PWD=${stand.password}`, 'db', 'mariadb', '-uroot', 'wp'],
@@ -2069,9 +2065,11 @@ async function wordpressTarget(card, ctx, log, t) {
   )
   rmSync(sqlFile, { force: true })
   const placeholder = derived.manifest.quickstart.placeholderUrl
+  // The URL as JSON writes it with escaped slashes (block attributes): backslashes first, then slashes.
+  const escapeSlashes = (u) => u.replace(/\\/g, '\\\\').replace(/\//g, '\\/')
   for (const [from, to] of [
     [placeholder, siteUrl],
-    [placeholder.replace(/\//g, '\\/'), siteUrl.replace(/\//g, '\\/')]
+    [escapeSlashes(placeholder), escapeSlashes(siteUrl)]
   ])
     await wp([
       'search-replace',
@@ -2981,7 +2979,7 @@ async function runBatchIn(command, o, { mode, platforms, scratch, disc, order, p
 
 // ───────────────────────────── notes, journal, verify-report ─────────────────────────────
 
-const cell = (v) => (v === null || v === undefined ? '—' : String(v)).replace(/\|/g, '\\|')
+const cell = (v) => (v === null || v === undefined ? '—' : String(v)).replace(/[\\|]/g, '\\$&')
 
 export function renderNotes(report) {
   const done = report.rows.filter((r) => r.status === 'delivered')

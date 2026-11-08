@@ -111,6 +111,36 @@
         "'slot_corrections' =>": true,
         "function urlSafeAlias(": true
       }
+    },
+    "0.24.88": {
+      "sha256": "eba3fb9f4df5baba39cf59ec41d259a9b9e9c80f4c1eaea3419eb1b89caba421",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.89": {
+      "sha256": "bc915fbe463fa7a0b25641b0139dd964d20bcd352ebba6e8dfa427b9251493b5",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.90": {
+      "sha256": "2742a8e1366a00f281fffbd54f3deeb39d39474bd2e41bbad6b8c9759f109739",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
     }
   }
 }

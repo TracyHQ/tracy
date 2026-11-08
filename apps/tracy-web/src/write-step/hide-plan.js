@@ -4,6 +4,7 @@
 // Joomla answers 404 on the path of an unpublished item, and a page beneath it goes too.
 import { NEW_CONTRACT } from '../lib/new-contract-pointer.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { stockScreensToDrop } from '../lib/stock-screens.js'
 import { guardControlLabels } from './hide-control-labels.js'
 import { goneRowSlots, listRowCounts, slotsToRemove } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
@@ -342,10 +343,14 @@ export function hideOrders({
     }
   }
   const taken = new Set(each(extras?.mainMenu?.hide).map((h) => slashless(h.path)))
-  const pages = each(plan?.pages)
+  // The plan's drops, then the kit's stock screens the plan does not keep (lib/stock-screens.js), each dropped like any other.
+  const planDrops = each(plan?.pages)
     .filter((p) => p?.decision === 'drop')
     .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
-    .filter((page) => page && !taken.has(slashless(page.path)))
+    .filter(Boolean)
+  const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
+  const pages = [...planDrops, ...stock.map(({ id, path }) => ({ id, path }))]
+    .filter((page) => !taken.has(slashless(page.path)))
     .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
   const claimed = new Set(
     [...owners.values()]

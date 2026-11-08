@@ -220,6 +220,7 @@ export function contentCoverageStep(
     lockedContent: verdict.lockedContent,
     accepted: verdict.accepted,
     incomplete: verdict.incomplete,
+    failureCodes: verdict.failureCodes,
     causes: causesOf(verdict.blocking),
     shown: verdict.blocking
       .slice(0, SHOWN_HOLES)

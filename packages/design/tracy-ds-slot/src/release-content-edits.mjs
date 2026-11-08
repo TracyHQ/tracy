@@ -20,6 +20,10 @@
  * both; the key stays, only its value changes. `count` is counted the same way, in the dump, in the lock, and
  * in the entity's field.
  *
+ * `"adds": true` (needs `json` and `row`, `count` 1) adds one setting: `to` is `from` kept as it is, a comma, then one new
+ * pair whose key the row does not hold yet (JA Voyara 1.0.12: Joomla 6 merges an article's own `article_layout` only
+ * where the menu item's value is `use_article`, and the tour category menu items had no such key).
+ *
  * `"reuses": true` says the new text is content the demo already carries in another row (JA Donate 1.0.7: the
  * Donate - Green/Orange slideshow's dead YouTube id takes the id the default home's slideshow plays). Then `to`
  * may already occur in the dump; a second run is still refused, by the count of `from`.
@@ -56,6 +60,9 @@ import { readFileSync } from 'node:fs'
 
 const SAFE = /^[\x20-\x7e]+$/
 const UNSAFE = /["'\\/]/
+// A row edit may name a path (`/pages/contact`): it is counted inside its own row in the dump, the lock and the
+// column, so a value written there as `\/` (PHP json_encode) is a count mismatch that stops the cut, never a miss.
+const UNSAFE_IN_ROW = /["'\\]/
 /** One JSON pair: a quoted key, then a string, number, true, false or null; no quote inside a string. */
 const JSON_PAIR = /^"([\w-]+)":("[^"]*"|-?\d+(\.\d+)?|true|false|null)$/
 /** A nested pair: the same, or an array of one string, and a key that may carry ACM's brackets (`f[button-link]`). */
@@ -71,6 +78,7 @@ function sameShape(e, at) {
     )
 }
 const NOT_IN_PAIR = /['\\/]/
+const NOT_IN_ROW_PAIR = /['\\]/
 const FIELD = /^[a-zA-Z_]+$/
 
 /** The text an edit's `from` / `to` is in a dump and in the lock file (a JSON pair's quotes as \"). */
@@ -116,18 +124,36 @@ export function loadContentEdits(file) {
     if (e.row === true && e.field === undefined) throw new Error(`${at}: a "row" edit names its "field"`)
     if (e.whole === true && (e.field === undefined || e.json === true || e.count !== 1))
       throw new Error(`${at}: a "whole" edit names its "field", is not a JSON pair and has "count": 1`)
-    for (const k of ['from', 'to']) {
+    if (e.adds !== undefined && e.adds !== true) throw new Error(`${at}: "adds" is true or absent`)
+    if (e.adds === true) {
+      if (e.json !== true || e.row !== true || e.nested === true || e.count !== 1)
+        throw new Error(`${at}: an "adds" edit is a JSON pair kept in its "row", not nested, with "count": 1`)
+      const added = typeof e.to === 'string' && typeof e.from === 'string' && e.to.startsWith(`${e.from},`)
+      const pair = added ? e.to.slice(e.from.length + 1) : ''
+      if (!added || !JSON_PAIR.test(pair) || NOT_IN_ROW_PAIR.test(pair) || !SAFE.test(pair))
+        throw new Error(`${at}: "to" of an "adds" edit is "from", a comma and one new JSON pair`)
+      if (JSON_PAIR.exec(pair)[1] === pairOf(e, e.from)?.[1])
+        throw new Error(`${at}: an "adds" edit adds a key other than the one it keeps`)
+    }
+    for (const k of e.adds === true ? ['from'] : ['from', 'to']) {
       const v = e[k]
       if (k === 'to' && v === '' && e.json !== true) continue
       if (e.json === true) {
-        if (typeof v !== 'string' || !SAFE.test(v) || NOT_IN_PAIR.test(v) || !pairOf(e, v))
+        if (
+          typeof v !== 'string' ||
+          !SAFE.test(v) ||
+          (e.row === true ? NOT_IN_ROW_PAIR : NOT_IN_PAIR).test(v) ||
+          !pairOf(e, v)
+        )
           throw new Error(
             `${at}: "${k}" must be one JSON pair ("key":"value") without backslashes, slashes or single quotes`
           )
-      } else if (typeof v !== 'string' || !SAFE.test(v) || UNSAFE.test(v))
-        throw new Error(`${at}: "${k}" must be printable ASCII without quotes, backslashes or slashes`)
+      } else if (typeof v !== 'string' || !SAFE.test(v) || (e.row === true ? UNSAFE_IN_ROW : UNSAFE).test(v))
+        throw new Error(
+          `${at}: "${k}" must be printable ASCII without quotes, backslashes or (outside a row edit) slashes`
+        )
     }
-    if (e.json === true && pairOf(e, e.from)[1] !== pairOf(e, e.to)[1])
+    if (e.json === true && e.adds !== true && pairOf(e, e.from)[1] !== pairOf(e, e.to)[1])
       throw new Error(`${at}: a JSON pair edit changes the value, not the key`)
     if (e.nested === true) sameShape(e, at)
     if (e.from === e.to) throw new Error(`${at}: "from" and "to" are the same`)
@@ -365,6 +391,10 @@ function editTable(out, e) {
   }
 }
 
+/** An adding edit's new key as a dump and the lock write it (`\"key\":`), or null for any other edit. */
+const addedKeyOf = (e) =>
+  e.adds === true ? `\\"${JSON_PAIR.exec(e.to.slice(e.from.length + 1))[1]}\\":` : null
+
 /** One row-kept edit (`row` or `whole`) in the dump texts, in place: only the value of the named column. */
 function editRow(out, e) {
   const r = rowOf(out, e.entity)
@@ -380,6 +410,9 @@ function editRow(out, e) {
     return
   }
   const from = asWritten(e, 'from')
+  const added = addedKeyOf(e)
+  if (added && now.includes(added))
+    throw new Error(`dump: ${e.entity}.${e.field} already holds ${added}, the edit would add it twice`)
   const n = occurrences(now, from)
   if (n !== e.count)
     throw new Error(
@@ -523,6 +556,9 @@ function editLockRow(lockText, e) {
     next = JSON.stringify(e.to)
     expected = e.to
   } else {
+    const key = e.adds === true ? `"${JSON_PAIR.exec(e.to.slice(e.from.length + 1))[1]}":` : null
+    if (key && value.includes(key))
+      throw new Error(`lock: ${e.entity}.${e.field} already holds ${key}, the edit would add it twice`)
     const n = occurrences(value, inValue(e, 'from'))
     const inText = occurrences(literal, asWritten(e, 'from'))
     if (n !== e.count || inText !== e.count)

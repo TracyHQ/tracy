@@ -303,6 +303,7 @@ for (const slug of slugs) {
   } else if (cmd === 'verify') {
     const m = JSON.parse(readFileSync(join(rel, 'manifest.json'), 'utf8'))
     const { differences } = await import('../src/probe.mjs')
+    const { verifiedOf } = await import('../src/release-verified.mjs')
     const status = (site, h) =>
       spawnSync(
         'curl',
@@ -358,7 +359,12 @@ for (const slug of slugs) {
           fontUrls.filter((u) => u.startsWith(st.site)).map((u) => [u, status('', u)])
         )
         const fonts = fontReport({ html, pageUrl: `${st.site}/`, sheets, fontStatus })
-        return { links, status: Object.fromEntries(links.map((h) => [h, status(st.site, h)])), fonts }
+        return {
+          links,
+          status: Object.fromEntries(links.map((h) => [h, status(st.site, h)])),
+          fonts,
+          home: html
+        }
       } finally {
         node('stand.mjs', 'down', '--name', name)
       }
@@ -415,16 +421,21 @@ for (const slug of slugs) {
     }
     // what the template can change decides: every computed value and every page's answer. Pixels are
     // reported too; a page with live content (a JS slider, a hit counter) can differ by a few
-    v.verified =
-      v.defaultLook.computedDifferences.desktop === 0 &&
-      v.defaultLook.computedDifferences.phone === 0 &&
-      v.pages.differ.length === 0 &&
-      v.fonts.ok
+    // an empty stand (the installer, no menu link) compares equal on every count: release-verified.mjs
+    const judged = verifiedOf({
+      computedDifferences: v.defaultLook.computedDifferences,
+      pages: v.pages,
+      fonts: v.fonts,
+      homes: { now: now.home, released: was.home }
+    })
+    v.verified = judged.verified
+    if (judged.problems.length) v.problems = judged.problems
     writeFileSync(join(rel, 'VERIFICATION.json'), `${JSON.stringify(v, null, 2)}\n`)
     console.log(
       JSON.stringify({
         slug,
         verified: v.verified,
+        ...(v.problems ? { problems: v.problems } : {}),
         ...v.defaultLook,
         pages: `${v.pages.ok}/${v.pages.checked} answer 200, ${v.pages.sameAsReleased}/${v.pages.checked} as released`,
         fonts: v.fonts.ok
@@ -432,6 +443,7 @@ for (const slug of slugs) {
           : v.fonts.problems.join('; ')
       })
     )
+    if (!v.verified) process.exitCode = 1
   } else if (cmd === 'commands') {
     const m = JSON.parse(readFileSync(join(rel, 'manifest.json'), 'utf8'))
     // the role scan travels with every release (rule VARS-1): no upload command for a folder whose

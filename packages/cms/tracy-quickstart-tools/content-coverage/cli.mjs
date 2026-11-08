@@ -10,7 +10,10 @@
 //     --site <url of a site built from the quickstart> --contract <contract folder> --out <dir> \
 //     [--db-dump <database.sql[.gz]>] [--webroot <unpacked webroot>] [--site-config <json>] \
 //     [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] \
-//     [--report-only | --reclassify]   (rebuild from an existing findings.json, no browser run)
+//     [--report-only | --reclassify]   (rebuild from an existing findings.json, no page opened: the label judge
+//               reuses <out>/module-boxes.json when its input fingerprint (site, dump sha256, webroot tree hash, page
+//               list, tool source) matches, else reads the module boxes in the browser again and says why on stderr)
+//     [--trust-saved-boxes]  reuse module-boxes.json without the fingerprint check (logged TRUSTED; one-off proofs)
 //     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
 //               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
 //               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
@@ -50,7 +53,7 @@ import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
 
 const USAGE =
-  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit] [--no-judge]'
+  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--trust-saved-boxes] [--fit] [--no-judge]'
 
 function parseArgs(argv) {
   const o = {}
@@ -194,7 +197,17 @@ async function main() {
       `[audit] contract ${contract.manifest.id}: ${contract.map.slots.length} slots, ${contract.pages.length} pages; DB ${dbIndex ? `${dbIndex.cells.length} cells` : 'none'}; sources ${sourceIndex ? `${sourceIndex.files.length} files, ${sourceIndex.ini.length} language strings` : 'none'}`
     )
     const cap = Number(o['max-pages'] ?? 150)
-    const run = await runAudit({ chromium, siteUrl, contract, dbIndex, sourceIndex, outDir, cap, viewports })
+    const run = await runAudit({
+      chromium,
+      siteUrl,
+      contract,
+      dbIndex,
+      sourceIndex,
+      outDir,
+      cap,
+      viewports,
+      webroot: sourceIndex ? o.webroot : null
+    })
     result = {
       site: siteUrl,
       contractId: contract.manifest.id,

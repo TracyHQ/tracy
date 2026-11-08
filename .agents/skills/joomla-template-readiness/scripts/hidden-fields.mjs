@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Keep the five hidden-by-CSS fields of a template kit across a rebuild. `template-kit/cli.mjs build` writes the kit's
-// whole `site` part again from what it reads on the site (lib/kit-site.mjs `mergeSite`), so the five fields a person
-// declared by hand (README "Make a kit for a new template", steps 8 and 9) are gone after it, and the verdict reads
-// `kit-hidden-field-missing` again. Save them before the build, replay them after it, through the kit tool's own
-// commands (so every rule of those commands still applies).
+// Keep the hand-declared site fields of a template kit across a build into an EMPTY folder. `template-kit/cli.mjs build`
+// and `assemble` keep them themselves when --out already holds a kit (lib/declared-site-fields.mjs); a build into an
+// empty folder has no kit to keep them from, so save them from the kit beside the contract before the build and replay
+// them after it, through the kit tool's own commands (so every rule of those commands still applies). The fields are the
+// tool's own list (DECLARED_SITE_FIELDS), so a new declare command is saved and replayed with no change here.
 //
 //   node hidden-fields.mjs save --kit <template-kit.json> --to <saved.json>
 //   node hidden-fields.mjs replay --from <saved.json> --kit <template-kit.json> [--dry-run]
@@ -14,43 +14,39 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 
+import {
+  DECLARED_SITE_FIELDS,
+  declaredOf
+} from '../../../../packages/cms/tracy-quickstart-tools/template-kit/lib/declared-site-fields.mjs'
+
 const CLI = 'packages/cms/tracy-quickstart-tools/template-kit/cli.mjs'
 
-/** The list fields: kit key, the kit tool command that writes it, and the flag naming one entry. */
-const LISTS = Object.freeze([
-  { field: 'emptyVideoButtons', command: 'video-buttons', key: 'selector' },
-  { field: 'selfLinkButtons', command: 'self-link-buttons', key: 'container' },
-  { field: 'hiddenPageLinks', command: 'hidden-page-links', key: 'container' },
-  { field: 'createdPageHide', command: 'created-page-hide', key: 'selector' }
-])
+const valueAt = (o, path) =>
+  path.split('.').reduce((v, k) => (v && typeof v === 'object' ? v[k] : undefined), o)
 
-/** The five fields of a kit, as the replay needs them. @param {any} kit */
+/** The declared fields of a kit, as the replay needs them (a part of its `site`). @param {any} kit */
 export function savedOf(kit) {
-  const site = kit?.site ?? {}
-  /** @type {Record<string, unknown>} */
-  const out = {}
-  for (const { field } of LISTS) if (Array.isArray(site[field])) out[field] = site[field]
-  if (site.noneWhy && typeof site.noneWhy === 'object') out.noneWhy = site.noneWhy
-  if (site.createdPageLayouts?.legal) out.legal = site.createdPageLayouts.legal
-  return out
+  return declaredOf(kit)
 }
 
-/** The kit tool commands that declare `saved` again on `kitFile`, in field order. @param {any} saved */
+/** The kit tool commands that declare `saved` again on `kitFile`, in the tool's field order. @param {any} saved */
 export function commandsOf(saved, kitFile) {
   const out = []
-  for (const { field, command, key } of LISTS) {
-    const list = Array.isArray(saved[field]) ? saved[field] : []
-    for (const entry of list)
-      out.push([command, '--kit', kitFile, `--${key}`, entry[key], '--why', entry.why])
+  for (const { field, command, flag, list } of DECLARED_SITE_FIELDS) {
+    // A file saved before the shared list held the legal layout under `legal`.
+    const value = valueAt(saved, field) ?? (field === 'createdPageLayouts.legal' ? saved.legal : undefined)
+    if (!list) {
+      if (!value || typeof value.why !== 'string') continue
+      if (value.articleLayout === null) out.push([command, '--kit', kitFile, '--none', '--why', value.why])
+      else out.push([command, '--kit', kitFile, `--${flag}`, value.articleLayout, '--why', value.why])
+      continue
+    }
+    const entries = Array.isArray(value) ? value : []
+    for (const entry of entries)
+      out.push([command, '--kit', kitFile, `--${flag}`, entry[flag], '--why', entry.why])
     const why = saved.noneWhy?.[field]
-    if (list.length === 0 && typeof why === 'string' && why.trim())
+    if (entries.length === 0 && typeof why === 'string' && why.trim())
       out.push([command, '--kit', kitFile, '--none', '--why', why])
-  }
-  const legal = saved.legal
-  if (legal && typeof legal.why === 'string') {
-    if (legal.articleLayout === null)
-      out.push(['legal-layout', '--kit', kitFile, '--none', '--why', legal.why])
-    else out.push(['legal-layout', '--kit', kitFile, '--layout', legal.articleLayout, '--why', legal.why])
   }
   return out
 }

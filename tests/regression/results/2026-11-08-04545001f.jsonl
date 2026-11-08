@@ -1,0 +1,1 @@
+{"id":"REG-PR-491-template-string-entities","verdict":"PASS","commit":"04545001f60d3069a90544c34f83d067aea293db","ran_at":"2026-11-08T09:17:26.903Z","evidence":"tests/regression/.runs/2026-11-08-04545001f/REG-PR-491-template-string-entities.log"}

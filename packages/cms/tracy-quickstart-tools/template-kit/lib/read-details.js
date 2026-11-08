@@ -35,6 +35,13 @@ export function readDetails() {
       .filter((c) => !STATE.test(c))
       .sort()
       .join('.')}`
+  // A row's shape: a modifier of one of its own classes (`plan--featured` beside `plan`, a highlighted card) is a
+  // variant of the row, not a shape of its own. Only the row sets use it; the body skeleton keeps every class.
+  const rowSig = (el) =>
+    `${el.tagName}.${[...el.classList]
+      .filter((c) => !STATE.test(c) && !(c.includes('--') && el.classList.contains(c.split('--')[0])))
+      .sort()
+      .join('.')}`
   const pathFrom = (root, el) => {
     const idx = []
     for (let x = el; x && x !== root; x = x.parentElement)
@@ -287,7 +294,7 @@ export function readDetails() {
         const r = c.getBoundingClientRect()
         // A row not rendered at all (in a closed tab) still counts; a rendered sliver (a spacer) does not.
         if (c.getClientRects().length && (r.width < 40 || r.height < 20)) continue
-        const k = sig(c)
+        const k = rowSig(c)
         if (!groups.has(k)) groups.set(k, [])
         groups.get(k).push(c)
       }
