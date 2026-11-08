@@ -1,6 +1,6 @@
 {
   "id": "REG-PR-473-ja-voyara-1-0-12-brand-profile-logo",
-  "kind": "fix",
+  "kind": "feat",
   "title": "JA Voyara j6 1.0.12: the brand step reads a T4 kit whose logo spots are written through the site profile, with no content map frame",
   "pr": 473,
   "area": "template-kit/brand-step",
