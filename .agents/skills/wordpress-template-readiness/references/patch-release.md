@@ -40,6 +40,9 @@ named volume) is where the chain restores what it packed.
    owner. A cause that appears at different widths from one run to the next on a page you did not touch is the source's
    own intermittent measure: accept it at every width with its decision, after comparing two runs. A full sweep that exits 4 on a history merge (`effective.checks.<check>.intermittent was measured by a run
    before the full run`) runs again with the sweep state file moved aside.
+   A deliberate change (for example a heading level swapped on purpose) gets ONE row per route that lists ALL the sweep's
+   widths, never one row per cell: cells of an intermittent cause move from width to width between runs, so per-cell
+   rows never stop failing.
    Declare such an exact-cell row `"intermittent": true`: a run in which its group is absent is then skipped, not a stale
    error, and the row still moves the cells when the group is there (dropping and re-adding rows between runs never
    converges). Never wrap the sweep in a log-idle watchdog: the heights phase prints nothing for minutes, and killing the
