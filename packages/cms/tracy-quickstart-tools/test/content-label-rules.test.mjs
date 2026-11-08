@@ -79,6 +79,11 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
     text('ok.price', '$4.00', 'offering.price', { group: grp('m.0', 0, 'menu_item') }),
     text('ok.claim', 'A platform that helped raise over $500 million for startups', 'claim.notice'),
     text('ok.stat', '$4.8m', 'stat.value'),
+    text('ok.dish', 'Salad ((span class="dish-price"))$30((/span))', 'offering.name', {
+      markup: 'inline',
+      group: grp('m.0', 0, 'menu_item')
+    }),
+    text('menu.plain-name', 'Salad $30', 'offering.name', { group: grp('m.1', 1, 'menu_item') }),
     text('ok.stat2', '$ 250k', 'stat.value'),
     text('home.price', 'Lakeside villa, $1.2 million', 'editorial.paragraph'),
     text('stat.phone', 'Call (555) 010-9921', 'stat.value'),
@@ -98,6 +103,7 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
     'about.p',
     'home.price',
     'menu.cost',
+    'menu.plain-name',
     'stat.phone'
   ])
 })
