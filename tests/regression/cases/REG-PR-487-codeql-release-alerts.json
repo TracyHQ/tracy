@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-487-codeql-release-alerts",
+  "kind": "fix",
+  "title": "The lines behind the 11 CodeQL alerts of release #474 keep their results: quickstart batch tools, the agent-tools build script and the tests that escaped by hand",
+  "pr": 487,
+  "area": "release/codeql",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repository root run: node --test --test-reporter=tap packages/cms/tracy-quickstart-tools/test/batch-contracts.test.mjs scripts/test/agent-tools.test.mjs packages/tools/tracy-site-tools/test/site-context.test.mjs packages/site/tracy-add-site/test/site-link-pacing.test.mjs scripts/test/tracy-web-comment-turn-image.test.mjs vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/scripts/tests/compile-seed.test.mjs",
+    "S2: Record the exit code and the '# tests', '# pass', '# fail' lines."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'."
+  ],
+  "selectors": {
+    "batch-contracts": "the --design pattern, the gunzip restore through run's stdoutFile, the URL pair and notes cell escapes (packages/cms/tracy-quickstart-tools/batch-contracts.mjs)",
+    "build-agent-tools": "literalValue (scripts/build-agent-tools.mjs)"
+  },
+  "evidence": "CodeQL check of the release PR #474: polynomial regular expression and shell command from environment values in batch-contracts.mjs, incomplete escaping in batch-contracts.mjs, scripts/build-agent-tools.mjs and three tests, identity replacement in the vendored compile-seed.test.mjs.",
+  "fence": "Mechanism only: the changed lines give the same results through their tests. Not covered: the CodeQL run itself (no CodeQL CLI on the machine) and a Joomla/WordPress restore on a live stand.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/batch-contracts.test.mjs",
+      "scripts/test/agent-tools.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-context.test.mjs",
+      "packages/site/tracy-add-site/test/site-link-pacing.test.mjs",
+      "scripts/test/tracy-web-comment-turn-image.test.mjs",
+      "vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/scripts/tests/compile-seed.test.mjs"
+    ]
+  }
+}
