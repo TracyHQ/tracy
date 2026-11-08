@@ -96,6 +96,56 @@ test('a media id is loaded from wo_media into the run folder before the first mo
   assert.ok(model.requests.length > 0, 'the agent was called once the logo was in place')
 })
 
+/** The logo as the place research keeps it: a `wo_place_media` row, named in the brief's media with `origin: 'place'`. */
+async function addPlaceMedia(pool, bytes, { revoked = false } = {}) {
+  const sha = createHash('sha256').update(bytes).digest('hex')
+  const place = (
+    await pool.query(`insert into wo_place (display_name) values ('Invented Padel Club') returning id`)
+  ).rows[0]
+  await pool.query(
+    `insert into wo_place_media (id, place_id, sha256, object_key, kind, category, source, source_url, mime, bytes, revoked_at)
+     values ($1, $2, $3, $4, 'image', 'logo', 'website', 'https://padel.example.test/logo.png', 'image/png', $5, $6)`,
+    [LOGO_ID, place.id, sha, `places/${sha}.png`, bytes.length, revoked ? new Date() : null]
+  )
+  return sha
+}
+
+/** The case whose brief names the logo as a place picture, as a research revision of a researched place does. */
+async function caseWithPlaceLogo(sha) {
+  const c = await caseWithLogo()
+  const media = [
+    ...(c.brief.media ?? []),
+    { id: LOGO_ID, origin: 'place', kind: 'image', category: 'logo', sha256: sha }
+  ]
+  return { ...c, brief: { ...c.brief, media } }
+}
+
+test(
+  'a logo the place research stored (wo_place_media) is loaded before the first model call',
+  opts,
+  async () => {
+    const sha = await addPlaceMedia(db.pool, logoPng)
+    const c = await caseWithPlaceLogo(sha)
+    const asked = []
+    const logoObjects = { get: async (key) => (asked.push(key), new Response(logoPng)) }
+    const { run, model } = await play(c, { logoObjects })
+    assert.doesNotMatch(String(run.error ?? ''), /BRAND_LOGO_UNAVAILABLE/)
+    assert.deepEqual(asked, [`places/${sha}.png`])
+    assert.deepEqual(c.files.read(`media/${LOGO_ID}.png`), logoPng)
+    assert.deepEqual(run.logoSource, { kind: 'place-media', mediaId: LOGO_ID })
+    assert.ok(model.requests.length > 0)
+  }
+)
+
+test('a revoked place logo fails the run with the reason and no model call', opts, async () => {
+  const sha = await addPlaceMedia(db.pool, logoPng, { revoked: true })
+  const c = await caseWithPlaceLogo(sha)
+  const { run, model } = await play(c, { logoObjects: { get: async () => new Response(logoPng) } })
+  assert.equal(run.status, 'failed')
+  assert.match(run.error, /BRAND_LOGO_UNAVAILABLE: logo media .* (revoked|does not exist)/)
+  assert.equal(model.requests.length, 0)
+})
+
 test('a missing logo media fails the run with the reason and no model call', opts, async () => {
   const c = await caseWithLogo()
   const { run, model } = await play(c, { logoObjects: { get: async () => new Response(logoPng) } })

@@ -3,7 +3,9 @@
 // approved lab kept it (`<case dir>/<id>.<ext>`) and the locked prompt tells the agent about ("the media id of the
 // logo"). This file puts the bytes there before the first model call, from one of two sources:
 //   a file on the server (`--logo-file`)   staged at the start, before the run is queued (stageLogoFile)
-//   the brief's media id (`wo_media`)      loaded when the worker claims the run (ensureLogo)
+//   the brief's media id                   loaded when the worker claims the run (ensureLogo), from the table the research
+//                                          keeps it in: a researched place's logo is a `wo_place_media` row (the brief's
+//                                          media names it with `origin: 'place'`), an opportunity's own a `wo_media` row
 // A logo that cannot be had stops the run with a reason; nothing is ever guessed or drawn instead.
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
@@ -48,14 +50,25 @@ export async function stageLogo(files, id, bytes) {
 
 const fail = (reason) => ({ ok: false, reason })
 
-/** The stored bytes of a `wo_media` row, checked against its sha256. */
-export async function mediaLogoBytes({ pool, objects, mediaId }) {
+/** Where the brief says its logo is kept: the place's table when its media entry says `origin: 'place'`, else `wo_media`. */
+export const logoOriginOf = (brief, mediaId) =>
+  (Array.isArray(brief?.media) ? brief.media : []).find((m) => m?.id === mediaId)?.origin === 'place'
+    ? 'place'
+    : 'opportunity'
+
+const LOGO_ROW = {
+  // A place picture is read only while it is not revoked, like every other reader of a place's pictures (brief-picture-bytes.js).
+  place: `select sha256, object_key, status, revoked_at from wo_place_media where id = $1`,
+  opportunity: 'select sha256, object_key, status, null as revoked_at from wo_media where id = $1'
+}
+
+/** The stored bytes of the logo's row (`wo_place_media` for a place's logo, `wo_media` otherwise), checked against its sha256. */
+export async function mediaLogoBytes({ pool, objects, mediaId, origin = 'opportunity' }) {
   if (!UUID.test(mediaId)) return fail(`brand.logo ${mediaId} is not a media id`)
-  const { rows } = await pool.query('select sha256, object_key, status from wo_media where id = $1', [
-    mediaId
-  ])
+  const { rows } = await pool.query(LOGO_ROW[origin] ?? LOGO_ROW.opportunity, [mediaId])
   const row = rows[0]
   if (!row) return fail(`logo media ${mediaId} does not exist`)
+  if (row.revoked_at) return fail(`logo media ${mediaId} was revoked`)
   if (row.status !== 'stored' || !row.object_key)
     return fail(`logo media ${mediaId} has no stored bytes (status ${row.status})`)
   if (!objects) return fail(`logo media ${mediaId} cannot be read: this server has no object store`)
@@ -76,8 +89,9 @@ export async function mediaLogoBytes({ pool, objects, mediaId }) {
 export async function ensureLogo({ pool, files, brief, objects }) {
   const mediaId = logoIdOf(brief)
   if (!mediaId || logoStaged(files, mediaId)) return { ok: true, source: null }
-  const got = await mediaLogoBytes({ pool, objects, mediaId })
+  const origin = logoOriginOf(brief, mediaId)
+  const got = await mediaLogoBytes({ pool, objects, mediaId, origin })
   if (!got.ok) return got
   if (!(await stageLogo(files, mediaId, got.bytes))) return fail(`logo media ${mediaId} is not an image`)
-  return { ok: true, source: { kind: 'media', mediaId } }
+  return { ok: true, source: { kind: origin === 'place' ? 'place-media' : 'media', mediaId } }
 }
