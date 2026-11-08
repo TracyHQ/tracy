@@ -5,16 +5,16 @@
 // names and harness settings. The worker (brand-worker.js) does the rest.
 import { randomUUID } from 'node:crypto'
 import { briefOfRevision } from '../lib/bench-sql.js'
+import { defaultContracts } from '../lib/contracts.js'
+import { headerSiteLogoBlockOf } from '../lib/template-kit/flow-reads.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { brandBriefProblems } from './brand-brief-shape.js'
 import { brandDoors } from './brand-doors.js'
-import { logoIdOf, stageLogo } from './brand-logo.js'
 import { brandHarnessFor } from './brand-harness.js'
+import { logoIdOf, stageLogo } from './brand-logo.js'
 import { brandPrompt } from './brand-prompt.js'
 import { activeRun, BRAND_RUN_ACTIVE, createRun, readRun, requestCancel, UUID } from './brand-store.js'
 import { brandKitProblem } from './kit-grounds.js'
-import { headerSiteLogoBlockOf } from '../lib/template-kit/flow-reads.js'
-import { defaultContracts } from '../lib/contracts.js'
 
 export { brandKitProblem, briefOfRevision }
 
@@ -56,7 +56,8 @@ export async function startBrandRun({
   wiring,
   index,
   logo,
-  agentModel
+  agentModel,
+  noCaps = false
 }) {
   const problems = brandBriefProblems(brief)
   if (problems.length)
@@ -112,7 +113,7 @@ export async function startBrandRun({
     promptSha256: brandPrompt().sha256,
     door: { agent: doors.agent.snapshot, reviewer: doors.reviewer.snapshot },
     tools: toolInfo(wired.tools),
-    harness: brandHarnessFor(doors.agent.snapshot.model, doors.agent.snapshot.providerId)
+    harness: brandHarnessFor(doors.agent.snapshot.model, doors.agent.snapshot.providerId, { noCaps })
   })
   if (created.error === BRAND_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

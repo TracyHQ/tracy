@@ -1,7 +1,7 @@
 // name_slots(): code reads brief.brand.name EXACTLY (and whether the brief holds it back) and the kit's
 // site.nameSlots, and returns for every slot its id, kind, where, the current text, and either the new value
-// (status "written") or a hand-off to the writing step. The rule lives in ../name-slots.js (the gate recomputes it).
-import { computeNameSlots } from '../name-slots.js'
+// (status "written") or a hand-off to the writing step. The rule lives in lib/brand-name-slots.js (the gate recomputes it).
+import { computeNameSlots } from '../../lib/brand-name-slots.js'
 import { BrandToolError } from './common.js'
 
 export const tool = {

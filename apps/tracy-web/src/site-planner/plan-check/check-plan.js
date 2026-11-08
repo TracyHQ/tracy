@@ -14,6 +14,8 @@ import { checkR10b } from './rules-closure-parts.js'
 import { checkR10g, checkR12 } from './rules-duplicates-channels.js'
 import { checkR02, checkR03 } from './rules-facts.js'
 import { checkR01 } from './rules-ids.js'
+import { checkR23 } from './rules-kept-rows.js'
+import { checkR24 } from './rules-labels.js'
 import { checkR10h, checkR19 } from './rules-map-judgement.js'
 import { checkR04 } from './rules-menu.js'
 import { checkR08, checkR09, checkR11 } from './rules-notices-forms.js'
@@ -60,6 +62,8 @@ const RUN_ORDER = [
   checkR20,
   checkR21,
   checkR22,
+  checkR23,
+  checkR24,
   checkR10h
 ]
 

@@ -80,6 +80,16 @@ export const RULE_TITLES = [
     'R22',
     'A list row printed in the same card as text slots (kit rows[].pairedSlots) is kept exactly when one of those slots is kept'
   ],
+  [
+    'r23',
+    'R23',
+    'A list row the plan keeps keeps all its printed fields (a kept card shows its title, text and picture together)'
+  ],
+  [
+    'r24',
+    'R24',
+    'A control that stays on the page keeps its label; a label one slot shares across blocks is written, never hidden'
+  ],
   ['r10h', 'R10h', 'Judgement items (needs reviewer): listed as skip']
 ]
 

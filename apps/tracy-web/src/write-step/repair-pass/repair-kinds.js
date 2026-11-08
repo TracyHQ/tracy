@@ -72,6 +72,7 @@ export const NOT_SENT_GROUPS = Object.freeze({
   'written-not-printed': `${OWN_STEP} (a written value the page does not print)`,
   'look-guard-findings': `${OWN_STEP} (the look guard's refusals)`,
   'unaddressable-items': `${OWN_STEP} (plan items with no slot)`,
+  'slot-disputes': `${OWN_STEP} (two steps' claims on one slot)`,
   'unowned-slots': `${OWN_STEP} (slots step 3 owns)`,
   'kit-version': `the kit version is the contract's; it ${NOT_SEEN}`,
   'page-slug': `${OWN_STEP} (the route stage's page addresses)`,

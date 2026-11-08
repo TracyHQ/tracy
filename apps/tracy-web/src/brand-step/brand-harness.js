@@ -15,8 +15,11 @@ export const BRAND_MAX_TOKENS = 32_000
 /** Fix rounds after round 0. */
 export const MAX_FIX_ROUNDS = 2
 
-/** The harness a run on this model records. `providerId` is the agent door's provider. */
-export function brandHarnessFor(model, providerId) {
+/**
+ * The harness a run on this model records. `providerId` is the agent door's provider; `noCaps` (a step of a chain build,
+ * #478) leaves the run without a cost cap (`capUsd: null`).
+ */
+export function brandHarnessFor(model, providerId, { noCaps = false } = {}) {
   const {
     writeAfterToolTurns: _planner,
     budgetUsd: _plannerBudget,
@@ -30,7 +33,7 @@ export function brandHarnessFor(model, providerId) {
     cacheTtl: { system: '5m', rolling: '5m' },
     imageLongEdge: BRAND_IMAGE_EDGE,
     maxTurns: 80,
-    capUsd: BRAND_CAP_USD,
+    capUsd: noCaps ? null : BRAND_CAP_USD,
     maxFixRounds: MAX_FIX_ROUNDS
   }
 }

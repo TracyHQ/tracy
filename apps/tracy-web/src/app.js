@@ -231,6 +231,10 @@ import { kitImagesFor } from './site-planner/kit-images.js'
 import { presign, signedCall } from './sites/artifacts.js'
 import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
+import { createStepChainEngine } from './sites/brief-engines/step-chain.js'
+import { createStepChainSteps } from './step-chain-steps.js'
+import { researchBusinessName } from './lib/research-revision.js'
+import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 import { createSiteBrand, setSiteBrand } from './sites/brief-engines/brand.js'
 import { createEmdashEngine } from './sites/brief-engines/emdash.js'
 import { createJoomlaEngine } from './sites/brief-engines/joomla.js'
@@ -2118,9 +2122,38 @@ export function buildApp(deps) {
               realPictures,
               applyFor
             })
-          )
+          ),
+          // The step chain (#483): picked by the frame for a chain build of an allow-listed template
+          // (`lib/step-chain-switch.js`). Its model steps run on the bench queues this server already works.
+          [STEP_CHAIN_WORKFLOW]: createStepChainEngine({
+            applyFor,
+            steps: createStepChainSteps({
+              pool: deps.pool,
+              config: deps.config,
+              secret: deps.config.sessionSecret,
+              kitImages: kitImagesFor({
+                pool: deps.pool,
+                config: deps.config,
+                fetchImpl: deps.fetchImpl ?? fetch
+              }),
+              brandWiring: productionWiring(deps.config, {
+                objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
+              }),
+              picturesStoreDir: defaultStoreDir(),
+              fetchImpl: deps.fetchImpl ?? fetch,
+              keepFiles: process.env.STEP_CHAIN_KEEP_FILES === '1',
+              log: deps.log ?? console
+            })
+          })
         },
         normalize: async (input) => {
+          // A step chain build names its site by the research it builds from; no model reads a brief it does not have.
+          if (input.brief?.workflow === STEP_CHAIN_WORKFLOW)
+            return {
+              name: await researchBusinessName(deps.pool, input.brief.researchRevisionId),
+              nameFrom: 'answer',
+              languages: []
+            }
           const normalized = await normalizeBrief({
             brief: input.brief,
             label: input.label,

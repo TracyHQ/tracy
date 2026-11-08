@@ -130,7 +130,7 @@ const BASE_KEYS = ['module-2.pic', 'article-7.5', 'module-2.gone', 'module-88.0'
 /**
  * The write step with a brand file and a picture package whose `painted` list is the one given.
  * @param {{ items: (figure: object) => object[], accent?: string, brand?: object, module?: string, contentMap?: object,
- *   site?: object }} input
+ *   site?: object, noBrand?: boolean }} input `noBrand`: the run has no brand file, as when the brand step failed
  */
 export async function runPainted({
   items,
@@ -141,7 +141,8 @@ export async function runPainted({
   site: over = {},
   templateFiles,
   templateAccent = null,
-  last
+  last,
+  noBrand = false
 }) {
   const figure = await makeFigure()
   const painted = items(figure)
@@ -178,7 +179,7 @@ export async function runPainted({
       siteKey: SITE,
       kit,
       contentMap,
-      files: { ...withBrand.files, pictures: frozen.files.pictures },
+      files: { ...withoutBrand(withBrand.files, noBrand), pictures: frozen.files.pictures },
       sleep: async () => {},
       ...(templateFiles ? { templateFiles } : {}),
       ...(last ? { last } : {}),
@@ -197,6 +198,13 @@ export async function runPainted({
     withBrand.done()
     frozen.done()
   }
+}
+
+/** The run's files, less the brand file when the run has none. */
+function withoutBrand(files, noBrand) {
+  if (!noBrand) return files
+  const { brand: _brand, ...rest } = files
+  return rest
 }
 
 /** The colours a picture holds: `#rrggbb` to how many fully opaque pixels have it. */

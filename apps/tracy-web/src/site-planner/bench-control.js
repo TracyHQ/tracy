@@ -2,7 +2,7 @@
 // it is queued (the brief's shape, the kit, the door, the kit's images) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
-import { benchHarnessFor, sendsImages } from '../lib/bench-harness.js'
+import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
@@ -28,7 +28,8 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object> }} input `kitImages`: the kit
- *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests).
+ *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the
+ *   run is a step of a chain build, so it carries no USD budget (#478).
  */
 export async function startBenchRun({
   pool,
@@ -38,7 +39,8 @@ export async function startBenchRun({
   kitRef,
   startedBy,
   kitImages,
-  index
+  index,
+  noCaps = false
 }) {
   const problems = briefShapeProblems(brief)
   if (problems.length)
@@ -69,7 +71,7 @@ export async function startBenchRun({
     promptSha256: plannerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: benchHarnessFor(door.snapshot.model, door.snapshot.providerId)
+    harness: capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps)
   })
   if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

@@ -111,17 +111,16 @@ test('list and status read the run; get writes the report file', async () => {
   assert.equal(report.counts.written, 9)
 })
 
-test('a dispute exits 1 and records the cause', async () => {
+test('a dispute no longer stops the run: it exits 0, the run is done and the report keeps the dispute', async () => {
   const c = copy()
   c.slots.push({ slot: 'block-2.3', owner: 'writer', text: 'Words the plan hides', factIds: [] })
   const frozen = frozenFiles({ copy: c })
   const h = harness()
-  assert.equal(await h.cli(runArgs(frozen.files)), 1)
+  assert.equal(await h.cli(runArgs(frozen.files)), 0)
   frozen.done()
-  assert.ok(h.err.some((l) => /SLOT_DISPUTE/.test(l) && /block-2\.3/.test(l)))
   const row = h.runs.rows[0]
-  assert.deepEqual([row.status, row.code], ['stopped', 'SLOT_DISPUTE'])
-  assert.equal(h.site.applies().length, 0)
+  assert.equal(row.status, 'done')
+  assert.ok(h.site.applies().length >= 1)
 })
 
 test('a missing file is a recorded stop, not a usage error', async () => {
@@ -233,12 +232,13 @@ test('check prints the group and the verdict, exits 0 on green and writes nothin
     "look-guard-findings: not-applicable 0 checked (the write step's look guard found nothing)"
   )
   assert.match(h.out[2], /^unaddressable-items: not-applicable 0 checked \(the write step left nothing out/)
+  assert.match(h.out[3], /^slot-disputes: not-applicable 0 checked \(no two files claimed one slot/)
   assert.match(
-    h.out[3],
+    h.out[4],
     /^emphasis-codes-left: not-applicable 0 checked \(the write step wrote no emphasis codes/
   )
-  assert.match(h.out[4], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
-  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured, 3 not applicable)')
+  assert.match(h.out[5], /^read-back: green 11 checked, \d+ skipped reads: content\.contract inspect \(11\)$/)
+  assert.equal(h.out.at(-1), 'site-check: green (0 block, 0 warn, 0 unmeasured, 4 not applicable)')
   assert.equal(h.site.calls.filter((c) => c.params.operation !== 'inspect').length, before)
   const { report } = h.runs.rows[0]
   assert.equal(report.siteCheck.version, 'site-check/1')
@@ -255,7 +255,7 @@ test('check exits 1 on red, printing the page, the slot, the step, and --out kee
     line,
     /block step 9 \(write\) page=- slot=block-2\.1 key=module-2\.1 measured="Changed by hand"/
   )
-  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured, 3 not applicable)')
+  assert.equal(h.out.at(-1), 'site-check: red (1 block, 0 warn, 0 unmeasured, 4 not applicable)')
   const saved = JSON.parse(readFileSync(path.join(dir, 'site-check.json'), 'utf8'))
   assert.equal(saved.status, 'red')
   assert.equal(h.runs.rows[0].report.slots.find((s) => s.slot === 'block-2.1').readBack, 'differs')
@@ -288,7 +288,7 @@ test('check --all-groups runs the page groups after a red read-back; a default c
       again.out.at(-1),
       wantAll
         ? /^site-check: red \(1 block, 0 warn, [1-9]\d* unmeasured(?:, \d+ not applicable)?\)$/
-        : /^site-check: red \(1 block, 0 warn, 0 unmeasured, 3 not applicable\)$/
+        : /^site-check: red \(1 block, 0 warn, 0 unmeasured, 4 not applicable\)$/
     )
   }
 })

@@ -466,6 +466,7 @@ Every webroot is a git repo. The sources that record:
 |---|---|---|
 | `site_turn` + Git moment | One chat or comment turn: who, what words; the files changed in the turn become one commit | The dsh host calls `POST /api/sites/:key/turn` ([`turn-record.mjs`](packages/site/tracy-site-tabs/src/host/turn-record.mjs)); since 09/10 step 1 does not wait for this door — the first tool call that **can write** to the site waits (`writeReady`, at most 15 s), so the turn-start seal still finishes before the agent's first write; turn 2+ of a session waits at the step to learn the `undone` list; since 16/10 that list is read with `POST /api/sites/:key/turn/undone` (reads only the previous turn's `site_turn`, no host job, no seal), so the step no longer waits for the seal and the previous turn's scan — if tracy-web does not have this door yet, it falls back to the answer of `POST /turn`. Since 10/10: the answer also carries `momentsPending` — earlier turns of the same session whose moment the host is still committing (`/moment` returned 202); the new turn's first write waits until `POST /api/sites/:key/moment/wait` reports `ended` (at most 120 s, equal to the host's site-lock wait limit); on timeout it writes and reports `release` so both turns are flagged if that moment commits. Since 16/10: the Good/Bad buttons under the answer (dsh's message feedback, heard through `session/event` and `feedback/committed`) are sent by the host to `POST /api/sites/:key/turn/rating` and kept in `site_turn.rating`, `rating_categories`, `rated_at` (migration 113) — no notes kept. Since 17/10 (real-usage measurement): closing a turn carries `work` — number of steps, number of tool calls, number of failed calls, read from the turn's own events — kept in `site_turn.steps`, `calls`, `failed_calls`; the turn's visual check verdict is sent by site-tools to `POST /api/sites/:key/turn/check` and kept in `site_turn.visual`, `visual_note` (migration 114) |
 | `site_write` | Every content write: through the Apply door, or reported to `POST /changed` (branch 4d) | The Apply door, the `/changed` door |
+| `setup_session` | The dsh chat sessions a Tracy setup run opened for its own repairs (the 9b pass of a step chain build; migration 206). The Apply door records a write made in one as `site_write.origin='setup'` under the run; Site changes leaves their turns out of the list and folds their writes and the files their turns committed into the run's one "Tracy setup" row; each is archived when the pass ends | The repair agent, before its first prompt ([`setup-session.js`](apps/tracy-web/src/sites/setup-session.js)) |
 | `site_stopped_write` | Every write of a call cut off by Stop: action, target, outcome (`sent`→result); `noticed_at` once the next turn has been told (migration 148) | `POST /turn/stopped` (host), read once with `POST /turn/stopped/take` |
 | `site_write` — action | The Apply door's write row for a create carries `content.create` (so Site changes shows it correctly as a create) while the `audit` row of the same statement keeps `content.update`; Undo pairs the two rows by turn + action + time, so `pairWrites` maps `content.create` of `via: apply` back to `content.update` when building the key | `recordApply`, `pairWrites` |
 | `site_write` — target.title | The record's name, so the card under the answer and Site changes name a write by its title, not its id (20/10/2026). `/changed` keeps the title EmDash reports; the Apply door keeps the `x-tracy-write-title` header (`encodeURIComponent`, one line, at most 200 characters) that the dsh host reads from that very record — accepted only from the host's signed actor, never from a cookie or an API key; it is only a label and does not decide which record is written or undone | `writeTitleOf`, `writeTarget`, `writeTargetOf` |
@@ -2376,7 +2377,29 @@ pages at once, and completion is read from `site_turn`. A site check of the page
 step's return is stopped with `session/cancel` and judged by what it wrote. A page that fails is logged and the others go
 on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
 step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
-`write-step-bench-repair-agent.js`); no customer flow calls it yet (#444).
+`write-step-bench-repair-agent.js`).
+
+**The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
+the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
+`workflow: 'step-chain/1'` and `researchRevisionId` (a `wo_revision` of the caller's own; no `brief`). The door refuses before
+anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or the revision is not the caller's (404); otherwise
+the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
+as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
+frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps, the brand cost cap and the 9b windows do not
+apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). Only a 2 hour outer deadline bounds the
+steps: a step still going then is stopped, its best version used, no new 9b work starts, and the Write step still runs inside a
+15 minute window (a soft failure; the run's hard stop is about 2 h 15 min). Lost-run
+detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
+and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
+queued through the bench's own command line on the revision and played by the bench worker this server runs
+(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Once the site is up and every input
+is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
+(`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. The write never leaves demo content: a step that
+fails does not stop the others (what reads its output is skipped), a failed run that still made versions hands over its best
+one, and a planner or writer that made nothing is replaced by stand-ins (`write-step/stand-in-files.js`: a plan keeping the
+whole kit, a copy filling nothing), so step 9's closing ladder empties every kept slot nothing fills. Only a template kit that
+cannot be read stops step 9 (a configuration error); the base site is then handed over as created. The row ends `applied`
+either way, with per-step minutes and USD and the ending kept in `site_brief.timings.chain`.
 
 ## 9. Sign-in, seats, permissions
 

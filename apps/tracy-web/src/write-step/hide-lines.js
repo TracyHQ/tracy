@@ -48,8 +48,72 @@ function removedResult({ key, already }, removed) {
   return typeof done === 'string' ? { status: 'failed', key, reason: done } : null
 }
 
+/** A link among words the write step replaces with words that hold no link: it leaves with the old words. */
+function rewrittenResult({ key }, refused) {
+  if (refused.has(key))
+    return {
+      status: 'failed',
+      key,
+      reason: `this link is inside the words of ${key}, whose new words were refused (${refusalWords(refused.get(key))}), so it stays`
+    }
+  return {
+    status: 'hidden',
+    key,
+    reason: `${PLAN_HIDES}: it was printed inside the words of ${key}, which the write step replaced with words that hold no link`
+  }
+}
+
+/** A link that follows the slots holding it: hidden when they all left, relinked or failed as they were. */
+function carriedResult({ key, keys, holder }, { gone, removed, relinked, refused }) {
+  const left = (k) => removed.get(k) === true || gone.has(k)
+  const relink = keys.find((k) => relinked?.has(k))
+  if (relink) {
+    const { address } = relinked.get(relink)
+    return {
+      status: 'written',
+      key: relink,
+      ordered: address,
+      part: 'relink',
+      reason: `${PLAN_HIDES}; the slot ${relink} that holds its address stays with its row, so it leads to the living page ${address}`
+    }
+  }
+  const failed = keys.find((k) => typeof removed.get(k) === 'string' || refused.has(k))
+  if (failed)
+    return {
+      status: 'failed',
+      key: failed,
+      reason: `this link stays with ${failed}, which could not leave: ${
+        typeof removed.get(failed) === 'string' ? removed.get(failed) : refusalWords(refused.get(failed))
+      }`
+    }
+  if (!keys.every(left)) return null
+  const what = {
+    row: 'its row',
+    slot: 'the slot of words',
+    address: 'the slots holding its address',
+    picture: 'the picture it is drawn around'
+  }[holder]
+  return {
+    status: 'hidden',
+    key,
+    reason: `${PLAN_HIDES}: it was printed by ${keys.join(', ')} and left with ${what ?? 'them'}`
+  }
+}
+
+/** A label written with a file's words, since hiding it would leave its control with none (hide-control-labels.js). */
+function restoredResult({ key, value, reason }, { refused, written }) {
+  const base = { key, part: 'control-label' }
+  if (refused.has(key))
+    return {
+      ...base,
+      status: 'failed',
+      reason: `${reason}; the words were refused: ${refusalWords(refused.get(key))}`
+    }
+  return written.has(key) ? { ...base, status: 'written', ordered: value, reason } : null
+}
+
 /** What became of one hide claim, or null while nothing did, which the report reads as the run having ended first. */
-function claimResult(order, { blocks, words, gone, refused, settled, removed, relinked }) {
+function claimResult(order, { blocks, words, gone, refused, settled, removed, relinked, written }) {
   const { via, key } = order
   if (via === 'kept') {
     const { status, reason, key: heldKey, ordered, readFrom, part } = order.line
@@ -58,9 +122,12 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
   if (via === 'failed')
     return { status: 'failed', reason: order.reason, key, ...(order.part ? { part: order.part } : {}) }
   if (via === 'fixed') return fixedResult(order, words)
+  if (via === 'restored') return restoredResult(order, { refused, written })
   if (via === 'removed') return removedResult(order, removed)
   if (via === 'empty')
     return { status: 'hidden', key, reason: `${PLAN_HIDES}: it is already empty on the site` }
+  if (via === 'rewritten') return rewrittenResult(order, refused)
+  if (via === 'carried') return carriedResult(order, { gone, removed, relinked, refused })
   if (via === 'block') {
     const done = blockResult(blocks, order.module)
     if (!done) return null
@@ -105,7 +172,8 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
 /**
  * @param {{ order: object, words: object, blocks: Map<string, true | string>, pages: Map<string, object>,
  *   cannotHide: string | null, emptied: Iterable<string>, refused: Map<string, object>, settled: Map<string, object>,
- *   removed?: Map<string, true | string>, relinked?: Map<string, { address: string, refusal: object }> }} input
+ *   removed?: Map<string, true | string>, relinked?: Map<string, { address: string, refusal: object }>,
+ *   written?: Iterable<string> }} input `written`: the keys the contract call wrote
  * @returns {{ hides: Map<string, object>, lines: object[], removed: Map<string, true | string>, rows: object[],
  *   rowKeys: Set<string> }} `rows`: rows kept against the plan per list; `rowKeys`: the unclaimed slots of given-up rows
  */
@@ -119,9 +187,19 @@ export function hideLines({
   refused,
   settled,
   removed = new Map(),
-  relinked = new Map()
+  relinked = new Map(),
+  written = []
 }) {
-  const seen = { blocks, words, gone: new Set(emptied), refused, settled, removed, relinked }
+  const seen = {
+    blocks,
+    words,
+    gone: new Set(emptied),
+    refused,
+    settled,
+    removed,
+    relinked,
+    written: new Set(written)
+  }
   const hides = new Map()
   for (const [slot, claim] of order.orders) {
     const result = claimResult(claim, seen)
@@ -137,6 +215,20 @@ export function hideLines({
   })
   const lines = [...pages].map(([page, result]) => frameLine(page, 'page-drop', result))
   lines.push(...rowRestLines(order, removed))
+  // A control taken with its only label, which no plan line names (hide-control-labels.js).
+  for (const [link, taking] of order.controls ?? []) {
+    const result = claimResult(taking, seen)
+    const said = result?.status === 'hidden' ? { reason: taking.reason } : {}
+    lines.push(
+      frameLine(
+        link,
+        'control',
+        result
+          ? { ...result, ...said }
+          : { status: 'skipped', reason: 'the run ended before this control was hidden' }
+      )
+    )
+  }
   for (const [block, module] of order.blocks) {
     const done =
       cannotHide && blocks.get(module) !== true

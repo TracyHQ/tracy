@@ -33,8 +33,20 @@ export function routeChanges(changes, kit, slots) {
   const deferred = new Map()
   const settings = new Set(each(kit?.site?.settingSlots).map((s) => s?.id))
   const icons = iconsOf(kit)
+  const fields = iconFields(icons)
   for (const { slot } of slots) {
     const key = contentMapKey(slot)
+    // The copy filled an icon's field itself: its class is never taken as is, only its network, in the template's own set.
+    if (fields.has(key) && looksLikeIconClass(changes[key])) {
+      const network = networkOfClass(changes[key])
+      const value = network && classOf(fields.get(key), network)
+      if (value) out[key] = value
+      else {
+        delete out[key]
+        deferred.set(key, `this template has no icon for "${changes[key]}"`)
+      }
+      continue
+    }
     if (settings.has(slot)) {
       delete out[key]
       deferred.set(key, 'a setting slot: the page settings stage writes it')
@@ -56,4 +68,101 @@ export function routeChanges(changes, kit, slots) {
       )
   }
   return { changes: out, routed, deferred }
+}
+
+/** Whether a value is a list of icon classes (`fa fa-x`, `fa-brands fa-x`, `fab fa-x`), not words. */
+const looksLikeIconClass = (value) =>
+  typeof value === 'string' &&
+  /^(?:[\w-]+\s+)*fa[a-z-]*(?:\s+[\w-]+)*$/i.test(value.trim()) &&
+  /(?:^|\s)fa-/i.test(value)
+
+/** Each icon field by content map key, with the classes of its list's rows by network name. */
+function iconFields(icons) {
+  const fields = new Map()
+  for (const { field, classes } of icons.values()) if (field) fields.set(contentMapKey(field), classes)
+  return fields
+}
+
+/** Network names that differ between icon sets and addresses; the kit names a network by its rows' own word. */
+const ALIASES = {
+  x: ['x', 'twitter'],
+  'x-twitter': ['x', 'twitter'],
+  'facebook-f': ['facebook'],
+  'linkedin-in': ['linkedin']
+}
+const classOf = (classes, network) =>
+  (ALIASES[network] ?? [network]).map((n) => classes.get(n)).find((v) => typeof v === 'string') ?? null
+
+/** The network an icon class draws (`fa-brands fa-instagram`, `fab fa-x-twitter`), or null. */
+export function networkOfClass(value) {
+  const found =
+    /(?:^|\s)fa-(facebook-f|facebook|instagram|x-twitter|twitter|linkedin-in|linkedin|youtube|tiktok|pinterest|whatsapp|telegram|threads)(?=\s|$)/i.exec(
+      String(value ?? '')
+    )
+  return found ? found[1].toLowerCase() : null
+}
+
+const HOSTS = [
+  [/(^|\.)(facebook\.com|fb\.com)$/, 'facebook'],
+  [/(^|\.)instagram\.com$/, 'instagram'],
+  [/(^|\.)(twitter\.com|x\.com)$/, 'x'],
+  [/(^|\.)linkedin\.com$/, 'linkedin'],
+  [/(^|\.)(youtube\.com|youtu\.be)$/, 'youtube'],
+  [/(^|\.)tiktok\.com$/, 'tiktok'],
+  [/(^|\.)pinterest\.com$/, 'pinterest'],
+  [/(^|\.)(wa\.me|whatsapp\.com)$/, 'whatsapp'],
+  [/(^|\.)t\.me$/, 'telegram'],
+  [/(^|\.)threads\.net$/, 'threads']
+]
+
+/** The network an address is on, or null. */
+export function networkOfUrl(url) {
+  let host
+  try {
+    host = new URL(String(url)).hostname.toLowerCase()
+  } catch {
+    return null
+  }
+  return HOSTS.find(([re]) => re.test(host))?.[1] ?? null
+}
+
+/**
+ * A row's icon follows its link (the icon slot `<link>.icon`): when a plan link writes the row's address, the row's icon field
+ * takes the template's class for that address's network, so no icon of a kept row is left unowned with the demo's glyph.
+ * @param {{ kit: object, links: Record<string, string> }} input `links`: what the link stage writes, by content map key
+ * @returns {{ changes: Record<string, string>, owned: string[], unknown: { slot: string, reason: string }[] }}
+ */
+export function linkIconChanges({ kit, links }) {
+  const changes = {}
+  const owned = []
+  const unknown = []
+  for (const [id, { field, classes }] of iconsOf(kit)) {
+    const url = field && id.endsWith('.icon') ? links[contentMapKey(id.slice(0, -'.icon'.length))] : null
+    if (typeof url !== 'string') continue
+    const network = networkOfUrl(url)
+    const value = network && classOf(classes, network)
+    if (value) {
+      changes[contentMapKey(field)] = value
+      owned.push(id)
+    } else unknown.push({ slot: id, reason: `this template has no icon for the network of ${url}` })
+  }
+  return { changes, owned, unknown }
+}
+
+/** The line of each row icon its link owns: written to the icon field, read back on that field. */
+export function iconLinkLines(owned, { written, refused, ordered }) {
+  const done = new Set(written)
+  return owned.map(({ slot, key }) => ({
+    slot,
+    key,
+    owner: 'plan',
+    readBack: null,
+    ordered: ordered[key],
+    status: done.has(key) ? 'written' : refused.has(key) ? 'failed' : 'skipped',
+    reason: done.has(key)
+      ? 'the icon follows the network its row now links to, in the template icon set'
+      : refused.has(key)
+        ? 'the site refused the icon of the network its row now links to'
+        : 'the run ended before the icon was written'
+  }))
 }

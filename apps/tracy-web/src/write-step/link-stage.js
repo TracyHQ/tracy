@@ -6,13 +6,14 @@ import { createHash } from 'node:crypto'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
+import { foreignItemLinks } from './item-page-links.js'
 import { linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, linkTarget } from './link-targets.js'
 import { menuRows } from '../lib/joomla-menu-rows.js'
 import { rowsOpening } from './page-meta-write.js'
-import { doorCall } from './settings-door.js'
+import { doorCall, readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const PAGE_ROWS = 25
@@ -97,6 +98,43 @@ function settleControls(orders, doors, owners) {
 }
 
 /**
+ * The menu items a plan link relabels whose target cannot be written (a component item is a page of its own, or the site refused
+ * the target): the label would print the plan's words over the old target, the template's demo page. So each leaves the menus
+ * with its label (ADR 0044, closing ladder): its line is hidden on the item's row, and the write step unpublishes the item and
+ * does not write the label. Decided before any write, so nothing is half written.
+ */
+function strandedMenuItems({ claims, doors, orders, leaving }) {
+  const out = []
+  for (const claim of claims) {
+    const door = doors.get(claim.slot)
+    const order = orders.get(claim.slot)
+    if (door?.via !== 'menu' || !door.row || !claim.label || leaving.has(door.link?.menuItem)) continue
+    if (order?.status !== 'failed' && order?.status !== 'refused') continue
+    const id = Number(door.item)
+    const reason = `${order.reason}; so the item leaves the menus with its label instead of printing the plan's words over its old page`
+    Object.assign(order, {
+      status: 'hidden',
+      reason,
+      key: null,
+      ordered: '0',
+      readFrom: readRow('menuItem', id, 'published')
+    })
+    out.push({ item: `menuItem-${id}`, id, link: claim.slot, label: claim.label, reason })
+  }
+  return out
+}
+
+/** A menu target the site refused after the label was written: the item is unpublished, so the label opens no old page. */
+async function unpublishAfterRefusal(call, item, refusal) {
+  try {
+    await call('content.update', { kind: 'menuItem', id: item, fields: { published: 0 } })
+    return `${refusal}; the item was unpublished so its label does not open the old page`
+  } catch (error) {
+    return `${refusal}; unpublishing the item failed too: ${error.message}`
+  }
+}
+
+/**
  * @param {{ door: { apply: Function }, siteKey: string, kit: object, plan: object, brief?: object, owners: Map<string, object>,
  *   reading: object, extras: object, taken: Record<string, string>, last?: object, createdPages?: Map<string, object> }} input
  *   `taken`: what other files send to the contract call; `last`: the last report, whose menu targets are not written again;
@@ -145,13 +183,23 @@ export async function prepareLinks({
   )
   const orders = new Map()
   const doors = new Map(claims.map((claim) => [claim.slot, doorOf(claim.slot)]))
+  // A card sent to another card's item page leads to the page that lists them instead (item-page-links.js).
+  const foreign = foreignItemLinks({ claims, kit, plan, taken })
   for (const claim of claims)
     orders.set(
       claim.slot,
       lineOrder(
         claim,
         doors.get(claim.slot),
-        linkTarget(claim.content, { plan, kit, facts, createdPages, ...site }),
+        foreign.has(claim.slot) && !foreign.get(claim.slot).content
+          ? { kind: 'failed', reason: foreign.get(claim.slot).reason }
+          : linkTarget(foreign.get(claim.slot)?.content ?? claim.content, {
+              plan,
+              kit,
+              facts,
+              createdPages,
+              ...site
+            }),
         {
           hiddenKeys,
           leaving,
@@ -160,6 +208,7 @@ export async function prepareLinks({
       )
     )
   settleControls(orders, doors, owners)
+  const stranded = strandedMenuItems({ claims, doors, orders, leaving })
 
   const onSite = new Map(each(reading?.slots).map((s) => [s?.key, s]))
   const values = new Map()
@@ -211,7 +260,8 @@ export async function prepareLinks({
         await call('content.update', { apply_id: applyId, kind: 'menuItem', id: item, fields: { link: url } })
         menuDone.set(order, 'done')
       } catch (error) {
-        menuDone.set(order, error.message)
+        // Its label is written by now: an item left on its old target would print the plan's words over that page.
+        menuDone.set(order, await unpublishAfterRefusal(call, item, error.message))
       }
     }
   }
@@ -219,10 +269,17 @@ export async function prepareLinks({
   return {
     changes,
     evidence,
+    stranded,
     writeMenu,
     results: (done) => {
       const seen = { ...done, written: new Set(done.written), hiddenKeys, leaving, menuDone }
-      return new Map([...orders].map(([slot, order]) => [slot, lineResult(order, seen)]))
+      return new Map(
+        [...orders].map(([slot, order]) => {
+          const line = lineResult(order, seen)
+          const moved = foreign.get(slot)
+          return [slot, moved && line.status === 'written' ? { ...line, reason: moved.reason } : line]
+        })
+      )
     }
   }
 }

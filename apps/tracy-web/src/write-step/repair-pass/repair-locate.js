@@ -86,7 +86,8 @@ export async function pageItems(pass, page, faults) {
     const element = served ? servedElementOf(served, fault) : null
     const words =
       typeof fault.measured === 'string' && fault.measured ? fault.measured : quotedWords(fault.seen)
-    const text = element?.text || (element?.image ? '' : words)
+    // A control's measure (`a.btn -> /contact`) is not words the page shows: a found control is looked up by its own words.
+    const text = element?.text || (element?.image || (element && fault.selector) ? '' : words)
     const marks = element?.marks ?? []
     const params = {
       url,

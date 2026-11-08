@@ -208,17 +208,17 @@ test('several frames of the one setting with one file are one owner and one line
   assert.equal(site.of('template.siteSettings', 'set').length, 1)
 })
 
-test('two frames of the one setting with different files are a dispute, with nothing written', async () => {
+test('two frames of the one setting with different files are a dispute settled on the setting; the run goes on', async () => {
   const other = picture('other background')
   const pictures = picturePackage()
   pictures.siteSettings.push({ ...pictures.siteSettings[0], ...other.entry, frame: 'block-4.bg' })
   const { report, site } = await runPictures({
     files: { pictures, files: [HERO, FIGURE, BACKGROUND, other] }
   })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
-  assert.match(report.cause.reason, /site\.body-background/)
-  assert.equal(site.log.length, 0)
+  assert.equal(report.status, 'done')
+  assert.equal(report.disputes[0].slot, 'site.body-background')
+  assert.ok(report.disputes[0].settled)
+  assert.ok(site.of('content.contract', 'apply').length >= 1)
 })
 
 test('a plugin older than the setting fails its line in words that name the release, and the rest goes on', async () => {
@@ -258,41 +258,44 @@ test('a setting entry that is a neutral preview is not written', async () => {
   assert.match(line('block-3.bg').reason, /not drawn yet/)
 })
 
-test('a picture on a slot the copy fills is a dispute that names both files, with nothing written', async () => {
+test('a picture on a text slot the copy fills is a dispute the words win, naming both files; the picture is not sent there', async () => {
   const pictures = picturePackage()
   pictures.mapping.changes['module-2.1'] = HERO.entry.sitePath
-  const { report, site } = await runPictures({ site: { contract: {} }, files: { pictures } })
-  assert.equal(report.status, 'stopped')
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
-  assert.match(report.cause.reason, /block-2\.1: mapping\.json \(picture\) against copy\.json \(writer\)/)
+  const { report, site, line } = await runPictures({ files: { pictures } })
+  assert.equal(report.status, 'done')
   assert.equal(report.disputes[0].slot, 'block-2.1')
-  assert.equal(site.log.length, 0)
+  assert.deepEqual(report.disputes[0].claims.map((c) => c.file).sort(), ['copy.json', 'mapping.json'])
+  assert.equal(report.disputes[0].settled.owner, 'writer')
+  assert.equal(line('block-2.1').status, 'written')
+  const sent = site.of('content.contract', 'apply').map((c) => c.params.changes['module-2.1'])
+  assert.deepEqual(sent, ['Train with a coach who knows you'])
 })
 
-test('a picture on a slot the plan hides is a dispute, with nothing written', async () => {
+test('a picture on a slot the plan hides is a dispute the plan wins; the picture is not sent there', async () => {
   const pictures = picturePackage()
   pictures.mapping.changes['module-2.3'] = HERO.entry.sitePath
-  const { report, site } = await runPictures({ files: { pictures } })
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
-  assert.match(report.cause.reason, /block-2\.3/)
-  assert.equal(site.log.length, 0)
+  const { report } = await runPictures({ files: { pictures } })
+  assert.equal(report.status, 'done')
+  assert.equal(report.disputes[0].slot, 'block-2.3')
+  assert.equal(report.disputes[0].settled.owner, 'plan')
 })
 
-test('a frame the package hides and the copy fills is a dispute', async () => {
+test('a frame the package hides and the copy fills is a dispute settled on that frame', async () => {
   const pictures = picturePackage()
   pictures.hidden.push({ frame: 'block-2.1', key: 'module-2.1', reason: 'invented' })
   const { report } = await runPictures({ files: { pictures } })
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
+  assert.equal(report.status, 'done')
+  assert.equal(report.disputes[0].slot, 'block-2.1')
 })
 
-test('a background on a frame the plan hides is a dispute, not a silent overwrite', async () => {
+test('a background on a frame the plan hides is a dispute the plan wins, not a silent overwrite', async () => {
   const pictures = picturePackage()
   pictures.siteSettings[0].frame = 'block-2.3'
   const kit = pictureKit()
   kit.doc.site.settingSlots[0].frames.push('block-2.3')
   const { report } = await runPictures({ kit, files: { pictures } })
-  assert.equal(report.cause.code, 'SLOT_DISPUTE')
-  assert.match(report.cause.reason, /block-2\.3/)
+  assert.equal(report.status, 'done')
+  assert.equal(report.disputes.find((d) => d.slot === 'block-2.3').settled.owner, 'plan')
 })
 
 test('a slot in the picture package no longer reads as having no owner', async () => {

@@ -18,6 +18,7 @@ import { GroupUnmeasured } from './group-unmeasured.js'
 import { kitVersionGroup } from './kit-version.js'
 import { PAGE_CHECK_GROUPS } from './page-groups.js'
 import { baselineAtRoutes, hasRouteTable, pageSlugGroup } from './page-slug.js'
+import { reachablePagesGroup, iconGlyphsGroup } from './reachable-pages.js'
 import { readBackGroup } from './read-back.js'
 import { WRITE_FINDING_GROUPS } from './write-findings.js'
 import { writtenNotPrintedGroup } from './written-not-printed.js'
@@ -36,8 +37,14 @@ export const ROUTE_GROUPS = [pageSlugGroup]
 /**
  * The groups that read pages as a visitor's browser gets them, with no browser: they run when a page reader is given.
  * `alt-matches-picture` also needs step 8's manifest (`pictures`); without it, it is unmeasured when pictures were written.
+ * `reachable-pages` and `icon-glyphs` (reachable-pages.js) open every page a kept page links to and read its icons.
  */
-export const PAGE_READ_GROUPS = [writtenNotPrintedGroup, altMatchesPictureGroup]
+export const PAGE_READ_GROUPS = [
+  writtenNotPrintedGroup,
+  altMatchesPictureGroup,
+  reachablePagesGroup,
+  iconGlyphsGroup
+]
 
 const READ_OPERATIONS = new Set(['inspect', 'read'])
 /** Actions that only read by what they are (the plugin marks `content.get` and `content.list` as writing nothing) and take no operation. */

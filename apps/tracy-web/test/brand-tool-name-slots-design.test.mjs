@@ -2,7 +2,7 @@
 // tracy-ds-slot in accent-only mode on the committed JA Boxing 1.0.10 kit.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { computeNameSlots } from '../src/brand-step/name-slots.js'
+import { computeNameSlots } from '../src/lib/brand-name-slots.js'
 import { BrandToolError, toolByName } from '../src/brand-step/tools/index.js'
 import { BRIEF, KIT, makeCtx } from './_brand-tool-fixtures.mjs'
 

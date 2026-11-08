@@ -568,7 +568,9 @@ export function createClientDemoService(deps) {
       revision: state.revision,
       requestId: state.action.build_request_id,
       label: state.build.label,
-      demoActionId: state.action.id
+      demoActionId: state.action.id,
+      // This build's chat owns it: never switched to the step chain.
+      stepChain: false
     })
     if (result.status >= 300) throw error(result.body.code ?? 'PROVISION_FAILED')
     return result

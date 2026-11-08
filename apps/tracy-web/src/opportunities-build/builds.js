@@ -33,6 +33,7 @@ import {
 import { templateRefusal } from './revisions.js'
 import { choiceKey } from './build-choice.js'
 import { QUALITY_PROTOCOL } from './quality-protocol.js'
+import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 
 const ABOUT_MAX = 300
 
@@ -127,7 +128,9 @@ export async function startBuild({
   config,
   domain,
   demoActionId = null,
-  qualityLease = null
+  qualityLease = null,
+  // False for a build whose chat already owns it (client-send): such a build is never switched to the chain.
+  stepChain = true
 }) {
   const refusal = templateRefusal(revision.template)
   if (refusal)
@@ -217,6 +220,16 @@ export async function startBuild({
     quality || agentDemo
       ? { brief: null, pagePlan: null }
       : await siteBrief({ request, origin, cookie, revision, domain })
+  // 🔒 AN ENABLED TEMPLATE'S AGENT-DEMO BUILD GOES TO THE STEP CHAIN (#479): the site is created with the chain
+  // workflow and the frozen research revision, and no brief. Quality runs and other templates keep their build. A
+  // build asked again keeps the workflow its first ask used, so a switch flipped between two asks never changes it.
+  const chain =
+    agentDemo &&
+    !quality &&
+    stepChain &&
+    (row.receipt?.workflow
+      ? row.receipt.workflow === STEP_CHAIN_WORKFLOW
+      : stepChainEnabled({ quickstart: revision.template.quickstart }))
   const answer = await readJson(request, '/api/sites', {
     method: 'POST',
     headers: {
@@ -237,7 +250,11 @@ export async function startBuild({
       ...(revision.template.release ? { expectedQuickstartRelease: revision.template.release } : {}),
       label: chosen,
       buildId: row.build_id,
-      ...(agentDemo ? { workflow: AGENT_DEMO } : {}),
+      ...(chain
+        ? { workflow: STEP_CHAIN_WORKFLOW, researchRevisionId: revision.id }
+        : agentDemo
+          ? { workflow: AGENT_DEMO }
+          : {}),
       ...(quality || agentDemo ? {} : { brief })
     })
   })
@@ -246,6 +263,7 @@ export async function startBuild({
     status: answer.status,
     body: answer.body,
     at: new Date().toISOString(),
+    ...(chain ? { workflow: STEP_CHAIN_WORKFLOW } : {}),
     ...(demoActionId ? { demoActionId } : {}),
     ...(pagePlan ? { pagePlan } : {}),
     // A warned brief builds, and what it lacks goes with the build as questions for the owner (#50).
@@ -267,6 +285,11 @@ export async function startBuild({
       build
     }
   }
+}
+
+/** Whether a build was asked of the create door with the step chain workflow (its receipt says so). */
+export function isStepChainBuild(build) {
+  return build?.receipt?.workflow === STEP_CHAIN_WORKFLOW
 }
 
 /**

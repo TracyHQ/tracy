@@ -230,3 +230,31 @@ test('a picture link that is truly dead stays dead: a 404, and an address nobody
     await s.close()
   }
 })
+
+// The real default request, not a fake: a site proxy routes by the Host header, and Node's fetch drops that header, so every
+// link of a site read through the proxy answered nothing (a local step chain run: 124 dead links, each a live page).
+test('through the site proxy, the default request carries the virtual Host, so a live link is not dead', async () => {
+  const { createServer } = await import('node:http')
+  const proxy = createServer((req, res) => {
+    const own = req.headers.host === 'padel-invented.tracy.test:51710'
+    res.writeHead(own ? 200 : 404, own ? { 'x-tracy-site-response': 'padel-invented' } : {})
+    res.end()
+  })
+  await new Promise((resolve) => proxy.listen(0, resolve))
+  try {
+    const via = `http://localhost:${proxy.address().port}/`
+    const site = 'http://padel-invented.tracy.test:51710/'
+    const { measures } = await withLinkStatus([entry('/', 1440, [`${site}index.php/about`])], {
+      base: site,
+      serveFrom: via,
+      serveFromIsProxy: true,
+      proxySiteLabel: 'padel-invented'
+    })
+    assert.deepEqual(
+      measures[0].links.map((l) => l.status),
+      [200]
+    )
+  } finally {
+    proxy.close()
+  }
+})
