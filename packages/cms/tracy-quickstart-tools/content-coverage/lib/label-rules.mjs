@@ -53,6 +53,12 @@ const FACT_SAMPLE_ROLE = /^contact\.|\.price$|^offering\.(?:price_note|schedule)
  * A phone, email, address or hours sample still needs a contact role.
  */
 const PRICE_LIKE_RESULT_ROLES = new Set(['stat.value', 'claim.notice'])
+/**
+ * A menu item's name that carries its price in the same inline markup slot (`Salad ((span class="price"))$30((/span))`):
+ * the role is a fact role, so a build never keeps the demo's words and the price goes with the name. Only the inline
+ * slot of a name role qualifies; a plain text name with a price inside stays an R2 failure.
+ */
+const NAME_WITH_PRICE_ROLES = new Set(['offering.name', 'package.name'])
 const CTA_LABEL_ROLES = new Set([
   'contact.cta_label',
   'offering.cta_label',
@@ -120,7 +126,9 @@ function r2(slots, version) {
       continue
     }
     const result = kinds.every((k) => k === 'price') && PRICE_LIKE_RESULT_ROLES.has(roleOf(s))
-    if (!result && !FACT_SAMPLE_ROLE.test(roleOf(s))) out.push(s.key)
+    const nameWithPrice =
+      kinds.every((k) => k === 'price') && s.markup === 'inline' && NAME_WITH_PRICE_ROLES.has(roleOf(s))
+    if (!result && !nameWithPrice && !FACT_SAMPLE_ROLE.test(roleOf(s))) out.push(s.key)
   }
   return out
 }

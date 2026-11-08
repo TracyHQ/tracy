@@ -32,6 +32,7 @@
  *     [--previous-map <previous version's content-map.json>] [--unplaced-report <file>]
  *     [--all-text] [--posts] [--page-titles] [--inline-markup] [--role-vocabulary 2|3]
  *     [--theme-picture-options <option,...>] [--theme-picture-meta <meta key,...>]
+ *     [--theme-text-options <option,...>] [--template-parts <slug,...>]
  *
  * ALL VISIBLE TEXT (spec #37, issue #43): `--all-text` also makes a slot for every heading, paragraph, list item, button,
  * table cell, cite and menu label that has no `metadata.name` (or repeats one), and a url slot for each link in them.
@@ -60,6 +61,11 @@
  * out and said. THEME PICTURES: `--theme-picture-options` and `--theme-picture-meta` declare the options and post meta
  * keys the theme keeps a picture's attachment id in (`manifest.themePictures`); each option becomes an entity, and
  * `capture-image-slots.mjs` makes their image slots. Both off by default: Claude Cowork 0.18.39 or later binds them.
+ *
+ * THEME TEXTS AND TEMPLATE PARTS (TracyHQ/tracy#459): `--theme-text-options` declares the options the theme keeps a text of
+ * the business in (a phone, an address; `manifest.themeTexts`, theme prefix only), each an option entity with one text
+ * slot. `--template-parts` makes a `templatePart` entity (identity `{ slug }`) of each named part, with the slots of its
+ * named blocks. Both off by default: Claude Cowork 0.18.40 or later binds them.
  *
  * SLOT ROLES (ADR 0038): every text and image slot of the map carries a `role` and a `group`. A recapture passes the
  * previous version's content map as --previous-map: a slot whose key AND sample are unchanged keeps its role and group
@@ -355,6 +361,83 @@ export function themePictureDeclaration({ theme, options = [], meta = [] }) {
 }
 
 /**
+ * The `themeTexts` declaration of the manifest (TracyHQ/tracy#459): the options the theme keeps a text of the business in
+ * (a phone, an address, a website the theme prints), held to the rule the Claude Cowork plugin binds by: the theme's own
+ * prefix (`wp-ja-diner` gives `wp_ja_diner_`), so a declaration can never reach a core setting. Null when nothing is
+ * declared, so a profile without theme texts keeps its manifest bytes.
+ * @param {{ theme: string, options?: string[] }} declared
+ * @returns {{ options: string[] } | null}
+ */
+export function themeTextDeclaration({ theme, options = [] }) {
+  if (options.length === 0) return null
+  const prefix = `${theme.replace(/-/g, '_')}_`
+  for (const name of options) {
+    if (!/^[A-Za-z0-9_-]{1,64}$/.test(name)) throw new Error(`theme text key ${name} is not a name`)
+    if (!name.startsWith(prefix) || name === prefix)
+      throw new Error(
+        `theme text option ${name} is not one of the theme ${theme} (its name starts ${prefix})`
+      )
+  }
+  return { options: [...options] }
+}
+
+/**
+ * The entity and the text slot of each declared theme text option, read from the dump's options.
+ * @param {{ options: string[], values: Map<string, string> }} input
+ */
+export function themeTextSlotsOf({ options, values }) {
+  const entities = []
+  const slots = []
+  for (const name of options) {
+    if (!values.has(name)) throw new Error(`theme text option ${name} is not in the dump`)
+    const sample = String(values.get(name) ?? '')
+    entities.push({ key: `option-${name}`, kind: 'option', identity: { name } })
+    slots.push({
+      key: `theme.${name}`,
+      entity: `option-${name}`,
+      target: { option: name },
+      type: 'text',
+      sample,
+      maxCharacters: Math.max(80, Math.min(2000, sample.length * 2 + 20)),
+      label: `Theme text — ${name}`
+    })
+  }
+  return { entities, slots }
+}
+
+/**
+ * The entity and the slots of each named template part: a part is addressed by its slug (`kind: "templatePart"`,
+ * identity `{ slug }`, key `templatePart-<slug>`), its slots are the named blocks of its markup by the same rule as a
+ * page. A slug that is not exactly one published row of the dump is refused by name.
+ * @param {object[]} rows the dump's posts
+ * @param {string[]} slugs
+ */
+export function templatePartEntitiesOf(rows, slugs, { allText = false, inlineMarkup = false } = {}) {
+  const entities = []
+  const slots = []
+  const skipped = []
+  for (const slug of slugs) {
+    const same = rows.filter(
+      (x) => x.post_type === 'wp_template_part' && x.post_name === slug && x.post_status === 'publish'
+    )
+    if (same.length !== 1) throw new Error(`template part ${slug} resolves to ${same.length} rows`)
+    const key = `templatePart-${slug}`
+    const got = pageSlots({
+      content: String(same[0].post_content ?? ''),
+      entityKey: key,
+      prefix: `part-${slug}`,
+      allText,
+      inlineMarkup
+    })
+    skipped.push(...got.skipped)
+    if (got.slots.length === 0) continue
+    entities.push({ key, kind: 'templatePart', identity: { slug } })
+    slots.push(...got.slots)
+  }
+  return { entities, slots, skipped }
+}
+
+/**
  * The fields of a release's `manifest.json` this tool reads, whichever of the two shapes it has: the
  * older one (`webroot`/`database` at the top, `wpVersion`, `phpVersion`, `theme` as a name or object)
  * and the newer `tracy-quickstart/v1` one (`parts`, `cms: {version}`, no PHP version). A field the
@@ -392,6 +475,8 @@ export function deriveProfile({
   inlineMarkup = false,
   themePictureOptions = [],
   themePictureMeta = [],
+  themeTextOptions = [],
+  templateParts = [],
   vocabulary
 }) {
   const release = normalizeRelease(raw)
@@ -482,6 +567,18 @@ export function deriveProfile({
     if (!options.has(name)) throw new Error(`theme picture option ${name} is not in the dump`)
     entities.push({ key: `option-${name}`, kind: 'option', identity: { name } })
   }
+  const themeTexts = themeTextDeclaration({ theme: stylesheet, options: themeTextOptions })
+  if (themeTexts) {
+    const got = themeTextSlotsOf({ options: themeTexts.options, values: options })
+    entities.push(...got.entities)
+    slots.push(...got.slots)
+  }
+  if (templateParts.length > 0) {
+    const got = templatePartEntitiesOf(rows, templateParts, { allText, inlineMarkup })
+    entities.push(...got.entities)
+    slots.push(...got.slots)
+    coverage.skipped.push(...got.skipped)
+  }
   const keys = new Set()
   for (const s of slots) {
     if (keys.has(s.key)) throw new Error(`slot key ${s.key} is made twice`)
@@ -521,7 +618,8 @@ export function deriveProfile({
     },
     coworkContractVersion: coworkVersion,
     mode: 'content-recommendation',
-    ...(themePictures ? { themePictures } : {})
+    ...(themePictures ? { themePictures } : {}),
+    ...(themeTexts ? { themeTexts } : {})
   }
   const contentMap = {
     schemaVersion: 'tracy-quickstart-content-map/wordpress/v1',
@@ -617,6 +715,8 @@ function main() {
     inlineMarkup: args['inline-markup'] === true,
     themePictureOptions: (args['theme-picture-options'] ?? '').split(',').filter(Boolean),
     themePictureMeta: (args['theme-picture-meta'] ?? '').split(',').filter(Boolean),
+    themeTextOptions: (args['theme-text-options'] ?? '').split(',').filter(Boolean),
+    templateParts: (args['template-parts'] ?? '').split(',').filter(Boolean),
     vocabulary: args['role-vocabulary'] === '3' ? 'place-content-roles/3' : undefined,
     previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined
   })
