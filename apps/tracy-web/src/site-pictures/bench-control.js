@@ -7,10 +7,11 @@
 // a specific cut-out frame, which is always drawn (#346). Always the looker door's
 // snapshot (#343, `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
-import { benchHarnessFor } from '../lib/bench-harness.js'
+import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
-import { readableKits } from '../lib/template-kit-source.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
+import { readableKits } from '../lib/template-kit-source.js'
+import { altsOfCopy } from './alt-notes.js'
 import {
   activeRun,
   createRun,
@@ -19,17 +20,16 @@ import {
   SITE_PICTURES_RUN_ACTIVE,
   sha256Of
 } from './bench-store.js'
-import { fileStore, sha256Hex } from './file-store.js'
-import { openKitWithMap } from './kit-with-map.js'
 import { picturePickerDoor } from './door.js'
 import { pictureDrawerDoor } from './drawer-door.js'
+import { fileStore, sha256Hex } from './file-store.js'
+import { openKitWithMap } from './kit-with-map.js'
+import { drawsCutouts } from './ladder-rungs.js'
 import { pictureLookerDoor } from './looker-door.js'
-import { altsOfCopy } from './alt-notes.js'
 import { briefImages } from './owner-photos.js'
+import { needsPicker } from './picker-input.js'
 import { CHECKER_VERSION } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
-import { drawsCutouts } from './ladder-rungs.js'
-import { needsPicker } from './picker-input.js'
 import { picturePrompts } from './picture-prompts.js'
 
 export { briefOfRevision }
@@ -57,7 +57,8 @@ export async function startPictureRun({
   photos = null,
   copy = null,
   storeDir,
-  index
+  index,
+  noCaps = false
 }) {
   const where = index ? { index } : {}
   const kits = readableKits(where)
@@ -125,7 +126,7 @@ export async function startPictureRun({
       looker: looker.snapshot,
       ...(drawer ? { drawer: drawer.snapshot } : {})
     },
-    harness: door ? benchHarnessFor(door.snapshot.model, door.snapshot.providerId) : {}
+    harness: door ? capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps) : {}
   })
   if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

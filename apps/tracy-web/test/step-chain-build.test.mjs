@@ -11,12 +11,12 @@ import { after, before, beforeEach, test } from 'node:test'
 import { buildApp } from '../src/app.js'
 import { readConfig } from '../src/config.js'
 import { hostCall, hostJob } from '../src/host/client.js'
+import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
 import { readActivityV2 } from '../src/sites/activity-v2.js'
 import { createBriefBuilds } from '../src/sites/brief-build.js'
-import { writeComponent } from '../src/sites/store.js'
 import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
 import { briefOf } from '../src/sites/brief-store.js'
-import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
+import { writeComponent } from '../src/sites/store.js'
 import { fileDb } from './_db.mjs'
 
 const db = fileDb()
@@ -605,5 +605,75 @@ test(
     )
     const row = (await briefOf(pool, 'harbourpadel.tracy.test')).timings.chain
     assert.equal(row.ending, 'running', 'the last snapshot stays; the reader sees the row failed')
+  }
+)
+
+test("a chain build past the frame's old 25 minute cut is not cut (#478)", dbOpts, async () => {
+  const { pool } = db
+  let clock = 0
+  const { steps } = fakeSteps({
+    plan: async () => ((clock += 40 * 60_000), { value: { file: 'plan.json' }, usd: 0.2 }),
+    write: async () => (
+      (clock += 20 * 60_000), { value: { report: { status: 'done', counts: { written: 5 } } } }
+    )
+  })
+  const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }), now: () => clock })
+  const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
+  await b.start(chainInput())
+  assert.equal((await untilSettled(b, 'harbourpadel.tracy.test')).state, 'applied')
+  const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
+  assert.equal(record.ending, 'complete')
+  assert.ok(record.totalMinutes >= 60, String(record.totalMinutes))
+})
+
+test(
+  'at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (#478)',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    let clock = 0
+    let fire = () => {}
+    let timerMs = null
+    const timer = (f, ms) => {
+      fire = f
+      timerMs = ms
+      return () => {}
+    }
+    const written = []
+    const { steps } = fakeSteps({
+      // The pictures step never ends on its own: only the deadline's signal frees it.
+      pictures: (_ctx, _inputs, { signal }) =>
+        new Promise((_resolve, reject) => {
+          clock += 119 * 60_000
+          signal.addEventListener('abort', () => {
+            clock += 1 * 60_000
+            reject(Object.assign(new Error('stopped at the deadline'), { usd: 0.4 }))
+          })
+          setImmediate(() => fire())
+        }),
+      write: async (_ctx, inputs, how) => {
+        written.push({ ...inputs, limits: how.limits })
+        return { value: { report: { status: 'done', counts: { written: 7 } } }, usd: 0.3 }
+      }
+    })
+    const chain = createStepChainEngine({
+      steps,
+      applyFor: () => async () => ({ ok: true }),
+      now: () => clock,
+      timer
+    })
+    const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
+    await b.start(chainInput())
+    const done = await untilSettled(b, 'harbourpadel.tracy.test')
+    assert.equal(timerMs, 2 * 60 * 60_000)
+    assert.equal(done.state, 'applied')
+    assert.equal(done.error, null)
+    assert.equal(written.length, 1, 'the Write step ran after the deadline')
+    assert.equal(written[0].pictures, null, 'the stopped step made nothing')
+    assert.deepEqual(written[0].limits, { stopNewWorkMs: 0, returnByMs: 15 * 60_000 }, 'no new 9b work')
+    const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
+    assert.deepEqual([record.ending, record.failedStep], ['soft-failure', 'pictures'])
+    assert.equal(record.steps.find((s) => s.step === 'pictures').outcome, 'stopped')
+    assert.equal(record.steps.find((s) => s.step === 'write').outcome, 'done')
   }
 )

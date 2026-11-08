@@ -29,12 +29,15 @@ import { siteByKey } from './sites/store.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
-import { standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
+import { standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { benchRepairAgent } from './write-step-bench-repair-agent.js'
 import { runStepNine } from './write-step-nine.js'
 
 const BY = 'step-chain'
+
+/** What a chain build adds to a bench `run` so its step carries no USD cap (the bench's own default runs keep it). */
+const NO_CAPS = ['--no-caps']
 const POLL_MS = 10_000
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const RUN_ACTIVE = /_RUN_ACTIVE|Only one run at a time/
@@ -171,7 +174,7 @@ export function createStepChainSteps(deps) {
       const dir = path.join(await folderOf(ctx), 'brand')
       const ran = await benchRun(
         'brand',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)],
+        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), ...NO_CAPS],
         dir,
         signal
       )
@@ -181,7 +184,12 @@ export function createStepChainSteps(deps) {
 
     async plan(ctx, { kit }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'plan')
-      const ran = await benchRun('plan', ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)], dir, signal)
+      const ran = await benchRun(
+        'plan',
+        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), ...NO_CAPS],
+        dir,
+        signal
+      )
       // The plan the run ended with: the last round that has one, as `get` writes it (plan-vN.json).
       const { rows } = await pool.query(
         'select plan from site_planner_round where run_id = $1 and plan is not null order by round desc limit 1',
@@ -195,7 +203,15 @@ export function createStepChainSteps(deps) {
 
     async copy(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy')
-      const argv = ['--plan-file', plan.file, '--kit', kit.ref, '--brief-revision', revisionOf(ctx)]
+      const argv = [
+        '--plan-file',
+        plan.file,
+        '--kit',
+        kit.ref,
+        '--brief-revision',
+        revisionOf(ctx),
+        ...NO_CAPS
+      ]
       const ran = await benchRun('copy', argv, dir, signal)
       const file = path.join(dir, 'site-copy.json')
       return answerOf(ran, { file }, exists(file))
@@ -203,14 +219,22 @@ export function createStepChainSteps(deps) {
 
     async pictures(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'pictures')
-      const argv = ['--plan-file', plan.file, '--kit', kit.ref, '--brief-revision', revisionOf(ctx)]
+      const argv = [
+        '--plan-file',
+        plan.file,
+        '--kit',
+        kit.ref,
+        '--brief-revision',
+        revisionOf(ctx),
+        ...NO_CAPS
+      ]
       const ran = await benchRun('pictures', argv, dir, signal)
       const value = { file: path.join(dir, 'mapping.json'), manifest: path.join(dir, 'site-pictures.json') }
       return answerOf(ran, value, exists(value.file))
     },
 
     // Step 9 whole: write, Site check, 9b repair pass, recheck, hand-over (write-step-nine.js).
-    async write(ctx, inputs, { door }) {
+    async write(ctx, inputs, { door, limits }) {
       const dir = await folderOf(ctx)
       const { rows } = await pool.query('select brief from wo_revision where id = $1', [revisionOf(ctx)])
       if (!rows[0]) throw stepError(`no research revision ${revisionOf(ctx)}`)
@@ -283,7 +307,8 @@ export function createStepChainSteps(deps) {
         door: siteDoor,
         siteKey: ctx.siteKey,
         email: ctx.email,
-        fetchImpl
+        fetchImpl,
+        setupRun: ctx.runId
       })
       const out = path.join(dir, 'step-9')
       await mkdir(out, { recursive: true })
@@ -293,6 +318,7 @@ export function createStepChainSteps(deps) {
         agent,
         baselines: contractBaselineStore({ index: defaultContracts() }),
         pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
+        limits,
         saveFile: (name, data) => writeFile(path.join(out, name), data),
         log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
       })

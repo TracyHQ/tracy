@@ -136,6 +136,7 @@ import {
 } from '../lib/site-design.js'
 import { completeProvisionDesign } from './provision-design-tokens.js'
 import { siteSessionAhead } from '../lib/site-session-ahead.js'
+import { setupRunOfSession } from './setup-session.js'
 import { templateThumbnailOf } from '../lib/template-thumbnail.js'
 import { readUiHidden, uiSwitchOn } from '../lib/ui-setting.js'
 import { mountActivity } from './activity.js'
@@ -6764,12 +6765,21 @@ export function sitesRoutes({
     // 🔒 WHERE THE WRITE CAME FROM, AS THIS DOOR KNOWS IT (sweep #4/#2, council 11/10/2026) — never read off a
     // header: a seat key's call is the key's (`/v1`), and `setupRun` reaches here only through `applyAs`, the
     // server writing a new site's brief for its person (never over HTTP). Everything else names none.
+    // A chat session the server opened for a setup run (the 9b repair pass of a step chain build) is that run's: its
+    // writes are the run's too, so Site changes holds them in the one "Tracy setup" row. The pair is the server's own
+    // record (`setup-session.js`); the header only names the session.
+    const sessionRun =
+      auth.kind !== 'key' && writeClass && !(typeof setupRun === 'string' && setupRun !== '')
+        ? await setupRunOfSession(pool, siteKey, auditSession).catch(() => null)
+        : null
     const writeOrigin =
       auth.kind === 'key'
         ? { kind: 'api', ref: auth.key.keyId }
         : typeof setupRun === 'string' && setupRun !== ''
           ? { kind: 'setup', ref: setupRun }
-          : null
+          : sessionRun
+            ? { kind: 'setup', ref: sessionRun }
+            : null
     /**
      * The audit line, and — for a call that changes the site (`writeClass`) — its `site_write` row in
      * the same statement. `outcome`: `ok` the source said it wrote; `refused` it said no cleanly;
