@@ -4,7 +4,7 @@
 // map beside it, null when there is none), prompt hash, checker version,
 // door snapshot (never the key) and harness settings, pages per turn among them (#330). The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
-import { benchHarnessFor, withoutCaps } from '../lib/bench-harness.js'
+import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { openContentMap } from '../lib/content-map-source.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
@@ -77,7 +77,7 @@ export async function startWriterRun({
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
     harness: {
-      ...(noCaps ? withoutCaps : (h) => h)(benchHarnessFor(door.snapshot.model, door.snapshot.providerId)),
+      ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
       pagesPerTurn
     }
   })

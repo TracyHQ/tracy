@@ -7,7 +7,7 @@
 // a specific cut-out frame, which is always drawn (#346). Always the looker door's
 // snapshot (#343, `door.looker`): a run does not start without the looker. The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
-import { benchHarnessFor, withoutCaps } from '../lib/bench-harness.js'
+import { benchHarnessFor, capsOf } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { readableKits } from '../lib/template-kit-source.js'
@@ -126,9 +126,7 @@ export async function startPictureRun({
       looker: looker.snapshot,
       ...(drawer ? { drawer: drawer.snapshot } : {})
     },
-    harness: door
-      ? (noCaps ? withoutCaps : (h) => h)(benchHarnessFor(door.snapshot.model, door.snapshot.providerId))
-      : {}
+    harness: door ? capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps) : {}
   })
   if (created.error === SITE_PICTURES_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

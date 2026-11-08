@@ -43,6 +43,9 @@ export function withoutCaps(harness) {
   return 'capUsd' in rest ? { ...rest, capUsd: null } : rest
 }
 
+/** `withoutCaps(harness)` for a run of a chain build, the harness as it is for any other (#478). */
+export const capsOf = (harness, noCaps) => (noCaps ? withoutCaps(harness) : harness)
+
 /**
  * DeepSeek's peak hours, in UTC: 01:00 to 04:00 and 06:00 to 10:00, Monday to Friday; every other hour is off-peak
  * (DeepSeek's pricing page, read 03/11/2026). DeepSeek also prices Chinese public holidays off-peak; they are ignored

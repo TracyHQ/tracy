@@ -26,6 +26,8 @@ test('the frame keeps its 25 minute run cut for every other engine, the chain ha
   assert.equal(STEP_CHAIN_DEADLINE_MS, 120 * MIN)
   assert.ok(STEP_CHAIN_LIMITS.runMs > STEP_CHAIN_DEADLINE_MS)
   assert.ok(STEP_CHAIN_LIMITS.applyMs > DEFAULT_LIMITS.applyMs)
+  // The frame's grace for the words after the site is up (a real timer) must not cut the steps before the deadline does.
+  assert.ok(STEP_CHAIN_LIMITS.prepareGraceMs >= STEP_CHAIN_DEADLINE_MS)
 })
 
 test('withoutCaps drops the planner budget and nothing else; the default harness keeps it', () => {

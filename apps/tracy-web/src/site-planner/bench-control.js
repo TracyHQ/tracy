@@ -2,7 +2,7 @@
 // it is queued (the brief's shape, the kit, the door, the kit's images) and stores what the run will use, so a refused start leaves
 // nothing behind and an accepted one says exactly what it ran: brief as used, kit, prompt hash, checker version, door
 // snapshot (never the key) and harness settings. The worker (bench-worker.js) does the rest.
-import { benchHarnessFor, sendsImages, withoutCaps } from '../lib/bench-harness.js'
+import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
@@ -22,7 +22,6 @@ export {
 } from '../lib/bench-harness.js'
 export { briefOfRevision }
 
-const capsOf = (harness, noCaps) => (noCaps ? withoutCaps(harness) : harness)
 const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extra })
 
 /**

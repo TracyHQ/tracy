@@ -60,7 +60,8 @@ export function chainRepairLimits(elapsedMs) {
  */
 export const STEP_CHAIN_LIMITS = Object.freeze({
   prepareMs: STEP_CHAIN_DEADLINE_MS,
-  prepareGraceMs: STEP_CHAIN_HANDOVER_MS,
+  // Counted from the site coming up: as long as the deadline, so it never fires before the engine's own deadline does.
+  prepareGraceMs: STEP_CHAIN_DEADLINE_MS,
   applyMs: STEP_CHAIN_DEADLINE_MS + STEP_CHAIN_HANDOVER_MS,
   runMs: STEP_CHAIN_DEADLINE_MS + STEP_CHAIN_HANDOVER_MS
 })
