@@ -624,7 +624,12 @@ export const V2_SOURCES_SQL = `
    where t.site_key = $1
      and (t.state in ('closed', 'stale') or (t.state = 'open' and t.opened_at < now() - interval '30 minutes'))
      -- A turn of a session a setup run opened for its own repairs is part of that run's row, not a row of its own.
-     and not exists (select 1 from setup_session ss where ss.site_key = t.site_key and ss.session_id = t.session_id)
+     -- (only while the run has a row to hold it: a repair turn of a run with none is listed as the chat row it is)
+     and not exists (select 1 from setup_session ss
+                      where ss.site_key = t.site_key and ss.session_id = t.session_id
+                        and exists (select 1 from site_write sw
+                                     where sw.site_key = ss.site_key and sw.origin = 'setup'
+                                       and sw.origin_ref = ss.run_id and sw.outcome <> 'refused'))
      and ((t.files > 0 and not t.turn_id = any($2::text[])) or exists (select 1 from site_write w
                                   where w.site_key = t.site_key and w.turn_id = t.turn_id and w.outcome <> 'refused'))
   union all

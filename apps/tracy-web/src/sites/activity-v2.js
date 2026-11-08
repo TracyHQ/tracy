@@ -75,7 +75,7 @@ import { cmsLogCoverage } from './cms-log.js'
 import { parseTurnId, recordOutside } from './turns.js'
 import { designSystemApplies, designSystemDescription, designSystemRowOf } from './design-system-rows.js'
 import { isSetupMoment, setupMomentFiles, setupRunOf } from './setup-moment.js'
-import { addRepairFiles, setupRepairTurns } from './setup-session.js'
+import { addRepairFiles, repairFileCount, setupRepairTurns, setupRunsWithRows } from './setup-session.js'
 
 /**
  * `people`: every Source except `automatic` — the changes a person (or Tracy for one) made, the
@@ -191,10 +191,11 @@ export async function readActivityV2(
   // before the rows are counted: with its paths it can be folded into the CMS row that wrote them.
   if (git.sealed) await recordOutside(pool, siteKey, [{ ...git.sealed, cause: 'seal' }])
   const trailerTurns = git.rows.map((r) => r.turn).filter((t) => typeof t === 'string' && t)
-  const [accounted, opShas, repairTurns] = await Promise.all([
+  const [accounted, opShas, repairTurns, rowRuns] = await Promise.all([
     accountedForGit(pool, siteKey, trailerTurns),
     operationShas(pool, siteKey),
-    setupRepairTurns(pool, siteKey, trailerTurns)
+    setupRepairTurns(pool, siteKey, trailerTurns),
+    setupRunsWithRows(pool, siteKey)
   ])
   /** The files the repair turns of a setup run committed (a step chain build's 9b pass), for the run's row. */
   const repairFiles = new Map()
@@ -207,8 +208,8 @@ export async function readActivityV2(
     if (setupRun && accounted.setupRuns.has(setupRun) && !setupMoments.has(setupRun))
       setupMoments.set(setupRun, { sha: r.sha, count: fileCount(r) })
     const repairRun = typeof r.turn === 'string' ? repairTurns.get(r.turn) : undefined
-    if (repairRun && accounted.setupRuns.has(repairRun)) {
-      addRepairFiles(repairFiles, repairRun, { sha: r.sha, count: fileCount(r), at: Number(r.at) })
+    if (repairRun && rowRuns.has(repairRun)) {
+      addRepairFiles(repairFiles, repairRun, { sha: r.sha, at: Number(r.at), files: r.files })
       continue
     }
     if (accounted.shas.has(r.sha) || opShas.has(r.sha)) continue
@@ -723,10 +724,11 @@ async function hydrate(pool, siteKey, page, ctx) {
       (first.origin === 'setup' ? (ctx.setupMoments?.get(first.origin_ref) ?? null) : null)
     // The files its repair turns committed ride on the same row: one more moment, the newest commit shown.
     const repaired = first.origin === 'setup' ? (ctx.repairFiles?.get(first.origin_ref) ?? null) : null
+    const repairCount = repaired ? repairFileCount(repaired) : 0
     const setupFiles = repaired
-      ? { sha: repaired.sha, count: (ownFiles?.count ?? 0) + repaired.count }
+      ? { sha: repaired.sha, count: (ownFiles?.count ?? 0) + repairCount }
       : ownFiles
-    const files = seal ? { sha: seal.sha, count: seal.files + (repaired?.count ?? 0) } : setupFiles
+    const files = seal ? { sha: seal.sha, count: seal.files + repairCount } : setupFiles
     const { effects, technical } = effectsOf({
       writes: carrier ? writes.filter((w) => w !== carrier) : writes,
       files,

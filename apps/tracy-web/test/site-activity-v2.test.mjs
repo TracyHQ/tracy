@@ -1863,6 +1863,47 @@ describe('site activity V2', { skip }, () => {
     assert.equal(page.counts.all, 1)
   })
 
+  test('#477: a file repaired in several turns counts once on the run’s row', async () => {
+    const { pool } = db
+    await seed(pool)
+    const run = '3b9c1d5e-7a2f-4c8d-9e0a-1b2c3d4e5f60'
+    await write(pool, {
+      at: iso(11),
+      target: { kind: 'post', id: '1', fields: ['post_title'] },
+      origin: 'setup',
+      origin_ref: run
+    })
+    await pool.query(
+      `insert into setup_session (site_key, session_id, run_id) values ($1, 'repair-a', $2), ($1, 'repair-b', $2)`,
+      [SITE.site_key, run]
+    )
+    await turn(pool, 'repair-a:1', { opened_at: iso(20), closed_at: iso(21), files: 2, head_sha: sha('a') })
+    await turn(pool, 'repair-b:1', { opened_at: iso(22), closed_at: iso(23), files: 2, head_sha: sha('b') })
+    const moments = [
+      commit('a', 21, { turn: 'repair-a:1', files: ['templates/t/css/custom.css', 'images/a.jpg'] }),
+      commit('b', 23, { turn: 'repair-b:1', files: ['templates/t/css/custom.css', 'images/b.jpg'] })
+    ]
+    const page = await v2(pool, fakeHost(moments))
+    assert.deepEqual(keys(page), [`writes:setup:${run}`])
+    assert.equal(page.items[0].effects.files.count, 3, 'three distinct files, not four')
+  })
+
+  test('#477: a repair turn of a run with no Tracy setup row is a row of its own, never hidden', async () => {
+    const { pool } = db
+    await seed(pool)
+    const run = '3b9c1d5e-7a2f-4c8d-9e0a-1b2c3d4e5f60'
+    // The run has no write Site changes lists (its only one was refused), so there is no row to hold the repair.
+    await write(pool, { at: iso(11), outcome: 'refused', origin: 'setup', origin_ref: run })
+    await pool.query(`insert into setup_session (site_key, session_id, run_id) values ($1, 'repair-a', $2)`, [
+      SITE.site_key,
+      run
+    ])
+    await turn(pool, 'repair-a:1', { opened_at: iso(20), closed_at: iso(21), files: 2, head_sha: sha('a') })
+    const page = await v2(pool, fakeHost([commit('a', 21, { turn: 'repair-a:1', files: 2 })]))
+    assert.deepEqual(keys(page), ['turn:repair-a:1'])
+    assert.equal(page.items[0].effects.files.count, 2)
+  })
+
   test('SC-3: a setup moment the run did not hear back from is still its own, never Unknown', async () => {
     const { pool } = db
     await seed(pool)

@@ -54,14 +54,36 @@ export async function setupRepairTurns(pool, siteKey, turnIds) {
 }
 
 /**
- * Add one moment's files to a run's total: the count adds up, the commit shown is the newest (the site as the run left it).
- * @param {Map<string, {sha: string, count: number, at: number}>} totals run → total so far
+ * The runs of a site that have a Tracy setup row: at least one write Site changes lists (a refused one is not listed). A
+ * repair turn folds into its run's row only when the row exists; otherwise it is a row of its own, so a change the
+ * customer can undo is never out of sight.
+ * @param {import('pg').Pool} pool
+ * @param {string} siteKey
+ * @returns {Promise<Set<string>>}
  */
-export function addRepairFiles(totals, run, { sha, count, at }) {
-  const so = totals.get(run)
-  totals.set(run, {
-    sha: !so || at >= so.at ? sha : so.sha,
-    count: (so?.count ?? 0) + count,
-    at: Math.max(at, so?.at ?? 0)
-  })
+export async function setupRunsWithRows(pool, siteKey) {
+  const { rows } = await pool.query(
+    `select distinct origin_ref as run from site_write
+      where site_key = $1 and origin = 'setup' and origin_ref is not null and outcome <> 'refused'`,
+    [siteKey]
+  )
+  return new Set(rows.map((r) => r.run))
 }
+
+/**
+ * Add one repair commit's files to its run's total. Paths are counted once however many turns touch them; a row that names
+ * only a count (no paths) adds that count. The commit shown is the newest (the site as the run left it).
+ * @param {Map<string, {sha: string, at: number, paths: Set<string>, uncounted: number}>} totals run → total so far
+ * @param {string} run
+ * @param {{sha: string, at: number, files: unknown}} commit `files` is a count or the list of paths, as the host sends it
+ */
+export function addRepairFiles(totals, run, { sha, at, files }) {
+  const so = totals.get(run) ?? { sha, at, paths: new Set(), uncounted: 0 }
+  if (Array.isArray(files)) for (const f of files) so.paths.add(String(f?.path ?? f))
+  else so.uncounted += typeof files === 'number' ? files : 0
+  if (at >= so.at) Object.assign(so, { sha, at })
+  totals.set(run, so)
+}
+
+/** The distinct files a run's repair turns committed. */
+export const repairFileCount = (total) => total.paths.size + total.uncounted
