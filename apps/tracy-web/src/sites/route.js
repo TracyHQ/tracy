@@ -6770,7 +6770,7 @@ export function sitesRoutes({
     // record (`setup-session.js`); the header only names the session.
     const sessionRun =
       auth.kind !== 'key' && writeClass && !(typeof setupRun === 'string' && setupRun !== '')
-        ? await setupRunOfSession(pool, siteKey, auditSession)
+        ? await setupRunOfSession(pool, siteKey, auditSession).catch(() => null)
         : null
     const writeOrigin =
       auth.kind === 'key'
