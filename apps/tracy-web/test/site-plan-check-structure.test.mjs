@@ -4,8 +4,8 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { base, breaks, decisionOf, keepHidingAll, kit } from './_site-plan-check.mjs'
 
-test('the base plan passes every rule the script can check; R10h is left to a reviewer, R20 to a kit with page titles, R22 to a kit with row pairs', () => {
-  assert.deepEqual(base().summary, { pass: 27, fail: 0, skip: 3 })
+test('the base plan passes every rule the script can check; R10h is left to a reviewer, R20 to a kit with page titles, R22 to a kit with row pairs; R23 and R24 pass on it', () => {
+  assert.deepEqual(base().summary, { pass: 29, fail: 0, skip: 3 })
   assert.deepEqual(base().inputErrors, [])
 })
 
