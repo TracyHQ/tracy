@@ -194,7 +194,7 @@ export async function readActivityV2(
   const [accounted, opShas, repairTurns] = await Promise.all([
     accountedForGit(pool, siteKey, trailerTurns),
     operationShas(pool, siteKey),
-    setupRepairTurns(pool, siteKey)
+    setupRepairTurns(pool, siteKey, trailerTurns)
   ])
   /** The files the repair turns of a setup run committed (a step chain build's 9b pass), for the run's row. */
   const repairFiles = new Map()
@@ -726,7 +726,7 @@ async function hydrate(pool, siteKey, page, ctx) {
     const setupFiles = repaired
       ? { sha: repaired.sha, count: (ownFiles?.count ?? 0) + repaired.count }
       : ownFiles
-    const files = seal ? { sha: seal.sha, count: seal.files } : setupFiles
+    const files = seal ? { sha: seal.sha, count: seal.files + (repaired?.count ?? 0) } : setupFiles
     const { effects, technical } = effectsOf({
       writes: carrier ? writes.filter((w) => w !== carrier) : writes,
       files,

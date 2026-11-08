@@ -39,14 +39,16 @@ export async function setupRunOfSession(pool, siteKey, sessionId) {
  * ride on the run's row instead of a row of its own.
  * @param {import('pg').Pool} pool
  * @param {string} siteKey
+ * @param {string[]} turnIds the turns a Git trailer names: only those can matter
  * @returns {Promise<Map<string, string>>} turn id → run id
  */
-export async function setupRepairTurns(pool, siteKey) {
+export async function setupRepairTurns(pool, siteKey, turnIds) {
+  if (!turnIds.length) return new Map()
   const { rows } = await pool.query(
     `select t.turn_id, ss.run_id from site_turn t
        join setup_session ss on ss.site_key = t.site_key and ss.session_id = t.session_id
-      where t.site_key = $1`,
-    [siteKey]
+      where t.site_key = $1 and t.turn_id = any($2::text[])`,
+    [siteKey, turnIds]
   )
   return new Map(rows.map((r) => [r.turn_id, r.run_id]))
 }
