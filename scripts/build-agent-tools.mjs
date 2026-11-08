@@ -166,7 +166,10 @@ function literalValue(token) {
   const quote = token[0]
   if (quote !== "'" && quote !== '"') return null
   const body = token.slice(1, -1)
-  const json = quote === '"' ? body : body.replace(/\\'/g, "'").replace(/"/g, '\\"')
+  const json =
+    quote === '"'
+      ? body
+      : body.replace(/\\([\s\S])|"/g, (m, c) => (c === undefined ? '\\"' : c === "'" ? "'" : m))
   try {
     return JSON.parse(`"${json}"`)
   } catch {

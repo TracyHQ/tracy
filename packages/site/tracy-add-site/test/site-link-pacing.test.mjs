@@ -340,7 +340,7 @@ function wordpressWorld() {
       return json({})
     }
     if (url.startsWith('https://store.test/')) return new Response(null, { status: 200 })
-    if (!url.startsWith(WEBROOT)) throw new TypeError(`unexpected fetch: ${method} ${url}`)
+    if (new URL(url).origin !== WEBROOT) throw new TypeError(`unexpected fetch: ${method} ${url}`)
 
     if (host.banned) throw host.refusal()
     // Cloudflare's managed challenge in front of the whole site, as measured on a customer's Joomla.
