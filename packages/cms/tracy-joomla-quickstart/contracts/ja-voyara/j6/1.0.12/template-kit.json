@@ -64683,12 +64683,12 @@
           "role": "editorial.paragraph",
           "type": "text",
           "maxCharacters": 198,
-          "sample": "Enter the email on your account and we&rsquo;ll send a secure link to set a new password.",
+          "sample": "Enter the email on your account and we’ll send a secure link to set a new password.",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
           "demoChars": {
-            "total": 89,
+            "total": 83,
             "lead": null,
             "bullets": []
           },
@@ -65145,12 +65145,12 @@
           "role": "editorial.paragraph",
           "type": "text",
           "maxCharacters": 200,
-          "sample": "Enter the email on your account and we&rsquo;ll send your username straight to your inbox.",
+          "sample": "Enter the email on your account and we’ll send your username straight to your inbox.",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
           "demoChars": {
-            "total": 90,
+            "total": 84,
             "lead": null,
             "bullets": []
           },
@@ -75149,12 +75149,12 @@
           "role": "editorial.paragraph",
           "type": "text",
           "maxCharacters": 190,
-          "sample": "&ldquo;We don&rsquo;t parachute in for a weekend. We send the people who&rsquo;ve spent years learning a place &mdash; its languages, its seasons, its back roads.&rdquo;",
+          "sample": "“We don’t parachute in for a weekend. We send the people who’ve spent years learning a place — its languages, its seasons, its back roads.”",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
           "demoChars": {
-            "total": 169,
+            "total": 139,
             "lead": null,
             "bullets": []
           },
@@ -75213,12 +75213,12 @@
           "role": "editorial.paragraph",
           "type": "text",
           "maxCharacters": 100,
-          "sample": "We&rsquo;re always reading pitches from local writers with a story only they can tell.",
+          "sample": "We’re always reading pitches from local writers with a story only they can tell.",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
           "demoChars": {
-            "total": 86,
+            "total": 80,
             "lead": null,
             "bullets": []
           },
@@ -559652,14 +559652,14 @@
       "slot": "languageString-1598806.0",
       "field": "value",
       "type": "text",
-      "sample": "About %1$s results for &ldquo;%2$s&rdquo;",
+      "sample": "About %1$s results for “%2$s”",
       "listedIn": null
     },
     {
       "slot": "languageString-39395525.0",
       "field": "value",
       "type": "text",
-      "sample": "About %1$s result for &ldquo;%2$s&rdquo;",
+      "sample": "About %1$s result for “%2$s”",
       "listedIn": null
     },
     {
@@ -559680,7 +559680,7 @@
       "slot": "languageString-121688118.0",
       "field": "value",
       "type": "text",
-      "sample": "Account &amp; security",
+      "sample": "Account & security",
       "listedIn": null
     },
     {
@@ -559750,7 +559750,7 @@
       "slot": "languageString-200499222.0",
       "field": "value",
       "type": "text",
-      "sample": "Atlas Mountains &amp; Sahara",
+      "sample": "Atlas Mountains & Sahara",
       "listedIn": null
     },
     {
@@ -560065,7 +560065,7 @@
       "slot": "languageString-40960675.0",
       "field": "value",
       "type": "text",
-      "sample": "Components &rarr; News Feeds",
+      "sample": "Components → News Feeds",
       "listedIn": null
     },
     {
@@ -560373,14 +560373,14 @@
       "slot": "languageString-136165743.0",
       "field": "value",
       "type": "text",
-      "sample": "Enter the email on your account and we&rsquo;ll send your us",
+      "sample": "Enter the email on your account and we’ll send your username",
       "listedIn": "body-pages_remind-username"
     },
     {
       "slot": "languageString-124749219.0",
       "field": "value",
       "type": "text",
-      "sample": "Enter the email on your account and we&rsquo;ll send a secur",
+      "sample": "Enter the email on your account and we’ll send a secure link",
       "listedIn": "body-pages_reset-password"
     },
     {
@@ -562242,7 +562242,7 @@
       "slot": "languageString-151074692.0",
       "field": "value",
       "type": "text",
-      "sample": "Trip reminders &amp; updates",
+      "sample": "Trip reminders & updates",
       "listedIn": null
     },
     {
@@ -562319,14 +562319,14 @@
       "slot": "languageString-268331639.0",
       "field": "value",
       "type": "text",
-      "sample": "&ldquo;We don&rsquo;t parachute in for a weekend. We send th",
+      "sample": "“We don’t parachute in for a weekend. We send the people who",
       "listedIn": "body-pages_writers"
     },
     {
       "slot": "languageString-60135582.0",
       "field": "value",
       "type": "text",
-      "sample": "We&rsquo;re always reading pitches from local writers with a",
+      "sample": "We’re always reading pitches from local writers with a story",
       "listedIn": "body-pages_writers"
     },
     {
@@ -564298,7 +564298,7 @@
       }
     }
   ],
-  "settledAt": "2026-11-08T06:47:39.806Z",
+  "settledAt": "2026-11-08T08:56:21.281Z",
   "packOf": {
     "images": 275,
     "note": "the full set is made again by `cli.mjs build`"

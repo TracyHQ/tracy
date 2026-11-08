@@ -15749,12 +15749,12 @@
     },
     {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/content-coverage.json",
-      "oid": "dac3901278c68ae645378141666c844ed1e021d5",
+      "oid": "1652dcf657d884b3b047cb9d74cabd79150eeb9e",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
     },
     {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/content-map.json",
-      "oid": "892453c20d8ec61439b62fbabad77f1293f5b0a2",
+      "oid": "5192e69637b65462c4c527e3200d9fdd5de55e98",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
     },
     {
@@ -15764,7 +15764,7 @@
     },
     {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/template-kit.json",
-      "oid": "9035bf2d1bdb27cbdc0c1c9273fc809d94ec5385",
+      "oid": "9300164c40a18e1e1bdce7de56b4caa78b067c1f",
       "reason": "Approved JA Voyara 1.0.12 template kit: third-party template demo content captured verbatim, sealed by its approval digest; larger than the text scan limit, so reviewed as an object."
     }
   ]
