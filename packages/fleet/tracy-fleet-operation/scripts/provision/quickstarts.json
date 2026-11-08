@@ -1179,11 +1179,82 @@
       "bytes": 585599,
       "sha256": "bc915fbe463fa7a0b25641b0139dd964d20bcd352ebba6e8dfa427b9251493b5",
       "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.89/pkg_claudecowork-0.24.89.zip",
+      "overridesRelease": true,
+      "contractVersions": [
+        "1.0.1",
+        "1.0.2",
+        "1.0.3",
+        "1.0.4",
+        "1.0.5",
+        "1.0.6",
+        "1.0.7",
+        "1.0.8",
+        "1.0.9",
+        "1.0.10",
+        "1.0.11"
+      ],
       "contractFiles": {
         "content-map.json": "5842836cbe11915bb61f30871f3b5b695cdcfa595858041baaa9f9a9e1012ab3",
         "manifest.json": "897489b649536906753f46c8b9517cdc2cdd0e7b0c35af5fbd057623febcd5fe",
         "presentation-lock.json": "425bf05cce746f39d266de4e351f2961e8519093fc35db4b5ebf1774d0b0add0",
         "showcase-nav-map.json": "7dbf117b8904a5e5c73df79b30c0485afdf336791cffa8ff507a16a41ef7d35a"
+      },
+      "alsoCarries": {
+        "ja-voyara/j6/1.0.1": {
+          "content-map.json": "4422fb8ca1626da61e270b04095c494743e5a6a461c8aaed74039cdf5ac73b3b",
+          "manifest.json": "9b166dd9ab25deab00719b6fca7f46749c342b8fec67e59c999bd01d9fe70e26",
+          "presentation-lock.json": "84aa9c55480c17b6b7f5162e282a0ab637621992cf9ca94717153e105703e891"
+        },
+        "ja-voyara/j6/1.0.2": {
+          "content-map.json": "4422fb8ca1626da61e270b04095c494743e5a6a461c8aaed74039cdf5ac73b3b",
+          "manifest.json": "193a45c7715c552441ceb178f4617e42e1f0f5b62f0766db81f9df7ed2e7c6b0",
+          "presentation-lock.json": "10973243fc21e15f8441225a6533b94d74fb5fe2b670a94fa3c0c257d2bf1389"
+        },
+        "ja-voyara/j6/1.0.3": {
+          "content-map.json": "4422fb8ca1626da61e270b04095c494743e5a6a461c8aaed74039cdf5ac73b3b",
+          "manifest.json": "80b92ac9ae776f1a01ff4dd5749beca6ecd99993a69ed1d86313aa4198d6589b",
+          "presentation-lock.json": "1e7941b69fcedf8f442ec44ba048128eae64273fdf04004b24135f7281356c76"
+        },
+        "ja-voyara/j6/1.0.4": {
+          "content-map.json": "7d83a23b12dcec059d372c81f26898d233688baf9209644a6f0c17e44250e01d",
+          "manifest.json": "aa2a68f1411e76419bdbe3b3a006b7f2de9bab870cb40d62643a4b5163d8caed",
+          "presentation-lock.json": "a7d9848de0964f830b6d502dd893838997d6964471ebcff8624e50bb9b837342"
+        },
+        "ja-voyara/j6/1.0.5": {
+          "content-map.json": "7d83a23b12dcec059d372c81f26898d233688baf9209644a6f0c17e44250e01d",
+          "manifest.json": "d5629b4f5c9c6d5131bebecba5b07a739486b2788ec4aa07411b527261469435",
+          "presentation-lock.json": "c13d1e3859efa364b11d1ebe88abbb96bf4af2244c3be7b9d12f4904f1d6abf2"
+        },
+        "ja-voyara/j6/1.0.6": {
+          "content-map.json": "7d83a23b12dcec059d372c81f26898d233688baf9209644a6f0c17e44250e01d",
+          "manifest.json": "0f9decddea2a067b4deb1a8fa2fa7bc2bee5f9ff16ca4bb73a2ff85364a6b1aa",
+          "presentation-lock.json": "6921e70fdd4dd49340432818feccf6e369b4828068dc42f24198febd3c241cc7"
+        },
+        "ja-voyara/j6/1.0.7": {
+          "content-map.json": "3d6ad5d85476b4bf7084838f2ad18b06058ac49f6d47f34f2264aa9a2233dd3c",
+          "manifest.json": "8d392900cc0b1a76a2a57eb179c0eefffdab475844da0b1b4bd6e4abc284d8c4",
+          "presentation-lock.json": "4c8e5294b201902c478c24a7c5be487acb6b4bc153d35914efb25e99cb846de6"
+        },
+        "ja-voyara/j6/1.0.8": {
+          "content-map.json": "819d67a98f811f150dea9f162de39450ccc77403531cdcfca15e616909c85a85",
+          "manifest.json": "7104e72263b10c7fedf197bc4e0ea24ea93804d41f6dd929c49c41db58bb5f6e",
+          "presentation-lock.json": "3623a3fdc7549042b6a401dba9010aaab5f254ac404fc7171989abd558e7c6f7"
+        },
+        "ja-voyara/j6/1.0.9": {
+          "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+          "manifest.json": "005f8492935cddc1990a007c5e207b4d2b759c4adc7fc3134a95a0732ab7df77",
+          "presentation-lock.json": "633d5599873e26fca5b5c8ff65152aca7ed67d7f2f392bf858a694b61f0846fe"
+        },
+        "ja-voyara/j6/1.0.10": {
+          "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+          "manifest.json": "bb39773bffdece97fbe9b9e6b91c30dd96a56ee73897bae286cc98692e072103",
+          "presentation-lock.json": "07ed4984cdafa54b25f244e226160b4ae790964d8ab51076c7cfb8b4a6576b13"
+        },
+        "ja-voyara/j6/1.0.11": {
+          "content-map.json": "454d2ee6c18be16e56679d721d866a4335e76f354cb27992503b9f69a8126a31",
+          "manifest.json": "c60306ad7dba945af3b5edba92bf0963e1c277e981443c49783efc0cc16eb943",
+          "presentation-lock.json": "44d43b156b2e6e3934783dc1e78be498f5dce558885bfbaf5b65eb864d508f48"
+        }
       }
     },
     "contract": "ja-voyara/j6/1.0.12"
