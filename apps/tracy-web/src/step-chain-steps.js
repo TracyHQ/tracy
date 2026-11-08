@@ -24,17 +24,30 @@ import { runSiteCheck } from './site-check/site-check.js'
 import { runCli as picturesCli } from './site-pictures/bench-cli.js'
 import { runCli as plannerCli } from './site-planner/bench-cli.js'
 import { runCli as writerCli } from './site-writer/bench-cli.js'
+import { STEP_CHAIN_DEADLINE_MS } from './sites/brief-engines/step-chain.js'
 import { designSystemSiteReaders } from './sites/design-system-site-readers.js'
 import { siteByKey } from './sites/store.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
-import { standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
+import { standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { benchRepairAgent } from './write-step-bench-repair-agent.js'
 import { runStepNine } from './write-step-nine.js'
 
 const BY = 'step-chain'
+
+/**
+ * Step 9b's windows for a chain build (#478): none of the repair pass's own 10 and 12 minute windows apply, the chain's
+ * outer deadline bounds the run. The two are finite (a timer given infinity fires at once) and as long as that deadline.
+ */
+export const CHAIN_REPAIR_LIMITS = Object.freeze({
+  stopNewWorkMs: STEP_CHAIN_DEADLINE_MS,
+  returnByMs: STEP_CHAIN_DEADLINE_MS
+})
+
+/** What a chain build adds to a bench `run` so its step carries no USD cap (the bench's own default runs keep it). */
+const NO_CAPS = ['--no-caps']
 const POLL_MS = 10_000
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const RUN_ACTIVE = /_RUN_ACTIVE|Only one run at a time/
@@ -171,7 +184,7 @@ export function createStepChainSteps(deps) {
       const dir = path.join(await folderOf(ctx), 'brand')
       const ran = await benchRun(
         'brand',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)],
+        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), ...NO_CAPS],
         dir,
         signal
       )
@@ -181,7 +194,12 @@ export function createStepChainSteps(deps) {
 
     async plan(ctx, { kit }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'plan')
-      const ran = await benchRun('plan', ['--kit', kit.ref, '--brief-revision', revisionOf(ctx)], dir, signal)
+      const ran = await benchRun(
+        'plan',
+        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), ...NO_CAPS],
+        dir,
+        signal
+      )
       // The plan the run ended with: the last round that has one, as `get` writes it (plan-vN.json).
       const { rows } = await pool.query(
         'select plan from site_planner_round where run_id = $1 and plan is not null order by round desc limit 1',
@@ -293,6 +311,7 @@ export function createStepChainSteps(deps) {
         agent,
         baselines: contractBaselineStore({ index: defaultContracts() }),
         pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
+        limits: CHAIN_REPAIR_LIMITS,
         saveFile: (name, data) => writeFile(path.join(out, name), data),
         log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
       })

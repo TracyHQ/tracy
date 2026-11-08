@@ -33,16 +33,33 @@
  * error may carry the `value` it still made, and the `usd` it spent), and is given the run's `AbortSignal`.
  */
 
-/** The outer deadline of a whole chain run: past it, the site is handed over as a soft failure. */
+/**
+ * The outer deadline of a chain run (#478): the model steps get this long, counted from the start of `prepare`. A step
+ * still going at the deadline is stopped (its best version, if it made one, is used) and the run ends as a soft failure:
+ * the Write step still runs, so the site is handed over and no kept slot keeps demo content.
+ */
 export const STEP_CHAIN_DEADLINE_MS = 2 * 60 * 60_000
 
-/** The frame's clocks for a chain run: none cuts a step; only the outer deadline bounds the run. */
+/** What the Write step (step 9: write, Site check, 9b, hand-over) may take after the deadline, a backstop for a hung run. */
+export const STEP_CHAIN_HANDOVER_MS = 60 * 60_000
+
+/**
+ * The frame's clocks for a chain run (#478): the frame's 25 minute run cut and its apply cut do not apply. The steps are
+ * bounded by the engine's own deadline; the frame's `runMs` is only the backstop for a worker that is stuck after it.
+ */
 export const STEP_CHAIN_LIMITS = Object.freeze({
   prepareMs: STEP_CHAIN_DEADLINE_MS,
-  prepareGraceMs: STEP_CHAIN_DEADLINE_MS,
-  applyMs: STEP_CHAIN_DEADLINE_MS,
-  runMs: STEP_CHAIN_DEADLINE_MS
+  prepareGraceMs: STEP_CHAIN_HANDOVER_MS,
+  applyMs: STEP_CHAIN_HANDOVER_MS,
+  runMs: STEP_CHAIN_DEADLINE_MS + STEP_CHAIN_HANDOVER_MS
 })
+
+/** A real timer that never keeps the process alive: `(fire, ms) => cancel`. */
+const realTimer = (fire, ms) => {
+  const handle = setTimeout(fire, ms)
+  handle.unref?.()
+  return () => clearTimeout(handle)
+}
 
 const round = (n, places) => Math.round(n * 10 ** places) / 10 ** places
 const messageOf = (error) => String(error instanceof Error ? error.message : error).slice(0, 300)
@@ -62,9 +79,15 @@ const messageOf = (error) => String(error instanceof Error ? error.message : err
 
 /**
  * @param {{ steps: StepChainSteps, applyFor: (email: string, setupRun: string) => (call: any) => Promise<any>,
- *   now?: () => number }} deps
+ *   now?: () => number, timer?: (fire: () => void, ms: number) => () => void, deadlineMs?: number }} deps
  */
-export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
+export function createStepChainEngine({
+  steps,
+  applyFor,
+  now = Date.now,
+  timer = realTimer,
+  deadlineMs = STEP_CHAIN_DEADLINE_MS
+}) {
   return {
     limits: STEP_CHAIN_LIMITS,
     /** The chain writes the brand itself (step 9), so the frame's own brand step does not run after it. */
@@ -74,7 +97,10 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
       const t0 = now()
       /** @type {Array<{step: string, startMs: number, endMs: number, usd: number, outcome: string, error?: string}>} */
       const record = []
-      const { signal } = ctx
+      // The outer deadline stops the steps, not the run: the Write step runs after it on the run's own signal.
+      const deadline = new AbortController()
+      const cancelTimer = timer(() => deadline.abort(new Error('the chain deadline')), deadlineMs)
+      const signal = AbortSignal.any([ctx.signal, deadline.signal])
       let failed = null
       /** Run one step, timed and costed; a failure is kept, never thrown, and what the step still made is used. */
       const run = async (step, inputs) => {
@@ -116,31 +142,35 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
         })
         return null
       }
-      const kit = await run('kit', {})
-      if (!kit) return { runId: ctx.runId, t0, record, failed, inputs: null }
-      const [brand, planned] = await Promise.all([
-        run('brand', { kit: kit.value }),
-        run('plan', { kit: kit.value }).then(async (plan) => {
-          if (!plan) return { plan: null, copy: skip('copy', 'plan'), pictures: skip('pictures', 'plan') }
-          const [copy, pictures] = await Promise.all([
-            run('copy', { kit: kit.value, plan: plan.value }),
-            run('pictures', { kit: kit.value, plan: plan.value })
-          ])
-          return { plan, copy, pictures }
-        })
-      ])
-      return {
-        runId: ctx.runId,
-        t0,
-        record,
-        failed,
-        inputs: {
-          kit: kit.value,
-          plan: planned.plan?.value ?? null,
-          copy: planned.copy?.value ?? null,
-          brand: brand?.value ?? null,
-          pictures: planned.pictures?.value ?? null
+      try {
+        const kit = await run('kit', {})
+        if (!kit) return { runId: ctx.runId, t0, record, failed, inputs: null }
+        const [brand, planned] = await Promise.all([
+          run('brand', { kit: kit.value }),
+          run('plan', { kit: kit.value }).then(async (plan) => {
+            if (!plan) return { plan: null, copy: skip('copy', 'plan'), pictures: skip('pictures', 'plan') }
+            const [copy, pictures] = await Promise.all([
+              run('copy', { kit: kit.value, plan: plan.value }),
+              run('pictures', { kit: kit.value, plan: plan.value })
+            ])
+            return { plan, copy, pictures }
+          })
+        ])
+        return {
+          runId: ctx.runId,
+          t0,
+          record,
+          failed,
+          inputs: {
+            kit: kit.value,
+            plan: planned.plan?.value ?? null,
+            copy: planned.copy?.value ?? null,
+            brand: brand?.value ?? null,
+            pictures: planned.pictures?.value ?? null
+          }
         }
+      } finally {
+        cancelTimer()
       }
     },
 
