@@ -11,8 +11,12 @@ import { CostCapReached, createSpend } from '../src/brand-step/brand-spend.js'
 import { BENCH_HARNESS, benchHarnessFor, withoutCaps } from '../src/lib/bench-harness.js'
 import { BENCH_QUEUE } from '../src/lib/bench-run-loop.js'
 import { DEFAULT_LIMITS } from '../src/sites/brief-build.js'
-import { STEP_CHAIN_DEADLINE_MS, STEP_CHAIN_LIMITS } from '../src/sites/brief-engines/step-chain.js'
-import { CHAIN_REPAIR_LIMITS } from '../src/step-chain-steps.js'
+import {
+  chainRepairLimits,
+  STEP_CHAIN_DEADLINE_MS,
+  STEP_CHAIN_HANDOVER_MS,
+  STEP_CHAIN_LIMITS
+} from '../src/sites/brief-engines/step-chain.js'
 import { REPAIR_LIMITS, repairClock } from '../src/write-step/repair-pass/repair-limits.js'
 
 const MIN = 60_000
@@ -54,10 +58,10 @@ test('the brand spend check stops at a cap and never stops without one', async (
   assert.equal(await spent(undefined), 'ran')
 })
 
-test('step 9b keeps its windows by default and runs past them with the chain limits', () => {
+test('step 9b keeps its windows by default; in a chain build it runs to the deadline and returns by 15 minutes after it', () => {
   for (const [limits, stoppedAt11, stoppedAt90] of [
     [null, true, true],
-    [CHAIN_REPAIR_LIMITS, false, false]
+    [chainRepairLimits(0), false, false]
   ]) {
     let at = 0
     const clock = repairClock({ now: () => at, sleep: async () => {}, limits })
@@ -68,10 +72,12 @@ test('step 9b keeps its windows by default and runs past them with the chain lim
   }
   assert.equal(REPAIR_LIMITS.stopNewWorkMs, 10 * MIN)
   assert.equal(REPAIR_LIMITS.returnByMs, 12 * MIN)
-  assert.ok(
-    Number.isFinite(CHAIN_REPAIR_LIMITS.returnByMs) &&
-      CHAIN_REPAIR_LIMITS.returnByMs >= STEP_CHAIN_DEADLINE_MS
-  )
+  assert.equal(STEP_CHAIN_HANDOVER_MS, 15 * MIN)
+  // Starting at 30 minutes: new work until the 2 hour mark, back by 15 minutes after it.
+  assert.deepEqual(chainRepairLimits(30 * MIN), { stopNewWorkMs: 90 * MIN, returnByMs: 105 * MIN })
+  // Starting after the deadline: no new 9b work at all, only the short bounded window.
+  assert.deepEqual(chainRepairLimits(130 * MIN), { stopNewWorkMs: 0, returnByMs: 15 * MIN })
+  assert.equal(STEP_CHAIN_LIMITS.runMs, 135 * MIN)
 })
 
 test("lost-run detection is untouched: the frame's stale clocks and the bench queue's lease and attempts", () => {

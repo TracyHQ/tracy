@@ -40,8 +40,19 @@
  */
 export const STEP_CHAIN_DEADLINE_MS = 2 * 60 * 60_000
 
-/** What the Write step (step 9: write, Site check, 9b, hand-over) may take after the deadline, a backstop for a hung run. */
-export const STEP_CHAIN_HANDOVER_MS = 60 * 60_000
+/** What the Write step (step 9: write, Site check, hand-over) may take after the deadline: the run's hard stop. */
+export const STEP_CHAIN_HANDOVER_MS = 15 * 60_000
+
+/**
+ * Step 9b's windows for a chain build (#478), from how far into the run the Write step starts: 9b may start new work until
+ * the deadline (none at all once it has passed) and returns by the handover window after it. So the former 10 and 12 minute
+ * windows do not apply, and the whole run still ends about `STEP_CHAIN_HANDOVER_MS` after the deadline.
+ * @param {number} elapsedMs
+ */
+export function chainRepairLimits(elapsedMs) {
+  const stopNewWorkMs = Math.max(0, STEP_CHAIN_DEADLINE_MS - elapsedMs)
+  return { stopNewWorkMs, returnByMs: stopNewWorkMs + STEP_CHAIN_HANDOVER_MS }
+}
 
 /**
  * The frame's clocks for a chain run (#478): the frame's 25 minute run cut and its apply cut do not apply. The steps are
@@ -50,7 +61,7 @@ export const STEP_CHAIN_HANDOVER_MS = 60 * 60_000
 export const STEP_CHAIN_LIMITS = Object.freeze({
   prepareMs: STEP_CHAIN_DEADLINE_MS,
   prepareGraceMs: STEP_CHAIN_HANDOVER_MS,
-  applyMs: STEP_CHAIN_HANDOVER_MS,
+  applyMs: STEP_CHAIN_DEADLINE_MS + STEP_CHAIN_HANDOVER_MS,
   runMs: STEP_CHAIN_DEADLINE_MS + STEP_CHAIN_HANDOVER_MS
 })
 
@@ -72,7 +83,7 @@ const messageOf = (error) => String(error instanceof Error ? error.message : err
  * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} copy
  * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} pictures
  * @property {(ctx: object, inputs: {kit: any, plan: any, copy: any, brand: any, pictures: any},
- *   how: {signal: AbortSignal, door: {apply: Function}}) => Promise<{value: any, usd?: number}>} write - step 9 whole; any
+ *   how: {signal: AbortSignal, door: {apply: Function}, limits: {stopNewWorkMs: number, returnByMs: number}}) => Promise<{value: any, usd?: number}>} write - step 9 whole; any
  *   input but the kit may be null (its step made nothing), and its value carries the write report (`report`)
  * @property {(prepared: any) => Promise<void>} [dispose] - what the steps left behind (files), whatever became of the run
  */
@@ -183,7 +194,11 @@ export function createStepChainEngine({
         const start = now()
         try {
           const door = { apply: applyFor(ctx.email, ctx.runId) }
-          const answer = await steps.write(ctx, prepared.inputs, { signal: ctx.signal, door })
+          const answer = await steps.write(ctx, prepared.inputs, {
+            signal: ctx.signal,
+            door,
+            limits: chainRepairLimits(start - t0)
+          })
           const report = answer?.value?.report ?? null
           const ok = report?.status === 'done'
           record.push({

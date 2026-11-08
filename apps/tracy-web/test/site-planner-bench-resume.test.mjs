@@ -8,8 +8,8 @@ import { readRun, saveTurn, setProgress } from '../src/site-planner/bench-store.
 import { createSitePlannerQueue } from '../src/site-planner/bench-worker.js'
 import { DOOR, finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
-import { assignPlannerDoor, readyKitImages, SECRET, startRun } from './_site-planner-bench.mjs'
 import { plan } from './_site-plan-check.mjs'
+import { assignPlannerDoor, readyKitImages, SECRET, startRun } from './_site-planner-bench.mjs'
 
 const db = fileDb()
 before(db.open)
@@ -263,3 +263,34 @@ test('a cancel asked while the run had no worker ends it on the next claim, with
   assert.equal(run.status, 'cancelled')
   assert.equal(run.rounds[0].state, 'cancelled')
 })
+
+test(
+  'a chain step whose worker died is picked up again and finishes past the former USD budget (#478)',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    for (const [noCaps, ends] of [
+      [true, 'succeeded'],
+      [false, 'failed']
+    ]) {
+      await pool.query("update site_planner_run set status = 'cancelled', step = 'done', finished_at = now()")
+      const started = await startRun(pool, { noCaps, startedBy: 'cli:step-chain' })
+      // The first worker answered one call that cost 3 USD (the plain budget is 2), then died with its lease lapsed.
+      const before = toolCallReply({
+        calls: [['read_kit_part', { id: 'pageGroups' }]],
+        usage: usageOf({ cost: 3 })
+      })
+      await killedAfter(pool, started.id, [before], { dieAt: { n: 1, state: 'dispatched' } })
+      const model = scriptedModel([
+        finalReply({ content: JSON.stringify(plan()), usage: usageOf({ cost: 1 }) })
+      ])
+      await drain(pool, model)
+      const run = await readRun(pool, started.id)
+      assert.equal(run.status, ends, `${noCaps ? 'chain' : 'plain'}: ${run.error}`)
+      assert.equal(run.attempts, 2)
+      if (noCaps) assert.equal(run.costUsd, 4)
+      else assert.match(String(run.error), /SITE_PLANNER_BUDGET/)
+    }
+  }
+)

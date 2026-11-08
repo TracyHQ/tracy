@@ -595,8 +595,8 @@ test(
           })
           setImmediate(() => fire())
         }),
-      write: async (_ctx, inputs) => {
-        written.push(inputs)
+      write: async (_ctx, inputs, how) => {
+        written.push({ ...inputs, limits: how.limits })
         return { value: { report: { status: 'done', counts: { written: 7 } } }, usd: 0.3 }
       }
     })
@@ -614,6 +614,7 @@ test(
     assert.equal(done.error, null)
     assert.equal(written.length, 1, 'the Write step ran after the deadline')
     assert.equal(written[0].pictures, null, 'the stopped step made nothing')
+    assert.deepEqual(written[0].limits, { stopNewWorkMs: 0, returnByMs: 15 * 60_000 }, 'no new 9b work')
     const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
     assert.deepEqual([record.ending, record.failedStep], ['soft-failure', 'pictures'])
     assert.equal(record.steps.find((s) => s.step === 'pictures').outcome, 'stopped')

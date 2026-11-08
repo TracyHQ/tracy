@@ -2384,9 +2384,10 @@ the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment'
 anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or the revision is not the caller's (404); otherwise
 the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
-frame's 25 minute run and apply cuts, the planner USD budget, the brand cost cap and the 9b new-work and return windows do not
-apply to it (its bench runs start with `--no-caps`, step 9 with `CHAIN_REPAIR_LIMITS`). Only a 2 hour outer deadline bounds the
-steps: a step still going then is stopped, its best version used, and the Write step still runs (a soft failure). Lost-run
+frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps, the brand cost cap and the 9b windows do not
+apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). Only a 2 hour outer deadline bounds the
+steps: a step still going then is stopped, its best version used, no new 9b work starts, and the Write step still runs inside a
+15 minute window (a soft failure; the run's hard stop is about 2 h 15 min). Lost-run
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs

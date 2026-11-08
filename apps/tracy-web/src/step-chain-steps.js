@@ -24,7 +24,6 @@ import { runSiteCheck } from './site-check/site-check.js'
 import { runCli as picturesCli } from './site-pictures/bench-cli.js'
 import { runCli as plannerCli } from './site-planner/bench-cli.js'
 import { runCli as writerCli } from './site-writer/bench-cli.js'
-import { STEP_CHAIN_DEADLINE_MS } from './sites/brief-engines/step-chain.js'
 import { designSystemSiteReaders } from './sites/design-system-site-readers.js'
 import { siteByKey } from './sites/store.js'
 import { mintSeatSession } from './workspace/seat-door.js'
@@ -36,15 +35,6 @@ import { benchRepairAgent } from './write-step-bench-repair-agent.js'
 import { runStepNine } from './write-step-nine.js'
 
 const BY = 'step-chain'
-
-/**
- * Step 9b's windows for a chain build (#478): none of the repair pass's own 10 and 12 minute windows apply, the chain's
- * outer deadline bounds the run. The two are finite (a timer given infinity fires at once) and as long as that deadline.
- */
-export const CHAIN_REPAIR_LIMITS = Object.freeze({
-  stopNewWorkMs: STEP_CHAIN_DEADLINE_MS,
-  returnByMs: STEP_CHAIN_DEADLINE_MS
-})
 
 /** What a chain build adds to a bench `run` so its step carries no USD cap (the bench's own default runs keep it). */
 const NO_CAPS = ['--no-caps']
@@ -213,7 +203,15 @@ export function createStepChainSteps(deps) {
 
     async copy(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'copy')
-      const argv = ['--plan-file', plan.file, '--kit', kit.ref, '--brief-revision', revisionOf(ctx)]
+      const argv = [
+        '--plan-file',
+        plan.file,
+        '--kit',
+        kit.ref,
+        '--brief-revision',
+        revisionOf(ctx),
+        ...NO_CAPS
+      ]
       const ran = await benchRun('copy', argv, dir, signal)
       const file = path.join(dir, 'site-copy.json')
       return answerOf(ran, { file }, exists(file))
@@ -221,14 +219,22 @@ export function createStepChainSteps(deps) {
 
     async pictures(ctx, { kit, plan }, { signal }) {
       const dir = path.join(await folderOf(ctx), 'pictures')
-      const argv = ['--plan-file', plan.file, '--kit', kit.ref, '--brief-revision', revisionOf(ctx)]
+      const argv = [
+        '--plan-file',
+        plan.file,
+        '--kit',
+        kit.ref,
+        '--brief-revision',
+        revisionOf(ctx),
+        ...NO_CAPS
+      ]
       const ran = await benchRun('pictures', argv, dir, signal)
       const value = { file: path.join(dir, 'mapping.json'), manifest: path.join(dir, 'site-pictures.json') }
       return answerOf(ran, value, exists(value.file))
     },
 
     // Step 9 whole: write, Site check, 9b repair pass, recheck, hand-over (write-step-nine.js).
-    async write(ctx, inputs, { door }) {
+    async write(ctx, inputs, { door, limits }) {
       const dir = await folderOf(ctx)
       const { rows } = await pool.query('select brief from wo_revision where id = $1', [revisionOf(ctx)])
       if (!rows[0]) throw stepError(`no research revision ${revisionOf(ctx)}`)
@@ -311,7 +317,7 @@ export function createStepChainSteps(deps) {
         agent,
         baselines: contractBaselineStore({ index: defaultContracts() }),
         pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
-        limits: CHAIN_REPAIR_LIMITS,
+        limits,
         saveFile: (name, data) => writeFile(path.join(out, name), data),
         log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
       })

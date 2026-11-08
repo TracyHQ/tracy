@@ -4,12 +4,12 @@
 // map beside it, null when there is none), prompt hash, checker version,
 // door snapshot (never the key) and harness settings, pages per turn among them (#330). The worker (bench-worker.js) does the rest.
 import { briefShapeProblems } from '../lib/bench-brief-shape.js'
-import { benchHarnessFor } from '../lib/bench-harness.js'
+import { benchHarnessFor, withoutCaps } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
+import { openContentMap } from '../lib/content-map-source.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
-import { openContentMap } from '../lib/content-map-source.js'
 import { CHECKER_VERSION } from './copy-check/check-copy.js'
 import { siteWriterDoor } from './door.js'
 import { writerPrompt } from './writer-prompt.js'
@@ -36,7 +36,8 @@ export async function startWriterRun({
   kitRef,
   startedBy,
   pagesPerTurn = DEFAULT_PAGES_PER_TURN,
-  index
+  index,
+  noCaps = false
 }) {
   const turnProblem = pagesPerTurnProblem(pagesPerTurn)
   if (turnProblem) return refuse('SITE_WRITER_HARNESS', `The run cannot start: ${turnProblem}.`)
@@ -75,7 +76,10 @@ export async function startWriterRun({
     promptSha256: writerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: { ...benchHarnessFor(door.snapshot.model, door.snapshot.providerId), pagesPerTurn }
+    harness: {
+      ...(noCaps ? withoutCaps : (h) => h)(benchHarnessFor(door.snapshot.model, door.snapshot.providerId)),
+      pagesPerTurn
+    }
   })
   if (created.error === SITE_WRITER_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }
