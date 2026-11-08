@@ -1,0 +1,1 @@
+{"id":"REG-PR-493-joomla-contract-fetch-github-fallback","verdict":"PASS","commit":"92cc045e66dff9820a5eaa5b5a8bd615513386b6","ran_at":"2026-11-08T11:14:19.314Z","evidence":"tests/regression/.runs/2026-11-08-92cc045e6/REG-PR-493-joomla-contract-fetch-github-fallback.log"}
