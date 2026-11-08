@@ -1,0 +1,2 @@
+- **The plan check sends back kept cards with a hidden field and visible buttons with a hidden label (R23, R24)** — Akemi Nguyen · #488 · `fix/s1-plan-checker-rules` · 2026-11-08
+  **Affects:** planner bench runs and step chain builds: the checker is now `site-plan-check/5`, so runs scored before are not compared with runs scored after. A plan that hides one field of a kept card while other cards print it, or hides a button label while the button stays (a shared label hidden at all), now fails and goes back to the planner for another round. The planner prompt is unchanged.
