@@ -8,10 +8,10 @@
 // picture steps made is still written over it. Nothing here is invented content: both files are empty of words.
 //
 // A brand step that made no brand file gets a stand-in too (standInBrand): the business name the brief gives, placed by the
-// same code rule the brand step uses (brand-step/name-slots.js), and the template's own accent and logos. Without it the site
+// same code rule the brand step uses (lib/brand-name-slots.js), and the template's own accent and logos. Without it the site
 // keeps the template's demo name and the site label in its footer.
 import { createHash } from 'node:crypto'
-import { computeNameSlots } from '../brand-step/name-slots.js'
+import { computeNameSlots } from '../lib/brand-name-slots.js'
 import { COPY_VERSION } from '../lib/site-copy-view.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
