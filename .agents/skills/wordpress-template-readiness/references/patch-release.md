@@ -35,8 +35,10 @@ named volume) is where the chain restores what it packed.
 3. **Sweep differences:** the chain's sweep must pass all eleven checks. A failing group that the baseline already had
    (same route, width, scheme, cause) is the port's long-standing difference: it becomes a `sweep.accept` row of
    `review.config.json` with its decision in `DECISIONS.md`, written by a script that accepts a group only when every
-   cell is in the baseline. A group that is not in the baseline is new: fix it in the theme, or stop W4 for the port
-   owner. A full sweep that exits 4 on a history merge (`effective.checks.<check>.intermittent was measured by a run
+   cell is in the baseline. A group that is not in the baseline is new: fix it in the theme (a `heights` or `scheme` group on a page whose markup
+   you changed is recipe H8 of [`coverage-holes.md`](coverage-holes.md)), or stop W4 for the port
+   owner. A cause that appears at different widths from one run to the next on a page you did not touch is the source's
+   own intermittent measure: accept it at every width with its decision, after comparing two runs. A full sweep that exits 4 on a history merge (`effective.checks.<check>.intermittent was measured by a run
    before the full run`) runs again with the sweep state file moved aside.
 4. **Prune trap:** `prune-audit` deletes an attachment that a pattern looks up by post name (no reference it can see).
    Bundle such a picture in the theme as the fallback instead of relying on the seed.

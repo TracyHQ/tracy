@@ -4,11 +4,11 @@
   "provenance": {
     "database": {
       "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-      "sha256": "fc1ed1890f3f8bc0dfe0fbcec96e02737fc4fe3fdcdb490403822bfa28635360"
+      "sha256": "7826189150083b5f2df75d152d4d5b374323e619657d51c1472a730df7d14545"
     },
     "webroot": {
       "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-      "sha256": "0200acaeefe3680fb0d5fb0f483e3b3dfa375c070ba10ae634f6789df00e4c08"
+      "sha256": "62a25a4eb4d25219e479f80af10b139c0d90331916fb4dbe80fcd98da8251c34"
     }
   },
   "tablePrefix": "tr_",
@@ -781,9 +781,9 @@
         "subscribe.form",
         "subscribe.posttext"
       ],
-      "contentSha256": "2bc46f5c3773782f4ba8be2701a4dc51e194d9df4e4e7dc124692014cfab0b63",
+      "contentSha256": "0dbec2258c1124faca0d8ba34c04403498d59ba7fc6885317a92bcf40953e667",
       "entity": "page-reservation",
-      "skeleton": "ec065c3af7cee3bd60305b30e6ac23ec2063dbe2ae0dcf95e56820f482da2ff1"
+      "skeleton": "3695de8483610b503ca25628928def3c62e5261779ab0f0c382849b89ae293d2"
     },
     {
       "id": 69,

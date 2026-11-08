@@ -60,6 +60,10 @@ green for the exit code. Never try to turn it `done`.
    Skip `kit-not-approved` and `kit-approval-stale`: the approval comes at green.
 2. Its fix is the piece's `fix` in the verdict JSON. Look its code up in
    [`references/fix-map.md`](references/fix-map.md), which says how that fix runs on WordPress, or that it is a stop.
+   For `coverage-holes`, `coverage-labels` and `coverage-judge`, and for a red release sweep check (`heights`,
+   `scheme`), find the symptom in [`references/coverage-holes.md`](references/coverage-holes.md) section 6 (recipes
+   H1 to H8: business words in a pattern, a fact in a `core/html` band, a priced item name, cut-out pictures, a
+   template part, a style guide sample, text with no door, a markup change that moves heights) and follow its recipe.
 3. Run it. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md) (a `build` wipes
    the five hand-declared hidden fields, and needs the database to read pages as sections).
 4. Append one line to `$RUN/fix-log.md`: piece, code, what changed, where (theme, contract folder, kit, tool, release).
