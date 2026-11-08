@@ -12,6 +12,9 @@
   "wo-builds.description": "Sites construits par la chaîne d’étapes, du plus récent au plus ancien : durée de chaque build et coût. Les chiffres viennent des relevés propres aux exécutions.",
   "wo-builds.empty": "Aucun build en chaîne n’est encore terminé.",
   "wo-builds.ending.complete": "Terminé",
+  "wo-builds.ending.failed": "Échec à {step}",
+  "wo-builds.ending.running": "En cours : {step}",
+  "wo-builds.ending.runningUnknown": "En cours",
   "wo-builds.ending.softFailure": "Échec doux à {step}",
   "wo-builds.ending.softFailureUnknown": "Échec doux",
   "wo-builds.expand": "Afficher les étapes de {site}",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "Site de base",
   "wo-builds.step.write": "Étape d’écriture",
   "wo-builds.title": "Builds en chaîne",
-  "wo-builds.usual": "Build habituel : {minutes} min. Les builds en surbrillance ont duré plus de {limit} min."
+  "wo-builds.usual": "Build habituel : {minutes} min. Les builds en surbrillance ont duré, ou durent déjà, plus de {limit} min."
 }

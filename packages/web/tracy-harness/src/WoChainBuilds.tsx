@@ -67,6 +67,22 @@ function EndingBadge({ build }: { build: ChainBuild }) {
       </Badge>
     )
   }
+  if (build.ending === 'running') {
+    return (
+      <Badge variant="outline" className="border-sky-500/30 bg-sky-500/10 text-sky-700 dark:text-sky-300">
+        {build.runningSteps.length > 0
+          ? t('wo-builds.ending.running', { step: build.runningSteps.map((s) => stepName(t, s)).join(', ') })
+          : t('wo-builds.ending.runningUnknown')}
+      </Badge>
+    )
+  }
+  if (build.ending === 'failed') {
+    return (
+      <Badge variant="outline" className="border-red-500/30 bg-red-500/10 text-red-700 dark:text-red-300">
+        {t('wo-builds.ending.failed', { step: stepName(t, build.failedStep ?? 'write') })}
+      </Badge>
+    )
+  }
   return (
     <Badge
       variant="outline"

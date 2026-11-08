@@ -110,6 +110,77 @@ test('a run far above the usual duration is highlighted, and only then', dbOpts,
   )
 })
 
+/** A build whose run left only a snapshot: still going while the row is open, a hard failure once it is not. */
+async function seedSnapshot(pool, siteKey, { at, state, running, usd = [0.3] }) {
+  const chain = {
+    ending: 'running',
+    running,
+    totalMinutes: 1,
+    totalUsd: 0,
+    steps: usd.map((u, i) => ({ step: ['kit', 'brand', 'plan'][i], minutes: 1, usd: u, outcome: 'done' }))
+  }
+  await pool.query(
+    `insert into site_brief (site_key, platform, quickstart, brief, state, timings, created_at)
+     values ($1, 'joomla', 'quickstart/ja-boxing/j6', '{}'::jsonb, $2, $3::jsonb, $4)`,
+    [siteKey, state, JSON.stringify({ chain }), at]
+  )
+}
+
+test(
+  'a running build is a row with its elapsed minutes, current step and spend so far, and is highlighted past the threshold',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    for (const [i, minutes] of [10, 12, 11].entries())
+      await seedBuild(pool, `d${i}.tracy.site`, { at: `2026-11-0${i + 1}T10:00:00Z`, minutes, usd: 1 })
+    await seedSnapshot(pool, 'fresh.tracy.site', {
+      at: '2026-11-07T09:50:00Z',
+      state: 'applying',
+      running: ['write']
+    })
+    await seedSnapshot(pool, 'stuck.tracy.site', {
+      at: '2026-11-07T08:00:00Z',
+      state: 'preparing',
+      running: ['plan', 'brand']
+    })
+    const now = () => Date.parse('2026-11-07T10:00:00Z')
+    const { builds } = await listChainBuilds(db.pool, CONFIG, { now })
+    const by = Object.fromEntries(builds.map((b) => [b.siteKey, b]))
+    assert.deepEqual(
+      [
+        by['fresh.tracy.site'].ending,
+        by['fresh.tracy.site'].totalMinutes,
+        by['fresh.tracy.site'].runningSteps
+      ],
+      ['running', 10, ['write']]
+    )
+    assert.equal(by['fresh.tracy.site'].totalUsd, 0.3)
+    assert.equal(by['fresh.tracy.site'].slow, false)
+    assert.deepEqual(
+      [by['stuck.tracy.site'].ending, by['stuck.tracy.site'].slow, by['stuck.tracy.site'].runningSteps],
+      ['running', true, ['plan', 'brand']]
+    )
+  }
+)
+
+test(
+  'a snapshot on a row that is no longer open is a hard failure at the step that was under way',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    await seedSnapshot(pool, 'dead.tracy.site', {
+      at: '2026-11-07T09:00:00Z',
+      state: 'failed',
+      running: ['pictures']
+    })
+    await seedSnapshot(pool, 'dead2.tracy.site', { at: '2026-11-07T09:10:00Z', state: 'failed', running: [] })
+    const { builds } = await listChainBuilds(pool, CONFIG)
+    const by = Object.fromEntries(builds.map((b) => [b.siteKey, [b.ending, b.failedStep, b.runningSteps]]))
+    assert.deepEqual(by['dead.tracy.site'], ['failed', 'pictures', []])
+    assert.deepEqual(by['dead2.tracy.site'], ['failed', 'write', []])
+  }
+)
+
 test('with too few builds there is no usual duration, so nothing is highlighted', dbOpts, async () => {
   const { pool } = db
   await seedBuild(pool, 'a.tracy.site', { at: '2026-11-01T10:00:00Z', minutes: 5, usd: 1 })

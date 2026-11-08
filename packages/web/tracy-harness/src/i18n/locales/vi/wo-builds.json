@@ -12,6 +12,9 @@
   "wo-builds.description": "Các site do chuỗi bước dựng, mới nhất trước: mỗi lượt mất bao lâu và tốn bao nhiêu. Số liệu lấy từ chính bản ghi của các lượt chạy.",
   "wo-builds.empty": "Chưa có lượt dựng bằng chuỗi bước nào kết thúc.",
   "wo-builds.ending.complete": "Hoàn tất",
+  "wo-builds.ending.failed": "Lỗi ở {step}",
+  "wo-builds.ending.running": "Đang chạy: {step}",
+  "wo-builds.ending.runningUnknown": "Đang chạy",
   "wo-builds.ending.softFailure": "Lỗi mềm ở {step}",
   "wo-builds.ending.softFailureUnknown": "Lỗi mềm",
   "wo-builds.expand": "Xem các bước của {site}",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "Site nền",
   "wo-builds.step.write": "Bước ghi",
   "wo-builds.title": "Các lượt dựng bằng chuỗi bước",
-  "wo-builds.usual": "Lượt dựng thường: {minutes} phút. Lượt được tô nổi mất hơn {limit} phút."
+  "wo-builds.usual": "Lượt dựng thường: {minutes} phút. Các lượt dựng được tô nổi đã mất, hoặc đến giờ đã mất, hơn {limit} phút."
 }

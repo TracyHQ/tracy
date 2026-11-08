@@ -12,6 +12,9 @@
   "wo-builds.description": "由步骤链构建的 site，最新的在前：每次构建用了多久、花了多少。数字来自各次运行自己的记录。",
   "wo-builds.empty": "还没有链式构建完成。",
   "wo-builds.ending.complete": "已完成",
+  "wo-builds.ending.failed": "在 {step} 失败",
+  "wo-builds.ending.running": "运行中：{step}",
+  "wo-builds.ending.runningUnknown": "运行中",
   "wo-builds.ending.softFailure": "在 {step} 软失败",
   "wo-builds.ending.softFailureUnknown": "软失败",
   "wo-builds.expand": "显示 {site} 的步骤",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "基础 site",
   "wo-builds.step.write": "写入步骤",
   "wo-builds.title": "链式构建",
-  "wo-builds.usual": "常规构建：{minutes} 分钟。高亮的构建耗时超过 {limit} 分钟。"
+  "wo-builds.usual": "常规构建：{minutes} 分钟。高亮的构建耗时（或至今已耗时）超过 {limit} 分钟。"
 }

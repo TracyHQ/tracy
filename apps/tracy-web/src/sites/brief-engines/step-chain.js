@@ -76,11 +76,18 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
       const record = []
       const { signal } = ctx
       let failed = null
+      /** The steps running now, and the snapshot of the run so far that the row keeps while the run is going. */
+      const active = new Set()
+      const snap = () =>
+        Promise.resolve(ctx.progress?.(chainSummary(record, failed, now() - t0, [...active]))).catch(() => {})
       /** Run one step, timed and costed; a failure is kept, never thrown, and what the step still made is used. */
       const run = async (step, inputs) => {
         const start = now()
+        active.add(step)
+        await snap()
         try {
           const answer = await steps[step](ctx, inputs, { signal })
+          active.delete(step)
           record.push({
             step,
             startMs: start - t0,
@@ -88,8 +95,10 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
             usd: Number(answer?.usd ?? 0),
             outcome: 'done'
           })
+          await snap()
           return { value: answer?.value ?? null }
         } catch (error) {
+          active.delete(step)
           const made = error?.value ?? null
           record.push({
             step,
@@ -100,6 +109,7 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
             error: messageOf(error)
           })
           failed ??= step
+          await snap()
           return made ? { value: made } : null
         }
       }
@@ -117,7 +127,7 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
         return null
       }
       const kit = await run('kit', {})
-      if (!kit) return { runId: ctx.runId, t0, record, failed, inputs: null }
+      if (!kit) return { runId: ctx.runId, t0, record, failed, inputs: null, snap, active }
       const [brand, planned] = await Promise.all([
         run('brand', { kit: kit.value }),
         run('plan', { kit: kit.value }).then(async (plan) => {
@@ -134,6 +144,8 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
         t0,
         record,
         failed,
+        snap,
+        active,
         inputs: {
           kit: kit.value,
           plan: planned.plan?.value ?? null,
@@ -145,12 +157,14 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
     },
 
     async apply(ctx, prepared) {
-      const { t0, record } = prepared
+      const { t0, record, snap, active } = prepared
       let { failed } = prepared
       let wrote = 0
       let kept = 0
       if (prepared.inputs) {
         const start = now()
+        active.add('write')
+        await snap()
         try {
           const door = { apply: applyFor(ctx.email, ctx.runId) }
           const answer = await steps.write(ctx, prepared.inputs, { signal: ctx.signal, door })
@@ -193,11 +207,14 @@ export function createStepChainEngine({ steps, applyFor, now = Date.now }) {
  * @param {Array<{step: string, startMs: number, endMs: number, usd: number, outcome: string, error?: string}>} record
  * @param {string | null} failed
  * @param {number} totalMs
+ * @param {string[] | null} [running]
  */
-export function chainSummary(record, failed, totalMs) {
+export function chainSummary(record, failed, totalMs, running = null) {
   return {
-    ending: failed ? 'soft-failure' : 'complete',
-    ...(failed ? { failedStep: failed } : {}),
+    // A snapshot of a run still going (`running`: the steps under way) says so; the row's state tells the reader whether
+    // the run is still going or ended without finishing the record (a hard failure).
+    ending: running ? 'running' : failed ? 'soft-failure' : 'complete',
+    ...(running ? { running } : failed ? { failedStep: failed } : {}),
     totalMinutes: round(totalMs / 60_000, 2),
     totalUsd: round(
       record.reduce((sum, s) => sum + (Number.isFinite(s.usd) ? s.usd : 0), 0),

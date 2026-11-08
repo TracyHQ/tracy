@@ -12,6 +12,9 @@
   "wo-builds.description": "Sites construidos por la cadena de pasos, el más reciente primero: cuánto tardó cada build y cuánto costó. Las cifras salen de los propios registros de las ejecuciones.",
   "wo-builds.empty": "Todavía no ha terminado ningún build en cadena.",
   "wo-builds.ending.complete": "Completado",
+  "wo-builds.ending.failed": "Fallo en {step}",
+  "wo-builds.ending.running": "En curso: {step}",
+  "wo-builds.ending.runningUnknown": "En curso",
   "wo-builds.ending.softFailure": "Fallo leve en {step}",
   "wo-builds.ending.softFailureUnknown": "Fallo leve",
   "wo-builds.expand": "Mostrar los pasos de {site}",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "Site base",
   "wo-builds.step.write": "Paso de escritura",
   "wo-builds.title": "Builds en cadena",
-  "wo-builds.usual": "Build habitual: {minutes} min. Los builds resaltados tardaron más de {limit} min."
+  "wo-builds.usual": "Build habitual: {minutes} min. Los builds resaltados tardaron, o llevan hasta ahora, más de {limit} min."
 }

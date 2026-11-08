@@ -12,6 +12,9 @@
   "wo-builds.description": "94b0ebe8",
   "wo-builds.empty": "756e0a29",
   "wo-builds.ending.complete": "628ea1a2",
+  "wo-builds.ending.failed": "184672dd",
+  "wo-builds.ending.running": "c379e578",
+  "wo-builds.ending.runningUnknown": "452925ec",
   "wo-builds.ending.softFailure": "55bc362a",
   "wo-builds.ending.softFailureUnknown": "fe47fd57",
   "wo-builds.expand": "e727a5d6",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "42feb173",
   "wo-builds.step.write": "0afec286",
   "wo-builds.title": "ea855b6b",
-  "wo-builds.usual": "4446a01e"
+  "wo-builds.usual": "4d76feb7"
 }

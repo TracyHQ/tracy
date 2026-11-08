@@ -12,6 +12,9 @@
   "wo-builds.description": "Sites gebouwd door de stappenketen, nieuwste eerst: hoe lang elke build duurde en wat hij kostte. De cijfers komen uit de eigen registratie van de runs.",
   "wo-builds.empty": "Er is nog geen ketenbuild afgerond.",
   "wo-builds.ending.complete": "Voltooid",
+  "wo-builds.ending.failed": "Mislukt bij {step}",
+  "wo-builds.ending.running": "Bezig: {step}",
+  "wo-builds.ending.runningUnknown": "Bezig",
   "wo-builds.ending.softFailure": "Milde fout bij {step}",
   "wo-builds.ending.softFailureUnknown": "Milde fout",
   "wo-builds.expand": "Stappen van {site} tonen",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "Basis-site",
   "wo-builds.step.write": "Schrijfstap",
   "wo-builds.title": "Ketenbuilds",
-  "wo-builds.usual": "Gebruikelijke build: {minutes} min. Gemarkeerde builds duurden langer dan {limit} min."
+  "wo-builds.usual": "Gebruikelijke build: {minutes} min. Gemarkeerde builds duurden, of duren tot nu toe, langer dan {limit} min."
 }

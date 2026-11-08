@@ -12,6 +12,9 @@
   "wo-builds.description": "Von der Schrittkette erstellte Sites, neueste zuerst: wie lange jeder Build gedauert hat und was er gekostet hat. Die Zahlen stammen aus den eigenen Aufzeichnungen der Läufe.",
   "wo-builds.empty": "Noch kein Ketten-Build ist abgeschlossen.",
   "wo-builds.ending.complete": "Abgeschlossen",
+  "wo-builds.ending.failed": "Fehlgeschlagen bei {step}",
+  "wo-builds.ending.running": "Läuft: {step}",
+  "wo-builds.ending.runningUnknown": "Läuft",
   "wo-builds.ending.softFailure": "Weicher Fehler bei {step}",
   "wo-builds.ending.softFailureUnknown": "Weicher Fehler",
   "wo-builds.expand": "Schritte von {site} anzeigen",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "Basis-Site",
   "wo-builds.step.write": "Schreibschritt",
   "wo-builds.title": "Ketten-Builds",
-  "wo-builds.usual": "Üblicher Build: {minutes} Min. Hervorgehobene Builds dauerten länger als {limit} Min."
+  "wo-builds.usual": "Üblicher Build: {minutes} Min. Hervorgehobene Builds dauerten oder dauern bisher länger als {limit} Min."
 }

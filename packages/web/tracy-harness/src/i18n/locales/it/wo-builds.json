@@ -12,6 +12,9 @@
   "wo-builds.description": "Site costruiti dalla catena di passi, dal più recente: quanto è durato ogni build e quanto è costato. I numeri vengono dai registri delle esecuzioni stesse.",
   "wo-builds.empty": "Nessun build a catena è ancora terminato.",
   "wo-builds.ending.complete": "Completato",
+  "wo-builds.ending.failed": "Non riuscito a {step}",
+  "wo-builds.ending.running": "In corso: {step}",
+  "wo-builds.ending.runningUnknown": "In corso",
   "wo-builds.ending.softFailure": "Errore lieve a {step}",
   "wo-builds.ending.softFailureUnknown": "Errore lieve",
   "wo-builds.expand": "Mostra i passi di {site}",
@@ -35,5 +38,5 @@
   "wo-builds.step.site": "Site di base",
   "wo-builds.step.write": "Passo di scrittura",
   "wo-builds.title": "Build a catena",
-  "wo-builds.usual": "Build abituale: {minutes} min. I build evidenziati sono durati più di {limit} min."
+  "wo-builds.usual": "Build abituale: {minutes} min. I build evidenziati sono durati, o finora durano, più di {limit} min."
 }

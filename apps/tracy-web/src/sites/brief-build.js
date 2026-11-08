@@ -177,6 +177,7 @@ function withTimeout(promise, ms, message) {
  * @property {any} normalized - what `normalize` read out of the brief (name, languages, tone, ...)
  * @property {AbortSignal} signal
  * @property {(phase: string, ms: number) => void} time - record how long a phase of the engine took
+ * @property {(chain: object) => Promise<void>} progress - keep what the engine measured so far on the row (`timings.chain`)
  * @property {(note: string) => void} note - say something the report should carry
  * @property {(applyId: string, how?: {reused: boolean}) => void} applied - an apply id a write named (`recordedDoor`): kept on
  *   the row so the whole Apply can be undone; a `reused` one (not minted by this Apply) is kept apart
@@ -523,6 +524,8 @@ export function createBriefBuilds({
         brief: input.brief,
         normalized,
         signal: controller.signal,
+        // What an engine measured so far, kept on the row while the run goes (/ops/wo reads it); a failure to save it never stops the run.
+        progress: (chain) => updateBrief(pool, siteKey, { timings: { chain } }).catch(() => {}),
         time,
         note: (n) => notes.push(String(n).slice(0, 200)),
         applied,

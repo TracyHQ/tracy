@@ -21,8 +21,11 @@ export interface ChainBuild {
   startedAt: string
   totalMinutes: number
   totalUsd: number
-  ending: 'complete' | 'soft-failure'
+  /** `running`: the run is going; `failed`: it died without finishing its record (a hard failure). */
+  ending: 'complete' | 'soft-failure' | 'failed' | 'running'
   failedStep: string | null
+  /** The steps under way, while the build is running. */
+  runningSteps: string[]
   steps: ChainBuildStep[]
   /** Far above the usual duration of the builds listed. */
   slow: boolean

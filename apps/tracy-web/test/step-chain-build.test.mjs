@@ -572,3 +572,38 @@ test(
     }
   }
 )
+
+test(
+  'while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    let seen = null
+    const { steps } = fakeSteps({
+      write: async () => {
+        seen = (await briefOf(pool, 'harbourpadel.tracy.test')).timings.chain
+        throw Object.assign(new Error('x'), { fatal: true })
+      }
+    })
+    const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+    // A hard failure: the engine's apply escapes the frame (a deadline, a crash), which no soft-failure record covers.
+    const hard = {
+      ...chain,
+      apply: async (ctx, prepared) => (
+        await chain.apply(ctx, prepared), Promise.reject(new Error('the run died'))
+      )
+    }
+    const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: hard })
+    await b.start(chainInput())
+    const done = await untilSettled(b, 'harbourpadel.tracy.test')
+    assert.equal(done.state, 'failed')
+    assert.equal(seen.ending, 'running', 'the write step was under way')
+    assert.deepEqual(seen.running, ['write'])
+    assert.ok(
+      seen.steps.some((st) => st.step === 'brand' && st.usd === 0.1),
+      'finished steps and their spend are there'
+    )
+    const row = (await briefOf(pool, 'harbourpadel.tracy.test')).timings.chain
+    assert.equal(row.ending, 'running', 'the last snapshot stays; the reader sees the row failed')
+  }
+)
