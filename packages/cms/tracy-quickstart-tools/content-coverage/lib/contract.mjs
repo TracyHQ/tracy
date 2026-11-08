@@ -98,6 +98,10 @@ export function loadContract(dir, siteUrl) {
     } else {
       // A text field that holds a web address (a store link among a template's extra fields) prints it as an href.
       if (/^https?:\/\//i.test(String(s.sample ?? '').trim())) push(url, normHref(s.sample, siteUrl), s.key)
+      // An inline markup slot (a button, a link inside a sentence) holds its address in the notation, and the plugin
+      // writes the whole value: each href in the sample is the slot's address.
+      for (const m of String(s.sample ?? '').matchAll(/\(\(a\s[^()]*?\bhref="([^"]+)"/gi))
+        push(url, normHref(m[1], siteUrl), s.key)
       const n = normText(s.sample)
       if (!n) continue
       push(text, n, s.key)

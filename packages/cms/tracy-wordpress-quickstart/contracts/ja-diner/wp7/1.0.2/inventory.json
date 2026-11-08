@@ -4,11 +4,11 @@
   "provenance": {
     "database": {
       "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-      "sha256": "918c4a1683c643e2b81c2d07e143bf81ed3399528e6b25dc58ea0342bb6a42a7"
+      "sha256": "c536f9cf394b28bae6c374ed6b9dd153c58777e4c75e2e7bbb86e5be4e708f92"
     },
     "webroot": {
       "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-      "sha256": "5a3bbef657bbf68e9ae4648b73566bf54fd7d75037b2519d587ad6209176a4b9"
+      "sha256": "fc319a8dda261f63f6ea0f3ef74b1d0a70cbddfbdcf613d996a45484a76f719d"
     }
   },
   "tablePrefix": "tr_",
@@ -768,21 +768,6 @@
         "masthead.background",
         "masthead.title",
         "masthead.description",
-        "reservation.root",
-        "reservation.image.1",
-        "reservation.eyebrow.1",
-        "reservation.title.1",
-        "reservation.description.1",
-        "reservation.button.1",
-        "reservation.eyebrow.2",
-        "reservation.title.2",
-        "reservation.description.2",
-        "reservation.button.2",
-        "reservation.image.2",
-        "reservation.title.3",
-        "reservation.description.3",
-        "reservation.phone",
-        "reservation.button.3",
         "features-intro.root",
         "features-intro.module-title",
         "features-intro.sub-heading",
@@ -796,9 +781,9 @@
         "subscribe.form",
         "subscribe.posttext"
       ],
-      "contentSha256": "237e90585a0cc23fb4db265523dc2197ae543fc7e70c59acbbd6151916936bd6",
+      "contentSha256": "690404d40c2eccb0271850dba3b53eb40fddfb5bede0882ee5e608fa3e10d79f",
       "entity": "page-reservation",
-      "skeleton": "5dba43b690c029196453cdb9a4b8e27297bd1356cc69f135694f1a0a66ee2f8c"
+      "skeleton": "c0559d4ba706dad9c52278d7464c41880056a48ed50c7920262caea78c26f926"
     },
     {
       "id": 69,
