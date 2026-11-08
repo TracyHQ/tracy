@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-489-quickstart-github-download-504",
+  "kind": "fix",
+  "title": "A quickstart part on a github.com release download address that answers 5xx is fetched through the GitHub API asset route",
+  "pr": 489,
+  "area": "fleet/provision/quickstart",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the quickstart GitHub fallback test of packages/fleet/tracy-fleet-operation (a local server answers 504, then 404, on the release download route and serves the release and the asset on the API routes)."
+  ],
+  "expect": [
+    "S1: both tests pass: on 504 the part is fetched through releases/tags then releases/assets with Accept application/octet-stream and its bytes match the pin; on 404 the download fails with HTTP 404 and no API route is called."
+  ],
+  "selectors": {
+    "test": "packages/fleet/tracy-fleet-operation/test/quickstart-github-fallback.test.mjs"
+  },
+  "evidence": "The JA Voyara 1.0.12 demo update stopped at prefetch with HTTP 504 while the github.com download route of the Claude Cowork release answered 504 and the API asset route served the same bytes",
+  "fence": "quickstart.py against a local server playing github.com and the API; no network, no database",
+  "run": {
+    "cmd": ["node", "--test", "packages/fleet/tracy-fleet-operation/test/quickstart-github-fallback.test.mjs"]
+  }
+}
