@@ -2,15 +2,15 @@
   "schemaVersion": "tracy-quickstart-showcase-nav/wordpress/v1",
   "profileVersion": "1.0.0",
   "contract": "ja-diner/wp7/1.0.2",
-  "baseHash": "7c4268cf54fcdbe10462fd73baa751fa1b91e6a4a56988d3c41f450ff48810d4",
+  "baseHash": "eb3395f21c8a14a89b7e86e3681e603cbd35f9efad152d2ab75c08aa20608082",
   "baseFiles": {
-    "manifest.json": "239dff5a464a65c975b6b970e59d1c73b6a8dfaa8ce8b41eef2c8d93fc4e9c27",
-    "content-map.json": "c082189c62ce2a62e667ab31643f12161b400480cc696014ce402a0e96d2000c",
-    "presentation-lock.json": "6fc369a8498d2118e147688c82b5f7c161e7463fcb63b67cdede0bcfcc061563"
+    "manifest.json": "3cbae0fe41eab9c4eab35adfaca5383eb4226c3b902f3f78bc4d1cbcfa400dbb",
+    "content-map.json": "7731fc6a998fb919995458a099b437fda2d6ab80e1f766f9b710a469d8a6b6f1",
+    "presentation-lock.json": "aad010e5a330c7818b8bfa9690dc91c0bca699144cf7e26c806bb909b8d22823"
   },
   "inputs": {
-    "navigation-source.json": "37037021e4ed5e87ac3a093a1f87c27428a8b959792d5c6a5c961f6141b024a6",
-    "inventory.json": "e442d4ee88f33c1286467639e4b91bf001807501124e400ff7c4469fbacd39b8"
+    "navigation-source.json": "2f8aa8e66934795f237eacf39e74d9dba5ab4e6fa4a96a970da41dc56e60b218",
+    "inventory.json": "27128eaa24662911621b0382460cbede8930919caf9a8cbf1285106900f676c4"
   },
   "decisionsHash": "21343786b2f22ee48077e7c775f6ea56617600d3cdd7cec68fcd4f4f1102293f",
   "status": "checked",

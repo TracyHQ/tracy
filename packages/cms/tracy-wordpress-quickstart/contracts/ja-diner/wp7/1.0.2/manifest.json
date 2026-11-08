@@ -18,18 +18,27 @@
     "parts": {
       "webroot": {
         "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-        "bytes": 60051863,
-        "sha256": "c7e5c3d6150248ae0caaef65e50134d50739cbe1ff2d532c44d16d32e181d82b",
+        "bytes": 60052050,
+        "sha256": "5a3bbef657bbf68e9ae4648b73566bf54fd7d75037b2519d587ad6209176a4b9",
         "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.2.tar.gz"
       },
       "database": {
         "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-        "bytes": 63373,
-        "sha256": "625a1c95b76f14697364553d811f2937e5b4e340d3d952473c2b8db929a8c0ae",
+        "bytes": 64055,
+        "sha256": "918c4a1683c643e2b81c2d07e143bf81ed3399528e6b25dc58ea0342bb6a42a7",
         "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.2.sql.gz"
       }
     }
   },
-  "coworkContractVersion": "0.18.38",
-  "mode": "content-recommendation"
+  "coworkContractVersion": "0.18.39",
+  "mode": "content-recommendation",
+  "themePictures": {
+    "options": [
+      "wp_ja_diner_blog_banner_image",
+      "wp_ja_diner_categories_banner_image"
+    ],
+    "postMeta": [
+      "jd_intro_image"
+    ]
+  }
 }
