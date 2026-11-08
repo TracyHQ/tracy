@@ -40,6 +40,11 @@ named volume) is where the chain restores what it packed.
    owner. A cause that appears at different widths from one run to the next on a page you did not touch is the source's
    own intermittent measure: accept it at every width with its decision, after comparing two runs. A full sweep that exits 4 on a history merge (`effective.checks.<check>.intermittent was measured by a run
    before the full run`) runs again with the sweep state file moved aside.
+   Declare such an exact-cell row `"intermittent": true`: a run in which its group is absent is then skipped, not a stale
+   error, and the row still moves the cells when the group is there (dropping and re-adding rows between runs never
+   converges). Never wrap the sweep in a log-idle watchdog: the heights phase prints nothing for minutes, and killing the
+   process there closes the heights browser and leaves every heights case "not measured". A scoped re-run never writes
+   `fix-measure.json`; the release needs a full run with every check passing.
 4. **Prune trap:** `prune-audit` deletes an attachment that a pattern looks up by post name (no reference it can see).
    Bundle such a picture in the theme as the fallback instead of relying on the seed.
 5. **Contract:** capture the new version's profile from the packed database (`capture-contract.mjs --posts

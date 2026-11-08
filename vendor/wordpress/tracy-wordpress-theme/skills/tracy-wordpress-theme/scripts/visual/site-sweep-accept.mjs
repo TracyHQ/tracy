@@ -10,6 +10,7 @@
 //   evidence  a path (absolute, or relative to the dossier) that exists, or an http(s) URL
 //   kind      "source-fault" (the source is wrong) | "decided" (the port keeps the difference on purpose) | "not-measurable" (below)
 //   key       optional: words the decision's own text must contain
+//   intermittent  optional, true: the group fails in one run and not the next (the source's own measure); a run without it is no stale error
 //
 // A third kind records what the tool COULD NOT MEASURE (the not-measured causes of site-sweep.md: `icons-unpairable`, `icon-covered`,
 // `touch-control-not-found`, `form-purpose-unknown`, a chips cause…) after the dossier measured it by hand:
@@ -64,6 +65,7 @@ export function validateSweepAccept(rows, { decisions, runRoot }) {
       else if (!isUrl(row.evidence) && !existsSync(evidencePath(row.evidence, runRoot))) E(`evidence ${row.evidence} does not exist (${evidencePath(row.evidence, runRoot)})`)
       return
     }
+    if (row.intermittent !== undefined && row.intermittent !== true) E('intermittent must be true (or left out): the row stays valid when its group is absent from a run')
     for (const m of routeErrors(row.routes)) E(m)
     if (row.widths !== undefined && (!Array.isArray(row.widths) || !row.widths.length || !row.widths.every((w) => Number.isInteger(w) && w > 0))) E('widths must be a non-empty list of integers')
     if (row.schemes !== undefined && (!Array.isArray(row.schemes) || !row.schemes.length || !row.schemes.every((x) => typeof x === 'string' && x))) E('schemes must be a non-empty list of names')
@@ -111,6 +113,8 @@ export function applyAccept(judged, rows, scope) {
     if (ranWidths && row.widths && !row.widths.some((w) => ranWidths.includes(w))) return skipped.push({ row: n, why: 'none of its widths was part of this run' })
     const same = original[row.check].filter((d) => causeOf(d) === row.cause)
     if (!same.length && partial) return skipped.push({ row: n, why: 'its group was not in the measured scope', unvalidated: true })
+    // `intermittent: true`: the cell fails in one run and not the next (the source's own measure), so a run without the group is no error
+    if (!same.length && row.intermittent === true) return skipped.push({ row: n, why: 'intermittent row: its group is absent from this run', unvalidated: true })
     if (!same.length) {
       const known = [...new Set(original[row.check].map(causeOf))].slice(0, 5)
       return fail(`matches no defect group in this run — a stale exception (the fault is gone, or the cause key changed)${known.length ? `; the groups of ${row.check} are: ${known.map((k) => `"${k}"`).join(', ')}` : `; ${row.check} has no defect group`}`)
