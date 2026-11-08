@@ -1666,28 +1666,28 @@
   },
   "quickstart/ja-diner/wp7": {
     "platform": "wordpress",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "webroot": {
-      "file": "ja-diner-wp7-webroot-1.0.1.tar.gz",
-      "bytes": 59642060,
-      "sha256": "2b4e826d69bc84d92c00d5707455caa813fbab2548b9b71c964a65b0d40d05cf",
-      "githubAssetId": 683703948,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.1.tar.gz"
+      "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
+      "bytes": 60052804,
+      "sha256": "62a25a4eb4d25219e479f80af10b139c0d90331916fb4dbe80fcd98da8251c34",
+      "githubAssetId": 724168105,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart/ja-diner/wp7/ja-diner-wp7-webroot-1.0.2.tar.gz"
     },
     "database": {
-      "file": "ja-diner-wp7-database-1.0.1.sql.gz",
-      "bytes": 63376,
-      "sha256": "771e7fdac6777e7f664585a0c3eb2ccb042698d6ca24eeeec86a30efd2e450ef",
-      "githubAssetId": 683703258,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.1.sql.gz"
+      "file": "ja-diner-wp7-database-1.0.2.sql.gz",
+      "bytes": 64008,
+      "sha256": "7826189150083b5f2df75d152d4d5b374323e619657d51c1472a730df7d14545",
+      "githubAssetId": 724168104,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart/ja-diner/wp7/ja-diner-wp7-database-1.0.2.sql.gz"
     },
     "cowork": {
-      "file": "claude-cowork-0.18.29.zip",
-      "version": "0.18.29",
-      "bytes": 1824050,
-      "sha256": "15ac0a9a6ae305e8366e358201a19df5f5bd7e842399d2e8d3aa0591c382af93",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.29/claude-cowork-0.18.29.zip",
-      "contractVersions": ["1.0.0"],
+      "file": "claude-cowork-0.18.40.zip",
+      "version": "0.18.40",
+      "bytes": 2019887,
+      "sha256": "a8100a3900a526db83acdaf62e2f5189a19df554b1ef7604c9d6bdea9ba6e455",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.40/claude-cowork-0.18.40.zip",
+      "contractVersions": ["1.0.0", "1.0.2"],
       "alsoCarries": {
         "ja-diner/wp7/1.0.0": {
           "content-map.json": "e81737fc88f5618c8357c3772348c48b4361a9c85069bfe6bcf201283f737697",
@@ -1696,19 +1696,28 @@
           "manifest.json": "0e25baf2becdd1f9c5128bc963a5193eedd76d82d864d213ebd8a8f8f59a3b54",
           "presentation-lock.json": "af6697dff5ece0d0c2678d0218583fbde8372a33049a945af43e9b2375ab7939",
           "superseded.json": "4c67f2ad167d42d1597c7629cebfa8a83455e9fd042dcb4408d762e862af2b15"
+        },
+        "ja-diner/wp7/1.0.1": {
+          "content-map.json": "e81737fc88f5618c8357c3772348c48b4361a9c85069bfe6bcf201283f737697",
+          "demo-trim-map.json": "2018bf1fdfbb57e16a2ccf6b903c4b5fb14e5c7accdbea52cecaf1cc87518eed",
+          "editions.json": "3585bdf7be73c16c091f338a5612b4a912ee20c27e983348257e4579891c3e8a",
+          "manifest.json": "2c1d7d96495aa954f752376692384d6919f95319cead0f75f79f50bf38c245ed",
+          "presentation-lock.json": "e17873f139d2ce0ef91be648347a448d5b0ed641e2d985578905556cc856497b",
+          "showcase-nav-map.json": "99e54244c0f1481be519aa21c1e28696e17f71714b76f1ddcbcea1fe0ed7a6cf",
+          "superseded.json": "d9a496c209755e4051ce2d068d4317d0f79ceb7682ce5d63d99750a305a0c06c"
         }
       },
       "contractFiles": {
-        "content-map.json": "e81737fc88f5618c8357c3772348c48b4361a9c85069bfe6bcf201283f737697",
-        "demo-trim-map.json": "2018bf1fdfbb57e16a2ccf6b903c4b5fb14e5c7accdbea52cecaf1cc87518eed",
-        "editions.json": "3585bdf7be73c16c091f338a5612b4a912ee20c27e983348257e4579891c3e8a",
-        "manifest.json": "2c1d7d96495aa954f752376692384d6919f95319cead0f75f79f50bf38c245ed",
-        "presentation-lock.json": "e17873f139d2ce0ef91be648347a448d5b0ed641e2d985578905556cc856497b",
-        "showcase-nav-map.json": "99e54244c0f1481be519aa21c1e28696e17f71714b76f1ddcbcea1fe0ed7a6cf",
-        "superseded.json": "d9a496c209755e4051ce2d068d4317d0f79ceb7682ce5d63d99750a305a0c06c"
+        "content-map.json": "1dfd1b6648024702d8f2e694be1830d78a4728101a11f5c8428e198039b2573e",
+        "demo-trim-map.json": "a533a7a834e6b7de4275811b8db50c77419b5df4ea7e7c70a32633c097fea732",
+        "editions.json": "f8dafdeb1145009058ccf5cc40d9cc7705ce5e7052ea577cd99fa7b1439b3ae6",
+        "manifest.json": "5a4659fbd671947e1758af079244e31c3e30839cb8f10d62c360e12de54b94c0",
+        "presentation-lock.json": "1efb2651d91b6555e3dd0a0b7072db4bfadf3cdf5df323b4a5a6427e88336c9b",
+        "showcase-nav-map.json": "09ddb334d8c5a808cf18e95ddd87b854443d07c7f9a6766ba2c61408ab897472",
+        "superseded.json": "29636259f61ede87ae276ab375762ec1eb4ed73b2543aa0eb9ae690aefc970fa"
       }
     },
-    "contract": "ja-diner/wp7/1.0.1"
+    "contract": "ja-diner/wp7/1.0.2"
   },
   "quickstart/ja-fresco/wp7": {
     "platform": "wordpress",
