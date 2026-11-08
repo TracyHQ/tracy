@@ -139,7 +139,8 @@ to the same list.
 - **Confirm.** R5 lists picture slots (a plate cut out of its photo, a brush stroke).
 - **Fix.** Read the crop of each (`label-judge/images/`) yourself: right as `editorial.illustration` or
   `editorial.design_element` is recorded with `record-judge.mjs`; a person, quote or business picture gets its role in
-  the content map. No model call.
+  the content map (a plated dish: `offering.image`; a staff member or chef: `person.image`; both are empty on a
+  customer site until the customer adds their own). No model call.
 - **Verify.** R5 is 0 after the judge is recorded on the **final** capture; a changed slot is asked again.
 
 ### H5. Words in a template part
@@ -205,3 +206,24 @@ to the same list.
   underscore), then `capture-image-slots.mjs` makes the image slots; the plugin (0.18.39 or later) writes them.
   A picture the theme prints from a fixed asset file is not a hole of this kind: the theme must read an option first.
 - **Verify.** The image holes are slots; the page renders the same picture; no `heights` group.
+
+### H12. Sample posts of a style guide that carry contact-shaped text
+
+- **Confirm.** R9 names text of a style guide or typography sample post (an address block with a phone number, a
+  card with a name and an email). A customer never edits it, but R9 cannot be lifted by an accept.
+- **Fix.** Replace the sample contents with plain role labels that carry no business data, keeping the same markup
+  elements (`address`, `strong`, `abbr`, a link) so the style guide still shows the styles: `Company name / Street
+  address / City / Phone number`, `Full name / Phone number / Email address`. Do not wrap the samples in a code block
+  and do not shorten them to a pattern that still looks like a number: a code block hides demo contact text from the
+  check while a visitor still sees it. Change the text in the demo database, pack again, and record the change as a
+  decision in the dossier (the sweep reports the sample as changed text).
+- **Verify.** R9 is 0 on the next measure; the rendered style guide keeps the same elements.
+
+### H13. An hours or schedule sample on a plain editorial role
+
+- **Confirm.** R2 names a slot whose sample is an hours or schedule line (`Mon to Thu 12 Noon to 11 PM`) on
+  `editorial.paragraph`.
+- **Fix.** Give the slot `offering.schedule` (when an offering runs) or `contact.hours` (the business hours) and put it
+  in the group of its card. The slot stays writable and reads empty on a customer site until it is filled. A blanket
+  accept would leave the demo hours in place.
+- **Verify.** R2 is 0; the slot has a role and a group.

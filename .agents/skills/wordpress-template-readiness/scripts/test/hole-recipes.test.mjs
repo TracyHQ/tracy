@@ -124,6 +124,49 @@ const CASES = [
         })
       ]),
     rules: ['R9']
+  },
+  {
+    id: 'H12',
+    broken: () =>
+      labelState(mapOf([]), [
+        hole({
+          value: 'Studio name Example Road 12, Sometown 00000 P: (555) 010 2030',
+          class: 'capture',
+          evidence: 'posts#9.post_content (contains)',
+          firstPage: '/?pagename=style-guide'
+        })
+      ]),
+    fixed: () =>
+      labelState(mapOf([]), [
+        hole({
+          value: 'Studio name Street address City P: Phone number',
+          class: 'capture',
+          evidence: 'posts#9.post_content (contains)',
+          firstPage: '/?pagename=style-guide'
+        })
+      ]),
+    rules: ['R9']
+  },
+  {
+    id: 'H13',
+    broken: () =>
+      labelState(
+        mapOf([
+          text('promo.info', 'Mon to Thu ((br/))12 Noon to 11 PM', 'editorial.paragraph', {
+            markup: 'inline'
+          })
+        ])
+      ),
+    fixed: () =>
+      labelState(
+        mapOf([
+          text('promo.info', 'Mon to Thu ((br/))12 Noon to 11 PM', 'offering.schedule', {
+            markup: 'inline',
+            group: grp('promo.0', 0, 'event')
+          })
+        ])
+      ),
+    rules: ['R2']
   }
 ]
 
@@ -153,7 +196,7 @@ test('H8 has no verdict piece: the release sweep detects it, and the patch relea
 })
 
 test('every recipe has its four parts, and SKILL.md and the fix map lead to them from the red code', () => {
-  for (let n = 1; n <= 11; n++) {
+  for (let n = 1; n <= 13; n++) {
     const body = HOLES.split(new RegExp(`^### H${n}\\. `, 'm'))[1]?.split(/^### H\d\. |^## /m)[0] ?? ''
     assert.ok(body, `recipe H${n} is missing`)
     for (const part of ['**Confirm.**', '**Fix.**', '**Verify.**'])
@@ -161,7 +204,7 @@ test('every recipe has its four parts, and SKILL.md and the fix map lead to them
   }
   assert.match(SKILL, /coverage-holes\.md`?\]?\(references\/coverage-holes\.md\) section 6/)
   assert.match(FIXMAP, /recipes H1, H2, H5, H7, H9, H10, H11 of section 6/)
-  assert.match(FIXMAP, /recipes H1 to H6 of section 6/)
+  assert.match(FIXMAP, /recipes H1 to H6, H12, H13 of section 6/)
   for (const code of ['coverage-holes', 'coverage-labels', 'coverage-judge']) assert.ok(SKILL.includes(code))
 })
 

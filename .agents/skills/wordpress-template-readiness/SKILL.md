@@ -78,6 +78,8 @@ green for the exit code. Never try to turn it `done`.
    | `coverage-holes` | a link inside an inline markup slot | H9 |
    | `coverage-holes` | a page or post title (evidence `post_title`) | H10 |
    | `coverage-holes` | a picture a theme option or theme post meta points at | H11 |
+| `coverage-labels` (R9) | sample posts of a style guide that carry contact-shaped text (a sample address, phone, email) | H12 |
+| `coverage-labels` (R2) | an hours or schedule sample on a plain editorial role | H13 |
 
    `apps/tracy-web/test/template-readiness-wordpress-holes.test.mjs` holds each row to a deliberately broken copy.
 3. Run it. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md) (a `build` wipes
