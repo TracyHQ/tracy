@@ -1,6 +1,6 @@
 # AI capabilities audit — 8 November 2026
 
-This audit uses `origin/develop` at `3172697b70`, the change journal, open GitHub issues and pull requests, and source inspection. It does not claim that a deployed site was exercised. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
+This audit uses `origin/develop` at `3172697b70`, the change journal, open GitHub issues and pull requests, and source inspection. The read-only deployment cross-check below establishes availability, not the quality of a complete customer site. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
 
 ## Read-only deployment cross-check — 9 November 2026
 
