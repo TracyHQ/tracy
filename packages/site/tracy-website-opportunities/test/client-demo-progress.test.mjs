@@ -86,3 +86,15 @@ test('a Retry still running over an older passed check draws its progress, not D
   assert.match(cell, /\[v3\.step\.build\]/)
   assert.match(cell, /\[v3\.building\]/)
 })
+
+test('Find sources is open once research has started, done included, and closed while nothing has started', () => {
+  const sources = lib.createElement('p', null, 'source rows')
+  const draw = (job) =>
+    lib.renderToStaticMarkup(
+      lib.createElement(lib.Steps, { t, row: { id: 'o2', job }, locale: 'en', now: 0, children: sources })
+    )
+  for (const state of ['completed', 'running', 'failed', 'cancelled'])
+    assert.match(draw({ state, stage: 'collection' }), /<details open="">/, state)
+  assert.match(draw(null), /<details><summary/)
+  assert.match(draw({ state: 'queued' }), /<details><summary/)
+})

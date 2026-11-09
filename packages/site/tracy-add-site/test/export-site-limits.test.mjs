@@ -468,7 +468,15 @@ test('prefix filtering covers Joomla, WordPress single, multisite, nested sites,
     const { calls } = await exportFixture({
       tableReply: reply,
       responseFor: (action) =>
-        action === 'db.dump' ? { sql_b64: '', next_cursor: '1', done: true, rows: 0, total: 0 } : {},
+        action === 'db.dump'
+          ? {
+              sql_b64: Buffer.from('CREATE TABLE example (id INT);').toString('base64'),
+              next_cursor: '1',
+              done: true,
+              rows: 0,
+              total: 0
+            }
+          : {},
       options: { platform }
     })
     assert.deepEqual(
@@ -851,4 +859,175 @@ test('stopped error followed by first-page dump_failed ends as call_failed', asy
     (error) => error.reason === 'call_failed'
   )
   assert.deepEqual(calls, [null, { table: 0, row: '1' }])
+})
+
+// These replies previously either looped forever or stored a partial database as success.
+test('database export refuses malformed replies before signing a storage upload', async () => {
+  const sql = Buffer.from('CREATE TABLE wp_posts (id INT);').toString('base64')
+  for (const dbDumpMany of [undefined, { max_tables: 10 }]) {
+    for (const mutation of [
+      { done: 'false' },
+      { sql_b64: undefined },
+      { sql_b64: '%%%=' },
+      { sql_b64: Buffer.from("INSERT INTO wp_posts VALUES ('cut").toString('base64') }
+    ]) {
+      await assert.rejects(
+        exportFixture({
+          tableReply: { tables: ['wp_posts'] },
+          options: { dbDumpMany },
+          responseFor: () => ({ sql_b64: sql, done: true, rows: 1, total: 1, next_cursor: null, ...mutation })
+        }),
+        (error) =>
+          error.reason === 'call_failed' &&
+          ['invalid_reply', 'invalid_payload'].includes(error.diagnostic?.check)
+      )
+    }
+  }
+  for (const tables of [undefined, [], 'wp_posts', [null]]) {
+    await assert.rejects(exportFixture({ tableReply: { tables }, responseFor: () => ({}) }), (error) =>
+      ['invalid_reply', 'empty_database'].includes(error.diagnostic?.check)
+    )
+  }
+})
+
+test('legacy cursors and offsets stop on a repeated page or zero progress', async () => {
+  for (const reply of [
+    { next_cursor: 'same', rows: 1 },
+    { next_offset: 1, rows: 1 },
+    { next_offset: 0, rows: 0 }
+  ]) {
+    let calls = 0
+    await assert.rejects(
+      exportFixture({
+        tableReply: { tables: ['wp_posts'] },
+        responseFor: () => {
+          if (++calls > 3) return { ok: false, error: 'dump_failed' }
+          return {
+            sql_b64: Buffer.from('INSERT INTO wp_posts VALUES (1);').toString('base64'),
+            done: false,
+            total: 9,
+            ...reply
+          }
+        }
+      }),
+      (error) => error.diagnostic?.check === 'cursor_stalled'
+    )
+  }
+})
+
+test('view definitions follow all base tables in dependency order from the engine', async () => {
+  const { sql, result, calls } = await exportFixture({
+    tableReply: {
+      tables: ['wp_z_base_view', 'wp_a_dependent_view', 'wp_posts'],
+      views: {
+        wp_z_base_view: 'CREATE VIEW wp_z_base_view AS SELECT * FROM wp_posts',
+        wp_a_dependent_view: 'CREATE VIEW wp_a_dependent_view AS SELECT * FROM wp_z_base_view'
+      }
+    },
+    responseFor: () => ({
+      sql_b64: Buffer.from('CREATE TABLE wp_posts (id INT);').toString('base64'),
+      done: true,
+      rows: 0,
+      total: 0
+    })
+  })
+  assert.equal(result.tables, 3)
+  assert.equal(calls.filter((call) => call.action === 'db.dump').length, 1)
+  assert.ok(sql.indexOf('CREATE TABLE') < sql.indexOf('CREATE VIEW wp_z'))
+  assert.ok(sql.indexOf('CREATE VIEW wp_z') < sql.indexOf('CREATE VIEW wp_a'))
+})
+
+test('a transient database storage refusal or reset retries the complete compressed upload', async () => {
+  const original = globalThis.fetch
+  for (const mode of ['503', 'reset']) {
+    let puts = 0
+    globalThis.fetch = async (url, init) => {
+      if (init?.method === 'PUT' && ++puts === 1) {
+        if (mode === 'reset') throw new TypeError('fetch failed')
+        return new Response('', { status: 503 })
+      }
+      return original(url, init)
+    }
+    try {
+      const { sql } = await exportFixture({
+        tableReply: { tables: ['wp_posts'] },
+        responseFor: () => ({
+          sql_b64: Buffer.from('CREATE TABLE wp_posts (id INT);').toString('base64'),
+          done: true,
+          rows: 0,
+          total: 0
+        })
+      })
+      assert.equal(puts, 2)
+      assert.equal(sql, 'CREATE TABLE wp_posts (id INT);')
+    } finally {
+      globalThis.fetch = original
+    }
+  }
+})
+
+test('cross-origin 307 never forwards an engine token', async () => {
+  let forwarded = 0
+  const target = createServer((req, res) => {
+    forwarded++
+    res.end('{}')
+  })
+  await new Promise((resolve) => target.listen(0, '127.0.0.1', resolve))
+  const source = createServer((req, res) =>
+    res.writeHead(307, { location: `http://127.0.0.1:${target.address().port}/stolen` }).end()
+  )
+  await new Promise((resolve) => source.listen(0, '127.0.0.1', resolve))
+  try {
+    await assert.rejects(
+      exporter.exportDatabase(
+        `http://127.0.0.1:${source.address().port}/engine`,
+        'dummy-only',
+        {},
+        undefined,
+        { link: { ready: async () => {}, failed() {}, answeredWith() {} } }
+      ),
+      (error) => error.diagnostic?.check === 'untrusted_target' && error.diagnostic?.action === 'db.tables'
+    )
+    assert.equal(forwarded, 0)
+  } finally {
+    source.closeAllConnections()
+    target.closeAllConnections()
+    source.close()
+    target.close()
+  }
+})
+
+test('a database page with a large binary literal does not overflow base64 validation', async () => {
+  const payload = Buffer.alloc(8 * 1024 * 1024, 128)
+  const sql = Buffer.concat([Buffer.from("INSERT INTO wp_posts VALUES ('"), payload, Buffer.from("');\n")])
+  const { result } = await exportFixture({
+    tableReply: { tables: ['wp_posts'] },
+    responseFor: () => ({
+      sql_b64: sql.toString('base64'),
+      done: true,
+      rows: 1,
+      total: 1
+    })
+  })
+  assert.equal(result.bytes, sql.length)
+})
+
+test('a WordPress login form after a valid engine reply retains the login diagnosis', async () => {
+  await withEngine(
+    {
+      onCall: (action, params, res) => {
+        if (action !== 'db.dump') return false
+        res
+          .writeHead(200, { 'content-type': 'text/html' })
+          .end('<form id="loginform"><input name="log"><input name="pwd"></form>')
+        return true
+      }
+    },
+    async (engine) => {
+      await assert.rejects(
+        exporter.exportDatabase(engine.endpoint, 'tok', engine.artifacts),
+        (error) => error.reason === 'call_failed' && error.diagnostic?.page === 'login_form'
+      )
+    }
+  )
 })

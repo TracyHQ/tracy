@@ -723,12 +723,24 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'GET',
     path: '/api/website-opportunities/:id',
     summary: 'Read one opportunity with its sources, media, jobs, revisions and builds',
-    description: `Everything collected for one opportunity: per-source status, reason and coverage (for a researched place, every source its research tried, Google Place Details, Google Maps and Tripadvisor included, failures too), the merged profile with its evidence and conflicts (\`profile.name\` is the name on the site and \`profile.nameCheck\` says why: \`{name, state: "agreed" | "check" | "chosen", suggested, current, options: [{name, sources: [{source, label?}]}], disagree, chosen?: {name, by: "typed" | "picked"}}\`; a name two sources other than Google agree on is suggested over Google's, \`check\` means the sources disagree and nobody has picked one yet), \`profile.hoursCheck\` says which opening hours the site shows: \`{state: "none" | "agreed" | "conflict" | "check" | "chosen", hours, claims: [{source, hours}], choice?: "keep" | "leave" | "edit", allWeek}\`, \`check\` when one source alone says open 24 hours every day for a business not normally open day and night), \`profile.googleRating\` says whether the site shows Google's rating: \`{state: "none" | "shown" | "left", score, reviews, few, choice: "show" | "leave" | null, from: "details" | "search"}\`, \`few\` under 5 reviews (left off until the person shows it), \`profile.phone\` is the main number (Google's, else the one most of the business's own sources state, its bios included) with \`phoneSources\`, and \`profile.otherPhones: [{phone, sources, whatsapp?}]\` the business's other numbers, brand observations, media metadata, jobs, revisions and builds. The two web search rows (\`facebook-search\`, \`instagram-search\`) also carry \`queries\` and \`pages\`: each page found with its \`url\`, \`network\`, \`verdict\` (\`confirmed\` = added to the place, \`pending\` = a person must check it, \`rejected\` = not used), \`title\`, \`proofs\` and \`reasons\`. Readable while the switch is off. \`menu\` is the place's Menu: ${MENU_PARTS_PROSE} ${OWN}`,
+    description: `Everything collected for one opportunity: per-source status, reason and coverage (for a researched place, every source its research tried, Google Place Details, Google Maps and Tripadvisor included, failures too), the merged profile with its evidence and conflicts (\`profile.name\` is the name on the site and \`profile.nameCheck\` says why: \`{name, state: "agreed" | "check" | "chosen", suggested, current, options: [{name, sources: [{source, label?}]}], disagree, chosen?: {name, by: "typed" | "picked"}}\`; a name two sources other than Google agree on is suggested over Google's, \`check\` means the sources disagree and nobody has picked one yet), \`profile.hoursCheck\` says which opening hours the site shows: \`{state: "none" | "agreed" | "conflict" | "check" | "chosen", hours, claims: [{source, hours}], choice?: "keep" | "leave" | "edit", allWeek}\`, \`check\` when one source alone says open 24 hours every day for a business not normally open day and night), \`profile.googleRating\` says whether the site shows Google's rating: \`{state: "none" | "shown" | "left", score, reviews, few, choice: "show" | "leave" | null, from: "details" | "search"}\`, \`few\` under 5 reviews (left off until the person shows it), \`profile.phone\` is the main number (Google's, else the one most of the business's own sources state, its bios included) with \`phoneSources\`, and \`profile.otherPhones: [{phone, sources, whatsapp?}]\` the business's other numbers, brand observations, media metadata, jobs, revisions and builds. The two web search rows (\`facebook-search\`, \`instagram-search\`) also carry \`queries\` and \`pages\`: each page found with its \`url\`, \`network\`, \`verdict\` (\`confirmed\` = added to the place, \`pending\` = a person must check it, \`rejected\` = not used), \`title\`, \`proofs\` and \`reasons\`. A source row that a link the person pasted feeds (Add a business by its links: the Google link's place, the website, a social page, the listing row) carries \`pastedLink\`, that link as they pasted it; rows research found by itself carry none. Readable while the switch is off. \`menu\` is the place's Menu: ${MENU_PARTS_PROSE} ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
     answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds}\`; ${MENU_ANSWER}`
+  },
+  // website-opportunities/src/route.js
+  {
+    method: 'DELETE',
+    path: '/api/website-opportunities/:id',
+    summary: 'Delete one opportunity',
+    description: `Deletes a saved opportunity, in this order: a research job still queued, running, paused or blocked is cancelled as the cancel door does; each live demo site of it (a build with a site not yet deleted, never a customer's own site) is torn down through the same path the demo retention sweep uses; then the row goes with its jobs, sources, media, profile, revisions, builds and demo actions. The shared place research and stored picture bytes stay. Works while the switch is off. 409 \`DEMO_BUILD_RUNNING\` while a demo of it is still being built (a build whose provision has not ended, or a queued demo action whose build is not done): nothing is changed and the build is not cancelled. 409 \`DEMO_TEARDOWN_FAILED\` when a demo site's teardown cannot start (another operation holds the site): nothing is deleted. A customer's own site (Build from my business) answers 404. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{ok: true, deleted: {id, siteRemoved}}`'
   },
   // website-opportunities/src/route.js
   {
@@ -857,7 +869,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/research',
     summary: 'Start collecting an opportunity’s website, social pages and media',
-    description: `Queues a durable research job (discovery, collection per source, media, profile, brand), run by the server in the background and resumable. Each social source takes its 20 most recent posts of the last 12 months, one Apify run capped by Apify at the operator's ceiling ($0.25 unless changed); the account has 40 Apify collection runs a day, and past them the job pauses with \`SOURCE_PAUSED\`/\`quota\` until resumed. The same \`requestId\` answers the same job; 409 \`JOB_ACTIVE\` while another job of this opportunity is queued or running, 409 \`REQUEST_ID_REUSED\` for a key used on another opportunity. With \`only: "logo"\` on a place that was researched before, it runs just the logo again: the home page is read for the logo it points at, the logo candidates are downloaded and looked at, and no other source is collected. With \`only\` naming one source (\`website\`, \`facebook\`, \`instagram\`, \`tiktok\`, \`youtube\`, \`google-places\`, \`google-maps\`, \`tripadvisor\`) it collects that source again now, even when it was tried recently, and no other source; the profile, pictures and brand are rebuilt from what it found, through the same cost ledger and limits as a whole research. A whole research, or a run of the same part, already waiting or running answers it instead; a waiting run of another part refuses it (409 \`JOB_ACTIVE\`, ask again once it ran), a running one is followed by this part's run; a whole research asked for later turns a waiting one-part run into a whole one; on a place never researched the whole research runs. A Google or Tripadvisor part this deployment cannot collect for the place answers 409 \`ONLY_UNAVAILABLE\`. 400 \`INVALID_ONLY\`, 409 \`ONLY_UNSUPPORTED\`. \`only\` also takes \`facebook-search\` or \`instagram-search\`: the web search for that network's page of a place with no website of its own, then the collection of a page it confirms (409 \`ONLY_UNAVAILABLE\` without a web search provider). With \`again: true\` (and no \`force\` or \`only\`) it is Research again: only the parts that failed on our side, are more than 30 days old, were never tried or whose rule changed run (see \`GET …/research-again\`), frozen into a run the account starts; a run already going is joined as it is (\`again.joined\`). 409 \`NOTHING_DUE\` with the \`plan\` when nothing is due, 429 \`RESEARCH_AGAIN_LIMIT\` past the account's runs of the day, 409 \`AGAIN_UNSUPPORTED\` for an opportunity that names no shared place, 400 \`INVALID_AGAIN\`. With \`again: true\`, \`parts\` limits the run to those parts (Read menu again sends \`menu-file\` and \`menu-photos\`); \`parts\` without \`again\`, or naming something that is not a part, is 400 \`INVALID_PARTS\`. \`only\` also takes \`menu-file\` or \`menu-photos\`. ${OWN} ${OFF}`,
+    description: `Queues a durable research job (discovery, collection per source, media, profile, brand), run by the server in the background and resumable. Each social source takes its 20 most recent posts of the last 12 months, one Apify run capped by Apify at the operator's ceiling ($0.25 unless changed); the account has 40 Apify collection runs a day, and past them the job pauses with \`SOURCE_PAUSED\`/\`quota\` until resumed. The same \`requestId\` answers the same job; 409 \`JOB_ACTIVE\` while another job of this opportunity is queued or running, 409 \`REQUEST_ID_REUSED\` for a key used on another opportunity. With \`only: "logo"\` on a place that was researched before, it runs just the logo again: the home page is read for the logo it points at, the logo candidates are downloaded and looked at, and no other source is collected. With \`only\` naming one source (\`website\`, \`facebook\`, \`instagram\`, \`tiktok\`, \`youtube\`, \`google-places\`, \`google-maps\`, \`tripadvisor\`) it collects that source again now, even when it was tried recently, and no other source; the profile, pictures and brand are rebuilt from what it found, through the same cost ledger and limits as a whole research. A whole research, or a run of the same part, already waiting or running answers it instead; a waiting run of another part refuses it (409 \`JOB_ACTIVE\`, ask again once it ran), a running one is followed by this part's run; a whole research asked for later turns a waiting one-part run into a whole one; on a place never researched the whole research runs. A Google or Tripadvisor part this deployment cannot collect for the place answers 409 \`ONLY_UNAVAILABLE\`. 400 \`INVALID_ONLY\`, 409 \`ONLY_UNSUPPORTED\`. \`only\` also takes \`facebook-search\` or \`instagram-search\`: the web search for that network's page of a place with no website of its own, then the collection of a page it confirms (409 \`ONLY_UNAVAILABLE\` without a web search provider). With \`again: true\` (and no \`force\` or \`only\`) it is Research again, from scratch: every part this deployment can collect for the place runs again whatever its age (reason \`again\`, see \`GET …/research-again\`), and the run reads the logo candidates and the business again without reusing an earlier reading; it is frozen into a run the account starts, reserving every part's ceiling; a run already going is joined as it is (\`again.joined\`). 409 \`NOTHING_DUE\` with the \`plan\` only when no part can run (each one unavailable here), 429 \`RESEARCH_AGAIN_LIMIT\` past the account's runs of the day, 409 \`AGAIN_UNSUPPORTED\` for an opportunity that names no shared place, 400 \`INVALID_AGAIN\`. With \`again: true\`, \`parts\` limits the run to those parts (Read menu again sends \`menu-file\` and \`menu-photos\`); \`parts\` without \`again\`, or naming something that is not a part, is 400 \`INVALID_PARTS\`. \`only\` also takes \`menu-file\` or \`menu-photos\`. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -872,34 +884,34 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
           enum: ['logo'],
           description: 'Refresh this one part of a researched place and nothing else'
         },
-        again: { type: 'boolean', description: 'Research again: only the parts that are due' },
+        again: { type: 'boolean', description: 'Research again: every part again, from scratch' },
         parts: {
           oneOf: [{ type: 'array', items: { type: 'string' }, minItems: 1 }, { type: 'string' }],
           description: `With \`again: true\` only. ${AGAIN_PARTS_DOC}`
         }
       }
     },
-    answers: '202 `{job, again?: {run, kept, ceilingCents, joined}}`'
+    answers: '202 `{job, again?: {run, kept, ceilingCents, fromScratch, joined}}`'
   },
   // website-opportunities/src/route.js
   {
     method: 'GET',
     path: '/api/website-opportunities/:id/research-again',
     summary: 'Preview what Research again would look at for an opportunity’s place',
-    description: `What a press of Research again would run now, why, and the most it may cost (each part's reserved ceiling in cents), the parts it keeps and why, and the account's runs of the day. A \`menu-photos\` part to run carries \`photos\`, how many photos it would read; its ceiling is that many vision calls. 400 \`INVALID_PARTS\`. Reads only. ${OWN} ${OFF}`,
+    description: `What a press of Research again would run now, why, and the most it may cost (each part's reserved ceiling in cents), the parts it keeps and why, and the account's runs of the day. The account's press researches from scratch (\`fromScratch: true\`): every part this deployment can collect is in \`run\` with reason \`again\`, and \`kept\` holds only parts it cannot collect (\`unavailable\`) or menu photos the place has none of (\`none\`). A \`menu-photos\` part to run carries \`photos\`, how many photos it would read; its ceiling is that many vision calls. 400 \`INVALID_PARTS\`. Reads only. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' }, query: { parts: AGAIN_PARTS_DOC } },
     answers:
-      '`{plan: {run: [{part, reason: "never" | "failed" | "outdated" | "rule-changed", ceilingCents, photos?}], kept: [{part, reason: "up-to-date" | "none" | "unavailable" | "over-cap", detail?}], ceilingCents}, payer: "account", limit: {perDay, usedToday}}`'
+      '`{plan: {run: [{part, reason: "again", ceilingCents, photos?}], kept: [{part, reason: "none" | "unavailable", detail?}], ceilingCents, fromScratch: true}, payer: "account", limit: {perDay, usedToday}}`'
   },
   // website-opportunities/src/route.js
   {
     method: 'POST',
     path: '/api/website-opportunities/jobs/bulk',
-    summary: 'Resume or cancel many research jobs',
-    description: `Runs \`action\` on each job, one after another, with the same checks as the single resume and cancel doors. Send either \`jobIds\` (the rows picked) or \`filter\` (\`stage\`, \`attention\`, \`q\` as the list door reads them): the server then takes the latest job of every matching row once, at this request. Each result carries the code its single door would answer: \`JOB_FINISHED\`, \`JOB_NOT_RESUMABLE\` and \`JOB_ACTIVE\` count as \`skipped\`; \`NOT_FOUND\` (another account’s or a missing job) and \`ERROR\` as \`failed\`. The same \`requestId\` with the same body answers the stored result without running again. Cancel works while the switch is off; resume does not. 400 \`INVALID_ACTION\`, \`INVALID_REQUEST_ID\`, \`INVALID_SELECTION\`; 409 \`REQUEST_ID_REUSED\` (another body), \`BULK_PENDING\` (still running); 422 \`TOO_MANY\` above 500 jobs (refused, never cut); 429 \`RATE_LIMITED\` (60 an hour). ${OFF}`,
+    summary: 'Resume or cancel many research jobs, or delete many opportunities',
+    description: `Runs \`action\` on each job, one after another, with the same checks as the single resume and cancel doors. Send either \`jobIds\` (the rows picked) or \`filter\` (\`stage\`, \`attention\`, \`q\` as the list door reads them): the server then takes the latest job of every matching row once, at this request. Each result carries the code its single door would answer: \`JOB_FINISHED\`, \`JOB_NOT_RESUMABLE\` and \`JOB_ACTIVE\` count as \`skipped\`; \`NOT_FOUND\` (another account’s or a missing job) and \`ERROR\` as \`failed\`. The same \`requestId\` with the same body answers the stored result without running again. Cancel works while the switch is off; resume does not. 400 \`INVALID_ACTION\`, \`INVALID_REQUEST_ID\`, \`INVALID_SELECTION\`; 409 \`REQUEST_ID_REUSED\` (another body), \`BULK_PENDING\` (still running); 422 \`TOO_MANY\` above 500 jobs (refused, never cut); 429 \`RATE_LIMITED\` (60 an hour). \`action: "delete"\` takes \`opportunityIds\` instead (a row without a job is deletable too; \`jobIds\` and \`filter\` are refused with 400 \`INVALID_SELECTION\`) and deletes each row as \`DELETE /api/website-opportunities/:id\` does: \`NOT_FOUND\` counts as \`skipped\`, \`DEMO_BUILD_RUNNING\`, \`DEMO_TEARDOWN_FAILED\` and \`ERROR\` as \`failed\`; its answer adds \`deleted\` and \`sitesRemoved\`, and works while the switch is off. ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -907,9 +919,14 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       type: 'object',
       required: ['action', 'requestId'],
       properties: {
-        action: { type: 'string', enum: ['resume', 'cancel'] },
+        action: { type: 'string', enum: ['resume', 'cancel', 'delete'] },
         requestId: REQUEST_ID,
         jobIds: { type: 'array', items: { type: 'string' }, description: 'Job ids, at most 500' },
+        opportunityIds: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Opportunity ids, at most 500 (delete only)'
+        },
         filter: {
           type: 'object',
           properties: {
@@ -923,7 +940,8 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
         }
       }
     },
-    answers: '`{results: [{jobId, ok, code?}], done, skipped, failed}`'
+    answers:
+      '`{results: [{jobId, ok, code?}], done, skipped, failed}`; for delete `{results: [{opportunityId, ok, code?, siteRemoved?}], done, skipped, failed, deleted, sitesRemoved}`'
   },
   // website-opportunities/src/route.js
   {

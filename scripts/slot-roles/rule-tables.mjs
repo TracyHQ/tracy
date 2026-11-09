@@ -22,6 +22,7 @@ import {
   customizeOfRole,
   DEFAULT_NEUTRAL_BY_ROLE,
   GROUP_KINDS,
+  GROUP_KINDS_V3,
   isRole,
   modeOfRole,
   pictureReplaceOfRole,
@@ -30,8 +31,9 @@ import {
 } from 'website-opportunities/domain'
 import { editorialRoleOf, repeatedRowOf } from './editorial-defaults.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
-import { proposeMarkupBindings } from './rule-tables-markup.mjs'
+import { placeHoursSamples } from './rule-tables-hours.mjs'
 import { proposeJoomlaMenuLinks } from './rule-tables-joomla-menu-links.mjs'
+import { proposeMarkupBindings } from './rule-tables-markup.mjs'
 import { proposeWordpressLinks } from './rule-tables-wordpress-links.mjs'
 
 export { FACT_FAMILY_ROLES }
@@ -395,6 +397,19 @@ export function proposeJoomla(slots, { vocabulary3 = false } = {}) {
   return collector.finalize()
 }
 
+/**
+ * The article role of a field of a WordPress post entity (`post-<slug>`), from where the slot writes: the post title,
+ * the excerpt, or any picture of the post (featured image, a theme's intro picture meta). Null for any other slot.
+ * @param {{entity?: unknown, target?: {field?: string}, type?: string}} slot
+ */
+function wordpressPostRole(slot) {
+  if (!String(slot.entity ?? '').startsWith('post-')) return null
+  if (slot.target?.field === 'post_title') return 'article.title'
+  if (slot.target?.field === 'post_excerpt') return 'article.lead'
+  if (slot.type === 'image') return 'article.image'
+  return null
+}
+
 const WP_REPEATED_FIELD_MAP = Object.freeze({
   'dish-name': { family: 'dish', entityKind: 'menu_item', role: 'offering.name' },
   'dish-price': { family: 'dish', entityKind: 'menu_item', role: 'offering.price' },
@@ -411,7 +426,40 @@ const WP_REPEATED_FIELD_MAP = Object.freeze({
   'author-img': { family: 'quote', entityKind: 'quote', role: 'quote.author_image' }
 })
 
-export function proposeWordpress(slots) {
+/**
+ * A proposal without the groups that lack a role their kind needs (`GROUP_KINDS_V3` requiredRoles): a menu card whose
+ * dish name is no slot (the name heading carries inline price markup) is not a card. Its slots lose their binding and
+ * fall back to an editorial role. `placedRoles` are the roles a group already has on the map, from slots placed before.
+ * @param {{groups: any[], bindings: any[], roleOnly: any[], unplaced: any[]}} proposal
+ * @param {Map<string, Set<string>>} placedRoles
+ */
+function withoutIncompleteGroups(proposal, placedRoles) {
+  const rolesOf = new Map()
+  for (const b of proposal.bindings) {
+    const roles = rolesOf.get(b.groupId) ?? new Set(placedRoles.get(b.groupId) ?? [])
+    roles.add(b.role)
+    rolesOf.set(b.groupId, roles)
+  }
+  const incomplete = new Set(
+    proposal.groups
+      .filter((g) =>
+        (GROUP_KINDS_V3[g.entityKind]?.requiredRoles ?? []).some((r) => !rolesOf.get(g.groupId)?.has(r))
+      )
+      .map((g) => g.groupId)
+  )
+  if (incomplete.size === 0) return proposal
+  return {
+    ...proposal,
+    groups: proposal.groups.filter((g) => !incomplete.has(g.groupId)),
+    bindings: proposal.bindings.filter((b) => !incomplete.has(b.groupId))
+  }
+}
+
+/**
+ * @param {any[]} slots the slots still without a role
+ * @param {{placedRoles?: Map<string, Set<string>>}} [options] the roles each group already has on the map
+ */
+export function proposeWordpress(slots, { placedRoles = new Map(), vocabulary3 = false } = {}) {
   const collector = buildGroupCollector()
 
   for (const slot of slots) {
@@ -437,15 +485,31 @@ export function proposeWordpress(slots) {
       continue
     }
 
+    // A sample blog post's own fields (version 3): its title, excerpt and pictures are the post's content, one card per post.
+    const postRole = vocabulary3 ? wordpressPostRole(slot) : null
+    if (postRole) {
+      const entity = String(slot.entity)
+      collector.addBinding({
+        slotKey: key,
+        groupId: `${entity}.article.0`,
+        entityKind: 'post',
+        itemIndex: 0,
+        role: postRole
+      })
+      continue
+    }
+
     const parts = key.split('.')
     if (parts.length === 4 && /^\d+$/.test(parts[3])) {
       const [page, section, field, rawIdx] = parts
       const idx = Number(rawIdx) - 1
       const direct = WP_REPEATED_FIELD_MAP[field]
       if (direct) {
+        // A picture slot is named after its page (`page-<slug>`), the text slots of the same card after the bare slug:
+        // one card needs one group id, or the picture sits alone in a card without its name and is dropped.
         collector.addBinding({
           slotKey: key,
-          groupId: `${page}.${section}.${direct.family}.${idx}`,
+          groupId: `${page.replace(/^page-/, '')}.${section}.${direct.family}.${idx}`,
           entityKind: direct.entityKind,
           itemIndex: idx,
           role: direct.role
@@ -494,10 +558,11 @@ export function proposeWordpress(slots) {
 
     if (parts.length === 3) {
       const [page, section, field] = parts
-      if (section === 'happyhours') {
+      if (/^happyhours(?:-\d+)?$/.test(section)) {
         const hpMap = {
           'hp-title': 'event.title',
           'hp-desc': 'event.description',
+          'hp-info': 'event.date_or_year',
           'hp-badge': 'package.badge',
           'hp-bg': 'event.image'
         }
@@ -529,7 +594,7 @@ export function proposeWordpress(slots) {
     }
   }
 
-  return collector.finalize()
+  return withoutIncompleteGroups(collector.finalize(), placedRoles)
 }
 
 const EMDASH_REPEATER_MAP = Object.freeze({
@@ -790,11 +855,20 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
       }
     }
   const open = slots.filter((slot) => slot && slot.role === undefined)
+  const placedRoles = new Map()
+  for (const slot of slots) {
+    if (slot?.role === undefined || !slot.group?.id) continue
+    const roles = placedRoles.get(slot.group.id) ?? new Set()
+    roles.add(slot.role)
+    placedRoles.set(slot.group.id, roles)
+  }
   const {
     groups,
     bindings,
     roleOnly = []
-  } = cms === 'wordpress' ? proposeWordpress(open) : proposeJoomla(open, { vocabulary3 })
+  } = cms === 'wordpress'
+    ? proposeWordpress(open, { placedRoles, vocabulary3 })
+    : proposeJoomla(open, { vocabulary3 })
   const roleOnlyBySlot = new Map(roleOnly.map((b) => [b.slotKey, b.role]))
   const groupOf = new Map(groups.map((g) => [g.groupId, g]))
   const bySlot = new Map(bindings.map((b) => [b.slotKey, b]))
@@ -838,6 +912,8 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     const group = groupOf.get(binding.groupId)
     slot.group = { id: binding.groupId, item: group.itemIndex, kind: group.entityKind }
   }
+  // An hours or schedule sample is a fact: it takes the role of its card, or contact.hours (rule-tables-hours.mjs).
+  if (vocabulary3) placeHoursSamples(open, slots)
   // What no fact table placed: a text or image slot takes an editorial role from its own signals (never over a fact role).
   for (const slot of open) {
     if (slot.role !== undefined || !ROLE_TYPES.has(slot.type)) continue

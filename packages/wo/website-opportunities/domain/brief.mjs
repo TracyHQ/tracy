@@ -36,7 +36,7 @@ import {
   assetLabelsOf
 } from './pictures/asset-labels.mjs'
 import { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
-import { PHOTO_ROLES, assetRelationsOf, closedListOf } from './pictures/picture-links.mjs'
+import { PHOTO_RISK_LABELS, PHOTO_ROLES, assetRelationsOf, closedListOf } from './pictures/picture-links.mjs'
 import {
   heldObservedFacts,
   observablePhotos,
@@ -59,11 +59,15 @@ import {
 } from './brief-facts.mjs'
 import { withKeyMessagePicks } from './business-reading.mjs'
 import { attemptsLine, briefSourceEntry, fetchedLine, suppliedBySource } from './brief-sources.mjs'
+import { liftReviewPeople, SHOWN_FROM_REVIEWS } from './brief-people.mjs'
 
 // 2 (#1791): every stated fact in one envelope (`facts`, `brief-facts.mjs`), `missing` a view over the withheld ones,
 // key messages; `contact.whatsapp` and the team carry a `factId` instead of their own flags. Readers take 1 and 2.
 export const BRIEF_SCHEMA_VERSION = 2
 export const BRIEF_SCHEMA_VERSIONS = Object.freeze([1, 2])
+// Bump whenever a brief made from the same research would come out differently (reading rules, people, name, facts).
+// It goes into the freshness key, so existing briefs offer Refresh. The schema version above is for the shape only.
+export const BRIEF_RULES_VERSION = 2
 /** The contact copy of a business whose hours wait for a check, when it can be called or written to. */
 // The contact line of a business whose hours wait for a check; the channels to book on follow it, each once.
 export const BY_APPOINTMENT = 'By appointment.'
@@ -336,15 +340,21 @@ export function buildBrief({
         ? decisionsOfAssessment(factAssessment)
         : decisionsOf(held, { overrides: factOverrides ?? cand.factOverrides ?? null })
   }).filter((f) => f.field !== 'menu' || dishes0.has(String(f.value?.name ?? '').toLowerCase()))
+  // 🔒 A person only reviews name, with a role or named in two reviews, is shown, flagged for the owner to check, and the
+  // reviews naming them are no longer held (`brief-people.mjs`, product owner 29/10/2026).
+  const statedLifted = liftReviewPeople(statedAsRead, {
+    reviews: [...(googlePlace?.reviews ?? []), ...reviewSitesReviewsOf(profile)],
+    team: profile?.businessReading?.team ?? []
+  })
   // 🔒 A review that names someone the brief holds off the site is quoted nowhere (`held-reviews.mjs`): not as a
   // testimonial, and not as the evidence of a fact, the kind of business, a key message or any other reading item. The
   // facts and the reading keep owner text and usable reviews only, before anything picks a quote from them.
-  const heldPeople = heldPeopleOf(withheldMissing(statedAsRead))
+  const heldPeople = heldPeopleOf(withheldMissing(statedLifted))
   const heldReviews = reviewsNamingHeld(
     [...(googlePlace?.reviews ?? []), ...reviewSitesReviewsOf(profile)],
     heldPeople
   )
-  const stated = factsWithoutHeldQuotes(statedAsRead, { names: heldPeople, held: heldReviews })
+  const stated = factsWithoutHeldQuotes(statedLifted, { names: heldPeople, held: heldReviews })
   const isOn = (field, match) => shown(factOf(stated, field, match))
   const usableReading = readingWithoutHeldReviews(profile.businessReading, {
     names: heldPeople,
@@ -690,10 +700,14 @@ export function buildBrief({
       kind: 'team',
       copy: `The people the sources name, each with the role a source gives: ${shownTeam.map((p) => (p.role ? `${p.label} (${p.role})` : p.label)).join(', ')}. Nobody else, and no portrait of your own.`,
       assetIds: [],
-      evidence: shownTeam.map((p) => ({
-        quote: p.quote,
-        source: `reading.team:${p.source?.kind ?? 'source'}`
-      }))
+      // A person shown from reviews may have lost their only quote to a review held for naming someone else
+      // (`held-reviews.mjs`): such a person is still named, with no quote as evidence.
+      evidence: shownTeam
+        .filter((p) => nonEmpty(p.quote))
+        .map((p) => ({
+          quote: p.quote,
+          source: `reading.team:${p.source?.kind ?? 'source'}`
+        }))
     })
   sitemap.push({ slug: 'about', title: 'About', sections: aboutSections })
   for (const [slug, title, kind, copy] of [
@@ -1300,7 +1314,7 @@ function assetRelationErrors(a) {
     !(Number.isInteger(a.peopleCount) && a.peopleCount >= 0)
   )
     out.push({ field: 'peopleCount', msg: 'must be a whole number, or null when no model looked' })
-  for (const field of ['isGraphic', 'isOwnPhoto'])
+  for (const field of ['isGraphic', 'isOwnPhoto', ...PHOTO_RISK_LABELS])
     if (field in a && a[field] !== null && typeof a[field] !== 'boolean')
       out.push({ field, msg: 'must be a boolean, or null when not known' })
   return out
@@ -1923,6 +1937,12 @@ function renderGooglePlace(g, line, includeGoogleReviews, hoursDisputed = false,
   line()
 }
 
+/** Whether a reading item's fact is a person shown from reviews alone (`liftReviewPeople`). */
+function shownFromReviews(brief, factId) {
+  const fact = factId ? (brief?.facts ?? []).find((f) => f?.id === factId) : null
+  return fact?.onSite === true && (fact.reasons ?? []).includes('review-only-person')
+}
+
 /** Where a reading item came from, as the brief names it: the bio, a post's address, a reviewer. */
 function readingSourceLabel(source = {}) {
   if (source.kind === 'bio') return 'bio'
@@ -1953,8 +1973,9 @@ function renderReading(r, line, words, brief = {}) {
     'Team',
     r.team,
     (p) =>
-      `${q(p.label)}${p.role ? ` (${p.role})` : ''}${heldPerson(p) ? ', off the site: keep this name off it' : ''}`,
-    (p) => !heldPerson(p)
+      `${q(p.label)}${p.role ? ` (${p.role})` : ''}${heldPerson(p) ? ', off the site: keep this name off it' : shownFromReviews(brief, p.factId) ? `, ${SHOWN_FROM_REVIEWS}` : ''}`,
+    // A shown person whose only quote was held (`held-reviews.mjs`) is named with where they were read, no quote.
+    (p) => !heldPerson(p) && nonEmpty(p.quote)
   )
   list('Story', r.story, (i) => q(i.label))
   list('Facts it states', r.facts, (i) => q(i.label))

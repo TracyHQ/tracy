@@ -56,7 +56,9 @@ test('a slot that already has a role keeps it: the tables only fill what is empt
   const { contentMap, unplaced } = proposeContentMapRoles(map, { cms: 'wordpress' })
   assert.equal(contentMap.slots[6].role, 'editorial.heading')
   assert.equal(contentMap.slots[1].role, 'offering.description')
-  assert.deepEqual(unplaced, [])
+  // The first card has no name left (its name slot was given another role), so it is no card: the price, which no
+  // editorial default fits, is left to the packaging agent.
+  assert.deepEqual(unplaced, ['home.menu.dish-price.1'])
 })
 
 test('from the command line, a capture step in any language reads the same proposal', () => {
@@ -115,4 +117,173 @@ test('a Joomla menu entry that opens a social network is a contact card, the nth
   // Not a social network: the address keeps no role and the title stays a menu label.
   assert.deepEqual(got['menuItem-7.1'], [null, null])
   assert.equal(got['menuItem-7.0'][1], null)
+})
+
+test('a WordPress card whose name is no slot gets no group: its other slots fall back to an editorial role', () => {
+  // A fictional bakery theme: the dish name heading carries inline price markup, so only the description is a slot.
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      {
+        key: 'home.menu.dish-description.1',
+        type: 'text',
+        sample: 'Rye crust, honey glaze and toasted seeds.'
+      },
+      { key: 'home.menu.dish-image.1', type: 'image', sample: 'loaf-1.jpg' },
+      { key: 'home.menu.dish-name.2', type: 'text', sample: 'Fig twist' },
+      { key: 'home.menu.dish-description.2', type: 'text', sample: 'Folded with dried figs and orange zest.' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  const got = fieldsOf(contentMap)
+  assert.equal(got['home.menu.dish-description.1'][1], null)
+  assert.equal(got['home.menu.dish-image.1'][1], null)
+  assert.match(String(got['home.menu.dish-description.1'][0]), /^editorial\./)
+  // The card that has its name keeps its group.
+  assert.deepEqual(got['home.menu.dish-description.2'], [
+    'offering.description',
+    { id: 'home.menu.dish.1', item: 1, kind: 'menu_item' }
+  ])
+  const check = checkContentMapRoles(contentMap)
+  assert.deepEqual(
+    check.errors.filter((e) => e.includes('lacks the role')),
+    []
+  )
+})
+
+test('a WordPress slot joins a card whose name the map already placed', () => {
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      {
+        key: 'home.menu.dish-name.1',
+        type: 'text',
+        sample: 'Fig twist',
+        role: 'offering.name',
+        group: { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+      },
+      { key: 'home.menu.dish-image.1', type: 'image', sample: 'fig-1.jpg' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  assert.deepEqual(fieldsOf(contentMap)['home.menu.dish-image.1'], [
+    'offering.image',
+    { id: 'home.menu.dish.0', item: 0, kind: 'menu_item' }
+  ])
+})
+
+test('an hours-shaped sample takes the role of the card it sits in, or contact.hours when it sits in none', () => {
+  const V3 = 'place-content-roles/3'
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      { key: 'home.menu.dish-name.1', type: 'text', sample: 'Smoked oolong' },
+      {
+        key: 'home.menu.dish-when.1',
+        type: 'text',
+        sample: 'Mon. Tue. & Sun ((br/))12 Noon to 11 PM',
+        markup: 'inline'
+      },
+      { key: 'home.happyhours.hp-title', type: 'text', sample: 'Evening special' },
+      {
+        key: 'home.happyhours.hp-info',
+        type: 'text',
+        sample: 'Mon. Tue. Thu. & Sun ((br/))12 Noon to 11 PM',
+        markup: 'inline'
+      },
+      { key: 'home.happyhours-2.hp-title', type: 'text', sample: 'Late special' },
+      {
+        key: 'home.happyhours-2.hp-info',
+        type: 'text',
+        sample: 'Fri. Sat. ((br/))9 PM to 1 AM',
+        markup: 'inline'
+      },
+      { key: 'home.footer.opening-line', type: 'text', sample: 'Open Mon to Fri, 9 AM to 5 PM' },
+      {
+        key: 'home.story.paragraph',
+        type: 'text',
+        sample:
+          'On Monday mornings at 9 AM our bakers start the dough, and by the end of the week the whole street smells of it.'
+      }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, { cms: 'wordpress', vocabulary: V3 })
+  const by = Object.fromEntries(contentMap.slots.map((s) => [s.key, s]))
+  assert.equal(by['home.menu.dish-when.1'].role, 'offering.schedule')
+  assert.deepEqual(by['home.menu.dish-when.1'].group, by['home.menu.dish-name.1'].group)
+  for (const sec of ['happyhours', 'happyhours-2']) {
+    assert.equal(by[`home.${sec}.hp-title`].role, 'event.title')
+    assert.equal(by[`home.${sec}.hp-info`].role, 'event.date_or_year')
+    assert.deepEqual(by[`home.${sec}.hp-info`].group, by[`home.${sec}.hp-title`].group)
+  }
+  assert.equal(by['home.footer.opening-line'].role, 'contact.hours')
+  assert.notEqual(
+    by['home.story.paragraph'].role,
+    'contact.hours',
+    'prose that mentions a day and a time is not an hours line'
+  )
+  assert.equal(
+    checkContentMapRoles(contentMap).errors.length,
+    0,
+    JSON.stringify(checkContentMapRoles(contentMap).errors)
+  )
+})
+
+test('WordPress version 3: a sample post is one article card, and a picture named after its page joins the text card', () => {
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      { key: 'site.name', type: 'text', sample: 'Larkspur Tea Room' },
+      {
+        key: 'post-first-brew.title',
+        entity: 'post-first-brew',
+        type: 'text',
+        sample: 'First brew',
+        target: { field: 'post_title' }
+      },
+      {
+        key: 'post-first-brew.excerpt',
+        entity: 'post-first-brew',
+        type: 'text',
+        sample: 'A short note on the first pot.',
+        target: { field: 'post_excerpt' }
+      },
+      {
+        key: 'post-first-brew.featured-image',
+        entity: 'post-first-brew',
+        type: 'image',
+        sample: 'brew.jpg',
+        target: { meta: '_thumbnail_id' }
+      },
+      {
+        key: 'post-first-brew.intro-picture',
+        entity: 'post-first-brew',
+        type: 'image',
+        sample: 'brew-2.jpg',
+        target: { meta: 'intro_picture' }
+      },
+      { key: 'about.team.member-name.1', type: 'text', sample: 'Ada Reed' },
+      { key: 'page-about.team.member-image.1', type: 'image', sample: 'ada.jpg' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  const post = { id: 'post-first-brew.article.0', item: 0, kind: 'post' }
+  assert.deepEqual(fieldsOf(contentMap), {
+    'site.name': ['business.name', { id: 'site.identity.0', item: 0, kind: 'business' }],
+    'post-first-brew.title': ['article.title', post],
+    'post-first-brew.excerpt': ['article.lead', post],
+    'post-first-brew.featured-image': ['article.image', post],
+    'post-first-brew.intro-picture': ['article.image', post],
+    'about.team.member-name.1': ['person.name', { id: 'about.team.member.0', item: 0, kind: 'person' }],
+    'page-about.team.member-image.1': ['person.image', { id: 'about.team.member.0', item: 0, kind: 'person' }]
+  })
 })

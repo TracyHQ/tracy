@@ -18,8 +18,8 @@
 <div class="wp-block-group group-text">
 <!-- wp:group {"className":"error-message","layout":{"type":"default"}} -->
 <div class="wp-block-group error-message">
-<!-- wp:heading -->
-<h2 class="wp-block-heading"><span><?php esc_html_e( 'Page not found', 'wp-ja-diner' ); ?></span></h2>
+<!-- wp:heading {"level":1} -->
+<h1 class="wp-block-heading"><span><?php esc_html_e( 'Page not found', 'wp-ja-diner' ); ?></span></h1>
 <!-- /wp:heading -->
 <!-- wp:paragraph -->
 <p><?php esc_html_e( 'Please try one of the following pages:', 'wp-ja-diner' ); ?></p>

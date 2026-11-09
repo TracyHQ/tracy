@@ -425,14 +425,22 @@ test(
       assert.equal(res.status, 200)
       return (await res.json()).plan
     }
+    // The account's press researches from scratch: both menu parts run again, every selected photo read again.
     const ready = await preview(h.deps.keys)
+    assert.equal(ready.fromScratch, true)
     assert.deepEqual(
       ready.run.map((r) => [r.part, r.reason, r.photos]),
-      [['menu-photos', 'rule-changed', 2]]
+      [
+        ['menu-file', 'again', undefined],
+        ['menu-photos', 'again', 2]
+      ]
     )
     // A host with no vision model: the photos are not read, and the preview says why.
     const none = await preview({ google: 'test-google' })
-    assert.deepEqual(none.run, [])
-    assert.ok(none.kept.some((k) => k.part === 'menu-photos'))
+    assert.deepEqual(
+      none.run.map((r) => r.part),
+      ['menu-file']
+    )
+    assert.ok(none.kept.some((k) => k.part === 'menu-photos' && k.reason === 'unavailable'))
   }
 )

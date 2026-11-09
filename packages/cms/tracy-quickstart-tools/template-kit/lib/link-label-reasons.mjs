@@ -9,7 +9,11 @@
 //   control-value   a link with no address that shows only a number: the value of an in-page control (a rating
 //                   star "1" to "5", a slide dot), which the control's script reads;
 //   sort-control    a link opening the same listing in another order (`?orderby=`, `/by,name/dirdesc`): its words
-//                   name a column the CMS sorts by.
+//                   name a column the CMS sorts by;
+//   taxonomy-term   a link to a category or tag archive (`/category/news`, `/tag/rye`): its words are the term's
+//                   name, kept in the CMS taxonomy and printed by no content slot;
+//   page-control    a link that acts inside the page and opens nothing (no address): the words belong to a control
+//                   of the template (a tab, a badge, a list item), which no content slot prints.
 // `linkLabelChecks` counts a link with words and neither, or with a `labelId` that is not a slot of its block.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 
@@ -108,6 +112,13 @@ function sortLink(l, pagePaths) {
   })
 }
 
+/** The link opens a category or tag archive of the CMS: the path holds a `category` or `tag` segment. */
+const taxonomyLink = (l) => /(?:^|\/)(?:category|tag)\/[^/?#]+/i.test(String(l.target ?? '').split('?')[0])
+
+/** The link acts inside the page and opens nothing. */
+const pageControl = (l) =>
+  l.action === 'page-control' && (!l.target || /^(?:#|javascript:)/i.test(String(l.target)))
+
 const REASONS = {
   'template-words':
     "the link's words are the block's fixed text (a CMS or template string), not a slot the customer writes",
@@ -117,7 +128,11 @@ const REASONS = {
   'control-value':
     'an in-page control with no address (a rating star, a slide dot): its number is the value the script reads',
   'sort-control':
-    "a listing's sort control: it opens the same listing in another order and names the CMS column"
+    "a listing's sort control: it opens the same listing in another order and names the CMS column",
+  'taxonomy-term':
+    "a category or tag archive link: its words are the term's name in the CMS taxonomy, printed by no content slot",
+  'page-control':
+    "an in-page control of the template with no address (a tab, a badge, a list item): its words are the template's, no content slot prints them"
 }
 
 /**
@@ -147,7 +162,11 @@ export function fixedLinkLabels(kit) {
               ? 'icon-name'
               : texts.length && fixedWords(l.label, texts)
                 ? 'template-words'
-                : null
+                : taxonomyLink(l)
+                  ? 'taxonomy-term'
+                  : pageControl(l)
+                    ? 'page-control'
+                    : null
       if (!rule) continue
       l.fixedLabel = { rule, reason: REASONS[rule] }
       fixed++

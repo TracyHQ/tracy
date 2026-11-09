@@ -25,11 +25,11 @@
 import { createGzip } from 'node:zlib'
 
 import type { SiteArtifacts } from './artifacts.js'
-import type { Diagnostic } from './joomla.js'
-import { DIAGNOSTIC_ACTIONS, DIAGNOSTIC_ENGINE_ERRORS } from './diagnostic.mjs'
+import { DIAGNOSTIC_ACTIONS, DIAGNOSTIC_ENGINE_ERRORS, diagnosticError } from './diagnostic.mjs'
 import { answerKind, engineReply, isPhpParseFailure, pageKind } from './doors.mjs'
 import { failureCode } from './error-code.mjs'
 import { firewallOf, gatewayOf, USER_AGENT } from './firewall.mjs'
+import type { Diagnostic } from './joomla.js'
 import { forgetUpload, heldUpload, rememberUpload, staleUpload } from './resume.js'
 import { relayedTransportError, withPartRetry, withRetry } from './retry.js'
 import { BlockedByHost, retryAfterMs, SiteLink } from './site-link.js'
@@ -284,6 +284,120 @@ interface SiteCall {
   link: SiteLink
 }
 
+/** Refuse malformed engine data before it can be stored as a successful database copy. */
+function invalidExport(action: string, check: string): ExportFailed {
+  return new ExportFailed('call_failed', `${action}: ${check}`, { at: 'export', check, action })
+}
+
+function validSql(action: string, value: unknown): Buffer {
+  if (typeof value !== 'string' || value.length % 4 !== 0 || !/^[A-Za-z0-9+/]*={0,2}$/.test(value))
+    throw invalidExport(action, 'invalid_payload')
+  const sql = Buffer.from(value, 'base64')
+  if (sql.toString('base64') !== value) throw invalidExport(action, 'invalid_payload')
+  // Scan bytes without decoding binary literals. A page must end outside quotes/comments,
+  // at a statement boundary; this detects truncation, not arbitrary SQL syntax errors.
+  let quote = 0
+  let comment = 0
+  let last = 0
+  for (let i = 0; i < sql.length; i++) {
+    const byte = sql[i]
+    if (comment === 1) {
+      if (byte === 10) comment = 0
+      continue
+    }
+    if (comment === 2) {
+      if (byte === 42 && sql[i + 1] === 47) {
+        comment = 0
+        i++
+      }
+      continue
+    }
+    if (quote) {
+      if (byte === 92 && quote !== 96) {
+        i++
+        continue
+      }
+      if (byte === quote) {
+        if (sql[i + 1] === quote) i++
+        else quote = 0
+      }
+      continue
+    }
+    if (byte === 45 && sql[i + 1] === 45 && (sql[i + 2] ?? 32) <= 32) {
+      comment = 1
+      i++
+      continue
+    }
+    if (byte === 35) {
+      comment = 1
+      continue
+    }
+    if (byte === 47 && sql[i + 1] === 42) {
+      comment = 2
+      i++
+      continue
+    }
+    if (byte > 32) last = byte
+    if (byte === 39 || byte === 34 || byte === 96) quote = byte
+  }
+  if (quote || comment === 2 || (last !== 0 && last !== 59)) throw invalidExport(action, 'invalid_payload')
+  return sql
+}
+
+function validateDump(action: string, reply: Record<string, unknown>): void {
+  if (typeof reply.done !== 'boolean') throw invalidExport(action, 'invalid_reply')
+  validSql(action, reply.sql_b64)
+  if (
+    action === 'db.dump_many' &&
+    reply.progress !== undefined &&
+    (!Array.isArray(reply.progress) ||
+      reply.progress.some(
+        (item) =>
+          !item ||
+          typeof item !== 'object' ||
+          typeof item.done !== 'boolean' ||
+          typeof item.table !== 'string' ||
+          !Number.isSafeInteger(item.rows) ||
+          item.rows < 0 ||
+          !Number.isSafeInteger(item.total) ||
+          item.total < 0
+      ))
+  )
+    throw invalidExport(action, 'invalid_reply')
+  if (
+    action === 'db.dump' &&
+    (!Number.isSafeInteger(reply.rows) ||
+      Number(reply.rows) < 0 ||
+      !Number.isSafeInteger(reply.total) ||
+      Number(reply.total) < 0 ||
+      (reply.next_cursor !== undefined &&
+        reply.next_cursor !== null &&
+        typeof reply.next_cursor !== 'string') ||
+      (reply.next_offset !== undefined &&
+        (!Number.isSafeInteger(reply.next_offset) || Number(reply.next_offset) < 0)))
+  )
+    throw invalidExport(action, 'invalid_reply')
+}
+
+/** Follow only same-origin redirects; POST tokens never ride a redirect to another origin. */
+async function engineFetch(endpoint: string, action: string, init: RequestInit): Promise<Response> {
+  const anchor = new URL(endpoint).origin
+  let url = endpoint
+  let request = init
+  for (let hop = 0; hop <= 5; hop++) {
+    const response = await fetch(url, { ...request, redirect: 'manual' })
+    if (![301, 302, 303, 307, 308].includes(response.status)) return response
+    const location = response.headers.get('location')
+    const next = location ? new URL(location, url) : null
+    await response.body?.cancel()
+    if (!next || next.origin !== anchor || next.username || next.password || hop === 5)
+      throw invalidExport(action, 'untrusted_target')
+    if ([301, 302, 303].includes(response.status)) request = { ...request, method: 'GET', body: undefined }
+    url = next.href
+  }
+  throw invalidExport(action, 'untrusted_target')
+}
+
 /**
  * One component call. Each call is a bounded chunk, named by an explicit cursor.
  * @param site `headers` are sent on the call — a site behind HTTP Basic on /administrator answers
@@ -300,7 +414,7 @@ async function callPlugin(
   await site.link.ready()
   let response: Response
   try {
-    response = await fetch(endpoint, {
+    response = await engineFetch(endpoint, action, {
       method: 'POST',
       // The same user agent the sign-in used: bot rules on shared hosting that let the login through
       // blocked the runtime's default `node` on the first engine call (measured 2026-10-19).
@@ -386,7 +500,8 @@ async function callPlugin(
       check: 'no_engine_reply',
       status: response.status,
       ...(DIAGNOSTIC_ACTIONS.has(action) ? { action } : {}),
-      answer: answerKind(text)
+      answer: answerKind(text),
+      ...(answerKind(text) === 'html' && pageKind(text) === 'login_form' ? { page: 'login_form' } : {})
     })
   }
   engineHeard.add(site.link)
@@ -433,6 +548,7 @@ async function callPlugin(
       engine_error: code
     })
   }
+  if (action === 'db.dump' || action === 'db.dump_many') validateDump(action, result)
   return result
 }
 
@@ -554,10 +670,21 @@ export async function exportDatabase(
   // Each call is a bounded chunk named by a cursor, so asking again is safe.
   const tableReply = (await overloadAware(
     withRetry(() => callPlugin(endpoint, token, 'db.tables', {}, site))
-  )) as unknown as { tables: string[]; prefix?: string; base_prefix?: string }
+  )) as unknown as { tables: string[]; prefix?: string; base_prefix?: string; views?: Record<string, string> }
+  if (
+    [tableReply.prefix, tableReply.base_prefix].some(
+      (value) => value !== undefined && typeof value !== 'string'
+    )
+  )
+    throw invalidExport('db.tables', 'invalid_reply')
   const prefix =
     options.platform === 'wordpress' ? tableReply.base_prefix || tableReply.prefix : tableReply.prefix
-  let tables = tableReply.tables
+  if (
+    !Array.isArray(tableReply.tables) ||
+    !tableReply.tables.every((table) => typeof table === 'string' && table.length > 0)
+  )
+    throw invalidExport('db.tables', 'invalid_reply')
+  let tables = [...new Set(tableReply.tables)]
   if (prefix) {
     const wordpress = options.platform === 'wordpress'
     const marker = wordpress ? ['options', 'posts', 'postmeta'] : ['extensions', 'content', 'menu', 'assets']
@@ -583,6 +710,19 @@ export async function exportDatabase(
     )
   }
 
+  if (tables.length === 0) throw invalidExport('db.tables', 'empty_database')
+  const views = tableReply.views ?? {}
+  if (
+    !views ||
+    typeof views !== 'object' ||
+    Array.isArray(views) ||
+    Object.values(views).some((value) => typeof value !== 'string' || !/^CREATE\b/i.test(value))
+  )
+    throw invalidExport('db.tables', 'invalid_reply')
+  const viewNames = Object.keys(views).filter((table) => tables.includes(table))
+  const totalTables = tables.length
+  tables = tables.filter((table) => !Object.hasOwn(views, table))
+
   // 🔒 BYTES, NEVER TEXT. The engine writes a BLOB column's raw bytes inside a quoted literal, so the
   // dump is not UTF-8: decoding it as text turned every invalid byte into U+FFFD and corrupted
   // images, serialized data and anything binary on the way to the copy. Each chunk is decoded from
@@ -594,6 +734,8 @@ export async function exportDatabase(
     gzip.on('end', resolve)
     gzip.on('error', reject)
   })
+  // Attach a rejection handler immediately: an export can fail before awaiting compression.
+  void gzipped.catch(() => {})
   let bytes = 0
   let tablesDone = 0
   const completedTables = new Set<string>()
@@ -602,149 +744,206 @@ export async function exportDatabase(
   // the cursor names rows, not pages, so a smaller page continues exactly where the last one ended.
   let limit = DB_CHUNK_LIMIT
 
-  if (options.dbDumpMany) {
-    const advertisedMaxTables = Number(options.dbDumpMany.max_tables ?? 5000)
-    const maxTables = Number.isFinite(advertisedMaxTables)
-      ? Math.max(1, Math.min(5000, Math.floor(advertisedMaxTables)))
-      : 5000
-    for (let start = 0; start < tables.length; start += maxTables) {
-      const tableBatch = tables.slice(start, start + maxTables)
-      let cursor: { table: number; row: string } | null = null
-      const seenCursors = new Set<string>()
-      let lastErrorCursor: string | null = null
-      for (;;) {
-        const chunk = (await overloadAware(
-          withRetry(() =>
-            callPlugin(
-              endpoint,
-              token,
-              'db.dump_many',
-              {
-                tables: tableBatch,
-                cursor,
-                limit
-              },
-              site
-            ).catch((error: unknown) => {
-              if (isSiteOverload(error)) limit = Math.max(MIN_DB_CHUNK_LIMIT, Math.floor(limit / 2))
-              throw error
-            })
-          )
-        )) as unknown as {
-          sql_b64: string
-          next_cursor: { table: number; row: string } | null
-          done: boolean
-          progress?: Array<{ index: number; table: string; rows: number; total: number; done: boolean }>
-          tables_done?: number
-          stopped?: 'done' | 'bytes' | 'time' | 'error'
-        }
-        const sql = Buffer.from(chunk.sql_b64, 'base64')
-        bytes += sql.length
-        gzip.write(sql)
-        for (const progress of chunk.progress ?? []) {
-          if (progress.done && !completedTables.has(progress.table)) {
-            completedTables.add(progress.table)
-            tablesDone += 1
-            onTable?.({
-              tables: tables.length,
-              table: progress.table,
-              rows: progress.total,
-              done: tablesDone
-            })
+  try {
+    if (options.dbDumpMany) {
+      const advertisedMaxTables = Number(options.dbDumpMany.max_tables ?? 5000)
+      const maxTables = Number.isFinite(advertisedMaxTables)
+        ? Math.max(1, Math.min(5000, Math.floor(advertisedMaxTables)))
+        : 5000
+      for (let start = 0; start < tables.length; start += maxTables) {
+        const tableBatch = tables.slice(start, start + maxTables)
+        let cursor: { table: number; row: string } | null = null
+        const seenCursors = new Set<string>()
+        let lastErrorCursor: string | null = null
+        for (;;) {
+          const chunk = (await overloadAware(
+            withRetry(() =>
+              callPlugin(
+                endpoint,
+                token,
+                'db.dump_many',
+                {
+                  tables: tableBatch,
+                  cursor,
+                  limit
+                },
+                site
+              ).catch((error: unknown) => {
+                if (isSiteOverload(error)) limit = Math.max(MIN_DB_CHUNK_LIMIT, Math.floor(limit / 2))
+                throw error
+              })
+            )
+          )) as unknown as {
+            sql_b64: string
+            next_cursor: { table: number; row: string } | null
+            done: boolean
+            progress?: Array<{ index: number; table: string; rows: number; total: number; done: boolean }>
+            tables_done?: number
+            stopped?: 'done' | 'bytes' | 'time' | 'error'
           }
-        }
-        const previous = cursor
-        cursor = chunk.next_cursor
-        if (!chunk.done && !cursor) throw new ExportFailed('call_failed')
-        if (cursor) {
-          const key = `${cursor.table}:${cursor.row}`
-          const previousRow = Number(previous?.row)
-          const nextRow = Number(cursor.row)
-          const previousKey = previous ? `${previous.table}:${previous.row}` : null
-          const repeatedAtInput = previousKey === key
-          if (
-            (seenCursors.has(key) && !(chunk.stopped === 'error' && repeatedAtInput)) ||
-            (previous && cursor.table < previous.table) ||
-            (previous &&
-              cursor.table === previous.table &&
-              Number.isFinite(previousRow) &&
-              Number.isFinite(nextRow) &&
-              nextRow < previousRow)
-          ) {
-            throw new ExportFailed('call_failed')
+          const sql = validSql('db.dump_many', chunk.sql_b64)
+          bytes += sql.length
+          gzip.write(sql)
+          if (!sql.length && chunk.done && !cursor) throw invalidExport('db.dump_many', 'invalid_payload')
+          for (const progress of chunk.progress ?? []) {
+            if (!tableBatch.includes(progress.table)) throw invalidExport('db.dump_many', 'invalid_reply')
+            if (progress.done && !completedTables.has(progress.table)) {
+              completedTables.add(progress.table)
+              tablesDone += 1
+              onTable?.({
+                tables: tables.length,
+                table: progress.table,
+                rows: progress.total,
+                done: tablesDone
+              })
+            }
           }
-          if (chunk.stopped === 'error') {
-            if (repeatedAtInput && lastErrorCursor === key) throw new ExportFailed('call_failed')
-            lastErrorCursor = key
-          } else {
-            lastErrorCursor = null
-          }
-          seenCursors.add(key)
-        }
-        if (chunk.done || !cursor) break
-      }
-    }
-  } else
-    for (const table of tables) {
-      let cursor: string | null = null
-      let offset = 0
-      let byOffset = false
-      let rows = 0
-      for (;;) {
-        const chunk = (await overloadAware(
-          withRetry(() =>
-            callPlugin(
-              endpoint,
-              token,
-              'db.dump',
-              {
-                table,
-                limit,
-                ...(byOffset ? { offset } : { cursor: cursor ?? '' })
-              },
-              site
-            ).catch((error: unknown) => {
-              if (isSiteOverload(error)) limit = Math.max(MIN_DB_CHUNK_LIMIT, Math.floor(limit / 2))
-              throw error
-            })
-          )
-        )) as unknown as DbDumpChunk
-        const sql = Buffer.from(chunk.sql_b64, 'base64')
-        bytes += sql.length
-        gzip.write(sql)
-        if (typeof chunk.next_cursor === 'string') {
+          const previous = cursor
           cursor = chunk.next_cursor
-        } else {
-          byOffset = true
-          offset = chunk.next_offset ?? offset + chunk.rows
+          if (!chunk.done && !cursor) throw invalidExport('db.dump_many', 'cursor_missing')
+          if (
+            cursor &&
+            (!Number.isSafeInteger(cursor.table) ||
+              cursor.table < 0 ||
+              cursor.table >= tableBatch.length ||
+              (cursor.row !== null && typeof cursor.row !== 'string'))
+          )
+            throw invalidExport('db.dump_many', 'invalid_reply')
+          if (cursor) {
+            const key = `${cursor.table}:${cursor.row}`
+            const previousRow = Number(previous?.row)
+            const nextRow = Number(cursor.row)
+            const previousKey = previous ? `${previous.table}:${previous.row}` : null
+            const repeatedAtInput = previousKey === key
+            if (
+              (seenCursors.has(key) && !(chunk.stopped === 'error' && repeatedAtInput)) ||
+              (previous && cursor.table < previous.table) ||
+              (previous &&
+                cursor.table === previous.table &&
+                Number.isFinite(previousRow) &&
+                Number.isFinite(nextRow) &&
+                nextRow < previousRow)
+            ) {
+              throw invalidExport(
+                'db.dump_many',
+                previous && cursor.table < previous.table ? 'cursor_backwards' : 'cursor_repeated'
+              )
+            }
+            if (chunk.stopped === 'error') {
+              if (repeatedAtInput && lastErrorCursor === key)
+                throw invalidExport('db.dump_many', 'cursor_stalled')
+              lastErrorCursor = key
+            } else {
+              lastErrorCursor = null
+            }
+            seenCursors.add(key)
+          }
+          if (chunk.done || !cursor) break
         }
-        rows = chunk.total
-        if (chunk.done) break
       }
-      tablesDone += 1
-      // `rows` is the table's TOTAL, which the component returns on every chunk — so the figure the customer reads ("312
-      // posts") costs no extra call.
-      onTable?.({ tables: tables.length, table, rows, done: tablesDone })
+    } else
+      for (const table of tables) {
+        let cursor: string | null = null
+        let offset = 0
+        let byOffset = false
+        let rows = 0
+        let first = true
+        const seen = new Set<string>()
+        for (;;) {
+          const chunk = (await overloadAware(
+            withRetry(() =>
+              callPlugin(
+                endpoint,
+                token,
+                'db.dump',
+                {
+                  table,
+                  limit,
+                  ...(byOffset ? { offset } : { cursor: cursor ?? '' })
+                },
+                site
+              ).catch((error: unknown) => {
+                if (isSiteOverload(error)) limit = Math.max(MIN_DB_CHUNK_LIMIT, Math.floor(limit / 2))
+                throw error
+              })
+            )
+          )) as unknown as DbDumpChunk
+          const sql = validSql('db.dump', chunk.sql_b64)
+          if (first && sql.length === 0) throw invalidExport('db.dump', 'invalid_payload')
+          first = false
+          const next =
+            typeof chunk.next_cursor === 'string'
+              ? `cursor:${chunk.next_cursor}`
+              : `offset:${chunk.next_offset ?? offset + chunk.rows}`
+          if (
+            !chunk.done &&
+            (seen.has(next) ||
+              chunk.rows === 0 ||
+              (byOffset && (chunk.next_offset ?? offset + chunk.rows) <= offset))
+          )
+            throw invalidExport('db.dump', 'cursor_stalled')
+          seen.add(next)
+          bytes += sql.length
+          gzip.write(sql)
+          if (typeof chunk.next_cursor === 'string') {
+            cursor = chunk.next_cursor
+          } else {
+            byOffset = true
+            offset = chunk.next_offset ?? offset + chunk.rows
+          }
+          rows = chunk.total
+          if (chunk.done) break
+        }
+        tablesDone += 1
+        // `rows` is the table's TOTAL, which the component returns on every chunk — so the figure the customer reads ("312
+        // posts") costs no extra call.
+        onTable?.({ tables: tables.length, table, rows, done: tablesDone })
+      }
+
+    for (const view of viewNames) {
+      const sql = Buffer.from(`${views[view]};\n`)
+      bytes += sql.length
+      gzip.write(sql)
     }
+    // gzip because that is what `provision.sh` on the fleet fetches (`fetch "$DB_KEY"` then `gunzip -c`).
+    gzip.end()
+    await gzipped
+    // A presigned PUT needs its length up front, so the compressed copy is held to send it in one go.
+    const gz = Buffer.concat(compressed)
 
-  // gzip because that is what `provision.sh` on the fleet fetches (`fetch "$DB_KEY"` then `gunzip -c`).
-  gzip.end()
-  await gzipped
-  // A presigned PUT needs its length up front, so the compressed copy is held to send it in one go.
-  const gz = Buffer.concat(compressed)
-
-  const signed = await artifacts.signPut('db')
-  const put = await fetch(signed.url, {
-    method: 'PUT',
-    body: new Uint8Array(gz),
-    headers: { 'content-type': 'application/gzip' }
-  })
-  // Tell "storage refused" apart from "the site answered wrong": the whole database is already pulled, the only thing
-  // that failed is the right to put it where the fleet reads it. Telling people to "retry" for that case pushes them into a
-  // loop with no end.
-  if (!put.ok) throw new ExportFailed('store_refused')
-
-  return { key: signed.key, tables: tables.length, bytes }
+    let uploadedKey = ''
+    await withRetry(async () => {
+      const signed = await artifacts.signPut('db')
+      const put = await fetch(signed.url, {
+        method: 'PUT',
+        body: new Uint8Array(gz),
+        redirect: 'error',
+        headers: { 'content-type': 'application/gzip' },
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS)
+      })
+      await put.body?.cancel()
+      if (put.status === 429 || put.status >= 500)
+        throw relayedTransportError('database upload temporarily refused')
+      if (!put.ok)
+        throw new ExportFailed('store_refused', undefined, {
+          at: 'export',
+          check: 'store_upload_failed',
+          status: put.status
+        })
+      uploadedKey = signed.key
+    }).catch((error: unknown) => {
+      if (error instanceof ExportFailed) throw error
+      throw new ExportFailed('store_refused', undefined, {
+        at: 'export',
+        check: 'store_upload_failed',
+        error: diagnosticError(error)
+      })
+    })
+    return { key: uploadedKey, tables: totalTables, bytes }
+  } catch (error) {
+    gzip.destroy()
+    throw error
+  }
 }
 
 /**

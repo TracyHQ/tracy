@@ -131,6 +131,9 @@ test("the brief's assets carry size, orientation, grade and content, and still v
     faceBoxes: [],
     peopleCount: null,
     isGraphic: null,
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null,
     isOwnPhoto: null
   })
   assert.equal(byId.get('thumb').content, 'unlabelled')

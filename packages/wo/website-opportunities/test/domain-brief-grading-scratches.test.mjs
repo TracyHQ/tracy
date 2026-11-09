@@ -24,7 +24,9 @@ const HSC = JSON.parse(
   readFileSync(new URL('./fixtures/sub-trade/harbour-sport-club.json', import.meta.url), 'utf8')
 )
 const IG = 'https://www.instagram.com/harbour.sportclub/'
-const SERVICE_NAME = 'Padel & Tennis Coach'
+// A proper name the own marks contradict: the case that still holds the name (#189). A listing name that is only a
+// trade description gives way to the own marks instead (domain-name-own-marks-over-trade-description.test.mjs).
+const SERVICE_NAME = 'Marina Racquet House'
 const LOGO = {
   mediaId: HSC.brand.logoResearch.chosen.mediaId,
   via: 'social-profile',
@@ -124,7 +126,14 @@ function scratchBrief({ profile = {}, posts = HSC.posts } = {}) {
     media: HSC.media,
     posts
   }
-  return makeSiteBrief(domain, read, { opportunity: HSC.opportunity, madeAt: HSC.madeAt })
+  const make = (opportunity) => makeSiteBrief(domain, read, { opportunity, madeAt: HSC.madeAt })
+  // Alex, a coach two reviews name, is shown by rule since 29/10/2026 (`brief-people.mjs`): the owner's own choice holds
+  // him off here, so the held path is still what these tests read.
+  const first = make(HSC.opportunity)
+  const alex = first.facts.find((f) => f.field === 'team' && f.value?.name === 'Alex')
+  if (!alex) return first
+  const factOverrides = { [alex.id]: { onSite: false, at: '2026-10-27T09:00:00.000Z' } }
+  return make({ ...HSC.opportunity, candidate: { ...HSC.opportunity.candidate, factOverrides } })
 }
 const pageSection = (brief, slug, kind) =>
   brief.sitemap.find((p) => p.slug === slug)?.sections.find((s) => s.kind === kind)

@@ -98,7 +98,7 @@ test('every source of the place is listed by name with its status and reason', (
     'Google Maps',
     'TripAdvisor'
   ])
-  assert.match(html, /TripAdvisor<\/span><span class="tracy-wo-muted">\[source\.status\.skipped\]/)
+  assert.match(html, /TripAdvisor<\/span><\/span><span class="tracy-wo-muted">\[source\.status\.skipped\]/)
   assert.match(html, /\[reason\.not_found\]/)
   assert.equal((html.match(/\[source\.status\.blocked\]/g) ?? []).length, 2)
   assert.equal((html.match(/\[reason\.other\]/g) ?? []).length, 2)
@@ -217,4 +217,74 @@ test('a closed door disables the button and says why; a place never researched s
   assert.match(closed, /disabled=""/)
   assert.match(closed, /\[again\.closed\.public\]/)
   assert.equal(button(control({ preview: { plan: null, payer: 'tracy', open: true, left: null } })), '')
+})
+
+// A business added by its links: a Google Maps link, an Instagram page and a listing page, all fictional.
+const PASTED = [
+  {
+    source: 'instagram',
+    ref: 'https://www.instagram.com/sample_bistro',
+    status: 'complete',
+    shared: true,
+    pastedLink: 'https://www.instagram.com/sample_bistro'
+  },
+  { source: 'facebook-search', status: 'complete', reason: 'pending', shared: true },
+  {
+    source: 'google-places',
+    ref: 'ChIJSampleBistroPlaceId00',
+    status: 'complete',
+    shared: true,
+    pastedLink: 'https://maps.app.goo.gl/SampleBistro'
+  },
+  { source: 'google-maps', ref: null, status: 'failed', shared: true },
+  { source: 'tripadvisor', ref: null, status: 'failed', shared: true },
+  {
+    source: 'listing',
+    ref: 'https://www.listing.example/dubai/sample-bistro/store/1',
+    status: 'complete',
+    pastedLink: 'https://www.listing.example/dubai/sample-bistro/store/1'
+  }
+]
+
+test('the links the owner pasted come first, each with The link you added and its address; the rest under Also looked at', () => {
+  const html = draw(PASTED)
+  assert.deepEqual(names(html), [
+    'Instagram',
+    'Google Places',
+    '[source.listing{&quot;host&quot;:&quot;listing.example&quot;}]',
+    '[source.facebookSearch]',
+    'Google Maps',
+    'TripAdvisor'
+  ])
+  assert.equal((html.match(/tracy-wo-src-pasted/g) ?? []).length, 3)
+  assert.match(html, /tracy-wo-src-pasted">\[source\.link\] · https:\/\/maps\.app\.goo\.gl\/SampleBistro</)
+  assert.match(html, /<a href="https:\/\/maps\.app\.goo\.gl\/SampleBistro"/)
+  const heading = html.indexOf('[source.alsoLookedAt]')
+  assert.ok(heading > html.indexOf('[source.listing'), 'the heading comes after the pasted rows')
+  assert.ok(heading < html.indexOf('[source.facebookSearch]'), 'and before what research found by itself')
+  assert.equal((html.match(/\[source\.alsoLookedAt\]/g) ?? []).length, 1)
+})
+
+test('Also looked at shows only when both groups have rows', () => {
+  assert.doesNotMatch(draw(SAGA), /source\.alsoLookedAt|tracy-wo-src-pasted/)
+  assert.doesNotMatch(draw(PASTED.filter((s) => s.pastedLink)), /source\.alsoLookedAt/)
+})
+
+test('a listing row is named Listing with its host, and plain Listing when its address has none', () => {
+  const plain = draw([{ source: 'listing', ref: null, status: 'complete' }])
+  assert.deepEqual(names(plain), ['[source.listingPlain]'])
+  const fromRef = draw([{ source: 'listing', ref: 'https://listing.example/p/1', status: 'complete' }])
+  assert.deepEqual(names(fromRef), ['[source.listing{&quot;host&quot;:&quot;listing.example&quot;}]'])
+})
+
+test('a pasted link that is not an http address is not trusted as one', () => {
+  const html = draw([
+    {
+      source: 'website',
+      ref: 'https://bistro.example/',
+      status: 'complete',
+      pastedLink: 'javascript:alert(1)'
+    }
+  ])
+  assert.doesNotMatch(html, /tracy-wo-src-pasted|javascript:/)
 })

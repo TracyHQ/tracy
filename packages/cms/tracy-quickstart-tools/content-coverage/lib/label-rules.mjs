@@ -46,13 +46,21 @@ const TITLES = Object.freeze({
 const isTextual = (s) => s?.type === 'text' || s?.type === 'html'
 const hasRole = (s, version) => typeof s?.role === 'string' && isRole(s.role, version)
 const roleOf = (s) => (typeof s?.role === 'string' ? s.role : '')
-const FACT_SAMPLE_ROLE = /^contact\.|\.price$|^offering\.(?:price_note|schedule)$|^package\.price$/
+// event.date_or_year: when an event runs (a date or a weekly schedule); like offering.schedule it is never kept in a build
+const FACT_SAMPLE_ROLE =
+  /^contact\.|\.price$|^offering\.(?:price_note|schedule)$|^package\.price$|^event\.date_or_year$/
 /**
  * A sum that states a result ("$4.8m in profits", "helped raise over $500 million") reads like a price but is a stat or
  * a claim: those roles never keep the demo's words in a build (a dash or empty), so a price-like sample may carry them.
  * A phone, email, address or hours sample still needs a contact role.
  */
 const PRICE_LIKE_RESULT_ROLES = new Set(['stat.value', 'claim.notice'])
+/**
+ * A menu item's name that carries its price in the same inline markup slot (`Salad ((span class="price"))$30((/span))`):
+ * the role is a fact role, so a build never keeps the demo's words and the price goes with the name. Only the inline
+ * slot of a name role qualifies; a plain text name with a price inside stays an R2 failure.
+ */
+const NAME_WITH_PRICE_ROLES = new Set(['offering.name', 'package.name'])
 const CTA_LABEL_ROLES = new Set([
   'contact.cta_label',
   'offering.cta_label',
@@ -120,7 +128,9 @@ function r2(slots, version) {
       continue
     }
     const result = kinds.every((k) => k === 'price') && PRICE_LIKE_RESULT_ROLES.has(roleOf(s))
-    if (!result && !FACT_SAMPLE_ROLE.test(roleOf(s))) out.push(s.key)
+    const nameWithPrice =
+      kinds.every((k) => k === 'price') && s.markup === 'inline' && NAME_WITH_PRICE_ROLES.has(roleOf(s))
+    if (!result && !nameWithPrice && !FACT_SAMPLE_ROLE.test(roleOf(s))) out.push(s.key)
   }
   return out
 }

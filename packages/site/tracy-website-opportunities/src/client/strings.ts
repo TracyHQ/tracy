@@ -405,6 +405,12 @@ export const en = {
   'source.website': 'Website',
   /** The source of an opportunity added by pasting one address. */
   'source.link': 'The link you added',
+  /** A listing page's source row (magicpin and the like), named with the host of its address. */
+  'source.listing': 'Listing · {host}',
+  /** A listing page's source row when its address has no readable host. */
+  'source.listingPlain': 'Listing',
+  /** Heading above the sources research looked at by itself, below the links the owner added. */
+  'source.alsoLookedAt': 'Also looked at',
 
   'source.status.complete': 'Complete',
   'source.status.partial': 'Partial',
@@ -508,6 +514,23 @@ export const en = {
   'bulk.resume': 'Resume {count}',
   'bulk.result': '{done} done · {skipped} left as they were · {failed} failed',
   'bulk.tooMany': 'Too many at once. Narrow the filter to 500 places or fewer.',
+  'delete.button': 'Delete',
+  'delete.title.one': 'Delete {name}?',
+  'delete.title.other': 'Delete {count} places?',
+  'delete.title.unnamed': 'Delete this place?',
+  'delete.lead.one':
+    'This place leaves My opportunities with its research, briefs and demo history. You cannot undo this.',
+  'delete.lead.other':
+    'These places leave My opportunities with their research, briefs and demo history. You cannot undo this.',
+  'delete.site': 'Its live demo site is removed too.',
+  'delete.sites.one': '{count} of them has a live demo site, which is removed too.',
+  'delete.sites.other': '{count} of them have a live demo site, which is removed too.',
+  'delete.cancel': 'Keep',
+  'delete.confirm': 'Delete',
+  'delete.deleting': 'Deleting…',
+  'delete.result': '{deleted} deleted · {failed} failed',
+  'delete.siteBusy': 'A demo site is busy right now. Wait a moment, then delete again.',
+  'delete.buildRunning': 'A demo is still being built. Wait for it to finish, then delete.',
   /** The My opportunities map: a pin shows the step number, `!` when it waits for you. */
   'map.legend.steps': 'Other steps (the number is the step)',
   /** Accessible name of the `My opportunities › Name › Brief N` trail. */
@@ -807,7 +830,7 @@ export const en = {
   'revision.document': 'Site brief',
   /** Details: every demo of the place with what it was built with, and the latest brief's status. */
   'brief.current': 'Brief {n} · up to date · made {when} from this research',
-  'brief.stale': 'Brief {n} · the research changed since this brief ({when})',
+  'brief.stale': 'Brief {n} · made {when}, before the research or the brief rules changed',
   'brief.view': 'View brief',
   'brief.refresh': 'Refresh',
   'brief.refreshing': 'Refreshing…',
@@ -858,11 +881,14 @@ export const en = {
   'again.upToDate': 'Everything is up to date',
   'again.due.one': '{count} part needs a new look',
   'again.due.other': '{count} parts need a new look',
+  'again.due.scratch': 'Every source is collected again, up to {total}',
   'again.closed.account': 'You used today’s Research again runs. Try again tomorrow.',
   'again.closed.public': 'Free research is used up for today. Try again tomorrow or sign in.',
   'again.title': 'Research {name} again?',
   'again.lead':
     'Tracy looks again only at what failed, is out of date, or was never tried. Everything else is kept.',
+  'again.lead.scratch':
+    'Tracy collects every source again and reads the business again from scratch, the logo included. Nothing from the last research is reused.',
   'again.kept': 'Kept',
   'again.total.account': 'Up to {total}, counted on your account.',
   'again.total.tracy': 'Up to {total}, paid by Tracy.',
@@ -875,6 +901,7 @@ export const en = {
   'again.run.failed': 'Failed last time',
   'again.run.outdated': 'Older than 30 days',
   'again.run.rule-changed': 'Tracy now looks for it differently',
+  'again.run.again': 'Collected again from scratch',
   'again.kept.up-to-date': 'Up to date',
   'again.kept.none': 'The place has none (checked recently)',
   'again.kept.unavailable': 'Not available on this server',

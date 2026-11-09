@@ -11,6 +11,7 @@ import { createChargeable, createCostLedger } from 'website-opportunities/src/co
 import { createExecutor } from 'website-opportunities/src/executor.js'
 import { imageInfoWith } from 'website-opportunities/src/media-info.js'
 import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
 import { addLink } from 'website-opportunities/src/places.js'
 import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
@@ -120,18 +121,16 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     })
   }
   const ledger = createCostLedger({ pool, caps: async () => ({ dailyCapCents: 1000, jobCapCents: 1000 }) })
+  const settings = {
+    ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+    tripadvisorReviews: false
+  }
   const ex = createExecutor({
     host: woHost,
     pool,
     shared: true,
     loadDomain: async () => domain,
-    runtime: async () => ({
-      keys: { google: 'test-google' },
-      settings: {
-        ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
-        tripadvisorReviews: false
-      }
-    }),
+    runtime: async () => ({ keys: { google: 'test-google' }, settings }),
     chargeable: createChargeable(ledger),
     businessReadingDoor: async () =>
       door === 'ready'
@@ -170,11 +169,14 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     .rows[0].place_id
   // The club's Instagram, as an operator adds a link to a Google place.
   await addLink(pool, placeId, 'instagram', IG, 'operator', {})
-  for (let i = 0; i < 20; i++) {
-    const { claimed, done } = await ex.tick()
-    if (!claimed) break
-    await done
+  const drain = async () => {
+    for (let i = 0; i < 20; i++) {
+      const { claimed, done } = await ex.tick()
+      if (!claimed) break
+      await done
+    }
   }
+  await drain()
   const opp = (await pool.query('select * from wo_opportunity where id = $1', [opportunity.id])).rows[0]
   const { read } = await briefResearchOf(pool, opp)
   const brief = makeSiteBrief(domain, read, { opportunity: opp, madeAt: '2026-10-26T10:00:00.000Z' })
@@ -184,6 +186,9 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     calls,
     opp,
     domain,
+    drain,
+    placeId,
+    settings,
     brief,
     markdown: domain.renderBriefMarkdown(brief),
     profile: await readPlaceProfile(pool, { opportunityId: opp.id })
@@ -191,6 +196,12 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
 }
 
 const labels = (items) => (items ?? []).map((i) => i.label)
+
+/** The same answer with Sam named without a role: named in one review only, he is held until the owner shows him. */
+const ANSWER_SAM_NO_ROLE = {
+  ...ANSWER,
+  team: [ANSWER.team[0], { name: 'Sam', quote: 'padel coaching with Alex and Sam', ref: 'review:1' }]
+}
 
 test(
   'Harbour Sport Club: services, who it is for, team and story read from its own words',
@@ -217,11 +228,14 @@ test(
     assert.deepEqual(
       reading.team.map((p) => [p.label, p.role, onSiteOf(r.brief, p)]),
       [
-        ['Alex', 'coach', false],
-        ['Sam', 'coach', false]
+        ['Alex', 'coach', true],
+        ['Sam', 'coach', true]
       ],
-      'people named only in reviews stay off the site until shown'
+      'people named only in reviews, each with a role, are shown on the site'
     )
+    // Shown from reviews alone: the brief names each one for the owner to check.
+    assert.match(r.markdown, /"Alex" \(coach\), shown from reviews, owner to check/)
+    assert.match(r.markdown, /"Sam" \(coach\), shown from reviews, owner to check/)
     assert.equal(reading.story[0].quote, 'European Coaching in Dubai')
     assert.equal(
       reading.about,
@@ -360,13 +374,30 @@ test(
   'Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both',
   opts,
   async () => {
-    const r = await research()
+    const r = await research({ answer: ANSWER_SAM_NO_ROLE })
     const swim = r.brief.reading.services.find((s) => s.label === 'Swimming lessons')
-    const alex = r.brief.reading.team.find((p) => p.label === 'Alex')
+    const sam = r.brief.reading.team.find((p) => p.label === 'Sam')
+    // Before any pick: Alex (a role) is shown from reviews, Sam (no role, one review) is held.
+    assert.deepEqual(
+      r.brief.reading.team.map((p) => [p.label, onSiteOf(r.brief, p)]),
+      [
+        ['Alex', true],
+        ['Sam', false]
+      ]
+    )
+    // The Profile card says the same before any pick.
+    const before = (await placeViewOf(r.pool, r.opp)).profile.readingCard
+    assert.deepEqual(
+      before.team.map((p) => [p.label, p.onSite, p.fromReviews === true]),
+      [
+        ['Alex', true, true],
+        ['Sam', false, false]
+      ]
+    )
     assert.ok(await saveReadingPick(r.pool, r.accountId, r.opp.id, swim.id, 'remove'))
-    const row = await saveReadingPick(r.pool, r.accountId, r.opp.id, alex.id, 'show')
+    const row = await saveReadingPick(r.pool, r.accountId, r.opp.id, sam.id, 'show')
     assert.deepEqual(row.candidate.readingPicks.removed, [swim.id], 'the second pick keeps the first')
-    assert.deepEqual(row.candidate.readingPicks.shown, [alex.id])
+    assert.deepEqual(row.candidate.readingPicks.shown, [sam.id])
     assert.equal(
       await saveReadingPick(r.pool, '00000000-0000-4000-8000-000000000000', r.opp.id, swim.id, 'restore'),
       null
@@ -375,11 +406,12 @@ test(
     const view = await placeViewOf(r.pool, row)
     const card = view.profile.readingCard
     assert.equal(card.services.find((s) => s.id === swim.id).removed, true)
+    // The card agrees with the brief: Alex (a role) shown from reviews, Sam on the site because the owner showed him.
     assert.deepEqual(
-      card.team.map((p) => [p.label, p.reviewsOnly, p.onSite]),
+      card.team.map((p) => [p.label, p.reviewsOnly, p.onSite, p.fromReviews === true]),
       [
-        ['Alex', true, true],
-        ['Sam', true, false]
+        ['Alex', true, true, true],
+        ['Sam', true, true, false]
       ]
     )
     const { read } = await briefResearchOf(r.pool, row)
@@ -390,10 +422,10 @@ test(
       brief.reading.team.map((p) => [p.label, onSiteOf(brief, p)]),
       [
         ['Alex', true],
-        ['Sam', false]
+        ['Sam', true]
       ]
     )
-    assert.match(r.domain.renderBriefMarkdown(brief), /Alex/)
+    assert.match(r.domain.renderBriefMarkdown(brief), /Sam/)
   }
 )
 
@@ -429,5 +461,35 @@ test(
     assert.equal(r.calls.bodies[0].max_tokens, 4_000)
     assert.equal(r.calls.bodies[0].reasoning_effort, undefined)
     assert.equal(r.brief.reading.method, 'model')
+  }
+)
+
+test(
+  'a Research again from scratch reads the business again although its texts and version are unchanged',
+  opts,
+  async () => {
+    const r = await research()
+    assert.equal(r.calls.model, 1)
+    const again = (onlyParts) =>
+      queueResearchAgain(r.pool, r.placeId, {
+        now: Date.now(),
+        keys: { google: 'test-google' },
+        settings: r.settings,
+        domain: r.domain,
+        starter: { kind: 'operator' },
+        onlyParts,
+        fromScratch: true
+      })
+    const whole = await again(null)
+    assert.equal(whole.plan.fromScratch.whole, true)
+    assert.ok(whole.plan.run.length > 0)
+    assert.ok(whole.plan.run.every((p) => p.reason === 'again'))
+    await r.drain()
+    assert.equal(r.calls.model, 2, 'the held reading is not reused')
+    // A run limited to some parts keeps the reading it holds when nothing it reads changed.
+    const limited = await again(['google-places'])
+    assert.equal(limited.plan.fromScratch.whole, false)
+    await r.drain()
+    assert.equal(r.calls.model, 2)
   }
 )

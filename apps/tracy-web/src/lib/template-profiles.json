@@ -375,6 +375,30 @@
           "height": 80
         },
         "note": "Same logos and content as 1.0.0; only the theme's home stylesheet changed: the Subscribe band's photograph is declared as a picture to readers of computed styles (an empty gradient layer), nothing is painted differently."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.2: the header logo, favicon and name fallback are those of 1.0.1 (the patch touches the footer words, the theme text options, the Contact pattern, the motion script and the font licence files, not the brand files)."
+      },
+      "1.0.3": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.3: the header logo, favicon and name fallback are those of 1.0.2; the patch only makes every page print exactly one h1 (repeated mastheads become paragraphs with the same class, pages without a title print theirs, the 404 title is the h1), so the logo slots, frames and the footer are unchanged."
       }
     },
     "quickstart/ja-essence/j6": {

@@ -13,7 +13,7 @@
  * and socials in `candidate`, the listings in `candidate.listings` with what their pages said in a `wo_source` row
  * `listing` (`saveListingSource`), merged into the profile at the lowest priority (`executor.js mergeProfile`).
  */
-import { dropTracking, judgeLinks } from '../domain/link-kinds.mjs'
+import { dropTracking, judgeLinks, withoutTracking } from '../domain/link-kinds.mjs'
 import { isPlaceId } from './place-suggest.js'
 import { LISTING_SOURCE, SOCIAL_SOURCES, normalizeUrl, sourceOfUrl } from './sources.js'
 
@@ -192,6 +192,16 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
     }
 
     const listed = listings.map((l) => ({ url: l.url, source: l.source }))
+    // Which research source each used link feeds, as the person pasted it less share tracking (`refOf`): Details lists
+    // these first (`pastedLinksOf`).
+    const pastedLinks = [
+      ...(google && googleLink && report[googleLink.i].used
+        ? [{ source: 'google-places', url: refOf(googleLink) }]
+        : []),
+      ...(websiteUrl ? [{ source: 'website', url: websiteUrl }] : []),
+      ...Object.entries(socials).map(([source, url]) => ({ source, url })),
+      ...listed.map((l) => ({ source: LISTING_SOURCE, url: l.url }))
+    ]
     const listingName = listings.find((l) => l.facts?.name)?.facts.name ?? null
     let fields
     if (google) {
@@ -207,7 +217,8 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
           ...(typedName ? { typedName } : {}),
           website: websiteUrl ?? base.candidate.website ?? null,
           socials: { ...base.candidate.socials, ...socials },
-          ...(listed.length ? { listings: mergeListings(base.candidate.listings, listed) } : {})
+          ...(listed.length ? { listings: mergeListings(base.candidate.listings, listed) } : {}),
+          pastedLinks
         }
       }
     } else {
@@ -231,7 +242,8 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
           ...(typedName ? { typedName } : {}),
           ...(websiteUrl ? { website: websiteUrl } : {}),
           ...(Object.keys(socials).length ? { socials } : {}),
-          ...(listed.length ? { listings: listed } : {})
+          ...(listed.length ? { listings: listed } : {}),
+          pastedLinks
         }
       }
     }
@@ -286,6 +298,37 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
     }
   }
 }
+
+/**
+ * The links the person pasted for an opportunity, by the research source each one feeds: `Map<source, url>`, the
+ * first link per source. A candidate saved before `pastedLinks` existed: its listings (only pasted links make them)
+ * and, when no Google place was its identity (`provider` `url`), its website and social pages.
+ */
+export function pastedLinksOf(opportunity) {
+  const candidate = opportunity?.candidate ?? {}
+  const out = new Map()
+  const add = (source, url) => {
+    if (typeof source === 'string' && typeof url === 'string' && url && !out.has(source)) out.set(source, url)
+  }
+  if (Array.isArray(candidate.pastedLinks)) {
+    for (const l of candidate.pastedLinks) add(l?.source, l?.url)
+    return out
+  }
+  for (const l of Array.isArray(candidate.listings) ? candidate.listings : []) add(LISTING_SOURCE, l?.url)
+  if (opportunity?.provider === 'url') {
+    add('website', candidate.website)
+    for (const [source, url] of Object.entries(candidate.socials ?? {})) add(source, url)
+  }
+  return out
+}
+
+/**
+ * `{pastedLink}` for a Details source row a pasted link feeds, without share tracking (an old record kept it); nothing
+ * for the rows research found by itself.
+ * @param {unknown} url
+ */
+export const pastedLinkField = (url) =>
+  typeof url === 'string' && url ? { pastedLink: withoutTracking(url) } : {}
 
 /** A candidate's listings plus new ones, one entry per page. */
 export function mergeListings(held, added) {

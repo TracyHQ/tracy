@@ -104,7 +104,12 @@ export async function joinPlace(
       )
     ).rows
     if (active.length) return { job: active[0], joined: true }
-    const frozen = JSON.stringify({ run: againPlan.run, ceilingCents: againPlan.ceilingCents })
+    const frozen = JSON.stringify({
+      run: againPlan.run,
+      ceilingCents: againPlan.ceilingCents,
+      // An account's press from scratch: the executor collects and reads every planned part again.
+      ...(againPlan.fromScratch ? { fromScratch: againPlan.fromScratch } : {})
+    })
     const stopped = (
       await client.query(
         `update wo_place_job set state = 'queued', again_plan = $2::jsonb, force = false, only_source = null,

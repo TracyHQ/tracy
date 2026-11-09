@@ -30,7 +30,12 @@ test('a bio line "Tennis & Padel" keeps Tennis when the model kept only a padel 
     { name: 'Padel sessions', quote: 'Join our padel sessions in Dubai!', ref: POST_PADEL },
     { name: 'Swimming Lessons', quote: 'Swimming Lessons', ref: 'bio' }
   ])
-  assert.deepEqual(labels(reading), ['Padel sessions', 'Swimming Lessons', 'Tennis'])
+  assert.deepEqual(labels(reading), [
+    'Padel sessions',
+    'Swimming Lessons',
+    'Tennis',
+    'Customized fitness lessons'
+  ])
   const tennis = reading.services.find((s) => s.label === 'Tennis')
   assert.equal(tennis.source.ref, 'bio')
   assert.equal(tennis.quote, 'Tennis & Padel')
@@ -47,15 +52,15 @@ test('a bio line "Tennis & Padel" keeps Tennis when the model kept only a padel 
 
 test('both parts are kept when the model listed neither, and a part already covered is not repeated', () => {
   const none = read([{ name: 'Swimming Lessons', quote: 'Swimming Lessons', ref: 'bio' }])
-  assert.deepEqual(labels(none), ['Swimming Lessons', 'Tennis', 'Padel'])
+  assert.deepEqual(labels(none), ['Swimming Lessons', 'Tennis', 'Padel', 'Customized fitness lessons'])
   const split = read([
     { name: 'Tennis', quote: 'Tennis & Padel', ref: 'bio' },
     { name: 'Padel', quote: 'Tennis & Padel', ref: 'bio' }
   ])
-  assert.deepEqual(labels(split), ['Tennis', 'Padel'])
+  assert.deepEqual(labels(split), ['Tennis', 'Padel', 'Customized fitness lessons'])
   // The model kept the joined label whole: nothing is added.
   const whole = read([{ name: 'Tennis & Padel', quote: 'Tennis & Padel', ref: 'bio' }])
-  assert.deepEqual(labels(whole), ['Tennis & Padel'])
+  assert.deepEqual(labels(whole), ['Tennis & Padel', 'Customized fitness lessons'])
 })
 
 test('a part no text names is never invented, and a line that joins nothing adds nothing', () => {
@@ -113,5 +118,5 @@ test('a reading held from before gets the lost part back without a second model 
   const held = { ...first, services: first.services.filter((s) => s.label !== 'Tennis') }
   const again = await readBusiness({ ...input, held })
   assert.equal(calls, 1, 'the held reading is kept, no second call')
-  assert.deepEqual(labels(again), labels(first))
+  assert.deepEqual(labels(again).sort(), labels(first).sort())
 })
