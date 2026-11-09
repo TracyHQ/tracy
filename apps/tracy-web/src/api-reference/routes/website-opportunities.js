@@ -728,7 +728,19 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds}\`; ${MENU_ANSWER}`
+    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds, research, briefJob}\`; ${MENU_ANSWER} \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` is empty and \`sources\` holds only its own rows, even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`.`
+  },
+  // website-opportunities/src/route.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/profile',
+    summary: "Save the seller's Profile edits",
+    description: `Body \`{edits: {phone?, address?, email?, bio?}}\`, each a string (at most 40, 300, 200 and 1200 characters) or null to drop the edit. The edits are stored on this opportunity and laid over the shared research: the Details door and every new Content brief read the edited value, with provenance \`seller\`. The shared place is never changed. 400 \`INVALID_EDITS\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{opportunity}`'
   },
   // website-opportunities/src/route.js
   {
@@ -1023,13 +1035,38 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
   {
     method: 'POST',
     path: '/api/website-opportunities/:id/revisions',
-    summary: 'Refresh the site brief',
-    description: `The site brief of the opportunity's current research: an immutable snapshot of the research (profile, sources, media, posts, the account's overlay) with its Markdown and asset manifest. A brief names no CMS or template — each build chooses both and keeps them — so one brief feeds demos on any CMS and template. The same research answers the brief already made for it (200); changed research writes the next one (201). A demo build makes its brief itself, so a client never has to. 422 \`BRIEF_INVALID\`. ${OWN} ${OFF}`,
+    summary: 'Start the Content brief as a background job',
+    description: `Starts the site brief of the opportunity's current research as a job and answers 202 at once; poll \`GET …/:id/brief-jobs/:jobId\`. The brief is an immutable snapshot of the research (profile with the seller's Profile edits, sources, media, posts, the account's overlay) with its Markdown and asset manifest. A brief names no CMS or template, so one brief feeds demos on any CMS and template. The same research answers the brief already made for it (the job ends \`done\` with \`reused: true\`); changed research writes the next one. Body \`{requestId?}\` (8 to 100 of letters, digits, \`.\`, \`_\`, \`:\`, \`-\`): the same id answers the same job. 409 \`RESEARCH_NOT_DONE\` until this opportunity's own Research has completed; 409 \`REQUEST_ID_REUSED\` for an id used on another opportunity. One job runs per opportunity: a second press answers the running one. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: '201 `{revision}` (new), 200 `{revision}` (the research has not changed)'
+    answers:
+      '202 `{job: {id, opportunityId, state: running|done|failed, step: reading|labelling|writing|null, revisionId, reused, error: {code, message?} | null, startedAt, updatedAt}}`'
+  },
+  // src/opportunities-build/route.js
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/brief-jobs/:jobId',
+    summary: 'Read a Content brief job',
+    description: `The job and, once \`done\`, the revision it made or reused. A job whose worker stopped answering for 5 minutes reads \`done\` when a brief was written after it started, else \`failed\` with \`BRIEF_INTERRUPTED\`. Other failure codes: \`BRIEF_INVALID\`, \`NOT_FOUND\`, \`BRIEF_FAILED\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id', jobId: 'Brief job id' } },
+    answers: '`{job, revision?}`'
+  },
+  // src/opportunities-build/route.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/revisions/:revId/edits',
+    summary: "Save the seller's edits of a Content brief as a new revision",
+    description: `Body \`{edits: [{path, value}]}\`, at most 60 edits of at most 2000 characters. A path names an existing line of the brief: \`business.name|phone|address|website\`, \`reading.about\`, \`reading.services|story|audience|facts.N.label\`, \`keyMessages.N.label\`. The edited brief is validated, written as the next revision with \`brief.edited: {by: "seller", at, from, fromHash, paths}\`, and counts as current for the research it came from; Build uses the latest revision. 400 \`INVALID_EDITS\` or \`UNKNOWN_PATH\`; 422 \`BRIEF_INVALID\`. ${OWN} ${OFF}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id', revId: 'Revision id the edits start from' } },
+    answers: '201 `{revision}`'
   },
   // website-opportunities/src/route.js
   {

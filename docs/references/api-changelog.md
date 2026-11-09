@@ -18,6 +18,10 @@ Changed `POST /api/website-opportunities/:id/research` with `again: true` and `G
 
 Added optional field `pastedLink` on rows of `sources` in `GET /api/website-opportunities/:id` (internal): on a source that a link the person pasted feeds (Add a business by its links), the link as they pasted it; rows research found by itself carry none.
 
+## 2026-11-09: Research per opportunity and the Content brief as a job
+
+Changed (internal): `POST /api/website-opportunities/:id/revisions` answers 202 `{job}` and makes the brief in the background; 409 `RESEARCH_NOT_DONE` until the opportunity's own Research completed. Added `GET /api/website-opportunities/:id/brief-jobs/:jobId`, `POST /api/website-opportunities/:id/revisions/:revId/edits` (seller edits as a new revision) and `PUT /api/website-opportunities/:id/profile` (seller Profile edits). `GET /api/website-opportunities/:id` adds `research`, `briefJob` and `collectedAt` on source rows, and leaves `profile` null until the opportunity's own Research completed. Public API v1 is unchanged.
+
 ## 2026-11-09: Delete a saved opportunity
 
 Added `DELETE /api/website-opportunities/:id` (internal): cancels the row's live research job, tears its live demo sites down through the demo retention path, then deletes the row; 409 `DEMO_BUILD_RUNNING` (a demo still being built) and 409 `DEMO_TEARDOWN_FAILED` keep it. `POST /api/website-opportunities/jobs/bulk` takes `action: "delete"` with `opportunityIds` (not `jobIds` or `filter`) and answers `deleted` and `sitesRemoved` beside `done`, `skipped` and `failed`.

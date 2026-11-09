@@ -50826,6 +50826,40 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/brief-jobs/{jobId}": {
+        "get": {
+          "operationId": "get_api_website_opportunities_id_brief_jobs_jobId_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "jobId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/demo/build": {
         "post": {
           "operationId": "post_api_website_opportunities_id_demo_build",
@@ -51232,6 +51266,32 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/profile": {
+        "put": {
+          "operationId": "put_api_website_opportunities_id_profile",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/rating": {
         "put": {
           "operationId": "put_api_website_opportunities_id_rating",
@@ -51425,6 +51485,40 @@
             {
               "in": "path",
               "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
+      "/api/website-opportunities/{id}/revisions/{revId}/edits": {
+        "post": {
+          "operationId": "post_api_website_opportunities_id_revisions_revId_edits",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "revId",
               "required": true,
               "schema": {
                 "type": "string"
