@@ -79,12 +79,24 @@ async function opportunity(call) {
   return res.body.opportunity
 }
 
+/** This card's own research finished (#524): only then does the card show the place profile. */
+async function researched(opp) {
+  await db.pool.query(
+    `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
+     select account_id, id, 'research', 'seed-research-1', 'completed' from wo_opportunity where id = $1`,
+    [opp.id]
+  )
+}
+
 test(
   'the owner reads a valid place profile with a coverage row per target and no brief or demo',
   opts,
   async () => {
     const { call } = await world()
     const opp = await opportunity(call)
+    const before = await call(A, 'GET', `${BASE}/${opp.id}/place-profile`)
+    assert.deepEqual(before.body, { profile: null, decisions: [] }, 'nothing before its own research')
+    await researched(opp)
     const res = await call(A, 'GET', `${BASE}/${opp.id}/place-profile`)
     assert.equal(res.status, 200)
     assert.deepEqual(Object.keys(res.body), ['profile', 'decisions'])

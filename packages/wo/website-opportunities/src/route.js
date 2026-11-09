@@ -1,3 +1,5 @@
+import { researched, researchStateOf, researchStateShape } from './research-state.js'
+import { readProfileEdits, saveProfileEdits, withProfileEdits } from './profile-edits.js'
 import { mediaJunk } from './media-junk.js'
 import { reviewSourcesRequired } from './tripadvisor-research.js'
 import { findResearchOf, withResearch } from './find-research.js'
@@ -1336,6 +1338,8 @@ export function websiteOpportunitiesRoutes(deps) {
     const id = c.req.param('id')
     const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
     if (!opp) return notFound(c, 'opportunity')
+    // Nothing of the shared place before this card's own research finished (#524).
+    if (!researched(await researchStateOf(pool, opp.id))) return json(c, { profile: null, decisions: [] })
     // 🔒 One decision per fact (#1791): the profile the latest brief revision froze, judged at the time and with the
     // dates its assessment used and the owner's choices of today, listing exactly the facts that brief states. Before
     // any revision (or with a host that keeps none), the place profile of the current research.
@@ -1383,32 +1387,41 @@ export function websiteOpportunitiesRoutes(deps) {
     if (!opp) return notFound(c, 'opportunity')
     // A researched place: its current snapshot with this account's overlay (`place-view.js`); else the
     // per-account rows, as before shared research.
-    const view = opp.place_id ? await placeViewOf(pool, opp) : null
+    // 🔒 What this card shows of the research is decided by ITS research (#524), never by the shared place: a place saved
+    // again, or saved by another account, reads empty until its own Research finishes.
+    const research = await researchStateOf(pool, opp.id)
+    const shown = researched(research)
+    const view = opp.place_id && shown ? await placeViewOf(pool, opp) : null
     // The research card lists every source the place's run tried (`view.shown`), Google and Tripadvisor too.
     const [[sources, profile, media, jobs], demo] = await Promise.all([
       Promise.all([
         view ? view.shown : sourcesOf(pool, opp.id),
         view
           ? { profile: view.profile, brand: view.brand }
-          : profileOf(pool, opp.id).then(
-              (held) =>
-                held && {
-                  ...held,
-                  profile: cleanProfileLinks(
-                    withPhoneDecision(
-                      withRatingDecision(
-                        withHoursDecision(
-                          withNameDecision(held.profile, { opportunity: opp, brand: held.brand }),
+          : !shown
+            ? null
+            : profileOf(pool, opp.id).then(
+                (held) =>
+                  held && {
+                    ...held,
+                    profile: withProfileEdits(
+                      cleanProfileLinks(
+                        withPhoneDecision(
+                          withRatingDecision(
+                            withHoursDecision(
+                              withNameDecision(held.profile, { opportunity: opp, brand: held.brand }),
+                              { opportunity: opp }
+                            ),
+                            { opportunity: opp }
+                          ),
                           { opportunity: opp }
-                        ),
-                        { opportunity: opp }
+                        )
                       ),
-                      { opportunity: opp }
+                      opp
                     )
-                  )
-                }
-            ),
-        view ? view.media : mediaOf(pool, opp.id),
+                  }
+              ),
+        view ? view.media : shown ? mediaOf(pool, opp.id) : [],
         jobsOfOpportunity(pool, opp.id)
       ]),
       // No builder: the demo fields are left out of the answer.
@@ -1417,6 +1430,7 @@ export function websiteOpportunitiesRoutes(deps) {
     const pasted = pastedLinksOf(opp)
     return json(c, {
       opportunity: opportunityShape(opp),
+      research,
       demo: demo.demo,
       place: view
         ? { id: opp.place_id, snapshotId: view.snapshot.id, publishedAt: view.snapshot.published_at }
@@ -1524,6 +1538,27 @@ export function websiteOpportunitiesRoutes(deps) {
         `Send "name" as the business's name, 1 to ${NAME_PICK_MAX} characters.`
       )
     const row = await saveNamePick(pool, who.accountId, opp.id, name)
+    if (!row) return notFound(c, 'opportunity')
+    return json(c, { opportunity: opportunityShape(row) })
+  })
+
+  // The seller's own edits of the Profile's text facts (#524): kept on this card, laid over the shared research on every
+  // read and in every later brief. A null value removes that edit.
+  app.put(`${BASE}/:id/profile`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+    if (!opp) return notFound(c, 'opportunity')
+    const read = readProfileEdits(await body(c))
+    if ('error' in read)
+      return refuse(
+        c,
+        400,
+        'INVALID_EDITS',
+        'Send "edits" with phone, address, email or bio, each a non-empty text within its length, or null to undo it.'
+      )
+    const row = await saveProfileEdits(pool, who.accountId, opp.id, read.edits)
     if (!row) return notFound(c, 'opportunity')
     return json(c, { opportunity: opportunityShape(row) })
   })
@@ -1995,6 +2030,8 @@ function listedShape(r, d) {
   return {
     ...opportunityShape(r),
     job: r.job ? jobShape(r.job) : null,
+    // This card's own research (`research-state.js`), never the shared place's.
+    research: researchStateShape(r),
     latestRevision: d?.latestRevision,
     sites: d?.sites,
     stage: r.stage,

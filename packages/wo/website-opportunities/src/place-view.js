@@ -8,6 +8,7 @@
  * (`wo_source`, `wo_profile`, `wo_media`), which is also how data from before shared research reads.
  */
 import { mergeProfile } from './executor.js'
+import { withProfileEdits } from './profile-edits.js'
 import { withNameDecision } from './business-name.js'
 import { withHoursDecision } from './business-hours.js'
 import { withRatingDecision } from './business-rating.js'
@@ -177,10 +178,14 @@ export async function placeViewOf(db, opportunity) {
     // The hours and Google's rating on the site, with this account's choices (`business-hours.js`, `business-rating.js`),
     // and every phone the business lists, the main one first (`business-phones.js`). Links read without share tracking
     // whenever they were saved (`social-links.mjs`, #1780 item 10).
-    profile: cleanProfileLinks(
-      withPhoneDecision(withRatingDecision(withHoursDecision(profile, { opportunity }), { opportunity }), {
-        opportunity
-      })
+    // The seller's own edits on top (`profile-edits.js`), so Details and the brief read the same Profile.
+    profile: withProfileEdits(
+      cleanProfileLinks(
+        withPhoneDecision(withRatingDecision(withHoursDecision(profile, { opportunity }), { opportunity }), {
+          opportunity
+        })
+      ),
+      opportunity
     ),
     brand: held.brand ?? null,
     media: [...placeMedia, ...ownMedia],

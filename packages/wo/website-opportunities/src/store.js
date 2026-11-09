@@ -7,6 +7,7 @@
  * bumps the token, so the old writer's next write throws `StaleLeaseError` instead of landing.
  */
 
+import { RESEARCH_STATE_COLUMNS } from './research-state.js'
 import { resolvePlace } from './places.js'
 import { LISTING_SOURCE } from './sources.js'
 import { nextReadingPicks } from '../domain/business-reading.mjs'
@@ -450,7 +451,7 @@ export async function listOpportunities(pool, accountId, opts = {}) {
   }
   const { rows } = await pool.query(
     `with ${staged}
-     select o.*, s.stage, s.attention, ${CURSOR_KEY_SQL} as cursor_key,
+     select o.*, s.stage, s.attention, ${CURSOR_KEY_SQL} as cursor_key, ${RESEARCH_STATE_COLUMNS},
        (select to_jsonb(j) || ${PLACE_PROGRESS_JSON} from wo_job j where j.id = s.latest_job_id) as job
      from staged s join wo_opportunity o on o.id = s.id
      where ${where}

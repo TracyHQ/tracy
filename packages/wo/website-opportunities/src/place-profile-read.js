@@ -1,3 +1,4 @@
+import { withProfileEdits } from './profile-edits.js'
 import { placeProfileFromResearch } from '../domain/place-profile-from-research.mjs'
 import { placeViewOf } from './place-view.js'
 import { socialStatsOfRead } from './place-social-stats.js'
@@ -36,7 +37,7 @@ export async function readPlaceProfile(db, { opportunityId, placeId } = {}) {
       const held = (
         await db.query('select profile, brand from wo_profile where opportunity_id = $1', [opportunityId])
       ).rows[0]
-      profile = held?.profile ?? {}
+      profile = withProfileEdits(held?.profile ?? {}, opportunity)
       brand = held?.brand ?? {}
       sources = (
         await db.query('select * from wo_source where opportunity_id = $1 order by source, ref', [

@@ -346,6 +346,12 @@ test(
       opp.id,
       JSON.stringify(mergeProfile(saved, rows))
     ])
+    // This card's own research finished (#524): only then does Details show the profile.
+    await w.pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
+       select account_id, id, 'research', 'seed-research-' || id, 'completed' from wo_opportunity where id = $1`,
+      [opp.id]
+    )
     const typed = await w.call('GET', `${BASE}/${opp.id}`)
     assert.equal(typed.status, 200, JSON.stringify(typed.body))
     assert.equal(typed.body.profile.name, 'Harbour Sport Club')
@@ -404,6 +410,12 @@ test(
         googlePlace: { placeId: 'ChIJcoachBarsha', openingHours: allDay }
       })
     ])
+    // This card's own research finished (#524): only then does Details show the profile.
+    await w.pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
+       select account_id, id, 'research', 'seed-research-' || id, 'completed' from wo_opportunity where id = $1`,
+      [id]
+    )
     const briefNow = async () => {
       const row = (await w.pool.query('select * from wo_opportunity where id = $1', [id])).rows[0]
       const { read } = await briefResearchOf(w.pool, row)

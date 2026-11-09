@@ -2,6 +2,7 @@
  * The research a site brief reads: a place's shared snapshot with the account's overlay, or the per-account rows of
  * an opportunity not researched as a place yet. Shared by every builder, so a brief reads the same whoever builds it.
  */
+import { withProfileEdits } from './profile-edits.js'
 import { revokedHubCopy } from './hub/local-cache.js'
 import { mediaJunk } from './media-junk.js'
 import { withoutNearCopies } from '../domain/pictures/brief-media.mjs'
@@ -158,17 +159,21 @@ export async function fromOpportunity(client, opp) {
   ).rows.map((r) => ({ source: r.source, ...r.post }))
   return {
     // The name on the site with the person's pick, made after research or not (`business-name.js`); its links clean.
-    profile: cleanProfileLinks(
-      withPhoneDecision(
-        withRatingDecision(
-          withHoursDecision(
-            withNameDecision(profileRow?.profile ?? {}, { opportunity: opp, brand: profileRow?.brand }),
+    // The seller's own edits on top (`profile-edits.js`), as on the Details page.
+    profile: withProfileEdits(
+      cleanProfileLinks(
+        withPhoneDecision(
+          withRatingDecision(
+            withHoursDecision(
+              withNameDecision(profileRow?.profile ?? {}, { opportunity: opp, brand: profileRow?.brand }),
+              { opportunity: opp }
+            ),
             { opportunity: opp }
           ),
           { opportunity: opp }
-        ),
-        { opportunity: opp }
-      )
+        )
+      ),
+      opp
     ),
     brand: profileRow?.brand ?? null,
     sources,
