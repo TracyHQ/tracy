@@ -21840,6 +21840,54 @@
       "reason": "Exact line of the JA Diner 1.0.5 content coverage file: the template's own English demo text sampled from its database, which contains a proper name with an accent or the word cafe with an accent. It is measured data, so the file is not edited."
     },
     {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "aca0508a924ea29320de9306f185a210af1dc498e3284cede07b479aeba509d8",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "044d53c52ac79250fd879ed5c3208e2780236f33af049269777a6bcd960460c3",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "5fa0726b4b6599f054f607028ebc0999a509c49cc664b7f20783ba90f0283c6d",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "1ed38428df66dc2f55ba7286ef142ce5bb7bfc759c8738063f89641b9d466bf8",
+      "count": 24,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "c0b93d5ea5c726ecee641b1d86d85af3332da659424eb81bb117b292c35ddf75",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "85b62f2d7b88cecc506eec856bbc6e9d49cd3a7169f169f205606cbacdb1c557",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "da214005dd4f5836d39b0eae6869dec4953d1a163294889ebe19af39a9ae81b1",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/presentation-lock.json",
+      "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/template-kit.json",
       "sha256": "35b17504116a2534f80ab9eca594525ccb7341a9680344d1bd3d31b7b922e633",
       "count": 1,
