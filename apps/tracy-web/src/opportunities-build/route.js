@@ -49,7 +49,7 @@ import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
-import { createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
+import { createRevision, currentResearchState, resolveRevisionCms } from './revisions.js'
 import { randomUUID } from 'node:crypto'
 import { briefJobShape, createBriefJobs } from './brief-jobs.js'
 import { researched, researchStateOf } from 'website-opportunities/src/research-state.js'
@@ -280,16 +280,25 @@ export function createWebsiteBuilder(deps) {
   async function briefStatus(opp, revisions) {
     if (!revisions.length) return null
     const domain = await loadDomain().catch(() => null)
-    const key = domain
-      ? await currentResearchKey(pool, opp, domain).catch((error) => {
+    const live = domain
+      ? await currentResearchState(pool, opp, domain).catch((error) => {
           if (error?.code === 'DEMO_REQUEST_MISSING') return undefined
           throw error
         })
       : null
+    const key = live?.key ?? null
     const same = key ? revisions.find((r) => r.research_hash === key) : null
     const shown = same ?? revisions[0]
-    const known = Boolean(domain) && key !== undefined
-    return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? Boolean(same) : null }
+    const known = Boolean(domain) && live !== undefined
+    // A brief of a reading made under older rules is not current either (#524): it offers Refresh.
+    const readingOld = live?.readingOld === true
+    return {
+      id: shown.id,
+      n: shown.n,
+      createdAt: shown.created_at,
+      current: known ? Boolean(same) && !readingOld : null,
+      ...(readingOld ? { readingOld: true } : {})
+    }
   }
 
   /** A demo action with its chain progress (`chain-progress.js`), when its build runs the step chain. */

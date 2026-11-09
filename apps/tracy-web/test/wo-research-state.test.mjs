@@ -381,3 +381,35 @@ test(
     assert.equal(healed.body.revision.id, done.revision.id)
   }
 )
+
+test('a brief of a reading older than the code is not current and offers Refresh', opts, async () => {
+  const { pool, call, drain, accountOf, saveGoogle } = await world()
+  const a = await accountOf(A)
+  const opp = await saveGoogle(a)
+  await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'reading-research-0001' })
+  await drain()
+  // The reading the published snapshot holds, rewritten past the snapshot guard (a published snapshot never changes).
+  const readAs = async (version) => {
+    await pool.query('alter table wo_place_snapshot_profile disable trigger user')
+    await pool.query(
+      `update wo_place_snapshot_profile set profile = jsonb_set(profile, '{businessReading}', $2::jsonb)
+       where snapshot_id = (select current_snapshot_id from wo_place where id = $1)`,
+      [opp.place_id, JSON.stringify({ version, services: [], audience: [], team: [], story: [] })]
+    )
+    await pool.query('alter table wo_place_snapshot_profile enable trigger user')
+  }
+  await readAs('business-reading-4-5e46f68738ff')
+  const old = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'reading-brief-0001' })
+  assert.equal((await settled(call, A, opp.id, old.body.job.id)).job.state, 'done')
+  const stale = await call(A, 'GET', `${BASE}/${opp.id}`)
+  assert.equal(stale.body.brief.current, false, 'a brief of an old reading is never current')
+  assert.equal(stale.body.brief.readingOld, true)
+
+  const { BUSINESS_READING_VERSION } = await websiteOpportunitiesDomain()
+  await readAs(`${BUSINESS_READING_VERSION}-6ca821c381fd`)
+  const fresh = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'reading-brief-0002' })
+  assert.equal((await settled(call, A, opp.id, fresh.body.job.id)).job.state, 'done')
+  const current = await call(A, 'GET', `${BASE}/${opp.id}`)
+  assert.equal(current.body.brief.current, true)
+  assert.equal(current.body.brief.readingOld, undefined)
+})
