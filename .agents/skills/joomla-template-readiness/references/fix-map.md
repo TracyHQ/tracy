@@ -46,3 +46,6 @@ step, fix and layout check. Find the code here before trying a fix of your own.
 | `coverage-stale` | F12 |
 | `kit-logo-unsettable`, `kit-brand-unreadable` | F13 |
 | `language-policy` job red on a policy edit in the same PR | F14 |
+| demo update `download failed: ... returned error: 504` on a `releases/download` URL | F15 |
+| `!! contract profile <id>: not on disk`; `!! contract-fetch:` | F16 |
+| `language-policy` finding `text blob exceeds 16777216 bytes` on a `template-kit.json` | F17 |
