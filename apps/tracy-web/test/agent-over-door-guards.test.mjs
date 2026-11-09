@@ -140,7 +140,7 @@ test('a conversation past its budget stops before the next call with AGENT_BUDGE
   }).catch((e) => e)
   assert.equal(error.code, 'AGENT_BUDGET')
   assert.equal(error.turn, 2)
-  assert.match(error.reason, /\$1\.2000, past its budget of \$1\.00/)
+  assert.match(error.reason, /\$1\.2000, at or past its budget of \$1\.00/)
   assert.equal(model.requests.length, 2, 'the third call went out')
   assert.deepEqual(saved, ['dispatched', 'answered', 'dispatched', 'answered'])
   // A resume over the saved turns stops the same way, before any call.
@@ -159,6 +159,24 @@ test('a conversation past its budget stops before the next call with AGENT_BUDGE
     runAgent({ door: DOOR, system: SYSTEM, firstUser: FIRST, budgetUsd: 0 }),
     (e) => e.code === 'AGENT_SETTINGS_INVALID'
   )
+})
+
+test('a conversation exactly at its budget dispatches no additional model call', async () => {
+  const model = scriptedModel([
+    toolCallReply({ calls: [['read_part', { id: 'p1' }]], usage: usageOf({ cost: 1 }) }),
+    finalReply({ content: 'must not be requested', usage: usageOf({ cost: 0.01 }) })
+  ])
+  const error = await runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools: [readTool()],
+    fetchImpl: model.fetchImpl,
+    budgetUsd: 1
+  }).catch((e) => e)
+  assert.equal(error.code, 'AGENT_BUDGET')
+  assert.equal(error.turn, 1)
+  assert.equal(model.requests.length, 1)
 })
 
 test('a budgeted conversation stops after a call whose cost is unknown, including on resume', async () => {

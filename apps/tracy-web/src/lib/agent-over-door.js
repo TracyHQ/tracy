@@ -26,7 +26,7 @@
 // table by the UTC time the call is dispatched; the turn's request keeps the table used and `priceRate`. A cancel
 // (signal) cuts a call in flight and records an uncertain failed receipt: the provider may have charged before Stop.
 //
-// Guards. budgetUsd: before each call, a conversation whose answered turns already cost more than this stops with
+// Guards. budgetUsd: before each call, a conversation whose answered turns already cost this much stops with
 // AGENT_BUDGET. A turn with unknown cost stops a budgeted conversation before another call; zero is not a price.
 // maxTurns bounds the number of calls. writeStep
 // ({ afterToolTurns, message }) ends the reading: once the conversation has `afterToolTurns` answers that called
@@ -181,10 +181,10 @@ export async function runAgent({
           turn: turns.length,
           reason: `${totals.turnsWithoutCost} answered model call(s) have no known cost; the $${o.budgetUsd.toFixed(2)} budget cannot be checked`
         })
-      if (totals.cost > o.budgetUsd)
+      if (totals.cost >= o.budgetUsd)
         throw new AgentError('AGENT_BUDGET', {
           turn: turns.length,
-          reason: `the conversation has cost $${totals.cost.toFixed(4)}, past its budget of $${o.budgetUsd.toFixed(2)}`
+          reason: `the conversation has cost $${totals.cost.toFixed(4)}, at or past its budget of $${o.budgetUsd.toFixed(2)}`
         })
     }
     const toolChoice =

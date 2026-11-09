@@ -9,7 +9,7 @@
 // the round the saved rounds say, from the saved turns. A call that was dispatched and never answered is marked
 // abandoned and its request is sent once more; if that resend is lost too, the run fails with AGENT_TURN_UNANSWERED.
 // Every claim counts as an attempt, so the retry limit is high. A cancel cuts a model call with an uncertain receipt,
-// or is honoured between two rounds. A run whose answered calls cost more than the harness's budgetUsd stops before its next call
+// or is honoured between two rounds. A run whose answered calls cost at least the harness's budgetUsd stops before its next call
 // with <CODE_PREFIX>_BUDGET.
 //
 // On DeepSeek's own API the provider balance is read before the first model call of the run and again when the run
