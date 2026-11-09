@@ -126,8 +126,10 @@ export function sourceNote(
 }
 
 /** The field in plain words: its string when it has one, else its code spelled out (`deliveryZones` → Delivery zones). */
-export function fieldLabel(field: string | null, t: Translate): string {
+export function fieldLabel(field: string | null, t: Translate, statistic: string | null = null): string {
   if (field === null) return t('brief.field.other')
+  // Google's rating and its review count are two facts of one field: the count is its own row.
+  if (field === 'googleRating' && statistic === 'reviewCount') return t('field.reviews')
   return (FIELD_KEYS as readonly string[]).includes(field) || field === 'googleRating'
     ? t(`field.${field}`)
     : spelledField(field)
@@ -143,7 +145,7 @@ export function businessBriefRows(
   return (factRowsView(profile, decisions) ?? []).map((row) => ({
     id: row.id,
     field: row.field,
-    label: fieldLabel(row.field, t),
+    label: fieldLabel(row.field, t, row.statistic),
     value: row.label,
     source: sourceNote(row.sources, row.confidence, t, locale),
     onSite: row.onSite,

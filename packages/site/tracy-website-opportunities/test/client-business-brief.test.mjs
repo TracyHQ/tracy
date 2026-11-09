@@ -87,6 +87,26 @@ test('every fact is a row with its label, its value and a plain note on where it
   )
 })
 
+test('Google rating and its review count are two rows with their own labels', () => {
+  const doc = {
+    ...profile,
+    business: {
+      ...profile.business,
+      rating: { id: 'f_rating', value: { label: 'rating', amount: 4.9 }, evidenceRefs: ['ev_g'] },
+      reviews: { id: 'f_reviews', value: { label: 'reviewCount', amount: 12 }, evidenceRefs: ['ev_g'] }
+    }
+  }
+  const all = [...decisions, decision('f_reviews', 'googleRating')]
+  const rows = businessBriefRows(doc, all, t, 'en').filter((r) => r.field === 'googleRating')
+  assert.deepEqual(
+    rows.map((r) => [r.label, r.value]),
+    [
+      ['Google rating', '4.9 stars'],
+      ['Reviews', '12 reviews']
+    ]
+  )
+})
+
 test('a fact off the site says why in plain words; one the person chose says so', () => {
   const rows = businessBriefRows(profile, decisions, t, 'en')
   const rating = rows.find((r) => r.id === 'f_rating')

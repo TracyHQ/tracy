@@ -14,6 +14,8 @@ export interface FactRowView {
   id: string
   /** The server's field code (`hours`, `serviceAreas`, `story`...): what kind of fact this is. */
   field: string | null
+  /** The statistic code of a counted value (`rating`, `reviewCount`), so two facts of one field can be told apart. */
+  statistic: string | null
   /** What the fact says, as the site would; empty when the profile holds no readable value for it. */
   label: string
   confidence: Confidence
@@ -216,6 +218,7 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
       {
         id,
         field,
+        statistic: text(rec(valueOf.get(id)).label),
         label: label ?? '',
         confidence,
         onSite: d.onSite,
