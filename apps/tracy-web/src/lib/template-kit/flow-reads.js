@@ -88,7 +88,6 @@ export function kitMapOf(map) {
  * @returns {KitMap | null}
  */
 export function kitMapOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
   const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return null
   const file = path.join(dir, 'content-map.json')

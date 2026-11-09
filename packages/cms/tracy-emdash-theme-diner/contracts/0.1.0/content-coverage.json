@@ -10,7 +10,7 @@
     "contentMapSha256": "baea0c0cd718a157ffcab3b202da541bfa40481161bd7fe6bb94c37508cecd67",
     "presentationLockSha256": null
   },
-  "measuredAt": "2026-11-09T08:53:54.374Z",
+  "measuredAt": "2026-11-09T11:00:58.753Z",
   "viewports": [
     "desktop",
     "phone"
@@ -47,8 +47,8 @@
       "capture": 0,
       "captureLocked": 0,
       "template": 2,
-      "core": 6,
-      "unknown": 0,
+      "core": 5,
+      "unknown": 1,
       "catalogue": 0,
       "ignored": 3
     },
@@ -78,7 +78,7 @@
     }
   },
   "coverage": {
-    "text": 99.7,
+    "text": 99.5,
     "images": 100,
     "links": 100
   },
@@ -92,6 +92,16 @@
       "pages": 2,
       "firstPage": "/our-blog",
       "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds",
+      "evidence": "div.dn-wrap > div.dn-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact-us",
+      "accepted": "Label of the Forms plugin's anti-spam field; interface wording, not demo content a customer rewrites."
     }
   ],
   "hygiene": [],

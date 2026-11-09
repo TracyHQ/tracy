@@ -6,9 +6,9 @@
 //   e = a shop's catalogue (VirtueMart products, categories, manufacturers, prices, product media): the
 //       shop owner's inventory, managed in the shop component, never a content contract slot (listed, never blocking)
 import { searchDb } from './db-index.mjs'
-import { videoId } from './match.mjs'
-import { compact, normText } from './normalize.mjs'
 import { searchSources } from './sources.mjs'
+import { normText, compact } from './normalize.mjs'
+import { videoId } from './match.mjs'
 
 const cut = (s) => String(s).slice(0, 200)
 const MONTHS =

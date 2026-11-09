@@ -99,7 +99,6 @@ export function rolesOfRead(read, dir) {
  * @returns {Roles}
  */
 export function rolesOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
   const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return rolesOfRead(slotRolesOfRelease(release, contracts), null)
   // Re-read only when a file changed: /ops builds every road on each list read.

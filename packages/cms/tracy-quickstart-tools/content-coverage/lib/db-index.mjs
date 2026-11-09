@@ -1,8 +1,7 @@
 // Searchable index of every string cell in the Joomla database dump, JSON params flattened.
-
-import { articlesAskingLayout } from './article-layout.mjs'
-import { compact, letterCount, normText } from './normalize.mjs'
 import { readDump } from './sql-dump.mjs'
+import { normText, letterCount, compact } from './normalize.mjs'
+import { articlesAskingLayout } from './article-layout.mjs'
 
 // Tables that hold copies, logs or installer metadata: a hit there says nothing about where a page's text comes from.
 const NOISE =

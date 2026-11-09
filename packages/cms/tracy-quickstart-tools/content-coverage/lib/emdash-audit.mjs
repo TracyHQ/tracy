@@ -42,8 +42,13 @@ export async function mediaIndexOf({ siteUrl, token, map }) {
     !Array.isArray(v) &&
     typeof v.id === 'string' &&
     (v.meta?.storageKey || v.filename)
-  const keysOf = (v) =>
-    [v.id, v.meta?.storageKey, String(v.meta?.storageKey ?? '').split('.')[0]].filter(Boolean)
+  // The names the media door serves a file under: its id, its storage key, and the ULID the storage key starts with.
+  const ULID = /^[0-9A-Z]{26}$/
+  const namesOf = (id, storageKey) => {
+    const first = String(storageKey ?? '').split('.')[0]
+    return [id, storageKey, ULID.test(first) ? first : null].filter(Boolean)
+  }
+  const keysOf = (v) => namesOf(v.id, v.meta?.storageKey)
   for (const collection of collections) {
     let cursor = null
     do {
@@ -62,16 +67,12 @@ export async function mediaIndexOf({ siteUrl, token, map }) {
             value.forEach((row, i) => {
               // A picture inside Portable Text: the block holds its file as `asset`.
               if (row?._type === 'image' && row.asset) {
-                for (const k of [
+                for (const k of namesOf(
                   row.asset.id,
                   String(row.asset.url ?? '')
                     .split('/')
-                    .pop(),
-                  String(row.asset.url ?? '')
-                    .split('/')
                     .pop()
-                    ?.split('.')[0]
-                ].filter(Boolean))
+                ))
                   put(k, at)
                 return
               }

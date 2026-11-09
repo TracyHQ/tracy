@@ -18,13 +18,13 @@
 //
 // Slots of a demo-only entity (a style-guide page, `demo-only.mjs`) are left out of R1 to R8; R9 reads every hole.
 import {
+  ROLE_VOCABULARY_V3,
   isFactRole,
-  isRole,
-  ROLE_VOCABULARY_V3
+  isRole
 } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { demoOnlyEntities } from './demo-only.mjs'
-import { factKindsOf } from './fact-samples.mjs'
 import { slotHash } from './label-judge.mjs'
+import { factKindsOf } from './fact-samples.mjs'
 
 export const LABEL_RULES_VERSION = 'label-rules/1'
 /** The vocabulary version whose maps these rules judge as blocking; older maps are measured and reported only. */

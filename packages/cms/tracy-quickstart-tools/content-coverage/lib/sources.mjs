@@ -3,7 +3,7 @@
 // Each file gets an ORIGIN that decides the class of a string found only there.
 import { readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
-import { letterCount, normText } from './normalize.mjs'
+import { normText, letterCount } from './normalize.mjs'
 import { decodePhpLiterals } from './php-literals.mjs'
 
 const TEXT_EXT = /\.(php|ini|json|xml|html?|css|scss|less|js|svg|txt)$/i

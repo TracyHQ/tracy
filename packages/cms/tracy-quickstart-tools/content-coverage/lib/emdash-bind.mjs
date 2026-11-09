@@ -20,15 +20,15 @@
 // names the entry, not the file, so it never binds a picture by itself. A link is bound by its stamp, by a link slot,
 // by a declared menu, page or taxonomy term, or by an address a text slot holds (mailto:, tel:); otherwise it is a hole.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, resolve, sep } from 'node:path'
 
-import { alnumCount, compact, normText } from './normalize.mjs'
+import { alnumCount, normText } from './normalize.mjs'
 
 const LINK_BASE = 'http://site.invalid'
 const MEDIA_PATH = '/_emdash/api/media/file/'
 
 /**
- * A link in the form slots are compared in: a path of this site with its whole query (parameters sorted), an absolute
+ * A link in the form slots are compared in: a path of this site with its whole query (keys sorted, values as written), an absolute
  * address with its trailing slash dropped, or a `mailto:` / `tel:` address without spaces.
  */
 export function normLink(href, origin) {
@@ -37,8 +37,10 @@ export function normLink(href, origin) {
   try {
     const u = new URL(raw, `${origin}/`)
     const path = u.pathname.replace(/\/+$/, '') || '/'
-    const query = [...u.searchParams].sort(([a, x], [b, y]) => a.localeCompare(b) || x.localeCompare(y))
-    const search = query.length > 0 ? `?${query.map(([k, v]) => `${k}=${v}`).join('&')}` : ''
+    // The query as written, re-serialised with its encoding (`%23` stays one value, never a fragment); only the keys are
+    // sorted (stably), so `?b=2&a=1` and `?a=1&b=2` are one route and `?token=x%23y` is not `?token=x`.
+    const query = new URLSearchParams([...u.searchParams].sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+    const search = query.size > 0 ? `?${query}` : ''
     if (u.origin === origin || u.origin === LINK_BASE) return `${path}${search}`
     return `${u.origin}${path}${search}`
   } catch {
@@ -47,7 +49,6 @@ export function normLink(href, origin) {
 }
 
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-const pad = (n) => String(n).padStart(2, '0')
 
 /** The words of a slot sample, plain: markup and line breaks gone. */
 const wordsOf = (sample) => normText(sample)
@@ -73,9 +74,16 @@ function sameWords(shown, sample, { prose = false } = {}) {
   if (parts.length > 1 && new RegExp(`^${parts.join('.+?')}$`).test(shown)) return true
   const pieces = piecesOf(sample)
   if (pieces.includes(shown)) return true
-  if (compact(shown) && pieces.some((p) => compact(p) === compact(shown))) return true
-  // A card prints a slot's words followed by or after others (two slots in one block): the block holds the whole slot.
-  if (prose) return pieces.some((p) => p.length >= 8 && (p.includes(shown) || shown.includes(p)))
+  // A template decorates a label with a closing mark ("Contact" printed as "Contact.", "Email:"), and a count with its
+  // unit ("85" printed as "85%"). Only that closing mark is ignored; no word, sign or figure is.
+  const bare = (v, numeric) => v.replace(numeric ? /[.:;!%]+$/ : /[.:;!]+$/, '').trim()
+  const numeric = /^\d+(?:[.,]\d+)?$/.test(String(sample).trim())
+  if (pieces.some((p) => bare(p, numeric) === bare(shown, numeric) && bare(p, numeric))) return true
+  // Spaces alone may differ ("Offline<span>Pages</span>" renders with or without one); punctuation and signs may not.
+  const unspaced = (v) => v.replace(/\s+/g, '')
+  if (unspaced(shown) && pieces.some((p) => unspaced(p) === unspaced(shown))) return true
+  // A paragraph or heading shown out of a prose field is a piece of it; a block that holds MORE than the slot says is not.
+  if (prose) return pieces.some((p) => p.length >= 8 && p.includes(shown))
   return false
 }
 
@@ -153,6 +161,7 @@ export function indexOfMap(map) {
 /** The template's own words: every string a theme's source or its forms file holds, normalized, in one haystack. */
 export function sourceIndexOf(themeDir) {
   const parts = []
+  let formsHaystack = ''
   const walk = (dir) => {
     let names = []
     try {
@@ -170,9 +179,16 @@ export function sourceIndexOf(themeDir) {
   if (themeDir) {
     walk(join(themeDir, 'src'))
     const forms = join(themeDir, 'tools', 'forms.json')
-    if (existsSync(forms)) parts.push(readFileSync(forms, 'utf8'))
+    if (existsSync(forms)) {
+      parts.push(readFileSync(forms, 'utf8'))
+      formsHaystack = normText(readFileSync(forms, 'utf8'))
+    }
   }
-  return { haystack: normText(parts.join('\n')), publicDir: themeDir ? join(themeDir, 'public') : null }
+  return {
+    haystack: normText(parts.join('\n')),
+    formsHaystack,
+    publicDir: themeDir ? join(themeDir, 'public') : null
+  }
 }
 
 const entityOf = (stamp) => `${stamp.collection}.${stamp.slug}`
@@ -188,9 +204,13 @@ const cellSlots = (index, entity, root, sub) =>
 function covers(slot, shown) {
   if (slot.type === 'date') return printsDate(shown, ymdOf(slot.sample))
   if (slot.type === 'richtext') return wordsOf(slot.sample).includes(shown)
-  // A year the template prints from the clock (a copyright line) is not the sample's year.
+  if (sameWords(shown, slot.sample)) return true
+  // The one literal a template prints from the clock is the year of a copyright line: only a slot of a copyright field
+  // may differ from its sample by a year. A year anywhere else (\"Founded in 2020\") must match as written.
   const yearless = (v) => v.replace(/\b(?:19|20)\d{2}\b/g, '#')
-  return sameWords(shown, slot.sample) || yearless(shown) === yearless(wordsOf(slot.sample))
+  return (
+    /copyright/i.test(String(slot.target?.field ?? '')) && yearless(shown) === yearless(wordsOf(slot.sample))
+  )
 }
 
 function bindByStamp(item, index) {
@@ -330,20 +350,26 @@ export function bindItems(items, index, ctx) {
 
 function bindPicture(item, ctx) {
   const url = new URL(item.value, ctx.origin)
+  // Only a picture of the audited site is ever accounted for: a foreign host's file is not this site's media or design.
+  if (url.origin !== ctx.origin)
+    return Object.assign(item, {
+      status: 'hole',
+      class: 'unknown',
+      cause: `a picture served from another site (${url.origin})`
+    })
   if (url.pathname.startsWith('/brand/') && url.pathname.includes('logo'))
     return Object.assign(item, {
       status: 'ignored',
       class: 'core',
       cause: "the brand logo: served by the brand door, replaced by Tracy's brand step"
     })
-  // The site's own record of which entry field holds this file (the REST read, `--token`): evidence a stamp would give.
-  // Only a file served by the media door counts, and its whole name (the file id, or the storage key with or without its
-  // extension) is looked up: a file of any other path is not the media record's file whatever its basename.
+  // The site's own record of which entry field holds this file (the REST media index): a file counts only under the media
+  // door, and its WHOLE final segment must be a key of the record (the file id, the storage key, or the storage key's
+  // ULID). No part of a name is looked up on its own.
   const name = url.pathname.startsWith(MEDIA_PATH)
     ? decodeURIComponent(url.pathname.slice(MEDIA_PATH.length))
     : ''
-  const owners =
-    name && !name.includes('/') ? (ctx.media?.get(name) ?? ctx.media?.get(name.split('.')[0])) : undefined
+  const owners = name && !name.includes('/') ? ctx.media?.get(name) : undefined
   if (owners) {
     const known = owners.filter((k) => ctx.index.byKey.has(k))
     // The stamp, when there is one, must agree with the file's owner: a stamped entry's own picture binds to its slot.
@@ -356,8 +382,15 @@ function bindPicture(item, ctx) {
       cause: `a picture held by ${owners[0]}, which the content map has no slot for`
     })
   }
-  const file = ctx.source?.publicDir ? join(ctx.source.publicDir, decodeURIComponent(url.pathname)) : null
-  if (file && existsSync(file) && statSync(file).isFile())
+  const file = ctx.source?.publicDir
+    ? resolve(ctx.source.publicDir, `.${decodeURIComponent(url.pathname)}`)
+    : null
+  // A file of the template's public folder only: an encoded `..` must not reach any other file of the theme.
+  if (
+    file?.startsWith(`${resolve(ctx.source.publicDir)}${sep}`) &&
+    existsSync(file) &&
+    statSync(file).isFile()
+  )
     return Object.assign(item, {
       status: 'locked',
       cause: "a picture of the template's own public folder (design)"
@@ -403,9 +436,9 @@ function bindLink(item, index, ctx) {
       )
   }
   if (index.links.has(norm)) return bound(index.links.get(norm), 'words')
-  if (/^mailto:/.test(norm) && index.textual.has(normText(norm.slice(7).split('?')[0])))
+  if (norm.startsWith('mailto:') && index.textual.has(normText(norm.slice(7).split('?')[0])))
     return bound(index.textual.get(normText(norm.slice(7).split('?')[0])), 'words')
-  if (/^tel:/.test(norm) && index.phones.has(norm.replace(/\D/g, ''))) return bound([], 'words')
+  if (norm.startsWith('tel:') && index.phones.has(norm.replace(/\D/g, ''))) return bound([], 'words')
   if (index.menuLinks.has(norm)) return bound([], 'menu')
   // `?page=N` of a declared page is that page's next leaf; any other query is a route of its own.
   if (index.routes.has(norm) || index.routes.has(norm.replace(/\?page=\d+$/, ''))) return bound([], 'route')
@@ -421,7 +454,8 @@ function bindLink(item, index, ctx) {
 }
 
 function holeOf(item, shown, ctx) {
-  if (item.inForm)
+  // A form's label counts as the Forms plugin's only when the theme's forms file holds it (a required star aside).
+  if (item.inForm && ctx.source?.formsHaystack?.includes(shown.replace(/\s*\*$/, '')))
     return Object.assign(item, {
       status: 'hole',
       class: 'core',
@@ -436,6 +470,7 @@ function holeOf(item, shown, ctx) {
   const inSource =
     shown.length >= 3 &&
     (source.includes(shown) ||
+      source.includes(shown.replace(/[.:;!]+$/, '')) ||
       (fragments.length > 0 &&
         fragments.length < 6 &&
         /\d/.test(shown) &&

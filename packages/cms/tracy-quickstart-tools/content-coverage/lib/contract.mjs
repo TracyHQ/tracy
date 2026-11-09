@@ -3,7 +3,7 @@
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { alnumCount, basename, compact, letterCount, normHref, normPath, normText } from './normalize.mjs'
+import { normText, normPath, normHref, basename, letterCount, alnumCount, compact } from './normalize.mjs'
 import { inventoryPagesOf, wordpressPagePath } from './wordpress-page-path.mjs'
 
 const readJson = (dir, name) => JSON.parse(readFileSync(join(dir, name), 'utf8'))

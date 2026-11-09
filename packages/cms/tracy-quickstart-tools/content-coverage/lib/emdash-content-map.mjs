@@ -121,7 +121,6 @@ export function emdashContentMapOf({ seed, fieldMap: rawFieldMap, contentApiMap 
   entities.push({ key: 'settings', kind: 'settings', identity: {} })
 
   for (const collection of Array.isArray(seed?.collections) ? seed.collections : []) {
-    const schema = new Map((collection.fields ?? []).map((f) => [f.slug, f]))
     const api = contentApiMap?.collections?.[collection.slug] ?? null
     for (const entry of defaultLocaleEntries(seed?.content?.[collection.slug], locale)) {
       if (!entry?.slug) continue

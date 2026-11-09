@@ -5956,7 +5956,28 @@
       "label": "Items 1 \u2014 Btn value",
       "role": "editorial.button_label",
       "fit": {
-        "measured": false
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 112,
+            "height": 80
+          },
+          "phone": {
+            "width": 181,
+            "height": 60
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 9,
+          "phone": 33
+        },
+        "maxCharacters": 9,
+        "casing": "upper",
+        "overflow": "rewrite"
       }
     },
     {

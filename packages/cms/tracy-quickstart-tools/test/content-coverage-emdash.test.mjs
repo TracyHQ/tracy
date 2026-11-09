@@ -222,7 +222,7 @@ const item = (value, over = {}) => ({
   stamp: null,
   ...over
 })
-const SOURCE = { haystack: 'read more # articles', publicDir: null }
+const SOURCE = { haystack: 'read more # articles', formsHaystack: 'name', publicDir: null }
 const bind = (items, media = null) =>
   bindItems(items, indexOfMap(mapOf()), { source: SOURCE, origin: 'http://site.test', media })
 const slotsOf = (it) => [it.status, it.matchBy, ...(it.slots ?? [])]
@@ -313,8 +313,8 @@ test("binder: a picture is bound by the site's own record of which field holds t
   const [bound, missing] = bind(
     [picture('ZZZ.jpg'), picture('YYY.jpg')],
     new Map([
-      ['ZZZ', ['cards.hot.photo']],
-      ['YYY', ['cards.hot.unmapped']]
+      ['ZZZ.jpg', ['cards.hot.photo']],
+      ['YYY.jpg', ['cards.hot.unmapped']]
     ])
   )
   assert.deepEqual(slotsOf(bound), ['matched', 'media', 'cards.hot.photo'])
@@ -322,7 +322,7 @@ test("binder: a picture is bound by the site's own record of which field holds t
 })
 
 test("binder: a picture outside the media file route never matches a media record by its file name (the reviewer's case)", () => {
-  const index = new Map([['ZZZ', ['cards.hot.photo']]])
+  const index = new Map([['ZZZ.jpg', ['cards.hot.photo']]])
   const [outside, nested] = bind(
     [
       picture('ZZZ.jpg', { value: 'http://site.test/static/ZZZ.jpg' }),
@@ -348,7 +348,7 @@ test("binder: an entry stamp never binds a picture by itself; the file must be t
   // the stamped entry's own file binds to that entry's slot even when another entry shows the same file
   const [own] = bind(
     [picture('ZZZ.jpg', stamped)],
-    new Map([['ZZZ', ['cards.other.photo', 'cards.hot.photo']]])
+    new Map([['ZZZ.jpg', ['cards.other.photo', 'cards.hot.photo']]])
   )
   assert.deepEqual(slotsOf(own), ['matched', 'media', 'cards.hot.photo'])
 })
@@ -485,7 +485,7 @@ test('binder: a sample the template fills in ("{year} {name}") is a pattern: fil
     entity: 'cards.hot',
     target: {},
     type: 'text',
-    sample: 'Copyright 2021 Cafe',
+    sample: 'Copyright {year} {name}',
     label: 'x'
   })
   const run = (value) =>
@@ -513,4 +513,154 @@ test("the generator: the caption of a picture inside Portable Text is part of th
     { source: SOURCE, origin: 'http://site.test' }
   )
   assert.equal(caption.status, 'matched')
+})
+
+test('routes: the query is kept as written, encoding included; only the keys are sorted', () => {
+  const o = 'http://site.test'
+  assert.equal(normLink('/preview?token=x%23y', o), '/preview?token=x%23y')
+  assert.equal(crawlKeyOf('/preview?token=x%23y', `${o}/`, o), '/preview?token=x%23y')
+  assert.notEqual(crawlKeyOf('/preview?token=x%23y', `${o}/`, o), crawlKeyOf('/preview?token=x', `${o}/`, o))
+  assert.equal(normLink('/p?q=a%26b', o), '/p?q=a%26b')
+  assert.equal(normLink('/p?q=a%3Db', o), '/p?q=a%3Db')
+  assert.equal(normLink('/p?b=2&a=1', o), '/p?a=1&b=2')
+  // a link to the encoded route is not covered by a slot that holds the decoded one
+  const [encoded] = bind([link('/menu?t=x%23y')])
+  assert.equal(encoded.status, 'hole')
+})
+
+test('pictures: a record matches only a file of the audited origin, under the media door, by its whole name', () => {
+  const media = new Map([
+    ['hero.key.png', ['cards.hot.photo']],
+    ['01ARZ3NDEKTSV4RRFFQ69G5FAV', ['cards.hot.photo']]
+  ])
+  const at = (url) => bind([picture('x', { value: url })], media)[0]
+  assert.equal(at('http://site.test/_emdash/api/media/file/hero.key.png').status, 'matched')
+  assert.equal(at('http://site.test/_emdash/api/media/file/01ARZ3NDEKTSV4RRFFQ69G5FAV').status, 'matched')
+  assert.equal(at('http://site.test/_emdash/api/media/file/hero.different.png').status, 'hole')
+  assert.equal(at('http://site.test/_emdash/api/media/file/hero').status, 'hole')
+  assert.equal(at('http://foreign.test/hero.key.png').status, 'hole')
+  assert.equal(at('http://foreign.test/_emdash/api/media/file/hero.key.png').status, 'hole')
+})
+
+test("pictures: a file of the template's public folder is design only on this origin and only inside that folder", () => {
+  const source = { haystack: '', publicDir: path.join(CMS, 'tracy-emdash-theme-diner/public') }
+  const run = (value) =>
+    bindItems([picture('x', { value })], indexOfMap(mapOf()), {
+      source,
+      origin: 'http://site.test',
+      media: new Map()
+    })[0]
+  assert.equal(run('http://site.test/brand/bg-icon.png').status, 'locked')
+  assert.equal(run('http://foreign.test/brand/bg-icon.png').status, 'hole')
+  assert.equal(run('http://site.test/%2e%2e/package.json').status, 'hole')
+})
+
+test('years: a literal year in a sample matches as written; only a copyright field or a {year} pattern may differ', () => {
+  const map = structuredClone(mapOf())
+  map.slots.push(
+    {
+      key: 'cards.hot.founded',
+      entity: 'cards.hot',
+      target: { field: 'founded' },
+      type: 'text',
+      sample: 'Founded in 2020',
+      label: 'x'
+    },
+    {
+      key: 'cards.hot.copyright',
+      entity: 'cards.hot',
+      target: { field: 'copyright' },
+      type: 'text',
+      sample: 'Copyright 2021 Cafe',
+      label: 'x'
+    }
+  )
+  const run = (field, value) =>
+    bindItems([item(value, { stamp: stamp('hot', field) })], indexOfMap(map), {
+      source: SOURCE,
+      origin: 'http://site.test'
+    })[0]
+  assert.equal(run('founded', 'Founded in 2020').status, 'matched')
+  assert.equal(run('founded', 'Founded in 2026').status, 'hole')
+  assert.equal(run('copyright', 'Copyright 2026 Cafe').status, 'matched')
+})
+
+test('words: spacing may differ, signs and extra words may not', () => {
+  const map = structuredClone(mapOf())
+  map.slots.push(
+    {
+      key: 'cards.hot.price',
+      entity: 'cards.hot',
+      target: { field: 'price' },
+      type: 'text',
+      sample: '$30',
+      label: 'x'
+    },
+    {
+      key: 'cards.hot.note',
+      entity: 'cards.hot',
+      target: { field: 'note' },
+      type: 'richtext',
+      sample: 'First paragraph of the note.',
+      label: 'x'
+    }
+  )
+  const run = (field, value) =>
+    bindItems([item(value, { stamp: stamp('hot', field) })], indexOfMap(map), {
+      source: SOURCE,
+      origin: 'http://site.test'
+    })[0]
+  assert.equal(run('price', '$ 30').status, 'matched')
+  assert.equal(run('price', '30').status, 'hole')
+  assert.equal(run('price', 'EUR 30').status, 'hole')
+  assert.equal(run('note', 'First paragraph').status, 'matched')
+  assert.equal(run('note', 'First paragraph of the note. And undeclared words after it').status, 'hole')
+})
+
+test("forms: a label is the Forms plugin's only when the theme's forms file holds it", () => {
+  const source = { haystack: 'send email', formsHaystack: 'name email send email', publicDir: null }
+  const run = (value) =>
+    bindItems([item(value, { inForm: true })], indexOfMap(mapOf()), { source, origin: 'http://site.test' })[0]
+  assert.deepEqual([run('Name *').status, run('Name *').class], ['hole', 'core'])
+  assert.equal(run('A demo promise printed inside a form').class, 'unknown')
+})
+
+test('words: a closing mark the template adds ("Contact." for "Contact", "85%" for a count) is ignored; a word, sign or figure is not', () => {
+  const map = structuredClone(mapOf())
+  map.slots.push(
+    {
+      key: 'cards.hot.label',
+      entity: 'cards.hot',
+      target: { field: 'label' },
+      type: 'text',
+      sample: 'Contact',
+      label: 'x'
+    },
+    {
+      key: 'cards.hot.count',
+      entity: 'cards.hot',
+      target: { field: 'count' },
+      type: 'text',
+      sample: '85',
+      label: 'x'
+    },
+    {
+      key: 'cards.hot.fee',
+      entity: 'cards.hot',
+      target: { field: 'fee' },
+      type: 'text',
+      sample: 'Fee 30',
+      label: 'x'
+    }
+  )
+  const run = (field, value) =>
+    bindItems([item(value, { stamp: stamp('hot', field) })], indexOfMap(map), {
+      source: SOURCE,
+      origin: 'http://site.test'
+    })[0]
+  assert.equal(run('label', 'Contact.').status, 'matched')
+  assert.equal(run('label', 'Contact us.').status, 'hole')
+  assert.equal(run('count', '85%').status, 'matched')
+  assert.equal(run('count', '86%').status, 'hole')
+  assert.equal(run('fee', 'Fee 30%').status, 'hole')
 })

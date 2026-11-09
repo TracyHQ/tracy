@@ -113,7 +113,8 @@ export function extractEmdashPage() {
       return n.clientWidth - px(ns.paddingLeft) - px(ns.paddingRight)
     }
     const parent = el.parentElement
-    const shrunk = /^inline/.test(s.display) || (parent && /flex|grid/.test(getComputedStyle(parent).display))
+    const shrunk =
+      s.display.startsWith('inline') || (parent && /flex|grid/.test(getComputedStyle(parent).display))
     const width = Math.round(shrunk && parent ? inner(parent) : inner(el))
     const height = el.clientHeight - px(s.paddingTop) - px(s.paddingBottom)
     return {

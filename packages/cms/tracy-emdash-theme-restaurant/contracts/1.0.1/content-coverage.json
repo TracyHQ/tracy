@@ -7,10 +7,10 @@
   "platform": "emdash",
   "contract": {
     "id": "tracy-restaurant/emdash-0.x/1.0.1",
-    "contentMapSha256": "3596f1bbbaf9819054ae0ca1f08735766185cc28d54023980cd309164c7e34c0",
+    "contentMapSha256": "236e60dead524ebef7584aec29f8929077732508baa73ae0b583db9ac973e3ec",
     "presentationLockSha256": null
   },
-  "measuredAt": "2026-11-09T08:55:23.819Z",
+  "measuredAt": "2026-11-09T11:02:28.593Z",
   "viewports": [
     "desktop",
     "phone"
@@ -54,8 +54,8 @@
       "locked": 0,
       "capture": 0,
       "captureLocked": 0,
-      "template": 10,
-      "core": 7,
+      "template": 12,
+      "core": 5,
       "unknown": 0,
       "catalogue": 0,
       "ignored": 6
@@ -86,7 +86,7 @@
     }
   },
   "coverage": {
-    "text": 97.7,
+    "text": 97.2,
     "images": 100,
     "links": 100
   },
@@ -123,6 +123,16 @@
     },
     {
       "kind": "text",
+      "value": "Leave blank",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-wrap > div.rs-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact/contact-us",
+      "accepted": "Label of the Forms plugin's anti-spam field; interface wording, not demo content a customer rewrites."
+    },
+    {
+      "kind": "text",
       "value": "Page # of #",
       "class": "template",
       "cause": "words in the template's own source",
@@ -130,6 +140,16 @@
       "pages": 3,
       "firstPage": "/blog",
       "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Search Terms:",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-main-grid > div > form.rs-search-form > label.rs-display",
+      "pages": 1,
+      "firstPage": "/explore/j-pages/smart-search",
+      "accepted": "Interface wording of the template's search results page around the visitor's own query; carries no business fact."
     }
   ],
   "hygiene": [],

@@ -5,15 +5,15 @@
 // judge saw in it (`crops`), so a verdicts file written from the slot tables alone, without opening the images, is
 // refused rather than recorded. Any problem refuses the whole file, so a half-read answer is never written as a verdict.
 import {
-  isRole,
-  ROLE_VOCABULARY_V3
+  ROLE_VOCABULARY_V3,
+  isRole
 } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import {
-  blockOf,
-  cut,
   DEFAULT_JUDGE,
   JUDGE_REQUEST_VERSION,
   LABEL_JUDGE_VERSION,
+  blockOf,
+  cut,
   roleGroupOf
 } from './label-judge.mjs'
 

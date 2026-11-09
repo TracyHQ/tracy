@@ -14,9 +14,9 @@ import { createHash } from 'node:crypto'
 
 import {
   ARTICLE_ROLES,
-  isFactRole,
   PLACE_CONTENT_ROLES_V3,
-  ROLE_VOCABULARY_V3
+  ROLE_VOCABULARY_V3,
+  isFactRole
 } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { locate } from './verify/locate.mjs'
 

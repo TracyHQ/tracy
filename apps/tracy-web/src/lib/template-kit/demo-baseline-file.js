@@ -101,7 +101,6 @@ function readBaseline(file, id) {
  * @param {import('../contracts.js').ContractIndex} contracts
  */
 export function baselineOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
   return baselineOfContract(contractOfRelease(release, contracts))
 }
 

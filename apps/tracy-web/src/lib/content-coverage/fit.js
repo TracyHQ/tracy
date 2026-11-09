@@ -66,7 +66,6 @@ function contentMapIn(dir) {
  * @returns {Fit}
  */
 export function fitOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
   const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return fitOfContentMap(null)
   // Re-read only when the map changed: /ops builds every road on each list read.

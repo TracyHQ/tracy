@@ -10,18 +10,17 @@
 // That reading holds for a `place-content-roles/2` map only. In a version 3 map the slot's role is the only decider
 // (ADR 0040 decision 3): `customize` and a picture's `fit.replace` are derived from the role, and the measured kind
 // describes shape only. A trainer face measured as an avatar with role `person.image` is replaced, not kept.
-
-import {
-  pictureKindOf,
-  pictureReplaceOf,
-  SLOT_FIT_TOLERANCE,
-  SLOT_FIT_VERSION
-} from '../../../../wo/website-opportunities/domain/content-map-fit.mjs'
 import {
   customizeOfRole,
   pictureReplaceOfRole,
   roleDecidesKeep
 } from '../../../../wo/website-opportunities/domain/content-map-keep-decision.mjs'
+import {
+  SLOT_FIT_TOLERANCE,
+  SLOT_FIT_VERSION,
+  pictureKindOf,
+  pictureReplaceOf
+} from '../../../../wo/website-opportunities/domain/content-map-fit.mjs'
 import { authorListsOf } from './author-lists.mjs'
 import { itemListsOf } from './item-lists.mjs'
 import { listingListsOf } from './listing-lists.mjs'

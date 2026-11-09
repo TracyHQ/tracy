@@ -1,5 +1,5 @@
 // Merge the items of one page across viewports, attach match + class, and count coverage.
-import { normPath, normText } from './normalize.mjs'
+import { normText, normPath } from './normalize.mjs'
 
 const keyOf = (it, siteUrl) => {
   if (it.kind === 'image') return `image|${normPath(it.value, siteUrl)}`

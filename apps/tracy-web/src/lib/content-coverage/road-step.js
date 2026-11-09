@@ -64,7 +64,6 @@ const SHOWN_HYGIENE = 8
  * @param {import('../contracts.js').ContractIndex} contracts
  */
 export function coverageOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
   return coverageOfContract(contractOfRelease(release, contracts))
 }
 
