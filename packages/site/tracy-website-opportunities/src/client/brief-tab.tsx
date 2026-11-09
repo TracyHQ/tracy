@@ -3,7 +3,7 @@
  * "How Tracy understands {business}" cards with the raw brief behind Full brief (`brief-understanding.tsx`, #520), and
  * closes on the Build card the Brief page uses, with its template, time and price.
  */
-import type { JSX } from 'react'
+import { type JSX, useState } from 'react'
 import { Button, Spinner } from '@tracy/ui'
 
 import type { Api } from './api.ts'
@@ -46,8 +46,19 @@ const ids = createRequestIds(() =>
 )
 
 export function BriefTab({ t, api, meta }: { t: Translate; api: Api; meta: BriefTabMeta }): JSX.Element {
-  const revisionId = meta.revisionId ?? null
+  // A seller's edit makes a new brief (#524): the card then shows, and builds from, that one.
+  const [editedId, setEditedId] = useState<string | null>(null)
+  const revisionId = editedId ?? meta.revisionId ?? null
   const page = useRevisionPage(api, revisionId)
+  const editLine = async (path: string, value: string): Promise<boolean> => {
+    if (revisionId === null || !meta.opportunityId) return false
+    const answer = await api.editBrief(meta.opportunityId, revisionId, [{ path, value }])
+    const made = answer.ok ? answer.body?.revision : null
+    const id = typeof made === 'object' && made !== null ? Reflect.get(made, 'id') : null
+    if (typeof id !== 'string') return false
+    setEditedId(id)
+    return true
+  }
   return (
     <div className="tracy-wo tracy-wo-tab">
       <div className="tracy-wo-body tracy-wo-brief-doc">
@@ -71,7 +82,12 @@ export function BriefTab({ t, api, meta }: { t: Translate; api: Api; meta: Brief
           // The cards and the Build card side by side, like the Brief page of Details; one column on a narrow tab.
           <div className="tracy-wo-page-grid is-brief">
             <div className="tracy-wo-col">
-              <BriefUnderstanding t={t} brief={page.revision.brief} markdown={page.markdown} />
+              <BriefUnderstanding
+                t={t}
+                brief={page.revision.brief}
+                markdown={page.markdown}
+                onEditLine={meta.opportunityId ? editLine : null}
+              />
             </div>
             {revisionId !== null && meta.opportunityId ? (
               <Build

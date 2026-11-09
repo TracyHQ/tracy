@@ -333,4 +333,8 @@ export const CSS = `
 .tracy-wo-nav .tracy-wo-nav-button { position: relative; display: flex; align-items: center; gap: 0.5rem; border-radius: 8px; color: var(--tsb-row-fg, var(--muted-foreground)); cursor: pointer; transition: background-color 120ms ease, color 120ms ease; }
 .tracy-wo-nav .tracy-wo-nav-button:hover { color: var(--sidebar-foreground); background: var(--tsb-hover, color-mix(in oklab, var(--sidebar-foreground) 8%, transparent)); }
 .tracy-wo-nav .tracy-wo-nav-button:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
+/* Inline edits of a Profile row or a Content brief line (#524): one hairline, no focus halo. */
+.tracy-wo-textarea { width: 100%; min-height: 72px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); color: var(--foreground); font: inherit; font-size: 13px; line-height: 18px; resize: vertical; box-shadow: none; outline: none; }
+.tracy-wo-textarea:focus-visible { border-color: var(--ring); outline: none; box-shadow: none; }
+.tracy-wo-edited { font-size: 11px; line-height: 15px; color: var(--muted-foreground); }
 `

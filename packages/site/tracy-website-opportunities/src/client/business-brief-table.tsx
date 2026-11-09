@@ -13,10 +13,13 @@ export function BusinessBriefTable({
   t,
   rows,
   firstRow = null,
+  editValue = null,
   onToggle
 }: {
   t: Translate
   rows: BriefRow[]
+  /** The value cell of a fact the seller can edit in place (#524), or null to draw it read only. */
+  editValue?: ((row: BriefRow) => ReactNode | null) | null
   /** A row drawn before the facts: Site name on Tracy (#519), shown even before research has run. */
   firstRow?: ReactNode
   /** Resolves true once the choice is saved and the page read again. */
@@ -50,7 +53,7 @@ export function BusinessBriefTable({
             <tr key={row.id} data-off={row.onSite ? undefined : 'true'}>
               <th scope="row">{row.label}</th>
               <td>
-                <span>{row.value}</span>
+                {editValue?.(row) ?? <span>{row.value}</span>}
                 {row.notes.map((note) => (
                   <span key={note} className="tracy-wo-brief-note">
                     {note}

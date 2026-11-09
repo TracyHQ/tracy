@@ -228,7 +228,20 @@ export interface Api {
   cancel(jobId: string): Promise<Answer<{ job?: unknown }>>
   resume(jobId: string): Promise<Answer<{ job?: unknown }>>
   /** Refresh: the brief of the current research (the latest one when it has not changed). */
-  createRevision(opportunityId: string): Promise<Answer<{ revision?: unknown }>>
+  /** Starts the Content brief job (#524): 202 with `job`; poll `briefJob` until it settles. */
+  createRevision(opportunityId: string, requestId?: string): Promise<Answer<{ job?: unknown }>>
+  briefJob(opportunityId: string, jobId: string): Promise<Answer<{ job?: unknown; revision?: unknown }>>
+  /** The seller's edits of the brief card texts, saved as a new revision (#524). */
+  editBrief(
+    opportunityId: string,
+    revisionId: string,
+    edits: { path: string; value: string }[]
+  ): Promise<Answer<{ revision?: unknown }>>
+  /** The seller's edits of the Profile's text facts, null to undo one (#524). */
+  editProfile(
+    opportunityId: string,
+    edits: Record<string, string | null>
+  ): Promise<Answer<{ opportunity?: unknown }>>
   revision(revisionId: string): Promise<
     Answer<{
       revision?: unknown
@@ -416,7 +429,12 @@ export function createApi(fetchImpl: FetchLike): Api {
       }),
     cancel: (jobId) => call(`${BASE}/jobs/${id(jobId)}/cancel`, 'POST'),
     resume: (jobId) => call(`${BASE}/jobs/${id(jobId)}/resume`, 'POST'),
-    createRevision: (opportunityId) => call(`${BASE}/${id(opportunityId)}/revisions`, 'POST', {}),
+    createRevision: (opportunityId, requestId) =>
+      call(`${BASE}/${id(opportunityId)}/revisions`, 'POST', requestId ? { requestId } : {}),
+    briefJob: (opportunityId, jobId) => call(`${BASE}/${id(opportunityId)}/brief-jobs/${id(jobId)}`),
+    editBrief: (opportunityId, revisionId, edits) =>
+      call(`${BASE}/${id(opportunityId)}/revisions/${id(revisionId)}/edits`, 'POST', { edits }),
+    editProfile: (opportunityId, edits) => call(`${BASE}/${id(opportunityId)}/profile`, 'PUT', { edits }),
     revision: (revisionId) => call(`${BASE}/revisions/${id(revisionId)}`),
     revisionMarkdown: (revisionId) =>
       call(`${BASE}/revisions/${id(revisionId)}?format=md`, 'GET', undefined, 'text/markdown'),

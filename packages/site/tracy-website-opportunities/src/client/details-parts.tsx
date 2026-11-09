@@ -3,6 +3,8 @@
  * (the links the owner pasted first, then what research found, each with its status, reason and Try again). Details
  * owns its copy so the page does not depend on the side panel, which goes away.
  */
+import { interfaceLocale } from '@tracy/core/interface-languages'
+import { collectedLine } from './research-gate-model.ts'
 import type { JSX, ReactNode } from 'react'
 import { CircleCheck, CircleMinus, CirclePause, CircleX, Clock } from 'lucide-react'
 import { Badge, Button } from '@tracy/ui'
@@ -88,6 +90,8 @@ function SourceItem({ t, s, retry }: { t: Translate; s: SourceInput; retry?: Sou
   const pages = searchPagesOf(s)
   const reasonKey = search === null ? row.reasonKey : s.status === 'failed' ? row.reasonKey : null
   const Icon = SOURCE_ICON[row.tone]
+  // When its data was collected, the shared research's own date (#524), never when this card's job ended.
+  const collected = collectedLine(t, s, interfaceLocale() ?? 'en')
   const retrySource = retry !== undefined && row.retryable && isShownSource(row.source) ? row.source : null
   const coverage =
     row.total !== null
@@ -110,7 +114,10 @@ function SourceItem({ t, s, retry }: { t: Translate; s: SourceInput; retry?: Sou
             <span className="tracy-wo-src-pasted">{`${t('source.link')} · ${pastedLink}`}</span>
           ) : null}
         </span>
-        <span className="tracy-wo-muted">{t(search ?? row.statusKey)}</span>
+        <span className="tracy-wo-muted">
+          {t(search ?? row.statusKey)}
+          {collected !== null ? ` · ${collected}` : null}
+        </span>
       </summary>
       <div className="tracy-wo-src-body">
         {coverage === null && reasonKey === null && search === null ? t('inspector.nothingYet') : null}

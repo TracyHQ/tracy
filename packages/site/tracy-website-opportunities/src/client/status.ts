@@ -38,6 +38,7 @@ export const PLACE_SETTLED_REASONS = ['not_found', 'private_or_empty', 'ambiguou
 
 const REASONS = new Set([
   'credential_missing',
+  'not_collected',
   'login_required',
   'rate_limited',
   'not_found',
@@ -78,6 +79,8 @@ export interface SourceInput {
   queries?: number | null
   /** The link the owner pasted that this source reads (Add a business by its links); absent: research found it. */
   pastedLink?: string | null
+  /** When its data was collected (#524); null when it holds none. */
+  collectedAt?: string | null
 }
 
 export interface SourceRow {

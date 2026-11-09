@@ -36,6 +36,10 @@ import { interfaceLocale } from '@tracy/core/interface-languages'
 import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
 import { buildChoice, buildLabel } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
+import { BriefControl } from './brief-control.tsx'
+import { EditableText } from './editable-text.tsx'
+import { profileEditBody, profileEditView } from './profile-edit-model.ts'
+import { researchOf } from './research-gate-model.ts'
 import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
 import {
@@ -429,6 +433,31 @@ export function DetailView({
   }
 
   const profile = isRecord(body.profile) ? body.profile : null
+  // This card's own research (#524): nothing researched shows, and the brief waits, until it is done.
+  const research = researchOf(body)
+  const editProfileRow = (field: string, value: string): JSX.Element | null => {
+    const view = profileEditView(profile, field)
+    if (view === null) return null
+    return (
+      <EditableText
+        key={`${field}:${value}`}
+        t={t}
+        value={value}
+        label={t(`field.${field}`)}
+        edited={view.edited}
+        editedKey="profile.editedByYou"
+        multiline={field === 'bio'}
+        maxLength={field === 'bio' ? 1200 : field === 'phone' ? 40 : 300}
+        onSave={async (typed) => {
+          const sent = profileEditBody(field, typed, view.value)
+          if (sent === null) return true
+          const answer = await api.editProfile(id, sent.edits)
+          if (answer.ok) void reload()
+          return answer.ok
+        }}
+      />
+    )
+  }
   // The name the site carries (the person's pick, else the one the sources agree on) titles the page.
   const shownName = nameOnSite(profile, row.name)
   // A name the brief holds off the site says so, with the neutral identity the site goes by (#1791).
@@ -639,6 +668,8 @@ export function DetailView({
               revisions={revisions}
               builds={asArray<unknown>(body.builds)}
               brief={body.brief}
+              research={body.research}
+              briefJob={body.briefJob}
               onOpen={(revisionId, n) => {
                 if (openBriefTab === null) return onOpenRevision(revisionId, false)
                 openBriefTab({
@@ -666,13 +697,21 @@ export function DetailView({
               t={t}
               rows={briefRows}
               firstRow={<SiteNameRow t={t} api={api} opportunityId={id} />}
+              editValue={(row) => {
+                // The seller's own edit shows at once, before a new brief freezes it (#524).
+                if (row.field === null) return null
+                const mine = profileEditView(profile, row.field)
+                return editProfileRow(row.field, mine?.edited ? mine.value : row.value)
+              }}
               onToggle={toggleFact}
             />
           </Section>
           <Profile
             t={t}
             profile={profile}
-            plainRows={briefRows.length === 0}
+            plainRows={briefRows.length === 0 || !research.done}
+            emptyKey={research.done ? 'detail.noProfile' : 'research.profileEmpty'}
+            editRow={research.done ? editProfileRow : null}
             nameRow={
               nameRow === null ? null : (
                 <ProfileNameRow
@@ -833,10 +872,16 @@ function Profile({
   phonesRow,
   readingRows,
   keyMessagesRows,
-  plainRows = true
+  plainRows = true,
+  editRow = null,
+  emptyKey = 'detail.noProfile'
 }: {
   t: Translate
   profile: Body | null
+  /** A plain row the seller can edit in place (#524, `editable-text.tsx`), or null to draw it read only. */
+  editRow?: ((field: string, value: string) => JSX.Element | null) | null
+  /** What an empty Profile says: before this card's research, how to fill it (#524). */
+  emptyKey?: string
   /** The plain field rows; off when the Business brief table already lists every fact. */
   plainRows?: boolean
   /** "Name on the site" (`profile-name-row.tsx`) in place of the plain Name row, when research decided a name. */
@@ -860,7 +905,7 @@ function Profile({
       <div key={row.field} className="tracy-wo-field">
         <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
         <dd>
-          <span>{row.value}</span>
+          {editRow?.(row.field, row.value) ?? <span>{row.value}</span>}
           {row.staleSince !== null ? (
             <span className="tracy-wo-warn tracy-wo-small">
               {t('detail.stale', { date: row.staleSince === '' ? '' : formatDate(row.staleSince) })}
@@ -892,7 +937,7 @@ function Profile({
   return (
     <Section title={t('detail.profile')}>
       {drawn.length === 0 ? (
-        <p className="tracy-wo-muted">{t('detail.noProfile')}</p>
+        <p className="tracy-wo-muted">{t(emptyKey)}</p>
       ) : (
         <dl className="tracy-wo-fields">{drawn}</dl>
       )}
@@ -1084,6 +1129,8 @@ function Demos({
   revisions,
   builds,
   brief,
+  research,
+  briefJob,
   onOpen,
   onRefreshed
 }: {
@@ -1093,23 +1140,17 @@ function Demos({
   revisions: Revision[]
   builds: unknown[]
   brief: unknown
+  /** This card's research (#524): the brief waits for it. */
+  research: unknown
+  /** The latest Content brief job (#524), made in the background (`brief-control.tsx`). */
+  briefJob: unknown
   onOpen: (revisionId: string, n: number) => void
   onRefreshed: () => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
-  const [refreshing, setRefreshing] = useState(false)
-  const [failed, setFailed] = useState(false)
   const rows = demoRows(builds, revisions)
   const status = briefStatus(brief)
-  const refresh = async (): Promise<void> => {
-    if (refreshing) return
-    setRefreshing(true)
-    setFailed(false)
-    const answer = await api.createRevision(id)
-    setRefreshing(false)
-    if (!answer.ok) return setFailed(true)
-    onRefreshed()
-  }
+  const edited = isRecord(brief) && brief.editedBySeller === true
   const when = status ? relativeTime(status.createdAt, Date.now(), locale) : ''
   return (
     <>
@@ -1153,7 +1194,9 @@ function Demos({
       )}
       <Section title={t('revision.document')}>
         {status === null ? (
-          <p className="tracy-wo-muted">{t('brief.none')}</p>
+          isRecord(briefJob) && briefJob.state === 'running' ? null : (
+            <p className="tracy-wo-muted">{t('brief.none')}</p>
+          )
         ) : (
           <div className="tracy-wo-row tracy-wo-wrap">
             <p className="tracy-wo-muted">
@@ -1165,19 +1208,18 @@ function Demos({
               <FileText aria-hidden="true" />
               {t('brief.view')}
             </Button>
-            {status.current === false ? (
-              <Button type="button" size="xs" disabled={refreshing} onClick={() => void refresh()}>
-                {refreshing ? <Spinner label={t('brief.refreshing')} /> : null}
-                {refreshing ? t('brief.refreshing') : t('brief.refresh')}
-              </Button>
-            ) : null}
           </div>
         )}
-        {failed && (
-          <p className="tracy-wo-error" role="alert">
-            {t('brief.failed')}
-          </p>
-        )}
+        {edited ? <p className="tracy-wo-muted tracy-wo-small">{t('brief.editedByYou')}</p> : null}
+        <BriefControl
+          t={t}
+          api={api}
+          opportunityId={id}
+          research={research}
+          brief={brief}
+          briefJob={briefJob}
+          onSettled={onRefreshed}
+        />
       </Section>
     </>
   )

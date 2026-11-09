@@ -10,6 +10,8 @@ import type { Translate } from './strings.ts'
 
 export interface BriefRow {
   id: string
+  /** The profile field the fact states (`phone`, `address`…), for the seller's edit of it (#524). */
+  field: string | null
   /** The field in plain words (`Opening hours`), never its code. */
   label: string
   /** What the fact says; empty when the profile holds no readable value for it. */
@@ -85,6 +87,7 @@ export function businessBriefRows(
 ): BriefRow[] {
   return (factRowsView(profile, decisions) ?? []).map((row) => ({
     id: row.id,
+    field: row.field,
     label: fieldLabel(row.field, t),
     value: row.label,
     source: sourceNote(row.sources, row.confidence, t, locale),
