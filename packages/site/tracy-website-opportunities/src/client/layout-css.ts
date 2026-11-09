@@ -206,22 +206,69 @@ export const CSS = `
 .tracy-wo-sub-list { height: 40px; }
 .tracy-wo-sub-n { color: var(--muted-foreground); font-weight: 400; font-variant-numeric: tabular-nums; }
 .tracy-wo-sub-live { display: inline-flex; align-items: center; gap: 4px; padding-bottom: 11px; font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
-/* My opportunities: list beside the Inspector, the search, paging and the bulk bar. */
-.tracy-wo-split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; }
-.tracy-wo-split[data-open] { display: block; }
+/* My opportunities: the search, paging and the bulk bar. */
 .tracy-wo-q { width: 220px; height: 28px; }
 .tracy-wo-c-research { min-width: 200px; }
-.tracy-wo-split[data-open] .tracy-wo-c-research { min-width: 150px; }
 .tracy-wo-c-action, .tracy-wo-c-demo { white-space: nowrap; }
 .tracy-wo-c-go { width: 32px; padding-left: 0; }
 .tracy-wo-select-all { justify-content: center; padding: 6px 10px; border-radius: 8px; background: var(--muted); }
 .tracy-wo-more-long { display: flex; align-items: center; justify-content: center; gap: 10px; }
-/* Outreach v3: a flat Inspector with one resizable divider. */
-.tracy-wo-split > [data-group] { min-height: 500px; }
-.tracy-wo-resize { flex: 0 0 12px; width: 12px; background: transparent !important; position: relative; }
-.tracy-wo-resize::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--border); }
-.tracy-wo-resize:hover::after, .tracy-wo-resize:focus-visible::after { background: var(--primary); }
-.tracy-wo-resize:focus-visible { outline: none; box-shadow: none; }
+/* My opportunities (spec #512): full width, Cards and Compact rows, four pieces per place. */
+.tracy-wo-my { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.tracy-wo-my-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.tracy-wo-my-rows { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.tracy-wo-my-place { position: relative; min-width: 0; cursor: pointer; }
+.tracy-wo-my-cards .tracy-wo-my-place { display: flex; flex-direction: column; gap: 10px; padding: 0 12px 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.tracy-wo-my-cards .tracy-wo-my-place:hover { border-color: color-mix(in oklab, var(--foreground) 25%, var(--border)); }
+.tracy-wo-my-rows .tracy-wo-my-place { display: grid; grid-template-columns: 16px minmax(150px, 1.1fr) minmax(200px, 1.6fr) minmax(150px, 1fr) auto; align-items: center; gap: 6px 14px; padding: 10px 12px; border-top: 1px solid var(--border); }
+.tracy-wo-my-rows .tracy-wo-my-place:first-child { border-top: 0; }
+.tracy-wo-my-rows .tracy-wo-my-place:hover { background: color-mix(in oklab, var(--foreground) 4%, transparent); }
+.tracy-wo-my-place[data-state='failed'] { box-shadow: inset 3px 0 0 var(--destructive); }
+.tracy-wo-my-place[data-selected] { background: color-mix(in oklab, var(--primary) 6%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-my-check { position: absolute; top: 10px; left: 10px; z-index: 1; }
+.tracy-wo-p-place { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tracy-wo-p-name { align-self: flex-start; font-weight: 600; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.tracy-wo-p-name:hover { text-decoration: underline; text-underline-offset: 2px; }
+.tracy-wo-p-name:focus-visible, .tracy-wo-p-pin:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; border-radius: 4px; }
+.tracy-wo-p-address { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.tracy-wo-p-address-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-wo-p-pin { display: inline-grid; place-items: center; width: 22px; height: 22px; flex: 0 0 auto; border-radius: 6px; color: var(--muted-foreground); }
+.tracy-wo-p-pin:hover { color: var(--foreground); background: color-mix(in oklab, var(--foreground) 6%, transparent); }
+.tracy-wo-p-pin svg { width: 14px; height: 14px; }
+.tracy-wo-p-opp { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tracy-wo-my-cards .tracy-wo-p-opp { padding: 8px 10px; border-radius: 8px; background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.tracy-wo-ring { position: relative; display: inline-grid; place-items: center; width: 36px; height: 36px; flex: 0 0 auto; }
+.tracy-wo-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tracy-wo-ring-track { fill: none; stroke: var(--border); stroke-width: 3; }
+.tracy-wo-ring-arc { fill: none; stroke: var(--muted-foreground); stroke-width: 3; stroke-linecap: round; }
+.tracy-wo-ring[data-grade='A'] .tracy-wo-ring-arc { stroke: var(--primary); }
+.tracy-wo-ring[data-grade='B'] .tracy-wo-ring-arc { stroke: color-mix(in oklab, var(--primary) 65%, var(--muted-foreground)); }
+.tracy-wo-ring b { position: relative; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.tracy-wo-p-grade { flex: 0 0 auto; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--muted-foreground); background: color-mix(in oklab, var(--foreground) 6%, transparent); }
+.tracy-wo-p-grade[data-grade='A'], .tracy-wo-p-grade[data-grade='B'] { color: color-mix(in oklab, var(--primary) 80%, var(--foreground)); background: color-mix(in oklab, var(--primary) 12%, transparent); }
+.tracy-wo-p-why { display: inline-flex; align-items: center; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+.tracy-wo-p-demo { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tracy-wo-my-cards .tracy-wo-p-demo { justify-content: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px 10px 40px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-demo[data-kind='failed'] { background: color-mix(in oklab, var(--destructive) 7%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-demo[data-kind='thumb'] { justify-content: flex-start; }
+.tracy-wo-p-thumb { display: flex; flex-direction: column; gap: 3px; width: 64px; height: 40px; flex: 0 0 auto; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); }
+.tracy-wo-p-thumb i { display: block; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--primary) 55%, var(--background)); }
+.tracy-wo-p-thumb i:nth-child(2) { width: 70%; }
+.tracy-wo-p-thumb i:nth-child(3) { width: 45%; }
+.tracy-wo-p-demo-text { display: flex; flex-direction: column; min-width: 0; }
+.tracy-wo-p-live { font-size: 12px; font-weight: 500; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
+.tracy-wo-p-site { overflow-wrap: anywhere; }
+.tracy-wo-p-nodemo { padding: 3px 10px; border: 1px dashed var(--border); border-radius: 6px; }
+.tracy-wo-p-alert { width: 14px; height: 14px; flex: 0 0 auto; color: var(--destructive); }
+.tracy-wo-p-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.tracy-wo-my-cards .tracy-wo-p-status { justify-content: space-between; margin-top: auto; }
+.tracy-wo-p-lines { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; }
+.tracy-wo-p-lines > div { display: flex; gap: 4px; min-width: 0; }
+.tracy-wo-p-lines dd { margin: 0; overflow-wrap: anywhere; }
+.tracy-wo-my-rows .tracy-wo-p-lines { grid-column: 2 / -1; }
+/* The Details route: Back and the menu above the Details page. */
+.tracy-wo-details-shell { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.tracy-wo-details-bar { display: flex; align-items: center; gap: 8px; }
 .tracy-wo-insp > .tracy-wo-insp-sec, .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { border: 0; border-radius: 0; background: transparent; padding: 14px 0; }
 .tracy-wo-insp > .tracy-wo-insp-sec + .tracy-wo-insp-sec, .tracy-wo-send { border-top: 1px solid var(--border); }
 .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { padding: 0; }
@@ -269,11 +316,8 @@ export const CSS = `
 .tracy-wo-facts-line > div { display: flex; gap: 6px; }
 .tracy-wo-start { align-self: flex-start; }
 @container (max-width: 900px) {
-  .tracy-wo-insp { position: static; max-height: none; }
-  .tracy-wo-insp-back { display: inline-flex; }
-  /* Narrow: the Inspector takes the list's place; its back button closes it. */
-  .tracy-wo-split[data-open] { grid-template-columns: minmax(0, 1fr); }
-  .tracy-wo-split[data-open] > .tracy-wo-split-list { display: none; }
+  .tracy-wo-my-rows .tracy-wo-my-place { grid-template-columns: 16px minmax(0, 1fr) minmax(0, 1fr); }
+  .tracy-wo-my-rows .tracy-wo-p-demo, .tracy-wo-my-rows .tracy-wo-p-status { grid-column: 2 / -1; justify-content: flex-start; }
   .tracy-wo-page-grid, .tracy-wo-page-grid.is-brief { grid-template-columns: minmax(0, 1fr); }
 }
 @container (max-width: 560px) {

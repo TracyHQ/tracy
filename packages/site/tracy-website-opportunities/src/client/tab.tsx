@@ -3,8 +3,9 @@
  * nothing; until `/api/ui` has answered it waits, so a page load never flashes the notice.
  *
  * On: two sub-tabs, Find places | My opportunities N (plan D5). It opens on My opportunities when the
- * account has any, else on Find; the sub-tab, the list's filter and search, the row in the Inspector
- * and the Details or Brief page live in the page address (`my-address.ts`), so a reload lands back.
+ * account has any, else on Find; the sub-tab, the list's filter and search and the Details or Brief page live in
+ * the page address (`my-address.ts`), so a reload lands back. Opening a page pushes a history entry
+ * (`my-nav.ts`), so Back, the control or the browser's, returns to the list where it was left (spec #512).
  */
 import { type JSX, useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { List, Search } from 'lucide-react'
@@ -14,11 +15,13 @@ import type { Api } from './api.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
 import { DetailView, RevisionView } from './detail.tsx'
 import { FindView } from './find.tsx'
-import { localStore, readHiddenColumns } from './column-prefs.ts'
+import { localStore, readHiddenColumns, readMyView } from './column-prefs.ts'
+import { DetailsShell } from './details-shell.tsx'
 import { flowReducer, initialFlow } from './flow.ts'
 import { CMS_ORDER, settingsView } from './gate.ts'
 import { MyOpportunitiesView } from './list.tsx'
 import { type MyAddress, type SubTab, addressFromSearch, searchWithAddress } from './my-address.ts'
+import { createListMemory, detailsAddress, historyWrite, listAddress } from './my-nav.ts'
 import { type AccountCounts, type Counts, legacyView, pageAnswer, startingSubTab } from './my-list.ts'
 import { onBackInSight, usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
@@ -79,20 +82,41 @@ function useAccountCounts(api: Api): AccountCounts {
   return { ...state, refresh }
 }
 
-/** The address state, read once on mount and written on every press (never on a render). */
-function useAddress(): [MyAddress, (next: MyAddress) => void] {
+/**
+ * The address state, read once on mount, written on every press (never on a render) and read again when the browser
+ * walks its history. Opening a page pushes an entry; `pushed` says whether Back can pop one this tab pushed.
+ */
+function useAddress(): [MyAddress, (next: MyAddress) => void, () => boolean] {
   const [address, setAddress] = useState<MyAddress>(() =>
     typeof window === 'undefined' ? addressFromSearch('') : addressFromSearch(window.location.search)
   )
+  const current = useRef(address)
+  const pushes = useRef(0)
   const write = useCallback((next: MyAddress) => {
+    const mode = historyWrite(current.current, next)
+    current.current = next
     setAddress(next)
     if (typeof window === 'undefined') return
     const { pathname, search, hash } = window.location
     const target = `${pathname}${searchWithAddress(search, next)}${hash}`
-    if (target !== `${pathname}${search}${hash}`)
-      window.history.replaceState(window.history.state, '', target)
+    if (target === `${pathname}${search}${hash}`) return
+    if (mode === 'push') {
+      pushes.current += 1
+      window.history.pushState(window.history.state, '', target)
+    } else window.history.replaceState(window.history.state, '', target)
   }, [])
-  return [address, write]
+  useEffect(() => {
+    const onPop = (): void => {
+      const next = addressFromSearch(window.location.search)
+      if (current.current.page !== null && next.page === null)
+        pushes.current = Math.max(0, pushes.current - 1)
+      current.current = next
+      setAddress(next)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
+  return [address, write, () => pushes.current > 0]
 }
 
 function SubTabs({
@@ -148,18 +172,42 @@ function Flow({
   )
   const cms = useDefaultCms(api)
   const account = useAccountCounts(api)
-  const [address, setAddress] = useAddress()
+  const [address, setAddress, canPop] = useAddress()
+  // Where the list was when a page opened, for this tab's lifetime (view and scroll offset).
+  const [memory] = useState(createListMemory)
+  const [deleted, setDeleted] = useState<readonly string[]>([])
+  const scroller = (): HTMLElement | null =>
+    typeof document === 'undefined' ? null : document.querySelector('.tracy-wo-tab')
   // "Build demo site" opens the Brief page with the name field focused; a reload does not refocus it.
   const [focusName, setFocusName] = useState(false)
   // The opening sub-tab is decided once; afterwards only a press changes it.
   const decided = useRef<SubTab | null>(null)
   if (decided.current === null) decided.current = startingSubTab(address.view, account.counts?.all ?? null)
   const sub: SubTab | null = address.view ?? decided.current
+  // Back on the list: the scroll offset it had when the page opened.
+  const lastPage = useRef(address.page)
+  useEffect(() => {
+    if (lastPage.current !== null && address.page === null) {
+      const spot = memory.recall()
+      const el = scroller()
+      if (spot && el) requestAnimationFrame(() => el.scrollTo({ top: spot.scroll }))
+    } else if (lastPage.current === null && address.page !== null) scroller()?.scrollTo({ top: 0 })
+    lastPage.current = address.page
+  }, [address.page, memory])
   useTabLoading(sub === null)
   if (sub === null) return <div className="tracy-wo-empty" aria-busy="true" />
 
   const go = (patch: Partial<MyAddress>): void => setAddress({ ...address, view: sub, ...patch })
   const toList = (): void => go({ view: 'mine', page: null, brief: null })
+  const openDetails = (id: string): void => {
+    memory.remember({ view: readMyView(localStore()), scroll: scroller()?.scrollTop ?? 0 })
+    setAddress(detailsAddress({ ...address, view: 'mine' }, id))
+  }
+  // Back: pop the entry this tab pushed (the browser's Back does the same), else rewrite the address to the list.
+  const back = (): void => {
+    if (canPop() && typeof window !== 'undefined') window.history.back()
+    else setAddress(listAddress({ ...address, view: 'mine' }))
+  }
   const openBrief = (opp: string, revisionId: string, focus: boolean): void => {
     setFocusName(focus)
     go({ view: 'mine', opp, page: 'brief', brief: revisionId })
@@ -198,23 +246,38 @@ function Flow({
               cms={cms}
               address={address}
               account={account}
+              deleted={deleted}
               onAddress={(patch) => go(patch)}
+              onOpen={openDetails}
               onOpenBrief={(opp, revisionId) => openBrief(opp, revisionId, true)}
             />
           </div>
         )}
         {page === 'details' && address.opp !== null && (
-          <DetailView
+          <DetailsShell
             t={t}
             api={api}
             ids={ids}
             id={address.opp}
-            cms={cms}
-            onList={toList}
-            onChanged={() => void account.refresh()}
-            onOpenRevision={(revisionId, focus) => openBrief(address.opp ?? '', revisionId, focus)}
-            openBriefTab={openBriefTab}
-          />
+            onBack={back}
+            onDeleted={(id) => {
+              setDeleted((d) => [...d, id])
+              void account.refresh()
+              back()
+            }}
+          >
+            <DetailView
+              t={t}
+              api={api}
+              ids={ids}
+              id={address.opp}
+              cms={cms}
+              onList={back}
+              onChanged={() => void account.refresh()}
+              onOpenRevision={(revisionId, focus) => openBrief(address.opp ?? '', revisionId, focus)}
+              openBriefTab={openBriefTab}
+            />
+          </DetailsShell>
         )}
         {page === 'brief' && address.opp !== null && address.brief !== null && (
           <RevisionView

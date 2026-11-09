@@ -22,7 +22,7 @@ import { type JSX, useSyncExternalStore } from 'react'
 import { FileText, Store } from 'lucide-react'
 import { Button, Spinner, TabLoadingScope } from '@tracy/ui'
 import { mayHoldSeatOnlyTab, readViewer, seatOnlyTab } from '@tracy/core/seat'
-import { LIST_PANEL_WIDTH, sidebarRightOf } from '@tracy/core/tab-link'
+import { sidebarRightOf } from '@tracy/core/tab-link'
 import { uiSwitches } from '@tracy/core/ui-switches'
 
 import { customerText } from './customer-text.ts'
@@ -185,11 +185,12 @@ export function apply(ctx: {
     () =>
       seatOnlyTab(ctx.betterSidebar, TAB_ID, () => ({
         id: TAB_ID,
-        title: () => t('tab.title'),
+        // The tab word is Opportunities; the product is still Website Opportunities (spec #512).
+        title: () => t('tab.name'),
         icon: (size: number) => <Store size={size} strokeWidth={1.8} aria-hidden="true" />,
         order: 40,
         single: true,
-        preferredWidth: LIST_PANEL_WIDTH,
+        // No preferredWidth: the list and Details take the panel's default, the remaining width of the workspace.
         component: function WebsiteOpportunitiesPane() {
           const state = useFeature()
           return (

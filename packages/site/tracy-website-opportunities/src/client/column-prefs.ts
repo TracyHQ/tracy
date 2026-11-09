@@ -62,3 +62,80 @@ export function writeMyHiddenColumns(store: Store | null, hidden: ReadonlySet<My
     // Private window or blocked storage: the choice lasts until the tab closes.
   }
 }
+
+/**
+ * My opportunities' view (spec #512): Cards or Compact rows, and Map only where the deployment has a browser map
+ * key. Remembered through the same door as the Columns choice. The Table view is Find's alone now.
+ */
+export const MY_VIEW_KEY = 'tracy-wo:my-view'
+export type MyView = 'cards' | 'rows' | 'map'
+const MY_VIEWS: readonly MyView[] = ['cards', 'rows', 'map']
+
+export function readMyView(store: Store | null): MyView {
+  try {
+    const raw = store?.getItem(MY_VIEW_KEY)
+    return MY_VIEWS.find((v) => v === raw) ?? 'cards'
+  } catch {
+    return 'cards'
+  }
+}
+
+export function writeMyView(store: Store | null, view: MyView): void {
+  try {
+    store?.setItem(MY_VIEW_KEY, view)
+  } catch {
+    // Private window or blocked storage: the choice lasts until the tab closes.
+  }
+}
+
+/** The views offered: Map only with a browser map key (`GET /capabilities` `maps.browserKey`); hidden, not disabled. */
+export function myViews(browserKey: string | null | undefined): readonly MyView[] {
+  return typeof browserKey === 'string' && browserKey !== '' ? MY_VIEWS : ['cards', 'rows']
+}
+
+/** The remembered view when it is offered here, else Cards. */
+export function shownMyView(chosen: MyView, offered: readonly MyView[]): MyView {
+  return offered.includes(chosen) ? chosen : 'cards'
+}
+
+/** Secondary fields the Columns menu adds as extra lines on a card or extra cells on a compact row. */
+export const MY_FIELDS_KEY = 'tracy-wo:my-fields'
+export type SecondaryField =
+  | 'type'
+  | 'contact'
+  | 'website'
+  | 'phone'
+  | 'rating'
+  | 'source'
+  | 'researched'
+  | 'stage'
+export const SECONDARY_FIELDS: readonly SecondaryField[] = Object.freeze([
+  'type',
+  'contact',
+  'website',
+  'phone',
+  'rating',
+  'source',
+  'researched',
+  'stage'
+])
+export const isSecondaryField = (v: unknown): v is SecondaryField => SECONDARY_FIELDS.some((f) => f === v)
+
+export function readMyFields(store: Store | null): SecondaryField[] {
+  try {
+    const raw = store?.getItem(MY_FIELDS_KEY)
+    if (raw === null || raw === undefined) return []
+    const parsed: unknown = JSON.parse(raw)
+    return Array.isArray(parsed) ? SECONDARY_FIELDS.filter((f) => parsed.includes(f)) : []
+  } catch {
+    return []
+  }
+}
+
+export function writeMyFields(store: Store | null, shown: ReadonlySet<SecondaryField>): void {
+  try {
+    store?.setItem(MY_FIELDS_KEY, JSON.stringify(SECONDARY_FIELDS.filter((f) => shown.has(f))))
+  } catch {
+    // Private window or blocked storage: the choice lasts until the tab closes.
+  }
+}
