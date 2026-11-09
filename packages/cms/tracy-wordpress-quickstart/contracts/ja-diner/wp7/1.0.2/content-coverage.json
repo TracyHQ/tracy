@@ -635,7 +635,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#275.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=content/typography"
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Neutral role-label sample of the Typography style guide page (address and contact form field names with no business words); a customer has nothing to replace."
     },
     {
       "kind": "text",
@@ -898,7 +899,8 @@
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#275.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=content/typography"
+      "firstPage": "/?pagename=content/typography",
+      "accepted": "Neutral role-label sample of the Typography style guide page (address and contact form field names with no business words); a customer has nothing to replace."
     },
     {
       "kind": "text",
