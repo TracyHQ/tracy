@@ -12,7 +12,7 @@ import { mintSession } from '../src/lib/session.js'
 import { briefFacts, readAskerContext } from '../src/assistant/context.js'
 import { assistantModel, deltaOf, readEvent } from '../src/assistant/model.js'
 import { designFact, DISCORD_URL, navigationFor, systemPrompt } from '../src/assistant/prompt.js'
-import { assistantRoutes, TURNS_PER_MINUTE } from '../src/assistant/route.js'
+import { assistantRoutes, MAX_STREAMS_PER_ACCOUNT, TURNS_PER_MINUTE } from '../src/assistant/route.js'
 import { accountByEmail, sitesOfAccount } from '../src/seats/store.js'
 import { siteByKey } from '../src/sites/store.js'
 import { briefOf } from '../src/sites/brief-store.js'
@@ -1087,6 +1087,47 @@ test(
       assert.equal((await post({ message: `hi ${i}` }, cookie)).status, 503, 'never rate-limited by failures')
   }
 )
+
+test('Help reserves a stream slot while waiting for the provider first response', opts, async () => {
+  const { pool } = db
+  await twoTenants(pool)
+  let started = 0
+  let releaseFirst
+  const first = new Promise((resolve) => {
+    releaseFirst = resolve
+  })
+  const model = {
+    async *stream() {
+      started += 1
+      await first
+      yield { model: 'fake-1', text: 'Hello' }
+    }
+  }
+  const { post, cookieFor } = harness(pool, model)
+  const cookie = await cookieFor('a@x.y')
+  const pending = Array.from({ length: MAX_STREAMS_PER_ACCOUNT }, (_, i) =>
+    post({ message: `question ${i}` }, cookie)
+  )
+  let extra
+  try {
+    for (let i = 0; i < 100 && started < MAX_STREAMS_PER_ACCOUNT; i += 1)
+      await new Promise((resolve) => setTimeout(resolve, 10))
+    assert.equal(started, MAX_STREAMS_PER_ACCOUNT)
+    extra = post({ message: 'one too many' }, cookie)
+    const refused = await Promise.race([
+      extra,
+      new Promise((resolve) => setTimeout(() => resolve(null), 1000))
+    ])
+    assert.ok(refused, 'the extra request is refused before the provider answers')
+    assert.equal(refused.status, 429)
+    assert.equal((await refused.json()).code, 'BUSY')
+    assert.equal(started, MAX_STREAMS_PER_ACCOUNT, 'the extra request never reached the model')
+  } finally {
+    releaseFirst()
+    for (const response of await Promise.all(pending)) await frames(response)
+    if (extra) await extra.then((response) => frames(response).catch(() => {})).catch(() => {})
+  }
+})
 
 test(
   'POST /api/assistant/turns: a conversation a person held, with support switched off, goes back to the assistant',

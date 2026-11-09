@@ -138,6 +138,10 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    `/design-inspiration` (public), `/tracy-badge.js`, beta, sign-in (`identity/`), seats
    (`seats/`, `lanes/`), `/api/sites/*` (`sites/`), public REST `/v1` (`api/`), notifications,
    `/ops` (`ops/`), the AI assistant `/api/assistant/*` (`assistant/`: answers with a model, hands over to a real person via Telegram; read-only, never writes to a site).
+   Help permits at most two concurrent model streams per account in one web process. A slot is
+   claimed before the provider's first response and released when the answer ends or startup
+   fails. The minute and day limits use shared Postgres buckets; the concurrent limit is
+   process-local, so a multi-process deployment has a higher aggregate ceiling.
    On the new-site screen, pressing a setup action calls `POST /api/assistant/onboarding-draft`.
    It reads only the signed-in account's current session conversation and uses the Help model to
    extract an editable draft from the canonical CMS question feeds. It never creates a site,
