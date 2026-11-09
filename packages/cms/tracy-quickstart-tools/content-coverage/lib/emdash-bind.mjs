@@ -372,8 +372,8 @@ function bindPicture(item, ctx) {
       cause: "the brand logo: served by the brand door, replaced by Tracy's brand step"
     })
   // The site's own record of which entry field holds this file (the REST media index): a file counts only under the media
-  // door, and its WHOLE final segment must be a key of the record (the file id, the storage key, or the storage key's
-  // ULID). No part of a name is looked up on its own.
+  // door, and its WHOLE final segment must be a key of the index: the record's storage key, the only name the media
+  // route serves. A record id or any part of a name is never looked up.
   const name = url.pathname.startsWith(MEDIA_PATH)
     ? decodeURIComponent(url.pathname.slice(MEDIA_PATH.length))
     : ''
