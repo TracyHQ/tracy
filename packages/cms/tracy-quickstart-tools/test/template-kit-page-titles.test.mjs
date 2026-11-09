@@ -144,6 +144,13 @@ test('two fields of the page entity with the title words stay open until a field
   assert.equal(measured.titleCandidates, undefined)
 })
 
+test('two fields measured at the title size: the one printed in the h1 is the title', () => {
+  const p = page('page-learn', '/learn-to-swim', 'LEARN TO SWIM', ['body-learn'])
+  const at = (tag) => ({ controls: [{ page: '/learn-to-swim', tag, attribute: 'text', title: true }] })
+  const measured = onePage(p, { 'article-3.0': at('div'), 'article-3.1': at('h1') }).pages[0]
+  assert.equal(measured.titleSlot, 'article-3.1')
+})
+
 test('a page titled by a person or a menu item the page belongs to takes that slot', () => {
   const author = page('page-dana', '/authors/dana', 'Dana Reef', ['header'])
   author.h1.slot = 'user-2.0'
@@ -307,4 +314,12 @@ test('a page printing its title in two h1 with the same words still has that tit
   const two = page('page-rules', '/pool-rules', null, ['body-rules'])
   two.h1 = { via: null, reason: 'the page shows 2 h1', texts: ['Pool Rules', 'Lane Hire'] }
   assert.equal(onePage(two).pages[0].titleSlot, null)
+})
+
+test('two measured H1 fields remain ambiguous', () => {
+  const p = page('page-learn', '/learn-to-swim', 'LEARN TO SWIM', ['body-learn'])
+  const at = () => ({ controls: [{ page: '/learn-to-swim', tag: 'h1', attribute: 'text', title: true }] })
+  const measured = onePage(p, { 'article-3.0': at(), 'article-3.1': at() }).pages[0]
+  assert.equal(measured.titleSlot, null)
+  assert.deepEqual(measured.titleCandidates, ['article-3.0', 'article-3.1'])
 })

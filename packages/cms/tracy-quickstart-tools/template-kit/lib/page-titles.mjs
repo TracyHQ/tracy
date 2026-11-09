@@ -38,6 +38,11 @@ const titledOnPage = (controls, path) => (controls ?? []).some((c) => c.title &&
 function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
   const measured = Object.keys(drives).filter((id) => titledOnPage(drives[id]?.controls, page.path))
   if (measured.length === 1) return { slot: measured[0], from: 'field measurement' }
+  // Two fields printed at the title's size (a slide's second line styled as an h1): the title is the one in the h1.
+  const inH1 = measured.filter((id) =>
+    drives[id].controls.some((c) => c.title && c.page === page.path && c.tag === 'h1')
+  )
+  if (inH1.length === 1) return { slot: inH1[0], from: 'field measurement' }
   const text = normText(page.h1?.text ?? oneText(page.h1?.texts))
   if (!text) return { slot: null, candidates: measured }
   const same = (id) => samples.get(id)?.type === 'text' && normText(samples.get(id).sample) === text

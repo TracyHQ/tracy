@@ -117,15 +117,26 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     const wide = el.scrollWidth - el.clientWidth
     const high = el.scrollHeight - el.clientHeight
     const cut = clips && ((clipX && wide > tolerance) || (clipY && high > tolerance))
+    // The element's own text only: a child (a code line in its own scrolling box) is read as itself, inside its clip.
     const range = document.createRange()
-    range.selectNodeContents(el)
-    let right = range.getBoundingClientRect().right
+    let left = Number.POSITIVE_INFINITY
+    let right = Number.NEGATIVE_INFINITY
+    for (const n of own) {
+      range.selectNodeContents(n)
+      const r = range.getBoundingClientRect()
+      left = Math.min(left, r.left)
+      right = Math.max(right, r.right)
+    }
+    let fixed = false
     // A clipping ancestor (below the page itself) hides what lies past its edge: that is its cut, not the screen's.
     for (let a = el; a && a !== document.body && a !== document.documentElement; a = a.parentElement) {
-      const o = getComputedStyle(a).overflowX
-      if (o !== 'visible') right = Math.min(right, a.getBoundingClientRect().right)
+      const acs = getComputedStyle(a)
+      if (acs.overflowX !== 'visible') right = Math.min(right, a.getBoundingClientRect().right)
+      if (acs.position === 'fixed') fixed = true
     }
-    const past = right > viewWidth + tolerance
+    // Fixed text wholly past the edge is a closed panel parked off screen: no visitor can scroll to it.
+    const parked = fixed && left >= viewWidth
+    const past = !parked && right > viewWidth + tolerance
     if (!cut && !past) continue
     textBoxes.push({
       selector: selectorOf(el),

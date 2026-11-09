@@ -153,3 +153,15 @@ test('a phone the demo leaves empty is not counted: an empty contact field or an
   kit.site.contactBlocks[0].accepts.fields[1].filled = true
   assert.equal(reachChecks(kit).phoneNotCallable, 1)
 })
+
+test('a phone slot holding a tel: address is the link address, not a number printed outside a link', () => {
+  // JA Vega j6 1.0.10 module 126: `<a href="tel:000">951-925-0780</a>`, the href slot read as a contact.phone.
+  const kit = studio()
+  for (const f of kit.site.contactBlocks[0].accepts.fields) f.filled = false
+  kit.blocks[1].demoOwned[0].sample = ''
+  const href = { id: 'block-9.4', role: 'contact.phone', sample: 'tel:000' }
+  kit.blocks[1].slots.push(href)
+  assert.equal(reachChecks(kit).phoneNotCallable, 0)
+  href.sample = '951-925-0780'
+  assert.equal(reachChecks(kit).phoneNotCallable, 1, 'a number in no link is still counted')
+})

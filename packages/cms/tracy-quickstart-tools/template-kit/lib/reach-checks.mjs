@@ -104,7 +104,9 @@ function uncallablePhonesOf(kit) {
         PHONE_ROLE.test(String(s?.role ?? '')) &&
         s?.id &&
         !named.has(s.id) &&
-        !(typeof s.sample === 'string' && !hasWords(s.sample))
+        !(typeof s.sample === 'string' && !hasWords(s.sample)) &&
+        // The slot holding a `tel:` address is the link's own address: the number it calls is printed inside it.
+        !(typeof s.sample === 'string' && /^tel:/i.test(s.sample.trim()))
       )
         add(b, s.id, 'phone slot')
   }

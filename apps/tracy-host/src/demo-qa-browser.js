@@ -1036,7 +1036,13 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     } catch {
       continue
     }
-    if (href.origin !== location.origin || !TAXONOMY.test(href.pathname + href.search)) continue
+    // Joomla lists an item's tags in `ul.tags` whatever path its router gives them (a hidden menu item per tag routes
+    // one to `/tag-business`), so the list names a tag where the path does not.
+    if (
+      href.origin !== location.origin ||
+      !(TAXONOMY.test(href.pathname + href.search) || a.closest('ul.tags'))
+    )
+      continue
     // A count printed beside the name ("Engineering 5") is not part of it.
     const text = (a.innerText ?? '')
       .replace(/\s+/g, ' ')

@@ -186,13 +186,15 @@ test(
 )
 
 test(
-  'text running past the right edge of a phone is reported, and one cut by an outer clip is not',
+  'text running past the right edge of a phone is reported; one cut by an outer clip, in a closed panel parked off screen or in a scrolling code box is not',
   opts,
   async () => {
     const { server, base } = await site()
     PAGES['/edge'] =
       `${head}<div style="width:2000px"><p style="margin-left:1200px;white-space:nowrap">Pushed out to the right of every screen</p></div>
-    <div style="width:100px;overflow:hidden"><p style="margin-left:300px;white-space:nowrap">Hidden by its parent</p></div>`
+    <div style="width:100px;overflow:hidden"><p style="margin-left:300px;white-space:nowrap">Hidden by its parent</p></div>
+    <aside style="position:fixed;top:0;left:0;width:330px;transform:translateX(390px)"><a href="/fine" style="display:block">Closed panel link</a></aside>
+    <div style="width:300px">Article text above a code block<pre style="overflow-x:auto;white-space:pre"><code>a code line far too long to fit on any phone screen at all, scrolled in its box</code></pre></div>`
     const browser = await playwright.chromium.launch({
       headless: true,
       args: ['--disable-features=MacAppCodeSignClone']

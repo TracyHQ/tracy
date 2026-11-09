@@ -8,7 +8,7 @@
 //
 //   site-cli.mjs --site <url> [--host-header <host>] --contract <dir> --out <dir>
 //                [--db mysql://user:pass@host:port/name | --db-command '<client prefix>']
-//                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 60]
+//                [--webroot <dir> [--files-command '<prefix>']] [--capture-index <file>] [--max-pages 400]
 //                [--no-hide-measure]
 //
 // Writes into --out: site.json ({site, mainHeadings, errors}) and site-palette.html.
@@ -34,6 +34,7 @@ import { logoSlotsOf } from './lib/site/logo-spots.mjs'
 import { writePaletteHtml } from './lib/site/palette.mjs'
 import { buildSite } from './lib/site/site-kit.mjs'
 import { pathsOnStyles, stylesOfOpeningTheme } from './lib/site/theme-styles.mjs'
+import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 
 const log = (...a) => console.error('[template-kit site]', ...a)
 const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))
@@ -47,8 +48,11 @@ export function parseArgs(argv) {
   return o
 }
 
-/** The pages to read: the capture's pages when given, else every map page that opens a page of its own. */
-export function pagesToRead(map, captureIndex, cap) {
+/**
+ * The pages to read: the capture's pages when given, else every map page that opens a page of its own. The cap is the
+ * capture's own (400), so a `build --full` reads every page it shot.
+ */
+export function pagesToRead(map, captureIndex, cap = 400) {
   const list = captureIndex
     ? captureIndex.pages.map((p) => ({ path: p.path, slug: p.slug }))
     : [
@@ -102,7 +106,10 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     source.describe.join(' and ') || 'the pages only',
     `(${adapter.cms}${adapter.framework ? ` ${adapter.framework}` : ''})`
   )
-  const pages = pagesToRead(map, capture, Number(o['max-pages'] ?? 60))
+  const pages = pagesToRead(map, capture, o['max-pages'] ? Number(o['max-pages']) : undefined)
+  // The page cap is reported, never applied silently.
+  const listed = pagesToRead(map, capture, Infinity).length
+  if (pages.length < listed) say(listed - pages.length, 'pages left unread by the page cap (--max-pages)')
   const served = await fetchStyles({ pages, siteUrl: o.site, hostHeader })
   const { htmls } = served
   // A page on another colour theme of the template (a theme showcase) does not paint the brand.

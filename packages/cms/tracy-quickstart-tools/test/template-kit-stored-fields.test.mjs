@@ -2,8 +2,12 @@
 // control is named by the gate. Fabricated swim club.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { onlySlots, writeFieldDrives } from '../template-kit/cli.mjs'
 import { coverageGate } from '../template-kit/lib/coverage-gate.mjs'
-import { measureFieldDrives, measurableFields } from '../template-kit/lib/field-drives.mjs'
+import { measurableFields, measureFieldDrives } from '../template-kit/lib/field-drives.mjs'
 import { joomlaFieldWriter } from '../template-kit/lib/site/adapters/joomla-field-writer.mjs'
 import { pagesOfEntity } from '../template-kit/lib/site/measure-fields.mjs'
 import { settleSlotRoles } from '../template-kit/lib/slot-roles.mjs'
@@ -205,11 +209,59 @@ test('the Joomla writer changes one JSON field, keeps the rest and puts the stor
   writer.set(field, 'MARK')
   const update = sent.find((q) => q.startsWith('UPDATE'))
   const hex = /x'([0-9a-f]+)'/.exec(update)[1]
-  assert.match(update, /^UPDATE x_content SET attribs=x'[0-9a-f]+' WHERE id=3$/)
+  // Columns are quoted: an article body sits in `fulltext`, a MySQL keyword.
+  assert.equal(sent[0], 'SELECT `attribs` AS value FROM x_content WHERE id=3')
+  assert.match(update, /^UPDATE x_content SET `attribs`=x'[0-9a-f]+' WHERE id=3$/)
   assert.deepEqual(JSON.parse(Buffer.from(hex, 'hex').toString()), { keep: 'x', 'signup-link': 'MARK' })
   writer.restore(field)
   const back = /x'([0-9a-f]+)'/.exec(sent.at(-1))[1]
   assert.equal(Buffer.from(back, 'hex').toString(), stored.attribs)
+})
+
+test('the Joomla writer sets a field inside a nested JSON string (an ACM module) and keeps that string a string', () => {
+  const inner = { hero: { 'hero-style[hero-title]': ['We are Symphony.'], keep: 1 } }
+  const stored = JSON.stringify({ 'jatools-layout-hero': 'style-1', 'jatools-config': JSON.stringify(inner) })
+  const sent = []
+  const writer = joomlaFieldWriter({
+    prefix: 'x_',
+    entities: [{ key: 'module-95', kind: 'module', sourceId: 95 }],
+    select: () => [{ value: stored }],
+    write: (sql) => sent.push(sql)
+  })
+  const field = {
+    key: 'module-95.0',
+    entity: 'module-95',
+    column: 'params',
+    nestedJson: 'jatools-config',
+    jsonPath: ['hero', 'hero-style[hero-title]', 0]
+  }
+  writer.set(field, 'MARK')
+  const doc = JSON.parse(Buffer.from(/x'([0-9a-f]+)'/.exec(sent[0])[1], 'hex').toString())
+  assert.deepEqual(Object.keys(doc), ['jatools-layout-hero', 'jatools-config'])
+  assert.deepEqual(JSON.parse(doc['jatools-config']), {
+    hero: { 'hero-style[hero-title]': ['MARK'], keep: 1 }
+  })
+  writer.restore(field)
+  assert.equal(Buffer.from(/x'([0-9a-f]+)'/.exec(sent.at(-1))[1], 'hex').toString(), stored)
+})
+
+test('the Joomla writer reaches a tag title, and a partial run measures only the slots asked for', () => {
+  // JA Kinetic j6 1.0.11 tag pages print "Tagged: <tag title>" as their h1: the tag title is the page title slot.
+  const sent = []
+  const writer = joomlaFieldWriter({
+    prefix: 'x_',
+    entities: [{ key: 'tag-6', kind: 'tag', sourceId: 6 }],
+    select: (sql) => (sent.push(sql), [{ value: 'incident' }]),
+    write: (sql) => sent.push(sql)
+  })
+  writer.set({ key: 'tag-6.0', entity: 'tag-6', column: 'title' }, 'MARK')
+  assert.equal(sent[0], 'SELECT `title` AS value FROM x_tags WHERE id=6')
+  const map = { slots: [{ key: 'tag-6.0' }, { key: 'article-3.0' }, { key: 'tag-7.0' }] }
+  assert.deepEqual(
+    onlySlots(map, 'tag-').slots.map((s) => s.key),
+    ['tag-6.0', 'tag-7.0']
+  )
+  assert.equal(onlySlots(map, undefined), map)
 })
 
 test('the Joomla writer refuses an entity kind it has no table for', () => {
@@ -268,4 +320,20 @@ test('the pages of an entity read a list that counts its rows, not only one that
     ]
   }
   assert.deepEqual(pagesOfEntity(kit, {})({ entity: 'article-3' }), ['/lessons'])
+})
+
+test('partial field measurements replace selected results and keep the others on disk', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'field-drives-'))
+  const file = join(dir, 'field-drives.json')
+  const read = () => JSON.parse(readFileSync(file, 'utf8'))
+  try {
+    writeFieldDrives(file, { 'tag-6.0': { controls: [] }, 'article-3.0': { error: 'retained' } }, false)
+    const next = { 'tag-6.0': { controls: [{ page: '/tag', tag: 'h1' }] } }
+    writeFieldDrives(file, next, true)
+    assert.deepEqual(read(), { ...next, 'article-3.0': { error: 'retained' } })
+    writeFieldDrives(file, next, false)
+    assert.deepEqual(read(), next)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
 })
