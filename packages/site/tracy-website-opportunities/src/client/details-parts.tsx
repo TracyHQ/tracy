@@ -1,7 +1,8 @@
 /**
  * Parts of the Details page (#517) that used to live in the Inspector: a titled section card and the Sources list
  * (the links the owner pasted first, then what research found, each with its status, reason and Try again). Details
- * owns its copy so the page does not depend on the side panel, which goes away.
+ * owns its copy so the page does not depend on the side panel, which goes away. The Sources card of Details draws the
+ * compact list (name, one line, chip); its sub-page draws every row with its details and the two groups.
  */
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { collectedLine } from './research-gate-model.ts'
@@ -61,7 +62,8 @@ export function Sources({
   t,
   sources,
   retry,
-  collected = true
+  collected = true,
+  compact = false
 }: {
   t: Translate
   sources: SourceInput[]
@@ -69,21 +71,29 @@ export function Sources({
   retry?: SourceRetry
   /** False before this card's research: a row with nothing yet reads Not collected yet. */
   collected?: boolean
+  /** The Sources card of Details: one line per source, no details, no group headings. */
+  compact?: boolean
 }): JSX.Element {
   if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
   // The links the owner pasted first; what research looked at by itself below, under its own heading.
   const { pasted, found } = sourceGroups(sources)
+  const both = !compact && pasted.length > 0 && found.length > 0
+  const item = (s: SourceInput): JSX.Element => (
+    <SourceItem
+      key={`${s.source}:${s.pastedLink ?? ''}`}
+      t={t}
+      s={s}
+      retry={retry}
+      collected={collected}
+      compact={compact}
+    />
+  )
   return (
-    <div className="tracy-wo-srcs">
-      {pasted.map((s) => (
-        <SourceItem key={s.source} t={t} s={s} retry={retry} collected={collected} />
-      ))}
-      {pasted.length > 0 && found.length > 0 ? (
-        <p className="tracy-wo-src-group">{t('source.alsoLookedAt')}</p>
-      ) : null}
-      {found.map((s) => (
-        <SourceItem key={s.source} t={t} s={s} retry={retry} collected={collected} />
-      ))}
+    <div className="tracy-wo-srcs" data-compact={compact ? '' : undefined}>
+      {both ? <p className="tracy-wo-src-group">{t('source.usedHere')}</p> : null}
+      {pasted.map(item)}
+      {both ? <p className="tracy-wo-src-group">{t('source.alsoLookedAt')}</p> : null}
+      {found.map(item)}
     </div>
   )
 }
@@ -103,12 +113,14 @@ function SourceItem({
   t,
   s,
   retry,
-  collected: researched
+  collected: researched,
+  compact
 }: {
   t: Translate
   s: SourceInput
   retry?: SourceRetry
   collected: boolean
+  compact: boolean
 }): JSX.Element {
   const row = sourceRow(s)
   const pastedLink = pastedLinkOf(s)
@@ -142,33 +154,42 @@ function SourceItem({
       : row.fetched > 0
         ? t('source.coverageOpen', { fetched: row.fetched })
         : null
+  const head = (
+    <>
+      <span className="tracy-wo-src-head">
+        <span className="tracy-wo-src-name">
+          {compact ? null : <Icon aria-hidden="true" className={`tracy-wo-src-icon is-${row.tone}`} />}
+          {sourceLabel(t, row.source, pastedLink ?? s.ref)}
+        </span>
+        {pastedLink !== null || s.fromSearch || collected !== null || plainReason !== null ? (
+          <span className="tracy-wo-src-sub">
+            {[
+              pastedLink !== null ? t('source.link') : null,
+              s.fromSearch ? t('source.fromSearch') : null,
+              collected,
+              plainReason ? t(plainReason) : null
+            ]
+              .filter(Boolean)
+              .join(' · ')}
+          </span>
+        ) : null}
+      </span>
+      <Badge
+        variant="outline"
+        className={cn('tracy-wo-src-chip', CHIP_CLASS[unavailable ? 'failed' : row.tone])}
+      >
+        {t(chipKey)}
+      </Badge>
+    </>
+  )
+  if (compact) return <div className="tracy-wo-src tracy-wo-src-line">{head}</div>
   return (
     <details
       className="tracy-wo-src"
       // Closed by default: the chip and the line under the name say it all; a page waiting for a check opens.
       open={search === 'again.search.pending' || row.tone === 'partial'}
     >
-      <summary>
-        <span className="tracy-wo-src-head">
-          <span className="tracy-wo-src-name">
-            <Icon aria-hidden="true" className={`tracy-wo-src-icon is-${row.tone}`} />
-            {sourceLabel(t, row.source, pastedLink ?? s.ref)}
-          </span>
-          {pastedLink !== null || collected !== null || plainReason !== null ? (
-            <span className="tracy-wo-src-sub">
-              {[pastedLink !== null ? t('source.link') : null, collected, plainReason ? t(plainReason) : null]
-                .filter(Boolean)
-                .join(' · ')}
-            </span>
-          ) : null}
-        </span>
-        <Badge
-          variant="outline"
-          className={cn('tracy-wo-src-chip', CHIP_CLASS[unavailable ? 'failed' : row.tone])}
-        >
-          {t(chipKey)}
-        </Badge>
-      </summary>
+      <summary>{head}</summary>
       <div className="tracy-wo-src-body">
         {coverage === null && reasonKey === null && search === null && link === null && !unavailable
           ? t('inspector.nothingYet')

@@ -481,6 +481,8 @@ export const en = {
   'source.listingPlain': 'Listing',
   /** Heading above the sources research looked at by itself, below the links the owner added. */
   'source.alsoLookedAt': 'Also looked at',
+  'source.usedHere': 'Used for this place',
+  'source.fromSearch': 'Found in your search',
 
   'source.status.complete': 'Complete',
   'source.status.partial': 'Partial',
@@ -1149,51 +1151,52 @@ export const en = {
   'pp.target.media': 'Photos',
   'pp.target.brand': 'Brand',
 
-  /** Details (#517): the sticky header and its menu, then one page of sections (layout B, spec #512). */
+  /** Details (#517): the sticky header and its menu, then two columns of section cards (layout C, spec #512). */
   'details.back': 'Back',
   'details.more': 'More actions',
   'details.researchAgain': 'Research again',
   'details.delete': 'Delete',
-  'details.sections': 'Sections of this place',
   'details.section.profile': 'Profile',
   'details.section.sources': 'Sources',
   'details.section.brief': 'Business brief',
   'details.section.media': 'Photos & video',
   'details.section.demo': 'Demo site',
 
-  /** The "On this page" rail of Details: one status line under each section (`rail-model.ts`). */
-  'rail.title': 'On this page',
-  'rail.profile.fields.one': '{count} field',
-  'rail.profile.fields.other': '{count} fields',
-  'rail.profile.partial': '{count} of {total}',
-  'rail.profile.waiting': 'Available after research',
-  'rail.sources.found': '{count} of {total} found',
-  'rail.sources.running': '{count} of {total} done',
-  'rail.sources.none': 'Not collected yet',
-  'rail.brief.made': 'Brief {n}, {date}',
-  'rail.brief.number': 'Brief {n}',
-  'rail.brief.running': 'Running',
-  'rail.brief.locked': 'Locked',
-  'rail.brief.none': 'Not made yet',
-  'rail.media.photos.one': '{count} photo',
-  'rail.media.photos.other': '{count} photos',
-  'rail.media.videos.one': '{count} video',
-  'rail.media.videos.other': '{count} videos',
-  'rail.media.soFar': '{count} so far',
-  'rail.media.none': 'None yet',
-  'rail.demo.none': 'Not built',
-  'rail.demo.building': 'Building',
-  'rail.demo.ready': 'Ready',
+  /** The status line beside each section title of Details (`section-model.ts`). */
+  'section.meta.profile.fields.one': '{count} field',
+  'section.meta.profile.fields.other': '{count} fields',
+  'section.meta.profile.partial': '{count} of {total}',
+  'section.meta.profile.waiting': 'Available after research',
+  'section.meta.sources.found': '{count} of {total} found',
+  'section.meta.sources.running': '{count} of {total} done',
+  'section.meta.sources.none': 'Not collected yet',
+  'section.meta.brief.made': 'Brief {n}, {date}',
+  'section.meta.brief.number': 'Brief {n}',
+  'section.meta.brief.running': 'Running',
+  'section.meta.brief.locked': 'Locked',
+  'section.meta.brief.none': 'Not made yet',
+  'section.meta.media.photos.one': '{count} photo',
+  'section.meta.media.photos.other': '{count} photos',
+  'section.meta.media.videos.one': '{count} video',
+  'section.meta.media.videos.other': '{count} videos',
+  'section.meta.media.soFar': '{count} so far',
+  'section.meta.media.none': 'None yet',
+  'section.meta.demo.none': 'Not built',
+  'section.meta.demo.building': 'Building',
+  'section.meta.demo.ready': 'Ready',
 
-  /** A section of Details: the lock line while it waits for a step, and the Show all bar of a heavy section. */
+  /** A section of Details: the lock line while it waits for a step, and the link that opens it as a sub-page. */
   'section.locked.research': 'Available after research finishes.',
   'section.locked.brief': 'Available after the content brief is ready.',
-  'section.showAll': 'Show all',
-  'section.showAllFields': 'Show all {count} fields',
-  'section.showAllMedia': 'Show all {count}',
-  'section.showAllProfile': 'Show all fields',
-  'section.showMore': 'Show more about this place',
-  'section.showLess': 'Show less',
+  'section.open': 'Open',
+  'section.openBrief': 'Open full brief',
+  'section.openNamed': 'Open {section}',
+
+  /** A section opened as a sub-page: the pager at its foot walks Profile, Sources, Business brief, Photos & video. */
+  'section.pager': 'Other sections of this place',
+  'section.previous': 'Previous',
+  'section.next': 'Next',
+  'section.backTo': 'Back to {name}',
 
   /** The Business brief table: label, value, where it came from, on the site. */
   'brief.table.fact': 'Fact',
@@ -1250,7 +1253,7 @@ export const en = {
   'brief.full': 'Full brief',
 
   /** The three steps of one place under the Details header (stepper-model.ts, mock r6-a). */
-  'stepper.label': 'Steps',
+  'progress.title': 'Progress',
   'step.research': 'Research',
   'step.brief': 'Content brief',
   'step.build': 'Build demo',

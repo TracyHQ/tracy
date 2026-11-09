@@ -10,10 +10,10 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { addressFromSearch, searchWithAddress } from '../src/client/my-address.ts'
-import { clickTarget, createListMemory, historyWrite, listAddress } from '../src/client/my-nav.ts'
+import { clickTarget, createListMemory, historyWrite, listAddress, pageDepth } from '../src/client/my-nav.ts'
 
 const ID = '0b6f5c2e-6a51-4c55-9a8e-3f1d2c4b5a69'
-const LIST = { view: 'mine', stage: 'demo', q: 'bistro', opp: null, page: null, brief: null }
+const LIST = { view: 'mine', stage: 'demo', q: 'bistro', opp: null, page: null, brief: null, section: null }
 const MAPS = 'https://www.google.com/maps/search/?api=1&query=Sunny+Fork'
 
 test('a row click and a name click both open Details of that place, in the same tab', () => {
@@ -21,7 +21,15 @@ test('a row click and a name click both open Details of that place, in the same 
     const target = clickTarget(kind, LIST, { id: ID, mapsUrl: MAPS })
     assert.deepEqual(target, {
       kind: 'details',
-      address: { view: 'mine', stage: 'demo', q: 'bistro', opp: ID, page: 'details', brief: null }
+      address: {
+        view: 'mine',
+        stage: 'demo',
+        q: 'bistro',
+        opp: ID,
+        page: 'details',
+        brief: null,
+        section: null
+      }
     })
   }
 })
@@ -68,4 +76,21 @@ test('Back restores the filter from the address and the view and scroll from mem
 
 test('the list address of a page drops the place and the page only', () => {
   assert.deepEqual(listAddress({ ...LIST, opp: ID, page: 'brief', brief: ID }), LIST)
+})
+
+test('opening a section of Details pushes an entry; the pager and the way back to Details replace it', () => {
+  const details = { ...LIST, opp: ID, page: 'details' }
+  const brief = { ...details, section: 'brief' }
+  assert.equal(historyWrite(details, brief), 'push')
+  assert.equal(historyWrite(brief, { ...details, section: 'media' }), 'replace')
+  assert.equal(historyWrite(brief, details), 'replace')
+  assert.equal(listAddress(brief).section, null)
+})
+
+test('page depth: the list 0, Details 1, a section or a brief 2', () => {
+  const details = { ...LIST, opp: ID, page: 'details' }
+  assert.equal(pageDepth(LIST), 0)
+  assert.equal(pageDepth(details), 1)
+  assert.equal(pageDepth({ ...details, section: 'sources' }), 2)
+  assert.equal(pageDepth({ ...details, page: 'brief', brief: ID }), 2)
 })

@@ -81,6 +81,8 @@ export interface SourceInput {
   pastedLink?: string | null
   /** When its data was collected (#524); null when it holds none. */
   collectedAt?: string | null
+  /** Before research: the Google listing the place was picked from in a search (`source-links-model.ts`). */
+  fromSearch?: boolean
 }
 
 export interface SourceRow {

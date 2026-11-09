@@ -263,11 +263,13 @@ test('the links the owner pasted come first, each with The link you added and it
   assert.ok(heading > html.indexOf('[source.listing'), 'the heading comes after the pasted rows')
   assert.ok(heading < html.indexOf('[source.facebookSearch]'), 'and before what research found by itself')
   assert.equal((html.match(/\[source\.alsoLookedAt\]/g) ?? []).length, 1)
+  // The pasted rows sit under their own heading, Used for this place.
+  assert.ok(html.indexOf('[source.usedHere]') < html.indexOf('Instagram'))
 })
 
 test('Also looked at shows only when both groups have rows', () => {
   assert.doesNotMatch(draw(SAGA), /source\.alsoLookedAt|\[source\.link\]/)
-  assert.doesNotMatch(draw(PASTED.filter((s) => s.pastedLink)), /source\.alsoLookedAt/)
+  assert.doesNotMatch(draw(PASTED.filter((s) => s.pastedLink)), /source\.alsoLookedAt|source\.usedHere/)
 })
 
 test('a listing row is named Listing with its host, and plain Listing when its address has none', () => {
@@ -287,4 +289,29 @@ test('a pasted link that is not an http address is not trusted as one', () => {
     }
   ])
   assert.doesNotMatch(html, /tracy-wo-src-pasted|javascript:/)
+})
+
+test('the compact list of the Sources card: one line per source with its chip, no details and no headings', () => {
+  const html = lib.renderToStaticMarkup(lib.createElement(lib.Sources, { t, sources: PASTED, compact: true }))
+  assert.doesNotMatch(html, /<details|<summary|source\.alsoLookedAt|source\.usedHere|<a /)
+  assert.equal((html.match(/tracy-wo-src-line/g) ?? []).length, PASTED.length)
+  assert.equal((html.match(/tracy-wo-src-chip/g) ?? []).length, PASTED.length)
+})
+
+test('before research, the pasted links and the Google listing of a search read Not collected yet', () => {
+  const sources = [
+    { source: 'google-places', status: null, fromSearch: true },
+    {
+      source: 'instagram',
+      ref: 'https://www.instagram.com/sample_bistro',
+      status: null,
+      pastedLink: 'https://www.instagram.com/sample_bistro'
+    }
+  ]
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.Sources, { t, sources, collected: false, compact: true })
+  )
+  assert.equal((html.match(/\[reason\.not_collected\]/g) ?? []).length, 2)
+  assert.match(html, /\[source\.fromSearch\]/)
+  assert.match(html, /\[source\.link\]/)
 })

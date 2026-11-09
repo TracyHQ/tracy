@@ -20,7 +20,7 @@ import { flowReducer, initialFlow } from './flow.ts'
 import { CMS_ORDER, settingsView } from './gate.ts'
 import { MyOpportunitiesView } from './list.tsx'
 import { type MyAddress, type SubTab, addressFromSearch, searchWithAddress } from './my-address.ts'
-import { createListMemory, detailsAddress, historyWrite, listAddress } from './my-nav.ts'
+import { createListMemory, detailsAddress, historyWrite, listAddress, pageDepth } from './my-nav.ts'
 import { type AccountCounts, type Counts, legacyView, pageAnswer, startingSubTab } from './my-list.ts'
 import { onBackInSight, usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
@@ -85,7 +85,7 @@ function useAccountCounts(api: Api): AccountCounts {
  * The address state, read once on mount, written on every press (never on a render) and read again when the browser
  * walks its history. Opening a page pushes an entry; `pushed` says whether Back can pop one this tab pushed.
  */
-function useAddress(): [MyAddress, (next: MyAddress) => void, () => boolean] {
+function useAddress(): [MyAddress, (next: MyAddress) => void, () => number] {
   const [address, setAddress] = useState<MyAddress>(() =>
     typeof window === 'undefined' ? addressFromSearch('') : addressFromSearch(window.location.search)
   )
@@ -107,15 +107,14 @@ function useAddress(): [MyAddress, (next: MyAddress) => void, () => boolean] {
   useEffect(() => {
     const onPop = (): void => {
       const next = addressFromSearch(window.location.search)
-      if (current.current.page !== null && next.page === null)
-        pushes.current = Math.max(0, pushes.current - 1)
+      pushes.current = Math.max(0, pushes.current - Math.max(0, pageDepth(current.current) - pageDepth(next)))
       current.current = next
       setAddress(next)
     }
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
-  return [address, write, () => pushes.current > 0]
+  return [address, write, () => pushes.current]
 }
 
 function SubTabs({
@@ -196,19 +195,27 @@ function Flow({
   if (sub === null) return <div className="tracy-wo-empty" aria-busy="true" />
 
   const go = (patch: Partial<MyAddress>): void => setAddress({ ...address, view: sub, ...patch })
-  const toList = (): void => go({ view: 'mine', page: null, brief: null })
+  const toList = (): void => go({ view: 'mine', page: null, brief: null, section: null })
   const openDetails = (id: string): void => {
     memory.remember({ view: readMyView(localStore()), scroll: scroller()?.scrollTop ?? 0 })
     setAddress(detailsAddress({ ...address, view: 'mine' }, id))
   }
-  // Back: pop the entry this tab pushed (the browser's Back does the same), else rewrite the address to the list.
+  // Back: pop the entries this tab pushed (the browser's Back does the same), else rewrite the address to the list.
   const back = (): void => {
-    if (canPop() && typeof window !== 'undefined') window.history.back()
+    const depth = pageDepth(address)
+    if (depth > 0 && canPop() >= depth && typeof window !== 'undefined') window.history.go(-depth)
     else setAddress(listAddress({ ...address, view: 'mine' }))
+  }
+  // A section of Details as a sub-page: opening one pushes an entry, the pager rewrites it, and going back to Details
+  // pops it when this tab pushed it (so the browser's Back and the page's own link agree).
+  const openSection = (section: MyAddress['section']): void => {
+    if (section === null && address.section !== null && canPop() > 0 && typeof window !== 'undefined')
+      return window.history.back()
+    go({ section })
   }
   const openBrief = (opp: string, revisionId: string, focus: boolean): void => {
     setFocusName(focus)
-    go({ view: 'mine', opp, page: 'brief', brief: revisionId })
+    go({ view: 'mine', opp, page: 'brief', brief: revisionId, section: null })
   }
   const page = sub === 'mine' ? address.page : null
 
@@ -218,7 +225,7 @@ function Flow({
         t={t}
         value={sub}
         counts={account.counts}
-        onChange={(view) => go({ view, page: null, brief: null })}
+        onChange={(view) => go({ view, page: null, brief: null, section: null })}
       />
       <div className="tracy-wo-body">
         {sub === 'find' && (
@@ -230,7 +237,7 @@ function Flow({
             dispatch={dispatch}
             onSent={() => {
               void account.refresh()
-              go({ view: 'mine', stage: 'all', q: '', opp: null, page: null, brief: null })
+              go({ view: 'mine', stage: 'all', q: '', opp: null, page: null, brief: null, section: null })
             }}
           />
         )}
@@ -258,6 +265,8 @@ function Flow({
             id={address.opp}
             cms={cms}
             onList={back}
+            section={address.section}
+            onSection={openSection}
             onChanged={() => void account.refresh()}
             onOpenRevision={(revisionId, focus) => openBrief(address.opp ?? '', revisionId, focus)}
             openBriefTab={openBriefTab}
@@ -272,7 +281,7 @@ function Flow({
             revisionId={address.brief}
             focusName={focusName}
             onList={toList}
-            onDetails={() => go({ page: 'details', brief: null })}
+            onDetails={() => go({ page: 'details', brief: null, section: null })}
           />
         )}
       </div>

@@ -204,10 +204,10 @@ function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX
   )
 }
 
-/** How many tiles the closed Photos & video section shows; past it, the last tile counts the rest. */
-export const MEDIA_STRIP = 8
+/** How many tiles the Photos & video card of Details shows (two rows); past it, the last tile counts the rest. */
+const MEDIA_STRIP = 16
 
-/** The closed Photos & video section (layout B): one strip of the first photos and videos, the last tile counting the rest. */
+/** The Photos & video card of Details: the first photos and videos, the last tile counting the rest. */
 function MediaStrip({ t, view }: { t: Translate; view: MediaRowView }): JSX.Element {
   const tiles = [...view.photos.groups.flatMap((g) => g.tiles), ...view.videos.tiles].filter((m) => m.stored)
   if (tiles.length === 0) return <None t={t} />
@@ -248,11 +248,6 @@ function MediaStrip({ t, view }: { t: Translate; view: MediaRowView }): JSX.Elem
   )
 }
 
-/** Photos and videos the strip can show, for its Show all bar. */
-export function mediaCount(view: MediaRowView): number {
-  return [...view.photos.groups.flatMap((g) => g.tiles), ...view.videos.tiles].filter((m) => m.stored).length
-}
-
 export function MediaRow({
   t,
   view,
@@ -269,7 +264,7 @@ export function MediaRow({
   food?: boolean
   /** The Menu field: each menu photo gets its number and reading result. */
   menu?: Menu | null
-  /** False: only the strip of the first tiles (the section's Show all opens the rest). */
+  /** False: only the first tiles (the card of Details; its sub-page opens the rest). */
   open?: boolean
   /** Inside the Photos & video section of Details, which carries the title: no card of its own. */
   bare?: boolean

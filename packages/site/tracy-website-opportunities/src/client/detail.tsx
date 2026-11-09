@@ -3,12 +3,14 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * The Details page of one opportunity and the page of one of its site briefs (plan D7), inside the
  * My opportunities sub-tab.
  *
- * Details (#517, layout B of spec #512): a sticky header (Back, name and type, status, the three steps with the one
- * action of the current step, a ⋯ menu with Research again and Delete) over ONE page with every section stacked and a
- * sticky "On this page" rail beside it (`details-rail.tsx`): Profile (the rows the person can check and edit, then
- * menu, Google, reviews, current website, social and place profile behind Show more), Sources (with Research again),
- * Business brief (the brief line and the facts table, a summary until Show all), Photos & video (a strip until Show
- * all) and Demo site (the block of #515 and every demo). A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
+ * Details (#517, layout C of spec #512): a sticky header (Back, name and type, status, a ⋯ menu with Research again
+ * and Delete) over two columns of cards. The left column holds Progress (the three steps with the one action of the
+ * current step), Profile (the rows the person can check and edit) and Sources (one line each); the right column holds
+ * Business brief (the brief line and the first rows of the facts table), Photos & video (two rows of tiles) and Demo
+ * site (the block of #515 and every demo). A narrow page is one column in that order. Profile, Sources, Business brief
+ * and Photos & video each open as a sub-page (`wo-section`, `details-sections.tsx`) with the whole section: the
+ * Profile with menu, Google, reviews, current website, social and place profile; Sources with Research again; the full
+ * facts table; every photo and video. A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
  * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
  * opened it).
  */
@@ -68,7 +70,7 @@ import {
   socialStatsLines,
   tripadvisorReviewView
 } from './detail-model.ts'
-import { MEDIA_STRIP, MediaRow, mediaCount } from './media-row.tsx'
+import { MediaRow } from './media-row.tsx'
 import { MenuBlock } from './menu-block.tsx'
 import { PlaceProfileBlock } from './place-profile-block.tsx'
 import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
@@ -85,8 +87,15 @@ import { BusinessBriefTable } from './business-brief-table.tsx'
 import { SiteNameRow } from './site-name-row.tsx'
 import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
 import { DemoSiteBlock } from './demo-site-block.tsx'
-import { DetailsRail, PageSection, useSections } from './details-rail.tsx'
-import { type SectionId, railView, researchRunning as researchMovingOf, sourceCounts } from './rail-model.ts'
+import { SectionCard, SubPage } from './details-sections.tsx'
+import {
+  type SectionId,
+  type SubSection,
+  researchRunning as researchMovingOf,
+  sectionMetas,
+  sourceCounts
+} from './section-model.ts'
+import { sourcesToShow } from './source-links-model.ts'
 import { DetailsHeader } from './details-header.tsx'
 import { Section, Sources } from './details-parts.tsx'
 import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
@@ -271,6 +280,8 @@ export function DetailView({
   ids,
   id,
   onList,
+  section = null,
+  onSection = () => undefined,
   onChanged,
   onOpenRevision,
   openBriefTab = null
@@ -281,6 +292,10 @@ export function DetailView({
   id: string
   cms: string | null
   onList: () => void
+  /** The section open as a sub-page (`wo-section`); null = the two columns of Details. */
+  section?: SubSection | null
+  /** Opens a section as a sub-page, or null to come back to Details. */
+  onSection?: (section: SubSection | null) => void
   onChanged: () => void
   /** `focusName`: the brief opens with its Demo site name field focused (Build demo site). */
   onOpenRevision: (revisionId: string, focusName: boolean) => void
@@ -331,16 +346,11 @@ export function DetailView({
     },
     MENU_PARTS
   )
-  // One long page (layout B): the rail follows the section in view; heavy sections open in place.
+  // A section opened as a sub-page, or the pager to the next one, starts at the top of the page.
   const page = useRef<HTMLDivElement | null>(null)
-  const sections = useSections(page, body !== null && row !== null)
-  const [open, setOpen] = useState<Record<'profile' | 'more' | 'brief' | 'media', boolean>>({
-    profile: false,
-    more: false,
-    brief: false,
-    media: false
-  })
-  const flip = (key: keyof typeof open): void => setOpen((o) => ({ ...o, [key]: !o[key] }))
+  useEffect(() => {
+    page.current?.closest<HTMLElement>('.tracy-wo-tab')?.scrollTo({ top: 0 })
+  }, [section])
   // Delete this place (the same confirmation and door as the list), then back to the list.
   const [deleting, setDeleting] = useState<DeleteAsk | null>(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
@@ -379,9 +389,14 @@ export function DetailView({
       if (outcome.kind === 'send-demo') {
         const answer = await api.outreach(row.id)
         if (answer.ok) {
-          // The Send panel lives in the Demo site section.
+          // The Send panel lives in the Demo site card.
           setSend(answer.body.outreach)
-          sections.go('demo')
+          if (section !== null) onSection(null)
+          requestAnimationFrame(() =>
+            page.current
+              ?.querySelector<HTMLElement>('[data-section="demo"]')
+              ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          )
         } else setActionFailed(true)
         return
       }
@@ -526,6 +541,8 @@ export function DetailView({
     return true
   }
   const sources = asArray<SourceInput>(body.sources).filter((s) => typeof s?.source === 'string')
+  // Before research has a row, the links the owner pasted (and the Google listing of a search), Not collected yet.
+  const shownSources = sourcesToShow(sources, body.opportunity)
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
@@ -562,7 +579,7 @@ export function DetailView({
     if (command.kind === 'press') return void demoPress(command.press)
     window.open(command.href, '_blank', 'noopener,noreferrer')
   }
-  // The three steps under the header, on every tab, with the ONE action of the current step (mock r6-a).
+  // The three steps with the ONE action of the current step: the Progress card, or one line on a sub-page.
   const stepper = stepperView({
     research,
     researchJob: job,
@@ -578,13 +595,14 @@ export function DetailView({
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
-  const stepperBlock = (
+  const stepperBlock = (strip: boolean): JSX.Element => (
     <Stepper
       t={t}
       view={stepper}
       locale={locale}
       busy={busy || briefJob.pressing}
       disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
+      strip={strip}
       onAction={onStep}
     />
   )
@@ -669,17 +687,16 @@ export function DetailView({
   }
   const summaryRows = briefSummaryRows(briefRows)
   const mediaView = mediaRowView({ profile, media, sources })
-  const mediaShown = mediaCount(mediaView)
   const profileRows = profileFields(profile)
   const researchMoving = researchMovingOf({ research, researchJob: job })
-  const rail = railView({
+  const metas = sectionMetas({
     research,
     researchJob: job,
     profile: {
       filled: profileRows.length + (ratingRow === null ? 0 : 1) + (readingRows === null ? 0 : 1),
       total: PROFILE_FIELDS.length + 2
     },
-    sources: sourceCounts(sources),
+    sources: sourceCounts(shownSources),
     briefJob: briefJob.job,
     brief: isRecord(body.brief) ? body.brief : null,
     media: {
@@ -689,7 +706,10 @@ export function DetailView({
     demo: demoView.state,
     locale
   })
-  const entryOf = (id: SectionId) => rail.find((e) => e.id === id)
+  const metaOf = (id: SectionId) => metas.find((e) => e.id === id)
+  // Profile, Business brief and Photos & video have something to open once research runs or is done.
+  const openable = research.done || researchMoving
+  const openTo = (labelKey = 'section.open') => (openable ? { labelKey, onOpen: onSection } : null)
   // What else research read about the place (menu, Google, reviews, current website, social, place profile).
   const hasMore =
     research.done &&
@@ -701,7 +721,9 @@ export function DetailView({
       placeProfile.failed ||
       tripadvisorReviewView(profile, media).length > 0)
 
-  const profileBlock = (
+  // The Profile card of Details keeps the plain rows, each editable in place; the rows that ask for a decision (name,
+  // rating, phones, hours, services, team, key messages) live on its sub-page.
+  const profileBlock = (full: boolean): JSX.Element => (
     <Profile
       t={t}
       profile={profile}
@@ -711,12 +733,12 @@ export function DetailView({
       collecting={researchMoving ? { name: shownName, phone } : null}
       editRow={research.done ? editProfileRow : null}
       nameRow={
-        nameRow === null ? null : (
+        !full || nameRow === null ? null : (
           <ProfileNameRow key={`${nameRow.name}:${nameRow.chip}`} t={t} view={nameRow} onSave={saveName} />
         )
       }
       hoursRow={
-        hoursRow === null ? null : (
+        !full || hoursRow === null ? null : (
           <ProfileHoursRow
             key={`${hoursRow.hours.join('|')}:${hoursRow.chip}:${hoursRow.left}`}
             t={t}
@@ -726,12 +748,12 @@ export function DetailView({
         )
       }
       phonesRow={
-        phonesRow === null || (phonesRow.others.length === 0 && !phonesRow.mainWhatsapp) ? null : (
+        !full || phonesRow === null || (phonesRow.others.length === 0 && !phonesRow.mainWhatsapp) ? null : (
           <ProfilePhonesRows t={t} view={phonesRow} />
         )
       }
       ratingRow={
-        ratingRow === null ? null : (
+        !full || ratingRow === null ? null : (
           <ProfileRatingRow
             key={`${ratingRow.shown}:${ratingRow.chosen}`}
             t={t}
@@ -742,42 +764,65 @@ export function DetailView({
         )
       }
       readingRows={
-        readingRows === null ? null : <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} />
+        !full || readingRows === null ? null : (
+          <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} />
+        )
       }
-      keyMessagesRows={keyMessagesRows(true)}
+      keyMessagesRows={full ? keyMessagesRows(true) : null}
     />
   )
-  const briefTable = (
+  const briefTable = (full: boolean): JSX.Element => (
     <BusinessBriefTable
       t={t}
-      rows={open.brief ? briefRows : summaryRows}
+      rows={full ? briefRows : summaryRows}
       firstRow={<SiteNameRow t={t} api={api} opportunityId={id} />}
       editValue={briefValue}
       onToggle={toggleFact}
     />
   )
 
-  return (
-    <div className="tracy-wo-page tracy-wo-details" ref={page}>
-      <DetailsHeader
-        t={t}
-        name={shownName}
-        branch={row.branch ?? null}
-        facts={facts}
-        status={<StatusBadge status={placeStatus(row, t)} />}
-        stepper={stepperBlock}
-        busy={busy}
-        onBack={onList}
-        menu={{
-          onResearchAgain: researchAgainOpen
-            ? () => {
-                sections.go('sources')
-                researchAgain.onOpen()
-              }
-            : undefined,
-          onDelete: () => setDeleting({ ids: [row.id], withSite: hasLiveDemo(row) ? 1 : 0, name: shownName })
-        }}
-      />
+  const briefLine = (
+    <BriefLine
+      t={t}
+      brief={body.brief}
+      research={body.research}
+      briefJob={briefJob}
+      profileEditedAt={editedAt}
+      onOpen={(revisionId, n) => {
+        if (openBriefTab === null) return onOpenRevision(revisionId, false)
+        openBriefTab({
+          revisionId,
+          opportunityId: id,
+          title: `${t('brief.number', { n })} · ${shownName}`
+        })
+      }}
+    />
+  )
+  const mediaBlock = (full: boolean): JSX.Element => (
+    <MediaRow
+      t={t}
+      menu={menu}
+      view={mediaView}
+      open={full}
+      bare
+      retryLogo={{ busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }}
+      food={profile?.trade === 'food'}
+    />
+  )
+  const cancelButton =
+    cancellable !== null ? (
+      <Button
+        type="button"
+        size="xs"
+        variant="ghost"
+        disabled={busy}
+        onClick={() => void cancel(cancellable)}
+      >
+        {t('job.cancel')}
+      </Button>
+    ) : null
+  const errors = (
+    <>
       {actionFailed || deleteFailed !== null ? (
         <p className="tracy-wo-error" role="alert">
           {t(deleteFailed ?? 'action.failed')}
@@ -788,148 +833,155 @@ export function DetailView({
           {t('demo.logoPending')}
         </p>
       ) : null}
-      <div className="tracy-wo-details-lay">
-        <DetailsRail t={t} entries={rail} active={sections.active} onGo={sections.go} />
-        <div className="tracy-wo-col tracy-wo-details-secs">
-          <PageSection
+    </>
+  )
+  const dialogs = (
+    <DeleteDialog
+      t={t}
+      locale={locale}
+      ask={deleting}
+      busy={deleteBusy}
+      onCancel={() => setDeleting(null)}
+      onConfirm={() => void confirmDelete()}
+    />
+  )
+
+  // A section opened as a sub-page: that section alone, whole.
+  if (section !== null) {
+    const content =
+      section === 'profile' ? (
+        <>
+          {profileBlock(true)}
+          {hasMore ? (
+            <div className="tracy-wo-psec-more">
+              <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
+              <GooglePlace
+                t={t}
+                place={googlePlaceView(profile?.googlePlace)}
+                food={profile?.trade === 'food'}
+              />
+              <TripadvisorReviews t={t} profile={profile} media={media} />
+              <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
+              <Social t={t} lines={socialStatsLines(profile, now)} />
+              <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
+            </div>
+          ) : null}
+        </>
+      ) : section === 'sources' ? (
+        <>
+          {research.researchedAt === null ? null : (
+            <span className="tracy-wo-sources-at">
+              {t('sources.researchedAt', {
+                date: new Intl.DateTimeFormat(locale, {
+                  day: 'numeric',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                }).format(Date.parse(research.researchedAt))
+              })}
+            </span>
+          )}
+          {job !== null && !researchRunning ? (
+            <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
+          ) : null}
+          <Sources t={t} sources={shownSources} retry={retrySource} collected={research.done} />
+          {cancelButton}
+        </>
+      ) : !research.done ? (
+        <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
+      ) : section === 'brief' ? (
+        <>
+          {briefLine}
+          {briefTable(true)}
+          {tableListsFacts ? <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p> : null}
+        </>
+      ) : (
+        mediaBlock(true)
+      )
+    return (
+      <div className="tracy-wo-page tracy-wo-details" ref={page}>
+        {errors}
+        <SubPage
+          t={t}
+          section={section}
+          name={shownName}
+          meta={metaOf(section)}
+          progress={stepperBlock(true)}
+          onList={onList}
+          onSection={onSection}
+        >
+          {content}
+        </SubPage>
+        {dialogs}
+      </div>
+    )
+  }
+
+  return (
+    <div className="tracy-wo-page tracy-wo-details" ref={page}>
+      <DetailsHeader
+        t={t}
+        name={shownName}
+        branch={row.branch ?? null}
+        facts={facts}
+        status={<StatusBadge status={placeStatus(row, t)} />}
+        busy={busy}
+        onBack={onList}
+        menu={{
+          onResearchAgain: researchAgainOpen
+            ? () => {
+                onSection('sources')
+                researchAgain.onOpen()
+              }
+            : undefined,
+          onDelete: () => setDeleting({ ids: [row.id], withSite: hasLiveDemo(row) ? 1 : 0, name: shownName })
+        }}
+      />
+      {errors}
+      <div className="tracy-wo-details-cols">
+        <div className="tracy-wo-col">
+          {stepperBlock(false)}
+          <SectionCard
             t={t}
             id="profile"
-            entry={entryOf('profile')}
-            toggle={
-              hasMore
-                ? {
-                    open: open.more,
-                    label: t('section.showMore'),
-                    onToggle: () => flip('more')
-                  }
-                : null
-            }
+            meta={metaOf('profile')}
+            open={openTo()}
+            className="tracy-wo-profile-card"
           >
-            <div className="tracy-wo-psec-profile" data-open={open.profile ? '' : undefined}>
-              {profileBlock}
-              <button
-                type="button"
-                className="tracy-wo-psec-toggle tracy-wo-psec-toggle-narrow"
-                aria-expanded={open.profile}
-                onClick={() => flip('profile')}
-              >
-                {open.profile ? t('section.showLess') : t('section.showAllProfile')}
-              </button>
-            </div>
-            {open.more ? (
-              <div className="tracy-wo-psec-more">
-                <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
-                <GooglePlace
-                  t={t}
-                  place={googlePlaceView(profile?.googlePlace)}
-                  food={profile?.trade === 'food'}
-                />
-                <TripadvisorReviews t={t} profile={profile} media={media} />
-                <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
-                <Social t={t} lines={socialStatsLines(profile, now)} />
-                <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
-              </div>
-            ) : null}
-          </PageSection>
-          <PageSection
+            {profileBlock(false)}
+          </SectionCard>
+          {/* Sources opens before research too: its sub-page lists each pasted link with its address. */}
+          <SectionCard
             t={t}
             id="sources"
-            entry={entryOf('sources')}
-            aside={
-              research.researchedAt === null ? null : (
-                <span className="tracy-wo-sources-at">
-                  {t('sources.researchedAt', {
-                    date: new Intl.DateTimeFormat(locale, {
-                      day: 'numeric',
-                      month: 'short',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    }).format(Date.parse(research.researchedAt))
-                  })}
-                </span>
-              )
-            }
+            meta={metaOf('sources')}
+            open={shownSources.length > 0 ? { labelKey: 'section.open', onOpen: onSection } : null}
           >
-            {job !== null && !researchRunning ? (
-              <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
-            ) : null}
-            <Sources t={t} sources={sources} retry={retrySource} collected={research.done} />
-            {cancellable !== null ? (
-              <Button
-                type="button"
-                size="xs"
-                variant="ghost"
-                disabled={busy}
-                onClick={() => void cancel(cancellable)}
-              >
-                {t('job.cancel')}
-              </Button>
-            ) : null}
-          </PageSection>
-          <PageSection
+            <Sources t={t} sources={shownSources} collected={research.done} compact />
+            {cancelButton}
+          </SectionCard>
+        </div>
+        <div className="tracy-wo-col">
+          <SectionCard
             t={t}
             id="brief"
-            entry={entryOf('brief')}
+            meta={metaOf('brief')}
             lockKey="section.locked.research"
-            toggle={
-              tableListsFacts && briefRows.length > summaryRows.length
-                ? {
-                    open: open.brief,
-                    label: t('section.showAllFields', { count: briefRows.length + 1 }),
-                    onToggle: () => flip('brief')
-                  }
-                : null
-            }
+            open={openTo('section.openBrief')}
           >
-            <BriefLine
-              t={t}
-              brief={body.brief}
-              research={body.research}
-              briefJob={briefJob}
-              profileEditedAt={editedAt}
-              onOpen={(revisionId, n) => {
-                if (openBriefTab === null) return onOpenRevision(revisionId, false)
-                openBriefTab({
-                  revisionId,
-                  opportunityId: id,
-                  title: `${t('brief.number', { n })} · ${shownName}`
-                })
-              }}
-            />
-            {briefTable}
-            {open.brief && tableListsFacts ? (
-              <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p>
-            ) : null}
-          </PageSection>
-          <PageSection
+            {briefLine}
+            {briefTable(false)}
+          </SectionCard>
+          <SectionCard
             t={t}
             id="media"
-            entry={entryOf('media')}
+            meta={metaOf('media')}
             lockKey="section.locked.research"
-            toggle={
-              research.done || mediaShown > 0
-                ? {
-                    open: open.media,
-                    label:
-                      mediaShown > MEDIA_STRIP
-                        ? t('section.showAllMedia', { count: mediaShown })
-                        : t('section.showAll'),
-                    onToggle: () => flip('media')
-                  }
-                : null
-            }
+            open={openTo()}
           >
-            <MediaRow
-              t={t}
-              menu={menu}
-              view={mediaView}
-              open={open.media}
-              bare
-              retryLogo={{ busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }}
-              food={profile?.trade === 'food'}
-            />
-          </PageSection>
-          <PageSection t={t} id="demo" entry={entryOf('demo')} lockKey="section.locked.brief">
+            {mediaBlock(false)}
+          </SectionCard>
+          <SectionCard t={t} id="demo" meta={metaOf('demo')} lockKey="section.locked.brief">
             {send ? (
               <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
             ) : null}
@@ -954,17 +1006,10 @@ export function DetailView({
               progress
             )}
             <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
-          </PageSection>
+          </SectionCard>
         </div>
       </div>
-      <DeleteDialog
-        t={t}
-        locale={locale}
-        ask={deleting}
-        busy={deleteBusy}
-        onCancel={() => setDeleting(null)}
-        onConfirm={() => void confirmDelete()}
-      />
+      {dialogs}
     </div>
   )
 }

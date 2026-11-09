@@ -1,7 +1,8 @@
 /**
- * The "On this page" rail of Details (layout B, spec #512): Details is one long page with every section stacked, and
- * a slim rail lists the sections in order with one status line under each. The rail reads the same inputs as the
- * stepper (`stepper-model.ts`) plus a few counts, so a section never reads Ready while its step is not done.
+ * The sections of Details (layout C, spec #512): two columns of cards, each with its title and one status line beside
+ * it, and four of them (Profile, Sources, Business brief, Photos & video) open as a sub-page of their own with a pager
+ * in that order. The status lines read the same inputs as the stepper (`stepper-model.ts`) plus a few counts, so a
+ * section never reads Ready while its step is not done.
  * Pure: no DOM, no fetch, no clock read. Dates are formatted with the locale it is given.
  */
 import type { DemoState } from '@tracy/wo-views/demo-state'
@@ -10,7 +11,7 @@ import { type ResearchState, briefControlView } from './research-gate-model.ts'
 import { type SourceInput, sourceRow } from './status.ts'
 
 export type SectionId = 'profile' | 'sources' | 'brief' | 'media' | 'demo'
-/** The order of the sections on the page and in the rail. */
+/** The order of the sections on a narrow page, one column. */
 export const SECTION_IDS: readonly SectionId[] = Object.freeze([
   'profile',
   'sources',
@@ -20,25 +21,25 @@ export const SECTION_IDS: readonly SectionId[] = Object.freeze([
 ])
 
 /** How the status line reads: settled with content, still moving, or plain (nothing yet, or waiting). */
-export type RailTone = 'ok' | 'run' | 'mute'
+export type SectionTone = 'ok' | 'run' | 'mute'
 
 /** One string of the status line; several are joined with a comma. */
-export interface RailText {
+export interface SectionText {
   key: string
   params?: Record<string, string | number>
 }
 
-export interface RailEntry {
+export interface SectionMeta {
   id: SectionId
   /** `details.section.<id>`: Profile, Sources, Business brief, Photos & video, Demo site. */
   titleKey: string
-  status: RailText[]
-  tone: RailTone
+  status: SectionText[]
+  tone: SectionTone
   /** The section waits for an earlier step: drawn muted, with a lock line in place of its content. */
   locked: boolean
 }
 
-export interface RailInput {
+export interface SectionMetaInput {
   /** This card's own research (`researchOf`). */
   research: { state: ResearchState; done: boolean }
   /** The research job of the card (`row.job`). */
@@ -61,7 +62,7 @@ export interface RailInput {
 const MOVING = new Set(['queued', 'running'])
 const BUILDING = new Set<DemoState>(['queued', 'building'])
 
-const counted = (base: string, count: number): RailText => ({
+const counted = (base: string, count: number): SectionText => ({
   key: `${base}.${count === 1 ? 'one' : 'other'}`,
   params: { count }
 })
@@ -78,16 +79,16 @@ function shortDate(iso: string | null | undefined, locale: string): string | nul
 }
 
 /** Whether this card's research is running now (its own state, or its job queued or running). */
-export function researchRunning(input: Pick<RailInput, 'research' | 'researchJob'>): boolean {
+export function researchRunning(input: Pick<SectionMetaInput, 'research' | 'researchJob'>): boolean {
   return input.research.state === 'running' || MOVING.has(input.researchJob?.state ?? '')
 }
 
-export function railView(input: RailInput): RailEntry[] {
+export function sectionMetas(input: SectionMetaInput): SectionMeta[] {
   const locale = input.locale ?? 'en'
   const running = !input.research.done && researchRunning(input)
   const done = input.research.done
   const hasBrief = typeof input.brief?.id === 'string' && input.brief.id !== ''
-  const entry = (id: SectionId, status: RailText[], tone: RailTone, locked = false): RailEntry => ({
+  const entry = (id: SectionId, status: SectionText[], tone: SectionTone, locked = false): SectionMeta => ({
     id,
     titleKey: `details.section.${id}`,
     status,
@@ -98,7 +99,7 @@ export function railView(input: RailInput): RailEntry[] {
   const profile = done
     ? entry(
         'profile',
-        [counted('rail.profile.fields', input.profile.filled)],
+        [counted('section.meta.profile.fields', input.profile.filled)],
         input.profile.filled > 0 ? 'ok' : 'mute'
       )
     : running
@@ -106,24 +107,24 @@ export function railView(input: RailInput): RailEntry[] {
           'profile',
           [
             {
-              key: 'rail.profile.partial',
+              key: 'section.meta.profile.partial',
               params: { count: input.profile.filled, total: input.profile.total }
             }
           ],
           'run'
         )
-      : entry('profile', [{ key: 'rail.profile.waiting' }], 'mute')
+      : entry('profile', [{ key: 'section.meta.profile.waiting' }], 'mute')
 
   const { found, settled, total } = input.sources
   const sources = running
-    ? entry('sources', [{ key: 'rail.sources.running', params: { count: settled, total } }], 'run')
+    ? entry('sources', [{ key: 'section.meta.sources.running', params: { count: settled, total } }], 'run')
     : done && total > 0
       ? entry(
           'sources',
-          [{ key: 'rail.sources.found', params: { count: found, total } }],
+          [{ key: 'section.meta.sources.found', params: { count: found, total } }],
           found > 0 ? 'ok' : 'mute'
         )
-      : entry('sources', [{ key: 'rail.sources.none' }], 'mute')
+      : entry('sources', [{ key: 'section.meta.sources.none' }], 'mute')
 
   const job = briefControlView({
     research: { state: done ? 'done' : 'not_started' },
@@ -132,65 +133,69 @@ export function railView(input: RailInput): RailEntry[] {
   })
   const briefDate = shortDate(input.brief?.createdAt, locale)
   const brief = !done
-    ? entry('brief', [{ key: 'rail.brief.locked' }], 'mute', true)
+    ? entry('brief', [{ key: 'section.meta.brief.locked' }], 'mute', true)
     : job.mode === 'running'
-      ? entry('brief', [{ key: 'rail.brief.running' }], 'run')
+      ? entry('brief', [{ key: 'section.meta.brief.running' }], 'run')
       : hasBrief
         ? entry(
             'brief',
             [
               briefDate === null
-                ? { key: 'rail.brief.number', params: { n: input.brief?.n ?? 1 } }
-                : { key: 'rail.brief.made', params: { n: input.brief?.n ?? 1, date: briefDate } }
+                ? { key: 'section.meta.brief.number', params: { n: input.brief?.n ?? 1 } }
+                : { key: 'section.meta.brief.made', params: { n: input.brief?.n ?? 1, date: briefDate } }
             ],
             'ok'
           )
-        : entry('brief', [{ key: 'rail.brief.none' }], 'mute')
+        : entry('brief', [{ key: 'section.meta.brief.none' }], 'mute')
 
   const { photos, videos } = input.media
   const media =
     running && photos + videos > 0
-      ? entry('media', [{ key: 'rail.media.soFar', params: { count: photos + videos } }], 'run')
+      ? entry('media', [{ key: 'section.meta.media.soFar', params: { count: photos + videos } }], 'run')
       : photos + videos > 0
         ? entry(
             'media',
             [
-              counted('rail.media.photos', photos),
-              ...(videos > 0 ? [counted('rail.media.videos', videos)] : [])
+              counted('section.meta.media.photos', photos),
+              ...(videos > 0 ? [counted('section.meta.media.videos', videos)] : [])
             ],
             'ok'
           )
-        : entry('media', [{ key: 'rail.media.none' }], 'mute', !done && !running)
+        : entry('media', [{ key: 'section.meta.media.none' }], 'mute', !done && !running)
 
   const demo =
     input.demo === 'ready'
-      ? entry('demo', [{ key: 'rail.demo.ready' }], 'ok')
+      ? entry('demo', [{ key: 'section.meta.demo.ready' }], 'ok')
       : BUILDING.has(input.demo)
-        ? entry('demo', [{ key: 'rail.demo.building' }], 'run')
-        : entry('demo', [{ key: 'rail.demo.none' }], 'mute', !hasBrief && input.demo === 'none')
+        ? entry('demo', [{ key: 'section.meta.demo.building' }], 'run')
+        : entry('demo', [{ key: 'section.meta.demo.none' }], 'mute', !hasBrief && input.demo === 'none')
 
   return [profile, sources, brief, media, demo]
 }
 
-/**
- * The section in view: the last one whose top has passed the reading line (just under the sticky header), the first
- * while none has. `tops` are the sections' tops relative to that line, in page order.
- */
-export function activeSection(tops: ReadonlyArray<{ id: SectionId; top: number }>, atEnd = false): SectionId {
-  if (tops.length === 0) return SECTION_IDS[0]
-  // Scrolled to the very end: the last section is the one being read, even when it is too short to reach the line.
-  if (atEnd) return tops[tops.length - 1].id
-  let on = tops[0].id
-  for (const s of tops) if (s.top <= 0) on = s.id
-  return on
-}
-
-/** The Sources counts of the rail from the source rows (`status.ts`): gave data, settled, all. */
-export function sourceCounts(sources: readonly SourceInput[]): RailInput['sources'] {
+/** The Sources counts from the source rows (`status.ts`): gave data, settled, all. */
+export function sourceCounts(sources: readonly SourceInput[]): SectionMetaInput['sources'] {
   const tones = sources.map((s) => sourceRow(s).tone)
   return {
     found: tones.filter((tone) => tone === 'ok' || tone === 'partial').length,
     settled: tones.filter((tone) => tone !== 'waiting').length,
     total: tones.length
+  }
+}
+
+/** A section that opens as a sub-page of its own (`wo-section`); the Demo site stays on Details. */
+export type SubSection = Exclude<SectionId, 'demo'>
+/** The order of the sub-pages, which their pager walks. */
+export const SUB_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'sources', 'brief', 'media'])
+
+export const isSubSection = (v: unknown): v is SubSection =>
+  typeof v === 'string' && (SUB_SECTIONS as readonly string[]).includes(v)
+
+/** The pager under a sub-page: the section before and the one after, null at either end. */
+export function pagerOf(section: SubSection): { previous: SubSection | null; next: SubSection | null } {
+  const at = SUB_SECTIONS.indexOf(section)
+  return {
+    previous: at > 0 ? SUB_SECTIONS[at - 1] : null,
+    next: at < SUB_SECTIONS.length - 1 ? SUB_SECTIONS[at + 1] : null
   }
 }

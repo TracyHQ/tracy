@@ -1,7 +1,6 @@
 /**
- * The sticky header of Details (#517): Back, the place's name and type, its status, a ⋯ menu with Research again
- * and Delete, then the three steps with the one action of the current step (mock r6-a). It stays in sight while the
- * sections below scroll.
+ * The sticky header of Details (#517): Back, the place's name and type, its status, and a ⋯ menu with Research again
+ * and Delete. It stays in sight while the cards below scroll.
  */
 import type { JSX, ReactNode } from 'react'
 import { ChevronLeft, Ellipsis } from 'lucide-react'
@@ -32,7 +31,6 @@ export function DetailsHeader({
   status,
   menu,
   busy,
-  stepper,
   onBack
 }: {
   t: Translate
@@ -43,8 +41,6 @@ export function DetailsHeader({
   status: ReactNode
   menu: HeaderMenu
   busy: boolean
-  /** The three steps with the one action of the current step (`stepper.tsx`). */
-  stepper?: ReactNode
   onBack: () => void
 }): JSX.Element {
   return (
@@ -91,7 +87,6 @@ export function DetailsHeader({
           </DropdownMenu>
         </div>
       </div>
-      {stepper}
     </header>
   )
 }

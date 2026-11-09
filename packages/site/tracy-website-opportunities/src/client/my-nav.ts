@@ -13,11 +13,11 @@ export type ClickTarget =
   | { kind: 'maps'; href: string; target: '_blank'; rel: 'noopener noreferrer' }
 
 export function detailsAddress(address: MyAddress, id: string): MyAddress {
-  return { ...address, view: 'mine', opp: id, page: 'details', brief: null }
+  return { ...address, view: 'mine', opp: id, page: 'details', brief: null, section: null }
 }
 
 export function listAddress(address: MyAddress): MyAddress {
-  return { ...address, opp: null, page: null, brief: null }
+  return { ...address, opp: null, page: null, brief: null, section: null }
 }
 
 export function clickTarget(
@@ -30,10 +30,22 @@ export function clickTarget(
   return { kind: 'details', address: detailsAddress(address, place.id) }
 }
 
-/** A new page (list to Details, Details to Brief) is a history entry; anything else rewrites the current one. */
+/**
+ * A new page (list to Details, Details to Brief, Details to one of its sections) is a history entry; anything else
+ * (the pager from one section to the next, a section back to Details, a filter) rewrites the current one.
+ */
 export function historyWrite(prev: MyAddress, next: MyAddress): 'push' | 'replace' {
   const opened = next.page !== null && (next.page !== prev.page || next.opp !== prev.opp)
-  return opened && (prev.page === null || next.page !== prev.page) ? 'push' : 'replace'
+  if (opened && (prev.page === null || next.page !== prev.page)) return 'push'
+  const sectionOpened =
+    next.page === 'details' && prev.page === 'details' && prev.section === null && next.section !== null
+  return sectionOpened ? 'push' : 'replace'
+}
+
+/** How many pages deep an address is: the list 0, Details 1, a section of Details or a brief 2. */
+export function pageDepth(address: MyAddress): number {
+  if (address.page === null) return 0
+  return address.page === 'brief' || address.section !== null ? 2 : 1
 }
 
 export interface ListSpot {
