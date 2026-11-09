@@ -16,6 +16,10 @@
  * `name` is the field slug unless `group.name` says another card to join (the brand name and the tagline share
  * `identity`). Settings slots use `settings.<field>.<name>.0`. Editorial roles take no group.
  *
+ * A theme built by `compile-seed.mjs` writes the other shape, `fields` keyed `<collection>.<field>` (each entry
+ * `{source, target, label}`); the same keys (`role`, `group`, `subRoles`) go on that entry, and `normalizeFieldMap`
+ * reads it as the shape above, taking the field types and repeater sub-fields from the seed's collections.
+ *
  * Fields that hold no copy are exempt from needing a role: links, alt text, identifiers (`isCopylessField`).
  */
 import { existsSync, readFileSync } from 'node:fs'
@@ -30,13 +34,22 @@ import {
 } from 'website-opportunities/domain'
 
 const COPY_TYPES = new Set(['string', 'text', 'image'])
+
+/** Whether a field of this type needs a role: a picture always does (a name like `img_icon` is no layout setting). */
+const needsRole = (type, slug) => COPY_TYPES.has(type) && (type === 'image' || !isCopylessField(slug))
 const SETTINGS_FIELDS = ['title', 'tagline']
 
 const has = (object, key) => Boolean(object && typeof object === 'object' && Object.hasOwn(object, key))
 
-/** A string or text field that holds no copy of its own: a link, alt text, an identifier or an anchor. */
+/**
+ * A string or text field that holds no copy of its own: a link (`_url`, `_link`, `btn_link2`, `link_social`), alt text,
+ * an identifier or an anchor, or a setting of the template's layout (`view`, `path`, `section_style`, `stats_color`,
+ * `button_icon`, `align`, `number_col`, `position` on its own: a `member_position` is a job title and has a role).
+ */
 export function isCopylessField(slug) {
-  return /(^|_)(url|href|alt|id|key|code|anchor|initials)$/.test(String(slug))
+  return /(^|_)(url|href|alt|id|key|code|anchor|initials|view|path|style|class|color|icon|align|webpage|number_col|number_column)\d*$|link\d*$|^link(_|$)|^(position|collection|entry)$/.test(
+    String(slug)
+  )
 }
 
 function readJson(file) {
@@ -111,7 +124,7 @@ export function checkFieldMapRoles(fieldMap) {
         for (const sub of subs) {
           const subNamed = `repeater sub-field "${col.collection}.${field.slug}.${sub.name}"`
           if (!has(roles, sub.name)) {
-            if (COPY_TYPES.has(sub.type) && !isCopylessField(sub.name)) errors.push(`${subNamed} has no role`)
+            if (needsRole(sub.type, sub.name)) errors.push(`${subNamed} has no role`)
             continue
           }
           const problem = declarationProblem(roles[sub.name], field.group, subNamed, { needsGroup: true })
@@ -123,7 +136,7 @@ export function checkFieldMapRoles(fieldMap) {
         continue
       }
       if (!has(field, 'role')) {
-        if (COPY_TYPES.has(field.type) && !isCopylessField(field.slug)) errors.push(`${named} has no role`)
+        if (needsRole(field.type, field.slug)) errors.push(`${named} has no role`)
         continue
       }
       const problem = declarationProblem(field.role, field.group, named, { needsGroup: true })
@@ -137,6 +150,39 @@ const defaultLocaleEntries = (entries, defaultLocale) => {
   if (!Array.isArray(entries)) return []
   const matching = entries.filter((e) => !e?.locale || e.locale === defaultLocale)
   return matching.length > 0 ? matching : entries
+}
+
+/** A seed collection field's repeater sub-fields as the `name:type` strings of a field map. */
+const subFieldStrings = (field) =>
+  (Array.isArray(field?.validation?.subFields) ? field.validation.subFields : []).map(
+    (sub) => `${sub?.slug}:${sub?.type ?? 'string'}`
+  )
+
+/**
+ * A field map in the `collections[].fields[]` shape. The compiled shape (`fields` keyed `<collection>.<field>`) is
+ * rebuilt as that shape, field by field, from the seed's collection schema: the field's type and a repeater's
+ * sub-fields come from the seed, its `role`, `group` and `subRoles` from the entry. A field map already in the
+ * `collections` shape is returned as it is.
+ * @param {any} fieldMap
+ * @param {any} seed
+ */
+export function normalizeFieldMap(fieldMap, seed) {
+  if (!fieldMap || Array.isArray(fieldMap.collections) || !has(fieldMap, 'fields')) return fieldMap
+  const entries = fieldMap.fields && typeof fieldMap.fields === 'object' ? fieldMap.fields : {}
+  const collections = []
+  for (const col of Array.isArray(seed?.collections) ? seed.collections : []) {
+    const fields = []
+    for (const field of Array.isArray(col?.fields) ? col.fields : []) {
+      const entry = entries[`${col.slug}.${field.slug}`]
+      const out = { slug: field.slug, type: field.type }
+      if (field.type === 'repeater') out.subFields = subFieldStrings(field)
+      for (const key of ['role', 'group', 'subRoles']) if (has(entry, key)) out[key] = entry[key]
+      fields.push(out)
+    }
+    collections.push({ collection: col.slug, fields })
+  }
+  const { fields: _compiled, ...rest } = fieldMap
+  return { ...rest, collections }
 }
 
 /**
@@ -222,9 +268,9 @@ export function contentMapOfFieldMap({ seed, fieldMap }) {
  */
 export function fieldMapRolesOf(seedDir, { contract = null } = {}) {
   if (!seedDir) return null
-  const fieldMap = readJson(path.join(seedDir, 'field-map.json'))
-  if (!fieldMap || !fieldMapDeclaresRoles(fieldMap)) return null
   const seed = readJson(path.join(seedDir, 'seed.json'))
+  const fieldMap = normalizeFieldMap(readJson(path.join(seedDir, 'field-map.json')), seed)
+  if (!fieldMap || !fieldMapDeclaresRoles(fieldMap)) return null
   const contentMap = contentMapOfFieldMap({ seed, fieldMap })
   const fieldCheck = checkFieldMapRoles(fieldMap)
   const cardCheck = checkContentMapRoles(contentMap)

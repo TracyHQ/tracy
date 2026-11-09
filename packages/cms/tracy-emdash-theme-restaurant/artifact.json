@@ -7,7 +7,7 @@
 		"version": "1.0.1"
 	},
 	"demoContent": "JA Restaurant",
-	"generatedAt": "2026-11-06T03:56:29.666Z",
+	"generatedAt": "2026-11-09T04:28:35.488Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -82,7 +82,7 @@
 		"template.config.json": "sha256:ebf99fe6bf66a37fc03f7b29009abd878c98b416ff48de5778d63f0ba626bd71",
 		"seed/seed.json": "sha256:2ba40e25077ad8f53a2137bef733da474bd5a45be98bbf59eb54dc11220102d8",
 		"seed/media-map.json": "sha256:07d3b76eaeade9fb7a49f25f6e165514f36150d05b0fd4203aa4469e1bef776c",
-		"seed/field-map.json": "sha256:07548f5b68d4202be58338db9ada012c70e8f8845f81f962ef190e0682e14a15",
+		"seed/field-map.json": "sha256:5780e5d5cef11590c4bbe0449928f417a11b7b0ca1338ff0a32c7faa6f99f1ac",
 		"pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
 		"tools/forms.json": "sha256:762e87a9fda1fba307ee2e2ebf2f9535c23d93c4b97801b11e91731dca548777",
 		"seed/media/*": "sha256:281a31fb658d188bb5cb3bee1264043c9a63bceacf643b17eae2021863e84276 (66 files)"

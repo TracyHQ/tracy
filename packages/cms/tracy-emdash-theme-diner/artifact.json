@@ -7,7 +7,7 @@
 		"version": "0.1.0"
 	},
 	"demoContent": "JA Diner",
-	"generatedAt": "2026-11-08T13:11:24.121Z",
+	"generatedAt": "2026-11-09T04:28:35.455Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,14 +75,14 @@
 		"docs/content-model.md": "sha256:e5e00b4d1186c4432873c182b71b915941779fc6ff96f1654b372beaf80cfef1",
 		"docs/content-rules.md": "sha256:334c379ec1dec8d60f34ad52ba51149c81225cfd71921aabcf4ec7bdd04338c6",
 		"docs/design-system.md": "sha256:baef0e467d430d69291fe32bc25ad5a694b6179f6111854b688634ec96a6fe15",
-		"docs/generated/inventory.json": "sha256:0e3c47954568c85e17f70e85ee34d2530cafa9968ee11a0d43811055d3672a89",
+		"docs/generated/inventory.json": "sha256:ad3b1907ded15c397de3a400a0a850a5467fad899a273d92976b523234c817ef",
 		"docs/generated/inventory.md": "sha256:00cdfca4610599f86aacff858b833df659e9901b27cbd027a0e6b494c0d33e75",
 		"docs/install.md": "sha256:94d06f3dcce8840f200edfa0410d5719f8969361952c0b720f62dadc1c2772d9",
 		"docs/languages.md": "sha256:2d404f1b996cbde1965276643ed278167e2d923db49b8fc11530ffb2662c9f5e",
 		"template.config.json": "sha256:6909fb8c573a103453116613dced7ffd351eb79f11b2710381f94a76d5a136ee",
 		"seed/seed.json": "sha256:5ac02a17ac52e79c1c89f4b2dc773310391ab30cc81f73ad08224c159b14d04a",
 		"seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
-		"seed/field-map.json": "sha256:77df304fb8bc5249a9a1fa8588efb1219454a501dc74c2359fa6737acce18a97",
+		"seed/field-map.json": "sha256:2aabae887448cdae62e7c9e2e6c0cd70e6a4b1a507b4d744fd63c64de2e06911",
 		"pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
 		"tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
 		"seed/media/*": "sha256:1e7d40ad20c205880798d50ea71c7dd9d09d65ad127b1343ea8397e92f88c79a (73 files)"
