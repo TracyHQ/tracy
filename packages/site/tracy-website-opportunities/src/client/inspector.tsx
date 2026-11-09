@@ -415,13 +415,24 @@ export function Inspector({
             <span className="tracy-wo-muted tracy-wo-small">{t('research.added', { ago: added })}</span>
           ) : null}
         </div>
-        <h2 className="tracy-wo-insp-title">
+        <h2 className="tracy-wo-insp-title" title={row.name ?? undefined}>
           {row.name ?? ''}
           {row.branch ? <span className="tracy-wo-muted">{` · ${row.branch}`}</span> : null}
         </h2>
         {meta.length ? <p className="tracy-wo-muted tracy-wo-small">{meta.join(' · ')}</p> : null}
       </div>
-      <div className="tracy-wo-row tracy-wo-insp-acts">
+      <Button
+        type="button"
+        size="icon-sm"
+        variant="ghost"
+        className="tracy-wo-insp-close"
+        aria-label={t('results.map.close')}
+        onClick={onClose}
+      >
+        <X aria-hidden="true" />
+      </Button>
+      {/* Actions get their own full-width row so the place name never shares its width. */}
+      <div className="tracy-wo-row tracy-wo-wrap tracy-wo-insp-acts">
         <ActionButton t={t} row={row} busy={busy} disabled={buildDisabled} onAction={onAction} />
         <Button type="button" size="xs" variant="outline" onClick={onDetails}>
           <Maximize2 aria-hidden="true" />
@@ -433,15 +444,6 @@ export function Inspector({
             {t('delete.button')}
           </Button>
         ) : null}
-        <Button
-          type="button"
-          size="icon-sm"
-          variant="ghost"
-          aria-label={t('results.map.close')}
-          onClick={onClose}
-        >
-          <X aria-hidden="true" />
-        </Button>
       </div>
     </div>
   )
