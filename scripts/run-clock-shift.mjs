@@ -49,6 +49,8 @@ export const EXCLUDED = Object.freeze(
       'PostgreSQL stamps created_at with its own now() on the real clock, and the sweep after each upload compares it with the moved Date.now(): the file just uploaded is swept as a day-old stray, so attaching it answers 404',
     'apps/tracy-web/test/website-opportunities-demo-runner.test.mjs':
       'PostgreSQL timestamps remain on the database clock while the preload shifts only JavaScript time. The runner compares shifted JS deadlines with fresh DB rows, so this file is a clock-domain fixture mismatch, not an expiry check.',
+    'apps/tracy-web/test/wo-quality-prices-expiry-guard.test.mjs':
+      'it exists to read the real date: it goes red on purpose when the price table is within 7 days of expiry, and the shifted clock is 400 days past it',
     'packages/cms/tracy-wordpress-theme/test/wp-contact-mail.test.mjs':
       'the rate-limit hour is computed by a PHP process on the real clock and compared with the hour of the moved Date.now()',
     'packages/core/tracy-core/test/lease.test.mjs': `draining() in src/lease compares the marker file's modification time, ${FILE_TIME}`,
