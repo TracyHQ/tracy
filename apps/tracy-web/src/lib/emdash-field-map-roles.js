@@ -25,11 +25,11 @@
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import {
-  GROUP_KINDS,
-  ROLE_VOCABULARY_VERSION,
   checkContentMapRoles,
+  GROUP_KINDS,
   isFactRole,
   isRole,
+  ROLE_VOCABULARY_VERSION,
   slotRolesOfContentMap
 } from 'website-opportunities/domain'
 
@@ -62,7 +62,7 @@ function readJson(file) {
 }
 
 /** The sub-fields of a repeater as `{name, type}`; the field map writes them `name:type`. */
-function subFieldsOf(field) {
+export function subFieldsOf(field) {
   return (Array.isArray(field?.subFields) ? field.subFields : []).map((raw) => {
     const [name, type] = String(raw).split(':')
     return { name: (name ?? '').trim(), type: (type ?? 'string').trim() }
@@ -146,7 +146,7 @@ export function checkFieldMapRoles(fieldMap) {
   return { declared: true, ok: errors.length === 0, errors }
 }
 
-const defaultLocaleEntries = (entries, defaultLocale) => {
+export const defaultLocaleEntries = (entries, defaultLocale) => {
   if (!Array.isArray(entries)) return []
   const matching = entries.filter((e) => !e?.locale || e.locale === defaultLocale)
   return matching.length > 0 ? matching : entries

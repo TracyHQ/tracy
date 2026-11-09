@@ -19,7 +19,7 @@ import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-import { contractFor } from '../contracts.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 
 export const BASELINE_FILE = 'demo-baseline.json'
 export const BASELINE_SCHEMA = 'demo-baseline/1'
@@ -101,8 +101,7 @@ function readBaseline(file, id) {
  * @param {import('../contracts.js').ContractIndex} contracts
  */
 export function baselineOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  return baselineOfContract(contractFor(contracts, release?.tag, version))
+  return baselineOfContract(contractOfRelease(release, contracts))
 }
 
 /**

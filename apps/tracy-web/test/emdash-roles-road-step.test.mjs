@@ -22,7 +22,7 @@ for (const [template, version] of [
   })
 }
 
-test('an EmDash release whose roles are ready passes Content coverage, new or live', () => {
+test('an EmDash release is measured by the audit now: ready roles with no measurement are not "not needed"', () => {
   const release = emdash('tracy-diner', '0.1.0')
   const roles = rolesOfRelease(release, new Map())
   const run = (rel) =>
@@ -33,7 +33,7 @@ test('an EmDash release whose roles are ready passes Content coverage, new or li
       roles,
       fit: { state: 'none' }
     })
-  assert.deepEqual([run(release).state, run(release).code], ['done', 'coverage-not-needed'])
+  assert.deepEqual([run(release).state, run(release).code], ['todo', 'coverage-not-measured'])
 })
 
 test('a field-map read: fields without a role are the missing group, any other fault is invalid', () => {

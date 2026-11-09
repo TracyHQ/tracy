@@ -260,6 +260,7 @@
 				"dish_name": "offering.name",
 				"dish_description": "offering.description",
 				"dish_price": "offering.price",
+				"dish_extra_class": "offering.variant_meta",
 				"dish_image": "offering.image"
 			},
 			"group": {

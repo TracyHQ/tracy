@@ -36,7 +36,7 @@ import path from 'node:path'
 
 import { brandKitProblem } from '../../brand-step/kit-grounds.js'
 import { contentMapKey } from '../content-map-key.js'
-import { contractFor } from '../contracts.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 import { kitZipName } from '../template-kit-images.js'
 import { BASELINE_FILE, baselineAskedOf } from './demo-baseline-file.js'
 import { logoWritePath } from './logo-write-path.js'
@@ -88,8 +88,7 @@ export function kitMapOf(map) {
  * @returns {KitMap | null}
  */
 export function kitMapOfRelease(release, contracts) {
-  const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  const dir = contractFor(contracts, release?.tag, version)?.dir ?? null
+  const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return null
   const file = path.join(dir, 'content-map.json')
   let stamp = 'missing'

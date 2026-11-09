@@ -17,6 +17,8 @@
       "!emdash-env.d.ts",
       "!artifact.json",
       "!docs/generated/**",
+      // The generated content map and the coverage file measured against its bytes (their sha256 is bound): never reformatted.
+      "!contracts/*/content-*.json",
       "!seed/**",
       "!evidence/**",
       "!data/**",
