@@ -117,6 +117,35 @@ test('merge messages and changes introduced on side branches are checked', (t) =
   assert.ok(findings.some((v) => v.path === 'feature.md'))
 })
 
+test('an excluded history is skipped while commits and merges outside it are still checked', (t) => {
+  const f = fixture(t)
+  // main = f.base; develop carries a commit main's policy would reject, already checked on develop.
+  f.git('checkout', '-q', '-b', 'develop')
+  f.put('develop.md', `${VI}\n`)
+  const developed = f.commit()
+  f.git('checkout', '-q', 'main')
+  f.put('hotfix.md', 'English hotfix.\n')
+  const main = f.commit()
+  f.git('checkout', '-q', '-b', 'release', developed)
+  f.git('merge', '--no-ff', 'main', '-m', `merge: ${VI}`)
+  f.put('release.md', `${ZH}\n`)
+  f.commit()
+  // Merging later develop work into the release branch does not re-read it either.
+  f.git('checkout', '-q', 'develop')
+  f.put('later.md', `${ZH}\n`)
+  const later = f.commit()
+  f.git('checkout', '-q', 'release')
+  f.git('merge', '--no-ff', 'develop', '-m', 'merge: bring in develop')
+  const head = f.git('rev-parse', 'HEAD')
+  const run = (exclude) => checkRange({ repo: f.repo, base: main, head, policy: emptyPolicy(), exclude })
+  assert.ok(run(null).findings.some((v) => v.path === 'develop.md'))
+  const result = run(later)
+  assert.equal(result.commits, 3)
+  assert.deepEqual(result.findings.map((v) => v.path).sort(), ['commit message', 'release.md'])
+  assert.throws(() => run('b'.repeat(40)))
+  assert.throws(() => run('develop'), /exclude/)
+})
+
 test('PR metadata has no markdown or HTML exemption, and an event must name the checked SHAs', (t) => {
   const f = fixture(t)
   const head = f.commit()

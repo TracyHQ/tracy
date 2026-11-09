@@ -219,6 +219,27 @@ test('the categories are the ones codeql.yml uploads', () => {
   assert.deepEqual([...languages].sort(), [...CATEGORIES].sort())
 })
 
+test('the full develop scan uploads its own categories on develop pushes only, and freshness ignores them', async () => {
+  const codeql = load(readFileSync(join(ROOT, '.github/workflows/codeql.yml'), 'utf8'))
+  const full = codeql.jobs['analyze-develop-full']
+  assert.equal(full.if, "github.event_name == 'push' && github.ref == 'refs/heads/develop'")
+  assert.deepEqual(full.strategy.matrix, codeql.jobs.analyze.strategy.matrix)
+  const steps = full.steps.map((step) => step.with ?? {})
+  assert.ok(
+    steps.every((w) => !('config-file' in w)),
+    'the full scan reads no config'
+  )
+  assert.ok(steps.some((w) => w.category === '/language:${{ matrix.language }}/full'))
+  const fullCategories = CATEGORIES.map((category) => `${category}/full`)
+  // A head analyzed in the watched categories is green whether or not the full categories exist.
+  for (const develop of [[all(0.5)], [[...all(0.5), ...fullCategories.map((c) => analysis(c, 2, PARENT))]]]) {
+    const result = await checkFreshness({ getJson: api({ develop, head: 3 }).getJson, now: NOW })
+    assert.equal(result.code, 0, result.stderr)
+  }
+  const { getJson } = api({ develop: [fullCategories.map((c) => analysis(c, 0.5))], head: 3 })
+  assert.equal((await checkFreshness({ getJson, now: NOW })).code, 1)
+})
+
 test('the freshness workflow is its own daily run with read-only permissions and pinned actions', () => {
   const text = readFileSync(join(ROOT, '.github/workflows/codeql-freshness.yml'), 'utf8')
   const doc = load(text)
