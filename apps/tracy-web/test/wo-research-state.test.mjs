@@ -297,3 +297,87 @@ test(
     assert.ok(!JSON.stringify(made.revision.brief).includes('+1 555 0100'), 'never the researched one')
   }
 )
+
+/** Poll a Content brief job until it settles, the way the client does. */
+async function settled(call, email, oppId, jobId) {
+  for (let i = 0; i < 100; i += 1) {
+    const res = await call(email, 'GET', `${BASE}/${oppId}/brief-jobs/${jobId}`)
+    assert.equal(res.status, 200, JSON.stringify(res.body))
+    if (res.body.job.state !== 'running') return res.body
+    await new Promise((r) => setTimeout(r, 20))
+  }
+  throw new Error('the brief job never settled')
+}
+
+test(
+  'the Content brief is locked until research, then made as a background job the client polls',
+  opts,
+  async () => {
+    const { pool, call, drain, accountOf, saveGoogle } = await world()
+    const a = await accountOf(A)
+    const opp = await saveGoogle(a)
+    const locked = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'brief-press-0001' })
+    assert.equal(locked.status, 409)
+    assert.equal(locked.body.code, 'RESEARCH_NOT_DONE')
+
+    await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'brief-research-0001' })
+    await drain()
+    const pressed = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'brief-press-0002' })
+    assert.equal(pressed.status, 202, JSON.stringify(pressed.body))
+    assert.equal(pressed.body.job.state, 'running')
+    assert.equal('revision' in pressed.body, false, 'the press never waits for the brief')
+    const again = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'brief-press-0002' })
+    assert.equal(again.body.job.id, pressed.body.job.id, 'the same press answers the same job')
+
+    const done = await settled(call, A, opp.id, pressed.body.job.id)
+    assert.equal(done.job.state, 'done', JSON.stringify(done.job.error))
+    assert.equal(done.revision.n, 1)
+    assert.equal(done.job.revisionId, done.revision.id)
+    const details = await call(A, 'GET', `${BASE}/${opp.id}`)
+    assert.equal(details.body.briefJob.state, 'done')
+    assert.equal(details.body.revisions.length, 1)
+
+    // Unknown, foreign and malformed jobs are not found.
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}/brief-jobs/not-a-job`)).status, 404)
+    await accountOf(B)
+    assert.equal((await call(B, 'GET', `${BASE}/${opp.id}/brief-jobs/${pressed.body.job.id}`)).status, 404)
+  }
+)
+
+test(
+  'a brief job whose worker stopped reads as failed, or as done when its brief was written',
+  opts,
+  async () => {
+    const { pool, call, drain, accountOf, saveGoogle } = await world()
+    const a = await accountOf(A)
+    const opp = await saveGoogle(a)
+    await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'stale-research-0001' })
+    await drain()
+    const stale = (
+      await pool.query(
+        `insert into wo_brief_job (account_id, opportunity_id, request_id, step, heartbeat_at, created_at)
+       values ($1, $2, 'stale-job-0001', 'labelling', now() - interval '10 minutes', now() - interval '12 minutes') returning id`,
+        [a, opp.id]
+      )
+    ).rows[0]
+    const failed = await call(A, 'GET', `${BASE}/${opp.id}/brief-jobs/${stale.id}`)
+    assert.equal(failed.body.job.state, 'failed')
+    assert.equal(failed.body.job.error.code, 'BRIEF_INTERRUPTED')
+    // Try again starts a new job, which completes.
+    const retried = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'stale-job-0002' })
+    assert.equal(retried.status, 202)
+    const done = await settled(call, A, opp.id, retried.body.job.id)
+    assert.equal(done.job.state, 'done')
+
+    const written = (
+      await pool.query(
+        `insert into wo_brief_job (account_id, opportunity_id, request_id, heartbeat_at, created_at)
+       values ($1, $2, 'stale-job-0003', now() - interval '10 minutes', now() - interval '1 hour') returning id`,
+        [a, opp.id]
+      )
+    ).rows[0]
+    const healed = await call(A, 'GET', `${BASE}/${opp.id}/brief-jobs/${written.id}`)
+    assert.equal(healed.body.job.state, 'done', 'its brief was written after it started')
+    assert.equal(healed.body.revision.id, done.revision.id)
+  }
+)

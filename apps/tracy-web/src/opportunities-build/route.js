@@ -50,6 +50,9 @@ import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
 import { createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
+import { randomUUID } from 'node:crypto'
+import { briefJobShape, createBriefJobs } from './brief-jobs.js'
+import { researched, researchStateOf } from 'website-opportunities/src/research-state.js'
 
 const BASE = '/api/website-opportunities'
 
@@ -79,6 +82,30 @@ export function createWebsiteBuilder(deps) {
   const templateCards = () => readTemplateCards(request, origin)
 
   const demoSettings = async () => (await runtime()).settings
+  // The Content brief as a background job (#524): the brief step labels the photographs, then writes the brief.
+  const briefJobs = createBriefJobs({
+    pool,
+    log: deps.log ?? console,
+    make: async ({ accountId, opportunityId, onStep }) => {
+      const label = deps.pictureLabels ?? null
+      return createRevision(pool, {
+        accountId,
+        opportunityId,
+        domain: await loadDomain(),
+        now,
+        pictureLabels: label
+          ? async (input) => {
+              onStep('labelling')
+              try {
+                return await label(input)
+              } finally {
+                onStep('writing')
+              }
+            }
+          : null
+      })
+    }
+  })
   const qualityMode = (accountId) => qualityModeOf(pool, accountId, { available: deps.quality?.available })
   async function acceptActions(args) {
     if (args.entries.some((entry) => entry.workflow === AGENT_DEMO))
@@ -287,6 +314,8 @@ export function createWebsiteBuilder(deps) {
       progress: demoProgress(builds[0]),
       revisions: revisions.map((r) => ({ id: r.id, n: r.n, createdAt: r.created_at })),
       brief: await briefStatus(opp, revisions),
+      // The latest Content brief job (#524): a running one shows its progress after a reload, a failed one its reason.
+      briefJob: briefJobShape(await briefJobs.latestOf(opp.id)),
       demoAction: await withChainRun((await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null),
       usage: await readDemoUsage(pool, accountId, settings.demoBuildsPerAccountPerDay, now()),
       builds: builds.map(buildShape)
@@ -644,21 +673,46 @@ export function createWebsiteBuilder(deps) {
       }
       const domain = await domainOr(c)
       if (domain instanceof Response) return domain
+      // 🔒 A brief is made from THIS card's research (#524): locked until it finished.
+      if (!researched(await researchStateOf(pool, opp.id)))
+        return refuse(
+          c,
+          409,
+          'RESEARCH_NOT_DONE',
+          'Press Research first: the brief is made from its results.'
+        )
+      const b = (await body(c)) ?? {}
+      if (b.requestId !== undefined && !REQUEST_ID.test(String(b.requestId)))
+        return refuse(
+          c,
+          400,
+          'INVALID_REQUEST_ID',
+          'Send a requestId of 8–100 letters, digits, ".", "_", ":" or "-", or leave it out.'
+        )
       // Refresh: the brief of the current research, the latest one when nothing changed. No template: a build chooses.
-      const result = await createRevision(pool, {
+      // It runs in the background (`brief-jobs.js`): poll `GET …/:id/brief-jobs/:jobId`.
+      const started = await briefJobs.start({
         accountId: who.accountId,
         opportunityId: opp.id,
-        domain,
-        now,
-        pictureLabels: deps.pictureLabels ?? null
+        requestId: b.requestId ?? `brief-${randomUUID()}`
       })
-      if ('error' in result && result.error === 'NOT_FOUND') return notFound(c, 'opportunity')
-      if ('error' in result)
-        return refuse(c, 422, 'BRIEF_INVALID', 'Run the research again: the brief did not pass its schema.', {
-          errors: result.errors
-        })
-      if (result.reused) return json(c, { revision: revisionShape(result.revision) }, 200)
-      return json(c, { revision: revisionShape(result.revision) }, 201)
+      if (started.reused)
+        return refuse(c, 409, 'REQUEST_ID_REUSED', 'Send a new requestId for another opportunity.')
+      return json(c, { job: briefJobShape(started.job) }, 202)
+    })
+
+    // The Content brief job (#524): its step while it runs; once done, the revision it made.
+    app.get(`${BASE}/:id/brief-jobs/:jobId`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const jobId = c.req.param('jobId')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp || !UUID.test(jobId)) return notFound(c, 'brief job')
+      const job = await briefJobs.read(who.accountId, opp.id, jobId)
+      if (!job) return notFound(c, 'brief job')
+      const revision = job.revision_id ? await revisionOf(pool, who.accountId, job.revision_id) : null
+      return json(c, { job: briefJobShape(job), ...(revision ? { revision: revisionShape(revision) } : {}) })
     })
 
     // ── A demo's life (`demo-retention.js`) ─────────────────────────────────────────────────────
@@ -780,6 +834,8 @@ export function createWebsiteBuilder(deps) {
     detailOf,
     demoFactsOf,
     demoJourneySql,
+    // Settles every Content brief job this process runs (tests, shutdown).
+    briefJobsIdle: () => briefJobs.idle(),
     templateChoicesOf,
     templateCards,
     // Before an opportunity is deleted: its live demo sites torn down (`demo-removal.js`), with `deps.demoTeardown`.

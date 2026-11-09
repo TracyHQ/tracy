@@ -1489,6 +1489,7 @@ export function websiteOpportunitiesRoutes(deps) {
       progress: demo.progress,
       revisions: demo.revisions,
       brief: demo.brief,
+      briefJob: demo.briefJob,
       demoAction: demo.demoAction,
       usage: demo.usage,
       builds: demo.builds

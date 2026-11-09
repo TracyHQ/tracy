@@ -200,6 +200,30 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
   // two steps (a brief "with" a template, then Build): the template asked for is remembered per opportunity and
   // the build goes through the real door, `POST /:id/demo/build`, with that choice as the selection.
   const asked = new Map()
+  async function briefThroughJob(email, oppId, path, body, extra) {
+    await pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
+       select o.account_id, o.id, 'research', 'seed-research-' || o.id, 'completed' from wo_opportunity o
+       where o.id = $1 and not exists (select 1 from wo_job j where j.opportunity_id = o.id and j.state = 'completed')`,
+      [oppId]
+    )
+    const pressed = await rawCall(email, 'POST', path, body, extra)
+    if (pressed.status !== 202) return pressed
+    for (let i = 0; i < 500; i += 1) {
+      const polled = await rawCall(
+        email,
+        'GET',
+        `${path.replace(/\/revisions$/, '')}/brief-jobs/${pressed.body.job.id}`
+      )
+      const job = polled.body?.job
+      if (job?.state === 'done')
+        return { status: job.reused ? 200 : 201, body: { revision: polled.body.revision } }
+      if (job?.state === 'failed')
+        return { status: 422, body: { code: job.error?.code, errors: job.error?.errors } }
+      await new Promise((r) => setTimeout(r, 10))
+    }
+    throw new Error('the brief job never settled')
+  }
   const call = async (email, method, path, body, extra = {}) => {
     const brief =
       method === 'POST' && path.match(/^\/api\/website-opportunities\/([0-9a-f-]{36})\/revisions$/)
@@ -208,6 +232,9 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
       const { template: _template, ...rest } = body
       body = rest
     }
+    // The Content brief is a background job (#524): this file's opportunities stand for researched cards, and a press
+    // is followed through its poll door to the answer the old synchronous door gave (201 new, 200 the same, 422).
+    if (brief) return briefThroughJob(email, brief[1], path, body, extra)
     const build = method === 'POST' && path.match(/^\/api\/website-opportunities\/revisions\/([^/]+)\/build$/)
     if (build) return buildThroughAction(email, build[1], body ?? {}, extra)
     // `manual: true` (test-only): the demo action stops at the provisioned site, as a manual build does.
