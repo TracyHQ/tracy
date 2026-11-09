@@ -30164,5 +30164,937 @@
     "/index.php/password-reset",
     "/index.php/username-reminder-request"
   ],
-  "previewMeasuredAt": "2026-11-09T16:43:16.236Z"
+  "previewMeasuredAt": "2026-11-09T16:43:16.236Z",
+  "previewParity": {
+    "probeVersion": 10,
+    "popup": "live, live/door",
+    "measuredAt": "2026-11-09T17:29:13.525Z",
+    "pages": [
+      "/",
+      "/index.php/home",
+      "/index.php/your-profile",
+      "/index.php/template-settings",
+      "/index.php/site-settings",
+      "/index.php/our-blog",
+      "/index.php/contact-us",
+      "/index.php/j-pages/login",
+      "/index.php/j-pages/registration",
+      "/index.php/j-pages/user-profile",
+      "/index.php/j-pages/edit-user-profile",
+      "/index.php/other-pages/smart-search",
+      "/index.php/joomla-content/all-categories",
+      "/index.php/joomla-content/fetured-articles",
+      "/index.php/joomla-content/tagged-items",
+      "/index.php/other-pages/error-page",
+      "/index.php/other-pages/offline-page",
+      "/index.php/joomla-content/typography",
+      "/index.php/offers",
+      "/index.php/about-us",
+      "/index.php/reservation",
+      "/index.php/home/home-red",
+      "/index.php/home/home-pink",
+      "/index.php/home/home-green",
+      "/index.php/home/home-blue",
+      "/index.php/password-reset",
+      "/index.php/username-reminder-request"
+    ],
+    "rows": [
+      {
+        "page": "/",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 390,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/your-profile",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/template-settings",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/site-settings",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/our-blog",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/contact-us",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/login",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/registration",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/user-profile",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/edit-user-profile",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/other-pages/smart-search",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/all-categories",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/fetured-articles",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/tagged-items",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/other-pages/error-page",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/other-pages/offline-page",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/typography",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/offers",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/about-us",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/reservation",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-red",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-pink",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-green",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-blue",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/password-reset",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/username-reminder-request",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 390,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/your-profile",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/template-settings",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/site-settings",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/our-blog",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/contact-us",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/login",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/registration",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/user-profile",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/j-pages/edit-user-profile",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/other-pages/smart-search",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/all-categories",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/fetured-articles",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/tagged-items",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/other-pages/error-page",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/other-pages/offline-page",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/joomla-content/typography",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/offers",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/about-us",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/reservation",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-red",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-pink",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-green",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/home/home-blue",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/password-reset",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/index.php/username-reminder-request",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live"
+      },
+      {
+        "page": "/",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 390,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/your-profile",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/template-settings",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/site-settings",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/our-blog",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/contact-us",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/login",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/registration",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/user-profile",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/edit-user-profile",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/other-pages/smart-search",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/all-categories",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/fetured-articles",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/tagged-items",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/other-pages/error-page",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/other-pages/offline-page",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/typography",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/offers",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/about-us",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/reservation",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-red",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-pink",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-green",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-blue",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/password-reset",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/username-reminder-request",
+        "system": "refero:7f70ee10-123b-43cc-bd04-498cfc5b5ac0",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 390,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/your-profile",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/template-settings",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/site-settings",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/our-blog",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/contact-us",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/login",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/registration",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/user-profile",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/j-pages/edit-user-profile",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/other-pages/smart-search",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/all-categories",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/fetured-articles",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/tagged-items",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/other-pages/error-page",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/other-pages/offline-page",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/joomla-content/typography",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/offers",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/about-us",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/reservation",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-red",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-pink",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-green",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/home/home-blue",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/password-reset",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      },
+      {
+        "page": "/index.php/username-reminder-request",
+        "system": "refero:5fd3b3b4-02ab-456a-87aa-e4395636b671",
+        "width": 1440,
+        "count": 0,
+        "findings": [],
+        "popup": "live/door"
+      }
+    ]
+  }
 }
