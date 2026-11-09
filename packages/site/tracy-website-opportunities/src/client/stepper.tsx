@@ -1,8 +1,8 @@
 /**
- * The four steps under the Details header, on every tab (mock r6-a): done steps carry a check and "Done <date>",
+ * The three steps under the Details header, on every tab (mock r6-a): done steps carry a check and "Done <date>",
  * the current step its number, its name and one status line, future steps stay grey. At the right end sits the ONE
  * action of the current step, a disabled Running while a job runs, or why it stopped with Try again. In a narrow
- * panel the four names stay on one row and the status line with the button moves to a row below.
+ * panel the three names stay on one row and the status line with the button moves to a row below.
  * The view comes from `stepper-model.ts`.
  */
 import type { JSX } from 'react'

@@ -1,5 +1,6 @@
 /**
- * The four steps of one place (spec #512, mock r6-a): 1 Research · 2 Content brief · 3 Build demo · 4 Send demo.
+ * The three steps of one place (spec #512, mock r6-a): 1 Research · 2 Content brief · 3 Build demo.
+ * Sending the demo is not a step (no door records a send); it stays an action in the Demo site block menu.
  * One pure model reads the place's own research, its latest Content brief job, its latest brief and its demo state,
  * and says which steps are done (with their date), which one is current with its one status line, and the ONE action
  * of the current step (or that a job is running, or why it failed). The Details stepper and the My opportunities
@@ -10,8 +11,8 @@ import type { DemoState } from '@tracy/wo-views/demo-state'
 
 import { type ResearchState, briefControlView } from './research-gate-model.ts'
 
-export type StepId = 'research' | 'brief' | 'build' | 'send'
-export const STEP_IDS: readonly StepId[] = Object.freeze(['research', 'brief', 'build', 'send'])
+export type StepId = 'research' | 'brief' | 'build'
+export const STEP_IDS: readonly StepId[] = Object.freeze(['research', 'brief', 'build'])
 
 export type StepState = 'done' | 'current' | 'future'
 
@@ -24,7 +25,6 @@ export type StepAction =
   | 'build'
   | 'retry-build'
   | 'rebuild'
-  | 'send'
 
 export interface StepperInput {
   /** This card's own research (`researchOf`). */
@@ -39,13 +39,11 @@ export interface StepperInput {
   demo: DemoState
   /** When the ready demo was made, when known. */
   demoAt?: string | null
-  /** When the demo was sent. No door records a send yet, so callers pass null today. */
-  sentAt?: string | null
 }
 
 export interface StepView {
   id: StepId
-  /** `step.<id>`: Research, Content brief, Build demo, Send demo. */
+  /** `step.<id>`: Research, Content brief, Build demo. */
   nameKey: string
   state: StepState
   /** The current step stopped on a failure. */
@@ -121,12 +119,6 @@ export function stepperView(input: StepperInput): StepperView {
       done.brief = input.brief?.createdAt ?? null
       if (input.demo === 'ready') {
         done.build = input.demoAt ?? null
-        if (input.sentAt) done.send = input.sentAt
-        else {
-          current = 'send'
-          lineKey = 'stepper.send.ready'
-          action = { kind: 'send', labelKey: 'v3.sendDemo' }
-        }
       } else {
         current = 'build'
         if (BUILDING.has(input.demo)) {

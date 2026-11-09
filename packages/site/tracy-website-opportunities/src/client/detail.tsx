@@ -3,8 +3,8 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * The Details page of one opportunity and the page of one of its site briefs (plan D7), inside the
  * My opportunities sub-tab.
  *
- * Details (#517): a sticky header (Back, name and type, status, the one primary action, a ⋯ menu with Send demo,
- * Research again and Delete) over four tabs kept in the page address: Overview (the Demo site block of #515, the
+ * Details (#517): a sticky header (Back, name and type, status, the one primary action, a ⋯ menu with Research again
+ * and Delete) over four tabs kept in the page address: Overview (the Demo site block of #515, the
  * demos and the site brief, key facts), Business brief (the facts table, then the rows the person can check and
  * edit, menu, Google, reviews, current website, social, place profile), Photos & video and Sources (with Research
  * again). A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
@@ -558,21 +558,19 @@ export function DetailView({
     if (command.kind === 'press') return void demoPress(command.press)
     window.open(command.href, '_blank', 'noopener,noreferrer')
   }
-  // The four steps under the header, on every tab, with the ONE action of the current step (mock r6-a).
+  // The three steps under the header, on every tab, with the ONE action of the current step (mock r6-a).
   const stepper = stepperView({
     research,
     researchJob: job,
     briefJob: briefJob.job,
     brief: isRecord(body.brief) ? body.brief : null,
     demo: demoView.state,
-    demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
-    sentAt: null
+    demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null
   })
   const onStep = (step: StepAction): void => {
     if (step === 'start-research') return void act('start')
     if (step === 'resume-research') return void act('resume')
     if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
-    if (step === 'send') return void act('send-demo')
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
@@ -591,7 +589,6 @@ export function DetailView({
     job !== null &&
     !researchRunning &&
     !(researchAgain.phase === 'ready' && researchAgain.preview?.plan === null)
-  const demoReady = demoView.state === 'ready'
   const facts = [...meta.map(String), added ? t('research.added', { ago: added }) : null].filter(
     (v): v is string => typeof v === 'string' && v !== ''
   )
@@ -680,7 +677,6 @@ export function DetailView({
           </Tabs>
         }
         menu={{
-          onSendDemo: demoReady ? () => void act('send-demo') : undefined,
           onResearchAgain: researchAgainOpen
             ? () => {
                 chooseTab('sources')

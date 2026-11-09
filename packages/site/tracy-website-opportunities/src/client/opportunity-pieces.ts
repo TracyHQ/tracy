@@ -176,8 +176,7 @@ function nextOf(
     research,
     researchJob: row.job ?? null,
     brief: row.latestRevision ?? null,
-    demo: state,
-    sentAt: null
+    demo: state
   })
   if (step.running) return { label: t('stepper.running'), run: null, disabled: true }
   const action = step.action
@@ -204,8 +203,6 @@ function nextOf(
       return { label, run: { kind: 'demo', action: 'build' }, disabled: blocked }
     case 'rebuild':
       return { label, run: { kind: 'demo', action: 'rebuild' }, disabled: blocked }
-    case 'send':
-      return { label, run: { kind: 'row', action: 'send-demo' }, disabled: false }
   }
 }
 

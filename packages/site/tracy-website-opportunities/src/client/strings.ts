@@ -765,6 +765,7 @@ export const en = {
   'field.address': 'Address',
   'field.phone': 'Phone',
   'field.googleRating': 'Google rating',
+  'field.reviews': 'Reviews',
   'field.services': 'Services',
   'field.offerings': 'What it offers',
   'field.audience': 'Who it is for',
@@ -1149,7 +1150,6 @@ export const en = {
   /** Details (#517): the sticky header, its menu and the four tabs. */
   'details.back': 'Back',
   'details.more': 'More actions',
-  'details.sendDemo': 'Send demo',
   'details.researchAgain': 'Research again',
   'details.delete': 'Delete',
   'details.tabs': 'Sections of this place',
@@ -1215,12 +1215,11 @@ export const en = {
   'brief.card.whatsapp': 'WhatsApp {number}',
   'brief.full': 'Full brief',
 
-  /** The four steps of one place under the Details header (stepper-model.ts, mock r6-a). */
+  /** The three steps of one place under the Details header (stepper-model.ts, mock r6-a). */
   'stepper.label': 'Steps',
   'step.research': 'Research',
   'step.brief': 'Content brief',
   'step.build': 'Build demo',
-  'step.send': 'Send demo',
   'stepper.doneOn': 'Done {date}',
   'stepper.done': 'Done',
   'stepper.running': 'Running',
@@ -1237,7 +1236,6 @@ export const en = {
   'stepper.build.running': 'Building the demo site…',
   'stepper.build.failed': 'The demo build stopped before it was finished.',
   'stepper.build.expired': 'The demo expired. Build it again to send it.',
-  'stepper.send.ready': 'Demo ready. Send it to the business.',
   'my.status.researched': 'Researched',
   'brief.chip.working': 'Working',
   'brief.chip.failed': 'Failed',

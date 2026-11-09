@@ -138,7 +138,7 @@ test('Demo: a live demo shows its thumbnail address and days left; Status Demo r
   })
   assert.equal(p.status.label, 'Demo ready')
   assert.equal(p.status.tone, 'live')
-  assert.deepEqual(p.next, { label: 'Send demo', run: { kind: 'row', action: 'send-demo' }, disabled: false })
+  assert.deepEqual(p.next, { label: 'Open demo', run: { kind: 'demo', action: 'open' }, disabled: false })
 })
 
 test('Demo: a failed demo shows the reason in words, never the code; next Try again', () => {

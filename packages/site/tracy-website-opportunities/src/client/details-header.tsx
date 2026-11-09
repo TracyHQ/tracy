@@ -1,6 +1,6 @@
 /**
- * The sticky header of Details (#517): Back, the place's name and type, its status, a ⋯ menu with Send demo, Research
- * again and Delete, then the four steps with the one action of the current step (mock r6-a) and the tabs. It stays in
+ * The sticky header of Details (#517): Back, the place's name and type, its status, a ⋯ menu with Research again
+ * and Delete, then the three steps with the one action of the current step (mock r6-a) and the tabs. It stays in
  * sight while the tabs below scroll.
  */
 import type { JSX, ReactNode } from 'react'
@@ -19,8 +19,6 @@ import { cn } from '@tracy/ui/cn'
 import type { Translate } from './strings.ts'
 
 export interface HeaderMenu {
-  /** Absent: the place has no ready demo to send. */
-  onSendDemo?: () => void
   /** Absent: research is running, or the place was never researched. */
   onResearchAgain?: () => void
   onDelete: () => void
@@ -48,7 +46,7 @@ export function DetailsHeader({
   busy: boolean
   /** The tab strip, kept in the sticky header so it stays in sight too. */
   tabs?: ReactNode
-  /** The four steps with the one action of the current step (`stepper.tsx`), above the tabs on every tab. */
+  /** The three steps with the one action of the current step (`stepper.tsx`), above the tabs on every tab. */
   stepper?: ReactNode
   onBack: () => void
 }): JSX.Element {
@@ -83,15 +81,12 @@ export function DetailsHeader({
               <Ellipsis aria-hidden="true" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {menu.onSendDemo ? (
-                <DropdownMenuItem onClick={menu.onSendDemo}>{t('details.sendDemo')}</DropdownMenuItem>
-              ) : null}
               {menu.onResearchAgain ? (
                 <DropdownMenuItem onClick={menu.onResearchAgain}>
                   {t('details.researchAgain')}
                 </DropdownMenuItem>
               ) : null}
-              {menu.onSendDemo || menu.onResearchAgain ? <DropdownMenuSeparator /> : null}
+              {menu.onResearchAgain ? <DropdownMenuSeparator /> : null}
               <DropdownMenuItem variant="destructive" onClick={menu.onDelete}>
                 {t('details.delete')}
               </DropdownMenuItem>

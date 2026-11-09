@@ -1,5 +1,5 @@
 /**
- * The four steps of one place (mock r6-a): which steps are done, the current step with its one line, and the ONE
+ * The three steps of one place (mock r6-a): which steps are done, the current step with its one line, and the ONE
  * action, from the card's research, brief job, latest brief and demo state. The Details stepper and the list card
  * both read this model, so a card never offers Build demo before a brief exists.
  *
@@ -20,7 +20,7 @@ test('not started: Research is current with Start research', () => {
     researchJob: null,
     demo: 'none'
   })
-  assert.equal(states(view), 'current future future future')
+  assert.equal(states(view), 'current future future')
   assert.equal(view.lineKey, 'stepper.research.notStarted')
   assert.deepEqual(view.action, { kind: 'start-research', labelKey: 'job.start' })
   assert.equal(view.running, false)
@@ -51,7 +51,7 @@ test('a failed research says why and offers Try again', () => {
 
 test('researched: step 1 done with its date, Make content brief', () => {
   const view = stepperView({ research: RESEARCHED, brief: null, demo: 'none' })
-  assert.equal(states(view), 'done current future future')
+  assert.equal(states(view), 'done current future')
   assert.equal(view.steps[0].doneAt, RESEARCHED.researchedAt)
   assert.equal(view.lineKey, 'stepper.brief.ready')
   assert.deepEqual(view.action, { kind: 'make-brief', labelKey: 'brief.make' })
@@ -91,7 +91,7 @@ test('brief ready: steps 1 and 2 done, Build demo', () => {
     brief: BRIEF,
     demo: 'none'
   })
-  assert.equal(states(view), 'done done current future')
+  assert.equal(states(view), 'done done current')
   assert.equal(view.steps[1].doneAt, BRIEF.createdAt)
   assert.deepEqual(view.action, { kind: 'build', labelKey: 'v3.buildDemo' })
 })
@@ -113,29 +113,22 @@ test('a failed or expired demo keeps step 3 current with its own press', () => {
   assert.equal(expired.action?.kind, 'rebuild')
 })
 
-test('demo ready: step 4 current with Send demo', () => {
+test('demo ready: every step done, no action, Send demo is not a step', () => {
   const view = stepperView({
     research: RESEARCHED,
     brief: BRIEF,
     demo: 'ready',
     demoAt: '2026-11-09T13:00:00Z'
   })
-  assert.equal(states(view), 'done done done current')
-  assert.equal(view.steps[2].doneAt, '2026-11-09T13:00:00Z')
-  assert.deepEqual(view.action, { kind: 'send', labelKey: 'v3.sendDemo' })
-})
-
-test('demo sent: every step done, no action', () => {
-  const view = stepperView({
-    research: RESEARCHED,
-    brief: BRIEF,
-    demo: 'ready',
-    sentAt: '2026-11-10T09:00:00Z'
-  })
-  assert.equal(states(view), 'done done done done')
+  assert.equal(view.steps.length, 3)
+  assert.deepEqual(
+    view.steps.map((s) => s.id),
+    ['research', 'brief', 'build']
+  )
+  assert.equal(states(view), 'done done done')
   assert.equal(view.current, null)
   assert.equal(view.action, null)
-  assert.equal(view.steps[3].doneAt, '2026-11-10T09:00:00Z')
+  assert.equal(view.steps[2].doneAt, '2026-11-09T13:00:00Z')
 })
 
 test('a stale brief still counts as a brief: Build demo, never Make content brief again', () => {
