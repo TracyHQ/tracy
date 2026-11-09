@@ -14,6 +14,8 @@ import { test } from 'node:test'
 
 import { readContracts } from '../src/lib/contracts.js'
 import { roadOf } from '../src/lib/road-to-live.js'
+import { DEMO_MEASURES_CHECK } from '../src/lib/template-readiness/demo-measures-check.js'
+import { measureDemo } from '../src/site-check/demo-measures.js'
 import { labelRulesOf } from '../../../packages/cms/tracy-quickstart-tools/content-coverage/lib/label-rules.mjs'
 
 const TAG = 'quickstart/bakery/wp7'
@@ -290,3 +292,56 @@ for (const c of CASES) {
     assert.match(SKILL, new RegExp(`\\| \`${c.code}\`[^\\n]*\\b${recipe}\\b`))
   })
 }
+
+// H15: the demo-measures fault `demo-main-heading`, found by counting `<h1` per route (the recipe's own detect step).
+const h1sOf = (html) =>
+  [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim())
+const MASTHEAD = (tag) => `<${tag} class="site-title">Fresh Bakery</${tag}>`
+const PAGES_H15 = {
+  broken: { '/': `${MASTHEAD('h1')}<h1>Fresh bread</h1>`, '/error': `${MASTHEAD('h1')}<p>Not found</p>` },
+  fixed: { '/': `${MASTHEAD('p')}<h1>Fresh bread</h1>`, '/error': `${MASTHEAD('p')}<h1>Not found</h1>` }
+}
+
+async function demoMeasuresVerdict(pages) {
+  const host = async (payload) => ({
+    checks: ['no-empty-picture-slots', 'no-empty-boxes'].map((id) => ({
+      id,
+      pass: true,
+      detail: [],
+      measured: 0,
+      expected: 'none'
+    })),
+    visited: payload.pages.map((p) => ({ path: p, status: 200 })),
+    pageMeasures: payload.pages.flatMap((p) =>
+      [1440, 390].map((width) => ({
+        path: p,
+        width,
+        textBoxes: [],
+        mainHeadings: h1sOf(pages[p]),
+        orphanRows: [],
+        blankFooterColumns: []
+      }))
+    )
+  })
+  const doc = await measureDemo({
+    host,
+    pages: Object.keys(pages),
+    quickstart: { slug: 'bakery', version: '1.0.0' }
+  })
+  const dir = mkdtempSync(path.join(tmpdir(), 'wp-h15-'))
+  writeFileSync(path.join(dir, 'demo-measures.json'), JSON.stringify(doc))
+  const contracts = new Map([[`${TAG}@1.0.0`, { id: 'bakery/wp7/1.0.0', dir, platform: 'wordpress' }]])
+  return DEMO_MEASURES_CHECK.judge(release, { contracts }, { steps: [], version: '1.0.0' })
+}
+
+test('H15 repeated masthead h1: red with demo-main-heading, green once the masthead is no heading', async () => {
+  const red = await demoMeasuresVerdict(PAGES_H15.broken)
+  assert.deepEqual([red.state, red.code], ['todo', 'demo-main-heading'])
+  assert.equal(red.params.faults[0].page, '/')
+  const green = await demoMeasuresVerdict(PAGES_H15.fixed)
+  assert.deepEqual([green.state, green.code], ['done', 'demo-measures-clean'])
+})
+
+test('H15: SKILL.md leads from demo-main-heading to its recipe', () => {
+  assert.match(SKILL, /\| `demo-main-heading`[^\n]*\bH15\b/)
+})

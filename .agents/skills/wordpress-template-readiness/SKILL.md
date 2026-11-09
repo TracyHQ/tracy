@@ -81,6 +81,7 @@ green for the exit code. Never try to turn it `done`.
 | `coverage-labels` (R9) | sample posts of a style guide that carry contact-shaped text (a sample address, phone, email) | H12 |
 | `coverage-labels` (R2) | an hours or schedule sample on a plain editorial role | H13 |
 | `customize-live-failing` (ABOUT-2 names a `part`) | contact words in a template part paragraph that also holds a link, so no slot can hold them | H14 |
+| `demo-main-heading` (step `demo-measures`) | two main headings on a demo page (a repeated masthead `h1` plus the page title), or none on an error, offline or reset page | H15 |
 
    `apps/tracy-web/test/template-readiness-wordpress-holes.test.mjs` holds each row to a deliberately broken copy.
 3. Run it. Rebuilding the kit goes through [`references/kit-rebuild.md`](references/kit-rebuild.md) (a `build` wipes

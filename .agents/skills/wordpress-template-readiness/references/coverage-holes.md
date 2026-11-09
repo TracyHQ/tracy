@@ -97,6 +97,7 @@ to the same list.
 | H10 | A page or post title | `coverage-holes`, evidence `….post_title` |
 | H11 | A picture a theme option or theme post meta points at | `coverage-holes`, hole kind `image`, evidence an `options#` or `postmeta#` row |
 | H14 | A contact-shaped text (address, phone, email) in a template part paragraph the capture cannot write (it also holds a link) | `customize-live-failing`, rule ABOUT-2 naming `part <name> <block>`; the capture lists it as skipped (inline markup the plugin cannot write) |
+| H15 | A repeated masthead `h1` beside the page title, or a page with no `h1` | `demo-measures`, code `demo-main-heading` (the measure `main-heading`; a page with none is only a warning) |
 
 ### H1. Business words hard-coded in a theme pattern or part
 
@@ -253,3 +254,20 @@ to the same list.
 - **Verify.** Run `sync-theme-to-stand.mjs` first (the part is a database row, see `patch-release.md`). Then set the text
   option to a made-up value with wp-cli and read the rendered part on two pages: the made-up value shows and the demo
   words do not. ABOUT-2 no longer names the part; the sweep is green.
+
+### H15. Two main headings on a demo page, or none
+
+- **Confirm.** The `demo-measures` step reports `demo-main-heading` on the untouched demo. Count the headings per route
+  from the running stand: `for r in / /about /404-page; do echo "$r $(curl -s "$STAND$r" | grep -o '<h1' | wc -l)"; done`.
+  Two or more is the usual repeated masthead (the site title in an `h1` on every page, plus the page or article title).
+  Zero is a page whose big title is not a heading (error, offline, password reset, username reminder); the check only
+  warns there, but fix it in the same pass.
+- **Fix.** In the theme, never in the demo content. A repeated masthead becomes a non-heading element (a `p` or `div`)
+  with the same class, so the look is unchanged; only the page or post title stays the `h1`. A page with no `h1`
+  promotes its existing visible title to `h1`. Never add a hidden `h1` only to fix the count: the check exists to
+  match what a visitor reads.
+- **Order.** The fix changes the pack, so do it BEFORE pack, sweep, judge, kit and pin (cheap checks first). The sweep may
+  then show heading-tag height deltas (an `h1` and a `p` size differently by default): decide them in one decision row
+  (H8) rather than chasing each.
+- **Verify.** Re-run the count above: exactly one `<h1` on every route. Re-measure the demo (`demo-measures` command of
+  the verdict); `demo-main-heading` is gone and the step reads `demo-measures-clean`.
