@@ -9,9 +9,9 @@
     "quickstart/ja-impact/j6": "1.0.1"
   },
   "maxVersion": {
-    "quickstart/ja-impact/j6": "1.0.5"
+    "quickstart/ja-impact/j6": "1.0.6"
   },
-  "maxVersionNote": "1.0.5 21/10/2026 (TEXT-1 batch 1): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css and scss/_ds-bootstrap-roles.scss (headings inside a status fill read the text role the fill re-points) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.4 17/10/2026 (batch 2): the template reads the design-system role variables (VARS-1), unchanged without a system (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "maxVersionNote": "1.0.6 10/11/2026: stock CSS-1/CSS-2 pass on the pinned webroot; all 12 stock-scope stylesheets are byte-identical to checked 1.0.5, with 7/7 palette-painting sheets reading the slot (1063 reads, no read drops). Static compatibility evidence only; no fresh runtime measurement or whole design-system readiness claim. 1.0.5 21/10/2026 (TEXT-1 batch 1): built from 1.0.4 (release-batch.mjs --overlay); only css/template.css and scss/_ds-bootstrap-roles.scss (headings inside a status fill read the text role the fill re-points) differ: text read a ground role (TEXT-1), now reads its text role with its own colour as the fallback; unworn the page is the release's own (VERIFICATION.json). 1.0.4 17/10/2026 (batch 2): the template reads the design-system role variables (VARS-1), unchanged without a system (VERIFICATION.json). 1.0.3 16/10/2026 (#1375): re-cut of 1.0.2 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
   "release": "quickstart/ja-impact/j6@1.0.1",
   "roles": {
     "page": "body.site-default.navigation-default",
