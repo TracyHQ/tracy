@@ -33,7 +33,7 @@ before(async () => {
       contents: `
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
-        export { Sources } from './inspector.tsx'
+        export { Sources } from './details-parts.tsx'
         export { ResearchAgainButton } from './research-again-dialog.tsx'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),

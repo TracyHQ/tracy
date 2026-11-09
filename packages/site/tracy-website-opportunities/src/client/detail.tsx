@@ -97,12 +97,14 @@ import { ProfileReadingRows } from './profile-reading-rows.tsx'
 import { menuAgainTarget, readMenu } from './menu-model.ts'
 import { TripadvisorReviews } from './tripadvisor-reviews.tsx'
 import { CMS_LABEL } from './cms-label.ts'
-import { Steps, type DemoStepFacts } from './demo-progress.tsx'
+import { BuildEstimate, DemoProgress } from './demo-progress.tsx'
 import { SendDemo } from './send-demo.tsx'
 import { usageFull, type OutreachDraft, type DemoUsage } from './outreach-model.ts'
 import { rowFromDetail } from './inspector-model.ts'
 import { useCardResearchAgain, useSourceRetry } from './source-retry.ts'
-import { ActionButton, StatusCell } from './opportunity-cells.tsx'
+import { ActionButton } from './opportunity-cells.tsx'
+import { StatusBadge } from './my-places.tsx'
+import { placeStatus } from './opportunity-pieces.ts'
 import { type NextAction, nextAction, nextStepText, relativeTime, stageOf } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
@@ -548,16 +550,7 @@ export function DetailView({
   const facts = [...meta.map(String), added ? t('research.added', { ago: added }) : null].filter(
     (v): v is string => typeof v === 'string' && v !== ''
   )
-  const progress = (
-    <Steps
-      t={t}
-      row={row}
-      facts={body.progress as DemoStepFacts | undefined}
-      locale={locale}
-      now={now}
-      onBrief={row.latestRevision?.id ? () => onOpenRevision(row.latestRevision!.id!, false) : undefined}
-    />
-  )
+  const progress = <DemoProgress t={t} row={row} locale={locale} now={now} />
   const briefRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale)
 
   return (
@@ -567,7 +560,7 @@ export function DetailView({
         name={shownName}
         branch={row.branch ?? null}
         facts={facts}
-        status={<StatusCell t={t} row={row} />}
+        status={<StatusBadge status={placeStatus(row, t)} />}
         primary={primary}
         busy={busy}
         onBack={onList}
@@ -1328,6 +1321,7 @@ function Build({
   const labelId = useId()
   const cmsId = useId()
   const templateId = useId()
+  const locale = interfaceLocale() ?? 'en'
   const [usage, setUsage] = useState(initialUsage)
   usePoll(
     async () => {
@@ -1522,6 +1516,7 @@ function Build({
           {t('build.start')}
         </Button>
       ) : null}
+      {buildId === null ? <BuildEstimate t={t} locale={locale} estimate={buildTemplate?.estimate} /> : null}
       {buildId === null ? <p className="tracy-wo-muted tracy-wo-small">{t('build.after')}</p> : null}
       {startCode !== null && (
         <p className="tracy-wo-error" role="alert">

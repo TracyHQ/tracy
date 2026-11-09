@@ -114,15 +114,27 @@ function demoPiece(state: DemoState, row: OpportunityListRow, t: Translate, opts
   return { kind: 'none' }
 }
 
+/** A place still in research (or cancelled) speaks of its research; from Demo on, of its demo. */
+function inResearch(row: OpportunityListRow, state: DemoState): boolean {
+  const stage = stageOf(row)
+  return (stage === 'research' || stage === 'cancelled') && state === 'none'
+}
+
+/**
+ * The one status of a place: the list's Status piece and the Details header chip both draw this, so they never
+ * disagree (Building while the demo action is queued or running, Ready once it completed).
+ */
+export function placeStatus(row: OpportunityListRow, t: Translate): { label: string; tone: BadgeTone } {
+  const state = demoStateOf(row)
+  if (inResearch(row, state)) return { label: t(statusView(row).key), tone: statusView(row).variant }
+  return { label: t(STATE_STATUS[state].key), tone: STATE_STATUS[state].tone }
+}
+
 export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOptions): PlacePieces {
   const place = toPlaceRow(row)
-  const stage = stageOf(row)
   const state = demoStateOf(row)
-  // A place still in research (or cancelled) speaks of its research; from Demo on, of its demo.
-  const research = (stage === 'research' || stage === 'cancelled') && state === 'none'
-  const statusOf = research
-    ? { label: t(statusView(row).key), tone: statusView(row).variant }
-    : { label: t(STATE_STATUS[state].key), tone: STATE_STATUS[state].tone }
+  const research = inResearch(row, state)
+  const statusOf = placeStatus(row, t)
   let next: PlacePieces['next']
   const rowAction = nextAction(row)
   if (research || rowAction === 'open-demo-chat') {

@@ -1,6 +1,6 @@
 /** Attributed TripAdvisor guest quotations in the customer's existing Details page. */
 import type { JSX } from 'react'
-import { Section } from './inspector.tsx'
+import { Section } from './details-parts.tsx'
 import { mediaUrl } from './api.ts'
 import { type MediaTile, tripadvisorListingView, tripadvisorReviewView } from './detail-model.ts'
 import type { Translate } from './strings.ts'

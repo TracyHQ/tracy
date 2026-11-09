@@ -2,7 +2,7 @@
  * The Demo site block of Details (#515) without the screen: the shared demo state machine (`@tracy/wo-views`
  * `demoBlock`) read for one place, and where each press goes. One primary button, a menu for the rest, one line.
  *
- * The menu leaves out Delete demo: no door removes a demo alone yet (only the whole place, from the header menu).
+ * The shared menu has no Delete demo: no door removes a demo alone yet (only the whole place, from the header menu).
  */
 import { type DemoBlock, type DemoFacts, type DemoState, demoBlock, demoStateOf } from '@tracy/wo-views'
 
@@ -40,7 +40,7 @@ export function demoBlockView(
   const full = withDemo(row, detail)
   const state = demoStateOf(full)
   const block = demoBlock(state, full, t, opts)
-  return { ...block, state, menu: block.menu.filter((item) => item.id !== 'delete') }
+  return { ...block, state }
 }
 
 /** Where the ready demo opens: its address, else the live link of its build, else its path on this host. */

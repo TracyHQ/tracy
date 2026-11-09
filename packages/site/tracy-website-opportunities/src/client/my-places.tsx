@@ -170,16 +170,7 @@ function StatusPiece({
   const primary = run?.kind === 'demo' && (run.action === 'open' || p.state === 'ready')
   return (
     <div className="tracy-wo-p-status">
-      <Badge
-        variant={BADGE[p.status.tone]}
-        className={cn(
-          p.status.tone === 'live' && 'tracy-wo-badge-live',
-          p.status.tone === 'ok' && 'tracy-wo-badge-ok'
-        )}
-      >
-        {p.status.tone === 'live' ? <CheckIcon aria-hidden="true" /> : null}
-        {p.status.label}
-      </Badge>
+      <StatusBadge status={p.status} />
       <Button
         type="button"
         size="sm"
@@ -193,6 +184,22 @@ function StatusPiece({
         {p.next.label}
       </Button>
     </div>
+  )
+}
+
+/** The status chip of a place (`placeStatus`); the Details header draws the same one. */
+export function StatusBadge({ status }: { status: PlacePieces['status'] }): JSX.Element {
+  return (
+    <Badge
+      variant={BADGE[status.tone]}
+      className={cn(
+        status.tone === 'live' && 'tracy-wo-badge-live',
+        status.tone === 'ok' && 'tracy-wo-badge-ok'
+      )}
+    >
+      {status.tone === 'live' ? <CheckIcon aria-hidden="true" /> : null}
+      {status.label}
+    </Badge>
   )
 }
 

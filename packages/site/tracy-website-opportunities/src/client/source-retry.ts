@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { type AgainPart, type Api, startResearch, startResearchAgain } from './api.ts'
 import { type AgainControl, useResearchAgain } from './research-again-dialog.tsx'
-import type { SourceRetry } from './inspector.tsx'
+import type { SourceRetry } from './details-parts.tsx'
 import type { RequestIds } from './request-ids.ts'
 import type { ShownSource } from './status.ts'
 

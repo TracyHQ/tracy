@@ -10,7 +10,7 @@ import { cn } from '@tracy/ui/cn'
 
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { mediaUrl } from './api.ts'
-import { Section } from './inspector.tsx'
+import { Section } from './details-parts.tsx'
 import {
   type Menu,
   type MenuChip,

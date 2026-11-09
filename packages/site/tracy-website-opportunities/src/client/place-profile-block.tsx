@@ -7,7 +7,7 @@ import type { JSX } from 'react'
 
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
-import { Section } from './inspector.tsx'
+import { Section } from './details-parts.tsx'
 import {
   type ClaimView,
   type CoverageRowView,
