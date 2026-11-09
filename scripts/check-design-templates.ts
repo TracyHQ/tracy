@@ -40,6 +40,7 @@ import {
 } from '../apps/tracy-web/src/lib/quickstart-releases.js'
 import { COVERAGE_FILE } from '../apps/tracy-web/src/lib/content-coverage/reader.js'
 import { DEMO_MEASURES_FILE } from '../apps/tracy-web/src/lib/template-readiness/demo-measures-file.js'
+import { BASELINE_FILE } from '../apps/tracy-web/src/lib/template-kit/demo-baseline-file.js'
 import { SLOT_ROLES_FILE } from '../apps/tracy-web/src/lib/slot-roles.js'
 import { MEASUREMENT_FILE } from '../apps/tracy-web/src/lib/template-design-system-readiness/readers/measurement.js'
 import { SOURCE_FILE as NAVIGATION_SOURCE_FILE } from '../packages/cms/tracy-wordpress-quickstart/scripts/capture-navigation-source.mjs'
@@ -150,14 +151,15 @@ for (const [id, design] of Object.entries<Record<string, unknown>>(registry.desi
   const dir = path.join(CONTRACTS, profile)
   let onDisk: string[] = []
   try {
-    // content-coverage.json, demo-measures.json and slot-roles.json are read by /ops and WO from the tree; they ship
-    // in no Claude Cowork plugin package, so contractFiles never lists them.
+    // content-coverage.json, demo-measures.json, demo-baseline.json and slot-roles.json are read by /ops and WO from the
+    // tree; they ship in no Claude Cowork plugin package, so contractFiles never lists them.
     onDisk = readdirSync(dir)
       .filter(
         (name) =>
           name.endsWith('.json') &&
           name !== COVERAGE_FILE &&
           name !== DEMO_MEASURES_FILE &&
+          name !== BASELINE_FILE &&
           name !== SLOT_ROLES_FILE
       )
       .sort()

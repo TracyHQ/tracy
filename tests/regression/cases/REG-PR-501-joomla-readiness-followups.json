@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-501-joomla-readiness-followups",
+  "kind": "fix",
+  "title": "Joomla readiness follow-ups: the language policy gate and the readiness red-code table stay consistent",
+  "pr": 501,
+  "area": "template-readiness/joomla",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run the language policy test and the readiness red-codes test."],
+  "expect": ["S1: all tests pass."],
+  "selectors": {
+    "test": "scripts/test/check-language-policy.test.mjs"
+  },
+  "evidence": "PR 501 follow-ups to the Joomla template readiness kit, baseline check and skill",
+  "fence": "Node tests against fixtures; no network, no database",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "scripts/test/check-language-policy.test.mjs",
+      ".agents/skills/joomla-template-readiness/scripts/test/red-codes.test.mjs"
+    ]
+  }
+}

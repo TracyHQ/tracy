@@ -176,3 +176,77 @@ a fault the flow has a door for. Detection per fault:
 - **Code**: the `language-policy` job stays red on a policy edit inside the same PR.
 - **Fix**: the job runs the checker and policy from the base commit: put the policy edit in its own PR, merge it first,
   then rerun the job. The policy names objects by id: recompute the ids after any change of those files.
+
+## F15. A demo update fails downloading the Cowork plugin from a release download URL
+
+- **Code**: the demo update's failed answer on /ops, read by `failureReason` (`apps/tracy-web/src/lib/demo-sites.js`):
+  `download failed: The requested URL returned error: 504` (or another sticky 5xx) on a release asset URL of the form
+  `https://github.com/<org>/<repo>/releases/download/<tag>/<file>`. Offline detector: none for the host itself (it is a
+  server fact); the printed line is the code, and the readiness proof is `scripts/test/red-codes.test.mjs`.
+- **Symptom**: the demo update stops while fetching a plugin or profile package; the same asset downloads fine through
+  the API. The fault is the route, not the release.
+- **Confirm**: ask the same asset twice, once by its download URL and once by
+  `https://api.github.com/repos/<org>/<repo>/releases/assets/<id>` with header `Accept: application/octet-stream`. A 5xx on
+  the first and a 200 on the second confirms it.
+- **Fix**: a tool fix, never a template or demo fix: every download the provisioner makes takes the API road when the
+  plain URL answers 5xx (#491 for the package, #493 for the profile). Do not pin a different release to get past it.
+- **Layout check**: none (nothing on the site changes).
+
+## F16. A demo update fails with "contract profile ... not on disk"
+
+- **Code**: `!! contract profile <id>: not on disk` in the provision log, shown on /ops through `failureReason`. A fixed
+  host prints the cause first: `!! contract-fetch: profile <id> could not be put on disk: <why>`.
+- **Symptom**: the update dies at the profile step. The older provisioner tried the fetch once for 15 s, so a slow or 5xx
+  answer ended the run with a line that named no reason.
+- **Confirm**: read the log lines above the "not on disk" line for a `contract-fetch:` reason. No such line means the host
+  runs the old provisioner. A reason that names a 5xx is F15.
+- **Fix**: a tool fix (#493: 120 s window, the API road of F15, the real reason surfaced); update the host's provisioner,
+  then run the demo update again. Never edit the contract or hand-copy the profile onto the host.
+- **Layout check**: none.
+
+## F17. A captured template kit that quotes Vietnamese text turns the language policy job red
+
+- **Code**: `language-policy` job, finding `Vietnamese text in captured content` at a line of
+  `packages/cms/tracy-joomla-quickstart/contracts/<template>/<ver>/template-kit.json`. Offline detector: `checkRange` of
+  `scripts/check-language-policy.mjs` on the branch (it scans blobs up to 100 MB, so a large kit is no longer a finding by
+  size).
+- **Symptom**: a PR that adds a kit whose captured demo text names a local place in Vietnamese (an article about a cafe, for
+  example) goes red. Other accents (Latin, Nordic, Spanish) pass: under the `captured` class the keys follow the full
+  English rule and string values are refused only for Vietnamese letters. A rerun stays red because the job reads the
+  checker and the policy from the base commit (F14).
+- **Confirm**: the finding names the line; `sed -n '<line>p' <kit>` shows the quoted text.
+- **Fix**: first an exact line allowance PR on `develop` alone: one `lines` entry in `scripts/language-policy.json` with the
+  kit `path`, the `sha256` of that exact line and a reason (verbatim third-party demo text, reviewed). Merge it. Then merge
+  `develop` into the kit branch (not rebase: a rebase breaks the commit refs of regression cases) and push; a rerun alone
+  reuses the old base. A line edited later has a new digest and needs a new entry.
+- **Layout check**: none (a policy entry only).
+
+## F18. A release accepted with no demo baseline
+
+- **Code**: `demo-baseline-missing` in the verdict's `demo-baseline` piece, read as `warn` on a release already shown
+  on Design inspiration; Road to live on /ops stays green, because its Template kit step asks for the file
+  (`kit-demo-baseline-missing`) only for the tags in `apps/tracy-web/src/lib/template-kit/demo-baseline-policy.json`.
+- **Symptom**: the template passed acceptance, yet the site check and the write step bench cannot tell demo words from
+  the customer's words on its sites. Met on JA Voyara 1.0.12: /ops 11 of 11 green, no `demo-baseline.json` beside
+  `contracts/ja-voyara/j6/1.0.12/`, while JA Boxing 1.0.11 and JA Diner 1.0.5 had one.
+- **Confirm**: `ls <contract dir>/demo-baseline.json`, or the verdict JSON's `demo-baseline` piece is not `done`.
+- **Fix**: no new template version. Restore the pinned version on a fresh stand nobody writes to, check the two asset
+  hashes against the pin, then `WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs
+  --base <stand address> --version <contract id> --pages-file <the kit's pages[].path as JSON>` and
+  `node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs baseline --from <dir>/<contract id with / as _>.json
+  --contract <contract dir>`. Commit the file, then add the tag to `holdPublishFor` in the policy file with its reason, so
+  /ops holds the next version too. The file is not one of the cowork `contractFiles` (manifest, content map,
+  presentation lock, showcase map), so no claude-cowork release is needed.
+- **Check**: the verdict's `demo-baseline` piece reads `done` `demo-baseline-recorded`, and the baseline line reports no
+  page the host could not reach. Nothing on the site changes, so no layout check is needed.
+
+## F19. Road to live shows "Design system ... not checked" after a release went live or a pin changed
+
+- **Code**: /ops Design system step reads `Not checked` (or an error) for the new version, or shows the old version or an
+  old `checkedAt`. Offline detector: none (a server fact); the proof is the step on /ops itself.
+- **Symptom**: the release is live and `tracy_setting.json` is pinned, yet the step has not run for it. GitHub sends Tracy
+  no event for asset uploads, so nothing starts the checks.
+- **Confirm**: open /ops and read the Design system step: version and `checkedAt`.
+- **Fix**: press Refresh on /ops/cms quickstarts (`POST /api/ops/quickstarts/refresh`), wait about 2 minutes, then press
+  Check again on the step if it still reads `Not checked` or an error. Never edit the release to force it.
+- **Layout check**: none.
