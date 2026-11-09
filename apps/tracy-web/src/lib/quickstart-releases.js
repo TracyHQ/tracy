@@ -772,7 +772,9 @@ export async function refreshReleases(
     ensureRepoWebhook(
       config.github,
       RELEASES_REPO,
-      { url: `${config.origin}/github/release`, secret: config.github.webhookSecret },
+      // `release`, the one event `/github/release` reads (`releaseEventWanted`): a hook left on the
+      // default `push` delivered nothing the door acts on, and a new version waited for this read.
+      { url: `${config.origin}/github/release`, secret: config.github.webhookSecret, events: ['release'] },
       fetchImpl
     )
       .then((r) => {
