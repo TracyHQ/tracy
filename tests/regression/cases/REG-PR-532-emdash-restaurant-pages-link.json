@@ -1,14 +1,14 @@
 {
-  "id": "REG-PR-1812-emdash-restaurant-pages-link",
+  "id": "REG-PR-532-emdash-restaurant-pages-link",
   "kind": "fix",
   "title": "JA Restaurant EmDash 1.0.2 shows the category label of a post as a link only when that category's list page is live, so /pages/chefs no longer links to a 404",
-  "pr": 1812,
+  "pr": 532,
   "area": "cms/emdash",
   "cms": ["em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "S1: From the repo root at the commit under test, run tests/regression/scripts/REG-PR-1812-emdash-restaurant-pages-link.mjs: it reads the theme's version, the post view, the list route, the seed and contracts/1.0.2/content-coverage.json."
+    "S1: From the repo root at the commit under test, run tests/regression/scripts/REG-PR-532-emdash-restaurant-pages-link.mjs: it reads the theme's version, the post view, the list route, the seed and contracts/1.0.2/content-coverage.json."
   ],
   "expect": [
     "The theme is 1.0.2 in package.json, template.config.json, artifact.json and the Dockerfile label.",
@@ -19,6 +19,6 @@
   "evidence": "Measured on a site built from the 1.0.1 package: dead link (404) /pages shown on /pages/chefs. Measured on a Docker-built 1.0.2 site, desktop and phone: no failing page.",
   "fence": "packages/cms/tracy-emdash-theme-restaurant/src/views/Post.astro, src/pages/[...path].astro and contracts/1.0.2/content-coverage.json.",
   "run": {
-    "cmd": ["node", "tests/regression/scripts/REG-PR-1812-emdash-restaurant-pages-link.mjs"]
+    "cmd": ["node", "tests/regression/scripts/REG-PR-532-emdash-restaurant-pages-link.mjs"]
   }
 }

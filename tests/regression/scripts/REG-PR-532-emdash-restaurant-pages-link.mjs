@@ -1,5 +1,5 @@
 /**
- * REG-PR-1812: JA Restaurant EmDash 1.0.2 prints a post's category label as a link only while that
+ * REG-PR-532: JA Restaurant EmDash 1.0.2 prints a post's category label as a link only while that
  * category has a live list page. The fence is what the release is made of: the post view gates the
  * link, the list route answers only the blog categories, the release carries its own contract files and
  * the committed coverage of 1.0.2 holds no dead link.
