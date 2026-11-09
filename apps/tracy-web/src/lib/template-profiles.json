@@ -411,6 +411,18 @@
           "height": 80
         },
         "note": "Theme wp-ja-diner 1.0.3: the header logo, favicon and name fallback are those of 1.0.2; the patch only makes every page print exactly one h1 (repeated mastheads become paragraphs with the same class, pages without a title print theirs, the 404 title is the h1), so the logo slots, frames and the footer are unchanged."
+      },
+      "1.0.4": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "nameFallback": true,
+        "darkLogo": true,
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "note": "Theme wp-ja-diner 1.0.4 (docs only): the demo now carries a logo for dark backgrounds, jd-site-logo-dark.png (the source logo with every pixel white, 128 x 80) as tracy_logo_dark, so the dark header shows the logo instead of the site name (D-34). Slots, frames and favicon are those of 1.0.3. A customer logo given without a dark one clears tracy_logo_dark, so the dark spot prints the customer's name, never the demo's white logo."
       }
     },
     "quickstart/ja-essence/j6": {
