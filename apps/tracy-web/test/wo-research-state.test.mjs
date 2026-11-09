@@ -118,7 +118,7 @@ async function world() {
     objects: { put: async () => true },
     switchOn: async () => true,
     imageInfo: imageInfoWith(woHost),
-    resolve: async () => [{ address: '93.184.216.34', family: 4 }],
+    resolve: async () => [{ address: '2606:4700:4700::1111', family: 6 }],
     fetchImpl: async () => {
       throw new Error('no network in tests')
     },
