@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-383-ja-diner-j6-1-0-5-pinned",
   "kind": "feat",
-  "title": "JA Diner (Joomla 6) 1.0.5 is sealed with the contract, the kit and the plugin it was released with: ja-diner/j6/1.0.5 is the contract Claude Cowork for Joomla 0.24.80 carries and its approved template kit sits beside it; both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 or a later version (1.0.6 since the dark mode release) with the installer of that contract's manifest",
+  "title": "JA Diner (Joomla 6) 1.0.5 is sealed with the contract, the kit and the plugin it was released with: ja-diner/j6/1.0.5 is the contract Claude Cowork for Joomla 0.24.80 carries and its approved template kit sits beside it; both quickstarts.json pin quickstart/ja-diner/j6 at 1.0.5 or a later version (1.0.6 since the dark mode release, 1.0.7 since its fix release) with the installer of that contract's manifest",
   "pr": 383,
   "area": "quickstart/contracts",
   "cms": ["jo"],

@@ -595,6 +595,45 @@
       ],
       "keep": []
     },
+    "ja-diner/j6/1.0.7": {
+      "hide": [
+        {
+          "menutype": "joomla-pages",
+          "reason": "the \"joomla-pages\" menu is the off-canvas drawer of the JA demo: every entry is a Joomla sample page (typography, error/offline, sample content views, sample user screens)"
+        },
+        {
+          "key": "menuItem-119",
+          "path": "j-pages/login",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-120",
+          "path": "j-pages/registration",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-121",
+          "path": "j-pages/user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-122",
+          "path": "j-pages/edit-user-profile",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-125",
+          "path": "other-pages/smart-search",
+          "menutype": "joomla-pages",
+          "reason": "Joomla sample screen inside the template's sample-pages drawer; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
     "ja-directory/j6/1.0.3": {
       "hide": [
         {
