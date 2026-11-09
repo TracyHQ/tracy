@@ -53,8 +53,21 @@ import { briefTradeOf } from '../domain/trades.mjs'
 import { identityOf } from './places.js'
 import { urlKeyOf } from './site-checks.js'
 import { SOCIAL_STAT_NETWORKS } from './social-stats.js'
-import { SHOWN_SOURCES, SOCIAL_SOURCES, normalizeUrl, refsOfUrls, sourceOfUrl } from './sources.js'
-import { createLinkFields, linkRequestOf, mergeListings, saveListingSource } from './link-fields.js'
+import {
+  LISTING_SOURCE,
+  SHOWN_SOURCES,
+  SOCIAL_SOURCES,
+  normalizeUrl,
+  refsOfUrls,
+  sourceOfUrl
+} from './sources.js'
+import {
+  createLinkFields,
+  linkRequestOf,
+  mergeListings,
+  pastedLinksOf,
+  saveListingSource
+} from './link-fields.js'
 import {
   activeJobOf,
   claimBulkRequest,
@@ -1398,6 +1411,7 @@ export function websiteOpportunitiesRoutes(deps) {
       // No builder: the demo fields are left out of the answer.
       builder ? builder.detailOf(opp, who.accountId) : {}
     ])
+    const pasted = pastedLinksOf(opp)
     return json(c, {
       opportunity: opportunityShape(opp),
       demo: demo.demo,
@@ -1417,7 +1431,10 @@ export function websiteOpportunitiesRoutes(deps) {
         updatedAt: s.updated_at,
         ...(view ? { shared: s.shared === true } : {}),
         // The two search rows: the pages found, with their verdicts (new optional fields).
-        ...searchRowPages(s)
+        ...searchRowPages(s),
+        // A source the person's own pasted link feeds: that link as they pasted it (`link-fields.js pastedLinksOf`).
+        // Only pasted links make a listing row, so one saved before `pastedLinks` gives its own first page.
+        ...pastedLinkField(pasted.get(s.source) ?? (s.source === LISTING_SOURCE ? s.ref : null))
       })),
       // With the trade the brief speaks in (`trades.mjs briefTradeOf`), so Details words a food business as today and any
       // other business neutrally (#1780).
@@ -1779,6 +1796,9 @@ function httpsOn(value, hosts) {
     return null
   }
 }
+
+/** `{pastedLink}` for a source row a pasted link feeds; nothing for the rows research found by itself. */
+const pastedLinkField = (url) => (typeof url === 'string' && url ? { pastedLink: url } : {})
 
 /** Chat links (Zalo, WhatsApp, Messenger, LINE) a candidate carries; anything else is dropped. */
 function chatContacts(raw) {

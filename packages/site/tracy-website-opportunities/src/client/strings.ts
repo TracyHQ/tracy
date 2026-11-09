@@ -405,6 +405,12 @@ export const en = {
   'source.website': 'Website',
   /** The source of an opportunity added by pasting one address. */
   'source.link': 'The link you added',
+  /** A listing page's source row (magicpin and the like), named with the host of its address. */
+  'source.listing': 'Listing · {host}',
+  /** A listing page's source row when its address has no readable host. */
+  'source.listingPlain': 'Listing',
+  /** Heading above the sources research looked at by itself, below the links the owner added. */
+  'source.alsoLookedAt': 'Also looked at',
 
   'source.status.complete': 'Complete',
   'source.status.partial': 'Partial',

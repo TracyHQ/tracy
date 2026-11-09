@@ -45,6 +45,7 @@ import {
 } from './opportunity-row.ts'
 import { type ShownSource, type SourceInput, type Tone, isShownSource, sourceRow } from './status.ts'
 import { type SearchPage, searchPagesOf } from './research-again.ts'
+import { pastedLinkOf, sourceGroups } from './source-groups.ts'
 import type { Translate } from './strings.ts'
 
 type Body = Record<string, unknown>
@@ -180,72 +181,90 @@ export function Sources({
   retry?: SourceRetry
 }): JSX.Element {
   if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
+  // The links the owner pasted first; what research looked at by itself below, under its own heading.
+  const { pasted, found } = sourceGroups(sources)
   return (
     <div className="tracy-wo-srcs">
-      {sources.map((s) => {
-        const row = sourceRow(s)
-        const search = searchStatusKey(s)
-        const pages = searchPagesOf(s)
-        const reasonKey = search === null ? row.reasonKey : s.status === 'failed' ? row.reasonKey : null
-        const Icon = SOURCE_ICON[row.tone]
-        const retrySource =
-          retry !== undefined && row.retryable && isShownSource(row.source) ? row.source : null
-        const coverage =
-          row.total !== null
-            ? t('source.coverage', { fetched: row.fetched, total: row.total })
-            : row.fetched > 0
-              ? t('source.coverageOpen', { fetched: row.fetched })
-              : null
-        return (
-          <details
-            key={row.source}
-            className="tracy-wo-src"
-            open={(row.tone !== 'ok' && row.tone !== 'waiting') || search === 'again.search.pending'}
-          >
-            <summary>
-              <span className="tracy-wo-src-name">
-                <Icon aria-hidden="true" className={`tracy-wo-src-icon is-${row.tone}`} />
-                {sourceLabel(t, row.source)}
-              </span>
-              <span className="tracy-wo-muted">{t(search ?? row.statusKey)}</span>
-            </summary>
-            <div className="tracy-wo-src-body">
-              {coverage === null && reasonKey === null && search === null ? t('inspector.nothingYet') : null}
-              {typeof s.queries === 'number' ? (
-                <span className="tracy-wo-small">{t('again.search.queries', { count: s.queries })} </span>
-              ) : null}
-              {s.ref && /^https?:\/\//.test(s.ref) ? (
-                <a href={s.ref} target="_blank" rel="noopener noreferrer" className="tracy-wo-demo-url">
-                  {s.ref}
-                </a>
-              ) : null}
-              {coverage}
-              {coverage !== null && reasonKey !== null ? ' · ' : null}
-              {reasonKey !== null ? t(reasonKey) : null}
-              {pages.length > 0 ? <SearchPages t={t} pages={pages} /> : null}
-              {retry !== undefined && retrySource !== null ? (
-                <span className="tracy-wo-row tracy-wo-wrap tracy-wo-src-retry">
-                  <Button
-                    type="button"
-                    size="sm"
-                    variant="outline"
-                    disabled={retry.busy === row.source}
-                    onClick={() => retry.onPress(retrySource)}
-                  >
-                    {t('action.retry')}
-                  </Button>
-                  {retry.failed === row.source ? (
-                    <span className="tracy-wo-error" role="alert">
-                      {t('source.retryFailed')}
-                    </span>
-                  ) : null}
-                </span>
-              ) : null}
-            </div>
-          </details>
-        )
-      })}
+      {pasted.map((s) => (
+        <SourceItem key={s.source} t={t} s={s} retry={retry} />
+      ))}
+      {pasted.length > 0 && found.length > 0 ? (
+        <p className="tracy-wo-src-group">{t('source.alsoLookedAt')}</p>
+      ) : null}
+      {found.map((s) => (
+        <SourceItem key={s.source} t={t} s={s} retry={retry} />
+      ))}
     </div>
+  )
+}
+
+/** One source row: its name and status, then coverage, reason, the pages a search found and Retry. */
+function SourceItem({ t, s, retry }: { t: Translate; s: SourceInput; retry?: SourceRetry }): JSX.Element {
+  const row = sourceRow(s)
+  const pastedLink = pastedLinkOf(s)
+  const link = pastedLink ?? (s.ref && /^https?:\/\//.test(s.ref) ? s.ref : null)
+  const search = searchStatusKey(s)
+  const pages = searchPagesOf(s)
+  const reasonKey = search === null ? row.reasonKey : s.status === 'failed' ? row.reasonKey : null
+  const Icon = SOURCE_ICON[row.tone]
+  const retrySource = retry !== undefined && row.retryable && isShownSource(row.source) ? row.source : null
+  const coverage =
+    row.total !== null
+      ? t('source.coverage', { fetched: row.fetched, total: row.total })
+      : row.fetched > 0
+        ? t('source.coverageOpen', { fetched: row.fetched })
+        : null
+  return (
+    <details
+      className="tracy-wo-src"
+      open={(row.tone !== 'ok' && row.tone !== 'waiting') || search === 'again.search.pending'}
+    >
+      <summary>
+        <span className="tracy-wo-src-head">
+          <span className="tracy-wo-src-name">
+            <Icon aria-hidden="true" className={`tracy-wo-src-icon is-${row.tone}`} />
+            {sourceLabel(t, row.source, pastedLink ?? s.ref)}
+          </span>
+          {pastedLink !== null ? (
+            <span className="tracy-wo-src-pasted">{`${t('source.link')} · ${pastedLink}`}</span>
+          ) : null}
+        </span>
+        <span className="tracy-wo-muted">{t(search ?? row.statusKey)}</span>
+      </summary>
+      <div className="tracy-wo-src-body">
+        {coverage === null && reasonKey === null && search === null ? t('inspector.nothingYet') : null}
+        {typeof s.queries === 'number' ? (
+          <span className="tracy-wo-small">{t('again.search.queries', { count: s.queries })} </span>
+        ) : null}
+        {link !== null ? (
+          <a href={link} target="_blank" rel="noopener noreferrer" className="tracy-wo-demo-url">
+            {link}
+          </a>
+        ) : null}
+        {coverage}
+        {coverage !== null && reasonKey !== null ? ' · ' : null}
+        {reasonKey !== null ? t(reasonKey) : null}
+        {pages.length > 0 ? <SearchPages t={t} pages={pages} /> : null}
+        {retry !== undefined && retrySource !== null ? (
+          <span className="tracy-wo-row tracy-wo-wrap tracy-wo-src-retry">
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={retry.busy === row.source}
+              onClick={() => retry.onPress(retrySource)}
+            >
+              {t('action.retry')}
+            </Button>
+            {retry.failed === row.source ? (
+              <span className="tracy-wo-error" role="alert">
+                {t('source.retryFailed')}
+              </span>
+            ) : null}
+          </span>
+        ) : null}
+      </div>
+    </details>
   )
 }
 

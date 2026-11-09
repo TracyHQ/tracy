@@ -8,6 +8,7 @@
  */
 
 import { resolvePlace } from './places.js'
+import { LISTING_SOURCE } from './sources.js'
 import { nextReadingPicks } from '../domain/business-reading.mjs'
 import { mergeKeyMessagePicks, nextFactOverrides } from './owner-fact-picks.js'
 import { journeySql } from './wo-journey.js'
@@ -65,7 +66,8 @@ export async function savePreference(pool, accountId, cms, qualityMode = undefin
  * The links a new save names that the saved candidate does not have yet: a website when it has none, a social page
  * of a network it has none of, listing pages it does not list. Null when nothing is new. Nothing else of the saved
  * candidate changes (its name, its `ownSite`, what research wrote on it) but `linksAddedAt`, the time a link was
- * added: a place research published before it is not current for this opportunity (`place-requests.js`).
+ * added: a place research published before it is not current for this opportunity (`place-requests.js`), and
+ * `pastedLinks`, the links the person pasted that it researches.
  */
 export function candidateWithNewRefs(held, sent, now = new Date()) {
   const base = held && typeof held === 'object' ? held : {}
@@ -87,8 +89,26 @@ export function candidateWithNewRefs(held, sent, now = new Date()) {
       changed = true
     }
   if (listings.length) out.listings = listings
+  // The links pasted this time join the ones pasted before (`link-fields.js pastedLinksOf`); they alone ask no new run.
+  const pasted = Array.isArray(base.pastedLinks) ? [...base.pastedLinks] : []
+  let pastedChanged = false
+  // Only a link the saved candidate researches: a second website or page of a network it has is not used.
+  const researched = (l) =>
+    l.source === 'google-places' ||
+    l.source === LISTING_SOURCE ||
+    (l.source === 'website' ? out.website : out.socials?.[l.source]) === l.url
+  for (const l of Array.isArray(sent?.pastedLinks) ? sent.pastedLinks : [])
+    if (
+      typeof l?.url === 'string' &&
+      researched(l) &&
+      !pasted.some((h) => h?.source === l.source && h?.url === l.url)
+    ) {
+      pasted.push(l)
+      pastedChanged = true
+    }
+  if (pastedChanged) out.pastedLinks = pasted
   if (changed) out.linksAddedAt = now.toISOString()
-  return changed ? out : null
+  return changed || pastedChanged ? out : null
 }
 
 /**

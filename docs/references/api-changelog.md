@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-09: Sources from pasted links
+
+Added optional field `pastedLink` on rows of `sources` in `GET /api/website-opportunities/:id` (internal): on a source that a link the person pasted feeds (Add a business by its links), the link as they pasted it; rows research found by itself carry none.
+
 ## 2026-11-09: Delete a saved opportunity
 
 Added `DELETE /api/website-opportunities/:id` (internal): cancels the row's live research job, tears its live demo sites down through the demo retention path, then deletes the row; 409 `DEMO_BUILD_RUNNING` (a demo still being built) and 409 `DEMO_TEARDOWN_FAILED` keep it. `POST /api/website-opportunities/jobs/bulk` takes `action: "delete"` with `opportunityIds` (not `jobIds` or `filter`) and answers `deleted` and `sitesRemoved` beside `done`, `skipped` and `failed`.

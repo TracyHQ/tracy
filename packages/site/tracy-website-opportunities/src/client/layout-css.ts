@@ -164,6 +164,9 @@ export const CSS = `
 .tracy-wo-src-icon.is-partial { color: var(--primary); }
 .tracy-wo-src-icon.is-waiting, .tracy-wo-src-icon.is-skipped { color: var(--muted-foreground); }
 .tracy-wo-src-retry { margin-top: 6px; }
+.tracy-wo-src-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tracy-wo-src-pasted { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.tracy-wo-src-group { margin: 8px 0 2px; font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-src-body { padding: 6px 10px 8px; border-top: 1px solid var(--border); color: var(--muted-foreground); }
 .tracy-wo-search-pages { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
 .tracy-wo-search-page { display: flex; flex-direction: column; gap: 2px; padding-top: 6px; border-top: 1px solid var(--border); }
