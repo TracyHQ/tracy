@@ -21892,6 +21892,12 @@
       "sha256": "b528d6530d923e2d813f55b000d1b52c85ca9233aa1d2fc928fe18b946190ff4",
       "count": 1,
       "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/demo-measures.json",
+      "sha256": "aea2e3e22b715aff01ede6e108c05a757e7dcca4cb82c9a3bbfd8607ec8eab31",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
     }
   ],
   "objects": [
