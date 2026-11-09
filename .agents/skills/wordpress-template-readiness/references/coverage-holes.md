@@ -96,6 +96,7 @@ to the same list.
 | H9 | A link (an address) inside an inline markup slot | `coverage-holes`, hole kind `link` |
 | H10 | A page or post title | `coverage-holes`, evidence `….post_title` |
 | H11 | A picture a theme option or theme post meta points at | `coverage-holes`, hole kind `image`, evidence an `options#` or `postmeta#` row |
+| H14 | A contact-shaped text (address, phone, email) in a template part paragraph the capture cannot write (it also holds a link) | `customize-live-failing`, rule ABOUT-2 naming `part <name> <block>`; the capture lists it as skipped (inline markup the plugin cannot write) |
 
 ### H1. Business words hard-coded in a theme pattern or part
 
@@ -232,3 +233,16 @@ to the same list.
   cannot place goes in the role hints file (H4). The slot stays writable and reads empty on a customer site until it is filled. A blanket
   accept would leave the demo hours in place.
 - **Verify.** R2 is 0; the slot has a role and a group.
+
+### H14. Contact words in a template part paragraph that also holds a link
+
+- **Confirm.** The Customize rule ABOUT-2 (verdict codes `customize-live-failing`, `cowork-pin`) names a template part
+  block (`part footer: 1 (footer.location.text)`), and the capture output lists that block as skipped (`inline markup
+  the plugin cannot write: link`). The words are a business address, phone or email shown to every visitor, and no slot
+  can hold them: the part is not an entity the plugin writes with a link inside.
+- **Fix.** Put the words behind a theme text option token, the door the other contact lines use (`{contact.address}`,
+  `{contact.phone}` and the like, filled from a `WP_*_TEXT_OPTIONS` option that a content map slot `theme.<option>` writes;
+  recipe H1). Keep the **named** paragraph to the token alone and move the link into a separate **unnamed**
+  paragraph: a link label such as "Get Directions" in the named paragraph is still prose to ABOUT-2 after the token is in.
+  Match the old spacing with a zero margin on the two paragraphs, then expect a heights check in the release sweep (H8).
+- **Verify.** ABOUT-2 no longer names the part; the part renders the same words from the option; the sweep is green.

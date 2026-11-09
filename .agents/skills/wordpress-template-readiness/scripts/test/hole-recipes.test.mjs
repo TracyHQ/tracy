@@ -11,6 +11,8 @@ import {
   judgeCoverage,
   judgeLabelRules
 } from '../../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
+import { namedLeafTexts } from '../../../../../apps/tracy-web/src/lib/template-customization-question-readiness/readers/wordpress-named-blocks.js'
+import { isProse } from '../../../../../apps/tracy-web/src/lib/template-customization-question-readiness/readers/joomla-row-text.js'
 import { labelRulesOf } from '../../../../../packages/cms/tracy-quickstart-tools/content-coverage/lib/label-rules.mjs'
 
 const V3 = 'place-content-roles/3'
@@ -196,7 +198,7 @@ test('H8 has no verdict piece: the release sweep detects it, and the patch relea
 })
 
 test('every recipe has its four parts, and SKILL.md and the fix map lead to them from the red code', () => {
-  for (let n = 1; n <= 13; n++) {
+  for (let n = 1; n <= 14; n++) {
     const body = HOLES.split(new RegExp(`^### H${n}\\. `, 'm'))[1]?.split(/^### H\d\. |^## /m)[0] ?? ''
     assert.ok(body, `recipe H${n} is missing`)
     for (const part of ['**Confirm.**', '**Fix.**', '**Verify.**'])
@@ -204,8 +206,29 @@ test('every recipe has its four parts, and SKILL.md and the fix map lead to them
   }
   assert.match(SKILL, /coverage-holes\.md`?\]?\(references\/coverage-holes\.md\) section 6/)
   assert.match(FIXMAP, /recipes H1, H2, H5, H7, H9, H10, H11 of section 6/)
-  assert.match(FIXMAP, /recipes H1 to H6, H12, H13 of section 6/)
+  assert.match(FIXMAP, /recipes H1 to H6, H12 to H14 of section 6/)
   for (const code of ['coverage-holes', 'coverage-labels', 'coverage-judge']) assert.ok(SKILL.includes(code))
+})
+
+/** The demo words Customize (ABOUT-2) counts in a template part: named blocks whose text is prose no contract slot targets. */
+const demoWordsOf = (part) =>
+  namedLeafTexts(part)
+    .filter((b) => isProse(b.text))
+    .map((b) => b.name)
+const LINK = '<a href="#" title="Get Directions">Get Directions</a>'
+
+test('H14: a contact-shaped text in a template part paragraph that also holds a link is demo words nothing rewrites; a token in its own named paragraph is not', () => {
+  const para = (inner, name) =>
+    `<!-- wp:paragraph {"metadata":{"name":"${name}"}} -->\n<p>${inner}</p>\n<!-- /wp:paragraph -->`
+  // broken: the address and the link share one named paragraph (the capture skips it: inline markup with a link)
+  const broken = para(`<span>12 Example Road, Sometown</span><br>${LINK}`, 'footer.place.text')
+  assert.deepEqual(demoWordsOf(broken), ['footer.place.text'])
+  // half fixed: the address is a token but the link label still makes the named paragraph prose
+  const half = para(`<span>{contact.address}</span><br>${LINK}`, 'footer.place.text')
+  assert.deepEqual(demoWordsOf(half), ['footer.place.text'])
+  // fixed: the named paragraph holds the token only, the link label sits in an unnamed paragraph (Tracy's)
+  const fixed = `${para('<span>{contact.address}</span>', 'footer.place.text')}\n<!-- wp:paragraph -->\n<p>${LINK}</p>\n<!-- /wp:paragraph -->`
+  assert.deepEqual(demoWordsOf(fixed), [])
 })
 
 test('the recipes carry no Diner-only wording as a rule', () => {
