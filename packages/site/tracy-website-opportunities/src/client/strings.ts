@@ -947,6 +947,7 @@ export const en = {
   'build.start': 'Build demo',
   'build.cms': 'CMS',
   'build.template': 'Template',
+  'build.pickNote': 'Build demo opens the templates, so you can keep this one or choose another.',
   'build.running': 'Building the demo site…',
   'build.done': 'The demo site is ready.',
   'build.failed': 'The build stopped: {reason}',

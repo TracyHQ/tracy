@@ -41,3 +41,18 @@ test('the Build form sends the Site name on Tracy when one is saved, else the na
   // An emptied field is no label: the server then uses the saved name itself.
   assert.equal(buildLabel('  ', 'my-coach', 'pho-ba'), '')
 })
+
+test("the card's template is the one the template picker recommends for this business, ahead of the pin", () => {
+  // The picker recommends a Joomla card for this trade; the card no longer shows the WordPress pin.
+  const c = buildChoice(choices, 'wordpress', null, null, ['bar'])
+  assert.equal(c.cms, 'joomla')
+  assert.equal(c.template.quickstart, 'bar/j6')
+  // The revision's CMS wins when it offers the recommended design too.
+  assert.equal(buildChoice(choices, 'wordpress', null, null, ['tracy-base', 'bar']).cms, 'wordpress')
+  // A recommended card no CMS offers falls back to the pin; a person's pick still wins.
+  assert.equal(buildChoice(choices, 'wordpress', null, null, ['gone']).template.quickstart, 'tracy-base/wp7')
+  assert.equal(
+    buildChoice(choices, 'wordpress', 'wordpress', 'diner', ['bar']).template.quickstart,
+    'diner/wp'
+  )
+})

@@ -23,8 +23,6 @@ import {
   BreadcrumbSeparator,
   Button,
   Input,
-  NativeSelect,
-  NativeSelectOption,
   Spinner,
   Tabs,
   TabsList,
@@ -114,7 +112,7 @@ import { placeStatus } from './opportunity-pieces.ts'
 import { type NextAction, nextAction, nextStepText, relativeTime, stageOf } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
-import { runAction } from './row-actions.ts'
+import { rankingFor, runAction } from './row-actions.ts'
 import { type SourceInput, buildView, reasonKey, shouldPoll } from './status.ts'
 import type { Translate } from './strings.ts'
 
@@ -297,6 +295,7 @@ export function DetailView({
   const [logoBusy, setLogoBusy] = useState(false)
   const [logoFailed, setLogoFailed] = useState(false)
   const buildChoices = useBuildChoices(api)
+  const recommended = useRecommendedDesigns(api, id)
   const retrySource = useSourceRetry(api, ids, id, async () => {
     await reload()
     onChanged()
@@ -662,7 +661,8 @@ export function DetailView({
                 onCommand={onDemo}
                 progress={progress}
                 estimate={
-                  buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null).template?.estimate
+                  buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
+                    ?.estimate
                 }
               />
             ) : null}
@@ -1331,6 +1331,25 @@ function useBuildChoices(api: Api): BuildChoices | null {
   }, [api])
   return choices
 }
+
+/**
+ * The designs the template picker recommends for this opportunity's trade (`templateRanking`), so the Build card and
+ * the Demo site block show the same template the picker puts first; empty until read or when the trade is unknown.
+ */
+function useRecommendedDesigns(api: Api, opportunityId: string): string[] {
+  const [recommended, setRecommended] = useState<string[]>([])
+  useEffect(() => {
+    let live = true
+    void rankingFor(api, [opportunityId]).then((ranking) => {
+      if (live) setRecommended(ranking?.recommended ?? [])
+    })
+    return () => {
+      live = false
+    }
+  }, [api, opportunityId])
+  return recommended
+}
+
 export function Build({
   t,
   api,
@@ -1362,8 +1381,6 @@ export function Build({
   focusName?: boolean
 }): JSX.Element {
   const labelId = useId()
-  const cmsId = useId()
-  const templateId = useId()
   const locale = interfaceLocale() ?? 'en'
   const [usage, setUsage] = useState(initialUsage)
   usePoll(
@@ -1398,13 +1415,11 @@ export function Build({
   }, [read])
   usePoll(read, buildId !== null && (status === null || status.phase === 'running'))
 
-  // The CMS and template are the person's choice; the template /ops/wo pins for the CMS is preselected.
+  // The card shows the template the picker recommends for this business (else the one /ops/wo pins); the person
+  // chooses in the same template picker the Demo site block opens, never with one click here.
   const choices = useBuildChoices(api)
-  const [pickedCms, setPickedCms] = useState<string | null>(null)
-  const [pickedDesign, setPickedDesign] = useState<string | null>(null)
-  const picked = buildChoice(choices, cms, pickedCms, pickedDesign)
-  const { cmsList, cms: buildCms, template: buildTemplate } = picked
-  const offered = choices?.[buildCms]
+  const recommended = useRecommendedDesigns(api, opportunityId)
+  const { cms: buildCms, template: buildTemplate } = buildChoice(choices, cms, null, null, recommended)
 
   const start = async (): Promise<void> => {
     if (busy) return
@@ -1424,15 +1439,7 @@ export function Build({
         },
         ids,
         'build',
-        { id: opportunityId },
-        // The form's choice when this server offers one; else the shared picker opens, as before.
-        buildTemplate
-          ? async () => ({
-              cms: buildCms,
-              design: buildTemplate.design,
-              quickstart: buildTemplate.quickstart
-            })
-          : undefined
+        { id: opportunityId }
       )
       if (outcome.kind === 'demo-chat' && !(await followChat(outcome.actions))) setStartCode('HTTP_500')
       if (outcome.kind === 'failed') setStartCode(outcome.code)
@@ -1488,47 +1495,19 @@ export function Build({
           {t('v3.limitReached')}
         </p>
       ) : null}
-      {buildTemplate && buildId === null ? (
-        <>
-          <label className="tracy-wo-field">
-            <span className="tracy-wo-label" id={cmsId}>
-              {t('build.cms')}
+      {buildId === null ? (
+        buildTemplate ? (
+          <div className="tracy-wo-field">
+            <span className="tracy-wo-label">{t('build.template')}</span>
+            <span>
+              {buildTemplate.label} · {CMS_LABEL[buildCms] ?? buildCms}
             </span>
-            <NativeSelect
-              aria-labelledby={cmsId}
-              value={buildCms}
-              onChange={(event) => {
-                setPickedCms(event.target.value)
-                setPickedDesign(null)
-              }}
-            >
-              {cmsList.map((key) => (
-                <NativeSelectOption key={key} value={key}>
-                  {CMS_LABEL[key] ?? key}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </label>
-          <label className="tracy-wo-field">
-            <span className="tracy-wo-label" id={templateId}>
-              {t('build.template')}
-            </span>
-            <NativeSelect
-              aria-labelledby={templateId}
-              value={buildTemplate.design}
-              onChange={(event) => setPickedDesign(event.target.value)}
-            >
-              {(offered?.templates ?? []).map((tpl) => (
-                <NativeSelectOption key={tpl.design} value={tpl.design}>
-                  {tpl.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </label>
-        </>
-      ) : (
-        <p className="tracy-wo-muted tracy-wo-small">{t('build.cmsNote')}</p>
-      )}
+            <span className="tracy-wo-muted tracy-wo-small">{t('build.pickNote')}</span>
+          </div>
+        ) : (
+          <p className="tracy-wo-muted tracy-wo-small">{t('build.cmsNote')}</p>
+        )
+      ) : null}
       <label className="tracy-wo-field">
         <span className="tracy-wo-label" id={labelId}>
           {t('build.label')}
