@@ -1532,6 +1532,7 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
             : tr('cms-readiness.coverage.joomlaOnly')
       })
     case 'coverage-waiting':
+    case 'coverage-roles-only':
       return g(STEP_TITLE['content-coverage'])
     case 'coverage-ready': {
       const c = (p.coverage ?? {}) as Record<string, unknown>

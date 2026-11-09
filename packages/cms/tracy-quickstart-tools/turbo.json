@@ -13,6 +13,8 @@
         "$TURBO_ROOT$/scratch-in-repo-must-not-appear",
         "$TURBO_ROOT$/scratch-in-repo-must-not-appear/a/**",
         "$TURBO_ROOT$/vendor/tracy/od-design-system/**",
+        "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-diner/**",
+        "$TURBO_ROOT$/packages/cms/tracy-emdash-theme-restaurant/**",
         "$TURBO_ROOT$/packages/wo/website-opportunities/**",
         "$TURBO_ROOT$/scripts/slot-roles/**",
         "$TURBO_ROOT$/packages/cms/tracy-wordpress-quickstart/scripts/**",

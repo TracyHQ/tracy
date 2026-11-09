@@ -251,7 +251,11 @@ test('the reading records the dropped themes, and keeps uspThemesReason only whe
   const none = await read(DOOR, stubModel(answer([ANSWER.uspThemes[1]])))
   assert.equal(none.uspThemes, null)
   assert.equal(none.uspThemesReason, 'rejected')
-  assert.deepEqual(none.uspThemesDropped, [{ label: 'coaches with world titles', why: 'quote_not_found' }])
+  // The one USP retry (the same stub answers it the same way) is recorded after the first pass.
+  assert.deepEqual(none.uspThemesDropped, [
+    { label: 'coaches with world titles', why: 'quote_not_found' },
+    { label: 'coaches with world titles', why: 'retry_rejected', detail: 'quote_not_found' }
+  ])
 })
 
 test('the prompt asks for the ladder: reviews first, one review next, the business own words last', async () => {

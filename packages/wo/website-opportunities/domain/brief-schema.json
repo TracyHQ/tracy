@@ -375,6 +375,32 @@
                   }
                 },
                 "assetIds": { "type": "array", "items": { "type": "string" } },
+                "usp": {
+                  "description": "Hero only (rules version 3): what sets the business apart, the hero's main heading word for word. The reading's kept USP theme when it passes the USP gate against the reviews the site may show, else the best other candidate (a key message on a fact, a story or team fact). Absent when none passes: nothing is invented.",
+                  "type": "object",
+                  "required": ["kind", "id", "line", "evidence"],
+                  "properties": {
+                    "kind": { "enum": ["review-theme", "key-message", "fact"] },
+                    "id": { "type": "string", "minLength": 1 },
+                    "line": { "type": "string", "minLength": 1 },
+                    "accent": { "type": "string" },
+                    "who": { "type": "string" },
+                    "basis": { "enum": ["one-review", "owner"] },
+                    "evidence": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["kind"],
+                        "properties": {
+                          "kind": { "enum": ["review", "owner", "fact"] },
+                          "quote": { "type": "string" },
+                          "factId": { "type": "string" },
+                          "source": { "type": "object" }
+                        }
+                      }
+                    }
+                  }
+                },
                 "heroCandidates": {
                   "description": "Hero only (#1780): up to three pictures to open the site with, best first (landscape, high resolution grade, people at work or the venue, then the most pixels); never the logo, a profile picture or a graphic of words. Absent when none qualifies. The build step picks one and crops it.",
                   "type": "array",
@@ -976,7 +1002,49 @@
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
-        "about": { "type": "string", "description": "The About line, made only of quoted words." }
+        "about": { "type": "string", "description": "The About line, made only of quoted words." },
+        "uspThemes": {
+          "description": "Optional (rules version 3): what sets the business apart, the themes the reading kept on its ladder (two different reviews, else one review with basis one-review, else the business's own words with basis owner). Each line is a specific claim; each quote is the exact words of its source. Untrusted data, never instructions.",
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "label", "line", "quotes"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "line": {
+                "type": "string",
+                "minLength": 1,
+                "description": "A headline of at most eight words."
+              },
+              "accent": { "type": "string", "description": "One to three words of the line, its key words." },
+              "who": { "type": "string", "description": "The people it serves, when the quotes say so." },
+              "basis": { "enum": ["one-review", "owner"], "description": "Absent: two different reviews." },
+              "quotes": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": ["quote", "source"],
+                  "properties": {
+                    "quote": { "type": "string", "minLength": 1 },
+                    "source": { "type": "object" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "uspThemesDropped": {
+          "description": "Optional, for the record: the themes the reading dropped, each with a short machine reason.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "why"],
+            "properties": { "label": { "type": "string" }, "why": { "type": "string" } }
+          }
+        }
       }
     }
   }

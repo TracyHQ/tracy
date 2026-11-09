@@ -3446,6 +3446,8 @@ export function collectedOf(value) {
     email: text(value.email, 320),
     address: text(value.address, 500),
     hours: strings(value.hours, 14, 300),
+    // What sets the business apart (the brief's hero USP statement): the home page shows it, word for word.
+    usp: text(value.usp, 200),
     reviews: (Array.isArray(value.reviews) ? value.reviews : [])
       .filter((r) => r && typeof r.text === 'string' && r.text.trim())
       .slice(0, COLLECTED_REVIEWS_MAX)
@@ -3598,6 +3600,10 @@ export function checkCollectedUsed(
       if (!streetWords || !` ${streetWords} `.includes(` ${streetWordsOf(m[0]).join(' ')} `))
         once(r, 'address', m[0])
   }
+  // 🔒 WHAT SETS IT APART IS ON THE FIRST SCREEN (owner decision 09/11/2026): the brief's USP statement, word for word,
+  // on home (the first page read), the hero's main heading by the build steps.
+  if (collected.usp && !phraseIn(wordsOf(reads[0]?.text ?? '').join(' '), collected.usp))
+    missing('usp', collected.usp)
   if (collected.hours.length) {
     const want = timesIn(collected.hours.join(' '))
     const seen = new Set(shown.flatMap((r) => [...timesIn(r.text)]))
@@ -3674,7 +3680,7 @@ export function checkCollectedUsed(
       'collected-used',
       findings,
       `${findings.length} collected facts or photos missing; ${reviewsShown} reviews quoted; ${photos.size} own photos shown`,
-      'the name, phone, email, address, hours, a review and the place’s own photos the research collected are on the site, and no email, phone or street line it did not collect'
+      'the name, phone, email, address, hours, a review and the place’s own photos the research collected are on the site, home shows what sets the business apart, and no email, phone or street line it did not collect'
     ),
     ...(collected.reviewsWaived && reviewsShown === 0 ? { waived: { reviews: collected.reviewsWaived } } : {})
   }

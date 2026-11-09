@@ -11,7 +11,7 @@
     "S1: Run the Content coverage roles tests for EmDash releases (tracy-diner 0.1.0, tracy-restaurant 1.0.1, tracy-base 0.5.8) read through rolesOfRelease with no contract folder."
   ],
   "expect": [
-    "S1: each release's roles are { state: 'ready' }; contentCoverageStep for tracy-diner 0.1.0 returns done / coverage-not-needed; a field-map read with fields lacking a role is 'missing' with those field names; every test passes."
+    "S1: each release's roles are { state: 'ready' }; contentCoverageStep for tracy-diner 0.1.0 with no measurement returns todo / coverage-not-measured (EmDash is measured by the audit since the content map PR); a field-map read with fields lacking a role is 'missing' with those field names; every test passes."
   ],
   "selectors": {
     "files": "apps/tracy-web/src/lib/content-coverage/roles.js",
