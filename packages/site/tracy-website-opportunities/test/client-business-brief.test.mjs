@@ -135,3 +135,15 @@ test('the confidence and rule words of the string table are plain sentences', ()
   const internal = /Single source|Corroborated|Left off by rule|Hand to the agent/
   for (const [key, text] of Object.entries(en)) assert.doesNotMatch(text, internal, key)
 })
+
+test('a counted fact whose label is a code reads as a number and a word, never as "code: number"', async () => {
+  const { factLabel } = await import('../src/client/profile-facts-model.ts')
+  assert.equal(factLabel({ label: 'followers', amount: 1819 }), '1,819 followers')
+  assert.equal(factLabel({ label: 'posts', amount: 77 }), '77 posts')
+  assert.equal(factLabel({ label: 'reviewCount', amount: 4 }), '4 reviews')
+  assert.equal(factLabel({ label: 'rating', amount: 5 }), '5.0 stars')
+  assert.equal(factLabel({ label: 'reviewCount', amount: 1 }), '1 review')
+  // A label already in plain words keeps its own wording.
+  assert.equal(factLabel({ label: 'Google rating', amount: 4.9 }), 'Google rating: 4.9')
+  assert.equal(factLabel({ label: 'repeatGuests', amount: 12 }), '12 repeat guests')
+})

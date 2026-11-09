@@ -68,8 +68,11 @@ export function BriefTab({ t, api, meta }: { t: Translate; api: Api; meta: Brief
             {t('loading.label')}
           </p>
         ) : (
-          <div className="tracy-wo-stack">
-            <BriefUnderstanding t={t} brief={page.revision.brief} markdown={page.markdown} />
+          // The cards and the Build card side by side, like the Brief page of Details; one column on a narrow tab.
+          <div className="tracy-wo-page-grid is-brief">
+            <div className="tracy-wo-col">
+              <BriefUnderstanding t={t} brief={page.revision.brief} markdown={page.markdown} />
+            </div>
             {revisionId !== null && meta.opportunityId ? (
               <Build
                 key={page.lastBuildId ?? 'new'}

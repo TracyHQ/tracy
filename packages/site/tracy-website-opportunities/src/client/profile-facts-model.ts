@@ -89,11 +89,31 @@ export function factLabel(value: unknown): string | null {
     if (hit === null) continue
     if (field === 'label' && typeof v.amount === 'number') {
       const unit = text(v.unit)
+      if (CODE_LABEL.test(hit)) return countedLabel(hit, v.amount)
       return `${hit}: ${v.amount}${unit === null ? '' : ` ${unit}`}`
     }
     return hit
   }
   return null
+}
+
+/** A counted fact's label that is a field code (`followers`, `reviewCount`) rather than words a person wrote. */
+const CODE_LABEL = /^[a-z][a-zA-Z0-9]*$/
+/** Codes whose plain word differs from the spelled-out code: [one, many]. */
+const COUNT_WORDS: Readonly<Record<string, readonly [string, string]>> = {
+  reviewCount: ['review', 'reviews'],
+  rating: ['star', 'stars']
+}
+
+/** `followers` 1819 reads "1,819 followers"; `rating` 5 reads "5.0 stars". */
+function countedLabel(code: string, amount: number): string {
+  const number =
+    code === 'rating'
+      ? amount.toLocaleString('en', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+      : amount.toLocaleString('en')
+  const spelled = spelledField(code).toLowerCase()
+  const [one, many] = COUNT_WORDS[code] ?? [spelled.replace(/s$/, ''), spelled]
+  return `${number} ${amount === 1 ? one : many}`
 }
 
 type Walked = { id: string; value: unknown; refs: unknown[] }

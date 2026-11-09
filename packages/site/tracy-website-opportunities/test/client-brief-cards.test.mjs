@@ -66,7 +66,7 @@ test('each part of the brief lands on its card, in the order a seller reads them
     'WhatsApp +1 555 0100',
     'Mon to Fri 07:00 to 15:00; Sat 08:00 to 13:00',
     'https://harbour-lane.example',
-    'facebook, instagram'
+    'Facebook, Instagram'
   ])
 })
 

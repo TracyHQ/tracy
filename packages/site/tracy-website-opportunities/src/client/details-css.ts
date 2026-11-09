@@ -21,7 +21,7 @@ export const DETAILS_CSS = `
 .tracy-wo-brief-table-wrap { overflow-x: auto; }
 .tracy-wo-brief-table { width: 100%; border-collapse: collapse; font-size: 13px; line-height: 18px; }
 .tracy-wo-brief-table th, .tracy-wo-brief-table td { text-align: left; vertical-align: top; padding: 9px 10px; border-top: 1px solid var(--border); }
-.tracy-wo-brief-table thead th { border-top: 0; color: var(--muted-foreground); font-weight: 500; font-size: 12px; }
+.tracy-wo-brief-table thead th { border-top: 0; color: var(--muted-foreground); font-weight: 500; font-size: 12px; white-space: nowrap; }
 .tracy-wo-brief-table tbody th { font-weight: 500; width: 20%; }
 .tracy-wo-brief-table td:nth-child(3) { width: 24%; }
 .tracy-wo-brief-table td:last-child { width: 80px; }

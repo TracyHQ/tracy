@@ -33,6 +33,20 @@ function lines(values: (string | null)[]): string[] {
   return out
 }
 
+/** Network names as their owners write them; the brief keys them by code (`instagram`). */
+const NETWORK_NAME: Readonly<Record<string, string>> = {
+  facebook: 'Facebook',
+  instagram: 'Instagram',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+  linkedin: 'LinkedIn',
+  whatsapp: 'WhatsApp',
+  x: 'X',
+  twitter: 'X'
+}
+const networkName = (code: string): string =>
+  NETWORK_NAME[code.toLowerCase()] ?? code.charAt(0).toUpperCase() + code.slice(1)
+
 export function briefCards(brief: unknown, t: Translate): BriefCardsView {
   const b = rec(brief)
   const business = rec(b.business)
@@ -44,6 +58,7 @@ export function briefCards(brief: unknown, t: Translate): BriefCardsView {
   const socials = Object.keys(rec(business.socials))
     .filter((net) => text(rec(business.socials)[net]) !== null)
     .sort()
+    .map(networkName)
   const items: Record<BriefCardId, string[]> = {
     who: lines([text(reading.about), ...labels(reading.story)]),
     offer: lines([...labels(reading.services), ...list(business.cuisine).map(text)]),
