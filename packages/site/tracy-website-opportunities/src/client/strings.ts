@@ -79,6 +79,7 @@ export const en = {
   'v3.sendDemo': 'Send demo',
   'v3.nextDemo': 'Build a demo from this research. You can adjust the brief in Details.',
   'v3.nextOutreach': 'The demo is ready. Copy the message or open a channel to share it.',
+  'v3.buildSelected.one': 'Build 1 demo',
   'v3.buildSelected': 'Build {count} demos',
   'v3.usage': '{used} / {limit} builds today',
   'v3.usageUnlimited': '{used} builds today · no daily limit',
@@ -576,6 +577,7 @@ export const en = {
   /** The Demo site column. */
   /** Picking many rows: the bar at the bottom, and the Gmail-style "select every matching row". */
   'select.count': '{count} selected',
+  'select.allShown': 'Select all',
   'select.page': 'All {count} shown are selected.',
   'select.all': 'Select all {count} matching this filter',
   'select.allOn': 'All {count} matching this filter are selected.',

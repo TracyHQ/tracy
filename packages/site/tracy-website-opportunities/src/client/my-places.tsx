@@ -251,8 +251,10 @@ export function MyPlaces({
           <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} />
           <OpportunityPiece t={t} p={p} />
           {view === 'rows' ? <DemoPiece t={t} p={p} /> : null}
-          <Lines lines={lines.get(p.id)} />
+          {view === 'cards' ? <Lines lines={lines.get(p.id)} /> : null}
           <StatusPiece t={t} p={p} busy={busy.has(p.id)} onNext={(run) => onNext(p.id, run)} />
+          {/* In rows the chosen fields take a second line under the row, after Status, so Status keeps its cell. */}
+          {view === 'rows' ? <Lines lines={lines.get(p.id)} /> : null}
         </li>
       ))}
     </ul>

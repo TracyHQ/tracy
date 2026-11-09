@@ -13,7 +13,15 @@ import { useDemoChatNavigation } from './demo-chat.ts'
 import { requestTemplatePick } from '@tracy/core/template-picker'
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Play, Search, Trash2, X } from 'lucide-react'
-import { Button, InputGroup, InputGroupAddon, InputGroupInput, Spinner, useTabLoading } from '@tracy/ui'
+import {
+  Button,
+  Checkbox,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  Spinner,
+  useTabLoading
+} from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { type PlaceRow, type RowActions, type SiteCheck, ColumnsMenu, PlacesMap } from '@tracy/wo-views'
 
@@ -325,6 +333,12 @@ export function MyOpportunitiesView({
   const jobs = selectionJobs(shown, picked)
   const total = legacy ? shown.length : (state.total ?? shown.length)
   const pageAllPicked = shown.length > 0 && shown.every((r) => picked.has(r.id))
+  /** The select-all box: picks every row shown, or clears them when all are picked already. */
+  const togglePage = (): void => {
+    if (pageAllPicked) return clearSelection()
+    setAllMatching(false)
+    setPicked(new Set(shown.map((r) => r.id)))
+  }
 
   // Website checks and social stats for the rows shown, as Find runs them
   // (`check-polls.ts`). A settled answer asks the list for those rows again, so the server re-scores
@@ -713,6 +727,17 @@ export function MyOpportunitiesView({
           {bulkNote}
         </p>
       ) : null}
+      {view !== 'map' && shown.length > 0 ? (
+        <label className="tracy-wo-my-all tracy-wo-small">
+          <Checkbox
+            checked={pageAllPicked}
+            indeterminate={picked.size > 0 && !pageAllPicked}
+            onCheckedChange={togglePage}
+            aria-label={t('select.allShown')}
+          />
+          <span aria-hidden="true">{t('select.allShown')}</span>
+        </label>
+      ) : null}
       {!legacy && view !== 'map' && pageAllPicked && total > shown.length ? (
         <p className="tracy-wo-note tracy-wo-select-all">
           {allMatching ? t('select.allOn', { count: total }) : t('select.page', { count: shown.length })}
@@ -760,7 +785,9 @@ export function MyOpportunitiesView({
                 disabled={bulkBusy || allMatching || usageFull(usage, buildable.length)}
                 onClick={() => void buildBulk()}
               >
-                {t('v3.buildSelected', { count: buildable.length })}
+                {t(buildable.length === 1 ? 'v3.buildSelected.one' : 'v3.buildSelected', {
+                  count: buildable.length
+                })}
               </Button>
             ) : null}
             <Button
@@ -783,15 +810,13 @@ export function MyOpportunitiesView({
               <X aria-hidden="true" />
               {t('bulk.cancel')}
             </Button>
-            <Button
-              type="button"
-              size="sm"
-              disabled={bulkBusy || (!allMatching && jobs.resume.length === 0)}
-              onClick={() => void bulk('resume')}
-            >
-              {bulkBusy ? <Spinner label={t('loading.label')} /> : <Play aria-hidden="true" />}
-              {allMatching ? t('job.resume') : t('bulk.resume', { count: jobs.resume.length })}
-            </Button>
+            {/* Resume only when a picked row has a stopped job to resume; "Resume 0" means nothing to a seller. */}
+            {allMatching || jobs.resume.length > 0 ? (
+              <Button type="button" size="sm" disabled={bulkBusy} onClick={() => void bulk('resume')}>
+                {bulkBusy ? <Spinner label={t('loading.label')} /> : <Play aria-hidden="true" />}
+                {allMatching ? t('job.resume') : t('bulk.resume', { count: jobs.resume.length })}
+              </Button>
+            ) : null}
           </div>
         </div>
       ) : null}

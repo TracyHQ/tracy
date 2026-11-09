@@ -217,6 +217,7 @@ export const CSS = `
 .tracy-wo-my { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .tracy-wo-my-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
 .tracy-wo-my-rows { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
+.tracy-wo-my-all { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding-left: 12px; cursor: pointer; color: var(--muted-foreground); }
 .tracy-wo-my-place { position: relative; min-width: 0; cursor: pointer; }
 .tracy-wo-my-cards .tracy-wo-my-place { display: flex; flex-direction: column; gap: 10px; padding: 0 12px 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
 .tracy-wo-my-cards .tracy-wo-my-place:hover { border-color: color-mix(in oklab, var(--foreground) 25%, var(--border)); }
