@@ -21,7 +21,7 @@ No customer account or authenticated customer site was used.
 | String done flag, malformed/missing base64, truncated SQL, missing/empty table list | Refused before a database is stored |
 | Database PUT answers 503 once or resets once | Retries the complete compressed object; second PUT succeeds |
 | Database PUT answers 403 | Refused as store_refused |
-| Engine redirects a POST to another origin with 307 | Refused; dummy-token receiver gets no request |
+| Engine redirects a POST to another origin with 307 | Refused; the other server gets no request |
 | PHP notice after complete JSON | Engine reply accepted; unrelated HTML and incomplete JSON remain refused |
 | WordPress login form after engine calls | Recognized as a login form instead of a generic host block |
 | Valid MySQL table name contains a backtick | Dump and restore succeed |
