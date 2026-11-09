@@ -1,16 +1,18 @@
 import { useDemoChatNavigation } from './demo-chat.ts'
 /**
  * The Details page of one opportunity and the page of one of its site briefs (plan D7), inside the
- * My opportunities sub-tab, with a breadcrumb back to the list (`My opportunities › Name › Brief N`).
+ * My opportunities sub-tab.
  *
- * Details is built from the Inspector's blocks in two columns: Research (per source) · What happens
- * next · Demo site · Demos · Site brief on the left; Profile · Photos and videos · Colors · Google Place ·
- * Current website · Social on the right; the row's next action top right. A brief is an immutable
- * snapshot of the research that names no CMS or template; its page shows it read-only beside the Build
- * form, where the person chooses both (the name field is focused when "Build demo site" opened it).
+ * Details (#517): a sticky header (Back, name and type, status, the one primary action, a ⋯ menu with Send demo,
+ * Research again and Delete) over four tabs kept in the page address: Overview (the Demo site block of #515, the
+ * demos and the site brief, key facts), Business brief (the facts table, then the rows the person can check and
+ * edit, menu, Google, reviews, current website, social, place profile), Photos & video and Sources (with Research
+ * again). A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
+ * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
+ * opened it).
  */
 import { Fragment, type JSX, useCallback, useEffect, useId, useState } from 'react'
-import { Bot, ExternalLink, FileText, Hammer } from 'lucide-react'
+import { Bot, ChevronLeft, ExternalLink, FileText, Hammer } from 'lucide-react'
 import {
   Badge,
   Breadcrumb,
@@ -24,6 +26,9 @@ import {
   NativeSelect,
   NativeSelectOption,
   Spinner,
+  Tabs,
+  TabsList,
+  TabsTrigger,
   useTabLoading
 } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
@@ -71,8 +76,16 @@ import { phonesView } from './profile-phones-model.ts'
 import { ProfilePhonesRows } from './profile-phones-rows.tsx'
 import { type RatingChoice, ProfileRatingRow } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
-import { ProfileFactsRows } from './profile-facts-rows.tsx'
-import { factRowsView } from './profile-facts-model.ts'
+import { businessBriefRows } from './business-brief-model.ts'
+import { BusinessBriefTable } from './business-brief-table.tsx'
+import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
+import { DemoPrimaryButton, DemoSiteBlock } from './demo-site-block.tsx'
+import { DETAIL_TABS, type DetailTab, readDetailTab, writeDetailTab } from './detail-tab.ts'
+import { DetailsHeader } from './details-header.tsx'
+import { Section, Sources } from './details-parts.tsx'
+import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
+import { DeleteDialog } from './delete-dialog.tsx'
+import { ResearchAgainButton } from './research-again-dialog.tsx'
 import { ProfileKeyMessages } from './profile-key-messages.tsx'
 import {
   type KeyMessageView,
@@ -87,11 +100,10 @@ import { CMS_LABEL } from './cms-label.ts'
 import { Steps, type DemoStepFacts } from './demo-progress.tsx'
 import { SendDemo } from './send-demo.tsx'
 import { usageFull, type OutreachDraft, type DemoUsage } from './outreach-model.ts'
-import { DemoSection, Section, Sources } from './inspector.tsx'
 import { rowFromDetail } from './inspector-model.ts'
 import { useCardResearchAgain, useSourceRetry } from './source-retry.ts'
 import { ActionButton, StatusCell } from './opportunity-cells.tsx'
-import { type NextAction, nextAction, nextStepText, relativeTime } from './opportunity-row.ts'
+import { type NextAction, nextAction, nextStepText, relativeTime, stageOf } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
 import { runAction } from './row-actions.ts'
@@ -310,10 +322,23 @@ export function DetailView({
     },
     MENU_PARTS
   )
+  // The open tab rides in the page address (`wo-tab`), so a reload or a return from the Brief page lands on it.
+  const [tab, setTab] = useState<DetailTab>(readDetailTab)
+  const chooseTab = (next: DetailTab): void => {
+    setTab(next)
+    writeDetailTab(next)
+  }
+  // Delete this place (the same confirmation and door as the list), then back to the list.
+  const [deleting, setDeleting] = useState<DeleteAsk | null>(null)
+  const [deleteBusy, setDeleteBusy] = useState(false)
+  const [deleteFailed, setDeleteFailed] = useState<string | null>(null)
   if (body === null || row === null) {
     return (
       <div className="tracy-wo-page">
-        <Crumbs t={t} items={[{ label: t('list.title'), onClick: onList }, { label: '…' }]} />
+        <Button type="button" size="sm" variant="ghost" className="tracy-wo-details-back" onClick={onList}>
+          <ChevronLeft aria-hidden="true" />
+          {t('details.back')}
+        </Button>
         <PageState
           t={t}
           failed={failed || (body !== null && row === null)}
@@ -335,8 +360,11 @@ export function DetailView({
       if (outcome.kind === 'demo-chat' && !(await followChat(outcome.actions))) setActionFailed(true)
       if (outcome.kind === 'send-demo') {
         const answer = await api.outreach(row.id)
-        if (answer.ok) setSend(answer.body.outreach)
-        else setActionFailed(true)
+        if (answer.ok) {
+          // The Send panel lives on Overview, beside the Demo site block.
+          setSend(answer.body.outreach)
+          chooseTab('overview')
+        } else setActionFailed(true)
         return
       }
       if (outcome.kind === 'open-brief') return onOpenRevision(outcome.revisionId, true)
@@ -380,6 +408,21 @@ export function DetailView({
     onChanged()
   }
 
+  const confirmDelete = async (): Promise<void> => {
+    if (deleting === null || deleteBusy) return
+    setDeleteBusy(true)
+    setDeleteFailed(null)
+    const outcome = await deleteOpportunities(api, ids, deleting.ids)
+    setDeleteBusy(false)
+    setDeleting(null)
+    if (!outcome.ok || outcome.failed > 0) {
+      setDeleteFailed(outcome.ok ? 'action.failed' : deleteFailedKey(outcome.code))
+      return
+    }
+    onChanged()
+    onList()
+  }
+
   const profile = isRecord(body.profile) ? body.profile : null
   // The name the site carries (the person's pick, else the one the sources agree on) titles the page.
   const shownName = nameOnSite(profile, row.name)
@@ -420,7 +463,6 @@ export function DetailView({
     return true
   }
   // Every fact with how sure Tracy is and whether the site says it, and the key messages (#1791).
-  const factRows = factRowsView(placeProfile.profile, placeProfile.decisions)
   const toggleFact = async (factId: string, onSite: boolean | null): Promise<boolean> => {
     const answer = await api.setFact(id, factId, onSite)
     if (!answer.ok) return false
@@ -467,129 +509,166 @@ export function DetailView({
   const cancellable =
     typeof job?.id === 'string' && (job.state === 'paused' || job.state === 'blocked') ? job.id : null
 
+  const limitReached = usageFull(body.usage as DemoUsage)
+  const stage = stageOf(row)
+  // Once the place is in the demo stage the header carries the Demo site block's own button; before, its next step.
+  const demoStage = stage === 'demo' || stage === 'outreach'
+  const demoView = demoBlockView(row, body, t, { now, locale })
+  const onDemo = (command: Exclude<DemoCommand, null>): void => {
+    if (command.kind === 'action') return void act(command.action)
+    if (command.kind === 'press') return void demoPress(command.press)
+    window.open(command.href, '_blank', 'noopener,noreferrer')
+  }
+  const primary = demoStage ? (
+    <DemoPrimaryButton
+      view={demoView}
+      busy={busy}
+      limitReached={limitReached}
+      onPress={() => {
+        const command = demoCommand('primary', row, body)
+        if (command !== null) onDemo(command)
+      }}
+    />
+  ) : (
+    <ActionButton
+      t={t}
+      row={row}
+      size="sm"
+      busy={busy}
+      disabled={limitReached && ['build', 'retry-demo'].includes(nextAction(row))}
+      onAction={(a) => void act(a)}
+    />
+  )
+  const researchRunning = job?.state === 'running' || job?.state === 'queued'
+  const researchAgainOpen =
+    job !== null &&
+    !researchRunning &&
+    !(researchAgain.phase === 'ready' && researchAgain.preview?.plan === null)
+  const demoReady = demoView.state === 'ready'
+  const facts = [...meta.map(String), added ? t('research.added', { ago: added }) : null].filter(
+    (v): v is string => typeof v === 'string' && v !== ''
+  )
+  const progress = (
+    <Steps
+      t={t}
+      row={row}
+      facts={body.progress as DemoStepFacts | undefined}
+      locale={locale}
+      now={now}
+      onBrief={row.latestRevision?.id ? () => onOpenRevision(row.latestRevision!.id!, false) : undefined}
+    />
+  )
+  const briefRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale)
+
   return (
-    <div className="tracy-wo-page">
-      <div className="tracy-wo-row tracy-wo-between tracy-wo-wrap">
-        <Crumbs t={t} items={[{ label: t('list.title'), onClick: onList }, { label: shownName }]} />
-        <ActionButton
-          t={t}
-          row={row}
-          size="sm"
-          busy={busy}
-          disabled={usageFull(body.usage as DemoUsage) && ['build', 'retry-demo'].includes(nextAction(row))}
-          onAction={(a) => void act(a)}
-        />
-      </div>
-      <div className="tracy-wo-page-head">
-        <div className="tracy-wo-row tracy-wo-wrap">
-          <StatusCell t={t} row={row} />
-          {added ? (
-            <span className="tracy-wo-muted tracy-wo-small">{t('research.added', { ago: added })}</span>
-          ) : null}
-        </div>
-        <h2 className="tracy-wo-page-title">
-          {shownName}
-          {row.branch ? <span className="tracy-wo-muted">{` · ${row.branch}`}</span> : null}
-        </h2>
-        <p className="tracy-wo-row tracy-wo-wrap tracy-wo-small tracy-wo-muted">
-          {meta.length > 0 ? <span>{meta.join(' · ')}</span> : null}
-          {website !== null ? (
-            <a className="tracy-wo-action-link" href={website} target="_blank" rel="noopener noreferrer">
-              {viewsHostOf(website) ?? website}
-              <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
-            </a>
-          ) : (
-            <span>{t('cell.website.none')}</span>
-          )}
-          {phone !== null ? <span>{phone}</span> : null}
+    <div className="tracy-wo-page tracy-wo-details">
+      <DetailsHeader
+        t={t}
+        name={shownName}
+        branch={row.branch ?? null}
+        facts={facts}
+        status={<StatusCell t={t} row={row} />}
+        primary={primary}
+        busy={busy}
+        onBack={onList}
+        tabs={
+          <Tabs value={tab} onValueChange={(v) => chooseTab(v as DetailTab)}>
+            <TabsList variant="line" aria-label={t('details.tabs')} className="tracy-wo-details-tabs">
+              {DETAIL_TABS.map((key) => (
+                <TabsTrigger key={key} value={key}>
+                  {t(`details.tab.${key}`)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+        }
+        menu={{
+          onSendDemo: demoReady ? () => void act('send-demo') : undefined,
+          onResearchAgain: researchAgainOpen
+            ? () => {
+                chooseTab('sources')
+                researchAgain.onOpen()
+              }
+            : undefined,
+          onDelete: () => setDeleting({ ids: [row.id], withSite: hasLiveDemo(row) ? 1 : 0, name: shownName })
+        }}
+      />
+      {actionFailed || deleteFailed !== null ? (
+        <p className="tracy-wo-error" role="alert">
+          {t(deleteFailed ?? 'action.failed')}
         </p>
-        {actionFailed ? (
-          <p className="tracy-wo-error" role="alert">
-            {t('action.failed')}
-          </p>
-        ) : null}
-        {logoWait ? (
-          <p className="tracy-wo-note" role="status">
-            {t('demo.logoPending')}
-          </p>
-        ) : null}
-      </div>
-      <div className="tracy-wo-page-grid">
-        <div className="tracy-wo-col">
-          {send ? (
-            <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
-          ) : null}
-          <Steps
-            t={t}
-            row={row}
-            facts={body.progress as DemoStepFacts | undefined}
-            locale={locale}
-            now={now}
-            onBrief={
-              row.latestRevision?.id ? () => onOpenRevision(row.latestRevision!.id!, false) : undefined
-            }
-            again={researchAgain}
-          >
-            <>
-              <Sources t={t} sources={sources} retry={retrySource} />
-              {cancellable !== null ? (
-                <Button
-                  type="button"
-                  size="xs"
-                  variant="ghost"
-                  disabled={busy}
-                  onClick={() => void cancel(cancellable)}
-                >
-                  {t('job.cancel')}
-                </Button>
-              ) : null}
-            </>
-          </Steps>
-          <Section title={t('inspector.next')}>
-            <p className="tracy-wo-muted">
-              {next.reasonKey ? `${t(next.reasonKey)} ` : null}
-              {t(next.key, next.params)}
-            </p>
-          </Section>
-          <DemoSection
-            t={t}
-            row={row}
-            detail={body}
-            locale={locale}
-            now={now}
-            actions={{
-              busy,
-              onExtend: () => void demoPress('extend'),
-              onReopen: () => void demoPress('reopen'),
-              onRebuild: () => void demoPress('rebuild'),
-              onRetry: () => void act('build')
-            }}
-          />
-          <Demos
-            t={t}
-            api={api}
-            id={id}
-            revisions={revisions}
-            builds={asArray<unknown>(body.builds)}
-            brief={body.brief}
-            onOpen={(revisionId, n) => {
-              if (openBriefTab === null) return onOpenRevision(revisionId, false)
-              openBriefTab({
-                revisionId,
-                opportunityId: id,
-                title: `${t('brief.number', { n })} · ${shownName}`
-              })
-            }}
-            onRefreshed={() => {
-              void reload()
-              onChanged()
-            }}
-          />
+      ) : null}
+      {logoWait ? (
+        <p className="tracy-wo-note" role="status">
+          {t('demo.logoPending')}
+        </p>
+      ) : null}
+      {tab === 'overview' ? (
+        <div className="tracy-wo-page-grid">
+          <div className="tracy-wo-col">
+            {send ? (
+              <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
+            ) : null}
+            {demoStage ? null : (
+              <>
+                <Section title={t('inspector.next')}>
+                  <p className="tracy-wo-muted">
+                    {next.reasonKey ? `${t(next.reasonKey)} ` : null}
+                    {t(next.key, next.params)}
+                  </p>
+                </Section>
+                {progress}
+              </>
+            )}
+            {demoStage ? (
+              <DemoSiteBlock
+                t={t}
+                row={row}
+                detail={body}
+                locale={locale}
+                now={now}
+                busy={busy}
+                limitReached={limitReached}
+                onCommand={onDemo}
+                progress={progress}
+              />
+            ) : null}
+            <Demos
+              t={t}
+              api={api}
+              id={id}
+              revisions={revisions}
+              builds={asArray<unknown>(body.builds)}
+              brief={body.brief}
+              onOpen={(revisionId, n) => {
+                if (openBriefTab === null) return onOpenRevision(revisionId, false)
+                openBriefTab({
+                  revisionId,
+                  opportunityId: id,
+                  title: `${t('brief.number', { n })} · ${shownName}`
+                })
+              }}
+              onRefreshed={() => {
+                void reload()
+                onChanged()
+              }}
+            />
+          </div>
+          <div className="tracy-wo-col">
+            <KeyFacts t={t} profile={profile} website={website} phone={phone} />
+          </div>
         </div>
+      ) : null}
+      {tab === 'brief' ? (
         <div className="tracy-wo-col">
+          <Section title={t('details.tab.brief')}>
+            <p className="tracy-wo-muted tracy-wo-small">{t('brief.table.lead')}</p>
+            <BusinessBriefTable t={t} rows={briefRows} onToggle={toggleFact} />
+          </Section>
           <Profile
             t={t}
             profile={profile}
+            plainRows={briefRows.length === 0}
             nameRow={
               nameRow === null ? null : (
                 <ProfileNameRow
@@ -641,11 +720,17 @@ export function DetailView({
                 />
               )
             }
-            factsRows={
-              factRows === null ? null : <ProfileFactsRows t={t} rows={factRows} onToggle={toggleFact} />
-            }
           />
           <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
+          <GooglePlace t={t} place={googlePlaceView(profile?.googlePlace)} food={profile?.trade === 'food'} />
+          <TripadvisorReviews t={t} profile={profile} media={media} />
+          <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
+          <Social t={t} lines={socialStatsLines(profile, now)} />
+          <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
+        </div>
+      ) : null}
+      {tab === 'media' ? (
+        <div className="tracy-wo-col">
           <MediaRow
             t={t}
             menu={menu}
@@ -653,14 +738,85 @@ export function DetailView({
             retryLogo={{ busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }}
             food={profile?.trade === 'food'}
           />
-          <GooglePlace t={t} place={googlePlaceView(profile?.googlePlace)} food={profile?.trade === 'food'} />
-          <TripadvisorReviews t={t} profile={profile} media={media} />
-          <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
-          <Social t={t} lines={socialStatsLines(profile, now)} />
-          <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
         </div>
-      </div>
+      ) : null}
+      {tab === 'sources' ? (
+        <div className="tracy-wo-col">
+          <Section title={t('details.tab.sources')}>
+            {job !== null && !researchRunning ? (
+              <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
+            ) : null}
+            <Sources t={t} sources={sources} retry={retrySource} />
+            {cancellable !== null ? (
+              <Button
+                type="button"
+                size="xs"
+                variant="ghost"
+                disabled={busy}
+                onClick={() => void cancel(cancellable)}
+              >
+                {t('job.cancel')}
+              </Button>
+            ) : null}
+          </Section>
+        </div>
+      ) : null}
+      <DeleteDialog
+        t={t}
+        locale={locale}
+        ask={deleting}
+        busy={deleteBusy}
+        onCancel={() => setDeleting(null)}
+        onConfirm={() => void confirmDelete()}
+      />
     </div>
+  )
+}
+
+/** Key facts on Overview: the profile's plain rows (name, address, phone, hours...) and the website, read only. */
+function KeyFacts({
+  t,
+  profile,
+  website,
+  phone
+}: {
+  t: Translate
+  profile: Body | null
+  website: string | null
+  phone: string | null
+}): JSX.Element {
+  const rows = profileFields(profile)
+  const hasPhone = rows.some((r) => r.field === 'phone')
+  return (
+    <Section title={t('details.keyFacts')}>
+      <dl className="tracy-wo-fields">
+        {rows.map((row) => (
+          <div key={row.field} className="tracy-wo-field">
+            <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
+            <dd>{row.value}</dd>
+          </div>
+        ))}
+        {!hasPhone && phone !== null ? (
+          <div className="tracy-wo-field">
+            <dt className="tracy-wo-muted tracy-wo-small">{t('field.phone')}</dt>
+            <dd>{phone}</dd>
+          </div>
+        ) : null}
+        <div className="tracy-wo-field">
+          <dt className="tracy-wo-muted tracy-wo-small">{t('field.website')}</dt>
+          <dd>
+            {website !== null ? (
+              <a className="tracy-wo-action-link" href={website} target="_blank" rel="noopener noreferrer">
+                {viewsHostOf(website) ?? website}
+                <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
+              </a>
+            ) : (
+              t('cell.website.none')
+            )}
+          </dd>
+        </div>
+      </dl>
+    </Section>
   )
 }
 
@@ -673,10 +829,12 @@ function Profile({
   phonesRow,
   readingRows,
   keyMessagesRows,
-  factsRows
+  plainRows = true
 }: {
   t: Translate
   profile: Body | null
+  /** The plain field rows; off when the Business brief table already lists every fact. */
+  plainRows?: boolean
   /** "Name on the site" (`profile-name-row.tsx`) in place of the plain Name row, when research decided a name. */
   nameRow: JSX.Element | null
   /** "Opening hours" (`profile-hours-row.tsx`), after the phone, when there are hours to show or check. */
@@ -689,9 +847,7 @@ function Profile({
   readingRows: JSX.Element | null
   /** "Key messages" (`profile-key-messages.tsx`), after the reading, when the reading found some. */
   keyMessagesRows: JSX.Element | null
-  /** "What the site may say" (`profile-facts-rows.tsx`), last: every fact, its confidence and its switch. */
-  factsRows: JSX.Element | null
-}): JSX.Element {
+}): JSX.Element | null {
   const rows = profileFields(profile)
   const drawRow = (row: ProfileRow): JSX.Element =>
     row.field === 'name' && nameRow !== null ? (
@@ -723,12 +879,12 @@ function Profile({
       drawn.push(<Fragment key="phone">{phonesRow}</Fragment>)
       continue
     }
-    const row = rows.find((r) => r.field === field)
-    if (row) drawn.push(drawRow(row))
+    const row = plainRows || field === 'name' ? rows.find((r) => r.field === field) : undefined
+    if (row && (plainRows || nameRow !== null)) drawn.push(drawRow(row))
   }
   if (readingRows !== null) drawn.push(<Fragment key="reading">{readingRows}</Fragment>)
   if (keyMessagesRows !== null) drawn.push(<Fragment key="keyMessages">{keyMessagesRows}</Fragment>)
-  if (factsRows !== null) drawn.push(<Fragment key="facts">{factsRows}</Fragment>)
+  if (drawn.length === 0 && !plainRows) return null
   return (
     <Section title={t('detail.profile')}>
       {drawn.length === 0 ? (

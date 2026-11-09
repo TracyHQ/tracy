@@ -11,4 +11,8 @@ declare const __TAILWIND_CSS__: string
 
 export const TAILWIND = __TAILWIND_CSS__
 
-export { CSS } from './layout-css.ts'
+import { CSS as LAYOUT_CSS } from './layout-css.ts'
+import { DETAILS_CSS } from './details-css.ts'
+
+/** The layout rules, then the Details page's own (`details-css.ts`). */
+export const CSS = LAYOUT_CSS + DETAILS_CSS

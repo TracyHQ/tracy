@@ -28,6 +28,8 @@ export interface FactRowView {
    * it (`logo`, `instagram`): only on the name row held back because its own marks call it something else.
    */
   alsoCalled: OtherNameView[]
+  /** The kinds of source its evidence cites (`google-places`, `website`, `account-overlay`...), each once, in order. */
+  sources: string[]
 }
 
 export interface OtherNameView {
@@ -94,8 +96,10 @@ export function factLabel(value: unknown): string | null {
   return null
 }
 
+type Walked = { id: string; value: unknown; refs: unknown[] }
+
 /** Every `{id, value, evidenceRefs}` fact anywhere in the profile document, in document order. */
-function walk(node: unknown, out: { id: string; value: unknown }[]): void {
+function walk(node: unknown, out: Walked[]): void {
   if (node === null || typeof node !== 'object') return
   if (Array.isArray(node)) {
     for (const child of node) walk(child, out)
@@ -103,7 +107,7 @@ function walk(node: unknown, out: { id: string; value: unknown }[]): void {
   }
   const n = node as Rec
   if (typeof n.id === 'string' && 'value' in n && Array.isArray(n.evidenceRefs)) {
-    out.push({ id: n.id, value: n.value })
+    out.push({ id: n.id, value: n.value, refs: n.evidenceRefs })
     return
   }
   for (const child of Object.values(n)) walk(child, out)
@@ -120,6 +124,14 @@ function decisionsOf(v: unknown): Map<string, Rec> {
 }
 
 const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
+
+/** Evidence id to the kind of its source, read from the profile's `sources` and `evidence` lists. */
+function sourceKindOfEvidence(doc: Rec): (ref: unknown) => string | null {
+  const sourceOf = new Map(list(doc.sources).map((s) => [text(rec(s).id), text(rec(s).kind)]))
+  const evidenceSource = new Map(list(doc.evidence).map((e) => [text(rec(e).id), text(rec(e).sourceId)]))
+  return (ref) => sourceOf.get(evidenceSource.get(text(ref)) ?? null) ?? null
+}
+
 const OWN_MARKS_CODE = 'name-differs-from-own-marks'
 
 /**
@@ -128,8 +140,7 @@ const OWN_MARKS_CODE = 'name-differs-from-own-marks'
  */
 export function otherNamesOf(profile: unknown, held: string): OtherNameView[] {
   const doc = rec(profile)
-  const sourceOf = new Map(list(doc.sources).map((s) => [text(rec(s).id), text(rec(s).kind)]))
-  const evidenceSource = new Map(list(doc.evidence).map((e) => [text(rec(e).id), text(rec(e).sourceId)]))
+  const kindOf = sourceKindOfEvidence(doc)
   const conflict = list(doc.conflicts)
     .map(rec)
     .find((c) => c.target === 'business.name' && String(c.reason ?? '').startsWith(`${OWN_MARKS_CODE}:`))
@@ -139,7 +150,7 @@ export function otherNamesOf(profile: unknown, held: string): OtherNameView[] {
     if (name === null || name === held) return []
     const sources: string[] = []
     for (const ref of list(rec(v).evidenceRefs)) {
-      const kind = sourceOf.get(evidenceSource.get(text(ref)) ?? null)
+      const kind = kindOf(ref)
       if (kind && !sources.includes(kind)) sources.push(kind)
     }
     return [{ name, sources }]
@@ -168,9 +179,11 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
   const doc = rec(profile)
   const decided = decisionsOf(decisions)
   if (decided.size === 0) return null
-  const facts: { id: string; value: unknown }[] = []
+  const facts: Walked[] = []
   walk(doc, facts)
   const valueOf = new Map(facts.map((f) => [f.id, f.value]))
+  const refsOf = new Map(facts.map((f) => [f.id, f.refs]))
+  const kindOf = sourceKindOfEvidence(doc)
   const rows = [...decided].flatMap(([id, d]) => {
     const label = factLabel(valueOf.get(id))
     const field = text(d.field)
@@ -190,7 +203,15 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
         reasons: (Array.isArray(d.reasons) ? d.reasons : []).flatMap((r) =>
           text(r) === null ? [] : [String(r)]
         ),
-        alsoCalled: field === 'name' ? otherNamesOf(doc, label ?? '') : []
+        alsoCalled: field === 'name' ? otherNamesOf(doc, label ?? '') : [],
+        sources: [
+          ...new Set(
+            (refsOf.get(id) ?? []).flatMap((ref) => {
+              const kind = kindOf(ref)
+              return kind === null ? [] : [kind]
+            })
+          )
+        ]
       }
     ]
   })
