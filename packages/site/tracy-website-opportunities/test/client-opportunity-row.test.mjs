@@ -55,6 +55,12 @@ test('Attention includes failed research, pipeline and QA; a ready demo has one 
   assert.equal(needsAttention(row({ demo: { qa: 'passed' } })), false)
   assert.equal(statusView(row()).key, 'v3.notStarted')
   assert.equal(statusView(row({ job: job('completed') })).key, 'v3.readyToBuild')
+  // A running research reads as the brand colour (the 'running' tone, terracotta chip), not the neutral one.
+  assert.deepEqual(statusView(row({ job: job('running') })), {
+    key: 'status.researching',
+    variant: 'running',
+    check: false
+  })
   assert.equal(statusView(row({ demoAction: { state: 'queued' } })).key, 'v3.building')
   assert.equal(statusView(row({ demoAction: { state: 'failed' } })).key, 'v3.needsReview')
   assert.equal(statusView(row({ demo: { qa: 'passed' } })).key, 'v3.demoReady')

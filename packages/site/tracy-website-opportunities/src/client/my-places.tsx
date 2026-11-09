@@ -36,7 +36,8 @@ const BADGE = {
   secondary: 'secondary',
   destructive: 'destructive',
   ok: 'outline',
-  live: 'secondary'
+  live: 'secondary',
+  running: 'outline'
 } as const
 
 /** The Opportunity score as a ring: the arc is the score out of 100. */
@@ -195,7 +196,9 @@ export function StatusBadge({ status }: { status: PlacePieces['status'] }): JSX.
       variant={BADGE[status.tone]}
       className={cn(
         status.tone === 'live' && 'tracy-wo-badge-live',
-        status.tone === 'ok' && 'tracy-wo-badge-ok'
+        status.tone === 'ok' && 'tracy-wo-badge-ok',
+        // A job running (Researching): the brand terracotta, as in the mocks.
+        status.tone === 'running' && 'tracy-wo-chip-brand'
       )}
     >
       {status.tone === 'live' ? <CheckIcon aria-hidden="true" /> : null}

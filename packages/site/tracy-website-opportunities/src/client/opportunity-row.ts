@@ -98,7 +98,7 @@ export function needsAttention(row: OpportunityListRow): boolean {
   )
 }
 
-export type BadgeTone = 'outline' | 'secondary' | 'destructive' | 'ok' | 'live'
+export type BadgeTone = 'outline' | 'secondary' | 'destructive' | 'ok' | 'live' | 'running'
 export interface StatusView {
   key: string
   variant: BadgeTone
@@ -134,7 +134,7 @@ export function statusView(row: OpportunityListRow): StatusView {
   if (state === 'paused' || state === 'blocked')
     return { key: 'status.paused', variant: 'outline', check: false }
   return state
-    ? { key: 'status.researching', variant: 'secondary', check: false }
+    ? { key: 'status.researching', variant: 'running', check: false }
     : { key: 'v3.notStarted', variant: 'outline', check: false }
 }
 
