@@ -50,7 +50,9 @@ const newer = idx > 0 ? list[idx - 1] : undefined
 const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
 // The label links to the category's list page only while that page exists and is live: the lists are the blog categories
 // (`[...path].astro`), so another category (Chefs sits in `pages`) is printed as plain text, never a link to a 404.
-const termLive = terms[0] ? (await liveLinks(Astro.request, locale, [`/${terms[0].slug}`]))(`/${terms[0].slug}`) : false
+const termLive = terms[0]
+  ? (await liveLinks(Astro.request, locale, [`/${terms[0].slug}`]))(`/${terms[0].slug}`)
+  : false
 const termLink = Boolean(terms[0] && BLOG_SIDEBAR.includes(terms[0].slug) && termLive)
 const cover = mediaUrl(a.cover)
 const dateTag = ui(locale).tag
