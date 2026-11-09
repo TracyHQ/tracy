@@ -4,6 +4,12 @@ The initial audit used `origin/develop` at `3172697b70`; this branch was later u
 
 ## Read-only deployment cross-check — 9 November 2026
 
+### Follow-up on the current dev image
+
+`GET /api/build` on `cowork.tracy.site` now answers `0d61cb25b9`. Authenticated read-only checks on that image found zero rows in `/api/ops/wo/chain-builds`; therefore no completed step-chain Build on this installation can be accepted from the current ledger. `/api/ops/llm` now assigns `sitePlanner` but leaves `siteWriter`, `picturePicker`, `pictureIconRanker`, `pictureLooker` and `pictureDrawer` unassigned; its vision test remains `unavailable`. An unassigned door may have an environment fallback, so these rows do not establish a model failure or a passing capability test. No Build was started by this audit.
+
+On this branch, `node apps/tracy-web/scripts/template-readiness.mjs quickstart/ja-boxing/j6 --json` checked published release 1.0.11: all seven verdict pieces and seven steps answered `done`. The CLI explicitly did not judge whether this server has the live demo for Add site or whether its preview door is healthy. Local PostgreSQL-backed suites for step-chain orchestration, demo residue findings, Site check read-back, rerun behavior and Undo passed 118 tests; they use scripted model and site boundaries and do not prove the visual quality or Undo of a customer site. The real Build, site read-back and Undo acceptance gaps remain open.
+
 The account holder signed into `cowork.tracy.site` in Chrome and named the profile to use. Read-only requests used that profile's existing session without printing or saving the session value. `GET /api/build` answered `3172697b70f1` (built 8 November 2026 at 14:55:39 UTC), matching the source commit above. This establishes that the audited `tracy-web` image was the one answering these requests. It does not establish the image version of a separate dsh, host or customer-site container.
 
 | Read-only check | Observed answer | What it establishes |
