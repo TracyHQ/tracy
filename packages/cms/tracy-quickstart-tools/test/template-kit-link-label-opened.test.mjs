@@ -235,3 +235,31 @@ test('a block with no entity of its own: a link printing a slot of the module it
   linkLabelSlots(kit, map)
   assert.deepEqual(labels(kit), ['block-110.1'])
 })
+
+test('a block string and a colon before the words: "Read More : X" names the title of the item it opens', () => {
+  const kit = kitOf([{ id: 'l1', label: 'Read More : Sourdough basics', target: '/blog/sourdough-basics' }], {
+    fixedText: [{ id: 'f1', text: 'Read More' }]
+  })
+  linkLabelSlots(kit, MAP)
+  assert.deepEqual(labels(kit), ['article-4.1'])
+})
+
+test('a WordPress post is opened by its slug: "Read More : X" names the post title', () => {
+  const map = {
+    entities: [{ key: 'post-sourdough', kind: 'post', identity: { postType: 'post', slug: 'sourdough' } }],
+    slots: [
+      {
+        key: 'post-sourdough.title',
+        entity: 'post-sourdough',
+        type: 'text',
+        role: 'article.title',
+        sample: 'Sourdough basics'
+      }
+    ]
+  }
+  const kit = kitOf([{ id: 'l1', label: 'Read More : Sourdough basics', target: '/sourdough' }], {
+    fixedText: [{ id: 'f1', text: 'Read More' }]
+  })
+  linkLabelSlots(kit, map)
+  assert.deepEqual(labels(kit), ['post-sourdough.title'])
+})
