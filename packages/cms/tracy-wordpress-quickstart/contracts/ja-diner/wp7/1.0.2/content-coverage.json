@@ -6,10 +6,10 @@
   },
   "contract": {
     "id": "ja-diner/wp7/1.0.2",
-    "contentMapSha256": "ec41589ac2b382b92d4091f9052965fb960ce268cf7f973285f1c8c71615b548",
-    "presentationLockSha256": "c0a6bcdfdd869c8a6a560011c8b1b1e626917911a0be30b6ce72a859429e9816"
+    "contentMapSha256": "0c7be2113491fc92776038cba145d411e961fd8a6ced597901e8dfd76149ae77",
+    "presentationLockSha256": "e1a06012990ea8633289eb8c060c35061f789e61b749d7d37939342efeeb0ddd"
   },
-  "measuredAt": "2026-11-08T05:22:30.430Z",
+  "measuredAt": "2026-11-09T04:47:15.425Z",
   "viewports": [
     "desktop",
     "phone"
@@ -24,14 +24,14 @@
   },
   "counts": {
     "text": {
-      "total": 586,
-      "matched": 244,
+      "total": 585,
+      "matched": 248,
       "locked": 0,
-      "capture": 170,
+      "capture": 169,
       "captureLocked": 0,
-      "template": 118,
+      "template": 116,
       "core": 18,
-      "unknown": 36,
+      "unknown": 34,
       "catalogue": 0,
       "ignored": 10
     },
@@ -48,10 +48,10 @@
       "ignored": 0
     },
     "links": {
-      "total": 13,
-      "matched": 7,
+      "total": 12,
+      "matched": 8,
       "locked": 0,
-      "capture": 5,
+      "capture": 3,
       "captureLocked": 0,
       "template": 1,
       "core": 0,
@@ -61,9 +61,9 @@
     }
   },
   "coverage": {
-    "text": 43,
+    "text": 43.7,
     "images": 95.5,
-    "links": 53.8
+    "links": 66.7
   },
   "holes": [
     {
@@ -629,14 +629,13 @@
     },
     {
       "kind": "text",
-      "value": "Company Name 795 Folsom Ave, Suite 600 San Francisco, CA 94107 P: (123) 456-7890",
+      "value": "Company name Street address City P: Phone number",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#275.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "firstPage": "/?pagename=content/typography"
     },
     {
       "kind": "text",
@@ -805,6 +804,17 @@
     },
     {
       "kind": "text",
+      "value": "Email Address *",
+      "class": "capture",
+      "lock": "undeclared",
+      "cause": "table posts.post_content (not a contract entity kind)",
+      "evidence": "posts#275.post_content",
+      "pages": 6,
+      "firstPage": "/?pagename=password-reset",
+      "accepted": "Form label or helper printed with the form (required mark, password rules, honeypot field, search help): interface text of the theme’s account, contact and search forms, not business words."
+    },
+    {
+      "kind": "text",
       "value": "Emphasis classes",
       "class": "capture",
       "lock": "undeclared",
@@ -882,14 +892,13 @@
     },
     {
       "kind": "text",
-      "value": "Full Name P: (123) 456-7890 first.last@example.com",
+      "value": "Full name P: Phone number Email address",
       "class": "capture",
       "lock": "undeclared",
       "cause": "table posts.post_content (not a contract entity kind)",
       "evidence": "posts#275.post_content (contains)",
       "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
+      "firstPage": "/?pagename=content/typography"
     },
     {
       "kind": "text",
@@ -1267,17 +1276,6 @@
     },
     {
       "kind": "text",
-      "value": "M. +201 382 348 5327 P. +201 166 993 7763 Info@joomlart.com",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#97.post_content (contains)",
-      "pages": 78,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Text of the footer template part (location, hours, contact lines, copyright). The Claude Cowork plugin reads and writes pages, posts and options only, a template part is not an entity kind of any WordPress contract, so these lines have no write door. Known gap, recorded as a plugin follow-up (a template part entity); the block names footer.* are in place for it."
-    },
-    {
-      "kind": "text",
       "value": "Maecenas sed diam eget risus varius blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus.",
       "class": "capture",
       "lock": "undeclared",
@@ -1286,28 +1284,6 @@
       "pages": 2,
       "firstPage": "/?pagename=content/typography",
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "link",
-      "value": "mailto:first.last@example.com",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#275.post_content",
-      "pages": 2,
-      "firstPage": "/?pagename=content/typography",
-      "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
-    },
-    {
-      "kind": "link",
-      "value": "mailto:Info@joomlart.com",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_content (not a contract entity kind)",
-      "evidence": "posts#97.post_content",
-      "pages": 78,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Text of the footer template part (location, hours, contact lines, copyright). The Claude Cowork plugin reads and writes pages, posts and options only, a template part is not an entity kind of any WordPress contract, so these lines have no write door. Known gap, recorded as a plugin follow-up (a template part entity); the block names footer.* are in place for it."
     },
     {
       "kind": "text",
@@ -1979,17 +1955,6 @@
       "pages": 2,
       "firstPage": "/?pagename=other-pages/error-page",
       "accepted": "Page of the template showcase (404, offline, search screens) that showcase-nav-map.json takes out of every navigation of a customer site."
-    },
-    {
-      "kind": "text",
-      "value": "Contact.",
-      "class": "capture",
-      "lock": "undeclared",
-      "cause": "table posts.post_title (not a contract entity kind)",
-      "evidence": "posts#39.post_title",
-      "pages": 78,
-      "firstPage": "/?pagename=front-page",
-      "accepted": "Title of a Contact Form 7 form record, an editor-side label that the theme does not print as page copy."
     },
     {
       "kind": "attr:aria-label",
@@ -3032,26 +2997,6 @@
     },
     {
       "kind": "text",
-      "value": "(084) 555-0110",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
-      "pages": 2,
-      "firstPage": "/?pagename=contact-us",
-      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
-    },
-    {
-      "kind": "text",
-      "value": "1600 Amphitheatre Parkway, Mountain View 5692",
-      "class": "template",
-      "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
-      "evidence": "wp-content/themes/wp-ja-diner/patterns/contact-form.php",
-      "pages": 2,
-      "firstPage": "/?pagename=contact-us",
-      "accepted": "Contact page body printed by the theme pattern contact-form.php (one core/html block holding the form): the demo address, phone, website and intro text are written in the pattern, so a customer site shows them until the theme prints them from named blocks. Known gap, recorded for the next theme release."
-    },
-    {
-      "kind": "text",
       "value": "Cancel",
       "class": "template",
       "cause": "template: theme file (wp-content/themes/wp-ja-diner/patterns)",
@@ -3341,16 +3286,6 @@
       "accepted": "Typography style guide page (page-typography): sample text that names and shows the theme’s own styles (headings, colours, alerts, tables); no business words replace it."
     },
     {
-      "kind": "text",
-      "value": "413-305-7497",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 2,
-      "firstPage": "/?pagename=reservation",
-      "accepted": "Text inside a core/html block (the Reservation page promotion: headings, buttons, phone). Arbitrary HTML is never made writable. A rebuild from named core blocks was tried and added height and dark scheme differences against the source, so it is left as a known gap for the next theme release."
-    },
-    {
       "kind": "attr:title",
       "value": "Article Count: 4",
       "class": "unknown",
@@ -3388,16 +3323,6 @@
       "evidence": "",
       "pages": 2,
       "firstPage": "/?pagename=j-pages/registration",
-      "accepted": "Form label or helper printed with the form (required mark, password rules, honeypot field, search help): interface text of the theme’s account, contact and search forms, not business words."
-    },
-    {
-      "kind": "text",
-      "value": "Email Address *",
-      "class": "unknown",
-      "cause": "unknown source",
-      "evidence": "",
-      "pages": 6,
-      "firstPage": "/?pagename=password-reset",
       "accepted": "Form label or helper printed with the form (required mark, password rules, honeypot field, search help): interface text of the theme’s account, contact and search forms, not business words."
     },
     {
@@ -4041,28 +3966,15 @@
     "roleVocabularyVersion": "place-content-roles/3",
     "applies": true,
     "r1": {
-      "facts": 111,
-      "slots": 559,
-      "percent": 19.9
+      "facts": 147,
+      "slots": 569,
+      "percent": 25.8
     },
     "rules": {
       "R2": {
         "title": "fact-like sample without a contact or price role",
-        "count": 33,
-        "keys": [
-          "front-page.menu.dish-name.1",
-          "front-page.menu.dish-name.2",
-          "front-page.menu.dish-name.3",
-          "front-page.menu.dish-name.4",
-          "front-page.menu.dish-name.5",
-          "front-page.menu.dish-name.6",
-          "front-page.menu.dish-name.7",
-          "front-page.menu.dish-name.8",
-          "front-page.menu.dish-name.9",
-          "front-page.menu.dish-name.10",
-          "front-page.menu-2.dish-name.1",
-          "front-page.menu-2.dish-name.2"
-        ]
+        "count": 0,
+        "keys": []
       },
       "R3": {
         "title": "URL slot without a role",
@@ -4076,20 +3988,8 @@
       },
       "R5": {
         "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
-        "count": 11,
-        "keys": [
-          "page-front-page.container-tabs.image-intro",
-          "page-front-page.features-intro.img-features",
-          "page-reservation.features-intro.img-features",
-          "page-home-red.container-tabs.image-intro",
-          "page-home-red.features-intro.img-features",
-          "page-home-pink.container-tabs.image-intro",
-          "page-home-pink.features-intro.img-features",
-          "page-home-green.container-tabs.image-intro",
-          "page-home-green.features-intro.img-features",
-          "page-home-blue.container-tabs.image-intro",
-          "page-home-blue.features-intro.img-features"
-        ]
+        "count": 0,
+        "keys": []
       },
       "R6": {
         "title": "link or list item inside a fact slot",
@@ -4108,14 +4008,8 @@
       },
       "R9": {
         "title": "fact-like hole",
-        "count": 5,
-        "keys": [
-          "M. +201 382 348 5327 P. +201 166 993 7763 Info@joomlart.com",
-          "(084) 555-0110",
-          "413-305-7497",
-          "Company Name 795 Folsom Ave, Suite 600 San Francisco, CA 94107 P: (123) 456-7890",
-          "Full Name P: (123) 456-7890 first.last@example.com"
-        ]
+        "count": 0,
+        "keys": []
       }
     }
   },
@@ -4125,13 +4019,13 @@
     "applies": true,
     "judgedBy": null,
     "state": "not-judged",
-    "reason": "AWAITING_AGENT",
+    "reason": "NOT_RUN",
     "counts": {
-      "slots": 559,
-      "located": 466,
-      "notLocated": 93,
+      "slots": 569,
+      "located": 472,
+      "notLocated": 97,
       "judged": 0,
-      "notJudged": 466,
+      "notJudged": 472,
       "right": 0,
       "wrongGroup": 0,
       "mismatch": 0

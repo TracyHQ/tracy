@@ -4,11 +4,11 @@
   "provenance": {
     "database": {
       "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-      "sha256": "7826189150083b5f2df75d152d4d5b374323e619657d51c1472a730df7d14545"
+      "sha256": "c249d668f1d2035892f025fd347648424ce9aa64b612ba02591e3434deb6389e"
     },
     "webroot": {
       "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-      "sha256": "62a25a4eb4d25219e479f80af10b139c0d90331916fb4dbe80fcd98da8251c34"
+      "sha256": "229a4d1fe37c21a515ce49fd9c29aa9a26d81b9da9436ff4f44189ba5ee0dfd1"
     }
   },
   "tablePrefix": "tr_",
@@ -1675,9 +1675,9 @@
         "subscribe.form",
         "subscribe.posttext"
       ],
-      "contentSha256": "f02bcab9fc433e0c6861b12c3f7265280347c4f08c853b9b73e548e32667c754",
+      "contentSha256": "873af2b85130128f807b828766f890d43dc8d255ac39dc05c72c4e9aa0cfd53c",
       "entity": "page-typography",
-      "skeleton": "b76f7c9dbbcf3ac371e5c9a7bdc0ab9b57742ea258d53f974dc36f57fcb6730e"
+      "skeleton": "154597cad3295e8edad01865d1c081cf5238ec74045623747986a41be622ca5c"
     },
     {
       "id": 277,

@@ -18,14 +18,14 @@
     "parts": {
       "webroot": {
         "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-        "bytes": 60052804,
-        "sha256": "62a25a4eb4d25219e479f80af10b139c0d90331916fb4dbe80fcd98da8251c34",
+        "bytes": 60052805,
+        "sha256": "229a4d1fe37c21a515ce49fd9c29aa9a26d81b9da9436ff4f44189ba5ee0dfd1",
         "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.2.tar.gz"
       },
       "database": {
         "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-        "bytes": 64008,
-        "sha256": "7826189150083b5f2df75d152d4d5b374323e619657d51c1472a730df7d14545",
+        "bytes": 63959,
+        "sha256": "c249d668f1d2035892f025fd347648424ce9aa64b612ba02591e3434deb6389e",
         "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.2.sql.gz"
       }
     }

@@ -245,4 +245,6 @@ to the same list.
   recipe H1). Keep the **named** paragraph to the token alone and move the link into a separate **unnamed**
   paragraph: a link label such as "Get Directions" in the named paragraph is still prose to ABOUT-2 after the token is in.
   Match the old spacing with a zero margin on the two paragraphs, then expect a heights check in the release sweep (H8).
-- **Verify.** ABOUT-2 no longer names the part; the part renders the same words from the option; the sweep is green.
+- **Verify.** Run `sync-theme-to-stand.mjs` first (the part is a database row, see `patch-release.md`). Then set the text
+  option to a made-up value with wp-cli and read the rendered part on two pages: the made-up value shows and the demo
+  words do not. ABOUT-2 no longer names the part; the sweep is green.

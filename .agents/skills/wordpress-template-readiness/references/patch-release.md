@@ -60,3 +60,13 @@ named volume) is where the chain restores what it packed.
 7. **Release:** procedure W1 (`release-wordpress.mjs` through its `release/<tag>` PR), then the chain's release phase
    (`release.mjs --patch`) with the published plugin, upload the printed assets, then procedure W3 (the pin), then the
    readiness verdict on the pinned version must exit 0.
+
+## The build stand must carry the final theme, and its template parts
+
+The chain's `--theme-zip` is read by the sweep and the release, but it is **not installed** on the build stand, and a
+template part saved in the database (footer, header) shadows the theme's `parts/<name>.html`. After any theme change,
+before `chain.sh --from cycle`, run
+`node packages/cms/tracy-wordpress-quickstart/scripts/sync-theme-to-stand.mjs --theme-zip <zip> --webroot <stand webroot> --wp "<stand wp-cli runner>" --parts footer`
+(it replaces the stand's theme and writes each part's file into its database row), then read the rendered part from the
+stand. Without it the pack, the sweep and the contract all describe the previous theme (met on JA Diner WP7: the footer
+address fix reached the zip but not the pack).
