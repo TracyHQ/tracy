@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-506-wo-delete-opportunity",
+  "kind": "feat",
+  "title": "Saved opportunities can be deleted: one door and a bulk action, refused with DEMO_BUILD_RUNNING while a demo builds, and a Delete button with a confirmation in the bulk bar and the Inspector",
+  "pr": 506,
+  "area": "website-opportunities/delete",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-reporter=tap packages/site/tracy-website-opportunities/test/client-delete.test.mjs",
+    "S2: Record the exit code, the \"# tests\", \"# pass\", \"# fail\", \"# skipped\" lines and the result of each test whose name starts with: \"a live demo site\"; \"the confirmation\"; \"the rows left after a delete\"; \"one row goes through its own door\"; \"several rows go through the bulk door\".",
+    "S3 (Postgres-backed part, not part of this case run): apps/tracy-web/test/website-opportunities-delete.test.mjs covers DELETE /api/website-opportunities/:id, the bulk delete action and the 409 DEMO_BUILD_RUNNING refusal against a database."
+  ],
+  "expect": [
+    "S1 exits 0 with \"# fail 0\" and \"# skipped 0\", and \"# pass\" equal to \"# tests\".",
+    "Every named test in S2 is \"ok\": the confirmation lists the picked rows in screen order and counts how many have a live demo site; a single row goes through its own door and NOT_FOUND counts as gone; several rows go through the bulk door and a failed press keeps its request id for the retry; the rows left keep their order."
+  ],
+  "selectors": {
+    "doors": "DELETE /api/website-opportunities/:id, POST bulk action \"delete\", 409 DEMO_BUILD_RUNNING",
+    "model": "packages/site/tracy-website-opportunities/src/client/delete-model.ts"
+  },
+  "fence": "Mechanism of the client delete model and its two doors. The server refusal while a demo builds is covered by the Postgres-backed apps/tracy-web/test/website-opportunities-delete.test.mjs, not graded here.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-website-opportunities/test/client-delete.test.mjs"
+    ],
+    "tests": [
+      "a live demo site",
+      "the confirmation",
+      "the rows left after a delete",
+      "one row goes through its own door",
+      "several rows go through the bulk door"
+    ]
+  }
+}

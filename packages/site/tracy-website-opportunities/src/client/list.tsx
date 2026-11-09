@@ -12,7 +12,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  */
 import { requestTemplatePick } from '@tracy/core/template-picker'
 import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ChevronRight, Play, Search, X } from 'lucide-react'
+import { ChevronRight, Play, Search, Trash2, X } from 'lucide-react'
 import { Button, InputGroup, InputGroupAddon, InputGroupInput, Spinner, useTabLoading } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import {
@@ -41,6 +41,14 @@ import { useCheckPolls } from './check-polls.ts'
 import { useCapabilities } from './find.tsx'
 import { mergeChecks, mergeSocialStats, socialStatsOffered } from './flow.ts'
 import { Inspector } from './inspector.tsx'
+import { DeleteDialog } from './delete-dialog.tsx'
+import {
+  type DeleteAsk,
+  deleteAsk,
+  deleteFailedKey,
+  deleteOpportunities,
+  withoutRows
+} from './delete-model.ts'
 import type { FilterValue, MyAddress } from './my-address.ts'
 import {
   type AccountCounts,
@@ -190,10 +198,22 @@ function useMyRows(api: Api, filter: FilterValue, q: string) {
   }
   useEffect(() => onBackInSight(() => backRef.current()), [])
 
+  /** Take deleted rows off the screen at once, without asking the list again. */
+  const drop = useCallback((deleted: readonly string[]) => {
+    if (deleted.length === 0) return
+    setState((s) => {
+      const rows = s.rows === null ? null : withoutRows(s.rows, deleted)
+      const legacyRows = s.legacyRows === null ? null : withoutRows(s.legacyRows, deleted)
+      const removed = (s.rows?.length ?? 0) - (rows?.length ?? 0)
+      return { ...s, rows, legacyRows, total: s.total === null ? null : Math.max(0, s.total - removed) }
+    })
+  }, [])
+
   return {
     state,
     loadingMore,
     more,
+    drop,
     refreshIds,
     refreshShown: () => backRef.current(),
     reload: () => firstPage('replace')
@@ -238,7 +258,11 @@ export function MyOpportunitiesView({
     void refreshUsage()
   }, [refreshUsage])
   usePoll(refreshUsage, true, 15000)
-  const { state, loadingMore, more, refreshIds, refreshShown, reload } = useMyRows(api, filter, address.q)
+  const { state, loadingMore, more, drop, refreshIds, refreshShown, reload } = useMyRows(
+    api,
+    filter,
+    address.q
+  )
   // Back from Details or a Brief (kept mounted, hidden): what was done there shows in the rows.
   const lastPage = useRef(address.page)
   useEffect(() => {
@@ -510,6 +534,45 @@ export function MyOpportunitiesView({
     )
     clearSelection()
     void reload()
+    void account.refresh()
+  }
+
+  // Delete (the bulk bar and the Inspector): a confirmation first, then the rows leave the screen.
+  const [deleting, setDeleting] = useState<DeleteAsk | null>(null)
+  const [deleteBusy, setDeleteBusy] = useState(false)
+  const askDelete = (ask: DeleteAsk | null): void => {
+    if (ask === null || deleteBusy) return
+    setBulkNote(null)
+    setDeleting(ask)
+  }
+  const confirmDelete = async (): Promise<void> => {
+    if (deleting === null || deleteBusy) return
+    const ask = deleting
+    setDeleteBusy(true)
+    const outcome = await deleteOpportunities(api, ids, ask.ids)
+    setDeleteBusy(false)
+    setDeleting(null)
+    if (!outcome.ok) {
+      setBulkNote(t(deleteFailedKey(outcome.code)))
+      return
+    }
+    drop(outcome.deleted)
+    setPicked(
+      (p) =>
+        new Set(
+          withoutRows(
+            [...p].map((id) => ({ id })),
+            outcome.deleted
+          ).map((r) => r.id)
+        )
+    )
+    setAllMatching(false)
+    if (address.opp !== null && outcome.deleted.includes(address.opp)) {
+      setSendId(null)
+      onAddress({ opp: null })
+    }
+    if (ask.ids.length > 1 || outcome.failed > 0)
+      setBulkNote(t('delete.result', { deleted: outcome.deleted.length, failed: outcome.failed }))
     void account.refresh()
   }
 
@@ -914,6 +977,16 @@ export function MyOpportunitiesView({
                 ) : null}
                 <Button
                   type="button"
+                  variant="destructive"
+                  size="sm"
+                  disabled={bulkBusy || deleteBusy || allMatching}
+                  onClick={() => askDelete(deleteAsk(shown, picked))}
+                >
+                  <Trash2 aria-hidden="true" />
+                  {t('delete.button')}
+                </Button>
+                <Button
+                  type="button"
                   variant="outline"
                   size="sm"
                   disabled={bulkBusy || (!allMatching && jobs.cancel.length === 0)}
@@ -934,6 +1007,14 @@ export function MyOpportunitiesView({
               </div>
             </div>
           ) : null}
+          <DeleteDialog
+            t={t}
+            locale={locale}
+            ask={deleting}
+            busy={deleteBusy}
+            onCancel={() => setDeleting(null)}
+            onConfirm={() => void confirmDelete()}
+          />
         </div>
       }
       inspector={
@@ -960,6 +1041,7 @@ export function MyOpportunitiesView({
             researchAgain={researchAgain}
             readMenuAgain={readMenuAgain}
             demoActions={demoActions(openRow)}
+            onDelete={() => askDelete(deleteAsk([openRow], new Set([openRow.id])))}
           />
         ) : null
       }

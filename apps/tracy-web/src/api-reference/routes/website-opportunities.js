@@ -723,12 +723,24 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'GET',
     path: '/api/website-opportunities/:id',
     summary: 'Read one opportunity with its sources, media, jobs, revisions and builds',
-    description: `Everything collected for one opportunity: per-source status, reason and coverage (for a researched place, every source its research tried, Google Place Details, Google Maps and Tripadvisor included, failures too), the merged profile with its evidence and conflicts (\`profile.name\` is the name on the site and \`profile.nameCheck\` says why: \`{name, state: "agreed" | "check" | "chosen", suggested, current, options: [{name, sources: [{source, label?}]}], disagree, chosen?: {name, by: "typed" | "picked"}}\`; a name two sources other than Google agree on is suggested over Google's, \`check\` means the sources disagree and nobody has picked one yet), \`profile.hoursCheck\` says which opening hours the site shows: \`{state: "none" | "agreed" | "conflict" | "check" | "chosen", hours, claims: [{source, hours}], choice?: "keep" | "leave" | "edit", allWeek}\`, \`check\` when one source alone says open 24 hours every day for a business not normally open day and night), \`profile.googleRating\` says whether the site shows Google's rating: \`{state: "none" | "shown" | "left", score, reviews, few, choice: "show" | "leave" | null, from: "details" | "search"}\`, \`few\` under 5 reviews (left off until the person shows it), \`profile.phone\` is the main number (Google's, else the one most of the business's own sources state, its bios included) with \`phoneSources\`, and \`profile.otherPhones: [{phone, sources, whatsapp?}]\` the business's other numbers, brand observations, media metadata, jobs, revisions and builds. The two web search rows (\`facebook-search\`, \`instagram-search\`) also carry \`queries\` and \`pages\`: each page found with its \`url\`, \`network\`, \`verdict\` (\`confirmed\` = added to the place, \`pending\` = a person must check it, \`rejected\` = not used), \`title\`, \`proofs\` and \`reasons\`. Readable while the switch is off. \`menu\` is the place's Menu: ${MENU_PARTS_PROSE} ${OWN}`,
+    description: `Everything collected for one opportunity: per-source status, reason and coverage (for a researched place, every source its research tried, Google Place Details, Google Maps and Tripadvisor included, failures too), the merged profile with its evidence and conflicts (\`profile.name\` is the name on the site and \`profile.nameCheck\` says why: \`{name, state: "agreed" | "check" | "chosen", suggested, current, options: [{name, sources: [{source, label?}]}], disagree, chosen?: {name, by: "typed" | "picked"}}\`; a name two sources other than Google agree on is suggested over Google's, \`check\` means the sources disagree and nobody has picked one yet), \`profile.hoursCheck\` says which opening hours the site shows: \`{state: "none" | "agreed" | "conflict" | "check" | "chosen", hours, claims: [{source, hours}], choice?: "keep" | "leave" | "edit", allWeek}\`, \`check\` when one source alone says open 24 hours every day for a business not normally open day and night), \`profile.googleRating\` says whether the site shows Google's rating: \`{state: "none" | "shown" | "left", score, reviews, few, choice: "show" | "leave" | null, from: "details" | "search"}\`, \`few\` under 5 reviews (left off until the person shows it), \`profile.phone\` is the main number (Google's, else the one most of the business's own sources state, its bios included) with \`phoneSources\`, and \`profile.otherPhones: [{phone, sources, whatsapp?}]\` the business's other numbers, brand observations, media metadata, jobs, revisions and builds. The two web search rows (\`facebook-search\`, \`instagram-search\`) also carry \`queries\` and \`pages\`: each page found with its \`url\`, \`network\`, \`verdict\` (\`confirmed\` = added to the place, \`pending\` = a person must check it, \`rejected\` = not used), \`title\`, \`proofs\` and \`reasons\`. A source row that a link the person pasted feeds (Add a business by its links: the Google link's place, the website, a social page, the listing row) carries \`pastedLink\`, that link as they pasted it; rows research found by itself carry none. Readable while the switch is off. \`menu\` is the place's Menu: ${MENU_PARTS_PROSE} ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
     answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds}\`; ${MENU_ANSWER}`
+  },
+  // website-opportunities/src/route.js
+  {
+    method: 'DELETE',
+    path: '/api/website-opportunities/:id',
+    summary: 'Delete one opportunity',
+    description: `Deletes a saved opportunity, in this order: a research job still queued, running, paused or blocked is cancelled as the cancel door does; each live demo site of it (a build with a site not yet deleted, never a customer's own site) is torn down through the same path the demo retention sweep uses; then the row goes with its jobs, sources, media, profile, revisions, builds and demo actions. The shared place research and stored picture bytes stay. Works while the switch is off. 409 \`DEMO_BUILD_RUNNING\` while a demo of it is still being built (a build whose provision has not ended, or a queued demo action whose build is not done): nothing is changed and the build is not cancelled. 409 \`DEMO_TEARDOWN_FAILED\` when a demo site's teardown cannot start (another operation holds the site): nothing is deleted. A customer's own site (Build from my business) answers 404. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{ok: true, deleted: {id, siteRemoved}}`'
   },
   // website-opportunities/src/route.js
   {
@@ -898,8 +910,8 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
   {
     method: 'POST',
     path: '/api/website-opportunities/jobs/bulk',
-    summary: 'Resume or cancel many research jobs',
-    description: `Runs \`action\` on each job, one after another, with the same checks as the single resume and cancel doors. Send either \`jobIds\` (the rows picked) or \`filter\` (\`stage\`, \`attention\`, \`q\` as the list door reads them): the server then takes the latest job of every matching row once, at this request. Each result carries the code its single door would answer: \`JOB_FINISHED\`, \`JOB_NOT_RESUMABLE\` and \`JOB_ACTIVE\` count as \`skipped\`; \`NOT_FOUND\` (another account’s or a missing job) and \`ERROR\` as \`failed\`. The same \`requestId\` with the same body answers the stored result without running again. Cancel works while the switch is off; resume does not. 400 \`INVALID_ACTION\`, \`INVALID_REQUEST_ID\`, \`INVALID_SELECTION\`; 409 \`REQUEST_ID_REUSED\` (another body), \`BULK_PENDING\` (still running); 422 \`TOO_MANY\` above 500 jobs (refused, never cut); 429 \`RATE_LIMITED\` (60 an hour). ${OFF}`,
+    summary: 'Resume or cancel many research jobs, or delete many opportunities',
+    description: `Runs \`action\` on each job, one after another, with the same checks as the single resume and cancel doors. Send either \`jobIds\` (the rows picked) or \`filter\` (\`stage\`, \`attention\`, \`q\` as the list door reads them): the server then takes the latest job of every matching row once, at this request. Each result carries the code its single door would answer: \`JOB_FINISHED\`, \`JOB_NOT_RESUMABLE\` and \`JOB_ACTIVE\` count as \`skipped\`; \`NOT_FOUND\` (another account’s or a missing job) and \`ERROR\` as \`failed\`. The same \`requestId\` with the same body answers the stored result without running again. Cancel works while the switch is off; resume does not. 400 \`INVALID_ACTION\`, \`INVALID_REQUEST_ID\`, \`INVALID_SELECTION\`; 409 \`REQUEST_ID_REUSED\` (another body), \`BULK_PENDING\` (still running); 422 \`TOO_MANY\` above 500 jobs (refused, never cut); 429 \`RATE_LIMITED\` (60 an hour). \`action: "delete"\` takes \`opportunityIds\` instead (a row without a job is deletable too; \`jobIds\` and \`filter\` are refused with 400 \`INVALID_SELECTION\`) and deletes each row as \`DELETE /api/website-opportunities/:id\` does: \`NOT_FOUND\` counts as \`skipped\`, \`DEMO_BUILD_RUNNING\`, \`DEMO_TEARDOWN_FAILED\` and \`ERROR\` as \`failed\`; its answer adds \`deleted\` and \`sitesRemoved\`, and works while the switch is off. ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -907,9 +919,14 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       type: 'object',
       required: ['action', 'requestId'],
       properties: {
-        action: { type: 'string', enum: ['resume', 'cancel'] },
+        action: { type: 'string', enum: ['resume', 'cancel', 'delete'] },
         requestId: REQUEST_ID,
         jobIds: { type: 'array', items: { type: 'string' }, description: 'Job ids, at most 500' },
+        opportunityIds: {
+          type: 'array',
+          items: { type: 'string' },
+          description: 'Opportunity ids, at most 500 (delete only)'
+        },
         filter: {
           type: 'object',
           properties: {
@@ -923,7 +940,8 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
         }
       }
     },
-    answers: '`{results: [{jobId, ok, code?}], done, skipped, failed}`'
+    answers:
+      '`{results: [{jobId, ok, code?}], done, skipped, failed}`; for delete `{results: [{opportunityId, ok, code?, siteRemoved?}], done, skipped, failed, deleted, sitesRemoved}`'
   },
   // website-opportunities/src/route.js
   {

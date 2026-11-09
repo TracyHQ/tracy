@@ -134,10 +134,12 @@ export const CSS = `
 .tracy-wo-attn:focus-visible { border-color: var(--ring); }
 .tracy-wo-attn-pill { padding: 1px 6px; border-radius: 999px; background: color-mix(in oklab, var(--destructive) 10%, transparent); font-weight: 600; }
 .tracy-wo-insp { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; max-height: calc(100vh - 24px); overflow-y: auto; padding: 12px 14px 14px; border: 1px solid color-mix(in oklab, var(--primary) 25%, var(--border)); border-radius: 14px; background: var(--card); font-size: 12px; line-height: 17px; }
-.tracy-wo-insp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
-.tracy-wo-insp-title-block { display: flex; flex-direction: column; gap: 2px; flex: 1 1 auto; min-width: 0; }
-.tracy-wo-insp-title { margin-top: 4px; font-size: 15px; line-height: 20px; font-weight: 600; overflow-wrap: anywhere; }
-.tracy-wo-insp-acts { flex: none; gap: 4px; }
+/* Title block and close button share the first row; the actions take a full-width row below. */
+.tracy-wo-insp-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; }
+.tracy-wo-insp-title-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tracy-wo-insp-title { margin-top: 4px; font-size: 15px; line-height: 20px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-wo-insp-close { grid-column: 2; grid-row: 1; }
+.tracy-wo-insp-acts { grid-column: 1 / -1; gap: 4px; }
 .tracy-wo-insp-back { display: none; align-self: flex-start; }
 .tracy-wo-insp-sec { display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; }
 .tracy-wo-insp-sec.is-tint { background: color-mix(in oklab, var(--muted) 45%, transparent); }
@@ -164,6 +166,9 @@ export const CSS = `
 .tracy-wo-src-icon.is-partial { color: var(--primary); }
 .tracy-wo-src-icon.is-waiting, .tracy-wo-src-icon.is-skipped { color: var(--muted-foreground); }
 .tracy-wo-src-retry { margin-top: 6px; }
+.tracy-wo-src-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tracy-wo-src-pasted { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.tracy-wo-src-group { margin: 8px 0 2px; font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-src-body { padding: 6px 10px 8px; border-top: 1px solid var(--border); color: var(--muted-foreground); }
 .tracy-wo-search-pages { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
 .tracy-wo-search-page { display: flex; flex-direction: column; gap: 2px; padding-top: 6px; border-top: 1px solid var(--border); }

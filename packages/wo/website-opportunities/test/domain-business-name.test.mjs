@@ -34,27 +34,44 @@ test('handleOfSocialUrl: the handle of a social page, never a path that is not o
   assert.equal(handleOfSocialUrl(null), null)
 })
 
-test('Harbour Sport Club: logo and Instagram agree against Google, so their name is suggested and checked', () => {
+test('Harbour Sport Club: Google names only the trade, so the name logo and Instagram agree on is the decision', () => {
   const d = decideBusinessName({ claims: DUBAI, fallback: 'Padel & Tennis Coach' })
   assert.equal(d.name, 'Harbour Sport Club')
   assert.equal(d.suggested, 'Harbour Sport Club')
-  assert.equal(d.current, 'Padel & Tennis Coach')
+  assert.equal(d.current, 'Harbour Sport Club')
+  assert.equal(d.state, 'agreed')
+  assert.equal(d.disagree, false)
+  assert.deepEqual(d.options, [
+    { name: 'Harbour Sport Club', sources: [{ source: 'logo' }, { source: 'instagram' }] }
+  ])
+})
+
+test('Google with a proper name: logo and Instagram agreeing are suggested and checked', () => {
+  const claims = DUBAI.map((c) =>
+    c.name === 'Padel & Tennis Coach' ? { ...c, name: 'Marina Racquet House' } : c
+  )
+  const d = decideBusinessName({ claims, fallback: 'Marina Racquet House' })
+  assert.equal(d.name, 'Harbour Sport Club')
+  assert.equal(d.current, 'Marina Racquet House')
   assert.equal(d.state, 'check')
   assert.equal(d.disagree, true)
   assert.deepEqual(d.options, [
     { name: 'Harbour Sport Club', sources: [{ source: 'instagram' }, { source: 'logo' }] },
     {
-      name: 'Padel & Tennis Coach',
+      name: 'Marina Racquet House',
       sources: [{ source: 'google' }, { source: 'listing', label: 'magicpin' }]
     }
   ])
 })
 
 test('one source saying a name twice (its name and its handle) is not two sources: Google is kept', () => {
-  const d = decideBusinessName({ claims: DUBAI.filter((c) => c.source !== 'logo') })
-  assert.equal(d.name, 'Padel & Tennis Coach')
+  const claims = DUBAI.filter((c) => c.source !== 'logo').map((c) =>
+    c.name === 'Padel & Tennis Coach' ? { ...c, name: 'Marina Racquet House' } : c
+  )
+  const d = decideBusinessName({ claims })
+  assert.equal(d.name, 'Marina Racquet House')
   assert.equal(d.state, 'check')
-  assert.equal(d.options[0].name, 'Padel & Tennis Coach')
+  assert.equal(d.options[0].name, 'Marina Racquet House')
 })
 
 test('Instagram and the website agreeing is enough; a handle alone is never shown as a name', () => {
@@ -146,15 +163,11 @@ test('Harbour Sport Club: a profile name equal to its handle is never shown; the
   const d = decideBusinessName({ claims: DUBAI_HANDLE_AS_NAME, fallback: 'Padel & Tennis Coach' })
   assert.equal(d.name, 'Harbour Sport Club')
   assert.equal(d.suggested, 'Harbour Sport Club')
-  assert.equal(d.current, 'Padel & Tennis Coach')
-  assert.equal(d.state, 'check')
+  assert.equal(d.state, 'agreed')
   assert.deepEqual(d.options, [
-    { name: 'Harbour Sport Club', sources: [{ source: 'instagram' }, { source: 'logo' }] },
-    {
-      name: 'Padel & Tennis Coach',
-      sources: [{ source: 'google' }, { source: 'listing', label: 'magicpin' }]
-    }
+    { name: 'Harbour Sport Club', sources: [{ source: 'logo' }, { source: 'instagram' }] }
   ])
+  assert.ok(!d.options.some((o) => o.name === 'harbour.sportclub'))
 })
 
 test('sources agreeing through a handle with no logo text: today’s name stays, a handle is never suggested', () => {

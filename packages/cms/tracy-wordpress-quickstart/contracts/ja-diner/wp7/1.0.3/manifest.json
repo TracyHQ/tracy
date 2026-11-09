@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-diner/wp7/1.0.3",
+  "platform": "wordpress",
+  "theme": "wp-ja-diner",
+  "quickstart": {
+    "schemaVersion": "tracy-runtime-quickstart/v1",
+    "release": "quickstart/ja-diner/wp7",
+    "version": "1.0.3",
+    "platform": "wordpress",
+    "platformVersion": "7.1.3",
+    "phpVersion": "8.3.36",
+    "tablePrefix": "tr_",
+    "placeholderUrl": "https://quickstart.invalid",
+    "theme": "wp-ja-diner",
+    "coworkVersion": null,
+    "writeDoor": "installed-at-provision",
+    "parts": {
+      "webroot": {
+        "file": "ja-diner-wp7-webroot-1.0.3.tar.gz",
+        "bytes": 60056840,
+        "sha256": "998233016dfe487953408b834fe6e9519dc2c98b6872b90a6adfda565e84bed9",
+        "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.3.tar.gz"
+      },
+      "database": {
+        "file": "ja-diner-wp7-database-1.0.3.sql.gz",
+        "bytes": 63983,
+        "sha256": "eeb542d8279d09ddcd488a4e20e9bfdb18f0f1b2154ac20b9aca2660aa290627",
+        "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.3.sql.gz"
+      }
+    }
+  },
+  "coworkContractVersion": "0.18.39",
+  "mode": "content-recommendation",
+  "themePictures": {
+    "options": [
+      "wp_ja_diner_blog_banner_image",
+      "wp_ja_diner_categories_banner_image"
+    ],
+    "postMeta": [
+      "jd_intro_image"
+    ]
+  },
+  "themeTexts": {
+    "options": [
+      "wp_ja_diner_contact_address",
+      "wp_ja_diner_footer_address",
+      "wp_ja_diner_contact_phone",
+      "wp_ja_diner_footer_mobile",
+      "wp_ja_diner_footer_landline",
+      "wp_ja_diner_footer_email"
+    ]
+  }
+}

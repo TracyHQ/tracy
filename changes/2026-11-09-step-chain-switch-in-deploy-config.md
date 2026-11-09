@@ -1,0 +1,2 @@
+- **The step-chain build switch `STEP_CHAIN_ENABLED` is now declared in `deploy/.env.example` (dev = 1, production = 0 until the step chain is accepted)** — Akemi · PR #506 · `feat/wo-delete-opportunity` · 2026-11-09
+  **Affects:** anyone who sets up or redeploys a Tracy host. The switch was only a hand-written line in the dev host's web env file, so rebuilding that host silently dropped it and the Build button fell back to the old build path; set it in the host's env file from this template.

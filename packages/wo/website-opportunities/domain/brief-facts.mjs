@@ -527,8 +527,11 @@ export function renderBriefFacts(brief, line, q) {
   const observed = facts.filter((f) => f.sourceKind === 'observed')
   for (const f of stated) {
     const from = [...new Set(f.evidence.map((e) => e.source))].join(', ')
+    // A person only reviews name, shown by rule (`liftReviewPeople`), is named for the owner to check.
     const where = f.onSite
-      ? 'on the site'
+      ? f.decidedBy !== 'owner' && f.reasons.includes('review-only-person')
+        ? 'shown from reviews, owner to check'
+        : 'on the site'
       : `off the site${f.reasons.length ? `: ${f.reasons.filter((r) => r !== 'owner-override').join(', ')}` : ''}`
     line(
       `- ${f.field}: ${valueLine(f.value, q)} · ${CONFIDENCE_WORDS[f.confidence] ?? f.confidence}${from ? ` (${from})` : ''} · ${where}${f.decidedBy === 'owner' ? ', by the owner' : ''}`

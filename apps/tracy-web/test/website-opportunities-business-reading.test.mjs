@@ -192,6 +192,12 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
 
 const labels = (items) => (items ?? []).map((i) => i.label)
 
+/** The same answer with Sam named without a role: named in one review only, he is held until the owner shows him. */
+const ANSWER_SAM_NO_ROLE = {
+  ...ANSWER,
+  team: [ANSWER.team[0], { name: 'Sam', quote: 'padel coaching with Alex and Sam', ref: 'review:1' }]
+}
+
 test(
   'Harbour Sport Club: services, who it is for, team and story read from its own words',
   opts,
@@ -217,11 +223,14 @@ test(
     assert.deepEqual(
       reading.team.map((p) => [p.label, p.role, onSiteOf(r.brief, p)]),
       [
-        ['Alex', 'coach', false],
-        ['Sam', 'coach', false]
+        ['Alex', 'coach', true],
+        ['Sam', 'coach', true]
       ],
-      'people named only in reviews stay off the site until shown'
+      'people named only in reviews, each with a role, are shown on the site'
     )
+    // Shown from reviews alone: the brief names each one for the owner to check.
+    assert.match(r.markdown, /"Alex" \(coach\), shown from reviews, owner to check/)
+    assert.match(r.markdown, /"Sam" \(coach\), shown from reviews, owner to check/)
     assert.equal(reading.story[0].quote, 'European Coaching in Dubai')
     assert.equal(
       reading.about,
@@ -360,13 +369,30 @@ test(
   'Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both',
   opts,
   async () => {
-    const r = await research()
+    const r = await research({ answer: ANSWER_SAM_NO_ROLE })
     const swim = r.brief.reading.services.find((s) => s.label === 'Swimming lessons')
-    const alex = r.brief.reading.team.find((p) => p.label === 'Alex')
+    const sam = r.brief.reading.team.find((p) => p.label === 'Sam')
+    // Before any pick: Alex (a role) is shown from reviews, Sam (no role, one review) is held.
+    assert.deepEqual(
+      r.brief.reading.team.map((p) => [p.label, onSiteOf(r.brief, p)]),
+      [
+        ['Alex', true],
+        ['Sam', false]
+      ]
+    )
+    // The Profile card says the same before any pick.
+    const before = (await placeViewOf(r.pool, r.opp)).profile.readingCard
+    assert.deepEqual(
+      before.team.map((p) => [p.label, p.onSite, p.fromReviews === true]),
+      [
+        ['Alex', true, true],
+        ['Sam', false, false]
+      ]
+    )
     assert.ok(await saveReadingPick(r.pool, r.accountId, r.opp.id, swim.id, 'remove'))
-    const row = await saveReadingPick(r.pool, r.accountId, r.opp.id, alex.id, 'show')
+    const row = await saveReadingPick(r.pool, r.accountId, r.opp.id, sam.id, 'show')
     assert.deepEqual(row.candidate.readingPicks.removed, [swim.id], 'the second pick keeps the first')
-    assert.deepEqual(row.candidate.readingPicks.shown, [alex.id])
+    assert.deepEqual(row.candidate.readingPicks.shown, [sam.id])
     assert.equal(
       await saveReadingPick(r.pool, '00000000-0000-4000-8000-000000000000', r.opp.id, swim.id, 'restore'),
       null
@@ -375,11 +401,12 @@ test(
     const view = await placeViewOf(r.pool, row)
     const card = view.profile.readingCard
     assert.equal(card.services.find((s) => s.id === swim.id).removed, true)
+    // The card agrees with the brief: Alex (a role) shown from reviews, Sam on the site because the owner showed him.
     assert.deepEqual(
-      card.team.map((p) => [p.label, p.reviewsOnly, p.onSite]),
+      card.team.map((p) => [p.label, p.reviewsOnly, p.onSite, p.fromReviews === true]),
       [
-        ['Alex', true, true],
-        ['Sam', true, false]
+        ['Alex', true, true, true],
+        ['Sam', true, true, false]
       ]
     )
     const { read } = await briefResearchOf(r.pool, row)
@@ -390,10 +417,10 @@ test(
       brief.reading.team.map((p) => [p.label, onSiteOf(brief, p)]),
       [
         ['Alex', true],
-        ['Sam', false]
+        ['Sam', true]
       ]
     )
-    assert.match(r.domain.renderBriefMarkdown(brief), /Alex/)
+    assert.match(r.domain.renderBriefMarkdown(brief), /Sam/)
   }
 )
 

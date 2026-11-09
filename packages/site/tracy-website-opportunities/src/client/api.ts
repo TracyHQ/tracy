@@ -147,12 +147,21 @@ export interface Api {
   list(): Promise<Answer<{ opportunities?: unknown[] }>>
   /** One page of My opportunities: `query` from `listParams` (or `ids=…` for the poll). */
   listPage(query: string): Promise<Answer<Record<string, unknown>>>
-  /** Resume or cancel many jobs: picked job ids, or the filter on screen. */
+  /** Resume or cancel many jobs (picked job ids, or the filter on screen), or delete many opportunities by id. */
   bulk(
     action: 'resume' | 'cancel',
     requestId: string,
     selection: { jobIds: string[] } | { filter: { stage?: string; attention?: boolean; q?: string } }
-  ): Promise<Answer<{ results?: unknown[]; done?: number; skipped?: number; failed?: number }>>
+  ): Promise<Answer<BulkAnswer>>
+  bulk(
+    action: 'delete',
+    requestId: string,
+    selection: { opportunityIds: string[] }
+  ): Promise<Answer<BulkAnswer>>
+  /** Delete one opportunity: its live job cancelled, its live demo sites removed (`DELETE …/:id`). */
+  remove(
+    opportunityId: string
+  ): Promise<Answer<{ ok?: boolean; deleted?: { id?: string; siteRemoved?: boolean } }>>
   detail(opportunityId: string): Promise<Answer<Record<string, unknown>>>
   /** The place's research as the template-independent place profile (ADR 0037). */
   placeProfile(
@@ -221,6 +230,16 @@ export interface Api {
   publicAgainPreview(placeId: string): Promise<Answer<unknown>>
   /** The public Find only (`POST /find/api/research-again`): a run of what is due, paid by Tracy. */
   publicResearchAgain(placeId: string): Promise<Answer<unknown>>
+}
+
+/** The bulk door's answer; a delete adds `deleted` and `sitesRemoved`. */
+export interface BulkAnswer {
+  results?: unknown[]
+  done?: number
+  skipped?: number
+  failed?: number
+  deleted?: number
+  sitesRemoved?: number
 }
 
 export function mediaUrl(mediaId: string): string {
@@ -336,8 +355,9 @@ export function createApi(fetchImpl: FetchLike): Api {
     create: (body) => call(BASE, 'POST', body),
     list: () => call(BASE),
     listPage: (query) => call(query === '' ? BASE : `${BASE}?${query}`),
-    bulk: (action, requestId, selection) =>
-      call(`${BASE}/jobs/bulk`, 'POST', { action, requestId, ...selection }),
+    bulk: (action: string, requestId: string, selection: object) =>
+      call<BulkAnswer>(`${BASE}/jobs/bulk`, 'POST', { action, requestId, ...selection }),
+    remove: (opportunityId) => call(`${BASE}/${id(opportunityId)}`, 'DELETE'),
     detail: (opportunityId) => call(`${BASE}/${id(opportunityId)}`),
     placeProfile: (opportunityId) => call(`${BASE}/${id(opportunityId)}/place-profile`),
     setFact: (opportunityId, factId, onSite) =>

@@ -76,6 +76,8 @@ export interface SourceInput {
   /** A web search row only (`facebook-search`, `instagram-search`): the pages it found and how many queries it asked. */
   pages?: unknown
   queries?: number | null
+  /** The link the owner pasted that this source reads (Add a business by its links); absent: research found it. */
+  pastedLink?: string | null
 }
 
 export interface SourceRow {
