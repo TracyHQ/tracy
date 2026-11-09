@@ -168,7 +168,6 @@ export const en: Record<string, string> = {
   'demo.primary.again': 'Build again',
   'demo.menu.send': 'Send demo',
   'demo.menu.rebuild': 'Rebuild',
-  'demo.menu.delete': 'Delete demo',
   'demo.line.ready': 'Ready',
   'demo.line.daysLeft.one': '{count} day left',
   'demo.line.daysLeft.other': '{count} days left',

@@ -50,15 +50,14 @@ test('a queued demo action is queued; a running one is building; both show a dis
     })
 })
 
-test('a live demo is ready: Open demo, the menu Send demo, Rebuild, Delete demo, and the ready line', () => {
+test('a live demo is ready: Open demo, the menu Send demo and Rebuild (no door deletes a demo alone), and the ready line', () => {
   const row = { demoAction: { id: 'a', state: 'completed', step: 'check' }, demo: liveDemo() }
   assert.equal(demoStateOf(row), 'ready')
   assert.deepEqual(demoBlock('ready', row, t, { now: NOW }), {
     primary: { label: 'Open demo', action: 'open', disabled: false },
     menu: [
       { id: 'send', label: 'Send demo' },
-      { id: 'rebuild', label: 'Rebuild' },
-      { id: 'delete', label: 'Delete demo' }
+      { id: 'rebuild', label: 'Rebuild' }
     ],
     line: 'Ready · phoba.tracy.site · 12 days left'
   })

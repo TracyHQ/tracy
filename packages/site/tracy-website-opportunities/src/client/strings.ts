@@ -58,8 +58,6 @@ export const en = {
   'my.view.rows': 'Compact rows',
   'my.view.map': 'Map',
   'my.columns.note': 'Place, Opportunity, Demo and Status always show. Remembered on this device.',
-  'my.back': 'Back',
-  'my.back.label': 'Back to My opportunities',
   'find.action.view': 'View demo',
   'v3.writes': 'Text updates: {count}',
   'v3.placed': 'Photos placed: {count}',

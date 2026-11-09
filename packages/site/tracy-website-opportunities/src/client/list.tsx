@@ -216,7 +216,6 @@ export function MyOpportunitiesView({
   ids,
   address,
   account,
-  deleted,
   onAddress,
   onOpen,
   onOpenBrief
@@ -227,8 +226,6 @@ export function MyOpportunitiesView({
   cms: string | null
   address: MyAddress
   account: AccountCounts
-  /** Places deleted elsewhere (the Details menu) this tab's lifetime: they leave the rows at once. */
-  deleted: readonly string[]
   onAddress: (patch: Partial<MyAddress>) => void
   /** Opens a place's Details page in the same tab (a history entry). */
   onOpen: (opportunityId: string) => void
@@ -250,13 +247,22 @@ export function MyOpportunitiesView({
     filter,
     address.q
   )
-  useEffect(() => drop(deleted), [deleted, drop])
-  // Back from Details or a Brief (kept mounted, hidden): what was done there shows in the rows.
-  const lastPage = useRef(address.page)
+  // Back from Details or a Brief (kept mounted, hidden): what was done there shows in the rows, and a place deleted
+  // from its Details menu leaves them.
+  const lastPage = useRef({ page: address.page, opp: address.opp })
   useEffect(() => {
-    if (lastPage.current !== null && address.page === null) refreshShown()
-    lastPage.current = address.page
-  }, [address.page, refreshShown])
+    const was = lastPage.current
+    if (was.page !== null && address.page === null) {
+      refreshShown()
+      const gone = was.opp
+      if (gone !== null)
+        void api.listPage(`ids=${gone}`).then((answer) => {
+          const page = answer.ok ? pageAnswer(answer.body) : null
+          if (page?.paged && !page.rows.some((r) => r.id === gone)) drop([gone])
+        })
+    }
+    lastPage.current = { page: address.page, opp: address.opp }
+  }, [address.page, address.opp, refreshShown, api, drop])
   const legacy = state.legacyRows !== null
   const shown = useMemo(
     () =>

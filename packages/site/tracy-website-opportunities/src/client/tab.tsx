@@ -16,7 +16,6 @@ import type { BriefTabSeed } from './brief-tab.tsx'
 import { DetailView, RevisionView } from './detail.tsx'
 import { FindView } from './find.tsx'
 import { localStore, readHiddenColumns, readMyView } from './column-prefs.ts'
-import { DetailsShell } from './details-shell.tsx'
 import { flowReducer, initialFlow } from './flow.ts'
 import { CMS_ORDER, settingsView } from './gate.ts'
 import { MyOpportunitiesView } from './list.tsx'
@@ -175,7 +174,6 @@ function Flow({
   const [address, setAddress, canPop] = useAddress()
   // Where the list was when a page opened, for this tab's lifetime (view and scroll offset).
   const [memory] = useState(createListMemory)
-  const [deleted, setDeleted] = useState<readonly string[]>([])
   const scroller = (): HTMLElement | null =>
     typeof document === 'undefined' ? null : document.querySelector('.tracy-wo-tab')
   // "Build demo site" opens the Brief page with the name field focused; a reload does not refocus it.
@@ -246,7 +244,6 @@ function Flow({
               cms={cms}
               address={address}
               account={account}
-              deleted={deleted}
               onAddress={(patch) => go(patch)}
               onOpen={openDetails}
               onOpenBrief={(opp, revisionId) => openBrief(opp, revisionId, true)}
@@ -254,30 +251,17 @@ function Flow({
           </div>
         )}
         {page === 'details' && address.opp !== null && (
-          <DetailsShell
+          <DetailView
             t={t}
             api={api}
             ids={ids}
             id={address.opp}
-            onBack={back}
-            onDeleted={(id) => {
-              setDeleted((d) => [...d, id])
-              void account.refresh()
-              back()
-            }}
-          >
-            <DetailView
-              t={t}
-              api={api}
-              ids={ids}
-              id={address.opp}
-              cms={cms}
-              onList={back}
-              onChanged={() => void account.refresh()}
-              onOpenRevision={(revisionId, focus) => openBrief(address.opp ?? '', revisionId, focus)}
-              openBriefTab={openBriefTab}
-            />
-          </DetailsShell>
+            cms={cms}
+            onList={back}
+            onChanged={() => void account.refresh()}
+            onOpenRevision={(revisionId, focus) => openBrief(address.opp ?? '', revisionId, focus)}
+            openBriefTab={openBriefTab}
+          />
         )}
         {page === 'brief' && address.opp !== null && address.brief !== null && (
           <RevisionView

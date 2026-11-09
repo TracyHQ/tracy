@@ -266,9 +266,6 @@ export const CSS = `
 .tracy-wo-p-lines > div { display: flex; gap: 4px; min-width: 0; }
 .tracy-wo-p-lines dd { margin: 0; overflow-wrap: anywhere; }
 .tracy-wo-my-rows .tracy-wo-p-lines { grid-column: 2 / -1; }
-/* The Details route: Back and the menu above the Details page. */
-.tracy-wo-details-shell { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.tracy-wo-details-bar { display: flex; align-items: center; gap: 8px; }
 .tracy-wo-insp > .tracy-wo-insp-sec, .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { border: 0; border-radius: 0; background: transparent; padding: 14px 0; }
 .tracy-wo-insp > .tracy-wo-insp-sec + .tracy-wo-insp-sec, .tracy-wo-send { border-top: 1px solid var(--border); }
 .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { padding: 0; }

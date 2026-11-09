@@ -17,7 +17,8 @@ export interface DemoStateRow {
 
 export interface DemoBlock {
   primary: { label: string; action: 'build' | 'open' | 'rebuild' | null; disabled: boolean }
-  menu: Array<{ id: 'send' | 'rebuild' | 'delete'; label: string }>
+  /** No Delete demo: no server door deletes a demo on its own (Delete removes the whole opportunity). */
+  menu: Array<{ id: 'send' | 'rebuild'; label: string }>
   line: string | null
 }
 
@@ -153,8 +154,7 @@ export function demoBlock(
         primary: { label: t('demo.primary.open'), action: 'open', disabled: false },
         menu: [
           { id: 'send', label: t('demo.menu.send') },
-          { id: 'rebuild', label: t('demo.menu.rebuild') },
-          { id: 'delete', label: t('demo.menu.delete') }
+          { id: 'rebuild', label: t('demo.menu.rebuild') }
         ],
         line: readyLine(r, t, now)
       }

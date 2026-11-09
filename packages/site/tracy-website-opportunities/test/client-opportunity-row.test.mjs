@@ -304,3 +304,30 @@ test('every code a failed demo action can carry names a reason in words; an unkn
     'reason.demo_failed'
   )
 })
+
+test('a demo build under way reads Building, never Ready to build (spec #512)', () => {
+  const researched = { id: 'r', job: { id: 'j', state: 'completed' }, latestRevision: { id: 'rev' } }
+  assert.equal(
+    statusView({ ...researched, demoAction: { id: 'a', state: 'running', step: 'kit' } }).key,
+    'v3.building'
+  )
+  assert.equal(
+    statusView({ ...researched, demoAction: { id: 'a', state: 'queued', step: 'brief' } }).key,
+    'v3.building'
+  )
+  assert.equal(
+    statusView({
+      ...researched,
+      demo: {
+        siteKey: null,
+        url: null,
+        expiresAt: null,
+        frozenAt: null,
+        deletedAt: null,
+        qa: null,
+        build: { status: 'building', startedAt: null }
+      }
+    }).key,
+    'v3.building'
+  )
+})

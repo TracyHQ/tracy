@@ -4,6 +4,7 @@
  * pass `now`). The server's `stage` wins when it sends one, so filter counts and badges agree.
  */
 import type { DemoFacts } from '@tracy/wo-views'
+import { demoStateOf } from '@tracy/wo-views/demo-state'
 import type { DemoAction, OutreachDraft } from './outreach-model.ts'
 
 import { type JobInput, reasonKey } from './status.ts'
@@ -108,6 +109,10 @@ export function statusView(row: OpportunityListRow): StatusView {
   const stage = stageOf(row)
   if (stage === 'outreach') return { key: 'v3.demoReady', variant: 'live', check: true }
   if (stage === 'demo') {
+    // A build under way says so, whatever an older check of the build it reuses decided.
+    const demoState = demoStateOf(row)
+    if (demoState === 'queued' || demoState === 'building')
+      return { key: 'v3.building', variant: 'secondary', check: false }
     if (
       row.demoAction?.state === 'failed' ||
       ['failed', 'refused'].includes(row.latestBuild?.state ?? '') ||
