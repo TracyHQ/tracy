@@ -557,7 +557,7 @@ test('a turn without a provider cost is counted, not guessed', async () => {
   assert.equal(result.totals.turnsWithoutCost, 1)
 })
 
-test('an abort is honoured between turns, never by cutting a call short', async () => {
+test('an abort before a call dispatches no request', async () => {
   const stop = new AbortController()
   stop.abort()
   const model = scriptedModel([finalReply({ content: 'ok' })])
@@ -573,6 +573,47 @@ test('an abort is honoured between turns, never by cutting a call short', async 
     (e) => e instanceof AgentError && e.code === 'AGENT_ABORTED'
   )
   assert.equal(model.requests.length, 0)
+})
+
+test('an abort during a model call saves an uncertain receipt and never retries it', async () => {
+  const stop = new AbortController()
+  const saved = []
+  let dispatched
+  const sent = new Promise((resolve) => {
+    dispatched = resolve
+  })
+  let calls = 0
+  const fetchImpl = async (_url, init) => {
+    calls++
+    dispatched()
+    return new Promise((_, reject) => {
+      init.signal.addEventListener('abort', () => reject(init.signal.reason), { once: true })
+    })
+  }
+  const run = runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    fetchImpl,
+    signal: stop.signal,
+    onTurn: (turn) => saved.push(turn)
+  })
+  await sent
+  stop.abort()
+  await assert.rejects(run, (error) => error instanceof AgentError && error.code === 'AGENT_ABORTED')
+  assert.equal(calls, 1)
+  assert.deepEqual(
+    saved.map((turn) => turn.state),
+    ['dispatched', 'failed']
+  )
+  assert.equal(saved[1].error.uncertain, true)
+  assert.equal(saved[1].error.attempts, 1)
+  assert.deepEqual(saved[1].retries, [])
+  await assert.rejects(
+    runAgent({ door: DOOR, system: SYSTEM, firstUser: FIRST, history: [saved[1]], fetchImpl }),
+    (error) => error.code === 'AGENT_TURN_UNANSWERED'
+  )
+  assert.equal(calls, 1, 'resume does not replay the ambiguous call')
 })
 
 test('a tool result with an image is sent inline, or as a user message after the tool results', async () => {

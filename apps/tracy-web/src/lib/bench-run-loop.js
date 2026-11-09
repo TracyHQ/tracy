@@ -8,8 +8,8 @@
 // A redeploy kills the process mid-run; the lease then lapses and the next tick claims the run again, which resumes at
 // the round the saved rounds say, from the saved turns. A call that was dispatched and never answered is marked
 // abandoned and its request is sent once more; if that resend is lost too, the run fails with AGENT_TURN_UNANSWERED.
-// Every claim counts as an attempt, so the retry limit is high. A cancel is honoured between two model calls and
-// between two rounds. A run whose answered calls cost more than the harness's budgetUsd stops before its next call
+// Every claim counts as an attempt, so the retry limit is high. A cancel cuts a model call with an uncertain receipt,
+// or is honoured between two rounds. A run whose answered calls cost more than the harness's budgetUsd stops before its next call
 // with <CODE_PREFIX>_BUDGET.
 //
 // On DeepSeek's own API the provider balance is read before the first model call of the run and again when the run
@@ -40,6 +40,28 @@ import { readBalance, readsBalance } from './provider-balance.js'
 
 /** One run at a time; a lease of 3 minutes renewed every minute; a redeploy costs one of the 20 claims. */
 export const BENCH_QUEUE = Object.freeze({ concurrency: 1, leaseMs: 3 * 60_000, maxAttempts: 20 })
+/** How often an active bench reads a Stop request while a provider call is in flight. */
+export const BENCH_STOP_POLL_MS = 2_000
+
+/** Watch the durable Stop flag while the model call is running; a transient read error waits for the next poll. */
+export function watchBenchStop(store, pool, runId, stop, intervalMs = BENCH_STOP_POLL_MS) {
+  let polling = false
+  const poll = setInterval(() => {
+    if (polling || stop.signal.aborted) return
+    polling = true
+    void store
+      .cancelAsked(pool, runId)
+      .then((asked) => {
+        if (asked) stop.abort()
+      })
+      .catch(() => {})
+      .finally(() => {
+        polling = false
+      })
+  }, intervalMs)
+  poll.unref?.()
+  return () => clearInterval(poll)
+}
 
 const HARNESS_KEYS = [
   'maxTokens',
@@ -175,6 +197,7 @@ async function ask(
   const { store } = step
   const runId = row.id
   const stop = new AbortController()
+  const stopWatching = watchBenchStop(store, pool, runId, stop)
   const shift = (turn, by) => ({
     ...turn,
     n: turn.n + by,
@@ -207,6 +230,8 @@ async function ask(
     if (error.code === 'AGENT_BUDGET')
       return { ended: ['failed', `${step.codePrefix}_BUDGET: ${error.reason}`] }
     return { ended: ['failed', error.message] }
+  } finally {
+    stopWatching()
   }
 }
 

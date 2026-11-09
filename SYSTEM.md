@@ -2260,6 +2260,10 @@ endpoint**.
   an answered call has no known cost and the budget can no longer be checked. One call can cross its cap before its
   answer returns. On DeepSeek's own API the bench also reads the account balance
   (`GET /user/balance`) before and after a run and stores it on the run.
+- **Stop during a model call:** the shared bench loop reads cancellation every two seconds while a call is active and
+  aborts the provider request. The dispatched turn is saved as failed with an uncertain outcome: the provider may have
+  charged before the abort. Stop also interrupts retry backoff before another request is sent. A cancelled run is not
+  replayed automatically; its receipt remains in the turn history.
 - **Kit images** ([`kit-images.js`](apps/tracy-web/src/site-planner/kit-images.js)): the first time a kit version is needed,
   tracy-web **downloads the kit zip from GitHub** (the `template-kit-<template>-<version>.zip` asset of the kit's quickstart
   release, found through `quickstart_releases`, read with the releases credential), checks every image against the sha256 the
