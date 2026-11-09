@@ -306,6 +306,19 @@ tracy_wp_contract_post() {
   printf '%s\ncurl exit %s, HTTP %s%s\n' "$raw" "$rc" "${code:-none}" "$said"
 }
 
+# Usage: tracy_wp_answer_file TEXT. Writes TEXT to a new temp file and prints its path; the caller
+# removes it. An answer of the plugin is NEVER handed to python3 as an argument or an environment
+# variable: Linux caps ONE argument (and one env string) at 128 KiB, and an inspect answer carries the
+# whole contract. JA Diner wp7 1.0.3 answered 143 KB (570 slots) on 09/11/2026, python3 never started
+# ("Argument list too long" on stderr), and the provision failed with "inspect after bind:" and no
+# reason, on a site that was bound.
+tracy_wp_answer_file() {
+  local f
+  f="$(mktemp)" || return 1
+  printf '%s' "$1" > "$f"
+  printf '%s\n' "$f"
+}
+
 # Bind the restored site to its content contract through the Claude Cowork plugin's own door, and read the
 # binding back. Refuses — and on the pinned road so stops the provision, marker kept — when the
 # profile cannot be laid over the site (the plugin does not carry it, an entity that is missing or
@@ -325,12 +338,15 @@ tracy_wp_bind_contract() {
     && url="http://127.0.0.1:${HOST_PORT}/wp-admin/admin-ajax.php?action=claude_cowork"
   answer="$(tracy_wp_contract_post \
     "{\"token\":\"$token\",\"action\":\"content.contract\",\"params\":{\"operation\":\"bind\",\"contract\":\"$contract\"}}" "$url")"
-  python3 - "${answer%$'\n'*}" "$contract" "${answer##*$'\n'}" <<'PY' || return 1
+  local body rc=0
+  body="$(tracy_wp_answer_file "${answer%$'\n'*}")" || { echo '!! could not keep the bind answer to read it' >&2; return 1; }
+  python3 - "$body" "$contract" "${answer##*$'\n'}" <<'PY' || rc=$?
 import json, sys
+body = open(sys.argv[1], encoding='utf-8', errors='replace').read()
 try:
-    a = json.loads(sys.argv[1])
+    a = json.loads(body)
 except Exception:
-    print('!! the Claude Cowork plugin did not answer the bind with JSON (%s): %s' % (sys.argv[3], sys.argv[1][:300]), file=sys.stderr); sys.exit(1)
+    print('!! the Claude Cowork plugin did not answer the bind with JSON (%s): %s' % (sys.argv[3], body[:300]), file=sys.stderr); sys.exit(1)
 # A provision that runs again on a bound site (the second pass of the same label) finds the
 # binding already there: the Claude Cowork plugin says so with `conflict`, and the inspect below is the proof.
 already = (not a.get('ok')) and 'already bound to ' + sys.argv[2] in str(a.get('message') or '')
@@ -341,11 +357,13 @@ elif not a.get('ok') or not a.get('bound'):
 else:
     print('    bound to %s (revision %s)' % (a.get('contract'), str(a.get('revision', ''))[:12]))
 PY
+  rm -f "$body"
+  [ "$rc" = 0 ] || { [ "$rc" = 1 ] || echo "!! the bind answer could not be read (python3 exit $rc)" >&2; return 1; }
   answer="$(tracy_wp_contract_post \
     "{\"token\":\"$token\",\"action\":\"content.contract\",\"params\":{\"operation\":\"inspect\"}}" "$url")"
   local said
   said="$(tracy_wp_inspect_confirms "$answer" "$contract")" || {
-    echo "!! inspect after bind: $said" >&2
+    echo "!! inspect after bind: ${said:-the inspect check printed no reason}" >&2
     return 1
   }
   echo "    inspect: bound, $said entities"
@@ -473,7 +491,7 @@ tracy_wp_showcase_nav() {
 # left in TRACY_WP_SHOWCASE_WHY. A revert is its own request (`REQUEST.rv`, apply id
 # `snav-revert-REQUEST`), so a revert retried after a lost answer is answered again, not run twice.
 tracy_wp_showcase_job() {
-  local op="$1" request="$2" token="$3" url="$4" apply answer verdict calls=0 lost=0 left='' moved=moved what=''
+  local op="$1" request="$2" token="$3" url="$4" apply answer body verdict calls=0 lost=0 left='' moved=moved what=''
   apply="snav-$request"
   [ "$op" = apply ] || { apply="snav-revert-$request"; request="$request.rv"; moved='put back'; what='revert '; }
   TRACY_WP_SHOWCASE_WHY=''
@@ -485,9 +503,10 @@ tracy_wp_showcase_job() {
     fi
     answer="$(tracy_wp_contract_post \
       "{\"token\":\"$token\",\"action\":\"content.contract\",\"params\":{\"operation\":\"showcaseNav.$op\",\"apply_id\":\"$apply\",\"request_id\":\"$request\"}}" "$url")"
-    verdict="$(python3 - "${answer%$'\n'*}" "${answer##*$'\n'}" "$left" "$op" <<'PY'
+    body="$(tracy_wp_answer_file "${answer%$'\n'*}")" || body=/dev/null
+    verdict="$(python3 - "$body" "${answer##*$'\n'}" "$left" "$op" <<'PY'
 import json, re, sys
-body, transport, left, op = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
+body, transport, left, op = open(sys.argv[1], encoding='utf-8', errors='replace').read(), sys.argv[2], sys.argv[3], sys.argv[4]
 m = re.search(r'HTTP (\d+)', transport)
 status = int(m.group(1)) if m else 0
 done = 'completed' if op == 'apply' else 'reverted'
@@ -532,6 +551,7 @@ moved = a.get('moved')
 print('next:%d:%d' % (remaining, moved if type(moved) is int else 0))
 PY
 )" || verdict=''
+    [ "$body" = /dev/null ] || rm -f "$body"
     case "$verdict" in
       lost:*)
         lost=$((lost + 1))
@@ -574,10 +594,11 @@ PY
 #     nothing was hidden: status 4, with that said instead, and the phase settles as failed with one
 #     `!!` line (`tracy_wp_showcase_nav`) — never a plain "applied".
 tracy_wp_showcase_status() {
-  local answer
+  local answer body rc=0
   answer="$(tracy_wp_contract_post \
     "{\"token\":\"$1\",\"action\":\"content.contract\",\"params\":{\"operation\":\"showcaseNav.status\"}}" "$2")"
-  python3 - "${answer%$'\n'*}" "${answer##*$'\n'}" <<'PY'
+  body="$(tracy_wp_answer_file "${answer%$'\n'*}")" || { echo 'the status answer could not be kept to read it'; return 1; }
+  python3 - "$body" "${answer##*$'\n'}" <<'PY' || rc=$?
 import json, re, sys
 
 def showcase_verdict(a):
@@ -611,7 +632,7 @@ def showcase_verdict(a):
     return 0
 
 try:
-    a = json.loads(sys.argv[1])
+    a = json.loads(open(sys.argv[1], encoding='utf-8', errors='replace').read())
 except Exception:
     a = None
 if not isinstance(a, dict) or a.get('ok') is not True or a.get('status') != 'complete' or a.get('remaining') != 0:
@@ -620,6 +641,8 @@ if not isinstance(a, dict) or a.get('ok') is not True or a.get('status') != 'com
     sys.exit(1)
 sys.exit(showcase_verdict(a))
 PY
+  rm -f "$body"
+  return "$rc"
 }
 
 # Usage: tracy_wp_inspect_confirms ANSWER CONTRACT, where ANSWER is what `tracy_wp_contract_post`
@@ -629,9 +652,11 @@ PY
 # on Joomla. Otherwise status 1, with what the plugin said printed on one line. Prints the number of
 # entities on success.
 tracy_wp_inspect_confirms() {
-  python3 - "${1%$'\n'*}" "${1##*$'\n'}" "$2" <<'PY'
+  local body said rc=0
+  body="$(tracy_wp_answer_file "${1%$'\n'*}")" || { echo 'the inspect answer could not be kept to read it'; return 1; }
+  said="$(python3 - "$body" "${1##*$'\n'}" "$2" <<'PY'
 import json, re, sys
-body, seen, contract = sys.argv[1], sys.argv[2], sys.argv[3]
+body, seen, contract = open(sys.argv[1], encoding='utf-8', errors='replace').read(), sys.argv[2], sys.argv[3]
 try:
     a = json.loads(body)
 except Exception:
@@ -646,6 +671,13 @@ if not contract or a.get('contract') != contract:
     print(('bound to %r, not %r' % (a.get('contract'), contract))[:600]); sys.exit(1)
 print(len(a.get('entities') or []) if isinstance(a.get('entities'), list) else 0)
 PY
+)" || rc=$?
+  rm -f "$body"
+  # A failure always says why: a check that died before printing (python3 that would not start, a
+  # traceback) is named by its exit code, never handed on as an empty reason.
+  [ "$rc" = 0 ] || [ -n "$said" ] || said="the inspect answer could not be read (python3 exit $rc)"
+  printf '%s\n' "$said"
+  return "$rc"
 }
 
 # Usage: tracy_wp_showcase_inspect TOKEN URL CONTRACT. Status 0 when the site still inspects as bound
@@ -729,12 +761,15 @@ tracy_wp_content_identity() {
   echo '==> enabling the content reader'
   answer="$(tracy_wp_post_ajax \
     "{\"token\":\"$token\",\"action\":\"content.identity\",\"params\":{\"newSite\":true,\"requestId\":\"provision-$LABEL\"}}")"
-  python3 - "$answer" "$SITE_DIR/content-identity.done" <<'PY'
+  local body rc=0
+  body="$(tracy_wp_answer_file "$answer")" || { echo '!! could not keep the content.identity answer to read it' >&2; return 1; }
+  python3 - "$body" "$SITE_DIR/content-identity.done" <<'PY' || rc=$?
 import json, sys
+answer = open(sys.argv[1], encoding='utf-8', errors='replace').read()
 try:
-    a = json.loads(sys.argv[1])
+    a = json.loads(answer)
 except Exception:
-    print('!! the Claude Cowork plugin did not answer content.identity with JSON: ' + sys.argv[1][:300], file=sys.stderr); sys.exit(1)
+    print('!! the Claude Cowork plugin did not answer content.identity with JSON: ' + answer[:300], file=sys.stderr); sys.exit(1)
 if not a.get('ok') and 'unknown action' in str(a.get('message') or a.get('error') or '').lower():
     print('    content reader: this Claude Cowork plugin has none — skipped'); sys.exit(0)
 if not a.get('ok'):
@@ -751,6 +786,8 @@ try:
 except OSError as e:
     print('!! content reader enabled, but its marker was not written: %s' % e, file=sys.stderr)
 PY
+  rm -f "$body"
+  return "$rc"
 }
 
 # Bind an imported copy to a contract DERIVED from its own rows (`content.contract` operation `derive`,
@@ -760,16 +797,18 @@ PY
 # Never fails the import: without it the copy works, the picker just resolves by text. A plugin older
 # than the operation answers `bad_action` or `bad_params` "unknown contract operation" — said, skipped.
 tracy_wp_derive_contract() {
-  local token="$1" body answer
+  local token="$1" body answer kept
   echo '==> deriving the content contract'
   body="$(TOKEN="$token" LABEL="$LABEL" python3 -c 'import json,os;print(json.dumps({"token":os.environ["TOKEN"],"action":"content.contract","params":{"operation":"derive","label":os.environ["LABEL"],"requestId":"provision-"+os.environ["LABEL"]}}))')"
   answer="$(tracy_wp_post_ajax "$body")" || answer=""  # no answer at all is judged below, never fatal
-  ANSWER="$answer" python3 - <<'PY' || echo '!! derived contract: not bound — the Edit picker resolves by text only on this copy' >&2
-import json, os, sys
+  kept="$(tracy_wp_answer_file "$answer")" || kept=/dev/null
+  python3 - "$kept" <<'PY' || echo '!! derived contract: not bound — the Edit picker resolves by text only on this copy' >&2
+import json, sys
+answer = open(sys.argv[1], encoding='utf-8', errors='replace').read()
 try:
-    a = json.loads(os.environ.get("ANSWER") or "")
+    a = json.loads(answer or "")
 except Exception:
-    print('!! derive: the Claude Cowork plugin did not answer with JSON: ' + (os.environ.get("ANSWER") or '')[:300], file=sys.stderr); sys.exit(1)
+    print('!! derive: the Claude Cowork plugin did not answer with JSON: ' + answer[:300], file=sys.stderr); sys.exit(1)
 if not isinstance(a, dict):
     sys.exit(1)
 said = str(a.get('message') or a.get('error') or '')
@@ -782,6 +821,7 @@ if not a.get('contract'):
 print('    derived contract: %d entities, %d slots, %s%s' % (int(a.get('entities') or 0), int(a.get('slots') or 0),
       'calibrated' if a.get('calibrated') else 'not calibrated', ' (request replayed)' if a.get('replayed') else ''))
 PY
+  [ "$kept" = /dev/null ] || rm -f "$kept"
   return 0
 }
 
