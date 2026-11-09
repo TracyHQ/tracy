@@ -91,8 +91,8 @@ export const en: Record<string, string> = {
   'score.reason.marketing.unknown': 'Social pages',
   'score.reason.contact.reachable': 'Phone, chat or email found',
   'score.reason.contact.none': 'No phone, chat or email',
-  'score.reason.chain.penalty': 'Chain, so halved',
-  'score.reason.closed.penalty': 'Temporarily closed, so halved',
+  'score.reason.chain.penalty': 'Chain, so the score is halved',
+  'score.reason.closed.penalty': 'Temporarily closed, so the score is halved',
 
   // Place cell
   'cell.place.openMap': 'Open on the map',
@@ -138,7 +138,7 @@ export const en: Record<string, string> = {
   'cell.demo.left.day.other': '{count} days left',
   'cell.demo.left.hour.one': '{count} hour left',
   'cell.demo.left.hour.other': '{count} hours left',
-  'cell.demo.qaPassed': 'QA passed',
+  'cell.demo.qaPassed': 'Checked',
   'cell.demo.extend': 'Extend',
   'cell.demo.frozen': 'Frozen',
   'cell.demo.deletesIn.one': 'deleted in {count} day',
@@ -200,7 +200,7 @@ export const en: Record<string, string> = {
   'demo.reason.server': 'The server could not set the site up.',
   'demo.reason.fill': 'Filling the demo with the business content did not finish.',
   'demo.reason.access': 'This account can no longer reach the demo site.',
-  'demo.reason.otherWriter': 'Another job was already writing to this demo site.',
+  'demo.reason.otherWriter': 'Another task was already changing this demo site.',
   'demo.reason.unknown': 'The demo stopped on an unexpected error.',
 
   // Card
