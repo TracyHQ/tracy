@@ -161,6 +161,54 @@ test('a conversation past its budget stops before the next call with AGENT_BUDGE
   )
 })
 
+test('a budgeted conversation stops after a call whose cost is unknown, including on resume', async () => {
+  const model = scriptedModel([
+    toolCallReply({ calls: [['read_part', { id: 'p1' }]] }),
+    finalReply({ content: 'must not be requested', usage: usageOf({ cost: 0.01 }) })
+  ])
+  const answered = []
+  const run = (history = []) =>
+    runAgent({
+      door: DOOR,
+      system: SYSTEM,
+      firstUser: FIRST,
+      tools: [readTool()],
+      history,
+      fetchImpl: model.fetchImpl,
+      budgetUsd: 1,
+      onTurn: async (turn) => {
+        if (turn.state === 'answered') answered.push(turn)
+      }
+    }).catch((error) => error)
+  const first = await run()
+  assert.equal(first.code, 'AGENT_BUDGET_UNKNOWN')
+  assert.equal(first.turn, 1)
+  assert.match(first.reason, /1 answered model call\(s\) have no known cost/)
+  assert.equal(model.requests.length, 1)
+  assert.equal(answered[0].cost, null)
+
+  const resumed = await run(answered)
+  assert.equal(resumed.code, 'AGENT_BUDGET_UNKNOWN')
+  assert.equal(model.requests.length, 1, 'resume did not dispatch another model call')
+})
+
+test('an unbudgeted conversation can continue after a call whose cost is unknown', async () => {
+  const model = scriptedModel([
+    toolCallReply({ calls: [['read_part', { id: 'p1' }]] }),
+    finalReply({ content: 'p1', usage: usageOf({ cost: 0.01 }) })
+  ])
+  const result = await runAgent({
+    door: DOOR,
+    system: SYSTEM,
+    firstUser: FIRST,
+    tools: [readTool()],
+    fetchImpl: model.fetchImpl
+  })
+  assert.equal(result.answer, 'p1')
+  assert.equal(result.totals.turnsWithoutCost, 1)
+  assert.equal(model.requests.length, 2)
+})
+
 test('the write step: after N answers that called tools, the message goes out and every later request carries tool_choice none', async () => {
   const calls = []
   const script = () => [

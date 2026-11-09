@@ -27,7 +27,8 @@
 // (signal) is honoured between turns only; a call in flight is never cut.
 //
 // Guards. budgetUsd: before each call, a conversation whose answered turns already cost more than this stops with
-// AGENT_BUDGET (turns without a cost count as nothing). maxTurns bounds the number of calls. writeStep
+// AGENT_BUDGET. A turn with unknown cost stops a budgeted conversation before another call; zero is not a price.
+// maxTurns bounds the number of calls. writeStep
 // ({ afterToolTurns, message }) ends the reading: once the conversation has `afterToolTurns` answers that called
 // tools, or an answer whose every tool call was answered as a repeat (a tool result with `repeated: true`), the
 // message goes out as a user message after the tool results, and from then on every request of the conversation
@@ -173,12 +174,19 @@ export async function runAgent({
     if (signal?.aborted) throw new AgentError('AGENT_ABORTED', { turn: turns.length })
     if (turns.length >= o.maxTurns)
       throw new AgentError('AGENT_TURN_LIMIT', { reason: `${o.maxTurns} model calls` })
-    const spent = totalsOf(turns).cost
-    if (o.budgetUsd !== undefined && spent > o.budgetUsd)
-      throw new AgentError('AGENT_BUDGET', {
-        turn: turns.length,
-        reason: `the conversation has cost $${spent.toFixed(4)}, past its budget of $${o.budgetUsd.toFixed(2)}`
-      })
+    if (o.budgetUsd !== undefined) {
+      const totals = totalsOf(turns)
+      if (totals.turnsWithoutCost > 0)
+        throw new AgentError('AGENT_BUDGET_UNKNOWN', {
+          turn: turns.length,
+          reason: `${totals.turnsWithoutCost} answered model call(s) have no known cost; the $${o.budgetUsd.toFixed(2)} budget cannot be checked`
+        })
+      if (totals.cost > o.budgetUsd)
+        throw new AgentError('AGENT_BUDGET', {
+          turn: turns.length,
+          reason: `the conversation has cost $${totals.cost.toFixed(4)}, past its budget of $${o.budgetUsd.toFixed(2)}`
+        })
+    }
     const toolChoice =
       tools.length && o.writeStep && sentWriteStep([...messages, ...next], o.writeStep.message)
         ? 'none'
