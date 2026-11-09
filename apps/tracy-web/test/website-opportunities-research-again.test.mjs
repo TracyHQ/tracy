@@ -255,6 +255,43 @@ test(
   }
 )
 
+test('a researched place with every source fresh still gets every part from scratch', opts, async () => {
+  const pages = { current: {} }
+  const { domain } = await domainWith(pages)
+  const clock = { now: Date.parse('2026-10-24T05:00:00Z') }
+  const ex = executor(db.pool, domain, clock)
+  const { placeId } = await researchOnce(db.pool, ex)
+  const base = { now: clock.now + 60_000, ...keysAndSettings(domain) }
+  const due = await placeAgainPlan(db.pool, placeId, base)
+  assert.deepEqual(due.run, [], 'nothing is due')
+  const plan = await placeAgainPlan(db.pool, placeId, { ...base, fromScratch: true })
+  assert.deepEqual(plan.fromScratch, { at: new Date(base.now).toISOString(), whole: true })
+  const parts = due.kept.filter((k) => k.reason !== 'unavailable').map((k) => k.part)
+  assert.ok(parts.length > 0)
+  assert.deepEqual(
+    plan.run.map((r) => [r.part, r.reason]),
+    parts.map((p) => [p, 'again'])
+  )
+  assert.ok(plan.kept.every((k) => ['unavailable', 'none'].includes(k.reason)))
+  // The run it queues collects them again, each once, and reads the place again.
+  const before = (await searchRows(db.pool)).map((r) => new Date(r.attempted_at).getTime())
+  assert.equal(before.length, 2, 'both searches ran in the first research')
+  clock.now = base.now
+  const out = await queueResearchAgain(db.pool, placeId, {
+    ...base,
+    starter: { kind: 'operator' },
+    fromScratch: true
+  })
+  assert.ok(out.job)
+  assert.equal(out.job.again_plan.fromScratch.whole, true)
+  await drain(ex)
+  const after = (await searchRows(db.pool)).map((r) => new Date(r.attempted_at).getTime())
+  assert.ok(
+    after.every((t, i) => t > before[i]),
+    'every search was tried again'
+  )
+})
+
 test('a Research again pressed while a run is going joins it and queues nothing more', opts, async () => {
   const pages = { current: {} }
   const { domain } = await domainWith(pages)

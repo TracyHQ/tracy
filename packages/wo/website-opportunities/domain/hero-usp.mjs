@@ -5,13 +5,16 @@
 //   SPECIFIC         a concrete method, result, convenience, credential or promise; generic praise ("friendly",
 //                    "quality", "best", "all levels", "European" or "premium" with nothing behind it) never counts
 //   DIFFERENTIATING  it says more than the trade, the offerings and the place (what every rival could say)
-//   PROVABLE         a fact of the brief, or a theme at least two reviews state (any star rating), quoted as evidence
+//   PROVABLE         a fact of the brief, or a theme quoted word for word: in two reviews or more (any star rating), else
+//                    in one review (`basis: 'one-review'`), else in the business's own words (`basis: 'owner'`), the
+//                    rungs the business reading keeps (`business-reading.mjs checkUspThemesOf`)
 // 🔒 NEVER INVENTED: no candidate passes, no USP. The headline then says what and where, and the owner is asked
 // "What makes you different from other <trade> in <place>?".
 //
 // The candidates, best first: the owner's key messages, the brief's story and team facts, then review themes. A theme is
 // one a model clustered while reading the business (`brief.reading.uspThemes`, or `options.themes`), which passes only
-// when its quotes are found word for word in at least two reviews, or it names a fact of the brief (`checkUspTheme`);
+// when its quotes are found word for word in the reviews its rung asks for, or it names a fact of the brief
+// (`checkUspTheme`);
 // without one that passes, one of a closed list of meanings read in code (`REVIEW_THEMES`).
 import { businessWords } from './trade-words.mjs'
 import {
@@ -139,15 +142,22 @@ export const REVIEW_THEMES = Object.freeze([
 const lastWordOf = (noun) => String(noun).split(' ').at(-1)
 
 /**
- * A model's review theme, checked in code: its quotes must be found word for word in the brief's reviews (the ones the
- * site may show), in two different reviews or more, or it must name a fact the brief shows; and its line must pass the
- * specific test. A quote is `{text}` or `{quote}`, with the review's index when the caller knows it.
- * @param {{label: string, line?: string, who?: string, quotes?: Array<{review?: number, text?: string, quote?: string}>,
+ * A model's theme, checked in code; its line must pass the specific test, and its rung (`basis`) says what proves it:
+ *   none          its quotes found word for word in the brief's reviews (the ones the site may show), in two different
+ *                 reviews or more, or a fact the brief shows
+ *   'one-review'  the same, one review being enough
+ *   'owner'       the business's own words (its bio or posts), which the reading found word for word in their text: each
+ *                 quote names a source that is not a review; the brief holds no copy of those texts to check again
+ * A quote is `{text}` or `{quote}`, with the review's index when the caller knows it. The evidence is the theme's own
+ * quotes, so the hero quotes nothing else.
+ * @param {{label: string, line?: string, who?: string, basis?: 'one-review' | 'owner',
+ *   quotes?: Array<{review?: number, text?: string, quote?: string, source?: {kind?: string}}>,
  *   factIds?: string[]}} theme
  * @param {any} brief
  * @returns {{pass: boolean, why: string, evidence: any[]}}
  */
 export function checkUspTheme(theme, brief, context = {}) {
+  if (theme?.basis === 'owner') return checkOwnerTheme(theme, context)
   const reviews = reviewsOf(brief).map(lower)
   const quotes = list(theme?.quotes).flatMap((q) => {
     const text = String(q?.text ?? q?.quote ?? '').trim()
@@ -161,12 +171,16 @@ export function checkUspTheme(theme, brief, context = {}) {
     .map((id) => list(brief?.facts).find((f) => f?.id === id && f.onSite === true))
     .filter(Boolean)
   const distinct = new Set(quotes.map((q) => q.review)).size
+  const needed = theme?.basis === 'one-review' ? 1 : 2
   if (quotes.length < list(theme?.quotes).length)
     return { pass: false, why: 'a quote is not found word for word in the reviews', evidence: [] }
-  if (distinct < 2 && !facts.length)
+  if (distinct < needed && !facts.length)
     return {
       pass: false,
-      why: 'fewer than two reviews state it word for word, and it names no fact',
+      why:
+        needed === 1
+          ? 'no review states it word for word, and it names no fact'
+          : 'fewer than two reviews state it word for word, and it names no fact',
       evidence: []
     }
   const claim = isSpecificClaim(theme.line ?? theme.label ?? '', context)
@@ -178,6 +192,23 @@ export function checkUspTheme(theme, brief, context = {}) {
       ...quotes.map((q) => ({ kind: 'review', review: q.review, quote: q.text })),
       ...facts.map((f) => ({ kind: 'fact', id: f.id }))
     ]
+  }
+}
+
+/** A theme on the business's own words (`basis: 'owner'`): every quote has text and a source that is not a review. */
+function checkOwnerTheme(theme, context) {
+  const quotes = list(theme?.quotes).map((q) => ({
+    text: String(q?.text ?? q?.quote ?? '').trim(),
+    kind: q?.source?.kind ?? null
+  }))
+  if (!quotes.length || quotes.some((q) => !q.text || !q.kind || q.kind === 'review'))
+    return { pass: false, why: "a quote is not the business's own words", evidence: [] }
+  const claim = isSpecificClaim(theme.line ?? theme.label ?? '', context)
+  if (!claim.specific) return { pass: false, why: claim.why, evidence: [] }
+  return {
+    pass: true,
+    why: "the business's own words",
+    evidence: quotes.map((q) => ({ kind: 'owner', source: q.kind, quote: q.text }))
   }
 }
 

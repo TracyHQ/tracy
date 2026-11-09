@@ -115,3 +115,33 @@ test("a model's review theme passes only with quotes found word for word in two 
   const generic = { label: 'Friendly and professional', quotes: quoted.quotes }
   assert.equal(checkUspTheme(generic, brief).pass, false)
 })
+
+test('a theme the reading kept on one review or on the business own words passes on its own rung only', () => {
+  const brief = swimBrief()
+  const one = {
+    label: 'The same coaches teach the whole family',
+    line: 'The same coaches for the whole family',
+    basis: 'one-review',
+    quotes: [{ text: 'My kids also swim with the same coaches as me' }]
+  }
+  assert.equal(checkUspTheme(one, brief).pass, true)
+  assert.equal(checkUspTheme({ ...one, basis: undefined }, brief).pass, false)
+  // One review is the floor: a quote no review holds still fails.
+  assert.equal(
+    checkUspTheme({ ...one, quotes: [{ text: 'The same coaches teach us all' }] }, brief).pass,
+    false
+  )
+  const owner = {
+    label: 'certified coaches since 2009',
+    line: 'Certified coaches, coaching since 2009',
+    basis: 'owner',
+    quotes: [{ quote: 'Certified coaches, coaching since 2009.', source: { kind: 'bio', ref: 'bio' } }]
+  }
+  const check = checkUspTheme(owner, brief)
+  assert.equal(check.pass, true)
+  assert.deepEqual(check.evidence, [
+    { kind: 'owner', source: 'bio', quote: 'Certified coaches, coaching since 2009.' }
+  ])
+  // An owner theme is still held to the specific test.
+  assert.equal(checkUspTheme({ ...owner, line: 'Friendly and professional' }, brief).pass, false)
+})

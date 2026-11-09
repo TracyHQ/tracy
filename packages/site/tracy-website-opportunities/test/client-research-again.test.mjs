@@ -205,3 +205,25 @@ test('a public Research again press: a run to follow by its receipt, up to date,
   assert.deepEqual(readAgainStart({ state: 'queued' }), { ok: false, code: 'UNKNOWN' })
   assert.deepEqual(readAgainStart(null), { ok: false, code: 'UNKNOWN' })
 })
+
+test("the account's press from scratch reads as such: every part runs with reason again", () => {
+  const scratch = {
+    run: [
+      { part: 'google-places', reason: 'again', ceilingCents: 2 },
+      { part: 'website', reason: 'again', ceilingCents: 0 }
+    ],
+    kept: [{ part: 'tiktok', reason: 'unavailable', detail: 'credential_missing' }],
+    ceilingCents: 2,
+    fromScratch: true
+  }
+  const preview = readAgainPreview({ plan: scratch, payer: 'account', limit: { perDay: 20, usedToday: 0 } })
+  assert.equal(preview.plan.fromScratch, true)
+  const view = againView(preview.plan, 'en-US')
+  assert.equal(view.fromScratch, true)
+  assert.deepEqual(
+    view.run.map((r) => r.reasonKey),
+    ['again.run.again', 'again.run.again']
+  )
+  // A due-only plan (the public Find) says nothing of the kind.
+  assert.equal(readAgainPreview({ plan: PLAN, payer: 'tracy' }).plan.fromScratch, false)
+})

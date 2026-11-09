@@ -895,7 +895,7 @@ export function websiteOpportunitiesRoutes(deps) {
         refusal: {
           status: 400,
           code: 'INVALID_AGAIN',
-          next: 'Research again looks only at what is due: send it without "force" or "only".'
+          next: 'Research again researches the place from scratch: send it without "force" or "only".'
         }
       }
     if (again && !(shared && identityOf(opp.provider, opp.provider_id)))
@@ -923,7 +923,9 @@ export function websiteOpportunitiesRoutes(deps) {
         keys: rt.keys,
         settings: rt.settings,
         domain: await loadDomain().catch(() => null),
-        onlyParts: limited.parts
+        onlyParts: limited.parts,
+        // An account's Research again researches from scratch (`research-again.js` AGAIN_REASON).
+        fromScratch: true
       }
     }
     if (shared && identityOf(opp.provider, opp.provider_id)) {
@@ -1703,7 +1705,14 @@ export function websiteOpportunitiesRoutes(deps) {
     const { keys, settings } = await runtime()
     const placeId = shared && identityOf(opp.provider, opp.provider_id) ? opp.place_id : null
     const plan = placeId
-      ? await placeAgainPlan(pool, placeId, { now: now(), keys, settings, domain, onlyParts: limited.parts })
+      ? await placeAgainPlan(pool, placeId, {
+          now: now(),
+          keys,
+          settings,
+          domain,
+          onlyParts: limited.parts,
+          fromScratch: true
+        })
       : { run: [], kept: [], ceilingCents: 0, researched: false }
     return json(c, {
       plan: againShape(plan),

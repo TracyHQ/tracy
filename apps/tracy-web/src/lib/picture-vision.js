@@ -57,7 +57,9 @@ const ENUMS = {
 }
 // The risk labels (isBlurry, hasTextOrWatermark, showsOtherBusiness) are held by `heldVisionLinks` (PHOTO_RISK_LABELS).
 const BOOLS = ['heroWorthy', 'isCollage', 'hasTextOverlay']
-const CALL_MS = 60_000
+// Per-call ceiling: a safety net against a hung provider, not an expected duration. A batch of 8 pictures with the p6
+// prompt (three risk questions per picture) takes well over a minute on some models, so we wait for the model.
+const CALL_MS = 600_000
 
 /** The closed list as the prompt shows it: one line per item, its id first. */
 function listLines(closedList) {

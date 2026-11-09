@@ -1,0 +1,2 @@
+{"id":"REG-PR-523-research-again-and-usp-ladder","verdict":"PASS","commit":"402f8101dfe9ecc78fb34cd80d8f2ebbffe02900","ran_at":"2026-11-09T12:24:54.358Z","evidence":"tests/regression/.runs/2026-11-09-402f8101d/REG-PR-523-research-again-and-usp-ladder.log"}
+{"id":"REG-PR-523-vision-call-ceiling","verdict":"PASS","commit":"402f8101dfe9ecc78fb34cd80d8f2ebbffe02900","ran_at":"2026-11-09T12:24:54.869Z","evidence":"tests/regression/.runs/2026-11-09-402f8101d/REG-PR-523-vision-call-ceiling.log"}
