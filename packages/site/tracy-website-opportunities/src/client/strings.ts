@@ -1161,6 +1161,7 @@ export const en = {
   'site.name.reserved': 'This name cannot be used',
   'site.name.edges': 'Start and end with a letter or a digit',
   'site.name.failed': 'Could not save the name. Try again.',
+  'site.name.loadFailed': 'Could not load the site name.',
 
   /** The brief as cards (#520). */
   'brief.cards.title': 'How Tracy understands {business}',

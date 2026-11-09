@@ -29,11 +29,15 @@ export function SiteNameRow({
   const [check, setCheck] = useState<SiteLabelCheck | null>(null)
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
+  /** The read door answered with an error: say so instead of waiting on a name that will not come. */
+  const [loadFailed, setLoadFailed] = useState(false)
   const inputId = useId()
   useEffect(() => {
     let live = true
     void api.siteLabel(opportunityId).then((answer) => {
-      if (live && answer.ok) setInfo(answer.body)
+      if (!live) return
+      if (answer.ok) setInfo(answer.body)
+      else setLoadFailed(true)
     })
     return () => {
       live = false
@@ -147,7 +151,11 @@ export function SiteNameRow({
           </span>
         ) : (
           <span className="tracy-wo-row tracy-wo-wrap">
-            <span>{shown !== null && info !== null ? siteAddress(shown, info) : '…'}</span>
+            {loadFailed ? (
+              <span className="tracy-wo-muted">{t('site.name.loadFailed')}</span>
+            ) : (
+              <span>{shown !== null && info !== null ? siteAddress(shown, info) : '…'}</span>
+            )}
             {info !== null ? (
               <Button
                 type="button"
@@ -163,7 +171,9 @@ export function SiteNameRow({
         )}
         <span className="tracy-wo-brief-note">{t('site.name.hint')}</span>
       </td>
-      <td className="tracy-wo-muted">{info?.label ? t('brief.source.you') : t('site.name.suggested')}</td>
+      <td className="tracy-wo-muted">
+        {info === null ? null : info.label ? t('brief.source.you') : t('site.name.suggested')}
+      </td>
       <td />
     </tr>
   )
