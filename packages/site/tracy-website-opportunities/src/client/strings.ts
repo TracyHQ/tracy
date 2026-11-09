@@ -881,11 +881,14 @@ export const en = {
   'again.upToDate': 'Everything is up to date',
   'again.due.one': '{count} part needs a new look',
   'again.due.other': '{count} parts need a new look',
+  'again.due.scratch': 'Every source is collected again, up to {total}',
   'again.closed.account': 'You used today’s Research again runs. Try again tomorrow.',
   'again.closed.public': 'Free research is used up for today. Try again tomorrow or sign in.',
   'again.title': 'Research {name} again?',
   'again.lead':
     'Tracy looks again only at what failed, is out of date, or was never tried. Everything else is kept.',
+  'again.lead.scratch':
+    'Tracy collects every source again and reads the business again from scratch, the logo included. Nothing from the last research is reused.',
   'again.kept': 'Kept',
   'again.total.account': 'Up to {total}, counted on your account.',
   'again.total.tracy': 'Up to {total}, paid by Tracy.',
@@ -898,6 +901,7 @@ export const en = {
   'again.run.failed': 'Failed last time',
   'again.run.outdated': 'Older than 30 days',
   'again.run.rule-changed': 'Tracy now looks for it differently',
+  'again.run.again': 'Collected again from scratch',
   'again.kept.up-to-date': 'Up to date',
   'again.kept.none': 'The place has none (checked recently)',
   'again.kept.unavailable': 'Not available on this server',

@@ -11,6 +11,7 @@ import { createChargeable, createCostLedger } from 'website-opportunities/src/co
 import { createExecutor } from 'website-opportunities/src/executor.js'
 import { imageInfoWith } from 'website-opportunities/src/media-info.js'
 import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
 import { addLink } from 'website-opportunities/src/places.js'
 import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
@@ -120,18 +121,16 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     })
   }
   const ledger = createCostLedger({ pool, caps: async () => ({ dailyCapCents: 1000, jobCapCents: 1000 }) })
+  const settings = {
+    ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+    tripadvisorReviews: false
+  }
   const ex = createExecutor({
     host: woHost,
     pool,
     shared: true,
     loadDomain: async () => domain,
-    runtime: async () => ({
-      keys: { google: 'test-google' },
-      settings: {
-        ...normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
-        tripadvisorReviews: false
-      }
-    }),
+    runtime: async () => ({ keys: { google: 'test-google' }, settings }),
     chargeable: createChargeable(ledger),
     businessReadingDoor: async () =>
       door === 'ready'
@@ -170,11 +169,14 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     .rows[0].place_id
   // The club's Instagram, as an operator adds a link to a Google place.
   await addLink(pool, placeId, 'instagram', IG, 'operator', {})
-  for (let i = 0; i < 20; i++) {
-    const { claimed, done } = await ex.tick()
-    if (!claimed) break
-    await done
+  const drain = async () => {
+    for (let i = 0; i < 20; i++) {
+      const { claimed, done } = await ex.tick()
+      if (!claimed) break
+      await done
+    }
   }
+  await drain()
   const opp = (await pool.query('select * from wo_opportunity where id = $1', [opportunity.id])).rows[0]
   const { read } = await briefResearchOf(pool, opp)
   const brief = makeSiteBrief(domain, read, { opportunity: opp, madeAt: '2026-10-26T10:00:00.000Z' })
@@ -184,6 +186,9 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     calls,
     opp,
     domain,
+    drain,
+    placeId,
+    settings,
     brief,
     markdown: domain.renderBriefMarkdown(brief),
     profile: await readPlaceProfile(pool, { opportunityId: opp.id })
@@ -456,5 +461,35 @@ test(
     assert.equal(r.calls.bodies[0].max_tokens, 4_000)
     assert.equal(r.calls.bodies[0].reasoning_effort, undefined)
     assert.equal(r.brief.reading.method, 'model')
+  }
+)
+
+test(
+  'a Research again from scratch reads the business again although its texts and version are unchanged',
+  opts,
+  async () => {
+    const r = await research()
+    assert.equal(r.calls.model, 1)
+    const again = (onlyParts) =>
+      queueResearchAgain(r.pool, r.placeId, {
+        now: Date.now(),
+        keys: { google: 'test-google' },
+        settings: r.settings,
+        domain: r.domain,
+        starter: { kind: 'operator' },
+        onlyParts,
+        fromScratch: true
+      })
+    const whole = await again(null)
+    assert.equal(whole.plan.fromScratch.whole, true)
+    assert.ok(whole.plan.run.length > 0)
+    assert.ok(whole.plan.run.every((p) => p.reason === 'again'))
+    await r.drain()
+    assert.equal(r.calls.model, 2, 'the held reading is not reused')
+    // A run limited to some parts keeps the reading it holds when nothing it reads changed.
+    const limited = await again(['google-places'])
+    assert.equal(limited.plan.fromScratch.whole, false)
+    await r.drain()
+    assert.equal(r.calls.model, 2)
   }
 )

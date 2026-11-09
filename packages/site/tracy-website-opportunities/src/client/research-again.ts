@@ -4,13 +4,16 @@
  * account pays) and the public Find (`GET /find/api/research-again`, Tracy pays) draw the same view.
  * Nothing here decides what is due: the server's plan does.
  */
-export type AgainRunReason = 'never' | 'failed' | 'outdated' | 'rule-changed'
+/** `again`: the account's press researches from scratch, so every part runs whatever its age. */
+export type AgainRunReason = 'never' | 'failed' | 'outdated' | 'rule-changed' | 'again'
 export type AgainKeptReason = 'up-to-date' | 'none' | 'unavailable' | 'over-cap'
 
 export interface AgainPlan {
   run: { part: string; reason: AgainRunReason; ceilingCents: number }[]
   kept: { part: string; reason: AgainKeptReason; detail?: string }[]
   ceilingCents: number
+  /** True: every part is collected again and the business is read again from scratch (the account's press). */
+  fromScratch: boolean
 }
 
 export interface AgainPreview {
@@ -23,7 +26,7 @@ export interface AgainPreview {
   left: number | null
 }
 
-const RUN_REASONS = new Set<string>(['never', 'failed', 'outdated', 'rule-changed'])
+const RUN_REASONS = new Set<string>(['never', 'failed', 'outdated', 'rule-changed', 'again'])
 const KEPT_REASONS = new Set<string>(['up-to-date', 'none', 'unavailable', 'over-cap'])
 
 const record = (v: unknown): v is Record<string, unknown> =>
@@ -48,7 +51,12 @@ function readPlan(raw: unknown): AgainPlan | null {
     return [{ part, reason: k.reason, ...(detail ? { detail } : {}) }]
   })
   const total = cents(raw.ceilingCents)
-  return { run, kept, ceilingCents: total > 0 ? total : run.reduce((sum, r) => sum + r.ceilingCents, 0) }
+  return {
+    run,
+    kept,
+    ceilingCents: total > 0 ? total : run.reduce((sum, r) => sum + r.ceilingCents, 0),
+    fromScratch: raw.fromScratch === true
+  }
 }
 
 /** Either door's answer; null when it is not one. */
@@ -80,6 +88,8 @@ export interface AgainView {
   total: string
   /** How many parts would run; 0 = everything is up to date. */
   due: number
+  /** The plan researches from scratch (`AgainPlan.fromScratch`). */
+  fromScratch: boolean
 }
 
 export function againView(plan: AgainPlan, locale?: string): AgainView {
@@ -98,7 +108,8 @@ export function againView(plan: AgainPlan, locale?: string): AgainView {
     })),
     kept,
     total: formatCents(plan.ceilingCents, locale),
-    due: plan.run.length
+    due: plan.run.length,
+    fromScratch: plan.fromScratch
   }
 }
 

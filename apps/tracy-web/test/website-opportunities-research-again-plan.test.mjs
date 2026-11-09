@@ -114,3 +114,39 @@ test('a plan over a cap drops its dearest parts first and says so', () => {
   assert.deepEqual(plan.kept.at(-1), { part: 'facebook-search', reason: 'over-cap' })
   assert.equal(plan.ceilingCents, 5)
 })
+
+test('from scratch, every part runs again whatever its age; only parts this server cannot run are kept', () => {
+  const fresh = { status: 'complete', collected_at: at(HOUR), attempted_at: at(HOUR) }
+  const plan = researchAgainPlan(
+    {
+      website: fresh,
+      'google-places': fresh,
+      youtube: { status: 'skipped', reason: 'not_found', attempted_at: at(HOUR) }
+    },
+    {
+      now: NOW,
+      parts: ['website', 'youtube', 'google-places', 'menu-photos', 'tiktok'],
+      unavailable: { tiktok: 'credential_missing' },
+      prices: { website: 3, 'google-places': 2 },
+      // The place has no menu photo to read.
+      custom: { 'menu-photos': { due: false, kept: 'none' } },
+      fromScratch: true
+    }
+  )
+  assert.deepEqual(plan.run, [
+    { part: 'website', reason: 'again', ceilingCents: 3 },
+    { part: 'youtube', reason: 'again', ceilingCents: 0 },
+    { part: 'google-places', reason: 'again', ceilingCents: 2 }
+  ])
+  assert.deepEqual(plan.kept, [
+    { part: 'menu-photos', reason: 'none' },
+    { part: 'tiktok', reason: 'unavailable', detail: 'credential_missing' }
+  ])
+  assert.equal(plan.ceilingCents, 5)
+  // The same rows without it: nothing is due.
+  const due = researchAgainPlan(
+    { website: fresh, 'google-places': fresh },
+    { now: NOW, parts: ['website', 'google-places'] }
+  )
+  assert.deepEqual(due.run, [])
+})

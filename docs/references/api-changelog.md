@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-09: Research again from scratch
+
+Changed `POST /api/website-opportunities/:id/research` with `again: true` and `GET /api/website-opportunities/:id/research-again` (internal): the account's Research again runs every part this deployment can collect, whatever its age, with the new run reason `again`, and re-reads the logo and the business without reusing an earlier reading; `kept` holds only `unavailable` parts and menu photos the place has none of (`none`), and the plan carries `fromScratch: true`. 409 `NOTHING_DUE` now means no part can run here. The public `/find` Research again is unchanged.
+
 ## 2026-11-09: Sources from pasted links
 
 Added optional field `pastedLink` on rows of `sources` in `GET /api/website-opportunities/:id` (internal): on a source that a link the person pasted feeds (Add a business by its links), the link as they pasted it; rows research found by itself carry none.
