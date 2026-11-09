@@ -87,3 +87,15 @@ test('a template part with no row in the dump, or two, is refused by name', () =
   }))
   assert.throws(() => templatePartEntitiesOf(two, ['footer']), /template part footer resolves to 2 rows/)
 })
+
+test('a text option whose stored value has a line break is a multiline slot, a one-line value is not', () => {
+  const got = themeTextSlotsOf({
+    options: ['wp_demo_bistro_contact_address', 'wp_demo_bistro_contact_phone'],
+    values: new Map([
+      ['wp_demo_bistro_contact_address', '1 Example Road,\nSometown'],
+      ['wp_demo_bistro_contact_phone', '(555) 010-2030']
+    ])
+  })
+  assert.equal(got.slots[0].multiline, true)
+  assert.equal('multiline' in got.slots[1], false)
+})

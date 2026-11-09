@@ -5,14 +5,14 @@
  * theme (a footer line that now prints a token) shows on the stand, in the pack and in the sweep only when the row
  * is written again. Nothing else is touched: pages, options and posts stay as they are.
  *
- *   node sync-theme-to-stand.mjs --theme-zip <zip> --webroot <stand webroot> --wp "<wp-cli runner>" [--parts footer,header]
+ *   node sync-theme-to-stand.mjs --theme-zip <zip> --webroot <stand webroot> --wp "<wp-cli runner>" [--parts footer,header] [--options <option file>]
  *
  * The runner is the stand's wp-cli prefix (the same string the patch chain takes as --wp-a); the webroot is the folder
  * that runner sees as /var/www/html. Run it before the cycle (prune, pack, restore, verify), then read the part again.
  * Exit 0 done, 1 a command failed, 2 usage.
  */
 import { execFileSync } from 'node:child_process'
-import { existsSync, rmSync } from 'node:fs'
+import { existsSync, readFileSync, rmSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { parseArgs } from 'node:util'
@@ -35,6 +35,27 @@ export function syncCommands({ slug, parts, ids }) {
   return out
 }
 
+/**
+ * The wp-cli argument lists that store the declared option values (a committed file `{ version: 1, options: { name: value } }`),
+ * for a value the stand's seed holds in another shape (an address with its line break). Names keep to the theme's prefix.
+ * @param {{ version?: number, options?: Record<string, string> }} file
+ * @param {string} slug the theme slug (`wp-ja-diner` gives the prefix `wp_ja_diner_`)
+ * @returns {string[][]}
+ */
+export function optionCommands(file, slug) {
+  if (file?.version !== 1 || typeof file.options !== 'object' || file.options === null)
+    throw new Error('option file: version must be 1 and options an object')
+  const prefix = `${slug.replace(/-/g, '_')}_`
+  return Object.entries(file.options).map(([name, value]) => {
+    if (!name.startsWith(prefix) || !/^[A-Za-z0-9_]{1,64}$/.test(name))
+      throw new Error(
+        `option ${JSON.stringify(name)} is not one of the theme ${slug} (its name starts ${prefix})`
+      )
+    if (typeof value !== 'string') throw new Error(`option ${name} must be a string`)
+    return ['option', 'update', name, value]
+  })
+}
+
 /** Shell-split a runner string on spaces (it holds no quoting beyond double quotes around nothing we use). */
 const words = (s) => s.trim().split(/\s+/)
 
@@ -44,7 +65,8 @@ function main() {
       'theme-zip': { type: 'string' },
       webroot: { type: 'string' },
       wp: { type: 'string' },
-      parts: { type: 'string', default: 'footer' }
+      parts: { type: 'string', default: 'footer' },
+      options: { type: 'string' }
     }
   })
   if (!o['theme-zip'] || !o.webroot || !o.wp) {
@@ -78,6 +100,11 @@ function main() {
     wp(args)
     process.stdout.write(`synced ${args[2]} from ${path.basename(args[3])}\n`)
   }
+  if (o.options)
+    for (const args of optionCommands(JSON.parse(readFileSync(o.options, 'utf8')), slug)) {
+      wp(args)
+      process.stdout.write(`option ${args[2]} stored\n`)
+    }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main()

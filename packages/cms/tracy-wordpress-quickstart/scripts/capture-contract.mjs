@@ -399,6 +399,8 @@ export function themeTextSlotsOf({ options, values }) {
       target: { option: name },
       type: 'text',
       sample,
+      // a stored value with a line break keeps its breaks when the plugin writes it (`multiline: true`)
+      ...(/[\r\n]/.test(sample) ? { multiline: true } : {}),
       maxCharacters: Math.max(80, Math.min(2000, sample.length * 2 + 20)),
       label: `Theme text — ${name}`
     })

@@ -62,6 +62,18 @@ function wp_ja_diner_text_option( string $option ): string {
 }
 
 /**
+ * A theme text option's words as HTML: escaped, with each line break of a multiline value drawn as a `<br>` (the address
+ * the footer prints on two lines). A one-line value has no break and prints as plain escaped text.
+ *
+ * @param string $value The option's words.
+ * @return string
+ */
+function wp_ja_diner_text_html( string $value ): string {
+	$lines = preg_split( '/\R/', $value );
+	return implode( '<br>', array_map( 'esc_html', false === $lines ? array( $value ) : $lines ) );
+}
+
+/**
  * A paragraph's or Custom HTML block's tokens, filled.
  *
  * @param string $content The block as drawn.
@@ -77,7 +89,7 @@ function wp_ja_diner_identity_fill( $content ): string {
 		if ( 'site.title' === $token ) {
 			$values[ '{' . $token . '}' ] = esc_html( get_bloginfo( 'name' ) );
 		} elseif ( isset( WP_JA_DINER_TEXT_TOKENS[ $token ] ) ) {
-			$values[ '{' . $token . '}' ] = esc_html( wp_ja_diner_text_option( WP_JA_DINER_TEXT_TOKENS[ $token ] ) );
+			$values[ '{' . $token . '}' ] = wp_ja_diner_text_html( wp_ja_diner_text_option( WP_JA_DINER_TEXT_TOKENS[ $token ] ) );
 		}
 	}
 	return strtr( $content, $values );

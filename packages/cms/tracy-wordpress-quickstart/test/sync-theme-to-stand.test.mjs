@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { syncCommands } from '../scripts/sync-theme-to-stand.mjs'
+import { optionCommands, syncCommands } from '../scripts/sync-theme-to-stand.mjs'
 
 test('each database row of a named part is written from the theme file of that part', () => {
   const cmds = syncCommands({
@@ -19,4 +19,16 @@ test('a part with no database row writes nothing, and a name that is not plain i
   assert.deepEqual(syncCommands({ slug: 'wp-demo', parts: ['footer'], ids: {} }), [])
   assert.throws(() => syncCommands({ slug: 'wp-demo', parts: ['../x'], ids: {} }), /not a plain name/)
   assert.throws(() => syncCommands({ slug: 'wp demo;', parts: ['footer'], ids: {} }), /not a plain name/)
+})
+
+test('declared option values become option update commands, held to the theme prefix', () => {
+  const file = { version: 1, options: { wp_demo_contact_address: '1 Example Road,\nSometown' } }
+  assert.deepEqual(optionCommands(file, 'wp-demo'), [
+    ['option', 'update', 'wp_demo_contact_address', '1 Example Road,\nSometown']
+  ])
+  assert.throws(
+    () => optionCommands({ version: 1, options: { siteurl: 'x' } }, 'wp-demo'),
+    /not one of the theme/
+  )
+  assert.throws(() => optionCommands({ version: 2, options: {} }, 'wp-demo'), /version must be 1/)
 })
