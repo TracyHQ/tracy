@@ -1,15 +1,17 @@
 /**
- * The Content brief control of the Details page (#524): locked with a short reason until this card's research is done,
- * then a button that starts the brief as a background job. While the job runs, its steps show here and the page polls
- * it like Research; a failed job says why with Try again. A settled job hands over to the brief line (`onSettled`).
+ * The Content brief of the Details page (#524). `useBriefJob` owns the brief job: the press (from the stepper, or
+ * Refresh of an out-of-date brief), and the poll while it runs, like Research. `BriefControl` draws the Site brief
+ * block's status under the brief line: locked until research is done, the job's steps with a progress bar while it
+ * runs, and a failed job's plain reason with the step that stopped. The one Make content brief / Try again button
+ * lives in the stepper (mock r6-a), never here; only Refresh of an out-of-date brief stays as a secondary press.
  */
-import { type JSX, useEffect, useState } from 'react'
-import { CircleCheck, Clock } from 'lucide-react'
+import { type JSX, useCallback, useEffect, useState } from 'react'
+import { CircleAlert, CircleCheck, Circle } from 'lucide-react'
 import { Button, Spinner } from '@tracy/ui'
 
 import type { Api } from './api.ts'
 import { usePoll } from './poll.ts'
-import { briefControlView } from './research-gate-model.ts'
+import type { BriefControlView } from './research-gate-model.ts'
 import type { Translate } from './strings.ts'
 
 const requestId = (): string =>
@@ -17,31 +19,22 @@ const requestId = (): string =>
     ? `brief-${crypto.randomUUID()}`
     : `brief-${Date.now()}-${Math.random().toString(36).slice(2)}`
 
-export function BriefControl({
-  t,
-  api,
-  opportunityId,
-  research,
-  brief,
-  briefJob,
-  onJob,
-  onSettled
-}: {
-  t: Translate
-  api: Api
-  opportunityId: string
-  /** `body.research` of the Details answer. */
-  research: unknown
-  /** `body.brief` of the Details answer. */
-  brief: unknown
-  /** `body.briefJob` of the Details answer: a running job keeps showing after a reload. */
-  briefJob: unknown
-  /** The job as this control knows it (pressed here, then polled), for the parts of the page around it. */
-  onJob?: (job: unknown) => void
+export interface BriefJobControl {
+  /** The latest job as this page knows it (from the Details answer, then pressed and polled here). */
+  job: unknown
+  pressing: boolean
+  /** The last press was refused by the server. */
+  refused: boolean
+  press: () => Promise<void>
+}
+
+export function useBriefJob(
+  api: Api,
+  opportunityId: string,
+  briefJob: unknown,
   onSettled: () => void
-}): JSX.Element | null {
+): BriefJobControl {
   const [job, setJob] = useState<unknown>(briefJob)
-  useEffect(() => onJob?.(job), [job, onJob])
   const [pressing, setPressing] = useState(false)
   const [refused, setRefused] = useState(false)
   useEffect(() => setJob(briefJob), [briefJob])
@@ -55,8 +48,7 @@ export function BriefControl({
     setJob(next)
     if (typeof next === 'object' && next !== null && Reflect.get(next, 'state') !== 'running') onSettled()
   }, running)
-  const view = briefControlView({ research, brief, briefJob: job })
-  const press = async (): Promise<void> => {
+  const press = useCallback(async (): Promise<void> => {
     if (pressing) return
     setPressing(true)
     setRefused(false)
@@ -64,71 +56,102 @@ export function BriefControl({
     setPressing(false)
     if (!answer.ok || answer.body?.job === undefined) return setRefused(true)
     setJob(answer.body.job)
-  }
-  if (view.mode === 'none') return null
+  }, [api, opportunityId, pressing])
+  return { job, pressing, refused, press }
+}
+
+/** The Site brief block's chip: Working while the job runs, Failed when it stopped. */
+export function briefChip(view: BriefControlView): 'working' | 'failed' | null {
+  if (view.mode === 'running') return 'working'
+  if (view.mode === 'failed') return 'failed'
+  return null
+}
+
+export function BriefControl({
+  t,
+  view,
+  control
+}: {
+  t: Translate
+  view: BriefControlView
+  control: BriefJobControl
+}): JSX.Element | null {
+  const refused = control.refused ? (
+    <p className="tracy-wo-error" role="alert">
+      {t('brief.failed')}
+    </p>
+  ) : null
+  if (view.mode === 'none') return refused
   if (view.mode === 'note')
     return view.noteKey !== null ? <p className="tracy-wo-muted tracy-wo-small">{t(view.noteKey)}</p> : null
-  if (view.mode === 'running')
+  if (view.mode === 'locked')
+    return <p className="tracy-wo-muted tracy-wo-small">{t(view.reasonKey ?? 'brief.locked')}</p>
+  if (view.mode === 'running' || view.mode === 'failed') {
+    const doneCount = view.steps.filter((s) => s.state === 'done').length
     return (
-      <div className="tracy-wo-progress" role="status">
-        <span className="tracy-wo-progress-now">{t('brief.job.title')}</span>
-        <span
-          className="tracy-wo-progress-bar"
-          role="progressbar"
-          aria-label={t('brief.job.title')}
-          aria-valuemin={0}
-          aria-valuemax={view.steps.length}
-          aria-valuenow={view.steps.filter((s) => s.state === 'done').length}
-        >
+      <div className="tracy-wo-stack" role={view.mode === 'running' ? 'status' : undefined}>
+        {view.mode === 'running' ? (
+          <p>{t('brief.job.title')}</p>
+        ) : (
+          <p role="alert">{t(view.errorKey ?? 'brief.job.error.other')}</p>
+        )}
+        {view.steps.length > 0 ? (
+          <ol className="tracy-wo-brief-steps">
+            {view.steps.map((s) => (
+              <li key={s.step} data-state={s.state}>
+                {s.state === 'done' ? (
+                  <CircleCheck className="tracy-wo-icon is-done" aria-hidden="true" />
+                ) : s.state === 'running' ? (
+                  <Spinner label={t(s.labelKey)} />
+                ) : s.state === 'failed' ? (
+                  <CircleAlert className="tracy-wo-icon is-failed" aria-hidden="true" />
+                ) : (
+                  <Circle className="tracy-wo-icon is-waiting" aria-hidden="true" />
+                )}
+                <b>{t(s.labelKey)}</b>
+                <span>
+                  {t(
+                    `brief.job.state.${s.state === 'waiting' && view.mode === 'failed' ? 'notStarted' : s.state}`
+                  )}
+                </span>
+              </li>
+            ))}
+          </ol>
+        ) : null}
+        {view.mode === 'running' ? (
           <span
-            style={{
-              width: `${((view.steps.filter((s) => s.state === 'done').length + 0.5) / view.steps.length) * 100}%`
-            }}
-          />
-        </span>
-        <ol className="tracy-wo-progress-steps tracy-wo-small">
-          {view.steps.map((s) => (
-            <li key={s.step} data-state={s.state === 'running' ? 'current' : s.state}>
-              {s.state === 'done' ? (
-                <CircleCheck className="tracy-wo-icon" aria-hidden="true" />
-              ) : s.state === 'running' ? (
-                <Spinner label={t(s.labelKey)} />
-              ) : (
-                <Clock className="tracy-wo-icon" aria-hidden="true" />
-              )}
-              <b>{t(s.labelKey)}</b>
-            </li>
-          ))}
-        </ol>
+            className="tracy-wo-progress-bar"
+            role="progressbar"
+            aria-label={t('brief.job.title')}
+            aria-valuemin={0}
+            aria-valuemax={view.steps.length}
+            aria-valuenow={doneCount}
+          >
+            <span style={{ width: `${((doneCount + 0.5) / Math.max(1, view.steps.length)) * 100}%` }} />
+          </span>
+        ) : null}
       </div>
     )
+  }
+  // make: the stepper carries the press; a brief that is out of date keeps Refresh here, beside its line.
   return (
     <div className="tracy-wo-stack">
       {view.noteKey !== null ? <p className="tracy-wo-muted tracy-wo-small">{t(view.noteKey)}</p> : null}
-      {view.errorKey !== null ? (
-        <p className="tracy-wo-error" role="alert">
-          {t(view.errorKey)}
-        </p>
+      {view.labelKey === 'brief.refresh' ? (
+        <div className="tracy-wo-row tracy-wo-wrap">
+          <Button
+            type="button"
+            size="xs"
+            variant="outline"
+            disabled={control.pressing}
+            onClick={() => void control.press()}
+          >
+            {control.pressing ? <Spinner label={t('brief.refresh')} /> : null}
+            {t('brief.refresh')}
+          </Button>
+        </div>
       ) : null}
-      <div className="tracy-wo-row tracy-wo-wrap">
-        <Button
-          type="button"
-          size="xs"
-          disabled={view.mode === 'locked' || pressing}
-          onClick={() => void press()}
-        >
-          {pressing ? <Spinner label={t(view.labelKey ?? 'brief.make')} /> : null}
-          {t(view.labelKey ?? 'brief.make')}
-        </Button>
-        {view.reasonKey !== null ? (
-          <span className="tracy-wo-muted tracy-wo-small">{t(view.reasonKey)}</span>
-        ) : null}
-      </div>
-      {refused ? (
-        <p className="tracy-wo-error" role="alert">
-          {t('brief.failed')}
-        </p>
-      ) : null}
+      {refused}
     </div>
   )
 }

@@ -40,7 +40,7 @@ export interface BriefControlView {
   reasonKey: string | null
   noteKey: string | null
   errorKey: string | null
-  steps: { step: BriefStep; labelKey: string; state: 'done' | 'running' | 'waiting' }[]
+  steps: { step: BriefStep; labelKey: string; state: 'done' | 'running' | 'waiting' | 'failed' }[]
 }
 
 const ERRORS = new Set(['BRIEF_INTERRUPTED', 'BRIEF_INVALID', 'RESEARCH_NOT_DONE'])
@@ -52,11 +52,14 @@ const ERRORS = new Set(['BRIEF_INTERRUPTED', 'BRIEF_INVALID', 'RESEARCH_NOT_DONE
 export function briefControlView({
   research,
   brief,
-  briefJob
+  briefJob,
+  profileEditedAt = null
 }: {
   research: unknown
   brief: unknown
   briefJob?: unknown
+  /** When the seller last edited the Profile (`profileEditedAt`), or null. */
+  profileEditedAt?: string | null
 }): BriefControlView {
   const view: BriefControlView = {
     mode: 'none',
@@ -88,14 +91,32 @@ export function briefControlView({
   const hasBrief = text(b.id) !== null
   if (job.state === 'failed' && (!hasBrief || b.current !== true)) {
     const code = text(rec(job.error).code) ?? ''
+    const at = STEPS.indexOf((text(job.step) ?? '') as BriefStep)
     view.mode = 'failed'
     view.labelKey = 'action.tryAgain'
-    view.errorKey = `brief.job.error.${ERRORS.has(code) ? code.toLowerCase() : 'other'}`
+    // A known code reads its own sentence; anything else names the step that did not finish, never the raw code.
+    view.errorKey = ERRORS.has(code)
+      ? `brief.job.error.${code.toLowerCase()}`
+      : at >= 0
+        ? `brief.job.error.at.${STEPS[at]}`
+        : 'brief.job.error.other'
+    if (at >= 0)
+      view.steps = STEPS.map((step, i) => ({
+        step,
+        labelKey: `brief.job.step.${step}`,
+        state: i < at ? 'done' : i === at ? 'failed' : 'waiting'
+      }))
     return view
   }
   if (!hasBrief) {
     view.mode = 'make'
     view.labelKey = 'brief.make'
+    return view
+  }
+  if (b.current === false && editsNewer(b.createdAt, profileEditedAt)) {
+    // The seller's Profile edit is newer than the brief: a Refresh writes a brief with it, whatever the reading.
+    view.mode = 'make'
+    view.labelKey = 'brief.refresh'
     return view
   }
   if (b.current === false) {
@@ -107,6 +128,23 @@ export function briefControlView({
     if (refreshHelps) view.labelKey = 'brief.refresh'
   }
   return view
+}
+
+const editsNewer = (briefAt: unknown, editedAt: string | null): boolean => {
+  const brief = typeof briefAt === 'string' ? Date.parse(briefAt) : Number.NaN
+  const edit = editedAt === null ? Number.NaN : Date.parse(editedAt)
+  return Number.isFinite(brief) && Number.isFinite(edit) && edit > brief
+}
+
+/**
+ * The line of the Site brief block: up to date, out of date because the seller's Profile edit is newer than it, or
+ * out of date because the research or the rules moved on.
+ */
+export function briefLineKey(brief: unknown, profileEditedAt: string | null): string {
+  const b = rec(brief)
+  if (b.current === true) return 'brief.current'
+  if (b.current !== false) return 'brief.number'
+  return editsNewer(b.createdAt, profileEditedAt) ? 'brief.staleEdits' : 'brief.stale'
 }
 
 /** "Collected 26 Oct" of a source row with collected data, or null. */

@@ -1,7 +1,7 @@
 /**
- * The sticky header of Details (#517): Back, the place's name and type, its status, the one primary action (the Demo
- * site block's own button once the place is in the demo stage, else the row's next step such as Start research), and
- * a ⋯ menu with Send demo, Research again and Delete. It stays in sight while the tabs below scroll.
+ * The sticky header of Details (#517): Back, the place's name and type, its status, a ⋯ menu with Send demo, Research
+ * again and Delete, then the four steps with the one action of the current step (mock r6-a) and the tabs. It stays in
+ * sight while the tabs below scroll.
  */
 import type { JSX, ReactNode } from 'react'
 import { ChevronLeft, Ellipsis } from 'lucide-react'
@@ -32,10 +32,10 @@ export function DetailsHeader({
   branch,
   facts,
   status,
-  primary,
   menu,
   busy,
   tabs,
+  stepper,
   onBack
 }: {
   t: Translate
@@ -44,11 +44,12 @@ export function DetailsHeader({
   /** The line under the name: type, distance, price, when it was added. */
   facts: string[]
   status: ReactNode
-  primary: ReactNode
   menu: HeaderMenu
   busy: boolean
   /** The tab strip, kept in the sticky header so it stays in sight too. */
   tabs?: ReactNode
+  /** The four steps with the one action of the current step (`stepper.tsx`), above the tabs on every tab. */
+  stepper?: ReactNode
   onBack: () => void
 }): JSX.Element {
   return (
@@ -71,7 +72,6 @@ export function DetailsHeader({
           {facts.length > 0 ? <p className="tracy-wo-muted tracy-wo-small">{facts.join(' · ')}</p> : null}
         </div>
         <div className="tracy-wo-row tracy-wo-details-head-acts">
-          {primary}
           <DropdownMenu>
             {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
             <DropdownMenuTrigger
@@ -99,6 +99,7 @@ export function DetailsHeader({
           </DropdownMenu>
         </div>
       </div>
+      {stepper}
       {tabs}
     </header>
   )

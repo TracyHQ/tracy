@@ -46,3 +46,15 @@ export function typedHours(typed: string): string[] {
     .map((line) => line.trim())
     .filter((line) => line !== '')
 }
+
+/** When the seller last edited a Profile fact of this opportunity (`candidate.profileEdits[field].at`), or null. */
+export function profileEditedAt(opportunity: unknown): string | null {
+  const edits = rec(rec(rec(opportunity).candidate).profileEdits)
+  let latest: string | null = null
+  for (const edit of Object.values(edits)) {
+    const at = rec(edit).at
+    if (typeof at === 'string' && Number.isFinite(Date.parse(at)) && (latest === null || at > latest))
+      latest = at
+  }
+  return latest
+}

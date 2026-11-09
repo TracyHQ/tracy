@@ -7,7 +7,12 @@
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { briefControlView, collectedLine, researchOf } from '../src/client/research-gate-model.ts'
+import {
+  briefControlView,
+  briefLineKey,
+  collectedLine,
+  researchOf
+} from '../src/client/research-gate-model.ts'
 import { en } from '../src/client/strings.ts'
 
 const t = (key, params = {}) => {
@@ -110,4 +115,41 @@ test('a source row says when its data was collected, never when the job ended', 
   assert.equal(collectedLine(t, { collectedAt: '2026-10-26T09:00:00Z' }, 'en-GB'), 'Collected 26 Oct')
   assert.equal(collectedLine(t, { collectedAt: null }, 'en'), null)
   assert.equal(collectedLine(t, {}, 'en'), null)
+})
+
+test('a Profile edit newer than the brief says so, and Refresh is offered even for an older reading', () => {
+  const brief = {
+    id: 'b',
+    n: 3,
+    createdAt: '2026-11-09T14:00:00Z',
+    current: false,
+    readingOld: true,
+    sameResearch: false
+  }
+  assert.equal(briefLineKey(brief, '2026-11-09T15:00:00Z'), 'brief.staleEdits')
+  assert.equal(briefLineKey(brief, '2026-11-09T13:00:00Z'), 'brief.stale')
+  assert.equal(briefLineKey({ ...brief, current: true }, '2026-11-09T15:00:00Z'), 'brief.current')
+  const view = briefControlView({
+    research: { state: 'done' },
+    brief,
+    profileEditedAt: '2026-11-09T15:00:00Z'
+  })
+  assert.equal(view.mode, 'make')
+  assert.equal(view.labelKey, 'brief.refresh')
+  assert.equal(view.noteKey, null, 'no line about an older reading when the edit is the news')
+  assert.match(en['brief.staleEdits'], /Profile edits are newer/)
+})
+
+test('a failed brief job names the step that stopped, never its raw code', () => {
+  const view = briefControlView({
+    research: { state: 'done' },
+    brief: null,
+    briefJob: { state: 'failed', step: 'writing', error: { code: 'SOME_PROVIDER_KEY_MISSING' } }
+  })
+  assert.equal(view.errorKey, 'brief.job.error.at.writing')
+  assert.deepEqual(
+    view.steps.map((s) => s.state),
+    ['done', 'done', 'failed']
+  )
+  assert.doesNotMatch(en[view.errorKey], /[A-Z]{3,}_/)
 })
