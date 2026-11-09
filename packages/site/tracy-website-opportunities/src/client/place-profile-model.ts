@@ -116,7 +116,7 @@ function claimRows(v: unknown, detailKey: string): ClaimView[] {
 }
 
 /** `null` when the answer is not a profile document. */
-export function placeProfileView(profile: unknown): PlaceProfileView | null {
+export function placeProfileView(profile: unknown, locale?: string): PlaceProfileView | null {
   const doc = rec(profile)
   if (!Array.isArray(doc.coverage) || typeof doc.schema !== 'string') return null
   const offerings: OfferingView[] = facts(doc.offerings).flatMap(({ id, value }) => {
@@ -150,7 +150,9 @@ export function placeProfileView(profile: unknown): PlaceProfileView | null {
     const label = text(value.label)
     if (label === null || typeof value.amount !== 'number') return []
     const unit = text(value.unit)
-    return [{ id, label, detail: `${value.amount}${unit === null ? '' : ` ${unit}`}` }]
+    // A figure reads as the interface writes numbers (1,819), like the Business brief table above it.
+    const amount = new Intl.NumberFormat(locale).format(value.amount)
+    return [{ id, label, detail: `${amount}${unit === null ? '' : ` ${unit}`}` }]
   })
   const names = new Map<string, string>()
   for (const o of offerings) names.set(o.id, o.name)

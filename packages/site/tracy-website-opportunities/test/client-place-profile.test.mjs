@@ -114,6 +114,7 @@ test('a figure research records under a code reads in plain words, never its cod
       claims: {
         statistics: [
           fact('s1', { amount: 4, label: 'reviewCount', scope: 'business' }),
+          fact('s3', { amount: 1819, label: 'followers', scope: 'business' }),
           fact('s2', { amount: 900, label: 'monthlyVisits', scope: 'business' })
         ],
         recognitions: [],
@@ -124,6 +125,7 @@ test('a figure research records under a code reads in plain words, never its cod
   assert.doesNotMatch(html, />reviewCount</)
   assert.match(html, /\[pp\.stat\.reviewCount\]<\/span><span[^>]*> · 4</)
   assert.match(html, /Monthly visits<\/span>/)
+  assert.match(html, /\[pp\.stat\.followers\]<\/span><span[^>]*> · 1,819</)
 })
 
 test('a block with no data is left out, never drawn empty', () => {

@@ -89,7 +89,7 @@ export function PlaceProfileBlock({
   profile: unknown
   failed: boolean
 }): JSX.Element | null {
-  const view: PlaceProfileView | null = placeProfileView(profile)
+  const view: PlaceProfileView | null = placeProfileView(profile, interfaceLocale())
   if (view === null)
     return failed ? (
       <Section title={t('pp.title')}>
