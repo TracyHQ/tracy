@@ -1,0 +1,3 @@
+- **Record checked JA Vega 1.0.10 stylesheet compatibility** — template readiness maintainers · PR pending · `fix/ja-vega-readiness` · 2026-11-10
+  **Affects:** the JA Vega design-system range through 1.0.10. Its note now explains the static CSS evidence and preserves the earlier checked-version history; geometry, emitter behaviour, runtime and full readiness remain separate evidence.
+  **Why / Measured:** compared all 22 template CSS files with checked 1.0.8: only `css/template.css` changed, adding heading typography and card alignment. All 1,071 colour reads remain, with no per-file DS variable read loss. The saved exact 1.0.10 stock CSS-1 and CSS-2 results both pass and are reused.
