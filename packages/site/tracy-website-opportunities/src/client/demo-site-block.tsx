@@ -3,7 +3,7 @@
  * Building, Open demo, Build again), a ⋯ menu for the rest (Send demo, Rebuild) and one plain line (ready with its
  * address and days left, where a failed build stopped and why, when it expired). It replaces the scattered Try again,
  * Retry, Rebuild, Reopen, Extend and Review demo controls. The build progress card sits inside it while a build runs
- * or after one stopped.
+ * or after one stopped. Under a Build demo button sits the same time and price line as the Build form.
  */
 import type { JSX, ReactNode } from 'react'
 import { ExternalLink, Ellipsis } from 'lucide-react'
@@ -25,6 +25,8 @@ import {
   demoBlockView,
   demoCommand
 } from './demo-block-model.ts'
+import type { ChainEstimate } from '@tracy/wo-views'
+import { BuildEstimate } from './demo-progress.tsx'
 import type { OpportunityListRow } from './opportunity-row.ts'
 import { Section } from './details-parts.tsx'
 import type { Translate } from './strings.ts'
@@ -40,7 +42,8 @@ export function DemoSiteBlock({
   busy,
   limitReached = false,
   onCommand,
-  progress
+  progress,
+  estimate
 }: {
   t: Translate
   row: OpportunityListRow
@@ -54,6 +57,8 @@ export function DemoSiteBlock({
   onCommand: (command: Exclude<DemoCommand, null>) => void
   /** The build progress card, drawn while a build runs or after one stopped. */
   progress?: ReactNode
+  /** The pinned or suggested template's measured time and price, drawn under Build demo as on the Build form. */
+  estimate?: ChainEstimate | null
 }): JSX.Element {
   const view = demoBlockView(row, detail, t, { now, locale })
   const press = (control: DemoControl): void => {
@@ -62,6 +67,7 @@ export function DemoSiteBlock({
   }
   const failed = view.state === 'failed'
   const showProgress = view.state === 'queued' || view.state === 'building' || failed
+  const builds = view.primary.action === 'build' || view.primary.action === 'rebuild'
   return (
     <Section title={t('demoBlock.title')}>
       <div className="tracy-wo-demo-block" data-state={view.state}>
@@ -102,6 +108,7 @@ export function DemoSiteBlock({
             </DropdownMenu>
           ) : null}
         </div>
+        {builds ? <BuildEstimate t={t} locale={locale} estimate={estimate} /> : null}
         {showProgress && progress ? progress : null}
       </div>
     </Section>

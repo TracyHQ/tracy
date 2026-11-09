@@ -2,6 +2,7 @@
  * An opportunity's answer, read for the screen. Only what the server sent is drawn: an empty field is
  * left out (it belongs in the brief's `missing` list, not on screen as a guess).
  */
+import { failureReason } from '@tracy/wo-views/demo-state'
 import { SOCIAL_NETWORKS, socialLine, type SocialLine } from '@tracy/wo-views/model'
 
 import { toSocialStat } from './flow.ts'
@@ -740,4 +741,12 @@ export function tripadvisorReviewView(profile: unknown, media: MediaTile[] = [])
       ]
     })
     .slice(0, 10)
+}
+
+/** A server reason that is a code (`ALL_CAPS_WITH_UNDERSCORES`) reads as its plain sentence; a sentence stays as is. */
+export function failureReasonText(
+  reason: string,
+  t: (key: string, params?: Record<string, unknown>) => string
+): string {
+  return /^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$/.test(reason.trim()) ? failureReason(reason.trim(), t) : reason
 }

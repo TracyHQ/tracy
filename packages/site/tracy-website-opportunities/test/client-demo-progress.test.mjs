@@ -1,7 +1,6 @@
 /**
- * The demo progress cells (`src/client/demo-progress.tsx`): a failed demo action always draws its reason, whatever
- * an older check of the same build said; a step chain build draws its own steps, minutes left and cost so far (#516),
- * and the Build button line says the measured time and price. Bundles the real component with React 18 and renders static markup.
+ * The demo progress card (`src/client/demo-progress.tsx`): a step chain build draws its own steps, minutes left and
+ * cost so far (#516), and the Build button line says the measured time and price. Bundles the real component with React 18 and renders static markup.
  */
 import assert from 'node:assert/strict'
 import { existsSync, mkdtempSync, readdirSync, rmSync } from 'node:fs'
@@ -33,7 +32,7 @@ before(async () => {
       contents: `
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
-        export { BuildEstimate, DemoProgress, ProgressCell, Steps, buildEstimateText } from './demo-progress.tsx'
+        export { BuildEstimate, DemoProgress, buildEstimateText } from './demo-progress.tsx'
         export { chainProgressView } from '@tracy/wo-views'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
@@ -56,49 +55,6 @@ before(async () => {
 })
 after(() => {
   if (outDir) rmSync(outDir, { recursive: true, force: true })
-})
-
-const t = (key) => `[${key}]`
-const row = {
-  id: 'o1',
-  demoAction: { id: 'a1', state: 'failed', step: 'check', error: 'DEMO_STEP_TIMEOUT' },
-  latestBuild: { id: 'b1', state: 'done', done: true, qa: 'passed' },
-  latestRevision: { id: 'r1', cms: 'wordpress' }
-}
-
-test('a failed action over a build whose older check passed draws its reason, in the list cell and the steps', () => {
-  for (const Component of [lib.ProgressCell, lib.Steps]) {
-    const html = lib.renderToStaticMarkup(lib.createElement(Component, { t, row, locale: 'en', now: 0 }))
-    assert.match(html, /\[reason\.demo_step_timeout\]/, Component.name)
-    assert.doesNotMatch(html, /\[v3\.demoReady\]/, Component.name)
-  }
-})
-
-test('a Retry still running over an older passed check draws its progress, not Demo ready', () => {
-  const running = { ...row, demoAction: { id: 'a2', state: 'queued', step: 'build', error: null } }
-  for (const Component of [lib.ProgressCell, lib.Steps]) {
-    const html = lib.renderToStaticMarkup(
-      lib.createElement(Component, { t, row: running, locale: 'en', now: 0 })
-    )
-    assert.doesNotMatch(html, /\[v3\.demoReady\]/, Component.name)
-  }
-  const cell = lib.renderToStaticMarkup(
-    lib.createElement(lib.ProgressCell, { t, row: running, locale: 'en', now: 0 })
-  )
-  assert.match(cell, /\[v3\.step\.build\]/)
-  assert.match(cell, /\[v3\.building\]/)
-})
-
-test('Find sources is open once research has started, done included, and closed while nothing has started', () => {
-  const sources = lib.createElement('p', null, 'source rows')
-  const draw = (job) =>
-    lib.renderToStaticMarkup(
-      lib.createElement(lib.Steps, { t, row: { id: 'o2', job }, locale: 'en', now: 0, children: sources })
-    )
-  for (const state of ['completed', 'running', 'failed', 'cancelled'])
-    assert.match(draw({ state, stage: 'collection' }), /<details open="">/, state)
-  assert.match(draw(null), /<details><summary/)
-  assert.match(draw({ state: 'queued' }), /<details><summary/)
 })
 
 /** A translator that shows the parameters, so a number on the card can be asserted. */
@@ -136,8 +92,8 @@ const chainRow = (run, action = {}) => ({
   latestRevision: { id: 'r3', cms: 'joomla' }
 })
 const OLD = /v3\.step\.(brief|build|fill|check)/
-const draw = (row, Component = lib.DemoProgress) =>
-  lib.renderToStaticMarkup(lib.createElement(Component, { t: tp, row, locale: 'en', now: NOW }))
+const draw = (row) =>
+  lib.renderToStaticMarkup(lib.createElement(lib.DemoProgress, { t: tp, row, locale: 'en', now: NOW }))
 
 test('the progress model: bar over the chain steps, minutes left from the estimate, cost so far', () => {
   const view = lib.chainProgressView(chainRun(), NOW)
@@ -186,8 +142,7 @@ test('a finished chain reads Ready and a stopped one names its step, never the o
   const stopped = draw(chainRow(chainRun(), { state: 'failed', error: 'DEMO_STEP_TIMEOUT' }))
   assert.match(stopped, /\[progress\.stopped step=\[progress\.step\.pictures\]\]/)
   assert.match(stopped, /\[reason\.demo_step_timeout\]/)
-  for (const Component of [lib.DemoProgress, lib.ProgressCell, lib.Steps])
-    assert.doesNotMatch(draw(chainRow(chainRun()), Component), OLD, Component.name)
+  assert.doesNotMatch(draw(chainRow(chainRun())), OLD)
 })
 
 test('under the Build button: the measured time and price, the first build note, or nothing', () => {

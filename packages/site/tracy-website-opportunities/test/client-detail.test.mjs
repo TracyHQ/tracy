@@ -10,6 +10,7 @@ import {
   brandColors,
   brandObservation,
   buildFailure,
+  failureReasonText,
   googlePlaceView,
   mediaRowView,
   mediaTile,
@@ -755,4 +756,14 @@ test('Google amenities any trade can have read as amenities: restroom, accessibi
   )
   assert.deepEqual(view.notOffered, ['acceptsCashOnly'])
   for (const id of ids) assert.equal(typeof EN_STRINGS[`amenity.${id}`], 'string', id)
+})
+
+test('a build failure reason that is a code reads as its plain sentence; a sentence is shown as is', () => {
+  const t = (key) => `[${key}]`
+  assert.equal(failureReasonText('DEMO_STEP_TIMEOUT', t), '[demo.reason.timeout]')
+  assert.equal(failureReasonText('SOMETHING_NEW_HERE', t), '[demo.reason.unknown]')
+  assert.equal(
+    failureReasonText('The server did not answer in time.', t),
+    'The server did not answer in time.'
+  )
 })

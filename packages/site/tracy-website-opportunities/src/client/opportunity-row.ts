@@ -157,7 +157,7 @@ export const ACTION_VIEW: Readonly<
   'retry-demo': { labelKey: 'action.retry', variant: 'outline' },
   'send-demo': { labelKey: 'v3.sendDemo', variant: 'default' },
   'open-demo-chat': { labelKey: 'v3.openDemoChat', variant: 'outline' },
-  'open-site': { labelKey: 'v3.reviewDemo', variant: 'outline' }
+  'open-site': { labelKey: 'demo.primary.open', variant: 'outline' }
 }
 const MOVING = new Set(['queued', 'running'])
 const hasJobId = (row: OpportunityListRow): boolean => typeof row.job?.id === 'string' && row.job.id !== ''

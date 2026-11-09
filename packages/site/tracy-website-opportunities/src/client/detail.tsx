@@ -60,6 +60,7 @@ import {
   googlePlaceView,
   mediaRowView,
   mediaTile,
+  failureReasonText,
   pageSpeedView,
   profileFields,
   socialStatsLines
@@ -291,6 +292,7 @@ export function DetailView({
   const [actionFailed, setActionFailed] = useState(false)
   const [logoBusy, setLogoBusy] = useState(false)
   const [logoFailed, setLogoFailed] = useState(false)
+  const buildChoices = useBuildChoices(api)
   const retrySource = useSourceRetry(api, ids, id, async () => {
     await reload()
     onChanged()
@@ -625,6 +627,9 @@ export function DetailView({
                 limitReached={limitReached}
                 onCommand={onDemo}
                 progress={progress}
+                estimate={
+                  buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null).template?.estimate
+                }
               />
             ) : null}
             <Demos
@@ -1068,7 +1073,8 @@ function Social({ t, lines }: { t: Translate; lines: SocialLine[] }): JSX.Elemen
 
 /**
  * Demos and the site brief (Lee, 23/10/2026): a brief is the research frozen once and names no template, so the
- * card lists every demo with what it was built with and the brief it came from; the brief line says whether the
+ * card lists every demo with what it was built with and the brief it came from (hidden while there is none, the Demo
+ * site block says so); the brief line says whether the
  * research still reads the same, with Refresh to make a new brief now and View brief to read it.
  */
 function Demos({
@@ -1107,10 +1113,9 @@ function Demos({
   const when = status ? relativeTime(status.createdAt, Date.now(), locale) : ''
   return (
     <>
-      <Section title={t('demos.title')}>
-        {rows.length === 0 ? (
-          <p className="tracy-wo-muted">{t('demos.none')}</p>
-        ) : (
+      {/* No demo yet: the Demo site block above already says so; the list only appears once there is a history. */}
+      {rows.length === 0 ? null : (
+        <Section title={t('demos.title')}>
           <ul className="tracy-wo-briefs">
             {rows.map((r) => {
               const facts = [
@@ -1144,8 +1149,8 @@ function Demos({
               )
             })}
           </ul>
-        )}
-      </Section>
+        </Section>
+      )}
       <Section title={t('revision.document')}>
         {status === null ? (
           <p className="tracy-wo-muted">{t('brief.none')}</p>
@@ -1264,6 +1269,21 @@ export function RevisionView({
   )
 }
 
+/** The templates this server offers per CMS and the one /ops/wo pins (`GET /capabilities`); null until read or when absent. */
+function useBuildChoices(api: Api): BuildChoices | null {
+  const [choices, setChoices] = useState<BuildChoices | null>(null)
+  useEffect(() => {
+    let live = true
+    void api.capabilities().then((answer) => {
+      const offered = answer.ok ? answer.body.templates : undefined
+      if (live && offered && !('error' in offered)) setChoices(offered)
+    })
+    return () => {
+      live = false
+    }
+  }, [api])
+  return choices
+}
 export function Build({
   t,
   api,
@@ -1332,19 +1352,9 @@ export function Build({
   usePoll(read, buildId !== null && (status === null || status.phase === 'running'))
 
   // The CMS and template are the person's choice; the template /ops/wo pins for the CMS is preselected.
-  const [choices, setChoices] = useState<BuildChoices | null>(null)
+  const choices = useBuildChoices(api)
   const [pickedCms, setPickedCms] = useState<string | null>(null)
   const [pickedDesign, setPickedDesign] = useState<string | null>(null)
-  useEffect(() => {
-    let live = true
-    void api.capabilities().then((answer) => {
-      const offered = answer.ok ? answer.body.templates : undefined
-      if (live && offered && !('error' in offered)) setChoices(offered)
-    })
-    return () => {
-      live = false
-    }
-  }, [api])
   const picked = buildChoice(choices, cms, pickedCms, pickedDesign)
   const { cmsList, cms: buildCms, template: buildTemplate } = picked
   const offered = choices?.[buildCms]
@@ -1539,7 +1549,7 @@ export function Build({
         </p>
       )}
       {status?.phase === 'failed' && failure?.reason ? (
-        <p className="tracy-wo-muted tracy-wo-small">{failure.reason}</p>
+        <p className="tracy-wo-muted tracy-wo-small">{failureReasonText(failure.reason, t)}</p>
       ) : null}
       {status?.phase === 'failed' && failure?.actionId && (
         <Button

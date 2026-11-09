@@ -58,8 +58,8 @@ import {
   toPlaceRow
 } from './my-list.ts'
 import { MyPlaces, MyViewSwitch } from './my-places.tsx'
-import { type NextRun, placePieces, secondaryLines } from './opportunity-pieces.ts'
-import { type NextAction, type OpportunityListRow, statusView } from './opportunity-row.ts'
+import { type NextRun, placePieces, placeStatus, secondaryLines } from './opportunity-pieces.ts'
+import type { NextAction, OpportunityListRow } from './opportunity-row.ts'
 import { POLL_MS, onBackInSight, usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
 import { photoActions, useMaps } from './results.tsx'
@@ -607,7 +607,7 @@ export function MyOpportunitiesView({
         }}
         pin={(place) => {
           const row = rowOf(place)
-          return { ...stagePin(row), title: `${place.name} · ${t(statusView(row).key)}` }
+          return { ...stagePin(row), title: `${place.name} · ${placeStatus(row, t).label}` }
         }}
         legend={
           <>
