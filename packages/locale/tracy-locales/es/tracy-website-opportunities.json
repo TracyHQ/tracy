@@ -661,6 +661,7 @@
   "delete.deleting": "Eliminando…",
   "delete.result": "{deleted} eliminados · {failed} con error",
   "delete.siteBusy": "Un sitio de demostración está ocupado ahora. Espera un momento y vuelve a eliminar.",
+  "delete.buildRunning": "Todavía se está creando una demo. Espera a que termine y luego elimina.",
   "map.legend.steps": "Otros pasos (el número es el paso)",
   "crumbs.label": "Ruta de navegación",
   "build.after": "Tras la construcción, aquí aparecen Abrir el site y Pasar al agent.",

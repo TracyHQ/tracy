@@ -661,6 +661,7 @@
   "delete.deleting": "正在删除…",
   "delete.result": "已删除 {deleted} · 失败 {failed}",
   "delete.siteBusy": "有一个演示 site 正忙。请稍候再删除。",
+  "delete.buildRunning": "演示仍在构建中。请等它完成后再删除。",
   "map.legend.steps": "其他步骤（数字即步骤）",
   "crumbs.label": "导航路径",
   "build.after": "搭建完成后，这里会出现“打开 site”和“交给 agent”。",

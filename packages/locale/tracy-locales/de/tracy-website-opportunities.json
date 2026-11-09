@@ -661,6 +661,7 @@
   "delete.deleting": "Wird gelöscht…",
   "delete.result": "{deleted} gelöscht · {failed} fehlgeschlagen",
   "delete.siteBusy": "Eine Demo-Site ist gerade belegt. Warten Sie kurz und löschen Sie dann erneut.",
+  "delete.buildRunning": "Eine Demo wird noch erstellt. Warten Sie, bis sie fertig ist, und löschen Sie dann.",
   "map.legend.steps": "Andere Schritte (die Zahl ist der Schritt)",
   "crumbs.label": "Brotkrumen",
   "build.after": "Nach dem Erstellen erscheinen hier „site öffnen“ und „An den agent übergeben“.",

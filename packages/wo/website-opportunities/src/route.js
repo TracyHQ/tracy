@@ -1471,6 +1471,13 @@ export function websiteOpportunitiesRoutes(deps) {
     if (deleted.ok)
       return json(c, { ok: true, deleted: { id: deleted.id, siteRemoved: deleted.siteRemoved } })
     if (deleted.code === 'NOT_FOUND') return notFound(c, 'opportunity')
+    if (deleted.code === 'DEMO_BUILD_RUNNING')
+      return refuse(
+        c,
+        409,
+        'DEMO_BUILD_RUNNING',
+        'A demo is still being built: wait for it to finish, then delete.'
+      )
     return refuse(
       c,
       409,

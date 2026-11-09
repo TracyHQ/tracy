@@ -524,6 +524,7 @@ export const en = {
   'delete.deleting': 'Deleting…',
   'delete.result': '{deleted} deleted · {failed} failed',
   'delete.siteBusy': 'A demo site is busy right now. Wait a moment, then delete again.',
+  'delete.buildRunning': 'A demo is still being built. Wait for it to finish, then delete.',
   /** The My opportunities map: a pin shows the step number, `!` when it waits for you. */
   'map.legend.steps': 'Other steps (the number is the step)',
   /** Accessible name of the `My opportunities › Name › Brief N` trail. */

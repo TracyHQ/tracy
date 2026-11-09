@@ -12,7 +12,7 @@ sources:
 
 ## 2026-11-09: Delete a saved opportunity
 
-Added `DELETE /api/website-opportunities/:id` (internal): cancels the row's live research job, tears its live demo sites down through the demo retention path, then deletes the row; 409 `DEMO_TEARDOWN_FAILED` keeps it. `POST /api/website-opportunities/jobs/bulk` takes `action: "delete"` with `opportunityIds` (not `jobIds` or `filter`) and answers `deleted` and `sitesRemoved` beside `done`, `skipped` and `failed`.
+Added `DELETE /api/website-opportunities/:id` (internal): cancels the row's live research job, tears its live demo sites down through the demo retention path, then deletes the row; 409 `DEMO_BUILD_RUNNING` (a demo still being built) and 409 `DEMO_TEARDOWN_FAILED` keep it. `POST /api/website-opportunities/jobs/bulk` takes `action: "delete"` with `opportunityIds` (not `jobIds` or `filter`) and answers `deleted` and `sitesRemoved` beside `done`, `skipped` and `failed`.
 
 ## 2026-11-05: Pages of a site in many languages
 

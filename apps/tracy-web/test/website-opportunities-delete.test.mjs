@@ -86,7 +86,7 @@ async function world({ teardown = 'started' } = {}) {
 let seq = 0
 
 /** A fictional place, with jobs in `jobs` states and, with `site`, a demo build on a site of that key. */
-async function seed(pool, accountId, { jobs = [], site = null, candidate = {} } = {}) {
+async function seed(pool, accountId, { jobs = [], site = null, build = 'done', candidate = {} } = {}) {
   const name = `Harbor Bakery ${++seq}`
   const opp = (
     await pool.query(
@@ -96,6 +96,8 @@ async function seed(pool, accountId, { jobs = [], site = null, candidate = {} } 
     )
   ).rows[0]
   const jobIds = []
+  const buildRequestId = `b-${randomUUID()}`
+  let revisionId = null
   for (const state of jobs) {
     const job = await pool.query(
       `insert into wo_job (account_id, opportunity_id, kind, request_id, state)
@@ -116,11 +118,12 @@ async function seed(pool, accountId, { jobs = [], site = null, candidate = {} } 
     )
     await pool.query(
       `insert into wo_build (account_id, revision_id, request_id, build_id, state, site_key, choice, choice_key)
-       values ($1, $2, $3, $4, 'done', $5, '{"cms":"joomla","cmsSource":"default","template":{"platform":"joomla","quickstart":"fixture","design":"fixture","version":"1"}}'::jsonb, 'fixture')`,
-      [accountId, rev.rows[0].id, `b-${randomUUID()}`, randomUUID(), site]
+       values ($1, $2, $3, $4, $6, $5, '{"cms":"joomla","cmsSource":"default","template":{"platform":"joomla","quickstart":"fixture","design":"fixture","version":"1"}}'::jsonb, 'fixture')`,
+      [accountId, rev.rows[0].id, buildRequestId, randomUUID(), site, build]
     )
+    revisionId = rev.rows[0].id
   }
-  return { ...opp, jobIds }
+  return { ...opp, jobIds, revisionId, buildRequestId }
 }
 
 const exists = async (pool, id) =>
@@ -174,8 +177,8 @@ test(
     const action = (
       await pool.query(
         `insert into wo_demo_action (account_id, opportunity_id, request_id, fingerprint, accepted_at, revision_id,
-         build_request_id, session_id, queued_at)
-       values ($1, $2, $3, 'fixture', now(), $4, $5, 'fixture', now()) returning id`,
+         build_request_id, session_id, queued_at, status)
+       values ($1, $2, $3, 'fixture', now(), $4, $5, 'fixture', now(), 'completed') returning id`,
         [acc, opp.id, randomUUID(), rev, randomUUID()]
       )
     ).rows[0].id
@@ -283,3 +286,88 @@ test('bulk delete: a filter or job ids are refused, over 500 is TOO_MANY', opts,
   assert.equal(many.status, 422)
   assert.equal(many.body.code, 'TOO_MANY')
 })
+
+/** A demo action of the opportunity, `status` as given, for the build request `buildRequestId`. */
+async function demoAction(pool, accountId, opp, { status, buildRequestId = `b-${randomUUID()}` }) {
+  const revisionId =
+    opp.revisionId ??
+    (
+      await pool.query(
+        `insert into wo_revision (opportunity_id, account_id, n, brief, brief_md)
+         values ($1, $2, 1, '{}'::jsonb, '') returning id`,
+        [opp.id, accountId]
+      )
+    ).rows[0].id
+  await pool.query(
+    `insert into wo_demo_action (account_id, opportunity_id, request_id, fingerprint, accepted_at, revision_id,
+       build_request_id, session_id, queued_at, status)
+     values ($1, $2, $3, 'fixture', now(), $4, $5, 'fixture', now(), $6)`,
+    [accountId, opp.id, randomUUID(), revisionId, buildRequestId, status]
+  )
+}
+
+test('delete waits for a demo still being built: 409 DEMO_BUILD_RUNNING, nothing changed', opts, async () => {
+  const { pool, call, accountOf, torn } = await world()
+  const acc = await accountOf(A)
+  // A build whose provision has not ended, with its site already named.
+  const provisioning = await seed(pool, acc, {
+    jobs: ['running'],
+    site: 'harbor-demo-4',
+    build: 'provisioning'
+  })
+  const res = await call(A, 'DELETE', `${BASE}/${provisioning.id}`)
+  assert.equal(res.status, 409)
+  assert.equal(res.body.code, 'DEMO_BUILD_RUNNING')
+  assert.ok(await exists(pool, provisioning.id))
+  const job = await pool.query('select state from wo_job where id = $1', [provisioning.jobIds[0]])
+  assert.equal(job.rows[0].state, 'running', 'the research job is not cancelled either')
+  // A queued demo action whose build has no site yet (its brief is being written).
+  const briefing = await seed(pool, acc)
+  await demoAction(pool, acc, briefing, { status: 'queued' })
+  assert.equal((await call(A, 'DELETE', `${BASE}/${briefing.id}`)).body.code, 'DEMO_BUILD_RUNNING')
+  // A demo action still queued on a build that failed before (a Retry under way on the same build).
+  const retry = await seed(pool, acc, { site: 'harbor-demo-5', build: 'failed' })
+  await demoAction(pool, acc, retry, { status: 'queued', buildRequestId: retry.buildRequestId })
+  assert.equal((await call(A, 'DELETE', `${BASE}/${retry.id}`)).body.code, 'DEMO_BUILD_RUNNING')
+  assert.deepEqual(torn, [], 'no teardown was started for a build still running')
+  assert.ok(await exists(pool, briefing.id))
+  assert.ok(await exists(pool, retry.id))
+})
+
+test(
+  'an action left open on a done build (the follow-up chat) does not hold the delete back',
+  opts,
+  async () => {
+    const { pool, call, accountOf, torn } = await world()
+    const acc = await accountOf(A)
+    const opp = await seed(pool, acc, { site: 'harbor-demo-6' })
+    await demoAction(pool, acc, opp, { status: 'queued', buildRequestId: opp.buildRequestId })
+    const res = await call(A, 'DELETE', `${BASE}/${opp.id}`)
+    assert.equal(res.status, 200, JSON.stringify(res.body))
+    assert.deepEqual(res.body.deleted, { id: opp.id, siteRemoved: true })
+    assert.equal(torn.length, 1)
+  }
+)
+
+test(
+  'bulk delete counts a row with a demo still being built as failed, and deletes the rest',
+  opts,
+  async () => {
+    const { pool, call, accountOf } = await world()
+    const acc = await accountOf(A)
+    const plain = await seed(pool, acc)
+    const building = await seed(pool, acc, { site: 'harbor-demo-7', build: 'requesting' })
+    const res = await call(A, 'POST', BULK, {
+      action: 'delete',
+      requestId: 'delete-00000005',
+      opportunityIds: [plain.id, building.id]
+    })
+    assert.equal(res.status, 200)
+    assert.deepEqual(res.body.results, [
+      { opportunityId: plain.id, ok: true, siteRemoved: false },
+      { opportunityId: building.id, ok: false, code: 'DEMO_BUILD_RUNNING' }
+    ])
+    assert.deepEqual([res.body.deleted, res.body.skipped, res.body.failed], [1, 0, 1])
+    assert.ok(await exists(pool, building.id))
+  }
+)

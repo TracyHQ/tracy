@@ -4757,6 +4757,7 @@ window.__ModuleLoader__.load({
               "delete.deleting": "\u0110ang\u0020xo\u00e1\u2026",
               "delete.result": "\u0110\u00e3\u0020xo\u00e1\u0020{deleted}\u0020\u00b7\u0020{failed}\u0020l\u1ed7i",
               "delete.siteBusy": "M\u1ed9t\u0020site\u0020demo\u0020\u0111ang\u0020b\u1eadn.\u0020\u0110\u1ee3i\u0020m\u1ed9t\u0020l\u00e1t\u0020r\u1ed3i\u0020xo\u00e1\u0020l\u1ea1i.",
+              "delete.buildRunning": "M\u1ed9t\u0020b\u1ea3n\u0020demo\u0020v\u1eabn\u0020\u0111ang\u0020\u0111\u01b0\u1ee3c\u0020d\u1ef1ng.\u0020\u0110\u1ee3i\u0020d\u1ef1ng\u0020xong\u0020r\u1ed3i\u0020h\u00e3y\u0020xo\u00e1.",
               "map.legend.steps": "C\u00e1c\u0020b\u01b0\u1edbc\u0020kh\u00e1c\u0020(s\u1ed1\u0020l\u00e0\u0020s\u1ed1\u0020b\u01b0\u1edbc)",
               "crumbs.label": "\u0110\u01b0\u1eddng\u0020d\u1eabn",
               "build.after": "D\u1ef1ng\u0020xong,\u0020n\u00fat\u0020M\u1edf\u0020site\u0020v\u00e0\u0020Giao\u0020cho\u0020agent\u0020s\u1ebd\u0020hi\u1ec7n\u0020\u1edf\u0020\u0111\u00e2y.",

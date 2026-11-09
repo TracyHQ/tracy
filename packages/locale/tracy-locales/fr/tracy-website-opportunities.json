@@ -661,6 +661,7 @@
   "delete.deleting": "Suppression…",
   "delete.result": "{deleted} supprimés · {failed} en échec",
   "delete.siteBusy": "Un site de démo est occupé pour le moment. Patientez un instant, puis supprimez à nouveau.",
+  "delete.buildRunning": "Une démo est encore en cours de création. Attendez qu’elle soit terminée, puis supprimez.",
   "map.legend.steps": "Autres étapes (le chiffre est l’étape)",
   "crumbs.label": "Fil d’Ariane",
   "build.after": "Après la construction, Ouvrir le site et Confier à l’agent apparaissent ici.",

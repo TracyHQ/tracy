@@ -91,6 +91,10 @@ const gone = (ids: readonly string[]): DeleteOutcome => ({
   sitesRemoved: 0
 })
 
-/** The key of the note a failed press shows: a busy demo site has its own words. */
+/** The key of the note a failed press shows: a busy demo site and a demo still being built have their own words. */
 export const deleteFailedKey = (code: string): string =>
-  code === 'DEMO_TEARDOWN_FAILED' ? 'delete.siteBusy' : 'action.failed'
+  code === 'DEMO_TEARDOWN_FAILED'
+    ? 'delete.siteBusy'
+    : code === 'DEMO_BUILD_RUNNING'
+      ? 'delete.buildRunning'
+      : 'action.failed'

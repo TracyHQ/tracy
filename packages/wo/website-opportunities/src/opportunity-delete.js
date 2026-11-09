@@ -2,6 +2,8 @@
  * Deleting a saved opportunity: My opportunities' Delete, for one row (`DELETE /api/website-opportunities/:id`) or
  * many (`POST /api/website-opportunities/jobs/bulk` with `action: "delete"`). In this order:
  *
+ *   0. a demo still being built (the builder's `demoBuildRunning`) refuses the delete (`DEMO_BUILD_RUNNING`) before
+ *      anything changes: its site could otherwise be made after the row is gone. The build is not cancelled;
  *   1. a research job still live (queued, running, paused, blocked) is cancelled through the cancel door's own path
  *      (`cancelRequest`), so a place job it shared is released;
  *   2. the builder (`deps.builder.prepareDelete`, Tracy's demo builder) tears its live demo sites down through the
@@ -29,12 +31,15 @@ const isOwnSite = (opp) =>
  * @param {import('pg').Pool} pool
  * @param {string} accountId
  * @param {string} id
- * @param {{ builder?: { prepareDelete?: Function } | null, log?: Pick<Console, 'warn'> }} deps
+ * @param {{ builder?: { prepareDelete?: Function, demoBuildRunning?: Function } | null,
+ *   log?: Pick<Console, 'warn'> }} deps
  * @returns {Promise<{ ok: true, id: string, siteRemoved: boolean } | { ok: false, code: string }>}
  */
 export async function deleteOpportunityOf(pool, accountId, id, { builder = null, log = console } = {}) {
   const opp = await opportunityOf(pool, accountId, id)
   if (!opp || isOwnSite(opp)) return { ok: false, code: 'NOT_FOUND' }
+  if (typeof builder?.demoBuildRunning === 'function' && (await builder.demoBuildRunning(opp, accountId)))
+    return { ok: false, code: 'DEMO_BUILD_RUNNING' }
   for (const job of await jobsOfOpportunity(pool, opp.id))
     if (LIVE_JOB.has(job.state)) await cancelRequest(pool, accountId, job.id)
   let siteRemoved = false

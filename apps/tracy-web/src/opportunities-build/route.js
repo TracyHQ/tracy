@@ -40,7 +40,7 @@ import {
 } from './demo-actions.js'
 import { qaShape } from './demo-qa.js'
 import { reopenDemo, startDemoClock, touchDemo } from './demo-retention.js'
-import { prepareOpportunityDelete } from './demo-removal.js'
+import { demoBuildRunning, prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
 import { demoJourneySql } from './journey-sql.js'
@@ -65,7 +65,8 @@ const BASE = '/api/website-opportunities'
  *   demoJourneySql: typeof demoJourneySql,
  *   templateChoicesOf: (settings: object) => Promise<object>,
  *   templateCards: () => Promise<any>,
- *   prepareDelete: (opp: object, accountId: string) => Promise<{ok: boolean, siteRemoved?: boolean}>
+ *   prepareDelete: (opp: object, accountId: string) => Promise<{ok: boolean, siteRemoved?: boolean}>,
+ *   demoBuildRunning: (opp: object, accountId: string) => Promise<boolean>
  * }}
  */
 export function createWebsiteBuilder(deps) {
@@ -765,7 +766,9 @@ export function createWebsiteBuilder(deps) {
     templateCards,
     // Before an opportunity is deleted: its live demo sites torn down (`demo-removal.js`), with `deps.demoTeardown`.
     prepareDelete: (opp, accountId) =>
-      prepareOpportunityDelete(pool, opp, accountId, { now: now(), teardown: deps.demoTeardown ?? null })
+      prepareOpportunityDelete(pool, opp, accountId, { now: now(), teardown: deps.demoTeardown ?? null }),
+    // A demo still being built holds the delete back (409 `DEMO_BUILD_RUNNING`), before anything is changed.
+    demoBuildRunning: (opp, accountId) => demoBuildRunning(pool, opp, accountId)
   }
 }
 

@@ -94,6 +94,13 @@ test('one row goes through its own door; NOT_FOUND counts as gone', async () => 
   assert.deepEqual(refused, { ok: false, code: 'DEMO_TEARDOWN_FAILED' })
   assert.equal(deleteFailedKey(refused.code), 'delete.siteBusy')
   assert.equal(deleteFailedKey('NETWORK'), 'action.failed')
+  const building = fakeApi({
+    remove: async () => ({ ok: false, status: 409, code: 'DEMO_BUILD_RUNNING' }),
+    bulk: async () => assert.fail()
+  })
+  const waiting = await deleteOpportunities(building.api, ids(), ['a'])
+  assert.deepEqual(waiting, { ok: false, code: 'DEMO_BUILD_RUNNING' })
+  assert.equal(deleteFailedKey(waiting.code), 'delete.buildRunning')
 })
 
 test('several rows go through the bulk door; a failed press keeps its request id for the retry', async () => {

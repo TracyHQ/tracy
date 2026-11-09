@@ -14,6 +14,28 @@
  */
 import { deleteDemo } from './demo-retention.js'
 
+/**
+ * A demo still being built, which a delete must wait for (409 `DEMO_BUILD_RUNNING`): its site could otherwise be
+ * made after the row is gone and belong to nobody's list. Either a build whose provision has not ended
+ * (`requesting`, `provisioning`: `build-store.js` `BUILD_OPEN`), or a demo action still queued whose build is not
+ * done yet (its brief is being written, a Retry is under way on its build). An agent action left open after a done
+ * build (the owner's follow-up chat) does not count: its site is up and is torn down like any other.
+ */
+const BUILD_RUNNING = `select 1 from wo_build b join wo_revision r on r.id = b.revision_id
+   where r.opportunity_id = $1 and b.account_id = $2 and b.state in ('requesting', 'provisioning')
+     and b.demo_deleted_at is null
+ union all
+ select 1 from wo_demo_action a
+   where a.opportunity_id = $1 and a.account_id = $2 and a.status in ('queued', 'quality-queued-v1')
+     and not exists (select 1 from wo_build b where b.account_id = a.account_id
+       and b.request_id = a.build_request_id and b.state = 'done')
+ limit 1`
+
+/** Whether the opportunity has a demo still being built (see `BUILD_RUNNING`). */
+export async function demoBuildRunning(pool, opp, accountId) {
+  return (await pool.query(BUILD_RUNNING, [opp.id, accountId])).rowCount > 0
+}
+
 const LIVE_DEMOS = `select b.* from wo_build b join wo_revision r on r.id = b.revision_id
    where r.opportunity_id = $1 and b.account_id = $2 and b.site_key is not null
      and b.demo_deleted_at is null and b.state is distinct from 'deleted'

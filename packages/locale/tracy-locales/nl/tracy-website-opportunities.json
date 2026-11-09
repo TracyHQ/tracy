@@ -661,6 +661,7 @@
   "delete.deleting": "Verwijderen…",
   "delete.result": "{deleted} verwijderd · {failed} mislukt",
   "delete.siteBusy": "Een demo-site is nu bezet. Wacht even en verwijder daarna opnieuw.",
+  "delete.buildRunning": "Er wordt nog een demo gebouwd. Wacht tot die klaar is en verwijder daarna.",
   "map.legend.steps": "Andere stappen (het getal is de stap)",
   "crumbs.label": "Kruimelpad",
   "build.after": "Na het bouwen verschijnen hier Site openen en Aan de agent overdragen.",
