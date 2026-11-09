@@ -583,7 +583,12 @@ export function DetailView({
     (v): v is string => typeof v === 'string' && v !== ''
   )
   const progress = <DemoProgress t={t} row={row} locale={locale} now={now} />
-  const briefRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale)
+  // A row the seller corrected (#524) came from them, whatever research said.
+  const briefRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale).map((r) =>
+    r.field !== null && profileEditView(profile, r.field)?.edited
+      ? { ...r, source: t('brief.source.you') }
+      : r
+  )
 
   return (
     <div className="tracy-wo-page tracy-wo-details">

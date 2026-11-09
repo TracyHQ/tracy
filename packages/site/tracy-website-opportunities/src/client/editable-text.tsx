@@ -57,8 +57,8 @@ export function EditableText({
   }
   if (!editing)
     return (
-      <span className="tracy-wo-row tracy-wo-wrap">
-        <span>{value}</span>
+      <span className="tracy-wo-editable">
+        <span className="tracy-wo-editable-text">{value}</span>
         {edited ? (
           <Badge variant="outline" className="tracy-wo-edited">
             {t(editedKey)}
