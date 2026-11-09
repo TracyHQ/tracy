@@ -49946,7 +49946,7 @@
                 "schema": {
                   "properties": {
                     "action": {
-                      "enum": ["resume", "cancel"],
+                      "enum": ["resume", "cancel", "delete"],
                       "type": "string"
                     },
                     "filter": {
@@ -49965,6 +49965,12 @@
                       "type": "object"
                     },
                     "jobIds": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "opportunityIds": {
                       "items": {
                         "type": "string"
                       },
@@ -50771,6 +50777,30 @@
         }
       },
       "/api/website-opportunities/{id}": {
+        "delete": {
+          "operationId": "delete_api_website_opportunities_id_",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        },
         "get": {
           "operationId": "get_api_website_opportunities_id_",
           "parameters": [

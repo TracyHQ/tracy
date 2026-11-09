@@ -122,7 +122,8 @@ export function Steps({
               <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={again} />
             ) : null}
             {children ? (
-              <details open={summary.kind === 'stopped' || summary.kind === 'running'}>
+              // Open once research has started: the sources it read stay in view after it is done too.
+              <details open={summary.kind !== 'none' && summary.kind !== 'queued'}>
                 <summary className="tracy-wo-muted">{t('v3.step.sources')}</summary>
                 {children}
               </details>

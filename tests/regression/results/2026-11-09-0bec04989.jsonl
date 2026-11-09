@@ -1,0 +1,2 @@
+{"id":"REG-PR-506-wo-delete-opportunity","verdict":"PASS","commit":"0bec04989868b8161c2170e6f777a4832e57080f","ran_at":"2026-11-09T09:26:04.798Z","evidence":"tests/regression/.runs/2026-11-09-0bec04989/REG-PR-506-wo-delete-opportunity.log"}
+{"id":"REG-PR-506-wo-brief-rules-and-picture-labels","verdict":"PASS","commit":"0bec04989868b8161c2170e6f777a4832e57080f","ran_at":"2026-11-09T09:26:05.115Z","evidence":"tests/regression/.runs/2026-11-09-0bec04989/REG-PR-506-wo-brief-rules-and-picture-labels.log"}

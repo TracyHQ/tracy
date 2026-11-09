@@ -8,6 +8,7 @@ import {
   GENERAL,
   PHOTO_ROLES,
   assetRelationsOf,
+  benchLabelsOf,
   closedListDigest,
   closedListOf,
   focusOfBox,
@@ -188,6 +189,41 @@ test('a brief asset: text links win, then the model in the list, else general; n
     faceBoxes: [],
     peopleCount: null,
     isGraphic: null,
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null,
     isOwnPhoto: null
+  })
+})
+
+test('a brief asset carries the lettering and other-business labels the picture bench reads, null when unanswered', () => {
+  const asset = (vision) =>
+    assetRelationsOf(
+      { id: 'p9', kind: 'image', source: 'google-places', labels: { vision: { labels: vision } } },
+      { list: LIST }
+    )
+  const clean = asset({
+    subject: 'interior',
+    textPresence: 'absent',
+    hasTextOverlay: false,
+    showsOtherBusiness: false
+  })
+  assert.equal(clean.hasTextOrWatermark, false)
+  assert.equal(clean.showsOtherBusiness, false)
+  assert.equal(asset({ subject: 'interior', textPresence: 'present' }).hasTextOrWatermark, true)
+  // Words laid over the photo count even when the model said no text was in the scene.
+  assert.equal(
+    asset({ subject: 'interior', textPresence: 'absent', hasTextOverlay: true }).hasTextOrWatermark,
+    true
+  )
+  assert.equal(asset({ subject: 'exterior', showsOtherBusiness: true }).showsOtherBusiness, true)
+  // A label made before the model was asked (prompt p5) has no answer: unknown, never a guessed false.
+  const old = asset({ subject: 'interior', hasTextOverlay: false })
+  assert.equal(old.hasTextOrWatermark, null)
+  assert.equal(old.showsOtherBusiness, null)
+  assert.deepEqual(benchLabelsOf(null), {
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null
   })
 })

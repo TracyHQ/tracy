@@ -34,6 +34,7 @@ import {
   resumeRequest
 } from './place-requests.js'
 import { againPartsOf, againShape, placeAgainPlan } from './research-again.js'
+import { bulkDelete, bulkDeleteAnswer, deleteOpportunityOf, deleteSelection } from './opportunity-delete.js'
 import { placeViewOf, searchRowPages } from './place-view.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { cleanProfileLinks, untrackedUrl } from '../domain/social-links.mjs'
@@ -52,8 +53,22 @@ import { briefTradeOf } from '../domain/trades.mjs'
 import { identityOf } from './places.js'
 import { urlKeyOf } from './site-checks.js'
 import { SOCIAL_STAT_NETWORKS } from './social-stats.js'
-import { SHOWN_SOURCES, SOCIAL_SOURCES, normalizeUrl, refsOfUrls, sourceOfUrl } from './sources.js'
-import { createLinkFields, linkRequestOf, mergeListings, saveListingSource } from './link-fields.js'
+import {
+  LISTING_SOURCE,
+  SHOWN_SOURCES,
+  SOCIAL_SOURCES,
+  normalizeUrl,
+  refsOfUrls,
+  sourceOfUrl
+} from './sources.js'
+import {
+  createLinkFields,
+  linkRequestOf,
+  mergeListings,
+  pastedLinkField,
+  pastedLinksOf,
+  saveListingSource
+} from './link-fields.js'
 import {
   activeJobOf,
   claimBulkRequest,
@@ -1117,8 +1132,8 @@ export function websiteOpportunitiesRoutes(deps) {
     if (who instanceof Response) return who
     const b = await body(c)
     const action = b?.action
-    if (action !== 'resume' && action !== 'cancel')
-      return refuse(c, 400, 'INVALID_ACTION', 'Send action as "resume" or "cancel".')
+    if (action !== 'resume' && action !== 'cancel' && action !== 'delete')
+      return refuse(c, 400, 'INVALID_ACTION', 'Send action as "resume", "cancel" or "delete".')
     if (!REQUEST_ID.test(String(b?.requestId ?? '')))
       return refuse(
         c,
@@ -1126,10 +1141,16 @@ export function websiteOpportunitiesRoutes(deps) {
         'INVALID_REQUEST_ID',
         'Send a requestId of 8–100 letters, digits, ".", "_", ":" or "-".'
       )
-    const selection = bulkSelection(b)
+    // A delete names opportunities (a row without a job is deletable too); resume and cancel name jobs.
+    const selection =
+      action === 'delete' ? deleteSelection(b, { max: BULK_MAX, uuid: UUID }) : bulkSelection(b)
     if ('error' in selection) return refuse(c, selection.status, selection.error, selection.next)
     if (action === 'resume' && !(await featureOn())) return featureOff(c)
-    if (!who.accountId) return json(c, { results: [], done: 0, skipped: 0, failed: 0 })
+    if (!who.accountId)
+      return json(
+        c,
+        action === 'delete' ? bulkDeleteAnswer([]) : { results: [], done: 0, skipped: 0, failed: 0 }
+      )
     const hash = createHash('sha256')
       .update(JSON.stringify({ action, ...selection }))
       .digest('hex')
@@ -1142,6 +1163,11 @@ export function websiteOpportunitiesRoutes(deps) {
     if (await overLimitOrClosed(pool, `wo:bulk:${who.accountId}`, BULK_PER_HOUR, now())) {
       await releaseBulkRequest(pool, who.accountId, b.requestId)
       return refuse(c, 429, 'RATE_LIMITED', 'Wait for the next hour before another bulk action.')
+    }
+    if (action === 'delete') {
+      const deleted = await bulkDelete(pool, who.accountId, selection.opportunityIds, { builder })
+      await finishBulkRequest(pool, who.accountId, b.requestId, deleted)
+      return json(c, deleted)
     }
     let jobIds = selection.jobIds
     if (!jobIds) {
@@ -1386,6 +1412,7 @@ export function websiteOpportunitiesRoutes(deps) {
       // No builder: the demo fields are left out of the answer.
       builder ? builder.detailOf(opp, who.accountId) : {}
     ])
+    const pasted = pastedLinksOf(opp)
     return json(c, {
       opportunity: opportunityShape(opp),
       demo: demo.demo,
@@ -1405,7 +1432,11 @@ export function websiteOpportunitiesRoutes(deps) {
         updatedAt: s.updated_at,
         ...(view ? { shared: s.shared === true } : {}),
         // The two search rows: the pages found, with their verdicts (new optional fields).
-        ...searchRowPages(s)
+        ...searchRowPages(s),
+        // A source the person's own pasted link feeds: that link as they pasted it, without share tracking (an old
+        // record kept it; `link-fields.js pastedLinksOf`).
+        // Only pasted links make a listing row, so one saved before `pastedLinks` gives its own first page.
+        ...pastedLinkField(pasted.get(s.source) ?? (s.source === LISTING_SOURCE ? s.ref : null))
       })),
       // With the trade the brief speaks in (`trades.mjs briefTradeOf`), so Details words a food business as today and any
       // other business neutrally (#1780).
@@ -1446,6 +1477,32 @@ export function websiteOpportunitiesRoutes(deps) {
       usage: demo.usage,
       builds: demo.builds
     })
+  })
+
+  // Delete one opportunity (`opportunity-delete.js`): its live job cancelled, its live demo sites torn down, then the
+  // row. Like cancel, it starts no work, so the feature switch does not gate it.
+  app.delete(`${BASE}/:id`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    if (!who.accountId || !UUID.test(id)) return notFound(c, 'opportunity')
+    const deleted = await deleteOpportunityOf(pool, who.accountId, id, { builder })
+    if (deleted.ok)
+      return json(c, { ok: true, deleted: { id: deleted.id, siteRemoved: deleted.siteRemoved } })
+    if (deleted.code === 'NOT_FOUND') return notFound(c, 'opportunity')
+    if (deleted.code === 'DEMO_BUILD_RUNNING')
+      return refuse(
+        c,
+        409,
+        'DEMO_BUILD_RUNNING',
+        'A demo is still being built: wait for it to finish, then delete.'
+      )
+    return refuse(
+      c,
+      409,
+      'DEMO_TEARDOWN_FAILED',
+      'Its demo site could not be removed now: wait a moment and delete it again.'
+    )
   })
 
   // The name on the site, as the person checked it on the Profile card: final for every later brief and build.

@@ -121,7 +121,16 @@ export async function placeViewOf(db, opportunity) {
       ...readingCardOf(
         held.profile.businessReading,
         opportunity?.candidate?.readingPicks,
-        opportunity?.candidate?.keyMessagePicks
+        opportunity?.candidate?.keyMessagePicks,
+        // The reviews the brief reads, so the card shows a person named in them as the brief does.
+        {
+          reviews: [
+            ...(held.profile.googlePlace?.reviews ?? []),
+            ...Object.values(held.profile.reviewSources ?? {}).flatMap((g) =>
+              Array.isArray(g?.reviews) ? g.reviews : []
+            )
+          ]
+        }
       ),
       trade: briefTradeOf({
         candidate: opportunity?.candidate ?? {},

@@ -150,12 +150,14 @@ test('a key message resting only on facts off the site is dropped; thin evidence
     ]
   }
   const brief = dscBrief({ answer })
-  assert.equal(fieldOf(brief, 'team').onSite, false)
-  assert.equal(brief.keyMessages, undefined)
-  assert.match(
-    renderBriefMarkdown(brief),
-    /- team: "Alex" · single source \(google\) · off the site: .*review-only-person/
-  )
+  // Two reviews name Alex: shown from reviews for the owner to check (product owner 29/10/2026, `brief-people.mjs`).
+  assert.equal(fieldOf(brief, 'team').onSite, true)
+  assert.equal(brief.keyMessages, undefined, 'a person’s name is never a key message')
+  const md = renderBriefMarkdown(brief)
+  assert.match(md, /- team: "Alex" · single source \(google\) · shown from reviews, owner to check/)
+  // The reviews that name a shown person are no longer held: none is listed as not for the site.
+  assert.equal(brief.googlePlace.heldReviews, undefined)
+  assert.doesNotMatch(md, /Not for the site: the review by .* names Alex/)
   // A business with nothing quotable: no key message at all.
   const thin = buildBrief({
     opportunity: { id: 'o-thin', name: 'Quiet Barber', candidate: { trade: 'beauty' } },

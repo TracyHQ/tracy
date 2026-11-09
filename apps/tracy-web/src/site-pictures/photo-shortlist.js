@@ -24,6 +24,18 @@ export function letteringOf(a) {
 }
 export const otherBusinessOf = (a) => bool(a.showsOtherBusiness) ?? bool(a.otherBusiness)
 
+/**
+ * Whether the photo is blurry. The measured sharpness gate is primary: its record (`{passed, verdict, ...}`, written by
+ * cut-photo.js writeRect from lib/photo-sharpness.js judgePhoto) decides when present. The vision model's `isBlurry` is a
+ * second opinion, read only when no measurement exists, so a photo the machine measured sharp is never refused for it.
+ */
+export function blurryOf(a) {
+  const measured = a?.sharpness
+  if (measured && typeof measured === 'object' && typeof measured.passed === 'boolean')
+    return !measured.passed
+  return a?.isBlurry === true
+}
+
 /** Why a brief asset can never fill a picture frame, or null when it may. */
 export function photoRefusal(a) {
   if (a?.kind !== 'image') return 'not a still image'
@@ -34,7 +46,7 @@ export function photoRefusal(a) {
   if (text === true) return 'lettering or a watermark'
   if (other === true) return 'another business'
   if (text === null || other === null) return 'a label that decides it is unknown'
-  if (a.isBlurry === true) return 'blurry'
+  if (blurryOf(a)) return 'blurry'
   return null
 }
 

@@ -612,7 +612,9 @@ test('bulk: input checked; resume is off with the switch, cancel still stops', o
   const acc = await accountOf(A)
   const paused = await seed(pool, acc, { jobs: ['paused'] })
   for (const [body, code] of [
-    [{ action: 'delete', requestId: 'bulk-00000007', jobIds: [paused.latestJobId] }, 'INVALID_ACTION'],
+    [{ action: 'archive', requestId: 'bulk-00000007', jobIds: [paused.latestJobId] }, 'INVALID_ACTION'],
+    // A delete names opportunities, never jobs (`website-opportunities-delete.test.mjs`).
+    [{ action: 'delete', requestId: 'bulk-00000007', jobIds: [paused.latestJobId] }, 'INVALID_SELECTION'],
     [{ action: 'cancel', requestId: 'x', jobIds: [paused.latestJobId] }, 'INVALID_REQUEST_ID'],
     [{ action: 'cancel', requestId: 'bulk-00000008' }, 'INVALID_SELECTION'],
     [{ action: 'cancel', requestId: 'bulk-00000008', jobIds: ['nope'] }, 'INVALID_SELECTION'],
