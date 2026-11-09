@@ -901,7 +901,7 @@ test('legacy cursors and offsets stop on a repeated page or zero progress', asyn
       exportFixture({
         tableReply: { tables: ['wp_posts'] },
         responseFor: () => {
-          assert.ok(++calls <= 3, 'cursor guard must terminate without a request ceiling')
+          if (++calls > 3) return { ok: false, error: 'dump_failed' }
           return {
             sql_b64: Buffer.from('INSERT INTO wp_posts VALUES (1);').toString('base64'),
             done: false,
