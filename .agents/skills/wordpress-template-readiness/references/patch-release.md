@@ -77,3 +77,5 @@ before `chain.sh --from cycle`, run
 (it replaces the stand's theme and writes each part's file into its database row), then read the rendered part from the
 stand. Without it the pack, the sweep and the contract all describe the previous theme (met on JA Diner WP7: the footer
 address fix reached the zip but not the pack).
+
+Measure the demo baseline before the gate sweep, because a restore after the sweep makes release refuse it.
