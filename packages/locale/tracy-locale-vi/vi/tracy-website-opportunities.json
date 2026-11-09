@@ -750,7 +750,7 @@
   "build.cms": "CMS",
   "build.template": "Template",
   "brief.current": "Brief {n} · mới nhất · làm {when} từ research này",
-  "brief.stale": "Brief {n} · research đã đổi từ khi có brief này ({when})",
+  "brief.stale": "Brief {n} · tạo {when}, trước khi research hoặc quy tắc brief thay đổi",
   "brief.view": "Xem brief",
   "brief.refresh": "Làm lại",
   "brief.refreshing": "Đang làm lại…",

@@ -4846,7 +4846,7 @@ window.__ModuleLoader__.load({
               "build.cms": "CMS",
               "build.template": "Template",
               "brief.current": "Brief\u0020{n}\u0020\u00b7\u0020m\u1edbi\u0020nh\u1ea5t\u0020\u00b7\u0020l\u00e0m\u0020{when}\u0020t\u1eeb\u0020research\u0020n\u00e0y",
-              "brief.stale": "Brief\u0020{n}\u0020\u00b7\u0020research\u0020\u0111\u00e3\u0020\u0111\u1ed5i\u0020t\u1eeb\u0020khi\u0020c\u00f3\u0020brief\u0020n\u00e0y\u0020({when})",
+              "brief.stale": "Brief\u0020{n}\u0020\u00b7\u0020t\u1ea1o\u0020{when},\u0020tr\u01b0\u1edbc\u0020khi\u0020research\u0020ho\u1eb7c\u0020quy\u0020t\u1eafc\u0020brief\u0020thay\u0020\u0111\u1ed5i",
               "brief.view": "Xem\u0020brief",
               "brief.refresh": "L\u00e0m\u0020l\u1ea1i",
               "brief.refreshing": "\u0110ang\u0020l\u00e0m\u0020l\u1ea1i\u2026",

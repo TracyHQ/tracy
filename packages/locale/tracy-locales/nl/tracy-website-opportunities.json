@@ -750,7 +750,7 @@
   "build.cms": "CMS",
   "build.template": "Template",
   "brief.current": "Brief {n} · actueel · {when} van dit onderzoek gemaakt",
-  "brief.stale": "Brief {n} · het onderzoek is veranderd sinds deze brief ({when})",
+  "brief.stale": "Brief {n} · gemaakt {when}, voordat het onderzoek of de briefregels veranderden",
   "brief.view": "Brief bekijken",
   "brief.refresh": "Vernieuwen",
   "brief.refreshing": "Vernieuwen…",

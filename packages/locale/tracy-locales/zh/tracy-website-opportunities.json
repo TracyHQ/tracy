@@ -750,7 +750,7 @@
   "build.cms": "CMS",
   "build.template": "Template",
   "brief.current": "简报 {n} · 最新 · {when}根据这份调研生成",
-  "brief.stale": "简报 {n} · 自本简报以来调研已变化（{when}）",
+  "brief.stale": "简报 {n} · 创建于 {when}，早于调研或简报规则的变化",
   "brief.view": "查看简报",
   "brief.refresh": "刷新",
   "brief.refreshing": "正在刷新…",

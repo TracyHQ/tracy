@@ -221,8 +221,10 @@ export {
   renderBriefMarkdown,
   BRIEF_SCHEMA_VERSION,
   BRIEF_SCHEMA_VERSIONS,
+  BRIEF_RULES_VERSION,
   BRIEF_REQUIRED
 } from './brief.mjs'
+export { BUSINESS_READING_VERSION } from './business-reading.mjs'
 export { factOnSite, withheldMissing } from './brief-facts.mjs'
 export {
   matchDishPhotos,

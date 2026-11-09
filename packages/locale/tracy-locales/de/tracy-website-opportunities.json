@@ -750,7 +750,7 @@
   "build.cms": "CMS",
   "build.template": "Template",
   "brief.current": "Brief {n} · aktuell · {when} aus dieser Recherche erstellt",
-  "brief.stale": "Brief {n} · die Recherche hat sich seit diesem Brief geändert ({when})",
+  "brief.stale": "Brief {n} · erstellt {when}, bevor sich die Recherche oder die Brief-Regeln geändert haben",
   "brief.view": "Brief ansehen",
   "brief.refresh": "Aktualisieren",
   "brief.refreshing": "Wird aktualisiert…",

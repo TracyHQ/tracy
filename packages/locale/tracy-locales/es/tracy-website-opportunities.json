@@ -750,7 +750,7 @@
   "build.cms": "CMS",
   "build.template": "Template",
   "brief.current": "Brief {n} · al día · creado {when} a partir de esta investigación",
-  "brief.stale": "Brief {n} · la investigación cambió desde este brief ({when})",
+  "brief.stale": "Brief {n} · creado {when}, antes de que cambiaran la investigación o las reglas del brief",
   "brief.view": "Ver brief",
   "brief.refresh": "Actualizar",
   "brief.refreshing": "Actualizando…",

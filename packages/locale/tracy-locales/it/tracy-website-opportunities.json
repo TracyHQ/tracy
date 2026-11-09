@@ -750,7 +750,7 @@
   "build.cms": "CMS",
   "build.template": "Template",
   "brief.current": "Brief {n} · aggiornato · creato {when} da questa ricerca",
-  "brief.stale": "Brief {n} · la ricerca è cambiata da questo brief ({when})",
+  "brief.stale": "Brief {n} · creato {when}, prima che cambiassero la ricerca o le regole del brief",
   "brief.view": "Vedi brief",
   "brief.refresh": "Aggiorna",
   "brief.refreshing": "Aggiornamento…",

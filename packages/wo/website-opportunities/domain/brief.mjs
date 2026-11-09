@@ -65,6 +65,9 @@ import { liftReviewPeople, SHOWN_FROM_REVIEWS } from './brief-people.mjs'
 // key messages; `contact.whatsapp` and the team carry a `factId` instead of their own flags. Readers take 1 and 2.
 export const BRIEF_SCHEMA_VERSION = 2
 export const BRIEF_SCHEMA_VERSIONS = Object.freeze([1, 2])
+// Bump whenever a brief made from the same research would come out differently (reading rules, people, name, facts).
+// It goes into the freshness key, so existing briefs offer Refresh. The schema version above is for the shape only.
+export const BRIEF_RULES_VERSION = 2
 /** The contact copy of a business whose hours wait for a check, when it can be called or written to. */
 // The contact line of a business whose hours wait for a check; the channels to book on follow it, each once.
 export const BY_APPOINTMENT = 'By appointment.'

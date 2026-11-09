@@ -553,9 +553,17 @@ export function researchKey(domain, research) {
   // step put on the photographs (`withPictureLabels`): a place's are kept in the shared analysis cache, never on its media rows, so the live read the
   // Details page hashes (`currentResearchKey`) has none, and a brief made a minute ago would read as stale. The other
   // labels a picture carries are the store's own and do count.
+  // The rules that turn research into a brief count too: a brief made under older reading or brief rules is not what
+  // the same research gives now, so it must offer Refresh. A missing version must fail loudly, never hash `undefined`.
+  const rulesVersion = domain.BRIEF_RULES_VERSION
+  const readingVersion = domain.BUSINESS_READING_VERSION
+  if (rulesVersion == null || readingVersion == null)
+    throw new Error('researchKey needs domain.BRIEF_RULES_VERSION and domain.BUSINESS_READING_VERSION')
   const { demoRequest, assetLabelling: _labelling, observedFacts: _observed, ...read } = research
   return researchHash({
     schemaVersion: domain.BRIEF_SCHEMA_VERSION,
+    rulesVersion,
+    readingVersion,
     profileSnapshotVersion: PROFILE_SNAPSHOT_VERSION,
     research: evidenceData({ ...read, media: (read.media ?? []).map(withoutVisionLabels) }),
     ...(demoRequest ? { demoRequestHash: researchHash(demoRequest) } : {})

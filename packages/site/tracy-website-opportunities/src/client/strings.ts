@@ -824,7 +824,7 @@ export const en = {
   'revision.document': 'Site brief',
   /** Details: every demo of the place with what it was built with, and the latest brief's status. */
   'brief.current': 'Brief {n} · up to date · made {when} from this research',
-  'brief.stale': 'Brief {n} · the research changed since this brief ({when})',
+  'brief.stale': 'Brief {n} · made {when}, before the research or the brief rules changed',
   'brief.view': 'View brief',
   'brief.refresh': 'Refresh',
   'brief.refreshing': 'Refreshing…',
