@@ -214,6 +214,44 @@ test(
 )
 
 test(
+  'main headings exclude ancestor-clipped clones but retain partial headings and headings below the viewport',
+  opts,
+  async () => {
+    const { server, base } = await site()
+    PAGES['/clipped-headings'] = `${head}<style>
+      .window { width: 300px; overflow: hidden; position: relative }
+      .track { width: 1200px; display: flex; transform: translateX(-300px) }
+      .slide { flex: 0 0 300px }
+      .partial { position: relative; left: 280px; width: 200px }
+      .below { margin-top: 2000px }
+    </style>
+    <div class="window"><div class="track">
+      <div class="slide"><h1>Parked clone</h1></div>
+      <div class="slide"><h1>Readable title</h1></div>
+      <div class="slide"><h1>Other parked clone</h1></div>
+    </div></div>
+    <div class="window"><h1 class="partial">Partly readable title</h1></div>
+    <h1 class="below">Another visible heading below the fold</h1>`
+    const browser = await playwright.chromium.launch({ headless: true })
+    try {
+      const page = await (await browser.newContext()).newPage()
+      const r = await readDemoPage(page, `${base}/clipped-headings`, '/clipped-headings', {
+        measurePages: true
+      })
+      for (const m of r.measures)
+        assert.deepEqual(m.mainHeadings, [
+          'Readable title',
+          'Partly readable title',
+          'Another visible heading below the fold'
+        ])
+    } finally {
+      await browser.close()
+      server.close()
+    }
+  }
+)
+
+test(
   'what a visitor sees: one main heading of three in the markup, and only what shows reads as shown',
   opts,
   async () => {

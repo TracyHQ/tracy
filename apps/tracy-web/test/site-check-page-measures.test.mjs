@@ -470,6 +470,138 @@ test('an orphan card row and a blank footer column are found once per page, with
   )
 })
 
+test('only complete associated final-page evidence explains an orphan row; raw geometry and unproven rows remain', () => {
+  const row = { selector: 'div.items-row', perRow: 3, lastRow: 1, rows: 2, gap: 960 }
+  const owner = 'div.com-content-category-blog'
+  const items = `${owner} > .com-content-category-blog__items`
+  const navigation = `${owner} > .com-content-category-blog__navigation`
+  const pagination = {
+    schemaVersion: 'tracy-final-pagination/v1',
+    association: {
+      owner,
+      items,
+      grid: `${items} > div.items-row`,
+      navigation,
+      pager: `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > .pagination > ul.pagination`
+    },
+    listCount: 1,
+    pagerCount: 1,
+    pages: [
+      { number: 1, current: false, href: '/donations' },
+      { number: 2, current: true, href: null }
+    ],
+    next: { disabled: true, href: null },
+    end: { disabled: true, href: null }
+  }
+  const measure = (extra) => [{ path: '/donations?start=9', width: 1440, orphanRows: [{ ...row, ...extra }] }]
+  const proven = measure({ pagination })
+  assert.deepEqual(findOrphanRows(proven), [])
+  const direct = {
+    ...pagination,
+    association: {
+      ...pagination.association,
+      pager: `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > ul.pagination`
+    }
+  }
+  assert.deepEqual(findOrphanRows(measure({ pagination: direct })), [])
+  assert.deepEqual(
+    proven[0].orphanRows[0],
+    { ...row, pagination },
+    'the measured row is never removed or mutated'
+  )
+  const invalid = [
+    {},
+    { intentional: 'final-paginated-results' },
+    { pagination: { intentional: 'final-paginated-results' } },
+    ...[
+      `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > .unsupported > ul.pagination`,
+      `${navigation} > .com-content-category-blog__pagination nav[aria-label] ul.pagination`,
+      `${navigation} > .com-content-category-blog__pagination > nav[aria-label] > .pagination > .extra > ul.pagination`
+    ].map((pager) => ({
+      pagination: { ...pagination, association: { ...pagination.association, pager } }
+    })),
+    {
+      pagination: {
+        ...pagination,
+        association: { ...pagination.association, grid: `${items} > div.other-grid` }
+      }
+    },
+    { pagination: { ...pagination, listCount: 2 } },
+    { pagination: { ...pagination, pagerCount: 2 } },
+    { pagination: { ...pagination, next: { disabled: false, href: '/donations?start=18' } } },
+    { pagination: { ...pagination, end: undefined } },
+    {
+      pagination: {
+        ...pagination,
+        pages: [...pagination.pages, { number: 3, current: false, href: '/donations?start=18' }]
+      }
+    },
+    { pagination: { ...pagination, pages: [{ number: 2, current: true, href: null }] } },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: 1, current: false, href: '/events' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: 1, current: false, href: '/donations?start=9' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: 1, current: false, href: '//elsewhere.invalid/donations' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [{ number: '1', current: false, href: '/donations' }, pagination.pages[1]]
+      }
+    },
+    {
+      pagination: {
+        ...pagination,
+        pages: [pagination.pages[0], { number: 2, current: false, href: '/donations?start=9' }]
+      }
+    },
+    { pagination: { ...pagination, association: { ...pagination.association, navigation: 'nav.unrelated' } } }
+  ]
+  for (const extra of invalid) {
+    const faults = findOrphanRows(measure(extra))
+    assert.equal(faults.length, 1, JSON.stringify(extra))
+    assert.equal(faults[0].selector, 'div.items-row')
+  }
+  const queryCase = (path, prior) => [
+    {
+      path,
+      width: 1440,
+      orphanRows: [
+        {
+          ...row,
+          pagination: {
+            ...pagination,
+            pages: [{ number: 1, current: false, href: prior }, pagination.pages[1]]
+          }
+        }
+      ]
+    }
+  ]
+  assert.deepEqual(
+    findOrphanRows(queryCase('/index.php?Itemid=101&catid=5&start=9', '/index.php?catid=5&Itemid=101')),
+    []
+  )
+  for (const prior of [
+    '/index.php?Itemid=102&catid=5',
+    '/index.php?Itemid=101&catid=6',
+    '/index.php?Itemid=101',
+    '/index.php?Itemid=101&catid=5&filter=featured'
+  ])
+    assert.equal(findOrphanRows(queryCase('/index.php?Itemid=101&catid=5&start=9', prior)).length, 1, prior)
+})
+
 test('an orphan row and a blank footer column fail the check through their groups; an older host leaves them unmeasured', async () => {
   const faults = {
     orphanRows: [{ selector: 'div.grid', perRow: 3, lastRow: 1, rows: 2, gap: 780 }],

@@ -75,6 +75,25 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
       (r.width <= 1 && r.height <= 1)
     )
   }
+  // A carousel clone can have a full box while an ancestor clips every pixel; page scrolling is not clipping.
+  const clippedByAncestor = (el) => {
+    const r = el.getBoundingClientRect()
+    let { left, right, top, bottom } = r
+    for (let parent = el.parentElement; parent; parent = parent.parentElement) {
+      const cs = getComputedStyle(parent)
+      const box = parent.getBoundingClientRect()
+      if (/^(hidden|clip)$/.test(cs.overflowX)) {
+        left = Math.max(left, box.left)
+        right = Math.min(right, box.right)
+      }
+      if (/^(hidden|clip)$/.test(cs.overflowY)) {
+        top = Math.max(top, box.top)
+        bottom = Math.min(bottom, box.bottom)
+      }
+      if (right <= left || bottom <= top) return true
+    }
+    return false
+  }
   const saidBy = (el) =>
     (el.innerText || el.value || el.getAttribute('aria-label') || el.title || '').replace(/\s+/g, ' ').trim()
 
@@ -395,7 +414,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   // The main headings a visitor reads: a page should print one.
   const mainHeadings = []
   for (const el of document.body.querySelectorAll('h1')) {
-    if (!shown(el) || clippedAway(el, getComputedStyle(el))) continue
+    if (!shown(el) || clippedAway(el, getComputedStyle(el)) || clippedByAncestor(el)) continue
     const text = (el.innerText ?? '').replace(/\s+/g, ' ').trim()
     if (text) mainHeadings.push(text.slice(0, 120))
   }
@@ -477,6 +496,88 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
   const inFlow = (el) => !/^(?:absolute|fixed)$/.test(getComputedStyle(el).position)
   const SLIDES =
     '[class*="carousel"],[class*="swiper"],[class*="slick"],[class*="splide"],[class*="owl-"],[class*="glide"]'
+  // Joomla's category list owns its items and navigation directly; another list's pager proves nothing.
+  const finalPaginationOf = (box) => {
+    const owner = box.closest('.com-content-category-blog')
+    if (!owner) return null
+    const items = [...owner.children].filter((c) => c.matches('.com-content-category-blog__items'))
+    const navigation = [...owner.children].filter((c) => c.matches('.com-content-category-blog__navigation'))
+    if (items.length !== 1 || navigation.length !== 1 || box.parentElement !== items[0]) return null
+    if (!box.matches('.items-row') || owner.querySelectorAll('.items-row').length !== 1) return null
+    const holders = [...navigation[0].children].filter((c) =>
+      c.matches('.com-content-category-blog__pagination')
+    )
+    if (holders.length !== 1) return null
+    const navs = holders[0].querySelectorAll('nav[aria-label]')
+    if (navs.length !== 1 || navs[0].parentElement !== holders[0]) return null
+    const pagers = navs[0].querySelectorAll('ul.pagination')
+    if (pagers.length !== 1) return null
+    const direct = pagers[0].parentElement === navs[0]
+    const wrapped =
+      pagers[0].parentElement.matches('.pagination') && pagers[0].parentElement.parentElement === navs[0]
+    if (!direct && !wrapped) return null
+    const controls = [...pagers[0].children]
+    if (controls.length < 6 || controls.some((c) => !c.matches('li.page-item'))) return null
+    const disabled = (c) => c.matches('.disabled') && !c.querySelector('a,button')
+    if (!disabled(controls.at(-2)) || !disabled(controls.at(-1))) return null
+    // Only the result offset may vary: Itemid, category and filters still identify the list.
+    const listQuery = (url) => {
+      const params = new URLSearchParams(url.search)
+      params.delete('start')
+      params.sort()
+      return params.toString()
+    }
+    const pages = []
+    for (const item of controls.slice(2, -2)) {
+      const text = item.textContent.trim()
+      if (!/^[1-9]\d*$/.test(text)) return null
+      const current = item.querySelector('[aria-current="true"],[aria-current="page"]')
+      const a = item.querySelector('a[href]')
+      let href = null
+      if (!current) {
+        if (!a || !shown(a)) return null
+        const url = new URL(a.href)
+        if (
+          url.origin !== location.origin ||
+          url.pathname !== location.pathname ||
+          listQuery(url) !== listQuery(location) ||
+          url.hash ||
+          url.pathname + url.search === location.pathname + location.search
+        )
+          return null
+        href = url.pathname + url.search
+      }
+      pages.push({ number: Number(text), current: Boolean(current), href })
+    }
+    const current = pages.filter((p) => p.current)
+    if (
+      current.length !== 1 ||
+      current[0].number <= 1 ||
+      new Set(pages.map((p) => p.number)).size !== pages.length ||
+      !pages.some((p) => !p.current && p.number < current[0].number) ||
+      pages.some((p) => p.number > current[0].number)
+    )
+      return null
+    const own = selectorOf(owner)
+    const itemSelector = `${own} > .com-content-category-blog__items`
+    const navSelector = `${own} > .com-content-category-blog__navigation`
+    return {
+      schemaVersion: 'tracy-final-pagination/v1',
+      association: {
+        owner: own,
+        items: itemSelector,
+        grid: `${itemSelector} > ${selectorOf(box)}`,
+        navigation: navSelector,
+        pager: `${navSelector} > .com-content-category-blog__pagination > nav[aria-label] > ${direct ? '' : '.pagination > '}ul.pagination`
+      },
+      listCount: 1,
+      pagerCount: 1,
+      pages,
+      next: { disabled: true, href: null },
+      end: { disabled: true, href: null },
+      reason: 'the last page has fewer remaining results than columns'
+    }
+  }
   const orphanRows = []
   for (const box of document.body.querySelectorAll('*')) {
     if (orphanRows.length >= caps.orphanRows) break
@@ -510,7 +611,15 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (!near(last[0].left, first[0].left, 4)) continue
     const gap = Math.round(first[first.length - 1].right - last[last.length - 1].right)
     if (gap < cardWidth * 0.5) continue
-    orphanRows.push({ selector: selectorOf(box), perRow, lastRow: last.length, rows: rows.length, gap })
+    const pagination = finalPaginationOf(box)
+    orphanRows.push({
+      selector: selectorOf(box),
+      perRow,
+      lastRow: last.length,
+      rows: rows.length,
+      gap,
+      ...(pagination ? { pagination } : {})
+    })
   }
 
   // Blank footer columns: in the site footer (not an article's own footer), a column of a row laid out side by side (a flex row
