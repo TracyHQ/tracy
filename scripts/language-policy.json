@@ -21850,6 +21850,54 @@
       "sha256": "4b849091b78012627695ed8a0d36b73910d2dcc01cd8f6c5a19d3f15f6803968",
       "count": 1,
       "reason": "Third-party JA Voyara demo article captured verbatim: a Hanoi travel paragraph that quotes the Vietnamese dish and cafe names, sealed in the approved template kit."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/content-coverage.json",
+      "sha256": "05971f479f969fce2e33bd7ac7755b44ab6da3eeb7b56a4b3d7499b9067bf223",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/content-coverage.json",
+      "sha256": "476943d002419c41e56b4a482d4c582d01aaf41cb420cd231bf40492ded5b8df",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/content-map.json",
+      "sha256": "4598a2534610e75691f9d0d17db91e4293131c8c4f895a47c235edfebf144a40",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/inventory.json",
+      "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/content-map.json",
+      "sha256": "000b1b3ed627290ff781a7af43ea7fd4f556975ae0016447b0e917f5d7ac907b",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/content-map.json",
+      "sha256": "4acd4ea97b86db7e8b23055be658673d2bc08223345d56be5e8e37efa337a00f",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/content-map.json",
+      "sha256": "b528d6530d923e2d813f55b000d1b52c85ca9233aa1d2fc928fe18b946190ff4",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.2/demo-measures.json",
+      "sha256": "aea2e3e22b715aff01ede6e108c05a757e7dcca4cb82c9a3bbfd8607ec8eab31",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.2 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
     }
   ],
   "objects": [
