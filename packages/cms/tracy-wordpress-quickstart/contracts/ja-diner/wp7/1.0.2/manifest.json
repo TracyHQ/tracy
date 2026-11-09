@@ -18,14 +18,14 @@
     "parts": {
       "webroot": {
         "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-        "bytes": 60052805,
-        "sha256": "229a4d1fe37c21a515ce49fd9c29aa9a26d81b9da9436ff4f44189ba5ee0dfd1",
+        "bytes": 60052846,
+        "sha256": "dd7fe65f72f96e13e6d9f37ea1f2eaa85f86922336597bf18219daf40373170d",
         "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.2.tar.gz"
       },
       "database": {
         "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-        "bytes": 63959,
-        "sha256": "c249d668f1d2035892f025fd347648424ce9aa64b612ba02591e3434deb6389e",
+        "bytes": 63983,
+        "sha256": "cb7eef5b9e22a9f16b091fde811b935ab230f8f9bb1a4f680ae74a388d72fe39",
         "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.2.sql.gz"
       }
     }
@@ -44,6 +44,7 @@
   "themeTexts": {
     "options": [
       "wp_ja_diner_contact_address",
+      "wp_ja_diner_footer_address",
       "wp_ja_diner_contact_phone",
       "wp_ja_diner_footer_mobile",
       "wp_ja_diner_footer_landline",

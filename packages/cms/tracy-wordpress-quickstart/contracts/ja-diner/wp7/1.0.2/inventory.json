@@ -4,11 +4,11 @@
   "provenance": {
     "database": {
       "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-      "sha256": "c249d668f1d2035892f025fd347648424ce9aa64b612ba02591e3434deb6389e"
+      "sha256": "cb7eef5b9e22a9f16b091fde811b935ab230f8f9bb1a4f680ae74a388d72fe39"
     },
     "webroot": {
       "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-      "sha256": "229a4d1fe37c21a515ce49fd9c29aa9a26d81b9da9436ff4f44189ba5ee0dfd1"
+      "sha256": "dd7fe65f72f96e13e6d9f37ea1f2eaa85f86922336597bf18219daf40373170d"
     }
   },
   "tablePrefix": "tr_",
@@ -1878,11 +1878,10 @@
       "id": 97,
       "slug": "footer",
       "area": "footer",
-      "sha256": "32a2d7827a1c1e5cde75eed65ba7a6c1b3112e868fdbf4e26acfca683d479e49",
+      "sha256": "fd65c284cc4dd6fece4d9de24ca148fba0b132e4b66918496d6d3dcf292c0f75",
       "blocks": [
         "footer.location",
         "footer.location.title",
-        "footer.location.text",
         "footer.hours",
         "footer.hours.title",
         "footer.hours.text",

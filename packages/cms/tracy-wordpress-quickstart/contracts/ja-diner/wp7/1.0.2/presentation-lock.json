@@ -100,13 +100,13 @@
     "wp-content/themes/wp-ja-diner/inc/groups/g1.php": "cd3b8424ed15c0bb0565f57deba7982977505a9fc048fc8937e87cc4403c3584",
     "wp-content/themes/wp-ja-diner/inc/groups/home.php": "20c8a2176642e605ffee1c1633c50c69c1251278c7742f52b79c8743b02a20d9",
     "wp-content/themes/wp-ja-diner/inc/groups/pages.php": "181fac14adc8f7c144919536e03dc7bf64a5963da56dd915efa2ee6c1aeef076",
-    "wp-content/themes/wp-ja-diner/inc/identity.php": "da2709d7b5e8355d769503ed28c34e84aa0b64ed1c951fd842584d1dbd23e549",
+    "wp-content/themes/wp-ja-diner/inc/identity.php": "5a60e82bb2827c90f3733058830ff18009b6693124fc00c036f44b7abd96a27e",
     "wp-content/themes/wp-ja-diner/inc/motion-head.php": "e8e3b5b22ac792cf8ce2ee97ff4dfdce949fc85d2f5aab34bdb8a21a498e41d5",
     "wp-content/themes/wp-ja-diner/inc/role-reads.php": "22b8e53eadd46c9d1eedb9d7a9b3839aa0f1182a661a4257c1f9f302744867a2",
     "wp-content/themes/wp-ja-diner/inc/update.php": "1833619b383ea9f03f41f8db076d151f108dce30cf9e58a054c3f750c4039a10",
     "wp-content/themes/wp-ja-diner/inc/variations.php": "54eee8dcec3f61fcaaffa3ecde6887b2b467cec816cce873f47aa4389d79a447",
     "wp-content/themes/wp-ja-diner/inspirations.json": "8ca62d32e4dcdbd84ee3a938ae6e095f23d125f3448a832664e7ba1b1b5208f2",
-    "wp-content/themes/wp-ja-diner/parts/footer.html": "d93bb6bd7b28be9b6584d2ec6f714193bc553009b6c0bee3890c7436e9f982c7",
+    "wp-content/themes/wp-ja-diner/parts/footer.html": "fd65c284cc4dd6fece4d9de24ca148fba0b132e4b66918496d6d3dcf292c0f75",
     "wp-content/themes/wp-ja-diner/parts/header.html": "d5668c31051c3bae9769d9792a43194f633c4733334ce61f380e11622300c73c",
     "wp-content/themes/wp-ja-diner/parts/search-description.html": "6e10979e1ff1a2cd8ee578a20648fbdfaaf5cb42cbac77b20f0e539f67c6c88f",
     "wp-content/themes/wp-ja-diner/parts/search-form.html": "74e567bb26125aee07ad87b5933a4e1928012b77a49d8e70c587d4fe55775ab5",
@@ -189,7 +189,7 @@
       "sha256": "37c59ac7eae951cb6ff68d57680cdec752a8ae004d042b7445bac9569c748d95"
     },
     "footer": {
-      "sha256": "32a2d7827a1c1e5cde75eed65ba7a6c1b3112e868fdbf4e26acfca683d479e49"
+      "sha256": "fd65c284cc4dd6fece4d9de24ca148fba0b132e4b66918496d6d3dcf292c0f75"
     }
   },
   "entities": {
@@ -590,12 +590,13 @@
     "option-wp_ja_diner_blog_banner_image": {},
     "option-wp_ja_diner_categories_banner_image": {},
     "option-wp_ja_diner_contact_address": {},
+    "option-wp_ja_diner_footer_address": {},
     "option-wp_ja_diner_contact_phone": {},
     "option-wp_ja_diner_footer_mobile": {},
     "option-wp_ja_diner_footer_landline": {},
     "option-wp_ja_diner_footer_email": {},
     "templatePart-footer": {
-      "skeleton": "0f5f16413578628471910de3e664e3f0fcaf60e0aa2aa4aa00e7658814797c1c"
+      "skeleton": "de541dcda45f877f1cd77f98a8f7fddb823a631a7a7e023fad436c3d553b68f5"
     }
   }
 }

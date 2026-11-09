@@ -2,14 +2,14 @@
   "schemaVersion": "tracy-content-coverage/v1",
   "tool": {
     "name": "@tracy/quickstart-tools content-coverage",
-    "version": "1.7.0"
+    "version": "1.8.0"
   },
   "contract": {
     "id": "ja-diner/wp7/1.0.2",
-    "contentMapSha256": "0c7be2113491fc92776038cba145d411e961fd8a6ced597901e8dfd76149ae77",
-    "presentationLockSha256": "e1a06012990ea8633289eb8c060c35061f789e61b749d7d37939342efeeb0ddd"
+    "contentMapSha256": "4c56d70d3153b3258fb66b0119510dfecc8038935a8629555536996922c91e13",
+    "presentationLockSha256": "fde46dd15b220f04d467991101be94073f8ebe858768acdf14cd4524f13f0e84"
   },
-  "measuredAt": "2026-11-09T04:47:15.425Z",
+  "measuredAt": "2026-11-09T06:13:57.183Z",
   "viewports": [
     "desktop",
     "phone"
@@ -3966,9 +3966,9 @@
     "roleVocabularyVersion": "place-content-roles/3",
     "applies": true,
     "r1": {
-      "facts": 147,
-      "slots": 569,
-      "percent": 25.8
+      "facts": 146,
+      "slots": 570,
+      "percent": 25.6
     },
     "rules": {
       "R2": {
@@ -4021,11 +4021,11 @@
     "state": "not-judged",
     "reason": "NOT_RUN",
     "counts": {
-      "slots": 569,
-      "located": 472,
+      "slots": 570,
+      "located": 473,
       "notLocated": 97,
       "judged": 0,
-      "notJudged": 472,
+      "notJudged": 473,
       "right": 0,
       "wrongGroup": 0,
       "mismatch": 0
