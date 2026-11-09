@@ -4,6 +4,8 @@
  * Read this script and its policy from a trusted checkout; --repo is Git data only. Inspect added
  * lines of EVERY new commit, including merges and changes later reverted, plus the final PR diff.
  * Existing text is not a mutable numeric allowance. Moving an old line also requires English.
+ * --exclude names a commit whose history already passed this check (develop, for a release PR):
+ * its commits are skipped and the final diff starts from its merge base with --head instead.
  */
 import { execFileSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
@@ -136,7 +138,7 @@ function translationProblem(text) {
   return null
 }
 
-export function checkRange({ repo, base, head, policy, pull = null }) {
+export function checkRange({ repo, base, head, policy, pull = null, exclude = null }) {
   const git = (...args) =>
     execFileSync('git', ['-C', repo, ...args], {
       maxBuffer: 128 * 1024 * 1024,
@@ -144,14 +146,23 @@ export function checkRange({ repo, base, head, policy, pull = null }) {
       env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1', GIT_OPTIONAL_LOCKS: '0', GIT_CONFIG_NOSYSTEM: '1' }
     })
   if (!HASH.test(base) || !HASH.test(head)) throw new Error('base and head must be full commit SHAs')
+  if (exclude !== null && !HASH.test(exclude)) throw new Error('exclude must be a full commit SHA')
   if (git('rev-parse', '--is-shallow-repository').toString().trim() !== 'false')
     throw new Error('full history required; refusing a shallow scan')
-  for (const sha of [base, head]) {
+  for (const sha of exclude === null ? [base, head] : [base, head, exclude]) {
     if (git('cat-file', '-t', sha).toString().trim() !== 'commit') throw new Error('expected commit object')
   }
   const mergeBases = git('merge-base', '--all', base, head).toString().trim().split('\n')
   if (mergeBases.length !== 1 || !HASH.test(mergeBases[0])) throw new Error('one merge base required')
-  const commits = git('rev-list', '--reverse', '--topo-order', head, '--not', base)
+  // Already-checked history is the start of the final diff too, so its content is not re-read.
+  let from = mergeBases[0]
+  if (exclude !== null) {
+    const excluded = git('merge-base', '--all', exclude, head).toString().trim().split('\n')
+    if (excluded.length !== 1 || !HASH.test(excluded[0])) throw new Error('one exclude merge base required')
+    from = excluded[0]
+  }
+  const notIn = exclude === null ? [base] : [base, exclude]
+  const commits = git('rev-list', '--reverse', '--topo-order', head, '--not', ...notIn)
     .toString()
     .trim()
     .split('\n')
@@ -284,10 +295,21 @@ export function checkRange({ repo, base, head, policy, pull = null }) {
     if (problem) report(commit, 'commit message', 1, problem)
     const parents = git('show', '-s', '--format=%P', commit).toString().trim().split(' ').filter(Boolean)
     if (!parents.length) throw new Error('unexpected root commit in contribution range')
-    scanDiff(parents[0], commit)
+    // A merge that brings in already-checked history is read against that parent, so only what is
+    // not yet in the excluded history counts as new.
+    const isExcluded = (parent) => {
+      try {
+        git('merge-base', '--is-ancestor', parent, exclude)
+        return true
+      } catch (error) {
+        if (error.status === 1) return false
+        throw error
+      }
+    }
+    scanDiff((exclude !== null && parents.find(isExcluded)) || parents[0], commit)
   }
   // Also inspect the final contribution relative to the merge base, including merge resolutions.
-  scanDiff(mergeBases[0], head)
+  scanDiff(from, head)
   return { commits: commits.length, files, findings }
 }
 
@@ -300,7 +322,8 @@ export function main(args = process.argv.slice(2)) {
         base: { type: 'string' },
         head: { type: 'string' },
         policy: { type: 'string', default: DEFAULT_POLICY },
-        event: { type: 'string' }
+        event: { type: 'string' },
+        exclude: { type: 'string' }
       }
     })
     const pull = values.event ? JSON.parse(readFileSync(values.event, 'utf8')).pull_request : null
@@ -310,7 +333,8 @@ export function main(args = process.argv.slice(2)) {
       base: values.base,
       head: values.head,
       policy: readPolicy(values.policy),
-      pull
+      pull,
+      exclude: values.exclude ?? null
     })
     console.log(JSON.stringify(result, null, 2))
     return result.findings.length ? 1 : 0
