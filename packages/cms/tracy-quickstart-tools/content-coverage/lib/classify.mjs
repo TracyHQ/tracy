@@ -8,24 +8,13 @@
 import { searchDb } from './db-index.mjs'
 import { searchSources } from './sources.mjs'
 import { normText, compact } from './normalize.mjs'
-import { videoId } from './match.mjs'
+import { videoId, isRenderedDate } from './match.mjs'
 
 const UPLOADS = 'wp-content/uploads/'
 /** A size WordPress generated from an upload (`cake-300x200.jpg`, `cake-scaled.jpg`): the upload, then the extension. */
 const WORDPRESS_SIZE = /^(.+?)-(?:\d+x\d+|scaled)(\.[a-z0-9]+)$/i
 
 const cut = (s) => String(s).slice(0, 200)
-const MONTHS =
-  '(jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t(ember)?)?|oct(ober)?|nov(ember)?|dec(ember)?)'
-// A module's date_format may lead with the weekday ("D, M Y" prints "Tue, Aug 2021").
-const WEEKDAY = '((mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\\s+)?'
-const DATE = new RegExp(
-  `^${WEEKDAY}(\\d{1,2}(st|nd|rd|th)?\\s+${MONTHS},?\\s+\\d{4}|${MONTHS}\\s+\\d{1,2}(st|nd|rd|th)?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|${MONTHS}\\s+\\d{4})$`
-)
-// An all-numeric date a layout prints from an item's own date with a format string (JA's latest-news layout: `d.m.Y`
-// -> 06.09.2021): day, month and year in either order, split by dots, slashes or dashes. It is the article's date, not
-// words of the demo; a phone or a price never has this shape.
-const NUMERIC_DATE = /^(\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}[./]\d{1,2}[./]\d{1,2})$/
 // Strings Joomla core or the framework generate whatever the site is (when no language file is given).
 const CORE_TEXT =
   /^(read more( \.\.\.)?|read more:.*|search|search \.\.\.|prev|previous|next|start|end|home|you are here:?|page \d+ of \d+|written by|published:?|hits:?|category:?|details|back to top|toggle navigation|close|menu|skip to main content|share|tags:?|more articles|\d+ (min|mins|minutes) read|skip to content|leave a comment|search for:?|comments?|reply|log in|proudly powered by wordpress|powered by wordpress)$/
@@ -90,7 +79,14 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
 
   function classifyText(value) {
     const norm = normText(value)
-    if (DATE.test(norm) || NUMERIC_DATE.test(norm))
+    const datePieces = norm
+      .split('·')
+      .map((part) => part.trim())
+      .filter(Boolean)
+    if (
+      datePieces.some(isRenderedDate) &&
+      datePieces.every((part) => isRenderedDate(part) || /^\d+ (min|mins|minutes)( read)?$/.test(part))
+    )
       return { class: 'c', label: 'date rendered by Joomla', evidence: [] }
     if (/^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$/.test(String(value).trim()))
       return {
@@ -223,7 +219,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
   }
 
   return function classify(item, m) {
-    const key = `${item.kind}|${item.zone ?? ''}|${m.remainder ?? m.path ?? item.value}`
+    const key = JSON.stringify([item.kind, item.zone, item.value, m.remainder, m.path])
     if (cache.has(key)) return cache.get(key)
     let res
     // Printed inside the shop component's own markup (a price, a size option, a product card, the cart).

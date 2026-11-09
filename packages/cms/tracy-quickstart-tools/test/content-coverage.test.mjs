@@ -24,7 +24,7 @@ import {
 const SITE = 'http://127.0.0.1:53039/'
 
 /** A contract with one article (title + intro slot) and one module whose params the lock pins. */
-function contractDir() {
+function contractDir(extraSlots = []) {
   const dir = mkdtempSync(path.join(tmpdir(), 'cov-contract-'))
   const write = (name, value) => writeFileSync(path.join(dir, name), JSON.stringify(value))
   write('manifest.json', {
@@ -74,7 +74,8 @@ function contractDir() {
         key: 'article-3.body',
         type: 'text',
         sample: 'Write to rules@example.test for any question about these rules and we answer within a day.'
-      }
+      },
+      ...extraSlots
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -108,8 +109,8 @@ function dbDump() {
   return file
 }
 
-function audit(items) {
-  const contract = loadContract(contractDir(), SITE)
+function audit(items, extraSlots = []) {
+  const contract = loadContract(contractDir(extraSlots), SITE)
   const match = createMatcher(contract, SITE)
   const classify = createClassifier(contract, buildDbIndex(dbDump()), null)
   const withKeys = items.map((it, i) => ({
@@ -578,4 +579,96 @@ test('audio capability matches exact owner and sparse track while preserving URL
     merged.map((x) => [x.entity, x.track]),
     copies.map((x) => [x.entity, x.track])
   )
+})
+
+const metadataSlots = [
+  { key: 'module-91.year', type: 'text', sample: '2026' },
+  { key: 'module-92.figure', type: 'text', sample: '99.99%' },
+  { key: 'module-93.lines', type: 'text', sample: 'First line\n99.99% UPTIME\r\n\nLast line' },
+  { key: 'module-94.features', type: 'text', sample: 'Private tier\n99.99% SLA' }
+]
+
+test('saved metadata: complete newline lines keep their declared owner before short figures', () => {
+  const { items } = audit(
+    [
+      { kind: 'text', value: '99.99% UPTIME' },
+      { kind: 'text', value: '99.99% SLA' },
+      { kind: 'text', value: 'First line' }
+    ],
+    metadataSlots
+  )
+  assert.deepEqual(
+    items.map((i) => [i.status, i.slots]),
+    [
+      ['matched', ['module-93.lines']],
+      ['matched', ['module-94.features']],
+      ['matched', ['module-93.lines']]
+    ]
+  )
+})
+
+for (const reverse of [false, true]) {
+  test(`saved metadata: date and read-time preserve a full date, encounter order ${reverse}`, () => {
+    const values = ['Riley Moss · 18 June 2026 · 2 min', '18 June 2026', '25 June 2026 · 3 min read']
+    if (reverse) values.reverse()
+    const { items } = audit(
+      values.map((value) => ({ kind: 'text', value })),
+      metadataSlots
+    )
+    for (const i of items) {
+      assert.equal(i.class, 'c', i.value)
+      assert.ok(!i.slots?.includes('module-91.year'), i.value)
+    }
+  })
+
+  test(`saved metadata: classifier cache includes whole value, encounter order ${reverse}`, () => {
+    const contract = loadContract(contractDir(), SITE)
+    const classify = createClassifier(contract, buildDbIndex(dbDump()), null)
+    const values = [
+      ['Advanced Boxing', 'a'],
+      ['18 June 2026', 'c']
+    ]
+    if (reverse) values.reverse()
+    for (const [value, expected] of values)
+      assert.equal(classify({ kind: 'text', value }, { remainder: '18 june' }).class, expected)
+  })
+}
+
+test('saved metadata: partial lines, yearless dates and unknown claims stay unexplained', () => {
+  const { items } = audit(
+    [
+      'UPTIME',
+      '99.99% AMAZING',
+      'SLA',
+      '18 June',
+      'Riley Moss · 18 June 2026 · Top 100 provider',
+      'Riley Moss · 18 June 2026 · 2 min · Unowned promise',
+      'Riley Moss · 18 June 2026 · (239) 555-0199',
+      'Riley Moss · 18 June 2026 · $9,950'
+    ].map((value) => ({ kind: 'text', value })),
+    metadataSlots
+  )
+  for (const i of items) {
+    assert.equal(i.status, 'hole', i.value)
+    assert.notEqual(i.class, 'c', i.value)
+  }
+})
+
+test('saved metadata: unknown prices, phones and locked PRE remain holes', () => {
+  const { items } = audit(
+    [
+      { kind: 'text', value: '$141.00' },
+      { kind: 'text', value: '(239) 555-0199' },
+      {
+        kind: 'text',
+        tag: 'pre',
+        inCode: true,
+        outsideCode: '',
+        value: 'union events | where ts > 2026 | sort ts asc'
+      }
+    ],
+    metadataSlots
+  )
+  for (const i of items) assert.equal(i.status, 'hole', i.value)
+  assert.notEqual(items[2].class, 'c')
 })

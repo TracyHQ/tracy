@@ -25,6 +25,21 @@ export function videoId(href) {
   return m ? m[1] : null
 }
 
+const MONTHS =
+  '(jan(uary)?|feb(ruary)?|mar(ch)?|apr(il)?|may|june?|july?|aug(ust)?|sep(t(ember)?)?|oct(ober)?|nov(ember)?|dec(ember)?)'
+// A module's date_format may lead with the weekday ("D, M Y" prints "Tue, Aug 2021").
+const WEEKDAY = '((mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\\s+)?'
+const DATE = new RegExp(
+  `^${WEEKDAY}(\\d{1,2}(st|nd|rd|th)?\\s+${MONTHS},?\\s+\\d{4}|${MONTHS}\\s+\\d{1,2}(st|nd|rd|th)?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|${MONTHS}\\s+\\d{4})$`
+)
+// An all-numeric date a layout prints from an item's own date with a format string (JA's latest-news layout: `d.m.Y`
+// -> 06.09.2021): day, month and year in either order, split by dots, slashes or dashes. It is the article's date, not
+// words of the demo; a phone or a price never has this shape.
+const NUMERIC_DATE = /^(\d{1,2}[./-]\d{1,2}[./-]\d{4}|\d{4}[./]\d{1,2}[./]\d{1,2})$/
+
+/** A complete rendered date, never a bare year or a yearless label. */
+export const isRenderedDate = (value) => DATE.test(value) || NUMERIC_DATE.test(value)
+
 export function createMatcher(contract, siteUrl) {
   const { text, textCompact, textList, patterns = [], image, url, rawSample } = contract.index
   // Compact forms of every slot sample, for blocks whose spans render with no space between them ("Our<span>Classes</span>").
@@ -131,9 +146,16 @@ export function createMatcher(contract, siteUrl) {
         rest = rest.split(s.norm).join(' \u0000 ')
       }
       for (const f of shortFigures) {
-        if (!occurrences(rest, f.norm).length) continue
-        slots.push(...f.keys)
-        rest = rest.split(f.norm).join(' \u0000 ')
+        // Metadata separators and matched slots bound complete dates; an unrelated year slot cannot own them.
+        rest = rest
+          // oxlint-disable-next-line no-control-regex -- NUL is the internal matched-slot boundary.
+          .split(/(\u0000|·)/)
+          .map((piece) => {
+            if (isRenderedDate(piece.trim()) || !occurrences(piece, f.norm).length) return piece
+            slots.push(...f.keys)
+            return piece.split(f.norm).join(' \u0000 ')
+          })
+          .join('')
       }
       const parts = rest
         .split('\u0000')

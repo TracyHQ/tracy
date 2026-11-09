@@ -67,6 +67,44 @@ const contains = (box, r) => {
   const cy = r.y + r.h / 2
   return cx >= box.x0 && cx <= box.x1 && cy >= box.y0 && cy <= box.y1
 }
+
+// Selectors are the extractor's at-most-six-element chains. Match their overlapping ancestry, not proximity.
+// Repeated copies have union scopes and only one rectangle: they cannot prove which anchor owns these words.
+const enclosesItem = (link, item) => {
+  let seen = false
+  for (const [vp, child] of Object.entries(item.viewports ?? {})) {
+    if (!child.visible) continue
+    const parent = link.viewports?.[vp]
+    if (child.count !== 1 || parent?.count !== 1 || !parent.visible) return false
+    const childParts = child.selector?.split(' > ') ?? []
+    const parentParts = parent.selector?.split(' > ') ?? []
+    if (childParts.length < 2 || !parentParts.length) return false
+    const end = childParts.lastIndexOf(parentParts.at(-1), childParts.length - 2)
+    if (end < 0) return false
+    const prefix = childParts.slice(0, end + 1)
+    const overlap = Math.min(prefix.length, parentParts.length)
+    if (overlap < 2 && !parentParts.at(-1).startsWith('#')) return false
+    if (prefix.slice(-overlap).join(' > ') !== parentParts.slice(-overlap).join(' > ')) return false
+    const r = child.rect
+    const outer = parent.rect
+    if (
+      !r ||
+      !outer ||
+      ![r.x, r.y, r.w, r.h, outer.x, outer.y, outer.w, outer.h].every(Number.isFinite) ||
+      r.w <= 0 ||
+      r.h <= 0 ||
+      outer.w <= 0 ||
+      outer.h <= 0 ||
+      r.x < outer.x - 1 ||
+      r.y < outer.y - 1 ||
+      r.x + r.w > outer.x + outer.w + 1 ||
+      r.y + r.h > outer.y + outer.h + 1
+    )
+      return false
+    seen = true
+  }
+  return seen
+}
 export const pathOfHref = (href) => {
   if (!href || /^\s*(#|javascript:|mailto:|tel:)/i.test(href)) return null
   try {
@@ -169,6 +207,25 @@ export function cardsOnPage(page, pick, candidates, slotsByKey) {
     const c = cards.get(hits[0])
     c.items.push({ it, index, slots: it.slots.filter((k) => entityOfKey(k) === hits[0]) })
   }
+  // An outer <a> card has no text href on its block descendants. Its separately captured link can name exactly
+  // one card, provided each visible copy proves the ancestry. Conflicting anchors stay unknown.
+  const enclosingPaths = new Map()
+  for (const { it } of pool) {
+    if (it.kind !== 'link' || it.source !== 'a' || it.tag !== 'a' || it.role === 'nav' || it.inCode) continue
+    const path = pathOfHref(it.value)
+    if (!path) continue
+    try {
+      if (new URL(it.value, page.url).origin !== new URL(page.url).origin) continue
+    } catch {
+      continue
+    }
+    const owners = [...cards.values()].filter((c) => c.items.some(({ it: child }) => enclosesItem(it, child)))
+    if (owners.length !== 1) continue
+    const paths = enclosingPaths.get(owners[0]) ?? new Set()
+    paths.add(path)
+    enclosingPaths.set(owners[0], paths)
+  }
+  for (const [c, paths] of enclosingPaths) if (!c.path && paths.size === 1) c.path = [...paths][0]
   // A card whose title merged with the same words elsewhere on the page (the page's own heading) lost its link: the
   // first link drawn inside the card's box names its detail page.
   for (const c of cards.values()) {

@@ -115,9 +115,11 @@ export function loadContract(dir, siteUrl) {
       if (!n) continue
       push(text, n, s.key)
       if (compact(n).length >= 4) push(textCompact, compact(n), s.key)
-      // A field that holds markup (<li>, ((li))) renders as several blocks: each text segment is that slot's text.
-      if (/<[a-z/][^>]*>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i.test(s.sample)) {
-        for (const seg of String(s.sample).split(/<[^>]+>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i)) {
+      // Markup and newline-delimited fields render as separate blocks; only complete segments keep their owner.
+      if (/[\r\n]|<[a-z/][^>]*>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i.test(s.sample)) {
+        for (const seg of String(s.sample).split(
+          /[\r\n]+|<[^>]+>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/i
+        )) {
           const sn = normText(seg)
           // A phone number or a figure has digits and no letters: count both, as the page reader does.
           if (alnumCount(sn) >= 2 && sn !== n) {
