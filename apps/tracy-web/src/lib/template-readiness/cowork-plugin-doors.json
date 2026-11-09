@@ -151,6 +151,26 @@
         "'slot_corrections' =>": true,
         "function urlSafeAlias(": true
       }
+    },
+    "0.24.92": {
+      "sha256": "1b3d4aef5c17168682bfdf049abaf718b9b460c8f94982048fe7e55b84358835",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
+    "0.24.93": {
+      "sha256": "732411ebe35955aa755d8eb6faa14e76afa09236010e4a5a3a60246fe2260aed",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
     }
   }
 }

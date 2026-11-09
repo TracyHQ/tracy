@@ -255,6 +255,18 @@
         },
         "logoHeight": 80,
         "note": "1.0.6 adds a dark mode (a light/dark toggle in the main band, the visitor's choice kept in the tracy_theme cookie, the OS preference followed until then, the dark palette of the JA Diner WordPress port) and a dark logo: the template param logoimage_dark replaces the light logo on a dark page, else the dark page shows the site name as text. Every style keeps logoimage empty (the template's own images/logo.png) and ships logoimage_dark set to images/joomlart/logo-dark.png, the same 128 x 80 artwork in white; the contract declares both as business.logo slots per style, so the brand writer replaces or clears them. Proven on the 1.0.6 installer pack (sha256 5545adc7) by a clean install whose contract capture pins the lock."
+      },
+      "1.0.7": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.6; 1.0.7 writes logoimage_dark inside the five template style rows of the installer's demo data (1.0.6 set it by an UPDATE appended to custom.sql, which the static dump readers do not apply, so the lock and the dump disagreed: STAB-1, STAB-6, LOGO-2), sets the dark page's site name text in the template's display face (Alegreya on Vietnamese pages, LANG-2), and fills the contact page's social buttons on the link itself on hover (HOVER-1). Built from the 1.0.6 installer pack with its contract; no logo file or logo rule changed."
       }
     },
     "quickstart/ja-directory/j6": {
