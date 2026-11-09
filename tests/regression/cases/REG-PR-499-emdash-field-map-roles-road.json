@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-499-emdash-field-map-roles-road",
+  "kind": "fix",
+  "title": "Road to live: an EmDash release's slot roles are read from its theme's field map, and JA Diner / JA Restaurant declare them",
+  "pr": 499,
+  "area": "road-to-live/content-coverage",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the Content coverage roles tests for EmDash releases (tracy-diner 0.1.0, tracy-restaurant 1.0.1, tracy-base 0.5.8) read through rolesOfRelease with no contract folder."
+  ],
+  "expect": [
+    "S1: each release's roles are { state: 'ready' }; contentCoverageStep for tracy-diner 0.1.0 returns done / coverage-not-needed; a field-map read with fields lacking a role is 'missing' with those field names; every test passes."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/lib/content-coverage/roles.js",
+    "tool": "apps/tracy-web/test/emdash-roles-road-step.test.mjs"
+  },
+  "evidence": "Before the fix /ops on dev showed content-coverage todo (coverage-roles, rolesState none) for tracy-diner/emdash-0.x 0.1.0 and tracy-restaurant/emdash-0.x 1.0.1 although the shared reader answered field-map ready for Tracy Base 0.5.8",
+  "fence": "Road step input only; the /ops page renders the step it is given",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/emdash-roles-road-step.test.mjs"]
+  }
+}
