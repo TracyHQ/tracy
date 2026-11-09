@@ -40,6 +40,10 @@
     "--accent-on": "#ffffff"
   },
   "darkTokens": {},
+  "modes": true,
+  "modesNote": "1.0.6 adds a light/dark switch (tpls/blocks/mainnav.php .theme-toggle, js/tracy-theme.js; css/darkmode.css paints html[data-theme=\"dark\"] by giving the role variables their dark values inside a cascade layer, so the unlayered module sheet wins): the module sheet writes the system's own side under the template's matching mode and the other side derived from it (src/derive.mjs, src/sides.mjs), and keeps the switch shown (MODE-2). Earlier versions never set data-theme, so only the light side applies to them.",
+  "modesAuto": false,
+  "modesAutoNote": "js/tracy-theme.js runs as a blocking script in the head (tpls/blocks/head.php) and always sets data-theme before the page paints (?theme=, the tracy_theme cookie, else the OS preference, followed live), so no auto state is left to the OS and the OS-dark copy is not written, as for JA Morgan Joomla.",
   "extraPalettes": [
     {
       "bg": "#fcfaf6",
@@ -115,7 +119,7 @@
     "container": ["#t3-mainbody .container, .container"],
     "section": ["#Section95"],
     "bodyFace": ["body"],
-    "inkImages": [".logo-image .logo-img"]
+    "inkImages": [".logo-image .logo-img:not(.logo-dark-img)"]
   },
   "contrast": {
     "accent-text": "#t3-mainbody a:not([class*=btn]):not(:has(img)), .t3-sl a:not([class*=btn]):not(:has(img))",
@@ -339,9 +343,9 @@
   "keepNote": "the newsletter section (#Section127) is drawn on a dark picture of its own (images/joomlart/others/bg-icon.png) that no system repaints: it keeps the template's colours — its orange title and grey note read 2.9–4.2:1 on the picture under MotherDuck, Moxie and Apple otherwise (re-measure 11/10/2026)",
   "inkNote": "the wordmark is a dark-ink image: inverted with its hues kept under a dark system, where it all but vanished on the worn page",
   "maxVersion": {
-    "quickstart/ja-diner/j6": "1.0.5"
+    "quickstart/ja-diner/j6": "1.0.6"
   },
-  "maxVersionNote": "1.0.5 04/11/2026: built from 1.0.4 (release-joomla.mjs --overlay); 28 files replaced (the agent documentation of the ACM module, template fixes in css, less, html, tpls and acm) and 2 demo-data statements appended (the Location card and the Reservation page buttons lead to real pages). 1.0.4 20/10/2026: built from 1.0.3 (release-batch.mjs --overlay); the only change is the badge of a Bootstrap 3 status panel heading (.panel-<status> > .panel-heading .badge, 44 rules in 11 bootstrap.css), whose ground reads --ds-c-<status>-text in place of the status fill, the inverted pair of its words (--ds-c-<status>-bg), so its words never read a ground role (TEXT-1); every fallback is the colour 1.0.3 painted, and unworn the page is 1.0.3's (VERIFICATION.json: 0 computed differences desktop and phone, 26/26 pages as released). 1.0.3 20/10/2026: built from 1.0.2 (release-batch.mjs --overlay --replace); every role variable the template paints is read with its own value as the fallback (role scan 0 unresolved), Vietnamese pages use Alegreya in place of Eczar; unworn the page is the release's own (VERIFICATION.json: 0 computed differences desktop and phone, 26/26 pages as released; the screenshots differ only where the home page's Gallery carousel had moved on). 1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "maxVersionNote": "1.0.6 09/11/2026: built from 1.0.5 (release-batch.mjs --overlay --sql); a light/dark switch and dark mode (css/darkmode.css, js/tracy-theme.js, tpls/blocks/head.php, header.php, mainnav.php, error.php, offline.php), the template param logoimage_dark with the demo logo drawn white as its value in every style; the light page is unchanged apart from the switch. 1.0.5 04/11/2026: built from 1.0.4 (release-joomla.mjs --overlay); 28 files replaced (the agent documentation of the ACM module, template fixes in css, less, html, tpls and acm) and 2 demo-data statements appended (the Location card and the Reservation page buttons lead to real pages). 1.0.4 20/10/2026: built from 1.0.3 (release-batch.mjs --overlay); the only change is the badge of a Bootstrap 3 status panel heading (.panel-<status> > .panel-heading .badge, 44 rules in 11 bootstrap.css), whose ground reads --ds-c-<status>-text in place of the status fill, the inverted pair of its words (--ds-c-<status>-bg), so its words never read a ground role (TEXT-1); every fallback is the colour 1.0.3 painted, and unworn the page is 1.0.3's (VERIFICATION.json: 0 computed differences desktop and phone, 26/26 pages as released). 1.0.3 20/10/2026: built from 1.0.2 (release-batch.mjs --overlay --replace); every role variable the template paints is read with its own value as the fallback (role scan 0 unresolved), Vietnamese pages use Alegreya in place of Eczar; unworn the page is the release's own (VERIFICATION.json: 0 computed differences desktop and phone, 26/26 pages as released; the screenshots differ only where the home page's Gallery carousel had moved on). 1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
   "keepDefaults": {},
   "bands": {
     "#Section127": {

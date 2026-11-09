@@ -141,6 +141,16 @@
         "'slot_corrections' =>": true,
         "function urlSafeAlias(": true
       }
+    },
+    "0.24.91": {
+      "sha256": "3a99e2f927c4d7efa672f7e7673460f831df0a2a2d356f2f11599fe049c94bf8",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
     }
   }
 }

@@ -20,6 +20,7 @@ const OPTIONS = [
   'stylesheet',
   'template',
   'site_logo',
+  'tracy_logo_dark',
   'site_icon',
   'page_on_front',
   'page_for_posts',
@@ -29,6 +30,16 @@ const OPTIONS = [
 /** The `ref` of the first navigation block in a template part's markup, or null. */
 export const navigationRefOf = (markup) =>
   /<!-- wp:navigation \{[^}]*?"ref":(\d+)/.exec(String(markup ?? ''))?.[1] ?? null
+
+/** The class names of every `core/site-logo` block in a template part's markup, in order. */
+export const siteLogoClassesOf = (markup) =>
+  [...String(markup ?? '').matchAll(/<!-- wp:site-logo(\s+\{.*?\})?\s*\/?-->/g)].map(
+    (m) => /"className":"((?:[^"\\]|\\.)*)"/.exec(m[1] ?? '')?.[1] ?? ''
+  )
+/** Block classes of the Tracy logo convention (inc/brand-logo.php): a dark-background spot, a light one, no text. */
+const LOGO_DARK_CLASS = /(?:^|\s)(?:tracy-logo-dark|[a-z0-9_-]*[_-]logo--dark)(?:\s|$)/
+const LOGO_FALLBACK_CLASS = /(?:^|\s)(?:tracy-logo-fallback|[a-z0-9_-]*[_-]logo--light)(?:\s|$)/
+const LOGO_BARE_CLASS = /(?:^|\s)tracy-logo-bare(?:\s|$)/
 
 /** The labels of a navigation post's top-level links and submenus, in order. */
 export function topLevelLabels(markup) {
@@ -169,13 +180,29 @@ export function wordpressAdapter(source) {
         ? []
         : [{ kind: 'setting', scope: 'cms', setting: 'option blogname', value: siteName }]
     },
-    /** The site logo option every `core/site-logo` block prints, with the template parts that print it. */
+    /**
+     * The logo options the `core/site-logo` blocks print, with the template parts that print them. Core draws one
+     * logo, `site_logo`, and nothing when it is empty. A theme carrying the Tracy convention (`inc/brand-logo.php`
+     * reads `tracy_logo_dark`) draws a block with a dark class from `tracy_logo_dark`, and prints the site name as text
+     * in a dark or light classed block whose option is empty (unless the block is `tracy-logo-bare`).
+     */
     logoSettings() {
-      const prints = ['header', 'footer']
-        .filter((slug) => /<!-- wp:site-logo\b/.test(partOf(slug) ?? ''))
-        .map((where) => ({ where, layout: `parts/${where}`, emptyShows: 'nothing' }))
-      if (!prints.length) return []
-      return [{ key: 'site_logo', value: attachedFile(state.options.site_logo) ?? '', prints }]
+      const tracyLogos = /tracy_logo_dark/.test(themeFile('inc/brand-logo.php') ?? '')
+      const byKey = new Map()
+      for (const where of ['header', 'footer'])
+        for (const classes of siteLogoClassesOf(partOf(where))) {
+          const dark = tracyLogos && LOGO_DARK_CLASS.test(classes)
+          const named =
+            tracyLogos && (dark || LOGO_FALLBACK_CLASS.test(classes)) && !LOGO_BARE_CLASS.test(classes)
+          const key = dark ? 'tracy_logo_dark' : 'site_logo'
+          const prints = byKey.get(key) ?? []
+          if (!prints.some((p) => p.where === where))
+            prints.push({ where, layout: `parts/${where}`, emptyShows: named ? 'name-as-text' : 'nothing' })
+          byKey.set(key, prints)
+        }
+      return ['site_logo', 'tracy_logo_dark']
+        .filter((key) => byKey.has(key))
+        .map((key) => ({ key, value: attachedFile(state.options[key]) ?? '', prints: byKey.get(key) }))
     },
     /**
      * The colours a block theme's theme.json palette declares (`settings.color.palette`): the variable a palette entry

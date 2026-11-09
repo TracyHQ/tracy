@@ -142,7 +142,7 @@ marks Our Blog for articles and categories, Tagged Items for tags and Smart Sear
 | `wp_ja_diner_blog_banner_image` | attachment id of the sidebar banner picture (`banner-1`) |
 | `tracy_motion` | motion settings; default one effect `carousel-step`; `{"effects":[]}` turns motion off |
 | `tracy_joomla_pager_text` | pager labels (Start, Prev, Next, End), used by the must-use plugin `tracy-joomla-pagination` |
-| `site_logo`, `tracy_logo_dark` | light and dark logos (attachment ids); `tracy_logo_dark` unset at build time (D-34) |
+| `site_logo`, `tracy_logo_dark` | light and dark logos (attachment ids); in the demo `tracy_logo_dark` is the white copy of the logo (D-34) |
 | `users_can_register`, `default_role`, `date_format` | 1, `subscriber` (D-15), `j F Y` (D-22) |
 | post meta `jd_intro_image`; term meta `jd_category_image` | list picture of an article; picture of a category card |
 | post meta `tracy_page_heading` | heading override read only by an inert hook |

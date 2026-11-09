@@ -172,6 +172,63 @@
         }
       ]
     },
+    "ja-diner/wp7/1.0.4": {
+      "hide": [
+        {
+          "navigation": 93,
+          "label": "Home - Red",
+          "pageId": 85,
+          "reason": "the red colour variant of the demo home page"
+        },
+        {
+          "navigation": 93,
+          "label": "Home - Pink",
+          "pageId": 86,
+          "reason": "the pink colour variant of the demo home page"
+        },
+        {
+          "navigation": 93,
+          "label": "Home - Green",
+          "pageId": 87,
+          "reason": "the green colour variant of the demo home page"
+        },
+        {
+          "navigation": 93,
+          "label": "Home - Blue",
+          "pageId": 88,
+          "reason": "the blue colour variant of the demo home page"
+        },
+        {
+          "navigation": 278,
+          "label": "All categories",
+          "pageId": 273,
+          "path": ["Content", "All categories"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: its text is the names of the post categories and a heading the blog shows too, its query lists the posts Blog lists, and its links go to Blog and the category archives; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 278,
+          "label": "Fetured Articles",
+          "pageId": 274,
+          "path": ["Content", "Fetured Articles"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: it holds no text of its own and its query lists the posts Blog lists; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        },
+        {
+          "navigation": 278,
+          "label": "Tagged Items",
+          "pageId": 277,
+          "path": ["Content", "Tagged Items"],
+          "reason": "Joomla sample listing screen in the drawer's \"Content\" branch: a tag cloud and queries of the posts Blog lists, with no text of its own; the header drawer keeps its account pages (Login, published with a core/loginout block, Registration, the profile pages) and Smart Search, which are real on a customer site"
+        }
+      ],
+      "keep": [
+        {
+          "navigation": 278,
+          "label": "J! Pages",
+          "path": ["J! Pages"],
+          "reason": "\"J! Pages\" holds the account pages a customer site uses: Login (published with a core/loginout block), Registration, User Profile and Edit User Profile; at install the site's own address replaces the demo one, so they work"
+        }
+      ]
+    },
     "ja-essence/wp7/1.0.20": {
       "hide": [
         {
