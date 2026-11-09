@@ -24,6 +24,7 @@ export function BriefControl({
   research,
   brief,
   briefJob,
+  onJob,
   onSettled
 }: {
   t: Translate
@@ -35,9 +36,12 @@ export function BriefControl({
   brief: unknown
   /** `body.briefJob` of the Details answer: a running job keeps showing after a reload. */
   briefJob: unknown
+  /** The job as this control knows it (pressed here, then polled), for the parts of the page around it. */
+  onJob?: (job: unknown) => void
   onSettled: () => void
 }): JSX.Element | null {
   const [job, setJob] = useState<unknown>(briefJob)
+  useEffect(() => onJob?.(job), [job, onJob])
   const [pressing, setPressing] = useState(false)
   const [refused, setRefused] = useState(false)
   useEffect(() => setJob(briefJob), [briefJob])

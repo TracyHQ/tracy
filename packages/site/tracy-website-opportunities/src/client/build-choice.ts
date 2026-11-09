@@ -64,3 +64,8 @@ export function buildLabel(typed: string | null, saved: string | null, suggested
   if (typed !== null) return typed.trim()
   return saved || suggested
 }
+
+/** The hint under the Build form's name: it names the saved Site name on Tracy while that is the one shown. */
+export function buildLabelHintKey(typed: string | null, saved: string | null): string {
+  return typed === null && saved ? 'build.labelHintSaved' : 'build.labelHint'
+}

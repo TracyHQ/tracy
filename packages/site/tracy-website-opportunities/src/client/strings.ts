@@ -945,6 +945,7 @@ export const en = {
 
   'build.label': 'Demo site name',
   'build.labelHint': 'Named after the place. Change it to use another address.',
+  'build.labelHintSaved': 'The site name you saved on the Business brief. Change it to use another address.',
   'build.start': 'Build demo',
   'build.cms': 'CMS',
   'build.template': 'Template',

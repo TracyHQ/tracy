@@ -42,6 +42,21 @@ test('the Build form sends the Site name on Tracy when one is saved, else the na
   assert.equal(buildLabel('  ', 'my-coach', 'pho-ba'), '')
 })
 
+test('the hint under the name says it is the saved Site name while that is the one shown', async () => {
+  const { buildLabelHintKey } = await import('../src/client/build-choice.ts')
+  const { en } = await import('../src/client/strings.ts')
+  assert.equal(
+    en[buildLabelHintKey(null, 'my-coach')],
+    'The site name you saved on the Business brief. Change it to use another address.'
+  )
+  assert.equal(en[buildLabelHintKey(null, null)], 'Named after the place. Change it to use another address.')
+  assert.equal(
+    buildLabelHintKey('typed-name', 'my-coach'),
+    'build.labelHint',
+    'a typed name is no longer the saved one'
+  )
+})
+
 test("the card's template is the one the template picker recommends for this business, ahead of the pin", () => {
   // The picker recommends a Joomla card for this trade; the card no longer shows the WordPress pin.
   const c = buildChoice(choices, 'wordpress', null, null, ['bar'])

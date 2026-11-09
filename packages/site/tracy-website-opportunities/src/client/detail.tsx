@@ -32,7 +32,7 @@ import {
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
 import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
-import { buildChoice, buildLabel } from './build-choice.ts'
+import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl } from './brief-control.tsx'
 import { EditableText } from './editable-text.tsx'
@@ -1204,6 +1204,9 @@ function Demos({
   const status = briefStatus(brief)
   const edited = isRecord(brief) && brief.editedBySeller === true
   const when = status ? relativeTime(status.createdAt, Date.now(), locale) : ''
+  // A job pressed on this page lives in the control; it reports it so the empty line gives way to the steps.
+  const [pressedJob, setPressedJob] = useState<unknown>(null)
+  const runningJob = [pressedJob, briefJob].some((j) => isRecord(j) && j.state === 'running')
   return (
     <>
       {/* No demo yet: the Demo site block above already says so; the list only appears once there is a history. */}
@@ -1246,7 +1249,7 @@ function Demos({
       )}
       <Section title={t('revision.document')}>
         {status === null ? (
-          isRecord(briefJob) && briefJob.state === 'running' ? null : (
+          runningJob ? null : (
             <p className="tracy-wo-muted">{t('brief.none')}</p>
           )
         ) : (
@@ -1270,6 +1273,7 @@ function Demos({
           research={research}
           brief={brief}
           briefJob={briefJob}
+          onJob={setPressedJob}
           onSettled={onRefreshed}
         />
       </Section>
@@ -1567,7 +1571,7 @@ export function Build({
           autoComplete="off"
           onChange={(event) => setTyped(event.target.value)}
         />
-        <span className="tracy-wo-muted tracy-wo-small">{t('build.labelHint')}</span>
+        <span className="tracy-wo-muted tracy-wo-small">{t(buildLabelHintKey(typed, siteLabel))}</span>
       </label>
       {buildId === null ? (
         <Button type="button" disabled={busy || usageFull(usage)} onClick={() => void start()}>
