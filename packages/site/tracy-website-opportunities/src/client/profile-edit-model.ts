@@ -35,3 +35,14 @@ export function profileEditBody(
   if (value === shown.trim()) return null
   return { edits: { [field]: value === '' ? null : value } }
 }
+
+/**
+ * The opening hours a seller typed in the Business brief table: one line per day (or `;` between days), blank lines
+ * dropped. Empty = nothing to save.
+ */
+export function typedHours(typed: string): string[] {
+  return typed
+    .split(/\n|;/)
+    .map((line) => line.trim())
+    .filter((line) => line !== '')
+}

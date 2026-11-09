@@ -1094,6 +1094,11 @@ export const en = {
   'pp.lead':
     'What the research found about this place. It is the same for every template and holds nothing of your brief or demos.',
   'pp.failed': 'The place profile could not be loaded.',
+  'pp.stat.followers': 'Followers',
+  'pp.stat.following': 'Following',
+  'pp.stat.posts': 'Posts',
+  'pp.stat.rating': 'Rating',
+  'pp.stat.reviewCount': 'Reviews',
   'pp.offerings': 'Offerings',
   'pp.people': 'People',
   'pp.claims': 'Claims',

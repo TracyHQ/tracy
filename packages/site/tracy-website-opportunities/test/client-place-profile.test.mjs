@@ -108,6 +108,24 @@ test('offerings keep variants and the price exactly as printed; people, faqs and
   assert.match(html, /Best pho/)
 })
 
+test('a figure research records under a code reads in plain words, never its code', () => {
+  const html = draw(
+    doc({
+      claims: {
+        statistics: [
+          fact('s1', { amount: 4, label: 'reviewCount', scope: 'business' }),
+          fact('s2', { amount: 900, label: 'monthlyVisits', scope: 'business' })
+        ],
+        recognitions: [],
+        relationships: []
+      }
+    })
+  )
+  assert.doesNotMatch(html, />reviewCount</)
+  assert.match(html, /\[pp\.stat\.reviewCount\]<\/span><span[^>]*> · 4</)
+  assert.match(html, /Monthly visits<\/span>/)
+})
+
 test('a block with no data is left out, never drawn empty', () => {
   const html = draw(doc())
   for (const key of ['pp.offerings', 'pp.people', 'pp.claims', 'pp.faqs', 'pp.quotes', 'pp.photoLinks'])

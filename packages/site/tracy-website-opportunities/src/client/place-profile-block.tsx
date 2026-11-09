@@ -14,7 +14,17 @@ import {
   type PlaceProfileView,
   placeProfileView
 } from './place-profile-model.ts'
+import { spelledField } from './profile-facts-model.ts'
 import type { Translate } from './strings.ts'
+
+/** Figures research records under a code (`reviewCount`); everything else is the business's own words, kept. */
+const STAT_KEYS = new Set(['followers', 'following', 'posts', 'rating', 'reviewCount'])
+
+/** A figure's label in plain words: `reviewCount` reads Reviews, never its code. */
+export function statLabel(label: string, t: Translate): string {
+  if (STAT_KEYS.has(label)) return t(`pp.stat.${label}`)
+  return /^[a-z][A-Za-z0-9_]*$/.test(label) && /[A-Z_]/.test(label) ? spelledField(label) : label
+}
 
 const day = (iso: string): string => {
   const at = new Date(iso)
@@ -136,7 +146,9 @@ export function PlaceProfileBlock({
         {hasClaims ? (
           <Part title={t('pp.claims')}>
             <div className="tracy-wo-stack">
-              {view.statistics.length > 0 ? <Claims rows={view.statistics} /> : null}
+              {view.statistics.length > 0 ? (
+                <Claims rows={view.statistics.map((row) => ({ ...row, label: statLabel(row.label, t) }))} />
+              ) : null}
               {view.recognitions.length > 0 ? <Claims rows={view.recognitions} /> : null}
               {view.relationships.length > 0 ? <Claims rows={view.relationships} /> : null}
             </div>

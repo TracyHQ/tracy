@@ -62,3 +62,16 @@ test('each brief card line that holds words of the brief maps to its path; deriv
     'the hours line is joined from many, not one text'
   )
 })
+
+test('hours typed in the Business brief table: one line per day or a semicolon between days, blanks dropped', async () => {
+  const { typedHours } = await import('../src/client/profile-edit-model.ts')
+  assert.deepEqual(typedHours('Monday: 9 AM to 5 PM\n\n Tuesday: Closed '), [
+    'Monday: 9 AM to 5 PM',
+    'Tuesday: Closed'
+  ])
+  assert.deepEqual(typedHours('Monday: 9 AM to 5 PM; Tuesday: Closed'), [
+    'Monday: 9 AM to 5 PM',
+    'Tuesday: Closed'
+  ])
+  assert.deepEqual(typedHours('  \n '), [])
+})

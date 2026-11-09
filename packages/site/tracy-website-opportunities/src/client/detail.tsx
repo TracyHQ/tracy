@@ -36,7 +36,7 @@ import { buildChoice, buildLabel } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl } from './brief-control.tsx'
 import { EditableText } from './editable-text.tsx'
-import { profileEditBody, profileEditView } from './profile-edit-model.ts'
+import { profileEditBody, profileEditView, typedHours } from './profile-edit-model.ts'
 import { researchOf } from './research-gate-model.ts'
 import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
@@ -582,12 +582,57 @@ export function DetailView({
     (v): v is string => typeof v === 'string' && v !== ''
   )
   const progress = <DemoProgress t={t} row={row} locale={locale} now={now} />
+  const keyMessagesRows = (titled: boolean): JSX.Element | null =>
+    keyMessages.length === 0 ? null : (
+      <ProfileKeyMessages
+        key={keyMessages.map((m) => `${m.id}:${m.label}`).join('|')}
+        t={t}
+        messages={keyMessages}
+        onSave={saveKeyMessages}
+        titled={titled}
+      />
+    )
+  // The name and the hours keep their own doors (`setName`, `setHours`); in the table they edit like any other fact.
+  const editNameCell = (value: string): JSX.Element => (
+    <EditableText
+      key={`name:${value}`}
+      t={t}
+      value={value}
+      label={t('field.name')}
+      edited={false}
+      editedKey="profile.editedByYou"
+      maxLength={200}
+      onSave={async (typed) => (typed.trim() === value.trim() ? true : saveName(typed.trim()))}
+    />
+  )
+  const editHoursCell = (value: string): JSX.Element => {
+    const lines = hoursRow?.hours ?? value.split(';').map((line) => line.trim())
+    return (
+      <EditableText
+        key={`hours:${lines.join('|')}`}
+        t={t}
+        value={lines.join('\n')}
+        label={t('field.hours')}
+        edited={false}
+        editedKey="profile.editedByYou"
+        multiline
+        maxLength={1200}
+        onSave={async (typed) => {
+          const hours = typedHours(typed)
+          if (hours.length === 0 || hours.join('|') === lines.join('|')) return true
+          return (await saveHours({ choice: 'edit', hours })) === 'ok'
+        }}
+      />
+    )
+  }
   // A row the seller corrected (#524) came from them, whatever research said.
   const briefRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale).map((r) =>
     r.field !== null && profileEditView(profile, r.field)?.edited
       ? { ...r, source: t('brief.source.you') }
       : r
   )
+  // Once research is done and the brief lists its facts, the Business brief table is the one place to check them.
+  const tableListsFacts = research.done && briefRows.length > 0
 
   return (
     <div className="tracy-wo-page tracy-wo-details">
@@ -704,71 +749,73 @@ export function DetailView({
               firstRow={<SiteNameRow t={t} api={api} opportunityId={id} />}
               editValue={(row) => {
                 // The seller's own edit shows at once, before a new brief freezes it (#524).
-                if (row.field === null) return null
+                if (row.field === null || !research.done) return null
+                if (row.field === 'name') return editNameCell(row.value)
+                if (row.field === 'hours') return editHoursCell(row.value)
                 const mine = profileEditView(profile, row.field)
                 return editProfileRow(row.field, mine?.edited ? mine.value : row.value)
               }}
               onToggle={toggleFact}
             />
           </Section>
-          <Profile
-            t={t}
-            profile={profile}
-            plainRows={briefRows.length === 0 || !research.done}
-            emptyKey={research.done ? 'detail.noProfile' : 'research.profileEmpty'}
-            editRow={research.done ? editProfileRow : null}
-            nameRow={
-              nameRow === null ? null : (
-                <ProfileNameRow
-                  key={`${nameRow.name}:${nameRow.chip}`}
-                  t={t}
-                  view={nameRow}
-                  onSave={saveName}
-                />
-              )
-            }
-            hoursRow={
-              hoursRow === null ? null : (
-                <ProfileHoursRow
-                  key={`${hoursRow.hours.join('|')}:${hoursRow.chip}:${hoursRow.left}`}
-                  t={t}
-                  view={hoursRow}
-                  onSave={saveHours}
-                />
-              )
-            }
-            phonesRow={
-              phonesRow === null || (phonesRow.others.length === 0 && !phonesRow.mainWhatsapp) ? null : (
-                <ProfilePhonesRows t={t} view={phonesRow} />
-              )
-            }
-            ratingRow={
-              ratingRow === null ? null : (
-                <ProfileRatingRow
-                  key={`${ratingRow.shown}:${ratingRow.chosen}`}
-                  t={t}
-                  view={ratingRow}
-                  locale={locale}
-                  onSave={saveRating}
-                />
-              )
-            }
-            readingRows={
-              readingRows === null ? null : (
-                <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} />
-              )
-            }
-            keyMessagesRows={
-              keyMessages.length === 0 ? null : (
-                <ProfileKeyMessages
-                  key={keyMessages.map((m) => `${m.id}:${m.label}`).join('|')}
-                  t={t}
-                  messages={keyMessages}
-                  onSave={saveKeyMessages}
-                />
-              )
-            }
-          />
+          {tableListsFacts ? (
+            // The table already lists every fact with its switch and its edit; only the key messages stay apart.
+            keyMessages.length === 0 ? null : (
+              <Section title={t('keyMessages.title')}>
+                <dl className="tracy-wo-fields">{keyMessagesRows(false)}</dl>
+              </Section>
+            )
+          ) : (
+            <Profile
+              t={t}
+              profile={profile}
+              plainRows={briefRows.length === 0 || !research.done}
+              emptyKey={research.done ? 'detail.noProfile' : 'research.profileEmpty'}
+              editRow={research.done ? editProfileRow : null}
+              nameRow={
+                nameRow === null ? null : (
+                  <ProfileNameRow
+                    key={`${nameRow.name}:${nameRow.chip}`}
+                    t={t}
+                    view={nameRow}
+                    onSave={saveName}
+                  />
+                )
+              }
+              hoursRow={
+                hoursRow === null ? null : (
+                  <ProfileHoursRow
+                    key={`${hoursRow.hours.join('|')}:${hoursRow.chip}:${hoursRow.left}`}
+                    t={t}
+                    view={hoursRow}
+                    onSave={saveHours}
+                  />
+                )
+              }
+              phonesRow={
+                phonesRow === null || (phonesRow.others.length === 0 && !phonesRow.mainWhatsapp) ? null : (
+                  <ProfilePhonesRows t={t} view={phonesRow} />
+                )
+              }
+              ratingRow={
+                ratingRow === null ? null : (
+                  <ProfileRatingRow
+                    key={`${ratingRow.shown}:${ratingRow.chosen}`}
+                    t={t}
+                    view={ratingRow}
+                    locale={locale}
+                    onSave={saveRating}
+                  />
+                )
+              }
+              readingRows={
+                readingRows === null ? null : (
+                  <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} />
+                )
+              }
+              keyMessagesRows={keyMessagesRows(true)}
+            />
+          )}
           <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
           <GooglePlace t={t} place={googlePlaceView(profile?.googlePlace)} food={profile?.trade === 'food'} />
           <TripadvisorReviews t={t} profile={profile} media={media} />

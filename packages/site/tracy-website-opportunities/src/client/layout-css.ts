@@ -337,7 +337,7 @@ export const CSS = `
 .tracy-wo-textarea { width: 100%; min-height: 72px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); color: var(--foreground); font: inherit; font-size: 13px; line-height: 18px; resize: vertical; box-shadow: none; outline: none; }
 .tracy-wo-textarea:focus-visible { border-color: var(--ring); outline: none; box-shadow: none; }
 .tracy-wo-editable { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
-.tracy-wo-editable-text { min-width: 0; overflow-wrap: anywhere; }
+.tracy-wo-editable-text { min-width: 0; overflow-wrap: anywhere; white-space: pre-line; }
 .tracy-wo-editable > :not(.tracy-wo-editable-text) { flex-shrink: 0; }
 .tracy-wo-edited { font-size: 11px; line-height: 15px; color: var(--muted-foreground); }
 `
