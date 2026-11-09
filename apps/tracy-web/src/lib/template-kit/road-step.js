@@ -23,9 +23,10 @@
  *   warn      the same on a release already published: it is never taken off for it, as Content coverage does; or a
  *             gap the flow only works around (`kit-setting-slot-missing`) on a kit otherwise approved.
  */
-import { contractFor } from '../contracts.js'
+
 import { COVERAGE_POLICY } from '../content-coverage/judge.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 import { BASELINE_FILE } from './demo-baseline-file.js'
 import { flowGapsOf } from './flow-reads.js'
 import {
@@ -99,7 +100,7 @@ const SHOWN_GAPS = 8
  */
 export function kitOfRelease(release, contracts) {
   const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  return kitOfContract(contractFor(contracts, release?.tag, version))
+  return kitOfContract(contractOfRelease(release, contracts))
 }
 
 /**

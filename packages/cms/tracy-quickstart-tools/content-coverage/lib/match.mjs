@@ -1,6 +1,7 @@
 // Match extracted items to content-map slots. Decides: matched | locked | hole | ignored.
-import { normText, normPath, normHref, letterCount, alnumCount, compact } from './normalize.mjs'
+
 import { isLockedDesignAsset } from './contract.mjs'
+import { alnumCount, compact, letterCount, normHref, normPath, normText } from './normalize.mjs'
 
 const isWordChar = (c) => !!c && /[\p{L}\p{N}]/u.test(c)
 

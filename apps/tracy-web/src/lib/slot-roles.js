@@ -12,15 +12,15 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import {
   BASE_FILES,
-  EMDASH_BASE_FILES,
   baseHashOf,
+  EMDASH_BASE_FILES,
   isFactRole,
   sha256,
   validateSlotRoles
 } from 'website-opportunities/domain'
 
 export const SLOT_ROLES_FILE = 'slot-roles.json'
-export { BASE_FILES, EMDASH_BASE_FILES, baseHashOf, sha256 }
+export { BASE_FILES, baseHashOf, EMDASH_BASE_FILES, sha256 }
 
 function readJsonIfPresent(filePath) {
   if (!existsSync(filePath)) return null
@@ -199,10 +199,13 @@ export function contractSlotInventory(contractDir) {
         manifest?.cms ??
         (manifest?.wordpress ? 'wordpress' : manifest?.joomla ? 'joomla' : '')
     ).toLowerCase()
-    const cms =
-      rawCms.startsWith('wp') ||
-      rawCms === 'wordpress' ||
-      (!rawCms && !slots.some((s) => s?.jsonPath || s?.xpath))
+    // An EmDash theme's generated content map names its platform in its schema (`.../emdash/v1`): no manifest beside it.
+    const isEmdashMap = !manifest && /\/emdash\//.test(String(contentMap?.schemaVersion ?? ''))
+    const cms = isEmdashMap
+      ? 'emdash'
+      : rawCms.startsWith('wp') ||
+          rawCms === 'wordpress' ||
+          (!rawCms && !slots.some((s) => s?.jsonPath || s?.xpath))
         ? 'wordpress'
         : 'joomla'
     return {

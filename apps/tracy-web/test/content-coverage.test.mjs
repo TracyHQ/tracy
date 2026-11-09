@@ -11,8 +11,9 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import { measureSlotFit } from '../../../packages/cms/tracy-quickstart-tools/content-coverage/lib/slot-fit.mjs'
-import { holeBlocks, judgeCoverage } from '../src/lib/content-coverage/judge.js'
+import { COVERAGE_POLICY, holeBlocks, judgeCoverage } from '../src/lib/content-coverage/judge.js'
 import { coverageOfContract } from '../src/lib/content-coverage/reader.js'
+import { contentCoverageStep } from '../src/lib/content-coverage/road-step.js'
 import { readContracts } from '../src/lib/contracts.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
 
@@ -390,13 +391,34 @@ test('WordPress: the roles are read from the content map of its own contract', (
   assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts, coverage: measured })).state, 'done')
 })
 
-test('EmDash: the roles group is judged too, whatever the contract state', () => {
+test('EmDash: the audit measures it, so a release with no measurement is held, not "not needed"', () => {
   const { contracts } = profile(null)
   const emdash = release({ tag: 'tracy-base/emdash-0.x', platform: 'emdash' })
-  const held = stepOf(roadOf(emdash, { contracts, roles: { state: 'none' } }))
+  const unmeasured = stepOf(roadOf(emdash, { contracts, roles: { state: 'ready' } }))
+  assert.deepEqual([unmeasured.state, unmeasured.code], ['todo', 'coverage-not-measured'])
+  const held = stepOf(
+    roadOf(emdash, { contracts, roles: { state: 'none' }, coverage: { state: 'measured', doc: doc() } })
+  )
   assert.deepEqual([held.state, held.code, held.params.rolesState], ['todo', 'coverage-roles', 'none'])
-  const ready = stepOf(roadOf(emdash, { contracts, roles: { state: 'ready' } }))
-  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-not-needed'])
+})
+
+test('a platform that binds roles but has no audit answers coverage-roles-only, never coverage-not-needed', () => {
+  const emdash = release({ tag: 'tracy-base/emdash-0.x', platform: 'emdash' })
+  const policy = { ...COVERAGE_POLICY, platforms: ['joomla', 'wordpress'] }
+  const put = (step, state, code, params) => ({ step, state, code, params })
+  const run = (roles) =>
+    contentCoverageStep(put, () => undefined, {
+      release: emdash,
+      version: '1.0.2',
+      coverage: { state: 'none' },
+      roles,
+      fit: { state: 'none' },
+      policy
+    })
+  const ready = run({ state: 'ready' })
+  assert.deepEqual([ready.state, ready.code, ready.params.measured], ['done', 'coverage-roles-only', false])
+  const held = run({ state: 'none' })
+  assert.deepEqual([held.state, held.code], ['todo', 'coverage-roles'])
 })
 
 test('the caller may hand the coverage in (the door reads the same file once)', () => {
@@ -668,13 +690,23 @@ test('fit group: holes keep their verdict, and Slot fit rides along in the refus
   assert.match(reason, /Slot fit/)
 })
 
-test('fit group: WordPress is judged like Joomla, EmDash not until its audit measures Slot fit', () => {
+test('fit group: WordPress and EmDash are judged like Joomla; a platform whose audit does not measure Slot fit is not', () => {
   const { contracts, wp } = wordpressProfile(MAP_WITHOUT_FIT)
   const step = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc() } }))
   assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'none', 12])
   const emdash = release({ tag: 'quickstart/ja-boxing/emdash', platform: 'emdash' })
-  const other = stepOf(roadOf(emdash, { contracts, fit: { state: 'none', count: 12, shown: [] } }))
-  assert.deepEqual([other.params.fitState, other.params.fitHolds], ['not-applicable', false])
+  const measuredEmdash = stepOf(
+    roadOf(emdash, {
+      contracts,
+      coverage: { state: 'measured', doc: doc() },
+      roles: { state: 'ready' },
+      fit: { state: 'none', count: 12, shown: [] }
+    })
+  )
+  assert.deepEqual([measuredEmdash.params.fitState, measuredEmdash.params.fitHolds], ['none', true])
+  const shop = release({ tag: 'quickstart/ja-boxing/shopify', platform: 'shopify' })
+  const other = stepOf(roadOf(shop, { contracts, fit: { state: 'none', count: 12, shown: [] } }))
+  assert.equal(other.code, 'coverage-not-needed')
 })
 
 // The JA Diner WP7 1.0.1 release: ten slots of its released content map and what the content coverage audit measured for

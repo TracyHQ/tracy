@@ -15,7 +15,7 @@ import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 import { checkContentMapFit } from 'website-opportunities/domain'
 
-import { contractFor } from '../contracts.js'
+import { contractOfRelease } from '../slot-roles-of-release.js'
 
 /** How many slot keys the group names itself. */
 const SHOWN_KEYS = 8
@@ -67,7 +67,7 @@ function contentMapIn(dir) {
  */
 export function fitOfRelease(release, contracts) {
   const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  const dir = contractFor(contracts, release?.tag, version)?.dir ?? null
+  const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return fitOfContentMap(null)
   // Re-read only when the map changed: /ops builds every road on each list read.
   const stamp = mtime(path.join(dir, 'content-map.json'))

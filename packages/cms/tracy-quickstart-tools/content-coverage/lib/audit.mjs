@@ -1,15 +1,15 @@
 // The audit loop: pages from the map + crawl, render at two viewports, match, classify.
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { openContext, renderPage } from './render.mjs'
-import { PagePlan } from './pages.mjs'
-import { mergeViewports, annotate, count, emptyCounts, coverage } from './items.mjs'
-import { createMatcher } from './match.mjs'
+import { layoutFindingsOf, planLayoutCheck } from './article-layout.mjs'
 import { createClassifier } from './classify.mjs'
 import { findHygiene } from './hygiene.mjs'
-import { normText } from './normalize.mjs'
+import { annotate, count, coverage, emptyCounts, mergeViewports } from './items.mjs'
 import { deadLinksOf, fetchStatus, renderedLinksOf } from './link-check.mjs'
-import { layoutFindingsOf, planLayoutCheck } from './article-layout.mjs'
+import { createMatcher } from './match.mjs'
+import { normText } from './normalize.mjs'
+import { PagePlan } from './pages.mjs'
+import { openContext, renderPage } from './render.mjs'
 import { standUserFilter } from './stand-users.mjs'
 
 const log = (...a) => console.error('[audit]', ...a)

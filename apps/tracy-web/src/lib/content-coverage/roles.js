@@ -13,8 +13,7 @@ import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 
 import { readSlotRoles } from '../contract-slot-roles.js'
-import { contractFor } from '../contracts.js'
-import { slotRolesOfRelease } from '../slot-roles-of-release.js'
+import { contractOfRelease, slotRolesOfRelease } from '../slot-roles-of-release.js'
 
 /** How many slot keys the group names itself. */
 const SHOWN_KEYS = 8
@@ -101,7 +100,7 @@ export function rolesOfRead(read, dir) {
  */
 export function rolesOfRelease(release, contracts) {
   const version = typeof release?.setting?.version === 'string' ? release.setting.version : undefined
-  const dir = contractFor(contracts, release?.tag, version)?.dir ?? null
+  const dir = contractOfRelease(release, contracts)?.dir ?? null
   if (!dir) return rolesOfRead(slotRolesOfRelease(release, contracts), null)
   // Re-read only when a file changed: /ops builds every road on each list read.
   const stamp = ['content-map.json', 'slot-roles.json', 'manifest.json', 'presentation-lock.json']

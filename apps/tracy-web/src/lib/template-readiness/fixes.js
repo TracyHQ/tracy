@@ -105,6 +105,7 @@ export const FIXES = Object.freeze({
 
   // content coverage
   'coverage-not-needed': GREEN,
+  'coverage-roles-only': GREEN,
   'coverage-ready': GREEN,
   'coverage-waiting': WAITING('the steps before Content coverage'),
   'coverage-not-measured': {

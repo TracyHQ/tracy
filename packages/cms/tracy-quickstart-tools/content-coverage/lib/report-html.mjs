@@ -1,8 +1,8 @@
 // Self-contained report.html: summary, then each page with annotated screenshots and its hole list.
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { CSS } from './report-style.mjs'
 import { coverage } from './items.mjs'
+import { CSS } from './report-style.mjs'
 
 const esc = (s) =>
   String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c])

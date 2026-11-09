@@ -318,6 +318,7 @@ const EVERY_CODE = [
     }
   ],
   ['content-coverage', 'coverage-not-needed', {}],
+  ['content-coverage', 'coverage-roles-only', {}],
   ['content-coverage', 'coverage-waiting', {}],
   ['content-coverage', 'coverage-not-measured', COVERAGE_BASE],
   [
@@ -570,6 +571,7 @@ const DONE_CODES = new Set([
   'not-published',
   'polish-done',
   'coverage-not-needed',
+  'coverage-roles-only',
   'coverage-waiting',
   'coverage-ready',
   'kit-not-needed',
