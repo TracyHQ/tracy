@@ -65,6 +65,7 @@ import {
   createLinkFields,
   linkRequestOf,
   mergeListings,
+  pastedLinkField,
   pastedLinksOf,
   saveListingSource
 } from './link-fields.js'
@@ -1432,7 +1433,8 @@ export function websiteOpportunitiesRoutes(deps) {
         ...(view ? { shared: s.shared === true } : {}),
         // The two search rows: the pages found, with their verdicts (new optional fields).
         ...searchRowPages(s),
-        // A source the person's own pasted link feeds: that link as they pasted it (`link-fields.js pastedLinksOf`).
+        // A source the person's own pasted link feeds: that link as they pasted it, without share tracking (an old
+        // record kept it; `link-fields.js pastedLinksOf`).
         // Only pasted links make a listing row, so one saved before `pastedLinks` gives its own first page.
         ...pastedLinkField(pasted.get(s.source) ?? (s.source === LISTING_SOURCE ? s.ref : null))
       })),
@@ -1796,9 +1798,6 @@ function httpsOn(value, hosts) {
     return null
   }
 }
-
-/** `{pastedLink}` for a source row a pasted link feeds; nothing for the rows research found by itself. */
-const pastedLinkField = (url) => (typeof url === 'string' && url ? { pastedLink: url } : {})
 
 /** Chat links (Zalo, WhatsApp, Messenger, LINE) a candidate carries; anything else is dropped. */
 function chatContacts(raw) {

@@ -124,6 +124,17 @@ const passes = (brief, name, role) =>
   Boolean(text(role)) || reviewMentionsOf(brief, name) >= REVIEW_MENTIONS_MIN
 
 /**
+ * Whether a person only reviews name is shown on the site by the rule above, read from the reviews alone (the Profile
+ * card, which holds no brief: `business-reading.mjs readingCardOf`).
+ * @param {any[]} reviews - every review the brief reads, with its text
+ * @param {string} name
+ * @param {string | null | undefined} role
+ */
+export const shownByReviewRule = (reviews, name, role) =>
+  Boolean(text(name)) &&
+  passes({ googlePlace: { reviews: Array.isArray(reviews) ? reviews : [] } }, name, role)
+
+/**
  * The brief's facts with every team member held only as `review-only-person` and passing the rule above shown on the
  * site, the reason kept so the brief reads "shown from reviews, owner to check" (`SHOWN_FROM_REVIEWS`). The owner's own
  * choice and any other reason are left as they are. Pure: a new list, the facts not changed.

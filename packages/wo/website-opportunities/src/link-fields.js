@@ -13,7 +13,7 @@
  * and socials in `candidate`, the listings in `candidate.listings` with what their pages said in a `wo_source` row
  * `listing` (`saveListingSource`), merged into the profile at the lowest priority (`executor.js mergeProfile`).
  */
-import { dropTracking, judgeLinks } from '../domain/link-kinds.mjs'
+import { dropTracking, judgeLinks, withoutTracking } from '../domain/link-kinds.mjs'
 import { isPlaceId } from './place-suggest.js'
 import { LISTING_SOURCE, SOCIAL_SOURCES, normalizeUrl, sourceOfUrl } from './sources.js'
 
@@ -192,7 +192,8 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
     }
 
     const listed = listings.map((l) => ({ url: l.url, source: l.source }))
-    // Which research source each used link feeds, as the person pasted it: Details lists these first (`pastedLinksOf`).
+    // Which research source each used link feeds, as the person pasted it less share tracking (`refOf`): Details lists
+    // these first (`pastedLinksOf`).
     const pastedLinks = [
       ...(google && googleLink && report[googleLink.i].used
         ? [{ source: 'google-places', url: refOf(googleLink) }]
@@ -320,6 +321,14 @@ export function pastedLinksOf(opportunity) {
   }
   return out
 }
+
+/**
+ * `{pastedLink}` for a Details source row a pasted link feeds, without share tracking (an old record kept it); nothing
+ * for the rows research found by itself.
+ * @param {unknown} url
+ */
+export const pastedLinkField = (url) =>
+  typeof url === 'string' && url ? { pastedLink: withoutTracking(url) } : {}
 
 /** A candidate's listings plus new ones, one entry per page. */
 export function mergeListings(held, added) {

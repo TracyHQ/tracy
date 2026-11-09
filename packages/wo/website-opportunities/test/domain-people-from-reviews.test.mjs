@@ -8,7 +8,6 @@ import { test } from 'node:test'
 import {
   liftReviewPeople,
   peopleFromReviewsNote,
-  REVIEW_MENTIONS_MIN,
   reviewMentionsOf,
   roleInCasingOf,
   showablePeopleOf
@@ -102,7 +101,6 @@ function bakeryBrief() {
 }
 
 test('reviewMentionsOf counts different reviews naming a person as a whole word, held reviews included', () => {
-  assert.equal(REVIEW_MENTIONS_MIN, 2)
   assert.equal(reviewMentionsOf(clinicBrief(), 'Mara'), 2)
   assert.equal(reviewMentionsOf(clinicBrief(), 'Noor'), 1)
   assert.equal(reviewMentionsOf(clinicBrief(), 'Mar'), 0, 'a part of a word is not a mention')

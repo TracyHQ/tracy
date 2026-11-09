@@ -9,7 +9,13 @@ import { mergeProfile } from '../src/executor.js'
 import { scoreOpportunity } from '../domain/opportunity-score.mjs'
 import { withSiteSocials } from '../domain/site-socials.mjs'
 import { candidateFromGplaces } from '../domain/discovery-gplaces.mjs'
-import { linkRequestOf, mergeListings, pastedLinksOf } from '../src/link-fields.js'
+import {
+  createLinkFields,
+  linkRequestOf,
+  mergeListings,
+  pastedLinkField,
+  pastedLinksOf
+} from '../src/link-fields.js'
 
 const MAGICPIN = 'https://magicpin.com/uae/Dubai/Al-Barsha/Fitness/Padel-and-Tennis-Coach/store/1000001'
 
@@ -181,4 +187,29 @@ test('linkRequestOf: links, the old url, and what is refused', () => {
   assert.equal(linkRequestOf({ links: [] }).error.code, 'INVALID_LINKS')
   assert.equal(linkRequestOf({ links: [1] }).error.code, 'INVALID_LINKS')
   assert.equal(linkRequestOf({}), null)
+})
+
+test('a pasted link is recorded and shown on Details without share tracking', async () => {
+  const tracked = 'https://www.instagram.com/harbour.sportclub?igsh=x&utm_source=qr'
+  const linkFields = createLinkFields({
+    domainDeps: () => ({}),
+    runtime: async () => ({}),
+    candidateFields: () => null
+  })
+  const domain = { assertPublicUrl: async () => {} }
+  const { fields } = await linkFields(domain, {
+    raws: [tracked],
+    typedName: null,
+    place: null,
+    legacy: false
+  })
+  assert.deepEqual(fields.candidate.pastedLinks, [
+    { source: 'instagram', url: 'https://www.instagram.com/harbour.sportclub' }
+  ])
+  // An old record kept the link as pasted: Details shows it clean, still as the link the person added.
+  const old = pastedLinksOf({ candidate: { pastedLinks: [{ source: 'instagram', url: tracked }] } })
+  const shown = pastedLinkField(old.get('instagram')).pastedLink
+  assert.doesNotMatch(shown, /igsh|utm_/)
+  assert.match(shown, /^https:\/\/www\.instagram\.com\/harbour\.sportclub\/?$/)
+  assert.deepEqual(pastedLinkField(null), {})
 })

@@ -300,6 +300,7 @@ test('a bounded pool: the next batch starts as soon as any call answers, never w
 })
 
 test('p6 asks whether a picture shows another business, and the answer is held as a boolean', () => {
+  // test-quality: contract the version is the cache key of stored vision labels and must move whenever the prompt text changes
   assert.equal(VISION_PROMPT_VERSION, 'p6')
   assert.match(PICTURE_LABEL_SYSTEM, /showsOtherBusiness/)
   assert.equal(

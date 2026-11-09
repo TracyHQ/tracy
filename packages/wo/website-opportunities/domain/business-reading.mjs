@@ -26,6 +26,7 @@ import { PLACEHOLDER_RE } from './content-pool.mjs'
 import { inSentence, withoutDashes } from './plain-prose.mjs'
 import { isSubTradeOf, subTradeChoicesOf } from './sub-trades.mjs'
 import { excludedPostOffer, postOfferCandidates } from './post-offerings.mjs'
+import { shownByReviewRule } from './brief-people.mjs'
 import { OFFERING_KIND_NOUNS, alternationOf, formsOf } from './trade-word-classes.mjs'
 
 // 3: services and audience may stand on repeated mentions, items carry their mentions, facts are read, and the reading
@@ -685,10 +686,12 @@ export function withReadingPicks(reading, picks) {
 
 /**
  * The reading as the Profile card shows it (pure): every item, a removed one marked `removed`, and each team member's
- * `onSite` (one named only in reviews is off the site until shown), and its key messages with the owner's
- * `keyMessagePicks` applied (`withKeyMessagePicks`). Null without a reading.
+ * `onSite` as the brief decides it: one named only in reviews is on the site when the owner showed them or when the
+ * reviews give them a role or two mentions (`brief-people.mjs`, then `fromReviews`, for the owner to check); and its key
+ * messages with the owner's `keyMessagePicks` applied (`withKeyMessagePicks`). Null without a reading.
+ * @param {{reviews?: any[]}} [read] - every review the brief reads (Google's and the review sites'), with its text
  */
-export function readingCardOf(reading, picks, keyMessagePicks = null) {
+export function readingCardOf(reading, picks, keyMessagePicks = null, { reviews = [] } = {}) {
   if (!reading) return null
   const removed = new Set(Array.isArray(picks?.removed) ? picks.removed : [])
   const shown = new Set(Array.isArray(picks?.shown) ? picks.shown : [])
@@ -709,7 +712,9 @@ export function readingCardOf(reading, picks, keyMessagePicks = null) {
     audience: card(reading.audience),
     team: card(reading.team).map((p, n) => {
       const reviewsOnly = reading.team[n]?.reviewsOnly === true
-      return { ...p, reviewsOnly, onSite: reviewsOnly ? shown.has(p.id) : true }
+      if (!reviewsOnly || shown.has(p.id)) return { ...p, reviewsOnly, onSite: true }
+      const lifted = shownByReviewRule(reviews, p.label, p.role)
+      return { ...p, reviewsOnly, onSite: lifted, ...(lifted ? { fromReviews: true } : {}) }
     }),
     story: card(reading.story),
     serviceAreas: card(reading.serviceAreas),
