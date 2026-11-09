@@ -6,6 +6,7 @@
  * Every door reads the signed-in person through the open router's `caller` and touches only that
  * account's rows: another account's revision, build or action answers 404, like one that does not exist.
  */
+import { withChainRuns, withTemplateEstimates } from './chain-progress.js'
 import { json } from '../lib/http.js'
 import { bornSiteAddress } from '../lib/site-address.js'
 import { woRuntime } from '../lib/wo-ops.js'
@@ -193,6 +194,11 @@ export function createWebsiteBuilder(deps) {
     )
     const { settings } = await runtime()
     for (const r of rows) r.demo_action = r.demo_action ? demoActionShape(r.demo_action) : null
+    await withChainRuns(
+      pool,
+      rows.map((r) => r.demo_action),
+      { now: now() }
+    )
     return new Map(
       rows.map((r) => [
         r.id,
@@ -213,7 +219,7 @@ export function createWebsiteBuilder(deps) {
    */
   /** The Build form's choices: each CMS's templates and the one `/ops/wo` pins there. */
   async function templateChoicesOf(settings) {
-    return templateChoices(await templateCards(), settings)
+    return withTemplateEstimates(pool, templateChoices(await templateCards(), settings))
   }
 
   async function demoFactsOf(accountId, ids) {
@@ -258,6 +264,12 @@ export function createWebsiteBuilder(deps) {
     return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? Boolean(same) : null }
   }
 
+  /** A demo action with its chain progress (`chain-progress.js`), when its build runs the step chain. */
+  async function withChainRun(action) {
+    await withChainRuns(pool, [action], { now: now() })
+    return action
+  }
+
   /** The demo half of `GET /:id`: its demo, progress, revisions, brief, action, usage and builds. */
   async function detailOf(opp, accountId) {
     const [revisions, builds] = await Promise.all([
@@ -274,7 +286,7 @@ export function createWebsiteBuilder(deps) {
       progress: demoProgress(builds[0]),
       revisions: revisions.map((r) => ({ id: r.id, n: r.n, createdAt: r.created_at })),
       brief: await briefStatus(opp, revisions),
-      demoAction: (await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null,
+      demoAction: await withChainRun((await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null),
       usage: await readDemoUsage(pool, accountId, settings.demoBuildsPerAccountPerDay, now()),
       builds: builds.map(buildShape)
     }

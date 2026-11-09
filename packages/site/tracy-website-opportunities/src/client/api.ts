@@ -6,7 +6,7 @@ import type { TemplatePick, TemplateRanking } from '@tracy/core/template-picker'
  * host's bare root, never under a plugin's `<base href>` mount. Every call settles: a refusal is its
  * `code` (`FEATURE_OFF`, `TEMPLATE_UNSELECTED`…), a broken network is `NETWORK`; nothing throws.
  */
-import type { Kind, SiteCheck } from '@tracy/wo-views'
+import type { ChainEstimate, Kind, SiteCheck } from '@tracy/wo-views'
 import type { ServerLink } from '@tracy/wo-views/link-rows-model'
 
 import type { SettingsAnswer } from './gate.ts'
@@ -61,7 +61,11 @@ export interface BuildChoice {
 }
 export type BuildChoices = Record<
   string,
-  { pinned: BuildChoice | null; templates: (BuildChoice & { label: string })[] }
+  {
+    pinned: BuildChoice | null
+    /** `estimate`: a step chain template's measured time and price, null before its first build (#516). */
+    templates: (BuildChoice & { label: string; estimate?: ChainEstimate | null })[]
+  }
 >
 
 /** `GET /capabilities`: what this server can search with; `maps.browserKey` null = no Map view. */
