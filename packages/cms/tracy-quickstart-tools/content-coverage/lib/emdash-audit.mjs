@@ -54,12 +54,11 @@ export async function mediaIndexOf({ siteUrl, token, map }) {
     !Array.isArray(v) &&
     typeof v.id === 'string' &&
     (v.meta?.storageKey || v.filename)
-  // The names a record is known by. The media route serves a file by its storage key, exactly as stored
+  // A file is known by its STORAGE KEY alone. The media route serves a file by that key, exactly as stored
   // (vendor/emdash/emdash/packages/core/src/astro/routes/api/media/file/[...key].ts: `storage.download(key)`; the key is
   // `${ulid()}${extname}` at api/handlers/media-upload.ts:157, and the record's own url is `file/${storageKey}` at :60).
-  // So a file is its storage key; its id is the record's other name. No part of a key stands for the key.
-  const namesOf = (id, storageKey) => [id, storageKey].filter(Boolean)
-  const keysOf = (v) => namesOf(v.id, v.meta?.storageKey)
+  // A record id is never a served file name, and no part of a key stands for the key.
+  const keysOf = (v) => [v.meta?.storageKey].filter(Boolean)
   for (const collection of collections) {
     let cursor = null
     do {
@@ -78,7 +77,8 @@ export async function mediaIndexOf({ siteUrl, token, map }) {
             value.forEach((row, i) => {
               // A picture inside Portable Text: the block holds its file as `asset`.
               if (row?._type === 'image' && row.asset) {
-                for (const k of namesOf(row.asset.id, mediaKeyOf(row.asset.url))) put(k, at)
+                // Only the final segment of its own URL, when that URL is this site's media route: never the asset's id.
+                for (const k of [mediaKeyOf(row.asset.url)].filter(Boolean)) put(k, at)
                 return
               }
               for (const [sub, cell] of Object.entries(row && typeof row === 'object' ? row : {}))

@@ -27,6 +27,8 @@ import {
 import { labelRulesOf } from '../content-coverage/lib/label-rules.mjs'
 import { measureSlotFit } from '../content-coverage/lib/slot-fit.mjs'
 
+// A ULID-shaped storage key stem, as EmDash media uploads produce.
+const ULID_STEM = '01ARZ3NDEKTSV4RRFFQ69G5FAV'
 const CMS = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const THEMES = [
   ['tracy-emdash-theme-diner', 'tracy-diner', '0.1.0'],
@@ -532,11 +534,11 @@ test('routes: the query is kept as written, encoding included; only the keys are
 test('pictures: a record matches only a file of the audited origin, under the media door, by its whole name', () => {
   const media = new Map([
     ['hero.key.png', ['cards.hot.photo']],
-    ['01ARZ3NDEKTSV4RRFFQ69G5FAV', ['cards.hot.photo']]
+    [ULID_STEM, ['cards.hot.photo']]
   ])
   const at = (url) => bind([picture('x', { value: url })], media)[0]
   assert.equal(at('http://site.test/_emdash/api/media/file/hero.key.png').status, 'matched')
-  assert.equal(at('http://site.test/_emdash/api/media/file/01ARZ3NDEKTSV4RRFFQ69G5FAV').status, 'matched')
+  assert.equal(at(`http://site.test/_emdash/api/media/file/${ULID_STEM}`).status, 'matched')
   assert.equal(at('http://site.test/_emdash/api/media/file/hero.different.png').status, 'hole')
   assert.equal(at('http://site.test/_emdash/api/media/file/hero').status, 'hole')
   assert.equal(at('http://foreign.test/hero.key.png').status, 'hole')
@@ -687,8 +689,6 @@ async function indexWith(collections) {
     globalThis.fetch = real
   }
 }
-// A ULID-shaped storage key stem, as EmDash media uploads produce.
-const ULID_STEM = '01ARZ3NDEKTSV4RRFFQ69G5FAV'
 
 const asMedia = (file) =>
   bind([picture('x', { value: `http://site.test/_emdash/api/media/file/${file}` })], mediaOf)[0]
@@ -709,10 +709,10 @@ test('media index: a file is its storage key (the media route serves `storage.do
       }
     ]
   })
-  assert.deepEqual([...mediaOf.keys()].sort(), ['01ARZ3NDEKTSV4RRFFQ69G5FAV.jpg', 'different-id'])
-  assert.equal(asMedia('01ARZ3NDEKTSV4RRFFQ69G5FAV.jpg').status, 'matched')
+  assert.deepEqual([...mediaOf.keys()].sort(), [`${ULID_STEM}.jpg`])
+  assert.equal(asMedia(`${ULID_STEM}.jpg`).status, 'matched')
   // the bare stem is another route: the storage has no such key, so it is no coverage
-  assert.equal(asMedia('01ARZ3NDEKTSV4RRFFQ69G5FAV').status, 'hole')
+  assert.equal(asMedia(ULID_STEM).status, 'hole')
 })
 
 test('media index: a Portable Text picture keys the index only through a URL on the audited site under the media route', async () => {
@@ -733,7 +733,7 @@ test('media index: a Portable Text picture keys the index only through a URL on 
       }
     ]
   })
-  assert.deepEqual([...mediaOf.keys()].sort(), ['a1', 'a2', 'a3', 'own.png'])
+  assert.deepEqual([...mediaOf.keys()].sort(), ['own.png'])
   assert.equal(asMedia('foreign.png').status, 'hole')
   assert.equal(asMedia('alien.png').status, 'hole')
 })
@@ -747,4 +747,22 @@ test('forms: a visible form text is the plugin\'s only when it equals a whole la
   const substring = run(['surname'], 'Name')
   assert.deepEqual([substring.status, substring.class], ['hole', 'unknown'])
   assert.equal(run(['name', 'surname'], 'Name *').class, 'core')
+})
+
+test('media index: a record id is never a file key (the route serves the storage key); both reproduced cases are holes', async () => {
+  mediaOf = await indexWith({
+    cards: [
+      { slug: 'hot', data: { photo: { id: 'direct-id', meta: { storageKey: 'actual.jpg' } } } },
+      {
+        slug: 'cold',
+        data: {
+          body: [{ _type: 'image', asset: { id: 'asset-id', url: 'https://foreign.test/foreign.png' } }]
+        }
+      }
+    ]
+  })
+  assert.deepEqual([...mediaOf.keys()], ['actual.jpg'])
+  assert.equal(asMedia('actual.jpg').status, 'matched')
+  assert.equal(asMedia('direct-id').status, 'hole')
+  assert.equal(asMedia('asset-id').status, 'hole')
 })
