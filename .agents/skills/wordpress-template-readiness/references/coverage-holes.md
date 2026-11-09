@@ -142,7 +142,8 @@ to the same list.
   the content map through the **role hints file** of the template
   (`packages/cms/tracy-wordpress-quickstart/role-hints/<design>-wp<major>.json`, `{key, role, group?, why}` per slot,
   passed as `--role-hints` to `capture-contract` and `capture-image-slots`, so every recapture produces the role again;
-  a plated dish: `offering.image`; a staff member or chef: `person.image`; both are empty on a customer site until the
+  a plated dish on a menu card: `offering.image` (group of that card); a plated dish tied to no card:
+  `business.gallery_image` (a `gallery` group of its own); a staff member or chef: `person.image`; both are empty on a customer site until the
   customer adds their own). No model call, no edit of the map after the capture.
 - **Verify.** R5 is 0 after the judge is recorded on the **final** capture; a changed slot is asked again.
 

@@ -92,7 +92,10 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
       '((svg viewBox="0 0 40 40"))((path d="M3.75 2.5 10.6250 12.5000 18.7684 15.7303"))((/svg))',
       'editorial.item_icon'
     ),
-    text('ok.hours', 'Mon-Fri 8am - 6pm', 'contact.hours', { group: grp('site.0', 0, 'business') })
+    text('ok.hours', 'Mon-Fri 8am - 6pm', 'contact.hours', { group: grp('site.0', 0, 'business') }),
+    text('ok.when', 'Mon. Tue. Thu. & Sun ((br/))12 Noon to\u00a011 PM', 'event.date_or_year', {
+      group: grp('promo.0', 0, 'event')
+    })
   )
   const res = labelRulesOf({ map })
   assert.deepEqual(fails(res), ['R2'])

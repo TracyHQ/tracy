@@ -46,7 +46,9 @@ const TITLES = Object.freeze({
 const isTextual = (s) => s?.type === 'text' || s?.type === 'html'
 const hasRole = (s, version) => typeof s?.role === 'string' && isRole(s.role, version)
 const roleOf = (s) => (typeof s?.role === 'string' ? s.role : '')
-const FACT_SAMPLE_ROLE = /^contact\.|\.price$|^offering\.(?:price_note|schedule)$|^package\.price$/
+// event.date_or_year: when an event runs (a date or a weekly schedule); like offering.schedule it is never kept in a build
+const FACT_SAMPLE_ROLE =
+  /^contact\.|\.price$|^offering\.(?:price_note|schedule)$|^package\.price$|^event\.date_or_year$/
 /**
  * A sum that states a result ("$4.8m in profits", "helped raise over $500 million") reads like a price but is a stat or
  * a claim: those roles never keep the demo's words in a build (a dash or empty), so a price-like sample may carry them.

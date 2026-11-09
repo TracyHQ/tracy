@@ -118,58 +118,113 @@
     },
     {
       "key": "page-front-page.container-tabs.image-intro",
-      "role": "offering.image",
-      "why": "Plated dish picture of a menu tab: the picture of an offering."
+      "role": "business.gallery_image",
+      "why": "Plated dish picture that opens the menu tabs: one of the business's own photos, tied to no menu card (the color pages have no dish card).",
+      "group": {
+        "id": "front-page.container-tabs.gallery",
+        "item": 0,
+        "kind": "gallery"
+      }
     },
     {
       "key": "page-front-page.features-intro.img-features",
       "role": "person.image",
-      "why": "Portrait of a chef with a visible face: the picture of a person."
+      "why": "Portrait of a chef with a visible face: the picture of a person.",
+      "group": {
+        "id": "front-page.features-intro.person",
+        "item": 0,
+        "kind": "person"
+      }
     },
     {
       "key": "page-home-blue.container-tabs.image-intro",
-      "role": "offering.image",
-      "why": "Plated dish picture of a menu tab: the picture of an offering."
+      "role": "business.gallery_image",
+      "why": "Plated dish picture that opens the menu tabs: one of the business's own photos, tied to no menu card (the color pages have no dish card).",
+      "group": {
+        "id": "home-blue.container-tabs.gallery",
+        "item": 0,
+        "kind": "gallery"
+      }
     },
     {
       "key": "page-home-blue.features-intro.img-features",
       "role": "person.image",
-      "why": "Portrait of a chef with a visible face: the picture of a person."
+      "why": "Portrait of a chef with a visible face: the picture of a person.",
+      "group": {
+        "id": "home-blue.features-intro.person",
+        "item": 0,
+        "kind": "person"
+      }
     },
     {
       "key": "page-home-green.container-tabs.image-intro",
-      "role": "offering.image",
-      "why": "Plated dish picture of a menu tab: the picture of an offering."
+      "role": "business.gallery_image",
+      "why": "Plated dish picture that opens the menu tabs: one of the business's own photos, tied to no menu card (the color pages have no dish card).",
+      "group": {
+        "id": "home-green.container-tabs.gallery",
+        "item": 0,
+        "kind": "gallery"
+      }
     },
     {
       "key": "page-home-green.features-intro.img-features",
       "role": "person.image",
-      "why": "Portrait of a chef with a visible face: the picture of a person."
+      "why": "Portrait of a chef with a visible face: the picture of a person.",
+      "group": {
+        "id": "home-green.features-intro.person",
+        "item": 0,
+        "kind": "person"
+      }
     },
     {
       "key": "page-home-pink.container-tabs.image-intro",
-      "role": "offering.image",
-      "why": "Plated dish picture of a menu tab: the picture of an offering."
+      "role": "business.gallery_image",
+      "why": "Plated dish picture that opens the menu tabs: one of the business's own photos, tied to no menu card (the color pages have no dish card).",
+      "group": {
+        "id": "home-pink.container-tabs.gallery",
+        "item": 0,
+        "kind": "gallery"
+      }
     },
     {
       "key": "page-home-pink.features-intro.img-features",
       "role": "person.image",
-      "why": "Portrait of a chef with a visible face: the picture of a person."
+      "why": "Portrait of a chef with a visible face: the picture of a person.",
+      "group": {
+        "id": "home-pink.features-intro.person",
+        "item": 0,
+        "kind": "person"
+      }
     },
     {
       "key": "page-home-red.container-tabs.image-intro",
-      "role": "offering.image",
-      "why": "Plated dish picture of a menu tab: the picture of an offering."
+      "role": "business.gallery_image",
+      "why": "Plated dish picture that opens the menu tabs: one of the business's own photos, tied to no menu card (the color pages have no dish card).",
+      "group": {
+        "id": "home-red.container-tabs.gallery",
+        "item": 0,
+        "kind": "gallery"
+      }
     },
     {
       "key": "page-home-red.features-intro.img-features",
       "role": "person.image",
-      "why": "Portrait of a chef with a visible face: the picture of a person."
+      "why": "Portrait of a chef with a visible face: the picture of a person.",
+      "group": {
+        "id": "home-red.features-intro.person",
+        "item": 0,
+        "kind": "person"
+      }
     },
     {
       "key": "page-reservation.features-intro.img-features",
       "role": "person.image",
-      "why": "Portrait of a chef with a visible face: the picture of a person."
+      "why": "Portrait of a chef with a visible face: the picture of a person.",
+      "group": {
+        "id": "reservation.features-intro.person",
+        "item": 0,
+        "kind": "person"
+      }
     },
     {
       "key": "reservation.features-intro.name",
