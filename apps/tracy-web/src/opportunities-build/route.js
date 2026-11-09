@@ -29,7 +29,8 @@ import {
   revisionsOf,
   siteOfBuild
 } from './build-store.js'
-import { settleBuild, suggestedLabel } from './builds.js'
+import { savedSiteLabel, settleBuild, suggestedLabel } from './builds.js'
+import { siteLabelRoutes } from './site-label-route.js'
 import {
   acceptDemoActions,
   templateRankingOf,
@@ -355,7 +356,9 @@ export function createWebsiteBuilder(deps) {
           null,
         usage: await readDemoUsage(pool, who.accountId, settings.demoBuildsPerAccountPerDay, now()),
         builds: builds.map(buildShape),
-        suggestedLabel: domain ? await suggestedLabel({ pool, config, domain, revision }) : null
+        suggestedLabel: domain ? await suggestedLabel({ pool, config, domain, revision }) : null,
+        // Site name on Tracy (#519): the label the person saved on the opportunity, or null.
+        siteLabel: await savedSiteLabel(pool, revision.opportunity_id)
       })
     })
 
@@ -739,6 +742,9 @@ export function createWebsiteBuilder(deps) {
       // The runner writes the build with its choice; until then the action alone answers.
       return json(c, { ...accepted.body, build: build ? buildShape(build) : null }, 202)
     })
+
+    // Site name on Tracy (#519): the label a demo of this opportunity is built under.
+    siteLabelRoutes(app, { pool, config, loadDomain, caller, refuse, notFound, body, UUID, opportunityOf })
 
     // Add site's Build from my business: the customer's own business, researched and built like a demo.
     ownSiteRoutes(app, {

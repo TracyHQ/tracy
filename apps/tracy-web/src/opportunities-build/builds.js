@@ -67,7 +67,8 @@ export function aboutOf(revision) {
 const SITE_LABEL_MAX = 30
 
 /**
- * The name the server gives a demo when the person typed none: the place's name as a site label
+ * The name the server gives a demo when the person typed none: the site label the person saved on the opportunity
+ * (`PUT …/:id/site-label`, #519) when there is one; else the place's name as a site label
  * (`siteLabelFor`), `-demo` added when the create door's own rule would refuse it (too short, reserved),
  * then the first free of `<base>`, `<base>-2`… across every name this deployment holds — its sites,
  * the shard directory, live label holds and custom names (the same books `holdLabel` reads).
@@ -76,10 +77,22 @@ const SITE_LABEL_MAX = 30
  * hashes the typed label into the build, so a second name for one build answers IDEMPOTENCY_CONFLICT.
  */
 export async function suggestedLabel({ pool, config, domain, revision }) {
-  let base = domain.siteLabelFor(siteNameOf(revision.brief), { max: SITE_LABEL_MAX })
+  const saved = await savedSiteLabel(pool, revision.opportunity_id)
+  if (saved) return saved
+  return freeLabelFor({ pool, config, domain, name: siteNameOf(revision.brief) })
+}
+
+/** The first free label made from a business name (see `suggestedLabel`). */
+export async function freeLabelFor({ pool, config, domain, name }) {
+  let base = domain.siteLabelFor(name, { max: SITE_LABEL_MAX })
   if (siteLabelRefusal(base) !== null) base = `${base.slice(0, SITE_LABEL_MAX - 8).replace(/-+$/, '')}-demo`
+  return domain.nextSiteLabel(base, new Set(await labelsHeldLike(pool, config, `${base}%`)))
+}
+
+/** The labels (without the deployment's prefix) this deployment holds that match a LIKE pattern. */
+async function labelsHeldLike(pool, config, pattern) {
   const prefix = config.siteAddressPrefix ?? ''
-  const like = `${prefix}${base}%`
+  const like = `${prefix}${pattern}`
   const { rows } = await pool.query(
     `select label from site where label like $1
      union select label from directory_site where label like $1
@@ -87,7 +100,30 @@ export async function suggestedLabel({ pool, config, domain, revision }) {
      union select split_part(name, '.', 1) from site_name where name like $2`,
     [like, `${like}.${config.siteDomain}`]
   )
-  return domain.nextSiteLabel(base, new Set(rows.map((r) => r.label.slice(prefix.length))))
+  return rows.map((r) => r.label.slice(prefix.length))
+}
+
+/** The site label saved on an opportunity, or null. */
+export async function savedSiteLabel(pool, opportunityId) {
+  if (!opportunityId) return null
+  const { rows } = await pool.query('select site_label from wo_opportunity where id = $1', [opportunityId])
+  return rows[0]?.site_label || null
+}
+
+/** The shortest and longest site label the create door takes (`SITE_LABEL_RE`). */
+export const SITE_LABEL_MIN = 6
+export { SITE_LABEL_MAX }
+
+/**
+ * Whether a typed site label can name a new site: the create door's own rule (`siteLabelRefusal`), then the same
+ * books `suggestedLabel` reads. A label holds no `%` or `_` once the rule passed, so the LIKE below is an exact match.
+ * @returns {Promise<{ available: true } | { available: false, reason: 'shape' | 'reserved' | 'looks_imported' | 'taken' }>}
+ */
+export async function siteLabelCheck({ pool, config, label }) {
+  const refusal = siteLabelRefusal(label)
+  if (refusal !== null) return { available: false, reason: refusal }
+  const held = await labelsHeldLike(pool, config, label)
+  return held.includes(label) ? { available: false, reason: 'taken' } : { available: true }
 }
 
 /** Whether the deployment still offers the revision's template on its CMS. */

@@ -3,9 +3,11 @@
  *
  * Tailwind (theme + utilities, no preflight) runs at build time on `website-opportunities.css` and
  * arrives here through esbuild's `define` (`scripts/build-client.mjs`). The layout rules live in
- * `layout-css.ts` (plus the progress card's `demo-progress-css.ts`), written for a narrow right column (360–480px).
+ * `layout-css.ts`, then the Details page's own (`details-css.ts`) and the progress card's
+ * (`demo-progress-css.ts`), then the brief view's (`brief-view-css.ts`).
  */
 
+import { BRIEF_VIEW_CSS } from './brief-view-css.ts'
 import { PROGRESS_CSS } from './demo-progress-css.ts'
 import { CSS as LAYOUT_CSS } from './layout-css.ts'
 
@@ -14,4 +16,5 @@ declare const __TAILWIND_CSS__: string
 
 export const TAILWIND = __TAILWIND_CSS__
 
-export const CSS = LAYOUT_CSS + PROGRESS_CSS
+/** The layout rules, then the Details page's, the progress card's and the brief view's. */
+export const CSS = LAYOUT_CSS + DETAILS_CSS + PROGRESS_CSS + BRIEF_VIEW_CSS

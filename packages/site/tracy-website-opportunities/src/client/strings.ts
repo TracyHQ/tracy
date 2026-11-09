@@ -1145,6 +1145,38 @@ export const en = {
   'brief.source.website': 'the website',
   'brief.source.logo': 'the logo',
 
+  /** Site name on Tracy, the first row of the Business brief (#519). */
+  'site.name.label': 'Site name on Tracy',
+  'site.name.edit': 'Edit',
+  'site.name.save': 'Save',
+  'site.name.cancel': 'Cancel',
+  'site.name.input': 'Site name',
+  'site.name.hint': 'The address of the demo, and of the site when the business takes it over.',
+  'site.name.suggested': 'Named after the place',
+  'site.name.limits': '{min} to {max} characters: lowercase letters, digits and hyphens.',
+  'site.name.checking': 'Checking…',
+  'site.name.free': 'This name is free',
+  'site.name.chars': 'Only lowercase letters, digits and hyphens',
+  'site.name.long': 'Too long',
+  'site.name.short': 'Too short',
+  'site.name.taken': 'This name is taken',
+  'site.name.reserved': 'This name cannot be used',
+  'site.name.edges': 'Start and end with a letter or a digit',
+  'site.name.failed': 'Could not save the name. Try again.',
+
+  /** The brief as cards (#520). */
+  'brief.cards.title': 'How Tracy understands {business}',
+  'brief.cards.titleNoName': 'How Tracy understands this business',
+  'brief.cards.lead': 'Read from public pages and profiles. Nothing here is a promise to the business.',
+  'brief.cards.none': 'Tracy has not read enough about this business yet. The full brief is below.',
+  'brief.card.who': 'Who they are',
+  'brief.card.offer': 'What they offer',
+  'brief.card.standout': 'What makes them stand out',
+  'brief.card.serve': 'Who they serve',
+  'brief.card.reach': 'How to reach them',
+  'brief.card.whatsapp': 'WhatsApp {number}',
+  'brief.full': 'Full brief',
+
   /** The Demo site block (#515). */
   'demoBlock.title': 'Demo site',
   'demoBlock.more': 'More demo actions'

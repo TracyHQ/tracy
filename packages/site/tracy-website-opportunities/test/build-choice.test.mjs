@@ -30,3 +30,14 @@ test("the person's pick wins; a CMS with no pin starts on its first template; an
 test('a server that offers no choices leaves the template to the shared picker', () => {
   assert.equal(buildChoice(null, 'wordpress', null, null).template, null)
 })
+
+test('the Build form sends the Site name on Tracy when one is saved, else the name the server suggests', async () => {
+  const { buildLabel } = await import('../src/client/build-choice.ts')
+  assert.equal(buildLabel(null, 'my-coach', 'pho-ba'), 'my-coach')
+  assert.equal(buildLabel(null, null, 'pho-ba'), 'pho-ba')
+  assert.equal(buildLabel(null, '', 'pho-ba'), 'pho-ba')
+  // What the person types in the form wins for that one build.
+  assert.equal(buildLabel(' typed-name ', 'my-coach', 'pho-ba'), 'typed-name')
+  // An emptied field is no label: the server then uses the saved name itself.
+  assert.equal(buildLabel('  ', 'my-coach', 'pho-ba'), '')
+})

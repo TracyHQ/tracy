@@ -34,7 +34,9 @@ import {
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
 import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
-import { buildChoice } from './build-choice.ts'
+import { buildChoice, buildLabel } from './build-choice.ts'
+import { BriefUnderstanding } from './brief-understanding.tsx'
+import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
 import {
   LOW_WEBSITE_SCORE,
@@ -60,9 +62,7 @@ import {
   mediaTile,
   pageSpeedView,
   profileFields,
-  shownBuildId,
-  socialStatsLines,
-  suggestedLabelOf
+  socialStatsLines
 } from './detail-model.ts'
 import { MediaRow } from './media-row.tsx'
 import { MenuBlock } from './menu-block.tsx'
@@ -78,6 +78,7 @@ import { type RatingChoice, ProfileRatingRow } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
 import { businessBriefRows } from './business-brief-model.ts'
 import { BusinessBriefTable } from './business-brief-table.tsx'
+import { SiteNameRow } from './site-name-row.tsx'
 import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
 import { DemoPrimaryButton, DemoSiteBlock } from './demo-site-block.tsx'
 import { DETAIL_TABS, type DetailTab, readDetailTab, writeDetailTab } from './detail-tab.ts'
@@ -656,7 +657,12 @@ export function DetailView({
         <div className="tracy-wo-col">
           <Section title={t('details.tab.brief')}>
             <p className="tracy-wo-muted tracy-wo-small">{t('brief.table.lead')}</p>
-            <BusinessBriefTable t={t} rows={briefRows} onToggle={toggleFact} />
+            <BusinessBriefTable
+              t={t}
+              rows={briefRows}
+              firstRow={<SiteNameRow t={t} api={api} opportunityId={id} />}
+              onToggle={toggleFact}
+            />
           </Section>
           <Profile
             t={t}
@@ -1192,33 +1198,9 @@ export function RevisionView({
   onList: () => void
   onDetails: () => void
 }): JSX.Element {
-  const [revision, setRevision] = useState<Body | null>(null)
-  const [markdown, setMarkdown] = useState<string | null>(null)
-  const [lastBuildId, setLastBuildId] = useState<string | null>(null)
-  const [usage, setUsage] = useState<DemoUsage | null>(null)
-  const [suggestedLabel, setSuggestedLabel] = useState('')
+  const page = useRevisionPage(api, revisionId)
+  const { revision, markdown, lastBuildId, usage, suggestedLabel, siteLabel, failed } = page
   const [name, setName] = useState<string | null>(null)
-  const [failed, setFailed] = useState(false)
-  const load = useCallback(async () => {
-    const [meta, md] = await Promise.all([api.revision(revisionId), api.revisionMarkdown(revisionId)])
-    if (!meta.ok || typeof meta.body?.revision !== 'object' || meta.body.revision === null) {
-      setFailed(true)
-      return
-    }
-    setFailed(false)
-    setRevision(meta.body.revision as Body)
-    setUsage(meta.body.usage as DemoUsage)
-    setLastBuildId(
-      shownBuildId(
-        Array.isArray(meta.body.builds) ? (meta.body.builds as { id?: unknown; state?: unknown }[]) : null
-      )
-    )
-    setSuggestedLabel(suggestedLabelOf(meta.body))
-    setMarkdown(md.ok ? md.body : null)
-  }, [api, revisionId])
-  useEffect(() => {
-    void load()
-  }, [load])
   // The breadcrumb names the place; the brief alone does not carry its name.
   useEffect(() => {
     let live = true
@@ -1249,26 +1231,16 @@ export function RevisionView({
     return (
       <div className="tracy-wo-page">
         {crumbs}
-        <PageState t={t} failed={failed} failedKey="revision.failed" onRetry={() => void load()} />
+        <PageState t={t} failed={failed} failedKey="revision.failed" onRetry={() => void page.reload()} />
       </div>
     )
   }
   return (
     <div className="tracy-wo-page">
       {crumbs}
-      <div className="tracy-wo-page-head">
-        <h2 className="tracy-wo-page-title">{t('brief.number', { n })}</h2>
-        <p className="tracy-wo-muted tracy-wo-small">{t('brief.readOnly')}</p>
-      </div>
       <div className="tracy-wo-page-grid is-brief">
         <div className="tracy-wo-col">
-          <Section title={t('revision.document')}>
-            {markdown !== null ? (
-              <pre className="tracy-wo-markdown">{markdown}</pre>
-            ) : (
-              <p className="tracy-wo-muted">{t('revision.failed')}</p>
-            )}
-          </Section>
+          <BriefUnderstanding t={t} brief={revision.brief} markdown={markdown} />
         </div>
         <div className="tracy-wo-col">
           <Build
@@ -1281,6 +1253,7 @@ export function RevisionView({
             onStarted={onDetails}
             cms=""
             suggestedLabel={suggestedLabel}
+            siteLabel={siteLabel}
             usage={usage}
             initialBuildId={lastBuildId}
             focusName={focusName}
@@ -1291,7 +1264,7 @@ export function RevisionView({
   )
 }
 
-function Build({
+export function Build({
   t,
   api,
   ids,
@@ -1300,6 +1273,7 @@ function Build({
   onStarted,
   cms,
   suggestedLabel,
+  siteLabel = null,
   usage: initialUsage,
   initialBuildId = null,
   focusName = false
@@ -1314,6 +1288,8 @@ function Build({
   usage: DemoUsage | null
   /** The server's name for the site; shown until the person types their own. */
   suggestedLabel: string
+  /** Site name on Tracy saved on the opportunity (#519); shown before the suggestion. */
+  siteLabel?: string | null
   /** The revision's latest build, so a reload still shows its site and the handoff. */
   initialBuildId?: string | null
   focusName?: boolean
@@ -1332,7 +1308,7 @@ function Build({
     15000
   )
   const [typed, setTyped] = useState<string | null>(null)
-  const label = typed ?? suggestedLabel
+  const label = buildLabel(typed, siteLabel, suggestedLabel)
   const [buildId] = useState<string | null>(initialBuildId)
   const [status, setStatus] = useState<ReturnType<typeof buildView> | null>(null)
   const [failure, setFailure] = useState<ReturnType<typeof buildFailure>>(null)

@@ -51444,6 +51444,106 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/site-label": {
+        "get": {
+          "operationId": "get_api_website_opportunities_id_site_label",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        },
+        "put": {
+          "operationId": "put_api_website_opportunities_id_site_label",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "label": {
+                      "type": ["string", "null"]
+                    }
+                  },
+                  "required": ["label"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
+      "/api/website-opportunities/{id}/site-label/check": {
+        "get": {
+          "operationId": "get_api_website_opportunities_id_site_label_check",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "label",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/widget-native/context": {
         "get": {
           "operationId": "get_api_widget_native_context",

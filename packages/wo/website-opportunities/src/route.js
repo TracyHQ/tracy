@@ -2015,6 +2015,8 @@ function opportunityShape(r) {
     // As read today, whenever it was saved (`candidate-as-read.mjs`).
     candidate: candidateAsRead(r.candidate),
     status: r.status,
+    // The site label the person chose for its demo, or null: a build then names the site itself.
+    siteLabel: r.site_label ?? null,
     createdAt: r.created_at,
     updatedAt: r.updated_at
   }

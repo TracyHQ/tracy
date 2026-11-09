@@ -811,6 +811,66 @@ test(
 )
 
 test(
+  'site name on Tracy: checked as typed, saved on the opportunity, and used by a build sent without a label',
+  opts,
+  async () => {
+    const { pool, call, runBuild, forwarded } = await world()
+    const opp = await opportunity(call)
+    const read = await call(A, 'GET', `${BASE}/${opp.id}/site-label`)
+    assert.equal(read.status, 200, JSON.stringify(read.body))
+    assert.deepEqual(read.body, {
+      label: null,
+      suggested: 'pho-ba',
+      prefix: '',
+      domain: 'localhost',
+      min: 6,
+      max: 30
+    })
+    await pool.query(
+      `insert into site (site_key, label, host, platform) values ('taken-name.localhost', 'taken-name', 'local', 'joomla')`
+    )
+    const check = async (label) =>
+      (await call(A, 'GET', `${BASE}/${opp.id}/site-label/check?label=${encodeURIComponent(label)}`)).body
+    assert.deepEqual(await check('Pho Ba'), { label: 'Pho Ba', available: false, reason: 'shape' })
+    assert.deepEqual(await check('webmail'), { label: 'webmail', available: false, reason: 'reserved' })
+    assert.deepEqual(await check('taken-name'), { label: 'taken-name', available: false, reason: 'taken' })
+    assert.deepEqual(await check('my-coach'), { label: 'my-coach', available: true })
+
+    const bad = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'Pho Ba' })
+    assert.equal(bad.status, 400)
+    assert.equal(bad.body.code, 'INVALID_LABEL')
+    const taken = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'taken-name' })
+    assert.equal(taken.status, 409)
+    assert.equal(taken.body.code, 'LABEL_TAKEN')
+    const saved = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'my-coach' })
+    assert.equal(saved.status, 200, JSON.stringify(saved.body))
+    assert.equal(saved.body.label, 'my-coach')
+    // Another account cannot read or name this opportunity.
+    assert.equal((await call(B, 'PUT', `${BASE}/${opp.id}/site-label`, { label: 'their-name' })).status, 404)
+
+    // It reloads with the opportunity, and the Build form and a build without a label use it.
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}`)).body.opportunity.siteLabel, 'my-coach')
+    assert.equal((await call(A, 'GET', `${BASE}/${opp.id}/site-label`)).body.label, 'my-coach')
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const revRead = (await call(A, 'GET', `${BASE}/revisions/${rev.id}`)).body
+    assert.equal(revRead.suggestedLabel, 'my-coach')
+    assert.equal(revRead.siteLabel, 'my-coach')
+    const built = await runBuild(A, 'POST', `${BASE}/revisions/${rev.id}/build`, {
+      requestId: 'build-named1'
+    })
+    assert.equal(built.status, 202, JSON.stringify(built.body))
+    const sent = JSON.parse(forwarded.filter((f) => f.path === '/api/sites')[0].init.body)
+    assert.equal(sent.label, 'my-coach')
+
+    // Cleared, the build goes back to the name the server suggests.
+    const cleared = await call(A, 'PUT', `${BASE}/${opp.id}/site-label`, { label: null })
+    assert.equal(cleared.status, 200)
+    assert.equal(cleared.body.label, null)
+    assert.equal((await call(A, 'GET', `${BASE}/revisions/${rev.id}`)).body.suggestedLabel, 'pho-ba')
+  }
+)
+
+test(
   'build: a label sent is kept, a retry without one keeps the first choice, a bad one is refused',
   opts,
   async () => {

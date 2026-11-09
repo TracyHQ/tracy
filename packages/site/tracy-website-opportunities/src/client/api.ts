@@ -98,6 +98,16 @@ export interface SearchResponse {
   candidates?: unknown[]
 }
 
+/** `GET …/:id/site-label` (#519): `label` saved or null, `suggested` the name a build would use without it. */
+export interface SiteLabelInfo {
+  label: string | null
+  suggested: string | null
+  prefix: string
+  domain: string
+  min: number
+  max: number
+}
+
 export interface Api {
   demoAction(actionId: string): Promise<Answer<{ action: DemoAction }>>
   prepareDemoChat(actionId: string): Promise<Answer<DemoChatPreparation>>
@@ -182,6 +192,15 @@ export interface Api {
     opportunityId: string,
     picks: { removed: string[]; order: string[]; labels: Record<string, string> }
   ): Promise<Answer<{ opportunity?: unknown }>>
+  /** Site name on Tracy (#519): the saved label, the one a build would use now, and how the server names an address. */
+  siteLabel(opportunityId: string): Promise<Answer<SiteLabelInfo>>
+  /** Whether a typed site label can name the demo (`GET …/:id/site-label/check`). */
+  checkSiteLabel(
+    opportunityId: string,
+    label: string
+  ): Promise<Answer<{ label: string; available: boolean; reason?: string }>>
+  /** Save the site label on the opportunity, or clear it with null (`PUT …/:id/site-label`). */
+  saveSiteLabel(opportunityId: string, label: string | null): Promise<Answer<{ label: string | null }>>
   /** The name the business's site carries, as the person checked it on the Profile card (`PUT …/:id/name`). */
   setName(opportunityId: string, name: string): Promise<Answer<{ opportunity?: unknown }>>
   /** The opening hours on the site, as the person checked them on the Profile card (`PUT …/:id/hours`). */
@@ -210,9 +229,15 @@ export interface Api {
   resume(jobId: string): Promise<Answer<{ job?: unknown }>>
   /** Refresh: the brief of the current research (the latest one when it has not changed). */
   createRevision(opportunityId: string): Promise<Answer<{ revision?: unknown }>>
-  revision(
-    revisionId: string
-  ): Promise<Answer<{ revision?: unknown; builds?: unknown; suggestedLabel?: unknown; usage?: DemoUsage }>>
+  revision(revisionId: string): Promise<
+    Answer<{
+      revision?: unknown
+      builds?: unknown
+      suggestedLabel?: unknown
+      siteLabel?: unknown
+      usage?: DemoUsage
+    }>
+  >
   revisionMarkdown(revisionId: string): Promise<Answer<string>>
   buildStatus(buildId: string): Promise<Answer<Record<string, unknown>>>
   handOff(
@@ -367,6 +392,11 @@ export function createApi(fetchImpl: FetchLike): Api {
     setFact: (opportunityId, factId, onSite) =>
       call(`${BASE}/${id(opportunityId)}/facts`, 'PUT', { factId, onSite }),
     setKeyMessages: (opportunityId, picks) => call(`${BASE}/${id(opportunityId)}/key-messages`, 'PUT', picks),
+    siteLabel: (opportunityId) => call(`${BASE}/${id(opportunityId)}/site-label`),
+    checkSiteLabel: (opportunityId, label) =>
+      call(`${BASE}/${id(opportunityId)}/site-label/check?label=${encodeURIComponent(label)}`),
+    saveSiteLabel: (opportunityId, label) =>
+      call(`${BASE}/${id(opportunityId)}/site-label`, 'PUT', { label }),
     setName: (opportunityId, name) => call(`${BASE}/${id(opportunityId)}/name`, 'PUT', { name }),
     setHours: (opportunityId, body) => call(`${BASE}/${id(opportunityId)}/hours`, 'PUT', body),
     setRating: (opportunityId, choice) => call(`${BASE}/${id(opportunityId)}/rating`, 'PUT', { choice }),

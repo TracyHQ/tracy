@@ -1,13 +1,16 @@
 /**
- * A site brief in the dsh side card (Lee 19/10, option a): its own tab, `Brief N · <place>`, with the
- * brief drawn by dsh's `MarkdownText`, as the side chat draws a message. It reads
- * `GET /revisions/:id?format=md` and writes nothing anywhere.
+ * A site brief in the dsh side card (Lee 19/10, option a): its own tab, `Brief N · <place>`. It shows the brief as
+ * "How Tracy understands {business}" cards with the raw brief behind Full brief (`brief-understanding.tsx`, #520), and
+ * closes on the Build card the Brief page uses, with its template, time and price.
  */
-import { type JSX, useEffect, useMemo, useState } from 'react'
-import { MarkdownText } from '@deepseek-ai/dsh-client-ui-primitives'
+import type { JSX } from 'react'
 import { Button, Spinner } from '@tracy/ui'
 
 import type { Api } from './api.ts'
+import { BriefUnderstanding } from './brief-understanding.tsx'
+import { Build } from './detail.tsx'
+import { createRequestIds } from './request-ids.ts'
+import { useRevisionPage } from './revision-page.ts'
 import type { Translate } from './strings.ts'
 
 /** The side-card tab type; no `tracy:` prefix, so tracy-tab-link does not mirror it into the address. */
@@ -35,51 +38,55 @@ export function briefTabMeta(meta: unknown): BriefTabMeta {
   }
 }
 
-export function BriefTab({ t, api, meta }: { t: Translate; api: Api; meta: BriefTabMeta }): JSX.Element {
-  const [text, setText] = useState<string | null>(null)
-  const [failed, setFailed] = useState(false)
-  const [ask, setAsk] = useState(0)
-  const revisionId = meta.revisionId ?? null
-  useEffect(() => {
-    if (revisionId === null) return
-    let live = true
-    setFailed(false)
-    void api.revisionMarkdown(revisionId).then((answer) => {
-      if (!live) return
-      if (answer.ok) setText(answer.body)
-      else setFailed(true)
-    })
-    return () => {
-      live = false
-    }
-  }, [api, revisionId, ask])
-  // A reference-stable object per locale: a new identity throws away MarkdownText's render cache.
-  const labels = useMemo(
-    () => ({ code: { copyLabel: t('briefTab.copy'), copiedLabel: t('briefTab.copied') }, footnotes: '' }),
-    [t]
-  )
+/** One request id per press for the side card's Build card, like the tab's own (`index.tsx`). */
+const ids = createRequestIds(() =>
+  typeof crypto?.randomUUID === 'function'
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`
+)
 
+export function BriefTab({ t, api, meta }: { t: Translate; api: Api; meta: BriefTabMeta }): JSX.Element {
+  const revisionId = meta.revisionId ?? null
+  const page = useRevisionPage(api, revisionId)
   return (
     <div className="tracy-wo tracy-wo-tab">
       <div className="tracy-wo-body tracy-wo-brief-doc">
-        {revisionId === null || failed ? (
+        {page.failed ? (
           <div className="tracy-wo-stack">
             <p className="tracy-wo-error" role="alert">
               {t('revision.failed')}
             </p>
             {revisionId !== null ? (
-              <Button type="button" size="sm" variant="outline" onClick={() => setAsk((n) => n + 1)}>
+              <Button type="button" size="sm" variant="outline" onClick={() => void page.reload()}>
                 {t('action.retry')}
               </Button>
             ) : null}
           </div>
-        ) : text === null ? (
+        ) : page.revision === null ? (
           <p className="tracy-wo-note" role="status">
             <Spinner label={t('loading.label')} />
             {t('loading.label')}
           </p>
         ) : (
-          <MarkdownText text={text} labels={labels} />
+          <div className="tracy-wo-stack">
+            <BriefUnderstanding t={t} brief={page.revision.brief} markdown={page.markdown} />
+            {revisionId !== null && meta.opportunityId ? (
+              <Build
+                key={page.lastBuildId ?? 'new'}
+                t={t}
+                api={api}
+                ids={ids}
+                revisionId={revisionId}
+                opportunityId={meta.opportunityId}
+                onStarted={() => void page.reload()}
+                cms=""
+                suggestedLabel={page.suggestedLabel}
+                siteLabel={page.siteLabel}
+                usage={page.usage}
+                initialBuildId={page.lastBuildId}
+              />
+            ) : null}
+          </div>
         )}
       </div>
     </div>

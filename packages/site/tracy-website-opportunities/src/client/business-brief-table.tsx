@@ -3,7 +3,7 @@
  * in the words a seller uses (`business-brief-model.ts`). The switch asks the server to keep the person's choice for
  * that one fact; the rule's reason shows under the value when the site leaves it out.
  */
-import { type JSX, useState } from 'react'
+import { type JSX, type ReactNode, useState } from 'react'
 import { Switch } from '@tracy/ui'
 
 import type { BriefRow } from './business-brief-model.ts'
@@ -12,16 +12,19 @@ import type { Translate } from './strings.ts'
 export function BusinessBriefTable({
   t,
   rows,
+  firstRow = null,
   onToggle
 }: {
   t: Translate
   rows: BriefRow[]
+  /** A row drawn before the facts: Site name on Tracy (#519), shown even before research has run. */
+  firstRow?: ReactNode
   /** Resolves true once the choice is saved and the page read again. */
   onToggle: (id: string, onSite: boolean | null) => Promise<boolean>
 }): JSX.Element {
   const [busy, setBusy] = useState<string | null>(null)
   const [failed, setFailed] = useState<string | null>(null)
-  if (rows.length === 0) return <p className="tracy-wo-muted">{t('brief.table.none')}</p>
+  if (rows.length === 0 && firstRow === null) return <p className="tracy-wo-muted">{t('brief.table.none')}</p>
   const choose = async (row: BriefRow, onSite: boolean): Promise<void> => {
     if (busy !== null) return
     setBusy(row.id)
@@ -42,6 +45,7 @@ export function BusinessBriefTable({
           </tr>
         </thead>
         <tbody>
+          {firstRow}
           {rows.map((row) => (
             <tr key={row.id} data-off={row.onSite ? undefined : 'true'}>
               <th scope="row">{row.label}</th>
@@ -76,6 +80,7 @@ export function BusinessBriefTable({
           ))}
         </tbody>
       </table>
+      {rows.length === 0 ? <p className="tracy-wo-muted">{t('brief.table.none')}</p> : null}
     </div>
   )
 }

@@ -26,3 +26,13 @@ export function buildChoice(
     null
   return { cmsList, cms, template }
 }
+
+/**
+ * The site label a build from the Build form sends: what the person typed there, else the Site name on Tracy saved on
+ * the opportunity (#519), else the name the server suggests. An emptied field sends no label, and the server then names
+ * the site itself (the saved name first).
+ */
+export function buildLabel(typed: string | null, saved: string | null, suggested: string): string {
+  if (typed !== null) return typed.trim()
+  return saved || suggested
+}

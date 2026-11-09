@@ -759,6 +759,47 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     },
     answers: '`{opportunity}`'
   },
+  // src/opportunities-build/site-label-route.js
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/site-label',
+    summary: 'Read the Site name on Tracy of an opportunity',
+    description: `The site label the person saved for this opportunity's demo (\`label\`, null when none), the label a build would get without it (\`suggested\`, from the latest brief or the place's name, first free of \`-2\`, \`-3\`…; null when the plugin is unavailable), how this deployment writes an address (\`<prefix><label>.<domain>\`) and the length limits of a label. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{label: string | null, suggested: string | null, prefix, domain, min, max}`'
+  },
+  // src/opportunities-build/site-label-route.js
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/site-label/check',
+    summary: 'Check a typed Site name on Tracy',
+    description: `Whether a typed label can name this opportunity's demo: the create door's own rule (6 to 30 lowercase letters, digits and hyphens, not a reserved word), then every name this deployment holds (sites, the shard directory, live holds, custom names). Reserves nothing. \`reason\`: \`shape\`, \`reserved\`, \`looks_imported\` or \`taken\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' }, query: { label: 'The typed label' } },
+    answers: '`{label, available: boolean, reason?}`'
+  },
+  // src/opportunities-build/site-label-route.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/site-label',
+    summary: 'Save the Site name on Tracy of an opportunity',
+    description: `Saves the site label a demo of this opportunity is built under; a build sent without a \`label\` then uses it. \`null\` clears it, and builds name the site from the business again. Checked as the check door does: 400 \`INVALID_LABEL\` with \`reason\`, 409 \`LABEL_TAKEN\`. Reserves nothing: a name taken before the build starts is refused by the create door. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['label'],
+      properties: { label: { type: ['string', 'null'], description: 'The site label, or null to clear it' } }
+    },
+    answers: '`{label: string | null}`'
+  },
   // website-opportunities/src/route.js
   {
     method: 'PUT',
@@ -995,12 +1036,12 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'GET',
     path: '/api/website-opportunities/revisions/:revId',
     summary: 'Read a brief revision',
-    description: `The revision with its brief JSON and its builds, or its Markdown with \`?format=md\` (generated from the JSON, never a second source). \`suggestedLabel\` is the site name a build without a \`label\` would get now: the place’s name as a site label, with \`-2\`, \`-3\`… when this deployment already holds it (null when the plugin is unavailable). Readable while the switch is off. ${OWN}`,
+    description: `The revision with its brief JSON and its builds, or its Markdown with \`?format=md\` (generated from the JSON, never a second source). \`suggestedLabel\` is the site name a build without a \`label\` would get now: the Site name on Tracy saved on the opportunity (\`siteLabel\`) when there is one, else the place’s name as a site label, with \`-2\`, \`-3\`… when this deployment already holds it (null when the plugin is unavailable). Readable while the switch is off. ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { revId: 'Revision id' }, query: { format: '`md` for the brief as text/markdown' } },
-    answers: '`{revision, builds: [build], suggestedLabel: string | null}`'
+    answers: '`{revision, builds: [build], suggestedLabel: string | null, siteLabel: string | null}`'
   },
   // website-opportunities/src/route.js
   {
