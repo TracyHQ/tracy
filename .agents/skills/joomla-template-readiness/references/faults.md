@@ -176,3 +176,44 @@ a fault the flow has a door for. Detection per fault:
 - **Code**: the `language-policy` job stays red on a policy edit inside the same PR.
 - **Fix**: the job runs the checker and policy from the base commit: put the policy edit in its own PR, merge it first,
   then rerun the job. The policy names objects by id: recompute the ids after any change of those files.
+
+## F15. A demo update fails downloading the Cowork plugin from a release download URL
+
+- **Code**: the demo update's failed answer on /ops, read by `failureReason` (`apps/tracy-web/src/lib/demo-sites.js`):
+  `download failed: The requested URL returned error: 504` (or another sticky 5xx) on a release asset URL of the form
+  `https://github.com/<org>/<repo>/releases/download/<tag>/<file>`. Offline detector: none for the host itself (it is a
+  server fact); the printed line is the code, and the readiness proof is `scripts/test/red-codes.test.mjs`.
+- **Symptom**: the demo update stops while fetching a plugin or profile package; the same asset downloads fine through
+  the API. The fault is the route, not the release.
+- **Confirm**: ask the same asset twice, once by its download URL and once by
+  `https://api.github.com/repos/<org>/<repo>/releases/assets/<id>` with header `Accept: application/octet-stream`. A 5xx on
+  the first and a 200 on the second confirms it.
+- **Fix**: a tool fix, never a template or demo fix: every download the provisioner makes takes the API road when the
+  plain URL answers 5xx (#491 for the package, #493 for the profile). Do not pin a different release to get past it.
+- **Layout check**: none (nothing on the site changes).
+
+## F16. A demo update fails with "contract profile ... not on disk"
+
+- **Code**: `!! contract profile <id>: not on disk` in the provision log, shown on /ops through `failureReason`. A fixed
+  host prints the cause first: `!! contract-fetch: profile <id> could not be put on disk: <why>`.
+- **Symptom**: the update dies at the profile step. The older provisioner tried the fetch once for 15 s, so a slow or 5xx
+  answer ended the run with a line that named no reason.
+- **Confirm**: read the log lines above the "not on disk" line for a `contract-fetch:` reason. No such line means the host
+  runs the old provisioner. A reason that names a 5xx is F15.
+- **Fix**: a tool fix (#493: 120 s window, the API road of F15, the real reason surfaced); update the host's provisioner,
+  then run the demo update again. Never edit the contract or hand-copy the profile onto the host.
+- **Layout check**: none.
+
+## F17. A new template kit over 16 MB turns the language policy job red
+
+- **Code**: `language-policy` job, finding `not scanned: text blob exceeds 16777216 bytes; review explicitly` on
+  `.../contracts/<template>/<ver>/template-kit.json`. Offline detector: `checkRange` of `scripts/check-language-policy.mjs`
+  on the branch, or `git cat-file -s <blob>` above 16777216 for the kit file.
+- **Symptom**: a PR that adds a kit larger than 16 MB goes red; a rerun stays red because the job reads the policy from the
+  base commit (F14).
+- **Confirm**: `git cat-file -s HEAD:<path to template-kit.json>`; above 16777216 is this fault.
+- **Fix**: first an exemption PR on `develop` alone: one `objects` entry in `scripts/language-policy.json` with the kit's
+  `path`, its blob `oid` and a reason (the kit is sealed by its approval digest; its text was read by the kit checks). Merge
+  it. Then merge `develop` into the kit branch (not rebase: a rebase breaks the commit refs of regression cases) and push; a
+  rerun alone reuses the old base. A kit edited later has a new `oid` and needs a new entry.
+- **Layout check**: none (a policy entry only).
