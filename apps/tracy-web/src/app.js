@@ -1415,19 +1415,19 @@ export function buildApp(deps) {
     app.socialStatsTick = () => socialStats.tick()
     // Unused demos freeze, then go through the site's own delete (`opportunities-build/demo-retention.js`),
     // acted as the account that built them. `app.teardownSiteAs` is mounted with the site doors below.
+    // The same teardown deletes the demo sites of an opportunity its owner deletes (`demo-removal.js`).
+    const woDemoTeardown = async (build) => {
+      if (typeof app.teardownSiteAs !== 'function') return 'busy'
+      const { rows } = await deps.pool.query('select email from account where id = $1', [build.account_id])
+      return rows[0] ? app.teardownSiteAs(build.site_key, rows[0].email) : 'busy'
+    }
     app.demoRetentionTick = async () => {
       // The feature's switch off stops the sweep too, like the two ticks above.
       if (!(await woSwitchOn())) return { ran: false, reason: 'switch-off' }
       return sweepDemos(deps.pool, {
         now: (deps.now ?? Date.now)(),
         settings: (await woRuntimeOf()).settings,
-        teardown: async (build) => {
-          if (typeof app.teardownSiteAs !== 'function') return 'busy'
-          const { rows } = await deps.pool.query('select email from account where id = $1', [
-            build.account_id
-          ])
-          return rows[0] ? app.teardownSiteAs(build.site_key, rows[0].email) : 'busy'
-        },
+        teardown: woDemoTeardown,
         log: deps.log ?? console
       })
     }
@@ -1437,6 +1437,7 @@ export function buildApp(deps) {
       app.demoQaUnhook = onTurnClosed(({ siteKey }) => claimAndRunQa(deps.pool, qaDeps, { siteKey }))
     }
     const opportunityDeps = {
+      demoTeardown: woDemoTeardown,
       checkDemoGrant: async (accountId, siteKey) =>
         (await grantFor(deps.pool, accountId, siteKey))?.role === 'owner',
       resumeFill: (build, email, actionId) => app.resumeOpportunityFill?.(build, email, actionId) ?? false,

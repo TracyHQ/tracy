@@ -40,6 +40,7 @@ import {
 } from './demo-actions.js'
 import { qaShape } from './demo-qa.js'
 import { reopenDemo, startDemoClock, touchDemo } from './demo-retention.js'
+import { prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
 import { demoJourneySql } from './journey-sql.js'
@@ -63,7 +64,8 @@ const BASE = '/api/website-opportunities'
  *     liveSiteKey: string | null, queuedActionId: string | null}>>,
  *   demoJourneySql: typeof demoJourneySql,
  *   templateChoicesOf: (settings: object) => Promise<object>,
- *   templateCards: () => Promise<any>
+ *   templateCards: () => Promise<any>,
+ *   prepareDelete: (opp: object, accountId: string) => Promise<{ok: boolean, siteRemoved?: boolean}>
  * }}
  */
 export function createWebsiteBuilder(deps) {
@@ -760,7 +762,10 @@ export function createWebsiteBuilder(deps) {
     demoFactsOf,
     demoJourneySql,
     templateChoicesOf,
-    templateCards
+    templateCards,
+    // Before an opportunity is deleted: its live demo sites torn down (`demo-removal.js`), with `deps.demoTeardown`.
+    prepareDelete: (opp, accountId) =>
+      prepareOpportunityDelete(pool, opp, accountId, { now: now(), teardown: deps.demoTeardown ?? null })
   }
 }
 

@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-09: Delete a saved opportunity
+
+Added `DELETE /api/website-opportunities/:id` (internal): cancels the row's live research job, tears its live demo sites down through the demo retention path, then deletes the row; 409 `DEMO_TEARDOWN_FAILED` keeps it. `POST /api/website-opportunities/jobs/bulk` takes `action: "delete"` with `opportunityIds` (not `jobIds` or `filter`) and answers `deleted` and `sitesRemoved` beside `done`, `skipped` and `failed`.
+
 ## 2026-11-05: Pages of a site in many languages
 
 Changed: `content.read` with `view: "pages"` and neither `locale` nor `url`, on a site that serves more than eight languages and whose pages do not fit in one listing, walks the site's default language only and names it in the new `locale` field of the `tracy-content-pages/v1` answer; `later` carries the same `locale`. Name a `locale` to list another language. A site in eight languages or fewer, a call with `locale` or `url`, and a site that fits in one listing answer as before.

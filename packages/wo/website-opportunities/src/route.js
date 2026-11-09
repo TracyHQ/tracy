@@ -34,6 +34,7 @@ import {
   resumeRequest
 } from './place-requests.js'
 import { againPartsOf, againShape, placeAgainPlan } from './research-again.js'
+import { bulkDelete, bulkDeleteAnswer, deleteOpportunityOf, deleteSelection } from './opportunity-delete.js'
 import { placeViewOf, searchRowPages } from './place-view.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { cleanProfileLinks, untrackedUrl } from '../domain/social-links.mjs'
@@ -1117,8 +1118,8 @@ export function websiteOpportunitiesRoutes(deps) {
     if (who instanceof Response) return who
     const b = await body(c)
     const action = b?.action
-    if (action !== 'resume' && action !== 'cancel')
-      return refuse(c, 400, 'INVALID_ACTION', 'Send action as "resume" or "cancel".')
+    if (action !== 'resume' && action !== 'cancel' && action !== 'delete')
+      return refuse(c, 400, 'INVALID_ACTION', 'Send action as "resume", "cancel" or "delete".')
     if (!REQUEST_ID.test(String(b?.requestId ?? '')))
       return refuse(
         c,
@@ -1126,10 +1127,16 @@ export function websiteOpportunitiesRoutes(deps) {
         'INVALID_REQUEST_ID',
         'Send a requestId of 8–100 letters, digits, ".", "_", ":" or "-".'
       )
-    const selection = bulkSelection(b)
+    // A delete names opportunities (a row without a job is deletable too); resume and cancel name jobs.
+    const selection =
+      action === 'delete' ? deleteSelection(b, { max: BULK_MAX, uuid: UUID }) : bulkSelection(b)
     if ('error' in selection) return refuse(c, selection.status, selection.error, selection.next)
     if (action === 'resume' && !(await featureOn())) return featureOff(c)
-    if (!who.accountId) return json(c, { results: [], done: 0, skipped: 0, failed: 0 })
+    if (!who.accountId)
+      return json(
+        c,
+        action === 'delete' ? bulkDeleteAnswer([]) : { results: [], done: 0, skipped: 0, failed: 0 }
+      )
     const hash = createHash('sha256')
       .update(JSON.stringify({ action, ...selection }))
       .digest('hex')
@@ -1142,6 +1149,11 @@ export function websiteOpportunitiesRoutes(deps) {
     if (await overLimitOrClosed(pool, `wo:bulk:${who.accountId}`, BULK_PER_HOUR, now())) {
       await releaseBulkRequest(pool, who.accountId, b.requestId)
       return refuse(c, 429, 'RATE_LIMITED', 'Wait for the next hour before another bulk action.')
+    }
+    if (action === 'delete') {
+      const deleted = await bulkDelete(pool, who.accountId, selection.opportunityIds, { builder })
+      await finishBulkRequest(pool, who.accountId, b.requestId, deleted)
+      return json(c, deleted)
     }
     let jobIds = selection.jobIds
     if (!jobIds) {
@@ -1446,6 +1458,25 @@ export function websiteOpportunitiesRoutes(deps) {
       usage: demo.usage,
       builds: demo.builds
     })
+  })
+
+  // Delete one opportunity (`opportunity-delete.js`): its live job cancelled, its live demo sites torn down, then the
+  // row. Like cancel, it starts no work, so the feature switch does not gate it.
+  app.delete(`${BASE}/:id`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    if (!who.accountId || !UUID.test(id)) return notFound(c, 'opportunity')
+    const deleted = await deleteOpportunityOf(pool, who.accountId, id, { builder })
+    if (deleted.ok)
+      return json(c, { ok: true, deleted: { id: deleted.id, siteRemoved: deleted.siteRemoved } })
+    if (deleted.code === 'NOT_FOUND') return notFound(c, 'opportunity')
+    return refuse(
+      c,
+      409,
+      'DEMO_TEARDOWN_FAILED',
+      'Its demo site could not be removed now: wait a moment and delete it again.'
+    )
   })
 
   // The name on the site, as the person checked it on the Profile card: final for every later brief and build.

@@ -146,6 +146,20 @@ export async function opportunityOf(db, accountId, id) {
   return rows[0] ?? null
 }
 
+/**
+ * Delete one of the account's opportunities. Its own rows go with it (foreign keys cascade: jobs and their
+ * attempts, sources, media, profile, revisions and their builds, demo actions, public demos); the shared place
+ * research it read (`wo_place*`) stays, other accounts read the same place.
+ * @returns {Promise<boolean>} whether a row of this account was deleted
+ */
+export async function deleteOpportunity(db, accountId, id) {
+  const { rowCount } = await db.query('delete from wo_opportunity where id = $1 and account_id = $2', [
+    id,
+    accountId
+  ])
+  return rowCount > 0
+}
+
 /** Longest name a person may give the business (the `wo_opportunity.name` limit). */
 export const NAME_PICK_MAX = 200
 
