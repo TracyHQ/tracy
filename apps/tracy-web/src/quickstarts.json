@@ -1682,11 +1682,11 @@
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart/ja-diner/wp7/ja-diner-wp7-database-1.0.2.sql.gz"
     },
     "cowork": {
-      "file": "claude-cowork-0.18.40.zip",
-      "version": "0.18.40",
-      "bytes": 2019887,
-      "sha256": "a8100a3900a526db83acdaf62e2f5189a19df554b1ef7604c9d6bdea9ba6e455",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.40/claude-cowork-0.18.40.zip",
+      "file": "claude-cowork-0.18.41.zip",
+      "version": "0.18.41",
+      "bytes": 2028437,
+      "sha256": "974637fc9b808a0c9f5cc0377501bdace0fb89c348c0341774884bb72db0b166",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.41/claude-cowork-0.18.41.zip",
       "contractVersions": ["1.0.0", "1.0.2"],
       "alsoCarries": {
         "ja-diner/wp7/1.0.0": {
@@ -1708,13 +1708,13 @@
         }
       },
       "contractFiles": {
-        "content-map.json": "1dfd1b6648024702d8f2e694be1830d78a4728101a11f5c8428e198039b2573e",
-        "demo-trim-map.json": "a533a7a834e6b7de4275811b8db50c77419b5df4ea7e7c70a32633c097fea732",
-        "editions.json": "f8dafdeb1145009058ccf5cc40d9cc7705ce5e7052ea577cd99fa7b1439b3ae6",
-        "manifest.json": "5a4659fbd671947e1758af079244e31c3e30839cb8f10d62c360e12de54b94c0",
-        "presentation-lock.json": "1efb2651d91b6555e3dd0a0b7072db4bfadf3cdf5df323b4a5a6427e88336c9b",
-        "showcase-nav-map.json": "09ddb334d8c5a808cf18e95ddd87b854443d07c7f9a6766ba2c61408ab897472",
-        "superseded.json": "29636259f61ede87ae276ab375762ec1eb4ed73b2543aa0eb9ae690aefc970fa"
+        "content-map.json": "4c56d70d3153b3258fb66b0119510dfecc8038935a8629555536996922c91e13",
+        "demo-trim-map.json": "3f9ac679a79dabe6cf7dec0f94cb52bcc78047c27b4172724719fa5f2f16432b",
+        "editions.json": "fc10cc0e20e4937e3242a69f80d26e8b43f3061663046780b9c926cda82626c9",
+        "manifest.json": "6aa939dec99e5a9baa733737754875f7c1631c7523b069caa1add7bd5d525b58",
+        "presentation-lock.json": "fde46dd15b220f04d467991101be94073f8ebe858768acdf14cd4524f13f0e84",
+        "showcase-nav-map.json": "db617c1e3c3b124ea660cab89091e04029ed29d72c32d23b13a3d77ebcba6dd4",
+        "superseded.json": "403c5abe35940e26b45f8afa36b72e32ede0536046723a321393cbe837199d08"
       }
     },
     "contract": "ja-diner/wp7/1.0.2"
