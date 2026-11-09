@@ -241,3 +241,11 @@ measurements carry across origins. The receipt does **not** carry across: `qa.mj
 not the report's (§7.1) and needs every consumer's notes in that run (§7.2), so the lenses still report on the P8
 runs. A Fast Gate pass **does not
 replace** visual acceptance, and does not replace the release receipt.
+
+- **Any contract rebuild or global-CSS edit stales `--reuse`.** `contract.revision` is part of the contract hash and `src/styles/**` is a render input of every page, so a rebuilt contract or one stylesheet edit leaves `reused=0` and a stale Fast Gate verdict even when the shots are byte-identical: rebuild the contract only when a rule changed, freeze it before the Fast Gate that feeds the full run, and scope a late fix to the page's own style. A reused shot keeps the tile path of the run that took it, so carry lens notes by tile path and Seen hash, and copy a notes folder with `cp -a` (the merge applies `*-close.md` rows in mtime order).
+
+- **Cap a lens agent's tile list at 75.** After about 100 images every further `Read` answers "media removed: request limit" with no tool error, and the agent may still list those tiles as opened; the brief caps the list at 75 and tells the agent not to list a tile it could not see.
+
+- **Note file names are matched exactly; others are ignored without a word.** `qa-notes.mjs` reads fix files only as lower-case `fix(-[a-z0-9-]+)?.md` (`fix-A.md` counts for nothing) and a verdict only as `<lens>-close.md` (`layout-G2-close.md` is ignored, so several readers' verdicts are concatenated into it), and a close row counts only for a lens that wrote that todo. Rows apply in file mtime order, so a fix file written after a verdict turns a closed note back to `done`; a difference accepted as is is closed in the lens's `-close.md` with the reason, after the last fix file.
+
+- **Lens readers do not converge by reading alone.** The same shot read twice gives different notes and a reader closes and reopens one todo between rounds: settle a layout note by measuring both sides (`getBoundingClientRect` in the source and the build) before a fix, and run the strongest-model layout reader at the first full tier, because it found mobile and tablet defects that earlier rounds by a lighter model had marked clean.

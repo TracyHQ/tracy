@@ -1,10 +1,28 @@
 {
 	"generatedAt": "2026-11-04T02:33:51.029Z",
+	"roleVocabularyVersion": "place-content-roles/2",
+	"settings": {
+		"title": {
+			"role": "business.name",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		},
+		"tagline": {
+			"role": "business.tagline",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
+		}
+	},
 	"fields": {
 		"pages.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"pages.body": {
 			"source": "prose",
@@ -19,22 +37,26 @@
 		"pages.image": {
 			"source": "image",
 			"target": "image",
-			"label": "Image"
+			"label": "Image",
+			"role": "editorial.decorative_image"
 		},
 		"pages.caption": {
 			"source": "text",
 			"target": "string",
-			"label": "Caption"
+			"label": "Caption",
+			"role": "editorial.paragraph"
 		},
 		"pages.lead_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Lead title"
+			"label": "Lead title",
+			"role": "editorial.heading"
 		},
 		"pages.lead_text": {
 			"source": "text",
 			"target": "string",
-			"label": "Lead text"
+			"label": "Lead text",
+			"role": "editorial.paragraph"
 		},
 		"pages.path": {
 			"source": "text",
@@ -49,12 +71,14 @@
 		"posts.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"posts.excerpt": {
 			"source": "prose",
 			"target": "text",
-			"label": "Excerpt"
+			"label": "Excerpt",
+			"role": "editorial.paragraph"
 		},
 		"posts.body": {
 			"source": "prose",
@@ -69,7 +93,8 @@
 		"posts.cover": {
 			"source": "image",
 			"target": "image",
-			"label": "Cover"
+			"label": "Cover",
+			"role": "editorial.decorative_image"
 		},
 		"posts.featured": {
 			"source": "boolean",
@@ -89,7 +114,10 @@
 		"posts.photos": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Photos"
+			"label": "Photos",
+			"subRoles": {
+				"image": "editorial.decorative_image"
+			}
 		},
 		"posts.path": {
 			"source": "text",
@@ -99,17 +127,23 @@
 		"slideshow.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"slideshow.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"image": "editorial.decorative_image",
+				"slide_title": "editorial.heading"
+			}
 		},
 		"slideshow.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"slideshow.section_style": {
 			"source": "text",
@@ -119,12 +153,14 @@
 		"slideshow.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"hero.hero_heading": {
 			"source": "text",
 			"target": "string",
-			"label": "Hero heading"
+			"label": "Hero heading",
+			"role": "editorial.heading"
 		},
 		"hero.hero_intro": {
 			"source": "prose",
@@ -134,17 +170,20 @@
 		"hero.hero_img": {
 			"source": "text",
 			"target": "image",
-			"label": "Hero img"
+			"label": "Hero img",
+			"role": "editorial.decorative_image"
 		},
 		"hero.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"hero.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"hero.section_style": {
 			"source": "text",
@@ -154,12 +193,14 @@
 		"hero.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"features_intro.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"features_intro.description": {
 			"source": "prose",
@@ -169,17 +210,30 @@
 		"features_intro.img_features": {
 			"source": "text",
 			"target": "image",
-			"label": "Img features"
+			"label": "Img features",
+			"role": "editorial.decorative_image"
 		},
 		"features_intro.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"img_icon": "offering.image",
+				"title": "offering.name",
+				"description": "editorial.paragraph",
+				"btn_value": "editorial.button_label",
+				"short_desc": "offering.description",
+				"price": "offering.price"
+			},
+			"group": {
+				"kind": "menu_item"
+			}
 		},
 		"features_intro.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"features_intro.section_style": {
 			"source": "text",
@@ -189,22 +243,34 @@
 		"features_intro.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"menu.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"menu.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"dish_name": "offering.name",
+				"dish_description": "offering.description",
+				"dish_price": "offering.price",
+				"dish_image": "offering.image"
+			},
+			"group": {
+				"kind": "menu_item"
+			}
 		},
 		"menu.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"menu.section_style": {
 			"source": "text",
@@ -214,12 +280,14 @@
 		"menu.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"tabs.heading": {
 			"source": "text",
 			"target": "string",
-			"label": "Heading"
+			"label": "Heading",
+			"role": "editorial.heading"
 		},
 		"tabs.position": {
 			"source": "text",
@@ -229,12 +297,14 @@
 		"tabs.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"tabs.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"tabs.section_style": {
 			"source": "text",
@@ -244,27 +314,39 @@
 		"tabs.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"testimonials.block_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Block intro"
+			"label": "Block intro",
+			"role": "editorial.paragraph"
 		},
 		"testimonials.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"testimonials.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"testimonial_text": "quote.text",
+				"author_name": "quote.author_name",
+				"author_img": "quote.author_image"
+			},
+			"group": {
+				"kind": "quote"
+			}
 		},
 		"testimonials.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"testimonials.section_style": {
 			"source": "text",
@@ -274,12 +356,14 @@
 		"testimonials.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"statistics.button_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Button title"
+			"label": "Button title",
+			"role": "editorial.button_label"
 		},
 		"statistics.button_link": {
 			"source": "url",
@@ -294,17 +378,26 @@
 		"statistics.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"statistics.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"stats_count": "stat.value",
+				"stats_name": "stat.label"
+			},
+			"group": {
+				"kind": "stat_item"
+			}
 		},
 		"statistics.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"statistics.section_style": {
 			"source": "text",
@@ -314,7 +407,8 @@
 		"statistics.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"teams.number_col": {
 			"source": "text",
@@ -324,17 +418,28 @@
 		"teams.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"teams.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"member_image": "person.image",
+				"member_desc": "person.bio",
+				"member_name": "person.name",
+				"member_position": "person.role"
+			},
+			"group": {
+				"kind": "person"
+			}
 		},
 		"teams.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"teams.section_style": {
 			"source": "text",
@@ -344,22 +449,34 @@
 		"teams.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"timeline.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"timeline.items": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Items"
+			"label": "Items",
+			"subRoles": {
+				"date": "event.date_or_year",
+				"image": "event.image",
+				"title": "event.title",
+				"description": "event.description"
+			},
+			"group": {
+				"kind": "event"
+			}
 		},
 		"timeline.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"timeline.section_style": {
 			"source": "text",
@@ -369,27 +486,40 @@
 		"timeline.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"opentime.oclock_begin": {
 			"source": "text",
 			"target": "string",
-			"label": "Oclock begin"
+			"label": "Oclock begin",
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"opentime.oclock_end": {
 			"source": "text",
 			"target": "string",
-			"label": "Oclock end"
+			"label": "Oclock end",
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"opentime.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"opentime.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"opentime.section_style": {
 			"source": "text",
@@ -399,12 +529,14 @@
 		"opentime.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"opentable.ot_desc": {
 			"source": "text",
 			"target": "string",
-			"label": "Ot desc"
+			"label": "Ot desc",
+			"role": "editorial.paragraph"
 		},
 		"opentable.ot_id": {
 			"source": "text",
@@ -414,42 +546,50 @@
 		"opentable.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"happyhours.hp_bg": {
 			"source": "text",
 			"target": "image",
-			"label": "Hp bg"
+			"label": "Hp bg",
+			"role": "editorial.decorative_image"
 		},
 		"happyhours.hp_brand": {
 			"source": "text",
 			"target": "image",
-			"label": "Hp brand"
+			"label": "Hp brand",
+			"role": "editorial.decorative_image"
 		},
 		"happyhours.hp_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Hp title"
+			"label": "Hp title",
+			"role": "editorial.heading"
 		},
 		"happyhours.hp_desc": {
 			"source": "text",
 			"target": "string",
-			"label": "Hp desc"
+			"label": "Hp desc",
+			"role": "editorial.paragraph"
 		},
 		"happyhours.hp_info": {
 			"source": "text",
 			"target": "string",
-			"label": "Hp info"
+			"label": "Hp info",
+			"role": "editorial.paragraph"
 		},
 		"happyhours.hp_badge": {
 			"source": "text",
 			"target": "string",
-			"label": "Hp badge"
+			"label": "Hp badge",
+			"role": "editorial.heading"
 		},
 		"happyhours.hp_link_text": {
 			"source": "url",
 			"target": "string",
-			"label": "Hp link text"
+			"label": "Hp link text",
+			"role": "editorial.button_label"
 		},
 		"happyhours.hp_link": {
 			"source": "url",
@@ -459,17 +599,20 @@
 		"happyhours.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"happyhours.hp_other_info": {
 			"source": "text",
 			"target": "string",
-			"label": "Hp other info"
+			"label": "Hp other info",
+			"role": "editorial.paragraph"
 		},
 		"happyhours.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"happyhours.section_style": {
 			"source": "text",
@@ -479,42 +622,70 @@
 		"happyhours.section_intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Section intro"
+			"label": "Section intro",
+			"role": "editorial.paragraph"
 		},
 		"chrome.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"chrome.brand_name": {
 			"source": "text",
 			"target": "string",
-			"label": "Brand name"
+			"label": "Brand name",
+			"role": "business.name",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
 		},
 		"chrome.topbar_text": {
 			"source": "text",
 			"target": "string",
-			"label": "Topbar text"
+			"label": "Topbar text",
+			"role": "contact.hours",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"chrome.logo_dark": {
 			"source": "image",
 			"target": "image",
-			"label": "Logo dark"
+			"label": "Logo dark",
+			"role": "business.logo",
+			"group": {
+				"kind": "business",
+				"name": "identity"
+			}
 		},
 		"chrome.footer_location_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer location title"
+			"label": "Footer location title",
+			"role": "editorial.heading"
 		},
 		"chrome.footer_address": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer address"
+			"label": "Footer address",
+			"role": "contact.address",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"chrome.footer_map_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer map label"
+			"label": "Footer map label",
+			"role": "contact.map_label",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"chrome.footer_map_url": {
 			"source": "url",
@@ -524,72 +695,95 @@
 		"chrome.footer_hours_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer hours title"
+			"label": "Footer hours title",
+			"role": "editorial.heading"
 		},
 		"chrome.footer_hours": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Footer hours"
+			"label": "Footer hours",
+			"subRoles": {
+				"days": "editorial.heading",
+				"time": "contact.hours"
+			},
+			"group": {
+				"kind": "contact"
+			}
 		},
 		"chrome.footer_contact_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Footer contact title"
+			"label": "Footer contact title",
+			"role": "editorial.heading"
 		},
 		"chrome.footer_contact": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Footer contact"
+			"label": "Footer contact",
+			"subRoles": {
+				"label": "editorial.heading",
+				"value": "editorial.paragraph"
+			}
 		},
 		"chrome.copyright": {
 			"source": "text",
 			"target": "string",
-			"label": "Copyright"
+			"label": "Copyright",
+			"role": "editorial.paragraph"
 		},
 		"chrome.skip_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Skip label"
+			"label": "Skip label",
+			"role": "editorial.button_label"
 		},
 		"chrome.menu_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Menu label"
+			"label": "Menu label",
+			"role": "editorial.menu_label"
 		},
 		"chrome.appearance_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Appearance label"
+			"label": "Appearance label",
+			"role": "editorial.button_label"
 		},
 		"chrome.categories_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Categories title"
+			"label": "Categories title",
+			"role": "editorial.heading"
 		},
 		"chrome.prev_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Prev label"
+			"label": "Prev label",
+			"role": "editorial.button_label"
 		},
 		"chrome.next_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Next label"
+			"label": "Next label",
+			"role": "editorial.button_label"
 		},
 		"chrome.more_label": {
 			"source": "text",
 			"target": "string",
-			"label": "More label"
+			"label": "More label",
+			"role": "editorial.button_label"
 		},
 		"chrome.photos_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Photos label"
+			"label": "Photos label",
+			"role": "editorial.button_label"
 		},
 		"chrome.gallery_link_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Gallery link label"
+			"label": "Gallery link label",
+			"role": "editorial.button_label"
 		},
 		"chrome.not_found_code": {
 			"source": "text",
@@ -599,57 +793,70 @@
 		"chrome.not_found_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Not found title"
+			"label": "Not found title",
+			"role": "editorial.heading"
 		},
 		"chrome.not_found_text": {
 			"source": "text",
 			"target": "string",
-			"label": "Not found text"
+			"label": "Not found text",
+			"role": "editorial.paragraph"
 		},
 		"chrome.not_found_back_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Not found back label"
+			"label": "Not found back label",
+			"role": "editorial.button_label"
 		},
 		"masthead.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"masthead.description": {
 			"source": "text",
 			"target": "string",
-			"label": "Description"
+			"label": "Description",
+			"role": "editorial.paragraph"
 		},
 		"masthead.background": {
 			"source": "image",
 			"target": "image",
-			"label": "Background"
+			"label": "Background",
+			"role": "editorial.decorative_image"
 		},
 		"banner.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"banner.image": {
 			"source": "image",
 			"target": "image",
-			"label": "Image"
+			"label": "Image",
+			"role": "editorial.decorative_image"
 		},
 		"banner.price": {
 			"source": "text",
 			"target": "string",
-			"label": "Price"
+			"label": "Price",
+			"role": "editorial.heading"
 		},
 		"banner.points": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Points"
+			"label": "Points",
+			"subRoles": {
+				"text": "editorial.paragraph"
+			}
 		},
 		"banner.button_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Button label"
+			"label": "Button label",
+			"role": "editorial.button_label"
 		},
 		"banner.button_link": {
 			"source": "text",
@@ -659,37 +866,44 @@
 		"category_info.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"category_info.description": {
 			"source": "text",
 			"target": "string",
-			"label": "Description"
+			"label": "Description",
+			"role": "editorial.paragraph"
 		},
 		"category_info.image": {
 			"source": "image",
 			"target": "image",
-			"label": "Image"
+			"label": "Image",
+			"role": "editorial.decorative_image"
 		},
 		"subscribe.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"subscribe.intro": {
 			"source": "text",
 			"target": "string",
-			"label": "Intro"
+			"label": "Intro",
+			"role": "editorial.paragraph"
 		},
 		"subscribe.placeholder": {
 			"source": "text",
 			"target": "string",
-			"label": "Placeholder"
+			"label": "Placeholder",
+			"role": "editorial.button_label"
 		},
 		"subscribe.button": {
 			"source": "text",
 			"target": "string",
-			"label": "Button"
+			"label": "Button",
+			"role": "editorial.button_label"
 		},
 		"subscribe.form_id": {
 			"source": "text",
@@ -699,17 +913,20 @@
 		"contact.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"contact.form_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Form title"
+			"label": "Form title",
+			"role": "editorial.heading"
 		},
 		"contact.form_note": {
 			"source": "text",
 			"target": "string",
-			"label": "Form note"
+			"label": "Form note",
+			"role": "editorial.paragraph"
 		},
 		"contact.form_id": {
 			"source": "text",
@@ -719,7 +936,8 @@
 		"contact.card_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Card title"
+			"label": "Card title",
+			"role": "editorial.heading"
 		},
 		"contact.card_text": {
 			"source": "prose",
@@ -729,32 +947,50 @@
 		"contact.details_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Details title"
+			"label": "Details title",
+			"role": "editorial.heading"
 		},
 		"contact.image": {
 			"source": "image",
 			"target": "image",
-			"label": "Image"
+			"label": "Image",
+			"role": "editorial.decorative_image"
 		},
 		"contact.address": {
 			"source": "text",
 			"target": "string",
-			"label": "Address"
+			"label": "Address",
+			"role": "contact.address",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"contact.phone": {
 			"source": "text",
 			"target": "string",
-			"label": "Phone"
+			"label": "Phone",
+			"role": "contact.phone",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"contact.mobile": {
 			"source": "text",
 			"target": "string",
-			"label": "Mobile"
+			"label": "Mobile",
+			"role": "contact.phone",
+			"group": {
+				"kind": "contact",
+				"name": "contact"
+			}
 		},
 		"reservation.title": {
 			"source": "text",
 			"target": "string",
-			"label": "Title"
+			"label": "Title",
+			"role": "editorial.heading"
 		},
 		"reservation.intro": {
 			"source": "prose",
@@ -764,22 +1000,32 @@
 		"reservation.blocks": {
 			"source": "group",
 			"target": "repeater",
-			"label": "Blocks"
+			"label": "Blocks",
+			"subRoles": {
+				"image": "editorial.decorative_image",
+				"title": "editorial.heading",
+				"text": "editorial.paragraph",
+				"points": "editorial.paragraph",
+				"button_label": "editorial.button_label"
+			}
 		},
 		"reservation.online_title": {
 			"source": "text",
 			"target": "string",
-			"label": "Online title"
+			"label": "Online title",
+			"role": "editorial.heading"
 		},
 		"reservation.online_text": {
 			"source": "text",
 			"target": "string",
-			"label": "Online text"
+			"label": "Online text",
+			"role": "editorial.paragraph"
 		},
 		"reservation.online_button": {
 			"source": "text",
 			"target": "string",
-			"label": "Online button"
+			"label": "Online button",
+			"role": "editorial.button_label"
 		},
 		"reservation.online_link": {
 			"source": "text",

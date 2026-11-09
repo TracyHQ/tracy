@@ -7,7 +7,12 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { readSlotRoles } from '../src/lib/contract-slot-roles.js'
-import { checkFieldMapRoles, fieldMapRolesOf } from '../src/lib/emdash-field-map-roles.js'
+import {
+  checkFieldMapRoles,
+  fieldMapRolesOf,
+  isCopylessField,
+  normalizeFieldMap
+} from '../src/lib/emdash-field-map-roles.js'
 import { baseHashOf, sha256 } from '../src/lib/slot-roles.js'
 import { checkAllSlotRoles } from '../../../scripts/slot-roles/check.mjs'
 
@@ -176,4 +181,101 @@ test('the contract check reports an EmDash field without a role', (t) => {
   const res = checkAllSlotRoles(dir, [path.join(dir, 'contracts/0.5.6')])
   assert.equal(res.ok, false)
   assert.match(res.errors.join('\n'), /contracts\/0\.5\.6: field "home\.hero_title" has no role/)
+})
+
+// A theme built by compile-seed.mjs (JA Diner, JA Restaurant) keeps its field map as `fields` keyed
+// `<collection>.<field>`; the roles go on those entries and the field types come from the seed's collections.
+const COMPILED = ['diner', 'restaurant'].map((name) => ({
+  name,
+  seedDir: path.join(ROOT, `packages/cms/tracy-emdash-theme-${name}/seed`)
+}))
+
+for (const { name, seedDir } of COMPILED) {
+  test(`the ${name} theme declares every copy field's role in its compiled field map`, () => {
+    const derived = fieldMapRolesOf(seedDir)
+    assert.ok(derived, 'the compiled field map declares roles')
+    assert.deepEqual(derived.errors, [])
+    assert.equal(derived.ok, true)
+    assert.ok(derived.doc.bindings.length > 100, 'the roles reach the entries of the seed')
+  })
+
+  test(`a ${name} compiled field without a role is reported by name`, (t) => {
+    const dir = mkdtempSync(path.join(tmpdir(), 'emdash-compiled-roles-'))
+    t.after(() => rmSync(dir, { recursive: true, force: true }))
+    cpSync(seedDir, path.join(dir, 'seed'), { recursive: true, filter: (src) => !src.includes('/media') })
+    const file = path.join(dir, 'seed/field-map.json')
+    const fieldMap = readJson(file)
+    delete fieldMap.fields['chrome.copyright'].role
+    delete fieldMap.fields['menu.items'].subRoles.dish_name
+    writeFileSync(file, JSON.stringify(fieldMap))
+    const derived = fieldMapRolesOf(path.join(dir, 'seed'))
+    assert.equal(derived.ok, false)
+    assert.ok(derived.errors.includes('field "chrome.copyright" has no role'), derived.errors.join('; '))
+    assert.ok(derived.errors.includes('repeater sub-field "menu.items.dish_name" has no role'))
+  })
+}
+
+test('a compiled field map without a role anywhere declares none', () => {
+  assert.equal(
+    normalizeFieldMap(
+      { fields: { 'pages.title': { source: 'text', target: 'string' } } },
+      { collections: [] }
+    ).collections.length,
+    0
+  )
+  assert.equal(
+    checkFieldMapRoles(
+      normalizeFieldMap(
+        { fields: { 'pages.title': { source: 'text', target: 'string' } } },
+        { collections: [{ slug: 'pages', fields: [{ slug: 'title', type: 'string' }] }] }
+      )
+    ).declared,
+    false
+  )
+})
+
+test('layout settings and links of a compiled theme need no role; a member_position does', () => {
+  for (const slug of [
+    'view',
+    'path',
+    'section_style',
+    'stats_color',
+    'button_icon',
+    'btn_link2',
+    'link_social',
+    'position',
+    'webpage',
+    'entry'
+  ])
+    assert.equal(isCopylessField(slug), true, slug)
+  for (const slug of ['member_position', 'title', 'hp_link_text', 'dish_price'])
+    assert.equal(isCopylessField(slug), false, slug)
+})
+
+test('a picture needs a role whatever its name: Restaurant img_icon is a food photo, not a layout setting', () => {
+  const fieldMap = {
+    roleVocabularyVersion: 'place-content-roles/2',
+    settings: {
+      title: { role: 'business.name', group: { kind: 'business' } },
+      tagline: { role: 'business.tagline', group: { kind: 'business' } }
+    },
+    collections: [
+      {
+        collection: 'features_intro',
+        fields: [
+          {
+            slug: 'items',
+            type: 'repeater',
+            subFields: ['img_icon:image', 'button_icon:string'],
+            subRoles: {}
+          },
+          { slug: 'icon', type: 'image' }
+        ]
+      }
+    ]
+  }
+  assert.deepEqual(checkFieldMapRoles(fieldMap).errors.sort(), [
+    'field "features_intro.icon" has no role',
+    'repeater sub-field "features_intro.items.img_icon" has no role'
+  ])
 })
