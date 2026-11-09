@@ -77,8 +77,6 @@ export function addressFromSearch(search: string): MyAddress {
 export function searchWithAddress(search: string, address: MyAddress): string {
   const params = new URLSearchParams(search)
   for (const name of Object.values(P)) params.delete(name)
-  // The Details tab (`detail-tab.ts`) lives as long as a page of this place is open; the list forgets it.
-  if (address.page === null || address.opp === null) params.delete('wo-tab')
   if (address.view !== null) params.set(P.view, address.view)
   if (address.stage !== 'all') params.set(P.stage, address.stage)
   if (address.q !== '') params.set(P.q, address.q.slice(0, Q_MAX))

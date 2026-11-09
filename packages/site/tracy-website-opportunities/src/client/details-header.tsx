@@ -1,7 +1,7 @@
 /**
  * The sticky header of Details (#517): Back, the place's name and type, its status, a ⋯ menu with Research again
- * and Delete, then the three steps with the one action of the current step (mock r6-a) and the tabs. It stays in
- * sight while the tabs below scroll.
+ * and Delete, then the three steps with the one action of the current step (mock r6-a). It stays in sight while the
+ * sections below scroll.
  */
 import type { JSX, ReactNode } from 'react'
 import { ChevronLeft, Ellipsis } from 'lucide-react'
@@ -32,7 +32,6 @@ export function DetailsHeader({
   status,
   menu,
   busy,
-  tabs,
   stepper,
   onBack
 }: {
@@ -44,9 +43,7 @@ export function DetailsHeader({
   status: ReactNode
   menu: HeaderMenu
   busy: boolean
-  /** The tab strip, kept in the sticky header so it stays in sight too. */
-  tabs?: ReactNode
-  /** The three steps with the one action of the current step (`stepper.tsx`), above the tabs on every tab. */
+  /** The three steps with the one action of the current step (`stepper.tsx`). */
   stepper?: ReactNode
   onBack: () => void
 }): JSX.Element {
@@ -95,7 +92,6 @@ export function DetailsHeader({
         </div>
       </div>
       {stepper}
-      {tabs}
     </header>
   )
 }

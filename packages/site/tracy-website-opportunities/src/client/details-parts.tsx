@@ -19,13 +19,17 @@ export function Section({
   title,
   aside,
   tint = false,
+  bare = false,
   children
 }: {
   title: string
   aside?: ReactNode
   tint?: boolean
+  /** Drawn inside a page section that already carries the title: the content alone, no card. */
+  bare?: boolean
   children: ReactNode
 }): JSX.Element {
+  if (bare) return <>{children}</>
   return (
     <section className={cn('tracy-wo-insp-sec', tint && 'is-tint')} aria-label={title}>
       <div className="tracy-wo-insp-sec-head">

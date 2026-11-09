@@ -1,5 +1,5 @@
 /**
- * The Business brief tab of Details (#517): every fact the brief states as one table row, in the words a seller uses.
+ * The Business brief section of Details (#517): every fact the brief states as one table row, in the words a seller uses.
  * Label (the field in plain words), value (what the site would say), where it came from ("From Google and the
  * website", "You entered this", "Tracy worked this out") and whether the site says it, with the reason in plain words
  * when it does not. Read from the same facts and decisions as the switches (`profile-facts-model.ts`); nothing is
@@ -152,4 +152,20 @@ export function businessBriefRows(
     ownerChoice: row.decidedBy === 'owner',
     notes: reasonKeys(row).map((key) => t(key))
   }))
+}
+
+/** The fields the collapsed Business brief shows under Site name, in this order (layout B, spec #512). */
+export const BRIEF_SUMMARY_FIELDS: readonly string[] = Object.freeze(['name', 'bio', 'services', 'team'])
+
+/**
+ * The rows of the collapsed Business brief: the first row of each summary field the brief states, in that order; when
+ * it states none of them, its first rows instead, so a collapsed brief is never empty while the full table is not.
+ */
+export function briefSummaryRows(rows: readonly BriefRow[], fallback = 4): BriefRow[] {
+  // One row per field: a field the brief states several times (three services) shows its first.
+  const picked = BRIEF_SUMMARY_FIELDS.flatMap((field) => {
+    const row = rows.find((r) => r.field === field)
+    return row === undefined ? [] : [row]
+  })
+  return picked.length > 0 ? picked : rows.slice(0, fallback)
 }

@@ -1,7 +1,8 @@
 /**
- * Layout of the Details page (#517): the sticky header, the tab strip, the Demo site block and the Business brief
- * table. Scoped under `.tracy-wo-details`, reading only Tracy tokens. The section card rules are repeated here so
- * Details keeps its look when the Inspector's rules go. No backtick may appear inside the template below.
+ * Layout of the Details page (#517): the sticky header, the "On this page" rail and the stacked sections (layout B),
+ * the Demo site block and the Business brief table. Scoped under `.tracy-wo-details`, reading only Tracy tokens. The
+ * section card rules are repeated here so Details keeps its look when the Inspector's rules go. No backtick may appear
+ * inside the template below.
  */
 export const DETAILS_CSS = `
 .tracy-wo-details { gap: 12px; }
@@ -13,8 +14,51 @@ export const DETAILS_CSS = `
 .tracy-wo-details-head-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .tracy-wo-details-head-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 260px; }
 .tracy-wo-details-head-acts { flex: none; }
-.tracy-wo-details-tabs { width: 100%; justify-content: flex-start; margin-bottom: -10px; }
-.tracy-wo-details-tabs [data-slot='tabs-trigger'] { flex: none; padding-left: 10px; padding-right: 10px; }
+.tracy-wo-details-lay { display: grid; grid-template-columns: 184px minmax(0, 1fr); gap: 20px; align-items: start; }
+.tracy-wo-details-secs { gap: 12px; }
+.tracy-wo-rail { position: sticky; top: calc(var(--tracy-wo-head-h, 0px) + 12px); z-index: 3; display: flex; flex-direction: column; min-width: 0; }
+.tracy-wo-rail-head { margin: 0; padding: 0 10px 6px; font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted-foreground); }
+.tracy-wo-rail-item { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 7px 10px; border: 0; border-left: 2px solid var(--border); border-radius: 0 8px 8px 0; background: transparent; color: var(--foreground); font: inherit; text-align: left; cursor: pointer; }
+.tracy-wo-rail-item:hover { background: color-mix(in oklab, var(--foreground) 5%, transparent); }
+.tracy-wo-rail-item:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
+.tracy-wo-rail-name { font-size: 12.5px; font-weight: 500; line-height: 17px; }
+.tracy-wo-rail-status { font-size: 11.5px; line-height: 15px; color: var(--muted-foreground); white-space: nowrap; }
+.tracy-wo-rail-status[data-tone='ok'] { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
+.tracy-wo-rail-status[data-tone='run'] { color: var(--primary); }
+.tracy-wo-rail-item[data-locked] .tracy-wo-rail-name { color: var(--muted-foreground); }
+.tracy-wo-rail-item[data-on] { border-left-color: var(--primary); background: color-mix(in oklab, var(--primary) 10%, var(--background)); }
+.tracy-wo-rail-item[data-on] .tracy-wo-rail-name { color: var(--primary); font-weight: 600; }
+.tracy-wo-psec { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); }
+.tracy-wo-psec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.tracy-wo-psec-title { display: flex; align-items: baseline; gap: 8px; margin: 0; font-size: 14px; font-weight: 600; line-height: 20px; }
+.tracy-wo-psec-meta { font-size: 12px; font-weight: 400; color: var(--muted-foreground); }
+.tracy-wo-psec[data-locked] { background: color-mix(in oklab, var(--muted) 45%, var(--background)); }
+.tracy-wo-psec[data-locked] .tracy-wo-psec-title { color: var(--muted-foreground); }
+.tracy-wo-psec-lock { display: flex; align-items: center; gap: 8px; margin: 0; color: var(--muted-foreground); }
+.tracy-wo-psec-toggle { display: block; width: calc(100% + 28px); margin: 4px -14px -12px; padding: 8px; border: 0; border-top: 1px solid var(--border); border-radius: 0 0 10px 10px; background: transparent; color: var(--primary); font: inherit; font-size: 12.5px; cursor: pointer; }
+.tracy-wo-psec-toggle:hover { background: color-mix(in oklab, var(--primary) 6%, transparent); }
+.tracy-wo-psec-toggle:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
+.tracy-wo-psec-profile { display: flex; flex-direction: column; gap: 8px; }
+.tracy-wo-psec-toggle-narrow { display: none; }
+.tracy-wo-psec-more { display: flex; flex-direction: column; gap: 12px; }
+.tracy-wo-psec-more .tracy-wo-insp-sec { padding: 12px 0 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; }
+.tracy-wo-media-strip { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tracy-wo-media-strip .tracy-wo-tile { position: relative; border-radius: 6px; }
+.tracy-wo-media-strip .tracy-wo-tile[data-video]::after { content: "\\25B6"; position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 12px; text-shadow: 0 1px 2px rgb(0 0 0 / 50%); pointer-events: none; }
+.tracy-wo-media-more { display: grid; place-items: center; font-size: 12px; color: var(--muted-foreground); }
+@container (max-width: 760px) {
+  .tracy-wo-details-lay { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .tracy-wo-rail { top: var(--tracy-wo-head-h, 0px); flex-direction: row; gap: 6px; margin: -12px -12px 0; padding: 8px 12px; overflow-x: auto; scrollbar-width: none; background: var(--background); border-bottom: 1px solid var(--border); }
+  .tracy-wo-rail-head { display: none; }
+  .tracy-wo-rail-item { flex: none; flex-direction: row; align-items: center; gap: 0; padding: 3px 10px; border: 1px solid var(--border); border-radius: 999px; }
+  .tracy-wo-rail-item[data-on] { border-color: color-mix(in oklab, var(--primary) 35%, var(--border)); }
+  .tracy-wo-rail-name { font-size: 12px; white-space: nowrap; }
+  .tracy-wo-rail-status { font-size: 12px; }
+  .tracy-wo-rail-status::before { content: "\\00B7"; margin: 0 5px; color: var(--muted-foreground); }
+  .tracy-wo-media-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .tracy-wo-psec-profile:not([data-open]) .tracy-wo-fields > :nth-child(n + 5) { display: none; }
+  .tracy-wo-psec-profile:has(.tracy-wo-fields > :nth-child(5)) .tracy-wo-psec-toggle-narrow { display: block; }
+}
 .tracy-wo-details .tracy-wo-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .tracy-wo-demo-block { display: flex; flex-direction: column; gap: 10px; }
 .tracy-wo-demo-block-acts { gap: 6px; }

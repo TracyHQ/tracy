@@ -43,7 +43,8 @@ export function DemoSiteBlock({
   limitReached = false,
   onCommand,
   progress,
-  estimate
+  estimate,
+  bare = false
 }: {
   t: Translate
   row: OpportunityListRow
@@ -59,6 +60,8 @@ export function DemoSiteBlock({
   progress?: ReactNode
   /** The pinned or suggested template's measured time and price, drawn under Build demo as on the Build form. */
   estimate?: ChainEstimate | null
+  /** Inside the Demo site section of Details, which carries the title: no card of its own. */
+  bare?: boolean
 }): JSX.Element {
   const view = demoBlockView(row, detail, t, { now, locale })
   const press = (control: DemoControl): void => {
@@ -69,7 +72,7 @@ export function DemoSiteBlock({
   const showProgress = view.state === 'queued' || view.state === 'building' || failed
   const builds = view.primary.action === 'build' || view.primary.action === 'rebuild'
   return (
-    <Section title={t('demoBlock.title')}>
+    <Section title={t('demoBlock.title')} bare={bare}>
       <div className="tracy-wo-demo-block" data-state={view.state}>
         {view.line !== null ? (
           <p className={failed ? 'tracy-wo-error' : 'tracy-wo-muted'} role={failed ? 'alert' : undefined}>

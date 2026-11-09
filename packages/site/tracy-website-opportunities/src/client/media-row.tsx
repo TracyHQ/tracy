@@ -204,12 +204,63 @@ function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX
   )
 }
 
+/** How many tiles the closed Photos & video section shows; past it, the last tile counts the rest. */
+export const MEDIA_STRIP = 8
+
+/** The closed Photos & video section (layout B): one strip of the first photos and videos, the last tile counting the rest. */
+function MediaStrip({ t, view }: { t: Translate; view: MediaRowView }): JSX.Element {
+  const tiles = [...view.photos.groups.flatMap((g) => g.tiles), ...view.videos.tiles].filter((m) => m.stored)
+  if (tiles.length === 0) return <None t={t} />
+  const more = tiles.length > MEDIA_STRIP ? tiles.length - (MEDIA_STRIP - 1) : 0
+  const shown = more > 0 ? tiles.slice(0, MEDIA_STRIP - 1) : tiles
+  return (
+    <ul className="tracy-wo-media-strip">
+      {shown.map((tile) => {
+        const source = tile.source === null ? '' : sourceLabel(t, tile.source)
+        const category = tile.kind === 'video' ? t('media.video') : t(`media.category.${tile.category}`)
+        return (
+          <li key={tile.id} className="tracy-wo-tile" data-video={tile.kind === 'video' ? '' : undefined}>
+            {tile.kind === 'video' ? (
+              <video
+                src={mediaUrl(tile.id)}
+                preload="metadata"
+                muted
+                playsInline
+                aria-label={t('media.item', { category, source })}
+              />
+            ) : (
+              <img
+                src={mediaUrl(tile.id)}
+                alt={t('media.item', { category, source })}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+          </li>
+        )
+      })}
+      {more > 0 ? (
+        <li className="tracy-wo-tile tracy-wo-media-more" aria-label={t('media.more', { count: more })}>
+          {t('media.moreShort', { count: more })}
+        </li>
+      ) : null}
+    </ul>
+  )
+}
+
+/** Photos and videos the strip can show, for its Show all bar. */
+export function mediaCount(view: MediaRowView): number {
+  return [...view.photos.groups.flatMap((g) => g.tiles), ...view.videos.tiles].filter((m) => m.stored).length
+}
+
 export function MediaRow({
   t,
   view,
   retryLogo,
   menu = null,
-  food = false
+  food = false,
+  open = true,
+  bare = false
 }: {
   t: Translate
   view: MediaRowView
@@ -218,10 +269,20 @@ export function MediaRow({
   food?: boolean
   /** The Menu field: each menu photo gets its number and reading result. */
   menu?: Menu | null
+  /** False: only the strip of the first tiles (the section's Show all opens the rest). */
+  open?: boolean
+  /** Inside the Photos & video section of Details, which carries the title: no card of its own. */
+  bare?: boolean
 }): JSX.Element {
   const { colors, photos, files, videos } = view
+  if (!open)
+    return (
+      <Section title={t('media.title')} bare={bare}>
+        <MediaStrip t={t} view={view} />
+      </Section>
+    )
   return (
-    <Section title={t('media.title')}>
+    <Section title={t('media.title')} bare={bare}>
       <h4 className="tracy-wo-h3">{t('media.brand')}</h4>
       <dl className="tracy-wo-fields">
         <div className="tracy-wo-field">

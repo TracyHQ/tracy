@@ -9,6 +9,7 @@
 
 import { BRIEF_VIEW_CSS } from './brief-view-css.ts'
 import { PROGRESS_CSS } from './demo-progress-css.ts'
+import { DETAILS_CSS } from './details-css.ts'
 import { CSS as LAYOUT_CSS } from './layout-css.ts'
 
 /** CSS Tailwind generated at build time, substituted by esbuild's `define`. */
