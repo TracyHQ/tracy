@@ -62,11 +62,12 @@ import {
 } from './menu-photo-reading.js'
 import { mediaJunk } from './media-junk.js'
 import {
+  bindLogoHints,
   logoCandidateImage,
   logoHintsOf,
   logoPaletteOfStored,
-  researchLogo,
-  sameLogoFindings
+  logoResearchToKeep,
+  researchLogo
 } from './place-logo.js'
 import { SEARCH_NETWORKS, SOCIAL_SEARCH_VERSION } from './research-again.js'
 import { sourceVersionOf } from './collector-versions.js'
@@ -995,6 +996,16 @@ export function createPlaceRunner(h) {
           known.set(m.url, mediaId)
         }
       }
+      // Each logo hint records the row its url became: a re-signed CDN url downloads a picture already stored under
+      // an older url, and the brand stage would otherwise find no row carrying it (dev 09/11/2026: a found logo became
+      // none on a from-scratch run).
+      for (const bound of bindLogoHints(sourceRows, (url) => known.get(url)))
+        await fenced(pool, lease, (db) =>
+          db.query(
+            'update wo_place_snapshot_source set collected = $3::jsonb where snapshot_id = $1 and source = $2',
+            [snapshotId, bound.source, JSON.stringify(bound.collected)]
+          )
+        )
       for (const optionalSource of [TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE]) {
         const ta = await sourceOf(snapshotId, optionalSource)
         if (ta?.collected?.reviews?.length || ta?.collected?.media?.length) {
@@ -1168,8 +1179,9 @@ export function createPlaceRunner(h) {
         ? ((await snapshotProfileOf(pool, ctx.place.current_snapshot_id))?.brand?.logoResearch ?? null)
         : null
       const found = await findLogo(ctx, { media, sources, name: profile.name ?? place.display_name }, held)
-      // Nothing new found: the research on record stays as it is, its vision bill included (e2e dev 24/10/2026).
-      const logoResearch = sameLogoFindings(found, held) ? held : found
+      // Nothing new found: the research on record stays as it is, its vision bill included (e2e dev 24/10/2026). A
+      // none that looked at zero candidates never replaces a found logo still in the snapshot (`logoResearchToKeep`).
+      const logoResearch = logoResearchToKeep({ found, held, media })
       const logoId = logoResearch?.chosen?.mediaId ?? null
       const brandPictures = media
         .filter((m) => !mediaJunk(m) || m.id === logoId)
