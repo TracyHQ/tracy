@@ -1,0 +1,1 @@
+{"id":"REG-PR-501-joomla-readiness-followups","verdict":"PASS","commit":"b4c900e7f87d3838c1a0ac432dec11153525256e","ran_at":"2026-11-09T04:48:50.682Z","evidence":"tests/regression/.runs/2026-11-09-b4c900e7f/REG-PR-501-joomla-readiness-followups.log"}
