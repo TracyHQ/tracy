@@ -1,0 +1,30 @@
+/* A repeated heading level 1 that the theme prints as a level 2 heading (inc/groups/headings.php) keeps the rules the
+   source wrote for the h1 tag in the same place: the second slide, the reservation title, the team section title. */
+.acm-slideshow .item .slider-content-inner h2.h1 {
+	color: #ffffff; /* ds-keep: words on a photo or dark scrim, they keep the template colour under every system */
+	letter-spacing: -0.5px;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+@media (max-width: 767px) {
+	.acm-slideshow .item .slider-content-inner h2.h1 {
+		font-size: 36px;
+	}
+}
+.reservation .content-group-3 .box-content .title h2.h1 {
+	font-size: 40px;
+	margin: 0 0 24px 0;
+}
+@media (max-width: 767px) {
+	.reservation .content-group-3 .box-content .title h2.h1 {
+		font-size: 35px;
+	}
+}
+.acm-teams.style-1 .text-group h2.h1 {
+	margin-top: 0;
+}
+@media (max-width: 991px) {
+	.acm-teams.style-1 .text-group h2.h1 {
+		font-size: 45px;
+	}
+}
