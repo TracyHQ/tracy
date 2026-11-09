@@ -210,6 +210,17 @@ keeps their previous manifest entries and never lists them as deleted. A whole r
 those paths from the preceding live tree before the three-way merge. A truncated or invalid
 omission list refuses the read because unnamed paths cannot safely be treated as deleted.
 
+**Database export integrity:** the Add site host validates dump reply types and canonical base64,
+checks SQL statement boundaries without decoding binary literals, and refuses stalled cursors before
+uploading a database. Engine redirects stay on the original origin so POST tokens cannot follow a
+cross-origin redirect. A transient database PUT failure retries the complete compressed object with a
+fresh signed URL. The bounded diagnostic check names are shared with the web stuck-signal reader.
+WordPress engines may include dependency-ordered `views` DDL in `db.tables`; the host dumps base
+tables first, then appends the selected views. This requires the companion WordPress engine change;
+older engines cannot supply view definitions. Keyless-table cursors in that engine carry a content
+checksum and refuse a concurrent change, rather than silently skipping shifted rows. This check
+costs a table scan per page and does not provide a transaction snapshot of the whole database.
+
 **An unfinished import is never opened as a workspace** (22/10/2026). An import claim creates the row and
 the claimed seat *before* the read; the site folder on the host exists only when `/provision` runs at the end, and a failed read
 keeps the row for Retry. One single rule, [`lib/import-pending.js`](apps/tracy-web/src/lib/import-pending.js):
