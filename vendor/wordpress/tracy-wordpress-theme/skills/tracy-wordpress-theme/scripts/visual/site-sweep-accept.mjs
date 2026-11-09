@@ -14,7 +14,7 @@
 //
 // A third kind records what the tool COULD NOT MEASURE (the not-measured causes of site-sweep.md: `icons-unpairable`, `icon-covered`,
 // `touch-control-not-found`, `form-purpose-unknown`, a chips cause…) after the dossier measured it by hand:
-//   { check, cause, kind: "not-measurable", cases, reason, measurement, evidence }
+//   { check, cause, kind: "not-measurable", cases, reason, measurement, evidence [, intermittent: true] }
 //   cause        the not-measured cause key as site-sweep.md prints it (`icons-unpairable`)
 //   cases        how many not-measured cases of that cause the hand measurement covers (a positive integer)
 //   reason       why the tool cannot read it;   measurement  what was measured by hand and found;   evidence  as above (a file that exists, or a URL)
@@ -106,7 +106,7 @@ export function applyAccept(judged, rows, scope) {
     const j = judged[row.check]
     const fail = (message) => errors.push({ check: row.check, row: n, cause: row.cause, message: `sweep.accept[${n}] ${row.check} "${row.cause}": ${message}` })
     if (!j) return skipped.push({ row: n, why: `${row.check} was not run` })
-    if (row.kind === 'not-measurable') return closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated: partial ? () => skipped.push({ row: n, why: 'its cause was not in the measured scope', unvalidated: true }) : null })
+    if (row.kind === 'not-measurable') return closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated: partial ? () => skipped.push({ row: n, why: 'its cause was not in the measured scope', unvalidated: true }) : null, intermittent: row.intermittent === true ? () => skipped.push({ row: n, why: 'intermittent row: its cause is not among the not-measured causes of this run', unvalidated: true }) : null })
     if (scope?.routes && !row.routes.some((r) => ran.has(r))) return skipped.push({ row: n, why: 'none of its routes was part of this run' })
     // heights reads its own widths (576 and 992 beside the run's): a heights row is in this run when heights read one of its widths
     const ranWidths = row.check === 'heights' && scope?.heightsWidths ? scope.heightsWidths : scope?.widths
@@ -163,10 +163,12 @@ export const notMeasuredCausesOf = (n) => (Array.isArray(n.causes) && n.causes.l
  * Close the not-measured cases of one cause with a `not-measurable` row. A case with several causes (chips) is closed when every cause
  * of it is recorded. More cases than the row says is an error and closes nothing: the cases stay not measured.
  */
-function closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated = null }) {
+function closeNotMeasured(j, row, { fail, accepted, closedItems, unvalidated = null, intermittent = null }) {
   if (j.closed?.some((c) => c.row.cause === row.cause)) return fail('the cause is recorded by another not-measurable row: one row per cause')
   const mine = j.notMeasured.filter((x) => notMeasuredCausesOf(x).includes(row.cause))
   if (!mine.length && unvalidated) return unvalidated()
+  // `intermittent: true`: the probe finds this cause in one run and not the next, so a run without it is no error
+  if (!mine.length && intermittent) return intermittent()
   if (!mine.length) {
     const known = [...new Set(j.notMeasured.flatMap(notMeasuredCausesOf))].slice(0, 5)
     return fail(`matches no not-measured cause in this run — a stale row (the cause is gone, or its key changed)${known.length ? `; the not-measured causes of ${row.check} are: ${known.map((k) => `"${k}"`).join(', ')}` : `; ${row.check} has nothing not measured`}`)
