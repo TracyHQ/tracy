@@ -455,3 +455,48 @@ test(
     assert.ok(website.collectedAt, 'a collected source carries its collection time')
   }
 )
+
+test(
+  'a seller edit of the Content brief is a new revision marked edited, which Details shows and Build reads',
+  opts,
+  async () => {
+    const { pool, call, drain, accountOf, saveGoogle } = await world()
+    const a = await accountOf(A)
+    const opp = await saveGoogle(a)
+    await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'edit-brief-research-1' })
+    await drain()
+    const pressed = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'edit-brief-press-1' })
+    const made = (await settled(call, A, opp.id, pressed.body.job.id)).revision
+    assert.equal(typeof made.brief.business.phone, 'string')
+
+    const bad = await call(A, 'POST', `${BASE}/${opp.id}/revisions/${made.id}/edits`, {
+      edits: [{ path: 'business.secret', value: 'x' }]
+    })
+    assert.equal(bad.status, 400)
+    const missing = await call(A, 'POST', `${BASE}/${opp.id}/revisions/${made.id}/edits`, {
+      edits: [{ path: 'reading.services.40.label', value: 'Boxing' }]
+    })
+    assert.equal(missing.status, 400)
+    assert.equal(missing.body.code, 'UNKNOWN_PATH', 'an edit never adds a fact the brief does not hold')
+
+    const edited = await call(A, 'POST', `${BASE}/${opp.id}/revisions/${made.id}/edits`, {
+      edits: [{ path: 'business.phone', value: '+1 555 0142' }]
+    })
+    assert.equal(edited.status, 201, JSON.stringify(edited.body))
+    assert.equal(edited.body.revision.n, made.n + 1)
+    assert.equal(edited.body.revision.editedBySeller, true)
+    assert.equal(edited.body.revision.brief.business.phone, '+1 555 0142')
+    const stored = (
+      await pool.query('select brief_md from wo_revision where id = $1', [edited.body.revision.id])
+    ).rows[0]
+    assert.ok(stored.brief_md.includes('+1 555 0142'), 'the build prompt says what the seller wrote')
+    const original = (await pool.query('select brief from wo_revision where id = $1', [made.id])).rows[0]
+    assert.notEqual(original.brief.business.phone, '+1 555 0142', 'the made brief never changes')
+
+    const details = await call(A, 'GET', `${BASE}/${opp.id}`)
+    assert.equal(details.body.brief.id, edited.body.revision.id, 'Details and Build use the edited brief')
+    assert.equal(details.body.brief.current, true)
+    assert.equal(details.body.brief.editedBySeller, true)
+    assert.equal(details.body.revisions[0].editedBySeller, true)
+  }
+)

@@ -52,6 +52,7 @@ import { qualityEvidenceRoutes } from './quality-route.js'
 import { createRevision, currentResearchState, resolveRevisionCms } from './revisions.js'
 import { randomUUID } from 'node:crypto'
 import { briefJobShape, createBriefJobs } from './brief-jobs.js'
+import { editRevision, readBriefEdits } from './brief-edits.js'
 import { researched, researchStateOf } from 'website-opportunities/src/research-state.js'
 
 const BASE = '/api/website-opportunities'
@@ -287,7 +288,8 @@ export function createWebsiteBuilder(deps) {
         })
       : null
     const key = live?.key ?? null
-    const same = key ? revisions.find((r) => r.research_hash === key) : null
+    // The newest brief of the current research, a seller's edit of it included (`brief-edits.js`).
+    const same = key ? revisions.find((r) => r.research_hash === key || r.edited_from_hash === key) : null
     const shown = same ?? revisions[0]
     const known = Boolean(domain) && live !== undefined
     // A brief of a reading made under older rules is not current either (#524): it offers Refresh.
@@ -297,6 +299,7 @@ export function createWebsiteBuilder(deps) {
       n: shown.n,
       createdAt: shown.created_at,
       current: known ? Boolean(same) && !readingOld : null,
+      ...(shown.edited_by === 'seller' ? { editedBySeller: true } : {}),
       ...(readingOld ? { readingOld: true } : {})
     }
   }
@@ -321,7 +324,12 @@ export function createWebsiteBuilder(deps) {
     return {
       demo: (await listedDemoOf(accountId, [opp.id])).get(opp.id)?.demo ?? null,
       progress: demoProgress(builds[0]),
-      revisions: revisions.map((r) => ({ id: r.id, n: r.n, createdAt: r.created_at })),
+      revisions: revisions.map((r) => ({
+        id: r.id,
+        n: r.n,
+        createdAt: r.created_at,
+        ...(r.edited_by === 'seller' ? { editedBySeller: true } : {})
+      })),
       brief: await briefStatus(opp, revisions),
       // The latest Content brief job (#524): a running one shows its progress after a reload, a failed one its reason.
       briefJob: briefJobShape(await briefJobs.latestOf(opp.id)),
@@ -710,6 +718,40 @@ export function createWebsiteBuilder(deps) {
       return json(c, { job: briefJobShape(started.job) }, 202)
     })
 
+    // The seller's edits of a Content brief (#524): a new revision marked edited, which Build then builds from.
+    app.post(`${BASE}/:id/revisions/:revId/edits`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const revId = c.req.param('revId')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp || !UUID.test(revId)) return notFound(c, 'brief')
+      const read = readBriefEdits(await body(c))
+      if ('error' in read)
+        return refuse(
+          c,
+          400,
+          'INVALID_EDITS',
+          'Send "edits" as a list of {"path", "value"}: a text of the brief and its new words, 1 to 2000 characters.'
+        )
+      const domain = await domainOr(c)
+      if (domain instanceof Response) return domain
+      const result = await editRevision(pool, {
+        accountId: who.accountId,
+        opportunityId: opp.id,
+        revisionId: revId,
+        edits: read.edits,
+        domain,
+        now
+      })
+      if (result.error === 'NOT_FOUND') return notFound(c, 'brief')
+      if (result.error === 'UNKNOWN_PATH')
+        return refuse(c, 400, 'UNKNOWN_PATH', `This brief has no text at ${result.path}.`)
+      if (result.error)
+        return refuse(c, 422, 'BRIEF_INVALID', 'These words do not fit the brief.', { errors: result.errors })
+      return json(c, { revision: revisionShape(result.revision) }, 201)
+    })
+
     // The Content brief job (#524): its step while it runs; once done, the revision it made.
     app.get(`${BASE}/:id/brief-jobs/:jobId`, async (c) => {
       const who = await caller(c)
@@ -919,7 +961,8 @@ function revisionShape(r) {
     n: r.n,
     brief: r.brief,
     assetManifest: r.asset_manifest,
-    createdAt: r.created_at
+    createdAt: r.created_at,
+    ...(r.brief?.edited?.by === 'seller' ? { editedBySeller: true } : {})
   }
 }
 
