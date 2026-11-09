@@ -397,6 +397,19 @@ export function proposeJoomla(slots, { vocabulary3 = false } = {}) {
   return collector.finalize()
 }
 
+/**
+ * The article role of a field of a WordPress post entity (`post-<slug>`), from where the slot writes: the post title,
+ * the excerpt, or any picture of the post (featured image, a theme's intro picture meta). Null for any other slot.
+ * @param {{entity?: unknown, target?: {field?: string}, type?: string}} slot
+ */
+function wordpressPostRole(slot) {
+  if (!String(slot.entity ?? '').startsWith('post-')) return null
+  if (slot.target?.field === 'post_title') return 'article.title'
+  if (slot.target?.field === 'post_excerpt') return 'article.lead'
+  if (slot.type === 'image') return 'article.image'
+  return null
+}
+
 const WP_REPEATED_FIELD_MAP = Object.freeze({
   'dish-name': { family: 'dish', entityKind: 'menu_item', role: 'offering.name' },
   'dish-price': { family: 'dish', entityKind: 'menu_item', role: 'offering.price' },
@@ -446,7 +459,7 @@ function withoutIncompleteGroups(proposal, placedRoles) {
  * @param {any[]} slots the slots still without a role
  * @param {{placedRoles?: Map<string, Set<string>>}} [options] the roles each group already has on the map
  */
-export function proposeWordpress(slots, { placedRoles = new Map() } = {}) {
+export function proposeWordpress(slots, { placedRoles = new Map(), vocabulary3 = false } = {}) {
   const collector = buildGroupCollector()
 
   for (const slot of slots) {
@@ -472,15 +485,31 @@ export function proposeWordpress(slots, { placedRoles = new Map() } = {}) {
       continue
     }
 
+    // A sample blog post's own fields (version 3): its title, excerpt and pictures are the post's content, one card per post.
+    const postRole = vocabulary3 ? wordpressPostRole(slot) : null
+    if (postRole) {
+      const entity = String(slot.entity)
+      collector.addBinding({
+        slotKey: key,
+        groupId: `${entity}.article.0`,
+        entityKind: 'post',
+        itemIndex: 0,
+        role: postRole
+      })
+      continue
+    }
+
     const parts = key.split('.')
     if (parts.length === 4 && /^\d+$/.test(parts[3])) {
       const [page, section, field, rawIdx] = parts
       const idx = Number(rawIdx) - 1
       const direct = WP_REPEATED_FIELD_MAP[field]
       if (direct) {
+        // A picture slot is named after its page (`page-<slug>`), the text slots of the same card after the bare slug:
+        // one card needs one group id, or the picture sits alone in a card without its name and is dropped.
         collector.addBinding({
           slotKey: key,
-          groupId: `${page}.${section}.${direct.family}.${idx}`,
+          groupId: `${page.replace(/^page-/, '')}.${section}.${direct.family}.${idx}`,
           entityKind: direct.entityKind,
           itemIndex: idx,
           role: direct.role
@@ -837,7 +866,9 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     groups,
     bindings,
     roleOnly = []
-  } = cms === 'wordpress' ? proposeWordpress(open, { placedRoles }) : proposeJoomla(open, { vocabulary3 })
+  } = cms === 'wordpress'
+    ? proposeWordpress(open, { placedRoles, vocabulary3 })
+    : proposeJoomla(open, { vocabulary3 })
   const roleOnlyBySlot = new Map(roleOnly.map((b) => [b.slotKey, b.role]))
   const groupOf = new Map(groups.map((g) => [g.groupId, g]))
   const bySlot = new Map(bindings.map((b) => [b.slotKey, b]))

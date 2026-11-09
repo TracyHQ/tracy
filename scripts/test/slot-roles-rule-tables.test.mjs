@@ -234,3 +234,56 @@ test('an hours-shaped sample takes the role of the card it sits in, or contact.h
     JSON.stringify(checkContentMapRoles(contentMap).errors)
   )
 })
+
+test('WordPress version 3: a sample post is one article card, and a picture named after its page joins the text card', () => {
+  const map = {
+    schemaVersion: 1,
+    slots: [
+      { key: 'site.name', type: 'text', sample: 'Larkspur Tea Room' },
+      {
+        key: 'post-first-brew.title',
+        entity: 'post-first-brew',
+        type: 'text',
+        sample: 'First brew',
+        target: { field: 'post_title' }
+      },
+      {
+        key: 'post-first-brew.excerpt',
+        entity: 'post-first-brew',
+        type: 'text',
+        sample: 'A short note on the first pot.',
+        target: { field: 'post_excerpt' }
+      },
+      {
+        key: 'post-first-brew.featured-image',
+        entity: 'post-first-brew',
+        type: 'image',
+        sample: 'brew.jpg',
+        target: { meta: '_thumbnail_id' }
+      },
+      {
+        key: 'post-first-brew.intro-picture',
+        entity: 'post-first-brew',
+        type: 'image',
+        sample: 'brew-2.jpg',
+        target: { meta: 'intro_picture' }
+      },
+      { key: 'about.team.member-name.1', type: 'text', sample: 'Ada Reed' },
+      { key: 'page-about.team.member-image.1', type: 'image', sample: 'ada.jpg' }
+    ]
+  }
+  const { contentMap } = proposeContentMapRoles(map, {
+    cms: 'wordpress',
+    vocabulary: 'place-content-roles/3'
+  })
+  const post = { id: 'post-first-brew.article.0', item: 0, kind: 'post' }
+  assert.deepEqual(fieldsOf(contentMap), {
+    'site.name': ['business.name', { id: 'site.identity.0', item: 0, kind: 'business' }],
+    'post-first-brew.title': ['article.title', post],
+    'post-first-brew.excerpt': ['article.lead', post],
+    'post-first-brew.featured-image': ['article.image', post],
+    'post-first-brew.intro-picture': ['article.image', post],
+    'about.team.member-name.1': ['person.name', { id: 'about.team.member.0', item: 0, kind: 'person' }],
+    'page-about.team.member-image.1': ['person.image', { id: 'about.team.member.0', item: 0, kind: 'person' }]
+  })
+})

@@ -337,6 +337,702 @@
         "kind": "contact"
       },
       "why": "Text option of the theme: one contact fact shown in the header or footer."
+    },
+    {
+      "key": "page-home.title",
+      "role": "editorial.menu_label",
+      "why": "The page title of the home page is its navigation label."
+    },
+    {
+      "key": "page-front-page.slideshow.image.1",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-front-page.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "Hero photo of the venue in the home slideshow."
+    },
+    {
+      "key": "front-page.features-intro.sub-heading",
+      "role": "business.summary",
+      "group": {
+        "id": "front-page.features-intro.about.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "States what the business is, its category and place."
+    },
+    {
+      "key": "page-front-page.features-intro.img.1",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-front-page.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-front-page.features-intro.img.2",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-front-page.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "front-page.features-intro-2.title.1",
+      "role": "offering.name",
+      "group": {
+        "id": "front-page.features-intro-2.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      },
+      "why": "Dish caption of the Gallery section: the name of a dish."
+    },
+    {
+      "key": "front-page.features-intro-2.title.2",
+      "role": "offering.name",
+      "group": {
+        "id": "front-page.features-intro-2.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      },
+      "why": "Dish caption of the Gallery section: the name of a dish."
+    },
+    {
+      "key": "front-page.features-intro-2.description.1",
+      "role": "offering.description",
+      "group": {
+        "id": "front-page.features-intro-2.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      },
+      "why": "Ingredient line of the dish named in the same Gallery caption."
+    },
+    {
+      "key": "front-page.features-intro-2.description.2",
+      "role": "offering.description",
+      "group": {
+        "id": "front-page.features-intro-2.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      },
+      "why": "Ingredient line of the dish named in the same Gallery caption."
+    },
+    {
+      "key": "front-page.latest-news.sub-heading",
+      "role": "claim.heading",
+      "group": {
+        "id": "front-page.latest-news.claim.0",
+        "item": 0,
+        "kind": "claim"
+      },
+      "why": "A heading that claims the best cafe of the area."
+    },
+    {
+      "key": "page-front-page.slideshow.image.2",
+      "role": "article.image",
+      "why": "The second slideshow picture slot is the thumbnail of a news card.",
+      "group": {
+        "id": "page-front-page.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      }
+    },
+    {
+      "key": "page-home-red.slideshow.image.1",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-red.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "Hero photo of the venue in the home slideshow."
+    },
+    {
+      "key": "home-red.features-intro.title.1",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "home-red.features-intro.title.2",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "page-home-red.features-intro.img.1",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-red.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-home-red.features-intro.img.2",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-red.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-home-red.slideshow.image.2",
+      "role": "article.image",
+      "why": "The second slideshow picture slot is the thumbnail of a news card.",
+      "group": {
+        "id": "page-home-red.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      }
+    },
+    {
+      "key": "home-red.features-intro.sub-heading",
+      "role": "quote.text",
+      "group": {
+        "id": "home-red.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
+      "why": "A quoted praise attributed to the chef."
+    },
+    {
+      "key": "page-home-red.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "page-home-pink.slideshow.image.1",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-pink.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "Hero photo of the venue in the home slideshow."
+    },
+    {
+      "key": "home-pink.features-intro.title.1",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "home-pink.features-intro.title.2",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "page-home-pink.features-intro.img.1",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-pink.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-home-pink.features-intro.img.2",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-pink.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-home-pink.slideshow.image.2",
+      "role": "article.image",
+      "why": "The second slideshow picture slot is the thumbnail of a news card.",
+      "group": {
+        "id": "page-home-pink.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      }
+    },
+    {
+      "key": "home-pink.features-intro.sub-heading",
+      "role": "quote.text",
+      "group": {
+        "id": "home-pink.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
+      "why": "A quoted praise attributed to the chef."
+    },
+    {
+      "key": "page-home-pink.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "page-home-green.slideshow.image.1",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-green.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "Hero photo of the venue in the home slideshow."
+    },
+    {
+      "key": "home-green.features-intro.title.1",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "home-green.features-intro.title.2",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "page-home-green.features-intro.img.1",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-green.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-home-green.features-intro.img.2",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-green.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
+      "why": "Dish photo in the Gallery section of the home page."
+    },
+    {
+      "key": "page-home-green.slideshow.image.2",
+      "role": "article.image",
+      "why": "The second slideshow picture slot is the thumbnail of a news card.",
+      "group": {
+        "id": "page-home-green.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      }
+    },
+    {
+      "key": "home-green.features-intro.sub-heading",
+      "role": "quote.text",
+      "group": {
+        "id": "home-green.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
+      "why": "A quoted praise attributed to the chef."
+    },
+    {
+      "key": "page-home-green.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "home-blue.features-intro.title.1",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "home-blue.features-intro.title.2",
+      "role": "editorial.heading",
+      "why": "Small label above the address or the hours of the home page, not an offering.",
+      "group": null
+    },
+    {
+      "key": "home-blue.features-intro.sub-heading",
+      "role": "quote.text",
+      "group": {
+        "id": "home-blue.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
+      "why": "A quoted praise attributed to the chef."
+    },
+    {
+      "key": "page-home-blue.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "page-password-reset.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "page-username-reminder-request.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "page-error-page.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "page-offline-page.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "your-profile.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "your-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "your-profile.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "your-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "page-your-profile.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "user-profile.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "user-profile.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "page-user-profile.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "edit-user-profile.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "edit-user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "edit-user-profile.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "edit-user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "page-edit-user-profile.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "fetured-articles.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "fetured-articles.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "fetured-articles.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "fetured-articles.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "page-fetured-articles.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "typography.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "typography.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "typography.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "typography.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "page-typography.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site."
+    },
+    {
+      "key": "tagged-items.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "tagged-items.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "tagged-items.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "tagged-items.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "contact-us.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "contact-us.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "contact-us.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "contact-us.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "offers.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "offers.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "about-us.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "about-us.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "about-us.features-intro-2.title_small",
+      "role": "business.name",
+      "group": {
+        "id": "about-us.features-intro-2.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "Names the restaurant."
+    },
+    {
+      "key": "reservation.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "reservation.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "registration.masthead.title",
+      "role": "business.name",
+      "group": {
+        "id": "registration.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead title prints the site name."
+    },
+    {
+      "key": "registration.masthead.description",
+      "role": "business.tagline",
+      "group": {
+        "id": "registration.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
+      "why": "The masthead line prints the site tagline."
+    },
+    {
+      "key": "home-red.features-intro.description.1",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-red.features-intro.description.2",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-pink.features-intro.description.1",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-pink.features-intro.description.2",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-green.features-intro.description.1",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-green.features-intro.description.2",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-blue.features-intro.description.1",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "home-blue.features-intro.description.2",
+      "role": "editorial.paragraph",
+      "why": "Caption under a gallery photo of a colour variant page; its dish name is no slot, so no menu card can hold it.",
+      "group": null
+    },
+    {
+      "key": "page-home-blue.slideshow.image.2",
+      "role": "article.image",
+      "why": "The second slideshow picture slot is the thumbnail of a news card.",
+      "group": {
+        "id": "page-home-blue.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      }
+    },
+    {
+      "key": "page-home-blue.slideshow.image.1",
+      "role": "business.hero_image",
+      "why": "Hero photo of the venue in the home slideshow.",
+      "group": {
+        "id": "page-home-blue.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      }
+    },
+    {
+      "key": "page-home-blue.features-intro.img.1",
+      "role": "business.gallery_image",
+      "why": "Dish photo in the Gallery section of the home page.",
+      "group": {
+        "id": "page-home-blue.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      }
+    },
+    {
+      "key": "page-home-blue.features-intro.img.2",
+      "role": "business.gallery_image",
+      "why": "Dish photo in the Gallery section of the home page.",
+      "group": {
+        "id": "page-home-blue.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      }
+    },
+    {
+      "key": "password-reset.subscribe.module-title",
+      "role": "editorial.button_label",
+      "why": "The outlined text is the Subscribe button label.",
+      "group": null
+    },
+    {
+      "key": "username-reminder-request.subscribe.module-title",
+      "role": "editorial.button_label",
+      "why": "The outlined text is the Subscribe button label.",
+      "group": null
+    },
+    {
+      "key": "error-page.subscribe.module-title",
+      "role": "editorial.button_label",
+      "why": "The outlined text is the Subscribe button label.",
+      "group": null
+    },
+    {
+      "key": "offline-page.subscribe.module-title",
+      "role": "editorial.button_label",
+      "why": "The outlined text is the Subscribe button label.",
+      "group": null
+    },
+    {
+      "key": "page-tagged-items.subscribe.section-bg",
+      "role": "editorial.design_element",
+      "why": "Decorative pattern behind the newsletter band, kept by every site.",
+      "group": null
     }
   ]
 }

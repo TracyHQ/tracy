@@ -902,7 +902,12 @@
       "sample": "The ((span class=\"jd-name\"))Three Broomsticks((/span)) is a ((span class=\"text-highlight\"))café & restaurant((/span)) nestled in the beautiful and quaint Hogsmeade Village.",
       "maxCharacters": 218,
       "label": "front-page — features-intro.sub-heading",
-      "role": "editorial.paragraph",
+      "role": "business.summary",
+      "group": {
+        "id": "front-page.features-intro.about.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1362,7 +1367,12 @@
       "sample": "Roasted Red Potatoes with Rosemary",
       "maxCharacters": 88,
       "label": "front-page — features-intro-2.title.1",
-      "role": "editorial.heading",
+      "role": "offering.name",
+      "group": {
+        "id": "front-page.features-intro-2.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1399,7 +1409,12 @@
       "sample": "w/ potatoes, rosemary & butter",
       "maxCharacters": 80,
       "label": "front-page — features-intro-2.description.1",
-      "role": "editorial.paragraph",
+      "role": "offering.description",
+      "group": {
+        "id": "front-page.features-intro-2.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1436,7 +1451,12 @@
       "sample": "Roasted Red Potatoes with Rosemary",
       "maxCharacters": 88,
       "label": "front-page — features-intro-2.title.2",
-      "role": "editorial.heading",
+      "role": "offering.name",
+      "group": {
+        "id": "front-page.features-intro-2.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -1473,7 +1493,12 @@
       "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
       "maxCharacters": 146,
       "label": "front-page — features-intro-2.description.2",
-      "role": "editorial.paragraph",
+      "role": "offering.description",
+      "group": {
+        "id": "front-page.features-intro-2.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -4371,7 +4396,12 @@
       "sample": "((span class=\"jd-name\"))Three Broomsticks((/span)) ((span class=\"text-highlight\"))is your best((/span)) ((br/))café & restaurant in the Hogsmeade.",
       "maxCharacters": 152,
       "label": "front-page — latest-news.sub-heading",
-      "role": "editorial.heading",
+      "role": "claim.heading",
+      "group": {
+        "id": "front-page.latest-news.claim.0",
+        "item": 0,
+        "kind": "claim"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -4692,7 +4722,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "your-profile — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "your-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -4729,7 +4764,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "your-profile — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "your-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -4907,7 +4947,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "contact-us — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "contact-us.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -4944,7 +4989,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "contact-us — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "contact-us.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -5165,7 +5215,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "offers — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "offers.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -6121,7 +6176,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "about-us — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "about-us.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -6308,7 +6368,12 @@
       "sample": "Meet Three BroomSticks",
       "maxCharacters": 80,
       "label": "about-us — features-intro-2.title_small",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "about-us.features-intro-2.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -7724,7 +7789,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "reservation — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "reservation.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -8045,7 +8115,7 @@
       "sample": "Subscribe",
       "maxCharacters": 80,
       "label": "password-reset — subscribe.module-title",
-      "role": "editorial.heading",
+      "role": "editorial.button_label",
       "fit": {
         "measured": true,
         "boxes": {
@@ -8171,7 +8241,7 @@
       "sample": "Subscribe",
       "maxCharacters": 80,
       "label": "username-reminder-request — subscribe.module-title",
-      "role": "editorial.heading",
+      "role": "editorial.button_label",
       "fit": {
         "measured": true,
         "boxes": {
@@ -8311,7 +8381,7 @@
       "sample": "Home",
       "maxCharacters": 80,
       "label": "page-home — title",
-      "role": "editorial.heading",
+      "role": "editorial.menu_label",
       "fit": {
         "measured": true,
         "boxes": {
@@ -8879,7 +8949,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "registration — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "registration.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -8916,7 +8991,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "registration — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "registration.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -9079,7 +9159,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "user-profile — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -9116,7 +9201,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "user-profile — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -9279,7 +9369,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "edit-user-profile — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "edit-user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -9316,7 +9411,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "edit-user-profile — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "edit-user-profile.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -9479,7 +9579,7 @@
       "sample": "Subscribe",
       "maxCharacters": 80,
       "label": "error-page — subscribe.module-title",
-      "role": "editorial.heading",
+      "role": "editorial.button_label",
       "fit": {
         "measured": true,
         "boxes": {
@@ -9605,7 +9705,7 @@
       "sample": "Subscribe",
       "maxCharacters": 80,
       "label": "offline-page — subscribe.module-title",
-      "role": "editorial.heading",
+      "role": "editorial.button_label",
       "fit": {
         "measured": true,
         "boxes": {
@@ -9953,12 +10053,7 @@
       "sample": "Location.",
       "maxCharacters": 80,
       "label": "home-red — features-intro.title.1",
-      "role": "offering.name",
-      "group": {
-        "id": "home-red.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -9995,12 +10090,7 @@
       "sample": "Hours.",
       "maxCharacters": 80,
       "label": "home-red — features-intro.title.2",
-      "role": "offering.name",
-      "group": {
-        "id": "home-red.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -10037,12 +10127,7 @@
       "sample": "w/ potatoes, rosemary & butter",
       "maxCharacters": 80,
       "label": "home-red — features-intro.description.1",
-      "role": "offering.description",
-      "group": {
-        "id": "home-red.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -10079,12 +10164,7 @@
       "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
       "maxCharacters": 146,
       "label": "home-red — features-intro.description.2",
-      "role": "offering.description",
-      "group": {
-        "id": "home-red.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -10596,7 +10676,12 @@
       "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
       "maxCharacters": 252,
       "label": "home-red — features-intro.sub-heading",
-      "role": "editorial.paragraph",
+      "role": "quote.text",
+      "group": {
+        "id": "home-red.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -11065,12 +11150,7 @@
       "sample": "Location.",
       "maxCharacters": 80,
       "label": "home-pink — features-intro.title.1",
-      "role": "offering.name",
-      "group": {
-        "id": "home-pink.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -11107,12 +11187,7 @@
       "sample": "Hours.",
       "maxCharacters": 80,
       "label": "home-pink — features-intro.title.2",
-      "role": "offering.name",
-      "group": {
-        "id": "home-pink.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -11149,12 +11224,7 @@
       "sample": "w/ potatoes, rosemary & butter",
       "maxCharacters": 80,
       "label": "home-pink — features-intro.description.1",
-      "role": "offering.description",
-      "group": {
-        "id": "home-pink.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -11191,12 +11261,7 @@
       "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
       "maxCharacters": 146,
       "label": "home-pink — features-intro.description.2",
-      "role": "offering.description",
-      "group": {
-        "id": "home-pink.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -11708,7 +11773,12 @@
       "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
       "maxCharacters": 252,
       "label": "home-pink — features-intro.sub-heading",
-      "role": "editorial.paragraph",
+      "role": "quote.text",
+      "group": {
+        "id": "home-pink.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -12177,12 +12247,7 @@
       "sample": "Location.",
       "maxCharacters": 80,
       "label": "home-green — features-intro.title.1",
-      "role": "offering.name",
-      "group": {
-        "id": "home-green.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -12219,12 +12284,7 @@
       "sample": "Hours.",
       "maxCharacters": 80,
       "label": "home-green — features-intro.title.2",
-      "role": "offering.name",
-      "group": {
-        "id": "home-green.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -12261,12 +12321,7 @@
       "sample": "w/ potatoes, rosemary & butter",
       "maxCharacters": 80,
       "label": "home-green — features-intro.description.1",
-      "role": "offering.description",
-      "group": {
-        "id": "home-green.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -12303,12 +12358,7 @@
       "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
       "maxCharacters": 146,
       "label": "home-green — features-intro.description.2",
-      "role": "offering.description",
-      "group": {
-        "id": "home-green.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -12820,7 +12870,12 @@
       "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
       "maxCharacters": 252,
       "label": "home-green — features-intro.sub-heading",
-      "role": "editorial.paragraph",
+      "role": "quote.text",
+      "group": {
+        "id": "home-green.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -13289,12 +13344,7 @@
       "sample": "Location.",
       "maxCharacters": 80,
       "label": "home-blue — features-intro.title.1",
-      "role": "offering.name",
-      "group": {
-        "id": "home-blue.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -13331,12 +13381,7 @@
       "sample": "Hours.",
       "maxCharacters": 80,
       "label": "home-blue — features-intro.title.2",
-      "role": "offering.name",
-      "group": {
-        "id": "home-blue.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -13373,12 +13418,7 @@
       "sample": "w/ potatoes, rosemary & butter",
       "maxCharacters": 80,
       "label": "home-blue — features-intro.description.1",
-      "role": "offering.description",
-      "group": {
-        "id": "home-blue.features-intro.item.0",
-        "item": 0,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -13415,12 +13455,7 @@
       "sample": "w/ mint parsley with apple cider vinegar, salt, sugar & spices.",
       "maxCharacters": 146,
       "label": "home-blue — features-intro.description.2",
-      "role": "offering.description",
-      "group": {
-        "id": "home-blue.features-intro.item.1",
-        "item": 1,
-        "kind": "menu_item"
-      },
+      "role": "editorial.paragraph",
       "fit": {
         "measured": true,
         "boxes": {
@@ -13932,7 +13967,12 @@
       "sample": "“Three Broomsticks delivers original cuisine with unusual depth and consectetur a finibus at, placerat vitae purus.”",
       "maxCharacters": 252,
       "label": "home-blue — features-intro.sub-heading",
-      "role": "editorial.paragraph",
+      "role": "quote.text",
+      "group": {
+        "id": "home-blue.features-intro.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14230,7 +14270,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "fetured-articles — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "fetured-articles.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14267,7 +14312,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "fetured-articles — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "fetured-articles.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14451,7 +14501,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "typography — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "typography.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14488,7 +14543,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "typography — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "typography.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14651,7 +14711,12 @@
       "sample": "Ja Diner",
       "maxCharacters": 80,
       "label": "tagged-items — masthead.title",
-      "role": "editorial.heading",
+      "role": "business.name",
+      "group": {
+        "id": "tagged-items.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14688,7 +14753,12 @@
       "sample": "Responsive WordPress theme for restaurant",
       "maxCharacters": 102,
       "label": "tagged-items — masthead.description",
-      "role": "editorial.paragraph",
+      "role": "business.tagline",
+      "group": {
+        "id": "tagged-items.masthead.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14835,7 +14905,12 @@
       "sample": "Lorem ipsum",
       "maxCharacters": 80,
       "label": "post-lorem-ipsum — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-lorem-ipsum.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": false
       }
@@ -14850,7 +14925,12 @@
       "sample": "Lorem ipsum dolor sit amet, ei quando inciderint complectitur eam. Ut option consequat vim. Omnis homero vix in. Vide mollis suscipit pro an, sea in soluta vocent. Sed possim consetetur moderatius an, deseruisse intellegam reprehendunt et mei, phaedrum euripidis intellegam an mei. Deleniti insolens mel et, mel idque facilis fuisset ut. Mei id dico offendit officiis. Verterem consequat sadipscing no quo. Habeo viris id est. Has ne integre democritum, eu labitur mentitum abhorreant vel. Quo ad dicant animal, mel et veniam causae definitionem. Graeco platonem per in, mel laboramus repudiandae ne, per sint possit salutandi ut. Vis ea utamur maluisset, eros incorrupte at eos.",
       "maxCharacters": 1378,
       "label": "post-lorem-ipsum — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-lorem-ipsum.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": false
       }
@@ -14865,7 +14945,12 @@
       "sample": "Cocktail Bar Alchemist set to open at Mediacity in Salford Quays",
       "maxCharacters": 148,
       "label": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14901,7 +14986,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14937,7 +15027,12 @@
       "sample": "We've been nominated for the Britain Restaurant Awards",
       "maxCharacters": 128,
       "label": "post-we-ve-been-nominated-for-the-britain-restaurant-awards — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-we-ve-been-nominated-for-the-britain-restaurant-awards.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -14973,7 +15068,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-we-ve-been-nominated-for-the-britain-restaurant-awards — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-we-ve-been-nominated-for-the-britain-restaurant-awards.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15009,7 +15109,12 @@
       "sample": "Three Broomsticks welcomes new chef Caleb Nunęz",
       "maxCharacters": 114,
       "label": "post-three-broomsticks-welcomes-new-chef-caleb-nunez — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-three-broomsticks-welcomes-new-chef-caleb-nunez.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15045,7 +15150,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-three-broomsticks-welcomes-new-chef-caleb-nunez — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-three-broomsticks-welcomes-new-chef-caleb-nunez.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15081,7 +15191,12 @@
       "sample": "Three Broomsticks's autumn menu unveiled",
       "maxCharacters": 100,
       "label": "post-three-broomsticks-s-autumn-menu-unveiled — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-three-broomsticks-s-autumn-menu-unveiled.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15117,7 +15232,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-three-broomsticks-s-autumn-menu-unveiled — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-three-broomsticks-s-autumn-menu-unveiled.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15153,7 +15273,12 @@
       "sample": "4 Habits That Can Improve Your Customer Service",
       "maxCharacters": 114,
       "label": "post-4-habits-that-can-improve-your-customer-service — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-4-habits-that-can-improve-your-customer-service.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15189,7 +15314,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-4-habits-that-can-improve-your-customer-service — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-4-habits-that-can-improve-your-customer-service.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15225,7 +15355,12 @@
       "sample": "8 trends trickling down to mainstream menus",
       "maxCharacters": 106,
       "label": "post-8-trends-trickling-down-to-mainstream-menus — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-8-trends-trickling-down-to-mainstream-menus.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15261,7 +15396,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-8-trends-trickling-down-to-mainstream-menus — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-8-trends-trickling-down-to-mainstream-menus.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15297,7 +15437,12 @@
       "sample": "Starbucks brings Under Armour exec on board",
       "maxCharacters": 106,
       "label": "post-starbucks-brings-under-armour-exec-on-board — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-starbucks-brings-under-armour-exec-on-board.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15333,7 +15478,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-starbucks-brings-under-armour-exec-on-board — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-starbucks-brings-under-armour-exec-on-board.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15369,7 +15519,12 @@
       "sample": "Inside Olive Garden's Never Ending Pasta Pass",
       "maxCharacters": 110,
       "label": "post-inside-olive-garden-s-never-ending-pasta-pass — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-inside-olive-garden-s-never-ending-pasta-pass.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15405,7 +15560,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-inside-olive-garden-s-never-ending-pasta-pass — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-inside-olive-garden-s-never-ending-pasta-pass.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15441,7 +15601,12 @@
       "sample": "Century-old Nathan’s Famous aims for youth with new look",
       "maxCharacters": 132,
       "label": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15477,7 +15642,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15513,7 +15683,12 @@
       "sample": "Did IHOP's publicity stunt hurt Applebee's?",
       "maxCharacters": 106,
       "label": "post-did-ihop-s-publicity-stunt-hurt-applebee-s — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-did-ihop-s-publicity-stunt-hurt-applebee-s.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15549,7 +15724,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-did-ihop-s-publicity-stunt-hurt-applebee-s — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-did-ihop-s-publicity-stunt-hurt-applebee-s.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15585,7 +15765,12 @@
       "sample": "Buffalo Wild Wings considers adding sports betting",
       "maxCharacters": 120,
       "label": "post-buffalo-wild-wings-considers-adding-sports-betting — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-buffalo-wild-wings-considers-adding-sports-betting.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15621,7 +15806,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-buffalo-wild-wings-considers-adding-sports-betting — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-buffalo-wild-wings-considers-adding-sports-betting.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15657,7 +15847,12 @@
       "sample": "This week’s restaurant nightmares: Language, people",
       "maxCharacters": 122,
       "label": "post-this-week-s-restaurant-nightmares-language-people — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-this-week-s-restaurant-nightmares-language-people.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15693,7 +15888,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-this-week-s-restaurant-nightmares-language-people — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-this-week-s-restaurant-nightmares-language-people.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15729,7 +15929,12 @@
       "sample": "Jason Alexander is KFC’s new colonel",
       "maxCharacters": 92,
       "label": "post-jason-alexander-is-kfc-s-new-colonel — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-jason-alexander-is-kfc-s-new-colonel.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15765,7 +15970,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-jason-alexander-is-kfc-s-new-colonel — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-jason-alexander-is-kfc-s-new-colonel.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15801,7 +16011,12 @@
       "sample": "10 most alluring LTOs on menus in July",
       "maxCharacters": 96,
       "label": "post-10-most-alluring-ltos-on-menus-in-july — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-10-most-alluring-ltos-on-menus-in-july.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15837,7 +16052,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-10-most-alluring-ltos-on-menus-in-july — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-10-most-alluring-ltos-on-menus-in-july.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15873,7 +16093,12 @@
       "sample": "Newk’s Eatery steals a dinner booster from supermarkets",
       "maxCharacters": 130,
       "label": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15909,7 +16134,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15945,7 +16175,12 @@
       "sample": "This week’s 5 head-spinning restaurant moments: 1 more inch",
       "maxCharacters": 138,
       "label": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -15981,7 +16216,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16017,7 +16257,12 @@
       "sample": "5 of the summer’s craziest restaurant marketing stunts",
       "maxCharacters": 128,
       "label": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16053,7 +16298,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16089,7 +16339,12 @@
       "sample": "Burger King takes a stand on the ‘pink tax’",
       "maxCharacters": 106,
       "label": "post-burger-king-takes-a-stand-on-the-pink-tax — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-burger-king-takes-a-stand-on-the-pink-tax.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16125,7 +16380,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-burger-king-takes-a-stand-on-the-pink-tax — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-burger-king-takes-a-stand-on-the-pink-tax.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16161,7 +16421,12 @@
       "sample": "Efforts to curb soda consumption bring results on both coasts",
       "maxCharacters": 142,
       "label": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16197,7 +16462,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16233,7 +16503,12 @@
       "sample": "How restaurants can promote a James Beard recognition",
       "maxCharacters": 126,
       "label": "post-how-restaurants-can-promote-a-james-beard-recognition — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-how-restaurants-can-promote-a-james-beard-recognition.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16269,7 +16544,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-how-restaurants-can-promote-a-james-beard-recognition — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-how-restaurants-can-promote-a-james-beard-recognition.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16305,7 +16585,12 @@
       "sample": "From IHOP to IHOb: Just how big was the chain’s name reveal?",
       "maxCharacters": 140,
       "label": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal — title",
-      "role": "editorial.heading",
+      "role": "article.title",
+      "group": {
+        "id": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16341,7 +16626,12 @@
       "sample": "Convallis nulla mauris, eget aucibus elit interdum quis. Proin a est ac nisl porta hendrerit vel itae odio uisque egestas neque a mauris.",
       "maxCharacters": 294,
       "label": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal — excerpt",
-      "role": "editorial.paragraph",
+      "role": "article.lead",
+      "group": {
+        "id": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "boxes": {
@@ -16800,7 +17090,12 @@
       "sampleId": 25,
       "maxCharacters": 255,
       "label": "page-front-page — slideshow.image.1",
-      "role": "editorial.illustration",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-front-page.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -16839,7 +17134,12 @@
       "sampleId": 26,
       "maxCharacters": 255,
       "label": "page-front-page — slideshow.image.2",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "page-front-page.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -16956,7 +17256,12 @@
       "sampleId": 103,
       "maxCharacters": 255,
       "label": "page-front-page — features-intro.img.1",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-front-page.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -16995,7 +17300,12 @@
       "sampleId": 104,
       "maxCharacters": 255,
       "label": "page-front-page — features-intro.img.2",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-front-page.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -17157,11 +17467,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-your-profile — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -17181,8 +17491,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-contact-us.masthead.background",
@@ -17820,7 +18131,12 @@
       "sampleId": 289,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.1",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.0",
+        "item": 0,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -17859,7 +18175,12 @@
       "sampleId": 290,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.2",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.1",
+        "item": 1,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -17898,7 +18219,12 @@
       "sampleId": 291,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.3",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.2",
+        "item": 2,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -17937,7 +18263,12 @@
       "sampleId": 292,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.4",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.3",
+        "item": 3,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -17976,7 +18307,12 @@
       "sampleId": 293,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.5",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.4",
+        "item": 4,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18015,7 +18351,12 @@
       "sampleId": 294,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.6",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.5",
+        "item": 5,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18054,7 +18395,12 @@
       "sampleId": 295,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.7",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.6",
+        "item": 6,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18093,7 +18439,12 @@
       "sampleId": 296,
       "maxCharacters": 255,
       "label": "page-about-us — teams.member-image.8",
-      "role": "editorial.illustration",
+      "role": "person.image",
+      "group": {
+        "id": "about-us.teams.member.7",
+        "item": 7,
+        "kind": "person"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18293,11 +18644,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-password-reset — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -18317,8 +18668,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-username-reminder-request.subscribe.section-bg",
@@ -18332,11 +18684,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-username-reminder-request — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -18356,8 +18708,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-our-blog.masthead.background",
@@ -18605,11 +18958,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-user-profile — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -18629,8 +18982,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-edit-user-profile.subscribe.section-bg",
@@ -18644,11 +18998,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-edit-user-profile — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -18668,8 +19022,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-error-page.subscribe.section-bg",
@@ -18683,11 +19038,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-error-page — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -18707,8 +19062,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-offline-page.subscribe.section-bg",
@@ -18722,11 +19078,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-offline-page — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -18746,8 +19102,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-home-red.slideshow.image.1",
@@ -18761,7 +19118,12 @@
       "sampleId": 25,
       "maxCharacters": 255,
       "label": "page-home-red — slideshow.image.1",
-      "role": "editorial.illustration",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-red.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18800,7 +19162,12 @@
       "sampleId": 26,
       "maxCharacters": 255,
       "label": "page-home-red — slideshow.image.2",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "page-home-red.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18917,7 +19284,12 @@
       "sampleId": 103,
       "maxCharacters": 255,
       "label": "page-home-red — features-intro.img.1",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-red.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -18956,7 +19328,12 @@
       "sampleId": 104,
       "maxCharacters": 255,
       "label": "page-home-red — features-intro.img.2",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-red.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19079,11 +19456,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-home-red — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -19103,8 +19480,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-home-pink.slideshow.image.1",
@@ -19118,7 +19496,12 @@
       "sampleId": 25,
       "maxCharacters": 255,
       "label": "page-home-pink — slideshow.image.1",
-      "role": "editorial.illustration",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-pink.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19157,7 +19540,12 @@
       "sampleId": 26,
       "maxCharacters": 255,
       "label": "page-home-pink — slideshow.image.2",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "page-home-pink.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19274,7 +19662,12 @@
       "sampleId": 103,
       "maxCharacters": 255,
       "label": "page-home-pink — features-intro.img.1",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-pink.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19313,7 +19706,12 @@
       "sampleId": 104,
       "maxCharacters": 255,
       "label": "page-home-pink — features-intro.img.2",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-pink.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19436,11 +19834,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-home-pink — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -19460,8 +19858,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-home-green.slideshow.image.1",
@@ -19475,7 +19874,12 @@
       "sampleId": 25,
       "maxCharacters": 255,
       "label": "page-home-green — slideshow.image.1",
-      "role": "editorial.illustration",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-green.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19514,7 +19918,12 @@
       "sampleId": 26,
       "maxCharacters": 255,
       "label": "page-home-green — slideshow.image.2",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "page-home-green.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19631,7 +20040,12 @@
       "sampleId": 103,
       "maxCharacters": 255,
       "label": "page-home-green — features-intro.img.1",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-green.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19670,7 +20084,12 @@
       "sampleId": 104,
       "maxCharacters": 255,
       "label": "page-home-green — features-intro.img.2",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-green.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19793,11 +20212,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-home-green — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -19817,8 +20236,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-home-blue.slideshow.image.1",
@@ -19832,7 +20252,12 @@
       "sampleId": 25,
       "maxCharacters": 255,
       "label": "page-home-blue — slideshow.image.1",
-      "role": "editorial.illustration",
+      "role": "business.hero_image",
+      "group": {
+        "id": "page-home-blue.slideshow.0",
+        "item": 0,
+        "kind": "business"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19871,7 +20296,12 @@
       "sampleId": 26,
       "maxCharacters": 255,
       "label": "page-home-blue — slideshow.image.2",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "page-home-blue.latest-news.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -19988,7 +20418,12 @@
       "sampleId": 103,
       "maxCharacters": 255,
       "label": "page-home-blue — features-intro.img.1",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-blue.features-intro.gallery.0",
+        "item": 0,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20027,7 +20462,12 @@
       "sampleId": 104,
       "maxCharacters": 255,
       "label": "page-home-blue — features-intro.img.2",
-      "role": "editorial.illustration",
+      "role": "business.gallery_image",
+      "group": {
+        "id": "page-home-blue.features-intro.gallery.1",
+        "item": 1,
+        "kind": "gallery"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20150,11 +20590,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-home-blue — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -20174,8 +20614,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-fetured-articles.subscribe.section-bg",
@@ -20189,11 +20630,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-fetured-articles — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -20213,8 +20654,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-typography.subscribe.section-bg",
@@ -20228,11 +20670,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-typography — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -20252,8 +20694,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "page-tagged-items.subscribe.section-bg",
@@ -20267,11 +20710,11 @@
       "sampleId": 27,
       "maxCharacters": 255,
       "label": "page-tagged-items — subscribe.section-bg",
-      "role": "editorial.illustration",
+      "role": "editorial.design_element",
       "fit": {
         "measured": true,
         "kind": "photo",
-        "replace": "photo",
+        "replace": "keep",
         "transparent": false,
         "source": {
           "width": 1536,
@@ -20291,8 +20734,9 @@
         "aspect": 2.5308,
         "tolerance": 0.02,
         "minWidth": 2160,
-        "crop": "cover"
-      }
+        "crop": "none"
+      },
+      "customize": "keep"
     },
     {
       "key": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.featured-image",
@@ -20305,7 +20749,12 @@
       "sampleId": 5,
       "maxCharacters": 255,
       "label": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20343,7 +20792,12 @@
       "sampleId": 25,
       "maxCharacters": 255,
       "label": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20381,7 +20835,12 @@
       "sampleId": 6,
       "maxCharacters": 255,
       "label": "post-we-ve-been-nominated-for-the-britain-restaurant-awards — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-we-ve-been-nominated-for-the-britain-restaurant-awards.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20419,7 +20878,12 @@
       "sampleId": 26,
       "maxCharacters": 255,
       "label": "post-we-ve-been-nominated-for-the-britain-restaurant-awards — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-we-ve-been-nominated-for-the-britain-restaurant-awards.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20457,7 +20921,12 @@
       "sampleId": 6,
       "maxCharacters": 255,
       "label": "post-three-broomsticks-welcomes-new-chef-caleb-nunez — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-three-broomsticks-welcomes-new-chef-caleb-nunez.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20495,7 +20964,12 @@
       "sampleId": 103,
       "maxCharacters": 255,
       "label": "post-three-broomsticks-welcomes-new-chef-caleb-nunez — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-three-broomsticks-welcomes-new-chef-caleb-nunez.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20533,7 +21007,12 @@
       "sampleId": 7,
       "maxCharacters": 255,
       "label": "post-three-broomsticks-s-autumn-menu-unveiled — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-three-broomsticks-s-autumn-menu-unveiled.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20571,7 +21050,12 @@
       "sampleId": 104,
       "maxCharacters": 255,
       "label": "post-three-broomsticks-s-autumn-menu-unveiled — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-three-broomsticks-s-autumn-menu-unveiled.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20609,7 +21093,12 @@
       "sampleId": 8,
       "maxCharacters": 255,
       "label": "post-4-habits-that-can-improve-your-customer-service — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-4-habits-that-can-improve-your-customer-service.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20647,7 +21136,12 @@
       "sampleId": 299,
       "maxCharacters": 255,
       "label": "post-4-habits-that-can-improve-your-customer-service — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-4-habits-that-can-improve-your-customer-service.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20685,7 +21179,12 @@
       "sampleId": 9,
       "maxCharacters": 255,
       "label": "post-8-trends-trickling-down-to-mainstream-menus — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-8-trends-trickling-down-to-mainstream-menus.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20723,7 +21222,12 @@
       "sampleId": 300,
       "maxCharacters": 255,
       "label": "post-8-trends-trickling-down-to-mainstream-menus — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-8-trends-trickling-down-to-mainstream-menus.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20761,7 +21265,12 @@
       "sampleId": 10,
       "maxCharacters": 255,
       "label": "post-starbucks-brings-under-armour-exec-on-board — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-starbucks-brings-under-armour-exec-on-board.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20799,7 +21308,12 @@
       "sampleId": 301,
       "maxCharacters": 255,
       "label": "post-starbucks-brings-under-armour-exec-on-board — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-starbucks-brings-under-armour-exec-on-board.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20837,7 +21351,12 @@
       "sampleId": 11,
       "maxCharacters": 255,
       "label": "post-inside-olive-garden-s-never-ending-pasta-pass — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-inside-olive-garden-s-never-ending-pasta-pass.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20875,7 +21394,12 @@
       "sampleId": 302,
       "maxCharacters": 255,
       "label": "post-inside-olive-garden-s-never-ending-pasta-pass — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-inside-olive-garden-s-never-ending-pasta-pass.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20913,7 +21437,12 @@
       "sampleId": 12,
       "maxCharacters": 255,
       "label": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20951,7 +21480,12 @@
       "sampleId": 303,
       "maxCharacters": 255,
       "label": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-century-old-nathan-s-famous-aims-for-youth-with-new-look.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -20989,7 +21523,12 @@
       "sampleId": 5,
       "maxCharacters": 255,
       "label": "post-did-ihop-s-publicity-stunt-hurt-applebee-s — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-did-ihop-s-publicity-stunt-hurt-applebee-s.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21027,7 +21566,12 @@
       "sampleId": 304,
       "maxCharacters": 255,
       "label": "post-did-ihop-s-publicity-stunt-hurt-applebee-s — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-did-ihop-s-publicity-stunt-hurt-applebee-s.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21065,7 +21609,12 @@
       "sampleId": 6,
       "maxCharacters": 255,
       "label": "post-buffalo-wild-wings-considers-adding-sports-betting — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-buffalo-wild-wings-considers-adding-sports-betting.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21103,7 +21652,12 @@
       "sampleId": 305,
       "maxCharacters": 255,
       "label": "post-buffalo-wild-wings-considers-adding-sports-betting — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-buffalo-wild-wings-considers-adding-sports-betting.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21141,7 +21695,12 @@
       "sampleId": 13,
       "maxCharacters": 255,
       "label": "post-this-week-s-restaurant-nightmares-language-people — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-this-week-s-restaurant-nightmares-language-people.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21179,7 +21738,12 @@
       "sampleId": 306,
       "maxCharacters": 255,
       "label": "post-this-week-s-restaurant-nightmares-language-people — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-this-week-s-restaurant-nightmares-language-people.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21217,7 +21781,12 @@
       "sampleId": 14,
       "maxCharacters": 255,
       "label": "post-jason-alexander-is-kfc-s-new-colonel — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-jason-alexander-is-kfc-s-new-colonel.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21255,7 +21824,12 @@
       "sampleId": 307,
       "maxCharacters": 255,
       "label": "post-jason-alexander-is-kfc-s-new-colonel — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-jason-alexander-is-kfc-s-new-colonel.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21293,7 +21867,12 @@
       "sampleId": 15,
       "maxCharacters": 255,
       "label": "post-10-most-alluring-ltos-on-menus-in-july — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-10-most-alluring-ltos-on-menus-in-july.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21331,7 +21910,12 @@
       "sampleId": 308,
       "maxCharacters": 255,
       "label": "post-10-most-alluring-ltos-on-menus-in-july — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-10-most-alluring-ltos-on-menus-in-july.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21369,7 +21953,12 @@
       "sampleId": 16,
       "maxCharacters": 255,
       "label": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21407,7 +21996,12 @@
       "sampleId": 309,
       "maxCharacters": 255,
       "label": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21445,7 +22039,12 @@
       "sampleId": 17,
       "maxCharacters": 255,
       "label": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21483,7 +22082,12 @@
       "sampleId": 310,
       "maxCharacters": 255,
       "label": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21521,7 +22125,12 @@
       "sampleId": 18,
       "maxCharacters": 255,
       "label": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21559,7 +22168,12 @@
       "sampleId": 311,
       "maxCharacters": 255,
       "label": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21597,7 +22211,12 @@
       "sampleId": 7,
       "maxCharacters": 255,
       "label": "post-burger-king-takes-a-stand-on-the-pink-tax — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-burger-king-takes-a-stand-on-the-pink-tax.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21635,7 +22254,12 @@
       "sampleId": 312,
       "maxCharacters": 255,
       "label": "post-burger-king-takes-a-stand-on-the-pink-tax — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-burger-king-takes-a-stand-on-the-pink-tax.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21673,7 +22297,12 @@
       "sampleId": 19,
       "maxCharacters": 255,
       "label": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21711,7 +22340,12 @@
       "sampleId": 313,
       "maxCharacters": 255,
       "label": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21749,7 +22383,12 @@
       "sampleId": 20,
       "maxCharacters": 255,
       "label": "post-how-restaurants-can-promote-a-james-beard-recognition — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-how-restaurants-can-promote-a-james-beard-recognition.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21787,7 +22426,12 @@
       "sampleId": 314,
       "maxCharacters": 255,
       "label": "post-how-restaurants-can-promote-a-james-beard-recognition — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-how-restaurants-can-promote-a-james-beard-recognition.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21825,7 +22469,12 @@
       "sampleId": 21,
       "maxCharacters": 255,
       "label": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal — featured image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21863,7 +22512,12 @@
       "sampleId": 315,
       "maxCharacters": 255,
       "label": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal — jd_intro_image",
-      "role": "editorial.illustration",
+      "role": "article.image",
+      "group": {
+        "id": "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal.article.0",
+        "item": 0,
+        "kind": "post"
+      },
       "fit": {
         "measured": true,
         "kind": "photo",
@@ -21970,6 +22624,26 @@
   "roleVocabularyVersion": "place-content-roles/3",
   "slotFitVersion": "slot-fit/1",
   "fitGroups": {
+    "about-us.features-intro-2": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "about-us.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
     "about-us.teams.member": {
       "items": 8,
       "shown": 8,
@@ -21978,6 +22652,56 @@
       "min": null,
       "minFrom": "unknown",
       "max": 8,
+      "maxFrom": "demo-count"
+    },
+    "contact-us.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "edit-user-profile.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "fetured-articles.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "front-page.features-intro-2.item": {
+      "items": 2,
+      "shown": 2,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count"
+    },
+    "front-page.features-intro.about": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
       "maxFrom": "demo-count"
     },
     "front-page.features-intro.hours": {
@@ -21991,6 +22715,16 @@
       "maxFrom": "demo-count"
     },
     "front-page.features-intro.location": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "front-page.latest-news.claim": {
       "items": 1,
       "shown": 1,
       "uniform": true,
@@ -22030,44 +22764,44 @@
       "max": 10,
       "maxFrom": "demo-count"
     },
-    "home-blue.features-intro.item": {
-      "items": 2,
-      "shown": 2,
+    "home-blue.features-intro.quote": {
+      "items": 1,
+      "shown": 1,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
-      "max": 2,
+      "max": 1,
       "maxFrom": "demo-count"
     },
-    "home-green.features-intro.item": {
-      "items": 2,
-      "shown": 2,
+    "home-green.features-intro.quote": {
+      "items": 1,
+      "shown": 1,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
-      "max": 2,
+      "max": 1,
       "maxFrom": "demo-count"
     },
-    "home-pink.features-intro.item": {
-      "items": 2,
-      "shown": 2,
+    "home-pink.features-intro.quote": {
+      "items": 1,
+      "shown": 1,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
-      "max": 2,
+      "max": 1,
       "maxFrom": "demo-count"
     },
-    "home-red.features-intro.item": {
-      "items": 2,
-      "shown": 2,
+    "home-red.features-intro.quote": {
+      "items": 1,
+      "shown": 1,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
-      "max": 2,
+      "max": 1,
       "maxFrom": "demo-count"
     },
     "offers.happyhours-2.promo": {
@@ -22100,7 +22834,407 @@
       "max": 1,
       "maxFrom": "demo-count"
     },
+    "offers.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-front-page.features-intro.gallery": {
+      "items": 2,
+      "shown": 2,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count"
+    },
+    "page-front-page.latest-news.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-front-page.slideshow": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-blue.features-intro.gallery": {
+      "items": 2,
+      "shown": 2,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count"
+    },
+    "page-home-blue.latest-news.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-blue.slideshow": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-green.features-intro.gallery": {
+      "items": 2,
+      "shown": 2,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count"
+    },
+    "page-home-green.latest-news.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-green.slideshow": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-pink.features-intro.gallery": {
+      "items": 2,
+      "shown": 2,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count"
+    },
+    "page-home-pink.latest-news.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-pink.slideshow": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-red.features-intro.gallery": {
+      "items": 2,
+      "shown": 2,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 2,
+      "maxFrom": "demo-count"
+    },
+    "page-home-red.latest-news.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "page-home-red.slideshow": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
     "part-footer.footer.hours": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-10-most-alluring-ltos-on-menus-in-july.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-4-habits-that-can-improve-your-customer-service.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-5-of-the-summer-s-craziest-restaurant-marketing-stunts.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-8-trends-trickling-down-to-mainstream-menus.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-buffalo-wild-wings-considers-adding-sports-betting.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-burger-king-takes-a-stand-on-the-pink-tax.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-century-old-nathan-s-famous-aims-for-youth-with-new-look.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-did-ihop-s-publicity-stunt-hurt-applebee-s.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-efforts-to-curb-soda-consumption-bring-results-on-both-coasts.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-how-restaurants-can-promote-a-james-beard-recognition.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-inside-olive-garden-s-never-ending-pasta-pass.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-jason-alexander-is-kfc-s-new-colonel.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-lorem-ipsum.article": {
+      "items": 1,
+      "shown": 0,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-newk-s-eatery-steals-a-dinner-booster-from-supermarkets.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-starbucks-brings-under-armour-exec-on-board.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-this-week-s-5-head-spinning-restaurant-moments-1-more-inch.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-this-week-s-restaurant-nightmares-language-people.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-three-broomsticks-s-autumn-menu-unveiled.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-three-broomsticks-welcomes-new-chef-caleb-nunez.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "post-we-ve-been-nominated-for-the-britain-restaurant-awards.article": {
+      "items": 1,
+      "shown": 1,
+      "uniform": false,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "registration.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "reservation.masthead": {
       "items": 1,
       "shown": 1,
       "uniform": true,
@@ -22163,6 +23297,46 @@
     "site.identity": {
       "items": 1,
       "shown": 0,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "tagged-items.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "typography.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "user-profile.masthead": {
+      "items": 1,
+      "shown": 1,
+      "uniform": true,
+      "whenFewer": "neutral",
+      "min": null,
+      "minFrom": "unknown",
+      "max": 1,
+      "maxFrom": "demo-count"
+    },
+    "your-profile.masthead": {
+      "items": 1,
+      "shown": 1,
       "uniform": true,
       "whenFewer": "neutral",
       "min": null,

@@ -54,6 +54,13 @@ named volume) is where the chain restores what it packed.
    --page-titles --role-vocabulary 3 --previous-map <previous map>`), `capture-inventory.mjs`, the derived files
    (`--check` clean), slot roles (`scripts/slot-roles/check.mjs`), then coverage ([`coverage-holes.md`](coverage-holes.md)),
    Slot fit and the label judge. While coverage has an open stop, nothing below runs.
+   **Run the label judge BEFORE the plugin cut and the pin** (cheap first): its fixes (a role hint, or a rule table
+   line with a test) change the content map, and a map that changed after the cut needs a second cowork PR, a second
+   plugin release and a second pin. Order: recapture, `--fit` crawl, judge (batches of whole components to sonnet
+   subagents that open every crop, then `record-judge.mjs`), fix every mismatch at the root, recapture and `--fit`
+   again, judge the changed slots only, and only then the cowork PR, the release and the re-pin. A common pattern
+   (a sample post, a person photo named after its page) belongs in `scripts/slot-roles/rule-tables.mjs` with a test; a
+   hint (`role-hints/<template>.json`) is for what is specific to the theme.
 6. **Bind:** the chain's bind needs a plugin carrying the new profile. Build claude-cowork locally with the new contract
    (`wordpress/cowork/build.sh`, the contract files byte for byte as this tree holds them) and resume `--from bind
    --plugin <local zip>`. Never publish that build.
