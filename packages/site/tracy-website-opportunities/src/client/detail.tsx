@@ -34,10 +34,12 @@ import { interfaceLocale } from '@tracy/core/interface-languages'
 import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
 import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
-import { BriefControl } from './brief-control.tsx'
+import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
+import { Stepper } from './stepper.tsx'
+import { type StepAction, stepperView } from './stepper-model.ts'
 import { EditableText } from './editable-text.tsx'
-import { profileEditBody, profileEditView, typedHours } from './profile-edit-model.ts'
-import { researchOf } from './research-gate-model.ts'
+import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
+import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
 import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
 import {
@@ -79,11 +81,11 @@ import { phonesView } from './profile-phones-model.ts'
 import { ProfilePhonesRows } from './profile-phones-rows.tsx'
 import { type RatingChoice, ProfileRatingRow } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
-import { businessBriefRows } from './business-brief-model.ts'
+import { businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
 import { BusinessBriefTable } from './business-brief-table.tsx'
 import { SiteNameRow } from './site-name-row.tsx'
 import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
-import { DemoPrimaryButton, DemoSiteBlock } from './demo-site-block.tsx'
+import { DemoSiteBlock } from './demo-site-block.tsx'
 import { DETAIL_TABS, type DetailTab, readDetailTab, writeDetailTab } from './detail-tab.ts'
 import { DetailsHeader } from './details-header.tsx'
 import { Section, Sources } from './details-parts.tsx'
@@ -106,10 +108,9 @@ import { SendDemo } from './send-demo.tsx'
 import { usageFull, type OutreachDraft, type DemoUsage } from './outreach-model.ts'
 import { rowFromDetail } from './inspector-model.ts'
 import { useCardResearchAgain, useSourceRetry } from './source-retry.ts'
-import { ActionButton } from './opportunity-cells.tsx'
 import { StatusBadge } from './my-places.tsx'
 import { placeStatus } from './opportunity-pieces.ts'
-import { type NextAction, nextAction, nextStepText, relativeTime, stageOf } from './opportunity-row.ts'
+import { type NextAction, relativeTime, stageOf } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
 import { rankingFor, runAction } from './row-actions.ts'
@@ -340,6 +341,11 @@ export function DetailView({
   const [deleting, setDeleting] = useState<DeleteAsk | null>(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
   const [deleteFailed, setDeleteFailed] = useState<string | null>(null)
+  // The Content brief job (#524): pressed from the stepper, polled here, drawn in the Site brief block.
+  const briefJob = useBriefJob(api, id, body?.briefJob ?? null, () => {
+    void reload()
+    onChanged()
+  })
   if (body === null || row === null) {
     return (
       <div className="tracy-wo-page">
@@ -524,7 +530,6 @@ export function DetailView({
   const revisions = asArray<Revision>(body.revisions).filter((r) => typeof r?.id === 'string')
   const candidate = isRecord(row.candidate) ? row.candidate : {}
   const job = row.job ?? null
-  const next = nextStepText(row)
   const ago = (at: unknown) => relativeTime(typeof at === 'string' ? at : null, now, locale)
   const added = ago(row.createdAt)
   const distance =
@@ -535,6 +540,7 @@ export function DetailView({
       : null
   const website = typeof candidate.website === 'string' && candidate.website !== '' ? candidate.website : null
   const phone = typeof candidate.phone === 'string' && candidate.phone !== '' ? candidate.phone : null
+  const editedAt = profileEditedAt(body.opportunity)
   const meta = [typeof candidate.category === 'string' ? candidate.category : null, distance, price].filter(
     Boolean
   )
@@ -552,24 +558,32 @@ export function DetailView({
     if (command.kind === 'press') return void demoPress(command.press)
     window.open(command.href, '_blank', 'noopener,noreferrer')
   }
-  const primary = demoStage ? (
-    <DemoPrimaryButton
-      view={demoView}
-      busy={busy}
-      limitReached={limitReached}
-      onPress={() => {
-        const command = demoCommand('primary', row, body)
-        if (command !== null) onDemo(command)
-      }}
-    />
-  ) : (
-    <ActionButton
+  // The four steps under the header, on every tab, with the ONE action of the current step (mock r6-a).
+  const stepper = stepperView({
+    research,
+    researchJob: job,
+    briefJob: briefJob.job,
+    brief: isRecord(body.brief) ? body.brief : null,
+    demo: demoView.state,
+    demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
+    sentAt: null
+  })
+  const onStep = (step: StepAction): void => {
+    if (step === 'start-research') return void act('start')
+    if (step === 'resume-research') return void act('resume')
+    if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
+    if (step === 'send') return void act('send-demo')
+    const command = demoCommand('primary', row, body)
+    if (command !== null) onDemo(command)
+  }
+  const stepperBlock = (
+    <Stepper
       t={t}
-      row={row}
-      size="sm"
-      busy={busy}
-      disabled={limitReached && ['build', 'retry-demo'].includes(nextAction(row))}
-      onAction={(a) => void act(a)}
+      view={stepper}
+      locale={locale}
+      busy={busy || briefJob.pressing}
+      disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
+      onAction={onStep}
     />
   )
   const researchRunning = job?.state === 'running' || job?.state === 'queued'
@@ -626,10 +640,19 @@ export function DetailView({
     )
   }
   // A row the seller corrected (#524) came from them, whatever research said.
-  const briefRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale).map((r) =>
+  const factRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale).map((r) =>
     r.field !== null && profileEditView(profile, r.field)?.edited
       ? { ...r, source: t('brief.source.you') }
       : r
+  )
+  // In the Profile's order, with the place's website (read only) when the brief states none.
+  const siteRow = factRows.length === 0 ? null : websiteRow(factRows, website, t)
+  const briefRows = orderBriefRows(siteRow === null ? factRows : [...factRows, siteRow])
+  const websiteLink = (url: string): JSX.Element => (
+    <a className="tracy-wo-action-link" href={url} target="_blank" rel="noopener noreferrer">
+      {viewsHostOf(url) ?? url}
+      <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
+    </a>
   )
   // Once research is done and the brief lists its facts, the Business brief table is the one place to check them.
   const tableListsFacts = research.done && briefRows.length > 0
@@ -642,7 +665,7 @@ export function DetailView({
         branch={row.branch ?? null}
         facts={facts}
         status={<StatusBadge status={placeStatus(row, t)} />}
-        primary={primary}
+        stepper={stepperBlock}
         busy={busy}
         onBack={onList}
         tabs={
@@ -678,23 +701,14 @@ export function DetailView({
         </p>
       ) : null}
       {tab === 'overview' ? (
-        <div className="tracy-wo-page-grid">
+        <div className="tracy-wo-col">
           <div className="tracy-wo-col">
             {send ? (
               <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
             ) : null}
-            {demoStage ? null : (
-              <>
-                <Section title={t('inspector.next')}>
-                  <p className="tracy-wo-muted">
-                    {next.reasonKey ? `${t(next.reasonKey)} ` : null}
-                    {t(next.key, next.params)}
-                  </p>
-                </Section>
-                {progress}
-              </>
-            )}
-            {demoStage ? (
+            {/* The stepper says what happens next; the Demo site block waits for a brief or a demo. */}
+            {demoStage ? null : progress}
+            {demoStage && (isRecord(body.brief) || demoView.state !== 'none') ? (
               <DemoSiteBlock
                 t={t}
                 row={row}
@@ -713,13 +727,12 @@ export function DetailView({
             ) : null}
             <Demos
               t={t}
-              api={api}
-              id={id}
               revisions={revisions}
               builds={asArray<unknown>(body.builds)}
               brief={body.brief}
               research={body.research}
-              briefJob={body.briefJob}
+              briefJob={briefJob}
+              profileEditedAt={editedAt}
               onOpen={(revisionId, n) => {
                 if (openBriefTab === null) return onOpenRevision(revisionId, false)
                 openBriefTab({
@@ -728,14 +741,7 @@ export function DetailView({
                   title: `${t('brief.number', { n })} · ${shownName}`
                 })
               }}
-              onRefreshed={() => {
-                void reload()
-                onChanged()
-              }}
             />
-          </div>
-          <div className="tracy-wo-col">
-            <KeyFacts t={t} profile={profile} website={website} phone={phone} />
           </div>
         </div>
       ) : null}
@@ -748,6 +754,8 @@ export function DetailView({
               rows={briefRows}
               firstRow={<SiteNameRow t={t} api={api} opportunityId={id} />}
               editValue={(row) => {
+                // The website no door edits: its link, read only.
+                if (row.readOnly) return website === null ? null : websiteLink(website)
                 // The seller's own edit shows at once, before a new brief freezes it (#524).
                 if (row.field === null || !research.done) return null
                 if (row.field === 'name') return editNameCell(row.value)
@@ -757,6 +765,9 @@ export function DetailView({
               }}
               onToggle={toggleFact}
             />
+            {tableListsFacts ? (
+              <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p>
+            ) : null}
           </Section>
           {tableListsFacts ? (
             // The table already lists every fact with its switch and its edit; only the key messages stay apart.
@@ -771,6 +782,12 @@ export function DetailView({
               profile={profile}
               plainRows={briefRows.length === 0 || !research.done}
               emptyKey={research.done ? 'detail.noProfile' : 'research.profileEmpty'}
+              website={research.done ? { url: website, link: websiteLink } : null}
+              collecting={
+                research.state === 'running' || ['queued', 'running'].includes(job?.state ?? '')
+                  ? { name: shownName, phone }
+                  : null
+              }
               editRow={research.done ? editProfileRow : null}
               nameRow={
                 nameRow === null ? null : (
@@ -837,11 +854,27 @@ export function DetailView({
       ) : null}
       {tab === 'sources' ? (
         <div className="tracy-wo-col">
-          <Section title={t('details.tab.sources')}>
+          <Section
+            title={t('details.tab.sources')}
+            aside={
+              research.researchedAt === null ? null : (
+                <span className="tracy-wo-sources-at">
+                  {t('sources.researchedAt', {
+                    date: new Intl.DateTimeFormat(locale, {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    }).format(Date.parse(research.researchedAt))
+                  })}
+                </span>
+              )
+            }
+          >
             {job !== null && !researchRunning ? (
               <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
             ) : null}
-            <Sources t={t} sources={sources} retry={retrySource} />
+            <Sources t={t} sources={sources} retry={retrySource} collected={research.done} />
             {cancellable !== null ? (
               <Button
                 type="button"
@@ -868,53 +901,6 @@ export function DetailView({
   )
 }
 
-/** Key facts on Overview: the profile's plain rows (name, address, phone, hours...) and the website, read only. */
-function KeyFacts({
-  t,
-  profile,
-  website,
-  phone
-}: {
-  t: Translate
-  profile: Body | null
-  website: string | null
-  phone: string | null
-}): JSX.Element {
-  const rows = profileFields(profile)
-  const hasPhone = rows.some((r) => r.field === 'phone')
-  return (
-    <Section title={t('details.keyFacts')}>
-      <dl className="tracy-wo-fields">
-        {rows.map((row) => (
-          <div key={row.field} className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
-            <dd>{row.value}</dd>
-          </div>
-        ))}
-        {!hasPhone && phone !== null ? (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('field.phone')}</dt>
-            <dd>{phone}</dd>
-          </div>
-        ) : null}
-        <div className="tracy-wo-field">
-          <dt className="tracy-wo-muted tracy-wo-small">{t('field.website')}</dt>
-          <dd>
-            {website !== null ? (
-              <a className="tracy-wo-action-link" href={website} target="_blank" rel="noopener noreferrer">
-                {viewsHostOf(website) ?? website}
-                <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
-              </a>
-            ) : (
-              t('cell.website.none')
-            )}
-          </dd>
-        </div>
-      </dl>
-    </Section>
-  )
-}
-
 function Profile({
   t,
   profile,
@@ -926,10 +912,16 @@ function Profile({
   keyMessagesRows,
   plainRows = true,
   editRow = null,
-  emptyKey = 'detail.noProfile'
+  emptyKey = 'detail.noProfile',
+  website = null,
+  collecting = null
 }: {
   t: Translate
   profile: Body | null
+  /** The place's website row after the hours, read only (no door edits it); null before research. */
+  website?: { url: string | null; link: (url: string) => JSX.Element } | null
+  /** Research is running: the rows it fills, with what is known so far and Collecting… for the rest. */
+  collecting?: { name: string; phone: string | null } | null
   /** A plain row the seller can edit in place (#524, `editable-text.tsx`), or null to draw it read only. */
   editRow?: ((field: string, value: string) => JSX.Element | null) | null
   /** What an empty Profile says: before this card's research, how to fill it (#524). */
@@ -949,6 +941,30 @@ function Profile({
   /** "Key messages" (`profile-key-messages.tsx`), after the reading, when the reading found some. */
   keyMessagesRows: JSX.Element | null
 }): JSX.Element | null {
+  if (collecting !== null && profile === null) {
+    const waiting = t('profile.collecting')
+    const lines: Array<[string, string | null]> = [
+      ['field.name', collecting.name],
+      ['field.phone', collecting.phone],
+      ['field.hours', null],
+      ['field.website', null],
+      ['field.services', null],
+      ['field.team', null]
+    ]
+    return (
+      <Section title={t('detail.profile')}>
+        <dl className="tracy-wo-fields">
+          {lines.map(([key, value]) => (
+            <div key={key} className="tracy-wo-field">
+              <dt className="tracy-wo-muted tracy-wo-small">{t(key)}</dt>
+              <dd className={value === null ? 'tracy-wo-muted' : undefined}>{value ?? waiting}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="tracy-wo-muted tracy-wo-small">{t('profile.filling')}</p>
+      </Section>
+    )
+  }
   const rows = profileFields(profile)
   const drawRow = (row: ProfileRow): JSX.Element =>
     row.field === 'name' && nameRow !== null ? (
@@ -972,6 +988,13 @@ function Profile({
   for (const field of PROFILE_FIELDS) {
     if (field === 'phone' && ratingRow !== null)
       drawn.push(<Fragment key="googleRating">{ratingRow}</Fragment>)
+    if (field === 'bio' && website !== null && (plainRows || drawn.length > 0))
+      drawn.push(
+        <div key="website" className="tracy-wo-field">
+          <dt className="tracy-wo-muted tracy-wo-small">{t('field.website')}</dt>
+          <dd>{website.url === null ? t('cell.website.none') : website.link(website.url)}</dd>
+        </div>
+      )
     if (field === 'hours' && hoursRow !== null) {
       drawn.push(<Fragment key="hours">{hoursRow}</Fragment>)
       continue
@@ -1176,37 +1199,35 @@ function Social({ t, lines }: { t: Translate; lines: SocialLine[] }): JSX.Elemen
  */
 function Demos({
   t,
-  api,
-  id,
   revisions,
   builds,
   brief,
   research,
   briefJob,
-  onOpen,
-  onRefreshed
+  profileEditedAt,
+  onOpen
 }: {
   t: Translate
-  api: Api
-  id: string
   revisions: Revision[]
   builds: unknown[]
   brief: unknown
   /** This card's research (#524): the brief waits for it. */
   research: unknown
-  /** The latest Content brief job (#524), made in the background (`brief-control.tsx`). */
-  briefJob: unknown
+  /** The Content brief job (#524), made in the background and pressed from the stepper (`brief-control.tsx`). */
+  briefJob: BriefJobControl
+  /** When the seller last edited the Profile: a newer edit makes the brief out of date in its own words. */
+  profileEditedAt: string | null
   onOpen: (revisionId: string, n: number) => void
-  onRefreshed: () => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
   const rows = demoRows(builds, revisions)
   const status = briefStatus(brief)
   const edited = isRecord(brief) && brief.editedBySeller === true
   const when = status ? relativeTime(status.createdAt, Date.now(), locale) : ''
-  // A job pressed on this page lives in the control; it reports it so the empty line gives way to the steps.
-  const [pressedJob, setPressedJob] = useState<unknown>(null)
-  const runningJob = [pressedJob, briefJob].some((j) => isRecord(j) && j.state === 'running')
+  const view = briefControlView({ research, brief, briefJob: briefJob.job, profileEditedAt })
+  const chip = briefChip(view)
+  // While a new brief is being made, the old one is only named: its out-of-date reason is already being acted on.
+  const lineKey = chip === 'working' ? 'brief.number' : briefLineKey(brief, profileEditedAt)
   return (
     <>
       {/* No demo yet: the Demo site block above already says so; the list only appears once there is a history. */}
@@ -1247,18 +1268,27 @@ function Demos({
           </ul>
         </Section>
       )}
-      <Section title={t('revision.document')}>
+      <Section
+        title={t('revision.document')}
+        aside={
+          chip === null ? null : (
+            <Badge
+              variant="outline"
+              className={chip === 'working' ? 'tracy-wo-chip-brand' : 'tracy-wo-chip-bad'}
+            >
+              {chip === 'working' ? <Spinner label={t('brief.chip.working')} /> : null}
+              {t(`brief.chip.${chip}`)}
+            </Badge>
+          )
+        }
+      >
         {status === null ? (
-          runningJob ? null : (
+          chip !== null || view.mode === 'locked' ? null : (
             <p className="tracy-wo-muted">{t('brief.none')}</p>
           )
         ) : (
           <div className="tracy-wo-row tracy-wo-wrap">
-            <p className="tracy-wo-muted">
-              {status.current === null
-                ? t('brief.number', { n: status.n })
-                : t(status.current ? 'brief.current' : 'brief.stale', { n: status.n, when })}
-            </p>
+            <p className="tracy-wo-muted">{t(lineKey, { n: status.n, when })}</p>
             <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
               <FileText aria-hidden="true" />
               {t('brief.view')}
@@ -1266,16 +1296,7 @@ function Demos({
           </div>
         )}
         {edited ? <p className="tracy-wo-muted tracy-wo-small">{t('brief.editedByYou')}</p> : null}
-        <BriefControl
-          t={t}
-          api={api}
-          opportunityId={id}
-          research={research}
-          brief={brief}
-          briefJob={briefJob}
-          onJob={setPressedJob}
-          onSettled={onRefreshed}
-        />
+        <BriefControl t={t} view={view} control={briefJob} />
       </Section>
     </>
   )

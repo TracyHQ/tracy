@@ -96,6 +96,7 @@ export const CSS = `
 .tracy-wo-results { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .tracy-wo-more { align-self: center; }
 /* My opportunities: Status, Research and Action cells, the stage bar and the Inspector. */
+.tracy-wo-badge-ok { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); border-color: transparent; }
 .tracy-wo-badge-ok svg { color: var(--success); }
 .tracy-wo-badge-live { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
 .tracy-wo-name-chip.is-check { background: color-mix(in oklab, var(--warning) 16%, transparent); border-color: color-mix(in oklab, var(--warning) 40%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
@@ -167,7 +168,7 @@ export const CSS = `
 .tracy-wo-src-icon.is-waiting, .tracy-wo-src-icon.is-skipped { color: var(--muted-foreground); }
 .tracy-wo-src-retry { margin-top: 6px; }
 .tracy-wo-src-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.tracy-wo-src-pasted { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
+.tracy-wo-src-pasted, .tracy-wo-src-sub { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
 .tracy-wo-src-group { margin: 8px 0 2px; font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-src-body { padding: 6px 10px 8px; border-top: 1px solid var(--border); color: var(--muted-foreground); }
 .tracy-wo-search-pages { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }

@@ -56,12 +56,15 @@ export interface SourceRetry {
 export function Sources({
   t,
   sources,
-  retry
+  retry,
+  collected = true
 }: {
   t: Translate
   sources: SourceInput[]
   /** Absent where the page cannot start a research: no Retry is drawn. */
   retry?: SourceRetry
+  /** False before this card's research: a row with nothing yet reads Not collected yet. */
+  collected?: boolean
 }): JSX.Element {
   if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
   // The links the owner pasted first; what research looked at by itself below, under its own heading.
@@ -69,26 +72,62 @@ export function Sources({
   return (
     <div className="tracy-wo-srcs">
       {pasted.map((s) => (
-        <SourceItem key={s.source} t={t} s={s} retry={retry} />
+        <SourceItem key={s.source} t={t} s={s} retry={retry} collected={collected} />
       ))}
       {pasted.length > 0 && found.length > 0 ? (
         <p className="tracy-wo-src-group">{t('source.alsoLookedAt')}</p>
       ) : null}
       {found.map((s) => (
-        <SourceItem key={s.source} t={t} s={s} retry={retry} />
+        <SourceItem key={s.source} t={t} s={s} retry={retry} collected={collected} />
       ))}
     </div>
   )
 }
 
 /** One source row: its name and status, then coverage, reason, the pages a search found and Retry. */
-function SourceItem({ t, s, retry }: { t: Translate; s: SourceInput; retry?: SourceRetry }): JSX.Element {
+/** The chip of a source row (mock r5): Complete, Not available, or the row's own state while it is not final. */
+const CHIP_CLASS: Readonly<Record<Tone, string>> = {
+  ok: 'tracy-wo-chip-ok',
+  partial: 'tracy-wo-chip-brand',
+  blocked: 'tracy-wo-chip-mute',
+  failed: 'tracy-wo-chip-mute',
+  skipped: 'tracy-wo-chip-mute',
+  waiting: 'tracy-wo-chip-mute'
+}
+
+function SourceItem({
+  t,
+  s,
+  retry,
+  collected: researched
+}: {
+  t: Translate
+  s: SourceInput
+  retry?: SourceRetry
+  collected: boolean
+}): JSX.Element {
   const row = sourceRow(s)
   const pastedLink = pastedLinkOf(s)
   const link = pastedLink ?? (s.ref && /^https?:\/\//.test(s.ref) ? s.ref : null)
   const search = searchStatusKey(s)
   const pages = searchPagesOf(s)
-  const reasonKey = search === null ? row.reasonKey : s.status === 'failed' ? row.reasonKey : null
+  // A source that gave nothing reads Not available with one plain line; a server's own key error is never named.
+  const unavailable = search === null && ['failed', 'skipped', 'blocked'].includes(row.tone)
+  const plainReason = unavailable
+    ? s.reason === 'not_found'
+      ? 'source.notFoundHere'
+      : s.reason === 'not_collected'
+        ? 'reason.not_collected'
+        : 'source.couldNotRead'
+    : null
+  const chipKey =
+    search ??
+    (unavailable
+      ? 'source.chip.notAvailable'
+      : row.tone === 'waiting' && !researched
+        ? 'reason.not_collected'
+        : row.statusKey)
+  const reasonKey = unavailable ? null : search === null ? row.reasonKey : null
   const Icon = SOURCE_ICON[row.tone]
   // When its data was collected, the shared research's own date (#524), never when this card's job ended.
   const collected = collectedLine(t, s, interfaceLocale() ?? 'en')
@@ -102,7 +141,8 @@ function SourceItem({ t, s, retry }: { t: Translate; s: SourceInput; retry?: Sou
   return (
     <details
       className="tracy-wo-src"
-      open={(row.tone !== 'ok' && row.tone !== 'waiting') || search === 'again.search.pending'}
+      // Closed by default: the chip and the line under the name say it all; a page waiting for a check opens.
+      open={search === 'again.search.pending' || row.tone === 'partial'}
     >
       <summary>
         <span className="tracy-wo-src-head">
@@ -110,17 +150,25 @@ function SourceItem({ t, s, retry }: { t: Translate; s: SourceInput; retry?: Sou
             <Icon aria-hidden="true" className={`tracy-wo-src-icon is-${row.tone}`} />
             {sourceLabel(t, row.source, pastedLink ?? s.ref)}
           </span>
-          {pastedLink !== null ? (
-            <span className="tracy-wo-src-pasted">{`${t('source.link')} · ${pastedLink}`}</span>
+          {pastedLink !== null || collected !== null || plainReason !== null ? (
+            <span className="tracy-wo-src-sub">
+              {[pastedLink !== null ? t('source.link') : null, collected, plainReason ? t(plainReason) : null]
+                .filter(Boolean)
+                .join(' · ')}
+            </span>
           ) : null}
         </span>
-        <span className="tracy-wo-muted">
-          {t(search ?? row.statusKey)}
-          {collected !== null ? ` · ${collected}` : null}
-        </span>
+        <Badge
+          variant="outline"
+          className={cn('tracy-wo-src-chip', CHIP_CLASS[unavailable ? 'failed' : row.tone])}
+        >
+          {t(chipKey)}
+        </Badge>
       </summary>
       <div className="tracy-wo-src-body">
-        {coverage === null && reasonKey === null && search === null ? t('inspector.nothingYet') : null}
+        {coverage === null && reasonKey === null && search === null && link === null && !unavailable
+          ? t('inspector.nothingYet')
+          : null}
         {typeof s.queries === 'number' ? (
           <span className="tracy-wo-small">{t('again.search.queries', { count: s.queries })} </span>
         ) : null}

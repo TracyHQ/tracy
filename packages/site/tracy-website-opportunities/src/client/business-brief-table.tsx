@@ -50,7 +50,7 @@ export function BusinessBriefTable({
         <tbody>
           {firstRow}
           {rows.map((row) => (
-            <tr key={row.id} data-off={row.onSite ? undefined : 'true'}>
+            <tr key={row.id} data-off={row.onSite || row.readOnly ? undefined : 'true'}>
               <th scope="row">{row.label}</th>
               <td>
                 {editValue?.(row) ?? <span>{row.value}</span>}
@@ -72,12 +72,14 @@ export function BusinessBriefTable({
                 ) : null}
               </td>
               <td>
-                <Switch
-                  checked={row.onSite}
-                  disabled={busy !== null}
-                  aria-label={`${t('brief.table.onSite')}: ${row.label}`}
-                  onCheckedChange={(on) => void choose(row, on)}
-                />
+                {row.readOnly ? null : (
+                  <Switch
+                    checked={row.onSite}
+                    disabled={busy !== null}
+                    aria-label={`${t('brief.table.onSite')}: ${row.label}`}
+                    onCheckedChange={(on) => void choose(row, on)}
+                  />
+                )}
               </td>
             </tr>
           ))}

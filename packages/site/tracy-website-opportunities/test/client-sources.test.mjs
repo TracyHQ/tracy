@@ -88,7 +88,7 @@ const draw = (sources, retry) =>
   lib.renderToStaticMarkup(lib.createElement(lib.Sources, { t, sources, retry }))
 const names = (html) => [...html.matchAll(/tracy-wo-src-name">.*?<\/svg>([^<]+)</g)].map((m) => m[1])
 
-test('every source of the place is listed by name with its status and reason', () => {
+test('every source of the place is listed by name with its chip and one plain line, never a key error', () => {
   const html = draw(SAGA)
   assert.deepEqual(names(html), [
     '[source.website]',
@@ -98,10 +98,11 @@ test('every source of the place is listed by name with its status and reason', (
     'Google Maps',
     'TripAdvisor'
   ])
-  assert.match(html, /TripAdvisor<\/span><\/span><span class="tracy-wo-muted">\[source\.status\.skipped\]/)
-  assert.match(html, /\[reason\.not_found\]/)
-  assert.equal((html.match(/\[source\.status\.blocked\]/g) ?? []).length, 2)
-  assert.equal((html.match(/\[reason\.other\]/g) ?? []).length, 2)
+  // Mock r5: Not available with Not found for this place, or Could not be read; never the server's own reason.
+  assert.match(html, /TripAdvisor<\/span><span class="tracy-wo-src-sub">\[source\.notFoundHere\]/)
+  assert.equal((html.match(/\[source\.chip\.notAvailable\]/g) ?? []).length, 3)
+  assert.equal((html.match(/\[source\.couldNotRead\]/g) ?? []).length, 2)
+  assert.doesNotMatch(html, /\[reason\.other\]|\[source\.status\.blocked\]/)
 })
 
 test('Retry shows on each source not collected, and only when the page can retry', () => {
@@ -147,7 +148,7 @@ test('a search row says what it found: each page with Needs a check or Not used,
   const html = draw([PAGES], { busy: null, failed: null, onPress: () => {} })
   assert.deepEqual(names(html), ['[source.instagramSearch]'])
   assert.match(html, /<details class="tracy-wo-src" open="">/)
-  assert.match(html, /tracy-wo-muted">\[again\.search\.pending\]/)
+  assert.match(html, /tracy-wo-src-chip[^"]*">\[again\.search\.pending\]/)
   assert.match(html, /\[again\.search\.queries\{&quot;count&quot;:3\}\]/)
   assert.match(html, /\[again\.page\.pending\].*instagram\.com\/samplesushi.*\[again\.page\.rejected\]/s)
   assert.match(html, /\[again\.proofs\{&quot;list&quot;:&quot;\[again\.proof\.phone\]&quot;\}\]/)
@@ -256,8 +257,7 @@ test('the links the owner pasted come first, each with The link you added and it
     'Google Maps',
     'TripAdvisor'
   ])
-  assert.equal((html.match(/tracy-wo-src-pasted/g) ?? []).length, 3)
-  assert.match(html, /tracy-wo-src-pasted">\[source\.link\] · https:\/\/maps\.app\.goo\.gl\/SampleBistro</)
+  assert.equal((html.match(/tracy-wo-src-sub">\[source\.link\]/g) ?? []).length, 3)
   assert.match(html, /<a href="https:\/\/maps\.app\.goo\.gl\/SampleBistro"/)
   const heading = html.indexOf('[source.alsoLookedAt]')
   assert.ok(heading > html.indexOf('[source.listing'), 'the heading comes after the pasted rows')
@@ -266,7 +266,7 @@ test('the links the owner pasted come first, each with The link you added and it
 })
 
 test('Also looked at shows only when both groups have rows', () => {
-  assert.doesNotMatch(draw(SAGA), /source\.alsoLookedAt|tracy-wo-src-pasted/)
+  assert.doesNotMatch(draw(SAGA), /source\.alsoLookedAt|\[source\.link\]/)
   assert.doesNotMatch(draw(PASTED.filter((s) => s.pastedLink)), /source\.alsoLookedAt/)
 })
 

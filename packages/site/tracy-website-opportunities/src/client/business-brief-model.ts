@@ -23,6 +23,61 @@ export interface BriefRow {
   ownerChoice: boolean
   /** Why the rule leaves it off the site, or that it was worked out and kept, in plain sentences. */
   notes: string[]
+  /** A row shown for reference only: no switch and no edit (the website, which no door edits). */
+  readOnly?: boolean
+}
+
+/**
+ * The table lists the facts in the Profile's order: the name first, then the address, the rating, the phones, the
+ * hours, the website, the description and what research read (services, who it is for, team). Facts the Profile
+ * does not show follow in the server's order.
+ */
+export const BRIEF_ROW_ORDER: readonly string[] = Object.freeze([
+  'name',
+  'branch',
+  'address',
+  'googleRating',
+  'phone',
+  'otherPhones',
+  'whatsapp',
+  'hours',
+  'website',
+  'bio',
+  'story',
+  'services',
+  'audience',
+  'team'
+])
+
+/** The rows in the Profile's order (`BRIEF_ROW_ORDER`); a stable sort, so equal fields keep the server's order. */
+export function orderBriefRows(rows: readonly BriefRow[]): BriefRow[] {
+  const rank = (row: BriefRow): number => {
+    const i = row.field === null ? -1 : BRIEF_ROW_ORDER.indexOf(row.field)
+    return i === -1 ? BRIEF_ROW_ORDER.length : i
+  }
+  return rows
+    .map((row, i) => ({ row, i }))
+    .sort((a, b) => rank(a.row) - rank(b.row) || a.i - b.i)
+    .map((x) => x.row)
+}
+
+/**
+ * The website of the place as a read-only row, when the brief states none itself: the Key facts block that showed it
+ * is gone, and no door edits it (`PUT …/:id/profile` takes phone, address, email and description only).
+ */
+export function websiteRow(rows: readonly BriefRow[], website: string | null, t: Translate): BriefRow | null {
+  if (rows.some((row) => row.field === 'website')) return null
+  return {
+    id: 'website',
+    field: 'website',
+    label: t('field.website'),
+    value: website ?? t('cell.website.none'),
+    source: website === null ? '' : t('brief.source.research'),
+    onSite: website !== null,
+    ownerChoice: false,
+    notes: [],
+    readOnly: true
+  }
 }
 
 /** Source kinds a seller recognises, in the order a note names them; any other kind is left out of the note. */

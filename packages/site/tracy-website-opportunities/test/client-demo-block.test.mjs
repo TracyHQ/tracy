@@ -164,22 +164,23 @@ const draw = (name, extra = {}) =>
     })
   )
 
-test('the block draws the primary button and the line, never a raw code or an old control', () => {
+test('the block draws the line and Open demo, never a raw code, an old control or the stepper press', () => {
   const failed = draw('failedUnknown')
-  assert.match(failed, />Build again</)
   assert.match(failed, /Stopped at writing the site: The demo stopped on an unexpected error\./)
   assert.doesNotMatch(failed, /SOMETHING_NEW_42/)
   for (const name of Object.keys(ROWS)) {
     const html = draw(name)
     for (const old of ['Try again', '>Retry<', '>Reopen<', '>Extend<', 'Review demo', 'Research again'])
       assert.equal(html.includes(old), false, `${name} draws ${old}`)
+    // Build demo, Build again and Building are the stepper's one action (mock r6-a), never a second button here.
+    for (const press of ['Build demo', 'Build again', 'Building'])
+      assert.doesNotMatch(html, new RegExp(`<button[^>]*>(?:<[^>]+>)*${press}<`), `${name} draws ${press}`)
   }
-  assert.match(draw('building'), disabledButton('Building'))
+  assert.match(draw('ready'), />Open demo</)
   assert.match(draw('ready'), /aria-label="More demo actions"/)
   assert.doesNotMatch(draw('none'), /More demo actions/, 'no menu when it would be empty')
 })
 
-test('the build limit disables Build demo and Build again', () => {
-  assert.match(draw('none', { limitReached: true }), disabledButton('Build demo'))
+test('the build limit leaves Open demo pressable', () => {
   assert.doesNotMatch(draw('ready', { limitReached: true }), disabledButton('Open demo'))
 })

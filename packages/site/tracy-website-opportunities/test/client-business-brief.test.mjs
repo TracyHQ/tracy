@@ -8,7 +8,12 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { businessBriefRows, sourceNote } from '../src/client/business-brief-model.ts'
+import {
+  businessBriefRows,
+  orderBriefRows,
+  sourceNote,
+  websiteRow
+} from '../src/client/business-brief-model.ts'
 import { en } from '../src/client/strings.ts'
 
 /** The real English table, so the test reads what a seller reads. */
@@ -146,4 +151,40 @@ test('a counted fact whose label is a code reads as a number and a word, never a
   // A label already in plain words keeps its own wording.
   assert.equal(factLabel({ label: 'Google rating', amount: 4.9 }), 'Google rating: 4.9')
   assert.equal(factLabel({ label: 'repeatGuests', amount: 12 }), '12 repeat guests')
+})
+
+test('the rows follow the Profile order: name, address, phone, hours, website, then what research read', () => {
+  const row = (id, field) => ({
+    id,
+    field,
+    label: id,
+    value: id,
+    source: '',
+    onSite: true,
+    ownerChoice: false,
+    notes: []
+  })
+  const rows = [
+    row('h', 'hours'),
+    row('p', 'phone'),
+    row('s1', 'services'),
+    row('n', 'name'),
+    row('x', 'socialFigures'),
+    row('a', 'address'),
+    row('s2', 'services'),
+    row('tm', 'team')
+  ]
+  const t = (key) => en[key] ?? key
+  const site = websiteRow(rows, 'https://fork.example', t)
+  assert.equal(site.readOnly, true)
+  assert.equal(site.label, 'Website')
+  assert.deepEqual(
+    orderBriefRows([...rows, site]).map((r) => r.id),
+    ['n', 'a', 'p', 'h', 'website', 's1', 's2', 'tm', 'x']
+  )
+  assert.equal(
+    websiteRow([row('w', 'website')], 'https://fork.example', t),
+    null,
+    'a brief that states it keeps its own'
+  )
 })

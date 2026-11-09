@@ -1,6 +1,6 @@
 /**
- * The Demo site block of Details (#515): one primary button whose label follows the demo state (Build demo,
- * Building, Open demo, Build again), a ⋯ menu for the rest (Send demo, Rebuild) and one plain line (ready with its
+ * The Demo site block of Details (#515): Open demo once the demo is ready (Build demo, Try again and Build again are
+ * the stepper's one action, mock r6-a), a ⋯ menu for the rest (Send demo, Rebuild) and one plain line (ready with its
  * address and days left, where a failed build stopped and why, when it expired). It replaces the scattered Try again,
  * Retry, Rebuild, Reopen, Extend and Review demo controls. The build progress card sits inside it while a build runs
  * or after one stopped. Under a Build demo button sits the same time and price line as the Build form.
@@ -76,38 +76,43 @@ export function DemoSiteBlock({
             {view.line}
           </p>
         ) : null}
-        <div className="tracy-wo-row tracy-wo-wrap tracy-wo-demo-block-acts">
-          <DemoPrimaryButton
-            view={view}
-            busy={busy}
-            limitReached={limitReached}
-            onPress={() => press('primary')}
-          />
-          {view.menu.length > 0 ? (
-            <DropdownMenu>
-              {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
-              <DropdownMenuTrigger
-                type="button"
-                disabled={busy}
-                className={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }))}
-                aria-label={t('demoBlock.more')}
-              >
-                <Ellipsis aria-hidden="true" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {view.menu.map((item) => (
-                  <DropdownMenuItem
-                    key={item.id}
-                    disabled={item.id === 'rebuild' && limitReached}
-                    onClick={() => press(item.id === 'send' ? 'send' : 'rebuild')}
-                  >
-                    {item.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : null}
-        </div>
+        {view.primary.action === 'open' || view.menu.length > 0 ? (
+          <div className="tracy-wo-row tracy-wo-wrap tracy-wo-demo-block-acts">
+            {/* Build, Try again and Build again live in the stepper (mock r6-a); the block keeps Open demo. */}
+            {view.primary.action === 'open' ? (
+              <DemoPrimaryButton
+                view={view}
+                busy={busy}
+                limitReached={limitReached}
+                onPress={() => press('primary')}
+              />
+            ) : null}
+            {view.menu.length > 0 ? (
+              <DropdownMenu>
+                {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
+                <DropdownMenuTrigger
+                  type="button"
+                  disabled={busy}
+                  className={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }))}
+                  aria-label={t('demoBlock.more')}
+                >
+                  <Ellipsis aria-hidden="true" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {view.menu.map((item) => (
+                    <DropdownMenuItem
+                      key={item.id}
+                      disabled={item.id === 'rebuild' && limitReached}
+                      onClick={() => press(item.id === 'send' ? 'send' : 'rebuild')}
+                    >
+                      {item.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : null}
+          </div>
+        ) : null}
         {builds ? <BuildEstimate t={t} locale={locale} estimate={estimate} /> : null}
         {showProgress && progress ? progress : null}
       </div>
@@ -115,7 +120,7 @@ export function DemoSiteBlock({
   )
 }
 
-/** The block's one primary button; the Details header draws the same one. */
+/** The block's Open demo button (its other presses are the stepper's). */
 export function DemoPrimaryButton({
   view,
   busy,
