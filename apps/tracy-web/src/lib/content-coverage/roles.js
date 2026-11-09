@@ -55,7 +55,7 @@ const missing = (keys, reason = null) => ({
 
 /**
  * @param {ReturnType<typeof readSlotRoles>} read what the shared reader answered
- * @param {string | null | undefined} dir the contract folder it read
+ * @param {string | null | undefined} dir the contract folder it read (null for an EmDash theme, which has no content map)
  * @returns {Roles}
  */
 export function rolesOfRead(read, dir) {
@@ -65,6 +65,17 @@ export function rolesOfRead(read, dir) {
     // "has no role" errors are the missing group above; anything else is a broken declaration
     const broken = (read.errors ?? []).filter((e) => !e.endsWith(' has no role'))
     if (read.state === 'invalid' && broken.length > 0) return { state: 'invalid', reason: broken[0] }
+    return { state: 'ready' }
+  }
+  if (read.source === 'field-map') {
+    // An EmDash theme declares roles per field (ADR 0038 decision 5): a field with none is the missing group, any other
+    // problem a broken declaration. The names are fields (`pages.title`), not entry slots: one field is every entry's.
+    const errors = read.errors ?? []
+    const keys = errors
+      .filter((e) => e.endsWith(' has no role'))
+      .map((e) => e.replace(/ has no role$/, '').replace(/^[a-z -]*"([^"]+)"$/, '$1'))
+    if (keys.length > 0) return missing(keys)
+    if (read.state === 'invalid' && errors.length > 0) return { state: 'invalid', reason: errors[0] }
     return { state: 'ready' }
   }
   if (read.source === 'sidecar') {
