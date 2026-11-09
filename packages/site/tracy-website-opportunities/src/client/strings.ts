@@ -865,7 +865,7 @@ export const en = {
   'media.logo.from.icon': 'Website icon',
   'media.logo.from.other': 'Collected picture',
   'media.logo.recognised.vision': 'Recognised as a logo',
-  'media.logo.recognised.words': 'Named as a logo on its page, not checked by a model',
+  'media.logo.recognised.words': 'Named as a logo on its page, not confirmed from the picture',
   'media.logo.smallNote':
     'Small picture ({width} × {height} px). Kept as a logo even though it is small. The demo reuses it or redraws it from this original.',
   'media.logo.sizeNote': '{width} × {height} px.',
@@ -925,7 +925,7 @@ export const en = {
   'build.cmsNote': 'No template is offered right now.',
   'build.openSite': 'Open the site',
   'build.openLive': 'View the live site',
-  'build.after': 'After the build, Open the site and Let Tracy finish it appear here.',
+  'build.after': 'After the build, the buttons to open the site and to let Tracy finish it appear here.',
 
   /** Gives the ready demo site its photos and the brief's prompt, then opens the site. */
   'handoff.start': 'Let Tracy finish it',
