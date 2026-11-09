@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-restaurant",
     "label": "JA Restaurant",
-    "version": "1.0.1"
+    "version": "1.0.2"
   },
   "locales": {
     "default": "en",
@@ -1269,7 +1269,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:81b84d0f0e6516da5f3e30c7b604a4459c1e61955d41199cacac48b5b56b57bf",
-    "package.json": "sha256:20eb431198d6d748cbc8a96b5f39643220d72863f3aca08b21cfe4b191387549",
+    "package.json": "sha256:3539070a5ccbb8903e0cf84e38ac6bc45afad270ca2406361aefe8faca0c5f29",
     "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
     "seed/field-map.json": "sha256:cc18d67c2e25a9148d4bad332c25cfafb2f7e7a09f76c1ad1e4d20fa378fe843",
     "seed/media-map.json": "sha256:07d3b76eaeade9fb7a49f25f6e165514f36150d05b0fd4203aa4469e1bef776c",
@@ -1342,9 +1342,9 @@
     "src/views/Home.astro": "sha256:efe9decd53268ae60e1c0a9a8e28494b45a8e0eab763ecc75378fd33cc78ecdf",
     "src/views/NotFound.astro": "sha256:654189a7725aa6ebc7c45d4e17246699a9bbbbfa5e8c3f3cacf32b43f81b644d",
     "src/views/Page.astro": "sha256:ef525001ce8bd7421965d525e28182f1d66e25361e600f7817edcaf4fbbcd34a",
-    "src/views/Post.astro": "sha256:88cbfeae4e4036bd3f2c7a8b8b0fd3ed204aa2cb496c6c4d8015927964b03e1a",
+    "src/views/Post.astro": "sha256:d45f3b159f1d5f1f6c3408f6ed0c7117aa9ed9ae4580f0d4d79fcfc1bfb6adc4",
     "src/views/Search.astro": "sha256:c022cfe06930035bd705cfea403cf0b365d7bc9c911b77ed56d716caed14e026",
-    "template.config.json": "sha256:ebf99fe6bf66a37fc03f7b29009abd878c98b416ff48de5778d63f0ba626bd71",
+    "template.config.json": "sha256:c5cf936f1d01b6d382d1e80e9cb08dd6688e4c9df0b1271bc9afb57f2af2eb33",
     "tools/forms.json": "sha256:762e87a9fda1fba307ee2e2ebf2f9535c23d93c4b97801b11e91731dca548777",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

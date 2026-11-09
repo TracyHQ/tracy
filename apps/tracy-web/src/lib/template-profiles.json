@@ -3710,6 +3710,12 @@
         "brandReady": true,
         "faviconReady": true,
         "note": "As 1.0.0: only the stylesheets changed (type, shape and colour roles read the design-system slot); the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
+      },
+      "1.0.2": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "note": "As 1.0.1: only the post view changed (the category label in the meta line is a link only while its list page is live); the header logo spot, settings.logo, the chrome entry's logo_dark and the favicon are untouched."
       }
     },
     "tracy-saas/emdash-0.x": {

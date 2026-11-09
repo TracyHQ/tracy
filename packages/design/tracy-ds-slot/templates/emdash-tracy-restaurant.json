@@ -5,10 +5,10 @@
     "tracy-restaurant/emdash-0.x": "1.0.1"
   },
   "maxVersion": {
-    "tracy-restaurant/emdash-0.x": "1.0.1"
+    "tracy-restaurant/emdash-0.x": "1.0.2"
   },
   "maxVersionNote": "1.0.1 reads the type and shape tokens (--ds-weight-*, --ds-size-*, --ds-leading-display, --ds-tracking-display, --ds-btn-radius, --ds-card-radius) in the rules of the roles this contract declares, and the colour roles systems define (the second colour takes accent-on-ink and accent-band; the on-ink soft words are a mix of on-ink); src/lib/ds-slot.ts and the layout load data/ds-slot.css as in Tracy Base. 1.0.0 did not read the type and shape tokens (ROLE-1) and read two roles no system defines (DEF-1), so the contract starts at 1.0.1",
-  "release": "tracy-restaurant/emdash-0.x@1.0.1",
+  "release": "tracy-restaurant/emdash-0.x@1.0.2",
   "applies": "data/ds-slot.css read per request by src/lib/ds-slot.ts; the template reads every value as var(--ds-*, <its own value>)",
   "readsComponents": true,
   "readsRoles": true,
@@ -37,7 +37,7 @@
     "block-text": "body div:not(:has(> :is(div, p, ul, ol, section, article, header, footer, nav, main, aside, figure, table, form, h1, h2, h3, h4, h5, h6)))"
   },
   "ready": true,
-  "readyNote": "measured 06/11/2026 with flow.mjs --cms emdash on a site built from the 1.0.1 package (restored on Node as a host does): the 15 featured systems at 1440 and 390, 64 of 64 views match their system (roles 16/16, page follows, every text reads at least as well as on the template), 4 controls 0 differences; preview-check with Moxie and Stripe, light and dark, on all 40 declared pages: no finding. With no system worn the site is pixel-identical to 1.0.0 (Fast Gate: 0 tiles differ). Measurement: contracts/1.0.1/design-system-measurement.json",
+  "readyNote": "measured 09/11/2026 with flow.mjs --cms emdash on a site built from the 1.0.2 Docker image (restored on Node as a host does): the 15 featured systems at 1440 and 390, 64 of 64 views match their system (roles 16/16, page follows, every text reads at least as well as on the template), 4 controls 0 differences; preview-check with Moxie and Stripe, light and dark, on all 40 declared pages: no finding. No stylesheet changed since 1.0.1 (the only difference is the unlinked category label of a post outside the blog categories). Measurement: contracts/1.0.2/design-system-measurement.json",
   "measureBlock": ["*opentable.com/*", "*otstatic.com/*"],
   "measureStill": true,
   "measureNote": "the Reservation page embeds OpenTable's booking widget through a parser-blocking script; the measuring browser fails it at once (the widget paints with OpenTable's own stylesheet). Carousels (home slideshow, quotes) are stopped on their first slide before each measure",
