@@ -352,3 +352,10 @@ export function uspQuestionOf(brief, place) {
   const plural = noun.endsWith('s') ? noun : noun.endsWith('y') ? `${noun.slice(0, -1)}ies` : `${noun}s`
   return `What makes you different from other ${plural}${place ? ` in ${place}` : ''}?`
 }
+
+/** The hero's USP statement a brief holds (`brief.mjs heroUspOf`), or null: a brief made before rules version 3 has none. */
+export function briefHeroUsp(brief) {
+  for (const p of list(brief?.sitemap))
+    for (const s of list(p?.sections)) if (s?.kind === 'hero' && nonEmpty(s.usp?.line)) return s.usp
+  return null
+}

@@ -20,6 +20,7 @@ import {
   agentDemoCreateContext,
   agentDemoCapabilities,
   agentDemoPrompt,
+  heroUspStep,
   researchHash,
   amendsPlan,
   isLogo,
@@ -854,6 +855,45 @@ test('collected for the final check: brief facts, every collected review, own ph
   assert.deepEqual(placed, ['wp-content/uploads/2026/10/a.jpg'])
   // 🔒 No sample exemption (plan §7, 26/10/2026): `collected-used` is told of no sample row.
   assert.equal(collected.samples, undefined)
+})
+
+// Owner decision 09/11/2026: what the research found sets the business apart is the hero's main heading.
+test('the brief’s hero USP statement reaches the agent’s steps and the collected-used check, word for word', () => {
+  const { revision, build } = fixture()
+  const line = 'The same team coaches the whole family'
+  const quote = 'Our kids take tennis lessons with the same team'
+  revision.brief.sitemap = [
+    {
+      slug: 'home',
+      title: 'Home',
+      sections: [
+        {
+          kind: 'hero',
+          copy: 'Place.',
+          assetIds: [],
+          usp: {
+            kind: 'review-theme',
+            id: 'us_1',
+            line,
+            basis: 'one-review',
+            evidence: [{ kind: 'review', quote, source: { kind: 'review' } }]
+          }
+        }
+      ]
+    }
+  ]
+  const prompt = agentDemoPrompt(revision)
+  assert.ok(
+    prompt.includes(
+      `The home page hero's main heading says what sets the business apart, word for word: "${line}" (it rests on "${quote}"). Write it on a rewrite row citing part:profile and part:reviews`
+    )
+  )
+  assert.equal(agentDemoCollected(revision, build).collected.usp, line)
+  // Counter-case: a brief with no USP (made before rules version 3, or nothing passed) asks for none.
+  revision.brief.sitemap[0].sections[0] = { kind: 'hero', copy: 'Place.', assetIds: [] }
+  assert.equal(heroUspStep(revision.brief), '')
+  assert.doesNotMatch(agentDemoPrompt(revision), /what sets the business apart/)
+  assert.equal(agentDemoCollected(revision, build).collected.usp, null)
 })
 
 test('a customer’s own site: its steps say website, never demo or pilot, and travel in the catalogue instructions', () => {

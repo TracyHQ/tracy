@@ -287,7 +287,7 @@ const REPAIR = {
   'look-kept':
     'The site keeps the template’s design system. Remove each colour, background or font override below and put the token’s value back; a `--ds-c-*` token is never set by hand, except the brand accent rule the build steps give, at exactly its values. Do not add another stylesheet, <style> block or inline style to compensate.',
   'collected-used':
-    "Put each collected fact, review or photo named below on the site, where the quickstart shows such a thing. Where the business's logo is named, it fills frames meant for something else: put a photo of the place, or the mark of the organisation the strip names, in those frames, or take the entry out of a strip of other organisations' marks, and keep the logo for the header and the footer.",
+    "Put each collected fact, review or photo named below on the site, where the quickstart shows such a thing. Where usp is named, it is the home page hero's main heading, word for word. Where the business's logo is named, it fills frames meant for something else: put a photo of the place, or the mark of the organisation the strip names, in those frames, or take the entry out of a strip of other organisations' marks, and keep the logo for the header and the footer.",
   'facts-from-brief':
     'Each fact below contradicts what the research collected: show the collected value instead, preserving its section and card. A price the research holds nowhere is made up: leave its field empty. A map link (kind map) searches another street than the business’s: change the address in its link (the href), its words may already be right.',
   'cta-real':

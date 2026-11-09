@@ -153,7 +153,12 @@ test('the same call picks the sub-trade from the tradeâ€™s list, quoting Googleâ
     fetchImpl: provider.fetchImpl,
     log: { warn() {} }
   })
-  assert.equal(provider.seen.length, 1, 'one model call reads the business and its sub-trade')
+  // One call reads the business and its sub-trade; the second is the one USP retry (this answer proposes no theme).
+  assert.equal(provider.seen.length, 2, 'one model call reads the business and its sub-trade')
+  assert.match(
+    provider.seen[1].messages[0].content,
+    /Propose exactly one thing that sets this business apart/
+  )
   const prompt = provider.seen[0].messages[1].content
   assert.match(prompt, /Kinds of business/)
   assert.match(prompt, /\[google:types\] \(google-types\)\n"sports_club, association_or_organization"/)

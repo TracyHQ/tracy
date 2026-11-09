@@ -180,7 +180,8 @@ test('a cached model omission is repaired without paying for another model call'
     repaired.services.map((s) => s.label),
     [c.label]
   )
-  assert.equal(calls, 1)
+  // The first reading's call and its one USP retry (the answer proposes no theme); the repair pays for none.
+  assert.equal(calls, 2)
 })
 
 test('a product and a class teaching how to make it are distinct offerings', () => {

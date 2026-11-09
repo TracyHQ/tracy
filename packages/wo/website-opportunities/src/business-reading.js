@@ -11,8 +11,12 @@ import { createHash } from 'node:crypto'
 import {
   BUSINESS_READING_SYSTEM,
   BUSINESS_READING_VERSION,
+  USP_RETRY_SYSTEM,
   businessReadingPrompt,
   checkBusinessReading,
+  needsUspRetry,
+  uspRetryPrompt,
+  withUspRetry,
   readBusinessByRules,
   readingFactsOf,
   readingSourcesOf,
@@ -135,13 +139,18 @@ export async function readBusiness({
   const facts = readingFactsOf({ googleTypes, categories })
   const inputHash = inputHashOf(sources, name, trade, facts)
   // A held reading made before joined service lines kept every part gets them now, paying nothing (F10).
-  if (held?.method === 'model' && held.version === version && held.inputHash === inputHash)
-    return {
+  if (held?.method === 'model' && held.version === version && held.inputHash === inputHash) {
+    const kept = {
       ...held,
       uspThemes: held.uspThemes?.length ? held.uspThemes : null,
       ...(!held.uspThemes?.length ? { uspThemesReason: held.uspThemesReason ?? 'not_recorded' } : {}),
       services: withPostOfferings(withListedServiceParts(held.services, sources), sources)
     }
+    // A held reading with no theme that never had its retry gets it now, alone: the whole reading is not paid again.
+    return ready && kept.uspRetry === undefined
+      ? retryUsp(kept, { ready, sources, name, trade, charge, fetchImpl, log })
+      : kept
+  }
   const at = new Date(now()).toISOString()
   const rules = (reason, extra = {}) => ({
     version: businessReadingVersion(null),
@@ -182,7 +191,42 @@ export async function readBusiness({
   if (!String(answer.text ?? '').trim()) return rules('empty', { model: ready.model })
   const read = checkBusinessReading(answer.text, sources, { trade, facts })
   if (!read) return rules('unreadable', { model: ready.model })
-  return { version, method: 'model', model: ready.model, inputHash, at, ...read }
+  return retryUsp(
+    { version, method: 'model', model: ready.model, inputHash, at, ...read },
+    { ready, sources, name, trade, charge, fetchImpl, log }
+  )
+}
+
+/**
+ * The reading's one USP retry (`domain/business-reading.mjs withUspRetry`): when no theme stands and a review or the bio
+ * could hold one, one short call on the reviews and the bio, reserved on the ledger like the reading. A failed call
+ * (budget, network, an answer cut off) keeps the reading as it was, marked `uspRetry: 'failed'`; never a second retry.
+ */
+async function retryUsp(read, { ready, sources, name, trade, charge, fetchImpl, log }) {
+  if (!needsUspRetry(read, sources)) return read
+  const prompt = uspRetryPrompt(sources, { name, trade, dropped: read.uspThemesDropped })
+  try {
+    const answer = await charge(
+      {
+        operation: ready.model,
+        maxCents: businessReadingCeilingCents(ready.model, prompt, businessReadingMaxTokens(ready)),
+        actualCents: (r) =>
+          visionCostCents(ready.model, {
+            promptTokens: r.promptTokens,
+            completionTokens: r.completionTokens
+          }),
+        tokens: (r) => modelTokensOf([r.usage])
+      },
+      () => askText({ door: ready, system: USP_RETRY_SYSTEM, text: prompt, fetchImpl })
+    )
+    if (answer.finishReason === 'length') return { ...read, uspRetry: 'failed' }
+    return withUspRetry(read, answer.text, sources, { trade })
+  } catch (error) {
+    if (controlError(error)) throw error
+    if (!(error instanceof BudgetExceededError))
+      log.warn?.('wo business reading USP retry failed', { error: error?.message })
+    return { ...read, uspRetry: 'failed' }
+  }
 }
 
 /** One chat completion asking for JSON, as `askVision` does without a picture. */

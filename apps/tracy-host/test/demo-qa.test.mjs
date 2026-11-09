@@ -601,6 +601,27 @@ test('collected-used: a timeline of years beside the collected phone is no unsou
   )
 })
 
+// Owner decision 09/11/2026: what the research found sets the business apart is on the first screen, word for word.
+test('collected-used: home shows the brief’s USP statement; on another page only, it is not shown', () => {
+  const collected = collectedOf({ name: 'Harbour Sport Club', usp: 'The same team coaches the whole family' })
+  const home = page({
+    path: '/',
+    text: 'Harbour Sport Club\nThe same team coaches the whole family\nBook a lesson'
+  })
+  assert.deepEqual(checkCollectedUsed([home], { collected }).detail, [])
+  const elsewhere = checkCollectedUsed(
+    [
+      page({ path: '/', text: 'Harbour Sport Club. Tennis, padel and swimming lessons.' }),
+      page({ path: '/about', text: 'The same team coaches the whole family.' })
+    ],
+    { collected }
+  )
+  assert.deepEqual(
+    elsewhere.detail.map((d) => [d.code, d.what, d.value]),
+    [['COLLECTED_NOT_SHOWN', 'usp', 'The same team coaches the whole family']]
+  )
+})
+
 // Harbour Sport Club, 26/10/2026: the bio lists two numbers; the main one must be on the site, the other may be.
 test('collected-used: the main phone is required, the business’s other phones are collected, a third is not', () => {
   const collected = collectedOf({
