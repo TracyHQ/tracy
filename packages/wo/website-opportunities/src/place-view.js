@@ -9,6 +9,7 @@
  */
 import { mergeProfile } from './executor.js'
 import { withProfileEdits } from './profile-edits.js'
+import { mergeSamePageRows } from './source-rows.js'
 import { withNameDecision } from './business-name.js'
 import { withHoursDecision } from './business-hours.js'
 import { withRatingDecision } from './business-rating.js'
@@ -166,10 +167,11 @@ export async function placeViewOf(db, opportunity) {
     : []
   // The research card lists every source the run tried, failures too; collected reviews read as above.
   const reviewOf = new Map(reviews.map((r) => [r.source, r]))
-  const shown = [
+  // A pasted link of a page the shared research holds is the same source: one row, the one with data (#524).
+  const shown = mergeSamePageRows([
     ...shownSourceRowsOf(snapshot.sources).map((s) => ({ ...(reviewOf.get(s.source) ?? s), shared: true })),
     ...own.map((s) => ({ ...s, shared: false }))
-  ]
+  ])
   const part = (name) => snapshot.sources.find((s) => s.source === name) ?? null
   return {
     snapshot,

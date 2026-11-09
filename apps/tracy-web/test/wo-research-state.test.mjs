@@ -413,3 +413,45 @@ test('a brief of a reading older than the code is not current and offers Refresh
   assert.equal(current.body.brief.current, true)
   assert.equal(current.body.brief.readingOld, undefined)
 })
+
+test(
+  'a pasted Instagram link of the shared page makes ONE row, dated by collection; a server key failure stays off the seller row',
+  opts,
+  async () => {
+    const { pool, call, drain, accountOf, saveGoogle } = await world()
+    const a = await accountOf(A)
+    const opp = await saveGoogle(a)
+    await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'merge-research-0001' })
+    await drain()
+    const snapshotId = (
+      await pool.query('select current_snapshot_id as id from wo_place where id = $1', [opp.place_id])
+    ).rows[0].id
+    // The shared research holds the Instagram page, collected on 26 Oct; this card's pasted copy of the same page failed
+    // on a server key; a second pasted network failed the same way and has no shared twin.
+    await pool.query('alter table wo_place_snapshot_source disable trigger user')
+    await pool.query(
+      `insert into wo_place_snapshot_source (snapshot_id, source, ref, status, coverage, collected, collected_at, attempted_at)
+     values ($1, 'instagram', 'https://www.instagram.com/harbor.gym/', 'complete', '{"fetched": 12}'::jsonb,
+       '{"posts": [], "profile": {}}'::jsonb, '2026-10-26T09:00:00Z', '2026-10-26T09:00:00Z')`,
+      [snapshotId]
+    )
+    await pool.query('alter table wo_place_snapshot_source enable trigger user')
+    await pool.query(
+      `insert into wo_source (opportunity_id, source, ref, status, reason, updated_at) values
+       ($1, 'instagram', 'https://www.instagram.com/harbor.gym?igsh=abc123&utm_source=qr', 'blocked', 'credential_invalid', now()),
+       ($1, 'tiktok', 'https://www.tiktok.com/@harbor.gym', 'blocked', 'credential_invalid', now())`,
+      [opp.id]
+    )
+    const details = await call(A, 'GET', `${BASE}/${opp.id}`)
+    const instagram = details.body.sources.filter((s) => s.source === 'instagram')
+    assert.equal(instagram.length, 1, JSON.stringify(details.body.sources))
+    assert.equal(instagram[0].status, 'complete', 'the row with data wins')
+    assert.equal(instagram[0].collectedAt, '2026-10-26T09:00:00.000Z')
+    const tiktok = details.body.sources.find((s) => s.source === 'tiktok')
+    assert.equal(tiktok.status, 'skipped')
+    assert.equal(tiktok.reason, 'not_collected', 'never the server key failure')
+    assert.equal(JSON.stringify(details.body.sources).includes('credential_invalid'), false)
+    const website = details.body.sources.find((s) => s.source === 'website')
+    assert.ok(website.collectedAt, 'a collected source carries its collection time')
+  }
+)

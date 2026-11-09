@@ -1,5 +1,6 @@
 import { researched, researchStateOf, researchStateShape } from './research-state.js'
 import { readProfileEdits, saveProfileEdits, withProfileEdits } from './profile-edits.js'
+import { sellerStatusOf } from './source-rows.js'
 import { mediaJunk } from './media-junk.js'
 import { reviewSourcesRequired } from './tripadvisor-research.js'
 import { findResearchOf, withResearch } from './find-research.js'
@@ -1441,11 +1442,13 @@ export function websiteOpportunitiesRoutes(deps) {
         source: s.source,
         // A social page's address as Tracy shows it, without share tracking (`social-links.mjs`).
         ref: SOCIAL_SOURCES.includes(s.source) ? untrackedUrl(s.ref, s.source) : s.ref,
-        status: s.status,
-        reason: s.reason,
+        // A server key problem is the operator's (/ops/wo), never the seller's row (`source-rows.js`).
+        ...sellerStatusOf(s),
         coverage: s.coverage,
         resumable: Boolean(s.cursor),
         updatedAt: s.updated_at,
+        // When the data was collected (the shared snapshot's time), not when this card's job ended (#524).
+        collectedAt: collectedAtOf(s),
         ...(view ? { shared: s.shared === true } : {}),
         // The two search rows: the pages found, with their verdicts (new optional fields).
         ...searchRowPages(s),
@@ -2027,6 +2030,15 @@ export function listQuery(raw) {
  * A listed row's shape. `d` is the builder's demo columns of the row (`listedDemoOf`); an undefined
  * field is left out of the JSON, so a deployment without a builder answers no demo columns.
  */
+/**
+ * When a source row's data was collected, or null when it holds none: a shared row's `updated_at` is the snapshot's
+ * collection time (`places.js asSourceRow`), an own row's the time its collection ended.
+ */
+function collectedAtOf(s) {
+  const at = ['complete', 'partial'].includes(s.status) ? s.updated_at : null
+  return at ? new Date(at).toISOString() : null
+}
+
 function listedShape(r, d) {
   return {
     ...opportunityShape(r),
