@@ -70,24 +70,22 @@ test('logoTextOf: only a logo a model saw the name on', () => {
   assert.equal(logoTextOf(null), null)
 })
 
-test('mergeProfile without the logo: Instagram alone does not outvote Google, and the name is to be checked', () => {
+test('mergeProfile without the logo: Google only names the trade, so the Instagram page’s name is the name', () => {
   const p = mergeProfile(GOOGLE_OPP, ROWS)
-  assert.equal(p.name, 'Padel & Tennis Coach')
-  assert.equal(p.nameCheck.state, 'check')
+  assert.equal(p.name, 'Harbour Sport Club')
+  assert.equal(p.nameCheck.state, 'agreed')
   assert.equal(p.nameClaims.length, 4)
 })
 
 test('Harbour Sport Club: the logo’s text and Instagram agree, so the read suggests their name', () => {
   const p = withNameDecision(mergeProfile(GOOGLE_OPP, ROWS), { opportunity: GOOGLE_OPP, brand: LOGO_BRAND })
   assert.equal(p.name, 'Harbour Sport Club')
-  assert.equal(p.nameCheck.state, 'check')
-  assert.equal(p.nameCheck.current, 'Padel & Tennis Coach')
+  // Google and magicpin only name the trade (#189): no claim, so the own marks' name is agreed, not checked.
+  assert.equal(p.nameCheck.state, 'agreed')
+  assert.equal(p.nameCheck.current, 'Harbour Sport Club')
   assert.deepEqual(
     p.nameCheck.options.map((o) => [o.name, o.sources.map((s) => s.label ?? s.source)]),
-    [
-      ['Harbour Sport Club', ['instagram', 'logo']],
-      ['Padel & Tennis Coach', ['google', 'magicpin']]
-    ]
+    [['Harbour Sport Club', ['logo', 'instagram']]]
   )
 })
 
@@ -129,12 +127,16 @@ const briefOf = (profile, opportunity = GOOGLE_OPP) =>
 test('the brief, and so the site check, carries the suggested name, never Google’s back', () => {
   const p = withNameDecision(mergeProfile(GOOGLE_OPP, ROWS), { opportunity: GOOGLE_OPP, brand: LOGO_BRAND })
   assert.equal(briefOf(p).business.name, 'Harbour Sport Club')
-  // A profile whose `name` was left at Google's holds that name off the site (its own marks say another), so the brief
-  // names the business by its neutral identity: never Google's name back.
+  // A profile whose `name` was left at Google's, which only describes the trade, gives way to the name its own marks
+  // agree on (#189): never Google's name back, and no neutral identity either.
   const stale = briefOf({ ...p, name: 'Padel & Tennis Coach' })
-  assert.equal(stale.facts.find((f) => f.field === 'name').onSite, false)
-  assert.notEqual(stale.business.name, 'Padel & Tennis Coach')
-  assert.equal(stale.business.name, stale.sitemap.find((pg) => pg.slug === 'home').seo.title)
+  assert.equal(stale.facts.find((f) => f.field === 'name').onSite, true)
+  assert.equal(stale.business.name, 'Harbour Sport Club')
+  // A stale proper name its own marks contradict is still held: the brief names the business by its neutral identity.
+  const held = briefOf({ ...p, name: 'Marina Racquet House' })
+  assert.equal(held.facts.find((f) => f.field === 'name').onSite, false)
+  assert.notEqual(held.business.name, 'Marina Racquet House')
+  assert.equal(held.business.name, held.sitemap.find((pg) => pg.slug === 'home').seo.title)
 })
 
 test('the brief carries the picked name', () => {

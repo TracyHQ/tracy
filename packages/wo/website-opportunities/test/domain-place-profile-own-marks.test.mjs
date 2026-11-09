@@ -12,7 +12,9 @@ import { validatePlaceProfile } from '../domain/place-profile.mjs'
 
 const AT = '2026-10-27T10:00:00.000Z'
 const IG = 'https://www.instagram.com/harbour.sportclub/'
-const SERVICE_NAME = 'Padel & Tennis Coach'
+// A proper name the own marks contradict: the case that still holds the name (#189). A listing name that is only a
+// trade description gives way to the own marks instead (domain-name-own-marks-over-trade-description.test.mjs).
+const SERVICE_NAME = 'Marina Racquet House'
 const LOGO = {
   readsAs: 'HARBOUR SPORT CLUB EST. 2023',
   showsName: true,
