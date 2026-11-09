@@ -66,6 +66,7 @@ export function photoViewOf(m, context = {}) {
     isOwnPhoto: links.isOwnPhoto,
     quality: labels.quality,
     isGraphic: links.isGraphic,
+    showsOtherBusiness: links.showsOtherBusiness,
     sharpness: typeof raw?.quality === 'string' ? raw.quality : null,
     offering
   }

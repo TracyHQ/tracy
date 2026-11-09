@@ -890,6 +890,14 @@
             "type": ["boolean", "null"],
             "description": "A logo, flyer, banner, menu or other designed graphic rather than a photograph: kept out of photo slots. Null when no model looked."
           },
+          "hasTextOrWatermark": {
+            "type": ["boolean", "null"],
+            "description": "Words, a logo or a watermark are on the picture (the vision model saw text present, or words overlaid): kept out of photo frames. Null when no model answered."
+          },
+          "showsOtherBusiness": {
+            "type": ["boolean", "null"],
+            "description": "The picture shows another business rather than this one: kept out of photo frames. Null when no model answered."
+          },
           "isOwnPhoto": {
             "type": ["boolean", "null"],
             "description": "The business's own photo: from its uploader when known, else a Google author named as the business, else the vision model's reading; null when not known."

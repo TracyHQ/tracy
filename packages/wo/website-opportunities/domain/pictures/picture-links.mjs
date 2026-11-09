@@ -203,9 +203,28 @@ const visionOf = (m) => {
 }
 
 /**
+ * The two labels the picture bench reads before it lets a photo fill a frame (`photo-shortlist.js`, picture check P09),
+ * copied from a vision model's answer: `hasTextOrWatermark` (words, a logo or a watermark on the picture: textPresence
+ * present or words overlaid; false only when the model said absent and no overlay) and `showsOtherBusiness`. Each is
+ * null when no model answered it, so an unknown label stays unknown and the bench refuses the photo.
+ * @param {Record<string, any> | null} raw the vision label
+ * @returns {{hasTextOrWatermark: boolean | null, showsOtherBusiness: boolean | null}}
+ */
+export function benchLabelsOf(raw) {
+  const text =
+    raw?.textPresence === 'present' || raw?.hasTextOverlay === true
+      ? true
+      : raw?.textPresence === 'absent'
+        ? false
+        : null
+  const other = typeof raw?.showsOtherBusiness === 'boolean' ? raw.showsOtherBusiness : null
+  return { hasTextOrWatermark: text, showsOtherBusiness: other }
+}
+
+/**
  * The relations and placing labels of one brief asset: `depicts` (an offering id or general) and `portraitOf` (a person
- * id or null), each with its evidence, the v3 role it can fill, its subject and face boxes, people count, graphic flag and
- * whether it is the business's own photo.
+ * id or null), each with its evidence, the v3 role it can fill, its subject and face boxes, people count, graphic flag,
+ * the lettering and other-business labels (`benchLabelsOf`) and whether it is the business's own photo.
  * @param {any} m a brief read's media entry
  * @param {{list?: any, posts?: any[], businessName?: string | null}} context
  */
@@ -242,6 +261,7 @@ export function assetRelationsOf(m, { list = null, posts = [], businessName = nu
     faceBoxes: seen?.faceBoxes ?? [],
     peopleCount: seen && 'peopleCount' in seen ? seen.peopleCount : null,
     isGraphic,
+    ...benchLabelsOf(raw),
     isOwnPhoto: owner === 'owner' ? true : owner === 'customer' ? false : (seen?.isOwnPhoto ?? null)
   }
 }

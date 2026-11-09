@@ -298,3 +298,20 @@ test('a bounded pool: the next batch starts as soon as any call answers, never w
   const out = await running
   assert.equal(out.usage.calls, 5)
 })
+
+test('p6 asks whether a picture shows another business, and the answer is held as a boolean', () => {
+  assert.equal(VISION_PROMPT_VERSION, 'p6')
+  assert.match(PICTURE_LABEL_SYSTEM, /showsOtherBusiness/)
+  assert.equal(
+    held({ id: 'a', subject: 'exterior', showsOtherBusiness: true }).labels.showsOtherBusiness,
+    true
+  )
+  assert.equal(
+    held({ id: 'b', subject: 'interior', showsOtherBusiness: false }).labels.showsOtherBusiness,
+    false
+  )
+  assert.equal(
+    'showsOtherBusiness' in held({ id: 'c', subject: 'interior', showsOtherBusiness: 'no' }).labels,
+    false
+  )
+})

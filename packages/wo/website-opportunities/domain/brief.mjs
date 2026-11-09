@@ -1300,7 +1300,7 @@ function assetRelationErrors(a) {
     !(Number.isInteger(a.peopleCount) && a.peopleCount >= 0)
   )
     out.push({ field: 'peopleCount', msg: 'must be a whole number, or null when no model looked' })
-  for (const field of ['isGraphic', 'isOwnPhoto'])
+  for (const field of ['isGraphic', 'isOwnPhoto', 'hasTextOrWatermark', 'showsOtherBusiness'])
     if (field in a && a[field] !== null && typeof a[field] !== 'boolean')
       out.push({ field, msg: 'must be a boolean, or null when not known' })
   return out
