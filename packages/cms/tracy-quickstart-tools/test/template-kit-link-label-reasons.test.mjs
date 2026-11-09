@@ -273,3 +273,27 @@ test('relabel lists a label slot it names now on the block, as assemble does, so
   )
   assert.equal(r.wrong, 0)
 })
+
+test('a category or tag archive link, and an in-page control with no address, are fixed by rule', () => {
+  const kit = {
+    pages: [],
+    blocks: [
+      {
+        id: 'body-blog',
+        links: [
+          { id: 'c1', label: 'Restaurant Marketing', target: '/category/our-blog/restaurant-marketing' },
+          { id: 'c2', label: 'Rye', target: '/tag/rye' },
+          { id: 'c3', label: 'Messages 25', target: null, action: 'page-control' },
+          { id: 'c4', label: 'Sourdough basics', target: '/sourdough', action: 'navigation' }
+        ]
+      }
+    ],
+    checks: {},
+    errors: []
+  }
+  fixedLinkLabels(kit)
+  assert.deepEqual(
+    kit.blocks[0].links.map((l) => l.fixedLabel?.rule ?? null),
+    ['taxonomy-term', 'taxonomy-term', 'page-control', null]
+  )
+})

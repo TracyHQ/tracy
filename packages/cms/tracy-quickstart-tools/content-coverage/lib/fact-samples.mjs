@@ -4,13 +4,15 @@
 
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/
 const PRICE = /(?:[$€£¥]\s?\d)|(?:\d[\d.,]*\s?(?:[$€£¥]|USD|EUR|GBP|AUD|CAD)(?![A-Za-z]))/
-const TIME = String.raw`\d{1,2}(?::\d{2})?\s?(?:am|pm)?`
+// am and pm as the sample writes them: am, pm, a.m, p.m., a.m.
+const MERIDIAN = String.raw`(?:[ap]\.?m\b\.?)`
+const TIME = String.raw`\d{1,2}(?::\d{2})?\s?(?:${MERIDIAN})?`
 const HOURS = new RegExp(
-  String.raw`\b${TIME}\s?(?:-|to|until)\s?${TIME}\b(?=.*\b(?:am|pm)\b)|\b(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\b[^.]{0,40}\b\d{1,2}(?::\d{2})?\s?(?:am|pm)\b`,
+  String.raw`\b${TIME}\s?(?:-|to|until)\s?${TIME}\b(?=.*\b${MERIDIAN})|\b(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*\b[^.]{0,40}\b\d{1,2}(?::\d{2})?\s?${MERIDIAN}`,
   'i'
 )
 const ADDRESS =
-  /\b\d{1,5}\s+(?:[A-Z][\w.'-]*\s+){0,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Way|Court|Ct|Place|Pl|Square|Sq)\b\.?/
+  /\b\d{1,5}\s+(?:(?:[A-Z][\w.'-]*|\d{1,3}(?:st|nd|rd|th))\s+){0,3}(?:Street|St|Avenue|Ave|Road|Rd|Boulevard|Blvd|Lane|Ln|Drive|Dr|Way|Court|Ct|Place|Pl|Square|Sq)\b\.?/
 const ISO_DATE = /\b\d{4}-\d{2}-\d{2}\b/g
 
 const stripTags = (s) =>

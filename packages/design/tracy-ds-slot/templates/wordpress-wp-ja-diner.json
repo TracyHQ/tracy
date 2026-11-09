@@ -6,9 +6,9 @@
     "wp-ja-diner": "1.0.0"
   },
   "maxVersion": {
-    "wp-ja-diner": "1.0.1"
+    "wp-ja-diner": "1.0.3"
   },
-  "maxVersionNote": "1.0.0 21/10/2026: the first cut of the theme, a port of the JA Diner Joomla 6 (T3) quickstart 1.0.4. The carried source sheets (assets/css/source/, from the tokenized 1.0.4 sheets by tasks/ja-diner-wp7/tools/port-css.mjs) read the slot with the template value as the fallback; the colour block of theme.overlay.json reads every role on both sides; tracy_apply_inspiration kept. 1.0.1 22/10/2026: stylesheet-only fix of 1.0.0 (an empty gradient layer on the Subscribe band, so a reader of computed styles sees a picture band); the slot reads the same.",
+  "maxVersionNote": "1.0.0 21/10/2026: the first cut of the theme, a port of the JA Diner Joomla 6 (T3) quickstart 1.0.4. The carried source sheets (assets/css/source/, from the tokenized 1.0.4 sheets by tasks/ja-diner-wp7/tools/port-css.mjs) read the slot with the template value as the fallback; the colour block of theme.overlay.json reads every role on both sides; tracy_apply_inspiration kept. 1.0.1 22/10/2026: stylesheet-only fix of 1.0.0 (an empty gradient layer on the Subscribe band, so a reader of computed styles sees a picture band); the slot reads the same. 1.0.2 08/11/2026: no stylesheet of the palette changed (style.css only the version header; the assets/css sheets are byte for byte those of 1.0.1); functions.php still calls tracy_apply_inspiration; the footer words moved to theme text options. 1.0.3 09/11/2026: one h1 per page; the only stylesheet added is assets/css/groups/headings.css (the geometry and the white text of the slide, reservation and team headings carried over from the h1 rules of the source, no palette value of its own), role-scan 0 flag and 0 missing, CSS-1 passes; functions.php still calls tracy_apply_inspiration.",
   "release": "quickstart/ja-diner/wp7",
   "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-diner/tokens.css",
   "roles": {

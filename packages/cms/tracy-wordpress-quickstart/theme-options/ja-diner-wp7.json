@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "why": "The footer prints its own address on two lines, as the demo does, apart from the Contact page address; the option holds the demo footer address with its line break.",
+  "options": {
+    "wp_ja_diner_footer_address": "398 North 23th Dumbledore Street,\nHogsmeade Village, Britain."
+  }
+}

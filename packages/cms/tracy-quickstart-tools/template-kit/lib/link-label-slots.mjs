@@ -199,11 +199,12 @@ function openedBy(map) {
   }
   const items = new Map(Object.entries(map.itemPages ?? {}).map(([e, ip]) => [clean(ip.path), e]))
   const byAlias = new Map()
-  // An article names its alias; a tag or a category its path, whose last segment is its alias; an author (a user) its
+  // An article names its alias (a WordPress post its slug); a tag or a category its path, whose last segment is its alias; an author (a user) its
   // username.
   for (const e of map.entities ?? []) {
     const alias =
       e.identity?.alias ??
+      e.identity?.slug ??
       e.identity?.username ??
       String(e.identity?.path ?? '')
         .split('/')

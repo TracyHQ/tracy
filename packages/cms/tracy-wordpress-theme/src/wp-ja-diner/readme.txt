@@ -42,6 +42,15 @@ License. Both as the source template ships them (assets/fonts, assets/css/icons.
 
 == Changelog ==
 
+= 1.0.3 =
+* One heading level 1 on every page: the article title keeps it and the blog masthead title prints as a paragraph of the same class, other repeated headings (a slide, the team section) become level 2 headings that keep their size, and the status and account pages that printed none print their page title as the first heading.
+
+= 1.0.2 =
+* Design pages (fixtures, artifacts) print the site's Additional CSS again: dequeuing the global styles had dropped it (TracyHQ/tch#1710).
+* Carousels: the carousel takes keyboard focus, and the arrow keys leave links and buttons inside a slide alone; a horizontal swipe captures the pointer, a photograph cannot be dragged out of a slide, and the click that ends a swipe does not open the link under it.
+* The licence files of the bundled Font Awesome and Ionicons fonts ship in assets/fonts.
+* Contact page: the picture beside the information text is the source's restaurant photograph again (bundled in assets/img); the media library copy the pattern looked for had been removed as unreferenced, so a grey placeholder showed.
+
 = 1.0.1 =
 * The Subscribe band's photograph is declared as a picture to readers of computed styles (the photograph's dark as background colour and an empty gradient layer on `.acy-mailing`); the opaque photograph covers both, so nothing is painted differently.
 

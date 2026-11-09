@@ -390,6 +390,14 @@ test('history: an intermittent group is a valid record of the result; one that h
   refused((e) => e.effective.checks.overflow.open.push(group('page-overflow|gone', [['/b', 320, 'light']])), /intermittent group of a cause that is open or listed twice/, withInter())
 })
 
+test('history: an intermittent group may stand on a run before the full run (it records when the cause was last seen), an open group may not', () => {
+  const earlier = (e) => {
+    e.runs.t0 = { ...e.runs.t1, ranAt: 't0' }
+    e.effective.checks.overflow.intermittent[0].measured = at('t0')
+  }
+  assert.equal(problems(earlier, withInter()), '')
+})
+
 test('history: an intermittent group fails the effective exit and is measured again by the next scope', () => {
   const entry = entryOf(withInter())
   assert.equal(entry.effective.exit, 1)

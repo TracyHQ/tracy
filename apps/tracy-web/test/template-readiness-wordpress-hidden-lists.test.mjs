@@ -1,9 +1,9 @@
 /**
  * The hidden kit fields check and the content map lists check on WordPress (ticket #457): both judged JA Diner WP7,
  * the WordPress reference, through the template readiness verdict, and turn red on a deliberately broken copy of it
- * (`dinerWp7({ edit })`) with the expected code. The committed kit declares none of the five hidden fields and the
- * committed content map carries no post entity, so the reference itself is recorded red today (the work of #459);
- * the green cases below declare what the kit and the map lack on a copy.
+ * (`dinerWp7({ edit })`) with the expected code. The committed Diner kit declares all five hidden fields and the
+ * committed content map carries the post entities, so the reference itself is green; every red case below breaks a
+ * copy of it (a kit with the fields cleared, a map with the posts stripped) and keeps guarding the same rule.
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -34,6 +34,7 @@ function judged(check, step, edit) {
 
 /** The five hidden kit fields, declared as a WordPress kit would. */
 const declared = (site) => {
+  cleared(site)
   site.emptyVideoButtons = [{ selector: '.jd-video[data-src$="/embed/"]', why: 'play button over the hero' }]
   site.selfLinkButtons = [{ container: 'div.jd-more', why: 'more button of a section' }]
   site.hiddenPageLinks = [{ container: 'div.jd-team-card', why: 'card links to a profile page' }]
@@ -50,8 +51,22 @@ const withKit =
 
 // ── hidden kit fields ────────────────────────────────────────────────────────────────────────────────────────────────
 
-test('hidden fields: the committed Diner WP7 kit declares none of the five, so all five are named', () => {
+const cleared = (site) => {
+  site.emptyVideoButtons = []
+  site.selfLinkButtons = []
+  site.hiddenPageLinks = []
+  site.createdPageHide = []
+  site.createdPageLayouts = {}
+  site.noneWhy = {}
+}
+
+test('hidden fields: the committed Diner WP7 kit declares all five, so the check is green', () => {
   const step = judged(HIDDEN_KIT_FIELDS_CHECK, FIELDS)
+  assert.deepEqual([step.state, step.code], ['done', 'kit-hidden-fields-declared'])
+})
+
+test('hidden fields: a copy whose kit declares none of the five has all five named', () => {
+  const step = judged(HIDDEN_KIT_FIELDS_CHECK, FIELDS, withKit(cleared))
   assert.deepEqual([step.state, step.code], ['todo', 'kit-hidden-field-missing'])
   assert.deepEqual(step.params.fields, [
     'emptyVideoButtons',
@@ -144,8 +159,15 @@ const withMap =
     change(map)
     writeJson('content-map.json', map)
   }
+/** The map as it was before the posts were captured: no post entity and no slot of one. */
+const stripPosts = (map) => {
+  const gone = new Set(map.entities.filter((e) => e.kind === 'post').map((e) => e.key))
+  map.entities = map.entities.filter((e) => !gone.has(e.key))
+  map.slots = map.slots.filter((sl) => !gone.has(sl.entity))
+}
 const withPosts = (n) =>
   withMap((map) => {
+    stripPosts(map)
     map.entities.push(...postEntities(n))
     for (let i = 0; i < n; i++)
       map.slots.push({
@@ -159,8 +181,12 @@ const withPosts = (n) =>
       })
   })
 
-test('lists: the committed Diner WP7 map carries no post entity although its inventory holds 22 posts', () => {
-  const step = judged(CONTENT_MAP_LISTS_CHECK, LISTS)
+test('lists: the committed Diner WP7 map carries its post entities, so the check flags nothing', () => {
+  assert.equal(judged(CONTENT_MAP_LISTS_CHECK, LISTS), undefined)
+})
+
+test('lists: a copy of the Diner map with its posts stripped, although the inventory holds 22 posts, is flagged', () => {
+  const step = judged(CONTENT_MAP_LISTS_CHECK, LISTS, withMap(stripPosts))
   assert.deepEqual([step.state, step.code], ['todo', 'content-map-missing-lists'])
   assert.deepEqual(step.params.missing, ['itemLists', 'itemPages'])
 })
@@ -178,7 +204,10 @@ test('lists: a post entity with no slot cannot be named or refilled, so the page
   const step = judged(
     CONTENT_MAP_LISTS_CHECK,
     LISTS,
-    withMap((map) => map.entities.push(...postEntities(3)))
+    withMap((map) => {
+      stripPosts(map)
+      map.entities.push(...postEntities(3))
+    })
   )
   assert.deepEqual(step.params.missing, ['itemLists', 'itemPages'])
 })
@@ -246,6 +275,7 @@ test('lists: a synced pattern or another structure of WordPress is not a post, s
     CONTENT_MAP_LISTS_CHECK,
     LISTS,
     withMap((map) => {
+      stripPosts(map)
       for (const [i, postType] of ['wp_block', 'wp_template_part', 'wp_navigation'].entries()) {
         map.entities.push({ key: `structure-${i}`, kind: 'post', identity: { postType, slug: `s-${i}` } })
         map.slots.push({

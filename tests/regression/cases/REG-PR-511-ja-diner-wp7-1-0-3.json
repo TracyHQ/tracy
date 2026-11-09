@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-511-ja-diner-wp7-1-0-3",
+  "kind": "feat",
+  "title": "JA Diner WordPress 7 1.0.3 is published and pinned with a contract that leaves no demo business words in a writable place",
+  "pr": 511,
+  "area": "wordpress-quickstart/ja-diner",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Read the content map of contracts/ja-diner/wp7/1.0.3 and count slots without a role, fact-role slots without a group, and text slots whose role is editorial but whose sample is a phone, email, address, price or hours.",
+    "S2: Read the footer template part of the wp-ja-diner overlay and list the named blocks whose words are prose.",
+    "S3: Read apps/tracy-web/src/quickstarts.json for quickstart/ja-diner/wp7 and compare its Claude Cowork pin with the plugin carrying the contract (contracts gate)."
+  ],
+  "expect": [
+    "S1: 0 slots without a role, 0 fact slots without a group, 0 editorial slots with a fact sample.",
+    "S2: none (the address is the {contact.address} token in its own named paragraph, the link label sits in an unnamed one).",
+    "S3: version 1.0.3 pinned on a Claude Cowork plugin whose carried contract matches this tree."
+  ],
+  "selectors": {
+    "files": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.3/content-map.json",
+    "tool": "tests/regression/scripts/REG-PR-511-ja-diner-wp7-1-0-3.mjs"
+  },
+  "evidence": "Before this change the published 1.0.1 left the footer address, the hours lines and the chef and dish pictures as demo words a customer could not rewrite",
+  "fence": "Static read of the committed contract, the theme overlay and the pin; the readiness verdict and the sweep measure the built site",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-511-ja-diner-wp7-1-0-3.mjs"],
+    "needs": []
+  }
+}
