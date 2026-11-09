@@ -951,6 +951,7 @@ window.__ModuleLoader__.load({
               "onboarding.action.templates.short": "Template",
               "onboarding.attach": "\u0110\u00ednh\u0020k\u00e8m\u0020file",
               "onboarding.drop": "Th\u1ea3\u0020file\u0020v\u00e0o\u0020\u0111\u00e2y\u0020\u0111\u1ec3\u0020\u0111\u00ednh\u0020k\u00e8m",
+              "onboarding.filesLimit": "Help\u0020c\u00f3\u0020th\u1ec3\u0020th\u1ea5y\u0020t\u00ean\u0020v\u00e0\u0020lo\u1ea1i\u0020file,\u0020nh\u01b0ng\u0020kh\u00f4ng\u0020\u0111\u1ecdc\u0020\u0111\u01b0\u1ee3c\u0020n\u1ed9i\u0020dung\u0020file.",
               "onboarding.placeholder": "Ch\u01b0a\u0020bi\u1ebft\u0020b\u1eaft\u0020\u0111\u1ea7u\u0020t\u1eeb\u0020\u0111\u00e2u?\u0020C\u1ee9\u0020h\u1ecfi",
               "onboarding.send": "G\u1eedi",
               "placeholder.hero": "M\u00f4\u0020t\u1ea3\u0020m\u1ed9t\u0020thay\u0020\u0111\u1ed5i.\u0020/help\u0020\u0111\u1ec3\u0020h\u1ecfi\u0020Tracy,\u0020/\u0020l\u1ec7nh,\u0020@\u0020file\u0020ho\u1eb7c\u0020session",

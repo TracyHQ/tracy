@@ -44,6 +44,7 @@
   "onboarding.action.templates.short": "Template",
   "onboarding.attach": "Đính kèm file",
   "onboarding.drop": "Thả file vào đây để đính kèm",
+  "onboarding.filesLimit": "Help có thể thấy tên và loại file, nhưng không đọc được nội dung file.",
   "onboarding.placeholder": "Chưa biết bắt đầu từ đâu? Cứ hỏi",
   "onboarding.send": "Gửi",
   "placeholder.hero": "Mô tả một thay đổi. /help để hỏi Tracy, / lệnh, @ file hoặc session",

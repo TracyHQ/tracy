@@ -44,6 +44,7 @@
   "onboarding.action.templates.short": "Template",
   "onboarding.attach": "Joindre des files",
   "onboarding.drop": "Déposez les files pour les joindre",
+  "onboarding.filesLimit": "Help peut voir les noms et les types de files, mais ne peut pas lire leur contenu.",
   "onboarding.placeholder": "Vous ne savez pas par où commencer ? Demandez",
   "onboarding.send": "Envoyer",
   "placeholder.hero": "Décrivez une modification. /help pour Tracy, / commandes, @ files ou sessions",

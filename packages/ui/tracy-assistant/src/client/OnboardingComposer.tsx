@@ -321,6 +321,9 @@ export function OnboardingComposer({
           </div>
         </div>
       </form>
+      {files.some((f) => f.status !== 'failed') && (
+        <p className="tv-onboarding-file-limit">{t('onboarding.filesLimit')}</p>
+      )}
       {notice && (
         <p className="tv-onboarding-notice" role="status">
           {t(notice.key, notice.name === undefined ? undefined : { name: notice.name })}
