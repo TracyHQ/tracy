@@ -14,6 +14,7 @@ import {
   buildEmdashCoverageFile,
   crawlKeyOf,
   fitFindingsOf,
+  mediaIndexOf,
   mergeViewports
 } from '../content-coverage/lib/emdash-audit.mjs'
 import { bindItems, indexOfMap, normLink } from '../content-coverage/lib/emdash-bind.mjs'
@@ -222,7 +223,7 @@ const item = (value, over = {}) => ({
   stamp: null,
   ...over
 })
-const SOURCE = { haystack: 'read more # articles', formsHaystack: 'name', publicDir: null }
+const SOURCE = { haystack: 'read more # articles', formsLabels: new Set(['name']), publicDir: null }
 const bind = (items, media = null) =>
   bindItems(items, indexOfMap(mapOf()), { source: SOURCE, origin: 'http://site.test', media })
 const slotsOf = (it) => [it.status, it.matchBy, ...(it.slots ?? [])]
@@ -618,7 +619,11 @@ test('words: spacing may differ, signs and extra words may not', () => {
 })
 
 test("forms: a label is the Forms plugin's only when the theme's forms file holds it", () => {
-  const source = { haystack: 'send email', formsHaystack: 'name email send email', publicDir: null }
+  const source = {
+    haystack: 'send email',
+    formsLabels: new Set(['name', 'email', 'send email']),
+    publicDir: null
+  }
   const run = (value) =>
     bindItems([item(value, { inForm: true })], indexOfMap(mapOf()), { source, origin: 'http://site.test' })[0]
   assert.deepEqual([run('Name *').status, run('Name *').class], ['hole', 'core'])
@@ -663,4 +668,83 @@ test('words: a closing mark the template adds ("Contact." for "Contact", "85%" f
   assert.equal(run('count', '85%').status, 'matched')
   assert.equal(run('count', '86%').status, 'hole')
   assert.equal(run('fee', 'Fee 30%').status, 'hole')
+})
+
+/** mediaIndexOf with the REST read answered from `collections` (collection -> items). */
+async function indexWith(collections) {
+  const real = globalThis.fetch
+  globalThis.fetch = async (url) => {
+    const name = new URL(url).pathname.split('/').pop()
+    return { ok: true, json: async () => ({ data: { items: collections[name] ?? [] } }) }
+  }
+  try {
+    return await mediaIndexOf({
+      siteUrl: 'http://site.test',
+      token: 't',
+      map: { entities: Object.keys(collections).map((c) => ({ identity: { collection: c } })) }
+    })
+  } finally {
+    globalThis.fetch = real
+  }
+}
+// A ULID-shaped storage key stem, as EmDash media uploads produce.
+const ULID_STEM = '01ARZ3NDEKTSV4RRFFQ69G5FAV'
+
+const asMedia = (file) =>
+  bind([picture('x', { value: `http://site.test/_emdash/api/media/file/${file}` })], mediaOf)[0]
+let mediaOf = new Map()
+
+test('media index: a file is its storage key (the media route serves `storage.download(key)` as stored), never a part of it', async () => {
+  mediaOf = await indexWith({
+    cards: [
+      {
+        slug: 'hot',
+        data: {
+          photo: {
+            id: 'different-id',
+            filename: 'a.jpg',
+            meta: { storageKey: `${ULID_STEM}.jpg` }
+          }
+        }
+      }
+    ]
+  })
+  assert.deepEqual([...mediaOf.keys()].sort(), ['01ARZ3NDEKTSV4RRFFQ69G5FAV.jpg', 'different-id'])
+  assert.equal(asMedia('01ARZ3NDEKTSV4RRFFQ69G5FAV.jpg').status, 'matched')
+  // the bare stem is another route: the storage has no such key, so it is no coverage
+  assert.equal(asMedia('01ARZ3NDEKTSV4RRFFQ69G5FAV').status, 'hole')
+})
+
+test('media index: a Portable Text picture keys the index only through a URL on the audited site under the media route', async () => {
+  mediaOf = await indexWith({
+    cards: [
+      {
+        slug: 'hot',
+        data: {
+          photo: [
+            { _type: 'image', asset: { id: 'a1', url: 'https://foreign.test/foreign.png' } },
+            { _type: 'image', asset: { id: 'a2', url: '/_emdash/api/media/file/own.png' } },
+            {
+              _type: 'image',
+              asset: { id: 'a3', url: 'https://foreign.test/_emdash/api/media/file/alien.png' }
+            }
+          ]
+        }
+      }
+    ]
+  })
+  assert.deepEqual([...mediaOf.keys()].sort(), ['a1', 'a2', 'a3', 'own.png'])
+  assert.equal(asMedia('foreign.png').status, 'hole')
+  assert.equal(asMedia('alien.png').status, 'hole')
+})
+
+test('forms: a visible form text is the plugin\'s only when it equals a whole label of the forms file ("Name" is not "surname")', () => {
+  const run = (labels, value) =>
+    bindItems([item(value, { inForm: true })], indexOfMap(mapOf()), {
+      source: { haystack: '', formsLabels: new Set(labels), publicDir: null },
+      origin: 'http://site.test'
+    })[0]
+  const substring = run(['surname'], 'Name')
+  assert.deepEqual([substring.status, substring.class], ['hole', 'unknown'])
+  assert.equal(run(['name', 'surname'], 'Name *').class, 'core')
 })

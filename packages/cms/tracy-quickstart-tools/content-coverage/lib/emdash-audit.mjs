@@ -16,6 +16,7 @@ export const VIEWPORTS = Object.freeze({
 })
 const NOT_A_PAGE =
   /\.(pdf|jpe?g|png|gif|webp|avif|svg|ico|zip|gz|css|js|json|xml|txt|mp4|webm|woff2?)(\?|$)|^\/(_emdash|_astro|api|brand|uploads)\//i
+const MEDIA_FILE_PATH = '/_emdash/api/media/file/'
 const PICK = { 'X-Tracy-Preview': 'pick' }
 const cut = (s, n) => (String(s ?? '').length > n ? `${String(s).slice(0, n - 3)}...` : String(s ?? ''))
 const pathOf = (url) => {
@@ -33,6 +34,17 @@ const pathOf = (url) => {
  * @returns {Promise<Map<string, string[]>>}
  */
 export async function mediaIndexOf({ siteUrl, token, map }) {
+  // A URL names a media key only if it is on the audited site, under the media route, as one whole segment.
+  const mediaKeyOf = (url) => {
+    try {
+      const u = new URL(String(url ?? ''), siteUrl)
+      if (u.origin !== new URL(siteUrl).origin || !u.pathname.startsWith(MEDIA_FILE_PATH)) return null
+      const key = decodeURIComponent(u.pathname.slice(MEDIA_FILE_PATH.length))
+      return key && !key.includes('/') ? key : null
+    } catch {
+      return null
+    }
+  }
   const out = new Map()
   const put = (key, slot) => out.set(key, [...(out.get(key) ?? []), slot])
   const collections = [...new Set((map.entities ?? []).map((e) => e.identity?.collection).filter(Boolean))]
@@ -42,12 +54,11 @@ export async function mediaIndexOf({ siteUrl, token, map }) {
     !Array.isArray(v) &&
     typeof v.id === 'string' &&
     (v.meta?.storageKey || v.filename)
-  // The names the media door serves a file under: its id, its storage key, and the ULID the storage key starts with.
-  const ULID = /^[0-9A-Z]{26}$/
-  const namesOf = (id, storageKey) => {
-    const first = String(storageKey ?? '').split('.')[0]
-    return [id, storageKey, ULID.test(first) ? first : null].filter(Boolean)
-  }
+  // The names a record is known by. The media route serves a file by its storage key, exactly as stored
+  // (vendor/emdash/emdash/packages/core/src/astro/routes/api/media/file/[...key].ts: `storage.download(key)`; the key is
+  // `${ulid()}${extname}` at api/handlers/media-upload.ts:157, and the record's own url is `file/${storageKey}` at :60).
+  // So a file is its storage key; its id is the record's other name. No part of a key stands for the key.
+  const namesOf = (id, storageKey) => [id, storageKey].filter(Boolean)
   const keysOf = (v) => namesOf(v.id, v.meta?.storageKey)
   for (const collection of collections) {
     let cursor = null
@@ -67,13 +78,7 @@ export async function mediaIndexOf({ siteUrl, token, map }) {
             value.forEach((row, i) => {
               // A picture inside Portable Text: the block holds its file as `asset`.
               if (row?._type === 'image' && row.asset) {
-                for (const k of namesOf(
-                  row.asset.id,
-                  String(row.asset.url ?? '')
-                    .split('/')
-                    .pop()
-                ))
-                  put(k, at)
+                for (const k of namesOf(row.asset.id, mediaKeyOf(row.asset.url))) put(k, at)
                 return
               }
               for (const [sub, cell] of Object.entries(row && typeof row === 'object' ? row : {}))

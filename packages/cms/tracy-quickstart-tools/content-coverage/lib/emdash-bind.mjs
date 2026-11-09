@@ -25,6 +25,8 @@ import { join, resolve, sep } from 'node:path'
 import { alnumCount, normText } from './normalize.mjs'
 
 const LINK_BASE = 'http://site.invalid'
+/** The keys of the forms file whose values a form prints. */
+const FORM_TEXT_KEYS = new Set(['label', 'placeholder', 'submitLabel', 'confirmationMessage'])
 const MEDIA_PATH = '/_emdash/api/media/file/'
 
 /**
@@ -161,7 +163,8 @@ export function indexOfMap(map) {
 /** The template's own words: every string a theme's source or its forms file holds, normalized, in one haystack. */
 export function sourceIndexOf(themeDir) {
   const parts = []
-  let formsHaystack = ''
+  /** The whole label, placeholder, button and confirmation values of the theme's forms file, normalised like other text. */
+  const formsLabels = new Set()
   const walk = (dir) => {
     let names = []
     try {
@@ -181,12 +184,17 @@ export function sourceIndexOf(themeDir) {
     const forms = join(themeDir, 'tools', 'forms.json')
     if (existsSync(forms)) {
       parts.push(readFileSync(forms, 'utf8'))
-      formsHaystack = normText(readFileSync(forms, 'utf8'))
+      const collect = (node, key) => {
+        if (Array.isArray(node)) for (const v of node) collect(v, key)
+        else if (node && typeof node === 'object') for (const [k, v] of Object.entries(node)) collect(v, k)
+        else if (typeof node === 'string' && FORM_TEXT_KEYS.has(key)) formsLabels.add(normText(node))
+      }
+      collect(JSON.parse(readFileSync(forms, 'utf8')))
     }
   }
   return {
     haystack: normText(parts.join('\n')),
-    formsHaystack,
+    formsLabels,
     publicDir: themeDir ? join(themeDir, 'public') : null
   }
 }
@@ -455,7 +463,7 @@ function bindLink(item, index, ctx) {
 
 function holeOf(item, shown, ctx) {
   // A form's label counts as the Forms plugin's only when the theme's forms file holds it (a required star aside).
-  if (item.inForm && ctx.source?.formsHaystack?.includes(shown.replace(/\s*\*$/, '')))
+  if (item.inForm && ctx.source?.formsLabels?.has(shown.replace(/\s*\*$/, '')))
     return Object.assign(item, {
       status: 'hole',
       class: 'core',
