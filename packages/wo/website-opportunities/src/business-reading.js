@@ -16,7 +16,8 @@ import {
   readBusinessByRules,
   readingFactsOf,
   readingSourcesOf,
-  withListedServiceParts
+  withListedServiceParts,
+  withPostOfferings
 } from '../domain/business-reading.mjs'
 import { BudgetExceededError } from './cost-ledger.js'
 import { visionCostCents } from './cost-prices.js'
@@ -135,7 +136,7 @@ export async function readBusiness({
   const inputHash = inputHashOf(sources, name, trade, facts)
   // A held reading made before joined service lines kept every part gets them now, paying nothing (F10).
   if (held?.method === 'model' && held.version === version && held.inputHash === inputHash)
-    return { ...held, services: withListedServiceParts(held.services, sources) }
+    return { ...held, services: withPostOfferings(withListedServiceParts(held.services, sources), sources) }
   const at = new Date(now()).toISOString()
   const rules = (reason, extra = {}) => ({
     version: businessReadingVersion(null),

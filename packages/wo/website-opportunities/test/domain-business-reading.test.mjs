@@ -76,7 +76,9 @@ test('an item survives only when its quote is in the source it names and its lab
       ['Padel sessions', 'service', 'post'],
       ['Swimming lessons', 'service', 'bio'],
       // The bio lists "Tennis & Padel": the part no kept service names stays (F10).
-      ['Tennis', 'service', 'bio']
+      ['Tennis', 'service', 'bio'],
+      // The invalid model label is dropped; the explicitly offered, quoted label is recovered.
+      ['Customized fitness lessons', 'service', 'post']
     ]
   )
   assert.equal(
@@ -130,12 +132,12 @@ test('the About line uses only quoted words; removed items leave it; a review-on
   )
   assert.equal(
     aboutLineOf('Ace Coach', read),
-    'Ace Coach offers Swiss coaching in Lisbon: tennis & padel and swimming lessons, for all ages and levels.'
+    'Ace Coach offers Swiss coaching in Lisbon: tennis & padel, swimming lessons and customized fitness lessons, for all ages and levels.'
   )
   const picked = withReadingPicks(read, { removed: [read.services[0].id], shown: [] })
   assert.deepEqual(
     picked.services.map((s) => s.label),
-    ['Swimming lessons']
+    ['Swimming lessons', 'Customized fitness lessons']
   )
   assert.equal(picked.team[0].onSite, false)
   assert.equal(withReadingPicks(read, { shown: [read.team[0].id] }).team[0].onSite, true)

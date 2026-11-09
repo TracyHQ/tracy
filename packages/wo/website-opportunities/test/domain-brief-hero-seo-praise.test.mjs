@@ -64,7 +64,10 @@ test('the hero is key message 1 and the on-site services, up to three, each with
   // Counter-case: a service the owner took off the site is not in the hero.
   const tennis = brief.facts.find((f) => f.field === 'services' && f.value?.name === 'Tennis')
   const off = hscBrief({ overrides: { [tennis.id]: { onSite: false, at: '2026-10-27T09:00:00.000Z' } } })
-  assert.equal(heroOf(off).copy, 'European Coaching in Dubai: padel, swimming lessons.')
+  assert.equal(
+    heroOf(off).copy,
+    'European Coaching in Dubai: padel, swimming lessons, customized fitness lessons.'
+  )
 })
 
 test('the home page carries an SEO title and description of on-site facts, within limits, checked by acceptance', () => {
