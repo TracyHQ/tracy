@@ -17,3 +17,19 @@ export function englishProblem(text) {
     return 'recognizable non-English phrase; write English'
   return null
 }
+
+// Vietnamese-only letters: the tone block of Latin Extended Additional plus the letters it lacks.
+// Combining tone marks that survive NFC (no precomposed form) are caught too.
+const VIETNAMESE_LETTER = /[\u1ea0-\u1ef9\u0102\u0103\u0110\u0111\u01a0\u01a1\u01af\u01b0]/u
+const VIETNAMESE_TONE_MARK = /\u0300|\u0301|\u0303|\u0309|\u0323/u
+
+/**
+ * For verbatim third-party captures (accented demo place names, for example): only
+ * Vietnamese is refused, so no team-written Vietnamese can hide inside captured data.
+ */
+export function vietnameseProblem(text) {
+  const normalized = text.normalize('NFC')
+  if (VIETNAMESE_LETTER.test(normalized) || VIETNAMESE_TONE_MARK.test(normalized))
+    return 'Vietnamese text in captured content'
+  return null
+}
