@@ -127,6 +127,12 @@ export function focusOfBox(box) {
   return dy < 0 ? 'top' : 'bottom'
 }
 
+/**
+ * The photo risk labels the vision step answers beside the links: sharpness, words or a watermark on the photo, another
+ * business shown. A boolean when a model answered; absent (null on the brief's asset) is unknown, never a pass.
+ */
+export const PHOTO_RISK_LABELS = Object.freeze(['isBlurry', 'hasTextOrWatermark', 'showsOtherBusiness'])
+
 /** The role a photo may fill given its links: offering and person roles need their link, a graphic fills none but the logo. */
 function roleFor(role, { depicts, portraitOf, isGraphic, content }) {
   if (content === 'logo') return 'business.logo'
@@ -165,6 +171,7 @@ export function heldVisionLinks(entry, list) {
   if (typeof entry?.isGraphic === 'boolean' || graphicByKind)
     out.isGraphic = entry?.isGraphic === true || graphicByKind
   if (typeof entry?.isOwnPhoto === 'boolean') out.isOwnPhoto = entry.isOwnPhoto
+  for (const field of PHOTO_RISK_LABELS) if (typeof entry?.[field] === 'boolean') out[field] = entry[field]
   out.role = roleFor(entry?.role, { ...out, content: entry?.content })
   return out
 }
@@ -202,29 +209,32 @@ const visionOf = (m) => {
   return v && typeof v === 'object' ? v : null
 }
 
+const boolOrNull = (v) => (typeof v === 'boolean' ? v : null)
+
 /**
- * The two labels the picture bench reads before it lets a photo fill a frame (`photo-shortlist.js`, picture check P09),
- * copied from a vision model's answer: `hasTextOrWatermark` (words, a logo or a watermark on the picture: textPresence
- * present or words overlaid; false only when the model said absent and no overlay) and `showsOtherBusiness`. Each is
- * null when no model answered it, so an unknown label stays unknown and the bench refuses the photo.
+ * The risk labels the picture bench reads before it lets a photo fill a frame (`photo-shortlist.js`, picture check P09),
+ * as the vision model answered them (PHOTO_RISK_LABELS). `hasTextOrWatermark` is the model's direct answer; words laid
+ * over the photo (hasTextOverlay) always count, and a label made before the direct question (prompt p5) falls back to
+ * textPresence (present: true, absent: false). `isBlurry` is the model's second opinion only: the measured sharpness gate
+ * (`photo-sharpness.js`) judges each cut, and this label never replaces it. Each is null when no model answered it, so
+ * an unknown label stays unknown and the bench refuses the photo.
  * @param {Record<string, any> | null} raw the vision label
- * @returns {{hasTextOrWatermark: boolean | null, showsOtherBusiness: boolean | null}}
+ * @returns {{isBlurry: boolean | null, hasTextOrWatermark: boolean | null, showsOtherBusiness: boolean | null}}
  */
 export function benchLabelsOf(raw) {
-  const text =
-    raw?.textPresence === 'present' || raw?.hasTextOverlay === true
-      ? true
-      : raw?.textPresence === 'absent'
-        ? false
-        : null
-  const other = typeof raw?.showsOtherBusiness === 'boolean' ? raw.showsOtherBusiness : null
-  return { hasTextOrWatermark: text, showsOtherBusiness: other }
+  const fromPresence = raw?.textPresence === 'present' ? true : raw?.textPresence === 'absent' ? false : null
+  const text = raw?.hasTextOverlay === true ? true : (boolOrNull(raw?.hasTextOrWatermark) ?? fromPresence)
+  return {
+    isBlurry: boolOrNull(raw?.isBlurry),
+    hasTextOrWatermark: text,
+    showsOtherBusiness: boolOrNull(raw?.showsOtherBusiness)
+  }
 }
 
 /**
  * The relations and placing labels of one brief asset: `depicts` (an offering id or general) and `portraitOf` (a person
  * id or null), each with its evidence, the v3 role it can fill, its subject and face boxes, people count, graphic flag,
- * the lettering and other-business labels (`benchLabelsOf`) and whether it is the business's own photo.
+ * the risk labels (`benchLabelsOf`) and whether it is the business's own photo.
  * @param {any} m a brief read's media entry
  * @param {{list?: any, posts?: any[], businessName?: string | null}} context
  */

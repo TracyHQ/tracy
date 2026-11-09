@@ -890,9 +890,13 @@
             "type": ["boolean", "null"],
             "description": "A logo, flyer, banner, menu or other designed graphic rather than a photograph: kept out of photo slots. Null when no model looked."
           },
+          "isBlurry": {
+            "type": ["boolean", "null"],
+            "description": "The vision model found the photo out of focus or smeared by motion: a second opinion only, the measured sharpness of each cut decides. Null when no model answered (unknown, not bad)."
+          },
           "hasTextOrWatermark": {
             "type": ["boolean", "null"],
-            "description": "Words, a logo or a watermark are on the picture (the vision model saw text present, or words overlaid): kept out of photo frames. Null when no model answered."
+            "description": "Words, a stamp, a logo or a watermark are written on the photo itself (the vision model's direct answer, or for an older label text present or words overlaid): kept out of photo frames. Null when no model answered."
           },
           "showsOtherBusiness": {
             "type": ["boolean", "null"],

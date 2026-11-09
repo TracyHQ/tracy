@@ -189,6 +189,7 @@ test('a brief asset: text links win, then the model in the list, else general; n
     faceBoxes: [],
     peopleCount: null,
     isGraphic: null,
+    isBlurry: null,
     hasTextOrWatermark: null,
     showsOtherBusiness: null,
     isOwnPhoto: null
@@ -220,5 +221,9 @@ test('a brief asset carries the lettering and other-business labels the picture 
   const old = asset({ subject: 'interior', hasTextOverlay: false })
   assert.equal(old.hasTextOrWatermark, null)
   assert.equal(old.showsOtherBusiness, null)
-  assert.deepEqual(benchLabelsOf(null), { hasTextOrWatermark: null, showsOtherBusiness: null })
+  assert.deepEqual(benchLabelsOf(null), {
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null
+  })
 })

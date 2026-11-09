@@ -196,6 +196,7 @@ test('a brief media row reads as a photo view: its labels, its own-photo answer 
     quality: 'high',
     isGraphic: false,
     showsOtherBusiness: null,
+    isBlurry: null,
     sharpness: 'blurry',
     offering: 'Court hire'
   })
@@ -251,4 +252,30 @@ test('the stops a value ends on are taken off; a long run of them inside a value
   const t = performance.now()
   assert.deepEqual(held(`clay courts${','.repeat(100_000)}x`), [])
   assert.ok(performance.now() - t < 500, 'a run of commas read in one pass')
+})
+
+test('a brief media row the model answered blurry is dropped as blurry, beside its quality word', () => {
+  const m = {
+    id: 'wm-40',
+    kind: 'image',
+    source: 'website',
+    width: 2000,
+    height: 1200,
+    labels: {
+      vision: {
+        labels: {
+          content: 'venue-interior',
+          caption: 'A bright reception desk.',
+          quality: 'good',
+          isOwnPhoto: true,
+          isGraphic: false,
+          isBlurry: true
+        }
+      }
+    }
+  }
+  const view = photoViewOf(m)
+  assert.equal(view.isBlurry, true)
+  assert.equal(view.sharpness, 'good')
+  assert.deepEqual(observablePhotos([view]).dropped, [{ id: 'wm-40', reason: 'blurry' }])
 })

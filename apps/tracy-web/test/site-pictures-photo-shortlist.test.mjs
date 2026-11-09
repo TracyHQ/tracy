@@ -43,3 +43,22 @@ test('a label the model never answered stays unknown, and the bench refuses it',
   assert.equal(showsOtherBusiness, false)
   assert.equal(photoRefusal(briefAsset(older)), 'a label that decides it is unknown')
 })
+
+test('a photo labelled with the direct answers (no textPresence) reaches the bench usable; a blurry answer refuses it', () => {
+  const { textPresence, hasTextOverlay, ...direct } = vision
+  assert.equal(textPresence, 'absent')
+  assert.equal(hasTextOverlay, false)
+  const labels = { ...direct, isBlurry: false, hasTextOrWatermark: false }
+  assert.equal(photoRefusal(briefAsset(labels)), null)
+  assert.equal(photoRefusal(briefAsset({ ...labels, hasTextOrWatermark: true })), 'lettering or a watermark')
+  assert.equal(photoRefusal(briefAsset({ ...labels, isBlurry: true })), 'blurry')
+})
+
+test('measured sharpness is primary; the vision blur answer refuses only without a measurement or with a poor one', () => {
+  const blurry = { ...briefAsset(vision), isBlurry: true }
+  const measuredSharp = { passed: true, verdict: 'pass', score: 0.7, bar: 0.45, version: 'test' }
+  const measuredPoor = { passed: false, verdict: 'fail', score: 0.3, bar: 0.45, version: 'test' }
+  assert.equal(photoRefusal({ ...blurry, sharpness: measuredSharp }), null)
+  assert.equal(photoRefusal(blurry), 'blurry')
+  assert.equal(photoRefusal({ ...blurry, sharpness: measuredPoor }), 'blurry')
+})

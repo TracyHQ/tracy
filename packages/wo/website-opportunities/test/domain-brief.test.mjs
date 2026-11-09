@@ -152,6 +152,7 @@ test('sections only reference assets listed in the brief', () => {
     faceBoxes: [],
     peopleCount: null,
     isGraphic: null,
+    isBlurry: null,
     hasTextOrWatermark: null,
     showsOtherBusiness: null,
     isOwnPhoto: null

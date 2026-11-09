@@ -46,7 +46,7 @@ const visionOf = (m) => {
 
 /**
  * One brief media row as the observation step reads it: what it shows, its caption, whether the business published it,
- * its resolution grade, the sharpness the vision model saw and the offering it is linked to.
+ * its resolution grade, the sharpness the vision model saw (quality word and blur answer) and the offering it is linked to.
  * @param {any} m a brief read's media entry
  * @param {{list?: any, posts?: any[], businessName?: string | null}} [context] as `assetRelationsOf` takes it
  */
@@ -67,6 +67,8 @@ export function photoViewOf(m, context = {}) {
     quality: labels.quality,
     isGraphic: links.isGraphic,
     showsOtherBusiness: links.showsOtherBusiness,
+    // The vision model's own blur answer, beside its quality word; neither replaces the other.
+    isBlurry: links.isBlurry,
     sharpness: typeof raw?.quality === 'string' ? raw.quality : null,
     offering
   }
