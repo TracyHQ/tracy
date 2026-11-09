@@ -78,3 +78,5 @@ path components and must not contain `$HOME`/cwd. Only then is the current copy 
 (not deleted). `tests/restore.test.mjs` runs a round-trip + 5 broken archives/targets on throwaway data.
 There is no distributed transaction: a `content` pass broken midway leaves N entries published and the receipt
 written up to there; rerunning continues (idempotent), no rollback needed.
+
+- **A list in a scalar field passes the first-run seed and fails the Admin API.** A `string` field that holds an array (a link title `["",""]`, a placement list) is accepted by `emdash seed`, then every PUT answers `VALIDATION_ERROR … expected string, received array` and `seed-apply content` stops at the first such entry; flatten or drop it in the model before `compile-seed`.
