@@ -1,0 +1,2 @@
+- **The language policy approves the exact non-English lines of the JA Diner WP7 1.0.2 contract** — Language policy · #459 · `chore/wp-459-language-policy` · 2026-11-09
+  **Affects:** anyone adding the JA Diner WP7 1.0.2 contract objects. They carry the template's own English demo text with an accented proper name or the word cafe with an accent; each line is listed by its exact hash and count in `scripts/language-policy.json`, as was done for the 1.0.1 kit. The policy is read from the base branch, so this must merge before the release pull request (#459).
