@@ -113,10 +113,12 @@ test('a reading held from before gets the lost part back without a second model 
   }
   const first = await readBusiness(input)
   assert.equal(first.method, 'model')
+  // The reading and its one USP retry (the answer proposes no theme); the held reading below adds no call.
+  assert.equal(calls, 2)
   assert.ok(labels(first).includes('Tennis'))
   // The reading as it was stored before this rule: the joined line's second part missing.
   const held = { ...first, services: first.services.filter((s) => s.label !== 'Tennis') }
   const again = await readBusiness({ ...input, held })
-  assert.equal(calls, 1, 'the held reading is kept, no second call')
+  assert.equal(calls, 2, 'the held reading is kept, no second call')
   assert.deepEqual(labels(again).sort(), labels(first).sort())
 })

@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-527-usp-theme-in-brief-and-hero",
   "kind": "feat",
-  "title": "The kept USP theme reaches the brief, its hero heading and the demo QA",
+  "title": "The kept USP theme reaches the brief, its hero heading and the demo QA, and the reading retries once when no theme stands",
   "pr": 527,
   "area": "website-opportunities/brief",
   "cms": ["any"],
@@ -9,17 +9,19 @@
   "flaky_model": false,
   "steps": [
     "S1: Run the domain-brief-usp-theme test file of packages/wo/website-opportunities.",
-    "S2: Run the collected-used tests of apps/tracy-host/test/demo-qa.test.mjs and the agent demo test file of apps/tracy-web."
+    "S2: Run the collected-used tests of apps/tracy-host/test/demo-qa.test.mjs and the agent demo test file of apps/tracy-web.",
+    "S3: Run the business-reading-usp-retry and business-reading-usp-themes test files of packages/wo/website-opportunities."
   ],
   "expect": [
     "S1: every test reports ok: brief.reading.uspThemes keeps the kept theme with basis one-review and its review quote, uspThemesDropped records why; no themes gives no key; the hero section's usp line is the theme line with its quotes only, in the acceptance list, brief_md and the agent prompt; a theme failing checkUspTheme is not the hero; a held review's quote leaves the theme.",
-    "S2: every test reports ok: collected-used reports what usp when home does not show the statement; the agent demo steps and collected usp carry the line, and a brief without one asks for none."
+    "S2: every test reports ok: collected-used reports what usp when home does not show the statement; the agent demo steps and collected usp carry the line, and a brief without one asks for none.",
+    "S3: every test reports ok: with every theme dropped one retry call on the reviews and bio, naming the dropped label and why, keeps a one-review theme; a retry rejected too leaves uspThemes null, reason rejected, retry_rejected entries in uspThemesDropped and no third call; a held reading with no theme and no retry gets the retry alone."
   ],
   "selectors": {
     "file": "packages/wo/website-opportunities/domain/brief.mjs"
   },
   "evidence": "On dev the reading on the place profile carried a one-review USP theme with a verbatim Google review quote, but briefReading copied no uspThemes and hero-usp.mjs had no caller outside the domain folder, so neither the stored brief nor the hero copy carried it",
-  "fence": "briefReading copying uspThemes, heroUspOf choosing the hero usp through checkUspTheme and findUsp, and checkCollectedUsed requiring the usp on home",
+  "fence": "briefReading copying uspThemes, heroUspOf choosing the hero usp through checkUspTheme and findUsp, and checkCollectedUsed requiring the usp on home; withUspRetry and the single retry call in readBusiness",
   "run": {
     "cmd": [
       "node",
@@ -28,7 +30,9 @@
       "--test-reporter=tap",
       "packages/wo/website-opportunities/test/domain-brief-usp-theme.test.mjs",
       "apps/tracy-host/test/demo-qa.test.mjs",
-      "apps/tracy-web/test/wo-agent-demo.test.mjs"
+      "apps/tracy-web/test/wo-agent-demo.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-usp-retry.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-usp-themes.test.mjs"
     ],
     "tests": [
       "the brief carries the kept USP theme with its rung and quotes, and the dropped ones with why",
@@ -37,7 +41,11 @@
       "a theme that fails the USP gate is not the hero: its quote must be in a review the site may show",
       "a USP theme drops the quote of a review that names someone held off the site, and goes when none is left",
       "collected-used: home shows the brief’s USP statement; on another page only, it is not shown",
-      "the brief’s hero USP statement reaches the agent’s steps and the collected-used check, word for word"
+      "the brief’s hero USP statement reaches the agent’s steps and the collected-used check, word for word",
+      "every theme dropped: one retry on the reviews and bio, told why, keeps a one-review theme",
+      "the retry rejected too: no theme, reason rejected, its themes recorded as retry_rejected, no third call",
+      "a held reading with no theme and no retry gets the retry alone, not the whole reading again",
+      "the reading records the dropped themes, and keeps uspThemesReason only when nothing stands"
     ]
   }
 }
