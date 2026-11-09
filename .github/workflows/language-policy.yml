@@ -39,6 +39,22 @@ jobs:
           persist-credentials: false
           submodules: false
 
+      # A release PR (develop -> main) carries develop's history, which already passed this check with
+      # develop's policy when it was merged there. Fetch develop as Git data only, so the check below
+      # skips it and reads only what is not on develop: merges of main and work on the release branch.
+      - name: Fetch develop's history for a release
+        if: >-
+          github.event.pull_request.base.ref == 'main' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          startsWith(github.event.pull_request.head.ref, 'release/develop-to-main-')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: develop
+          fetch-depth: 0
+          path: develop-history
+          persist-credentials: false
+          submodules: false
+
       - name: Set up the trusted Node version
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
@@ -48,6 +64,18 @@ jobs:
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
           HEAD: ${{ github.event.pull_request.head.sha }}
-        run: >-
-          node trusted/scripts/check-language-policy.mjs
-          --repo candidate --base "$BASE" --head "$HEAD" --event "$GITHUB_EVENT_PATH"
+        run: |
+          exclude=()
+          if [ -d develop-history ]; then
+            # --exclude reaches main with the release that adds it; until then main's validator
+            # checks the whole range, as before.
+            if grep -q "exclude: { type: 'string' }" trusted/scripts/check-language-policy.mjs; then
+              develop="$(git -C develop-history rev-parse HEAD)"
+              git -C candidate fetch --quiet --no-tags "$GITHUB_WORKSPACE/develop-history" "$develop"
+              exclude=(--exclude "$develop")
+            else
+              echo "::notice::main's validator has no --exclude yet; checking every commit not on main."
+            fi
+          fi
+          node trusted/scripts/check-language-policy.mjs \
+            --repo candidate --base "$BASE" --head "$HEAD" --event "$GITHUB_EVENT_PATH" "${exclude[@]}"

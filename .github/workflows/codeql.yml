@@ -9,6 +9,12 @@ name: CodeQL
 #   · `analyze-full` — pull requests from forks and every pull request into another base than
 #     `develop`: `main` (the release), or a stacked pull request into a feature branch.
 #     No config: everything is scanned.
+#   · `analyze-develop-full` — every push to `develop`, the same unfiltered scan as `analyze-full`,
+#     uploaded under its own categories (`/language:<language>/full`). What the release's full scan
+#     would raise (tests, fixtures, `vendor/`) shows on `develop` right after the merge that brought
+#     it: code scanning alerts filtered to branch `develop` (`is:open branch:develop`). Pull
+#     requests into `develop` stay on the fast filtered scan; no pull request uploads these
+#     categories, so they are never what a pull request's alerts are compared against.
 #
 # Every pull request, whatever its base, gets one of the two scans and the dependency review.
 # `edited` is there for a retarget (`develop` -> `main` must start the full scan without a new
@@ -22,7 +28,9 @@ name: CodeQL
 # `analyze-full` never finds an overlay base: it always runs a full analysis.
 # The weekly scan runs on `main` and refreshes the base before the 7-day cache eviction.
 # A push to `develop` is not the default branch, so it runs a full (filtered) analysis and caches
-# nothing.
+# nothing. `analyze-develop-full` has its own job id and categories, so it neither reads nor writes
+# the overlay cache of `analyze`, and `codeql-freshness.mjs` (which watches only the `analyze`
+# categories) does not wait for it.
 
 on:
   push:
@@ -128,6 +136,44 @@ jobs:
         uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           category: /language:${{ matrix.language }}
+
+  analyze-develop-full:
+    name: CodeQL develop full (${{ matrix.language }})
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      # Its own category: the filtered `/language:<language>` analyses of `develop` stay what pull
+      # requests into `develop` compare against.
+      - name: Analyze
+        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          category: /language:${{ matrix.language }}/full
 
   dependency-review:
     name: Dependency review
