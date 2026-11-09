@@ -40,6 +40,8 @@ The real `deepseek-official/deepseek-flash` model then received one edit request
 
 The harness reports `versionAttested: false` because a full dsh runtime image from this branch was not built. The reset used an explicit copy-only CMS command, not Tracy's Undo; the earlier local Joomla moment/Diff/Undo evidence below covers that separate mechanism. These turns prove one imported copy of each CMS was writable and readable through Tracy's local agent path. They do not establish plugin compatibility for every marketplace extension, production HTTPS custody, the stock Joomla 5 image build path, or repeated concurrent edits.
 
+After the read-back, the four imported copies, both disposable sources, the isolated Tracy stand, their volumes and networks, and the dedicated headless Chrome were stopped and removed. The QA fixture directory fell from 1.2 GB to 3.0 MB. The shared `tracy` and `tracy-qa` services remained healthy. A Joomla 5 image tag was retained because other QA containers still reference it.
+
 ## Read-only deployment cross-check — 9 November 2026
 
 ### Corrected model configuration and real-provider probe
