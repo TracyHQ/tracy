@@ -25,7 +25,14 @@
   "evidence": "The shared bench loop previously read cancellation only after an answered model turn, leaving an in-flight request running until its call timeout.",
   "fence": "An interrupted provider call is never silently replayed, and cancellation cannot dispatch another retry attempt.",
   "run": {
-    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/agent-over-door.test.mjs", "apps/tracy-web/test/agent-over-door-retry.test.mjs", "apps/tracy-web/test/bench-stop-watch.test.mjs"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-over-door.test.mjs",
+      "apps/tracy-web/test/agent-over-door-retry.test.mjs",
+      "apps/tracy-web/test/bench-stop-watch.test.mjs"
+    ],
     "tests": [
       "an abort during a model call saves an uncertain receipt and never retries it",
       "Stop during retry backoff dispatches no second call and keeps the failed attempt",

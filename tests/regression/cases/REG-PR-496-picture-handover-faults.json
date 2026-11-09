@@ -22,7 +22,13 @@
   "evidence": "The picture manifest stored filledBy and its faults, but site-write-report.json did not carry them into handover.",
   "fence": "Rejected-but-kept picture provenance remains visible in the final write report.",
   "run": {
-    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/write-step-picture-review.test.mjs", "apps/tracy-web/test/write-step-nine-repair.test.mjs"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-picture-review.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair.test.mjs"
+    ],
     "tests": [
       "the final write report keeps each rejected picture and the looker fault names",
       "step 9 saves the rejected-picture faults in its final report"

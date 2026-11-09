@@ -1,3 +1,13 @@
+---
+description: Evidence, fixes and remaining acceptance work for Tracy AI capabilities outside Voice.
+sources:
+  - CONTEXT.md
+  - SYSTEM.md
+  - apps/tracy-web/src/assistant/route.js
+  - apps/tracy-web/src/lib/agent-over-door.js
+  - apps/tracy-web/src/sites/brief-engines/step-chain.js
+---
+
 # AI capabilities audit — 8 November 2026
 
 The initial audit used `origin/develop` at `3172697b70`; this branch was later updated by merging `origin/develop` at `57ea72d293`, which included PR #488. It uses the change journal, open GitHub issues and pull requests, source inspection, and bounded checks on `cowork.tracy.site`. Voice is outside this audit at the account holder's request. A passing unit test establishes the behavior named by that test, not the quality of a complete customer site.
