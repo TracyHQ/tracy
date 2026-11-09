@@ -46,3 +46,4 @@ step, fix and layout check. Find the code here before trying a fix of your own.
 | `coverage-stale` | F12 |
 | `kit-logo-unsettable`, `kit-brand-unreadable` | F13 |
 | `language-policy` job red on a policy edit in the same PR | F14 |
+| `demo-baseline-missing` read as `warn` while /ops is green (template not in `demo-baseline-policy.json`) | F18 |

@@ -21,7 +21,9 @@ The reference is the latest JA Boxing release: on it, this skill finds nothing t
 - `RUN`: a working folder outside the repository that survives a restart. It holds every verdict, `fix-log.md`, the
   eye review and `readiness-report.md`.
 - **Published templates only warn.** A release already on Design inspiration reads `warn` where a new one would be held.
-  Fix it in the next version; never take the live release off Design inspiration or delete it.
+  Fix it in the next version; never take the live release off Design inspiration or delete it. A warn is still not
+  done: the run is not accepted until every piece is `done` (section 6). The demo baseline is the exception that needs
+  no new version: measure it on an untouched site of the pinned version and commit it beside that contract.
 - The stop points of the skills called here are passed without waiting: naming the template is the go. Only the stops
   in section 5 stop the run.
 
@@ -118,3 +120,9 @@ its params, what was tried, and who must act.
 
 Every piece `done` on the last verdict, the kit approved, the release pinned in both quickstart lists, the PR open with
 the fix log and the readiness report's faults listed. Report to the preparer: the version, the PR, the faults left.
+
+**The demo baseline is required for acceptance.** The `demo-baseline` piece must read `done` with code
+`demo-baseline-recorded` (the file `demo-baseline.json` of this version beside the contract), whatever
+`demo-baseline-policy.json` says and even when the piece only reads `warn` on a release already published. A green
+Road to live on /ops is not acceptance: /ops asks for the baseline only for the templates the policy opts in.
+[`references/faults.md`](references/faults.md) F18.

@@ -176,3 +176,22 @@ a fault the flow has a door for. Detection per fault:
 - **Code**: the `language-policy` job stays red on a policy edit inside the same PR.
 - **Fix**: the job runs the checker and policy from the base commit: put the policy edit in its own PR, merge it first,
   then rerun the job. The policy names objects by id: recompute the ids after any change of those files.
+
+## F18. A release accepted with no demo baseline
+
+- **Code**: `demo-baseline-missing` in the verdict's `demo-baseline` piece, read as `warn` on a release already shown
+  on Design inspiration; Road to live on /ops stays green, because its Template kit step asks for the file
+  (`kit-demo-baseline-missing`) only for the tags in `apps/tracy-web/src/lib/template-kit/demo-baseline-policy.json`.
+- **Symptom**: the template passed acceptance, yet the site check and the write step bench cannot tell demo words from
+  the customer's words on its sites. Met on JA Voyara 1.0.12: /ops 11 of 11 green, no `demo-baseline.json` beside
+  `contracts/ja-voyara/j6/1.0.12/`, while JA Boxing 1.0.11 and JA Diner 1.0.5 had one.
+- **Confirm**: `ls <contract dir>/demo-baseline.json`, or the verdict JSON's `demo-baseline` piece is not `done`.
+- **Fix**: no new template version. Restore the pinned version on a fresh stand nobody writes to, check the two asset
+  hashes against the pin, then `WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs
+  --base <stand address> --version <contract id> --pages-file <the kit's pages[].path as JSON>` and
+  `node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs baseline --from <dir>/<contract id with / as _>.json
+  --contract <contract dir>`. Commit the file, then add the tag to `holdPublishFor` in the policy file with its reason, so
+  /ops holds the next version too. The file is not one of the cowork `contractFiles` (manifest, content map,
+  presentation lock, showcase map), so no claude-cowork release is needed.
+- **Check**: the verdict's `demo-baseline` piece reads `done` `demo-baseline-recorded`, and the baseline line reports no
+  page the host could not reach. Nothing on the site changes, so no layout check is needed.
