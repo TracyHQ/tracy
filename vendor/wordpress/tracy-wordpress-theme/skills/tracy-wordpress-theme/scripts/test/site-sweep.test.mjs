@@ -887,6 +887,37 @@ test('accept rows: every refusal is named — wildcard routes, no routes, a miss
   assert.match(validateSweepAccept([rowOf(dir)], { decisions: null, runRoot: dir }).join('\n'), /no decisions were given/)
 })
 
+test('accept rows: an exact-cell row declared intermittent is skipped, not stale, when its group is absent from the run; it still moves the cells when the group is there', () => {
+  const judged = () => ({ chips: { cases: 4, defects: [defectRow({ route: '/a' })], listed: [], notDefects: [] } })
+  const scope = { routes: ['/a', '/b'], widths: [390, 1440] }
+  // absent group, plain row: stale error (unchanged)
+  assert.equal(applyAccept(judged(), [rowOf(null, { cause: 'chip-background|span.gone' })], scope).errors.length, 1)
+  // absent group, intermittent row: no error, recorded as skipped
+  const gone = applyAccept(judged(), [rowOf(null, { cause: 'chip-background|span.gone', intermittent: true })], scope)
+  assert.deepEqual(gone.errors, [])
+  assert.match(gone.skipped[0].why, /intermittent/)
+  // present group, intermittent row: judged like any other row
+  const there = judged()
+  assert.deepEqual(applyAccept(there, [rowOf(null, { routes: ['/a'], intermittent: true })], scope).errors, [])
+  assert.equal(there.chips.defects.length, 0)
+  // the group is in the run on other routes: an intermittent row tolerates the cells it names that did not occur
+  const other = () => ({ chips: { cases: 4, defects: [defectRow({ route: '/a' }), defectRow({ route: '/b', width: 390 })], listed: [], notDefects: [] } })
+  const wide = { routes: ['/a', '/b', '/c'], widths: [390, 1440] }
+  assert.match(applyAccept(other(), [rowOf(null, { routes: ['/c'] })], wide).errors[0].message, /where the group does not occur/)
+  const tol = other()
+  const tolerated = applyAccept(tol, [rowOf(null, { routes: ['/a', '/c'], widths: [390, 1440], intermittent: true })], wide)
+  assert.deepEqual(tolerated.errors, [])
+  assert.deepEqual(tol.chips.defects.map((d) => d.route), ['/b'], 'only the cells that occurred move')
+  const none = applyAccept(other(), [rowOf(null, { routes: ['/c'], intermittent: true })], wide)
+  assert.deepEqual(none.errors, [])
+  assert.match(none.skipped[0].why, /intermittent/)
+  // the flag is a boolean, and only on defect rows
+  const dir = evidenceDir()
+  const errs = (o) => validateSweepAccept([rowOf(dir, o)], { decisions: decisionsOf(), runRoot: dir })
+  assert.deepEqual(errs({ intermittent: true }), [])
+  assert.match(errs({ intermittent: 'yes' }).join('\n'), /intermittent must be true/)
+})
+
 test('accept rows: a group moves to notDefects with its decision and evidence; a stale row, a row naming a route the group is not on, and a defect row two rows cover are errors', () => {
   const judged = () => ({ chips: { cases: 4, defects: [defectRow({ route: '/a' }), defectRow({ route: '/b', width: 390 }), defectRow({ route: '/c', cause: 'chip-radius|a.x', what: 'chip-radius' })], listed: [], notDefects: [], notMeasured: [] } })
   const scope = { routes: ['/a', '/b', '/c'], widths: [390, 1440] }

@@ -1,7 +1,7 @@
 // lib/sweep-coverage.mjs: what a measure covers, and the gate a patch release holds it to. All readings are synthetic.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { coverageOf, coverageProblems, expectedSweepCells, mergeCoverage, sweepOutcomeProblems, validateCoverage } from '../lib/sweep-coverage.mjs'
+import { coverageFromReport, coverageOf, coverageProblems, expectedSweepCells, mergeCoverage, sweepOutcomeProblems, validateCoverage } from '../lib/sweep-coverage.mjs'
 import { judgeTargetBehaviour } from '../visual/site-sweep-behaviour-judge.mjs'
 
 const CHECKS = ['overflow', 'scheme', 'heights']
@@ -90,4 +90,14 @@ test('sweep outcomes: a spec-bound none page needs every typed comparison N/A an
   comparison.reason = 'reference.kind=none'
   report.applicability.outcomes.splice(report.applicability.outcomes.findIndex((x) => x.status === 'not-applicable'), 1)
   assert.ok(sweepOutcomeProblems(report, pages).some((x) => /missing or invalid spec-bound N\/A/.test(x)))
+})
+
+test('coverageFromReport: a scheme the contract declares derived on every route counts as covered; a partly derived or undeclared one does not', () => {
+  const derived = (route, scheme = 'dark') => ({ route, scheme, checks: ['overflow'], reason: 'the contract declares the source has no dark of its own (source.darkDerived, page-map theme.darkDerived): nothing to compare' })
+  const base = (notOwed) => ({ coverage: { mode: 'full', explicit: [], carried: false }, run: { mode: 'full' }, checks: [{ id: 'overflow' }], heights: { widths: [390] },
+    rows: [{ route: '/', width: 390, scheme: 'light' }, { route: '/a', width: 390, scheme: 'light' }], notOwed })
+  assert.deepEqual(coverageFromReport(base([derived('/'), derived('/a')])).schemes, ['dark', 'light'])
+  assert.deepEqual(coverageFromReport(base([derived('/')])).schemes, ['light'], 'one route only: not covered')
+  assert.deepEqual(coverageFromReport(base([{ ...derived('/'), reason: 'some other reason' }, { ...derived('/a'), reason: 'some other reason' }])).schemes, ['light'])
+  assert.deepEqual(coverageFromReport(base(undefined)).schemes, ['light'])
 })
