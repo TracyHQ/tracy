@@ -3,12 +3,13 @@
  * "How Tracy understands {business}" cards with the raw brief behind Full brief (`brief-understanding.tsx`, #520), and
  * closes on the Build card the Brief page uses, with its template, time and price.
  */
-import { type JSX, useState } from 'react'
+import { type JSX, useEffect, useState } from 'react'
 import { Button, Spinner } from '@tracy/ui'
 
 import type { Api } from './api.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { Build } from './detail.tsx'
+import { retitledBrief } from './brief-edit-model.ts'
 import { createRequestIds } from './request-ids.ts'
 import { useRevisionPage } from './revision-page.ts'
 import type { Translate } from './strings.ts'
@@ -45,11 +46,40 @@ const ids = createRequestIds(() =>
     : `${Date.now()}-${Math.random().toString(36).slice(2)}`
 )
 
-export function BriefTab({ t, api, meta }: { t: Translate; api: Api; meta: BriefTabMeta }): JSX.Element {
+/**
+ * Points the open tab at the brief an edit made: its title reads that brief's number and its meta holds its id, so a
+ * reload opens the same brief. `title` is the tab's current title.
+ */
+export function retitleBriefTab(
+  title: string,
+  meta: BriefTabMeta,
+  revisionId: string,
+  label: string
+): { title: string; meta: BriefTabMeta } {
+  return { title: retitledBrief(title, label), meta: { ...meta, revisionId } }
+}
+
+export function BriefTab({
+  t,
+  api,
+  meta,
+  onEdited = null
+}: {
+  t: Translate
+  api: Api
+  meta: BriefTabMeta
+  /** An edit made a new brief, now loaded: the tab takes its number (`Brief {n}`) and id. */
+  onEdited?: ((revisionId: string, label: string) => void) | null
+}): JSX.Element {
   // A seller's edit makes a new brief (#524): the card then shows, and builds from, that one.
   const [editedId, setEditedId] = useState<string | null>(null)
   const revisionId = editedId ?? meta.revisionId ?? null
   const page = useRevisionPage(api, revisionId)
+  const editedN = editedId !== null && page.revision?.id === editedId ? page.revision.n : null
+  useEffect(() => {
+    if (editedId !== null && typeof editedN === 'number')
+      onEdited?.(editedId, t('brief.number', { n: editedN }))
+  }, [editedId, editedN, onEdited, t])
   const editLine = async (path: string, value: string): Promise<boolean> => {
     if (revisionId === null || !meta.opportunityId) return false
     const answer = await api.editBrief(meta.opportunityId, revisionId, [{ path, value }])

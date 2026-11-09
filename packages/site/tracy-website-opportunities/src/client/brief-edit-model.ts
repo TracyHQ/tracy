@@ -32,3 +32,12 @@ export function briefEditTargets(brief: unknown): Map<string, string> {
   put('reach', business.website, 'business.website')
   return out
 }
+
+/**
+ * The side-card tab title once an edit made a new brief: `Brief 3 · Pho Ba` becomes `Brief 4 · Pho Ba`. `label` is the
+ * new brief's own words (`Brief {n}`); the place after the first ` · ` is kept, and a title without one is replaced.
+ */
+export function retitledBrief(title: string, label: string): string {
+  const at = title.indexOf(' · ')
+  return at < 0 ? label : `${label}${title.slice(at)}`
+}

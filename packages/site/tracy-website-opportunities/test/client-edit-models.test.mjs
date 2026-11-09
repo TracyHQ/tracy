@@ -75,3 +75,10 @@ test('hours typed in the Business brief table: one line per day or a semicolon b
   ])
   assert.deepEqual(typedHours('  \n '), [])
 })
+
+test('after an edit the brief tab reads the new brief number and keeps the place', async () => {
+  const { retitledBrief } = await import('../src/client/brief-edit-model.ts')
+  assert.equal(retitledBrief('Brief 3 · Corner Bakery', 'Brief 4'), 'Brief 4 · Corner Bakery')
+  assert.equal(retitledBrief('Brief 3 · Corner · Bakery', 'Brief 4'), 'Brief 4 · Corner · Bakery')
+  assert.equal(retitledBrief('Site brief', 'Brief 4'), 'Brief 4')
+})
