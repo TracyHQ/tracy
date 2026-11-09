@@ -62,6 +62,8 @@ export function BriefControl({
     setJob(answer.body.job)
   }
   if (view.mode === 'none') return null
+  if (view.mode === 'note')
+    return view.noteKey !== null ? <p className="tracy-wo-muted tracy-wo-small">{t(view.noteKey)}</p> : null
   if (view.mode === 'running')
     return (
       <div className="tracy-wo-progress" role="status">

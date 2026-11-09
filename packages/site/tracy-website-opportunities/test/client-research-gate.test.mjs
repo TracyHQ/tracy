@@ -43,14 +43,34 @@ test('the brief button is locked with a plain reason until research is done', ()
   assert.equal(t(open.labelKey), 'Make content brief')
 })
 
-test('a current brief needs no button; a stale or old reading one offers Refresh', () => {
+test('a current brief needs no button; a stale one offers Refresh', () => {
   const research = { state: 'done', researchedAt: '2026-11-09T11:22:00Z' }
   assert.equal(briefControlView({ research, brief: { id: 'b', n: 2, current: true } }).mode, 'none')
   const stale = briefControlView({ research, brief: { id: 'b', n: 2, current: false } })
   assert.equal(stale.mode, 'make')
   assert.equal(t(stale.labelKey), 'Refresh')
-  const reading = briefControlView({ research, brief: { id: 'b', n: 2, current: false, readingOld: true } })
-  assert.equal(t(reading.noteKey), 'This brief was made from an older reading of the business.')
+})
+
+test('a brief of an older reading points to Research again, and offers Refresh only when the research moved on', () => {
+  const research = { state: 'done', researchedAt: '2026-11-09T11:22:00Z' }
+  const note =
+    'This brief was made from an older reading of the business. Research again to read the business with the latest rules.'
+  const same = briefControlView({
+    research,
+    brief: { id: 'b', n: 2, current: false, readingOld: true, sameResearch: true }
+  })
+  assert.equal(same.mode, 'note', 'a new brief of the same reading would be the same brief')
+  assert.equal(same.labelKey, null)
+  assert.equal(t(same.noteKey), note)
+  const older = briefControlView({ research, brief: { id: 'b', n: 2, current: false, readingOld: true } })
+  assert.equal(older.mode, 'note', 'a host that does not say sameResearch gets no Refresh for this case')
+  const moved = briefControlView({
+    research,
+    brief: { id: 'b', n: 2, current: false, readingOld: true, sameResearch: false }
+  })
+  assert.equal(moved.mode, 'make')
+  assert.equal(t(moved.labelKey), 'Refresh')
+  assert.equal(t(moved.noteKey), note)
 })
 
 test('a running brief job shows its step; a failed one its plain reason with Try again', () => {

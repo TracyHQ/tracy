@@ -31,8 +31,11 @@ export type BriefStep = 'reading' | 'labelling' | 'writing'
 const STEPS: readonly BriefStep[] = ['reading', 'labelling', 'writing']
 
 export interface BriefControlView {
-  /** locked: research first; make: a button that starts a job; running: progress; failed: reason and Try again. */
-  mode: 'none' | 'locked' | 'make' | 'running' | 'failed'
+  /**
+   * locked: research first; make: a button that starts a job; running: progress; failed: reason and Try again;
+   * note: a line with no button (a brief of an older reading that a new brief would not change).
+   */
+  mode: 'none' | 'locked' | 'make' | 'running' | 'failed' | 'note'
   labelKey: string | null
   reasonKey: string | null
   noteKey: string | null
@@ -96,9 +99,12 @@ export function briefControlView({
     return view
   }
   if (b.current === false) {
-    view.mode = 'make'
-    view.labelKey = 'brief.refresh'
+    // The brief job cannot read the business again, so a brief that is out of date only because its reading is
+    // older gets the note pointing to Research again, and no Refresh that would make the same brief.
     if (b.readingOld === true) view.noteKey = 'brief.readingOld'
+    const refreshHelps = b.readingOld !== true || b.sameResearch === false
+    view.mode = refreshHelps ? 'make' : 'note'
+    if (refreshHelps) view.labelKey = 'brief.refresh'
   }
   return view
 }

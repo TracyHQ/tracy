@@ -292,7 +292,9 @@ export function createWebsiteBuilder(deps) {
     const same = key ? revisions.find((r) => r.research_hash === key || r.edited_from_hash === key) : null
     const shown = same ?? revisions[0]
     const known = Boolean(domain) && live !== undefined
-    // A brief of a reading made under older rules is not current either (#524): it offers Refresh.
+    // A brief of a reading made under older rules is not current either (#524). The brief job cannot read the
+    // business again, so `sameResearch` says whether a Refresh would change anything: when the brief already
+    // matches this research, only Research again brings the reading up to the latest rules.
     const readingOld = live?.readingOld === true
     return {
       id: shown.id,
@@ -300,7 +302,7 @@ export function createWebsiteBuilder(deps) {
       createdAt: shown.created_at,
       current: known ? Boolean(same) && !readingOld : null,
       ...(shown.edited_by === 'seller' ? { editedBySeller: true } : {}),
-      ...(readingOld ? { readingOld: true } : {})
+      ...(readingOld ? { readingOld: true, sameResearch: Boolean(same) } : {})
     }
   }
 

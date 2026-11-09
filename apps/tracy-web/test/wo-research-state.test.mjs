@@ -404,6 +404,7 @@ test('a brief of a reading older than the code is not current and offers Refresh
   const stale = await call(A, 'GET', `${BASE}/${opp.id}`)
   assert.equal(stale.body.brief.current, false, 'a brief of an old reading is never current')
   assert.equal(stale.body.brief.readingOld, true)
+  assert.equal(stale.body.brief.sameResearch, true, 'a Refresh would make the same brief of the same reading')
 
   const { BUSINESS_READING_VERSION } = await websiteOpportunitiesDomain()
   await readAs(`${BUSINESS_READING_VERSION}-6ca821c381fd`)
@@ -412,6 +413,7 @@ test('a brief of a reading older than the code is not current and offers Refresh
   const current = await call(A, 'GET', `${BASE}/${opp.id}`)
   assert.equal(current.body.brief.current, true)
   assert.equal(current.body.brief.readingOld, undefined)
+  assert.equal(current.body.brief.sameResearch, undefined)
 })
 
 test(

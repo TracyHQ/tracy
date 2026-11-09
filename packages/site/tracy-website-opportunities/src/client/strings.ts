@@ -904,7 +904,8 @@ export const en = {
   // #524: the Content brief waits for this card's research and is made in the background.
   'brief.make': 'Make content brief',
   'brief.locked': 'Available after research finishes.',
-  'brief.readingOld': 'This brief was made from an older reading of the business.',
+  'brief.readingOld':
+    'This brief was made from an older reading of the business. Research again to read the business with the latest rules.',
   'brief.job.title': 'Making the content brief. This takes about 2 minutes. You can close this panel.',
   'brief.job.step.reading': 'Reading the business',
   'brief.job.step.labelling': 'Labelling photos',
