@@ -2,10 +2,10 @@
   "schemaVersion": "tracy-quickstart-demo-trim/wordpress/v1",
   "extensionVersion": "1.0.0",
   "contract": "ja-diner/wp7/1.0.2",
-  "baseHash": "1e4d2274d6d2b96a1149c1a64a4dee064fcb163e1c594233f5902ec9a1f8f455",
+  "baseHash": "9a8698cacb1b6b46ed8ab05b148c3ff45b257bcecbb15ea930c1773e9884bcf7",
   "baseFiles": {
     "manifest.json": "8941f0e7875df3c9e0b9fc3d044bdb2e7a0c0b2d243b8d563dd50a9247d5d7ab",
-    "content-map.json": "b41f72b7396f0f26f59ca53710fe1375e1bbf2bc74c4abdbf4a32b9ceedea86f",
+    "content-map.json": "0e279c3537aba175990752bf0d1b55ff017fb8956db031d16e34e7ac2246caeb",
     "presentation-lock.json": "e1a06012990ea8633289eb8c060c35061f789e61b749d7d37939342efeeb0ddd"
   },
   "kept": [

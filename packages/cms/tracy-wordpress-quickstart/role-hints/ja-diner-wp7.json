@@ -2,6 +2,26 @@
   "version": 1,
   "hints": [
     {
+      "key": "front-page.features-intro.description.1",
+      "role": "contact.address",
+      "group": {
+        "id": "front-page.features-intro.location.0",
+        "item": 0,
+        "kind": "contact"
+      },
+      "why": "The Location card of the home page holds the business address, so it carries the contact role the customer's address lands in, not a description role."
+    },
+    {
+      "key": "front-page.features-intro.description.2",
+      "role": "contact.hours",
+      "group": {
+        "id": "front-page.features-intro.hours.0",
+        "item": 0,
+        "kind": "contact"
+      },
+      "why": "The Hours card of the home page holds the opening hours, so it carries the contact hours role."
+    },
+    {
       "key": "front-page.features-intro.name",
       "role": "person.name",
       "group": {
@@ -20,6 +40,18 @@
         "kind": "person"
       },
       "why": "Chef card of the features-intro block: the job title line of the same person."
+    },
+    {
+      "key": "front-page.features-intro.title.1",
+      "role": "editorial.heading",
+      "group": null,
+      "why": "The card label Location. is a fixed heading of the card, not an offering name."
+    },
+    {
+      "key": "front-page.features-intro.title.2",
+      "role": "editorial.heading",
+      "group": null,
+      "why": "The card label Hours. is a fixed heading of the card, not an offering name."
     },
     {
       "key": "home-blue.features-intro.name",

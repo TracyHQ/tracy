@@ -232,6 +232,11 @@ to the same list.
   (`event.date_or_year`, `offering.schedule`) or `contact.hours` when it sits in none, and a group. A sample the rule
   cannot place goes in the role hints file (H4). The slot stays writable and reads empty on a customer site until it is filled. A blanket
   accept would leave the demo hours in place.
+- **Also in a body card.** Contact-shaped text in a card of a page body (a Location card with an address, an Hours card
+  with the opening times) carries a contact role (`contact.address`, `contact.hours`, with a `contact` group), never
+  `offering.description`: the writer fills a description role with copy about the offering, so the customer's real address
+  would never land there. R2 reads such a sample through `fact-samples.mjs` (ordinal street words, `9a.m` style times);
+  the role goes in the role hints file (H4), and the card's fixed label (`Location.`) is `editorial.heading`.
 - **Verify.** R2 is 0; the slot has a role and a group.
 
 ### H14. Contact words in a template part paragraph that also holds a link
