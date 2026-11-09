@@ -13,13 +13,17 @@ import { readFileSync } from 'node:fs'
 import { extname, resolve } from 'node:path'
 import { parseArgs } from 'node:util'
 import { fileURLToPath } from 'node:url'
-import { englishProblem } from './lib/english-policy.mjs'
+import { englishProblem, vietnameseProblem } from './lib/english-policy.mjs'
 
 const DEFAULT_POLICY = fileURLToPath(new URL('./language-policy.json', import.meta.url))
 const ZERO = '0'.repeat(40)
 const HASH = /^[a-f0-9]{40}$/
 const DIGEST = /^[a-f0-9]{64}$/
-const MAX_BLOB = 16 * 1024 * 1024
+// GitHub refuses any file over 100 MB, so every blob a pull request can carry is read and scanned.
+// The cap only bounds runner memory for a corrupt or crafted object; it is not a review shortcut.
+const MAX_BLOB = 100 * 1024 * 1024
+// Blobs are cached by total size, so a few large files cannot hold gigabytes between commits.
+const MAX_CACHE = 64 * 1024 * 1024
 const MEDIA = new Set([
   '.png',
   '.jpg',
@@ -83,16 +87,19 @@ function pathPattern(pattern) {
 
 export function readPolicy(file) {
   const policy = JSON.parse(readFileSync(file, 'utf8'))
-  if (policy.version !== 1 || !['translations', 'lines', 'objects'].every((k) => Array.isArray(policy[k])))
+  // Older policies have no captured class; an absent list means no path is captured.
+  if (policy.captured === undefined) policy.captured = []
+  const kinds = ['translations', 'captured', 'lines', 'objects']
+  if (policy.version !== 1 || !kinds.every((k) => Array.isArray(policy[k])))
     throw new Error('invalid language policy')
-  for (const kind of ['translations', 'lines', 'objects']) {
+  for (const kind of kinds) {
     const seen = new Set()
     for (const rule of policy[kind]) {
       if (!validPath(rule.path) || typeof rule.reason !== 'string' || rule.reason.trim().length < 15)
         throw new Error(`invalid ${kind} exception: path and specific reason required`)
-      if (kind === 'translations') {
+      if (kind === 'translations' || kind === 'captured') {
         if (!rule.path.endsWith('.json') || rule.path.includes('**'))
-          throw new Error('translation exceptions must be specific JSON paths')
+          throw new Error(`${kind} exceptions must be specific JSON paths`)
       } else if (
         rule.path.includes('*') ||
         (kind === 'objects' ? !HASH.test(rule.oid) : !DIGEST.test(rule.sha256)) ||
@@ -120,6 +127,37 @@ export function addedLines(diff) {
   return lines
 }
 
+/**
+ * Verbatim third-party JSON (a template kit captured from a demo). Keys are authored by Tracy and
+ * keep the full English rule; string values are third-party text and are refused only for
+ * Vietnamese. Every token of the whole file is read, with its line number.
+ */
+export function capturedProblems(text) {
+  try {
+    JSON.parse(text)
+  } catch {
+    return [{ line: 1, problem: 'captured content is not valid JSON' }]
+  }
+  const problems = []
+  const strings = /"(?:[^"\\]|\\.)*"/g
+  const colon = /\s*:/y
+  let line = 1
+  let counted = 0
+  for (const match of text.matchAll(strings)) {
+    for (let at = text.indexOf('\n', counted); at !== -1 && at < match.index; at = text.indexOf('\n', at + 1))
+      line++
+    counted = match.index
+    const value = JSON.parse(match[0])
+    colon.lastIndex = match.index + match[0].length
+    const isKey = colon.test(text)
+    const problem = isKey
+      ? englishProblem(value) && 'captured keys must be English identifiers'
+      : vietnameseProblem(value)
+    if (problem) problems.push({ line, problem })
+  }
+  return problems
+}
+
 function translationProblem(text) {
   let value
   try {
@@ -139,12 +177,15 @@ function translationProblem(text) {
 }
 
 export function checkRange({ repo, base, head, policy, pull = null, exclude = null }) {
-  const git = (...args) =>
+  const run = (maxBuffer, args) =>
     execFileSync('git', ['-C', repo, ...args], {
-      maxBuffer: 128 * 1024 * 1024,
+      maxBuffer,
       stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1', GIT_OPTIONAL_LOCKS: '0', GIT_CONFIG_NOSYSTEM: '1' }
     })
+  const git = (...args) => run(128 * 1024 * 1024, args)
+  // A text diff of two blobs at the cap holds at most both of them plus line prefixes.
+  const gitDiff = (...args) => run(3 * MAX_BLOB, args)
   if (!HASH.test(base) || !HASH.test(head)) throw new Error('base and head must be full commit SHAs')
   if (exclude !== null && !HASH.test(exclude)) throw new Error('exclude must be a full commit SHA')
   if (git('rev-parse', '--is-shallow-repository').toString().trim() !== 'false')
@@ -184,15 +225,22 @@ export function checkRange({ repo, base, head, policy, pull = null, exclude = nu
     }
   }
   const blobs = new Map()
+  let cached = 0
   const readBlob = (oid) => {
     if (oid === ZERO) return Buffer.alloc(0)
     if (blobs.has(oid)) return blobs.get(oid)
     const size = Number(git('cat-file', '-s', oid).toString().trim())
     if (!Number.isSafeInteger(size) || size > MAX_BLOB)
       throw new Error(`text blob exceeds ${MAX_BLOB} bytes; review explicitly`)
-    const bytes = git('cat-file', 'blob', oid)
-    if (blobs.size > 128) blobs.clear()
+    const bytes = run(size + 1024, ['cat-file', 'blob', oid])
+    if (bytes.length !== size) throw new Error('blob size changed while reading')
+    if (size > MAX_CACHE) return bytes
+    if (cached + size > MAX_CACHE) {
+      blobs.clear()
+      cached = 0
+    }
     blobs.set(oid, bytes)
+    cached += size
     return bytes
   }
   const decode = (bytes) => {
@@ -200,6 +248,7 @@ export function checkRange({ repo, base, head, policy, pull = null, exclude = nu
     return new TextDecoder('utf-8', { fatal: true }).decode(bytes)
   }
   const patterns = policy.translations.map((r) => pathPattern(r.path))
+  const captured = policy.captured.map((r) => pathPattern(r.path))
   const checked = new Set()
   let files = 0
   const scanDiff = (from, to) => {
@@ -247,6 +296,20 @@ export function checkRange({ repo, base, head, policy, pull = null, exclude = nu
           continue
         }
         const text = decode(bytes)
+        if (mode !== '120000' && captured.some((p) => p.test(path))) {
+          // Reviewed line allowances still apply, with the same whole-file cardinality as text.
+          const problems = capturedProblems(text)
+          const lines = problems.length ? text.split('\n') : []
+          for (const { line, problem } of problems) {
+            const content = lines[line - 1] ?? ''
+            const hash = sha256(content)
+            const rules = policy.lines.filter((r) => r.path === path && r.sha256 === hash)
+            const count = rules.length ? lines.filter((l) => l === content).length : 0
+            if (rules.some((r) => count <= r.count)) continue
+            report(to, path, line, problem)
+          }
+          continue
+        }
         if (mode !== '120000' && patterns.some((p) => p.test(path))) {
           const problem = translationProblem(text)
           if (problem) report(to, path, 1, problem)
@@ -257,7 +320,7 @@ export function checkRange({ repo, base, head, policy, pull = null, exclude = nu
           oldOid === ZERO
             ? text.split('\n').map((text, index) => ({ line: index + 1, text }))
             : addedLines(
-                git(
+                gitDiff(
                   'diff',
                   '--no-ext-diff',
                   '--no-textconv',

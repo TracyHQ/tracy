@@ -12,7 +12,7 @@ import { englishProblem } from '../lib/english-policy.mjs'
 const SCRIPT = fileURLToPath(new URL('../check-language-policy.mjs', import.meta.url))
 const VI = 's\u1eeda l\u1ed7i'
 const ZH = '\u4fee\u590d'
-const emptyPolicy = () => ({ version: 1, translations: [], lines: [], objects: [] })
+const emptyPolicy = () => ({ version: 1, translations: [], captured: [], lines: [], objects: [] })
 const digest = (text) => createHash('sha256').update(text).digest('hex')
 
 function fixture(t) {
@@ -316,4 +316,100 @@ test('diff line numbers remain correct for content beginning with plus signs', (
     { line: 3, text: '+++ value' },
     { line: 4, text: 'English' }
   ])
+})
+
+test('a text blob over 16 MB is scanned in full without any object approval', (t) => {
+  const f = fixture(t)
+  const filler = `${'English demo line for a large captured file.\n'.repeat(400_000)}`
+  assert.ok(Buffer.byteLength(filler) > 16 * 1024 * 1024)
+  f.put('data/large.json', filler)
+  f.commit()
+  assert.deepEqual(f.check().findings, [])
+  const lines = filler.split('\n').length
+  f.put('data/large.json', `${filler}${ZH}\n`)
+  f.commit()
+  assert.deepEqual(
+    f.check().findings.map((v) => [v.path, v.line, v.problem]),
+    [
+      ['data/large.json', lines, 'non-English letters in contributor-facing text'],
+      ['data/large.json', lines, 'non-English letters in contributor-facing text']
+    ]
+  )
+})
+
+test('captured kits allow third-party accented values but refuse Vietnamese values and foreign keys', (t) => {
+  const kit = 'packages/cms/tracy-joomla-quickstart/contracts/ja-example/j6/1.0.0/template-kit.json'
+  const policy = emptyPolicy()
+  policy.captured.push({
+    path: 'packages/cms/tracy-joomla-quickstart/contracts/*/*/*/template-kit.json',
+    reason: 'Verbatim third-party demo content.'
+  })
+  const accented = JSON.stringify(
+    { title: 'Chasing the northern lights from Troms\u00f8', place: 'Gal\u00e1pagos, caf\u00e9' },
+    null,
+    2
+  )
+  const f = fixture(t)
+  f.put(kit, accented)
+  f.commit()
+  assert.deepEqual(f.check(policy).findings, [])
+  // The same path outside the captured class keeps the full English rule.
+  assert.ok(f.check().findings.length > 0)
+
+  const vietnamese = '\u0110\u00e0 N\u1eb5ng'
+  for (const [text, line, problem] of [
+    [`{\n  "place": "${vietnamese}"\n}\n`, 2, 'Vietnamese text in captured content'],
+    [`{\n  "place": "${vietnamese.normalize('NFD')}"\n}\n`, 2, 'Vietnamese text in captured content'],
+    ['{\n  "a": 1,\n  "place": "\\u0110\\u00e0 N\\u1eb5ng"\n}\n', 3, 'Vietnamese text in captured content'],
+    [`{\n  "caf\u00e9": "Plain value"\n}\n`, 2, 'captured keys must be English identifiers'],
+    ['{ "broken": ', 1, 'captured content is not valid JSON']
+  ]) {
+    const g = fixture(t)
+    g.put(kit, text)
+    g.commit()
+    assert.deepEqual(
+      g.check(policy).findings.map((v) => [v.path, v.line, v.problem]),
+      [[kit, line, problem]],
+      text
+    )
+  }
+})
+
+test('a reviewed line allowance can approve one exact Vietnamese line inside a captured kit', (t) => {
+  const kit = 'packages/cms/tracy-joomla-quickstart/contracts/ja-example/j6/1.0.0/template-kit.json'
+  const quoted = '  "sample": "Try the c\u00e0 ph\u00ea tr\u1ee9ng at Wren Example Cafe."'
+  const policy = emptyPolicy()
+  policy.captured.push({
+    path: 'packages/cms/tracy-joomla-quickstart/contracts/*/*/*/template-kit.json',
+    reason: 'Verbatim third-party demo content.'
+  })
+  policy.lines.push({
+    path: kit,
+    sha256: digest(quoted),
+    count: 1,
+    reason: 'Reviewed verbatim demo paragraph.'
+  })
+  const f = fixture(t)
+  f.put(kit, `{\n${quoted}\n}\n`)
+  f.commit()
+  assert.deepEqual(f.check(policy).findings, [])
+  f.put(kit, `[\n{\n${quoted}\n},\n{\n${quoted}\n}\n]\n`)
+  f.commit()
+  assert.ok(f.check(policy).findings.some((v) => v.path === kit && v.line === 3))
+})
+
+test('captured classes must be specific JSON paths, and older policies without one still load', (t) => {
+  const root = mkdtempSync(join(tmpdir(), 'english-policy-'))
+  t.after(() => rmSync(root, { recursive: true, force: true }))
+  const file = join(root, 'policy.json')
+  writeFileSync(file, JSON.stringify(emptyPolicy()))
+  assert.deepEqual(readPolicy(file).captured, [])
+  writeFileSync(
+    file,
+    JSON.stringify({
+      ...emptyPolicy(),
+      captured: [{ path: 'packages/**', reason: 'This is much too broad.' }]
+    })
+  )
+  assert.throws(() => readPolicy(file), /specific JSON/)
 })
