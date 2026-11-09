@@ -7,9 +7,30 @@ export function viewerWorkspaceUrl(workspace, origin) {
   return url.href
 }
 
+export async function dismissWelcome(page, { timeoutMs = 60000 } = {}) {
+  // A newly imported copy opens the Welcome dialog over that composer. Close it through the
+  // same visible control a person uses before submitting the measured turn.
+  const welcome = page.locator('.tv-welcome .tv-wl-close')
+  if (await welcome.isVisible().catch(() => false)) {
+    await welcome.click()
+    await page.locator('.tv-welcome').waitFor({ state: 'hidden', timeout: timeoutMs })
+  }
+  // Closing Welcome can start the guided tour on the same newly imported site.
+  const tourLayer = page.locator('.tv-tour')
+  if (!(await tourLayer.isVisible().catch(() => false)))
+    await tourLayer.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {})
+  const tour = page.locator('.tv-tour .tv-tour-link').first()
+  if (await tour.isVisible().catch(() => false)) {
+    await tour.click()
+    await tourLayer.waitFor({ state: 'hidden', timeout: timeoutMs })
+  }
+  await page.locator('.tracy-boot-cover').waitFor({ state: 'hidden', timeout: timeoutMs })
+}
+
 export async function prepareViewer(page, copyAddress, { timeoutMs = 60000 } = {}) {
   // The workspace composer can render underneath Tracy's asynchronous boot cover.
   await page.locator('.tracy-boot-cover').waitFor({ state: 'hidden', timeout: timeoutMs })
+  await dismissWelcome(page, { timeoutMs })
   const expand = page.getByRole('button', { name: 'Expand sidebar', exact: true })
   if (await expand.isVisible().catch(() => false)) await expand.click()
   await page.locator('[role="textbox"][contenteditable]:visible').last().waitFor({ timeout: timeoutMs })
