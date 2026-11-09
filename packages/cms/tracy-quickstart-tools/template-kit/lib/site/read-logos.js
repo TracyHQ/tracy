@@ -76,7 +76,9 @@ export function readLogos({ logoFiles, siteName, brand }) {
     if (!isImg && img.closest('img, a.btn, button')) continue
     const blockEl = img.closest('[data-kit-block]')
     const r = img.getBoundingClientRect()
-    const twin = img.closest('.d-light, .d-dark, [class*="logo-light"], [class*="logo-dark"]')
+    const twin = img.closest(
+      '.d-light, .d-dark, [class*="logo-light"], [class*="logo-dark"], [class*="logo--light"], [class*="logo--dark"]'
+    )
     const blockText = blockEl ? blockEl.innerText.replace(/\s+/g, ' ').trim() : null
     logos.push({
       file: file ?? (isImg ? null : 'inline-svg'),
@@ -97,8 +99,14 @@ export function readLogos({ logoFiles, siteName, brand }) {
     MODE.test(c)
   )
   const theme = document.documentElement.getAttribute('data-bs-theme')
+  // A WordPress block theme of the Tracy convention keeps light and dark in `data-theme` on the root.
+  const wpTheme = document.documentElement.getAttribute('data-theme')
   const opensOn = {
-    markers: [...marks, ...(theme ? [`[data-bs-theme=${theme}]`] : [])],
+    markers: [
+      ...marks,
+      ...(theme ? [`[data-bs-theme=${theme}]`] : []),
+      ...(wpTheme ? [`[data-theme=${wpTheme}]`] : [])
+    ],
     ground:
       hex(getComputedStyle(document.body).backgroundColor) ??
       hex(getComputedStyle(document.documentElement).backgroundColor)
@@ -166,6 +174,18 @@ export function switchTheme() {
   if (t) {
     html.setAttribute('data-bs-theme', t === 'dark' ? 'light' : 'dark')
     return `[data-bs-theme=${t === 'dark' ? 'light' : 'dark'}]`
+  }
+  // A WordPress block theme of the Tracy convention: `data-theme` on the root, absent while the visitor's system
+  // decides. Without the attribute the page has another theme only when it prints a dark-background logo block.
+  const wp = html.getAttribute('data-theme')
+  if (wp === 'dark' || wp === 'light') {
+    const to = wp === 'dark' ? 'light' : 'dark'
+    html.setAttribute('data-theme', to)
+    return `[data-theme=${to}]`
+  }
+  if (!wp && document.querySelector('[class*="logo--dark"], .tracy-logo-dark')) {
+    html.setAttribute('data-theme', 'dark')
+    return '[data-theme=dark]'
   }
   return null
 }
