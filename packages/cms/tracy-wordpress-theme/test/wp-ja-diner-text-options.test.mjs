@@ -19,6 +19,7 @@ const COPIES = ['overlays/wp-ja-diner', 'src/wp-ja-diner']
 const OPTIONS = {
   wp_ja_diner_contact_address: '1600 Amphitheatre Parkway, Mountain View 5692',
   wp_ja_diner_contact_phone: '(084) 555-0110',
+  wp_ja_diner_footer_address: '398 North 23th Dumbledore Street,\nHogsmeade Village, Britain.',
   wp_ja_diner_footer_mobile: '+201 382 348 5327',
   wp_ja_diner_footer_landline: '+201 166 993 7763',
   wp_ja_diner_footer_email: 'Info@joomlart.com'
@@ -37,8 +38,7 @@ function wp_date(){return '2026';} function get_bloginfo(){return 'Site';} funct
 require $T.'/inc/identity.php';
 ob_start(); include $T.'/patterns/contact-form.php'; $out=ob_get_clean();
 $foot=file_get_contents($T.'/parts/footer.html');
-preg_match('#<!-- wp:paragraph \\{"metadata":\\{"name":"footer.contact.text"\\}\\} -->(.*?)<!-- /wp:paragraph -->#s',$foot,$m);
-echo $out."\\n=====FOOTER\\n".wp_ja_diner_identity_fill($m[1]);
+echo $out."\\n=====FOOTER\\n".wp_ja_diner_identity_fill($foot);
 `
 
 const php = spawnSync('php', ['-v'])
@@ -52,7 +52,7 @@ const render = (dir, options) => {
 }
 
 for (const copy of COPIES) {
-  test(`${copy}: the theme names the five text options and keeps no demo words in its files`, () => {
+  test(`${copy}: the theme names the six text options and keeps no demo words in its files`, () => {
     const identity = readFileSync(path.join(PKG, copy, 'inc/identity.php'), 'utf8')
     const pattern = readFileSync(path.join(PKG, copy, 'patterns/contact-form.php'), 'utf8')
     for (const [name, demo] of Object.entries(OPTIONS)) {
@@ -74,19 +74,22 @@ for (const copy of COPIES) {
     skip: php.status !== 0
   }, () => {
     const out = render(copy, OPTIONS)
-    for (const demo of Object.values(OPTIONS)) assert.ok(out.includes(demo), `${demo} is printed`)
+    for (const demo of Object.values(OPTIONS))
+      assert.ok(out.includes(demo.replace('\n', '<br>')), `${demo} is printed (a line break drawn as a br)`)
     assert.ok(out.includes('<a href="mailto:Info@joomlart.com">Info@joomlart.com</a>'))
   })
 
   test(`${copy}: an option value is printed, escaped, in every place`, { skip: php.status !== 0 }, () => {
     const out = render(copy, {
       wp_ja_diner_contact_address: '5 Test <b>Lane</b>',
+      wp_ja_diner_footer_address: '9 Foot <i>Road</i>\nTown',
       wp_ja_diner_contact_phone: '(000) 111-0000',
       wp_ja_diner_footer_mobile: '+1 000',
       wp_ja_diner_footer_landline: '+2 000',
       wp_ja_diner_footer_email: 'hi@example.test'
     })
     assert.ok(out.includes('5 Test &lt;b&gt;Lane&lt;/b&gt;'))
+    assert.ok(out.includes('9 Foot &lt;i&gt;Road&lt;/i&gt;<br>Town'))
     assert.ok(out.includes('(000) 111-0000'))
     assert.ok(out.includes('M. +1 000<br>P. +2 000'))
     assert.ok(out.includes('<a href="mailto:hi@example.test">hi@example.test</a>'))

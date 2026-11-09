@@ -299,6 +299,16 @@
       "why": "Text option of the theme: one contact fact shown in the header or footer."
     },
     {
+      "key": "theme.wp_ja_diner_footer_address",
+      "role": "contact.address",
+      "group": {
+        "id": "site.footer-address.0",
+        "item": 4,
+        "kind": "contact"
+      },
+      "why": "Text option of the theme: the footer address, kept apart from the Contact page address as the demo keeps two."
+    },
+    {
       "key": "theme.wp_ja_diner_footer_email",
       "role": "contact.email",
       "group": {

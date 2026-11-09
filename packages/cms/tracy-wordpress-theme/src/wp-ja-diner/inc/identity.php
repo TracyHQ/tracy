@@ -36,6 +36,7 @@ const WP_JA_DINER_IDENTITY_TOKENS = array(
 const WP_JA_DINER_TEXT_OPTIONS = array(
 	'wp_ja_diner_contact_address',
 	'wp_ja_diner_contact_phone',
+	'wp_ja_diner_footer_address',
 	'wp_ja_diner_footer_mobile',
 	'wp_ja_diner_footer_landline',
 	'wp_ja_diner_footer_email',
@@ -43,7 +44,7 @@ const WP_JA_DINER_TEXT_OPTIONS = array(
 
 /** The footer tokens and the text option each one prints. */
 const WP_JA_DINER_TEXT_TOKENS = array(
-	'contact.address'  => 'wp_ja_diner_contact_address',
+	'contact.address'  => 'wp_ja_diner_footer_address',
 	'contact.phone'    => 'wp_ja_diner_contact_phone',
 	'contact.mobile'   => 'wp_ja_diner_footer_mobile',
 	'contact.landline' => 'wp_ja_diner_footer_landline',
