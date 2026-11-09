@@ -1669,24 +1669,24 @@
     "version": "1.0.2",
     "webroot": {
       "file": "ja-diner-wp7-webroot-1.0.2.tar.gz",
-      "bytes": 60052804,
-      "sha256": "62a25a4eb4d25219e479f80af10b139c0d90331916fb4dbe80fcd98da8251c34",
-      "githubAssetId": 724168105,
+      "bytes": 60052846,
+      "sha256": "dd7fe65f72f96e13e6d9f37ea1f2eaa85f86922336597bf18219daf40373170d",
+      "githubAssetId": 726540249,
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart/ja-diner/wp7/ja-diner-wp7-webroot-1.0.2.tar.gz"
     },
     "database": {
       "file": "ja-diner-wp7-database-1.0.2.sql.gz",
-      "bytes": 64008,
-      "sha256": "7826189150083b5f2df75d152d4d5b374323e619657d51c1472a730df7d14545",
-      "githubAssetId": 724168104,
+      "bytes": 63983,
+      "sha256": "cb7eef5b9e22a9f16b091fde811b935ab230f8f9bb1a4f680ae74a388d72fe39",
+      "githubAssetId": 726540267,
       "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart/ja-diner/wp7/ja-diner-wp7-database-1.0.2.sql.gz"
     },
     "cowork": {
-      "file": "claude-cowork-0.18.41.zip",
-      "version": "0.18.41",
-      "bytes": 2028437,
-      "sha256": "974637fc9b808a0c9f5cc0377501bdace0fb89c348c0341774884bb72db0b166",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.41/claude-cowork-0.18.41.zip",
+      "file": "claude-cowork-0.18.42.zip",
+      "version": "0.18.42",
+      "bytes": 2030183,
+      "sha256": "b9d38fc23dae313b6497e8fc876fdea5003d89c0d386e7946594646382194b28",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/wordpress-v0.18.42/claude-cowork-0.18.42.zip",
       "contractVersions": ["1.0.0", "1.0.2"],
       "alsoCarries": {
         "ja-diner/wp7/1.0.0": {
@@ -1708,13 +1708,13 @@
         }
       },
       "contractFiles": {
-        "content-map.json": "4c56d70d3153b3258fb66b0119510dfecc8038935a8629555536996922c91e13",
-        "demo-trim-map.json": "3f9ac679a79dabe6cf7dec0f94cb52bcc78047c27b4172724719fa5f2f16432b",
-        "editions.json": "fc10cc0e20e4937e3242a69f80d26e8b43f3061663046780b9c926cda82626c9",
+        "content-map.json": "65d3ef68b931658b88da723b16a234ca33e7967292b16ff60cef54b0a6ea24f0",
+        "demo-trim-map.json": "ac8c7ba897dc4feaa7abcb68a463e9d5bdade9424cf0cc165912a02dee3af5b7",
+        "editions.json": "bf82c7cd612a18445374404ef42c6a71a7a6f3cf95c50ee4737a088a3155d73a",
         "manifest.json": "6aa939dec99e5a9baa733737754875f7c1631c7523b069caa1add7bd5d525b58",
         "presentation-lock.json": "fde46dd15b220f04d467991101be94073f8ebe858768acdf14cd4524f13f0e84",
-        "showcase-nav-map.json": "db617c1e3c3b124ea660cab89091e04029ed29d72c32d23b13a3d77ebcba6dd4",
-        "superseded.json": "403c5abe35940e26b45f8afa36b72e32ede0536046723a321393cbe837199d08"
+        "showcase-nav-map.json": "f03143231ecf62f81842ecd9415d82523e69da91cad7822efca2600390771b15",
+        "superseded.json": "06474c4fec6e56ca424744433ae34216c861a85cc64faca2ffba9a609c8e88a6"
       }
     },
     "contract": "ja-diner/wp7/1.0.2"
