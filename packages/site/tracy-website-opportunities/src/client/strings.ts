@@ -508,6 +508,22 @@ export const en = {
   'bulk.resume': 'Resume {count}',
   'bulk.result': '{done} done · {skipped} left as they were · {failed} failed',
   'bulk.tooMany': 'Too many at once. Narrow the filter to 500 places or fewer.',
+  'delete.button': 'Delete',
+  'delete.title.one': 'Delete {name}?',
+  'delete.title.other': 'Delete {count} places?',
+  'delete.title.unnamed': 'Delete this place?',
+  'delete.lead.one':
+    'This place leaves My opportunities with its research, briefs and demo history. You cannot undo this.',
+  'delete.lead.other':
+    'These places leave My opportunities with their research, briefs and demo history. You cannot undo this.',
+  'delete.site': 'Its live demo site is removed too.',
+  'delete.sites.one': '{count} of them has a live demo site, which is removed too.',
+  'delete.sites.other': '{count} of them have a live demo site, which is removed too.',
+  'delete.cancel': 'Keep',
+  'delete.confirm': 'Delete',
+  'delete.deleting': 'Deleting…',
+  'delete.result': '{deleted} deleted · {failed} failed',
+  'delete.siteBusy': 'A demo site is busy right now. Wait a moment, then delete again.',
   /** The My opportunities map: a pin shows the step number, `!` when it waits for you. */
   'map.legend.steps': 'Other steps (the number is the step)',
   /** Accessible name of the `My opportunities › Name › Brief N` trail. */

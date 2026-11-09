@@ -17,6 +17,7 @@ import {
   ExternalLink,
   ImageIcon,
   Maximize2,
+  Trash2,
   X
 } from 'lucide-react'
 import { Badge, Button, Spinner } from '@tracy/ui'
@@ -74,6 +75,8 @@ export interface InspectorProps {
   researchAgain?: AgainControl
   /** Read menu again in the Menu block (Research again over `MENU_PARTS`); absent: no button. */
   readMenuAgain?: AgainControl
+  /** Delete this opportunity (the list asks for a confirmation first); absent: no button. */
+  onDelete?: () => void
 }
 
 const isRecord = (v: unknown): v is Body => typeof v === 'object' && v !== null && !Array.isArray(v)
@@ -363,7 +366,8 @@ export function Inspector({
   readMenuAgain,
   send,
   onCloseSend,
-  buildDisabled
+  buildDisabled,
+  onDelete
 }: InspectorProps): JSX.Element {
   const ago = (at: unknown) => relativeTime(typeof at === 'string' ? at : null, now, locale)
   const candidate = isRecord(row.candidate) ? row.candidate : {}
@@ -404,6 +408,12 @@ export function Inspector({
           <Maximize2 aria-hidden="true" />
           {t('inspector.details')}
         </Button>
+        {onDelete ? (
+          <Button type="button" size="xs" variant="destructive" onClick={onDelete}>
+            <Trash2 aria-hidden="true" />
+            {t('delete.button')}
+          </Button>
+        ) : null}
         <Button
           type="button"
           size="icon-sm"
