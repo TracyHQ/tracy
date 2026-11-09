@@ -79,11 +79,40 @@ test('Opportunity: nothing found reads plainly', () => {
   assert.equal(placePieces(row, t, opts).opportunity.why, 'No website · No reviews · No social pages')
 })
 
-test('Demo and Status: no demo yet, the next action is Build demo', () => {
+test('Demo and Status: a brief and no demo yet, the next action is Build demo', () => {
   const p = placePieces(researched(), t, opts)
   assert.deepEqual(p.demo, { kind: 'none' })
-  assert.equal(p.status.label, 'Not built')
+  assert.equal(p.status.label, 'Brief ready')
   assert.deepEqual(p.next, { label: 'Build demo', run: { kind: 'demo', action: 'build' }, disabled: false })
+})
+
+test('Status: researched without a brief offers Make content brief, never Build demo (same steps as Details)', () => {
+  const p = placePieces(
+    researched({ latestRevision: null, research: { state: 'done', researchedAt: iso(NOW - D) } }),
+    t,
+    opts
+  )
+  assert.equal(p.status.label, 'Researched')
+  assert.deepEqual(p.next, { label: 'Make content brief', run: { kind: 'brief' }, disabled: false })
+})
+
+test('Status: a place never researched offers Start research', () => {
+  const p = placePieces(
+    researched({
+      stage: 'research',
+      job: null,
+      latestRevision: null,
+      research: { state: 'not_started', researchedAt: null }
+    }),
+    t,
+    opts
+  )
+  assert.equal(p.status.label, 'Not started')
+  assert.deepEqual(p.next, {
+    label: 'Start research',
+    run: { kind: 'row', action: 'start' },
+    disabled: false
+  })
 })
 
 test('Demo: a live demo shows its thumbnail address and days left; Status Demo ready, next Open demo', () => {
@@ -109,10 +138,10 @@ test('Demo: a live demo shows its thumbnail address and days left; Status Demo r
   })
   assert.equal(p.status.label, 'Demo ready')
   assert.equal(p.status.tone, 'live')
-  assert.deepEqual(p.next, { label: 'Open demo', run: { kind: 'demo', action: 'open' }, disabled: false })
+  assert.deepEqual(p.next, { label: 'Send demo', run: { kind: 'row', action: 'send-demo' }, disabled: false })
 })
 
-test('Demo: a failed demo shows the reason in words, never the code; next Build again', () => {
+test('Demo: a failed demo shows the reason in words, never the code; next Try again', () => {
   const row = researched({
     demoAction: { id: 'a1', state: 'failed', step: 'kit', error: 'DEMO_STEP_TIMEOUT' }
   })
@@ -123,7 +152,7 @@ test('Demo: a failed demo shows the reason in words, never the code; next Build 
   })
   assert.equal(p.status.label, 'Build failed')
   assert.equal(p.status.tone, 'destructive')
-  assert.deepEqual(p.next, { label: 'Build again', run: { kind: 'demo', action: 'build' }, disabled: false })
+  assert.deepEqual(p.next, { label: 'Try again', run: { kind: 'demo', action: 'build' }, disabled: false })
 })
 
 test('Demo: a build under way is Building, and its button waits', () => {
@@ -131,7 +160,7 @@ test('Demo: a build under way is Building, and its button waits', () => {
   const p = placePieces(row, t, opts)
   assert.deepEqual(p.demo, { kind: 'building' })
   assert.equal(p.status.label, 'Building')
-  assert.deepEqual(p.next, { label: 'Building', run: null, disabled: true })
+  assert.deepEqual(p.next, { label: 'Running', run: null, disabled: true })
 })
 
 test('Demo: an expired demo says when it expired, and Build again rebuilds it', () => {
@@ -152,7 +181,7 @@ test('Demo: an expired demo says when it expired, and Build again rebuilds it', 
   assert.deepEqual(p.next.run, { kind: 'demo', action: 'rebuild' })
 })
 
-test('Status: a place still in research keeps its research action', () => {
+test('Status: a place still in research waits while it runs, and resumes when it stopped', () => {
   const running = placePieces(
     researched({
       stage: 'research',
@@ -163,7 +192,7 @@ test('Status: a place still in research keeps its research action', () => {
     opts
   )
   assert.equal(running.status.label, 'Researching')
-  assert.deepEqual(running.next, { label: 'Cancel', run: { kind: 'row', action: 'cancel' }, disabled: false })
+  assert.deepEqual(running.next, { label: 'Running', run: null, disabled: true })
   const stopped = placePieces(
     researched({ stage: 'research', latestRevision: null, job: { id: 'j1', state: 'paused' } }),
     t,

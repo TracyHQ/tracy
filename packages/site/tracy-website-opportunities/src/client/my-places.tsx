@@ -167,7 +167,8 @@ function StatusPiece({
   onNext(run: NextRun): void
 }): JSX.Element {
   const run = p.next.run
-  const primary = run?.kind === 'demo' && (run.action === 'open' || p.state === 'ready')
+  // The current step's action reads as the primary press, as in the Details stepper; Open demo stays plain.
+  const primary = run !== null && !(run.kind === 'demo' && run.action === 'open')
   return (
     <div className="tracy-wo-p-status">
       <StatusBadge status={p.status} />

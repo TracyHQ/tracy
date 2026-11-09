@@ -448,9 +448,24 @@ export function MyOpportunitiesView({
       })
     }
   }
+  // Make content brief from a card: the brief job starts, then Details shows its steps (the list carries no brief job).
+  const makeBrief = async (row: OpportunityListRow): Promise<void> => {
+    if (busy.has(row.id)) return
+    setActionFailed(false)
+    setBusy((b) => new Set(b).add(row.id))
+    const answer = await api.createRevision(row.id, `brief-${row.id}-${Date.now()}`)
+    setBusy((b) => {
+      const next = new Set(b)
+      next.delete(row.id)
+      return next
+    })
+    if (!answer.ok) return setActionFailed(true)
+    onOpen(row.id)
+  }
   /** The one next action of a place, from its four pieces. */
   const runNext = (row: OpportunityListRow, run: NextRun): void => {
     if (run.kind === 'row') return void act(run.action, row)
+    if (run.kind === 'brief') return void makeBrief(row)
     if (run.action === 'build') return void act('build', row)
     if (run.action === 'open') return void act('open-site', row)
     void demoPress(row, row.demo?.frozenAt && !row.demo.deletedAt ? 'reopen' : 'rebuild')

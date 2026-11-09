@@ -20,6 +20,8 @@ import {
   stageOf,
   statusView
 } from './opportunity-row.ts'
+import { type ResearchState, researchOf } from './research-gate-model.ts'
+import { stepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
 export type DemoPiece =
@@ -29,9 +31,13 @@ export type DemoPiece =
   | { kind: 'failed'; reason: string }
   | { kind: 'expired'; line: string }
 
-/** What the one button does: a row action of the research stage, or the demo state machine's primary. */
+/**
+ * What the one button does, following the same four steps as the Details stepper (`stepper-model.ts`): a row action
+ * (Start research, Resume, Send demo), Make content brief, or a demo press.
+ */
 export type NextRun =
   | { kind: 'row'; action: NextAction }
+  | { kind: 'brief' }
   | { kind: 'demo'; action: 'build' | 'open' | 'rebuild' }
 
 export interface PlacePieces {
@@ -87,6 +93,7 @@ function whyLine(row: OpportunityListRow, t: Translate, locale: string): string 
   return [t(web), reviewText, social].join(' · ')
 }
 
+/** A researched place with no demo yet: Researched, or Brief ready once it has a content brief. */
 const STATE_STATUS: Record<DemoState, { key: string; tone: BadgeTone }> = {
   none: { key: 'my.status.notBuilt', tone: 'outline' },
   queued: { key: 'my.status.building', tone: 'secondary' },
@@ -127,30 +134,86 @@ function inResearch(row: OpportunityListRow, state: DemoState): boolean {
 export function placeStatus(row: OpportunityListRow, t: Translate): { label: string; tone: BadgeTone } {
   const state = demoStateOf(row)
   if (inResearch(row, state)) return { label: t(statusView(row).key), tone: statusView(row).variant }
+  if (state === 'none')
+    return row.latestRevision?.id
+      ? { label: t('status.brief'), tone: 'ok' }
+      : { label: t('my.status.researched'), tone: 'ok' }
   return { label: t(STATE_STATUS[state].key), tone: STATE_STATUS[state].tone }
+}
+
+const OLD_HOST_RESEARCH: Record<string, ResearchState> = {
+  completed: 'done',
+  queued: 'running',
+  running: 'running',
+  failed: 'failed'
+}
+
+/** The card's one button: the current step's action of the stepper model, so it never skips the content brief. */
+function nextOf(
+  row: OpportunityListRow,
+  state: DemoState,
+  t: Translate,
+  opts: PieceOptions
+): PlacePieces['next'] {
+  // A demo handed to the client chat keeps its own button.
+  if (nextAction(row) === 'open-demo-chat')
+    return {
+      label: t(ACTION_VIEW['open-demo-chat'].labelKey),
+      run: { kind: 'row', action: 'open-demo-chat' },
+      disabled: false
+    }
+  // An older host sends no `research`: the research job says it (completed = done).
+  const jobState = row.job?.state ?? ''
+  const research =
+    (row as { research?: unknown }).research === undefined
+      ? {
+          state: OLD_HOST_RESEARCH[jobState] ?? ('not_started' as const),
+          researchedAt: null,
+          done: jobState === 'completed'
+        }
+      : researchOf(row)
+  const step = stepperView({
+    research,
+    researchJob: row.job ?? null,
+    brief: row.latestRevision ?? null,
+    demo: state,
+    sentAt: null
+  })
+  if (step.running) return { label: t('stepper.running'), run: null, disabled: true }
+  const action = step.action
+  if (action === null) {
+    const primary = demoBlock(state, row, t, { now: opts.now, locale: opts.locale }).primary
+    return {
+      label: primary.label,
+      run: primary.action === null ? null : { kind: 'demo', action: primary.action },
+      disabled: primary.disabled
+    }
+  }
+  const label = t(action.labelKey)
+  const blocked = opts.buildBlocked === true
+  switch (action.kind) {
+    case 'start-research':
+      return { label, run: { kind: 'row', action: 'start' }, disabled: false }
+    case 'resume-research':
+      return { label, run: { kind: 'row', action: 'resume' }, disabled: false }
+    case 'make-brief':
+    case 'retry-brief':
+      return { label, run: { kind: 'brief' }, disabled: false }
+    case 'build':
+    case 'retry-build':
+      return { label, run: { kind: 'demo', action: 'build' }, disabled: blocked }
+    case 'rebuild':
+      return { label, run: { kind: 'demo', action: 'rebuild' }, disabled: blocked }
+    case 'send':
+      return { label, run: { kind: 'row', action: 'send-demo' }, disabled: false }
+  }
 }
 
 export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOptions): PlacePieces {
   const place = toPlaceRow(row)
   const state = demoStateOf(row)
-  const research = inResearch(row, state)
   const statusOf = placeStatus(row, t)
-  let next: PlacePieces['next']
-  const rowAction = nextAction(row)
-  if (research || rowAction === 'open-demo-chat') {
-    next = {
-      label: t(ACTION_VIEW[rowAction].labelKey),
-      run: { kind: 'row', action: rowAction },
-      disabled: false
-    }
-  } else {
-    const primary = demoBlock(state, row, t, { now: opts.now, locale: opts.locale }).primary
-    next = {
-      label: primary.label,
-      run: primary.action === null ? null : { kind: 'demo', action: primary.action },
-      disabled: primary.disabled || (primary.action !== 'open' && opts.buildBlocked === true)
-    }
-  }
+  const next = nextOf(row, state, t, opts)
   return {
     id: row.id,
     state,
