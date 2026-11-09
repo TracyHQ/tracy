@@ -204,16 +204,49 @@ a fault the flow has a door for. Detection per fault:
   then run the demo update again. Never edit the contract or hand-copy the profile onto the host.
 - **Layout check**: none.
 
-## F17. A new template kit over 16 MB turns the language policy job red
+## F17. A captured template kit that quotes Vietnamese text turns the language policy job red
 
-- **Code**: `language-policy` job, finding `not scanned: text blob exceeds 16777216 bytes; review explicitly` on
-  `.../contracts/<template>/<ver>/template-kit.json`. Offline detector: `checkRange` of `scripts/check-language-policy.mjs`
-  on the branch, or `git cat-file -s <blob>` above 16777216 for the kit file.
-- **Symptom**: a PR that adds a kit larger than 16 MB goes red; a rerun stays red because the job reads the policy from the
-  base commit (F14).
-- **Confirm**: `git cat-file -s HEAD:<path to template-kit.json>`; above 16777216 is this fault.
-- **Fix**: first an exemption PR on `develop` alone: one `objects` entry in `scripts/language-policy.json` with the kit's
-  `path`, its blob `oid` and a reason (the kit is sealed by its approval digest; its text was read by the kit checks). Merge
-  it. Then merge `develop` into the kit branch (not rebase: a rebase breaks the commit refs of regression cases) and push; a
-  rerun alone reuses the old base. A kit edited later has a new `oid` and needs a new entry.
+- **Code**: `language-policy` job, finding `Vietnamese text in captured content` at a line of
+  `packages/cms/tracy-joomla-quickstart/contracts/<template>/<ver>/template-kit.json`. Offline detector: `checkRange` of
+  `scripts/check-language-policy.mjs` on the branch (it scans blobs up to 100 MB, so a large kit is no longer a finding by
+  size).
+- **Symptom**: a PR that adds a kit whose captured demo text names a local place in Vietnamese (an article about a cafe, for
+  example) goes red. Other accents (Latin, Nordic, Spanish) pass: under the `captured` class the keys follow the full
+  English rule and string values are refused only for Vietnamese letters. A rerun stays red because the job reads the
+  checker and the policy from the base commit (F14).
+- **Confirm**: the finding names the line; `sed -n '<line>p' <kit>` shows the quoted text.
+- **Fix**: first an exact line allowance PR on `develop` alone: one `lines` entry in `scripts/language-policy.json` with the
+  kit `path`, the `sha256` of that exact line and a reason (verbatim third-party demo text, reviewed). Merge it. Then merge
+  `develop` into the kit branch (not rebase: a rebase breaks the commit refs of regression cases) and push; a rerun alone
+  reuses the old base. A line edited later has a new digest and needs a new entry.
 - **Layout check**: none (a policy entry only).
+
+## F18. A release accepted with no demo baseline
+
+- **Code**: `demo-baseline-missing` in the verdict's `demo-baseline` piece, read as `warn` on a release already shown
+  on Design inspiration; Road to live on /ops stays green, because its Template kit step asks for the file
+  (`kit-demo-baseline-missing`) only for the tags in `apps/tracy-web/src/lib/template-kit/demo-baseline-policy.json`.
+- **Symptom**: the template passed acceptance, yet the site check and the write step bench cannot tell demo words from
+  the customer's words on its sites. Met on JA Voyara 1.0.12: /ops 11 of 11 green, no `demo-baseline.json` beside
+  `contracts/ja-voyara/j6/1.0.12/`, while JA Boxing 1.0.11 and JA Diner 1.0.5 had one.
+- **Confirm**: `ls <contract dir>/demo-baseline.json`, or the verdict JSON's `demo-baseline` piece is not `done`.
+- **Fix**: no new template version. Restore the pinned version on a fresh stand nobody writes to, check the two asset
+  hashes against the pin, then `WRITE_BENCH_BASELINE_DIR=<dir> node apps/tracy-web/scripts/site-check-baseline.mjs
+  --base <stand address> --version <contract id> --pages-file <the kit's pages[].path as JSON>` and
+  `node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs baseline --from <dir>/<contract id with / as _>.json
+  --contract <contract dir>`. Commit the file, then add the tag to `holdPublishFor` in the policy file with its reason, so
+  /ops holds the next version too. The file is not one of the cowork `contractFiles` (manifest, content map,
+  presentation lock, showcase map), so no claude-cowork release is needed.
+- **Check**: the verdict's `demo-baseline` piece reads `done` `demo-baseline-recorded`, and the baseline line reports no
+  page the host could not reach. Nothing on the site changes, so no layout check is needed.
+
+## F19. Road to live shows "Design system ... not checked" after a release went live or a pin changed
+
+- **Code**: /ops Design system step reads `Not checked` (or an error) for the new version, or shows the old version or an
+  old `checkedAt`. Offline detector: none (a server fact); the proof is the step on /ops itself.
+- **Symptom**: the release is live and `tracy_setting.json` is pinned, yet the step has not run for it. GitHub sends Tracy
+  no event for asset uploads, so nothing starts the checks.
+- **Confirm**: open /ops and read the Design system step: version and `checkedAt`.
+- **Fix**: press Refresh on /ops/cms quickstarts (`POST /api/ops/quickstarts/refresh`), wait about 2 minutes, then press
+  Check again on the step if it still reads `Not checked` or an error. Never edit the release to force it.
+- **Layout check**: none.

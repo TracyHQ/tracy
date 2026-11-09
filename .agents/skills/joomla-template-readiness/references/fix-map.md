@@ -48,4 +48,6 @@ step, fix and layout check. Find the code here before trying a fix of your own.
 | `language-policy` job red on a policy edit in the same PR | F14 |
 | demo update `download failed: ... returned error: 504` on a `releases/download` URL | F15 |
 | `!! contract profile <id>: not on disk`; `!! contract-fetch:` | F16 |
-| `language-policy` finding `text blob exceeds 16777216 bytes` on a `template-kit.json` | F17 |
+| `language-policy` finding `Vietnamese text in captured content` on a `template-kit.json` | F17 |
+| `demo-baseline-missing` read as `warn` while /ops is green (template not in `demo-baseline-policy.json`) | F18 |
+| /ops Design system step `Not checked`, an error, or an old version/`checkedAt` after a release or pin | F19 |
