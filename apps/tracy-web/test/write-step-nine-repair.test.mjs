@@ -79,6 +79,34 @@ test('no faults means no turn, and the site is handed over with the first check'
   assert.equal(saved.get('repair-pass.json').status, 'nothing-to-send')
 })
 
+test('step 9 saves the rejected-picture faults in its final report', async () => {
+  const pictures = {
+    version: 'site-pictures/1',
+    frames: [
+      {
+        frame: 'hero.1',
+        source: 'owner-photo',
+        sitePath: 'images/tracy-content/hero.jpg',
+        filledBy: { rung: 'best-rejected', faults: ['subject cut off'] }
+      }
+    ]
+  }
+  const { result, saved } = await stepNine({
+    checks: [checkOf([])],
+    agent: fakeAgent(),
+    input: { pictures }
+  })
+  assert.deepEqual(result.report.pictureReview, [
+    {
+      frame: 'hero.1',
+      source: 'owner-photo',
+      sitePath: 'images/tracy-content/hero.jpg',
+      filledBy: { rung: 'best-rejected', faults: ['subject cut off'] }
+    }
+  ])
+  assert.deepEqual(saved.get('site-write-report.json').pictureReview, result.report.pictureReview)
+})
+
 test('a turn that causes a new blocking failure on its page is undone, newest first', async () => {
   const agent = fakeAgent()
   const first = checkOf([DEMO, ALT, failure('demo-words', '/contact', 'module-5.1', 'demo@example.test')])

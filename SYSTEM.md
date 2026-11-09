@@ -2385,6 +2385,9 @@ step's return is stopped with `session/cancel` and judged by what it wrote. A pa
 on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
 step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`).
+The final `site-write-report.json` also carries `pictureReview`: each picture that the fallback ladder kept after a
+looker rejection, with its frame, source, site path, rung and exact fault names. This is handover evidence, not a
+passing visual verdict.
 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
