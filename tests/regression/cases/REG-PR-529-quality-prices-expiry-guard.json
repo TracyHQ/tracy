@@ -8,10 +8,12 @@
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "S1: Read validUntil in apps/tracy-web/src/opportunities-build/quality-prices.json and compare it with the current date."
+    "S1: Read validUntil in apps/tracy-web/src/opportunities-build/quality-prices.json and compare it with the current date.",
+    "S2: Ask the logo and menu reading door for a ready vision assignment with no passed pixel test."
   ],
   "expect": [
-    "S1: validUntil is more than 7 days ahead; otherwise the test fails and names the file to renew."
+    "S1: validUntil is more than 7 days ahead; otherwise the test fails and names the file to renew.",
+    "S2: the door is ready and no proof is looked up; unassigned stays not_configured, a model without vision stays unavailable."
   ],
   "selectors": {
     "file": "apps/tracy-web/src/opportunities-build/quality-prices.json",
@@ -24,7 +26,8 @@
       "node",
       "--test",
       "--test-concurrency=1",
-      "apps/tracy-web/test/wo-quality-prices-expiry-guard.test.mjs"
+      "apps/tracy-web/test/wo-quality-prices-expiry-guard.test.mjs",
+      "apps/tracy-web/test/opportunities-menu-photo-reading.test.mjs"
     ]
   }
 }
