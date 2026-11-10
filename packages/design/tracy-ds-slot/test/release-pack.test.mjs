@@ -1,9 +1,10 @@
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { chmodSync, mkdirSync, mkdtempSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
+import { gunzipSync } from 'node:zlib'
 import { normaliseModes, packTar, packZip } from '../src/release-pack.mjs'
 
 const has = (cmd, arg) => spawnSync(cmd, [arg], { stdio: 'ignore' }).status === 0
@@ -45,6 +46,31 @@ test('packTar sets the modes itself: a 0600 member never reaches the archive', {
     assert.match(list, /^-rw-r--r-- .*templates\/x\/a\.css$/m)
     assert.match(list, /^drwxr-xr-x .*templates\/x\/?$/m)
     assert.doesNotMatch(list, /^-rw-------|^drwx------/m)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('packTar excludes extended attributes without changing member bytes', {
+  skip: !BSDTAR || process.platform !== 'darwin'
+}, () => {
+  const { root, site } = tree()
+  try {
+    const css = join(site, 'templates', 'x', 'a.css')
+    const attribute = 'com.tracy.release-pack-test'
+    execFileSync('xattr', ['-w', attribute, 'synthetic-release-metadata', css])
+    assert.equal(
+      execFileSync('xattr', ['-p', attribute, css], { encoding: 'utf8' }).trim(),
+      'synthetic-release-metadata'
+    )
+    const file = join(root, 'webroot.tar.gz')
+    packTar(site, file)
+    const archive = gunzipSync(readFileSync(file)).toString('latin1')
+    assert.equal(archive.includes(attribute), false, 'synthetic xattr must not enter the archive')
+    assert.deepEqual(archive.match(/(?:LIBARCHIVE|SCHILY)\.xattr\.[^=\n]+/g) ?? [], [])
+    assert.doesNotMatch(archive, /synthetic-release-metadata|AppleDouble|\._a\.css/)
+    assert.equal(execFileSync('tar', ['-xOzf', file, './templates/x/a.css'], { encoding: 'utf8' }), 'a{}')
+    assert.equal(execFileSync('tar', ['-xOzf', file, './cli.sh'], { encoding: 'utf8' }), '#!/bin/sh\n')
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
