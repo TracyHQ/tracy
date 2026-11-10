@@ -5,6 +5,8 @@ import { approvalOf, markProfileChanged } from './approval.js'
 import { researchRunOf } from './research-progress.js'
 import { stepProgressOf } from './step-progress.js'
 import { OWNER_MEDIA_SOURCE, sellerReviewRoutes } from './seller-review-routes.js'
+import { ownerEditRoutes } from './owner-edit-routes.js'
+import { SOCIAL_NETWORKS, bandsOf, hiddenSetOf, withReviewKeys } from '../domain/owner-site-picks.mjs'
 import { imageInfoWith } from './media-info.js'
 import { mediaJunk } from './media-junk.js'
 import { reviewSourcesRequired } from './tripadvisor-research.js'
@@ -1338,6 +1340,19 @@ export function websiteOpportunitiesRoutes(deps) {
     BASE
   })
 
+  ownerEditRoutes(app, {
+    pool,
+    caller,
+    refuse,
+    notFound,
+    json,
+    body,
+    opportunityShape,
+    opportunityOf,
+    UUID,
+    BASE
+  })
+
   builder?.routes(app, {
     caller,
     refuse,
@@ -1382,7 +1397,9 @@ export function websiteOpportunitiesRoutes(deps) {
     const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
     if (!opp) return notFound(c, 'opportunity')
     // Nothing of the shared place before this card's own research finished (#524).
-    if (!researched(await researchStateOf(pool, opp.id))) return json(c, { profile: null, decisions: [] })
+    const bands = bandsOf(opp.candidate?.factOverrides)
+    if (!researched(await researchStateOf(pool, opp.id)))
+      return json(c, { profile: null, decisions: [], bands })
     // 🔒 One decision per fact (#1791): the profile the latest brief revision froze, judged at the time and with the
     // dates its assessment used and the owner's choices of today, listing exactly the facts that brief states. Before
     // any revision (or with a host that keeps none), the place profile of the current research.
@@ -1416,6 +1433,9 @@ export function websiteOpportunitiesRoutes(deps) {
     return json(c, {
       profile,
       decisions,
+      // The Profile's bands (`domain/owner-site-picks.mjs BANDS`), each switched through this door's sibling `PUT /:id/facts`
+      // with `factId: band_<band>`.
+      bands,
       ...(frozen ? { revisionId: frozen.revisionId } : {}),
       ...(nameOff && frozen?.siteName ? { siteName: frozen.siteName } : {})
     })
@@ -1476,6 +1496,8 @@ export function websiteOpportunitiesRoutes(deps) {
       builder ? builder.detailOf(opp, who.accountId) : {}
     ])
     const pasted = pastedLinksOf(opp)
+    // The photos and videos the owner keeps off the site (`mediaPicks`, #537).
+    const mediaHidden = hiddenSetOf(opp.candidate?.mediaPicks)
     return json(c, {
       opportunity: opportunityShape(opp),
       research,
@@ -1507,9 +1529,10 @@ export function websiteOpportunitiesRoutes(deps) {
       })),
       // With the trade the brief speaks in (`trades.mjs briefTradeOf`), so Details words a food business as today and any
       // other business neutrally (#1780).
+      // Each review with its `key` and `ownerHidden` (`owner-site-picks.mjs withReviewKeys`, #537).
       profile: profile
         ? {
-            ...profile.profile,
+            ...withReviewKeys(profile.profile, opp.candidate),
             brand: profile.brand ?? null,
             trade: briefTradeOf({
               candidate: opp.candidate ?? {},
@@ -1534,8 +1557,14 @@ export function websiteOpportunitiesRoutes(deps) {
         ...(['tripadvisor', 'google-maps'].includes(m.source)
           ? { postId: m.post_id, credit: m.credit ?? null }
           : {}),
-        ...(m.origin ? { origin: m.origin } : {})
+        ...(m.origin ? { origin: m.origin } : {}),
+        // The owner kept it off the site (`PUT /:id/media/:mediaId/visibility`): still listed, in no brief slot.
+        ownerHidden: mediaHidden.has(m.id)
       })),
+      // The Profile's bands as the owner switched them (`factOverrides.band_<band>`), and the networks a social link
+      // the owner types may name (`PUT /:id/socials`).
+      bands: bandsOf(opp.candidate?.factOverrides),
+      socialNetworks: SOCIAL_NETWORKS,
       // The seller's approvals (#537, `approval.js`): what the Progress card and the gates read.
       approval: approvalOf({ opportunity: opp, research, latestBriefAt: await latestBriefAt(opp) }),
       // The sub steps of the step that runs now (#537, `step-progress.js`), from recorded data only.

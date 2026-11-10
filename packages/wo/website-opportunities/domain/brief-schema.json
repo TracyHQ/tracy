@@ -63,7 +63,7 @@
           "type": "object",
           "required": ["kind"],
           "properties": {
-            "kind": { "enum": ["bio", "post", "review"] },
+            "kind": { "enum": ["bio", "post", "review", "owner"] },
             "url": { "type": "string" },
             "source": { "type": "string" },
             "author": { "type": "string" }
@@ -71,6 +71,11 @@
         },
         "kind": { "type": "string", "description": "services only: service, class, membership or package." },
         "role": { "type": "string", "description": "team only: the role a text gives the person." },
+        "photoAssetId": {
+          "type": "string",
+          "minLength": 1,
+          "description": "team only: the photo the owner gave this person, an id of assets[]."
+        },
         "factId": {
           "type": "string",
           "minLength": 1,
@@ -234,6 +239,11 @@
             "youtube": { "type": "string" }
           },
           "additionalProperties": { "type": "string" }
+        },
+        "socialLabels": {
+          "type": "object",
+          "description": "Optional: the label the owner gave the link under socials.other.",
+          "properties": { "other": { "type": "string", "minLength": 1 } }
         }
       }
     },
@@ -993,7 +1003,7 @@
       "type": "object",
       "required": ["method", "services", "audience", "team", "story"],
       "properties": {
-        "method": { "enum": ["model", "rules"] },
+        "method": { "enum": ["model", "rules", "owner"] },
         "reason": {
           "type": "string",
           "description": "Why the model did not read (rules only): not_configured, unavailable, budget, failed, truncated (the answer hit the token limit), empty or unreadable (not the contract's JSON)."

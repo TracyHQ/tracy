@@ -51224,6 +51224,56 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/media/{mediaId}/visibility": {
+        "put": {
+          "operationId": "put_api_website_opportunities_id_media_mediaId_visibility",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "mediaId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hidden": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": ["hidden"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/name": {
         "put": {
           "operationId": "put_api_website_opportunities_id_name",
@@ -51556,6 +51606,51 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/reviews/visibility": {
+        "put": {
+          "operationId": "put_api_website_opportunities_id_reviews_visibility",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "hidden": {
+                      "type": "boolean"
+                    },
+                    "key": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["key", "hidden"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/revisions": {
         "post": {
           "operationId": "post_api_website_opportunities_id_revisions",
@@ -51716,6 +51811,64 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/socials": {
+        "put": {
+          "operationId": "put_api_website_opportunities_id_socials",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "action": {
+                      "enum": ["set", "remove"],
+                      "type": "string"
+                    },
+                    "handle": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "network": {
+                      "type": "string"
+                    },
+                    "number": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["network", "action"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/sources": {
         "delete": {
           "operationId": "delete_api_website_opportunities_id_sources",
@@ -51779,6 +51932,61 @@
                     }
                   },
                   "required": ["url"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
+      "/api/website-opportunities/{id}/team": {
+        "put": {
+          "operationId": "put_api_website_opportunities_id_team",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "action": {
+                      "enum": ["add", "update", "remove"],
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    },
+                    "photoMediaId": {
+                      "type": ["string", "null"]
+                    },
+                    "role": {
+                      "type": ["string", "null"]
+                    }
+                  },
+                  "required": ["action"],
                   "type": "object"
                 }
               }

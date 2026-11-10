@@ -95,11 +95,20 @@ test(
     const { call } = await world()
     const opp = await opportunity(call)
     const before = await call(A, 'GET', `${BASE}/${opp.id}/place-profile`)
-    assert.deepEqual(before.body, { profile: null, decisions: [] }, 'nothing before its own research')
+    assert.deepEqual(
+      before.body,
+      {
+        profile: null,
+        decisions: [],
+        // The Profile's bands are the owner's, so they read before research too (#537).
+        bands: { brand: true, keyMessages: true, reviews: true, media: true, socials: true }
+      },
+      'nothing before its own research'
+    )
     await researched(opp)
     const res = await call(A, 'GET', `${BASE}/${opp.id}/place-profile`)
     assert.equal(res.status, 200)
-    assert.deepEqual(Object.keys(res.body), ['profile', 'decisions'])
+    assert.deepEqual(Object.keys(res.body), ['profile', 'decisions', 'bands'])
     // One on-site decision per fact (#1791), the rule's while the owner chose nothing.
     const name = res.body.decisions.find((d) => d.factId === res.body.profile.business.name.id)
     assert.equal(name.decidedBy, 'rule')

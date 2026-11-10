@@ -2,6 +2,7 @@
  * The research a site brief reads: a place's shared snapshot with the account's overlay, or the per-account rows of
  * an opportunity not researched as a place yet. Shared by every builder, so a brief reads the same whoever builds it.
  */
+import { profileWithReviewPicks } from '../domain/owner-site-picks.mjs'
 import { withProfileEdits } from './profile-edits.js'
 import { revokedHubCopy } from './hub/local-cache.js'
 import { mediaJunk } from './media-junk.js'
@@ -305,7 +306,8 @@ export function makeSiteBrief(domain, read, { opportunity, madeAt, placeProfile 
       ...(Array.isArray(read.observedFacts) ? { observedFacts: read.observedFacts } : {}),
       madeAt
     }),
-    read.profile
+    // Only the reviews the owner keeps on the site (`owner-site-picks.mjs`, #537).
+    profileWithReviewPicks(read.profile, opportunity?.candidate)
   )
   // How the photographs were labelled when this brief was made (F08), failure included: the brief says it.
   // Each asset left unlabelled carries the reason the labelling step gave for it; the note keeps the counts.

@@ -225,6 +225,11 @@ export function sellerReviewRoutes(app, ctx) {
         'INVALID_FILE',
         'Send multipart/form-data with a photo or video in a field named `file`.'
       )
+    // `purpose: team`: a team member's photo (`PUT /:id/team`), filed with the people pictures; it still shows in Photos &
+    // video like every other upload.
+    const purpose = form.get('purpose')
+    if (purpose !== null && purpose !== 'team')
+      return refuse(c, 400, 'INVALID_PURPOSE', 'Send "purpose" as "team", or leave it out.')
     if (file.size > VIDEO_MAX_BYTES)
       return refuse(
         c,
@@ -244,6 +249,8 @@ export function sellerReviewRoutes(app, ctx) {
         'NOT_MEDIA',
         'Send a JPEG, PNG, GIF, WebP or AVIF photo, or an MP4 or WebM video.'
       )
+    if (purpose === 'team' && kind !== 'image')
+      return refuse(c, 415, 'NOT_MEDIA', 'A team photo is a JPEG, PNG, GIF, WebP or AVIF photo.')
     if (kind === 'image' && bytes.length > IMAGE_MAX_BYTES)
       return refuse(
         c,
@@ -278,7 +285,7 @@ export function sellerReviewRoutes(app, ctx) {
       width: info.width,
       height: info.height,
       kind,
-      category: 'other',
+      category: purpose === 'team' ? 'people' : 'other',
       palette: info.palette,
       source: OWNER_MEDIA_SOURCE,
       sourceUrl: `owner:${sha256}`,
@@ -287,13 +294,22 @@ export function sellerReviewRoutes(app, ctx) {
       dhash: info.dhash ?? null,
       labels: { ...(info.features ? { features: info.features } : {}), ...(name ? { fileName: name } : {}) }
     })
-    if (!inserted)
+    if (!inserted) {
+      // The row already held, so a team photo sent again can still be given to a person (`PUT /:id/team`).
+      const held = (
+        await pool.query('select id, kind from wo_media where opportunity_id = $1 and sha256 = $2', [
+          opp.id,
+          sha256
+        ])
+      ).rows[0]
       return refuse(
         c,
         409,
         'MEDIA_ALREADY_ADDED',
-        'This file is already in the Photos & video of this business.'
+        'This file is already in the Photos & video of this business.',
+        held ? { media: { id: held.id, kind: held.kind } } : {}
       )
+    }
     const row = (await markProfileChanged(pool, own.who.accountId, opp.id)) ?? opp
     const research = await researchStateOf(pool, row.id)
     return json(
@@ -301,7 +317,14 @@ export function sellerReviewRoutes(app, ctx) {
       {
         opportunity: ctx.opportunityShape(row),
         approval: approvalOf({ opportunity: row, research, latestBriefAt: await ctx.latestBriefAt(row) }),
-        media: { id: inserted.id, kind, source: OWNER_MEDIA_SOURCE, width: info.width, height: info.height }
+        media: {
+          id: inserted.id,
+          kind,
+          category: inserted.category,
+          source: OWNER_MEDIA_SOURCE,
+          width: info.width,
+          height: info.height
+        }
       },
       201
     )

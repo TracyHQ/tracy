@@ -15,6 +15,7 @@ import { withHoursDecision } from './business-hours.js'
 import { withRatingDecision } from './business-rating.js'
 import { withPhoneDecision } from './business-phones.js'
 import { readingCardOf } from '../domain/business-reading.mjs'
+import { withTeamEdits } from '../domain/owner-site-picks.mjs'
 import { briefTradeOf } from '../domain/trades.mjs'
 import { cleanProfileLinks } from '../domain/social-links.mjs'
 import {
@@ -121,7 +122,8 @@ export async function placeViewOf(db, opportunity) {
     // With the trade the brief speaks in, so the card says Services, or What it offers for an unknown trade.
     profile.readingCard = {
       ...readingCardOf(
-        held.profile.businessReading,
+        // With the people the owner added and their changes (`owner-site-picks.mjs`, #537).
+        withTeamEdits(held.profile.businessReading, opportunity?.candidate?.teamEdits),
         opportunity?.candidate?.readingPicks,
         opportunity?.candidate?.keyMessagePicks,
         // The reviews the brief reads, so the card shows a person named in them as the brief does.
@@ -164,6 +166,9 @@ export async function placeViewOf(db, opportunity) {
   ).rows
     .filter((m) => ownKinds.has(m.source) || m.source === 'owner')
     .map((m) => ({ ...m, origin: 'opportunity' }))
+  // A team member's photo the owner gave (#537): the media row as the media list shows it, or none once it is gone.
+  if (profile.readingCard?.team)
+    profile.readingCard.team = withTeamPhotos(profile.readingCard.team, [...placeMedia, ...ownMedia])
   // The research card lists every source the run tried, failures too; collected reviews read as above.
   const reviewOf = new Map(reviews.map((r) => [r.source, r]))
   // A pasted link of a page the shared research holds is the same source: one row, the one with data (#524).
@@ -197,6 +202,18 @@ export async function placeViewOf(db, opportunity) {
       menuPhotos: placeMedia.filter((m) => m.category === 'menu').length
     })
   }
+}
+
+/** Team card rows with `photo: {id, kind, width, height}` of the media row the owner chose, else `photo: null`. */
+export function withTeamPhotos(team, media) {
+  const byId = new Map(media.map((m) => [m.id, m]))
+  return team.map(({ photoMediaId, ...p }) => {
+    const m = photoMediaId ? byId.get(photoMediaId) : null
+    return {
+      ...p,
+      photo: m ? { id: m.id, kind: m.kind, width: m.width ?? null, height: m.height ?? null } : null
+    }
+  })
 }
 
 const iso = (v) => (v ? new Date(v).toISOString() : null)

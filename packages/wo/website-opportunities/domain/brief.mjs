@@ -61,6 +61,16 @@ import {
 import { withKeyMessagePicks } from './business-reading.mjs'
 import { attemptsLine, briefSourceEntry, fetchedLine, suppliedBySource } from './brief-sources.mjs'
 import { liftReviewPeople, SHOWN_FROM_REVIEWS } from './brief-people.mjs'
+import {
+  SOCIAL_NETWORKS,
+  bandsOf,
+  hiddenSetOf,
+  otherSocialLabelOf,
+  reviewKeyOf,
+  siteSocialsOf,
+  teamPhotoIdsOf,
+  withTeamEdits
+} from './owner-site-picks.mjs'
 
 // 2 (#1791): every stated fact in one envelope (`facts`, `brief-facts.mjs`), `missing` a view over the withheld ones,
 // key messages; `contact.whatsapp` and the team carry a `factId` instead of their own flags. Readers take 1 and 2.
@@ -87,7 +97,8 @@ export const BRIEF_REQUIRED = Object.freeze([
   'acceptance',
   'sources'
 ])
-const SOURCE_ORDER = ['website', 'facebook', 'instagram', 'tiktok', 'youtube']
+// Every network an owner can link (`owner-site-picks.mjs SOCIAL_NETWORKS`) has its place after the website.
+const SOURCE_ORDER = ['website', ...SOCIAL_NETWORKS.map((n) => n.id)]
 const SOURCE_STATUS = ['complete', 'partial', 'blocked', 'failed']
 const CATEGORIES = ASSET_CATEGORIES
 const CTA_KINDS = ['booking', 'phone', 'social', 'link']
@@ -117,7 +128,7 @@ const BUSINESS_PAGES = [
   { id: 'blog' },
   { id: 'contact' }
 ]
-const NETWORK_LABEL = { facebook: 'Facebook', instagram: 'Instagram', tiktok: 'TikTok', youtube: 'YouTube' }
+const NETWORK_LABEL = Object.fromEntries(SOCIAL_NETWORKS.map((n) => [n.id, n.label]))
 /** The button and contact line of a channel the business invites messages on (`own-channels.mjs`). */
 const CHANNEL_LABEL = {
   'instagram-dm': 'Message on Instagram',
@@ -209,6 +220,19 @@ function withDishPhotos(items, images, posts, reviews = []) {
   })
 }
 
+/** The ids of the logo and its candidates the model called a logo: kept as assets whatever the owner hid. */
+function logoMediaIdsOf(brand) {
+  return new Set(
+    [
+      brand?.logo,
+      brand?.logoResearch?.chosen?.mediaId,
+      ...(Array.isArray(brand?.logoResearch?.candidates) ? brand.logoResearch.candidates : [])
+        .filter((c) => c?.reading?.isLogo === true)
+        .map((c) => c.mediaId)
+    ].filter((id) => typeof id === 'string' && id)
+  )
+}
+
 /** Every review the review sites (`profile.reviewSources`) collected, as they were read. */
 const reviewSitesReviewsOf = (profile) =>
   Object.values(isObj(profile?.reviewSources) ? profile.reviewSources : {}).flatMap((group) =>
@@ -267,8 +291,19 @@ export function buildBrief({
   const branch = opportunity.branch ?? profile.branch ?? cand.branch ?? null
   // "Name (Branch)": never joined by a dash, which reads as machine written in the copy (#1791).
   const displayName = branch ? `${name} (${branch})` : name
-  // Every social link cleaned of share tracking, old records included (`social-links.mjs`, #1780 item 10).
-  const socials = cleanSocials({ ...cand.socials, ...profile.socials })
+  // 🔒 The owner's choices for the site itself (`owner-site-picks.mjs`, #537): the bands switched off, the photos, videos
+  // and reviews kept off, the team photos. A band off blanks what it feeds below; a hidden item fills no slot.
+  const bands = bandsOf(cand.factOverrides)
+  const hiddenMedia = hiddenSetOf(cand.mediaPicks)
+  const hiddenReviews = hiddenSetOf(cand.reviewPicks)
+  const reviewShown = (r) => bands.reviews && !hiddenReviews.has(reviewKeyOf(r))
+  const teamPhotos = teamPhotoIdsOf(cand.teamEdits)
+  const logoMedia = logoMediaIdsOf(brand)
+  const mediaOnSite = (m) => bands.media && !hiddenMedia.has(m?.id)
+  // A team photo or the logo stays an asset even with Photos & video off; it fills no photo slot then.
+  media = (Array.isArray(media) ? media : []).filter(
+    (m) => mediaOnSite(m) || teamPhotos.has(m?.id) || logoMedia.has(m?.id)
+  )
   // Google's rating: shown from FEW_GOOGLE_REVIEWS reviews on, or when the person chose to show it (`google-rating.mjs`).
   const ratingDecided = decideGoogleRating({ googlePlace, candidate: cand, pick: ratingPickOf(cand) })
   const site = currentSiteSection(currentSite)
@@ -358,6 +393,17 @@ export function buildBrief({
   )
   const stated = factsWithoutHeldQuotes(statedLifted, { names: heldPeople, held: heldReviews })
   const isOn = (field, match) => shown(factOf(stated, field, match))
+  // Every social link cleaned of share tracking, old records included (`social-links.mjs`, #1780 item 10). A researched
+  // link follows its fact (the owner's off keeps it off); the links the owner typed for the site follow (`siteSocials`),
+  // and the Socials band off keeps every one off.
+  const researchedSocials = Object.fromEntries(
+    Object.entries(cleanSocials({ ...cand.socials, ...profile.socials })).filter(
+      ([net, url]) => nonEmpty(url) && isOn('socials', (v) => v?.kind === net)
+    )
+  )
+  const socials = bands.socials
+    ? cleanSocials({ ...researchedSocials, ...siteSocialsOf(cand.siteSocials) })
+    : {}
   const usableReading = readingWithoutHeldReviews(profile.businessReading, {
     names: heldPeople,
     held: heldReviews
@@ -373,14 +419,16 @@ export function buildBrief({
   const words = tradeWords(trade, subTrade?.id)
   const noun = words.noun
   // What the business sells, who it is for, its team and story (`business-reading.mjs`), less what the person removed.
-  const readingPicked = withReadingPicks(usableReading, cand.readingPicks)
+  // The owner's team edits come first (`withTeamEdits`): the people added, and the label, role and photo they changed.
+  const readingPicked = withReadingPicks(withTeamEdits(usableReading, cand.teamEdits), cand.readingPicks)
   const sameName = (label) => (v) => String(v?.name ?? '').toLowerCase() === String(label).toLowerCase()
   const reading = readingPicked
     ? {
         ...readingPicked,
         services: readingPicked.services.filter((i) => isOn('services', sameName(i.label))),
         team: readingPicked.team.map((p) => {
-          const f = factOf(stated, 'team', sameName(p.label))
+          // A researched person keeps the fact of the label research read (`researchLabel`); an added one has none.
+          const f = p.owner ? null : factOf(stated, 'team', sameName(p.researchLabel ?? p.label))
           return { ...p, onSite: f ? f.onSite : p.onSite, ...(f ? { factId: f.id } : {}) }
         })
       }
@@ -396,14 +444,21 @@ export function buildBrief({
     ? { ...ratingDecided, state: ratingFact.onSite ? 'shown' : 'left' }
     : ratingDecided
   const place = googlePlaceSection(googlePlace, cand, ratingDecision)
+  // A review the owner hid, or every one with the Reviews band off, is no testimonial (`reviewPicks`).
+  if (place) place.reviews = place.reviews.filter(reviewShown)
   // The names the business's own marks give besides the held one (`otherNamesOf`): named to the builder, never printed.
   const otherNames = otherNamesOf(held)
-  const keyMessages = keyMessagesOf(
-    withKeyMessagePicks(readingPicked?.keyMessages, cand.keyMessagePicks),
-    stated,
-    readingPicked,
-    { otherNames: otherNames.map((n) => n.name) }
-  )
+  // The Key messages band off: no key message leads the hero or the brief.
+  const keyMessages = bands.keyMessages
+    ? keyMessagesOf(
+        withKeyMessagePicks(readingPicked?.keyMessages, cand.keyMessagePicks),
+        stated,
+        readingPicked,
+        {
+          otherNames: otherNames.map((n) => n.name)
+        }
+      )
+    : []
 
   // An email only with a source behind it: one the restaurant published, never a guess at a mailbox.
   const email =
@@ -412,6 +467,9 @@ export function buildBrief({
       : null
 
   const business = { name, branch, address, phone, socials }
+  // The label the owner gave an `other` link (`siteSocials.other.label`): the site names that link by it.
+  const otherLabel = socials.other ? otherSocialLabelOf(cand.siteSocials) : null
+  if (otherLabel) business.socialLabels = { other: otherLabel }
   if (phone && otherPhones.length) business.otherPhones = otherPhones
   // Where the business says it serves ("Locations across Dubai"), each with its short verbatim quote: never the address,
   // which stays the one address above (#1780 item 17).
@@ -480,6 +538,10 @@ export function buildBrief({
       ...assetLabelsOf(m),
       ...assetRelationsOf(m, linkContext)
     }))
+  // A team member's photo, when it is an asset of this brief (`teamEdits`); else null.
+  const assetIdSet = new Set(assets.map((a) => a.id))
+  const teamPhotoAsset = (p) =>
+    typeof p?.photoMediaId === 'string' && assetIdSet.has(p.photoMediaId) ? p.photoMediaId : null
   // What the business's own photos show, as facts (`observed-facts.mjs`): the observation step's answer held again
   // against this brief's own photos, so a fact resting only on a guest's, a blurry or an off-topic photo is not stated.
   const observed = Array.isArray(observedFacts)
@@ -505,7 +567,7 @@ export function buildBrief({
   for (const [field, p] of Object.entries(profile.provenance ?? {})) {
     if (isStale(p?.seenAt, resolvedAt)) stale.push({ field, source: p.source ?? 'unknown', seenAt: p.seenAt })
   }
-  const usable = media.filter((m) => nonEmpty(m?.id) && !staleIds.has(m.id))
+  const usable = media.filter((m) => nonEmpty(m?.id) && !staleIds.has(m.id) && mediaOnSite(m))
   // Photographs only: the logo and profile pictures stay out of every photo slot (`photographsOnly`).
   const images = photographsOnly(
     usable.filter((m) => m.kind === 'image'),
@@ -521,7 +583,10 @@ export function buildBrief({
   )
   const menuRead = withDishPhotos(read, images, posts, guestReviewsOf(profile))
 
-  const firstSocial = SOURCE_ORDER.slice(1).find((n) => nonEmpty(socials[n]))
+  // A page to follow: never a chat number or an unnamed link.
+  const firstSocial = SOURCE_ORDER.slice(1).find(
+    (n) => n !== 'whatsapp' && n !== 'other' && nonEmpty(socials[n])
+  )
   // The channels the business invites messages on in its own words ("DM us"), those on the site, each with its quotes.
   const channels = stated
     .filter(
@@ -675,12 +740,15 @@ export function buildBrief({
   ]
   if (storyEvidence.length) story.evidence = storyEvidence
   // What the business states about itself, each with its words: from its bio and posts (the reading) and its logo.
+  // The Brand band off: no fact read off the logo.
   const facts = [
     ...(reading?.facts ?? []).map((f) => ({ text: f.label, quote: f.quote, source: f.source })),
-    ...logoFactsOf({
-      readsAs: brand?.logoResearch?.chosen?.readsAs,
-      mediaId: brand?.logoResearch?.chosen?.mediaId ?? brand?.logo
-    })
+    ...(bands.brand
+      ? logoFactsOf({
+          readsAs: brand?.logoResearch?.chosen?.readsAs,
+          mediaId: brand?.logoResearch?.chosen?.mediaId ?? brand?.logo
+        })
+      : [])
   ]
   if (facts.length) story.facts = facts
   const storyItems = [...(plan.about?.items ?? []), ...(plan['our-story']?.items ?? [])]
@@ -700,8 +768,9 @@ export function buildBrief({
   if (shownTeam.length)
     aboutSections.push({
       kind: 'team',
-      copy: `The people the sources name, each with the role a source gives: ${shownTeam.map((p) => (p.role ? `${p.label} (${p.role})` : p.label)).join(', ')}. Nobody else, and no portrait of your own.`,
-      assetIds: [],
+      copy: `The people the sources name, each with the role a source gives: ${shownTeam.map((p) => (p.role ? `${p.label} (${p.role})` : p.label)).join(', ')}. Nobody else, and no portrait of your own.${shownTeam.some((p) => teamPhotoAsset(p)) ? ' A person with a photo of their own (photoAssetId) shows with it.' : ''}`,
+      // The photos the owner gave team members, each an asset of this brief.
+      assetIds: shownTeam.map(teamPhotoAsset).filter(Boolean),
       // A person shown from reviews may have lost their only quote to a review held for naming someone else
       // (`held-reviews.mjs`): such a person is still named, with no quote as evidence.
       evidence: shownTeam
@@ -857,7 +926,7 @@ export function buildBrief({
     reading,
     reviews: [
       ...(place?.reviews ?? []),
-      ...heldReviewsSplit(reviewSitesReviewsOf(profile), heldPeopleOf(missing)).reviews
+      ...heldReviewsSplit(reviewSitesReviewsOf(profile).filter(reviewShown), heldPeopleOf(missing)).reviews
     ],
     places: [cityOf(addressOn)].filter(nonEmpty)
   })
@@ -877,7 +946,12 @@ export function buildBrief({
   }
   if (!bio && !about)
     miss('about.story', 'No description was collected: the about text says only the facts above, briefly.')
-  if (!images.length) miss('images', 'No usable photos collected.')
+  if (!bands.media)
+    miss(
+      'images',
+      'The owner left Photos & video off the site: no photo or video of this brief fills a gallery, hero or section.'
+    )
+  else if (!images.length) miss('images', 'No usable photos collected.')
   const orderedSources = [...sources].sort((a, b) => {
     const ia = SOURCE_ORDER.indexOf(a.source)
     const ib = SOURCE_ORDER.indexOf(b.source)
@@ -945,13 +1019,16 @@ export function buildBrief({
     // Generated prose carries no dash (`plain-prose.mjs`); quotes and evidence stay exact.
     sitemap: sitemapWithoutDashes(sitemap),
     ...(pool ? { content: { items: contentItems, links: pool.links } } : {}),
-    ...(reading ? { reading: briefReading(reading, about && withoutDashes(about)) } : {}),
+    ...(reading ? { reading: briefReading(reading, about && withoutDashes(about), assetIdSet) } : {}),
     // The brand's name is the decided business name, never a raw handle (`brandNamed`). 🔒 While that name is held off
     // the site, the brand names nobody (`name: null`) and points to the held name's Missing entry, whose `otherNames`
     // the builder reads: no builder prints the brand's name in place of the held one.
-    brand: nameOn
-      ? brandWithoutDashes(brandNamed(brand, name))
-      : brandNameHeld(brandWithoutDashes(brand), stated),
+    // 🔒 The Brand band off: no brand observation at all (colours, logo, voice, accent), so no build is guided by it.
+    brand: !bands.brand
+      ? null
+      : nameOn
+        ? brandWithoutDashes(brandNamed(brand, name))
+        : brandNameHeld(brandWithoutDashes(brand), stated),
     ...(place ? { googlePlace: place } : {}),
     ...(site ? { currentSite: site } : {}),
     integrations,
@@ -1249,7 +1326,7 @@ export function seoOf({ name = null, noun, city = null, services = [] }) {
 }
 
 /** The reading as a brief carries it: each item's words, quote and source, the team's place on the site, the About line. */
-function briefReading(reading, about) {
+function briefReading(reading, about, assetIds = null) {
   // A held person's team entry has no quote (`readingWithoutHeldReviews`): it is named, never quoted.
   const item = (i) => ({
     id: i.id,
@@ -1269,7 +1346,11 @@ function briefReading(reading, about) {
     team: reading.team.map((p) => ({
       ...item(p),
       ...(p.role ? { role: p.role } : {}),
-      ...(p.factId ? { factId: p.factId } : { onSite: p.onSite })
+      ...(p.factId ? { factId: p.factId } : { onSite: p.onSite }),
+      // A person the owner added (`source.kind: owner`), and the photo the owner gave, an asset id of this brief.
+      ...(typeof p.photoMediaId === 'string' && assetIds?.has(p.photoMediaId)
+        ? { photoAssetId: p.photoMediaId }
+        : {})
     })),
     story: reading.story.map(item),
     ...(about ? { about } : {}),

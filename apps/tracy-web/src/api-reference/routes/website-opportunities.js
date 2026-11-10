@@ -5,6 +5,12 @@ const OFF =
 const APPROVAL_ANSWER =
   '`approval: {profile: "none" | "needed" | "approved", profileApprovedAt, profileChangedAt, brief: "none" | "needed" | "approved" | "stale", briefApprovedAt, briefStale: "profile" | null}` is the seller’s review of this opportunity (#537): the Profile is approved before a Content brief is made, the latest brief before a demo is built. `profile` is `none` before research; a Profile edit, or a photo the seller adds, after approval makes it `needed` again. `brief` is `stale` (with `briefStale: "profile"`) when the Profile changed or the Profile was approved after the latest brief was made, and `needed` until that brief is approved; making the brief again (even when it answers the same revision) ends `stale`. Sources are fixed once research starts, so a source never changes the approvals.'
 const OWN = 'Another account’s row answers 404 `NOT_FOUND`, exactly like a missing one.'
+/** The networks a social link the owner types may name (`domain/owner-site-picks.mjs SOCIAL_NETWORKS`). */
+export const SOCIAL_NETWORKS_DOC =
+  '`facebook`, `instagram`, `tiktok`, `youtube`, `x`, `linkedin`, `telegram`, `whatsapp`, `pinterest`, `snapchat`, `threads` and `other` (with a `label`); each listed as `{id, label, placeholder}` in the Details answer’s `socialNetworks`. The website has its own field and is not one of them.'
+/** What the Details answer says of the owner's choices for the site itself (#537). */
+const OWNER_SITE_ANSWER =
+  'Of the owner’s choices for the site (#537): each `media` row has `ownerHidden` (kept off the site by `PUT …/:id/media/:mediaId/visibility`; `hidden` stays the junk reason); each review of `profile.googlePlace.reviews` and `profile.reviewSources.*.reviews` has `key` (its own `id` when the source gives one, else `rv_<hash>` of author, time and text) and `ownerHidden`; `profile.readingCard.team` rows carry `owner: true` for a person the owner added, `researchLabel` when the owner renamed a person research read, and `photo: {id, kind, width, height} | null`; `bands: {brand, keyMessages, reviews, media, socials}` (booleans); `socialNetworks: [{id, label, placeholder}]`; the candidate holds `teamEdits`, `siteSocials`, `mediaPicks` and `reviewPicks`.'
 const REQUEST_ID = {
   type: 'string',
   description:
@@ -293,7 +299,8 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: '`{profile, decisions:[{factId,confidence,onSite,decidedBy,reasons}]}`'
+    answers:
+      '`{profile, decisions:[{factId,confidence,onSite,decidedBy,reasons}], bands}`; `bands: {brand, keyMessages, reviews, media, socials}` (booleans, also before research) says which bands of the Profile the owner left on; one is switched with `PUT …/:id/facts` and `factId: band_<band>`.'
   },
 
   // website-opportunities/src/route.js
@@ -730,7 +737,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds, research, briefJob, approval, stepProgress}\`; ${MENU_ANSWER} ${APPROVAL_ANSWER} \`stepProgress: {step: "research" | "brief" | "build" | null, items: [{key, label, state: "done" | "running" | "waiting" | "failed", at}]}\` is the step that runs now (else the one whose latest attempt failed, else null) with its sub steps, read from recorded data only: a Content brief job's own step (reading, labelling, writing; \`at\` on the current one), a step chain build's chain steps (\`demoAction.run\`), and for Research the shared place job serving the request: one item per source of its snapshot (\`key\` the source, \`label\` its name as the Sources card shows it, \`at\` when it was tried) then \`{key: "profile", label: "Writing the business facts"}\`, no items while that job is queued; a build of another workflow records no sub steps. \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` holds only the seller's own photos and videos and \`sources\` holds only its own rows, each reading not collected yet (\`status\`, \`reason\`, \`coverage\` and \`collectedAt\` null, as a pasted link), even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`.`
+    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds, research, briefJob, approval, stepProgress, bands, socialNetworks}\`; ${OWNER_SITE_ANSWER} ${MENU_ANSWER} ${APPROVAL_ANSWER} \`stepProgress: {step: "research" | "brief" | "build" | null, items: [{key, label, state: "done" | "running" | "waiting" | "failed", at}]}\` is the step that runs now (else the one whose latest attempt failed, else null) with its sub steps, read from recorded data only: a Content brief job's own step (reading, labelling, writing; \`at\` on the current one), a step chain build's chain steps (\`demoAction.run\`), and for Research the shared place job serving the request: one item per source of its snapshot (\`key\` the source, \`label\` its name as the Sources card shows it, \`at\` when it was tried) then \`{key: "profile", label: "Writing the business facts"}\`, no items while that job is queued; a build of another workflow records no sub steps. \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` holds only the seller's own photos and videos and \`sources\` holds only its own rows, each reading not collected yet (\`status\`, \`reason\`, \`coverage\` and \`collectedAt\` null, as a pasted link), even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`.`
   },
   // website-opportunities/src/route.js
   {
@@ -811,12 +818,12 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/media',
     summary: 'Add a photo or video to an opportunity',
-    description: `\`multipart/form-data\` with one file in the field \`file\`: a JPEG, PNG, GIF, WebP or AVIF photo (at most 25 MB) or an MP4 or WebM video (at most 200 MB). Stored like a collected picture with source \`owner\`, it shows in Photos & video (also before research) and the next Content brief and build read it like the others. It counts as a Profile edit: the Profile needs review again, research does not. 400 \`INVALID_FILE\`; 413 \`TOO_LARGE\`; 415 \`NOT_MEDIA\` or \`IMAGE_UNREADABLE\`; 409 \`MEDIA_ALREADY_ADDED\` for the same bytes again; 503 \`STORE_UNAVAILABLE\` without a file store; 502 \`STORE_FAILED\`. ${OWN} ${OFF}`,
+    description: `\`multipart/form-data\` with one file in the field \`file\`: a JPEG, PNG, GIF, WebP or AVIF photo (at most 25 MB) or an MP4 or WebM video (at most 200 MB). An optional field \`purpose: team\` files a photo with the people pictures (\`category: people\`, else \`other\`) for a team member (\`PUT …/:id/team\`); 400 \`INVALID_PURPOSE\` for another value, 415 \`NOT_MEDIA\` for a video. Stored like a collected picture with source \`owner\`, it shows in Photos & video (also before research) and the next Content brief and build read it like the others. It counts as a Profile edit: the Profile needs review again, research does not. 400 \`INVALID_FILE\`; 413 \`TOO_LARGE\`; 415 \`NOT_MEDIA\` or \`IMAGE_UNREADABLE\`; 409 \`MEDIA_ALREADY_ADDED\` for the same bytes again, with \`media: {id, kind}\` of the row already held; 503 \`STORE_UNAVAILABLE\` without a file store; 502 \`STORE_FAILED\`. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: `201 \`{opportunity, approval, media: {id, kind, source: "owner", width, height}}\`; ${APPROVAL_ANSWER}`
+    answers: `201 \`{opportunity, approval, media: {id, kind, category, source: "owner", width, height}}\`; ${APPROVAL_ANSWER}`
   },
   // website-opportunities/src/route.js
   {
@@ -954,7 +961,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'PUT',
     path: '/api/website-opportunities/:id/facts',
     summary: 'Put one fact of the place profile on the site, or leave it off',
-    description: `The owner’s choice for one fact on the Profile card: \`onSite: true\` puts it on the site, \`false\` leaves it off, whatever the rule decided (a rating from few reviews, all-week 24-hour hours, a person named only in reviews, an inferred contact); \`null\` lets the rule decide again. Kept on the opportunity, so it holds for every later brief, build and site check, Research again included; a choice for a fact research no longer finds is kept but changes nothing. Answers the opportunity, its candidate holding \`factOverrides: {<factId>: {onSite, at}}\`. 400 \`INVALID_FACT\`, 400 \`INVALID_ON_SITE\`. ${OWN}`,
+    description: `The owner’s choice for one fact on the Profile card: \`onSite: true\` puts it on the site, \`false\` leaves it off, whatever the rule decided (a rating from few reviews, all-week 24-hour hours, a person named only in reviews, an inferred contact); \`null\` lets the rule decide again. Kept on the opportunity, so it holds for every later brief, build and site check, Research again included; a choice for a fact research no longer finds is kept but changes nothing. A whole band of the Profile is switched the same way, with \`factId\` \`band_brand\` (no brand observation: \`brief.brand\` is null and no fact is read off the logo), \`band_keyMessages\` (no \`brief.keyMessages\`, so none leads the hero), \`band_reviews\` (no review in \`brief.googlePlace.reviews\` or the review sites), \`band_media\` (no photo or video in any section, hero or gallery; only the logo and team photos stay assets) or \`band_socials\` (\`brief.business.socials\` empty); \`true\` or \`null\` puts it back. Answers the opportunity, its candidate holding \`factOverrides: {<factId>: {onSite, at}}\`. 400 \`INVALID_FACT\`, 400 \`INVALID_ON_SITE\`. ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -992,6 +999,95 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       }
     },
     answers: '`{opportunity}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/team',
+    summary: 'Add, change or remove a person of the team',
+    description: `The team as the owner keeps it on the Profile card (#537): \`add\` a person (\`label\` 1 to 80 characters, \`role\` up to 60, \`photoMediaId\` optional), \`update\` one (a person the owner added, or one research read: their name, role or photo; \`role: null\` or \`""\` clears the role, \`photoMediaId: null\` the photo), or \`remove\` one (a person the owner added is deleted; one research read is taken off as the reading’s Remove does, \`readingPicks.removed\`, and comes back with \`PUT …/:id/reading\` \`restore\`). Show and hide stay the reading door’s. A photo is a photo of this business first (\`POST …/:id/media\`, best with \`purpose: team\`); it stays in Photos & video. A Profile edit: the Profile needs review again. The next brief names the people in \`reading.team\` (an added person with \`source.kind: owner\`, a photo as \`photoAssetId\`) and its team section lists the photos in \`assetIds\`. 400 \`INVALID_ACTION\`, \`INVALID_MEMBER\`, \`INVALID_LABEL\`, \`INVALID_ROLE\`, \`INVALID_PHOTO\`; 404 \`NOT_FOUND\` for a person this team does not have; 409 \`TOO_MANY_MEMBERS\` (\`max: 30\` added people); 422 \`MEDIA_NOT_FOUND\` when \`photoMediaId\` is no stored photo of this opportunity. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['action'],
+      properties: {
+        action: { type: 'string', enum: ['add', 'update', 'remove'] },
+        id: { type: 'string', description: 'The person’s id (update and remove)' },
+        label: { type: 'string', description: 'The person’s name, 1 to 80 characters (required to add)' },
+        role: { type: ['string', 'null'], description: 'Their role, up to 60 characters; null clears it' },
+        photoMediaId: {
+          type: ['string', 'null'],
+          description: 'A photo of this opportunity (a media id); null clears it'
+        }
+      }
+    },
+    answers: '201 (add) or 200 `{opportunity, member: {id, label, role, photoMediaId} | null}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/socials',
+    summary: 'Set or remove a social link the site shows',
+    description: `A social link the owner types on the Profile card (#537), shown on the site and never a research source: research reads the links the opportunity was saved with, which this door never changes, so the research link rules (\`UNSUPPORTED_LINK\`) do not apply. \`network\` is one of ${SOCIAL_NETWORKS_DOC} \`set\` takes \`url\` (an http or https link on that network’s own site; any site for \`other\`) or \`handle\` (\`@name\`, made into the network’s link; LinkedIn and \`other\` need a link), and for \`whatsapp\` a \`number\` with its country code (8 to 15 digits), kept as \`https://wa.me/<digits>\`. One link per network; \`remove\` takes it off. The next brief shows it in \`business.socials\` beside the researched links (the owner’s wins), and the label of \`other\` in \`business.socialLabels.other\`. A Profile edit. 400 \`INVALID_NETWORK\`, \`INVALID_ACTION\`, \`INVALID_LABEL\` (\`other\` needs a label of 1 to 40 characters); 422 \`INVALID_URL\`, 422 \`INVALID_PHONE\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['network', 'action'],
+      properties: {
+        network: { type: 'string', description: 'A network id of `socialNetworks`' },
+        action: { type: 'string', enum: ['set', 'remove'] },
+        url: { type: 'string', description: 'An http or https link' },
+        handle: { type: 'string', description: 'A handle, with or without @' },
+        number: { type: 'string', description: 'WhatsApp only: the number with its country code' },
+        label: { type: 'string', description: '`other` only: the link’s name, 1 to 40 characters' }
+      }
+    },
+    answers: '`{opportunity, siteSocials: {<network>: {url, label?, at}}}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/media/:mediaId/visibility',
+    summary: 'Keep one photo or video off the site, or put it back',
+    description: `One photo or video of this opportunity (its own or its place’s) kept off the site (#537): it stays in Photos & video with \`ownerHidden: true\` and fills no section, hero or gallery of a later brief, nor is it an asset (unless it is a team photo). A Profile edit. 400 \`INVALID_HIDDEN\`; 404 \`NOT_FOUND\` for a media id this opportunity does not have; 409 \`TOO_MANY_HIDDEN\` (\`max: 500\`). ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id', mediaId: 'A media id of the Details answer' } },
+    body: {
+      type: 'object',
+      required: ['hidden'],
+      properties: {
+        hidden: { type: 'boolean', description: 'true keeps it off the site, false puts it back' }
+      }
+    },
+    answers: '`{opportunity, media: {id, ownerHidden}}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/reviews/visibility',
+    summary: 'Keep one review off the site, or put it back',
+    description: `One review kept off the site (#537), by the \`key\` the Details answer gives each review (its source’s own id, else \`rv_<hash>\` of author, time and text): no later brief quotes it as a testimonial. A key no review has is kept and changes nothing. A Profile edit. 400 \`INVALID_REVIEW\` (1 to 200 of \`A-Z a-z 0-9 _ . : -\`), 400 \`INVALID_HIDDEN\`; 409 \`TOO_MANY_HIDDEN\` (\`max: 500\`). ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['key', 'hidden'],
+      properties: {
+        key: { type: 'string', description: 'The review’s key, as the Details answer gives it' },
+        hidden: { type: 'boolean', description: 'true keeps it off the site, false puts it back' }
+      }
+    },
+    answers: '`{opportunity, review: {key, ownerHidden}}`'
   },
   // website-opportunities/src/route.js
   {

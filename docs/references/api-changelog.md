@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-10: The owner edits the team, the social links and what the site shows
+
+Added (internal): `PUT /api/website-opportunities/:id/team` (`{action: add | update | remove, id?, label?, role?, photoMediaId?}`, answers `{opportunity, member}`; 400 `INVALID_ACTION`, `INVALID_MEMBER`, `INVALID_LABEL`, `INVALID_ROLE`, `INVALID_PHOTO`, 404, 409 `TOO_MANY_MEMBERS`, 422 `MEDIA_NOT_FOUND`), `PUT …/:id/socials` (`{network, action: set | remove, url? | handle? | number?, label?}`, answers `{opportunity, siteSocials}`; 400 `INVALID_NETWORK`, `INVALID_ACTION`, `INVALID_LABEL`, 422 `INVALID_URL`, `INVALID_PHONE`), `PUT …/:id/media/:mediaId/visibility` (`{hidden}`, answers `{opportunity, media: {id, ownerHidden}}`; 400 `INVALID_HIDDEN`, 404, 409 `TOO_MANY_HIDDEN`) and `PUT …/:id/reviews/visibility` (`{key, hidden}`, answers `{opportunity, review: {key, ownerHidden}}`; 400 `INVALID_REVIEW`, `INVALID_HIDDEN`, 409 `TOO_MANY_HIDDEN`). Changed (internal): `PUT …/:id/facts` also switches a band of the Profile with `factId` `band_brand`, `band_keyMessages`, `band_reviews`, `band_media` or `band_socials`; `POST …/:id/media` takes an optional `purpose: team` (`category: people`; 400 `INVALID_PURPOSE`), answers `media.category`, and its 409 `MEDIA_ALREADY_ADDED` carries `media: {id, kind}`; `GET …/:id` adds `bands`, `socialNetworks`, `media[].ownerHidden`, a `key` and `ownerHidden` on each review, and `owner`, `researchLabel` and `photo` on `profile.readingCard.team`; `GET …/:id/place-profile` adds `bands`. Public API v1 is unchanged.
+
 ## 2026-11-10: Sources are fixed once research starts
 
 Changed `POST /api/website-opportunities/:id/sources` (internal): a source can be added only before research runs or after it failed, like a removal; otherwise 409 `RESEARCH_STARTED` with a `next` sentence, and 409 `JOB_ACTIVE` is no longer answered here. Removed (internal): `approval.research`, `approval.sourcesChangedAt` and `briefStale: "sources"`, and the 409 `RESEARCH_NEEDED` of the profile approve, brief approve, revisions and demo build doors, since a source never changes after research.
