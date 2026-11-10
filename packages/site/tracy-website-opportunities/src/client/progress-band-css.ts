@@ -21,7 +21,8 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-pane { box-sizing: border-box; min-height: 0; overflow: hidden; gap: 6px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-kicker { line-height: 16px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-head { display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-est { flex: none; display: inline-flex; align-items: center; gap: 4px; max-width: 40%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 2px 8px 2px 6px; border-radius: 999px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--primary); background: color-mix(in oklab, var(--primary) 12%, transparent); border: 1px solid color-mix(in oklab, var(--primary) 28%, transparent); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-est { flex: none; display: inline-flex; align-items: center; gap: 4px; max-width: 40%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 2px 8px 2px 6px; border-radius: 999px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--foreground); background: color-mix(in oklab, var(--foreground) 7%, transparent); border: 1px solid var(--border); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-est > svg { color: var(--muted-foreground); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-est > svg { width: 12px; height: 12px; flex: none; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-head > .tracy-wo-band-name { flex: 0 1 auto; min-width: 0; margin: 0; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
