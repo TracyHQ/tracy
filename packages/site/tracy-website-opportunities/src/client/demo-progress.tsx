@@ -2,18 +2,12 @@
  * The demo progress card of a step chain build and the time and price line under a Build demo button (#516, spec #512).
  */
 import type { JSX } from 'react'
-import { CircleCheck, CircleX, Clock } from 'lucide-react'
-import { Spinner } from '@tracy/ui'
 import { chainProgressView } from '@tracy/wo-views'
 import type { ChainEstimate, ChainRun } from '@tracy/wo-views'
+import { chainStepLabel as stepLabel, chainSubSteps, knownChainStep } from './band-sub-steps-model.ts'
 import { demoFailureKey, type OpportunityListRow } from './opportunity-row.ts'
+import { SubSteps } from './progress-band-subs.tsx'
 import type { Translate } from './strings.ts'
-
-const STEP_KEYS = new Set(['kit', 'brand', 'plan', 'copy', 'pictures', 'write'])
-/** A chain step's label: the string table first, the server's English label for a step it does not know yet. */
-function stepLabel(t: Translate, run: ChainRun, id: string): string {
-  return STEP_KEYS.has(id) ? t(`progress.step.${id}`) : (run.steps.find((s) => s.id === id)?.label ?? id)
-}
 
 /** The one plain sentence of the card: Ready, where it stopped, or what Tracy is doing now. */
 function nowSentence(t: Translate, row: OpportunityListRow, run: ChainRun): string {
@@ -22,7 +16,7 @@ function nowSentence(t: Translate, row: OpportunityListRow, run: ChainRun): stri
   if (state === 'failed')
     return t('progress.stopped', { step: stepLabel(t, run, run.current ?? run.steps[0]?.id ?? '') })
   if (run.current === null) return t('progress.now.start')
-  return STEP_KEYS.has(run.current) ? t(`progress.now.${run.current}`) : stepLabel(t, run, run.current)
+  return knownChainStep(run.current) ? t(`progress.now.${run.current}`) : stepLabel(t, run, run.current)
 }
 
 const usdText = (locale: string, usd: number): string =>
@@ -31,7 +25,7 @@ const usdText = (locale: string, usd: number): string =>
 /**
  * The progress card of a demo build (#516, spec #512): a bar over the chain's steps, one sentence, about n min left
  * (the measured estimate minus the time since the start), the USD spent so far, and the steps folded under it, each
- * done, running or pending. A build with no chain progress (`demoAction.run`) shows one sentence while it builds; the
+ * done, running or waiting in the Progress band's standard sub-step row (`progress-band-subs.tsx`). A build with no chain progress (`demoAction.run`) shows one sentence while it builds; the
  * four steps of the older build are never drawn here.
  */
 export function DemoProgress({
@@ -93,32 +87,8 @@ export function DemoProgress({
       {why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
       <details open={open}>
         <summary className="tracy-wo-small">{t('progress.show', { n: view.total })}</summary>
-        <ol className="tracy-wo-progress-steps tracy-wo-small">
-          {view.steps.map((s) => {
-            const state = finished ? 'done' : s.state
-            return (
-              <li key={s.id} data-state={state}>
-                {state === 'done' ? (
-                  <CircleCheck className="tracy-wo-icon" aria-hidden="true" />
-                ) : state === 'current' ? (
-                  failed ? (
-                    <CircleX className="tracy-wo-icon" aria-hidden="true" />
-                  ) : (
-                    <Spinner label={stepLabel(t, run, s.id)} />
-                  )
-                ) : (
-                  <Clock className="tracy-wo-icon" aria-hidden="true" />
-                )}
-                <b>{stepLabel(t, run, s.id)}</b>
-                <span className="tracy-wo-muted">
-                  {state === 'done' && s.minutes !== null
-                    ? t('progress.minutes', { n: Math.max(1, Math.round(s.minutes)) })
-                    : t(`progress.state.${state}`)}
-                </span>
-              </li>
-            )
-          })}
-        </ol>
+        {/* The same sub-step row as research and the brief (#537): ring, spinner, check or cross, plain labels. */}
+        <SubSteps t={t} items={chainSubSteps(t, run, action?.state)} />
       </details>
     </div>
   )

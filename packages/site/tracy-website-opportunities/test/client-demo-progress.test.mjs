@@ -157,3 +157,18 @@ test('under the Build button: the measured time and price, the first build note,
   )
   assert.match(line, /\[progress\.estimate n=26 usd=\$1\.84\]/)
 })
+
+test('the chain steps draw the standard sub-step row: done, running and waiting nodes, a stopped step as failed', () => {
+  const html = draw(chainRow(chainRun()))
+  assert.match(html, /<ol class="tracy-wo-band-subs" data-layout="row" data-many="">/)
+  const nodes = [...html.matchAll(/class="tracy-wo-band-sub-node" data-node="(\w+)"/g)].map((m) => m[1])
+  assert.deepEqual(nodes, ['done', 'running', 'done', 'running', 'running', 'waiting'])
+  assert.doesNotMatch(html, /tracy-wo-progress-steps|lucide-(circle-check|circle-x|clock)/)
+  const stopped = draw(chainRow(chainRun(), { state: 'failed', error: 'DEMO_STEP_TIMEOUT' }))
+  assert.match(
+    stopped,
+    /<li data-state="failed" title="\[progress\.step\.copy\]: \[brief\.job\.state\.failed\]">/
+  )
+  const finished = draw(chainRow(chainRun(), { state: 'completed' }))
+  assert.equal((finished.match(/data-node="done"/g) ?? []).length, 6)
+})

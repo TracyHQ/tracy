@@ -39,6 +39,8 @@ before(async () => {
         export { stepperView } from './stepper-model.ts'
         export { PROGRESS_BAND_CSS } from './progress-band-css.ts'
         export { DETAILS_CSS } from './details-css.ts'
+        export { DemoProgress } from './demo-progress.tsx'
+        export { briefControlView } from './research-gate-model.ts'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
       loader: 'tsx'
@@ -173,7 +175,7 @@ test('the brief job running shows no sub-step row when the server sent none, onl
 test('the band CSS fixes one height, lays the sub-steps in a row and is joined to the Details stylesheet', () => {
   const css = lib.PROGRESS_BAND_CSS
   assert.match(css, /\.tracy-wo-band\[data-fixed\] \{[^}]*height: var\(--wo-band-h\)/)
-  assert.match(css, /\.tracy-wo-band-subs, [^{]*\{[^}]*flex-direction: row;[^}]*overflow-x: auto/)
+  assert.match(css, /\.tracy-wo-band-subs \{[^}]*flex-direction: row;[^}]*overflow-x: auto/)
   assert.match(css, /-webkit-line-clamp: 2/)
   assert.ok(!css.includes('`'), 'no backtick inside the template')
   assert.ok(lib.DETAILS_CSS.endsWith(css))
@@ -214,11 +216,110 @@ test('done is a success pill with a check, review is amber, up next is neutral, 
   assert.match(failed, /data-state="failed"[^>]*><span class="tracy-wo-band-sub-node" data-node="failed"/)
 })
 
-test('the band CSS keeps the pill on one line and truncates the name, not the pill', () => {
+test('the left pane is as wide as its content: a capped fit-content track, names and pills never shrink', () => {
   const css = lib.PROGRESS_BAND_CSS
+  assert.match(
+    css,
+    /\.tracy-wo-band\[data-fixed\] \{[^}]*grid-template-columns: fit-content\(min\(46%, 400px\)\) minmax\(0, 1fr\)/
+  )
+  assert.doesNotMatch(css, /44fr|56fr/)
+  // The list never goes below its min-content (the widest name with its pill), even though it clips vertically.
+  assert.match(css, /\.tracy-wo-band-list \{[^}]*min-width: min-content;[^}]*overflow: hidden/)
+  assert.match(css, /\.tracy-wo-band\[data-fixed\] \.tracy-wo-step \{ grid-template-columns: 22px auto; \}/)
   assert.match(css, /\.tracy-wo-band-top > \.tracy-wo-band-pill \{[^}]*flex: none/)
-  assert.match(css, /\.tracy-wo-band-top > \.tracy-wo-step-name \{[^}]*flex: 0 1 auto/)
+  assert.match(css, /\.tracy-wo-band-top > \.tracy-wo-step-name \{ flex: none; \}/)
+  assert.doesNotMatch(css, /\.tracy-wo-band-top > \.tracy-wo-band-pill \{[^}]*max-width/)
+  // A purpose line wraps for sizing (min-content is one word) and shows one clamped line.
+  assert.match(css, /\.tracy-wo-band-purpose \{[^}]*-webkit-line-clamp: 1;[^}]*white-space: normal/)
   assert.match(css, /--wo-band-h: 176px/)
+  assert.match(
+    css,
+    /@container \(max-width: 719px\) \{\s*\.tracy-wo-band\[data-fixed\] \{[^}]*grid-template-columns: minmax\(0, 1fr\)/
+  )
+})
+
+test('the band CSS draws no colour literal and keeps no rule for the old build chain', () => {
+  const css = lib.PROGRESS_BAND_CSS
+  assert.doesNotMatch(css, /#[0-9a-fA-F]{3,8}\b|rgba?\(|hsla?\(/)
+  assert.doesNotMatch(css, /tracy-wo-progress-steps/)
+})
+
+const BRIEF_RUNNING = { id: 'j-2', state: 'running', step: 'labelling' }
+const briefInput = { research: RESEARCHED, briefJob: BRIEF_RUNNING, demo: 'none' }
+/** The brief sub-steps exactly as Details derives them from the brief job. */
+const briefSubs = () =>
+  lib
+    .briefControlView({ research: { state: 'done' }, brief: null, briefJob: BRIEF_RUNNING })
+    .steps.map((s) => ({ key: s.step, label: t(s.labelKey), state: s.state }))
+const nodeStates = (html) =>
+  [...rowHtml(html).matchAll(/class="tracy-wo-band-sub-node" data-node="(\w+)"/g)].map((m) => m[1])
+const liStates = (html) => [...rowHtml(html).matchAll(/<li data-state="(\w+)"/g)].map((m) => m[1])
+
+test('the brief job draws the research row: the same nodes, one state per item, no other look', () => {
+  const html = draw(briefInput, { subSteps: briefSubs() })
+  assert.equal((html.match(/<ol class="tracy-wo-band-subs" data-layout="row"/g) ?? []).length, 1)
+  assert.deepEqual(nodeStates(html), ['done', 'running', 'waiting'])
+  assert.deepEqual(liStates(html), ['done', 'running', 'waiting'])
+  assert.match(html, /class="tracy-wo-band-sub-label">\[brief\.job\.step\.labelling\]</)
+  assert.doesNotMatch(html, /tracy-wo-demo-|tracy-wo-progress-steps/)
+})
+
+const step = (id, state, minutes = null) => ({ id, label: id, state, minutes })
+const buildRow = (actionState = 'running') => ({
+  id: 'o1',
+  demoAction: {
+    id: 'a1',
+    state: actionState,
+    step: 'pictures',
+    error: null,
+    run: {
+      steps: [
+        step('kit', 'done', 0.1),
+        step('brand', 'done', 2),
+        step('plan', 'done', 6),
+        step('copy', 'current'),
+        step('pictures', 'current'),
+        step('write', 'upcoming')
+      ],
+      current: 'pictures',
+      startedAt: new Date(Date.parse('2026-11-10T10:00:00Z') - 8 * 60_000).toISOString(),
+      minutes: 8,
+      usd: 0.25,
+      estimate: { minutes: 26, usd: 1.84 }
+    }
+  }
+})
+const drawBuild = (row) =>
+  draw(
+    {
+      research: RESEARCHED,
+      brief: { id: 'b-1', n: 1 },
+      demo: 'building',
+      approval: { research: 'ok', profile: 'approved', brief: 'approved' }
+    },
+    {
+      buildSteps: lib.createElement(lib.DemoProgress, {
+        t,
+        row,
+        locale: 'en',
+        now: Date.parse('2026-11-10T10:00:00Z'),
+        open: true
+      })
+    }
+  )
+
+test('the build run draws the research row too: done, running and waiting nodes, the time and cost line kept', () => {
+  const html = drawBuild(buildRow())
+  assert.match(html, /data-build=""/)
+  assert.deepEqual(nodeStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
+  assert.deepEqual(liStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
+  assert.match(html, /class="tracy-wo-band-sub-label">\[progress\.step\.copy\]</)
+  // The minutes left and the cost so far stay on their line above the row.
+  assert.match(html, /\[progress\.left\{&quot;n&quot;:18\}\] · \[progress\.spent/)
+  assert.ok(html.indexOf('[progress.left') < html.indexOf('class="tracy-wo-band-subs"'))
+  // No other node set, no chain icons and no demo classes inside the band.
+  assert.doesNotMatch(html, /tracy-wo-demo-|tracy-wo-progress-steps|<b>/)
+  assert.doesNotMatch(rowHtml(html), /lucide-circle-check|lucide-circle-x|lucide-clock/)
 })
 
 test('the sub-step connector is one continuous 1px line: no gaps, segment pseudo elements, label masked by the pane colour', () => {
