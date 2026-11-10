@@ -32,9 +32,9 @@ export interface WorkspaceSection {
   expandable: boolean
   /** The one line beside the title while the section is folded; for a locked row, the line of what it waits for. */
   summary: WorkspaceText[]
-  /** The chip in the row (Needs your review), or null. */
+  /** The chip text of a review row (Needs your review), or null. The card draws the Review pill instead. */
   chipKey: string | null
-  /** The words of the link to the section's sub-page, or null when it has none. */
+  /** The words of the status pill that opens the section's sub-page, or null when it has none. */
   linkKey: string | null
 }
 
@@ -115,20 +115,20 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
     const expandable = state !== 'locked'
     const byDefault = state === 'open' || state === 'review'
     const expanded = expandable && (input.opened[id] ?? byDefault)
+    // The pill is the row's one action: Review when it waits for the seller, Open when it is complete. A locked row
+    // shows a lock instead, the demo row has no sub-page, and a current Sources row only has Add source inside.
     const linkKey =
       extra.linkKey !== undefined
         ? extra.linkKey
-        : id === 'demo' || !expandable
+        : id === 'demo' || !expandable || (id === 'sources' && state === 'open')
           ? null
           : state === 'review'
             ? 'section.review'
-            : id === 'brief' && expanded
-              ? 'section.openBrief'
-              : 'section.open'
+            : 'section.open'
     return { id, state, expanded, expandable, summary, chipKey: extra.chipKey ?? null, linkKey }
   }
-  const locked = (id: WorkspaceId, waitKey: string, linkKey: string | null = null): WorkspaceSection =>
-    section(id, 'locked', [{ key: waitKey }], { linkKey })
+  const locked = (id: WorkspaceId, waitKey: string): WorkspaceSection =>
+    section(id, 'locked', [{ key: waitKey }])
   const done = (id: WorkspaceId): WorkspaceState => (focus === id ? 'open' : 'done')
 
   // Sources: the links the seller pasted, collected or not yet; never reviewed (#537).
@@ -140,13 +140,12 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
       : [{ key: 'workspace.sum.notCollected' }])
   ])
 
-  // Business facts: the output of research. While research runs it waits; before it, the sub-page still takes the
-  // seller's own photos and videos, so the muted row keeps its Open link.
+  // Business facts: the output of research. While research runs, and before it, it waits as a locked row.
   const fieldsLine = counted('section.meta.profile.fields', input.fields)
   const profile = input.researchMoving
     ? locked('profile', 'workspace.wait.research')
     : !input.researchDone
-      ? locked('profile', 'section.meta.profile.waiting', 'section.open')
+      ? locked('profile', 'section.meta.profile.waiting')
       : stepper.current === 'research' && stepper.review
         ? section('profile', 'review', [fieldsLine], { chipKey: 'stepper.needsReview' })
         : researchAgain

@@ -218,26 +218,30 @@ for (const c of CASES) {
   })
 }
 
-test('workspace: locked rows never open and have no link, except Business facts before research', () => {
+test('workspace: locked rows never open and have no pill link (the card draws a lock), Business facts included', () => {
   const sections = sectionsOf({ research: NOT_STARTED, job: null, opened: { brief: true, demo: true } })
   const by = Object.fromEntries(sections.map((s) => [s.id, s]))
   assert.equal(by.brief.expanded, false)
   assert.equal(by.brief.expandable, false)
   assert.equal(by.brief.linkKey, null)
   assert.equal(by.demo.linkKey, null)
-  // Its sub-page takes the seller's own photos before research.
-  assert.equal(by.profile.linkKey, 'section.open')
+  assert.equal(by.profile.state, 'locked')
+  assert.equal(by.profile.linkKey, null)
 })
 
-test('workspace: the links read Review on a review, Open full brief on the open brief, Open elsewhere', () => {
+test('workspace: the pill reads Review on a review, Open on a complete row, nothing on a current Sources row', () => {
   const review = Object.fromEntries(sectionsOf({}).map((s) => [s.id, s.linkKey]))
   assert.equal(review.profile, 'section.review')
   assert.equal(review.sources, 'section.open')
   const built = Object.fromEntries(
     sectionsOf({ brief: BRIEF, approval: APPROVED, opened: { brief: true } }).map((s) => [s.id, s.linkKey])
   )
-  assert.equal(built.brief, 'section.openBrief')
+  assert.equal(built.brief, 'section.open')
   assert.equal(built.demo, null)
+  const before = Object.fromEntries(
+    sectionsOf({ research: NOT_STARTED, job: null }).map((s) => [s.id, [s.state, s.linkKey]])
+  )
+  assert.deepEqual(before.sources, ['open', null])
 })
 
 test('workspace: the stored open/closed choices keep only booleans of known sections', () => {

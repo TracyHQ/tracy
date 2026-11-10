@@ -22,12 +22,16 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-sec[data-state='review'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
 .tracy-wo-ws-name { flex: none; min-width: 150px; font-weight: 600; white-space: nowrap; }
 .tracy-wo-ws-sum { flex: 1 1 auto; min-width: 0; overflow: hidden; color: var(--muted-foreground); white-space: nowrap; text-overflow: ellipsis; }
-.tracy-wo-ws-chip { flex: none; }
-.tracy-wo-ws-row > .tracy-wo-open { flex: none; }
-.tracy-wo-ws-chev { display: grid; place-items: center; flex: none; width: 22px; height: 22px; margin: 0; padding: 0; border: 0; background: none; color: var(--muted-foreground); cursor: pointer; }
-.tracy-wo-ws-chev > svg { width: 16px; height: 16px; transition: transform 0.15s; }
-.tracy-wo-ws-sec[data-open] .tracy-wo-ws-chev > svg { transform: rotate(90deg); }
-.tracy-wo-ws-lock { flex: none; width: 14px; height: 14px; margin-right: 4px; color: var(--muted-foreground); }
+.tracy-wo-ws-pill { display: inline-flex; align-items: center; flex: none; gap: 3px; height: 26px; margin: 0; padding: 0 8px 0 11px; border: 1px solid var(--border); border-radius: 99px; background: var(--card, var(--background)); color: var(--foreground); font: inherit; font-size: 12.5px; font-weight: 500; white-space: nowrap; cursor: pointer; }
+.tracy-wo-ws-pill > svg { width: 14px; height: 14px; color: var(--muted-foreground); }
+.tracy-wo-ws-pill:hover { background: color-mix(in oklab, var(--muted) 60%, var(--card, var(--background))); }
+.tracy-wo-ws-pill:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+.tracy-wo-ws-pill[data-kind='review'] { border-color: color-mix(in oklab, var(--primary) 35%, transparent); background: color-mix(in oklab, var(--primary) 10%, transparent); color: var(--primary); }
+.tracy-wo-ws-pill[data-kind='review'] > svg { color: var(--primary); }
+.tracy-wo-ws-pill[data-kind='review']:hover { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.tracy-wo-ws-pill[data-kind='review']:hover > svg { color: var(--primary-foreground); }
+.tracy-wo-ws-pill[data-kind='locked'] { padding: 0 9px; border-style: dashed; background: transparent; color: var(--muted-foreground); cursor: default; }
+.tracy-wo-ws-pill[data-kind='locked']:hover { background: transparent; }
 .tracy-wo-ws-sec[data-state='locked'] { background: color-mix(in oklab, var(--muted) 35%, var(--card, var(--background))); }
 .tracy-wo-ws-sec[data-state='locked'] .tracy-wo-ws-name { color: var(--muted-foreground); }
 .tracy-wo-ws-body { padding: 12px 16px 14px; }

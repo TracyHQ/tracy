@@ -1206,6 +1206,9 @@ export const en = {
   'workspace.title': 'Workspace',
   'workspace.subtitle': 'Everything Tracy has for this business',
   'workspace.toggle': 'Show or hide {section}',
+  // Status pill at the end of a Workspace row (#537)
+  'workspace.locked': 'Locked',
+  'workspace.reviewNamed': 'Review {section}',
   'workspace.sum.links.one': '{count} link',
   'workspace.sum.links.other': '{count} links',
   'workspace.sum.collected': 'collected {date}',

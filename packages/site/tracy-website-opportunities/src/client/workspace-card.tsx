@@ -1,10 +1,9 @@
 /**
  * The Workspace card of Details (#537, option D): one full width card under the Progress band, its four sections drawn
  * from `workspace-model.ts`. A section with content is a row that opens and folds on a press (several may be open); a
- * locked section is one muted row with a lock. The seller's open/closed choices live in session storage per place.
+ * locked section is one muted row with a lock pill. The status pill is the single trailing action. The seller's open/closed choices live in session storage per place.
  */
 
-import { Badge } from '@tracy/ui'
 import { hostOf } from '@tracy/wo-views'
 import { AppWindow, Check, ChevronRight, ClipboardList, FileText, Link2, Lock } from 'lucide-react'
 import { type JSX, type ReactNode, useCallback, useEffect, useId, useState } from 'react'
@@ -84,7 +83,7 @@ function Row({
   onSection: (id: SubSection) => void
 }): JSX.Element {
   const bodyId = useId()
-  const { id, state, expanded, expandable, chipKey, linkKey } = section
+  const { id, state, expanded, expandable, linkKey } = section
   const title = t(`details.section.${id}`)
   const Icon = state === 'done' ? Check : ICONS[id]
   const head = (
@@ -118,36 +117,24 @@ function Row({
         ) : (
           <span className="tracy-wo-ws-toggle">{head}</span>
         )}
-        {chipKey !== null ? (
-          <Badge variant="outline" className="tracy-wo-chip-warn tracy-wo-ws-chip">
-            {t(chipKey)}
-          </Badge>
-        ) : null}
-        {linkKey !== null && id !== 'demo' ? (
+        {state === 'locked' ? (
+          <span className="tracy-wo-ws-pill" data-kind="locked" role="img" aria-label={t('workspace.locked')}>
+            <Lock aria-hidden="true" />
+          </span>
+        ) : linkKey !== null && id !== 'demo' ? (
           <button
             type="button"
-            className="tracy-wo-open"
-            aria-label={t('section.openNamed', { section: title })}
+            className="tracy-wo-ws-pill"
+            data-kind={state === 'review' ? 'review' : 'open'}
+            aria-label={t(state === 'review' ? 'workspace.reviewNamed' : 'section.openNamed', {
+              section: title
+            })}
             onClick={() => onSection(id)}
           >
             {t(linkKey)}
             <ChevronRight aria-hidden="true" />
           </button>
         ) : null}
-        {expandable ? (
-          // The chevron folds the row too; the title button carries the name and the state for keyboards.
-          <button
-            type="button"
-            tabIndex={-1}
-            aria-hidden="true"
-            className="tracy-wo-ws-chev"
-            onClick={() => onToggle(id, expanded)}
-          >
-            <ChevronRight />
-          </button>
-        ) : (
-          <Lock aria-hidden="true" className="tracy-wo-ws-lock" />
-        )}
       </div>
       {expanded ? (
         <div className="tracy-wo-ws-body" id={bodyId}>
