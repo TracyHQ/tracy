@@ -1,13 +1,15 @@
 /**
  * The Business facts body of the Workspace card (#537, option B, `facts-body.tsx`): a fixed height in every state, at
- * most two columns of facts on the left, a strip of three square tiles on the right. Under 720px of card the strip goes under the
+ * most two columns of facts on the left, a strip of three square tiles on the right. Under 752px of card the strip goes under the
  * facts and the body grows to a second fixed height. Reads only Tracy tokens. No backtick may appear inside the
  * template below.
  */
 export const FACTS_BODY_CSS = `
-.tracy-wo-ws { --tracy-wo-fb-height: 192px; --tracy-wo-fb-tile: 120px; --tracy-wo-fb-gap: 8px; --tracy-wo-fb-strip: calc(3 * var(--tracy-wo-fb-tile) + 2 * var(--tracy-wo-fb-gap)); --tracy-wo-fb-strip-max: calc(6 * var(--tracy-wo-fb-tile) + 5 * var(--tracy-wo-fb-gap)); }
+.tracy-wo-ws { --tracy-wo-fb-tile: 120px; --tracy-wo-fb-gap: 8px; --tracy-wo-fb-strip: calc(3 * var(--tracy-wo-fb-tile) + 2 * var(--tracy-wo-fb-gap)); --tracy-wo-fb-strip-max: calc(6 * var(--tracy-wo-fb-tile) + 5 * var(--tracy-wo-fb-gap)); }
+/* The profile section is the container the queries below measure: it is as wide as the card, whatever the page column is. Side by side needs 320px of facts, 24px of gap and three tiles (376px) inside 16px of padding each side, so 752px. */
+.tracy-wo-ws-sec[data-section='profile']:has(> .tracy-wo-ws-body > .tracy-wo-fb) { container: wofb / inline-size; }
 /* The body keeps one height whatever was found: 12px top and 14px bottom padding, 166px of content. */
-.tracy-wo-ws-sec[data-section='profile'] > .tracy-wo-ws-body:has(> .tracy-wo-fb) { box-sizing: border-box; height: var(--tracy-wo-fb-height); overflow: hidden; }
+.tracy-wo-ws-sec[data-section='profile'] > .tracy-wo-ws-body:has(> .tracy-wo-fb) { --tracy-wo-fb-height: 192px; box-sizing: border-box; height: var(--tracy-wo-fb-height); overflow: hidden; }
 .tracy-wo-fb { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(var(--tracy-wo-fb-strip), var(--tracy-wo-fb-strip-max)); gap: 24px; height: 100%; min-width: 0; overflow: hidden; }
 /* Two columns of facts, never more: four fixed slots each, the last one two lines tall for About. */
 .tracy-wo-fb-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; align-content: start; min-width: 0; overflow: hidden; }
@@ -51,14 +53,14 @@ a.tracy-wo-fb-v:focus-visible { outline: 1px solid var(--ring); outline-offset: 
 .tracy-wo-fb-nophoto { box-sizing: border-box; align-self: start; height: var(--tracy-wo-fb-tile); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 0; padding: 8px; overflow: hidden; border: 1px dashed color-mix(in oklab, var(--muted-foreground) 45%, transparent); border-radius: 8px; background: color-mix(in oklab, var(--muted) 50%, transparent); color: var(--muted-foreground); font-size: 12.5px; text-align: center; }
 .tracy-wo-fb-nophoto > b { color: var(--foreground); font-weight: 500; }
 .tracy-wo-fb-nophoto > svg { width: 16px; height: 16px; }
-@container (max-width: 719px) {
+@container wofb (max-width: 751px) {
   /* The strip goes under the facts, three to six tiles by its own width; the body gets a taller fixed height: 314px of content. */
-  .tracy-wo-ws { --tracy-wo-fb-height: 340px; }
+  .tracy-wo-ws-sec[data-section='profile'] > .tracy-wo-ws-body:has(> .tracy-wo-fb) { --tracy-wo-fb-height: 340px; }
   .tracy-wo-fb { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 12px; }
   .tracy-wo-fb-strip { width: min(100%, var(--tracy-wo-fb-strip-max)); }
   .tracy-wo-fb-nophoto { width: min(100%, var(--tracy-wo-fb-strip)); }
 }
-@container (max-width: 560px) {
+@container wofb (max-width: 560px) {
   /* The body's padding drops to 10px top and 12px bottom here; the height stays 340px. */
   .tracy-wo-fb-facts { column-gap: 16px; }
   .tracy-wo-fb-fact { grid-template-columns: 56px minmax(0, 1fr); gap: 8px; }

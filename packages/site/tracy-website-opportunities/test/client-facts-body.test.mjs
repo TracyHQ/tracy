@@ -265,6 +265,19 @@ test('strings: every key the body uses exists, English only, no long dashes', ()
   assert.equal(lib.en['facts.body.na'], 'N/A')
 })
 
+test('css: the profile section is the container, and the strip stacks below side-by-side room', () => {
+  const css = lib.FACTS_BODY_CSS
+  assert.match(
+    css,
+    /data-section='profile'\]:has\(> \.tracy-wo-ws-body > \.tracy-wo-fb\) \{ container: wofb \/ inline-size; \}/
+  )
+  assert.match(css, /@container wofb \(max-width: 751px\)/)
+  assert.doesNotMatch(css, /@container \((max|min)-width: 7\d\dpx\) \{\n  \/\* The strip goes/)
+  const stacked = css.slice(css.indexOf('@container wofb (max-width: 751px)'))
+  assert.match(stacked, /--tracy-wo-fb-height: 340px/)
+  assert.match(stacked, /\.tracy-wo-fb \{ grid-template-columns: minmax\(0, 1fr\)/)
+})
+
 test('css: fixed height, overflow hidden, two-column facts, never three, three square tiles', () => {
   const css = lib.FACTS_BODY_CSS
   assert.match(css, /--tracy-wo-fb-height: 192px/)
