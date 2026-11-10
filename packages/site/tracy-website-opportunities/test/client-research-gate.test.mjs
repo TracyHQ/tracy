@@ -45,7 +45,7 @@ test('the brief button is locked with a plain reason until research is done', ()
     brief: null
   })
   assert.equal(open.mode, 'make')
-  assert.equal(t(open.labelKey), 'Make content brief')
+  assert.equal(t(open.labelKey), 'Make site content brief')
 })
 
 test('a current brief needs no button; a stale one offers Refresh', () => {
@@ -137,7 +137,7 @@ test('a Profile edit newer than the brief says so, and Refresh is offered even f
   assert.equal(view.mode, 'make')
   assert.equal(view.labelKey, 'brief.refresh')
   assert.equal(view.noteKey, null, 'no line about an older reading when the edit is the news')
-  assert.match(en['brief.staleEdits'], /Profile edits are newer/)
+  assert.match(en['brief.staleEdits'], /edits to the business facts are newer/)
 })
 
 test('a failed brief job names the step that stopped, never its raw code', () => {

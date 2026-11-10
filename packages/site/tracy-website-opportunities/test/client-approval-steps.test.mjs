@@ -178,3 +178,19 @@ test('step 1 reads Research business facts, its first press too; Research again 
   assert.equal(en['details.researchAgain'], 'Research again')
   assert.equal(en['stepper.lock.profile'], 'Approve the business facts to unlock')
 })
+
+test('the steps read Research business facts, Write site content brief, Build your site', () => {
+  assert.deepEqual(
+    ['step.research', 'step.brief', 'step.build'].map((k) => en[k]),
+    ['Research business facts', 'Write site content brief', 'Build your site']
+  )
+  assert.equal(en['details.section.brief'], 'Site content brief')
+  assert.equal(en['chip.briefReview'], 'Site content brief needs review')
+  assert.equal(en['brief.make'], 'Make site content brief')
+  assert.equal(en['brief.refresh'], 'Refresh')
+  assert.equal(en['stepper.lock.brief'], 'Approve the site content brief to unlock')
+  assert.equal(
+    en['site.notYet.brief'],
+    'Not available yet. Approve the site content brief, then build the site.'
+  )
+})

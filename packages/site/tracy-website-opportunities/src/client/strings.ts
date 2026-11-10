@@ -892,7 +892,7 @@ export const en = {
   'media.hidden.decoration': 'Decoration',
   'media.hidden.not_stored': 'Not kept in Tracy',
 
-  'brief.none': 'No content brief yet.',
+  'brief.none': 'No site content brief yet.',
   'brief.failed': 'Could not make a new site brief.',
   'brief.number': 'Brief {n}',
   /** The copy button on a code block inside a brief shown in the side card. */
@@ -907,7 +907,7 @@ export const en = {
   'brief.view': 'View brief',
   'brief.refresh': 'Refresh',
   // #524: the Content brief waits for this card's research and is made in the background.
-  'brief.make': 'Make content brief',
+  'brief.make': 'Make site content brief',
   'brief.locked': 'Available after research finishes.',
   'brief.readingOld':
     'This brief was made from an older reading of the business. Research again to read the business with the latest rules.',
@@ -951,7 +951,8 @@ export const en = {
 
   'build.label': 'Demo site name',
   'build.labelHint': 'Named after the place. Change it to use another address.',
-  'build.labelHintSaved': 'The site name you saved on the Business brief. Change it to use another address.',
+  'build.labelHintSaved':
+    'The site name you saved on the Site content brief. Change it to use another address.',
   'build.start': 'Build demo',
   'build.cms': 'CMS',
   'build.template': 'Template',
@@ -1158,7 +1159,7 @@ export const en = {
   'details.delete': 'Delete',
   'details.section.profile': 'Business facts',
   'details.section.sources': 'Sources',
-  'details.section.brief': 'Business brief',
+  'details.section.brief': 'Site content brief',
   'details.section.media': 'Photos & video',
   'details.section.demo': 'Your site',
 
@@ -1187,7 +1188,7 @@ export const en = {
 
   /** A section of Details: the lock line while it waits for a step, and the link that opens it as a sub-page. */
   'section.locked.research': 'Available after research finishes.',
-  'section.locked.brief': 'Available after the content brief is ready.',
+  'section.locked.brief': 'Available after the site content brief is ready.',
   'section.open': 'Open',
   'section.review': 'Review',
   'section.openBrief': 'Open full brief',
@@ -1256,7 +1257,7 @@ export const en = {
   /** The three steps of one place under the Details header (stepper-model.ts, mock r6-a). */
   'progress.title': 'Progress',
   'step.research': 'Research business facts',
-  'step.brief': 'Content brief',
+  'step.brief': 'Write site content brief',
   'step.build': 'Build your site',
   'stepper.doneOn': 'Done {date}',
   'stepper.done': 'Done',
@@ -1267,10 +1268,10 @@ export const en = {
   'stepper.research.running': 'Reading the website, Google listing and social pages. Usually 2 to 4 minutes.',
   'stepper.research.paused': 'Research paused. Resume to finish it.',
   'stepper.research.failed': 'Research could not finish.',
-  'stepper.brief.ready': 'Research finished. Make the content brief to describe the site.',
-  'stepper.brief.running': 'Making the content brief…',
+  'stepper.brief.ready': 'Research finished. Make the site content brief to describe the site.',
+  'stepper.brief.running': 'Writing the site content brief…',
   'stepper.brief.failed': 'Could not be made. Try again.',
-  'stepper.build.ready': 'Content brief ready. Build a demo site from it.',
+  'stepper.build.ready': 'Site content brief ready. Build your site from it.',
   'stepper.build.running': 'Building the demo site…',
   'stepper.build.failed': 'The demo build stopped before it was finished.',
   'stepper.build.expired': 'The demo expired. Build it again to send it.',
@@ -1301,9 +1302,9 @@ export const en = {
   'stepper.review.profile':
     'Research business facts finished. Check them, edit anything that is wrong, then approve.',
   'stepper.review.brief':
-    'The content brief is ready. Check every row, edit anything that is wrong, then approve it.',
+    'The site content brief is ready. Check every row, edit anything that is wrong, then approve it.',
   'stepper.reviewProfile': 'Review business facts ›',
-  'stepper.reviewBrief': 'Review brief ›',
+  'stepper.reviewBrief': 'Review site content brief ›',
   'stepper.needsReview': 'Needs your review',
   'stepper.approvedOn': 'Approved {date}',
   'stepper.failed': 'Failed',
@@ -1312,20 +1313,22 @@ export const en = {
   'stepper.upNext': 'Up next',
   'stepper.sourcesChanged': 'Sources changed',
   'stepper.lock.profile': 'Approve the business facts to unlock',
-  'stepper.lock.profileAgain': 'Approve the business facts again, then make the brief again',
-  'stepper.lock.brief': 'Approve the brief to unlock',
-  'stepper.lock.both': 'Locked until the business facts and brief are approved',
+  'stepper.lock.profileAgain': 'Approve the business facts again, then make the site content brief again',
+  'stepper.lock.brief': 'Approve the site content brief to unlock',
+  'stepper.lock.both': 'Locked until the business facts and the site content brief are approved',
   'stepper.lock.research': 'Research business facts to unlock',
   'stepper.lock.researchAgain': 'Run research again to unlock',
-  'stepper.brief.readyApproved': 'Business facts approved. Writing the brief takes about 2 minutes.',
-  'stepper.brief.staleProfile': 'The business facts changed after this brief was made. Make the brief again.',
-  'stepper.brief.staleSources': 'The sources changed after this brief was made. Make the brief again.',
+  'stepper.brief.readyApproved':
+    'Business facts approved. Writing the site content brief takes about 2 minutes.',
+  'stepper.brief.staleProfile':
+    'The business facts changed after this site content brief was made. Make it again.',
+  'stepper.brief.staleSources': 'The sources changed after this site content brief was made. Make it again.',
   'stepper.build.readyApproved': 'Brief approved. Building your site takes about 50 minutes.',
-  'brief.makeAgain': 'Make the brief again',
+  'brief.makeAgain': 'Make the site content brief again',
   'brief.heldProfile':
-    'Brief {n} was made before the business facts were approved. Approve the business facts, then make the brief again.',
+    'Brief {n} was made before the business facts were approved. Approve the business facts, then make the site content brief again.',
   'brief.heldSources':
-    'Brief {n} was made from older sources. Run research again, approve the business facts, then make the brief again.',
+    'Brief {n} was made from older sources. Run research again, approve the business facts, then make the site content brief again.',
   'brief.chip.olderProfile': 'Made from older business facts',
   'brief.chip.olderSources': 'Made from older sources',
 
@@ -1343,9 +1346,9 @@ export const en = {
   'chip.sourcesChanged': 'Sources changed',
   'chip.profileReview': 'Business facts need review',
   'chip.profileApproved': 'Business facts approved',
-  'chip.briefRunning': 'Making brief',
-  'chip.briefReview': 'Brief needs review',
-  'chip.briefApproved': 'Brief approved',
+  'chip.briefRunning': 'Writing site content brief',
+  'chip.briefReview': 'Site content brief needs review',
+  'chip.briefApproved': 'Site content brief approved',
   'chip.building': 'Building your site',
   'chip.built': 'Site ready',
 
@@ -1354,20 +1357,20 @@ export const en = {
   'approve.scrollHint': 'Scroll to the end to approve.',
   'approve.back': 'Back',
   'approve.profile': 'Approve business facts and continue',
-  'approve.brief': 'Approve brief and continue',
+  'approve.brief': 'Approve site content brief and continue',
   'approve.saving': 'Approving…',
   'approve.done.profile': 'Business facts approved {date}',
-  'approve.done.brief': 'Brief approved {date}',
+  'approve.done.brief': 'Site content brief approved {date}',
 
   /** Refusals of the approval steps and the gates (#537), keyed by the server code. */
   'gate.PROFILE_NOT_APPROVED': 'Approve the business facts first: open them, check every row, then approve.',
-  'gate.BRIEF_NOT_APPROVED': 'Approve the content brief first: open it, check every row, then approve.',
+  'gate.BRIEF_NOT_APPROVED': 'Approve the site content brief first: open it, check every row, then approve.',
   'gate.RESEARCH_NEEDED':
     'A source was added after research. Run research again, then approve the new business facts.',
   'gate.RESEARCH_NOT_DONE': 'Research business facts first.',
-  'gate.NO_BRIEF': 'Make a content brief first.',
+  'gate.NO_BRIEF': 'Make a site content brief first.',
   'gate.BRIEF_STALE':
-    'This brief was made from older business facts or older sources. Make the brief again, then approve it.',
+    'This site content brief was made from older business facts or older sources. Make it again, then approve it.',
   'gate.other': 'That did not work. Try again in a moment.',
 
   /** Add source (#537): one more link of the business. */
@@ -1400,8 +1403,8 @@ export const en = {
 
   /** Your site (#537): before the site is built, the block says which step is needed. */
   'site.notYet.research': 'Not available yet. Research business facts first.',
-  'site.notYet.profile': 'Not available yet. Approve the business facts, then make the content brief.',
-  'site.notYet.brief': 'Not available yet. Approve the content brief, then build the site.',
+  'site.notYet.profile': 'Not available yet. Approve the business facts, then make the site content brief.',
+  'site.notYet.brief': 'Not available yet. Approve the site content brief, then build the site.',
   'site.building': 'Building your site. About 50 minutes.',
 
   /** The Demo site block (#515). */

@@ -97,7 +97,7 @@ test('Status: researched without a brief offers Make content brief, never Build 
     opts
   )
   assert.equal(p.status.label, 'Researched')
-  assert.deepEqual(p.next, { label: 'Make content brief', run: { kind: 'brief' }, disabled: false })
+  assert.deepEqual(p.next, { label: 'Make site content brief', run: { kind: 'brief' }, disabled: false })
 })
 
 test('Status: a place never researched offers Start research', () => {

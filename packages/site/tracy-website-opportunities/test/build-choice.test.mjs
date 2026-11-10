@@ -47,7 +47,7 @@ test('the hint under the name says it is the saved Site name while that is the o
   const { en } = await import('../src/client/strings.ts')
   assert.equal(
     en[buildLabelHintKey(null, 'my-coach')],
-    'The site name you saved on the Business brief. Change it to use another address.'
+    'The site name you saved on the Site content brief. Change it to use another address.'
   )
   assert.equal(en[buildLabelHintKey(null, null)], 'Named after the place. Change it to use another address.')
   assert.equal(
