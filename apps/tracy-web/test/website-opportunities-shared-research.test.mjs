@@ -21,7 +21,7 @@ import { cancelRequest, requestResearch } from 'website-opportunities/src/place-
 import { claimPlaceJob, finishPlaceJob, placeLease } from 'website-opportunities/src/place-jobs.js'
 import { createRevision } from '../src/opportunities-build/revisions.js'
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
-import { fenced, insertOpportunity } from 'website-opportunities/src/store.js'
+import { checkpoint, fenced, insertOpportunity } from 'website-opportunities/src/store.js'
 import { buildPlaced } from '../src/opportunities-build/build-store.js'
 import { fileDb, writeAsHistory } from './_db.mjs'
 import { createTracyWoHost } from '../src/wo-host.js'
@@ -3024,5 +3024,211 @@ test(
     await requestResearch(pool, { accountId: a, opportunity, requestId: 'storage-reuse', again: again() })
     await drain(ex)
     assert.deepEqual(downloads, [], 'stored bytes and the new terminal blocked reference are reused')
+  }
+)
+
+test(
+  'two executor instances admit only five downloaded pictures until real media storage completes',
+  opts,
+  async () => {
+    const { pool } = db
+    const owner = await account(pool, 'media-admission@tracy.test')
+    const requests = []
+    for (const providerId of ['ChIJadmissionOne', 'ChIJadmissionTwo']) {
+      const { row: opportunity } = await insertOpportunity(pool, owner, {
+        name: 'Picture research',
+        branch: null,
+        provider: 'google-places',
+        providerId,
+        candidate: { provider: 'google-places', providerId, name: 'Picture research', socials: {} }
+      })
+      requests.push(
+        await requestResearch(pool, { accountId: owner, opportunity, requestId: `admit-${providerId}` })
+      )
+    }
+    let release
+    const stored = new Promise((resolve) => {
+      release = resolve
+    })
+    let entered
+    const full = new Promise((resolve) => {
+      entered = resolve
+    })
+    let downloads = 0
+    let awaitingStorage = 0
+    let peak = 0
+    const { domain } = await domainWith({
+      website: websiteOk(
+        Array.from({ length: 5 }, (_, i) => ({ url: `https://phoba.example/admit-${i}.png`, kind: 'image' }))
+      ),
+      fetchLimited: async (url) => {
+        downloads += 1
+        return { url, status: 200, mime: 'image/png', bytes: PNG, truncated: false }
+      }
+    })
+    const extra = {
+      objects: {
+        put: async () => {
+          awaitingStorage += 1
+          peak = Math.max(peak, awaitingStorage)
+          if (awaitingStorage === 5) entered()
+          await stored
+          awaitingStorage -= 1
+          return true
+        }
+      }
+    }
+    const first = await executor(pool, domain, extra).ex.tick()
+    const second = await executor(pool, domain, extra).ex.tick()
+    const complete = Promise.all([first.done, second.done])
+    try {
+      assert.ok(first.claimed)
+      assert.ok(second.claimed)
+      await Promise.race([
+        full,
+        complete.then(() => {
+          throw new Error('Research ended before reaching five pending stores')
+        })
+      ])
+      await new Promise((resolve) => setImmediate(resolve))
+      assert.equal(downloads, 5, 'the other executor cannot fetch buffers while all five stores are pending')
+      assert.equal(awaitingStorage, 5)
+    } finally {
+      release()
+      await complete
+    }
+    assert.equal(downloads, 10)
+    assert.equal(peak, 5)
+    for (const request of requests) {
+      assert.equal((await jobRow(pool, request.job.id)).state, 'completed')
+    }
+  }
+)
+
+test(
+  'foreground crash recovery stops after three takeovers and explicit resume keeps paid checkpoints',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'crash-recovery@tracy.test')
+    const opportunity = await saveGoogle(pool, a)
+    const { job: request } = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'crash-recovery'
+    })
+    let claimed = await claimPlaceJob(pool, 'first-worker', 60_000)
+    const snapshotId = claimed.snapshot_id
+    const paidRun = { source: 'instagram', offset: 0, id: 'already-paid-run', datasetId: 'already-paid-data' }
+    await checkpoint(pool, placeLease(claimed), { stage: 'media', progress: { apifyRun: paidRun } })
+    const expire = () =>
+      pool.query("update wo_place_job set lease_until=now()-interval '1 second' where id=$1", [claimed.id])
+    for (let recovery = 1; recovery <= 3; recovery++) {
+      const stale = placeLease(claimed)
+      await expire()
+      claimed = await claimPlaceJob(pool, `recovery-${recovery}`, 60_000)
+      assert.ok(claimed)
+      assert.equal(claimed.snapshot_id, snapshotId)
+      assert.equal(claimed.progress.crashRecoveries, recovery)
+      assert.deepEqual(claimed.progress.apifyRun, paidRun)
+      assert.equal(claimed.stage, 'media')
+      await assert.rejects(
+        fenced(pool, stale, () => {}),
+        (error) => error.code === 'STALE_LEASE'
+      )
+    }
+    const stale = placeLease(claimed)
+    await expire()
+    assert.equal(await claimPlaceJob(pool, 'would-loop-again', 60_000), null)
+    const stopped = await one(pool, 'select * from wo_place_job where id=$1', [claimed.id])
+    assert.equal(stopped.state, 'paused')
+    assert.equal(stopped.last_error.code, 'RESEARCH_RECOVERY_LIMIT')
+    assert.equal(stopped.attempt, 4, 'initial attempt plus three automatic recoveries')
+    assert.equal(stopped.lease_until, null)
+    assert.equal(stopped.lease_owner, null)
+    assert.equal((await jobRow(pool, request.id)).state, 'paused')
+    assert.equal((await jobRow(pool, request.id)).last_error.code, 'RESEARCH_RECOVERY_LIMIT')
+    assert.equal(
+      (await one(pool, 'select state from wo_place_snapshot where id=$1', [snapshotId])).state,
+      'preparing'
+    )
+    assert.equal(await finishPlaceJob(pool, stale, { state: 'completed' }), false)
+    await assert.rejects(
+      fenced(pool, stale, () => {}),
+      (error) => error.code === 'STALE_LEASE'
+    )
+    assert.equal(await claimPlaceJob(pool, 'poll-again', 60_000), null)
+    const resumed = await resumeRequest(pool, a, request.id, { shared: true })
+    assert.equal(resumed.state, 'queued')
+    claimed = await claimPlaceJob(pool, 'explicit-resume', 60_000)
+    assert.equal(claimed.id, stopped.id)
+    assert.equal(claimed.snapshot_id, snapshotId)
+    assert.equal(claimed.attempt, 5, 'lifetime claim history is retained')
+    assert.equal(claimed.progress.crashRecoveries, 0)
+    assert.deepEqual(claimed.progress.apifyRun, paidRun)
+    assert.equal(claimed.stage, 'media')
+  }
+)
+
+test('quota resumes with many prior attempts do not consume automatic crash recoveries', opts, async () => {
+  const { pool } = db
+  const a = await account(pool, 'quota-crash-budget@tracy.test')
+  const opportunity = await saveGoogle(pool, a)
+  const { job: request } = await requestResearch(pool, {
+    accountId: a,
+    opportunity,
+    requestId: 'quota-crash-budget'
+  })
+  let claimed = await claimPlaceJob(pool, 'quota-worker', 60_000)
+  await pool.query('update wo_place_job set attempt=20 where id=$1', [claimed.id])
+  await finishPlaceJob(pool, placeLease(claimed), {
+    state: 'paused',
+    lastError: { code: 'SOURCE_PAUSED', reason: 'quota' }
+  })
+  await resumeRequest(pool, a, request.id, { shared: true })
+  claimed = await claimPlaceJob(pool, 'quota-resumed', 60_000)
+  assert.equal(claimed.attempt, 21)
+  assert.equal(claimed.progress.crashRecoveries, 0)
+  await pool.query("update wo_place_job set lease_until=now()-interval '1 second' where id=$1", [claimed.id])
+  const recovery = await claimPlaceJob(pool, 'first-real-crash', 60_000)
+  assert.equal(recovery.progress.crashRecoveries, 1)
+  assert.equal(recovery.attempt, 22)
+})
+
+test(
+  'own site polling surfaces the crash recovery limit without automatically resuming it',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'own-crash-limit@tracy.test')
+    const opportunity = await saveGoogle(pool, a, { ownSite: { requestId: 'own-crash-limit' } })
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'own-crash-limit:research'
+    })
+    await pool.query(
+      'update wo_place_job set state=\'paused\',last_error=\'{"code":"RESEARCH_RECOVERY_LIMIT"}\'::jsonb where id=$1',
+      [job.place_job_id]
+    )
+    const { domain } = await domainWith()
+    const { call } = await doors(pool, domain)
+    await pool.query(
+      `update ui_setting set overrides=overrides || '{"site-from-business":true}'::jsonb where id=true`
+    )
+    const result = await call(
+      'own-crash-limit@tracy.test',
+      'GET',
+      `/api/sites/from-business/${opportunity.id}`
+    )
+    assert.equal(result.status, 200)
+    assert.equal(result.body.business.phase, 'failed')
+    assert.equal(result.body.business.code, 'RESEARCH_RECOVERY_LIMIT')
+    assert.equal(
+      (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+      'paused'
+    )
+    const saved = await one(pool, 'select candidate from wo_opportunity where id=$1', [opportunity.id])
+    assert.equal(saved.candidate.ownSite.resumes ?? 0, 0)
   }
 )

@@ -228,7 +228,9 @@ import { releaseWebroot } from './site-pictures/icon-step.js'
 import { createBrandQueue } from './brand-step/brand-worker.js'
 import { productionWiring } from './brand-step/brand-wiring.js'
 import { kitImagesFor } from './site-planner/kit-images.js'
-import { presign, signedCall } from './sites/artifacts.js'
+import { signedCall } from './sites/artifacts.js'
+import { storeObjects } from './lib/store-objects.js'
+export { storeObjects } from './lib/store-objects.js'
 import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
 import { createStepChainEngine } from './sites/brief-engines/step-chain.js'
@@ -2771,50 +2773,4 @@ export function placeMediaObjectsFor(config, fetchImpl) {
     local: storeObjects(config.artifactStore ?? null, fetchImpl),
     shared: storeObjects(config.placeMediaStore ?? null, fetchImpl)
   })
-}
-
-/**
- * The artifact store as the assistant and Website Opportunities need it: put, read and delete one
- * object by a key the caller chose. Null without a store: staff photos are then refused with a note in
- * the topic, and opportunity media are kept as references only.
- * @param {{ endpoint: string, bucket: string, accessKey: string, secretKey: string } | null} store
- * @param {typeof fetch} fetchImpl
- */
-export function storeObjects(store, fetchImpl) {
-  if (!store) return null
-  const TTL_S = 300
-  return {
-    // A URL the browser may follow itself: only a TLS store (R2) is reachable from outside; a local
-    // MinIO behind the docker network is not, so its bytes are streamed through the door instead.
-    async publicUrl(key) {
-      return store.endpoint.startsWith('https:')
-        ? presign(store, { method: 'GET', key, expiresIn: TTL_S })
-        : null
-    },
-    async put(key, bytes, type) {
-      const url = await presign(store, { method: 'PUT', key, expiresIn: TTL_S })
-      const res = await fetchImpl(url, {
-        method: 'PUT',
-        headers: { 'content-type': type },
-        body: bytes
-      }).catch(() => null)
-      return Boolean(res?.ok)
-    },
-    async get(key) {
-      const url = await presign(store, { method: 'GET', key, expiresIn: TTL_S })
-      return fetchImpl(url, { method: 'GET' }).catch(() => null)
-    },
-    /** `{size}` of the object, or null when it is missing or the store did not answer. */
-    async head(key) {
-      const url = await presign(store, { method: 'HEAD', key, expiresIn: TTL_S })
-      const res = await fetchImpl(url, { method: 'HEAD' }).catch(() => null)
-      if (!res?.ok) return null
-      const size = Number(res.headers.get('content-length'))
-      return Number.isFinite(size) ? { size } : null
-    },
-    async delete(key) {
-      const res = await signedCall(store, { method: 'DELETE', key }, fetchImpl).catch(() => null)
-      return Boolean(res?.ok || res?.status === 404)
-    }
-  }
 }

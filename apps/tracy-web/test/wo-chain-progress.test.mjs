@@ -223,6 +223,62 @@ test(
       steps: []
     })
     await w.tick()
-    assert.equal((await w.action()).status, 'completed')
+    assert.equal((await w.action()).status, 'failed')
+    assert.equal((await w.action()).error, 'QA_NEEDS_REVIEW')
   }
 )
+
+test('a soft-failed model step can hand over when the final write and site check passed', opts, async () => {
+  const w = await world()
+  await w.press()
+  await w.tick(0)
+  w.host.job = 'done'
+  await w.chain('applied', {
+    ending: 'soft-failure',
+    failedStep: 'brand',
+    steps: [{ step: 'brand', outcome: 'failed' }, done('write', 1, 0)]
+  })
+  await w.tick()
+  assert.equal((await w.action()).status, 'completed')
+  const { qa } = (await w.pool.query('select qa from wo_build')).rows[0]
+  assert.equal(qa.state, 'passed')
+  assert.equal(qa.humanAccepted, false)
+})
+
+for (const [label, state, measurement] of [
+  ['missing brief', null, null],
+  ['failed brief', 'failed', { ending: 'complete', steps: [done('write', 1, 0)] }],
+  ['stale running measurement', 'applied', running(['write'], [])],
+  ['missing write measurement', 'applied', { ending: 'complete', steps: [] }],
+  [
+    'failed final write',
+    'applied',
+    { ending: 'soft-failure', steps: [{ step: 'write', outcome: 'failed' }] }
+  ],
+  ['stopped final write', 'applied', { ending: 'complete', steps: [{ step: 'write', outcome: 'stopped' }] }]
+]) {
+  test(`a chain with ${label} never passes QA after base provisioning`, opts, async () => {
+    const w = await world()
+    await w.press()
+    await w.tick(0)
+    const original = (await w.pool.query('select id, site_key from wo_build')).rows[0]
+    w.host.job = 'done'
+    if (state) await w.chain(state, measurement)
+    await w.tick()
+    const action = await w.action()
+    assert.equal(action.status, 'failed')
+    assert.equal(action.error, 'QA_NEEDS_REVIEW')
+    const { qa } = (await w.pool.query('select qa from wo_build')).rows[0]
+    assert.equal(qa.state, 'failed')
+    assert.equal(qa.humanAccepted, false)
+    assert.equal(qa.chain?.briefState, state)
+    assert.equal(qa.chain?.writeOutcome, measurement?.steps?.find((s) => s.step === 'write')?.outcome ?? null)
+    assert.equal(qa.chain?.ending, measurement?.ending ?? null)
+    const retained = (await w.pool.query('select id, site_key from wo_build')).rows[0]
+    assert.deepEqual(retained, original, 'the failed attempt keeps its build and site for Retry')
+    if (measurement) {
+      const brief = (await w.pool.query('select timings from site_brief where site_key=$1', [SITE])).rows[0]
+      assert.deepEqual(brief.timings.chain, measurement, 'the original findings remain on the chain')
+    }
+  })
+}

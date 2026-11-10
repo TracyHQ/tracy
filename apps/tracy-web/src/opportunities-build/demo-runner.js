@@ -283,22 +283,38 @@ export function createDemoRunner(deps) {
         // brief to send, no QA baseline to take and no fill to wait for. The action ends with the chain: the host
         // makes the base site long before the chain has written it (#516), so a brief row still running holds the
         // action open, and a finished one ends it.
-        // The row still reaches Outreach (it needs a passed QA state) and the demo keeps its retention clock, so the
-        // "send the link to the owner" step and the sweep treat it like any finished demo. The chain's own checks
-        // belong to the chain; a soft failure still hands the site over.
+        // Step 9 records `done` only after its final Site check and repair verification pass. Earlier model failures
+        // may still hand over a verified fallback, but a terminal frame alone never proves that the site passed.
         if (isStepChainBuild(build)) {
           if (chainRun && chainRunOpen(chainRun.state)) return wait()
+          const measured = chainRun?.timings?.chain
+          const write = Array.isArray(measured?.steps)
+            ? measured.steps.findLast((entry) => entry?.step === 'write')
+            : null
+          const passed =
+            chainRun?.state === 'applied' &&
+            ['complete', 'soft-failure'].includes(measured?.ending) &&
+            !(Array.isArray(measured?.running) && measured.running.length) &&
+            write?.outcome === 'done'
+          // Only bounded status fields cross into QA. Detailed findings remain on the original chain measurement.
+          const statusOf = (value, known) =>
+            value == null ? null : known.includes(value) ? value : 'unknown'
+          const qa = {
+            state: passed ? 'passed' : 'failed',
+            workflow: 'step-chain/1',
+            humanAccepted: false,
+            chain: {
+              briefState: statusOf(chainRun?.state, ['applied', 'failed', 'cancelled']),
+              ending: statusOf(measured?.ending, ['complete', 'soft-failure', 'running']),
+              writeOutcome: statusOf(write?.outcome, ['done', 'failed', 'stopped', 'skipped'])
+            }
+          }
           await db.query(
             `update wo_build set qa = coalesce(qa,'{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1 and account_id = $4`,
-            [
-              build.id,
-              JSON.stringify({ state: 'passed', workflow: 'step-chain/1', humanAccepted: false }),
-              new Date(now()),
-              action.account_id
-            ]
+            [build.id, JSON.stringify(qa), new Date(now()), action.account_id]
           )
           await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
-          return finish('completed')
+          return finish(passed ? 'completed' : 'failed', passed ? null : 'QA_NEEDS_REVIEW')
         }
         await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
         // A manual quickstart-first build still owns its site's fill: the fill writes only while this

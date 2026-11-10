@@ -1657,35 +1657,39 @@ export function createPlaceRunner(h) {
         continue
       }
       if (await ctx.pausePoint({ placePhotos: { done: i, total: photos.length } })) return ctx.stopOutcome
-      let got
-      try {
-        got = await charge(ctx, 'google', 'place-photo', ceilingCents('google', 'place-photo'), () =>
-          domain.fetchPlacePhoto(photo.name, {
-            ...h.domainDeps,
-            googleKey: keys.google,
-            attributions: photo.attributions ?? [],
-            maxBytes: h.imageMax
-          })
-        )
-      } catch (error) {
-        if (error instanceof BudgetExceededError) throw error
-        log.warn(`[opportunities] place ${place.id}: Google photo skipped (${error?.code ?? 'error'})`)
-        continue
-      }
-      const base = {
-        ...placeOwner(ctx).fields,
-        kind: 'image',
-        category: 'other',
-        caption: null,
-        alt: null,
-        source: GOOGLE_FACTS_SOURCE,
-        sourceUrl: got.sourceUrl,
-        postId: null,
-        postedAt: null
-      }
-      const record = await h.storedRecord(domain, placeOwner(ctx), base, got.bytes, () => null)
+      const result = await h.withMediaAdmission('image', async () => {
+        let got
+        try {
+          got = await charge(ctx, 'google', 'place-photo', ceilingCents('google', 'place-photo'), () =>
+            domain.fetchPlacePhoto(photo.name, {
+              ...h.domainDeps,
+              googleKey: keys.google,
+              attributions: photo.attributions ?? [],
+              maxBytes: h.imageMax
+            })
+          )
+        } catch (error) {
+          if (error instanceof BudgetExceededError) throw error
+          log.warn(`[opportunities] place ${place.id}: Google photo skipped (${error?.code ?? 'error'})`)
+          return null
+        }
+        const base = {
+          ...placeOwner(ctx).fields,
+          kind: 'image',
+          category: 'other',
+          caption: null,
+          alt: null,
+          source: GOOGLE_FACTS_SOURCE,
+          sourceUrl: got.sourceUrl,
+          postId: null,
+          postedAt: null
+        }
+        const record = await h.storedRecord(domain, placeOwner(ctx), base, got.bytes, () => null)
+        return { record, attributions: got.attributions }
+      })
+      const { record, attributions } = result ?? {}
       if (!record) continue
-      record.credit = { provider: 'Google', authors: got.attributions ?? [] }
+      record.credit = { provider: 'Google', authors: attributions ?? [] }
       await fenced(pool, lease, (db) => keepMedia(db, snapshotId, record))
     }
     return null

@@ -1944,10 +1944,19 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   discovery → collection (website, then the social accounts found) → media → profile → brand. A source stopped by timeout/rate
   limit/quota → job `paused` keeping its cursor; resume continues. Brand: observations from picture colours (sharp) + bio (`brandFromSocial`,
   origin `website`/`social`); it does **not yet** call the Brand Engine before a site exists (`engine.status: not_integrated`).
-  Media downloads remain concurrent (five per place), but native picture measurement in `media-info.js` shares one
+  Media admission in `media-admission.js` is process-wide across executor instances: five images share FIFO permits,
+  while a declared video takes all permits exclusively. Admission starts before downloading and stays held through
+  completed object storage; legacy and shared Google Places photos use it too. Native picture measurement in `media-info.js` shares one
   process-wide permit across host adapters, jobs and logo palettes. The permit includes optional host picture features,
   releases after decode failures, and retains the 100-million-pixel input limit; compressed byte limits alone do not
   bound decoded memory. This bounds simultaneous measurement, not the memory of an individual supported image.
+  The web object adapter (`lib/store-objects.js`) bounds PUT, GET, HEAD and DELETE to 60 seconds and accepts caller
+  cancellation. GET keeps the deadline through streamed body consumption; status-only operations cancel unread bodies.
+  Local/shared media routing forwards cancellation without allowing shared-bucket deletion.
+  Foreground shared jobs allow three automatic expired-lease recoveries after the initial claim, separately from
+  lifetime attempts and quota resumes. At the limit, claim atomically pauses the job and waiting requests with
+  `RESEARCH_RECOVERY_LIMIT` and fences the old worker. Explicit Resume/Research again resets that recovery counter
+  while retaining the snapshot and paid-operation checkpoints; own-site polling surfaces the limit without auto-resuming it.
 - **TripAdvisor reviews and pictures: SerpApi → OneAPI → Litescrape** (21/10/2026): migration 149 adds
   `litescrape_key_cipher`/namespace `tripadvisor`; migration 150 adds `serpapi_key_cipher`. `/ops/wo` Settings
   Save/Clear/Test use the same provider API; a stored override takes priority over env `SERPAPI_API_KEY`/`RAPIDAPI_KEY`/
@@ -2961,7 +2970,7 @@ the destination page sends the brief as with a demo. On an http stand (no `crypt
 
 For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
 follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
-a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds. The durable action follows the chain's recorded step and stays queued while its current site brief is queued, preparing, ready or applying, even when the host has finished base provisioning. A live chain also holds the action deadline within the existing maximum action window; terminal soft failure still follows the chain's existing handover policy, so action completion does not establish content acceptance.
+a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds. The durable action follows the chain's recorded step and stays queued while its current site brief is queued, preparing, ready or applying, even when the host has finished base provisioning. A live chain also holds the action deadline within the existing maximum action window; a terminal chain passes QA only when its current brief is applied, its measurement has ended, no measured steps are active, and the last write outcome is done (the write step's final check passed). Earlier model soft failures may retain a verified fallback; missing, failed, stopped or unmeasured writes end with QA_NEEDS_REVIEW. This is machine verification, never human acceptance. Historical pre-fix completed actions are not rewritten.
 Server-owned `agent-demo/1` actions share the picture-label run warmed during template choice. Pending labels queue
 the action until `retryAt` without freezing a revision or provisioning a site. A label run past its five-minute
 bound returns `DEMO_PICTURE_LABELS_TIMEOUT` without freezing empty labels; a later prepare or explicit Retry can

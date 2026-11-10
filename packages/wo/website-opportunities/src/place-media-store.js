@@ -47,23 +47,23 @@ export function routePlaceMediaObjects({ local, shared }) {
   if (!local && !shared) return null
   const storeOf = (key) => (isSharedMediaKey(key) ? shared : local)
   return {
-    async get(key) {
-      return (await storeOf(key)?.get(key)) ?? null
+    async get(key, options) {
+      return (await storeOf(key)?.get(key, options)) ?? null
     },
-    async put(key, bytes, type) {
+    async put(key, bytes, type, options) {
       const store = storeOf(key)
-      return store ? Boolean(await store.put(key, bytes, type)) : false
+      return store ? Boolean(await store.put(key, bytes, type, options)) : false
     },
     async publicUrl(key) {
       return (await storeOf(key)?.publicUrl?.(key)) ?? null
     },
     /** `{size}` of a stored object, or null when it is missing or unreadable. */
-    async head(key) {
-      return (await storeOf(key)?.head?.(key)) ?? null
+    async head(key, options) {
+      return (await storeOf(key)?.head?.(key, options)) ?? null
     },
-    async delete(key) {
+    async delete(key, options) {
       if (isSharedMediaKey(key)) return
-      await local?.delete?.(key)
+      await local?.delete?.(key, options)
     },
     sharedKey(media, ext) {
       return shared ? sharedMediaKey({ sha256: media.sha256, ext, origin: placeMediaOrigin(media) }) : null
