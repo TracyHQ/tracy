@@ -141,6 +141,8 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     apiFetch: async (url, init) => {
       if (String(url) === MODEL_URL) {
         const body = JSON.parse(init.body)
+        calls.model += 1
+        calls.bodies.push(body)
         if (body.messages[0].content === USP_RETRY_SYSTEM) {
           calls.uspRetry += 1
           calls.uspBodies.push(body)
@@ -151,8 +153,6 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
           })
         }
         assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
-        calls.model += 1
-        calls.bodies.push(body)
         // What the page following the research reads while the reading runs (#251).
         calls.progress.push(
           (await pool.query('select stage, progress from wo_place_job order by created_at desc limit 1'))
