@@ -1,6 +1,10 @@
 import { researched, researchStateOf, researchStateShape } from './research-state.js'
 import { readProfileEdits, saveProfileEdits, withProfileEdits } from './profile-edits.js'
 import { sellerStatusOf } from './source-rows.js'
+import { approvalOf, markProfileChanged } from './approval.js'
+import { stepProgressOf } from './step-progress.js'
+import { OWNER_MEDIA_SOURCE, sellerReviewRoutes } from './seller-review-routes.js'
+import { imageInfoWith } from './media-info.js'
 import { mediaJunk } from './media-junk.js'
 import { reviewSourcesRequired } from './tripadvisor-research.js'
 import { findResearchOf, withResearch } from './find-research.js'
@@ -1297,6 +1301,41 @@ export function websiteOpportunitiesRoutes(deps) {
   })
 
   // ── The builder's doors (`opportunities-build/route.js`), fixed paths before `/:id` ──────────────
+  /** When the latest Content brief of an opportunity was made (the one a build uses), or null; null without a builder. */
+  const latestBriefAt = async (row) => (builder?.latestBriefAt ? builder.latestBriefAt(row.id) : null)
+  /** A Profile edit's answer (#537): the Profile needs review again, and a brief made before it reads stale. */
+  async function profileEdited(c, who, row) {
+    const marked = (await markProfileChanged(pool, who.accountId, row.id)) ?? row
+    return json(c, { opportunity: opportunityShape(marked) })
+  }
+  // Photos are measured with the host's picture features when it has them (`media-info.js`).
+  let imageInfo = deps.imageInfo ?? null
+  if (!imageInfo)
+    try {
+      imageInfo = imageInfoWith(deps.host)
+    } catch {
+      imageInfo = null
+    }
+  sellerReviewRoutes(app, {
+    pool,
+    objects,
+    imageInfo,
+    caller,
+    refuse,
+    notFound,
+    json,
+    body,
+    domainOr,
+    featureOn,
+    featureOff,
+    linkFields,
+    opportunityShape,
+    latestBriefAt,
+    opportunityOf,
+    UUID,
+    BASE
+  })
+
   builder?.routes(app, {
     caller,
     refuse,
@@ -1312,6 +1351,7 @@ export function websiteOpportunitiesRoutes(deps) {
     linkRequestOf,
     saveListingSource,
     jobShape,
+    opportunityShape,
     startResearch,
     UUID,
     REQUEST_ID
@@ -1422,7 +1462,12 @@ export function websiteOpportunitiesRoutes(deps) {
                     )
                   }
               ),
-        view ? view.media : shown ? mediaOf(pool, opp.id) : [],
+        view
+          ? view.media
+          : shown
+            ? mediaOf(pool, opp.id)
+            : // Before research, only the photos and videos the seller added (#537).
+              mediaOf(pool, opp.id).then((rows) => rows.filter((m) => m.source === OWNER_MEDIA_SOURCE)),
         jobsOfOpportunity(pool, opp.id)
       ]),
       // No builder: the demo fields are left out of the answer.
@@ -1488,6 +1533,10 @@ export function websiteOpportunitiesRoutes(deps) {
           : {}),
         ...(m.origin ? { origin: m.origin } : {})
       })),
+      // The seller's approvals (#537, `approval.js`): what the Progress card and the gates read.
+      approval: approvalOf({ opportunity: opp, research, latestBriefAt: await latestBriefAt(opp) }),
+      // The sub steps of the step that runs now (#537, `step-progress.js`), from recorded data only.
+      stepProgress: stepProgressOf({ research, briefJob: demo.briefJob, demoAction: demo.demoAction }),
       jobs: jobs.map(jobShape),
       progress: demo.progress,
       revisions: demo.revisions,
@@ -1543,7 +1592,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveNamePick(pool, who.accountId, opp.id, name)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // The seller's own edits of the Profile's text facts (#524): kept on this card, laid over the shared research on every
@@ -1564,7 +1613,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveProfileEdits(pool, who.accountId, opp.id, read.edits)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // The opening hours on the site, as the person checked them on the Profile card: keep the hours waiting for a
@@ -1589,7 +1638,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveHoursPick(pool, who.accountId, opp.id, { choice, ...(hours ? { hours } : {}) })
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // Google's rating on the site, as the person chose on the Profile card: show it (a rating from few reviews is left
@@ -1606,7 +1655,7 @@ export function websiteOpportunitiesRoutes(deps) {
       return refuse(c, 400, 'INVALID_CHOICE', 'Send "choice" as "show" or "leave".')
     const row = await saveRatingPick(pool, who.accountId, opp.id, { choice })
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // The reading on the Profile card (#1780): Remove (or restore) an item the site would show, and Show on the site (or
@@ -1624,7 +1673,7 @@ export function websiteOpportunitiesRoutes(deps) {
       return refuse(c, 400, 'INVALID_CHOICE', 'Send "choice" as "remove", "restore", "show" or "hide".')
     const row = await saveReadingPick(pool, who.accountId, opp.id, b.item, b.choice)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // One fact on or off the site, as the owner chose on the Profile card (#1791): `onSite` true or false wins over the
@@ -1652,7 +1701,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     }
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   // The key messages as the owner edited them on the Profile card (#1791). A save MERGES into the stored picks under a
@@ -1675,7 +1724,7 @@ export function websiteOpportunitiesRoutes(deps) {
       )
     const row = await saveKeyMessagePicks(pool, who.accountId, opp.id, picks)
     if (!row) return notFound(c, 'opportunity')
-    return json(c, { opportunity: opportunityShape(row) })
+    return profileEdited(c, who, row)
   })
 
   /** Whether a run here can collect this Google or Tripadvisor part of the place: a Retry that cannot is refused. */
@@ -2046,6 +2095,11 @@ function listedShape(r, d) {
     // This card's own research (`research-state.js`), never the shared place's.
     research: researchStateShape(r),
     latestRevision: d?.latestRevision,
+    approval: approvalOf({
+      opportunity: r,
+      research: researchStateShape(r),
+      latestBriefAt: d?.latestBriefAt ?? d?.latestRevision?.createdAt ?? null
+    }),
     sites: d?.sites,
     stage: r.stage,
     attention: r.attention,

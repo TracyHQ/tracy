@@ -28,7 +28,8 @@ const TRACY_COPIES = {
   '0009-site-check-read-tier.sql': '176-wo-site-check-read-tier.sql',
   '0010-monid-key.sql': '186-wo-monid-key.sql',
   '0011-bulk-request-delete.sql': '207-wo-bulk-request-delete.sql',
-  '0012-opportunity-site-label.sql': '208-wo-opportunity-site-label.sql'
+  '0012-opportunity-site-label.sql': '208-wo-opportunity-site-label.sql',
+  '0013-opportunity-approval.sql': '210-wo-opportunity-approval.sql'
 }
 const CARRIED = Object.keys(TRACY_COPIES)
 const afterBaseline = async () =>

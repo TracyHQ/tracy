@@ -322,6 +322,8 @@ test(
 
     await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'brief-research-0001' })
     await drain()
+    // The seller approves the Profile before the brief is made (#537).
+    assert.equal((await call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
     const pressed = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'brief-press-0002' })
     assert.equal(pressed.status, 202, JSON.stringify(pressed.body))
     assert.equal(pressed.body.job.state, 'running')
@@ -364,6 +366,8 @@ test(
     assert.equal(failed.body.job.state, 'failed')
     assert.equal(failed.body.job.error.code, 'BRIEF_INTERRUPTED')
     // Try again starts a new job, which completes.
+    // The seller approves the Profile before the brief is made (#537).
+    assert.equal((await call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
     const retried = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'stale-job-0002' })
     assert.equal(retried.status, 202)
     const done = await settled(call, A, opp.id, retried.body.job.id)
@@ -399,6 +403,8 @@ test('a brief of a reading older than the code is not current and offers Refresh
     await pool.query('alter table wo_place_snapshot_profile enable trigger user')
   }
   await readAs('business-reading-4-5e46f68738ff')
+  // The seller approves the Profile before the brief is made (#537).
+  assert.equal((await call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
   const old = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'reading-brief-0001' })
   assert.equal((await settled(call, A, opp.id, old.body.job.id)).job.state, 'done')
   const stale = await call(A, 'GET', `${BASE}/${opp.id}`)
@@ -467,6 +473,8 @@ test(
     const opp = await saveGoogle(a)
     await requestResearch(pool, { accountId: a, opportunity: opp, requestId: 'edit-brief-research-1' })
     await drain()
+    // The seller approves the Profile before the brief is made (#537).
+    assert.equal((await call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
     const pressed = await call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'edit-brief-press-1' })
     const made = (await settled(call, A, opp.id, pressed.body.job.id)).revision
     assert.equal(typeof made.brief.business.phone, 'string')

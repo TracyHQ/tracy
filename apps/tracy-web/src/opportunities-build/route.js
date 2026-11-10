@@ -54,8 +54,20 @@ import { randomUUID } from 'node:crypto'
 import { briefJobShape, createBriefJobs } from './brief-jobs.js'
 import { editRevision, readBriefEdits } from './brief-edits.js'
 import { researched, researchStateOf } from 'website-opportunities/src/research-state.js'
+import {
+  APPROVAL_NEXT,
+  approvalOf,
+  approveBrief,
+  briefGateOf,
+  buildGateOf
+} from 'website-opportunities/src/approval.js'
 
 const BASE = '/api/website-opportunities'
+
+/** `at`: the later of the latest revision and the latest brief job that ended done, of the opportunity `$1` (#537). */
+const LATEST_BRIEF_AT_SQL = `select greatest(
+    (select max(created_at) from wo_revision where opportunity_id = $1),
+    (select max(updated_at) from wo_brief_job where opportunity_id = $1 and state = 'done')) as at`
 
 /**
  * @param {object} deps the open router's own deps (`app.js`), read at request time: `clientDemo` and
@@ -201,6 +213,7 @@ export function createWebsiteBuilder(deps) {
       `select o.id,
        (select to_jsonb(a) from wo_demo_action a where a.opportunity_id = o.id and a.account_id = $1
           order by a.accepted_at desc, a.id desc limit 1) as demo_action,
+       (${LATEST_BRIEF_AT_SQL.replaceAll('$1', 'o.id')}) as brief_at,
        (select jsonb_build_object('id', r.id, 'n', r.n, 'createdAt', r.created_at,
                  'cms', lb.choice->'cms', 'template', lb.choice->'template')
           from wo_revision r left join lateral (select b.choice from wo_build b join wo_revision br on br.id = b.revision_id
@@ -233,6 +246,8 @@ export function createWebsiteBuilder(deps) {
         r.id,
         {
           latestRevision: r.latest_revision ?? null,
+          // When a brief was last made or made again (`latestBriefAt`), for the card's approval (#537).
+          latestBriefAt: r.brief_at ?? null,
           sites: r.sites ?? [],
           latestBuild: r.latest_build ?? null,
           demoAction: r.demo_action,
@@ -306,6 +321,23 @@ export function createWebsiteBuilder(deps) {
     }
   }
 
+  /**
+   * When a Content brief of an opportunity was last made or made again, or null before the first: the latest revision,
+   * or a later brief job that ended done. A job that found the same research answers an existing revision (`reused`),
+   * so without the job's time a brief marked stale by a Profile edit that left the research as it was (an edit undone)
+   * would stay stale however often it is made again.
+   */
+  async function latestBriefAt(opportunityId) {
+    const { rows } = await pool.query(LATEST_BRIEF_AT_SQL, [opportunityId])
+    return rows[0]?.at ?? null
+  }
+
+  /** The seller's approvals of one opportunity (#537, `approval.js`), read now. */
+  async function approvalFor(opp) {
+    const [research, briefAt] = await Promise.all([researchStateOf(pool, opp.id), latestBriefAt(opp.id)])
+    return approvalOf({ opportunity: opp, research, latestBriefAt: briefAt })
+  }
+
   /** A demo action with its chain progress (`chain-progress.js`), when its build runs the step chain. */
   async function withChainRun(action) {
     await withChainRuns(pool, [action], { now: now() })
@@ -358,6 +390,49 @@ export function createWebsiteBuilder(deps) {
         cancelRun: deps.quality?.cancelRun
       })
     )
+    /**
+     * The 409 of a build whose brief is not approved yet (#537), or null. Only the classic brief path is gated: with the
+     * quality protocol on (`quality-protocol.js`) a demo action prepares its own durable brief, which no seller reviews
+     * here. A batch names every refused opportunity in `ids`.
+     */
+    async function buildGateRefusal(c, accountId, opps) {
+      let mode
+      try {
+        mode = await qualityMode(accountId)
+      } catch {
+        return null
+      }
+      if (mode !== 'off') return null
+      const refused = []
+      for (const opp of opps) {
+        const gate = buildGateOf(await approvalFor(opp))
+        if (gate) refused.push({ id: opp.id, code: gate })
+      }
+      if (!refused.length) return null
+      const code = refused[0].code
+      return refuse(c, 409, code, APPROVAL_NEXT[code], opps.length > 1 ? { ids: refused } : {})
+    }
+
+    // The seller approves the latest Content brief (#537): it unlocks Build demo. A brief made from an older Profile or
+    // older sources is made again first.
+    app.post(`${BASE}/:id/brief/approve`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp) return notFound(c, 'opportunity')
+      const before = await approvalFor(opp)
+      if (before.research === 'sources_changed')
+        return refuse(c, 409, 'RESEARCH_NEEDED', APPROVAL_NEXT.RESEARCH_NEEDED)
+      if (before.brief === 'none') return refuse(c, 409, 'NO_BRIEF', APPROVAL_NEXT.NO_BRIEF)
+      if (before.brief === 'stale') return refuse(c, 409, 'BRIEF_STALE', APPROVAL_NEXT.BRIEF_STALE)
+      if (before.profile !== 'approved')
+        return refuse(c, 409, 'PROFILE_NOT_APPROVED', APPROVAL_NEXT.PROFILE_NOT_APPROVED)
+      const row = await approveBrief(pool, who.accountId, opp.id)
+      if (!row) return notFound(c, 'opportunity')
+      return json(c, { opportunity: ctx.opportunityShape(row), approval: await approvalFor(row) })
+    })
+
     /** A customer's own-site action (`own-site.js`) keeps its chat doors while Build from my business is on. */
     const ownActionOpen = async (accountId, actionId) =>
       (await ownSiteOn(pool)) && (await isOwnSiteAction(pool, accountId, actionId))
@@ -585,6 +660,11 @@ export function createWebsiteBuilder(deps) {
         new Set(b.ids).size !== b.ids.length
       )
         return refuse(c, 400, 'INVALID_BATCH', 'Send a requestId and 1–100 distinct opportunity ids.')
+      const opps = (await Promise.all(b.ids.map((id) => opportunityOf(pool, who.accountId, id)))).filter(
+        Boolean
+      )
+      const bulkRefusal = await buildGateRefusal(c, who.accountId, opps)
+      if (bulkRefusal) return bulkRefusal
       const result = await acceptActions({
         accountId: who.accountId,
         entries: b.ids.map((id) => ({
@@ -645,6 +725,12 @@ export function createWebsiteBuilder(deps) {
             }
           )
       }
+      // 🔒 A demo is built from an approved brief (#537): a retry continues its own accepted build, and a Find quick build
+      // (`fromFind`) is its own flow with no Details page to approve on.
+      if (!b.retryOf && b.fromFind !== true) {
+        const refusal = await buildGateRefusal(c, who.accountId, [opp])
+        if (refusal) return refusal
+      }
       const result = await acceptActions({
         accountId: who.accountId,
         entries: [
@@ -700,6 +786,9 @@ export function createWebsiteBuilder(deps) {
           'RESEARCH_NOT_DONE',
           'Press Research first: the brief is made from its results.'
         )
+      // 🔒 The seller approves the Profile before a brief is made from it (#537).
+      const briefGate = briefGateOf(await approvalFor(opp))
+      if (briefGate) return refuse(c, 409, briefGate, APPROVAL_NEXT[briefGate])
       const b = (await body(c)) ?? {}
       if (b.requestId !== undefined && !REQUEST_ID.test(String(b.requestId)))
         return refuse(
@@ -885,6 +974,7 @@ export function createWebsiteBuilder(deps) {
     saveSettings,
     listedDemoOf,
     detailOf,
+    latestBriefAt,
     demoFactsOf,
     demoJourneySql,
     // Settles every Content brief job this process runs (tests, shutdown).

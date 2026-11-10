@@ -207,6 +207,9 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
        where o.id = $1 and not exists (select 1 from wo_job j where j.opportunity_id = o.id and j.state = 'completed')`,
       [oppId]
     )
+    // These cards stand for a Profile and a brief the seller approved (#537); the gates have their own tests
+    // (`wo-approval.test.mjs`).
+    await pool.query('update wo_opportunity set profile_approved_at = now() where id = $1', [oppId])
     const pressed = await rawCall(email, 'POST', path, body, extra)
     if (pressed.status !== 202) return pressed
     for (let i = 0; i < 500; i += 1) {
@@ -216,8 +219,13 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
         `${path.replace(/\/revisions$/, '')}/brief-jobs/${pressed.body.job.id}`
       )
       const job = polled.body?.job
-      if (job?.state === 'done')
+      if (job?.state === 'done') {
+        await pool.query(
+          "update wo_opportunity set brief_approved_at = now() + interval '1 second' where id = $1",
+          [oppId]
+        )
         return { status: job.reused ? 200 : 201, body: { revision: polled.body.revision } }
+      }
       if (job?.state === 'failed')
         return { status: 422, body: { code: job.error?.code, errors: job.error?.errors } }
       await new Promise((r) => setTimeout(r, 10))
@@ -237,6 +245,14 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
     if (brief) return briefThroughJob(email, brief[1], path, body, extra)
     const build = method === 'POST' && path.match(/^\/api\/website-opportunities\/revisions\/([^/]+)\/build$/)
     if (build) return buildThroughAction(email, build[1], body ?? {}, extra)
+    // A build is made from an approved brief (#537): a card of this file that has none gets one, approved, first.
+    const single =
+      method === 'POST' && path.match(/^\/api\/website-opportunities\/([0-9a-f-]{36})\/demo\/build$/)
+    // An agent build checks its research first (its own test seeds none), so it is left as sent.
+    if (single && !body?.retryOf && body?.fromFind !== true && body?.workflow !== 'agent-demo/1')
+      await approvedBrief(email, single[1])
+    if (method === 'POST' && path === `${BASE}/demo/builds/bulk` && Array.isArray(body?.ids))
+      for (const id of body.ids) if (/^[0-9a-f-]{36}$/.test(String(id))) await approvedBrief(email, id)
     // `manual: true` (test-only): the demo action stops at the provisioned site, as a manual build does.
     if (method === 'POST' && body?.manual === true && path.endsWith('/demo/build')) {
       const { manual: _manual, ...rest } = body
@@ -248,6 +264,22 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
       return answer
     }
     return rawCall(email, method, path, body, extra)
+  }
+  async function approvedBrief(email, oppId) {
+    const held = (await pool.query('select 1 from wo_revision where opportunity_id = $1 limit 1', [oppId]))
+      .rowCount
+    const mine = (
+      await pool.query(
+        'select 1 from wo_opportunity o join account a on a.id = o.account_id where o.id = $1 and a.email = $2',
+        [oppId, email]
+      )
+    ).rowCount
+    if (!mine) return
+    if (!held) await briefThroughJob(email, oppId, `${BASE}/${oppId}/revisions`, {}, {})
+    await pool.query(
+      "update wo_opportunity set profile_approved_at = now(), brief_approved_at = now() + interval '1 second' where id = $1",
+      [oppId]
+    )
   }
   async function buildThroughAction(email, revisionId, body, extra) {
     const rev = /^[0-9a-f-]{36}$/.test(revisionId)
@@ -695,9 +727,10 @@ test('build: acceptance queues the action and does no work; the same request rep
   assert.equal(action.lease_until, null)
   assert.equal(action.selection.cms, 'joomla')
   assert.equal(action.selection.design, 'ja-restaurant')
-  // The worker makes the brief and the build; acceptance makes neither.
+  // The worker makes the build; acceptance makes no build and no brief of its own (the one revision is the approved
+  // brief the build is made from, #537).
   assert.equal((await pool.query('select count(*)::int n from wo_build')).rows[0].n, 0)
-  assert.equal((await pool.query('select count(*)::int n from wo_revision')).rows[0].n, 0)
+  assert.equal((await pool.query('select count(*)::int n from wo_revision')).rows[0].n, 1)
   const replay = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, body)
   assert.equal(replay.status, 202)
   assert.deepEqual(replay.body.actions, accepted.body.actions)
@@ -3013,8 +3046,8 @@ test(
     assert.equal(first.body.usage.used, 1)
     assert.equal(
       (await pool.query('select id from wo_revision')).rowCount,
-      0,
-      '202 is before revision creation'
+      1,
+      '202 makes no revision of its own: the one is the approved brief (#537)'
     )
     const replay = await call(A, 'POST', `${BASE}/${opportunities[0].id}/demo/build`, {
       requestId: 'cap-first-press',

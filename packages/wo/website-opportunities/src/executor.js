@@ -55,15 +55,15 @@ export const EXECUTOR_LOCK_ID = 7_243_040
 const RESUMABLE = new Set(['timeout', 'rate_limited', 'quota'])
 const MEDIA_BUDGET = 300
 const WEBSITE_PAGES = 40
-const IMAGE_MAX_BYTES = 25 * 1024 * 1024
-const VIDEO_MAX_BYTES = 200 * 1024 * 1024
+export const IMAGE_MAX_BYTES = 25 * 1024 * 1024
+export const VIDEO_MAX_BYTES = 200 * 1024 * 1024
 const PLACE_FACTS_MAX_AGE_MS = 30 * 24 * 3600 * 1000
 const PLACE_PHOTOS_MAX = 10
 /** `wo_media.source` of a photo from the restaurant's Google Places listing. */
 export const GOOGLE_PLACES_SOURCE = 'google-places'
 /** The most of a caption or alt text kept with a picture: the picture planner reads its opening. */
 const TEXT_MAX = 2000
-const EXT = {
+export const EXT = {
   'image/jpeg': 'jpg',
   'image/png': 'png',
   'image/gif': 'gif',

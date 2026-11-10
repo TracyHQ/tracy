@@ -156,15 +156,14 @@ export async function placeViewOf(db, opportunity) {
     .map((m) => ({ ...m, origin: 'place' }))
   // Pictures of the sources only this opportunity names. `mergeProfile` reads the place's source of a kind
   // first, so a private page never outranks the place's own.
-  const ownMedia = ownKinds.size
-    ? (
-        await db.query('select * from wo_media where opportunity_id = $1 order by collected_at, id', [
-          opportunity.id
-        ])
-      ).rows
-        .filter((m) => ownKinds.has(m.source))
-        .map((m) => ({ ...m, origin: 'opportunity' }))
-    : []
+  // The photos and videos the seller added themself (source `owner`, #537) are this opportunity's too.
+  const ownMedia = (
+    await db.query('select * from wo_media where opportunity_id = $1 order by collected_at, id', [
+      opportunity.id
+    ])
+  ).rows
+    .filter((m) => ownKinds.has(m.source) || m.source === 'owner')
+    .map((m) => ({ ...m, origin: 'opportunity' }))
   // The research card lists every source the run tried, failures too; collected reviews read as above.
   const reviewOf = new Map(reviews.map((r) => [r.source, r]))
   // A pasted link of a page the shared research holds is the same source: one row, the one with data (#524).
