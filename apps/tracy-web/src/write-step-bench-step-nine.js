@@ -76,6 +76,7 @@ export async function stepNineOfRun(d, values, write, inCwd) {
   const step = await runStepNine({
     write,
     checkSite,
+    pictures,
     agent,
     saveFile,
     // The page as the site serves it, for the element each comment points at (repair-served-element.js).

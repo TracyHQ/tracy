@@ -187,7 +187,8 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool)
-    const started = await startRun(pool)
+    // This case checks the saved conversation across fix rounds; the budget guard has its own tests.
+    const started = await startRun(pool, { noCaps: true })
     const bad = plan()
     delete bad.site
     await drain(pool, scriptedModel([finalReply({ content: JSON.stringify(bad) })]), { killOn: 2 })
@@ -229,7 +230,7 @@ test(
 test('a redeploy between two rounds opens the next round with the failure list', opts, async () => {
   const { pool } = db
   await assignPlannerDoor(pool)
-  const started = await startRun(pool)
+  const started = await startRun(pool, { noCaps: true })
   const bad = plan()
   delete bad.site
   // Round 0 is checked and saved, then the process dies before round 1 opens.

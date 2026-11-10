@@ -13,7 +13,7 @@
 // preloadedFirstMessage) and the run sends no tools, so its first answer is the plan. A run that reads with tools gets
 // the write step: after the harness's writeAfterToolTurns answers that called a tool, or an answer that only re-read
 // parts already sent, WRITE_STEP_MESSAGE goes out and every later request carries tool_choice "none". A run whose
-// answered calls cost more than the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
+// answered calls cost at least the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'

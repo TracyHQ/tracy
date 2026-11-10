@@ -5,27 +5,29 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
-import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
-import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
-import { createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
-import { createExecutor } from 'website-opportunities/src/executor.js'
-import { imageInfoWith } from 'website-opportunities/src/media-info.js'
-import { requestResearch } from 'website-opportunities/src/place-requests.js'
-import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
-import { addLink } from 'website-opportunities/src/places.js'
-import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
-import { placeViewOf } from 'website-opportunities/src/place-view.js'
-import { briefResearchOf, makeSiteBrief } from 'website-opportunities/src/brief-research.js'
-import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
 import { BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
+import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
+import { briefResearchOf, makeSiteBrief } from 'website-opportunities/src/brief-research.js'
 import {
   businessReadingDoorOf,
   businessReadingMaxTokens
 } from 'website-opportunities/src/business-reading.js'
-import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
+import { createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
+import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
+import { createExecutor } from 'website-opportunities/src/executor.js'
+import { imageInfoWith } from 'website-opportunities/src/media-info.js'
+import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
+import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { addLink } from 'website-opportunities/src/places.js'
+import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
+import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
+import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
 import { fileDb } from './_db.mjs'
+
 // Whether a person shows lives in their fact (brief schema 2, #1791); an older brief said it on the item.
 const onSiteOf = (brief, p) => (p.factId ? brief.facts.find((f) => f.id === p.factId)?.onSite : p.onSite)
+
 import { createTracyWoHost } from '../src/wo-host.js'
 
 const woHost = createTracyWoHost()
@@ -217,7 +219,11 @@ test(
   opts,
   async () => {
     const r = await research()
-    assert.equal(r.calls.model, 1, 'one model call per research run')
+    assert.equal(r.calls.model, 2, 'one reading call and one USP retry for this fixture')
+    assert.deepEqual(
+      r.calls.bodies.map((body) => body.messages[0].content),
+      [BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM]
+    )
     // #251: while the reading runs, the job says so and names no source still being collected.
     assert.equal(r.calls.progress[0].stage, 'profile')
     assert.equal(r.calls.progress[0].progress.reading, 'business')
@@ -475,7 +481,7 @@ test(
   opts,
   async () => {
     const r = await research({ effort: 'off' })
-    assert.equal(r.calls.model, 1)
+    assert.equal(r.calls.model, 2)
     assert.deepEqual(r.calls.bodies[0].thinking, { type: 'disabled' })
     assert.equal(r.calls.bodies[0].max_tokens, 4_000)
     assert.equal(r.calls.bodies[0].reasoning_effort, undefined)
@@ -488,7 +494,7 @@ test(
   opts,
   async () => {
     const r = await research()
-    assert.equal(r.calls.model, 1)
+    assert.equal(r.calls.model, 2)
     const again = (onlyParts) =>
       queueResearchAgain(r.pool, r.placeId, {
         now: Date.now(),
@@ -504,11 +510,11 @@ test(
     assert.ok(whole.plan.run.length > 0)
     assert.ok(whole.plan.run.every((p) => p.reason === 'again'))
     await r.drain()
-    assert.equal(r.calls.model, 2, 'the held reading is not reused')
+    assert.equal(r.calls.model, 4, 'the held reading is not reused')
     // A run limited to some parts keeps the reading it holds when nothing it reads changed.
     const limited = await again(['google-places'])
     assert.equal(limited.plan.fromScratch.whole, false)
     await r.drain()
-    assert.equal(r.calls.model, 2)
+    assert.equal(r.calls.model, 4)
   }
 )

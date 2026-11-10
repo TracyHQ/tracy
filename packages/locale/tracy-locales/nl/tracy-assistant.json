@@ -44,6 +44,7 @@
   "onboarding.action.templates.short": "Template",
   "onboarding.attach": "Files bijvoegen",
   "onboarding.drop": "Zet files neer om ze bij te voegen",
+  "onboarding.filesLimit": "Help kan namen en typen van files zien, maar de inhoud ervan niet lezen.",
   "onboarding.placeholder": "Weet u niet waar te beginnen? Vraag het",
   "onboarding.send": "Versturen",
   "placeholder.hero": "Beschrijf een wijziging. /help voor Tracy, / opdrachten, @ files of sessions",

@@ -39,6 +39,27 @@ async function briefOf(files) {
   }
 }
 
+/** Frames the manifest kept with a picture the looker rejected. Keep the exact fault names in the final write report. */
+export function pictureReviewOf(manifest) {
+  return [
+    ...(Array.isArray(manifest?.frames) ? manifest.frames : []),
+    ...(Array.isArray(manifest?.siteSettings) ? manifest.siteSettings : [])
+  ]
+    .filter(
+      (entry) =>
+        entry?.filledBy?.rung === 'best-rejected' &&
+        typeof entry.frame === 'string' &&
+        Array.isArray(entry.filledBy.faults) &&
+        entry.filledBy.faults.every((fault) => typeof fault === 'string')
+    )
+    .map((entry) => ({
+      frame: entry.frame,
+      source: entry.source,
+      sitePath: entry.sitePath,
+      filledBy: { rung: 'best-rejected', faults: [...entry.filledBy.faults] }
+    }))
+}
+
 /** The address a comment names for a page: the agent's, never a bare path. */
 const pageAddressOf = (agent) => (page) => {
   if (typeof agent?.pageUrl !== 'function')
@@ -96,6 +117,7 @@ async function takeBack(pass, reason, firstCheck) {
  *     pages?: string[] }) => Promise<object>,
  *   baselines?: { read: (contract: string) => Promise<object | null> } | null, contracts?: Map<string, object>,
  *   agent?: object | null, saveFile?: ((name: string, data: string) => Promise<void>) | null,
+ *   pictures?: object | null,
  *   pageHtml?: ((page: string) => Promise<string | null>) | null,
  *   limits?: object | null, timer?: Function, now?: () => number, sleep?: (ms: number) => Promise<void>,
  *   log?: { warn: (line: string) => void } }} input `write` is the write step's input (write-step.js); `agent` the site
@@ -104,7 +126,7 @@ async function takeBack(pass, reason, firstCheck) {
  * @returns {Promise<{ report: object, siteCheck: object | null, firstCheck: object | null, repair: object | null }>}
  */
 export async function runStepNine(input) {
-  const { write, checkSite, baselines, contracts, agent = null, saveFile = null } = input
+  const { write, checkSite, baselines, contracts, agent = null, saveFile = null, pictures = null } = input
   const { limits = null, timer, now = Date.now, sleep = realSleep, log = console, pageHtml = null } = input
   const t0 = now()
   const timeline = []
@@ -165,6 +187,7 @@ export async function runStepNine(input) {
   const verified = checkAccepted(handed) && !['incomplete', 'failed'].includes(outcome.status)
   const report = {
     ...withReadBack(written, handed),
+    pictureReview: pictureReviewOf(pictures),
     writeStatus: written.status,
     ...(!verified
       ? {

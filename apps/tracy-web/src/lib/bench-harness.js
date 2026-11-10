@@ -14,7 +14,7 @@ import { RETRY_DEFAULTS } from './agent-over-door-retry.js'
  * medium, as in the Claude Code runs that produced the approved reference plans.
  *
  * Guards (#301, after a DeepSeek V4 Pro run looped 86 calls re-reading kit parts and was cancelled): a run whose
- * answered calls already cost more than budgetUsd stops before its next call (SITE_PLANNER_BUDGET); a run that reads
+ * answered calls already cost at least budgetUsd stops before its next call (SITE_PLANNER_BUDGET); a run that reads
  * the kit with tools is told to write the plan, with tool_choice "none", after writeAfterToolTurns answers that called
  * a tool or as soon as an answer only re-reads parts it was already sent (bench-worker.js); maxTurns bounds the calls.
  */

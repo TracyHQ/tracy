@@ -138,6 +138,10 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    `/design-inspiration` (public), `/tracy-badge.js`, beta, sign-in (`identity/`), seats
    (`seats/`, `lanes/`), `/api/sites/*` (`sites/`), public REST `/v1` (`api/`), notifications,
    `/ops` (`ops/`), the AI assistant `/api/assistant/*` (`assistant/`: answers with a model, hands over to a real person via Telegram; read-only, never writes to a site).
+   Help permits at most two concurrent model streams per account in one web process. A slot is
+   claimed before the provider's first response and released when the answer ends or startup
+   fails. The minute and day limits use shared Postgres buckets; the concurrent limit is
+   process-local, so a multi-process deployment has a higher aggregate ceiling.
    On the new-site screen, pressing a setup action calls `POST /api/assistant/onboarding-draft`.
    It reads only the signed-in account's current session conversation and uses the Help model to
    extract an editable draft from the canonical CMS question feeds. It never creates a site,
@@ -445,8 +449,9 @@ success to `POST /api/sites/:key/changed`. Since 20/10/2026: before **every** Em
 `POST /api/sites/:key/lease/acquire` (held within the session's site by `conversationSite`, signed as the person typing,
 carrying `x-tracy-session` + `x-tracy-turn`; a seat that cannot write → 403); `SITE_BUSY` is waited out as on the
 Apply path (`lease-wait.mjs`, outside the flight, cut by Stop — a Stop during the wait sends nothing), and the lease is released
-at the end of the turn (`/lease/release`). If tracy-web does not answer this door (older version, unreachable), the write
-still goes ahead as before. Look changes (`look.set`/`look.revert`) take no lease, on all three CMSs.
+at the end of the turn (`/lease/release`). If tracy-web does not answer this door (older version, unreachable),
+or the answer does not confirm the lease, the EmDash write is refused before it reaches the site. Look changes
+(`look.set`/`look.revert`) take no lease, on all three CMSs.
 The text of EmDash contact forms (plugin `emdash-forms`, stored in the plugin's own store, which no content tool reaches)
 goes through the **form door** of `tracy_emdash` (25/10/2026): `form_list` reads, `form_words` changes exactly the words the customer reads (labels, hints,
 option labels with the same count, submit button, thank-you message) — the host reads the form, then sends `forms/update` back with only those words changed;
@@ -2268,8 +2273,14 @@ endpoint**.
   DeepSeek's own API (streamed), one computed from DeepSeek's published prices. DeepSeek Flash reads the kit's text
   looks with tool calls, at reasoning effort max. A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
   no tools; a run that reads with tools is told to write after 20 reading calls or a read of parts it already had. Every
-  run stops past its cost budget (2 USD by default). On DeepSeek's own API the bench also reads the account balance
+  budgeted runs stop before another model call once their known cost reaches the budget (2 USD by default), or once
+  an answered call has no known cost and the budget can no longer be checked. One call can cross its cap before its
+  answer returns. On DeepSeek's own API the bench also reads the account balance
   (`GET /user/balance`) before and after a run and stores it on the run.
+- **Stop during a model call:** the shared bench loop reads cancellation every two seconds while a call is active and
+  aborts the provider request. The dispatched turn is saved as failed with an uncertain outcome: the provider may have
+  charged before the abort. Stop also interrupts retry backoff before another request is sent. A cancelled run is not
+  replayed automatically; its receipt remains in the turn history.
 - **Kit images** ([`kit-images.js`](apps/tracy-web/src/site-planner/kit-images.js)): the first time a kit version is needed,
   tracy-web **downloads the kit zip from GitHub** (the `template-kit-<template>-<version>.zip` asset of the kit's quickstart
   release, found through `quickstart_releases`, read with the releases credential), checks every image against the sha256 the
@@ -2394,6 +2405,9 @@ step's return is stopped with `session/cancel` and judged by what it wrote. A pa
 on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
 step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`).
+The final `site-write-report.json` also carries `pictureReview`: each picture that the fallback ladder kept after a
+looker rejection, with its frame, source, site path, rung and exact fault names. This is handover evidence, not a
+passing visual verdict.
 Repair prompts explicitly run unattended: they use existing assets or supported removal and do not ask for uploads or approval. Consent-required refusals such as `CONFIRM_FIRST` remain blocked; the repair instruction prohibits asking, asserting consent, or bypassing them through another door. Each repair turn has a ten-minute cap independent of the chain preparation deadline; expired turns are cancelled, checked, and retain unresolved findings. Deep image targets use compact asset selectors, and inline backgrounds carry their actual source URL.
 Queued repair pages are checked against the latest completed site check before opening a session. Before a scripted menu unpublish, step 9 reads the native record and refuses when `home: 1`; its stored `/home` path is not evidence that the root does not depend on it. Unavailable kept pages ask the agent to restore the CMS route and publication state, rather than remove a link. Failed-page repairs
 run first because a shared menu repair can restore several pages; all pages use the serial default. A
