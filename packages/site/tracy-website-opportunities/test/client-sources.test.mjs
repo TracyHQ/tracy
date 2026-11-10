@@ -112,13 +112,13 @@ test('every source of the place is listed by name with its state pill, never a k
   assert.doesNotMatch(html, /\[reason\.other\]|\[source\.status\.blocked\]|<details|tracy-wo-src-chip/)
 })
 
-test('Try again shows under the pill of each source not collected, and only when the page can retry', () => {
+test('Try again sits left of the pill of each source not collected, and only when the page can retry', () => {
   const html = draw(SAGA, { retry: noRetry })
   assert.equal((html.match(/\[action\.retry\]/g) ?? []).length, 3)
   // Under the pill: inside the State part of a failed row, after its pill.
   assert.match(
     html,
-    /data-state="failed">(?:(?!<\/li>).)*class="tracy-wo-stab-pill" data-state="failed">(?:(?!<\/li>).)*class="tracy-wo-stab-act"[^>]*>\[action\.retry\]/s
+    /data-state="failed">(?:(?!<\/li>).)*class="tracy-wo-stab-act"[^>]*>\[action\.retry\]<\/button><span class="tracy-wo-stab-pill" data-state="failed">/s
   )
   assert.doesNotMatch(draw(SAGA), /\[action\.retry\]/)
   // A collected row never offers it.
@@ -249,10 +249,14 @@ test('the Sources table of the Workspace card: one line per source, the state pi
     ['collected', 'failed', 'failed', 'new']
   )
   // Collected with its day; Could not collect with the server's reason, or alone when it sent none.
-  assert.match(html, /\[source\.state\.collected\]<\/span><\/span><span class="tracy-wo-stab-detail">Nov 10</)
+  // The date sits before the pill, on the same line, with the full text on hover.
   assert.match(
     html,
-    /\[source\.state\.failed\]<\/span><\/span><span class="tracy-wo-stab-detail">\[reason\.login_required\]</
+    /<span class="tracy-wo-stab-detail" title="Nov 10">Nov 10<\/span><span class="tracy-wo-stab-pill" data-state="collected"/
+  )
+  assert.match(
+    html,
+    /<span class="tracy-wo-stab-detail" title="\[reason\.login_required\]">\[reason\.login_required\]<\/span>(?:(?!<\/li>).)*\[source\.state\.failed\]</
   )
   // Each state is a pill that carries the Progress band's node: check, cross, hollow ring.
   const pills = [

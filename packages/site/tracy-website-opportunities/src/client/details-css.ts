@@ -70,12 +70,13 @@ export const DETAILS_CSS =
 .tracy-wo-stab-line { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 0; }
 .tracy-wo-stab-name { flex: none; white-space: nowrap; }
 .tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }
-.tracy-wo-stab-state { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; min-width: 0; margin-left: auto; padding-left: 12px; font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
+.tracy-wo-stab-state { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex: none; min-width: 0; margin-left: auto; padding-left: 12px; font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
 .tracy-wo-stab-pill { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 9px 2px 6px; border-radius: 999px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 7%, transparent); color: var(--muted-foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
 .tracy-wo-stab-pill[data-state='reading'] { border-color: color-mix(in oklab, var(--primary) 28%, transparent); background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); font-weight: 600; }
 .tracy-wo-stab-pill[data-state='collected'] { border-color: color-mix(in oklab, var(--success) 28%, transparent); background: color-mix(in oklab, var(--success) 12%, transparent); color: var(--success); }
 .tracy-wo-stab-pill[data-state='failed'] { border-color: color-mix(in oklab, var(--destructive) 28%, transparent); background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); }
-.tracy-wo-stab-detail { font-size: 11.5px; color: var(--muted-foreground); opacity: 0.85; }
+.tracy-wo-stab-detail { max-width: 34ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; color: var(--muted-foreground); opacity: 0.85; }
+.tracy-wo-stab-state > .tracy-wo-stab-pill { flex: none; }
 .tracy-wo-stab-act { margin: 0; padding: 0; border: 0; background: none; color: var(--primary); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
 .tracy-wo-stab-act:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 2px; }
 .tracy-wo-stab-act:disabled { color: var(--muted-foreground); cursor: default; }
@@ -118,6 +119,8 @@ export const DETAILS_CSS =
 .tracy-wo-addsrc-notice-link { min-width: 0; max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; opacity: .8; }
 @container (max-width: 560px) {
   .tracy-wo-stab-line { flex-wrap: wrap; row-gap: 2px; }
+  .tracy-wo-stab-state { flex-wrap: wrap; row-gap: 2px; }
+  .tracy-wo-stab-detail { max-width: none; white-space: normal; }
   .tracy-wo-stab-link { order: 9; flex-basis: 100%; padding-left: 30px; }
   .tracy-wo-stab-remove { opacity: 1; }
 }

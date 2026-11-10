@@ -174,11 +174,12 @@ export function SourcesTable({
                   </span>
                 ) : (
                   <span className="tracy-wo-stab-state">
-                    <span className="tracy-wo-stab-pill" data-state={view.state}>
-                      <SubStepNode state={NODE_OF[view.state]} label={t(view.key)} />
-                      <span className="tracy-wo-stab-word">{t(view.key)}</span>
-                    </span>
-                    {detail !== null ? <span className="tracy-wo-stab-detail">{detail}</span> : null}
+                    {/* The date or reason sits left of the pill on the same line (owner, #537): a column, not a second row. */}
+                    {detail !== null ? (
+                      <span className="tracy-wo-stab-detail" title={detail}>
+                        {detail}
+                      </span>
+                    ) : null}
                     {retrySource !== null && retry !== undefined ? (
                       <button
                         type="button"
@@ -194,6 +195,10 @@ export function SourcesTable({
                         {t('source.retryFailed')}
                       </span>
                     ) : null}
+                    <span className="tracy-wo-stab-pill" data-state={view.state}>
+                      <SubStepNode state={NODE_OF[view.state]} label={t(view.key)} />
+                      <span className="tracy-wo-stab-word">{t(view.key)}</span>
+                    </span>
                   </span>
                 )}
                 {removeUrl !== null && remove !== undefined ? (
