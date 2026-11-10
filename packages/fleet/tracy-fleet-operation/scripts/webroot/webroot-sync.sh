@@ -1189,6 +1189,8 @@ remember_read() { # theirs_commit
   done
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
+  # This merge pruned stale mappings and repaired the counters (#307, #536).
+  printf '1\n' > "$SYNC_DIR/id-map-revision"
   remember_kept
   # The files' sha1s as this read found them: the next read takes only what moved since.
   if [[ -f "$DIR/live/manifest.json" ]]; then
@@ -1610,6 +1612,11 @@ read_live() {
       # No sync applied yet: the fingerprint the import took (tracy-host writes it beside the run, from
       # tracy-web's record of the import). A first sync of a live site that did not move stops here.
       fingerprint="$DIR/base-fingerprint.json"
+    fi
+    # Older syncs could leave a deleted record in the map. Read once without the
+    # fingerprint shortcut so even an unmoved live site can repair that map (#307).
+    if [[ -f "$ID_MAP" && ! -f "$SYNC_DIR/id-map-revision" ]]; then
+      fingerprint="" base_dump=""
     fi
     if [[ -z "$manifest" ]] && first_read_manifest; then manifest="$DIR/first-manifest.json"; fi
     # WordPress rewrites its transients, WP-Cron, sessions and auto-drafts on every visit: rows the

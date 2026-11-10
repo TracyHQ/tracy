@@ -87,6 +87,10 @@ ${WIZARD_ROOT_BASE_CSS}
 .tas-root [data-import-preflight] [data-state="ok"] > svg, .tas-root [data-preflight-icon="ok"] { color: var(--success); }
 /* Resolution actions sit inside muted instructional copy; keep the shared button token contrast. */
 .tas-root [data-import-problem] button[data-slot="button"] { color: var(--foreground); }
+.tas-root .tas-import-head { padding: 10px 12px; }
+.tas-root .tas-import-title { display: inline-flex; align-items: center; gap: 6px; }
+.tas-root .tas-import-body { padding: 0 12px 12px; }
+.tas-root .tas-import-actions { margin-top: 12px; }
 ${WIZARD_ROOT_BUTTON_CSS}
 
 ${WIZARD_ROOT_LAYOUT_CSS}

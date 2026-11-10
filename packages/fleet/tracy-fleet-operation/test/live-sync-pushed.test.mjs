@@ -850,7 +850,8 @@ test(
       guid: `${LIVE}/old-news/`,
       post_type: 'post'
     })}
-       INSERT INTO wp_postmeta VALUES (60, 30, 'subtitle', 'A subtitle');
+       INSERT INTO wp_postmeta VALUES (60, 30, 'subtitle', 'A subtitle'),
+         (62, 30, '_pingme', '1'), (63, 30, '_encloseme', '1');
        INSERT INTO wp_term_relationships VALUES (30, 1, 0);`
     schema('wk_base', SITE(LIVE, `${picture('rt-pic')} ${post}`))
     schema(
@@ -898,7 +899,7 @@ test(
     assert.deepEqual(rows('SELECT COUNT(*) FROM wp_term_relationships WHERE object_id = 30', 'wk_ours'), [
       ['0']
     ])
-    assert.equal(answer.counts.orphansRemoved, 2)
+    assert.equal(answer.counts.orphansRemoved, 4)
   }
 )
 
@@ -927,3 +928,85 @@ test(
     )
   }
 )
+
+for (const high of [false, true]) {
+  test(
+    `Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: ${high}, #536)`,
+    opts,
+    () => {
+      const offset = high ? 2_000_000_000 : 0
+      schema('repeat_base', `${J_TABLES} ${ARTICLE_1}`)
+      schema('repeat_ours', `${J_TABLES} ${ARTICLE_1}`)
+      schema('repeat_theirs', `${J_TABLES} ${ARTICLE_1}`)
+      const first = joomlaMerge(
+        { base: 'repeat_base', ours: 'repeat_ours', theirs: 'repeat_theirs' },
+        { content: { 1: 1 } }
+      )
+      assert.equal(first.ok, true)
+      assert.equal(autoIncrement('repeat_ours', 'jos_content'), 2)
+      for (const [id, title] of [
+        [2, 'D2'],
+        [3, 'G1']
+      ]) {
+        sql(`INSERT INTO jos_content (id, title) VALUES (${offset + id}, '${title}');`, 'repeat_ours')
+        sql(`INSERT INTO jos_content (id, title) VALUES (${5 - id}, '${title}');`, 'repeat_theirs')
+      }
+      const map = { content: { 1: 1, 2: offset + 3, 3: offset + 2 } }
+      const answer = joomlaMerge({ base: 'repeat_base', ours: 'repeat_ours', theirs: 'repeat_theirs' }, map)
+      assert.equal(answer.ok, true)
+      assert.deepEqual(rows('SELECT id, title FROM jos_content ORDER BY id', 'repeat_ours'), [
+        ['1', 'Tracy news'],
+        [String(offset + 2), 'D2'],
+        [String(offset + 3), 'G1']
+      ])
+      assert.equal(autoIncrement('repeat_ours', 'jos_content'), offset + 4)
+    }
+  )
+}
+
+for (const high of [false, true]) {
+  test(
+    `WordPress: reversed pushed post ids sync with references (existing high ids: ${high}, #536)`,
+    opts,
+    () => {
+      const offset = high ? 2_000_000_000 : 0
+      schema('wr_base', SITE(LIVE, ''))
+      const post = (id, title) =>
+        wpRow({
+          ID: id,
+          post_title: title,
+          post_name: title.toLowerCase(),
+          post_type: 'post',
+          post_date: '2026-11-10 10:00:00'
+        })
+      schema(
+        'wr_ours',
+        SITE(
+          COPY,
+          `${post(offset + 700, 'D2')} ${post(offset + 701, 'G1')}
+      INSERT INTO wp_postmeta VALUES (900, ${offset + 700}, 'subtitle', 'D2 meta');`
+        )
+      )
+      schema(
+        'wr_theirs',
+        SITE(
+          LIVE,
+          `${post(701, 'D2')} ${post(700, 'G1')}
+      INSERT INTO wp_postmeta VALUES (900, 701, 'subtitle', 'D2 meta');`
+        )
+      )
+      const answer = wpMerge({ base: 'wr_base', ours: 'wr_ours', theirs: 'wr_theirs' }, null, {
+        posts: { 701: offset + 700, 700: offset + 701 }
+      })
+      assert.equal(answer.ok, true)
+      assert.deepEqual(rows(`SELECT ID, post_title FROM wp_posts WHERE ID >= 700 ORDER BY ID`, 'wr_ours'), [
+        [String(offset + 700), 'D2'],
+        [String(offset + 701), 'G1']
+      ])
+      assert.deepEqual(rows("SELECT post_id FROM wp_postmeta WHERE meta_key = 'subtitle'", 'wr_ours'), [
+        [String(offset + 700)]
+      ])
+      assert.equal(autoIncrement('wr_ours', 'wp_posts'), offset + 702)
+    }
+  )
+}

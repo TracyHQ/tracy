@@ -13,38 +13,27 @@ import {
   DEFAULT_FONT
 } from '../src/shared/settings.mjs'
 
-test('a valid hex primary lands on dsh brand tokens and on Tracy --primary, same in both modes', () => {
-  const t = primaryTokens('#00B96B')
-  assert.deepEqual(t['--dsw-alias-brand-primary'], { light: '#00B96B', dark: '#00B96B' })
-  assert.deepEqual(t['--dsw-alias-button-primary-fill'], { light: '#00B96B', dark: '#00B96B' })
-  assert.deepEqual(t['--primary'], { light: '#00B96B', dark: '#00B96B' })
-  assert.match(t['--dsw-alias-button-primary-hover'].light, /^color-mix\(/)
-})
-
-test('an invalid or empty primary falls back to Tracy blue instead of poisoning the layer', () => {
-  assert.equal(primaryTokens('')['--dsw-alias-brand-primary'].light, DEFAULT_PRIMARY)
-  assert.equal(primaryTokens('not a colour')['--dsw-alias-brand-primary'].light, DEFAULT_PRIMARY)
-  assert.equal(primaryTokens('#12')['--dsw-alias-brand-primary'].light, DEFAULT_PRIMARY)
-  assert.equal(primaryTokens('#abc')['--dsw-alias-brand-primary'].light, '#abc')
-})
-
-test('the default terracotta fills buttons and colours words in its AA shade; the mark and rings keep #bf5b3d (#228)', () => {
-  for (const value of ['', '#bf5b3d', '#BF5B3D', 'not a colour']) {
-    const t = primaryTokens(value)
-    for (const name of ['--primary', '--dsw-alias-button-primary-fill', '--dsw-alias-brand-text'])
-      assert.deepEqual(
-        t[name],
-        { light: DEFAULT_PRIMARY_FILL, dark: DEFAULT_PRIMARY_FILL },
-        `${value} ${name}`
-      )
-    for (const name of ['--dsw-alias-brand-primary', '--ring', '--dsw-alias-state-business-primary'])
-      for (const mode of ['light', 'dark'])
-        assert.equal(t[name][mode].toLowerCase(), DEFAULT_PRIMARY, `${value} ${name}`)
-    assert.match(t['--dsw-alias-button-primary-hover'].light, new RegExp(DEFAULT_PRIMARY_FILL))
+test('accepted primary colours retain the brand choice while deriving readable roles (#316)', () => {
+  for (const color of ['#00B96B', '#5b8def', '#ef4444', '#f59e0b', '#8b5cf6', '#ffd400', '#000', '#fff']) {
+    const tokens = primaryTokens(color)
+    assert.deepEqual(tokens['--dsw-alias-brand-primary'], { light: color, dark: color })
+    assert.deepEqual(tokens['--primary'], tokens['--dsw-alias-button-primary-fill'])
+    assert.match(tokens['--dsw-alias-button-primary-hover'].light, /black/)
+    assert.equal(
+      tokens['--dsw-alias-button-primary-hover'].light,
+      tokens['--dsw-alias-button-primary-hover'].dark
+    )
   }
-  // A colour the person picked is theirs, unchanged.
-  assert.deepEqual(primaryTokens('#5b8def')['--primary'], { light: '#5b8def', dark: '#5b8def' })
-  assert.deepEqual(primaryTokens('#5b8def')['--dsw-alias-brand-text'], { light: '#5b8def', dark: '#5b8def' })
+})
+
+test('invalid and default primary colours keep the default AA fill (#228, #316)', () => {
+  for (const value of ['', '#bf5b3d', '#BF5B3D', 'not a colour', '#12']) {
+    const t = primaryTokens(value)
+    assert.deepEqual(t['--primary'], { light: DEFAULT_PRIMARY_FILL, dark: DEFAULT_PRIMARY_FILL })
+    assert.equal(t['--dsw-alias-brand-text'].light, DEFAULT_PRIMARY_FILL)
+    assert.equal(t['--ring'].light.toLowerCase(), DEFAULT_PRIMARY)
+    assert.equal(t['--dsw-alias-brand-primary'].light.toLowerCase(), DEFAULT_PRIMARY)
+  }
 })
 
 test('the default font contributes nothing, so dsh keeps its own stack', () => {
