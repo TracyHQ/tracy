@@ -1944,6 +1944,10 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   discovery → collection (website, then the social accounts found) → media → profile → brand. A source stopped by timeout/rate
   limit/quota → job `paused` keeping its cursor; resume continues. Brand: observations from picture colours (sharp) + bio (`brandFromSocial`,
   origin `website`/`social`); it does **not yet** call the Brand Engine before a site exists (`engine.status: not_integrated`).
+  Media downloads remain concurrent (five per place), but native picture measurement in `media-info.js` shares one
+  process-wide permit across host adapters, jobs and logo palettes. The permit includes optional host picture features,
+  releases after decode failures, and retains the 100-million-pixel input limit; compressed byte limits alone do not
+  bound decoded memory. This bounds simultaneous measurement, not the memory of an individual supported image.
 - **TripAdvisor reviews and pictures: SerpApi → OneAPI → Litescrape** (21/10/2026): migration 149 adds
   `litescrape_key_cipher`/namespace `tripadvisor`; migration 150 adds `serpapi_key_cipher`. `/ops/wo` Settings
   Save/Clear/Test use the same provider API; a stored override takes priority over env `SERPAPI_API_KEY`/`RAPIDAPI_KEY`/
