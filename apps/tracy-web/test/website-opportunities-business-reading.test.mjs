@@ -17,7 +17,7 @@ import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
 import { briefResearchOf, makeSiteBrief } from 'website-opportunities/src/brief-research.js'
 import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
-import { BUSINESS_READING_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
+import { BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
 import {
   businessReadingDoorOf,
   businessReadingMaxTokens
@@ -83,7 +83,7 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     providerId: PLACE_ID,
     candidate: { provider: 'google-places', providerId: PLACE_ID, name: 'Harbour Sport Club', ...candidate }
   })
-  const calls = { model: 0, bodies: [], progress: [] }
+  const calls = { model: 0, bodies: [], progress: [], uspRetry: 0, uspBodies: [] }
   const real = await websiteOpportunitiesDomain()
   const blocked = { available: false, collect: async () => ({ status: 'blocked', media: [] }) }
   const domain = {
@@ -139,6 +139,15 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     apiFetch: async (url, init) => {
       if (String(url) === MODEL_URL) {
         const body = JSON.parse(init.body)
+        if (body.messages[0].content === USP_RETRY_SYSTEM) {
+          calls.uspRetry += 1
+          calls.uspBodies.push(body)
+          return Response.json({
+            id: `usp-retry-${calls.uspRetry}`,
+            choices: [{ message: { content: JSON.stringify({ uspThemes: [] }) } }],
+            usage: { prompt_tokens: 1000, completion_tokens: 10 }
+          })
+        }
         assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
         calls.model += 1
         calls.bodies.push(body)
@@ -287,10 +296,20 @@ test(
     assert.equal(coverage.offerings.status, 'found')
     assert.equal(coverage.people.status, 'found')
 
-    // The ledger: one reserved and settled model call, for this purpose.
+    // The fixture proposes no USP: one full reading and one bounded USP retry, both settled on the same ledger.
+    assert.equal(r.calls.uspRetry, 1)
+    assert.equal(r.calls.uspBodies[0].messages[0].content, USP_RETRY_SYSTEM)
+    const storedReading = (
+      await r.pool.query(
+        "select profile->'businessReading' as reading from wo_place_snapshot_profile where profile ? 'businessReading'"
+      )
+    ).rows
+    assert.equal(storedReading.length, 1)
+    assert.equal(storedReading[0].reading.uspRetry, 'rejected')
+    assert.equal(storedReading[0].reading.uspThemes, null)
     const rows = (await r.pool.query("select * from wo_cost_ledger where purpose = 'business-reading'")).rows
-    assert.equal(rows.length, 1)
-    assert.equal(rows[0].provider, 'woEditorial')
+    assert.equal(rows.length, 2)
+    assert.ok(rows.every((row) => row.provider === 'woEditorial' && row.state === 'settled'))
   }
 )
 
