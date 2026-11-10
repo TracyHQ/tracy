@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { bandSubSteps, reviewChipOf, stepperView } from '../src/client/stepper-model.ts'
+import { bandSubSteps, briefHeldOf, reviewChipOf, stepperView } from '../src/client/stepper-model.ts'
 import { en } from '../src/client/strings.ts'
 
 const RESEARCHED = { state: 'done', researchedAt: '2026-11-09T11:22:00Z', done: true }
@@ -125,4 +125,38 @@ test('every string of the review steps is plain: no dash characters', () => {
   )
   assert.ok(keys.length > 40)
   for (const k of keys) assert.doesNotMatch(en[k], /[–—]/, k)
+})
+
+test('a brief made before the Profile was approved is held: named only, step 2 locked', () => {
+  const approval = { research: 'ok', profile: 'needed', brief: 'needed' }
+  const v = view({ brief: BRIEF, approval })
+  assert.equal(v.current, 'research')
+  assert.equal(v.steps[1].lockKey, 'stepper.lock.profile')
+  assert.equal(briefHeldOf({ approval, brief: BRIEF }), 'profile')
+  assert.match(en['brief.heldProfile'], /^Brief \{n\} was made before the Profile was approved\./)
+})
+
+test('once the Profile is approved after that brief: Make the brief again, Made from an older profile', () => {
+  const approval = {
+    research: 'ok',
+    profile: 'approved',
+    profileApprovedAt: '2026-11-10T08:00:00Z',
+    brief: 'needed'
+  }
+  const v = view({ brief: BRIEF, approval })
+  assert.equal(v.current, 'brief')
+  assert.deepEqual(v.action, { kind: 'make-brief', labelKey: 'brief.makeAgain' })
+  assert.equal(v.steps[1].staleKey, 'brief.chip.olderProfile')
+  assert.equal(briefHeldOf({ approval, brief: BRIEF }), null)
+})
+
+test('a brief from older sources is held until research ran again and the Profile is approved', () => {
+  const changed = { research: 'sources_changed', profile: 'none', brief: 'stale', briefStale: 'sources' }
+  assert.equal(briefHeldOf({ approval: changed, brief: BRIEF }), 'sources')
+  const reread = { research: 'ok', profile: 'needed', brief: 'stale', briefStale: 'sources' }
+  assert.equal(briefHeldOf({ approval: reread, brief: BRIEF }), 'sources')
+  const approved = { ...reread, profile: 'approved', profileApprovedAt: '2026-11-10T08:00:00Z' }
+  assert.equal(briefHeldOf({ approval: approved, brief: BRIEF }), null)
+  assert.equal(view({ brief: BRIEF, approval: approved }).steps[1].staleKey, 'brief.chip.olderSources')
+  assert.equal(briefHeldOf({ approval: null, brief: BRIEF }), null)
 })

@@ -36,7 +36,7 @@ import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
 import { Stepper } from './stepper.tsx'
-import { type StepAction, bandSubSteps, reviewChipOf, stepperView } from './stepper-model.ts'
+import { type StepAction, bandSubSteps, briefHeldOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
 import { AddMedia, AddSource, ApprovalFooter, gateText } from './seller-review.tsx'
 import { EditableText } from './editable-text.tsx'
@@ -624,10 +624,17 @@ export function DetailView({
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
+  // On a sub-page, the strip's Review press never points at the page already open.
+  const stripView =
+    section !== null &&
+    ((stepper.action?.kind === 'review-profile' && pageOf(section) === 'profile') ||
+      (stepper.action?.kind === 'review-brief' && pageOf(section) === 'brief'))
+      ? { ...stepper, action: null }
+      : stepper
   const stepperBlock = (strip: boolean): JSX.Element => (
     <Stepper
       t={t}
-      view={stepper}
+      view={strip ? stripView : stepper}
       locale={locale}
       busy={busy || briefJob.pressing}
       disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
@@ -663,7 +670,7 @@ export function DetailView({
   const profileReview = stepper.current === 'research' && stepper.review
   const briefReview = stepper.current === 'brief' && stepper.review
   const needsReview = (
-    <Badge variant="outline" className="tracy-wo-chip-warn">
+    <Badge variant="outline" className="tracy-wo-chip-warn tracy-wo-review-badge">
       {t('stepper.needsReview')}
     </Badge>
   )
@@ -879,6 +886,14 @@ export function DetailView({
     />
   )
 
+  const openBrief = (revisionId: string, n: number): void => {
+    if (openBriefTab === null) return onOpenRevision(revisionId, false)
+    openBriefTab({
+      revisionId,
+      opportunityId: id,
+      title: `${t('brief.number', { n })} · ${shownName}`
+    })
+  }
   const briefLine = (
     <BriefLine
       t={t}
@@ -886,16 +901,38 @@ export function DetailView({
       research={body.research}
       briefJob={briefJob}
       profileEditedAt={editedAt}
-      onOpen={(revisionId, n) => {
-        if (openBriefTab === null) return onOpenRevision(revisionId, false)
-        openBriefTab({
-          revisionId,
-          opportunityId: id,
-          title: `${t('brief.number', { n })} · ${shownName}`
-        })
-      }}
+      review={
+        approval === null
+          ? null
+          : { lockKey: stepper.steps[1]?.lockKey ?? null, staleKey: stepper.steps[1]?.staleKey ?? null }
+      }
+      onOpen={openBrief}
     />
   )
+  // A brief made before the Profile was approved, or from older sources (#537): on Details it is only named, read
+  // only, with what to do first; its table and Refresh wait until the seller approves the new Profile.
+  const held = briefHeldOf({ approval, brief: isRecord(body.brief) ? body.brief : null })
+  const heldBrief = isRecord(body.brief) ? body.brief : {}
+  const heldLine =
+    held === null ? null : (
+      <div className="tracy-wo-stack">
+        <p className="tracy-wo-muted">
+          {t(held === 'sources' ? 'brief.heldSources' : 'brief.heldProfile', { n: Number(heldBrief.n ?? 1) })}
+        </p>
+        {typeof heldBrief.id === 'string' ? (
+          <Button
+            type="button"
+            size="xs"
+            variant="outline"
+            className="tracy-wo-review-badge"
+            onClick={() => openBrief(String(heldBrief.id), Number(heldBrief.n ?? 1))}
+          >
+            <FileText aria-hidden="true" />
+            {t('brief.view')}
+          </Button>
+        ) : null}
+      </div>
+    )
   const mediaBlock = (full: boolean): JSX.Element => (
     <MediaRow
       t={t}
@@ -1134,8 +1171,8 @@ export function DetailView({
             meta={metaOf('profile')}
             open={openTo(profileReview ? 'section.review' : 'section.open')}
             className="tracy-wo-profile-card"
-            actions={profileReview ? needsReview : null}
           >
+            {profileReview ? needsReview : null}
             {profileBlock(false)}
             {/* Photos & video belong to the Profile (#537): a strip at its foot, opened on the Profile sub-page. */}
             {research.done || researchMoving ? (
@@ -1180,10 +1217,14 @@ export function DetailView({
             meta={metaOf('brief')}
             lockKey="section.locked.research"
             open={openTo(briefReview ? 'section.review' : 'section.openBrief')}
-            actions={briefReview ? needsReview : null}
           >
-            {briefLine}
-            {briefTable(false)}
+            {briefReview ? needsReview : null}
+            {heldLine ?? (
+              <>
+                {briefLine}
+                {briefTable(false)}
+              </>
+            )}
           </SectionCard>
         </div>
       </div>
@@ -1547,6 +1588,7 @@ function BriefLine({
   research,
   briefJob,
   profileEditedAt,
+  review = null,
   onOpen
 }: {
   t: Translate
@@ -1557,6 +1599,11 @@ function BriefLine({
   briefJob: BriefJobControl
   /** When the seller last edited the Profile: a newer edit makes the brief out of date in its own words. */
   profileEditedAt: string | null
+  /**
+   * The seller's approvals (#537), when the server sends them: the brief step's lock line (it replaces Make and
+   * Refresh while the Profile waits for approval) and its stale chip. Their words replace the older out-of-date line.
+   */
+  review?: { lockKey: string | null; staleKey: string | null } | null
   onOpen: (revisionId: string, n: number) => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
@@ -1566,7 +1613,7 @@ function BriefLine({
   const view = briefControlView({ research, brief, briefJob: briefJob.job, profileEditedAt })
   const chip = briefChip(view)
   // While a new brief is being made, the old one is only named: its out-of-date reason is already being acted on.
-  const lineKey = chip === 'working' ? 'brief.number' : briefLineKey(brief, profileEditedAt)
+  const lineKey = chip === 'working' || review != null ? 'brief.number' : briefLineKey(brief, profileEditedAt)
   return (
     <div className="tracy-wo-stack">
       {status === null ? (
@@ -1585,6 +1632,11 @@ function BriefLine({
               {t(`brief.chip.${chip}`)}
             </Badge>
           )}
+          {review?.staleKey ? (
+            <Badge variant="outline" className="tracy-wo-chip-warn">
+              {t(review.staleKey)}
+            </Badge>
+          ) : null}
           <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
             <FileText aria-hidden="true" />
             {t('brief.view')}
@@ -1592,7 +1644,15 @@ function BriefLine({
         </div>
       )}
       {edited ? <p className="tracy-wo-muted tracy-wo-small">{t('brief.editedByYou')}</p> : null}
-      <BriefControl t={t} view={view} control={briefJob} />
+      {review?.lockKey ? (
+        <p className="tracy-wo-psec-lock tracy-wo-small">
+          <Lock aria-hidden="true" className="tracy-wo-icon" />
+          {t(review.lockKey)}
+        </p>
+      ) : review != null && view.mode === 'make' ? null : (
+        // With approvals the Progress band carries Make and Make again; this block keeps the job's own progress.
+        <BriefControl t={t} view={view} control={briefJob} />
+      )}
     </div>
   )
 }

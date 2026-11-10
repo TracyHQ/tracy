@@ -136,6 +136,30 @@ export function approvalOf(input: ApprovalInput | null | undefined):
   }
 }
 
+/**
+ * A brief made before the Profile was approved (an older brief, or one made before the approval rule) was made from
+ * an older Profile: stale until a new brief is made, whatever the server's own `brief` says.
+ */
+function withOlderBrief(
+  approval: ReturnType<typeof approvalOf>,
+  brief: StepperInput['brief']
+): ReturnType<typeof approvalOf> {
+  if (approval === null || brief == null || approval.brief === 'stale') return approval
+  const made = Date.parse(brief.createdAt ?? '')
+  const approved = Date.parse(approval.profileApprovedAt ?? '')
+  if (approval.profile !== 'approved' || !Number.isFinite(made) || !Number.isFinite(approved)) return approval
+  return approved > made ? { ...approval, brief: 'stale', briefStale: 'profile' } : approval
+}
+
+/** Why the latest brief cannot be used now, for the Business brief card (#537), or null when it can. */
+export function briefHeldOf(input: Pick<StepperInput, 'approval' | 'brief'>): 'profile' | 'sources' | null {
+  const approval = approvalOf(input.approval)
+  if (approval === null || !hasBrief(input.brief)) return null
+  if (approval.researchNeeded) return 'sources'
+  if (approval.profile !== 'approved') return approval.briefStale === 'sources' ? 'sources' : 'profile'
+  return null
+}
+
 export function stepperView(input: StepperInput): StepperView {
   const done: Partial<Record<StepId, string | null>> = {}
   const approvedAt: Partial<Record<StepId, string | null>> = {}
@@ -148,8 +172,8 @@ export function stepperView(input: StepperInput): StepperView {
   let action: StepperView['action'] = null
   let review = false
   const jobState = input.researchJob?.state ?? null
-  const approval = approvalOf(input.approval)
   const briefMade = hasBrief(input.brief)
+  const approval = withOlderBrief(approvalOf(input.approval), briefMade ? input.brief : null)
   if (approval !== null && briefMade && approval.brief === 'stale')
     staleKey = approval.briefStale === 'sources' ? 'brief.chip.olderSources' : 'brief.chip.olderProfile'
 

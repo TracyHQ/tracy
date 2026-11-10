@@ -22,6 +22,7 @@ export const REVIEW_CSS = `
 .tracy-wo-band-lock { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
 .tracy-wo-band-lock .tracy-wo-icon { width: 12px; height: 12px; flex: none; }
 .tracy-wo-band-stale { align-self: flex-start; margin-top: 4px; }
+.tracy-wo-review-badge { align-self: flex-start; }
 .tracy-wo-chip-warn { background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); border-color: transparent; }
 .tracy-wo-band-pane { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 14px 16px; background: color-mix(in oklab, var(--primary) 5%, var(--card, var(--background))); }
 .tracy-wo-band-pane[data-review] { background: color-mix(in oklab, var(--warning) 8%, var(--card, var(--background))); }

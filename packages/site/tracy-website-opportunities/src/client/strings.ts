@@ -1321,12 +1321,17 @@ export const en = {
   'stepper.brief.staleSources': 'The sources changed after this brief was made. Make the brief again.',
   'stepper.build.readyApproved': 'Brief approved. Building your site takes about 50 minutes.',
   'brief.makeAgain': 'Make the brief again',
+  'brief.heldProfile':
+    'Brief {n} was made before the Profile was approved. Approve the Profile, then make the brief again.',
+  'brief.heldSources':
+    'Brief {n} was made from older sources. Run research again, approve the Profile, then make the brief again.',
   'brief.chip.olderProfile': 'Made from an older profile',
   'brief.chip.olderSources': 'Made from older sources',
 
   /** The Progress band at the top of Details (#537): the step list on the left, the current step on the right. */
   'band.kicker': 'Step {n} of {total}',
   'band.allDone': 'All steps done',
+  'band.built': 'Your site is ready. Open it, or send it to the business, from Your site.',
   'band.research.collecting': 'Collecting the website, Google listing and social pages',
   'band.build.steps': 'Build steps',
   'band.tryAgain': 'Try again',

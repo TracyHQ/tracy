@@ -126,6 +126,7 @@ export function ProgressBand({
           <>
             <span className="tracy-wo-band-kicker">{t('band.allDone')}</span>
             <h3 className="tracy-wo-band-name">{t(view.steps[total - 1]?.nameKey ?? 'step.build')}</h3>
+            <p className="tracy-wo-band-line">{t('band.built')}</p>
           </>
         ) : (
           <>
