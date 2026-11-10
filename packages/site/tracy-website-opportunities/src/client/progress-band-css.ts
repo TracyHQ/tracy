@@ -21,7 +21,8 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-pane { box-sizing: border-box; min-height: 0; overflow: hidden; gap: 6px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-kicker { line-height: 16px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-head { display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-est { flex: none; max-width: 40%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-est { flex: none; display: inline-flex; align-items: center; gap: 4px; max-width: 40%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding: 2px 8px 2px 6px; border-radius: 999px; font-size: 12px; line-height: 16px; font-weight: 500; color: var(--primary); background: color-mix(in oklab, var(--primary) 12%, transparent); border: 1px solid color-mix(in oklab, var(--primary) 28%, transparent); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-est > svg { width: 12px; height: 12px; flex: none; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-head > .tracy-wo-band-name { flex: 0 1 auto; min-width: 0; margin: 0; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-line { flex: none; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
@@ -35,7 +36,7 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li { flex: none; display: flex; align-items: center; gap: 5px; min-width: 0; color: var(--foreground); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li + li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li + li::before { content: ''; flex: none; width: 16px; height: 1px; margin: 0 6px 0 2px; background: var(--border); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='done'] + li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='done'] + li::before { background: var(--success); }
-.tracy-wo-band[data-fixed] .tracy-wo-band-sub-node { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--background); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-sub-node { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 999px; border: 1.5px solid color-mix(in oklab, var(--muted-foreground) 45%, transparent); background: transparent; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li > .tracy-wo-band-sub-node > svg { width: 10px; height: 10px; stroke-width: 3; color: var(--background); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] > .tracy-wo-band-sub-node > svg { width: 14px; height: 14px; stroke-width: 2.5; color: var(--primary); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs[data-many] > li[data-state='done'] > .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps:has(> li:nth-child(5)) > li[data-state='done'] > b { display: none; }
