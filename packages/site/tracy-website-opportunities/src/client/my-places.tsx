@@ -1,8 +1,8 @@
 /**
  * My opportunities' two views (spec #512, ticket #518): **Cards** and **Compact rows**, both drawn from the same
- * pieces per place (`opportunity-pieces.ts`). A row is the place, the step it reached with its state, and the step's
- * one action (#537, option A); a card adds the demo preview and the score. A click on the row or the name opens Details; the pin beside the address
- * opens Google Maps in a new tab, and is the only link out. Secondary fields chosen in Columns add lines or cells.
+ * pieces per place (`opportunity-pieces.ts`): the place, the step it reached with its state, and the step's one action
+ * (#537, option A). A card's top area is the demo preview once a site exists, else the step. A click on the row or the
+ * name opens Details; the pin beside the address opens Google Maps in a new tab, and is the only link out. Secondary fields chosen in Columns add lines or cells.
  */
 import type { JSX, MouseEvent } from 'react'
 import { AlertCircle, CheckIcon, MapPin } from 'lucide-react'
@@ -41,34 +41,6 @@ const BADGE = {
   running: 'outline'
 } as const
 
-/** The Opportunity score as a ring: the arc is the score out of 100. */
-function ScoreRing({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
-  const r = 15
-  const c = 2 * Math.PI * r
-  const score = Math.max(0, Math.min(100, p.opportunity.score))
-  return (
-    <span
-      className="tracy-wo-ring"
-      data-grade={p.opportunity.grade}
-      role="img"
-      aria-label={t('score.aria', { grade: p.opportunity.grade, score })}
-    >
-      <svg viewBox="0 0 36 36" aria-hidden="true">
-        <circle cx="18" cy="18" r={r} className="tracy-wo-ring-track" />
-        <circle
-          cx="18"
-          cy="18"
-          r={r}
-          className="tracy-wo-ring-arc"
-          strokeDasharray={`${(c * score) / 100} ${c}`}
-          transform="rotate(-90 18 18)"
-        />
-      </svg>
-      <b>{score}</b>
-    </span>
-  )
-}
-
 function PlacePiece({ t, p, onOpen }: { t: Translate; p: PlacePieces; onOpen(): void }): JSX.Element {
   return (
     <div className="tracy-wo-p-place">
@@ -93,66 +65,27 @@ function PlacePiece({ t, p, onOpen }: { t: Translate; p: PlacePieces; onOpen(): 
   )
 }
 
-function OpportunityPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
-  return (
-    <div className="tracy-wo-p-opp">
-      <ScoreRing t={t} p={p} />
-      <span className="tracy-wo-p-grade" data-grade={p.opportunity.grade}>
-        {p.opportunity.grade}
-      </span>
-      <span className="tracy-wo-p-why tracy-wo-small tracy-wo-muted">
-        {p.opportunity.why}
-        {p.opportunity.pending ? <Spinner label={t('score.stillChecking')} className="size-3" /> : null}
-      </span>
-    </div>
-  )
-}
-
-function DemoPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
+/** The demo preview at the top of a card, drawn only once a site exists. */
+function DemoThumb({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element | null {
   const d = p.demo
-  if (d.kind === 'thumb')
-    return (
-      <div className="tracy-wo-p-demo" data-kind="thumb">
-        <span className="tracy-wo-p-thumb" aria-hidden="true">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="tracy-wo-p-demo-text">
-          <span className="tracy-wo-p-live">
-            {d.daysLeft === null
-              ? t('my.demo.live')
-              : t(d.daysLeft === 1 ? 'my.demo.daysLeft.one' : 'my.demo.daysLeft.other', {
-                  count: d.daysLeft
-                })}
-          </span>
-          <span className="tracy-wo-small tracy-wo-p-site">{d.address}</span>
-        </span>
-      </div>
-    )
-  if (d.kind === 'failed')
-    return (
-      <div className="tracy-wo-p-demo" data-kind="failed">
-        <AlertCircle aria-hidden="true" className="tracy-wo-p-alert" />
-        <span className="tracy-wo-small tracy-wo-error">{d.reason}</span>
-      </div>
-    )
-  if (d.kind === 'building')
-    return (
-      <div className="tracy-wo-p-demo" data-kind="building">
-        <Spinner label={t('my.status.building')} className="size-3" />
-        <span className="tracy-wo-small tracy-wo-muted">{t('my.demo.building')}</span>
-      </div>
-    )
-  if (d.kind === 'expired')
-    return (
-      <div className="tracy-wo-p-demo" data-kind="expired">
-        <span className="tracy-wo-small tracy-wo-muted">{d.line}</span>
-      </div>
-    )
+  if (d.kind !== 'thumb') return null
   return (
-    <div className="tracy-wo-p-demo" data-kind="none">
-      <span className="tracy-wo-p-nodemo tracy-wo-small tracy-wo-muted">{t('my.demo.none')}</span>
+    <div className="tracy-wo-p-demo" data-kind="thumb">
+      <span className="tracy-wo-p-thumb" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+      </span>
+      <span className="tracy-wo-p-demo-text">
+        <span className="tracy-wo-p-live">
+          {d.daysLeft === null
+            ? t('my.demo.live')
+            : t(d.daysLeft === 1 ? 'my.demo.daysLeft.one' : 'my.demo.daysLeft.other', {
+                count: d.daysLeft
+              })}
+        </span>
+        <span className="tracy-wo-small tracy-wo-p-site">{d.address}</span>
+      </span>
     </div>
   )
 }
@@ -277,11 +210,21 @@ export function MyPlaces({
             onCheckedChange={() => onToggle(p.id)}
             aria-label={t('results.select', { name: p.place.name })}
           />
-          {view === 'cards' ? <DemoPiece t={t} p={p} /> : null}
+          {/*
+            Cards and rows show the same pieces (#537, option A): the place, the step it reached and the step's action.
+            A card's top area is the demo preview once a site exists, else the step; a row draws the step in its middle.
+          */}
+          {view === 'cards' ? (
+            p.demo.kind === 'thumb' ? (
+              <DemoThumb t={t} p={p} />
+            ) : (
+              <div className="tracy-wo-p-top">
+                <StepPiece t={t} p={p} />
+              </div>
+            )
+          ) : null}
           <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} />
-          {/* A row shows the step reached and its action only (#537, option A); a card keeps its preview and score. */}
-          {view === 'cards' ? <OpportunityPiece t={t} p={p} /> : null}
-          <StepPiece t={t} p={p} />
+          {view === 'rows' ? <StepPiece t={t} p={p} /> : null}
           {view === 'cards' ? <Lines lines={lines.get(p.id)} /> : null}
           <ActionPiece t={t} p={p} busy={busy.has(p.id)} onNext={(run) => onNext(p.id, run)} />
           {/* In rows the chosen fields take a second line under the row, after Status, so Status keeps its cell. */}

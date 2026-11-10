@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * The four pieces a place shows in My opportunities (`src/client/opportunity-pieces.ts`, spec #512 and #518): Place,
- * Opportunity, Demo, Status with its one next action, read from a row shaped like `GET /api/website-opportunities`.
+ * The pieces a place shows in My opportunities (`src/client/opportunity-pieces.ts`, spec #512, #518, #537): Place,
+ * the step it reached, Demo, Status with its one next action, read from a row shaped like `GET /api/website-opportunities`.
  * Secondary fields come from the same row for the Columns menu.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-opportunity-pieces.test.mjs
@@ -56,27 +56,11 @@ test('Place: the place page Google gave wins as the pin link', () => {
   assert.equal(placePieces(row, t, opts).place.mapsUrl, 'https://maps.google.com/?cid=123')
 })
 
-test('Opportunity: score ring and one why line from website, reviews and social facts', () => {
-  const { opportunity } = placePieces(researched(), t, opts)
-  assert.deepEqual({ score: opportunity.score, grade: opportunity.grade }, { score: 33, grade: 'C' })
-  assert.equal(opportunity.why, 'Has a website · 1,802 reviews, 4.7 stars · No social pages')
-})
-
-test('Opportunity: no website but a social page with followers', () => {
-  const row = researched({
-    candidate: candidate({ website: null, reviews: 4, rating: 5 }),
-    socials: { instagram: 'https://instagram.com/sunnyfork' },
-    social: { instagram: { url: 'https://instagram.com/sunnyfork', followers: 1819, status: 'ok' } }
-  })
-  assert.equal(
-    placePieces(row, t, opts).opportunity.why,
-    'Only a social page · 4 reviews, 5.0 stars · 1,819 followers'
-  )
-})
-
-test('Opportunity: nothing found reads plainly', () => {
-  const row = researched({ candidate: candidate({ website: null, reviews: null, rating: null }) })
-  assert.equal(placePieces(row, t, opts).opportunity.why, 'No website · No reviews · No social pages')
+test('Step: a place carries the step it reached, not a score or a social summary (#537, option A)', () => {
+  const p = placePieces(researched(), t, opts)
+  assert.equal('opportunity' in p, false)
+  assert.equal(t(p.step.kickerKey, p.step.kickerParams), 'Step 3 of 3')
+  assert.deepEqual(p.step.segments, ['done', 'done', 'current'])
 })
 
 test('Demo and Status: a brief and no demo yet, the next action is Build demo', () => {

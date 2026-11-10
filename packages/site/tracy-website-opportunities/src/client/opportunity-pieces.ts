@@ -1,13 +1,12 @@
 /**
- * The four pieces every place shows in My opportunities (spec #512, ticket #518), in Cards and in Compact rows:
- * **Place** (name, type, address with a pin to Google Maps), **Opportunity** (score ring and one "why" line),
- * **Demo** (thumbnail, days left, or the reason it stopped) and **Status** with its one next action. Built from
- * facts the list door already returns; nothing is invented, a missing fact is left out.
+ * The pieces every place shows in My opportunities (spec #512, ticket #518; #537 option A), in Cards and in Compact
+ * rows: **Place** (name, type, address with a pin to Google Maps), the **Step** it reached with the step's one action
+ * (`row-step-model.ts`), and the **Demo** preview a card draws once a site exists. Built from facts the list door
+ * already returns; nothing is invented, a missing fact is left out.
  * Pure: no fetch, no clock read (callers pass `now`).
  */
-import type { Grade } from '@tracy/wo-views'
 import { type DemoState, demoBlock, demoStateOf } from '@tracy/wo-views/demo-state'
-import { SOCIAL_NETWORKS, formatNumber, formatRating, hostOf, totalFollowers } from '@tracy/wo-views/model'
+import { formatNumber, formatRating, hostOf } from '@tracy/wo-views/model'
 
 import type { SecondaryField } from './column-prefs.ts'
 import { toPlaceRow } from './my-list.ts'
@@ -50,7 +49,6 @@ export interface PlacePieces {
   id: string
   state: DemoState
   place: { name: string; type: string | null; address: string | null; mapsUrl: string }
-  opportunity: { score: number; grade: Grade; pending: boolean; why: string }
   demo: DemoPiece
   status: { label: string; tone: BadgeTone }
   /** Step n of 3 and the state of the current step, from the same stepper view as the Details band (#537). */
@@ -77,28 +75,6 @@ export function mapsUrlOf(row: OpportunityListRow): string {
   if (place.provider !== 'osm' && place.providerId && place.providerId !== row.id)
     params.set('query_place_id', place.providerId)
   return `https://www.google.com/maps/search/?${params}`
-}
-
-function whyLine(row: OpportunityListRow, t: Translate, locale: string): string {
-  const place = toPlaceRow(row)
-  const hasSocial = SOCIAL_NETWORKS.some((n) => Boolean(place.socials?.[n] ?? place.social?.[n]?.url))
-  const web = place.website ? 'my.why.website' : hasSocial ? 'my.why.socialOnly' : 'my.why.noWebsite'
-  const reviews = num(place.reviews)
-  const rating = num(place.rating)
-  const reviewText =
-    reviews !== null && reviews > 0
-      ? t(reviews === 1 ? 'my.why.reviews.one' : 'my.why.reviews.other', {
-          count: formatNumber(reviews, locale)
-        }) + (rating !== null ? t('my.why.stars', { rating: formatRating(rating, locale) }) : '')
-      : t('my.why.noReviews')
-  const followers = totalFollowers(place)
-  const social =
-    followers !== null && followers > 0
-      ? t('my.why.followers', { count: formatNumber(followers, locale) })
-      : hasSocial
-        ? t('my.why.hasSocial')
-        : t('my.why.noSocial')
-  return [t(web), reviewText, social].join(' · ')
 }
 
 /** A researched place with no demo yet: Researched, or Brief ready once it has a content brief. */
@@ -250,12 +226,6 @@ export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOp
       type: text(place.category) ?? text(place.cuisine),
       address: text(place.address),
       mapsUrl: mapsUrlOf(row)
-    },
-    opportunity: {
-      score: place.score.score,
-      grade: place.score.grade,
-      pending: place.score.pending,
-      why: whyLine(row, t, opts.locale)
     },
     demo: demoPiece(state, row, t, opts),
     status: statusOf,

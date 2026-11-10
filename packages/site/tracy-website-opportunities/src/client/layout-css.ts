@@ -214,7 +214,7 @@ export const CSS = `
 .tracy-wo-c-go { width: 32px; padding-left: 0; }
 .tracy-wo-select-all { justify-content: center; padding: 6px 10px; border-radius: 8px; background: var(--muted); }
 .tracy-wo-more-long { display: flex; align-items: center; justify-content: center; gap: 10px; }
-/* My opportunities (spec #512): full width, Cards and Compact rows, four pieces per place. */
+/* My opportunities (spec #512, #537 option A): full width, Cards and Compact rows, the step each place reached. */
 .tracy-wo-my { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .tracy-wo-my-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
 .tracy-wo-my-rows { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
@@ -237,21 +237,9 @@ export const CSS = `
 .tracy-wo-p-pin { display: inline-grid; place-items: center; width: 22px; height: 22px; flex: 0 0 auto; border-radius: 6px; color: var(--muted-foreground); }
 .tracy-wo-p-pin:hover { color: var(--foreground); background: color-mix(in oklab, var(--foreground) 6%, transparent); }
 .tracy-wo-p-pin svg { width: 14px; height: 14px; }
-.tracy-wo-p-opp { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.tracy-wo-my-cards .tracy-wo-p-opp { padding: 8px 10px; border-radius: 8px; background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
-.tracy-wo-ring { position: relative; display: inline-grid; place-items: center; width: 36px; height: 36px; flex: 0 0 auto; }
-.tracy-wo-ring svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.tracy-wo-ring-track { fill: none; stroke: var(--border); stroke-width: 3; }
-.tracy-wo-ring-arc { fill: none; stroke: var(--muted-foreground); stroke-width: 3; stroke-linecap: round; }
-.tracy-wo-ring[data-grade='A'] .tracy-wo-ring-arc { stroke: var(--primary); }
-.tracy-wo-ring[data-grade='B'] .tracy-wo-ring-arc { stroke: color-mix(in oklab, var(--primary) 65%, var(--muted-foreground)); }
-.tracy-wo-ring b { position: relative; font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
-.tracy-wo-p-grade { flex: 0 0 auto; padding: 1px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; color: var(--muted-foreground); background: color-mix(in oklab, var(--foreground) 6%, transparent); }
-.tracy-wo-p-grade[data-grade='A'], .tracy-wo-p-grade[data-grade='B'] { color: color-mix(in oklab, var(--primary) 80%, var(--foreground)); background: color-mix(in oklab, var(--primary) 12%, transparent); }
-.tracy-wo-p-why { display: inline-flex; align-items: center; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
 .tracy-wo-p-demo { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .tracy-wo-my-cards .tracy-wo-p-demo { justify-content: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px 10px 40px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
-.tracy-wo-my-cards .tracy-wo-p-demo[data-kind='failed'] { background: color-mix(in oklab, var(--destructive) 7%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-top { display: flex; align-items: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px 10px 40px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
 .tracy-wo-my-cards .tracy-wo-p-demo[data-kind='thumb'] { justify-content: flex-start; }
 .tracy-wo-p-thumb { display: flex; flex-direction: column; gap: 3px; width: 64px; height: 40px; flex: 0 0 auto; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); }
 .tracy-wo-p-thumb i { display: block; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--primary) 55%, var(--background)); }
@@ -260,7 +248,6 @@ export const CSS = `
 .tracy-wo-p-demo-text { display: flex; flex-direction: column; min-width: 0; }
 .tracy-wo-p-live { font-size: 12px; font-weight: 500; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
 .tracy-wo-p-site { overflow-wrap: anywhere; }
-.tracy-wo-p-nodemo { padding: 3px 10px; border: 1px dashed var(--border); border-radius: 6px; }
 .tracy-wo-p-alert { width: 14px; height: 14px; flex: 0 0 auto; color: var(--destructive); }
 .tracy-wo-p-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
 .tracy-wo-my-cards .tracy-wo-p-status { justify-content: space-between; margin-top: auto; }
