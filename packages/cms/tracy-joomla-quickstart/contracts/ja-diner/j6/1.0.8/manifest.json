@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-diner/j6/1.0.8",
+  "platform": "joomla",
+  "template": "ja_diner",
+  "quickstart": {
+    "product": "ja-diner",
+    "platform": "joomla",
+    "version": "1.0.8",
+    "cms": {
+      "version": "6.0.3"
+    },
+    "template": "ja_diner",
+    "parts": {
+      "installer": {
+        "file": "ja-diner-j6-quickstart-1.0.8.zip",
+        "bytes": 63426923,
+        "sha256": "0e426592cc6a87ef006c377a23d3469fe5725feee307a7c7e5cf808b26757d44"
+      }
+    },
+    "createdAt": "2026-11-10T05:31:59.012Z",
+    "builtFrom": {
+      "from": "quickstart/ja-diner/j6@1.0.7",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 5 files replaced (templates/ja_diner/error.php, templates/ja_diner/css, templates/ja_diner/language, templates/ja_diner/tpls); 1 installed language files (language/en-GB/en-GB.tpl_ja_diner.ini); stylesheets read the worn design system (--ds-c-*)"
+    },
+    "release": "quickstart/ja-diner/j6"
+  },
+  "coworkContractVersion": "0.24.91",
+  "mode": "content-recommendation"
+}
