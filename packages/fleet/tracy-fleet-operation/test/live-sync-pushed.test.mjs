@@ -1010,3 +1010,25 @@ for (const high of [false, true]) {
     }
   )
 }
+
+test('Joomla: a taken mapped table preserves real counters before the holding move (#536)', opts, () => {
+  schema('counter_base', `${J_TABLES} ${ARTICLE_1}`)
+  schema(
+    'counter_ours',
+    `${J_TABLES} ${ARTICLE_1} UPDATE jos_content SET id = 2 WHERE id = 1; ALTER TABLE jos_content AUTO_INCREMENT = 50;`
+  )
+  schema(
+    'counter_theirs',
+    `${J_TABLES} ${ARTICLE_1} UPDATE jos_content SET title = 'Live edit' WHERE id = 1; ALTER TABLE jos_content AUTO_INCREMENT = 75;`
+  )
+  const answer = joomlaMerge(
+    { base: 'counter_base', ours: 'counter_ours', theirs: 'counter_theirs' },
+    { content: { 1: 2 } }
+  )
+  assert.equal(answer.ok, true)
+  assert.equal(answer.tables.jos_content, 'from-theirs')
+  assert.deepEqual(rows('SELECT id, title FROM jos_content', 'counter_ours'), [['2', 'Live edit']])
+  assert.equal(autoIncrement('counter_ours', 'jos_content'), 75)
+  sql("INSERT INTO jos_content (title) VALUES ('Next article');", 'counter_ours')
+  assert.deepEqual(rows("SELECT id FROM jos_content WHERE title = 'Next article'", 'counter_ours'), [['75']])
+})
