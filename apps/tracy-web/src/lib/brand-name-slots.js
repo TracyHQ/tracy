@@ -4,7 +4,8 @@
 //
 // THE RULE (generic: it never looks at a slot id; it only looks at the slot's current text):
 //   templateName = the demo name the template prints: the value of the CMS site-name setting in nameSlots, else
-//   kit.template.name with "_" and "-" read as spaces. It is matched case-insensitively, whitespace-flexible.
+//   kit.template.name with "_" and "-" read as spaces. It is matched case-insensitively, with "-", "_" and
+//   whitespace as one separator ("ja-diner" matches "Ja Diner").
 //   1. brief has no brand.name, or brief.missing[] holds it back ("brand.name" / "name" / "business.name"):
 //      write NOTHING; every slot is status "not-written"; owner task confirm-name.
 //   2. current value empty and the slot is a setting (site name setting that prints the CMS name when empty):
@@ -45,6 +46,12 @@ const MARKETING_REASON = 'template marketing sentence; the writing step rewrites
 const HELD_BACK_FIELDS = ['brand.name', 'name', 'business.name']
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+// "-", "_" and spaces are one separator in the template name: a stand fills the CMS site name with the product slug
+// ("ja-diner") while the pages print "Ja Diner" (JA Diner 1.0.6 and 1.0.7 kits)
+const SEP = /[\s_-]+/g
+const nameRe = (tpl) => new RegExp(tpl.trim().split(SEP).map(esc).join('[\\s_-]+'), 'gi')
+const sameName = (a, b) =>
+  a.trim().toLowerCase().replace(SEP, ' ') === b.trim().toLowerCase().replace(SEP, ' ')
 const words = (s) => s.toLowerCase().match(/[\p{L}]+/gu) ?? []
 
 /** The demo name the template prints: the CMS site-name setting's value, else the template slug as words. */
@@ -101,7 +108,7 @@ function judge(current, tpl, name, kind) {
       reason: 'no template text to judge; the writing step decides'
     }
   }
-  const re = new RegExp(esc(tpl).replace(/\s+/g, '\\s+'), 'gi')
+  const re = nameRe(tpl)
   if (!re.test(current)) {
     return {
       status: 'handed-off',
@@ -111,7 +118,7 @@ function judge(current, tpl, name, kind) {
       reason: `${MARKETING_REASON} (the text does not hold the template name)`
     }
   }
-  if (current.trim().toLowerCase().replace(/\s+/g, ' ') === tpl.toLowerCase().replace(/\s+/g, ' ')) {
+  if (sameName(current, tpl)) {
     return {
       status: 'written',
       value: name,
