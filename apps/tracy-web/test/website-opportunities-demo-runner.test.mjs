@@ -2942,6 +2942,97 @@ test(
 )
 
 test(
+  'a historical server build keeps its existing brief path without new photo-label waits',
+  opts,
+  async () => {
+    const w = await world()
+    let asked = 0
+    w.deps.pictureLabels = async () => {
+      asked += 1
+      return { labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0 } }
+    }
+    await w.accept()
+    await w.runner().drain()
+    assert.equal(w.creates(), 1, 'historical builds still provision in the existing runner pass')
+    assert.equal(asked, 0, 'the new agent-demo label wait does not change historical workflows')
+  }
+)
+
+test(
+  'a server-owned build waits for the shared photo labels before freezing its first brief',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, readiness: 'measured' })
+    const actionId = (await w.accept()).body.actions[0].id
+    const media = Array.from({ length: 8 }, (_, i) => ({
+      id: `photo-${i}`,
+      kind: 'image',
+      origin: 'place',
+      source: 'website',
+      sourceUrl: `https://phoba.example/photo-${i}.jpg`,
+      sha256: String(i).repeat(64),
+      width: 2000,
+      height: 1200,
+      category: 'other'
+    }))
+    await w.pool.query(
+      `update wo_demo_action set selection = jsonb_set(selection || '{"ownSite":true}'::jsonb,
+        '{researchInput,media}', $2::jsonb) where id=$1`,
+      [actionId, JSON.stringify(media)]
+    )
+    const asked = []
+    let settle
+    const answer = new Promise((resolve) => {
+      settle = resolve
+    })
+    w.deps.pictureLabels = (input) => {
+      asked.push(input)
+      return answer
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    const runner = w.runner()
+    await runner.drain()
+    assert.equal(
+      (await w.pool.query('select id from wo_revision')).rowCount,
+      0,
+      'the first brief cannot freeze while its photograph labels are pending'
+    )
+    assert.equal(w.creates(), 0)
+    let action = (await w.pool.query('select * from wo_demo_action where id=$1', [actionId])).rows[0]
+    assert.equal(action.status, 'queued')
+    assert.equal(action.error, null)
+    assert.equal(new Date(action.next_at).getTime(), w.deps.now() + 4_000)
+    await w.advance()
+    await runner.drain()
+    assert.equal(asked.length, 1, 'queue retries share one in-flight labelling run')
+    settle({
+      labels: new Map(
+        media.map((m) => [
+          m.id,
+          {
+            key: 'fixture|p3',
+            model: 'fixture',
+            labels: { content: 'venue-exterior', caption: 'The restaurant exterior' }
+          }
+        ])
+      ),
+      note: { status: 'labelled', asked: 8, labelled: 8, cached: 0, max: 60 }
+    })
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await runner.drain()
+    const brief = (await w.pool.query('select brief from wo_revision')).rows[0].brief
+    assert.equal(brief.assetLabelling.labelled, 8)
+    const labelled = brief.readiness.checks.find((check) => check.id === 'labelled-share')
+    assert.equal(labelled.verdict, 'pass')
+    assert.equal(labelled.measured.share, 1)
+    assert.notEqual(brief.readiness.verdict, 'block')
+    assert.equal(asked.length, 1)
+    assert.equal(w.creates(), 1)
+  }
+)
+
+test(
   'a client demo whose logo research answers in time is briefed from the place read again',
   opts,
   async () => {

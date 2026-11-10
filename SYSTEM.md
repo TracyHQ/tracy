@@ -2904,7 +2904,10 @@ this kind (`SHEET_KINDS`).
 Doors (`apps/tracy-web/src/opportunities-build/own-site.js`, registered in the WO app): `GET /api/sites/from-business/find`,
 `POST /api/sites/from-business` (stores the business as the account's own opportunity, `candidate.ownSite` +
 `trade`, runs the shared research), `GET /api/sites/from-business/:id` (when research is `completed`, phase `choose`
-with `recommended`: the `autoTemplate` template suggested by trade), `POST /api/sites/from-business/:id/build`
+with `recommended`: the `autoTemplate` template suggested by trade). A waiting shared request reads its place run's
+state and error: a paused place run resumes through `resumeRequest`, at most three successful automatic resumes per
+business; a nonblocking advisory lock serialises concurrent polls without using up retries, and a resume failure is
+returned rather than hidden as continuing research. `POST /api/sites/from-business/:id/build`
 (`{selection:{cms,design,quickstart}}` chosen by the customer — keep the suggestion or pick another in the Design templates popup, which
 opens with a "Tracy's pick" frame from `requestTemplatePick(…, {recommended})`; accepts exactly one `agent-demo/1` +
 `client-send/1` action with `ownSite:true` and `suggested.taken`; quota `ownSiteBuildsPerAccountPerDay`, default 3, in
@@ -2915,6 +2918,10 @@ the destination page sends the brief as with a demo. On an http stand (no `crypt
 For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
 follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
 a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds.
+Server-owned `agent-demo/1` actions share the picture-label run warmed during template choice. Pending labels queue
+the action until `retryAt` without freezing a revision or provisioning a site. A label run past its five-minute
+bound returns `DEMO_PICTURE_LABELS_TIMEOUT` without freezing empty labels; a later prepare or explicit Retry can
+adopt the same run's settled answer. Historical server actions without that workflow keep their existing brief path.
 An explicit `POST …/:id/build` with `{retryOf:<failed action id>}` retries the same owned business using the shared
 acceptance path: the original revision, build request, template and session remain frozen. The Retry request id is
 stable per failed action, and state reads follow the replacement action. Sending a new template with Retry is refused.
