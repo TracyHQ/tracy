@@ -2,7 +2,7 @@
 // check, it does what a person does with the preview's comment popover: for each page with customer-visible faults in
 // that check, point at each element, say in one sentence what should change, and ask Tracy to edit, each page in a
 // session of its own opened for the site as the site owner, its faults packed into as few turns as fit the comment turn's
-// budget (repair-page.js). Pages run side by side (repair-schedule.js), and each turn is judged by a site check of the
+// budget (repair-page.js). Pages run serially by default (repair-schedule.js), and each turn is judged by a site check of the
 // pages it changed (repair-check.js): undone, the whole turn, when that check shows a new blocking failure on a page it
 // changed. A turn still open at the time limit is cancelled and judged by what it wrote. Every turn of the pass's request
 // ids is judged, a late or duplicate one too. Past `stopNewWorkMs` no new turn starts, and the pass returns by `returnByMs`
@@ -14,7 +14,7 @@
 // (write-step-nine.js) then takes back the turns in `ledger` and hands over the site as written. Repairs are Tracy turns,
 // so the customer sees and can undo each one in Site changes.
 import { checkWorker } from './repair-check.js'
-import { blockingFailures } from './repair-faults.js'
+import { blockingFailures, checkAccepted } from './repair-faults.js'
 import { itemsGate } from './repair-limits.js'
 import { repairPage } from './repair-page.js'
 import { schedulePages } from './repair-schedule.js'
@@ -29,8 +29,11 @@ async function judgeTheRest(pass, result, checks) {
   for (const t of rest) {
     if (t.state !== 'open') continue
     // A late turn still running is waited for while there is time, then cut short.
-    while (t.state === 'open' && pass.clock.waitLeft() > 0) {
-      await pass.clock.sleep(Math.max(1, Math.min(pass.clock.limits.pollMs, pass.clock.waitLeft())))
+    const turnBy = t.turnBy ?? pass.clock.now() + pass.clock.limits.turnMs
+    while (t.state === 'open' && pass.clock.waitLeft() > 0 && pass.clock.now() < turnBy) {
+      await pass.clock.sleep(
+        Math.max(1, Math.min(pass.clock.limits.pollMs, pass.clock.waitLeft(), turnBy - pass.clock.now()))
+      )
       await sweepTurns(pass, result)
     }
     if (t.state === 'open') await cutShort(pass, t)
@@ -59,6 +62,7 @@ export async function runRepairPass(pass, { firstCheck, brief = null }) {
     checks: 1
   }
   pass.result = result
+  pass.brief = brief
   pass.rate ??= itemsGate(pass.clock)
   // Every slot the first check names places its record on a page (repair-judge.js `recordPagesOf`).
   pass.ledger.faults = blockingFailures(firstCheck)
@@ -71,8 +75,24 @@ export async function runRepairPass(pass, { firstCheck, brief = null }) {
     run: (page) => repairPage(pass, page, result, checks, state)
   })
   result.skipped = skipped
-  if (!started) return { ...result, status: 'nothing-to-send', check: firstCheck }
+  if (!started)
+    return {
+      ...result,
+      status: checkAccepted(firstCheck) ? 'nothing-to-send' : 'incomplete',
+      remaining: blockingFailures(firstCheck),
+      check: firstCheck
+    }
   await judgeTheRest(pass, result, checks)
   await checks.recheck()
-  return { ...result, check: state.check }
+  const accepted =
+    checkAccepted(state.check) &&
+    !result.errors.length &&
+    !result.turns.some((t) => t.leftOpen) &&
+    !result.undone.some((t) => !t.ok)
+  return {
+    ...result,
+    status: accepted ? 'done' : 'incomplete',
+    remaining: blockingFailures(state.check),
+    check: state.check
+  }
 }

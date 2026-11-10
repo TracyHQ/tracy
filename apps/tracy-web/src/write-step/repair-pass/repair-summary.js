@@ -28,6 +28,10 @@ const turnLine = (t) => ({
   ...(t.cancelled ? { cancelled: true } : {}),
   ...(t.leftOpen ? { leftOpen: true } : {}),
   changedPages: t.changedPages ?? null,
+  verdict: t.verdict ?? 'unverified',
+  regressions: t.regressions ?? [],
+  newlyObserved: t.newlyObserved ?? [],
+  remaining: t.remaining ?? [],
   items: (t.items ?? []).map((i) => ({
     url: i.url,
     selector: i.element?.selector ?? '',
@@ -73,6 +77,7 @@ export function repairSummary({ outcome, clock, site, timeline = [] }) {
     notSent: outcome.notSent ?? [],
     errors: outcome.errors ?? [],
     checks: outcome.checks ?? 1,
+    remaining: outcome.remaining ?? [],
     timeline
   }
 }

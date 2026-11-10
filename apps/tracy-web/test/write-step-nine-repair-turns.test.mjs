@@ -106,7 +106,8 @@ test('a turn still open at ten minutes is waited for, never judged while open, a
   const { result, checksRun } = await stepNine({
     checks: [checkOf([DEMO]), later, checkOf([])],
     agent,
-    clock
+    clock,
+    input: { limits: { turnMs: 12 * 60_000 } }
   })
   const [turn] = result.repair.turns
   assert.equal(turn.state, 'closed', 'waited for until it closed')
@@ -148,7 +149,7 @@ test('every agent call and the site check are raced against the time left; the c
   for (let i = 0; i < 5000 && !agent.sent.requests.length; i++) await new Promise((r) => setImmediate(r))
   fire?.()
   const { result } = await run
-  assert.equal(result.repair.status, 'done', 'the step returns, the page that hung logged')
+  assert.equal(result.repair.status, 'incomplete', 'the step returns without accepting an unverified page')
   assert.match(result.repair.errors[0].error, /did not answer in the time left/)
   assert.ok(
     agent.sent.requests[0].timeLeftMs > 0 && agent.sent.requests[0].timeLeftMs <= REPAIR_LIMITS.stopNewWorkMs
@@ -191,7 +192,11 @@ test('the pages a turn changed come from what it wrote, not only the page it was
         : { changes: [] }
   })
   const later = checkOf([failure('dead-links', '/index.php/contact', 'block-5.2', '/missing')])
-  const { result } = await stepNine({ checks: [checkOf([DEMO, contact]), later, checkOf([])], agent })
+  const { result } = await stepNine({
+    checks: [checkOf([DEMO, contact]), later, checkOf([])],
+    agent,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   const home = result.repair.turns.find((t) => t.page === '/')
   assert.deepEqual(home.changedPages, ['/contact'])
   assert.deepEqual(agent.sent.undone, [home.turnId])
@@ -208,7 +213,12 @@ test('a write the pass cannot place on a page counts as changing every page', as
 test('an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason', async () => {
   const agent = fakeAgent({
     undo: (turnId) => {
-      if (turnId.startsWith('sess-1:')) return { ok: false, code: 'TURN_UNDO_CONFLICT' }
+      if (turnId.startsWith('sess-1:'))
+        return {
+          ok: false,
+          code: 'TURN_UNDO_CONFLICT',
+          reasons: [{ code: 'SHARED_CHANGE', cause: 'concurrent' }]
+        }
       throw new Error('undo door answered 502')
     }
   })
@@ -216,8 +226,15 @@ test('an undo the site refuses, or that throws, is kept in repair-pass.json as u
     failure('text-overflow', '/', 'block-2.1', 'wider than 390 px'),
     failure('text-overflow', '/index.php/about', 'block-4.1', 'wider than 390 px')
   ])
-  const { saved } = await stepNine({ checks: [checkOf([DEMO, ALT]), later, later], agent })
+  const { saved } = await stepNine({
+    checks: [checkOf([DEMO, ALT]), later, later],
+    agent,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   const undone = saved.get('repair-pass.json').undone
+  assert.deepEqual(undone.find((u) => u.code === 'TURN_UNDO_CONFLICT').reasons, [
+    { code: 'SHARED_CHANGE', cause: 'concurrent' }
+  ])
   assert.deepEqual(
     undone.map((u) => [u.status, u.reason]),
     [
@@ -237,4 +254,28 @@ test('a turn that only changed design files counts as changing every page: a new
   assert.equal(turn.changedPages, '*')
   assert.deepEqual(agent.sent.undone, [turn.turnId])
   assert.equal(result.repair.undone[0].status, 'undone')
+})
+
+test('an automatic repair turn cannot wait on a human until the chain two-hour deadline', async () => {
+  const clock = fakeClock()
+  const agent = fakeAgent({
+    clock,
+    canCancel: true,
+    behave: () => ({ openForMs: 2 * 60 * 60_000, changes: [] })
+  })
+  const from = clock.t
+  const { result } = await stepNine({
+    checks: [checkOf([DEMO])],
+    agent,
+    clock,
+    input: { limits: { stopNewWorkMs: 2 * 60 * 60_000, returnByMs: 135 * 60_000 } }
+  })
+  assert.equal(agent.sent.cancelled, 1)
+  assert.ok(clock.t - from <= 10 * 60_000 + 1_000, `${clock.t - from} ms`)
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(result.repair.turns[0].cancelled, true)
+  assert.match(agent.sent.prompts[0].text, /automated site build/)
+  assert.match(agent.sent.prompts[0].text, /Do not ask the user/)
+  assert.match(agent.sent.prompts[0].text, /CONFIRM_FIRST/)
+  assert.match(agent.sent.prompts[0].text, /Record that change as blocked/)
 })

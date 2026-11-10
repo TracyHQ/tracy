@@ -1,19 +1,27 @@
 {
   "id": "REG-PR-449-step-9b-site-agent-repair",
-  "kind": "feat",
-  "title": "Step 9 is write, first site check, step 9b on that check's customer-visible faults through the site agent, a check of the changed pages, undo of a turn that made things worse, hand-over",
+  "kind": "fix",
+  "title": "Step 9 preserves publication, verifies repairs and undoes regressions without overlapping page writers",
   "pr": 449,
   "area": "write-step/repair-pass",
-  "cms": ["any"],
+  "cms": [
+    "any"
+  ],
   "needs": [],
   "flaky_model": false,
   "steps": [
     "S1: Run the step 9 entry point tests with the site agent and the site check faked, one file at a time: apps/tracy-web/test/write-step-nine-flow.test.mjs, write-step-nine-repair.test.mjs and its -faults, -turns, -pipeline and -messages siblings, and the scoped site check test.",
-    "S2: Run the bench command and image layout tests one file at a time: write-step-bench-repair-cli, scripts/test/tracy-web-comment-turn-image, module-graph, and the site tools slot corrections test."
+    "S2: Run the bench command and image layout tests one file at a time: write-step-bench-repair-cli, scripts/test/tracy-web-comment-turn-image, module-graph, and the site tools slot corrections test.",
+    "S3: Run node --test apps/tracy-web/test/write-step-nine-repair-targets.test.mjs.",
+    "S4: Run node --test apps/tracy-web/test/write-step-nine-repair-verdicts.test.mjs.",
+    "S5: Run node --test apps/tracy-web/test/write-step-settings.test.mjs."
   ],
   "expect": [
-    "S1: every test passes: step 9 is write, first check, session, turn, check, with no finder stage; 9b sends the first check's customer-visible faults once each with page, element and sentence, never missing accent emphasis, a step's own check, a fault with no page or a brief's own value; a page whose faults do not fit one comment turn is split into several turns in its session, every fault sent; a page whose turn throws is logged in errors while the other pages proceed and the second check of the changed pages runs; a turn causing a new blocking failure is undone newest first; a prompt with no turn is resent once then dropped; one resend round for check faults still there; no new work after 10 minutes and a return by 12; only a site check that cannot run hands over the written site with the first check and its turns undone; items carry the content.locate answer and the served selector on the served page address; late and duplicate turns are judged and undone; every wait races one step clock and the first check spends it too; an open turn is waited for, then cancelled and judged by what it wrote; capped, unknown and invisible faults are logged with a code; the pages a turn changed come from its writes; undo failures are kept; a turn that only changed files counts as changing every page; pages run side by side in sessions of their own, at most three at once, within 20 request items a minute; repair-pass.json has a timeline.",
-    "S2: every test passes: the bench runs step 9 whole as the site owner and reads a turn's committed files as a change; comment-turn.mjs loads from the image layout the Dockerfile copies; the contract pre-check honours slot corrections."
+    "S1: every test passes: step 9 is write, first check, session, turn, check, with no finder stage; 9b sends the first check's customer-visible faults once each with page, element and sentence, never missing accent emphasis, a step's own check, a fault with no page or a brief's own value; a page whose faults do not fit one comment turn is split into several turns in its session, every fault sent; a page whose turn throws is logged in errors while the other pages proceed and the second check of the changed pages runs; a turn causing a new blocking failure is undone newest first; a prompt with no turn is resent once then dropped; one resend round for check faults still there; no new work after 10 minutes and a return by 12; only a site check that cannot run hands over the written site with the first check and its turns undone; items carry the content.locate answer and the served selector on the served page address; late and duplicate turns are judged and undone; every wait races one step clock and the first check spends it too; an open turn is waited for, then cancelled and judged by what it wrote; capped, unknown and invisible faults are logged with a code; the pages a turn changed come from its writes; undo failures are kept; a turn that only changed files counts as changing every page; pages run serially through verification by default to avoid competing whole-site file moments; an explicit override still bounds three concurrent sessions; structured undo refusal reasons are preserved; requests remain within 20 items a minute; repair-pass.json has a timeline.",
+    "S2: every test passes: the bench runs step 9 whole as the site owner and reads a turn's committed files as a change; comment-turn.mjs loads from the image layout the Dockerfile copies; the contract pre-check honours slot corrections.",
+    "S3: All tests pass: image paths and measured frame selectors resolve served elements with provenance; native locate records scope content-only checks to their pages while file changes still check every page; an unrelated slotless finding does not resend a repaired fault, while an improving heading count remains eligible; queued pages cleared by a shared repair open no session, while scoped checks retain other pages.",
+    "S4: Automated repair prompts ask no user questions; a turn waiting for two hours is cancelled at its own ten-minute cap and remains stopped when red. Recovery does not undo newly observable content; read-back regressions and later layout regressions still undo. Closed no-op turns get fresh checks and at most one retry. Persistent or excluded failures and unmeasured checks cannot report done. Losing a previously measured group rolls back the write even without explicit failure rows; an unmeasured no-op retains unresolved faults without a blind retry. Failed pages serialize and a shared repair clears queued sessions.",
+    "S5: Ordinary hidden menu items are unpublished, but a native default Home item at /home remains published and its attempted hide reports failure."
   ],
   "selectors": {
     "files": "apps/tracy-web/test/write-step-nine-flow.test.mjs, apps/tracy-web/test/write-step-nine-repair.test.mjs, apps/tracy-web/test/write-step-nine-repair-faults.test.mjs, apps/tracy-web/test/write-step-nine-repair-turns.test.mjs, apps/tracy-web/test/write-step-nine-repair-pipeline.test.mjs, apps/tracy-web/test/write-step-nine-repair-messages.test.mjs, apps/tracy-web/test/site-check-scoped-pages.test.mjs, scripts/test/tracy-web-comment-turn-image.test.mjs, apps/tracy-web/test/write-step-bench-repair-cli.test.mjs, apps/tracy-web/test/module-graph.test.mjs, packages/tools/tracy-site-tools/test/slot-corrections.test.mjs",
@@ -35,7 +43,10 @@
       "scripts/test/tracy-web-comment-turn-image.test.mjs",
       "apps/tracy-web/test/write-step-bench-repair-cli.test.mjs",
       "apps/tracy-web/test/module-graph.test.mjs",
-      "packages/tools/tracy-site-tools/test/slot-corrections.test.mjs"
+      "packages/tools/tracy-site-tools/test/slot-corrections.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair-targets.test.mjs",
+      "apps/tracy-web/test/write-step-nine-repair-verdicts.test.mjs",
+      "apps/tracy-web/test/write-step-settings.test.mjs"
     ]
   }
 }

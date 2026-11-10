@@ -77,7 +77,8 @@ test('a turn that throws is logged for its page, the other pages proceed, and th
     agent,
     clock
   })
-  assert.equal(result.repair.status, 'done')
+  assert.equal(result.repair.status, 'incomplete')
+  assert.equal(result.report.status, 'stopped')
   assert.deepEqual(result.repair.turns.map((t) => t.page).sort(), ['/', '/contact'])
   assert.deepEqual(agent.sent.undone, [], 'the turns of the other pages are kept')
   assert.deepEqual(

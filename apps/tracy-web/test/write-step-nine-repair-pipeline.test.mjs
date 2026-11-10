@@ -38,13 +38,18 @@ test('whatever the customer sees is sent, glued words too; only missing accent e
   )
 })
 
-test('pages run side by side, each in a session of its own, never more than three turns at once', async () => {
+test('an explicit concurrency override still bounds page sessions to three turns at once', async () => {
   const clock = fakeClock()
   const pages = ['/', '/about', '/classes', '/contact', '/prices']
   const agent = fakeAgent({ clock, behave: () => ({ openForMs: 3 * 60_000 }) })
   const from = clock.t
   const first = checkOf(pages.map((p, i) => failure('demo-words', p, `module-${i}.1`, `Demo Gym ${i}`)))
-  const { result } = await stepNine({ checks: [first, checkOf([])], agent, clock })
+  const { result } = await stepNine({
+    checks: [first, checkOf([])],
+    agent,
+    clock,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   assert.equal(agent.sent.prompts.length, 5)
   assert.equal(agent.sent.mostOpen, 3)
   assert.equal(new Set(agent.sent.prompts.map((p) => p.sessionId)).size, 5, 'one session per page')
@@ -148,4 +153,21 @@ test("a write to a record is placed on the pages whose faults name that record's
   const fitness = result.repair.turns.find((t) => t.page === '/services/fitness')
   assert.deepEqual(fitness.changedPages.slice().sort(), ['/', '/services/fitness'])
   assert.deepEqual(checkOptions.at(-1).pages?.slice().sort(), ['/', '/services/fitness'])
+})
+
+// A native turn can write shared records and whole-site file moments even when its comment names one page.
+test('default repair scheduling finishes and checks each page before another writer starts', async () => {
+  const clock = fakeClock()
+  const pages = ['/', '/about', '/classes']
+  const agent = fakeAgent({ clock, behave: () => ({ openForMs: 30_000 }) })
+  const faults = pages.map((p, i) => failure('demo-words', p, `module-${i}.1`, `Demo Gym ${i}`))
+  const { result } = await stepNine({
+    checks: [checkOf(faults), checkOf(faults.slice(1)), checkOf(faults.slice(2)), checkOf([])],
+    agent,
+    clock
+  })
+  assert.equal(agent.sent.mostOpen, 1)
+  assert.equal(agent.sent.prompts.length, 3)
+  assert.equal(result.repair.checks, 4)
+  assert.equal(result.repair.status, 'done')
 })
