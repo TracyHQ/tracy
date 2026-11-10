@@ -14,7 +14,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
  * opened it).
  */
-import { Fragment, type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Bot, ChevronLeft, ChevronRight, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
   Badge,
@@ -38,7 +38,7 @@ import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './br
 import { Stepper } from './stepper.tsx'
 import { type StepAction, bandSubSteps, briefHeldOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
-import { AddMedia, AddSource, ApprovalFooter, gateText } from './seller-review.tsx'
+import { AddSource, ApprovalFooter, gateText } from './seller-review.tsx'
 import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
@@ -58,7 +58,6 @@ import {
 import {
   type GooglePlaceView,
   type PageSpeedView,
-  type ProfileRow,
   PROFILE_FIELDS,
   buildFailure,
   briefStatus,
@@ -78,11 +77,11 @@ import { PlaceProfileBlock } from './place-profile-block.tsx'
 import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
 import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
-import { type HoursChoice, type HoursSaved, ProfileHoursRow } from './profile-hours-row.tsx'
+import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
 import { ratingRowView } from './profile-rating-model.ts'
 import { phonesView } from './profile-phones-model.ts'
 import { ProfilePhonesRows } from './profile-phones-rows.tsx'
-import { type RatingChoice, ProfileRatingRow } from './profile-rating-row.tsx'
+import type { RatingChoice } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
 import { briefSummaryRows, businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
 import { BusinessBriefTable } from './business-brief-table.tsx'
@@ -115,6 +114,8 @@ import {
   removedKeyMessageIds
 } from './profile-key-messages-model.ts'
 import { ProfileReadingRows } from './profile-reading-rows.tsx'
+import { BusinessFactsPage } from './business-facts-page.tsx'
+import { businessFactsView } from './business-facts-model.ts'
 import { menuAgainTarget, readMenu } from './menu-model.ts'
 import { TripadvisorReviews } from './tripadvisor-reviews.tsx'
 import { CMS_LABEL } from './cms-label.ts'
@@ -478,7 +479,7 @@ export function DetailView({
   const profile = isRecord(body.profile) ? body.profile : null
   // This card's own research (#524): nothing researched shows, and the brief waits, until it is done.
   const research = researchOf(body)
-  const editProfileRow = (field: string, value: string): JSX.Element | null => {
+  const editProfileRow = (field: string, value: string, open = false): JSX.Element | null => {
     const view = profileEditView(profile, field)
     if (view === null) return null
     return (
@@ -490,6 +491,7 @@ export function DetailView({
         edited={view.edited}
         editedKey="profile.editedByYou"
         multiline={field === 'bio'}
+        startOpen={open}
         maxLength={field === 'bio' ? 1200 : field === 'phone' ? 40 : 300}
         onSave={async (typed) => {
           const sent = profileEditBody(field, typed, view.value)
@@ -579,7 +581,6 @@ export function DetailView({
       ? '$'.repeat(candidate.priceLevel)
       : null
   const website = typeof candidate.website === 'string' && candidate.website !== '' ? candidate.website : null
-  const phone = typeof candidate.phone === 'string' && candidate.phone !== '' ? candidate.phone : null
   const editedAt = profileEditedAt(body.opportunity)
   const meta = [typeof candidate.category === 'string' ? candidate.category : null, distance, price].filter(
     Boolean
@@ -825,54 +826,17 @@ export function DetailView({
       placeProfile.failed ||
       tripadvisorReviewView(profile, media).length > 0)
 
-  // The Profile card of Details keeps the plain rows, each editable in place; the rows that ask for a decision (name,
-  // rating, phones, hours, services, team, key messages) live on its sub-page.
-  const profileBlock = (full: boolean): JSX.Element => (
+  // The compact Business facts card of Details: the plain rows, read only (#537); the sub-page holds the cards. While
+  // research runs it holds nothing partial: progress shows in the band only.
+  const profileBlock = (): JSX.Element => (
     <Profile
       t={t}
-      profile={profile}
+      profile={researchMoving ? null : profile}
       bare
-      emptyKey={research.done ? 'detail.noProfile' : 'research.profileEmpty'}
-      website={research.done ? { url: website, link: websiteLink } : null}
-      collecting={researchMoving ? { name: shownName, phone } : null}
-      editRow={full && research.done ? editProfileRow : null}
-      nameRow={
-        !full || nameRow === null ? null : (
-          <ProfileNameRow key={`${nameRow.name}:${nameRow.chip}`} t={t} view={nameRow} onSave={saveName} />
-        )
+      emptyKey={
+        researchMoving ? 'score.notCollected' : research.done ? 'detail.noProfile' : 'research.profileEmpty'
       }
-      hoursRow={
-        !full || hoursRow === null ? null : (
-          <ProfileHoursRow
-            key={`${hoursRow.hours.join('|')}:${hoursRow.chip}:${hoursRow.left}`}
-            t={t}
-            view={hoursRow}
-            onSave={saveHours}
-          />
-        )
-      }
-      phonesRow={
-        !full || phonesRow === null || (phonesRow.others.length === 0 && !phonesRow.mainWhatsapp) ? null : (
-          <ProfilePhonesRows t={t} view={phonesRow} />
-        )
-      }
-      ratingRow={
-        !full || ratingRow === null ? null : (
-          <ProfileRatingRow
-            key={`${ratingRow.shown}:${ratingRow.chosen}`}
-            t={t}
-            view={ratingRow}
-            locale={locale}
-            onSave={saveRating}
-          />
-        )
-      }
-      readingRows={
-        !full || readingRows === null ? null : (
-          <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} />
-        )
-      }
-      keyMessagesRows={full ? keyMessagesRows(true) : null}
+      website={research.done && !researchMoving ? { url: website, link: websiteLink } : null}
     />
   )
   const briefTable = (full: boolean): JSX.Element => (
@@ -985,37 +949,76 @@ export function DetailView({
   // A section opened as a sub-page: that section alone, whole.
   if (section !== null) {
     const shown = pageOf(section)
-    // Photos & video belong to the Profile (#537): the full grid with Add more, under the Profile's rows.
-    const mediaSection = (
-      <div className="tracy-wo-media-section" data-media-section="">
-        <div className="tracy-wo-media-section-head">
-          <h3>{t('details.section.media')}</h3>
-          <AddMedia t={t} onUpload={uploadMedia} />
-        </div>
-        {mediaBlock(true)}
-      </div>
-    )
     const content =
       shown === 'profile' ? (
-        <>
-          {profileBlock(true)}
-          {/* The seller may add photos before research too: the server keeps them as the owner's own. */}
-          {mediaSection}
-          {hasMore ? (
-            <div className="tracy-wo-psec-more">
-              <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
-              <GooglePlace
-                t={t}
-                place={googlePlaceView(profile?.googlePlace)}
-                food={profile?.trade === 'food'}
-              />
-              <TripadvisorReviews t={t} profile={profile} media={media} />
-              <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
-              <Social t={t} lines={socialStatsLines(profile, now)} />
-              <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
-            </div>
-          ) : null}
-        </>
+        <BusinessFactsPage
+          t={t}
+          locale={locale}
+          view={businessFactsView({
+            profile,
+            candidate,
+            name: shownName,
+            researched: research.done && !researchMoving,
+            approval,
+            briefCreatedAt:
+              isRecord(body.brief) && typeof body.brief.createdAt === 'string' ? body.brief.createdAt : null,
+            colors: mediaView.colors.state === 'found' ? mediaView.colors.colors : [],
+            reviews: [
+              ...(googlePlaceView(profile?.googlePlace)?.reviews ?? []).map((r) => ({
+                ...r,
+                source: 'google'
+              })),
+              ...tripadvisorReviewView(profile, media).map((r) => ({ ...r, source: 'tripadvisor' }))
+            ]
+          })}
+          media={mediaView}
+          food={profile?.trade === 'food'}
+          running={researchMoving}
+          websiteLink={websiteLink}
+          doors={{
+            nameRow:
+              nameRow === null ? null : (
+                <ProfileNameRow
+                  key={`${nameRow.name}:${nameRow.chip}`}
+                  t={t}
+                  view={nameRow}
+                  onSave={saveName}
+                />
+              ),
+            saveName,
+            field: (field, value) => editProfileRow(field, value, true),
+            phonesRows:
+              phonesRow === null || phonesRow.others.length === 0 ? null : (
+                <ProfilePhonesRows t={t} view={phonesRow} />
+              ),
+            saveHours,
+            saveRating,
+            pickReading,
+            readingRows: (groups) =>
+              readingRows === null ? null : (
+                <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} groups={groups} />
+              ),
+            keyMessages: keyMessagesRows(false),
+            uploadMedia,
+            retryLogo: { busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }
+          }}
+          researchDetails={
+            hasMore ? (
+              <div className="tracy-wo-psec-more">
+                <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
+                <GooglePlace
+                  t={t}
+                  place={googlePlaceView(profile?.googlePlace)}
+                  food={profile?.trade === 'food'}
+                />
+                <TripadvisorReviews t={t} profile={profile} media={media} />
+                <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
+                <Social t={t} lines={socialStatsLines(profile, now)} />
+                <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
+              </div>
+            ) : null
+          }
+        />
       ) : shown === 'sources' ? (
         <>
           {research.researchedAt === null ? null : (
@@ -1177,7 +1180,7 @@ export function DetailView({
             className="tracy-wo-profile-card"
           >
             {profileReview ? needsReview : null}
-            {profileBlock(false)}
+            {profileBlock()}
             {/* Photos & video belong to the Profile (#537): a strip at its foot, opened on the Profile sub-page. */}
             {research.done ||
             researchMoving ||
@@ -1244,90 +1247,22 @@ export function DetailView({
 function Profile({
   t,
   profile,
-  nameRow,
-  hoursRow,
-  ratingRow,
-  phonesRow,
-  readingRows,
-  keyMessagesRows,
   bare = false,
-  editRow = null,
   emptyKey = 'detail.noProfile',
-  website = null,
-  collecting = null
+  website = null
 }: {
   t: Translate
   profile: Body | null
   /** The place's website row after the hours, read only (no door edits it); null before research. */
   website?: { url: string | null; link: (url: string) => JSX.Element } | null
-  /** Research is running: the rows it fills, with what is known so far and Collecting… for the rest. */
-  collecting?: { name: string; phone: string | null } | null
-  /** A plain row the seller can edit in place (#524, `editable-text.tsx`), or null to draw it read only. */
-  editRow?: ((field: string, value: string) => JSX.Element | null) | null
-  /** What an empty Profile says: before this card's research, how to fill it (#524). */
+  /** What an empty card says: before this card's research, how to fill it (#524); while it runs, Not collected yet. */
   emptyKey?: string
-  /** Inside the Profile section of Details, which carries the title: no card of its own. */
+  /** Inside the Business facts section of Details, which carries the title: no card of its own. */
   bare?: boolean
-  /** "Name on the site" (`profile-name-row.tsx`) in place of the plain Name row, when research decided a name. */
-  nameRow: JSX.Element | null
-  /** "Opening hours" (`profile-hours-row.tsx`), after the phone, when there are hours to show or check. */
-  hoursRow: JSX.Element | null
-  /** "Google rating" (`profile-rating-row.tsx`), before the phone, when Google rates the place. */
-  ratingRow: JSX.Element | null
-  /** "Phone" with Main and "Other phones" (`profile-phones-rows.tsx`) in place of the plain Phone row. */
-  phonesRow: JSX.Element | null
-  /** "Services", "Who it is for" and "Team" (`profile-reading-rows.tsx`), after the other rows, when research read them. */
-  readingRows: JSX.Element | null
-  /** "Key messages" (`profile-key-messages.tsx`), after the reading, when the reading found some. */
-  keyMessagesRows: JSX.Element | null
 }): JSX.Element | null {
-  if (collecting !== null && profile === null) {
-    const waiting = t('profile.collecting')
-    const lines: Array<[string, string | null]> = [
-      ['field.name', collecting.name],
-      ['field.phone', collecting.phone],
-      ['field.hours', null],
-      ['field.website', null],
-      ['field.services', null],
-      ['field.team', null]
-    ]
-    return (
-      <Section title={t('detail.profile')} bare={bare}>
-        <dl className="tracy-wo-fields">
-          {lines.map(([key, value]) => (
-            <div key={key} className="tracy-wo-field">
-              <dt className="tracy-wo-muted tracy-wo-small">{t(key)}</dt>
-              <dd className={value === null ? 'tracy-wo-muted' : undefined}>{value ?? waiting}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="tracy-wo-muted tracy-wo-small">{t('profile.filling')}</p>
-      </Section>
-    )
-  }
   const rows = profileFields(profile)
-  const drawRow = (row: ProfileRow): JSX.Element =>
-    row.field === 'name' && nameRow !== null ? (
-      <Fragment key={row.field}>{nameRow}</Fragment>
-    ) : (
-      <div key={row.field} className="tracy-wo-field">
-        <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
-        <dd>
-          {editRow?.(row.field, row.value) ?? <span>{row.value}</span>}
-          {row.staleSince !== null ? (
-            <span className="tracy-wo-warn tracy-wo-small">
-              {t('detail.stale', { date: row.staleSince === '' ? '' : formatDate(row.staleSince) })}
-            </span>
-          ) : null}
-        </dd>
-      </div>
-    )
-  // Each field in its place, with the decided rows where they belong: the rating before the phone, the phones and
-  // the hours in place of their plain rows.
   const drawn: JSX.Element[] = []
   for (const field of PROFILE_FIELDS) {
-    if (field === 'phone' && ratingRow !== null)
-      drawn.push(<Fragment key="googleRating">{ratingRow}</Fragment>)
     if (field === 'bio' && website !== null)
       drawn.push(
         <div key="website" className="tracy-wo-field">
@@ -1335,19 +1270,22 @@ function Profile({
           <dd>{website.url === null ? t('cell.website.none') : website.link(website.url)}</dd>
         </div>
       )
-    if (field === 'hours' && hoursRow !== null) {
-      drawn.push(<Fragment key="hours">{hoursRow}</Fragment>)
-      continue
-    }
-    if (field === 'phone' && phonesRow !== null) {
-      drawn.push(<Fragment key="phone">{phonesRow}</Fragment>)
-      continue
-    }
     const row = rows.find((r) => r.field === field)
-    if (row) drawn.push(drawRow(row))
+    if (row)
+      drawn.push(
+        <div key={row.field} className="tracy-wo-field">
+          <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
+          <dd>
+            <span>{row.value}</span>
+            {row.staleSince !== null ? (
+              <span className="tracy-wo-warn tracy-wo-small">
+                {t('detail.stale', { date: row.staleSince === '' ? '' : formatDate(row.staleSince) })}
+              </span>
+            ) : null}
+          </dd>
+        </div>
+      )
   }
-  if (readingRows !== null) drawn.push(<Fragment key="reading">{readingRows}</Fragment>)
-  if (keyMessagesRows !== null) drawn.push(<Fragment key="keyMessages">{keyMessagesRows}</Fragment>)
   return (
     <Section title={t('detail.profile')} bare={bare}>
       {drawn.length === 0 ? (

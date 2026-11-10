@@ -53,7 +53,7 @@ function NotCollected({
   )
 }
 
-function LogoField({
+export function LogoField({
   t,
   logo,
   retry,
@@ -143,7 +143,7 @@ function Photo({ t, tile, menu }: { t: Translate; tile: MediaTile; menu: Menu | 
   )
 }
 
-function File({ t, file }: { t: Translate; file: FileTile }): JSX.Element {
+export function File({ t, file }: { t: Translate; file: FileTile }): JSX.Element {
   return (
     <li className="tracy-wo-photo">
       <a className="tracy-wo-tile tracy-wo-file" href={file.url} target="_blank" rel="noopener noreferrer">
@@ -164,7 +164,7 @@ function File({ t, file }: { t: Translate; file: FileTile }): JSX.Element {
 }
 
 /** The pictures kept but not shown as photographs (icons, maps, spacers, rows that did not download), on demand. */
-function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX.Element | null {
+export function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX.Element | null {
   const [open, setOpen] = useState(false)
   if (tiles.length === 0) return null
   return (

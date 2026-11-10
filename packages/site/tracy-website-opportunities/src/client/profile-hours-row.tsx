@@ -25,7 +25,7 @@ const PRODUCT_NAME: Record<string, string> = {
   osm: 'OpenStreetMap'
 }
 
-function sourceName(t: Translate, view: HoursRowView): string {
+export function sourceName(t: Translate, view: HoursRowView): string {
   if (view.source === 'listing') return view.sourceLabel ?? t('name.source.listing')
   if (view.source === 'website') return t('name.source.website')
   return PRODUCT_NAME[view.source ?? 'google'] ?? PRODUCT_NAME.google

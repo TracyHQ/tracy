@@ -1402,6 +1402,23 @@ export const en = {
   'media.error.IMAGE_UNREADABLE': 'This photo cannot be read. Save it again as JPEG or PNG.',
   'media.error.other': 'Could not upload the file. Try again.',
 
+  /** The Business facts sub-page as grouped cards (#537, design A). */
+  'facts.done': 'Done',
+  'facts.editedAfter': 'Edited after approval',
+  'facts.rating.shown': 'The rating shows on the site.',
+  'facts.rating.left': 'The rating stays off the site until you show it.',
+  'facts.reviews.one': '{count} Google review',
+  'facts.reviews.other': '{count} Google reviews',
+  'facts.phone.others': 'Other: {list}.',
+  'facts.website.none': 'No website found',
+  'facts.messages.lead': 'The site leads with these',
+  'facts.reviews.title': 'What guests say',
+  'facts.reviews.note': 'Not on the site, used for tone only',
+  'facts.media.all': 'All {count}',
+  'facts.media.photos': 'Photos {count}',
+  'facts.media.videos': 'Videos {count}',
+  'facts.research': 'Research details',
+
   /** Your site (#537): before the site is built, the block says which step is needed. */
   'site.notYet.research': 'Not available yet. Research business facts first.',
   'site.notYet.profile': 'Not available yet. Approve the business facts, then make the site content brief.',

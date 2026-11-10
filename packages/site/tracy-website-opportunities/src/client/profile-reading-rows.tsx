@@ -82,10 +82,13 @@ function Item({
 export function ProfileReadingRows({
   t,
   view,
-  onPick
+  onPick,
+  groups = null
 }: {
   t: Translate
   view: ReadingRowsView
+  /** Only these groups (a Business facts card draws its own, #537); null draws all four. */
+  groups?: ReadonlyArray<'services' | 'audience' | 'team' | 'serviceAreas'> | null
   /** Resolves true once the pick is saved and the page read again (`PUT …/:id/reading`). */
   onPick: (id: string, pick: ReadingPick) => Promise<boolean>
 }): JSX.Element {
@@ -99,13 +102,15 @@ export function ProfileReadingRows({
     setBusy(false)
     setFailed(!ok)
   }
-  const rows: [string, ReadingItemView[]][] = [
-    [view.servicesLabel === 'offerings' ? 'field.offerings' : 'field.services', view.services],
-    ['field.audience', view.audience],
-    ['field.team', view.team],
-    ['field.serviceAreas', view.serviceAreas]
+  const rows: [string, ReadingItemView[], 'services' | 'audience' | 'team' | 'serviceAreas'][] = [
+    [view.servicesLabel === 'offerings' ? 'field.offerings' : 'field.services', view.services, 'services'],
+    ['field.audience', view.audience, 'audience'],
+    ['field.team', view.team, 'team'],
+    ['field.serviceAreas', view.serviceAreas, 'serviceAreas']
   ]
-  const shown = rows.filter(([, items]) => items.length > 0)
+  const shown = rows.filter(
+    ([, items, group]) => items.length > 0 && (groups === null || groups.includes(group))
+  )
   return (
     <>
       {shown.map(([key, items], n) => (

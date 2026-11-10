@@ -17,6 +17,7 @@ export function EditableText({
   multiline = false,
   maxLength,
   onSave,
+  startOpen = false,
   keys = {
     edit: 'profile.edit',
     save: 'profile.edit.save',
@@ -35,9 +36,11 @@ export function EditableText({
   multiline?: boolean
   maxLength: number
   onSave: (typed: string) => Promise<boolean>
+  /** Opens as a field at once: the Edit of a Business facts card opens every row of the card (#537). */
+  startOpen?: boolean
   keys?: { edit: string; save: string; cancel: string; failed: string }
 }): JSX.Element {
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(startOpen)
   const [draft, setDraft] = useState(value)
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)

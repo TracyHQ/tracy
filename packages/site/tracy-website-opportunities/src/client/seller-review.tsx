@@ -203,11 +203,14 @@ export function AddSource({
 /** Add more: one photo or video added to the Profile's Photos & video. */
 export function AddMedia({
   t,
-  onUpload
+  onUpload,
+  tile = false
 }: {
   t: Translate
   /** Uploads the file; answers the refusal code, or null when it was added. */
   onUpload: (file: File) => Promise<string | null>
+  /** Drawn as the first tile of the Business facts grid (#537): a large press, no hint line. */
+  tile?: boolean
 }): JSX.Element {
   const input = useRef<HTMLInputElement | null>(null)
   const [busy, setBusy] = useState(false)
@@ -221,6 +224,30 @@ export function AddMedia({
     if (code !== null) setError(code)
     if (input.current) input.current.value = ''
   }
+  const field = (
+    <input
+      ref={input}
+      type="file"
+      accept="image/jpeg,image/png,image/gif,image/webp,image/avif,video/mp4,video/webm"
+      hidden
+      onChange={(e) => void picked(e.target.files?.[0])}
+    />
+  )
+  if (tile)
+    return (
+      <div className="tracy-wo-add-tile">
+        {field}
+        <button type="button" disabled={busy} onClick={() => input.current?.click()}>
+          {busy ? <Spinner label={t('media.adding')} /> : <Plus aria-hidden="true" />}
+          <span>{t(busy ? 'media.adding' : 'media.add')}</span>
+        </button>
+        {error !== null ? (
+          <span className="tracy-wo-error tracy-wo-small" role="alert">
+            {codeText(t, 'media.error', error)}
+          </span>
+        ) : null}
+      </div>
+    )
   return (
     <div className="tracy-wo-add-media">
       <input
