@@ -65,8 +65,7 @@ export const DETAILS_CSS =
 .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 2px 10px; align-items: baseline; }
 .tracy-wo-stab { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 0; list-style: none; }
 /* One line per source (#537): glyph, name and link on the left, the state pill pushed right, then the remove control. */
-.tracy-wo-stab-row { display: flex; flex-direction: column; min-width: 0; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
-.tracy-wo-stab-row:first-child { border-top: 0; }
+.tracy-wo-stab-row { display: flex; flex-direction: column; min-width: 0; }
 .tracy-wo-stab-row[data-pending] { opacity: 0.55; }
 .tracy-wo-stab-line { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 0; }
 .tracy-wo-stab-name { flex: none; white-space: nowrap; }
@@ -77,10 +76,7 @@ export const DETAILS_CSS =
 .tracy-wo-stab-pill[data-state='collected'] { border-color: color-mix(in oklab, var(--success) 28%, transparent); background: color-mix(in oklab, var(--success) 12%, transparent); color: var(--success); }
 .tracy-wo-stab-pill[data-state='failed'] { border-color: color-mix(in oklab, var(--destructive) 28%, transparent); background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); }
 .tracy-wo-stab-detail { font-size: 11.5px; color: var(--muted-foreground); opacity: 0.85; }
-.tracy-wo-stab-ask { color: var(--foreground); }
-.tracy-wo-stab-acts { display: inline-flex; gap: 10px; }
 .tracy-wo-stab-act { margin: 0; padding: 0; border: 0; background: none; color: var(--primary); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
-.tracy-wo-stab-act[data-danger] { color: var(--destructive); }
 .tracy-wo-stab-act:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 2px; }
 .tracy-wo-stab-act:disabled { color: var(--muted-foreground); cursor: default; }
 .tracy-wo-stab-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
@@ -93,7 +89,7 @@ export const DETAILS_CSS =
 .tracy-wo-stab-remove:disabled { cursor: default; }
 @media (hover: none) { .tracy-wo-stab-remove { opacity: 1; } }
 .tracy-wo-stab-notice { margin: 0 0 8px; font-size: 12px; text-align: right; }
-.tracy-wo-stab-foot { border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); padding-top: 8px; }
+.tracy-wo-stab-foot { padding-top: 8px; }
 .tracy-wo-sprog { display: inline-flex; flex: none; gap: 2px; margin-right: 8px; vertical-align: middle; }
 .tracy-wo-sprog > i { width: 14px; height: 5px; border-radius: 2px; background: var(--border); }
 .tracy-wo-sprog > i[data-state='collected'] { background: var(--success); }

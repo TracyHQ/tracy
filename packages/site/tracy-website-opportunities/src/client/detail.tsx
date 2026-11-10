@@ -1128,6 +1128,7 @@ export function DetailView({
                 progress={sourceProgress}
                 retry={retrySource}
                 remove={removeSourceControl}
+                researchState={research.state}
               />
               {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
             </div>

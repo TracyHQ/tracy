@@ -1468,14 +1468,16 @@ export const en = {
   'chip.title.youOn': 'Edited by you on {date}',
   'chip.title.none': 'The research did not find it',
   'chip.title.looked': 'Looked on {list}, not found',
-  // Remove a pasted source from the Sources table (#537, source-remove-model.ts).
+  // Remove a pasted source from the Sources table through its dialog (#537, source-remove-model.ts).
   'source.remove.label': 'Remove {name}',
-  'source.remove.ask': 'Remove this source?',
+  'source.remove.title': 'Remove this source?',
+  'source.remove.lead': '{name} ({link}) will no longer be read for this place.',
+  'source.remove.cancel': 'Cancel',
   'source.remove.confirm': 'Remove',
-  'source.remove.keep': 'Keep',
   'source.remove.removing': 'Removing',
   'source.remove.error.LAST_SOURCE': 'Keep at least one source. Add another before removing this one.',
-  'source.remove.error.JOB_ACTIVE': 'Wait for the research to finish.',
+  'source.remove.error.RESEARCH_STARTED':
+    'Research has already run. Sources can be removed only before the research, or after it failed.',
   'source.remove.error.NOT_FOUND': 'This source is already gone.',
   'source.remove.error.GOOGLE_LINK_NOT_REMOVED': 'The Google listing identifies this business and stays.'
 } satisfies Record<string, string>

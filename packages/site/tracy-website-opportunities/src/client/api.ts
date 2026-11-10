@@ -258,7 +258,7 @@ export interface Api {
   ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
   /**
    * One pasted link of the business removed (#537); answers the same payload as `addSource`. Refusals: 404
-   * `NOT_FOUND`, 409 `LAST_SOURCE`, 409 `JOB_ACTIVE`.
+   * `NOT_FOUND`, 409 `LAST_SOURCE`, 409 `RESEARCH_STARTED` (research runs or ran), 422 `GOOGLE_LINK_NOT_REMOVED`.
    */
   removeSource(
     opportunityId: string,

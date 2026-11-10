@@ -1,6 +1,7 @@
 /**
  * The Sources table of Details (#537): every source the place's research tried, one line each with its state pill, a
- * Try again on the rows that could not be collected, and the remove control on the links the owner pasted. The
+ * Try again on the rows that could not be collected, and the trash control on the links the owner pasted (only before
+ * research or after it failed, the question itself is a dialog: client-source-remove.test.mjs). The
  * Sources sub-page and its Also looked at group are gone. Research again's button (the public Find) is here too.
  * Bundles the real component with React 18 (the one dsh's page runs) and renders it to static markup.
  */
@@ -37,6 +38,7 @@ before(async () => {
         export * as parts from './details-parts.tsx'
         export { SourcesTable } from './details-parts.tsx'
         export { ResearchAgainButton } from './research-again-dialog.tsx'
+        export { DETAILS_CSS } from './details-css.ts'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
       loader: 'tsx'
@@ -324,18 +326,28 @@ const removeAt = (over = {}) => ({
   step: null,
   notice: null,
   onAsk() {},
-  onKeep() {},
+  onCancel() {},
   onConfirm() {},
   ...over
 })
+const asked = (url, phase, error = null) => ({
+  url,
+  name: 'Instagram',
+  link: 'instagram.com/sample_bistro',
+  phase,
+  error
+})
+const removable = (over = {}, researchState = 'not_started') => ({ remove: removeAt(over), researchState })
 
-test('each pasted link has a remove control after its pill; the Google place and rows research found have none', () => {
-  const html = draw(PASTED, { remove: removeAt() })
+test('before research, each pasted link has a trash control after its pill; the Google place and found rows have none', () => {
+  const html = draw(PASTED, removable())
   const labels = [...html.matchAll(/class="tracy-wo-stab-remove"[^>]*aria-label="([^"]+)"/g)].map((m) => m[1])
   assert.equal(labels.length, 2)
   assert.equal(labels[0], '[source.remove.label{&quot;name&quot;:&quot;Instagram&quot;}]')
   assert.match(labels[1], /^\[source\.remove\.label\{&quot;name&quot;:&quot;\[source\.listing/)
-  // After the pill, at the end of the row's line.
+  // A trash icon (lucide Trash2), not a cross, at the end of the row's line after the pill.
+  assert.match(html, /class="tracy-wo-stab-remove"[^>]*aria-haspopup="dialog"[^>]*><svg[^>]*lucide-trash2?/)
+  assert.doesNotMatch(html, /lucide-x"/)
   assert.match(
     html,
     /class="tracy-wo-stab-state">(?:(?!<\/li>).)*<\/span><button type="button" class="tracy-wo-stab-remove"/s
@@ -347,23 +359,36 @@ test('each pasted link has a remove control after its pill; the Google place and
     rows - labels.length
   )
   assert.match(html, /Google Places(?:(?!<\/li>).)*class="tracy-wo-stab-slot"/s)
+  // After a failed research the trash is there too.
+  assert.equal((draw(PASTED, removable({}, 'failed')).match(/class="tracy-wo-stab-remove"/g) ?? []).length, 2)
   // No remove and no slot where the page cannot remove.
   assert.doesNotMatch(draw(PASTED), /tracy-wo-stab-remove|tracy-wo-stab-slot/)
 })
 
-test('pressing remove turns the row state into an inline confirm with Remove and Keep', () => {
-  const html = draw(PASTED, { remove: removeAt({ step: { url: INSTAGRAM, phase: 'confirm' } }) })
-  assert.equal((html.match(/\[source\.remove\.ask\]/g) ?? []).length, 1)
+test('while research runs or once it is done, no row has a trash control: every row keeps the slot only', () => {
+  for (const state of ['running', 'done', undefined]) {
+    const html = draw(PASTED, { remove: removeAt(), researchState: state })
+    assert.doesNotMatch(html, /tracy-wo-stab-remove/, String(state))
+    const rows = (html.match(/<li class="tracy-wo-stab-row"/g) ?? []).length
+    assert.equal((html.match(/class="tracy-wo-stab-slot"/g) ?? []).length, rows, String(state))
+  }
+})
+
+test('pressing the trash asks in a dialog, never on the row: the row keeps its pill and no inline confirm is drawn', () => {
+  const html = draw(PASTED, removable({ step: asked(INSTAGRAM, 'confirm') }))
+  assert.doesNotMatch(html, /source\.remove\.(ask|keep)|data-danger|tracy-wo-stab-ask/)
   assert.match(
     html,
-    /data-state="collected"><span class="tracy-wo-stab-line">(?:(?!<\/li>).)*\[source\.remove\.ask\](?:(?!<\/li>).)*data-danger=""[^>]*>\[source\.remove\.confirm\]<\/button><button[^>]*>\[source\.remove\.keep\]/s
+    /data-state="collected"><span class="tracy-wo-stab-line">(?:(?!<\/li>).)*instagram\.com\/sample_bistro(?:(?!<\/li>).)*class="tracy-wo-stab-pill"/s
   )
-  // The row asked about shows the question in place of its pill, and its own remove control steps aside.
-  assert.equal((html.match(/class="tracy-wo-stab-remove"/g) ?? []).length, 1)
+  // The row asked about keeps its control on show while its dialog is open.
+  assert.match(html, /class="tracy-wo-stab-remove is-on"/)
+  // The dialog is a portal: nothing of it is drawn inside the table.
+  assert.match(html, /<\/ul>$/)
 })
 
 test('while the remove runs the row is muted with a spinner node and its control is disabled', () => {
-  const html = draw(PASTED, { remove: removeAt({ step: { url: LISTING, phase: 'pending' } }) })
+  const html = draw(PASTED, removable({ step: { ...asked(LISTING, 'pending'), name: 'Listing' } }))
   assert.match(html, /<li class="tracy-wo-stab-row" data-state="collected" data-pending="" aria-busy="true">/)
   assert.match(
     html,
@@ -371,33 +396,27 @@ test('while the remove runs the row is muted with a spinner node and its control
   )
 })
 
-test('a refusal leaves its one line under the row it was pressed on', () => {
-  for (const key of [
-    'source.remove.error.LAST_SOURCE',
-    'source.remove.error.JOB_ACTIVE',
-    'source.remove.error.GOOGLE_LINK_NOT_REMOVED',
-    'action.failed'
-  ]) {
-    const html = draw(PASTED, { remove: removeAt({ notice: { url: INSTAGRAM, key } }) })
-    assert.match(
-      html,
-      new RegExp(
-        `instagram\\.com/sample_bistro<\\/a>(?:(?!<\\/li>).)*<p class="tracy-wo-error tracy-wo-stab-notice" role="alert">\\[${key.replace(/\./g, '\\.')}\\]<\\/p><\\/li>`,
-        's'
-      ),
-      key
-    )
-  }
-})
-
 test('Already gone shows at the foot once the row went; a row still there after it reads the generic error', () => {
   const gone = { url: 'https://gone.example/', key: 'source.remove.error.NOT_FOUND' }
-  const foot = draw(PASTED, { remove: removeAt({ notice: gone }) })
+  const foot = draw(PASTED, removable({ notice: gone }))
   assert.match(
     foot,
     /<li class="tracy-wo-stab-foot"><p[^>]*role="alert">\[source\.remove\.error\.NOT_FOUND\]<\/p><\/li><\/ul>$/
   )
-  const still = draw(PASTED, { remove: removeAt({ notice: { url: INSTAGRAM, key: gone.key } }) })
+  const still = draw(PASTED, removable({ notice: { url: INSTAGRAM, key: gone.key } }))
   assert.match(still, /role="alert">\[action\.failed\]/)
   assert.doesNotMatch(still, /NOT_FOUND/)
+})
+
+test('source rows have no rule between them, the foot notice neither (#537)', () => {
+  const css = lib.DETAILS_CSS
+  const rules = (selector) =>
+    [...css.matchAll(/([^{}]+)\{([^}]*)\}/g)].filter(([, sel]) =>
+      sel.split(',').some((x) => x.trim().split(/\s+/).at(-1) === selector)
+    )
+  for (const selector of ['.tracy-wo-stab-row', '.tracy-wo-stab-foot']) {
+    assert.ok(rules(selector).length > 0, selector)
+    for (const [, , body] of rules(selector)) assert.doesNotMatch(body, /border-top/, selector)
+  }
+  assert.doesNotMatch(css, /tracy-wo-stab-row:first-child|tracy-wo-stab-ask|tracy-wo-stab-acts/)
 })

@@ -56,8 +56,9 @@ export function useCardResearchAgain(
 }
 
 /**
- * Remove on a pasted source row (#537): the press asks on the row, Remove calls `DELETE …/sources`, then `after`
- * reloads Details when the source went (or was already gone). A refusal leaves its line under the row.
+ * Remove on a pasted source row (#537): the trash opens the dialog, Remove calls `DELETE …/sources` while the dialog
+ * shows its spinner, then `after` reloads Details and the dialog closes when the source went (or was already gone).
+ * A refusal stays in the dialog with Remove enabled again; Cancel closes it with nothing changed.
  */
 export function useSourceRemove(
   api: Pick<Api, 'removeSource'>,
@@ -68,22 +69,28 @@ export function useSourceRemove(
   const [notice, setNotice] = useState<RemoveNotice | null>(null)
   const onConfirm = async (): Promise<void> => {
     if (step === null || step.phase !== 'confirm' || opportunityId === null) return
-    const url = step.url
-    setStep({ url, phase: 'pending' })
-    const outcome = await removeSource(api, opportunityId, url)
-    if (outcome.refresh) await after()
+    const asked = step
+    setStep({ ...asked, phase: 'pending', error: null })
+    const outcome = await removeSource(api, opportunityId, asked.url)
+    if (!outcome.refresh) {
+      setStep({ ...asked, phase: 'confirm', error: outcome.noticeKey })
+      return
+    }
+    await after()
     setStep(null)
-    setNotice(outcome.noticeKey === null ? null : { url, key: outcome.noticeKey })
+    setNotice(outcome.noticeKey === null ? null : { url: asked.url, key: outcome.noticeKey })
   }
   return {
     step,
     notice,
-    onAsk: (url) => {
+    onAsk: ({ url, name, link }) => {
       if (step?.phase === 'pending') return
       setNotice(null)
-      setStep({ url, phase: 'confirm' })
+      setStep({ url, name, link, phase: 'confirm', error: null })
     },
-    onKeep: () => setStep(null),
+    onCancel: () => {
+      if (step?.phase !== 'pending') setStep(null)
+    },
     onConfirm: () => void onConfirm()
   }
 }

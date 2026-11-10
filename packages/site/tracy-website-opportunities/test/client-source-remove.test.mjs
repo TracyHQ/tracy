@@ -1,8 +1,9 @@
 /**
  * Remove a pasted source from the Sources table of Details (#537): the door's answers read as their own lines (an
- * older server without the door reads the generic error), and the whole press mounted with React 18 in jsdom against
- * a stubbed API: ask on the row, Keep, Remove, the row muted while the call runs, each refusal under the row, and a
- * reload when the source went or was already gone.
+ * older server without the door reads the generic error), only before research or after it failed, and the whole
+ * press mounted with React 18 in jsdom against a stubbed API: the trash opens a confirmation dialog, Cancel and
+ * Escape close it with nothing called, Remove spins in the dialog while the row is muted, a refusal stays in the
+ * dialog with Remove enabled again, and a reload closes it when the source went or was already gone.
  *
  *   node --test --test-concurrency=1 packages/site/tracy-website-opportunities/test/client-source-remove.test.mjs
  */
@@ -15,7 +16,12 @@ import { after, before, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { createApi } from '../src/client/api.ts'
-import { removableLinkOf, removeRefusalKey, removeSource } from '../src/client/source-remove-model.ts'
+import {
+  removableLinkOf,
+  removeAllowedIn,
+  removeRefusalKey,
+  removeSource
+} from '../src/client/source-remove-model.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const repo = path.resolve(here, '..', '..', '..', '..')
@@ -51,7 +57,9 @@ test('the door is DELETE …/:id/sources with the link as JSON', async () => {
 
 test('each refusal has its own line; an unknown one, INVALID_URL and an older server read the generic error', () => {
   assert.equal(removeRefusalKey('LAST_SOURCE', 409), 'source.remove.error.LAST_SOURCE')
-  assert.equal(removeRefusalKey('JOB_ACTIVE', 409), 'source.remove.error.JOB_ACTIVE')
+  assert.equal(removeRefusalKey('RESEARCH_STARTED', 409), 'source.remove.error.RESEARCH_STARTED')
+  // The server no longer answers JOB_ACTIVE for a removal: it has no line of its own any more.
+  assert.equal(removeRefusalKey('JOB_ACTIVE', 409), 'action.failed')
   assert.equal(removeRefusalKey('NOT_FOUND', 404), 'source.remove.error.NOT_FOUND')
   assert.equal(
     removeRefusalKey('GOOGLE_LINK_NOT_REMOVED', 422),
@@ -88,6 +96,14 @@ test('a removed or already gone source reloads Details; a refusal does not', asy
   assert.deepEqual(thrown, { refresh: false, noticeKey: 'action.failed' })
 })
 
+test('a source can be removed only before research or after it failed', () => {
+  assert.equal(removeAllowedIn('not_started'), true)
+  assert.equal(removeAllowedIn('failed'), true)
+  assert.equal(removeAllowedIn('running'), false)
+  assert.equal(removeAllowedIn('done'), false)
+  assert.equal(removeAllowedIn(undefined), false)
+})
+
 test('only a pasted link can be removed, never the Google place', () => {
   assert.equal(removableLinkOf({ source: 'instagram', pastedLink: INSTAGRAM }), INSTAGRAM)
   assert.equal(removableLinkOf({ source: 'website', ref: WEBSITE, status: 'complete' }), null)
@@ -116,10 +132,21 @@ before(async () => {
     'Element',
     'HTMLElement',
     'MouseEvent',
-    'Event'
+    'KeyboardEvent',
+    'Event',
+    'FocusEvent',
+    'CustomEvent',
+    'getComputedStyle',
+    'requestAnimationFrame',
+    'cancelAnimationFrame'
   ]) {
     Object.defineProperty(globalThis, name, {
-      value: name === 'window' ? window : window[name],
+      value:
+        name === 'window'
+          ? window
+          : /^[a-z]/.test(name) && typeof window[name] === 'function'
+            ? window[name].bind(window)
+            : window[name],
       configurable: true,
       writable: true
     })
@@ -146,7 +173,7 @@ before(async () => {
         export function Harness({ api, initial, reloaded }) {
           const [sources, setSources] = useState(initial)
           const remove = useSourceRemove(api, '${ID}', async () => setSources(reloaded))
-          return createElement(SourcesTable, { t, sources, researched: true, remove })
+          return createElement(SourcesTable, { t, sources, researched: true, remove, researchState: 'not_started' })
         }
         export { createElement }
       `,
@@ -194,41 +221,82 @@ function mount(reloaded = ROWS) {
   lib.act(() => root.render(lib.createElement(lib.Harness, { api, initial: ROWS, reloaded })))
   const rowOf = (url) =>
     [...host.querySelectorAll('li.tracy-wo-stab-row')].find((li) => li.querySelector(`a[href="${url}"]`))
+  // The dialog is a portal on the body, outside the table.
+  const dialog = () => document.body.querySelector('[role="dialog"]')
   const press = (el) => lib.act(() => el.dispatchEvent(new window.MouseEvent('click', { bubbles: true })))
-  const button = (row, text) => [...row.querySelectorAll('button')].find((b) => b.textContent === text)
+  const button = (scope, text) => [...scope.querySelectorAll('button')].find((b) => b.textContent === text)
+  const ask = (url) => press(rowOf(url).querySelector('.tracy-wo-stab-remove'))
   const settle = async (answer) => {
     await lib.act(async () => {
       calls.at(-1).resolve(answer)
       await new Promise((r) => setTimeout(r, 10))
     })
   }
-  return { host, root, calls, rowOf, press, button, settle }
+  return { host, root, calls, rowOf, dialog, press, button, ask, settle }
 }
 
-test('remove asks on the row; Keep puts the pill back and calls nothing', () => {
+const unmount = (m) => {
+  lib.act(() => m.root.unmount())
+  m.host.remove()
+}
+
+test('the trash opens a dialog naming the source and its short link; Cancel closes it and calls nothing', () => {
   const m = mount()
   try {
-    const row = m.rowOf(INSTAGRAM)
-    m.press(row.querySelector('.tracy-wo-stab-remove'))
-    assert.match(m.rowOf(INSTAGRAM).textContent, /\[source\.remove\.ask\]/)
-    m.press(m.button(m.rowOf(INSTAGRAM), '[source.remove.keep]'))
-    assert.doesNotMatch(m.host.textContent, /source\.remove\.ask/)
+    assert.equal(m.dialog(), null)
+    m.ask(INSTAGRAM)
+    const dialog = m.dialog()
+    assert.ok(dialog, 'dialog open')
+    assert.match(dialog.textContent, /\[source\.remove\.title\]/)
+    assert.match(
+      dialog.textContent,
+      /\[source\.remove\.lead\{"name":"Instagram","link":"instagram\.com\/sample_kite_club"\}\]/
+    )
+    assert.ok(m.button(dialog, '[source.remove.cancel]'))
+    assert.ok(m.button(dialog, '[source.remove.confirm]'))
+    // No inline confirm on the row: it keeps its pill.
+    assert.doesNotMatch(m.host.textContent, /source\.remove\.(ask|keep|confirm)/)
     assert.ok(m.rowOf(INSTAGRAM).querySelector('.tracy-wo-stab-pill'))
+    m.press(m.button(dialog, '[source.remove.cancel]'))
+    assert.equal(m.dialog(), null)
     assert.equal(m.calls.length, 0)
   } finally {
-    lib.act(() => m.root.unmount())
+    unmount(m)
   }
 })
 
-test('Remove calls the door with the row link, mutes the row while it runs, and the reload drops the row', async () => {
+test('Escape closes the dialog with nothing changed', () => {
+  const m = mount()
+  try {
+    m.ask(INSTAGRAM)
+    assert.ok(m.dialog())
+    lib.act(() =>
+      m.dialog().dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }))
+    )
+    assert.equal(m.dialog(), null)
+    assert.equal(m.calls.length, 0)
+    assert.ok(m.rowOf(INSTAGRAM))
+  } finally {
+    unmount(m)
+  }
+})
+
+test('Remove calls the door with the row link, spins in the dialog while the row is muted, then closes on success', async () => {
   const m = mount([ROWS[1]])
   try {
-    m.press(m.rowOf(INSTAGRAM).querySelector('.tracy-wo-stab-remove'))
-    m.press(m.button(m.rowOf(INSTAGRAM), '[source.remove.confirm]'))
+    m.ask(INSTAGRAM)
+    m.press(m.button(m.dialog(), '[source.remove.confirm]'))
     assert.deepEqual(
       m.calls.map((c) => [c.id, c.url]),
       [[ID, INSTAGRAM]]
     )
+    const dialog = m.dialog()
+    assert.ok(dialog, 'the dialog stays open while the call runs')
+    const confirm =
+      m.button(dialog, '[source.remove.confirm]') ?? [...dialog.querySelectorAll('button')].at(-1)
+    assert.equal(confirm.disabled, true)
+    assert.match(confirm.innerHTML, /\[source\.remove\.removing\]/)
+    assert.equal(m.button(dialog, '[source.remove.cancel]').disabled, true)
     const pending = m.rowOf(INSTAGRAM)
     assert.equal(pending.getAttribute('aria-busy'), 'true')
     assert.ok(pending.hasAttribute('data-pending'))
@@ -236,16 +304,17 @@ test('Remove calls the door with the row link, mutes the row while it runs, and 
     assert.equal(pending.querySelector('.tracy-wo-stab-pill'), null)
     await m.settle({ ok: true, status: 200, body: { opportunity: {}, approval: {} } })
     assert.equal(m.rowOf(INSTAGRAM), undefined)
+    assert.equal(m.dialog(), null)
     assert.equal(m.host.querySelector('[role="alert"]'), null)
   } finally {
-    lib.act(() => m.root.unmount())
+    unmount(m)
   }
 })
 
-test('each refusal leaves its line under the row, which stays', async () => {
+test('each refusal stays in the dialog with Remove enabled again; the row stays as it was', async () => {
   for (const [answer, line] of [
     [refuse(409, 'LAST_SOURCE'), '[source.remove.error.LAST_SOURCE]'],
-    [refuse(409, 'JOB_ACTIVE'), '[source.remove.error.JOB_ACTIVE]'],
+    [refuse(409, 'RESEARCH_STARTED'), '[source.remove.error.RESEARCH_STARTED]'],
     [refuse(422, 'GOOGLE_LINK_NOT_REMOVED'), '[source.remove.error.GOOGLE_LINK_NOT_REMOVED]'],
     [refuse(400, 'INVALID_URL'), '[action.failed]'],
     [refuse(405, 'HTTP_405'), '[action.failed]'],
@@ -253,32 +322,42 @@ test('each refusal leaves its line under the row, which stays', async () => {
   ]) {
     const m = mount()
     try {
-      m.press(m.rowOf(INSTAGRAM).querySelector('.tracy-wo-stab-remove'))
-      m.press(m.button(m.rowOf(INSTAGRAM), '[source.remove.confirm]'))
+      m.ask(INSTAGRAM)
+      m.press(m.button(m.dialog(), '[source.remove.confirm]'))
       await m.settle(answer)
+      const dialog = m.dialog()
+      assert.ok(dialog, line)
+      assert.equal(dialog.querySelector('[role="alert"]')?.textContent, line)
+      assert.equal(m.button(dialog, '[source.remove.confirm]').disabled, false, line)
       const row = m.rowOf(INSTAGRAM)
       assert.ok(row, line)
-      assert.equal(row.querySelector('[role="alert"]')?.textContent, line)
       assert.equal(row.getAttribute('aria-busy'), null)
+      assert.equal(row.querySelector('[role="alert"]'), null)
       assert.ok(row.querySelector('.tracy-wo-stab-pill'))
+      // A second press tries again and clears the line while it runs.
+      m.press(m.button(dialog, '[source.remove.confirm]'))
+      assert.equal(m.calls.length, 2, line)
+      assert.equal(m.dialog().querySelector('[role="alert"]'), null)
+      await m.settle(answer)
     } finally {
-      lib.act(() => m.root.unmount())
+      unmount(m)
     }
   }
 })
 
-test('already gone reloads Details and says so at the foot of the table', async () => {
+test('already gone reloads Details, closes the dialog and says so at the foot of the table', async () => {
   const m = mount([ROWS[1]])
   try {
-    m.press(m.rowOf(INSTAGRAM).querySelector('.tracy-wo-stab-remove'))
-    m.press(m.button(m.rowOf(INSTAGRAM), '[source.remove.confirm]'))
+    m.ask(INSTAGRAM)
+    m.press(m.button(m.dialog(), '[source.remove.confirm]'))
     await m.settle(refuse(404, 'NOT_FOUND'))
     assert.equal(m.rowOf(INSTAGRAM), undefined)
+    assert.equal(m.dialog(), null)
     assert.equal(
       m.host.querySelector('.tracy-wo-stab-foot [role="alert"]')?.textContent,
       '[source.remove.error.NOT_FOUND]'
     )
   } finally {
-    lib.act(() => m.root.unmount())
+    unmount(m)
   }
 })
