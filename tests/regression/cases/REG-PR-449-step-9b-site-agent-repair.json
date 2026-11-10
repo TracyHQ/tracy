@@ -32,6 +32,7 @@
     "cmd": [
       "node",
       "--test",
+      "--test-reporter=tap",
       "--test-concurrency=1",
       "apps/tracy-web/test/write-step-nine-flow.test.mjs",
       "apps/tracy-web/test/write-step-nine-repair.test.mjs",
