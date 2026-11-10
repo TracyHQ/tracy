@@ -1,0 +1,101 @@
+✔ Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: false, #536) (56248.160875ms)
+✖ Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: true, #536) (11025.935208ms)
+✔ WordPress: reversed pushed post ids sync with references (existing high ids: false, #536) (8836.010625ms)
+✖ WordPress: reversed pushed post ids sync with references (existing high ids: true, #536) (16135.070917ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 107556.41325
+
+✖ failing tests:
+
+test at ../../../../..<temporary>
+✖ Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: true, #536) (11025.935208ms)
+  AssertionError [ERR_ASSERTION]: ==> db merge: ids surveyed at 0.0s (5 SQL calls)
+  Traceback (most recent call last):
+    File "<temporary> line 3155, in main
+      return run_half(args)
+    File "<temporary> line 3275, in run_half
+      answer = DbMerge(sql, args.base_schema, args.ours_schema, args.theirs_schema,
+    File "<temporary> line 1590, in run
+      return self._run()
+    File "<temporary> line 1616, in _run
+      self.ids.apply(self.names["theirs"], base=self.names["base"])
+    File "<temporary> line 1295, in apply
+      self.renumber(schema, table, rule, pairs)
+    File "<temporary> line 1155, in renumber
+      self.sql.run("\n".join(script))
+    File "<temporary> line 913, in run
+      raise SqlError(f"SQL failed: {error[-2000:]}",
+  SqlError: SQL failed: --------------
+  UPDATE `repeat_theirs`.`jos_content` SET `id` = CASE `id` WHEN 2000000001 THEN 1 WHEN 2000000002 THEN 2000000003 WHEN 2000000003 THEN 2000000002 END WHERE `id` IN (2000000001, 2000000002, 2000000003)
+  --------------
+  
+  ERROR 1062 (23000) at line 58: Duplicate entry '2000000003' for key 'PRIMARY'
+  ==> db merge stopped: SqlError: ERROR 1062 (23000) at line 58: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)
+  {"ok": false, "code": "MERGE_FAILED", "detail": "SqlError: ERROR 1062 (23000) at line 58: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)"}
+  
+  
+  1 !== 0
+  
+      at joomlaMerge (file://<temporary>
+      at TestContext.<anonymous> (file://<temporary>
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../..<temporary>
+✖ WordPress: reversed pushed post ids sync with references (existing high ids: true, #536) (16135.070917ms)
+  AssertionError [ERR_ASSERTION]: ==> db merge: base: https://shop.example → https://shop-com.tracy.ai: 2 row(s) in 1 table(s)
+  ==> db merge: theirs: https://shop.example → https://shop-com.tracy.ai: 2 row(s) in 1 table(s)
+  ==> db merge: reads prepared at 0.9s (37 SQL calls)
+  ==> db merge: ids surveyed at 1.2s (57 SQL calls)
+  Traceback (most recent call last):
+    File "<temporary> line 3155, in main
+      return run_half(args)
+    File "<temporary> line 3275, in run_half
+      answer = DbMerge(sql, args.base_schema, args.ours_schema, args.theirs_schema,
+    File "<temporary> line 1590, in run
+      return self._run()
+    File "<temporary> line 1616, in _run
+      self.ids.apply(self.names["theirs"], base=self.names["base"])
+    File "<temporary> line 1295, in apply
+      self.renumber(schema, table, rule, pairs)
+    File "<temporary> line 1155, in renumber
+      self.sql.run("\n".join(script))
+    File "<temporary> line 913, in run
+      raise SqlError(f"SQL failed: {error[-2000:]}",
+  SqlError: SQL failed: --------------
+  UPDATE `wr_theirs`.`wp_posts` SET `ID` = CASE `ID` WHEN 2000000700 THEN 2000000701 WHEN 2000000701 THEN 2000000700 END WHERE `ID` IN (2000000700, 2000000701)
+  --------------
+  
+  ERROR 1062 (23000) at line 288: Duplicate entry '2000000701' for key 'PRIMARY'
+  ==> db merge stopped: SqlError: ERROR 1062 (23000) at line 288: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)
+  {"ok": false, "code": "MERGE_FAILED", "detail": "SqlError: ERROR 1062 (23000) at line 288: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)"}
+  
+  
+  1 !== 0
+  
+      at wpMerge (file://<temporary>
+      at TestContext.<anonymous> (file://<temporary>
+      at Test.runInAsyncScope (node:async_hooks:214:14)
+      at Test.run (node:internal/test_runner/test:1106:25)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:788:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
