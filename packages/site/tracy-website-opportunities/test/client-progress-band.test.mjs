@@ -330,3 +330,14 @@ test('the sub-step connector is one continuous 1px line: no gaps, segment pseudo
   assert.match(css, /\.tracy-wo-band-sub-label[^{]*\{[^}]*padding: 0 4px; background: var\(--wo-pane-bg\)/)
   assert.doesNotMatch(css, /li \+ li::before/)
 })
+
+test('the estimate pill explains itself on hover, and the build estimate is an open-ended minimum', () => {
+  const html = draw({
+    research: RESEARCHED,
+    brief: { id: 'b-1', n: 1 },
+    demo: 'none',
+    approval: { research: 'ok', profile: 'approved', brief: 'approved' }
+  })
+  assert.match(html, /class="tracy-wo-band-est" title="\[stepper\.estimate\.build\.why\]"/)
+  assert.match(html, /\[stepper\.estimate\.build\]</)
+})

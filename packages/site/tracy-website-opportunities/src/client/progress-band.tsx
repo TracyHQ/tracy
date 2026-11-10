@@ -168,7 +168,7 @@ export function ProgressBand({
                 {t(current.nameKey)}
               </h3>
               {view.estimateKey !== null ? (
-                <span className="tracy-wo-band-est">
+                <span className="tracy-wo-band-est" title={t(`${view.estimateKey}.why`)}>
                   <Clock className="tracy-wo-icon" aria-hidden="true" />
                   {t(view.estimateKey)}
                 </span>

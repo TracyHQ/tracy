@@ -1302,7 +1302,12 @@ export const en = {
   'stepper.build.readyApproved': 'Brief approved. Build your site from it.',
   'stepper.estimate.research': 'Est. 2 to 4 min',
   'stepper.estimate.brief': 'Est. 2 min',
-  'stepper.estimate.build': 'Est. 50 min',
+  'stepper.estimate.build': 'Est. 20+ min',
+  // On hover: why the estimate is what it is.
+  'stepper.estimate.research.why': 'Usually 2 to 4 minutes, depending on how many pages there are to read.',
+  'stepper.estimate.brief.why': 'About 2 minutes.',
+  'stepper.estimate.build.why':
+    '20 minutes or more, depending on how much your business has to show. You can leave this page and come back.',
 
   /** The Progress band at the top of Details (#537): the step list on the left, the current step on the right. */
   'band.kicker': 'Step {n} of {total}',
