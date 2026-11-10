@@ -14,7 +14,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
  * opened it).
  */
-import { Fragment, type JSX, useCallback, useEffect, useId, useRef, useState } from 'react'
+import { Fragment, type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Bot, ChevronLeft, ChevronRight, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
   Badge,
@@ -100,6 +100,9 @@ import {
 } from './section-model.ts'
 import { sourcesToShow } from './source-links-model.ts'
 import { DetailsHeader } from './details-header.tsx'
+// [TAM] preview panel (temporary, never ships)
+import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
+import { applyPreview } from './preview-states.ts'
 import { Section, Sources } from './details-parts.tsx'
 import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
 import { DeleteDialog } from './delete-dialog.tsx'
@@ -287,7 +290,7 @@ function PageState({
 
 export function DetailView({
   t,
-  api,
+  api: realApi,
   ids,
   id,
   onList,
@@ -313,7 +316,11 @@ export function DetailView({
   /** Opens a brief in its own side-card tab; null → the Brief page instead. */
   openBriefTab?: ((seed: BriefTabSeed) => void) | null
 }): JSX.Element {
-  const { body, failed, reload } = useDetail(api, id)
+  // [TAM] preview panel: with wo-preview=1 a chosen state replaces the answer and every write door is a toast.
+  const preview = usePreview()
+  const api = usePreviewApi(realApi, preview)
+  const { body: realBody, failed, reload } = useDetail(api, id)
+  const body = useMemo(() => applyPreview(realBody, preview.state, Date.now()), [realBody, preview.state])
   const [logoWait, setLogoWait] = useState(false)
   const beginDemoChat = useDemoChatNavigation(api, true, setLogoWait)
   const [busy, setBusy] = useState(false)
@@ -390,6 +397,7 @@ export function DetailView({
   const locale = interfaceLocale() ?? 'en'
   const now = Date.now()
   const act = async (action: NextAction): Promise<void> => {
+    if (preview.block(action)) return // [TAM]
     if (busy) return
     setBusy(true)
     setActionFailed(false)
@@ -602,6 +610,7 @@ export function DetailView({
   })
   const approval = isRecord(body.approval) ? body.approval : null
   const onStep = (step: StepAction): void => {
+    if (!step.startsWith('review-') && preview.block(step)) return // [TAM]
     if (step === 'start-research') return void act('start')
     if (step === 'resume-research') return void act('resume')
     if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
@@ -934,6 +943,7 @@ export function DetailView({
       onConfirm={() => void confirmDelete()}
     />
   )
+  const previewPanel = <PreviewPanel preview={preview} /> // [TAM]
 
   // A section opened as a sub-page: that section alone, whole.
   if (section !== null) {
@@ -1045,6 +1055,7 @@ export function DetailView({
           {content}
         </SubPage>
         {dialogs}
+        {previewPanel /* [TAM] */}
       </div>
     )
   }
@@ -1177,6 +1188,7 @@ export function DetailView({
         </div>
       </div>
       {dialogs}
+      {previewPanel /* [TAM] */}
     </div>
   )
 }
