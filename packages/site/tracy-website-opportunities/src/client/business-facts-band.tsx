@@ -97,6 +97,7 @@ export function FactsBand({
   add,
   onSite,
   edit,
+  open = null,
   children
 }: {
   t: Translate
@@ -114,12 +115,14 @@ export function FactsBand({
   add?: ReactNode
   onSite: BandSwitchView
   edit: EditDoor
+  /** A row the band opens in place by itself (Add more of Social pages), drawn like Edit's fields; null when shut. */
+  open?: ReactNode | null
   children?: ReactNode
 }): JSX.Element {
   const [editing, setEditing] = useState(false)
   const body = useRef<HTMLDivElement | null>(null)
   useSideWheel(body, editing)
-  const form = editing && 'form' in edit ? edit.form(() => setEditing(false)) : null
+  const form = open ?? (editing && 'form' in edit ? edit.form(() => setEditing(false)) : null)
   return (
     <section
       className="tracy-wo-facts-band"

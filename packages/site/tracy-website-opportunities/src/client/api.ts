@@ -12,6 +12,7 @@ import type { ServerLink } from '@tracy/wo-views/link-rows-model'
 import type { SettingsAnswer } from './gate.ts'
 import type { RequestIds } from './request-ids.ts'
 import { type ShownSource, reasonKey } from './status.ts'
+import type { SocialEditBody, TeamEditBody } from './owner-edits-model.ts'
 import type { DemoUsage, DemoAction, DemoChatPreparation, OutreachDraft } from './outreach-model.ts'
 
 export const BASE = '/api/website-opportunities'
@@ -33,6 +34,8 @@ export type Answer<T> =
       platform?: string | null
       /** `TOO_MANY_SOURCES`: the most listing pages one business keeps. */
       max?: number
+      /** `MEDIA_ALREADY_ADDED` of the upload door: the row already held, so it can be used again. */
+      media?: { id: string; kind?: string }
     }
 
 /** One place a Google link may be, as the create door offers it back (409 `GOOGLE_LINK_AMBIGUOUS`). */
@@ -264,11 +267,34 @@ export interface Api {
     opportunityId: string,
     url: string
   ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
-  /** A photo or video the seller adds to the Profile (#537), sent as multipart field file. */
+  /** A photo or video the seller adds to the Profile (#537), sent as multipart field file; `team` files a team photo. */
   uploadMedia(
     opportunityId: string,
-    file: Blob & { name?: string }
+    file: Blob & { name?: string },
+    purpose?: 'team'
   ): Promise<Answer<{ opportunity?: unknown; approval?: unknown; media?: unknown }>>
+  /** The team as the owner keeps it (#537 R14, `PUT …/:id/team`): add a person, change one, or remove one. */
+  setTeam(
+    opportunityId: string,
+    edit: TeamEditBody
+  ): Promise<Answer<{ opportunity?: unknown; member?: unknown }>>
+  /** A social link the owner types for the site, or its removal (#537 R15, `PUT …/:id/socials`). */
+  setSocial(
+    opportunityId: string,
+    body: SocialEditBody
+  ): Promise<Answer<{ opportunity?: unknown; siteSocials?: unknown }>>
+  /** One photo or video kept off the site, or put back (#537 R16). */
+  setMediaHidden(
+    opportunityId: string,
+    mediaId: string,
+    hidden: boolean
+  ): Promise<Answer<{ opportunity?: unknown; media?: unknown }>>
+  /** One review kept off the site, or put back, by its `key` (#537 R16). */
+  setReviewHidden(
+    opportunityId: string,
+    key: string,
+    hidden: boolean
+  ): Promise<Answer<{ opportunity?: unknown; review?: unknown }>>
   revision(revisionId: string): Promise<
     Answer<{
       revision?: unknown
@@ -367,7 +393,9 @@ export function createApi(fetchImpl: FetchLike): Api {
         retryAt?: unknown
         platform?: unknown
         max?: unknown
+        media?: unknown
       }
+      const held = refusal.media as { id?: unknown; kind?: unknown } | null | undefined
       const code = refusal.code
       return {
         ok: false,
@@ -378,7 +406,10 @@ export function createApi(fetchImpl: FetchLike): Api {
         ...(Array.isArray(refusal.links) ? { links: refusal.links as ServerLink[] } : {}),
         ...(typeof refusal.retryAt === 'string' ? { retryAt: refusal.retryAt } : {}),
         ...(typeof refusal.platform === 'string' ? { platform: refusal.platform } : {}),
-        ...(typeof refusal.max === 'number' ? { max: refusal.max } : {})
+        ...(typeof refusal.max === 'number' ? { max: refusal.max } : {}),
+        ...(typeof held?.id === 'string'
+          ? { media: { id: held.id, ...(typeof held.kind === 'string' ? { kind: held.kind } : {}) } }
+          : {})
       }
     }
     return { ok: true, status: res.status, body: parsed as T }
@@ -472,11 +503,18 @@ export function createApi(fetchImpl: FetchLike): Api {
     approveBrief: (opportunityId) => call(`${BASE}/${id(opportunityId)}/brief/approve`, 'POST', {}),
     addSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'POST', { url }),
     removeSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'DELETE', { url }),
-    uploadMedia: (opportunityId, file) => {
+    uploadMedia: (opportunityId, file, purpose) => {
       const form = new FormData()
       form.append('file', file, file.name ?? 'upload')
+      if (purpose) form.append('purpose', purpose)
       return call(`${BASE}/${id(opportunityId)}/media`, 'POST', form)
     },
+    setTeam: (opportunityId, edit) => call(`${BASE}/${id(opportunityId)}/team`, 'PUT', edit),
+    setSocial: (opportunityId, body) => call(`${BASE}/${id(opportunityId)}/socials`, 'PUT', body),
+    setMediaHidden: (opportunityId, mediaId, hidden) =>
+      call(`${BASE}/${id(opportunityId)}/media/${id(mediaId)}/visibility`, 'PUT', { hidden }),
+    setReviewHidden: (opportunityId, key, hidden) =>
+      call(`${BASE}/${id(opportunityId)}/reviews/visibility`, 'PUT', { key, hidden }),
     revision: (revisionId) => call(`${BASE}/revisions/${id(revisionId)}`),
     revisionMarkdown: (revisionId) =>
       call(`${BASE}/revisions/${id(revisionId)}?format=md`, 'GET', undefined, 'text/markdown'),

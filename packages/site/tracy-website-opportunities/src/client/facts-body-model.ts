@@ -141,8 +141,9 @@ export function factsBodyView(input: FactsBodyInput): FactsBodyView {
   const field = (f: string): string | null => rows.find((r) => r.field === f)?.value ?? null
   const hours = hoursRowView(profile)
   const about = field('bio')
-  const photos = media.photos.groups.flatMap((g) => g.tiles).filter((m) => m.stored)
-  const videos = media.videos.tiles.filter((m) => m.stored)
+  // A photo or video the owner keeps off the site is not a thumbnail of the business (#537 R16).
+  const photos = media.photos.groups.flatMap((g) => g.tiles).filter((m) => m.stored && !m.ownerHidden)
+  const videos = media.videos.tiles.filter((m) => m.stored && !m.ownerHidden)
   const items = [...photos, ...videos]
   return {
     left: [

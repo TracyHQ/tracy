@@ -109,6 +109,10 @@ export interface FactsCardView {
 }
 
 export interface ReviewQuoteView {
+  /** The server's key of the review (`PUT …/reviews/visibility`), null when the answer gives none. */
+  key?: string | null
+  /** The owner keeps this review off the site (#537 R16). */
+  ownerHidden?: boolean
   author: string
   text: string
   rating: number | null
@@ -270,6 +274,7 @@ function valueSource(profile: Rec, field: string, value: string | null): string 
 
 /** The chip of one reading item (services, audience, service area, team). */
 export function itemChipOf(view: Pick<BusinessFactsView, 'sources' | 'bioPlatform'>, item: ReadingItemView) {
+  if (item.from === 'owner') return youChip()
   const platform = item.from === 'bio' ? view.bioPlatform : (item.platform ?? null)
   return readingChip(item.from, platform, item.url, view.sources)
 }
@@ -286,8 +291,8 @@ export function reviewChipOf(view: Pick<BusinessFactsView, 'sources'>, r: Review
   return readingChip('review', r.source, null, view.sources)
 }
 
-const readingOrigins = (items: { from: 'bio' | 'post' | 'review' }[]): Origin[] =>
-  uniqueOrigins(items.map((i) => ({ kind: 'reading', from: i.from })))
+const readingOrigins = (items: { from: ReadingItemView['from'] }[]): Origin[] =>
+  uniqueOrigins(items.map((i) => (i.from === 'owner' ? { kind: 'you' } : { kind: 'reading', from: i.from })))
 
 /** The whole sub-page in groups. */
 export function businessFactsView(input: BusinessFactsInput): BusinessFactsView {

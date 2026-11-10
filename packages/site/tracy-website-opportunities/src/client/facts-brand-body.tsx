@@ -1,13 +1,16 @@
 /**
  * The Brand body of the Business facts sub-page (#537): the logo and where it came from, the verdict on the logo and
- * the note on the colours (one line each, the whole sentence on hover), and the colours, in one row.
+ * the note on the colours (one line each, the whole sentence on hover), and the colours, in one row. The band's
+ * switch leaves the whole brand off the site (`band_brand`, #537 R16).
  */
 import type { JSX } from 'react'
 import { Badge } from '@tracy/ui'
 
 import { mediaUrl } from './api.ts'
+import { FactsBand, NotAvailable } from './business-facts-band.tsx'
 import { sourceLabel } from './cms-label.ts'
-import type { ColorsView, LogoView } from './detail-model.ts'
+import type { ColorsView, LogoView, MediaRowView } from './detail-model.ts'
+import type { BandSwitchView } from './facts-band-actions.tsx'
 import { LogoField } from './media-row.tsx'
 import type { Translate } from './strings.ts'
 
@@ -94,5 +97,39 @@ export function BrandBody({
         </ul>
       ) : null}
     </div>
+  )
+}
+
+/** The Brand band: nothing to edit here; Not collected yet before research. */
+export function BrandBand({
+  t,
+  notCollected,
+  media,
+  retry,
+  food,
+  onSite
+}: {
+  t: Translate
+  notCollected: boolean
+  media: MediaRowView
+  retry: { busy: boolean; failed: boolean; onPress: () => void }
+  food: boolean
+  onSite: BandSwitchView
+}): JSX.Element {
+  return (
+    <FactsBand
+      t={t}
+      id="brand"
+      label={t('media.brand')}
+      title={t('media.brand')}
+      onSite={onSite}
+      edit={{ why: t('facts.edit.brand') }}
+    >
+      {notCollected ? (
+        <NotAvailable t={t} state="notCollected" />
+      ) : (
+        <BrandBody t={t} logo={media.logo} colors={media.colors} retry={retry} food={food} />
+      )}
+    </FactsBand>
   )
 }

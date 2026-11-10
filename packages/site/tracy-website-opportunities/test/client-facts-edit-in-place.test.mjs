@@ -94,6 +94,17 @@ after(() => {
   dom?.window.close()
 })
 
+const OWNER = {
+  bands: { brand: true, keyMessages: true, reviews: true, media: true, socials: true },
+  setBand: async () => true,
+  setMediaHidden: async () => true,
+  setReviewHidden: async () => true,
+  team: async () => null,
+  uploadTeamPhoto: async () => ({ code: 'HTTP' }),
+  networks: [],
+  socials: [],
+  setSocial: async () => null
+}
 const t = (key, params) => `[${key}${params ? JSON.stringify(params) : ''}]`
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const MEDIA = {
@@ -148,7 +159,8 @@ function mount() {
     readingRows: () => null,
     keyMessages: null,
     uploadMedia: async () => null,
-    retryLogo: { busy: false, failed: false, onPress: () => {} }
+    retryLogo: { busy: false, failed: false, onPress: () => {} },
+    owner: OWNER
   }
   const host = document.createElement('div')
   document.body.append(host)

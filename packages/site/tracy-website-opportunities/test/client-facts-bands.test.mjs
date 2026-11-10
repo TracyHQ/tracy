@@ -66,6 +66,17 @@ after(() => {
   if (outDir) rmSync(outDir, { recursive: true, force: true })
 })
 
+const OWNER = {
+  bands: { brand: true, keyMessages: true, reviews: true, media: true, socials: true },
+  setBand: async () => true,
+  setMediaHidden: async () => true,
+  setReviewHidden: async () => true,
+  team: async () => null,
+  uploadTeamPhoto: async () => ({ code: 'HTTP' }),
+  networks: [],
+  socials: [],
+  setSocial: async () => null
+}
 const t = (key, params) => `[${key}${params ? JSON.stringify(params) : ''}]`
 const MEDIA = {
   logo: { state: 'none' },
@@ -98,7 +109,8 @@ const DOORS = {
   readingRows: () => null,
   keyMessages: null,
   uploadMedia: async () => null,
-  retryLogo: { busy: false, failed: false, onPress: () => {} }
+  retryLogo: { busy: false, failed: false, onPress: () => {} },
+  owner: OWNER
 }
 
 /** Draws the page with stubbed doors. */
@@ -202,12 +214,12 @@ test('before research the bands say Not collected yet, never N/A', () => {
   assert.doesNotMatch(band(html, 'team'), /\[facts\.na\]/)
 })
 
-test('every band header holds one cluster, in one order: [Add more] on Photos & video only, the switch, Edit', () => {
+test('every band header holds one cluster, in one order: [Add more] on Photos & video and Social pages, the switch, Edit', () => {
   const { html } = draw({ profile: FULL })
   for (const id of BAND_IDS) {
     const h = head(html, id)
     const slots = [...h.matchAll(/class="tracy-wo-facts-slot-([a-z]+)"/g)].map((m) => m[1])
-    assert.deepEqual(slots, id === 'media' ? ['add', 'sw', 'edit'] : ['sw', 'edit'], id)
+    assert.deepEqual(slots, id === 'media' || id === 'social' ? ['add', 'sw', 'edit'] : ['sw', 'edit'], id)
     assert.equal((h.match(/class="tracy-wo-facts-cl"/g) ?? []).length, 1, id)
     assert.match(h, /role="switch"/, id)
     assert.match(h, /\[profile\.edit\]<\/button><\/span><\/span><\/div><div class="$/, id)
@@ -242,7 +254,7 @@ test('locked bands: Business always on, Research details always off with its rea
     assert.doesNotMatch(switchOf(html, id), /tracy-wo-facts-lock/, id)
 })
 
-test('a band switch follows its facts and flips through the door; a band with no stored choice says so', () => {
+test('a band switch follows its facts and flips through the door; a band with nothing to leave off says so', () => {
   const { html } = draw({
     profile: FULL,
     doors: {
@@ -252,7 +264,8 @@ test('a band switch follows its facts and flips through the door; a band with no
   assert.match(switchOf(html, 'services'), /aria-checked="false"[^]*\[facts\.off\]/)
   assert.doesNotMatch(switchOf(html, 'services'), /aria-disabled="true"|data-disabled=""/)
   assert.match(html, /data-card="services" data-off=""/)
-  assert.match(switchOf(html, 'brand'), /title="\[facts\.switch\.notStored\]"/)
+  assert.match(switchOf(html, 'about'), /title="\[facts\.switch\.nothing\]"/)
+  assert.doesNotMatch(html, /facts\.switch\.notStored/)
 })
 
 test('no band offers Show all or Show less, and nothing opens a sheet or a dialog', () => {
@@ -284,7 +297,7 @@ test('Photos & video has exactly one Add more, in the cluster, the formats as it
     videos: { tiles: [tile('v1', 'video')] }
   }
   const { html } = draw({ media })
-  assert.equal((html.match(/\[media\.add\]/g) ?? []).length, 1)
+  assert.equal((band(html, 'media').match(/\[media\.add\]/g) ?? []).length, 1)
   assert.match(head(html, 'media'), /<span class="tracy-wo-facts-slot-add">.*title="\[media\.addHint\]"/)
   assert.doesNotMatch(html, /tracy-wo-add-tile|\[facts\.media\.more/)
   // The hint shows only as the title until Edit.

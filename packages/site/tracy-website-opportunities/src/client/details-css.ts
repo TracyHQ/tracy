@@ -8,6 +8,7 @@
 import { PROGRESS_BAND_CSS } from './progress-band-css.ts'
 import { STEP_NODE_CSS } from './step-node-css.ts'
 import { FACTS_BANDS_CSS } from './facts-bands-css.ts'
+import { FACTS_OWNER_CSS } from './facts-owner-css.ts'
 export const DETAILS_CSS =
   `
 .tracy-wo-details { gap: 12px; }
@@ -213,4 +214,5 @@ export const DETAILS_CSS =
 ` +
   STEP_NODE_CSS +
   PROGRESS_BAND_CSS +
-  FACTS_BANDS_CSS
+  FACTS_BANDS_CSS +
+  FACTS_OWNER_CSS

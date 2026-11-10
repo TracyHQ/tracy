@@ -4,25 +4,28 @@
  * details. Every band has one header row (title, source chips, Check this, then the action cluster: [Add more] ·
  * On the site switch · Edit) and the same collapsed height; what does not fit scrolls sideways in one row, a missing
  * fact reads N/A. Edit turns a band into its fields in place, with Cancel and Save at its bottom right; nothing opens
- * elsewhere. Before research, and while it runs, the bands say Not collected yet and hold nothing partial.
+ * elsewhere. Before research, and while it runs, the bands say Not collected yet and hold nothing partial. The
+ * owner's own choices (bands off, team, social links, items kept off, #537 R14 to R16) go through `doors.owner`.
  */
 import type { JSX, ReactNode } from 'react'
 
-import { FactsBand, NotAvailable } from './business-facts-band.tsx'
-import { HoursBand, Missing, ResearchBand, TeamPeople } from './business-facts-bands.tsx'
+import { HoursBand, ResearchBand } from './business-facts-bands.tsx'
 import { FactsMedia } from './business-facts-media.tsx'
 import type { BusinessFactsView, CardId } from './business-facts-model.ts'
 import { BusinessBand } from './business-facts-parts.tsx'
 import type { LogoView, MediaRowView } from './detail-model.ts'
 import type { BandSwitchView, EditDoor } from './facts-band-actions.tsx'
-import { AboutEdit, BusinessEdit, type ProfileField } from './facts-band-edit.tsx'
+import { BusinessEdit, type ProfileField } from './facts-band-edit.tsx'
 import { EditFooter } from './facts-band-actions.tsx'
-import { BrandBody } from './facts-brand-body.tsx'
-import { MessagesBand, ReviewsBand, ServicesBand, SocialBand } from './facts-list-bands.tsx'
+import { BrandBand } from './facts-brand-body.tsx'
+import { AboutBand } from './facts-about-band.tsx'
+import { MessagesBand, ReviewsBand, ServicesBand } from './facts-list-bands.tsx'
+import { SocialBand } from './facts-social-band.tsx'
+import { TeamBand } from './facts-team-people.tsx'
+import type { OwnerBand, OwnerDoors } from './owner-edits-model.ts'
 import type { HoursChoice, HoursSaved } from './profile-hours-row.tsx'
 import type { RatingChoice } from './profile-rating-row.tsx'
 import type { ReadingPick } from './profile-reading-model.ts'
-import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
 
 /** The calls the bands save through: each one the Business facts rows already had. */
@@ -45,6 +48,8 @@ export interface FactsDoors {
   keyMessages: JSX.Element | null
   uploadMedia: (file: File) => Promise<string | null>
   retryLogo: { busy: boolean; failed: boolean; onPress: () => void }
+  /** The owner's choices for the site: band switches, team, social links, photos and reviews kept off. */
+  owner: OwnerDoors
 }
 
 const NOT_COLLECTED_LOGO = { state: 'notCollected' } as LogoView
@@ -74,11 +79,15 @@ export function BusinessFactsPage({
 }): JSX.Element {
   const cardOf = (id: CardId) => view.cards.find((c) => c.id === id)
   const facts = view.researched
-  const filled = (id: CardId): boolean => cardOf(id)?.state === 'filled'
-  const body = (id: CardId, draw: () => ReactNode): ReactNode =>
-    filled(id) ? draw() : <Missing t={t} card={cardOf(id)} />
-  const notStored: BandSwitchView = { on: true, set: null, why: t('facts.switch.notStored') }
-  const switchOf = (fields: readonly string[]): BandSwitchView => doors.factSwitch(fields) ?? notStored
+  const owner = doors.owner
+  const switchOf = (fields: readonly string[]): BandSwitchView =>
+    doors.factSwitch(fields) ?? { on: true, set: null, why: t('facts.switch.nothing') }
+  // The bands the owner switches as a whole (`band_<band>`), stored through the facts door.
+  const bandOf = (band: OwnerBand): BandSwitchView => ({
+    on: owner.bands[band],
+    set: (on) => owner.setBand(band, on)
+  })
+  const teamSwitch = switchOf(['team'])
   // A band that research has not filled yet has nothing to edit; its fields save themselves (Done only).
   const widgetEdit = (id: CardId, widget: () => ReactNode, why = t('facts.edit.none')): EditDoor =>
     cardOf(id) === undefined || cardOf(id)?.state === 'notCollected'
@@ -138,59 +147,50 @@ export function BusinessFactsPage({
         onSite={switchOf(['services', 'audience', 'serviceAreas'])}
         edit={widgetEdit('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
       />
-      <FactsBand
+      <AboutBand
         t={t}
-        id="about"
-        label={t('field.bio')}
-        title={t('field.bio')}
-        chips={filled('about') ? <SourceChip t={t} chip={aboutCard?.chip ?? null} locale={locale} /> : null}
+        locale={locale}
+        card={aboutCard}
+        about={view.about}
+        field={about}
         onSite={switchOf(['story', 'bio'])}
-        edit={
-          aboutCard === undefined || aboutCard.state === 'notCollected' || about === null
-            ? { why: t(about === null ? 'facts.edit.none' : 'reason.not_collected') }
-            : { form: (close) => <AboutEdit t={t} close={close} about={about} /> }
-        }
-      >
-        {body('about', () => (
-          <p className="tracy-wo-facts-about tracy-wo-facts-clamp2" title={view.about ?? undefined}>
-            {view.about}
-          </p>
-        ))}
-      </FactsBand>
-      <FactsBand
-        t={t}
-        id="team"
-        label={t('field.team')}
-        title={t('field.team')}
-        onSite={switchOf(['team'])}
-        edit={widgetEdit('team', () => doors.readingRows(['team']))}
-      >
-        {body('team', () => (
-          <TeamPeople t={t} locale={locale} view={view} pickReading={doors.pickReading} />
-        ))}
-      </FactsBand>
-      <FactsBand
-        t={t}
-        id="brand"
-        label={t('media.brand')}
-        title={t('media.brand')}
-        onSite={notStored}
-        edit={{ why: t('facts.edit.brand') }}
-      >
-        {cardOf('brand')?.state === 'notCollected' ? (
-          <NotAvailable t={t} state="notCollected" />
-        ) : (
-          <BrandBody t={t} logo={media.logo} colors={media.colors} retry={doors.retryLogo} food={food} />
-        )}
-      </FactsBand>
-      <MessagesBand {...shared} onSite={notStored} edit={widgetEdit('messages', () => doors.keyMessages)} />
-      <ReviewsBand {...shared} onSite={notStored} edit={{ why: t('facts.edit.reviews') }} />
-      <SocialBand
-        {...shared}
-        onSite={switchOf(['socials', 'socialFigures'])}
-        edit={{ why: t('facts.edit.social') }}
       />
-      <FactsMedia t={t} media={media} show={!running} onUpload={doors.uploadMedia} />
+      <TeamBand
+        t={t}
+        locale={locale}
+        view={view}
+        onSite={teamSwitch}
+        owner={owner}
+        pickReading={doors.pickReading}
+      />
+      <BrandBand
+        t={t}
+        notCollected={cardOf('brand')?.state === 'notCollected'}
+        media={media}
+        retry={doors.retryLogo}
+        food={food}
+        onSite={bandOf('brand')}
+      />
+      <MessagesBand
+        {...shared}
+        onSite={bandOf('keyMessages')}
+        edit={widgetEdit('messages', () => doors.keyMessages)}
+      />
+      <ReviewsBand
+        {...shared}
+        onSite={bandOf('reviews')}
+        edit={{ why: t('facts.edit.reviews') }}
+        setHidden={owner.setReviewHidden}
+      />
+      <SocialBand t={t} view={view} onSite={bandOf('socials')} owner={owner} />
+      <FactsMedia
+        t={t}
+        media={media}
+        show={!running}
+        onUpload={doors.uploadMedia}
+        onSite={bandOf('media')}
+        setHidden={owner.setMediaHidden}
+      />
       <ResearchBand t={t} view={view} />
       {facts && researchDetails !== null ? (
         <div className="tracy-wo-facts-more">{researchDetails}</div>

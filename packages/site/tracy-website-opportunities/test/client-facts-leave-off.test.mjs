@@ -61,6 +61,17 @@ after(() => {
   if (outDir) rmSync(outDir, { recursive: true, force: true })
 })
 
+const OWNER = {
+  bands: { brand: true, keyMessages: true, reviews: true, media: true, socials: true },
+  setBand: async () => true,
+  setMediaHidden: async () => true,
+  setReviewHidden: async () => true,
+  team: async () => null,
+  uploadTeamPhoto: async () => ({ code: 'HTTP' }),
+  networks: [],
+  socials: [],
+  setSocial: async () => null
+}
 const t = (key, params) => `[${key}${params ? JSON.stringify(params) : ''}]`
 const DAYS = ['Monday', 'Tuesday', 'Wednesday']
 const person = (extra) => ({
@@ -109,7 +120,8 @@ const draw = (p, { media = MEDIA, running = true, sources = [] } = {}) => {
     readingRows: () => null,
     keyMessages: null,
     uploadMedia: async () => null,
-    retryLogo: { busy: false, failed: false, onPress: () => {} }
+    retryLogo: { busy: false, failed: false, onPress: () => {} },
+    owner: OWNER
   }
   return lib.renderToStaticMarkup(
     lib.createElement(lib.BusinessFactsPage, {

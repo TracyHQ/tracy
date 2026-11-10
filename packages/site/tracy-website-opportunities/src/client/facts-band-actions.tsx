@@ -29,11 +29,14 @@ export function BandSwitch({
   t,
   view,
   small = false,
+  bare = false,
   label
 }: {
   t: Translate
   view: BandSwitchView
   small?: boolean
+  /** The state word is read out but not drawn (a photo tile has no room for it). */
+  bare?: boolean
   /** The accessible name: what the switch puts on the site. */
   label: string
 }): JSX.Element {
@@ -63,7 +66,15 @@ export function BandSwitch({
         aria-label={`${label}: ${word}`}
         onCheckedChange={(on) => void flip(on)}
       />
-      <span className={small ? 'tracy-wo-facts-sw-word tracy-wo-small' : 'tracy-wo-facts-sw-word'}>
+      <span
+        className={
+          bare
+            ? 'tracy-wo-facts-sr'
+            : small
+              ? 'tracy-wo-facts-sw-word tracy-wo-small'
+              : 'tracy-wo-facts-sw-word'
+        }
+      >
         {word}
       </span>
       {view.lock ? <Lock aria-hidden="true" className="tracy-wo-facts-lock" /> : null}

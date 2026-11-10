@@ -1,18 +1,18 @@
 /**
- * The list bands of the Business facts sub-page (#537, design A): Services, Key messages, What guests say, Social
- * pages. Each draws every item in one row that scrolls sideways inside the band (key messages
- * are three cells); a band that research left empty reads N/A alone.
+ * The list bands of the Business facts sub-page (#537, design A): Services, Key messages, What guests say. Each draws
+ * every item in one row that scrolls sideways inside the band (key messages are three cells); a band that research
+ * left empty reads N/A alone. Each guest review has its own small switch (#537 R16): one kept off the site stays,
+ * dimmed, and no part of the site quotes it. Social pages live in `facts-social-band.tsx`.
  */
 import type { JSX, ReactNode } from 'react'
 
 import { FactsBand, OneLine } from './business-facts-band.tsx'
 import { Missing } from './business-facts-bands.tsx'
 import { type BusinessFactsView, itemChipOf, messageChipOf, reviewChipOf } from './business-facts-model.ts'
-import { sourceLabel } from './cms-label.ts'
 import type { BandSwitchView, EditDoor } from './facts-band-actions.tsx'
+import { ItemSwitch } from './facts-item-switch.tsx'
 import type { ReadingItemView } from './profile-reading-model.ts'
 import { SourceChip } from './source-chip.tsx'
-import { SourceGlyph } from './source-logo.tsx'
 import type { Translate } from './strings.ts'
 
 interface BandProps {
@@ -112,7 +112,17 @@ export function MessagesBand({ t, locale, view, onSite, edit }: BandProps): JSX.
 }
 
 /** What guests say: every review as a card, in one row. */
-export function ReviewsBand({ t, locale, view, onSite, edit }: BandProps): JSX.Element {
+export function ReviewsBand({
+  t,
+  locale,
+  view,
+  onSite,
+  edit,
+  setHidden
+}: BandProps & {
+  /** Keeps one review off the site, or puts it back, by its key. */
+  setHidden: (key: string, hidden: boolean) => Promise<boolean>
+}): JSX.Element {
   return (
     <FactsBand
       t={t}
@@ -125,7 +135,7 @@ export function ReviewsBand({ t, locale, view, onSite, edit }: BandProps): JSX.E
       {body(view, t, 'reviews', () => (
         <ul className="tracy-wo-facts-cards tracy-wo-facts-row">
           {view.reviews.map((r, i) => (
-            <li key={`${r.author}-${i}`}>
+            <li key={r.key ?? `${r.author}-${i}`} data-off={r.ownerHidden ? '' : undefined}>
               <q className="tracy-wo-facts-clamp2" title={r.text}>
                 {r.text}
               </q>
@@ -134,34 +144,15 @@ export function ReviewsBand({ t, locale, view, onSite, edit }: BandProps): JSX.E
                   {[r.rating === null ? null : `★ ${r.rating}`, r.author].filter(Boolean).join(' · ')}
                 </span>
                 <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />
+                {typeof r.key === 'string' ? (
+                  <ItemSwitch
+                    t={t}
+                    label={r.author}
+                    on={r.ownerHidden !== true}
+                    set={(on) => setHidden(r.key as string, !on)}
+                  />
+                ) : null}
               </span>
-            </li>
-          ))}
-        </ul>
-      ))}
-    </FactsBand>
-  )
-}
-
-/** Social pages: each a linked chip with its glyph, in one row. */
-export function SocialBand({ t, view, onSite, edit }: BandProps): JSX.Element {
-  return (
-    <FactsBand
-      t={t}
-      id="social"
-      label={t('facts.social.title')}
-      title={t('facts.social.title')}
-      onSite={onSite}
-      edit={edit}
-    >
-      {body(view, t, 'social', () => (
-        <ul className="tracy-wo-facts-chiprow tracy-wo-facts-row">
-          {view.social.map((p) => (
-            <li key={p.url} className="tracy-wo-facts-pill">
-              <a href={p.url} target="_blank" rel="noreferrer" title={p.url}>
-                <SourceGlyph logo={p.logo} size={12} />
-                <span className="tracy-wo-facts-ell">{sourceLabel(t, p.source, p.url)}</span>
-              </a>
             </li>
           ))}
         </ul>

@@ -44,7 +44,9 @@ function Item({
           </span>
           <span className="tracy-wo-muted tracy-wo-small"> · {t(`reading.from.${item.from}`)}</span>
         </summary>
-        <blockquote className="tracy-wo-reading-quote tracy-wo-small">“{item.quote}”</blockquote>
+        {item.quote === '' ? null : (
+          <blockquote className="tracy-wo-reading-quote tracy-wo-small">“{item.quote}”</blockquote>
+        )}
         {item.url !== null ? (
           <a
             className="tracy-wo-action-link tracy-wo-small"

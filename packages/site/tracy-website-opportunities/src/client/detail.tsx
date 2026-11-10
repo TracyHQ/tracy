@@ -90,6 +90,7 @@ import { DemoSiteBlock } from './demo-site-block.tsx'
 import { SubPage } from './details-sections.tsx'
 import { WorkspaceCard, demoHostOf } from './workspace-card.tsx'
 import { FactsBody } from './facts-body.tsx'
+import { ownerDoorsOf } from './owner-doors.ts'
 import { factsBodyView } from './facts-body-model.ts'
 import {
   type SectionId,
@@ -984,7 +985,18 @@ export function DetailView({
               ),
             keyMessages: keyMessagesRows(false),
             uploadMedia,
-            retryLogo: { busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }
+            retryLogo: { busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() },
+            // The owner's choices for the site (#537 R14 to R16).
+            owner: ownerDoorsOf({
+              api,
+              id,
+              body,
+              setFact: toggleFact,
+              refresh: async () => {
+                await reload()
+                onChanged()
+              }
+            })
           }}
           researchDetails={
             hasMore ? (
