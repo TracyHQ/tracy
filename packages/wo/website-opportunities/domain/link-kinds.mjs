@@ -16,7 +16,8 @@ export const MAX_LINKS = 5
  * @type {Readonly<Record<string, string>>}
  */
 export const LISTING_HOSTS = Object.freeze({
-  'magicpin.com': 'magicpin',
+  // magicpin serves India on magicpin.in and the UAE on magicpin.com.
+  'magicpin.*': 'magicpin',
   'tripadvisor.*': 'Tripadvisor',
   'yelp.*': 'Yelp',
   'zomato.com': 'Zomato',
@@ -24,6 +25,23 @@ export const LISTING_HOSTS = Object.freeze({
   'foursquare.com': 'Foursquare',
   'deliveroo.*': 'Deliveroo',
   'fresha.com': 'Fresha'
+})
+
+/**
+ * Hosts whose pages Tracy cannot read, host suffix -> the platform's name (a subdomain matches too:
+ * `mobile.twitter.com`, `api.whatsapp.com`). The add-a-source door refuses them (`UNSUPPORTED_LINK`) instead of saving
+ * one as the business's website; the client reads this same list to say so before sending.
+ * @type {Readonly<Record<string, string>>}
+ */
+export const UNSUPPORTED_LINK_HOSTS = Object.freeze({
+  'x.com': 'X',
+  'twitter.com': 'X',
+  'linkedin.com': 'LinkedIn',
+  'threads.net': 'Threads',
+  'threads.com': 'Threads',
+  'linktr.ee': 'Linktree',
+  'wa.me': 'WhatsApp',
+  'whatsapp.com': 'WhatsApp'
 })
 
 /**
@@ -172,6 +190,19 @@ export function linkKind(raw) {
     if (isListingMatch(host, suffix)) return { kind: 'listing', url, key: plainKey, source }
   }
   return { kind: 'website', url, key: plainKey }
+}
+
+/**
+ * The platform of a link Tracy cannot read (`UNSUPPORTED_LINK_HOSTS`): `{host, platform}`, else null.
+ * @param {unknown} raw
+ * @returns {{ host: string, platform: string } | null}
+ */
+export function unsupportedLinkOf(raw) {
+  const host = toUrl(raw)?.hostname.toLowerCase()
+  if (!host) return null
+  for (const [suffix, platform] of Object.entries(UNSUPPORTED_LINK_HOSTS))
+    if (host === suffix || host.endsWith(`.${suffix}`)) return { host: suffix, platform }
+  return null
 }
 
 /**

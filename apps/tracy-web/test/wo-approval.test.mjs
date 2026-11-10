@@ -478,6 +478,72 @@ test(
   }
 )
 
+test(
+  'adding a source refuses unreadable platforms, duplicates and a sixth listing page, each by its own code',
+  opts,
+  async () => {
+    const w = await world()
+    const a = await w.accountOf(A)
+    const fresh = await w.saveGoogle(a)
+    const add = (url) => w.call(A, 'POST', `${BASE}/${fresh.id}/sources`, { url })
+    const candidate = async () =>
+      (await w.pool.query('select candidate from wo_opportunity where id = $1', [fresh.id])).rows[0].candidate
+
+    for (const [url, platform] of [
+      ['https://x.com/harbor_gym_example', 'X'],
+      ['https://twitter.com/harbor_gym_example', 'X'],
+      ['https://www.linkedin.com/company/harbor-gym-example', 'LinkedIn'],
+      ['https://www.threads.net/@harbor.gym.example', 'Threads'],
+      ['https://linktr.ee/harborgymexample', 'Linktree'],
+      ['https://wa.me/15550100', 'WhatsApp'],
+      ['https://api.whatsapp.com/send?phone=15550100', 'WhatsApp']
+    ]) {
+      const res = await add(url)
+      assert.equal(res.status, 422, url)
+      assert.equal(res.body.code, 'UNSUPPORTED_LINK', url)
+      assert.equal(res.body.platform, platform, url)
+      assert.ok(res.body.next, url)
+    }
+    assert.equal((await candidate()).website, undefined, 'none of them was saved as the website')
+
+    // magicpin on another TLD is a listing page, never the website.
+    const MAGICPIN_IN = 'https://magicpin.in/New-Delhi/Saket/Fitness/Harbor-Gym-Example/store/1000002'
+    assert.equal((await add(MAGICPIN_IN)).status, 201)
+    const afterMagicpin = await candidate()
+    assert.equal(afterMagicpin.website, undefined)
+    assert.ok(afterMagicpin.listings.some((l) => l.url === MAGICPIN_IN && l.source === 'magicpin'))
+
+    // The exact link again (any spelling) and another page of a platform it has read apart.
+    assert.equal((await add(SITE)).status, 201)
+    const sameSite = await add('http://www.harbor-gym.example')
+    assert.equal(sameSite.status, 409)
+    assert.equal(sameSite.body.code, 'SOURCE_ALREADY_KNOWN')
+    const otherSite = await add('https://harbor-gym-two.example/')
+    assert.equal(otherSite.status, 409)
+    assert.deepEqual([otherSite.body.code, otherSite.body.platform], ['PLATFORM_ALREADY_KNOWN', 'website'])
+    assert.equal((await add('https://www.instagram.com/harbor.gym.example/')).status, 201)
+    const sameIg = await add('https://instagram.com/harbor.gym.example?igsh=abc123')
+    assert.equal(sameIg.body.code, 'SOURCE_ALREADY_KNOWN')
+    const otherIg = await add('https://www.instagram.com/someone.else.example/')
+    assert.deepEqual([otherIg.body.code, otherIg.body.platform], ['PLATFORM_ALREADY_KNOWN', 'instagram'])
+    assert.equal((await add(MAGICPIN_IN)).body.code, 'SOURCE_ALREADY_KNOWN')
+
+    // At most five listing pages: the sixth is refused, the same page again still reads as known.
+    for (let i = 1; i <= 4; i += 1) {
+      const res = await add(
+        `https://www.tripadvisor.com/Attraction_Review-g000-d00${i}-Reviews-Harbor_Gym_Example.html`
+      )
+      assert.equal(res.status, 201, JSON.stringify(res.body))
+    }
+    assert.equal((await candidate()).listings.length, 5)
+    const sixth = await add('https://www.yelp.com/biz/harbor-gym-example')
+    assert.equal(sixth.status, 409)
+    assert.deepEqual([sixth.body.code, sixth.body.max], ['TOO_MANY_SOURCES', 5])
+    assert.equal((await add(MAGICPIN_IN)).body.code, 'SOURCE_ALREADY_KNOWN')
+    assert.equal((await candidate()).listings.length, 5)
+  }
+)
+
 test('a source removed before research only leaves the link list', opts, async () => {
   const w = await world()
   const a = await w.accountOf(A)

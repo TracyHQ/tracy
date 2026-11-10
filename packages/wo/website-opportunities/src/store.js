@@ -172,6 +172,19 @@ export function candidateWithoutLink(held, url, now = new Date()) {
   return { candidate: out, source }
 }
 
+/** Whether the saved candidate already holds this exact link (any spelling `linkKeyOf` treats as the same page). */
+export function candidateHasLink(held, url) {
+  const key = linkKeyOf(url)
+  if (!key || !held || typeof held !== 'object') return false
+  const links = [
+    held.website,
+    ...Object.values(held.socials ?? {}),
+    ...(Array.isArray(held.listings) ? held.listings.map((l) => l?.url) : []),
+    ...(Array.isArray(held.pastedLinks) ? held.pastedLinks.map((l) => l?.url) : [])
+  ]
+  return links.some((u) => linkKeyOf(u) === key)
+}
+
 /**
  * How many links research still reads for an opportunity: its Google place (the business itself), its website, its
  * social pages and its listing pages. An opportunity needs one at least.

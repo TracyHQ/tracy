@@ -14,9 +14,13 @@
  * `listing` (`saveListingSource`), merged into the profile at the lowest priority (`executor.js mergeProfile`).
  */
 import { dropTracking, judgeLinks, withoutTracking } from '../domain/link-kinds.mjs'
+// The hosts Tracy cannot read live with the other host tables, in the module the browser imports too.
+export { UNSUPPORTED_LINK_HOSTS, unsupportedLinkOf } from '../domain/link-kinds.mjs'
 import { isPlaceId } from './place-suggest.js'
 import { LISTING_SOURCE, SOCIAL_SOURCES, normalizeUrl, sourceOfUrl } from './sources.js'
 
+/** Most listing pages one opportunity keeps (the add-a-source door answers `TOO_MANY_SOURCES` past it). */
+export const LISTING_PAGES_MAX = 5
 /** Most entries a request's `links` may carry; past `MAX_LINKS` they are reported as `limit`, not used. */
 export const LINK_REQUEST_MAX = 20
 const LINK_MAX_CHARS = 2000

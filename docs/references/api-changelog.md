@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-10: Adding a source refuses unreadable, duplicate and excess links clearly
+
+Changed `POST /api/website-opportunities/:id/sources` (internal): 422 `UNSUPPORTED_LINK` with `platform` for X, LinkedIn, Threads, Linktree and WhatsApp links (they were saved as the website); 409 `SOURCE_ALREADY_KNOWN` now means this exact link only, and the new 409 `PLATFORM_ALREADY_KNOWN` with `platform` means another page of a kind it already has; 409 `TOO_MANY_SOURCES` with `max: 5` for a sixth listing page. magicpin pages on any TLD (`magicpin.in`) read as listing pages.
+
 ## 2026-11-10: Remove a source from an opportunity
 
 Added `DELETE /api/website-opportunities/:id/sources` (internal): body `{url}` removes one of the business's own links and answers 200 `{opportunity, approval}`; after research ran it asks for research again, as an added source does. 404 `NOT_FOUND`, 409 `LAST_SOURCE` (`next: "add"`), 409 `JOB_ACTIVE`, 422 `GOOGLE_LINK_NOT_REMOVED`. Changed (internal): `POST …/:id/sources` answers 409 `JOB_ACTIVE` while research runs.

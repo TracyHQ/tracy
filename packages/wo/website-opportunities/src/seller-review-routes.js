@@ -21,10 +21,11 @@ import {
   saveSourceChange
 } from './approval.js'
 import { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES } from './executor.js'
-import { pruneListingSource, saveListingSource } from './link-fields.js'
+import { LISTING_PAGES_MAX, pruneListingSource, saveListingSource, unsupportedLinkOf } from './link-fields.js'
 import { researchStateOf } from './research-state.js'
 import {
   activeJobOf,
+  candidateHasLink,
   candidateWithNewRefs,
   candidateWithoutLink,
   insertMedia,
@@ -88,7 +89,10 @@ export function sellerReviewRoutes(app, ctx) {
   })
 
   // One more link of the business, of the kinds a create accepts (a website, a social page, a listing page), judged by
-  // the same rules (`link-fields.js`). A Google link names the business itself, so it is not added here.
+  // the same rules (`link-fields.js`). A Google link names the business itself, so it is not added here; a page of a
+  // platform Tracy cannot read (`UNSUPPORTED_LINK_HOSTS`) is refused rather than saved as the website; at most
+  // `LISTING_PAGES_MAX` listing pages. A refused duplicate says whether it is this exact link or another page of a
+  // platform the business already has a page of (one website, one page per social network).
   app.post(`${BASE}/:id/sources`, async (c) => {
     const own = await ownOpportunity(c)
     if (own instanceof Response) return own
@@ -104,6 +108,15 @@ export function sellerReviewRoutes(app, ctx) {
         'INVALID_URL',
         'Send "url" as the address of a website, social page or listing page.'
       )
+    const unsupported = unsupportedLinkOf(raw)
+    if (unsupported)
+      return refuse(
+        c,
+        422,
+        'UNSUPPORTED_LINK',
+        `Tracy cannot read ${unsupported.platform} pages: add the business's website, a Facebook, Instagram, TikTok or YouTube page, or a listing page instead.`,
+        { platform: unsupported.platform }
+      )
     const [judged] = judgeLinks([raw])
     if (judged?.kind === 'google')
       return refuse(
@@ -111,6 +124,17 @@ export function sellerReviewRoutes(app, ctx) {
         422,
         'GOOGLE_LINK_NOT_ADDED',
         'A Google link names the business itself: add its website, a social page or a listing page instead.'
+      )
+    const held = own.opp.candidate ?? {}
+    const known = candidateHasLink(held, raw)
+    const listingCount = Array.isArray(held.listings) ? held.listings.length : 0
+    if (judged?.kind === 'listing' && !known && listingCount >= LISTING_PAGES_MAX)
+      return refuse(
+        c,
+        409,
+        'TOO_MANY_SOURCES',
+        `This business already has ${LISTING_PAGES_MAX} listing pages: remove one before adding another.`,
+        { max: LISTING_PAGES_MAX }
       )
     const domain = await ctx.domainOr(c)
     if (domain instanceof Response) return domain
@@ -121,13 +145,19 @@ export function sellerReviewRoutes(app, ctx) {
     }
     const merged = candidateWithNewRefs(own.opp.candidate, made.fields.candidate)
     if (!merged)
-      return refuse(
-        c,
-        409,
-        'SOURCE_ALREADY_KNOWN',
-        'This business already has this link, or a link of the same kind: nothing was added.',
-        { links: made.links }
-      )
+      return known || judged?.kind === 'listing'
+        ? refuse(c, 409, 'SOURCE_ALREADY_KNOWN', 'This business already has this link: nothing was added.', {
+            links: made.links
+          })
+        : refuse(
+            c,
+            409,
+            'PLATFORM_ALREADY_KNOWN',
+            judged?.kind === 'website'
+              ? 'This business already has a website: remove it before adding another.'
+              : 'This business already has a page on this network: remove it before adding another.',
+            { platform: judged?.kind ?? null, links: made.links }
+          )
     const research = await researchStateOf(pool, own.opp.id)
     const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, merged, {
       researched: Boolean(research.researchedAt)
