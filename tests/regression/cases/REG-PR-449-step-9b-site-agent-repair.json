@@ -4,9 +4,7 @@
   "title": "Step 9 preserves publication, verifies repairs and undoes regressions without overlapping page writers",
   "pr": 449,
   "area": "write-step/repair-pass",
-  "cms": [
-    "any"
-  ],
+  "cms": ["any"],
   "needs": [],
   "flaky_model": false,
   "steps": [
