@@ -87,7 +87,11 @@ test('a turn that causes a new blocking failure on its page is undone, newest fi
     failure('text-overflow', '/', 'module-2.1', 'wider than 390 px'),
     failure('dead-links', '/index.php/contact', 'module-5.2', '/missing')
   ])
-  const { result } = await stepNine({ checks: [first, second, checkOf([])], agent })
+  const { result } = await stepNine({
+    checks: [first, second, checkOf([])],
+    agent,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   const byPage = Object.fromEntries(result.repair.turns.map((t) => [t.page, t.turnId]))
   // Pages go in the order their first fault was named: home, contact, about; undone newest first.
   assert.deepEqual(agent.sent.undone, [byPage['/contact'], byPage['/']])
@@ -118,7 +122,11 @@ test('faults still there after the second check get one resend round, then the p
   const first = checkOf([DEMO, ALT])
   // The home page's demo words are still there; the alt was fixed.
   const second = checkOf([DEMO])
-  const { result, checksRun } = await stepNine({ checks: [first, second, second], agent })
+  const { result, checksRun } = await stepNine({
+    checks: [first, second, second],
+    agent,
+    input: { limits: { turnsAtOnce: 3 } }
+  })
   assert.equal(agent.sent.prompts.length, 3)
   assert.deepEqual(
     agent.sent.requests[2].items.map((i) => i.element.label),
@@ -141,7 +149,8 @@ test('past ten minutes no new turn starts, and the step returns by twelve', asyn
       checkOf([])
     ],
     agent,
-    clock
+    clock,
+    input: { limits: { turnsAtOnce: 3 } }
   })
   assert.equal(agent.sent.prompts.length, 6, 'the seventh page is not started')
   assert.deepEqual(
@@ -165,7 +174,8 @@ test('a site check that cannot run after the turns hands over the written site w
       }
     }
   })
-  assert.equal(result.report.status, 'done')
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(result.report.writeStatus, 'done')
   assert.equal(result.siteCheck, first)
   assert.match(result.repair.error, /the site check answered 500/)
   assert.ok(result.repair.turns.length > 0)
@@ -209,7 +219,8 @@ test('the sessions are retired when the pass was taken back too, and a retire th
       }
     }
   })
-  assert.equal(result.report.status, 'done')
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(result.report.writeStatus, 'done')
   assert.ok(logged.some((line) => /could not be retired: dsh refused the archive/.test(line)))
   assert.ok(logged.some((line) => /could not be retired: dsh did not list/.test(line)))
 })

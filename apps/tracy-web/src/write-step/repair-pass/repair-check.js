@@ -3,8 +3,9 @@
 // (every page when one changed files or a write no page places, repair-judge.js), and is joined to the site as it now is
 // (lib/scoped-site-check.js). A turn with a new blocking failure on a page it changed is undone, whole, newest first;
 // the pages it changed then hold the failures they had before it, and are read again before the hand-over (`recheck`).
-// A turn that wrote nothing needs no check. A check that cannot end in the time left throws, as any 9b error.
+// A closed turn that wrote nothing still needs a fresh check of its requested page. A check that cannot end in the time left throws, as any 9b error.
 import { mergeScopedCheck } from '../../lib/scoped-site-check.js'
+import { stillThere } from './repair-faults.js'
 import { EVERY_PAGE, pagesChanged, recordPagesOf, turnsToUndo, undoTurns } from './repair-judge.js'
 
 /** One site check within the time left, of `pages` (every page when null), joined to the site as it now is. */
@@ -47,11 +48,14 @@ export function checkWorker(pass, state, result) {
       const wrote = batch.map((b) => b.turn).filter((t) => t.changes.length)
       for (const b of batch) b.turn.judged = true
       let bad = []
-      if (wrote.length) {
+      if (batch.length) {
         const before = state.check
-        const pages = scopeOf(wrote, recordPages)
+        const pages = scopeOf(
+          batch.map(({ turn }) => (turn.changes.length ? turn : { ...turn, changes: [{ page: turn.page }] })),
+          recordPages
+        )
         await checkPages(pass, state, result, pages)
-        bad = turnsToUndo(wrote, state.first, state.check, recordPages)
+        bad = turnsToUndo(wrote, before, state.check, recordPages)
         const undone = await undoTurns(pass, bad, 'a new blocking failure on a page it changed')
         result.undone.push(...undone)
         for (const t of bad.filter((t) => pass.ledger.undone.has(t.turnId))) {
@@ -62,7 +66,26 @@ export function checkWorker(pass, state, result) {
             t.changedPages === EVERY_PAGE ? before : mergeScopedCheck(state.check, before, t.changedPages)
         }
       }
-      for (const b of batch) b.resolve({ undone: pass.ledger.undone.has(b.turn.turnId) })
+      for (const b of batch) {
+        const t = b.turn
+        const undone = pass.ledger.undone.has(t.turnId)
+        t.remaining = stillThere(t.faults, state.check)
+        const unverified =
+          state.check?.status === 'unmeasured' ||
+          t.faults.some((f) =>
+            state.check?.groups?.some((g) => g.name === f.group && g.status === 'unmeasured')
+          )
+        t.verdict = undone
+          ? 'reverted'
+          : unverified
+            ? 'unverified'
+            : t.remaining.length
+              ? t.changes.length
+                ? 'still-failing'
+                : 'no-change'
+              : 'fixed'
+        b.resolve({ undone })
+      }
     } catch (error) {
       // Not judged after all: the pass judges them again before the hand-over (repair-pass.js `judgeTheRest`).
       for (const b of batch) b.turn.judged = false
@@ -80,7 +103,7 @@ export function checkWorker(pass, state, result) {
   }
 
   return {
-    /** Judges one ended turn: `{ undone }` once a check covering it ran (none when it wrote nothing). */
+    /** Judges one ended turn: `{ undone }` once a fresh check covering its writes or requested page ran. */
     judge(turn) {
       return new Promise((resolve, reject) => {
         pending.push({ turn, resolve, reject })

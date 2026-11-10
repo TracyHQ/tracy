@@ -20,7 +20,7 @@ export const readTurns = (pass, sessionId, requestIds) =>
   pass.clock.bounded('the site turn records', () => pass.agent.turns({ sessionId, requestIds }))
 
 /** Waits for a turn on one of `requestIds`: the turn once ended, `{ open }` when time ran out on an open one, or null. */
-async function awaitTurn(pass, sessionId, requestIds, noTurnBy) {
+async function awaitTurn(pass, sessionId, requestIds, noTurnBy, turnBy) {
   const { clock } = pass
   let open = null
   for (;;) {
@@ -29,7 +29,9 @@ async function awaitTurn(pass, sessionId, requestIds, noTurnBy) {
     if (ended) return ended
     open = turns.find((t) => t.state === 'open') ?? open
     if (!open && (clock.now() >= noTurnBy || clock.workLeft() <= 0)) return null
-    const left = open ? clock.waitLeft() : Math.min(noTurnBy - clock.now(), clock.workLeft())
+    const left = open
+      ? Math.min(clock.waitLeft(), turnBy - clock.now())
+      : Math.min(noTurnBy - clock.now(), clock.workLeft())
     if (left <= 0) return open ? { ...open, open: true } : null
     await clock.sleep(Math.max(1, Math.min(clock.limits.pollMs, left)))
   }
@@ -131,6 +133,7 @@ export async function cutShort(pass, entry) {
 export async function sendPageTurn(pass, { page, faults, items, round, sessionId }) {
   const { agent, clock, buildCommentTurn, ledger } = pass
   const from = clock.now()
+  const turnBy = from + clock.limits.turnMs
   if (pass.rate && !(await pass.rate.take(items.length)))
     return { page, round, faults, items, sessionId, timeLimit: true, ms: clock.now() - from }
   const requestId = pass.nextRequestId()
@@ -140,20 +143,20 @@ export async function sendPageTurn(pass, { page, faults, items, round, sessionId
   if (!Array.isArray(numbers) || numbers.length !== items.length)
     throw new Error(`the comment requests door numbered ${numbers?.length ?? 0} of ${items.length} items`)
   const text = pageTurn(buildCommentTurn, items, numbers)
-  const record = { page, round, faults, items, numbers, requestIds: [requestId], text, sessionId }
+  const record = { page, round, faults, items, numbers, requestIds: [requestId], text, sessionId, turnBy }
   const prompt = (id) =>
     clock.bounded('the site session prompt', () => agent.prompt({ sessionId, requestId: id, text }))
   ledger.records.set(requestId, record)
   if (!(await prompt(requestId)))
     return { ...record, refused: 'the session did not accept the prompt', ms: clock.now() - from }
-  let turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs)
+  let turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs, turnBy)
   if (!turn && !clock.stopped()) {
     const again = `${requestId}-resend`
     record.requestIds.push(again)
     ledger.records.set(again, record)
     pass.log(`step 9b: no turn on ${page} after ${clock.limits.noTurnMs / 1000} s; resent once`)
     if (await prompt(again))
-      turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs)
+      turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs, turnBy)
   }
   const ms = clock.now() - from
   if (!turn) {

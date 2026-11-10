@@ -20,6 +20,7 @@ import { contractBaselineStore } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { kitAltSlots } from './write-step/repair-pass/repair-alt-slots.js'
 import { briefValues } from './write-step/repair-pass/repair-brief-values.js'
+import { checkAccepted } from './write-step/repair-pass/repair-faults.js'
 import { runRepairPass, undoTurns } from './write-step/repair-pass/repair-pass.js'
 import { sweepTurns } from './write-step/repair-pass/repair-turns.js'
 import { repairClock } from './write-step/repair-pass/repair-limits.js'
@@ -161,7 +162,20 @@ export async function runStepNine(input) {
   await retireSessions(agent, pass.result?.sessions ?? [], (line) => log.warn(line))
   const handed = outcome.check
   const repair = repairSummary({ outcome, clock, site: write.siteKey, timeline })
-  const report = withReadBack(written, handed)
+  const verified = checkAccepted(handed) && !['incomplete', 'failed'].includes(outcome.status)
+  const report = {
+    ...withReadBack(written, handed),
+    writeStatus: written.status,
+    ...(!verified
+      ? {
+          status: 'stopped',
+          cause: {
+            code: 'STEP_NINE_CHECK_FAILED',
+            reason: 'The write completed, but the final site check or repair verification did not pass.'
+          }
+        }
+      : {})
+  }
   if (saveFile) {
     const out = (name, value) => saveFile(name, `${JSON.stringify(value, null, 2)}\n`)
     await out('site-write-report.json', report)
