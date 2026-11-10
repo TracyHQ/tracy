@@ -5,6 +5,7 @@
  *   share tracking, a trailing slash) is not a second source; the row with data stands for both.
  * - A server's own key problem (`credential_invalid`, `credential_missing`) is the operator's to fix and shows on
  *   /ops/wo; the seller's row says the source was not collected, never an infrastructure error.
+ * - BEFORE RESEARCH every row reads not collected yet (#537): a source added before research is not a failed one.
  */
 import { untrackedUrl } from '../domain/social-links.mjs'
 
@@ -50,8 +51,13 @@ export function mergeSamePageRows(rows) {
   return out
 }
 
-/** A row's status and reason as the seller sees them: a server key problem reads as not collected. */
-export function sellerStatusOf(row) {
+/**
+ * A row's status and reason as the seller sees them: a server key problem reads as not collected. Before this card's
+ * own research ran (#537), every row reads not collected yet (status and reason null, the shape a pasted link has
+ * before research): a listing link the seller added is only fetched to judge it, and that fetch is not research.
+ */
+export function sellerStatusOf(row, { researched = true } = {}) {
+  if (!researched) return { status: null, reason: null }
   if (SERVER_KEY_REASONS.includes(row?.reason)) return { status: 'skipped', reason: 'not_collected' }
   return { status: row?.status ?? null, reason: row?.reason ?? null }
 }

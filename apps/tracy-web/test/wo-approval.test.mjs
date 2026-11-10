@@ -17,6 +17,7 @@ import { imageInfoWith } from 'website-opportunities/src/media-info.js'
 import { createExecutor } from 'website-opportunities/src/executor.js'
 import { requestResearch } from 'website-opportunities/src/place-requests.js'
 import { insertOpportunity } from 'website-opportunities/src/store.js'
+import { researchItemsOf, researchRunOf } from 'website-opportunities/src/research-progress.js'
 import { createTracyWoHost } from '../src/wo-host.js'
 import { fileDb } from './_db.mjs'
 
@@ -317,6 +318,76 @@ test('a Profile edit after approval asks for review again and marks the brief st
   assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).status, 200)
 })
 
+test('the Research sub steps read the place job serving the card and its snapshot', opts, async () => {
+  const w = await world()
+  const { opp } = await researchedCard(w)
+  const run = await researchRunOf(w.pool, opp.id)
+  assert.ok(run, 'the request is served by a place job with a snapshot')
+  assert.equal(run.job.state, 'completed')
+  const items = researchItemsOf(run)
+  assert.ok(
+    items.some((i) => i.key === 'website' && i.label === 'Website' && i.state === 'done'),
+    JSON.stringify(items)
+  )
+  assert.deepEqual(items.at(-1), {
+    key: 'profile',
+    label: 'Writing the business facts',
+    state: 'done',
+    at: null
+  })
+  // Put the same job back to collecting the website: the card reads it running, Writing the business facts waiting.
+  await w.pool.query(
+    `update wo_place_job set state = 'running', stage = 'collection', progress = '{"collecting":"website"}'::jsonb
+      where id = (select place_job_id from wo_job where opportunity_id = $1 and kind = 'research' limit 1)`,
+    [opp.id]
+  )
+  await w.pool.query(
+    `update wo_place_snapshot_source set attempted_at = attempted_at - interval '1 day'
+      where source = 'website' and snapshot_id = (select pj.snapshot_id from wo_place_job pj join wo_job rj on
+        rj.place_job_id = pj.id where rj.opportunity_id = $1 and rj.kind = 'research' limit 1)`,
+    [opp.id]
+  )
+  await w.pool.query(`update wo_job set state = 'running' where opportunity_id = $1 and kind = 'research'`, [
+    opp.id
+  ])
+  const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+  assert.equal(detail.stepProgress.step, 'research')
+  assert.equal(detail.stepProgress.items.find((i) => i.key === 'website')?.state, 'running')
+  assert.equal(detail.stepProgress.items.at(-1).state, 'waiting')
+})
+
+test(
+  'a brief made before the Profile was approved reads stale; approving the Profile again keeps its time',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp } = await researchedCard(w)
+    await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
+    await makeBrief(w, opp, 'early-brief-01')
+    // Approving again without an edit keeps the first approval, so the brief made after it stays current.
+    const first = (
+      await w.pool.query('select profile_approved_at from wo_opportunity where id = $1', [opp.id])
+    ).rows[0].profile_approved_at
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
+    const kept = (
+      await w.pool.query('select profile_approved_at from wo_opportunity where id = $1', [opp.id])
+    ).rows[0].profile_approved_at
+    assert.equal(kept.toISOString(), first.toISOString())
+    assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval.brief, 'needed')
+    // A brief made before the approval (one made before the approval step existed): stale, and the build waits.
+    await w.pool.query(
+      `update wo_opportunity set profile_approved_at = now() + interval '1 minute' where id = $1`,
+      [opp.id]
+    )
+    const approval = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval
+    assert.equal(approval.profile, 'approved')
+    assert.equal(approval.brief, 'stale')
+    assert.equal(approval.briefStale, 'profile')
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).body.code, 'BRIEF_STALE')
+    assert.equal((await build(w, opp, 'early-build-01')).body.code, 'BRIEF_NOT_APPROVED')
+  }
+)
+
 test(
   'a source added after research asks for research again; before research it is only added',
   opts,
@@ -344,6 +415,31 @@ test(
       url: 'https://www.instagram.com/harbor.gym.example/'
     })
     assert.equal(again.body.code, 'SOURCE_ALREADY_KNOWN')
+    // A listing link added before research gets its own row at once (its page is fetched to judge the link, and here
+    // that fetch fails), but the row reads not collected yet, like a pasted link, until research runs.
+    const LISTING = 'https://www.tripadvisor.com/Attraction_Review-g000-d000-Reviews-Harbor_Gym_Example.html'
+    const listing = await w.call(A, 'POST', `${BASE}/${fresh.id}/sources`, { url: LISTING })
+    assert.equal(listing.status, 201, JSON.stringify(listing.body))
+    const stored = (
+      await w.pool.query(`select status from wo_source where opportunity_id = $1 and source = 'listing'`, [
+        fresh.id
+      ])
+    ).rows[0]
+    assert.equal(stored?.status, 'failed', 'the fetch to judge the link failed')
+    const early = (await w.call(A, 'GET', `${BASE}/${fresh.id}`)).body.sources.find(
+      (s) => s.source === 'listing'
+    )
+    assert.ok(early, 'the listing row is shown')
+    assert.deepEqual(
+      {
+        status: early.status,
+        reason: early.reason,
+        coverage: early.coverage,
+        collectedAt: early.collectedAt
+      },
+      { status: null, reason: null, coverage: null, collectedAt: null }
+    )
+    assert.equal(early.pastedLink, LISTING)
 
     await requestResearch(w.pool, { accountId: a, opportunity: fresh, requestId: 'source-research-01' })
     await w.drain()

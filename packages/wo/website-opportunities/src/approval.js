@@ -4,7 +4,8 @@
  * `profile_approved_at`, `brief_approved_at`, `profile_changed_at` (the last Profile edit) and `sources_changed_at` (a
  * source the seller added after research ran).
  *
- * `approvalOf` derives the state the doors and the client read; the gates in the builder (`opportunities-build/route.js`)
+ * `approvalOf` derives the state the doors and the client read (a brief reads stale when the sources, a Profile edit or
+ * the Profile approval came after it was made); the gates in the builder (`opportunities-build/route.js`)
  * read the same object, so the client never offers a step the server would refuse.
  */
 
@@ -44,6 +45,9 @@ export function approvalOf({ opportunity, research, latestBriefAt }) {
   if (briefAt !== null) {
     if (sourcesChangedAt !== null && sourcesChangedAt > briefAt) briefStale = 'sources'
     else if (profileChangedAt !== null && profileChangedAt > briefAt) briefStale = 'profile'
+    // A brief made before the Profile was approved was made from Business facts nobody checked yet: it reads stale
+    // until it is made again from the approved Profile.
+    else if (profileApprovedAt !== null && profileApprovedAt > briefAt) briefStale = 'profile'
     brief = briefStale
       ? 'stale'
       : briefApprovedAt !== null && briefApprovedAt >= briefAt
@@ -103,10 +107,13 @@ export async function markProfileChanged(db, accountId, id) {
   return rows[0] ?? null
 }
 
-/** The Profile approved now. Returns the updated row, or null when it is not this account's. */
+/**
+ * The Profile approved now. Approving it again without an edit between keeps the first time, so a brief made after the
+ * first approval does not read stale. Returns the updated row, or null when it is not this account's.
+ */
 export async function approveProfile(db, accountId, id) {
   const { rows } = await db.query(
-    `update wo_opportunity set profile_approved_at = now(), updated_at = now()
+    `update wo_opportunity set profile_approved_at = coalesce(profile_approved_at, now()), updated_at = now()
      where id = $1 and account_id = $2 returning *`,
     [id, accountId]
   )

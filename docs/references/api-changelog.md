@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-10: Research sub steps, a brief older than the Profile approval, sources before research
+
+Changed `GET /api/website-opportunities/:id` (internal, no field added): `stepProgress.items` for a running Research now lists the sources of the shared place job serving the request and a final `profile` item (Writing the business facts); `approval.brief` reads `stale` with `briefStale: "profile"` when the Profile was approved after the latest brief was made, and a build answers 409 `BRIEF_NOT_APPROVED` until the brief is made again and approved; approving an already approved Profile keeps its first time. Before the opportunity's own Research completed, every `sources` row reads not collected yet (`status`, `reason`, `coverage` and `collectedAt` null), also a listing link added through `POST …/:id/sources` whose page could not be fetched.
+
 ## 2026-11-10: The seller approves the Profile and the Content brief
 
 Added (internal): `POST /api/website-opportunities/:id/profile/approve`, `POST /api/website-opportunities/:id/brief/approve`, `POST /api/website-opportunities/:id/sources` (one more link of the business) and `POST /api/website-opportunities/:id/media` (a photo or video the seller adds, multipart). `GET /api/website-opportunities/:id` and the rows of `GET /api/website-opportunities` add `approval`, and `GET …/:id` adds `stepProgress` (the sub steps of the step that runs now). Changed (internal): `POST …/:id/revisions` answers 409 `PROFILE_NOT_APPROVED` or `RESEARCH_NEEDED`; `POST …/:id/demo/build` and `POST …/demo/builds/bulk` answer 409 `PROFILE_NOT_APPROVED`, `BRIEF_NOT_APPROVED` or `RESEARCH_NEEDED` for a new build of the classic brief path. Public API v1 is unchanged.

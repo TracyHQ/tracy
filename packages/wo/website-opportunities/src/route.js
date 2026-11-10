@@ -2,6 +2,7 @@ import { researched, researchStateOf, researchStateShape } from './research-stat
 import { readProfileEdits, saveProfileEdits, withProfileEdits } from './profile-edits.js'
 import { sellerStatusOf } from './source-rows.js'
 import { approvalOf, markProfileChanged } from './approval.js'
+import { researchRunOf } from './research-progress.js'
 import { stepProgressOf } from './step-progress.js'
 import { OWNER_MEDIA_SOURCE, sellerReviewRoutes } from './seller-review-routes.js'
 import { imageInfoWith } from './media-info.js'
@@ -1488,12 +1489,13 @@ export function websiteOpportunitiesRoutes(deps) {
         // A social page's address as Tracy shows it, without share tracking (`social-links.mjs`).
         ref: SOCIAL_SOURCES.includes(s.source) ? untrackedUrl(s.ref, s.source) : s.ref,
         // A server key problem is the operator's (/ops/wo), never the seller's row (`source-rows.js`).
-        ...sellerStatusOf(s),
-        coverage: s.coverage,
-        resumable: Boolean(s.cursor),
+        // Before this card's research every row reads not collected yet (#537): no status, coverage or collected time.
+        ...sellerStatusOf(s, { researched: shown }),
+        coverage: shown ? s.coverage : null,
+        resumable: shown && Boolean(s.cursor),
         updatedAt: s.updated_at,
         // When the data was collected (the shared snapshot's time), not when this card's job ended (#524).
-        collectedAt: collectedAtOf(s),
+        collectedAt: shown ? collectedAtOf(s) : null,
         ...(view ? { shared: s.shared === true } : {}),
         // The two search rows: the pages found, with their verdicts (new optional fields).
         ...searchRowPages(s),
@@ -1536,7 +1538,12 @@ export function websiteOpportunitiesRoutes(deps) {
       // The seller's approvals (#537, `approval.js`): what the Progress card and the gates read.
       approval: approvalOf({ opportunity: opp, research, latestBriefAt: await latestBriefAt(opp) }),
       // The sub steps of the step that runs now (#537, `step-progress.js`), from recorded data only.
-      stepProgress: stepProgressOf({ research, briefJob: demo.briefJob, demoAction: demo.demoAction }),
+      stepProgress: stepProgressOf({
+        research,
+        researchRun: research.state === 'running' ? await researchRunOf(pool, opp.id) : null,
+        briefJob: demo.briefJob,
+        demoAction: demo.demoAction
+      }),
       jobs: jobs.map(jobShape),
       progress: demo.progress,
       revisions: demo.revisions,

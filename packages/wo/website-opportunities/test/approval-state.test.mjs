@@ -73,6 +73,46 @@ const CASES = [
     gates: { brief: null, build: 'BRIEF_NOT_APPROVED' }
   },
   {
+    name: 'a brief made before the Profile was approved reads stale, and the build waits',
+    opp: { profile_approved_at: T(4) },
+    researchedAt: T(1),
+    briefAt: T(3),
+    want: { research: 'ok', profile: 'approved', brief: 'stale', briefStale: 'profile' },
+    gates: { brief: null, build: 'BRIEF_NOT_APPROVED' }
+  },
+  {
+    name: 'a brief made before the Profile approval stays stale even when the brief was approved',
+    opp: { profile_approved_at: T(5), brief_approved_at: T(4) },
+    researchedAt: T(1),
+    briefAt: T(3),
+    want: { profile: 'approved', brief: 'stale', briefStale: 'profile' },
+    gates: { build: 'BRIEF_NOT_APPROVED' }
+  },
+  {
+    name: 'a brief made before the Profile was approved, Profile not approved: brief needed, not stale',
+    opp: {},
+    researchedAt: T(1),
+    briefAt: T(3),
+    want: { profile: 'needed', brief: 'needed', briefStale: null },
+    gates: { brief: 'PROFILE_NOT_APPROVED', build: 'PROFILE_NOT_APPROVED' }
+  },
+  {
+    name: 'the brief made again after the Profile approval: needed, then approved',
+    opp: { profile_approved_at: T(4), brief_approved_at: T(6) },
+    researchedAt: T(1),
+    briefAt: T(5),
+    want: { profile: 'approved', brief: 'approved', briefStale: null },
+    gates: { brief: null, build: null }
+  },
+  {
+    name: 'sources stale wins over a later Profile approval',
+    opp: { profile_approved_at: T(9), sources_changed_at: T(6) },
+    researchedAt: T(8),
+    briefAt: T(3),
+    want: { research: 'ok', profile: 'approved', brief: 'stale', briefStale: 'sources' },
+    gates: { build: 'BRIEF_NOT_APPROVED' }
+  },
+  {
     name: 'a source added after research: research needed, brief stale from sources',
     opp: { profile_approved_at: null, brief_approved_at: T(4), sources_changed_at: T(6) },
     researchedAt: T(1),

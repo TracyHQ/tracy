@@ -2,7 +2,8 @@
  * The sub steps of the step that runs now on one opportunity (#537), for the right pane of the Details Progress card.
  * Read from what the server records, never from a timer:
  *
- * - Research: no items. A research job records its state, not the part it is collecting, so only "running" is known.
+ * - Research: the shared place job serving the card's request (`research-progress.js`): one item per source of its
+ *   snapshot, then Writing the business facts. No items while the place job is still queued.
  * - Content brief: the brief job's own `step` (`brief-jobs.js`: reading, labelling, writing). Earlier steps read done,
  *   later ones waiting; only the current step has a time (the job's `updatedAt`, set when it moved to that step).
  * - Build: the step chain of a chain build (`demoAction.run.steps`, `chain-progress.js`). A build of another workflow
@@ -11,6 +12,8 @@
  * `step` is the most downstream step that runs (build, then brief, then research); with none running, the step whose
  * latest attempt failed, else null.
  */
+
+import { researchItemsOf } from './research-progress.js'
 
 /** The brief job's steps in the order `createRevision` moves through them. */
 export const BRIEF_STEPS = Object.freeze([
@@ -58,17 +61,18 @@ function buildItems(action) {
 const iso = (v) => (v ? new Date(v).getTime() : 0)
 
 /**
- * @param {{ research?: { state?: string } | null, briefJob?: { state: string, step?: string | null,
+ * @param {{ research?: { state?: string } | null, researchRun?: object | null, briefJob?: { state: string, step?: string | null,
  *   startedAt?: string, updatedAt?: string } | null, demoAction?: { state: string, acceptedAt?: string,
- *   run?: { steps?: Array<{ id: string, label: string, state: string }> } } | null }} input
+ *   run?: { steps?: Array<{ id: string, label: string, state: string }> } } | null }} input `researchRun` is the
+ *   place job serving the research request (`research-progress.js researchRunOf`)
  * @returns {{ step: 'research' | 'brief' | 'build' | null, items: Array<{ key: string, label: string,
  *   state: 'done' | 'running' | 'waiting' | 'failed', at: string | null }> }}
  */
-export function stepProgressOf({ research, briefJob, demoAction }) {
+export function stepProgressOf({ research, researchRun = null, briefJob, demoAction }) {
   if (demoAction && ACTIVE_BUILD.has(demoAction.state))
     return { step: 'build', items: buildItems(demoAction) }
   if (briefJob?.state === 'running') return { step: 'brief', items: briefItems(briefJob) }
-  if (research?.state === 'running') return { step: 'research', items: [] }
+  if (research?.state === 'running') return { step: 'research', items: researchItemsOf(researchRun) }
   // Nothing runs: the step whose latest attempt failed, the later of the two when both did.
   const buildFailed = demoAction?.state === 'failed'
   const briefFailed = briefJob?.state === 'failed'

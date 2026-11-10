@@ -276,8 +276,10 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
     ).rowCount
     if (!mine) return
     if (!held) await briefThroughJob(email, oppId, `${BASE}/${oppId}/revisions`, {}, {})
+    // The Profile approved before the brief was made (a later approval would read the brief stale).
     await pool.query(
-      "update wo_opportunity set profile_approved_at = now(), brief_approved_at = now() + interval '1 second' where id = $1",
+      `update wo_opportunity set profile_approved_at = coalesce(profile_approved_at, to_timestamp(0)),
+         brief_approved_at = now() + interval '1 second' where id = $1`,
       [oppId]
     )
   }
