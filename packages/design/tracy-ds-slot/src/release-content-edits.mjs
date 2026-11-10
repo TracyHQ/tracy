@@ -22,7 +22,9 @@
  *
  * `"adds": true` (needs `json` and `row`, `count` 1) adds one setting: `to` is `from` kept as it is, a comma, then one new
  * pair whose key the row does not hold yet (JA Voyara 1.0.12: Joomla 6 merges an article's own `article_layout` only
- * where the menu item's value is `use_article`, and the tour category menu items had no such key).
+ * where the menu item's value is `use_article`, and the tour category menu items had no such key). A lock that already
+ * holds the new pair right after the kept one, with the same value, is left as it is and the dump alone is edited (JA
+ * Diner 1.0.7: 1.0.6 set its dark logo by SQL appended to the installer, so its lock had the pair and its dump's rows not).
  *
  * `"reuses": true` says the new text is content the demo already carries in another row (JA Donate 1.0.7: the
  * Donate - Green/Orange slideshow's dead YouTube id takes the id the default home's slideshow plays). Then `to`
@@ -349,8 +351,19 @@ function rowOf(texts, entity) {
       }
     }
   })
-  if (rows.length !== 1) throw new Error(`dump: ${rows.length} rows of ${entity}, the edit expects 1`)
-  return rows[0]
+  // A text that empties the table again (DROP TABLE, TRUNCATE, DELETE FROM: Joomla's custom.sql after base.sql)
+  // runs after the texts that seed it, so only the rows it writes after its last reset reach the site, as the
+  // readiness check's dump reader reads them (JA Diner 1.0.7: base.sql's template styles 10 to 12)
+  const reset = new RegExp(
+    `^(?:DROP TABLE\\s+(?:IF EXISTS\\s+)?|TRUNCATE\\s+(?:TABLE\\s+)?|DELETE\\s+FROM\\s+)\`${escapeRe(prefix)}${table}\`\\s*;`,
+    'gm'
+  )
+  const lastReset = texts.map((text) => Math.max(-1, ...[...text.matchAll(reset)].map((m) => m.index)))
+  const live = lastReset.some((at) => at >= 0)
+    ? rows.filter((r) => r.start > lastReset[r.index] && lastReset[r.index] >= 0)
+    : rows
+  if (live.length !== 1) throw new Error(`dump: ${live.length} rows of ${entity}, the edit expects 1`)
+  return live[0]
 }
 
 /** The spans of every row of `<prefix><table>` in the dump texts: `{ index, start, end }`. */
@@ -557,6 +570,11 @@ function editLockRow(lockText, e) {
     expected = e.to
   } else {
     const key = e.adds === true ? `"${JSON_PAIR.exec(e.to.slice(e.from.length + 1))[1]}":` : null
+    // a lock captured from a site the pair was already set on (JA Diner 1.0.6 set it by SQL appended to the
+    // installer, so its dump's rows lacked it): the pair right after the kept one, with the same value, is the
+    // edit made already, and only the dump takes it
+    if (key && occurrences(value, key) === 1 && occurrences(value, inValue(e, 'to')) === e.count)
+      return lockText
     if (key && value.includes(key))
       throw new Error(`lock: ${e.entity}.${e.field} already holds ${key}, the edit would add it twice`)
     const n = occurrences(value, inValue(e, 'from'))

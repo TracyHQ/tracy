@@ -8,7 +8,7 @@
   "nav": "brand-centered",
   "hero": "cover",
   "updateSlug": "wp-ja-diner",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "roleReads": {
     "--bg": "--ds-c-bg",
     "--surface": "--ds-c-surface",
