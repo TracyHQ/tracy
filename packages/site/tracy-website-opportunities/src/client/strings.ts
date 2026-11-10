@@ -1383,7 +1383,7 @@ export const en = {
   'source.add.dismiss': 'Dismiss',
   'source.add.error.TOO_LONG': 'This link is too long. Copy the page address again from the address bar.',
   'source.add.error.NOT_A_LINK':
-    'This is not a link. Paste the full address, for example instagram.com/yourbusiness.',
+    'This is not a link. Paste the full address of the page, for example www.example.com.',
   'source.add.error.PRIVATE_ADDRESS': 'This is a private address. Paste the public address of the page.',
   'source.add.error.UNREACHABLE': 'This address cannot be reached. Check the spelling.',
   'source.add.error.UNSUPPORTED_LINK':
