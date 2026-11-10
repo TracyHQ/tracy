@@ -950,7 +950,31 @@ export function DetailView({
                 />
               ),
             saveName,
-            field: (field, value) => editProfileRow(field, value, true),
+            profileField: (field, value) => {
+              const view = profileEditView(profile, field)
+              if (view === null) return null
+              return {
+                value,
+                save: async (typed) => {
+                  const sent = profileEditBody(field, typed, view.value)
+                  if (sent === null) return true
+                  const answer = await api.editProfile(id, sent.edits)
+                  if (answer.ok) void reload()
+                  return answer.ok
+                }
+              }
+            },
+            factSwitch: (fields) => {
+              const rows = factRows.filter((r) => r.field !== null && fields.includes(r.field))
+              if (rows.length === 0) return null
+              return {
+                on: rows.some((r) => r.onSite),
+                set: async (on) => {
+                  for (const r of rows) if (r.onSite !== on && !(await toggleFact(r.id, on))) return false
+                  return true
+                }
+              }
+            },
             saveHours,
             saveRating,
             pickReading,

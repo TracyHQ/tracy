@@ -1,32 +1,25 @@
 /**
- * The bands of the Business facts sub-page that hold their own state (#537, layout C): Opening hours (the days as a
- * row of fixed cells that scrolls sideways, the check and its choices in a last cell of their own that never
- * scrolls, the full table and the note in Show all), Team (people in a row, each with its choice) and the Brand body
- * (three cells: the logo and where it came from, the verdict and the colour note one line each, the colours).
+ * The bands of the Business facts sub-page that hold their own state (#537, design A): Opening hours (the days as a
+ * row of cells that shrink to fit, and scroll sideways when they cannot; the check note as the amber chip in the
+ * header; the band's switch keeps the hours on the site or leaves them off) and the Team row (people side by side,
+ * each with its own small switch) and Research details (locked off the site, the sources research read).
  */
-import { type JSX, type ReactNode, type RefObject, useState } from 'react'
+import type { JSX } from 'react'
 import { Clock } from 'lucide-react'
-import { Badge, Button } from '@tracy/ui'
 
-import { FactsBand, NotAvailable, useHidesItems } from './business-facts-band.tsx'
+import { FactsBand, NotAvailable } from './business-facts-band.tsx'
 import {
-  BAND_CAPACITY,
   type BusinessFactsView,
   type FactsCardView,
   hoursLineParts,
   initialsOf,
-  itemChipOf,
-  overflows
+  itemChipOf
 } from './business-facts-model.ts'
-import { ActButton, LeftOffTag } from './business-facts-parts.tsx'
-import type { ColorsView, LogoView } from './detail-model.ts'
-import { EditableText } from './editable-text.tsx'
-import { mediaUrl } from './api.ts'
 import { sourceLabel } from './cms-label.ts'
-import { LogoField } from './media-row.tsx'
-import { typedHours } from './profile-hours-model.ts'
+import { BandSwitch } from './facts-band-actions.tsx'
+import { HoursEdit } from './facts-band-edit.tsx'
 import { type HoursChoice, type HoursSaved, sourceName } from './profile-hours-row.tsx'
-import { type ReadingPick, readingActions } from './profile-reading-model.ts'
+import type { ReadingItemView, ReadingPick } from './profile-reading-model.ts'
 import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
 
@@ -47,328 +40,148 @@ export function HoursBand({
   saveHours: (choice: HoursChoice) => Promise<HoursSaved>
 }): JSX.Element {
   const hours = view.hours
-  const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const choose = async (choice: HoursChoice): Promise<void> => {
-    if (busy) return
-    setBusy(true)
-    setFailed(false)
-    setFailed((await saveHours(choice)) !== 'ok')
-    setBusy(false)
-  }
   const card = view.cards.find((c) => c.id === 'hours')
   const filled = card?.state === 'filled' && hours !== null
   const lines = hours === null ? [] : hours.hours.length > 0 ? hours.hours : hours.sourceHours
   const note = hours?.open ? t('hours.note', { source: sourceName(t, hours) }) : null
-  const chip =
-    hours?.chip === 'check' ? (
-      <Badge variant="outline" className="tracy-wo-chip-warn" title={note ?? undefined}>
-        {t('name.chip.check')}
-      </Badge>
-    ) : hours?.chip === 'checked' ? (
-      <Badge variant="outline" className="tracy-wo-chip-ok">
-        {t('name.chip.checked')}
-      </Badge>
-    ) : null
-  // A left off hours band keeps its days and a tag; the one choice flips to Show on the site.
-  const choices =
-    !filled || hours === null
-      ? []
-      : hours.left
-        ? hours.sourceHours.length > 0
-          ? [
-              <ActButton key="show" disabled={busy} onClick={() => void choose({ choice: 'keep' })}>
-                {t('reading.show')}
-              </ActButton>
-            ]
-          : []
-        : [
-            ...(hours.open && hours.sourceHours.length > 0
-              ? [
-                  <ActButton key="keep" disabled={busy} onClick={() => void choose({ choice: 'keep' })}>
-                    {t('name.keep')}
-                  </ActButton>
-                ]
-              : []),
-            <ActButton key="leave" disabled={busy} onClick={() => void choose({ choice: 'leave' })}>
-              {t('hours.leave')}
-            </ActButton>
-          ]
-  const table = (): ReactNode => (
-    <>
-      <table className="tracy-wo-facts-hours" data-off={hours?.left ? '' : undefined}>
-        <tbody>
-          {lines.map((line) => {
-            const { days, times } = hoursLineParts(line)
-            return (
-              <tr key={line}>
-                <th scope="row">{days}</th>
-                <td>{times}</td>
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-      {note === null ? null : (
-        <div className="tracy-wo-facts-note" role="note">
-          <span>{note}</span>
-        </div>
-      )}
-    </>
-  )
-  const edit = (): ReactNode => (
-    <>
-      <EditableText
-        t={t}
-        value={lines.join('\n')}
-        label={t('field.hours')}
-        edited={false}
-        editedKey="profile.editedByYou"
-        multiline
-        maxLength={1200}
-        startOpen
-        onSave={async (typed) => {
-          const next = typedHours(typed)
-          if (next.length === 0 || next.join('|') === lines.join('|')) return true
-          return (await saveHours({ choice: 'edit', hours: next })) === 'ok'
-        }}
-      />
-      <span className="tracy-wo-muted tracy-wo-small">{t('hours.hint')}</span>
-      {hours?.left ? null : (
-        <span className="tracy-wo-row">
-          <Button
-            type="button"
-            size="xs"
-            variant="link"
-            disabled={busy}
-            onClick={() => void choose({ choice: 'leave' })}
-          >
-            {t('hours.leave')}
-          </Button>
-        </span>
-      )}
-    </>
-  )
-  const shown = lines.slice(0, BAND_CAPACITY.hours)
-  // The days scroll sideways when the band is narrower than all of them: Show all (n) then opens the full table.
-  const [daysRef, daysHidden] = useHidesItems<HTMLDivElement>(shown.length)
+  // On: the hours go to the site. Off: left off. Putting them back keeps what the source says.
+  const canSet = filled && (!hours.left || hours.sourceHours.length > 0)
+  const set = async (on: boolean): Promise<boolean> =>
+    (await saveHours({ choice: on ? 'keep' : 'leave' })) === 'ok'
   return (
     <FactsBand
       t={t}
       id="hours"
+      label={t('field.hours')}
       title={
         <>
           <Clock aria-hidden="true" className="tracy-wo-icon" />
           <span className="tracy-wo-facts-ell">{t('field.hours')}</span>
-          <SourceChip t={t} chip={card?.chip ?? null} locale={locale} />
         </>
       }
-      sheetTitle={t('field.hours')}
-      edit={card === undefined || card.state === 'notCollected' ? null : edit}
-      more={
-        filled && (overflows('hours', lines.length) || note !== null || daysHidden)
-          ? { count: lines.length, render: table }
-          : null
+      check={note}
+      chips={filled ? <SourceChip t={t} chip={card?.chip ?? null} locale={locale} /> : null}
+      onSite={{ on: !(hours?.left ?? false), set: canSet ? set : null }}
+      edit={
+        !filled
+          ? { why: t('reason.not_collected') }
+          : {
+              form: (close) => (
+                <HoursEdit t={t} close={close} lines={lines} open={hours.open} saveHours={saveHours} />
+              )
+            }
       }
     >
       {!filled ? (
         <Missing t={t} card={card} />
       ) : (
-        <div className="tracy-wo-facts-hoursrow">
-          <div
-            ref={daysRef}
-            className="tracy-wo-facts-days tracy-wo-facts-cells"
-            data-off={hours.left ? '' : undefined}
-          >
-            {shown.map((line) => {
-              const { days, times } = hoursLineParts(line)
-              return (
-                <div key={line} className="tracy-wo-facts-cell">
-                  <span className="tracy-wo-facts-ck" title={days}>
-                    {days}
-                  </span>
-                  <span className="tracy-wo-facts-ln">
-                    <span className="tracy-wo-facts-ell" title={times}>
-                      {times}
-                    </span>
-                  </span>
-                </div>
-              )
-            })}
-          </div>
-          {chip === null && choices.length === 0 && !hours.left && !failed ? null : (
-            <div className="tracy-wo-facts-cell tracy-wo-facts-status">
-              <span className="tracy-wo-facts-ln">
-                {chip}
-                {hours.left ? <LeftOffTag t={t} /> : null}
-              </span>
-              <span className="tracy-wo-facts-ln tracy-wo-facts-choices">
-                {choices}
-                {failed ? (
-                  <span className="tracy-wo-error" role="alert">
-                    {t('hours.failed')}
-                  </span>
-                ) : null}
-              </span>
-            </div>
-          )}
+        <div className="tracy-wo-facts-days tracy-wo-facts-cells tracy-wo-facts-row">
+          {lines.map((line) => {
+            const { days, times } = hoursLineParts(line)
+            return (
+              <div key={line} className="tracy-wo-facts-cell" title={line}>
+                <span className="tracy-wo-facts-ck">{days}</span>
+                <span className="tracy-wo-facts-ln">
+                  <span className="tracy-wo-facts-ell">{times}</span>
+                </span>
+              </div>
+            )
+          })}
         </div>
       )}
     </FactsBand>
   )
 }
 
-/** The team: people in a row (or a list in the sheet), each with its avatar, role, chip and choice. */
+/** A person is on the site unless removed, or named only in reviews and not shown. */
+const onSiteOf = (p: ReadingItemView): boolean => !p.removed && (!p.reviewsOnly || p.onSite)
+
+/** The reading picks that put a person on the site, or take them off it. */
+export function personPicks(p: ReadingItemView, on: boolean): ReadingPick[] {
+  if (!on) return [p.reviewsOnly ? 'hide' : 'remove']
+  return [
+    ...(p.removed ? (['restore'] as const) : []),
+    ...(p.reviewsOnly && !p.onSite ? (['show'] as const) : [])
+  ]
+}
+
+/** The team: people in one row that scrolls sideways, each with its avatar, role, chip and own small switch. */
 export function TeamPeople({
   t,
   locale,
   view,
-  pickReading,
-  limit,
-  listRef
+  pickReading
 }: {
   t: Translate
   locale: string
   view: BusinessFactsView
   pickReading: (item: string, pick: ReadingPick) => Promise<boolean>
-  /** How many people the band shows; all of them in the sheet. */
-  limit?: number
-  /** The band's row, measured to offer Show all when a person does not fit. */
-  listRef?: RefObject<HTMLUListElement | null>
 }): JSX.Element {
-  const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const pick = async (id: string, choice: ReadingPick): Promise<void> => {
-    if (busy) return
-    setBusy(true)
-    setFailed(false)
-    setFailed(!(await pickReading(id, choice)))
-    setBusy(false)
-  }
+  const set =
+    (person: ReadingItemView) =>
+    async (on: boolean): Promise<boolean> => {
+      for (const pick of personPicks(person, on)) if (!(await pickReading(person.id, pick))) return false
+      return true
+    }
   return (
-    <ul ref={listRef} className="tracy-wo-facts-people">
-      {view.team.slice(0, limit).map((person) => {
-        const off = person.removed || (person.reviewsOnly && !person.onSite)
-        return (
-          <li key={person.id} data-off={off ? '' : undefined}>
-            <span className="tracy-wo-facts-avatar" aria-hidden="true">
-              {initialsOf(person.label)}
-            </span>
-            <span className="tracy-wo-facts-person">
-              <span className="tracy-wo-facts-ln">
-                <span className="tracy-wo-facts-ell" title={person.label}>
-                  {person.label}
-                </span>
-                <SourceChip t={t} chip={itemChipOf(view, person)} locale={locale} />
-                {off ? <LeftOffTag t={t} /> : null}
+    <ul className="tracy-wo-facts-people tracy-wo-facts-row">
+      {view.team.map((person) => (
+        <li key={person.id} data-off={onSiteOf(person) ? undefined : ''}>
+          <span className="tracy-wo-facts-avatar" aria-hidden="true">
+            {initialsOf(person.label)}
+          </span>
+          <span className="tracy-wo-facts-person">
+            <span className="tracy-wo-facts-ln">
+              <span className="tracy-wo-facts-ell" title={person.label}>
+                {person.label}
               </span>
-              {person.role === null ? null : (
-                <small className="tracy-wo-facts-ell" title={person.role}>
-                  {person.role}
-                </small>
-              )}
+              <SourceChip t={t} chip={itemChipOf(view, person)} locale={locale} />
             </span>
-            {readingActions(person)
-              .filter((p) => p !== 'remove')
-              .map((p) => (
-                <ActButton key={p} disabled={busy} onClick={() => void pick(person.id, p)}>
-                  {t(p === 'restore' ? 'reading.show' : `reading.${p}`)}
-                </ActButton>
-              ))}
-          </li>
-        )
-      })}
-      {failed ? (
-        <li className="tracy-wo-error" role="alert">
-          {t('reading.failed')}
+            {person.role === null ? null : (
+              <small className="tracy-wo-facts-ell" title={person.role}>
+                {person.role}
+              </small>
+            )}
+          </span>
+          <BandSwitch t={t} small label={person.label} view={{ on: onSiteOf(person), set: set(person) }} />
         </li>
-      ) : null}
+      ))}
     </ul>
   )
 }
 
-/**
- * The brand in three cells side by side, no layer over another: the logo with where it came from and its size, the
- * verdict on the logo and the note on the colours (one line each, the whole sentence on hover), and the colours.
- * Under 560px the verdict and the note go to a second row.
- */
-export function BrandBody({
-  t,
-  logo,
-  colors,
-  retry,
-  food
-}: {
-  t: Translate
-  logo: LogoView
-  colors: ColorsView
-  retry: { busy: boolean; failed: boolean; onPress: () => void }
-  food: boolean
-}): JSX.Element {
-  const verdict =
-    logo.state === 'found' && logo.recognised !== null ? t(`media.logo.recognised.${logo.recognised}`) : null
-  const colorNote =
-    colors.state === 'found' && colors.observedOnly
-      ? t(colors.origin === 'website' ? 'detail.colorsObserved.website' : 'detail.colorsObserved.social')
-      : null
-  const size =
-    logo.state === 'found' && logo.width !== null && logo.height !== null
-      ? `${t(logo.small ? 'media.logo.smallNote' : 'media.logo.sizeNote', {
-          width: logo.width,
-          height: logo.height
-        })}${logo.transparent ? ` ${t('media.logo.transparent')}` : ''}`
-      : null
-  const via =
-    logo.state === 'found'
-      ? t(logo.viaKey, { source: logo.source === null ? '' : sourceLabel(t, logo.source) })
-      : null
+/** Research details: locked off the site, the sources research read in one row. */
+export function ResearchBand({ t, view }: { t: Translate; view: BusinessFactsView }): JSX.Element {
+  const researched = view.researched
+  const looked = view.sources
+    .filter((s) => typeof s.collectedAt === 'string' && s.collectedAt !== '')
+    .map((s) => sourceLabel(t, s.source, s.ref ?? null))
+    .filter((name, i, all) => all.indexOf(name) === i)
   return (
-    <div className="tracy-wo-facts-brand">
-      <div className="tracy-wo-facts-brand-logo">
-        {logo.state === 'found' ? (
-          <>
-            <span className="tracy-wo-logo">
-              <img src={mediaUrl(logo.mediaId)} alt={t('media.logo')} decoding="async" />
-            </span>
-            <span className="tracy-wo-facts-brand-via">
-              <Badge variant="outline" title={via ?? undefined}>
-                {via}
-              </Badge>
-              {size === null ? null : (
-                <span className="tracy-wo-facts-ell tracy-wo-facts-dim tracy-wo-small" title={size}>
-                  {size}
-                </span>
-              )}
-            </span>
-          </>
-        ) : (
-          <LogoField t={t} logo={logo} retry={retry} food={food} />
-        )}
-      </div>
-      {verdict === null && colorNote === null ? null : (
-        <div className="tracy-wo-facts-brand-notes">
-          {verdict === null ? null : (
-            <span className="tracy-wo-facts-ell" title={verdict}>
-              {verdict}
-            </span>
-          )}
-          {colorNote === null ? null : (
-            <span className="tracy-wo-facts-ell tracy-wo-facts-dim tracy-wo-small" title={colorNote}>
-              {colorNote}
-            </span>
-          )}
-        </div>
-      )}
-      {colors.state === 'found' ? (
-        <ul className="tracy-wo-facts-swatches" title={colorNote ?? undefined}>
-          {colors.colors.map((c, i) => (
-            <li key={`${c.hex}-${i}`}>
-              <span style={{ backgroundColor: c.hex }} aria-hidden="true" />
-              {c.hex}
+    <FactsBand
+      t={t}
+      id="research"
+      label={t('facts.research')}
+      title={t('facts.research')}
+      aside={
+        <span className="tracy-wo-facts-aside" title={t('facts.lock.research')}>
+          {t('facts.lock.research')}
+        </span>
+      }
+      onSite={{ on: false, set: null, lock: true, why: t('facts.lock.research') }}
+      edit={{ why: t('facts.edit.research') }}
+    >
+      {researched && looked.length > 0 ? (
+        <ul className="tracy-wo-facts-chiprow tracy-wo-facts-row">
+          {looked.map((name) => (
+            <li key={name} className="tracy-wo-facts-pill">
+              <span className="tracy-wo-facts-ell">{name}</span>
             </li>
           ))}
         </ul>
-      ) : null}
-    </div>
+      ) : (
+        <NotAvailable t={t} state={researched ? 'none' : 'notCollected'} />
+      )}
+    </FactsBand>
   )
 }

@@ -112,13 +112,13 @@ export function ApprovalActions({
 export function AddMedia({
   t,
   onUpload,
-  tile = false
+  act = false
 }: {
   t: Translate
   /** Uploads the file; answers the refusal code, or null when it was added. */
   onUpload: (file: File) => Promise<string | null>
-  /** Drawn as the first tile of the Business facts grid (#537): a large press, no hint line. */
-  tile?: boolean
+  /** Drawn as a text action in the Photos & video header of Business facts (#537): the formats as its title. */
+  act?: boolean
 }): JSX.Element {
   const input = useRef<HTMLInputElement | null>(null)
   const [busy, setBusy] = useState(false)
@@ -141,20 +141,26 @@ export function AddMedia({
       onChange={(e) => void picked(e.target.files?.[0])}
     />
   )
-  if (tile)
+  if (act)
     return (
-      <div className="tracy-wo-add-tile">
+      <span className="tracy-wo-add-act" data-failed={error === null ? undefined : ''}>
         {field}
-        <button type="button" disabled={busy} onClick={() => input.current?.click()}>
+        <button
+          type="button"
+          className="tracy-wo-facts-act"
+          disabled={busy}
+          title={error === null ? t('media.addHint') : codeText(t, 'media.error', error)}
+          onClick={() => input.current?.click()}
+        >
           {busy ? <Spinner label={t('media.adding')} /> : <Plus aria-hidden="true" />}
-          <span>{t(busy ? 'media.adding' : 'media.add')}</span>
+          {t(busy ? 'media.adding' : 'media.add')}
         </button>
         {error !== null ? (
-          <span className="tracy-wo-error tracy-wo-small" role="alert">
+          <span className="tracy-wo-facts-sw-failed" role="alert">
             {codeText(t, 'media.error', error)}
           </span>
         ) : null}
-      </div>
+      </span>
     )
   return (
     <div className="tracy-wo-add-media">

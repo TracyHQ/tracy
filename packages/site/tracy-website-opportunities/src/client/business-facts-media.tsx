@@ -1,9 +1,9 @@
 /**
- * Photos & video of the Business facts sub-page (#537, layout C): a fixed-height band whose body is a one-row
- * filmstrip that starts with an Add more tile, then the first tiles; more than fits ends in a +N tile and Show all
- * (n) opens the whole grid in the side sheet, with the filters All / Photos / Videos, the menu files and the
- * pictures kept but not shown as photographs. Every tile but the seller's own has its source's glyph in a corner.
- * While research runs the strip waits (only Add more stays): progress shows in the band.
+ * Photos & video of the Business facts sub-page (#537, design A): the filters All / Photos / Videos, then every tile in
+ * one filmstrip that scrolls sideways inside the band. The one Add more sits in the header cluster, the formats as
+ * its title. Edit shows the formats, the menu files and the pictures kept but not shown as photographs, in place.
+ * Every tile but the seller's own has its source's glyph in a corner. While research runs the strip waits (only Add
+ * more stays): progress shows in the band.
  */
 import { type JSX, useState } from 'react'
 import { Play } from 'lucide-react'
@@ -12,8 +12,9 @@ import { Badge } from '@tracy/ui'
 import { mediaUrl } from './api.ts'
 import { sourceLabel } from './cms-label.ts'
 import { FactsBand, NotAvailable } from './business-facts-band.tsx'
-import { BAND_CAPACITY, type MediaFilter, filterMedia, overflows } from './business-facts-model.ts'
+import { type MediaFilter, filterMedia } from './business-facts-model.ts'
 import type { MediaRowView } from './detail-model.ts'
+import { EditFooter } from './facts-band-actions.tsx'
 import { File, HiddenPictures } from './media-row.tsx'
 import { AddMedia } from './seller-review.tsx'
 import { MediaSourceBadge } from './source-chip.tsx'
@@ -49,40 +50,6 @@ function MediaTile({ t, tile }: { t: Translate; tile: Tile }): JSX.Element {
   )
 }
 
-/** The whole grid in the sheet, with its filters, the menu files and the hidden pictures. */
-function MediaAll({ t, media, tiles }: { t: Translate; media: MediaRowView; tiles: Tile[] }): JSX.Element {
-  const [filter, setFilter] = useState<MediaFilter>('all')
-  const counts: Record<MediaFilter, number> = {
-    all: tiles.length,
-    photos: filterMedia(tiles, 'photos').length,
-    videos: filterMedia(tiles, 'videos').length
-  }
-  return (
-    <div className="tracy-wo-facts-sheet-media">
-      <span className="tracy-wo-facts-filters" role="group" aria-label={t('details.section.media')}>
-        {FILTERS.map((f) => (
-          <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)}>
-            {t(`facts.media.${f}`, { count: counts[f] })}
-          </button>
-        ))}
-      </span>
-      <ul className="tracy-wo-facts-grid-media">
-        {filterMedia(tiles, filter).map((tile) => (
-          <MediaTile key={tile.id} t={t} tile={tile} />
-        ))}
-      </ul>
-      {media.files.length > 0 ? (
-        <ul className="tracy-wo-media">
-          {media.files.map((file) => (
-            <File key={file.url} t={t} file={file} />
-          ))}
-        </ul>
-      ) : null}
-      <HiddenPictures t={t} tiles={media.photos.hidden} />
-    </div>
-  )
-}
-
 export function FactsMedia({
   t,
   media,
@@ -95,53 +62,58 @@ export function FactsMedia({
   show: boolean
   onUpload: (file: File) => Promise<string | null>
 }): JSX.Element {
+  const [filter, setFilter] = useState<MediaFilter>('all')
   const tiles = show
     ? [...media.photos.groups.flatMap((g) => g.tiles), ...media.videos.tiles].filter((m) => m.stored)
     : []
-  const photos = filterMedia(tiles, 'photos').length
-  const videos = filterMedia(tiles, 'videos').length
-  const extra =
-    (show && (media.files.length > 0 || media.photos.hidden.length > 0)) || overflows('media', tiles.length)
-  const strip = tiles.slice(0, BAND_CAPACITY.media)
-  const rest = tiles.length - strip.length
+  const counts: Record<MediaFilter, number> = {
+    all: tiles.length,
+    photos: filterMedia(tiles, 'photos').length,
+    videos: filterMedia(tiles, 'videos').length
+  }
   return (
     <FactsBand
       t={t}
       id="media"
+      label={t('details.section.media')}
       title={t('details.section.media')}
-      aside={
-        tiles.length > 0 ? (
-          <span className="tracy-wo-facts-aside">
-            {t('facts.media.photos', { count: photos })} · {t('facts.media.videos', { count: videos })}
-          </span>
-        ) : null
-      }
-      actions={[<AddMedia key="add" t={t} onUpload={onUpload} />]}
-      edit={null}
-      more={
-        extra && tiles.length > 0
-          ? { count: tiles.length, render: () => <MediaAll t={t} media={media} tiles={tiles} /> }
-          : null
-      }
+      add={<AddMedia t={t} onUpload={onUpload} act />}
+      onSite={{ on: true, set: null, why: t('facts.switch.notStored') }}
+      edit={{
+        form: (close) => (
+          <>
+            <p className="tracy-wo-muted tracy-wo-small">{t('media.addHint')}</p>
+            {media.files.length > 0 ? (
+              <ul className="tracy-wo-media">
+                {media.files.map((file) => (
+                  <File key={file.url} t={t} file={file} />
+                ))}
+              </ul>
+            ) : null}
+            <HiddenPictures t={t} tiles={show ? media.photos.hidden : []} />
+            <EditFooter t={t} onCancel={close} />
+          </>
+        )
+      }}
     >
-      <ul className="tracy-wo-facts-strip">
-        <li>
-          <AddMedia t={t} onUpload={onUpload} tile />
-        </li>
-        {strip.map((tile) => (
-          <MediaTile key={tile.id} t={t} tile={tile} />
-        ))}
-        {rest > 0 ? (
-          <li className="tracy-wo-facts-more-tile">
-            <span aria-hidden="true">{t('facts.media.more', { count: rest })}</span>
-          </li>
-        ) : null}
-        {tiles.length === 0 ? (
-          <li className="tracy-wo-facts-strip-na">
-            <NotAvailable t={t} state={show ? 'none' : 'notCollected'} />
-          </li>
-        ) : null}
-      </ul>
+      {tiles.length === 0 ? (
+        <NotAvailable t={t} state={show ? 'none' : 'notCollected'} />
+      ) : (
+        <div className="tracy-wo-facts-mediarow">
+          <span className="tracy-wo-facts-filters" role="group" aria-label={t('details.section.media')}>
+            {FILTERS.map((f) => (
+              <button key={f} type="button" aria-pressed={filter === f} onClick={() => setFilter(f)}>
+                {t(`facts.media.${f}`, { count: counts[f] })}
+              </button>
+            ))}
+          </span>
+          <ul className="tracy-wo-facts-strip tracy-wo-facts-row">
+            {filterMedia(tiles, filter).map((tile) => (
+              <MediaTile key={tile.id} t={t} tile={tile} />
+            ))}
+          </ul>
+        </div>
+      )}
     </FactsBand>
   )
 }

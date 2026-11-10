@@ -1410,25 +1410,27 @@ export const en = {
   'facts.reviews.one': '{count} Google review',
   'facts.reviews.other': '{count} Google reviews',
   'facts.phone.others': 'Other: {list}.',
-  'facts.website.none': 'No website found',
   'facts.messages.lead': 'The site leads with these',
   'facts.reviews.title': 'What guests say',
-  'facts.reviews.note': 'Not on the site, used for tone only',
   'facts.media.all': 'All {count}',
   'facts.media.photos': 'Photos {count}',
   'facts.media.videos': 'Videos {count}',
   'facts.research': 'Research details',
-  // Business facts as stacked fixed-height bands (#537, layout C): N/A, Show all, the side sheet, social pages.
+  // Business facts bands (#537): N/A, key messages, social pages.
   'facts.na': 'N/A',
-  'facts.showAll': 'Show all',
-  'facts.showAll.count': 'Show all ({count})',
-  'facts.open': 'Open',
-  'facts.close': 'Close',
   'facts.message.n': 'Message {n}',
   'facts.social.title': 'Social pages',
-  'facts.research.count.one': '{count} source read',
-  'facts.research.count.other': '{count} sources read',
-  'facts.media.more': '+{count}',
+  // Business facts, design A (#537): the band switch, the locked bands, Edit in place.
+  'facts.business': 'Business',
+  'facts.lock.business': 'The name and the contact details always show on the site.',
+  'facts.lock.research': 'Notes on how the facts were found, never shown on the site',
+  'facts.switch.notStored': 'Shows on the site. Leaving this section off is not stored yet.',
+  'facts.edit.note': 'Only this section changes. The rest of the page stays as it is.',
+  'facts.edit.none': 'Nothing in this section can be edited yet.',
+  'facts.edit.brand': 'The logo and the colours cannot be edited here yet.',
+  'facts.edit.social': 'The social pages cannot be edited here yet.',
+  'facts.edit.reviews': 'Guest reviews are quoted as written, so they cannot be edited.',
+  'facts.edit.research': 'Research details are a record of what was read.',
   // End of the Business facts bands block.
 
   /** Your site (#537): before the site is built, the block says which step is needed. */

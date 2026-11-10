@@ -41,61 +41,15 @@ export const BAND_IDS = ['business', ...CARD_IDS, 'media', 'research'] as const
 export type BandId = (typeof BAND_IDS)[number]
 
 /**
- * One fixed height per band kind, the same for every business, at three widths of the facts column: [wide page
- * (900px and more), mid page (under 900px), narrow page (under 560px)]. Under 900px the band title moves above the
- * band content, and the business band lays its four facts two by two. A band never grows with its content; more
- * than fits scrolls inside it or opens in Show all.
+ * The one collapsed height every band has, the same for every business, at three widths of the facts column: [wide
+ * page (900px and more), mid page (under 900px), narrow page (under 560px)]. A band is a 40px header row (title, chips,
+ * the action cluster) over a 76px body; what does not fit in the body scrolls sideways in one row. Only Edit makes a
+ * band taller.
  */
-export const BAND_HEIGHTS: Readonly<Record<BandId, readonly [number, number, number]>> = {
-  business: [144, 212, 212],
-  hours: [72, 96, 96],
-  services: [64, 84, 84],
-  about: [72, 96, 96],
-  team: [64, 92, 92],
-  brand: [96, 112, 156],
-  messages: [88, 112, 240],
-  reviews: [156, 184, 184],
-  social: [64, 84, 84],
-  media: [184, 228, 228],
-  research: [52, 52, 52]
-}
+export const BAND_HEIGHT = [118, 118, 118] as const
 
-/** The widths of the facts column where the bands change layout and height: mid under the first, narrow under the second. */
+/** The widths of the facts column where the bands change their paddings and cell widths: mid under the first, narrow under the second. */
 export const BAND_BREAKPOINTS = [900, 560] as const
-
-/** How many items a band shows before Show all (n) opens the rest. */
-export const BAND_CAPACITY = {
-  hours: 7,
-  services: 6,
-  team: 4,
-  messages: 3,
-  reviews: 4,
-  social: 4,
-  media: 8
-} as const
-export type ListBand = keyof typeof BAND_CAPACITY
-
-/** True when a band's list holds more than the band shows, so the band offers Show all (n). */
-export const overflows = (band: ListBand, count: number): boolean => count > BAND_CAPACITY[band]
-
-/** The box of a row that clips what does not fit (one line of chips, people, or days scrolling sideways). */
-export interface ClipBox {
-  scrollWidth: number
-  scrollHeight: number
-  clientWidth: number
-  clientHeight: number
-}
-
-/**
- * True when a row hides some of its items at the width the page has: a chip or a person pushed to the hidden second
- * line, or days beyond the visible part of the row. The band then offers Show all (n) even under its capacity.
- */
-export const rowHidesItems = (box: ClipBox): boolean =>
-  box.scrollHeight > box.clientHeight + 1 || box.scrollWidth > box.clientWidth + 1
-
-/** The About text is clamped to two lines: more lines, or a long text, offer Show all. */
-export const aboutOverflows = (about: string | null): boolean =>
-  about !== null && (about.split('\n').filter((l) => l.trim() !== '').length > 2 || about.length > 180)
 
 /** One social page or listing the research read or the seller pasted, as a linked chip. */
 export interface SocialPageView {

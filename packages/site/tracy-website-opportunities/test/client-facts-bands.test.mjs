@@ -1,9 +1,10 @@
 /**
- * The Business facts sub-page as stacked fixed-height bands (#537, layout C): every band is drawn even when the
- * profile is empty (N/A), each band kind has one fixed height in the CSS and clips what does not fit, Show all
- * appears only past a band's capacity, Edit opens the side sheet instead of growing the band, and the source chips
- * still follow their values. Bundles the real page with React 18 and renders it to static markup. Every business in
- * this file is invented.
+ * The Business facts sub-page as stacked bands (#537, design A): every band is drawn even when the profile is empty
+ * (N/A alone, no chip), every band header carries the same action cluster in the same slots ([Add more] on Photos &
+ * video only, the switch, Edit), the business and research bands are locked, no band offers Show all or opens a
+ * sheet, every band shares one collapsed height and long rows scroll sideways, and the source chips still follow
+ * their values. Bundles the real page with React 18 and renders it to static markup. Every business in this file
+ * is invented.
  *
  *   node --test --test-concurrency=1 packages/site/tracy-website-opportunities/test/client-facts-bands.test.mjs
  */
@@ -15,12 +16,7 @@ import path from 'node:path'
 import { after, before, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import {
-  BAND_BREAKPOINTS,
-  BAND_HEIGHTS,
-  BAND_IDS,
-  rowHidesItems
-} from '../src/client/business-facts-model.ts'
+import { BAND_BREAKPOINTS, BAND_HEIGHT, BAND_IDS } from '../src/client/business-facts-model.ts'
 import { FACTS_BANDS_CSS } from '../src/client/facts-bands-css.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -91,9 +87,29 @@ const review = (n) => ({
   source: 'google'
 })
 
-/** Draws the page; `calls` counts each time a band's fields are drawn. */
-function draw({ profile = {}, reviews = [], sources = [], researched = true } = {}) {
-  const calls = { field: 0, readingRows: 0 }
+const DOORS = {
+  nameRow: null,
+  saveName: async () => true,
+  profileField: () => null,
+  saveHours: async () => 'ok',
+  saveRating: async () => true,
+  pickReading: async () => true,
+  factSwitch: () => null,
+  readingRows: () => null,
+  keyMessages: null,
+  uploadMedia: async () => null,
+  retryLogo: { busy: false, failed: false, onPress: () => {} }
+}
+
+/** Draws the page with stubbed doors. */
+function draw({
+  profile = {},
+  reviews = [],
+  sources = [],
+  researched = true,
+  media = MEDIA,
+  doors = {}
+} = {}) {
   const view = lib.businessFactsView({
     profile,
     candidate: { name: 'Harbour Kite Lessons' },
@@ -105,38 +121,20 @@ function draw({ profile = {}, reviews = [], sources = [], researched = true } = 
     reviews,
     sources
   })
-  const doors = {
-    nameRow: null,
-    saveName: async () => true,
-    field: () => {
-      calls.field += 1
-      return null
-    },
-    saveHours: async () => 'ok',
-    saveRating: async () => true,
-    pickReading: async () => true,
-    readingRows: () => {
-      calls.readingRows += 1
-      return null
-    },
-    keyMessages: null,
-    uploadMedia: async () => null,
-    retryLogo: { busy: false, failed: false, onPress: () => {} }
-  }
   const html = lib.renderToStaticMarkup(
     lib.createElement(lib.BusinessFactsPage, {
       t,
       locale: 'en',
       view,
-      media: MEDIA,
-      doors,
+      media,
+      doors: { ...DOORS, ...doors },
       food: false,
       websiteLink: (u) => u,
       researchDetails: null,
       running: false
     })
   )
-  return { html, calls }
+  return { html }
 }
 const band = (html, id) => {
   const at = html.indexOf(`data-card="${id}"`)
@@ -147,7 +145,21 @@ const head = (html, id) => {
   const b = band(html, id)
   return b.slice(0, b.indexOf('tracy-wo-facts-band-body'))
 }
+const switchOf = (html, id) => {
+  const h = head(html, id)
+  return h.slice(h.indexOf('tracy-wo-facts-slot-sw'), h.indexOf('tracy-wo-facts-slot-edit'))
+}
 const NA = 'tracy-wo-facts-na" title="[reason.not_found]">[facts.na]<'
+const FULL = {
+  readingCard: {
+    method: 'model',
+    services: [1, 2, 3, 4, 5, 6, 7, 8, 9].map(service),
+    audience: [],
+    serviceAreas: [],
+    team: [],
+    keyMessages: [1, 2, 3].map(message)
+  }
+}
 
 test('an empty profile still draws every band, in order, each with N/A', () => {
   const { html } = draw()
@@ -167,9 +179,21 @@ test('an empty profile still draws every band, in order, each with N/A', () => {
     'research'
   ])
     assert.ok(band(html, id).includes(NA), `${id} reads N/A`)
-  // The business band: no rating, no phone, no address read N/A too.
-  assert.ok((band(html, 'business').match(/\[facts\.na\]/g) ?? []).length >= 3)
-  assert.doesNotMatch(html, /tracy-wo-facts-grid"|tracy-wo-facts-col"/)
+  // The business band: no type, phone, rating, address or website read N/A.
+  assert.equal((band(html, 'business').match(/\[facts\.na\]/g) ?? []).length, 5)
+})
+
+test('a missing value reads N/A alone: no source chip, no Not found chip, no second line', () => {
+  const { html } = draw({ profile: { phone: '+10 555 0100' } })
+  const business = band(html, 'business')
+  const website = business.slice(business.indexOf('>[my.field.website]<') + 1)
+  assert.match(
+    website,
+    /^\[my\.field\.website\]<\/span><span class="tracy-wo-facts-ln"><span class="tracy-wo-facts-na"[^>]*>\[facts\.na\]<\/span><\/span><\/div>/
+  )
+  assert.doesNotMatch(website, /tracy-wo-sc|\[facts\.website\.none\]/)
+  // A band with nothing has no chip in its header either.
+  for (const id of ['hours', 'about']) assert.doesNotMatch(head(html, id), /tracy-wo-sc/, id)
 })
 
 test('before research the bands say Not collected yet, never N/A', () => {
@@ -178,8 +202,100 @@ test('before research the bands say Not collected yet, never N/A', () => {
   assert.doesNotMatch(band(html, 'team'), /\[facts\.na\]/)
 })
 
-test('the CSS fixes one height per band kind at each width of the facts column, and clips every band', () => {
+test('every band header holds one cluster, in one order: [Add more] on Photos & video only, the switch, Edit', () => {
+  const { html } = draw({ profile: FULL })
+  for (const id of BAND_IDS) {
+    const h = head(html, id)
+    const slots = [...h.matchAll(/class="tracy-wo-facts-slot-([a-z]+)"/g)].map((m) => m[1])
+    assert.deepEqual(slots, id === 'media' ? ['add', 'sw', 'edit'] : ['sw', 'edit'], id)
+    assert.equal((h.match(/class="tracy-wo-facts-cl"/g) ?? []).length, 1, id)
+    assert.match(h, /role="switch"/, id)
+    assert.match(h, /\[profile\.edit\]<\/button><\/span><\/span><\/div><div class="$/, id)
+  }
+  // The slots keep fixed widths so the switches and Edit line up down the page, close together.
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-cl \{[^}]*gap: 8px; margin-left: auto; \}/)
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-slot-sw \{ width: \d+px; \}/)
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-slot-edit \{ width: \d+px;/)
+})
+
+test('locked bands: Business always on, Research details always off with its reason by the title', () => {
+  const { html } = draw({ profile: FULL })
+  const business = switchOf(html, 'business')
+  assert.match(business, /title="\[facts\.lock\.business\]"/)
+  assert.match(business, /aria-checked="true"/)
+  assert.match(business, /aria-disabled="true"|data-disabled/)
+  assert.match(business, /\[facts\.on\]<\/span><svg[^>]*tracy-wo-facts-lock/)
+  const research = head(html, 'research')
+  assert.match(
+    research,
+    /<span class="tracy-wo-facts-aside" title="\[facts\.lock\.research\]">\[facts\.lock\.research\]<\/span>/
+  )
+  assert.match(switchOf(html, 'research'), /aria-checked="false"/)
+  assert.match(switchOf(html, 'research'), /tracy-wo-facts-lock/)
+  assert.match(
+    research,
+    /<button type="button" class="tracy-wo-facts-act" disabled="" title="\[facts\.edit\.research\]"/
+  )
+  // What guests say is not locked: no lock, no tone-only sentence.
+  assert.doesNotMatch(head(html, 'reviews'), /tracy-wo-facts-lock|facts\.reviews\.note/)
+  for (const id of BAND_IDS.filter((b) => b !== 'business' && b !== 'research'))
+    assert.doesNotMatch(switchOf(html, id), /tracy-wo-facts-lock/, id)
+})
+
+test('a band switch follows its facts and flips through the door; a band with no stored choice says so', () => {
+  const { html } = draw({
+    profile: FULL,
+    doors: {
+      factSwitch: (fields) => (fields.includes('services') ? { on: false, set: async () => true } : null)
+    }
+  })
+  assert.match(switchOf(html, 'services'), /aria-checked="false"[^]*\[facts\.off\]/)
+  assert.doesNotMatch(switchOf(html, 'services'), /aria-disabled="true"|data-disabled=""/)
+  assert.match(html, /data-card="services" data-off=""/)
+  assert.match(switchOf(html, 'brand'), /title="\[facts\.switch\.notStored\]"/)
+})
+
+test('no band offers Show all or Show less, and nothing opens a sheet or a dialog', () => {
+  const { html } = draw({
+    profile: FULL,
+    reviews: [1, 2, 3, 4, 5, 6].map(review)
+  })
+  assert.doesNotMatch(html, /showAll|showLess|Show all|Show less|facts\.open\]|facts\.close\]/)
+  assert.doesNotMatch(html, /aria-haspopup|role="dialog"|tracy-wo-facts-sheet/)
+  // Every item is in its row: nine service chips, six review cards.
+  assert.equal((band(html, 'services').match(/tracy-wo-facts-pill/g) ?? []).length, 9)
+  assert.equal((band(html, 'reviews').match(/<q /g) ?? []).length, 6)
+  // Key messages stay three cells.
+  assert.equal((band(html, 'messages').match(/\[facts\.message\.n/g) ?? []).length, 3)
+})
+
+test('Photos & video has exactly one Add more, in the cluster, the formats as its title; no add tile', () => {
+  const tile = (id, kind = 'image') => ({
+    id,
+    kind,
+    stored: true,
+    source: 'instagram',
+    sourceUrl: null,
+    category: 'other'
+  })
+  const media = {
+    ...MEDIA,
+    photos: { groups: [{ tiles: [tile('p1'), tile('p2')] }], hidden: [] },
+    videos: { tiles: [tile('v1', 'video')] }
+  }
+  const { html } = draw({ media })
+  assert.equal((html.match(/\[media\.add\]/g) ?? []).length, 1)
+  assert.match(head(html, 'media'), /<span class="tracy-wo-facts-slot-add">.*title="\[media\.addHint\]"/)
+  assert.doesNotMatch(html, /tracy-wo-add-tile|\[facts\.media\.more/)
+  // The hint shows only as the title until Edit.
+  assert.doesNotMatch(band(html, 'media'), />\[media\.addHint\]</)
+  assert.match(band(html, 'media'), /aria-pressed="true">\[facts\.media\.all\{&quot;count&quot;:3\}\]/)
+  assert.equal((band(html, 'media').match(/class="tracy-wo-tile"/g) ?? []).length, 3)
+})
+
+test('every band shares one collapsed height per breakpoint; long rows scroll sideways, the scrollbar hidden', () => {
   const [mid, narrow] = BAND_BREAKPOINTS
+  const [wideH, midH, narrowH] = BAND_HEIGHT
   const midBlock = FACTS_BANDS_CSS.slice(
     FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${mid - 1}px)`),
     FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${narrow - 1}px)`)
@@ -187,62 +303,46 @@ test('the CSS fixes one height per band kind at each width of the facts column, 
   const narrowBlock = FACTS_BANDS_CSS.slice(
     FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${narrow - 1}px)`)
   )
-  assert.ok(midBlock.length > 0 && narrowBlock.length > 0)
-  for (const id of BAND_IDS) {
-    const [wideH, midH, narrowH] = BAND_HEIGHTS[id]
-    assert.match(
-      FACTS_BANDS_CSS,
-      new RegExp(`\\.tracy-wo-facts-band\\[data-card='${id}'\\] \\{ height: var\\(--wo-band-${id}\\); \\}`)
-    )
-    assert.ok(FACTS_BANDS_CSS.includes(`--wo-band-${id}: ${wideH}px;`), `${id} wide`)
-    assert.ok(midBlock.includes(`--wo-band-${id}: ${midH}px;`), `${id} mid`)
-    assert.ok(narrowBlock.includes(`--wo-band-${id}: ${narrowH}px;`), `${id} narrow`)
-  }
-  // The breakpoints read the facts column itself, not the whole tab.
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts \{ container: wo-facts \/ inline-size;/)
-  assert.doesNotMatch(FACTS_BANDS_CSS, /@container \(/)
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band \{[^}]*overflow: hidden;/)
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band-body \{[^}]*overflow: hidden;/)
-  // Tokens only: no colour literal, and no halo on focus.
-  assert.doesNotMatch(FACTS_BANDS_CSS, /#[0-9a-f]{3,8}\b|rgba?\(|box-shadow/i)
+  assert.match(
+    FACTS_BANDS_CSS,
+    new RegExp(`\\.tracy-wo-facts \\{ container: wo-facts / inline-size; --wo-band-h: ${wideH}px;`)
+  )
+  assert.ok(midBlock.includes(`--wo-band-h: ${midH}px;`))
+  assert.ok(narrowBlock.includes(`--wo-band-h: ${narrowH}px;`))
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-band \{[^}]*height: var\(--wo-band-h\);[^}]*overflow: hidden;/
+  )
+  // Only Edit makes a band taller; no per-band height is left.
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band\[data-editing\] \{ height: auto;/)
+  assert.doesNotMatch(
+    FACTS_BANDS_CSS,
+    /--wo-band-(business|hours|services|about|team|brand|messages|reviews|social|media|research)/
+  )
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-row \{ overflow-x: auto; overflow-y: hidden; scrollbar-width: none;/
+  )
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-row::-webkit-scrollbar \{ display: none; \}/)
+  // Tokens only: no colour literal, no alias of dsh, and no halo on focus.
+  assert.doesNotMatch(FACTS_BANDS_CSS, /#[0-9a-f]{3,8}\b|rgba?\(|box-shadow: 0|--dsw-alias/i)
   assert.doesNotMatch(FACTS_BANDS_CSS, /`/)
-})
-
-test('the business band keeps every primary fact readable: four cells under the name, two by two under 900px', () => {
-  // A row of four under the name row, two by two on a mid page; never five squeezed in one row.
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\[data-card='business'\] \.tracy-wo-facts-cells \{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\);[^}]*grid-template-rows: 48px 58px;/
-  )
-  const [mid] = BAND_BREAKPOINTS
-  const midBlock = FACTS_BANDS_CSS.slice(
-    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${mid - 1}px)`)
-  )
-  assert.match(
-    midBlock,
-    /\[data-card='business'\] \.tracy-wo-facts-cells \{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\); grid-template-rows: 48px 58px 58px; \}/
-  )
-  assert.match(FACTS_BANDS_CSS, /\[data-card='business'\] \.tracy-wo-facts-hero \{ grid-column: 1 \/ -1;/)
-  // The name is never cut before 40 characters on a wide or mid page.
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-hero-name > \.tracy-wo-facts-ln:first-child > \.tracy-wo-facts-ell \{ flex: 0 0 auto; max-width: max\(40ch, calc\(100% - 80px\)\); \}/
-  )
-  // One line values with an ellipsis, never wrapped.
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-ell \{[^}]*text-overflow: ellipsis; white-space: nowrap;/)
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-ln > \.tracy-wo-facts-keep \{ flex: 0 0 auto; max-width: 100%; \}/
-  )
-  // The business band is tall enough for its rows: 2px of border, 24px of padding, the name row, the gaps.
-  const [wideH, midH] = BAND_HEIGHTS.business
-  assert.ok(wideH >= 2 + 24 + 48 + 10 + 58, `wide ${wideH}`)
-  assert.ok(midH >= 2 + 24 + 48 + 10 + 58 + 10 + 58, `mid ${midH}`)
+  const tiles = {
+    ...MEDIA,
+    videos: { tiles: [{ id: 'v1', kind: 'video', stored: true, source: 'instagram', sourceUrl: null }] }
+  }
+  const { html } = draw({
+    profile: { ...FULL, hoursCheck: { state: 'none' }, googleHours: [`Monday: 09:00 - 18:00`] },
+    reviews: [review(1)],
+    media: tiles,
+    sources: [{ source: 'instagram', ref: 'https://instagram.example/harbourkite' }]
+  })
+  for (const id of ['services', 'reviews', 'media', 'social'])
+    assert.match(band(html, id), /tracy-wo-facts-row/, id)
 })
 
 test('the business band draws the whole name, then phone, rating, address and website; the rating is one string', () => {
   const name = 'Harbour Kite Lessons and Paddle Club Bay'
-  assert.equal(name.length, 40)
   const view = lib.businessFactsView({
     profile: {
       phone: '+10 555 0100',
@@ -264,18 +364,7 @@ test('the business band draws the whole name, then phone, rating, address and we
       locale: 'en',
       view,
       media: MEDIA,
-      doors: {
-        nameRow: null,
-        saveName: async () => true,
-        field: () => null,
-        saveHours: async () => 'ok',
-        saveRating: async () => true,
-        pickReading: async () => true,
-        readingRows: () => null,
-        keyMessages: null,
-        uploadMedia: async () => null,
-        retryLogo: { busy: false, failed: false, onPress: () => {} }
-      },
+      doors: DOORS,
       food: false,
       websiteLink: (u) => u,
       researchDetails: null,
@@ -286,7 +375,6 @@ test('the business band draws the whole name, then phone, rating, address and we
   assert.match(business, new RegExp(`<span class="tracy-wo-facts-ell" title="${name}">${name}</span>`))
   const labels = [...business.matchAll(/class="tracy-wo-facts-ck" title="([^"]*)"/g)].map((m) => m[1])
   assert.deepEqual(labels, ['[field.phone]', '[my.field.rating]', '[field.address]', '[my.field.website]'])
-  // The star, the score and the count in one span that never wraps; the full string in its title.
   assert.match(
     business,
     /<span class="tracy-wo-facts-ell tracy-wo-facts-rating" title="★ 4\.8 · \[facts\.reviews\.other\{&quot;count&quot;:&quot;40&quot;\}\]\n[^"]*"><span class="tracy-wo-facts-stars" aria-hidden="true">★<\/span> <b>4\.8<\/b><span class="tracy-wo-facts-dim"> · \[facts\.reviews\.other/
@@ -295,97 +383,11 @@ test('the business band draws the whole name, then phone, rating, address and we
     business,
     /<span class="tracy-wo-facts-ell tracy-wo-facts-keep" title="\+10 555 0100">\+10 555 0100<\/span>/
   )
-})
-
-test('a row that hides items at the page width offers Show all, even under its capacity', () => {
-  assert.equal(
-    rowHidesItems({ scrollWidth: 600, scrollHeight: 28, clientWidth: 600, clientHeight: 28 }),
-    false
-  )
-  // A chip wrapped to the hidden second line, or days beyond the visible part of the row.
-  assert.equal(
-    rowHidesItems({ scrollWidth: 600, scrollHeight: 62, clientWidth: 600, clientHeight: 28 }),
-    true
-  )
-  assert.equal(
-    rowHidesItems({ scrollWidth: 784, scrollHeight: 42, clientWidth: 520, clientHeight: 42 }),
-    true
-  )
-  // Rows keep one line of fixed height and wrap what does not fit out of sight; the days scroll sideways.
+  // Five cells in one row on a wide page; the row scrolls sideways when the column is narrower.
   assert.match(
     FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-chiprow \{[^}]*flex-wrap: wrap;[^}]*height: 28px;[^}]*overflow: hidden;/
+    /\[data-card='business'\] \.tracy-wo-facts-cells \{ grid-template-columns: minmax\(200px, 1\.4fr\)/
   )
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-band \.tracy-wo-facts-people \{[^}]*flex-wrap: wrap;[^}]*height: 36px;[^}]*overflow: hidden;/
-  )
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-band \.tracy-wo-facts-days \{[^}]*grid-auto-columns: 112px;[^}]*overflow-x: auto;/
-  )
-  // The check and its choices sit outside the scrolling days, in a cell that keeps its width.
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-hoursrow > \.tracy-wo-facts-status \{ flex: none;/)
-})
-
-test('Show all (n) appears only when a list holds more than its band shows', () => {
-  const fit = draw({
-    profile: {
-      readingCard: {
-        method: 'model',
-        services: [1, 2].map(service),
-        audience: [],
-        serviceAreas: [],
-        team: [],
-        keyMessages: [1, 2].map(message)
-      }
-    },
-    reviews: [1, 2].map(review)
-  }).html
-  for (const id of ['services', 'messages', 'reviews'])
-    assert.doesNotMatch(head(fit, id), /facts\.showAll/, id)
-  const many = draw({
-    profile: {
-      readingCard: {
-        method: 'model',
-        services: [1, 2, 3, 4, 5, 6, 7].map(service),
-        audience: [],
-        serviceAreas: [],
-        team: [],
-        keyMessages: [1, 2, 3, 4].map(message)
-      }
-    },
-    reviews: [1, 2, 3, 4, 5].map(review)
-  }).html
-  assert.match(head(many, 'services'), /\[facts\.showAll\.count\{&quot;count&quot;:7\}\]/)
-  // Key messages hold three at most (MAX_KEY_MESSAGES): all three fit the band, so it never needs Show all.
-  assert.doesNotMatch(head(many, 'messages'), /facts\.showAll/)
-  assert.match(head(many, 'reviews'), /\[facts\.showAll\.count\{&quot;count&quot;:5\}\]/)
-  // The band itself keeps its capacity: three messages, four review cards, six service chips.
-  assert.equal((band(many, 'messages').match(/\[facts\.message\.n/g) ?? []).length, 3)
-  assert.equal((band(many, 'reviews').match(/<q /g) ?? []).length, 4)
-  assert.equal((band(many, 'services').match(/tracy-wo-facts-pill/g) ?? []).length, 6)
-})
-
-test('Edit opens the side sheet: the band draws no field until it is pressed', () => {
-  const { html, calls } = draw({
-    profile: {
-      bio: 'Kite lessons on the lagoon',
-      readingCard: {
-        method: 'model',
-        services: [service(1)],
-        audience: [],
-        serviceAreas: [],
-        team: [],
-        keyMessages: []
-      }
-    }
-  })
-  for (const id of ['services', 'about']) {
-    assert.match(head(html, id), /aria-haspopup="dialog"[^>]*>(<svg.*?<\/svg>)?\[profile\.edit\]/, id)
-  }
-  assert.doesNotMatch(html, /tracy-wo-facts-edit|<textarea|<input(?![^>]*type="file")/)
-  assert.deepEqual(calls, { field: 0, readingRows: 0 })
 })
 
 test('the source chips still follow their values in the bands', () => {
@@ -405,7 +407,6 @@ test('the source chips still follow their values in the bands', () => {
   })
   assert.match(band(html, 'services'), /Lesson 1<\/span><span class="tracy-wo-sc" data-word="bio"/)
   assert.match(band(html, 'reviews'), /Guest 1<\/span><span class="tracy-wo-sc" data-word="review"/)
-  // Social pages: a linked chip with its glyph.
   assert.match(
     band(html, 'social'),
     /<a href="https:\/\/instagram\.example\/harbourkite"[^>]*><svg[^>]*data-logo="instagram"/

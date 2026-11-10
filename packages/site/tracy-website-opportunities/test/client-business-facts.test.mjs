@@ -1,5 +1,5 @@
 /**
- * The Business facts sub-page as stacked fixed-height bands (#537, layout C): the opportunity payload sorted into the
+ * The Business facts sub-page as stacked bands of one shared height (#537, design A): the opportunity payload sorted into the
  * business band and one band per group, with origins and edit marks; every band stays, N/A when research found
  * nothing. Every business in this file is invented.
  *
@@ -9,10 +9,9 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
-  BAND_CAPACITY,
-  BAND_HEIGHTS,
+  BAND_BREAKPOINTS,
+  BAND_HEIGHT,
   BAND_IDS,
-  aboutOverflows,
   businessFactsView,
   clipQuote,
   contrast,
@@ -21,7 +20,6 @@ import {
   hoursLineParts,
   initialsOf,
   markColorsOf,
-  overflows,
   socialPagesOf
 } from '../src/client/business-facts-model.ts'
 
@@ -228,7 +226,7 @@ test('quotes, media filters and hours lines', () => {
   assert.deepEqual(hoursLineParts('Mo-Fr 09:00-18:00'), { days: '', times: 'Mo-Fr 09:00-18:00' })
 })
 
-test('the band set is complete and every band kind has one fixed height, taller on a narrow page', () => {
+test('the band set is complete and every band shares one collapsed height at each breakpoint', () => {
   assert.deepEqual(BAND_IDS, [
     'business',
     'hours',
@@ -242,27 +240,9 @@ test('the band set is complete and every band kind has one fixed height, taller 
     'media',
     'research'
   ])
-  for (const id of BAND_IDS) {
-    const [wide, mid, narrow] = BAND_HEIGHTS[id]
-    assert.ok(Number.isInteger(wide) && wide > 0, id)
-    assert.ok(mid >= wide, id)
-    assert.ok(narrow >= mid, id)
-  }
-  assert.deepEqual(
-    BAND_IDS.map((id) => BAND_HEIGHTS[id][0]),
-    [144, 72, 64, 72, 64, 96, 88, 156, 64, 184, 52]
-  )
-})
-
-test('Show all only past a band capacity; About only when longer than two lines', () => {
-  for (const [band, cap] of Object.entries(BAND_CAPACITY)) {
-    assert.equal(overflows(band, cap), false, band)
-    assert.equal(overflows(band, cap + 1), true, band)
-  }
-  assert.equal(aboutOverflows(null), false)
-  assert.equal(aboutOverflows('Kite lessons\nAll year'), false)
-  assert.equal(aboutOverflows('One\nTwo\nThree'), true)
-  assert.equal(aboutOverflows('word '.repeat(50)), true)
+  // A 40px header row over a 76px body, with 2px of border: the same at the wide, mid and narrow widths.
+  assert.deepEqual([...BAND_HEIGHT], [118, 118, 118])
+  assert.deepEqual([...BAND_BREAKPOINTS], [900, 560])
 })
 
 test('social pages: pasted pages and listings with their glyph, once each; the website and Google stay out', () => {

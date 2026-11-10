@@ -1,14 +1,15 @@
 /**
- * One band of the Business facts sub-page (#537, layout C): a fixed-height row with its title, source chip and
- * controls on the left and its content laid sideways on the right. A band never grows: Show all (n) opens the whole
- * list, and Edit opens the band's fields, both in a side sheet over the page. Escape closes the sheet and the focus
- * goes back to the control that opened it. Missing facts read N/A.
+ * One band of the Business facts sub-page (#537, design A): a header row (the title, its source chips, an amber
+ * Check this chip when the band has a check note, a muted aside) with the action cluster at its right
+ * (`facts-band-actions.tsx`), over a body of one fixed height. What does not fit in the body scrolls sideways in one
+ * row (the mouse wheel scrolls it too); a band never grows by itself, only Edit makes it taller: Edit turns the body
+ * into the band's fields, in place, with Cancel and Save at the band's bottom right. Missing facts read N/A.
  */
-import { Fragment, type JSX, type ReactNode, type RefObject, useEffect, useRef, useState } from 'react'
-import { ExternalLink, Pencil } from 'lucide-react'
-import { Button, Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@tracy/ui'
+import { type JSX, type ReactNode, useEffect, useRef, useState } from 'react'
+import { TriangleAlert } from 'lucide-react'
 
-import { type BandId, rowHidesItems } from './business-facts-model.ts'
+import type { BandId } from './business-facts-model.ts'
+import { BandCluster, type BandSwitchView, type EditDoor } from './facts-band-actions.tsx'
 import type { Translate } from './strings.ts'
 
 /** A missing fact: N/A, muted, the reason in its title. */
@@ -28,29 +29,6 @@ export function NotAvailable({
   )
 }
 
-/**
- * Watches a row that clips what does not fit and says whether it hides items at the width the page has now, so the
- * band can offer Show all (n). `count` is the number of items drawn: the row is measured again when it changes.
- * Nothing is measured on the server: there the band falls back to its capacity.
- */
-export function useHidesItems<T extends HTMLElement>(count: number): [RefObject<T | null>, boolean] {
-  const ref = useRef<T | null>(null)
-  const [hides, setHides] = useState(false)
-  useEffect(() => {
-    const el = ref.current
-    if (el === null || typeof ResizeObserver === 'undefined') {
-      setHides(false)
-      return
-    }
-    const measure = (): void => setHides(rowHidesItems(el))
-    measure()
-    const watch = new ResizeObserver(measure)
-    watch.observe(el)
-    return () => watch.disconnect()
-  }, [count])
-  return [ref, hides]
-}
-
 /** A long value on one line with an ellipsis; the full text shows on hover. Its chips follow it, never cut. */
 export function OneLine({ text, children }: { text: string; children?: ReactNode }): JSX.Element {
   return (
@@ -63,150 +41,119 @@ export function OneLine({ text, children }: { text: string; children?: ReactNode
   )
 }
 
-/** The side sheet a band opens: its title, the content scrolling inside, and Done. */
-export function FactsSheet({
+/** The amber note of a band that needs a check: a chip in the header, a strip inside the band in Edit. */
+export function CheckNote({
   t,
-  open,
-  title,
-  onClose,
-  back,
-  children
+  note,
+  strip = false
 }: {
   t: Translate
-  open: boolean
-  title: ReactNode
-  onClose: () => void
-  /** The control that opened the sheet: the focus returns to it on close. */
-  back: RefObject<HTMLButtonElement | null>
-  children: ReactNode
+  note: string
+  strip?: boolean
 }): JSX.Element {
-  return (
-    <Sheet open={open} onOpenChange={(next) => (next ? undefined : onClose())}>
-      <SheetContent
-        side="right"
-        className="tracy-wo tracy-wo-facts-sheet sm:max-w-lg"
-        closeLabel={t('facts.close')}
-        finalFocus={back}
-      >
-        <SheetHeader>
-          <SheetTitle>{title}</SheetTitle>
-        </SheetHeader>
-        <div className="tracy-wo-facts-sheet-body">{open ? children : null}</div>
-        <SheetFooter>
-          <Button type="button" size="sm" variant="outline" onClick={onClose}>
-            {t('facts.done')}
-          </Button>
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
+  return strip ? (
+    <div className="tracy-wo-facts-note" role="note">
+      <TriangleAlert aria-hidden="true" />
+      <span>{note}</span>
+    </div>
+  ) : (
+    <span className="tracy-wo-facts-chk" title={note}>
+      <TriangleAlert aria-hidden="true" />
+      {t('name.chip.check')}
+    </span>
   )
 }
 
-/** A small text control in a band's title column (Edit, Show all, Open...). */
-const Act = ({
-  label,
-  icon,
-  onClick,
-  refTo
-}: {
-  label: string
-  icon?: ReactNode
-  onClick: () => void
-  refTo: RefObject<HTMLButtonElement | null>
-}): JSX.Element => (
-  <button ref={refTo} type="button" className="tracy-wo-facts-act" aria-haspopup="dialog" onClick={onClick}>
-    {icon}
-    {label}
-  </button>
-)
+/**
+ * A vertical wheel over a row that scrolls sideways moves the row, until the row reaches its end; a trackpad's
+ * sideways swipe scrolls it natively. Rows carry the class tracy-wo-facts-row.
+ */
+function useSideWheel(body: { current: HTMLElement | null }, editing: boolean): void {
+  useEffect(() => {
+    const el = body.current
+    if (el === null) return
+    const wheel = (e: WheelEvent): void => {
+      if (Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return
+      const row = (e.target as Element | null)?.closest?.('.tracy-wo-facts-row') as HTMLElement | null
+      if (row === null || !el.contains(row) || row.scrollWidth <= row.clientWidth) return
+      const end = row.scrollWidth - row.clientWidth
+      if ((e.deltaY < 0 && row.scrollLeft <= 0) || (e.deltaY > 0 && row.scrollLeft >= end - 1)) return
+      e.preventDefault()
+      row.scrollLeft += e.deltaY
+    }
+    el.addEventListener('wheel', wheel, { passive: false })
+    return () => el.removeEventListener('wheel', wheel)
+  }, [body, editing])
+}
 
 export function FactsBand({
   t,
   id,
   title,
-  sheetTitle,
+  label,
+  chips,
+  check,
   aside,
-  actions = [],
+  add,
+  onSite,
   edit,
-  more,
-  open,
   children
 }: {
   t: Translate
   id: BandId
+  /** The title words and its icon. */
   title: ReactNode
-  /** The words of the sheet title; the band title when absent. */
-  sheetTitle?: ReactNode
+  /** The band's name in words, for the switch's accessible name. */
+  label: string
+  /** The source chip or chips after the title. */
+  chips?: ReactNode
+  /** The band's check note: an amber Check this chip, the note on hover and as a strip in Edit. */
+  check?: string | null
   aside?: ReactNode
-  /** The band's own choices (Show on the site...), before its sheet controls. */
-  actions?: ReactNode[]
-  /** The band's fields, drawn only in the sheet; null: the band has no Edit. */
-  edit: (() => ReactNode) | null
-  /** The whole list, drawn only in the sheet; null: everything fits. `count` null reads Show all with no number. */
-  more?: { count: number | null; render: () => ReactNode } | null
-  /** Research details: one Open control for the sheet. */
-  open?: (() => ReactNode) | null
+  /** Add more (Photos & video): the first slot of the cluster. */
+  add?: ReactNode
+  onSite: BandSwitchView
+  edit: EditDoor
   children?: ReactNode
 }): JSX.Element {
-  const [sheet, setSheet] = useState<'edit' | 'all' | 'open' | null>(null)
-  const editRef = useRef<HTMLButtonElement | null>(null)
-  const allRef = useRef<HTMLButtonElement | null>(null)
-  const openRef = useRef<HTMLButtonElement | null>(null)
-  const controls: ReactNode[] = [
-    ...actions,
-    more == null ? null : (
-      <Act
-        key="all"
-        refTo={allRef}
-        label={more.count === null ? t('facts.showAll') : t('facts.showAll.count', { count: more.count })}
-        onClick={() => setSheet('all')}
-      />
-    ),
-    open == null ? null : (
-      <Act
-        key="open"
-        refTo={openRef}
-        icon={<ExternalLink aria-hidden="true" />}
-        label={t('facts.open')}
-        onClick={() => setSheet('open')}
-      />
-    ),
-    edit === null ? null : (
-      <Act
-        key="edit"
-        refTo={editRef}
-        icon={<Pencil aria-hidden="true" />}
-        label={t('profile.edit')}
-        onClick={() => setSheet('edit')}
-      />
-    )
-  ].filter((c) => c !== null)
-  const content =
-    sheet === 'edit' ? edit?.() : sheet === 'all' ? more?.render() : sheet === 'open' ? open?.() : null
-  const back = sheet === 'edit' ? editRef : sheet === 'all' ? allRef : openRef
+  const [editing, setEditing] = useState(false)
+  const body = useRef<HTMLDivElement | null>(null)
+  useSideWheel(body, editing)
+  const form = editing && 'form' in edit ? edit.form(() => setEditing(false)) : null
   return (
-    <section className="tracy-wo-facts-band" data-card={id}>
-      <div className="tracy-wo-facts-band-label">
+    <section
+      className="tracy-wo-facts-band"
+      data-card={id}
+      data-editing={form === null ? undefined : ''}
+      data-off={onSite.on ? undefined : ''}
+    >
+      <div className="tracy-wo-facts-bh">
         <h3>{title}</h3>
-        {aside}
-        {controls.length === 0 ? null : (
-          <span className="tracy-wo-facts-acts">
-            {controls.map((c, i) => (
-              <Fragment key={i}>{c}</Fragment>
-            ))}
-          </span>
+        {check ? <CheckNote t={t} note={check} /> : null}
+        {chips === undefined || chips === null ? null : (
+          <span className="tracy-wo-facts-chips-h">{chips}</span>
         )}
+        {aside}
+        <BandCluster
+          t={t}
+          label={label}
+          add={add}
+          onSite={onSite}
+          edit={edit}
+          editing={form !== null}
+          onEdit={() => setEditing(true)}
+        />
       </div>
-      <div className="tracy-wo-facts-band-body">{children}</div>
-      <FactsSheet
-        t={t}
-        open={sheet !== null}
-        title={sheetTitle ?? title}
-        onClose={() => setSheet(null)}
-        back={back}
-      >
-        {sheet === 'edit' ? <div className="tracy-wo-facts-edit">{content}</div> : content}
-      </FactsSheet>
+      {form === null ? (
+        <div ref={body} className="tracy-wo-facts-band-body">
+          {children}
+        </div>
+      ) : (
+        <div ref={body} className="tracy-wo-facts-band-edit">
+          {check ? <CheckNote t={t} note={check} strip /> : null}
+          {form}
+        </div>
+      )}
     </section>
   )
 }

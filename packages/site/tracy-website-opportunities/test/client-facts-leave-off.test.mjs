@@ -1,8 +1,8 @@
 /**
- * The Business facts sub-page keeps what the seller left off the site: the item stays in its band with a small
- * muted tag, and its control flips to Show on the site. The choices sit beside the value they change (the rating
- * cell, the last hours cell, each person of the Team row); Edit stays in the band's title column (the corner of the
- * business band). Bundles the real page with React 18 and renders it to static markup.
+ * The Business facts sub-page keeps what the seller left off the site (#537, design A): the item stays in its band,
+ * and its switch reads Off the site. The rating keeps its own choice in its cell; Opening hours are kept or left off
+ * by the band's switch (no Keep / Leave off links), with the check note as an amber Check this chip in the header;
+ * each Team member has its own small switch. Bundles the real page with React 18 and renders it to static markup.
  *
  *   node --test --test-concurrency=1 packages/site/tracy-website-opportunities/test/client-facts-leave-off.test.mjs
  */
@@ -101,7 +101,8 @@ const draw = (p, { media = MEDIA, running = true, sources = [] } = {}) => {
   const doors = {
     nameRow: null,
     saveName: async () => true,
-    field: () => null,
+    profileField: () => null,
+    factSwitch: () => null,
     saveHours: async () => 'ok',
     saveRating: async () => true,
     pickReading: async () => true,
@@ -130,30 +131,25 @@ const band = (html, card) => {
   const end = html.indexOf('<section', at)
   return html.slice(at, end === -1 ? undefined : end)
 }
-// The title column of a band: its title, chips and controls (Show all, Edit).
+// The header row of a band: its title, chips and the action cluster.
 const head = (html, card) => {
   const b = band(html, card)
-  return b.slice(b.indexOf('tracy-wo-facts-band-label'), b.indexOf('tracy-wo-facts-band-body'))
+  return b.slice(b.indexOf('tracy-wo-facts-bh'), b.indexOf('tracy-wo-facts-band-body'))
 }
-// The business band's Edit sits in its top right corner.
-const corner = (html) => {
-  const at = html.indexOf('tracy-wo-facts-corner')
-  return html.slice(at, html.indexOf('</button>', at) + 9)
-}
-// The rating choice sits in the rating cell, after the stars, not beside Edit.
+// The rating choice sits in the rating cell, after the stars, not in the header.
 const ratingLine = (html) => {
   const at = html.indexOf('tracy-wo-facts-stars')
   return html.slice(at, html.indexOf('class="tracy-wo-facts-cell"', at))
 }
-// The last cell of the hours band: the check, the tag and the choices.
-const status = (html) => {
-  const b = band(html, 'hours')
-  return b.slice(b.indexOf('tracy-wo-facts-status'))
+// The band switch in a header: its state and whether it can be pressed.
+const bandSwitch = (html, card) => {
+  const h = head(html, card)
+  return h.slice(h.indexOf('tracy-wo-facts-slot-sw'), h.indexOf('tracy-wo-facts-slot-edit'))
 }
 const labels = (html) =>
   [...html.matchAll(/class="tracy-wo-facts-act"[^>]*>(?:<svg.*?<\/svg>)?([^<]*)</g)].map((m) => m[1])
 
-test('a rating left off stays in the business band with the tag; Show on the site sits in the rating cell, Edit alone in the corner', () => {
+test('a rating left off stays in the business band with the tag; Show on the site sits in the rating cell, only Edit in the header', () => {
   const html = draw(
     profile({
       rating: { state: 'left', score: 4.8, reviews: 40, few: false, choice: 'leave' },
@@ -163,7 +159,7 @@ test('a rating left off stays in the business band with the tag; Show on the sit
   )
   assert.match(html, /tracy-wo-facts-stars/)
   assert.match(band(html, 'business'), /tracy-wo-facts-off">\[facts\.leftOff\]/)
-  assert.deepEqual(labels(corner(html)), ['[profile.edit]'])
+  assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
   assert.deepEqual(labels(ratingLine(html)), ['[rating.show]'])
 })
 
@@ -175,12 +171,12 @@ test('a rating that shows offers Leave off the site in the rating cell and no ta
       team: []
     })
   )
-  assert.deepEqual(labels(corner(html)), ['[profile.edit]'])
+  assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
   assert.deepEqual(labels(ratingLine(html)), ['[rating.leave]'])
   assert.doesNotMatch(html, /facts\.leftOff/)
 })
 
-test('hours left off keep their days with the tag; the last cell offers Show on the site, the title column only Edit', () => {
+test('hours left off keep their days, dimmed; the band switch reads Off the site and can put them back', () => {
   const html = draw(
     profile({
       rating: null,
@@ -190,27 +186,28 @@ test('hours left off keep their days with the tag; the last cell offers Show on 
   )
   const hours = band(html, 'hours')
   assert.match(hours, /Monday/)
-  assert.match(hours, /tracy-wo-facts-cells" data-off=""/)
-  assert.match(status(html), /tracy-wo-facts-off">\[facts\.leftOff\]/)
-  assert.deepEqual(labels(status(html)), ['[reading.show]'])
+  assert.match(html, /data-card="hours" data-off=""/)
+  assert.match(bandSwitch(html, 'hours'), /aria-checked="false"/)
+  assert.doesNotMatch(bandSwitch(html, 'hours'), /aria-disabled="true"/)
+  assert.match(bandSwitch(html, 'hours'), /\[facts\.off\]/)
   assert.deepEqual(labels(head(html, 'hours')), ['[profile.edit]'])
-  assert.doesNotMatch(hours, /hours\.leave/)
+  assert.doesNotMatch(hours, /hours\.leave|name\.keep|reading\.show|tracy-wo-facts-status/)
 })
 
-test('hours that wait for a check offer Keep and Leave off the site in the last cell; the note opens in Show all, not in the band', () => {
+test('hours that wait for a check show the amber Check this chip with the note on hover; no Keep or Leave off links', () => {
   const html = draw(
     profile({ rating: null, hoursCheck: { state: 'check', hours: [], claims: CLAIMS }, team: [] })
   )
-  assert.deepEqual(labels(status(html)), ['[name.keep]', '[hours.leave]'])
-  assert.deepEqual(labels(head(html, 'hours')), [
-    '[facts.showAll.count{&quot;count&quot;:3}]',
-    '[profile.edit]'
-  ])
-  assert.doesNotMatch(band(html, 'hours'), /tracy-wo-facts-note/)
-  assert.match(status(html), /title="\[hours\.note/)
+  assert.match(
+    head(html, 'hours'),
+    /<span class="tracy-wo-facts-chk" title="\[hours\.note[^"]*"><svg.*?<\/svg>\[name\.chip\.check\]<\/span>/
+  )
+  assert.match(bandSwitch(html, 'hours'), /aria-checked="true"/)
+  assert.deepEqual(labels(head(html, 'hours')), ['[profile.edit]'])
+  assert.doesNotMatch(band(html, 'hours'), /name\.keep|hours\.leave|tracy-wo-facts-note/)
 })
 
-test('a team member left off stays in the row with the tag and its own Show on the site', () => {
+test('each team member carries its own small switch: off for a person left off, on for one shown', () => {
   const html = draw(
     profile({
       rating: null,
@@ -222,15 +219,15 @@ test('a team member left off stays in the row with the tag and its own Show on t
     })
   )
   const team = band(html, 'team')
-  const [rina, omar] = team
+  const body = team.slice(team.indexOf('tracy-wo-facts-band-body'))
+  const [rina, omar] = body
     .split('<li')
     .slice(1, 3)
     .map((x) => x.slice(0, x.indexOf('</li>')))
-  assert.match(rina, /Rina/)
-  assert.match(rina, /facts\.leftOff/)
-  assert.deepEqual(labels(rina), ['[reading.show]'])
-  assert.doesNotMatch(omar, /facts\.leftOff/)
-  assert.deepEqual(labels(omar), ['[reading.hide]'])
+  assert.match(rina, /^ data-off=""/)
+  assert.match(rina, /Rina[^]*role="switch"[^]*aria-checked="false"[^]*\[facts\.off\]/)
+  assert.match(omar, /Omar[^]*role="switch"[^]*aria-checked="true"[^]*\[facts\.on\]/)
+  assert.doesNotMatch(team, /reading\.show|reading\.hide|facts\.leftOff/)
 })
 
 test('source chips sit right after their values, and a photo carries its glyph badge', () => {
