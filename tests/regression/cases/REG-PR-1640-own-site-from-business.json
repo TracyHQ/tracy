@@ -34,6 +34,7 @@
     "cmd": [
       "node",
       "--test",
+      "--test-concurrency=2",
       "--test-reporter=tap",
       "packages/wo/website-opportunities/test/domain-trades.test.mjs",
       "packages/wo/website-opportunities/test/domain-brief.test.mjs",
@@ -63,7 +64,10 @@
       "an overdue picture run",
       "own site resumes a paused shared run",
       "shared resume follows the paused upstream run",
-      "own site exposes a shared resume failure"
+      "own site exposes a shared resume failure",
+      "a blocked client-send brief fails promptly with its readiness cause",
+      "client-send photo-label timeout fails with its actual cause",
+      "a client-send preparation outage retains the runner bounded retry policy"
     ],
     "needs": ["postgres"]
   }

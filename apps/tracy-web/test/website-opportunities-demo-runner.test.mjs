@@ -3508,6 +3508,119 @@ test(
   }
 )
 
+test(
+  'a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged',
+  opts,
+  async () => {
+    const w = await world({
+      historical: false,
+      agentWorkflow: true,
+      chatMode: 'client-send/1',
+      readiness: 'measured'
+    })
+    const actionId = (await w.accept()).body.actions[0].id
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: 'BRIEF_NOT_READY'
+    })
+    const frozen = (await w.pool.query('select * from wo_revision')).rows
+    // No logo/photo requested marker is required: prepare already froze a blocked brief.
+    await w.advance()
+    await w.runner().drain()
+    const action = (
+      await w.pool.query('select status,error,step from wo_demo_action where id=$1', [actionId])
+    ).rows[0]
+    assert.deepEqual(action, { status: 'failed', error: 'BRIEF_NOT_READY', step: 'brief' })
+    assert.deepEqual((await w.pool.query('select * from wo_revision')).rows, frozen)
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.equal(w.creates(), 0)
+    assert.equal(w.messages.size, 0)
+    assert.equal(w.allocations.length, 0)
+    for (let i = 0; i < 660; i++) await w.advance()
+    await w.runner().drain()
+    assert.equal(
+      (await w.pool.query('select error from wo_demo_action where id=$1', [actionId])).rows[0].error,
+      'BRIEF_NOT_READY'
+    )
+  }
+)
+
+test(
+  'client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+    const actionId = (await w.accept()).body.actions[0].id
+    await w.pool.query(
+      `update wo_demo_action set selection=selection || '{"ownSite":true}'::jsonb where id=$1`,
+      [actionId]
+    )
+    let settle
+    w.deps.pictureLabels = () =>
+      new Promise((resolve) => {
+        settle = resolve
+      })
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: PICTURE_LABELS_PENDING
+    })
+    await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(
+      (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+      { status: 'queued', error: null }
+    )
+    for (let i = 0; i < 28; i++) await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(
+      (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+      { status: 'failed', error: 'DEMO_PICTURE_LABELS_TIMEOUT' }
+    )
+    settle({ labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0 } })
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await w.runner().drain()
+    assert.equal((await w.pool.query('select id from wo_revision')).rowCount, 0)
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.equal(w.messages.size, 0)
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: 'AGENT_DEMO_ACTION_CLOSED'
+    })
+    const retried = await acceptDemoActions(w.pool, {
+      accountId: w.account,
+      now: w.deps.now,
+      entries: [{ opportunityId: w.opportunity, requestId: 'retry-photo-label-timeout', retryOf: actionId }]
+    })
+    assert.equal(retried.status, 202)
+    const prepared = await w.deps.clientDemo.prepare({
+      accountId: w.account,
+      actionId: retried.body.actions[0].id
+    })
+    assert.ok(prepared.brief.hash, 'only explicit Retry adopts the settled labels and creates its brief')
+    assert.equal((await w.pool.query('select id from wo_revision')).rowCount, 1)
+    assert.equal(w.messages.size, 0)
+  }
+)
+
+test('a client-send preparation outage retains the runner bounded retry policy', opts, async () => {
+  const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+  const actionId = (await w.accept()).body.actions[0].id
+  await w.pool.query(
+    `update wo_demo_action set selection=selection || '{"pictureLabels":{"state":"requested"}}'::jsonb where id=$1`,
+    [actionId]
+  )
+  w.deps.revisionForAction = async () => {
+    throw Object.assign(new Error('Templates unavailable'), { code: 'TEMPLATES_UNREADABLE', status: 503 })
+  }
+  await w.runner().drain()
+  assert.deepEqual(
+    (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+    { status: 'queued', error: 'TEMPLATES_UNREADABLE' }
+  )
+  assert.equal((await w.pool.query('select id from wo_revision')).rowCount, 0)
+  assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+  assert.equal(w.messages.size, 0)
+})
+
 test('a warned brief builds and its build carries the owner questions', opts, async () => {
   const warned = {
     version: 'brief-readiness/1',

@@ -2847,6 +2847,12 @@ Since 22/10/2026, new Ask Tracy actions keep `selection.chatMode=client-send/1`.
 
 The agent reads research before a container exists through the `_conversation` context, calls `tracy_demo` provision.start/status/wait itself, reads the structure/baseline snapshot and saves a grouped plan before writing, then checks in the same turn. The backend only reconciles the job; it sends no initial/continuation/repair/wake prompt in the new mode. Site/session/native-turn permissions, Stop and write readiness are checked on the server. Retry keeps marker/site/session. Bulk opens each action's session in turn to send the user messages. The Open demo chat button restores navigation without creating a new build.
 
+Before a client-send build exists, reconciliation also checks an already frozen brief or requested logo/photo work.
+Pending research keeps waiting; terminal readiness, invalid input, withdrawn template and photo-label timeout failures
+end the action with their original code, allowing explicit Retry rather than waiting for the two-hour action timeout.
+Temporary preparation outages use the queue's bounded retry policy. Frozen revisions and late photo-label results never
+reopen an action that has failed.
+
 QA takes publicOrigin from the server-managed site address, checking that the hostname matches the site before using an alias. The origin keeps the real scheme/port, including Joomla force_ssl without canonical HTML; the port is not inferred from the template nor hard-coded per stand.
 
 In client-send mode, the user can continue the demo with a new message in the same chat after every accepted turn has finished normally. The new permission must come from an authenticated turn book: actor owner, source panel, open native prompt message ID/RPC, owner seat still present; CAS keeps one winning turn and accepts the same proof again on parallel/replay. Deadline/budget/baseline/research/plan are not reset. Any Stop/error/stale in the chain blocks continuation and requires an explicit Retry. Catalogue/plan.read/structure.read return a planGuide with canonical sources leading to the frozen bundle, field paths and native target samples; a wrong plan returns diagnostics, with no CMS write.
