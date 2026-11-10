@@ -18,12 +18,12 @@ import { writeContracts } from './quickstart-contracts.mjs'
 import { acceptedConfig, webrootTar } from './lib/webroot-tar.mjs'
 import { cleanAudit } from './lib/finish-audit.mjs'
 import { acquireLock, sumsText } from '../quickstart/lib.mjs'
-import { baselineOf, mergeFixMeasures, writeFixMeasure } from '../lib/fix-measure.mjs'
+import { baselineOf, mergeFixMeasures, validateFixMeasure, writeFixMeasure } from '../lib/fix-measure.mjs'
 import { coverageOf, expectedSweepCells } from '../lib/sweep-coverage.mjs'
 import { fingerprintOf } from '../lib/source-fingerprint.mjs'
 import { ALL_CHECKS, DEFAULT_SCHEMES, DEFAULT_WIDTHS, sweepInputs } from '../visual/site-sweep.mjs'
 import { heightsWidths } from '../visual/site-sweep-heights.mjs'
-import { acceptRelease, assembleRelease, behaviourProblems, compareVersions, portableVerification, runRelease, sweepAuthority, BINDING_FILE, BINDING_SCHEMA, SMOKE_TIER, TIER_IDS, AcceptanceError } from '../quickstart/release.mjs'
+import { acceptRelease, assembleRelease, behaviourProblems, compareVersions, portableFingerprint, portableMeasure, portableVerification, runRelease, sweepAuthority, BINDING_FILE, BINDING_SCHEMA, SMOKE_TIER, TIER_IDS, AcceptanceError } from '../quickstart/release.mjs'
 import { DARK_DERIVED_REASON } from '../visual/site-sweep-judge.mjs'
 import { bindingFor, packArtifacts, writeBinding } from '../visual/round.mjs'
 import { COUNT_OPTIONS, COUNT_TYPES } from '../quickstart/verify-parity.mjs'
@@ -1523,10 +1523,11 @@ test('patch: a fix release is accepted on the measure, with no checkpoint, run-r
   assert.equal(v.acceptance.gate, 'patch')
   // VERIFICATION.json goes on a public release: paths and stand origins are written as portableVerification makes them
   assert.deepEqual(v.previous, { release: 'tracy-base/wp7', version: '0.9.0', file: portableVerification(recordPath(f.previousFile)), evidence: tag(readFileSync(f.previousFile)), gate: 'full', visual: f.prev.visual })
-  assert.deepEqual([v.measure.passed, v.measure.total, v.measure.site, v.measure.source, v.measure.tool, v.measure.evidence], [N_CHECKS, N_CHECKS, 'http://b', portableVerification('http://source.test'), 'measure.mjs', tag(readFileSync(f.measureFile))])
+  // the measure names a .test stand, so the release publishes the portable copy and VERIFICATION.json binds those bytes
+  assert.deepEqual([v.measure.passed, v.measure.total, v.measure.site, v.measure.source, v.measure.tool, v.measure.evidence], [N_CHECKS, N_CHECKS, 'http://b', portableVerification('http://source.test'), 'measure.mjs', tag(readFileSync(path.join(f.out, 'fix-measure.json')))])
   assert.deepEqual(v.measure.checks.map((c) => c.id), ['A1', 'B1', ...ALL_CHECKS])
-  assert.deepEqual([v.measure.coverage.mode, v.measure.sourceFingerprint.id], ['full', SOURCE_FP.id])
-  assert.deepEqual(v.baseline, f.m.baseline)
+  assert.deepEqual([v.measure.coverage.mode, v.measure.sourceFingerprint.url, v.measure.sourceFingerprint.htmlSha256, v.measure.sourceFingerprint.id], ['full', 'https://quickstart.invalid/', SOURCE_FP.htmlSha256, portableFingerprint(SOURCE_FP).id])
+  assert.deepEqual(v.baseline, portableVerification(f.m.baseline))
   assert.equal(v.noBaseline, undefined)
   assert.deepEqual(v.notDefects, f.m.notDefects)
   assert.equal(v.changedFrom, null)
@@ -2329,7 +2330,11 @@ test('release: --setting-template writes tracy_setting.json (version, archives, 
   assert.equal(read('tracy_setting.json'), JSON.stringify(wanted, null, 2) + '\n')
   assert.deepEqual(Object.keys(JSON.parse(read('tracy_setting.json'))), Object.keys(settingOf()), 'the template\'s order is kept')
   assert.equal(read('tracy_design_inspiration.json'), cardBytes)
-  assert.equal(read('fix-measure.json'), readFileSync(f.measureFile, 'utf8'))
+  // the published measure is the portable copy of the one the release was accepted on: same checks, no stand origin
+  const measured = JSON.parse(readFileSync(f.measureFile, 'utf8'))
+  assert.equal(read('fix-measure.json'), JSON.stringify(portableMeasure(measured), null, 2) + '\n')
+  assert.doesNotMatch(read('fix-measure.json'), /source\.test/)
+  assert.deepEqual(validateFixMeasure(JSON.parse(read('fix-measure.json'))), [])
   const sums = read('SHA256SUMS')
   for (const n of ['tracy_setting.json', 'tracy_design_inspiration.json', 'fix-measure.json']) assert.ok(sums.includes(`${hex(readFileSync(path.join(f.out, n)))}  ${n}\n`), n)
   assert.ok(JSON.parse(read('manifest.json')).assets.includes('tracy_setting.json'))
