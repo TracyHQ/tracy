@@ -13,8 +13,9 @@ export const WORKSPACE_CSS = `
 .tracy-wo-ws-title { margin: 0; font-size: 14px; font-weight: 600; line-height: 20px; }
 .tracy-wo-ws-subtitle { font-size: 12.5px; color: var(--muted-foreground); }
 .tracy-wo-ws-sec + .tracy-wo-ws-sec { border-top: 1px solid var(--border); }
-.tracy-wo-ws-row { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 6px 16px; }
-.tracy-wo-ws-sec:not([data-state='locked']) > .tracy-wo-ws-row:hover { background: color-mix(in oklab, var(--muted) 35%, var(--card, var(--background))); }
+/* Every section row reads as a header, locked or not, so the values that open under it stand apart (owner, #537). */
+.tracy-wo-ws-row { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 6px 16px; background: color-mix(in oklab, var(--muted) 35%, var(--card, var(--background))); }
+.tracy-wo-ws-sec:not([data-state='locked']) > .tracy-wo-ws-row:hover { background: color-mix(in oklab, var(--muted) 55%, var(--card, var(--background))); }
 .tracy-wo-ws-sec[data-open] > .tracy-wo-ws-row { border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
 .tracy-wo-ws-toggle { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; margin: 0; padding: 4px 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; }
 button.tracy-wo-ws-toggle { cursor: pointer; }
@@ -36,7 +37,6 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-pill[data-kind='review']:hover > svg { color: var(--primary-foreground); }
 .tracy-wo-ws-pill[data-kind='locked'] { padding: 0 9px; border-style: dashed; background: transparent; color: var(--muted-foreground); cursor: default; }
 .tracy-wo-ws-pill[data-kind='locked']:hover { background: transparent; }
-.tracy-wo-ws-sec[data-state='locked'] { background: color-mix(in oklab, var(--muted) 35%, var(--card, var(--background))); }
 .tracy-wo-ws-sec[data-state='locked'] .tracy-wo-ws-name { color: var(--muted-foreground); }
 .tracy-wo-ws-body { padding: 12px 16px 14px; }
 .tracy-wo-ws .tracy-wo-profile-card .tracy-wo-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; }
