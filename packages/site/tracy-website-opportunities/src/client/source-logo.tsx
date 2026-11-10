@@ -26,10 +26,10 @@ export function SourceGlyph({ logo, size = 14 }: { logo: SourceLogoKey; size?: n
 }
 
 /** The 20px tile at the left of a Sources row. */
-export function SourceLogo({ source, ref }: { source: string; ref?: string | null }): JSX.Element {
+export function SourceLogo({ source, href }: { source: string; href?: string | null }): JSX.Element {
   return (
     <span className="tracy-wo-src-logo">
-      <SourceGlyph logo={sourceLogoKey(source, ref)} />
+      <SourceGlyph logo={sourceLogoKey(source, href)} />
     </span>
   )
 }

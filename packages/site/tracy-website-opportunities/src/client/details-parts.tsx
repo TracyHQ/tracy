@@ -148,7 +148,7 @@ function SourceItem({
   const head = (
     <>
       <span className="tracy-wo-src-main">
-        <SourceLogo source={row.source} ref={link ?? s.ref} />
+        <SourceLogo source={row.source} href={link ?? s.ref} />
         <span className="tracy-wo-src-head">
           <span className="tracy-wo-src-name">{sourceLabel(t, row.source, pastedLink ?? s.ref)}</span>
           {link !== null || s.fromSearch || collected !== null || plainReason !== null ? (
