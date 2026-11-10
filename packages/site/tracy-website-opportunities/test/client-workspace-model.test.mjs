@@ -175,22 +175,6 @@ const CASES = [
     ]
   },
   {
-    name: 'sources changed: Sources open, facts, brief and site read as not made',
-    input: {
-      brief: BRIEF,
-      demo: 'ready',
-      demoAt: '2026-11-10T13:00:00Z',
-      approval: { research: 'sources_changed', profile: 'none', brief: 'stale', briefStale: 'sources' },
-      sources: ['collected', 'collected', 'failed', 'new']
-    },
-    want: [
-      'sources open +: 2 of 4 read · 1 new link, research again',
-      'profile locked: Run research again first',
-      'brief locked: Run research again first',
-      'demo locked: Approve the business facts and the brief first'
-    ]
-  },
-  {
     name: 'research again pressed: the old output is reset to waiting rows',
     input: { research: RERUNNING, job: { state: 'running' }, brief: BRIEF },
     want: [

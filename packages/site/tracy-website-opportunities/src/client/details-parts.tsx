@@ -72,7 +72,6 @@ export interface SourceRemove {
 /** The band node each row state is drawn with (the same node as the Progress band's sub-steps). */
 const NODE_OF: Readonly<Record<SourceState, StepNodeState>> = {
   waiting: 'waiting',
-  new: 'waiting',
   reading: 'running',
   collected: 'done',
   failed: 'failed'
@@ -87,7 +86,6 @@ const NODE_OF: Readonly<Record<SourceState, StepNodeState>> = {
 export function SourcesTable({
   t,
   sources,
-  researched,
   progress,
   retry,
   remove,
@@ -95,8 +93,6 @@ export function SourcesTable({
 }: {
   t: Translate
   sources: SourceInput[]
-  /** This card's research has finished and does not run again now (`source-table-model.ts sourceStateOf`). */
-  researched: boolean
   /** The band's research items by source key while research runs (`sourceProgressOf`); none: rows keep their own state. */
   progress?: SourceProgress
   /** Absent where the page cannot start a research: no Try again is drawn. */
@@ -134,7 +130,7 @@ export function SourcesTable({
         {sources.map((s) => {
           const pastedLink = pastedLinkOf(s)
           const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
-          const view = sourceStateOf(s, researched, locale, progress)
+          const view = sourceStateOf(s, locale, progress)
           const detail =
             view.detail === null ? null : 'text' in view.detail ? view.detail.text : t(view.detail.key)
           const name = sourceLabel(t, s.source, pastedLink ?? s.ref)

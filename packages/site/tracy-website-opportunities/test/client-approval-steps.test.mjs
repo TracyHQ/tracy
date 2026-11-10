@@ -77,20 +77,12 @@ test('a Profile edit after approval: review again, the brief and the build read 
   assert.equal('staleKey' in v.steps[1], false)
 })
 
-test('a source added after research: Research again, the brief and the build locked', () => {
-  const v = view({
-    brief: BRIEF,
-    demo: 'ready',
-    approval: { research: 'sources_changed', profile: 'none', brief: 'stale', briefStale: 'sources' }
-  })
+test('sources are fixed once research starts: no step asks for research again because of sources', () => {
+  const v = view({ brief: BRIEF, demo: 'ready', approval: { research: 'ok', profile: 'none' } })
   assert.equal(v.current, 'research')
-  assert.equal(v.lineKey, 'stepper.research.sourcesChanged')
-  assert.deepEqual(v.action, { kind: 'research-again', labelKey: 'details.researchAgain' })
-  assert.equal(v.steps[0].status.key, 'stepper.sourcesChanged')
-  assert.equal(v.steps[1].lockKey, 'stepper.lock.researchAgain')
-  assert.equal(v.steps[2].lockKey, 'stepper.lock.both')
-  assert.equal(reviewChipOf(v).key, 'chip.sourcesChanged')
-  assert.equal(en['stepper.research.sourcesChanged'], 'Sources changed. Run research again.')
+  assert.equal(v.action.kind, 'review-profile')
+  for (const key of ['stepper.research.sourcesChanged', 'stepper.sourcesChanged', 'chip.sourcesChanged'])
+    assert.equal(en[key], undefined, key)
 })
 
 test('an approved stale brief reads as not made: Make the site content brief', () => {
@@ -192,15 +184,6 @@ const CASCADE = [
     false
   ],
   ['brief marked stale', { ...OK, brief: 'stale', briefStale: 'profile' }, 'ready', BUILT, {}, false, false],
-  [
-    'sources changed',
-    { research: 'sources_changed', profile: 'approved', brief: 'approved' },
-    'ready',
-    BUILT,
-    {},
-    false,
-    false
-  ],
   [
     'research runs again',
     { ...OK, brief: 'approved', briefApprovedAt: '2026-11-09T12:10:00Z' },
@@ -351,7 +334,7 @@ test('a new place reads Ready to start with the plain sentence and the Research 
   assert.equal(v.estimateKey, 'stepper.estimate.research')
   assert.equal(en['stepper.estimate.research'], 'Est. 2 to 4 min')
   assert.equal(en['stepper.estimate.brief'], 'Est. 2 min')
-  assert.equal(en['stepper.estimate.build'], 'Est. 50 min')
+  assert.equal(en['stepper.estimate.build'], 'Est. 20+ min')
   assert.doesNotMatch(
     Object.values(en)
       .filter((x) => /^(Tracy reads|Reading the website|Business facts approved|Brief approved)/.test(x))

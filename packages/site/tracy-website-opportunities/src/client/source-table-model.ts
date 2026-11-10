@@ -10,9 +10,9 @@ import type { WorkspaceText } from './workspace-model.ts'
 
 /**
  * waiting: research has not run (or runs now) · collected: research read it · failed: research could not read it ·
- * new: a link added after research, waiting for the next research · reading: research reads it right now.
+ * reading: research reads it right now. Sources are fixed once research starts, so no link waits after it.
  */
-export type SourceState = 'waiting' | 'reading' | 'collected' | 'failed' | 'new'
+export type SourceState = 'waiting' | 'reading' | 'collected' | 'failed'
 
 /** What the Progress band's research sub-step of one source says, by source key (`google-places`, `instagram`...). */
 export type SourceProgress = ReadonlyMap<string, 'waiting' | 'running' | 'done' | 'failed'>
@@ -40,8 +40,7 @@ const STATE_KEY: Readonly<Record<SourceState, string>> = {
   waiting: 'source.state.waiting',
   reading: 'source.state.reading',
   collected: 'source.state.collected',
-  failed: 'source.state.failed',
-  new: 'source.state.new'
+  failed: 'source.state.failed'
 }
 
 /** Reason keys that are not a reason a seller can read under Could not collect. */
@@ -60,13 +59,11 @@ export function shortDate(iso: unknown, locale: string, timeZone?: string): stri
 }
 
 /**
- * The state of one source row. `researched`: this card's research has finished and does not run again now; a row
- * with no outcome then is a link added since. The failure reason is the server's own `reason` code when it names
+ * The state of one source row; a row with no outcome waits for research. The failure reason is the server's own `reason` code when it names
  * one the screen knows; with none, the row reads Could not collect alone (no reason is made up).
  */
 export function sourceStateOf(
   s: SourceInput,
-  researched: boolean,
   locale: string,
   progress: SourceProgress = NO_PROGRESS
 ): SourceStateView {
@@ -90,8 +87,7 @@ export function sourceStateOf(
       detail: key === null || NO_REASON.has(key) ? null : { key }
     }
   }
-  const state: SourceState = researched ? 'new' : 'waiting'
-  return { state, key: STATE_KEY[state], detail: null }
+  return { state: 'waiting', key: STATE_KEY.waiting, detail: null }
 }
 
 export interface SourcesSummaryInput {
@@ -109,15 +105,9 @@ export interface SourcesSummaryInput {
 export function sourcesSummary(input: SourcesSummaryInput): WorkspaceText[] {
   const { states } = input
   const read = states.filter((s) => s === 'collected').length
-  const fresh = states.filter((s) => s === 'new').length
   const head: WorkspaceText = { key: 'workspace.sum.read', params: { read, total: states.length } }
   if (input.researchMoving) return [head, { key: 'workspace.sum.researching' }]
   if (!input.researchDone) return [head, { key: 'workspace.sum.notRun' }]
-  if (fresh > 0)
-    return [
-      head,
-      { key: `workspace.sum.newLinks.${fresh === 1 ? 'one' : 'other'}`, params: { count: fresh } }
-    ]
   const date = shortDate(input.researchedAt, input.locale)
   return date === null ? [head] : [head, { text: date }]
 }

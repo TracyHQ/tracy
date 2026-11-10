@@ -36,15 +36,15 @@ const shortLink = (url: string): string => url.replace(/^https?:\/\//i, '').repl
 
 export function AddSourcePopover({
   t,
-  researched,
-  researchRunning,
+  locked,
   onAdd
 }: {
   t: Translate
-  /** Research has run: adding a source asks for it again (said under the field and on the Add button). */
-  researched: boolean
-  /** Research runs now: the button is off until it finishes (the door would answer `JOB_ACTIVE`). */
-  researchRunning: boolean
+  /**
+   * Sources are fixed: research runs or ran (`addAllowedIn` is false). The button stays drawn but off, and its reason
+   * shows on hover; the door would answer `RESEARCH_STARTED` (or `JOB_ACTIVE` while it runs).
+   */
+  locked: boolean
   /** Adds the link; answers the door's refusal, or null when it was added. */
   onAdd: (url: string) => Promise<AddSourceRefusal | null>
 }): JSX.Element {
@@ -116,7 +116,7 @@ export function AddSourcePopover({
   const checkingKey = addSourceCheckingKey(state, now)
   const glyph = state.open ? addSourceGlyphOf(state.url) : null
   const pending = state.notice?.phase === 'pending'
-  const off = researchRunning || pending
+  const off = locked || pending
   const notice = state.notice
 
   return (
@@ -158,10 +158,7 @@ export function AddSourcePopover({
           ) : null}
         </span>
       ) : null}
-      <span
-        className="tracy-wo-addsrc-btnwrap"
-        title={researchRunning ? t('source.add.waitResearch') : undefined}
-      >
+      <span className="tracy-wo-addsrc-btnwrap" title={locked ? t('source.add.locked') : undefined}>
         <Button
           type="button"
           size="xs"
@@ -217,7 +214,7 @@ export function AddSourcePopover({
               placeholder={t('source.add.placeholder')}
               value={state.url}
               aria-invalid={state.error !== null ? true : undefined}
-              aria-describedby={state.error !== null || researched ? hintId : undefined}
+              aria-describedby={state.error !== null ? hintId : undefined}
               onChange={(e) => dispatch({ type: 'type', url: e.target.value })}
             />
             {checkingKey === null ? null : (
@@ -231,17 +228,13 @@ export function AddSourcePopover({
             <p id={hintId} className="tracy-wo-error tracy-wo-small" role="alert">
               {lineOf(t, state.error)}
             </p>
-          ) : researched ? (
-            <p id={hintId} className="tracy-wo-muted tracy-wo-small">
-              {t('source.add.afterResearch')}
-            </p>
           ) : null}
           <span className="tracy-wo-addsrc-acts">
             <Button type="button" size="sm" variant="outline" onClick={() => dispatch({ type: 'close' })}>
               {t('source.add.cancel')}
             </Button>
             <Button type="submit" size="sm" disabled={checking}>
-              {t(researched ? 'source.add.submitAgain' : 'source.add.submit')}
+              {t('source.add.submit')}
             </Button>
           </span>
         </form>

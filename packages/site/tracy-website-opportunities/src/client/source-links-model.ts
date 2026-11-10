@@ -42,12 +42,7 @@ export function pastedLinksOf(opportunity: unknown): Array<{ source: string; url
  * The source rows to draw: research's own rows once it has any, else one row per pasted link (Google first when the
  * place came from a search and no Google link was pasted).
  */
-export function sourcesToShow(
-  sources: readonly SourceInput[],
-  opportunity: unknown,
-  /** The server's approval says the sources changed after research (`research: 'sources_changed'`). */
-  changed = false
-): SourceInput[] {
+export function sourcesToShow(sources: readonly SourceInput[], opportunity: unknown): SourceInput[] {
   const opp = isRec(opportunity) ? opportunity : {}
   // A listing link the seller added before research (#537) gets its own row at once: the pasted links that no row
   // covers yet still show, Not collected yet, beside it.
@@ -60,9 +55,8 @@ export function sourcesToShow(
     status: null
   }))
   const researched = sources.some((s) => s.source !== 'listing')
-  // Once research has rows, they are the links: shown as they are. A link the seller added since (the server says
-  // the sources changed) has no row yet: it shows after them, waiting for the next research.
-  if (researched) return changed ? [...sources, ...rows] : [...sources]
+  // Once research has rows, they are the links: shown as they are (sources are fixed once research starts).
+  if (researched) return [...sources]
   const searched =
     opp.provider === 'google-places' &&
     !covered.has('google-places') &&
@@ -76,7 +70,7 @@ export function sourcesToShow(
 
 /**
  * The sources the Workspace card lists on the overview (#537, option C). Before research every pasted link shows,
- * waiting. After it, every row research collected or could not collect, and links added since; a row research
+ * waiting. After it, every row research collected or could not collect; a row research
  * skipped by itself (a search that found no page) stays on the Sources sub-page, unless the seller pasted its link.
  */
 export function overviewSourcesOf(shown: readonly SourceInput[], collected: boolean): SourceInput[] {

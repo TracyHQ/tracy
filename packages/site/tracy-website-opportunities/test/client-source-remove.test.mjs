@@ -173,7 +173,7 @@ before(async () => {
         export function Harness({ api, initial, reloaded }) {
           const [sources, setSources] = useState(initial)
           const remove = useSourceRemove(api, '${ID}', async () => setSources(reloaded))
-          return createElement(SourcesTable, { t, sources, researched: true, remove, researchState: 'not_started' })
+          return createElement(SourcesTable, { t, sources, remove, researchState: 'not_started' })
         }
         export { createElement }
       `,

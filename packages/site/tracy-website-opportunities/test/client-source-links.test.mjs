@@ -131,7 +131,7 @@ test('the overview lists collected and failed sources after research, every past
   assert.equal(overviewSourcesOf(shown, false).length, 6)
 })
 
-test('a link added after research shows after research rows only while the sources changed (#537)', () => {
+test('after research its rows are the whole list: sources are fixed once research starts, no pasted link is added beside them (#537)', () => {
   const opp = {
     candidate: {
       pastedLinks: [
@@ -145,10 +145,6 @@ test('a link added after research shows after research rows only while the sourc
     { source: 'website', status: 'failed' }
   ]
   assert.deepEqual(sourcesToShow(research, opp), research)
-  assert.deepEqual(
-    sourcesToShow(research, opp, true).map((r) => `${r.source}:${r.status}`),
-    ['instagram:complete', 'website:failed', 'facebook:null']
-  )
 })
 
 test('only http and https addresses become links, shown as host and path with an ellipsis', () => {

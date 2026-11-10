@@ -11,6 +11,14 @@
 import { judgeLinks, linkKind, unsupportedLinkOf } from 'website-opportunities/domain/link-kinds.mjs'
 
 import { type SourceLogoKey, sourceLogoKey } from './source-logo.ts'
+import { removeAllowedIn } from './source-remove-model.ts'
+
+/**
+ * Sources can be added only before the research or after it failed, the same rule as removing one
+ * (`source-remove-model.ts removeAllowedIn`): once research runs or ran the sources are fixed, and the add door
+ * answers `RESEARCH_STARTED`. Otherwise the Add source button stays drawn, off, with `source.add.locked` on hover.
+ */
+export const addAllowedIn = removeAllowedIn
 
 /** Longest link the add door accepts (`seller-review-routes.js URL_MAX`). */
 export const ADD_SOURCE_URL_MAX = 2000
@@ -116,6 +124,7 @@ export function addSourceRefusal(refusal: AddSourceRefusal): AddSourceMessage {
     case 'INVALID_URL':
     case 'GOOGLE_LINK_NOT_ADDED':
     case 'JOB_ACTIVE':
+    case 'RESEARCH_STARTED':
     case 'NETWORK':
     case 'NOT_FOUND':
     case 'FEATURE_OFF':

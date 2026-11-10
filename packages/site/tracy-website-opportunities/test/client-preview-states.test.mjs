@@ -14,6 +14,7 @@ import { PREVIEW_STATES, applyPreview, previewFlag } from '../src/client/preview
 import { sectionMetas, sourceCounts } from '../src/client/section-model.ts'
 import { researchOf } from '../src/client/research-gate-model.ts'
 import { sourcesToShow } from '../src/client/source-links-model.ts'
+import { sourceStateOf } from '../src/client/source-table-model.ts'
 import { stepperView } from '../src/client/stepper-model.ts'
 
 const NOW = Date.parse('2026-11-09T12:00:00Z')
@@ -135,12 +136,6 @@ const EXPECTED = {
     action: 'review-profile',
     tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
   },
-  'sources-changed': {
-    current: 'research',
-    running: false,
-    action: 'research-again',
-    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
-  },
   'brief-approved': {
     current: 'build',
     running: false,
@@ -188,6 +183,48 @@ test('the failed brief reads a plain sentence; researching marks sources done, r
   )
   const statuses = applyPreview(REAL, 'researching', NOW).sources.map((s) => s.status)
   assert.deepEqual(statuses, ['complete', 'complete', 'partial', 'partial', null, null])
+})
+
+test('after research every pasted link of a card never researched reads as a collected source row', () => {
+  // An invented card added by two links and never researched: no source row of its own yet.
+  const fresh = {
+    ...REAL,
+    opportunity: {
+      ...REAL.opportunity,
+      provider: 'url',
+      candidate: {
+        ...REAL.opportunity.candidate,
+        pastedLinks: [
+          { url: 'https://www.instagram.com/sample_court_club', source: 'instagram' },
+          { url: 'https://sample-court.example/', source: 'website' }
+        ]
+      }
+    },
+    research: { state: 'not_started', researchedAt: null },
+    sources: []
+  }
+  assert.equal(PREVIEW_STATES.includes('sources-changed'), false)
+  const after = PREVIEW_STATES.filter((s) => !['real', 'new', 'researching'].includes(s))
+  for (const id of after) {
+    const body = applyPreview(fresh, id, NOW)
+    const shown = sourcesToShow(body.sources, body.opportunity)
+    assert.deepEqual(
+      shown.map((r) => [r.source, r.pastedLink, r.status, sourceStateOf(r, 'en-US').state]),
+      [
+        ['instagram', 'https://www.instagram.com/sample_court_club', 'complete', 'collected'],
+        ['website', 'https://sample-court.example/', 'complete', 'collected']
+      ],
+      id
+    )
+    for (const r of shown) assert.equal(typeof r.collectedAt, 'string', id)
+  }
+  // A pasted link a real row already covers gets no second row.
+  const covered = { ...fresh, sources: [{ source: 'instagram', status: 'complete', shared: true }] }
+  const body = applyPreview(covered, 'profile-review', NOW)
+  assert.deepEqual(
+    body.sources.map((r) => r.source),
+    ['instagram', 'website']
+  )
 })
 
 test('the demo states: building has a progress run, ready has a demo address', () => {

@@ -9,7 +9,7 @@
  * With the seller's approvals (`approval` of the Details and list answers, #537) two review states sit between the
  * steps: research done and the Profile not approved reads "Needs your review" on Research with Review profile, the
  * brief step locked; a brief made and not approved reads the same on Content brief, Build locked. A brief made from an
- * older Profile or older sources is stale, and a source added after research asks for research again. Without
+ * older Profile is stale; sources are fixed once research starts, so they never ask for research again. Without
  * `approval` (an older server) the steps read as before.
  * Pure: no DOM, no fetch, no clock read.
  */
@@ -33,18 +33,17 @@ export type StepAction =
   | 'rebuild'
   | 'review-profile'
   | 'review-brief'
-  | 'research-again'
 
 /** The seller's approvals as the server answers them (`approval.js approvalOf`); every field may be absent. */
 export interface ApprovalInput {
-  research?: 'ok' | 'sources_changed' | string | null
+  research?: 'ok' | string | null
   profile?: 'none' | 'needed' | 'approved' | string | null
   profileApprovedAt?: string | null
   profileChangedAt?: string | null
   brief?: 'none' | 'needed' | 'approved' | 'stale' | string | null
   briefApprovedAt?: string | null
-  briefStale?: 'profile' | 'sources' | string | null
-  sourcesChangedAt?: string | null
+  /** Why the brief is stale: only `profile` (sources are fixed once research starts, so they never make it stale). */
+  briefStale?: 'profile' | string | null
 }
 
 /** One line of a step in the Progress list or its detail pane. */
@@ -122,25 +121,18 @@ const BUILDING = new Set<DemoState>(['queued', 'building'])
 const hasBrief = (brief: StepperInput['brief']): boolean => typeof brief?.id === 'string' && brief.id !== ''
 
 /** The approvals in one shape: null when the server sent none (an older server), so no review state shows. */
-export function approvalOf(input: ApprovalInput | null | undefined):
-  | (Required<ApprovalInput> & {
-      researchNeeded: boolean
-    })
-  | null {
+export function approvalOf(input: ApprovalInput | null | undefined): Required<ApprovalInput> | null {
   if (input === null || typeof input !== 'object') return null
   const text = (v: unknown): string | null => (typeof v === 'string' && v !== '' ? v : null)
   const raw = input
-  const researchNeeded = raw.research === 'sources_changed'
   return {
-    research: researchNeeded ? 'sources_changed' : 'ok',
-    researchNeeded,
+    research: 'ok',
     profile: text(raw.profile) ?? 'none',
     profileApprovedAt: text(raw.profileApprovedAt),
     profileChangedAt: text(raw.profileChangedAt),
     brief: text(raw.brief) ?? 'none',
     briefApprovedAt: text(raw.briefApprovedAt),
-    briefStale: text(raw.briefStale) ?? (raw.brief === 'stale' ? 'profile' : null),
-    sourcesChangedAt: text(raw.sourcesChangedAt)
+    briefStale: text(raw.briefStale) ?? (raw.brief === 'stale' ? 'profile' : null)
   }
 }
 
@@ -162,7 +154,7 @@ function withOlderBrief(
 /**
  * What on screen still counts as made, in ONE place (#537). The three steps depend on each other, so a reset
  * cascades downstream and nothing old is shown: the server keeps its revisions, the client treats them as not made.
- *   - research running again, sources changed, or the business facts not approved (or edited after approval):
+ *   - research running again, or the business facts not approved (or edited after approval):
  *     the brief and the site are not made;
  *   - a brief made before the facts were approved (`withOlderBrief`) or marked stale: the brief and the site are not
  *     made;
@@ -175,8 +167,7 @@ export function effectiveOf(input: StepperInput): { brief: StepperInput['brief']
   const briefUsable =
     hasBrief(input.brief) &&
     !again &&
-    (approval === null ||
-      (!approval.researchNeeded && approval.profile === 'approved' && approval.brief !== 'stale'))
+    (approval === null || (approval.profile === 'approved' && approval.brief !== 'stale'))
   const approvedAt = Date.parse(approval?.briefApprovedAt ?? '')
   const builtAt = Date.parse(input.demoAt ?? '')
   const approvedAfterBuild = Number.isFinite(approvedAt) && Number.isFinite(builtAt) && approvedAt > builtAt
@@ -224,16 +215,11 @@ export function stepperView(raw: StepperInput): StepperView {
       lineKey = 'stepper.research.notStarted'
       action = { kind: 'start-research', labelKey: 'job.start' }
     }
-  } else if (approval?.researchNeeded || input.research.state === 'running' || MOVING.has(jobState ?? '')) {
-    // A source added after research: research reads the business again before anything downstream counts (#537).
+  } else if (input.research.state === 'running' || MOVING.has(jobState ?? '')) {
+    // Research runs again (Research again): it reads the business again before anything downstream counts (#537).
     current = 'research'
-    if (input.research.state === 'running' || MOVING.has(jobState ?? '')) {
-      running = true
-      lineKey = 'stepper.research.running'
-    } else {
-      lineKey = 'stepper.research.sourcesChanged'
-      action = { kind: 'research-again', labelKey: 'details.researchAgain' }
-    }
+    running = true
+    lineKey = 'stepper.research.running'
     lockOf.brief = 'stepper.lock.researchAgain'
     lockOf.build = 'stepper.lock.both'
   } else if (approval !== null && approval.profile !== 'approved') {
@@ -320,11 +306,9 @@ export function stepperView(raw: StepperInput): StepperView {
             : state === 'current'
               ? running
                 ? { key: 'stepper.running', tone: 'run' }
-                : id === 'research' && approval?.researchNeeded
-                  ? { key: 'stepper.sourcesChanged', tone: 'warn' }
-                  : lineKey === 'stepper.research.paused'
-                    ? { key: 'stepper.paused', tone: 'warn' }
-                    : { key: 'stepper.ready', tone: 'mute' }
+                : lineKey === 'stepper.research.paused'
+                  ? { key: 'stepper.paused', tone: 'warn' }
+                  : { key: 'stepper.ready', tone: 'mute' }
               : { key: 'stepper.upNext', tone: 'mute' }
     return {
       id,
@@ -352,7 +336,6 @@ export function reviewChipOf(view: StepperView): StepLine {
   if (view.errorKey !== null) return { key: 'stepper.failed', tone: 'error' }
   if (step.id === 'research') {
     if (view.running) return { key: 'chip.researching', tone: 'run' }
-    if (step.status.key === 'stepper.sourcesChanged') return { key: 'chip.sourcesChanged', tone: 'warn' }
     if (view.review) return { key: 'chip.profileReview', tone: 'warn' }
     return { key: 'chip.notStarted', tone: 'mute' }
   }

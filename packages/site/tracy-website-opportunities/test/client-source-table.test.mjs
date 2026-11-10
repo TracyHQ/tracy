@@ -19,58 +19,53 @@ const words = (parts) =>
     .join(' · ')
 
 /** A row's State column as two lines joined by a slash. */
-function cell(source, researched) {
-  const v = sourceStateOf(source, researched, 'en-US')
+function cell(source) {
+  const v = sourceStateOf(source, 'en-US')
   return [STRINGS[v.key], v.detail === null ? null : words([v.detail])].filter(Boolean).join(' / ')
 }
 
 test('before research every row waits, whatever it holds', () => {
-  assert.equal(cell({ source: 'instagram', status: null }, false), 'Waiting for research')
-  assert.equal(cell({ source: 'website' }, false), 'Waiting for research')
-  assert.equal(sourceStateOf({ source: 'website' }, false, 'en-US').state, 'waiting')
+  assert.equal(cell({ source: 'instagram', status: null }), 'Waiting for research')
+  assert.equal(cell({ source: 'website' }), 'Waiting for research')
+  assert.equal(sourceStateOf({ source: 'website' }, 'en-US').state, 'waiting')
 })
 
 test('a collected row reads Collected, with the day its data was collected on the second line', () => {
   assert.equal(
-    cell({ source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }, true),
+    cell({ source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }),
     'Collected / Nov 10'
   )
   assert.equal(
-    cell({ source: 'website', status: 'partial', collectedAt: '2026-11-09T23:30:00Z' }, true),
+    cell({ source: 'website', status: 'partial', collectedAt: '2026-11-09T23:30:00Z' }),
     'Collected / Nov 9'
   )
-  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: null }, true), 'Collected')
-  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: 'not a date' }, true), 'Collected')
+  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: null }), 'Collected')
+  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: 'not a date' }), 'Collected')
 })
 
 test('a failed row reads Could not collect, with the server reason only when it sends one the screen knows', () => {
   assert.equal(
-    cell({ source: 'listing', status: 'failed', reason: 'login_required' }, true),
+    cell({ source: 'listing', status: 'failed', reason: 'login_required' }),
     'Could not collect / This page asks for a login'
   )
   assert.equal(
-    cell({ source: 'website', status: 'skipped', reason: 'not_found' }, true),
+    cell({ source: 'website', status: 'skipped', reason: 'not_found' }),
     'Could not collect / Not found'
   )
   assert.equal(
-    cell({ source: 'website', status: 'blocked', reason: 'URL_BLOCKED' }, true),
+    cell({ source: 'website', status: 'blocked', reason: 'URL_BLOCKED' }),
     'Could not collect / This address cannot be fetched'
   )
   // No reason, an unknown code, or a code that is not a reason: Could not collect alone, nothing made up.
-  assert.equal(cell({ source: 'website', status: 'failed' }, true), 'Could not collect')
-  assert.equal(
-    cell({ source: 'website', status: 'failed', reason: 'SOMETHING_NEW' }, true),
-    'Could not collect'
-  )
-  assert.equal(
-    cell({ source: 'website', status: 'failed', reason: 'not_collected' }, true),
-    'Could not collect'
-  )
+  assert.equal(cell({ source: 'website', status: 'failed' }), 'Could not collect')
+  assert.equal(cell({ source: 'website', status: 'failed', reason: 'SOMETHING_NEW' }), 'Could not collect')
+  assert.equal(cell({ source: 'website', status: 'failed', reason: 'not_collected' }), 'Could not collect')
 })
 
-test('a row with no outcome after research is a link added since', () => {
-  assert.equal(cell({ source: 'facebook', status: null }, true), 'New, waiting for research')
-  assert.equal(sourceStateOf({ source: 'facebook', status: null }, true, 'en-US').state, 'new')
+test('a row with no outcome waits for research: sources are fixed once research starts, so no link is new after it', () => {
+  assert.equal(cell({ source: 'facebook', status: null }), 'Waiting for research')
+  assert.equal(sourceStateOf({ source: 'facebook', status: null }, 'en-US').state, 'waiting')
+  assert.equal(STRINGS['source.state.new'], undefined)
 })
 
 const researchItems = (items) => ({ step: 'research', items })
@@ -85,7 +80,7 @@ test('while research runs, the band item with the row source key makes it Readin
     ]),
     true
   )
-  const state = (source) => sourceStateOf({ source, status: null }, false, 'en-US', progress)
+  const state = (source) => sourceStateOf({ source, status: null }, 'en-US', progress)
   assert.equal(state('instagram').state, 'reading')
   assert.equal(STRINGS[state('instagram').key], 'Reading now')
   assert.equal(state('google-places').state, 'collected')
@@ -103,8 +98,8 @@ test('the band items count only while research runs, for the research step, and 
   assert.equal(sourceProgressOf(null, true).size, 0)
   const progress = sourceProgressOf(researchItems(items), true)
   const done = { source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }
-  assert.equal(sourceStateOf(done, false, 'en-US', progress).state, 'collected')
-  assert.equal(sourceStateOf({ source: 'instagram', status: null }, true, 'en-US', progress).state, 'reading')
+  assert.equal(sourceStateOf(done, 'en-US', progress).state, 'collected')
+  assert.equal(sourceStateOf({ source: 'instagram', status: null }, 'en-US', progress).state, 'reading')
 })
 
 test('the summary counts the same row states the table draws', () => {
@@ -120,8 +115,6 @@ test('the summary counts the same row states the table draws', () => {
     '0 of 3 read · research running'
   )
   assert.equal(sum(['collected', 'collected', 'failed']), '2 of 3 read · Nov 10')
-  assert.equal(sum(['collected', 'collected', 'failed', 'new']), '2 of 4 read · 1 new link, research again')
-  assert.equal(sum(['collected', 'new', 'new']), '1 of 3 read · 2 new links, research again')
   assert.equal(sum(['collected'], { researchedAt: null }), '1 of 1 read')
 })
 
@@ -131,7 +124,7 @@ test('the summary and the rows agree for one payload', () => {
     { source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' },
     { source: 'listing', status: 'failed', reason: 'login_required' }
   ]
-  const states = rows.map((r) => sourceStateOf(r, true, 'en-US').state)
+  const states = rows.map((r) => sourceStateOf(r, 'en-US').state)
   assert.deepEqual(states, ['collected', 'collected', 'failed'])
   assert.equal(
     words(

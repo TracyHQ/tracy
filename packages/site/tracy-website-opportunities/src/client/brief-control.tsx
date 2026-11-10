@@ -24,7 +24,7 @@ export interface BriefJobControl {
   pressing: boolean
   /** The last press was refused by the server. */
   refused: boolean
-  /** The code of that refusal (`PROFILE_NOT_APPROVED`, `RESEARCH_NEEDED`, ...), or null (#537). */
+  /** The code of that refusal (`PROFILE_NOT_APPROVED`, `BRIEF_STALE`, ...), or null (#537). */
   refusedCode: string | null
   press: () => Promise<void>
 }

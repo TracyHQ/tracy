@@ -89,7 +89,7 @@ const SAGA = [
   { source: 'tripadvisor', ref: null, status: 'skipped', reason: 'not_found', shared: true }
 ]
 const draw = (sources, extra = {}) =>
-  lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, researched: true, ...extra }))
+  lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, ...extra }))
 const names = (html) => [...html.matchAll(/tracy-wo-stab-name">([^<]+)</g)].map((m) => m[1])
 const noRetry = { busy: null, failed: null, onPress: () => {} }
 
@@ -241,12 +241,12 @@ test('the Sources table of the Workspace card: one line per source, the state pi
     { source: 'website', ref: 'https://bistro.example/', status: 'failed' },
     { source: 'facebook', ref: 'https://www.facebook.com/sample_bistro', status: null }
   ]
-  const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, researched: true }))
+  const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources }))
   assert.doesNotMatch(html, /<details|<summary|tracy-wo-src-chip|role="table"|role="cell"/)
   assert.match(html, /<ul class="tracy-wo-stab" aria-label="\[details\.section\.sources\]">/)
   assert.deepEqual(
     [...html.matchAll(/<li class="tracy-wo-stab-row" data-state="(\w+)"/g)].map((m) => m[1]),
-    ['collected', 'failed', 'failed', 'new']
+    ['collected', 'failed', 'failed', 'waiting']
   )
   // Collected with its day; Could not collect with the server's reason, or alone when it sent none.
   // The date sits before the pill, on the same line, with the full text on hover.
@@ -270,11 +270,11 @@ test('the Sources table of the Workspace card: one line per source, the state pi
       ['collected', 'done'],
       ['failed', 'failed'],
       ['failed', 'failed'],
-      ['new', 'waiting']
+      ['waiting', 'waiting']
     ]
   )
   assert.equal((html.match(/tracy-wo-stab-detail/g) ?? []).length, 2)
-  assert.match(html, /\[source\.state\.new\]/)
+  assert.match(html, /\[source\.state\.waiting\]/)
   // Each link stays an http(s) anchor opening a new tab, its full address in the title.
   assert.match(
     html,
@@ -292,9 +292,7 @@ test('while research runs, a row whose band item runs reads Reading now with the
     ['google-places', 'done'],
     ['instagram', 'running']
   ])
-  const html = lib.renderToStaticMarkup(
-    lib.createElement(lib.SourcesTable, { t, sources, researched: false, progress })
-  )
+  const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, progress }))
   assert.deepEqual(
     [...html.matchAll(/class="tracy-wo-stab-pill" data-state="(\w+)"/g)].map((m) => m[1]),
     ['collected', 'reading', 'waiting']
@@ -314,9 +312,7 @@ test('before research, the pasted links and the Google listing of a search read 
       pastedLink: 'https://www.instagram.com/sample_bistro'
     }
   ]
-  const html = lib.renderToStaticMarkup(
-    lib.createElement(lib.SourcesTable, { t, sources, researched: false })
-  )
+  const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources }))
   assert.equal((html.match(/\[source\.state\.waiting\]/g) ?? []).length, 2)
   assert.match(
     html,

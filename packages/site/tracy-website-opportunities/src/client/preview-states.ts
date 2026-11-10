@@ -5,6 +5,8 @@
  * patching only the fields the stepper, the section cards and the blocks read (research, jobs, sources, profile, brief, brief
  * job, demo, demo action). The place's name, type and address stay real. Pure: no DOM, no fetch; the clock is given.
  */
+import { pastedLinksOf } from './source-links-model.ts'
+
 type Body = Record<string, unknown>
 
 export const PREVIEW_STATES = [
@@ -18,7 +20,6 @@ export const PREVIEW_STATES = [
   'brief-review',
   'brief-approved',
   'edited-after-approval',
-  'sources-changed',
   'building',
   'built'
 ] as const
@@ -35,7 +36,6 @@ export const PREVIEW_LABELS: Readonly<Record<PreviewStateId, string>> = {
   'brief-review': 'Site content brief needs review',
   'brief-approved': 'Site content brief approved',
   'edited-after-approval': 'Edited after approval',
-  'sources-changed': 'Sources changed',
   building: 'Building',
   built: 'Built'
 }
@@ -55,6 +55,21 @@ const rec = (v: unknown): Body =>
   typeof v === 'object' && v !== null && !Array.isArray(v) ? (v as Body) : {}
 const list = (v: unknown): Body[] =>
   Array.isArray(v) ? v.filter((x) => typeof x === 'object' && x !== null) : []
+
+/**
+ * Research turns every pasted link into a source row (sources are fixed once it starts). A card that was never
+ * researched has no row for them yet, so each pasted link no real row covers gets one, collected at `collectedAt`,
+ * shaped like the server's own row (`source-links-model.ts sourcesToShow`).
+ */
+export function pastedRows(opportunity: unknown, sources: readonly Body[], collectedAt: string): Body[] {
+  const covered = (l: { source: string; url: string }): boolean =>
+    sources.some(
+      (s) => s.pastedLink === l.url || s.ref === l.url || (l.source !== 'listing' && s.source === l.source)
+    )
+  return pastedLinksOf(opportunity)
+    .filter((l) => !covered(l))
+    .map((l) => ({ source: l.source, ref: l.url, pastedLink: l.url, status: 'complete', collectedAt }))
+}
 
 export function applyPreview(real: Body | null, state: PreviewStateId, now: number): Body | null {
   if (real === null || state === 'real') return real
@@ -76,7 +91,6 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
     brief: 'none',
     briefApprovedAt: null,
     briefStale: null,
-    sourcesChangedAt: null,
     ...over
   })
   const approved = { profile: 'approved', profileApprovedAt: at(-50) }
@@ -167,11 +181,14 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
         }
       ]
   // Sources the real card never researched read as collected at that time, so the table agrees with the step.
-  const collected = sources.map((s) =>
-    typeof s.status === 'string' && s.status !== ''
-      ? s
-      : { ...s, status: 'complete', collectedAt: researchedAt }
-  )
+  const collected = [
+    ...sources.map((s) =>
+      typeof s.status === 'string' && s.status !== ''
+        ? s
+        : { ...s, status: 'complete', collectedAt: researchedAt }
+    ),
+    ...pastedRows(real.opportunity, sources, researchedAt)
+  ]
   const done = {
     ...real,
     research: { state: 'done', researchedAt },
@@ -245,17 +262,6 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
         profileChangedAt: at(-5),
         brief: 'stale',
         briefStale: 'profile'
-      })
-    }
-  if (state === 'sources-changed')
-    return {
-      ...withBrief,
-      ...noDemo,
-      approval: approval({
-        research: 'sources_changed',
-        sourcesChangedAt: at(-3),
-        brief: 'stale',
-        briefStale: 'sources'
       })
     }
 

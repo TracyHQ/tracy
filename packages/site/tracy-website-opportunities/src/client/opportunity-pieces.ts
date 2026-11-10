@@ -207,8 +207,6 @@ function nextOf(
       return { label, run: { kind: 'details', section: 'profile' }, disabled: false, look }
     case 'review-brief':
       return { label, run: { kind: 'details', section: 'brief' }, disabled: false, look }
-    case 'research-again':
-      return { label, run: { kind: 'details' }, disabled: false, look }
   }
 }
 

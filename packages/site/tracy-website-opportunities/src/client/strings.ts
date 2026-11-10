@@ -1170,13 +1170,10 @@ export const en = {
   'workspace.sum.read': '{read} of {total} read',
   'workspace.sum.notRun': 'research not run yet',
   'workspace.sum.researching': 'research running',
-  'workspace.sum.newLinks.one': '{count} new link, research again',
-  'workspace.sum.newLinks.other': '{count} new links, research again',
   // The Sources table of the Workspace card (#537, option C): its two column heads and the State column
   'source.state.waiting': 'Waiting for research',
   'source.state.collected': 'Collected',
   'source.state.failed': 'Could not collect',
-  'source.state.new': 'New, waiting for research',
   'source.state.reading': 'Reading now',
   'workspace.sum.approved': 'approved {date}',
   'workspace.sum.built': 'built {date}',
@@ -1278,7 +1275,6 @@ export const en = {
   'source.posts.other': '{count} posts',
 
   /** The seller's approvals (#537): review lines, locks and stale chips of the steps (stepper-model.ts). */
-  'stepper.research.sourcesChanged': 'Sources changed. Run research again.',
   'stepper.review.profile':
     'Research business facts finished. Check them, edit anything that is wrong, then approve.',
   'stepper.review.brief':
@@ -1292,7 +1288,6 @@ export const en = {
   'stepper.ready': 'Ready to start',
   'stepper.paused': 'Paused',
   'stepper.upNext': 'Up next',
-  'stepper.sourcesChanged': 'Sources changed',
   'stepper.lock.profile': 'Approve the business facts first',
   'stepper.lock.brief': 'Approve the site content brief first',
   'stepper.lock.both': 'Approve the business facts and the brief first',
@@ -1324,7 +1319,6 @@ export const en = {
   /** The header chip of Details: where the place stands (#537). */
   'chip.notStarted': 'Not started',
   'chip.researching': 'Researching',
-  'chip.sourcesChanged': 'Sources changed',
   'chip.profileReview': 'Business facts need review',
   'chip.profileApproved': 'Business facts approved',
   'chip.briefRunning': 'Writing site content brief',
@@ -1352,8 +1346,6 @@ export const en = {
   /** Refusals of the approval steps and the gates (#537), keyed by the server code. */
   'gate.PROFILE_NOT_APPROVED': 'Approve the business facts first: open them, check every row, then approve.',
   'gate.BRIEF_NOT_APPROVED': 'Approve the site content brief first: open it, check every row, then approve.',
-  'gate.RESEARCH_NEEDED':
-    'A source was added after research. Run research again, then approve the new business facts.',
   'gate.RESEARCH_NOT_DONE': 'Research business facts first.',
   'gate.NO_BRIEF': 'Make a site content brief first.',
   'gate.BRIEF_STALE':
@@ -1367,8 +1359,6 @@ export const en = {
   'source.add.submit': 'Add',
   'source.add.cancel': 'Cancel',
   'source.add.saving': 'Adding…',
-  'source.add.afterResearch':
-    'Adding a source after research means research runs again and the business facts need your review again.',
   'source.add.error.INVALID_URL': 'Enter the address of a website, social page or listing page.',
   'source.add.error.GOOGLE_LINK_NOT_ADDED':
     'A Google link names the business itself. Add its website, a social page or a listing page instead.',
@@ -1378,10 +1368,8 @@ export const en = {
   'source.add.error.other': 'Could not add the source. Try again.',
 
   /** Add source checks and refusals (#537, the add source cases review): one line for each answer of the add door. */
-  'source.add.submitAgain': 'Add and research again',
   'source.add.checking': 'Checking the link…',
   'source.add.slow': 'Still checking…',
-  'source.add.waitResearch': 'Wait for the research to finish',
   'source.add.pending': 'Still adding the link…',
   'source.add.added': '{platform} added',
   'source.add.tryAgain': 'Try again',
@@ -1402,6 +1390,9 @@ export const en = {
   'source.add.error.TOO_MANY_SOURCES':
     'This business already has {max} listing pages. Remove one before adding another.',
   'source.add.error.JOB_ACTIVE': 'Research is running. Add the link when it finishes.',
+  'source.add.locked': 'Sources are fixed once the research has run.',
+  'source.add.error.RESEARCH_STARTED':
+    'Research has already run. Sources are fixed once the research starts; they can be changed only before it, or after it failed.',
   'source.add.error.NETWORK': 'No connection. Check your internet, then press Add again.',
   'source.add.error.NOT_SIGNED_IN': 'You are signed out. Sign in again, then add the link.',
   'source.add.error.NOT_FOUND': 'This business was removed. Go back to My opportunities.',

@@ -105,9 +105,6 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
   const research = step('research')
   const briefStep = step('brief')
   const buildStep = step('build')
-  const researchAgain =
-    stepper.current === 'research' &&
-    (research?.status.key === 'stepper.sourcesChanged' || stepper.action?.kind === 'research-again')
   const focus = focusOf(input)
 
   const section = (
@@ -158,39 +155,35 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
       ? locked('profile', 'section.meta.profile.waiting')
       : stepper.current === 'research' && stepper.review
         ? section('profile', 'review', [fieldsLine], { chipKey: 'stepper.needsReview' })
-        : researchAgain
-          ? locked('profile', 'stepper.lock.researchAgain')
-          : section('profile', done('profile'), [
-              fieldsLine,
-              ...dated('workspace.sum.approved', shortDate(research?.approvedAt ?? research?.doneAt, locale))
-            ])
+        : section('profile', done('profile'), [
+            fieldsLine,
+            ...dated('workspace.sum.approved', shortDate(research?.approvedAt ?? research?.doneAt, locale))
+          ])
 
   // Site content brief: the output of the second step.
   const briefLine: WorkspaceText = { key: 'section.meta.brief.number', params: { n: input.brief?.n ?? 1 } }
   const brief =
     input.researchMoving || !input.researchDone
       ? locked('brief', 'section.meta.profile.waiting')
-      : researchAgain
-        ? locked('brief', 'stepper.lock.researchAgain')
-        : stepper.current === 'research'
-          ? locked('brief', 'stepper.lock.profile')
-          : input.briefEmpty === 'running'
-            ? locked('brief', 'brief.beingWritten')
-            : input.briefEmpty === 'failed'
-              ? locked('brief', 'section.meta.brief.none')
-              : input.brief === null
-                ? locked('brief', 'workspace.wait.brief')
-                : stepper.current === 'brief' && stepper.review
-                  ? section('brief', 'review', [briefLine], { chipKey: 'stepper.needsReview' })
-                  : section('brief', done('brief'), [
-                      briefLine,
-                      ...(stepper.current === 'brief'
-                        ? []
-                        : dated(
-                            'workspace.sum.approved',
-                            shortDate(briefStep?.approvedAt ?? briefStep?.doneAt, locale)
-                          ))
-                    ])
+      : stepper.current === 'research'
+        ? locked('brief', 'stepper.lock.profile')
+        : input.briefEmpty === 'running'
+          ? locked('brief', 'brief.beingWritten')
+          : input.briefEmpty === 'failed'
+            ? locked('brief', 'section.meta.brief.none')
+            : input.brief === null
+              ? locked('brief', 'workspace.wait.brief')
+              : stepper.current === 'brief' && stepper.review
+                ? section('brief', 'review', [briefLine], { chipKey: 'stepper.needsReview' })
+                : section('brief', done('brief'), [
+                    briefLine,
+                    ...(stepper.current === 'brief'
+                      ? []
+                      : dated(
+                          'workspace.sum.approved',
+                          shortDate(briefStep?.approvedAt ?? briefStep?.doneAt, locale)
+                        ))
+                  ])
 
   // Your site: the outcome, with its actions once built.
   const demo =

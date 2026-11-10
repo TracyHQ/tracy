@@ -39,7 +39,7 @@ import { Stepper } from './stepper.tsx'
 import { type StepAction, bandSubSteps, effectiveOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
 import { type ApprovalView, gateText } from './seller-review.tsx'
-import type { AddSourceRefusal } from './add-source-model.ts'
+import { type AddSourceRefusal, addAllowedIn } from './add-source-model.ts'
 import { AddSourcePopover } from './add-source-popover.tsx'
 import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
@@ -568,25 +568,20 @@ export function DetailView({
   const sources = asArray<SourceInput>(body.sources).filter((s) => typeof s?.source === 'string')
   // Before research has a row, the links the owner pasted (and the Google listing of a search), Not collected yet.
   // While research runs (again) the rows are reset to the pasted links, Not collected yet: progress shows in the band.
-  // A link added after research has no row of research yet: it shows beside them while the server says the sources
-  // changed, waiting for the next research.
-  const sourcesChanged = isRecord(body.approval) && body.approval.research === 'sources_changed'
+  // Sources are fixed once research starts, so after it research's own rows are the whole list.
   const shownSources = sourcesToShow(
     researchMovingOf({ research, researchJob: row.job ?? null }) ? [] : sources,
-    body.opportunity,
-    sourcesChanged
+    body.opportunity
   )
-  // The overview table lists what research collected or could not collect, and links added since; a row research
-  // skipped by itself stays on the Sources sub-page. Before research the pasted links all show, waiting.
+  // The overview table lists what research collected or could not collect; a row research skipped by itself stays on
+  // the Sources sub-page. Before research the pasted links all show, waiting.
   const sourcesRead = research.done && !researchMovingOf({ research, researchJob: row.job ?? null })
   const overviewSources = overviewSourcesOf(shownSources, sourcesRead)
   const sourceProgress = sourceProgressOf(
     body.stepProgress,
     researchMovingOf({ research, researchJob: row.job ?? null })
   )
-  const overviewStates = overviewSources.map(
-    (s) => sourceStateOf(s, sourcesRead, locale, sourceProgress).state
-  )
+  const overviewStates = overviewSources.map((s) => sourceStateOf(s, locale, sourceProgress).state)
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
@@ -638,10 +633,9 @@ export function DetailView({
     if (step === 'start-research') return void act('start')
     if (step === 'resume-research') return void act('resume')
     if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
-    // The seller's review steps (#537) open the sub-page to review; research again opens its dialog where it is.
+    // The seller's review steps (#537) open the sub-page to review.
     if (step === 'review-profile') return onSection('profile')
     if (step === 'review-brief') return onSection('brief')
-    if (step === 'research-again') return researchAgain.onOpen()
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
@@ -727,8 +721,9 @@ export function DetailView({
     return t(key, { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms) })
   }
   const researchRunning = job?.state === 'running' || job?.state === 'queued'
+  // Sources are fixed once research runs or ran: the button stays drawn, off, with the reason on hover.
   const addSourceButton = (
-    <AddSourcePopover t={t} researched={research.done} researchRunning={researchRunning} onAdd={addSource} />
+    <AddSourcePopover t={t} locked={researchRunning || !addAllowedIn(research.state)} onAdd={addSource} />
   )
   const researchAgainOpen =
     job !== null &&
@@ -1124,7 +1119,6 @@ export function DetailView({
               <SourcesTable
                 t={t}
                 sources={overviewSources}
-                researched={sourcesRead}
                 progress={sourceProgress}
                 retry={retrySource}
                 remove={removeSourceControl}

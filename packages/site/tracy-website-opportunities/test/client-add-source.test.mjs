@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 
 import {
   ADD_SOURCE_CLOSED,
+  addAllowedIn,
   ADD_SOURCE_SLOW_MS,
   addSourceCheck,
   addSourceCheckingKey,
@@ -90,6 +91,8 @@ test('every refusal of the add door has its own line; only a 5xx or an unknown c
     params: { max: 5 }
   })
   assert.equal(line('JOB_ACTIVE', 409).key, 'source.add.error.JOB_ACTIVE')
+  // Research started while the popover was open: the sources are fixed now.
+  assert.equal(line('RESEARCH_STARTED', 409).key, 'source.add.error.RESEARCH_STARTED')
   assert.equal(line('INVALID_URL', 400).key, 'source.add.error.INVALID_URL')
   assert.equal(line('NOT_FOUND', 404).key, 'source.add.error.NOT_FOUND')
   assert.equal(line('FEATURE_OFF', 404).key, 'source.add.error.FEATURE_OFF')
@@ -124,8 +127,7 @@ test('every key the model can name exists in English, with no dash in the words'
     'source.add.slow',
     'source.add.pending',
     'source.add.added',
-    'source.add.waitResearch',
-    'source.add.submitAgain',
+    'source.add.locked',
     'source.add.tryAgain',
     'source.add.dismiss'
   ])
@@ -136,6 +138,7 @@ test('every key the model can name exists in English, with no dash in the words'
     'PLATFORM_ALREADY_KNOWN',
     'TOO_MANY_SOURCES',
     'JOB_ACTIVE',
+    'RESEARCH_STARTED',
     'INVALID_URL',
     'NOT_FOUND',
     'FEATURE_OFF',
@@ -317,11 +320,7 @@ function mount(props = {}) {
   const host = document.createElement('div')
   document.body.append(host)
   const root = lib.createRoot(host)
-  lib.act(() =>
-    root.render(
-      lib.createElement(lib.Harness, { researched: false, researchRunning: false, onAdd, ...props })
-    )
-  )
+  lib.act(() => root.render(lib.createElement(lib.Harness, { locked: false, onAdd, ...props })))
   const press = (el) => lib.act(() => el.dispatchEvent(new window.MouseEvent('click', { bubbles: true })))
   const open = () => press(host.querySelector('.tracy-wo-addsrc-btn'))
   const type = (value) =>
@@ -432,25 +431,32 @@ test('Escape while checking closes the popover and the notice reads the answer w
   }
 })
 
-test('Add source is off while research runs, and says why; after research Add reads Add and research again', () => {
-  const running = mount({ researchRunning: true })
-  try {
-    assert.equal(running.host.querySelector('.tracy-wo-addsrc-btn').disabled, true)
-    assert.equal(
-      running.host.querySelector('.tracy-wo-addsrc-btnwrap').getAttribute('title'),
-      '[source.add.waitResearch]'
-    )
-  } finally {
-    lib.act(() => running.root.unmount())
+test('sources are fixed once research runs: Add source is off with the reason in running and done, on before and after a failure', () => {
+  for (const [state, allowed] of [
+    ['not_started', true],
+    ['failed', true],
+    ['running', false],
+    ['done', false]
+  ]) {
+    assert.equal(addAllowedIn(state), allowed, state)
+    const m = mount({ locked: !addAllowedIn(state) })
+    try {
+      assert.equal(m.host.querySelector('.tracy-wo-addsrc-btn').disabled, !allowed, state)
+      assert.equal(
+        m.host.querySelector('.tracy-wo-addsrc-btnwrap').getAttribute('title'),
+        allowed ? null : '[source.add.locked]',
+        state
+      )
+      if (allowed) {
+        m.open()
+        // One Add for every case: no source is ever added after research.
+        assert.equal(m.host.querySelector('button[type="submit"]').textContent, '[source.add.submit]', state)
+      }
+    } finally {
+      lib.act(() => m.root.unmount())
+    }
   }
-  const researched = mount({ researched: true })
-  try {
-    researched.open()
-    assert.equal(
-      researched.host.querySelector('button[type="submit"]').textContent,
-      '[source.add.submitAgain]'
-    )
-  } finally {
-    lib.act(() => researched.root.unmount())
-  }
+  assert.equal(en['source.add.locked'], 'Sources are fixed once the research has run.')
+  assert.equal(en['source.add.submitAgain'], undefined)
+  assert.equal(en['source.add.afterResearch'], undefined)
 })
