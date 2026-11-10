@@ -307,7 +307,7 @@ not ok 50 - WooCommerce HPOS order placed on live under a number the copy holds 
   error: |-
     Command failed: /usr/local/bin/docker exec -i -e MYSQL_PWD=t tracy-live-sync-wp-db-93108 mariadb -uroot -N -B wordpress
     Cannot connect to the Docker daemon at unix://<user>/.docker/run/docker.sock. Is the docker daemon running?
-    
+
   code: 'ERR_TEST_FAILURE'
   stack: |-
     genericNodeError (node:internal/errors:983:15)

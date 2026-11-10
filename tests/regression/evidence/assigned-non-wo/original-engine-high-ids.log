@@ -34,14 +34,14 @@ test at ../../../../..<temporary>
   SqlError: SQL failed: --------------
   UPDATE `repeat_theirs`.`jos_content` SET `id` = CASE `id` WHEN 2000000001 THEN 1 WHEN 2000000002 THEN 2000000003 WHEN 2000000003 THEN 2000000002 END WHERE `id` IN (2000000001, 2000000002, 2000000003)
   --------------
-  
+
   ERROR 1062 (23000) at line 58: Duplicate entry '2000000003' for key 'PRIMARY'
   ==> db merge stopped: SqlError: ERROR 1062 (23000) at line 58: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)
   {"ok": false, "code": "MERGE_FAILED", "detail": "SqlError: ERROR 1062 (23000) at line 58: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)"}
-  
-  
+
+
   1 !== 0
-  
+
       at joomlaMerge (file://<temporary>
       at TestContext.<anonymous> (file://<temporary>
       at Test.runInAsyncScope (node:async_hooks:214:14)
@@ -79,14 +79,14 @@ test at ../../../../..<temporary>
   SqlError: SQL failed: --------------
   UPDATE `wr_theirs`.`wp_posts` SET `ID` = CASE `ID` WHEN 2000000700 THEN 2000000701 WHEN 2000000701 THEN 2000000700 END WHERE `ID` IN (2000000700, 2000000701)
   --------------
-  
+
   ERROR 1062 (23000) at line 288: Duplicate entry '2000000701' for key 'PRIMARY'
   ==> db merge stopped: SqlError: ERROR 1062 (23000) at line 288: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)
   {"ok": false, "code": "MERGE_FAILED", "detail": "SqlError: ERROR 1062 (23000) at line 288: Duplicate entry '…' (in IdMap.apply › IdMap.renumber)"}
-  
-  
+
+
   1 !== 0
-  
+
       at wpMerge (file://<temporary>
       at TestContext.<anonymous> (file://<temporary>
       at Test.runInAsyncScope (node:async_hooks:214:14)

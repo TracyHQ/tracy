@@ -27,4 +27,10 @@ Local fixture E2E does not replace acceptance against the deployed image. Keep t
 - Reproduce a failed import (PHP below minimum) on an owned source. Inspect failed header, recovery spacing and retry in light/dark on mobile/desktop. The standard E2E runner declares import J2c uncovered, so it cannot substitute for this specific check.
 - Inspect primary hover, destructive controls, focus strokes and chosen accent roles in the deployed dsh page in both modes.
 
-No acceptance result against dev is recorded yet. The PR is draft because complete local gates and deployed acceptance are still outstanding.
+No acceptance result against dev is recorded yet. The user requested the non-WO fixes be merged into develop independently of WO acceptance. Dev acceptance follows the deployment; it has not run yet. Latest-head CI must pass before merging.
+
+## Isolated branch verification
+
+The non-WO implementation and evidence were extracted onto latest develop 949fc1ef23. The generated Add site client was rebuilt against that source. Fresh regression receipts are recorded on b409cdde66; the original receipts above are historical evidence. This branch contains no WO server or research source changes; its WO client bundle is rebuilt solely because it consumes the shared Button. Full local Turbo tracing remains unverified; CI must verify the isolated head before merge.
+
+Fresh isolated-branch outcomes: all three mechanism regressions PASS on b409cdde66 (10 MariaDB cases, 72 rendered button states, failed-import progress); the full wizard suite passed 11/11 and direct theme/contrast suites passed 14/14. Turbo structure validation passed and traced zero suites. The first non-test pass had three worktree setup failures (lint dependencies, missing pinned vendor locale build outputs, and workspace bundle resolution); these are recorded rather than treated as source failures. No video evidence is committed.

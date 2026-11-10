@@ -73,4 +73,4 @@ ok 10 - Joomla: a taken mapped table preserves real counters before the holding 
 --- stderr ---
 
 --- verdict ---
-PASS 
+PASS

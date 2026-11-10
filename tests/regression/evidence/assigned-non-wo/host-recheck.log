@@ -94,7 +94,7 @@ test at apps/tracy-host/test/demo-qa-reach-measures-browser.test.mjs:30:1
   page.setContent: Timeout 30000ms exceeded.
   Call log:
     - setting frame content, waiting until "load"
-  
+
       at TestContext.<anonymous> (<checkout>/apps/tracy-host/test/demo-qa-reach-measures-browser.test.mjs:34:16) {
     name: 'TimeoutError',
     log: [ '  - setting frame content, waiting until "load"' ]

@@ -19,4 +19,4 @@ ok 1 - a failed import marks its operation failed without claiming all steps com
 --- stderr ---
 
 --- verdict ---
-PASS 
+PASS

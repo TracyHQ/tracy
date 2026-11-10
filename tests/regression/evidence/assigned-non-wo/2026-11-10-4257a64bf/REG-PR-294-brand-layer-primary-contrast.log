@@ -44,4 +44,4 @@ ok - 72 rendered primary/destructive states meet AA; minimum 4.51:1
 --- stderr ---
 
 --- verdict ---
-PASS 
+PASS

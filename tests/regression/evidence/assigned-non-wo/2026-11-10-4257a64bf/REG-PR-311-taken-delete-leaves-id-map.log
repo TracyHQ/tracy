@@ -67,4 +67,4 @@ ok 9 - WordPress: reversed pushed post ids sync with references (existing high i
 --- stderr ---
 
 --- verdict ---
-PASS 
+PASS
