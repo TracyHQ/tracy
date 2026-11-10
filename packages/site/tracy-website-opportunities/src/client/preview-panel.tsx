@@ -17,6 +17,7 @@ import {
 } from './preview-states.ts'
 
 const KEY = 'tracy-wo-preview-state'
+const OPEN_KEY = 'tracy-wo-preview-open'
 
 export interface Preview {
   /** The flag is in the address: the panel shows. */
@@ -114,7 +115,7 @@ export function usePreviewApi(api: Api, preview: Preview): Api {
 const box: CSSProperties = {
   position: 'fixed',
   right: 16,
-  bottom: 16,
+  bottom: 76,
   zIndex: 2147483000,
   width: 248,
   padding: 12,
@@ -137,7 +138,22 @@ const pill: CSSProperties = {
 const muted: CSSProperties = { color: 'var(--muted-foreground)', margin: '6px 0 0' }
 
 export function PreviewPanel({ preview }: { preview: Preview }): JSX.Element | null {
-  const [open, setOpen] = useState(true)
+  // Collapsed by default so it hides no column; the choice is kept for the tab (sessionStorage).
+  const [open, setRaw] = useState(() => {
+    try {
+      return window.sessionStorage.getItem(OPEN_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+  const setOpen = (next: boolean): void => {
+    setRaw(next)
+    try {
+      window.sessionStorage.setItem(OPEN_KEY, next ? '1' : '0')
+    } catch {
+      // Storage refused: the choice lasts until the reload.
+    }
+  }
   if (!preview.flag) return null
   const label = PREVIEW_LABELS[preview.state]
   if (!open)

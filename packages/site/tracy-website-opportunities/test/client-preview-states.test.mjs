@@ -129,6 +129,12 @@ const EXPECTED = {
     action: 'review-profile',
     tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
   },
+  'old-brief-profile-review': {
+    current: 'research',
+    running: false,
+    action: 'review-profile',
+    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
+  },
   'sources-changed': {
     current: 'research',
     running: false,
