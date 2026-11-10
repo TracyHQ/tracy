@@ -1,24 +1,14 @@
 #!/usr/bin/env node
 /**
- * My opportunities' view (spec #512, ticket #518): Cards or Compact rows, remembered through the same preference
- * door as Columns (`src/client/column-prefs.ts`); Map only where the deployment has a browser map key; the
- * secondary fields the Columns menu adds, remembered the same way.
+ * My opportunities' view (spec #512, ticket #518): Cards or Rows, remembered on this device
+ * (`src/client/column-prefs.ts`); Map only where the deployment has a browser map key.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-my-view.test.mjs
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import {
-  MY_FIELDS_KEY,
-  MY_VIEW_KEY,
-  myViews,
-  readMyFields,
-  readMyView,
-  shownMyView,
-  writeMyFields,
-  writeMyView
-} from '../src/client/column-prefs.ts'
+import { MY_VIEW_KEY, myViews, readMyView, shownMyView, writeMyView } from '../src/client/column-prefs.ts'
 
 const memory = (initial = {}) => {
   const data = { ...initial }
@@ -65,13 +55,4 @@ test('a remembered Map on a deployment without a key shows Cards, without an err
   assert.equal(shownMyView('map', myViews(null)), 'cards')
   assert.equal(shownMyView('map', myViews('fake-browser-key')), 'map')
   assert.equal(shownMyView('rows', myViews(null)), 'rows')
-})
-
-test('secondary fields: none by default, the chosen ones remembered in menu order, unknown ids dropped', () => {
-  assert.deepEqual(readMyFields(memory()), [])
-  const store = memory()
-  writeMyFields(store, new Set(['phone', 'type']))
-  assert.deepEqual(readMyFields(memory(store.data)), ['type', 'phone'])
-  assert.deepEqual(readMyFields(memory({ [MY_FIELDS_KEY]: '["stage","bogus"]' })), ['stage'])
-  assert.deepEqual(readMyFields(memory({ [MY_FIELDS_KEY]: 'not json' })), [])
 })

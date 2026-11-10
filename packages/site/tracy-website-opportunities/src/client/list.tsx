@@ -1,46 +1,23 @@
-import { useDemoChatNavigation } from './demo-chat.ts'
 /**
- * My opportunities (spec #512): the full-width list inside the Opportunities tab. Every place shows four pieces
- * (Place, Opportunity, Demo, Status with its next action) as Cards or Compact rows, plus Map where the deployment has
- * a browser map key; the stage bar, Search by name, 50 rows a page newest first, many-row Build, Delete, Resume and
- * Cancel. A row or its name opens Details in the same tab (`onOpen`); there is no side panel.
+ * My opportunities (spec #512, #537 header C): the full-width list inside the Opportunities tab. Every place shows its
+ * pieces as Cards or Rows, plus Map where the deployment has a browser map key; one line of tools (Attention, Search by
+ * name, the "..." menu with Select, the view, Show cancelled and today's builds), 50 rows a page newest first, and a
+ * selection mode for Delete and Cancel research. A row or its name opens Details in the same tab (`onOpen`).
  *
  * Only moving rows are asked again (research waiting or running, demo sites being built) by id every
  * 3 s; the counts come from the tab every 15 s and after each press; coming back to the page refreshes
  * the rows shown and puts rows added elsewhere on top. An old server (no `counts`) answers every row
  * at once: the screen then filters and counts itself and offers no "select all matching".
  */
-import { requestTemplatePick } from '@tracy/core/template-picker'
-import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Play, Search, Trash2, X } from 'lucide-react'
-import {
-  Button,
-  Checkbox,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput,
-  Spinner,
-  useTabLoading
-} from '@tracy/ui'
-import { interfaceLocale } from '@tracy/core/interface-languages'
-import { type PlaceRow, type RowActions, type SiteCheck, ColumnsMenu, PlacesMap } from '@tracy/wo-views'
 
+import { interfaceLocale } from '@tracy/core/interface-languages'
+import { Button, Spinner, useTabLoading } from '@tracy/ui'
+import { type PlaceRow, PlacesMap, type RowActions, type SiteCheck } from '@tracy/wo-views'
+import { type JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { addedAgo } from './added-ago.ts'
 import { type Api, pressDemo } from './api.ts'
-import {
-  type MyView,
-  type SecondaryField,
-  SECONDARY_FIELDS,
-  localStore,
-  myViews,
-  readMyFields,
-  readMyView,
-  shownMyView,
-  writeMyFields,
-  writeMyView
-} from './column-prefs.ts'
 import { useCheckPolls } from './check-polls.ts'
-import { useCapabilities } from './find.tsx'
-import { mergeChecks, mergeSocialStats, socialStatsOffered } from './flow.ts'
+import { localStore, type MyView, myViews, readMyView, shownMyView, writeMyView } from './column-prefs.ts'
 import { DeleteDialog } from './delete-dialog.tsx'
 import {
   type DeleteAsk,
@@ -49,6 +26,13 @@ import {
   deleteOpportunities,
   withoutRows
 } from './delete-model.ts'
+import { useDemoChatNavigation } from './demo-chat.ts'
+import { useCapabilities } from './find.tsx'
+import { mergeChecks, mergeSocialStats, socialStatsOffered } from './flow.ts'
+import { listMenu } from './list-menu-model.ts'
+import { SelectionBar } from './list-select-bar.tsx'
+import { pickState, useSelectMode } from './list-select-mode.ts'
+import { ListToolbar } from './list-toolbar.tsx'
 import type { FilterValue, MyAddress } from './my-address.ts'
 import {
   type AccountCounts,
@@ -65,15 +49,14 @@ import {
   stagePin,
   toPlaceRow
 } from './my-list.ts'
-import { MyPlaces, MyViewSwitch } from './my-places.tsx'
-import { type NextRun, placePieces, placeStatus, secondaryLines } from './opportunity-pieces.ts'
+import { MyPlaces } from './my-places.tsx'
+import { type NextRun, placePieces, placeStatus } from './opportunity-pieces.ts'
 import type { NextAction, OpportunityListRow } from './opportunity-row.ts'
-import { POLL_MS, onBackInSight, usePoll } from './poll.ts'
+import { type DemoUsage, usageFull } from './outreach-model.ts'
+import { onBackInSight, POLL_MS, usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
 import { photoActions, useMaps } from './results.tsx'
-import { rankingFor, runAction } from './row-actions.ts'
-import { usageFull, type DemoUsage } from './outreach-model.ts'
-import { StageFilter } from './stage-filter.tsx'
+import { runAction } from './row-actions.ts'
 import type { Translate } from './strings.ts'
 
 const PAGE = 50
@@ -212,12 +195,6 @@ function useMyRows(api: Api, filter: FilterValue, q: string) {
   }
 }
 
-/** "1 place" / "186 places" in the interface language. */
-function countText(t: Translate, locale: string, count: number): string {
-  const form = new Intl.PluralRules(locale).select(count) === 'one' ? 'one' : 'other'
-  return t(`list.count.${form}`, { count: new Intl.NumberFormat(locale).format(count) })
-}
-
 export function MyOpportunitiesView({
   t,
   api,
@@ -240,7 +217,10 @@ export function MyOpportunitiesView({
   onOpenBrief: (opportunityId: string, revisionId: string) => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
-  const filter = address.stage
+  // No step filter on this list (#537): it shows every place, or only those needing attention, or only cancelled
+  // ones. An old address naming a step reads as every place.
+  const filter: FilterValue =
+    address.stage === 'attention' || address.stage === 'cancelled' ? address.stage : 'all'
   const [usage, setUsage] = useState<DemoUsage | null>(null)
   const refreshUsage = useCallback(async () => {
     const answer = await api.demoUsage()
@@ -287,15 +267,6 @@ export function MyOpportunitiesView({
     setChosenView(next)
     writeMyView(localStore(), next)
   }
-  const [fields, setFields] = useState<ReadonlySet<SecondaryField>>(() => new Set(readMyFields(localStore())))
-  const toggleField = (field: SecondaryField): void =>
-    setFields((f) => {
-      const next = new Set(f)
-      if (next.has(field)) next.delete(field)
-      else next.add(field)
-      writeMyFields(localStore(), next)
-      return next
-    })
 
   // Search: typed text shows at once, the list asks 300 ms after the last key.
   const [text, setText] = useState(address.q)
@@ -332,8 +303,12 @@ export function MyOpportunitiesView({
   }
   const jobs = selectionJobs(shown, picked)
   const total = legacy ? shown.length : (state.total ?? shown.length)
-  const pageAllPicked = shown.length > 0 && shown.every((r) => picked.has(r.id))
-  /** The select-all box: picks every row shown, or clears them when all are picked already. */
+  const pick = pickState(
+    shown.map((r) => r.id),
+    picked
+  )
+  const pageAllPicked = shown.length > 0 && pick === 'all'
+  /** The selection bar's leading box: picks every row shown, or clears them when all are picked already. */
   const togglePage = (): void => {
     if (pageAllPicked) return clearSelection()
     setAllMatching(false)
@@ -506,6 +481,8 @@ export function MyOpportunitiesView({
   // Delete (the bulk bar; one place deletes from its Details menu): a confirmation first, then the rows leave the screen.
   const [deleting, setDeleting] = useState<DeleteAsk | null>(null)
   const [deleteBusy, setDeleteBusy] = useState(false)
+  // Selection mode: the "..." menu's Select enters it; Done or Escape leaves it and clears the picks.
+  const selecting = useSelectMode(clearSelection, deleting !== null)
   const askDelete = (ask: DeleteAsk | null): void => {
     if (ask === null || deleteBusy) return
     setBulkNote(null)
@@ -538,43 +515,6 @@ export function MyOpportunitiesView({
     void account.refresh()
   }
 
-  const buildable = shown.filter(
-    (row) => picked.has(row.id) && row.stage === 'demo' && !row.latestBuild && !row.demoAction
-  )
-  const buildBulk = async () => {
-    if (bulkBusy || allMatching || !buildable.length) return
-    const followChat = beginDemoChat()
-    const selected = buildable.map((row) => row.id)
-    const key = `bulk:build:${selected.join(',')}`
-    setBulkBusy(true)
-    setBusy((rows) => new Set([...rows, ...selected]))
-    setBulkNote(null)
-    try {
-      const selection = await requestTemplatePick(undefined, { ranking: await rankingFor(api, selected) })
-      if (!selection) return
-      const choiceKey = `${key}:${selection.cms}:${selection.design}:${selection.quickstart}`
-      const { id: requestId } = ids.begin(choiceKey)
-      const answer = await api.buildDemos(selected, requestId, selection)
-      if (answer.ok) {
-        ids.succeed(choiceKey)
-        if (!(await followChat(answer.body.actions))) setBulkNote(t('action.failed'))
-        await refreshIds(selected)
-        clearSelection()
-        void account.refresh()
-      } else {
-        ids.fail(choiceKey)
-        if (answer.usage) setUsage(answer.usage)
-        setBulkNote(t(answer.code === 'DEMO_BUILD_DAILY_LIMIT' ? 'v3.limitReached' : 'action.failed'))
-      }
-      refreshUsage()
-    } catch {
-      setBulkNote(t('action.failed'))
-    } finally {
-      setBulkBusy(false)
-      setBusy((rows) => new Set([...rows].filter((id) => !selected.includes(id))))
-    }
-  }
-
   // The map's card opens Details like a row does.
   const actions: RowActions = {
     onToggle: toggle,
@@ -585,8 +525,7 @@ export function MyOpportunitiesView({
   const now = Date.now()
   const pieceOptions = { now, locale, buildBlocked: usageFull(usage) }
   const pieces = shown.map((row) => placePieces(row, t, pieceOptions))
-  const fieldList = SECONDARY_FIELDS.filter((f) => fields.has(f))
-  const lines = new Map(shown.map((row) => [row.id, secondaryLines(row, t, pieceOptions, fieldList)]))
+  const added = new Map(shown.map((row) => [row.id, addedAgo(row.createdAt, now, locale)]))
   const mapsKey = caps?.maps?.browserKey ?? null
   const views = myViews(caps === null ? null : mapsKey)
   const view = shownMyView(chosenView, views)
@@ -662,7 +601,8 @@ export function MyOpportunitiesView({
         t={t}
         view={view}
         places={pieces}
-        lines={lines}
+        selecting={selecting.on}
+        added={added}
         selected={picked}
         busy={busy}
         onToggle={toggle}
@@ -674,61 +614,43 @@ export function MyOpportunitiesView({
       />
     )
 
-  const anyPicked = allMatching || picked.size > 0
+  const menu = listMenu(t, {
+    view,
+    views,
+    cancelledOn: filter === 'cancelled',
+    cancelledCount: counts?.cancelled ?? null,
+    usage,
+    locale
+  })
   return (
     <div className="tracy-wo-my tracy-wo-results">
-      <div className="tracy-wo-res-head">
-        <div className="tracy-wo-res-title">
-          <p className="tracy-wo-count">
-            <b>{counts === null ? '' : countText(t, locale, counts.all)}</b>
-            <span className="tracy-wo-muted">{` · ${t('list.order')}`}</span>
-          </p>
-        </div>
-        <InputGroup className="tracy-wo-q">
-          <InputGroupAddon>
-            <Search aria-hidden="true" />
-          </InputGroupAddon>
-          <InputGroupInput
-            value={text}
-            maxLength={100}
-            placeholder={t('list.search')}
-            aria-label={t('list.search')}
-            autoComplete="off"
-            onChange={(event) => setText(event.target.value)}
-          />
-        </InputGroup>
-        <div className="tracy-wo-tools">
-          <MyViewSwitch t={t} value={view} views={views} onChange={chooseView} />
-          {view !== 'map' && (
-            <ColumnsMenu
-              t={t}
-              hidden={new Set()}
-              onToggle={() => {}}
-              columns={[]}
-              fixed={[t('columns.place'), t('columns.score'), t('columns.demo'), t('columns.status')]}
-              items={SECONDARY_FIELDS.map((field) => ({
-                id: field,
-                label: t(`my.field.${field}`),
-                shown: fields.has(field),
-                onToggle: () => toggleField(field)
-              }))}
-              note={t('my.columns.note')}
-            />
-          )}
-        </div>
-      </div>
-      <StageFilter t={t} value={filter} counts={counts} onChange={(stage) => onAddress({ stage })} />
-      {usage ? (
-        <p className="tracy-wo-muted tracy-wo-small" role="status">
-          {t(usage.limit === 0 ? 'v3.usageUnlimited' : 'v3.usage', {
-            used: usage.used,
-            limit: usage.limit
-          })}
-          {usageFull(usage)
-            ? ` · ${t('v3.limitResets', { time: new Intl.DateTimeFormat(locale, { timeStyle: 'short', timeZone: 'UTC' }).format(new Date(usage.resetsAt)) })}`
-            : null}
-        </p>
-      ) : null}
+      {selecting.on ? (
+        <SelectionBar
+          t={t}
+          count={allMatching ? total : picked.size}
+          pick={pick}
+          busy={bulkBusy || deleteBusy}
+          deleteDisabled={allMatching || picked.size === 0}
+          cancelDisabled={!allMatching && jobs.cancel.length === 0}
+          onPickAll={togglePage}
+          onDelete={() => askDelete(deleteAsk(shown, picked))}
+          onCancelResearch={() => void bulk('cancel')}
+          onDone={selecting.leave}
+        />
+      ) : (
+        <ListToolbar
+          t={t}
+          attention={counts?.attention ?? null}
+          attentionOn={filter === 'attention'}
+          text={text}
+          onText={setText}
+          onAttention={(on) => onAddress({ stage: on ? 'attention' : 'all' })}
+          menu={menu}
+          onSelect={selecting.enter}
+          onView={chooseView}
+          onCancelled={(on) => onAddress({ stage: on ? 'cancelled' : 'all' })}
+        />
+      )}
       {actionFailed ? (
         <p className="tracy-wo-error" role="alert">
           {t('action.failed')}
@@ -744,18 +666,7 @@ export function MyOpportunitiesView({
           {bulkNote}
         </p>
       ) : null}
-      {view !== 'map' && shown.length > 0 ? (
-        <label className="tracy-wo-my-all tracy-wo-small">
-          <Checkbox
-            checked={pageAllPicked}
-            indeterminate={picked.size > 0 && !pageAllPicked}
-            onCheckedChange={togglePage}
-            aria-label={t('select.allShown')}
-          />
-          <span aria-hidden="true">{t('select.allShown')}</span>
-        </label>
-      ) : null}
-      {!legacy && view !== 'map' && pageAllPicked && total > shown.length ? (
+      {selecting.on && !legacy && view !== 'map' && pageAllPicked && total > shown.length ? (
         <p className="tracy-wo-note tracy-wo-select-all">
           {allMatching ? t('select.allOn', { count: total }) : t('select.page', { count: shown.length })}
           {allMatching ? (
@@ -785,56 +696,6 @@ export function MyOpportunitiesView({
             {loadingMore ? <Spinner label={t('loading.label')} /> : null}
             {t('find.showMore', { count: Math.min(PAGE, Math.max(0, total - shown.length)) || PAGE })}
           </Button>
-        </div>
-      ) : null}
-      {anyPicked ? (
-        <div className="tracy-wo-sticky">
-          <div className="tracy-wo-sticky-row">
-            <span className="tracy-wo-small tracy-wo-muted tracy-wo-sticky-note">
-              {t('select.count', { count: allMatching ? total : picked.size })}
-            </span>
-            <Button type="button" variant="ghost" size="sm" disabled={bulkBusy} onClick={clearSelection}>
-              {t('find.clear')}
-            </Button>
-            {buildable.length ? (
-              <Button
-                size="sm"
-                disabled={bulkBusy || allMatching || usageFull(usage, buildable.length)}
-                onClick={() => void buildBulk()}
-              >
-                {t(buildable.length === 1 ? 'v3.buildSelected.one' : 'v3.buildSelected', {
-                  count: buildable.length
-                })}
-              </Button>
-            ) : null}
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              disabled={bulkBusy || deleteBusy || allMatching}
-              onClick={() => askDelete(deleteAsk(shown, picked))}
-            >
-              <Trash2 aria-hidden="true" />
-              {t('delete.button')}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={bulkBusy || (!allMatching && jobs.cancel.length === 0)}
-              onClick={() => void bulk('cancel')}
-            >
-              <X aria-hidden="true" />
-              {t('bulk.cancel')}
-            </Button>
-            {/* Resume only when a picked row has a stopped job to resume; "Resume 0" means nothing to a seller. */}
-            {allMatching || jobs.resume.length > 0 ? (
-              <Button type="button" size="sm" disabled={bulkBusy} onClick={() => void bulk('resume')}>
-                {bulkBusy ? <Spinner label={t('loading.label')} /> : <Play aria-hidden="true" />}
-                {allMatching ? t('job.resume') : t('bulk.resume', { count: jobs.resume.length })}
-              </Button>
-            ) : null}
-          </div>
         </div>
       ) : null}
       <DeleteDialog

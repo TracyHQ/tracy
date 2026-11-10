@@ -2,7 +2,6 @@
 /**
  * The pieces a place shows in My opportunities (`src/client/opportunity-pieces.ts`, spec #512, #518, #537): Place,
  * the step it reached, Demo, Status with its one next action, read from a row shaped like `GET /api/website-opportunities`.
- * Secondary fields come from the same row for the Columns menu.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-opportunity-pieces.test.mjs
  */
@@ -10,7 +9,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { createTranslate } from '@tracy/wo-views/strings'
-import { placePieces, secondaryLines } from '../src/client/opportunity-pieces.ts'
+import { placePieces } from '../src/client/opportunity-pieces.ts'
 import { en } from '../src/client/strings.ts'
 
 const t = createTranslate(en)
@@ -216,35 +215,4 @@ test('Status: a place still in research waits while it runs, and resumes when it
 test('Status: over the daily build limit, Build demo is disabled', () => {
   const p = placePieces(researched(), t, { ...opts, buildBlocked: true })
   assert.equal(p.next.disabled, true)
-})
-
-test('Secondary fields: each one present on the row, in the Columns order, with plain values', () => {
-  const row = researched({
-    candidate: candidate({ phone: '+1 555 0100', contacts: { whatsapp: '+1 555 0101' } })
-  })
-  const lines = secondaryLines(row, t, opts, [
-    'type',
-    'contact',
-    'website',
-    'phone',
-    'rating',
-    'source',
-    'researched',
-    'stage'
-  ])
-  assert.deepEqual(lines, [
-    { id: 'type', label: 'Type', value: 'Bistro' },
-    { id: 'contact', label: 'Contact', value: 'WhatsApp +1 555 0101' },
-    { id: 'website', label: 'Website', value: 'sunnyfork.example' },
-    { id: 'phone', label: 'Phone', value: '+1 555 0100' },
-    { id: 'rating', label: 'Rating', value: '4.7 from 1,802 reviews' },
-    { id: 'source', label: 'Source', value: 'Google Maps' },
-    { id: 'researched', label: 'Researched', value: 'Nov 7, 2026' },
-    { id: 'stage', label: 'Stage', value: 'Demo' }
-  ])
-})
-
-test('Secondary fields: only the asked ones, and a missing value is left out rather than invented', () => {
-  const row = researched({ candidate: candidate({ website: null }) })
-  assert.deepEqual(secondaryLines(row, t, opts, ['website', 'phone']), [])
 })

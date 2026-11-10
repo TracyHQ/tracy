@@ -6,16 +6,15 @@
  * Pure: no fetch, no clock read (callers pass `now`).
  */
 import { type DemoState, demoBlock, demoStateOf } from '@tracy/wo-views/demo-state'
-import { formatNumber, formatRating, hostOf } from '@tracy/wo-views/model'
+import { hostOf } from '@tracy/wo-views/model'
 
-import type { SecondaryField } from './column-prefs.ts'
 import { toPlaceRow } from './my-list.ts'
 import {
   ACTION_VIEW,
   type BadgeTone,
   type NextAction,
-  type OpportunityListRow,
   nextAction,
+  type OpportunityListRow,
   stageOf,
   statusView
 } from './opportunity-row.ts'
@@ -64,7 +63,6 @@ export interface PieceOptions {
 }
 
 const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null)
-const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null)
 
 /** The place page Google gave, else a Google Maps search for the place (by its place id when Google found it). */
 export function mapsUrlOf(row: OpportunityListRow): string {
@@ -230,74 +228,4 @@ export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOp
     step,
     next
   }
-}
-
-const CHAT_NAME: Record<string, string> = {
-  whatsapp: 'WhatsApp',
-  zalo: 'Zalo',
-  messenger: 'Messenger',
-  line: 'LINE'
-}
-const SOURCE_KEY: Record<string, string> = {
-  'google-places': 'my.source.google',
-  'google-maps': 'my.source.google',
-  osm: 'my.source.osm'
-}
-
-export function secondaryLines(
-  row: OpportunityListRow,
-  t: Translate,
-  opts: PieceOptions,
-  fields: readonly SecondaryField[]
-): Array<{ id: SecondaryField; label: string; value: string }> {
-  const place = toPlaceRow(row)
-  const value = (field: SecondaryField): string | null => {
-    switch (field) {
-      case 'type':
-        return text(place.category) ?? text(place.cuisine)
-      case 'contact': {
-        const email = text(place.email) ?? text(place.siteCheck?.emails?.[0])
-        if (email) return email
-        const chat = Object.entries(place.contacts ?? {}).find(([, v]) => text(v))
-        return chat ? `${CHAT_NAME[chat[0]] ?? chat[0]} ${text(chat[1])}` : null
-      }
-      case 'website':
-        return place.website ? hostOf(place.website) : null
-      case 'phone':
-        return text(place.phone)
-      case 'rating': {
-        const rating = num(place.rating)
-        const reviews = num(place.reviews)
-        if (rating === null) return null
-        return reviews !== null && reviews > 0
-          ? t('my.field.ratingFrom', {
-              rating: formatRating(rating, opts.locale),
-              count: formatNumber(reviews, opts.locale)
-            })
-          : formatRating(rating, opts.locale)
-      }
-      case 'source': {
-        const c = (row.candidate ?? {}) as Record<string, unknown>
-        const key = typeof c.provider === 'string' ? SOURCE_KEY[c.provider] : undefined
-        return key ? t(key) : null
-      }
-      case 'researched': {
-        if (row.job?.state !== 'completed') return null
-        const ms = row.job.updatedAt ? Date.parse(row.job.updatedAt) : Number.NaN
-        return Number.isFinite(ms)
-          ? new Intl.DateTimeFormat(opts.locale, { day: 'numeric', month: 'short', year: 'numeric' }).format(
-              ms
-            )
-          : null
-      }
-      case 'stage':
-        return t(`my.stage.${stageOf(row)}`)
-    }
-  }
-  const lines: Array<{ id: SecondaryField; label: string; value: string }> = []
-  for (const id of fields) {
-    const v = value(id)
-    if (v) lines.push({ id, label: t(`my.field.${id}`), value: v })
-  }
-  return lines
 }

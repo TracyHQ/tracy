@@ -123,16 +123,13 @@ export const CSS = `
 .tracy-wo-steps > span { flex: 1 1 0; height: 4px; border-radius: 2px; background: var(--muted); }
 .tracy-wo-steps > span[data-state="done"] { background: var(--primary); }
 .tracy-wo-steps > span[data-state="now"] { background: color-mix(in oklab, var(--primary) 45%, var(--muted)); }
-/* Wraps rather than scrolls, so Attention (pushed right) never hides behind the open Inspector. */
-.tracy-wo-stages { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; min-width: 0; }
+/* A spacer that pushes what follows to the right (the sub-tab line). */
 .tracy-wo-stages-grow { flex: 1 1 auto; min-width: 8px; }
-.tracy-wo-stage { height: 28px; flex-shrink: 0; gap: 4px; padding: 0 8px; font-size: 12px; }
-.tracy-wo-stage.is-on { font-weight: 600; }
-.tracy-wo-stage.is-zero { opacity: 0.45; }
-.tracy-wo-attn { border-color: color-mix(in oklab, var(--destructive) 30%, transparent); color: var(--destructive); }
+/* The Attention toggle over My opportunities: red text, a tinted fill while it is on. */
+.tracy-wo-attn { height: 28px; gap: 6px; padding: 0 10px; font-size: 12px; border-color: color-mix(in oklab, var(--destructive) 30%, transparent); color: var(--destructive); }
 .tracy-wo-attn:hover, .tracy-wo-attn.is-on { background: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
 .tracy-wo-attn.is-on { border-color: color-mix(in oklab, var(--destructive) 50%, transparent); }
-.tracy-wo-attn:focus-visible { border-color: var(--ring); }
+.tracy-wo-attn:focus-visible { border-color: color-mix(in oklab, var(--destructive) 70%, var(--border)); }
 .tracy-wo-attn-pill { padding: 1px 6px; border-radius: 999px; background: color-mix(in oklab, var(--destructive) 10%, transparent); font-weight: 600; }
 .tracy-wo-insp { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; max-height: calc(100vh - 24px); overflow-y: auto; padding: 12px 14px 14px; border: 1px solid color-mix(in oklab, var(--primary) 25%, var(--border)); border-radius: 14px; background: var(--card); font-size: 12px; line-height: 17px; }
 /* Title block and close button share the first row; the actions take a full-width row below. */
@@ -196,23 +193,18 @@ export const CSS = `
 .tracy-wo-sub-n { color: var(--muted-foreground); font-weight: 400; font-variant-numeric: tabular-nums; }
 .tracy-wo-sub-live { display: inline-flex; align-items: center; gap: 4px; padding-bottom: 11px; font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
 /* My opportunities: the search, paging and the bulk bar. */
-.tracy-wo-q { width: 220px; height: 28px; }
+.tracy-wo-q { width: 240px; height: 28px; }
 .tracy-wo-c-research { min-width: 200px; }
 .tracy-wo-c-action, .tracy-wo-c-demo { white-space: nowrap; }
 .tracy-wo-c-go { width: 32px; padding-left: 0; }
 .tracy-wo-select-all { justify-content: center; padding: 6px 10px; border-radius: 8px; background: var(--muted); }
 .tracy-wo-more-long { display: flex; align-items: center; justify-content: center; gap: 10px; }
-/* My opportunities (spec #512, #537 option A): full width, Cards and Compact rows, the step each place reached. */
+/* My opportunities (spec #512, #537 option A): full width, Cards, the step each place reached; Rows in my-list-css.ts. */
 .tracy-wo-my { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .tracy-wo-my-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
-.tracy-wo-my-rows { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--card); }
-.tracy-wo-my-all { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding-left: 12px; cursor: pointer; color: var(--muted-foreground); }
 .tracy-wo-my-place { position: relative; min-width: 0; cursor: pointer; }
 .tracy-wo-my-cards .tracy-wo-my-place { display: flex; flex-direction: column; gap: 10px; padding: 0 12px 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
 .tracy-wo-my-cards .tracy-wo-my-place:hover { border-color: color-mix(in oklab, var(--foreground) 25%, var(--border)); }
-.tracy-wo-my-rows .tracy-wo-my-place { display: grid; grid-template-columns: 16px minmax(180px, 1.3fr) minmax(220px, 1.2fr) auto; align-items: center; gap: 6px 14px; padding: 10px 12px; border-top: 1px solid var(--border); }
-.tracy-wo-my-rows .tracy-wo-my-place:first-child { border-top: 0; }
-.tracy-wo-my-rows .tracy-wo-my-place:hover { background: color-mix(in oklab, var(--foreground) 4%, transparent); }
 .tracy-wo-my-place[data-state='failed'] { box-shadow: inset 3px 0 0 var(--destructive); }
 .tracy-wo-my-place[data-selected] { background: color-mix(in oklab, var(--primary) 6%, var(--card)); }
 .tracy-wo-my-cards .tracy-wo-my-check { position: absolute; top: 10px; left: 10px; z-index: 1; }
@@ -226,8 +218,8 @@ export const CSS = `
 .tracy-wo-p-pin:hover { color: var(--foreground); background: color-mix(in oklab, var(--foreground) 6%, transparent); }
 .tracy-wo-p-pin svg { width: 14px; height: 14px; }
 .tracy-wo-p-demo { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.tracy-wo-my-cards .tracy-wo-p-demo { justify-content: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px 10px 40px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
-.tracy-wo-my-cards .tracy-wo-p-top { display: flex; align-items: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px 10px 40px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-demo { justify-content: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-top { display: flex; align-items: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
 .tracy-wo-my-cards .tracy-wo-p-demo[data-kind='thumb'] { justify-content: flex-start; }
 .tracy-wo-p-thumb { display: flex; flex-direction: column; gap: 3px; width: 64px; height: 40px; flex: 0 0 auto; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); }
 .tracy-wo-p-thumb i { display: block; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--primary) 55%, var(--background)); }
@@ -256,10 +248,6 @@ export const CSS = `
 .tracy-wo-p-step-check { width: 14px; height: 14px; flex: 0 0 auto; }
 .tracy-wo-p-quiet { color: var(--muted-foreground); }
 .tracy-wo-p-quiet:hover { color: var(--foreground); }
-.tracy-wo-p-lines { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; }
-.tracy-wo-p-lines > div { display: flex; gap: 4px; min-width: 0; }
-.tracy-wo-p-lines dd { margin: 0; overflow-wrap: anywhere; }
-.tracy-wo-my-rows .tracy-wo-p-lines { grid-column: 2 / -1; }
 .tracy-wo-insp > .tracy-wo-insp-sec, .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { border: 0; border-radius: 0; background: transparent; padding: 14px 0; }
 .tracy-wo-insp > .tracy-wo-insp-sec + .tracy-wo-insp-sec, .tracy-wo-send { border-top: 1px solid var(--border); }
 .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { padding: 0; }
@@ -307,8 +295,6 @@ export const CSS = `
 .tracy-wo-facts-line > div { display: flex; gap: 6px; }
 .tracy-wo-start { align-self: flex-start; }
 @container (max-width: 900px) {
-  .tracy-wo-my-rows .tracy-wo-my-place { grid-template-columns: 16px minmax(0, 1fr) minmax(0, 1fr); }
-  .tracy-wo-my-rows .tracy-wo-p-status { grid-column: 2 / -1; justify-content: flex-start; }
   .tracy-wo-page-grid, .tracy-wo-page-grid.is-brief { grid-template-columns: minmax(0, 1fr); }
 }
 @container (max-width: 560px) {

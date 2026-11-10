@@ -1,25 +1,30 @@
 /**
- * My opportunities' two views (spec #512, ticket #518): **Cards** and **Compact rows**, both drawn from the same
+ * My opportunities' two views (spec #512, ticket #518): **Cards** and **Rows**, both drawn from the same
  * pieces per place (`opportunity-pieces.ts`): the place, the step it reached with its state, and the step's one action
  * (#537, option A). A card's top area is the demo preview once a site exists, else the step. A click on the row or the
- * name opens Details; the pin beside the address opens Google Maps in a new tab, and is the only link out. Secondary fields chosen in Columns add lines or cells.
+ * name opens Details; the pin beside the address opens Google Maps in a new tab, and is the only link out. A place's
+ * checkbox shows only in selection mode; Rows sit under one header of column titles (#537, header C, row style 2).
  */
-import type { JSX, MouseEvent } from 'react'
-import { AlertCircle, CheckIcon, MapPin } from 'lucide-react'
-import { Badge, Button, Checkbox, Spinner, ToggleGroup, ToggleGroupItem } from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
-import { LayoutGridIcon, MapIcon, Rows3Icon } from 'lucide-react'
 
-import type { MyView, SecondaryField } from './column-prefs.ts'
+import { Badge, Checkbox } from '@tracy/ui'
+import { cn } from '@tracy/ui/cn'
+import { CheckIcon, MapPin } from 'lucide-react'
+import type { JSX, MouseEvent } from 'react'
+
+import type { AddedAgo } from './added-ago.ts'
+import { AddedCell, AddressCell, ListHead, NameCell } from './list-row.tsx'
 import type { NextRun, PlacePieces } from './opportunity-pieces.ts'
+import { ActionPiece, StepPiece } from './place-step-cells.tsx'
 import type { Translate } from './strings.ts'
 
 export interface MyPlacesProps {
   t: Translate
   view: 'cards' | 'rows'
   places: readonly PlacePieces[]
-  /** Secondary lines per place id, already in Columns order. */
-  lines: ReadonlyMap<string, Array<{ id: SecondaryField; label: string; value: string }>>
+  /** Selection mode: each place shows its checkbox. */
+  selecting: boolean
+  /** When each place was added (`added-ago.ts`), by place id. */
+  added: ReadonlyMap<string, AddedAgo | null>
   selected: ReadonlySet<string>
   busy: ReadonlySet<string>
   onToggle(id: string): void
@@ -90,64 +95,6 @@ function DemoThumb({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element | nu
   )
 }
 
-/**
- * The step the place has reached (#537, option A): three segments with Step n of 3, the state of the current step in
- * the Details page's own words, and the one action of that step. Both come from `rowStepOf`, the Details band's view.
- */
-function StepPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
-  const s = p.step
-  return (
-    <div className="tracy-wo-p-step" data-tone={s.tone}>
-      <span className="tracy-wo-p-step-kick">
-        <span className="tracy-wo-p-segs" aria-hidden="true">
-          {s.segments.map((seg, i) => (
-            <i key={i} data-state={seg} />
-          ))}
-        </span>
-        {t(s.kickerKey, s.kickerParams)}
-      </span>
-      <span className="tracy-wo-p-step-state">
-        {s.running ? <Spinner label={t(s.stateKey)} className="size-3" /> : null}
-        {s.tone === 'error' ? <AlertCircle aria-hidden="true" className="tracy-wo-p-alert" /> : null}
-        {s.allDone ? <CheckIcon aria-hidden="true" className="tracy-wo-p-step-check" /> : null}
-        {t(s.stateKey)}
-      </span>
-    </div>
-  )
-}
-
-/** The current step's one action: primary when the step waits for the seller, a quiet Open while a job runs. */
-function ActionPiece({
-  t,
-  p,
-  busy,
-  onNext
-}: {
-  t: Translate
-  p: PlacePieces
-  busy: boolean
-  onNext(run: NextRun): void
-}): JSX.Element {
-  const run = p.next.run
-  if (run === null) return <div className="tracy-wo-p-status" />
-  const variant = p.next.look === 'primary' ? 'default' : p.next.look === 'outline' ? 'outline' : 'ghost'
-  return (
-    <div className="tracy-wo-p-status">
-      <Button
-        type="button"
-        size="sm"
-        variant={variant}
-        className={cn(p.next.look === 'quiet' && 'tracy-wo-p-quiet')}
-        disabled={p.next.disabled || busy}
-        onClick={() => onNext(run)}
-      >
-        {busy ? <Spinner label={t('loading.label')} /> : null}
-        {p.next.label}
-      </Button>
-    </div>
-  )
-}
-
 /** The status chip of a place (`placeStatus`); the Details header draws the same one. */
 export function StatusBadge({ status }: { status: PlacePieces['status'] }): JSX.Element {
   return (
@@ -166,33 +113,24 @@ export function StatusBadge({ status }: { status: PlacePieces['status'] }): JSX.
   )
 }
 
-function Lines({ lines }: { lines: Array<{ id: string; label: string; value: string }> | undefined }) {
-  if (!lines?.length) return null
-  return (
-    <dl className="tracy-wo-p-lines tracy-wo-small">
-      {lines.map((l) => (
-        <div key={l.id} data-field={l.id}>
-          <dt className="tracy-wo-muted">{l.label}</dt>
-          <dd>{l.value}</dd>
-        </div>
-      ))}
-    </dl>
-  )
-}
-
 export function MyPlaces({
   t,
   view,
   places,
-  lines,
+  selecting,
+  added,
   selected,
   busy,
   onToggle,
   onOpen,
   onNext
 }: MyPlacesProps) {
-  return (
-    <ul className={view === 'cards' ? 'tracy-wo-my-cards' : 'tracy-wo-my-rows'} data-view={view}>
+  const list = (
+    <ul
+      className={view === 'cards' ? 'tracy-wo-my-cards' : 'tracy-wo-my-rows'}
+      data-view={view}
+      data-selecting={selecting || undefined}
+    >
       {places.map((p) => (
         // biome-ignore lint/a11y/useKeyWithClickEvents: the name button is the keyboard way in; the row click is a mouse shortcut
         <li
@@ -204,12 +142,14 @@ export function MyPlaces({
             if (opensDetails(e)) onOpen(p.id)
           }}
         >
-          <Checkbox
-            className="tracy-wo-my-check"
-            checked={selected.has(p.id)}
-            onCheckedChange={() => onToggle(p.id)}
-            aria-label={t('results.select', { name: p.place.name })}
-          />
+          {selecting ? (
+            <Checkbox
+              className="tracy-wo-my-check"
+              checked={selected.has(p.id)}
+              onCheckedChange={() => onToggle(p.id)}
+              aria-label={t('results.select', { name: p.place.name })}
+            />
+          ) : null}
           {/*
             Cards and rows show the same pieces (#537, option A): the place, the step it reached and the step's action.
             A card's top area is the demo preview once a site exists, else the step; a row draws the step in its middle.
@@ -223,54 +163,30 @@ export function MyPlaces({
               </div>
             )
           ) : null}
-          <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} />
-          {view === 'rows' ? <StepPiece t={t} p={p} /> : null}
-          {view === 'cards' ? <Lines lines={lines.get(p.id)} /> : null}
+          {/* Row style 2: name and type, the address, the step, Added, the action; one grid track each. */}
+          {view === 'cards' ? (
+            <>
+              <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} />
+              <AddedCell t={t} added={added.get(p.id)} card />
+            </>
+          ) : (
+            <>
+              <NameCell p={p} onOpen={() => onOpen(p.id)} />
+              <AddressCell t={t} p={p} />
+              <StepPiece t={t} p={p} />
+              <AddedCell t={t} added={added.get(p.id)} card={false} />
+            </>
+          )}
           <ActionPiece t={t} p={p} busy={busy.has(p.id)} onNext={(run) => onNext(p.id, run)} />
-          {/* In rows the chosen fields take a second line under the row, after Status, so Status keeps its cell. */}
-          {view === 'rows' ? <Lines lines={lines.get(p.id)} /> : null}
         </li>
       ))}
     </ul>
   )
-}
-
-const VIEW_ICON = { cards: LayoutGridIcon, rows: Rows3Icon, map: MapIcon } as const
-
-/** Cards / Compact rows / Map; Map is not drawn at all where the deployment has no browser map key. */
-export function MyViewSwitch({
-  t,
-  value,
-  views,
-  onChange
-}: {
-  t: Translate
-  value: MyView
-  views: readonly MyView[]
-  onChange(v: MyView): void
-}): JSX.Element {
+  if (view === 'cards') return list
   return (
-    <ToggleGroup
-      variant="outline"
-      size="sm"
-      spacing={0}
-      value={[value]}
-      onValueChange={(next: unknown[]) => {
-        const v = views.find((x) => x === next[0])
-        if (v) onChange(v)
-      }}
-      aria-label={t('results.view.label')}
-      className="tracy-wo-view-switch"
-    >
-      {views.map((id) => {
-        const Icon = VIEW_ICON[id]
-        return (
-          <ToggleGroupItem key={id} value={id} data-view={id} aria-label={t(`my.view.${id}`)}>
-            <Icon aria-hidden />
-            <span className="tracy-wo-tool-label">{t(`my.view.${id}`)}</span>
-          </ToggleGroupItem>
-        )
-      })}
-    </ToggleGroup>
+    <div className="tracy-wo-my-table" data-selecting={selecting || undefined}>
+      <ListHead t={t} />
+      {list}
+    </div>
   )
 }
