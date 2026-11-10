@@ -1,9 +1,13 @@
 /**
  * The Workspace card of Details (#537, option D, `workspace-card.tsx`): one card, a row per section with a tile, the
  * title and a folded summary, open sections below their row, locked rows muted. Reads only Tracy tokens, so light and
- * dark follow the theme. No backtick may appear inside the template below.
+ * dark follow the theme. The Business facts body brings its own rules (`facts-body-css.ts`). No backtick may appear
+ * inside the template below.
  */
-export const WORKSPACE_CSS = `
+import { FACTS_BODY_CSS } from './facts-body-css.ts'
+
+export const WORKSPACE_CSS =
+  `
 .tracy-wo-ws { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); overflow: hidden; }
 /* The Add source popover hangs below the Sources row: the card stops clipping while it is open. */
 .tracy-wo-ws:has(.tracy-wo-addsrc-pop) { overflow: visible; }
@@ -39,12 +43,6 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-pill[data-kind='locked']:hover { background: transparent; }
 .tracy-wo-ws-sec[data-state='locked'] .tracy-wo-ws-name { color: var(--muted-foreground); }
 .tracy-wo-ws-body { padding: 12px 16px 14px; }
-.tracy-wo-ws .tracy-wo-profile-card .tracy-wo-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; }
-.tracy-wo-ws .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-@container (max-width: 719px) {
-  .tracy-wo-ws .tracy-wo-profile-card .tracy-wo-fields { grid-template-columns: minmax(0, 1fr); }
-  .tracy-wo-ws .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-}
 @container (max-width: 560px) {
   .tracy-wo-ws-row { gap: 8px; padding: 6px 12px; }
   .tracy-wo-ws-toggle { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; row-gap: 0; }
@@ -53,6 +51,5 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
   .tracy-wo-ws-sum { white-space: normal; }
   .tracy-wo-ws-sum:empty { display: none; }
   .tracy-wo-ws-body { padding: 10px 12px 12px; }
-  .tracy-wo-ws .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-`
+` + FACTS_BODY_CSS

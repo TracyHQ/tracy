@@ -15,7 +15,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * opened it).
  */
 import { type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
-import { Bot, ChevronLeft, ChevronRight, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
+import { Bot, ChevronLeft, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
   Badge,
   Breadcrumb,
@@ -73,7 +73,6 @@ import {
   socialStatsLines,
   tripadvisorReviewView
 } from './detail-model.ts'
-import { MediaRow } from './media-row.tsx'
 import { MenuBlock } from './menu-block.tsx'
 import { PlaceProfileBlock } from './place-profile-block.tsx'
 import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
@@ -90,6 +89,8 @@ import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model
 import { DemoSiteBlock } from './demo-site-block.tsx'
 import { SubPage } from './details-sections.tsx'
 import { WorkspaceCard, demoHostOf } from './workspace-card.tsx'
+import { FactsBody } from './facts-body.tsx'
+import { factsBodyView } from './facts-body-model.ts'
 import {
   type SectionId,
   type SubSection,
@@ -835,19 +836,6 @@ export function DetailView({
       placeProfile.failed ||
       tripadvisorReviewView(profile, media).length > 0)
 
-  // The compact Business facts card of Details: the plain rows, read only (#537); the sub-page holds the cards. While
-  // research runs it holds nothing partial: progress shows in the band only.
-  const profileBlock = (): JSX.Element => (
-    <Profile
-      t={t}
-      profile={researchMoving ? null : profile}
-      bare
-      emptyKey={
-        researchMoving ? 'reason.not_collected' : research.done ? 'detail.noProfile' : 'research.profileEmpty'
-      }
-      website={research.done && !researchMoving ? { url: website, link: websiteLink } : null}
-    />
-  )
   const briefTable = (full: boolean): JSX.Element => (
     <BusinessBriefTable
       t={t}
@@ -876,17 +864,6 @@ export function DetailView({
       profileEditedAt={editedAt}
       review={approval === null ? null : { lockKey: stepper.steps[1]?.lockKey ?? null }}
       onOpen={openBrief}
-    />
-  )
-  const mediaBlock = (full: boolean): JSX.Element => (
-    <MediaRow
-      t={t}
-      menu={menu}
-      view={mediaView}
-      open={full}
-      bare
-      retryLogo={{ busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }}
-      food={profile?.trade === 'food'}
     />
   )
   const cancelButton =
@@ -1127,36 +1104,21 @@ export function DetailView({
               {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
             </div>
           ),
+          // Facts left, one hero photo right, one fixed height (#537, option B); the hero opens the sub-page.
           profile: (
-            <div className="tracy-wo-stack tracy-wo-profile-card">
-              {profileBlock()}
-              {/* Photos & video belong to the Business facts (#537): a strip at its foot, opened on its sub-page. */}
-              {!researchMoving &&
-              (research.done ||
-                mediaView.videos.tiles.length > 0 ||
-                mediaView.photos.groups.some((g) => g.tiles.length > 0)) ? (
-                <div className="tracy-wo-profile-media">
-                  <div className="tracy-wo-profile-media-head">
-                    <span>
-                      {t('details.section.media')}
-                      {metaOf('media')
-                        ? ` · ${(metaOf('media')?.status ?? []).map((x) => t(x.key, x.params)).join(', ')}`
-                        : ''}
-                    </span>
-                    <button
-                      type="button"
-                      className="tracy-wo-open"
-                      aria-label={t('section.openNamed', { section: t('details.section.media') })}
-                      onClick={() => onSection('media')}
-                    >
-                      {t('media.strip.open')}
-                      <ChevronRight aria-hidden="true" />
-                    </button>
-                  </div>
-                  {mediaBlock(false)}
-                </div>
-              ) : null}
-            </div>
+            <FactsBody
+              t={t}
+              view={factsBodyView({
+                profile,
+                candidate,
+                name: shownName,
+                media: mediaView,
+                running: researchMoving,
+                today: new Date(now).getDay(),
+                locale
+              })}
+              onOpen={() => onSection('profile')}
+            />
           ),
           brief: (
             <div className="tracy-wo-stack">
@@ -1192,59 +1154,6 @@ export function DetailView({
       {dialogs}
       {previewPanel /* [TAM] */}
     </div>
-  )
-}
-
-function Profile({
-  t,
-  profile,
-  bare = false,
-  emptyKey = 'detail.noProfile',
-  website = null
-}: {
-  t: Translate
-  profile: Body | null
-  /** The place's website row after the hours, read only (no door edits it); null before research. */
-  website?: { url: string | null; link: (url: string) => JSX.Element } | null
-  /** What an empty card says: before this card's research, how to fill it (#524); while it runs, Not collected yet. */
-  emptyKey?: string
-  /** Inside the Business facts section of Details, which carries the title: no card of its own. */
-  bare?: boolean
-}): JSX.Element | null {
-  const rows = profileFields(profile)
-  const drawn: JSX.Element[] = []
-  for (const field of PROFILE_FIELDS) {
-    if (field === 'bio' && website !== null)
-      drawn.push(
-        <div key="website" className="tracy-wo-field">
-          <dt className="tracy-wo-muted tracy-wo-small">{t('field.website')}</dt>
-          <dd>{website.url === null ? t('cell.website.none') : website.link(website.url)}</dd>
-        </div>
-      )
-    const row = rows.find((r) => r.field === field)
-    if (row)
-      drawn.push(
-        <div key={row.field} className="tracy-wo-field">
-          <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
-          <dd>
-            <span>{row.value}</span>
-            {row.staleSince !== null ? (
-              <span className="tracy-wo-warn tracy-wo-small">
-                {t('detail.stale', { date: row.staleSince === '' ? '' : formatDate(row.staleSince) })}
-              </span>
-            ) : null}
-          </dd>
-        </div>
-      )
-  }
-  return (
-    <Section title={t('detail.profile')} bare={bare}>
-      {drawn.length === 0 ? (
-        <p className="tracy-wo-muted">{t(emptyKey)}</p>
-      ) : (
-        <dl className="tracy-wo-fields">{drawn}</dl>
-      )}
-    </Section>
   )
 }
 
