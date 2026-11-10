@@ -4,7 +4,7 @@
  * lock state of a capture hole, and the committed file /ops reads.
  */
 import assert from 'node:assert/strict'
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -16,6 +16,7 @@ import { buildDbIndex } from '../content-coverage/lib/db-index.mjs'
 import { annotate, mergeViewports } from '../content-coverage/lib/items.mjs'
 import { createMatcher } from '../content-coverage/lib/match.mjs'
 import { parseConfigurationPhp } from '../content-coverage/lib/site-config.mjs'
+import { buildSourceIndex, receiverProducer } from '../content-coverage/lib/sources.mjs'
 import {
   coverageFileProblem,
   judgeCoverage
@@ -775,4 +776,355 @@ test('literal PRE: DOM extraction double preserves decoded text and rejects unsu
       read(html).some((s) => typeof s.codeText === 'string'),
       false
     )
+})
+
+// Fictional ACM source fields; no saved contract, contacts or accounts are loaded.
+function teamSocialMatcher(sample, extra = {}, module = 'mod_ja_acm') {
+  const dir = contractDir([
+    {
+      key: 'module-90.socials',
+      entity: 'module-90',
+      column: 'params',
+      type: 'text',
+      role: 'editorial.navigation_url',
+      nestedJson: 'jatools-config',
+      jsonPath: ['teams', 'teams[socials]', 0],
+      sample,
+      ...extra
+    }
+  ])
+  const file = path.join(dir, 'content-map.json')
+  const map = JSON.parse(readFileSync(file, 'utf8'))
+  map.entities.find((e) => e.key === 'module-90').identity = { module }
+  writeFileSync(file, JSON.stringify(map))
+  const contract = loadContract(dir, SITE)
+  return { contract, match: createMatcher(contract, SITE), mapFile: file }
+}
+
+test('ACM social URLs: two newline network|URL entries bind their existing scalar key', () => {
+  const sample =
+    'network-one | https://one.example.test/profile\r\nnetwork-two|https://two.example.test/profile?view=card&lang=en'
+  const { contract, match, mapFile } = teamSocialMatcher(sample)
+  const before = readFileSync(mapFile, 'utf8')
+  for (const value of [
+    'https://one.example.test/profile',
+    'https://two.example.test/profile?view=card&lang=en'
+  ])
+    assert.deepEqual(match({ kind: 'link', value }), {
+      status: 'matched',
+      by: 'href',
+      slots: ['module-90.socials']
+    })
+  assert.equal(contract.slotsByKey.get('module-90.socials').sample, sample)
+  assert.equal(readFileSync(mapFile, 'utf8'), before, 'indexing never rewrites the map')
+  assert.equal(match({ kind: 'link', value: 'https://one.example.test/other' }).status, 'hole')
+})
+
+test('ACM social URLs: wrong source address, type, role or module never gains a URL projection', () => {
+  const value = 'https://gated.example.test/profile'
+  const sample = `network|${value}`
+  for (const extra of [
+    { entity: 'article-2' },
+    { column: 'content' },
+    { type: 'html' },
+    { role: 'editorial.paragraph' },
+    { nestedJson: 'other-config' },
+    { jsonPath: ['other', 'teams[socials]', 0] },
+    { jsonPath: ['teams', 'teams[bio]', 0] },
+    { jsonPath: ['teams', 'teams[socials]', '0'] },
+    { jsonPath: ['teams', 'teams[socials]', -1] },
+    { jsonPath: ['teams', 'teams[socials]', 0, 'extra'] }
+  ])
+    assert.equal(teamSocialMatcher(sample, extra).match({ kind: 'link', value }).status, 'hole')
+  assert.equal(teamSocialMatcher(sample, {}, 'mod_custom').match({ kind: 'link', value }).status, 'hole')
+})
+
+test('ACM social URLs: malformed lines and prose stay holes while ordinary URL behavior remains', () => {
+  const value = 'https://negative.example.test/profile'
+  for (const sample of [
+    `Read the profile at ${value}`,
+    `network ${value}`,
+    `|${value}`,
+    `network|${value}|trailing`,
+    `network|${value} trailing prose`,
+    `network|javascript:open('${value}')`,
+    'network|https://'
+  ])
+    assert.equal(teamSocialMatcher(sample).match({ kind: 'link', value }).status, 'hole')
+  const { match } = teamSocialMatcher(`network|${value}\rbad line\nnetwork|`)
+  assert.equal(match({ kind: 'link', value }).status, 'matched', 'malformed sibling lines add no URL')
+  assert.deepEqual(match({ kind: 'link', value: 'https://music.apple.com/' }).slots, ['article-2.store'])
+  assert.equal(match({ kind: 'text', value: 'Advanced Boxing' }).status, 'matched')
+})
+
+function generatedReceiverFixture() {
+  const root = mkdtempSync(path.join(tmpdir(), 'cov-generated-'))
+  const put = (file, body) => {
+    const target = path.join(root, file)
+    mkdirSync(path.dirname(target), { recursive: true })
+    writeFileSync(target, body)
+  }
+  const base = 'templates/ja_kinetic/html/com_content/'
+  const files = {
+    [base + 'article/default.php']: `<?php
+function kinetic_readtime($html) { $words = str_word_count(strip_tags((string) $html)); return max(1, (int) ceil($words / 200)); }
+$readmins = kinetic_readtime(($this->item->introtext ?? '') . ' ' . ($this->item->fulltext ?? ''));
+?><span class="hx-author__meta"><?php $hxMeta = []; if ($authorRole !== '') $hxMeta[] = $this->escape($authorRole);
+$hxMeta[] = HTMLHelper::_('date', $this->item->created, Text::_('DATE_FORMAT_LC3'));
+$hxMeta[] = Text::sprintf('TPL_JA_KINETIC_BLOG_READMIN', $readmins); echo implode(' · ', $hxMeta); ?></span>`,
+    [base + 'author/author_info.php']:
+      `<?php ?><div class="hx-auaside__meta"><?php if ($haRole !== '') : ?><span class="hx-auaside__role"><?php echo $this->escape($haRole); ?></span> &middot; <?php endif; ?><span class="hx-auaside__c"><?php echo Text::plural('TPL_JA_KINETIC_N_ARTICLES', (int) $haCount); ?></span></div>`,
+    [base + 'category/blog.php']:
+      `<?php $hxTotal = (int) (!empty($this->pagination->total) ? $this->pagination->total : count($rows)); ?><span class="hx-bloglist__count">// <?php echo str_pad((string) $hxTotal, 2, '0', STR_PAD_LEFT); ?> <?php echo Text::_('TPL_JA_KINETIC_BLOG_POSTS_NEWEST'); ?></span>`,
+    [base + 'category/blog_item.php']:
+      `<?php $dateField = $params->get('show_create_date', 1) ? $item->created : ($item->publish_up ?? $item->created); ?>
+<time class="hx-blogdate"><span class="hx-blogdate__d"><?php echo HTMLHelper::_('date', $dateField, 'd'); ?></span><span class="hx-blogdate__m"><?php echo HTMLHelper::_('date', $dateField, 'M'); ?></span></time>
+<div class="hx-blogmeta"><span class="hx-blogauthor"><?php echo $this->escape($author); ?></span><span class="hx-blogdatetxt"><?php echo HTMLHelper::_('date', $dateField, Text::_('DATE_FORMAT_LC3')); ?></span><span class="hx-blogread"><?php echo Text::sprintf('TPL_JA_KINETIC_BLOG_READMIN_SHORT', $readmins); ?></span></div>`,
+    'language/en-GB/en-GB.tpl_ja_kinetic.ini':
+      'TPL_JA_KINETIC_BLOG_READMIN="%d min read"\nTPL_JA_KINETIC_BLOG_READMIN_SHORT="%d min"\nTPL_JA_KINETIC_N_ARTICLES="%d articles"\nTPL_JA_KINETIC_N_ARTICLES_1="%d article"\nTPL_JA_KINETIC_BLOG_POSTS_NEWEST="posts &middot; newest first"',
+    'language/en-GB/joomla.ini':
+      'DATE_FORMAT_LC3="d F Y"\nJUNE_SHORT="Jun"\nJUNE="June"\nJGLOBAL_PASSWORD="Password"',
+    'libraries/src/Date/Date.php': `<?php $return = str_replace(self::MONTH_ABBR, $this->monthToString(parent::format('n'), true), $return); $return = str_replace(self::MONTH_NAME, $this->monthToString(parent::format('n')), $return); function monthToString($month, $abbr = false) { switch ($month) { case 6: return $abbr ? Text::_('JUNE_SHORT') : Text::_('JUNE'); } }`,
+    'components/com_users/forms/login.xml':
+      '<form><field name="username" type="text" label="COM_USERS_LOGIN_USERNAME_LABEL" required="true"/><field name="password" type="password" label="JGLOBAL_PASSWORD" required="true"/></form>',
+    'components/com_users/forms/registration.xml':
+      '<form><field name="name" type="text" label="COM_USERS_REGISTER_NAME_LABEL" required="true"/><field name="password1" type="password" label="COM_USERS_PROFILE_PASSWORD1_LABEL" required="true"/></form>',
+    'libraries/src/Form/FormField.php': `<?php $title = $this->element['label'] ? (string) $this->element['label'] : (string) $this->element['name']; $title = $this->translateLabel ? Text::_($title) : $title; $extraData = ['text' => $data['label'], 'for' => $this->id]; return $this->getRenderer($this->renderLabelLayout)->render(array_merge($data, $extraData));`,
+    'layouts/joomla/form/renderlabel.php': `<?php $id = $for . '-lbl'; ?><label id="<?php echo $id; ?>" for="<?php echo $for; ?>"><?php echo $text; ?><?php if ($required) : ?><span class="star" aria-hidden="true">&#160;*</span><?php endif; ?></label>`,
+    'language/en-GB/com_users.ini':
+      'COM_USERS_LOGIN_USERNAME_LABEL="Username"\nCOM_USERS_REGISTER_NAME_LABEL="Name"\nCOM_USERS_PROFILE_PASSWORD1_LABEL="Password"'
+  }
+  for (const [file, body] of Object.entries(files)) put(file, body)
+  const contract = loadContract(
+    contractDir([{ key: 'module-90.role', type: 'text', sample: 'Editor' }]),
+    SITE
+  )
+  contract.template = 'ja_kinetic'
+  const create = () => createClassifier(contract, null, buildSourceIndex(root, contract.template))
+  const item = (value, selector, extra = {}) => ({
+    kind: 'text',
+    tag: 'span',
+    value,
+    selector,
+    viewports: { desktop: { count: 1, selector }, phone: { count: 1, selector } },
+    ...extra
+  })
+  return { root, create, item, put, files, base, contract }
+}
+
+test('generated receivers: durations/counts preserve template language origin and covered role/date siblings', () => {
+  const f = generatedReceiverFixture(),
+    c = f.create()
+  for (const [value, selector] of [
+    [
+      'Editor · 18 June 2026 · 2 min read',
+      'div.hx-author > div.hx-author__c > span.hx-author__meta:nth-of-type(2)'
+    ],
+    ['Editor · 3 articles', 'div.hx-auaside > div.hx-auaside__nm > div.hx-auaside__meta'],
+    ['1 article', 'div.hx-auaside > div.hx-auaside__nm > div.hx-auaside__meta'],
+    ['// 03 posts · newest first', 'div.hx-bloglist > div.hx-bloglist__head > span.hx-bloglist__count']
+  ]) {
+    const result = c(f.item(value, selector), {})
+    assert.equal(result.class, 'b')
+    assert.match(result.label, /source-bound/)
+  }
+  for (const [value, selector] of [
+    ['Unowned claim · 2 min read', 'span.hx-author__meta'],
+    ['Editor · 2 min read · Unowned claim', 'span.hx-author__meta'],
+    ['Unowned role · 3 articles', 'div.hx-auaside__meta'],
+    ['Editor · 1 articles', 'div.hx-auaside__meta'],
+    ['// 3 posts · newest first', 'span.hx-bloglist__count'],
+    ['// 03 posts · newest first Unowned claim', 'span.hx-bloglist__count']
+  ])
+    assert.doesNotMatch(c(f.item(value, selector), { remainder: '2 min read' }).label, /source-bound/)
+})
+
+test('generated receivers: exact localized day/month and full metadata formulas require their source', () => {
+  const f = generatedReceiverFixture(),
+    c = f.create()
+  const day = f.item('18 Jun', 'a.hx-blogrow > time.hx-blogdate', { tag: 'time' })
+  assert.equal(c(day, {}).class, 'c')
+  assert.match(c(day, {}).label, /source-bound/)
+  const meta = f.item('Editor 18 June 2026 2 min', 'a.hx-blogrow > div.hx-blogmeta', { tag: 'div' })
+  assert.equal(c(meta, { remainder: '18 june' }).class, 'b', 'template duration remains template origin')
+  assert.match(c(meta, { remainder: '18 june' }).label, /source-bound/)
+  for (const value of ['18 June', '32 Jun', '18 Jun claim'])
+    assert.notEqual(c({ ...day, value }, {}).class, 'c')
+  for (const value of ['Unowned 18 June 2026 2 min', 'Editor 18 June 2026 2 min Unowned'])
+    assert.doesNotMatch(c({ ...meta, value }, { remainder: '18 june' }).label, /source-bound/)
+  f.put('language/overrides/en-GB.override.ini', 'JUNE_SHORT="Jun"')
+  assert.equal(f.create()(day, {}).class, 'b', 'effective override origin survives')
+  f.put('language/fr-FR/joomla.ini', 'JUNE_SHORT="Juin"')
+  f.put('language/overrides/en-GB.override.ini', '')
+  assert.notEqual(f.create()(day, {}).class, 'c', 'conflicting effective source languages refuse')
+})
+
+test('generated receivers: required labels bind exact form/page, XML, renderlabel and effective language', () => {
+  const f = generatedReceiverFixture(),
+    c = f.create()
+  const login = { url: SITE + '?option=com_users&view=login' }
+  const registration = { url: SITE + '?option=com_users&view=registration' }
+  for (const [value, selector, context] of [
+    ['Username *', '#username-lbl', login],
+    ['Password\u00a0*', '#password-lbl', login],
+    ['Name *', '#jform_name-lbl', registration],
+    ['Password *', '#jform_password1-lbl', registration]
+  ]) {
+    const result = c(f.item(value, selector, { tag: 'label' }), {}, context)
+    assert.equal(result.class, 'c')
+    assert.match(result.label, /source-bound/)
+  }
+  const label = f.item('Password *', '#password-lbl', { tag: 'label' })
+  for (const context of [{}, registration, { url: SITE + '?option=com_example&view=login' }])
+    assert.notEqual(c(label, {}, context).class, 'c')
+  f.put('language/overrides/en-GB.override.ini', 'JGLOBAL_PASSWORD="Password"')
+  assert.equal(f.create()(label, {}, login).class, 'b')
+  f.put('language/overrides/en-GB.override.ini', 'JGLOBAL_PASSWORD="Secret phrase"')
+  assert.notEqual(f.create()(label, {}, login).class, 'c')
+})
+
+test('generated receivers: every viewport/count/selector/code and cache order is guarded', () => {
+  const f = generatedReceiverFixture()
+  const valid = f.item('18 Jun', 'a.hx-blogrow > time.hx-blogdate', { tag: 'time' })
+  const invalid = [
+    { ...valid, inCode: true },
+    { ...valid, codeText: '18 Jun' },
+    { ...valid, tag: 'div' },
+    { ...valid, selector: valid.selector + ' > span.extra', viewports: {} },
+    { ...valid, viewports: { desktop: { count: 1 } } },
+    { ...valid, selector: 'time.hx-blogdate-business', viewports: {} },
+    { ...valid, viewports: { desktop: { count: 2, selector: valid.selector } } },
+    {
+      ...valid,
+      viewports: {
+        desktop: { count: 1, selector: valid.selector },
+        phone: { count: 1, selector: 'div.business' }
+      }
+    }
+  ]
+  for (const reverse of [false, true]) {
+    const c = f.create(),
+      entries = [[valid, 'c'], ...invalid.map((i) => [i, 'not-c'])]
+    if (reverse) entries.reverse()
+    for (const [item, expected] of entries) {
+      const result = c(item, {})
+      if (expected === 'c') assert.equal(result.class, 'c')
+      else assert.notEqual(result.class, 'c')
+    }
+  }
+})
+
+test('generated receivers: comments, wrong producers and unseen source do not prove generation', () => {
+  const f = generatedReceiverFixture(),
+    date = f.item('18 Jun', 'time.hx-blogdate', { tag: 'time' })
+  const file = f.base + 'category/blog_item.php'
+  for (const body of [
+    '',
+    '<?php /* ' + f.files[file] + ' */',
+    '<?php\n# $dateField = $item->created; $item->publish_up; class="hx-blogdate__d" class="hx-blogdate__m"\n# HTMLHelper::_("date", $dateField, "d"); HTMLHelper::_("date", $dateField, "M");'
+  ]) {
+    f.put(file, body)
+    assert.notEqual(f.create()(date, {}).class, 'c')
+  }
+  f.put(file, f.files[file].replace("$dateField, 'M'", "$otherField, 'M'"))
+  assert.notEqual(f.create()(date, {}).class, 'c')
+  f.put(file, f.files[file])
+  f.put('libraries/src/Date/Date.php', '<?php // monthToString JUNE_SHORT')
+  assert.notEqual(f.create()(date, {}).class, 'c')
+  const duration = f.item('2 min read', 'span.hx-author__meta')
+  f.put(f.base + 'article/default.php', '<?php /* ' + f.files[f.base + 'article/default.php'] + ' */')
+  assert.doesNotMatch(f.create()(duration, {}).label, /source-bound/)
+})
+
+test('generated receivers: annotate forwards page context transiently without changing occurrence records', () => {
+  const f = generatedReceiverFixture(),
+    context = { url: SITE + '?option=com_users&view=login' }
+  const label = f.item('Password *', '#password-lbl', { tag: 'label' })
+  const views = JSON.stringify(label.viewports)
+  const items = annotate([label], () => ({ status: 'hole' }), f.create(), context)
+  assert.equal(items[0].class, 'c')
+  assert.equal(JSON.stringify(items[0].viewports), views)
+  assert.equal(Object.hasOwn(items[0], 'url'), false)
+  assert.equal(Object.hasOwn(items[0], 'context'), false)
+  const absent = f.item('Password *', '#password-lbl', { tag: 'label' })
+  assert.notEqual(annotate([absent], () => ({ status: 'hole' }), f.create())[0].class, 'c')
+})
+
+test('generated receivers: producer token guards keep markup and quoted URLs but remove real comments', () => {
+  const f = generatedReceiverFixture()
+  const file = 'templates/ja_kinetic/producer.php'
+  // The source index itself is the production path; no synthetic normalized-only source index is substituted.
+  f.put(
+    file,
+    `<?php $url = 'https://example.test/path'; /* ?> ignored_producer */ ?>// visible_count &#160;* <?php # hidden_producer\n $alive = 'yes'; ?>`
+  )
+  const index = buildSourceIndex(f.root, 'ja_kinetic')
+  assert.equal(
+    receiverProducer(index, file, /https:\/\/example\.test\/path/, /visible_count/, /&#160;\*/, /\$alive/),
+    true
+  )
+  assert.equal(receiverProducer(index, file, /ignored_producer/), false)
+  assert.equal(receiverProducer(index, file, /hidden_producer/), false)
+  const js = 'media/vendor/widget/widget.js'
+  f.put(js, 'const path=/\\//g; const receiver="real_receiver"; // fake_receiver')
+  const source = buildSourceIndex(f.root, 'ja_kinetic')
+  assert.equal(receiverProducer(source, js, /real_receiver/), true, 'pre-unescape source keeps regex slashes')
+  assert.equal(receiverProducer(source, js, /fake_receiver/), false)
+})
+
+test('generated receivers: wrong category formula, template label origin and untouched cohorts remain guarded', () => {
+  const f = generatedReceiverFixture()
+  const file = f.base + 'category/blog.php'
+  const count = f.item('// 03 posts · newest first', 'span.hx-bloglist__count')
+  f.put(file, f.files[file].replace('count($rows)', 'count($unrelated)'))
+  assert.doesNotMatch(f.create()(count, {}).label, /source-bound/)
+  f.put('templates/ja_kinetic/language/en-GB/tpl_ja_kinetic.ini', 'COM_USERS_REGISTER_NAME_LABEL="Name"')
+  const label = f.item('Name *', '#jform_name-lbl', { tag: 'label' })
+  assert.equal(f.create()(label, {}, { url: SITE + '?option=com_users&view=registration' }).class, 'b')
+  const c = f.create()
+  for (const item of [
+    f.item('network', 'a.hx-team-social-link', {
+      kind: 'attr',
+      attr: 'aria-label',
+      viewports: { desktop: { count: 3, selector: 'a.hx-team-social-link' } }
+    }),
+    f.item('Unbound article excerpt...', 'span.hxcat-row__excerpt')
+  ])
+    assert.notEqual(c(item, {}).class, 'c')
+})
+
+test('generated receivers: month format M cannot be proved by the numeric-month m producer', () => {
+  const f = generatedReceiverFixture()
+  const file = f.base + 'category/blog_item.php'
+  const value = f.item('18 Jun', 'a.hx-blogrow > time.hx-blogdate', { tag: 'time' })
+  assert.equal(f.create()(value, {}).class, 'c', 'named-month producer is proved')
+  f.put(file, f.files[file].replace("$dateField, 'M'", "$dateField, 'm'"))
+  assert.notEqual(
+    f.create()(value, {}).class,
+    'c',
+    'same receiver/value/language with numeric format remains unproved'
+  )
+  const source = buildSourceIndex(f.root, 'ja_kinetic')
+  assert.ok(
+    source.files.find((s) => s.rel === file).code.includes("$dateField, 'm'"),
+    'producer index retains exact source case'
+  )
+  f.put(file, f.files[file])
+  f.put(file, f.files[file].replace("$dateField, 'd'", "$dateField, 'D'"))
+  assert.notEqual(f.create()(value, {}).class, 'c', 'weekday format cannot prove day-of-month')
+  f.put(file, f.files[file])
+  const dateFile = 'libraries/src/Date/Date.php'
+  f.put(dateFile, f.files[dateFile].replaceAll("format('n')", "format('N')"))
+  assert.notEqual(f.create()(value, {}).class, 'c', 'weekday number cannot prove month number')
+  f.put(dateFile, f.files[dateFile])
+  f.put(file, '<?PHP /* ' + f.files[file] + ' */')
+  assert.notEqual(f.create()(value, {}).class, 'c', 'case-insensitive PHP opener still strips comments')
+  f.put(file, f.files[file])
+  f.put('language/fr-FR/joomla.ini', 'DATE_FORMAT_LC3="d f Y"')
+  const meta = f.item('Editor 18 June 2026 2 min', 'div.hx-blogmeta', { tag: 'div' })
+  assert.doesNotMatch(
+    f.create()(meta, {}).label,
+    /source-bound/,
+    'case-distinct effective date formats conflict'
+  )
 })

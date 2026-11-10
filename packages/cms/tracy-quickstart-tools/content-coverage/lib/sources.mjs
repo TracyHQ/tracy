@@ -91,6 +91,7 @@ export function buildSourceIndex(webroot, template, platform = 'joomla') {
       files.push({
         rel,
         origin,
+        code: body,
         raw: body.toLowerCase().replace(/\\\//g, '/'),
         norm: normText(body.replace(/\\\//g, '/'))
       })
@@ -159,4 +160,52 @@ export function searchSources(index, { norm, raw }, limit = 3) {
       out.push({ file: f.rel, origin: f.origin })
   }
   return out
+}
+
+/** The effective value of one proven receiver's language key; conflicting languages/overrides stay unproved. */
+export function receiverLanguage(index, key, file) {
+  const overrides = index?.ini.filter((s) => s.key === key && s.rel.startsWith('language/overrides/')) ?? []
+  const hits = overrides.length
+    ? overrides
+    : (index?.ini.filter((s) => s.key === key && file.test(s.rel)) ?? [])
+  // Preserve literal case and markup: PHP date formats and link targets carry distinct semantics.
+  const values = hits.map((s) => s.value.normalize('NFKC').replace(/\s+/g, ' ').trim())
+  if (!hits.length || new Set(values).size !== 1) return null
+  return { value: hits[0].value, class: hits[0].origin.cls, evidence: hits.map((s) => `${s.rel} ${key}`) }
+}
+
+/** Specific producer expressions, not a same-word hit from another extension or dead comment. */
+export function receiverProducer(index, file, ...expressions) {
+  const f = index?.files.find((s) => s.rel === file)
+  if (!f) return false
+  const source = f.code ?? f.raw
+  const comment = (s) => s.startsWith('/*') || s.startsWith('//') || s.startsWith('#') || s.startsWith('<!--')
+  // Preserve quoted tokens and strip comments before text normalization/unescaping.
+  const tokens =
+    /(["'])(?:\\.|(?!\1)[^\\])*?\1|\/\*[\s\S]*?(?:\*\/|$)|\/\/(?:(?!\?>)[^\n])*|#(?!\[)(?:(?!\?>)[^\n])*|\?>/g
+  let body = ''
+  if (file.endsWith('.php')) {
+    let at = 0
+    let php = false
+    // PHP comments cannot eat visible // counts or the # inside an HTML &#160; star.
+    while (at < source.length) {
+      const re = php ? tokens : /<\?(?:php\b|=)|<!--[\s\S]*?(?:-->|$)/gi
+      re.lastIndex = at
+      const token = re.exec(source)
+      if (!token) {
+        body += source.slice(at)
+        break
+      }
+      body += source.slice(at, token.index)
+      const part = token[0]
+      body += comment(part) ? ' ' : part
+      if (!php && part.startsWith('<?')) php = true
+      else if (php && part === '?>') php = false
+      at = re.lastIndex
+    }
+  } else {
+    const comments = /(["'])(?:\\.|(?!\1)[^\\])*?\1|\/\*[\s\S]*?\*\/|(?<!\\)\/\/[^\n]*|<!--[\s\S]*?-->/g
+    body = source.replace(comments, (part) => (comment(part) ? ' ' : part))
+  }
+  return expressions.every((re) => re.test(body))
 }

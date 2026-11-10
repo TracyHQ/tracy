@@ -6,7 +6,7 @@
 //   e = a shop's catalogue (VirtueMart products, categories, manufacturers, prices, product media): the
 //       shop owner's inventory, managed in the shop component, never a content contract slot (listed, never blocking)
 import { searchDb } from './db-index.mjs'
-import { searchSources } from './sources.mjs'
+import { searchSources, receiverLanguage, receiverProducer } from './sources.mjs'
 import { normText, compact } from './normalize.mjs'
 import { videoId, isRenderedDate } from './match.mjs'
 
@@ -75,6 +75,273 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       lockState: d[0].locked ? 'locked' : 'undeclared',
       evidence: d.map((x) => `${x.where}${x.exact ? '' : ' (contains)'}`)
     }
+  }
+
+  const templateLanguage = new RegExp(
+    `^(?:language/[^/]+/(?:[^/]+\\.)?tpl_${tpl}\\.ini|templates/${tpl}/language/[^/]+/(?:[^/]+\\.)?tpl_${tpl}\\.ini)$`
+  )
+  const coreLanguage = /^language\/[^/]+\/joomla\.ini$/
+  const labelKeys = [
+    'COM_USERS_LOGIN_USERNAME_LABEL',
+    'JGLOBAL_PASSWORD',
+    'COM_USERS_REGISTER_NAME_LABEL',
+    'COM_USERS_PROFILE_PASSWORD1_LABEL'
+  ]
+  const labelValues = new Set(
+    (sourceIndex?.ini ?? []).filter((s) => labelKeys.includes(s.key)).map((s) => normText(s.value))
+  )
+  const generatedSelector =
+    /\.(?:hx-author__meta|hx-auaside__meta|hx-bloglist__count|hx-blogdate|hx-blogmeta)(?=[:. >]|$)|^#(?:username|password|jform_name|jform_password1)-lbl$/
+
+  function generated(item, context) {
+    if (
+      contract.platform !== 'joomla' ||
+      !sourceIndex ||
+      item.inCode ||
+      typeof item.codeText === 'string' ||
+      item.kind !== 'text'
+    )
+      return null
+    // A merged repeated item has only its first selector; every observed copy must have proof.
+    const views = Object.values(item.viewports ?? {})
+    if (views.some((v) => v.count !== 1 || !v.selector)) return null
+    const selectors = [item.selector, ...views.map((v) => v.selector)].filter(Boolean)
+    const receiver = (re) => selectors.length > 0 && selectors.every((s) => re.test(s))
+    const producer = (file, ...expressions) =>
+      receiverProducer(
+        sourceIndex,
+        file,
+        ...expressions.map((re) => new RegExp(re.source, re.flags.includes('i') ? re.flags : re.flags + 'i'))
+      )
+
+    const language = (key, file = coreLanguage) =>
+      receiverLanguage(
+        sourceIndex,
+        key,
+        sourceIndex.ini.some((s) => s.key === key && templateLanguage.test(s.rel)) ? templateLanguage : file
+      )
+    const canonical = (value) => normText(value).replaceAll('·', '.')
+    const norm = canonical(item.value)
+    const base = `templates/${tpl}/html/com_content/`
+    const proved = (file, label, ...langs) => ({
+      class: langs.some((l) => l.class === 'b') ? 'b' : 'c',
+      label: `source-bound ${label}`,
+      evidence: [file, ...langs.flatMap((l) => l.evidence)]
+    })
+    const covered = (part) => contract.index.text.has(normText(part))
+    const integer = (value, lang, minimum = 0) => {
+      if (!lang || (lang.value.match(/%d/g) ?? []).length !== 1 || lang.value.replace('%d', '').includes('%'))
+        return null
+      const escaped = canonical(lang.value)
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace('%d', '(0|[1-9][0-9]*)')
+      const m = new RegExp(`^${escaped}$`).exec(value)
+      return m && Number(m[1]) >= minimum ? Number(m[1]) : null
+    }
+    const date = (value, abbreviated = false) => {
+      const m = (
+        abbreviated ? /^(0[1-9]|[12][0-9]|3[01]) (.+)$/ : /^(0[1-9]|[12][0-9]|3[01]) (.+) ([1-9][0-9]{3})$/
+      ).exec(value)
+      if (!m) return null
+      const format = abbreviated ? null : language('DATE_FORMAT_LC3')
+      if (!abbreviated && format?.value.trim() !== 'd F Y') return null
+      const file = 'libraries/src/Date/Date.php'
+      for (const key of [
+        'JANUARY',
+        'FEBRUARY',
+        'MARCH',
+        'APRIL',
+        'MAY',
+        'JUNE',
+        'JULY',
+        'AUGUST',
+        'SEPTEMBER',
+        'OCTOBER',
+        'NOVEMBER',
+        'DECEMBER'
+      ]) {
+        const month = language(key + (abbreviated ? '_SHORT' : ''))
+        if (!month || canonical(month.value) !== m[2]) continue
+        if (
+          !receiverProducer(
+            sourceIndex,
+            file,
+            abbreviated
+              ? /monthToString\(parent::format\(['"]n['"]\),\s*true\)/
+              : /monthToString\(parent::format\(['"]n['"]\)\)/,
+            new RegExp(`Text::_\\(['"]${key}${abbreviated ? '_SHORT' : ''}['"]\\)`)
+          )
+        )
+          continue
+        return format ? [format, month] : [month]
+      }
+      return null
+    }
+    const dateFile = base + 'category/blog_item.php'
+    const dateSource = producer(dateFile, /\$datefield\s*=.*\$item->created/, /\$item->publish_up/)
+    if (item.tag === 'time' && receiver(/\btime\.hx-blogdate(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+      const langs = date(norm, true)
+      if (
+        langs &&
+        dateSource &&
+        // PHP date-format literals are case-sensitive; bind each one to its exact receiver.
+        receiverProducer(
+          sourceIndex,
+          dateFile,
+          /class=['"]hx-blogdate__d['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*['"]d['"]\)/,
+          /class=['"]hx-blogdate__m['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*['"]M['"]\)/
+        )
+      )
+        return proved(dateFile, 'day/month date receiver', ...langs)
+    }
+    if (receiver(/\bdiv\.hx-blogmeta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+      const short = language('TPL_JA_KINETIC_BLOG_READMIN_SHORT', templateLanguage)
+      for (const prefix of ['', ...contract.index.text.keys()]) {
+        if (prefix && !norm.startsWith(canonical(prefix) + ' ')) continue
+        const rest = prefix ? norm.slice(canonical(prefix).length + 1) : norm
+        const m = /^(\d{2} .+ [1-9][0-9]{3}) (.+)$/.exec(rest)
+        const langs = m && date(m[1])
+        if (
+          langs &&
+          integer(m[2], short, 1) !== null &&
+          dateSource &&
+          producer(
+            dateFile,
+            /class=['"]hx-blogmeta['"]/,
+            /class=['"]hx-blogauthor['"]/,
+            /\$this->escape\(\$author\)/,
+            /htmlhelper::_\(['"]date['"],\s*\$datefield,\s*text::_\(['"]date_format_lc3['"]\)\)/,
+            /text::sprintf\(['"]tpl_ja_kinetic_blog_readmin_short['"],\s*\$readmins\)/
+          )
+        )
+          return proved(dateFile, 'full date and duration receiver', ...langs, short)
+      }
+    }
+    if (receiver(/\bspan\.hx-author__meta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+      const file = base + 'article/default.php'
+      const lang = language('TPL_JA_KINETIC_BLOG_READMIN', templateLanguage)
+      const pieces = norm.split(' . ')
+      const duration = pieces.pop()
+      const langs = pieces.length ? date(pieces[pieces.length - 1]) : null
+      if (langs) pieces.pop()
+      if (
+        integer(duration, lang, 1) !== null &&
+        pieces.length <= 1 &&
+        pieces.every(covered) &&
+        producer(
+          file,
+          /class=['"]hx-author__meta['"]/,
+          /str_word_count\(strip_tags\(\(string\)\s*\$html\)\)/,
+          /max\(1,\s*\(int\)\s*ceil\(\$words\s*\/\s*200\)\)/,
+          /\$readmins\s*=\s*kinetic_readtime\(/,
+          /text::sprintf\(['"]tpl_ja_kinetic_blog_readmin['"],\s*\$readmins\)/,
+          /implode\(['"] · ['"],\s*\$hxmeta\)/,
+          /\$this->escape\(\$authorrole\)/
+        ) &&
+        (!langs || producer(file, /text::_\(['"]date_format_lc3['"]\)/))
+      )
+        return proved(file, 'article duration receiver', lang, ...(langs ?? []))
+    }
+    if (receiver(/\bdiv\.hx-auaside__meta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+      const file = base + 'author/author_info.php'
+      const pieces = norm.split(' . '),
+        phrase = pieces.pop()
+      const singular = language('TPL_JA_KINETIC_N_ARTICLES_1', templateLanguage)
+      const plural = language('TPL_JA_KINETIC_N_ARTICLES', templateLanguage)
+      const lang =
+        integer(phrase, singular) === 1
+          ? singular
+          : integer(phrase, plural) !== null && integer(phrase, plural) !== 1
+            ? plural
+            : null
+      if (
+        lang &&
+        pieces.length <= 1 &&
+        pieces.every(covered) &&
+        producer(
+          file,
+          /class=['"]hx-auaside__meta['"]/,
+          /class=['"]hx-auaside__c['"]/,
+          /text::plural\(['"]tpl_ja_kinetic_n_articles['"],\s*\(int\)\s*\$hacount\)/,
+          /\$this->escape\(\$harole\)/
+        )
+      )
+        return proved(file, 'author article count receiver', lang)
+    }
+    if (receiver(/\bspan\.hx-bloglist__count(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+      const file = base + 'category/blog.php'
+      const lang = language('TPL_JA_KINETIC_BLOG_POSTS_NEWEST', templateLanguage)
+      const m = /^\/\/ (0[0-9]|[1-9][0-9]+) (.+)$/.exec(norm)
+      if (
+        m &&
+        lang &&
+        m[2] === canonical(lang.value) &&
+        producer(
+          file,
+          /class=['"]hx-bloglist__count['"]/,
+          /\$hxtotal\s*=\s*\(int\)\s*\(!empty\(\$this->pagination->total\)\s*\?\s*\$this->pagination->total\s*:\s*count\(\$rows\)\)/,
+          /str_pad\(\(string\)\s*\$hxtotal,\s*2,\s*['"]0['"],\s*str_pad_left\)/,
+          /text::_\(['"]tpl_ja_kinetic_blog_posts_newest['"]\)/
+        )
+      )
+        return proved(file, 'category padded count receiver', lang)
+    }
+    if (item.tag === 'label') {
+      let page
+      try {
+        page = new URL(context?.url)
+      } catch {
+        return null
+      }
+      const route = page.pathname.replace(/^\/(?:index\.php\/)?/, '').replace(/\/$/, '')
+      const mapped = contract.pages.find((p) =>
+        page.searchParams.has('Itemid')
+          ? String(p.sourceId) === page.searchParams.get('Itemid')
+          : String(p.route).replace(/^\/|\/$/g, '') === route
+      )
+      const link = mapped?.link ? new URL(mapped.link, page) : null
+      const component = page.searchParams.get('option') ?? link?.searchParams.get('option')
+      const view = page.searchParams.get('view') ?? link?.searchParams.get('view')
+      if (component !== 'com_users') return null
+      const fields = [
+        ['login', 'username', 'username', 'COM_USERS_LOGIN_USERNAME_LABEL'],
+        ['login', 'password', 'password', 'JGLOBAL_PASSWORD'],
+        ['registration', 'name', 'jform_name', 'COM_USERS_REGISTER_NAME_LABEL'],
+        ['registration', 'password1', 'jform_password1', 'COM_USERS_PROFILE_PASSWORD1_LABEL']
+      ]
+      for (const [form, field, id, key] of fields) {
+        if (view !== form || !receiver(new RegExp(`^#${id}-lbl$`))) continue
+        const file = `components/com_users/forms/${form}.xml`
+        const lang = language(
+          key,
+          key === 'JGLOBAL_PASSWORD' ? coreLanguage : /^language\/[^/]+\/com_users\.ini$/
+        )
+        if (
+          lang &&
+          [canonical(lang.value), canonical(lang.value) + ' *'].includes(norm) &&
+          producer(
+            file,
+            new RegExp(
+              `<field\\b(?=[^>]*\\bname=['"]${field}['"])(?=[^>]*\\blabel=['"]${key.toLowerCase()}['"])(?=[^>]*\\brequired=['"]true['"])[^>]*>`
+            )
+          ) &&
+          producer(
+            'libraries/src/Form/FormField.php',
+            /\$this->translatelabel\s*\?\s*text::_\(\$title\)/,
+            /\$this->getrenderer\(\$this->renderlabellayout\)->render\(/
+          ) &&
+          producer(
+            'layouts/joomla/form/renderlabel.php',
+            /\$id\s*=\s*\$for\s*\.\s*['"]-lbl['"]/,
+            /if\s*\(\$required\)/,
+            /class=['"]star['"]/,
+            /&#160;\*/
+          )
+        )
+          return proved(file, 'required form label receiver', lang)
+      }
+    }
+    return null
   }
 
   function classifyText(value) {
@@ -218,10 +485,28 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     )
   }
 
-  return function classify(item, m) {
-    const key = JSON.stringify([item.kind, item.zone, item.value, m.remainder, m.path])
+  return function classify(item, m, context = {}) {
+    const key = JSON.stringify([
+      item.kind,
+      item.zone,
+      item.tag,
+      item.attr,
+      item.value,
+      m.remainder,
+      m.remainderParts,
+      m.path,
+      item.selector,
+      item.inCode,
+      item.codeText,
+      Object.values(item.viewports ?? {}).map((v) => [v.count, v.selector]),
+      context.url
+    ])
     if (cache.has(key)) return cache.get(key)
-    let res
+    let res = item.zone ? null : generated(item, context)
+    if (res) {
+      cache.set(key, res)
+      return res
+    }
     // Printed inside the shop component's own markup (a price, a size option, a product card, the cart).
     if (item.zone === 'catalogue') res = catalogue('printed inside VirtueMart markup')
     // An item of a remote feed: another site's words, fetched by Joomla's News Feeds when the page is viewed.
@@ -242,6 +527,18 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           ? { ...whole, label: whole.label + ' (whole block, around slot text)' }
           : classifyText(m.remainder)
     } else res = classifyText(item.value)
+    if (
+      contract.platform === 'joomla' &&
+      !item.zone &&
+      res.class === 'c' &&
+      (generatedSelector.test(item.selector ?? '') ||
+        labelValues.has(normText(item.value).replace(/ \*$/, '')))
+    )
+      res = fromDb({ norm: normText(item.value) }) ?? {
+        class: 'd',
+        label: 'generated value without a proven source receiver',
+        evidence: res.evidence
+      }
     if (!dbIndex && !sourceIndex && res.class === 'd')
       res.label = 'unclassified (no --db-dump / --webroot given)'
     cache.set(key, res)

@@ -83,7 +83,7 @@ export function mergeViewports(byViewport, siteUrl) {
   return [...merged.values()]
 }
 
-export function annotate(items, match, classify) {
+export function annotate(items, match, classify, context = {}) {
   for (const it of items) {
     const m = match(it)
     it.status = m.status
@@ -96,7 +96,7 @@ export function annotate(items, match, classify) {
       it.remainderParts = m.remainderParts
     }
     if (m.status === 'hole') {
-      const c = classify(it, m)
+      const c = classify(it, m, context)
       it.class = c.class
       it.classLabel = c.label
       it.evidence = c.evidence

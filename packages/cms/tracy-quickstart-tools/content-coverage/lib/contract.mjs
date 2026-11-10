@@ -125,6 +125,34 @@ export function loadContract(dir, siteUrl) {
       // writes the whole value: each href in the sample is the slot's address.
       for (const m of String(s.sample ?? '').matchAll(/\(\(a\s[^()]*?\bhref="([^"]+)"/gi))
         push(url, normHref(m[1], siteUrl), s.key)
+      // ACM teams render each complete network|URL line from this one declared scalar.
+      if (
+        platform === 'joomla' &&
+        s.type === 'text' &&
+        s.column === 'params' &&
+        s.role === 'editorial.navigation_url' &&
+        s.nestedJson === 'jatools-config' &&
+        Array.isArray(s.jsonPath) &&
+        s.jsonPath.length === 3 &&
+        s.jsonPath[0] === 'teams' &&
+        s.jsonPath[1] === 'teams[socials]' &&
+        Number.isInteger(s.jsonPath[2]) &&
+        s.jsonPath[2] >= 0 &&
+        entityByKey.get(s.entity)?.kind === 'module' &&
+        entityByKey.get(s.entity)?.identity?.module === 'mod_ja_acm' &&
+        typeof s.sample === 'string'
+      ) {
+        for (const line of s.sample.split(/\r\n|\r|\n/)) {
+          const entry = /^\s*[a-z][a-z0-9_-]*\s*\|\s*(https?:\/\/[^\s|]+)\s*$/i.exec(line)
+          if (!entry) continue
+          try {
+            new URL(entry[1])
+          } catch {
+            continue
+          }
+          push(url, normHref(entry[1], siteUrl), s.key)
+        }
+      }
       const n = normText(s.sample)
       if (!n) continue
       push(text, n, s.key)
