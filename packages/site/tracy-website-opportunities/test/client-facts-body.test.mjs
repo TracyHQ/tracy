@@ -1,6 +1,6 @@
 /**
  * The Business facts body of the Workspace card (#537, option B): two columns of facts in fixed slots (NA when not
- * found), one hero photo with its counts badge, no Open control of its own, one fixed height in every state.
+ * found), a strip of three square tiles (+N on the third), no Open control of its own, one fixed height in every state.
  * Bundles the real model and component with React 18 (the one dsh's page runs) and renders them to static markup.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-facts-body.test.mjs
@@ -111,7 +111,11 @@ test('model: every fact present fills the fixed slots in order', () => {
   assert.equal(v.right[2].value.key, 'facts.body.ratingMany')
   assert.deepEqual(v.right[2].value.params, { rating: '5.0', count: '4' })
   assert.deepEqual(v.right[3].value.params, { count: '1,200' })
-  assert.equal(v.hero.id, 'a')
+  assert.deepEqual(
+    v.tiles.map((x) => x.id),
+    ['a', 'b', 'v']
+  )
+  assert.equal(v.more, 0)
   assert.deepEqual(v.counts, { photos: 2, videos: 1 })
 })
 
@@ -133,32 +137,85 @@ test('model: sparse facts keep their slots, the listing fills what it knows', ()
   assert.equal(v.right[3].labelKey, null)
 })
 
-test('model: nothing known reads NA in every slot and the hero is null', () => {
+test('model: nothing known reads NA in every slot and there are no tiles', () => {
   const v = view({ profile: null, candidate: {}, name: null, media: media([]) })
   assert.ok([...v.left, ...v.right].every((f) => f.value === null))
   assert.equal(v.left.length, 4)
   assert.equal(v.right.length, 4)
-  assert.equal(v.hero, null)
+  assert.deepEqual(v.tiles, [])
+  assert.equal(v.more, 0)
   assert.deepEqual(v.counts, { photos: 0, videos: 0 })
 })
 
-test('markup: two columns at most, the badge, and no Open control for the photos', () => {
+const many = (n) => media(Array.from({ length: n }, (_, i) => tile(`p${i}`)))
+const clicked = (v) => {
+  const calls = []
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.FactsBody, { t, view: v, onOpen: () => calls.push('profile') })
+  )
+  return { html, calls }
+}
+
+test('markup: two columns at most, three square tiles, no hero and no Open control', () => {
   const html = draw(view())
   assert.equal(html.match(/class="tracy-wo-fb-col"/g).length, 2)
-  assert.ok(html.includes('class="tracy-wo-fb-hero"'))
+  assert.equal(html.match(/class="tracy-wo-fb-tile"/g).length, 3)
+  assert.ok(!html.includes('hero'))
+  assert.ok(!html.includes('tracy-wo-fb-badge'))
   assert.ok(html.includes('src="'))
-  assert.match(html, /class="tracy-wo-fb-badge">.*\[facts\.body\.counts/)
+  assert.ok(html.includes('data-kind="video"'), 'a video shows as a neutral tile with a play glyph')
+  assert.ok(html.includes('class="tracy-wo-fb-strip" role="group" aria-label="[facts.body.counts'))
   assert.equal(
     lib.countsText((key, params) => lib.en[key].replace(/\{(\w+)\}/g, (_, k) => String(params[k])), {
       photos: 25,
       videos: 10
     }),
-    '25 photos · 10 videos'
+    '25 photos \u00b7 10 videos'
   )
   assert.ok(!html.includes('media.strip.open'))
   assert.ok(!html.includes('section.openNamed'))
-  assert.equal(html.match(/<button/g).length, 1, 'the hero is the only control')
   assert.ok(html.includes('aria-label="[facts.body.openPhotos]"'))
+})
+
+test('markup: 35 items show three tiles, the third dimmed with +32', () => {
+  const v = view({ media: many(35) })
+  assert.equal(v.tiles.length, 3)
+  assert.equal(v.more, 32)
+  const html = draw(v)
+  assert.equal(html.match(/<button/g).length, 3)
+  assert.equal(html.match(/class="tracy-wo-fb-more"/g).length, 1)
+  assert.ok(html.includes('+32'))
+  assert.ok(html.includes('title="[facts.body.moreMedia{&quot;count&quot;:32}]"'))
+  assert.ok(html.indexOf('data-more') > html.indexOf('p1'), 'the dim sits on the third tile')
+})
+
+test('markup: three items or fewer dim nothing; empty slots keep the row width', () => {
+  assert.ok(!draw(view({ media: many(3) })).includes('tracy-wo-fb-more'))
+  const one = draw(view({ media: many(1) }))
+  assert.ok(!one.includes('tracy-wo-fb-more'))
+  assert.equal(one.match(/class="tracy-wo-fb-tile"/g).length, 3, 'three slots drawn')
+  assert.equal(one.match(/data-empty=""/g).length, 2)
+  assert.equal(one.match(/<button/g).length, 1)
+})
+
+test('markup: a press on any tile opens the Business facts page', () => {
+  const v = view({ media: many(35) })
+  assert.equal(v.tiles.length, 3)
+  const { html } = clicked(v)
+  assert.equal(html.match(/onClick/g), null, 'static markup holds no handler; the element is a button')
+  const el = lib.FactsBody({ t, view: v, onOpen: () => calls.push('profile') })
+  const calls = []
+  const buttons = []
+  const walk = (n) => {
+    if (n === null || typeof n !== 'object') return
+    if (Array.isArray(n)) return n.forEach(walk)
+    if (n.type === 'button') buttons.push(n)
+    walk(n.props?.children)
+  }
+  walk(el)
+  assert.equal(buttons.length, 3)
+  for (const b of buttons) b.props.onClick()
+  assert.deepEqual(calls, ['profile', 'profile', 'profile'])
 })
 
 test('markup: NA in muted slots, no photos keeps the box', () => {
@@ -168,6 +225,7 @@ test('markup: NA in muted slots, no photos keeps the box', () => {
   assert.ok(html.includes('class="tracy-wo-fb-nophoto"'))
   assert.ok(html.includes('[facts.body.noPhotos]'))
   assert.ok(!html.includes('<button'))
+  assert.ok(!html.includes('tracy-wo-fb-strip'))
 })
 
 test('markup: while research runs a missing fact reads Collecting', () => {
@@ -192,13 +250,17 @@ test('strings: every key the body uses exists, English only, no long dashes', ()
   assert.equal(lib.en['facts.body.na'], 'N/A')
 })
 
-test('css: fixed height, overflow hidden, two-column facts, never three', () => {
+test('css: fixed height, overflow hidden, two-column facts, never three, three square tiles', () => {
   const css = lib.FACTS_BODY_CSS
   assert.match(css, /--tracy-wo-fb-height: 192px/)
   assert.match(css, /--tracy-wo-fb-height: 340px/)
   assert.match(css, /height: var\(--tracy-wo-fb-height\); overflow: hidden;/)
   assert.match(css, /\.tracy-wo-fb-facts \{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/)
-  assert.doesNotMatch(css, /repeat\(3,/)
+  assert.doesNotMatch(css, /repeat\(3, minmax\(0, 1fr\)\) *;[^}]*tracy-wo-fb-facts/)
+  assert.match(css, /\.tracy-wo-fb-tile \{[^}]*aspect-ratio: 1 \/ 1[^}]*border-radius: 8px/)
+  assert.match(css, /--tracy-wo-fb-gap: 8px/)
+  assert.match(css, /\.tracy-wo-fb-more \{[^}]*color-mix\(in oklab, var\(--background\) 55%/)
+  assert.doesNotMatch(css, /tracy-wo-fb-hero/)
   assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b|rgba?\(/i, 'tokens only')
   assert.doesNotMatch(css, /box-shadow/)
   assert.doesNotMatch(css, /`/)

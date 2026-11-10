@@ -1,13 +1,13 @@
 /**
- * The Business facts body of the Workspace card (#537, option B): two columns of facts on the left, one hero photo
- * with its count badge on the right. Read only, and the same fixed height whatever is found (`facts-body-css.ts`).
- * The hero opens the Business facts sub-page; there is no separate Open control here (the row's pill opens it too).
+ * The Business facts body of the Workspace card (#537, option B): two columns of facts on the left, a strip of three
+ * square thumbnails on the right (the last one dimmed with +N when more are stored). Read only, and the same fixed height whatever is found (`facts-body-css.ts`).
+ * Any tile opens the Business facts sub-page; there is no separate Open control here (the row's pill opens it too).
  */
 import type { JSX } from 'react'
-import { ImageIcon, Images } from 'lucide-react'
+import { ImageIcon, Play } from 'lucide-react'
 
 import { mediaUrl } from './api.ts'
-import type { Fact, FactsBodyView } from './facts-body-model.ts'
+import { STRIP_SLOTS, type Fact, type FactsBodyView } from './facts-body-model.ts'
 import type { Translate } from './strings.ts'
 
 const plural = (t: Translate, n: number, one: string, many: string): string =>
@@ -74,20 +74,35 @@ export function FactsBody({
           </div>
         ))}
       </div>
-      {view.hero !== null ? (
-        <button
-          type="button"
-          className="tracy-wo-fb-hero"
-          aria-label={t('facts.body.openPhotos')}
-          title={t('facts.body.openPhotos')}
-          onClick={onOpen}
-        >
-          <img src={mediaUrl(view.hero.id)} alt="" loading="lazy" decoding="async" />
-          <span className="tracy-wo-fb-badge">
-            <Images aria-hidden="true" />
-            {counts}
-          </span>
-        </button>
+      {view.tiles.length > 0 ? (
+        <div className="tracy-wo-fb-strip" role="group" aria-label={counts}>
+          {Array.from({ length: STRIP_SLOTS }, (_, i) => {
+            const tile = view.tiles[i]
+            if (tile === undefined)
+              return <span className="tracy-wo-fb-tile" data-empty="" key={`empty-${i}`} aria-hidden="true" />
+            const more = i === STRIP_SLOTS - 1 && view.more > 0
+            const title = more ? t('facts.body.moreMedia', { count: view.more }) : t('facts.body.openPhotos')
+            return (
+              <button
+                type="button"
+                className="tracy-wo-fb-tile"
+                data-kind={tile.kind}
+                data-more={more ? '' : undefined}
+                key={tile.id}
+                aria-label={title}
+                title={title}
+                onClick={onOpen}
+              >
+                {tile.kind === 'image' ? (
+                  <img src={mediaUrl(tile.id)} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <Play aria-hidden="true" className="tracy-wo-fb-play" />
+                )}
+                {more ? <span className="tracy-wo-fb-more">+{view.more}</span> : null}
+              </button>
+            )
+          })}
+        </div>
       ) : (
         <div className="tracy-wo-fb-nophoto">
           <ImageIcon aria-hidden="true" />
