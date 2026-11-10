@@ -37,7 +37,7 @@ const kit = JSON.parse(readFileSync(join(ROOT, `${C}/template-kit.json`), 'utf8'
 c.eq('S1 kit approved by', kit.approval?.by, 'Akemi0x')
 c.eq('S1 kit quickstart version', kit.quickstart?.version, '1.0.5')
 
-// S2: the pin moved on from 1.0.5 (to 1.0.6 by the dark mode release, to 1.0.7 by its fix release); whatever version it names, it is sealed
+// S2: the pin moved on from 1.0.5 (to 1.0.6 by the dark mode release, to 1.0.7 and 1.0.8 by its fix releases); whatever version it names, it is sealed
 // the same way: its contract folder exists, the installer is the one that contract's manifest records, and every
 // pinned contract file hash equals the repository file's.
 for (const file of [
