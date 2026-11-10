@@ -39,7 +39,7 @@ test('lists, maps and phones are read as a visitor sees them', opts, async () =>
         body: '<!doctype html><title>Map fixture</title>'
       })
     )
-    await page.setContent(PAGE)
+    await page.setContent(PAGE, { waitUntil: 'domcontentloaded' })
     const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
     const cards = m.lists.find((l) => l.selector.includes('.card'))
     assert.equal(cards.items.length, 3, 'a state class does not split the list')

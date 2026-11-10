@@ -94,6 +94,7 @@ export const CSS = `
 .tv-help-files a.tv-chip-body { color: inherit; text-decoration: none; }
 /* Why a file was refused, once, under the chat box. */
 .tv-onboarding-notice { margin: 6px 4px 0; font-size: 13px; color: var(--destructive, #b42318); }
+.tv-onboarding-file-limit { margin: 6px 4px 0; font-size: 13px; color: var(--muted-foreground, #6b7280); }
 .tv-help-tip { flex-direction: row; align-items: center; gap: 8px; font-size: 13px; color: var(--muted-foreground, #6b7280); }
 .tv-help-tip > span { flex: 1; min-width: 0; }
 

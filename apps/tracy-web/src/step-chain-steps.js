@@ -322,6 +322,7 @@ export function createStepChainSteps(deps) {
       const step = await runStepNine({
         write,
         checkSite,
+        pictures: manifest,
         agent,
         baselines: contractBaselineStore({ index: defaultContracts() }),
         pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
