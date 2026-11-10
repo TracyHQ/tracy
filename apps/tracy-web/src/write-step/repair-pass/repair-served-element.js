@@ -108,8 +108,64 @@ const saidOf = (fault) =>
 
 /** A simple selector as the host writes it (`a#id.first-class`), as its parts, or null. */
 const simpleSelector = (selector) => {
-  const m = /^([a-z][a-z0-9]*)(?:#([\w-]+))?(?:\.([\w-]+))?$/i.exec(String(selector ?? ''))
-  return m ? { tag: m[1].toLowerCase(), id: m[2] ?? null, cls: m[3] ?? null } : null
+  const m = /^([a-z][a-z0-9]*)(?:#([\w-]+))?((?:\.[\w-]+)*)$/i.exec(String(selector ?? ''))
+  return m ? { tag: m[1].toLowerCase(), id: m[2] ?? null, classes: m[3].split('.').filter(Boolean) } : null
+}
+
+const matchesSimple = (el, want) =>
+  want &&
+  el?.tagName === want.tag &&
+  (!want.id || attrOf(el, 'id') === want.id) &&
+  want.classes.every((cls) => (attrOf(el, 'class') ?? '').split(/\s+/).includes(cls))
+
+/** The host names empty boxes with child selectors of tags and classes; unsupported selectors stay unresolved. */
+function frameElement(body, selector) {
+  const parts = String(selector ?? '')
+    .split(/\s*>\s*/)
+    .map(simpleSelector)
+  if (!parts.length || parts.some((part) => !part)) return null
+  return innermost(body, (el) => {
+    let at = el
+    for (let i = parts.length - 1; i >= 0; i--, at = at?.parentNode)
+      if (!matchesSimple(at, parts[i])) return false
+    return true
+  })
+}
+
+const imagePath = (src) => {
+  try {
+    return new URL(String(src), 'https://site.invalid').pathname
+  } catch {
+    return null
+  }
+}
+
+/** An inline background still has a picture owner, even when there is no img element to pick. */
+function backgroundSource(el, wanted) {
+  const style = attrOf(el, 'style') ?? ''
+  for (const match of style.matchAll(/url\(\s*(?:"([^"]*)"|'([^']*)'|([^)]*?))\s*\)/gi)) {
+    const source = (match[1] ?? match[2] ?? match[3]).trim()
+    if (imagePath(source) === imagePath(wanted)) return source
+  }
+  return null
+}
+
+/** Keep an asset selector short enough that the shared comment builder does not fold its CSS syntax. */
+function picturePath(el, source, background) {
+  const ownId = attrOf(el, 'id')
+  if (ownId && /^[A-Za-z][\w-]*$/.test(ownId)) return `#${ownId}`
+  const asset = source.split('#')[0]
+  const target = `${el.tagName}[${background ? 'style*' : 'src^'}=${JSON.stringify(asset)}]`
+  let scope = ''
+  for (let at = el.parentNode; at?.tagName; at = at.parentNode) {
+    const id = attrOf(at, 'id')
+    if (id && /^[A-Za-z][\w-]*$/.test(id)) {
+      scope = `#${id} `
+      break
+    }
+  }
+  const selector = scope + target
+  return selector.length <= 180 ? selector : pathOf(el)
 }
 
 /** The nearest served block holding an element (`Mod<N>`, `acm-…-<N>`), or null. */
@@ -133,7 +189,7 @@ function controlElement(body, fault) {
       if (
         child.tagName === want.tag &&
         (!want.id || attrOf(child, 'id') === want.id) &&
-        (!want.cls || classes.includes(want.cls)) &&
+        want.classes.every((cls) => classes.includes(cls)) &&
         (fault.href == null || attrOf(child, 'href') === fault.href)
       )
         all.push(child)
@@ -184,21 +240,34 @@ export function servedElementOf({ blocks, body }, fault) {
   const root = block ?? (n ? null : body)
   if (!root) return null
   const said = saidOf(fault).toLowerCase()
-  const picture =
-    fault.kind === 'wrong-alt' && said
-      ? innermost(root, (el) => el.tagName === 'img' && flat(attrOf(el, 'alt')).toLowerCase().includes(said))
+  const demoPicture =
+    fault.kind === 'demo-picture' && said
+      ? innermost(
+          root,
+          (el) =>
+            (el.tagName === 'img' && imagePath(attrOf(el, 'src')) === imagePath(saidOf(fault))) ||
+            Boolean(backgroundSource(el, saidOf(fault)))
+        )
       : null
+  const frame = fault.kind === 'empty-frame' ? frameElement(root, fault.selector) : null
+  const picture =
+    demoPicture ??
+    (fault.kind === 'wrong-alt' && said
+      ? innermost(root, (el) => el.tagName === 'img' && flat(attrOf(el, 'alt')).toLowerCase().includes(said))
+      : null)
   const worded =
     !picture && said ? innermost(root, (el) => flat(textOf(el)).toLowerCase().includes(said)) : null
-  const el = picture ?? worded ?? block
+  const el = picture ?? frame ?? worded ?? block
   if (!el) return null
-  const path = pathOf(el)
+  const background = picture?.tagName !== 'img'
+  const source = picture ? (attrOf(picture, 'src') ?? backgroundSource(picture, saidOf(fault)) ?? '') : ''
+  const path = picture ? picturePath(el, source, background) : pathOf(el)
   return {
     selector: block ? `#${attrOf(block, 'id')}` : path,
     path,
     tag: el.tagName,
     text: picture ? '' : flat(textOf(el)).slice(0, MAX_TEXT),
     marks: marksUp(el),
-    image: picture ? { src: attrOf(picture, 'src') ?? '', alt: attrOf(picture, 'alt') ?? '' } : null
+    image: picture ? { src: source, alt: attrOf(picture, 'alt') ?? '' } : null
   }
 }

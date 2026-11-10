@@ -97,7 +97,8 @@ test('run --repair runs step 9 whole on the bench site as its owner and writes t
       }
     })
     const code = await h.cli(args(frozen.files, ['--repair', '--out', outDir]))
-    assert.equal(code, 0, h.err.join('\n'))
+    assert.equal(code, 1, 'the bench has no browser host, so its unmeasured page checks cannot pass')
+    assert.match(h.err.join('\n'), /STEP_NINE_CHECK_FAILED/)
     assert.deepEqual(asked, [{ siteKey: SITE, account: 'bench@example.test' }])
     for (const file of [
       'site-write-report.json',

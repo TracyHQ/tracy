@@ -19,10 +19,14 @@ export const REPAIR_LIMITS = Object.freeze({
   undoReserveMs: 30_000,
   judgeReserveMs: 60_000,
   noTurnMs: 60_000,
+  // A native question can leave a turn open with no person present to answer it.
+  // The chain's two-hour preparation window must not become one repair turn's wait.
+  turnMs: 10 * 60_000,
   pollMs: 5_000,
   itemsPerTurn: 12,
   itemsPerMinute: 20,
-  turnsAtOnce: 3,
+  // Native file moments belong to the whole site. Overlapping page turns cannot be undone independently.
+  turnsAtOnce: 1,
   cancelSettleMs: 20_000,
   judgeGatherMs: 1_000
 })

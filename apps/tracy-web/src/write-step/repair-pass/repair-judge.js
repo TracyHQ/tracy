@@ -6,7 +6,7 @@
 // counted as changing every page (`*`), and so is a change of files (a turn's Git moments, such as a site-wide CSS look
 // change, which writes no record): a turn is never kept because its writes could not be read. Undo is of the whole
 // turn, newest first, and every undo that fails, is refused or finds no time left is kept with its reason.
-import { newBlocking, pageOf } from './repair-faults.js'
+import { changedFindings, pageOf } from './repair-faults.js'
 
 export const EVERY_PAGE = '*'
 
@@ -31,7 +31,7 @@ export function recordPagesOf(ledger) {
   }
   for (const record of new Set(ledger.records.values())) {
     for (const item of record.items ?? [])
-      for (const level of item.locate?.levels ?? []) add(recordKey(level), item.page)
+      for (const level of item.locate?.levels ?? []) add(recordKey(level.native ?? level), item.page)
     for (const fault of record.faults ?? []) add(slotRecord(fault.slot), pageOf(fault.page))
   }
   for (const fault of ledger.faults ?? []) add(slotRecord(fault.slot), pageOf(fault.page))
@@ -62,15 +62,18 @@ export function pagesChanged(turn, recordPages) {
 
 /** The turns to undo after `later`: those that changed a page with a new blocking failure, newest first. */
 export function turnsToUndo(turns, first, later, recordPages) {
-  const broken = newBlocking(first, later).map((f) => pageOf(f.page))
-  const brokenSet = new Set(broken.filter(Boolean))
+  const { regressions, newlyObserved } = changedFindings(first, later)
   const out = []
   for (const turn of turns) {
     if (!turn.turnId || !turn.changes.length) continue
     turn.changedPages = pagesChanged(turn, recordPages)
-    const hit =
-      turn.changedPages === EVERY_PAGE ? broken.length > 0 : turn.changedPages.some((p) => brokenSet.has(p))
-    if (hit) out.push(turn)
+    const affects = (f) =>
+      f.kind === 'verification-lost' ||
+      turn.changedPages === EVERY_PAGE ||
+      turn.changedPages.includes(pageOf(f.page))
+    turn.regressions = regressions.filter(affects)
+    turn.newlyObserved = newlyObserved.filter(affects)
+    if (turn.regressions.length) out.push(turn)
   }
   return out.reverse()
 }
@@ -98,7 +101,14 @@ export async function undoTurns(pass, turns, why) {
       .catch((error) => ({ ok: false, code: null, reason: String(error?.message ?? error) }))
     const ok = answer?.ok === true
     const reason = ok ? null : (answer?.reason ?? answer?.code ?? 'the undo door gave no answer')
-    undone.push({ ...entry, status: ok ? 'undone' : 'undo-failed', ok, code: answer?.code ?? null, reason })
+    undone.push({
+      ...entry,
+      status: ok ? 'undone' : 'undo-failed',
+      ok,
+      code: answer?.code ?? null,
+      reason,
+      ...(!ok && Array.isArray(answer?.reasons) ? { reasons: answer.reasons } : {})
+    })
     if (ok) pass.ledger.undone.add(turn.turnId)
     else pass.log(`step 9b: undo of ${turn.turnId} on ${turn.page} failed: ${reason}`)
   }

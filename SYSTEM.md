@@ -2394,8 +2394,11 @@ turns, built by the preview popover's own builder (`lib/comment-turn.js`, `@trac
 copied into the image, whose build imports the copy) and packed into as few turns as fit its length limit, after each
 element is located through the Apply door (`content.locate`) and the comment requests are made through
 `POST /api/sites/:key/requests` (20 items a minute per site, kept by the pass). Each page's turns are queued into a session
-of its own that 9b opens for the site as its owner (`lib/site-session-ahead.js`, the path demo QA uses), at most three
-pages at once, and completion is read from `site_turn`. A site check of the pages the turn changed (`runSiteCheck`
+of its own that 9b opens for the site as its owner (`lib/site-session-ahead.js`, the path demo QA uses). By default one page runs through repair and verification before the next starts: native file moments are site-wide, and overlapping writers cannot be undone independently. An explicit `turnsAtOnce` override is retained for controlled callers. Completion is read from `site_turn`. Image findings are matched to served image paths and empty
+frames to their measured selectors, preserving element provenance for `content.locate`. Native record identities in
+the locate levels map content writes to the pages displaying those records; unknown writes and file changes still
+require a whole-site check. A second round resends the same remaining finding, rather than any finding in its group.
+A site check of the pages the turn changed (`runSiteCheck`
 `pages`, joined by `lib/scoped-site-check.js`) judges it, and a turn that made a page worse is undone whole through
 `POST /api/sites/:key/turns/undo`. Repairs are Tracy turns, so Site changes shows each with Undo; a turn still open at the
 step's return is stopped with `session/cancel` and judged by what it wrote. A page that fails is logged and the others go
@@ -2405,6 +2408,17 @@ step. Before the contract call the closing rule (`write-step/closing-ladder.js`,
 The final `site-write-report.json` also carries `pictureReview`: each picture that the fallback ladder kept after a
 looker rejection, with its frame, source, site path, rung and exact fault names. This is handover evidence, not a
 passing visual verdict.
+Repair prompts explicitly run unattended: they use existing assets or supported removal and do not ask for uploads or approval. Consent-required refusals such as `CONFIRM_FIRST` remain blocked; the repair instruction prohibits asking, asserting consent, or bypassing them through another door. Each repair turn has a ten-minute cap independent of the chain preparation deadline; expired turns are cancelled, checked, and retain unresolved findings. Deep image targets use compact asset selectors, and inline backgrounds carry their actual source URL.
+Queued repair pages are checked against the latest completed site check before opening a session. Before a scripted menu unpublish, step 9 reads the native record and refuses when `home: 1`; its stored `/home` path is not evidence that the root does not depend on it. Unavailable kept pages ask the agent to restore the CMS route and publication state, rather than remove a link. Failed-page repairs
+run first because a shared menu repair can restore several pages; all pages use the serial default. A
+shared repair that cleared queued findings does not start more agent turns; scoped checks preserve other pages.
+A closed turn with no writes gets a fresh check of its requested page and, when its finding persists, the same one
+resend round. Regression judgment uses the latest completed check. Rendered findings first observable after a page
+recovers from 404/500 remain blocking, but do not undo that recovery; eligible findings on the recovered page go into
+its bounded second round. New read-back failures and later regressions still undo the responsible turn. Losing a previously measured check group is a verification regression even when it emits no failure rows; its responsible write is undone. Unmeasured groups retain their unresolved queued faults and do not trigger blind resend rounds. The repair
+summary records per-turn verdicts, regressions, newly observed findings, remaining failures and any structured reasons the undo door supplies for a refusal. A red or unmeasured
+final check, failed repair verification or open turn makes the final report `stopped` with `STEP_NINE_CHECK_FAILED`
+and `writeStatus: done`; the chain cannot count a completed write as an accepted site.
 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
@@ -2413,7 +2427,7 @@ anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or t
 the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
 frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps, the brand cost cap and the 9b windows do not
-apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). Only a 2 hour outer deadline bounds the
+apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). The ten-minute native repair-turn cap still applies independently. A 2 hour outer deadline bounds the
 steps: a step still going then is stopped, its best version used, no new 9b work starts, and the Write step still runs inside a
 15 minute window (a soft failure; the run's hard stop is about 2 h 15 min). Lost-run
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
