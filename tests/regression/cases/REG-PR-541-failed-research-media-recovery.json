@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-541-failed-research-media-recovery",
+  "kind": "fix",
+  "title": "Research from scratch retries transient media failures and preserves history",
+  "pr": 541,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the shared-research PostgreSQL test with a failed image download, a stored image, a blocked URL and a revoked reference. Restore the downloader and request research from scratch twice."
+  ],
+  "expect": [
+    "An ordinary forced refresh does not retry references.",
+    "Research from scratch downloads only the non-revoked download_failed URL and exposes its real PNG bytes.",
+    "Blocked and revoked media remain unchanged, old snapshot membership is unchanged, and stored bytes win over an older failed reference on the next run.",
+    "A failed reference that becomes URL_BLOCKED stays blocked on the next from-scratch run; a planned Tripadvisor source retries its failed media."
+  ],
+  "selectors": {
+    "api": "/api/website-opportunities/:id/research-again"
+  },
+  "fence": "planned-source transient-reference retry with immutable historical media",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=from-scratch.*research",
+      "apps/tracy-web/test/website-opportunities-shared-research.test.mjs"
+    ],
+    "tests": [
+      "from-scratch research recovers failed downloads without reviving blocked or revoked media",
+      "from-scratch Tripadvisor research retries its failed media downloads"
+    ],
+    "needs": ["postgres"]
+  }
+}

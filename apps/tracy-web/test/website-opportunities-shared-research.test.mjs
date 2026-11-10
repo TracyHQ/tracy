@@ -2786,3 +2786,167 @@ test(
     )
   }
 )
+
+test(
+  'from-scratch research recovers failed downloads without reviving blocked or revoked media',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'media-recovery@tracy.test')
+    const opportunity = await saveGoogle(pool, a)
+    const urls = ['failed', 'stored', 'blocked', 'revoked', 'newly-blocked'].map(
+      (name) => `https://phoba.example/${name}.png`
+    )
+    const downloads = []
+    let healthy = false
+    const { domain } = await domainWith({
+      website: websiteOk(urls.map((url) => ({ url, kind: 'image' }))),
+      fetchLimited: async (url) => {
+        downloads.push(url)
+        if (url === urls[2] || (healthy && url === urls[4]))
+          throw Object.assign(new Error('blocked'), { code: 'URL_BLOCKED' })
+        if (url !== urls[1] && !healthy) throw new Error('temporary download failure')
+        return { url, status: 200, mime: 'image/png', bytes: url === urls[0] ? PNG2 : PNG, truncated: false }
+      }
+    })
+    const { ex, put } = executor(pool, domain)
+    const first = await requestResearch(pool, { accountId: a, opportunity, requestId: 'failed-media-first' })
+    await drain(ex)
+    const oldSnapshot = (await jobRow(pool, first.job.id)).result_snapshot_id
+    const before = (await pool.query('select * from wo_place_media order by source_url')).rows
+    assert.equal(before.length, 5)
+    const revoked = before.find((m) => m.source_url === urls[3])
+    await pool.query('update wo_place_media set revoked_at=now() where id=$1', [revoked.id])
+    const oldIds = (
+      await pool.query(
+        'select media_id from wo_place_snapshot_media where snapshot_id=$1 order by media_id',
+        [oldSnapshot]
+      )
+    ).rows
+    healthy = true
+    downloads.length = 0
+    await requestResearch(pool, { accountId: a, opportunity, requestId: 'failed-media-warm', force: true })
+    await drain(ex)
+    assert.deepEqual(downloads, [], 'an ordinary refresh reuses references')
+    const again = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'failed-media-recover',
+      again: {
+        domain,
+        keys: { google: 'AIza-test' },
+        settings: normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+        fromScratch: true
+      }
+    })
+    await drain(ex)
+    assert.deepEqual(downloads, [urls[0], urls[4]], 'only transient failed references are downloaded again')
+    const snapshot = (await jobRow(pool, again.job.id)).result_snapshot_id
+    const media = (
+      await pool.query(
+        'select m.* from wo_place_media m join wo_place_snapshot_media sm on sm.media_id=m.id where sm.snapshot_id=$1',
+        [snapshot]
+      )
+    ).rows
+    const recovered = media.find((m) => m.source_url === urls[0])
+    assert.equal(recovered?.status, 'stored', 'the new snapshot exposes the downloaded bytes')
+    assert.deepEqual(put.get(recovered.object_key), PNG2)
+    assert.ok(
+      media.some((m) => m.id === revoked.id && m.revoked_at),
+      'revocation survives research again'
+    )
+    assert.ok(media.some((m) => m.source_url === urls[2] && m.reason === 'url_blocked'))
+    assert.ok(
+      media.some((m) => m.source_url === urls[4] && m.reason === 'url_blocked'),
+      'a newly blocked retry keeps a new immutable reference'
+    )
+    assert.deepEqual(
+      (
+        await pool.query(
+          'select media_id from wo_place_snapshot_media where snapshot_id=$1 order by media_id',
+          [oldSnapshot]
+        )
+      ).rows,
+      oldIds,
+      'historical snapshot membership is unchanged'
+    )
+    assert.equal(
+      (
+        await one(pool, 'select status from wo_place_media where id=$1', [
+          before.find((m) => m.source_url === urls[0]).id
+        ])
+      ).status,
+      'reference'
+    )
+    downloads.length = 0
+    await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'failed-media-reuse',
+      again: {
+        domain,
+        keys: { google: 'AIza-test' },
+        settings: normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+        fromScratch: true
+      }
+    })
+    await drain(ex)
+    assert.deepEqual(downloads, [], 'stored bytes win over an older failed reference for the same URL')
+  }
+)
+
+test('from-scratch Tripadvisor research retries its failed media downloads', opts, async () => {
+  const { pool } = db
+  const a = await account(pool, 'tripadvisor-media-recovery@tracy.test')
+  const opportunity = await saveGoogle(pool, a)
+  const runner = await taExecutor(pool, { keys: { serpapi: 'test-private' } })
+  const originalFetch = runner.domain.fetchLimited
+  let healthy = false
+  const downloads = []
+  runner.domain.fetchLimited = async (url, options) => {
+    if (new URL(url).hostname === 'media-cdn.tripadvisor.com') {
+      downloads.push(url)
+      if (!healthy) throw new Error('temporary download failure')
+    }
+    return originalFetch(url, options)
+  }
+  const first = await requestResearch(pool, { accountId: a, opportunity, requestId: 'ta-media-failed' })
+  await drain(runner.ex)
+  const oldSnapshot = (await jobRow(pool, first.job.id)).result_snapshot_id
+  const failures = (
+    await pool.query("select id from wo_place_media where source='tripadvisor' and reason='download_failed'")
+  ).rows
+  assert.ok(failures.length > 0)
+  healthy = true
+  downloads.length = 0
+  const runtime = await runner.runtime()
+  const again = await requestResearch(pool, {
+    accountId: a,
+    opportunity,
+    requestId: 'ta-media-recover',
+    again: { ...runtime, domain: runner.domain, fromScratch: true, parts: ['tripadvisor'] }
+  })
+  assert.ok(again.plan.run.some((r) => r.part === 'tripadvisor'))
+  await drain(runner.ex)
+  assert.ok(downloads.length > 0, 'a planned optional media source is eligible for recovery')
+  const snapshot = (await jobRow(pool, again.job.id)).result_snapshot_id
+  assert.ok(
+    (
+      await one(
+        pool,
+        "select count(*)::int n from wo_place_snapshot_media sm join wo_place_media m on m.id=sm.media_id where sm.snapshot_id=$1 and m.source='tripadvisor' and m.status='stored'",
+        [snapshot]
+      )
+    ).n > 0
+  )
+  assert.equal(
+    (
+      await one(
+        pool,
+        "select count(*)::int n from wo_place_snapshot_media sm join wo_place_media m on m.id=sm.media_id where sm.snapshot_id=$1 and m.source='tripadvisor' and m.reason='download_failed'",
+        [oldSnapshot]
+      )
+    ).n,
+    failures.length
+  )
+})

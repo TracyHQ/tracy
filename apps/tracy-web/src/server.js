@@ -225,6 +225,7 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
       app.brandQueue?.stop()
       app.siteWriterQueue?.stop()
       app.sitePicturesQueue?.stop()
+      app.siteBriefBuilds?.stop?.()
       await support.stop()
       await app.betaLogin?.stop()
       await new Promise((r) => server.close(r))

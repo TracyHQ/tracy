@@ -869,6 +869,9 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   expired, never adds. The step that searches Facebook/Instagram via web search is the `facebook-search`/`instagram-search` part with its own `_source`
   row and runs on `sourceDue` like every source. A partial run that finds nothing new (snapshot `superseded`) still copies the attempt
   info to the current snapshot.
+  An explicit Research again source listed in `again_plan.fromScratch` re-downloads only non-revoked media references
+  whose earlier attempt ended `download_failed`. Stored bytes are reused; intentionally blocked or revoked media are not
+  re-downloaded. The new snapshot maps a successful retry to its new stored row while historical snapshots retain the earlier reference.
   Migration 170 (Menu): `menu-file` (a menu file/page read as text) and `menu-photos` (menu photos
   read with a vision model) are two research parts with their own `_source` row, version and Try again, only for food and drink places
   (Google type, or a place that already has dishes). One photo-reading rule for every door ([`menu-photo-reading.js`](packages/wo/website-opportunities/src/menu-photo-reading.js)):
@@ -2448,6 +2451,11 @@ whole kit, a copy filling nothing), so step 9's closing ladder empties every kep
 cannot be read stops step 9 (a configuration error); the base site is then handed over as created. The row ends `applied`
 either way, with per-step minutes and USD and the ending kept in `site_brief.timings.chain`. A retry records its epoch-millisecond start in
 `timings.attemptStartedAt`; attempt start, elapsed time and base-site duration use that stamp while `created_at` retains the original generation identity.
+
+At startup, the brief runner settles orphaned rows using their last observed `updated_at`, preserving a live replica's
+heartbeat and the existing uncertain-write policy. Transient database or DNS failures retry that recovery at most 20
+times with exponential backoff from one second to 30 seconds; permanent errors or exhausted attempts are logged as stopped.
+Server shutdown cancels recovery waits before closing the pool. Recovery never resumes an interrupted content writer.
 
 Before the chain's first write, code pins the newest backup whose existing owner/session `GET /api/sites/:key/backups`
 answer proves a full database dump and file commit. Missing full backup or an unhealthy initial home refuses the write.

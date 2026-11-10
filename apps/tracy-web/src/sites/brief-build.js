@@ -86,7 +86,11 @@ export const DEFAULT_LIMITS = Object.freeze({
    * At a process's start: an open row whose heartbeat (every 5 s) has been silent this long has no live worker anywhere,
    * so it is settled then and there instead of after `staleMs` (run 1–3 on wo2, L3).
    */
-  lostAfterMs: 30_000
+  lostAfterMs: 30_000,
+  /** Startup recovery retries transient database outages, with bounded exponential backoff. */
+  recoveryRetryMs: 1000,
+  recoveryRetryMaxMs: 30_000,
+  recoveryAttempts: 20
 })
 
 /** The code a row settled at a process's start carries (`timings.lost`): its worker died with the process before. */
@@ -230,6 +234,19 @@ export function createBriefBuilds({
   const cap = { ...DEFAULT_LIMITS, ...limits }
   /** @type {Map<string, Promise<void>>} the runs this process is doing */
   const running = new Map()
+  let recoveryStopped = false
+  let cancelRecoveryWait = null
+  const recoveryWait = (ms) =>
+    new Promise((resolve) => {
+      const finish = () => {
+        clearTimeout(timer)
+        cancelRecoveryWait = null
+        resolve()
+      }
+      const timer = setTimeout(finish, Math.max(1, ms))
+      timer.unref?.()
+      cancelRecoveryWait = finish
+    })
 
   /**
    * Settle the open rows no live worker holds, the moment this process starts (it is built once, at boot). A row silent
@@ -249,7 +266,7 @@ export function createBriefBuilds({
       [['queued', 'preparing', 'ready', 'applying']]
     )
     const settle = async (/** @type {any} */ row) => {
-      if (running.has(row.site_key)) return
+      if (recoveryStopped || running.has(row.site_key)) return
       const ending = lostEnding(row)
       const { rowCount } = await pool.query(
         `update site_brief set state = $3, stage = null, error = $4,
@@ -266,17 +283,39 @@ export function createBriefBuilds({
       else fresh.push(row)
     }
     if (fresh.length === 0) return
-    await new Promise((resolve) => setTimeout(resolve, cap.lostAfterMs).unref?.())
+    await recoveryWait(cap.lostAfterMs)
     for (const row of fresh) await settle(row)
   }
-  const recovered =
-    pool && recoverOnStart
-      ? recoverLost().catch((error) =>
-          log.warn?.(
-            `[brief] could not settle the rows of a dead process: ${error instanceof Error ? error.message : error}`
-          )
+  async function recoverOnBoot() {
+    for (let attempt = 1; attempt <= cap.recoveryAttempts && !recoveryStopped; attempt++) {
+      try {
+        await recoverLost()
+        return
+      } catch (error) {
+        if (recoveryStopped) return
+        const code = String(error?.code ?? '')
+        const transient =
+          /^(08|53)/.test(code) ||
+          [
+            '57P01',
+            '57P02',
+            '57P03',
+            'EAI_AGAIN',
+            'ENOTFOUND',
+            'ECONNREFUSED',
+            'ECONNRESET',
+            'ETIMEDOUT'
+          ].includes(code)
+        const retry = transient && attempt < cap.recoveryAttempts
+        log.warn?.(
+          `[brief] could not settle the rows of a dead process: ${error instanceof Error ? error.message : error}; ${retry ? 'retrying startup recovery' : 'startup recovery stopped'}`
         )
-      : Promise.resolve()
+        if (!retry) return
+        await recoveryWait(Math.min(cap.recoveryRetryMaxMs, cap.recoveryRetryMs * 2 ** (attempt - 1)))
+      }
+    }
+  }
+  const recovered = pool && recoverOnStart ? recoverOnBoot() : Promise.resolve()
 
   /** Record a failure on the row, softly: the site is handed over as it is. */
   async function fail(siteKey, error) {
@@ -783,6 +822,12 @@ export function createBriefBuilds({
 
     /** The start-up settle of the rows a dead process left (`recoverLost`); resolved when it is over. */
     recovered,
+
+    /** Stop startup recovery before the server closes its pool; an in-flight query may still settle. */
+    stop() {
+      recoveryStopped = true
+      cancelRecoveryWait?.()
+    },
 
     /** Wait for the runs this process started (tests, shutdown). */
     async idle() {

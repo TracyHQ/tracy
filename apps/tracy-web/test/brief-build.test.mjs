@@ -1065,6 +1065,115 @@ test('a process that starts settles at once the open rows a dead process left', 
   assert.equal((await briefOf(pool, 'done.tracy.test')).state, 'applied', 'a settled row is left alone')
 })
 
+test('startup recovery retries a transient database failure without a customer poll', dbOpts, async () => {
+  const { pool } = db
+  for (const [index, code, phase] of [
+    [0, 'ENOTFOUND', 'read'],
+    [1, '53100', 'write'],
+    [2, 'ECONNRESET', 'write']
+  ]) {
+    const siteKey = `restart-retry-${index}.tracy.test`
+    await pool.query(
+      `insert into site_brief (site_key, platform, brief, state, updated_at)
+       values ($1, 'wordpress', '{"about":"Original"}', $2, now() - interval '1 minute')`,
+      [siteKey, index === 2 ? 'applying' : 'preparing']
+    )
+    let interrupted = false
+    const flaky = {
+      query(sql, params) {
+        const target =
+          phase === 'read' ? sql.includes('as idle_ms') : sql.includes("jsonb_build_object('lost'")
+        if (!interrupted && target) {
+          interrupted = true
+          return Promise.reject(Object.assign(new Error('temporary database outage'), { code }))
+        }
+        return pool.query(sql, params)
+      }
+    }
+    const b = builds(flaky, {}, { recoverOnStart: true, limits: { recoveryRetryMs: 1 } })
+    await b.recovered
+    assert.equal(interrupted, true)
+    const row = await briefOf(pool, siteKey)
+    assert.equal(row.state, 'failed', `${code} must not leave an orphaned run preparing`)
+    assert.equal(row.error, index === 2 ? LOST_PLACING : LOST_WORK)
+    assert.equal(row.timings.lost, LOST_ON_RESTART)
+    assert.equal(row.timings.lostFrom, index === 2 ? 'applying' : 'preparing')
+  }
+})
+
+test('startup recovery stops on permanent errors and after its transient retry budget', dbOpts, async () => {
+  for (const [code, expectedCalls] of [
+    ['42601', 1],
+    ['53100', 3]
+  ]) {
+    let calls = 0
+    const warnings = []
+    const pool = {
+      query() {
+        calls++
+        return Promise.reject(Object.assign(new Error('database unavailable'), { code }))
+      }
+    }
+    const b = builds(
+      pool,
+      {},
+      {
+        recoverOnStart: true,
+        limits: { recoveryRetryMs: 1, recoveryAttempts: 3 },
+        log: { warn: (message) => warnings.push(message) }
+      }
+    )
+    // The production recovery timer is unref'd; this referenced deadline also bounds this test.
+    const deadline = setTimeout(() => {}, 1000)
+    try {
+      await b.recovered
+    } finally {
+      clearTimeout(deadline)
+      b.stop()
+    }
+    assert.equal(calls, expectedCalls)
+    assert.match(warnings.at(-1), /startup recovery stopped/)
+  }
+})
+
+test('shutdown cancels startup recovery backoff before it can write an orphaned row', dbOpts, async () => {
+  const { pool } = db
+  const siteKey = 'restart-shutdown.tracy.test'
+  await pool.query(
+    `insert into site_brief (site_key, platform, brief, state, updated_at)
+     values ($1, 'wordpress', '{"about":"Original"}', 'preparing', now() - interval '1 minute')`,
+    [siteKey]
+  )
+  let failed
+  const interrupted = new Promise((resolve) => {
+    failed = resolve
+  })
+  let queries = 0
+  const flaky = {
+    query(...args) {
+      queries++
+      if (queries === 1)
+        return Promise.reject(Object.assign(new Error('database offline'), { code: 'ENOTFOUND' }))
+      return pool.query(...args)
+    }
+  }
+  const b = builds(
+    flaky,
+    {},
+    {
+      recoverOnStart: true,
+      limits: { recoveryRetryMs: 50 },
+      log: { warn: () => failed() }
+    }
+  )
+  await interrupted
+  b.stop()
+  await b.recovered
+  await new Promise((resolve) => setTimeout(resolve, 60))
+  assert.equal(queries, 1, 'a cancelled backoff never starts a second database query')
+  assert.equal((await briefOf(pool, siteKey)).state, 'preparing')
+})
+
 test(
   'a row too fresh to judge at start is settled once it misses its heartbeat, and a beating one is left alone',
   dbOpts,

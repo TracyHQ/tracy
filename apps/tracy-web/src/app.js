@@ -2199,6 +2199,7 @@ export function buildApp(deps) {
           versionOf: async (siteKey) => (await siteByKey(deps.pool, siteKey))?.quickstart_version ?? null
         })
       })
+    app.siteBriefBuilds = briefs
     // Resume only the failed fill on an existing demo, through the site's own brief runner.
     app.resumeOpportunityFill = async (build, email, retryActionId) => {
       if ((await grantFor(deps.pool, build.account_id, build.site_key))?.role !== 'owner') return false

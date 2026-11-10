@@ -1,0 +1,513 @@
+check-all: lint
+check-lint: time — oxlint: 3440 ms (ok)
+check-lint: cache — restore: unknown (no restore outputs were passed to this run)
+check-lint: typecheck — 14 project(s), 4 at a time
+check-lint: tsc -p packages/brand/tracy-brand ok (1461 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-chat-input ok (3054 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-settings ok (6681 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-sidebar ok (6891 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-ui ok (11965 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-add-site ok (6775 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-my-sites ok (6704 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-inbox ok (5085 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-mode-picker ok (2767 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-site-tabs ok (10235 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/core/tracy-core ok (8930 ms) [build-info before start: disabled]
+check-lint: tsc -p tsconfig.scripts.json ok (7311 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/dev/tracy-design ok (29222 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/web/tracy-harness ok (14782 ms) [build-info before start: disabled]
+check-lint: cache — build-info: disabled (no TRACY_TSC_CACHE_DIR, or the sequential fallback: no --incremental was passed)
+check-lint: time — typecheck (whole stage): 32608 ms (ok)
+$ biome format && biome lint
+packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.0/design-system-measurement.json format ━━━━━━━━━━
+
+  ! The size of the file is 1.2 MiB, which exceeds the configured maximum of 1.0 MiB for this project.
+    Use the `files.maxSize` configuration to change the maximum size of files processed, or `files.includes` to ignore the file.
+  
+
+packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.1/design-system-measurement.json format ━━━━━━━━━━
+
+  ! The size of the file is 1.1 MiB, which exceeds the configured maximum of 1.0 MiB for this project.
+    Use the `files.maxSize` configuration to change the maximum size of files processed, or `files.includes` to ignore the file.
+  
+
+scripts/language-policy.json format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! The size of the file is 1.4 MiB, which exceeds the configured maximum of 1.0 MiB for this project.
+    Use the `files.maxSize` configuration to change the maximum size of files processed, or `files.includes` to ignore the file.
+  
+
+Checked 13614 files in 2s. No fixes applied.
+Found 3 warnings.
+packages/brand/tracy-brand/src/client/appearance-row.tsx:35:41 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    33 │ function Window({ dark }: { dark: boolean }) {
+    34 │   return (
+  > 35 │     <span className={`tb-pv-win${dark ? ' tb-pv-dark' : ''}`}>
+       │                                         ^^^^^^^^^^^^^
+    36 │       <span className="tb-pv-side" />
+    37 │       <span className="tb-pv-body">
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    35 │ ····<span·className={`tb-pv-win${dark·?·'·tb-pv-dark'·:·''}`}>
+       │                                          -                    
+
+packages/brand/tracy-brand/src/client/appearance-row.tsx:86:56 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    84 │             onClick={() => theme.setTheme(id)}
+    85 │           >
+  > 86 │             <span className={`tb-pv${id === 'system' ? ' tb-pv-split' : ''}`} aria-hidden="true">
+       │                                                        ^^^^^^^^^^^^^^
+    87 │               {id === 'system' ? (
+    88 │                 <>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    86 │ ············<span·className={`tb-pv${id·===·'system'·?·'·tb-pv-split'·:·''}`}·aria-hidden="true">
+       │                                                         -                                        
+
+packages/core/tracy-core/src/site-tabs/DownloadBackupDialog.tsx:319:25 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    317 │             <p
+    318 │               role="status"
+  > 319 │               className="m-0 flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-400"
+        │                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    320 │               data-download-done
+    321 │             >
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    317 317 │               <p
+    318 318 │                 role="status"
+    319     │ - ··············className="m-0·flex·items-center·gap-2·text-sm·text-emerald-700·dark:text-emerald-400"
+        319 │ + ··············className="m-0·flex·items-center·gap-2·text-emerald-700·text-sm·dark:text-emerald-400"
+    320 320 │                 data-download-done
+    321 321 │               >
+  
+
+packages/core/tracy-core/src/team/team.tsx:366:39 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    364 │                       )}
+    365 │                       {/* Narrow panel: Role and Status ride under the name, Approve beside them. */}
+  > 366 │                       <span className="mt-0.5 hidden flex-wrap items-center gap-1 @max-[526px]:flex!">
+        │                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    367 │                         <RoleBadge role={seat.role} t={t} />
+    368 │                         <StatusBadge seat={seat} t={t} />
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    364 364 │                         )}
+    365 365 │                         {/* Narrow panel: Role and Status ride under the name, Approve beside them. */}
+    366     │ - ······················<span·className="mt-0.5·hidden·flex-wrap·items-center·gap-1·@max-[526px]:flex!">
+        366 │ + ······················<span·className="@max-[526px]:flex!·mt-0.5·hidden·flex-wrap·items-center·gap-1">
+    367 367 │                           <RoleBadge role={seat.role} t={t} />
+    368 368 │                           <StatusBadge seat={seat} t={t} />
+  
+
+packages/core/tracy-core/src/team/team.tsx:413:37 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    411 │                       {isEditRequest(seat) && (
+    412 │                         <span
+  > 413 │                           className="mt-0.5 flex flex-wrap items-center gap-1 @max-[526px]:hidden!"
+        │                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    414 │                           data-edit-request=""
+    415 │                         >
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    411 411 │                         {isEditRequest(seat) && (
+    412 412 │                           <span
+    413     │ - ··························className="mt-0.5·flex·flex-wrap·items-center·gap-1·@max-[526px]:hidden!"
+        413 │ + ··························className="@max-[526px]:hidden!·mt-0.5·flex·flex-wrap·items-center·gap-1"
+    414 414 │                             data-edit-request=""
+    415 415 │                           >
+  
+
+packages/design/tracy-design-inspiration/src/client/SystemPreviewDialog.tsx:86:3 suppressions/unused ━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    84 │   /** The side pressed in Light | Dark; null: the side the page opens on (`previewModeOf`). A new system starts over. */
+    85 │   const [picked, setPicked] = useState<StageTheme | null>(null)
+  > 86 │   // biome-ignore lint/correctness/useExhaustiveDependencies: a new system opens on its own side again.
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    87 │   useEffect(() => setPicked(null), [s.id])
+    88 │   useEffect(() => {
+  
+
+packages/design/tracy-design-inspiration/src/client/preview-stage.tsx:194:3 suppressions/unused ━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    192 │    */
+    193 │   const [at, setAt] = useState<string | null>(null)
+  > 194 │   // biome-ignore lint/correctness/useExhaustiveDependencies: a new document forgets where the last one was.
+        │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    195 │   useEffect(() => setAt(null), [doc, src])
+    196 │   /**
+  
+
+packages/dev/tracy-design/src/mockups/better-sidebar-start.mock.stories.tsx:64:20 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    62 │   return (
+    63 │     <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+  > 64 │       <p className="mx-auto mb-3 max-w-[760px] text-sm text-muted-foreground">
+       │                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    65 │         Mockup · the old + launcher in the current Better Sidebar tab strip
+    66 │       </p>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+     62  62 │     return (
+     63  63 │       <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+     64     │ - ······<p·className="mx-auto·mb-3·max-w-[760px]·text-sm·text-muted-foreground">
+         64 │ + ······<p·className="mx-auto·mb-3·max-w-[760px]·text-muted-foreground·text-sm">
+     65  65 │           Mockup · the old + launcher in the current Better Sidebar tab strip
+     66  66 │         </p>
+  
+
+packages/dev/tracy-design/src/mockups/better-sidebar-start.mock.stories.tsx:161:24 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    159 │           </div>
+    160 │         </div>
+  > 161 │         <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        │                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    162 │           {selected && active === 'Selected'
+    163 │             ? `${selected.label} opens in a tab`
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    159 159 │             </div>
+    160 160 │           </div>
+    161     │ - ········<div·className="flex·flex-1·items-center·justify-center·text-sm·text-muted-foreground">
+        161 │ + ········<div·className="flex·flex-1·items-center·justify-center·text-muted-foreground·text-sm">
+    162 162 │             {selected && active === 'Selected'
+    163 163 │               ? `${selected.label} opens in a tab`
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:174:20 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    172 │   return (
+    173 │     <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+  > 174 │       <p className="mx-auto mb-3 max-w-[760px] text-sm text-muted-foreground">
+        │                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    175 │         Mockup · Browser tab site picker · choosing a site also switches the workspace
+    176 │       </p>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    172 172 │     return (
+    173 173 │       <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+    174     │ - ······<p·className="mx-auto·mb-3·max-w-[760px]·text-sm·text-muted-foreground">
+        174 │ + ······<p·className="mx-auto·mb-3·max-w-[760px]·text-muted-foreground·text-sm">
+    175 175 │           Mockup · Browser tab site picker · choosing a site also switches the workspace
+    176 176 │         </p>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:216:50 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    214 │                   </DropdownMenuTrigger>
+    215 │                   <DropdownMenuContent align="start" sideOffset={6} className="w-64">
+  > 216 │                     <DropdownMenuLabel className="text-xs text-muted-foreground">
+        │                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    217 │                       Choose a site action
+    218 │                     </DropdownMenuLabel>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    214 214 │                     </DropdownMenuTrigger>
+    215 215 │                     <DropdownMenuContent align="start" sideOffset={6} className="w-64">
+    216     │ - ····················<DropdownMenuLabel·className="text-xs·text-muted-foreground">
+        216 │ + ····················<DropdownMenuLabel·className="text-muted-foreground·text-xs">
+    217 217 │                         Choose a site action
+    218 218 │                       </DropdownMenuLabel>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:316:28 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    314 │         <div className="flex flex-1 flex-col">
+    315 │           {activeTab !== 'Browser' ? (
+  > 316 │             <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    317 │               {activeTab}
+    318 │             </div>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    314 314 │           <div className="flex flex-1 flex-col">
+    315 315 │             {activeTab !== 'Browser' ? (
+    316     │ - ············<div·className="flex·flex-1·items-center·justify-center·text-sm·text-muted-foreground">
+        316 │ + ············<div·className="flex·flex-1·items-center·justify-center·text-muted-foreground·text-sm">
+    317 317 │                 {activeTab}
+    318 318 │               </div>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:323:30 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    321 │           ) : (
+    322 │             <>
+  > 323 │               <div className="flex items-center gap-2 border-b border-border px-4 py-3 text-sm font-medium">
+        │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    324 │                 {view === 'Team' ? (
+    325 │                   <Users className="size-4" />
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    321 321 │             ) : (
+    322 322 │               <>
+    323     │ - ··············<div·className="flex·items-center·gap-2·border-b·border-border·px-4·py-3·text-sm·font-medium">
+        323 │ + ··············<div·className="flex·items-center·gap-2·border-border·border-b·px-4·py-3·font-medium·text-sm">
+    324 324 │                   {view === 'Team' ? (
+    325 325 │                     <Users className="size-4" />
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:335:30 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    333 │                 {view === 'Team' || view === 'Site changes' ? view : liveEdit ? 'Live Edit' : view} · {site}
+    334 │               </div>
+  > 335 │               <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    336 │                 {view === 'Team'
+    337 │                   ? `Team for ${site}`
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    333 333 │                   {view === 'Team' || view === 'Site changes' ? view : liveEdit ? 'Live Edit' : view} · {site}
+    334 334 │                 </div>
+    335     │ - ··············<div·className="flex·flex-1·items-center·justify-center·text-sm·text-muted-foreground">
+        335 │ + ··············<div·className="flex·flex-1·items-center·justify-center·text-muted-foreground·text-sm">
+    336 336 │                   {view === 'Team'
+    337 337 │                     ? `Team for ${site}`
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:359:22 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    357 │   return (
+    358 │     <div className="min-h-0 flex-1 overflow-auto">
+  > 359 │       <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+        │                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    360 │         <Settings2 className="size-4" />
+    361 │         <span className="font-medium text-sm">Settings</span>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    357 357 │     return (
+    358 358 │       <div className="min-h-0 flex-1 overflow-auto">
+    359     │ - ······<div·className="flex·items-center·gap-2·border-b·border-border·px-4·py-3">
+        359 │ + ······<div·className="flex·items-center·gap-2·border-border·border-b·px-4·py-3">
+    360 360 │           <Settings2 className="size-4" />
+    361 361 │           <span className="font-medium text-sm">Settings</span>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:368:27 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    366 │           <span className="font-medium text-sm">{site}</span>
+    367 │           <Badge variant="outline">Published</Badge>
+  > 368 │           <span className="ml-auto text-xs text-muted-foreground">Illustrative CMS values</span>
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    369 │         </div>
+    370 │         <section className="rounded-lg border border-border bg-card">
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    366 366 │             <span className="font-medium text-sm">{site}</span>
+    367 367 │             <Badge variant="outline">Published</Badge>
+    368     │ - ··········<span·className="ml-auto·text-xs·text-muted-foreground">Illustrative·CMS·values</span>
+        368 │ + ··········<span·className="ml-auto·text-muted-foreground·text-xs">Illustrative·CMS·values</span>
+    369 369 │           </div>
+    370 370 │           <section className="rounded-lg border border-border bg-card">
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:371:26 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    369 │         </div>
+    370 │         <section className="rounded-lg border border-border bg-card">
+  > 371 │           <div className="border-b border-border px-4 py-3">
+        │                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    372 │             <h2 className="m-0 text-sm font-semibold">Site URL</h2>
+    373 │           </div>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    369 369 │           </div>
+    370 370 │           <section className="rounded-lg border border-border bg-card">
+    371     │ - ··········<div·className="border-b·border-border·px-4·py-3">
+        371 │ + ··········<div·className="border-border·border-b·px-4·py-3">
+    372 372 │               <h2 className="m-0 text-sm font-semibold">Site URL</h2>
+    373 373 │             </div>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:372:27 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    370 │         <section className="rounded-lg border border-border bg-card">
+    371 │           <div className="border-b border-border px-4 py-3">
+  > 372 │             <h2 className="m-0 text-sm font-semibold">Site URL</h2>
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    373 │           </div>
+    374 │           {urlEditing ? (
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    370 370 │           <section className="rounded-lg border border-border bg-card">
+    371 371 │             <div className="border-b border-border px-4 py-3">
+    372     │ - ············<h2·className="m-0·text-sm·font-semibold">Site·URL</h2>
+        372 │ + ············<h2·className="m-0·font-semibold·text-sm">Site·URL</h2>
+    373 373 │             </div>
+    374 374 │             {urlEditing ? (
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:376:51 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    374 │           {urlEditing ? (
+    375 │             <div className="px-4 py-4">
+  > 376 │               <label htmlFor="site-url" className="text-xs text-muted-foreground">
+        │                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    377 │                 New site URL
+    378 │               </label>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    374 374 │             {urlEditing ? (
+    375 375 │               <div className="px-4 py-4">
+    376     │ - ··············<label·htmlFor="site-url"·className="text-xs·text-muted-foreground">
+        376 │ + ··············<label·htmlFor="site-url"·className="text-muted-foreground·text-xs">
+    377 377 │                   New site URL
+    378 378 │                 </label>
+  
+
+packages/dev/tracy-design/src/mockups/build-with.mock.stories.tsx:582:24 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    580 │     <Card className="gap-0 py-0">
+    581 │       <CardContent className="flex flex-col gap-2 px-4 py-3">
+  > 582 │         <div className="text-sm font-medium">{title}</div>
+        │                        ^^^^^^^^^^^^^^^^^^^^^
+    583 │         <ul className="flex flex-col gap-1.5 text-sm">
+    584 │           {stages.map((s) => (
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    580 580 │       <Card className="gap-0 py-0">
+    581 581 │         <CardContent className="flex flex-col gap-2 px-4 py-3">
+    582     │ - ········<div·className="text-sm·font-medium">{title}</div>
+        582 │ + ········<div·className="font-medium·text-sm">{title}</div>
+    583 583 │           <ul className="flex flex-col gap-1.5 text-sm">
+    584 584 │             {stages.map((s) => (
+  
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 522.
+Checked 2646 files in 418ms. No fixes applied.
+Found 542 warnings.
+check-lint: time — format:check (biome format + biome lint, one figure): 4518 ms (ok)
+check-lint: time — total: 40567 ms (ok)
+check-lint: 3 steps green.
+check-all: 1 gate(s) passed (--only: 65 of 66 left to the other CI jobs)
