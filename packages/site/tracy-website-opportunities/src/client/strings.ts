@@ -1200,6 +1200,21 @@ export const en = {
   'section.next': 'Next',
   'section.backTo': 'Back to {name}',
 
+  /** The Workspace card of Details (#537): its title, the folded summary of a section, and the waiting lines. */
+  'workspace.title': 'Workspace',
+  'workspace.subtitle': 'Everything Tracy has for this business',
+  'workspace.toggle': 'Show or hide {section}',
+  'workspace.sum.links.one': '{count} link',
+  'workspace.sum.links.other': '{count} links',
+  'workspace.sum.collected': 'collected {date}',
+  'workspace.sum.notCollected': 'not collected yet',
+  'workspace.sum.approved': 'approved {date}',
+  'workspace.sum.built': 'built {date}',
+  'workspace.wait.research': 'Being researched. Progress is shown above.',
+  'workspace.wait.brief': 'Ready to write. Start it in Progress above.',
+  'workspace.wait.build': 'Ready to build. Start it in Progress above.',
+  'workspace.wait.site': 'After the site content brief',
+
   /** The Business brief table: label, value, where it came from, on the site. */
   'brief.table.fact': 'Fact',
   'brief.table.value': 'Value',

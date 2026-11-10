@@ -86,7 +86,8 @@ import { BusinessBriefTable } from './business-brief-table.tsx'
 import { SiteNameRow } from './site-name-row.tsx'
 import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
 import { DemoSiteBlock } from './demo-site-block.tsx'
-import { SectionCard, SubPage } from './details-sections.tsx'
+import { SubPage } from './details-sections.tsx'
+import { WorkspaceCard, demoHostOf } from './workspace-card.tsx'
 import {
   type SectionId,
   type SubSection,
@@ -124,7 +125,7 @@ import { rowFromDetail } from './inspector-model.ts'
 import { useCardResearchAgain, useSourceRetry } from './source-retry.ts'
 import { StatusBadge } from './my-places.tsx'
 import { placeStatus } from './opportunity-pieces.ts'
-import { type NextAction, relativeTime, stageOf } from './opportunity-row.ts'
+import { type NextAction, relativeTime } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
 import { rankingFor, runAction } from './row-actions.ts'
@@ -590,9 +591,6 @@ export function DetailView({
     typeof job?.id === 'string' && (job.state === 'paused' || job.state === 'blocked') ? job.id : null
 
   const limitReached = usageFull(body.usage as DemoUsage)
-  const stage = stageOf(row)
-  // Once the place is in the demo stage the header carries the Demo site block's own button; before, its next step.
-  const demoStage = stage === 'demo' || stage === 'outreach'
   const demoView = demoBlockView(row, body, t, { now, locale })
   const onDemo = (command: Exclude<DemoCommand, null>): void => {
     if (command.kind === 'action') return void act(command.action)
@@ -675,14 +673,6 @@ export function DetailView({
     />
   )
   const reviewChip = approval === null ? null : reviewChipOf(stepper)
-  // The overview cards that wait for the seller's review say so beside their Review link (#537).
-  const profileReview = stepper.current === 'research' && stepper.review
-  const briefReview = stepper.current === 'brief' && stepper.review
-  const needsReview = (
-    <Badge variant="outline" className="tracy-wo-chip-warn tracy-wo-review-badge">
-      {t('stepper.needsReview')}
-    </Badge>
-  )
   // The seller's own doors (#537): each answers the refusal code, or null once it went through and Details reloaded.
   const settle = async (answer: { ok: boolean; code?: string }): Promise<string | null> => {
     if (!answer.ok) return answer.code ?? 'HTTP'
@@ -708,17 +698,6 @@ export function DetailView({
     if (!Number.isFinite(ms)) return null
     return t(key, { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms) })
   }
-  // What Your site needs before it can be built (#537), or null once the build step is reached.
-  const siteWait =
-    approval === null || demoView.state !== 'none'
-      ? null
-      : stepper.current === 'research' && !stepper.review
-        ? 'site.notYet.research'
-        : stepper.current === 'research' || (stepper.current === 'brief' && !stepper.review)
-          ? 'site.notYet.profile'
-          : stepper.current === 'brief'
-            ? 'site.notYet.brief'
-            : null
   const researchRunning = job?.state === 'running' || job?.state === 'queued'
   const researchAgainOpen =
     job !== null &&
@@ -819,9 +798,6 @@ export function DetailView({
     locale
   })
   const metaOf = (id: SectionId) => metas.find((e) => e.id === id)
-  // Profile, Business brief and Photos & video have something to open once research runs or is done.
-  const openable = research.done || researchMoving
-  const openTo = (labelKey = 'section.open') => (openable ? { labelKey, onOpen: onSection } : null)
   // What else research read about the place (menu, Google, reviews, current website, social, place profile).
   const hasMore =
     research.done &&
@@ -1143,110 +1119,97 @@ export function DetailView({
       />
       {errors}
       {progressBand}
-      <div className="tracy-wo-details-cols">
-        <div className="tracy-wo-col">
-          <SectionCard t={t} id="demo" meta={metaOf('demo')} lockKey={siteWait ?? 'section.locked.brief'}>
-            {send ? (
-              <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
-            ) : null}
-            {siteWait !== null || demoView.state === 'queued' || demoView.state === 'building' ? (
-              // While the site builds, the card keeps one static line: the band carries the build (#537).
-              <p className="tracy-wo-site-wait">
-                <Lock aria-hidden="true" className="tracy-wo-icon" />
-                {t(siteWait ?? 'site.notYet.building')}
-              </p>
-            ) : demoStage || isRecord(body.brief) || demoView.state !== 'none' ? (
-              <>
-                <DemoSiteBlock
-                  t={t}
-                  row={row}
-                  detail={body}
-                  locale={locale}
-                  now={now}
-                  busy={busy}
-                  bare
-                  limitReached={limitReached}
-                  onCommand={onDemo}
-                  estimate={
-                    buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
-                      ?.estimate
-                  }
-                />
-              </>
-            ) : null}
-            <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
-          </SectionCard>
-          <SectionCard
-            t={t}
-            id="profile"
-            meta={metaOf('profile')}
-            // Opens before research too: its Photos & video take the seller's own photos (#537).
-            open={{ labelKey: profileReview ? 'section.review' : 'section.open', onOpen: onSection }}
-            className="tracy-wo-profile-card"
-          >
-            {profileReview ? needsReview : null}
-            {profileBlock()}
-            {/* Photos & video belong to the Profile (#537): a strip at its foot, opened on the Profile sub-page. */}
-            {!researchMoving &&
-            (research.done ||
-              mediaView.videos.tiles.length > 0 ||
-              mediaView.photos.groups.some((g) => g.tiles.length > 0)) ? (
-              <div className="tracy-wo-profile-media">
-                <div className="tracy-wo-profile-media-head">
-                  <span>
-                    {t('details.section.media')}
-                    {metaOf('media')
-                      ? ` · ${(metaOf('media')?.status ?? []).map((x) => t(x.key, x.params)).join(', ')}`
-                      : ''}
-                  </span>
-                  <button
-                    type="button"
-                    className="tracy-wo-open"
-                    aria-label={t('section.openNamed', { section: t('details.section.media') })}
-                    onClick={() => onSection('media')}
-                  >
-                    {t('media.strip.open')}
-                    <ChevronRight aria-hidden="true" />
-                  </button>
+      <WorkspaceCard
+        t={t}
+        opportunityId={id}
+        onSection={onSection}
+        input={{
+          stepper,
+          researchDone: research.done,
+          researchMoving,
+          researchedAt: research.researchedAt,
+          sources: shownSources.length,
+          fields: profileRows.length,
+          brief: isRecord(body.brief) ? { n: Number(body.brief.n ?? 1) } : null,
+          briefEmpty:
+            briefSteps.mode === 'running' ? 'running' : briefSteps.mode === 'failed' ? 'failed' : null,
+          held,
+          demo: demoView.state,
+          demoHost: demoHostOf(demoCommand('primary', row, body)),
+          locale
+        }}
+        bodies={{
+          sources: (
+            <div className="tracy-wo-stack">
+              <Sources t={t} sources={shownSources} collected={research.done && !researchMoving} compact />
+              <span className="tracy-wo-row">
+                {addSourceButton}
+                {cancelButton}
+              </span>
+            </div>
+          ),
+          profile: (
+            <div className="tracy-wo-stack tracy-wo-profile-card">
+              {profileBlock()}
+              {/* Photos & video belong to the Business facts (#537): a strip at its foot, opened on its sub-page. */}
+              {!researchMoving &&
+              (research.done ||
+                mediaView.videos.tiles.length > 0 ||
+                mediaView.photos.groups.some((g) => g.tiles.length > 0)) ? (
+                <div className="tracy-wo-profile-media">
+                  <div className="tracy-wo-profile-media-head">
+                    <span>
+                      {t('details.section.media')}
+                      {metaOf('media')
+                        ? ` · ${(metaOf('media')?.status ?? []).map((x) => t(x.key, x.params)).join(', ')}`
+                        : ''}
+                    </span>
+                    <button
+                      type="button"
+                      className="tracy-wo-open"
+                      aria-label={t('section.openNamed', { section: t('details.section.media') })}
+                      onClick={() => onSection('media')}
+                    >
+                      {t('media.strip.open')}
+                      <ChevronRight aria-hidden="true" />
+                    </button>
+                  </div>
+                  {mediaBlock(false)}
                 </div>
-                {mediaBlock(false)}
-              </div>
-            ) : null}
-          </SectionCard>
-          {/* Sources opens before research too: its sub-page lists each pasted link with its address. */}
-          <SectionCard
-            t={t}
-            id="sources"
-            meta={metaOf('sources')}
-            open={shownSources.length > 0 ? { labelKey: 'section.open', onOpen: onSection } : null}
-          >
-            <Sources t={t} sources={shownSources} collected={research.done && !researchMoving} compact />
-            {addSourceButton}
-            {cancelButton}
-          </SectionCard>
-        </div>
-        <div className="tracy-wo-col">
-          <SectionCard
-            t={t}
-            id="brief"
-            meta={metaOf('brief')}
-            lockKey="section.locked.research"
-            open={openTo(briefReview ? 'section.review' : 'section.openBrief')}
-          >
-            {briefReview ? needsReview : null}
-            {briefEmpty !== null && research.done ? (
-              <p className="tracy-wo-muted">{t(briefEmpty)}</p>
-            ) : (
-              (heldLine ?? (
-                <>
-                  {briefLine}
-                  {briefTable(false)}
-                </>
-              ))
-            )}
-          </SectionCard>
-        </div>
-      </div>
+              ) : null}
+            </div>
+          ),
+          brief: heldLine ?? (
+            <div className="tracy-wo-stack">
+              {briefLine}
+              {briefTable(false)}
+            </div>
+          ),
+          demo: (
+            <div className="tracy-wo-stack">
+              {send ? (
+                <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
+              ) : null}
+              <DemoSiteBlock
+                t={t}
+                row={row}
+                detail={body}
+                locale={locale}
+                now={now}
+                busy={busy}
+                bare
+                limitReached={limitReached}
+                onCommand={onDemo}
+                estimate={
+                  buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
+                    ?.estimate
+                }
+              />
+              <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
+            </div>
+          )
+        }}
+      />
       {dialogs}
       {previewPanel /* [TAM] */}
     </div>

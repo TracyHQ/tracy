@@ -1,11 +1,10 @@
 /**
- * The frames of Details (layout C, spec #512): a section card (its title with one status line from `section-model.ts`,
- * an Open link to its sub-page, its content or a lock line while it waits for an earlier step), and the sub-page a
- * section opens into (a breadcrumb back to the list and to Details, the one line Progress strip, the section alone,
- * and a pager to the section before and after it).
+ * The sub-page frame of Details (layout C, spec #512; the overview is the Workspace card, `workspace-card.tsx`): the
+ * sub-page a section opens into (a breadcrumb back to the list and to Details, the one line Progress strip, the
+ * section alone, and a pager to the section before and after it).
  */
 import type { JSX, ReactNode } from 'react'
-import { ChevronLeft, ChevronRight, Lock } from 'lucide-react'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,95 +15,11 @@ import {
   Button
 } from '@tracy/ui'
 
-import { type SectionId, type SectionMeta, type SubSection, pageOf, pagerOf } from './section-model.ts'
+import { type SectionMeta, type SubSection, pageOf, pagerOf } from './section-model.ts'
 import type { Translate } from './strings.ts'
 
 const metaLine = (t: Translate, meta: SectionMeta | undefined): string | null =>
   meta === undefined ? null : meta.status.map((s) => t(s.key, s.params)).join(', ')
-
-/** The link in a card's head that opens its section as a sub-page. */
-function OpenLink({
-  t,
-  id,
-  labelKey,
-  onOpen
-}: {
-  t: Translate
-  id: SubSection
-  labelKey: string
-  onOpen: (id: SubSection) => void
-}): JSX.Element {
-  return (
-    <button
-      type="button"
-      className="tracy-wo-open"
-      aria-label={t('section.openNamed', { section: t(`details.section.${id}`) })}
-      onClick={() => onOpen(id)}
-    >
-      {t(labelKey)}
-      <ChevronRight aria-hidden="true" />
-    </button>
-  )
-}
-
-/** One card of Details: its title and status line, an Open link, then its content or a lock line. */
-export function SectionCard({
-  t,
-  id,
-  meta,
-  lockKey,
-  open,
-  className,
-  actions,
-  children
-}: {
-  t: Translate
-  id: SectionId
-  meta: SectionMeta | undefined
-  /** What the lock line says while the section waits for an earlier step. */
-  lockKey?: string
-  /** The Open link to the sub-page, with its words; absent: the card has no sub-page or nothing to open yet. */
-  open?: { labelKey: string; onOpen: (id: SubSection) => void } | null
-  className?: string
-  /** More buttons in the card's head, before the Open link (Add source, #537). */
-  actions?: ReactNode
-  children?: ReactNode
-}): JSX.Element {
-  const title = t(`details.section.${id}`)
-  const locked = meta?.locked === true && lockKey !== undefined
-  const line = metaLine(t, meta)
-  return (
-    <section
-      className={['tracy-wo-psec', className].filter(Boolean).join(' ')}
-      data-section={id}
-      data-locked={locked ? '' : undefined}
-      aria-label={title}
-    >
-      <div className="tracy-wo-psec-head">
-        <h3 className="tracy-wo-psec-title">
-          {title}
-          {line ? <span className="tracy-wo-psec-meta">{line}</span> : null}
-        </h3>
-        {!locked && (actions || (open && id !== 'demo')) ? (
-          <span className="tracy-wo-row">
-            {actions}
-            {open && id !== 'demo' ? (
-              <OpenLink t={t} id={id} labelKey={open.labelKey} onOpen={open.onOpen} />
-            ) : null}
-          </span>
-        ) : null}
-      </div>
-      {locked ? (
-        <p className="tracy-wo-psec-lock">
-          <Lock aria-hidden="true" className="tracy-wo-icon" />
-          {t(lockKey)}
-        </p>
-      ) : (
-        children
-      )}
-    </section>
-  )
-}
 
 /** A section opened as a sub-page: breadcrumb, Progress strip, the section, and the pager. */
 export function SubPage({

@@ -1,0 +1,50 @@
+/**
+ * The Workspace card of Details (#537, option D, `workspace-card.tsx`): one card, a row per section with a tile, the
+ * title and a folded summary, open sections below their row, locked rows muted. Reads only Tracy tokens, so light and
+ * dark follow the theme. No backtick may appear inside the template below.
+ */
+export const WORKSPACE_CSS = `
+.tracy-wo-ws { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); overflow: hidden; }
+.tracy-wo-ws-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; padding: 11px 16px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--muted) 40%, var(--card, var(--background))); }
+.tracy-wo-ws-title { margin: 0; font-size: 14px; font-weight: 600; line-height: 20px; }
+.tracy-wo-ws-subtitle { font-size: 12.5px; color: var(--muted-foreground); }
+.tracy-wo-ws-sec + .tracy-wo-ws-sec { border-top: 1px solid var(--border); }
+.tracy-wo-ws-row { display: flex; align-items: center; gap: 10px; min-height: 46px; padding: 6px 16px; }
+.tracy-wo-ws-sec:not([data-state='locked']) > .tracy-wo-ws-row:hover { background: color-mix(in oklab, var(--muted) 35%, var(--card, var(--background))); }
+.tracy-wo-ws-sec[data-open] > .tracy-wo-ws-row { border-bottom: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.tracy-wo-ws-toggle { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; margin: 0; padding: 4px 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; }
+button.tracy-wo-ws-toggle { cursor: pointer; }
+button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
+.tracy-wo-ws-tile { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 7px; background: color-mix(in oklab, var(--muted) 70%, var(--card, var(--background))); color: var(--muted-foreground); }
+.tracy-wo-ws-tile > svg { width: 14px; height: 14px; }
+.tracy-wo-ws-sec[data-state='done'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--success) 16%, transparent); color: color-mix(in oklab, var(--success) 80%, var(--foreground)); }
+.tracy-wo-ws-sec[data-state='open'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); }
+.tracy-wo-ws-sec[data-state='review'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
+.tracy-wo-ws-name { flex: none; min-width: 150px; font-weight: 600; white-space: nowrap; }
+.tracy-wo-ws-sum { flex: 1 1 auto; min-width: 0; overflow: hidden; color: var(--muted-foreground); white-space: nowrap; text-overflow: ellipsis; }
+.tracy-wo-ws-chip { flex: none; }
+.tracy-wo-ws-row > .tracy-wo-open { flex: none; }
+.tracy-wo-ws-chev { display: grid; place-items: center; flex: none; width: 22px; height: 22px; margin: 0; padding: 0; border: 0; background: none; color: var(--muted-foreground); cursor: pointer; }
+.tracy-wo-ws-chev > svg { width: 16px; height: 16px; transition: transform 0.15s; }
+.tracy-wo-ws-sec[data-open] .tracy-wo-ws-chev > svg { transform: rotate(90deg); }
+.tracy-wo-ws-lock { flex: none; width: 14px; height: 14px; margin-right: 4px; color: var(--muted-foreground); }
+.tracy-wo-ws-sec[data-state='locked'] { background: color-mix(in oklab, var(--muted) 35%, var(--card, var(--background))); }
+.tracy-wo-ws-sec[data-state='locked'] .tracy-wo-ws-name { color: var(--muted-foreground); }
+.tracy-wo-ws-body { padding: 12px 16px 14px; }
+.tracy-wo-ws .tracy-wo-profile-card .tracy-wo-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 24px; }
+.tracy-wo-ws .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+@container (max-width: 719px) {
+  .tracy-wo-ws .tracy-wo-profile-card .tracy-wo-fields { grid-template-columns: minmax(0, 1fr); }
+  .tracy-wo-ws .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@container (max-width: 560px) {
+  .tracy-wo-ws-row { gap: 8px; padding: 6px 12px; }
+  .tracy-wo-ws-toggle { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; row-gap: 0; }
+  .tracy-wo-ws-tile { grid-row: span 2; }
+  .tracy-wo-ws-name { min-width: 0; white-space: normal; }
+  .tracy-wo-ws-sum { white-space: normal; }
+  .tracy-wo-ws-sum:empty { display: none; }
+  .tracy-wo-ws-body { padding: 10px 12px 12px; }
+  .tracy-wo-ws .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+`
