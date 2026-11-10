@@ -166,7 +166,19 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
           updatedAt: researchedAt
         }
       ]
-  const done = { ...real, research: { state: 'done', researchedAt }, jobs, stepProgress: null }
+  // Sources the real card never researched read as collected at that time, so the table agrees with the step.
+  const collected = sources.map((s) =>
+    typeof s.status === 'string' && s.status !== ''
+      ? s
+      : { ...s, status: 'complete', collectedAt: researchedAt }
+  )
+  const done = {
+    ...real,
+    research: { state: 'done', researchedAt },
+    jobs,
+    sources: collected,
+    stepProgress: null
+  }
 
   if (state === 'profile-review')
     return { ...done, ...noDemo, ...noBrief, approval: approval({ profile: 'needed' }) }
