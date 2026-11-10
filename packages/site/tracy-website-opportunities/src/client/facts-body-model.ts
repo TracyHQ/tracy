@@ -1,6 +1,6 @@
 /**
  * The body of the Business facts row in the Workspace card (#537, option B): a fixed grid of facts in two columns on
- * the left and a strip of three square media tiles on the right. Every slot is always there, so the body never changes height: a fact the
+ * the left and a strip of three to six square media tiles on the right. Every slot is always there, so the body never changes height: a fact the
  * research has not found reads NA (or Collecting… while research runs). Reads the same views the Business facts
  * sub-page reads; nothing is decided here.
  */
@@ -11,8 +11,9 @@ import { ratingRowView, ratingText } from './profile-rating-model.ts'
 
 type Rec = Record<string, unknown>
 
-/** Square slots in the media strip; the last one carries the +N when more are stored. */
+/** The strip shows at least STRIP_SLOTS square slots and at most STRIP_MAX tiles, as the room allows (CSS decides). */
 export const STRIP_SLOTS = 3
+export const STRIP_MAX = 6
 
 export type FactId =
   | 'name'
@@ -45,10 +46,10 @@ export interface FactsBodyView {
   left: Fact[]
   /** Phone, Website, Rating, then Instagram followers or a reserved empty slot. */
   right: Fact[]
-  /** The first stored items, photos then videos, at most STRIP_SLOTS of them. */
+  /** The first stored items, photos then videos, at most STRIP_MAX of them. */
   tiles: MediaTile[]
-  /** Stored photos and videos beyond the shown tiles (0 when the total fits). */
-  more: number
+  /** Every stored photo and video; a tile's rest count is total minus its 1-based place. */
+  total: number
   counts: { photos: number; videos: number }
   /** Research is running: a missing fact reads Collecting… instead of NA. */
   running: boolean
@@ -169,8 +170,8 @@ export function factsBodyView(input: FactsBodyInput): FactsBodyView {
       { id: 'rating', labelKey: 'facts.body.rating', value: ratingValue(profile, locale) },
       followersFact(profile, locale)
     ],
-    tiles: items.slice(0, STRIP_SLOTS),
-    more: Math.max(0, items.length - STRIP_SLOTS),
+    tiles: items.slice(0, STRIP_MAX),
+    total: items.length,
     counts: { photos: photos.length, videos: videos.length },
     running: input.running
   }

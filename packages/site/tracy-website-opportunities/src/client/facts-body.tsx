@@ -76,18 +76,19 @@ export function FactsBody({
       </div>
       {view.tiles.length > 0 ? (
         <div className="tracy-wo-fb-strip" role="group" aria-label={counts}>
-          {Array.from({ length: STRIP_SLOTS }, (_, i) => {
+          {Array.from({ length: Math.max(STRIP_SLOTS, view.tiles.length) }, (_, i) => {
             const tile = view.tiles[i]
             if (tile === undefined)
               return <span className="tracy-wo-fb-tile" data-empty="" key={`empty-${i}`} aria-hidden="true" />
-            const more = i === STRIP_SLOTS - 1 && view.more > 0
-            const title = more ? t('facts.body.moreMedia', { count: view.more }) : t('facts.body.openPhotos')
+            // Its own rest count; CSS shows the overlay only on the last tile the strip has room for.
+            const rest = view.total - (i + 1)
+            const title = t('facts.body.openPhotos')
             return (
               <button
                 type="button"
                 className="tracy-wo-fb-tile"
                 data-kind={tile.kind}
-                data-more={more ? '' : undefined}
+                data-i={i + 1}
                 key={tile.id}
                 aria-label={title}
                 title={title}
@@ -98,7 +99,11 @@ export function FactsBody({
                 ) : (
                   <Play aria-hidden="true" className="tracy-wo-fb-play" />
                 )}
-                {more ? <span className="tracy-wo-fb-more">+{view.more}</span> : null}
+                {rest > 0 ? (
+                  <span className="tracy-wo-fb-more" title={t('facts.body.moreMedia', { count: rest })}>
+                    +{rest}
+                  </span>
+                ) : null}
               </button>
             )
           })}

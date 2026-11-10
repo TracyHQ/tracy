@@ -115,7 +115,7 @@ test('model: every fact present fills the fixed slots in order', () => {
     v.tiles.map((x) => x.id),
     ['a', 'b', 'v']
   )
-  assert.equal(v.more, 0)
+  assert.equal(v.total, 3)
   assert.deepEqual(v.counts, { photos: 2, videos: 1 })
 })
 
@@ -143,7 +143,7 @@ test('model: nothing known reads NA in every slot and there are no tiles', () =>
   assert.equal(v.left.length, 4)
   assert.equal(v.right.length, 4)
   assert.deepEqual(v.tiles, [])
-  assert.equal(v.more, 0)
+  assert.equal(v.total, 0)
   assert.deepEqual(v.counts, { photos: 0, videos: 0 })
 })
 
@@ -177,20 +177,36 @@ test('markup: two columns at most, three square tiles, no hero and no Open contr
   assert.ok(html.includes('aria-label="[facts.body.openPhotos]"'))
 })
 
-test('markup: 35 items show three tiles, the third dimmed with +32', () => {
+test('markup: 35 items render six tiles, each with its own +N rest count', () => {
   const v = view({ media: many(35) })
-  assert.equal(v.tiles.length, 3)
-  assert.equal(v.more, 32)
+  assert.equal(v.tiles.length, 6)
+  assert.equal(v.total, 35)
   const html = draw(v)
-  assert.equal(html.match(/<button/g).length, 3)
-  assert.equal(html.match(/class="tracy-wo-fb-more"/g).length, 1)
-  assert.ok(html.includes('+32'))
+  assert.equal(html.match(/<button/g).length, 6)
+  const overlays = [...html.matchAll(/data-i="(\d)".*?<span class="tracy-wo-fb-more"[^>]*>\+(\d+)<\/span>/g)]
+  assert.equal(html.match(/class="tracy-wo-fb-more"/g).length, 6)
+  assert.deepEqual(
+    [...html.matchAll(/class="tracy-wo-fb-more"[^>]*>\+(\d+)</g)].map((m) => Number(m[1])),
+    [34, 33, 32, 31, 30, 29]
+  )
+  assert.ok(overlays.length >= 1)
   assert.ok(html.includes('title="[facts.body.moreMedia{&quot;count&quot;:32}]"'))
-  assert.ok(html.indexOf('data-more') > html.indexOf('p1'), 'the dim sits on the third tile')
 })
 
-test('markup: three items or fewer dim nothing; empty slots keep the row width', () => {
-  assert.ok(!draw(view({ media: many(3) })).includes('tracy-wo-fb-more'))
+test('markup: a tile whose rest count is zero never dims', () => {
+  for (const n of [3, 6]) {
+    const html = draw(view({ media: many(n) }))
+    assert.equal(html.match(/<button/g).length, n)
+    assert.equal(
+      html.match(/tracy-wo-fb-more/g)?.length ?? 0,
+      n - 1,
+      `${n} items: the last tile has no overlay`
+    )
+  }
+  assert.equal(draw(view({ media: many(4) })).match(/>\+1</g).length, 1)
+})
+
+test('markup: three items or fewer keep three slots; empty slots keep the row width', () => {
   const one = draw(view({ media: many(1) }))
   assert.ok(!one.includes('tracy-wo-fb-more'))
   assert.equal(one.match(/class="tracy-wo-fb-tile"/g).length, 3, 'three slots drawn')
@@ -199,8 +215,7 @@ test('markup: three items or fewer dim nothing; empty slots keep the row width',
 })
 
 test('markup: a press on any tile opens the Business facts page', () => {
-  const v = view({ media: many(35) })
-  assert.equal(v.tiles.length, 3)
+  const v = view({ media: many(3) })
   const { html } = clicked(v)
   assert.equal(html.match(/onClick/g), null, 'static markup holds no handler; the element is a button')
   const el = lib.FactsBody({ t, view: v, onOpen: () => calls.push('profile') })
@@ -259,6 +274,13 @@ test('css: fixed height, overflow hidden, two-column facts, never three, three s
   assert.doesNotMatch(css, /repeat\(3, minmax\(0, 1fr\)\) *;[^}]*tracy-wo-fb-facts/)
   assert.match(css, /\.tracy-wo-fb-tile \{[^}]*aspect-ratio: 1 \/ 1[^}]*border-radius: 8px/)
   assert.match(css, /--tracy-wo-fb-gap: 8px/)
+  assert.match(css, /container-type: inline-size/)
+  for (const w of [504, 632, 760]) assert.match(css, new RegExp(`@container \\(min-width: ${w}px\\)`))
+  assert.match(
+    css,
+    /data-i='4'\], \.tracy-wo-fb-tile\[data-i='5'\], \.tracy-wo-fb-tile\[data-i='6'\] \{ display: none; \}/
+  )
+  assert.match(css, /minmax\(320px, 1fr\)/)
   assert.match(css, /\.tracy-wo-fb-more \{[^}]*color-mix\(in oklab, var\(--background\) 55%/)
   assert.doesNotMatch(css, /tracy-wo-fb-hero/)
   assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b|rgba?\(/i, 'tokens only')
