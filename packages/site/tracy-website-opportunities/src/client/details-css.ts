@@ -82,14 +82,13 @@ export const DETAILS_CSS =
 .tracy-wo-stab-act:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 2px; }
 .tracy-wo-stab-act:disabled { color: var(--muted-foreground); cursor: default; }
 .tracy-wo-stab-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
-.tracy-wo-stab-remove { display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; margin: 0; padding: 0; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--muted-foreground); cursor: pointer; opacity: 0; }
+.tracy-wo-stab-remove { display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; margin: 0; padding: 0; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--muted-foreground); cursor: pointer; }
 .tracy-wo-stab-remove > svg { width: 14px; height: 14px; }
 .tracy-wo-stab-slot { flex: none; width: 24px; height: 24px; }
-.tracy-wo-stab-row:hover .tracy-wo-stab-remove, .tracy-wo-stab-remove:focus-visible, .tracy-wo-stab-remove.is-on { opacity: 1; }
-.tracy-wo-stab-remove:hover:not(:disabled) { color: var(--foreground); background: color-mix(in oklab, var(--muted) 60%, transparent); }
+/* The trash always shows (owner, #537); it turns red on hover and while its dialog is open. */
+.tracy-wo-stab-remove:hover:not(:disabled), .tracy-wo-stab-remove.is-on { color: var(--destructive); background: color-mix(in oklab, var(--destructive) 10%, transparent); }
 .tracy-wo-stab-remove:focus-visible { outline: none; border-color: var(--ring); }
 .tracy-wo-stab-remove:disabled { cursor: default; }
-@media (hover: none) { .tracy-wo-stab-remove { opacity: 1; } }
 .tracy-wo-stab-notice { margin: 0 0 8px; font-size: 12px; text-align: right; }
 .tracy-wo-stab-foot { padding-top: 8px; }
 .tracy-wo-sprog { display: inline-flex; flex: none; gap: 2px; margin-right: 8px; vertical-align: middle; }
@@ -123,7 +122,6 @@ export const DETAILS_CSS =
   .tracy-wo-stab-state { flex-wrap: wrap; row-gap: 2px; }
   .tracy-wo-stab-detail { max-width: none; white-space: normal; }
   .tracy-wo-stab-link { order: 9; flex-basis: 100%; padding-left: 30px; }
-  .tracy-wo-stab-remove { opacity: 1; }
 }
 .tracy-wo-progress { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); }
 .tracy-wo-progress-steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
