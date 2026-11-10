@@ -12,11 +12,11 @@ import type { Translate } from './strings.ts'
 /**
  * The running step's sub-steps as one horizontal row (#537): a small node per sub-step (check, spinner, cross or
  * dot) and a short label clamped with its full text and state on hover, joined by a thin line. The row never wraps:
- * a set of more than two (research has up to six sources and the facts) folds its done nodes to the check alone
+ * a set of more than five (research has up to six sources and the facts) folds its done nodes to the check alone
  * (label on hover), and what still does not fit scrolls sideways inside the row, the running node kept in view.
  */
 /** More sub-steps than this fold the done ones to their check. */
-const MANY = 2
+const MANY = 5
 
 export function SubSteps({ t, items }: { t: Translate; items: BandSubStep[] }): JSX.Element {
   const row = useRef<HTMLOListElement>(null)

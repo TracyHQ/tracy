@@ -111,10 +111,10 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
       stepProgress: {
         step: 'research',
         items: [
-          { key: 'website', label: 'Website', state: 'done' },
-          { key: 'google', label: 'Google listing', state: 'done' },
-          { key: 'social', label: 'Social pages', state: 'running' },
-          { key: 'photos', label: 'Photos and videos', state: 'waiting' }
+          { key: 'google-places', label: 'Google Places', state: 'done' },
+          { key: 'instagram', label: 'Instagram', state: 'running' },
+          { key: 'website', label: 'Website', state: 'waiting' },
+          { key: 'profile', label: 'Writing the business facts', state: 'waiting' }
         ]
       },
       jobs: [
