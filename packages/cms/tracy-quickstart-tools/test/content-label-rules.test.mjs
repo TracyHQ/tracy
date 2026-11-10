@@ -131,6 +131,55 @@ test('R2: a phone, email, address, price or hours sample with an editorial role 
   ])
 })
 
+test('R2: literal PRE text samples are code rather than business facts', () => {
+  const map = cleanMap()
+  const samples = [
+    ['phone', 'phone = "(555) 010-9921"'],
+    ['price', 'cost = "$12.00"'],
+    ['email', 'WARN\tperson@example.com\n'],
+    ['hours', 'schedule = "Mon-Fri 8am - 6pm"'],
+    ['address', 'address = "14 Marlow Street"']
+  ]
+  map.slots.push(
+    ...samples.map(([kind, sample], i) =>
+      text(`code.${kind}`, sample, 'editorial.paragraph', {
+        xpath: i % 2 ? '/html/body/div/section/pre[2]/code/text()[1]' : '/html/body/div/pre/code/text()'
+      })
+    )
+  )
+  const before = JSON.stringify(map)
+  const res = labelRulesOf({ map })
+  assert.equal(rule(res, 'R2').count, 0)
+  assert.deepEqual(rule(res, 'R2').keys, [])
+  assert.deepEqual(res.r1, { facts: 9, slots: 15, percent: 60 })
+  assert.equal(JSON.stringify(map), before)
+})
+
+test('R2: ordinary and unsupported code addresses still require fact roles', () => {
+  const map = cleanMap()
+  const controls = [
+    ['ordinary', {}],
+    ['bare-pre', { xpath: '/html/body/div/pre/text()' }],
+    ['inline-code', { xpath: '/html/body/div/p/code/text()' }],
+    ['html', { type: 'html', xpath: '/html/body/div/pre/code/text()' }],
+    ['leaf', { leaf: { kind: 'text' }, xpath: '/html/body/div/pre/code/text()' }],
+    ['element', { xpath: '/html/body/div/pre/code' }],
+    ['second-text', { xpath: '/html/body/div/pre/code/text()[2]' }],
+    ['invalid-index', { xpath: '/html/body/div/pre[0]/code/text()' }]
+  ]
+  map.slots.push(
+    ...controls.map(([key, extra]) =>
+      text(`control.${key}`, 'Call (555) 010-9921', 'editorial.paragraph', extra)
+    )
+  )
+  const res = labelRulesOf({ map })
+  assert.equal(rule(res, 'R2').count, controls.length)
+  assert.deepEqual(
+    rule(res, 'R2').keys,
+    controls.map(([key]) => `control.${key}`)
+  )
+})
+
 test('R3: a URL slot without a role fails', () => {
   const map = cleanMap()
   map.slots.push({ key: 'foot.link', type: 'url', sample: 'index.php?Itemid=5' })
