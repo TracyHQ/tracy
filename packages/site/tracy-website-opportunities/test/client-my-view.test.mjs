@@ -16,8 +16,8 @@ const memory = (initial = {}) => {
 }
 
 test('nothing chosen yet: Cards', () => {
-  assert.equal(readMyView(memory()), 'cards')
-  assert.equal(readMyView(null), 'cards')
+  assert.equal(readMyView(memory()), 'rows')
+  assert.equal(readMyView(null), 'rows')
 })
 
 test('the chosen view is saved and read back after a reload', () => {
@@ -31,7 +31,7 @@ test('the chosen view is saved and read back after a reload', () => {
 
 test('the old Table and Grid choices and garbage read as Cards; storage that throws is ignored', () => {
   for (const old of ['table', 'grid', 'bogus'])
-    assert.equal(readMyView(memory({ [MY_VIEW_KEY]: old })), 'cards')
+    assert.equal(readMyView(memory({ [MY_VIEW_KEY]: old })), 'rows')
   const broken = {
     getItem: () => {
       throw new Error('blocked')
@@ -40,7 +40,7 @@ test('the old Table and Grid choices and garbage read as Cards; storage that thr
       throw new Error('blocked')
     }
   }
-  assert.equal(readMyView(broken), 'cards')
+  assert.equal(readMyView(broken), 'rows')
   assert.doesNotThrow(() => writeMyView(broken, 'rows'))
 })
 

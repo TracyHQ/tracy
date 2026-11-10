@@ -45,12 +45,13 @@ export const MY_VIEW_KEY = 'tracy-wo:my-view'
 export type MyView = 'cards' | 'rows' | 'map'
 const MY_VIEWS: readonly MyView[] = ['cards', 'rows', 'map']
 
+/** The list opens as rows (the owner's chosen table layout, #537); Cards stays a choice in the list menu. */
 export function readMyView(store: Store | null): MyView {
   try {
     const raw = store?.getItem(MY_VIEW_KEY)
-    return MY_VIEWS.find((v) => v === raw) ?? 'cards'
+    return MY_VIEWS.find((v) => v === raw) ?? 'rows'
   } catch {
-    return 'cards'
+    return 'rows'
   }
 }
 
