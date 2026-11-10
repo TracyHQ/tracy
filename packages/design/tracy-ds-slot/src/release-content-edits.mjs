@@ -245,6 +245,7 @@ const TABLES = {
   module: 'modules',
   article: 'content',
   category: 'categories',
+  contact: 'contact_details',
   menuItem: 'menu',
   templateStyle: 'template_styles'
 }

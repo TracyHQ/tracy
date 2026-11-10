@@ -31,6 +31,108 @@ const editsFile = (edits) => {
   return f
 }
 
+const CONTACT_EDIT = {
+  entity: 'contact-1',
+  field: 'email_to',
+  row: true,
+  from: 'before@example.invalid',
+  to: 'hello@example.invalid',
+  count: 1
+}
+const CONTACT_CORE = "INSERT INTO `jd_modules` (`id`,`position`) VALUES (110,'footer');\n"
+const CONTACT_ROW = "('before@example.invalid',1,'before@example.invalid')"
+const CONTACT_INSERT = 'INSERT INTO `jd_contact_details` (`email_to`,`id`,`name`) VALUES '
+
+test('contact row edits find reordered explicit and CREATE-derived columns, preserving other rows and fields', () => {
+  const rows = `${CONTACT_ROW},('before@example.invalid',10,'Other');\n`
+  const explicit = CONTACT_CORE + CONTACT_INSERT + rows
+  const created =
+    CONTACT_CORE +
+    'CREATE TABLE `jd_contact_details` (\n  `email_to` varchar(255),\n  `id` int,\n  `name` text\n);\n' +
+    'INSERT INTO `jd_contact_details` VALUES ' +
+    rows
+  for (const dump of [explicit, created]) {
+    for (const whole of [false, true]) {
+      const edits = loadContentEdits(editsFile([{ ...CONTACT_EDIT, ...(whole ? { whole: true } : {}) }]))
+      const next = editDump(dump, edits)
+      assert.equal(next, dump.replace(CONTACT_ROW, "('hello@example.invalid',1,'before@example.invalid')"))
+      assert.throws(() => editDump(next, edits), /occurs 0 times|the edit expects/)
+    }
+  }
+})
+
+test('contact row edits retain missing, duplicate, field, count and prefix refusals', () => {
+  const dump = CONTACT_CORE + CONTACT_INSERT + CONTACT_ROW + ';\n'
+  assert.throws(() => editDump(dump, [{ ...CONTACT_EDIT, entity: 'contact-2' }]), /0 rows/)
+  assert.throws(() => editDump(dump + CONTACT_INSERT + CONTACT_ROW + ';\n', [CONTACT_EDIT]), /2 rows/)
+  assert.throws(() => editDump(dump, [{ ...CONTACT_EDIT, field: 'missing' }]), /no column missing/)
+  assert.throws(() => editDump(dump, [{ ...CONTACT_EDIT, count: 2 }]), /occurs 1 times/)
+  assert.throws(() => loadContentEdits(editsFile([{ ...CONTACT_EDIT, whole: true, count: 2 }])), /count/)
+  assert.throws(
+    () => editDump(dump + 'INSERT INTO `old_modules` (`id`) VALUES (110);\n', [CONTACT_EDIT]),
+    /2 table prefixes/
+  )
+})
+
+test('contact and module edits keep dump, lock and slot samples consistent within their fields', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const from = CONTACT_EDIT.from
+  const html = `<a href="mailto:${from}">${from}</a><span>${from}</span>`
+  const edits = loadContentEdits(
+    editsFile([
+      { entity: 'module-110', field: 'content', row: true, from, to: CONTACT_EDIT.to, count: 3 },
+      { ...CONTACT_EDIT, whole: true }
+    ])
+  )
+  const dump =
+    `INSERT INTO \`jd_modules\` (\`id\`,\`content\`) VALUES (110,'${html}');\n` +
+    CONTACT_INSERT +
+    CONTACT_ROW +
+    ';\n'
+  const lock = JSON.stringify(
+    {
+      entities: {
+        'module-110': { content: html },
+        'contact-1': { email_to: from, name: from },
+        'contact-2': { email_to: from }
+      }
+    },
+    null,
+    2
+  )
+  const slots = [
+    { key: 'module-110.1', entity: 'module-110', column: 'content', sample: `mailto:${from}` },
+    { key: 'contact-1.1', entity: 'contact-1', column: 'email_to', sample: from },
+    { key: 'contact-1.2', entity: 'contact-1', column: 'name', sample: from },
+    { key: 'contact-2.1', entity: 'contact-2', column: 'email_to', sample: from }
+  ]
+  const nextLock = JSON.parse(editLock(lock, edits))
+  const nextMap = editContentMap(JSON.stringify({ slots }, null, 2), edits)
+  assert.equal(
+    editDump(dump, edits),
+    dump
+      .replace(html, html.replaceAll(from, CONTACT_EDIT.to))
+      .replace(CONTACT_ROW, "('hello@example.invalid',1,'before@example.invalid')")
+  )
+  assert.equal(nextLock.entities['module-110'].content, html.replaceAll(from, CONTACT_EDIT.to))
+  assert.deepEqual(nextLock.entities['contact-1'], { email_to: CONTACT_EDIT.to, name: from })
+  assert.equal(nextLock.entities['contact-2'].email_to, from)
+  assert.deepEqual(nextMap.edited, ['module-110.1', 'contact-1.1'])
+  assert.deepEqual(
+    JSON.parse(nextMap.text).slots,
+    slots.map((s, i) => (i < 2 ? { ...s, sample: s.sample.replace(from, CONTACT_EDIT.to) } : s))
+  )
+})
+
+test('contact tables stay entity-scoped alongside the existing ordinary entity tables', () => {
+  for (const table of ['contact_details', 'modules', 'content', 'categories', 'menu', 'template_styles']) {
+    assert.throws(
+      () => loadContentEdits(editsFile([{ table, from: 'before', to: 'after', count: 1 }])),
+      /holds contract entities/
+    )
+  }
+})
+
 test('an edit the two escapings would not agree on is refused', () => {
   for (const from of ['a "quoted" value', "it's", 'a\\b', 'a/b', 'Strategy · Design'])
     assert.throws(() => loadContentEdits(editsFile([{ entity: 'module-1', from, to: 'x', count: 1 }])))
