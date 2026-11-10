@@ -2,349 +2,349 @@ TAP version 13
 # Subtest: Dubai pre-runs the full customer Research stages and a later user receives its warm profile and photos
 ok 1 - Dubai pre-runs the full customer Research stages and a later user receives its warm profile and photos
   ---
-  duration_ms: 2582.592833
+  duration_ms: 36552.328375
   type: 'test'
   ...
 # Subtest: two accounts, one Google place: ONE place job; the second request waits and gets the same snapshot
 ok 2 - two accounts, one Google place: ONE place job; the second request waits and gets the same snapshot
   ---
-  duration_ms: 89.863208
+  duration_ms: 192.230834
   type: 'test'
   ...
 # Subtest: cancel from one account stops its own request only; the place job goes on for the other
 ok 3 - cancel from one account stops its own request only; the place job goes on for the other
   ---
-  duration_ms: 101.265542
+  duration_ms: 120.074917
   type: 'test'
   ...
 # Subtest: a worker whose lease was taken publishes nothing: the snapshot stays preparing, current unchanged
 ok 4 - a worker whose lease was taken publishes nothing: the snapshot stays preparing, current unchanged
   ---
-  duration_ms: 34.843583
+  duration_ms: 47.794084
   type: 'test'
   ...
 # Subtest: a failed refresh keeps the published snapshot; freshness is per source, from its last success
 ok 5 - a failed refresh keeps the published snapshot; freshness is per source, from its last success
   ---
-  duration_ms: 173.850667
+  duration_ms: 212.240125
   type: 'test'
   ...
 # Subtest: a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
 ok 6 - a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
   ---
-  duration_ms: 62.82575
+  duration_ms: 76.0505
   type: 'test'
   ...
 # Subtest: a brief of a researched place makes its content from the posts the place collected
 ok 7 - a brief of a researched place makes its content from the posts the place collected
   ---
-  duration_ms: 84.697667
+  duration_ms: 99.260292
   type: 'test'
   ...
 # Subtest: a brief made before a refresh still builds the same media after it: the manifest pins id and sha256
 ok 8 - a brief made before a refresh still builds the same media after it: the manifest pins id and sha256
   ---
-  duration_ms: 164.984958
+  duration_ms: 200.660625
   type: 'test'
   ...
 # Subtest: poisoning: a fake website or social in a client's candidate never becomes a source of the shared place
 ok 9 - poisoning: a fake website or social in a client's candidate never becomes a source of the shared place
   ---
-  duration_ms: 190.403042
+  duration_ms: 250.918084
   type: 'test'
   ...
 # Subtest: doors: research, list, detail and media read through the place; a revoked picture is withdrawn
 ok 10 - doors: research, list, detail and media read through the place; a revoked picture is withdrawn
   ---
-  duration_ms: 238.416291
+  duration_ms: 418.860458
   type: 'test'
   ...
 # Subtest: WO_SHARED_RESEARCH=0: a new request runs the per-account research; place jobs are not claimed
 ok 11 - WO_SHARED_RESEARCH=0: a new request runs the per-account research; place jobs are not claimed
   ---
-  duration_ms: 75.411834
+  duration_ms: 124.406875
   type: 'test'
   ...
 # Subtest: a paid call over Tracy's research cap pauses the place job with 'budget'; what it reserved is in the ledger
 ok 12 - a paid call over Tracy's research cap pauses the place job with 'budget'; what it reserved is in the ledger
   ---
-  duration_ms: 111.68625
+  duration_ms: 107.516917
   type: 'test'
   ...
 # Subtest: abuse limit: an account sends at most newPlacesPerAccountPerDay never-researched places; a known one is free
 ok 13 - abuse limit: an account sends at most newPlacesPerAccountPerDay never-researched places; a known one is free
   ---
-  duration_ms: 101.622
+  duration_ms: 172.674166
   type: 'test'
   ...
 # Subtest: a restart during a place job’s paid Apify run: the next holder reads the recorded run, one reservation
 ok 14 - a restart during a place job’s paid Apify run: the next holder reads the recorded run, one reservation
   ---
-  duration_ms: 81.527291
+  duration_ms: 90.597875
   type: 'test'
   ...
 # Subtest: a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
 ok 15 - a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
   ---
-  duration_ms: 47.77225
+  duration_ms: 58.012708
   type: 'test'
   ...
 # Subtest: a user joins the running full campaign job; cancellation preserves campaign demand and Stop blocks further stages
 ok 16 - a user joins the running full campaign job; cancellation preserves campaign demand and Stop blocks further stages
   ---
-  duration_ms: 142.205
+  duration_ms: 123.916
   type: 'test'
   ...
 # Subtest: TripAdvisor enriches a previously fresh snapshot once, is shared and reaches profile and brief without replacing Google
 ok 17 - TripAdvisor enriches a previously fresh snapshot once, is shared and reaches profile and brief without replacing Google
   ---
-  duration_ms: 183.358166
+  duration_ms: 235.396167
   type: 'test'
   ...
 # Subtest: TripAdvisor identity collision is recorded without merging places or fetching reviews
 ok 18 - TripAdvisor identity collision is recorded without merging places or fetching reviews
   ---
-  duration_ms: 86.25325
+  duration_ms: 83.626167
   type: 'test'
   ...
 # Subtest: TripAdvisor failure preserves successful reviews and budget refusal pauses without a provider call
 ok 19 - TripAdvisor failure preserves successful reviews and budget refusal pauses without a provider call
   ---
-  duration_ms: 372.386833
+  duration_ms: 195.188709
   type: 'test'
   ...
 # Subtest: TripAdvisor response after cancellation cannot publish or leave an identity
 ok 20 - TripAdvisor response after cancellation cannot publish or leave an identity
   ---
-  duration_ms: 73.552291
+  duration_ms: 55.102375
   type: 'test'
   ...
 # Subtest: TripAdvisor paused budget resumes its persisted search without paying for it twice
 ok 21 - TripAdvisor paused budget resumes its persisted search without paying for it twice
   ---
-  duration_ms: 121.044458
+  duration_ms: 131.799083
   type: 'test'
   ...
 # Subtest: OneAPI primary success does not call Litescrape and charges each actual primary attempt
 ok 22 - OneAPI primary success does not call Litescrape and charges each actual primary attempt
   ---
-  duration_ms: 103.584583
+  duration_ms: 108.195667
   type: 'test'
   ...
 # Subtest: OneAPI failure 401 falls back once with separate provider accounting
 ok 23 - OneAPI failure 401 falls back once with separate provider accounting
   ---
-  duration_ms: 140.168208
+  duration_ms: 239.292833
   type: 'test'
   ...
 # Subtest: OneAPI failure 402 falls back once with separate provider accounting
 ok 24 - OneAPI failure 402 falls back once with separate provider accounting
   ---
-  duration_ms: 199.016291
+  duration_ms: 99.635833
   type: 'test'
   ...
 # Subtest: OneAPI failure 403 falls back once with separate provider accounting
 ok 25 - OneAPI failure 403 falls back once with separate provider accounting
   ---
-  duration_ms: 129.88575
+  duration_ms: 105.426209
   type: 'test'
   ...
 # Subtest: OneAPI failure 429 falls back once with separate provider accounting
 ok 26 - OneAPI failure 429 falls back once with separate provider accounting
   ---
-  duration_ms: 118.308042
+  duration_ms: 101.284875
   type: 'test'
   ...
 # Subtest: OneAPI failure 503 falls back once with separate provider accounting
 ok 27 - OneAPI failure 503 falls back once with separate provider accounting
   ---
-  duration_ms: 123.221875
+  duration_ms: 120.102875
   type: 'test'
   ...
 # Subtest: OneAPI failure application falls back once with separate provider accounting
 ok 28 - OneAPI failure application falls back once with separate provider accounting
   ---
-  duration_ms: 125.236333
+  duration_ms: 129.752791
   type: 'test'
   ...
 # Subtest: OneAPI legitimate empty search does not spend fallback quota
 ok 29 - OneAPI legitimate empty search does not spend fallback quota
   ---
-  duration_ms: 72.13975
+  duration_ms: 72.302875
   type: 'test'
   ...
 # Subtest: budget refusal between failed primary and fallback pauses before fallback network
 ok 30 - budget refusal between failed primary and fallback pauses before fallback network
   ---
-  duration_ms: 67.099833
+  duration_ms: 97.871625
   type: 'test'
   ...
 # Subtest: missing OneAPI branch evidence uses an optional same-brand website association without fallback
 ok 31 - missing OneAPI branch evidence uses an optional same-brand website association without fallback
   ---
-  duration_ms: 126.837417
+  duration_ms: 97.880333
   type: 'test'
   ...
 # Subtest: OneAPI conflicting branch phone keeps a same-brand review source without creating branch identity
 ok 32 - OneAPI conflicting branch phone keeps a same-brand review source without creating branch identity
   ---
-  duration_ms: 111.525958
+  duration_ms: 90.360292
   type: 'test'
   ...
 # Subtest: fallback cannot replace a primary matched identity when its review call fails
 ok 33 - fallback cannot replace a primary matched identity when its review call fails
   ---
-  duration_ms: 98.137458
+  duration_ms: 102.608667
   type: 'test'
   ...
 # Subtest: unknown primary outcome is not paid twice after budget pauses the fallback
 ok 34 - unknown primary outcome is not paid twice after budget pauses the fallback
   ---
-  duration_ms: 146.628083
+  duration_ms: 138.182708
   type: 'test'
   ...
 # Subtest: refresh cannot remap an existing TripAdvisor source or mix another branch reviews
 ok 35 - refresh cannot remap an existing TripAdvisor source or mix another branch reviews
   ---
-  duration_ms: 517.6405
+  duration_ms: 158.471375
   type: 'test'
   ...
 # Subtest: new research retries a recovered provider instead of inheriting the previous job failure checkpoint
 ok 36 - new research retries a recovered provider instead of inheriting the previous job failure checkpoint
   ---
-  duration_ms: 158.573458
+  duration_ms: 156.918875
   type: 'test'
   ...
 # Subtest: customer Details omits optional provider failures and keeps previous reviews after refresh quota failure
 ok 37 - customer Details omits optional provider failures and keeps previous reviews after refresh quota failure
   ---
-  duration_ms: 249.182959
+  duration_ms: 224.953375
   type: 'test'
   ...
 # Subtest: user journey saves a place, starts Research, opens Details and creates an attributed TripAdvisor brief
 ok 38 - user journey saves a place, starts Research, opens Details and creates an attributed TripAdvisor brief
   ---
-  duration_ms: 217.21625
+  duration_ms: 251.955084
   type: 'test'
   ...
 # Subtest: SerpApi primary persists reviews, avatars and attached photos through customer Details and demo manifest
 ok 39 - SerpApi primary persists reviews, avatars and attached photos through customer Details and demo manifest
   ---
-  duration_ms: 209.142833
+  duration_ms: 167.111458
   type: 'test'
   ...
 # Subtest: SerpApi 401 falls through RapidAPI quota to Litescrape with separate attempt records
 ok 40 - SerpApi 401 falls through RapidAPI quota to Litescrape with separate attempt records
   ---
-  duration_ms: 108.371458
+  duration_ms: 158.405792
   type: 'test'
   ...
 # Subtest: SerpApi 429 falls through RapidAPI quota to Litescrape with separate attempt records
 ok 41 - SerpApi 429 falls through RapidAPI quota to Litescrape with separate attempt records
   ---
-  duration_ms: 104.622917
+  duration_ms: 260.30175
   type: 'test'
   ...
 # Subtest: SerpApi 429 once is retried after its wait, and the reviews come from SerpApi
 ok 42 - SerpApi 429 once is retried after its wait, and the reviews come from SerpApi
   ---
-  duration_ms: 106.390583
+  duration_ms: 175.592042
   type: 'test'
   ...
 # Subtest: SerpApi 503 once is retried after its wait, and the reviews come from SerpApi
 ok 43 - SerpApi 503 once is retried after its wait, and the reviews come from SerpApi
   ---
-  duration_ms: 103.916458
+  duration_ms: 297.807292
   type: 'test'
   ...
 # Subtest: SerpApi 402 (paid quota spent) is not retried: the next provider is asked at once
 ok 44 - SerpApi 402 (paid quota spent) is not retried: the next provider is asked at once
   ---
-  duration_ms: 95.121209
+  duration_ms: 116.006916
   type: 'test'
   ...
 # Subtest: SerpApi empty search ends enrichment without fallback while transient review failure reuses the verified ID
 ok 45 - SerpApi empty search ends enrichment without fallback while transient review failure reuses the verified ID
   ---
-  duration_ms: 168.045958
+  duration_ms: 223.340833
   type: 'test'
   ...
 # Subtest: the operator order on /ops/wo decides which Tripadvisor provider is asked first
 ok 46 - the operator order on /ops/wo decides which Tripadvisor provider is asked first
   ---
-  duration_ms: 89.51225
+  duration_ms: 150.117333
   type: 'test'
   ...
 # Subtest: an empty Tripadvisor order switches the reviews off
 ok 47 - an empty Tripadvisor order switches the reviews off
   ---
-  duration_ms: 61.838958
+  duration_ms: 165.321333
   type: 'test'
   ...
 # Subtest: missing photo capability falls back per step without losing successful SerpApi review photos
 ok 48 - missing photo capability falls back per step without losing successful SerpApi review photos
   ---
-  duration_ms: 119.104875
+  duration_ms: 119.510667
   type: 'test'
   ...
 # Subtest: SerpApi budget pause resumes operation checkpoints without double payment
 ok 49 - SerpApi budget pause resumes operation checkpoints without double payment
   ---
-  duration_ms: 400.385125
+  duration_ms: 140.197208
   type: 'test'
   ...
 # Subtest: provider-switch refresh keeps same-review author links, avatar and attached stored photos
 ok 50 - provider-switch refresh keeps same-review author links, avatar and attached stored photos
   ---
-  duration_ms: 191.825208
+  duration_ms: 334.12175
   type: 'test'
   ...
 # Subtest: TripAdvisor photo capability upgrade leaves fresh Google facts and other collectors cached
 ok 51 - TripAdvisor photo capability upgrade leaves fresh Google facts and other collectors cached
   ---
-  duration_ms: 192.962375
+  duration_ms: 197.919542
   type: 'test'
   ...
 # Subtest: photo budget refusal keeps good reviews and resumes only the missing gallery operation
 ok 52 - photo budget refusal keeps good reviews and resumes only the missing gallery operation
   ---
-  duration_ms: 138.276875
+  duration_ms: 165.555625
   type: 'test'
   ...
 # Subtest: ordinary Research retries a previous not-found source and collects no-website restaurant reviews without creating branch identity
 ok 53 - ordinary Research retries a previous not-found source and collects no-website restaurant reviews without creating branch identity
   ---
-  duration_ms: 246.582667
+  duration_ms: 290.794041
   type: 'test'
   ...
 # Subtest: SerpApi twenty reviews reach the shared profile and brief; a fresh reader costs no extra calls
 ok 54 - SerpApi twenty reviews reach the shared profile and brief; a fresh reader costs no extra calls
   ---
-  duration_ms: 253.8305
+  duration_ms: 192.008708
   type: 'test'
   ...
 # Subtest: SerpApi refresh reuses the accepted place ID without another search and preserves identity checks
 ok 55 - SerpApi refresh reuses the accepted place ID without another search and preserves identity checks
   ---
-  duration_ms: 273.636167
+  duration_ms: 254.704542
   type: 'test'
   ...
 # Subtest: doors: the detail lists Google with the collected sources, and Retry on one source queues that source alone
 ok 56 - doors: the detail lists Google with the collected sources, and Retry on one source queues that source alone
   ---
-  duration_ms: 121.355834
+  duration_ms: 126.7755
   type: 'test'
   ...
 # Subtest: own site resumes a paused shared run behind a queued request once per poll batch, then stops at three
 ok 57 - own site resumes a paused shared run behind a queued request once per poll batch, then stops at three
   ---
-  duration_ms: 152.257541
+  duration_ms: 124.745791
   type: 'test'
   ...
 # Subtest: shared resume follows the paused upstream run but refuses another account and terminal requests
 ok 58 - shared resume follows the paused upstream run but refuses another account and terminal requests
   ---
-  duration_ms: 30.663333
+  duration_ms: 100.303375
   type: 'test'
   ...
 # error: synthetic resume failure
@@ -379,27 +379,33 @@ ok 58 - shared resume follows the paused upstream run but refuses another accoun
 # Subtest: own site exposes a shared resume failure without spending its automatic resume allowance
 ok 59 - own site exposes a shared resume failure without spending its automatic resume allowance
   ---
-  duration_ms: 74.707542
+  duration_ms: 75.869792
   type: 'test'
   ...
 # Subtest: from-scratch research recovers failed downloads without reviving blocked or revoked media
 ok 60 - from-scratch research recovers failed downloads without reviving blocked or revoked media
   ---
-  duration_ms: 403.979958
+  duration_ms: 255.173792
   type: 'test'
   ...
 # Subtest: from-scratch Tripadvisor research retries its failed media downloads
 ok 61 - from-scratch Tripadvisor research retries its failed media downloads
   ---
-  duration_ms: 250.944833
+  duration_ms: 255.650833
   type: 'test'
   ...
-1..61
-# tests 61
+# Subtest: from-scratch research recovers failed media storage and keeps a newly blocked retry blocked
+ok 62 - from-scratch research recovers failed media storage and keeps a newly blocked retry blocked
+  ---
+  duration_ms: 183.164084
+  type: 'test'
+  ...
+1..62
+# tests 62
 # suites 0
-# pass 61
+# pass 62
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 12834.38025
+# duration_ms 70717.978833

@@ -2950,3 +2950,79 @@ test('from-scratch Tripadvisor research retries its failed media downloads', opt
     failures.length
   )
 })
+
+test(
+  'from-scratch research recovers failed media storage and keeps a newly blocked retry blocked',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'store-recovery@tracy.test')
+    const opportunity = await saveGoogle(pool, a)
+    const urls = ['storage', 'storage-blocked'].map((name) => `https://phoba.example/${name}.png`)
+    let healthy = false
+    const downloads = []
+    const stored = new Map()
+    const { domain } = await domainWith({
+      website: websiteOk(urls.map((url) => ({ url, kind: 'image' }))),
+      fetchLimited: async (url) => {
+        downloads.push(url)
+        if (healthy && url === urls[1]) throw Object.assign(new Error('blocked'), { code: 'URL_BLOCKED' })
+        return { url, status: 200, mime: 'image/png', bytes: PNG, truncated: false }
+      }
+    })
+    const { ex } = executor(pool, domain, {
+      objects: {
+        put: async (key, bytes) => {
+          if (!healthy) return false
+          stored.set(key, bytes)
+          return true
+        }
+      }
+    })
+    const first = await requestResearch(pool, { accountId: a, opportunity, requestId: 'storage-first' })
+    await drain(ex)
+    const oldSnapshot = (await jobRow(pool, first.job.id)).result_snapshot_id
+    const failures = (await pool.query("select id from wo_place_media where reason='store_failed'")).rows
+    assert.equal(failures.length, 2)
+    healthy = true
+    downloads.length = 0
+    const again = () => ({
+      domain,
+      keys: { google: 'AIza-test' },
+      settings: normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+      fromScratch: true
+    })
+    const recovered = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'storage-recover',
+      again: again()
+    })
+    await drain(ex)
+    assert.deepEqual(downloads, urls)
+    const snapshot = (await jobRow(pool, recovered.job.id)).result_snapshot_id
+    const media = (
+      await pool.query(
+        'select m.* from wo_place_media m join wo_place_snapshot_media sm on sm.media_id=m.id where sm.snapshot_id=$1',
+        [snapshot]
+      )
+    ).rows
+    assert.equal(media.find((m) => m.source_url === urls[0])?.status, 'stored')
+    assert.deepEqual(stored.get(media.find((m) => m.source_url === urls[0]).object_key), PNG)
+    assert.equal(media.find((m) => m.source_url === urls[1])?.reason, 'url_blocked')
+    assert.equal(
+      (
+        await one(
+          pool,
+          "select count(*)::int n from wo_place_snapshot_media sm join wo_place_media m on m.id=sm.media_id where sm.snapshot_id=$1 and m.reason='store_failed'",
+          [oldSnapshot]
+        )
+      ).n,
+      2
+    )
+    downloads.length = 0
+    await requestResearch(pool, { accountId: a, opportunity, requestId: 'storage-reuse', again: again() })
+    await drain(ex)
+    assert.deepEqual(downloads, [], 'stored bytes and the new terminal blocked reference are reused')
+  }
+)

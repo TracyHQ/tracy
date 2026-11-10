@@ -77,6 +77,11 @@ import { tradeOfPlace } from '../domain/trades.mjs'
 import { StaleLeaseError, checkpoint, fenced, heartbeat } from './store.js'
 import { HUB_COLLECTOR_VERSION } from './hub/local-cache.js'
 
+/** Transient transport/storage references can be retried by an explicit from-scratch plan. */
+const TRANSIENT_MEDIA_FAILURES = Object.freeze(['download_failed', 'store_failed'])
+const retryableMediaReference = (row) =>
+  row.status === 'reference' && TRANSIENT_MEDIA_FAILURES.includes(row.reason) && !row.revoked_at
+
 /**
  * Who a place run's charges count against on /ops › Usage (migration 167): whoever created or started the run again
  * (`joinPlace`'s `starter`); a campaign run with no stamp is its campaign's; a run from before the stamp is unknown (null).
@@ -994,7 +999,7 @@ export function createPlaceRunner(h) {
           }
           const record = await (early[k] ?? h.mediaRecord(domain, owner, m))
           // A newly blocked retry needs its own immutable reference; ref:url still belongs to the old failure.
-          if (retryMedia.has(m.url) && record.status === 'reference' && record.reason !== 'download_failed')
+          if (retryMedia.has(m.url) && record.status === 'reference' && !retryableMediaReference(record))
             record.sha256 = domain.sha256Hex(new TextEncoder().encode(`ref:${record.reason}:${m.url}`))
           if ([TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].includes(m.source)) {
             record.credit = m.credit
@@ -1573,19 +1578,13 @@ export function createPlaceRunner(h) {
       `select id, source_url, source, status, reason, revoked_at from wo_place_media
        where place_id = $1 or place_id in (select id from wo_place where merged_into = $1)
        order by (revoked_at is not null), (status = 'stored'),
-         (reason is distinct from 'download_failed'), id`,
-      [placeId]
+         (not coalesce(reason = any($2::text[]), false)), id`,
+      [placeId, TRANSIENT_MEDIA_FAILURES]
     )
     const chosen = new Map(rows.map((r) => [r.source_url, r]))
     const known = new Map()
     for (const [url, row] of chosen) {
-      if (
-        retrySources.has(row.source) &&
-        row.status === 'reference' &&
-        row.reason === 'download_failed' &&
-        !row.revoked_at
-      )
-        retryMedia.set(url, row.id)
+      if (retrySources.has(row.source) && retryableMediaReference(row)) retryMedia.set(url, row.id)
       else known.set(url, row.id)
     }
     return known

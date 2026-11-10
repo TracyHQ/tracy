@@ -870,7 +870,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   row and runs on `sourceDue` like every source. A partial run that finds nothing new (snapshot `superseded`) still copies the attempt
   info to the current snapshot.
   An explicit Research again source listed in `again_plan.fromScratch` re-downloads only non-revoked media references
-  whose earlier attempt ended `download_failed`. Stored bytes are reused; intentionally blocked or revoked media are not
+  whose earlier attempt ended `download_failed` or `store_failed` (a transient download or storage failure). Stored bytes are reused; intentionally blocked or revoked media are not
   re-downloaded. The new snapshot maps a successful retry to its new stored row while historical snapshots retain the earlier reference.
   Migration 170 (Menu): `menu-file` (a menu file/page read as text) and `menu-photos` (menu photos
   read with a vision model) are two research parts with their own `_source` row, version and Try again, only for food and drink places

@@ -14,7 +14,8 @@
     "An ordinary forced refresh does not retry references.",
     "Research from scratch downloads only the non-revoked download_failed URL and exposes its real PNG bytes.",
     "Blocked and revoked media remain unchanged, old snapshot membership is unchanged, and stored bytes win over an older failed reference on the next run.",
-    "A failed reference that becomes URL_BLOCKED stays blocked on the next from-scratch run; a planned Tripadvisor source retries its failed media."
+    "A failed reference that becomes URL_BLOCKED stays blocked on the next from-scratch run; a planned Tripadvisor source retries its failed media.",
+    "Store failures recover into real stored bytes or a new immutable blocked reference, which is reused on the next run."
   ],
   "selectors": {
     "api": "/api/website-opportunities/:id/research-again"
@@ -31,7 +32,8 @@
     ],
     "tests": [
       "from-scratch research recovers failed downloads without reviving blocked or revoked media",
-      "from-scratch Tripadvisor research retries its failed media downloads"
+      "from-scratch Tripadvisor research retries its failed media downloads",
+      "from-scratch research recovers failed media storage and keeps a newly blocked retry blocked"
     ],
     "needs": ["postgres"]
   }
