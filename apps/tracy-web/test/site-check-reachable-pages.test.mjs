@@ -75,3 +75,40 @@ test('both groups run in the site check when a page reader is given', async () =
   assert.ok(names.includes('reachable-pages') && names.includes('icon-glyphs'))
   assert.equal(check.groups.find((g) => g.name === 'reachable-pages').status, 'red')
 })
+
+test('one site check shares page reads across groups and the next check reads fresh HTML', async () => {
+  const calls = new Map()
+  let html = page('<h1>Invented Club</h1>')
+  const read = async (path) => {
+    calls.set(path, (calls.get(path) ?? 0) + 1)
+    return html
+  }
+  const input = {
+    door: { apply: async () => ({ ok: true, slots: [], pages: [] }) },
+    report: { site: 'invented', status: 'done', slots: [], keptPages: [{ id: 'home', path: '/' }] },
+    pageHtml: read,
+    allGroups: true
+  }
+  const first = await runSiteCheck(input)
+  assert.equal(calls.get('/'), 1, 'all HTML groups share one read of the exact path')
+  assert.equal(first.groups.find((g) => g.name === 'icon-glyphs').status, 'not-applicable')
+  html = page('<h1>Invented Club</h1><span class="fa-brands fa-instagram"></span>')
+  const next = await runSiteCheck(input)
+  assert.equal(calls.get('/'), 2, 'a new check must not reuse pre-repair HTML')
+  assert.equal(next.groups.find((g) => g.name === 'icon-glyphs').status, 'red')
+})
+
+test('a failed page read is shared for one check without turning unavailable evidence green', async () => {
+  let reads = 0
+  const out = await runSiteCheck({
+    door: { apply: async () => ({ ok: true, slots: [], pages: [] }) },
+    report: { site: 'invented', status: 'done', slots: [], keptPages: [{ id: 'home', path: '/' }] },
+    pageHtml: async () => {
+      reads++
+      throw new Error('page unavailable')
+    },
+    allGroups: true
+  })
+  assert.equal(reads, 1)
+  assert.notEqual(out.status, 'green')
+})

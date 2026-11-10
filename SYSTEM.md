@@ -2419,6 +2419,11 @@ its bounded second round. New read-back failures and later regressions still und
 summary records per-turn verdicts, regressions, newly observed findings, remaining failures and any structured reasons the undo door supplies for a refusal. A red or unmeasured
 final check, failed repair verification or open turn makes the final report `stopped` with `STEP_NINE_CHECK_FAILED`
 and `writeStatus: done`; the chain cannot count a completed write as an accepted site.
+A Stop acknowledgement is not proof that a native turn ended. If its record remains open after the settle window,
+or cannot be read after Stop, no further repair writer starts and no undo runs while a turn remains open.
+The result retains the open turn as unverified. Rate waiting and comment request submission count toward the overall
+step deadline, but the native turn's execution window starts only after its prompt is accepted. Within one site check,
+HTML reads of the exact same path are shared across groups, including failures; the next check reads fresh pages.
 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
@@ -2856,6 +2861,12 @@ Since 22/10/2026, new Ask Tracy actions keep `selection.chatMode=client-send/1`.
 
 The agent reads research before a container exists through the `_conversation` context, calls `tracy_demo` provision.start/status/wait itself, reads the structure/baseline snapshot and saves a grouped plan before writing, then checks in the same turn. The backend only reconciles the job; it sends no initial/continuation/repair/wake prompt in the new mode. Site/session/native-turn permissions, Stop and write readiness are checked on the server. Retry keeps marker/site/session. Bulk opens each action's session in turn to send the user messages. The Open demo chat button restores navigation without creating a new build.
 
+Before a client-send build exists, reconciliation also checks an already frozen brief or requested logo/photo work.
+Pending research keeps waiting; terminal readiness, invalid input, withdrawn template and photo-label timeout failures
+end the action with their original code, allowing explicit Retry rather than waiting for the two-hour action timeout.
+Temporary preparation outages use the queue's bounded retry policy. Frozen revisions and late photo-label results never
+reopen an action that has failed.
+
 QA takes publicOrigin from the server-managed site address, checking that the hostname matches the site before using an alias. The origin keeps the real scheme/port, including Joomla force_ssl without canonical HTML; the port is not inferred from the template nor hard-coded per stand.
 
 In client-send mode, the user can continue the demo with a new message in the same chat after every accepted turn has finished normally. The new permission must come from an authenticated turn book: actor owner, source panel, open native prompt message ID/RPC, owner seat still present; CAS keeps one winning turn and accepts the same proof again on parallel/replay. Deadline/budget/baseline/research/plan are not reset. Any Stop/error/stale in the chain blocks continuation and requires an explicit Retry. Catalogue/plan.read/structure.read return a planGuide with canonical sources leading to the frozen bundle, field paths and native target samples; a wrong plan returns diagnostics, with no CMS write.
@@ -2913,13 +2924,29 @@ this kind (`SHEET_KINDS`).
 Doors (`apps/tracy-web/src/opportunities-build/own-site.js`, registered in the WO app): `GET /api/sites/from-business/find`,
 `POST /api/sites/from-business` (stores the business as the account's own opportunity, `candidate.ownSite` +
 `trade`, runs the shared research), `GET /api/sites/from-business/:id` (when research is `completed`, phase `choose`
-with `recommended`: the `autoTemplate` template suggested by trade), `POST /api/sites/from-business/:id/build`
+with `recommended`: the `autoTemplate` template suggested by trade). A waiting shared request reads its place run's
+state and error: a paused place run resumes through `resumeRequest`, at most three successful automatic resumes per
+business; a nonblocking advisory lock serialises concurrent polls without using up retries, and a resume failure is
+returned rather than hidden as continuing research. `POST /api/sites/from-business/:id/build`
 (`{selection:{cms,design,quickstart}}` chosen by the customer — keep the suggestion or pick another in the Design templates popup, which
 opens with a "Tracy's pick" frame from `requestTemplatePick(…, {recommended})`; accepts exactly one `agent-demo/1` +
 `client-send/1` action with `ownSite:true` and `suggested.taken`; quota `ownSiteBuildsPerAccountPerDay`, default 3, in
 `/ops` WO). The browser calls WO's `chat/prepare` then opens `/<site>/s/<session>?wo-demo-chat=<action>`; the WO plugin on
 the destination page sends the brief as with a demo. On an http stand (no `crypto.subtle`) the plugin does not re-hash the brief itself; the
 `chat/send` door still matches `briefHash`.
+
+For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
+follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
+a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds.
+Server-owned `agent-demo/1` actions share the picture-label run warmed during template choice. Pending labels queue
+the action until `retryAt` without freezing a revision or provisioning a site. A label run past its five-minute
+bound returns `DEMO_PICTURE_LABELS_TIMEOUT` without freezing empty labels; a later prepare or explicit Retry can
+adopt the same run's settled answer. Historical server actions without that workflow keep their existing brief path.
+An explicit `POST …/:id/build` with `{retryOf:<failed action id>}` retries the same owned business using the shared
+acceptance path: the original revision, build request, template and session remain frozen. The Retry request id is
+stable per failed action, and state reads follow the replacement action. Sending a new template with Retry is refused.
+The writer and plan guide require a review quote only when frozen usable review evidence contains one; absent reviews
+do not prevent writing articles or other pages. Existing review attribution and hold rules still apply.
 
 The customer's site is not a demo: no retention clock (`startDemoClock` skips `ownSite` actions), not shown
 in the WO list (`stagedSql`), no outreach. The message shown in chat is a single sentence; the steps are in

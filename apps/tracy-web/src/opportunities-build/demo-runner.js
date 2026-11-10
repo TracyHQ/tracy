@@ -9,6 +9,7 @@ import { startDemoClock } from './demo-retention.js'
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { handOffToAgent } from './handoff-service.js'
 import { revisionForAction } from './revisions.js'
+import { createPictureLabelRuns } from './picture-label-runs.js'
 import { briefOf } from '../lib/site-brief-row.js'
 import { withHandoffLock } from './handoff.js'
 
@@ -125,6 +126,11 @@ export function createDemoRunner(deps) {
   const now = deps.now ?? Date.now
   const origin = String(config.origin).replace(/\/+$/, '')
   const log = deps.log ?? console
+  // Server-owned builds and client-send builds freeze the same labelled research. Reuse the run warmed by the
+  // own-site state door; a queued action must not freeze an unlabelled brief while that run is still working.
+  const pictureRuns =
+    deps.clientDemo?.pictureRuns ??
+    (deps.pictureLabels ? createPictureLabelRuns({ label: deps.pictureLabels, now, log }) : null)
   const expire = () =>
     expireOverdueDemoActions(pool, now()).catch((error) => {
       log.error?.(`[wo-demo] deadline sweep failed: ${error?.code ?? error?.message ?? 'error'}`)
@@ -155,11 +161,11 @@ export function createDemoRunner(deps) {
       }
       const finish = (state, error = null) =>
         lease.finish({ status: state, error, step, checked_at: new Date(now()), updated_at: new Date(now()) })
-      const wait = () =>
+      const wait = (retryAt = now() + POLL_MS) =>
         lease.finish({
           status: 'queued',
           error: null,
-          next_at: new Date(now() + POLL_MS),
+          next_at: new Date(Math.max(now() + 1_000, retryAt)),
           attempts: 0,
           updated_at: new Date(now())
         })
@@ -194,8 +200,12 @@ export function createDemoRunner(deps) {
             return data.templates
           },
           ops: (await runtime()).settings,
-          now
+          now,
+          ...(pictureRuns && action.selection?.workflow === 'agent-demo/1'
+            ? { pictureLabelRuns: pictureRuns }
+            : {})
         })
+        if (made.pending) return wait(made.retryAt)
         if (made.error) return finish('failed', made.error)
         const revision = made.revision
         if (action.selection?.workflow && action.selection.workflow !== revision.brief?.quickstartWorkflow)

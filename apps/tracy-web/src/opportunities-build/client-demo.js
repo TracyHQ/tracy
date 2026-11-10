@@ -54,6 +54,17 @@ export const LOGO_RESEARCH_PENDING = 'DEMO_LOGO_RESEARCH_PENDING'
 export { PICTURE_LABELS_PENDING }
 const CMS_NAMES = { wordpress: 'WordPress', joomla: 'Joomla', emdash: 'EmDash' }
 const error = (code, status = 409) => Object.assign(new Error(code), { code, status })
+/** These inputs need an explicit Retry or corrected research; polling cannot repair this action's frozen brief. */
+const PREPARATION_FAILURES = new Set([
+  'BRIEF_NOT_READY',
+  'BRIEF_INVALID',
+  'NOT_FOUND',
+  'DEMO_PICTURE_LABELS_TIMEOUT',
+  'TEMPLATE_UNAVAILABLE',
+  'TEMPLATE_VERSION_CHANGED',
+  'TEMPLATE_PIN_UNAVAILABLE',
+  'INVALID_TEMPLATE'
+])
 
 /** How many `tracy_demo check` runs a build has (`agent-demo.js`, where the brief says it too). */
 export { DEMO_CHECKS }
@@ -354,7 +365,7 @@ export function createClientDemoService(deps) {
       ).rows[0] ?? null
     // The brief names no template: a build's choice is how this demo reads it (`build-choice.js`).
     const revision = build?.choice ? withBuildChoice(stored, build.choice) : null
-    return { action, account, cookie, build, revision }
+    return { action, account, cookie, build, revision, hasRevision: Boolean(stored) }
   }
   function answer(state) {
     const held = state.build.content.agentDemo.clientChat
@@ -639,15 +650,21 @@ export function createClientDemoService(deps) {
     // build has sent no brief yet, so that guard would return first and the build would never start.
     if (
       !state.build &&
-      (state.action.selection?.logoResearch?.state === 'requested' ||
+      (state.hasRevision ||
+        state.action.selection?.logoResearch?.state === 'requested' ||
         state.action.selection?.pictureLabels?.state === 'requested')
-    )
-      await prepare({ accountId: action.account_id, actionId: action.id }).catch((failure) => {
-        if (failure?.code !== LOGO_RESEARCH_PENDING && failure?.code !== PICTURE_LABELS_PENDING)
-          (deps.log ?? console).warn(
-            `client demo ${action.id} not prepared after its logo research: ${failure?.code ?? failure}`
-          )
-      })
+    ) {
+      try {
+        await prepare({ accountId: action.account_id, actionId: action.id })
+      } catch (failure) {
+        // Pending work keeps its queue rights. A terminal readiness/input failure keeps its real cause instead of
+        // clearing it on every poll until the two-hour deadline calls it DEMO_STEP_TIMEOUT. Other failures follow
+        // the runner's bounded retry policy, including temporary template/network outages.
+        if (PREPARATION_FAILURES.has(failure?.code))
+          return { terminal: true, state: 'failed', step: 'brief', error: failure.code }
+        if (failure?.code !== LOGO_RESEARCH_PENDING && failure?.code !== PICTURE_LABELS_PENDING) throw failure
+      }
+    }
     /**
      * 🔒 A RETRY STARTS CLEAN (27/10/2026): a Retry reuses its build, which still carries the previous attempt's
      * check, turns and provision until this action's own brief is sent (`send` writes a fresh `qa`). Nothing on the

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import { after, afterEach, before, beforeEach, test } from 'node:test'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.js'
-import { acceptDemoActions } from '../src/opportunities-build/demo-actions.js'
+import { acceptDemoActions, demoActionOf } from '../src/opportunities-build/demo-actions.js'
 import { createDemoRunner } from '../src/opportunities-build/demo-runner.js'
 import { revisionForAction } from '../src/opportunities-build/revisions.js'
 import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
@@ -96,13 +96,14 @@ async function world(template) {
     log: { warn() {}, error() {} }
   }
   // What the browser sends for a Build press: the agent-demo workflow in chat-send mode.
-  const press = () =>
+  const press = (extra = {}) =>
     acceptDemoActions(pool, {
       accountId: account,
       entries: [
         {
           opportunityId: opportunity,
           requestId: 'press-once',
+          ...extra,
           workflow: 'agent-demo/1',
           chatMode: 'client-send/1',
           selection: { cms: template.cms, design: template.design, quickstart: template.quickstart }
@@ -191,5 +192,30 @@ test(
     assert.equal(w.created.length, 1)
     assert.equal(w.created[0].workflow, 'agent-demo/1')
     assert.equal(Object.hasOwn(w.created[0], 'researchRevisionId'), false)
+  }
+)
+
+test(
+  'an own-site Build press also selects the chain without a second chat writer or retention clock',
+  opts,
+  async () => {
+    const w = await world(CHAIN)
+    await w.pool.query(
+      `update wo_opportunity set candidate = '{"ownSite":{"requestId":"own-test-press"},"trade":"fitness"}'`
+    )
+    const answer = await w.press({ ownSite: true })
+    assert.equal(answer.status, 202, JSON.stringify(answer.body))
+    assert.equal(answer.body.actions[0].chatMode, undefined)
+    await w.run()
+    assert.equal(w.created.length, 1)
+    assert.equal(w.created[0].workflow, STEP_CHAIN_WORKFLOW)
+    assert.equal(w.messages.length, 0)
+    const build = (await w.pool.query('select demo_expires_at from wo_build')).rows[0]
+    assert.equal(build.demo_expires_at, null)
+    const account = (await w.pool.query('select id from account')).rows[0].id
+    const actionId = answer.body.actions[0].id
+    assert.equal((await demoActionOf(w.pool, account, actionId)).siteKey, 'harbor-gym.localhost')
+    await w.pool.query('update wo_build set demo_deleted_at=now()')
+    assert.equal((await demoActionOf(w.pool, account, actionId)).siteKey, undefined)
   }
 )
