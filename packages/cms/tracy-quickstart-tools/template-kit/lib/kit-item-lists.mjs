@@ -9,6 +9,7 @@
 import { neutralKey } from './ids.mjs'
 import { measuredMin } from './min-evidence.mjs'
 import { canonicalPath } from './kit-paths.mjs'
+import { matchRepeat, ruleOneMin } from './rows.mjs'
 
 const norm = (s) =>
   String(s ?? '')
@@ -167,5 +168,30 @@ export function joinMeasuredTwins(blockLists, mapLists) {
       Object.assign(l, measured)
     }
     blockLists.splice(blockLists.indexOf(twin), 1)
+  }
+}
+
+/** A block's own item list may use the stock slider rule only when its visible row set is unambiguous. */
+export function applyItemSliderMinima(block, repeats, errors) {
+  for (const list of block.lists) {
+    const count = list.shown?.length
+    if (
+      list.rowKind !== 'items' ||
+      list.min != null ||
+      !list.id.startsWith(`${block.id}.`) ||
+      !(count > 1) ||
+      !(list.max >= count)
+    )
+      continue
+    // Count matching alone cannot choose between two lists or two row sets in the same block.
+    if (block.lists.filter((l) => l.shown?.length === count || l.max === count).length !== 1) continue
+    const candidates = (repeats ?? []).filter((r) => r.count === count && !r.nested && r.shownCount > 0)
+    if (candidates.length !== 1) continue
+    const repeat = matchRepeat(candidates, count)
+    if (!repeat?.inSlider) continue
+    Object.assign(list, ruleOneMin(repeat, list.max))
+    const field = `blocks[${block.id}].lists[${list.id}].min`
+    for (let i = errors.length - 1; i >= 0; i--)
+      if (errors[i].kind === 'missing' && errors[i].field === field) errors.splice(i, 1)
   }
 }

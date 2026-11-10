@@ -162,7 +162,7 @@ export function joomlaAdapter(source) {
     logoSettings() {
       if (t3) return t3LogoSettings({ params: t3.params, layouts: t3.layouts, templateHas })
       if (!t4) return []
-      const layouts = logoLayouts(readFile, state.template)
+      const layouts = logoLayouts(readFile, state.template, source.listDir)
       const blocks = acmLogoBlocks()
       return Object.entries(t4.values)
         .filter(([k]) => k.startsWith('site_logo'))

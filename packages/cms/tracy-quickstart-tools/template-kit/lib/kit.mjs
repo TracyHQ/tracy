@@ -3,7 +3,13 @@
 import { imagesDigest } from '../../../../../apps/tracy-web/src/lib/template-kit/reader.js'
 import { imageIdOf, neutralKey, pageIdOf } from './ids.mjs'
 import { buildBlock } from './kit-blocks.mjs'
-import { itemListsOf, itemParents, joinMeasuredTwins, listingListKeys } from './kit-item-lists.mjs'
+import {
+  applyItemSliderMinima,
+  itemListsOf,
+  itemParents,
+  joinMeasuredTwins,
+  listingListKeys
+} from './kit-item-lists.mjs'
 import { canonicalPath, pathOfRoute } from './kit-paths.mjs'
 import { applyLayouts } from './layouts.mjs'
 import { listingMax } from './listing-rows.mjs'
@@ -244,6 +250,8 @@ export function buildKit({
         if (most && most.maxSource === 'captured-rows' && list.maxFrom === 'view-setting' && list.max != null)
           Object.assign(list, { maxSource: 'view-setting', maxEvidence: most.maxEvidence })
         else if (most) Object.assign(list, most)
+        else if (list.maxFrom === 'view-setting' && Number.isInteger(list.max) && list.max > 0)
+          list.maxSource = 'view-setting'
         else
           errors.push({
             kind: 'missing',
@@ -252,6 +260,7 @@ export function buildKit({
           })
       }
     }
+    applyItemSliderMinima(block, rec.widths[desk]?.details?.repeats, errors)
     return block
   })
   // Pages of one layout: one body shot and one canHide measurement stand for all of them (layouts.mjs).

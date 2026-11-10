@@ -520,3 +520,82 @@ test('a T4 block layout that prints the site profile logo is a place that settin
 function logo_(file, region, block) {
   return logo(file, region, block, null, true, '#ffffff')
 }
+
+test('T4 footer logo placement follows effective layout files, not PHP or module names', () => {
+  const footer = (content) =>
+    JSON.stringify({ layout: { sections: [{ name: 'footer', contents: [content] }] } })
+  const element = { type: 'element', element: 'logo', name: 'logo' }
+  const shipped = 'templates/demo_t4/etc/layout/default.json'
+  const local = 'templates/demo_t4/local/etc/layout/default.json'
+  const settingsOf = (extra) => {
+    const source = fakeSource()
+    return joomlaAdapter({
+      ...source,
+      readFile: (file) => (Object.hasOwn(extra, file) ? extra[file] : source.readFile(file)),
+      listDir: (dir) =>
+        Object.keys(extra)
+          .filter((f) => f.startsWith(dir + '/') && !f.slice(dir.length + 1).includes('/'))
+          .map((f) => f.slice(dir.length + 1))
+    })
+      .logoSettings()
+      .find((s) => s.key === 'site_logo')
+  }
+  const atFooter = (extra) => settingsOf(extra).prints.find((p) => p.where === 'footer')
+  assert.equal(atFooter({ [shipped]: footer(element) }).emptyShows, 'name-as-text')
+  assert.equal(atFooter({ [local]: footer(element) }).emptyShows, 'name-as-text')
+  for (const replacement of [footer({ type: 'positions', name: 'logo' }), '{broken', ''])
+    assert.equal(
+      atFooter({ [shipped]: footer(element), [local]: replacement }),
+      undefined,
+      'local presence masks shipped placement'
+    )
+  assert.equal(atFooter({ [shipped]: footer({ type: 'block', block: 'logo' }) }), undefined)
+  assert.equal(
+    atFooter({
+      [shipped]: JSON.stringify({ layout: { sections: [{ name: 'header', contents: [element] }] } })
+    }),
+    undefined
+  )
+  assert.equal(atFooter({}), undefined, 'the logo PHP alone proves no footer placement')
+
+  const source = fakeSource()
+  const settings = joomlaAdapter({
+    ...source,
+    readFile: (file) => (file === shipped ? footer(element) : source.readFile(file)),
+    listDir: (dir) => (dir === 'templates/demo_t4/etc/layout' ? ['default.json'] : [])
+  }).logoSettings()
+  const { logoSpots } = buildLogoSpots({
+    reads: logoReads,
+    map,
+    settings,
+    isFreeHtml: (e) => e.identity?.module === 'mod_custom'
+  })
+  assert.equal(
+    logoSpots.find((s) => s.frameId === 'block-40.1').emptyShows,
+    'nothing',
+    'free HTML still owns its logo'
+  )
+})
+
+test('T4 explicit footer element preserves the independent ACM fallback', () => {
+  const source = acmSource()
+  const file = 'templates/demo_t4/etc/layout/default.json'
+  const settings = joomlaAdapter({
+    ...source,
+    readFile: (f) =>
+      f === file
+        ? JSON.stringify({
+            layout: { sections: [{ name: 'Footer', contents: [{ type: 'element', element: 'logo' }] }] }
+          })
+        : source.readFile(f),
+    listDir: (dir) => (dir === 'templates/demo_t4/etc/layout' ? ['default.json'] : source.listDir(dir))
+  }).logoSettings()
+  assert.equal(settings[0].prints.find((p) => p.where === 'footer').emptyShows, 'name-as-text')
+  const { logoSpots } = buildLogoSpots({
+    reads: [{ pageId: 'page-home', opening: true, logos: [logo_('inline-svg', 'footer', 'module-460')] }],
+    map: { entities: [], slots: [] },
+    settings,
+    isFreeHtml: () => false
+  })
+  assert.equal(logoSpots[0].emptyShows, 'template-text')
+})

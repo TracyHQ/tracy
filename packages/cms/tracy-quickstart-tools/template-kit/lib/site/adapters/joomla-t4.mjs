@@ -71,7 +71,7 @@ export function variableOf(php, key) {
 }
 
 /** The layouts of a T4 template that print the logo, with where each prints it. */
-export function logoLayouts(readFile, template) {
+export function logoLayouts(readFile, template, listDir) {
   const out = []
   for (const [where, rel] of [
     ['header', 'html/layouts/t4/element/logo.php'],
@@ -81,6 +81,24 @@ export function logoLayouts(readFile, template) {
     const base = own ?? readFile(`plugins/system/t4/themes/base/${rel}`)
     if (base)
       out.push({ where, php: base, file: own ? `templates/${template}/${rel}` : `t4 framework ${rel}` })
+  }
+  // Only an explicit logo element in an effective footer section proves the shared element prints there.
+  const dirs = [`templates/${template}/local/etc/layout`, `templates/${template}/etc/layout`]
+  const names = new Set(dirs.flatMap((dir) => listDir?.(dir) ?? []))
+  const hasLogo = (node) =>
+    (node?.type === 'element' && node.element === 'logo') ||
+    (Array.isArray(node?.contents) && node.contents.some(hasLogo))
+  const element = out.find((l) => l.where === 'header')
+  for (const name of names) {
+    if (!element || !/^[\w-]+\.json$/.test(name)) continue
+    const text = readFile(`${dirs[0]}/${name}`) ?? readFile(`${dirs[1]}/${name}`)
+    try {
+      const sections = JSON.parse(text)?.layout?.sections
+      if (Array.isArray(sections) && sections.some((s) => /^footer$/i.test(s.name) && hasLogo(s))) {
+        out.push({ ...element, where: 'footer' })
+        break
+      }
+    } catch {}
   }
   return out
 }
