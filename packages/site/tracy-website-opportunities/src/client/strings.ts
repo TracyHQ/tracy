@@ -1349,7 +1349,7 @@ export const en = {
   'gate.RESEARCH_NOT_DONE': 'Research business facts first.',
   'gate.NO_BRIEF': 'Make a site content brief first.',
   'gate.BRIEF_STALE':
-    'This site content brief was made from older business facts or older sources. Make it again, then approve it.',
+    'This site content brief was made from older business facts. Make it again, then approve it.',
   'gate.other': 'That did not work. Try again in a moment.',
 
   /** Add source (#537): one more link of the business. */
