@@ -1,6 +1,7 @@
 // The seller approves the Profile, then the Content brief, before the next step unlocks (#537): the approve doors set
-// their times, a Profile edit or an added photo after approval asks for review again and marks the brief stale, a
-// source added after research asks for research again, and the brief and build doors refuse with the reason.
+// their times, a Profile edit or an added photo after approval asks for review again and marks the brief stale, sources
+// are fixed once research starts (added or removed only before it or after it failed), and the brief and build doors
+// refuse with the reason.
 // Real Postgres, a fictional place, the real domain with its network parts replaced.
 //
 //   TEST_DATABASE_URL=… node --test --test-concurrency=1 apps/tracy-web/test/wo-approval.test.mjs
@@ -268,7 +269,7 @@ test(
     assert.equal(briefOk.body.approval.brief, 'approved')
     const open = await build(w, fresh, 'approval-build-03')
     assert.ok(
-      !['PROFILE_NOT_APPROVED', 'BRIEF_NOT_APPROVED', 'RESEARCH_NEEDED'].includes(open.body?.code),
+      !['PROFILE_NOT_APPROVED', 'BRIEF_NOT_APPROVED'].includes(open.body?.code),
       JSON.stringify(open.body)
     )
   }
@@ -389,7 +390,7 @@ test(
 )
 
 test(
-  'a source added after research asks for research again; before research it is only added',
+  'a source can be added before research or after it failed; running or done answers RESEARCH_STARTED',
   opts,
   async () => {
     const w = await world()
@@ -405,8 +406,8 @@ test(
       url: 'https://www.instagram.com/harbor.gym.example/'
     })
     assert.equal(first.status, 201, JSON.stringify(first.body))
-    assert.equal(first.body.approval.research, 'ok', 'nothing ran yet: the source is only added')
-    assert.equal(first.body.approval.sourcesChangedAt, null)
+    assert.equal('research' in first.body.approval, false, 'the approval carries no sources state')
+    assert.equal('sourcesChangedAt' in first.body.approval, false)
     assert.ok(
       first.body.opportunity.candidate.pastedLinks.some((l) => l.source === 'instagram'),
       JSON.stringify(first.body.opportunity.candidate)
@@ -441,40 +442,52 @@ test(
     )
     assert.equal(early.pastedLink, LISTING)
 
+    const add = (url) => w.call(A, 'POST', `${BASE}/${fresh.id}/sources`, { url })
+    const linksNow = async () =>
+      (await w.pool.query('select candidate from wo_opportunity where id = $1', [fresh.id])).rows[0].candidate
+    const NEXT =
+      'Research has already run. Sources are fixed once the research starts; they can be changed only before it, or after it failed.'
+
+    // Running: refused with exactly {code, next}, the link list does not change.
+    await w.pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'add-running-01', 'running')`,
+      [a, fresh.id]
+    )
+    const busy = await add('https://www.tiktok.com/@harbor.gym.example')
+    assert.equal(busy.status, 409, JSON.stringify(busy.body))
+    assert.deepEqual(busy.body, { code: 'RESEARCH_STARTED', next: NEXT })
+    assert.equal((await linksNow()).socials?.tiktok, undefined, 'nothing was added')
+    await w.pool.query(`delete from wo_job where request_id = 'add-running-01'`)
+
+    // Failed: a bad link may be the cause, so another one can be added.
+    await w.pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'add-failed-01', 'failed')`,
+      [a, fresh.id]
+    )
+    const afterFail = await add('https://www.facebook.com/harbor.gym.example')
+    assert.equal(afterFail.status, 201, JSON.stringify(afterFail.body))
+    assert.ok(afterFail.body.opportunity.candidate.socials?.facebook, 'the link is added')
+    await w.pool.query(`delete from wo_job where request_id = 'add-failed-01'`)
+
+    // Done: refused, and the approvals stay as they were (no research, Profile or brief reset).
     await requestResearch(w.pool, { accountId: a, opportunity: fresh, requestId: 'source-research-01' })
     await w.drain()
-    await w.call(A, 'PUT', `${BASE}/${fresh.id}/profile`, { edits: { email: 'hello@harbor-gym.example' } })
     await w.call(A, 'POST', `${BASE}/${fresh.id}/profile/approve`)
     await makeBrief(w, fresh, 'source-brief-01')
     await w.call(A, 'POST', `${BASE}/${fresh.id}/brief/approve`)
-
-    const added = await w.call(A, 'POST', `${BASE}/${fresh.id}/sources`, {
-      url: 'https://www.tiktok.com/@harbor.gym.example'
-    })
-    assert.equal(added.status, 201, JSON.stringify(added.body))
-    assert.equal(added.body.approval.research, 'sources_changed')
-    assert.equal(added.body.approval.profile, 'none')
-    assert.equal(added.body.approval.brief, 'stale')
-    assert.equal(added.body.approval.briefStale, 'sources')
-    for (const [path, body] of [
-      [`${BASE}/${fresh.id}/revisions`, { requestId: 'source-brief-02' }],
-      [`${BASE}/${fresh.id}/demo/build`, { requestId: 'source-build-01', selection: { cms: 'joomla' } }],
-      [`${BASE}/${fresh.id}/profile/approve`, undefined],
-      [`${BASE}/${fresh.id}/brief/approve`, undefined]
-    ]) {
-      const res = await w.call(A, 'POST', path, body)
-      assert.equal(res.status, 409, path)
-      assert.equal(res.body.code, 'RESEARCH_NEEDED', path)
-    }
-    // Research again: the Profile needs review, the seller's edit is kept over the collected value.
-    const held = (await w.pool.query('select * from wo_opportunity where id = $1', [fresh.id])).rows[0]
-    await requestResearch(w.pool, { accountId: a, opportunity: held, requestId: 'source-research-02' })
-    await w.drain()
-    const reread = await w.call(A, 'GET', `${BASE}/${fresh.id}`)
-    assert.equal(reread.body.approval.research, 'ok', JSON.stringify(reread.body.research))
-    assert.equal(reread.body.approval.profile, 'needed')
-    assert.equal(reread.body.approval.brief, 'stale')
-    assert.equal(reread.body.profile.email, 'hello@harbor-gym.example')
+    const beforeAdd = (await w.call(A, 'GET', `${BASE}/${fresh.id}`)).body.approval
+    assert.equal(beforeAdd.brief, 'approved')
+    const held = await linksNow()
+    const done = await add('https://www.tiktok.com/@harbor.gym.example')
+    assert.equal(done.status, 409, JSON.stringify(done.body))
+    assert.deepEqual(done.body, { code: 'RESEARCH_STARTED', next: NEXT })
+    assert.deepEqual(await linksNow(), held, 'the link list is unchanged')
+    // The add door refuses before it judges the link: even a duplicate or a bad body reads RESEARCH_STARTED.
+    assert.equal((await add('not a link')).body.code, 'RESEARCH_STARTED')
+    const afterAdd = (await w.call(A, 'GET', `${BASE}/${fresh.id}`)).body.approval
+    assert.deepEqual(afterAdd, beforeAdd)
+    assert.equal('research' in afterAdd, false)
+    assert.equal(afterAdd.briefStale, null)
   }
 )
 
@@ -578,8 +591,7 @@ test('a source removed before research only leaves the link list', opts, async (
     url: 'http://instagram.com/harbor.gym.example?igsh=abc123'
   })
   assert.equal(gone.status, 200, JSON.stringify(gone.body))
-  assert.equal(gone.body.approval.research, 'ok')
-  assert.equal(gone.body.approval.sourcesChangedAt, null)
+  assert.equal('research' in gone.body.approval, false)
   assert.equal(gone.body.opportunity.candidate.socials?.instagram, undefined)
   assert.ok(!gone.body.opportunity.candidate.pastedLinks.some((l) => l.source === 'instagram'))
   assert.ok(gone.body.opportunity.candidate.pastedLinks.some((l) => l.source === 'google-places'))
@@ -625,8 +637,7 @@ test(
     // Not started: the link goes and the approvals do not move.
     const early = await del(IG)
     assert.equal(early.status, 200, JSON.stringify(early.body))
-    assert.equal(early.body.approval.research, 'ok')
-    assert.equal(early.body.approval.sourcesChangedAt, null)
+    assert.equal('research' in early.body.approval, false)
     assert.equal(early.body.opportunity.candidate.socials?.instagram, undefined)
 
     // Running: refused with the research-started answer, nothing changes.
@@ -650,8 +661,7 @@ test(
     const failed = await del(IG2)
     assert.equal(failed.status, 200, JSON.stringify(failed.body))
     assert.equal(failed.body.opportunity.candidate.socials?.facebook, undefined, 'the link is gone')
-    assert.equal(failed.body.approval.research, 'ok')
-    assert.equal(failed.body.approval.sourcesChangedAt, null)
+    assert.equal('research' in failed.body.approval, false)
     await w.pool.query(`delete from wo_job where request_id = 'failed-01'`)
 
     // Done: still refused, and the collected rows are untouched.
@@ -671,7 +681,8 @@ test(
       held
     )
     const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
-    assert.equal(detail.approval.research, 'ok')
+    assert.equal('research' in detail.approval, false)
+    assert.equal('sourcesChangedAt' in detail.approval, false)
   }
 )
 
@@ -739,8 +750,8 @@ test(
     const later = await w.upload(A, `${BASE}/${fresh.id}/media`, second)
     assert.equal(later.status, 201)
     assert.equal(later.body.approval.profile, 'needed', 'an added photo asks for review again')
-    assert.equal(later.body.approval.research, 'ok', 'but never for research again')
     const shown = await w.call(A, 'GET', `${BASE}/${fresh.id}`)
+    assert.equal(shown.body.research?.state, 'done', 'but never for research again')
     assert.equal(shown.body.media.filter((m) => m.source === 'owner').length, 2)
     assert.ok(shown.body.media.length > 2, 'next to the collected photos')
     assert.equal(w.kept.size >= 2, true)

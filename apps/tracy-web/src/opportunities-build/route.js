@@ -413,8 +413,8 @@ export function createWebsiteBuilder(deps) {
       return refuse(c, 409, code, APPROVAL_NEXT[code], opps.length > 1 ? { ids: refused } : {})
     }
 
-    // The seller approves the latest Content brief (#537): it unlocks Build demo. A brief made from an older Profile or
-    // older sources is made again first.
+    // The seller approves the latest Content brief (#537): it unlocks Build demo. A brief made from an older Profile is made
+    // again first.
     app.post(`${BASE}/:id/brief/approve`, async (c) => {
       const who = await caller(c)
       if (who instanceof Response) return who
@@ -422,8 +422,6 @@ export function createWebsiteBuilder(deps) {
       const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
       if (!opp) return notFound(c, 'opportunity')
       const before = await approvalFor(opp)
-      if (before.research === 'sources_changed')
-        return refuse(c, 409, 'RESEARCH_NEEDED', APPROVAL_NEXT.RESEARCH_NEEDED)
       if (before.brief === 'none') return refuse(c, 409, 'NO_BRIEF', APPROVAL_NEXT.NO_BRIEF)
       if (before.brief === 'stale') return refuse(c, 409, 'BRIEF_STALE', APPROVAL_NEXT.BRIEF_STALE)
       if (before.profile !== 'approved')

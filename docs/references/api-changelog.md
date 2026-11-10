@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-10: Sources are fixed once research starts
+
+Changed `POST /api/website-opportunities/:id/sources` (internal): a source can be added only before research runs or after it failed, like a removal; otherwise 409 `RESEARCH_STARTED` with a `next` sentence, and 409 `JOB_ACTIVE` is no longer answered here. Removed (internal): `approval.research`, `approval.sourcesChangedAt` and `briefStale: "sources"`, and the 409 `RESEARCH_NEEDED` of the profile approve, brief approve, revisions and demo build doors, since a source never changes after research.
+
 ## 2026-11-10: Adding a source refuses unreadable, duplicate and excess links clearly
 
 Changed `POST /api/website-opportunities/:id/sources` (internal): 422 `UNSUPPORTED_LINK` with `platform` for X, LinkedIn, Threads, Linktree and WhatsApp links (they were saved as the website); 409 `SOURCE_ALREADY_KNOWN` now means this exact link only, and the new 409 `PLATFORM_ALREADY_KNOWN` with `platform` means another page of a kind it already has; 409 `TOO_MANY_SOURCES` with `max: 5` for a sixth listing page. magicpin pages on any TLD (`magicpin.in`) read as listing pages.

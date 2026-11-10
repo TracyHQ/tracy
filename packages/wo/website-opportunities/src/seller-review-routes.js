@@ -6,25 +6,19 @@
  *   DELETE /api/website-opportunities/:id/sources         {url}: one of its links removed (one link stays at least)
  *   POST /api/website-opportunities/:id/media             multipart `file`: a photo or video the seller adds
  *
- * Each answers `{opportunity, approval}` (`approval.js approvalOf`). A source added or removed after research ran
- * asks for research again and clears the Profile approval; a photo or video added is a Profile edit (the Profile needs review
+ * Each answers `{opportunity, approval}` (`approval.js approvalOf`). Sources are fixed once research starts: a source
+ * is added or removed only while research has not started or after it failed (`sourcesLocked`), so a source change
+ * never has research, a Profile or a brief to reset. A photo or video added is a Profile edit (the Profile needs review
  * again, research does not). Every door touches only the caller's own opportunity: another account's answers 404.
  * The brief's own approval door lives with the brief (`opportunities-build/route.js`).
  */
 import { judgeLinks } from '../domain/link-kinds.mjs'
 import { videoSize } from '../domain/video-size.mjs'
-import {
-  APPROVAL_NEXT,
-  approvalOf,
-  approveProfile,
-  markProfileChanged,
-  saveSourceChange
-} from './approval.js'
+import { approvalOf, approveProfile, markProfileChanged, saveSourceChange } from './approval.js'
 import { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES } from './executor.js'
 import { LISTING_PAGES_MAX, pruneListingSource, saveListingSource, unsupportedLinkOf } from './link-fields.js'
 import { researchStateOf } from './research-state.js'
 import {
-  activeJobOf,
   candidateHasLink,
   candidateWithNewRefs,
   candidateWithoutLink,
@@ -40,16 +34,22 @@ const URL_MAX = 2000
 /**
  * @param {import('hono').Hono} app
  * @param {object} ctx the open router's helpers and deps: `pool`, `objects`, `imageInfo`, `caller`, `refuse`,
- *   `notFound`, `jobActive`, `json`, `body`, `domainOr`, `featureOn`, `featureOff`, `linkFields`, `opportunityShape`,
+ *   `notFound`, `json`, `body`, `domainOr`, `featureOn`, `featureOff`, `linkFields`, `opportunityShape`,
  *   `latestBriefAt`, `opportunityOf`, `UUID`, `BASE`.
  */
 export function sellerReviewRoutes(app, ctx) {
   const { pool, caller, refuse, notFound, json, body, UUID, BASE, opportunityOf } = ctx
 
-  /** 409 `JOB_ACTIVE` while research runs for the opportunity: its link list is what that run reads. */
-  async function jobRunning(c, opp) {
-    const job = await activeJobOf(pool, opp.id)
-    return job ? ctx.jobActive(c, job) : null
+  /**
+   * 409 `RESEARCH_STARTED` unless this opportunity's research has not started or failed (owner decision: sources are
+   * fixed once research starts; a bad link often causes a failure, so a failed research reopens them). It also covers
+   * an active research job: a queued, running or paused one reads `running` (`research-state.js`), and a brief or a
+   * build needs finished research. `next` is the door's own sentence. Null when the sources may change.
+   */
+  async function sourcesLocked(c, opp, next) {
+    const research = await researchStateOf(pool, opp.id)
+    if (research.state === 'not_started' || research.state === 'failed') return null
+    return refuse(c, 409, 'RESEARCH_STARTED', next)
   }
 
   /** The caller's own opportunity of the path, or a Response. */
@@ -74,8 +74,6 @@ export function sellerReviewRoutes(app, ctx) {
     if (own instanceof Response) return own
     const research = await researchStateOf(pool, own.opp.id)
     const approval = approvalOf({ opportunity: own.opp, research, latestBriefAt: null })
-    if (approval.research === 'sources_changed')
-      return refuse(c, 409, 'RESEARCH_NEEDED', APPROVAL_NEXT.RESEARCH_NEEDED)
     if (approval.profile === 'none')
       return refuse(
         c,
@@ -92,13 +90,18 @@ export function sellerReviewRoutes(app, ctx) {
   // the same rules (`link-fields.js`). A Google link names the business itself, so it is not added here; a page of a
   // platform Tracy cannot read (`UNSUPPORTED_LINK_HOSTS`) is refused rather than saved as the website; at most
   // `LISTING_PAGES_MAX` listing pages. A refused duplicate says whether it is this exact link or another page of a
-  // platform the business already has a page of (one website, one page per social network).
+  // platform the business already has a page of (one website, one page per social network). Only before research
+  // starts or after it failed (`sourcesLocked`): the link list is what research reads.
   app.post(`${BASE}/:id/sources`, async (c) => {
     const own = await ownOpportunity(c)
     if (own instanceof Response) return own
     if (!(await ctx.featureOn())) return ctx.featureOff(c)
-    const running = await jobRunning(c, own.opp)
-    if (running) return running
+    const locked = await sourcesLocked(
+      c,
+      own.opp,
+      'Research has already run. Sources are fixed once the research starts; they can be changed only before it, or after it failed.'
+    )
+    if (locked) return locked
     const b = await body(c)
     const raw = typeof b?.url === 'string' ? b.url.trim() : ''
     if (!raw || raw.length > URL_MAX)
@@ -158,20 +161,15 @@ export function sellerReviewRoutes(app, ctx) {
               : 'This business already has a page on this network: remove it before adding another.',
             { platform: judged?.kind ?? null, links: made.links }
           )
-    const research = await researchStateOf(pool, own.opp.id)
-    const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, merged, {
-      researched: Boolean(research.researchedAt)
-    })
+    const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, merged)
     if (!row) return notFound(c, 'opportunity')
     await saveListingSource(pool, row.id, made.listings)
     return answer(c, row, 201)
   })
 
   // One of the business's links removed, matched as stored, as shown or as pasted (`store.js linkKeyOf`), and only
-  // while research has not run or after it failed (owner decision; a bad link often causes the failure): any other research state answers 409 `RESEARCH_STARTED`. That also
-  // covers an active research job (JOB_ACTIVE cannot happen here: queued, running and paused research reads `running`,
-  // and a brief or build needs finished research). So a removal never has research to reset: only this
-  // opportunity's link list (and its private listing row) changes.
+  // before research starts or after it failed (`sourcesLocked`): only this opportunity's link list (and its private
+  // listing row) changes.
   app.delete(`${BASE}/:id/sources`, async (c) => {
     const own = await ownOpportunity(c)
     if (own instanceof Response) return own
@@ -191,17 +189,13 @@ export function sellerReviewRoutes(app, ctx) {
     if (!removed) return notFound(c, 'link')
     if (researchLinkCountOf(own.opp.provider, removed.candidate) < 1)
       return refuse(c, 409, 'LAST_SOURCE', 'add')
-    const research = await researchStateOf(pool, own.opp.id)
-    if (research.state !== 'not_started' && research.state !== 'failed')
-      return refuse(
-        c,
-        409,
-        'RESEARCH_STARTED',
-        'Research is running or has finished. Sources can be removed only before the research, or after it failed.'
-      )
-    const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, removed.candidate, {
-      researched: false
-    })
+    const locked = await sourcesLocked(
+      c,
+      own.opp,
+      'Research is running or has finished. Sources can be removed only before the research, or after it failed.'
+    )
+    if (locked) return locked
+    const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, removed.candidate)
     if (!row) return notFound(c, 'opportunity')
     const key = linkKeyOf(raw)
     await pruneListingSource(pool, row.id, (url) => linkKeyOf(url) !== key)

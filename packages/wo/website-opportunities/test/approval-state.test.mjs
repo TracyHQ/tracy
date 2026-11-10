@@ -13,7 +13,7 @@ const CASES = [
     opp: {},
     researchedAt: null,
     briefAt: null,
-    want: { research: 'ok', profile: 'none', brief: 'none', briefStale: null },
+    want: { profile: 'none', brief: 'none', briefStale: null },
     gates: { brief: 'PROFILE_NOT_APPROVED', build: 'PROFILE_NOT_APPROVED' }
   },
   {
@@ -21,7 +21,7 @@ const CASES = [
     opp: {},
     researchedAt: T(1),
     briefAt: null,
-    want: { research: 'ok', profile: 'needed', brief: 'none', briefStale: null },
+    want: { profile: 'needed', brief: 'none', briefStale: null },
     gates: { brief: 'PROFILE_NOT_APPROVED', build: 'PROFILE_NOT_APPROVED' }
   },
   {
@@ -29,7 +29,7 @@ const CASES = [
     opp: { profile_approved_at: T(2) },
     researchedAt: T(1),
     briefAt: null,
-    want: { research: 'ok', profile: 'approved', brief: 'none', briefStale: null },
+    want: { profile: 'approved', brief: 'none', briefStale: null },
     gates: { brief: null, build: 'BRIEF_NOT_APPROVED' }
   },
   {
@@ -37,7 +37,7 @@ const CASES = [
     opp: { profile_approved_at: T(2) },
     researchedAt: T(1),
     briefAt: T(3),
-    want: { research: 'ok', profile: 'approved', brief: 'needed', briefStale: null },
+    want: { profile: 'approved', brief: 'needed', briefStale: null },
     gates: { brief: null, build: 'BRIEF_NOT_APPROVED' }
   },
   {
@@ -45,7 +45,7 @@ const CASES = [
     opp: { profile_approved_at: T(2), brief_approved_at: T(4) },
     researchedAt: T(1),
     briefAt: T(3),
-    want: { research: 'ok', profile: 'approved', brief: 'approved', briefStale: null },
+    want: { profile: 'approved', brief: 'approved', briefStale: null },
     gates: { brief: null, build: null }
   },
   {
@@ -61,7 +61,7 @@ const CASES = [
     opp: { profile_approved_at: null, brief_approved_at: T(4), profile_changed_at: T(6) },
     researchedAt: T(1),
     briefAt: T(3),
-    want: { research: 'ok', profile: 'needed', brief: 'stale', briefStale: 'profile' },
+    want: { profile: 'needed', brief: 'stale', briefStale: 'profile' },
     gates: { brief: 'PROFILE_NOT_APPROVED', build: 'PROFILE_NOT_APPROVED' }
   },
   {
@@ -77,7 +77,7 @@ const CASES = [
     opp: { profile_approved_at: T(4) },
     researchedAt: T(1),
     briefAt: T(3),
-    want: { research: 'ok', profile: 'approved', brief: 'stale', briefStale: 'profile' },
+    want: { profile: 'approved', brief: 'stale', briefStale: 'profile' },
     gates: { brief: null, build: 'BRIEF_NOT_APPROVED' }
   },
   {
@@ -105,35 +105,11 @@ const CASES = [
     gates: { brief: null, build: null }
   },
   {
-    name: 'sources stale wins over a later Profile approval',
-    opp: { profile_approved_at: T(9), sources_changed_at: T(6) },
-    researchedAt: T(8),
-    briefAt: T(3),
-    want: { research: 'ok', profile: 'approved', brief: 'stale', briefStale: 'sources' },
-    gates: { build: 'BRIEF_NOT_APPROVED' }
-  },
-  {
-    name: 'a source added after research: research needed, brief stale from sources',
-    opp: { profile_approved_at: null, brief_approved_at: T(4), sources_changed_at: T(6) },
+    name: 'a stored sources_changed_at (written before sources were fixed) changes nothing',
+    opp: { sources_changed_at: T(6), profile_approved_at: T(2), brief_approved_at: T(4) },
     researchedAt: T(1),
     briefAt: T(3),
-    want: { research: 'sources_changed', profile: 'none', brief: 'stale', briefStale: 'sources' },
-    gates: { brief: 'RESEARCH_NEEDED', build: 'RESEARCH_NEEDED' }
-  },
-  {
-    name: 'research ran again after the source: research ok, Profile needed, brief still stale',
-    opp: { sources_changed_at: T(6) },
-    researchedAt: T(8),
-    briefAt: T(3),
-    want: { research: 'ok', profile: 'needed', brief: 'stale', briefStale: 'sources' },
-    gates: { brief: 'PROFILE_NOT_APPROVED', build: 'PROFILE_NOT_APPROVED' }
-  },
-  {
-    name: 'a new brief after the re-run and both approvals: clear',
-    opp: { sources_changed_at: T(6), profile_approved_at: T(9), brief_approved_at: T(11) },
-    researchedAt: T(8),
-    briefAt: T(10),
-    want: { research: 'ok', profile: 'approved', brief: 'approved', briefStale: null },
+    want: { profile: 'approved', brief: 'approved', briefStale: null },
     gates: { brief: null, build: null }
   }
 ]
@@ -159,8 +135,10 @@ test('approvalOf answers ISO times, from Date or string', () => {
     latestBriefAt: null
   })
   assert.equal(got.profileApprovedAt, T(2))
-  assert.equal(got.sourcesChangedAt, T(1))
   assert.equal(got.briefApprovedAt, null)
+  // Sources are fixed once research starts: the approval carries no research or sources state.
+  assert.equal('research' in got, false)
+  assert.equal('sourcesChangedAt' in got, false)
 })
 
 const chain = (states, state = 'queued') => ({
