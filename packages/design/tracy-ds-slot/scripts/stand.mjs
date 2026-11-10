@@ -281,7 +281,18 @@ else execFileSync('tar', ['-xzf', join(dir, 'dl', webFile), '-C', site])
 const web = `${name}-web`
 const db = `${name}-db`
 for (const c of [web, db]) quiet('rm', '-f', c)
-quiet('network', 'create', name)
+try {
+  docker('network', 'create', name)
+} catch (error) {
+  // An existing exact-name network may be preallocated; every other failure must stop before the DB run.
+  let network
+  try {
+    network = JSON.parse(docker('network', 'inspect', '--format', '{{json .}}', name))
+  } catch {
+    throw error
+  }
+  if (network?.Name !== name || !/^[a-f0-9]{64}$/.test(network?.Id ?? '')) throw error
+}
 docker(
   'run',
   '-d',
