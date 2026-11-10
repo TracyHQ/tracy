@@ -1614,29 +1614,29 @@
   },
   "quickstart/ja-diner/j6": {
     "platform": "joomla",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "installer": {
-      "file": "ja-diner-j6-quickstart-1.0.7.zip",
-      "bytes": 63426036,
-      "sha256": "b6fefb9a0da3099489c56535ed7a1127124580cb43059e621dd9994cf4299ee2",
-      "githubAssetId": 728596324,
-      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fj6/ja-diner-j6-quickstart-1.0.7.zip"
+      "file": "ja-diner-j6-quickstart-1.0.8.zip",
+      "bytes": 63426923,
+      "sha256": "0e426592cc6a87ef006c377a23d3469fe5725feee307a7c7e5cf808b26757d44",
+      "githubAssetId": 730438374,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fj6/ja-diner-j6-quickstart-1.0.8.zip"
     },
     "cowork": {
-      "file": "pkg_claudecowork-0.24.93.zip",
-      "version": "0.24.93",
-      "bytes": 587071,
-      "sha256": "732411ebe35955aa755d8eb6faa14e76afa09236010e4a5a3a60246fe2260aed",
-      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.93/pkg_claudecowork-0.24.93.zip",
+      "file": "pkg_claudecowork-0.24.94.zip",
+      "version": "0.24.94",
+      "bytes": 587127,
+      "sha256": "6684fd196ad1f83c8e3a8cee631c0ec18defdb1bb0973ad9ee70b0f8f80bb426",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.94/pkg_claudecowork-0.24.94.zip",
       "contractFiles": {
         "content-map.json": "6df56fb093a69d27c69e841e1fa3275e0a088e9b5fd925198ca5690907c28635",
-        "manifest.json": "96ffc1e8e106b679ed157bb2ca365467c30e3ef976f1276b7ff32f144522ff89",
-        "presentation-lock.json": "c7f378c971857e83eb7c5c97b2f870a810f5536d0694c7f7b5ce011675bc73ea",
-        "showcase-nav-map.json": "1eee41588880cebccacbd931e96cb9b9eb1040f1fff5f4fddb9a58cf13e6531a"
+        "manifest.json": "73cf29095c6d226ee5e63706fb71dbd80cd377a19ae28e9ae8468f993c9fe0b4",
+        "presentation-lock.json": "40a22ed8c7bc42e38108fe30285f63943f6d1dcec8b4b8135e4504df94024dea",
+        "showcase-nav-map.json": "e7a22cc6d9246ee8a6a738100a666687a3f6c6b7ced18b646f46dc3eb0e9c11e"
       }
     },
     "multilingual": false,
-    "contract": "ja-diner/j6/1.0.7"
+    "contract": "ja-diner/j6/1.0.8"
   },
   "quickstart/ja-boxing/j6": {
     "platform": "joomla",
