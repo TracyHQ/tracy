@@ -167,9 +167,11 @@ export function sellerReviewRoutes(app, ctx) {
     return answer(c, row, 201)
   })
 
-  // One of the business's links removed, matched as stored, as shown or as pasted (`store.js linkKeyOf`). The same
-  // effect as an added link: after research ran, research is needed again. What research already collected from that
-  // link stays in the place's snapshot; only this opportunity's link list (and its private listing row) changes.
+  // One of the business's links removed, matched as stored, as shown or as pasted (`store.js linkKeyOf`), and only
+  // while research has not run (owner decision): any other research state answers 409 `RESEARCH_STARTED`. That also
+  // covers an active research job (JOB_ACTIVE cannot happen here: queued, running and paused research reads `running`,
+  // and a brief or build needs finished research). So a removal never has research to reset: only this
+  // opportunity's link list (and its private listing row) changes.
   app.delete(`${BASE}/:id/sources`, async (c) => {
     const own = await ownOpportunity(c)
     if (own instanceof Response) return own
@@ -189,11 +191,16 @@ export function sellerReviewRoutes(app, ctx) {
     if (!removed) return notFound(c, 'link')
     if (researchLinkCountOf(own.opp.provider, removed.candidate) < 1)
       return refuse(c, 409, 'LAST_SOURCE', 'add')
-    const running = await jobRunning(c, own.opp)
-    if (running) return running
     const research = await researchStateOf(pool, own.opp.id)
+    if (research.state !== 'not_started')
+      return refuse(
+        c,
+        409,
+        'RESEARCH_STARTED',
+        'Research has already run. Sources can be removed only before the research.'
+      )
     const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, removed.candidate, {
-      researched: Boolean(research.researchedAt)
+      researched: false
     })
     if (!row) return notFound(c, 'opportunity')
     const key = linkKeyOf(raw)

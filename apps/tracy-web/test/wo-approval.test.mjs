@@ -605,57 +605,69 @@ test('a source removed before research only leaves the link list', opts, async (
   )
 })
 
-test('a source removed after research asks for research again; the collected data stays', opts, async () => {
-  const w = await world()
-  const { a, opp } = await researchedCard(w)
-  const TT = 'https://www.tiktok.com/@harbor.gym.example'
-  // Added while research runs: refused, the run reads the link list.
-  await w.pool.query(
-    `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'running-01', 'running')`,
-    [a, opp.id]
-  )
-  const busyAdd = await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: TT })
-  assert.equal(busyAdd.status, 409)
-  assert.equal(busyAdd.body.code, 'JOB_ACTIVE')
-  await w.pool.query(`delete from wo_job where request_id = 'running-01'`)
-  assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: TT })).status, 201)
-  await requestResearch(w.pool, {
-    accountId: a,
-    opportunity: (await w.pool.query('select * from wo_opportunity where id = $1', [opp.id])).rows[0],
-    requestId: 'remove-research-01'
-  })
-  await w.drain()
-  await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
-  await makeBrief(w, opp, 'remove-brief-01')
-  await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)
-  const snapshotRows = async () =>
-    (await w.pool.query('select count(*)::int as n from wo_place_snapshot_source')).rows[0].n
-  const held = await snapshotRows()
+test(
+  'a source can be removed only before research: after it started the door answers RESEARCH_STARTED',
+  opts,
+  async () => {
+    const w = await world()
+    const a = await w.accountOf(A)
+    const opp = await w.saveGoogle(a)
+    const TT = 'https://www.tiktok.com/@harbor.gym.example'
+    const IG = 'https://www.instagram.com/harbor.gym.example/'
+    const del = (url) => w.call(A, 'DELETE', `${BASE}/${opp.id}/sources`, { url })
+    const stored = async () =>
+      (await w.pool.query('select candidate from wo_opportunity where id = $1', [opp.id])).rows[0].candidate
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: TT })).status, 201)
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: IG })).status, 201)
 
-  await w.pool.query(
-    `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'running-02', 'running')`,
-    [a, opp.id]
-  )
-  const busy = await w.call(A, 'DELETE', `${BASE}/${opp.id}/sources`, { url: TT })
-  assert.equal(busy.status, 409)
-  assert.equal(busy.body.code, 'JOB_ACTIVE')
-  await w.pool.query(`delete from wo_job where request_id = 'running-02'`)
+    // Not started: the link goes and the approvals do not move.
+    const early = await del(IG)
+    assert.equal(early.status, 200, JSON.stringify(early.body))
+    assert.equal(early.body.approval.research, 'ok')
+    assert.equal(early.body.approval.sourcesChangedAt, null)
+    assert.equal(early.body.opportunity.candidate.socials?.instagram, undefined)
 
-  const removed = await w.call(A, 'DELETE', `${BASE}/${opp.id}/sources`, { url: TT })
-  assert.equal(removed.status, 200, JSON.stringify(removed.body))
-  assert.equal(removed.body.approval.research, 'sources_changed')
-  assert.ok(removed.body.approval.sourcesChangedAt)
-  assert.equal(removed.body.approval.profile, 'none')
-  assert.equal(removed.body.approval.profileApprovedAt, null)
-  assert.equal(removed.body.approval.brief, 'stale')
-  assert.equal(removed.body.approval.briefStale, 'sources')
-  assert.equal(removed.body.opportunity.candidate.socials?.tiktok, undefined)
-  assert.equal(await snapshotRows(), held, "the place's collected rows are untouched")
-  assert.equal((await build(w, opp, 'remove-build-01')).body.code, 'RESEARCH_NEEDED')
-  const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
-  assert.equal(detail.approval.research, 'sources_changed')
-  assert.ok(!detail.sources.some((s) => s.pastedLink?.includes('tiktok.com')), JSON.stringify(detail.sources))
-})
+    // Running: refused with the research-started answer, nothing changes.
+    await w.pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'running-01', 'running')`,
+      [a, opp.id]
+    )
+    const busy = await del(TT)
+    assert.equal(busy.status, 409)
+    assert.deepEqual(Object.keys(busy.body).sort(), ['code', 'next'])
+    assert.equal(busy.body.code, 'RESEARCH_STARTED')
+    assert.match(busy.body.next, /only before the research/)
+    assert.equal((await stored()).socials?.tiktok !== undefined, true, 'the link stays')
+    await w.pool.query(`delete from wo_job where request_id = 'running-01'`)
+
+    // Failed: still refused.
+    await w.pool.query(
+      `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'failed-01', 'failed')`,
+      [a, opp.id]
+    )
+    assert.equal((await del(TT)).body.code, 'RESEARCH_STARTED')
+    await w.pool.query(`delete from wo_job where request_id = 'failed-01'`)
+
+    // Done: still refused, and the collected rows are untouched.
+    await requestResearch(w.pool, {
+      accountId: a,
+      opportunity: (await w.pool.query('select * from wo_opportunity where id = $1', [opp.id])).rows[0],
+      requestId: 'remove-research-01'
+    })
+    await w.drain()
+    const held = (await w.pool.query('select count(*)::int as n from wo_place_snapshot_source')).rows[0].n
+    const done = await del(TT)
+    assert.equal(done.status, 409, JSON.stringify(done.body))
+    assert.equal(done.body.code, 'RESEARCH_STARTED')
+    assert.equal((await stored()).socials?.tiktok !== undefined, true, 'the link stays')
+    assert.equal(
+      (await w.pool.query('select count(*)::int as n from wo_place_snapshot_source')).rows[0].n,
+      held
+    )
+    const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+    assert.equal(detail.approval.research, 'ok')
+  }
+)
 
 test('the last link of an opportunity is never removed', opts, async () => {
   const w = await world()
