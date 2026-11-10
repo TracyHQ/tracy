@@ -109,7 +109,7 @@ p.add_argument('--languages',default='');p.add_argument('--counts-from',default=
 # `xpath` beside it, from 0.24.58. Off by default so every published profile re-captures byte for byte.
 p.add_argument('--full-coverage',action='store_true')
 # Slot roles (ADR 0038): every text and image slot of the content map carries a `role` and a `group`. A recapture
-# passes the previous version's content map here; a slot whose key AND sample are unchanged keeps its role and group
+# passes the previous version's content map here; a unique unchanged write address and compatible sample keep its key, role and group
 # (the packaging agent reviewed them), the rule tables place the rest, and what they cannot place is listed on stdout
 # (and in `--unplaced-report`, a file kept outside the contract) for the agent to bind from sample and position.
 p.add_argument('--previous-map',default='');p.add_argument('--unplaced-report',default='')
@@ -855,14 +855,50 @@ manifest={'schemaVersion':'tracy-quickstart-contract/v1','id':a.id,'platform':'j
 content_map={'entities':[{k:v for k,v in e.items() if k!='initial'} for e in entities],'slots':slots,'pages':pages}
 repo_root=pathlib.Path(__file__).resolve().parents[4]
 if a.previous_map:
- previous={s['key']:s for s in json.load(open(a.previous_map)).get('slots',[])}
- for sl in slots:
-  before=previous.get(sl['key'])
-  # Under --inline-markup a sample that only gained or lost markup is the same words: its role stays.
-  same=before and (plain_text(before.get('sample'))==plain_text(sl.get('sample')) if a.inline_markup else before.get('sample')==sl.get('sample'))
-  if same and 'role' in before and not (a.role_vocabulary=='3' and sl.get('jsonPath',[])[:2]==['ctm_audio','audio-src'] ):
-   sl['role']=before['role']
-   if 'group' in before:sl['group']=before['group']
+ previous=json.load(open(a.previous_map))
+ def entity_index(content):
+  indexed=collections.defaultdict(list)
+  for entity in content.get('entities',[]):indexed[entity['key']].append(entity)
+  return indexed
+ def slot_address(slot,indexed):
+  bound=indexed.get(slot.get('entity'),[])
+  if len(bound)!=1:return None
+  entity=bound[0]
+  if not entity.get('kind') or not isinstance(entity.get('identity'),dict) or not entity['identity']:return None
+  if not slot.get('column') or not slot.get('type'):return None
+  # These are the entity binding and every selector this producer writes; labels and measured fit are not addresses.
+  return json.dumps([{k:entity.get(k) for k in ('key','kind','identity','identityReferences','sourceId')},
+   {k:slot.get(k) for k in ('column','type','jsonPath','nestedJson','xpath')}],sort_keys=True)
+ old_entities=entity_index(previous);new_entities=entity_index(content_map)
+ by_address=collections.defaultdict(list)
+ for before in previous.get('slots',[]):
+  address=slot_address(before,old_entities)
+  if address is not None:by_address[address].append(before)
+ addresses=[slot_address(sl,new_entities) for sl in slots]
+ address_counts=collections.Counter(addresses)
+ key_counts=collections.Counter(sl.get('key') for sl in previous.get('slots',[]))
+ reserved={key for key in key_counts if isinstance(key,str)}
+ unmatched=[]
+ for sl,address in zip(slots,addresses):
+  candidates=by_address.get(address,[])
+  before=candidates[0] if address is not None and address_counts[address]==1 and len(candidates)==1 else None
+  same=before is not None and isinstance(before.get('sample'),str) and isinstance(sl.get('sample'),str)
+  if same:
+   # Literal PRE leaves are code, so even inline-markup mode must compare raw case and whitespace.
+   same=before['sample']==sl['sample'] if literal_pre_xpath(sl.get('xpath')) or not a.inline_markup else plain_text(before['sample'])==plain_text(sl['sample'])
+  if same and isinstance(before.get('key'),str) and key_counts[before['key']]==1:
+   sl['key']=before['key']
+   # A v3 audio source is retyped as a URL fact: its old role is not carried.
+   if 'role' in before and not (a.role_vocabulary=='3' and sl.get('jsonPath',[])[:2]==['ctm_audio','audio-src']):
+    sl['role']=before['role']
+    if 'group' in before:sl['group']=before['group']
+  else:unmatched.append(sl)
+ # Reserve even removed or incompatible prior keys: a newly discovered leaf must never inherit their identity.
+ next_key=collections.defaultdict(int)
+ for sl in unmatched:
+  eid=sl['entity']
+  while f'{eid}.{next_key[eid]}' in reserved:next_key[eid]+=1
+  sl['key']=f'{eid}.{next_key[eid]}';reserved.add(sl['key']);next_key[eid]+=1
 # The rule tables fill in every slot still without a role; slots that kept one are left as they are.
 proposed=subprocess.run(['node',str(repo_root/'scripts/slot-roles/rule-tables.mjs'),'joomla','--vocabulary',a.role_vocabulary],input=json.dumps(content_map).encode(),capture_output=True,cwd=repo_root)
 if proposed.returncode:sys.exit('Contract not written:\n- slot role rule tables failed: '+proposed.stderr.decode().strip())

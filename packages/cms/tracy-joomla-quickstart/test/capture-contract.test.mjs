@@ -2626,3 +2626,152 @@ test('literal PRE: legacy bare PRE retains ordinary whole-root capture normaliza
   assert.equal(slots[0].xpath, '/html/body/div')
   assert.equal(slots[0].sample, 'Legacy words')
 })
+
+const previousMapCapture = (html, previous) =>
+  capture(bodyInventory(html), {
+    helper: process.env.COWORK_SLOTS_HELPER || PER_TEXT_HELPER,
+    args: ['--whole-units', '--inline-markup'],
+    previous
+  })
+const previousMapBody = (map) => map.slots.filter((s) => s.entity === 'module-2')
+const reviewPreviousSlot = (slot) => {
+  slot.role = 'claim.heading'
+  slot.group = { id: 'reviewed.previous', kind: 'claim', item: 0 }
+}
+
+test(
+  'previous-map identity: inserting PRE preserves ordinary keys and carries only role/group',
+  needsPhp,
+  () => {
+    const ordinary = '<h2>Reviewed heading</h2><p>Reviewed paragraph</p>'
+    const first = previousMapCapture(ordinary)
+    assertWritten(first)
+    const previous = first.read('content-map.json')
+    const reviewed = previousMapBody(previous)
+    for (const slot of reviewed) {
+      reviewPreviousSlot(slot)
+      slot.fit = { stale: true }
+      slot.customize = 'stale'
+      slot.maxCharacters = 1
+      slot.requiresEvidence = true
+    }
+    const run = previousMapCapture(`<pre><code>new literal</code></pre>${ordinary}`, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))
+    for (const before of reviewed) {
+      const slot = now.find((s) => s.xpath === before.xpath)
+      assert.equal(slot.key, before.key)
+      assert.equal(slot.role, before.role)
+      assert.deepEqual(slot.group, before.group)
+      assert.equal('fit' in slot, false)
+      assert.notEqual(slot.customize, 'stale')
+      assert.notEqual(slot.maxCharacters, 1)
+      assert.equal(slot.requiresEvidence, false)
+    }
+    const literal = now.find((s) => s.xpath.includes('/pre/'))
+    assert.ok(!previous.slots.some((s) => s.key === literal.key), 'new leaf cannot reuse a prior key')
+    assert.equal(new Set(now.map((s) => s.key)).size, now.length)
+  }
+)
+
+test(
+  'previous-map identity: equal text at a different address never carries or reuses a key',
+  needsPhp,
+  () => {
+    const previous = previousMapCapture('<h2>Repeated words</h2>').read('content-map.json')
+    const before = previousMapBody(previous)[0]
+    reviewPreviousSlot(before)
+    const run = previousMapCapture('<p>Repeated words</p>', previous)
+    assertWritten(run)
+    const slot = previousMapBody(run.read('content-map.json'))[0]
+    assert.notEqual(slot.key, before.key)
+    assert.notEqual(slot.role, before.role)
+    assert.notEqual(slot.group?.id, before.group.id)
+  }
+)
+
+test('previous-map identity: ambiguous addresses or keys never choose a reviewed slot', needsPhp, () => {
+  const html = '<h2>Reviewed words</h2><p>Other words</p>'
+  const original = previousMapCapture(html).read('content-map.json')
+  for (const ambiguity of ['address', 'key', 'entity']) {
+    const previous = structuredClone(original)
+    const slot = previousMapBody(previous)[0]
+    reviewPreviousSlot(slot)
+    if (ambiguity === 'address') previous.slots.push({ ...slot, key: 'module-2.999' })
+    if (ambiguity === 'key') previousMapBody(previous)[1].key = slot.key
+    if (ambiguity === 'entity')
+      previous.entities.push({ ...previous.entities.find((e) => e.key === slot.entity) })
+    const run = previousMapCapture(html, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))[0]
+    assert.notEqual(now.key, slot.key, ambiguity)
+    assert.notEqual(now.role, slot.role, ambiguity)
+    assert.notEqual(now.group?.id, slot.group.id, ambiguity)
+    assert.equal(new Set(run.read('content-map.json').slots.map((s) => s.key)).size, original.slots.length)
+  }
+})
+
+test('previous-map identity: entity identity and every write-address component must agree', needsPhp, () => {
+  const html = '<h2>Reviewed words</h2>'
+  const original = previousMapCapture(html).read('content-map.json')
+  for (const field of [
+    'identity',
+    'kind',
+    'identityReferences',
+    'column',
+    'type',
+    'jsonPath',
+    'nestedJson',
+    'xpath'
+  ]) {
+    const previous = structuredClone(original)
+    const slot = previousMapBody(previous)[0]
+    reviewPreviousSlot(slot)
+    const entity = previous.entities.find((e) => e.key === slot.entity)
+    if (field === 'identity') entity.identity.note = 'another binding'
+    else if (field === 'kind') entity.kind = 'article'
+    else if (field === 'identityReferences') entity.identityReferences = { owner: 'article-3' }
+    else slot[field] = field === 'jsonPath' ? ['different'] : field === 'type' ? 'url' : 'different'
+    const run = previousMapCapture(html, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))[0]
+    assert.notEqual(now.key, slot.key, field)
+    assert.notEqual(now.role, slot.role, field)
+    assert.notEqual(now.group?.id, slot.group.id, field)
+  }
+})
+
+test('previous-map identity: literal samples require exact case whitespace and markup bytes', {
+  skip:
+    needsPhp.skip ||
+    (!process.env.COWORK_SLOTS_HELPER && 'set real COWORK_SLOTS_HELPER for literal recapture integration')
+}, () => {
+  const html = '<pre><code> A  B\n((em))Case((/em)) </code></pre>'
+  const original = previousMapCapture(html).read('content-map.json')
+  const exact = previousMapBody(original)[0].sample
+  for (const sample of [
+    exact,
+    exact.toLowerCase(),
+    exact.trim(),
+    exact.replace('  ', ' '),
+    exact.replaceAll(/\(\(\/?em\)\)/g, '')
+  ]) {
+    const previous = structuredClone(original)
+    const slot = previousMapBody(previous)[0]
+    slot.sample = sample
+    reviewPreviousSlot(slot)
+    const run = previousMapCapture(html, previous)
+    assertWritten(run)
+    const now = previousMapBody(run.read('content-map.json'))[0]
+    assert.equal(now.sample, exact)
+    if (sample === exact) {
+      assert.equal(now.key, slot.key)
+      assert.equal(now.role, slot.role)
+      assert.deepEqual(now.group, slot.group)
+    } else {
+      assert.notEqual(now.key, slot.key)
+      assert.notEqual(now.role, slot.role)
+      assert.notEqual(now.group?.id, slot.group.id)
+    }
+  }
+})
