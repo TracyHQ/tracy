@@ -1,6 +1,7 @@
 /**
- * My opportunities' two views (spec #512, ticket #518): **Cards** and **Compact rows**, both drawn from the same four
- * pieces per place (`opportunity-pieces.ts`). A click on the row or the name opens Details; the pin beside the address
+ * My opportunities' two views (spec #512, ticket #518): **Cards** and **Compact rows**, both drawn from the same
+ * pieces per place (`opportunity-pieces.ts`). A row is the place, the step it reached with its state, and the step's
+ * one action (#537, option A); a card adds the demo preview and the score. A click on the row or the name opens Details; the pin beside the address
  * opens Google Maps in a new tab, and is the only link out. Secondary fields chosen in Columns add lines or cells.
  */
 import type { JSX, MouseEvent } from 'react'
@@ -156,7 +157,34 @@ function DemoPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
   )
 }
 
-function StatusPiece({
+/**
+ * The step the place has reached (#537, option A): three segments with Step n of 3, the state of the current step in
+ * the Details page's own words, and the one action of that step. Both come from `rowStepOf`, the Details band's view.
+ */
+function StepPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
+  const s = p.step
+  return (
+    <div className="tracy-wo-p-step" data-tone={s.tone}>
+      <span className="tracy-wo-p-step-kick">
+        <span className="tracy-wo-p-segs" aria-hidden="true">
+          {s.segments.map((seg, i) => (
+            <i key={i} data-state={seg} />
+          ))}
+        </span>
+        {t(s.kickerKey, s.kickerParams)}
+      </span>
+      <span className="tracy-wo-p-step-state">
+        {s.running ? <Spinner label={t(s.stateKey)} className="size-3" /> : null}
+        {s.tone === 'error' ? <AlertCircle aria-hidden="true" className="tracy-wo-p-alert" /> : null}
+        {s.allDone ? <CheckIcon aria-hidden="true" className="tracy-wo-p-step-check" /> : null}
+        {t(s.stateKey)}
+      </span>
+    </div>
+  )
+}
+
+/** The current step's one action: primary when the step waits for the seller, a quiet Open while a job runs. */
+function ActionPiece({
   t,
   p,
   busy,
@@ -168,19 +196,17 @@ function StatusPiece({
   onNext(run: NextRun): void
 }): JSX.Element {
   const run = p.next.run
-  // The current step's action reads as the primary press, as in the Details stepper; Open demo stays plain.
-  const primary = run !== null && !(run.kind === 'demo' && run.action === 'open')
+  if (run === null) return <div className="tracy-wo-p-status" />
+  const variant = p.next.look === 'primary' ? 'default' : p.next.look === 'outline' ? 'outline' : 'ghost'
   return (
     <div className="tracy-wo-p-status">
-      <StatusBadge status={p.status} />
       <Button
         type="button"
         size="sm"
-        variant={primary ? 'default' : 'outline'}
-        disabled={p.next.disabled || busy || run === null}
-        onClick={() => {
-          if (run) onNext(run)
-        }}
+        variant={variant}
+        className={cn(p.next.look === 'quiet' && 'tracy-wo-p-quiet')}
+        disabled={p.next.disabled || busy}
+        onClick={() => onNext(run)}
       >
         {busy ? <Spinner label={t('loading.label')} /> : null}
         {p.next.label}
@@ -253,10 +279,11 @@ export function MyPlaces({
           />
           {view === 'cards' ? <DemoPiece t={t} p={p} /> : null}
           <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} />
-          <OpportunityPiece t={t} p={p} />
-          {view === 'rows' ? <DemoPiece t={t} p={p} /> : null}
+          {/* A row shows the step reached and its action only (#537, option A); a card keeps its preview and score. */}
+          {view === 'cards' ? <OpportunityPiece t={t} p={p} /> : null}
+          <StepPiece t={t} p={p} />
           {view === 'cards' ? <Lines lines={lines.get(p.id)} /> : null}
-          <StatusPiece t={t} p={p} busy={busy.has(p.id)} onNext={(run) => onNext(p.id, run)} />
+          <ActionPiece t={t} p={p} busy={busy.has(p.id)} onNext={(run) => onNext(p.id, run)} />
           {/* In rows the chosen fields take a second line under the row, after Status, so Status keeps its cell. */}
           {view === 'rows' ? <Lines lines={lines.get(p.id)} /> : null}
         </li>

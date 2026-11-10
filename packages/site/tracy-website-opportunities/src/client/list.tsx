@@ -235,8 +235,8 @@ export function MyOpportunitiesView({
   address: MyAddress
   account: AccountCounts
   onAddress: (patch: Partial<MyAddress>) => void
-  /** Opens a place's Details page in the same tab (a history entry). */
-  onOpen: (opportunityId: string) => void
+  /** Opens a place's Details page in the same tab (a history entry), or one of its sub-pages when `section` is given. */
+  onOpen: (opportunityId: string, section?: 'profile' | 'brief' | 'sources') => void
   onOpenBrief: (opportunityId: string, revisionId: string) => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
@@ -466,7 +466,8 @@ export function MyOpportunitiesView({
   const runNext = (row: OpportunityListRow, run: NextRun): void => {
     if (run.kind === 'row') return void act(run.action, row)
     if (run.kind === 'brief') return void makeBrief(row)
-    if (run.kind === 'details') return onOpen(row.id)
+    // The same sub-page the Details band opens for this step (review facts or brief, research again on Sources).
+    if (run.kind === 'details') return onOpen(row.id, run.section)
     if (run.action === 'build') return void act('build', row)
     if (run.action === 'open') return void act('open-site', row)
     void demoPress(row, row.demo?.frozenAt && !row.demo.deletedAt ? 'reopen' : 'rebuild')
@@ -665,7 +666,7 @@ export function MyOpportunitiesView({
         selected={picked}
         busy={busy}
         onToggle={toggle}
-        onOpen={onOpen}
+        onOpen={(id) => onOpen(id)}
         onNext={(id, run) => {
           const row = byId.get(id)
           if (row) runNext(row, run)

@@ -222,7 +222,7 @@ export const CSS = `
 .tracy-wo-my-place { position: relative; min-width: 0; cursor: pointer; }
 .tracy-wo-my-cards .tracy-wo-my-place { display: flex; flex-direction: column; gap: 10px; padding: 0 12px 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
 .tracy-wo-my-cards .tracy-wo-my-place:hover { border-color: color-mix(in oklab, var(--foreground) 25%, var(--border)); }
-.tracy-wo-my-rows .tracy-wo-my-place { display: grid; grid-template-columns: 16px minmax(150px, 1.1fr) minmax(200px, 1.6fr) minmax(150px, 1fr) auto; align-items: center; gap: 6px 14px; padding: 10px 12px; border-top: 1px solid var(--border); }
+.tracy-wo-my-rows .tracy-wo-my-place { display: grid; grid-template-columns: 16px minmax(180px, 1.3fr) minmax(220px, 1.2fr) auto; align-items: center; gap: 6px 14px; padding: 10px 12px; border-top: 1px solid var(--border); }
 .tracy-wo-my-rows .tracy-wo-my-place:first-child { border-top: 0; }
 .tracy-wo-my-rows .tracy-wo-my-place:hover { background: color-mix(in oklab, var(--foreground) 4%, transparent); }
 .tracy-wo-my-place[data-state='failed'] { box-shadow: inset 3px 0 0 var(--destructive); }
@@ -264,6 +264,23 @@ export const CSS = `
 .tracy-wo-p-alert { width: 14px; height: 14px; flex: 0 0 auto; color: var(--destructive); }
 .tracy-wo-p-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
 .tracy-wo-my-cards .tracy-wo-p-status { justify-content: space-between; margin-top: auto; }
+/* The step a place reached (#537, option A): three segments, Step n of 3, and the state in the tone of the band. */
+.tracy-wo-p-step { display: flex; flex-direction: column; gap: 3px; min-width: 0; --tracy-wo-tone: var(--muted-foreground); }
+.tracy-wo-p-step[data-tone='ok'] { --tracy-wo-tone: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
+.tracy-wo-p-step[data-tone='warn'] { --tracy-wo-tone: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
+.tracy-wo-p-step[data-tone='run'] { --tracy-wo-tone: var(--primary); }
+.tracy-wo-p-step[data-tone='error'] { --tracy-wo-tone: var(--destructive); }
+.tracy-wo-p-step[data-tone='mute'] { --tracy-wo-tone: color-mix(in oklab, var(--foreground) 55%, var(--muted-foreground)); }
+.tracy-wo-p-step-kick { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 500; color: var(--muted-foreground); }
+.tracy-wo-p-segs { display: inline-flex; gap: 3px; }
+.tracy-wo-p-segs i { width: 22px; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 12%, transparent); }
+.tracy-wo-p-segs i[data-state='done'] { background: var(--success); }
+.tracy-wo-p-segs i[data-state='current'] { background: var(--tracy-wo-tone); }
+.tracy-wo-p-step-state { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-weight: 500; color: var(--tracy-wo-tone); overflow-wrap: anywhere; }
+.tracy-wo-p-step[data-tone='mute'] .tracy-wo-p-step-state { color: var(--muted-foreground); }
+.tracy-wo-p-step-check { width: 14px; height: 14px; flex: 0 0 auto; }
+.tracy-wo-p-quiet { color: var(--muted-foreground); }
+.tracy-wo-p-quiet:hover { color: var(--foreground); }
 .tracy-wo-p-lines { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; }
 .tracy-wo-p-lines > div { display: flex; gap: 4px; min-width: 0; }
 .tracy-wo-p-lines dd { margin: 0; overflow-wrap: anywhere; }
@@ -316,7 +333,7 @@ export const CSS = `
 .tracy-wo-start { align-self: flex-start; }
 @container (max-width: 900px) {
   .tracy-wo-my-rows .tracy-wo-my-place { grid-template-columns: 16px minmax(0, 1fr) minmax(0, 1fr); }
-  .tracy-wo-my-rows .tracy-wo-p-demo, .tracy-wo-my-rows .tracy-wo-p-status { grid-column: 2 / -1; justify-content: flex-start; }
+  .tracy-wo-my-rows .tracy-wo-p-status { grid-column: 2 / -1; justify-content: flex-start; }
   .tracy-wo-page-grid, .tracy-wo-page-grid.is-brief { grid-template-columns: minmax(0, 1fr); }
 }
 @container (max-width: 560px) {

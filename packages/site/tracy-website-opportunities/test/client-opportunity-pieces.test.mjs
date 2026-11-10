@@ -86,7 +86,8 @@ test('Demo and Status: a brief and no demo yet, the next action is Build demo', 
   assert.deepEqual(p.next, {
     label: 'Build your site',
     run: { kind: 'demo', action: 'build' },
-    disabled: false
+    disabled: false,
+    look: 'primary'
   })
 })
 
@@ -97,7 +98,12 @@ test('Status: researched without a brief offers Make content brief, never Build 
     opts
   )
   assert.equal(p.status.label, 'Researched')
-  assert.deepEqual(p.next, { label: 'Make site content brief', run: { kind: 'brief' }, disabled: false })
+  assert.deepEqual(p.next, {
+    label: 'Make site content brief',
+    run: { kind: 'brief' },
+    disabled: false,
+    look: 'primary'
+  })
 })
 
 test('Status: a place never researched offers Start research', () => {
@@ -115,7 +121,8 @@ test('Status: a place never researched offers Start research', () => {
   assert.deepEqual(p.next, {
     label: 'Research business facts',
     run: { kind: 'row', action: 'start' },
-    disabled: false
+    disabled: false,
+    look: 'primary'
   })
 })
 
@@ -142,7 +149,13 @@ test('Demo: a live demo shows its thumbnail address and days left; Status Demo r
   })
   assert.equal(p.status.label, 'Demo ready')
   assert.equal(p.status.tone, 'live')
-  assert.deepEqual(p.next, { label: 'Open demo', run: { kind: 'demo', action: 'open' }, disabled: false })
+  // Every step done: the row reads Site ready and opens the site, as the Your site block does (#537).
+  assert.deepEqual(p.next, {
+    label: 'Open your site ›',
+    run: { kind: 'demo', action: 'open' },
+    disabled: false,
+    look: 'outline'
+  })
 })
 
 test('Demo: a failed demo shows the reason in words, never the code; next Try again', () => {
@@ -156,15 +169,21 @@ test('Demo: a failed demo shows the reason in words, never the code; next Try ag
   })
   assert.equal(p.status.label, 'Build failed')
   assert.equal(p.status.tone, 'destructive')
-  assert.deepEqual(p.next, { label: 'Try again', run: { kind: 'demo', action: 'build' }, disabled: false })
+  assert.deepEqual(p.next, {
+    label: 'Try again',
+    run: { kind: 'demo', action: 'build' },
+    disabled: false,
+    look: 'primary'
+  })
 })
 
-test('Demo: a build under way is Building, and its button waits', () => {
+test('Demo: a build under way is Building, and its button opens Details', () => {
   const row = researched({ demoAction: { id: 'a1', state: 'queued', step: 'brief' } })
   const p = placePieces(row, t, opts)
   assert.deepEqual(p.demo, { kind: 'building' })
   assert.equal(p.status.label, 'Building')
-  assert.deepEqual(p.next, { label: 'Running', run: null, disabled: true })
+  // A running step: a quiet Open to Details, where the band shows the build steps (#537).
+  assert.deepEqual(p.next, { label: 'Open ›', run: { kind: 'details' }, disabled: false, look: 'quiet' })
 })
 
 test('Demo: an expired demo says when it expired, and Build again rebuilds it', () => {
@@ -196,7 +215,12 @@ test('Status: a place still in research waits while it runs, and resumes when it
     opts
   )
   assert.equal(running.status.label, 'Researching')
-  assert.deepEqual(running.next, { label: 'Running', run: null, disabled: true })
+  assert.deepEqual(running.next, {
+    label: 'Open ›',
+    run: { kind: 'details' },
+    disabled: false,
+    look: 'quiet'
+  })
   const stopped = placePieces(
     researched({ stage: 'research', latestRevision: null, job: { id: 'j1', state: 'paused' } }),
     t,

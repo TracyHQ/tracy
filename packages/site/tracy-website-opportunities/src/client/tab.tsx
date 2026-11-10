@@ -196,9 +196,13 @@ function Flow({
 
   const go = (patch: Partial<MyAddress>): void => setAddress({ ...address, view: sub, ...patch })
   const toList = (): void => go({ view: 'mine', page: null, brief: null, section: null })
-  const openDetails = (id: string): void => {
+  // A row's step action may open a sub-page of Details: Details is pushed first, then the sub-page, so Back from the
+  // sub-page lands on Details and a second Back on the list, as when the seller walks there by hand.
+  const openDetails = (id: string, section: MyAddress['section'] = null): void => {
     memory.remember({ view: readMyView(localStore()), scroll: scroller()?.scrollTop ?? 0 })
-    setAddress(detailsAddress({ ...address, view: 'mine' }, id))
+    const details = detailsAddress({ ...address, view: 'mine' }, id)
+    setAddress(details)
+    if (section !== null) setAddress({ ...details, section })
   }
   // Back: pop the entries this tab pushed (the browser's Back does the same), else rewrite the address to the list.
   const back = (): void => {

@@ -21,7 +21,8 @@ import {
   statusView
 } from './opportunity-row.ts'
 import { type ResearchState, researchOf } from './research-gate-model.ts'
-import { type StepperInput, stepperView } from './stepper-model.ts'
+import { type RowStep, rowStepOf } from './row-step-model.ts'
+import { type StepperInput, type StepperView, stepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
 export type DemoPiece =
@@ -39,8 +40,11 @@ export type NextRun =
   | { kind: 'row'; action: NextAction }
   | { kind: 'brief' }
   | { kind: 'demo'; action: 'build' | 'open' | 'rebuild' }
-  /** A step that waits for the seller (review the Profile or the brief, research again): opens Details (#537). */
-  | { kind: 'details' }
+  /**
+   * Opens Details (#537): on the sub-page the step waits on (review the business facts or the brief, research again on
+   * Sources), or on Details itself while a job runs.
+   */
+  | { kind: 'details'; section?: 'profile' | 'brief' | 'sources' }
 
 export interface PlacePieces {
   id: string
@@ -49,7 +53,9 @@ export interface PlacePieces {
   opportunity: { score: number; grade: Grade; pending: boolean; why: string }
   demo: DemoPiece
   status: { label: string; tone: BadgeTone }
-  next: { label: string; run: NextRun | null; disabled: boolean }
+  /** Step n of 3 and the state of the current step, from the same stepper view as the Details band (#537). */
+  step: RowStep
+  next: { label: string; run: NextRun | null; disabled: boolean; look: 'primary' | 'outline' | 'quiet' }
 }
 
 export interface PieceOptions {
@@ -150,20 +156,11 @@ const OLD_HOST_RESEARCH: Record<string, ResearchState> = {
   failed: 'failed'
 }
 
-/** The card's one button: the current step's action of the stepper model, so it never skips the content brief. */
-function nextOf(
-  row: OpportunityListRow,
-  state: DemoState,
-  t: Translate,
-  opts: PieceOptions
-): PlacePieces['next'] {
-  // A demo handed to the client chat keeps its own button.
-  if (nextAction(row) === 'open-demo-chat')
-    return {
-      label: t(ACTION_VIEW['open-demo-chat'].labelKey),
-      run: { kind: 'row', action: 'open-demo-chat' },
-      disabled: false
-    }
+/**
+ * The place's stepper view, built from the list row exactly as Details builds it from its own answer. The list carries
+ * no Content brief job, so a brief being written reads as not made yet until the list reloads.
+ */
+export function rowStepperView(row: OpportunityListRow, state: DemoState = demoStateOf(row)): StepperView {
   // An older host sends no `research`: the research job says it (completed = done).
   const jobState = row.job?.state ?? ''
   const research =
@@ -174,42 +171,68 @@ function nextOf(
           done: jobState === 'completed'
         }
       : researchOf(row)
-  const step = stepperView({
+  return stepperView({
     research,
     researchJob: row.job ?? null,
     brief: row.latestRevision ?? null,
     demo: state,
+    demoAt: state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
     approval: (row as { approval?: StepperInput['approval'] }).approval ?? null
   })
-  if (step.running) return { label: t('stepper.running'), run: null, disabled: true }
-  const action = step.action
-  if (action === null) {
-    const primary = demoBlock(state, row, t, { now: opts.now, locale: opts.locale }).primary
+}
+
+/** The row's one button: the current step's action of the stepper model, so it never skips the content brief. */
+function nextOf(
+  row: OpportunityListRow,
+  state: DemoState,
+  step: RowStep,
+  t: Translate,
+  opts: PieceOptions
+): PlacePieces['next'] {
+  // A demo handed to the client chat keeps its own button.
+  if (nextAction(row) === 'open-demo-chat')
     return {
-      label: primary.label,
-      run: primary.action === null ? null : { kind: 'demo', action: primary.action },
-      disabled: primary.disabled
+      label: t(ACTION_VIEW['open-demo-chat'].labelKey),
+      run: { kind: 'row', action: 'open-demo-chat' },
+      disabled: false,
+      look: 'outline'
     }
-  }
+  const action = step.action
+  if (action === null) return { label: '', run: null, disabled: true, look: 'quiet' }
   const label = t(action.labelKey)
+  const look = action.look
   const blocked = opts.buildBlocked === true
   switch (action.kind) {
+    case 'open':
+      return { label, run: { kind: 'details' }, disabled: false, look }
+    case 'open-site': {
+      // The ready site's own press of the Your site block (open it, or reopen a frozen one).
+      const primary = demoBlock(state, row, t, { now: opts.now, locale: opts.locale }).primary
+      return {
+        label,
+        run: primary.action === null ? null : { kind: 'demo', action: primary.action },
+        disabled: primary.disabled,
+        look
+      }
+    }
     case 'start-research':
-      return { label, run: { kind: 'row', action: 'start' }, disabled: false }
+      return { label, run: { kind: 'row', action: 'start' }, disabled: false, look }
     case 'resume-research':
-      return { label, run: { kind: 'row', action: 'resume' }, disabled: false }
+      return { label, run: { kind: 'row', action: 'resume' }, disabled: false, look }
     case 'make-brief':
     case 'retry-brief':
-      return { label, run: { kind: 'brief' }, disabled: false }
+      return { label, run: { kind: 'brief' }, disabled: false, look }
     case 'build':
     case 'retry-build':
-      return { label, run: { kind: 'demo', action: 'build' }, disabled: blocked }
+      return { label, run: { kind: 'demo', action: 'build' }, disabled: blocked, look }
     case 'rebuild':
-      return { label, run: { kind: 'demo', action: 'rebuild' }, disabled: blocked }
+      return { label, run: { kind: 'demo', action: 'rebuild' }, disabled: blocked, look }
     case 'review-profile':
+      return { label, run: { kind: 'details', section: 'profile' }, disabled: false, look }
     case 'review-brief':
+      return { label, run: { kind: 'details', section: 'brief' }, disabled: false, look }
     case 'research-again':
-      return { label, run: { kind: 'details' }, disabled: false }
+      return { label, run: { kind: 'details', section: 'sources' }, disabled: false, look }
   }
 }
 
@@ -217,7 +240,8 @@ export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOp
   const place = toPlaceRow(row)
   const state = demoStateOf(row)
   const statusOf = placeStatus(row, t)
-  const next = nextOf(row, state, t, opts)
+  const step = rowStepOf(rowStepperView(row, state))
+  const next = nextOf(row, state, step, t, opts)
   return {
     id: row.id,
     state,
@@ -235,6 +259,7 @@ export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOp
     },
     demo: demoPiece(state, row, t, opts),
     status: statusOf,
+    step,
     next
   }
 }

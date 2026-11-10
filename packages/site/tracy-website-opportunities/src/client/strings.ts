@@ -1361,6 +1361,12 @@ export const en = {
   'chip.briefApproved': 'Site content brief approved',
   'chip.building': 'Building your site',
   'chip.built': 'Site ready',
+  // My opportunities row, option A (#537, row-step-model.ts): words the band and the header chip do not already have.
+  'row.researching': 'Researching business facts…',
+  'row.failed.research': 'Research failed',
+  'row.failed.brief': 'Site content brief failed',
+  'row.open': 'Open ›',
+  'row.openSite': 'Open your site ›',
 
   /** The approval footer of the Profile and Business brief sub-pages (#537). */
   'approve.hint': 'Check every row. Edit anything that is wrong, then approve.',
