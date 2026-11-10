@@ -1,7 +1,8 @@
 /**
- * The Business facts sub-page keeps what the seller left off the site: the item stays on the card with a small
- * muted tag, and its control flips to Show on the site. The choices sit next to Edit in the card header (and right
- * aligned on a Team row). Bundles the real page with React 18 and renders it to static markup.
+ * The Business facts sub-page keeps what the seller left off the site: the item stays in its band with a small
+ * muted tag, and its control flips to Show on the site. The choices sit beside the value they change (the rating
+ * cell, the last hours cell, each person of the Team row); Edit stays in the band's title column (the corner of the
+ * business band). Bundles the real page with React 18 and renders it to static markup.
  *
  *   node --test --test-concurrency=1 packages/site/tracy-website-opportunities/test/client-facts-leave-off.test.mjs
  */
@@ -123,19 +124,36 @@ const draw = (p, { media = MEDIA, running = true, sources = [] } = {}) => {
     })
   )
 }
-const head = (html, card) => {
+// One band of the page, from its section to the next one.
+const band = (html, card) => {
   const at = html.indexOf(`data-card="${card}"`)
-  return html.slice(at, html.indexOf('</div>', html.indexOf('tracy-wo-facts-card-head', at)))
+  const end = html.indexOf('<section', at)
+  return html.slice(at, end === -1 ? undefined : end)
 }
-// The rating choice sits on the rating line, after the stars, not in the card header.
+// The title column of a band: its title, chips and controls (Show all, Edit).
+const head = (html, card) => {
+  const b = band(html, card)
+  return b.slice(b.indexOf('tracy-wo-facts-band-label'), b.indexOf('tracy-wo-facts-band-body'))
+}
+// The business band's Edit sits in its top right corner.
+const corner = (html) => {
+  const at = html.indexOf('tracy-wo-facts-corner')
+  return html.slice(at, html.indexOf('</button>', at) + 9)
+}
+// The rating choice sits in the rating cell, after the stars, not beside Edit.
 const ratingLine = (html) => {
   const at = html.indexOf('tracy-wo-facts-stars')
-  return html.slice(at, html.indexOf('</ul>', at))
+  return html.slice(at, html.indexOf('class="tracy-wo-facts-cell"', at))
+}
+// The last cell of the hours band: the check, the tag and the choices.
+const status = (html) => {
+  const b = band(html, 'hours')
+  return b.slice(b.indexOf('tracy-wo-facts-status'))
 }
 const labels = (html) =>
   [...html.matchAll(/class="tracy-wo-facts-act"[^>]*>(?:<svg.*?<\/svg>)?([^<]*)</g)].map((m) => m[1])
 
-test('a rating left off stays on the card with the tag, and Show on the site sits on the rating line and the header keeps only Edit', () => {
+test('a rating left off stays in the business band with the tag; Show on the site sits in the rating cell, Edit alone in the corner', () => {
   const html = draw(
     profile({
       rating: { state: 'left', score: 4.8, reviews: 40, few: false, choice: 'leave' },
@@ -143,14 +161,13 @@ test('a rating left off stays on the card with the tag, and Show on the site sit
       team: []
     })
   )
-  const business = head(html, 'business')
   assert.match(html, /tracy-wo-facts-stars/)
-  assert.match(html, /tracy-wo-facts-off">\[facts\.leftOff\]/)
-  assert.deepEqual(labels(business), ['[profile.edit]'])
+  assert.match(band(html, 'business'), /tracy-wo-facts-off">\[facts\.leftOff\]/)
+  assert.deepEqual(labels(corner(html)), ['[profile.edit]'])
   assert.deepEqual(labels(ratingLine(html)), ['[rating.show]'])
 })
 
-test('a rating that shows offers Leave off the site on the rating line and no tag', () => {
+test('a rating that shows offers Leave off the site in the rating cell and no tag', () => {
   const html = draw(
     profile({
       rating: { state: 'shown', score: 4.8, reviews: 40, few: false, choice: 'show' },
@@ -158,12 +175,12 @@ test('a rating that shows offers Leave off the site on the rating line and no ta
       team: []
     })
   )
-  assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
+  assert.deepEqual(labels(corner(html)), ['[profile.edit]'])
   assert.deepEqual(labels(ratingLine(html)), ['[rating.leave]'])
   assert.doesNotMatch(html, /facts\.leftOff/)
 })
 
-test('hours left off keep their lines with the tag; the header offers Show on the site, then Edit', () => {
+test('hours left off keep their days with the tag; the last cell offers Show on the site, the title column only Edit', () => {
   const html = draw(
     profile({
       rating: null,
@@ -171,23 +188,29 @@ test('hours left off keep their lines with the tag; the header offers Show on th
       team: []
     })
   )
-  const card = html.slice(html.indexOf('data-card="hours"'))
-  assert.match(card, /Monday/)
-  assert.match(card, /tracy-wo-facts-off">\[facts\.leftOff\]/)
-  assert.deepEqual(labels(head(html, 'hours')), ['[reading.show]', '[profile.edit]'])
-  assert.doesNotMatch(head(html, 'hours'), /hours\.leave/)
+  const hours = band(html, 'hours')
+  assert.match(hours, /Monday/)
+  assert.match(hours, /tracy-wo-facts-cells" data-off=""/)
+  assert.match(status(html), /tracy-wo-facts-off">\[facts\.leftOff\]/)
+  assert.deepEqual(labels(status(html)), ['[reading.show]'])
+  assert.deepEqual(labels(head(html, 'hours')), ['[profile.edit]'])
+  assert.doesNotMatch(hours, /hours\.leave/)
 })
 
-test('hours that wait for a check offer Keep and Leave off the site before Edit, the note keeps only its words', () => {
+test('hours that wait for a check offer Keep and Leave off the site in the last cell; the note opens in Show all, not in the band', () => {
   const html = draw(
     profile({ rating: null, hoursCheck: { state: 'check', hours: [], claims: CLAIMS }, team: [] })
   )
-  assert.deepEqual(labels(head(html, 'hours')), ['[name.keep]', '[hours.leave]', '[profile.edit]'])
-  const note = html.slice(html.indexOf('tracy-wo-facts-note'))
-  assert.doesNotMatch(note.slice(0, note.indexOf('</div>')), /<button/)
+  assert.deepEqual(labels(status(html)), ['[name.keep]', '[hours.leave]'])
+  assert.deepEqual(labels(head(html, 'hours')), [
+    '[facts.showAll.count{&quot;count&quot;:3}]',
+    '[profile.edit]'
+  ])
+  assert.doesNotMatch(band(html, 'hours'), /tracy-wo-facts-note/)
+  assert.match(status(html), /title="\[hours\.note/)
 })
 
-test('a team member left off stays in the list with the tag and a right aligned Show on the site', () => {
+test('a team member left off stays in the row with the tag and its own Show on the site', () => {
   const html = draw(
     profile({
       rating: null,
@@ -198,7 +221,7 @@ test('a team member left off stays in the list with the tag and a right aligned 
       ]
     })
   )
-  const team = html.slice(html.indexOf('data-card="team"'))
+  const team = band(html, 'team')
   const [rina, omar] = team
     .split('<li')
     .slice(1, 3)
@@ -210,7 +233,7 @@ test('a team member left off stays in the list with the tag and a right aligned 
   assert.deepEqual(labels(omar), ['[reading.hide]'])
 })
 
-test('source chips sit after their values, the old footer line is gone, and a photo carries its glyph badge', () => {
+test('source chips sit right after their values, and a photo carries its glyph badge', () => {
   const tile = (id, source) => ({
     id,
     kind: 'image',
@@ -240,15 +263,18 @@ test('source chips sit after their values, the old footer line is gone, and a ph
   assert.doesNotMatch(html, /brief\.source\.from|reading\.from\./)
   assert.match(
     html,
-    /12 Lagoon Walk<span class="tracy-wo-sc" data-word="google" title="\[chip\.title\.collected/
+    /title="12 Lagoon Walk">12 Lagoon Walk<\/span><span class="tracy-wo-sc" data-word="google" title="\[chip\.title\.collected/
   )
   assert.match(head(html, 'hours'), /tracy-wo-sc" data-word="google"/)
   // No source for the phone: no chip.
   assert.doesNotMatch(
-    html.slice(html.indexOf('+10 555 0100'), html.indexOf('</li>', html.indexOf('+10 555 0100'))),
+    html.slice(
+      html.indexOf('+10 555 0100'),
+      html.indexOf('class="tracy-wo-facts-cell"', html.indexOf('+10 555 0100'))
+    ),
     /tracy-wo-sc/
   )
-  const media = html.slice(html.indexOf('data-card="media"'))
+  const media = band(html, 'media')
   assert.equal((media.match(/tracy-wo-facts-bdg/g) ?? []).length, 1)
   assert.match(media, /source\.owner/)
 })

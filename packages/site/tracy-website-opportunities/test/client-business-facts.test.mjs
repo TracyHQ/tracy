@@ -1,6 +1,7 @@
 /**
- * The Business facts sub-page as grouped cards (#537, design A): the opportunity payload sorted into the business
- * card and one card per group, with origins and edit marks. Every business in this file is invented.
+ * The Business facts sub-page as stacked fixed-height bands (#537, layout C): the opportunity payload sorted into the
+ * business band and one band per group, with origins and edit marks; every band stays, N/A when research found
+ * nothing. Every business in this file is invented.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-business-facts.test.mjs
  */
@@ -8,6 +9,10 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
+  BAND_CAPACITY,
+  BAND_HEIGHTS,
+  BAND_IDS,
+  aboutOverflows,
   businessFactsView,
   clipQuote,
   contrast,
@@ -15,7 +20,9 @@ import {
   filterMedia,
   hoursLineParts,
   initialsOf,
-  markColorsOf
+  markColorsOf,
+  overflows,
+  socialPagesOf
 } from '../src/client/business-facts-model.ts'
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -79,7 +86,7 @@ const ids = (view) => view.cards.map((c) => `${c.id}:${c.state}`)
 
 const CASES = [
   {
-    name: 'researched: every group is a card, team and reviews included',
+    name: 'researched: every group is a band, team and reviews included, social N/A without a page',
     input: base,
     cards: [
       'hours:filled',
@@ -88,7 +95,8 @@ const CASES = [
       'team:filled',
       'brand:filled',
       'messages:filled',
-      'reviews:filled'
+      'reviews:filled',
+      'social:none'
     ]
   },
   {
@@ -101,13 +109,23 @@ const CASES = [
       'team:notCollected',
       'brand:notCollected',
       'messages:notCollected',
-      'reviews:notCollected'
+      'reviews:notCollected',
+      'social:notCollected'
     ]
   },
   {
-    name: 'researched but empty: groups say Not found, team and reviews leave no card',
+    name: 'researched but empty: every band stays and reads N/A, team and reviews included',
     input: { ...base, profile: {}, colors: [], reviews: [] },
-    cards: ['hours:none', 'services:none', 'about:none', 'brand:none', 'messages:none']
+    cards: [
+      'hours:none',
+      'services:none',
+      'about:none',
+      'team:none',
+      'brand:none',
+      'messages:none',
+      'reviews:none',
+      'social:none'
+    ]
   }
 ]
 for (const c of CASES)
@@ -208,4 +226,68 @@ test('quotes, media filters and hours lines', () => {
   assert.equal(filterMedia(tiles, 'videos').length, 1)
   assert.deepEqual(hoursLineParts('Monday: 09:00 - 18:00'), { days: 'Monday', times: '09:00 - 18:00' })
   assert.deepEqual(hoursLineParts('Mo-Fr 09:00-18:00'), { days: '', times: 'Mo-Fr 09:00-18:00' })
+})
+
+test('the band set is complete and every band kind has one fixed height, taller on a narrow page', () => {
+  assert.deepEqual(BAND_IDS, [
+    'business',
+    'hours',
+    'services',
+    'about',
+    'team',
+    'brand',
+    'messages',
+    'reviews',
+    'social',
+    'media',
+    'research'
+  ])
+  for (const id of BAND_IDS) {
+    const [wide, narrow] = BAND_HEIGHTS[id]
+    assert.ok(Number.isInteger(wide) && wide > 0, id)
+    assert.ok(narrow >= wide, id)
+  }
+  assert.deepEqual(
+    BAND_IDS.map((id) => BAND_HEIGHTS[id][0]),
+    [112, 72, 64, 72, 64, 96, 88, 156, 64, 184, 52]
+  )
+})
+
+test('Show all only past a band capacity; About only when longer than two lines', () => {
+  for (const [band, cap] of Object.entries(BAND_CAPACITY)) {
+    assert.equal(overflows(band, cap), false, band)
+    assert.equal(overflows(band, cap + 1), true, band)
+  }
+  assert.equal(aboutOverflows(null), false)
+  assert.equal(aboutOverflows('Kite lessons\nAll year'), false)
+  assert.equal(aboutOverflows('One\nTwo\nThree'), true)
+  assert.equal(aboutOverflows('word '.repeat(50)), true)
+})
+
+test('social pages: pasted pages and listings with their glyph, once each; the website and Google stay out', () => {
+  const pages = socialPagesOf([
+    { source: 'instagram', ref: 'https://instagram.example/harbourkite' },
+    {
+      source: 'instagram',
+      ref: 'https://instagram.example/harbourkite',
+      collectedAt: '2026-11-09T08:00:00Z'
+    },
+    { source: 'listing', ref: 'https://listing.example/harbour-kite' },
+    { source: 'website', ref: 'https://harbourkite.example' },
+    { source: 'google-places', ref: 'https://maps.example/place' },
+    { source: 'facebook', ref: null }
+  ])
+  assert.deepEqual(
+    pages.map((p) => [p.source, p.logo]),
+    [
+      ['instagram', 'instagram'],
+      ['listing', 'website']
+    ]
+  )
+  const view = businessFactsView({
+    ...base,
+    researched: false,
+    sources: [{ source: 'instagram', ref: 'https://instagram.example/harbourkite' }]
+  })
+  assert.equal(view.cards.find((c) => c.id === 'social').state, 'filled')
 })

@@ -1,39 +1,39 @@
 /**
- * The Business facts sub-page (#537, design A "Grouped cards"): the business card on top, then two columns of cards
- * (hours, team and key messages on the left; services, about, brand and guest reviews on the right; one column on a
- * narrow page), Photos & video, and Research details folded. One Edit per card opens its rows as fields through the
- * doors the rows always had (name, hours, rating, profile rows, reading, key messages); nothing new is sent. Before
- * research, and while it runs, the cards say Not collected yet and hold nothing partial: progress shows in the band.
+ * The Business facts sub-page (#537, layout C "Single column, stacked fixed bands"): one full-width band per group,
+ * top to bottom: the business, Opening hours, Services, About, Team, Brand, Key messages, What guests say, Social
+ * pages, Photos & video and Research details. Every band has one fixed height (`BAND_HEIGHTS`), the same for every
+ * business, and is always drawn: a missing fact reads N/A. A list longer than the band opens in Show all (n), and
+ * Edit opens the band's fields through the doors they always had (name, hours, rating, profile rows, reading, key
+ * messages) in a side sheet, so no band ever grows. Before research, and while it runs, the bands say Not collected
+ * yet and hold nothing partial: progress shows in the band at the top of the page.
  */
-import { type JSX, type ReactNode, useState } from 'react'
-import { Clock } from 'lucide-react'
-import { Badge, Button } from '@tracy/ui'
+import type { JSX, ReactNode } from 'react'
 
+import { FactsBand, NotAvailable, OneLine } from './business-facts-band.tsx'
+import { BrandBody, HoursBand, Missing, TeamPeople } from './business-facts-bands.tsx'
+import { FactsMedia } from './business-facts-media.tsx'
 import {
+  BAND_CAPACITY,
   type BusinessFactsView,
   type CardId,
-  clipQuote,
-  hoursLineParts,
-  initialsOf,
+  aboutOverflows,
   itemChipOf,
   messageChipOf,
+  overflows,
   reviewChipOf
 } from './business-facts-model.ts'
-import { ActButton, BusinessCard, FactsCard, LeftOffTag } from './business-facts-parts.tsx'
+import { BusinessBand } from './business-facts-parts.tsx'
 import { sourceLabel } from './cms-label.ts'
-import type { ReadingItemView } from './profile-reading-model.ts'
-import { SourceChip } from './source-chip.tsx'
-import { FactsMedia } from './business-facts-media.tsx'
-import type { ColorsView, LogoView, MediaRowView } from './detail-model.ts'
-import { LogoField } from './media-row.tsx'
+import type { LogoView, MediaRowView } from './detail-model.ts'
 import { EditableText } from './editable-text.tsx'
-import { type HoursChoice, type HoursSaved, sourceName } from './profile-hours-row.tsx'
-import { typedHours } from './profile-hours-model.ts'
+import type { HoursChoice, HoursSaved } from './profile-hours-row.tsx'
 import type { RatingChoice } from './profile-rating-row.tsx'
-import { type ReadingPick, readingActions } from './profile-reading-model.ts'
+import type { ReadingItemView, ReadingPick } from './profile-reading-model.ts'
+import { SourceChip } from './source-chip.tsx'
+import { SourceGlyph } from './source-logo.tsx'
 import type { Translate } from './strings.ts'
 
-/** The doors the cards edit through: each one the Business facts rows already had. */
+/** The doors the bands edit through: each one the Business facts rows already had. */
 export interface FactsDoors {
   /** "Name on the site" with its own choices, or null when research decided no name (the plain field then). */
   nameRow: JSX.Element | null
@@ -55,251 +55,6 @@ export interface FactsDoors {
 
 const NOT_COLLECTED_LOGO = { state: 'notCollected' } as LogoView
 
-const NotYet = ({ t, state }: { t: Translate; state: 'none' | 'notCollected' }): JSX.Element => (
-  <p className="tracy-wo-muted tracy-wo-facts-empty">
-    {t(state === 'none' ? 'reason.not_found' : 'reason.not_collected')}
-  </p>
-)
-
-function HoursCard({
-  t,
-  locale,
-  view,
-  doors
-}: {
-  t: Translate
-  locale: string
-  view: BusinessFactsView
-  doors: FactsDoors
-}): JSX.Element {
-  const hours = view.hours
-  const [editing, setEditing] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const choose = async (choice: HoursChoice): Promise<void> => {
-    if (busy) return
-    setBusy(true)
-    setFailed(false)
-    setFailed((await doors.saveHours(choice)) !== 'ok')
-    setBusy(false)
-  }
-  const card = view.cards.find((c) => c.id === 'hours')
-  const lines = hours === null ? [] : hours.hours.length > 0 ? hours.hours : hours.sourceHours
-  const chip =
-    hours?.chip === 'check' ? (
-      <Badge variant="outline" className="tracy-wo-chip-warn">
-        {t('name.chip.check')}
-      </Badge>
-    ) : hours?.chip === 'checked' ? (
-      <Badge variant="outline" className="tracy-wo-chip-ok">
-        {t('name.chip.checked')}
-      </Badge>
-    ) : null
-  // A left off hours card keeps its lines and a tag; the one choice flips to Show on the site.
-  const actions =
-    hours === null || card?.state !== 'filled'
-      ? []
-      : hours.left
-        ? hours.sourceHours.length > 0
-          ? [
-              <ActButton key="show" disabled={busy} onClick={() => void choose({ choice: 'keep' })}>
-                {t('reading.show')}
-              </ActButton>
-            ]
-          : []
-        : [
-            ...(hours.open && hours.sourceHours.length > 0
-              ? [
-                  <ActButton key="keep" disabled={busy} onClick={() => void choose({ choice: 'keep' })}>
-                    {t('name.keep')}
-                  </ActButton>
-                ]
-              : []),
-            <ActButton key="leave" disabled={busy} onClick={() => void choose({ choice: 'leave' })}>
-              {t('hours.leave')}
-            </ActButton>
-          ]
-  const edit = (): ReactNode => (
-    <>
-      <EditableText
-        t={t}
-        value={lines.join('\n')}
-        label={t('field.hours')}
-        edited={false}
-        editedKey="profile.editedByYou"
-        multiline
-        maxLength={1200}
-        startOpen
-        onSave={async (typed) => {
-          const next = typedHours(typed)
-          if (next.length === 0 || next.join('|') === lines.join('|')) return true
-          return (await doors.saveHours({ choice: 'edit', hours: next })) === 'ok'
-        }}
-      />
-      <span className="tracy-wo-muted tracy-wo-small">{t('hours.hint')}</span>
-      {hours?.left ? null : (
-        <span className="tracy-wo-row">
-          <Button
-            type="button"
-            size="xs"
-            variant="link"
-            disabled={busy}
-            onClick={() => void choose({ choice: 'leave' })}
-          >
-            {t('hours.leave')}
-          </Button>
-        </span>
-      )}
-    </>
-  )
-  return (
-    <FactsCard
-      t={t}
-      id="hours"
-      title={
-        <>
-          <Clock aria-hidden="true" className="tracy-wo-icon" />
-          {t('field.hours')}
-          {chip}
-          <SourceChip t={t} chip={card?.chip ?? null} locale={locale} />
-          {hours?.left ? <LeftOffTag t={t} /> : null}
-        </>
-      }
-      edit={card?.state === 'notCollected' ? null : edit}
-      actions={actions}
-      editing={editing}
-      onEditing={setEditing}
-    >
-      {card === undefined || card.state !== 'filled' || hours === null ? (
-        <NotYet t={t} state={card?.state === 'filled' || card === undefined ? 'none' : card.state} />
-      ) : (
-        <>
-          {lines.length === 0 ? null : (
-            <table className="tracy-wo-facts-hours" data-off={hours.left ? '' : undefined}>
-              <tbody>
-                {lines.map((line) => {
-                  const { days, times } = hoursLineParts(line)
-                  return (
-                    <tr key={line}>
-                      <th scope="row">{days}</th>
-                      <td>{times}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          )}
-          {hours.open ? (
-            <div className="tracy-wo-facts-note" role="note">
-              <span>{t('hours.note', { source: sourceName(t, hours) })}</span>
-            </div>
-          ) : null}
-          {failed ? (
-            <span className="tracy-wo-error" role="alert">
-              {t('hours.failed')}
-            </span>
-          ) : null}
-        </>
-      )}
-    </FactsCard>
-  )
-}
-
-function TeamList({
-  t,
-  locale,
-  view,
-  doors
-}: {
-  t: Translate
-  locale: string
-  view: BusinessFactsView
-  doors: FactsDoors
-}): JSX.Element {
-  const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const pick = async (id: string, choice: ReadingPick): Promise<void> => {
-    if (busy) return
-    setBusy(true)
-    setFailed(false)
-    setFailed(!(await doors.pickReading(id, choice)))
-    setBusy(false)
-  }
-  return (
-    <ul className="tracy-wo-facts-people">
-      {view.team.map((person) => (
-        <li
-          key={person.id}
-          data-off={person.removed || (person.reviewsOnly && !person.onSite) ? '' : undefined}
-        >
-          <span className="tracy-wo-facts-avatar" aria-hidden="true">
-            {initialsOf(person.label)}
-          </span>
-          <span className="tracy-wo-facts-person">
-            <span>
-              {person.label}
-              <SourceChip t={t} chip={itemChipOf(view, person)} locale={locale} />
-              {person.removed || (person.reviewsOnly && !person.onSite) ? <LeftOffTag t={t} /> : null}
-            </span>
-            {person.role === null ? null : <small>{person.role}</small>}
-          </span>
-          {readingActions(person)
-            .filter((p) => p !== 'remove')
-            .map((p) => (
-              <ActButton key={p} disabled={busy} onClick={() => void pick(person.id, p)}>
-                {t(p === 'restore' ? 'reading.show' : `reading.${p}`)}
-              </ActButton>
-            ))}
-        </li>
-      ))}
-      {failed ? (
-        <li className="tracy-wo-error" role="alert">
-          {t('reading.failed')}
-        </li>
-      ) : null}
-    </ul>
-  )
-}
-
-function BrandBody({
-  t,
-  logo,
-  colors,
-  retry,
-  food
-}: {
-  t: Translate
-  logo: LogoView
-  colors: ColorsView
-  retry: FactsDoors['retryLogo']
-  food: boolean
-}): JSX.Element {
-  return (
-    <>
-      <LogoField t={t} logo={logo} retry={retry} food={food} />
-      {colors.state === 'found' ? (
-        <>
-          <ul className="tracy-wo-facts-swatches">
-            {colors.colors.map((c, i) => (
-              <li key={`${c.hex}-${i}`}>
-                <span style={{ backgroundColor: c.hex }} aria-hidden="true" />
-                {c.hex}
-              </li>
-            ))}
-          </ul>
-          {colors.observedOnly ? (
-            <p className="tracy-wo-facts-cap">
-              {t(
-                colors.origin === 'website' ? 'detail.colorsObserved.website' : 'detail.colorsObserved.social'
-              )}
-            </p>
-          ) : null}
-        </>
-      ) : null}
-    </>
-  )
-}
-
 export function BusinessFactsPage({
   t,
   locale,
@@ -318,13 +73,18 @@ export function BusinessFactsPage({
   doors: FactsDoors
   food: boolean
   websiteLink: (url: string) => JSX.Element
-  /** Menu, Google Place, reviews, current website, social figures and place profile, folded; null when none. */
+  /** Menu, Google Place, reviews, current website, social figures and place profile; null when none. */
   researchDetails: ReactNode | null
   /** Research runs: the photos and videos wait for it to finish, only Add more stays (#537). */
   running: boolean
 }): JSX.Element {
   const cardOf = (id: CardId) => view.cards.find((c) => c.id === id)
   const facts = view.researched
+  const filled = (id: CardId): boolean => cardOf(id)?.state === 'filled'
+  const body = (id: CardId, draw: () => ReactNode): ReactNode =>
+    filled(id) ? draw() : <Missing t={t} card={cardOf(id)} />
+  const editOf = (id: CardId, rows: () => ReactNode): (() => ReactNode) | null =>
+    cardOf(id) === undefined || cardOf(id)?.state === 'notCollected' ? null : rows
   const businessEdit = !facts
     ? null
     : () => (
@@ -360,171 +120,99 @@ export function BusinessFactsPage({
           ) : null}
         </>
       )
-  const body = (id: CardId, filled: () => ReactNode): ReactNode => {
-    const card = cardOf(id)
-    if (card === undefined) return null
-    return card.state === 'filled' ? filled() : <NotYet t={t} state={card.state} />
-  }
-  const editOf = (id: CardId, rows: () => ReactNode): (() => ReactNode) | null =>
-    cardOf(id)?.state === 'notCollected' ? null : rows
-  // Each reading item followed by its chip ("Tennis [Bio], Padel [Bio]").
-  const withChips = (items: ReadingItemView[]): ReactNode =>
-    items.map((i, n) => (
-      <span key={i.id}>
-        {n > 0 ? ', ' : null}
-        {i.label}
-        <SourceChip t={t} chip={itemChipOf(view, i)} locale={locale} />
-      </span>
-    ))
   const looked = view.sources
     .filter((s) => typeof s.collectedAt === 'string' && s.collectedAt !== '')
     .map((s) => sourceLabel(t, s.source, s.ref ?? null))
     .filter((name, i, all) => all.indexOf(name) === i)
-  const left: JSX.Element[] = []
-  const right: JSX.Element[] = []
-  for (const card of view.cards) {
-    let el: JSX.Element | null = null
-    if (card.id === 'hours') el = <HoursCard key="hours" t={t} locale={locale} view={view} doors={doors} />
-    if (card.id === 'services')
-      el = (
-        <FactsCard
-          key="services"
-          t={t}
-          id="services"
-          title={t('field.services')}
-          edit={editOf('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
-        >
-          {body('services', () => (
-            <>
-              <ul className="tracy-wo-facts-chips">
-                {view.services
-                  .filter((s) => !s.removed)
-                  .map((s) => (
-                    <li key={s.id}>
-                      {s.label}
-                      <SourceChip t={t} chip={itemChipOf(view, s)} locale={locale} />
-                    </li>
-                  ))}
-              </ul>
-              <dl className="tracy-wo-facts-kv">
-                {(
-                  [
-                    ['field.audience', view.audience],
-                    ['field.serviceAreas', view.serviceAreas]
-                  ] as const
-                ).map(([key, items]) =>
-                  items.filter((i) => !i.removed).length === 0 ? null : (
-                    <div key={key}>
-                      <dt>{t(key)}</dt>
-                      <dd>{withChips(items.filter((i) => !i.removed))}</dd>
-                    </div>
-                  )
-                )}
-              </dl>
-            </>
-          ))}
-        </FactsCard>
-      )
-    if (card.id === 'about')
-      el = (
-        <FactsCard
-          key="about"
-          t={t}
-          id="about"
-          title={
-            <>
-              {t('field.bio')}
-              <SourceChip t={t} chip={card.chip} locale={locale} />
-            </>
-          }
-          edit={editOf('about', () => doors.field('bio', view.about ?? ''))}
-        >
-          {body('about', () => (
-            <p className="tracy-wo-facts-about">{view.about}</p>
-          ))}
-        </FactsCard>
-      )
-    if (card.id === 'team')
-      el = (
-        <FactsCard
-          key="team"
-          t={t}
-          id="team"
-          title={t('field.team')}
-          edit={editOf('team', () => doors.readingRows(['team']))}
-        >
-          {body('team', () => (
-            <TeamList t={t} locale={locale} view={view} doors={doors} />
-          ))}
-        </FactsCard>
-      )
-    if (card.id === 'brand')
-      el = (
-        <FactsCard key="brand" t={t} id="brand" title={t('media.brand')} edit={null}>
-          {card.state === 'notCollected' ? (
-            <NotYet t={t} state="notCollected" />
-          ) : (
-            <BrandBody t={t} logo={media.logo} colors={media.colors} retry={doors.retryLogo} food={food} />
-          )}
-        </FactsCard>
-      )
-    if (card.id === 'messages')
-      el = (
-        <FactsCard
-          key="messages"
-          t={t}
-          id="messages"
-          title={t('keyMessages.title')}
-          aside={<span className="tracy-wo-facts-aside">{t('facts.messages.lead')}</span>}
-          edit={editOf('messages', () => doors.keyMessages)}
-        >
-          {body('messages', () => (
-            <ol className="tracy-wo-facts-msgs">
-              {view.messages.map((m) => (
-                <li key={m.id}>
-                  <span>
-                    {m.label}
-                    <SourceChip t={t} chip={messageChipOf(view, m)} locale={locale} />
-                  </span>
-                  {m.quotes.slice(0, 1).map((q) => (
-                    <q key={q}>{q}</q>
-                  ))}
-                </li>
-              ))}
-            </ol>
-          ))}
-        </FactsCard>
-      )
-    if (card.id === 'reviews')
-      el = (
-        <FactsCard
-          key="reviews"
-          t={t}
-          id="reviews"
-          title={t('facts.reviews.title')}
-          aside={<span className="tracy-wo-facts-aside">{t('facts.reviews.note')}</span>}
-          edit={null}
-        >
-          {body('reviews', () => (
-            <ul className="tracy-wo-facts-quotes">
-              {view.reviews.map((r, i) => (
-                <li key={`${r.author}-${i}`}>
-                  <q>{clipQuote(r.text)}</q>
-                  <small>
-                    {[r.author, r.rating === null ? null : `★ ${r.rating}`].filter(Boolean).join(' · ')}
-                    <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />
-                  </small>
-                </li>
-              ))}
-            </ul>
-          ))}
-        </FactsCard>
-      )
-    if (el !== null) (card.column === 'left' ? left : right).push(el)
+
+  // Services: the services chips, then the audience and the service areas, each after its muted label.
+  const serviceGroups = (
+    [
+      ['field.services', view.services],
+      ['field.audience', view.audience],
+      ['field.serviceAreas', view.serviceAreas]
+    ] as const
+  ).map(([key, items]) => [key, items.filter((i) => !i.removed)] as const)
+  const serviceCount = serviceGroups.reduce((n, [, items]) => n + items.length, 0)
+  const chips = (items: readonly ReadingItemView[]): ReactNode =>
+    items.map((s) => (
+      <li key={s.id} className="tracy-wo-facts-pill">
+        <span className="tracy-wo-facts-ell" title={s.label}>
+          {s.label}
+        </span>
+        <SourceChip t={t} chip={itemChipOf(view, s)} locale={locale} />
+      </li>
+    ))
+  const servicesRow = (all: boolean): ReactNode => {
+    let left = all ? Number.POSITIVE_INFINITY : BAND_CAPACITY.services
+    return (
+      <ul className={all ? 'tracy-wo-facts-chips' : 'tracy-wo-facts-chiprow'}>
+        {serviceGroups.map(([key, items]) => {
+          const shown = items.slice(0, Math.max(0, left))
+          left -= shown.length
+          if (shown.length === 0) return null
+          return [
+            key === 'field.services' ? null : (
+              <li key={key} className="tracy-wo-facts-ck tracy-wo-facts-group">
+                {t(key)}
+              </li>
+            ),
+            chips(shown)
+          ]
+        })}
+      </ul>
+    )
   }
+
+  const messagesList = (): ReactNode => (
+    <ol className="tracy-wo-facts-msgs">
+      {view.messages.map((m) => (
+        <li key={m.id}>
+          <span>
+            {m.label}
+            <SourceChip t={t} chip={messageChipOf(view, m)} locale={locale} />
+          </span>
+          {m.quotes.slice(0, 1).map((q) => (
+            <q key={q}>{q}</q>
+          ))}
+        </li>
+      ))}
+    </ol>
+  )
+  const reviewsList = (): ReactNode => (
+    <ul className="tracy-wo-facts-quotes">
+      {view.reviews.map((r, i) => (
+        <li key={`${r.author}-${i}`}>
+          <q>{r.text}</q>
+          <small>
+            {[r.author, r.rating === null ? null : `★ ${r.rating}`].filter(Boolean).join(' · ')}
+            <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />
+          </small>
+        </li>
+      ))}
+    </ul>
+  )
+  const socialChips = (limit?: number): ReactNode => (
+    <ul className={limit === undefined ? 'tracy-wo-facts-chips' : 'tracy-wo-facts-chiprow'}>
+      {view.social.slice(0, limit).map((p) => {
+        const name = sourceLabel(t, p.source, p.url)
+        return (
+          <li key={p.url} className="tracy-wo-facts-pill">
+            <a href={p.url} target="_blank" rel="noreferrer" title={p.url}>
+              <SourceGlyph logo={p.logo} size={12} />
+              <span className="tracy-wo-facts-ell">{name}</span>
+            </a>
+          </li>
+        )
+      })}
+    </ul>
+  )
+  const aboutCard = cardOf('about')
+  const researchCount = looked.length
+
   return (
     <div className="tracy-wo-facts">
-      <BusinessCard
+      <BusinessBand
         t={t}
         locale={locale}
         view={view.business}
@@ -533,18 +221,178 @@ export function BusinessFactsPage({
         onRating={doors.saveRating}
         edit={businessEdit}
         looked={looked}
+        researched={facts}
       />
-      <div className="tracy-wo-facts-grid">
-        <div className="tracy-wo-facts-col">{left}</div>
-        <div className="tracy-wo-facts-col">{right}</div>
-      </div>
+      <HoursBand t={t} locale={locale} view={view} saveHours={doors.saveHours} />
+      <FactsBand
+        t={t}
+        id="services"
+        title={t('field.services')}
+        edit={editOf('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
+        more={
+          filled('services') && overflows('services', serviceCount)
+            ? { count: serviceCount, render: () => servicesRow(true) }
+            : null
+        }
+      >
+        {body('services', () => servicesRow(false))}
+      </FactsBand>
+      <FactsBand
+        t={t}
+        id="about"
+        title={
+          <>
+            <span className="tracy-wo-facts-ell">{t('field.bio')}</span>
+            <SourceChip t={t} chip={aboutCard?.chip ?? null} locale={locale} />
+          </>
+        }
+        sheetTitle={t('field.bio')}
+        edit={editOf('about', () => doors.field('bio', view.about ?? ''))}
+        more={
+          filled('about') && aboutOverflows(view.about)
+            ? { count: null, render: () => <p className="tracy-wo-facts-about">{view.about}</p> }
+            : null
+        }
+      >
+        {body('about', () => (
+          <p className="tracy-wo-facts-about tracy-wo-facts-clamp2" title={view.about ?? undefined}>
+            {view.about}
+          </p>
+        ))}
+      </FactsBand>
+      <FactsBand
+        t={t}
+        id="team"
+        title={t('field.team')}
+        edit={editOf('team', () => doors.readingRows(['team']))}
+        more={
+          filled('team') && overflows('team', view.team.length)
+            ? {
+                count: view.team.length,
+                render: () => <TeamPeople t={t} locale={locale} view={view} pickReading={doors.pickReading} />
+              }
+            : null
+        }
+      >
+        {body('team', () => (
+          <TeamPeople
+            t={t}
+            locale={locale}
+            view={view}
+            pickReading={doors.pickReading}
+            limit={BAND_CAPACITY.team}
+          />
+        ))}
+      </FactsBand>
+      <FactsBand t={t} id="brand" title={t('media.brand')} edit={null}>
+        {cardOf('brand')?.state === 'notCollected' ? (
+          <NotAvailable t={t} state="notCollected" />
+        ) : (
+          <BrandBody t={t} logo={media.logo} colors={media.colors} retry={doors.retryLogo} food={food} />
+        )}
+      </FactsBand>
+      <FactsBand
+        t={t}
+        id="messages"
+        title={t('keyMessages.title')}
+        aside={
+          <span className="tracy-wo-facts-aside" title={t('facts.messages.lead')}>
+            {t('facts.messages.lead')}
+          </span>
+        }
+        edit={editOf('messages', () => doors.keyMessages)}
+        more={
+          filled('messages') && overflows('messages', view.messages.length)
+            ? { count: view.messages.length, render: messagesList }
+            : null
+        }
+      >
+        {body('messages', () => (
+          <div className="tracy-wo-facts-cells">
+            {view.messages.slice(0, BAND_CAPACITY.messages).map((m, i) => (
+              <div key={m.id} className="tracy-wo-facts-cell">
+                <span className="tracy-wo-facts-ck">{t('facts.message.n', { n: i + 1 })}</span>
+                <OneLine text={m.label}>
+                  <SourceChip t={t} chip={messageChipOf(view, m)} locale={locale} />
+                </OneLine>
+                {m.quotes.slice(0, 1).map((q) => (
+                  <q key={q} className="tracy-wo-facts-ell tracy-wo-facts-dim" title={q}>
+                    {q}
+                  </q>
+                ))}
+              </div>
+            ))}
+          </div>
+        ))}
+      </FactsBand>
+      <FactsBand
+        t={t}
+        id="reviews"
+        title={t('facts.reviews.title')}
+        aside={
+          <span className="tracy-wo-facts-aside" title={t('facts.reviews.note')}>
+            {t('facts.reviews.note')}
+          </span>
+        }
+        edit={null}
+        more={
+          filled('reviews') && overflows('reviews', view.reviews.length)
+            ? { count: view.reviews.length, render: reviewsList }
+            : null
+        }
+      >
+        {body('reviews', () => (
+          <ul className="tracy-wo-facts-cards">
+            {view.reviews.slice(0, BAND_CAPACITY.reviews).map((r, i) => (
+              <li key={`${r.author}-${i}`}>
+                <q className="tracy-wo-facts-clamp3" title={r.text}>
+                  {r.text}
+                </q>
+                <span className="tracy-wo-facts-ln tracy-wo-facts-dim tracy-wo-small">
+                  <span className="tracy-wo-facts-ell">
+                    {[r.rating === null ? null : `★ ${r.rating}`, r.author].filter(Boolean).join(' · ')}
+                  </span>
+                  <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        ))}
+      </FactsBand>
+      <FactsBand
+        t={t}
+        id="social"
+        title={t('facts.social.title')}
+        edit={null}
+        more={
+          overflows('social', view.social.length)
+            ? { count: view.social.length, render: () => socialChips() }
+            : null
+        }
+      >
+        {filled('social') ? socialChips(BAND_CAPACITY.social) : <Missing t={t} card={cardOf('social')} />}
+      </FactsBand>
       <FactsMedia t={t} media={media} show={!running} onUpload={doors.uploadMedia} />
-      {facts && researchDetails !== null ? (
-        <details className="tracy-wo-facts-card tracy-wo-facts-more">
-          <summary>{t('facts.research')}</summary>
-          {researchDetails}
-        </details>
-      ) : null}
+      <FactsBand
+        t={t}
+        id="research"
+        title={t('facts.research')}
+        aside={
+          facts ? (
+            <span className="tracy-wo-facts-aside">
+              {t(researchCount === 1 ? 'facts.research.count.one' : 'facts.research.count.other', {
+                count: researchCount
+              })}
+            </span>
+          ) : null
+        }
+        edit={null}
+        open={facts && researchDetails !== null ? () => researchDetails : null}
+      >
+        {facts && researchDetails !== null ? null : (
+          <NotAvailable t={t} state={facts ? 'none' : 'notCollected'} />
+        )}
+      </FactsBand>
     </div>
   )
 }

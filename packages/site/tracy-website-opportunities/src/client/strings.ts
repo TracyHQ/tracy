@@ -1429,6 +1429,18 @@ export const en = {
   'facts.media.photos': 'Photos {count}',
   'facts.media.videos': 'Videos {count}',
   'facts.research': 'Research details',
+  // Business facts as stacked fixed-height bands (#537, layout C): N/A, Show all, the side sheet, social pages.
+  'facts.na': 'N/A',
+  'facts.showAll': 'Show all',
+  'facts.showAll.count': 'Show all ({count})',
+  'facts.open': 'Open',
+  'facts.close': 'Close',
+  'facts.message.n': 'Message {n}',
+  'facts.social.title': 'Social pages',
+  'facts.research.count.one': '{count} source read',
+  'facts.research.count.other': '{count} sources read',
+  'facts.media.more': '+{count}',
+  // End of the Business facts bands block.
 
   /** Your site (#537): before the site is built, the block says which step is needed. */
   'site.notYet.research': 'Not available yet. Research business facts first.',

@@ -1,9 +1,11 @@
 /**
- * The Business facts sub-page as grouped cards (#537, design A): what the opportunity payload says, sorted into the
- * business card on top and one card per group of facts (hours, services, about, team, brand, key messages, guest
- * reviews), each with where its facts come from and whether the seller changed one. Nothing is decided here: every
- * value is the server's (`profile`, `candidate`, `approval`), only grouped and labelled for the screen.
+ * The Business facts sub-page as stacked fixed-height bands (#537, layout C): what the opportunity payload says,
+ * sorted into the business band on top and one band per group of facts (hours, services, about, team, brand, key
+ * messages, guest reviews, social pages), each with where its facts come from and whether the seller changed one.
+ * Every band is always drawn, with N/A when research found nothing. Nothing is decided here: every value is the
+ * server's (`profile`, `candidate`, `approval`), only grouped and labelled for the screen.
  */
+import { type SourceLogoKey, sourceLogoKey } from './source-logo.ts'
 import { type PhonesView, phonesView } from './profile-phones-model.ts'
 import { type RatingRowView, ratingRowView } from './profile-rating-model.ts'
 import { type HoursRowView, hoursRowView } from './profile-hours-model.ts'
@@ -22,8 +24,91 @@ type Rec = Record<string, unknown>
 const rec = (v: unknown): Rec => (v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {})
 const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null)
 
-export const CARD_IDS = ['hours', 'services', 'about', 'team', 'brand', 'messages', 'reviews'] as const
+export const CARD_IDS = [
+  'hours',
+  'services',
+  'about',
+  'team',
+  'brand',
+  'messages',
+  'reviews',
+  'social'
+] as const
 export type CardId = (typeof CARD_IDS)[number]
+
+/** Every band of the page, top to bottom: the business band, the cards, Photos & video, Research details. */
+export const BAND_IDS = ['business', ...CARD_IDS, 'media', 'research'] as const
+export type BandId = (typeof BAND_IDS)[number]
+
+/**
+ * One fixed height per band kind, the same for every business: [wide page, narrow page (under 720px)]. A band never
+ * grows with its content; more than fits scrolls inside it or opens in Show all.
+ */
+export const BAND_HEIGHTS: Readonly<Record<BandId, readonly [number, number]>> = {
+  business: [112, 232],
+  hours: [72, 148],
+  services: [64, 104],
+  about: [72, 120],
+  team: [64, 104],
+  brand: [96, 156],
+  messages: [88, 228],
+  reviews: [156, 204],
+  social: [64, 104],
+  media: [184, 228],
+  research: [52, 52]
+}
+
+/** How many items a band shows before Show all (n) opens the rest. */
+export const BAND_CAPACITY = {
+  hours: 7,
+  services: 6,
+  team: 4,
+  messages: 3,
+  reviews: 4,
+  social: 4,
+  media: 8
+} as const
+export type ListBand = keyof typeof BAND_CAPACITY
+
+/** True when a band's list holds more than the band shows, so the band offers Show all (n). */
+export const overflows = (band: ListBand, count: number): boolean => count > BAND_CAPACITY[band]
+
+/** The About text is clamped to two lines: more lines, or a long text, offer Show all. */
+export const aboutOverflows = (about: string | null): boolean =>
+  about !== null && (about.split('\n').filter((l) => l.trim() !== '').length > 2 || about.length > 180)
+
+/** One social page or listing the research read or the seller pasted, as a linked chip. */
+export interface SocialPageView {
+  source: string
+  url: string
+  logo: SourceLogoKey
+}
+
+/** Sources that are not a social page or a listing: the own website, Google's place, searches, files, the seller. */
+const NOT_SOCIAL = new Set([
+  'website',
+  'google-places',
+  'google-maps',
+  'menu-file',
+  'menu-photos',
+  'owner',
+  'instagram-search',
+  'facebook-search'
+])
+
+/** The social pages and listings among the source rows, one per page address, in order. */
+export function socialPagesOf(rows: readonly ChipSourceRow[]): SocialPageView[] {
+  const seen = new Set<string>()
+  const out: SocialPageView[] = []
+  for (const r of rows) {
+    const url = text(r.ref)
+    if (url === null || !/^https?:\/\//i.test(url) || NOT_SOCIAL.has(r.source)) continue
+    if (seen.has(url)) continue
+    seen.add(url)
+    out.push({ source: r.source, url, logo: sourceLogoKey(r.source, url) })
+  }
+  return out
+}
 
 /** Where a card's facts come from: a named source (`google-places`, `instagram`…), a kind of text, or the seller. */
 export type Origin =
@@ -42,8 +127,6 @@ export type CardState = 'filled' | 'none' | 'notCollected'
 
 export interface FactsCardView {
   id: CardId
-  /** The column of two (one column on a narrow page, in reading order: left, then right). */
-  column: 'left' | 'right'
   state: CardState
   origins: Origin[]
   mark: EditMark
@@ -97,6 +180,8 @@ export interface BusinessFactsView {
   team: ReadingItemView[]
   messages: KeyMessageView[]
   reviews: ReviewQuoteView[]
+  /** The social pages and listings, each a linked chip with its glyph. */
+  social: SocialPageView[]
   /** The source rows (`body.sources`), for each chip's collected time and page address. */
   sources: ChipSourceRow[]
   /** The platform the bio was read from (a reading item from the bio carries none), or null. */
@@ -306,15 +391,9 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
   const claims = rec(profile.hoursCheck).claims
   const hoursSource = Array.isArray(claims) ? text(rec(claims[0]).source) : null
   const hoursChoice = text(rec(profile.hoursCheck).choice)
-  const card = (
-    id: CardId,
-    column: 'left' | 'right',
-    filled: boolean,
-    origins: Origin[],
-    m: EditMark = null
-  ): FactsCardView => ({
+  const social = socialPagesOf(rows)
+  const card = (id: CardId, filled: boolean, origins: Origin[], m: EditMark = null): FactsCardView => ({
     id,
-    column,
     state: state(filled),
     origins: researched && filled ? origins : [],
     mark: m,
@@ -323,7 +402,6 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
   const cards: FactsCardView[] = [
     card(
       'hours',
-      'left',
       hours !== null,
       hoursChoice === 'edit'
         ? [{ kind: 'you' }]
@@ -333,23 +411,23 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     ),
     card(
       'services',
-      'right',
       services.length + audience.length + serviceAreas.length > 0,
       readingOrigins([...services, ...audience, ...serviceAreas])
     ),
     card(
       'about',
-      'right',
       about !== null,
       mark('bio') !== null
         ? [{ kind: 'you' }]
         : [provenanceOrigin(profile, 'bio')].filter((o): o is Origin => o !== null),
       mark('bio')
     ),
-    card('team', 'left', team.length > 0, readingOrigins(team)),
-    card('brand', 'right', hasBrand, []),
-    card('messages', 'left', messages.length > 0, []),
-    card('reviews', 'right', reviews.length > 0, [])
+    card('team', team.length > 0, readingOrigins(team)),
+    card('brand', hasBrand, []),
+    card('messages', messages.length > 0, []),
+    card('reviews', reviews.length > 0, []),
+    // The pasted links are known before research: their band fills as soon as there is one.
+    { id: 'social', state: social.length > 0 ? 'filled' : state(false), origins: [], mark: null, chip: null }
   ]
   // Hours and About are one block each: their chip sits once in the card header.
   for (const c of cards) {
@@ -363,12 +441,11 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
             : fieldChip(hoursSource, 'hours', rows)
     if (c.id === 'about') c.chip = mark('bio') !== null ? youChip(editedAt('bio')) : chipOf('bio', about)
   }
-  // A team or guest reviews the research did not find leave no empty card behind; the other groups say Not found.
-  const shown = cards.filter((c) => !((c.id === 'team' || c.id === 'reviews') && c.state === 'none'))
+  // Every band stays, the ones research found nothing for read N/A.
   return {
     researched,
     business,
-    cards: shown,
+    cards,
     hours,
     about,
     services,
@@ -377,6 +454,7 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     team,
     messages,
     reviews,
+    social,
     sources: rows,
     bioPlatform: researched ? bioPlatform : null
   }

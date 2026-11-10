@@ -1,12 +1,14 @@
 /**
- * The small pieces of the Business facts cards (#537, design A): a card with its title and one Edit, the edit marks,
- * and the business card on top, each value followed by its source chip (`source-chip.tsx`).
+ * The small pieces of the Business facts bands (#537, layout C): the edit marks, the left off tag, the text buttons,
+ * and the business band on top, a row of five cells (name, rating, phone, address, website), each value on one
+ * line followed by its source chip (`source-chip.tsx`). Its Edit opens the fields in the side sheet.
  */
-import { Fragment, type JSX, type ReactNode, useState } from 'react'
-import { Eye, Globe, MapPin, Pencil, Phone } from 'lucide-react'
-import { Badge, Button } from '@tracy/ui'
+import { Fragment, type JSX, type ReactNode, useRef, useState } from 'react'
+import { Pencil } from 'lucide-react'
+import { Badge } from '@tracy/ui'
 
 import { mediaUrl } from './api.ts'
+import { FactsSheet, NotAvailable, OneLine } from './business-facts-band.tsx'
 import type { BusinessCardView, EditMark } from './business-facts-model.ts'
 import type { LogoView } from './detail-model.ts'
 import { ratingActions, ratingText } from './profile-rating-model.ts'
@@ -26,12 +28,12 @@ export function Mark({ t, mark }: { t: Translate; mark: EditMark }): JSX.Element
   )
 }
 
-/** The small muted tag beside a card or row the seller left off the site. */
+/** The small muted tag beside a band or item the seller left off the site. */
 export function LeftOffTag({ t }: { t: Translate }): JSX.Element {
   return <span className="tracy-wo-facts-off">{t('facts.leftOff')}</span>
 }
 
-/** One reading choice as a small text button in a card header (or right-aligned on a row). */
+/** One reading choice as a small text button. */
 export function ActButton({
   children,
   disabled,
@@ -48,134 +50,74 @@ export function ActButton({
   )
 }
 
-/**
- * One card: its title, one Edit that opens the card's rows as fields (`editing`), and Done to close them. A card
- * with nothing to edit (`edit` null) has no Edit.
- */
-export function FactsCard({
-  t,
-  id,
-  title,
-  aside,
-  wide = false,
-  edit,
-  editing: controlled,
-  onEditing,
-  actions = [],
-  children
-}: {
-  t: Translate
-  id: string
-  title: ReactNode
-  aside?: ReactNode
-  wide?: boolean
-  /** The reading choices of the card (Keep, Leave off the site...), small text buttons before Edit. */
-  actions?: ReactNode[]
-  /** The rows as fields; null: the card has no Edit. */
-  edit: (() => ReactNode) | null
-  /** Held by the card's owner when a press inside the card also opens it (Edit hours). */
-  editing?: boolean
-  onEditing?: (open: boolean) => void
-  children: ReactNode
-}): JSX.Element {
-  const [own, setOwn] = useState(false)
-  const editing = controlled ?? own
-  const setEditing = onEditing ?? setOwn
-  return (
-    <section
-      className="tracy-wo-facts-card"
-      data-card={id}
-      data-wide={wide ? '' : undefined}
-      data-editing={editing ? '' : undefined}
-    >
-      <div className="tracy-wo-facts-card-head">
-        <h3>{title}</h3>
-        {aside}
-        {editing && edit !== null ? (
-          <Button type="button" size="xs" variant="outline" onClick={() => setEditing(false)}>
-            {t('facts.done')}
-          </Button>
-        ) : edit === null && actions.length === 0 ? null : (
-          <span className="tracy-wo-facts-acts">
-            {[
-              ...actions,
-              edit === null ? null : (
-                <button
-                  key="edit"
-                  type="button"
-                  className="tracy-wo-facts-act"
-                  onClick={() => setEditing(true)}
-                >
-                  <Pencil aria-hidden="true" />
-                  {t('profile.edit')}
-                </button>
-              )
-            ]
-              .filter((a) => a !== null)
-              .map((a, i) => (
-                <Fragment key={i}>
-                  {i > 0 ? (
-                    <span className="tracy-wo-facts-dot" aria-hidden="true">
-                      ·
-                    </span>
-                  ) : null}
-                  {a}
-                </Fragment>
-              ))}
-          </span>
-        )}
-      </div>
-      {editing && edit !== null ? <div className="tracy-wo-facts-edit">{edit()}</div> : children}
-    </section>
-  )
-}
+/** A cell of the business band: a small label over its value. */
+const Cell = ({ label, children }: { label: string; children: ReactNode }): JSX.Element => (
+  <div className="tracy-wo-facts-cell">
+    <span className="tracy-wo-facts-ck">{label}</span>
+    {children}
+  </div>
+)
 
-function RatingLine({
+function RatingCell({
   t,
   view,
   locale,
-  failed,
   chip,
-  actions
+  onRating
 }: {
   t: Translate
   view: NonNullable<BusinessCardView['rating']>
   locale: string
-  failed: boolean
   chip: BusinessCardView['chips']['rating']
-  /** The choices that change the rating (Show on the site), beside the sentence they belong to. */
-  actions: ReactNode[]
+  onRating: (choice: RatingChoice) => Promise<boolean>
 }): JSX.Element {
+  const [busy, setBusy] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const save = async (choice: RatingChoice): Promise<void> => {
+    if (busy) return
+    setBusy(true)
+    setFailed(false)
+    const ok = await onRating(choice)
+    setBusy(false)
+    setFailed(!ok)
+  }
+  // A thin rating is already off the site: Leave off there would only repeat the sentence, so only Show is offered.
+  const choices = ratingActions(view).filter((c) => !(c === 'leave' && view.few && !view.chosen))
   const note = view.shown
     ? 'facts.rating.shown'
     : view.few && !view.chosen
       ? 'facts.rating.left'
       : 'rating.left'
+  const count =
+    view.reviews === null
+      ? ''
+      : t(view.reviews === 1 ? 'facts.reviews.one' : 'facts.reviews.other', {
+          count: new Intl.NumberFormat(locale).format(view.reviews)
+        })
   return (
     <>
-      <span className="tracy-wo-facts-sub">
+      <span className="tracy-wo-facts-ln" title={t(note)}>
         <span className="tracy-wo-facts-stars" aria-hidden="true">
-          {'★'.repeat(Math.max(0, Math.min(5, Math.round(view.score))))}
+          ★
         </span>
         <b>{ratingText(view.score, locale)}</b>
-        {view.reviews === null ? null : (
-          <span>
-            {t(view.reviews === 1 ? 'facts.reviews.one' : 'facts.reviews.other', {
-              count: new Intl.NumberFormat(locale).format(view.reviews)
-            })}
-          </span>
-        )}
+        <span className="tracy-wo-facts-ell tracy-wo-facts-dim" title={count}>
+          {count}
+        </span>
+        <SourceChip t={t} chip={chip} locale={locale} />
+      </span>
+      <span className="tracy-wo-facts-ln tracy-wo-facts-rating-acts">
         {view.few ? (
           <Badge variant="outline" className="tracy-wo-chip-warn">
             {t('rating.few')}
           </Badge>
         ) : null}
-        <SourceChip t={t} chip={chip} locale={locale} />
-      </span>
-      <span className="tracy-wo-facts-sub tracy-wo-small">
-        <Eye aria-hidden="true" className="tracy-wo-icon" />
-        {note === 'rating.left' ? <LeftOffTag t={t} /> : <span>{t(note)}</span>}
-        {actions}
+        {note === 'rating.left' ? <LeftOffTag t={t} /> : null}
+        {choices.map((choice) => (
+          <ActButton key={choice} disabled={busy} onClick={() => void save(choice)}>
+            {t(choice === 'show' ? 'rating.show' : 'rating.leave')}
+          </ActButton>
+        ))}
         {failed ? (
           <span className="tracy-wo-error" role="alert">
             {t('rating.failed')}
@@ -186,8 +128,8 @@ function RatingLine({
   )
 }
 
-/** The business card: logo or initials, name, category, rating, then address, phones and website with icons. */
-export function BusinessCard({
+/** The business band: five cells in a row (two columns on a narrow page), Edit at the top right. */
+export function BusinessBand({
   t,
   locale,
   view,
@@ -195,7 +137,8 @@ export function BusinessCard({
   websiteLink,
   onRating,
   edit,
-  looked
+  looked,
+  researched
 }: {
   t: Translate
   locale: string
@@ -207,7 +150,11 @@ export function BusinessCard({
   onRating: (choice: RatingChoice) => Promise<boolean>
   /** The name, address and phone as fields; null before research (nothing to edit yet). */
   edit: (() => ReactNode) | null
+  researched: boolean
 }): JSX.Element {
+  const [editing, setEditing] = useState(false)
+  const editRef = useRef<HTMLButtonElement | null>(null)
+  const missing = <NotAvailable t={t} state={researched ? 'none' : 'notCollected'} />
   const mark =
     logo.state === 'found' ? (
       <span className="tracy-wo-facts-logo">
@@ -231,81 +178,49 @@ export function BusinessCard({
   const others = phones?.others ?? []
   // "Other: {list}." in the interface language, split where the numbers (each with its chip) go.
   const [othersBefore = '', othersAfter = ''] = t('facts.phone.others', { list: '\u0000' }).split('\u0000')
-  const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const saveRating = async (choice: RatingChoice): Promise<void> => {
-    if (busy) return
-    setBusy(true)
-    setFailed(false)
-    const ok = await onRating(choice)
-    setBusy(false)
-    setFailed(!ok)
-  }
-  // A thin rating is already off the site: Leave off there would only repeat the sentence, so only Show is offered.
-  const ratingChoices =
-    view.rating === null
-      ? []
-      : ratingActions(view.rating).filter((c) => !(c === 'leave' && view.rating?.few && !view.rating.chosen))
-  const actions =
-    view.rating === null
-      ? []
-      : ratingChoices.map((choice) => (
-          <ActButton key={choice} disabled={busy} onClick={() => void saveRating(choice)}>
-            {t(choice === 'show' ? 'rating.show' : 'rating.leave')}
-          </ActButton>
-        ))
+  const othersText = `${t('facts.phone.others', { list: others.map((o) => o.phone).join(', ') })} ${t('phone.othersNote')}`
   return (
-    <FactsCard
-      t={t}
-      id="business"
-      wide
-      title={
-        <span className="tracy-wo-facts-hero">
-          {mark}
-          <span className="tracy-wo-facts-hero-name">
-            <span className="tracy-wo-facts-bn">
-              {view.name}
-              <SourceChip t={t} chip={view.chips.name} locale={locale} />
+    <section className="tracy-wo-facts-band" data-card="business">
+      <div className="tracy-wo-facts-band-body">
+        <div className="tracy-wo-facts-cells">
+          <div className="tracy-wo-facts-cell tracy-wo-facts-hero">
+            {mark}
+            <span className="tracy-wo-facts-hero-name">
+              <OneLine text={view.name}>
+                <SourceChip t={t} chip={view.chips.name} locale={locale} />
+              </OneLine>
+              <span className="tracy-wo-facts-ln">
+                {view.category === null ? (
+                  missing
+                ) : (
+                  <Badge variant="outline" className="tracy-wo-chip-mute" title={view.category}>
+                    {view.category}
+                  </Badge>
+                )}
+              </span>
             </span>
-            {view.category === null ? null : (
-              <Badge variant="outline" className="tracy-wo-chip-mute">
-                {view.category}
-              </Badge>
-            )}
-          </span>
-        </span>
-      }
-      edit={edit}
-    >
-      {view.rating === null ? null : (
-        <RatingLine
-          t={t}
-          view={view.rating}
-          locale={locale}
-          failed={failed}
-          chip={view.chips.rating}
-          actions={actions}
-        />
-      )}
-      <ul className="tracy-wo-facts-contacts">
-        <li>
-          <MapPin aria-hidden="true" className="tracy-wo-icon" />
-          <span>
-            <span className="tracy-wo-facts-line">
-              {view.address ?? <span className="tracy-wo-muted">{t('reason.not_collected')}</span>}
-              <SourceChip t={t} chip={view.chips.address} locale={locale} />
-              <Mark t={t} mark={view.marks.address} />
-            </span>
-          </span>
-        </li>
-        <li>
-          <Phone aria-hidden="true" className="tracy-wo-icon" />
-          <span>
-            {phones === null ? (
-              <span className="tracy-wo-muted">{t('reason.not_collected')}</span>
+          </div>
+          <Cell label={t('my.field.rating')}>
+            {view.rating === null ? (
+              <span className="tracy-wo-facts-ln">{missing}</span>
             ) : (
-              <span className="tracy-wo-facts-line">
-                <span>{phones.main}</span>
+              <RatingCell
+                t={t}
+                view={view.rating}
+                locale={locale}
+                chip={view.chips.rating}
+                onRating={onRating}
+              />
+            )}
+          </Cell>
+          <Cell label={t('field.phone')}>
+            {phones === null ? (
+              <span className="tracy-wo-facts-ln">{missing}</span>
+            ) : (
+              <span className="tracy-wo-facts-ln">
+                <span className="tracy-wo-facts-ell" title={phones.main}>
+                  {phones.main}
+                </span>
                 {others.length > 0 ? (
                   <Badge variant="outline" className="tracy-wo-name-chip">
                     {t('phone.main')}
@@ -316,34 +231,62 @@ export function BusinessCard({
               </span>
             )}
             {others.length > 0 ? (
-              <span className="tracy-wo-muted tracy-wo-small tracy-wo-facts-block">
-                {othersBefore}
-                {others.map((o, i) => (
-                  <Fragment key={o.phone}>
-                    {i > 0 ? ', ' : null}
-                    {o.phone}
-                    <SourceChip t={t} chip={view.chips.others[i] ?? null} locale={locale} />
-                  </Fragment>
-                ))}
-                {othersAfter} {t('phone.othersNote')}
+              <span className="tracy-wo-facts-ln tracy-wo-facts-dim tracy-wo-small" title={othersText}>
+                <span className="tracy-wo-facts-ell">
+                  {othersBefore}
+                  {others.map((o, i) => (
+                    <Fragment key={o.phone}>
+                      {i > 0 ? ', ' : null}
+                      {o.phone}
+                      <SourceChip t={t} chip={view.chips.others[i] ?? null} locale={locale} />
+                    </Fragment>
+                  ))}
+                  {othersAfter}
+                </span>
               </span>
             ) : null}
-          </span>
-        </li>
-        <li>
-          <Globe aria-hidden="true" className="tracy-wo-icon" />
-          <span>
-            <span className="tracy-wo-facts-line">
+          </Cell>
+          <Cell label={t('field.address')}>
+            {view.address === null ? (
+              <span className="tracy-wo-facts-ln">{missing}</span>
+            ) : (
+              <OneLine text={view.address}>
+                <SourceChip t={t} chip={view.chips.address} locale={locale} />
+                <Mark t={t} mark={view.marks.address} />
+              </OneLine>
+            )}
+          </Cell>
+          <Cell label={t('my.field.website')}>
+            <span className="tracy-wo-facts-ln">
               {view.website === null ? (
-                <span className="tracy-wo-muted">{t('facts.website.none')}</span>
+                <span className="tracy-wo-facts-ell tracy-wo-facts-dim">{t('facts.website.none')}</span>
               ) : (
-                websiteLink(view.website)
+                <span className="tracy-wo-facts-ell" title={view.website}>
+                  {websiteLink(view.website)}
+                </span>
               )}
               <SourceChip t={t} chip={view.chips.website} locale={locale} looked={looked} />
             </span>
-          </span>
-        </li>
-      </ul>
-    </FactsCard>
+          </Cell>
+        </div>
+      </div>
+      {edit === null ? null : (
+        <span className="tracy-wo-facts-acts tracy-wo-facts-corner">
+          <button
+            ref={editRef}
+            type="button"
+            className="tracy-wo-facts-act"
+            aria-haspopup="dialog"
+            onClick={() => setEditing(true)}
+          >
+            <Pencil aria-hidden="true" />
+            {t('profile.edit')}
+          </button>
+        </span>
+      )}
+      <FactsSheet t={t} open={editing} title={view.name} onClose={() => setEditing(false)} back={editRef}>
+        <div className="tracy-wo-facts-edit">{editing ? edit?.() : null}</div>
+      </FactsSheet>
+    </section>
   )
 }
