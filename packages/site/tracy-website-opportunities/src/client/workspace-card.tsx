@@ -7,7 +7,16 @@
  */
 
 import { hostOf } from '@tracy/wo-views'
-import { AppWindow, Check, ChevronRight, ClipboardList, FileText, Link2, Lock } from 'lucide-react'
+import {
+  AppWindow,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  ClipboardList,
+  FileText,
+  Link2,
+  Lock
+} from 'lucide-react'
 import { type JSX, type ReactNode, useCallback, useEffect, useId, useState } from 'react'
 
 import type { DemoCommand } from './demo-block-model.ts'
@@ -112,7 +121,11 @@ function Row({
       <span className="tracy-wo-ws-tile" aria-hidden="true">
         <Icon />
       </span>
-      <span className="tracy-wo-ws-name">{title}</span>
+      <span className="tracy-wo-ws-name">
+        {title}
+        {/* A row that opens says so: a chevron beside its name, turned up while the body is open (owner, #537). */}
+        {expandable ? <ChevronDown className="tracy-wo-ws-chev" aria-hidden="true" /> : null}
+      </span>
       <span className="tracy-wo-ws-sum">
         {/* Sources keeps its summary beside the title while open: it says how many links were read. */}
         {expanded && id !== 'sources' ? (

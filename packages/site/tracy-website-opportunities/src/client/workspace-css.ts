@@ -30,6 +30,9 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-sec[data-state='open'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); }
 .tracy-wo-ws-sec[data-state='review'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
 .tracy-wo-ws-name { flex: none; min-width: 150px; font-weight: 600; white-space: nowrap; }
+.tracy-wo-ws-name { display: inline-flex; align-items: center; gap: 4px; }
+.tracy-wo-ws-chev { flex: none; width: 14px; height: 14px; color: var(--muted-foreground); transition: transform 0.15s ease; }
+.tracy-wo-ws-sec[data-open] .tracy-wo-ws-chev { transform: rotate(180deg); }
 .tracy-wo-ws-sum { flex: 1 1 auto; min-width: 0; overflow: hidden; color: var(--muted-foreground); white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-ws-pill { display: inline-flex; align-items: center; flex: none; gap: 3px; height: 26px; margin: 0; padding: 0 8px 0 11px; border: 1px solid var(--border); border-radius: 99px; background: var(--card, var(--background)); color: var(--foreground); font: inherit; font-size: 12.5px; font-weight: 500; white-space: nowrap; cursor: pointer; }
 .tracy-wo-ws-pill > svg { width: 14px; height: 14px; color: var(--muted-foreground); }
