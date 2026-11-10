@@ -66,6 +66,7 @@ export const DETAILS_CSS =
 .tracy-wo-stab { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 0; list-style: none; }
 /* One line per source (#537): glyph, name and link on the left, the state pill pushed right, then the remove control. */
 .tracy-wo-stab-row { display: flex; flex-direction: column; min-width: 0; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.tracy-wo-stab-row:first-child { border-top: 0; }
 .tracy-wo-stab-row[data-pending] { opacity: 0.55; }
 .tracy-wo-stab-line { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 0; }
 .tracy-wo-stab-name { flex: none; white-space: nowrap; }
@@ -85,6 +86,7 @@ export const DETAILS_CSS =
 .tracy-wo-stab-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
 .tracy-wo-stab-remove { display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; margin: 0; padding: 0; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--muted-foreground); cursor: pointer; opacity: 0; }
 .tracy-wo-stab-remove > svg { width: 14px; height: 14px; }
+.tracy-wo-stab-slot { flex: none; width: 24px; height: 24px; }
 .tracy-wo-stab-row:hover .tracy-wo-stab-remove, .tracy-wo-stab-remove:focus-visible, .tracy-wo-stab-remove.is-on { opacity: 1; }
 .tracy-wo-stab-remove:hover:not(:disabled) { color: var(--foreground); background: color-mix(in oklab, var(--muted) 60%, transparent); }
 .tracy-wo-stab-remove:focus-visible { outline: none; border-color: var(--ring); }

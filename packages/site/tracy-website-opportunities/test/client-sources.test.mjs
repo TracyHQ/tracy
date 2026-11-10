@@ -340,8 +340,15 @@ test('each pasted link has a remove control after its pill; the Google place and
     html,
     /class="tracy-wo-stab-state">(?:(?!<\/li>).)*<\/span><button type="button" class="tracy-wo-stab-remove"/s
   )
-  // No remove where the page cannot remove.
-  assert.doesNotMatch(draw(PASTED), /tracy-wo-stab-remove/)
+  // The Google place row keeps an empty slot of the same width, so every pill ends on one line (owner, #537).
+  const rows = (html.match(/<li class="tracy-wo-stab-row"/g) ?? []).length
+  assert.equal(
+    (html.match(/class="tracy-wo-stab-slot" aria-hidden="true"/g) ?? []).length,
+    rows - labels.length
+  )
+  assert.match(html, /Google Places(?:(?!<\/li>).)*class="tracy-wo-stab-slot"/s)
+  // No remove and no slot where the page cannot remove.
+  assert.doesNotMatch(draw(PASTED), /tracy-wo-stab-remove|tracy-wo-stab-slot/)
 })
 
 test('pressing remove turns the row state into an inline confirm with Remove and Keep', () => {

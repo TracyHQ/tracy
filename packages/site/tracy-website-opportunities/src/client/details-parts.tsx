@@ -203,6 +203,9 @@ export function SourcesTable({
                 >
                   <X aria-hidden="true" />
                 </button>
+              ) : remove !== undefined ? (
+                // A row without a remove control keeps its width, so every pill ends on the same line.
+                <span className="tracy-wo-stab-slot" aria-hidden="true" />
               ) : null}
             </span>
             {notice !== null ? noticeLine(notice) : null}
