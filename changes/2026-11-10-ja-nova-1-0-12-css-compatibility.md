@@ -1,0 +1,3 @@
+- **Extend the JA Nova design-system range from 1.0.11 to 1.0.12 using unchanged CSS.** — template readiness maintainers · `fix/ja-nova-readiness` · 2026-11-10
+  **Affects:** The JA Nova design-system profile records static CSS compatibility through quickstart 1.0.12. Every other profile field and the complete historical note remain unchanged.
+  **Why / Measured:** Saved archive-member verification establishes that all 23 template CSS files in the local 1.0.12 pack are byte-identical to the checked 1.0.11 pack. Its accepted CSS-1 and CSS-2 results are reused; neither check was rerun. This records static CSS compatibility, with no new rendering, heading or full-readiness result.
