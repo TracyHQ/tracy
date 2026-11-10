@@ -1204,8 +1204,6 @@ export const en = {
   'workspace.sum.newLinks.one': '{count} new link, research again',
   'workspace.sum.newLinks.other': '{count} new links, research again',
   // The Sources table of the Workspace card (#537, option C): its two column heads and the State column
-  'source.table.source': 'Source',
-  'source.table.state': 'State',
   'source.state.waiting': 'Waiting for research',
   'source.state.collected': 'Collected',
   'source.state.failed': 'Could not collect',
@@ -1349,9 +1347,9 @@ export const en = {
   'band.build.steps': 'Build steps',
   'band.tryAgain': 'Try again',
   /** The one fixed line under each step name in the band's step list: what the step does, not its state. */
-  'band.purpose.research': 'Collects what is true about the business from its links.',
-  'band.purpose.brief': 'Turns the facts into the words and sections of the site.',
-  'band.purpose.build': 'Builds a working site from the brief for you to open.',
+  'band.purpose.research': 'Collects what is true about this business.',
+  'band.purpose.brief': 'Turns the facts into the words of the site.',
+  'band.purpose.build': 'Builds a site you can open and review.',
 
   /** The header chip of Details: where the place stands (#537). */
   'chip.notStarted': 'Not started',

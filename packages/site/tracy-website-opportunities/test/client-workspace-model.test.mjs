@@ -234,10 +234,10 @@ test('workspace: locked rows never open and have no pill link (the card draws a 
   assert.equal(by.profile.linkKey, null)
 })
 
-test('workspace: the pill reads Review on a review, Open on a complete row, nothing on a current Sources row', () => {
+test('workspace: the pill reads Review on a review, Open on a complete row, never on Sources', () => {
   const review = Object.fromEntries(sectionsOf({}).map((s) => [s.id, s.linkKey]))
   assert.equal(review.profile, 'section.review')
-  assert.equal(review.sources, 'section.open')
+  assert.equal(review.sources, null)
   const built = Object.fromEntries(
     sectionsOf({ brief: BRIEF, approval: APPROVED, opened: { brief: true } }).map((s) => [s.id, s.linkKey])
   )

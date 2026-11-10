@@ -67,10 +67,6 @@ export const DETAILS_CSS =
 .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 2px 10px; align-items: baseline; }
 .tracy-wo-stab { display: flex; flex-direction: column; min-width: 0; }
 .tracy-wo-stab-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 220px); min-width: 0; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
-.tracy-wo-stab-head { border-top: 0; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted-foreground); }
-.tracy-wo-stab-head > span { padding: 0 0 6px; }
-.tracy-wo-stab-head > span:last-child { text-align: right; }
-.tracy-wo-stab-head + .tracy-wo-stab-row { border-top: 0; }
 .tracy-wo-stab-src { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 12px 8px 0; }
 .tracy-wo-stab-name { flex: none; white-space: nowrap; }
 .tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }

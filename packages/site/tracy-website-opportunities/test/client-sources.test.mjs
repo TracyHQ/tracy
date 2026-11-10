@@ -309,7 +309,6 @@ test('the Sources table of the Workspace card: a Source and a State column, no c
   ]
   const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, researched: true }))
   assert.doesNotMatch(html, /<details|<summary|tracy-wo-src-chip|source\.alsoLookedAt|source\.usedHere/)
-  assert.match(html, /\[source\.table\.source\][\s\S]*\[source\.table\.state\]/)
   assert.deepEqual(
     [...html.matchAll(/role="row" data-state="(\w+)"/g)].map((m) => m[1]),
     ['collected', 'failed', 'failed', 'new']

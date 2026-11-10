@@ -120,11 +120,12 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
     const byDefault = state === 'open' || state === 'review'
     const expanded = expandable && (input.opened[id] ?? byDefault)
     // The pill is the row's one action: Review when it waits for the seller, Open when it is complete. A locked row
-    // shows a lock instead, the demo row has no sub-page, and a current Sources row only has Add source inside.
+    // shows a lock instead; the demo row and Sources have no sub-page (the Sources table on the overview is the
+    // whole of it, #537).
     const linkKey =
       extra.linkKey !== undefined
         ? extra.linkKey
-        : id === 'demo' || !expandable || (id === 'sources' && state === 'open')
+        : id === 'demo' || id === 'sources' || !expandable
           ? null
           : state === 'review'
             ? 'section.review'

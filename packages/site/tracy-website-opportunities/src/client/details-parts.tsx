@@ -113,10 +113,6 @@ export function SourcesTable({
   const locale = interfaceLocale() ?? 'en'
   return (
     <div className="tracy-wo-stab" role="table" aria-label={t('details.section.sources')}>
-      <div className="tracy-wo-stab-row tracy-wo-stab-head" role="row">
-        <span role="columnheader">{t('source.table.source')}</span>
-        <span role="columnheader">{t('source.table.state')}</span>
-      </div>
       {sources.map((s) => {
         const pastedLink = pastedLinkOf(s)
         const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)

@@ -8,7 +8,7 @@
  * data-fixed attribute to win over them. Reads only Tracy tokens. No backtick may appear inside the template below.
  */
 export const PROGRESS_BAND_CSS = `
-.tracy-wo-band[data-fixed] { --wo-band-h: 176px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); grid-template-rows: minmax(0, 1fr); }
+.tracy-wo-band[data-fixed] { --wo-band-h: 176px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: minmax(0, 44fr) minmax(0, 56fr); grid-template-rows: minmax(0, 1fr); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-list { box-sizing: border-box; min-height: 0; overflow: hidden; }
 .tracy-wo-band[data-fixed] .tracy-wo-step { padding-bottom: 12px; }
 .tracy-wo-band[data-fixed] .tracy-wo-step:last-child { padding-bottom: 0; }
@@ -57,7 +57,7 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] > .tracy-wo-band-sub-node > svg { width: 14px; height: 14px; stroke-width: 2.5; color: var(--primary); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs[data-many] > li[data-state='done'] > .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps:has(> li:nth-child(5)) > li[data-state='done'] > b { display: none; }
 .tracy-wo-band[data-fixed] li[data-state='done'] > .tracy-wo-band-sub-node { border-color: var(--success); background: var(--success); color: var(--background); }
-.tracy-wo-band[data-fixed] li[data-state='running'] > .tracy-wo-band-sub-node { width: 16px; height: 16px; border: 0; background: transparent; color: var(--primary); }
+.tracy-wo-band[data-fixed] li[data-state='running'] > .tracy-wo-band-sub-node { width: 16px; height: 16px; border: 0; background: var(--wo-pane-bg); color: var(--primary); }
 .tracy-wo-band[data-fixed] li[data-state='failed'] > .tracy-wo-band-sub-node { border-color: var(--destructive); background: var(--destructive); color: var(--background); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li > b { padding: 0 4px; background: var(--wo-pane-bg); max-width: 16ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 400; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='current'] > b { padding: 1px 7px; border-radius: 999px; font-weight: 600; color: var(--primary); background: color-mix(in oklab, var(--primary) 12%, var(--wo-pane-bg)); }
