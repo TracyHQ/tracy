@@ -1,8 +1,13 @@
-// VERIFICATION.json goes onto a public release: it keeps measurements and hashes, never a stand origin or a path of the build machine.
+// VERIFICATION.json and fix-measure.json go onto a release: they keep measurements and hashes, never a stand origin or a path of the build machine.
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { homedir } from 'node:os'
-import { verificationRecord } from '../quickstart/release.mjs'
+import { portableFingerprint, portableMeasure, portableVerification, verificationRecord } from '../quickstart/release.mjs'
+import { fingerprintOf, validateFingerprint } from '../lib/source-fingerprint.mjs'
+import { validateFixMeasure, writeFixMeasure } from '../lib/fix-measure.mjs'
+import { mkdtempSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 
 const home = homedir()
 const manifest = { id: 'quickstart/x/wp7', version: '1.0.0', platform: 'wordpress', prefix: 'tr_', theme: { name: 't' } }
@@ -55,4 +60,65 @@ test('a file:// URL of a machine path is cut to the file name', () => {
 test('only loopback IPv6 is a stand origin; a documentation address stays', () => {
   const v = verificationRecord({ manifest, parity, restoreReport: { steps: [{ name: 'a', value: 'https://[2001:db8::1]/reference' }, { name: 'b', value: 'http://[::1]:80/' }] } }, { repoRoot: null })
   assert.deepEqual(v.restoration.steps.map((s) => s.value), ['https://[2001:db8::1]/reference', 'a stand/'])
+})
+
+const LOCAL = /127\.0\.0\.1|localhost|:87\d\d|\/Users\/|~\//
+const sourceFp = fingerprintOf({ url: 'http://127.0.0.1:8791/', html: '<p>home</p>', template: { name: 'ja_example', version: '1.0.0' } })
+
+test('a source fingerprint is published on the placeholder origin and still validates', () => {
+  const f = portableFingerprint(sourceFp)
+  assert.equal(f.url, 'https://quickstart.invalid/')
+  assert.equal(f.htmlSha256, sourceFp.htmlSha256)
+  assert.deepEqual(f.template, sourceFp.template)
+  assert.deepEqual(validateFingerprint(f), [])
+  assert.notEqual(f.id, sourceFp.id)
+  // a fingerprint of a real host is not touched, nor one that did not validate as measured
+  const real = fingerprintOf({ url: 'https://example.com/', html: '<p>x</p>' })
+  assert.equal(portableFingerprint(real), real)
+  const broken = { ...sourceFp, id: 'x' }
+  assert.deepEqual(portableFingerprint(broken), { ...broken, url: 'https://quickstart.invalid/' })
+})
+
+test('VERIFICATION.json carries the measure and baseline fingerprints without the stand origin', () => {
+  const v = portableVerification({ measure: { site: 'http://127.0.0.1:8792', sourceFingerprint: sourceFp }, baseline: { version: '1.0.3', sourceFingerprint: sourceFp } })
+  assert.doesNotMatch(JSON.stringify(v), LOCAL)
+  assert.equal(v.measure.site, 'a stand')
+  assert.deepEqual(v.measure.sourceFingerprint, portableFingerprint(sourceFp))
+  assert.deepEqual(v.baseline.sourceFingerprint, portableFingerprint(sourceFp))
+  // the record and the published measure name the source by the same fingerprint
+  assert.equal(v.measure.sourceFingerprint.id, portableMeasure({ sourceFingerprint: sourceFp }).sourceFingerprint.id)
+})
+
+test('fix-measure.json as published: stand origins on the placeholder origin, machine paths cut, still a valid measure', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'fix-measure-portable-'))
+  try {
+    const checks = [{ id: 'A1', title: 'hero height', pass: true, cases: 3, defects: 0, evidence: `${home}/tracy-data/diner/sweep/report.json` }]
+    const m = writeFixMeasure(path.join(dir, 'fix-measure.json'), {
+      tool: 'site-sweep.mjs', site: 'http://127.0.0.1:8792', source: 'http://127.0.0.1:8791', themeZipSha256: 'a'.repeat(64),
+      ranAt: new Date().toISOString(), checks, sourceFingerprint: sourceFp
+    })
+    assert.deepEqual(validateFixMeasure(m), [])
+    const p = portableMeasure(m)
+    const text = JSON.stringify(p)
+    assert.doesNotMatch(text, LOCAL)
+    assert.ok(!text.includes(home), 'no home directory')
+    assert.equal(p.site, 'https://quickstart.invalid')
+    assert.equal(p.source, 'https://quickstart.invalid')
+    assert.equal(p.checks[0].evidence, 'report.json')
+    assert.deepEqual([p.passed, p.total, p.artifact, p.checks[0].pass], [m.passed, m.total, m.artifact, true])
+    assert.deepEqual(validateFixMeasure(p), [])
+    // a measure that names no stand and no machine path is left as it is
+    const clean = { ...m, site: 'https://example.com', source: 'https://example.org', sourceFingerprint: undefined, checks: [{ ...checks[0], evidence: 'report.json' }] }
+    assert.deepEqual(portableMeasure(clean), clean)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+test('a site route under /home is not a machine path: it stays whole in the record and in the published measure', () => {
+  const text = 'scheme: footer-text-colour on 1 route(s) — e.g. /home/home-red @1440, evidence in /Users/x/sweep/report.json'
+  const v = portableVerification({ parity: { routes: { table: [{ path: '/home/home-red' }] } }, notDefects: [{ what: text }] })
+  assert.equal(v.parity.routes.table[0].path, '/home/home-red')
+  assert.equal(v.notDefects[0].what, 'scheme: footer-text-colour on 1 route(s) — e.g. /home/home-red @1440, evidence in report.json')
+  assert.equal(portableMeasure({ what: text }).what, v.notDefects[0].what)
 })
