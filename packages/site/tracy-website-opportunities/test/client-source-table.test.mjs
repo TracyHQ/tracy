@@ -149,39 +149,51 @@ test('the summary and the rows agree for one payload', () => {
 
 test('the Add source popover opens, closes, and keeps the refusal under the field', () => {
   let s = addSourceStep(ADD_SOURCE_CLOSED, { type: 'toggle' })
-  assert.deepEqual(s, { open: true, url: '', busy: false, error: null })
+  assert.deepEqual(s, { open: true, url: '', checkingSince: null, error: null, notice: null })
   // An empty field sends nothing and says why.
   assert.equal(addSourceLinkOf(s), null)
-  s = addSourceStep(s, { type: 'submit' })
-  assert.equal(s.error, 'INVALID_URL')
-  assert.equal(s.busy, false)
+  s = addSourceStep(s, { type: 'submit', at: 0 })
+  assert.equal(s.error.key, 'source.add.error.INVALID_URL')
+  assert.equal(s.checkingSince, null)
   // Typing clears the refusal; Add sends the trimmed link and waits.
   s = addSourceStep(s, { type: 'type', url: '  https://www.instagram.com/sample_kite_club ' })
   assert.equal(s.error, null)
   assert.equal(addSourceLinkOf(s), 'https://www.instagram.com/sample_kite_club')
-  s = addSourceStep(s, { type: 'submit' })
-  assert.equal(s.busy, true)
+  s = addSourceStep(s, { type: 'submit', at: 1000 })
+  assert.equal(s.checkingSince, 1000)
   assert.equal(addSourceLinkOf(s), null)
-  assert.deepEqual(addSourceStep(s, { type: 'submit' }), s)
+  assert.deepEqual(addSourceStep(s, { type: 'submit', at: 1200 }), s)
   // A refusal stays in the popover with the typed link.
-  const refused = addSourceStep(s, { type: 'done', code: 'SOURCE_ALREADY_KNOWN' })
+  const refusal = { key: 'source.add.error.SOURCE_ALREADY_KNOWN' }
+  const refused = addSourceStep(s, { type: 'done', refusal })
   assert.deepEqual(refused, {
     open: true,
     url: '  https://www.instagram.com/sample_kite_club ',
-    busy: false,
-    error: 'SOURCE_ALREADY_KNOWN'
+    checkingSince: null,
+    error: refusal,
+    notice: null
   })
-  // Added: the popover closes and forgets the link.
-  assert.deepEqual(addSourceStep(s, { type: 'done', code: null }), ADD_SOURCE_CLOSED)
+  // Added: the popover closes, forgets the link and leaves the added notice.
+  assert.deepEqual(addSourceStep(s, { type: 'done', refusal: null }), {
+    ...ADD_SOURCE_CLOSED,
+    notice: { phase: 'added', url: 'https://www.instagram.com/sample_kite_club', platform: 'instagram' }
+  })
 })
 
-test('Escape, Cancel or a press outside close the popover; an answer after closing keeps it closed', () => {
+test('Escape, Cancel or a press outside close the popover; an answer after closing reads on the notice', () => {
   const open = addSourceStep(ADD_SOURCE_CLOSED, { type: 'open' })
   const typed = addSourceStep(open, { type: 'type', url: 'https://sample-kite.example' })
   assert.deepEqual(addSourceStep(typed, { type: 'close' }), ADD_SOURCE_CLOSED)
   assert.deepEqual(addSourceStep(typed, { type: 'toggle' }), ADD_SOURCE_CLOSED)
-  const busy = addSourceStep(typed, { type: 'submit' })
+  const busy = addSourceStep(typed, { type: 'submit', at: 0 })
   const closed = addSourceStep(busy, { type: 'close' })
-  assert.deepEqual(addSourceStep(closed, { type: 'done', code: 'INVALID_URL' }), ADD_SOURCE_CLOSED)
+  assert.deepEqual(closed.notice, { phase: 'pending', url: 'https://sample-kite.example' })
+  const refusal = { key: 'source.add.error.INVALID_URL' }
+  assert.deepEqual(addSourceStep(closed, { type: 'done', refusal }).notice, {
+    phase: 'failed',
+    url: 'https://sample-kite.example',
+    error: refusal
+  })
+  assert.equal(addSourceStep(closed, { type: 'done', refusal }).open, false)
   assert.deepEqual(addSourceStep(ADD_SOURCE_CLOSED, { type: 'type', url: 'x' }), ADD_SOURCE_CLOSED)
 })

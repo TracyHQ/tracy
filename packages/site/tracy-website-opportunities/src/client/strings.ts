@@ -1367,10 +1367,43 @@ export const en = {
   'source.add.error.INVALID_URL': 'Enter the address of a website, social page or listing page.',
   'source.add.error.GOOGLE_LINK_NOT_ADDED':
     'A Google link names the business itself. Add its website, a social page or a listing page instead.',
-  'source.add.error.SOURCE_ALREADY_KNOWN': 'This business already has this link, or a link of the same kind.',
+  'source.add.error.SOURCE_ALREADY_KNOWN': 'This link is already in the list of sources.',
   'source.add.error.NO_USABLE_LINKS':
     'This link cannot be read. Try the address of a website, social page or listing page.',
   'source.add.error.other': 'Could not add the source. Try again.',
+
+  /** Add source checks and refusals (#537, the add source cases review): one line for each answer of the add door. */
+  'source.add.submitAgain': 'Add and research again',
+  'source.add.checking': 'Checking the link…',
+  'source.add.slow': 'Still checking…',
+  'source.add.waitResearch': 'Wait for the research to finish',
+  'source.add.pending': 'Still adding the link…',
+  'source.add.added': '{platform} added',
+  'source.add.tryAgain': 'Try again',
+  'source.add.dismiss': 'Dismiss',
+  'source.add.error.TOO_LONG': 'This link is too long. Copy the page address again from the address bar.',
+  'source.add.error.NOT_A_LINK':
+    'This is not a link. Paste the full address, for example instagram.com/yourbusiness.',
+  'source.add.error.PRIVATE_ADDRESS': 'This is a private address. Paste the public address of the page.',
+  'source.add.error.UNREACHABLE': 'This address cannot be reached. Check the spelling.',
+  'source.add.error.UNSUPPORTED_LINK':
+    'Tracy cannot read {platform} pages yet. Add the website, a Facebook, Instagram, TikTok or YouTube page, or a listing page instead.',
+  'source.add.error.UNSUPPORTED_LINK_PLAIN':
+    'Tracy cannot read pages of this platform yet. Add the website, a Facebook, Instagram, TikTok or YouTube page, or a listing page instead.',
+  'source.add.error.PLATFORM_ALREADY_KNOWN':
+    'This business already has a {platform} page as a source. Remove it first to use another.',
+  'source.add.error.WEBSITE_ALREADY_KNOWN':
+    'This business already has a website as a source. Remove it first to use another.',
+  'source.add.error.TOO_MANY_SOURCES':
+    'This business already has {max} listing pages. Remove one before adding another.',
+  'source.add.error.JOB_ACTIVE': 'Research is running. Add the link when it finishes.',
+  'source.add.error.NETWORK': 'No connection. Check your internet, then press Add again.',
+  'source.add.error.NOT_SIGNED_IN': 'You are signed out. Sign in again, then add the link.',
+  'source.add.error.NOT_FOUND': 'This business was removed. Go back to My opportunities.',
+  'source.add.error.FEATURE_OFF': 'Website Opportunities is turned off right now. Try again later.',
+  'source.add.error.NO_DOOR': 'This server cannot add sources yet. Reload the page and try again.',
+  'source.add.error.PREVIEW_BLOCKED':
+    'The preview is showing a test state. Switch to Real data to add a source.', // [TAM]
 
   /** Photos & video inside the Profile (#537). */
   'media.strip.open': 'Open',

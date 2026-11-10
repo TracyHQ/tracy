@@ -29,6 +29,10 @@ export type Answer<T> =
       candidates?: LinkCandidate[]
       /** `GOOGLE_LINK_AMBIGUOUS`, `NO_USABLE_LINKS`: how the server judged each link sent. */
       links?: ServerLink[]
+      /** `UNSUPPORTED_LINK`, `PLATFORM_ALREADY_KNOWN` of the add source door: the platform it names. */
+      platform?: string | null
+      /** `TOO_MANY_SOURCES`: the most listing pages one business keeps. */
+      max?: number
     }
 
 /** One place a Google link may be, as the create door offers it back (409 `GOOGLE_LINK_AMBIGUOUS`). */
@@ -361,6 +365,8 @@ export function createApi(fetchImpl: FetchLike): Api {
         candidates?: unknown
         links?: unknown
         retryAt?: unknown
+        platform?: unknown
+        max?: unknown
       }
       const code = refusal.code
       return {
@@ -370,7 +376,9 @@ export function createApi(fetchImpl: FetchLike): Api {
         ...(refusal.usage ? { usage: refusal.usage } : {}),
         ...(Array.isArray(refusal.candidates) ? { candidates: refusal.candidates as LinkCandidate[] } : {}),
         ...(Array.isArray(refusal.links) ? { links: refusal.links as ServerLink[] } : {}),
-        ...(typeof refusal.retryAt === 'string' ? { retryAt: refusal.retryAt } : {})
+        ...(typeof refusal.retryAt === 'string' ? { retryAt: refusal.retryAt } : {}),
+        ...(typeof refusal.platform === 'string' ? { platform: refusal.platform } : {}),
+        ...(typeof refusal.max === 'number' ? { max: refusal.max } : {})
       }
     }
     return { ok: true, status: res.status, body: parsed as T }

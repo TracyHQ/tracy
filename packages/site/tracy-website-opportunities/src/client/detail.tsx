@@ -39,6 +39,7 @@ import { Stepper } from './stepper.tsx'
 import { type StepAction, bandSubSteps, effectiveOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
 import { type ApprovalView, gateText } from './seller-review.tsx'
+import type { AddSourceRefusal } from './add-source-model.ts'
 import { AddSourcePopover } from './add-source-popover.tsx'
 import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
@@ -711,15 +712,24 @@ export function DetailView({
     if (code === null) onSection(null)
     return code
   }
-  const addSource = async (url: string): Promise<string | null> => settle(await api.addSource(id, url))
+  // Add source keeps the whole refusal: its line may name the platform or the most listing pages.
+  const addSource = async (url: string): Promise<AddSourceRefusal | null> => {
+    const answer = await api.addSource(id, url)
+    if (!answer.ok) return answer
+    await reload()
+    onChanged()
+    return null
+  }
   const uploadMedia = async (file: File): Promise<string | null> => settle(await api.uploadMedia(id, file))
-  const addSourceButton = <AddSourcePopover t={t} researched={research.done} onAdd={addSource} />
   const approvedLine = (key: string, at: unknown): string | null => {
     const ms = typeof at === 'string' ? Date.parse(at) : Number.NaN
     if (!Number.isFinite(ms)) return null
     return t(key, { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms) })
   }
   const researchRunning = job?.state === 'running' || job?.state === 'queued'
+  const addSourceButton = (
+    <AddSourcePopover t={t} researched={research.done} researchRunning={researchRunning} onAdd={addSource} />
+  )
   const researchAgainOpen =
     job !== null &&
     !researchRunning &&

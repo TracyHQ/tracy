@@ -105,6 +105,21 @@ export const DETAILS_CSS =
 .tracy-wo-addsrc-label { font-size: 12.5px; font-weight: 600; }
 .tracy-wo-addsrc-pop .tracy-wo-small { margin: 0; }
 .tracy-wo-addsrc-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.tracy-wo-addsrc { align-items: center; gap: 8px; }
+.tracy-wo-addsrc-btnwrap { display: inline-flex; }
+.tracy-wo-addsrc-field { position: relative; display: flex; align-items: center; }
+.tracy-wo-addsrc-glyph { position: absolute; left: 9px; display: inline-flex; color: var(--muted-foreground); pointer-events: none; }
+.tracy-wo-addsrc-field[data-glyph] .tracy-wo-addsrc-input { padding-left: 30px; }
+.tracy-wo-addsrc-field[data-checking] .tracy-wo-addsrc-input { padding-right: 132px; }
+.tracy-wo-addsrc-checking { position: absolute; right: 9px; display: inline-flex; align-items: center; gap: 5px; max-width: 124px; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; pointer-events: none; }
+.tracy-wo-addsrc-checking > span { overflow: hidden; text-overflow: ellipsis; }
+.tracy-wo-addsrc-checking svg { width: 12px; height: 12px; flex: none; }
+.tracy-wo-addsrc-notice { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: min(420px, 60vw); color: var(--muted-foreground); white-space: nowrap; }
+.tracy-wo-addsrc-notice[data-phase="failed"] { color: var(--destructive); }
+.tracy-wo-addsrc-notice svg { flex: none; }
+.tracy-wo-addsrc-notice-text { flex: none; }
+.tracy-wo-addsrc-notice[data-phase="failed"] .tracy-wo-addsrc-notice-text { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.tracy-wo-addsrc-notice-link { min-width: 0; max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; opacity: .8; }
 @container (max-width: 560px) {
   .tracy-wo-stab-line { flex-wrap: wrap; row-gap: 2px; }
   .tracy-wo-stab-link { order: 9; flex-basis: 100%; padding-left: 30px; }

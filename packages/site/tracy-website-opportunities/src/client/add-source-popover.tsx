@@ -1,33 +1,55 @@
 /**
- * Add source (#537, option C): a small outlined button that opens a popover under it with one field for a link of
- * the business, Cancel and Add side by side, and the server's refusal under the field. Escape and a press outside
- * close it. The state is `add-source-model.ts`; the caller's `onAdd` sends the link.
+ * Add source (#537): a small outlined button that opens a popover under it with one field for a link of the
+ * business, Cancel and Add side by side, and the refusal under the field. The field shows the platform glyph as soon
+ * as the text reads as a link, and while the add door checks the link its right end reads Checking the link. Escape
+ * and a press outside close it; closed while checking, a notice beside the button reads the answer when it comes.
+ * The state is `add-source-model.ts`; the caller's `onAdd` sends the link.
  */
-import { Plus } from 'lucide-react'
-import { type JSX, useEffect, useId, useReducer, useRef } from 'react'
+import { Plus, X } from 'lucide-react'
+import { type JSX, useEffect, useId, useReducer, useRef, useState } from 'react'
 import { Button, Input, Spinner } from '@tracy/ui'
 
-import { ADD_SOURCE_CLOSED, addSourceLinkOf, addSourceStep } from './add-source-model.ts'
-import { en, type Translate } from './strings.ts'
+import {
+  ADD_SOURCE_ADDED_NOTICE_MS,
+  ADD_SOURCE_CLOSED,
+  ADD_SOURCE_SLOW_MS,
+  type AddSourceMessage,
+  type AddSourceRefusal,
+  addSourceCheckingKey,
+  addSourceGlyphOf,
+  addSourceLinkOf,
+  addSourceRefusal,
+  addSourceStep
+} from './add-source-model.ts'
+import { sourceLabel } from './cms-label.ts'
+import { SourceGlyph } from './source-logo.tsx'
+import type { Translate } from './strings.ts'
 
-const known = (key: string): boolean => Object.prototype.hasOwnProperty.call(en, key)
+/** The words of one line, its platform named the way the Sources table names it. */
+const lineOf = (t: Translate, m: AddSourceMessage): string =>
+  m.params === undefined && m.platform === undefined
+    ? t(m.key)
+    : t(m.key, { ...m.params, ...(m.platform === undefined ? {} : { platform: sourceLabel(t, m.platform) }) })
 
-/** The words of a refusal (`source.add.error.<code>`), or the plain fallback. */
-const errorText = (t: Translate, code: string): string =>
-  t(known(`source.add.error.${code}`) ? `source.add.error.${code}` : 'source.add.error.other')
+/** The link without its scheme and www., as the notice echoes it. */
+const shortLink = (url: string): string => url.replace(/^https?:\/\//i, '').replace(/^www\./i, '')
 
 export function AddSourcePopover({
   t,
   researched,
+  researchRunning,
   onAdd
 }: {
   t: Translate
-  /** Research has run: adding a source asks for it again (said under the field). */
+  /** Research has run: adding a source asks for it again (said under the field and on the Add button). */
   researched: boolean
-  /** Adds the link; answers the refusal code, or null when it was added. */
-  onAdd: (url: string) => Promise<string | null>
+  /** Research runs now: the button is off until it finishes (the door would answer `JOB_ACTIVE`). */
+  researchRunning: boolean
+  /** Adds the link; answers the door's refusal, or null when it was added. */
+  onAdd: (url: string) => Promise<AddSourceRefusal | null>
 }): JSX.Element {
   const [state, dispatch] = useReducer(addSourceStep, ADD_SOURCE_CLOSED)
+  const [now, setNow] = useState(() => Date.now())
   const wrap = useRef<HTMLSpanElement>(null)
   const field = useId()
   const popId = useId()
@@ -43,8 +65,8 @@ export function AddSourcePopover({
     const onKey = (e: KeyboardEvent): void => {
       if (e.key !== 'Escape') return
       dispatch({ type: 'close' })
-      // Back to the Add source button (the first button of the wrapper), so the keyboard does not lose its place.
-      wrap.current?.querySelector('button')?.focus()
+      // Back to the Add source button, so the keyboard does not lose its place.
+      wrap.current?.querySelector<HTMLButtonElement>('.tracy-wo-addsrc-btn')?.focus()
     }
     document.addEventListener('pointerdown', onDown)
     document.addEventListener('keydown', onKey)
@@ -54,34 +76,115 @@ export function AddSourcePopover({
     }
   }, [state.open])
 
+  // While checking, the clock moves once more when the answer is slow, so the field reads Still checking.
+  useEffect(() => {
+    if (state.checkingSince === null) return
+    setNow(Date.now())
+    const left = state.checkingSince + ADD_SOURCE_SLOW_MS - Date.now()
+    const timer = setTimeout(() => setNow(Date.now()), Math.max(0, left))
+    return () => clearTimeout(timer)
+  }, [state.checkingSince])
+
+  // A refusal puts the caret back in the field, with the pasted link kept, to fix it. By id: the shared Input takes
+  // no ref on a React 18 host.
+  useEffect(() => {
+    if (state.open && state.error !== null) document.getElementById(field)?.focus()
+  }, [state.open, state.error, field])
+
+  // The notice of an added link goes by itself; a refusal stays until Try again or Dismiss.
+  const noticePhase = state.notice?.phase ?? null
+  useEffect(() => {
+    if (noticePhase !== 'added') return
+    const timer = setTimeout(() => dispatch({ type: 'dismiss' }), ADD_SOURCE_ADDED_NOTICE_MS)
+    return () => clearTimeout(timer)
+  }, [noticePhase])
+
   const submit = async (): Promise<void> => {
     const link = addSourceLinkOf(state)
-    dispatch({ type: 'submit' })
+    dispatch({ type: 'submit', at: Date.now() })
     if (link === null) return
-    dispatch({ type: 'done', code: await onAdd(link) })
+    let refusal: AddSourceRefusal | null
+    try {
+      refusal = await onAdd(link)
+    } catch {
+      refusal = { code: 'NETWORK', status: 0 }
+    }
+    dispatch({ type: 'done', refusal: refusal === null ? null : addSourceRefusal(refusal) })
   }
+
+  const checking = state.checkingSince !== null
+  const checkingKey = addSourceCheckingKey(state, now)
+  const glyph = state.open ? addSourceGlyphOf(state.url) : null
+  const pending = state.notice?.phase === 'pending'
+  const off = researchRunning || pending
+  const notice = state.notice
 
   return (
     <span className="tracy-wo-addsrc" ref={wrap}>
-      <Button
-        type="button"
-        size="xs"
-        variant="outline"
-        className="tracy-wo-addsrc-btn"
-        data-on={state.open ? '' : undefined}
-        aria-expanded={state.open}
-        aria-controls={state.open ? popId : undefined}
-        onClick={() => dispatch({ type: 'toggle' })}
+      {notice !== null && !state.open ? (
+        <span
+          className="tracy-wo-addsrc-notice tracy-wo-small"
+          data-phase={notice.phase}
+          role={notice.phase === 'failed' ? 'alert' : 'status'}
+        >
+          {notice.phase === 'pending' ? <Spinner label={t('source.add.pending')} aria-hidden="true" /> : null}
+          <span className="tracy-wo-addsrc-notice-text">
+            {notice.phase === 'pending'
+              ? t('source.add.pending')
+              : notice.phase === 'added'
+                ? t('source.add.added', {
+                    platform: sourceLabel(t, notice.platform ?? 'website')
+                  })
+                : lineOf(t, notice.error)}
+          </span>
+          <span className="tracy-wo-addsrc-notice-link" title={notice.url}>
+            {shortLink(notice.url)}
+          </span>
+          {notice.phase === 'failed' ? (
+            <>
+              <Button type="button" size="xs" variant="ghost" onClick={() => dispatch({ type: 'retry' })}>
+                {t('source.add.tryAgain')}
+              </Button>
+              <Button
+                type="button"
+                size="icon-xs"
+                variant="ghost"
+                aria-label={t('source.add.dismiss')}
+                onClick={() => dispatch({ type: 'dismiss' })}
+              >
+                <X aria-hidden="true" />
+              </Button>
+            </>
+          ) : null}
+        </span>
+      ) : null}
+      <span
+        className="tracy-wo-addsrc-btnwrap"
+        title={researchRunning ? t('source.add.waitResearch') : undefined}
       >
-        <Plus aria-hidden="true" />
-        {t('source.add')}
-      </Button>
+        <Button
+          type="button"
+          size="xs"
+          variant="outline"
+          className="tracy-wo-addsrc-btn"
+          disabled={off}
+          data-on={state.open ? '' : undefined}
+          aria-expanded={state.open}
+          aria-controls={state.open ? popId : undefined}
+          onClick={() => dispatch({ type: 'toggle' })}
+        >
+          <Plus aria-hidden="true" />
+          {t('source.add')}
+        </Button>
+      </span>
       {state.open ? (
         <form
           id={popId}
           className="tracy-wo-addsrc-pop"
           role="dialog"
           aria-label={t('source.add')}
+          aria-busy={checking ? true : undefined}
+          noValidate
           onSubmit={(e) => {
             e.preventDefault()
             void submit()
@@ -90,21 +193,43 @@ export function AddSourcePopover({
           <label className="tracy-wo-addsrc-label" htmlFor={field}>
             {t('source.add.label')}
           </label>
-          <Input
-            id={field}
-            type="url"
-            inputMode="url"
-            autoComplete="off"
-            autoFocus
-            placeholder={t('source.add.placeholder')}
-            value={state.url}
-            aria-invalid={state.error !== null ? true : undefined}
-            aria-describedby={state.error !== null || researched ? hintId : undefined}
-            onChange={(e) => dispatch({ type: 'type', url: e.target.value })}
-          />
+          <span
+            className="tracy-wo-addsrc-field"
+            data-glyph={glyph === null ? undefined : ''}
+            data-checking={checking ? '' : undefined}
+          >
+            {glyph === null ? null : (
+              <span className="tracy-wo-addsrc-glyph">
+                <SourceGlyph logo={glyph} />
+              </span>
+            )}
+            <Input
+              id={field}
+              className="tracy-wo-addsrc-input"
+              type="text"
+              inputMode="url"
+              autoComplete="off"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
+              autoFocus
+              disabled={checking}
+              placeholder={t('source.add.placeholder')}
+              value={state.url}
+              aria-invalid={state.error !== null ? true : undefined}
+              aria-describedby={state.error !== null || researched ? hintId : undefined}
+              onChange={(e) => dispatch({ type: 'type', url: e.target.value })}
+            />
+            {checkingKey === null ? null : (
+              <span className="tracy-wo-addsrc-checking" role="status">
+                <Spinner label={t(checkingKey)} aria-hidden="true" />
+                <span>{t(checkingKey)}</span>
+              </span>
+            )}
+          </span>
           {state.error !== null ? (
             <p id={hintId} className="tracy-wo-error tracy-wo-small" role="alert">
-              {errorText(t, state.error)}
+              {lineOf(t, state.error)}
             </p>
           ) : researched ? (
             <p id={hintId} className="tracy-wo-muted tracy-wo-small">
@@ -115,9 +240,8 @@ export function AddSourcePopover({
             <Button type="button" size="sm" variant="outline" onClick={() => dispatch({ type: 'close' })}>
               {t('source.add.cancel')}
             </Button>
-            <Button type="submit" size="sm" disabled={state.busy}>
-              {state.busy ? <Spinner label={t('source.add.saving')} /> : null}
-              {t(state.busy ? 'source.add.saving' : 'source.add.submit')}
+            <Button type="submit" size="sm" disabled={checking}>
+              {t(researched ? 'source.add.submitAgain' : 'source.add.submit')}
             </Button>
           </span>
         </form>
