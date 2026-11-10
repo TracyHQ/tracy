@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-541-chain-full-backup-recovery",
+  "kind": "fix",
+  "title": "A broken chain write restores only a verified full backup after native writers settle",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the chain recovery wrapper with a healthy initial home, a verified full backup, explicit server failures after the write, and settled native turn records. Exercise transient reads, content-only faults, files-only backups and missing native records."
+  ],
+  "expect": [
+    "A confirmed broken home restores the pinned full backup through the idempotent owner restore operation and verifies the resulting home.",
+    "Missing full backups refuse writes; ordinary content faults and network failures never restore demo content.",
+    "Unsettled or missing native request records block restore; pending restore operations never report success."
+  ],
+  "selectors": {
+    "api": "/api/sites/:key/restore"
+  },
+  "fence": "chain full-backup pin, positive native writer settlement and verified restore operation",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-site-recovery.test.mjs",
+      "apps/tracy-web/test/write-step-bench-door.test.mjs",
+      "apps/tracy-web/test/backup-restore.test.mjs"
+    ],
+    "tests": [
+      "a write that breaks a previously healthy site restores its pinned full backup and verifies the home",
+      "ordinary content faults and transient reads never restore the template",
+      "a missing full baseline refuses writes instead of advertising a files-only recovery point",
+      "missing settlement evidence prevents a restore even when no open turn is listed",
+      "recovery pins only a full backup and restores through one verified, idempotent customer operation",
+      "step 9 proves native writer settlement from every prompted request record",
+      "chain recovery uses the real owner backup and restore routes with a verified full point"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -1,0 +1,20 @@
+check-tests: vendor/tracy/dsh-passwords has no node_modules — npm ci
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+> dsh-passwords@2.7.7-tracy.19 prepare
+> node -e "require('node:fs').mkdirSync('dist', { recursive: true })" && node scripts/build-client.mjs
+
+dist/client.js 构建完成
+
+added 654 packages, and audited 655 packages in 9s
+
+81 packages are looking for funding
+  run `npm fund` for details
+
+1 moderate severity vulnerability
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+turbo-config: 51 tasks, 0 measured now — every path their suites read is covered by the task's hash, and no hashed file of any task is ignored by git.

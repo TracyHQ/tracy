@@ -29,6 +29,7 @@ import { siteByKey } from './sites/store.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
+import { probeSiteHome, runWithSiteRecovery } from './write-step/site-recovery.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
 import { standInBrand, standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { benchRepairAgent } from './write-step-bench-repair-agent.js'
@@ -319,17 +320,27 @@ export function createStepChainSteps(deps) {
       })
       const out = path.join(dir, 'step-9')
       await mkdir(out, { recursive: true })
-      const step = await runStepNine({
-        write,
-        checkSite,
-        pictures: manifest,
-        agent,
-        baselines: contractBaselineStore({ index: defaultContracts() }),
-        pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
-        limits,
-        saveFile: (name, data) => writeFile(path.join(out, name), data),
-        log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
+      const step = await runWithSiteRecovery({
+        door: siteDoor,
+        siteKey: ctx.siteKey,
+        runId: ctx.runId,
+        probe: () => probeSiteHome({ site, readers, fetchImpl }),
+        sleep,
+        run: () =>
+          runStepNine({
+            write,
+            checkSite,
+            pictures: manifest,
+            agent,
+            baselines: contractBaselineStore({ index: defaultContracts() }),
+            pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
+            limits,
+            saveFile: (name, data) => writeFile(path.join(out, name), data),
+            log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
+          })
       })
+      await writeFile(path.join(out, 'site-recovery.json'), JSON.stringify(step.recovery, null, 2))
+      await writeFile(path.join(out, 'site-write-report.json'), JSON.stringify(step.report, null, 2))
       const usd = Number(step.repair?.costUsd?.agent ?? 0)
       return { value: { report: step.report, siteCheck: step.siteCheck?.status ?? null }, usd }
     },

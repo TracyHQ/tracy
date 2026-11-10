@@ -59,8 +59,9 @@ export async function restartBrief(pool, siteKey, brief, retryActionId = null) {
   const { rowCount } = await pool.query(
     `update site_brief as b set
        state = 'queued', stage = null, error = null, normalized = null,
-       timings = case when $3::text is null then '{}'::jsonb
-                      else jsonb_build_object('woRetryActionId', $3::text) end,
+       timings = jsonb_build_object('attemptStartedAt', floor(extract(epoch from clock_timestamp()) * 1000))
+                 || case when $3::text is null then '{}'::jsonb
+                         else jsonb_build_object('woRetryActionId', $3::text) end,
        brief = $2::jsonb, updated_at = now()
      where site_key = $1 and state = 'failed'
        and coalesce(timings->>'lostFrom', '') <> 'applying'

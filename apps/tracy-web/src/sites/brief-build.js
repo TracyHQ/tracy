@@ -612,7 +612,13 @@ export function createBriefBuilds({
         // poll door's word, `readyAt` the frame's own look at the host job).
         const own = await briefOf(pool, siteKey).catch(() => null)
         const upMs = Number(own?.timings?.provisionedAt ?? own?.timings?.readyAt) || siteUpAt || upAt
-        const pressedMs = own?.created_at ? new Date(own.created_at).getTime() : startedAt
+        const attemptMs = Number(own?.timings?.attemptStartedAt)
+        const pressedMs =
+          Number.isFinite(attemptMs) && attemptMs > 0
+            ? attemptMs
+            : own?.created_at
+              ? new Date(own.created_at).getTime()
+              : startedAt
         const chain = withBaseSite(/** @type {any} */ (report).chain, upMs - Math.min(pressedMs, startedAt))
         await inTurn(() =>
           advanceBrief(pool, siteKey, ['applying'], {

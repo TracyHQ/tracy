@@ -2446,7 +2446,18 @@ fails does not stop the others (what reads its output is skipped), a failed run 
 one, and a planner or writer that made nothing is replaced by stand-ins (`write-step/stand-in-files.js`: a plan keeping the
 whole kit, a copy filling nothing), so step 9's closing ladder empties every kept slot nothing fills. Only a template kit that
 cannot be read stops step 9 (a configuration error); the base site is then handed over as created. The row ends `applied`
-either way, with per-step minutes and USD and the ending kept in `site_brief.timings.chain`.
+either way, with per-step minutes and USD and the ending kept in `site_brief.timings.chain`. A retry records its epoch-millisecond start in
+`timings.attemptStartedAt`; attempt start, elapsed time and base-site duration use that stamp while `created_at` retains the original generation identity.
+
+Before the chain's first write, code pins the newest backup whose existing owner/session `GET /api/sites/:key/backups`
+answer proves a full database dump and file commit. Missing full backup or an unhealthy initial home refuses the write.
+After step 9, two explicit HTTP server failures or CMS fatal-error pages on the previously healthy home trigger the existing
+`POST /api/sites/:key/restore` door with `mode: everything`, the pinned point and one idempotency key. Its normal host
+hash checks, Before-restore backup, operation settlement and audit remain in force. A network timeout or ordinary content
+check failure does not restore template content. An open repair writer also prevents restore. Recovery is recorded in the
+write step's chain measurement; only a verified restore operation followed by a healthy home is called restored, and the
+personalized write remains stopped pending review. Exceptions with no complete repair ledger remain failures rather than
+risk a restore racing an unknown writer.
 
 ## 9. Sign-in, seats, permissions
 
@@ -2938,7 +2949,7 @@ the destination page sends the brief as with a demo. On an http stand (no `crypt
 
 For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
 follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
-a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds.
+a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds. The durable action follows the chain's recorded step and stays queued while its current site brief is queued, preparing, ready or applying, even when the host has finished base provisioning. A live chain also holds the action deadline within the existing maximum action window; terminal soft failure still follows the chain's existing handover policy, so action completion does not establish content acceptance.
 Server-owned `agent-demo/1` actions share the picture-label run warmed during template choice. Pending labels queue
 the action until `retryAt` without freezing a revision or provisioning a site. A label run past its five-minute
 bound returns `DEMO_PICTURE_LABELS_TIMEOUT` without freezing empty labels; a later prepare or explicit Retry can

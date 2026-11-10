@@ -112,6 +112,28 @@ async function takeBack(pass, reason, firstCheck) {
   }
 }
 
+/** Positive evidence that every prompted request ended; absent or dropped native records remain unsafe. */
+async function repairWritersSettled(agent, ledger) {
+  if (!agent || !ledger.records.size) return true
+  const sessions = new Map()
+  for (const [id, record] of ledger.records)
+    sessions.set(record.sessionId, [...(sessions.get(record.sessionId) ?? []), id])
+  try {
+    for (const [sessionId, requestIds] of sessions) {
+      const turns = await agent.turns({ sessionId, requestIds })
+      if (
+        !Array.isArray(turns) ||
+        turns.some((t) => !['closed', 'stale'].includes(t.state)) ||
+        requestIds.some((id) => !turns.some((t) => t.rpcId === id))
+      )
+        return false
+    }
+    return true
+  } catch {
+    return false
+  }
+}
+
 /**
  * @param {{ write: object, checkSite: (report: object, options: { baseline: object | null, allGroups: true,
  *     pages?: string[] }) => Promise<object>,
@@ -134,7 +156,8 @@ export async function runStepNine(input) {
     timeline.push({ stage, ...extra, startMs: from - t0, endMs: now() - t0 })
   const written = await runWriteStep({ now, sleep, ...write })
   mark('write', t0)
-  if (written.status !== 'done') return { report: written, siteCheck: null, firstCheck: null, repair: null }
+  if (written.status !== 'done')
+    return { report: written, siteCheck: null, firstCheck: null, repair: null, writersSettled: true }
   // The demo baseline committed beside the contract at step 0 (demo-baseline.json), unless the caller gives its own lookup.
   const store = baselines ?? contractBaselineStore({ index: contracts ?? defaultContracts() })
   const baseline = await store.read(written.contract).catch(() => null)
@@ -206,5 +229,11 @@ export async function runStepNine(input) {
     await out('site-check.json', handed)
     await out('repair-pass.json', repair)
   }
-  return { report, siteCheck: handed, firstCheck, repair }
+  return {
+    report,
+    siteCheck: handed,
+    firstCheck,
+    repair,
+    writersSettled: await repairWritersSettled(agent, ledger)
+  }
 }

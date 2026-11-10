@@ -10,7 +10,9 @@ import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { handOffToAgent } from './handoff-service.js'
 import { revisionForAction } from './revisions.js'
 import { createPictureLabelRuns } from './picture-label-runs.js'
-import { briefOf } from '../lib/site-brief-row.js'
+import { briefOf, CURRENT_BRIEF } from '../lib/site-brief-row.js'
+import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
+import { chainRunOpen, chainStepOf } from '../lib/wo-chain-builds.js'
 import { withHandoffLock } from './handoff.js'
 
 const POLL_MS = 10_000
@@ -22,6 +24,22 @@ const CHAT_ALIVE_MS = 30 * 60_000
 const CHAT_ACTION_MAX_MS = 2 * ACTION_TIMEOUT_MS
 
 /**
+ * 🔒 A STEP CHAIN STILL RUNNING IS NOT TIMED OUT EITHER (#516): the action waits for the chain to end, and the chain
+ * has its own outer deadline and hand-over window (`sites/brief-engines/step-chain.js`, 2 h plus 15 min from its start)
+ * and lost-run settling, so a chain at its deadline still hands the site over instead of the action failing a few
+ * minutes before. A chain that ended within the alive window is still alive, so the next poll settles it as built
+ * rather than timed out. Bounded by `CHAT_ACTION_MAX_MS` like a chat. SQL over `wo_demo_action a`; `alive` names the
+ * parameter holding the alive window's start.
+ */
+const chainAliveSql = (
+  alive
+) => `exists (select 1 from wo_build w join site_brief b on b.site_key = w.site_key
+    left join site s on s.site_key = w.site_key
+    where w.account_id = a.account_id and w.request_id = a.build_request_id
+      and w.receipt->>'workflow' = '${STEP_CHAIN_WORKFLOW}' and ${CURRENT_BRIEF}
+      and (b.state in ('queued', 'preparing', 'ready', 'applying') or b.updated_at > ${alive}))`
+
+/**
  * 🔒 A BUILD WHOSE CHAT IS STILL WORKING IS NOT TIMED OUT (#247, dev 30/10/2026). A client-send action stays queued for
  * its whole chat, and a build of six checks of 9–28 min each crossed the 2 h deadline while its agent was still
  * repairing: the action failed `DEMO_STEP_TIMEOUT`, Build from my business said failed, and eight minutes later the
@@ -29,13 +47,14 @@ const CHAT_ACTION_MAX_MS = 2 * ACTION_TIMEOUT_MS
  * write of that turn, a beat of its running check, or the turn opened within `CHAT_ALIVE_MS`), up to
  * `CHAT_ACTION_MAX_MS`. SQL over `wo_demo_action a`: `alive` names the parameter holding the alive window's start.
  */
-const chatAliveSql = (alive) => `(a.selection->>'chatMode' = 'client-send/1' and exists (
+const chatAliveSql = (alive) => `((a.selection->>'chatMode' = 'client-send/1' and exists (
     select 1 from wo_build b join site_turn t on t.site_key = b.site_key and t.session_id = a.session_id
     where b.account_id = a.account_id and b.request_id = a.build_request_id and t.state = 'open'
       and (t.opened_at > ${alive}
         or exists (select 1 from site_write w where w.turn_id = t.turn_id and w.at > ${alive})
         or case when b.qa->'clientCheck'->>'beatAt' ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}T'
-          then (b.qa->'clientCheck'->>'beatAt')::timestamptz end > ${alive})))`
+          then (b.qa->'clientCheck'->>'beatAt')::timestamptz end > ${alive})))
+  or ${chainAliveSql(alive)})`
 
 /** Whether this action's chat turn is alive (`chatAliveSql`), so its deadline waits. */
 export async function chatTurnAlive(db, action, at = Date.now()) {
@@ -249,17 +268,26 @@ export function createDemoRunner(deps) {
         build = await settleBuild({ pool: db, request, origin, cookie, build })
         if (['failed', 'refused', 'deleted'].includes(build.state))
           return finish('failed', build.receipt?.failure?.code ?? 'BUILD_FAILED')
+        // 🔒 A CHAIN BUILD'S STEP IS THE CHAIN'S OWN STEP (#516): the run frame keeps the chain's measurement on the
+        // site's brief row as each step starts (`timings.chain`), and each poll marks the furthest step it has reached
+        // (`chainStepOf`: kit, brand, plan, copy, pictures, write), so the progress card and /ops/wo agree on where a
+        // build is. Other builds keep brief, build, fill and check.
+        const chainRun = isStepChainBuild(build) && build.site_key ? await briefOf(db, build.site_key) : null
+        const chainStep = chainStepOf(chainRun?.timings?.chain)
+        if (chainStep && chainStep !== step) await mark(chainStep)
         if (build.state !== 'done') {
-          await mark('build')
+          if (!isStepChainBuild(build)) await mark('build')
           return wait()
         }
         // 🔒 A STEP CHAIN BUILD HAS NO CHAT TO HAND OVER TO (#479): the chain writes the site, so there is no agent
-        // brief to send, no QA baseline to take and no fill to wait for. The action ends with the site.
+        // brief to send, no QA baseline to take and no fill to wait for. The action ends with the chain: the host
+        // makes the base site long before the chain has written it (#516), so a brief row still running holds the
+        // action open, and a finished one ends it.
         // The row still reaches Outreach (it needs a passed QA state) and the demo keeps its retention clock, so the
         // "send the link to the owner" step and the sweep treat it like any finished demo. The chain's own checks
         // belong to the chain; a soft failure still hands the site over.
         if (isStepChainBuild(build)) {
-          await mark('build')
+          if (chainRun && chainRunOpen(chainRun.state)) return wait()
           await db.query(
             `update wo_build set qa = coalesce(qa,'{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1 and account_id = $4`,
             [

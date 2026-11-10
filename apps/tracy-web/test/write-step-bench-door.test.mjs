@@ -114,3 +114,57 @@ test('apply hands back the plugin answer, per-slot errors included, and shapes a
   assert.deepEqual([nested.ok, nested.code, nested.message], [false, 'CONTENT_BAD_QUERY', 'bad query'])
   assert.equal((await d.apply(call)).contract, 'demo-gym/j6/1.2.3')
 })
+
+test('recovery pins only a full backup and restores through one verified, idempotent customer operation', async () => {
+  const point = {
+    kind: 'backup',
+    version: 2,
+    sha: 'a'.repeat(40),
+    database: { state: 'full', sha256: 'b'.repeat(64) }
+  }
+  const history = {
+    rows: [{ ...point, version: 3, database: { state: 'none' } }, point],
+    may: { restoreEverything: true }
+  }
+  const { door: d, seen } = door([
+    [200, history],
+    [200, history],
+    [202, { operationId: 'op-1', status: 'unknown' }],
+    [200, { ok: true, operationId: 'op-1', status: 'succeeded', head: 'c'.repeat(40) }]
+  ])
+  const pinned = await d.recoveryPoint('k.sites.example')
+  assert.equal(pinned.version, 2)
+  const restored = await d.restorePoint('k.sites.example', pinned, 'chain-recovery-test')
+  assert.equal(restored.ok, true)
+  const requests = seen.filter((r) => r.init.method === 'POST').map((r) => JSON.parse(r.init.body))
+  assert.equal(requests.length, 2)
+  assert.deepEqual(requests[0], requests[1])
+  assert.deepEqual(requests[0], {
+    mode: 'everything',
+    version: 2,
+    confirm: 'restore',
+    idemKey: 'chain-recovery-test'
+  })
+})
+
+test('recovery refuses changed backup bytes and never restores a files-only point', async () => {
+  const point = {
+    kind: 'backup',
+    version: 1,
+    sha: 'a'.repeat(40),
+    database: { state: 'full', sha256: 'b'.repeat(64) }
+  }
+  const { door: d, seen } = door([
+    [200, { rows: [{ ...point, database: { state: 'none' } }], may: { restoreEverything: true } }],
+    [200, { rows: [{ ...point, sha: 'c'.repeat(40) }] }]
+  ])
+  assert.equal(await d.recoveryPoint('k.sites.example'), null)
+  assert.equal(
+    (await d.restorePoint('k.sites.example', point, 'same-operation')).code,
+    'RECOVERY_POINT_CHANGED'
+  )
+  assert.equal(
+    seen.some((r) => r.init.method === 'POST'),
+    false
+  )
+})

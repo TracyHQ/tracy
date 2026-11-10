@@ -15,6 +15,39 @@ export const SLOW_MIN_BUILDS = 3
 /** The states of a brief row whose run is still going (`sites/brief-store.js` `OPEN_STATES`; `lib/` cannot import a domain). */
 const OPEN_STATES = ['queued', 'preparing', 'ready', 'applying']
 
+/**
+ * The chain's own steps in the order they start (`sites/brief-engines/step-chain.js`), with the English label the seller
+ * reads (#516). The base site (`site`) is made by the host beside them and is not a step the seller waits on; the Write
+ * step holds the Site check and the repair pass (step 9 whole).
+ */
+export const CHAIN_STEPS = Object.freeze([
+  Object.freeze({ id: 'kit', label: 'Template kit' }),
+  Object.freeze({ id: 'brand', label: 'Brand colors' }),
+  Object.freeze({ id: 'plan', label: 'Page plan' }),
+  Object.freeze({ id: 'copy', label: 'Page texts' }),
+  Object.freeze({ id: 'pictures', label: 'Photos' }),
+  Object.freeze({ id: 'write', label: 'Writing to the site' })
+])
+const CHAIN_IDS = CHAIN_STEPS.map((s) => s.id)
+
+/**
+ * The furthest chain step a measurement has started (running or recorded), or null before the first. Steps run side by
+ * side (brand beside the plan, copy beside the pictures), so the furthest one is the step the build has reached.
+ * @param {{ running?: unknown, steps?: unknown } | null | undefined} chain
+ * @returns {string | null}
+ */
+export function chainStepOf(chain) {
+  const started = [
+    ...(Array.isArray(chain?.running) ? chain.running : []),
+    ...(Array.isArray(chain?.steps) ? chain.steps.map((s) => s?.step) : [])
+  ]
+  const furthest = Math.max(-1, ...started.map((id) => CHAIN_IDS.indexOf(String(id))))
+  return furthest < 0 ? null : CHAIN_IDS[furthest]
+}
+
+/** Whether a brief row's run is still going. @param {string | null | undefined} state */
+export const chainRunOpen = (state) => OPEN_STATES.includes(String(state))
+
 /** How many builds the table shows, newest first. */
 export const CHAIN_BUILDS_LIMIT = 200
 
@@ -35,10 +68,14 @@ const medianOf = (values) => {
  */
 export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT, now = Date.now } = {}) {
   const { rows } = await pool.query(
-    `select b.site_key, b.quickstart, b.state, b.created_at, b.timings -> 'chain' as chain, s.label
+    `select b.site_key, b.quickstart, b.state, b.created_at,
+            coalesce(case when b.timings ->> 'attemptStartedAt' ~ '^[1-9][0-9]{0,14}$'
+                          then (b.timings ->> 'attemptStartedAt')::numeric end,
+                     extract(epoch from b.created_at) * 1000) as attempt_started_at,
+            b.timings -> 'chain' as chain, s.label
        from site_brief b left join site s on s.site_key = b.site_key
       where b.timings ? 'chain' and ${CURRENT_BRIEF}
-      order by b.created_at desc
+      order by attempt_started_at desc
       limit $1`,
     [limit]
   )
@@ -46,7 +83,9 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
     const chain = row.chain ?? {}
     const steps = Array.isArray(chain.steps) ? chain.steps : []
     const spent = steps.reduce((sum, s) => sum + finiteOrZero(s.usd), 0)
-    const createdMs = new Date(row.created_at).getTime()
+    const attemptMs = Number(row.attempt_started_at)
+    const startedMs =
+      Number.isFinite(attemptMs) && attemptMs > 0 ? attemptMs : new Date(row.created_at).getTime()
     // A snapshot of a run that was going: still going while the row is open, otherwise it ended without finishing its
     // record (a hard failure), at the step that was under way (the write when none was).
     const unfinished = chain.ending === 'running'
@@ -64,10 +103,10 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       label: row.label ?? null,
       address: row.label && config.siteDomain ? bornSiteAddress(row.label, config) : null,
       template: chainTemplateOf(row.quickstart) || null,
-      startedAt: new Date(row.created_at).toISOString(),
+      startedAt: new Date(startedMs).toISOString(),
       // A running build counts its minutes from the press until now; spend is what the finished steps cost so far.
       totalMinutes: running
-        ? Math.round(((now() - createdMs) / 60_000) * 100) / 100
+        ? Math.round(((now() - startedMs) / 60_000) * 100) / 100
         : finiteOrZero(chain.totalMinutes),
       totalUsd: unfinished ? Math.round(spent * 10_000) / 10_000 : finiteOrZero(chain.totalUsd),
       ending,

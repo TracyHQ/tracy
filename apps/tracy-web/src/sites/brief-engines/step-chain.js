@@ -222,6 +222,7 @@ export function createStepChainEngine({
             endMs: now() - t0,
             usd: Number(answer?.usd ?? 0),
             outcome: ok ? 'done' : 'failed',
+            ...(report?.recovery ? { recovery: report.recovery } : {}),
             ...(ok ? {} : { error: messageOf(report?.cause?.reason ?? report?.status ?? 'no write report') })
           })
           if (!ok) failed ??= 'write'
