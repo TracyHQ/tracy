@@ -67,7 +67,7 @@ export const PROGRESS_BAND_CSS = `
 /* Inside a status pill the node sits on the pill's own colour: no pane shade behind it (it would read as a dark disc in the dark theme). */
 .tracy-wo-band[data-fixed] .tracy-wo-band-pill > .tracy-wo-band-sub-node { background: transparent; }
 .tracy-wo-band[data-fixed] li[data-state='failed'] > .tracy-wo-band-sub-node { border-color: var(--destructive); background: var(--destructive); color: var(--background); }
-.tracy-wo-band[data-fixed] .tracy-wo-band-sub-label { padding: 0 4px; background: var(--wo-pane-bg); max-width: 16ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 400; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-sub-label { padding: 0 4px; background: var(--wo-pane-bg); white-space: nowrap; font-weight: 400; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] .tracy-wo-band-sub-label { padding: 1px 7px; border-radius: 999px; font-weight: 600; color: var(--primary); background: color-mix(in oklab, var(--primary) 12%, var(--wo-pane-bg)); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='failed'] .tracy-wo-band-sub-label { color: var(--destructive); font-weight: 500; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='waiting'] { color: var(--muted-foreground); }
