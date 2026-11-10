@@ -70,12 +70,13 @@ export function sourcesToShow(sources: readonly SourceInput[], opportunity: unkn
 
 /**
  * The sources the Workspace card lists on the overview (#537, option C). Before research every pasted link shows,
- * waiting. After it, every row research collected or could not collect; a row research
- * skipped by itself (a search that found no page) stays on the Sources sub-page, unless the seller pasted its link.
+ * waiting. After it, only the rows that have a link (the owner's pasted link or the page research read): a search
+ * Tracy ran by itself that found no page has no link to show, so it stays off the table and out of its count (owner,
+ * #537). Such rows stay on the Sources sub-page.
  */
 export function overviewSourcesOf(shown: readonly SourceInput[], collected: boolean): SourceInput[] {
   if (!collected) return [...shown]
-  return shown.filter((s) => s.status !== 'skipped' || typeof s.pastedLink === 'string')
+  return shown.filter((s) => typeof s.pastedLink === 'string' || safeHttpUrl(s.ref) !== null)
 }
 
 /** The address as an http(s) URL, or null for anything else (no other scheme ever becomes a link). */
