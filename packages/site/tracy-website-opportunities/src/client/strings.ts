@@ -1348,6 +1348,10 @@ export const en = {
   'band.research.collecting': 'Collecting the website, Google listing and social pages',
   'band.build.steps': 'Build steps',
   'band.tryAgain': 'Try again',
+  /** The one fixed line under each step name in the band's step list: what the step does, not its state. */
+  'band.purpose.research': 'Collects what is true about the business from its links.',
+  'band.purpose.brief': 'Turns the facts into the words and sections of the site.',
+  'band.purpose.build': 'Builds a working site from the brief for you to open.',
 
   /** The header chip of Details: where the place stands (#537). */
   'chip.notStarted': 'Not started',

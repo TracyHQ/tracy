@@ -8,16 +8,23 @@
  * data-fixed attribute to win over them. Reads only Tracy tokens. No backtick may appear inside the template below.
  */
 export const PROGRESS_BAND_CSS = `
-.tracy-wo-band[data-fixed] { --wo-band-h: 168px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); grid-template-rows: minmax(0, 1fr); }
+.tracy-wo-band[data-fixed] { --wo-band-h: 176px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); grid-template-rows: minmax(0, 1fr); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-list { box-sizing: border-box; min-height: 0; overflow: hidden; }
 .tracy-wo-band[data-fixed] .tracy-wo-step { padding-bottom: 12px; }
 .tracy-wo-band[data-fixed] .tracy-wo-step:last-child { padding-bottom: 0; }
 .tracy-wo-band[data-fixed] .tracy-wo-step-ln { bottom: -12px; }
 .tracy-wo-band[data-fixed] .tracy-wo-step-body { gap: 0; }
-.tracy-wo-band[data-fixed] .tracy-wo-step-name, .tracy-wo-band[data-fixed] .tracy-wo-step-sub, .tracy-wo-band[data-fixed] .tracy-wo-band-lock > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-status { display: flex; align-items: center; gap: 6px; min-width: 0; height: 16px; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-status > .tracy-wo-step-sub { flex: 0 0 auto; max-width: 100%; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-lock { display: flex; min-width: 0; height: 16px; }
+.tracy-wo-band[data-fixed] .tracy-wo-step-name, .tracy-wo-band[data-fixed] .tracy-wo-band-purpose, .tracy-wo-band[data-fixed] .tracy-wo-band-pill-text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-top { display: flex; align-items: center; gap: 8px; min-width: 0; height: 22px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-top > .tracy-wo-step-name { flex: 0 1 auto; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-top > .tracy-wo-band-pill { flex: none; max-width: 60%; box-sizing: border-box; height: 22px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-pill-text { flex: 0 1 auto; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-pill[data-state='review'] { border-color: color-mix(in oklab, var(--warning) 35%, transparent); background: color-mix(in oklab, var(--warning) 14%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-pill[data-state='locked'] { padding: 2px 6px; color: var(--muted-foreground); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-pill > .tracy-wo-icon { width: 12px; height: 12px; flex: none; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-purpose { display: block; height: 16px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-wo-band[data-fixed] { --wo-pane-bg: color-mix(in oklab, var(--primary) 5%, var(--card, var(--background))); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-pane[data-review] { --wo-pane-bg: color-mix(in oklab, var(--warning) 8%, var(--card, var(--background))); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-pane { box-sizing: border-box; min-height: 0; overflow: hidden; gap: 6px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-kicker { line-height: 16px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-head { display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; }
@@ -35,17 +42,25 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps { flex: none; display: flex; flex-direction: row; align-items: center; gap: 0; position: relative; height: 24px; margin: 0; padding: 0; list-style: none; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; font-size: 12px; line-height: 16px; -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs::-webkit-scrollbar, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps::-webkit-scrollbar { display: none; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li { flex: none; display: flex; align-items: center; gap: 5px; min-width: 0; color: var(--foreground); }
-.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li + li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li + li::before { content: ''; flex: none; width: 16px; height: 1px; margin: 0 6px 0 2px; background: var(--border); }
-.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='done'] + li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='done'] + li::before { background: var(--success); }
-.tracy-wo-band[data-fixed] .tracy-wo-band-sub-node { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 999px; border: 1.5px solid color-mix(in oklab, var(--muted-foreground) 45%, transparent); background: transparent; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li { position: relative; padding: 0 12px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li:first-child, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li:first-child { padding-left: 0; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li:last-child, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li:last-child { padding-right: 0; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li::after, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li::after { content: ''; position: absolute; top: 50%; height: 1px; background: var(--border); z-index: 0; pointer-events: none; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li::before { left: 0; width: 19px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li::after, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li::after { left: 19px; right: 0; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li:first-child::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li:first-child::before, .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li:last-child::after, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li:last-child::after { display: none; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li:first-child::after, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li:first-child::after { left: 7px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li > *, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li > * { position: relative; z-index: 1; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='done']::after, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='done']::after, .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='done'] + li::before, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='done'] + li::before { background: var(--success); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-sub-node { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 999px; border: 1.5px solid color-mix(in oklab, var(--muted-foreground) 45%, transparent); background: var(--wo-pane-bg); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li > .tracy-wo-band-sub-node > svg { width: 10px; height: 10px; stroke-width: 3; color: var(--background); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] > .tracy-wo-band-sub-node > svg { width: 14px; height: 14px; stroke-width: 2.5; color: var(--primary); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs[data-many] > li[data-state='done'] > .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps:has(> li:nth-child(5)) > li[data-state='done'] > b { display: none; }
 .tracy-wo-band[data-fixed] li[data-state='done'] > .tracy-wo-band-sub-node { border-color: var(--success); background: var(--success); color: var(--background); }
 .tracy-wo-band[data-fixed] li[data-state='running'] > .tracy-wo-band-sub-node { width: 16px; height: 16px; border: 0; background: transparent; color: var(--primary); }
 .tracy-wo-band[data-fixed] li[data-state='failed'] > .tracy-wo-band-sub-node { border-color: var(--destructive); background: var(--destructive); color: var(--background); }
-.tracy-wo-band[data-fixed] .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li > b { max-width: 16ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 400; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='current'] > b { padding: 1px 7px; border-radius: 999px; font-weight: 600; color: var(--primary); background: color-mix(in oklab, var(--primary) 12%, transparent); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li > b { padding: 0 4px; background: var(--wo-pane-bg); max-width: 16ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: 400; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='running'] .tracy-wo-band-sub-label, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='current'] > b { padding: 1px 7px; border-radius: 999px; font-weight: 600; color: var(--primary); background: color-mix(in oklab, var(--primary) 12%, var(--wo-pane-bg)); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='failed'] .tracy-wo-band-sub-label { color: var(--destructive); font-weight: 500; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-subs > li[data-state='waiting'], .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li[data-state='upcoming'] { color: var(--muted-foreground); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-sub-state, .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-steps > li > span.tracy-wo-muted { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }

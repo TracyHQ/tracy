@@ -1,7 +1,7 @@
 /**
  * The Progress band at the top of Details (#537, option D): one full width band with two panes. The left pane lists
- * the three steps (a dot, the name and ONE status line: "Done Nov 9", "Needs your review", "Up next", or for a step that waits
- * a lock icon with a short reason). The right pane is the current step: "Step 2 of 3", its name, its one status line,
+ * the three steps (a dot, the name with the status as a pill on its right, and one fixed line saying what the step does;
+ * a step that waits shows only a lock icon in its pill, the short reason on hover). The right pane is the current step: "Step 2 of 3", its name, its one status line,
  * why it stopped, the REAL sub-steps of a running job, and the action buttons at its bottom right.
  *
  * Sub-steps come only from what the server sends: the Content brief job's steps (`briefControlView`), the build's
@@ -9,7 +9,7 @@
  * running line. Nothing here counts time to fake progress. The view comes from `stepper-model.ts`.
  *
  * The band keeps ONE fixed height in every state (`progress-band-css.ts`): the left list sets it (three steps, each a
- * name, one status line and at most one lock line, all clamped to one line with the full text on hover), and the
+ * name with its pill, and one purpose line, all clamped to one line with the full text on hover), and the
  * right pane fills it with its buttons pinned to the bottom. Sub-steps run in one horizontal row of small nodes; a
  * long set scrolls sideways inside the row, which keeps the running node in view, so the pane never grows.
  */
@@ -19,7 +19,8 @@ import { Check, Lock, Clock } from 'lucide-react'
 import type { JSX, ReactNode } from 'react'
 
 import { SubSteps } from './progress-band-subs.tsx'
-import type { BandSubStep, StepAction, StepperView, StepView } from './stepper-model.ts'
+import { type StepNodeState, SubStepNode } from './step-node.tsx'
+import type { BandSubStep, StepAction, StepId, StepperView, StepView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
 const shortDate = (iso: unknown, locale: string): string | null => {
@@ -33,6 +34,42 @@ function statusText(t: Translate, step: StepView, locale: string): string {
   const date = shortDate(step.status.params?.date, locale)
   if (step.status.params?.date !== undefined && date === null) return t('stepper.done')
   return t(step.status.key, date === null ? step.status.params : { ...step.status.params, date })
+}
+
+const PURPOSE_OF: Record<StepId, string> = {
+  research: 'band.purpose.research',
+  brief: 'band.purpose.brief',
+  build: 'band.purpose.build'
+}
+
+/** The pill of a step, to the right of its name: the state as a pill, or only a lock icon (reason on hover) for a locked step. */
+function StatusPill({ t, step, locale }: { t: Translate; step: StepView; locale: string }): JSX.Element {
+  if (step.lockKey !== null) {
+    const reason = t(step.lockKey)
+    return (
+      <span
+        className="tracy-wo-stab-pill tracy-wo-band-pill"
+        data-state="locked"
+        role="img"
+        title={reason}
+        aria-label={reason}
+      >
+        <Lock aria-hidden="true" className="tracy-wo-icon" />
+      </span>
+    )
+  }
+  const full = statusText(t, step, locale)
+  const tone = step.status.tone
+  const text = tone === 'ok' ? t('stepper.done') : full
+  const node: StepNodeState | null =
+    tone === 'run' ? 'running' : tone === 'ok' ? 'done' : tone === 'error' ? 'failed' : null
+  const state = { run: 'reading', ok: 'collected', error: 'failed', warn: 'review', mute: 'next' }[tone]
+  return (
+    <span className="tracy-wo-stab-pill tracy-wo-band-pill" data-state={state} title={full}>
+      {node !== null ? <SubStepNode state={node} label={text} /> : null}
+      <span className="tracy-wo-band-pill-text">{text}</span>
+    </span>
+  )
 }
 
 export function ProgressBand({
@@ -87,28 +124,15 @@ export function ProgressBand({
               <span className="tracy-wo-step-ln" />
             </span>
             <span className="tracy-wo-step-body">
-              <span className="tracy-wo-step-name" title={t(step.nameKey)}>
-                {t(step.nameKey)}
+              <span className="tracy-wo-band-top">
+                <span className="tracy-wo-step-name" title={t(step.nameKey)}>
+                  {t(step.nameKey)}
+                </span>
+                <StatusPill t={t} step={step} locale={locale} />
               </span>
-              {step.lockKey !== null ? (
-                // A locked step: the lock icon and a short reason on the one status line (no "Locked" word).
-                <span className="tracy-wo-band-status">
-                  <span className="tracy-wo-band-lock" title={t(step.lockKey)}>
-                    <Lock aria-hidden="true" className="tracy-wo-icon" />
-                    <span>{t(step.lockKey)}</span>
-                  </span>
-                </span>
-              ) : (
-                <span className="tracy-wo-band-status">
-                  <span
-                    className="tracy-wo-step-sub"
-                    data-tone={step.status.tone}
-                    title={statusText(t, step, locale)}
-                  >
-                    {statusText(t, step, locale)}
-                  </span>
-                </span>
-              )}
+              <span className="tracy-wo-band-purpose" title={t(PURPOSE_OF[step.id])}>
+                {t(PURPOSE_OF[step.id])}
+              </span>
             </span>
           </li>
         ))}
