@@ -18,6 +18,7 @@
  * there is no skip.
  */
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import { goToStep, submitCreate } from './wizard-navigation.mjs'
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import http from 'node:http'
@@ -45,6 +46,7 @@ let outDir
 let server
 let base
 let browser
+let wizardCss = ''
 
 async function bundle(entry) {
   const built = await esbuild.build({
@@ -58,6 +60,7 @@ async function bundle(entry) {
     loader: { '.css': 'empty' },
     nodePaths: [path.join(pkgRoot, 'node_modules'), path.join(corePkg, 'node_modules')],
     write: false,
+    define: { __TAILWIND_CSS__: JSON.stringify(wizardCss) },
     logLevel: 'silent'
   })
   return built.outputFiles[0].text
@@ -66,10 +69,16 @@ async function bundle(entry) {
 const html = ({ script, cookie, baseHref }) =>
   `<!doctype html><html><head><meta charset="utf-8">${baseHref ? `<base href="${baseHref}">` : ''}` +
   `${cookie ? `<script>document.cookie=${JSON.stringify(cookie)}</script>` : ''}</head>` +
-  `<body><div id="root"></div><script src="/${script}"></script></body></html>`
+  `<body style="font-family:system-ui"><div id="root"></div><script src="/${script}"></script></body></html>`
 
 before(async () => {
   outDir = mkdtempSync(path.join(tmpdir(), 'tas-e2e-'))
+  const cssFile = path.join(outDir, 'wizard.css')
+  execFileSync('pnpm', ['exec', 'tailwindcss', '-i', 'src/client/add-site.css', '-o', cssFile], {
+    cwd: pkgRoot,
+    stdio: 'pipe'
+  })
+  wizardCss = readFileSync(cssFile, 'utf8')
   writeFileSync(path.join(outDir, 'handover.js'), await bundle('handover-entry.tsx'))
   writeFileSync(path.join(outDir, 'build.js'), await bundle('build-poll-entry.tsx'))
   writeFileSync(
@@ -450,4 +459,42 @@ test('Copy details works without the Clipboard API and after a denied write, res
       assert.deepEqual(errors, [])
     })
   }
+})
+
+test('a failed import marks its operation failed without claiming all steps completed (#392)', async () => {
+  await withPage(async (page) => {
+    await page.goto(`${base}/existing.html?import-failed=1`)
+    await page.getByText('Import existing site').click()
+    await openImportDetails(page, 'failed.example')
+    await page.getByLabel('Username').fill('admin')
+    await page.getByLabel('Password', { exact: true }).fill('secret')
+    await reviewAndStart(page)
+    await page.getByRole('button', { name: 'Try again', exact: true }).waitFor()
+    assert.equal(await page.getByText('All steps completed', { exact: true }).count(), 0)
+    assert.equal(await page.locator('[data-wizard-goto="import"]').getAttribute('data-step-state'), 'failed')
+    assert.equal(await page.locator('[data-wizard-goto="import"]').getAttribute('aria-current'), 'step')
+    assert.equal(await page.evaluate(() => window.__harness.provisionCount), 0)
+    for (const mode of ['light', 'dark']) {
+      await page.evaluate(
+        (dark) => document.body.toggleAttribute('data-ds-dark-theme', dark),
+        mode === 'dark'
+      )
+      for (const width of [390, 1440]) {
+        await page.setViewportSize({ width, height: 1000 })
+        const panel = page.locator('[data-import-problem] .tas-import-body')
+        const button = panel.getByRole('button', { name: 'Try again', exact: true })
+        const panelBox = await panel.boundingBox(),
+          buttonBox = await button.boundingBox()
+        assert.ok(buttonBox.y + buttonBox.height < panelBox.y + panelBox.height, 'retry has bottom padding')
+        assert.equal(
+          await page.locator('.tas-import-title').evaluate((el) => getComputedStyle(el).display),
+          'inline-flex'
+        )
+        if (process.env.TRACY_WIZARD_SHOTS)
+          await page.screenshot({
+            path: path.join(process.env.TRACY_WIZARD_SHOTS, `import-failed-${mode}-${width}.png`)
+          })
+      }
+    }
+  })
 })

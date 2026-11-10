@@ -89,7 +89,7 @@ export const CSS = `
 [data-slot="conversation.composer.bar"] { --tc-composer-focus-border: color-mix(in oklab, var(--foreground, #172026) 50%, var(--card, #ffffff)); }
 [data-slot="conversation.composer.bar"] [class*="_card"] { border-radius: 12px; border-style: solid; border-width: 1px; border-color: var(--dsw-alias-border-l2, #e3e7e9); background: var(--dsw-alias-bg-layer-1, #ffffff); box-shadow: none; }
 [data-slot="conversation.composer.bar"] [class*="_card"]:focus-within { border-color: var(--tc-composer-focus-border); }
-[data-slot="conversation.composer.bar"] [class*="_primary"] { background: var(--dsw-alias-brand-primary, #bf5b3d); }
+[data-slot="conversation.composer.bar"] [class*="_primary"] { background: var(--dsw-alias-button-primary-fill, #b75436); }
 /* The same round button in every state (David, 11/10/2026): dsh paints .primary:hover with its blue info hover,
    so hover and press take the darker terracotta this plugin puts in --dsw-alias-button-primary-hover (theme.mjs:
    darker in light, lighter in dark). Help's stop (.tv-help-stop, @tracy/dsh-assistant) stands in the same seat and

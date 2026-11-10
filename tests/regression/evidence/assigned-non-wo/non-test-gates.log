@@ -1,0 +1,93 @@
+check-all: lint
+check-lint: time — oxlint: 17903 ms (ok)
+check-lint: cache — restore: unknown (no restore outputs were passed to this run)
+check-lint: typecheck — 14 project(s), 4 at a time
+check-lint: tsc -p packages/brand/tracy-brand ok (4072 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-chat-input ok (12001 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-settings ok (24080 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-sidebar ok (22399 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-my-sites ok (25821 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-ui ok (58319 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-add-site ok (43786 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-mode-picker ok (9825 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-inbox ok (28822 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-site-tabs ok (48498 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/core/tracy-core ok (43761 ms) [build-info before start: disabled]
+check-lint: tsc -p tsconfig.scripts.json ok (31556 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/web/tracy-harness ok (68854 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/dev/tracy-design ok (156938 ms) [build-info before start: disabled]
+check-lint: cache — build-info: disabled (no TRACY_TSC_CACHE_DIR, or the sequential fallback: no --incremental was passed)
+check-lint: time — typecheck (whole stage): 168977 ms (ok)
+check-lint: time — format:check (biome format + biome lint, one figure): 15600 ms (ok)
+check-lint: time — total: 202482 ms (ok)
+check-lint: 3 steps green.
+check-all: doc-links
+Doc links: 596 files, no broken links.
+check-all: doc-frontmatter
+check-all: doc-index
+check-all: env-example
+check-all: compose-yaml
+check-all: skills
+check-all: workflow-scripts
+check-all: self-contained
+check-all: plugin-identity
+check-all: plugin-contracts
+check-all: language
+Language gate: 5247 files + 10 files installed into customer sites + 29 AGENTS.md going to customer sites + 25 workflows + 110 scripts (==> lines) + 49 API docs site files + 14203 files' comments + 2183 owned vendor files, clean (ledger: 30 older hits in 20 files, scripts/language-debt.json).
+check-all: wo-public
+check-all: vocabulary
+check-all: test-quality
+check-all: dsh-paths
+check-all: tailwind-source
+check-all: dsh-locale
+check-all: kept-terms
+check-all: interface-languages
+check-interface-languages: 8 languages, 20 Tracy + 37 dsh namespaces, known debt {"vi":0,"de":0,"it":0,"fr":0,"nl":0,"zh":0,"es":0}
+check-all: guide-coverage
+check-all: web-languages
+check-all: ops-languages
+check-all: dsh-tokens
+check-all: seat-door
+check-all: refusal-next
+check-all: origins
+check-all: presets
+check-all: story-kinds
+check-all: od-slots
+check-all: design-tokens
+check-all: od-dark
+check-all: agent-tools
+check-all: infra-contracts
+check-all: cms-sections
+check-all: cms-motion
+check-all: cms-preview
+check-all: joomla-template
+check-all: wordpress-theme
+check-all: joomla-multilingual
+check-all: joomla-demo-trim
+check-all: joomla-showcase-nav
+check-all: wordpress-editions
+check-all: wordpress-demo-trim
+check-all: wordpress-showcase-nav
+check-all: wordpress-superseded
+check-all: emdash-diagrams
+check-all: design-templates
+check-all: quickstart-overrides
+check-all: contracts
+check-all: slot-roles
+check-all: content-api
+check-all: api-spec
+check-all: questions
+check-all: templates
+check-all: story-strings
+check-all: site-model
+check-all: emdash-kit-sync
+check-all: emdash-inventory
+check-all: emdash-content-map
+check-all: bundles
+Bundle gate: 23 packages, 32 builds, all match their source.
+check-all: image-profile
+check-all: passwords-core-diff
+check-all: boot-graph
+check-boot-graph: [web] 58 entries, all 7 declared Tracy plugins present
+check-boot-graph: [native] 75 entries, all 23 declared Tracy plugins present
+check-all: 64 gate(s) passed (2 skipped by --skip: turbo-config, tests)
