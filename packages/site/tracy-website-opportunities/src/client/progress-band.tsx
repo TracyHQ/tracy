@@ -7,11 +7,18 @@
  * Sub-steps come only from what the server sends: the Content brief job's steps (`briefControlView`), the build's
  * step chain (`DemoProgress`, passed in), or a `stepProgress` answer. Research sends none per card, so it shows one
  * running line. Nothing here counts time to fake progress. The view comes from `stepper-model.ts`.
+ *
+ * The band keeps ONE fixed height in every state (`progress-band-css.ts`): the left list sets it (three steps, each a
+ * name, one status line and at most one lock line, all clamped to one line with the full text on hover), and the
+ * right pane fills it with its buttons pinned to the bottom. Sub-steps run in one horizontal row of small nodes; a
+ * long set scrolls sideways inside the row, which keeps the running node in view, so the pane never grows.
  */
-import type { JSX, ReactNode } from 'react'
-import { Check, CircleCheck, CircleX, Clock, Lock } from 'lucide-react'
-import { Badge, Button, Spinner } from '@tracy/ui'
 
+import { Badge, Button, Spinner } from '@tracy/ui'
+import { Check, Lock } from 'lucide-react'
+import type { JSX, ReactNode } from 'react'
+
+import { SubSteps } from './progress-band-subs.tsx'
 import type { BandSubStep, StepAction, StepperView, StepView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -26,28 +33,6 @@ function statusText(t: Translate, step: StepView, locale: string): string {
   const date = shortDate(step.status.params?.date, locale)
   if (step.status.params?.date !== undefined && date === null) return t('stepper.done')
   return t(step.status.key, date === null ? step.status.params : { ...step.status.params, date })
-}
-
-function SubSteps({ t, items }: { t: Translate; items: BandSubStep[] }): JSX.Element {
-  return (
-    <ol className="tracy-wo-band-subs">
-      {items.map((s) => (
-        <li key={s.key} data-state={s.state}>
-          {s.state === 'done' ? (
-            <CircleCheck className="tracy-wo-icon" aria-hidden="true" />
-          ) : s.state === 'running' ? (
-            <Spinner label={s.label} />
-          ) : s.state === 'failed' ? (
-            <CircleX className="tracy-wo-icon" aria-hidden="true" />
-          ) : (
-            <Clock className="tracy-wo-icon" aria-hidden="true" />
-          )}
-          <span>{s.label}</span>
-          <span className="tracy-wo-band-sub-state">{t(`brief.job.state.${s.state}`)}</span>
-        </li>
-      ))}
-    </ol>
-  )
 }
 
 export function ProgressBand({
@@ -86,7 +71,7 @@ export function ProgressBand({
   )
   const action = view.action
   return (
-    <section className="tracy-wo-band" aria-label={t('progress.title')}>
+    <section className="tracy-wo-band" data-fixed="" aria-label={t('progress.title')}>
       <ol className="tracy-wo-band-list">
         {view.steps.map((step, i) => (
           <li
@@ -102,41 +87,63 @@ export function ProgressBand({
               <span className="tracy-wo-step-ln" />
             </span>
             <span className="tracy-wo-step-body">
-              <span className="tracy-wo-step-name">{t(step.nameKey)}</span>
-              <span className="tracy-wo-step-sub" data-tone={step.status.tone}>
-                {statusText(t, step, locale)}
+              <span className="tracy-wo-step-name" title={t(step.nameKey)}>
+                {t(step.nameKey)}
+              </span>
+              <span className="tracy-wo-band-status">
+                <span
+                  className="tracy-wo-step-sub"
+                  data-tone={step.status.tone}
+                  title={statusText(t, step, locale)}
+                >
+                  {statusText(t, step, locale)}
+                </span>
+                {step.staleKey !== null ? (
+                  <Badge
+                    variant="outline"
+                    className="tracy-wo-chip-warn tracy-wo-band-stale"
+                    title={t(step.staleKey)}
+                  >
+                    {t(step.staleKey)}
+                  </Badge>
+                ) : null}
               </span>
               {step.lockKey !== null ? (
-                <span className="tracy-wo-band-lock">
+                <span className="tracy-wo-band-lock" title={t(step.lockKey)}>
                   <Lock aria-hidden="true" className="tracy-wo-icon" />
-                  {t(step.lockKey)}
+                  <span>{t(step.lockKey)}</span>
                 </span>
-              ) : null}
-              {step.staleKey !== null ? (
-                <Badge variant="outline" className="tracy-wo-chip-warn tracy-wo-band-stale">
-                  {t(step.staleKey)}
-                </Badge>
               ) : null}
             </span>
           </li>
         ))}
       </ol>
-      <div className="tracy-wo-band-pane" data-review={view.review ? '' : undefined}>
+      <div
+        className="tracy-wo-band-pane"
+        data-review={view.review ? '' : undefined}
+        data-build={view.running && current?.id === 'build' && buildSteps ? '' : undefined}
+      >
         {current === null ? (
           <>
             <span className="tracy-wo-band-kicker">{t('band.allDone')}</span>
             <h3 className="tracy-wo-band-name">{t(view.steps[total - 1]?.nameKey ?? 'step.build')}</h3>
-            <p className="tracy-wo-band-line">{t('band.built')}</p>
+            <p className="tracy-wo-band-line" title={t('band.built')}>
+              {t('band.built')}
+            </p>
           </>
         ) : (
           <>
             <span className="tracy-wo-band-kicker">{t('band.kicker', { n: at + 1, total })}</span>
-            <h3 className="tracy-wo-band-name">{t(current.nameKey)}</h3>
+            <h3 className="tracy-wo-band-name" title={t(current.nameKey)}>
+              {t(current.nameKey)}
+            </h3>
             {view.lineKey !== null && view.errorKey === null ? (
-              <p className="tracy-wo-band-line">{t(view.lineKey)}</p>
+              <p className="tracy-wo-band-line" title={t(view.lineKey)}>
+                {t(view.lineKey)}
+              </p>
             ) : null}
             {view.errorKey !== null ? (
-              <p className="tracy-wo-error tracy-wo-band-line" role="alert">
+              <p className="tracy-wo-error tracy-wo-band-line" role="alert" title={t(view.errorKey)}>
                 {t(view.errorKey)}
               </p>
             ) : null}
@@ -154,13 +161,13 @@ export function ProgressBand({
             ) : null}
           </>
         )}
-        {error ? (
-          <p className="tracy-wo-error tracy-wo-small" role="alert">
-            {error}
-          </p>
-        ) : null}
-        {view.running || action !== null ? (
+        {error || view.running || action !== null ? (
           <div className="tracy-wo-band-acts">
+            {error ? (
+              <p className="tracy-wo-error tracy-wo-small tracy-wo-band-refused" role="alert" title={error}>
+                {error}
+              </p>
+            ) : null}
             {view.running ? (
               <Button type="button" size="sm" variant="outline" disabled>
                 <Spinner label={t('stepper.running')} />

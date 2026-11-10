@@ -5,7 +5,9 @@
  * section card rules are repeated here so Details keeps its look when the Inspector's rules go. No backtick may appear
  * inside the template below.
  */
-export const DETAILS_CSS = `
+import { PROGRESS_BAND_CSS } from './progress-band-css.ts'
+export const DETAILS_CSS =
+  `
 .tracy-wo-details { gap: 12px; }
 .tracy-wo-details .tracy-wo-insp-sec { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; }
 .tracy-wo-details .tracy-wo-insp-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -201,4 +203,4 @@ export const DETAILS_CSS = `
   .tracy-wo-pager { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .tracy-wo-pager > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
 }
-`
+` + PROGRESS_BAND_CSS
