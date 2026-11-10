@@ -32,7 +32,8 @@ function sectionsOf({
   approval = { profile: 'none', brief: 'none' },
   demo = 'none',
   demoAt = null,
-  opened = {}
+  opened = {},
+  sources = null
 }) {
   const input = { research, researchJob: job, briefJob, brief, demo, demoAt, approval }
   const stepper = stepperView(input)
@@ -44,7 +45,10 @@ function sectionsOf({
     researchDone: research.done,
     researchMoving: moving,
     researchedAt: research.researchedAt,
-    sources: 3,
+    // The row states of the Sources table: three waiting links before research, two read and one not after it.
+    sources:
+      sources ??
+      (research.done && !moving ? ['collected', 'collected', 'failed'] : ['waiting', 'waiting', 'waiting']),
     fields: 6,
     brief: effective.brief == null ? null : { n: brief.n },
     briefEmpty,
@@ -71,7 +75,7 @@ const CASES = [
     name: 'new place: Sources open with the pasted links, the rest locked',
     input: { research: NOT_STARTED, job: null },
     want: [
-      'sources open +: 3 links · not collected yet',
+      'sources open +: 0 of 3 read · research not run yet',
       'profile locked: Available after research',
       'brief locked: Available after research',
       'demo locked: After the site content brief'
@@ -81,7 +85,7 @@ const CASES = [
     name: 'researching: Business facts is the muted waiting row, nothing partial',
     input: { research: { ...NOT_STARTED, state: 'running' }, job: { state: 'running' } },
     want: [
-      'sources open +: 3 links · not collected yet',
+      'sources open +: 0 of 3 read · research running',
       'profile locked: Being researched. Progress is shown above.',
       'brief locked: Available after research',
       'demo locked: After the site content brief'
@@ -91,7 +95,7 @@ const CASES = [
     name: 'business facts to review: open with its chip, Sources folded',
     input: {},
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile review +: 6 fields [Needs your review]',
       'brief locked: Approve the business facts first',
       'demo locked: Approve the business facts and the brief first'
@@ -101,7 +105,7 @@ const CASES = [
     name: 'an old brief made before approval is not shown: locked rows, no chip',
     input: { brief: OLD_BRIEF },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile review +: 6 fields [Needs your review]',
       'brief locked: Approve the business facts first',
       'demo locked: Approve the business facts and the brief first'
@@ -111,7 +115,7 @@ const CASES = [
     name: 'business facts approved: facts open, the brief ready to write',
     input: { approval: { ...APPROVED, brief: 'none', briefApprovedAt: null } },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile open +: 6 fields · approved Nov 10',
       'brief locked: Ready to write. Start it in Progress above.',
       'demo locked: Approve the site content brief first'
@@ -124,7 +128,7 @@ const CASES = [
       briefJob: { state: 'running', step: 'writing' }
     },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile open +: 6 fields · approved Nov 10',
       'brief locked: The site content brief is being written. Progress is shown above.',
       'demo locked: Approve the site content brief first'
@@ -134,7 +138,7 @@ const CASES = [
     name: 'brief to review: open with its chip, the site waits for it',
     input: { brief: BRIEF, approval: { ...APPROVED, brief: 'needed', briefApprovedAt: null } },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
       'brief review +: Brief 4 [Needs your review]',
       'demo locked: Approve the site content brief first'
@@ -144,7 +148,7 @@ const CASES = [
     name: 'brief approved: the brief open, the site ready to build',
     input: { brief: BRIEF, approval: APPROVED },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
       'brief open +: Brief 4 · approved Nov 10',
       'demo locked: Ready to build. Start it in Progress above.'
@@ -154,7 +158,7 @@ const CASES = [
     name: 'building: Your site is the muted waiting row',
     input: { brief: BRIEF, approval: APPROVED, demo: 'building' },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
       'brief open +: Brief 4 · approved Nov 10',
       'demo locked: Not available yet. The build is shown in Progress above.'
@@ -164,7 +168,7 @@ const CASES = [
     name: 'built: Your site open, everything else folded',
     input: { brief: BRIEF, approval: APPROVED, demo: 'ready', demoAt: '2026-11-10T13:00:00Z' },
     want: [
-      'sources done: 3 links · collected Nov 10',
+      'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
       'brief done: Brief 4 · approved Nov 10',
       'demo open +: tennis-padel-coach.tracy.test · built Nov 10'
@@ -176,10 +180,11 @@ const CASES = [
       brief: BRIEF,
       demo: 'ready',
       demoAt: '2026-11-10T13:00:00Z',
-      approval: { research: 'sources_changed', profile: 'none', brief: 'stale', briefStale: 'sources' }
+      approval: { research: 'sources_changed', profile: 'none', brief: 'stale', briefStale: 'sources' },
+      sources: ['collected', 'collected', 'failed', 'new']
     },
     want: [
-      'sources open +: 3 links · collected Nov 10',
+      'sources open +: 2 of 4 read · 1 new link, research again',
       'profile locked: Run research again first',
       'brief locked: Run research again first',
       'demo locked: Approve the business facts and the brief first'
@@ -189,7 +194,7 @@ const CASES = [
     name: 'research again pressed: the old output is reset to waiting rows',
     input: { research: RERUNNING, job: { state: 'running' }, brief: BRIEF },
     want: [
-      'sources open +: 3 links · not collected yet',
+      'sources open +: 0 of 3 read · research running',
       'profile locked: Being researched. Progress is shown above.',
       'brief locked: Available after research',
       'demo locked: Approve the business facts and the brief first'
@@ -199,7 +204,7 @@ const CASES = [
     name: 'the seller folds the current section and opens a finished one',
     input: { brief: BRIEF, approval: APPROVED, opened: { brief: false, sources: true, demo: true } },
     want: [
-      'sources done +: 3 links · collected Nov 10',
+      'sources done +: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
       'brief open: Brief 4 · approved Nov 10',
       'demo locked: Ready to build. Start it in Progress above.'

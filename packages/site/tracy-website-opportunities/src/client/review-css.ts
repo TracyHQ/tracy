@@ -41,10 +41,6 @@ export const REVIEW_CSS = `
 .tracy-wo-approve { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-left: auto; min-width: 0; }
 .tracy-wo-approve > p { margin: 0; }
 .tracy-wo-approve-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
-.tracy-wo-add-source { align-self: flex-start; }
-.tracy-wo-add-source-form { display: flex; flex-direction: column; gap: 6px; padding: 10px 0 0; border-top: 1px solid var(--border); }
-.tracy-wo-add-source-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.tracy-wo-add-source-row > input { flex: 1 1 220px; min-width: 0; }
 .tracy-wo-add-media { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .tracy-wo-profile-media { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
 .tracy-wo-profile-media-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }

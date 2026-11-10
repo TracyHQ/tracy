@@ -42,7 +42,12 @@ export function pastedLinksOf(opportunity: unknown): Array<{ source: string; url
  * The source rows to draw: research's own rows once it has any, else one row per pasted link (Google first when the
  * place came from a search and no Google link was pasted).
  */
-export function sourcesToShow(sources: readonly SourceInput[], opportunity: unknown): SourceInput[] {
+export function sourcesToShow(
+  sources: readonly SourceInput[],
+  opportunity: unknown,
+  /** The server's approval says the sources changed after research (`research: 'sources_changed'`). */
+  changed = false
+): SourceInput[] {
   const opp = isRec(opportunity) ? opportunity : {}
   // A listing link the seller added before research (#537) gets its own row at once: the pasted links that no row
   // covers yet still show, Not collected yet, beside it.
@@ -55,8 +60,9 @@ export function sourcesToShow(sources: readonly SourceInput[], opportunity: unkn
     status: null
   }))
   const researched = sources.some((s) => s.source !== 'listing')
-  // Once research has rows, they are the links: shown as they are.
-  if (researched) return [...sources]
+  // Once research has rows, they are the links: shown as they are. A link the seller added since (the server says
+  // the sources changed) has no row yet: it shows after them, waiting for the next research.
+  if (researched) return changed ? [...sources, ...rows] : [...sources]
   const searched =
     opp.provider === 'google-places' &&
     !covered.has('google-places') &&
@@ -69,12 +75,13 @@ export function sourcesToShow(sources: readonly SourceInput[], opportunity: unkn
 }
 
 /**
- * The sources the Workspace card lists on the overview: after research only the ones collected (status complete);
- * the other outcomes (No page found, Not available, Could not be read) stay on the Sources sub-page. Before research
- * every pasted link shows, Not collected yet.
+ * The sources the Workspace card lists on the overview (#537, option C). Before research every pasted link shows,
+ * waiting. After it, every row research collected or could not collect, and links added since; a row research
+ * skipped by itself (a search that found no page) stays on the Sources sub-page, unless the seller pasted its link.
  */
 export function overviewSourcesOf(shown: readonly SourceInput[], collected: boolean): SourceInput[] {
-  return collected ? shown.filter((s) => s.status === 'complete') : [...shown]
+  if (!collected) return [...shown]
+  return shown.filter((s) => s.status !== 'skipped' || typeof s.pastedLink === 'string')
 }
 
 /** The address as an http(s) URL, or null for anything else (no other scheme ever becomes a link). */

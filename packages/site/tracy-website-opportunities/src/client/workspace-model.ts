@@ -9,6 +9,7 @@
  */
 import type { DemoState } from '@tracy/wo-views/demo-state'
 
+import { type SourceState, sourcesSummary } from './source-table-model.ts'
 import type { StepperView } from './stepper-model.ts'
 
 export type WorkspaceId = 'sources' | 'profile' | 'brief' | 'demo'
@@ -30,7 +31,10 @@ export interface WorkspaceSection {
   expanded: boolean
   /** A locked row never opens. */
   expandable: boolean
-  /** The one line beside the title while the section is folded; for a locked row, the line of what it waits for. */
+  /**
+   * The one line beside the title while the section is folded (Sources keeps it while open too); for a locked row,
+   * the line of what it waits for.
+   */
   summary: WorkspaceText[]
   /** The chip text of a review row (Needs your review), or null. The card draws the Review pill instead. */
   chipKey: string | null
@@ -45,8 +49,8 @@ export interface WorkspaceInput {
   /** Research runs now, first time or again (`researchMovingOf`). */
   researchMoving: boolean
   researchedAt: string | null
-  /** How many source rows Sources lists. */
-  sources: number
+  /** The state of each source row Sources lists, in its order (`source-table-model.ts`). */
+  sources: readonly SourceState[]
   /** Business facts rows that hold a value. */
   fields: number
   /** The latest brief, or null before the first one. */
@@ -131,14 +135,19 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
     section(id, 'locked', [{ key: waitKey }])
   const done = (id: WorkspaceId): WorkspaceState => (focus === id ? 'open' : 'done')
 
-  // Sources: the links the seller pasted, collected or not yet; never reviewed (#537).
-  const collected = input.researchDone && !input.researchMoving
-  const sources = section('sources', done('sources'), [
-    counted('workspace.sum.links', input.sources),
-    ...(collected
-      ? dated('workspace.sum.collected', shortDate(input.researchedAt, locale))
-      : [{ key: 'workspace.sum.notCollected' }])
-  ])
+  // Sources: the links the seller pasted, read or not yet; never reviewed (#537). Its summary is counted from the
+  // same row states its table draws.
+  const sources = section(
+    'sources',
+    done('sources'),
+    sourcesSummary({
+      states: input.sources,
+      researchDone: input.researchDone,
+      researchMoving: input.researchMoving,
+      researchedAt: input.researchedAt,
+      locale
+    })
+  )
 
   // Business facts: the output of research. While research runs, and before it, it waits as a locked row.
   const fieldsLine = counted('section.meta.profile.fields', input.fields)

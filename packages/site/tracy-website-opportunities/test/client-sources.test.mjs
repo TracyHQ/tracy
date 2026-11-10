@@ -33,7 +33,7 @@ before(async () => {
       contents: `
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
-        export { Sources } from './details-parts.tsx'
+        export { Sources, SourcesTable } from './details-parts.tsx'
         export { ResearchAgainButton } from './research-again-dialog.tsx'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
@@ -295,14 +295,41 @@ test('a pasted link that is not an http address is not trusted as one', () => {
   assert.doesNotMatch(html, /tracy-wo-src-pasted|javascript:/)
 })
 
-test('the compact list of the Sources card: one line per source with its chip, no details and no headings', () => {
-  const html = lib.renderToStaticMarkup(lib.createElement(lib.Sources, { t, sources: PASTED, compact: true }))
-  assert.doesNotMatch(html, /<details|<summary|source\.alsoLookedAt|source\.usedHere/)
-  assert.equal((html.match(/tracy-wo-src-line/g) ?? []).length, PASTED.length)
-  assert.equal((html.match(/tracy-wo-src-chip/g) ?? []).length, PASTED.length)
+test('the Sources table of the Workspace card: a Source and a State column, no chips, no details (#537, option C)', () => {
+  const sources = [
+    {
+      source: 'instagram',
+      ref: 'https://www.instagram.com/sample_bistro',
+      status: 'complete',
+      collectedAt: '2026-11-10T08:00:00Z'
+    },
+    { source: 'listing', ref: 'https://www.listing.example/p/1', status: 'failed', reason: 'login_required' },
+    { source: 'website', ref: 'https://bistro.example/', status: 'failed' },
+    { source: 'facebook', ref: 'https://www.facebook.com/sample_bistro', status: null }
+  ]
+  const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, researched: true }))
+  assert.doesNotMatch(html, /<details|<summary|tracy-wo-src-chip|source\.alsoLookedAt|source\.usedHere/)
+  assert.match(html, /\[source\.table\.source\][\s\S]*\[source\.table\.state\]/)
+  assert.deepEqual(
+    [...html.matchAll(/data-state="(\w+)"/g)].map((m) => m[1]),
+    ['collected', 'failed', 'failed', 'new']
+  )
+  // Collected with its day; Could not collect with the server's reason, or alone when it sent none.
+  assert.match(html, /\[source\.state\.collected\]<\/span><span class="tracy-wo-stab-detail">Nov 10</)
+  assert.match(
+    html,
+    /\[source\.state\.failed\]<\/span><span class="tracy-wo-stab-detail">\[reason\.login_required\]</
+  )
+  assert.equal((html.match(/tracy-wo-stab-detail/g) ?? []).length, 2)
+  assert.match(html, /\[source\.state\.new\]/)
+  // Each link stays an http(s) anchor opening a new tab, its full address in the title.
+  assert.match(
+    html,
+    /<a href="https:\/\/www\.instagram\.com\/sample_bistro" target="_blank" rel="noopener noreferrer" title="https:\/\/www\.instagram\.com\/sample_bistro"[^>]*>instagram\.com\/sample_bistro<\/a>/
+  )
 })
 
-test('before research, the pasted links and the Google listing of a search read Not collected yet', () => {
+test('before research, the pasted links and the Google listing of a search read Waiting for research', () => {
   const sources = [
     { source: 'google-places', status: null, fromSearch: true },
     {
@@ -313,10 +340,9 @@ test('before research, the pasted links and the Google listing of a search read 
     }
   ]
   const html = lib.renderToStaticMarkup(
-    lib.createElement(lib.Sources, { t, sources, collected: false, compact: true })
+    lib.createElement(lib.SourcesTable, { t, sources, researched: false })
   )
-  assert.equal((html.match(/\[reason\.not_collected\]/g) ?? []).length, 2)
-  assert.match(html, /\[source\.fromSearch\]/)
+  assert.equal((html.match(/\[source\.state\.waiting\]/g) ?? []).length, 2)
   assert.match(
     html,
     /<a href="https:\/\/www\.instagram\.com\/sample_bistro"[^>]*>instagram\.com\/sample_bistro<\/a>/

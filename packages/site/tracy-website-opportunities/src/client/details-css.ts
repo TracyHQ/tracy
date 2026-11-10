@@ -64,9 +64,35 @@ export const DETAILS_CSS =
 .tracy-wo-open:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
 .tracy-wo-profile-card .tracy-wo-field dd > span:first-child { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 2px 10px; align-items: baseline; }
-.tracy-wo-srcs[data-compact] { gap: 0; }
-.tracy-wo-src-line { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; background: transparent; }
-.tracy-wo-src-line:first-child { border-top: 0; padding-top: 0; }
+.tracy-wo-stab { display: flex; flex-direction: column; min-width: 0; }
+.tracy-wo-stab-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 220px); min-width: 0; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.tracy-wo-stab-head { border-top: 0; border-bottom: 1px solid var(--border); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--muted-foreground); }
+.tracy-wo-stab-head > span { padding: 0 0 6px; }
+.tracy-wo-stab-head > span:last-child { text-align: right; }
+.tracy-wo-stab-head + .tracy-wo-stab-row { border-top: 0; }
+.tracy-wo-stab-src { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 12px 8px 0; }
+.tracy-wo-stab-name { flex: none; white-space: nowrap; }
+.tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }
+.tracy-wo-stab-state { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; min-width: 0; padding: 8px 0 8px 12px; border-left: 1px solid color-mix(in oklab, var(--border) 60%, transparent); font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
+.tracy-wo-stab-detail { font-size: 11.5px; color: var(--muted-foreground); opacity: 0.85; }
+.tracy-wo-stab-row[data-state='collected'] .tracy-wo-stab-word { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
+.tracy-wo-stab-row[data-state='failed'] .tracy-wo-stab-word { color: var(--destructive); }
+.tracy-wo-stab-row[data-state='new'] .tracy-wo-stab-word { color: var(--foreground); }
+.tracy-wo-sprog { display: inline-flex; flex: none; gap: 2px; margin-right: 8px; vertical-align: middle; }
+.tracy-wo-sprog > i { width: 14px; height: 5px; border-radius: 2px; background: var(--border); }
+.tracy-wo-sprog > i[data-state='collected'] { background: var(--success); }
+.tracy-wo-sprog > i[data-state='failed'] { background: var(--destructive); }
+.tracy-wo-addsrc { position: relative; display: inline-flex; flex: none; }
+.tracy-wo-addsrc-btn[data-on] { border-color: color-mix(in oklab, var(--primary) 45%, var(--border)); color: var(--primary); }
+.tracy-wo-addsrc-pop { position: absolute; top: calc(100% + 8px); right: 0; z-index: 30; display: flex; flex-direction: column; gap: 6px; width: min(400px, calc(100vw - 32px)); padding: 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--popover, var(--card, var(--background))); color: var(--popover-foreground, var(--foreground)); box-shadow: 0 8px 24px color-mix(in oklab, var(--foreground) 14%, transparent); text-align: left; white-space: normal; cursor: default; }
+.tracy-wo-addsrc-label { font-size: 12.5px; font-weight: 600; }
+.tracy-wo-addsrc-pop .tracy-wo-small { margin: 0; }
+.tracy-wo-addsrc-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+@container (max-width: 560px) {
+  .tracy-wo-stab-row { grid-template-columns: minmax(0, 1fr) minmax(110px, 40%); }
+  .tracy-wo-stab-src { flex-wrap: wrap; row-gap: 2px; }
+  .tracy-wo-stab-link { flex-basis: 100%; padding-left: 30px; }
+}
 .tracy-wo-progress { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); }
 .tracy-wo-progress-steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
 .tracy-wo-progress .tracy-wo-step { display: grid; grid-template-columns: 22px minmax(0, 1fr); align-items: start; gap: 10px; padding: 0 0 12px; }

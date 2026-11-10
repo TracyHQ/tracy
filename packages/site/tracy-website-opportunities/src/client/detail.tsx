@@ -38,7 +38,8 @@ import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './br
 import { Stepper } from './stepper.tsx'
 import { type StepAction, bandSubSteps, effectiveOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
-import { AddSource, type ApprovalView, gateText } from './seller-review.tsx'
+import { type ApprovalView, gateText } from './seller-review.tsx'
+import { AddSourcePopover } from './add-source-popover.tsx'
 import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
@@ -101,7 +102,8 @@ import { DetailsHeader } from './details-header.tsx'
 // [TAM] preview panel (temporary, never ships)
 import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
 import { applyPreview } from './preview-states.ts'
-import { Section, Sources } from './details-parts.tsx'
+import { Section, Sources, SourcesTable } from './details-parts.tsx'
+import { sourceStateOf } from './source-table-model.ts'
 import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
 import { DeleteDialog } from './delete-dialog.tsx'
 import { ResearchAgainButton } from './research-again-dialog.tsx'
@@ -561,16 +563,19 @@ export function DetailView({
   const sources = asArray<SourceInput>(body.sources).filter((s) => typeof s?.source === 'string')
   // Before research has a row, the links the owner pasted (and the Google listing of a search), Not collected yet.
   // While research runs (again) the rows are reset to the pasted links, Not collected yet: progress shows in the band.
+  // A link added after research has no row of research yet: it shows beside them while the server says the sources
+  // changed, waiting for the next research.
+  const sourcesChanged = isRecord(body.approval) && body.approval.research === 'sources_changed'
   const shownSources = sourcesToShow(
     researchMovingOf({ research, researchJob: row.job ?? null }) ? [] : sources,
-    body.opportunity
+    body.opportunity,
+    sourcesChanged
   )
-  // The overview lists only what was collected (status complete); the other outcomes stay on the Sources sub-page.
-  // Before research the pasted links all show, Not collected yet.
-  const overviewSources = overviewSourcesOf(
-    shownSources,
-    research.done && !researchMovingOf({ research, researchJob: row.job ?? null })
-  )
+  // The overview table lists what research collected or could not collect, and links added since; a row research
+  // skipped by itself stays on the Sources sub-page. Before research the pasted links all show, waiting.
+  const sourcesRead = research.done && !researchMovingOf({ research, researchJob: row.job ?? null })
+  const overviewSources = overviewSourcesOf(shownSources, sourcesRead)
+  const overviewStates = overviewSources.map((s) => sourceStateOf(s, sourcesRead, locale).state)
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
@@ -701,7 +706,7 @@ export function DetailView({
   }
   const addSource = async (url: string): Promise<string | null> => settle(await api.addSource(id, url))
   const uploadMedia = async (file: File): Promise<string | null> => settle(await api.uploadMedia(id, file))
-  const addSourceButton = <AddSource t={t} researched={research.done} onAdd={addSource} />
+  const addSourceButton = <AddSourcePopover t={t} researched={research.done} onAdd={addSource} />
   const approvedLine = (key: string, at: unknown): string | null => {
     const ms = typeof at === 'string' ? Date.parse(at) : Number.NaN
     if (!Number.isFinite(ms)) return null
@@ -1108,12 +1113,13 @@ export function DetailView({
         t={t}
         opportunityId={id}
         onSection={onSection}
+        addSource={addSourceButton}
         input={{
           stepper,
           researchDone: research.done,
           researchMoving,
           researchedAt: research.researchedAt,
-          sources: overviewSources.length,
+          sources: overviewStates,
           fields: profileRows.length,
           brief: effective.brief != null && isRecord(body.brief) ? { n: Number(body.brief.n ?? 1) } : null,
           briefEmpty:
@@ -1125,11 +1131,8 @@ export function DetailView({
         bodies={{
           sources: (
             <div className="tracy-wo-stack">
-              <Sources t={t} sources={overviewSources} collected={research.done && !researchMoving} compact />
-              <span className="tracy-wo-row">
-                {addSourceButton}
-                {cancelButton}
-              </span>
+              <SourcesTable t={t} sources={overviewSources} researched={sourcesRead} />
+              {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
             </div>
           ),
           profile: (

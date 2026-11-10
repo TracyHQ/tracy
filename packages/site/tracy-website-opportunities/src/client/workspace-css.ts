@@ -5,6 +5,10 @@
  */
 export const WORKSPACE_CSS = `
 .tracy-wo-ws { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); overflow: hidden; }
+/* The Add source popover hangs below the Sources row: the card stops clipping while it is open. */
+.tracy-wo-ws:has(.tracy-wo-addsrc-pop) { overflow: visible; }
+.tracy-wo-ws:has(.tracy-wo-addsrc-pop) > .tracy-wo-ws-head { border-radius: 9px 9px 0 0; }
+.tracy-wo-ws:has(.tracy-wo-addsrc-pop) > .tracy-wo-ws-sec:last-child { border-radius: 0 0 9px 9px; }
 .tracy-wo-ws-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; padding: 11px 16px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--muted) 40%, var(--card, var(--background))); }
 .tracy-wo-ws-title { margin: 0; font-size: 14px; font-weight: 600; line-height: 20px; }
 .tracy-wo-ws-subtitle { font-size: 12.5px; color: var(--muted-foreground); }

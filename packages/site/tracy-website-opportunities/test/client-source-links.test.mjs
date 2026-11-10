@@ -115,18 +115,40 @@ test('a listing added before research has its own row; the other pasted links st
   )
 })
 
-test('the overview lists only collected sources after research, every pasted link before it', () => {
+test('the overview lists collected and failed sources after research, every pasted link before it (#537, option C)', () => {
   const shown = [
     { source: 'instagram', status: 'complete' },
-    { source: 'website', status: 'skipped', reason: 'not_found' },
+    { source: 'facebook-search', status: 'skipped', reason: 'not_found' },
+    { source: 'website', status: 'skipped', reason: 'not_found', pastedLink: 'https://sample-kite.example' },
     { source: 'tripadvisor', status: 'failed' },
-    { source: 'google-maps', status: 'blocked' }
+    { source: 'google-maps', status: 'blocked' },
+    { source: 'listing', status: null }
   ]
   assert.deepEqual(
     overviewSourcesOf(shown, true).map((s) => s.source),
-    ['instagram']
+    ['instagram', 'website', 'tripadvisor', 'google-maps', 'listing']
   )
-  assert.equal(overviewSourcesOf(shown, false).length, 4)
+  assert.equal(overviewSourcesOf(shown, false).length, 6)
+})
+
+test('a link added after research shows after research rows only while the sources changed (#537)', () => {
+  const opp = {
+    candidate: {
+      pastedLinks: [
+        { url: 'https://www.instagram.com/sample_kite_club', source: 'instagram' },
+        { url: 'https://www.facebook.com/sample_kite_club', source: 'facebook' }
+      ]
+    }
+  }
+  const research = [
+    { source: 'instagram', status: 'complete' },
+    { source: 'website', status: 'failed' }
+  ]
+  assert.deepEqual(sourcesToShow(research, opp), research)
+  assert.deepEqual(
+    sourcesToShow(research, opp, true).map((r) => `${r.source}:${r.status}`),
+    ['instagram:complete', 'website:failed', 'facebook:null']
+  )
 })
 
 test('only http and https addresses become links, shown as host and path with an ellipsis', () => {

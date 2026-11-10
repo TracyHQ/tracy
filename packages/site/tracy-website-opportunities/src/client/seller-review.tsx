@@ -2,13 +2,12 @@
  * The seller's own steps on Details (#537):
  *   - the approval actions in the header of the Profile and Business brief sub-pages: Back, and Approve ... and
  *     continue, enabled once the page has been scrolled to its end (at once when it fits without scrolling);
- *   - Add source: an inline form for one more link of the business, with its errors in place;
  *   - Add more: one photo or video added to the Profile's Photos & video.
  * Each press goes through the door the caller passes and answers a refusal code (or null), shown in words here.
  */
-import { type JSX, useEffect, useId, useRef, useState } from 'react'
+import { type JSX, useEffect, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
-import { Button, Input, Spinner } from '@tracy/ui'
+import { Button, Spinner } from '@tracy/ui'
 
 import { en, type Translate } from './strings.ts'
 
@@ -106,99 +105,6 @@ export function ApprovalActions({
         <p className="tracy-wo-muted tracy-wo-small">{t('approve.scrollHint')}</p>
       ) : null}
     </div>
-  )
-}
-
-/** Add source: a button that opens an inline form for one more link of the business. */
-export function AddSource({
-  t,
-  researched,
-  onAdd
-}: {
-  t: Translate
-  /** Research has run: adding a source asks for it again (said under the field). */
-  researched: boolean
-  /** Adds the link; answers the refusal code, or null when it was added. */
-  onAdd: (url: string) => Promise<string | null>
-}): JSX.Element {
-  const [open, setOpen] = useState(false)
-  const [url, setUrl] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const field = useId()
-  const close = (): void => {
-    setOpen(false)
-    setUrl('')
-    setError(null)
-  }
-  const submit = async (): Promise<void> => {
-    if (busy) return
-    const typed = url.trim()
-    if (typed === '') return setError('INVALID_URL')
-    setBusy(true)
-    setError(null)
-    const code = await onAdd(typed)
-    setBusy(false)
-    if (code === null) close()
-    else setError(code)
-  }
-  if (!open)
-    return (
-      <Button
-        type="button"
-        size="xs"
-        variant="outline"
-        className="tracy-wo-add-source"
-        onClick={() => setOpen(true)}
-      >
-        <Plus aria-hidden="true" />
-        {t('source.add')}
-      </Button>
-    )
-  return (
-    <form
-      className="tracy-wo-add-source-form"
-      onSubmit={(e) => {
-        e.preventDefault()
-        void submit()
-      }}
-    >
-      <label className="tracy-wo-label" htmlFor={field}>
-        {t('source.add.label')}
-      </label>
-      <div className="tracy-wo-add-source-row">
-        <Input
-          id={field}
-          type="url"
-          inputMode="url"
-          autoComplete="off"
-          placeholder={t('source.add.placeholder')}
-          value={url}
-          aria-invalid={error !== null ? true : undefined}
-          onChange={(e) => {
-            setUrl(e.target.value)
-            if (error !== null) setError(null)
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') close()
-          }}
-        />
-        <Button type="submit" size="sm" disabled={busy}>
-          {busy ? <Spinner label={t('source.add.saving')} /> : null}
-          {t(busy ? 'source.add.saving' : 'source.add.submit')}
-        </Button>
-        <Button type="button" size="sm" variant="ghost" onClick={close}>
-          {t('source.add.cancel')}
-        </Button>
-      </div>
-      {error !== null ? (
-        <p className="tracy-wo-error tracy-wo-small" role="alert">
-          {codeText(t, 'source.add.error', error)}
-        </p>
-      ) : researched ? (
-        <p className="tracy-wo-muted tracy-wo-small">{t('source.add.afterResearch')}</p>
-      ) : null}
-    </form>
   )
 }
 

@@ -1197,10 +1197,19 @@ export const en = {
   // Status pill at the end of a Workspace row (#537)
   'workspace.locked': 'Locked',
   'workspace.reviewNamed': 'Review {section}',
-  'workspace.sum.links.one': '{count} link',
-  'workspace.sum.links.other': '{count} links',
-  'workspace.sum.collected': 'collected {date}',
-  'workspace.sum.notCollected': 'not collected yet',
+  // Summary beside the Sources title (#537, option C): "2 of 3 read · Nov 10"
+  'workspace.sum.read': '{read} of {total} read',
+  'workspace.sum.notRun': 'research not run yet',
+  'workspace.sum.researching': 'research running',
+  'workspace.sum.newLinks.one': '{count} new link, research again',
+  'workspace.sum.newLinks.other': '{count} new links, research again',
+  // The Sources table of the Workspace card (#537, option C): its two column heads and the State column
+  'source.table.source': 'Source',
+  'source.table.state': 'State',
+  'source.state.waiting': 'Waiting for research',
+  'source.state.collected': 'Collected',
+  'source.state.failed': 'Could not collect',
+  'source.state.new': 'New, waiting for research',
   'workspace.sum.approved': 'approved {date}',
   'workspace.sum.built': 'built {date}',
   'workspace.wait.research': 'Being researched. Progress is shown above.',

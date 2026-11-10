@@ -1,8 +1,9 @@
 /**
  * Parts of the Details page (#517) that used to live in the Inspector: a titled section card and the Sources list
  * (the links the owner pasted first, then what research found, each with its status, reason and Try again). Details
- * owns its copy so the page does not depend on the side panel, which goes away. The Sources card of Details draws the
- * compact list (name, one line, chip); its sub-page draws every row with its details and the two groups.
+ * owns its copy so the page does not depend on the side panel, which goes away. The Workspace card of Details draws
+ * the Sources table (source and state, option C of #537); the sub-page draws every row with its details and the two
+ * groups.
  */
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { collectedLine } from './research-gate-model.ts'
@@ -15,6 +16,7 @@ import { type SearchPage, searchPagesOf } from './research-again.ts'
 import { pastedLinkOf, sourceGroups } from './source-groups.ts'
 import { safeHttpUrl, shortUrl } from './source-links-model.ts'
 import { SourceLogo } from './source-logo.tsx'
+import { sourceStateOf } from './source-table-model.ts'
 import { type ShownSource, type SourceInput, type Tone, isShownSource, sourceRow } from './status.ts'
 import type { Translate } from './strings.ts'
 export function Section({
@@ -54,8 +56,7 @@ export function Sources({
   t,
   sources,
   retry,
-  collected = true,
-  compact = false
+  collected = true
 }: {
   t: Translate
   sources: SourceInput[]
@@ -63,29 +64,81 @@ export function Sources({
   retry?: SourceRetry
   /** False before this card's research: a row with nothing yet reads Not collected yet. */
   collected?: boolean
-  /** The Sources card of Details: one line per source, no details, no group headings. */
-  compact?: boolean
 }): JSX.Element {
   if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
   // The links the owner pasted first; what research looked at by itself below, under its own heading.
   const { pasted, found } = sourceGroups(sources)
-  const both = !compact && pasted.length > 0 && found.length > 0
+  const both = pasted.length > 0 && found.length > 0
   const item = (s: SourceInput): JSX.Element => (
-    <SourceItem
-      key={`${s.source}:${s.pastedLink ?? ''}`}
-      t={t}
-      s={s}
-      retry={retry}
-      collected={collected}
-      compact={compact}
-    />
+    <SourceItem key={`${s.source}:${s.pastedLink ?? ''}`} t={t} s={s} retry={retry} collected={collected} />
   )
   return (
-    <div className="tracy-wo-srcs" data-compact={compact ? '' : undefined}>
+    <div className="tracy-wo-srcs">
       {both ? <p className="tracy-wo-src-group">{t('source.usedHere')}</p> : null}
       {pasted.map(item)}
       {both ? <p className="tracy-wo-src-group">{t('source.alsoLookedAt')}</p> : null}
       {found.map(item)}
+    </div>
+  )
+}
+
+/**
+ * The Sources table of the Workspace card (#537, option C): a Source column (glyph, name, the link as an anchor) and a
+ * State column of two lines (state, then the date it was collected or the reason it could not be). No chips.
+ */
+export function SourcesTable({
+  t,
+  sources,
+  researched
+}: {
+  t: Translate
+  sources: SourceInput[]
+  /** This card's research has finished and does not run again now (`source-table-model.ts sourceStateOf`). */
+  researched: boolean
+}): JSX.Element {
+  if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
+  const locale = interfaceLocale() ?? 'en'
+  return (
+    <div className="tracy-wo-stab" role="table" aria-label={t('details.section.sources')}>
+      <div className="tracy-wo-stab-row tracy-wo-stab-head" role="row">
+        <span role="columnheader">{t('source.table.source')}</span>
+        <span role="columnheader">{t('source.table.state')}</span>
+      </div>
+      {sources.map((s) => {
+        const pastedLink = pastedLinkOf(s)
+        const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
+        const view = sourceStateOf(s, researched, locale)
+        const detail =
+          view.detail === null ? null : 'text' in view.detail ? view.detail.text : t(view.detail.key)
+        return (
+          <div
+            key={`${s.source}:${s.pastedLink ?? s.ref ?? ''}`}
+            className="tracy-wo-stab-row"
+            role="row"
+            data-state={view.state}
+          >
+            <span className="tracy-wo-stab-src" role="cell">
+              <SourceLogo source={s.source} href={link ?? s.ref} />
+              <span className="tracy-wo-stab-name">{sourceLabel(t, s.source, pastedLink ?? s.ref)}</span>
+              {link !== null ? (
+                <a
+                  href={link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={link}
+                  className="tracy-wo-src-link tracy-wo-stab-link"
+                >
+                  {shortUrl(link)}
+                </a>
+              ) : null}
+            </span>
+            <span className="tracy-wo-stab-state" role="cell">
+              <span className="tracy-wo-stab-word">{t(view.key)}</span>
+              {detail !== null ? <span className="tracy-wo-stab-detail">{detail}</span> : null}
+            </span>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -105,14 +158,12 @@ function SourceItem({
   t,
   s,
   retry,
-  collected: researched,
-  compact
+  collected: researched
 }: {
   t: Translate
   s: SourceInput
   retry?: SourceRetry
   collected: boolean
-  compact: boolean
 }): JSX.Element {
   const row = sourceRow(s)
   const pastedLink = pastedLinkOf(s)
@@ -190,7 +241,6 @@ function SourceItem({
       </Badge>
     </>
   )
-  if (compact) return <div className="tracy-wo-src tracy-wo-src-line">{head}</div>
   return (
     <details
       className="tracy-wo-src"

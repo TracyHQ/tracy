@@ -1,0 +1,96 @@
+/**
+ * The Sources table of the Workspace card (#537, option C): one state per source row, the two lines of its State
+ * column, and the summary beside the Sources title (a progress bar of one segment per row and "2 of 3 read · Nov 10").
+ * The summary is counted from the same row states the table draws, so the two never disagree.
+ * Pure: no DOM, no fetch, no clock read. Dates are formatted with the locale it is given.
+ */
+import { reasonKey, type SourceInput, sourceRow } from './status.ts'
+import type { WorkspaceText } from './workspace-model.ts'
+
+/**
+ * waiting: research has not run (or runs now) · collected: research read it · failed: research could not read it ·
+ * new: a link added after research, waiting for the next research.
+ */
+export type SourceState = 'waiting' | 'collected' | 'failed' | 'new'
+
+export interface SourceStateView {
+  state: SourceState
+  /** The first line of the State column. */
+  key: string
+  /** The muted second line: the date it was collected, or the reason it could not be; null when there is none. */
+  detail: WorkspaceText | null
+}
+
+const STATE_KEY: Readonly<Record<SourceState, string>> = {
+  waiting: 'source.state.waiting',
+  collected: 'source.state.collected',
+  failed: 'source.state.failed',
+  new: 'source.state.new'
+}
+
+/** Reason keys that are not a reason a seller can read under Could not collect. */
+const NO_REASON = new Set(['reason.other', 'reason.not_collected'])
+
+/** A short day and month (Nov 10), or null for a missing or broken date. */
+export function shortDate(iso: unknown, locale: string, timeZone?: string): string | null {
+  if (typeof iso !== 'string' || iso === '') return null
+  const at = Date.parse(iso)
+  if (Number.isNaN(at)) return null
+  try {
+    return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short', timeZone }).format(at)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * The state of one source row. `researched`: this card's research has finished and does not run again now; a row
+ * with no outcome then is a link added since. The failure reason is the server's own `reason` code when it names
+ * one the screen knows; with none, the row reads Could not collect alone (no reason is made up).
+ */
+export function sourceStateOf(s: SourceInput, researched: boolean, locale: string): SourceStateView {
+  const { tone } = sourceRow(s)
+  if (tone === 'ok' || tone === 'partial') {
+    // The day its data was collected (#524), in UTC like the Sources sub-page.
+    const date = shortDate(s.collectedAt, locale, 'UTC')
+    return { state: 'collected', key: STATE_KEY.collected, detail: date === null ? null : { text: date } }
+  }
+  if (tone === 'failed' || tone === 'blocked' || tone === 'skipped') {
+    const key = reasonKey(s.reason)
+    return {
+      state: 'failed',
+      key: STATE_KEY.failed,
+      detail: key === null || NO_REASON.has(key) ? null : { key }
+    }
+  }
+  const state: SourceState = researched ? 'new' : 'waiting'
+  return { state, key: STATE_KEY[state], detail: null }
+}
+
+export interface SourcesSummaryInput {
+  /** The row states the table draws, in its order. */
+  states: readonly SourceState[]
+  /** This card's research has finished once (`researchOf().done`). */
+  researchDone: boolean
+  /** Research runs now, first time or again. */
+  researchMoving: boolean
+  researchedAt: string | null
+  locale: string
+}
+
+/** The summary beside the Sources title: how many rows were read, then when, or what is still to do. */
+export function sourcesSummary(input: SourcesSummaryInput): WorkspaceText[] {
+  const { states } = input
+  const read = states.filter((s) => s === 'collected').length
+  const fresh = states.filter((s) => s === 'new').length
+  const head: WorkspaceText = { key: 'workspace.sum.read', params: { read, total: states.length } }
+  if (input.researchMoving) return [head, { key: 'workspace.sum.researching' }]
+  if (!input.researchDone) return [head, { key: 'workspace.sum.notRun' }]
+  if (fresh > 0)
+    return [
+      head,
+      { key: `workspace.sum.newLinks.${fresh === 1 ? 'one' : 'other'}`, params: { count: fresh } }
+    ]
+  const date = shortDate(input.researchedAt, input.locale)
+  return date === null ? [head] : [head, { text: date }]
+}

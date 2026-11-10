@@ -1,7 +1,9 @@
 /**
  * The Workspace card of Details (#537, option D): one full width card under the Progress band, its four sections drawn
  * from `workspace-model.ts`. A section with content is a row that opens and folds on a press (several may be open); a
- * locked section is one muted row with a lock pill. The status pill is the single trailing action. The seller's open/closed choices live in session storage per place.
+ * locked section is one muted row with a lock pill. The status pill is the single trailing action; the Sources row
+ * also carries Add source before it, and keeps its summary (a progress bar and how many links were read) while open.
+ * The seller's open/closed choices live in session storage per place.
  */
 
 import { hostOf } from '@tracy/wo-views'
@@ -11,6 +13,7 @@ import { type JSX, type ReactNode, useCallback, useEffect, useId, useState } fro
 import type { DemoCommand } from './demo-block-model.ts'
 
 import type { SubSection } from './section-model.ts'
+import type { SourceState } from './source-table-model.ts'
 import type { Translate } from './strings.ts'
 import {
   readOpened,
@@ -69,16 +72,34 @@ export const demoHostOf = (command: DemoCommand): string | null =>
 const textOf = (t: Translate, parts: WorkspaceText[]): string =>
   parts.map((p) => ('text' in p ? p.text : t(p.key, p.params))).join(' · ')
 
+/** The progress bar before the Sources summary: one segment per source row, coloured by its state. */
+function SourcesBar({ states }: { states: readonly SourceState[] }): JSX.Element | null {
+  if (states.length === 0) return null
+  return (
+    <span className="tracy-wo-sprog" aria-hidden="true">
+      {states.map((state, i) => (
+        <i key={i} data-state={state} />
+      ))}
+    </span>
+  )
+}
+
 function Row({
   t,
   section,
   body,
+  lead,
+  tool,
   onToggle,
   onSection
 }: {
   t: Translate
   section: WorkspaceSection
   body: ReactNode
+  /** Drawn before the summary text (the Sources progress bar). */
+  lead?: ReactNode
+  /** An action of the row before its status pill (Add source), outside the toggle. */
+  tool?: ReactNode
   onToggle: (id: WorkspaceId, now: boolean) => void
   onSection: (id: SubSection) => void
 }): JSX.Element {
@@ -92,7 +113,17 @@ function Row({
         <Icon />
       </span>
       <span className="tracy-wo-ws-name">{title}</span>
-      <span className="tracy-wo-ws-sum">{expanded ? '' : textOf(t, section.summary)}</span>
+      <span className="tracy-wo-ws-sum">
+        {/* Sources keeps its summary beside the title while open: it says how many links were read. */}
+        {expanded && id !== 'sources' ? (
+          ''
+        ) : (
+          <>
+            {lead}
+            {textOf(t, section.summary)}
+          </>
+        )}
+      </span>
     </>
   )
   return (
@@ -117,6 +148,7 @@ function Row({
         ) : (
           <span className="tracy-wo-ws-toggle">{head}</span>
         )}
+        {tool}
         {state === 'locked' ? (
           <span className="tracy-wo-ws-pill" data-kind="locked" role="img" aria-label={t('workspace.locked')}>
             <Lock aria-hidden="true" />
@@ -150,6 +182,7 @@ export function WorkspaceCard({
   opportunityId,
   input,
   bodies,
+  addSource,
   onSection
 }: {
   t: Translate
@@ -158,6 +191,8 @@ export function WorkspaceCard({
   input: Omit<WorkspaceInput, 'opened'>
   /** The content of each section when it is open. */
   bodies: Record<WorkspaceId, ReactNode>
+  /** The Add source button of the Sources row, drawn whether the row is open or folded. */
+  addSource?: ReactNode
   onSection: (id: SubSection) => void
 }): JSX.Element {
   const { opened, toggle } = useOpened(opportunityId)
@@ -169,7 +204,16 @@ export function WorkspaceCard({
         <span className="tracy-wo-ws-subtitle">{t('workspace.subtitle')}</span>
       </div>
       {sections.map((s) => (
-        <Row key={s.id} t={t} section={s} body={bodies[s.id]} onToggle={toggle} onSection={onSection} />
+        <Row
+          key={s.id}
+          t={t}
+          section={s}
+          body={bodies[s.id]}
+          lead={s.id === 'sources' ? <SourcesBar states={input.sources} /> : undefined}
+          tool={s.id === 'sources' && s.state !== 'locked' ? addSource : undefined}
+          onToggle={toggle}
+          onSection={onSection}
+        />
       ))}
     </section>
   )
