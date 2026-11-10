@@ -8,6 +8,7 @@ import { fixedTextChecks, fixedTextId, mergeSite } from '../template-kit/lib/kit
 import { matchCmsStrings } from '../template-kit/lib/site/cms-strings.mjs'
 import { languageFileRank } from '../template-kit/lib/site/adapters/joomla.mjs'
 import { judgeHide } from '../template-kit/lib/site/hide-cms-text.mjs'
+import { retainFixedTexts } from '../template-kit/site-cli.mjs'
 
 const INI =
   'JPREV="Prev"\nJNEXT="Next"\nJPREVIOUS_TITLE="Previous article: %s"\nFOOT_LINE2="Example CMS is free software."\n'
@@ -176,4 +177,51 @@ test('one value in several language files: the line is named after the template 
     languageFileRank('language/en-GB/com_users.ini', 'tpl_x') <
       languageFileRank('language/en-GB/en-GB.com_mailer.ini', 'tpl_x')
   )
+})
+
+test('filtered CMS candidates cannot shift measurement errors onto another fixed text', () => {
+  const fixedTexts = [
+    { text: 'Template words', notPrintedByCms: true },
+    { text: 'Unreadable CMS sentence', canHide: null, evidence: { reason: 'unreadable' } },
+    { text: 'Another template guess', notPrintedByCms: true },
+    { text: 'Invalid CMS measurement', canHide: null },
+    { text: 'Kept CMS sentence', canHide: true }
+  ]
+  const unrelated = { kind: 'missing', field: 'site.forms[0]', reason: 'unrelated' }
+  const errors = [
+    { kind: 'missing', field: 'site.fixedTexts[0].canHide', reason: 'filtered candidate' },
+    { kind: 'missing', field: 'site.fixedTexts[1].canHide', reason: 'unreadable' },
+    { kind: 'missing', field: 'site.fixedTexts[2].canHide', reason: 'other filtered candidate' },
+    { kind: 'missing', field: 'site.fixedTexts[3].canHide', reason: 'nothing changed' },
+    unrelated
+  ]
+  const before = structuredClone({ fixedTexts, errors })
+  const result = retainFixedTexts(fixedTexts, errors)
+  assert.deepEqual(result.fixedTexts, [fixedTexts[1], fixedTexts[3], fixedTexts[4]])
+  assert.deepEqual(result.errors, [
+    { ...errors[1], field: 'site.fixedTexts[0].canHide' },
+    { ...errors[3], field: 'site.fixedTexts[1].canHide' },
+    unrelated
+  ])
+  for (const error of result.errors.slice(0, 2)) {
+    const index = Number(/\[(\d+)\]/.exec(error.field)[1])
+    assert.equal(result.fixedTexts[index].canHide, null)
+  }
+  assert.strictEqual(result.fixedTexts[0], fixedTexts[1])
+  assert.strictEqual(result.errors[2], unrelated)
+  assert.deepEqual({ fixedTexts, errors }, before)
+})
+
+test('unfiltered fixed texts preserve null and skipped-measurement errors without hiding invalid paths', () => {
+  const fixedTexts = [
+    { text: 'CMS words', canHide: null },
+    { text: 'More CMS words', canHide: false }
+  ]
+  const errors = [
+    { kind: 'missing', field: 'site.fixedTexts[0].canHide', reason: 'measurement invalid' },
+    { kind: 'missing', field: 'site.fixedTexts[1].canHide', reason: 'not measured (--no-hide-measure)' },
+    { kind: 'missing', field: 'site.fixedTexts[20].canHide', reason: 'invalid original index' }
+  ]
+  assert.deepEqual(retainFixedTexts(fixedTexts, errors), { fixedTexts, errors })
+  assert.deepEqual(retainFixedTexts([], []), { fixedTexts: [], errors: [] })
 })

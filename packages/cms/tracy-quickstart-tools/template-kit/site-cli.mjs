@@ -68,6 +68,26 @@ export function pagesToRead(map, captureIndex, cap = 400) {
     .map((p) => ({ ...p, pageId: pageIdOf(p.slug) }))
 }
 
+/** Retain CMS-printed entries together with their measurement errors. */
+export function retainFixedTexts(fixedTexts, errors) {
+  const indices = new Map()
+  const retained = fixedTexts.filter((f, i) => {
+    if (f.notPrintedByCms) return false
+    indices.set(i, indices.size)
+    return true
+  })
+  return {
+    fixedTexts: retained,
+    errors: errors.flatMap((error) => {
+      const match = /^site\.fixedTexts\[(\d+)\](?=\.|$)/.exec(error.field ?? '')
+      if (!match || Number(match[1]) >= fixedTexts.length) return [error]
+      const index = indices.get(Number(match[1]))
+      if (index === undefined) return []
+      return [{ ...error, field: error.field.replace(match[0], `site.fixedTexts[${index}]`) }]
+    })
+  }
+}
+
 /**
  * What the EmDash adapter reads beyond the theme files: the site settings through the REST door (agent token file,
  * `--token-file`) and the content map. Other platforms read everything through the source.
@@ -142,8 +162,9 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
     if (fixed.length && cms && !o['no-hide-measure']) {
       const writer = siteWriter({ filesCommand: str(o['files-command']), webroot: str(o.webroot) })
       say(fixed.length, 'fixed CMS sentences; measuring whether each can be hidden')
-      r.errors.push(
-        ...(await measureFixedTexts({
+      const measured = retainFixedTexts(
+        fixed,
+        await measureFixedTexts({
           browser,
           siteUrl: o.site,
           hostHeader,
@@ -153,10 +174,11 @@ export async function runSite({ o, out, chromium, capture = null, log: say = log
           readFile: source.readFile,
           writer,
           log: say
-        }))
+        })
       )
       // Words a short language value only seemed to print stay template words: the kit measures them itself.
-      r.site.fixedTexts = fixed.filter((f) => !f.notPrintedByCms)
+      r.site.fixedTexts = measured.fixedTexts
+      r.errors.push(...measured.errors)
     } else if (fixed.length)
       for (const [i] of fixed.entries())
         r.errors.push({
