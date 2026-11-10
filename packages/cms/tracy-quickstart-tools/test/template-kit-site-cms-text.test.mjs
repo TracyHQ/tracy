@@ -9,6 +9,7 @@ import { test } from 'node:test'
 import { siteWriter, writable } from '../template-kit/lib/site/adapters/site-writer.mjs'
 import { siteSource } from '../template-kit/lib/site/adapters/source.mjs'
 import {
+  shortPattern,
   matchCmsStrings,
   parseIni,
   shownText,
@@ -152,4 +153,122 @@ test('whole words: a sentence ending in punctuation counts against the control s
   assert.equal(wholeWordCount('SORT BY\nNAME\n MANUFACTURER:SELECT MANUFACTURER', 'MANUFACTURER:'), 1)
   assert.equal(wholeWordCount('Previous page', 'Prev'), 0)
   assert.equal(wholeWordCount('Start Prev 1 2 Next End', 'End'), 1)
+})
+
+test('dynamic CMS producer retains actual matched language formats and refuses competing identities', () => {
+  const files = [{ file: 'cms.ini', text: 'HITS="Hits: %d"\nCOUNT="Hits: %s"\nSTATIC="Prev"\n' }]
+  const { fixedTexts } = matchCmsStrings({
+    lines: [
+      { block: 'body-a', text: 'Hits: 24' },
+      { block: 'body-a', text: 'Prev' }
+    ],
+    files
+  })
+  const hits = fixedTexts[0]
+  assert.deepEqual(hits.source.formats, [
+    { file: 'cms.ini', constant: 'HITS', value: 'Hits: %d' },
+    { file: 'cms.ini', constant: 'COUNT', value: 'Hits: %s' }
+  ])
+  assert.deepEqual(hits.source.constants, ['HITS', 'COUNT'])
+  assert.ok(shortPattern(hits.source.formats[0].value).test('hits: 25'))
+  assert.equal(fixedTexts[1].source.formats, undefined, 'literal static records keep their existing shape')
+  const competing = matchCmsStrings({
+    lines: [{ block: 'body-a', text: 'Hits: 24' }],
+    files: [{ file: 'cms.ini', text: files[0].text + 'OTHER="Hits: 2%s"\n' }]
+  }).fixedTexts[0]
+  assert.equal(competing.source.formats.length, 3)
+  assert.equal(
+    judgeHide({
+      text: competing.text,
+      source: competing.source,
+      textBefore: 'Hits: 24',
+      textAfter: '',
+      changed: true
+    }).canHide,
+    null,
+    'different matching formats are ambiguous, not a broader wildcard'
+  )
+  for (const formats of [
+    [],
+    [{ file: 'cms.ini', constant: 'HITS' }],
+    [{ file: 'cms.ini', constant: 'HITS', value: '%s' }]
+  ])
+    assert.equal(
+      judgeHide({
+        text: 'Hits: 24',
+        source: { file: 'cms.ini', constant: 'HITS', formats },
+        textBefore: 'Hits: 24',
+        textAfter: '',
+        changed: true
+      }).canHide,
+      null
+    )
+})
+
+test('dynamic CMS hiding counts current format occurrences, never the captured counter value', () => {
+  const { fixedTexts } = matchCmsStrings({
+    lines: [{ block: 'body-a', text: 'Hits: 12' }],
+    files: [{ file: 'cms.ini', text: 'HITS="Hits: %d"\n' }]
+  })
+  const f = fixedTexts[0]
+  const judge = (textBefore, textAfter, changed = true, source = f.source) =>
+    judgeHide({ text: f.text, source, textBefore, textAfter, changed })
+  assert.equal(judge('Title\nHits: 24', 'Title\nHits: 25').canHide, false)
+  assert.equal(
+    judge('Title\nHits: 12', 'Title\nHits: 25').canHide,
+    false,
+    'a changing counter is no removed sentence'
+  )
+  assert.equal(
+    judge('Hits: 24\nHits: 25', 'Hits: 26').canHide,
+    false,
+    'a remaining format-bound occurrence is still shown'
+  )
+  assert.equal(judge('Title\nHits: 24', 'Title').canHide, true)
+  assert.equal(judge('Title\nHits: 24', 'Title', false).canHide, null)
+  assert.equal(judge('Title', 'Title').canHide, null, 'absent before stays unknown')
+  assert.equal(judge('Other Hits: 24', '').canHide, null, 'only a whole source-format line matches')
+  assert.equal(judge(undefined, '').canHide, null)
+  assert.equal(judge('Hits: 24', undefined).canHide, null)
+  assert.equal(judge('Hits: 12', '', true, { ...f.source, formats: [] }).canHide, null)
+  const formats = [...f.source.formats, { file: 'cms.ini', constant: 'OTHER', value: 'Hits: 1%s' }]
+  assert.equal(judge('Hits: 12', '', true, { ...f.source, formats }).canHide, null)
+  assert.equal(
+    judgeHide({ text: 'Prev', textBefore: 'Previous Prev', textAfter: 'Previous', changed: true }).canHide,
+    true
+  )
+  assert.equal(
+    judgeHide({ text: 'Prev', textBefore: 'Prev', textAfter: 'Prev', changed: true }).canHide,
+    false
+  )
+})
+
+test('dynamic CMS reflow cannot turn a remaining counter into a successful hide', () => {
+  const f = matchCmsStrings({
+    lines: [{ block: 'body-a', text: 'Hits: 24' }],
+    files: [{ file: 'cms.ini', text: 'HITS="Hits: %d"\n' }]
+  }).fixedTexts[0]
+  const judge = (textBefore, textAfter) =>
+    judgeHide({ text: f.text, source: f.source, textBefore, textAfter, changed: true })
+  for (const after of ['Title Hits: 25', 'Title\nOther Hits: 25', 'Title\nHits:\n25']) {
+    const result = judge('Title\nHits: 24', after)
+    assert.equal(result.canHide, null, `possible joined or reflowed counter stays unknown: ${after}`)
+    assert.match(result.reason, /joined|reflowed/)
+  }
+  assert.equal(
+    judge('Other Hits: 24', 'Other Hits: 25').canHide,
+    null,
+    'embedded before is no positive source identification'
+  )
+  assert.equal(judge('Title\nHits: 24', 'Title').canHide, true, 'actual removal still passes')
+  assert.equal(
+    judge('Title\nHits: 24', 'Title\nHits: 25').canHide,
+    false,
+    'anchored current occurrence still shows'
+  )
+  assert.equal(
+    judgeHide({ text: 'Prev', textBefore: 'Title Prev', textAfter: 'Title', changed: true }).canHide,
+    true,
+    'static literal semantics are unchanged'
+  )
 })

@@ -8,6 +8,7 @@ import { keepDeclaredSiteFields } from './declared-site-fields.mjs'
 import { neutralKey } from './ids.mjs'
 import { indexMap, ownerOfPath } from './map-index.mjs'
 import { linkAction, listHolds } from './site/helpers.mjs'
+import { cmsFormatPattern } from './site/cms-strings.mjs'
 
 const ITEM_KINDS = /^(article|contact|user|userProfile)$/ // an entity with a page of its own in a collection
 
@@ -70,9 +71,13 @@ export function mergeSite(kit, doc, map, words = null, previous = null) {
     // the site name is a name slot, not fixed text.
     const cms = fixedOf(b.id)
     const said = [...cms.map((c) => c.text), ...namedOf(b.id)].map(normText).filter(Boolean)
+    const formats = cms.map((c) => cmsFormatPattern(c.source)).filter(Boolean)
     // Template words no language string prints: measured in the DOM (measure-words-links.mjs).
     const plain = (b.fixedText ?? [])
-      .filter((t) => !said.some((x) => x.includes(normText(t.text))))
+      .filter(
+        (t) =>
+          !said.some((x) => x.includes(normText(t.text))) && !formats.some((p) => p.test(normText(t.text)))
+      )
       .map((t) => {
         const m = words?.words?.[b.id]?.[t.text]
         return m

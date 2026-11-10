@@ -9,6 +9,7 @@ import { textShift } from '../empty-frame.mjs'
 import { urlOfPath } from '../kit-paths.mjs'
 import { assignedAt } from '../map-index.mjs'
 import { layoutOf } from '../read-frames.js'
+import { cmsFormatPattern } from './cms-strings.mjs'
 
 const WIDTH = 1440
 const norm = (s) =>
@@ -39,18 +40,38 @@ export function wholeWordCount(within, text) {
   return [...norm(within).matchAll(new RegExp(`${before}${want}${after}`, 'gu'))].length
 }
 
-/** The verdict of one measurement: the words left when they show fewer times, as whole words, than before. */
-export function judgeHide({ textBefore, textAfter, text, changed }) {
-  const before = wholeWordCount(textBefore, text)
+/** Current whole-line occurrences of a source-bound format; literal words keep their existing boundaries. */
+function sentenceCount(within, text, source) {
+  if (source?.formats === undefined) return wholeWordCount(within, text)
+  const pattern = cmsFormatPattern(source)
+  if (!pattern || typeof within !== 'string') return null
+  return within.split(/\r?\n/).filter((line) => pattern.test(norm(line))).length
+}
+
+/** Literal words must leave; a dynamic language format must have no occurrence left at any current value. */
+export function judgeHide({ textBefore, textAfter, text, changed, source }) {
+  const before = sentenceCount(textBefore, text, source)
+  const after = sentenceCount(textAfter, text, source)
+  if (before === null || after === null)
+    return {
+      canHide: null,
+      reason: 'the matched language formats are invalid, ambiguous or their text unreadable'
+    }
   if (!before) return { canHide: null, reason: 'the sentence was not on the page before the change' }
-  if (wholeWordCount(textAfter, text) >= before)
+  if (source?.formats !== undefined ? after > 0 : after >= before)
     return { canHide: false, reason: 'the sentence still shows with the override set' }
+  // Losing a line boundary does not prove removal; embedded matches can only withhold a verdict.
+  if (
+    source?.formats !== undefined &&
+    new RegExp(cmsFormatPattern(source).source.slice(1, -1)).test(norm(textAfter))
+  )
+    return { canHide: null, reason: 'the language format may still show in joined or reflowed text' }
   if (!changed) return { canHide: null, reason: 'nothing in the block changed: measurement invalid' }
   return { canHide: true, reason: 'the sentence left the page and the block changed with it' }
 }
 
 /** Whether a reading of the block shows the sentence (an unreadable block counts as showing: its error is kept). */
-const showsSentence = (read, text) => !!read?.error || wholeWordCount(read?.text, text) > 0
+const showsSentence = (read, f) => !!read?.error || sentenceCount(read?.text, f.text, f.source) > 0
 
 async function readBlock(ctx, { siteUrl, idx, at }) {
   const opened = await openFrozen(ctx, urlOfPath(at.path, siteUrl), assignedAt(idx, at.path), null, {
@@ -94,12 +115,21 @@ export async function measureFixedTexts({
         errors.push({ kind: 'missing', field, reason: 'no page where the sentence shows' })
         continue
       }
+      if (f.source.formats !== undefined && !cmsFormatPattern(f.source)) {
+        f.canHide = null
+        errors.push({
+          kind: 'missing',
+          field,
+          reason: 'the matched language formats are invalid or ambiguous'
+        })
+        continue
+      }
       // One reading of a block before any change serves every sentence it shows.
       const beforeKey = `${f.at.path}|${f.at.raw}`
       if (!befores.has(beforeKey)) befores.set(beforeKey, await readBlock(ctx, { siteUrl, idx, at: f.at }))
       // A page whose script settles late (a pager a script shows after load) may lack the words on one reading:
       // the block is read once more before the sentence is called absent.
-      if (!showsSentence(befores.get(beforeKey), f.text))
+      if (!showsSentence(befores.get(beforeKey), f))
         befores.set(beforeKey, await readBlock(ctx, { siteUrl, idx, at: f.at }))
       const before = befores.get(beforeKey)
       if (before.error) {
@@ -127,7 +157,13 @@ export async function measureFixedTexts({
       const shift = textShift(before.layout, after.layout)
       const heightChange = (after.layout?.block?.height ?? 0) - (before.layout?.block?.height ?? 0)
       const changed = shift.gone > 0 || shift.moved > 0 || heightChange !== 0
-      let verdict = judgeHide({ textBefore: before.text, textAfter: after.text, text: f.text, changed })
+      let verdict = judgeHide({
+        textBefore: before.text,
+        textAfter: after.text,
+        text: f.text,
+        changed,
+        source: f.source
+      })
       // A short value was a guess: the words still showing with every candidate emptied means the CMS does not
       // print them from these strings (the template does), so they are measured as template words instead.
       if (verdict.canHide === false && f.source.short) {

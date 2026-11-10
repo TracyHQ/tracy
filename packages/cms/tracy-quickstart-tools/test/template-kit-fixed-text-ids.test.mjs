@@ -225,3 +225,52 @@ test('unfiltered fixed texts preserve null and skipped-measurement errors withou
   assert.deepEqual(retainFixedTexts(fixedTexts, errors), { fixedTexts, errors })
   assert.deepEqual(retainFixedTexts([], []), { fixedTexts: [], errors: [] })
 })
+
+test('dynamic CMS merge keeps one source-bound counter instead of stale unbound template words', () => {
+  const MAP = { entities: [], slots: [], pages: [] }
+  const make = () => ({
+    pages: [],
+    errors: [],
+    blocks: [
+      {
+        id: 'body-a',
+        lists: [],
+        links: [],
+        frames: [],
+        fixedText: [{ text: 'Hits: 24' }, { text: 'Other Hits: 24' }, { text: 'Prev' }]
+      }
+    ]
+  })
+  const cms = matchCmsStrings({
+    lines: [{ block: 'body-a', text: 'Hits: 25' }],
+    files: [{ file: 'cms.ini', text: 'HITS="Hits: %d"\n' }]
+  }).fixedTexts[0]
+  cms.canHide = null
+  const sourceError = {
+    kind: 'missing',
+    field: 'site.fixedTexts[0].canHide',
+    reason: 'actual observation still required'
+  }
+  const doc = { site: { fixedTexts: [cms] }, mainHeadings: [], errors: [sourceError] }
+  const kit = mergeSite(make(), doc, MAP)
+  assert.deepEqual(
+    kit.blocks[0].fixedText.map((f) => f.text),
+    ['Other Hits: 24', 'Prev', 'Hits: 25']
+  )
+  assert.equal(kit.blocks[0].fixedText.at(-1).source.constant, 'HITS')
+  assert.equal(kit.blocks[0].fixedText.at(-1).canHide, null)
+  assert.ok(kit.errors.includes(sourceError), 'the real source-bound error survives merge')
+  assert.ok(!kit.errors.some((e) => e.field.includes('fixedText[Hits: 24]')))
+  const ambiguous = structuredClone(doc)
+  ambiguous.site.fixedTexts[0].source.formats.push({ file: 'cms.ini', constant: 'OTHER', value: 'Hits: 2%s' })
+  assert.ok(
+    mergeSite(make(), ambiguous, MAP).blocks[0].fixedText.some((f) => f.text === 'Hits: 24'),
+    'ambiguous source never absorbs stale template words'
+  )
+  const otherBlock = structuredClone(doc)
+  otherBlock.site.fixedTexts[0].block = 'body-b'
+  assert.ok(
+    mergeSite(make(), otherBlock, MAP).blocks[0].fixedText.some((f) => f.text === 'Hits: 24'),
+    'format binding is block-local'
+  )
+})

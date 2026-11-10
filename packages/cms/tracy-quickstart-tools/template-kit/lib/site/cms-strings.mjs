@@ -73,6 +73,23 @@ export function shortPattern(value) {
   return new RegExp(`^${parts.join('.+?')}$`)
 }
 
+/** The one pattern proved by the matched language formats; competing or malformed identities stay unknown. */
+export function cmsFormatPattern(source) {
+  const formats = source?.formats
+  if (
+    !Array.isArray(formats) ||
+    !formats.length ||
+    !formats.some((f) => f?.file === source.file && f?.constant === source.constant)
+  )
+    return null
+  const patterns = formats.map((f) =>
+    typeof f?.file === 'string' && typeof f?.constant === 'string' && typeof f?.value === 'string'
+      ? shortPattern(f.value)
+      : null
+  )
+  return patterns.every((p) => p && p.source === patterns[0]?.source) ? patterns[0] : null
+}
+
 /**
  * @param {{lines: Array<{block: string, text: string, pageId?: string, path?: string, raw?: string}>, files: Array<{file: string, text: string}>, slotTexts?: string[], rankFile?: (file: string) => number}} o
  * @returns {{fixedTexts: object[], nameLines: object[]}} each `{block, text, pages, source: {file, constant}, placeholders}`
@@ -105,13 +122,18 @@ export function matchCmsStrings({ lines, files, slotTexts = [], rankFile = () =>
     // and ruled out on its own, never taking a real CMS line of that value in the block down with it.
     const key = hit.short ? `${l.block}|${hit.constant}|${text}` : `${l.block}|${hit.constant}`
     const constants = [...new Set(hits.map((h) => h.constant))]
+    const matching = strings.filter((s) => s.pattern.test(text))
+    const formats = matching.some((s) => s.value.match(PLACEHOLDER))
+      ? matching.map(({ file, constant, value }) => ({ file, constant, value }))
+      : null
     const rec = by.get(key) ?? {
       block: l.block,
       text: String(l.text).replace(/\s+/g, ' ').trim(),
       source: {
         file: hit.file,
         constant: hit.constant,
-        ...(hit.short ? { short: true, constants } : {})
+        ...(hit.short ? { short: true, constants } : {}),
+        ...(formats ? { formats } : {})
       },
       placeholders: [...new Set(hit.value.match(PLACEHOLDER) ?? [])],
       printsName: NAME_PLACEHOLDER.test(hit.value),
