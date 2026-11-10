@@ -32,6 +32,7 @@ test('Profile approved, no brief: Make content brief, Research reads Approved on
   const v = view({ approval: { ...OK, brief: 'none' } })
   assert.equal(states(v), 'done current future')
   assert.equal(v.lineKey, 'stepper.brief.readyApproved')
+  assert.equal(v.estimateKey, 'stepper.estimate.brief')
   assert.equal(v.action.kind, 'make-brief')
   assert.deepEqual(v.steps[0].status, {
     key: 'stepper.approvedOn',
@@ -58,6 +59,7 @@ test('brief approved: Build your site', () => {
   assert.equal(v.action.kind, 'build')
   assert.equal(en[v.action.labelKey], 'Build your site')
   assert.equal(v.lineKey, 'stepper.build.readyApproved')
+  assert.equal(v.estimateKey, 'stepper.estimate.build')
   assert.equal(reviewChipOf(v).key, 'chip.briefApproved')
 })
 
@@ -344,7 +346,17 @@ test('a new place reads Ready to start with the plain sentence and the Research 
   assert.equal(v.lineKey, 'stepper.research.notStarted')
   assert.equal(
     en['stepper.research.notStarted'],
-    'Tracy reads the links you added and collects this business’s details. Usually 2 to 4 minutes.'
+    'Tracy reads the links you added and collects this business’s details.'
+  )
+  assert.equal(v.estimateKey, 'stepper.estimate.research')
+  assert.equal(en['stepper.estimate.research'], 'Est. 2 to 4 min')
+  assert.equal(en['stepper.estimate.brief'], 'Est. 2 min')
+  assert.equal(en['stepper.estimate.build'], 'Est. 50 min')
+  assert.doesNotMatch(
+    Object.values(en)
+      .filter((x) => /^(Tracy reads|Reading the website|Business facts approved|Brief approved)/.test(x))
+      .join(' '),
+    /minutes/
   )
   assert.equal(en['stepper.ready'], 'Ready to start')
   assert.equal(en[v.action.labelKey], 'Research business facts')

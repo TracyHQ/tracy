@@ -98,11 +98,21 @@ export interface StepperView {
   lineKey: string | null
   /** A job of the current step is running: the button reads Running, disabled, with a spinner. */
   running: boolean
+  /** The duration estimate tag of the current step (`stepper.estimate.*`), or null when none is known. */
+  estimateKey: string | null
   /** The current step stopped: the plain sentence of why (the stepper shows it beside Try again). */
   errorKey: string | null
   action: { kind: StepAction; labelKey: string } | null
   /** The current step waits for the seller's review: its action opens the sub-page to review. */
   review: boolean
+}
+
+/** Where a status line carries a known duration, that estimate is shown as a tag beside the step title. */
+const ESTIMATE_OF: Record<string, string> = {
+  'stepper.research.notStarted': 'stepper.estimate.research',
+  'stepper.research.running': 'stepper.estimate.research',
+  'stepper.brief.readyApproved': 'stepper.estimate.brief',
+  'stepper.build.readyApproved': 'stepper.estimate.build'
 }
 
 const MOVING = new Set(['queued', 'running'])
@@ -328,7 +338,8 @@ export function stepperView(raw: StepperInput): StepperView {
       status
     }
   })
-  return { steps, current, lineKey, running, errorKey, action, review }
+  const estimateKey = errorKey === null && lineKey !== null ? (ESTIMATE_OF[lineKey] ?? null) : null
+  return { steps, current, lineKey, estimateKey, running, errorKey, action, review }
 }
 
 /**

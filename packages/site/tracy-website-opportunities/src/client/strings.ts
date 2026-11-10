@@ -1271,9 +1271,8 @@ export const en = {
   'stepper.done': 'Done',
   'stepper.running': 'Running',
   'stepper.stopped': 'Stopped. Try again.',
-  'stepper.research.notStarted':
-    'Tracy reads the links you added and collects this business’s details. Usually 2 to 4 minutes.',
-  'stepper.research.running': 'Reading the website, Google listing and social pages. Usually 2 to 4 minutes.',
+  'stepper.research.notStarted': 'Tracy reads the links you added and collects this business’s details.',
+  'stepper.research.running': 'Reading the website, Google listing and social pages.',
   'stepper.research.paused': 'Research paused. Resume to finish it.',
   'stepper.research.failed': 'Research could not finish.',
   'stepper.brief.ready': 'Research finished. Make the site content brief to describe the site.',
@@ -1326,9 +1325,11 @@ export const en = {
   'stepper.lock.both': 'Approve the business facts and the brief first',
   'stepper.lock.research': 'Research the business facts first',
   'stepper.lock.researchAgain': 'Run research again first',
-  'stepper.brief.readyApproved':
-    'Business facts approved. Writing the site content brief takes about 2 minutes.',
-  'stepper.build.readyApproved': 'Brief approved. Building your site takes about 50 minutes.',
+  'stepper.brief.readyApproved': 'Business facts approved. Make the site content brief.',
+  'stepper.build.readyApproved': 'Brief approved. Build your site from it.',
+  'stepper.estimate.research': 'Est. 2 to 4 min',
+  'stepper.estimate.brief': 'Est. 2 min',
+  'stepper.estimate.build': 'Est. 50 min',
 
   /** The Progress band at the top of Details (#537): the step list on the left, the current step on the right. */
   'band.kicker': 'Step {n} of {total}',

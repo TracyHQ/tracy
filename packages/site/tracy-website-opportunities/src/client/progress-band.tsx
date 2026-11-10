@@ -129,9 +129,14 @@ export function ProgressBand({
         ) : (
           <>
             <span className="tracy-wo-band-kicker">{t('band.kicker', { n: at + 1, total })}</span>
-            <h3 className="tracy-wo-band-name" title={t(current.nameKey)}>
-              {t(current.nameKey)}
-            </h3>
+            <div className="tracy-wo-band-head">
+              <h3 className="tracy-wo-band-name" title={t(current.nameKey)}>
+                {t(current.nameKey)}
+              </h3>
+              {view.estimateKey !== null ? (
+                <span className="tracy-wo-band-est">{t(view.estimateKey)}</span>
+              ) : null}
+            </div>
             {view.lineKey !== null && view.errorKey === null ? (
               <p className="tracy-wo-band-line" title={t(view.lineKey)}>
                 {t(view.lineKey)}

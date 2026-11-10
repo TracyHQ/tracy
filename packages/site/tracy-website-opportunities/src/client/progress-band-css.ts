@@ -20,6 +20,9 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-lock { display: flex; min-width: 0; height: 16px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-pane { box-sizing: border-box; min-height: 0; overflow: hidden; gap: 6px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-kicker { line-height: 16px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-head { display: flex; align-items: center; gap: 8px; min-width: 0; overflow: hidden; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-est { flex: none; max-width: 40%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-head > .tracy-wo-band-name { flex: 0 1 auto; min-width: 0; margin: 0; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-line { flex: none; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-pane[data-build] .tracy-wo-band-line { -webkit-line-clamp: 1; }
