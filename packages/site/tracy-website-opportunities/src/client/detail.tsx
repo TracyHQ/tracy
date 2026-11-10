@@ -79,8 +79,6 @@ import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
 import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
 import { ratingRowView } from './profile-rating-model.ts'
-import { phonesView } from './profile-phones-model.ts'
-import { ProfilePhonesRows } from './profile-phones-rows.tsx'
 import type { RatingChoice } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
 import { briefSummaryRows, businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
@@ -523,8 +521,6 @@ export function DetailView({
     return 'ok'
   }
   const ratingRow = ratingRowView(profile)
-  // The main phone and the business's other numbers (`business-phones.js`).
-  const phonesRow = phonesView(profile)
   const saveRating = async (choice: RatingChoice): Promise<boolean> => {
     const answer = await api.setRating(id, choice)
     if (!answer.ok) return false
@@ -563,7 +559,11 @@ export function DetailView({
   }
   const sources = asArray<SourceInput>(body.sources).filter((s) => typeof s?.source === 'string')
   // Before research has a row, the links the owner pasted (and the Google listing of a search), Not collected yet.
-  const shownSources = sourcesToShow(sources, body.opportunity)
+  // While research runs (again) the rows are reset to the pasted links, Not collected yet: progress shows in the band.
+  const shownSources = sourcesToShow(
+    researchMovingOf({ research, researchJob: row.job ?? null }) ? [] : sources,
+    body.opportunity
+  )
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
@@ -649,6 +649,14 @@ export function DetailView({
     brief: body.brief,
     briefJob: briefJob.job
   })
+  // A brief being written, or a run that failed with no current brief, leaves the brief card empty (#537): the band
+  // alone shows the job, and the older brief is reset on screen until a new one is made.
+  const briefEmpty =
+    briefSteps.mode === 'running'
+      ? 'brief.beingWritten'
+      : briefSteps.mode === 'failed'
+        ? 'section.meta.brief.none'
+        : null
   const subSteps =
     stepper.current === 'brief' && stepper.running && briefSteps.steps.length > 0
       ? briefSteps.steps.map((s) => ({ key: s.step, label: t(s.labelKey), state: s.state }))
@@ -719,7 +727,6 @@ export function DetailView({
   const facts = [...meta.map(String), added ? t('research.added', { ago: added }) : null].filter(
     (v): v is string => typeof v === 'string' && v !== ''
   )
-  const progress = <DemoProgress t={t} row={row} locale={locale} now={now} />
   const keyMessagesRows = (titled: boolean): JSX.Element | null =>
     keyMessages.length === 0 ? null : (
       <ProfileKeyMessages
@@ -834,7 +841,7 @@ export function DetailView({
       profile={researchMoving ? null : profile}
       bare
       emptyKey={
-        researchMoving ? 'score.notCollected' : research.done ? 'detail.noProfile' : 'research.profileEmpty'
+        researchMoving ? 'reason.not_collected' : research.done ? 'detail.noProfile' : 'research.profileEmpty'
       }
       website={research.done && !researchMoving ? { url: website, link: websiteLink } : null}
     />
@@ -987,10 +994,6 @@ export function DetailView({
               ),
             saveName,
             field: (field, value) => editProfileRow(field, value, true),
-            phonesRows:
-              phonesRow === null || phonesRow.others.length === 0 ? null : (
-                <ProfilePhonesRows t={t} view={phonesRow} />
-              ),
             saveHours,
             saveRating,
             pickReading,
@@ -1021,7 +1024,7 @@ export function DetailView({
         />
       ) : shown === 'sources' ? (
         <>
-          {research.researchedAt === null ? null : (
+          {research.researchedAt === null || researchMoving ? null : (
             <span className="tracy-wo-sources-at">
               {t('sources.researchedAt', {
                 date: new Intl.DateTimeFormat(locale, {
@@ -1036,11 +1039,18 @@ export function DetailView({
           {job !== null && !researchRunning ? (
             <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
           ) : null}
-          <Sources t={t} sources={shownSources} retry={retrySource} collected={research.done} />
+          <Sources
+            t={t}
+            sources={shownSources}
+            retry={retrySource}
+            collected={research.done && !researchMoving}
+          />
           {cancelButton}
         </>
       ) : !research.done ? (
         <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
+      ) : briefEmpty !== null ? (
+        <p className="tracy-wo-muted">{t(briefEmpty)}</p>
       ) : (
         <>
           {heldLine ?? briefLine}
@@ -1139,16 +1149,14 @@ export function DetailView({
             {send ? (
               <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
             ) : null}
-            {siteWait !== null ? (
+            {siteWait !== null || demoView.state === 'queued' || demoView.state === 'building' ? (
+              // While the site builds, the card keeps one static line: the band carries the build (#537).
               <p className="tracy-wo-site-wait">
                 <Lock aria-hidden="true" className="tracy-wo-icon" />
-                {t(siteWait)}
+                {t(siteWait ?? 'site.notYet.building')}
               </p>
             ) : demoStage || isRecord(body.brief) || demoView.state !== 'none' ? (
               <>
-                {demoView.state === 'queued' || demoView.state === 'building' ? (
-                  <p className="tracy-wo-muted tracy-wo-small">{t('site.building')}</p>
-                ) : null}
                 <DemoSiteBlock
                   t={t}
                   row={row}
@@ -1159,16 +1167,13 @@ export function DetailView({
                   bare
                   limitReached={limitReached}
                   onCommand={onDemo}
-                  progress={progress}
                   estimate={
                     buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
                       ?.estimate
                   }
                 />
               </>
-            ) : (
-              progress
-            )}
+            ) : null}
             <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
           </SectionCard>
           <SectionCard
@@ -1182,10 +1187,10 @@ export function DetailView({
             {profileReview ? needsReview : null}
             {profileBlock()}
             {/* Photos & video belong to the Profile (#537): a strip at its foot, opened on the Profile sub-page. */}
-            {research.done ||
-            researchMoving ||
-            mediaView.videos.tiles.length > 0 ||
-            mediaView.photos.groups.some((g) => g.tiles.length > 0) ? (
+            {!researchMoving &&
+            (research.done ||
+              mediaView.videos.tiles.length > 0 ||
+              mediaView.photos.groups.some((g) => g.tiles.length > 0)) ? (
               <div className="tracy-wo-profile-media">
                 <div className="tracy-wo-profile-media-head">
                   <span>
@@ -1215,7 +1220,7 @@ export function DetailView({
             meta={metaOf('sources')}
             open={shownSources.length > 0 ? { labelKey: 'section.open', onOpen: onSection } : null}
           >
-            <Sources t={t} sources={shownSources} collected={research.done} compact />
+            <Sources t={t} sources={shownSources} collected={research.done && !researchMoving} compact />
             {addSourceButton}
             {cancelButton}
           </SectionCard>
@@ -1229,11 +1234,15 @@ export function DetailView({
             open={openTo(briefReview ? 'section.review' : 'section.openBrief')}
           >
             {briefReview ? needsReview : null}
-            {heldLine ?? (
-              <>
-                {briefLine}
-                {briefTable(false)}
-              </>
+            {briefEmpty !== null && research.done ? (
+              <p className="tracy-wo-muted">{t(briefEmpty)}</p>
+            ) : (
+              (heldLine ?? (
+                <>
+                  {briefLine}
+                  {briefTable(false)}
+                </>
+              ))
             )}
           </SectionCard>
         </div>
@@ -1573,7 +1582,6 @@ function BriefLine({
               variant="outline"
               className={chip === 'working' ? 'tracy-wo-chip-brand' : 'tracy-wo-chip-bad'}
             >
-              {chip === 'working' ? <Spinner label={t('brief.chip.working')} /> : null}
               {t(`brief.chip.${chip}`)}
             </Badge>
           )}

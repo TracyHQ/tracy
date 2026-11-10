@@ -84,7 +84,7 @@ test('a new place: nothing collected, the later sections locked', () => {
   assert.equal(r.profile.locked, false)
 })
 
-test('while research runs: partial counts in the brand tone, photos so far', () => {
+test('while research runs: the cards hold nothing partial, the band carries the progress (#537)', () => {
   const r = by(
     sectionMetas({
       ...base,
@@ -96,22 +96,32 @@ test('while research runs: partial counts in the brand tone, photos so far', () 
       media: { photos: 5, videos: 0 }
     })
   )
-  assert.equal(line(r.profile), '3 of 7')
-  assert.equal(line(r.sources), '2 of 5 done')
-  assert.equal(line(r.media), '5 so far')
+  assert.equal(line(r.profile), 'Available after research')
+  assert.equal(line(r.sources), 'Not collected yet')
+  assert.equal(line(r.media), 'None yet')
   assert.equal(line(r.brief), 'Locked')
-  assert.equal(r.sources.tone, 'run')
+  assert.equal(r.sources.tone, 'mute')
   assert.equal(r.media.locked, false)
 })
 
-test('a brief being made reads Running; a building demo Building; a ready one Ready', () => {
+test('research run again: the cards reset until it finishes (#537)', () => {
+  const r = by(sectionMetas({ ...base, research: DONE, researchJob: { state: 'running' } }))
+  assert.equal(line(r.profile), 'Available after research')
+  assert.equal(line(r.sources), 'Not collected yet')
+  assert.equal(line(r.media), 'None yet')
+})
+
+test('a brief being made or failed reads Not made yet; a building demo Not built; a ready one Ready (#537)', () => {
   const running = by(
     sectionMetas({ ...base, brief: null, briefJob: { id: 'j1', state: 'running', step: 'reading' } })
   )
-  assert.equal(line(running.brief), 'Running')
-  assert.equal(running.brief.tone, 'run')
+  assert.equal(line(running.brief), 'Not made yet')
+  assert.equal(running.brief.tone, 'mute')
   assert.equal(running.demo.locked, true)
-  assert.equal(line(by(sectionMetas({ ...base, demo: 'building' })).demo), 'Building')
+  // Made again over an older brief: the older one is reset on screen while the job runs.
+  const again = by(sectionMetas({ ...base, briefJob: { id: 'j2', state: 'running', step: 'writing' } }))
+  assert.equal(line(again.brief), 'Not made yet')
+  assert.equal(line(by(sectionMetas({ ...base, demo: 'building' })).demo), 'Not built')
   const ready = by(sectionMetas({ ...base, demo: 'ready' }))
   assert.equal(line(ready.demo), 'Ready')
   assert.equal(ready.demo.tone, 'ok')

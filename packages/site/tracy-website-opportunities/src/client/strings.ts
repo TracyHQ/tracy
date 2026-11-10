@@ -1424,6 +1424,8 @@ export const en = {
   'site.notYet.profile': 'Not available yet. Approve the business facts, then make the site content brief.',
   'site.notYet.brief': 'Not available yet. Approve the site content brief, then build the site.',
   'site.building': 'Building your site. About 50 minutes.',
+  'site.notYet.building': 'Not available yet. The build is shown in Progress above.',
+  'brief.beingWritten': 'The site content brief is being written. Progress is shown above.',
 
   /** The Demo site block (#515). */
   'demoBlock.title': 'Your site',

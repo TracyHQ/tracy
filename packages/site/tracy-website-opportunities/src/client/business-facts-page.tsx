@@ -34,8 +34,6 @@ export interface FactsDoors {
   saveName: (name: string) => Promise<boolean>
   /** A plain profile row as a field (`phone`, `address`, `bio`), opened at once. */
   field: (field: string, value: string) => JSX.Element | null
-  /** The phones with their sources, as the row drew them (read only, no door edits other numbers). */
-  phonesRows: JSX.Element | null
   saveHours: (choice: HoursChoice) => Promise<HoursSaved>
   saveRating: (choice: RatingChoice) => Promise<boolean>
   pickReading: (item: string, pick: ReadingPick) => Promise<boolean>
@@ -53,7 +51,7 @@ const NOT_COLLECTED_LOGO = { state: 'notCollected' } as LogoView
 
 const NotYet = ({ t, state }: { t: Translate; state: 'none' | 'notCollected' }): JSX.Element => (
   <p className="tracy-wo-muted tracy-wo-facts-empty">
-    {t(state === 'none' ? 'reason.not_found' : 'score.notCollected')}
+    {t(state === 'none' ? 'reason.not_found' : 'reason.not_collected')}
   </p>
 )
 
@@ -108,15 +106,17 @@ function HoursCard({
       />
       <span className="tracy-wo-muted tracy-wo-small">{t('hours.hint')}</span>
       {hours?.left ? null : (
-        <Button
-          type="button"
-          size="xs"
-          variant="link"
-          disabled={busy}
-          onClick={() => void choose({ choice: 'leave' })}
-        >
-          {t('hours.leave')}
-        </Button>
+        <span className="tracy-wo-row">
+          <Button
+            type="button"
+            size="xs"
+            variant="link"
+            disabled={busy}
+            onClick={() => void choose({ choice: 'leave' })}
+          >
+            {t('hours.leave')}
+          </Button>
+        </span>
       )}
     </>
   )
@@ -351,7 +351,13 @@ export function BusinessFactsPage({
             <span>{t('field.phone')}</span>
             {doors.field('phone', view.business.phones?.main ?? '')}
           </label>
-          {doors.phonesRows}
+          {(view.business.phones?.others.length ?? 0) > 0 ? (
+            // The other numbers are read only: no door edits them.
+            <p className="tracy-wo-muted tracy-wo-small">
+              {t('facts.phone.others', { list: view.business.phones?.others.map((o) => o.phone).join(', ') })}{' '}
+              {t('phone.othersNote')}
+            </p>
+          ) : null}
         </>
       )
   const body = (id: CardId, filled: () => ReactNode): ReactNode => {

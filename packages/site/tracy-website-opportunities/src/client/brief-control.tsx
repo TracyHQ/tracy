@@ -1,13 +1,12 @@
 /**
  * The Content brief of the Details page (#524). `useBriefJob` owns the brief job: the press (from the stepper, or
  * Refresh of an out-of-date brief), and the poll while it runs, like Research. `BriefControl` draws the Site brief
- * block's status under the brief line: locked until research is done, the job's steps with a progress bar while it
- * runs, and a failed job's plain reason with the step that stopped. The one Make content brief / Try again button
+ * block's status under the brief line: locked until research is done; a job that runs or stopped shows in the
+ * Progress band only (#537). The one Make content brief / Try again button
  * lives in the stepper (mock r6-a), never here; only Refresh of an out-of-date brief stays as a secondary press.
  */
 import { type JSX, useCallback, useEffect, useState } from 'react'
-import { CircleAlert, CircleCheck, Circle } from 'lucide-react'
-import { Button, Spinner } from '@tracy/ui'
+import { Button } from '@tracy/ui'
 
 import type { Api } from './api.ts'
 import { usePoll } from './poll.ts'
@@ -93,53 +92,8 @@ export function BriefControl({
     return view.noteKey !== null ? <p className="tracy-wo-muted tracy-wo-small">{t(view.noteKey)}</p> : null
   if (view.mode === 'locked')
     return <p className="tracy-wo-muted tracy-wo-small">{t(view.reasonKey ?? 'brief.locked')}</p>
-  if (view.mode === 'running' || view.mode === 'failed') {
-    const doneCount = view.steps.filter((s) => s.state === 'done').length
-    return (
-      <div className="tracy-wo-stack" role={view.mode === 'running' ? 'status' : undefined}>
-        {view.mode === 'running' ? (
-          <p>{t('brief.job.title')}</p>
-        ) : (
-          <p role="alert">{t(view.errorKey ?? 'brief.job.error.other')}</p>
-        )}
-        {view.steps.length > 0 ? (
-          <ol className="tracy-wo-brief-steps">
-            {view.steps.map((s) => (
-              <li key={s.step} data-state={s.state}>
-                {s.state === 'done' ? (
-                  <CircleCheck className="tracy-wo-icon is-done" aria-hidden="true" />
-                ) : s.state === 'running' ? (
-                  <Spinner label={t(s.labelKey)} />
-                ) : s.state === 'failed' ? (
-                  <CircleAlert className="tracy-wo-icon is-failed" aria-hidden="true" />
-                ) : (
-                  <Circle className="tracy-wo-icon is-waiting" aria-hidden="true" />
-                )}
-                <b>{t(s.labelKey)}</b>
-                <span>
-                  {t(
-                    `brief.job.state.${s.state === 'waiting' && view.mode === 'failed' ? 'notStarted' : s.state}`
-                  )}
-                </span>
-              </li>
-            ))}
-          </ol>
-        ) : null}
-        {view.mode === 'running' ? (
-          <span
-            className="tracy-wo-progress-bar"
-            role="progressbar"
-            aria-label={t('brief.job.title')}
-            aria-valuemin={0}
-            aria-valuemax={view.steps.length}
-            aria-valuenow={doneCount}
-          >
-            <span style={{ width: `${((doneCount + 0.5) / Math.max(1, view.steps.length)) * 100}%` }} />
-          </span>
-        ) : null}
-      </div>
-    )
-  }
+  // A job that runs or stopped shows in the Progress band only (#537): the card draws nothing of it.
+  if (view.mode === 'running' || view.mode === 'failed') return refused
   // make: the stepper carries the press; a brief that is out of date keeps Refresh here, beside its line.
   return (
     <div className="tracy-wo-stack">
@@ -153,7 +107,6 @@ export function BriefControl({
             disabled={control.pressing}
             onClick={() => void control.press()}
           >
-            {control.pressing ? <Spinner label={t('brief.refresh')} /> : null}
             {t('brief.refresh')}
           </Button>
         </div>

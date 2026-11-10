@@ -85,8 +85,10 @@ export function researchRunning(input: Pick<SectionMetaInput, 'research' | 'rese
 
 export function sectionMetas(input: SectionMetaInput): SectionMeta[] {
   const locale = input.locale ?? 'en'
-  const running = !input.research.done && researchRunning(input)
-  const done = input.research.done
+  // A step that runs shows its progress in the Progress band only (#537): its card holds nothing partial, and a run
+  // pressed again resets the card until it finishes.
+  const running = researchRunning(input)
+  const done = input.research.done && !running
   const hasBrief = typeof input.brief?.id === 'string' && input.brief.id !== ''
   const entry = (id: SectionId, status: SectionText[], tone: SectionTone, locked = false): SectionMeta => ({
     id,
@@ -102,23 +104,11 @@ export function sectionMetas(input: SectionMetaInput): SectionMeta[] {
         [counted('section.meta.profile.fields', input.profile.filled)],
         input.profile.filled > 0 ? 'ok' : 'mute'
       )
-    : running
-      ? entry(
-          'profile',
-          [
-            {
-              key: 'section.meta.profile.partial',
-              params: { count: input.profile.filled, total: input.profile.total }
-            }
-          ],
-          'run'
-        )
-      : entry('profile', [{ key: 'section.meta.profile.waiting' }], 'mute')
+    : entry('profile', [{ key: 'section.meta.profile.waiting' }], 'mute')
 
-  const { found, settled, total } = input.sources
-  const sources = running
-    ? entry('sources', [{ key: 'section.meta.sources.running', params: { count: settled, total } }], 'run')
-    : done && total > 0
+  const { found, total } = input.sources
+  const sources =
+    done && total > 0
       ? entry(
           'sources',
           [{ key: 'section.meta.sources.found', params: { count: found, total } }],
@@ -134,8 +124,8 @@ export function sectionMetas(input: SectionMetaInput): SectionMeta[] {
   const briefDate = shortDate(input.brief?.createdAt, locale)
   const brief = !done
     ? entry('brief', [{ key: 'section.meta.brief.locked' }], 'mute', true)
-    : job.mode === 'running'
-      ? entry('brief', [{ key: 'section.meta.brief.running' }], 'run')
+    : job.mode === 'running' || job.mode === 'failed'
+      ? entry('brief', [{ key: 'section.meta.brief.none' }], 'mute')
       : hasBrief
         ? entry(
             'brief',
@@ -149,25 +139,24 @@ export function sectionMetas(input: SectionMetaInput): SectionMeta[] {
         : entry('brief', [{ key: 'section.meta.brief.none' }], 'mute')
 
   const { photos, videos } = input.media
-  const media =
-    running && photos + videos > 0
-      ? entry('media', [{ key: 'section.meta.media.soFar', params: { count: photos + videos } }], 'run')
-      : photos + videos > 0
-        ? entry(
-            'media',
-            [
-              counted('section.meta.media.photos', photos),
-              ...(videos > 0 ? [counted('section.meta.media.videos', videos)] : [])
-            ],
-            'ok'
-          )
-        : entry('media', [{ key: 'section.meta.media.none' }], 'mute', !done && !running)
+  const media = running
+    ? entry('media', [{ key: 'section.meta.media.none' }], 'mute')
+    : photos + videos > 0
+      ? entry(
+          'media',
+          [
+            counted('section.meta.media.photos', photos),
+            ...(videos > 0 ? [counted('section.meta.media.videos', videos)] : [])
+          ],
+          'ok'
+        )
+      : entry('media', [{ key: 'section.meta.media.none' }], 'mute', !done && !running)
 
   const demo =
     input.demo === 'ready'
       ? entry('demo', [{ key: 'section.meta.demo.ready' }], 'ok')
       : BUILDING.has(input.demo)
-        ? entry('demo', [{ key: 'section.meta.demo.building' }], 'run')
+        ? entry('demo', [{ key: 'section.meta.demo.none' }], 'mute')
         : entry('demo', [{ key: 'section.meta.demo.none' }], 'mute', !hasBrief && input.demo === 'none')
 
   return [profile, sources, brief, media, demo]

@@ -249,7 +249,7 @@ export function BusinessCard({
         <li>
           <MapPin aria-hidden="true" className="tracy-wo-icon" />
           <span>
-            {view.address ?? <span className="tracy-wo-muted">{t('score.notCollected')}</span>}
+            {view.address ?? <span className="tracy-wo-muted">{t('reason.not_collected')}</span>}
             <Mark t={t} mark={view.marks.address} />
           </span>
         </li>
@@ -257,7 +257,7 @@ export function BusinessCard({
           <Phone aria-hidden="true" className="tracy-wo-icon" />
           <span>
             {phones === null ? (
-              <span className="tracy-wo-muted">{t('score.notCollected')}</span>
+              <span className="tracy-wo-muted">{t('reason.not_collected')}</span>
             ) : (
               <span className="tracy-wo-row tracy-wo-wrap">
                 <span>{phones.main}</span>
