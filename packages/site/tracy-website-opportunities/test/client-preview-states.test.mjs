@@ -91,7 +91,7 @@ const EXPECTED = {
     current: 'research',
     running: true,
     action: null,
-    tones: { profile: 'run', sources: 'run', brief: 'mute:locked', media: 'run', demo: 'mute:locked' }
+    tones: { profile: 'mute', sources: 'mute', brief: 'mute:locked', media: 'mute', demo: 'mute:locked' }
   },
   'profile-review': {
     current: 'research',
@@ -109,7 +109,7 @@ const EXPECTED = {
     current: 'brief',
     running: true,
     action: null,
-    tones: { profile: 'ok', sources: 'ok', brief: 'run', media: 'ok', demo: 'mute:locked' }
+    tones: { profile: 'ok', sources: 'ok', brief: 'mute', media: 'ok', demo: 'mute:locked' }
   },
   'brief-failed': {
     current: 'brief',
@@ -151,7 +151,7 @@ const EXPECTED = {
     current: 'build',
     running: true,
     action: null,
-    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'run' }
+    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
   },
   built: {
     current: null,
