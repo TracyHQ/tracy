@@ -178,7 +178,8 @@ test('the band CSS fixes one height, lays the sub-steps in a row and is joined t
   assert.match(css, /\.tracy-wo-band-subs \{[^}]*flex-direction: row;[^}]*overflow-x: auto/)
   assert.match(css, /-webkit-line-clamp: 2/)
   assert.ok(!css.includes('`'), 'no backtick inside the template')
-  assert.ok(lib.DETAILS_CSS.endsWith(css))
+  // The Details stylesheet joins the band CSS after the step node CSS; the facts bands come after it.
+  assert.ok(lib.DETAILS_CSS.includes(css))
 })
 
 test('each step shows its status as a pill right of the name and one fixed purpose line under it', () => {
