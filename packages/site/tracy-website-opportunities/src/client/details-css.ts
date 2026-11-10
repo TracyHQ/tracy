@@ -166,17 +166,12 @@ export const DETAILS_CSS =
 .tracy-wo-src-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 .tracy-wo-src-link:hover { color: var(--foreground); }
 .tracy-wo-facts-off { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--muted); color: var(--muted-foreground); font-size: 11px; font-weight: 400; line-height: 16px; white-space: nowrap; }
-.tracy-wo-facts-hours[data-off] { opacity: 0.6; }
-.tracy-wo-facts-acts { display: inline-flex; align-items: center; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: 4px 6px; margin-left: auto; }
 .tracy-wo-facts-act { display: inline-flex; align-items: center; gap: 4px; padding: 2px 0; border: 0; background: transparent; color: var(--muted-foreground); font: inherit; font-size: 12px; line-height: 16px; cursor: pointer; white-space: nowrap; }
 .tracy-wo-facts-act:hover:not(:disabled) { color: var(--foreground); text-decoration: underline; }
 .tracy-wo-facts-act:disabled { opacity: 0.5; cursor: default; }
 .tracy-wo-facts-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
 .tracy-wo-facts-act svg { width: 12px; height: 12px; }
-.tracy-wo-facts-dot { color: var(--muted-foreground); opacity: 0.6; }
 .tracy-wo-facts-aside { font-size: 12px; color: var(--muted-foreground); }
-.tracy-wo-facts-cap { margin: 2px 0 0; font-size: 11.5px; line-height: 16px; color: var(--muted-foreground); }
-.tracy-wo-facts-cap::before { content: ""; display: inline-block; width: 5px; height: 5px; margin-right: 6px; vertical-align: 2px; border-radius: 50%; background: color-mix(in oklab, var(--muted-foreground) 60%, transparent); }
 /* The source chip after each value (design A): small, muted, one word; the title names the source in full. */
 .tracy-wo-sc { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 0 5px 0 4px; border: 1px solid var(--border); border-radius: 5px; background: var(--card, var(--background)); color: color-mix(in oklab, var(--muted-foreground) 75%, var(--card, var(--background))); font-size: 10.5px; font-weight: 400; line-height: 16px; letter-spacing: 0; white-space: nowrap; vertical-align: 1px; cursor: default; }
 .tracy-wo-sc svg { flex: none; width: 10px; height: 10px; }
@@ -185,10 +180,6 @@ export const DETAILS_CSS =
 .tracy-wo-sc[data-word='none'] { border-style: dashed; }
 .tracy-wo-facts-bdg { position: absolute; right: 5px; bottom: 5px; z-index: 1; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; background: rgb(0 0 0 / 50%); color: white; pointer-events: auto; }
 .tracy-wo-facts-bdg svg { width: 11px; height: 11px; }
-.tracy-wo-facts-empty { margin: 0; }
-.tracy-wo-facts-edit { display: flex; flex-direction: column; gap: 10px; }
-.tracy-wo-facts-field { display: flex; flex-direction: column; gap: 4px; }
-.tracy-wo-facts-field > span:first-child { font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-facts-logo[data-neutral] { background: var(--muted); color: var(--muted-foreground); border: 1px solid var(--border); }
 .tracy-wo-facts-logo img { width: 100%; height: 100%; object-fit: cover; }
 .tracy-wo-facts-stars { color: var(--warning); letter-spacing: 1px; }
@@ -196,13 +187,7 @@ export const DETAILS_CSS =
 .tracy-wo-facts .tracy-wo-chip-warn { border-color: transparent; background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
 .tracy-wo-facts .tracy-wo-chip-ok { border-color: transparent; background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
 .tracy-wo-facts .tracy-wo-chip-mute { border-color: transparent; background: var(--muted); color: var(--muted-foreground); }
-.tracy-wo-facts-hours { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tracy-wo-facts-hours th, .tracy-wo-facts-hours td { padding: 4px 0; text-align: left; vertical-align: top; border-bottom: 1px dashed var(--border); }
-.tracy-wo-facts-hours tr:last-child th, .tracy-wo-facts-hours tr:last-child td { border-bottom: 0; }
-.tracy-wo-facts-hours th { width: 40%; padding-right: 10px; font-weight: 400; color: var(--muted-foreground); }
 .tracy-wo-facts-note { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid color-mix(in oklab, var(--warning) 40%, transparent); border-radius: 8px; background: color-mix(in oklab, var(--warning) 12%, var(--background)); font-size: 12.5px; }
-.tracy-wo-facts-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.tracy-wo-facts-chips li { max-width: 100%; padding: 3px 11px; border: 1px solid var(--border); border-radius: 999px; background: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
 .tracy-wo-facts-about { margin: 0; white-space: pre-line; line-height: 1.6; overflow-wrap: anywhere; }
 .tracy-wo-facts-people { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .tracy-wo-facts-avatar { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: color-mix(in oklab, var(--primary) 12%, var(--background)); color: var(--primary); font-weight: 600; font-size: 13px; }
@@ -211,29 +196,11 @@ export const DETAILS_CSS =
 .tracy-wo-facts-swatches { display: flex; flex-wrap: wrap; gap: 12px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 12.5px; }
 .tracy-wo-facts-swatches li { display: inline-flex; align-items: center; gap: 6px; }
 .tracy-wo-facts-swatches li > span { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border); }
-.tracy-wo-facts-msgs { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; counter-reset: msg; }
-.tracy-wo-facts-msgs li { counter-increment: msg; display: grid; grid-template-columns: 22px minmax(0, 1fr); column-gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); }
-.tracy-wo-facts-msgs li::before { content: counter(msg); grid-row: 1 / span 2; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--border); background: var(--muted); font-size: 11px; color: var(--muted-foreground); }
-.tracy-wo-facts-msgs q { grid-column: 2; display: block; margin-top: 3px; padding-left: 8px; border-left: 2px solid var(--border); font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
-.tracy-wo-facts-quotes { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
-.tracy-wo-facts-quotes li { display: flex; flex-direction: column; gap: 3px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12.5px; }
-.tracy-wo-facts-quotes small { font-size: 11.5px; color: var(--muted-foreground); }
 .tracy-wo-facts-filters { display: flex; gap: 4px; flex: 1 1 auto; flex-wrap: wrap; justify-content: flex-end; }
 .tracy-wo-facts-filters button { padding: 2px 10px; border: 0; border-radius: 999px; background: transparent; color: var(--muted-foreground); font: inherit; font-size: 12px; cursor: pointer; }
 .tracy-wo-facts-filters button[aria-pressed='true'] { background: var(--muted); color: var(--foreground); font-weight: 500; }
 .tracy-wo-facts-filters button:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; }
-.tracy-wo-facts-grid-media { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
-.tracy-wo-facts-grid-media > li { position: relative; aspect-ratio: 1 / 1; overflow: hidden; border-radius: 8px; background: var(--muted); }
-.tracy-wo-facts-grid-media > li > a { display: grid; place-items: center; width: 100%; height: 100%; color: var(--muted-foreground); }
-.tracy-wo-facts-grid-media > li > a:hover { color: var(--foreground); }
-.tracy-wo-facts-grid-media > li > a svg { width: 28px; height: 28px; fill: currentColor; }
-.tracy-wo-facts-grid-media .tracy-wo-add-tile, .tracy-wo-facts-grid-media .tracy-wo-add-tile > button { height: 100%; }
-.tracy-wo-facts-grid-media img, .tracy-wo-facts-grid-media video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .tracy-wo-facts-owner { position: absolute; left: 6px; bottom: 6px; }
-.tracy-wo-add-tile { display: flex; flex-direction: column; gap: 4px; }
-.tracy-wo-add-tile > button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 96px; border: 1px dashed var(--border); border-radius: 8px; background: color-mix(in oklab, var(--muted) 50%, var(--background)); color: var(--muted-foreground); font: inherit; font-size: 12.5px; cursor: pointer; }
-.tracy-wo-add-tile > button:hover { color: var(--foreground); }
-.tracy-wo-add-tile > button:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
 @container (max-width: 719px) {
   .tracy-wo-details-cols { grid-template-columns: minmax(0, 1fr); gap: 12px; }
 }
