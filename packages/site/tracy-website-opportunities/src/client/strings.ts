@@ -929,7 +929,7 @@ export const en = {
   'action.tryAgain': 'Try again',
   'source.collectedOn': 'Collected {date}',
   'reason.not_collected': 'Not collected yet',
-  'research.profileEmpty': 'Press Research to collect this business’s details.',
+  'research.profileEmpty': 'Press Research business facts to collect this business’s details.',
   'profile.edit': 'Edit',
   'profile.edit.save': 'Save',
   'profile.edit.cancel': 'Cancel',
@@ -1393,6 +1393,7 @@ export const en = {
   /** Photos & video inside the Profile (#537). */
   'media.strip.open': 'Open',
   'media.add': 'Add more',
+  'source.owner': 'Added by you',
   'media.adding': 'Uploading…',
   'media.addHint': 'A JPEG, PNG, WebP or AVIF photo, or an MP4 or WebM video.',
   'media.error.NOT_MEDIA': 'Send a JPEG, PNG, GIF, WebP or AVIF photo, or an MP4 or WebM video.',

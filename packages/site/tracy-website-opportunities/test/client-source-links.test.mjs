@@ -92,3 +92,19 @@ test('nothing usable: no rows, and an address that is not http is never a link',
     []
   )
 })
+
+test('a listing added before research has its own row; the other pasted links stay beside it (#537)', () => {
+  const opp = {
+    candidate: {
+      pastedLinks: [
+        { url: 'https://www.instagram.com/sample_kite_club', source: 'instagram' },
+        { url: 'https://www.listing.example/dubai/sample-kite-club', source: 'listing' }
+      ]
+    }
+  }
+  const rows = sourcesToShow([{ source: 'listing', status: 'failed' }], opp)
+  assert.deepEqual(
+    rows.map((r) => `${r.source}:${r.status}`),
+    ['instagram:null', 'listing:failed']
+  )
+})

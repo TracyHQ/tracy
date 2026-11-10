@@ -43,15 +43,27 @@ export function pastedLinksOf(opportunity: unknown): Array<{ source: string; url
  * place came from a search and no Google link was pasted).
  */
 export function sourcesToShow(sources: readonly SourceInput[], opportunity: unknown): SourceInput[] {
-  if (sources.length > 0) return [...sources]
   const opp = isRec(opportunity) ? opportunity : {}
-  const pasted = pastedLinksOf(opp)
+  // A listing link the seller added before research (#537) gets its own row at once: the pasted links that no row
+  // covers yet still show, Not collected yet, beside it.
+  const covered = new Set(sources.map((s) => s.source))
+  const pasted = pastedLinksOf(opp).filter((l) => !covered.has(l.source))
   const rows: SourceInput[] = pasted.map((l) => ({
     source: l.source,
     ref: l.url,
     pastedLink: l.url,
     status: null
   }))
-  const searched = opp.provider === 'google-places' && !pasted.some((l) => l.source === 'google-places')
-  return searched ? [{ source: 'google-places', status: null, fromSearch: true }, ...rows] : rows
+  const researched = sources.some((s) => s.source !== 'listing')
+  // Once research has rows, they are the links: shown as they are.
+  if (researched) return [...sources]
+  const searched =
+    opp.provider === 'google-places' &&
+    !covered.has('google-places') &&
+    !pasted.some((l) => l.source === 'google-places')
+  return [
+    ...(searched ? [{ source: 'google-places', status: null, fromSearch: true }] : []),
+    ...rows,
+    ...sources
+  ]
 }

@@ -50,5 +50,7 @@ export function sourceLabel(
   if (source === 'instagram-search') return t('source.instagramSearch')
   if (source === 'menu-file') return t('source.menuFile')
   if (source === 'menu-photos') return t('source.menuPhotos')
+  // A photo or video the seller added themself (#537).
+  if (source === 'owner') return t('source.owner')
   return SOCIAL_LABEL[source] ?? source
 }
