@@ -34,7 +34,8 @@
       "Joomla: a site already stuck",
       "Joomla: repeated push with reversed live ids syncs without counter pollution",
       "WordPress: reversed pushed post ids sync with references",
-      "an unchanged live site bypasses the fingerprint once"
+      "an unchanged live site bypasses the fingerprint once",
+      "Joomla: a taken mapped table preserves real counters"
     ],
     "timeout_s": 600
   }
