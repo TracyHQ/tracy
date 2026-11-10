@@ -2,7 +2,7 @@
  * The small pieces of the Business facts cards (#537, design A): a card with its title and one Edit, the caption of
  * where its facts come from, the edit marks, and the business card on top.
  */
-import { type JSX, type ReactNode, useState } from 'react'
+import { Fragment, type JSX, type ReactNode, useState } from 'react'
 import { Eye, Globe, MapPin, Pencil, Phone } from 'lucide-react'
 import { Badge, Button } from '@tracy/ui'
 
@@ -55,6 +55,28 @@ export function Mark({ t, mark }: { t: Translate; mark: EditMark }): JSX.Element
   )
 }
 
+/** The small muted tag beside a card or row the seller left off the site. */
+export function LeftOffTag({ t }: { t: Translate }): JSX.Element {
+  return <span className="tracy-wo-facts-off">{t('facts.leftOff')}</span>
+}
+
+/** One reading choice as a small text button in a card header (or right-aligned on a row). */
+export function ActButton({
+  children,
+  disabled,
+  onClick
+}: {
+  children: ReactNode
+  disabled?: boolean
+  onClick: () => void
+}): JSX.Element {
+  return (
+    <button type="button" className="tracy-wo-facts-act" disabled={disabled} onClick={onClick}>
+      {children}
+    </button>
+  )
+}
+
 /**
  * One card: its title, one Edit that opens the card's rows as fields (`editing`), and Done to close them. A card
  * with nothing to edit (`edit` null) has no Edit.
@@ -68,6 +90,7 @@ export function FactsCard({
   edit,
   editing: controlled,
   onEditing,
+  actions = [],
   children
 }: {
   t: Translate
@@ -75,6 +98,8 @@ export function FactsCard({
   title: ReactNode
   aside?: ReactNode
   wide?: boolean
+  /** The reading choices of the card (Keep, Leave off the site...), small text buttons before Edit. */
+  actions?: ReactNode[]
   /** The rows as fields; null: the card has no Edit. */
   edit: (() => ReactNode) | null
   /** Held by the card's owner when a press inside the card also opens it (Edit hours). */
@@ -95,15 +120,38 @@ export function FactsCard({
       <div className="tracy-wo-facts-card-head">
         <h3>{title}</h3>
         {aside}
-        {edit === null ? null : editing ? (
+        {editing && edit !== null ? (
           <Button type="button" size="xs" variant="outline" onClick={() => setEditing(false)}>
             {t('facts.done')}
           </Button>
-        ) : (
-          <Button type="button" size="xs" variant="ghost" onClick={() => setEditing(true)}>
-            <Pencil aria-hidden="true" />
-            {t('profile.edit')}
-          </Button>
+        ) : edit === null && actions.length === 0 ? null : (
+          <span className="tracy-wo-facts-acts">
+            {[
+              ...actions,
+              edit === null ? null : (
+                <button
+                  key="edit"
+                  type="button"
+                  className="tracy-wo-facts-act"
+                  onClick={() => setEditing(true)}
+                >
+                  <Pencil aria-hidden="true" />
+                  {t('profile.edit')}
+                </button>
+              )
+            ]
+              .filter((a) => a !== null)
+              .map((a, i) => (
+                <Fragment key={i}>
+                  {i > 0 ? (
+                    <span className="tracy-wo-facts-dot" aria-hidden="true">
+                      ·
+                    </span>
+                  ) : null}
+                  {a}
+                </Fragment>
+              ))}
+          </span>
         )}
       </div>
       {editing && edit !== null ? <div className="tracy-wo-facts-edit">{edit()}</div> : children}
@@ -115,23 +163,13 @@ function RatingLine({
   t,
   view,
   locale,
-  onSave
+  failed
 }: {
   t: Translate
   view: NonNullable<BusinessCardView['rating']>
   locale: string
-  onSave: (choice: RatingChoice) => Promise<boolean>
+  failed: boolean
 }): JSX.Element {
-  const [busy, setBusy] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const save = async (choice: RatingChoice): Promise<void> => {
-    if (busy) return
-    setBusy(true)
-    setFailed(false)
-    const ok = await onSave(choice)
-    setBusy(false)
-    setFailed(!ok)
-  }
   const note = view.shown
     ? 'facts.rating.shown'
     : view.few && !view.chosen
@@ -159,19 +197,7 @@ function RatingLine({
       </span>
       <span className="tracy-wo-facts-sub tracy-wo-small">
         <Eye aria-hidden="true" className="tracy-wo-icon" />
-        <span>{t(note)}</span>
-        {ratingActions(view).map((choice) => (
-          <Button
-            key={choice}
-            type="button"
-            size="xs"
-            variant="link"
-            disabled={busy}
-            onClick={() => void save(choice)}
-          >
-            {t(choice === 'show' ? 'rating.show' : 'rating.leave')}
-          </Button>
-        ))}
+        {note === 'rating.left' ? <LeftOffTag t={t} /> : <span>{t(note)}</span>}
         {failed ? (
           <span className="tracy-wo-error" role="alert">
             {t('rating.failed')}
@@ -222,10 +248,29 @@ export function BusinessCard({
     )
   const phones = view.phones
   const others = phones?.others ?? []
+  const [busy, setBusy] = useState(false)
+  const [failed, setFailed] = useState(false)
+  const saveRating = async (choice: RatingChoice): Promise<void> => {
+    if (busy) return
+    setBusy(true)
+    setFailed(false)
+    const ok = await onRating(choice)
+    setBusy(false)
+    setFailed(!ok)
+  }
+  const actions =
+    view.rating === null
+      ? []
+      : ratingActions(view.rating).map((choice) => (
+          <ActButton key={choice} disabled={busy} onClick={() => void saveRating(choice)}>
+            {t(choice === 'show' ? 'rating.show' : 'rating.leave')}
+          </ActButton>
+        ))
   return (
     <FactsCard
       t={t}
       id="business"
+      actions={actions}
       wide
       title={
         <span className="tracy-wo-facts-hero">
@@ -242,9 +287,7 @@ export function BusinessCard({
       }
       edit={edit}
     >
-      {view.rating === null ? null : (
-        <RatingLine t={t} view={view.rating} locale={locale} onSave={onRating} />
-      )}
+      {view.rating === null ? null : <RatingLine t={t} view={view.rating} locale={locale} failed={failed} />}
       <ul className="tracy-wo-facts-contacts">
         <li>
           <MapPin aria-hidden="true" className="tracy-wo-icon" />

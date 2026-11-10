@@ -4,6 +4,7 @@
  * but not shown as photographs. While research runs the grid waits (only Add more stays): progress shows in the band.
  */
 import { type JSX, useState } from 'react'
+import { Play } from 'lucide-react'
 import { Badge } from '@tracy/ui'
 
 import { mediaUrl } from './api.ts'
@@ -65,29 +66,13 @@ export function FactsMedia({
             category: tile.kind === 'video' ? t('media.video') : t(`media.category.${tile.category}`),
             source
           })
-          // A video is a square tile: a tall phone clip would fill a whole column.
-          const ratio =
-            tile.kind === 'video'
-              ? '1 / 1'
-              : tile.width !== null && tile.height !== null && tile.width > 0
-                ? `${tile.width} / ${tile.height}`
-                : '1 / 1'
           return (
-            <li
-              key={tile.id}
-              className="tracy-wo-tile"
-              data-video={tile.kind === 'video' ? '' : undefined}
-              style={{ aspectRatio: ratio }}
-            >
+            <li key={tile.id} className="tracy-wo-tile" data-video={tile.kind === 'video' ? '' : undefined}>
               {tile.kind === 'video' ? (
-                <video
-                  src={mediaUrl(tile.id)}
-                  preload="metadata"
-                  muted
-                  playsInline
-                  controls
-                  aria-label={label}
-                />
+                // No poster is stored for a video: a neutral tile with a play glyph that opens the file.
+                <a href={mediaUrl(tile.id)} target="_blank" rel="noreferrer" aria-label={label} title={label}>
+                  <Play aria-hidden="true" />
+                </a>
               ) : (
                 <img src={mediaUrl(tile.id)} alt={label} loading="lazy" decoding="async" />
               )}

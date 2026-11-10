@@ -7,7 +7,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { pastedLinksOf, sourcesToShow } from '../src/client/source-links-model.ts'
+import {
+  overviewSourcesOf,
+  pastedLinksOf,
+  safeHttpUrl,
+  shortUrl,
+  sourcesToShow
+} from '../src/client/source-links-model.ts'
 
 const PASTED = {
   provider: 'url',
@@ -107,4 +113,31 @@ test('a listing added before research has its own row; the other pasted links st
     rows.map((r) => `${r.source}:${r.status}`),
     ['instagram:null', 'listing:failed']
   )
+})
+
+test('the overview lists only collected sources after research, every pasted link before it', () => {
+  const shown = [
+    { source: 'instagram', status: 'complete' },
+    { source: 'website', status: 'skipped', reason: 'not_found' },
+    { source: 'tripadvisor', status: 'failed' },
+    { source: 'google-maps', status: 'blocked' }
+  ]
+  assert.deepEqual(
+    overviewSourcesOf(shown, true).map((s) => s.source),
+    ['instagram']
+  )
+  assert.equal(overviewSourcesOf(shown, false).length, 4)
+})
+
+test('only http and https addresses become links, shown as host and path with an ellipsis', () => {
+  assert.equal(safeHttpUrl('javascript:alert(1)'), null)
+  assert.equal(safeHttpUrl('data:text/html,x'), null)
+  assert.equal(safeHttpUrl('not a url'), null)
+  assert.equal(safeHttpUrl(null), null)
+  assert.equal(safeHttpUrl('https://www.instagram.com/sample_club'), 'https://www.instagram.com/sample_club')
+  assert.equal(shortUrl('https://www.instagram.com/sample_club/'), 'instagram.com/sample_club')
+  assert.equal(shortUrl('https://sample.example/a?x=1#top'), 'sample.example/a')
+  const long = shortUrl(`https://sample.example/${'a'.repeat(80)}`)
+  assert.equal(long.length, 48)
+  assert.ok(long.endsWith('\u2026'))
 })

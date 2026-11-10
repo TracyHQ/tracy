@@ -1,13 +1,12 @@
 /**
  * The seller's own steps on Details (#537):
- *   - the approval footer of the Profile and Business brief sub-pages: "Check every row. Edit anything that is wrong,
- *     then approve.", Back, and Approve ... and continue, enabled once the page has been scrolled to its end (at once
- *     when it fits without scrolling);
+ *   - the approval actions in the header of the Profile and Business brief sub-pages: Back, and Approve ... and
+ *     continue, enabled once the page has been scrolled to its end (at once when it fits without scrolling);
  *   - Add source: an inline form for one more link of the business, with its errors in place;
  *   - Add more: one photo or video added to the Profile's Photos & video.
  * Each press goes through the door the caller passes and answers a refusal code (or null), shown in words here.
  */
-import { type JSX, type RefObject, useEffect, useId, useRef, useState } from 'react'
+import { type JSX, useEffect, useId, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Button, Input, Spinner } from '@tracy/ui'
 
@@ -30,11 +29,10 @@ const codeText = (t: Translate, prefix: string, code: string): string =>
  * True once the end marker has been seen inside the page's scroll box: scrolled to the end, or the content fits
  * without scrolling. Without IntersectionObserver (an old browser) it is true at once, never a dead button.
  */
-function useReachedEnd(): [RefObject<HTMLDivElement | null>, boolean] {
-  const marker = useRef<HTMLDivElement | null>(null)
+export function useReachedEnd(): [(el: HTMLDivElement | null) => void, boolean] {
+  const [el, setEl] = useState<HTMLDivElement | null>(null)
   const [reached, setReached] = useState(false)
   useEffect(() => {
-    const el = marker.current
     if (el === null || reached) return
     if (typeof IntersectionObserver === 'undefined') return setReached(true)
     const root = el.closest<HTMLElement>('.tracy-wo-tab')
@@ -46,64 +44,68 @@ function useReachedEnd(): [RefObject<HTMLDivElement | null>, boolean] {
     )
     seen.observe(el)
     return () => seen.disconnect()
-  }, [reached])
-  return [marker, reached]
+  }, [el, reached])
+  return [setEl, reached]
 }
 
-export function ApprovalFooter({
-  t,
-  kind,
-  approvedLine,
-  onBack,
-  onApprove
-}: {
-  t: Translate
+/** What the header of a Profile or Business brief sub-page offers: Back, and Approve while it is pending. */
+export interface ApprovalView {
   kind: 'profile' | 'brief'
   /** Already approved: the line that says when (the button is gone). */
   approvedLine: string | null
+  /** Approval is possible now (research done / brief current); false: only Back shows. */
+  pending: boolean
   onBack: () => void
   /** Approves; answers the refusal code, or null when it went through. */
   onApprove: () => Promise<string | null>
+}
+
+/** Back and Approve ... and continue in the sub-page header, with the scroll hint under them while it is off. */
+export function ApprovalActions({
+  t,
+  view,
+  reached
+}: {
+  t: Translate
+  view: ApprovalView
+  /** The content has been scrolled to its end (or fits). */
+  reached: boolean
 }): JSX.Element {
-  const [marker, reached] = useReachedEnd()
   const [busy, setBusy] = useState(false)
   const [refused, setRefused] = useState<string | null>(null)
   const press = async (): Promise<void> => {
     if (busy) return
     setBusy(true)
     setRefused(null)
-    const code = await onApprove()
+    const code = await view.onApprove()
     setBusy(false)
     if (code !== null) setRefused(code)
   }
-  const label = t(kind === 'profile' ? 'approve.profile' : 'approve.brief')
+  const label = t(view.kind === 'profile' ? 'approve.profile' : 'approve.brief')
+  const approvable = view.pending && view.approvedLine === null
   return (
-    <>
-      <div ref={marker} className="tracy-wo-approve-end" aria-hidden="true" />
-      <div className="tracy-wo-approve" data-kind={kind}>
-        <div className="tracy-wo-approve-text">
-          <p className="tracy-wo-approve-hint">{approvedLine ?? t('approve.hint')}</p>
-          {refused !== null ? (
-            <p className="tracy-wo-error tracy-wo-small" role="alert">
-              {gateText(t, refused)}
-            </p>
-          ) : approvedLine === null && !reached ? (
-            <p className="tracy-wo-muted tracy-wo-small">{t('approve.scrollHint')}</p>
-          ) : null}
-        </div>
-        <div className="tracy-wo-approve-acts">
-          <Button type="button" size="sm" variant="outline" onClick={onBack}>
-            {t('approve.back')}
+    <div className="tracy-wo-approve" data-kind={view.kind}>
+      <div className="tracy-wo-approve-acts">
+        <Button type="button" size="sm" variant="outline" onClick={view.onBack}>
+          {t('approve.back')}
+        </Button>
+        {approvable ? (
+          <Button type="button" size="sm" disabled={!reached || busy} onClick={() => void press()}>
+            {busy ? <Spinner label={t('approve.saving')} /> : null}
+            {busy ? t('approve.saving') : label}
           </Button>
-          {approvedLine === null ? (
-            <Button type="button" size="sm" disabled={!reached || busy} onClick={() => void press()}>
-              {busy ? <Spinner label={t('approve.saving')} /> : null}
-              {busy ? t('approve.saving') : label}
-            </Button>
-          ) : null}
-        </div>
+        ) : null}
       </div>
-    </>
+      {refused !== null ? (
+        <p className="tracy-wo-error tracy-wo-small" role="alert">
+          {gateText(t, refused)}
+        </p>
+      ) : view.approvedLine !== null ? (
+        <p className="tracy-wo-muted tracy-wo-small">{view.approvedLine}</p>
+      ) : approvable && !reached ? (
+        <p className="tracy-wo-muted tracy-wo-small">{t('approve.scrollHint')}</p>
+      ) : null}
+    </div>
   )
 }
 

@@ -18,7 +18,6 @@ export const PREVIEW_STATES = [
   'brief-review',
   'brief-approved',
   'edited-after-approval',
-  'old-brief-profile-review',
   'sources-changed',
   'building',
   'built'
@@ -36,7 +35,6 @@ export const PREVIEW_LABELS: Readonly<Record<PreviewStateId, string>> = {
   'brief-review': 'Site content brief needs review',
   'brief-approved': 'Site content brief approved',
   'edited-after-approval': 'Edited after approval',
-  'old-brief-profile-review': 'Old brief, business facts to review',
   'sources-changed': 'Sources changed',
   building: 'Building',
   built: 'Built'
@@ -237,9 +235,6 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
         briefStale: 'profile'
       })
     }
-  // A brief made before the approval rule, the Profile not approved yet (#537).
-  if (state === 'old-brief-profile-review')
-    return { ...withBrief, ...noDemo, approval: approval({ profile: 'needed', brief: 'needed' }) }
   if (state === 'sources-changed')
     return {
       ...withBrief,

@@ -147,19 +147,16 @@ test('the band carries data-fixed, and a refused press sits in the button row in
   )
 })
 
-test('a lock and a stale chip each stay on one line with their full text on hover', () => {
+test('a locked step is two lines: name and one lock status line, and no stale chip anywhere', () => {
   const html = draw({
     research: RESEARCHED,
     brief: { id: 'b-1', n: 1, createdAt: '2026-11-09T09:00:00Z' },
     demo: 'none',
     approval: { research: 'ok', profile: 'needed', brief: 'stale', briefStale: 'profile' }
   })
-  assert.match(html, /<span class="tracy-wo-band-lock" title="\[stepper\.lock\.profileAgain\]">/)
-  const status = html.match(/<span class="tracy-wo-band-status">.*?<\/span><\/span>/g) ?? []
-  assert.ok(
-    status.some((s) => s.includes('[brief.chip.olderProfile]')),
-    'the stale chip sits in the status row'
-  )
+  assert.match(html, /<span class="tracy-wo-band-lock" title="\[stepper\.lock\.profile\]">/)
+  assert.doesNotMatch(html, /\[stepper\.locked\]/)
+  assert.doesNotMatch(html, /brief\.chip\.older|tracy-wo-band-stale/)
 })
 
 test('the brief job running shows no sub-step row when the server sent none, only the one running line', () => {

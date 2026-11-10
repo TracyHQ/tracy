@@ -1,8 +1,8 @@
 /**
  * The Progress band at the top of Details (#537, option D): one full width band with two panes. The left pane lists
- * the three steps (a dot, the name, one status line such as "Done Nov 9", "Needs your review" or "Up next", and the
- * lock line of a step that waits). The right pane is the current step: "Step 2 of 3", its name, its one status line,
- * a stale chip, why it stopped, the REAL sub-steps of a running job, and the action buttons at its bottom right.
+ * the three steps (a dot, the name and ONE status line: "Done Nov 9", "Needs your review", "Up next", or for a step that waits
+ * a lock icon with a short reason). The right pane is the current step: "Step 2 of 3", its name, its one status line,
+ * why it stopped, the REAL sub-steps of a running job, and the action buttons at its bottom right.
  *
  * Sub-steps come only from what the server sends: the Content brief job's steps (`briefControlView`), the build's
  * step chain (`DemoProgress`, passed in), or a `stepProgress` answer. Research sends none per card, so it shows one
@@ -14,7 +14,7 @@
  * long set scrolls sideways inside the row, which keeps the running node in view, so the pane never grows.
  */
 
-import { Badge, Button, Spinner } from '@tracy/ui'
+import { Button, Spinner } from '@tracy/ui'
 import { Check, Lock } from 'lucide-react'
 import type { JSX, ReactNode } from 'react'
 
@@ -90,30 +90,25 @@ export function ProgressBand({
               <span className="tracy-wo-step-name" title={t(step.nameKey)}>
                 {t(step.nameKey)}
               </span>
-              <span className="tracy-wo-band-status">
-                <span
-                  className="tracy-wo-step-sub"
-                  data-tone={step.status.tone}
-                  title={statusText(t, step, locale)}
-                >
-                  {statusText(t, step, locale)}
-                </span>
-                {step.staleKey !== null ? (
-                  <Badge
-                    variant="outline"
-                    className="tracy-wo-chip-warn tracy-wo-band-stale"
-                    title={t(step.staleKey)}
-                  >
-                    {t(step.staleKey)}
-                  </Badge>
-                ) : null}
-              </span>
               {step.lockKey !== null ? (
-                <span className="tracy-wo-band-lock" title={t(step.lockKey)}>
-                  <Lock aria-hidden="true" className="tracy-wo-icon" />
-                  <span>{t(step.lockKey)}</span>
+                // A locked step: the lock icon and a short reason on the one status line (no "Locked" word).
+                <span className="tracy-wo-band-status">
+                  <span className="tracy-wo-band-lock" title={t(step.lockKey)}>
+                    <Lock aria-hidden="true" className="tracy-wo-icon" />
+                    <span>{t(step.lockKey)}</span>
+                  </span>
                 </span>
-              ) : null}
+              ) : (
+                <span className="tracy-wo-band-status">
+                  <span
+                    className="tracy-wo-step-sub"
+                    data-tone={step.status.tone}
+                    title={statusText(t, step, locale)}
+                  >
+                    {statusText(t, step, locale)}
+                  </span>
+                </span>
+              )}
             </span>
           </li>
         ))}

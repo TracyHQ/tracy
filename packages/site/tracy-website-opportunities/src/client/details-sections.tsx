@@ -15,6 +15,7 @@ import {
   Button
 } from '@tracy/ui'
 
+import { ApprovalActions, type ApprovalView, useReachedEnd } from './seller-review.tsx'
 import { type SectionMeta, type SubSection, pageOf, pagerOf } from './section-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -31,7 +32,7 @@ export function SubPage({
   onList,
   onSection,
   actions,
-  footer,
+  approval = null,
   children
 }: {
   t: Translate
@@ -46,14 +47,15 @@ export function SubPage({
   onSection: (section: SubSection | null) => void
   /** Buttons beside the sub-page title (Add source, #537). */
   actions?: ReactNode
-  /** The sticky approval footer under the section (#537). */
-  footer?: ReactNode
+  /** Back and Approve in the header row (#537); null: none. */
+  approval?: ApprovalView | null
   children: ReactNode
 }): JSX.Element {
   // Photos & video open the Profile sub-page (#537).
   const title = t(`details.section.${pageOf(section)}`)
   const { previous, next } = pagerOf(section)
   const line = metaLine(t, meta)
+  const [endMarker, reached] = useReachedEnd()
   return (
     <div className="tracy-wo-subpage" data-section={pageOf(section)}>
       <Breadcrumb label={t('crumbs.label')} className="tracy-wo-crumbs">
@@ -79,12 +81,13 @@ export function SubPage({
         <h2 className="tracy-wo-page-title">{title}</h2>
         {line ? <span className="tracy-wo-psec-meta">{line}</span> : null}
         {actions ? <span className="tracy-wo-subpage-acts">{actions}</span> : null}
+        {approval === null ? null : <ApprovalActions t={t} view={approval} reached={reached} />}
       </div>
       {progress}
       <section className="tracy-wo-psec" aria-label={title}>
         {children}
       </section>
-      {footer}
+      {approval === null ? null : <div ref={endMarker} className="tracy-wo-approve-end" aria-hidden="true" />}
       <nav className="tracy-wo-pager" aria-label={t('section.pager')}>
         {previous !== null ? (
           <button type="button" className="tracy-wo-pager-link" onClick={() => onSection(previous)}>

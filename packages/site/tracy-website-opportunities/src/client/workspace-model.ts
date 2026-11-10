@@ -16,9 +16,9 @@ export const WORKSPACE_IDS: readonly WorkspaceId[] = Object.freeze(['sources', '
 
 /**
  * open: the section of the current step · done: finished, folds to its summary · review: waits for the seller's
- * review · held: an older output that cannot be used now (made from older facts or sources) · locked: nothing yet.
+ * review · locked: nothing to show (not made yet, or reset by an earlier step: nothing old is shown).
  */
-export type WorkspaceState = 'open' | 'done' | 'review' | 'held' | 'locked'
+export type WorkspaceState = 'open' | 'done' | 'review' | 'locked'
 
 /** One piece of a summary line: a string key, or text drawn as is (a site address). Pieces join with a middle dot. */
 export type WorkspaceText = { key: string; params?: Record<string, string | number> } | { text: string }
@@ -32,7 +32,7 @@ export interface WorkspaceSection {
   expandable: boolean
   /** The one line beside the title while the section is folded; for a locked row, the line of what it waits for. */
   summary: WorkspaceText[]
-  /** The chip in the row (Needs your review, Made from older sources), or null. */
+  /** The chip in the row (Needs your review), or null. */
   chipKey: string | null
   /** The words of the link to the section's sub-page, or null when it has none. */
   linkKey: string | null
@@ -53,8 +53,6 @@ export interface WorkspaceInput {
   brief: { n: number } | null
   /** A brief run is under way or failed with no current brief: the brief is reset on screen. */
   briefEmpty: 'running' | 'failed' | null
-  /** The latest brief cannot be used now (`briefHeldOf`). */
-  held: 'profile' | 'sources' | null
   demo: DemoState
   /** The address of the ready demo, when known. */
   demoHost: string | null
@@ -115,7 +113,7 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
     extra: Partial<Pick<WorkspaceSection, 'chipKey' | 'linkKey'>> = {}
   ): WorkspaceSection => {
     const expandable = state !== 'locked'
-    const byDefault = state === 'open' || state === 'review' || (id === 'brief' && state === 'held')
+    const byDefault = state === 'open' || state === 'review'
     const expanded = expandable && (input.opened[id] ?? byDefault)
     const linkKey =
       extra.linkKey !== undefined
@@ -124,7 +122,7 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
           ? null
           : state === 'review'
             ? 'section.review'
-            : id === 'brief' && expanded && state !== 'held'
+            : id === 'brief' && expanded
               ? 'section.openBrief'
               : 'section.open'
     return { id, state, expanded, expandable, summary, chipKey: extra.chipKey ?? null, linkKey }
@@ -152,7 +150,7 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
       : stepper.current === 'research' && stepper.review
         ? section('profile', 'review', [fieldsLine], { chipKey: 'stepper.needsReview' })
         : researchAgain
-          ? section('profile', 'held', [fieldsLine], { chipKey: 'brief.chip.olderSources' })
+          ? locked('profile', 'stepper.lock.researchAgain')
           : section('profile', done('profile'), [
               fieldsLine,
               ...dated('workspace.sum.approved', shortDate(research?.approvedAt ?? research?.doneAt, locale))
@@ -163,31 +161,27 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
   const brief =
     input.researchMoving || !input.researchDone
       ? locked('brief', 'section.meta.profile.waiting')
-      : input.held !== null && input.brief !== null
-        ? section('brief', 'held', [briefLine], {
-            chipKey: input.held === 'sources' ? 'brief.chip.olderSources' : 'brief.chip.olderProfile'
-          })
-        : researchAgain
-          ? locked('brief', 'stepper.lock.researchAgain')
-          : stepper.current === 'research'
-            ? locked('brief', 'stepper.lock.profile')
-            : input.briefEmpty === 'running'
-              ? locked('brief', 'brief.beingWritten')
-              : input.briefEmpty === 'failed'
-                ? locked('brief', 'section.meta.brief.none')
-                : input.brief === null
-                  ? locked('brief', 'workspace.wait.brief')
-                  : stepper.current === 'brief' && stepper.review
-                    ? section('brief', 'review', [briefLine], { chipKey: 'stepper.needsReview' })
-                    : section('brief', done('brief'), [
-                        briefLine,
-                        ...(stepper.current === 'brief'
-                          ? []
-                          : dated(
-                              'workspace.sum.approved',
-                              shortDate(briefStep?.approvedAt ?? briefStep?.doneAt, locale)
-                            ))
-                      ])
+      : researchAgain
+        ? locked('brief', 'stepper.lock.researchAgain')
+        : stepper.current === 'research'
+          ? locked('brief', 'stepper.lock.profile')
+          : input.briefEmpty === 'running'
+            ? locked('brief', 'brief.beingWritten')
+            : input.briefEmpty === 'failed'
+              ? locked('brief', 'section.meta.brief.none')
+              : input.brief === null
+                ? locked('brief', 'workspace.wait.brief')
+                : stepper.current === 'brief' && stepper.review
+                  ? section('brief', 'review', [briefLine], { chipKey: 'stepper.needsReview' })
+                  : section('brief', done('brief'), [
+                      briefLine,
+                      ...(stepper.current === 'brief'
+                        ? []
+                        : dated(
+                            'workspace.sum.approved',
+                            shortDate(briefStep?.approvedAt ?? briefStep?.doneAt, locale)
+                          ))
+                    ])
 
   // Your site: the outcome, with its actions once built.
   const demo =
@@ -202,9 +196,7 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
           ? locked('demo', 'site.notYet.building')
           : stepper.current === 'build'
             ? locked('demo', 'workspace.wait.build')
-            : stepper.current === 'brief' && stepper.review
-              ? locked('demo', 'stepper.lock.brief')
-              : locked('demo', 'workspace.wait.site')
+            : locked('demo', buildStep?.lockKey ?? 'workspace.wait.site')
 
   return [sources, profile, brief, demo]
 }

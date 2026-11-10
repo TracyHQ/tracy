@@ -110,9 +110,24 @@ export const DETAILS_CSS =
 .tracy-wo-facts-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; align-items: start; }
 .tracy-wo-facts-col { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .tracy-wo-facts-card { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card, var(--background)); }
-.tracy-wo-facts-card-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tracy-wo-facts-card-head { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; min-width: 0; }
 .tracy-wo-facts-card-head > h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1 1 auto; min-width: 0; margin: 0; font-size: 13.5px; font-weight: 600; line-height: 20px; }
 .tracy-wo-facts-card-head > button { flex: none; }
+.tracy-wo-src-main { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; }
+.tracy-wo-src-logo { flex: none; display: grid; place-items: center; width: 20px; height: 20px; color: var(--muted-foreground); }
+.tracy-wo-src-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+.tracy-wo-src-link:hover { color: var(--foreground); }
+.tracy-wo-facts-off { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; background: var(--muted); color: var(--muted-foreground); font-size: 11px; font-weight: 400; line-height: 16px; white-space: nowrap; }
+.tracy-wo-facts-sub .tracy-wo-facts-off { margin-left: 0; }
+.tracy-wo-facts-hours[data-off] { opacity: 0.6; }
+.tracy-wo-facts-acts { display: inline-flex; align-items: center; flex: none; flex-wrap: wrap; justify-content: flex-end; gap: 4px 6px; margin-left: auto; }
+.tracy-wo-facts-people .tracy-wo-facts-act { margin-left: auto; }
+.tracy-wo-facts-act { display: inline-flex; align-items: center; gap: 4px; padding: 2px 0; border: 0; background: transparent; color: var(--muted-foreground); font: inherit; font-size: 12px; line-height: 16px; cursor: pointer; white-space: nowrap; }
+.tracy-wo-facts-act:hover:not(:disabled) { color: var(--foreground); text-decoration: underline; }
+.tracy-wo-facts-act:disabled { opacity: 0.5; cursor: default; }
+.tracy-wo-facts-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
+.tracy-wo-facts-act svg { width: 12px; height: 12px; }
+.tracy-wo-facts-dot { color: var(--muted-foreground); opacity: 0.6; }
 .tracy-wo-facts-aside { font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-facts-card[data-card='messages'] .tracy-wo-facts-card-head > h3 { flex: 0 1 auto; }
 .tracy-wo-facts-card[data-card='messages'] .tracy-wo-facts-aside, .tracy-wo-facts-card[data-card='reviews'] .tracy-wo-facts-aside { flex: 1 1 auto; }
@@ -176,8 +191,12 @@ export const DETAILS_CSS =
 .tracy-wo-facts-card[data-card='media'] .tracy-wo-facts-card-head { flex-wrap: wrap; }
 .tracy-wo-facts-card[data-card='media'] .tracy-wo-facts-card-head > h3 { flex: 0 1 auto; }
 .tracy-wo-facts-card[data-card='media'] .tracy-wo-add-media { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.tracy-wo-facts-grid-media { columns: 5 120px; column-gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
-.tracy-wo-facts-grid-media > li { position: relative; break-inside: avoid; margin-bottom: 8px; overflow: hidden; border-radius: 8px; background: var(--muted); }
+.tracy-wo-facts-grid-media { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+.tracy-wo-facts-grid-media > li { position: relative; aspect-ratio: 1 / 1; overflow: hidden; border-radius: 8px; background: var(--muted); }
+.tracy-wo-facts-grid-media > li > a { display: grid; place-items: center; width: 100%; height: 100%; color: var(--muted-foreground); }
+.tracy-wo-facts-grid-media > li > a:hover { color: var(--foreground); }
+.tracy-wo-facts-grid-media > li > a svg { width: 28px; height: 28px; fill: currentColor; }
+.tracy-wo-facts-grid-media .tracy-wo-add-tile, .tracy-wo-facts-grid-media .tracy-wo-add-tile > button { height: 100%; }
 .tracy-wo-facts-grid-media img, .tracy-wo-facts-grid-media video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .tracy-wo-facts-card[data-card='brand'] .tracy-wo-row > * { max-width: 100%; white-space: normal; height: auto; }
 .tracy-wo-facts-card[data-card='brand'] .tracy-wo-logo { width: 48px; height: 48px; }
@@ -191,7 +210,7 @@ export const DETAILS_CSS =
 .tracy-wo-facts-more[open] > summary { margin-bottom: 8px; }
 @container (max-width: 640px) {
   .tracy-wo-facts-grid { grid-template-columns: minmax(0, 1fr); }
-  .tracy-wo-facts-grid-media { columns: 3 90px; }
+  .tracy-wo-facts-grid-media { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tracy-wo-facts-kv > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
 }
 @container (max-width: 719px) {

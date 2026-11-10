@@ -8,7 +8,7 @@
  * data-fixed attribute to win over them. Reads only Tracy tokens. No backtick may appear inside the template below.
  */
 export const PROGRESS_BAND_CSS = `
-.tracy-wo-band[data-fixed] { --wo-band-h: 194px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); grid-template-rows: minmax(0, 1fr); }
+.tracy-wo-band[data-fixed] { --wo-band-h: 168px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: minmax(0, 38fr) minmax(0, 62fr); grid-template-rows: minmax(0, 1fr); }
 .tracy-wo-band[data-fixed] .tracy-wo-band-list { box-sizing: border-box; min-height: 0; overflow: hidden; }
 .tracy-wo-band[data-fixed] .tracy-wo-step { padding-bottom: 12px; }
 .tracy-wo-band[data-fixed] .tracy-wo-step:last-child { padding-bottom: 0; }
@@ -17,7 +17,6 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-step-name, .tracy-wo-band[data-fixed] .tracy-wo-step-sub, .tracy-wo-band[data-fixed] .tracy-wo-band-lock > span { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-status { display: flex; align-items: center; gap: 6px; min-width: 0; height: 16px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-status > .tracy-wo-step-sub { flex: 0 0 auto; max-width: 100%; }
-.tracy-wo-band[data-fixed] .tracy-wo-band-stale { flex: 0 1 auto; min-width: 0; height: 16px; margin: 0; padding: 0 6px; font-size: 11px; line-height: 16px; display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-lock { display: flex; min-width: 0; height: 16px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-pane { box-sizing: border-box; min-height: 0; overflow: hidden; gap: 6px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-kicker { line-height: 16px; }

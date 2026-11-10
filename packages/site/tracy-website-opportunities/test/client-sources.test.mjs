@@ -86,7 +86,7 @@ const SAGA = [
 ]
 const draw = (sources, retry) =>
   lib.renderToStaticMarkup(lib.createElement(lib.Sources, { t, sources, retry }))
-const names = (html) => [...html.matchAll(/tracy-wo-src-name">.*?<\/svg>([^<]+)</g)].map((m) => m[1])
+const names = (html) => [...html.matchAll(/tracy-wo-src-name">([^<]+)</g)].map((m) => m[1])
 
 test('every source of the place is listed by name with its chip and one plain line, never a key error', () => {
   const html = draw(SAGA)
@@ -257,7 +257,11 @@ test('the links the owner pasted come first, each with The link you added and it
     'Google Maps',
     'TripAdvisor'
   ])
-  assert.equal((html.match(/tracy-wo-src-sub">\[source\.link\]/g) ?? []).length, 3)
+  assert.equal((html.match(/class="tracy-wo-src-link"/g) ?? []).length, 3)
+  assert.match(
+    html,
+    /title="https:\/\/maps\.app\.goo\.gl\/SampleBistro"[^>]*>maps\.app\.goo\.gl\/SampleBistro</
+  )
   assert.match(html, /<a href="https:\/\/maps\.app\.goo\.gl\/SampleBistro"/)
   const heading = html.indexOf('[source.alsoLookedAt]')
   assert.ok(heading > html.indexOf('[source.listing'), 'the heading comes after the pasted rows')
@@ -268,7 +272,7 @@ test('the links the owner pasted come first, each with The link you added and it
 })
 
 test('Also looked at shows only when both groups have rows', () => {
-  assert.doesNotMatch(draw(SAGA), /source\.alsoLookedAt|\[source\.link\]/)
+  assert.doesNotMatch(draw(SAGA), /source\.alsoLookedAt/)
   assert.doesNotMatch(draw(PASTED.filter((s) => s.pastedLink)), /source\.alsoLookedAt|source\.usedHere/)
 })
 
@@ -293,7 +297,7 @@ test('a pasted link that is not an http address is not trusted as one', () => {
 
 test('the compact list of the Sources card: one line per source with its chip, no details and no headings', () => {
   const html = lib.renderToStaticMarkup(lib.createElement(lib.Sources, { t, sources: PASTED, compact: true }))
-  assert.doesNotMatch(html, /<details|<summary|source\.alsoLookedAt|source\.usedHere|<a /)
+  assert.doesNotMatch(html, /<details|<summary|source\.alsoLookedAt|source\.usedHere/)
   assert.equal((html.match(/tracy-wo-src-line/g) ?? []).length, PASTED.length)
   assert.equal((html.match(/tracy-wo-src-chip/g) ?? []).length, PASTED.length)
 })
@@ -313,5 +317,8 @@ test('before research, the pasted links and the Google listing of a search read 
   )
   assert.equal((html.match(/\[reason\.not_collected\]/g) ?? []).length, 2)
   assert.match(html, /\[source\.fromSearch\]/)
-  assert.match(html, /\[source\.link\]/)
+  assert.match(
+    html,
+    /<a href="https:\/\/www\.instagram\.com\/sample_bistro"[^>]*>instagram\.com\/sample_bistro<\/a>/
+  )
 })

@@ -6,14 +6,15 @@
  */
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { collectedLine } from './research-gate-model.ts'
-import type { JSX, ReactNode } from 'react'
-import { CircleCheck, CircleMinus, CirclePause, CircleX, Clock } from 'lucide-react'
+import { Fragment, type JSX, type ReactNode } from 'react'
 import { Badge, Button } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
 
 import { sourceLabel } from './cms-label.ts'
 import { type SearchPage, searchPagesOf } from './research-again.ts'
 import { pastedLinkOf, sourceGroups } from './source-groups.ts'
+import { safeHttpUrl, shortUrl } from './source-links-model.ts'
+import { SourceLogo } from './source-logo.tsx'
 import { type ShownSource, type SourceInput, type Tone, isShownSource, sourceRow } from './status.ts'
 import type { Translate } from './strings.ts'
 export function Section({
@@ -40,15 +41,6 @@ export function Section({
       {children}
     </section>
   )
-}
-
-const SOURCE_ICON: Readonly<Record<Tone, typeof CircleCheck>> = {
-  ok: CircleCheck,
-  partial: CirclePause,
-  blocked: CircleX,
-  failed: CircleX,
-  skipped: CircleMinus,
-  waiting: Clock
 }
 
 /** Retry on one source row: `busy` is being asked for, `failed` did not start. */
@@ -124,7 +116,7 @@ function SourceItem({
 }): JSX.Element {
   const row = sourceRow(s)
   const pastedLink = pastedLinkOf(s)
-  const link = pastedLink ?? (s.ref && /^https?:\/\//.test(s.ref) ? s.ref : null)
+  const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
   const search = searchStatusKey(s)
   const pages = searchPagesOf(s)
   // A source that gave nothing reads Not available with one plain line; a server's own key error is never named.
@@ -144,7 +136,6 @@ function SourceItem({
         ? 'reason.not_collected'
         : row.statusKey)
   const reasonKey = unavailable ? null : search === null ? row.reasonKey : null
-  const Icon = SOURCE_ICON[row.tone]
   // When its data was collected, the shared research's own date (#524), never when this card's job ended.
   const collected = collectedLine(t, s, interfaceLocale() ?? 'en')
   const retrySource = retry !== undefined && row.retryable && isShownSource(row.source) ? row.source : null
@@ -156,23 +147,40 @@ function SourceItem({
         : null
   const head = (
     <>
-      <span className="tracy-wo-src-head">
-        <span className="tracy-wo-src-name">
-          {compact ? null : <Icon aria-hidden="true" className={`tracy-wo-src-icon is-${row.tone}`} />}
-          {sourceLabel(t, row.source, pastedLink ?? s.ref)}
+      <span className="tracy-wo-src-main">
+        <SourceLogo source={row.source} ref={link ?? s.ref} />
+        <span className="tracy-wo-src-head">
+          <span className="tracy-wo-src-name">{sourceLabel(t, row.source, pastedLink ?? s.ref)}</span>
+          {link !== null || s.fromSearch || collected !== null || plainReason !== null ? (
+            <span className="tracy-wo-src-sub">
+              {[
+                link !== null ? (
+                  <a
+                    key="link"
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={link}
+                    className="tracy-wo-src-link"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {shortUrl(link)}
+                  </a>
+                ) : null,
+                s.fromSearch ? t('source.fromSearch') : null,
+                collected,
+                plainReason ? t(plainReason) : null
+              ]
+                .filter(Boolean)
+                .map((part, i) => (
+                  <Fragment key={i}>
+                    {i > 0 ? ' · ' : null}
+                    {part}
+                  </Fragment>
+                ))}
+            </span>
+          ) : null}
         </span>
-        {pastedLink !== null || s.fromSearch || collected !== null || plainReason !== null ? (
-          <span className="tracy-wo-src-sub">
-            {[
-              pastedLink !== null ? t('source.link') : null,
-              s.fromSearch ? t('source.fromSearch') : null,
-              collected,
-              plainReason ? t(plainReason) : null
-            ]
-              .filter(Boolean)
-              .join(' · ')}
-          </span>
-        ) : null}
       </span>
       <Badge
         variant="outline"
@@ -196,11 +204,6 @@ function SourceItem({
           : null}
         {typeof s.queries === 'number' ? (
           <span className="tracy-wo-small">{t('again.search.queries', { count: s.queries })} </span>
-        ) : null}
-        {link !== null ? (
-          <a href={link} target="_blank" rel="noopener noreferrer" className="tracy-wo-demo-url">
-            {link}
-          </a>
         ) : null}
         {coverage}
         {coverage !== null && reasonKey !== null ? ' · ' : null}

@@ -87,8 +87,6 @@ export interface StepView {
   approvedAt: string | null
   /** Why a later step cannot start yet (`stepper.lock.*`), or null. */
   lockKey: string | null
-  /** The brief this step made is stale (`brief.chip.olderProfile` / `brief.chip.olderSources`), or null. */
-  staleKey: string | null
   /** The one status line of the step in the Progress list. */
   status: StepLine
 }
@@ -151,20 +149,40 @@ function withOlderBrief(
   return approved > made ? { ...approval, brief: 'stale', briefStale: 'profile' } : approval
 }
 
-/** Why the latest brief cannot be used now, for the Business brief card (#537), or null when it can. */
-export function briefHeldOf(input: Pick<StepperInput, 'approval' | 'brief'>): 'profile' | 'sources' | null {
-  const approval = approvalOf(input.approval)
-  if (approval === null || !hasBrief(input.brief)) return null
-  if (approval.researchNeeded) return 'sources'
-  if (approval.profile !== 'approved') return approval.briefStale === 'sources' ? 'sources' : 'profile'
-  return null
+/**
+ * What on screen still counts as made, in ONE place (#537). The three steps depend on each other, so a reset
+ * cascades downstream and nothing old is shown: the server keeps its revisions, the client treats them as not made.
+ *   - research running again, sources changed, or the business facts not approved (or edited after approval):
+ *     the brief and the site are not made;
+ *   - a brief made before the facts were approved (`withOlderBrief`) or marked stale: the brief and the site are not
+ *     made;
+ *   - a brief that is not approved, or approved after the site was made: the site is not built.
+ */
+export function effectiveOf(input: StepperInput): { brief: StepperInput['brief']; demo: DemoState } {
+  const approval = withOlderBrief(approvalOf(input.approval), hasBrief(input.brief) ? input.brief : null)
+  const jobState = input.researchJob?.state ?? null
+  const again = input.research.state === 'running' || MOVING.has(jobState ?? '')
+  const briefUsable =
+    hasBrief(input.brief) &&
+    !again &&
+    (approval === null ||
+      (!approval.researchNeeded && approval.profile === 'approved' && approval.brief !== 'stale'))
+  const approvedAt = Date.parse(approval?.briefApprovedAt ?? '')
+  const builtAt = Date.parse(input.demoAt ?? '')
+  const approvedAfterBuild = Number.isFinite(approvedAt) && Number.isFinite(builtAt) && approvedAt > builtAt
+  const demoValid =
+    briefUsable && (approval === null || (approval.brief === 'approved' && !approvedAfterBuild))
+  return { brief: briefUsable ? input.brief : null, demo: demoValid ? input.demo : 'none' }
 }
 
-export function stepperView(input: StepperInput): StepperView {
+/** Whether the latest brief counts as made on screen (`effectiveOf`). */
+export const briefUsableOf = (input: StepperInput): boolean => effectiveOf(input).brief != null
+
+export function stepperView(raw: StepperInput): StepperView {
+  const input = { ...raw, ...effectiveOf(raw) }
   const done: Partial<Record<StepId, string | null>> = {}
   const approvedAt: Partial<Record<StepId, string | null>> = {}
   const lockOf: Partial<Record<StepId, string>> = {}
-  let staleKey: string | null = null
   let current: StepId | null = null
   let lineKey: string | null = null
   let running = false
@@ -174,11 +192,14 @@ export function stepperView(input: StepperInput): StepperView {
   const jobState = input.researchJob?.state ?? null
   const briefMade = hasBrief(input.brief)
   const approval = withOlderBrief(approvalOf(input.approval), briefMade ? input.brief : null)
-  if (approval !== null && briefMade && approval.brief === 'stale')
-    staleKey = approval.briefStale === 'sources' ? 'brief.chip.olderSources' : 'brief.chip.olderProfile'
 
   if (!input.research.done) {
     current = 'research'
+    if (input.research.researchedAt !== null) {
+      // Research runs again: what came after it waits.
+      lockOf.brief = 'stepper.lock.research'
+      lockOf.build = 'stepper.lock.both'
+    }
     if (input.research.state === 'running' || MOVING.has(jobState ?? '')) {
       running = true
       lineKey = 'stepper.research.running'
@@ -193,7 +214,7 @@ export function stepperView(input: StepperInput): StepperView {
       lineKey = 'stepper.research.notStarted'
       action = { kind: 'start-research', labelKey: 'job.start' }
     }
-  } else if (approval?.researchNeeded) {
+  } else if (approval?.researchNeeded || input.research.state === 'running' || MOVING.has(jobState ?? '')) {
     // A source added after research: research reads the business again before anything downstream counts (#537).
     current = 'research'
     if (input.research.state === 'running' || MOVING.has(jobState ?? '')) {
@@ -203,7 +224,7 @@ export function stepperView(input: StepperInput): StepperView {
       lineKey = 'stepper.research.sourcesChanged'
       action = { kind: 'research-again', labelKey: 'details.researchAgain' }
     }
-    lockOf.brief = briefMade ? 'stepper.lock.researchAgain' : 'stepper.lock.research'
+    lockOf.brief = 'stepper.lock.researchAgain'
     lockOf.build = 'stepper.lock.both'
   } else if (approval !== null && approval.profile !== 'approved') {
     // Research done, the Profile not approved yet (or edited after approval): the seller reviews it first.
@@ -211,8 +232,8 @@ export function stepperView(input: StepperInput): StepperView {
     review = true
     lineKey = 'stepper.review.profile'
     action = { kind: 'review-profile', labelKey: 'stepper.reviewProfile' }
-    lockOf.brief = staleKey !== null ? 'stepper.lock.profileAgain' : 'stepper.lock.profile'
-    if (staleKey !== null) lockOf.build = 'stepper.lock.both'
+    lockOf.brief = 'stepper.lock.profile'
+    lockOf.build = 'stepper.lock.both'
   } else {
     done.research = input.research.researchedAt
     approvedAt.research = approval?.profileApprovedAt ?? null
@@ -225,6 +246,7 @@ export function stepperView(input: StepperInput): StepperView {
       current = 'brief'
       running = true
       lineKey = 'stepper.brief.running'
+      lockOf.build = 'stepper.lock.brief'
     } else if (job.mode === 'failed' && !briefMade) {
       current = 'brief'
       lineKey = 'stepper.brief.failed'
@@ -234,11 +256,6 @@ export function stepperView(input: StepperInput): StepperView {
       current = 'brief'
       lineKey = approval !== null ? 'stepper.brief.readyApproved' : 'stepper.brief.ready'
       action = { kind: 'make-brief', labelKey: 'brief.make' }
-    } else if (approval !== null && approval.brief === 'stale') {
-      current = 'brief'
-      lineKey =
-        approval.briefStale === 'sources' ? 'stepper.brief.staleSources' : 'stepper.brief.staleProfile'
-      action = { kind: 'make-brief', labelKey: 'brief.makeAgain' }
       lockOf.build = 'stepper.lock.brief'
     } else if (approval !== null && approval.brief !== 'approved') {
       current = 'brief'
@@ -295,10 +312,10 @@ export function stepperView(input: StepperInput): StepperView {
                 ? { key: 'stepper.running', tone: 'run' }
                 : id === 'research' && approval?.researchNeeded
                   ? { key: 'stepper.sourcesChanged', tone: 'warn' }
-                  : { key: 'stepper.now', tone: 'run' }
-              : lockKey !== null
-                ? { key: 'stepper.locked', tone: 'mute' }
-                : { key: 'stepper.upNext', tone: 'mute' }
+                  : lineKey === 'stepper.research.paused'
+                    ? { key: 'stepper.paused', tone: 'warn' }
+                    : { key: 'stepper.ready', tone: 'mute' }
+              : { key: 'stepper.upNext', tone: 'mute' }
     return {
       id,
       nameKey: `step.${id}`,
@@ -308,7 +325,6 @@ export function stepperView(input: StepperInput): StepperView {
       review: stepReview,
       approvedAt: approved,
       lockKey,
-      staleKey: id === 'brief' ? staleKey : null,
       status
     }
   })

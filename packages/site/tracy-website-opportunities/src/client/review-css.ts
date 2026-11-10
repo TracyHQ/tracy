@@ -21,7 +21,6 @@ export const REVIEW_CSS = `
 .tracy-wo-band .tracy-wo-step-sub[data-tone='mute'] { color: var(--muted-foreground); }
 .tracy-wo-band-lock { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; color: var(--muted-foreground); }
 .tracy-wo-band-lock .tracy-wo-icon { width: 12px; height: 12px; flex: none; }
-.tracy-wo-band-stale { align-self: flex-start; margin-top: 4px; }
 .tracy-wo-review-badge { align-self: flex-start; }
 .tracy-wo-chip-warn { background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); border-color: transparent; }
 .tracy-wo-band-pane { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding: 14px 16px; background: color-mix(in oklab, var(--primary) 5%, var(--card, var(--background))); }
@@ -39,10 +38,9 @@ export const REVIEW_CSS = `
 .tracy-wo-band-build .tracy-wo-progress { padding: 0; border: 0; background: transparent; }
 .tracy-wo-band-acts { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
 .tracy-wo-approve-end { height: 1px; }
-.tracy-wo-approve { position: sticky; bottom: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--background); box-shadow: 0 -6px 12px -10px color-mix(in oklab, var(--foreground) 30%, transparent); }
-.tracy-wo-approve-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 260px; }
-.tracy-wo-approve-hint { margin: 0; font-size: 13px; font-weight: 500; }
-.tracy-wo-approve-acts { display: flex; gap: 8px; flex: none; margin-left: auto; }
+.tracy-wo-approve { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-left: auto; min-width: 0; }
+.tracy-wo-approve > p { margin: 0; }
+.tracy-wo-approve-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .tracy-wo-add-source { align-self: flex-start; }
 .tracy-wo-add-source-form { display: flex; flex-direction: column; gap: 6px; padding: 10px 0 0; border-top: 1px solid var(--border); }
 .tracy-wo-add-source-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }

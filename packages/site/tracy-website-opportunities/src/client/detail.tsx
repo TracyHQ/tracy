@@ -36,9 +36,9 @@ import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
 import { Stepper } from './stepper.tsx'
-import { type StepAction, bandSubSteps, briefHeldOf, reviewChipOf, stepperView } from './stepper-model.ts'
+import { type StepAction, bandSubSteps, effectiveOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
-import { AddSource, ApprovalFooter, gateText } from './seller-review.tsx'
+import { AddSource, type ApprovalView, gateText } from './seller-review.tsx'
 import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
@@ -96,7 +96,7 @@ import {
   sectionMetas,
   sourceCounts
 } from './section-model.ts'
-import { sourcesToShow } from './source-links-model.ts'
+import { overviewSourcesOf, sourcesToShow } from './source-links-model.ts'
 import { DetailsHeader } from './details-header.tsx'
 // [TAM] preview panel (temporary, never ships)
 import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
@@ -565,6 +565,12 @@ export function DetailView({
     researchMovingOf({ research, researchJob: row.job ?? null }) ? [] : sources,
     body.opportunity
   )
+  // The overview lists only what was collected (status complete); the other outcomes stay on the Sources sub-page.
+  // Before research the pasted links all show, Not collected yet.
+  const overviewSources = overviewSourcesOf(
+    shownSources,
+    research.done && !researchMovingOf({ research, researchJob: row.job ?? null })
+  )
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
@@ -598,7 +604,7 @@ export function DetailView({
     window.open(command.href, '_blank', 'noopener,noreferrer')
   }
   // The three steps with the ONE action of the current step: the Progress card, or one line on a sub-page.
-  const stepper = stepperView({
+  const stepperInput = {
     research,
     researchJob: job,
     briefJob: briefJob.job,
@@ -606,7 +612,10 @@ export function DetailView({
     demo: demoView.state,
     demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
     approval: isRecord(body.approval) ? body.approval : null
-  })
+  }
+  // What still counts as made: a reset upstream clears the brief and the site on screen (`effectiveOf`).
+  const effective = effectiveOf(stepperInput)
+  const stepper = stepperView(stepperInput)
   const approval = isRecord(body.approval) ? body.approval : null
   const onStep = (step: StepAction): void => {
     if (!step.startsWith('review-') && preview.block(step)) return // [TAM]
@@ -848,38 +857,10 @@ export function DetailView({
       research={body.research}
       briefJob={briefJob}
       profileEditedAt={editedAt}
-      review={
-        approval === null
-          ? null
-          : { lockKey: stepper.steps[1]?.lockKey ?? null, staleKey: stepper.steps[1]?.staleKey ?? null }
-      }
+      review={approval === null ? null : { lockKey: stepper.steps[1]?.lockKey ?? null }}
       onOpen={openBrief}
     />
   )
-  // A brief made before the Profile was approved, or from older sources (#537): on Details it is only named, read
-  // only, with what to do first; its table and Refresh wait until the seller approves the new Profile.
-  const held = briefHeldOf({ approval, brief: isRecord(body.brief) ? body.brief : null })
-  const heldBrief = isRecord(body.brief) ? body.brief : {}
-  const heldLine =
-    held === null ? null : (
-      <div className="tracy-wo-stack">
-        <p className="tracy-wo-muted">
-          {t(held === 'sources' ? 'brief.heldSources' : 'brief.heldProfile', { n: Number(heldBrief.n ?? 1) })}
-        </p>
-        {typeof heldBrief.id === 'string' ? (
-          <Button
-            type="button"
-            size="xs"
-            variant="outline"
-            className="tracy-wo-review-badge"
-            onClick={() => openBrief(String(heldBrief.id), Number(heldBrief.n ?? 1))}
-          >
-            <FileText aria-hidden="true" />
-            {t('brief.view')}
-          </Button>
-        ) : null}
-      </div>
-    )
   const mediaBlock = (full: boolean): JSX.Element => (
     <MediaRow
       t={t}
@@ -1027,46 +1008,48 @@ export function DetailView({
         <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
       ) : briefEmpty !== null ? (
         <p className="tracy-wo-muted">{t(briefEmpty)}</p>
+      ) : effective.brief == null && isRecord(body.brief) ? (
+        // A reset upstream: the old brief is not shown at all, the page reads as not made yet.
+        <p className="tracy-wo-psec-lock">
+          <Lock aria-hidden="true" className="tracy-wo-icon" />
+          {t(stepper.steps[1]?.lockKey ?? 'workspace.wait.brief')}
+        </p>
       ) : (
         <>
-          {heldLine ?? briefLine}
+          {briefLine}
           {briefTable(true)}
           {tableListsFacts ? <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p> : null}
         </>
       )
-    // The approval footer (#537): on the Profile once research is done, on the brief once one is made and current.
-    const footer =
-      approval === null ? null : shown === 'profile' &&
-        approval.profile !== 'none' &&
-        approval.profile !== undefined ? (
-        <ApprovalFooter
-          key="profile"
-          t={t}
-          kind="profile"
-          approvedLine={
-            approval.profile === 'approved'
-              ? approvedLine('approve.done.profile', approval.profileApprovedAt)
-              : null
-          }
-          onBack={() => onSection(null)}
-          onApprove={approveProfile}
-        />
-      ) : shown === 'brief' &&
-        held === null &&
-        (approval.brief === 'needed' || approval.brief === 'approved') ? (
-        <ApprovalFooter
-          key="brief"
-          t={t}
-          kind="brief"
-          approvedLine={
-            approval.brief === 'approved'
-              ? approvedLine('approve.done.brief', approval.briefApprovedAt)
-              : null
-          }
-          onBack={() => onSection(null)}
-          onApprove={approveBrief}
-        />
-      ) : null
+    // Back and Approve in the header (#537): on the Profile once research is done, on the brief once one is made and
+    // current; elsewhere on those two pages only Back.
+    const approvalView: ApprovalView | null =
+      approval === null
+        ? null
+        : shown === 'profile'
+          ? {
+              kind: 'profile',
+              pending: approval.profile !== 'none' && approval.profile !== undefined,
+              approvedLine:
+                approval.profile === 'approved'
+                  ? approvedLine('approve.done.profile', approval.profileApprovedAt)
+                  : null,
+              onBack: () => onSection(null),
+              onApprove: approveProfile
+            }
+          : shown === 'brief'
+            ? {
+                kind: 'brief',
+                pending:
+                  effective.brief != null && (approval.brief === 'needed' || approval.brief === 'approved'),
+                approvedLine:
+                  effective.brief != null && approval.brief === 'approved'
+                    ? approvedLine('approve.done.brief', approval.briefApprovedAt)
+                    : null,
+                onBack: () => onSection(null),
+                onApprove: approveBrief
+              }
+            : null
     return (
       <div className="tracy-wo-page tracy-wo-details" ref={page}>
         {errors}
@@ -1079,7 +1062,7 @@ export function DetailView({
           onList={onList}
           onSection={onSection}
           actions={shown === 'sources' ? addSourceButton : null}
-          footer={footer}
+          approval={approvalView}
         >
           {content}
         </SubPage>
@@ -1128,20 +1111,19 @@ export function DetailView({
           researchDone: research.done,
           researchMoving,
           researchedAt: research.researchedAt,
-          sources: shownSources.length,
+          sources: overviewSources.length,
           fields: profileRows.length,
-          brief: isRecord(body.brief) ? { n: Number(body.brief.n ?? 1) } : null,
+          brief: effective.brief != null && isRecord(body.brief) ? { n: Number(body.brief.n ?? 1) } : null,
           briefEmpty:
             briefSteps.mode === 'running' ? 'running' : briefSteps.mode === 'failed' ? 'failed' : null,
-          held,
-          demo: demoView.state,
+          demo: effective.demo,
           demoHost: demoHostOf(demoCommand('primary', row, body)),
           locale
         }}
         bodies={{
           sources: (
             <div className="tracy-wo-stack">
-              <Sources t={t} sources={shownSources} collected={research.done && !researchMoving} compact />
+              <Sources t={t} sources={overviewSources} collected={research.done && !researchMoving} compact />
               <span className="tracy-wo-row">
                 {addSourceButton}
                 {cancelButton}
@@ -1179,7 +1161,7 @@ export function DetailView({
               ) : null}
             </div>
           ),
-          brief: heldLine ?? (
+          brief: (
             <div className="tracy-wo-stack">
               {briefLine}
               {briefTable(false)}
@@ -1518,9 +1500,9 @@ function BriefLine({
   profileEditedAt: string | null
   /**
    * The seller's approvals (#537), when the server sends them: the brief step's lock line (it replaces Make and
-   * Refresh while the Profile waits for approval) and its stale chip. Their words replace the older out-of-date line.
+   * Refresh while the Profile waits for approval). Its words replace the older out-of-date line.
    */
-  review?: { lockKey: string | null; staleKey: string | null } | null
+  review?: { lockKey: string | null } | null
   onOpen: (revisionId: string, n: number) => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
@@ -1548,11 +1530,6 @@ function BriefLine({
               {t(`brief.chip.${chip}`)}
             </Badge>
           )}
-          {review?.staleKey ? (
-            <Badge variant="outline" className="tracy-wo-chip-warn">
-              {t(review.staleKey)}
-            </Badge>
-          ) : null}
           <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
             <FileText aria-hidden="true" />
             {t('brief.view')}

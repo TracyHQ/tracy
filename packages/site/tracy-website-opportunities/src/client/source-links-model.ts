@@ -67,3 +67,30 @@ export function sourcesToShow(sources: readonly SourceInput[], opportunity: unkn
     ...sources
   ]
 }
+
+/**
+ * The sources the Workspace card lists on the overview: after research only the ones collected (status complete);
+ * the other outcomes (No page found, Not available, Could not be read) stay on the Sources sub-page. Before research
+ * every pasted link shows, Not collected yet.
+ */
+export function overviewSourcesOf(shown: readonly SourceInput[], collected: boolean): SourceInput[] {
+  return collected ? shown.filter((s) => s.status === 'complete') : [...shown]
+}
+
+/** The address as an http(s) URL, or null for anything else (no other scheme ever becomes a link). */
+export function safeHttpUrl(raw: unknown): string | null {
+  if (typeof raw !== 'string') return null
+  try {
+    const url = new URL(raw.trim())
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null
+  } catch {
+    return null
+  }
+}
+
+/** A link as shown in a row: host and path without the scheme, an ellipsis past `max` characters. */
+export function shortUrl(url: string, max = 48): string {
+  let text = url.replace(/^https?:\/\//i, '').replace(/^www\./i, '')
+  text = text.replace(/[?#].*$/, '').replace(/\/+$/, '')
+  return text.length > max ? `${text.slice(0, max - 1)}\u2026` : text
+}

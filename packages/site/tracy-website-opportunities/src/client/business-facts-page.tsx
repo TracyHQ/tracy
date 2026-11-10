@@ -16,7 +16,7 @@ import {
   hoursLineParts,
   initialsOf
 } from './business-facts-model.ts'
-import { BusinessCard, Caption, FactsCard } from './business-facts-parts.tsx'
+import { ActButton, BusinessCard, Caption, FactsCard, LeftOffTag } from './business-facts-parts.tsx'
 import { FactsMedia } from './business-facts-media.tsx'
 import type { ColorsView, LogoView, MediaRowView } from './detail-model.ts'
 import { LogoField } from './media-row.tsx'
@@ -87,6 +87,30 @@ function HoursCard({
         {t('name.chip.checked')}
       </Badge>
     ) : null
+  // A left off hours card keeps its lines and a tag; the one choice flips to Show on the site.
+  const actions =
+    hours === null || card?.state !== 'filled'
+      ? []
+      : hours.left
+        ? hours.sourceHours.length > 0
+          ? [
+              <ActButton key="show" disabled={busy} onClick={() => void choose({ choice: 'keep' })}>
+                {t('reading.show')}
+              </ActButton>
+            ]
+          : []
+        : [
+            ...(hours.open && hours.sourceHours.length > 0
+              ? [
+                  <ActButton key="keep" disabled={busy} onClick={() => void choose({ choice: 'keep' })}>
+                    {t('name.keep')}
+                  </ActButton>
+                ]
+              : []),
+            <ActButton key="leave" disabled={busy} onClick={() => void choose({ choice: 'leave' })}>
+              {t('hours.leave')}
+            </ActButton>
+          ]
   const edit = (): ReactNode => (
     <>
       <EditableText
@@ -129,9 +153,11 @@ function HoursCard({
           <Clock aria-hidden="true" className="tracy-wo-icon" />
           {t('field.hours')}
           {chip}
+          {hours?.left ? <LeftOffTag t={t} /> : null}
         </>
       }
       edit={card?.state === 'notCollected' ? null : edit}
+      actions={actions}
       editing={editing}
       onEditing={setEditing}
     >
@@ -139,10 +165,8 @@ function HoursCard({
         <NotYet t={t} state={card?.state === 'filled' || card === undefined ? 'none' : card.state} />
       ) : (
         <>
-          {hours.left ? (
-            <p className="tracy-wo-muted">{t('hours.left')}</p>
-          ) : (
-            <table className="tracy-wo-facts-hours">
+          {lines.length === 0 ? null : (
+            <table className="tracy-wo-facts-hours" data-off={hours.left ? '' : undefined}>
               <tbody>
                 {lines.map((line) => {
                   const { days, times } = hoursLineParts(line)
@@ -159,37 +183,6 @@ function HoursCard({
           {hours.open ? (
             <div className="tracy-wo-facts-note" role="note">
               <span>{t('hours.note', { source: sourceName(t, hours) })}</span>
-              <span className="tracy-wo-row tracy-wo-wrap">
-                {hours.sourceHours.length > 0 ? (
-                  <Button
-                    type="button"
-                    size="xs"
-                    variant="link"
-                    disabled={busy}
-                    onClick={() => void choose({ choice: 'keep' })}
-                  >
-                    {t('name.keep')}
-                  </Button>
-                ) : null}
-                <Button
-                  type="button"
-                  size="xs"
-                  variant="link"
-                  disabled={busy}
-                  onClick={() => setEditing(true)}
-                >
-                  {t('hours.edit')}
-                </Button>
-                <Button
-                  type="button"
-                  size="xs"
-                  variant="link"
-                  disabled={busy}
-                  onClick={() => void choose({ choice: 'leave' })}
-                >
-                  {t('hours.leave')}
-                </Button>
-              </span>
             </div>
           ) : null}
           {failed ? (
@@ -233,22 +226,18 @@ function TeamList({
             {initialsOf(person.label)}
           </span>
           <span className="tracy-wo-facts-person">
-            <span>{person.label}</span>
+            <span>
+              {person.label}
+              {person.removed || (person.reviewsOnly && !person.onSite) ? <LeftOffTag t={t} /> : null}
+            </span>
             <small>{[person.role, t(`reading.from.${person.from}`)].filter(Boolean).join(' · ')}</small>
           </span>
           {readingActions(person)
             .filter((p) => p !== 'remove')
             .map((p) => (
-              <Button
-                key={p}
-                type="button"
-                size="xs"
-                variant="link"
-                disabled={busy}
-                onClick={() => void pick(person.id, p)}
-              >
-                {t(`reading.${p}`)}
-              </Button>
+              <ActButton key={p} disabled={busy} onClick={() => void pick(person.id, p)}>
+                {t(p === 'restore' ? 'reading.show' : `reading.${p}`)}
+              </ActButton>
             ))}
         </li>
       ))}
