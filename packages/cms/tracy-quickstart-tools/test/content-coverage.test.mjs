@@ -672,3 +672,107 @@ test('saved metadata: unknown prices, phones and locked PRE remain holes', () =>
   for (const i of items) assert.equal(i.status, 'hole', i.value)
   assert.notEqual(items[2].class, 'c')
 })
+
+test('literal PRE: exact code text owns only its declared scalar, never prose normalization', () => {
+  const literal = 'SELECT <Widget>\n\tA &amp; B ((strong))Case((/strong))'
+  const c = loadContract(
+    contractDir([
+      {
+        key: 'article-2.code',
+        type: 'text',
+        sample: literal,
+        xpath: '/html/body/div/pre/code/text()'
+      }
+    ]),
+    SITE
+  )
+  const match = createMatcher(c, SITE)
+  const item = (codeText) => ({
+    kind: 'text',
+    tag: 'pre',
+    inCode: true,
+    codeText,
+    value: codeText,
+    outsideCode: ''
+  })
+  assert.equal(match(item(literal)).status, 'matched')
+  assert.deepEqual(match(item(literal)).slots, ['article-2.code'])
+  for (const changed of [
+    literal.toLowerCase(),
+    literal.replace('\t', ' '),
+    literal.replace('\n', ' '),
+    literal.replace('&amp;', '&'),
+    literal + ' '
+  ])
+    assert.equal(match(item(changed)).status, 'hole', JSON.stringify(changed))
+  assert.notEqual(match({ kind: 'text', value: literal }).status, 'matched', 'code samples cannot own prose')
+  assert.equal(match(item('Train like a champion every single day.')).status, 'hole', 'prose cannot own code')
+  assert.equal(
+    match({ ...item(literal), codeText: undefined }).status,
+    'hole',
+    'unsupported CODE has no exact structural observation'
+  )
+  const merged = mergeViewports(
+    { desktop: { items: [item(literal), item(literal.toLowerCase())] }, phone: { items: [item(literal)] } },
+    SITE
+  )
+  assert.equal(merged.length, 2)
+  assert.equal(merged[0].codeText, literal)
+  assert.equal(merged[0].viewports.phone.count, 1)
+})
+
+test('literal PRE: DOM extraction double preserves decoded text and rejects unsupported structures', async () => {
+  const { parseHTML } = await import('linkedom')
+  const { runInNewContext } = await import('node:vm')
+  const { extractPage } = await import('../content-coverage/lib/browser-extract.js')
+  const literal = 'SELECT <Widget>\n\tA &amp; B'
+  const read = (inner) => {
+    const { window, document } = parseHTML(`<html><body>${inner}</body></html>`)
+    document.body.normalize() // linkedom splits entities into adjacent text nodes; HTML parsers coalesce them.
+    // Layout/canvas doubles only; this is no browser or rendering proof.
+    window.HTMLElement.prototype.getBoundingClientRect = () => ({
+      left: 0,
+      top: 0,
+      right: 100,
+      bottom: 30,
+      width: 100,
+      height: 30
+    })
+    const create = document.createElement.bind(document)
+    document.createElement = (tag) =>
+      tag === 'canvas'
+        ? { getContext: () => ({ measureText: (s) => ({ width: s.length * 8 }) }) }
+        : create(tag)
+    window.scrollX = 0
+    window.scrollY = 0
+    window.innerWidth = 1440
+    return runInNewContext(`(${extractPage.toString()})()`, {
+      window,
+      document,
+      location: { href: SITE },
+      getComputedStyle: () => ({
+        display: 'block',
+        backgroundImage: 'none',
+        fontSize: '16px',
+        lineHeight: '20px'
+      })
+    }).items
+  }
+  const encoded = literal.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+  const supported = read(`<pre><code>${encoded}</code></pre>`)
+  assert.equal(
+    supported.filter((s) => s.kind === 'text').length,
+    1,
+    'block-display CODE is not duplicated or lost'
+  )
+  assert.equal(supported[0].codeText, literal)
+  for (const html of [
+    `<pre><code><span>${encoded}</span></code></pre>`,
+    `<pre>outside<code>${encoded}</code></pre>`,
+    `<pre>${encoded}</pre>`
+  ])
+    assert.equal(
+      read(html).some((s) => typeof s.codeText === 'string'),
+      false
+    )
+})

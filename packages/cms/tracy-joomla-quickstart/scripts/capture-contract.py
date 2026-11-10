@@ -183,9 +183,13 @@ if a.skip_unshipped_block_modules:
 # `a` and `span` are not: they sit inside one of these.
 UNIT_TAGS={'h1','h2','h3','h4','h5','h6','p','li','dt','dd','figcaption','summary','th','td','button','label'}
 HTML_ROOT='/html/body/div'
+def literal_pre_xpath(xpath):
+ # Address is a candidate only: ContentSlots::htmlSlots validates the current DOM shape.
+ return isinstance(xpath,str) and bool(re.fullmatch(r'/html/body/div(?:/[a-z][a-z0-9-]*(?:\[[1-9][0-9]*\])?)*/pre(?:\[[1-9][0-9]*\])?/code(?:\[[1-9][0-9]*\])?/text\(\)(?:\[1\])?',xpath))
 def text_unit(xpath):
  """The xpath of the nearest unit element above a text node's xpath, or None."""
  segs=xpath.strip('/').split('/')
+ if literal_pre_xpath(xpath):return None
  if not segs or not re.fullmatch(r'text\(\)(\[\d+\])?',segs[-1]):return None
  for i in range(len(segs)-2,-1,-1):
   if re.fullmatch(r'[a-z0-9]+',re.sub(r'\[\d+\]$','',segs[i])) and re.sub(r'\[\d+\]$','',segs[i]) in UNIT_TAGS:return '/'+'/'.join(segs[:i+1])
@@ -214,7 +218,7 @@ def whole_units(hs,body=''):
  texts=[h for h in hs if h.get('type')=='text' and isinstance(h.get('xpath'),str) and '/@' not in h['xpath']]
  units={id(h):text_unit(h['xpath']) for h in texts}
  # No unit element anywhere in the fragment: the fragment is the unit (a heading field with `<br>`, a one-line note).
- if texts and not any(units.values()) and all(h['xpath'].startswith(HTML_ROOT+'/') for h in texts):units={id(h):HTML_ROOT for h in texts}
+ if texts and not any(literal_pre_xpath(h['xpath']) for h in texts) and not any(units.values()) and all(h['xpath'].startswith(HTML_ROOT+'/') for h in texts):units={id(h):HTML_ROOT for h in texts}
  members=collections.defaultdict(list)
  for h in texts:
   if units[id(h)]:members[units[id(h)]].append(h)
@@ -223,6 +227,8 @@ def whole_units(hs,body=''):
  # A unit that holds an element carrying an attribute slot anywhere inside it (an <img src> beside the words) also
  # keeps its pieces: one text node written over the unit would drop the words around that element.
  apart|={u for u in members if any(e.startswith(u+'/') for e in slotted)}
+ # A whole unit must not rewrite across a separately owned literal code block.
+ apart|={u for u in members if any(literal_pre_xpath(h['xpath']) and h['xpath'].startswith(u+'/') for h in texts)}
  out=[];done=set()
  for h in hs:
   unit=units.get(id(h))
@@ -248,7 +254,7 @@ def plain_text(sample):
  """A sample's words: markup (notation or HTML) read as a space, white space collapsed."""
  return re.sub(r'\s+',' ',re.sub(r'<[^>]*>',' ',NOTATION.sub(' ',str(sample)))).strip()
 # The length a slot's limit is counted on: its plain text under --inline-markup (markup is not what a reader counts).
-text_len=lambda sample:len(plain_text(sample)) if a.inline_markup else len(sample)
+text_len=lambda sample,xpath=None:len(sample) if literal_pre_xpath(xpath) else len(plain_text(sample)) if a.inline_markup else len(sample)
 def html_slots(body):
  script='require $argv[1]; echo json_encode(ContentSlots::htmlSlots(stream_get_contents(STDIN)));'
  hs=json.loads(subprocess.check_output(['php','-r',script,a.slots_helper],input=body.encode())) if body.strip() else []
@@ -485,7 +491,7 @@ for kind,table in tables.items():
   if kind=='article':entity['identityReferences']={'catid':'category-'+row['catid']}
   entities.append(entity)
   def add(column, typ, sample, **extra):
-   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':2048 if typ=='url' else 255 if typ=='image' else max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':bool(re.search(a.evidence_pattern,row.get('title',''))),**extra})
+   slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':2048 if typ=='url' else 255 if typ=='image' else max(40,min(2000,text_len(sample,extra.get('xpath'))*2+20)),'requiresEvidence':bool(re.search(a.evidence_pattern,row.get('title',''))),**extra})
   if kind=='module' and row['module']=='mod_ja_acm' and row['title'].startswith(a.module_prefix):
    params=json.loads(row['params']);cfg=json.loads(params['jatools-config']);block=cfg[':type'].split(':')[-1];layout=cfg[block].get('jatools-layout-'+block,'style-1')
    xml=root/('templates/'+template+'/acm')/block/'tmpl'/f'{layout}.xml'
@@ -581,7 +587,7 @@ if a.full_coverage:
   for pr in sorted((p for p in people_rows['userProfile'] if p['user_id']==uid),key=lambda p:int(p['id'])):
    pid=f'userProfile-{pr["id"]}';plabel=label.strip()+' / '+pr['field']
    def add(column,typ,sample,**extra):
-    slots.append({'key':f'{pid}.{len([s for s in slots if s["entity"]==pid])}','entity':pid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
+    slots.append({'key':f'{pid}.{len([s for s in slots if s["entity"]==pid])}','entity':pid,'column':column,'type':typ,'sample':sample,'maxCharacters':255 if typ=='image' else max(40,min(2000,text_len(sample,extra.get('xpath'))*2+20)),'requiresEvidence':False,**extra})
    if pr['field']=='user_avatar':declare_text(add,'value',pr['value'],plabel,'image')
    elif MARKUP.search(pr['value']):declare_html(add,'value',pr['value'],plabel)
    else:declare_text(add,'value',pr['value'],plabel)
@@ -680,7 +686,7 @@ if a.full_coverage:
   for ext,key,value in sorted(declared):
    sid=string_id(ext,tag,key);eid=f'languageString-{sid}';label=f'{key} (template string, {tag})'
    def add(column,typ,sample,**extra):
-    slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,text_len(sample)*2+20)),'requiresEvidence':False,**extra})
+    slots.append({'key':f'{eid}.{len([s for s in slots if s["entity"]==eid])}','entity':eid,'column':column,'type':typ,'sample':sample,'maxCharacters':max(40,min(2000,text_len(sample,extra.get('xpath'))*2+20)),'requiresEvidence':False,**extra})
    # A language string is HTML (Joomla prints it as it stands), so one written with an entity (`&amp;`, `&rsquo;`) is
    # read as HTML too: its slot holds the words a visitor reads, the entity decoded, and the plugin writes it through
    # its node. Kept as text, the sample would teach a model to write "&amp;" into a business name (rule NAME-4).

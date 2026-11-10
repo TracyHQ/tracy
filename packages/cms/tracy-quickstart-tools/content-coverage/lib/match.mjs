@@ -258,11 +258,18 @@ export function createMatcher(contract, siteUrl) {
     }
     if (item.kind === 'image') return matchImage(item.value)
     if (item.kind === 'link') return matchLink(item)
+    if (item.kind === 'text' && typeof item.codeText === 'string') {
+      const keys = contract.index.code?.get(item.codeText)
+      return keys
+        ? { status: 'matched', by: 'exact literal PRE text', slots: keys }
+        : { status: 'hole', reason: 'literal PRE text has no exact declared scalar' }
+    }
+    if (item.inCode) return { status: 'hole', reason: 'unsupported or undeclared code text' }
     const res = matchText(item.value)
     // Inline code is left out of every slot on purpose (capture skips <code>): the words around it are the slot's text.
     if (res.status === 'hole' && typeof item.outsideCode === 'string') {
       const rest = matchText(item.outsideCode)
-      // Only a match counts: a block that is all code (<pre><code>) stays a hole, to be accepted with a reason.
+      // Only declared prose around inline CODE counts; an all-code block stays a hole.
       if (rest.status === 'matched') return { ...rest, by: `text outside inline code (${rest.by})` }
     }
     return res

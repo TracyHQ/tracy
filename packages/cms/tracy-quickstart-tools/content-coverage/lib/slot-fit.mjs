@@ -21,6 +21,7 @@ import {
   pictureKindOf,
   pictureReplaceOf
 } from '../../../../wo/website-opportunities/domain/content-map-fit.mjs'
+import { isLiteralPreSlot } from './contract.mjs'
 import { authorListsOf } from './author-lists.mjs'
 import { itemListsOf } from './item-lists.mjs'
 import { listingListsOf } from './listing-lists.mjs'
@@ -58,7 +59,7 @@ const wordsOf = (v) =>
     .replace(/\s+/g, ' ')
     .trim()
 
-function evidenceOf(findings, samples = new Map()) {
+function evidenceOf(findings, slots = new Map()) {
   /** @type {Map<string, {boxes: Record<string, any>, looks: Record<string, any>, file: any, value: string}>} */
   const bySlot = new Map()
   for (const page of findings?.pages ?? [])
@@ -73,15 +74,24 @@ function evidenceOf(findings, samples = new Map()) {
       if (
         item.kind === 'text' &&
         !composite &&
+        item.matchBy !== 'exact literal PRE text' &&
         !/^exact( ignoring spaces\/punctuation)?$/.test(String(item.matchBy))
       )
         continue
       if (item.kind !== 'text' && item.kind !== 'image') continue
       for (const key of item.slots) {
+        const slot = slots.get(key)
+        if (isLiteralPreSlot(slot)) {
+          if (
+            item.kind !== 'text' ||
+            item.matchBy !== 'exact literal PRE text' ||
+            typeof item.codeText !== 'string' ||
+            item.codeText !== slot.sample
+          )
+            continue
+        } else if (item.matchBy === 'exact literal PRE text') continue
         const ev = bySlot.get(key) ?? { boxes: {}, looks: {}, reserve: {}, file: null, value: item.value }
-        const reserve = composite
-          ? Math.max(0, wordsOf(item.value).length - wordsOf(samples.get(key)).length)
-          : 0
+        const reserve = composite ? Math.max(0, wordsOf(item.value).length - wordsOf(slot?.sample).length) : 0
         for (const [vp, v] of Object.entries(item.viewports ?? {})) {
           if (!v?.visible || !(v.rect?.w >= 2) || !(v.rect?.h >= 2)) continue
           const b = { width: v.rect.w, height: v.rect.h }
@@ -280,7 +290,7 @@ function settleCustomizeByRole(slot) {
  * @param {{map: any, findings: any, lock?: any}} input
  */
 export function measureSlotFit({ map, findings, lock }) {
-  const evidence = evidenceOf(findings, new Map((map.slots ?? []).map((s) => [s.key, s.sample])))
+  const evidence = evidenceOf(findings, new Map((map.slots ?? []).map((s) => [s.key, s])))
   const out = structuredClone(map)
   const byRole = roleDecidesKeep(out)
   const summary = {

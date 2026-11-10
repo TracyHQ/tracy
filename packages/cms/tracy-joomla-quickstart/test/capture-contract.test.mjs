@@ -2571,3 +2571,58 @@ test(
     )
   }
 )
+
+test('literal PRE: real Cowork capture keeps leaf sample and literal length across whole units', {
+  skip:
+    needsPhp.skip ||
+    (!process.env.COWORK_SLOTS_HELPER &&
+      'set COWORK_SLOTS_HELPER to the real ContentSlots.php for cross-repo integration')
+}, () => {
+  const literal = ' <Widget>\n\tA &amp; B ((strong))Case((/strong)) '
+  const html = `Lead <b>words</b><pre><code>${literal.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')}</code></pre> Tail`
+  const run = capture(bodyInventory(html), {
+    helper: process.env.COWORK_SLOTS_HELPER,
+    args: ['--whole-units', '--inline-markup']
+  })
+  assertWritten(run)
+  const slots = run.read('content-map.json').slots.filter((s) => s.entity === 'module-2')
+  const code = slots.find((s) => s.xpath === '/html/body/div/pre/code/text()')
+  assert.ok(code, 'the code leaf must never merge into a root fragment')
+  assert.equal(code.sample, literal)
+  assert.equal(code.maxCharacters, [...literal].length * 2 + 20)
+  assert.equal(
+    slots.some((s) => s.xpath === '/html/body/div'),
+    false,
+    'whole-root prose cannot own or cross PRE'
+  )
+  assert.ok(
+    slots.some((s) => s.sample === 'Lead '),
+    'ordinary scalar whitespace follows the real helper'
+  )
+  const unsupported = capture(
+    bodyInventory('<p>Keep prose</p><pre><code><span>highlighted</span></code></pre>'),
+    {
+      helper: process.env.COWORK_SLOTS_HELPER,
+      args: ['--whole-units', '--inline-markup']
+    }
+  )
+  assertWritten(unsupported)
+  assert.equal(
+    unsupported.read('content-map.json').slots.some((s) => s.xpath?.includes('/pre')),
+    false
+  )
+})
+
+test('literal PRE: legacy bare PRE retains ordinary whole-root capture normalization', {
+  skip: needsPhp.skip || (!process.env.COWORK_SLOTS_HELPER && 'set real COWORK_SLOTS_HELPER for integration')
+}, () => {
+  const run = capture(bodyInventory('<pre>Legacy <b>words</b></pre>'), {
+    helper: process.env.COWORK_SLOTS_HELPER,
+    args: ['--whole-units']
+  })
+  assertWritten(run)
+  const slots = run.read('content-map.json').slots.filter((s) => s.entity === 'module-2')
+  assert.equal(slots.length, 1)
+  assert.equal(slots[0].xpath, '/html/body/div')
+  assert.equal(slots[0].sample, 'Legacy words')
+})

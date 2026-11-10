@@ -11,6 +11,15 @@ import { normText, normPath, normHref, basename, letterCount, alnumCount, compac
 import { inventoryPagesOf, wordpressPagePath } from './wordpress-page-path.mjs'
 
 const readJson = (dir, name) => JSON.parse(readFileSync(join(dir, name), 'utf8'))
+/** Candidate leaf address; capture and the writer validate the actual PRE/CODE DOM separately. */
+export const isLiteralPreSlot = (slot) =>
+  slot?.type === 'text' &&
+  !slot.leaf &&
+  typeof slot.xpath === 'string' &&
+  /^\/html\/body\/div(?:\/[a-z][a-z0-9-]*(?:\[[1-9][0-9]*\])?)*\/pre(?:\[[1-9][0-9]*\])?\/code(?:\[[1-9][0-9]*\])?\/text\(\)(?:\[1\])?$/.test(
+    slot.xpath
+  )
+
 /** sha256 of a contract file's bytes: the coverage file names the exact map and lock it measured. */
 export const fileSha256 = (dir, name) =>
   createHash('sha256')
@@ -77,6 +86,7 @@ export function loadContract(dir, siteUrl) {
     return key && entityByKey.has(key) ? key : undefined
   }
 
+  const code = new Map() // exact decoded literal PRE text -> [slot keys]
   const text = new Map() // normText(sample) -> [slot keys]
   const textCompact = new Map() // compact(normText(sample)) -> [slot keys]
   const textList = [] // [{norm, key}] for containment checks, longest first
@@ -95,6 +105,10 @@ export function loadContract(dir, siteUrl) {
   for (const s of map.slots) {
     if (isAudioSlot(s)) {
       audio.push({ ...s, sourceIdentity: audioSourceIdentity(s.sample, siteUrl) })
+      continue
+    }
+    if (isLiteralPreSlot(s)) {
+      if (typeof s.sample === 'string') push(code, s.sample, s.key)
       continue
     }
     if (typeof s.sample === 'string' && s.sample.trim()) push(rawSample, s.sample.trim(), s.key)
@@ -141,7 +155,13 @@ export function loadContract(dir, siteUrl) {
   const PLACEHOLDER = /%(?:\d+\$)?[sdu]/g
   const patterns = []
   for (const s of map.slots) {
-    if (s.type !== 'text' || typeof s.sample !== 'string' || !PLACEHOLDER.test(s.sample)) continue
+    if (
+      isLiteralPreSlot(s) ||
+      s.type !== 'text' ||
+      typeof s.sample !== 'string' ||
+      !PLACEHOLDER.test(s.sample)
+    )
+      continue
     PLACEHOLDER.lastIndex = 0
     const fixed = s.sample.split(PLACEHOLDER).map((x) => normText(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     if (letterCount(fixed.join('')) < 3) continue
@@ -200,7 +220,7 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { text, textCompact, textList, patterns, image, imageBase, url, rawSample, audio },
+    index: { code, text, textCompact, textList, patterns, image, imageBase, url, rawSample, audio },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

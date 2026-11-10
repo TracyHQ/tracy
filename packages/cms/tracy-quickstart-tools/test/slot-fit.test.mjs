@@ -5,6 +5,12 @@
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
+import { loadContract } from '../content-coverage/lib/contract.mjs'
+import { createMatcher } from '../content-coverage/lib/match.mjs'
+import { mergeViewports, annotate } from '../content-coverage/lib/items.mjs'
 
 import { measureSlotFit } from '../content-coverage/lib/slot-fit.mjs'
 import { checkContentMapFit } from '../../../wo/website-opportunities/domain/content-map-fit.mjs'
@@ -619,4 +625,86 @@ test('WordPress: a page slot is named by its block (metadata.name), not by the s
   assert.equal(slotOf(fitted, 'about.testimonial.avatar.1').fit.kind, 'avatar')
   assert.equal(slotOf(fitted, 'about.clients.logo.1').fit.kind, 'logo')
   assert.ok(checkContentMapFit(fitted).ok, checkContentMapFit(fitted).errors.join('\n'))
+})
+
+test('literal PRE fit: matcher and merged raw evidence measure only the exact supported scalar', () => {
+  const literal = 'SELECT <Widget>\n\tA &amp; B ((strong))Case((/strong))'
+  const slot = {
+    key: 'article-8.code',
+    type: 'text',
+    sample: literal,
+    xpath: '/html/body/div/pre/code/text()'
+  }
+  const prose = { key: 'article-8.prose', type: 'text', sample: literal }
+  const map = { entities: [], pages: [], slots: [slot, prose] }
+  const dir = mkdtempSync(path.join(tmpdir(), 'literal-fit-'))
+  try {
+    for (const [name, body] of Object.entries({
+      manifest: { id: 'literal-fit/test' },
+      'content-map': map,
+      'presentation-lock': {}
+    }))
+      writeFileSync(path.join(dir, `${name}.json`), JSON.stringify(body))
+    const site = 'http://site.test/'
+    const match = createMatcher(loadContract(dir, site), site)
+    const raw = (codeText) => ({
+      kind: 'text',
+      tag: 'pre',
+      inCode: true,
+      outsideCode: '',
+      codeText,
+      value: codeText,
+      visible: true,
+      rect: rect(20, 40),
+      look: textLook(20, 2, 10)
+    })
+    const items = annotate(mergeViewports({ desktop: { items: [raw(literal)] } }, site), match, () => ({
+      class: 'd'
+    }))
+    assert.equal(items[0].matchBy, 'exact literal PRE text')
+    assert.equal(items[0].codeText, literal)
+    assert.deepEqual(items[0].slots, [slot.key])
+    const fit = (item, slots = [slot]) =>
+      measureSlotFit({ map: { ...map, slots }, findings: { pages: [{ items: [item] }] } }).map.slots[0].fit
+    assert.equal(fit(items[0]).measured, true)
+    assert.equal(
+      fit(items[0]).maxCharacters,
+      literal.length,
+      'raw sample, including whitespace and markup-looking literal text'
+    )
+    assert.deepEqual(fit(items[0]).lines, { desktop: 2 })
+    for (const codeText of [
+      undefined,
+      literal.toLowerCase(),
+      literal.replace('\t', ' '),
+      literal.replace('\n', ' '),
+      literal.replace('&amp;', '&')
+    ]) {
+      assert.equal(fit({ ...items[0], codeText }).measured, false, JSON.stringify(codeText))
+      // Even an old exact/composite label cannot grant literal evidence without equal raw text.
+      for (const matchBy of ['exact', 'exact ignoring spaces/punctuation', 'composite'])
+        assert.equal(
+          fit({ ...items[0], codeText, matchBy, slots: [slot.key, prose.key] }).measured,
+          false,
+          matchBy
+        )
+    }
+    assert.equal(
+      fit({ ...items[0], slots: [prose.key] }, [prose]).measured,
+      false,
+      'ordinary slot cannot trust code label'
+    )
+    assert.equal(fit({ ...items[0], codeText: undefined }).measured, false)
+    for (const changed of [literal.toLowerCase(), literal.replace('\t', ' '), literal.replace('\n', ' ')]) {
+      const changedItems = annotate(
+        mergeViewports({ desktop: { items: [raw(changed)] } }, site),
+        match,
+        () => ({ class: 'd' })
+      )
+      assert.equal(changedItems[0].status, 'hole')
+      assert.equal(fit(changedItems[0]).measured, false)
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
 })

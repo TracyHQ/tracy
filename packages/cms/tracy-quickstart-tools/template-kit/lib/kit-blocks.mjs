@@ -29,7 +29,7 @@ const short = (s, n = 60) => {
 }
 // A text slot's sample is the whole demo text (cut only past SAMPLE_CAP, a long article body): the writer aims its
 // length at it. Formatted samples (one part per line) are set later by formatTextSlots; an image path stays short.
-const sampleOfSlot = (x) => (x.type === 'text' ? sampleOf(x.sample).sample || null : short(x.sample))
+const sampleOfSlot = (x) => (x.type === 'text' ? sampleOf(x.sample, x).sample || null : short(x.sample))
 
 /**
  * The block's shown links, one per position (links repeating a label and an address are each kept), each with the

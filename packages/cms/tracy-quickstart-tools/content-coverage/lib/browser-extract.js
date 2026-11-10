@@ -189,7 +189,7 @@ export function extractPage() {
       role: el ? roleOf(el) : 'head',
       zone: el ? zoneOf(el) : undefined,
       look: el && (kind === 'image' || kind === 'text') ? lookOf(kind, el, extra) : undefined,
-      // Inside a code sample (<pre>, <code>): text capture never declares, on purpose.
+      // Code needs an exact structural observation; ordinary prose normalization is insufficient.
       ...(el && (kind === 'text' || kind === 'link') && el.closest('pre, code') ? { inCode: true } : {}),
       ...extra
     })
@@ -212,13 +212,27 @@ export function extractPage() {
     }
     return out
   }
+  const literalCodeOf = (el) => {
+    if (el?.tagName !== 'PRE' || el.childNodes.length !== 1 || el.parentElement?.closest('pre, code'))
+      return null
+    const code = el.firstChild
+    return code.nodeType === 1 &&
+      code.tagName === 'CODE' &&
+      code.childNodes.length === 1 &&
+      code.firstChild.nodeType === 3
+      ? code
+      : null
+  }
   for (const el of document.body.querySelectorAll('*')) {
     if (SKIP.has(el.tagName) || el.closest('svg, script, style, noscript, template')) continue
-    if (!blockish(el) && el.parentElement && el !== document.body) continue
-    const t = ownText(el).replace(/\s+/g, ' ').trim()
+    if (el.tagName === 'CODE' && literalCodeOf(el.parentElement) === el) continue
+    const code = literalCodeOf(el)
+    if (!code && !blockish(el) && el.parentElement && el !== document.body) continue
+    const t = (code ? code.firstChild.nodeValue : ownText(el)).replace(/\s+/g, ' ').trim()
     if (!t) continue
     const a = el.tagName === 'A' ? el : el.querySelector(':scope > a')
     const extra = { value: t, href: a ? a.getAttribute('href') : null }
+    if (code) extra.codeText = code.firstChild.nodeValue
     // A paragraph with inline code ("hold the line: <code>status</code> is an integer"): its slot sample has no code words.
     if (el.tagName !== 'CODE' && el.querySelector('code')) {
       const rest = ownText(el, true).replace(/\s+/g, ' ').trim()

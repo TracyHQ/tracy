@@ -53,7 +53,7 @@ function labelSlots(kit, mapOf) {
       const m = mapOf.get(l.labelId)
       const entry = o
         ? Object.fromEntries(FORMAT.filter((k) => o.s[k] !== undefined).map((k) => [k, o.s[k]]))
-        : { type: 'text', role: m?.role ?? null, ...formatOf(m?.sample ?? l.label, {}) }
+        : { type: 'text', role: m?.role ?? null, ...formatOf(m?.sample ?? l.label, {}, m) }
       entry.type ??= 'text'
       const slot = { id: l.labelId, ...entry, ...(o ? { ownedBy: o.b.id } : {}) }
       b.slots = [...(b.slots ?? []), slot]
@@ -329,7 +329,7 @@ export function coverageGate(kit, { map, readings = new Map(), gapAccepts = {}, 
   parts.limitsBelowDemo = 0
   const below = new Set()
   for (const { id, entry } of slotPlaces(kit)) {
-    const demo = demoLength(mapOf.get(id)?.sample)
+    const demo = demoLength(mapOf.get(id)?.sample, mapOf.get(id))
     if (!Number.isFinite(entry.maxCharacters) || entry.maxCharacters >= demo || below.has(id)) continue
     below.add(id)
     parts.limitsBelowDemo++

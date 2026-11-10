@@ -4,6 +4,8 @@ import { normText, normPath } from './normalize.mjs'
 const keyOf = (it, siteUrl) => {
   if (it.kind === 'media')
     return `media|${it.mediaKind}|${it.entity}|${it.track}|${it.selector ?? ''}|${it.value}`
+  if (it.kind === 'text' && typeof it.codeText === 'string') return `code|${it.codeText}`
+  if (it.kind === 'text' && it.inCode) return `unsupported-code|${it.value}`
   if (it.kind === 'image') return `image|${normPath(it.value, siteUrl)}`
   if (it.kind === 'link') return `link|${it.value}`
   return `${it.kind}|${it.attr ?? ''}|${normText(it.value)}`
@@ -44,6 +46,7 @@ export function mergeViewports(byViewport, siteUrl) {
           href: it.href,
           text: it.text,
           ...(typeof it.outsideCode === 'string' ? { outsideCode: it.outsideCode } : {}),
+          ...(typeof it.codeText === 'string' ? { codeText: it.codeText } : {}),
           ...(it.inCode ? { inCode: true } : {}),
           viewports: {}
         }
