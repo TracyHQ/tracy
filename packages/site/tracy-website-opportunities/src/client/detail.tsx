@@ -103,7 +103,7 @@ import { DetailsHeader } from './details-header.tsx'
 import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
 import { applyPreview } from './preview-states.ts'
 import { Section, Sources, SourcesTable } from './details-parts.tsx'
-import { sourceStateOf } from './source-table-model.ts'
+import { sourceProgressOf, sourceStateOf } from './source-table-model.ts'
 import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
 import { DeleteDialog } from './delete-dialog.tsx'
 import { ResearchAgainButton } from './research-again-dialog.tsx'
@@ -575,7 +575,13 @@ export function DetailView({
   // skipped by itself stays on the Sources sub-page. Before research the pasted links all show, waiting.
   const sourcesRead = research.done && !researchMovingOf({ research, researchJob: row.job ?? null })
   const overviewSources = overviewSourcesOf(shownSources, sourcesRead)
-  const overviewStates = overviewSources.map((s) => sourceStateOf(s, sourcesRead, locale).state)
+  const sourceProgress = sourceProgressOf(
+    body.stepProgress,
+    researchMovingOf({ research, researchJob: row.job ?? null })
+  )
+  const overviewStates = overviewSources.map(
+    (s) => sourceStateOf(s, sourcesRead, locale, sourceProgress).state
+  )
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
@@ -1131,7 +1137,12 @@ export function DetailView({
         bodies={{
           sources: (
             <div className="tracy-wo-stack">
-              <SourcesTable t={t} sources={overviewSources} researched={sourcesRead} />
+              <SourcesTable
+                t={t}
+                sources={overviewSources}
+                researched={sourcesRead}
+                progress={sourceProgress}
+              />
               {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
             </div>
           ),

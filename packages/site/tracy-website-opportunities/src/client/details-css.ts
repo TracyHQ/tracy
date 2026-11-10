@@ -6,6 +6,7 @@
  * inside the template below.
  */
 import { PROGRESS_BAND_CSS } from './progress-band-css.ts'
+import { STEP_NODE_CSS } from './step-node-css.ts'
 export const DETAILS_CSS =
   `
 .tracy-wo-details { gap: 12px; }
@@ -74,13 +75,15 @@ export const DETAILS_CSS =
 .tracy-wo-stab-name { flex: none; white-space: nowrap; }
 .tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }
 .tracy-wo-stab-state { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; min-width: 0; padding: 8px 0 8px 12px; border-left: 1px solid color-mix(in oklab, var(--border) 60%, transparent); font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
+.tracy-wo-stab-pill { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 9px 2px 6px; border-radius: 999px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 7%, transparent); color: var(--muted-foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+.tracy-wo-stab-pill[data-state='reading'] { border-color: color-mix(in oklab, var(--primary) 28%, transparent); background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); font-weight: 600; }
+.tracy-wo-stab-pill[data-state='collected'] { border-color: color-mix(in oklab, var(--success) 28%, transparent); background: color-mix(in oklab, var(--success) 12%, transparent); color: var(--success); }
+.tracy-wo-stab-pill[data-state='failed'] { border-color: color-mix(in oklab, var(--destructive) 28%, transparent); background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); }
 .tracy-wo-stab-detail { font-size: 11.5px; color: var(--muted-foreground); opacity: 0.85; }
-.tracy-wo-stab-row[data-state='collected'] .tracy-wo-stab-word { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
-.tracy-wo-stab-row[data-state='failed'] .tracy-wo-stab-word { color: var(--destructive); }
-.tracy-wo-stab-row[data-state='new'] .tracy-wo-stab-word { color: var(--foreground); }
 .tracy-wo-sprog { display: inline-flex; flex: none; gap: 2px; margin-right: 8px; vertical-align: middle; }
 .tracy-wo-sprog > i { width: 14px; height: 5px; border-radius: 2px; background: var(--border); }
 .tracy-wo-sprog > i[data-state='collected'] { background: var(--success); }
+.tracy-wo-sprog > i[data-state='reading'] { background: var(--primary); }
 .tracy-wo-sprog > i[data-state='failed'] { background: var(--destructive); }
 .tracy-wo-addsrc { position: relative; display: inline-flex; flex: none; }
 .tracy-wo-addsrc-btn[data-on] { border-color: color-mix(in oklab, var(--primary) 45%, var(--border)); color: var(--primary); }
@@ -270,4 +273,6 @@ export const DETAILS_CSS =
   .tracy-wo-pager { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .tracy-wo-pager > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
 }
-` + PROGRESS_BAND_CSS
+` +
+  STEP_NODE_CSS +
+  PROGRESS_BAND_CSS

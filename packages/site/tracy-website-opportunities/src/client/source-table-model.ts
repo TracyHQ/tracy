@@ -5,13 +5,28 @@
  * Pure: no DOM, no fetch, no clock read. Dates are formatted with the locale it is given.
  */
 import { reasonKey, type SourceInput, sourceRow } from './status.ts'
+import { bandSubSteps } from './stepper-model.ts'
 import type { WorkspaceText } from './workspace-model.ts'
 
 /**
  * waiting: research has not run (or runs now) · collected: research read it · failed: research could not read it ·
- * new: a link added after research, waiting for the next research.
+ * new: a link added after research, waiting for the next research · reading: research reads it right now.
  */
-export type SourceState = 'waiting' | 'collected' | 'failed' | 'new'
+export type SourceState = 'waiting' | 'reading' | 'collected' | 'failed' | 'new'
+
+/** What the Progress band's research sub-step of one source says, by source key (`google-places`, `instagram`...). */
+export type SourceProgress = ReadonlyMap<string, 'waiting' | 'running' | 'done' | 'failed'>
+
+const NO_PROGRESS: SourceProgress = new Map()
+
+/**
+ * The per-source progress of a run: the items of the server's `stepProgress` for the research step, by key. Empty
+ * when research does not run now or the payload names no research items (every row then keeps its own state).
+ */
+export function sourceProgressOf(stepProgress: unknown, researchMoving: boolean): SourceProgress {
+  if (!researchMoving) return NO_PROGRESS
+  return new Map(bandSubSteps(stepProgress, 'research').map((i) => [i.key, i.state]))
+}
 
 export interface SourceStateView {
   state: SourceState
@@ -23,6 +38,7 @@ export interface SourceStateView {
 
 const STATE_KEY: Readonly<Record<SourceState, string>> = {
   waiting: 'source.state.waiting',
+  reading: 'source.state.reading',
   collected: 'source.state.collected',
   failed: 'source.state.failed',
   new: 'source.state.new'
@@ -48,8 +64,19 @@ export function shortDate(iso: unknown, locale: string, timeZone?: string): stri
  * with no outcome then is a link added since. The failure reason is the server's own `reason` code when it names
  * one the screen knows; with none, the row reads Could not collect alone (no reason is made up).
  */
-export function sourceStateOf(s: SourceInput, researched: boolean, locale: string): SourceStateView {
+export function sourceStateOf(
+  s: SourceInput,
+  researched: boolean,
+  locale: string,
+  progress: SourceProgress = NO_PROGRESS
+): SourceStateView {
   const { tone } = sourceRow(s)
+  // While research runs, the band's item with this row's source key is the truth: running reads now, done is
+  // already collected, failed could not be collected. No matching item: the row stays as its own data says.
+  const item = tone === 'ok' || tone === 'partial' || tone === 'failed' ? undefined : progress.get(s.source)
+  if (item === 'running') return { state: 'reading', key: STATE_KEY.reading, detail: null }
+  if (item === 'done') return { state: 'collected', key: STATE_KEY.collected, detail: null }
+  if (item === 'failed') return { state: 'failed', key: STATE_KEY.failed, detail: null }
   if (tone === 'ok' || tone === 'partial') {
     // The day its data was collected (#524), in UTC like the Sources sub-page.
     const date = shortDate(s.collectedAt, locale, 'UTC')

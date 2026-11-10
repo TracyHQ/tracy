@@ -16,7 +16,8 @@ import { type SearchPage, searchPagesOf } from './research-again.ts'
 import { pastedLinkOf, sourceGroups } from './source-groups.ts'
 import { safeHttpUrl, shortUrl } from './source-links-model.ts'
 import { SourceLogo } from './source-logo.tsx'
-import { sourceStateOf } from './source-table-model.ts'
+import { type SourceProgress, type SourceState, sourceStateOf } from './source-table-model.ts'
+import { type StepNodeState, SubStepNode } from './step-node.tsx'
 import { type ShownSource, type SourceInput, type Tone, isShownSource, sourceRow } from './status.ts'
 import type { Translate } from './strings.ts'
 export function Section({
@@ -82,6 +83,15 @@ export function Sources({
   )
 }
 
+/** The band node each row state is drawn with (the same node as the Progress band's sub-steps). */
+const NODE_OF: Readonly<Record<SourceState, StepNodeState>> = {
+  waiting: 'waiting',
+  new: 'waiting',
+  reading: 'running',
+  collected: 'done',
+  failed: 'failed'
+}
+
 /**
  * The Sources table of the Workspace card (#537, option C): a Source column (glyph, name, the link as an anchor) and a
  * State column of two lines (state, then the date it was collected or the reason it could not be). No chips.
@@ -89,12 +99,15 @@ export function Sources({
 export function SourcesTable({
   t,
   sources,
-  researched
+  researched,
+  progress
 }: {
   t: Translate
   sources: SourceInput[]
   /** This card's research has finished and does not run again now (`source-table-model.ts sourceStateOf`). */
   researched: boolean
+  /** The band's research items by source key while research runs (`sourceProgressOf`); none: rows keep their own state. */
+  progress?: SourceProgress
 }): JSX.Element {
   if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
   const locale = interfaceLocale() ?? 'en'
@@ -107,7 +120,7 @@ export function SourcesTable({
       {sources.map((s) => {
         const pastedLink = pastedLinkOf(s)
         const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
-        const view = sourceStateOf(s, researched, locale)
+        const view = sourceStateOf(s, researched, locale, progress)
         const detail =
           view.detail === null ? null : 'text' in view.detail ? view.detail.text : t(view.detail.key)
         return (
@@ -133,7 +146,10 @@ export function SourcesTable({
               ) : null}
             </span>
             <span className="tracy-wo-stab-state" role="cell">
-              <span className="tracy-wo-stab-word">{t(view.key)}</span>
+              <span className="tracy-wo-stab-pill" data-state={view.state}>
+                <SubStepNode state={NODE_OF[view.state]} label={t(view.key)} />
+                <span className="tracy-wo-stab-word">{t(view.key)}</span>
+              </span>
               {detail !== null ? <span className="tracy-wo-stab-detail">{detail}</span> : null}
             </span>
           </div>

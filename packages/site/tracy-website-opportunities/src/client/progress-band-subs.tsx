@@ -2,10 +2,9 @@
  * The sub-step row of the Progress band's right pane (#537), split from `progress-band.tsx`.
  */
 
-import { Spinner } from '@tracy/ui'
-import { Check, X } from 'lucide-react'
 import { type JSX, useEffect, useRef } from 'react'
 
+import { SubStepNode } from './step-node.tsx'
 import type { BandSubStep } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -40,15 +39,7 @@ export function SubSteps({ t, items }: { t: Translate; items: BandSubStep[] }): 
         const state = t(`brief.job.state.${s.state}`)
         return (
           <li key={s.key} data-state={s.state} title={`${s.label}: ${state}`}>
-            <span className="tracy-wo-band-sub-node" aria-hidden={s.state === 'running' ? undefined : 'true'}>
-              {s.state === 'done' ? (
-                <Check className="tracy-wo-icon" aria-hidden="true" />
-              ) : s.state === 'running' ? (
-                <Spinner label={s.label} />
-              ) : s.state === 'failed' ? (
-                <X className="tracy-wo-icon" aria-hidden="true" />
-              ) : null}
-            </span>
+            <SubStepNode state={s.state} label={s.label} />
             <span className="tracy-wo-band-sub-label">{s.label}</span>
             <span className="tracy-wo-band-sub-state">{state}</span>
           </li>

@@ -311,14 +311,29 @@ test('the Sources table of the Workspace card: a Source and a State column, no c
   assert.doesNotMatch(html, /<details|<summary|tracy-wo-src-chip|source\.alsoLookedAt|source\.usedHere/)
   assert.match(html, /\[source\.table\.source\][\s\S]*\[source\.table\.state\]/)
   assert.deepEqual(
-    [...html.matchAll(/data-state="(\w+)"/g)].map((m) => m[1]),
+    [...html.matchAll(/role="row" data-state="(\w+)"/g)].map((m) => m[1]),
     ['collected', 'failed', 'failed', 'new']
   )
   // Collected with its day; Could not collect with the server's reason, or alone when it sent none.
-  assert.match(html, /\[source\.state\.collected\]<\/span><span class="tracy-wo-stab-detail">Nov 10</)
+  assert.match(html, /\[source\.state\.collected\]<\/span><\/span><span class="tracy-wo-stab-detail">Nov 10</)
   assert.match(
     html,
-    /\[source\.state\.failed\]<\/span><span class="tracy-wo-stab-detail">\[reason\.login_required\]</
+    /\[source\.state\.failed\]<\/span><\/span><span class="tracy-wo-stab-detail">\[reason\.login_required\]</
+  )
+  // Each state is a pill that carries the Progress band's node: check, cross, hollow ring.
+  const pills = [
+    ...html.matchAll(
+      /class="tracy-wo-stab-pill" data-state="(\w+)"><span class="tracy-wo-band-sub-node" data-node="(\w+)"/g
+    )
+  ]
+  assert.deepEqual(
+    pills.map((m) => [m[1], m[2]]),
+    [
+      ['collected', 'done'],
+      ['failed', 'failed'],
+      ['failed', 'failed'],
+      ['new', 'waiting']
+    ]
   )
   assert.equal((html.match(/tracy-wo-stab-detail/g) ?? []).length, 2)
   assert.match(html, /\[source\.state\.new\]/)
@@ -327,6 +342,28 @@ test('the Sources table of the Workspace card: a Source and a State column, no c
     html,
     /<a href="https:\/\/www\.instagram\.com\/sample_bistro" target="_blank" rel="noopener noreferrer" title="https:\/\/www\.instagram\.com\/sample_bistro"[^>]*>instagram\.com\/sample_bistro<\/a>/
   )
+})
+
+test('while research runs, a row whose band item runs reads Reading now with the spinner node, in an accent pill', () => {
+  const sources = [
+    { source: 'google-places', status: null },
+    { source: 'instagram', status: null, pastedLink: 'https://www.instagram.com/sample_bistro' },
+    { source: 'website', status: null, pastedLink: 'https://bistro.example/' }
+  ]
+  const progress = new Map([
+    ['google-places', 'done'],
+    ['instagram', 'running']
+  ])
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.SourcesTable, { t, sources, researched: false, progress })
+  )
+  assert.deepEqual(
+    [...html.matchAll(/class="tracy-wo-stab-pill" data-state="(\w+)"/g)].map((m) => m[1]),
+    ['collected', 'reading', 'waiting']
+  )
+  assert.match(html, /data-state="reading"><span class="tracy-wo-band-sub-node" data-node="running"/)
+  assert.match(html, /\[source\.state\.reading\]/)
+  assert.equal((html.match(/data-node="waiting"/g) ?? []).length, 1)
 })
 
 test('before research, the pasted links and the Google listing of a search read Waiting for research', () => {

@@ -1210,6 +1210,7 @@ export const en = {
   'source.state.collected': 'Collected',
   'source.state.failed': 'Could not collect',
   'source.state.new': 'New, waiting for research',
+  'source.state.reading': 'Reading now',
   'workspace.sum.approved': 'approved {date}',
   'workspace.sum.built': 'built {date}',
   'workspace.wait.research': 'Being researched. Progress is shown above.',

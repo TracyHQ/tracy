@@ -8,7 +8,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import { ADD_SOURCE_CLOSED, addSourceLinkOf, addSourceStep } from '../src/client/add-source-model.ts'
-import { sourceStateOf, sourcesSummary } from '../src/client/source-table-model.ts'
+import { sourceProgressOf, sourceStateOf, sourcesSummary } from '../src/client/source-table-model.ts'
 import { en as STRINGS } from '../src/client/strings.ts'
 
 const words = (parts) =>
@@ -71,6 +71,40 @@ test('a failed row reads Could not collect, with the server reason only when it 
 test('a row with no outcome after research is a link added since', () => {
   assert.equal(cell({ source: 'facebook', status: null }, true), 'New, waiting for research')
   assert.equal(sourceStateOf({ source: 'facebook', status: null }, true, 'en-US').state, 'new')
+})
+
+const researchItems = (items) => ({ step: 'research', items })
+
+test('while research runs, the band item with the row source key makes it Reading now, Collected or Could not collect', () => {
+  const progress = sourceProgressOf(
+    researchItems([
+      { key: 'google-places', label: 'Google Places', state: 'done' },
+      { key: 'instagram', label: 'Instagram', state: 'running' },
+      { key: 'website', label: 'Website', state: 'waiting' },
+      { key: 'facebook', label: 'Facebook', state: 'failed' }
+    ]),
+    true
+  )
+  const state = (source) => sourceStateOf({ source, status: null }, false, 'en-US', progress)
+  assert.equal(state('instagram').state, 'reading')
+  assert.equal(STRINGS[state('instagram').key], 'Reading now')
+  assert.equal(state('google-places').state, 'collected')
+  assert.equal(state('google-places').detail, null)
+  assert.equal(state('facebook').state, 'failed')
+  // Waiting item, or no item for the row: Waiting for research.
+  assert.equal(state('website').state, 'waiting')
+  assert.equal(state('tiktok').state, 'waiting')
+})
+
+test('the band items count only while research runs, for the research step, and never override a read outcome', () => {
+  const items = [{ key: 'instagram', label: 'Instagram', state: 'running' }]
+  assert.equal(sourceProgressOf(researchItems(items), false).size, 0)
+  assert.equal(sourceProgressOf({ step: 'brief', items }, true).size, 0)
+  assert.equal(sourceProgressOf(null, true).size, 0)
+  const progress = sourceProgressOf(researchItems(items), true)
+  const done = { source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }
+  assert.equal(sourceStateOf(done, false, 'en-US', progress).state, 'collected')
+  assert.equal(sourceStateOf({ source: 'instagram', status: null }, true, 'en-US', progress).state, 'reading')
 })
 
 test('the summary counts the same row states the table draws', () => {
