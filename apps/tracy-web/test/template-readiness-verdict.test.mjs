@@ -157,7 +157,7 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes, and is gr
     ['cowork-pin', 'todo', 'customize-not-checked'],
     ['customize', 'todo', 'customize-not-checked'],
     ['design-system', 'todo', 'ds-not-checked'],
-    // The demo baseline of 1.0.5 sits beside its contract (#433, measured in #439).
+    // The demo baseline of the pinned version sits beside its contract (#433; 1.0.5 measured in #439, 1.0.6 in the dark mode release, 1.0.7 in its fix release).
     ['demo-baseline', 'done', 'demo-baseline-recorded']
   ])
 })
@@ -165,7 +165,7 @@ test('the T3 case: JA Diner j6 is judged by the same pieces and codes, and is gr
 test('the command line prints the verdict of a named template as text and as JSON, and fails when a piece is not green', async () => {
   let text = ''
   assert.equal(await main(['ja-diner', '--pin-only'], { out: (s) => (text += s) }), 1)
-  assert.match(text, /^quickstart\/ja-diner\/j6 1\.0\.5 /)
+  assert.match(text, /^quickstart\/ja-diner\/j6 1\.0\.7 /)
   assert.match(text, /done {5}template-kit {9}demo-measures-clean/)
   assert.match(text, /todo {5}design-system {8}ds-not-checked/)
   let json = ''

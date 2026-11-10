@@ -924,3 +924,72 @@ test('an adding JSON edit keeps its pair and adds one new key, in its row only',
   // a second run finds the key already there
   assert.throws(() => editDump(out, [ADD_LAYOUT]), /already/)
 })
+
+// JA Diner 1.0.7 (09/11/2026): 1.0.6 set the dark logo by an UPDATE appended to the installer's SQL, so its lock
+// (captured from an installed site) holds `logoimage_dark` while the dump's INSERT rows do not, and the static
+// readers saw drift. The next version carries the pair in the rows: an adding edit whose exact pair the lock already
+// holds edits the dump alone; a lock holding the key with another value, or elsewhere, is still refused.
+const ADD_DARK_LOGO = {
+  entity: 'templateStyle-9',
+  field: 'params',
+  row: true,
+  json: true,
+  adds: true,
+  from: '"logoimage":""',
+  to: '"logoimage":"","logoimage_dark":"images/joomlart/logo-dark.png"',
+  count: 1
+}
+
+test('an adding JSON edit whose pair the lock already holds edits the dump alone', () => {
+  assert.equal(loadContentEdits(editsFile([ADD_DARK_LOGO])).length, 1)
+  const lockOf = (params) =>
+    `${JSON.stringify({ entities: { 'templateStyle-9': { template: 'ja_diner', params } } }, null, 2)}\n`
+  const held = lockOf(
+    '{"logoimage":"","logoimage_dark":"images/joomlart/logo-dark.png","enable_logoimage_sm":"0"}'
+  )
+  assert.equal(editLock(held, [ADD_DARK_LOGO]), held)
+  // the key held with another value, or not right after the kept pair: the lock and the dump would disagree
+  for (const params of [
+    '{"logoimage":"","logoimage_dark":"images/other.png","enable_logoimage_sm":"0"}',
+    '{"logoimage_dark":"images/joomlart/logo-dark.png","logoimage":"","enable_logoimage_sm":"0"}'
+  ])
+    assert.throws(() => editLock(lockOf(params), [ADD_DARK_LOGO]), /already holds/)
+  // a lock without the key still takes the edit
+  const bare = lockOf('{"logoimage":"","enable_logoimage_sm":"0"}')
+  assert.equal(
+    JSON.parse(editLock(bare, [ADD_DARK_LOGO])).entities['templateStyle-9'].params,
+    '{"logoimage":"","logoimage_dark":"images/joomlart/logo-dark.png","enable_logoimage_sm":"0"}'
+  )
+  // the dump still refuses a row that holds the key
+  const dump =
+    'INSERT INTO `#__template_styles` (`id`, `params`) VALUES (9,\'{\\"logoimage\\":\\"\\",\\"enable_logoimage_sm\\":\\"0\\"}\'),(10,\'{}\');\n' +
+    'INSERT INTO `#__modules` (`id`) VALUES (1);'
+  const out = editDump([dump], [ADD_DARK_LOGO])[0]
+  assert.ok(
+    out.includes('\\"logoimage\\":\\"\\",\\"logoimage_dark\\":\\"images/joomlart/logo-dark.png\\",\\"enable')
+  )
+  assert.throws(() => editDump([out], [ADD_DARK_LOGO]), /already/)
+})
+
+// JA Diner 1.0.7: Joomla's installer seeds `#__template_styles` in base.sql (ids 10 to 12), then the demo's custom.sql
+// drops the table and writes its own rows, ids 9 to 16. The rows written before a table is emptied again never reach
+// the site, as the readiness check's dump reader reads it (the last rows written win).
+test('a row edit skips the rows of a table emptied again later: the rows after the reset are the ones the site gets', () => {
+  const base =
+    "INSERT INTO `#__template_styles` (`id`, `params`) VALUES (10, '{}'),(11, '{}');\n" +
+    'INSERT INTO `#__modules` (`id`) VALUES (1);'
+  const custom =
+    'DROP TABLE IF EXISTS `#__template_styles`;\n' +
+    'INSERT INTO `#__template_styles` (`id`, `params`) VALUES (9,\'{\\"logoimage\\":\\"\\"}\'),(10,\'{\\"logoimage\\":\\"\\"}\');'
+  const e = { ...ADD_DARK_LOGO, entity: 'templateStyle-10' }
+  for (const texts of [
+    [base, custom],
+    [custom, base]
+  ]) {
+    const out = editDump(texts, [e])
+    assert.equal(out[texts.indexOf(base)], base)
+    assert.ok(out[texts.indexOf(custom)].includes('(10,\'{\\"logoimage\\":\\"\\",\\"logoimage_dark'))
+  }
+  // without a reset two rows of one id are still refused
+  assert.throws(() => editDump([base, custom.replace(/^DROP.*\n/, '')], [e]), /2 rows/)
+})

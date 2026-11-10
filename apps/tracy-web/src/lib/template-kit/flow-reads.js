@@ -172,13 +172,19 @@ function kitSlotIds(doc) {
   return ids
 }
 
-function logoGap(site, map) {
-  // The write step's own decision, so a spot passes here only when the write step can write it.
+/** The ids of the logo spots the page shows that the write step cannot write (its own decision, `logoWritePath`). */
+function unsettableLogoIds(site, map) {
   const world = map ? { frameKnown: (key) => map.slotKeys.has(key), siteLogoBlock: map.siteLogoBlock } : {}
   const writes = (s) => logoWritePath(s, world).via !== 'none'
-  const spots = arr(site.logoSpots).filter((s) => arr(s?.shownIn).length > 0 && !writes(s))
-  if (spots.length === 0) return null
-  const ids = spots.map((s) => String(s.id))
+  return arr(site.logoSpots)
+    .filter((s) => arr(s?.shownIn).length > 0 && !writes(s))
+    .map((s) => String(s.id))
+}
+
+function logoGap(site, map) {
+  // The write step's own decision, so a spot passes here only when the write step can write it.
+  const ids = unsettableLogoIds(site, map)
+  if (ids.length === 0) return null
   return {
     code: 'kit-logo-unsettable',
     spots: ids.slice(0, SHOWN),
@@ -297,6 +303,13 @@ function baselineGap(release, baseline) {
   }
 }
 
+/** Whether the brand step's refusal is only about logo spots the logo gap already names. */
+function saidByLogoGap(brand, unsettable) {
+  const listed = /logo spots[^:]*: (.+)$/.exec(brand)?.[1]
+  if (!listed) return false
+  return listed.split(', ').every((id) => unsettable.includes(id))
+}
+
 /**
  * Every fact the flow reads that this kit gets wrong, todo ones first in `FLOW_TODO_CODES` order, then the warnings.
  * @param {any} doc the parsed kit
@@ -315,10 +328,12 @@ export function flowGapsOf(doc, { map = null, release = null, baseline = undefin
     mapGap(doc, map),
     frontPageGap(doc)
   ]
-  const logo = gaps[0]
   const brand = brandKitProblem(doc, { siteLogoBlock: map?.siteLogoBlock })
-  // The brand step names a spot without a frame too: said once, by the logo gap.
-  if (brand && !(logo && /logo spots/.test(brand))) gaps.push({ code: 'kit-brand-unreadable', reason: brand })
+  // The brand step names a spot without a frame too: said once, by the logo gap, but only when the logo gap names
+  // every spot the brand step refuses. A spot only the brand step refuses (on WordPress, a site_logo spot whose header
+  // prints no Site Logo block) is still its own gap, whatever other spot the logo gap names.
+  if (brand && !saidByLogoGap(brand, unsettableLogoIds(site, map)))
+    gaps.push({ code: 'kit-brand-unreadable', reason: brand })
   if (release && !release.local && Array.isArray(release.assets)) {
     const file = kitZipName(doc)
     if (!release.assets.some((a) => a?.name === file))
