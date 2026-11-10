@@ -168,7 +168,7 @@ export function sellerReviewRoutes(app, ctx) {
   })
 
   // One of the business's links removed, matched as stored, as shown or as pasted (`store.js linkKeyOf`), and only
-  // while research has not run (owner decision): any other research state answers 409 `RESEARCH_STARTED`. That also
+  // while research has not run or after it failed (owner decision; a bad link often causes the failure): any other research state answers 409 `RESEARCH_STARTED`. That also
   // covers an active research job (JOB_ACTIVE cannot happen here: queued, running and paused research reads `running`,
   // and a brief or build needs finished research). So a removal never has research to reset: only this
   // opportunity's link list (and its private listing row) changes.
@@ -192,12 +192,12 @@ export function sellerReviewRoutes(app, ctx) {
     if (researchLinkCountOf(own.opp.provider, removed.candidate) < 1)
       return refuse(c, 409, 'LAST_SOURCE', 'add')
     const research = await researchStateOf(pool, own.opp.id)
-    if (research.state !== 'not_started')
+    if (research.state !== 'not_started' && research.state !== 'failed')
       return refuse(
         c,
         409,
         'RESEARCH_STARTED',
-        'Research has already run. Sources can be removed only before the research.'
+        'Research is running or has finished. Sources can be removed only before the research, or after it failed.'
       )
     const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, removed.candidate, {
       researched: false

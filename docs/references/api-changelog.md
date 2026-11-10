@@ -18,7 +18,7 @@ Changed `POST /api/website-opportunities/:id/sources` (internal): 422 `UNSUPPORT
 
 Added `DELETE /api/website-opportunities/:id/sources` (internal): body `{url}` removes one of the business's own links and answers 200 `{opportunity, approval}`; after research ran it asks for research again, as an added source does. 404 `NOT_FOUND`, 409 `LAST_SOURCE` (`next: "add"`), 409 `JOB_ACTIVE`, 422 `GOOGLE_LINK_NOT_REMOVED`. Changed (internal): `POST …/:id/sources` answers 409 `JOB_ACTIVE` while research runs.
 
-Changed `DELETE /api/website-opportunities/:id/sources` (internal): a source can be removed only before research runs; once Research has started (running, done or failed) it answers 409 `RESEARCH_STARTED` with a `next` sentence, and 409 `JOB_ACTIVE` is no longer answered here.
+Changed `DELETE /api/website-opportunities/:id/sources` (internal): a source can be removed only before research runs or after it failed; while Research is running or once it is done it answers 409 `RESEARCH_STARTED` with a `next` sentence, and 409 `JOB_ACTIVE` is no longer answered here.
 
 ## 2026-11-10: Research sub steps, a brief older than the Profile approval, sources before research
 

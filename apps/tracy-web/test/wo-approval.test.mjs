@@ -606,7 +606,7 @@ test('a source removed before research only leaves the link list', opts, async (
 })
 
 test(
-  'a source can be removed only before research: after it started the door answers RESEARCH_STARTED',
+  'a source can be removed before research or after it failed; running or done answers RESEARCH_STARTED',
   opts,
   async () => {
     const w = await world()
@@ -619,6 +619,8 @@ test(
       (await w.pool.query('select candidate from wo_opportunity where id = $1', [opp.id])).rows[0].candidate
     assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: TT })).status, 201)
     assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: IG })).status, 201)
+    const IG2 = 'https://www.facebook.com/harbor.gym.example'
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: IG2 })).status, 201)
 
     // Not started: the link goes and the approvals do not move.
     const early = await del(IG)
@@ -636,16 +638,20 @@ test(
     assert.equal(busy.status, 409)
     assert.deepEqual(Object.keys(busy.body).sort(), ['code', 'next'])
     assert.equal(busy.body.code, 'RESEARCH_STARTED')
-    assert.match(busy.body.next, /only before the research/)
+    assert.match(busy.body.next, /only before the research, or after it failed/)
     assert.equal((await stored()).socials?.tiktok !== undefined, true, 'the link stays')
     await w.pool.query(`delete from wo_job where request_id = 'running-01'`)
 
-    // Failed: still refused.
+    // Failed: the bad link may be the cause, so it can go; the approvals do not move.
     await w.pool.query(
       `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'failed-01', 'failed')`,
       [a, opp.id]
     )
-    assert.equal((await del(TT)).body.code, 'RESEARCH_STARTED')
+    const failed = await del(IG2)
+    assert.equal(failed.status, 200, JSON.stringify(failed.body))
+    assert.equal(failed.body.opportunity.candidate.socials?.facebook, undefined, 'the link is gone')
+    assert.equal(failed.body.approval.research, 'ok')
+    assert.equal(failed.body.approval.sourcesChangedAt, null)
     await w.pool.query(`delete from wo_job where request_id = 'failed-01'`)
 
     // Done: still refused, and the collected rows are untouched.
