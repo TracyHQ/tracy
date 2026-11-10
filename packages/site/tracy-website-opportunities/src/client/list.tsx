@@ -466,6 +466,7 @@ export function MyOpportunitiesView({
   const runNext = (row: OpportunityListRow, run: NextRun): void => {
     if (run.kind === 'row') return void act(run.action, row)
     if (run.kind === 'brief') return void makeBrief(row)
+    if (run.kind === 'details') return onOpen(row.id)
     if (run.action === 'build') return void act('build', row)
     if (run.action === 'open') return void act('open-site', row)
     void demoPress(row, row.demo?.frozenAt && !row.demo.deletedAt ? 'reopen' : 'rebuild')

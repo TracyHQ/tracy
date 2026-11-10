@@ -17,11 +17,14 @@ const CHECK_AFTER_MS = 300
 export function SiteNameRow({
   t,
   api,
-  opportunityId
+  opportunityId,
+  readOnly = false
 }: {
   t: Translate
   api: Api
   opportunityId: string
+  /** The compact brief of Details: the name shows, its Edit lives on the brief sub-page (#537). */
+  readOnly?: boolean
 }): JSX.Element {
   const [info, setInfo] = useState<SiteLabelInfo | null>(null)
   const [editing, setEditing] = useState(false)
@@ -156,7 +159,7 @@ export function SiteNameRow({
             ) : (
               <span>{shown !== null && info !== null ? siteAddress(shown, info) : '…'}</span>
             )}
-            {info !== null ? (
+            {info !== null && !readOnly ? (
               <Button
                 type="button"
                 size="sm"

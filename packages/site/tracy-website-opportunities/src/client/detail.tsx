@@ -15,7 +15,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * opened it).
  */
 import { Fragment, type JSX, useCallback, useEffect, useId, useRef, useState } from 'react'
-import { Bot, ChevronLeft, ExternalLink, FileText, Hammer } from 'lucide-react'
+import { Bot, ChevronLeft, ChevronRight, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
   Badge,
   Breadcrumb,
@@ -36,7 +36,9 @@ import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
 import { Stepper } from './stepper.tsx'
-import { type StepAction, stepperView } from './stepper-model.ts'
+import { type StepAction, bandSubSteps, reviewChipOf, stepperView } from './stepper-model.ts'
+import { ProgressBand } from './progress-band.tsx'
+import { AddMedia, AddSource, ApprovalFooter, gateText } from './seller-review.tsx'
 import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
@@ -91,6 +93,7 @@ import { SectionCard, SubPage } from './details-sections.tsx'
 import {
   type SectionId,
   type SubSection,
+  pageOf,
   researchRunning as researchMovingOf,
   sectionMetas,
   sourceCounts
@@ -135,6 +138,14 @@ type Revision = {
 }
 
 const asArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : [])
+/** The header chip's look by tone (#537). */
+const CHIP_CLASS: Record<string, string> = {
+  ok: 'tracy-wo-chip-ok',
+  warn: 'tracy-wo-chip-warn',
+  run: 'tracy-wo-chip-brand',
+  error: 'tracy-wo-chip-bad',
+  mute: 'tracy-wo-chip-mute'
+}
 const isRecord = (v: unknown): v is Body => typeof v === 'object' && v !== null && !Array.isArray(v)
 
 function formatDate(value: string): string {
@@ -586,12 +597,21 @@ export function DetailView({
     briefJob: briefJob.job,
     brief: isRecord(body.brief) ? body.brief : null,
     demo: demoView.state,
-    demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null
+    demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
+    approval: isRecord(body.approval) ? body.approval : null
   })
+  const approval = isRecord(body.approval) ? body.approval : null
   const onStep = (step: StepAction): void => {
     if (step === 'start-research') return void act('start')
     if (step === 'resume-research') return void act('resume')
     if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
+    // The seller's review steps (#537) open the sub-page to review; research again opens its dialog on Sources.
+    if (step === 'review-profile') return onSection('profile')
+    if (step === 'review-brief') return onSection('brief')
+    if (step === 'research-again') {
+      onSection('sources')
+      return researchAgain.onOpen()
+    }
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
@@ -606,6 +626,74 @@ export function DetailView({
       onAction={onStep}
     />
   )
+  // The Progress band (#537): the running step's real sub-steps, from the brief job or the server's stepProgress.
+  const briefSteps = briefControlView({
+    research: { state: 'done' },
+    brief: body.brief,
+    briefJob: briefJob.job
+  })
+  const subSteps =
+    stepper.current === 'brief' && stepper.running && briefSteps.steps.length > 0
+      ? briefSteps.steps.map((s) => ({ key: s.step, label: t(s.labelKey), state: s.state }))
+      : bandSubSteps(body.stepProgress, stepper.current)
+  const progressBand = (
+    <ProgressBand
+      t={t}
+      view={stepper}
+      locale={locale}
+      busy={busy || briefJob.pressing}
+      disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
+      subSteps={subSteps}
+      buildSteps={<DemoProgress t={t} row={row} locale={locale} now={now} open />}
+      error={briefJob.refusedCode === null ? null : gateText(t, briefJob.refusedCode)}
+      onAction={onStep}
+    />
+  )
+  const reviewChip = approval === null ? null : reviewChipOf(stepper)
+  // The overview cards that wait for the seller's review say so beside their Review link (#537).
+  const profileReview = stepper.current === 'research' && stepper.review
+  const briefReview = stepper.current === 'brief' && stepper.review
+  const needsReview = (
+    <Badge variant="outline" className="tracy-wo-chip-warn">
+      {t('stepper.needsReview')}
+    </Badge>
+  )
+  // The seller's own doors (#537): each answers the refusal code, or null once it went through and Details reloaded.
+  const settle = async (answer: { ok: boolean; code?: string }): Promise<string | null> => {
+    if (!answer.ok) return answer.code ?? 'HTTP'
+    await reload()
+    onChanged()
+    return null
+  }
+  const approveProfile = async (): Promise<string | null> => {
+    const code = await settle(await api.approveProfile(id))
+    if (code === null) onSection(null)
+    return code
+  }
+  const approveBrief = async (): Promise<string | null> => {
+    const code = await settle(await api.approveBrief(id))
+    if (code === null) onSection(null)
+    return code
+  }
+  const addSource = async (url: string): Promise<string | null> => settle(await api.addSource(id, url))
+  const uploadMedia = async (file: File): Promise<string | null> => settle(await api.uploadMedia(id, file))
+  const addSourceButton = <AddSource t={t} researched={research.done} onAdd={addSource} />
+  const approvedLine = (key: string, at: unknown): string | null => {
+    const ms = typeof at === 'string' ? Date.parse(at) : Number.NaN
+    if (!Number.isFinite(ms)) return null
+    return t(key, { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms) })
+  }
+  // What Your site needs before it can be built (#537), or null once the build step is reached.
+  const siteWait =
+    approval === null || demoView.state !== 'none'
+      ? null
+      : stepper.current === 'research' && !stepper.review
+        ? 'site.notYet.research'
+        : stepper.current === 'research' || (stepper.current === 'brief' && !stepper.review)
+          ? 'site.notYet.profile'
+          : stepper.current === 'brief'
+            ? 'site.notYet.brief'
+            : null
   const researchRunning = job?.state === 'running' || job?.state === 'queued'
   const researchAgainOpen =
     job !== null &&
@@ -731,7 +819,7 @@ export function DetailView({
       emptyKey={research.done ? 'detail.noProfile' : 'research.profileEmpty'}
       website={research.done ? { url: website, link: websiteLink } : null}
       collecting={researchMoving ? { name: shownName, phone } : null}
-      editRow={research.done ? editProfileRow : null}
+      editRow={full && research.done ? editProfileRow : null}
       nameRow={
         !full || nameRow === null ? null : (
           <ProfileNameRow key={`${nameRow.name}:${nameRow.chip}`} t={t} view={nameRow} onSave={saveName} />
@@ -775,8 +863,9 @@ export function DetailView({
     <BusinessBriefTable
       t={t}
       rows={full ? briefRows : summaryRows}
-      firstRow={<SiteNameRow t={t} api={api} opportunityId={id} />}
-      editValue={briefValue}
+      firstRow={<SiteNameRow t={t} api={api} opportunityId={id} readOnly={!full} />}
+      editValue={full ? briefValue : (r) => (r.readOnly && website !== null ? websiteLink(website) : null)}
+      readOnly={!full}
       onToggle={toggleFact}
     />
   )
@@ -848,10 +937,22 @@ export function DetailView({
 
   // A section opened as a sub-page: that section alone, whole.
   if (section !== null) {
+    const shown = pageOf(section)
+    // Photos & video belong to the Profile (#537): the full grid with Add more, under the Profile's rows.
+    const mediaSection = (
+      <div className="tracy-wo-media-section" data-media-section="">
+        <div className="tracy-wo-media-section-head">
+          <h3>{t('details.section.media')}</h3>
+          <AddMedia t={t} onUpload={uploadMedia} />
+        </div>
+        {mediaBlock(true)}
+      </div>
+    )
     const content =
-      section === 'profile' ? (
+      shown === 'profile' ? (
         <>
           {profileBlock(true)}
+          {research.done || mediaView.photos.groups.length > 0 ? mediaSection : null}
           {hasMore ? (
             <div className="tracy-wo-psec-more">
               <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
@@ -867,7 +968,7 @@ export function DetailView({
             </div>
           ) : null}
         </>
-      ) : section === 'sources' ? (
+      ) : shown === 'sources' ? (
         <>
           {research.researchedAt === null ? null : (
             <span className="tracy-wo-sources-at">
@@ -889,15 +990,44 @@ export function DetailView({
         </>
       ) : !research.done ? (
         <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
-      ) : section === 'brief' ? (
+      ) : (
         <>
           {briefLine}
           {briefTable(true)}
           {tableListsFacts ? <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p> : null}
         </>
-      ) : (
-        mediaBlock(true)
       )
+    // The approval footer (#537): on the Profile once research is done, on the brief once one is made and current.
+    const footer =
+      approval === null ? null : shown === 'profile' &&
+        approval.profile !== 'none' &&
+        approval.profile !== undefined ? (
+        <ApprovalFooter
+          key="profile"
+          t={t}
+          kind="profile"
+          approvedLine={
+            approval.profile === 'approved'
+              ? approvedLine('approve.done.profile', approval.profileApprovedAt)
+              : null
+          }
+          onBack={() => onSection(null)}
+          onApprove={approveProfile}
+        />
+      ) : shown === 'brief' && (approval.brief === 'needed' || approval.brief === 'approved') ? (
+        <ApprovalFooter
+          key="brief"
+          t={t}
+          kind="brief"
+          approvedLine={
+            approval.brief === 'approved'
+              ? approvedLine('approve.done.brief', approval.briefApprovedAt)
+              : null
+          }
+          onBack={() => onSection(null)}
+          onApprove={approveBrief}
+        />
+      ) : null
     return (
       <div className="tracy-wo-page tracy-wo-details" ref={page}>
         {errors}
@@ -905,10 +1035,12 @@ export function DetailView({
           t={t}
           section={section}
           name={shownName}
-          meta={metaOf(section)}
+          meta={metaOf(shown)}
           progress={stepperBlock(true)}
           onList={onList}
           onSection={onSection}
+          actions={shown === 'sources' ? addSourceButton : null}
+          footer={footer}
         >
           {content}
         </SubPage>
@@ -924,7 +1056,15 @@ export function DetailView({
         name={shownName}
         branch={row.branch ?? null}
         facts={facts}
-        status={<StatusBadge status={placeStatus(row, t)} />}
+        status={
+          reviewChip === null ? (
+            <StatusBadge status={placeStatus(row, t)} />
+          ) : (
+            <Badge variant="outline" className={`tracy-wo-details-chip ${CHIP_CLASS[reviewChip.tone]}`}>
+              {t(reviewChip.key)}
+            </Badge>
+          )
+        }
         busy={busy}
         onBack={onList}
         menu={{
@@ -938,17 +1078,77 @@ export function DetailView({
         }}
       />
       {errors}
+      {progressBand}
       <div className="tracy-wo-details-cols">
         <div className="tracy-wo-col">
-          {stepperBlock(false)}
+          <SectionCard t={t} id="demo" meta={metaOf('demo')} lockKey={siteWait ?? 'section.locked.brief'}>
+            {send ? (
+              <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
+            ) : null}
+            {siteWait !== null ? (
+              <p className="tracy-wo-site-wait">
+                <Lock aria-hidden="true" className="tracy-wo-icon" />
+                {t(siteWait)}
+              </p>
+            ) : demoStage || isRecord(body.brief) || demoView.state !== 'none' ? (
+              <>
+                {demoView.state === 'queued' || demoView.state === 'building' ? (
+                  <p className="tracy-wo-muted tracy-wo-small">{t('site.building')}</p>
+                ) : null}
+                <DemoSiteBlock
+                  t={t}
+                  row={row}
+                  detail={body}
+                  locale={locale}
+                  now={now}
+                  busy={busy}
+                  bare
+                  limitReached={limitReached}
+                  onCommand={onDemo}
+                  progress={progress}
+                  estimate={
+                    buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
+                      ?.estimate
+                  }
+                />
+              </>
+            ) : (
+              progress
+            )}
+            <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
+          </SectionCard>
           <SectionCard
             t={t}
             id="profile"
             meta={metaOf('profile')}
-            open={openTo()}
+            open={openTo(profileReview ? 'section.review' : 'section.open')}
             className="tracy-wo-profile-card"
+            actions={profileReview ? needsReview : null}
           >
             {profileBlock(false)}
+            {/* Photos & video belong to the Profile (#537): a strip at its foot, opened on the Profile sub-page. */}
+            {research.done || researchMoving ? (
+              <div className="tracy-wo-profile-media">
+                <div className="tracy-wo-profile-media-head">
+                  <span>
+                    {t('details.section.media')}
+                    {metaOf('media')
+                      ? ` · ${(metaOf('media')?.status ?? []).map((x) => t(x.key, x.params)).join(', ')}`
+                      : ''}
+                  </span>
+                  <button
+                    type="button"
+                    className="tracy-wo-open"
+                    aria-label={t('section.openNamed', { section: t('details.section.media') })}
+                    onClick={() => onSection('media')}
+                  >
+                    {t('media.strip.open')}
+                    <ChevronRight aria-hidden="true" />
+                  </button>
+                </div>
+                {mediaBlock(false)}
+              </div>
+            ) : null}
           </SectionCard>
           {/* Sources opens before research too: its sub-page lists each pasted link with its address. */}
           <SectionCard
@@ -958,6 +1158,7 @@ export function DetailView({
             open={shownSources.length > 0 ? { labelKey: 'section.open', onOpen: onSection } : null}
           >
             <Sources t={t} sources={shownSources} collected={research.done} compact />
+            {addSourceButton}
             {cancelButton}
           </SectionCard>
         </div>
@@ -967,45 +1168,11 @@ export function DetailView({
             id="brief"
             meta={metaOf('brief')}
             lockKey="section.locked.research"
-            open={openTo('section.openBrief')}
+            open={openTo(briefReview ? 'section.review' : 'section.openBrief')}
+            actions={briefReview ? needsReview : null}
           >
             {briefLine}
             {briefTable(false)}
-          </SectionCard>
-          <SectionCard
-            t={t}
-            id="media"
-            meta={metaOf('media')}
-            lockKey="section.locked.research"
-            open={openTo()}
-          >
-            {mediaBlock(false)}
-          </SectionCard>
-          <SectionCard t={t} id="demo" meta={metaOf('demo')} lockKey="section.locked.brief">
-            {send ? (
-              <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
-            ) : null}
-            {demoStage || isRecord(body.brief) || demoView.state !== 'none' ? (
-              <DemoSiteBlock
-                t={t}
-                row={row}
-                detail={body}
-                locale={locale}
-                now={now}
-                busy={busy}
-                bare
-                limitReached={limitReached}
-                onCommand={onDemo}
-                progress={progress}
-                estimate={
-                  buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
-                    ?.estimate
-                }
-              />
-            ) : (
-              progress
-            )}
-            <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
           </SectionCard>
         </div>
       </div>

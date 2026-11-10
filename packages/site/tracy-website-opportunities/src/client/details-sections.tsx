@@ -16,7 +16,7 @@ import {
   Button
 } from '@tracy/ui'
 
-import { type SectionId, type SectionMeta, type SubSection, pagerOf } from './section-model.ts'
+import { type SectionId, type SectionMeta, type SubSection, pageOf, pagerOf } from './section-model.ts'
 import type { Translate } from './strings.ts'
 
 const metaLine = (t: Translate, meta: SectionMeta | undefined): string | null =>
@@ -55,6 +55,7 @@ export function SectionCard({
   lockKey,
   open,
   className,
+  actions,
   children
 }: {
   t: Translate
@@ -65,6 +66,8 @@ export function SectionCard({
   /** The Open link to the sub-page, with its words; absent: the card has no sub-page or nothing to open yet. */
   open?: { labelKey: string; onOpen: (id: SubSection) => void } | null
   className?: string
+  /** More buttons in the card's head, before the Open link (Add source, #537). */
+  actions?: ReactNode
   children?: ReactNode
 }): JSX.Element {
   const title = t(`details.section.${id}`)
@@ -82,8 +85,13 @@ export function SectionCard({
           {title}
           {line ? <span className="tracy-wo-psec-meta">{line}</span> : null}
         </h3>
-        {!locked && open && id !== 'demo' ? (
-          <OpenLink t={t} id={id} labelKey={open.labelKey} onOpen={open.onOpen} />
+        {!locked && (actions || (open && id !== 'demo')) ? (
+          <span className="tracy-wo-row">
+            {actions}
+            {open && id !== 'demo' ? (
+              <OpenLink t={t} id={id} labelKey={open.labelKey} onOpen={open.onOpen} />
+            ) : null}
+          </span>
         ) : null}
       </div>
       {locked ? (
@@ -107,6 +115,8 @@ export function SubPage({
   progress,
   onList,
   onSection,
+  actions,
+  footer,
   children
 }: {
   t: Translate
@@ -119,13 +129,18 @@ export function SubPage({
   onList: () => void
   /** Another section, or null for Details. */
   onSection: (section: SubSection | null) => void
+  /** Buttons beside the sub-page title (Add source, #537). */
+  actions?: ReactNode
+  /** The sticky approval footer under the section (#537). */
+  footer?: ReactNode
   children: ReactNode
 }): JSX.Element {
-  const title = t(`details.section.${section}`)
+  // Photos & video open the Profile sub-page (#537).
+  const title = t(`details.section.${pageOf(section)}`)
   const { previous, next } = pagerOf(section)
   const line = metaLine(t, meta)
   return (
-    <div className="tracy-wo-subpage" data-section={section}>
+    <div className="tracy-wo-subpage" data-section={pageOf(section)}>
       <Breadcrumb label={t('crumbs.label')} className="tracy-wo-crumbs">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -148,11 +163,13 @@ export function SubPage({
       <div className="tracy-wo-subpage-head">
         <h2 className="tracy-wo-page-title">{title}</h2>
         {line ? <span className="tracy-wo-psec-meta">{line}</span> : null}
+        {actions ? <span className="tracy-wo-subpage-acts">{actions}</span> : null}
       </div>
       {progress}
       <section className="tracy-wo-psec" aria-label={title}>
         {children}
       </section>
+      {footer}
       <nav className="tracy-wo-pager" aria-label={t('section.pager')}>
         {previous !== null ? (
           <button type="button" className="tracy-wo-pager-link" onClick={() => onSection(previous)}>

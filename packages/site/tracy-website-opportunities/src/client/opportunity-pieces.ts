@@ -21,7 +21,7 @@ import {
   statusView
 } from './opportunity-row.ts'
 import { type ResearchState, researchOf } from './research-gate-model.ts'
-import { stepperView } from './stepper-model.ts'
+import { type StepperInput, stepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
 export type DemoPiece =
@@ -39,6 +39,8 @@ export type NextRun =
   | { kind: 'row'; action: NextAction }
   | { kind: 'brief' }
   | { kind: 'demo'; action: 'build' | 'open' | 'rebuild' }
+  /** A step that waits for the seller (review the Profile or the brief, research again): opens Details (#537). */
+  | { kind: 'details' }
 
 export interface PlacePieces {
   id: string
@@ -176,7 +178,8 @@ function nextOf(
     research,
     researchJob: row.job ?? null,
     brief: row.latestRevision ?? null,
-    demo: state
+    demo: state,
+    approval: (row as { approval?: StepperInput['approval'] }).approval ?? null
   })
   if (step.running) return { label: t('stepper.running'), run: null, disabled: true }
   const action = step.action
@@ -203,6 +206,10 @@ function nextOf(
       return { label, run: { kind: 'demo', action: 'build' }, disabled: blocked }
     case 'rebuild':
       return { label, run: { kind: 'demo', action: 'rebuild' }, disabled: blocked }
+    case 'review-profile':
+    case 'review-brief':
+    case 'research-again':
+      return { label, run: { kind: 'details' }, disabled: false }
   }
 }
 

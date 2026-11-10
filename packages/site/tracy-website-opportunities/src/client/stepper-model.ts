@@ -5,6 +5,12 @@
  * and says which steps are done (with their date), which one is current with its one status line, and the ONE action
  * of the current step (or that a job is running, or why it failed). The Details stepper and the My opportunities
  * card both draw this, so a place never offers Build demo before it has a brief.
+ *
+ * With the seller's approvals (`approval` of the Details and list answers, #537) two review states sit between the
+ * steps: research done and the Profile not approved reads "Needs your review" on Research with Review profile, the
+ * brief step locked; a brief made and not approved reads the same on Content brief, Build locked. A brief made from an
+ * older Profile or older sources is stale, and a source added after research asks for research again. Without
+ * `approval` (an older server) the steps read as before.
  * Pure: no DOM, no fetch, no clock read.
  */
 import type { DemoState } from '@tracy/wo-views/demo-state'
@@ -25,6 +31,29 @@ export type StepAction =
   | 'build'
   | 'retry-build'
   | 'rebuild'
+  | 'review-profile'
+  | 'review-brief'
+  | 'research-again'
+
+/** The seller's approvals as the server answers them (`approval.js approvalOf`); every field may be absent. */
+export interface ApprovalInput {
+  research?: 'ok' | 'sources_changed' | string | null
+  profile?: 'none' | 'needed' | 'approved' | string | null
+  profileApprovedAt?: string | null
+  profileChangedAt?: string | null
+  brief?: 'none' | 'needed' | 'approved' | 'stale' | string | null
+  briefApprovedAt?: string | null
+  briefStale?: 'profile' | 'sources' | string | null
+  sourcesChangedAt?: string | null
+}
+
+/** One line of a step in the Progress list or its detail pane. */
+export interface StepLine {
+  key: string
+  params?: Record<string, string | number>
+  /** ok: settled · warn: waits for the seller · run: moving · error: stopped · mute: waiting for an earlier step. */
+  tone: 'ok' | 'warn' | 'run' | 'error' | 'mute'
+}
 
 export interface StepperInput {
   /** This card's own research (`researchOf`). */
@@ -39,6 +68,8 @@ export interface StepperInput {
   demo: DemoState
   /** When the ready demo was made, when known. */
   demoAt?: string | null
+  /** The seller's approvals (#537); absent: the steps read without review states. */
+  approval?: ApprovalInput | null
 }
 
 export interface StepView {
@@ -50,6 +81,16 @@ export interface StepView {
   failed: boolean
   /** ISO date a done step finished, when known. */
   doneAt: string | null
+  /** The step waits for the seller's review (#537). */
+  review: boolean
+  /** When the seller approved what this step made, when known. */
+  approvedAt: string | null
+  /** Why a later step cannot start yet (`stepper.lock.*`), or null. */
+  lockKey: string | null
+  /** The brief this step made is stale (`brief.chip.olderProfile` / `brief.chip.olderSources`), or null. */
+  staleKey: string | null
+  /** The one status line of the step in the Progress list. */
+  status: StepLine
 }
 
 export interface StepperView {
@@ -62,6 +103,8 @@ export interface StepperView {
   /** The current step stopped: the plain sentence of why (the stepper shows it beside Try again). */
   errorKey: string | null
   action: { kind: StepAction; labelKey: string } | null
+  /** The current step waits for the seller's review: its action opens the sub-page to review. */
+  review: boolean
 }
 
 const MOVING = new Set(['queued', 'running'])
@@ -70,14 +113,45 @@ const BUILDING = new Set<DemoState>(['queued', 'building'])
 
 const hasBrief = (brief: StepperInput['brief']): boolean => typeof brief?.id === 'string' && brief.id !== ''
 
+/** The approvals in one shape: null when the server sent none (an older server), so no review state shows. */
+export function approvalOf(input: ApprovalInput | null | undefined):
+  | (Required<ApprovalInput> & {
+      researchNeeded: boolean
+    })
+  | null {
+  if (input === null || typeof input !== 'object') return null
+  const text = (v: unknown): string | null => (typeof v === 'string' && v !== '' ? v : null)
+  const raw = input
+  const researchNeeded = raw.research === 'sources_changed'
+  return {
+    research: researchNeeded ? 'sources_changed' : 'ok',
+    researchNeeded,
+    profile: text(raw.profile) ?? 'none',
+    profileApprovedAt: text(raw.profileApprovedAt),
+    profileChangedAt: text(raw.profileChangedAt),
+    brief: text(raw.brief) ?? 'none',
+    briefApprovedAt: text(raw.briefApprovedAt),
+    briefStale: text(raw.briefStale) ?? (raw.brief === 'stale' ? 'profile' : null),
+    sourcesChangedAt: text(raw.sourcesChangedAt)
+  }
+}
+
 export function stepperView(input: StepperInput): StepperView {
   const done: Partial<Record<StepId, string | null>> = {}
+  const approvedAt: Partial<Record<StepId, string | null>> = {}
+  const lockOf: Partial<Record<StepId, string>> = {}
+  let staleKey: string | null = null
   let current: StepId | null = null
   let lineKey: string | null = null
   let running = false
   let errorKey: string | null = null
   let action: StepperView['action'] = null
+  let review = false
   const jobState = input.researchJob?.state ?? null
+  const approval = approvalOf(input.approval)
+  const briefMade = hasBrief(input.brief)
+  if (approval !== null && briefMade && approval.brief === 'stale')
+    staleKey = approval.briefStale === 'sources' ? 'brief.chip.olderSources' : 'brief.chip.olderProfile'
 
   if (!input.research.done) {
     current = 'research'
@@ -95,8 +169,29 @@ export function stepperView(input: StepperInput): StepperView {
       lineKey = 'stepper.research.notStarted'
       action = { kind: 'start-research', labelKey: 'job.start' }
     }
+  } else if (approval?.researchNeeded) {
+    // A source added after research: research reads the business again before anything downstream counts (#537).
+    current = 'research'
+    if (input.research.state === 'running' || MOVING.has(jobState ?? '')) {
+      running = true
+      lineKey = 'stepper.research.running'
+    } else {
+      lineKey = 'stepper.research.sourcesChanged'
+      action = { kind: 'research-again', labelKey: 'details.researchAgain' }
+    }
+    lockOf.brief = briefMade ? 'stepper.lock.researchAgain' : 'stepper.lock.research'
+    lockOf.build = 'stepper.lock.both'
+  } else if (approval !== null && approval.profile !== 'approved') {
+    // Research done, the Profile not approved yet (or edited after approval): the seller reviews it first.
+    current = 'research'
+    review = true
+    lineKey = 'stepper.review.profile'
+    action = { kind: 'review-profile', labelKey: 'stepper.reviewProfile' }
+    lockOf.brief = staleKey !== null ? 'stepper.lock.profileAgain' : 'stepper.lock.profile'
+    if (staleKey !== null) lockOf.build = 'stepper.lock.both'
   } else {
     done.research = input.research.researchedAt
+    approvedAt.research = approval?.profileApprovedAt ?? null
     const job = briefControlView({
       research: { state: 'done' },
       brief: input.brief,
@@ -106,17 +201,30 @@ export function stepperView(input: StepperInput): StepperView {
       current = 'brief'
       running = true
       lineKey = 'stepper.brief.running'
-    } else if (job.mode === 'failed' && !hasBrief(input.brief)) {
+    } else if (job.mode === 'failed' && !briefMade) {
       current = 'brief'
       lineKey = 'stepper.brief.failed'
       errorKey = job.errorKey
       action = { kind: 'retry-brief', labelKey: 'action.tryAgain' }
-    } else if (!hasBrief(input.brief)) {
+    } else if (!briefMade) {
       current = 'brief'
-      lineKey = 'stepper.brief.ready'
+      lineKey = approval !== null ? 'stepper.brief.readyApproved' : 'stepper.brief.ready'
       action = { kind: 'make-brief', labelKey: 'brief.make' }
+    } else if (approval !== null && approval.brief === 'stale') {
+      current = 'brief'
+      lineKey =
+        approval.briefStale === 'sources' ? 'stepper.brief.staleSources' : 'stepper.brief.staleProfile'
+      action = { kind: 'make-brief', labelKey: 'brief.makeAgain' }
+      lockOf.build = 'stepper.lock.brief'
+    } else if (approval !== null && approval.brief !== 'approved') {
+      current = 'brief'
+      review = true
+      lineKey = 'stepper.review.brief'
+      action = { kind: 'review-brief', labelKey: 'stepper.reviewBrief' }
+      lockOf.build = 'stepper.lock.brief'
     } else {
       done.brief = input.brief?.createdAt ?? null
+      approvedAt.brief = approval?.briefApprovedAt ?? null
       if (input.demo === 'ready') {
         done.build = input.demoAt ?? null
       } else {
@@ -132,7 +240,7 @@ export function stepperView(input: StepperInput): StepperView {
           lineKey = 'stepper.build.expired'
           action = { kind: 'rebuild', labelKey: 'demo.primary.again' }
         } else {
-          lineKey = 'stepper.build.ready'
+          lineKey = approval !== null ? 'stepper.build.readyApproved' : 'stepper.build.ready'
           action = { kind: 'build', labelKey: 'v3.buildDemo' }
         }
       }
@@ -140,14 +248,99 @@ export function stepperView(input: StepperInput): StepperView {
   }
 
   const at = current === null ? STEP_IDS.length : STEP_IDS.indexOf(current)
-  const steps = STEP_IDS.map(
-    (id, i): StepView => ({
+  const steps = STEP_IDS.map((id, i): StepView => {
+    const state: StepState = i < at ? 'done' : i === at ? 'current' : 'future'
+    const failed = i === at && errorKey !== null
+    const stepReview = i === at && review
+    const lockKey = state === 'future' ? (lockOf[id] ?? null) : null
+    const doneAt = i < at ? (done[id] ?? null) : null
+    const approved = i < at ? (approvedAt[id] ?? null) : null
+    const status: StepLine =
+      state === 'done'
+        ? approved !== null
+          ? { key: 'stepper.approvedOn', params: { date: approved }, tone: 'ok' }
+          : doneAt !== null
+            ? { key: 'stepper.doneOn', params: { date: doneAt }, tone: 'ok' }
+            : { key: 'stepper.done', tone: 'ok' }
+        : failed
+          ? { key: 'stepper.failed', tone: 'error' }
+          : stepReview
+            ? { key: 'stepper.needsReview', tone: 'warn' }
+            : state === 'current'
+              ? running
+                ? { key: 'stepper.running', tone: 'run' }
+                : id === 'research' && approval?.researchNeeded
+                  ? { key: 'stepper.sourcesChanged', tone: 'warn' }
+                  : { key: 'stepper.now', tone: 'run' }
+              : lockKey !== null
+                ? { key: 'stepper.locked', tone: 'mute' }
+                : { key: 'stepper.upNext', tone: 'mute' }
+    return {
       id,
       nameKey: `step.${id}`,
-      state: i < at ? 'done' : i === at ? 'current' : 'future',
-      failed: i === at && errorKey !== null,
-      doneAt: i < at ? (done[id] ?? null) : null
-    })
-  )
-  return { steps, current, lineKey, running, errorKey, action }
+      state,
+      failed,
+      doneAt,
+      review: stepReview,
+      approvedAt: approved,
+      lockKey,
+      staleKey: id === 'brief' ? staleKey : null,
+      status
+    }
+  })
+  return { steps, current, lineKey, running, errorKey, action, review }
+}
+
+/**
+ * The chip in the Details header (#537): where the place stands for the seller, in one or two words
+ * (`chip.*`): Researching, Profile needs review, Making brief, Brief needs review, Building your site, Site ready...
+ */
+export function reviewChipOf(view: StepperView): StepLine {
+  const step = view.steps.find((s) => s.id === view.current)
+  if (step === undefined) return { key: 'chip.built', tone: 'ok' }
+  if (view.errorKey !== null) return { key: 'stepper.failed', tone: 'error' }
+  if (step.id === 'research') {
+    if (view.running) return { key: 'chip.researching', tone: 'run' }
+    if (step.status.key === 'stepper.sourcesChanged') return { key: 'chip.sourcesChanged', tone: 'warn' }
+    if (view.review) return { key: 'chip.profileReview', tone: 'warn' }
+    return { key: 'chip.notStarted', tone: 'mute' }
+  }
+  if (step.id === 'brief') {
+    if (view.running) return { key: 'chip.briefRunning', tone: 'run' }
+    if (view.review) return { key: 'chip.briefReview', tone: 'warn' }
+    return { key: 'chip.profileApproved', tone: 'ok' }
+  }
+  if (view.running) return { key: 'chip.building', tone: 'run' }
+  return { key: 'chip.briefApproved', tone: 'ok' }
+}
+
+/** One sub-step of a running step, from the server. */
+export interface BandSubStep {
+  key: string
+  label: string
+  state: 'done' | 'running' | 'waiting' | 'failed'
+}
+
+const SUB_STATES = new Set(['done', 'running', 'waiting', 'failed'])
+
+/**
+ * The sub-steps of `stepProgress` (`{step, items: [{key, label, state}]}`) for one step, or an empty list when the
+ * server sends none for it.
+ */
+export function bandSubSteps(stepProgress: unknown, step: string | null): BandSubStep[] {
+  if (typeof stepProgress !== 'object' || stepProgress === null || step === null) return []
+  const p = stepProgress as { step?: unknown; items?: unknown }
+  if (p.step !== step || !Array.isArray(p.items)) return []
+  return p.items.flatMap((raw): BandSubStep[] => {
+    const i = (raw ?? {}) as Record<string, unknown>
+    if (typeof i.label !== 'string' || i.label === '' || typeof i.state !== 'string') return []
+    if (!SUB_STATES.has(i.state)) return []
+    return [
+      {
+        key: typeof i.key === 'string' ? i.key : i.label,
+        label: i.label,
+        state: i.state as BandSubStep['state']
+      }
+    ]
+  })
 }

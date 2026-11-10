@@ -38,12 +38,15 @@ export function DemoProgress({
   t,
   row,
   locale = 'en',
-  now = Date.now()
+  now = Date.now(),
+  open = false
 }: {
   t: Translate
   row: OpportunityListRow
   locale?: string
   now?: number
+  /** The steps start unfolded (the Progress band lists them, #537). */
+  open?: boolean
 }): JSX.Element | null {
   const action = row.demoAction
   const run = action?.run
@@ -88,7 +91,7 @@ export function DemoProgress({
         <span className="tracy-wo-muted tracy-wo-small">{t('progress.firstBuild')}</span>
       ) : null}
       {why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
-      <details>
+      <details open={open}>
         <summary className="tracy-wo-small">{t('progress.show', { n: view.total })}</summary>
         <ol className="tracy-wo-progress-steps tracy-wo-small">
           {view.steps.map((s) => {

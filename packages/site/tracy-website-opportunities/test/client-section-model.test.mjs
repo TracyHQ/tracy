@@ -177,15 +177,16 @@ test('section strings are English with no dash', () => {
   for (const k of keys) assert.doesNotMatch(STRINGS[k], /[–—]/, k)
 })
 
-test('four sections open as a sub-page, in the pager order Profile, Sources, Business brief, Photos & video', () => {
+test('four sections open as a sub-page, the pager walks Profile, Sources, Business brief', () => {
   assert.deepEqual(SUB_SECTIONS, ['profile', 'sources', 'brief', 'media'])
   assert.equal(isSubSection('brief'), true)
   assert.equal(isSubSection('demo'), false)
   assert.equal(isSubSection('rail'), false)
   assert.deepEqual(pagerOf('profile'), { previous: null, next: 'sources' })
   assert.deepEqual(pagerOf('sources'), { previous: 'profile', next: 'brief' })
-  assert.deepEqual(pagerOf('brief'), { previous: 'sources', next: 'media' })
-  assert.deepEqual(pagerOf('media'), { previous: 'brief', next: null })
+  assert.deepEqual(pagerOf('brief'), { previous: 'sources', next: null })
+  // Photos & video live in the Profile (#537): the media alias opens the Profile page and walks its pager.
+  assert.deepEqual(pagerOf('media'), { previous: null, next: 'sources' })
 })
 
 test('every rail string is gone with the rail', () => {

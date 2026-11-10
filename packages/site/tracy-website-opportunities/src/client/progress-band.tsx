@@ -1,0 +1,184 @@
+/**
+ * The Progress band at the top of Details (#537, option D): one full width band with two panes. The left pane lists
+ * the three steps (a dot, the name, one status line such as "Done Nov 9", "Needs your review" or "Up next", and the
+ * lock line of a step that waits). The right pane is the current step: "Step 2 of 3", its name, its one status line,
+ * a stale chip, why it stopped, the REAL sub-steps of a running job, and the action buttons at its bottom right.
+ *
+ * Sub-steps come only from what the server sends: the Content brief job's steps (`briefControlView`), the build's
+ * step chain (`DemoProgress`, passed in), or a `stepProgress` answer. Research sends none per card, so it shows one
+ * running line. Nothing here counts time to fake progress. The view comes from `stepper-model.ts`.
+ */
+import type { JSX, ReactNode } from 'react'
+import { Check, CircleCheck, CircleX, Clock, Lock } from 'lucide-react'
+import { Badge, Button, Spinner } from '@tracy/ui'
+
+import type { BandSubStep, StepAction, StepperView, StepView } from './stepper-model.ts'
+import type { Translate } from './strings.ts'
+
+const shortDate = (iso: unknown, locale: string): string | null => {
+  const ms = typeof iso === 'string' ? Date.parse(iso) : Number.NaN
+  if (!Number.isFinite(ms)) return null
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms)
+}
+
+/** The status line of a step, its date formatted in the interface language. */
+function statusText(t: Translate, step: StepView, locale: string): string {
+  const date = shortDate(step.status.params?.date, locale)
+  if (step.status.params?.date !== undefined && date === null) return t('stepper.done')
+  return t(step.status.key, date === null ? step.status.params : { ...step.status.params, date })
+}
+
+function SubSteps({ t, items }: { t: Translate; items: BandSubStep[] }): JSX.Element {
+  return (
+    <ol className="tracy-wo-band-subs">
+      {items.map((s) => (
+        <li key={s.key} data-state={s.state}>
+          {s.state === 'done' ? (
+            <CircleCheck className="tracy-wo-icon" aria-hidden="true" />
+          ) : s.state === 'running' ? (
+            <Spinner label={s.label} />
+          ) : s.state === 'failed' ? (
+            <CircleX className="tracy-wo-icon" aria-hidden="true" />
+          ) : (
+            <Clock className="tracy-wo-icon" aria-hidden="true" />
+          )}
+          <span>{s.label}</span>
+          <span className="tracy-wo-band-sub-state">{t(`brief.job.state.${s.state}`)}</span>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+export function ProgressBand({
+  t,
+  view,
+  locale,
+  busy,
+  disabled = false,
+  subSteps = [],
+  buildSteps = null,
+  error = null,
+  onAction
+}: {
+  t: Translate
+  view: StepperView
+  locale: string
+  /** A press of this page is in flight. */
+  busy: boolean
+  /** The action waits (the daily build limit is used up). */
+  disabled?: boolean
+  /** The sub-steps of the running step, from the server. */
+  subSteps?: BandSubStep[]
+  /** The build's own step chain (`DemoProgress`), shown while the build runs. */
+  buildSteps?: ReactNode
+  /** A refusal of the last press (`gate.*`), already in words. */
+  error?: string | null
+  onAction: (action: StepAction) => void
+}): JSX.Element {
+  const at = view.current === null ? -1 : view.steps.findIndex((s) => s.id === view.current)
+  const current = at < 0 ? null : view.steps[at]
+  const total = view.steps.length
+  const dot = (step: StepView, i: number): JSX.Element => (
+    <span className="tracy-wo-step-dot" aria-hidden="true">
+      {step.state === 'done' ? <Check /> : i + 1}
+    </span>
+  )
+  const action = view.action
+  return (
+    <section className="tracy-wo-band" aria-label={t('progress.title')}>
+      <ol className="tracy-wo-band-list">
+        {view.steps.map((step, i) => (
+          <li
+            key={step.id}
+            className="tracy-wo-step"
+            data-state={step.state}
+            data-failed={step.failed ? '' : undefined}
+            data-review={step.review ? '' : undefined}
+            aria-current={step.state === 'current' ? 'step' : undefined}
+          >
+            <span className="tracy-wo-step-mark">
+              {dot(step, i)}
+              <span className="tracy-wo-step-ln" />
+            </span>
+            <span className="tracy-wo-step-body">
+              <span className="tracy-wo-step-name">{t(step.nameKey)}</span>
+              <span className="tracy-wo-step-sub" data-tone={step.status.tone}>
+                {statusText(t, step, locale)}
+              </span>
+              {step.lockKey !== null ? (
+                <span className="tracy-wo-band-lock">
+                  <Lock aria-hidden="true" className="tracy-wo-icon" />
+                  {t(step.lockKey)}
+                </span>
+              ) : null}
+              {step.staleKey !== null ? (
+                <Badge variant="outline" className="tracy-wo-chip-warn tracy-wo-band-stale">
+                  {t(step.staleKey)}
+                </Badge>
+              ) : null}
+            </span>
+          </li>
+        ))}
+      </ol>
+      <div className="tracy-wo-band-pane" data-review={view.review ? '' : undefined}>
+        {current === null ? (
+          <>
+            <span className="tracy-wo-band-kicker">{t('band.allDone')}</span>
+            <h3 className="tracy-wo-band-name">{t(view.steps[total - 1]?.nameKey ?? 'step.build')}</h3>
+          </>
+        ) : (
+          <>
+            <span className="tracy-wo-band-kicker">{t('band.kicker', { n: at + 1, total })}</span>
+            <h3 className="tracy-wo-band-name">{t(current.nameKey)}</h3>
+            {view.lineKey !== null && view.errorKey === null ? (
+              <p className="tracy-wo-band-line">{t(view.lineKey)}</p>
+            ) : null}
+            {view.errorKey !== null ? (
+              <p className="tracy-wo-error tracy-wo-band-line" role="alert">
+                {t(view.errorKey)}
+              </p>
+            ) : null}
+            {view.running ? (
+              current.id === 'build' && buildSteps ? (
+                <div className="tracy-wo-band-build">{buildSteps}</div>
+              ) : subSteps.length > 0 ? (
+                <SubSteps t={t} items={subSteps} />
+              ) : (
+                <p className="tracy-wo-band-running" role="status">
+                  <Spinner label={t('stepper.running')} />
+                  {t(current.id === 'research' ? 'band.research.collecting' : 'stepper.running')}
+                </p>
+              )
+            ) : null}
+          </>
+        )}
+        {error ? (
+          <p className="tracy-wo-error tracy-wo-small" role="alert">
+            {error}
+          </p>
+        ) : null}
+        {view.running || action !== null ? (
+          <div className="tracy-wo-band-acts">
+            {view.running ? (
+              <Button type="button" size="sm" variant="outline" disabled>
+                <Spinner label={t('stepper.running')} />
+                {t('stepper.running')}
+              </Button>
+            ) : action !== null ? (
+              <Button
+                type="button"
+                size="sm"
+                disabled={busy || disabled}
+                onClick={() => onAction(action.kind)}
+              >
+                {busy ? <Spinner label={t(action.labelKey)} /> : null}
+                {t(action.labelKey)}
+              </Button>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+    </section>
+  )
+}

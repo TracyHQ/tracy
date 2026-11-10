@@ -54,6 +54,7 @@ type FetchLike = (
 ) => Promise<{ ok: boolean; status: number; json(): Promise<unknown>; text?(): Promise<string> }>
 
 const id = (value: string): string => encodeURIComponent(value)
+const isForm = (v: unknown): v is FormData => typeof FormData !== 'undefined' && v instanceof FormData
 
 export interface BuildChoice {
   design: string
@@ -242,6 +243,20 @@ export interface Api {
     opportunityId: string,
     edits: Record<string, string | null>
   ): Promise<Answer<{ opportunity?: unknown }>>
+  /** The seller approves the Profile (#537): unlocks the Content brief. */
+  approveProfile(opportunityId: string): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /** The seller approves the latest Content brief (#537): unlocks the build. */
+  approveBrief(opportunityId: string): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /** One more link of the business (#537); after research it asks for research again. */
+  addSource(
+    opportunityId: string,
+    url: string
+  ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /** A photo or video the seller adds to the Profile (#537), sent as multipart field file. */
+  uploadMedia(
+    opportunityId: string,
+    file: Blob & { name?: string }
+  ): Promise<Answer<{ opportunity?: unknown; approval?: unknown; media?: unknown }>>
   revision(revisionId: string): Promise<
     Answer<{
       revision?: unknown
@@ -310,8 +325,10 @@ export function createApi(fetchImpl: FetchLike): Api {
       res = await fetchImpl(path, {
         method,
         credentials: 'same-origin',
-        headers: body === undefined ? { accept } : { accept, 'content-type': 'application/json' },
-        ...(body === undefined ? {} : { body: JSON.stringify(body) })
+        // A FormData body carries its own multipart boundary, so no content-type is set for it.
+        headers:
+          body === undefined || isForm(body) ? { accept } : { accept, 'content-type': 'application/json' },
+        ...(body === undefined ? {} : { body: isForm(body) ? body : JSON.stringify(body) })
       })
     } catch {
       return { ok: false, status: 0, code: 'NETWORK' }
@@ -435,6 +452,14 @@ export function createApi(fetchImpl: FetchLike): Api {
     editBrief: (opportunityId, revisionId, edits) =>
       call(`${BASE}/${id(opportunityId)}/revisions/${id(revisionId)}/edits`, 'POST', { edits }),
     editProfile: (opportunityId, edits) => call(`${BASE}/${id(opportunityId)}/profile`, 'PUT', { edits }),
+    approveProfile: (opportunityId) => call(`${BASE}/${id(opportunityId)}/profile/approve`, 'POST', {}),
+    approveBrief: (opportunityId) => call(`${BASE}/${id(opportunityId)}/brief/approve`, 'POST', {}),
+    addSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'POST', { url }),
+    uploadMedia: (opportunityId, file) => {
+      const form = new FormData()
+      form.append('file', file, file.name ?? 'upload')
+      return call(`${BASE}/${id(opportunityId)}/media`, 'POST', form)
+    },
     revision: (revisionId) => call(`${BASE}/revisions/${id(revisionId)}`),
     revisionMarkdown: (revisionId) =>
       call(`${BASE}/revisions/${id(revisionId)}?format=md`, 'GET', undefined, 'text/markdown'),

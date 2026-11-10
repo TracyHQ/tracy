@@ -83,7 +83,11 @@ test('Demo and Status: a brief and no demo yet, the next action is Build demo', 
   const p = placePieces(researched(), t, opts)
   assert.deepEqual(p.demo, { kind: 'none' })
   assert.equal(p.status.label, 'Brief ready')
-  assert.deepEqual(p.next, { label: 'Build demo', run: { kind: 'demo', action: 'build' }, disabled: false })
+  assert.deepEqual(p.next, {
+    label: 'Build your site',
+    run: { kind: 'demo', action: 'build' },
+    disabled: false
+  })
 })
 
 test('Status: researched without a brief offers Make content brief, never Build demo (same steps as Details)', () => {

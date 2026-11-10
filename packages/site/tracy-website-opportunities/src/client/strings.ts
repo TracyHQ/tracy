@@ -73,7 +73,7 @@ export const en = {
   'v3.needsReview': 'Needs review',
   'v3.demoReady': 'Demo ready',
   'v3.notBuilt': 'Not built yet',
-  'v3.buildDemo': 'Build demo',
+  'v3.buildDemo': 'Build your site',
   'v3.openDemoChat': 'Open demo chat',
   'v3.reviewDemo': 'Review demo',
   'v3.sendDemo': 'Send demo',
@@ -1160,7 +1160,7 @@ export const en = {
   'details.section.sources': 'Sources',
   'details.section.brief': 'Business brief',
   'details.section.media': 'Photos & video',
-  'details.section.demo': 'Demo site',
+  'details.section.demo': 'Your site',
 
   /** The status line beside each section title of Details (`section-model.ts`). */
   'section.meta.profile.fields.one': '{count} field',
@@ -1189,6 +1189,7 @@ export const en = {
   'section.locked.research': 'Available after research finishes.',
   'section.locked.brief': 'Available after the content brief is ready.',
   'section.open': 'Open',
+  'section.review': 'Review',
   'section.openBrief': 'Open full brief',
   'section.openNamed': 'Open {section}',
 
@@ -1256,7 +1257,7 @@ export const en = {
   'progress.title': 'Progress',
   'step.research': 'Research',
   'step.brief': 'Content brief',
-  'step.build': 'Build demo',
+  'step.build': 'Build your site',
   'stepper.doneOn': 'Done {date}',
   'stepper.done': 'Done',
   'stepper.running': 'Running',
@@ -1294,7 +1295,110 @@ export const en = {
   'source.posts.one': '{count} post',
   'source.posts.other': '{count} posts',
 
+  /** The seller's approvals (#537): review lines, locks and stale chips of the steps (stepper-model.ts). */
+  'stepper.research.sourcesChanged': 'Sources changed. Run research again.',
+  'stepper.review.profile':
+    'Research finished. Check the Profile, edit anything that is wrong, then approve it.',
+  'stepper.review.brief':
+    'The content brief is ready. Check every row, edit anything that is wrong, then approve it.',
+  'stepper.reviewProfile': 'Review profile ›',
+  'stepper.reviewBrief': 'Review brief ›',
+  'stepper.needsReview': 'Needs your review',
+  'stepper.approvedOn': 'Approved {date}',
+  'stepper.failed': 'Failed',
+  'stepper.now': 'In progress',
+  'stepper.locked': 'Locked',
+  'stepper.upNext': 'Up next',
+  'stepper.sourcesChanged': 'Sources changed',
+  'stepper.lock.profile': 'Approve the profile to unlock',
+  'stepper.lock.profileAgain': 'Approve the profile again, then make the brief again',
+  'stepper.lock.brief': 'Approve the brief to unlock',
+  'stepper.lock.both': 'Locked until the profile and brief are approved',
+  'stepper.lock.research': 'Run research to unlock',
+  'stepper.lock.researchAgain': 'Run research again to unlock',
+  'stepper.brief.readyApproved': 'Profile approved. Writing the brief takes about 2 minutes.',
+  'stepper.brief.staleProfile': 'The profile changed after this brief was made. Make the brief again.',
+  'stepper.brief.staleSources': 'The sources changed after this brief was made. Make the brief again.',
+  'stepper.build.readyApproved': 'Brief approved. Building your site takes about 50 minutes.',
+  'brief.makeAgain': 'Make the brief again',
+  'brief.chip.olderProfile': 'Made from an older profile',
+  'brief.chip.olderSources': 'Made from older sources',
+
+  /** The Progress band at the top of Details (#537): the step list on the left, the current step on the right. */
+  'band.kicker': 'Step {n} of {total}',
+  'band.allDone': 'All steps done',
+  'band.research.collecting': 'Collecting the website, Google listing and social pages',
+  'band.build.steps': 'Build steps',
+  'band.tryAgain': 'Try again',
+
+  /** The header chip of Details: where the place stands (#537). */
+  'chip.notStarted': 'Not started',
+  'chip.researching': 'Researching',
+  'chip.sourcesChanged': 'Sources changed',
+  'chip.profileReview': 'Profile needs review',
+  'chip.profileApproved': 'Profile approved',
+  'chip.briefRunning': 'Making brief',
+  'chip.briefReview': 'Brief needs review',
+  'chip.briefApproved': 'Brief approved',
+  'chip.building': 'Building your site',
+  'chip.built': 'Site ready',
+
+  /** The approval footer of the Profile and Business brief sub-pages (#537). */
+  'approve.hint': 'Check every row. Edit anything that is wrong, then approve.',
+  'approve.scrollHint': 'Scroll to the end to approve.',
+  'approve.back': 'Back',
+  'approve.profile': 'Approve profile and continue',
+  'approve.brief': 'Approve brief and continue',
+  'approve.saving': 'Approving…',
+  'approve.done.profile': 'Profile approved {date}',
+  'approve.done.brief': 'Brief approved {date}',
+
+  /** Refusals of the approval steps and the gates (#537), keyed by the server code. */
+  'gate.PROFILE_NOT_APPROVED': 'Approve the profile first: open it, check every row, then approve.',
+  'gate.BRIEF_NOT_APPROVED': 'Approve the content brief first: open it, check every row, then approve.',
+  'gate.RESEARCH_NEEDED':
+    'A source was added after research. Run research again, then approve the new profile.',
+  'gate.RESEARCH_NOT_DONE': 'Run research first: the profile is made from its results.',
+  'gate.NO_BRIEF': 'Make a content brief first.',
+  'gate.BRIEF_STALE':
+    'This brief was made from an older profile or older sources. Make the brief again, then approve it.',
+  'gate.other': 'That did not work. Try again in a moment.',
+
+  /** Add source (#537): one more link of the business. */
+  'source.add': 'Add source',
+  'source.add.label': 'Link of the business',
+  'source.add.placeholder': 'Website, social page or listing page',
+  'source.add.submit': 'Add',
+  'source.add.cancel': 'Cancel',
+  'source.add.saving': 'Adding…',
+  'source.add.afterResearch':
+    'Adding a source after research means research runs again and the profile needs your review again.',
+  'source.add.error.INVALID_URL': 'Enter the address of a website, social page or listing page.',
+  'source.add.error.GOOGLE_LINK_NOT_ADDED':
+    'A Google link names the business itself. Add its website, a social page or a listing page instead.',
+  'source.add.error.SOURCE_ALREADY_KNOWN': 'This business already has this link, or a link of the same kind.',
+  'source.add.error.NO_USABLE_LINKS':
+    'This link cannot be read. Try the address of a website, social page or listing page.',
+  'source.add.error.other': 'Could not add the source. Try again.',
+
+  /** Photos & video inside the Profile (#537). */
+  'media.strip.open': 'Open',
+  'media.add': 'Add more',
+  'media.adding': 'Uploading…',
+  'media.addHint': 'A JPEG, PNG, WebP or AVIF photo, or an MP4 or WebM video.',
+  'media.error.NOT_MEDIA': 'Send a JPEG, PNG, GIF, WebP or AVIF photo, or an MP4 or WebM video.',
+  'media.error.TOO_LARGE': 'This file is too large.',
+  'media.error.MEDIA_ALREADY_ADDED': 'This file is already in the Photos & video.',
+  'media.error.IMAGE_UNREADABLE': 'This photo cannot be read. Save it again as JPEG or PNG.',
+  'media.error.other': 'Could not upload the file. Try again.',
+
+  /** Your site (#537): before the site is built, the block says which step is needed. */
+  'site.notYet.research': 'Not available yet. Run Research first.',
+  'site.notYet.profile': 'Not available yet. Approve the Profile, then make the content brief.',
+  'site.notYet.brief': 'Not available yet. Approve the content brief, then build the site.',
+  'site.building': 'Building your site. About 50 minutes.',
+
   /** The Demo site block (#515). */
-  'demoBlock.title': 'Demo site',
+  'demoBlock.title': 'Your site',
   'demoBlock.more': 'More demo actions'
 } satisfies Record<string, string>

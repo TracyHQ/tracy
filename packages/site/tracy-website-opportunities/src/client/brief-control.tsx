@@ -25,6 +25,8 @@ export interface BriefJobControl {
   pressing: boolean
   /** The last press was refused by the server. */
   refused: boolean
+  /** The code of that refusal (`PROFILE_NOT_APPROVED`, `RESEARCH_NEEDED`, ...), or null (#537). */
+  refusedCode: string | null
   press: () => Promise<void>
 }
 
@@ -37,6 +39,7 @@ export function useBriefJob(
   const [job, setJob] = useState<unknown>(briefJob)
   const [pressing, setPressing] = useState(false)
   const [refused, setRefused] = useState(false)
+  const [refusedCode, setRefusedCode] = useState<string | null>(null)
   useEffect(() => setJob(briefJob), [briefJob])
   const jobRec = typeof job === 'object' && job !== null ? (job as Record<string, unknown>) : {}
   const running = jobRec.state === 'running' && typeof jobRec.id === 'string'
@@ -52,12 +55,16 @@ export function useBriefJob(
     if (pressing) return
     setPressing(true)
     setRefused(false)
+    setRefusedCode(null)
     const answer = await api.createRevision(opportunityId, requestId())
     setPressing(false)
-    if (!answer.ok || answer.body?.job === undefined) return setRefused(true)
+    if (!answer.ok || answer.body?.job === undefined) {
+      setRefusedCode(answer.ok ? null : answer.code)
+      return setRefused(true)
+    }
     setJob(answer.body.job)
   }, [api, opportunityId, pressing])
-  return { job, pressing, refused, press }
+  return { job, pressing, refused, refusedCode, press }
 }
 
 /** The Site brief block's chip: Working while the job runs, Failed when it stopped. */

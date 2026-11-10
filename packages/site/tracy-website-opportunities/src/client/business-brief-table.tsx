@@ -14,12 +14,15 @@ export function BusinessBriefTable({
   rows,
   firstRow = null,
   editValue = null,
+  readOnly = false,
   onToggle
 }: {
   t: Translate
   rows: BriefRow[]
   /** The value cell of a fact the seller can edit in place (#524), or null to draw it read only. */
   editValue?: ((row: BriefRow) => ReactNode | null) | null
+  /** The compact brief of Details: the On the site switches show their state, unpressable (#537). */
+  readOnly?: boolean
   /** A row drawn before the facts: Site name on Tracy (#519), shown even before research has run. */
   firstRow?: ReactNode
   /** Resolves true once the choice is saved and the page read again. */
@@ -75,7 +78,7 @@ export function BusinessBriefTable({
                 {row.readOnly ? null : (
                   <Switch
                     checked={row.onSite}
-                    disabled={busy !== null}
+                    disabled={readOnly || busy !== null}
                     aria-label={`${t('brief.table.onSite')}: ${row.label}`}
                     onCheckedChange={(on) => void choose(row, on)}
                   />

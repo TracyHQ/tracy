@@ -185,17 +185,25 @@ export function sourceCounts(sources: readonly SourceInput[]): SectionMetaInput[
 
 /** A section that opens as a sub-page of its own (`wo-section`); the Demo site stays on Details. */
 export type SubSection = Exclude<SectionId, 'demo'>
-/** The order of the sub-pages, which their pager walks. */
+/**
+ * The sections that open as a sub-page. Photos & video belong to the Profile (#537): `media` stays a valid
+ * `wo-section` and opens the Profile sub-page scrolled to its Photos & video part, so the pager never walks it.
+ */
 export const SUB_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'sources', 'brief', 'media'])
+/** The order of the sub-pages, which their pager walks. */
+export const PAGER_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'sources', 'brief'])
 
 export const isSubSection = (v: unknown): v is SubSection =>
   typeof v === 'string' && (SUB_SECTIONS as readonly string[]).includes(v)
 
+/** The sub-page a section opens: `media` opens the Profile. */
+export const pageOf = (section: SubSection): SubSection => (section === 'media' ? 'profile' : section)
+
 /** The pager under a sub-page: the section before and the one after, null at either end. */
 export function pagerOf(section: SubSection): { previous: SubSection | null; next: SubSection | null } {
-  const at = SUB_SECTIONS.indexOf(section)
+  const at = PAGER_SECTIONS.indexOf(pageOf(section))
   return {
-    previous: at > 0 ? SUB_SECTIONS[at - 1] : null,
-    next: at < SUB_SECTIONS.length - 1 ? SUB_SECTIONS[at + 1] : null
+    previous: at > 0 ? PAGER_SECTIONS[at - 1] : null,
+    next: at < PAGER_SECTIONS.length - 1 ? PAGER_SECTIONS[at + 1] : null
   }
 }
