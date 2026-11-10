@@ -2510,3 +2510,64 @@ test(
     )
   }
 )
+
+test(
+  'audio capability captures v3 track sources as URL facts without retyping the cover or losing row identity',
+  needsPhp,
+  () => {
+    const inv = fullInventory()
+    inv.content[1].attribs = JSON.stringify({
+      ctm_audio: {
+        'audio-src': { 0: 'images/audio/Same.mp3', 2: 'images/audio/Same.mp3' },
+        'audio-title': { 0: 'First track', 2: 'Second track' }
+      },
+      ctm_thumbnail: 'images/cover.jpg'
+    })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage', '--role-vocabulary', '3'],
+      schemas: { features: ICONS_XML },
+      files: {
+        ...FULL_FILES,
+        'templates/tracy/contenttype/types/audio.xml':
+          '<form><fields name="attribs"><field name="ctm_audio" type="jaitems"><item name="audio-src" type="text"/><item name="audio-title" type="text"/></field><field name="ctm_thumbnail" type="media"/></fields></form>'
+      }
+    })
+    assertWritten(run)
+    const slots = run.read('content-map.json').slots
+    const tracks = slots.filter((s) => s.entity === 'article-3' && s.jsonPath?.[1] === 'audio-src')
+    assert.equal(tracks.length, 2)
+    assert.equal(new Set(tracks.map((s) => s.group.id)).size, 2)
+    for (const [row, s] of tracks.entries()) {
+      assert.equal(s.type, 'url')
+      assert.equal(s.role, 'business.audio')
+      assert.equal(s.customize, undefined)
+      assert.equal(s.sample, 'images/audio/Same.mp3')
+      assert.deepEqual(s.jsonPath, ['ctm_audio', 'audio-src', String(row * 2)])
+      assert.equal(s.column, 'attribs')
+    }
+    const cover = slots.find((s) => s.entity === 'article-3' && s.jsonPath?.[0] === 'ctm_thumbnail')
+    assert.equal(cover.type, 'image')
+    const previous = run.read('content-map.json')
+    for (const s of previous.slots.filter((s) => s.role === 'business.audio')) {
+      s.role = 'editorial.illustration'
+      s.customize = 'keep'
+    }
+    const successor = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage', '--role-vocabulary', '3'],
+      previous,
+      schemas: { features: ICONS_XML },
+      files: {
+        ...FULL_FILES,
+        'templates/tracy/contenttype/types/audio.xml':
+          '<form><fields name="attribs"><field name="ctm_audio" type="jaitems"><item name="audio-src" type="text"/><item name="audio-title" type="text"/></field><field name="ctm_thumbnail" type="media"/></fields></form>'
+      }
+    })
+    assertWritten(successor)
+    assert.ok(
+      successor
+        .read('content-map.json')
+        .slots.filter((s) => s.jsonPath?.[1] === 'audio-src')
+        .every((s) => s.role === 'business.audio' && !s.customize)
+    )
+  }
+)

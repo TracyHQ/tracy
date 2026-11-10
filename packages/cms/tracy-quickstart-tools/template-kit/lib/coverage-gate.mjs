@@ -7,6 +7,11 @@
 // every text slot gets its one limit (slot-limits.mjs), and the main menu row its whole-row limit. `coverageGate`
 // then counts what is still missing, part by part, and lists every failure: green (0) means the kit is final.
 
+import { isDeepStrictEqual } from 'node:util'
+import {
+  audioSourceIdentity,
+  isAudioSlot
+} from '../../../../wo/website-opportunities/domain/audio-source.mjs'
 import { settleButtons } from './button-slots.mjs'
 import { settleContentPages } from './content-pages.mjs'
 import { neutralKey } from './ids.mjs'
@@ -198,6 +203,65 @@ export function applyCoverage(
   return kit
 }
 
+/** Audio is an owner-bound source, never an image frame or a CTA. Missing playback state stays a failure. */
+export function audioSourceChecks({ kit, map, fail }) {
+  const slots = (map.slots ?? []).filter(isAudioSlot)
+  let missing = 0
+  for (const block of kit.blocks) {
+    const mine = slots.filter((s) =>
+      [block.source?.entity, ...(block.source?.contains ?? [])].includes(s.entity)
+    )
+    const links = (block.links ?? []).filter((l) => l.action === 'media-source')
+    const targets = new Set([...mine.map((s) => neutralKey(s.key)), ...links.map((l) => l.sourceSlot)])
+    for (const id of targets) {
+      const candidates = mine.filter((s) => neutralKey(s.key) === id)
+      const sources = links.filter((l) => l.sourceSlot === id)
+      const s = candidates[0],
+        l = sources[0],
+        a = l?.observed
+      const valid =
+        candidates.length === 1 &&
+        sources.length === 1 &&
+        l.mediaKind === 'audio' &&
+        l.id === id &&
+        !l.labelId &&
+        s.column === 'attribs' &&
+        s.jsonPath?.length === 3 &&
+        s.jsonPath[0] === 'ctm_audio' &&
+        s.jsonPath[1] === 'audio-src' &&
+        /^(?:0|[1-9]\d*)$/.test(String(s.jsonPath[2])) &&
+        Number.isSafeInteger(Number(s.jsonPath[2])) &&
+        s.group?.id === `${s.entity}.audio.${Number(s.jsonPath[2])}` &&
+        s.group?.item === Number(s.jsonPath[2]) &&
+        s.group?.kind === 'business' &&
+        isDeepStrictEqual(l.sourceBinding, {
+          entity: s.entity,
+          column: s.column,
+          jsonPath: s.jsonPath,
+          group: s.group
+        }) &&
+        l.target === s.sample &&
+        l.sourceUrl &&
+        l.sourceUrl === audioSourceIdentity(s.sample, l.sourceBase) &&
+        l.sourceUrl === audioSourceIdentity(a?.value, l.sourceBase) &&
+        a?.entity === s.entity &&
+        String(a?.track) === String(s.jsonPath[2]) &&
+        a?.initialized === true &&
+        a?.metadata === true &&
+        a?.mediaError === null &&
+        !(block.frames ?? []).some((f) => f.id === id || f.slot === id)
+      if (valid) continue
+      missing++
+      fail(
+        'audioSourcesUnresolved',
+        `blocks[${block.id}].links[${id}]`,
+        'audio needs one exact article/track source binding and initialized error-free metadata proof; never an image or CTA'
+      )
+    }
+  }
+  return missing
+}
+
 /**
  * Count what the kit still lacks against the content map (`map`) and the read pass (`readings`: block id -> the
  * block's reading at the widest width), part by part (`kit.coverage.parts`), list every failure
@@ -281,6 +345,7 @@ export function coverageGate(kit, { map, readings = new Map(), gapAccepts = {}, 
   parts.linksWithoutTarget = linksWithoutTarget({ kit, map, readings, fail })
   parts.linksWithoutLabelSlot = linksWithoutLabelSlot({ kit, map, fail })
   parts.imagesWithoutFrame = imagesWithoutFrame({ kit, map, readings, fail })
+  parts.audioSourcesUnresolved = audioSourceChecks({ kit, map, fail })
   // 4. The main menu row has its whole-row limit.
   const block = mainMenuBlock(kit)
   const main = (kit.site?.navigationGroups ?? []).find((g) => g.block === block)

@@ -7,7 +7,12 @@ import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { foreignItemLinks } from './item-page-links.js'
-import { linkDoors } from './link-doors.js'
+import {
+  audioDecisionProblem,
+  isAudioSlot
+} from '../../../../packages/wo/website-opportunities/domain/audio-source.mjs'
+import { keptBlocks } from './owner-table.js'
+import { audioBindingMatches, linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
 import { NO_LAST } from './no-last-report.js'
 import { articleOfPage, linkTarget } from './link-targets.js'
@@ -17,6 +22,22 @@ import { doorCall, readRow } from './settings-door.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const PAGE_ROWS = 25
+
+// Contract keys survive a clone; only inspect's unique actual row mapping identifies the rendered article.
+function renderedAudioEntity(reading, entity) {
+  const ids = reading?.ids
+  const id = ids?.[entity]
+  if (
+    !ids ||
+    Array.isArray(ids) ||
+    !Number.isSafeInteger(id) ||
+    id <= 0 ||
+    Object.entries(ids).filter(([key, value]) => key.startsWith('article-') && String(value) === String(id))
+      .length !== 1
+  )
+    return null
+  return `article-${id}`
+}
 
 async function articleRows(call) {
   const rows = new Map()
@@ -156,6 +177,18 @@ export async function prepareLinks({
   contentMap,
   createdPages
 }) {
+  const active = new Set(keptBlocks(plan).map((d) => d.block))
+  const media = each(kit?.blocks)
+    .filter((b) => active.has(b.id))
+    .flatMap((block) =>
+      each(block.links)
+        .filter((l) => l.action === 'media-source')
+        .map((link) => ({ link, block }))
+    )
+  const audioFailures = []
+  const audioOrders = []
+  let audioReadback = []
+  const emptySlots = []
   const claims = [...owners.values()].filter((c) => c.kind === 'link')
   const call = doorCall(door, siteKey)
   let site
@@ -166,6 +199,9 @@ export async function prepareLinks({
     return {
       changes: {},
       evidence: {},
+      emptySlots,
+      audioFailures: media.map(({ link }) => ({ slot: link.id, reason })),
+      readbackAudio: async () => [],
       writeMenu: async () => {},
       results: () => new Map(claims.map((c) => [c.slot, failed(reason)]))
     }
@@ -193,13 +229,22 @@ export async function prepareLinks({
         doors.get(claim.slot),
         foreign.has(claim.slot) && !foreign.get(claim.slot).content
           ? { kind: 'failed', reason: foreign.get(claim.slot).reason }
-          : linkTarget(foreign.get(claim.slot)?.content ?? claim.content, {
-              plan,
-              kit,
-              facts,
-              createdPages,
-              ...site
-            }),
+          : doors.get(claim.slot)?.link?.action === 'media-source'
+            ? (() => {
+                const reason = audioDecisionProblem(
+                  doors.get(claim.slot).link,
+                  claim.content,
+                  each(brief?.facts)
+                )
+                return reason ? { kind: 'failed', reason } : { kind: 'audio', url: claim.content }
+              })()
+            : linkTarget(foreign.get(claim.slot)?.content ?? claim.content, {
+                plan,
+                kit,
+                facts,
+                createdPages,
+                ...site
+              }),
         {
           hiddenKeys,
           leaving,
@@ -207,6 +252,112 @@ export async function prepareLinks({
         }
       )
     )
+  for (const { link, block } of media) {
+    const bound = doorOf(link.id)
+    const slot = each(reading?.slots).find((s) => s.key === contentMapKey(link.sourceSlot))
+    const claim = owners.get(link.id)
+    let reason =
+      bound.via !== 'audio'
+        ? bound.reason
+        : !renderedAudioEntity(reading, link.sourceBinding.entity)
+          ? 'audio source has no unique trusted actual article ID'
+          : null
+    if (!reason && claim?.kind === 'link') {
+      const order = orders.get(link.id)
+      if (order?.via !== 'slot') reason = order?.reason ?? 'audio source decision was refused'
+      else audioOrders.push({ link, block, key: slot.key, value: order.url })
+    } else if (!reason && (!claim || claim.kind === 'hide')) {
+      if (slot.canHide !== true || slot.key in taken)
+        reason = 'audio absence requires proven source hide eligibility and no competing write'
+      else {
+        emptySlots.push(slot.key)
+        audioOrders.push({ link, block, key: slot.key, value: '' })
+      }
+    } else if (!reason) reason = 'audio source has a competing non-media owner'
+    if (reason) audioFailures.push({ slot: link.id, reason })
+  }
+  const readbackAudio = async () => {
+    if (!audioOrders.length) return []
+    let after
+    try {
+      after = await call('content.contract', { operation: 'inspect' })
+    } catch (error) {
+      audioReadback = audioOrders.map(({ key }) => ({
+        key,
+        stored: false,
+        status: 'failed',
+        reason: `audio source inspect failed: ${error.message}`
+      }))
+      return audioReadback
+    }
+    audioReadback = audioOrders.map(({ link, block, key, value }) => {
+      const slots = each(after?.slots).filter((s) => s.key === key)
+      const beforeOwner = each(reading?.slots).filter(
+        (s) => s.entity === link.sourceBinding.entity && isAudioSlot(s)
+      )
+      const owner = each(after?.slots).filter((s) => s.entity === link.sourceBinding.entity && isAudioSlot(s))
+      const census =
+        owner.length === beforeOwner.length &&
+        owner.every(
+          (s) =>
+            beforeOwner.filter(
+              (b) =>
+                b.key === s.key &&
+                audioBindingMatches(
+                  s,
+                  {
+                    ...link,
+                    id: b.key,
+                    sourceSlot: b.key,
+                    target: b.sample,
+                    sourceBinding: {
+                      entity: b.entity,
+                      column: b.column,
+                      jsonPath: b.jsonPath,
+                      group: b.group
+                    }
+                  },
+                  block
+                ) &&
+                s.current === (audioOrders.find((o) => o.key === b.key)?.value ?? b.current)
+            ).length === 1
+        )
+      const entity = renderedAudioEntity(after, link.sourceBinding.entity)
+      const stored =
+        !!entity &&
+        entity === renderedAudioEntity(reading, link.sourceBinding.entity) &&
+        census &&
+        after?.contract === reading?.contract &&
+        slots.length === 1 &&
+        audioBindingMatches(slots[0], link, block) &&
+        slots[0].current === value &&
+        (value !== '' || slots[0].canHide === true)
+      return {
+        key,
+        ordered: value,
+        contractEntity: link.sourceBinding.entity,
+        sourceBinding: link.sourceBinding,
+        entity,
+        track: String(link.sourceBinding.group.item),
+        block: block.id,
+        allEmpty: census && owner.every((s) => s.current === ''),
+        ownerTracks: owner.map((s) => ({
+          key: s.key,
+          entity,
+          track: String(s.group?.item),
+          ordered: s.current
+        })),
+        stored,
+        status: stored ? 'pending' : 'failed',
+        reason: stored
+          ? value
+            ? 'stored source verified; initialized player metadata/error-free playback proof is still required'
+            : 'empty source verified; whole track row and all-empty player absence proof is still required'
+          : 'audio source readback did not preserve the exact contract/owner/track/value'
+      }
+    })
+    return audioReadback
+  }
   settleControls(orders, doors, owners)
   const stranded = strandedMenuItems({ claims, doors, orders, leaving })
 
@@ -230,6 +381,10 @@ export async function prepareLinks({
       else values.set(key, order.url)
     }
   settleShared(orders, values)
+  for (const order of audioOrders) {
+    if (order.value && values.get(order.key) !== order.value)
+      audioFailures.push({ slot: order.link.id, reason: 'audio source conflicts with another write' })
+  }
   const changes = Object.fromEntries(values)
   const evidence = {}
   for (const claim of claims) {
@@ -270,12 +425,30 @@ export async function prepareLinks({
     changes,
     evidence,
     stranded,
+    emptySlots,
+    audioFailures,
+    readbackAudio,
+    acceptAudioProof: (proof) => {
+      audioReadback = proof
+    },
     writeMenu,
     results: (done) => {
       const seen = { ...done, written: new Set(done.written), hiddenKeys, leaving, menuDone }
       return new Map(
         [...orders].map(([slot, order]) => {
           const line = lineResult(order, seen)
+          const source = audioReadback.find((a) => a.key === order.keys?.[0])
+          if (source)
+            return [
+              slot,
+              {
+                ...line,
+                status: source.stored && source.status !== 'failed' ? 'written' : 'failed',
+                reason: source.reason,
+                stored: source.stored,
+                mediaProof: source.status
+              }
+            ]
           const moved = foreign.get(slot)
           return [slot, moved && line.status === 'written' ? { ...line, reason: moved.reason } : line]
         })

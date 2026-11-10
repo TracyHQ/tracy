@@ -537,3 +537,45 @@ test('a breadcrumb that prints the page heading first keeps the heading mark whe
   assert.equal(merged[0].tag, 'li')
   assert.equal(merged[0].h1, true)
 })
+
+test('audio capability matches exact owner and sparse track while preserving URL case/query and every occurrence', () => {
+  const dir = contractDir()
+  const mapPath = path.join(dir, 'content-map.json')
+  const slots = [11, 12].flatMap((entity) =>
+    [0, 2].map((row) => ({
+      key: `article-${entity}.${row}`,
+      entity: `article-${entity}`,
+      column: 'attribs',
+      jsonPath: ['ctm_audio', 'audio-src', row],
+      type: 'url',
+      role: 'business.audio',
+      sample: 'https://media.example/Track.mp3?key=A'
+    }))
+  )
+  writeFileSync(mapPath, JSON.stringify({ entities: [], pages: [], slots }))
+  const matcher = createMatcher(loadContract(dir, SITE), SITE)
+  const item = { kind: 'media', mediaKind: 'audio', entity: 'article-11', track: '2', value: slots[0].sample }
+  assert.deepEqual(matcher(item).slots, ['article-11.2'])
+  for (const over of [
+    { entity: 'article-13' },
+    { track: '1' },
+    { value: 'https://media.example/track.mp3?key=A' },
+    { value: 'https://media.example/Track.mp3?key=a' },
+    { entity: undefined },
+    { value: '/images/undeclared.mp3' }
+  ])
+    assert.equal(matcher({ ...item, ...over }).status, 'hole')
+  const copies = slots.map((s) => ({
+    ...item,
+    entity: s.entity,
+    track: String(s.jsonPath[2]),
+    rect: null,
+    visible: true
+  }))
+  const merged = mergeViewports({ 1440: { items: copies }, 390: { items: copies } }, SITE)
+  assert.equal(merged.length, 4)
+  assert.deepEqual(
+    merged.map((x) => [x.entity, x.track]),
+    copies.map((x) => [x.entity, x.track])
+  )
+})

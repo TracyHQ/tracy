@@ -44,7 +44,8 @@ export const MEASURE_CAPS = Object.freeze({
   blankFooterColumns: 20,
   maps: 10,
   phones: 40,
-  videoButtons: 40
+  videoButtons: 40,
+  audio: 80
 })
 
 /**
@@ -770,6 +771,77 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (attribute)
       videoButtons.push({ selector: selectorOf(el), attribute, address: el.getAttribute(attribute) })
   }
+  // Exact receiver markers bind a source, its own UI row and its list; repeated IDs never identify a track.
+  const audioSources = [],
+    audioRows = [],
+    audioLists = []
+  let audioTruncated = false,
+    audioUnbound = 0
+  const identity = (el) => {
+    const entity = el.getAttribute('data-audio-entity')
+    const track = el.getAttribute('data-audio-track')
+    if (!/^article-[1-9][0-9]*$/.test(entity || '') || (track !== null && !/^(?:0|[1-9][0-9]*)$/.test(track)))
+      audioUnbound++
+    return { entity, track }
+  }
+  const ownBox = (el) => {
+    const r = el.getBoundingClientRect()
+    return { x: r.x ?? r.left, y: r.y ?? r.top, width: r.width, height: r.height }
+  }
+  const absolute = (value) => {
+    if (!value) return null
+    try {
+      return new URL(value, document.baseURI).href
+    } catch {
+      return null
+    }
+  }
+  const addAudio = (list, value) => {
+    if (list.length < caps.audio) list.push(value)
+    else audioTruncated = true
+  }
+  for (const el of document.querySelectorAll('.audio-player-wrap')) {
+    const id = identity(el)
+    addAudio(audioLists, { entity: id.entity, visible: shown(el), rect: ownBox(el) })
+  }
+  for (const el of document.querySelectorAll('.jp-audio')) {
+    const id = identity(el)
+    if (id.track === null) audioUnbound++
+    addAudio(audioRows, { ...id, visible: shown(el), rect: ownBox(el) })
+  }
+  for (const el of document.querySelectorAll('audio, .jp-jplayer')) {
+    const native = !el.classList.contains('jp-jplayer')
+    if (native && el.parentElement?.closest('.jp-jplayer')) continue
+    const id = identity(el)
+    if (id.track === null) audioUnbound++
+    let state = null
+    if (!native) {
+      try {
+        state = window.jQuery?.(el).data('jPlayer')
+      } catch {}
+    }
+    const audio = native ? el : state?.htmlElement?.audio
+    const source = absolute(
+      native
+        ? el.getAttribute('src') || el.querySelector('source[src]')?.getAttribute('src')
+        : state?.status?.media?.mp3
+    )
+    const currentSrc = absolute(audio?.currentSrc)
+    const selected = absolute(native ? audio?.currentSrc : state?.status?.src)
+    addAudio(audioSources, {
+      ...id,
+      mechanism: native ? 'native' : 'jplayer',
+      source,
+      currentSrc,
+      initialized: !!source && selected === source && currentSrc === source,
+      readyState: Number.isFinite(audio?.readyState) ? audio.readyState : null,
+      duration: Number.isFinite(audio?.duration) ? audio.duration : null,
+      mediaError: audio ? (audio.error?.code ?? null) : 'unavailable',
+      rect: ownBox(el)
+    })
+    if (native) addAudio(audioRows, { ...id, visible: shown(el), rect: ownBox(el) })
+  }
+  const sourceBase = absolute(document.querySelector('base[href]')?.getAttribute('href'))
   return {
     links,
     textBoxes,
@@ -797,7 +869,14 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     blankFooterColumns,
     maps,
     phones,
-    videoButtons
+    videoButtons,
+    url: location.href,
+    sourceBase,
+    audioSources,
+    audioRows,
+    audioLists,
+    audioTruncated,
+    audioUnbound
   }
 }
 

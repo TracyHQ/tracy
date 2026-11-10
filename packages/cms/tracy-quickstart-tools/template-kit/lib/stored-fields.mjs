@@ -22,7 +22,10 @@ function listedIn(kit) {
     for (const s of b.slots ?? []) if (!s.ownedBy) add(s.id, b.id)
     for (const s of b.demoOwned ?? []) add(s.id, b.id)
     for (const f of b.frames ?? []) add(f.id, b.id)
-    for (const l of b.links ?? []) add(l.labelId, b.id)
+    for (const l of b.links ?? []) {
+      add(l.labelId, b.id)
+      if (l.action === 'media-source') add(l.sourceSlot, b.id)
+    }
     for (const l of b.lists ?? []) {
       for (const r of l.rowSlots ?? []) {
         add(r.id, b.id)
@@ -53,6 +56,16 @@ export function settleStoredFields(kit, { map, drives = {} }) {
       slot,
       field: fieldName(s),
       type: s.type,
+      ...(s.role === 'business.audio'
+        ? {
+            role: s.role,
+            mediaKind: 'audio',
+            entity: s.entity,
+            column: s.column,
+            jsonPath: s.jsonPath,
+            group: s.group
+          }
+        : {}),
       sample: short(s.sample),
       listedIn: listed.get(slot) ?? null,
       ...(measured ? { drives: measured } : {})

@@ -78,6 +78,7 @@ export function planLinkTable({ plan, kit, brief }) {
       const target = targetOf(link.leadsTo, facts)
       if (!target) continue
       const kitLink = kitLinks.get(link.link)
+      if (kitLink?.action === 'media-source') continue
       planLinks.push({
         link: link.link,
         block: d.block,

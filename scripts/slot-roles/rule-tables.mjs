@@ -28,7 +28,7 @@ import {
   pictureReplaceOfRole,
   ROLE_VOCABULARY_V3,
   ROLE_VOCABULARY_VERSION
-} from 'website-opportunities/domain'
+} from '../../packages/wo/website-opportunities/domain/index.mjs'
 import { editorialRoleOf, repeatedRowOf } from './editorial-defaults.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
 import { placeHoursSamples } from './rule-tables-hours.mjs'
@@ -254,6 +254,27 @@ export function proposeJoomla(slots, { vocabulary3 = false } = {}) {
     if (slot.jsonPath) {
       const parsed = parseJoomlaJsonPath(slot.jsonPath)
       if (parsed) {
+        if (
+          vocabulary3 &&
+          entity.startsWith('article-') &&
+          slot.column === 'attribs' &&
+          parsed.block === 'ctm_audio' &&
+          parsed.field === 'audio-src' &&
+          slot.type === 'url' &&
+          Array.isArray(slot.jsonPath) &&
+          slot.jsonPath.length === 3 &&
+          /^(?:0|[1-9]\d*)$/.test(String(slot.jsonPath[2])) &&
+          Number.isSafeInteger(parsed.index)
+        ) {
+          collector.addBinding({
+            slotKey: key,
+            groupId: `${entity}.audio.${parsed.index}`,
+            entityKind: 'business',
+            itemIndex: parsed.index,
+            role: 'business.audio'
+          })
+          continue
+        }
         if (
           stepEntities.has(entity) &&
           (parsed.field === 'figure-value' || parsed.field === 'figure-caption')

@@ -320,6 +320,7 @@ export function createStepChainSteps(deps) {
         : null
       const host = hostMeasure({ hostCall, config, site, selfNames: demoSelfNames, fetchImpl })
       const write = {
+        host,
         door: siteDoor,
         siteKey: ctx.siteKey,
         kit: { ref: inputs.kit.ref, doc: inputs.kit.doc },

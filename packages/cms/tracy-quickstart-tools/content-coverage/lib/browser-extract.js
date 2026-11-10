@@ -281,15 +281,48 @@ export function extractPage() {
       add('image', img, { source, value: v })
     }
   }
-  for (const s of document.querySelectorAll(
-    'picture source[srcset], video source[src], video[src], audio[src], audio source[src]'
-  )) {
+  for (const s of document.querySelectorAll('picture source[srcset], video source[src], video[src]')) {
     const host = s.closest('picture, video, audio') || s
     for (const u of s.tagName === 'SOURCE' && s.srcset
       ? srcsetUrls(s.getAttribute('srcset'))
       : [s.getAttribute('src')])
       add('image', host, { source: s.tagName.toLowerCase(), value: u })
   }
+  const audioSources = []
+  for (const player of document.querySelectorAll('audio, .jp-jplayer')) {
+    if (player.tagName === 'AUDIO' && player.closest('.jp-jplayer')) continue
+    const native = player.tagName === 'AUDIO'
+    const state = native ? null : window.jQuery?.(player)?.data('jPlayer')
+    const audio = native ? player : state?.htmlElement?.audio
+    const raw = native
+      ? player.currentSrc ||
+        player.getAttribute('src') ||
+        player.querySelector('source[src]')?.getAttribute('src')
+      : state?.status?.media?.mp3
+    if (!raw) continue
+    let value, initializedSource
+    try {
+      value = new URL(raw, document.baseURI || location.href).href
+      initializedSource = new URL(
+        native ? player.currentSrc : state?.status?.src,
+        document.baseURI || location.href
+      ).href
+    } catch {
+      continue
+    }
+    audioSources.push({
+      element: player,
+      value,
+      entity: player.getAttribute('data-audio-entity'),
+      track: player.getAttribute('data-audio-track'),
+      mechanism: native ? 'native' : 'jplayer',
+      initialized: !!(native ? player.currentSrc : state?.status?.src) && initializedSource === value,
+      metadata: !!audio && audio.readyState >= 1 && Number.isFinite(audio.duration) && audio.duration > 0,
+      mediaError: audio ? (audio.error?.code ?? null) : 'unavailable'
+    })
+  }
+  for (const { element, ...source } of audioSources)
+    add('media', element, { ...source, mediaKind: 'audio', source: source.mechanism })
   for (const v of document.querySelectorAll('video[poster]'))
     add('image', v, { source: 'poster', value: v.getAttribute('poster') })
   for (const f of document.querySelectorAll('iframe[src]'))

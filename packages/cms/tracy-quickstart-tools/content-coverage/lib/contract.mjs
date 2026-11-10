@@ -1,5 +1,9 @@
 // Load a contract folder (manifest, content-map, presentation-lock) and index its slots
 // in the canonical forms the matcher compares against.
+import {
+  isAudioSlot,
+  audioSourceIdentity
+} from '../../../../wo/website-opportunities/domain/audio-source.mjs'
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -79,6 +83,7 @@ export function loadContract(dir, siteUrl) {
   const image = new Map() // normPath -> [slot keys]
   const imageBase = new Map() // basename -> [slot keys] (weak evidence only)
   const url = new Map() // normHref -> [slot keys]
+  const audio = []
   const rawSample = new Map() // exact sample string -> [slot keys] (a video id, an e-mail address)
   const push = (m, k, v) => {
     if (!k) return
@@ -88,6 +93,10 @@ export function loadContract(dir, siteUrl) {
   }
 
   for (const s of map.slots) {
+    if (isAudioSlot(s)) {
+      audio.push({ ...s, sourceIdentity: audioSourceIdentity(s.sample, siteUrl) })
+      continue
+    }
     if (typeof s.sample === 'string' && s.sample.trim()) push(rawSample, s.sample.trim(), s.key)
     if (s.type === 'image') {
       const p = normPath(s.sample, siteUrl)
@@ -189,7 +198,7 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { text, textCompact, textList, patterns, image, imageBase, url, rawSample },
+    index: { text, textCompact, textList, patterns, image, imageBase, url, rawSample, audio },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

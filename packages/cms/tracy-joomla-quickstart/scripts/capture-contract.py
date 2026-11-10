@@ -298,7 +298,7 @@ HTML_ENTITY=re.compile(r'&(?:[A-Za-z][A-Za-z0-9]{1,31}|#[0-9]{1,7}|#[xX][0-9A-Fa
 # A `jaitems` field stores its rows under the keys "0", "1"… (an object, not a list: JA Masthead's `menuitem_config`
 # skips a deleted row's number), so a numeric key is a row, not a field name.
 row_key=lambda x:isinstance(x,int) or isinstance(x,str) and x.isdigit()
-# A text field naming the file an <audio>/<video> plays (`audio-src`) is a picture slot: the page reads it as a `src`.
+# Legacy captures classify src fields as pictures; v3 audio sources are URL facts, separate from covers.
 MEDIA_SRC=re.compile(r'(^|[-_])src$')
 def leaf_name(path):
  name=next((str(x) for x in reversed(path) if not row_key(x)),'')
@@ -319,7 +319,8 @@ def declare_json(add,column,value,types,label,skip=()):
    name=leaf_name(path);ft=types.get(name)
    if ft not in CONTENT_TYPES:return
    if ft!='media' and 'video' not in name.lower() and TECHNICAL.search(name):return
-   typ='image' if ft=='media' or MEDIA_SRC.search(name) else 'url' if ft=='url' or LINK_ROLE.search(name) else 'text'
+   audio=a.role_vocabulary=='3' and column=='attribs' and len(path)==3 and row_key(path[2]) and path[:2]==['ctm_audio','audio-src']
+   typ='url' if audio else 'image' if ft=='media' or MEDIA_SRC.search(name) else 'url' if ft=='url' or LINK_ROLE.search(name) else 'text'
    if typ=='text' and MARKUP.search(node):
     for h in html_slots(node):add(column,h['type'],h['sample'],jsonPath=path,xpath=h['xpath'],label=label+' / '+name,customize='keep')
    else:add(column,typ,node,jsonPath=path,label=label+' / '+name,customize='keep')
@@ -853,7 +854,7 @@ if a.previous_map:
   before=previous.get(sl['key'])
   # Under --inline-markup a sample that only gained or lost markup is the same words: its role stays.
   same=before and (plain_text(before.get('sample'))==plain_text(sl.get('sample')) if a.inline_markup else before.get('sample')==sl.get('sample'))
-  if same and 'role' in before:
+  if same and 'role' in before and not (a.role_vocabulary=='3' and sl.get('jsonPath',[])[:2]==['ctm_audio','audio-src'] ):
    sl['role']=before['role']
    if 'group' in before:sl['group']=before['group']
 # The rule tables fill in every slot still without a role; slots that kept one are left as they are.

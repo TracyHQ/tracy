@@ -281,3 +281,28 @@ test('TRACY_CONTRACT_PRECHECK=off is the one switch that hands every value back 
   assert.equal(contractPrecheckOn({ TRACY_CONTRACT_PRECHECK: ' OFF ' }), false)
   assert.equal(contractPrecheckOn({ TRACY_CONTRACT_PRECHECK: '0' }), true, 'only "off" turns it off')
 })
+
+test('audio capability applies scoped MP3 URL validation without widening CTA or image rules', () => {
+  const audio = url({ key: 'article-1.2', role: 'business.audio', sample: 'images/audio/Original.mp3' })
+  for (const value of [
+    'images/audio/New.mp3',
+    '/images/audio/New.mp3',
+    'https://media.example/Track.mp3?key=A'
+  ])
+    assert.equal(checkSlotValue(audio, value), null, value)
+  for (const value of [
+    'images/a.jpg',
+    'images/../private/a.mp3',
+    'https://u:p@media.example/a.mp3',
+    '//media.example/a.mp3',
+    'mailto:a@example.test'
+  ])
+    assert.equal(checkSlotValue(audio, value)?.rule, 'audio', value)
+  assert.equal(
+    checkSlotValue({ ...audio, requiresEvidence: true }, 'https://media.example/a.mp3')?.rule,
+    'evidence'
+  )
+  assert.equal(checkSlotValue(audio, '')?.rule, 'cannot-empty')
+  assert.equal(checkSlotValue(text({ type: 'image', sample: 'images/a.jpg' }), 'images/a.mp3')?.rule, 'image')
+  assert.equal(checkSlotValue(url(), 'mailto:a@example.test'), null)
+})

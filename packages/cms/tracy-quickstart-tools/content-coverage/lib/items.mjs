@@ -2,6 +2,8 @@
 import { normText, normPath } from './normalize.mjs'
 
 const keyOf = (it, siteUrl) => {
+  if (it.kind === 'media')
+    return `media|${it.mediaKind}|${it.entity}|${it.track}|${it.selector ?? ''}|${it.value}`
   if (it.kind === 'image') return `image|${normPath(it.value, siteUrl)}`
   if (it.kind === 'link') return `link|${it.value}`
   return `${it.kind}|${it.attr ?? ''}|${normText(it.value)}`
@@ -22,6 +24,16 @@ export function mergeViewports(byViewport, siteUrl) {
         m = {
           key: k,
           kind: it.kind,
+          ...(it.kind === 'media'
+            ? {
+                mediaKind: it.mediaKind,
+                entity: it.entity,
+                track: it.track,
+                initialized: it.initialized,
+                metadata: it.metadata,
+                mediaError: it.mediaError
+              }
+            : {}),
           attr: it.attr,
           source: it.source,
           value: it.value,
@@ -92,7 +104,8 @@ export function annotate(items, match, classify) {
   return items
 }
 
-const bucketOf = (it) => (it.kind === 'image' ? 'images' : it.kind === 'link' ? 'links' : 'text')
+const bucketOf = (it) =>
+  it.kind === 'image' ? 'images' : it.kind === 'link' || it.kind === 'media' ? 'links' : 'text'
 
 export function emptyCounts() {
   const c = {}

@@ -3,7 +3,7 @@
 // paragraphs and bullets, and what the page prints but the contract cannot write says so. Fabricated swim club.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { applyCoverage, coverageGate } from '../template-kit/lib/coverage-gate.mjs'
+import { applyCoverage, audioSourceChecks, coverageGate } from '../template-kit/lib/coverage-gate.mjs'
 
 const fit = (desktop, phone) => ({
   measured: true,
@@ -262,4 +262,125 @@ test('a shown text slot the theme declares non-visual needs no limit; a number-l
   delete slot.nonVisual
   assert.equal(coverageGate(kit, { map }) > 0, true)
   assert.ok(kit.coverage.failures.some((f) => f.part === 'slotsMissing'))
+})
+
+test('audio capability gate requires exact typed source ownership and error-free player metadata', () => {
+  const slot = {
+    key: 'article-7.9',
+    entity: 'article-7',
+    type: 'url',
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', 2],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Same.mp3'
+  }
+  const link = {
+    id: slot.key,
+    sourceSlot: slot.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: slot.sample,
+    sourceBase: 'https://site.example/sub/',
+    sourceUrl: 'https://site.example/sub/images/audio/Same.mp3',
+    sourceBinding: { entity: slot.entity, column: slot.column, jsonPath: slot.jsonPath, group: slot.group },
+    observed: {
+      entity: slot.entity,
+      track: '2',
+      value: '/sub/images/audio/Same.mp3',
+      initialized: true,
+      metadata: true,
+      mediaError: null
+    }
+  }
+  const block = { id: 'body-album', source: { entity: slot.entity }, links: [link], frames: [] }
+  const map = { slots: [slot] },
+    kit = { blocks: [block] }
+  const count = () => audioSourceChecks({ kit, map, fail: () => {} })
+  assert.equal(count(), 0)
+  for (const over of [
+    { entity: 'article-8' },
+    { track: '1' },
+    { metadata: false },
+    { mediaError: 4 },
+    { initialized: false },
+    { value: '/sub/images/audio/same.mp3' }
+  ]) {
+    const original = link.observed
+    link.observed = { ...original, ...over }
+    assert.equal(count(), 1)
+    link.observed = original
+  }
+  block.links.push({ ...link })
+  assert.equal(count(), 1)
+  block.links.pop()
+  block.frames.push({ id: link.id, kind: 'image' })
+  assert.equal(count(), 1)
+  block.frames.pop()
+  block.links = []
+  assert.equal(count(), 1)
+})
+
+test('audio capability stored field stays source media and never supplies CTA addresses or navigation QA', async () => {
+  const { settleButtons } = await import('../template-kit/lib/button-slots.mjs')
+  const { settleStoredFields } = await import('../template-kit/lib/stored-fields.mjs')
+  const { buttonsOfBlock } = await import('../../../../apps/tracy-web/src/write-step/kit-buttons.js')
+  const { planLinkTable } = await import('../../../../apps/tracy-web/src/write-step/plan-link-table.js')
+  const audio = {
+    key: 'article-7.9',
+    entity: 'article-7',
+    type: 'url',
+    role: 'business.audio',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', '2'],
+    group: { id: 'article-7.audio.2', item: 2, kind: 'business' },
+    sample: 'images/audio/Same.mp3'
+  }
+  const label = {
+    key: 'article-7.10',
+    entity: 'article-7',
+    type: 'text',
+    column: 'attribs',
+    role: 'contact.cta_label',
+    sample: 'Listen',
+    group: audio.group
+  }
+  const source = {
+    id: audio.key,
+    sourceSlot: audio.key,
+    action: 'media-source',
+    mediaKind: 'audio',
+    target: audio.sample
+  }
+  const block = {
+    id: 'body-album',
+    source: { entity: audio.entity },
+    visibleAt: [1440],
+    links: [source, { id: 'cta', label: 'Listen' }]
+  }
+  const kit = { blocks: [block], pages: [], site: {} },
+    map = { slots: [audio, label] }
+  settleButtons(kit, { map })
+  assert.equal(block.buttons[0].urlSlot, null)
+  delete block.buttons
+  assert.equal(buttonsOfBlock(block, map)[0].urlSlot, null)
+  settleStoredFields(kit, { map })
+  const field = kit.storedFields.find((s) => s.slot === audio.key)
+  assert.deepEqual([field.mediaKind, field.role, field.listedIn], ['audio', 'business.audio', block.id])
+  assert.deepEqual(field.jsonPath, audio.jsonPath)
+  const qa = planLinkTable({
+    kit,
+    brief: { facts: [] },
+    plan: {
+      sharedBlocks: [
+        {
+          block: block.id,
+          decision: 'keep',
+          links: [{ link: source.id, leadsTo: 'https://media.example/Same.mp3' }]
+        }
+      ],
+      pages: []
+    }
+  })
+  assert.deepEqual(qa.planLinks, [])
 })

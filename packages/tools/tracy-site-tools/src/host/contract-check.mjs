@@ -22,6 +22,8 @@
  * value to the component, as before this file.
  */
 
+import { isAudioSlot, audioSourceProblem } from '../../../../wo/website-opportunities/domain/audio-source.mjs'
+
 /**
  * Every identity token a page may carry — `Identity::NAMES` of `plg_system_tracyidentity` and
  * `IdentityTokens::NAMES` of the component, which must be equal. Closed on purpose: anything else in
@@ -232,7 +234,10 @@ export function checkSlotValue(slot, value, { evidence = null } = {}) {
       limit: Number(slot.maxCharacters),
       length
     }
-  if (slot.type === 'url') {
+  if (isAudioSlot(slot)) {
+    const problem = audioSourceProblem(value)
+    if (problem) return { rule: 'audio', key, message: `Unsupported audio source: ${key}` }
+  } else if (slot.type === 'url') {
     // QC.php:554 — a scheme-relative address and a backslash, whatever the pattern says.
     if (value.startsWith('//') || value.includes('\\'))
       return { rule: 'url', key, message: `Unsupported CTA URL: ${key}` }

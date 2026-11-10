@@ -1,4 +1,5 @@
 // Match extracted items to content-map slots. Decides: matched | locked | hole | ignored.
+import { audioSourceIdentity } from '../../../../wo/website-opportunities/domain/audio-source.mjs'
 import { normText, normPath, normHref, letterCount, alnumCount, compact } from './normalize.mjs'
 import { isLockedDesignAsset } from './contract.mjs'
 
@@ -216,6 +217,23 @@ export function createMatcher(contract, siteUrl) {
   }
 
   return function match(item) {
+    if (item.kind === 'media') {
+      const identity = audioSourceIdentity(item.value, siteUrl)
+      const hits = (contract.index.audio ?? []).filter(
+        (s) =>
+          identity &&
+          s.sourceIdentity === identity &&
+          item.entity === s.entity &&
+          item.track !== undefined &&
+          String(item.track) === String(s.jsonPath?.[2]) &&
+          s.column === 'attribs' &&
+          s.jsonPath?.[0] === 'ctm_audio' &&
+          s.jsonPath?.[1] === 'audio-src'
+      )
+      return item.mediaKind === 'audio' && hits.length === 1
+        ? { status: 'matched', by: 'audio source and owner row', slots: [hits[0].key] }
+        : { status: 'hole', reason: 'audio source has no unique exact owner and row binding' }
+    }
     if (item.kind === 'image') return matchImage(item.value)
     if (item.kind === 'link') return matchLink(item)
     const res = matchText(item.value)

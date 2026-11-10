@@ -44,6 +44,7 @@ import { buttonClaims } from './kit-buttons.js'
 import { kitSlotIds } from './kit-slot-ids.js'
 import { iconLinkLines, iconsOf, linkIconChanges, routeChanges } from './kit-slot-routes.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
+import { proveAudio } from './audio-proof.js'
 import { prepareLinks } from './link-stage.js'
 import { lookGuard } from './look-guard.js'
 import { strandMenuItems, withEveryMenuHide } from './menu-hides.js'
@@ -610,7 +611,10 @@ export async function runWriteStep(input) {
   }
 
   // Before the hide stage: a slot a kept link writes is not emptied as well.
-  if ([...table.owners.values()].some((claim) => claim.kind === 'link')) {
+  if (
+    [...table.owners.values()].some((claim) => claim.kind === 'link') ||
+    kit.doc.blocks?.some((b) => b.links?.some((l) => l.action === 'media-source'))
+  ) {
     links = await timed('links', () =>
       prepareLinks({
         contentMap,
@@ -627,6 +631,13 @@ export async function runWriteStep(input) {
         createdPages: created.pages
       })
     )
+    if (links.audioFailures?.length) {
+      report.audio = links.audioFailures
+      return stopped({
+        code: 'AUDIO_SOURCE_REFUSED',
+        reason: links.audioFailures.map((f) => `${f.slot}: ${f.reason}`).join('; ')
+      })
+    }
     Object.assign(mapping.changes, links.changes)
     Object.assign(mapping.evidence, links.evidence)
     // A slot a plan link writes has an owner, though the plan names the link and not the slot.
@@ -673,7 +684,7 @@ export async function runWriteStep(input) {
   )
   if (hiding.stop) return stopped(hiding.stop)
   hide = hiding
-  mapping.emptySlots = hide.emptySlots
+  mapping.emptySlots = [...new Set([...hide.emptySlots, ...(links?.emptySlots ?? [])])]
   for (const [key, value] of Object.entries(hide.restored ?? {})) {
     mapping.changes[key] = value
     ordered[key] = value
@@ -767,6 +778,20 @@ export async function runWriteStep(input) {
   relinked = wrote.relinked ?? new Map()
   if (wrote.cancelled) return finish('cancelled', null, [], wrote.refused)
   if (wrote.stop) return finish('stopped', wrote.stop, [], wrote.refused)
+  if (links?.readbackAudio) {
+    report.audio = await links.readbackAudio()
+    if (report.audio.some((a) => !a.stored)) {
+      return finish(
+        'stopped',
+        {
+          code: 'AUDIO_SOURCE_READBACK_FAILED',
+          reason: report.audio.map((a) => `${a.key}: ${a.reason}`).join('; ')
+        },
+        [...wrote.written, ...held],
+        wrote.refused
+      )
+    }
+  }
   // A refused text slot keeps no demo words if it can help it: plain words, else hidden, else said (text-fallback.js).
   fallbacks = await climbTextFallback({
     refused: wrote.refused,
@@ -940,5 +965,37 @@ export async function runWriteStep(input) {
       // And the links in the kit's containers that still lead to a page the plan hid read as plain text (card AM).
       ...(await hideHiddenPageLinks({ door, siteKey, kit: kit.doc, plan, keptPages: report.keptPages ?? [] }))
     ]
+  if (report.audio?.length) {
+    if (await isCancelled()) return finish('cancelled', null, written, wrote.refused)
+    // Reinspect after every settings/route write; a storage drift never reaches the browser.
+    report.audio = await links.readbackAudio()
+    if (report.audio.every((a) => a.stored))
+      report.audio = await timed('audio-proof', () =>
+        proveAudio({
+          orders: report.audio,
+          kit: kit.doc,
+          plan,
+          keptPages: report.keptPages ?? [],
+          host: input.host,
+          isCancelled
+        })
+      )
+    links.acceptAudioProof(report.audio)
+    if (await isCancelled()) return finish('cancelled', null, written, wrote.refused)
+    if (report.audio.some((a) => a.status !== 'verified'))
+      return finish(
+        'stopped',
+        {
+          code: report.audio.some((a) => !a.stored)
+            ? 'AUDIO_SOURCE_READBACK_FAILED'
+            : typeof input.host === 'function'
+              ? 'AUDIO_PLAYER_READBACK_FAILED'
+              : 'AUDIO_PROOF_REQUIRED',
+          reason: report.audio.map((a) => `${a.key}: ${a.reason}`).join('; ')
+        },
+        written,
+        wrote.refused
+      )
+  }
   return finish('done', null, written, wrote.refused)
 }

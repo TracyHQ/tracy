@@ -685,3 +685,65 @@ test('assembled owned item slider closes only its missing minimum', () => {
   assert.deepEqual([list.min, list.minSource], [1, 'slider-or-tab'])
   assert.ok(!kit.errors.some((e) => e.field === 'blocks[block-11].lists[block-11.items].min'))
 })
+
+test('audio capability keeps exact owner-bound source occurrences separate from image frames and navigation', async () => {
+  const { buildBlock } = await import('../template-kit/lib/kit-blocks.mjs')
+  const slots = [0, 2].map((row) => ({
+    key: `article-1.${row}`,
+    entity: 'article-1',
+    column: 'attribs',
+    jsonPath: ['ctm_audio', 'audio-src', row],
+    type: 'url',
+    role: 'business.audio',
+    group: { id: `article-1.audio.${row}`, kind: 'business', item: row },
+    sample: 'images/audio/Same.mp3'
+  }))
+  const map = { entities: [], slots, pages: [] }
+  const make = (audioSources) => {
+    const errors = []
+    const block = buildBlock({
+      rec: {
+        id: 'body-album',
+        source: 'article-1',
+        widths: { 1440: { pages: ['album'], details: { audioSources } } }
+      },
+      entity: 'article-1',
+      idx: indexMap(map),
+      samples: { matchOf: () => null },
+      errors,
+      minEvidence: {},
+      siteUrl: 'https://site.example/sub/',
+      aliasHosts: [],
+      widths: ['1440', '390']
+    })
+    return { block, errors }
+  }
+  const reads = [0, 2].map((track) => ({
+    entity: 'article-1',
+    track: String(track),
+    value: '/sub/images/audio/Same.mp3',
+    mechanism: 'jplayer',
+    initialized: true,
+    selector: `#player-${track}`
+  }))
+  const { block, errors } = make(reads)
+  assert.deepEqual(block.frames, [])
+  assert.equal(errors.filter((e) => e.kind === 'audio-source').length, 0)
+  assert.deepEqual(
+    block.links.map((l) => [l.id, l.action, l.mediaKind, l.sourceSlot]),
+    slots.map((s) => [s.key, 'media-source', 'audio', s.key])
+  )
+  assert.deepEqual(
+    block.links.map((l) => l.sourceBinding),
+    slots.map((s) => ({ entity: s.entity, column: s.column, jsonPath: s.jsonPath, group: s.group }))
+  )
+  assert.ok(
+    make([{ ...reads[0], entity: 'article-2' }, reads[1]]).errors.some((e) => e.kind === 'audio-source')
+  )
+  assert.ok(make([reads[0], reads[0], reads[1]]).errors.some((e) => e.kind === 'audio-source'))
+  assert.ok(
+    make([reads[0], { ...reads[1], value: '/sub/images/audio/same.mp3' }]).errors.some(
+      (e) => e.kind === 'audio-source'
+    )
+  )
+})
