@@ -279,3 +279,85 @@ test('an automatic repair turn cannot wait on a human until the chain two-hour d
   assert.match(agent.sent.prompts[0].text, /CONFIRM_FIRST/)
   assert.match(agent.sent.prompts[0].text, /Record that change as blocked/)
 })
+
+test('a refused or unsettled Stop never judges an open writer or starts another page writer', async () => {
+  for (const ok of [false, true]) {
+    const clock = fakeClock()
+    const agent = fakeAgent({ clock, behave: () => ({ openForMs: 30 * 60_000 }) })
+    agent.cancel = async () => ({ ok, code: ok ? undefined : 'CANCEL_REFUSED' })
+    const { result, checksRun } = await stepNine({
+      checks: [checkOf([DEMO, ALT]), checkOf([])],
+      agent,
+      clock,
+      input: { limits: { turnMs: 10_000, cancelSettleMs: 1_000, pollMs: 500 } }
+    })
+    assert.equal(agent.sent.prompts.length, 1, 'no second writer while the first remains open')
+    assert.equal(checksRun, 1, 'a moving site cannot be judged')
+    const [turn] = result.repair.turns
+    assert.equal(turn.leftOpen, true)
+    assert.equal(turn.judged, undefined)
+    assert.deepEqual(agent.sent.undone, [])
+    assert.equal(result.report.status, 'stopped')
+    assert.ok(result.repair.notSent.some((row) => row.reason === 'open-turn'))
+  }
+})
+
+test('the native turn gets its execution window after rate waiting and request submission', async () => {
+  const { sendPageTurn } = await import('../src/write-step/repair-pass/repair-turns.js')
+  const { repairClock } = await import('../src/write-step/repair-pass/repair-limits.js')
+  const clock = fakeClock()
+  const agent = fakeAgent({ clock, behave: () => ({ openForMs: 2_000 }) })
+  const request = agent.request
+  agent.request = async (input) => {
+    clock.t += 5_000
+    return request(input)
+  }
+  const pass = {
+    agent,
+    clock: repairClock({ now: clock.now, sleep: clock.sleep, limits: { turnMs: 3_000, pollMs: 500 } }),
+    rate: {
+      take: async () => {
+        clock.t += 60_000
+        return true
+      }
+    },
+    ledger: { records: new Map() },
+    nextRequestId: () => 'rate-wait-test',
+    buildCommentTurn: () => 'Fix the observed fault',
+    log: () => {}
+  }
+  const turn = await sendPageTurn(pass, {
+    page: '/',
+    faults: [DEMO],
+    items: [{ page: '/' }],
+    round: 1,
+    sessionId: 'sess-1'
+  })
+  assert.equal(turn.state, 'closed')
+  assert.equal(turn.ms, 67_000, 'elapsed time still includes queue and request time')
+})
+
+test('a failed read after Stop leaves the writer unverified and prevents subsequent repairs', async () => {
+  const clock = fakeClock()
+  const agent = fakeAgent({ clock, behave: () => ({ openForMs: 30 * 60_000 }) })
+  const turns = agent.turns
+  let cancelled = false
+  agent.cancel = async () => {
+    cancelled = true
+    return { ok: true }
+  }
+  agent.turns = async (input) => {
+    if (cancelled) throw new Error('turn records unavailable')
+    return turns(input)
+  }
+  const { result } = await stepNine({
+    checks: [checkOf([DEMO, ALT])],
+    agent,
+    clock,
+    input: { limits: { turnMs: 10_000, pollMs: 500 } }
+  })
+  assert.equal(agent.sent.prompts.length, 1)
+  assert.equal(result.repair.turns[0].leftOpen, true)
+  assert.equal(result.report.status, 'stopped')
+  assert.deepEqual(agent.sent.undone, [])
+})

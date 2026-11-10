@@ -95,18 +95,19 @@ export async function sweepTurns(pass, result) {
  */
 export async function cutShort(pass, entry) {
   const { clock } = pass
+  entry.leftOpen = true
+  pass.writerOpen = true
   if (typeof pass.agent.cancel !== 'function') {
     pass.log(
       `step 9b: ${entry.turnId} still open at the time limit, and the site agent cannot cancel; left open`
     )
-    entry.leftOpen = true
     return entry
   }
   const answer = await clock
     .bounded('the session cancel', () => pass.agent.cancel({ sessionId: entry.sessionId }))
     .catch((error) => ({ ok: false, code: String(error?.message ?? error) }))
   pass.log(
-    `step 9b: ${entry.turnId} still open at the time limit; its session's work was cancelled (${answer?.ok === false ? `refused: ${answer.code}` : 'accepted'}), and it is judged by what it wrote`
+    `step 9b: ${entry.turnId} still open at the time limit; its session's Stop was requested (${answer?.ok === false ? `refused: ${answer.code}` : 'accepted'}), waiting for its turn record to end`
   )
   entry.cancelled = true
   const until = Math.min(clock.now() + clock.limits.cancelSettleMs, clock.now() + clock.checkLeft())
@@ -117,6 +118,12 @@ export async function cutShort(pass, entry) {
     if (turn) refresh(entry, turn)
     if (!turn || entry.state !== 'open' || clock.now() >= until) break
     await clock.sleep(Math.max(1, Math.min(clock.limits.pollMs, until - clock.now())))
+  }
+  entry.leftOpen = entry.state === 'open'
+  pass.writerOpen = pass.ledger.turns.some((turn) => turn.leftOpen && turn.state === 'open')
+  if (entry.leftOpen) {
+    pass.writerOpen = true
+    pass.log(`step 9b: ${entry.turnId} has not ended after Stop; no further repairs or judgement`)
   }
   return entry
 }
@@ -133,7 +140,6 @@ export async function cutShort(pass, entry) {
 export async function sendPageTurn(pass, { page, faults, items, round, sessionId }) {
   const { agent, clock, buildCommentTurn, ledger } = pass
   const from = clock.now()
-  const turnBy = from + clock.limits.turnMs
   if (pass.rate && !(await pass.rate.take(items.length)))
     return { page, round, faults, items, sessionId, timeLimit: true, ms: clock.now() - from }
   const requestId = pass.nextRequestId()
@@ -143,12 +149,15 @@ export async function sendPageTurn(pass, { page, faults, items, round, sessionId
   if (!Array.isArray(numbers) || numbers.length !== items.length)
     throw new Error(`the comment requests door numbered ${numbers?.length ?? 0} of ${items.length} items`)
   const text = pageTurn(buildCommentTurn, items, numbers)
-  const record = { page, round, faults, items, numbers, requestIds: [requestId], text, sessionId, turnBy }
+  const record = { page, round, faults, items, numbers, requestIds: [requestId], text, sessionId }
   const prompt = (id) =>
     clock.bounded('the site session prompt', () => agent.prompt({ sessionId, requestId: id, text }))
   ledger.records.set(requestId, record)
   if (!(await prompt(requestId)))
     return { ...record, refused: 'the session did not accept the prompt', ms: clock.now() - from }
+  // Waiting for quota, numbering and accepting a prompt is not native execution time.
+  const turnBy = clock.now() + clock.limits.turnMs
+  record.turnBy = turnBy
   let turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs, turnBy)
   if (!turn && !clock.stopped()) {
     const again = `${requestId}-resend`

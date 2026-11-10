@@ -2646,3 +2646,143 @@ test(
     assert.deepEqual(placeJob, { only_source: 'website', force: false })
   }
 )
+
+test(
+  'own site resumes a paused shared run behind a queued request once per poll batch, then stops at three',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'own-shared@tracy.test')
+    const opp = await saveGoogle(pool, a, { ownSite: { requestId: 'own-shared-pause' } })
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity: opp,
+      requestId: 'own-shared-pause:research'
+    })
+    const { domain } = await domainWith()
+    const { call } = await doors(pool, domain)
+    await pool.query(
+      `update ui_setting set overrides=overrides || '{"site-from-business":true}'::jsonb where id=true`
+    )
+    const pause = () =>
+      pool.query(
+        `update wo_place_job set state='paused',last_error='{"code":"SOURCE_PAUSED","reason":"rate_limited"}'::jsonb where id=$1`,
+        [job.place_job_id]
+      )
+    // The account's request never leaves queued. Only the upstream run changes its state.
+    for (let n = 1; n <= 3; n++) {
+      await pause()
+      assert.equal((await jobRow(pool, job.id)).state, 'queued')
+      const polls = await Promise.all(
+        Array.from({ length: 4 }, () =>
+          call('own-shared@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+        )
+      )
+      assert.ok(
+        polls.every((r) => r.status === 200 && r.body.business.phase === 'research'),
+        JSON.stringify(polls)
+      )
+      const saved = await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])
+      assert.equal(saved.candidate.ownSite.resumes, n, 'concurrent polls count one real resume')
+      assert.equal(
+        (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+        'queued'
+      )
+      const ordinary = await call('own-shared@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+      assert.equal(ordinary.body.business.phase, 'research')
+      assert.equal(
+        (await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])).candidate.ownSite
+          .resumes,
+        n
+      )
+    }
+    await pause()
+    const stopped = await call('own-shared@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+    assert.equal(stopped.body.business.phase, 'failed')
+    assert.equal(stopped.body.business.code, 'SOURCE_PAUSED')
+    assert.equal(stopped.body.business.job.state, 'paused')
+    assert.equal(
+      (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+      'paused'
+    )
+    assert.equal((await call('other@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)).status, 404)
+  }
+)
+
+test(
+  'shared resume follows the paused upstream run but refuses another account and terminal requests',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'shared-resume-owner@tracy.test')
+    const b = await account(pool, 'shared-resume-other@tracy.test')
+    const opp = await saveGoogle(pool, a)
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity: opp,
+      requestId: 'shared-resume-auth'
+    })
+    await pool.query(`update wo_place_job set state='paused' where id=$1`, [job.place_job_id])
+    assert.equal(await resumeRequest(pool, b, job.id, { shared: true }), null)
+    const resumed = await resumeRequest(pool, a, job.id, { shared: true })
+    assert.equal(resumed.state, 'queued')
+    assert.equal(
+      await resumeRequest(pool, a, job.id, { shared: true }),
+      null,
+      'a running or queued upstream is not resumed'
+    )
+    await pool.query(`update wo_place_job set state='paused' where id=$1`, [job.place_job_id])
+    await pool.query(`update wo_job set state='completed' where id=$1`, [job.id])
+    assert.equal(await resumeRequest(pool, a, job.id, { shared: true }), null)
+  }
+)
+
+test(
+  'own site exposes a shared resume failure without spending its automatic resume allowance',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'own-shared-error@tracy.test')
+    const opp = await saveGoogle(pool, a, { ownSite: { requestId: 'own-shared-error' } })
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity: opp,
+      requestId: 'own-shared-error:research'
+    })
+    await pool.query(`update wo_place_job set state='paused' where id=$1`, [job.place_job_id])
+    const { domain } = await domainWith()
+    const { call } = await doors(pool, domain)
+    await pool.query(
+      `update ui_setting set overrides=overrides || '{"site-from-business":true}'::jsonb where id=true`
+    )
+    await pool.query(
+      `create function reject_test_resume() returns trigger language plpgsql as $$ begin raise exception 'synthetic resume failure'; end; $$`
+    )
+    await pool.query(
+      `create trigger reject_test_resume before update on wo_job for each row execute function reject_test_resume()`
+    )
+    try {
+      const failed = await call('own-shared-error@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+      assert.equal(failed.status, 500, 'a failed resume is not silently reported as researching')
+      assert.equal(
+        (await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])).candidate.ownSite
+          .resumes,
+        undefined
+      )
+      assert.equal(
+        (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+        'paused',
+        'the transaction rolled back'
+      )
+    } finally {
+      await pool.query('drop trigger reject_test_resume on wo_job; drop function reject_test_resume()')
+    }
+    const recovered = await call('own-shared-error@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+    assert.equal(recovered.body.business.phase, 'research')
+    assert.equal(
+      (await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])).candidate.ownSite
+        .resumes,
+      1
+    )
+  }
+)

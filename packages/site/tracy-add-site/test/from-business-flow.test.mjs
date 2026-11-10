@@ -546,3 +546,69 @@ test('startOutcome keeps the server verdict of each link on a started business',
   const out = startOutcome({ ok: true, status: 201, body: { business: { id: 'b1', name: 'Club' }, links } })
   assert.deepEqual(out.links, links)
 })
+
+test('a server-owned chain build is followed without preparing or sending a legacy chat brief', async () => {
+  const opened = []
+  let polls = 0
+  const out = await followBusiness({
+    api: {
+      state: async () => ({
+        ok: true,
+        body: {
+          business: {
+            phase: 'build',
+            action: {
+              id: 'chain-action',
+              workflow: 'agent-demo/1',
+              state: ++polls === 1 ? 'queued' : 'completed',
+              siteKey: 'invented.tracy.test'
+            }
+          }
+        }
+      }),
+      prepare: async () => {
+        throw new Error('a chain must not prepare a legacy writer')
+      }
+    },
+    id: 'business',
+    onState() {},
+    open: (href) => opened.push(href),
+    signal: new AbortController().signal,
+    wait: async () => {}
+  })
+  assert.deepEqual(out, { opened: true })
+  assert.equal(polls, 2)
+  assert.deepEqual(opened, ['/invented.tracy.test'])
+})
+
+test('a failed chain build reports its error and never opens a site as completed', async () => {
+  const out = await followBusiness({
+    api: {
+      state: async () => ({
+        ok: true,
+        body: {
+          business: {
+            phase: 'build',
+            action: {
+              id: 'chain-action',
+              workflow: 'agent-demo/1',
+              state: 'failed',
+              error: 'STEP_NINE_CHECK_FAILED'
+            }
+          }
+        }
+      }),
+      prepare: async () => {
+        throw new Error('unexpected prepare')
+      }
+    },
+    id: 'business',
+    onState() {},
+    open() {
+      throw new Error('unexpected navigation')
+    },
+    signal: new AbortController().signal,
+    wait: async () => {}
+  })
+  assert.deepEqual(out, { failed: 'STEP_NINE_CHECK_FAILED' })
+})

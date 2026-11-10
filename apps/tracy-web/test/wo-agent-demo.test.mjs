@@ -1112,6 +1112,10 @@ test('a place with no collected reviews keeps its testimonials empty or neutral;
       posts: []
     }
   })
+  const reviewedRevision = { ...revision, brief: { ...revision.brief, agentDemoSnapshot: reviewed } }
+  assert.match(agentDemoPrompt(reviewedRevision), /Use at least one collected review verbatim/)
+  assert.doesNotMatch(agentDemoPrompt(reviewedRevision), /No reviews were collected/)
+  assert.match(JSON.stringify(agentPlanGuide(reviewed)), /for at least one review/)
   const withReviews = { ...plan, researchHash: reviewed.hash }
   const quoted = { ...emptyTestimonial, neutral: undefined, sourceIds: ['part:reviews'] }
   assert.ok(validateAgentPlan({ ...withReviews, rows: [...plan.rows, quoted] }, reviewed).hash)
@@ -1740,4 +1744,18 @@ test('media source context joins only exact frozen picture URLs and does not cer
   assert.deepEqual(pictureSourceAssociations(bundle, item), expected)
   assert.deepEqual(pictureSourceAssociations(bundle, { sourceUrl: 'https://x.test/oats.jpg?invented' }), [])
   assert.deepEqual(bundlePart({ ...bundle, media: [item] }, 'media').items[0].sourceAssociations, expected)
+})
+
+test('empty review evidence never asks the writer or plan guide for a mandatory review', () => {
+  const { revision, bundle } = fixture()
+  assert.equal(bundle.counts.reviews, 0)
+  for (const text of [
+    agentDemoPrompt(revision),
+    ownSiteInstructions(revision),
+    JSON.stringify(agentPlanGuide(bundle))
+  ]) {
+    assert.doesNotMatch(text, /at least one collected review|for at least one review/)
+    assert.match(text, /No reviews were collected/)
+    assert.match(text, /Continue/)
+  }
 })
