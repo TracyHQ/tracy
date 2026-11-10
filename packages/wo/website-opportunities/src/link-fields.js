@@ -411,3 +411,27 @@ export async function saveListingSource(db, opportunityId, listings) {
     ]
   )
 }
+
+/**
+ * The `listing` source of an opportunity without the pages the person removed (`keep` says which stay): the row
+ * keeps the other pages as they were read, and goes when no page is left, so neither Details nor the next profile
+ * merge reads a page that is no longer one of its links. The place's shared research is not touched.
+ * @param {(url: string) => boolean} keep
+ */
+export async function pruneListingSource(db, opportunityId, keep) {
+  const row = (
+    await db.query('select collected from wo_source where opportunity_id = $1 and source = $2', [
+      opportunityId,
+      LISTING_SOURCE
+    ])
+  ).rows[0]
+  if (!row) return
+  const held = Array.isArray(row.collected?.listings) ? row.collected.listings : []
+  const kept = held.filter((l) => typeof l?.url === 'string' && keep(l.url))
+  if (kept.length === held.length) return
+  await db.query('delete from wo_source where opportunity_id = $1 and source = $2', [
+    opportunityId,
+    LISTING_SOURCE
+  ])
+  if (kept.length) await saveListingSource(db, opportunityId, kept)
+}

@@ -773,7 +773,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/sources',
     summary: 'Add a source to an opportunity',
-    description: `Body \`{url}\`: one more link of the business (a website, a social page or a listing page), judged as the links of a create are. It joins the opportunity's own links (\`candidate.pastedLinks\`). Before research ran it is only added; after, Research is needed again (\`approval.research: "sources_changed"\`), the Profile approval is cleared and a brief made before it reads stale, until Research runs again, the new Profile is approved and a new brief is made and approved. The seller's Profile edits stay and win over the values research collects again. 400 \`INVALID_URL\`; 422 \`GOOGLE_LINK_NOT_ADDED\` for a Google link (it names the business itself); 422 \`NO_USABLE_LINKS\` when the link cannot be read; 409 \`SOURCE_ALREADY_KNOWN\` when the business has this link or a link of the same kind. ${OWN} ${OFF}`,
+    description: `Body \`{url}\`: one more link of the business (a website, a social page or a listing page), judged as the links of a create are. It joins the opportunity's own links (\`candidate.pastedLinks\`). Before research ran it is only added; after, Research is needed again (\`approval.research: "sources_changed"\`), the Profile approval is cleared and a brief made before it reads stale, until Research runs again, the new Profile is approved and a new brief is made and approved. The seller's Profile edits stay and win over the values research collects again. 400 \`INVALID_URL\`; 422 \`GOOGLE_LINK_NOT_ADDED\` for a Google link (it names the business itself); 422 \`NO_USABLE_LINKS\` when the link cannot be read; 409 \`SOURCE_ALREADY_KNOWN\` when the business has this link or a link of the same kind; 409 \`JOB_ACTIVE\` (with \`job\`) while research runs for it. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -786,6 +786,25 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       }
     },
     answers: `201 \`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'DELETE',
+    path: '/api/website-opportunities/:id/sources',
+    summary: 'Remove a source from an opportunity',
+    description: `Body \`{url}\`: one of the business's own links (its website, a social page or a listing page) removed from the opportunity's links (\`candidate.website\`, \`candidate.socials\`, \`candidate.listings\`, \`candidate.pastedLinks\`) and from its own listing row, so the list and Details stop showing it. The link matches as stored, as shown or as pasted: scheme, \`www.\`, a trailing slash and share-tracking parameters aside. The same effect as an added source: before research ran the link only goes; after, Research is needed again (\`approval.research: "sources_changed"\`), the Profile approval is cleared and a brief made before it reads stale. What research already collected from that link stays in the place's shared research. 400 \`INVALID_URL\`; 404 \`NOT_FOUND\` when the link is not one of its sources; 422 \`GOOGLE_LINK_NOT_REMOVED\` for its Google link (it names the business itself); 409 \`LAST_SOURCE\` with \`next: "add"\` when it is the last link research reads (add another first); 409 \`JOB_ACTIVE\` (with \`job\`) while research runs for it. ${OWN} ${OFF}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['url'],
+      properties: {
+        url: { type: 'string', description: 'One of the links the opportunity lists' }
+      }
+    },
+    answers: `200 \`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
   },
   // website-opportunities/src/seller-review-routes.js
   {

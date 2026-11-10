@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-10: Remove a source from an opportunity
+
+Added `DELETE /api/website-opportunities/:id/sources` (internal): body `{url}` removes one of the business's own links and answers 200 `{opportunity, approval}`; after research ran it asks for research again, as an added source does. 404 `NOT_FOUND`, 409 `LAST_SOURCE` (`next: "add"`), 409 `JOB_ACTIVE`, 422 `GOOGLE_LINK_NOT_REMOVED`. Changed (internal): `POST …/:id/sources` answers 409 `JOB_ACTIVE` while research runs.
+
 ## 2026-11-10: Research sub steps, a brief older than the Profile approval, sources before research
 
 Changed `GET /api/website-opportunities/:id` (internal, no field added): `stepProgress.items` for a running Research now lists the sources of the shared place job serving the request and a final `profile` item (Writing the business facts); `approval.brief` reads `stale` with `briefStale: "profile"` when the Profile was approved after the latest brief was made, and a build answers 409 `BRIEF_NOT_APPROVED` until the brief is made again and approved; approving an already approved Profile keeps its first time. Before the opportunity's own Research completed, every `sources` row reads not collected yet (`status`, `reason`, `coverage` and `collectedAt` null), also a listing link added through `POST …/:id/sources` whose page could not be fetched.

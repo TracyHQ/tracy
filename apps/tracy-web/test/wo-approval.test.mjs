@@ -478,6 +478,147 @@ test(
   }
 )
 
+test('a source removed before research only leaves the link list', opts, async () => {
+  const w = await world()
+  const a = await w.accountOf(A)
+  const fresh = await w.saveGoogle(a)
+  const IG = 'https://www.instagram.com/harbor.gym.example/'
+  const LISTING = 'https://www.tripadvisor.com/Attraction_Review-g000-d000-Reviews-Harbor_Gym_Example.html'
+  assert.equal((await w.call(A, 'POST', `${BASE}/${fresh.id}/sources`, { url: IG })).status, 201)
+  assert.equal((await w.call(A, 'POST', `${BASE}/${fresh.id}/sources`, { url: LISTING })).status, 201)
+  // Another account cannot remove it; a link it does not list is 404; a bad body is 400.
+  await w.accountOf(B)
+  assert.equal((await w.call(B, 'DELETE', `${BASE}/${fresh.id}/sources`, { url: IG })).status, 404)
+  const unknown = await w.call(A, 'DELETE', `${BASE}/${fresh.id}/sources`, {
+    url: 'https://www.instagram.com/someone.else.example/'
+  })
+  assert.equal(unknown.status, 404)
+  assert.equal(unknown.body.code, 'NOT_FOUND')
+  assert.equal((await w.call(A, 'DELETE', `${BASE}/${fresh.id}/sources`, { url: 'not a link' })).status, 400)
+  // The Google link is the business itself.
+  await w.pool.query(
+    `update wo_opportunity set candidate = jsonb_set(candidate, '{pastedLinks}',
+       candidate->'pastedLinks' || '[{"source":"google-places","url":"https://maps.google.com/?cid=1234567890"}]')
+     where id = $1`,
+    [fresh.id]
+  )
+  const google = await w.call(A, 'DELETE', `${BASE}/${fresh.id}/sources`, {
+    url: 'https://maps.google.com/?cid=1234567890'
+  })
+  assert.equal(google.body.code, 'GOOGLE_LINK_NOT_REMOVED')
+
+  // Sent as shown: no www, http, no trailing slash, a share-tracking parameter.
+  const gone = await w.call(A, 'DELETE', `${BASE}/${fresh.id}/sources`, {
+    url: 'http://instagram.com/harbor.gym.example?igsh=abc123'
+  })
+  assert.equal(gone.status, 200, JSON.stringify(gone.body))
+  assert.equal(gone.body.approval.research, 'ok')
+  assert.equal(gone.body.approval.sourcesChangedAt, null)
+  assert.equal(gone.body.opportunity.candidate.socials?.instagram, undefined)
+  assert.ok(!gone.body.opportunity.candidate.pastedLinks.some((l) => l.source === 'instagram'))
+  assert.ok(gone.body.opportunity.candidate.pastedLinks.some((l) => l.source === 'google-places'))
+
+  const listing = await w.call(A, 'DELETE', `${BASE}/${fresh.id}/sources`, { url: LISTING })
+  assert.equal(listing.status, 200, JSON.stringify(listing.body))
+  assert.equal(listing.body.opportunity.candidate.listings, undefined)
+  const rows = (
+    await w.pool.query(`select 1 from wo_source where opportunity_id = $1 and source = 'listing'`, [fresh.id])
+  ).rows
+  assert.equal(rows.length, 0, 'its private listing row goes with its last page')
+  const detail = (await w.call(A, 'GET', `${BASE}/${fresh.id}`)).body
+  assert.ok(!detail.sources.some((s) => s.source === 'listing'), JSON.stringify(detail.sources))
+  assert.ok(!JSON.stringify(detail.opportunity.candidate).includes('harbor.gym.example/'))
+  const listed = (await w.call(A, 'GET', `${BASE}?limit=10`)).body.opportunities.find(
+    (o) => o.id === fresh.id
+  )
+  assert.equal(listed.candidate.socials?.instagram, undefined)
+  assert.equal(
+    (await w.call(A, 'DELETE', `${BASE}/${fresh.id}/sources`, { url: IG })).body.code,
+    'NOT_FOUND',
+    'removed once, it is gone'
+  )
+})
+
+test('a source removed after research asks for research again; the collected data stays', opts, async () => {
+  const w = await world()
+  const { a, opp } = await researchedCard(w)
+  const TT = 'https://www.tiktok.com/@harbor.gym.example'
+  // Added while research runs: refused, the run reads the link list.
+  await w.pool.query(
+    `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'running-01', 'running')`,
+    [a, opp.id]
+  )
+  const busyAdd = await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: TT })
+  assert.equal(busyAdd.status, 409)
+  assert.equal(busyAdd.body.code, 'JOB_ACTIVE')
+  await w.pool.query(`delete from wo_job where request_id = 'running-01'`)
+  assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/sources`, { url: TT })).status, 201)
+  await requestResearch(w.pool, {
+    accountId: a,
+    opportunity: (await w.pool.query('select * from wo_opportunity where id = $1', [opp.id])).rows[0],
+    requestId: 'remove-research-01'
+  })
+  await w.drain()
+  await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
+  await makeBrief(w, opp, 'remove-brief-01')
+  await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)
+  const snapshotRows = async () =>
+    (await w.pool.query('select count(*)::int as n from wo_place_snapshot_source')).rows[0].n
+  const held = await snapshotRows()
+
+  await w.pool.query(
+    `insert into wo_job (account_id, opportunity_id, kind, request_id, state) values ($1, $2, 'research', 'running-02', 'running')`,
+    [a, opp.id]
+  )
+  const busy = await w.call(A, 'DELETE', `${BASE}/${opp.id}/sources`, { url: TT })
+  assert.equal(busy.status, 409)
+  assert.equal(busy.body.code, 'JOB_ACTIVE')
+  await w.pool.query(`delete from wo_job where request_id = 'running-02'`)
+
+  const removed = await w.call(A, 'DELETE', `${BASE}/${opp.id}/sources`, { url: TT })
+  assert.equal(removed.status, 200, JSON.stringify(removed.body))
+  assert.equal(removed.body.approval.research, 'sources_changed')
+  assert.ok(removed.body.approval.sourcesChangedAt)
+  assert.equal(removed.body.approval.profile, 'none')
+  assert.equal(removed.body.approval.profileApprovedAt, null)
+  assert.equal(removed.body.approval.brief, 'stale')
+  assert.equal(removed.body.approval.briefStale, 'sources')
+  assert.equal(removed.body.opportunity.candidate.socials?.tiktok, undefined)
+  assert.equal(await snapshotRows(), held, "the place's collected rows are untouched")
+  assert.equal((await build(w, opp, 'remove-build-01')).body.code, 'RESEARCH_NEEDED')
+  const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+  assert.equal(detail.approval.research, 'sources_changed')
+  assert.ok(!detail.sources.some((s) => s.pastedLink?.includes('tiktok.com')), JSON.stringify(detail.sources))
+})
+
+test('the last link of an opportunity is never removed', opts, async () => {
+  const w = await world()
+  await w.accountOf(A)
+  const made = await w.call(A, 'POST', BASE, { links: [SITE] })
+  assert.ok([200, 201].includes(made.status), JSON.stringify(made.body))
+  const id = made.body.opportunity.id
+  const last = await w.call(A, 'DELETE', `${BASE}/${id}/sources`, { url: SITE })
+  assert.equal(last.status, 409, JSON.stringify(last.body))
+  assert.deepEqual({ code: last.body.code, next: last.body.next }, { code: 'LAST_SOURCE', next: 'add' })
+  assert.equal(
+    (await w.pool.query('select candidate from wo_opportunity where id = $1', [id])).rows[0].candidate
+      .website,
+    SITE
+  )
+  // With a second link, the first one goes.
+  assert.equal(
+    (
+      await w.call(A, 'POST', `${BASE}/${id}/sources`, {
+        url: 'https://www.instagram.com/harbor.gym.example/'
+      })
+    ).status,
+    201
+  )
+  const ok = await w.call(A, 'DELETE', `${BASE}/${id}/sources`, { url: 'harbor-gym.example' })
+  assert.equal(ok.status, 200, JSON.stringify(ok.body))
+  assert.equal(ok.body.opportunity.candidate.website, undefined)
+})
+
 test(
   'a photo the seller adds is stored as their own, shown on Details, and counts as a Profile edit',
   opts,

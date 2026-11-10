@@ -2,7 +2,7 @@
  * The seller's approvals of one opportunity (#537): the Profile is approved before a Content brief is made, the latest
  * brief is approved before a demo is built. Stored on the opportunity row (migration 210, package `0013`):
  * `profile_approved_at`, `brief_approved_at`, `profile_changed_at` (the last Profile edit) and `sources_changed_at` (a
- * source the seller added after research ran).
+ * source the seller added or removed after research ran).
  *
  * `approvalOf` derives the state the doors and the client read (a brief reads stale when the sources, a Profile edit or
  * the Profile approval came after it was made); the gates in the builder (`opportunities-build/route.js`)
@@ -86,7 +86,8 @@ export function buildGateOf(approval) {
 
 /** The plain next step of each refusal, in the doors' `{code, next}` shape. */
 export const APPROVAL_NEXT = Object.freeze({
-  RESEARCH_NEEDED: 'A source was added after research: run Research again, then approve the new Profile.',
+  RESEARCH_NEEDED:
+    'A source was added or removed after research: run Research again, then approve the new Profile.',
   PROFILE_NOT_APPROVED: 'Approve the Profile first: open it, check every row, then approve.',
   BRIEF_NOT_APPROVED: 'Approve the latest Content brief first: open it, check every row, then approve.',
   NO_BRIEF: 'Make a Content brief first.',
@@ -131,10 +132,11 @@ export async function approveBrief(db, accountId, id) {
 }
 
 /**
- * The seller added a source. After research ran, research is needed again and the Profile approval is cleared; before,
- * the source is only added. `candidate` is the merged candidate (`store.js candidateWithNewRefs`).
+ * The seller added or removed a source. After research ran, research is needed again and the Profile approval is
+ * cleared; before, the link list only changes. `candidate` is the changed candidate (`store.js candidateWithNewRefs`,
+ * `candidateWithoutLink`).
  */
-export async function saveAddedSource(db, accountId, id, candidate, { researched }) {
+export async function saveSourceChange(db, accountId, id, candidate, { researched }) {
   const { rows } = await db.query(
     `update wo_opportunity set candidate = $3::jsonb, updated_at = now(),
        sources_changed_at = case when $4 then now() else sources_changed_at end,

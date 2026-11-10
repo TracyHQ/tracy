@@ -11,6 +11,7 @@ import { RESEARCH_STATE_COLUMNS } from './research-state.js'
 import { resolvePlace } from './places.js'
 import { LISTING_SOURCE } from './sources.js'
 import { nextReadingPicks } from '../domain/business-reading.mjs'
+import { dropTracking } from '../domain/link-kinds.mjs'
 import { mergeKeyMessagePicks, nextFactOverrides } from './owner-fact-picks.js'
 import { journeySql } from './wo-journey.js'
 
@@ -110,6 +111,79 @@ export function candidateWithNewRefs(held, sent, now = new Date()) {
   if (pastedChanged) out.pastedLinks = pasted
   if (changed) out.linksAddedAt = now.toISOString()
   return changed || pastedChanged ? out : null
+}
+
+/**
+ * The spelling two links of one page share: scheme, `www.`, a trailing slash, the fragment and share-tracking
+ * parameters aside, host in lower case. Null when it is no address. Used to find the link a person asks to remove,
+ * whether she sends it as stored, as shown (without tracking) or as she pasted it.
+ * @param {unknown} raw
+ */
+export function linkKeyOf(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) return null
+  try {
+    const text = raw.trim()
+    const u = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `https://${text}`)
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null
+    dropTracking(u.searchParams)
+    u.searchParams.sort()
+    const host = u.hostname.toLowerCase().replace(/^www\./, '')
+    const path = u.pathname.replace(/\/+$/, '')
+    return `${host}${path}${u.search}`
+  } catch {
+    return null
+  }
+}
+
+/**
+ * The saved candidate without one link the person pasted or added (its website, a social page, a listing page), and
+ * that link's research source: `{candidate, source}`, or null when the candidate holds no such link. Its entries in
+ * `pastedLinks` go with it; `linksAddedAt` is set, as for an added link, so the place's last research is not current
+ * for this opportunity any more (`place-requests.js`). A Google link is the business itself and is never removed here:
+ * `{google: true}` when the link only names the Google place.
+ */
+export function candidateWithoutLink(held, url, now = new Date()) {
+  const key = linkKeyOf(url)
+  if (!key || !held || typeof held !== 'object') return null
+  const same = (u) => linkKeyOf(u) === key
+  const out = { ...held }
+  let source = null
+  if (same(held.website)) {
+    delete out.website
+    source = 'website'
+  }
+  for (const [network, u] of Object.entries(held.socials ?? {}))
+    if (same(u)) {
+      out.socials = Object.fromEntries(Object.entries(out.socials).filter(([n]) => n !== network))
+      source ??= network
+    }
+  if (Array.isArray(held.listings) && held.listings.some((l) => same(l?.url))) {
+    out.listings = held.listings.filter((l) => !same(l?.url))
+    if (!out.listings.length) delete out.listings
+    source ??= LISTING_SOURCE
+  }
+  const pasted = Array.isArray(held.pastedLinks) ? held.pastedLinks : []
+  if (!source) {
+    const named = pasted.find((l) => same(l?.url))
+    return named?.source === 'google-places' ? { google: true } : null
+  }
+  if (pasted.length) out.pastedLinks = pasted.filter((l) => l?.source === 'google-places' || !same(l?.url))
+  out.linksAddedAt = now.toISOString()
+  return { candidate: out, source }
+}
+
+/**
+ * How many links research still reads for an opportunity: its Google place (the business itself), its website, its
+ * social pages and its listing pages. An opportunity needs one at least.
+ */
+export function researchLinkCountOf(provider, candidate) {
+  const c = candidate ?? {}
+  return (
+    (provider === 'google-places' ? 1 : 0) +
+    (typeof c.website === 'string' && c.website ? 1 : 0) +
+    Object.values(c.socials ?? {}).filter((u) => typeof u === 'string' && u).length +
+    (Array.isArray(c.listings) ? c.listings.filter((l) => typeof l?.url === 'string').length : 0)
+  )
 }
 
 /**

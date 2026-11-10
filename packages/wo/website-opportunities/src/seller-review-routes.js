@@ -3,20 +3,34 @@
  *
  *   POST /api/website-opportunities/:id/profile/approve   the Profile approved (unlocks the Content brief)
  *   POST /api/website-opportunities/:id/sources           {url}: one more link of the business
+ *   DELETE /api/website-opportunities/:id/sources         {url}: one of its links removed (one link stays at least)
  *   POST /api/website-opportunities/:id/media             multipart `file`: a photo or video the seller adds
  *
- * Each answers `{opportunity, approval}` (`approval.js approvalOf`). A source added after research ran asks for
- * research again and clears the Profile approval; a photo or video added is a Profile edit (the Profile needs review
+ * Each answers `{opportunity, approval}` (`approval.js approvalOf`). A source added or removed after research ran
+ * asks for research again and clears the Profile approval; a photo or video added is a Profile edit (the Profile needs review
  * again, research does not). Every door touches only the caller's own opportunity: another account's answers 404.
  * The brief's own approval door lives with the brief (`opportunities-build/route.js`).
  */
 import { judgeLinks } from '../domain/link-kinds.mjs'
 import { videoSize } from '../domain/video-size.mjs'
-import { APPROVAL_NEXT, approvalOf, approveProfile, markProfileChanged, saveAddedSource } from './approval.js'
+import {
+  APPROVAL_NEXT,
+  approvalOf,
+  approveProfile,
+  markProfileChanged,
+  saveSourceChange
+} from './approval.js'
 import { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES } from './executor.js'
-import { saveListingSource } from './link-fields.js'
+import { pruneListingSource, saveListingSource } from './link-fields.js'
 import { researchStateOf } from './research-state.js'
-import { candidateWithNewRefs, insertMedia } from './store.js'
+import {
+  activeJobOf,
+  candidateWithNewRefs,
+  candidateWithoutLink,
+  insertMedia,
+  linkKeyOf,
+  researchLinkCountOf
+} from './store.js'
 
 /** `wo_media.source` of a photo or video the seller added themself. */
 export const OWNER_MEDIA_SOURCE = 'owner'
@@ -25,11 +39,17 @@ const URL_MAX = 2000
 /**
  * @param {import('hono').Hono} app
  * @param {object} ctx the open router's helpers and deps: `pool`, `objects`, `imageInfo`, `caller`, `refuse`,
- *   `notFound`, `json`, `body`, `domainOr`, `featureOn`, `featureOff`, `linkFields`, `opportunityShape`,
+ *   `notFound`, `jobActive`, `json`, `body`, `domainOr`, `featureOn`, `featureOff`, `linkFields`, `opportunityShape`,
  *   `latestBriefAt`, `opportunityOf`, `UUID`, `BASE`.
  */
 export function sellerReviewRoutes(app, ctx) {
   const { pool, caller, refuse, notFound, json, body, UUID, BASE, opportunityOf } = ctx
+
+  /** 409 `JOB_ACTIVE` while research runs for the opportunity: its link list is what that run reads. */
+  async function jobRunning(c, opp) {
+    const job = await activeJobOf(pool, opp.id)
+    return job ? ctx.jobActive(c, job) : null
+  }
 
   /** The caller's own opportunity of the path, or a Response. */
   async function ownOpportunity(c) {
@@ -73,6 +93,8 @@ export function sellerReviewRoutes(app, ctx) {
     const own = await ownOpportunity(c)
     if (own instanceof Response) return own
     if (!(await ctx.featureOn())) return ctx.featureOff(c)
+    const running = await jobRunning(c, own.opp)
+    if (running) return running
     const b = await body(c)
     const raw = typeof b?.url === 'string' ? b.url.trim() : ''
     if (!raw || raw.length > URL_MAX)
@@ -107,12 +129,46 @@ export function sellerReviewRoutes(app, ctx) {
         { links: made.links }
       )
     const research = await researchStateOf(pool, own.opp.id)
-    const row = await saveAddedSource(pool, own.who.accountId, own.opp.id, merged, {
+    const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, merged, {
       researched: Boolean(research.researchedAt)
     })
     if (!row) return notFound(c, 'opportunity')
     await saveListingSource(pool, row.id, made.listings)
     return answer(c, row, 201)
+  })
+
+  // One of the business's links removed, matched as stored, as shown or as pasted (`store.js linkKeyOf`). The same
+  // effect as an added link: after research ran, research is needed again. What research already collected from that
+  // link stays in the place's snapshot; only this opportunity's link list (and its private listing row) changes.
+  app.delete(`${BASE}/:id/sources`, async (c) => {
+    const own = await ownOpportunity(c)
+    if (own instanceof Response) return own
+    if (!(await ctx.featureOn())) return ctx.featureOff(c)
+    const b = await body(c)
+    const raw = typeof b?.url === 'string' ? b.url.trim() : ''
+    if (!raw || raw.length > URL_MAX || !linkKeyOf(raw))
+      return refuse(c, 400, 'INVALID_URL', 'Send "url" as one of the links this business lists.')
+    const removed = candidateWithoutLink(own.opp.candidate, raw)
+    if (removed?.google)
+      return refuse(
+        c,
+        422,
+        'GOOGLE_LINK_NOT_REMOVED',
+        'A Google link names the business itself: it stays while the opportunity exists.'
+      )
+    if (!removed) return notFound(c, 'link')
+    if (researchLinkCountOf(own.opp.provider, removed.candidate) < 1)
+      return refuse(c, 409, 'LAST_SOURCE', 'add')
+    const running = await jobRunning(c, own.opp)
+    if (running) return running
+    const research = await researchStateOf(pool, own.opp.id)
+    const row = await saveSourceChange(pool, own.who.accountId, own.opp.id, removed.candidate, {
+      researched: Boolean(research.researchedAt)
+    })
+    if (!row) return notFound(c, 'opportunity')
+    const key = linkKeyOf(raw)
+    await pruneListingSource(pool, row.id, (url) => linkKeyOf(url) !== key)
+    return answer(c, row)
   })
 
   // A photo or video the seller adds (multipart `file`), stored like a collected picture (`executor.js storedRecord`)

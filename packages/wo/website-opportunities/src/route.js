@@ -1324,6 +1324,7 @@ export function websiteOpportunitiesRoutes(deps) {
     caller,
     refuse,
     notFound,
+    jobActive,
     json,
     body,
     domainOr,
