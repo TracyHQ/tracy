@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-10: The seller approves the Profile and the Content brief
+
+Added (internal): `POST /api/website-opportunities/:id/profile/approve`, `POST /api/website-opportunities/:id/brief/approve`, `POST /api/website-opportunities/:id/sources` (one more link of the business) and `POST /api/website-opportunities/:id/media` (a photo or video the seller adds, multipart). `GET /api/website-opportunities/:id` and the rows of `GET /api/website-opportunities` add `approval`, and `GET …/:id` adds `stepProgress` (the sub steps of the step that runs now). Changed (internal): `POST …/:id/revisions` answers 409 `PROFILE_NOT_APPROVED` or `RESEARCH_NEEDED`; `POST …/:id/demo/build` and `POST …/demo/builds/bulk` answer 409 `PROFILE_NOT_APPROVED`, `BRIEF_NOT_APPROVED` or `RESEARCH_NEEDED` for a new build of the classic brief path. Public API v1 is unchanged.
+
 ## 2026-11-09: Research again from scratch
 
 Changed `POST /api/website-opportunities/:id/research` with `again: true` and `GET /api/website-opportunities/:id/research-again` (internal): the account's Research again runs every part this deployment can collect, whatever its age, with the new run reason `again`, and re-reads the logo and the business without reusing an earlier reading; `kept` holds only `unavailable` parts and menu photos the place has none of (`none`), and the plan carries `fromScratch: true`. 409 `NOTHING_DUE` now means no part can run here. The public `/find` Research again is unchanged.

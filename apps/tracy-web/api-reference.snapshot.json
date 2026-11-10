@@ -50860,6 +50860,32 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/brief/approve": {
+        "post": {
+          "operationId": "post_api_website_opportunities_id_brief_approve",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/demo/build": {
         "post": {
           "operationId": "post_api_website_opportunities_id_demo_build",
@@ -51172,6 +51198,32 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/media": {
+        "post": {
+          "operationId": "post_api_website_opportunities_id_media",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/name": {
         "put": {
           "operationId": "put_api_website_opportunities_id_name",
@@ -51269,6 +51321,32 @@
       "/api/website-opportunities/{id}/profile": {
         "put": {
           "operationId": "put_api_website_opportunities_id_profile",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
+      "/api/website-opportunities/{id}/profile/approve": {
+        "post": {
+          "operationId": "post_api_website_opportunities_id_profile_approve",
           "parameters": [
             {
               "in": "path",
@@ -51625,6 +51703,48 @@
               }
             }
           ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
+      "/api/website-opportunities/{id}/sources": {
+        "post": {
+          "operationId": "post_api_website_opportunities_id_sources",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["url"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
           "responses": {
             "200": {}
           },

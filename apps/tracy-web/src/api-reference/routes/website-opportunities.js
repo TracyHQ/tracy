@@ -2,6 +2,8 @@
 
 const OFF =
   '404 `FEATURE_OFF` while the `website-opportunities` switch is off (or cannot be read); 401 `NOT_SIGNED_IN`.'
+const APPROVAL_ANSWER =
+  '`approval: {research: "ok" | "sources_changed", profile: "none" | "needed" | "approved", profileApprovedAt, profileChangedAt, brief: "none" | "needed" | "approved" | "stale", briefApprovedAt, briefStale: "profile" | "sources" | null, sourcesChangedAt}` is the seller’s review of this opportunity (#537): the Profile is approved before a Content brief is made, the latest brief before a demo is built. `profile` is `none` before research and while `research` is `sources_changed` (a source was added after research ran); a Profile edit, or a photo the seller adds, after approval makes it `needed` again. `brief` is `stale` when the Profile changed or a source was added after the latest brief was made, and `needed` until that brief is approved; making the brief again (even when it answers the same revision) ends `stale`.'
 const OWN = 'Another account’s row answers 404 `NOT_FOUND`, exactly like a missing one.'
 const REQUEST_ID = {
   type: 'string',
@@ -203,7 +205,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/demo/build',
     summary: 'Build a demo in one press',
-    description: `Requires selection:{cms,design,quickstart} for a new build (the person chooses the CMS and the template); a CMS sent without design and quickstart takes the template pinned for it on /ops/wo. No account default and no automatic pick: {auto:true} is refused with 400 DEMO_TEMPLATE_REQUIRED. Records the explicit choice and the per-CMS release version/archive checksums before revision or site creation, then the worker creates the pinned brief/template, provisions, waits for deterministic fill, hands off and checks the site. retryOf resumes the failed action’s same revision, CMS, template, site, session and work ids but is a new charged action; sending selection with Retry is refused. Internal retry and request replay never add a charge. ${OWN} ${OFF}`,
+    description: `Requires selection:{cms,design,quickstart} for a new build (the person chooses the CMS and the template); a CMS sent without design and quickstart takes the template pinned for it on /ops/wo. No account default and no automatic pick: {auto:true} is refused with 400 DEMO_TEMPLATE_REQUIRED. Records the explicit choice and the per-CMS release version/archive checksums before revision or site creation, then the worker creates the pinned brief/template, provisions, waits for deterministic fill, hands off and checks the site. retryOf resumes the failed action’s same revision, CMS, template, site, session and work ids but is a new charged action; sending selection with Retry is refused. Internal retry and request replay never add a charge. A new build (not a retry, not a Find quick build) needs the seller's approvals (#537): 409 \`PROFILE_NOT_APPROVED\`, 409 \`BRIEF_NOT_APPROVED\` until the latest Content brief is approved (\`POST …/:id/brief/approve\`), or 409 \`RESEARCH_NEEDED\` after a source was added; with the quality protocol on, the demo action prepares its own brief and is not gated. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -242,7 +244,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/demo/builds/bulk',
     summary: 'Accept a batch of demo builds atomically',
-    description: `1–100 distinct owned opportunity ids and one explicit selection:{cms,design,quickstart} for the whole batch (a CMS without design and quickstart takes its /ops/wo pin). No automatic pick. An account/day transaction accepts the whole batch or none; the batch request id derives one stable id per opportunity. Partial replay does not recharge already accepted actions. ${OWN} ${OFF}`,
+    description: `1–100 distinct owned opportunity ids and one explicit selection:{cms,design,quickstart} for the whole batch (a CMS without design and quickstart takes its /ops/wo pin). No automatic pick. An account/day transaction accepts the whole batch or none; the batch request id derives one stable id per opportunity. Partial replay does not recharge already accepted actions. Every id needs the approvals a single build needs (#537): the first refusal's code with \`ids: [{id, code}]\` naming each refused one, and nothing is accepted. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -728,7 +730,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds, research, briefJob}\`; ${MENU_ANSWER} \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` is empty and \`sources\` holds only its own rows, even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`.`
+    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds, research, briefJob, approval, stepProgress}\`; ${MENU_ANSWER} ${APPROVAL_ANSWER} \`stepProgress: {step: "research" | "brief" | "build" | null, items: [{key, label, state: "done" | "running" | "waiting" | "failed", at}]}\` is the step that runs now (else the one whose latest attempt failed, else null) with its sub steps, read from recorded data only: a Content brief job's own step (reading, labelling, writing; \`at\` on the current one), a step chain build's chain steps (\`demoAction.run\`), and no items for Research or a build of another workflow, which record no sub steps. \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` is empty and \`sources\` holds only its own rows, even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`.`
   },
   // website-opportunities/src/route.js
   {
@@ -741,6 +743,61 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     internal: true,
     params: { path: { id: 'Opportunity id' } },
     answers: '`{opportunity}`'
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/profile/approve',
+    summary: 'Approve the Profile',
+    description: `The seller read the Profile and approves it (#537): it unlocks the Content brief. Every Profile edit after it (the edit doors of the Profile card, or a photo added through \`POST …/:id/media\`) clears it again. No body. 409 \`RESEARCH_NOT_DONE\` before this opportunity's own Research completed; 409 \`RESEARCH_NEEDED\` after a source was added until Research ran again. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: `\`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // src/opportunities-build/route.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/brief/approve',
+    summary: 'Approve the latest Content brief',
+    description: `The seller read the latest Content brief and approves it (#537): it unlocks Build demo. A newer brief (a Refresh, or the seller's own brief edits) needs its own approval. No body. 409 \`NO_BRIEF\` before the first brief; 409 \`BRIEF_STALE\` when the Profile changed or a source was added after the brief was made (make it again first); 409 \`PROFILE_NOT_APPROVED\`; 409 \`RESEARCH_NEEDED\` after a source was added until Research ran again. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: `\`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/sources',
+    summary: 'Add a source to an opportunity',
+    description: `Body \`{url}\`: one more link of the business (a website, a social page or a listing page), judged as the links of a create are. It joins the opportunity's own links (\`candidate.pastedLinks\`). Before research ran it is only added; after, Research is needed again (\`approval.research: "sources_changed"\`), the Profile approval is cleared and a brief made before it reads stale, until Research runs again, the new Profile is approved and a new brief is made and approved. The seller's Profile edits stay and win over the values research collects again. 400 \`INVALID_URL\`; 422 \`GOOGLE_LINK_NOT_ADDED\` for a Google link (it names the business itself); 422 \`NO_USABLE_LINKS\` when the link cannot be read; 409 \`SOURCE_ALREADY_KNOWN\` when the business has this link or a link of the same kind. ${OWN} ${OFF}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['url'],
+      properties: {
+        url: { type: 'string', description: 'The address of a website, social page or listing page' }
+      }
+    },
+    answers: `201 \`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/media',
+    summary: 'Add a photo or video to an opportunity',
+    description: `\`multipart/form-data\` with one file in the field \`file\`: a JPEG, PNG, GIF, WebP or AVIF photo (at most 25 MB) or an MP4 or WebM video (at most 200 MB). Stored like a collected picture with source \`owner\`, it shows in Photos & video (also before research) and the next Content brief and build read it like the others. It counts as a Profile edit: the Profile needs review again, research does not. 400 \`INVALID_FILE\`; 413 \`TOO_LARGE\`; 415 \`NOT_MEDIA\` or \`IMAGE_UNREADABLE\`; 409 \`MEDIA_ALREADY_ADDED\` for the same bytes again; 503 \`STORE_UNAVAILABLE\` without a file store; 502 \`STORE_FAILED\`. ${OWN} ${OFF}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: `201 \`{opportunity, approval, media: {id, kind, source: "owner", width, height}}\`; ${APPROVAL_ANSWER}`
   },
   // website-opportunities/src/route.js
   {
@@ -1036,7 +1093,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/revisions',
     summary: 'Start the Content brief as a background job',
-    description: `Starts the site brief of the opportunity's current research as a job and answers 202 at once; poll \`GET …/:id/brief-jobs/:jobId\`. The brief is an immutable snapshot of the research (profile with the seller's Profile edits, sources, media, posts, the account's overlay) with its Markdown and asset manifest. A brief names no CMS or template, so one brief feeds demos on any CMS and template. The same research answers the brief already made for it (the job ends \`done\` with \`reused: true\`); changed research writes the next one. Body \`{requestId?}\` (8 to 100 of letters, digits, \`.\`, \`_\`, \`:\`, \`-\`): the same id answers the same job. 409 \`RESEARCH_NOT_DONE\` until this opportunity's own Research has completed; 409 \`REQUEST_ID_REUSED\` for an id used on another opportunity. One job runs per opportunity: a second press answers the running one. ${OWN} ${OFF}`,
+    description: `Starts the site brief of the opportunity's current research as a job and answers 202 at once; poll \`GET …/:id/brief-jobs/:jobId\`. The brief is an immutable snapshot of the research (profile with the seller's Profile edits, sources, media, posts, the account's overlay) with its Markdown and asset manifest. A brief names no CMS or template, so one brief feeds demos on any CMS and template. The same research answers the brief already made for it (the job ends \`done\` with \`reused: true\`); changed research writes the next one. Body \`{requestId?}\` (8 to 100 of letters, digits, \`.\`, \`_\`, \`:\`, \`-\`): the same id answers the same job. 409 \`RESEARCH_NOT_DONE\` until this opportunity's own Research has completed; 409 \`PROFILE_NOT_APPROVED\` until the seller approved the Profile (\`POST …/:id/profile/approve\`), 409 \`RESEARCH_NEEDED\` after a source was added until Research ran again; 409 \`REQUEST_ID_REUSED\` for an id used on another opportunity. One job runs per opportunity: a second press answers the running one. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
