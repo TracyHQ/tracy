@@ -1341,8 +1341,8 @@ function conversationHeaders(
  * Take (or renew) the site's write lease before a write that does not pass the Apply door — an EmDash
  * write (`POST /api/sites/:key/lease/acquire`, review Q1, council 20/10/2026). Answers what the door
  * said in the shape {@link waitOutLease} reads: `{ok: true}`, the door's `SITE_BUSY` refusal, or a
- * refusal of another code (an older tracy-web without the door, Tracy unreachable) that the caller lets
- * through — the write then goes as it did before this door existed. Signed afresh on each send.
+ * refusal of another code (an older tracy-web without the door, Tracy unreachable) that stops the
+ * write. Signed afresh on each send. A successful HTTP answer must also confirm the lease in JSON.
  */
 export async function acquireSiteLease(
   config: Config,
@@ -1361,7 +1361,7 @@ export async function acquireSiteLease(
       }
     )
     const body = (await res.json().catch(() => null)) as Record<string, unknown> | null
-    if (res.ok) return { ...body, ok: true }
+    if (res.ok && body?.ok === true) return { ...body, ok: true }
     if (res.status === 409 && body?.code === 'SITE_BUSY') return { ...body, ok: false, httpStatus: 409 }
     return { ok: false, code: 'LEASE_DOOR_UNAVAILABLE', httpStatus: res.status }
   } catch (error) {
@@ -3211,20 +3211,21 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    * renews the lease between them and never outlives its 90 s of silence. The lease is given back when
    * the turn ends (`turnEnded`), like an Apply write's.
    *
-   * Answers null when the write may go — the lease is held, or the door cannot be asked (no
-   * conversation, nobody to act as, an older tracy-web): then it goes as it did before this door — or
-   * the answer to give instead of sending: `TURN_STOPPED`, or the last `SITE_BUSY` with `waitedSeconds`.
+   * Answers null only when the lease is held. Without a conversation or a usable lease answer, the
+   * write is refused, as it is for Stop or the last `SITE_BUSY` with `waitedSeconds`.
    * 🔒 A Stop during the wait sends nothing, even when the lease then came free.
    */
   const emdashWriteLease = async (
     label: string,
     sessionId: string | null
   ): Promise<Record<string, unknown> | null> => {
-    if (!sessionId) return null
+    if (!sessionId)
+      return { ok: false, code: 'LEASE_DOOR_UNAVAILABLE', error: 'Site editing is unavailable right now.' }
     const signal = turnSignal.getStore() ?? null
     if (signal?.aborted) return stoppedAnswer()
     const { plan } = planFor(sessionId)
-    if (plan === null) return null
+    if (plan === null)
+      return { ok: false, code: 'LEASE_DOOR_UNAVAILABLE', error: 'Site editing is unavailable right now.' }
     const seat = flightSeat()
     const answer = (await waitOutLease(
       () => acquireSiteLease(config, plan, '_conversation', label, sessionId),
@@ -3241,9 +3242,14 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     }
     if (isTurnStopped(answer) || isLeaseBusy(answer)) return answer
     warn(
-      `[site-tools] ${label}: the write lease could not be asked (${String(answer.code)}); the EmDash write goes on`
+      `[site-tools] ${label}: the write lease could not be taken (${String(answer.code)}); the EmDash write was refused`
     )
-    return null
+    return {
+      ...answer,
+      ok: false,
+      code: String(answer.code ?? 'LEASE_DOOR_UNAVAILABLE'),
+      error: 'Site editing is unavailable right now.'
+    }
   }
 
   /** Whether one MCP request to an EmDash site writes: a tool call of a tool EmDash does not mark read-only. */

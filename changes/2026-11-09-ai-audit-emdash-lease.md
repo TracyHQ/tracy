@@ -1,0 +1,3 @@
+- **EmDash content writes now wait for a confirmed Tracy site lease and refuse when the lease door is unavailable or unconfirmed** — Codex · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-09
+  **Affects:** the `tracy-site-tools` dsh image and EmDash site editors. Rebuild and deploy the dsh image after the matching `tracy-web` lease door is available; during a web outage or an older web deployment, EmDash writes return `LEASE_DOOR_UNAVAILABLE` without reaching the site.
+  **Why / Measured:** the old path logged an unavailable lease then wrote without serialization. The local Q1 regression exercises HTTP 503, HTTP 404, a 200 without `ok: true`, and a network error; each refuses before the site MCP receives a write.

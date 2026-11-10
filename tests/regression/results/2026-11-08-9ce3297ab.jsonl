@@ -1,0 +1,1 @@
+{"id":"REG-PR-496-emdash-lease-fail-closed","verdict":"PASS","commit":"9ce3297ab95891b04719c81532e754d6120834fb","ran_at":"2026-11-08T17:56:38.832Z","evidence":"tests/regression/.runs/2026-11-08-9ce3297ab/REG-PR-496-emdash-lease-fail-closed.log"}
