@@ -157,6 +157,18 @@ export async function runSiteCheck({
   pages = null
 }) {
   const siteKey = report.site
+  // One read snapshot per check, including rejected reads. A later post-write check starts fresh.
+  const html = new Map()
+  const sharedPageHtml = pageHtml
+    ? (path) => {
+        if (!html.has(path))
+          html.set(
+            path,
+            Promise.resolve().then(() => pageHtml(path))
+          )
+        return html.get(path)
+      }
+    : undefined
   const context = {
     report,
     siteKey,
@@ -164,7 +176,7 @@ export async function runSiteCheck({
     host,
     // Only these kept pages are opened by the host (step 9b's check after a turn, joined by lib/scoped-site-check.js).
     pages,
-    pageHtml,
+    pageHtml: sharedPageHtml,
     // Measured at the demo's addresses; the kept pages answer at the plan's now (page-slug.js).
     baseline: baselineAtRoutes(baseline, report.routes),
     kit,

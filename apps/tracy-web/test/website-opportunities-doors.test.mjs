@@ -3370,6 +3370,33 @@ test(
     assert.equal(twice.body.business.action.id, action[0].id)
     const again2 = await w.call(A, 'POST', `${OWN}/${id}/build`, { selection: { auto: true } })
     assert.equal(again2.body.business.action.id, action[0].id)
+    // An explicit Retry keeps the original build/revision/session and replays the same replacement action.
+    const badRetry = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: 'not-a-uuid' })
+    assert.equal(badRetry.status, 400)
+    const activeRetry = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: action[0].id })
+    assert.equal(activeRetry.body.code, 'ACTION_NOT_FAILED')
+    await w.pool.query(
+      `update wo_demo_action set status='failed', error='AGENT_DEMO_ENDED_UNCHECKED' where id=$1`,
+      [action[0].id]
+    )
+    const retried = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: action[0].id })
+    assert.equal(retried.status, 202, JSON.stringify(retried.body))
+    const replacement = (await w.pool.query('select * from wo_demo_action where retry_of=$1', [action[0].id]))
+      .rows[0]
+    assert.equal(replacement.build_request_id, action[0].build_request_id)
+    assert.equal(replacement.revision_id, action[0].revision_id)
+    assert.equal(replacement.session_id, action[0].session_id)
+    const replayedRetry = await w.call(A, 'POST', `${OWN}/${id}/build`, { retryOf: action[0].id })
+    assert.equal(replayedRetry.body.business.action.id, replacement.id)
+    const followingRetry = await w.call(A, 'GET', `${OWN}/${id}`)
+    assert.equal(followingRetry.body.business.action.id, replacement.id)
+    // Completion must not fall back to the original failure, even with equal acceptance timestamps.
+    await w.pool.query(`update wo_demo_action set status='completed' where id=$1`, [replacement.id])
+    const completedRetry = await w.call(A, 'GET', `${OWN}/${id}`)
+    assert.equal(completedRetry.body.business.action.id, replacement.id)
+    await w.pool.query(`update wo_demo_action set status='queued' where id=$1`, [replacement.id])
+    // Keep the remaining assertions on the currently active action.
+    action[0] = replacement
     // Pressed again later (a new request) while that build is still open: the same build, never a new choice
     // that the build door would refuse (24/10/2026).
     const pressedAgain = await w.call(A, 'POST', OWN, { requestId: 'own-press-0002', place: smile })

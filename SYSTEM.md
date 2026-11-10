@@ -2405,6 +2405,11 @@ its bounded second round. New read-back failures and later regressions still und
 summary records per-turn verdicts, regressions, newly observed findings, remaining failures and any structured reasons the undo door supplies for a refusal. A red or unmeasured
 final check, failed repair verification or open turn makes the final report `stopped` with `STEP_NINE_CHECK_FAILED`
 and `writeStatus: done`; the chain cannot count a completed write as an accepted site.
+A Stop acknowledgement is not proof that a native turn ended. If its record remains open after the settle window,
+or cannot be read after Stop, no further repair writer starts and no undo runs while a turn remains open.
+The result retains the open turn as unverified. Rate waiting and comment request submission count toward the overall
+step deadline, but the native turn's execution window starts only after its prompt is accepted. Within one site check,
+HTML reads of the exact same path are shared across groups, including failures; the next check reads fresh pages.
 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
@@ -2906,6 +2911,15 @@ opens with a "Tracy's pick" frame from `requestTemplatePick(…, {recommended})`
 `/ops` WO). The browser calls WO's `chat/prepare` then opens `/<site>/s/<session>?wo-demo-chat=<action>`; the WO plugin on
 the destination page sends the brief as with a demo. On an http stand (no `crypto.subtle`) the plugin does not re-hash the brief itself; the
 `chat/send` door still matches `briefHash`.
+
+For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
+follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
+a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds.
+An explicit `POST …/:id/build` with `{retryOf:<failed action id>}` retries the same owned business using the shared
+acceptance path: the original revision, build request, template and session remain frozen. The Retry request id is
+stable per failed action, and state reads follow the replacement action. Sending a new template with Retry is refused.
+The writer and plan guide require a review quote only when frozen usable review evidence contains one; absent reviews
+do not prevent writing articles or other pages. Existing review attribution and hold rules still apply.
 
 The customer's site is not a demo: no retention clock (`startDemoClock` skips `ownSite` actions), not shown
 in the WO list (`stagedSql`), no outreach. The message shown in chat is a single sentence; the steps are in

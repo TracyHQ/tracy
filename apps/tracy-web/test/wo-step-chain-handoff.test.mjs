@@ -96,13 +96,14 @@ async function world(template) {
     log: { warn() {}, error() {} }
   }
   // What the browser sends for a Build press: the agent-demo workflow in chat-send mode.
-  const press = () =>
+  const press = (extra = {}) =>
     acceptDemoActions(pool, {
       accountId: account,
       entries: [
         {
           opportunityId: opportunity,
           requestId: 'press-once',
+          ...extra,
           workflow: 'agent-demo/1',
           chatMode: 'client-send/1',
           selection: { cms: template.cms, design: template.design, quickstart: template.quickstart }
@@ -191,5 +192,25 @@ test(
     assert.equal(w.created.length, 1)
     assert.equal(w.created[0].workflow, 'agent-demo/1')
     assert.equal(Object.hasOwn(w.created[0], 'researchRevisionId'), false)
+  }
+)
+
+test(
+  'an own-site Build press also selects the chain without a second chat writer or retention clock',
+  opts,
+  async () => {
+    const w = await world(CHAIN)
+    await w.pool.query(
+      `update wo_opportunity set candidate = '{"ownSite":{"requestId":"own-test-press"},"trade":"fitness"}'`
+    )
+    const answer = await w.press({ ownSite: true })
+    assert.equal(answer.status, 202, JSON.stringify(answer.body))
+    assert.equal(answer.body.actions[0].chatMode, undefined)
+    await w.run()
+    assert.equal(w.created.length, 1)
+    assert.equal(w.created[0].workflow, STEP_CHAIN_WORKFLOW)
+    assert.equal(w.messages.length, 0)
+    const build = (await w.pool.query('select demo_expires_at from wo_build')).rows[0]
+    assert.equal(build.demo_expires_at, null)
   }
 )

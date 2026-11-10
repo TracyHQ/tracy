@@ -7,9 +7,9 @@
  * the same shared research Website Opportunities runs. Once the research is done the page shows the template Tracy
  * suggests for the business's trade (`autoTemplate`) and the customer keeps it or picks another — the person
  * chooses the CMS and the template, Tracy only suggests (24/10/2026, "combined"). That press accepts one
- * ordinary `agent-demo/1` + `client-send/1` action with `ownSite: true`; the site and its chat are claimed for the
- * customer, and the browser sends the one brief the site's own agent builds the whole site from (`client-demo.js`,
- * `tracy_demo`).
+ * ordinary `agent-demo/1` action with `ownSite: true`. An enabled step-chain template is server-owned;
+ * other templates keep `client-send/1`, claim the site and chat for the customer, and let the browser send
+ * the one brief the site's own agent builds from (`client-demo.js`, `tracy_demo`).
  *
  * 🔒 IT IS THE CUSTOMER'S SITE, NOT A DEMO. No retention clock (`demo-retention.js` `startDemoClock`), not listed
  * among Website Opportunities (`store.js` `stagedSql`), no outreach, a brief that says "website", never "demo".
@@ -21,7 +21,7 @@
  *   GET  /api/sites/from-business/find?q=       → {candidates}: Google places by name and city, any trade
  *   POST /api/sites/from-business               → 202 {business, links?}: {requestId, place | links | url, name?, label?}
  *   GET  /api/sites/from-business/:id           → {business}: research, then `choose` with Tracy's pick, then build
- *   POST /api/sites/from-business/:id/build     → 202 {business}: {selection: {cms, design, quickstart} | {auto}}
+ *   POST /api/sites/from-business/:id/build     → 202 {business}: {selection: {cms, design, quickstart} | {auto}} or {retryOf}
  */
 import { json, requireViewer } from '../lib/http.js'
 import { overLimitOrClosed } from '../lib/rate.js'
@@ -265,19 +265,35 @@ export function ownSiteRoutes(app, h) {
       return refuse(c, 404, 'NOT_FOUND', 'Reload: this business is gone or is not yours.')
     const b = await h.body(c)
     const selection = b?.selection
+    const retryOf = b?.retryOf
+    if (retryOf && selection !== undefined)
+      return refuse(c, 400, 'RETRY_TEMPLATE_FROZEN', 'Retry keeps the original CMS and quickstart.')
+    if (retryOf !== undefined && !UUID.test(String(retryOf)))
+      return refuse(c, 400, 'INVALID_ACTION', 'Send the failed action id as retryOf.')
     if (
-      !selection ||
-      (selection.auto !== true &&
-        !(
-          ['wordpress', 'joomla', 'emdash'].includes(selection.cms) &&
-          selection.design &&
-          selection.quickstart
-        ))
+      !retryOf &&
+      (!selection ||
+        (selection.auto !== true &&
+          !(
+            ['wordpress', 'joomla', 'emdash'].includes(selection.cms) &&
+            selection.design &&
+            selection.quickstart
+          )))
     )
       return refuse(c, 400, 'DEMO_TEMPLATE_REQUIRED', 'Choose a CMS and a template, or keep Tracy’s pick.')
     const state = await stateOf(me.accountId, opp)
-    if (state.phase === 'build') return json(c, { business: state })
-    if (state.phase !== 'choose')
+    if (state.phase === 'build' && !retryOf) return json(c, { business: state })
+    if (retryOf) {
+      // Replaying a Retry returns its existing replacement through acceptActions below.
+      const prior = (
+        await pool.query(
+          `select id from wo_demo_action where id=$1 and account_id=$2 and opportunity_id=$3 and selection->>'ownSite'='true'`,
+          [retryOf, me.accountId, opp.id]
+        )
+      ).rows[0]
+      if (!prior) return refuse(c, 409, 'ACTION_NOT_FAILED', 'Retry a failed action of this business.')
+    }
+    if (state.phase !== 'choose' && !retryOf)
       return refuse(c, 409, 'RESEARCH_NOT_DONE', 'Wait for Tracy to finish reading the business.', {
         business: state
       })
@@ -287,13 +303,16 @@ export function ownSiteRoutes(app, h) {
       entries: [
         {
           opportunityId: opp.id,
-          requestId: `${own.requestId}:build`,
-          selection:
-            selection.auto === true
-              ? { auto: true }
-              : { cms: selection.cms, design: selection.design, quickstart: selection.quickstart },
-          workflow: AGENT_DEMO,
-          chatMode: CLIENT_DEMO,
+          requestId: retryOf ? `own-retry-${retryOf}` : `${own.requestId}:build`,
+          ...(retryOf
+            ? { retryOf }
+            : {
+                selection:
+                  selection.auto === true
+                    ? { auto: true }
+                    : { cms: selection.cms, design: selection.design, quickstart: selection.quickstart }
+              }),
+          ...(!retryOf ? { workflow: AGENT_DEMO, chatMode: CLIENT_DEMO } : {}),
           ownSite: true,
           ...(own.label ? { label: own.label } : {})
         }
@@ -325,9 +344,10 @@ export function ownSiteRoutes(app, h) {
     // again opens it rather than offering a choice the build door then refuses (DEMO_BUILD_ACTIVE, 24/10/2026).
     const action = (
       await pool.query(
-        `select id from wo_demo_action where account_id = $1 and opportunity_id = $2
-           and (request_id = $3 or status in ('queued', 'quality-queued-v1'))
-         order by (request_id = $3) desc, accepted_at desc limit 1`,
+        `select a.id from wo_demo_action a where account_id = $1 and opportunity_id = $2
+           and (request_id = $3 or build_request_id = $3 or status in ('queued', 'quality-queued-v1'))
+           and not exists (select 1 from wo_demo_action replacement where replacement.retry_of = a.id)
+         order by (status in ('queued', 'quality-queued-v1')) desc, accepted_at desc, id desc limit 1`,
         [accountId, opp.id, `${own.requestId}:build`]
       )
     ).rows[0]
