@@ -933,7 +933,9 @@ export function DetailView({
                 source: 'google'
               })),
               ...tripadvisorReviewView(profile, media).map((r) => ({ ...r, source: 'tripadvisor' }))
-            ]
+            ],
+            // Each chip's collected time and page address (#537).
+            sources
           })}
           media={mediaView}
           food={profile?.trade === 'food'}

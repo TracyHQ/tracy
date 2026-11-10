@@ -1,7 +1,7 @@
 /**
  * Photos & video of the Business facts sub-page (#537, design A): filter chips All / Photos / Videos, a grid that
  * starts with an Add more tile, the seller's own media captioned Added by you, then menu files and the pictures kept
- * but not shown as photographs. While research runs the grid waits (only Add more stays): progress shows in the band.
+ * but not shown as photographs; every other tile has its source's glyph in a corner. While research runs the grid waits (only Add more stays): progress shows in the band.
  */
 import { type JSX, useState } from 'react'
 import { Play } from 'lucide-react'
@@ -13,6 +13,7 @@ import { type MediaFilter, filterMedia } from './business-facts-model.ts'
 import type { MediaRowView } from './detail-model.ts'
 import { File, HiddenPictures } from './media-row.tsx'
 import { AddMedia } from './seller-review.tsx'
+import { MediaSourceBadge } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
 
 const FILTERS: MediaFilter[] = ['all', 'photos', 'videos']
@@ -80,7 +81,9 @@ export function FactsMedia({
                 <Badge variant="secondary" className="tracy-wo-facts-owner">
                   {t('source.owner')}
                 </Badge>
-              ) : null}
+              ) : (
+                <MediaSourceBadge t={t} source={tile.source} sourceUrl={tile.sourceUrl} />
+              )}
             </li>
           )
         })}

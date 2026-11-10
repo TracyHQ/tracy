@@ -1439,5 +1439,28 @@ export const en = {
 
   /** The Demo site block (#515). */
   'demoBlock.title': 'Your site',
-  'demoBlock.more': 'More demo actions'
+  'demoBlock.more': 'More demo actions',
+  // Business facts source chips (#537, design A, source-chip-model.ts): one word after each value, full name on hover.
+  'chip.word.google': 'Google',
+  'chip.word.bio': 'Bio',
+  'chip.word.post': 'Post',
+  'chip.word.listing': 'Listing',
+  'chip.word.review': 'Review',
+  'chip.word.profile': 'Profile',
+  'chip.word.website': 'Website',
+  'chip.word.you': 'You',
+  'chip.word.none': 'Not found',
+  'chip.full.bio': '{source} bio',
+  'chip.full.bio.plain': 'The bio',
+  'chip.full.post': '{source} post',
+  'chip.full.post.plain': 'A post',
+  'chip.full.profile': '{source} profile',
+  'chip.full.profile.plain': 'A social profile',
+  'chip.full.review': 'Guest review on {source}',
+  'chip.full.review.plain': 'A guest review',
+  'chip.title.collected': '{source} · collected {date}',
+  'chip.title.you': 'Edited by you',
+  'chip.title.youOn': 'Edited by you on {date}',
+  'chip.title.none': 'The research did not find it',
+  'chip.title.looked': 'Looked on {list}, not found'
 } satisfies Record<string, string>

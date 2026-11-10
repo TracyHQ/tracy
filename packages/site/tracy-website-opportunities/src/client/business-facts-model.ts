@@ -9,6 +9,14 @@ import { type RatingRowView, ratingRowView } from './profile-rating-model.ts'
 import { type HoursRowView, hoursRowView } from './profile-hours-model.ts'
 import { type ReadingItemView, readingRowsView } from './profile-reading-model.ts'
 import { type KeyMessageView, keyMessagesView } from './profile-key-messages-model.ts'
+import {
+  type ChipSourceRow,
+  type SourceChipView,
+  fieldChip,
+  noneChip,
+  readingChip,
+  youChip
+} from './source-chip-model.ts'
 
 type Rec = Record<string, unknown>
 const rec = (v: unknown): Rec => (v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {})
@@ -39,6 +47,8 @@ export interface FactsCardView {
   state: CardState
   origins: Origin[]
   mark: EditMark
+  /** The one source chip of a block value (hours, about) in the card header; null when the source is not known. */
+  chip: SourceChipView | null
 }
 
 export interface ReviewQuoteView {
@@ -62,6 +72,16 @@ export interface BusinessCardView {
   website: string | null
   origins: Origin[]
   marks: { address: EditMark; phone: EditMark }
+  /** The source chip after each value; null where the payload names no source. */
+  chips: {
+    name: SourceChipView | null
+    rating: SourceChipView | null
+    address: SourceChipView | null
+    phone: SourceChipView | null
+    website: SourceChipView | null
+    /** One per other phone, in the order of `phones.others`. */
+    others: (SourceChipView | null)[]
+  }
 }
 
 export interface BusinessFactsView {
@@ -77,6 +97,10 @@ export interface BusinessFactsView {
   team: ReadingItemView[]
   messages: KeyMessageView[]
   reviews: ReviewQuoteView[]
+  /** The source rows (`body.sources`), for each chip's collected time and page address. */
+  sources: ChipSourceRow[]
+  /** The platform the bio was read from (a reading item from the bio carries none), or null. */
+  bioPlatform: string | null
 }
 
 export interface BusinessFactsInput {
@@ -93,6 +117,8 @@ export interface BusinessFactsInput {
   colors: { hex: string; role: string | null }[]
   /** The guest reviews research kept (Google's, then TripAdvisor's). */
   reviews: ReviewQuoteView[]
+  /** The source rows of the opportunity (`body.sources`): kind, page address, collected time. */
+  sources?: ChipSourceRow[]
 }
 
 /** "Tennis & Padel Coach" reads TP; one word gives its first letter; nothing readable gives "?". */
@@ -168,6 +194,39 @@ function provenanceOrigin(profile: Rec, field: string): Origin | null {
   return source === 'seller' ? { kind: 'you' } : { kind: 'source', source }
 }
 
+/**
+ * The source of a field's shown value: the one the server credits (`provenance`, the seller for an edit). The name
+ * on the site may be another source's word or the seller's pick, so it is credited to the first source that states
+ * that very name (`evidence`), and to none when no source does.
+ */
+function valueSource(profile: Rec, field: string, value: string | null): string | null {
+  const credited = text(rec(rec(profile.provenance)[field]).source)
+  if (field !== 'name' || credited === 'seller') return credited
+  const fold = (v: string) => v.toLocaleLowerCase().replace(/\s+/g, ' ')
+  const evidence = rec(profile.evidence).name
+  if (value === null || !Array.isArray(evidence)) return null
+  const hit = evidence.map(rec).find((e) => fold(text(e.value) ?? '') === fold(value))
+  return Array.isArray(hit?.sources) ? text(hit.sources[0]) : null
+}
+
+/** The chip of one reading item (services, audience, service area, team). */
+export function itemChipOf(view: Pick<BusinessFactsView, 'sources' | 'bioPlatform'>, item: ReadingItemView) {
+  const platform = item.from === 'bio' ? view.bioPlatform : (item.platform ?? null)
+  return readingChip(item.from, platform, item.url, view.sources)
+}
+
+/** The chip of a key message, from the text its first quote stands on; null when the server does not say. */
+export function messageChipOf(view: Pick<BusinessFactsView, 'sources' | 'bioPlatform'>, m: KeyMessageView) {
+  if (m.from === undefined || m.from === null) return null
+  const platform = m.from.kind === 'bio' ? view.bioPlatform : m.from.platform
+  return readingChip(m.from.kind, platform, m.from.url, view.sources)
+}
+
+/** The chip of a guest review: Review, on Google or TripAdvisor. */
+export function reviewChipOf(view: Pick<BusinessFactsView, 'sources'>, r: ReviewQuoteView): SourceChipView {
+  return readingChip('review', r.source, null, view.sources)
+}
+
 const readingOrigins = (items: { from: 'bio' | 'post' | 'review' }[]): Origin[] =>
   uniqueOrigins(items.map((i) => ({ kind: 'reading', from: i.from })))
 
@@ -177,16 +236,30 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
   const candidate = rec(input.candidate)
   const researched = input.researched
   const mark = (field: string): EditMark => (researched ? editMarkOf(input, field) : null)
+  const rows = input.sources ?? []
+  const editedAt = (field: string): string | null =>
+    text(rec(rec(rec(candidate.profileEdits)[field])).at) ?? text(rec(rec(profile.provenance)[field]).seenAt)
+  const chipOf = (field: string, value: string | null): SourceChipView | null =>
+    researched && value !== null
+      ? fieldChip(valueSource(profile, field, value), field, rows, editedAt(field))
+      : null
+  const bioEvidence = rec(profile.evidence).bio
+  const bioFirst = Array.isArray(bioEvidence) ? rec(bioEvidence[0]).sources : null
+  const bioCredited = text(rec(rec(profile.provenance).bio).source)
+  const bioPlatform =
+    (Array.isArray(bioFirst) ? text(bioFirst[0]) : null) ?? (bioCredited === 'seller' ? null : bioCredited)
 
   const phones = researched ? phonesView(profile) : null
   const candidatePhone = text(candidate.phone)
+  const address = (researched ? text(profile.address) : null) ?? text(candidate.address)
+  const rating = researched ? ratingRowView(profile) : null
   const business: BusinessCardView = {
     name: input.name,
     initials: initialsOf(input.name),
     markColors: researched ? markColorsOf(input.colors) : null,
     category: text(candidate.category),
-    rating: researched ? ratingRowView(profile) : null,
-    address: (researched ? text(profile.address) : null) ?? text(candidate.address),
+    rating,
+    address,
     phones:
       phones ?? (candidatePhone === null ? null : { main: candidatePhone, mainWhatsapp: false, others: [] }),
     website: text(candidate.website),
@@ -202,7 +275,20 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
             )
         )
       : [],
-    marks: { address: mark('address'), phone: mark('phone') }
+    marks: { address: mark('address'), phone: mark('phone') },
+    chips: {
+      name: chipOf('name', input.name),
+      // Google's rating, read from the Google Places listing.
+      rating: rating === null ? null : fieldChip('google-places', 'rating', rows),
+      address: researched && text(profile.address) !== null ? chipOf('address', address) : null,
+      phone: phones === null ? null : chipOf('phone', phones.main),
+      // The website is the link the search or the seller gave: no source is named. One research did not find says so.
+      website: researched && text(candidate.website) === null ? noneChip() : null,
+      others: (phones?.others ?? []).map((o) => {
+        const first = o.sources[0]
+        return first === undefined ? null : fieldChip(first, 'phone', rows)
+      })
+    }
   }
 
   const hours = researched ? hoursRowView(profile) : null
@@ -231,7 +317,8 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     column,
     state: state(filled),
     origins: researched && filled ? origins : [],
-    mark: m
+    mark: m,
+    chip: null
   })
   const cards: FactsCardView[] = [
     card(
@@ -264,6 +351,18 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     card('messages', 'left', messages.length > 0, []),
     card('reviews', 'right', reviews.length > 0, [])
   ]
+  // Hours and About are one block each: their chip sits once in the card header.
+  for (const c of cards) {
+    if (c.state !== 'filled') continue
+    if (c.id === 'hours')
+      c.chip =
+        hoursChoice === 'edit'
+          ? youChip()
+          : hoursSource === null
+            ? null
+            : fieldChip(hoursSource, 'hours', rows)
+    if (c.id === 'about') c.chip = mark('bio') !== null ? youChip(editedAt('bio')) : chipOf('bio', about)
+  }
   // A team or guest reviews the research did not find leave no empty card behind; the other groups say Not found.
   const shown = cards.filter((c) => !((c.id === 'team' || c.id === 'reviews') && c.state === 'none'))
   return {
@@ -277,7 +376,9 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     serviceAreas,
     team,
     messages,
-    reviews
+    reviews,
+    sources: rows,
+    bioPlatform: researched ? bioPlatform : null
   }
 }
 

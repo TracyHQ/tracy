@@ -1,47 +1,18 @@
 /**
- * The small pieces of the Business facts cards (#537, design A): a card with its title and one Edit, the caption of
- * where its facts come from, the edit marks, and the business card on top.
+ * The small pieces of the Business facts cards (#537, design A): a card with its title and one Edit, the edit marks,
+ * and the business card on top, each value followed by its source chip (`source-chip.tsx`).
  */
 import { Fragment, type JSX, type ReactNode, useState } from 'react'
 import { Eye, Globe, MapPin, Pencil, Phone } from 'lucide-react'
 import { Badge, Button } from '@tracy/ui'
 
 import { mediaUrl } from './api.ts'
-import { sourceLabel } from './cms-label.ts'
-import type { BusinessCardView, EditMark, Origin } from './business-facts-model.ts'
+import type { BusinessCardView, EditMark } from './business-facts-model.ts'
 import type { LogoView } from './detail-model.ts'
 import { ratingActions, ratingText } from './profile-rating-model.ts'
 import type { RatingChoice } from './profile-rating-row.tsx'
+import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
-
-/** "From Google Places, Instagram · From the bio · You entered this". */
-export function originsText(t: Translate, origins: Origin[]): string {
-  const named = origins.flatMap((o) => (o.kind === 'source' ? [sourceLabel(t, o.source)] : []))
-  const parts: string[] = []
-  if (named.length > 0) parts.push(t('brief.source.from', { list: named.join(', ') }))
-  for (const o of origins) if (o.kind === 'reading') parts.push(t(`reading.from.${o.from}`))
-  if (origins.some((o) => o.kind === 'you')) parts.push(t('brief.source.you'))
-  return parts.join(' · ')
-}
-
-export function Caption({
-  t,
-  origins,
-  children
-}: {
-  t: Translate
-  origins: Origin[]
-  children?: ReactNode
-}): JSX.Element | null {
-  const words = originsText(t, origins)
-  if (words === '' && children === undefined) return null
-  return (
-    <p className="tracy-wo-facts-cap">
-      {words === '' ? null : <span>{words}</span>}
-      {children}
-    </p>
-  )
-}
 
 export function Mark({ t, mark }: { t: Translate; mark: EditMark }): JSX.Element | null {
   if (mark === null) return null
@@ -163,12 +134,14 @@ function RatingLine({
   t,
   view,
   locale,
-  failed
+  failed,
+  chip
 }: {
   t: Translate
   view: NonNullable<BusinessCardView['rating']>
   locale: string
   failed: boolean
+  chip: BusinessCardView['chips']['rating']
 }): JSX.Element {
   const note = view.shown
     ? 'facts.rating.shown'
@@ -194,6 +167,7 @@ function RatingLine({
             {t('rating.few')}
           </Badge>
         ) : null}
+        <SourceChip t={t} chip={chip} locale={locale} />
       </span>
       <span className="tracy-wo-facts-sub tracy-wo-small">
         <Eye aria-hidden="true" className="tracy-wo-icon" />
@@ -216,11 +190,14 @@ export function BusinessCard({
   logo,
   websiteLink,
   onRating,
-  edit
+  edit,
+  looked
 }: {
   t: Translate
   locale: string
   view: BusinessCardView
+  /** The sources research read, named, for the Not found title of the website. */
+  looked: string[]
   logo: LogoView
   websiteLink: (url: string) => JSX.Element
   onRating: (choice: RatingChoice) => Promise<boolean>
@@ -248,6 +225,8 @@ export function BusinessCard({
     )
   const phones = view.phones
   const others = phones?.others ?? []
+  // "Other: {list}." in the interface language, split where the numbers (each with its chip) go.
+  const [othersBefore = '', othersAfter = ''] = t('facts.phone.others', { list: '\u0000' }).split('\u0000')
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
   const saveRating = async (choice: RatingChoice): Promise<void> => {
@@ -276,7 +255,10 @@ export function BusinessCard({
         <span className="tracy-wo-facts-hero">
           {mark}
           <span className="tracy-wo-facts-hero-name">
-            <span className="tracy-wo-facts-bn">{view.name}</span>
+            <span className="tracy-wo-facts-bn">
+              {view.name}
+              <SourceChip t={t} chip={view.chips.name} locale={locale} />
+            </span>
             {view.category === null ? null : (
               <Badge variant="outline" className="tracy-wo-chip-mute">
                 {view.category}
@@ -287,12 +269,15 @@ export function BusinessCard({
       }
       edit={edit}
     >
-      {view.rating === null ? null : <RatingLine t={t} view={view.rating} locale={locale} failed={failed} />}
+      {view.rating === null ? null : (
+        <RatingLine t={t} view={view.rating} locale={locale} failed={failed} chip={view.chips.rating} />
+      )}
       <ul className="tracy-wo-facts-contacts">
         <li>
           <MapPin aria-hidden="true" className="tracy-wo-icon" />
           <span>
             {view.address ?? <span className="tracy-wo-muted">{t('reason.not_collected')}</span>}
+            <SourceChip t={t} chip={view.chips.address} locale={locale} />
             <Mark t={t} mark={view.marks.address} />
           </span>
         </li>
@@ -309,20 +294,21 @@ export function BusinessCard({
                     {t('phone.main')}
                   </Badge>
                 ) : null}
+                <SourceChip t={t} chip={view.chips.phone} locale={locale} />
                 <Mark t={t} mark={view.marks.phone} />
               </span>
             )}
             {others.length > 0 ? (
               <span className="tracy-wo-muted tracy-wo-small tracy-wo-facts-block">
-                {t('facts.phone.others', {
-                  list: others
-                    .map((o) => {
-                      const from = o.sources.map((s) => sourceLabel(t, s)).join(', ')
-                      return from === '' ? o.phone : `${o.phone} (${from})`
-                    })
-                    .join(', ')
-                })}{' '}
-                {t('phone.othersNote')}
+                {othersBefore}
+                {others.map((o, i) => (
+                  <Fragment key={o.phone}>
+                    {i > 0 ? ', ' : null}
+                    {o.phone}
+                    <SourceChip t={t} chip={view.chips.others[i] ?? null} locale={locale} />
+                  </Fragment>
+                ))}
+                {othersAfter} {t('phone.othersNote')}
               </span>
             ) : null}
           </span>
@@ -335,10 +321,10 @@ export function BusinessCard({
             ) : (
               websiteLink(view.website)
             )}
+            <SourceChip t={t} chip={view.chips.website} locale={locale} looked={looked} />
           </span>
         </li>
       </ul>
-      <Caption t={t} origins={view.origins} />
     </FactsCard>
   )
 }

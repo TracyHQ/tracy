@@ -14,9 +14,15 @@ import {
   type CardId,
   clipQuote,
   hoursLineParts,
-  initialsOf
+  initialsOf,
+  itemChipOf,
+  messageChipOf,
+  reviewChipOf
 } from './business-facts-model.ts'
-import { ActButton, BusinessCard, Caption, FactsCard, LeftOffTag } from './business-facts-parts.tsx'
+import { ActButton, BusinessCard, FactsCard, LeftOffTag } from './business-facts-parts.tsx'
+import { sourceLabel } from './cms-label.ts'
+import type { ReadingItemView } from './profile-reading-model.ts'
+import { SourceChip } from './source-chip.tsx'
 import { FactsMedia } from './business-facts-media.tsx'
 import type { ColorsView, LogoView, MediaRowView } from './detail-model.ts'
 import { LogoField } from './media-row.tsx'
@@ -57,10 +63,12 @@ const NotYet = ({ t, state }: { t: Translate; state: 'none' | 'notCollected' }):
 
 function HoursCard({
   t,
+  locale,
   view,
   doors
 }: {
   t: Translate
+  locale: string
   view: BusinessFactsView
   doors: FactsDoors
 }): JSX.Element {
@@ -153,6 +161,7 @@ function HoursCard({
           <Clock aria-hidden="true" className="tracy-wo-icon" />
           {t('field.hours')}
           {chip}
+          <SourceChip t={t} chip={card?.chip ?? null} locale={locale} />
           {hours?.left ? <LeftOffTag t={t} /> : null}
         </>
       }
@@ -190,7 +199,6 @@ function HoursCard({
               {t('hours.failed')}
             </span>
           ) : null}
-          <Caption t={t} origins={card.origins} />
         </>
       )}
     </FactsCard>
@@ -199,10 +207,12 @@ function HoursCard({
 
 function TeamList({
   t,
+  locale,
   view,
   doors
 }: {
   t: Translate
+  locale: string
   view: BusinessFactsView
   doors: FactsDoors
 }): JSX.Element {
@@ -228,9 +238,10 @@ function TeamList({
           <span className="tracy-wo-facts-person">
             <span>
               {person.label}
+              <SourceChip t={t} chip={itemChipOf(view, person)} locale={locale} />
               {person.removed || (person.reviewsOnly && !person.onSite) ? <LeftOffTag t={t} /> : null}
             </span>
-            <small>{[person.role, t(`reading.from.${person.from}`)].filter(Boolean).join(' · ')}</small>
+            {person.role === null ? null : <small>{person.role}</small>}
           </span>
           {readingActions(person)
             .filter((p) => p !== 'remove')
@@ -356,11 +367,24 @@ export function BusinessFactsPage({
   }
   const editOf = (id: CardId, rows: () => ReactNode): (() => ReactNode) | null =>
     cardOf(id)?.state === 'notCollected' ? null : rows
+  // Each reading item followed by its chip ("Tennis [Bio], Padel [Bio]").
+  const withChips = (items: ReadingItemView[]): ReactNode =>
+    items.map((i, n) => (
+      <span key={i.id}>
+        {n > 0 ? ', ' : null}
+        {i.label}
+        <SourceChip t={t} chip={itemChipOf(view, i)} locale={locale} />
+      </span>
+    ))
+  const looked = view.sources
+    .filter((s) => typeof s.collectedAt === 'string' && s.collectedAt !== '')
+    .map((s) => sourceLabel(t, s.source, s.ref ?? null))
+    .filter((name, i, all) => all.indexOf(name) === i)
   const left: JSX.Element[] = []
   const right: JSX.Element[] = []
   for (const card of view.cards) {
     let el: JSX.Element | null = null
-    if (card.id === 'hours') el = <HoursCard key="hours" t={t} view={view} doors={doors} />
+    if (card.id === 'hours') el = <HoursCard key="hours" t={t} locale={locale} view={view} doors={doors} />
     if (card.id === 'services')
       el = (
         <FactsCard
@@ -376,7 +400,10 @@ export function BusinessFactsPage({
                 {view.services
                   .filter((s) => !s.removed)
                   .map((s) => (
-                    <li key={s.id}>{s.label}</li>
+                    <li key={s.id}>
+                      {s.label}
+                      <SourceChip t={t} chip={itemChipOf(view, s)} locale={locale} />
+                    </li>
                   ))}
               </ul>
               <dl className="tracy-wo-facts-kv">
@@ -389,17 +416,11 @@ export function BusinessFactsPage({
                   items.filter((i) => !i.removed).length === 0 ? null : (
                     <div key={key}>
                       <dt>{t(key)}</dt>
-                      <dd>
-                        {items
-                          .filter((i) => !i.removed)
-                          .map((i) => i.label)
-                          .join(', ')}
-                      </dd>
+                      <dd>{withChips(items.filter((i) => !i.removed))}</dd>
                     </div>
                   )
                 )}
               </dl>
-              <Caption t={t} origins={card.origins} />
             </>
           ))}
         </FactsCard>
@@ -410,14 +431,16 @@ export function BusinessFactsPage({
           key="about"
           t={t}
           id="about"
-          title={t('field.bio')}
+          title={
+            <>
+              {t('field.bio')}
+              <SourceChip t={t} chip={card.chip} locale={locale} />
+            </>
+          }
           edit={editOf('about', () => doors.field('bio', view.about ?? ''))}
         >
           {body('about', () => (
-            <>
-              <p className="tracy-wo-facts-about">{view.about}</p>
-              <Caption t={t} origins={card.origins} />
-            </>
+            <p className="tracy-wo-facts-about">{view.about}</p>
           ))}
         </FactsCard>
       )
@@ -431,10 +454,7 @@ export function BusinessFactsPage({
           edit={editOf('team', () => doors.readingRows(['team']))}
         >
           {body('team', () => (
-            <>
-              <TeamList t={t} view={view} doors={doors} />
-              <Caption t={t} origins={card.origins} />
-            </>
+            <TeamList t={t} locale={locale} view={view} doors={doors} />
           ))}
         </FactsCard>
       )
@@ -462,7 +482,10 @@ export function BusinessFactsPage({
             <ol className="tracy-wo-facts-msgs">
               {view.messages.map((m) => (
                 <li key={m.id}>
-                  <span>{m.label}</span>
+                  <span>
+                    {m.label}
+                    <SourceChip t={t} chip={messageChipOf(view, m)} locale={locale} />
+                  </span>
                   {m.quotes.slice(0, 1).map((q) => (
                     <q key={q}>{q}</q>
                   ))}
@@ -488,13 +511,8 @@ export function BusinessFactsPage({
                 <li key={`${r.author}-${i}`}>
                   <q>{clipQuote(r.text)}</q>
                   <small>
-                    {[
-                      r.author,
-                      r.source === 'tripadvisor' ? 'TripAdvisor' : 'Google',
-                      r.rating === null ? null : `★ ${r.rating}`
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
+                    {[r.author, r.rating === null ? null : `★ ${r.rating}`].filter(Boolean).join(' · ')}
+                    <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />
                   </small>
                 </li>
               ))}
@@ -514,6 +532,7 @@ export function BusinessFactsPage({
         websiteLink={websiteLink}
         onRating={doors.saveRating}
         edit={businessEdit}
+        looked={looked}
       />
       <div className="tracy-wo-facts-grid">
         <div className="tracy-wo-facts-col">{left}</div>

@@ -15,6 +15,8 @@ export interface ReadingItemView {
   from: ReadingSource
   /** The post the quote is from, when it has an address. */
   url: string | null
+  /** The platform of the text (`instagram`, `google`...), when the server names it; a bio carries none. */
+  platform?: string | null
   /** Team only: the role a text gives the person. */
   role: string | null
   /** Removed from the site by the person. */
@@ -56,6 +58,7 @@ function itemOf(v: unknown): ReadingItemView | null {
     quote,
     from,
     url: url !== null && url.startsWith('https://') ? url : null,
+    platform: text(source.source),
     role: text(i.role),
     removed: i.removed === true,
     reviewsOnly: i.reviewsOnly === true,

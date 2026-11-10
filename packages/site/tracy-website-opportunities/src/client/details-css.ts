@@ -135,6 +135,15 @@ export const DETAILS_CSS =
 .tracy-wo-facts-card[data-card='reviews'] .tracy-wo-facts-aside { text-align: right; }
 .tracy-wo-facts-cap { margin: 2px 0 0; font-size: 11.5px; line-height: 16px; color: var(--muted-foreground); }
 .tracy-wo-facts-cap::before { content: ""; display: inline-block; width: 5px; height: 5px; margin-right: 6px; vertical-align: 2px; border-radius: 50%; background: color-mix(in oklab, var(--muted-foreground) 60%, transparent); }
+/* The source chip after each value (design A): small, muted, one word; the title names the source in full. */
+.tracy-wo-sc { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 0 5px 0 4px; border: 1px solid var(--border); border-radius: 5px; background: var(--card, var(--background)); color: color-mix(in oklab, var(--muted-foreground) 75%, var(--card, var(--background))); font-size: 10.5px; font-weight: 400; line-height: 16px; letter-spacing: 0; white-space: nowrap; vertical-align: 1px; cursor: default; }
+.tracy-wo-sc svg { flex: none; width: 10px; height: 10px; }
+.tracy-wo-sc:hover { color: var(--foreground); border-color: color-mix(in oklab, var(--muted-foreground) 60%, var(--card, var(--background))); }
+.tracy-wo-sc[data-word='you'] { background: var(--muted); color: var(--muted-foreground); }
+.tracy-wo-sc[data-word='none'] { border-style: dashed; }
+.tracy-wo-facts-card-head > h3 > .tracy-wo-sc { margin-left: 0; }
+.tracy-wo-facts-bdg { position: absolute; right: 5px; bottom: 5px; z-index: 1; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; background: rgb(0 0 0 / 50%); color: white; pointer-events: auto; }
+.tracy-wo-facts-bdg svg { width: 11px; height: 11px; }
 .tracy-wo-facts-empty { margin: 0; }
 .tracy-wo-facts-edit { display: flex; flex-direction: column; gap: 10px; }
 .tracy-wo-facts-field { display: flex; flex-direction: column; gap: 4px; }

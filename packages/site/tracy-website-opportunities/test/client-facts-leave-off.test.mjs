@@ -85,7 +85,7 @@ const MEDIA = {
   videos: { tiles: [] },
   files: []
 }
-const draw = (p) => {
+const draw = (p, { media = MEDIA, running = true, sources = [] } = {}) => {
   const view = lib.businessFactsView({
     profile: p,
     candidate: { name: 'Harbour Kite Lessons' },
@@ -94,7 +94,8 @@ const draw = (p) => {
     approval: { profile: 'needed' },
     briefCreatedAt: null,
     colors: [],
-    reviews: []
+    reviews: [],
+    sources
   })
   const doors = {
     nameRow: null,
@@ -113,12 +114,12 @@ const draw = (p) => {
       t,
       locale: 'en',
       view,
-      media: MEDIA,
+      media,
       doors,
       food: false,
       websiteLink: (u) => u,
       researchDetails: null,
-      running: true
+      running
     })
   )
 }
@@ -201,4 +202,47 @@ test('a team member left off stays in the list with the tag and a right aligned 
   assert.deepEqual(labels(rina), ['[reading.show]'])
   assert.doesNotMatch(omar, /facts\.leftOff/)
   assert.deepEqual(labels(omar), ['[reading.hide]'])
+})
+
+test('source chips sit after their values, the old footer line is gone, and a photo carries its glyph badge', () => {
+  const tile = (id, source) => ({
+    id,
+    kind: 'image',
+    category: 'photo',
+    stored: true,
+    source,
+    sourceUrl: null
+  })
+  const html = draw(
+    {
+      ...profile({
+        rating: null,
+        hoursCheck: { state: 'agreed', hours: ['Monday: 09:00-17:00'], claims: CLAIMS },
+        team: []
+      }),
+      provenance: { address: { source: 'google' } }
+    },
+    {
+      running: false,
+      sources: [{ source: 'google-places', collectedAt: '2026-11-09T08:00:00Z' }],
+      media: {
+        ...MEDIA,
+        photos: { groups: [{ tiles: [tile('m1', 'instagram'), tile('m2', 'owner')] }], hidden: [] }
+      }
+    }
+  )
+  assert.doesNotMatch(html, /brief\.source\.from|reading\.from\./)
+  assert.match(
+    html,
+    /12 Lagoon Walk<span class="tracy-wo-sc" data-word="google" title="\[chip\.title\.collected/
+  )
+  assert.match(head(html, 'hours'), /tracy-wo-sc" data-word="google"/)
+  // No source for the phone: no chip.
+  assert.doesNotMatch(
+    html.slice(html.indexOf('+10 555 0100'), html.indexOf('</li>', html.indexOf('+10 555 0100'))),
+    /tracy-wo-sc/
+  )
+  const media = html.slice(html.indexOf('data-card="media"'))
+  assert.equal((media.match(/tracy-wo-facts-bdg/g) ?? []).length, 1)
+  assert.match(media, /source\.owner/)
 })
