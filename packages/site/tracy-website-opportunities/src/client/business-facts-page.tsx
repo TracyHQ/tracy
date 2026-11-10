@@ -2,14 +2,15 @@
  * The Business facts sub-page (#537, layout C "Single column, stacked fixed bands"): one full-width band per group,
  * top to bottom: the business, Opening hours, Services, About, Team, Brand, Key messages, What guests say, Social
  * pages, Photos & video and Research details. Every band has one fixed height (`BAND_HEIGHTS`), the same for every
- * business, and is always drawn: a missing fact reads N/A. A list longer than the band opens in Show all (n), and
+ * business at a given width, and is always drawn: a missing fact reads N/A. A list longer than the band, or one
+ * whose row hides an item at the width the page has, opens in Show all (n), and
  * Edit opens the band's fields through the doors they always had (name, hours, rating, profile rows, reading, key
  * messages) in a side sheet, so no band ever grows. Before research, and while it runs, the bands say Not collected
  * yet and hold nothing partial: progress shows in the band at the top of the page.
  */
 import type { JSX, ReactNode } from 'react'
 
-import { FactsBand, NotAvailable, OneLine } from './business-facts-band.tsx'
+import { FactsBand, NotAvailable, OneLine, useHidesItems } from './business-facts-band.tsx'
 import { BrandBody, HoursBand, Missing, TeamPeople } from './business-facts-bands.tsx'
 import { FactsMedia } from './business-facts-media.tsx'
 import {
@@ -134,6 +135,10 @@ export function BusinessFactsPage({
     ] as const
   ).map(([key, items]) => [key, items.filter((i) => !i.removed)] as const)
   const serviceCount = serviceGroups.reduce((n, [, items]) => n + items.length, 0)
+  // Rows of chips and people keep one line: what does not fit wraps out of sight and the band offers Show all (n).
+  const [servicesRef, servicesHidden] = useHidesItems<HTMLUListElement>(serviceCount)
+  const [teamRef, teamHidden] = useHidesItems<HTMLUListElement>(view.team.length)
+  const [socialRef, socialHidden] = useHidesItems<HTMLUListElement>(view.social.length)
   const chips = (items: readonly ReadingItemView[]): ReactNode =>
     items.map((s) => (
       <li key={s.id} className="tracy-wo-facts-pill">
@@ -146,7 +151,10 @@ export function BusinessFactsPage({
   const servicesRow = (all: boolean): ReactNode => {
     let left = all ? Number.POSITIVE_INFINITY : BAND_CAPACITY.services
     return (
-      <ul className={all ? 'tracy-wo-facts-chips' : 'tracy-wo-facts-chiprow'}>
+      <ul
+        ref={all ? undefined : servicesRef}
+        className={all ? 'tracy-wo-facts-chips' : 'tracy-wo-facts-chiprow'}
+      >
         {serviceGroups.map(([key, items]) => {
           const shown = items.slice(0, Math.max(0, left))
           left -= shown.length
@@ -193,7 +201,10 @@ export function BusinessFactsPage({
     </ul>
   )
   const socialChips = (limit?: number): ReactNode => (
-    <ul className={limit === undefined ? 'tracy-wo-facts-chips' : 'tracy-wo-facts-chiprow'}>
+    <ul
+      ref={limit === undefined ? undefined : socialRef}
+      className={limit === undefined ? 'tracy-wo-facts-chips' : 'tracy-wo-facts-chiprow'}
+    >
       {view.social.slice(0, limit).map((p) => {
         const name = sourceLabel(t, p.source, p.url)
         return (
@@ -230,7 +241,7 @@ export function BusinessFactsPage({
         title={t('field.services')}
         edit={editOf('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
         more={
-          filled('services') && overflows('services', serviceCount)
+          filled('services') && (overflows('services', serviceCount) || servicesHidden)
             ? { count: serviceCount, render: () => servicesRow(true) }
             : null
         }
@@ -266,7 +277,7 @@ export function BusinessFactsPage({
         title={t('field.team')}
         edit={editOf('team', () => doors.readingRows(['team']))}
         more={
-          filled('team') && overflows('team', view.team.length)
+          filled('team') && (overflows('team', view.team.length) || teamHidden)
             ? {
                 count: view.team.length,
                 render: () => <TeamPeople t={t} locale={locale} view={view} pickReading={doors.pickReading} />
@@ -281,6 +292,7 @@ export function BusinessFactsPage({
             view={view}
             pickReading={doors.pickReading}
             limit={BAND_CAPACITY.team}
+            listRef={teamRef}
           />
         ))}
       </FactsBand>
@@ -365,7 +377,7 @@ export function BusinessFactsPage({
         title={t('facts.social.title')}
         edit={null}
         more={
-          overflows('social', view.social.length)
+          overflows('social', view.social.length) || socialHidden
             ? { count: view.social.length, render: () => socialChips() }
             : null
         }

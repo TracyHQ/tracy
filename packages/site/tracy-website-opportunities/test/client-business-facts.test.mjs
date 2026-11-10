@@ -243,13 +243,14 @@ test('the band set is complete and every band kind has one fixed height, taller 
     'research'
   ])
   for (const id of BAND_IDS) {
-    const [wide, narrow] = BAND_HEIGHTS[id]
+    const [wide, mid, narrow] = BAND_HEIGHTS[id]
     assert.ok(Number.isInteger(wide) && wide > 0, id)
-    assert.ok(narrow >= wide, id)
+    assert.ok(mid >= wide, id)
+    assert.ok(narrow >= mid, id)
   }
   assert.deepEqual(
     BAND_IDS.map((id) => BAND_HEIGHTS[id][0]),
-    [112, 72, 64, 72, 64, 96, 88, 156, 64, 184, 52]
+    [144, 72, 64, 72, 64, 96, 88, 156, 64, 184, 52]
   )
 })
 

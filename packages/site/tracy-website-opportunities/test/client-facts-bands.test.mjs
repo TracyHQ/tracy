@@ -15,7 +15,12 @@ import path from 'node:path'
 import { after, before, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { BAND_HEIGHTS, BAND_IDS } from '../src/client/business-facts-model.ts'
+import {
+  BAND_BREAKPOINTS,
+  BAND_HEIGHTS,
+  BAND_IDS,
+  rowHidesItems
+} from '../src/client/business-facts-model.ts'
 import { FACTS_BANDS_CSS } from '../src/client/facts-bands-css.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -173,22 +178,154 @@ test('before research the bands say Not collected yet, never N/A', () => {
   assert.doesNotMatch(band(html, 'team'), /\[facts\.na\]/)
 })
 
-test('the CSS fixes one height per band kind, taller under 720px, and clips every band', () => {
+test('the CSS fixes one height per band kind at each width of the facts column, and clips every band', () => {
+  const [mid, narrow] = BAND_BREAKPOINTS
+  const midBlock = FACTS_BANDS_CSS.slice(
+    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${mid - 1}px)`),
+    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${narrow - 1}px)`)
+  )
+  const narrowBlock = FACTS_BANDS_CSS.slice(
+    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${narrow - 1}px)`)
+  )
+  assert.ok(midBlock.length > 0 && narrowBlock.length > 0)
   for (const id of BAND_IDS) {
-    const [wide, narrow] = BAND_HEIGHTS[id]
+    const [wideH, midH, narrowH] = BAND_HEIGHTS[id]
     assert.match(
       FACTS_BANDS_CSS,
       new RegExp(`\\.tracy-wo-facts-band\\[data-card='${id}'\\] \\{ height: var\\(--wo-band-${id}\\); \\}`)
     )
-    assert.ok(FACTS_BANDS_CSS.includes(`--wo-band-${id}: ${wide}px;`), `${id} wide`)
-    const narrowBlock = FACTS_BANDS_CSS.slice(FACTS_BANDS_CSS.indexOf('@container (max-width: 719px)'))
-    assert.ok(narrowBlock.includes(`--wo-band-${id}: ${narrow}px;`), `${id} narrow`)
+    assert.ok(FACTS_BANDS_CSS.includes(`--wo-band-${id}: ${wideH}px;`), `${id} wide`)
+    assert.ok(midBlock.includes(`--wo-band-${id}: ${midH}px;`), `${id} mid`)
+    assert.ok(narrowBlock.includes(`--wo-band-${id}: ${narrowH}px;`), `${id} narrow`)
   }
+  // The breakpoints read the facts column itself, not the whole tab.
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts \{ container: wo-facts \/ inline-size;/)
+  assert.doesNotMatch(FACTS_BANDS_CSS, /@container \(/)
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band \{[^}]*overflow: hidden;/)
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band-body \{[^}]*overflow: hidden;/)
   // Tokens only: no colour literal, and no halo on focus.
   assert.doesNotMatch(FACTS_BANDS_CSS, /#[0-9a-f]{3,8}\b|rgba?\(|box-shadow/i)
   assert.doesNotMatch(FACTS_BANDS_CSS, /`/)
+})
+
+test('the business band keeps every primary fact readable: four cells under the name, two by two under 900px', () => {
+  // A row of four under the name row, two by two on a mid page; never five squeezed in one row.
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\[data-card='business'\] \.tracy-wo-facts-cells \{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\);[^}]*grid-template-rows: 48px 58px;/
+  )
+  const [mid] = BAND_BREAKPOINTS
+  const midBlock = FACTS_BANDS_CSS.slice(
+    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${mid - 1}px)`)
+  )
+  assert.match(
+    midBlock,
+    /\[data-card='business'\] \.tracy-wo-facts-cells \{ grid-template-columns: repeat\(2, minmax\(0, 1fr\)\); grid-template-rows: 48px 58px 58px; \}/
+  )
+  assert.match(FACTS_BANDS_CSS, /\[data-card='business'\] \.tracy-wo-facts-hero \{ grid-column: 1 \/ -1;/)
+  // The name is never cut before 40 characters on a wide or mid page.
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-hero-name > \.tracy-wo-facts-ln:first-child > \.tracy-wo-facts-ell \{ flex: 0 0 auto; max-width: max\(40ch, calc\(100% - 80px\)\); \}/
+  )
+  // One line values with an ellipsis, never wrapped.
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-ell \{[^}]*text-overflow: ellipsis; white-space: nowrap;/)
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-ln > \.tracy-wo-facts-keep \{ flex: 0 0 auto; max-width: 100%; \}/
+  )
+  // The business band is tall enough for its rows: 2px of border, 24px of padding, the name row, the gaps.
+  const [wideH, midH] = BAND_HEIGHTS.business
+  assert.ok(wideH >= 2 + 24 + 48 + 10 + 58, `wide ${wideH}`)
+  assert.ok(midH >= 2 + 24 + 48 + 10 + 58 + 10 + 58, `mid ${midH}`)
+})
+
+test('the business band draws the whole name, then phone, rating, address and website; the rating is one string', () => {
+  const name = 'Harbour Kite Lessons and Paddle Club Bay'
+  assert.equal(name.length, 40)
+  const view = lib.businessFactsView({
+    profile: {
+      phone: '+10 555 0100',
+      address: '12 Lagoon Walk, Sandbar Bay',
+      googleRating: { state: 'shown', score: 4.8, reviews: 40, few: false, choice: 'show' }
+    },
+    candidate: { name },
+    name,
+    researched: true,
+    approval: { profile: 'needed' },
+    briefCreatedAt: null,
+    colors: [],
+    reviews: [],
+    sources: []
+  })
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.BusinessFactsPage, {
+      t,
+      locale: 'en',
+      view,
+      media: MEDIA,
+      doors: {
+        nameRow: null,
+        saveName: async () => true,
+        field: () => null,
+        saveHours: async () => 'ok',
+        saveRating: async () => true,
+        pickReading: async () => true,
+        readingRows: () => null,
+        keyMessages: null,
+        uploadMedia: async () => null,
+        retryLogo: { busy: false, failed: false, onPress: () => {} }
+      },
+      food: false,
+      websiteLink: (u) => u,
+      researchDetails: null,
+      running: false
+    })
+  )
+  const business = band(html, 'business')
+  assert.match(business, new RegExp(`<span class="tracy-wo-facts-ell" title="${name}">${name}</span>`))
+  const labels = [...business.matchAll(/class="tracy-wo-facts-ck" title="([^"]*)"/g)].map((m) => m[1])
+  assert.deepEqual(labels, ['[field.phone]', '[my.field.rating]', '[field.address]', '[my.field.website]'])
+  // The star, the score and the count in one span that never wraps; the full string in its title.
+  assert.match(
+    business,
+    /<span class="tracy-wo-facts-ell tracy-wo-facts-rating" title="★ 4\.8 · \[facts\.reviews\.other\{&quot;count&quot;:&quot;40&quot;\}\]\n[^"]*"><span class="tracy-wo-facts-stars" aria-hidden="true">★<\/span> <b>4\.8<\/b><span class="tracy-wo-facts-dim"> · \[facts\.reviews\.other/
+  )
+  assert.match(
+    business,
+    /<span class="tracy-wo-facts-ell tracy-wo-facts-keep" title="\+10 555 0100">\+10 555 0100<\/span>/
+  )
+})
+
+test('a row that hides items at the page width offers Show all, even under its capacity', () => {
+  assert.equal(
+    rowHidesItems({ scrollWidth: 600, scrollHeight: 28, clientWidth: 600, clientHeight: 28 }),
+    false
+  )
+  // A chip wrapped to the hidden second line, or days beyond the visible part of the row.
+  assert.equal(
+    rowHidesItems({ scrollWidth: 600, scrollHeight: 62, clientWidth: 600, clientHeight: 28 }),
+    true
+  )
+  assert.equal(
+    rowHidesItems({ scrollWidth: 784, scrollHeight: 42, clientWidth: 520, clientHeight: 42 }),
+    true
+  )
+  // Rows keep one line of fixed height and wrap what does not fit out of sight; the days scroll sideways.
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-chiprow \{[^}]*flex-wrap: wrap;[^}]*height: 28px;[^}]*overflow: hidden;/
+  )
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-band \.tracy-wo-facts-people \{[^}]*flex-wrap: wrap;[^}]*height: 36px;[^}]*overflow: hidden;/
+  )
+  assert.match(
+    FACTS_BANDS_CSS,
+    /\.tracy-wo-facts-band \.tracy-wo-facts-days \{[^}]*grid-auto-columns: 112px;[^}]*overflow-x: auto;/
+  )
+  // The check and its choices sit outside the scrolling days, in a cell that keeps its width.
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-hoursrow > \.tracy-wo-facts-status \{ flex: none;/)
 })
 
 test('Show all (n) appears only when a list holds more than its band shows', () => {

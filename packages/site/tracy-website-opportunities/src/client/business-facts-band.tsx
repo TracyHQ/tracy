@@ -4,11 +4,11 @@
  * list, and Edit opens the band's fields, both in a side sheet over the page. Escape closes the sheet and the focus
  * goes back to the control that opened it. Missing facts read N/A.
  */
-import { Fragment, type JSX, type ReactNode, type RefObject, useRef, useState } from 'react'
+import { Fragment, type JSX, type ReactNode, type RefObject, useEffect, useRef, useState } from 'react'
 import { ExternalLink, Pencil } from 'lucide-react'
 import { Button, Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@tracy/ui'
 
-import type { BandId } from './business-facts-model.ts'
+import { type BandId, rowHidesItems } from './business-facts-model.ts'
 import type { Translate } from './strings.ts'
 
 /** A missing fact: N/A, muted, the reason in its title. */
@@ -26,6 +26,29 @@ export function NotAvailable({
       {t('facts.na')}
     </span>
   )
+}
+
+/**
+ * Watches a row that clips what does not fit and says whether it hides items at the width the page has now, so the
+ * band can offer Show all (n). `count` is the number of items drawn: the row is measured again when it changes.
+ * Nothing is measured on the server: there the band falls back to its capacity.
+ */
+export function useHidesItems<T extends HTMLElement>(count: number): [RefObject<T | null>, boolean] {
+  const ref = useRef<T | null>(null)
+  const [hides, setHides] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (el === null || typeof ResizeObserver === 'undefined') {
+      setHides(false)
+      return
+    }
+    const measure = (): void => setHides(rowHidesItems(el))
+    measure()
+    const watch = new ResizeObserver(measure)
+    watch.observe(el)
+    return () => watch.disconnect()
+  }, [count])
+  return [ref, hides]
 }
 
 /** A long value on one line with an ellipsis; the full text shows on hover. Its chips follow it, never cut. */

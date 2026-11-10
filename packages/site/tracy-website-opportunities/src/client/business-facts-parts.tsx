@@ -1,7 +1,8 @@
 /**
  * The small pieces of the Business facts bands (#537, layout C): the edit marks, the left off tag, the text buttons,
- * and the business band on top, a row of five cells (name, rating, phone, address, website), each value on one
- * line followed by its source chip (`source-chip.tsx`). Its Edit opens the fields in the side sheet.
+ * and the business band on top: the mark and the full name on a first row, then four cells (phone, rating, address,
+ * website), four in a row on a wide page and two by two under 900px, each value on one line followed by its source
+ * chip (`source-chip.tsx`). Its Edit opens the fields in the side sheet.
  */
 import { Fragment, type JSX, type ReactNode, useRef, useState } from 'react'
 import { Pencil } from 'lucide-react'
@@ -53,7 +54,9 @@ export function ActButton({
 /** A cell of the business band: a small label over its value. */
 const Cell = ({ label, children }: { label: string; children: ReactNode }): JSX.Element => (
   <div className="tracy-wo-facts-cell">
-    <span className="tracy-wo-facts-ck">{label}</span>
+    <span className="tracy-wo-facts-ck" title={label}>
+      {label}
+    </span>
     {children}
   </div>
 )
@@ -94,15 +97,18 @@ function RatingCell({
       : t(view.reviews === 1 ? 'facts.reviews.one' : 'facts.reviews.other', {
           count: new Intl.NumberFormat(locale).format(view.reviews)
         })
+  const score = ratingText(view.score, locale)
+  const full = count === '' ? `★ ${score}` : `★ ${score} · ${count}`
   return (
     <>
-      <span className="tracy-wo-facts-ln" title={t(note)}>
-        <span className="tracy-wo-facts-stars" aria-hidden="true">
-          ★
-        </span>
-        <b>{ratingText(view.score, locale)}</b>
-        <span className="tracy-wo-facts-ell tracy-wo-facts-dim" title={count}>
-          {count}
+      <span className="tracy-wo-facts-ln">
+        {/* One string that never wraps: the star, the score and the count; the count ends in an ellipsis first. */}
+        <span className="tracy-wo-facts-ell tracy-wo-facts-rating" title={`${full}\n${t(note)}`}>
+          <span className="tracy-wo-facts-stars" aria-hidden="true">
+            ★
+          </span>{' '}
+          <b>{score}</b>
+          {count === '' ? null : <span className="tracy-wo-facts-dim"> · {count}</span>}
         </span>
         <SourceChip t={t} chip={chip} locale={locale} />
       </span>
@@ -128,7 +134,7 @@ function RatingCell({
   )
 }
 
-/** The business band: five cells in a row (two columns on a narrow page), Edit at the top right. */
+/** The business band: the name row, then phone, rating, address and website (two by two on a narrow page), Edit at the top right. */
 export function BusinessBand({
   t,
   locale,
@@ -186,6 +192,7 @@ export function BusinessBand({
           <div className="tracy-wo-facts-cell tracy-wo-facts-hero">
             {mark}
             <span className="tracy-wo-facts-hero-name">
+              {/* The full name: it ends in an ellipsis only past 40 characters or the width of the row. */}
               <OneLine text={view.name}>
                 <SourceChip t={t} chip={view.chips.name} locale={locale} />
               </OneLine>
@@ -200,32 +207,14 @@ export function BusinessBand({
               </span>
             </span>
           </div>
-          <Cell label={t('my.field.rating')}>
-            {view.rating === null ? (
-              <span className="tracy-wo-facts-ln">{missing}</span>
-            ) : (
-              <RatingCell
-                t={t}
-                view={view.rating}
-                locale={locale}
-                chip={view.chips.rating}
-                onRating={onRating}
-              />
-            )}
-          </Cell>
-          <Cell label={t('field.phone')}>
+          <Cell label={others.length > 0 ? `${t('field.phone')} · ${t('phone.main')}` : t('field.phone')}>
             {phones === null ? (
               <span className="tracy-wo-facts-ln">{missing}</span>
             ) : (
               <span className="tracy-wo-facts-ln">
-                <span className="tracy-wo-facts-ell" title={phones.main}>
+                <span className="tracy-wo-facts-ell tracy-wo-facts-keep" title={phones.main}>
                   {phones.main}
                 </span>
-                {others.length > 0 ? (
-                  <Badge variant="outline" className="tracy-wo-name-chip">
-                    {t('phone.main')}
-                  </Badge>
-                ) : null}
                 <SourceChip t={t} chip={view.chips.phone} locale={locale} />
                 <Mark t={t} mark={view.marks.phone} />
               </span>
@@ -245,6 +234,19 @@ export function BusinessBand({
                 </span>
               </span>
             ) : null}
+          </Cell>
+          <Cell label={t('my.field.rating')}>
+            {view.rating === null ? (
+              <span className="tracy-wo-facts-ln">{missing}</span>
+            ) : (
+              <RatingCell
+                t={t}
+                view={view.rating}
+                locale={locale}
+                chip={view.chips.rating}
+                onRating={onRating}
+              />
+            )}
           </Cell>
           <Cell label={t('field.address')}>
             {view.address === null ? (
