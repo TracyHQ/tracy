@@ -1,0 +1,13 @@
+# Local integrated pipeline verification
+
+The branch includes the WO reliability fixes through commit 1c914b2d37, merged as 10362f4771. It contains origin/develop f25af7cb7b. Acceptance remains incomplete; do not deploy this report as an acceptance verdict.
+
+Nine focused suites ran against isolated PostgreSQL databases: 225 passed, zero failed or skipped. An initial run resolved website-opportunities through a stale local symlink to another checkout, causing three shared-resume failures. Repairing the local workspace link made the same cases pass; no product assertion was removed. The map measurement browser suite passed four cases after serving the external map frame locally; its URL and measured coordinates remain unchanged.
+
+The owned stand uses the branch web source and WO package, with the rebuilt Add site client. Its host/dsh images are reused QA images, so this is not a clean image-build acceptance. Five real fitness businesses exercise JA Boxing, the only template enabled for the new chain: Urban Boxer, Boxica, FitRepublik, SEVEN and Embody Fitness. Their website root pages answered HTTP 200 before intake. Five normal from-business intakes returned 202 with distinct opportunities. A successful intake is not a successful site.
+
+The actual pixel capability test passed on DeepSeek Flash. No independent picture looker, brand reviewer or image drawer credential exists in the local configuration. Their real preflight checks refuse with BRAND_REVIEWER_DOOR_UNSET, SITE_PICTURES_LOOKER_UNSET and SITE_PICTURES_DRAWER_UNSET. A private configuration helper is prepared but refuses to proceed without a provider key; no capability guard was weakened.
+
+The first Urban Boxer build failed while downloading its released quickstart, and its kit download also failed. The host recorded PROVISION_FAILED with a socket read timeout. The site brief reports a failed kit and site-not-up failure; this is not a completed handover. Reused release cache files were checked against their SHA256 names before copying into this stand. The product kit reader then verified every image against the checked-in 1.0.11 kit and returned ok without network. An explicit Retry was requested after the failed action; the original attempt is retained.
+
+A complete build:check was attempted but did not pass: formatting initially needed one fix, and the Turbo tracing run timed out in the host/web tasks. The owned full-check process tree was stopped after these failures to free resources for local acceptance. No borrowed process was stopped. Full gates, five accepted sites and dev E2E remain pending.

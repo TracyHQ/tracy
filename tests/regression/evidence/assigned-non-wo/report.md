@@ -1,6 +1,6 @@
 # Assigned non-WO issues: verification
 
-The branch fixes #536, #307, #392 and #316 in PR #541. No WO source was edited; the WO client bundle was regenerated because it consumes the shared Button.
+The branch fixes #536, #307, #392 and #316 in PR #541. The initial non-WO stage changed only the WO generated bundle through the shared Button. The expanded pipeline integration and its outstanding local/dev acceptance are recorded in [local-pipeline-progress.md](local-pipeline-progress.md).
 
 ## Local results
 

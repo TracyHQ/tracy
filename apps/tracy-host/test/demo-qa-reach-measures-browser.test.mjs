@@ -28,9 +28,17 @@ const PAGE = `<!doctype html><html><body style="margin:0;font:16px sans-serif">
 </body></html>`
 
 test('lists, maps and phones are read as a visitor sees them', opts, async () => {
-  const browser = await playwright.chromium.launch()
+  const browser = await playwright.chromium.launch({ args: ['--disable-features=MacAppCodeSignClone'] })
   try {
     const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+    // The check reads the frame address; loading Google's live map adds no coverage.
+    await page.route('https://www.google.com/maps/embed?*', (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: '<!doctype html><title>Map fixture</title>'
+      })
+    )
     await page.setContent(PAGE)
     const m = await page.evaluate(measurePageInPage, { tolerance: 2, stretch: 0.05, caps: MEASURE_CAPS })
     const cards = m.lists.find((l) => l.selector.includes('.card'))
