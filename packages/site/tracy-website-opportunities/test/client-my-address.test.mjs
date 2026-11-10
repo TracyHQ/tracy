@@ -90,7 +90,7 @@ test('a search longer than the server takes is cut to its 100 characters', () =>
 
 test('a section of Details opened as a sub-page rides as wo-section and reads back after a reload', () => {
   const details = { view: 'mine', stage: 'all', q: '', opp: ID, page: 'details', brief: null }
-  for (const section of ['profile', 'sources', 'brief', 'media']) {
+  for (const section of ['profile', 'brief', 'media']) {
     const search = searchWithAddress('?tab=tracy:website-opportunities', { ...details, section })
     assert.equal(new URLSearchParams(search).get('wo-section'), section)
     assert.deepEqual(addressFromSearch(search), { ...details, section })
@@ -98,6 +98,11 @@ test('a section of Details opened as a sub-page rides as wo-section and reads ba
   // Absent: the two columns of Details, and nothing written.
   const plain = searchWithAddress('', { ...details, section: null })
   assert.equal(new URLSearchParams(plain).get('wo-section'), null)
+  // The Sources sub-page is gone (#537): an old address with it opens the overview of Details.
+  assert.deepEqual(addressFromSearch(`?wo-view=mine&wo-opp=${ID}&wo-page=details&wo-section=sources`), {
+    ...details,
+    section: null
+  })
 })
 
 test('wo-section means nothing without Details: the Demo site, a made up name or the Brief page drop it', () => {

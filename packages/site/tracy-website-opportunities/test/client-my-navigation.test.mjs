@@ -91,6 +91,6 @@ test('page depth: the list 0, Details 1, a section or a brief 2', () => {
   const details = { ...LIST, opp: ID, page: 'details' }
   assert.equal(pageDepth(LIST), 0)
   assert.equal(pageDepth(details), 1)
-  assert.equal(pageDepth({ ...details, section: 'sources' }), 2)
+  assert.equal(pageDepth({ ...details, section: 'profile' }), 2)
   assert.equal(pageDepth({ ...details, page: 'brief', brief: ID }), 2)
 })

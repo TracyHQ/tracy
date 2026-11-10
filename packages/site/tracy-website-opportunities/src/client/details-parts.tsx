@@ -1,24 +1,22 @@
 /**
- * Parts of the Details page (#517) that used to live in the Inspector: a titled section card and the Sources list
- * (the links the owner pasted first, then what research found, each with its status, reason and Try again). Details
- * owns its copy so the page does not depend on the side panel, which goes away. The Workspace card of Details draws
- * the Sources table (source and state, option C of #537); the sub-page draws every row with its details and the two
- * groups.
+ * Parts of the Details page (#517) that used to live in the Inspector: a titled section card and the Sources table of
+ * the Workspace card (source and state, option C of #537). The table is the whole of Sources: a failed row offers Try
+ * again under its pill, and a link the owner pasted can be removed from its row.
  */
 import { interfaceLocale } from '@tracy/core/interface-languages'
-import { collectedLine } from './research-gate-model.ts'
-import { Fragment, type JSX, type ReactNode } from 'react'
-import { Badge, Button } from '@tracy/ui'
+import { X } from 'lucide-react'
+import type { JSX, ReactNode } from 'react'
+import { Spinner } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
 
 import { sourceLabel } from './cms-label.ts'
-import { type SearchPage, searchPagesOf } from './research-again.ts'
-import { pastedLinkOf, sourceGroups } from './source-groups.ts'
+import { pastedLinkOf } from './source-groups.ts'
 import { safeHttpUrl, shortUrl } from './source-links-model.ts'
 import { SourceLogo } from './source-logo.tsx'
+import { type RemoveNotice, type RemoveStep, noticeLineKey, removableLinkOf } from './source-remove-model.ts'
 import { type SourceProgress, type SourceState, sourceStateOf } from './source-table-model.ts'
 import { type StepNodeState, SubStepNode } from './step-node.tsx'
-import { type ShownSource, type SourceInput, type Tone, isShownSource, sourceRow } from './status.ts'
+import { type ShownSource, type SourceInput, isShownSource, sourceRow } from './status.ts'
 import type { Translate } from './strings.ts'
 export function Section({
   title,
@@ -53,34 +51,13 @@ export interface SourceRetry {
   onPress: (source: ShownSource) => void
 }
 
-export function Sources({
-  t,
-  sources,
-  retry,
-  collected = true
-}: {
-  t: Translate
-  sources: SourceInput[]
-  /** Absent where the page cannot start a research: no Retry is drawn. */
-  retry?: SourceRetry
-  /** False before this card's research: a row with nothing yet reads Not collected yet. */
-  collected?: boolean
-}): JSX.Element {
-  if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
-  // The links the owner pasted first; what research looked at by itself below, under its own heading.
-  const { pasted, found } = sourceGroups(sources)
-  const both = pasted.length > 0 && found.length > 0
-  const item = (s: SourceInput): JSX.Element => (
-    <SourceItem key={`${s.source}:${s.pastedLink ?? ''}`} t={t} s={s} retry={retry} collected={collected} />
-  )
-  return (
-    <div className="tracy-wo-srcs">
-      {both ? <p className="tracy-wo-src-group">{t('source.usedHere')}</p> : null}
-      {pasted.map(item)}
-      {both ? <p className="tracy-wo-src-group">{t('source.alsoLookedAt')}</p> : null}
-      {found.map(item)}
-    </div>
-  )
+/** Remove on a pasted source row: the row asked about or being removed, and the line left by a press that did not. */
+export interface SourceRemove {
+  step: RemoveStep
+  notice: RemoveNotice | null
+  onAsk: (url: string) => void
+  onKeep: () => void
+  onConfirm: () => void
 }
 
 /** The band node each row state is drawn with (the same node as the Progress band's sub-steps). */
@@ -93,14 +70,17 @@ const NODE_OF: Readonly<Record<SourceState, StepNodeState>> = {
 }
 
 /**
- * The Sources table of the Workspace card (#537, option C): a Source column (glyph, name, the link as an anchor) and a
- * State column of two lines (state, then the date it was collected or the reason it could not be). No chips.
+ * The Sources table of the Workspace card (#537, option C): one line per source (glyph, name, the link as an anchor,
+ * then the state pill on the right with its date or reason under it). A failed row the page can retry offers Try
+ * again under the pill; a link the owner pasted has a remove control after the pill, which asks on the row first.
  */
 export function SourcesTable({
   t,
   sources,
   researched,
-  progress
+  progress,
+  retry,
+  remove
 }: {
   t: Translate
   sources: SourceInput[]
@@ -108,27 +88,55 @@ export function SourcesTable({
   researched: boolean
   /** The band's research items by source key while research runs (`sourceProgressOf`); none: rows keep their own state. */
   progress?: SourceProgress
+  /** Absent where the page cannot start a research: no Try again is drawn. */
+  retry?: SourceRetry
+  /** Absent where the page cannot remove a source: no remove control is drawn. */
+  remove?: SourceRemove
 }): JSX.Element {
-  if (sources.length === 0) return <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
   const locale = interfaceLocale() ?? 'en'
+  const links = new Set(sources.map(removableLinkOf).filter((l): l is string => l !== null))
+  // A notice whose row went with the reload (Already gone) stays at the foot of the table.
+  const orphan = remove?.notice != null && !links.has(remove.notice.url) ? remove.notice : null
+  const noticeLine = (notice: RemoveNotice): JSX.Element => (
+    <p className="tracy-wo-error tracy-wo-stab-notice" role="alert">
+      {t(noticeLineKey(notice, links.has(notice.url)))}
+    </p>
+  )
+  if (sources.length === 0)
+    return (
+      <>
+        <p className="tracy-wo-muted">{t('inspector.noSources')}</p>
+        {orphan !== null ? noticeLine(orphan) : null}
+      </>
+    )
   return (
-    <div className="tracy-wo-stab" role="table" aria-label={t('details.section.sources')}>
+    <ul className="tracy-wo-stab" aria-label={t('details.section.sources')}>
       {sources.map((s) => {
         const pastedLink = pastedLinkOf(s)
         const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
         const view = sourceStateOf(s, researched, locale, progress)
         const detail =
           view.detail === null ? null : 'text' in view.detail ? view.detail.text : t(view.detail.key)
+        const name = sourceLabel(t, s.source, pastedLink ?? s.ref)
+        const row = sourceRow(s)
+        const retrySource: ShownSource | null =
+          retry !== undefined && view.state === 'failed' && row.retryable && isShownSource(row.source)
+            ? row.source
+            : null
+        const removeUrl = remove === undefined ? null : removableLinkOf(s)
+        const step = removeUrl !== null && remove?.step?.url === removeUrl ? remove.step.phase : null
+        const notice = removeUrl !== null && remove?.notice?.url === removeUrl ? remove.notice : null
         return (
-          <div
+          <li
             key={`${s.source}:${s.pastedLink ?? s.ref ?? ''}`}
             className="tracy-wo-stab-row"
-            role="row"
             data-state={view.state}
+            data-pending={step === 'pending' ? '' : undefined}
+            aria-busy={step === 'pending' ? true : undefined}
           >
-            <span className="tracy-wo-stab-src" role="cell">
+            <span className="tracy-wo-stab-line">
               <SourceLogo source={s.source} href={link ?? s.ref} />
-              <span className="tracy-wo-stab-name">{sourceLabel(t, s.source, pastedLink ?? s.ref)}</span>
+              <span className="tracy-wo-stab-name">{name}</span>
               {link !== null ? (
                 <a
                   href={link}
@@ -140,196 +148,68 @@ export function SourcesTable({
                   {shortUrl(link)}
                 </a>
               ) : null}
+              {step === 'confirm' && remove !== undefined ? (
+                <span className="tracy-wo-stab-state tracy-wo-stab-ask">
+                  <span>{t('source.remove.ask')}</span>
+                  <span className="tracy-wo-stab-acts">
+                    <button
+                      type="button"
+                      className="tracy-wo-stab-act"
+                      data-danger=""
+                      onClick={remove.onConfirm}
+                    >
+                      {t('source.remove.confirm')}
+                    </button>
+                    <button type="button" className="tracy-wo-stab-act" onClick={remove.onKeep}>
+                      {t('source.remove.keep')}
+                    </button>
+                  </span>
+                </span>
+              ) : step === 'pending' ? (
+                <span className="tracy-wo-stab-state">
+                  <Spinner label={t('source.remove.removing')} />
+                </span>
+              ) : (
+                <span className="tracy-wo-stab-state">
+                  <span className="tracy-wo-stab-pill" data-state={view.state}>
+                    <SubStepNode state={NODE_OF[view.state]} label={t(view.key)} />
+                    <span className="tracy-wo-stab-word">{t(view.key)}</span>
+                  </span>
+                  {detail !== null ? <span className="tracy-wo-stab-detail">{detail}</span> : null}
+                  {retrySource !== null && retry !== undefined ? (
+                    <button
+                      type="button"
+                      className="tracy-wo-stab-act"
+                      disabled={retry.busy === retrySource}
+                      onClick={() => retry.onPress(retrySource)}
+                    >
+                      {t('action.retry')}
+                    </button>
+                  ) : null}
+                  {retrySource !== null && retry?.failed === retrySource ? (
+                    <span className="tracy-wo-error tracy-wo-stab-detail" role="alert">
+                      {t('source.retryFailed')}
+                    </span>
+                  ) : null}
+                </span>
+              )}
+              {removeUrl !== null && remove !== undefined && step !== 'confirm' ? (
+                <button
+                  type="button"
+                  className={cn('tracy-wo-stab-remove', step === 'pending' && 'is-on')}
+                  aria-label={t('source.remove.label', { name })}
+                  disabled={step === 'pending'}
+                  onClick={() => remove.onAsk(removeUrl)}
+                >
+                  <X aria-hidden="true" />
+                </button>
+              ) : null}
             </span>
-            <span className="tracy-wo-stab-state" role="cell">
-              <span className="tracy-wo-stab-pill" data-state={view.state}>
-                <SubStepNode state={NODE_OF[view.state]} label={t(view.key)} />
-                <span className="tracy-wo-stab-word">{t(view.key)}</span>
-              </span>
-              {detail !== null ? <span className="tracy-wo-stab-detail">{detail}</span> : null}
-            </span>
-          </div>
+            {notice !== null ? noticeLine(notice) : null}
+          </li>
         )
       })}
-    </div>
-  )
-}
-
-/** One source row: its name and status, then coverage, reason, the pages a search found and Retry. */
-/** The chip of a source row (mock r5): Complete, Not available, or the row's own state while it is not final. */
-const CHIP_CLASS: Readonly<Record<Tone, string>> = {
-  ok: 'tracy-wo-chip-ok',
-  partial: 'tracy-wo-chip-brand',
-  blocked: 'tracy-wo-chip-mute',
-  failed: 'tracy-wo-chip-mute',
-  skipped: 'tracy-wo-chip-mute',
-  waiting: 'tracy-wo-chip-mute'
-}
-
-function SourceItem({
-  t,
-  s,
-  retry,
-  collected: researched
-}: {
-  t: Translate
-  s: SourceInput
-  retry?: SourceRetry
-  collected: boolean
-}): JSX.Element {
-  const row = sourceRow(s)
-  const pastedLink = pastedLinkOf(s)
-  const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
-  const search = searchStatusKey(s)
-  const pages = searchPagesOf(s)
-  // A source that gave nothing reads Not available with one plain line; a server's own key error is never named.
-  const unavailable = search === null && ['failed', 'skipped', 'blocked'].includes(row.tone)
-  const plainReason = unavailable
-    ? s.reason === 'not_found'
-      ? 'source.notFoundHere'
-      : s.reason === 'not_collected'
-        ? 'reason.not_collected'
-        : 'source.couldNotRead'
-    : null
-  const chipKey =
-    search ??
-    (unavailable
-      ? 'source.chip.notAvailable'
-      : row.tone === 'waiting' && !researched
-        ? 'reason.not_collected'
-        : row.statusKey)
-  const reasonKey = unavailable ? null : search === null ? row.reasonKey : null
-  // When its data was collected, the shared research's own date (#524), never when this card's job ended.
-  const collected = collectedLine(t, s, interfaceLocale() ?? 'en')
-  const retrySource = retry !== undefined && row.retryable && isShownSource(row.source) ? row.source : null
-  const coverage =
-    row.total !== null
-      ? t('source.coverage', { fetched: row.fetched, total: row.total })
-      : row.fetched > 0
-        ? t('source.coverageOpen', { fetched: row.fetched })
-        : null
-  const head = (
-    <>
-      <span className="tracy-wo-src-main">
-        <SourceLogo source={row.source} href={link ?? s.ref} />
-        <span className="tracy-wo-src-head">
-          <span className="tracy-wo-src-name">{sourceLabel(t, row.source, pastedLink ?? s.ref)}</span>
-          {link !== null || s.fromSearch || collected !== null || plainReason !== null ? (
-            <span className="tracy-wo-src-sub">
-              {[
-                link !== null ? (
-                  <a
-                    key="link"
-                    href={link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={link}
-                    className="tracy-wo-src-link"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {shortUrl(link)}
-                  </a>
-                ) : null,
-                s.fromSearch ? t('source.fromSearch') : null,
-                collected,
-                plainReason ? t(plainReason) : null
-              ]
-                .filter(Boolean)
-                .map((part, i) => (
-                  <Fragment key={i}>
-                    {i > 0 ? ' · ' : null}
-                    {part}
-                  </Fragment>
-                ))}
-            </span>
-          ) : null}
-        </span>
-      </span>
-      <Badge
-        variant="outline"
-        className={cn('tracy-wo-src-chip', CHIP_CLASS[unavailable ? 'failed' : row.tone])}
-      >
-        {t(chipKey)}
-      </Badge>
-    </>
-  )
-  return (
-    <details
-      className="tracy-wo-src"
-      // Closed by default: the chip and the line under the name say it all; a page waiting for a check opens.
-      open={search === 'again.search.pending' || row.tone === 'partial'}
-    >
-      <summary>{head}</summary>
-      <div className="tracy-wo-src-body">
-        {coverage === null && reasonKey === null && search === null && link === null && !unavailable
-          ? t('inspector.nothingYet')
-          : null}
-        {typeof s.queries === 'number' ? (
-          <span className="tracy-wo-small">{t('again.search.queries', { count: s.queries })} </span>
-        ) : null}
-        {coverage}
-        {coverage !== null && reasonKey !== null ? ' · ' : null}
-        {reasonKey !== null ? t(reasonKey) : null}
-        {pages.length > 0 ? <SearchPages t={t} pages={pages} /> : null}
-        {retry !== undefined && retrySource !== null ? (
-          <span className="tracy-wo-row tracy-wo-wrap tracy-wo-src-retry">
-            <Button
-              type="button"
-              size="sm"
-              variant="outline"
-              disabled={retry.busy === row.source}
-              onClick={() => retry.onPress(retrySource)}
-            >
-              {t('action.retry')}
-            </Button>
-            {retry.failed === row.source ? (
-              <span className="tracy-wo-error" role="alert">
-                {t('source.retryFailed')}
-              </span>
-            ) : null}
-          </span>
-        ) : null}
-      </div>
-    </details>
-  )
-}
-
-/** A search row's own words: a page added, a page waiting for a person, or none found; null for other rows. */
-function searchStatusKey(s: SourceInput): string | null {
-  if (s.source !== 'facebook-search' && s.source !== 'instagram-search') return null
-  if (s.status === 'complete') return s.reason === 'pending' ? 'again.search.pending' : 'again.search.added'
-  if (s.status === 'skipped' && s.reason === 'not_found') return 'again.search.none'
-  return null
-}
-
-const VERDICT_BADGE = { confirmed: 'secondary', pending: 'outline', rejected: 'ghost' } as const
-
-/** The pages a search found: Added, Needs a check (only Tracy's team decides) or Not used, with short evidence. */
-function SearchPages({ t, pages }: { t: Translate; pages: SearchPage[] }): JSX.Element {
-  return (
-    <ul className="tracy-wo-search-pages">
-      {pages.map((p) => (
-        <li key={p.url} className="tracy-wo-search-page">
-          <span className="tracy-wo-row tracy-wo-wrap">
-            <Badge variant={VERDICT_BADGE[p.verdict]}>{t(p.verdictKey)}</Badge>
-            <a href={p.url} target="_blank" rel="noopener noreferrer" className="tracy-wo-demo-url">
-              {p.label}
-            </a>
-          </span>
-          {p.title !== null ? <span className="tracy-wo-small">{p.title}</span> : null}
-          {p.proofKeys.length > 0 ? (
-            <span className="tracy-wo-small">
-              {t('again.proofs', { list: p.proofKeys.map((k) => t(k)).join(', ') })}
-            </span>
-          ) : null}
-          {p.reasonKeys.length > 0 ? (
-            <span className="tracy-wo-small">{p.reasonKeys.map((k) => t(k)).join(' · ')}</span>
-          ) : null}
-          {p.verdict === 'pending' ? (
-            <span className="tracy-wo-small">{t('again.page.pendingNote')}</span>
-          ) : null}
-        </li>
-      ))}
+      {orphan !== null ? <li className="tracy-wo-stab-foot">{noticeLine(orphan)}</li> : null}
     </ul>
   )
 }

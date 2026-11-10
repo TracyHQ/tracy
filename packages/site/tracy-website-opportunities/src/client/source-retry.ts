@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { type AgainPart, type Api, startResearch, startResearchAgain } from './api.ts'
 import { type AgainControl, useResearchAgain } from './research-again-dialog.tsx'
-import type { SourceRetry } from './details-parts.tsx'
+import type { SourceRemove, SourceRetry } from './details-parts.tsx'
+import { type RemoveNotice, type RemoveStep, removeSource } from './source-remove-model.ts'
 import type { RequestIds } from './request-ids.ts'
 import type { ShownSource } from './status.ts'
 
@@ -52,4 +53,37 @@ export function useCardResearchAgain(
         : startResearchAgain(api, opportunityId, ids, parts),
     after
   })
+}
+
+/**
+ * Remove on a pasted source row (#537): the press asks on the row, Remove calls `DELETE …/sources`, then `after`
+ * reloads Details when the source went (or was already gone). A refusal leaves its line under the row.
+ */
+export function useSourceRemove(
+  api: Pick<Api, 'removeSource'>,
+  opportunityId: string | null,
+  after: () => unknown
+): SourceRemove {
+  const [step, setStep] = useState<RemoveStep>(null)
+  const [notice, setNotice] = useState<RemoveNotice | null>(null)
+  const onConfirm = async (): Promise<void> => {
+    if (step === null || step.phase !== 'confirm' || opportunityId === null) return
+    const url = step.url
+    setStep({ url, phase: 'pending' })
+    const outcome = await removeSource(api, opportunityId, url)
+    if (outcome.refresh) await after()
+    setStep(null)
+    setNotice(outcome.noticeKey === null ? null : { url, key: outcome.noticeKey })
+  }
+  return {
+    step,
+    notice,
+    onAsk: (url) => {
+      if (step?.phase === 'pending') return
+      setNotice(null)
+      setStep({ url, phase: 'confirm' })
+    },
+    onKeep: () => setStep(null),
+    onConfirm: () => void onConfirm()
+  }
 }

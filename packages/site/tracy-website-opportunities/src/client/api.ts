@@ -252,6 +252,14 @@ export interface Api {
     opportunityId: string,
     url: string
   ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /**
+   * One pasted link of the business removed (#537); answers the same payload as `addSource`. Refusals: 404
+   * `NOT_FOUND`, 409 `LAST_SOURCE`, 409 `JOB_ACTIVE`.
+   */
+  removeSource(
+    opportunityId: string,
+    url: string
+  ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
   /** A photo or video the seller adds to the Profile (#537), sent as multipart field file. */
   uploadMedia(
     opportunityId: string,
@@ -455,6 +463,7 @@ export function createApi(fetchImpl: FetchLike): Api {
     approveProfile: (opportunityId) => call(`${BASE}/${id(opportunityId)}/profile/approve`, 'POST', {}),
     approveBrief: (opportunityId) => call(`${BASE}/${id(opportunityId)}/brief/approve`, 'POST', {}),
     addSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'POST', { url }),
+    removeSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'DELETE', { url }),
     uploadMedia: (opportunityId, file) => {
       const form = new FormData()
       form.append('file', file, file.name ?? 'upload')

@@ -1,6 +1,6 @@
 /**
  * The sections of Details (layout C, spec #512): two columns of cards, each with its title and one status line beside
- * it, and four of them (Profile, Sources, Business brief, Photos & video) open as a sub-page of their own with a pager
+ * it, and three of them (Profile, Business brief, Photos & video) open as a sub-page of their own with a pager
  * in that order. The status lines read the same inputs as the stepper (`stepper-model.ts`) plus a few counts, so a
  * section never reads Ready while its step is not done.
  * Pure: no DOM, no fetch, no clock read. Dates are formatted with the locale it is given.
@@ -172,15 +172,19 @@ export function sourceCounts(sources: readonly SourceInput[]): SectionMetaInput[
   }
 }
 
-/** A section that opens as a sub-page of its own (`wo-section`); the Demo site stays on Details. */
-export type SubSection = Exclude<SectionId, 'demo'>
+/**
+ * A section that opens as a sub-page of its own (`wo-section`); the Demo site stays on Details, and Sources is the
+ * table on Details alone (#537: a business never has many sources).
+ */
+export type SubSection = Exclude<SectionId, 'demo' | 'sources'>
 /**
  * The sections that open as a sub-page. Photos & video belong to the Profile (#537): `media` stays a valid
- * `wo-section` and opens the Profile sub-page scrolled to its Photos & video part, so the pager never walks it.
+ * `wo-section` and opens the Profile sub-page scrolled to its Photos & video part, so the pager never walks it. An
+ * old address with `wo-section=sources` is no section: it opens the overview.
  */
-export const SUB_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'sources', 'brief', 'media'])
+export const SUB_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'brief', 'media'])
 /** The order of the sub-pages, which their pager walks. */
-export const PAGER_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'sources', 'brief'])
+export const PAGER_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'brief'])
 
 export const isSubSection = (v: unknown): v is SubSection =>
   typeof v === 'string' && (SUB_SECTIONS as readonly string[]).includes(v)

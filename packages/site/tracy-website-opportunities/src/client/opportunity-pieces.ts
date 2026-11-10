@@ -40,10 +40,10 @@ export type NextRun =
   | { kind: 'brief' }
   | { kind: 'demo'; action: 'build' | 'open' | 'rebuild' }
   /**
-   * Opens Details (#537): on the sub-page the step waits on (review the business facts or the brief, research again on
-   * Sources), or on Details itself while a job runs.
+   * Opens Details (#537): on the sub-page the step waits on (review the business facts or the brief), or on Details
+   * itself for research again (its Sources table and the step's own press) and while a job runs.
    */
-  | { kind: 'details'; section?: 'profile' | 'brief' | 'sources' }
+  | { kind: 'details'; section?: 'profile' | 'brief' }
 
 export interface PlacePieces {
   id: string
@@ -208,7 +208,7 @@ function nextOf(
     case 'review-brief':
       return { label, run: { kind: 'details', section: 'brief' }, disabled: false, look }
     case 'research-again':
-      return { label, run: { kind: 'details', section: 'sources' }, disabled: false, look }
+      return { label, run: { kind: 'details' }, disabled: false, look }
   }
 }
 

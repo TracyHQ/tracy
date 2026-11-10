@@ -155,24 +155,12 @@ export const CSS = `
 .tracy-wo-kv.is-wide { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .tracy-wo-kv > div { display: flex; gap: 4px; min-width: 0; }
 .tracy-wo-kv dd { color: var(--foreground); font-weight: 500; font-variant-numeric: tabular-nums; }
-.tracy-wo-srcs { display: flex; flex-direction: column; gap: 4px; }
-.tracy-wo-src { border: 1px solid var(--border); border-radius: 4px; background: var(--background); }
-.tracy-wo-src summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; list-style: none; cursor: pointer; border-radius: 4px; }
-.tracy-wo-src summary::-webkit-details-marker { display: none; }
-.tracy-wo-src summary:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
-.tracy-wo-src-name { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-weight: 500; }
 .tracy-wo-src-icon { width: 14px; height: 14px; flex: 0 0 auto; }
 .tracy-wo-src-icon.is-ok { color: var(--success); }
 .tracy-wo-src-icon.is-failed, .tracy-wo-src-icon.is-blocked { color: var(--destructive); }
 .tracy-wo-src-icon.is-partial { color: var(--primary); }
 .tracy-wo-src-icon.is-waiting, .tracy-wo-src-icon.is-skipped { color: var(--muted-foreground); }
-.tracy-wo-src-retry { margin-top: 6px; }
-.tracy-wo-src-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .tracy-wo-src-pasted, .tracy-wo-src-sub { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
-.tracy-wo-src-group { margin: 8px 0 2px; font-size: 12px; color: var(--muted-foreground); }
-.tracy-wo-src-body { padding: 6px 10px 8px; border-top: 1px solid var(--border); color: var(--muted-foreground); }
-.tracy-wo-search-pages { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-.tracy-wo-search-page { display: flex; flex-direction: column; gap: 2px; padding-top: 6px; border-top: 1px solid var(--border); }
 .tracy-wo-again { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
 .tracy-wo-again-list { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; }
 .tracy-wo-again-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 8px 10px; }

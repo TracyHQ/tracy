@@ -467,10 +467,6 @@ export const en = {
   'source.listing': 'Listing · {host}',
   /** A listing page's source row when its address has no readable host. */
   'source.listingPlain': 'Listing',
-  /** Heading above the sources research looked at by itself, below the links the owner added. */
-  'source.alsoLookedAt': 'Also looked at',
-  'source.usedHere': 'Used for this place',
-  'source.fromSearch': 'Found in your search',
 
   'source.status.complete': 'Complete',
   'source.status.partial': 'Partial',
@@ -479,8 +475,6 @@ export const en = {
   'source.status.skipped': 'Skipped',
   'source.retryFailed': 'The retry did not start. Try again in a moment.',
   'source.status.waiting': 'Waiting',
-  'source.coverage': '{fetched} of {total}',
-  'source.coverageOpen': '{fetched} collected',
 
   'job.none': 'Not researched yet',
   'job.start': 'Research business facts',
@@ -540,7 +534,6 @@ export const en = {
   'inspector.started': 'Started',
   'inspector.finished': 'Finished',
   'inspector.noSources': 'No sources found yet.',
-  'inspector.nothingYet': 'Nothing collected yet.',
   'inspector.next': 'What happens next',
   'inspector.demo': 'Demo site',
   'inspector.noDemo': 'No demo site yet.',
@@ -1013,30 +1006,6 @@ export const en = {
   'again.error.network': 'Tracy could not be reached. Check your connection and try again.',
   'again.error.failed': 'Research again could not start. Try again.',
   /** A search row's state, and each page it found. Only Tracy's team decides on a page that needs a check. */
-  'again.search.added': 'Page added',
-  'again.search.pending': 'A page needs a check',
-  'again.search.none': 'No page found',
-  'again.search.queries': 'Searches: {count}',
-  'again.page.confirmed': 'Added',
-  'again.page.pending': 'Needs a check',
-  'again.page.rejected': 'Not used',
-  'again.page.pendingNote': 'Not added until Tracy’s team checks it.',
-  'again.proofs': 'Matches: {list}',
-  'again.proof.address': 'street address',
-  'again.proof.phone': 'phone',
-  'again.proof.link': 'points to this place',
-  'again.why.name_near': 'Name differs by one letter',
-  'again.why.name_mismatch': 'Different name',
-  'again.why.page_closed': 'The page says the place is closed',
-  'again.why.no_branch_proof': 'Nothing shows it is this branch',
-  'again.why.locality_mismatch': 'Another city',
-  'again.why.locality_unknown': 'City not shown',
-  'again.why.ambiguous': 'More than one page matches',
-  'again.why.phone_differs': 'Different phone',
-  'again.why.shared_phone': 'Phone shared with other places',
-  'again.why.website_differs': 'Points to another website',
-  'again.why.no_page_facts': 'The page could not be read',
-  'again.why.other': 'Other reason',
 
   // The Menu field of a place card (tasks/todo-wo-menu-items.md).
   'source.menuFile': 'Menu file',
@@ -1305,10 +1274,6 @@ export const en = {
     'Brief {n} · made {when}. Your edits to the business facts are newer. Refresh to use them.',
   'profile.collecting': 'Collecting…',
   'profile.filling': 'Filling in as sources finish.',
-  'sources.researchedAt': 'Researched {date}',
-  'source.chip.notAvailable': 'Not available',
-  'source.notFoundHere': 'Not found for this place',
-  'source.couldNotRead': 'Could not be read',
   'source.posts.one': '{count} post',
   'source.posts.other': '{count} posts',
 
@@ -1469,5 +1434,15 @@ export const en = {
   'chip.title.you': 'Edited by you',
   'chip.title.youOn': 'Edited by you on {date}',
   'chip.title.none': 'The research did not find it',
-  'chip.title.looked': 'Looked on {list}, not found'
+  'chip.title.looked': 'Looked on {list}, not found',
+  // Remove a pasted source from the Sources table (#537, source-remove-model.ts).
+  'source.remove.label': 'Remove {name}',
+  'source.remove.ask': 'Remove this source?',
+  'source.remove.confirm': 'Remove',
+  'source.remove.keep': 'Keep',
+  'source.remove.removing': 'Removing',
+  'source.remove.error.LAST_SOURCE': 'Keep at least one source. Add another before removing this one.',
+  'source.remove.error.JOB_ACTIVE': 'Wait for the research to finish.',
+  'source.remove.error.NOT_FOUND': 'This source is already gone.',
+  'source.remove.error.GOOGLE_LINK_NOT_REMOVED': 'The Google listing identifies this business and stays.'
 } satisfies Record<string, string>

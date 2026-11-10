@@ -56,8 +56,6 @@ export const DETAILS_CSS =
 .tracy-wo-brief-steps .tracy-wo-icon.is-done { color: var(--success); }
 .tracy-wo-brief-steps .tracy-wo-icon.is-failed { color: var(--destructive); }
 .tracy-wo-brief-steps .tracy-wo-icon.is-waiting { color: var(--muted-foreground); }
-.tracy-wo-src-chip { flex: none; }
-.tracy-wo-sources-at { font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-details-cols { display: grid; grid-template-columns: minmax(0, 34fr) minmax(0, 66fr); gap: 16px; align-items: start; }
 .tracy-wo-open { flex: none; display: inline-flex; align-items: center; gap: 2px; padding: 0; border: 0; background: transparent; color: var(--primary); font: inherit; font-size: 12.5px; white-space: nowrap; cursor: pointer; }
 .tracy-wo-open svg { width: 14px; height: 14px; }
@@ -65,17 +63,35 @@ export const DETAILS_CSS =
 .tracy-wo-open:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
 .tracy-wo-profile-card .tracy-wo-field dd > span:first-child { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 2px 10px; align-items: baseline; }
-.tracy-wo-stab { display: flex; flex-direction: column; min-width: 0; }
-.tracy-wo-stab-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 220px); min-width: 0; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
-.tracy-wo-stab-src { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 12px 8px 0; }
+.tracy-wo-stab { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 0; list-style: none; }
+/* One line per source (#537): glyph, name and link on the left, the state pill pushed right, then the remove control. */
+.tracy-wo-stab-row { display: flex; flex-direction: column; min-width: 0; border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); }
+.tracy-wo-stab-row[data-pending] { opacity: 0.55; }
+.tracy-wo-stab-line { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 0; }
 .tracy-wo-stab-name { flex: none; white-space: nowrap; }
 .tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }
-.tracy-wo-stab-state { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; min-width: 0; padding: 8px 0 8px 12px; border-left: 1px solid color-mix(in oklab, var(--border) 60%, transparent); font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
+.tracy-wo-stab-state { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex: none; min-width: 0; margin-left: auto; padding-left: 12px; font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
 .tracy-wo-stab-pill { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 9px 2px 6px; border-radius: 999px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 7%, transparent); color: var(--muted-foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
 .tracy-wo-stab-pill[data-state='reading'] { border-color: color-mix(in oklab, var(--primary) 28%, transparent); background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); font-weight: 600; }
 .tracy-wo-stab-pill[data-state='collected'] { border-color: color-mix(in oklab, var(--success) 28%, transparent); background: color-mix(in oklab, var(--success) 12%, transparent); color: var(--success); }
 .tracy-wo-stab-pill[data-state='failed'] { border-color: color-mix(in oklab, var(--destructive) 28%, transparent); background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); }
 .tracy-wo-stab-detail { font-size: 11.5px; color: var(--muted-foreground); opacity: 0.85; }
+.tracy-wo-stab-ask { color: var(--foreground); }
+.tracy-wo-stab-acts { display: inline-flex; gap: 10px; }
+.tracy-wo-stab-act { margin: 0; padding: 0; border: 0; background: none; color: var(--primary); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
+.tracy-wo-stab-act[data-danger] { color: var(--destructive); }
+.tracy-wo-stab-act:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 2px; }
+.tracy-wo-stab-act:disabled { color: var(--muted-foreground); cursor: default; }
+.tracy-wo-stab-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
+.tracy-wo-stab-remove { display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; margin: 0; padding: 0; border: 1px solid transparent; border-radius: 6px; background: none; color: var(--muted-foreground); cursor: pointer; opacity: 0; }
+.tracy-wo-stab-remove > svg { width: 14px; height: 14px; }
+.tracy-wo-stab-row:hover .tracy-wo-stab-remove, .tracy-wo-stab-remove:focus-visible, .tracy-wo-stab-remove.is-on { opacity: 1; }
+.tracy-wo-stab-remove:hover:not(:disabled) { color: var(--foreground); background: color-mix(in oklab, var(--muted) 60%, transparent); }
+.tracy-wo-stab-remove:focus-visible { outline: none; border-color: var(--ring); }
+.tracy-wo-stab-remove:disabled { cursor: default; }
+@media (hover: none) { .tracy-wo-stab-remove { opacity: 1; } }
+.tracy-wo-stab-notice { margin: 0 0 8px; font-size: 12px; text-align: right; }
+.tracy-wo-stab-foot { border-top: 1px solid color-mix(in oklab, var(--border) 60%, transparent); padding-top: 8px; }
 .tracy-wo-sprog { display: inline-flex; flex: none; gap: 2px; margin-right: 8px; vertical-align: middle; }
 .tracy-wo-sprog > i { width: 14px; height: 5px; border-radius: 2px; background: var(--border); }
 .tracy-wo-sprog > i[data-state='collected'] { background: var(--success); }
@@ -88,9 +104,9 @@ export const DETAILS_CSS =
 .tracy-wo-addsrc-pop .tracy-wo-small { margin: 0; }
 .tracy-wo-addsrc-acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
 @container (max-width: 560px) {
-  .tracy-wo-stab-row { grid-template-columns: minmax(0, 1fr) minmax(110px, 40%); }
-  .tracy-wo-stab-src { flex-wrap: wrap; row-gap: 2px; }
-  .tracy-wo-stab-link { flex-basis: 100%; padding-left: 30px; }
+  .tracy-wo-stab-line { flex-wrap: wrap; row-gap: 2px; }
+  .tracy-wo-stab-link { order: 9; flex-basis: 100%; padding-left: 30px; }
+  .tracy-wo-stab-remove { opacity: 1; }
 }
 .tracy-wo-progress { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); }
 .tracy-wo-progress-steps { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
@@ -138,7 +154,6 @@ export const DETAILS_CSS =
 .tracy-wo-facts-card-head { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 8px; min-width: 0; }
 .tracy-wo-facts-card-head > h3 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; flex: 1 1 auto; min-width: 0; margin: 0; font-size: 13.5px; font-weight: 600; line-height: 20px; }
 .tracy-wo-facts-card-head > button { flex: none; }
-.tracy-wo-src-main { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1 1 auto; }
 .tracy-wo-src-logo { flex: none; display: grid; place-items: center; width: 20px; height: 20px; color: var(--muted-foreground); }
 .tracy-wo-src-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
 .tracy-wo-src-link:hover { color: var(--foreground); }

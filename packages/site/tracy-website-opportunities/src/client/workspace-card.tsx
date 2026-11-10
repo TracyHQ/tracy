@@ -153,7 +153,7 @@ function Row({
           <span className="tracy-wo-ws-pill" data-kind="locked" role="img" aria-label={t('workspace.locked')}>
             <Lock aria-hidden="true" />
           </span>
-        ) : linkKey !== null && id !== 'demo' ? (
+        ) : linkKey !== null && id !== 'demo' && id !== 'sources' ? (
           <button
             type="button"
             className="tracy-wo-ws-pill"

@@ -7,10 +7,10 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * and Delete) over two columns of cards. The left column holds Progress (the three steps with the one action of the
  * current step), Profile (the rows the person can check and edit) and Sources (one line each); the right column holds
  * Business brief (the brief line and the first rows of the facts table), Photos & video (two rows of tiles) and Demo
- * site (the block of #515 and every demo). A narrow page is one column in that order. Profile, Sources, Business brief
- * and Photos & video each open as a sub-page (`wo-section`, `details-sections.tsx`) with the whole section: the
- * Profile with menu, Google, reviews, current website, social and place profile; Sources with Research again; the full
- * facts table; every photo and video. A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
+ * site (the block of #515 and every demo). A narrow page is one column in that order. Profile, Business brief and
+ * Photos & video each open as a sub-page (`wo-section`, `details-sections.tsx`) with the whole section: the Profile
+ * with menu, Google, reviews, current website, social and place profile; the full facts table; every photo and video.
+ * Sources is the table on Details alone (#537), with Try again and remove on its rows. A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
  * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
  * opened it).
  */
@@ -102,11 +102,11 @@ import { DetailsHeader } from './details-header.tsx'
 // [TAM] preview panel (temporary, never ships)
 import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
 import { applyPreview } from './preview-states.ts'
-import { Section, Sources, SourcesTable } from './details-parts.tsx'
+import { Section, SourcesTable } from './details-parts.tsx'
 import { sourceProgressOf, sourceStateOf } from './source-table-model.ts'
 import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
 import { DeleteDialog } from './delete-dialog.tsx'
-import { ResearchAgainButton } from './research-again-dialog.tsx'
+import { ResearchAgainDialog } from './research-again-dialog.tsx'
 import { ProfileKeyMessages } from './profile-key-messages.tsx'
 import {
   type KeyMessageView,
@@ -124,7 +124,7 @@ import { BuildEstimate, DemoProgress } from './demo-progress.tsx'
 import { SendDemo } from './send-demo.tsx'
 import { usageFull, type OutreachDraft, type DemoUsage } from './outreach-model.ts'
 import { rowFromDetail } from './inspector-model.ts'
-import { useCardResearchAgain, useSourceRetry } from './source-retry.ts'
+import { useCardResearchAgain, useSourceRemove, useSourceRetry } from './source-retry.ts'
 import { StatusBadge } from './my-places.tsx'
 import { placeStatus } from './opportunity-pieces.ts'
 import { type NextAction, relativeTime } from './opportunity-row.ts'
@@ -333,6 +333,10 @@ export function DetailView({
   const buildChoices = useBuildChoices(api)
   const recommended = useRecommendedDesigns(api, id)
   const retrySource = useSourceRetry(api, ids, id, async () => {
+    await reload()
+    onChanged()
+  })
+  const removeSourceControl = useSourceRemove(api, id, async () => {
     await reload()
     onChanged()
   })
@@ -633,13 +637,10 @@ export function DetailView({
     if (step === 'start-research') return void act('start')
     if (step === 'resume-research') return void act('resume')
     if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
-    // The seller's review steps (#537) open the sub-page to review; research again opens its dialog on Sources.
+    // The seller's review steps (#537) open the sub-page to review; research again opens its dialog where it is.
     if (step === 'review-profile') return onSection('profile')
     if (step === 'review-brief') return onSection('brief')
-    if (step === 'research-again') {
-      onSection('sources')
-      return researchAgain.onOpen()
-    }
+    if (step === 'research-again') return researchAgain.onOpen()
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
@@ -910,14 +911,18 @@ export function DetailView({
     </>
   )
   const dialogs = (
-    <DeleteDialog
-      t={t}
-      locale={locale}
-      ask={deleting}
-      busy={deleteBusy}
-      onCancel={() => setDeleting(null)}
-      onConfirm={() => void confirmDelete()}
-    />
+    <>
+      {/* Research again asks here, from the step strip or the page menu (the Sources sub-page is gone, #537). */}
+      <ResearchAgainDialog t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
+      <DeleteDialog
+        t={t}
+        locale={locale}
+        ask={deleting}
+        busy={deleteBusy}
+        onCancel={() => setDeleting(null)}
+        onConfirm={() => void confirmDelete()}
+      />
+    </>
   )
   const previewPanel = <PreviewPanel preview={preview} /> // [TAM]
 
@@ -992,31 +997,6 @@ export function DetailView({
             ) : null
           }
         />
-      ) : shown === 'sources' ? (
-        <>
-          {research.researchedAt === null || researchMoving ? null : (
-            <span className="tracy-wo-sources-at">
-              {t('sources.researchedAt', {
-                date: new Intl.DateTimeFormat(locale, {
-                  day: 'numeric',
-                  month: 'short',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                }).format(Date.parse(research.researchedAt))
-              })}
-            </span>
-          )}
-          {job !== null && !researchRunning ? (
-            <ResearchAgainButton t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
-          ) : null}
-          <Sources
-            t={t}
-            sources={shownSources}
-            retry={retrySource}
-            collected={research.done && !researchMoving}
-          />
-          {cancelButton}
-        </>
       ) : !research.done ? (
         <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
       ) : briefEmpty !== null ? (
@@ -1074,7 +1054,6 @@ export function DetailView({
           progress={stepperBlock(true)}
           onList={onList}
           onSection={onSection}
-          actions={shown === 'sources' ? addSourceButton : null}
           approval={approvalView}
         >
           {content}
@@ -1104,12 +1083,7 @@ export function DetailView({
         busy={busy}
         onBack={onList}
         menu={{
-          onResearchAgain: researchAgainOpen
-            ? () => {
-                onSection('sources')
-                researchAgain.onOpen()
-              }
-            : undefined,
+          onResearchAgain: researchAgainOpen ? researchAgain.onOpen : undefined,
           onDelete: () => setDeleting({ ids: [row.id], withSite: hasLiveDemo(row) ? 1 : 0, name: shownName })
         }}
       />
@@ -1142,6 +1116,8 @@ export function DetailView({
                 sources={overviewSources}
                 researched={sourcesRead}
                 progress={sourceProgress}
+                retry={retrySource}
+                remove={removeSourceControl}
               />
               {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
             </div>
