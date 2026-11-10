@@ -203,7 +203,9 @@ test('done is a success pill with a check, review is amber, up next is neutral, 
   )
   assert.match(draw(researching), /data-state="next"[^>]*title="\[stepper\.upNext\]"/)
   const done = draw({ research: RESEARCHED, brief: { id: 'b-1', n: 1 }, demo: 'none' })
-  assert.match(done, /data-state="collected"[^>]*><span class="tracy-wo-band-sub-node" data-node="done"/)
+  // A finished step shows only its green check in the dot: no "Done" pill (owner, #537).
+  assert.doesNotMatch(done, /tracy-wo-band-pill" data-state="collected"/)
+  assert.match(done, /class="tracy-wo-step" data-state="done"[\s\S]*?lucide-check/)
   const failed = draw({
     research: { state: 'failed', researchedAt: null, done: false },
     researchJob: { state: 'failed' },

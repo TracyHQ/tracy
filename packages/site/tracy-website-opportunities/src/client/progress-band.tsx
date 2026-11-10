@@ -60,7 +60,10 @@ function StatusPill({ t, step, locale }: { t: Translate; step: StepView; locale:
   }
   const full = statusText(t, step, locale)
   const tone = step.status.tone
-  const text = tone === 'ok' ? t('stepper.done') : full
+  // A finished step already shows its green check in the number dot: no pill repeats "Done" (owner, #537). The
+  // finish date stays readable on the step name through its title.
+  if (tone === 'ok') return null
+  const text = full
   const node: StepNodeState | null =
     tone === 'run' ? 'running' : tone === 'ok' ? 'done' : tone === 'error' ? 'failed' : null
   const state = { run: 'reading', ok: 'collected', error: 'failed', warn: 'review', mute: 'next' }[tone]
