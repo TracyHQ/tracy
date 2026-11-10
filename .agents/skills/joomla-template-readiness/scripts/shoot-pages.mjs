@@ -131,5 +131,5 @@ async function main(argv) {
   return failed.length ? 1 : 0
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href)
+if (typeof process !== 'undefined' && import.meta.url === pathToFileURL(process.argv[1] ?? '').href)
   process.exitCode = await main(process.argv.slice(2))

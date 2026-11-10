@@ -1,10 +1,42 @@
 // Runs a real Chromium (the Playwright apps/tracy-host installs); skipped when it is not installed.
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import { createServer } from 'node:http'
 import { createRequire } from 'node:module'
 import path from 'node:path'
 import { test } from 'node:test'
+import { fileURLToPath } from 'node:url'
 import { contextOptions, pageUrl, shootPages, walkPage } from '../shoot-pages.mjs'
+
+const script = new URL('../shoot-pages.mjs', import.meta.url)
+
+test('shoot-pages imports as a library without a process global', () => {
+  const result = spawnSync(
+    process.execPath,
+    [
+      '--input-type=module',
+      '--eval',
+      `import assert from 'node:assert/strict';
+       delete globalThis.process;
+       const shots = await import(${JSON.stringify(script.href)});
+       for (const name of ['pageUrl', 'contextOptions', 'walkPage', 'shootPages'])
+         assert.equal(typeof shots[name], 'function', name);`
+    ],
+    { encoding: 'utf8', timeout: 5000 }
+  )
+  assert.equal(result.status, 0, result.stderr)
+  assert.equal(result.stdout, '')
+})
+
+test('shoot-pages CLI without arguments keeps usage exit 2', () => {
+  const result = spawnSync(process.execPath, [fileURLToPath(script)], {
+    encoding: 'utf8',
+    timeout: 5000
+  })
+  assert.equal(result.status, 2, result.stderr)
+  assert.match(result.stderr, /^usage: shoot-pages\.mjs --base /)
+  assert.equal(result.stdout, '')
+})
 
 const ROOT = path.resolve(import.meta.dirname, '../../../../..')
 let chromium = null
