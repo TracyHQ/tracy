@@ -135,13 +135,16 @@ function RatingLine({
   view,
   locale,
   failed,
-  chip
+  chip,
+  actions
 }: {
   t: Translate
   view: NonNullable<BusinessCardView['rating']>
   locale: string
   failed: boolean
   chip: BusinessCardView['chips']['rating']
+  /** The choices that change the rating (Show on the site), beside the sentence they belong to. */
+  actions: ReactNode[]
 }): JSX.Element {
   const note = view.shown
     ? 'facts.rating.shown'
@@ -172,6 +175,7 @@ function RatingLine({
       <span className="tracy-wo-facts-sub tracy-wo-small">
         <Eye aria-hidden="true" className="tracy-wo-icon" />
         {note === 'rating.left' ? <LeftOffTag t={t} /> : <span>{t(note)}</span>}
+        {actions}
         {failed ? (
           <span className="tracy-wo-error" role="alert">
             {t('rating.failed')}
@@ -237,10 +241,15 @@ export function BusinessCard({
     setBusy(false)
     setFailed(!ok)
   }
+  // A thin rating is already off the site: Leave off there would only repeat the sentence, so only Show is offered.
+  const ratingChoices =
+    view.rating === null
+      ? []
+      : ratingActions(view.rating).filter((c) => !(c === 'leave' && view.rating?.few && !view.rating.chosen))
   const actions =
     view.rating === null
       ? []
-      : ratingActions(view.rating).map((choice) => (
+      : ratingChoices.map((choice) => (
           <ActButton key={choice} disabled={busy} onClick={() => void saveRating(choice)}>
             {t(choice === 'show' ? 'rating.show' : 'rating.leave')}
           </ActButton>
@@ -249,7 +258,6 @@ export function BusinessCard({
     <FactsCard
       t={t}
       id="business"
-      actions={actions}
       wide
       title={
         <span className="tracy-wo-facts-hero">
@@ -270,15 +278,24 @@ export function BusinessCard({
       edit={edit}
     >
       {view.rating === null ? null : (
-        <RatingLine t={t} view={view.rating} locale={locale} failed={failed} chip={view.chips.rating} />
+        <RatingLine
+          t={t}
+          view={view.rating}
+          locale={locale}
+          failed={failed}
+          chip={view.chips.rating}
+          actions={actions}
+        />
       )}
       <ul className="tracy-wo-facts-contacts">
         <li>
           <MapPin aria-hidden="true" className="tracy-wo-icon" />
           <span>
-            {view.address ?? <span className="tracy-wo-muted">{t('reason.not_collected')}</span>}
-            <SourceChip t={t} chip={view.chips.address} locale={locale} />
-            <Mark t={t} mark={view.marks.address} />
+            <span className="tracy-wo-facts-line">
+              {view.address ?? <span className="tracy-wo-muted">{t('reason.not_collected')}</span>}
+              <SourceChip t={t} chip={view.chips.address} locale={locale} />
+              <Mark t={t} mark={view.marks.address} />
+            </span>
           </span>
         </li>
         <li>
@@ -287,7 +304,7 @@ export function BusinessCard({
             {phones === null ? (
               <span className="tracy-wo-muted">{t('reason.not_collected')}</span>
             ) : (
-              <span className="tracy-wo-row tracy-wo-wrap">
+              <span className="tracy-wo-facts-line">
                 <span>{phones.main}</span>
                 {others.length > 0 ? (
                   <Badge variant="outline" className="tracy-wo-name-chip">
@@ -316,12 +333,14 @@ export function BusinessCard({
         <li>
           <Globe aria-hidden="true" className="tracy-wo-icon" />
           <span>
-            {view.website === null ? (
-              <span className="tracy-wo-muted">{t('facts.website.none')}</span>
-            ) : (
-              websiteLink(view.website)
-            )}
-            <SourceChip t={t} chip={view.chips.website} locale={locale} looked={looked} />
+            <span className="tracy-wo-facts-line">
+              {view.website === null ? (
+                <span className="tracy-wo-muted">{t('facts.website.none')}</span>
+              ) : (
+                websiteLink(view.website)
+              )}
+              <SourceChip t={t} chip={view.chips.website} locale={locale} looked={looked} />
+            </span>
           </span>
         </li>
       </ul>

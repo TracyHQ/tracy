@@ -127,10 +127,15 @@ const head = (html, card) => {
   const at = html.indexOf(`data-card="${card}"`)
   return html.slice(at, html.indexOf('</div>', html.indexOf('tracy-wo-facts-card-head', at)))
 }
+// The rating choice sits on the rating line, after the stars, not in the card header.
+const ratingLine = (html) => {
+  const at = html.indexOf('tracy-wo-facts-stars')
+  return html.slice(at, html.indexOf('</ul>', at))
+}
 const labels = (html) =>
   [...html.matchAll(/class="tracy-wo-facts-act"[^>]*>(?:<svg.*?<\/svg>)?([^<]*)</g)].map((m) => m[1])
 
-test('a rating left off stays on the card with the tag, and the header offers only Show on the site before Edit', () => {
+test('a rating left off stays on the card with the tag, and Show on the site sits on the rating line and the header keeps only Edit', () => {
   const html = draw(
     profile({
       rating: { state: 'left', score: 4.8, reviews: 40, few: false, choice: 'leave' },
@@ -141,11 +146,11 @@ test('a rating left off stays on the card with the tag, and the header offers on
   const business = head(html, 'business')
   assert.match(html, /tracy-wo-facts-stars/)
   assert.match(html, /tracy-wo-facts-off">\[facts\.leftOff\]/)
-  assert.deepEqual(labels(business), ['[rating.show]', '[profile.edit]'])
-  assert.match(business, /tracy-wo-facts-dot/)
+  assert.deepEqual(labels(business), ['[profile.edit]'])
+  assert.deepEqual(labels(ratingLine(html)), ['[rating.show]'])
 })
 
-test('a rating that shows offers Leave off the site next to Edit and no tag', () => {
+test('a rating that shows offers Leave off the site on the rating line and no tag', () => {
   const html = draw(
     profile({
       rating: { state: 'shown', score: 4.8, reviews: 40, few: false, choice: 'show' },
@@ -153,7 +158,8 @@ test('a rating that shows offers Leave off the site next to Edit and no tag', ()
       team: []
     })
   )
-  assert.deepEqual(labels(head(html, 'business')), ['[rating.leave]', '[profile.edit]'])
+  assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
+  assert.deepEqual(labels(ratingLine(html)), ['[rating.leave]'])
   assert.doesNotMatch(html, /facts\.leftOff/)
 })
 

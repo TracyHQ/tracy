@@ -163,6 +163,19 @@ export const DETAILS_CSS =
 .tracy-wo-facts-contacts li > .tracy-wo-icon { flex: none; box-sizing: content-box; width: 14px; height: 14px; padding: 6px; border-radius: 8px; background: var(--muted); color: var(--muted-foreground); }
 .tracy-wo-facts-contacts li > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; padding-top: 4px; overflow-wrap: anywhere; }
 .tracy-wo-facts-block { display: block; }
+.tracy-wo-facts-line { display: block; }
+.tracy-wo-facts-line > * + * { margin-left: 6px; }
+.tracy-wo-facts .tracy-wo-chip-warn, .tracy-wo-facts .tracy-wo-chip-ok, .tracy-wo-facts .tracy-wo-chip-mute, .tracy-wo-facts .tracy-wo-name-chip, .tracy-wo-facts .tracy-wo-edited { display: inline-flex; align-items: center; padding: 0 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 11.5px; font-weight: 500; line-height: 18px; white-space: nowrap; }
+.tracy-wo-facts .tracy-wo-chip-warn { border-color: transparent; background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
+.tracy-wo-facts .tracy-wo-chip-ok { border-color: transparent; background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
+.tracy-wo-facts .tracy-wo-chip-mute { border-color: transparent; background: var(--muted); color: var(--muted-foreground); }
+.tracy-wo-facts-sub .tracy-wo-facts-act { color: var(--primary); }
+.tracy-wo-facts-card[data-card='brand'] .tracy-wo-stack:has(> .tracy-wo-warn) { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.tracy-wo-facts-card[data-card='brand'] .tracy-wo-warn { color: var(--muted-foreground); font-size: 12.5px; }
+.tracy-wo-facts-card[data-card='brand'] .tracy-wo-stack button, .tracy-wo-facts-card[data-card='media'] .tracy-wo-add-media button { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 10px; border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--foreground); font: inherit; font-size: 12px; line-height: 16px; cursor: pointer; }
+.tracy-wo-facts-card[data-card='brand'] .tracy-wo-stack button:hover:not(:disabled), .tracy-wo-facts-card[data-card='media'] .tracy-wo-add-media button:hover:not(:disabled) { background: var(--muted); }
+.tracy-wo-facts-card[data-card='media'] .tracy-wo-add-media button svg { width: 12px; height: 12px; }
+.tracy-wo-facts-card[data-card='media'] .tracy-wo-add-media > span { font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-facts-hours { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tracy-wo-facts-hours th, .tracy-wo-facts-hours td { padding: 4px 0; text-align: left; vertical-align: top; border-bottom: 1px dashed var(--border); }
 .tracy-wo-facts-hours tr:last-child th, .tracy-wo-facts-hours tr:last-child td { border-bottom: 0; }
