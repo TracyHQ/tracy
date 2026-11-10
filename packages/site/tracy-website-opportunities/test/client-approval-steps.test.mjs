@@ -61,7 +61,7 @@ test('brief approved: Build your site', () => {
   assert.equal(reviewChipOf(v).key, 'chip.briefApproved')
 })
 
-test('a Profile edit after approval: review again, the brief reads Made from an older profile, Build locked', () => {
+test('a Profile edit after approval: review again, the brief reads Made from older business facts, Build locked', () => {
   const v = view({
     brief: BRIEF,
     approval: { research: 'ok', profile: 'needed', brief: 'stale', briefStale: 'profile' }
@@ -71,7 +71,7 @@ test('a Profile edit after approval: review again, the brief reads Made from an 
   assert.equal(v.steps[1].staleKey, 'brief.chip.olderProfile')
   assert.equal(v.steps[1].lockKey, 'stepper.lock.profileAgain')
   assert.equal(v.steps[2].lockKey, 'stepper.lock.both')
-  assert.equal(en['brief.chip.olderProfile'], 'Made from an older profile')
+  assert.equal(en['brief.chip.olderProfile'], 'Made from older business facts')
 })
 
 test('a source added after research: Research again, the brief made from older sources', () => {
@@ -133,10 +133,10 @@ test('a brief made before the Profile was approved is held: named only, step 2 l
   assert.equal(v.current, 'research')
   assert.equal(v.steps[1].lockKey, 'stepper.lock.profile')
   assert.equal(briefHeldOf({ approval, brief: BRIEF }), 'profile')
-  assert.match(en['brief.heldProfile'], /^Brief \{n\} was made before the Profile was approved\./)
+  assert.match(en['brief.heldProfile'], /^Brief \{n\} was made before the business facts were approved\./)
 })
 
-test('once the Profile is approved after that brief: Make the brief again, Made from an older profile', () => {
+test('once the Profile is approved after that brief: Make the brief again, Made from older business facts', () => {
   const approval = {
     research: 'ok',
     profile: 'approved',
@@ -159,4 +159,22 @@ test('a brief from older sources is held until research ran again and the Profil
   assert.equal(briefHeldOf({ approval: approved, brief: BRIEF }), null)
   assert.equal(view({ brief: BRIEF, approval: approved }).steps[1].staleKey, 'brief.chip.olderSources')
   assert.equal(briefHeldOf({ approval: null, brief: BRIEF }), null)
+})
+
+test('the seller reads Business facts, never Profile, in the review copy', () => {
+  assert.equal(en['details.section.profile'], 'Business facts')
+  assert.equal(en['chip.profileReview'], 'Business facts need review')
+  assert.equal(en['stepper.reviewProfile'], 'Review business facts ›')
+  assert.equal(en['approve.profile'], 'Approve business facts and continue')
+  const keys = Object.keys(en).filter((k) =>
+    /^(stepper|band|chip|approve|gate|site\.notYet|brief\.(held|chip))/.test(k)
+  )
+  for (const k of keys) assert.doesNotMatch(en[k], /\bprofile\b/i, k)
+})
+
+test('step 1 reads Research business facts, its first press too; Research again stays', () => {
+  assert.equal(en['step.research'], 'Research business facts')
+  assert.equal(en['job.start'], 'Research business facts')
+  assert.equal(en['details.researchAgain'], 'Research again')
+  assert.equal(en['stepper.lock.profile'], 'Approve the business facts to unlock')
 })

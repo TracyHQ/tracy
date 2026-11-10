@@ -113,7 +113,7 @@ test('Status: a place never researched offers Start research', () => {
   )
   assert.equal(p.status.label, 'Not started')
   assert.deepEqual(p.next, {
-    label: 'Start research',
+    label: 'Research business facts',
     run: { kind: 'row', action: 'start' },
     disabled: false
   })

@@ -999,7 +999,8 @@ export function DetailView({
       shown === 'profile' ? (
         <>
           {profileBlock(true)}
-          {research.done || mediaView.photos.groups.length > 0 ? mediaSection : null}
+          {/* The seller may add photos before research too: the server keeps them as the owner's own. */}
+          {mediaSection}
           {hasMore ? (
             <div className="tracy-wo-psec-more">
               <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
@@ -1039,7 +1040,7 @@ export function DetailView({
         <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
       ) : (
         <>
-          {briefLine}
+          {heldLine ?? briefLine}
           {briefTable(true)}
           {tableListsFacts ? <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p> : null}
         </>
@@ -1061,7 +1062,9 @@ export function DetailView({
           onBack={() => onSection(null)}
           onApprove={approveProfile}
         />
-      ) : shown === 'brief' && (approval.brief === 'needed' || approval.brief === 'approved') ? (
+      ) : shown === 'brief' &&
+        held === null &&
+        (approval.brief === 'needed' || approval.brief === 'approved') ? (
         <ApprovalFooter
           key="brief"
           t={t}
@@ -1169,13 +1172,17 @@ export function DetailView({
             t={t}
             id="profile"
             meta={metaOf('profile')}
-            open={openTo(profileReview ? 'section.review' : 'section.open')}
+            // Opens before research too: its Photos & video take the seller's own photos (#537).
+            open={{ labelKey: profileReview ? 'section.review' : 'section.open', onOpen: onSection }}
             className="tracy-wo-profile-card"
           >
             {profileReview ? needsReview : null}
             {profileBlock(false)}
             {/* Photos & video belong to the Profile (#537): a strip at its foot, opened on the Profile sub-page. */}
-            {research.done || researchMoving ? (
+            {research.done ||
+            researchMoving ||
+            mediaView.videos.tiles.length > 0 ||
+            mediaView.photos.groups.some((g) => g.tiles.length > 0) ? (
               <div className="tracy-wo-profile-media">
                 <div className="tracy-wo-profile-media-head">
                   <span>

@@ -44,7 +44,7 @@ export const en = {
   'my.field.ratingFrom': '{rating} from {count} reviews',
   'my.source.google': 'Google Maps',
   'my.source.osm': 'OpenStreetMap',
-  'my.stage.research': 'Research',
+  'my.stage.research': 'Research business facts',
   'my.stage.demo': 'Demo',
   'my.stage.outreach': 'Outreach',
   'my.stage.cancelled': 'Cancelled',
@@ -495,7 +495,7 @@ export const en = {
   'source.coverageOpen': '{fetched} collected',
 
   'job.none': 'Not researched yet',
-  'job.start': 'Start research',
+  'job.start': 'Research business facts',
   'job.resume': 'Resume',
   'job.cancel': 'Cancel',
   'job.state.queued': 'Waiting to start',
@@ -508,7 +508,7 @@ export const en = {
   'job.stage.discovery': 'Finding sources',
   'job.stage.collection': 'Collecting pages and posts',
   'job.stage.media': 'Saving photos and videos',
-  'job.stage.profile': 'Writing the profile',
+  'job.stage.profile': 'Writing the business facts',
   'job.stage.brand': 'Reading colors and style',
   'job.stage.done': 'Finishing',
 
@@ -645,8 +645,8 @@ export const en = {
   'reason.other': 'Not available',
 
   'detail.failed': 'Could not load this opportunity.',
-  'detail.profile': 'Profile',
-  'detail.noProfile': 'No profile yet. It appears once research has run.',
+  'detail.profile': 'Business facts',
+  'detail.noProfile': 'No business facts yet. They appear once research has run.',
   'detail.from': 'From {sources}',
   'detail.stale': 'May be out of date (seen {date})',
   'detail.conflict': 'Sources disagree',
@@ -1098,10 +1098,10 @@ export const en = {
   'menu.again.title': 'Read the menu of {name} again?',
   'menu.again.lead':
     'Tracy reads the menu file first, then the menu photos. Dishes from the file come first; a photo only adds dishes the file does not have.',
-  'pp.title': 'Place profile',
+  'pp.title': 'Place details',
   'pp.lead':
     'What the research found about this place. It is the same for every template and holds nothing of your brief or demos.',
-  'pp.failed': 'The place profile could not be loaded.',
+  'pp.failed': 'The place details could not be loaded.',
   'pp.stat.followers': 'Followers',
   'pp.stat.following': 'Following',
   'pp.stat.posts': 'Posts',
@@ -1156,7 +1156,7 @@ export const en = {
   'details.more': 'More actions',
   'details.researchAgain': 'Research again',
   'details.delete': 'Delete',
-  'details.section.profile': 'Profile',
+  'details.section.profile': 'Business facts',
   'details.section.sources': 'Sources',
   'details.section.brief': 'Business brief',
   'details.section.media': 'Photos & video',
@@ -1255,7 +1255,7 @@ export const en = {
 
   /** The three steps of one place under the Details header (stepper-model.ts, mock r6-a). */
   'progress.title': 'Progress',
-  'step.research': 'Research',
+  'step.research': 'Research business facts',
   'step.brief': 'Content brief',
   'step.build': 'Build your site',
   'stepper.doneOn': 'Done {date}',
@@ -1285,7 +1285,8 @@ export const en = {
   'brief.job.error.at.reading': 'The brief could not be made: reading the business did not finish.',
   'brief.job.error.at.labelling': 'The brief could not be made: labelling the photos did not finish.',
   'brief.job.error.at.writing': 'The brief could not be made: writing the brief did not finish.',
-  'brief.staleEdits': 'Brief {n} · made {when}. Your Profile edits are newer. Refresh to use them.',
+  'brief.staleEdits':
+    'Brief {n} · made {when}. Your edits to the business facts are newer. Refresh to use them.',
   'profile.collecting': 'Collecting…',
   'profile.filling': 'Filling in as sources finish.',
   'sources.researchedAt': 'Researched {date}',
@@ -1298,10 +1299,10 @@ export const en = {
   /** The seller's approvals (#537): review lines, locks and stale chips of the steps (stepper-model.ts). */
   'stepper.research.sourcesChanged': 'Sources changed. Run research again.',
   'stepper.review.profile':
-    'Research finished. Check the Profile, edit anything that is wrong, then approve it.',
+    'Research business facts finished. Check them, edit anything that is wrong, then approve.',
   'stepper.review.brief':
     'The content brief is ready. Check every row, edit anything that is wrong, then approve it.',
-  'stepper.reviewProfile': 'Review profile ›',
+  'stepper.reviewProfile': 'Review business facts ›',
   'stepper.reviewBrief': 'Review brief ›',
   'stepper.needsReview': 'Needs your review',
   'stepper.approvedOn': 'Approved {date}',
@@ -1310,22 +1311,22 @@ export const en = {
   'stepper.locked': 'Locked',
   'stepper.upNext': 'Up next',
   'stepper.sourcesChanged': 'Sources changed',
-  'stepper.lock.profile': 'Approve the profile to unlock',
-  'stepper.lock.profileAgain': 'Approve the profile again, then make the brief again',
+  'stepper.lock.profile': 'Approve the business facts to unlock',
+  'stepper.lock.profileAgain': 'Approve the business facts again, then make the brief again',
   'stepper.lock.brief': 'Approve the brief to unlock',
-  'stepper.lock.both': 'Locked until the profile and brief are approved',
-  'stepper.lock.research': 'Run research to unlock',
+  'stepper.lock.both': 'Locked until the business facts and brief are approved',
+  'stepper.lock.research': 'Research business facts to unlock',
   'stepper.lock.researchAgain': 'Run research again to unlock',
-  'stepper.brief.readyApproved': 'Profile approved. Writing the brief takes about 2 minutes.',
-  'stepper.brief.staleProfile': 'The profile changed after this brief was made. Make the brief again.',
+  'stepper.brief.readyApproved': 'Business facts approved. Writing the brief takes about 2 minutes.',
+  'stepper.brief.staleProfile': 'The business facts changed after this brief was made. Make the brief again.',
   'stepper.brief.staleSources': 'The sources changed after this brief was made. Make the brief again.',
   'stepper.build.readyApproved': 'Brief approved. Building your site takes about 50 minutes.',
   'brief.makeAgain': 'Make the brief again',
   'brief.heldProfile':
-    'Brief {n} was made before the Profile was approved. Approve the Profile, then make the brief again.',
+    'Brief {n} was made before the business facts were approved. Approve the business facts, then make the brief again.',
   'brief.heldSources':
-    'Brief {n} was made from older sources. Run research again, approve the Profile, then make the brief again.',
-  'brief.chip.olderProfile': 'Made from an older profile',
+    'Brief {n} was made from older sources. Run research again, approve the business facts, then make the brief again.',
+  'brief.chip.olderProfile': 'Made from older business facts',
   'brief.chip.olderSources': 'Made from older sources',
 
   /** The Progress band at the top of Details (#537): the step list on the left, the current step on the right. */
@@ -1340,8 +1341,8 @@ export const en = {
   'chip.notStarted': 'Not started',
   'chip.researching': 'Researching',
   'chip.sourcesChanged': 'Sources changed',
-  'chip.profileReview': 'Profile needs review',
-  'chip.profileApproved': 'Profile approved',
+  'chip.profileReview': 'Business facts need review',
+  'chip.profileApproved': 'Business facts approved',
   'chip.briefRunning': 'Making brief',
   'chip.briefReview': 'Brief needs review',
   'chip.briefApproved': 'Brief approved',
@@ -1352,21 +1353,21 @@ export const en = {
   'approve.hint': 'Check every row. Edit anything that is wrong, then approve.',
   'approve.scrollHint': 'Scroll to the end to approve.',
   'approve.back': 'Back',
-  'approve.profile': 'Approve profile and continue',
+  'approve.profile': 'Approve business facts and continue',
   'approve.brief': 'Approve brief and continue',
   'approve.saving': 'Approving…',
-  'approve.done.profile': 'Profile approved {date}',
+  'approve.done.profile': 'Business facts approved {date}',
   'approve.done.brief': 'Brief approved {date}',
 
   /** Refusals of the approval steps and the gates (#537), keyed by the server code. */
-  'gate.PROFILE_NOT_APPROVED': 'Approve the profile first: open it, check every row, then approve.',
+  'gate.PROFILE_NOT_APPROVED': 'Approve the business facts first: open them, check every row, then approve.',
   'gate.BRIEF_NOT_APPROVED': 'Approve the content brief first: open it, check every row, then approve.',
   'gate.RESEARCH_NEEDED':
-    'A source was added after research. Run research again, then approve the new profile.',
-  'gate.RESEARCH_NOT_DONE': 'Run research first: the profile is made from its results.',
+    'A source was added after research. Run research again, then approve the new business facts.',
+  'gate.RESEARCH_NOT_DONE': 'Research business facts first.',
   'gate.NO_BRIEF': 'Make a content brief first.',
   'gate.BRIEF_STALE':
-    'This brief was made from an older profile or older sources. Make the brief again, then approve it.',
+    'This brief was made from older business facts or older sources. Make the brief again, then approve it.',
   'gate.other': 'That did not work. Try again in a moment.',
 
   /** Add source (#537): one more link of the business. */
@@ -1377,7 +1378,7 @@ export const en = {
   'source.add.cancel': 'Cancel',
   'source.add.saving': 'Adding…',
   'source.add.afterResearch':
-    'Adding a source after research means research runs again and the profile needs your review again.',
+    'Adding a source after research means research runs again and the business facts need your review again.',
   'source.add.error.INVALID_URL': 'Enter the address of a website, social page or listing page.',
   'source.add.error.GOOGLE_LINK_NOT_ADDED':
     'A Google link names the business itself. Add its website, a social page or a listing page instead.',
@@ -1398,8 +1399,8 @@ export const en = {
   'media.error.other': 'Could not upload the file. Try again.',
 
   /** Your site (#537): before the site is built, the block says which step is needed. */
-  'site.notYet.research': 'Not available yet. Run Research first.',
-  'site.notYet.profile': 'Not available yet. Approve the Profile, then make the content brief.',
+  'site.notYet.research': 'Not available yet. Research business facts first.',
+  'site.notYet.profile': 'Not available yet. Approve the business facts, then make the content brief.',
   'site.notYet.brief': 'Not available yet. Approve the content brief, then build the site.',
   'site.building': 'Building your site. About 50 minutes.',
 
