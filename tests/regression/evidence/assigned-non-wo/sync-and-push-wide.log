@@ -1,0 +1,373 @@
+TAP version 13
+# Subtest: preview, apply, a second preview and Undo: the copy’s changes reach the live site and nothing comes back twice
+ok 1 - preview, apply, a second preview and Undo: the copy’s changes reach the live site and nothing comes back twice
+  ---
+  duration_ms: 111389.128125
+  type: 'test'
+  ...
+# Subtest: a table Sync from live kept whole holds the push through sync/kept.json: the customer’s edit there stays (\#87)
+ok 2 - a table Sync from live kept whole holds the push through sync/kept.json: the customer’s edit there stays (\#87)
+  ---
+  duration_ms: 33949.745916
+  type: 'test'
+  ...
+# Subtest: an article a push created and the customer then deleted on the live site goes from the copy too (\#223)
+ok 3 - an article a push created and the customer then deleted on the live site goes from the copy too (\#223)
+  ---
+  duration_ms: 100651.700083
+  type: 'test'
+  ...
+# Subtest: --settle-later: the answer comes once the writes are in; the Sync from live after them, run on its own, brings nothing back twice
+ok 4 - --settle-later: the answer comes once the writes are in; the Sync from live after them, run on its own, brings nothing back twice
+  ---
+  duration_ms: 637336.37475
+  type: 'test'
+  ...
+# Subtest: template files: a template’s own CSS goes through the live site’s template door, a new one too; Undo takes both back, the copy keeps them
+ok 5 - template files: a template’s own CSS goes through the live site’s template door, a new one too; Undo takes both back, the copy keeps them
+  ---
+  duration_ms: 156617.078084
+  type: 'test'
+  ...
+# Subtest: the shell preserves partial writes and Undo after a firewall blocks a later batch
+ok 6 - the shell preserves partial writes and Undo after a firewall blocks a later batch
+  ---
+  duration_ms: 111845.095291
+  type: 'test'
+  ...
+# Subtest: a PHP too old met mid-Apply reaches the push answer with both versions, the earlier writes kept
+ok 7 - a PHP too old met mid-Apply reaches the push answer with both versions, the earlier writes kept
+  ---
+  duration_ms: 66983.87825
+  type: 'test'
+  ...
+# Subtest: a pushed template file deletion survives Undo and Sync on the copy and is offered again
+ok 8 - a pushed template file deletion survives Undo and Sync on the copy and is offered again
+  ---
+  duration_ms: 198515.067875
+  type: 'test'
+  ...
+# fatal: Needed a single revision
+# fatal: Needed a single revision
+# Subtest: the customer’s live changes and the agent’s copy changes both end up in the copy; a second sync starts from the first
+ok 9 - the customer’s live changes and the agent’s copy changes both end up in the copy; a second sync starts from the first
+  ---
+  duration_ms: 59081.036125
+  type: 'test'
+  ...
+# Subtest: a clash keeps Tracy’s side and says what the live site changed there; a decision may still take the live side
+ok 10 - a clash keeps Tracy’s side and says what the live site changed there; a decision may still take the live side
+  ---
+  duration_ms: 43025.988167
+  type: 'test'
+  ...
+# Subtest: an edit lock taken on the live site never reaches the copy; the copy’s own lock stays
+ok 11 - an edit lock taken on the live site never reaches the copy; the copy’s own lock stays
+  ---
+  duration_ms: 35178.648375
+  type: 'test'
+  ...
+# Subtest: a read the database refuses half way stops the merge; nothing is taken as dropped
+ok 12 - a read the database refuses half way stops the merge; nothing is taken as dropped
+  ---
+  duration_ms: 11069.645042
+  type: 'test'
+  ...
+# Subtest: a copy whose database cannot be read stops the merge, and the answer says why
+ok 13 - a copy whose database cannot be read stops the merge, and the answer says why
+  ---
+  duration_ms: 6738.231458
+  type: 'test'
+  ...
+# detail: the copy's database could not be read into its scratch schema: mariadb-dump: Couldn't execute '…' (1356)
+# Subtest: a copy that changed between merge and apply is refused, files or database
+ok 14 - a copy that changed between merge and apply is refused, files or database
+  ---
+  duration_ms: 66446.4565
+  type: 'test'
+  ...
+# Subtest: a live site that did not move is answered applied at once: no merge, no backup point, the copy as it was
+ok 15 - a live site that did not move is answered applied at once: no merge, no backup point, the copy as it was
+  ---
+  duration_ms: 53026.598584
+  type: 'test'
+  ...
+# Subtest: a first sync whose live files did not move since the import reads the database only, and takes the import as their tree
+ok 16 - a first sync whose live files did not move since the import reads the database only, and takes the import as their tree
+  ---
+  duration_ms: 86723.599541
+  type: 'test'
+  ...
+# Subtest: a sync that read no file but listed the live files keeps a manifest naming them by the tree it merged
+ok 17 - a sync that read no file but listed the live files keeps a manifest naming them by the tree it merged
+  ---
+  duration_ms: 93169.765833
+  type: 'test'
+  ...
+# Subtest: a sync swaps only the tables that differ from its point: the others stay as they were, triggers and all
+ok 18 - a sync swaps only the tables that differ from its point: the others stay as they were, triggers and all
+  ---
+  duration_ms: 437235.864542
+  type: 'test'
+  ...
+# Subtest: a module’s content both sites edited, three syncs running: each side’s keys stay, a key both changed is Tracy’s and named
+ok 19 - a module’s content both sites edited, three syncs running: each side’s keys stay, a key both changed is Tracy’s and named
+  ---
+  duration_ms: 162924.765416
+  type: 'test'
+  ...
+# Subtest: a module’s content that is not JSON on one side stays one value: the copy’s, named as the column
+ok 20 - a module’s content that is not JSON on one side stays one value: the copy’s, named as the column
+  ---
+  duration_ms: 46348.449083
+  type: 'test'
+  ...
+# Subtest: both sites indexing one saved article for Smart Search never holds a sync: the copy keeps its index
+ok 21 - both sites indexing one saved article for Smart Search never holds a sync: the copy keeps its index
+  ---
+  duration_ms: 59662.6865
+  type: 'test'
+  ...
+# Subtest: a sync whose merge leaves the copy as it is makes no backup point and restores nothing; its read is the next base
+ok 22 - a sync whose merge leaves the copy as it is makes no backup point and restores nothing; its read is the next base
+  ---
+  duration_ms: 122942.16425
+  type: 'test'
+  ...
+# Subtest: `sync` merges and applies in one go, a clash included: Tracy’s side stays
+ok 23 - `sync` merges and applies in one go, a clash included: Tracy’s side stays
+  ---
+  duration_ms: 117533.785416
+  type: 'test'
+  ...
+# Subtest: a collation the live site changed, with no row changed, reaches the copy: first read and after a stored one (\#120)
+ok 24 - a collation the live site changed, with no row changed, reaches the copy: first read and after a stored one (\#120)
+  ---
+  duration_ms: 89840.759084
+  type: 'test'
+  ...
+# Subtest: `sync` keeps thousands of places both sides changed: its answer never goes through one argument (\#219)
+ok 25 - `sync` keeps thousands of places both sides changed: its answer never goes through one argument (\#219)
+  ---
+  duration_ms: 43017.949417
+  type: 'test'
+  ...
+# Subtest: `merge` then `apply` with thousands of kept places: the ready merge keeps its live read (\#287)
+ok 26 - `merge` then `apply` with thousands of kept places: the ready merge keeps its live read (\#287)
+  ---
+  duration_ms: 37712.717833
+  type: 'test'
+  ...
+# Subtest: an `apply` whose live read is gone refuses before anything is put in place (\#287)
+ok 27 - an `apply` whose live read is gone refuses before anything is put in place (\#287)
+  ---
+  duration_ms: 9114.443292
+  type: 'test'
+  ...
+# Subtest: a whole read lacking what the site's engine could not read keeps the copy's files there, never deletes them (05/11/2026)
+ok 28 - a whole read lacking what the site's engine could not read keeps the copy's files there, never deletes them (05/11/2026)
+  ---
+  duration_ms: 26063.811625
+  type: 'test'
+  ...
+# Subtest: a read that carries only what changed is laid over the last read; its manifest is kept for the next
+ok 29 - a read that carries only what changed is laid over the last read; its manifest is kept for the next
+  ---
+  duration_ms: 39308.287
+  type: 'test'
+  ...
+# Subtest: Sync anyway reuses the held sync’s read and merge; the read alone when the copy moved; neither when the live site did
+ok 30 - Sync anyway reuses the held sync’s read and merge; the read alone when the copy moved; neither when the live site did
+  ---
+  duration_ms: 36613.394333
+  type: 'test'
+  ...
+# Subtest: a cut-off apply: nothing written stays as it is, edits since included; only the sync’s writes are put back
+ok 31 - a cut-off apply: nothing written stays as it is, edits since included; only the sync’s writes are put back
+  ---
+  duration_ms: 35338.642042
+  type: 'test'
+  ...
+# Subtest: a cut-off apply whose copy was edited since is not written over: the owner is told, once
+ok 32 - a cut-off apply whose copy was edited since is not written over: the owner is told, once
+  ---
+  duration_ms: 14481.279458
+  type: 'test'
+  ...
+# Subtest: a cut-off apply that was in place is finished, after a day too, never over a large file edited or deleted since
+ok 33 - a cut-off apply that was in place is finished, after a day too, never over a large file edited or deleted since
+  ---
+  duration_ms: 74862.185208
+  type: 'test'
+  ...
+# Subtest: failed live reads retain busy and access codes; unknown failures use LIVE_READ_FAILED
+ok 34 - failed live reads retain busy and access codes; unknown failures use LIVE_READ_FAILED
+  ---
+  duration_ms: 1729.672083
+  type: 'test'
+  ...
+# Subtest: the live read is normalised the way provision normalised the copy (one statement, two places)
+ok 35 - the live read is normalised the way provision normalised the copy (one statement, two places)
+  ---
+  duration_ms: 2.418
+  type: 'test'
+  ...
+# Subtest: a product both sites added under one number is held with the rows the live site made for it; Sync anyway leaves them out, and the read’s timing line reaches the row
+ok 36 - a product both sites added under one number is held with the rows the live site made for it; Sync anyway leaves them out, and the read’s timing line reaches the row
+  ---
+  duration_ms: 8280.676834
+  type: 'test'
+  ...
+# Subtest: a pre-swap trigger failure retires its foreign-key plan before cleaning the stage
+ok 37 - a pre-swap trigger failure retires its foreign-key plan before cleaning the stage
+  ---
+  duration_ms: 13263.413625
+  type: 'test'
+  ...
+# Subtest: a record both sites created comes over under a new number, keeps it, and takes the customer’s later edits
+ok 38 - a record both sites created comes over under a new number, keeps it, and takes the customer’s later edits
+  ---
+  duration_ms: 38878.656958
+  type: 'test'
+  ...
+# Subtest: an extension table both sites added to, or that points at a renumbered record, is held — never dropped
+ok 39 - an extension table both sites added to, or that points at a renumbered record, is held — never dropped
+  ---
+  duration_ms: 6271.429458
+  type: 'test'
+  ...
+# Subtest: field values, versions and 404 log rows follow a renumbered article; neither log holds the sync
+ok 40 - field values, versions and 404 log rows follow a renumbered article; neither log holds the sync
+  ---
+  duration_ms: 15886.00875
+  type: 'test'
+  ...
+# Subtest: references from tables outside the adapter are counted in one grouped call, with the same answer as one count per number
+ok 41 - references from tables outside the adapter are counted in one grouped call, with the same answer as one count per number
+  ---
+  duration_ms: 39313.32475
+  type: 'test'
+  ...
+# Subtest: a remembered number whose live record is gone never stands for the live record now created under its copy number
+ok 42 - a remembered number whose live record is gone never stands for the live record now created under its copy number
+  ---
+  duration_ms: 23613.858417
+  type: 'test'
+  ...
+# Cannot connect to the Docker daemon at unix://<user>/.docker/run/docker.sock. Is the docker daemon running?
+# Subtest: WordPress: the customer’s live changes and the agent’s copy changes both end up in the copy, at the copy’s address
+ok 43 - WordPress: the customer’s live changes and the agent’s copy changes both end up in the copy, at the copy’s address
+  ---
+  duration_ms: 70754.274416
+  type: 'test'
+  ...
+# Subtest: WordPress: a first sync reads only the files that differ from the copy as built, and lays them over it
+ok 44 - WordPress: a first sync reads only the files that differ from the copy as built, and lays them over it
+  ---
+  duration_ms: 25159.938541
+  type: 'test'
+  ...
+# Subtest: WordPress: a chain of syncs that renumber many posts, a live upload, a trashed and a deleted page, then a sync with nothing new
+ok 45 - WordPress: a chain of syncs that renumber many posts, a live upload, a trashed and a deleted page, then a sync with nothing new
+  ---
+  duration_ms: 155028.958375
+  type: 'test'
+  ...
+# Subtest: WordPress: what wp-admin leaves on the live site by itself never comes over — an auto-draft, its meta, a user’s admin settings, dashboard options — and an auto-draft the customer then publishes does (\#1664)
+ok 46 - WordPress: what wp-admin leaves on the live site by itself never comes over — an auto-draft, its meta, a user’s admin settings, dashboard options — and an auto-draft the customer then publishes does (\#1664)
+  ---
+  duration_ms: 336242.257625
+  type: 'test'
+  ...
+# Subtest: WordPress: a post the customer publishes under the number the copy holds only as an auto-draft comes over under it; the agent’s posts stay (dev S5, 24/10/2026)
+ok 47 - WordPress: a post the customer publishes under the number the copy holds only as an auto-draft comes over under it; the agent’s posts stay (dev S5, 24/10/2026)
+  ---
+  duration_ms: 519846.527375
+  type: 'test'
+  ...
+# Subtest: WordPress: copy-token writes the copy’s own Claude Cowork token into its options
+ok 48 - WordPress: copy-token writes the copy’s own Claude Cowork token into its options
+  ---
+  duration_ms: 16607.245584
+  type: 'test'
+  ...
+# Subtest: WooCommerce derived background rows do not create a backup or count as customer changes
+ok 49 - WooCommerce derived background rows do not create a backup or count as customer changes
+  ---
+  duration_ms: 53153.372917
+  type: 'test'
+  ...
+# Subtest: WooCommerce HPOS order placed on live under a number the copy holds moves with its placeholder; it never attaches to the copy post (\#107)
+not ok 50 - WooCommerce HPOS order placed on live under a number the copy holds moves with its placeholder; it never attaches to the copy post (\#107)
+  ---
+  duration_ms: 68114.646333
+  type: 'test'
+  location: '<checkout>/packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs:1142:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Command failed: /usr/local/bin/docker exec -i -e MYSQL_PWD=t tracy-live-sync-wp-db-93108 mariadb -uroot -N -B wordpress
+    Cannot connect to the Docker daemon at unix://<user>/.docker/run/docker.sock. Is the docker daemon running?
+    
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    genericNodeError (node:internal/errors:983:15)
+    wrappedFn (node:internal/errors:537:14)
+    checkExecSyncError (node:child_process:916:11)
+    execFileSync (node:child_process:952:15)
+    sql (file://<checkout>/packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs:88:3)
+    TestContext.<anonymous> (file://<checkout>/packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs:1171:22)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: a live record squatting on a remembered number moves, and a plugin row naming it is held, not pointed at another record (\#107)
+ok 51 - a live record squatting on a remembered number moves, and a plugin row naming it is held, not pointed at another record (\#107)
+  ---
+  duration_ms: 158708.754792
+  type: 'test'
+  ...
+# Subtest: WooCommerce HPOS order with a placeholder and child rows is one record with all business data retained
+ok 52 - WooCommerce HPOS order with a placeholder and child rows is one record with all business data retained
+  ---
+  duration_ms: 66008.917292
+  type: 'test'
+  ...
+# Subtest: WooCommerce child-only edits still sync without becoming independent records
+ok 53 - WooCommerce child-only edits still sync without becoming independent records
+  ---
+  duration_ms: 89524.442375
+  type: 'test'
+  ...
+# Subtest: WooCommerce compatibility copies count the authoritative order once in HPOS and legacy modes
+ok 54 - WooCommerce compatibility copies count the authoritative order once in HPOS and legacy modes
+  ---
+  duration_ms: 35036.336459
+  type: 'test'
+  ...
+# Subtest: WordPress logo and header follow attachment renumbering through Sync and the next Preview
+ok 55 - WordPress logo and header follow attachment renumbering through Sync and the next Preview
+  ---
+  duration_ms: 23376.462833
+  type: 'test'
+  ...
+# Subtest: WordPress: a live Polylang translation renumbered by Sync keeps its translation link on the copy, and the next Preview offers no false change (\#105)
+ok 56 - WordPress: a live Polylang translation renumbered by Sync keeps its translation link on the copy, and the next Preview offers no false change (\#105)
+  ---
+  duration_ms: 30884.180625
+  type: 'test'
+  ...
+# Subtest: WordPress: a picture Tracy retitled and the customer deleted for good on the live site stays whole in the copy — its row, its meta and its files (\#223)
+ok 57 - WordPress: a picture Tracy retitled and the customer deleted for good on the live site stays whole in the copy — its row, its meta and its files (\#223)
+  ---
+  duration_ms: 14270.997916
+  type: 'test'
+  ...
+1..57
+# tests 57
+# suites 0
+# pass 56
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1836587.451166

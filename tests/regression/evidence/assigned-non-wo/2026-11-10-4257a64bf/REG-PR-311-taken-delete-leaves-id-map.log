@@ -1,0 +1,70 @@
+$ node --test --test-reporter=tap --test-name-pattern=#307|#536 packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs
+TAP version 13
+# Subtest: an unchanged live site bypasses the fingerprint once to repair an old id map (\#307)
+ok 1 - an unchanged live site bypasses the fingerprint once to repair an old id map (\#307)
+  ---
+  duration_ms: 77050.279917
+  type: 'test'
+  ...
+# Subtest: Joomla: an article a push made and the live site deleted for good leaves the id map, keeps its number used, and takes its copy-only versions along (\#307)
+ok 2 - Joomla: an article a push made and the live site deleted for good leaves the id map, keeps its number used, and takes its copy-only versions along (\#307)
+  ---
+  duration_ms: 35570.892375
+  type: 'test'
+  ...
+# Subtest: Joomla: an article the merge keeps (Tracy changed it, the live site deleted it) keeps its versions; its live number leaves the id map (\#307)
+ok 3 - Joomla: an article the merge keeps (Tracy changed it, the live site deleted it) keeps its versions; its live number leaves the id map (\#307)
+  ---
+  duration_ms: 3704.809083
+  type: 'test'
+  ...
+# Subtest: WordPress: a picture Tracy retitled and the live site deleted for good is kept with its meta, its terms and its files; a deleted post takes its copy-only revision and meta along (\#223, \#307)
+ok 4 - WordPress: a picture Tracy retitled and the live site deleted for good is kept with its meta, its terms and its files; a deleted post takes its copy-only revision and meta along (\#223, \#307)
+  ---
+  duration_ms: 8071.765667
+  type: 'test'
+  ...
+# Subtest: Joomla: a site already stuck — a new copy article under a deleted one's number — is put right at its next sync (\#307)
+ok 5 - Joomla: a site already stuck — a new copy article under a deleted one's number — is put right at its next sync (\#307)
+  ---
+  duration_ms: 11376.232
+  type: 'test'
+  ...
+# Subtest: Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: false, \#536)
+ok 6 - Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: false, \#536)
+  ---
+  duration_ms: 38289.099625
+  type: 'test'
+  ...
+# Subtest: Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: true, \#536)
+ok 7 - Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: true, \#536)
+  ---
+  duration_ms: 20518.78275
+  type: 'test'
+  ...
+# Subtest: WordPress: reversed pushed post ids sync with references (existing high ids: false, \#536)
+ok 8 - WordPress: reversed pushed post ids sync with references (existing high ids: false, \#536)
+  ---
+  duration_ms: 23382.443
+  type: 'test'
+  ...
+# Subtest: WordPress: reversed pushed post ids sync with references (existing high ids: true, \#536)
+ok 9 - WordPress: reversed pushed post ids sync with references (existing high ids: true, \#536)
+  ---
+  duration_ms: 28904.800042
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 183420.553542
+
+--- stderr ---
+
+--- verdict ---
+PASS 
