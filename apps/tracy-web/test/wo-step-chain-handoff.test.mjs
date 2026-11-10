@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import { after, afterEach, before, beforeEach, test } from 'node:test'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.js'
-import { acceptDemoActions } from '../src/opportunities-build/demo-actions.js'
+import { acceptDemoActions, demoActionOf } from '../src/opportunities-build/demo-actions.js'
 import { createDemoRunner } from '../src/opportunities-build/demo-runner.js'
 import { revisionForAction } from '../src/opportunities-build/revisions.js'
 import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
@@ -212,5 +212,10 @@ test(
     assert.equal(w.messages.length, 0)
     const build = (await w.pool.query('select demo_expires_at from wo_build')).rows[0]
     assert.equal(build.demo_expires_at, null)
+    const account = (await w.pool.query('select id from account')).rows[0].id
+    const actionId = answer.body.actions[0].id
+    assert.equal((await demoActionOf(w.pool, account, actionId)).siteKey, 'harbor-gym.localhost')
+    await w.pool.query('update wo_build set demo_deleted_at=now()')
+    assert.equal((await demoActionOf(w.pool, account, actionId)).siteKey, undefined)
   }
 )
