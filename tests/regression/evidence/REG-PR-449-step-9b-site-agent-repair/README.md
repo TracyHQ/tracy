@@ -48,6 +48,6 @@ The five full runs predate the final loss-of-verification guard. Tests and the f
 
 ## Reproducible checks
 
-- `node --test --test-concurrency=1 apps/tracy-web/test/write-step-*.test.mjs apps/tracy-web/test/site-check-scoped-pages.test.mjs`: 717 tests, 714 passed, zero failed, three skipped on the final local patch before integration with the latest base.
-- `REG-PR-449-step-9b-site-agent-repair`: deterministic entry-point, target, verdict, time-limit and scoped-check coverage; rerun after the branch integration and record the branch commit in the regression results.
+- `node --test --test-concurrency=1 apps/tracy-web/test/write-step-*.test.mjs apps/tracy-web/test/site-check-scoped-pages.test.mjs`: 717 tests, 714 passed, zero failed, three skipped after merging the latest base into the branch.
+- `REG-PR-449-step-9b-site-agent-repair`: deterministic entry-point, target, verdict, time-limit and scoped-check coverage; PASS after integration on commit `6b82af34e1`, recorded in the regression results.
 - Targeted Oxlint, Biome and whitespace checks passed. Broader local checks had dependency/profile limitations; the PR description records their current results separately.
