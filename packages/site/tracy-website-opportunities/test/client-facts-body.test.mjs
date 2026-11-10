@@ -189,7 +189,7 @@ test('strings: every key the body uses exists, English only, no long dashes', ()
     'profile.collecting'
   ])
     assert.ok(lib.en[k], k)
-  assert.equal(lib.en['facts.body.na'], 'NA')
+  assert.equal(lib.en['facts.body.na'], 'N/A')
 })
 
 test('css: fixed height, overflow hidden, two-column facts, never three', () => {

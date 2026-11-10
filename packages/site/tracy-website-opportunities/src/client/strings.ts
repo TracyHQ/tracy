@@ -1490,7 +1490,7 @@ export const en = {
   'source.remove.error.GOOGLE_LINK_NOT_REMOVED': 'The Google listing identifies this business and stays.',
   // facts.body.* begin: the Business facts body of the Workspace card, facts left and one hero photo (#537).
   'facts.body.label': 'Business facts at a glance',
-  'facts.body.na': 'NA',
+  'facts.body.na': 'N/A',
   'facts.body.hours': 'Hours',
   'facts.body.rating': 'Rating',
   'facts.body.instagram': 'Instagram',
