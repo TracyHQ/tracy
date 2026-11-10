@@ -43,7 +43,15 @@ const PURPOSE_OF: Record<StepId, string> = {
 }
 
 /** The pill of a step, to the right of its name: the state as a pill, or only a lock icon (reason on hover) for a locked step. */
-function StatusPill({ t, step, locale }: { t: Translate; step: StepView; locale: string }): JSX.Element {
+function StatusPill({
+  t,
+  step,
+  locale
+}: {
+  t: Translate
+  step: StepView
+  locale: string
+}): JSX.Element | null {
   if (step.lockKey !== null) {
     const reason = t(step.lockKey)
     return (
@@ -64,9 +72,8 @@ function StatusPill({ t, step, locale }: { t: Translate; step: StepView; locale:
   // finish date stays readable on the step name through its title.
   if (tone === 'ok') return null
   const text = full
-  const node: StepNodeState | null =
-    tone === 'run' ? 'running' : tone === 'ok' ? 'done' : tone === 'error' ? 'failed' : null
-  const state = { run: 'reading', ok: 'collected', error: 'failed', warn: 'review', mute: 'next' }[tone]
+  const node: StepNodeState | null = tone === 'run' ? 'running' : tone === 'error' ? 'failed' : null
+  const state = { run: 'reading', error: 'failed', warn: 'review', mute: 'next' }[tone]
   return (
     <span className="tracy-wo-stab-pill tracy-wo-band-pill" data-state={state} title={full}>
       {node !== null ? <SubStepNode state={node} label={text} /> : null}
