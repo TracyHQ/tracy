@@ -1,10 +1,13 @@
 /**
  * My opportunities' own rules (#537, header C with row style 2): the tool line and the selection bar, the "..." menu's
  * extra bits, and the Rows table, whose header and rows share one set of fixed grid tracks so every title sits over
- * its cells. Every row is 64px high. Tracy tokens only. No backtick may appear inside the template below.
+ * its cells: the table is one grid and the header, the list and every row are subgrids of its columns, so the Action
+ * column is as wide as the widest button in any row and the header follows. Every row is 64px high. Tracy tokens only.
+ * No backtick may appear inside the template below.
  *
- * Wide (over 900px): Place 1fr, Address 1fr, Progress 230px, Added 110px, Action 190px.
- * Narrow (up to 900px): Place 1fr, Address 1fr (one line), Progress 200px with Added under it, Action 160px.
+ * Wide (over 900px): Place 1fr, Address 1fr, Progress 230px, Added 110px, Action max-content (never cut).
+ * Narrow (up to 900px): Place 1.3fr, Address 0.7fr (one line) and Progress share what the action leaves; Address gives
+ * way first (down to 80px), then Progress (200px down to 120px). Added sits under Progress.
  * Small (up to 560px): rows stack and grow; the header hides.
  */
 export const MY_LIST_CSS = `
@@ -27,13 +30,14 @@ export const MY_LIST_CSS = `
 .tracy-wo-my-cards[data-selecting] .tracy-wo-p-top, .tracy-wo-my-cards[data-selecting] .tracy-wo-p-demo { padding-left: 40px; }
 .tracy-wo-my-cards .tracy-wo-p-added { margin-top: -6px; }
 
-.tracy-wo-my-table { --tracy-wo-my-cols: minmax(0, 1fr) minmax(0, 1fr) 230px 110px 190px; --tracy-wo-my-areas: "place address step added action"; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
-.tracy-wo-my-table[data-selecting] { --tracy-wo-my-cols: 16px minmax(0, 1fr) minmax(0, 1fr) 230px 110px 190px; --tracy-wo-my-areas: "check place address step added action"; }
-.tracy-wo-my-head, .tracy-wo-my-rows .tracy-wo-my-place { display: grid; grid-template-columns: var(--tracy-wo-my-cols); grid-template-areas: var(--tracy-wo-my-areas); column-gap: 16px; padding: 0 14px; }
+.tracy-wo-my-table { --tracy-wo-my-cols: minmax(0, 1fr) minmax(0, 1fr) 230px 110px max-content; --tracy-wo-my-areas: "place address step added action"; display: grid; grid-template-columns: var(--tracy-wo-my-cols); column-gap: 16px; row-gap: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.tracy-wo-my-table[data-selecting] { --tracy-wo-my-cols: 16px minmax(0, 1fr) minmax(0, 1fr) 230px 110px max-content; --tracy-wo-my-areas: "check place address step added action"; }
+.tracy-wo-my-head, .tracy-wo-my-rows, .tracy-wo-my-rows .tracy-wo-my-place { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; }
+.tracy-wo-my-head, .tracy-wo-my-rows .tracy-wo-my-place { grid-template-areas: var(--tracy-wo-my-areas); padding: 0 14px; }
 .tracy-wo-my-head { height: 30px; align-items: center; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 2.5%, var(--card)); font-size: 11.5px; line-height: 16px; font-weight: 500; color: var(--muted-foreground); }
 .tracy-wo-my-head > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tracy-wo-my-head > [data-col='action'] { text-align: right; }
-.tracy-wo-my-rows { display: flex; flex-direction: column; list-style: none; margin: 0; padding: 0; }
+.tracy-wo-my-rows { row-gap: 0; list-style: none; margin: 0; padding: 0; }
 .tracy-wo-my-rows .tracy-wo-my-place { height: 64px; align-items: center; align-content: center; border-top: 1px solid var(--border); }
 .tracy-wo-my-rows .tracy-wo-my-place:first-child { border-top: 0; }
 .tracy-wo-my-rows .tracy-wo-my-place:hover { background: color-mix(in oklab, var(--foreground) 4%, transparent); }
@@ -55,12 +59,10 @@ export const MY_LIST_CSS = `
 .tracy-wo-p-added { min-width: 0; font-size: 12.5px; line-height: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tracy-wo-p-added time { cursor: default; text-decoration: underline dotted color-mix(in oklab, var(--foreground) 30%, transparent); text-underline-offset: 3px; }
 .tracy-wo-my-rows .tracy-wo-p-status { flex-wrap: nowrap; min-width: 0; }
-.tracy-wo-my-rows .tracy-wo-p-status > button { max-width: 100%; }
-.tracy-wo-p-act-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 @container (max-width: 900px) {
-  .tracy-wo-my-table { --tracy-wo-my-cols: minmax(0, 1fr) minmax(0, 1fr) 200px 160px; --tracy-wo-my-areas: "place address step action" "place address added action"; }
-  .tracy-wo-my-table[data-selecting] { --tracy-wo-my-cols: 16px minmax(0, 1fr) minmax(0, 1fr) 200px 160px; --tracy-wo-my-areas: "check place address step action" "check place address added action"; }
+  .tracy-wo-my-table { --tracy-wo-my-cols: minmax(140px, 1.3fr) minmax(80px, 0.7fr) minmax(120px, 200px) max-content; --tracy-wo-my-areas: "place address step action" "place address added action"; }
+  .tracy-wo-my-table[data-selecting] { --tracy-wo-my-cols: 16px minmax(140px, 1.3fr) minmax(80px, 0.7fr) minmax(120px, 200px) max-content; --tracy-wo-my-areas: "check place address step action" "check place address added action"; }
   .tracy-wo-my-rows .tracy-wo-my-place { grid-template-rows: auto auto; row-gap: 2px; }
   .tracy-wo-my-head { --tracy-wo-my-areas: "place address step action"; }
   .tracy-wo-my-table[data-selecting] .tracy-wo-my-head { --tracy-wo-my-areas: "check place address step action"; }
@@ -72,8 +74,8 @@ export const MY_LIST_CSS = `
 }
 @container (max-width: 560px) {
   .tracy-wo-my-head { display: none; }
-  .tracy-wo-my-table { --tracy-wo-my-cols: minmax(0, 1fr) auto; --tracy-wo-my-areas: "place action" "address address" "step step" "added added"; }
-  .tracy-wo-my-table[data-selecting] { --tracy-wo-my-cols: 16px minmax(0, 1fr) auto; --tracy-wo-my-areas: "check place action" "check address address" "check step step" "check added added"; }
+  .tracy-wo-my-table { --tracy-wo-my-cols: minmax(0, 1fr) max-content; --tracy-wo-my-areas: "place action" "address address" "step step" "added added"; }
+  .tracy-wo-my-table[data-selecting] { --tracy-wo-my-cols: 16px minmax(0, 1fr) max-content; --tracy-wo-my-areas: "check place action" "check address address" "check step step" "check added added"; }
   .tracy-wo-my-rows .tracy-wo-my-place { height: auto; grid-template-rows: none; row-gap: 4px; padding: 10px 12px; }
   .tracy-wo-my-bar { flex-wrap: wrap; }
 }
