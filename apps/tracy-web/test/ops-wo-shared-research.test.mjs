@@ -135,3 +135,24 @@ test('consumed shared results do not override private follow-up diagnostics', op
   assert.equal(row.execution.workerId, null)
   assert.equal(row.collectors.find((item) => item.name.startsWith('4.')).status, 'skipped')
 })
+
+for (const state of ['paused', 'blocked', 'expired']) {
+  test(`Ops does not report active collection after shared research is ${state}`, opts, async () => {
+    const f = await fixture({ state: state === 'expired' ? 'running' : state })
+    await db.pool.query(
+      `update wo_place_job set state=$2, lease_until=now()-interval '1 minute',
+        last_error='{"code":"SOURCE_PAUSED"}'::jsonb where id=$1`,
+      [f.worker, state === 'expired' ? 'running' : state]
+    )
+    // A collector can retain its last running status when the worker stops.
+    await db.pool.query(
+      `update wo_place_snapshot_source set status='running' where source='website'
+        and snapshot_id=(select snapshot_id from wo_place_job where id=$1)`,
+      [f.worker]
+    )
+    const row = await rowFor(f)
+    assert.equal(row.queueState, state === 'paused' ? 'PAUSED' : 'BLOCKED')
+    assert.equal(row.needsAttention, true)
+    assert.match(row.currentStep, state === 'expired' ? /^Worker lease expired/ : /^Stopped:/)
+  })
+}

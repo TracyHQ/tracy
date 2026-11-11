@@ -289,9 +289,11 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
       opp.status === 'failed' ||
       leaseExpired
     const activeSource =
-      latestJob?.progress?.collecting && latestJob.stage === 'collection'
-        ? { source: latestJob.progress.collecting }
-        : runningSources[0]
+      latestJob?.state === 'running' && !isFailed
+        ? latestJob.progress?.collecting && latestJob.stage === 'collection'
+          ? { source: latestJob.progress.collecting }
+          : runningSources[0]
+        : null
     const blockedSource = blockedSources[0]
 
     let currentStep = `Stage: ${latestJob?.stage || 'collection'} (${doneSources.length}/${Math.max(1, sources.length)} sources)`
