@@ -240,3 +240,8 @@ The site-tools generated host bundle was rebuilt with dependency paths relative 
 checkout-specific paths without changing the build gate. The two research strings and all seven translations
 no longer promise a fixed ten-minute duration. Full local and final-head Linux gate results remain separate
 from these focused passes; no customer site, develop deployment or post-merge test is accepted here.
+
+On committed source aa4177bd9a, provider-payment-retry, post-fact-routing and wo-alt-repair-capability all
+returned PASS with committed-source receipts. The latest non-test sweep passed all 63 selected gates,
+including lint/typecheck/format, source language and generated bundles. Tests, Turbo tracing and boot graph
+were explicitly excluded from that sweep; it is not a full build:check pass.
