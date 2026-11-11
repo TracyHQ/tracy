@@ -1,0 +1,26 @@
+{
+  "pr": 569,
+  "sourceCommit": "841121d2bd4f74ea40c074f9829ac667ae0bee65",
+  "browserAcceptance": {
+    "site": "https://portland-city-boxing-3.tracy.site/",
+    "result": "FAIL before this fix; complete site acceptance remains pending",
+    "observed": [
+      "Beginner Boxing and Advanced Boxing remained in the home and category class lists with demo content.",
+      "Both native article states were 1 through the authenticated read-only content API.",
+      "Both direct class pages returned HTTP 200.",
+      "The build action ended with QA_NEEDS_REVIEW; provisioning done was not site acceptance.",
+      "Gallery template photos remain a separate unresolved acceptance failure."
+    ]
+  },
+  "local": {
+    "focusedTests": { "pass": 82, "fail": 0, "skip": 0 },
+    "selectedGates": { "pass": 63, "excluded": ["tests", "turbo-config", "boot-graph"] },
+    "finalSourceChecks": ["language", "test-quality", "scoped oxlint", "scoped biome format"],
+    "regression": "REG-PR-569-dropped-native-articles — PASS on sourceCommit",
+    "baselineComparison": "The original dropPages function fails five of six initial scenarios; these are local script fixtures, not a deployed CMS stand."
+  },
+  "limits": [
+    "Post-deployment acceptance has not run for this change.",
+    "No complete generated-site pass or issue closure is claimed."
+  ]
+}
