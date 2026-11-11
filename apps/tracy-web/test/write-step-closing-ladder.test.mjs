@@ -187,3 +187,16 @@ test('unknown native hide tiers stay blocked', async () => {
   assert.equal(line('block-2.7').status, 'failed')
   assert.equal(site.held['module-2.7'], undefined)
 })
+
+test('a conflicting hidden receipt cannot turn a retry into an unverified success', async () => {
+  const kit = withStatCard()
+  const copy = baseCopy()
+  copy.returns = [{ slot: 'block-2.7', reason: 'No supported number.' }]
+  const script = { extraKeys: STAT_KEYS, overSlot: hideable(STAT_KEYS) }
+  const first = await runStep({ copy }, script, { kit })
+  for (const line of first.report.slots) if (STAT_KEYS.includes(line.key)) line.readBack = 'differs'
+  const again = await runStep({ copy }, script, { kit, last: first.report })
+  assert.equal(again.report.status, 'stopped')
+  assert.equal(again.report.cause.code, 'NEEDS_NEW_SITE')
+  assert.equal(again.site.applies().length, 0)
+})

@@ -18,7 +18,8 @@
     "Existing non-article stock-screen and menu behavior remains intact.",
     "Native measured and unmeasured capabilities permit fallback; conditional rows require another exact row member and unknown tiers remain blocked.",
     "Retrying a verified hidden row does not clear it again.",
-    "Created legal pages disable the separate native intro, read the setting back and upgrade old receipts without replacing native rows or unrelated settings."
+    "Created legal pages disable the separate native intro, read the setting back and upgrade old receipts without replacing native rows or unrelated settings.",
+    "Unsupported article copy is never sent: native permission either empties the demo slot or leaves an explicit refusal, and uncertain prior hides cannot claim a successful retry."
   ],
   "selectors": {},
   "fence": "Exact native article ownership declared by the kit; no guessed aliases, direct database writes or CSS hiding",
@@ -35,7 +36,8 @@
       "apps/tracy-web/test/write-step-hide.test.mjs",
       "apps/tracy-web/test/write-step-run.test.mjs",
       "apps/tracy-web/test/write-step-buttons.test.mjs",
-      "apps/tracy-web/test/write-step-created-legal-layout.test.mjs"
+      "apps/tracy-web/test/write-step-created-legal-layout.test.mjs",
+      "apps/tracy-web/test/site-copy-export-article-provenance.test.mjs"
     ],
     "needs": [],
     "timeout_s": 120

@@ -29,33 +29,39 @@ const mapped = (f, over = {}) =>
 const title = (f) => f.copy.slots.find((s) => s.slot === 'block-2.1')
 
 for (const fact of ['service', 'held', 'missing'])
-  test(`a failed article citing ${fact} is omitted before export and real CMS write`, async () => {
-    const f = fixture()
-    f.wish.factIds = title(f).factIds = [fact]
-    const before = JSON.stringify(f)
-    assert.equal(
-      checkPlan({ plan: f.plan, kit: f.kit.doc, brief: f.brief }).rules.find((r) => r.id === 'R25').status,
-      'fail'
-    )
-    const out = mapped(f)
-    const { report, site, line } = await runStep(
-      { plan: f.plan, copy: f.copy, brief: f.brief },
-      {},
-      { kit: f.kit }
-    )
-    assert.equal(site.held['module-2.1'], undefined)
-    assert.equal(out.mapping.changes['module-2.1'], undefined)
-    assert.equal(out.mapping.evidence['module-2.1'], undefined)
-    assert.match(out.problems.find((p) => p.where === 'block-2.1').detail, /original owner post/)
-    assert.ok(out.mapping.changes['module-2.2'], 'generic trade content remains exportable')
-    assert.notEqual(line('block-2.1')?.status, 'written')
-    assert.match(
-      report.unaddressable.find((p) => p.slot === 'block-2.1')?.reason ?? '',
-      /original owner post/
-    )
-    assert.ok(site.held['module-2.2'], 'the valid generic service copy still reaches the site')
-    assert.equal(JSON.stringify(f), before, 'the boundary never rewrites frozen inputs')
-  })
+  for (const canHide of [false, 'measured'])
+    test(`unsupported article citing ${fact} never writes invented copy when native hide is ${canHide}`, async () => {
+      const f = fixture()
+      f.wish.factIds = title(f).factIds = [fact]
+      const before = JSON.stringify(f)
+      assert.equal(
+        checkPlan({ plan: f.plan, kit: f.kit.doc, brief: f.brief }).rules.find((r) => r.id === 'R25').status,
+        'fail'
+      )
+      const out = mapped(f)
+      const { report, site, line } = await runStep(
+        { plan: f.plan, copy: f.copy, brief: f.brief },
+        { overSlot: (slot) => (slot.key === 'module-2.1' ? { canHide } : {}) },
+        { kit: f.kit }
+      )
+      assert.equal(site.held['module-2.1'], canHide ? '' : undefined)
+      assert.ok(
+        site.applies().every((call) => call.params.changes?.['module-2.1'] === undefined),
+        'unsupported copy never reaches a write'
+      )
+      assert.equal(line('block-2.1').status, canHide ? 'hidden' : 'failed')
+      assert.equal(out.mapping.changes['module-2.1'], undefined)
+      assert.equal(out.mapping.evidence['module-2.1'], undefined)
+      assert.match(out.problems.find((p) => p.where === 'block-2.1').detail, /original owner post/)
+      assert.ok(out.mapping.changes['module-2.2'], 'generic trade content remains exportable')
+      assert.notEqual(line('block-2.1')?.status, 'written')
+      assert.match(
+        report.unaddressable.find((p) => p.slot === 'block-2.1')?.reason ?? '',
+        /original owner post/
+      )
+      assert.ok(site.held['module-2.2'], 'the valid generic service copy still reaches the site')
+      assert.equal(JSON.stringify(f), before, 'the boundary never rewrites frozen inputs')
+    })
 
 test('a valid article plan cannot authorize a writer to substitute service facts or inconsistent article posts', () => {
   const f = fixture()

@@ -22,13 +22,13 @@
     "selectedGates": {
       "pass": 63,
       "excluded": ["tests", "turbo-config", "boot-graph"],
-      "scope": "Article and native capability source; rerun for created-page intro correction is in progress."
+      "scope": "All production changes passed one complete 63-gate run. Final provenance/read-back test-only follow-up receives scoped lint/format plus language and test-quality checks."
     },
     "finalSourceChecks": ["language", "test-quality", "scoped oxlint", "scoped biome format"],
     "regression": "REG-PR-569-dropped-native-articles — PASS on e0fed2d2aa721aea341c34e054fe337e01674ff8",
     "baselineComparison": "The original dropPages function fails five of six initial scenarios; these are local script fixtures, not a deployed CMS stand.",
     "completeWriteSuite": {
-      "pass": 836,
+      "pass": 837,
       "fail": 0,
       "skip": 0,
       "services": "Real owned PostgreSQL and Playwright"
@@ -39,6 +39,12 @@
       "afterPass": 5,
       "afterFail": 0,
       "nativeWebsiteProbe": "On the owned QA privacy article, setting show_intro=0 through content.update reduced two rendered policy bodies to one. The isolated setting probe is restored; deployed write-step acceptance remains pending."
+    },
+    "articleProvenanceBoundary": {
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "behavior": "Unsupported article copy is never sent, with explicit native hide permitted/refused fixtures."
     }
   },
   "limits": [
