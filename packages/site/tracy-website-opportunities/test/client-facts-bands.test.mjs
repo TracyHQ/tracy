@@ -1,7 +1,7 @@
 /**
  * The Business facts sub-page as stacked bands (#537, design A): every band is drawn even when the profile is empty
  * (N/A alone, no chip), every band header carries the same action cluster in the same slots ([Add more] on Photos &
- * video only, the switch, Edit), the business and research bands are locked, no band offers Show all or opens a
+ * video only, the switch, Edit), the business band is locked, no band offers Show all or opens a
  * sheet, every band shares one collapsed height and long rows scroll sideways, and the source chips still follow
  * their values. Bundles the real page with React 18 and renders it to static markup. Every business in this file
  * is invented.
@@ -178,17 +178,7 @@ test('an empty profile still draws every band, in order, each with N/A', () => {
     (m) => m[1]
   )
   assert.deepEqual(order, [...BAND_IDS])
-  for (const id of [
-    'hours',
-    'services',
-    'about',
-    'team',
-    'messages',
-    'reviews',
-    'social',
-    'media',
-    'research'
-  ])
+  for (const id of ['hours', 'services', 'about', 'team', 'messages', 'reviews', 'social', 'media'])
     assert.ok(band(html, id).includes(NA), `${id} reads N/A`)
   // The business band: no type, phone, address or website read N/A (the rating sits in What guests say).
   assert.equal((band(html, 'business').match(/\[facts\.na\]/g) ?? []).length, 4)
@@ -229,27 +219,21 @@ test('every band header holds one cluster, in one order: [Add more] on Photos & 
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-slot-edit \{ width: \d+px;/)
 })
 
-test('locked bands: Business always on, Research details always off with its reason by the title', () => {
+test('locked bands: Business always on; the page holds no Research details band', () => {
   const { html } = draw({ profile: FULL })
   const business = switchOf(html, 'business')
   assert.match(business, /title="\[facts\.lock\.business\]"/)
   assert.match(business, /aria-checked="true"/)
   assert.match(business, /aria-disabled="true"|data-disabled/)
   assert.match(business, /\[facts\.on\]<\/span><svg[^>]*tracy-wo-facts-lock/)
-  const research = head(html, 'research')
-  assert.match(
-    research,
-    /<span class="tracy-wo-facts-aside" title="\[facts\.lock\.research\]">\[facts\.lock\.research\]<\/span>/
-  )
-  assert.match(switchOf(html, 'research'), /aria-checked="false"/)
-  assert.match(switchOf(html, 'research'), /tracy-wo-facts-lock/)
-  assert.match(
-    research,
-    /<button type="button" class="tracy-wo-facts-act" disabled="" title="\[facts\.edit\.research\]"/
+  // The sources research read sit in the Workspace card's Sources table: no band here repeats them.
+  assert.doesNotMatch(
+    html,
+    /data-card="research"|facts\.lock\.research|facts\.edit\.research|\[facts\.research\]/
   )
   // What guests say is not locked: no lock, no tone-only sentence.
   assert.doesNotMatch(head(html, 'reviews'), /tracy-wo-facts-lock|facts\.reviews\.note/)
-  for (const id of BAND_IDS.filter((b) => b !== 'business' && b !== 'research'))
+  for (const id of BAND_IDS.filter((b) => b !== 'business'))
     assert.doesNotMatch(switchOf(html, id), /tracy-wo-facts-lock/, id)
 })
 
@@ -329,7 +313,7 @@ test('every band shares one collapsed height per breakpoint; long rows scroll si
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band\[data-editing\] \{ height: auto;/)
   assert.doesNotMatch(
     FACTS_BANDS_CSS,
-    /--wo-band-(business|hours|services|about|team|brand|messages|reviews|social|media|research)/
+    /--wo-band-(business|hours|services|about|team|brand|messages|reviews|social|media)/
   )
   assert.match(
     FACTS_BANDS_CSS,

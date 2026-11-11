@@ -161,7 +161,6 @@ export const DETAILS_CSS =
 .tracy-wo-facts-act:disabled { opacity: 0.5; cursor: default; }
 .tracy-wo-facts-act:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 2px; }
 .tracy-wo-facts-act svg { width: 12px; height: 12px; }
-.tracy-wo-facts-aside { font-size: 12px; color: var(--muted-foreground); }
 /* The source chip after each value (design A): small, muted, one word; the title names the source in full. */
 .tracy-wo-sc { display: inline-flex; align-items: center; gap: 3px; margin-left: 6px; padding: 0 5px 0 4px; border: 1px solid var(--border); border-radius: 5px; background: var(--card, var(--background)); color: color-mix(in oklab, var(--muted-foreground) 75%, var(--card, var(--background))); font-size: 10.5px; font-weight: 400; line-height: 16px; letter-spacing: 0; white-space: nowrap; vertical-align: 1px; cursor: default; }
 .tracy-wo-sc svg { flex: none; width: 10px; height: 10px; }

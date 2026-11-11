@@ -237,8 +237,7 @@ test('the band set is complete and every band shares one collapsed height at eac
     'messages',
     'reviews',
     'social',
-    'media',
-    'research'
+    'media'
   ])
   // A 40px header row over a 76px body, with 2px of border: the same at the wide, mid and narrow widths.
   assert.deepEqual([...BAND_HEIGHT], [118, 118, 118])

@@ -19,7 +19,7 @@ import { fileURLToPath } from 'node:url'
 import { createApi } from '../src/client/api.ts'
 import { factsBodyView } from '../src/client/facts-body-model.ts'
 import { draftOf, sentValueOf } from '../src/client/facts-value-model.ts'
-import { savedBandsOf, savedFactsOf } from '../src/client/saved-profile-model.ts'
+import { RAW_BUSINESS_DUPLICATES, savedBandsOf, savedFactsOf } from '../src/client/saved-profile-model.ts'
 import { en } from '../src/client/strings.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -94,6 +94,10 @@ const SAVED = {
     address: f('fact_address', '12 Lagoon Walk, Sandbar Bay'),
     internationalPhoneNumber: f('fact_intl', '+10 555 0199'),
     location: f('fact_location', { latitude: 1.5, longitude: 2.5 }),
+    addressComponents: f('fact_parts', [{ longText: 'Sandbar Bay', types: ['locality'] }]),
+    nationalPhoneNumber: f('fact_national', '0555 0199'),
+    plusCode: f('fact_plus', { globalCode: '7HQQ22X2+X2' }),
+    seasonWindow: f('fact_window', { from: 'May', to: 'October' }),
     seasonNote: f('fact_season', 'Open all year'),
     hours: f('fact_hours', ['Monday: 9:00 AM to 5:00 PM', 'Tuesday: Closed']),
     amenities: f('fact_amenities', { restroom: true, freeParkingLot: false, kiteStorage: true }),
@@ -200,11 +204,30 @@ const band = (html, card) => {
 const head = (html, card) => band(html, card).split('tracy-wo-facts-band-body')[0]
 const has = (html, id) => html.includes(`data-fact="${id}"`)
 
+test('the business band leaves out the raw Google duplicates of what it draws, as the server brief does', () => {
+  const html = draw()
+  const business = band(html, 'business')
+  for (const id of ['fact_location', 'fact_parts', 'fact_national', 'fact_plus'])
+    assert.ok(!has(html, id), `${id} is not drawn`)
+  assert.doesNotMatch(business, /1\.5, 2\.5|0555 0199|7HQQ22X2/)
+  for (const key of [
+    'location',
+    'addressComponents',
+    'nationalPhoneNumber',
+    'internationalPhoneNumber',
+    'plusCode'
+  ])
+    assert.ok(RAW_BUSINESS_DUPLICATES.has(key), key)
+  // An unknown key that is no such duplicate keeps its generic cell.
+  assert.ok(has(business, 'fact_window'))
+  assert.ok(!RAW_BUSINESS_DUPLICATES.has('seasonWindow'))
+})
+
 test('every group fills its band, a fact of no known kind is a generic row there, and nothing is dropped', () => {
   const html = draw()
   const business = band(html, 'business')
-  for (const id of ['fact_location', 'fact_season', 'fact_price']) assert.ok(has(business, id), id)
-  assert.match(business, /1\.5, 2\.5/)
+  for (const id of ['fact_window', 'fact_season', 'fact_price']) assert.ok(has(business, id), id)
+  assert.match(business, /May, October/)
   assert.match(business, /Season note/)
   // Google's international number is the phone itself: drawn once, by the phone cell.
   assert.ok(!has(html, 'fact_intl'))
@@ -230,6 +253,11 @@ test('every group fills its band, a fact of no known kind is a generic row there
     'fact_phone',
     'fact_address',
     'fact_intl',
+    // Google's raw duplicates: the band leaves them out (their own test above).
+    'fact_location',
+    'fact_parts',
+    'fact_national',
+    'fact_plus',
     'fact_rina',
     'fact_crew',
     'fact_review'

@@ -39,7 +39,7 @@ export const CARD_IDS = [
 export type CardId = (typeof CARD_IDS)[number]
 
 /** Every band of the page, top to bottom: the business band, the cards, Photos & video, Research details. */
-export const BAND_IDS = ['business', ...CARD_IDS, 'media', 'research'] as const
+export const BAND_IDS = ['business', ...CARD_IDS, 'media'] as const
 export type BandId = (typeof BAND_IDS)[number]
 
 /**

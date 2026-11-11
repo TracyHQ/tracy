@@ -1329,7 +1329,6 @@ export const en = {
   'facts.media.all': 'All {count}',
   'facts.media.photos': 'Photos {count}',
   'facts.media.videos': 'Videos {count}',
-  'facts.research': 'Research details',
   // The saved profile on the Business facts page (#537 R18).
   'facts.hoursAmenities': 'Hours and amenities',
   'facts.edited': 'Edited',
@@ -1341,7 +1340,6 @@ export const en = {
   // Business facts, design A (#537): the band switch, the locked bands, Edit in place.
   'facts.business': 'Business',
   'facts.lock.business': 'The name and the contact details always show on the site.',
-  'facts.lock.research': 'Notes on how the facts were found, never shown on the site',
   'facts.switch.nothing': 'Shows on the site. The brief states nothing here that can be left off.',
   'facts.team.bandOff': 'The Team section is off the site. Turn it on to choose who shows.',
   'facts.edit.note': 'Only this section changes. The rest of the page stays as it is.',
@@ -1349,7 +1347,6 @@ export const en = {
   'facts.edit.brand': 'The logo and the colours cannot be edited here yet.',
   'facts.edit.social': 'Add a link with Add more. Pages found by research are sources and stay.',
   'facts.edit.reviews': 'Guest reviews are quoted as written, so they cannot be edited.',
-  'facts.edit.research': 'Research details are a record of what was read.',
   // End of the Business facts bands block.
 
   /** Your site (#537): before the site is built, the block says which step is needed. */
@@ -1398,9 +1395,7 @@ export const en = {
     'Research has already run. Sources can be removed only before the research, or after it failed.',
   'source.remove.error.NOT_FOUND': 'This source is already gone.',
   'source.remove.error.GOOGLE_LINK_NOT_REMOVED': 'The Google listing identifies this business and stays.',
-  // facts.body.* begin: the Business facts body of the Workspace card, facts in two groups and a 3 by 2 photo mosaic (#537).
-  'facts.body.groupBusiness': 'Business',
-  'facts.body.groupContact': 'Contact',
+  // facts.body.* begin: the Business facts body of the Workspace card, facts left and three square media tiles (#537).
   'facts.body.label': 'Business facts at a glance',
   'facts.body.na': 'N/A',
   'facts.body.hours': 'Hours',

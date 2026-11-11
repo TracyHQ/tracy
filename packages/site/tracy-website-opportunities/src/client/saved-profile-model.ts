@@ -93,12 +93,36 @@ export function savedFactsOf(profile: unknown): SavedFact[] {
   return out
 }
 
+/**
+ * Business keys that only repeat or take apart a fact the business band already draws (Google's raw duplicates): the
+ * coordinates and parts of the address, the phone in other formats, the place's own ids and map links. The server's
+ * brief skips them for the same reason (`brief-facts.mjs` STATED_BUSINESS); the owner does not review them, so the band
+ * leaves them out. Any other unknown key still gets its generic cell.
+ */
+export const RAW_BUSINESS_DUPLICATES: ReadonlySet<string> = new Set([
+  'location',
+  'viewport',
+  'addressComponents',
+  'formattedAddress',
+  'shortFormattedAddress',
+  'adrFormatAddress',
+  'postalAddress',
+  'plusCode',
+  'nationalPhoneNumber',
+  'internationalPhoneNumber',
+  'placeId',
+  'googleMapsUri',
+  'googleMapsUrl',
+  'mapsUrl',
+  'utcOffsetMinutes'
+])
+
 /** The facts of the Hours and amenities band, by business key. */
 export const HOURS_BAND_KEYS = ['hours', 'amenities', 'reservable'] as const
 
 /** The saved profile sorted into the bands of the page. */
 export interface SavedBands {
-  /** The business group (but the Hours and amenities facts) and the extensions, in order. */
+  /** The business group (but the Hours and amenities facts and Google's raw duplicates) and the extensions. */
   business: SavedFact[]
   hours: SavedFact | null
   amenities: SavedFact | null
@@ -132,7 +156,9 @@ export function savedBandsOf(profile: unknown): SavedBands | null {
   })
   return {
     business: [
-      ...of('business').filter((f) => !(HOURS_BAND_KEYS as readonly string[]).includes(f.key)),
+      ...of('business').filter(
+        (f) => !(HOURS_BAND_KEYS as readonly string[]).includes(f.key) && !RAW_BUSINESS_DUPLICATES.has(f.key)
+      ),
       ...of('extensions')
     ],
     hours: one('hours'),

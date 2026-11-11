@@ -1,6 +1,6 @@
 /**
- * The body of the Business facts row in the Workspace card (#537, option F): two small groups of facts (Business,
- * Contact), an About line, and a 3 by 2 photo mosaic. Every fact is always there: a fact not
+ * The body of the Business facts row in the Workspace card (#537, option B): a fixed grid of facts in two columns and
+ * a strip of three to six square media tiles. Every slot is always there, so the body never changes height: a fact not
  * found reads NA (or Collecting… while research runs). Once research made the saved profile (#537 R18) it reads its
  * facts, as the sub-page does: an owner's value shows edited, a fact kept off reads NA. Nothing is decided here.
  */
@@ -12,7 +12,8 @@ import { factsBodyFromSaved as fromSaved, followersSlot } from './facts-body-sav
 
 type Rec = Record<string, unknown>
 
-/** The photo mosaic is always 3 by 2: six tiles, the last one carrying +N for the rest. */
+/** The strip shows at least STRIP_SLOTS square slots and at most STRIP_MAX tiles, as the room allows (CSS decides). */
+export const STRIP_SLOTS = 3
 export const STRIP_MAX = 6
 
 export type FactId =
@@ -44,14 +45,10 @@ export interface Fact {
 }
 
 export interface FactsBodyView {
-  /** The "Business" group: Name, Hours, Rating. */
-  business: Fact[]
-  /** The "Contact" group: Phone, Website, Address. */
-  contact: Fact[]
-  /** The About line under both groups. */
-  about: Fact
-  /** Instagram followers, shown at the right end of the About line; null when research did not count them. */
-  followers: Fact | null
+  /** Name, Address, Hours, About. */
+  left: Fact[]
+  /** Phone, Website, Rating, then Instagram followers or a reserved empty slot. */
+  right: Fact[]
   /** The first stored items, photos then videos, at most STRIP_MAX of them. */
   tiles: MediaTile[]
   /** Every stored photo and video; a tile's rest count is total minus its 1-based place. */
@@ -149,22 +146,29 @@ export function factsBodyView(input: FactsBodyInput): FactsBodyView {
   const items = [...photos, ...videos]
   const off = (id: Fact['id']): boolean => saved?.off.has(id as never) === true
   const marked = (facts: Fact[]): Fact[] => facts.map((f) => (off(f.id) ? { ...f, off: true } : f))
-  const followers = saved === null ? followersFact(profile, locale) : saved.followers
   return {
-    business: marked([
+    left: marked([
       { id: 'name', labelKey: 'field.name', value: plain(text(input.name) ?? raw('name')) },
+      {
+        id: 'address',
+        labelKey: 'field.address',
+        value: plain(
+          saved?.address === undefined ? (raw('address') ?? text(candidate.address)) : saved.address
+        )
+      },
       {
         id: 'hours',
         labelKey: 'facts.body.hours',
         value: hours === null ? null : hoursSummary(hours, input.today)
       },
+      // About keeps its line breaks for the two clamped lines; the title holds the whole text.
       {
-        id: 'rating',
-        labelKey: 'facts.body.rating',
-        value: saved === null ? ratingValue(profile, locale) : saved.rating
+        id: 'about',
+        labelKey: 'field.bio',
+        value: about === null ? null : { kind: 'text', text: about, title: about }
       }
     ]),
-    contact: marked([
+    right: marked([
       {
         id: 'phone',
         labelKey: 'field.phone',
@@ -174,22 +178,12 @@ export function factsBodyView(input: FactsBodyInput): FactsBodyView {
       },
       { id: 'website', labelKey: 'field.website', value: websiteValue(candidate.website) },
       {
-        id: 'address',
-        labelKey: 'field.address',
-        value: plain(
-          saved?.address === undefined ? (raw('address') ?? text(candidate.address)) : saved.address
-        )
-      }
+        id: 'rating',
+        labelKey: 'facts.body.rating',
+        value: saved === null ? ratingValue(profile, locale) : saved.rating
+      },
+      saved === null ? followersFact(profile, locale) : saved.followers
     ]),
-    // About is one muted line; the title holds the whole text.
-    about: marked([
-      {
-        id: 'about',
-        labelKey: 'field.bio',
-        value: about === null ? null : { kind: 'text', text: about.replace(/\s+/g, ' '), title: about }
-      }
-    ])[0] as Fact,
-    followers: followers.labelKey === null ? null : (marked([followers])[0] ?? null),
     tiles: items.slice(0, STRIP_MAX),
     total: items.length,
     counts: { photos: photos.length, videos: videos.length },

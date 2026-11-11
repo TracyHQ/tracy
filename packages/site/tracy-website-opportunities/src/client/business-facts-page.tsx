@@ -1,7 +1,7 @@
 /**
  * The Business facts sub-page (#537, design A): one full-width band per group, top to bottom: the business, Hours and
  * amenities, Services (Menu for a food place), About, Team, Brand, Key messages, What guests say, Social pages, Photos
- * & video and Research details. Once research made the saved profile (#537 R18) the bands read its groups: the owner's
+ * & video. Once research made the saved profile (#537 R18) the bands read its groups: the owner's
  * values with an Edited chip, what is kept off dimmed, and a fact of no special drawing as a generic cell with its own
  * switch and Edit through the facts door. Every band has one header row (title, source chips, Check this, then [Add
  * more] · On the site · Edit) and the same collapsed height; what does not fit scrolls sideways, a missing fact reads
@@ -10,7 +10,6 @@
  */
 import type { JSX, ReactNode } from 'react'
 
-import { ResearchBand } from './business-facts-bands.tsx'
 import { FactsMedia } from './business-facts-media.tsx'
 import type { BusinessFactsView, CardId } from './business-facts-model.ts'
 import { BusinessBand, moreBusinessFacts } from './business-facts-parts.tsx'
@@ -173,7 +172,6 @@ export function BusinessFactsPage({
         onSite={bandOf('media')}
         setHidden={owner.setMediaHidden}
       />
-      <ResearchBand t={t} view={view} />
     </div>
   )
 }

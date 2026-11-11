@@ -1,18 +1,30 @@
 /**
- * The Business facts body of the Workspace card (#537, option F): two small groups of facts (Business, Contact) with
- * an About line under them, and a 3 by 2 photo mosaic beside them (`facts-body-mosaic.tsx`). Read only, one fixed
- * height (`facts-body-css.ts`). Any tile opens the Business facts sub-page; there is no separate Open control here.
+ * The Business facts body of the Workspace card (#537, option B): two columns of facts on the left, a strip of three
+ * square thumbnails on the right (the last one dimmed with +N when more are stored). Read only, and the same fixed height whatever is found (`facts-body-css.ts`).
+ * Any tile opens the Business facts sub-page; there is no separate Open control here (the row's pill opens it too).
  */
 import type { JSX } from 'react'
+import { ImageIcon, Play } from 'lucide-react'
 
-import type { Fact, FactsBodyView } from './facts-body-model.ts'
-import { FactsMosaic } from './facts-body-mosaic.tsx'
+import { mediaUrl } from './api.ts'
+import { STRIP_SLOTS, type Fact, type FactsBodyView } from './facts-body-model.ts'
 import type { Translate } from './strings.ts'
 
-export { countsText } from './facts-body-mosaic.tsx'
+const plural = (t: Translate, n: number, one: string, many: string): string =>
+  n === 1 ? t(one) : t(many, { count: n })
+
+/** "25 photos · 10 videos" */
+export function countsText(t: Translate, counts: FactsBodyView['counts']): string {
+  return t('facts.body.counts', {
+    photos: plural(t, counts.photos, 'facts.body.photosOne', 'facts.body.photosMany'),
+    videos: plural(t, counts.videos, 'facts.body.videosOne', 'facts.body.videosMany')
+  })
+}
 
 function FactSlot({ t, fact, running }: { t: Translate; fact: Fact; running: boolean }): JSX.Element {
-  if (fact.labelKey === null) return <></>
+  // The reserved slot keeps the grid's rows aligned and the body's height fixed.
+  if (fact.labelKey === null)
+    return <div className="tracy-wo-fb-fact" data-fact={fact.id} aria-hidden="true" />
   const v = fact.value
   const value =
     v === null ? (
@@ -40,27 +52,6 @@ function FactSlot({ t, fact, running }: { t: Translate; fact: Fact; running: boo
   )
 }
 
-function Group({
-  t,
-  title,
-  facts,
-  running
-}: {
-  t: Translate
-  title: string
-  facts: Fact[]
-  running: boolean
-}): JSX.Element {
-  return (
-    <div className="tracy-wo-fb-group">
-      <h4 className="tracy-wo-fb-gt">{title}</h4>
-      {facts.map((fact) => (
-        <FactSlot key={fact.id} t={t} fact={fact} running={running} />
-      ))}
-    </div>
-  )
-}
-
 export function FactsBody({
   t,
   view,
@@ -71,27 +62,65 @@ export function FactsBody({
   /** Opens the Business facts sub-page, as the row's pill does. */
   onOpen: () => void
 }): JSX.Element {
+  const counts = countsText(t, view.counts)
   return (
     <div className="tracy-wo-fb" aria-label={t('facts.body.label')} role="group">
       <div className="tracy-wo-fb-facts">
-        <div className="tracy-wo-fb-groups">
-          <Group t={t} title={t('facts.body.groupBusiness')} facts={view.business} running={view.running} />
-          <Group t={t} title={t('facts.body.groupContact')} facts={view.contact} running={view.running} />
-        </div>
-        <div className="tracy-wo-fb-foot">
-          <FactSlot t={t} fact={view.about} running={view.running} />
-          {view.followers?.value?.kind === 'text' ? (
-            <span
-              className="tracy-wo-fb-aside"
-              data-off={view.followers.off ? '' : undefined}
-              data-fact="followers"
-            >
-              <b>{view.followers.value.text}</b> {t('pp.stat.followers')}
-            </span>
-          ) : null}
-        </div>
+        {[view.left, view.right].map((column, i) => (
+          <div className="tracy-wo-fb-col" key={i === 0 ? 'left' : 'right'}>
+            {column.map((fact) => (
+              <FactSlot key={fact.id} t={t} fact={fact} running={view.running} />
+            ))}
+          </div>
+        ))}
       </div>
-      <FactsMosaic t={t} view={view} onOpen={onOpen} />
+      {view.tiles.length > 0 ? (
+        <div className="tracy-wo-fb-strip" role="group" aria-label={counts}>
+          {Array.from({ length: Math.max(STRIP_SLOTS, view.tiles.length) }, (_, i) => {
+            const tile = view.tiles[i]
+            if (tile === undefined)
+              return <span className="tracy-wo-fb-tile" data-empty="" key={`empty-${i}`} aria-hidden="true" />
+            // Its own rest count; CSS shows the overlay only on the last tile the strip has room for.
+            const rest = view.total - (i + 1)
+            const title = t('facts.body.openPhotos')
+            return (
+              <button
+                type="button"
+                className="tracy-wo-fb-tile"
+                data-kind={tile.kind}
+                data-i={i + 1}
+                key={tile.id}
+                aria-label={title}
+                title={title}
+                onClick={onOpen}
+              >
+                {tile.kind === 'image' ? (
+                  <img src={mediaUrl(tile.id)} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  <Play aria-hidden="true" className="tracy-wo-fb-play" />
+                )}
+                {rest > 0 ? (
+                  <span className="tracy-wo-fb-more" title={t('facts.body.moreMedia', { count: rest })}>
+                    +{rest}
+                  </span>
+                ) : null}
+              </button>
+            )
+          })}
+        </div>
+      ) : (
+        <div className="tracy-wo-fb-nophoto">
+          <ImageIcon aria-hidden="true" />
+          {view.running ? (
+            <b>{t('profile.collecting')}</b>
+          ) : (
+            <>
+              <b>{t('facts.body.noPhotos')}</b>
+              <span>{t('facts.body.noPhotosNote')}</span>
+            </>
+          )}
+        </div>
+      )}
     </div>
   )
 }
