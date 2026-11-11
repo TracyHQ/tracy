@@ -2529,6 +2529,8 @@ contrast checks and the existing confirm-name owner task. The safe version uses 
 so reaching a gate or cost limit cannot render a withheld name. Historical runs retain their recorded checker.
 Parallel bench exports share one pending temporary-directory allocation per chain; disposal awaits that same
 allocation and removes all its exports, unless the explicit evidence-retention option is enabled.
+If a required repair-turn undo is refused or cannot be verified, no later page, batch or resend opens more native
+work. Accepted request IDs remain in the ledger so existing writers are settled and judged; the result stays incomplete.
 Once the site is up and every input
 is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
 (`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. The write never leaves demo content: a step that
