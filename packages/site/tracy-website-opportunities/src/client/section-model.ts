@@ -183,20 +183,8 @@ export type SubSection = Exclude<SectionId, 'demo' | 'sources'>
  * old address with `wo-section=sources` is no section: it opens the overview.
  */
 export const SUB_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'brief', 'media'])
-/** The order of the sub-pages, which their pager walks. */
-export const PAGER_SECTIONS: readonly SubSection[] = Object.freeze(['profile', 'brief'])
-
 export const isSubSection = (v: unknown): v is SubSection =>
   typeof v === 'string' && (SUB_SECTIONS as readonly string[]).includes(v)
 
 /** The sub-page a section opens: `media` opens the Profile. */
 export const pageOf = (section: SubSection): SubSection => (section === 'media' ? 'profile' : section)
-
-/** The pager under a sub-page: the section before and the one after, null at either end. */
-export function pagerOf(section: SubSection): { previous: SubSection | null; next: SubSection | null } {
-  const at = PAGER_SECTIONS.indexOf(pageOf(section))
-  return {
-    previous: at > 0 ? PAGER_SECTIONS[at - 1] : null,
-    next: at < PAGER_SECTIONS.length - 1 ? PAGER_SECTIONS[at + 1] : null
-  }
-}

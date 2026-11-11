@@ -127,7 +127,7 @@ test('Rows: one header with the column titles, and each row shows Added with the
   const html = places()
   assert.equal(count(html, 'class="tracy-wo-my-head"'), 1)
   const titles = [...html.matchAll(/<span data-col="(\w+)">([^<]*)<\/span>/g)].map((m) => m[2])
-  assert.deepEqual(titles, ['Place', 'Address', 'Progress', 'Added', 'Action'])
+  assert.deepEqual(titles, ['Business', 'Address', 'Progress', 'Added', 'Action'])
   assert.match(html, /<time title="10 Nov 2026, 11:05">3 hours ago<\/time>/)
   assert.match(html, /<time title="7 Nov 2026, 11:05">3 days ago<\/time>/)
   assert.match(html, /title="1 Example Road, Sampletown">1 Example Road, Sampletown</)

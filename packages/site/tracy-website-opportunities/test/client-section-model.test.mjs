@@ -11,7 +11,6 @@ import {
   SECTION_IDS,
   SUB_SECTIONS,
   isSubSection,
-  pagerOf,
   sectionMetas,
   sourceCounts
 } from '../src/client/section-model.ts'
@@ -187,17 +186,13 @@ test('section strings are English with no dash', () => {
   for (const k of keys) assert.doesNotMatch(STRINGS[k], /[–—]/, k)
 })
 
-test('three sections open as a sub-page, the pager walks Profile and Business brief; Sources is no sub-page', () => {
+test('three sections open as a sub-page, Sources is no sub-page', () => {
   assert.deepEqual(SUB_SECTIONS, ['profile', 'brief', 'media'])
   assert.equal(isSubSection('brief'), true)
   assert.equal(isSubSection('demo'), false)
   assert.equal(isSubSection('rail'), false)
   // The Sources table on Details is the whole of Sources (#537).
   assert.equal(isSubSection('sources'), false)
-  assert.deepEqual(pagerOf('profile'), { previous: null, next: 'brief' })
-  assert.deepEqual(pagerOf('brief'), { previous: 'profile', next: null })
-  // Photos & video live in the Profile (#537): the media alias opens the Profile page and walks its pager.
-  assert.deepEqual(pagerOf('media'), { previous: null, next: 'brief' })
 })
 
 test('every rail string is gone with the rail', () => {

@@ -52,7 +52,7 @@ export const en = {
   'v3.sendDemo': 'Send demo',
   'v3.nextDemo': 'Build a demo from this research. You can adjust the brief in Details.',
   'v3.nextOutreach': 'The demo is ready. Copy the message or open a channel to share it.',
-  'v3.limitReached': 'Daily build limit reached. Select fewer places or wait until 00:00 UTC.',
+  'v3.limitReached': 'Daily build limit reached. Select fewer businesses or wait until 00:00 UTC.',
   'v3.limitResets': 'Resets at {time} UTC',
   'v3.steps': 'Steps',
   'v3.step.brief': 'Planning the site',
@@ -129,15 +129,15 @@ export const en = {
   'off.title': 'Website Opportunities is turned off',
   'off.body': 'An admin turned this feature off. Your saved opportunities and demo sites are kept.',
 
-  'list.title': 'My opportunities',
-  'list.find': 'Find places',
+  'list.title': 'Added businesses',
+  'list.find': 'Find businesses',
   'list.empty.title': 'No opportunities yet',
   'list.empty.body': 'Search around a place, or paste the address of a restaurant’s website or social page.',
   'list.failed': 'Could not load your opportunities.',
   /** Under a row's name: how many demo sites were built from it. */
   'list.sites': '{count} demo sites',
 
-  'find.title': 'Find places',
+  'find.title': 'Find businesses',
   'find.useLocation': 'Use my location',
   'find.location.asking': 'Asking for your location…',
   'find.location.found': 'Searching around your location.',
@@ -208,7 +208,7 @@ export const en = {
   /** After an add that left links out: the heading over them, and the way on. `{count}`: links left out. */
   'links.added.one': 'Added. 1 link left out',
   'links.added.other': 'Added. {count} links left out',
-  'links.added.open': 'Open My opportunities',
+  'links.added.open': 'Open Added businesses',
   'find.failed': 'The search did not go through.',
   'find.none': 'No places found here. Try a bigger radius or another area.',
   'find.send': 'Research {count} selected',
@@ -480,10 +480,11 @@ export const en = {
 
   /** "What happens next" in the Inspector, one line per stage. A stop reason (`reason.*`) is drawn before `next.stopped`. */
   'next.running':
-    'Tracy is collecting the place’s pages, posts and photos. You can leave this tab; it keeps running.',
+    'Tracy is collecting the business’s pages, posts and photos. You can leave this tab; it keeps running.',
   'next.queued': 'Waiting for a free researcher. It starts by itself.',
   'next.stopped': 'What was already collected is kept. Resume to carry on.',
-  'next.new': 'Nothing collected yet. Research reads the place’s website, Google listing and social pages.',
+  'next.new':
+    'Nothing collected yet. Research reads the business’s website, Google listing and social pages.',
   'next.cancelled': 'Research was cancelled. What was collected before is kept. Resume to carry on.',
   'next.researched': 'Research is done. Create a site brief, then build a demo site from it.',
   'next.brief': 'Brief {n} is written. Build a demo site from it.',
@@ -520,7 +521,7 @@ export const en = {
   /** Beside the two sub-tabs: research runs waiting or running now. */
   'sub.researching': '{count} researching',
   /** My opportunities (#537, header C): the column titles over Rows, the Added cell, the "..." menu, selection mode. */
-  'list.col.place': 'Place',
+  'list.col.place': 'Business',
   'list.col.address': 'Address',
   'list.col.progress': 'Progress',
   'list.col.added': 'Added',
@@ -533,11 +534,11 @@ export const en = {
   'my.menu.showCancelled': 'Show cancelled',
   'my.menu.quota': '{used} of {limit} builds used today',
   'my.menu.quotaUnlimited': '{used} builds used today, no daily limit',
-  'select.bar': 'Selected places',
+  'select.bar': 'Selected businesses',
   'select.done': 'Done',
   'list.search': 'Search by name',
-  'list.noMatch': 'No place matches “{q}”.',
-  'list.filterEmpty': 'No place matches this filter.',
+  'list.noMatch': 'No business matches “{q}”.',
+  'list.filterEmpty': 'No business matches this filter.',
   /** Under the table while more pages wait on the server. */
   'list.showing': 'Showing {shown} of {total}',
   'columns.research': 'Research',
@@ -552,15 +553,15 @@ export const en = {
   'select.allOn': 'All {count} matching this filter are selected.',
   'bulk.cancel': 'Cancel research',
   'bulk.result': '{done} done · {skipped} left as they were · {failed} failed',
-  'bulk.tooMany': 'Too many at once. Narrow the filter to 500 places or fewer.',
+  'bulk.tooMany': 'Too many at once. Narrow the filter to 500 businesses or fewer.',
   'delete.button': 'Delete',
   'delete.title.one': 'Delete {name}?',
-  'delete.title.other': 'Delete {count} places?',
-  'delete.title.unnamed': 'Delete this place?',
+  'delete.title.other': 'Delete {count} businesses?',
+  'delete.title.unnamed': 'Delete this business?',
   'delete.lead.one':
-    'This place leaves My opportunities with its research, briefs and demo history. You cannot undo this.',
+    'This business leaves Added businesses with its research, briefs and demo history. You cannot undo this.',
   'delete.lead.other':
-    'These places leave My opportunities with their research, briefs and demo history. You cannot undo this.',
+    'These businesses leave Added businesses with their research, briefs and demo history. You cannot undo this.',
   'delete.site': 'Its live demo site is removed too.',
   'delete.sites.one': '{count} of them has a live demo site, which is removed too.',
   'delete.sites.other': '{count} of them have a live demo site, which is removed too.',
@@ -894,7 +895,7 @@ export const en = {
   'demos.state.deleted': 'Removed',
 
   'build.label': 'Demo site name',
-  'build.labelHint': 'Named after the place. Change it to use another address.',
+  'build.labelHint': 'Named after the business. Change it to use another address.',
   'build.labelHintSaved':
     'The site name you saved on the Site content brief. Change it to use another address.',
   'build.start': 'Build demo',
@@ -942,7 +943,8 @@ export const en = {
   'again.kept': 'Kept',
   'again.total.account': 'Up to {total}, counted on your account.',
   'again.total.tracy': 'Up to {total}, paid by Tracy.',
-  'again.pagesNote': 'Pages found on the web are added only when they match this place’s address or phone.',
+  'again.pagesNote':
+    'Pages found on the web are added only when they match this business’s address or phone.',
   'again.nothingDue': 'Nothing needs a new look right now.',
   'again.left': 'Research again runs left today: {count}',
   'again.cancel': 'Cancel',
@@ -953,17 +955,17 @@ export const en = {
   'again.run.rule-changed': 'Tracy now looks for it differently',
   'again.run.again': 'Collected again from scratch',
   'again.kept.up-to-date': 'Up to date',
-  'again.kept.none': 'The place has none (checked recently)',
+  'again.kept.none': 'The business has none (checked recently)',
   'again.kept.unavailable': 'Not available on this server',
   'again.kept.over-cap': 'Left for a later run: over this run’s spending limit',
   'again.error.nothingDue': 'Everything is already up to date.',
   'again.error.limit': 'You used today’s Research again runs. Try again tomorrow.',
-  'again.error.running': 'This place is already being researched. Wait for it to finish.',
-  'again.error.unsupported': 'Research again is not available for this place.',
-  'again.error.publicPlace': 'This place was already researched again today. Try again tomorrow.',
+  'again.error.running': 'This business is already being researched. Wait for it to finish.',
+  'again.error.unsupported': 'Research again is not available for this business.',
+  'again.error.publicPlace': 'This business was already researched again today. Try again tomorrow.',
   'again.error.publicSpent': 'Free research is used up for today. Try again tomorrow or sign in.',
   'again.error.publicLimit': 'You reached today’s research limit. Try again tomorrow or sign in.',
-  'again.error.notResearched': 'This place has not been researched yet.',
+  'again.error.notResearched': 'This business has not been researched yet.',
   'again.error.network': 'Tracy could not be reached. Check your connection and try again.',
   'again.error.failed': 'Research again could not start. Try again.',
   /** A search row's state, and each page it found. Only Tracy's team decides on a page that needs a check. */
@@ -983,9 +985,9 @@ export const en = {
   'menu.state.fileOnly': 'Only the file was read',
   'menu.state.partly': 'Read partly',
   'menu.why.never':
-    'Tracy has not read the menu of this place yet. Menu photos: {photos} · Menu files: {files}',
-  'menu.why.none': 'No menu file or menu photo was found for this place. Checked {date}.',
-  'menu.why.noneUndated': 'No menu file or menu photo was found for this place.',
+    'Tracy has not read the menu of this business yet. Menu photos: {photos} · Menu files: {files}',
+  'menu.why.none': 'No menu file or menu photo was found for this business. Checked {date}.',
+  'menu.why.noneUndated': 'No menu file or menu photo was found for this business.',
   'menu.why.off': 'Tracy does not read menus yet.',
   'menu.why.photosOff': 'Tracy does not read menu photos yet.',
   'menu.why.partly': 'Some menu photos could not be read this time.',
@@ -1053,10 +1055,6 @@ export const en = {
   'section.openBrief': 'Open full brief',
   'section.openNamed': 'Open {section}',
 
-  /** A section opened as a sub-page: the pager at its foot walks Profile, Sources, Business brief, Photos & video. */
-  'section.pager': 'Other sections of this place',
-  'section.previous': 'Previous',
-  'section.next': 'Next',
   'section.backTo': 'Back to {name}',
 
   /** The Workspace card of Details (#537): its title, the folded summary of a section, and the waiting lines. */
@@ -1117,7 +1115,7 @@ export const en = {
   'site.name.cancel': 'Cancel',
   'site.name.input': 'Site name',
   'site.name.hint': 'The address of the demo, and of the site when the business takes it over.',
-  'site.name.suggested': 'Named after the place',
+  'site.name.suggested': 'Named after the business',
   'site.name.limits': '{min} to {max} characters: lowercase letters, digits and hyphens.',
   'site.name.checking': 'Checking…',
   'site.name.free': 'This name is free',
@@ -1304,7 +1302,7 @@ export const en = {
     'Research has already run. Sources are fixed once the research starts; they can be changed only before it, or after it failed.',
   'source.add.error.NETWORK': 'No connection. Check your internet, then press Add again.',
   'source.add.error.NOT_SIGNED_IN': 'You are signed out. Sign in again, then add the link.',
-  'source.add.error.NOT_FOUND': 'This business was removed. Go back to My opportunities.',
+  'source.add.error.NOT_FOUND': 'This business was removed. Go back to Added businesses.',
   'source.add.error.FEATURE_OFF': 'Website Opportunities is turned off right now. Try again later.',
   'source.add.error.NO_DOOR': 'This server cannot add sources yet. Reload the page and try again.',
   'source.add.error.PREVIEW_BLOCKED':
@@ -1391,7 +1389,7 @@ export const en = {
   // Remove a pasted source from the Sources table through its dialog (#537, source-remove-model.ts).
   'source.remove.label': 'Remove {name}',
   'source.remove.title': 'Remove this source?',
-  'source.remove.lead': '{name} ({link}) will no longer be read for this place.',
+  'source.remove.lead': '{name} ({link}) will no longer be read for this business.',
   'source.remove.cancel': 'Cancel',
   'source.remove.confirm': 'Remove',
   'source.remove.removing': 'Removing',

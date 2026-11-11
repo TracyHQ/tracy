@@ -1,6 +1,6 @@
 /**
  * Layout of the Details page (#517): the sticky header, the two columns of section cards (layout C), the Progress
- * card (stepper style D), the sub-page with its pager (its header: `sub-page-header-css.ts`), the Demo site block and
+ * card (stepper style D), the sub-page (its header: `sub-page-header-css.ts`), the Demo site block and
  * the Business brief table. Scoped under `.tracy-wo-details`, reading only Tracy tokens. The
  * section card rules are repeated here so Details keeps its look when the Inspector's rules go. No backtick may appear
  * inside the template below.
@@ -152,13 +152,6 @@ export const DETAILS_CSS =
 .tracy-wo-step[data-failed] .tracy-wo-step-line { color: var(--destructive); }
 .tracy-wo-step-act { display: flex; margin-top: 8px; }
 .tracy-wo-subpage { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.tracy-wo-pager { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--border); }
-.tracy-wo-pager-link { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; width: 100%; max-width: 240px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--background); color: var(--foreground); font: inherit; font-size: 13px; text-align: left; cursor: pointer; }
-.tracy-wo-pager-link[data-next] { justify-self: end; align-items: flex-end; text-align: right; }
-.tracy-wo-pager-link small { display: inline-flex; align-items: center; gap: 2px; font-size: 11.5px; color: var(--muted-foreground); }
-.tracy-wo-pager-link small svg { width: 12px; height: 12px; }
-.tracy-wo-pager-link:hover { background: color-mix(in oklab, var(--foreground) 4%, var(--background)); }
-.tracy-wo-pager-link:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
 .tracy-wo-subpage[data-section='profile'] > .tracy-wo-psec { padding: 0; border: 0; background: transparent; }
 .tracy-wo-src-logo { flex: none; display: grid; place-items: center; width: 20px; height: 20px; color: var(--muted-foreground); }
 .tracy-wo-src-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
@@ -203,8 +196,6 @@ export const DETAILS_CSS =
 @container (max-width: 560px) {
   .tracy-wo-media-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { grid-template-columns: minmax(0, 1fr); }
-  .tracy-wo-pager { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-  .tracy-wo-pager > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
 }
 ` +
   STEP_NODE_CSS +
