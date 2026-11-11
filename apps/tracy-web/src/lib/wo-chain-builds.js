@@ -4,8 +4,9 @@
  * `sites/brief-engines/step-chain.js` and `brief-build.js`). The numbers are the runs' own minutes and spend; nothing here
  * is estimated. Staff only: the door (`ops/wo.js`) admits internal emails and nobody else.
  */
-import { CURRENT_BRIEF } from './site-brief-row.js'
+
 import { bornSiteAddress } from './site-address.js'
+import { CURRENT_BRIEF } from './site-brief-row.js'
 import { chainTemplateOf } from './step-chain-switch.js'
 
 /** A run is "far above the usual" when it took more than this many times the median of the builds listed. */
@@ -52,6 +53,7 @@ export const chainRunOpen = (state) => OPEN_STATES.includes(String(state))
 export const CHAIN_BUILDS_LIMIT = 200
 
 const finiteOrZero = (value) => (Number.isFinite(Number(value)) ? Number(value) : 0)
+const measuredUsd = (value) => (value == null ? null : Number.isFinite(Number(value)) ? Number(value) : null)
 
 const medianOf = (values) => {
   if (values.length === 0) return 0
@@ -82,7 +84,8 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
   const builds = rows.map((row) => {
     const chain = row.chain ?? {}
     const steps = Array.isArray(chain.steps) ? chain.steps : []
-    const spent = steps.reduce((sum, s) => sum + finiteOrZero(s.usd), 0)
+    const spent = steps.reduce((sum, s) => sum + (measuredUsd(s.usd) ?? measuredUsd(s.knownUsd) ?? 0), 0)
+    const partial = steps.some((s) => measuredUsd(s.usd) === null)
     const attemptMs = Number(row.attempt_started_at)
     const startedMs =
       Number.isFinite(attemptMs) && attemptMs > 0 ? attemptMs : new Date(row.created_at).getTime()
@@ -135,7 +138,14 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
           : finiteOrZero(chain.totalMinutes),
       rawChain: chain,
       interruption,
-      totalUsd: unfinished ? Math.round(spent * 10_000) / 10_000 : finiteOrZero(chain.totalUsd),
+      totalUsd: unfinished
+        ? partial
+          ? null
+          : Math.round(spent * 10_000) / 10_000
+        : measuredUsd(chain.totalUsd),
+      ...((unfinished ? partial : measuredUsd(chain.totalUsd) === null)
+        ? { knownUsd: Math.round((measuredUsd(chain.knownUsd) ?? spent) * 10_000) / 10_000 }
+        : {}),
       ending,
       failedStep:
         ending === 'failed'
@@ -147,7 +157,8 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       steps: steps.map((s) => ({
         step: String(s.step),
         minutes: finiteOrZero(s.minutes),
-        usd: finiteOrZero(s.usd),
+        usd: measuredUsd(s.usd),
+        ...(measuredUsd(s.usd) === null ? { knownUsd: measuredUsd(s.knownUsd) ?? 0 } : {}),
         outcome: String(s.outcome ?? ''),
         error: typeof s.error === 'string' ? s.error : null
       })),

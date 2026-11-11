@@ -8,7 +8,8 @@ import { tr } from './i18n/index.ts'
 export interface ChainBuildStep {
   step: string
   minutes: number
-  usd: number
+  usd: number | null
+  knownUsd?: number
   outcome: string
   error: string | null
 }
@@ -20,7 +21,8 @@ export interface ChainBuild {
   template: string | null
   startedAt: string
   totalMinutes: number
-  totalUsd: number
+  totalUsd: number | null
+  knownUsd?: number
   /** The original chain snapshot, retained separately from interruption accounting. */
   rawChain: Record<string, unknown>
   interruption: {
@@ -69,7 +71,8 @@ export function formatMinutes(minutes: number): string {
 }
 
 /** USD with cents ("$2.40"); under a cent it keeps four places so a cheap step is not shown as free. */
-export function formatUsd(usd: number): string {
+export function formatUsd(usd: number | null): string {
+  if (usd === null || !Number.isFinite(usd)) return '—'
   const safe = Number.isFinite(usd) && usd > 0 ? usd : 0
   const places = safe > 0 && safe < 0.01 ? 4 : 2
   return `$${formatNumber(safe, { minimumFractionDigits: places, maximumFractionDigits: places })}`

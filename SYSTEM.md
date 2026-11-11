@@ -2600,6 +2600,12 @@ write step's chain measurement; only a verified restore operation followed by a 
 personalized write remains stopped pending review. Exceptions with no complete repair ledger remain failures rather than
 risk a restore racing an unknown writer.
 
+Chain spend is measured, never estimated. A repair summary's `costUsd.agent` is null if any native turn lacks a
+finite reported cost; `costUsd.agentKnown` retains the measured subtotal. No native turns means zero agent spend.
+Step and chain records preserve unknown `usd` and `totalUsd` as null and carry `knownUsd` for their measured subtotal.
+The Ops data response preserves these nulls and subtotals. Historical numeric measurements, including zero, are read
+unchanged; historical artifacts are not reinterpreted or rewritten.
+
 Bench execution and checked quality are separate. Planner, writer and picture runs can finish `succeeded` with
 `standing_failures` after their bounded fix rounds. The chain still exports and writes their best available output,
 but records `CHAIN_BENCH_CHECK_FAILED` on the originating step; terminal demo QA rejects that unresolved check even

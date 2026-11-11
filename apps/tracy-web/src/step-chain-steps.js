@@ -381,8 +381,12 @@ export function createStepChainSteps(deps) {
       })
       await writeFile(path.join(out, 'site-recovery.json'), JSON.stringify(step.recovery, null, 2))
       await writeFile(path.join(out, 'site-write-report.json'), JSON.stringify(step.report, null, 2))
-      const usd = Number(step.repair?.costUsd?.agent ?? 0)
-      return { value: { report: step.report, siteCheck: step.siteCheck?.status ?? null }, usd }
+      const usd = step.repair ? (step.repair.costUsd?.agent ?? null) : 0
+      return {
+        value: { report: step.report, siteCheck: step.siteCheck?.status ?? null },
+        usd,
+        ...(usd === null ? { knownUsd: step.repair?.costUsd?.agentKnown ?? 0 } : {})
+      }
     },
 
     // What the run left on disk goes with it (unless `keepFiles`: a stand that reads them after); the bench runs keep their
