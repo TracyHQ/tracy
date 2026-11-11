@@ -30,7 +30,8 @@ const TRACY_COPIES = {
   '0011-bulk-request-delete.sql': '207-wo-bulk-request-delete.sql',
   '0012-opportunity-site-label.sql': '208-wo-opportunity-site-label.sql',
   '0013-opportunity-approval.sql': '210-wo-opportunity-approval.sql',
-  '0014-opportunity-same-place.sql': '211-wo-opportunity-same-place.sql'
+  '0014-opportunity-same-place.sql': '211-wo-opportunity-same-place.sql',
+  '0015-opportunity-approved-research.sql': '213-wo-opportunity-approved-research.sql'
 }
 const CARRIED = Object.keys(TRACY_COPIES)
 const afterBaseline = async () =>

@@ -185,18 +185,18 @@ export async function fromOpportunity(client, opp) {
 }
 
 /**
- * Facts the place's current snapshot took from a shared hub that has since revoked them (`hub/local-cache.js`):
+ * Facts the snapshot the card reads (the place's current one, or the one an approved card is pinned to,
+ * `approved-research.js`) took from a shared hub that has since revoked them (`hub/local-cache.js`):
  * `[{hubPlaceId, source, revokedAt}]`. Empty where no hub was ever read (the table is absent on such a host).
  */
-async function revokedHubUses(db, placeId) {
+async function revokedHubUses(db, snapshotId) {
   const { rows } = await db.query(`select to_regclass('wo_hub_client_use') is not null as present`)
   if (!rows[0].present) return []
   return (
     await db.query(
-      `select u.hub_place_id, u.source, u.revoked_at from wo_place p
-         join wo_hub_client_use u on u.snapshot_id = p.current_snapshot_id
-        where p.id = $1 and u.revoked_at is not null order by u.hub_place_id`,
-      [placeId]
+      `select u.hub_place_id, u.source, u.revoked_at from wo_hub_client_use u
+        where u.snapshot_id = $1 and u.revoked_at is not null order by u.hub_place_id`,
+      [snapshotId]
     )
   ).rows.map((r) => ({ hubPlaceId: r.hub_place_id, source: r.source, revokedAt: r.revoked_at.toISOString() }))
 }
@@ -273,7 +273,7 @@ export async function briefResearchOf(db, opp) {
     const revoked = await revokedHubCopy(db, read.profile?.googlePlace)
     return { read: revoked ? withoutRevoked(read, [{ ...revoked, source: 'google-places' }]) : read, view }
   }
-  const revoked = await revokedHubUses(db, opp.place_id)
+  const revoked = await revokedHubUses(db, view.snapshot.id)
   const read = await withVision(db, fromPlace(view))
   return { read: revoked.length ? withoutRevoked(read, revoked) : read, view }
 }

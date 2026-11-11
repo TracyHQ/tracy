@@ -6,6 +6,9 @@
  *
  * Null when the place has no published snapshot: the reader falls back to the per-account rows
  * (`wo_source`, `wo_profile`, `wo_media`), which is also how data from before shared research reads.
+ *
+ * 🔒 An approved card reads the research it was approved with (`approved-research.js`, #537 R23): its pinned snapshot
+ * and source rows, never the place's current one, so another card's research of the same place changes nothing here.
  */
 import { mergeProfile } from './executor.js'
 import { withProfileEdits } from './profile-edits.js'
@@ -29,17 +32,20 @@ import { LISTING_SOURCE, SOURCES } from './sources.js'
 import { judgedAs } from './link-rejudge.js'
 import { MENU_FILE_PART, menuApplicable } from './menu-items.js'
 import { MENU_PHOTOS_PART } from './menu-photo-reading.js'
+import { approvedResearchOf } from './approved-research.js'
 
 /**
  * @param {import('pg').Pool | import('pg').PoolClient} db
  * @param {object} opportunity - a `wo_opportunity` row
  * @returns {Promise<null | {snapshot: object, sources: object[], shown: object[], profile: object,
- *   brand: object | null, media: object[]}>} `sources` are `wo_source`-shaped with `shared` (true: the place's);
+ *   brand: object | null, media: object[], approved?: object}>} `sources` are `wo_source`-shaped with `shared` (true: the place's);
  *   `shown` is what the research card lists: every source the run tried, failures included; `media` rows carry
- *   `origin` ('place': `wo_place_media`, 'opportunity': `wo_media`); revoked place media are left out
+ *   `origin` ('place': `wo_place_media`, 'opportunity': `wo_media`); revoked place media are left out; `approved` the
+ *   card's pin (`wo_opportunity_approved_research` row) when its Business facts are approved
  */
 export async function placeViewOf(db, opportunity) {
-  const snapshot = await currentSnapshotOf(db, opportunity.place_id)
+  const pinned = await approvedResearchOf(db, opportunity)
+  const snapshot = pinned?.snapshot ?? (await currentSnapshotOf(db, opportunity.place_id))
   if (!snapshot) return null
   // Guest reviews reach the profile and brief only when collected; a failed refresh keeps the last quotations.
   const reviews = snapshot.sources
@@ -86,12 +92,14 @@ export async function placeViewOf(db, opportunity) {
       seed.ref !== seed.collected?.externalId
     )
       continue
-    const identity = (
-      await db.query(
-        "select 1 from wo_place_identity where place_id = $1 and namespace = 'google' and external_id = $2",
-        [snapshot.place_id, seed.ref]
-      )
-    ).rows[0]
+    const identity = pinned
+      ? pinned.googleIds.has(seed.ref)
+      : (
+          await db.query(
+            "select 1 from wo_place_identity where place_id = $1 and namespace = 'google' and external_id = $2",
+            [snapshot.place_id, seed.ref]
+          )
+        ).rows[0]
     if (identity)
       publicProfiles.push({
         source: 'google-places',
@@ -179,6 +187,8 @@ export async function placeViewOf(db, opportunity) {
   const part = (name) => snapshot.sources.find((s) => s.source === name) ?? null
   return {
     snapshot,
+    // The card's pin (`approved-research.js`), when it is approved: its readers take the kept measurements from it.
+    ...(pinned ? { approved: pinned.approved } : {}),
     sources: rows,
     shown,
     // The hours and Google's rating on the site, with this account's choices (`business-hours.js`, `business-rating.js`),

@@ -15,6 +15,7 @@
 import { judgeLinks } from '../domain/link-kinds.mjs'
 import { videoSize } from '../domain/video-size.mjs'
 import { approvalOf, approveProfile, markProfileChanged, saveSourceChange } from './approval.js'
+import { pinApprovedResearch } from './approved-research.js'
 import { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES } from './executor.js'
 import { LISTING_PAGES_MAX, pruneListingSource, saveListingSource, unsupportedLinkOf } from './link-fields.js'
 import { researchStateOf } from './research-state.js'
@@ -83,6 +84,9 @@ export function sellerReviewRoutes(app, ctx) {
       )
     const row = await approveProfile(pool, own.who.accountId, own.opp.id)
     if (!row) return notFound(c, 'opportunity')
+    // Approved is final, the research it read too (#537 R23): pinned now, so another card's research of the same place
+    // never reaches this card (`approved-research.js`).
+    await pinApprovedResearch(pool, row)
     return answer(c, row)
   })
 

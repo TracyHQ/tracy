@@ -33,6 +33,8 @@ import {
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
 import { closedListOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { withSocialStats } from 'website-opportunities/src/place-social-stats.js'
+import { approvedSocialStatsOf } from 'website-opportunities/src/approved-research.js'
+import { snapshotProfileOf } from 'website-opportunities/src/places.js'
 import { qualityHash } from './quality-dossier.js'
 import { makeBuildChoice, withBuildChoice } from './build-choice.js'
 import { withLogoResearch } from './logo-research.js'
@@ -517,7 +519,11 @@ function withPictureLabels(read, labelling) {
 }
 
 async function liveRead(db, opp, view) {
-  return withSocialStats(db, view ? fromPlace(view) : await fromOpportunity(db, opp))
+  // An approved card reads the social measurements kept with its pinned research (`approved-research.js`, #537 R23).
+  const frozen = view?.approved
+    ? await approvedSocialStatsOf(db, view, await snapshotProfileOf(db, view.snapshot.id))
+    : null
+  return withSocialStats(db, view ? fromPlace(view) : await fromOpportunity(db, opp), { frozen })
 }
 
 /** One shape for a live read and an action's frozen one (`freezeDemoResearchInput`), so both hash alike. */

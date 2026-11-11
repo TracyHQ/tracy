@@ -3,6 +3,7 @@ import { placeProfileFromResearch } from '../domain/place-profile-from-research.
 import { placeViewOf } from './place-view.js'
 import { socialStatsOfRead } from './place-social-stats.js'
 import { currentSnapshotOf, snapshotMediaOf, snapshotProfileOf } from './places.js'
+import { approvedSocialStatsOf } from './approved-research.js'
 
 /** Read the full research, including failed/pending collectors, without the brief's content limits. */
 export async function readPlaceProfile(db, ids = {}) {
@@ -24,6 +25,9 @@ export async function readPlaceProfileWithInputs(db, { opportunityId, placeId } 
   let brand = {}
   let sources = []
   let media = []
+  // An approved card's pin (`approved-research.js`): its place's external id and social measurements as they were then.
+  let approved = null
+  let frozenStats = null
   if (opportunityId) {
     opportunity = (await db.query('select * from wo_opportunity where id = $1', [opportunityId])).rows[0]
     if (!opportunity) return null
@@ -32,6 +36,8 @@ export async function readPlaceProfileWithInputs(db, { opportunityId, placeId } 
     if (view) {
       snapshot = view.snapshot
       const held = await snapshotProfileOf(db, snapshot.id)
+      approved = view.approved ?? null
+      frozenStats = await approvedSocialStatsOf(db, view, held)
       profile = { ...held?.profile, ...view.profile }
       brand = view.brand
       // Keep collectors absent from the display list, too (search seeds and future collectors).
@@ -71,15 +77,17 @@ export async function readPlaceProfileWithInputs(db, { opportunityId, placeId } 
       media = await snapshotMediaOf(db, snapshot.id)
     }
   }
-  const external = placeId
-    ? (
-        await db.query(
-          `select namespace, external_id from wo_place_identity where place_id = $1 and namespace <> 'merge'
+  const external = approved
+    ? approved.identity
+    : placeId
+      ? (
+          await db.query(
+            `select namespace, external_id from wo_place_identity where place_id = $1 and namespace <> 'merge'
      order by case namespace when 'google' then 0 when 'osm' then 1 when 'url' then 2 else 3 end, external_id limit 1`,
-          [placeId]
-        )
-      ).rows[0]
-    : null
+            [placeId]
+          )
+        ).rows[0]
+      : null
   const identity = {
     ...(opportunity ?? { id: placeId, name: place?.display_name }),
     ...(external ? { namespace: external.namespace, externalId: external.external_id } : {})
@@ -97,7 +105,7 @@ export async function readPlaceProfileWithInputs(db, { opportunityId, placeId } 
       sources,
       media: stored,
       posts,
-      socialStats: await socialStatsOfRead(db, { profile, sources })
+      socialStats: await socialStatsOfRead(db, { profile, sources }, undefined, { frozen: frozenStats })
     }),
     research: profile,
     media: stored
