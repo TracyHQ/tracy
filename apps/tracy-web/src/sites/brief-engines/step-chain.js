@@ -129,10 +129,14 @@ export function createStepChainEngine({
        * doors can say how long it has been running (#537).
        */
       const active = new Map()
-      const snap = () =>
-        Promise.resolve(
-          ctx.progress?.(chainSummary(record, failed, now() - t0, [...active.keys()], sinceOf(active)))
-        ).catch(() => {})
+      let progressWrite = Promise.resolve()
+      const snap = () => {
+        const summary = chainSummary(record, failed, now() - t0, [...active.keys()], sinceOf(active))
+        // Parallel steps share one row. Persist snapshots in order so a slower earlier write
+        // cannot erase another step's start, completion or measured spend.
+        progressWrite = progressWrite.then(() => ctx.progress?.(summary)).catch(() => {})
+        return progressWrite
+      }
       /** Run one step, timed and costed; a failure is kept, never thrown, and what the step still made is used. */
       const run = async (step, inputs) => {
         const start = now()

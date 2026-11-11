@@ -2596,7 +2596,10 @@ steps: a step still going then is stopped, its best version used, no new 9b work
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
-(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. The brand boundary receives the
+(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Parallel steps persist
+their chain progress snapshots in order through one promise queue per run, so a late earlier update cannot erase
+another step's start, completion or measured spend. Progress storage failures remain non-fatal and do not poison later updates.
+The brand boundary receives the
 frame's selected primary site language. Only when the research has no brand voice, it supplies that language name alone
 in the brand run's input and records `brand-brief-language/1` in `brief_source`; it invents no tone, preserves an authored voice,
 and never rewrites the WO revision. A missing or unknown selected language cannot supply a voice.
@@ -2681,6 +2684,8 @@ finite reported cost; `costUsd.agentKnown` retains the measured subtotal. No nat
 Step and chain records preserve unknown `usd` and `totalUsd` as null and carry `knownUsd` for their measured subtotal.
 The Ops data response preserves these nulls and subtotals. Historical numeric measurements, including zero, are read
 unchanged; historical artifacts are not reinterpreted or rewritten.
+An interrupted running snapshot with active steps has an unknown final cost: Ops exposes the recorded charges as
+`knownUsd` and leaves `totalUsd` null, without rewriting its original chain measurement.
 
 Bench execution and checked quality are separate. Planner, writer and picture runs can finish `succeeded` with
 `standing_failures` after their bounded fix rounds. The chain still exports and writes their best available output,
