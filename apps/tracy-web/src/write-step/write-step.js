@@ -339,6 +339,17 @@ export async function runWriteStep(input) {
       plan,
       contentMap
     })
+    const provenanceProblems = exported.problems.filter((p) => p.code === 'ARTICLE_PROVENANCE')
+    const refusedCopy = new Set(provenanceProblems.map((p) => p.where))
+    leaveOut(
+      provenanceProblems.map((p) => ({
+        slot: String(p.where),
+        key: contentMapKey(String(p.where)),
+        owner: 'writer',
+        step: 6,
+        reason: `copy: ${p.detail}`
+      }))
+    )
     extras = exported.extras
     // A page the plan creates with no words in the copy is not created, and said once on step 6; every other page is written.
     const wordless = new Set(pagesWithoutCopy(plan, extras.pages))
@@ -384,7 +395,10 @@ export async function runWriteStep(input) {
         reason: `copy: the kit has no slot ${s.slot}`
       }))
     )
-    const view = { ...copyView, slots: copyView.slots.filter((s) => known.has(s.slot)) }
+    const view = {
+      ...copyView,
+      slots: copyView.slots.filter((s) => known.has(s.slot) && !refusedCopy.has(s.slot))
+    }
     const fromPlan = planClaims(
       {
         plan,

@@ -333,7 +333,14 @@ test('every rung of the ladder, in order, and never a drawing in an any-real or 
   assert.ok(!m.returns.some((r) => r.frame === 'block-c.1'), 'never returned')
   assert.deepEqual(e.get('block-c.1').filledBy, { rung: 'best-rejected', faults: ['wrong subject'] })
   assert.match(e.get('block-c.1').reason, /^placed despite looker: wrong subject, after: draw placed/)
-  const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
+  const exported = exportPictureMapping({
+    pictures: m,
+    contract: kit().contract,
+    revision: 'r',
+    kit: kit(),
+    plan: plan(),
+    brief: brief()
+  })
   assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
   assert.ok(!packageProblems(exported, kit().contract).some((x) => x.startsWith('block-c.1:')))
   // The redraw names the looker's faults; the first drawing does not.
@@ -507,7 +514,14 @@ test('a frame the plan wants filled that cannot be hidden keeps the best picture
     result.rules.filter((r) => r.status === 'fail').map((r) => [r.id, r.failures]),
     []
   )
-  const exported = exportPictureMapping({ pictures: m, contract: kit().contract, revision: 'r', kit: kit() })
+  const exported = exportPictureMapping({
+    pictures: m,
+    contract: kit().contract,
+    revision: 'r',
+    kit: kit(),
+    plan: plan(),
+    brief: brief()
+  })
   assert.equal(exported.mapping.changes['module-c.1'], c.sitePath)
   assert.ok(!exported.problems.some((x) => x.where === 'block-c.1'))
 })

@@ -2425,6 +2425,20 @@ New WO briefs retain known vision `textPresence` separately from the legacy over
 overlay answer is false; unknown presence remains omitted. Picture checker version `site-pictures-check/2`
 records this behavior. Existing frozen briefs and paid research labels are not rewritten.
 
+The picture bench's mapping export reuses P07's documentary-source rule with the run's original plan,
+brief and kit before placing a generated or extended picture in a write package. A rejected documentary
+frame, its twins and setting pictures are omitted from changes, uploads and alts with explicit package
+problems. Missing original context refuses generated provenance rather than assuming an illustration;
+generic illustrations with their original context remain available. This also checks failed and historical
+final manifests when exported again; it does not rewrite their saved records or previously exported files.
+
+The copy export also reuses the planner's original-owner-post article rule on both the frozen plan and
+the writer's actual fact citations. Invalid article titles, leads and dates are omitted before Joomla or
+WordPress mapping; generic trade copy and authentic original posts remain available. Step 9 records the
+refused article slots as explicit `ARTICLE_PROVENANCE` problems attributed to the writer, without
+claiming those words were written. Re-exporting a historical result rechecks its original inputs; saved
+plans, copy records and old write receipts are not rewritten.
+
 The picture looker's per-run `negative-looks/rendered-lettering-1` index can reuse only a readable
 `stray lettering` rejection for the same source bytes, rendered pixels, display and overlay/cutout context,
 model and prompt. Each versioned proof points to the original paid look in `looks/`; original records stay

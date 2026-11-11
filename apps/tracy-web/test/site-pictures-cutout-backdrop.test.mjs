@@ -173,7 +173,24 @@ test('the manifest keeps a drawn cut-out backdrop and refuses a wrong one; step 
   const out = exportPictureMapping({
     pictures: manifest(cutoutEntry(backdrop)),
     contract: 'c',
-    revision: 'r'
+    revision: 'r',
+    kit: { blocks: [{ id: 'block-9', frames: [{ id: 'block-9.1', kind: 'cutout' }] }] },
+    plan: {
+      pages: [
+        {
+          id: 'home',
+          decision: 'keep',
+          blocks: [
+            {
+              block: 'block-9',
+              decision: 'keep',
+              pictures: [{ frame: 'block-9.1', match: 'specific', factIds: [] }]
+            }
+          ]
+        }
+      ]
+    },
+    brief: { facts: [] }
   })
   assert.deepEqual(out.problems, [])
   // The figure is placed as it is; the backdrop is painted by step 9 behind it.
