@@ -7,7 +7,7 @@
 // The rung each slot ended on is on its report line as `textFallback`. Pictures, links and settings are not text: untouched here.
 import { visibleText } from '../lib/site-copy/emphasis-markup.js'
 import { kitSlotIndex } from '../lib/template-kit/kit-slots.js'
-import { refusalWords } from './contract-write.js'
+import { refusalWords, slotCanEmpty } from './contract-write.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const DEMO_REMAINS = 'the demo text remains on the site'
@@ -71,9 +71,7 @@ export async function climbTextFallback({
 
   // Rung 2: hide what the kit lets go and the site can empty (as the site said before the write), read afresh only to send.
   const onSite = new Map(each(before?.slots).map((s) => [s?.key, s]))
-  const hideable = left.filter(
-    (key) => onSite.get(key)?.canHide === true && kitSlotOf(key)?.canHide !== false
-  )
+  const hideable = left.filter((key) => slotCanEmpty(onSite.get(key)) && kitSlotOf(key)?.canHide !== false)
   if (hideable.length) {
     const took = await send({ reading: await inspect(), changes: {}, evidence: {}, emptySlots: hideable })
     for (const key of took.stop || took.cancelled ? [] : (took.emptied ?? []))

@@ -2518,6 +2518,11 @@ article owner declared by the kit body. Removing a menu item alone does not remo
 article navigation. An owner shared by a kept page, multiple owners or an unreadable article state refuses the drop;
 the report reads back the native article state. Paths, aliases and titles do not identify the article.
 
+Demo-content fallback reads the native contract hide capability: `measured` and `unmeasured` permit an empty write,
+while `withRow` requires another exact native row member in the same closing unit. Unknown tiers and a kit prohibition
+remain blocked; the native plugin still authorizes every write. Text fallback cannot empty a conditional slot alone.
+A retry retains previously verified hidden slot receipts so a removed row is not cleared again.
+
 When a kit contact page's original path has no published menu item, form closure, metadata, links and route writes
 share one fallback: the kit's exact native contact body must identify one published frontend component menu item
 opening that same contact. Multiple candidates or conflicting owners remain unresolved; an exact kit path keeps

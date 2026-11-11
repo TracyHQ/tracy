@@ -9,15 +9,30 @@
       "Both native article states were 1 through the authenticated read-only content API.",
       "Both direct class pages returned HTTP 200.",
       "The build action ended with QA_NEEDS_REVIEW; provisioning done was not site acceptance.",
-      "Gallery template photos remain a separate unresolved acceptance failure."
+      "Gallery template photos remain a separate unresolved acceptance failure.",
+      "Read-only native contract inspection reports gallery canHide measured; the previous boolean-only fallback excluded it."
     ]
   },
   "local": {
-    "focusedTests": { "pass": 82, "fail": 0, "skip": 0 },
-    "selectedGates": { "pass": 63, "excluded": ["tests", "turbo-config", "boot-graph"] },
+    "focusedTests": {
+      "pass": 82,
+      "fail": 0,
+      "skip": 0
+    },
+    "selectedGates": {
+      "pass": 63,
+      "excluded": ["tests", "turbo-config", "boot-graph"]
+    },
     "finalSourceChecks": ["language", "test-quality", "scoped oxlint", "scoped biome format"],
-    "regression": "REG-PR-569-dropped-native-articles — PASS on sourceCommit",
-    "baselineComparison": "The original dropPages function fails five of six initial scenarios; these are local script fixtures, not a deployed CMS stand."
+    "regression": "REG-PR-569-dropped-native-articles \u2014 PASS on sourceCommit",
+    "baselineComparison": "The original dropPages function fails five of six initial scenarios; these are local script fixtures, not a deployed CMS stand.",
+    "completeWriteSuite": {
+      "pass": 834,
+      "fail": 0,
+      "skip": 0,
+      "services": "Real owned PostgreSQL and Playwright"
+    },
+    "nativeCapabilityBaseline": "Four of eleven targeted cases fail with the original closing ladder and text fallback; all thirteen targeted cases pass after the fix."
   },
   "limits": [
     "Post-deployment acceptance has not run for this change.",

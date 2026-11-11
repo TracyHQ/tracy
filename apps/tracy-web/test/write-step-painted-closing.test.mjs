@@ -23,7 +23,11 @@ test('an initials frame left undrawn for want of a brand file is emptied, not le
 })
 
 test('an undrawn frame the site cannot empty fails and says the demo picture remains', async () => {
-  const { line } = await runPainted({ noBrand: true, items: () => [initialsItem('block-4.face')] })
+  const { line } = await runPainted({
+    noBrand: true,
+    items: () => [initialsItem('block-4.face')],
+    site: { contract: { overSlot: () => ({ canHide: false }) } }
+  })
   const face = line('block-4.face')
   assert.equal(face.status, 'failed', JSON.stringify(face))
   assert.match(face.reason, /demo content remains/)
