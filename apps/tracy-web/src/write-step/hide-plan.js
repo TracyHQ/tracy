@@ -393,7 +393,13 @@ export function hideOrders({
       .map((g) => g.id)
   )
   for (const page of each(kit?.pages))
-    if (droppedGroups.has(page?.group) && !planDrops.some((p) => p.id === page.id)) planDrops.push(page)
+    if (
+      droppedGroups.has(page?.group) &&
+      articleOwners(page, kit).length > 0 &&
+      !each(plan?.pages).some((p) => p.id === page.id && p.decision === 'keep') &&
+      !planDrops.some((p) => p.id === page.id)
+    )
+      planDrops.push(page)
   const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
   const pages = [...planDrops, ...stock.map(({ id, path }) => ({ id, path }))]
     .filter((page) => !taken.has(slashless(page.path)) || articleOwners(page, kit).length > 0)
