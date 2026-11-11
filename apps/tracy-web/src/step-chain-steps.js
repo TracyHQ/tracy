@@ -140,8 +140,14 @@ export function createStepChainSteps(deps) {
   const folders = new Map()
   /** This run's own folder, made once. */
   async function folderOf(ctx) {
-    if (!folders.has(ctx.runId))
-      folders.set(ctx.runId, await mkdtemp(path.join(tmpdir(), 'tracy-step-chain-')))
+    if (!folders.has(ctx.runId)) {
+      // Brand and Planner start together: publish the allocation before yielding, so disposal owns both exports.
+      const pending = mkdtemp(path.join(tmpdir(), 'tracy-step-chain-'))
+      folders.set(ctx.runId, pending)
+      pending.catch(() => {
+        if (folders.get(ctx.runId) === pending) folders.delete(ctx.runId)
+      })
+    }
     return folders.get(ctx.runId)
   }
   const revisionOf = (ctx) => String(ctx.brief?.researchRevisionId ?? '')
@@ -382,9 +388,10 @@ export function createStepChainSteps(deps) {
     // What the run left on disk goes with it (unless `keepFiles`: a stand that reads them after); the bench runs keep their
     // own rows and files.
     async dispose(prepared) {
-      const dir = folders.get(prepared?.runId)
-      if (!dir) return
+      const pending = folders.get(prepared?.runId)
+      if (!pending) return
       folders.delete(prepared.runId)
+      const dir = await pending
       if (deps.keepFiles) log.info?.(`[step-chain] run ${prepared.runId}: files kept`)
       else await rm(dir, { recursive: true, force: true })
     }

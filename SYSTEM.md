@@ -2519,6 +2519,8 @@ New Brand runs also record `brand-held-name-check/1`: a missing or withheld name
 variants null instead of demanding unused name files. Fitted standalone marks still require independent review,
 contrast checks and the existing confirm-name owner task. The safe version uses the same recorded name decision,
 so reaching a gate or cost limit cannot render a withheld name. Historical runs retain their recorded checker.
+Parallel bench exports share one pending temporary-directory allocation per chain; disposal awaits that same
+allocation and removes all its exports, unless the explicit evidence-retention option is enabled.
 Once the site is up and every input
 is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
 (`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. The write never leaves demo content: a step that
