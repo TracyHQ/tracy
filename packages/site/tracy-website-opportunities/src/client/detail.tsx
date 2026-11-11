@@ -1,18 +1,22 @@
 import { useDemoChatNavigation } from './demo-chat.ts'
 /**
  * The Details page of one opportunity and the page of one of its site briefs (plan D7), inside the
- * My opportunities sub-tab, with a breadcrumb back to the list (`My opportunities › Name › Brief N`).
+ * My opportunities sub-tab.
  *
- * Details is built from the Inspector's blocks in two columns: Research (per source) · What happens
- * next · Demo site · Demos · Site brief on the left; Profile · Photos and videos · Colors · Google Place ·
- * Current website · Social on the right; the row's next action top right. A brief is an immutable
- * snapshot of the research that names no CMS or template; its page shows it read-only beside the Build
- * form, where the person chooses both (the name field is focused when "Build demo site" opened it).
+ * Details (#517, layout C of spec #512): a sticky header (Back, name and type, status, a ⋯ menu with Research again
+ * and Delete) over two columns of cards. The left column holds Progress (the three steps with the one action of the
+ * current step), Profile (the rows the person can check and edit) and Sources (one line each); the right column holds
+ * Business brief (the brief line and the first rows of the facts table), Photos & video (two rows of tiles) and Demo
+ * site (the block of #515 and every demo). A narrow page is one column in that order. Profile, Business brief and
+ * Photos & video each open as a sub-page (`wo-section`, `details-sections.tsx`) with the whole section: the Profile
+ * with menu, Google, reviews, current website, social and place profile; the full facts table; every photo and video.
+ * Sources is the table on Details alone (#537), with Try again and remove on its rows. A brief is an immutable snapshot of the research that names no CMS or template; its page shows it
+ * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
+ * opened it).
  */
-import { Fragment, type JSX, useCallback, useEffect, useId, useState } from 'react'
-import { Bot, ExternalLink, FileText, Hammer } from 'lucide-react'
+import { type JSX, useCallback, useEffect, useId, useRef, useState } from 'react'
+import { Bot, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
-  Badge,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -21,58 +25,63 @@ import {
   BreadcrumbSeparator,
   Button,
   Input,
-  NativeSelect,
-  NativeSelectOption,
   Spinner,
   useTabLoading
 } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
-import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
-import { buildChoice } from './build-choice.ts'
+import { type Api, type BuildChoices, addAgain, handOffBuild, pressDemo, startResearch } from './api.ts'
+import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
+import { BriefUnderstanding } from './brief-understanding.tsx'
+import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
+import { StepButton } from './stepper.tsx'
+import { type StepAction, bandSubSteps, effectiveOf, reviewChipOf, stepperView } from './stepper-model.ts'
+import { ProgressBand } from './progress-band.tsx'
+import { type ApprovalView, gateText } from './seller-review.tsx'
+import { type AddSourceRefusal, addAllowedIn } from './add-source-model.ts'
+import { AddSourcePopover } from './add-source-popover.tsx'
+import { profileEditBody, profileEditView, typedHours } from './profile-edit-model.ts'
+import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
+import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
+import { formatDistance, hostOf as viewsHostOf } from '@tracy/wo-views'
 import {
-  LOW_WEBSITE_SCORE,
-  SOCIAL_NAME,
-  type SocialLine,
-  SocialStatLine,
-  ageInDays,
-  formatAgo,
-  formatDistance,
-  hostOf as viewsHostOf,
-  providerLabel
-} from '@tracy/wo-views'
-import {
-  type GooglePlaceView,
-  type PageSpeedView,
-  type ProfileRow,
-  PROFILE_FIELDS,
   buildFailure,
   briefStatus,
   demoRows,
   googlePlaceView,
   mediaRowView,
   mediaTile,
-  pageSpeedView,
+  failureReasonText,
   profileFields,
-  shownBuildId,
-  socialStatsLines,
-  suggestedLabelOf
+  tripadvisorReviewView
 } from './detail-model.ts'
-import { MediaRow } from './media-row.tsx'
-import { MenuBlock } from './menu-block.tsx'
-import { PlaceProfileBlock } from './place-profile-block.tsx'
 import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
 import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
-import { type HoursChoice, type HoursSaved, ProfileHoursRow } from './profile-hours-row.tsx'
-import { ratingRowView } from './profile-rating-model.ts'
-import { phonesView } from './profile-phones-model.ts'
-import { ProfilePhonesRows } from './profile-phones-rows.tsx'
-import { type RatingChoice, ProfileRatingRow } from './profile-rating-row.tsx'
+import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
-import { ProfileFactsRows } from './profile-facts-rows.tsx'
-import { factRowsView } from './profile-facts-model.ts'
+import { businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
+import { BriefChecklist } from './brief-checklist.tsx'
+import type { BriefEditDoor } from './brief-checklist-item.tsx'
+import { briefMediaRows, briefMediaView } from './brief-media-model.ts'
+import { useBriefReviewMarks } from './brief-review-store.ts'
+import { briefReview, briefSteps as briefChecklistSteps, markStep } from './brief-steps-model.ts'
+import { SiteNameRow } from './site-name-row.tsx'
+import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
+import { DemoSiteBlock } from './demo-site-block.tsx'
+import { SubPage } from './details-sections.tsx'
+import { WorkspaceCard, demoHostOf } from './workspace-card.tsx'
+import { ownerDoorsOf } from './owner-doors.ts'
+import { type SubSection, pageOf, researchRunning as researchMovingOf } from './section-model.ts'
+import { overviewSourcesOf, sourcesToShow } from './source-links-model.ts'
+import { BackButton } from './back-button.tsx'
+import { DetailsHeader } from './details-header.tsx'
+import { Section, SourcesTable } from './details-parts.tsx'
+import { sourceProgressOf, sourceStateOf } from './source-table-model.ts'
+import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
+import { DeleteDialog } from './delete-dialog.tsx'
+import { ResearchAgainDialog } from './research-again-dialog.tsx'
 import { ProfileKeyMessages } from './profile-key-messages.tsx'
 import {
   type KeyMessageView,
@@ -81,20 +90,24 @@ import {
   removedKeyMessageIds
 } from './profile-key-messages-model.ts'
 import { ProfileReadingRows } from './profile-reading-rows.tsx'
-import { menuAgainTarget, readMenu } from './menu-model.ts'
-import { TripadvisorReviews } from './tripadvisor-reviews.tsx'
+import { BusinessFactsPage } from './business-facts-page.tsx'
+import { useApprovedRefusal } from './approval-lock-api.ts'
+import { SameAsLine } from './same-as-line.tsx'
+import { sameAsOf } from './same-as-model.ts'
+import { businessFactsView } from './business-facts-model.ts'
 import { CMS_LABEL } from './cms-label.ts'
-import { Steps, type DemoStepFacts } from './demo-progress.tsx'
+import { BuildEstimate, DemoProgress } from './demo-progress.tsx'
 import { SendDemo } from './send-demo.tsx'
 import { usageFull, type OutreachDraft, type DemoUsage } from './outreach-model.ts'
-import { DemoSection, Section, Sources } from './inspector.tsx'
 import { rowFromDetail } from './inspector-model.ts'
-import { useCardResearchAgain, useSourceRetry } from './source-retry.ts'
-import { ActionButton, StatusCell } from './opportunity-cells.tsx'
-import { type NextAction, nextAction, nextStepText, relativeTime } from './opportunity-row.ts'
+import { useCardResearchAgain, useSourceRemove, useSourceRetry } from './source-retry.ts'
+import { StatusBadge } from './my-places.tsx'
+import { placeStatus } from './opportunity-pieces.ts'
+import { type NextAction, relativeTime } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
-import { runAction } from './row-actions.ts'
+import { type PillState, StatusPill } from './status-pill.tsx'
+import { rankingFor, runAction } from './row-actions.ts'
 import { type SourceInput, buildView, reasonKey, shouldPoll } from './status.ts'
 import type { Translate } from './strings.ts'
 
@@ -107,13 +120,22 @@ type Revision = {
 }
 
 const asArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : [])
-const isRecord = (v: unknown): v is Body => typeof v === 'object' && v !== null && !Array.isArray(v)
-
-function formatDate(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  return new Intl.DateTimeFormat(interfaceLocale(), { dateStyle: 'medium' }).format(date)
+/** The header chip's status pill state by tone (#537, `status-pill.tsx`). */
+const PILL_OF_TONE: Record<string, PillState> = {
+  ok: 'done',
+  warn: 'attention',
+  run: 'running',
+  error: 'failed',
+  mute: 'neutral'
 }
+/** A demo build's phase as a status pill state. */
+const DEMO_PILL: Record<string, PillState> = {
+  running: 'running',
+  done: 'done',
+  failed: 'failed',
+  deleted: 'neutral'
+}
+const isRecord = (v: unknown): v is Body => typeof v === 'object' && v !== null && !Array.isArray(v)
 
 function useDetail(
   api: Api,
@@ -248,13 +270,16 @@ function PageState({
 
 export function DetailView({
   t,
-  api,
+  api: realApi,
   ids,
   id,
   onList,
+  section = null,
+  onSection = () => undefined,
   onChanged,
   onOpenRevision,
-  openBriefTab = null
+  openBriefTab = null,
+  onOpenOpportunity = () => undefined
 }: {
   t: Translate
   api: Api
@@ -262,13 +287,29 @@ export function DetailView({
   id: string
   cms: string | null
   onList: () => void
+  /** Opens another card's Details: a card of the same place, or the one Add this business again made (#537 R23). */
+  onOpenOpportunity?: (id: string) => void
+  /** The section open as a sub-page (`wo-section`); null = the two columns of Details. */
+  section?: SubSection | null
+  /** Opens a section as a sub-page, or null to come back to Details. */
+  onSection?: (section: SubSection | null) => void
   onChanged: () => void
   /** `focusName`: the brief opens with its Demo site name field focused (Build demo site). */
   onOpenRevision: (revisionId: string, focusName: boolean) => void
   /** Opens a brief in its own side-card tab; null → the Brief page instead. */
   openBriefTab?: ((seed: BriefTabSeed) => void) | null
 }): JSX.Element {
+  // A write that reaches approved facts (409 PROFILE_APPROVED, #537 R23): its sentence in the error line, then Details
+  // is read again so the page draws the facts locked.
+  const [approvedRefusal, setApprovedRefusal] = useState(false)
+  const reloadRef = useRef<() => Promise<void>>(async () => undefined)
+  const onApprovedRefusal = useCallback(() => {
+    setApprovedRefusal(true)
+    void reloadRef.current()
+  }, [])
+  const api = useApprovedRefusal(realApi, onApprovedRefusal)
   const { body, failed, reload } = useDetail(api, id)
+  reloadRef.current = reload
   const [logoWait, setLogoWait] = useState(false)
   const beginDemoChat = useDemoChatNavigation(api, true, setLogoWait)
   const [busy, setBusy] = useState(false)
@@ -276,7 +317,13 @@ export function DetailView({
   const [actionFailed, setActionFailed] = useState(false)
   const [logoBusy, setLogoBusy] = useState(false)
   const [logoFailed, setLogoFailed] = useState(false)
+  const buildChoices = useBuildChoices(api)
+  const recommended = useRecommendedDesigns(api, id)
   const retrySource = useSourceRetry(api, ids, id, async () => {
+    await reload()
+    onChanged()
+  })
+  const removeSourceControl = useSourceRemove(api, id, async () => {
     await reload()
     onChanged()
   })
@@ -298,22 +345,29 @@ export function DetailView({
       onChanged()
     }
   )
-  // Only a place with a Menu previews Read menu again (`menuAgainTarget`).
-  const readMenuAgain = useCardResearchAgain(
-    api,
-    ids,
-    menuAgainTarget(id, body?.menu),
-    `${row?.job?.state ?? ''}:${row?.job?.updatedAt ?? ''}`,
-    async () => {
-      await reload()
-      onChanged()
-    },
-    MENU_PARTS
+  // A section opened as a sub-page, or the pager to the next one, starts at the top of the page.
+  const page = useRef<HTMLDivElement | null>(null)
+  useEffect(() => {
+    page.current?.closest<HTMLElement>('.tracy-wo-tab')?.scrollTo({ top: 0 })
+  }, [section])
+  // Delete this place (the same confirmation and door as the list), then back to the list.
+  const [deleting, setDeleting] = useState<DeleteAsk | null>(null)
+  const [deleteBusy, setDeleteBusy] = useState(false)
+  const [deleteFailed, setDeleteFailed] = useState<string | null>(null)
+  // The Content brief job (#524): pressed from the stepper, polled here, drawn in the Site brief block.
+  const briefJob = useBriefJob(api, id, body?.briefJob ?? null, () => {
+    void reload()
+    onChanged()
+  })
+  // The owner's reviewed marks of the brief checklist (#537, option E): this browser only, per brief revision.
+  const briefMarks = useBriefReviewMarks(
+    id,
+    isRecord(body?.brief) && typeof body.brief.id === 'string' ? body.brief.id : null
   )
   if (body === null || row === null) {
     return (
       <div className="tracy-wo-page">
-        <Crumbs t={t} items={[{ label: t('list.title'), onClick: onList }, { label: '…' }]} />
+        <BackButton label={t('details.backToList')} onClick={onList} />
         <PageState
           t={t}
           failed={failed || (body !== null && row === null)}
@@ -335,8 +389,16 @@ export function DetailView({
       if (outcome.kind === 'demo-chat' && !(await followChat(outcome.actions))) setActionFailed(true)
       if (outcome.kind === 'send-demo') {
         const answer = await api.outreach(row.id)
-        if (answer.ok) setSend(answer.body.outreach)
-        else setActionFailed(true)
+        if (answer.ok) {
+          // The Send panel lives in the Demo site card.
+          setSend(answer.body.outreach)
+          if (section !== null) onSection(null)
+          requestAnimationFrame(() =>
+            page.current
+              ?.querySelector<HTMLElement>('[data-section="demo"]')
+              ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          )
+        } else setActionFailed(true)
         return
       }
       if (outcome.kind === 'open-brief') return onOpenRevision(outcome.revisionId, true)
@@ -380,7 +442,24 @@ export function DetailView({
     onChanged()
   }
 
+  const confirmDelete = async (): Promise<void> => {
+    if (deleting === null || deleteBusy) return
+    setDeleteBusy(true)
+    setDeleteFailed(null)
+    const outcome = await deleteOpportunities(api, ids, deleting.ids)
+    setDeleteBusy(false)
+    setDeleting(null)
+    if (!outcome.ok || outcome.failed > 0) {
+      setDeleteFailed(outcome.ok ? 'action.failed' : deleteFailedKey(outcome.code))
+      return
+    }
+    onChanged()
+    onList()
+  }
+
   const profile = isRecord(body.profile) ? body.profile : null
+  // This card's own research (#524): nothing researched shows, and the brief waits, until it is done.
+  const research = researchOf(body)
   // The name the site carries (the person's pick, else the one the sources agree on) titles the page.
   const shownName = nameOnSite(profile, row.name)
   // A name the brief holds off the site says so, with the neutral identity the site goes by (#1791).
@@ -400,16 +479,6 @@ export function DetailView({
     onChanged()
     return 'ok'
   }
-  const ratingRow = ratingRowView(profile)
-  // The main phone and the business's other numbers (`business-phones.js`).
-  const phonesRow = phonesView(profile)
-  const saveRating = async (choice: RatingChoice): Promise<boolean> => {
-    const answer = await api.setRating(id, choice)
-    if (!answer.ok) return false
-    await reload()
-    onChanged()
-    return true
-  }
   // What the business sells, who it is for and its team, as the research read them (#1780).
   const readingRows = readingRowsView(profile)
   const pickReading = async (item: string, choice: ReadingPick): Promise<boolean> => {
@@ -420,15 +489,17 @@ export function DetailView({
     return true
   }
   // Every fact with how sure Tracy is and whether the site says it, and the key messages (#1791).
-  const factRows = factRowsView(placeProfile.profile, placeProfile.decisions)
-  const toggleFact = async (factId: string, onSite: boolean | null): Promise<boolean> => {
+  // Answers null once saved, else the refusal code (the brief checklist says a lock in words, #537).
+  const setFactCode = async (factId: string, onSite: boolean | null): Promise<string | null> => {
     const answer = await api.setFact(id, factId, onSite)
-    if (!answer.ok) return false
+    if (!answer.ok) return answer.code
     setDecisionsTick((n) => n + 1)
     await reload()
     onChanged()
-    return true
+    return null
   }
+  const toggleFact = async (factId: string, onSite: boolean | null): Promise<boolean> =>
+    (await setFactCode(factId, onSite)) === null
   const keyMessages = keyMessagesView(profile)
   const saveKeyMessages = async (before: KeyMessageView[], next: KeyMessageView[]): Promise<boolean> => {
     const answer = await api.setKeyMessages(
@@ -441,15 +512,29 @@ export function DetailView({
     return true
   }
   const sources = asArray<SourceInput>(body.sources).filter((s) => typeof s?.source === 'string')
+  // Before research has a row, the links the owner pasted (and the Google listing of a search), Not collected yet.
+  // While research runs (again) the rows are reset to the pasted links, Not collected yet: progress shows in the band.
+  // Sources are fixed once research starts, so after it research's own rows are the whole list.
+  const shownSources = sourcesToShow(
+    researchMovingOf({ research, researchJob: row.job ?? null }) ? [] : sources,
+    body.opportunity
+  )
+  // The overview table lists what research collected or could not collect; a row research skipped by itself stays on
+  // the Sources sub-page. Before research the pasted links all show, waiting.
+  const sourcesRead = research.done && !researchMovingOf({ research, researchJob: row.job ?? null })
+  const overviewSources = overviewSourcesOf(shownSources, sourcesRead)
+  const sourceProgress = sourceProgressOf(
+    body.stepProgress,
+    researchMovingOf({ research, researchJob: row.job ?? null })
+  )
+  const overviewStates = overviewSources.map((s) => sourceStateOf(s, locale, sourceProgress).state)
   const media = asArray<Body>(body.media).flatMap((m) => {
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
   })
-  const menu = readMenu(body.menu)
   const revisions = asArray<Revision>(body.revisions).filter((r) => typeof r?.id === 'string')
   const candidate = isRecord(row.candidate) ? row.candidate : {}
   const job = row.job ?? null
-  const next = nextStepText(row)
   const ago = (at: unknown) => relativeTime(typeof at === 'string' ? at : null, now, locale)
   const added = ago(row.createdAt)
   const distance =
@@ -459,7 +544,6 @@ export function DetailView({
       ? '$'.repeat(candidate.priceLevel)
       : null
   const website = typeof candidate.website === 'string' && candidate.website !== '' ? candidate.website : null
-  const phone = typeof candidate.phone === 'string' && candidate.phone !== '' ? candidate.phone : null
   const meta = [typeof candidate.category === 'string' ? candidate.category : null, distance, price].filter(
     Boolean
   )
@@ -467,130 +551,362 @@ export function DetailView({
   const cancellable =
     typeof job?.id === 'string' && (job.state === 'paused' || job.state === 'blocked') ? job.id : null
 
-  return (
-    <div className="tracy-wo-page">
-      <div className="tracy-wo-row tracy-wo-between tracy-wo-wrap">
-        <Crumbs t={t} items={[{ label: t('list.title'), onClick: onList }, { label: shownName }]} />
-        <ActionButton
-          t={t}
-          row={row}
-          size="sm"
-          busy={busy}
-          disabled={usageFull(body.usage as DemoUsage) && ['build', 'retry-demo'].includes(nextAction(row))}
-          onAction={(a) => void act(a)}
-        />
-      </div>
-      <div className="tracy-wo-page-head">
-        <div className="tracy-wo-row tracy-wo-wrap">
-          <StatusCell t={t} row={row} />
-          {added ? (
-            <span className="tracy-wo-muted tracy-wo-small">{t('research.added', { ago: added })}</span>
-          ) : null}
-        </div>
-        <h2 className="tracy-wo-page-title">
-          {shownName}
-          {row.branch ? <span className="tracy-wo-muted">{` · ${row.branch}`}</span> : null}
-        </h2>
-        <p className="tracy-wo-row tracy-wo-wrap tracy-wo-small tracy-wo-muted">
-          {meta.length > 0 ? <span>{meta.join(' · ')}</span> : null}
-          {website !== null ? (
-            <a className="tracy-wo-action-link" href={website} target="_blank" rel="noopener noreferrer">
-              {viewsHostOf(website) ?? website}
-              <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
-            </a>
-          ) : (
-            <span>{t('cell.website.none')}</span>
-          )}
-          {phone !== null ? <span>{phone}</span> : null}
+  const limitReached = usageFull(body.usage as DemoUsage)
+  const demoView = demoBlockView(row, body, t, { now, locale })
+  const onDemo = (command: Exclude<DemoCommand, null>): void => {
+    if (command.kind === 'action') return void act(command.action)
+    if (command.kind === 'press') return void demoPress(command.press)
+    window.open(command.href, '_blank', 'noopener,noreferrer')
+  }
+  // The three steps with the ONE action of the current step: the Progress band, or the title row of a sub-page.
+  const stepperInput = {
+    research,
+    researchJob: job,
+    briefJob: briefJob.job,
+    brief: isRecord(body.brief) ? body.brief : null,
+    demo: demoView.state,
+    demoAt: demoView.state === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
+    approval: isRecord(body.approval) ? body.approval : null
+  }
+  // What still counts as made: a reset upstream clears the brief and the site on screen (`effectiveOf`).
+  const effective = effectiveOf(stepperInput)
+  const stepper = stepperView(stepperInput)
+  const approval = isRecord(body.approval) ? body.approval : null
+  const onStep = (step: StepAction): void => {
+    if (step === 'start-research') return void act('start')
+    if (step === 'resume-research') return void act('resume')
+    if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
+    // The seller's review steps (#537) open the sub-page to review.
+    if (step === 'review-profile') return onSection('profile')
+    if (step === 'review-brief') return onSection('brief')
+    const command = demoCommand('primary', row, body)
+    if (command !== null) onDemo(command)
+  }
+  // On a sub-page, the step action's Review press never points at the page already open.
+  const stripView =
+    section !== null &&
+    ((stepper.action?.kind === 'review-profile' && pageOf(section) === 'profile') ||
+      (stepper.action?.kind === 'review-brief' && pageOf(section) === 'brief'))
+      ? { ...stepper, action: null }
+      : stepper
+  // The one action of the current step, in the title row of a sub-page.
+  const stepAction = (
+    <StepButton
+      t={t}
+      view={stripView}
+      busy={busy || briefJob.pressing}
+      disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
+      onAction={onStep}
+    />
+  )
+  // The Progress band (#537): the running step's real sub-steps, from the brief job or the server's stepProgress.
+  const briefSteps = briefControlView({
+    research: { state: 'done' },
+    brief: body.brief,
+    briefJob: briefJob.job
+  })
+  // A brief being written, or a run that failed with no current brief, leaves the brief card empty (#537): the band
+  // alone shows the job, and the older brief is reset on screen until a new one is made.
+  const briefEmpty =
+    briefSteps.mode === 'running'
+      ? 'brief.beingWritten'
+      : briefSteps.mode === 'failed'
+        ? 'section.meta.brief.none'
+        : null
+  const subSteps =
+    stepper.current === 'brief' && stepper.running && briefSteps.steps.length > 0
+      ? briefSteps.steps.map((s) => ({ key: s.step, label: t(s.labelKey), state: s.state }))
+      : bandSubSteps(body.stepProgress, stepper.current)
+  const progressBand = (
+    <ProgressBand
+      t={t}
+      view={stepper}
+      locale={locale}
+      busy={busy || briefJob.pressing}
+      disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
+      subSteps={subSteps}
+      buildSteps={<DemoProgress t={t} row={row} locale={locale} now={now} open />}
+      error={briefJob.refusedCode === null ? null : gateText(t, briefJob.refusedCode)}
+      onAction={onStep}
+    />
+  )
+  const reviewChip = approval === null ? null : reviewChipOf(stepper)
+  // The seller's own doors (#537): each answers the refusal code, or null once it went through and Details reloaded.
+  const settle = async (answer: { ok: boolean; code?: string }): Promise<string | null> => {
+    if (!answer.ok) return answer.code ?? 'HTTP'
+    await reload()
+    onChanged()
+    return null
+  }
+  const approveProfile = async (): Promise<string | null> => {
+    const code = await settle(await api.approveProfile(id))
+    if (code === null) onSection(null)
+    return code
+  }
+  const approveBrief = async (): Promise<string | null> => {
+    const code = await settle(await api.approveBrief(id))
+    if (code === null) onSection(null)
+    return code
+  }
+  // Add source keeps the whole refusal: its line may name the platform or the most listing pages.
+  const addSource = async (url: string): Promise<AddSourceRefusal | null> => {
+    const answer = await api.addSource(id, url)
+    if (!answer.ok) return answer
+    await reload()
+    onChanged()
+    return null
+  }
+  const uploadMedia = async (file: File): Promise<string | null> => settle(await api.uploadMedia(id, file))
+  const approvedLine = (key: string, at: unknown): string | null => {
+    const ms = typeof at === 'string' ? Date.parse(at) : Number.NaN
+    if (!Number.isFinite(ms)) return null
+    return t(key, { date: new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms) })
+  }
+  const researchRunning = job?.state === 'running' || job?.state === 'queued'
+  // Sources are fixed once research runs or ran: the button stays drawn, off, with the reason on hover.
+  const addSourceButton = (
+    <AddSourcePopover t={t} locked={researchRunning || !addAllowedIn(research.state)} onAdd={addSource} />
+  )
+  // Approved facts are final (#537 R23): Research again would rewrite them, so it is not offered.
+  const factsApproved = approval?.profile === 'approved'
+  const researchAgainOpen =
+    !factsApproved &&
+    job !== null &&
+    !researchRunning &&
+    !(researchAgain.phase === 'ready' && researchAgain.preview?.plan === null)
+  const facts = [...meta.map(String), added ? t('research.added', { ago: added }) : null].filter(
+    (v): v is string => typeof v === 'string' && v !== ''
+  )
+  const keyMessagesRows = (titled: boolean): JSX.Element | null =>
+    keyMessages.length === 0 ? null : (
+      <ProfileKeyMessages
+        key={keyMessages.map((m) => `${m.id}:${m.label}`).join('|')}
+        t={t}
+        messages={keyMessages}
+        onSave={saveKeyMessages}
+        titled={titled}
+      />
+    )
+  // A row the seller corrected (#524) came from them, whatever research said.
+  const factRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale).map((r) =>
+    r.field !== null && profileEditView(profile, r.field)?.edited
+      ? { ...r, source: t('brief.source.you') }
+      : r
+  )
+  // In the Profile's order, with the place's website (read only) when the brief states none.
+  const siteRow = factRows.length === 0 ? null : websiteRow(factRows, website, t)
+  const briefRows = orderBriefRows(siteRow === null ? factRows : [...factRows, siteRow])
+  const websiteLink = (url: string): JSX.Element => (
+    <a className="tracy-wo-action-link" href={url} target="_blank" rel="noopener noreferrer">
+      {viewsHostOf(url) ?? url}
+      <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
+    </a>
+  )
+  // Once research is done and the brief lists its facts, the Business brief table is the one place to check them.
+  const tableListsFacts = research.done && briefRows.length > 0
+  const mediaView = mediaRowView({ profile, media, sources })
+  const profileRows = profileFields(profile)
+  const researchMoving = researchMovingOf({ research, researchJob: job })
+  // The saved profile (#537 R18): what the Business facts read, the owner's edits laid on.
+  const savedProfile = isRecord(body.placeProfile) ? body.placeProfile.profile : placeProfile.profile
+
+  // The Site content brief sub-page as a checklist of five steps (#537, option E); locked once approved.
+  const briefLocked = approval?.brief === 'approved'
+  const briefMedia = briefMediaView(mediaView)
+  const checkSteps = briefChecklistSteps([...briefRows, ...briefMediaRows(mediaView, briefMedia, t, locale)])
+  const checkReview = briefReview(checkSteps, briefMarks.marks, briefLocked)
+  const briefApproval: ApprovalView | null =
+    approval === null
+      ? null
+      : {
+          kind: 'brief',
+          pending: effective.brief != null && (approval.brief === 'needed' || approval.brief === 'approved'),
+          approvedLine:
+            effective.brief != null && approval.brief === 'approved'
+              ? approvedLine('approve.done.brief', approval.briefApprovedAt)
+              : null,
+          onApprove: approveBrief,
+          blockedReason: checkReview.all
+            ? null
+            : t('brief.steps.approveBlocked', { total: checkSteps.length })
+        }
+  const profileDoor = (field: string, value: string): BriefEditDoor | null => {
+    const view = profileEditView(profile, field)
+    if (view === null) return null
+    return {
+      value,
+      multiline: field === 'bio' || field === 'story',
+      maxLength: field === 'bio' ? 1200 : field === 'phone' ? 40 : 300,
+      save: async (typed) => {
+        const sent = profileEditBody(field, typed, view.value)
+        if (sent === null) return true
+        const answer = await api.editProfile(id, sent.edits)
+        if (answer.ok) void reload()
+        return answer.ok
+      }
+    }
+  }
+  const briefEditDoor = (r: (typeof briefRows)[number]): BriefEditDoor | null => {
+    if (r.readOnly || r.field === null || !research.done) return null
+    if (r.field === 'name')
+      return {
+        value: r.value,
+        multiline: false,
+        maxLength: 200,
+        save: async (typed) => (typed.trim() === r.value.trim() ? true : saveName(typed.trim()))
+      }
+    if (r.field === 'hours') {
+      const lines = hoursRow?.hours ?? r.value.split(';').map((line) => line.trim())
+      return {
+        value: lines.join('\n'),
+        multiline: true,
+        maxLength: 1200,
+        save: async (typed) => {
+          const hours = typedHours(typed)
+          if (hours.length === 0 || hours.join('|') === lines.join('|')) return true
+          return (await saveHours({ choice: 'edit', hours })) === 'ok'
+        }
+      }
+    }
+    const mine = profileEditView(profile, r.field)
+    return profileDoor(r.field, mine?.edited ? mine.value : r.value)
+  }
+  const briefChecklist = (
+    <BriefChecklist
+      key={isRecord(body.brief) ? String(body.brief.id ?? '') : ''}
+      t={t}
+      steps={checkSteps}
+      review={checkReview}
+      locked={briefLocked}
+      approval={briefApproval}
+      media={briefMedia}
+      siteName={<SiteNameRow t={t} api={api} opportunityId={id} readOnly={briefLocked} />}
+      editDoor={briefEditDoor}
+      onMark={(step) => briefMarks.save(markStep(briefMarks.marks, step))}
+      onToggle={(factId, on) => setFactCode(factId, on)}
+    />
+  )
+
+  const openBrief = (revisionId: string, n: number): void => {
+    if (openBriefTab === null) return onOpenRevision(revisionId, false)
+    openBriefTab({
+      revisionId,
+      opportunityId: id,
+      title: `${t('brief.number', { n })} · ${shownName}`
+    })
+  }
+  const briefLine = (
+    <BriefLine
+      t={t}
+      brief={body.brief}
+      research={body.research}
+      briefJob={briefJob}
+      review={approval === null ? null : { lockKey: stepper.steps[1]?.lockKey ?? null }}
+      onOpen={openBrief}
+    />
+  )
+  const cancelButton =
+    cancellable !== null ? (
+      <Button
+        type="button"
+        size="xs"
+        variant="ghost"
+        disabled={busy}
+        onClick={() => void cancel(cancellable)}
+      >
+        {t('job.cancel')}
+      </Button>
+    ) : null
+  const errors = (
+    <>
+      {approvedRefusal ? (
+        <p className="tracy-wo-error" role="alert">
+          {gateText(t, 'PROFILE_APPROVED')}
         </p>
-        {actionFailed ? (
-          <p className="tracy-wo-error" role="alert">
-            {t('action.failed')}
-          </p>
-        ) : null}
-        {logoWait ? (
-          <p className="tracy-wo-note" role="status">
-            {t('demo.logoPending')}
-          </p>
-        ) : null}
-      </div>
-      <div className="tracy-wo-page-grid">
-        <div className="tracy-wo-col">
-          {send ? (
-            <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
-          ) : null}
-          <Steps
-            t={t}
-            row={row}
-            facts={body.progress as DemoStepFacts | undefined}
-            locale={locale}
-            now={now}
-            onBrief={
-              row.latestRevision?.id ? () => onOpenRevision(row.latestRevision!.id!, false) : undefined
-            }
-            again={researchAgain}
-          >
-            <>
-              <Sources t={t} sources={sources} retry={retrySource} />
-              {cancellable !== null ? (
-                <Button
-                  type="button"
-                  size="xs"
-                  variant="ghost"
-                  disabled={busy}
-                  onClick={() => void cancel(cancellable)}
-                >
-                  {t('job.cancel')}
-                </Button>
-              ) : null}
-            </>
-          </Steps>
-          <Section title={t('inspector.next')}>
-            <p className="tracy-wo-muted">
-              {next.reasonKey ? `${t(next.reasonKey)} ` : null}
-              {t(next.key, next.params)}
-            </p>
-          </Section>
-          <DemoSection
-            t={t}
-            row={row}
-            detail={body}
-            locale={locale}
-            now={now}
-            actions={{
-              busy,
-              onExtend: () => void demoPress('extend'),
-              onReopen: () => void demoPress('reopen'),
-              onRebuild: () => void demoPress('rebuild'),
-              onRetry: () => void act('build')
-            }}
-          />
-          <Demos
-            t={t}
-            api={api}
-            id={id}
-            revisions={revisions}
-            builds={asArray<unknown>(body.builds)}
-            brief={body.brief}
-            onOpen={(revisionId, n) => {
-              if (openBriefTab === null) return onOpenRevision(revisionId, false)
-              openBriefTab({
-                revisionId,
-                opportunityId: id,
-                title: `${t('brief.number', { n })} · ${shownName}`
-              })
-            }}
-            onRefreshed={() => {
-              void reload()
-              onChanged()
-            }}
-          />
-        </div>
-        <div className="tracy-wo-col">
-          <Profile
-            t={t}
-            profile={profile}
-            nameRow={
+      ) : null}
+      {actionFailed || deleteFailed !== null ? (
+        <p className="tracy-wo-error" role="alert">
+          {t(deleteFailed ?? 'action.failed')}
+        </p>
+      ) : null}
+      {logoWait ? (
+        <p className="tracy-wo-note" role="status">
+          {t('demo.logoPending')}
+        </p>
+      ) : null}
+    </>
+  )
+  const dialogs = (
+    <>
+      {/* Research again asks here, from the step strip or the page menu (the Sources sub-page is gone, #537). */}
+      <ResearchAgainDialog t={t} locale={locale} name={row.name ?? ''} control={researchAgain} />
+      <DeleteDialog
+        t={t}
+        locale={locale}
+        ask={deleting}
+        busy={deleteBusy}
+        onCancel={() => setDeleting(null)}
+        onConfirm={() => void confirmDelete()}
+      />
+    </>
+  )
+  // The account's other cards of the same place (#537 R23), named at the top of Details and of Business facts.
+  const sameAsLine = (
+    <SameAsLine
+      t={t}
+      cards={sameAsOf(isRecord(body.opportunity) ? body.opportunity.sameAs : null)}
+      onOpen={onOpenOpportunity}
+    />
+  )
+  // Approved facts are final (#537 R23): the page reads only, and Add this business again makes a new card of the
+  // same place from this card's own inputs, then opens it.
+  const factsLock =
+    factsApproved && approval !== null
+      ? {
+          // With no approval time known, the same sentence without the date.
+          line: approvedLine('facts.locked.line', approval.profileApprovedAt) ?? t('gate.PROFILE_APPROVED'),
+          addAgain: async (): Promise<string | null> => {
+            const made = await addAgain(api, body.opportunity)
+            if ('code' in made) return made.code
+            onChanged()
+            onOpenOpportunity(made.id)
+            return null
+          }
+        }
+      : null
+
+  // A section opened as a sub-page: that section alone, whole.
+  if (section !== null) {
+    const shown = pageOf(section)
+    const content =
+      shown === 'profile' ? (
+        <BusinessFactsPage
+          t={t}
+          locale={locale}
+          view={businessFactsView({
+            profile,
+            candidate,
+            name: shownName,
+            researched: research.done && !researchMoving,
+            colors: mediaView.colors.state === 'found' ? mediaView.colors.colors : [],
+            reviews: [
+              ...(googlePlaceView(profile?.googlePlace)?.reviews ?? []).map((r) => ({
+                ...r,
+                source: 'google'
+              })),
+              ...tripadvisorReviewView(profile, media).map((r) => ({ ...r, source: 'tripadvisor' }))
+            ],
+            // Each chip's collected time and page address (#537).
+            sources,
+            savedProfile
+          })}
+          media={mediaView}
+          food={profile?.trade === 'food'}
+          running={researchMoving}
+          websiteLink={websiteLink}
+          locked={factsLock}
+          doors={{
+            nameRow:
               nameRow === null ? null : (
                 <ProfileNameRow
                   key={`${nameRow.name}:${nameRow.chip}`}
@@ -598,428 +914,324 @@ export function DetailView({
                   view={nameRow}
                   onSave={saveName}
                 />
-              )
-            }
-            hoursRow={
-              hoursRow === null ? null : (
-                <ProfileHoursRow
-                  key={`${hoursRow.hours.join('|')}:${hoursRow.chip}:${hoursRow.left}`}
-                  t={t}
-                  view={hoursRow}
-                  onSave={saveHours}
-                />
-              )
-            }
-            phonesRow={
-              phonesRow === null || (phonesRow.others.length === 0 && !phonesRow.mainWhatsapp) ? null : (
-                <ProfilePhonesRows t={t} view={phonesRow} />
-              )
-            }
-            ratingRow={
-              ratingRow === null ? null : (
-                <ProfileRatingRow
-                  key={`${ratingRow.shown}:${ratingRow.chosen}`}
-                  t={t}
-                  view={ratingRow}
-                  locale={locale}
-                  onSave={saveRating}
-                />
-              )
-            }
-            readingRows={
+              ),
+            saveName,
+            profileField: (field, value) => {
+              const view = profileEditView(profile, field)
+              if (view === null) return null
+              return {
+                value,
+                save: async (typed) => {
+                  const sent = profileEditBody(field, typed, view.value)
+                  if (sent === null) return true
+                  const answer = await api.editProfile(id, sent.edits)
+                  if (answer.ok) void reload()
+                  return answer.ok
+                }
+              }
+            },
+            factSwitch: (fields) => {
+              const rows = factRows.filter((r) => r.field !== null && fields.includes(r.field))
+              if (rows.length === 0) return null
+              return {
+                on: rows.some((r) => r.onSite),
+                set: async (on) => {
+                  for (const r of rows) if (r.onSite !== on && !(await toggleFact(r.id, on))) return false
+                  return true
+                }
+              }
+            },
+            saveHours,
+            pickReading,
+            readingRows: (groups) =>
               readingRows === null ? null : (
-                <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} />
-              )
+                <ProfileReadingRows t={t} view={readingRows} onPick={pickReading} groups={groups} />
+              ),
+            keyMessages: keyMessagesRows(false),
+            uploadMedia,
+            retryLogo: { busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() },
+            // Any fact of the saved profile: on or off, and its value by kind (#537 R18).
+            setFactOn: toggleFact,
+            saveFactValue: async (factId, value) => {
+              const answer = await api.setFactValue(id, factId, value)
+              if (!answer.ok) return false
+              setDecisionsTick((n) => n + 1)
+              await reload()
+              onChanged()
+              return true
+            },
+            // The owner's choices for the site (#537 R14 to R16).
+            owner: ownerDoorsOf({
+              api,
+              id,
+              body,
+              setFact: toggleFact,
+              refresh: async () => {
+                await reload()
+                onChanged()
+              }
+            })
+          }}
+        />
+      ) : !research.done ? (
+        <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
+      ) : briefEmpty !== null ? (
+        <p className="tracy-wo-muted">{t(briefEmpty)}</p>
+      ) : effective.brief == null && isRecord(body.brief) ? (
+        // A reset upstream: the old brief is not shown at all, the page reads as not made yet.
+        <p className="tracy-wo-psec-lock">
+          <Lock aria-hidden="true" className="tracy-wo-icon" />
+          {t(stepper.steps[1]?.lockKey ?? 'workspace.wait.brief')}
+        </p>
+      ) : (
+        <>
+          {briefLine}
+          {briefChecklist}
+          {tableListsFacts && !briefLocked ? (
+            <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p>
+          ) : null}
+        </>
+      )
+    // Approve in the header (#537): on the Profile once research is done, on the brief once one is made and
+    // current; elsewhere on those two pages none.
+    // Approved facts show their date in the locked notice instead (#537 R23).
+    const approvalView: ApprovalView | null =
+      approval === null || (shown === 'profile' && factsApproved)
+        ? null
+        : shown === 'profile'
+          ? {
+              kind: 'profile',
+              pending: approval.profile !== 'none' && approval.profile !== undefined,
+              approvedLine:
+                approval.profile === 'approved'
+                  ? approvedLine('approve.done.profile', approval.profileApprovedAt)
+                  : null,
+              onApprove: approveProfile
             }
-            keyMessagesRows={
-              keyMessages.length === 0 ? null : (
-                <ProfileKeyMessages
-                  key={keyMessages.map((m) => `${m.id}:${m.label}`).join('|')}
-                  t={t}
-                  messages={keyMessages}
-                  onSave={saveKeyMessages}
-                />
-              )
-            }
-            factsRows={
-              factRows === null ? null : <ProfileFactsRows t={t} rows={factRows} onToggle={toggleFact} />
-            }
-          />
-          <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
-          <MediaRow
-            t={t}
-            menu={menu}
-            view={mediaRowView({ profile, media, sources })}
-            retryLogo={{ busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() }}
-            food={profile?.trade === 'food'}
-          />
-          <GooglePlace t={t} place={googlePlaceView(profile?.googlePlace)} food={profile?.trade === 'food'} />
-          <TripadvisorReviews t={t} profile={profile} media={media} />
-          <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
-          <Social t={t} lines={socialStatsLines(profile, now)} />
-          <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
-        </div>
+          : shown === 'brief'
+            ? briefApproval
+            : null
+    return (
+      <div className="tracy-wo-page tracy-wo-details" ref={page}>
+        {errors}
+        <SubPage
+          t={t}
+          section={section}
+          name={shownName}
+          view={stripView}
+          stepAction={stepAction}
+          onSection={onSection}
+          approval={approvalView}
+          locked={shown === 'profile' && factsApproved}
+        >
+          {shown === 'profile' ? sameAsLine : null}
+          {content}
+        </SubPage>
+        {dialogs}
       </div>
+    )
+  }
+
+  return (
+    <div className="tracy-wo-page tracy-wo-details" ref={page}>
+      <DetailsHeader
+        t={t}
+        name={shownName}
+        branch={row.branch ?? null}
+        facts={facts}
+        status={
+          reviewChip === null ? (
+            <StatusBadge status={placeStatus(row, t)} />
+          ) : (
+            <StatusPill state={PILL_OF_TONE[reviewChip.tone] ?? 'neutral'} label={t(reviewChip.key)} />
+          )
+        }
+        busy={busy}
+        onBack={onList}
+        menu={{
+          onResearchAgain: researchAgainOpen ? researchAgain.onOpen : undefined,
+          onDelete: () => setDeleting({ ids: [row.id], withSite: hasLiveDemo(row) ? 1 : 0, name: shownName })
+        }}
+      />
+      {sameAsLine}
+      {errors}
+      {progressBand}
+      <WorkspaceCard
+        t={t}
+        opportunityId={id}
+        onSection={onSection}
+        addSource={addSourceButton}
+        input={{
+          stepper,
+          researchDone: research.done,
+          researchMoving,
+          researchedAt: research.researchedAt,
+          sources: overviewStates,
+          fields: profileRows.length,
+          brief: effective.brief != null && isRecord(body.brief) ? { n: Number(body.brief.n ?? 1) } : null,
+          briefEmpty:
+            briefSteps.mode === 'running' ? 'running' : briefSteps.mode === 'failed' ? 'failed' : null,
+          demo: effective.demo,
+          demoHost: demoHostOf(demoCommand('primary', row, body)),
+          locale
+        }}
+        bodies={{
+          sources: (
+            <div className="tracy-wo-stack">
+              <SourcesTable
+                t={t}
+                sources={overviewSources}
+                progress={sourceProgress}
+                retry={retrySource}
+                remove={removeSourceControl}
+                researchState={research.state}
+              />
+              {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
+            </div>
+          ),
+          demo: (
+            <div className="tracy-wo-stack">
+              {send ? (
+                <SendDemo key={row.id} t={t} draft={send} locale={locale} onClose={() => setSend(null)} />
+              ) : null}
+              <DemoSiteBlock
+                t={t}
+                row={row}
+                detail={body}
+                locale={locale}
+                now={now}
+                busy={busy}
+                bare
+                siteName={shownName}
+                brand={mediaView.colors.state === 'found' ? (mediaView.colors.colors[0]?.hex ?? null) : null}
+                limitReached={limitReached}
+                onCommand={onDemo}
+                estimate={
+                  buildChoice(buildChoices, row.latestRevision?.cms ?? '', null, null, recommended).template
+                    ?.estimate
+                }
+              />
+              <DemoHistory t={t} revisions={revisions} builds={asArray<unknown>(body.builds)} />
+            </div>
+          )
+        }}
+      />
+      {dialogs}
     </div>
   )
 }
 
-function Profile({
+/**
+ * Every demo of the place (Lee, 23/10/2026), with what it was built with and the brief it came from; nothing until
+ * there is a history (the Demo site block says what comes next).
+ */
+function DemoHistory({
   t,
-  profile,
-  nameRow,
-  hoursRow,
-  ratingRow,
-  phonesRow,
-  readingRows,
-  keyMessagesRows,
-  factsRows
+  revisions,
+  builds
 }: {
   t: Translate
-  profile: Body | null
-  /** "Name on the site" (`profile-name-row.tsx`) in place of the plain Name row, when research decided a name. */
-  nameRow: JSX.Element | null
-  /** "Opening hours" (`profile-hours-row.tsx`), after the phone, when there are hours to show or check. */
-  hoursRow: JSX.Element | null
-  /** "Google rating" (`profile-rating-row.tsx`), before the phone, when Google rates the place. */
-  ratingRow: JSX.Element | null
-  /** "Phone" with Main and "Other phones" (`profile-phones-rows.tsx`) in place of the plain Phone row. */
-  phonesRow: JSX.Element | null
-  /** "Services", "Who it is for" and "Team" (`profile-reading-rows.tsx`), after the other rows, when research read them. */
-  readingRows: JSX.Element | null
-  /** "Key messages" (`profile-key-messages.tsx`), after the reading, when the reading found some. */
-  keyMessagesRows: JSX.Element | null
-  /** "What the site may say" (`profile-facts-rows.tsx`), last: every fact, its confidence and its switch. */
-  factsRows: JSX.Element | null
-}): JSX.Element {
-  const rows = profileFields(profile)
-  const drawRow = (row: ProfileRow): JSX.Element =>
-    row.field === 'name' && nameRow !== null ? (
-      <Fragment key={row.field}>{nameRow}</Fragment>
-    ) : (
-      <div key={row.field} className="tracy-wo-field">
-        <dt className="tracy-wo-muted tracy-wo-small">{t(`field.${row.field}`)}</dt>
-        <dd>
-          <span>{row.value}</span>
-          {row.staleSince !== null ? (
-            <span className="tracy-wo-warn tracy-wo-small">
-              {t('detail.stale', { date: row.staleSince === '' ? '' : formatDate(row.staleSince) })}
-            </span>
-          ) : null}
-        </dd>
-      </div>
-    )
-  // Each field in its place, with the decided rows where they belong: the rating before the phone, the phones and
-  // the hours in place of their plain rows.
-  const drawn: JSX.Element[] = []
-  for (const field of PROFILE_FIELDS) {
-    if (field === 'phone' && ratingRow !== null)
-      drawn.push(<Fragment key="googleRating">{ratingRow}</Fragment>)
-    if (field === 'hours' && hoursRow !== null) {
-      drawn.push(<Fragment key="hours">{hoursRow}</Fragment>)
-      continue
-    }
-    if (field === 'phone' && phonesRow !== null) {
-      drawn.push(<Fragment key="phone">{phonesRow}</Fragment>)
-      continue
-    }
-    const row = rows.find((r) => r.field === field)
-    if (row) drawn.push(drawRow(row))
-  }
-  if (readingRows !== null) drawn.push(<Fragment key="reading">{readingRows}</Fragment>)
-  if (keyMessagesRows !== null) drawn.push(<Fragment key="keyMessages">{keyMessagesRows}</Fragment>)
-  if (factsRows !== null) drawn.push(<Fragment key="facts">{factsRows}</Fragment>)
-  return (
-    <Section title={t('detail.profile')}>
-      {drawn.length === 0 ? (
-        <p className="tracy-wo-muted">{t('detail.noProfile')}</p>
-      ) : (
-        <dl className="tracy-wo-fields">{drawn}</dl>
-      )}
-    </Section>
-  )
-}
-
-const answer = (t: Translate, v: boolean | null): string =>
-  t(v === true ? 'answer.yes' : v === false ? 'answer.no' : 'answer.unknown')
-
-/** What Google lists for the place; every fact is Google's, so reviews are quoted as written, with their author. */
-/** `food`: the profile's trade is food, so Google's reservable reads Book a table; any other trade reads Takes bookings. */
-function GooglePlace({
-  t,
-  place,
-  food
-}: {
-  t: Translate
-  place: GooglePlaceView | null
-  food: boolean
+  revisions: Revision[]
+  builds: unknown[]
 }): JSX.Element | null {
-  if (place === null) return null
-  const amenities = (ids: string[]) => ids.map((id) => t(`amenity.${id}`)).join(', ')
-  return (
-    <Section title={t('detail.google')}>
-      <dl className="tracy-wo-fields">
-        {place.offered.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.offered')}</dt>
-            <dd>{amenities(place.offered)}</dd>
-          </div>
-        )}
-        {place.notOffered.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.notOffered')}</dt>
-            <dd>{amenities(place.notOffered)}</dd>
-          </div>
-        )}
-        <div className="tracy-wo-field">
-          <dt className="tracy-wo-muted tracy-wo-small">
-            {t(food ? 'detail.google.reservable' : 'detail.google.reservable.any')}
-          </dt>
-          <dd>{answer(t, place.reservable)}</dd>
-        </div>
-        {place.price !== null && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.price')}</dt>
-            <dd>{place.price === 'free' ? t('detail.google.price.free') : place.price}</dd>
-          </div>
-        )}
-        {place.summaries.map((s) => (
-          <div key={s.kind} className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t(`detail.google.summary.${s.kind}`)}</dt>
-            <dd>{s.text}</dd>
-          </div>
-        ))}
-        {place.openingHours.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('field.hours')}</dt>
-            <dd>
-              {place.openingHours.map((h) => (
-                <span key={h}>{h}</span>
-              ))}
-            </dd>
-          </div>
-        )}
-        {place.reviews.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.reviews')}</dt>
-            <dd className="tracy-wo-reviews">
-              {place.reviews.map((r, i) => (
-                <blockquote key={`${r.author}-${i}`} className="tracy-wo-review">
-                  <q>{r.text}</q>
-                  <span className="tracy-wo-muted tracy-wo-small tracy-wo-review-author">
-                    {r.authorAvatarUrl ? (
-                      <img
-                        src={r.authorAvatarUrl}
-                        alt=""
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : null}
-                    {r.authorUri ? (
-                      <a href={r.authorUri} target="_blank" rel="noopener noreferrer">
-                        {r.rating === null
-                          ? t('detail.google.by', { author: r.author })
-                          : t('detail.google.byRated', { author: r.author, rating: r.rating })}
-                      </a>
-                    ) : r.rating === null ? (
-                      t('detail.google.by', { author: r.author })
-                    ) : (
-                      t('detail.google.byRated', { author: r.author, rating: r.rating })
-                    )}
-                  </span>
-                </blockquote>
-              ))}
-            </dd>
-          </div>
-        )}
-      </dl>
-    </Section>
-  )
-}
-
-/** Mobile PageSpeed of the place's own website, as measured; a score under 50 reads red like the Website column. */
-function CurrentSite({ t, site }: { t: Translate; site: PageSpeedView | null }): JSX.Element | null {
-  if (site === null) return null
-  const scoreText = (v: number | null) =>
-    v === null ? (
-      t('answer.unknown')
-    ) : (
-      <span className="tracy-wo-web-score" data-low={v < LOW_WEBSITE_SCORE}>
-        {t('cell.website.score', { score: v })}
-      </span>
-    )
-  const lcp =
-    site.lcpSeconds === null
-      ? t('answer.unknown')
-      : new Intl.NumberFormat(interfaceLocale(), {
-          style: 'unit',
-          unit: 'second',
-          unitDisplay: 'short',
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1
-        }).format(site.lcpSeconds)
-  const facts: Array<[string, JSX.Element | string]> = [
-    ['detail.site.performance', scoreText(site.performance)],
-    ['detail.site.seo', scoreText(site.seo)],
-    ['detail.site.lcp', lcp],
-    ['detail.site.https', answer(t, site.https)],
-    ['detail.site.mobileFriendly', answer(t, site.mobileFriendly)]
-  ]
-  return (
-    <Section title={t('detail.site')}>
-      <p className="tracy-wo-facts">
-        {facts.map(([key, value], i) => (
-          <span key={key}>
-            {i > 0 ? ' · ' : null}
-            <span className="tracy-wo-muted">{t(key)}</span> {value}
-          </span>
-        ))}
-      </p>
-      <p className="tracy-wo-muted tracy-wo-small">
-        {t('detail.site.checked', { date: formatDate(site.checkedAt) })}
-      </p>
-    </Section>
-  )
-}
-
-/** Followers, last post and posts a month per page, with where they came from; nothing until research stored some. */
-function Social({ t, lines }: { t: Translate; lines: SocialLine[] }): JSX.Element | null {
-  if (lines.length === 0) return null
   const locale = interfaceLocale() ?? 'en'
-  const now = Date.now()
+  const rows = demoRows(builds, revisions)
+  if (rows.length === 0) return null
   return (
-    <Section title={t('columns.social')}>
-      <ul className="tracy-wo-stack">
-        {lines.map((line) => {
-          const days = ageInDays(line.fetchedAt, now)
-          const source = [
-            SOCIAL_NAME[line.network],
-            line.provider ? providerLabel(line.provider) : null,
-            days !== null ? t('cell.social.checked', { ago: formatAgo(days, locale) }) : null
+    <div className="tracy-wo-stack">
+      <h4 className="tracy-wo-h3">{t('demos.title')}</h4>
+      <ul className="tracy-wo-briefs">
+        {rows.map((r) => {
+          const facts = [
+            r.cms ? (CMS_LABEL[r.cms] ?? r.cms) : null,
+            r.template,
+            relativeTime(r.createdAt, Date.now(), locale),
+            r.briefN === null ? null : t('demos.fromBrief', { n: r.briefN })
           ].filter(Boolean)
           return (
-            <li key={line.network} className="tracy-wo-row tracy-wo-wrap">
-              <SocialStatLine t={t} line={line} locale={locale} />
-              <span className="tracy-wo-muted tracy-wo-small">{source.join(' · ')}</span>
+            <li key={r.id} className="tracy-wo-brief-row">
+              <span className="tracy-wo-name">{t('demos.number', { n: r.n })}</span>
+              <span className="tracy-wo-muted tracy-wo-small tracy-wo-brief-facts">{facts.join(' · ')}</span>
+              <StatusPill state={DEMO_PILL[r.phase] ?? 'neutral'} label={t(`demos.state.${r.phase}`)} />
+              {r.siteKey !== null && r.phase !== 'deleted' ? (
+                <span className="tracy-wo-row tracy-wo-brief-acts">
+                  <a className="tracy-wo-action-link" href={`/${encodeURIComponent(r.siteKey)}/`}>
+                    {t('demos.open')}
+                    <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
+                  </a>
+                </span>
+              ) : null}
             </li>
           )
         })}
       </ul>
-    </Section>
+    </div>
   )
 }
 
 /**
- * Demos and the site brief (Lee, 23/10/2026): a brief is the research frozen once and names no template, so the
- * card lists every demo with what it was built with and the brief it came from; the brief line says whether the
- * research still reads the same, with Refresh to make a new brief now and View brief to read it.
+ * The brief line at the top of the Business brief section (Lee, 23/10/2026): a brief is the research frozen once and
+ * names no template; the line says whether the research still reads the same, with View brief to read it, and the
+ * Content brief job's steps while a new one is made in the background (`brief-control.tsx`).
  */
-function Demos({
+function BriefLine({
   t,
-  api,
-  id,
-  revisions,
-  builds,
   brief,
-  onOpen,
-  onRefreshed
+  research,
+  briefJob,
+  review = null,
+  onOpen
 }: {
   t: Translate
-  api: Api
-  id: string
-  revisions: Revision[]
-  builds: unknown[]
   brief: unknown
+  /** This card's research (#524): the brief waits for it. */
+  research: unknown
+  /** The Content brief job (#524), made in the background and pressed from the stepper (`brief-control.tsx`). */
+  briefJob: BriefJobControl
+  /**
+   * The seller's approvals (#537), when the server sends them: the brief step's lock line (it replaces Make and
+   * Refresh while the Profile waits for approval). Its words replace the older out-of-date line.
+   */
+  review?: { lockKey: string | null } | null
   onOpen: (revisionId: string, n: number) => void
-  onRefreshed: () => void
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
-  const [refreshing, setRefreshing] = useState(false)
-  const [failed, setFailed] = useState(false)
-  const rows = demoRows(builds, revisions)
   const status = briefStatus(brief)
-  const refresh = async (): Promise<void> => {
-    if (refreshing) return
-    setRefreshing(true)
-    setFailed(false)
-    const answer = await api.createRevision(id)
-    setRefreshing(false)
-    if (!answer.ok) return setFailed(true)
-    onRefreshed()
-  }
+  const edited = isRecord(brief) && brief.editedBySeller === true
   const when = status ? relativeTime(status.createdAt, Date.now(), locale) : ''
+  const view = briefControlView({ research, brief, briefJob: briefJob.job })
+  const chip = briefChip(view)
+  // While a new brief is being made, the old one is only named: its out-of-date reason is already being acted on.
+  const lineKey = chip === 'working' || review != null ? 'brief.number' : briefLineKey(brief)
   return (
-    <>
-      <Section title={t('demos.title')}>
-        {rows.length === 0 ? (
-          <p className="tracy-wo-muted">{t('demos.none')}</p>
-        ) : (
-          <ul className="tracy-wo-briefs">
-            {rows.map((r) => {
-              const facts = [
-                r.cms ? (CMS_LABEL[r.cms] ?? r.cms) : null,
-                r.template,
-                relativeTime(r.createdAt, Date.now(), locale),
-                r.briefN === null ? null : t('demos.fromBrief', { n: r.briefN })
-              ].filter(Boolean)
-              const live = r.phase === 'done'
-              return (
-                <li key={r.id} className="tracy-wo-brief-row">
-                  <span className="tracy-wo-name">{t('demos.number', { n: r.n })}</span>
-                  <span className="tracy-wo-muted tracy-wo-small tracy-wo-brief-facts">
-                    {facts.join(' · ')}
-                  </span>
-                  <Badge
-                    variant={live ? 'secondary' : 'outline'}
-                    className={live ? 'tracy-wo-badge-live' : undefined}
-                  >
-                    {t(`demos.state.${r.phase}`)}
-                  </Badge>
-                  {r.siteKey !== null && r.phase !== 'deleted' ? (
-                    <span className="tracy-wo-row tracy-wo-brief-acts">
-                      <a className="tracy-wo-action-link" href={`/${encodeURIComponent(r.siteKey)}/`}>
-                        {t('demos.open')}
-                        <ExternalLink aria-hidden="true" className="tracy-wo-icon" />
-                      </a>
-                    </span>
-                  ) : null}
-                </li>
-              )
-            })}
-          </ul>
-        )}
-      </Section>
-      <Section title={t('revision.document')}>
-        {status === null ? (
+    <div className="tracy-wo-stack">
+      {status === null ? (
+        chip !== null || view.mode === 'locked' ? null : (
           <p className="tracy-wo-muted">{t('brief.none')}</p>
-        ) : (
-          <div className="tracy-wo-row tracy-wo-wrap">
-            <p className="tracy-wo-muted">
-              {status.current === null
-                ? t('brief.number', { n: status.n })
-                : t(status.current ? 'brief.current' : 'brief.stale', { n: status.n, when })}
-            </p>
-            <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
-              <FileText aria-hidden="true" />
-              {t('brief.view')}
-            </Button>
-            {status.current === false ? (
-              <Button type="button" size="xs" disabled={refreshing} onClick={() => void refresh()}>
-                {refreshing ? <Spinner label={t('brief.refreshing')} /> : null}
-                {refreshing ? t('brief.refreshing') : t('brief.refresh')}
-              </Button>
-            ) : null}
-          </div>
-        )}
-        {failed && (
-          <p className="tracy-wo-error" role="alert">
-            {t('brief.failed')}
-          </p>
-        )}
-      </Section>
-    </>
+        )
+      ) : (
+        <div className="tracy-wo-row tracy-wo-wrap">
+          <p className="tracy-wo-muted">{t(lineKey, { n: status.n, when })}</p>
+          {chip === null ? null : (
+            <StatusPill state={chip === 'working' ? 'running' : 'failed'} label={t(`brief.chip.${chip}`)} />
+          )}
+          <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
+            <FileText aria-hidden="true" />
+            {t('brief.view')}
+          </Button>
+        </div>
+      )}
+      {edited ? <p className="tracy-wo-muted tracy-wo-small">{t('brief.editedByYou')}</p> : null}
+      {review?.lockKey ? (
+        <p className="tracy-wo-psec-lock tracy-wo-small">
+          <Lock aria-hidden="true" className="tracy-wo-icon" />
+          {t(review.lockKey)}
+        </p>
+      ) : review != null && view.mode === 'make' ? null : (
+        // With approvals the Progress band carries Make and Make again; this block keeps the job's own progress.
+        <BriefControl t={t} view={view} control={briefJob} />
+      )}
+    </div>
   )
 }
 
@@ -1043,33 +1255,9 @@ export function RevisionView({
   onList: () => void
   onDetails: () => void
 }): JSX.Element {
-  const [revision, setRevision] = useState<Body | null>(null)
-  const [markdown, setMarkdown] = useState<string | null>(null)
-  const [lastBuildId, setLastBuildId] = useState<string | null>(null)
-  const [usage, setUsage] = useState<DemoUsage | null>(null)
-  const [suggestedLabel, setSuggestedLabel] = useState('')
+  const page = useRevisionPage(api, revisionId)
+  const { revision, markdown, lastBuildId, usage, suggestedLabel, siteLabel, failed } = page
   const [name, setName] = useState<string | null>(null)
-  const [failed, setFailed] = useState(false)
-  const load = useCallback(async () => {
-    const [meta, md] = await Promise.all([api.revision(revisionId), api.revisionMarkdown(revisionId)])
-    if (!meta.ok || typeof meta.body?.revision !== 'object' || meta.body.revision === null) {
-      setFailed(true)
-      return
-    }
-    setFailed(false)
-    setRevision(meta.body.revision as Body)
-    setUsage(meta.body.usage as DemoUsage)
-    setLastBuildId(
-      shownBuildId(
-        Array.isArray(meta.body.builds) ? (meta.body.builds as { id?: unknown; state?: unknown }[]) : null
-      )
-    )
-    setSuggestedLabel(suggestedLabelOf(meta.body))
-    setMarkdown(md.ok ? md.body : null)
-  }, [api, revisionId])
-  useEffect(() => {
-    void load()
-  }, [load])
   // The breadcrumb names the place; the brief alone does not carry its name.
   useEffect(() => {
     let live = true
@@ -1100,26 +1288,16 @@ export function RevisionView({
     return (
       <div className="tracy-wo-page">
         {crumbs}
-        <PageState t={t} failed={failed} failedKey="revision.failed" onRetry={() => void load()} />
+        <PageState t={t} failed={failed} failedKey="revision.failed" onRetry={() => void page.reload()} />
       </div>
     )
   }
   return (
     <div className="tracy-wo-page">
       {crumbs}
-      <div className="tracy-wo-page-head">
-        <h2 className="tracy-wo-page-title">{t('brief.number', { n })}</h2>
-        <p className="tracy-wo-muted tracy-wo-small">{t('brief.readOnly')}</p>
-      </div>
       <div className="tracy-wo-page-grid is-brief">
         <div className="tracy-wo-col">
-          <Section title={t('revision.document')}>
-            {markdown !== null ? (
-              <pre className="tracy-wo-markdown">{markdown}</pre>
-            ) : (
-              <p className="tracy-wo-muted">{t('revision.failed')}</p>
-            )}
-          </Section>
+          <BriefUnderstanding t={t} brief={revision.brief} markdown={markdown} />
         </div>
         <div className="tracy-wo-col">
           <Build
@@ -1132,6 +1310,7 @@ export function RevisionView({
             onStarted={onDetails}
             cms=""
             suggestedLabel={suggestedLabel}
+            siteLabel={siteLabel}
             usage={usage}
             initialBuildId={lastBuildId}
             focusName={focusName}
@@ -1142,7 +1321,41 @@ export function RevisionView({
   )
 }
 
-function Build({
+/** The templates this server offers per CMS and the one /ops/wo pins (`GET /capabilities`); null until read or when absent. */
+function useBuildChoices(api: Api): BuildChoices | null {
+  const [choices, setChoices] = useState<BuildChoices | null>(null)
+  useEffect(() => {
+    let live = true
+    void api.capabilities().then((answer) => {
+      const offered = answer.ok ? answer.body.templates : undefined
+      if (live && offered && !('error' in offered)) setChoices(offered)
+    })
+    return () => {
+      live = false
+    }
+  }, [api])
+  return choices
+}
+
+/**
+ * The designs the template picker recommends for this opportunity's trade (`templateRanking`), so the Build card and
+ * the Demo site block show the same template the picker puts first; empty until read or when the trade is unknown.
+ */
+function useRecommendedDesigns(api: Api, opportunityId: string): string[] {
+  const [recommended, setRecommended] = useState<string[]>([])
+  useEffect(() => {
+    let live = true
+    void rankingFor(api, [opportunityId]).then((ranking) => {
+      if (live) setRecommended(ranking?.recommended ?? [])
+    })
+    return () => {
+      live = false
+    }
+  }, [api, opportunityId])
+  return recommended
+}
+
+export function Build({
   t,
   api,
   ids,
@@ -1151,6 +1364,7 @@ function Build({
   onStarted,
   cms,
   suggestedLabel,
+  siteLabel = null,
   usage: initialUsage,
   initialBuildId = null,
   focusName = false
@@ -1165,13 +1379,14 @@ function Build({
   usage: DemoUsage | null
   /** The server's name for the site; shown until the person types their own. */
   suggestedLabel: string
+  /** Site name on Tracy saved on the opportunity (#519); shown before the suggestion. */
+  siteLabel?: string | null
   /** The revision's latest build, so a reload still shows its site and the handoff. */
   initialBuildId?: string | null
   focusName?: boolean
 }): JSX.Element {
   const labelId = useId()
-  const cmsId = useId()
-  const templateId = useId()
+  const locale = interfaceLocale() ?? 'en'
   const [usage, setUsage] = useState(initialUsage)
   usePoll(
     async () => {
@@ -1182,7 +1397,7 @@ function Build({
     15000
   )
   const [typed, setTyped] = useState<string | null>(null)
-  const label = typed ?? suggestedLabel
+  const label = buildLabel(typed, siteLabel, suggestedLabel)
   const [buildId] = useState<string | null>(initialBuildId)
   const [status, setStatus] = useState<ReturnType<typeof buildView> | null>(null)
   const [failure, setFailure] = useState<ReturnType<typeof buildFailure>>(null)
@@ -1205,23 +1420,11 @@ function Build({
   }, [read])
   usePoll(read, buildId !== null && (status === null || status.phase === 'running'))
 
-  // The CMS and template are the person's choice; the template /ops/wo pins for the CMS is preselected.
-  const [choices, setChoices] = useState<BuildChoices | null>(null)
-  const [pickedCms, setPickedCms] = useState<string | null>(null)
-  const [pickedDesign, setPickedDesign] = useState<string | null>(null)
-  useEffect(() => {
-    let live = true
-    void api.capabilities().then((answer) => {
-      const offered = answer.ok ? answer.body.templates : undefined
-      if (live && offered && !('error' in offered)) setChoices(offered)
-    })
-    return () => {
-      live = false
-    }
-  }, [api])
-  const picked = buildChoice(choices, cms, pickedCms, pickedDesign)
-  const { cmsList, cms: buildCms, template: buildTemplate } = picked
-  const offered = choices?.[buildCms]
+  // The card shows the template the picker recommends for this business (else the one /ops/wo pins); the person
+  // chooses in the same template picker the Demo site block opens, never with one click here.
+  const choices = useBuildChoices(api)
+  const recommended = useRecommendedDesigns(api, opportunityId)
+  const { cms: buildCms, template: buildTemplate } = buildChoice(choices, cms, null, null, recommended)
 
   const start = async (): Promise<void> => {
     if (busy) return
@@ -1241,15 +1444,7 @@ function Build({
         },
         ids,
         'build',
-        { id: opportunityId },
-        // The form's choice when this server offers one; else the shared picker opens, as before.
-        buildTemplate
-          ? async () => ({
-              cms: buildCms,
-              design: buildTemplate.design,
-              quickstart: buildTemplate.quickstart
-            })
-          : undefined
+        { id: opportunityId }
       )
       if (outcome.kind === 'demo-chat' && !(await followChat(outcome.actions))) setStartCode('HTTP_500')
       if (outcome.kind === 'failed') setStartCode(outcome.code)
@@ -1305,47 +1500,19 @@ function Build({
           {t('v3.limitReached')}
         </p>
       ) : null}
-      {buildTemplate && buildId === null ? (
-        <>
-          <label className="tracy-wo-field">
-            <span className="tracy-wo-label" id={cmsId}>
-              {t('build.cms')}
+      {buildId === null ? (
+        buildTemplate ? (
+          <div className="tracy-wo-field">
+            <span className="tracy-wo-label">{t('build.template')}</span>
+            <span>
+              {buildTemplate.label} · {CMS_LABEL[buildCms] ?? buildCms}
             </span>
-            <NativeSelect
-              aria-labelledby={cmsId}
-              value={buildCms}
-              onChange={(event) => {
-                setPickedCms(event.target.value)
-                setPickedDesign(null)
-              }}
-            >
-              {cmsList.map((key) => (
-                <NativeSelectOption key={key} value={key}>
-                  {CMS_LABEL[key] ?? key}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </label>
-          <label className="tracy-wo-field">
-            <span className="tracy-wo-label" id={templateId}>
-              {t('build.template')}
-            </span>
-            <NativeSelect
-              aria-labelledby={templateId}
-              value={buildTemplate.design}
-              onChange={(event) => setPickedDesign(event.target.value)}
-            >
-              {(offered?.templates ?? []).map((tpl) => (
-                <NativeSelectOption key={tpl.design} value={tpl.design}>
-                  {tpl.label}
-                </NativeSelectOption>
-              ))}
-            </NativeSelect>
-          </label>
-        </>
-      ) : (
-        <p className="tracy-wo-muted tracy-wo-small">{t('build.cmsNote')}</p>
-      )}
+            <span className="tracy-wo-muted tracy-wo-small">{t('build.pickNote')}</span>
+          </div>
+        ) : (
+          <p className="tracy-wo-muted tracy-wo-small">{t('build.cmsNote')}</p>
+        )
+      ) : null}
       <label className="tracy-wo-field">
         <span className="tracy-wo-label" id={labelId}>
           {t('build.label')}
@@ -1358,7 +1525,7 @@ function Build({
           autoComplete="off"
           onChange={(event) => setTyped(event.target.value)}
         />
-        <span className="tracy-wo-muted tracy-wo-small">{t('build.labelHint')}</span>
+        <span className="tracy-wo-muted tracy-wo-small">{t(buildLabelHintKey(typed, siteLabel))}</span>
       </label>
       {buildId === null ? (
         <Button type="button" disabled={busy || usageFull(usage)} onClick={() => void start()}>
@@ -1366,6 +1533,7 @@ function Build({
           {t('build.start')}
         </Button>
       ) : null}
+      {buildId === null ? <BuildEstimate t={t} locale={locale} estimate={buildTemplate?.estimate} /> : null}
       {buildId === null ? <p className="tracy-wo-muted tracy-wo-small">{t('build.after')}</p> : null}
       {startCode !== null && (
         <p className="tracy-wo-error" role="alert">
@@ -1412,7 +1580,7 @@ function Build({
         </p>
       )}
       {status?.phase === 'failed' && failure?.reason ? (
-        <p className="tracy-wo-muted tracy-wo-small">{failure.reason}</p>
+        <p className="tracy-wo-muted tracy-wo-small">{failureReasonText(failure.reason, t)}</p>
       ) : null}
       {status?.phase === 'failed' && failure?.actionId && (
         <Button

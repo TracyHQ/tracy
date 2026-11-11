@@ -11,6 +11,12 @@ import { ratingShownForms } from './google-rating.mjs'
 import { comparable, labelQuoted } from './business-reading.mjs'
 import { cleanSocialUrl } from './social-links.mjs'
 import { OBSERVED_USE_RULE } from './pictures/observed-facts.mjs'
+import { SOCIAL_NETWORKS } from './owner-site-picks.mjs'
+
+/** A link to one of these networks is a social link (`owner-site-picks.mjs`); WhatsApp is its own fact. */
+const SOCIAL_LINK_KINDS = new Set(
+  SOCIAL_NETWORKS.map((n) => n.id).filter((id) => id !== 'whatsapp' && id !== 'other')
+)
 
 // The brief names a source by its platform: Google's two collectors are one Google.
 const SOURCE_NAME = { 'google-places': 'google', 'google-maps': 'google' }
@@ -50,7 +56,7 @@ function fieldOf(path, fact, sourceKind, food) {
     if (kind === 'whatsapp' || kind === 'website' || kind === 'menu' || kind === 'booking') return kind
     // A channel the business invites messages on in its own words (`own-channels.mjs`): "DM us" on Instagram.
     if (/^(?:instagram|facebook|tiktok|x)-dm$/.test(kind ?? '')) return 'contactChannels'
-    return ['facebook', 'instagram', 'tiktok', 'youtube', 'x'].includes(kind) ? 'socials' : null
+    return SOCIAL_LINK_KINDS.has(kind) ? 'socials' : null
   }
   if (group === 'extensions' && key === 'research:otherPhones') return 'otherPhones'
   return null
@@ -99,7 +105,8 @@ export function briefFactsOf(profile, { food = false, decisions }) {
     const refs = fact.evidenceRefs.map((r) => evidence.get(r)).filter(Boolean)
     const first = sources.get(refs[0]?.sourceId)
     const field = fieldOf(path, fact, first?.kind, food)
-    if (!field) continue
+    // A person or link the owner added (`saved-profile.mjs`) reaches the brief through its team and links, not as a fact.
+    if (!field || fact.addedByOwner) continue
     // Preserve the raw profile quote, but never send an unfilled source-template line to the builder.
     const cleanPostText = (text) =>
       text
@@ -134,7 +141,11 @@ export function briefFactsOf(profile, { food = false, decisions }) {
       confidence: d.confidence,
       onSite: d.onSite,
       decidedBy: d.decidedBy,
-      reasons: d.reasons ?? []
+      reasons: d.reasons ?? [],
+      // The owner's value (#537 R18): `value` is what the site states, `researchValue` what research read.
+      ...(fact.editedByOwner && 'researchValue' in fact
+        ? { editedByOwner: true, researchValue: fact.researchValue }
+        : {})
     })
   }
   return out

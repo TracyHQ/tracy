@@ -4,10 +4,10 @@
  * Nothing blocks the build: unchecked, the site shows no hours.
  */
 import { type JSX, useId, useState } from 'react'
-import { Badge, Button, Textarea } from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
+import { Button, Textarea } from '@tracy/ui'
 
 import { type HoursRowView, typedHours } from './profile-hours-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** What the person asks the server to keep (`PUT …/:id/hours`). */
@@ -25,7 +25,7 @@ const PRODUCT_NAME: Record<string, string> = {
   osm: 'OpenStreetMap'
 }
 
-function sourceName(t: Translate, view: HoursRowView): string {
+export function sourceName(t: Translate, view: HoursRowView): string {
   if (view.source === 'listing') return view.sourceLabel ?? t('name.source.listing')
   if (view.source === 'website') return t('name.source.website')
   return PRODUCT_NAME[view.source ?? 'google'] ?? PRODUCT_NAME.google
@@ -62,9 +62,10 @@ export function ProfileHoursRow({
   const typed = typedHours(draft)
   const chip =
     view.chip !== null ? (
-      <Badge variant="outline" className={cn('tracy-wo-name-chip', `is-${view.chip}`)}>
-        {t(view.chip === 'check' ? 'name.chip.check' : 'name.chip.checked')}
-      </Badge>
+      <StatusPill
+        state={view.chip === 'check' ? 'attention' : 'done'}
+        label={t(view.chip === 'check' ? 'name.chip.check' : 'name.chip.checked')}
+      />
     ) : null
   return (
     <div className="tracy-wo-field">

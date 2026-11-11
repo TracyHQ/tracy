@@ -22,12 +22,12 @@ import { type JSX, useSyncExternalStore } from 'react'
 import { FileText, Store } from 'lucide-react'
 import { Button, Spinner, TabLoadingScope } from '@tracy/ui'
 import { mayHoldSeatOnlyTab, readViewer, seatOnlyTab } from '@tracy/core/seat'
-import { LIST_PANEL_WIDTH, sidebarRightOf } from '@tracy/core/tab-link'
+import { sidebarRightOf } from '@tracy/core/tab-link'
 import { uiSwitches } from '@tracy/core/ui-switches'
 
 import { customerText } from './customer-text.ts'
 import { createApi } from './api.ts'
-import { BRIEF_TAB, BriefTab, type BriefTabSeed, briefTabMeta } from './brief-tab.tsx'
+import { BRIEF_TAB, BriefTab, type BriefTabSeed, briefTabMeta, retitleBriefTab } from './brief-tab.tsx'
 import { desktopOpenHook, featureOn } from './gate.ts'
 import { receiveHandoff } from './handoff-entry.ts'
 import { clientChatState, receiveClientDemoChat, type ChatServices } from './client-demo-chat.ts'
@@ -53,6 +53,7 @@ interface BetterSidebar {
   getSnapshot?: () => { sessionId?: string; state?: unknown }
   subscribeState?: (listener: () => void) => () => void
   openTabsOf?: (type: string) => readonly { id: string; type: string; meta?: unknown }[]
+  updateTab?: (tabId: string, patch: { title?: string; meta?: unknown }) => void
 }
 
 const api = createApi((url, init) => fetch(url, init))
@@ -185,11 +186,12 @@ export function apply(ctx: {
     () =>
       seatOnlyTab(ctx.betterSidebar, TAB_ID, () => ({
         id: TAB_ID,
-        title: () => t('tab.title'),
+        // The tab word is Opportunities; the product is still Website Opportunities (spec #512).
+        title: () => t('tab.name'),
         icon: (size: number) => <Store size={size} strokeWidth={1.8} aria-hidden="true" />,
         order: 40,
         single: true,
-        preferredWidth: LIST_PANEL_WIDTH,
+        // No preferredWidth: the list and Details take the panel's default, the remaining width of the workspace.
         component: function WebsiteOpportunitiesPane() {
           const state = useFeature()
           return (
@@ -226,8 +228,23 @@ export function apply(ctx: {
         icon: (size: number) => <FileText size={size} strokeWidth={1.8} aria-hidden="true" />,
         order: 41,
         dedupeKey: (tab: { meta?: unknown }) => `${BRIEF_TAB}:${briefTabMeta(tab.meta).revisionId ?? ''}`,
-        component: function WebsiteOpportunitiesBrief({ tab }: { tab: { meta?: unknown } }) {
-          return <BriefTab t={t} api={api} meta={briefTabMeta(tab.meta)} />
+        component: function WebsiteOpportunitiesBrief({
+          tab
+        }: {
+          tab: { id?: string; title?: string; meta?: unknown }
+        }) {
+          const meta = briefTabMeta(tab.meta)
+          const update = ctx.betterSidebar.updateTab
+          // After an edit the tab reads the new brief's number and reopens on it (#524).
+          const onEdited =
+            typeof update === 'function' && typeof tab.id === 'string'
+              ? (revisionId: string, label: string) => {
+                  const next = retitleBriefTab(tab.title ?? '', meta, revisionId, label)
+                  if (next.title !== tab.title || meta.revisionId !== revisionId)
+                    update(tab.id as string, next)
+                }
+              : null
+          return <BriefTab t={t} api={api} meta={meta} onEdited={onEdited} />
         }
       })),
     'tracy-website-opportunities: brief tab'

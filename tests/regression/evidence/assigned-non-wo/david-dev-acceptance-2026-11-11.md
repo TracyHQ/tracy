@@ -115,6 +115,7 @@ The new deterministic tests failed against the earlier source. Local verificatio
 
 Source `7e2114c9b4` passed all three deterministic regression cases: own-build recovery, social icon family and owner-post excerpts. The broader copy/writer/write run passed 920 tests with 33 environment skips; all 32 database-dependent cases then passed against real isolated PostgreSQL, and the review browser file passed 12/12 with Playwright configured. The focused owner-post suite passed 12/12, including the actual write-step refusal before any content apply. The selected gate command passed 63 gates with tests, turbo-config and boot-graph explicitly excluded. The existing authenticated browser still answered `/auth/me` with 200 and reported deployed commit `bc23d315` at 16:11 UTC; it is not yet running this correction.
 
+The final PR #522 reconciliation incorporates `5b31f81e29` without conflicts at merge source `f69a6974f0`. Its client, own-business flow/browser and icon/excerpt suites passed 817/817 with no skips; the eight server suites passed 130/130 against isolated PostgreSQL with no skips. All 63 selected gates passed, retaining the three explicit worktree exclusions above. An additional broad WO-domain/Add-site run passed 2621 tests with 136 explicitly reported environment skips; that run does not replace the separate client or PostgreSQL validations. The Details, social icon and owner-post deterministic regressions all passed on `f69a6974f0`. The complete source scan of `7e2114c9b4` found the same 107 blocking findings as the prior icon source, with zero additions or removals in a private finding comparison; no publication-clean claim is made. The parallel session is still working on PR #558 and its named browser tabs are preserved.
 
 ## Conflict reconciliation after PR #558
 
@@ -123,3 +124,10 @@ The user merged #558 into develop as `05c0e3bba4`. Source `11dc73869a` reconcile
 Local verification on this committed source passed 22 focused cases, 977 broader copy/writer/write cases with 33 explicit environment skips, 32 real PostgreSQL cases with no skips, and 12 Playwright review cases with no skips. Four official regressions passed: #558 original-post export/write provenance, #559 own-build recovery, and #565 social icon family and owner-post excerpts. The selected gate run completed all other gates but lint found an ignored synthetic operation-result file left by a test; that exact generated file was removed and lint rerun separately. Tests, turbo-config and boot-graph remain explicit worktree exclusions. Website content acceptance remains incomplete.
 
 The separate lint rerun passed oxlint, all 14 TypeScript projects, formatting and lint. Together with the completed gate run, all 63 selected gates passed; the three stated exclusions remain.
+
+
+## Opportunities reconciliation after the same merge
+
+Source `cb674960bf` merges #565 at `423cd2b59e` into #522 without replacing its implementation. The step-chain conflict combines running-step timestamps with unknown-spend accounting; evidence from both lines is retained. GitHub reports both branches mergeable against develop. Local client and flow suites passed 818/818 with no skips; running-step and unknown-spend suites passed 11/11 with no skips. All four official regressions passed on `cb674960bf`. Final-head CI and deployed content acceptance remain separate obligations.
+
+The complete eight-suite PostgreSQL run on `cb674960bf` passed 130 cases with no skips, failures or cancellations.

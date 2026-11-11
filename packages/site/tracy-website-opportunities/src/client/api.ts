@@ -6,12 +6,13 @@ import type { TemplatePick, TemplateRanking } from '@tracy/core/template-picker'
  * host's bare root, never under a plugin's `<base href>` mount. Every call settles: a refusal is its
  * `code` (`FEATURE_OFF`, `TEMPLATE_UNSELECTED`…), a broken network is `NETWORK`; nothing throws.
  */
-import type { Kind, SiteCheck } from '@tracy/wo-views'
+import type { ChainEstimate, Kind, SiteCheck } from '@tracy/wo-views'
 import type { ServerLink } from '@tracy/wo-views/link-rows-model'
 
 import type { SettingsAnswer } from './gate.ts'
 import type { RequestIds } from './request-ids.ts'
 import { type ShownSource, reasonKey } from './status.ts'
+import type { SocialEditBody, TeamEditBody } from './owner-edits-model.ts'
 import type { DemoUsage, DemoAction, DemoChatPreparation, OutreachDraft } from './outreach-model.ts'
 
 export const BASE = '/api/website-opportunities'
@@ -29,6 +30,12 @@ export type Answer<T> =
       candidates?: LinkCandidate[]
       /** `GOOGLE_LINK_AMBIGUOUS`, `NO_USABLE_LINKS`: how the server judged each link sent. */
       links?: ServerLink[]
+      /** `UNSUPPORTED_LINK`, `PLATFORM_ALREADY_KNOWN` of the add source door: the platform it names. */
+      platform?: string | null
+      /** `TOO_MANY_SOURCES`: the most listing pages one business keeps. */
+      max?: number
+      /** `MEDIA_ALREADY_ADDED` of the upload door: the row already held, so it can be used again. */
+      media?: { id: string; kind?: string }
     }
 
 /** One place a Google link may be, as the create door offers it back (409 `GOOGLE_LINK_AMBIGUOUS`). */
@@ -54,6 +61,7 @@ type FetchLike = (
 ) => Promise<{ ok: boolean; status: number; json(): Promise<unknown>; text?(): Promise<string> }>
 
 const id = (value: string): string => encodeURIComponent(value)
+const isForm = (v: unknown): v is FormData => typeof FormData !== 'undefined' && v instanceof FormData
 
 export interface BuildChoice {
   design: string
@@ -61,7 +69,11 @@ export interface BuildChoice {
 }
 export type BuildChoices = Record<
   string,
-  { pinned: BuildChoice | null; templates: (BuildChoice & { label: string })[] }
+  {
+    pinned: BuildChoice | null
+    /** `estimate`: a step chain template's measured time and price, null before its first build (#516). */
+    templates: (BuildChoice & { label: string; estimate?: ChainEstimate | null })[]
+  }
 >
 
 /** `GET /capabilities`: what this server can search with; `maps.browserKey` null = no Map view. */
@@ -92,6 +104,16 @@ export interface SearchResponse {
   pages?: unknown
   hiddenChains?: unknown
   candidates?: unknown[]
+}
+
+/** `GET …/:id/site-label` (#519): `label` saved or null, `suggested` the name a build would use without it. */
+export interface SiteLabelInfo {
+  label: string | null
+  suggested: string | null
+  prefix: string
+  domain: string
+  min: number
+  max: number
 }
 
 export interface Api {
@@ -143,7 +165,7 @@ export interface Api {
   ): Promise<Answer<{ label?: unknown; lat?: unknown; lon?: unknown }>>
   create(
     body: { candidate: unknown } | { url: string } | LinksBody
-  ): Promise<Answer<{ opportunity?: { id?: string }; links?: ServerLink[] }>>
+  ): Promise<Answer<{ opportunity?: { id?: string; sameAs?: unknown }; links?: ServerLink[] }>>
   list(): Promise<Answer<{ opportunities?: unknown[] }>>
   /** One page of My opportunities: `query` from `listParams` (or `ids=…` for the poll). */
   listPage(query: string): Promise<Answer<Record<string, unknown>>>
@@ -173,11 +195,29 @@ export interface Api {
     factId: string,
     onSite: boolean | null
   ): Promise<Answer<{ opportunity?: unknown }>>
+  /**
+   * One fact's value as the owner edits it, checked against the fact's kind, or `null` to give back what research read
+   * (`PUT …/:id/facts {factId, value}`, #537 R18).
+   */
+  setFactValue(
+    opportunityId: string,
+    factId: string,
+    value: unknown
+  ): Promise<Answer<{ opportunity?: unknown; fact?: unknown }>>
   /** The owner's key message picks: ids removed, ids in order, labels retyped (`PUT …/:id/key-messages`, #1791). */
   setKeyMessages(
     opportunityId: string,
     picks: { removed: string[]; order: string[]; labels: Record<string, string> }
   ): Promise<Answer<{ opportunity?: unknown }>>
+  /** Site name on Tracy (#519): the saved label, the one a build would use now, and how the server names an address. */
+  siteLabel(opportunityId: string): Promise<Answer<SiteLabelInfo>>
+  /** Whether a typed site label can name the demo (`GET …/:id/site-label/check`). */
+  checkSiteLabel(
+    opportunityId: string,
+    label: string
+  ): Promise<Answer<{ label: string; available: boolean; reason?: string }>>
+  /** Save the site label on the opportunity, or clear it with null (`PUT …/:id/site-label`). */
+  saveSiteLabel(opportunityId: string, label: string | null): Promise<Answer<{ label: string | null }>>
   /** The name the business's site carries, as the person checked it on the Profile card (`PUT …/:id/name`). */
   setName(opportunityId: string, name: string): Promise<Answer<{ opportunity?: unknown }>>
   /** The opening hours on the site, as the person checked them on the Profile card (`PUT …/:id/hours`). */
@@ -205,10 +245,74 @@ export interface Api {
   cancel(jobId: string): Promise<Answer<{ job?: unknown }>>
   resume(jobId: string): Promise<Answer<{ job?: unknown }>>
   /** Refresh: the brief of the current research (the latest one when it has not changed). */
-  createRevision(opportunityId: string): Promise<Answer<{ revision?: unknown }>>
-  revision(
-    revisionId: string
-  ): Promise<Answer<{ revision?: unknown; builds?: unknown; suggestedLabel?: unknown; usage?: DemoUsage }>>
+  /** Starts the Content brief job (#524): 202 with `job`; poll `briefJob` until it settles. */
+  createRevision(opportunityId: string, requestId?: string): Promise<Answer<{ job?: unknown }>>
+  briefJob(opportunityId: string, jobId: string): Promise<Answer<{ job?: unknown; revision?: unknown }>>
+  /** The seller's edits of the brief card texts, saved as a new revision (#524). */
+  editBrief(
+    opportunityId: string,
+    revisionId: string,
+    edits: { path: string; value: string }[]
+  ): Promise<Answer<{ revision?: unknown }>>
+  /** The seller's edits of the Profile's text facts, null to undo one (#524). */
+  editProfile(
+    opportunityId: string,
+    edits: Record<string, string | null>
+  ): Promise<Answer<{ opportunity?: unknown }>>
+  /** The seller approves the Profile (#537): unlocks the Content brief. */
+  approveProfile(opportunityId: string): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /** The seller approves the latest Content brief (#537): unlocks the build. */
+  approveBrief(opportunityId: string): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /** One more link of the business (#537); after research it asks for research again. */
+  addSource(
+    opportunityId: string,
+    url: string
+  ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /**
+   * One pasted link of the business removed (#537); answers the same payload as `addSource`. Refusals: 404
+   * `NOT_FOUND`, 409 `LAST_SOURCE`, 409 `RESEARCH_STARTED` (research runs or ran), 422 `GOOGLE_LINK_NOT_REMOVED`.
+   */
+  removeSource(
+    opportunityId: string,
+    url: string
+  ): Promise<Answer<{ opportunity?: unknown; approval?: unknown }>>
+  /** A photo or video the seller adds to the Profile (#537), sent as multipart field file; `team` files a team photo. */
+  uploadMedia(
+    opportunityId: string,
+    file: Blob & { name?: string },
+    purpose?: 'team'
+  ): Promise<Answer<{ opportunity?: unknown; approval?: unknown; media?: unknown }>>
+  /** The team as the owner keeps it (#537 R14, `PUT …/:id/team`): add a person, change one, or remove one. */
+  setTeam(
+    opportunityId: string,
+    edit: TeamEditBody
+  ): Promise<Answer<{ opportunity?: unknown; member?: unknown }>>
+  /** A social link the owner types for the site, or its removal (#537 R15, `PUT …/:id/socials`). */
+  setSocial(
+    opportunityId: string,
+    body: SocialEditBody
+  ): Promise<Answer<{ opportunity?: unknown; siteSocials?: unknown }>>
+  /** One photo or video kept off the site, or put back (#537 R16). */
+  setMediaHidden(
+    opportunityId: string,
+    mediaId: string,
+    hidden: boolean
+  ): Promise<Answer<{ opportunity?: unknown; media?: unknown }>>
+  /** One review kept off the site, or put back, by its `key` (#537 R16). */
+  setReviewHidden(
+    opportunityId: string,
+    key: string,
+    hidden: boolean
+  ): Promise<Answer<{ opportunity?: unknown; review?: unknown }>>
+  revision(revisionId: string): Promise<
+    Answer<{
+      revision?: unknown
+      builds?: unknown
+      suggestedLabel?: unknown
+      siteLabel?: unknown
+      usage?: DemoUsage
+    }>
+  >
   revisionMarkdown(revisionId: string): Promise<Answer<string>>
   buildStatus(buildId: string): Promise<Answer<Record<string, unknown>>>
   handOff(
@@ -268,8 +372,10 @@ export function createApi(fetchImpl: FetchLike): Api {
       res = await fetchImpl(path, {
         method,
         credentials: 'same-origin',
-        headers: body === undefined ? { accept } : { accept, 'content-type': 'application/json' },
-        ...(body === undefined ? {} : { body: JSON.stringify(body) })
+        // A FormData body carries its own multipart boundary, so no content-type is set for it.
+        headers:
+          body === undefined || isForm(body) ? { accept } : { accept, 'content-type': 'application/json' },
+        ...(body === undefined ? {} : { body: isForm(body) ? body : JSON.stringify(body) })
       })
     } catch {
       return { ok: false, status: 0, code: 'NETWORK' }
@@ -294,7 +400,11 @@ export function createApi(fetchImpl: FetchLike): Api {
         candidates?: unknown
         links?: unknown
         retryAt?: unknown
+        platform?: unknown
+        max?: unknown
+        media?: unknown
       }
+      const held = refusal.media as { id?: unknown; kind?: unknown } | null | undefined
       const code = refusal.code
       return {
         ok: false,
@@ -303,7 +413,12 @@ export function createApi(fetchImpl: FetchLike): Api {
         ...(refusal.usage ? { usage: refusal.usage } : {}),
         ...(Array.isArray(refusal.candidates) ? { candidates: refusal.candidates as LinkCandidate[] } : {}),
         ...(Array.isArray(refusal.links) ? { links: refusal.links as ServerLink[] } : {}),
-        ...(typeof refusal.retryAt === 'string' ? { retryAt: refusal.retryAt } : {})
+        ...(typeof refusal.retryAt === 'string' ? { retryAt: refusal.retryAt } : {}),
+        ...(typeof refusal.platform === 'string' ? { platform: refusal.platform } : {}),
+        ...(typeof refusal.max === 'number' ? { max: refusal.max } : {}),
+        ...(typeof held?.id === 'string'
+          ? { media: { id: held.id, ...(typeof held.kind === 'string' ? { kind: held.kind } : {}) } }
+          : {})
       }
     }
     return { ok: true, status: res.status, body: parsed as T }
@@ -362,7 +477,14 @@ export function createApi(fetchImpl: FetchLike): Api {
     placeProfile: (opportunityId) => call(`${BASE}/${id(opportunityId)}/place-profile`),
     setFact: (opportunityId, factId, onSite) =>
       call(`${BASE}/${id(opportunityId)}/facts`, 'PUT', { factId, onSite }),
+    setFactValue: (opportunityId, factId, value) =>
+      call(`${BASE}/${id(opportunityId)}/facts`, 'PUT', { factId, value }),
     setKeyMessages: (opportunityId, picks) => call(`${BASE}/${id(opportunityId)}/key-messages`, 'PUT', picks),
+    siteLabel: (opportunityId) => call(`${BASE}/${id(opportunityId)}/site-label`),
+    checkSiteLabel: (opportunityId, label) =>
+      call(`${BASE}/${id(opportunityId)}/site-label/check?label=${encodeURIComponent(label)}`),
+    saveSiteLabel: (opportunityId, label) =>
+      call(`${BASE}/${id(opportunityId)}/site-label`, 'PUT', { label }),
     setName: (opportunityId, name) => call(`${BASE}/${id(opportunityId)}/name`, 'PUT', { name }),
     setHours: (opportunityId, body) => call(`${BASE}/${id(opportunityId)}/hours`, 'PUT', body),
     setRating: (opportunityId, choice) => call(`${BASE}/${id(opportunityId)}/rating`, 'PUT', { choice }),
@@ -382,7 +504,28 @@ export function createApi(fetchImpl: FetchLike): Api {
       }),
     cancel: (jobId) => call(`${BASE}/jobs/${id(jobId)}/cancel`, 'POST'),
     resume: (jobId) => call(`${BASE}/jobs/${id(jobId)}/resume`, 'POST'),
-    createRevision: (opportunityId) => call(`${BASE}/${id(opportunityId)}/revisions`, 'POST', {}),
+    createRevision: (opportunityId, requestId) =>
+      call(`${BASE}/${id(opportunityId)}/revisions`, 'POST', requestId ? { requestId } : {}),
+    briefJob: (opportunityId, jobId) => call(`${BASE}/${id(opportunityId)}/brief-jobs/${id(jobId)}`),
+    editBrief: (opportunityId, revisionId, edits) =>
+      call(`${BASE}/${id(opportunityId)}/revisions/${id(revisionId)}/edits`, 'POST', { edits }),
+    editProfile: (opportunityId, edits) => call(`${BASE}/${id(opportunityId)}/profile`, 'PUT', { edits }),
+    approveProfile: (opportunityId) => call(`${BASE}/${id(opportunityId)}/profile/approve`, 'POST', {}),
+    approveBrief: (opportunityId) => call(`${BASE}/${id(opportunityId)}/brief/approve`, 'POST', {}),
+    addSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'POST', { url }),
+    removeSource: (opportunityId, url) => call(`${BASE}/${id(opportunityId)}/sources`, 'DELETE', { url }),
+    uploadMedia: (opportunityId, file, purpose) => {
+      const form = new FormData()
+      form.append('file', file, file.name ?? 'upload')
+      if (purpose) form.append('purpose', purpose)
+      return call(`${BASE}/${id(opportunityId)}/media`, 'POST', form)
+    },
+    setTeam: (opportunityId, edit) => call(`${BASE}/${id(opportunityId)}/team`, 'PUT', edit),
+    setSocial: (opportunityId, body) => call(`${BASE}/${id(opportunityId)}/socials`, 'PUT', body),
+    setMediaHidden: (opportunityId, mediaId, hidden) =>
+      call(`${BASE}/${id(opportunityId)}/media/${id(mediaId)}/visibility`, 'PUT', { hidden }),
+    setReviewHidden: (opportunityId, key, hidden) =>
+      call(`${BASE}/${id(opportunityId)}/reviews/visibility`, 'PUT', { key, hidden }),
     revision: (revisionId) => call(`${BASE}/revisions/${id(revisionId)}`),
     revisionMarkdown: (revisionId) =>
       call(`${BASE}/revisions/${id(revisionId)}?format=md`, 'GET', undefined, 'text/markdown'),
@@ -477,6 +620,52 @@ export async function sendLinks(
   const links = created.body?.links
   if (!started.ok || !Array.isArray(links)) return started
   return { ...started, body: { ...started.body, links } }
+}
+
+type Rec = Record<string, unknown>
+const recOf = (v: unknown): Rec =>
+  v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {}
+const textOf = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null)
+
+/**
+ * The create body that makes this card again (#537 R23), from what the card holds (`opportunity.candidate`): a card
+ * made from pasted links sends the same links (`pastedLinks`) with the name the person typed, and its Google place as
+ * `place` so the link is never asked about again; a card picked on Find sends its candidate as the search gave it.
+ * Null when the card holds neither. Nothing the owner changed later (edits, kept-off items) is sent: a new card starts
+ * from research.
+ */
+export function againBodyOf(opportunity: unknown): { candidate: unknown } | LinksBody | null {
+  const c = recOf(recOf(opportunity).candidate)
+  const links = (Array.isArray(c.pastedLinks) ? c.pastedLinks : [])
+    .map((l) => textOf(recOf(l).url))
+    .filter((u): u is string => u !== null)
+  const provider = textOf(c.provider)
+  const providerId = textOf(c.providerId)
+  const name = textOf(c.name)
+  if (links.length > 0) {
+    const typed = textOf(c.typedName)
+    return {
+      links,
+      ...(typed === null ? {} : { name: typed }),
+      ...(provider === 'google-places' && providerId !== null && name !== null
+        ? { place: { provider: 'google-places', providerId, name } }
+        : {})
+    }
+  }
+  return provider !== null && providerId !== null && name !== null ? { candidate: c } : null
+}
+
+/**
+ * Add this business again (#537 R23): one press of the create door with the card's own inputs (`againBodyOf`). No
+ * research is started: the new card waits for its owner like any new card. The new card's id, or the refusal code.
+ */
+export async function addAgain(api: Api, opportunity: unknown): Promise<{ id: string } | { code: string }> {
+  const body = againBodyOf(opportunity)
+  if (body === null) return { code: 'INVALID_REQUEST' }
+  const created = await api.create(body)
+  if (!created.ok) return { code: created.code }
+  const id = textOf(created.body?.opportunity?.id)
+  return id === null ? { code: 'HTTP_200' } : { id }
 }
 
 /** How long the page waits for an earlier hand-off press of the same build: 36 × 5 s = 3 minutes. */

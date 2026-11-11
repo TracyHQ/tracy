@@ -1,3 +1,4 @@
+import type { ChainRun } from '@tracy/wo-views'
 import { parseSocialUrl } from 'website-opportunities/domain/social-stats/handles.mjs'
 
 export interface DemoUsage {
@@ -18,6 +19,8 @@ export interface DemoAction {
   error?: string | null
   acceptedAt?: string
   updatedAt?: string
+  /** A step chain build's progress (#516): its steps, minutes and USD so far, and the measured estimate. */
+  run?: ChainRun | null
 }
 export interface DemoChatPreparation {
   action: DemoAction

@@ -18,7 +18,8 @@ test('an address with nothing of ours reads as no choice: the tab decides the su
     q: '',
     opp: null,
     page: null,
-    brief: null
+    brief: null,
+    section: null
   })
 })
 
@@ -29,7 +30,8 @@ test('the sub-tab, filter, search, open row and page are read back as written', 
     q: 'pizza & co',
     opp: ID,
     page: 'brief',
-    brief: REV
+    brief: REV,
+    section: null
   })
   assert.deepEqual(addressFromSearch(search), {
     view: 'mine',
@@ -37,7 +39,8 @@ test('the sub-tab, filter, search, open row and page are read back as written', 
     q: 'pizza & co',
     opp: ID,
     page: 'brief',
-    brief: REV
+    brief: REV,
+    section: null
   })
   assert.match(search, /^\?tab=tracy:website-opportunities&/)
 })
@@ -49,13 +52,14 @@ test('defaults are not written, and other parameters keep their place', () => {
     q: '',
     opp: null,
     page: null,
-    brief: null
+    brief: null,
+    section: null
   })
   assert.equal(search, '?tab=tracy:website-opportunities&site=a.tracy.site&wo-view=find')
 })
 
 test('clearing every choice removes our parameters and leaves an empty search when nothing else is left', () => {
-  const blank = { view: null, stage: 'all', q: '', opp: null, page: null, brief: null }
+  const blank = { view: null, stage: 'all', q: '', opp: null, page: null, brief: null, section: null }
   assert.equal(searchWithAddress('?wo-view=mine&wo-stage=new&wo-q=x', blank), '')
 })
 
@@ -63,7 +67,15 @@ test('values a hand-edited address cannot mean are dropped, not half-applied', (
   const read = addressFromSearch(
     `?wo-view=other&wo-stage=nope&wo-opp=not-a-uuid&wo-page=edit&wo-brief=${REV}`
   )
-  assert.deepEqual(read, { view: null, stage: 'all', q: '', opp: null, page: null, brief: null })
+  assert.deepEqual(read, {
+    view: null,
+    stage: 'all',
+    q: '',
+    opp: null,
+    page: null,
+    brief: null,
+    section: null
+  })
 })
 
 test('a Brief page needs its opportunity and brief; a Details page needs its opportunity', () => {
@@ -74,4 +86,33 @@ test('a Brief page needs its opportunity and brief; a Details page needs its opp
 
 test('a search longer than the server takes is cut to its 100 characters', () => {
   assert.equal(addressFromSearch(`?wo-q=${'a'.repeat(150)}`).q.length, 100)
+})
+
+test('a section of Details opened as a sub-page rides as wo-section and reads back after a reload', () => {
+  const details = { view: 'mine', stage: 'all', q: '', opp: ID, page: 'details', brief: null }
+  for (const section of ['profile', 'brief', 'media']) {
+    const search = searchWithAddress('?tab=tracy:website-opportunities', { ...details, section })
+    assert.equal(new URLSearchParams(search).get('wo-section'), section)
+    assert.deepEqual(addressFromSearch(search), { ...details, section })
+  }
+  // Absent: the two columns of Details, and nothing written.
+  const plain = searchWithAddress('', { ...details, section: null })
+  assert.equal(new URLSearchParams(plain).get('wo-section'), null)
+  // The Sources sub-page is gone (#537): an old address with it opens the overview of Details.
+  assert.deepEqual(addressFromSearch(`?wo-view=mine&wo-opp=${ID}&wo-page=details&wo-section=sources`), {
+    ...details,
+    section: null
+  })
+})
+
+test('wo-section means nothing without Details: the Demo site, a made up name or the Brief page drop it', () => {
+  assert.equal(addressFromSearch(`?wo-page=details&wo-opp=${ID}&wo-section=demo`).section, null)
+  assert.equal(addressFromSearch(`?wo-page=details&wo-opp=${ID}&wo-section=rail`).section, null)
+  assert.equal(addressFromSearch(`?wo-section=brief`).section, null)
+  assert.equal(
+    addressFromSearch(`?wo-page=brief&wo-opp=${ID}&wo-brief=${REV}&wo-section=brief`).section,
+    null
+  )
+  const brief = { view: 'mine', stage: 'all', q: '', opp: ID, page: 'brief', brief: REV, section: 'media' }
+  assert.equal(new URLSearchParams(searchWithAddress('', brief)).get('wo-section'), null)
 })

@@ -11,6 +11,8 @@
 @source './';
 @source '../../node_modules/@tracy/ui/src';
 @source '../../node_modules/@tracy/wo-views/src';
+/* The anchored menus (the ... menus) are `Popover` of @tracy/core: its panel classes come from there. */
+@source '../../node_modules/@tracy/core/src/site-tabs';
 
 /* `dark:` follows the signal dsh actually sets ([data-ds-dark-theme]), not the OS. */
 @custom-variant dark (&:where([data-ds-dark-theme], [data-ds-dark-theme] *));

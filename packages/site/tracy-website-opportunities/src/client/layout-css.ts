@@ -11,7 +11,6 @@ export const CSS = `
 .tracy-wo-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .tracy-wo-wrap { flex-wrap: wrap; }
 .tracy-wo-between { justify-content: space-between; }
-.tracy-wo-back { align-self: flex-start; }
 .tracy-wo-h2 { font-size: 15px; line-height: 20px; font-weight: 600; overflow-wrap: anywhere; }
 .tracy-wo-h3 { font-size: 13px; line-height: 18px; font-weight: 600; }
 .tracy-wo-label { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
@@ -44,10 +43,6 @@ export const CSS = `
 .tracy-wo-sticky-note { flex: 1 1 auto; min-width: 0; }
 .tracy-wo-fields { display: flex; flex-direction: column; gap: 8px; }
 .tracy-wo-field dd { display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
-.tracy-wo-review-author { display: flex; align-items: center; gap: 6px; }
-.tracy-wo-review-author img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.tracy-wo-reviews { gap: 8px; }
-.tracy-wo-review { display: flex; flex-direction: column; gap: 2px; margin: 0; padding-left: 10px; border-left: 2px solid var(--border); }
 .tracy-wo-facts { overflow-wrap: anywhere; }
 .tracy-wo-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
 .tracy-wo-swatch { display: flex; align-items: center; gap: 6px; }
@@ -96,11 +91,6 @@ export const CSS = `
 .tracy-wo-results { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .tracy-wo-more { align-self: center; }
 /* My opportunities: Status, Research and Action cells, the stage bar and the Inspector. */
-.tracy-wo-badge-ok svg { color: var(--success); }
-.tracy-wo-badge-live { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
-.tracy-wo-name-chip.is-check { background: color-mix(in oklab, var(--warning) 16%, transparent); border-color: color-mix(in oklab, var(--warning) 40%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
-.tracy-wo-name-chip.is-checked { background: color-mix(in oklab, var(--success) 14%, transparent); border-color: transparent; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
-.tracy-wo-name-chip.is-held { background: color-mix(in oklab, var(--muted-foreground) 10%, transparent); border-color: transparent; color: var(--muted-foreground); }
 .tracy-wo-name-actions { gap: 12px; }
 .tracy-wo-name-actions [data-slot='button'] { padding-inline: 0; height: auto; }
 .tracy-wo-hours-lines { display: flex; flex-direction: column; }
@@ -122,17 +112,13 @@ export const CSS = `
 .tracy-wo-steps > span { flex: 1 1 0; height: 4px; border-radius: 2px; background: var(--muted); }
 .tracy-wo-steps > span[data-state="done"] { background: var(--primary); }
 .tracy-wo-steps > span[data-state="now"] { background: color-mix(in oklab, var(--primary) 45%, var(--muted)); }
-/* Wraps rather than scrolls, so Attention (pushed right) never hides behind the open Inspector. */
-.tracy-wo-stages { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; min-width: 0; }
+/* A spacer that pushes what follows to the right (the sub-tab line). */
 .tracy-wo-stages-grow { flex: 1 1 auto; min-width: 8px; }
-.tracy-wo-stage { height: 28px; flex-shrink: 0; gap: 4px; padding: 0 8px; font-size: 12px; }
-.tracy-wo-stage.is-on { font-weight: 600; }
-.tracy-wo-stage.is-zero { opacity: 0.45; }
-.tracy-wo-attn { border-color: color-mix(in oklab, var(--destructive) 30%, transparent); color: var(--destructive); }
+/* The Attention toggle over My opportunities: red text, a tinted fill while it is on. */
+.tracy-wo-attn { height: 28px; gap: 6px; padding: 0 10px; font-size: 12px; border-color: color-mix(in oklab, var(--destructive) 30%, transparent); color: var(--destructive); }
 .tracy-wo-attn:hover, .tracy-wo-attn.is-on { background: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
 .tracy-wo-attn.is-on { border-color: color-mix(in oklab, var(--destructive) 50%, transparent); }
-.tracy-wo-attn:focus-visible { border-color: var(--ring); }
-.tracy-wo-attn-pill { padding: 1px 6px; border-radius: 999px; background: color-mix(in oklab, var(--destructive) 10%, transparent); font-weight: 600; }
+.tracy-wo-attn:focus-visible { border-color: color-mix(in oklab, var(--destructive) 70%, var(--border)); }
 .tracy-wo-insp { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; max-height: calc(100vh - 24px); overflow-y: auto; padding: 12px 14px 14px; border: 1px solid color-mix(in oklab, var(--primary) 25%, var(--border)); border-radius: 14px; background: var(--card); font-size: 12px; line-height: 17px; }
 /* Title block and close button share the first row; the actions take a full-width row below. */
 .tracy-wo-insp-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; }
@@ -154,24 +140,12 @@ export const CSS = `
 .tracy-wo-kv.is-wide { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .tracy-wo-kv > div { display: flex; gap: 4px; min-width: 0; }
 .tracy-wo-kv dd { color: var(--foreground); font-weight: 500; font-variant-numeric: tabular-nums; }
-.tracy-wo-srcs { display: flex; flex-direction: column; gap: 4px; }
-.tracy-wo-src { border: 1px solid var(--border); border-radius: 4px; background: var(--background); }
-.tracy-wo-src summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 10px; list-style: none; cursor: pointer; border-radius: 4px; }
-.tracy-wo-src summary::-webkit-details-marker { display: none; }
-.tracy-wo-src summary:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
-.tracy-wo-src-name { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-weight: 500; }
 .tracy-wo-src-icon { width: 14px; height: 14px; flex: 0 0 auto; }
 .tracy-wo-src-icon.is-ok { color: var(--success); }
 .tracy-wo-src-icon.is-failed, .tracy-wo-src-icon.is-blocked { color: var(--destructive); }
 .tracy-wo-src-icon.is-partial { color: var(--primary); }
 .tracy-wo-src-icon.is-waiting, .tracy-wo-src-icon.is-skipped { color: var(--muted-foreground); }
-.tracy-wo-src-retry { margin-top: 6px; }
-.tracy-wo-src-head { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-.tracy-wo-src-pasted { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
-.tracy-wo-src-group { margin: 8px 0 2px; font-size: 12px; color: var(--muted-foreground); }
-.tracy-wo-src-body { padding: 6px 10px 8px; border-top: 1px solid var(--border); color: var(--muted-foreground); }
-.tracy-wo-search-pages { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
-.tracy-wo-search-page { display: flex; flex-direction: column; gap: 2px; padding-top: 6px; border-top: 1px solid var(--border); }
+.tracy-wo-src-pasted, .tracy-wo-src-sub { font-size: 12px; color: var(--muted-foreground); overflow-wrap: anywhere; }
 .tracy-wo-again { display: flex; flex-direction: column; gap: 4px; margin: 4px 0; }
 .tracy-wo-again-list { display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; }
 .tracy-wo-again-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding: 8px 10px; }
@@ -181,21 +155,10 @@ export const CSS = `
 .tracy-wo-again-item.is-kept { color: var(--muted-foreground); }
 .tracy-wo-again-dialog { max-width: min(28rem, calc(100% - 2rem)); }
 .tracy-wo-quote { padding-left: 8px; border-left: 2px solid var(--border); }
-.tracy-wo-menu-chip.is-file { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
-.tracy-wo-menu-chip.is-photo { color: var(--primary); }
-.tracy-wo-menu-sec { display: flex; flex-direction: column; gap: 2px; }
 .tracy-wo-menu-sec-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
 .tracy-wo-menu-sec-title { font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-foreground); }
-.tracy-wo-menu-items { display: flex; flex-direction: column; }
-.tracy-wo-menu-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 5px 0; border-bottom: 1px dashed var(--border); overflow-wrap: anywhere; }
-.tracy-wo-menu-price { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.tracy-wo-menu-price.is-none { color: var(--muted-foreground); }
-.tracy-wo-menu-other { grid-column: 1 / -1; }
-.tracy-wo-menu-status { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 10px; padding: 4px 0; }
 .tracy-wo-menu-status-why { grid-column: 1 / -1; }
 .tracy-wo-menu-status-act { justify-content: flex-end; }
-.tracy-wo-menu-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--muted-foreground); }
-.tracy-wo-menu-dot.is-warn { background: color-mix(in oklab, var(--primary) 70%, var(--foreground)); }
 .tracy-wo-menu-photo .is-ok { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
 .tracy-wo-insp .tracy-wo-swatches { gap: 6px; }
 .tracy-wo-thumbs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
@@ -206,22 +169,59 @@ export const CSS = `
 .tracy-wo-sub-list { height: 40px; }
 .tracy-wo-sub-n { color: var(--muted-foreground); font-weight: 400; font-variant-numeric: tabular-nums; }
 .tracy-wo-sub-live { display: inline-flex; align-items: center; gap: 4px; padding-bottom: 11px; font-size: 12px; color: var(--muted-foreground); white-space: nowrap; }
-/* My opportunities: list beside the Inspector, the search, paging and the bulk bar. */
-.tracy-wo-split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; }
-.tracy-wo-split[data-open] { display: block; }
-.tracy-wo-q { width: 220px; height: 28px; }
+/* My opportunities: the search, paging and the bulk bar. */
+.tracy-wo-q { width: 240px; height: 28px; }
 .tracy-wo-c-research { min-width: 200px; }
-.tracy-wo-split[data-open] .tracy-wo-c-research { min-width: 150px; }
 .tracy-wo-c-action, .tracy-wo-c-demo { white-space: nowrap; }
 .tracy-wo-c-go { width: 32px; padding-left: 0; }
 .tracy-wo-select-all { justify-content: center; padding: 6px 10px; border-radius: 8px; background: var(--muted); }
 .tracy-wo-more-long { display: flex; align-items: center; justify-content: center; gap: 10px; }
-/* Outreach v3: a flat Inspector with one resizable divider. */
-.tracy-wo-split > [data-group] { min-height: 500px; }
-.tracy-wo-resize { flex: 0 0 12px; width: 12px; background: transparent !important; position: relative; }
-.tracy-wo-resize::after { content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--border); }
-.tracy-wo-resize:hover::after, .tracy-wo-resize:focus-visible::after { background: var(--primary); }
-.tracy-wo-resize:focus-visible { outline: none; box-shadow: none; }
+/* My opportunities (spec #512, #537 option A): full width, Cards, the step each place reached; Rows in my-list-css.ts. */
+.tracy-wo-my { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.tracy-wo-my-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; list-style: none; margin: 0; padding: 0; }
+.tracy-wo-my-place { position: relative; min-width: 0; cursor: pointer; }
+.tracy-wo-my-cards .tracy-wo-my-place { display: flex; flex-direction: column; gap: 10px; padding: 0 12px 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 10px; background: var(--card); }
+.tracy-wo-my-cards .tracy-wo-my-place:hover { border-color: color-mix(in oklab, var(--foreground) 25%, var(--border)); }
+.tracy-wo-my-place[data-state='failed'] { box-shadow: inset 3px 0 0 var(--destructive); }
+.tracy-wo-my-place[data-selected] { background: color-mix(in oklab, var(--primary) 6%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-my-check { position: absolute; top: 10px; left: 10px; z-index: 1; }
+.tracy-wo-p-place { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.tracy-wo-p-name { align-self: flex-start; font-weight: 600; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
+.tracy-wo-p-name:hover { text-decoration: underline; text-underline-offset: 2px; }
+.tracy-wo-p-name:focus-visible, .tracy-wo-p-pin:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; border-radius: 4px; }
+.tracy-wo-p-address { display: flex; align-items: center; gap: 2px; min-width: 0; }
+.tracy-wo-p-address-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-wo-p-pin { display: inline-grid; place-items: center; width: 22px; height: 22px; flex: 0 0 auto; border-radius: 6px; color: var(--muted-foreground); }
+.tracy-wo-p-pin:hover { color: var(--foreground); background: color-mix(in oklab, var(--foreground) 6%, transparent); }
+.tracy-wo-p-pin svg { width: 14px; height: 14px; }
+.tracy-wo-p-demo { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.tracy-wo-my-cards .tracy-wo-p-demo { justify-content: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-top { display: flex; align-items: center; min-height: 64px; margin: 0 -12px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 3%, var(--card)); }
+.tracy-wo-my-cards .tracy-wo-p-demo[data-kind='thumb'] { justify-content: flex-start; }
+.tracy-wo-p-thumb { display: flex; flex-direction: column; gap: 3px; width: 64px; height: 40px; flex: 0 0 auto; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); }
+.tracy-wo-p-thumb i { display: block; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--primary) 55%, var(--background)); }
+.tracy-wo-p-thumb i:nth-child(2) { width: 70%; }
+.tracy-wo-p-thumb i:nth-child(3) { width: 45%; }
+.tracy-wo-p-demo-text { display: flex; flex-direction: column; min-width: 0; }
+.tracy-wo-p-live { font-size: 12px; font-weight: 500; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
+.tracy-wo-p-site { overflow-wrap: anywhere; }
+.tracy-wo-p-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
+.tracy-wo-my-cards .tracy-wo-p-status { justify-content: space-between; margin-top: auto; }
+/* The step a place reached (#537, option A): three segments, Step n of 3, and the state in the tone of the band. */
+.tracy-wo-p-step { display: flex; flex-direction: column; gap: 3px; min-width: 0; --tracy-wo-tone: var(--muted-foreground); }
+.tracy-wo-p-step[data-tone='ok'] { --tracy-wo-tone: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
+.tracy-wo-p-step[data-tone='warn'] { --tracy-wo-tone: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
+.tracy-wo-p-step[data-tone='run'] { --tracy-wo-tone: var(--primary); }
+.tracy-wo-p-step[data-tone='error'] { --tracy-wo-tone: var(--destructive); }
+.tracy-wo-p-step[data-tone='mute'] { --tracy-wo-tone: color-mix(in oklab, var(--foreground) 55%, var(--muted-foreground)); }
+.tracy-wo-p-step-kick { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 500; color: var(--muted-foreground); }
+.tracy-wo-p-segs { display: inline-flex; gap: 3px; }
+.tracy-wo-p-segs i { width: 22px; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 12%, transparent); }
+.tracy-wo-p-segs i[data-state='done'] { background: var(--success); }
+.tracy-wo-p-segs i[data-state='current'] { background: var(--tracy-wo-tone); }
+.tracy-wo-p-step > .tracy-wo-pill { align-self: flex-start; }
+.tracy-wo-p-quiet { color: var(--muted-foreground); }
+.tracy-wo-p-quiet:hover { color: var(--foreground); }
 .tracy-wo-insp > .tracy-wo-insp-sec, .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { border: 0; border-radius: 0; background: transparent; padding: 14px 0; }
 .tracy-wo-insp > .tracy-wo-insp-sec + .tracy-wo-insp-sec, .tracy-wo-send { border-top: 1px solid var(--border); }
 .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { padding: 0; }
@@ -269,11 +269,6 @@ export const CSS = `
 .tracy-wo-facts-line > div { display: flex; gap: 6px; }
 .tracy-wo-start { align-self: flex-start; }
 @container (max-width: 900px) {
-  .tracy-wo-insp { position: static; max-height: none; }
-  .tracy-wo-insp-back { display: inline-flex; }
-  /* Narrow: the Inspector takes the list's place; its back button closes it. */
-  .tracy-wo-split[data-open] { grid-template-columns: minmax(0, 1fr); }
-  .tracy-wo-split[data-open] > .tracy-wo-split-list { display: none; }
   .tracy-wo-page-grid, .tracy-wo-page-grid.is-brief { grid-template-columns: minmax(0, 1fr); }
 }
 @container (max-width: 560px) {
@@ -291,4 +286,10 @@ export const CSS = `
 .tracy-wo-nav .tracy-wo-nav-button { position: relative; display: flex; align-items: center; gap: 0.5rem; border-radius: 8px; color: var(--tsb-row-fg, var(--muted-foreground)); cursor: pointer; transition: background-color 120ms ease, color 120ms ease; }
 .tracy-wo-nav .tracy-wo-nav-button:hover { color: var(--sidebar-foreground); background: var(--tsb-hover, color-mix(in oklab, var(--sidebar-foreground) 8%, transparent)); }
 .tracy-wo-nav .tracy-wo-nav-button:focus-visible { outline: 1px solid var(--ring); outline-offset: -1px; }
+/* Inline edits of a Profile row or a Content brief line (#524): one hairline, no focus halo. */
+.tracy-wo-textarea { width: 100%; min-height: 72px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--background); color: var(--foreground); font: inherit; font-size: 13px; line-height: 18px; resize: vertical; box-shadow: none; outline: none; }
+.tracy-wo-textarea:focus-visible { border-color: var(--ring); outline: none; box-shadow: none; }
+.tracy-wo-editable { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.tracy-wo-editable-text { min-width: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.tracy-wo-editable > :not(.tracy-wo-editable-text) { flex-shrink: 0; }
 `
