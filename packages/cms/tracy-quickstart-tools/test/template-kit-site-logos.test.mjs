@@ -108,6 +108,39 @@ test('a T4 layout says what prints when a logo setting is empty', () => {
   assert.equal(emptyShowsOf(LAYOUT, 'logo_small'), null)
 })
 
+test('a T4 layout says what prints when a logo setting is empty: compound fallback stays conservative', () => {
+  const compound = `<?php $site_name = $s->get('site_name'); $logo = $s->get('site_logo'); ?>
+<?php if ($logo && $logo_dark) : ?>
+  <span class="d-light"><?php echo $printLogo($logo); ?></span>
+  <span class="d-dark"><?php echo $printLogo($logo_dark); ?></span>
+<?php elseif ($logo) : ?><?php echo $printLogo($logo); ?>
+<?php else : ?>
+  <?php if ($site_name) : ?><span class="site-name"><?php echo $site_name; ?></span><?php endif; ?>
+<?php endif; ?>`
+  assert.equal(emptyShowsOf(compound, 'logo'), 'name-as-text')
+  assert.equal(emptyShowsOf(compound, 'logo_dark'), null)
+  assert.equal(emptyShowsOf(compound, 'logo_small'), null)
+  assert.equal(
+    emptyShowsOf('<?php if ($logo && $dark) : ?>x<?php elseif ($logo) : ?>y<?php endif; ?>', 'logo'),
+    'nothing'
+  )
+  assert.equal(emptyShowsOf(compound.replace('$logo && $logo_dark', '$logo || $logo_dark'), 'logo'), null)
+  assert.equal(emptyShowsOf(compound.replace('$logo && $logo_dark', '$logo && ready()'), 'logo'), null)
+  assert.equal(emptyShowsOf(compound.replace('elseif ($logo)', 'elseif ($other)'), 'logo'), null)
+  assert.equal(emptyShowsOf(compound.replace('elseif ($logo)', 'elseif ($logo = pick())'), 'logo'), null)
+  assert.equal(
+    emptyShowsOf(compound.replace('<?php else : ?>', "<?php else : ?><?php $logo = 'new'; ?>"), 'logo'),
+    null
+  )
+  assert.equal(
+    emptyShowsOf(
+      '<?php if ($logo && $dark) : ?>x<?php else : ?><span>site-name</span><?php endif; ?>',
+      'logo'
+    ),
+    'template-text'
+  )
+})
+
 test('logo spots: twins by theme, frame ids from the map, free HTML without a slot still listed', () => {
   const settings = [
     { key: 'site_logo', prints: [{ where: 'header', emptyShows: 'name-as-text' }] },

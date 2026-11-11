@@ -21,7 +21,7 @@ export function t4Settings(readFile, template, group, profile = 'default') {
  * What a PHP layout prints when the setting read into `$var` is empty, from the shape of its `if ($var) : ... else :
  * ... endif` blocks: `name-as-text` when the `else` branch prints the site name, `template-text` when it prints
  * something else (a fixed word), `nothing` when there is no `else` or it prints nothing; null when the layout never
- * tests the variable.
+ * tests the variable. Positive conjunction chains are known only when every arm requires that variable.
  * @param {string} php
  * @param {string} variable without the dollar sign
  */
@@ -31,16 +31,44 @@ export function emptyShowsOf(php, variable) {
   const stack = []
   for (const t of tokens) {
     const word = t[1].split(/[\s(:;]/)[0]
-    if (word === 'if') stack.push({ test: t[2].trim(), elseAt: -1 })
+    if (word === 'if') stack.push({ tests: [t[2].trim()], start: t.index, elseAt: -1, fallbackAt: -1 })
     else if (word === 'else' || word === 'elseif') {
       const top = stack.at(-1)
-      if (top && top.elseAt < 0) top.elseAt = t.index
+      if (top) {
+        if (top.elseAt < 0) top.elseAt = t.index
+        if (word === 'else') top.fallbackAt = t.index
+        else top.tests.push(/^elseif\s*\((.*?)\)\s*:/.exec(t[1])[1].trim())
+      }
     } else if (word === 'endif') {
       const done = stack.pop()
-      if (!done || done.test !== `$${variable}`) continue
-      if (done.elseAt < 0) return 'nothing'
-      const branch = text.slice(done.elseAt, t.index)
-      if (/site[-_]?name/i.test(branch)) return 'name-as-text'
+      if (!done) continue
+      const compound = done.tests.length > 1 || done.tests[0] !== `$${variable}`
+      let elseAt = done.elseAt
+      if (compound) {
+        if (!done.tests.some((test) => (test.match(/\$\w+/g) ?? []).includes(`$${variable}`))) continue
+        // Every arm must require this logo; calls, negation and alternative conditions stay unknown.
+        if (
+          !done.tests.every(
+            (test) => /^\$\w+(?:\s*&&\s*\$\w+)*$/.test(test) && test.match(/\$\w+/g).includes(`$${variable}`)
+          )
+        )
+          return null
+        const chain = text.slice(done.start, t.index)
+        if (
+          [...chain.matchAll(/\$(\w+)\s*(?:\?\?=|[+*/%.-]?=(?!=)|\+\+|--)/g)].some((m) => m[1] === variable)
+        )
+          return null
+        elseAt = done.fallbackAt
+      }
+      if (elseAt < 0) return 'nothing'
+      const branch = text.slice(elseAt, t.index)
+      const siteName = compound ? variableOf(text, 'site_name') : null
+      if (
+        compound
+          ? siteName && new RegExp(`echo\\s+\\$${siteName}\\b`).test(branch)
+          : /site[-_]?name/i.test(branch)
+      )
+        return 'name-as-text'
       // Anything else the branch prints (a fixed template word, a language string): not the name, not nothing.
       const rest = branch.replace(
         /<\?php\s+(?:if\s*\(.*?\)\s*:|else\s*:|elseif\s*\(.*?\)\s*:|endif\s*;)\s*\?>/g,
