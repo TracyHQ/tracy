@@ -1,6 +1,7 @@
 // W04 and W05 (ADR 0042): every checkable detail in the copy comes from the brief.
 import { allTexts } from './copy-view.js'
 import { escapeRegExp } from '../../lib/site-copy/text-tools.js'
+import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
 
 const EMAIL = /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g
 const URL_RE = /\b(?:https?:\/\/|www\.)[^\s"'<>)]+/gi
@@ -96,7 +97,7 @@ function backed({ kind, token }, factsText) {
   return [...prose.matchAll(COUNT_PHRASE)].some((match) => match[0].toLowerCase() === word)
 }
 
-export function checkW04({ R, view, idx }) {
+export function checkW04({ R, view, idx, brief }) {
   const everything = [...idx.facts.values()].join(' \n ')
   const seen = new Set()
   for (const s of view.slots) {
@@ -104,6 +105,11 @@ export function checkW04({ R, view, idx }) {
     seen.add(s.slot)
     const ids = [...new Set([...s.factIds, ...(idx.expected.get(s.slot)?.factIds ?? [])])]
     let bad = false
+    const excerpt = ownerPostExcerptFor(s, idx, brief)
+    if (excerpt && !excerpt.valid) {
+      bad = true
+      R.w04.fail(s.slot, `${s.slot}: ${excerpt.detail}`, 'invented-post')
+    }
     for (const id of s.factIds)
       if (!idx.facts.has(id)) {
         bad = true

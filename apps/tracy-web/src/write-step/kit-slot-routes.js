@@ -2,22 +2,10 @@
 // page settings stage writes. An icon slot holds a network's name in the copy, while the site holds the icon class in
 // the text slot the kit names as its `field`, so the name is turned into that class and written there.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
+import { iconsOf, iconClassOf, networkOfClass } from '../lib/template-kit/icon-classes.js'
+export { iconsOf, networkOfClass } from '../lib/template-kit/icon-classes.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
-
-/** Every icon of the kit by slot id, with the classes of its list's rows by network name. */
-export function iconsOf(kit) {
-  const icons = new Map()
-  for (const block of each(kit?.blocks))
-    for (const list of each(block?.lists)) {
-      const rowIcons = each(list?.rows).flatMap((row) => each(row?.slots).filter((s) => s?.type === 'icon'))
-      const classes = new Map(
-        rowIcons.filter((s) => s.network && s.fieldValue).map((s) => [s.network.toLowerCase(), s.fieldValue])
-      )
-      for (const icon of rowIcons) icons.set(icon.id, { field: icon.field ?? null, classes })
-    }
-  return icons
-}
 
 /**
  * Takes the mapping's changes apart: what stays goes to the contract door as it is, an icon moves to its field, and a
@@ -39,7 +27,7 @@ export function routeChanges(changes, kit, slots) {
     // The copy filled an icon's field itself: its class is never taken as is, only its network, in the template's own set.
     if (fields.has(key) && looksLikeIconClass(changes[key])) {
       const network = networkOfClass(changes[key])
-      const value = network && classOf(fields.get(key), network)
+      const value = network && iconClassOf(fields.get(key), network)
       if (value) out[key] = value
       else {
         delete out[key]
@@ -55,7 +43,7 @@ export function routeChanges(changes, kit, slots) {
     const icon = icons.get(slot)
     if (!icon) continue
     const name = String(changes[key] ?? '').trim()
-    const value = classOf(icon.classes, name.toLowerCase())
+    const value = iconClassOf(icon.classes, name.toLowerCase())
     delete out[key]
     if (icon.field && value) {
       const target = contentMapKey(icon.field)
@@ -81,36 +69,6 @@ function iconFields(icons) {
   const fields = new Map()
   for (const { field, classes } of icons.values()) if (field) fields.set(contentMapKey(field), classes)
   return fields
-}
-
-/** Network names that differ between icon sets and addresses; the kit names a network by its rows' own word. */
-const ALIASES = {
-  x: ['x', 'twitter'],
-  'x-twitter': ['x', 'twitter'],
-  'facebook-f': ['facebook'],
-  'linkedin-in': ['linkedin']
-}
-// These brand glyphs exist in both Font Awesome 4 and 5. A demo list is a sample, not the font's catalogue.
-// Infer only a family already evidenced by this list; unknown and mixed families stay refused.
-const COMMON_GLYPHS = new Set(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin', 'pinterest'])
-function classOf(classes, network) {
-  const found = (ALIASES[network] ?? [network]).map((n) => classes.get(n)).find((v) => typeof v === 'string')
-  if (found) return found
-  const name = network === 'x' || network === 'x-twitter' ? 'twitter' : network
-  if (!COMMON_GLYPHS.has(name)) return null
-  const families = [...classes.values()].map((v) => /^(fa|fab|fa-brands) fa-[a-z-]+$/.exec(v)?.[1])
-  return families.length && families[0] && families.every((f) => f === families[0])
-    ? `${families[0]} fa-${name}`
-    : null
-}
-
-/** The network an icon class draws (`fa-brands fa-instagram`, `fab fa-x-twitter`), or null. */
-export function networkOfClass(value) {
-  const found =
-    /(?:^|\s)fa-(facebook-f|facebook|instagram|x-twitter|twitter|linkedin-in|linkedin|youtube|tiktok|pinterest|whatsapp|telegram|threads)(?=\s|$)/i.exec(
-      String(value ?? '')
-    )
-  return found ? found[1].toLowerCase() : null
 }
 
 const HOSTS = [
@@ -151,7 +109,7 @@ export function linkIconChanges({ kit, links }) {
     const url = field && id.endsWith('.icon') ? links[contentMapKey(id.slice(0, -'.icon'.length))] : null
     if (typeof url !== 'string') continue
     const network = networkOfUrl(url)
-    const value = network && classOf(classes, network)
+    const value = network && iconClassOf(classes, network)
     if (value) {
       changes[contentMapKey(field)] = value
       owned.push(id)

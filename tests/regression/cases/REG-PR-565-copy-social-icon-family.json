@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-565-copy-social-icon-family",
+  "kind": "fix",
+  "title": "Copy checking and site writes agree on supported social icon families",
+  "pr": 565,
+  "area": "website-opportunities/copy-icons",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the released JA Boxing copy checker fixtures and the link icon writer tests."],
+  "expect": [
+    "A YouTube class supported by the evidenced font family passes copy checks and is written by the link writer.",
+    "A wrong replacement network, an unsupported network, another font family and mixed-family inference remain refused.",
+    "A repair finding gives the supported target class when it exists."
+  ],
+  "selectors": {
+    "test": "apps/tracy-web/test/site-copy-check-icon-fields.test.mjs"
+  },
+  "fence": "Copy validation and link writing resolve glyphs from one shared font-family rule.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/site-copy-check-icon-fields.test.mjs",
+      "apps/tracy-web/test/write-step-icon-classes.test.mjs",
+      "apps/tracy-web/test/site-copy-check-structure.test.mjs"
+    ],
+    "timeout_s": 60
+  }
+}
