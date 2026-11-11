@@ -2284,6 +2284,12 @@ A trial bench for the first step of the new brief-built flow: the approved plann
 plan for one template kit, and the deterministic checker scores it. It builds no site and has **no screen, route or API
 endpoint**.
 
+Planner, writer and step-chain kit/content-map readers use a separate cached artifact index: existing sealing
+profiles plus authored EmDash kit/map pairs from shipped contract folders or checkout theme contracts. Their exact
+template, release and version metadata must agree. Duplicate claims within a surface fail closed; image artifacts
+precede checkout artifacts. Discovery creates no manifest and changes neither `contractFor` sealing nor readiness,
+approval or chain eligibility. Explicit custom indexes remain isolated from deployment discovery.
+
 - **Measured title ownership:** the central kit reader (`lib/template-kit-source.js`,
   `lib/template-kit/measured-titles.js`) derives missing title declarations only from an exact `pages[].titleSlot`,
   matching stored field path/sample and unique native content-map owner with measured desktop/phone fit. Published

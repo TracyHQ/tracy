@@ -18,10 +18,11 @@
 // view of the kit (preloadedFirstMessage) and the run has no tools. The kit block opens the message and is the same
 // bytes for every run on the same kit version, so the provider's prefix cache can reuse it across briefs; the brief
 // and the instruction to write come last.
-import { defaultContracts } from './contracts.js'
-import { kitOfContract } from './template-kit/reader.js'
-import { withMeasuredTitles } from './template-kit/measured-titles.js'
+
 import { openContentMap } from './content-map-source.js'
+import { withMeasuredTitles } from './template-kit/measured-titles.js'
+import { kitOfContract } from './template-kit/reader.js'
+import { kitContracts } from './template-kit-contracts.js'
 import { compactForPlanner, lookTextOf } from './template-kit-planner-view.js'
 
 export { compactForPlanner, lookTextOf, PLANNER_DROPPED_KIT_FIELDS } from './template-kit-planner-view.js'
@@ -53,7 +54,7 @@ const isPart = (value) => value !== null && typeof value === 'object'
  * Every kit the server can read: contracts whose template-kit.json reads cleanly, sorted by ref.
  * @param {{ index?: Map<string, { id: string, dir?: string, platform?: string }> }} [options]
  */
-export function readableKits({ index = defaultContracts() } = {}) {
+export function readableKits({ index = kitContracts() } = {}) {
   const kits = []
   for (const [key, contract] of index) {
     const kit = kitOfContract(contract)
@@ -76,7 +77,7 @@ export function readableKits({ index = defaultContracts() } = {}) {
  * One readable kit by its ref (the contract id, e.g. "ja-boxing/j6/1.0.10"), with the release tag and version its
  * contract seals (where the kit's image zip is published), or null.
  */
-export function openKit(ref, { index = defaultContracts() } = {}) {
+export function openKit(ref, { index = kitContracts() } = {}) {
   if (typeof ref !== 'string' || ref === '') return null
   for (const [key, contract] of index) {
     if (contract.id !== ref) continue
