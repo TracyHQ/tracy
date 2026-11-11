@@ -4,9 +4,7 @@
   "title": "Measured picture repairs use exact native slot geometry and preserve consent and hide constraints",
   "pr": 568,
   "area": "website-opportunities/step-nine",
-  "cms": [
-    "jo"
-  ],
+  "cms": ["jo"],
   "needs": [],
   "flaky_model": false,
   "steps": [
