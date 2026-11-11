@@ -10,7 +10,7 @@
     "files": [
       {
         "path": "crawl.json",
-        "sha256": "sha256:0c3dbcb9d97b9214e155965589f17a048c98719724962010ea92da3dfbe2e966",
+        "sha256": "sha256:c0ad895350b828c78965f22b4a0234e01ceeee52917498c8f598d1694244a47c",
         "disposition": "asset"
       },
       {
@@ -515,281 +515,293 @@
       },
       {
         "path": "index.html",
-        "sha256": "sha256:fecaccb5658948ce9ad23057ca718ed9d51cd4acac5ed6c1649b56a3ff8e207f",
+        "sha256": "sha256:ee75d9b8c4c84ab3de4aadd8b42cac860e85d63257d1cca8c9a89d91e6a3a9b3",
         "disposition": "converted"
       },
       {
         "path": "index.php/about-us/index.html",
-        "sha256": "sha256:08cc0112c75d770f729dcfc47ed310532400546cfef09b72e4518096cea9ab2a",
+        "sha256": "sha256:36ca4f552cfecff24a5b0a3970e5064277c5aa522800a9b07500547af7d407b3",
         "disposition": "converted"
       },
       {
         "path": "index.php/about-us/our-history/index.html",
-        "sha256": "sha256:3286e202d0ecef0860d83ebedba0f5b73dffcedcfe484d22068e595b8b84452e",
+        "sha256": "sha256:f19af634c69393dbcb47fabb48854b09e6704f9195567a85bcbf69bb7381301a",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/11-restaurant-news/5-indies-aren-t-sold-on-tech/index.html",
-        "sha256": "sha256:54a6569f9d56454a88578dc32120c92cee4b7829f495360eba0b48c6e2d84808",
+        "sha256": "sha256:1b91acf9e7b7305a7cce39b986ba8e14683d56f65b5e688ffd1dadc31502c59a",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/11-restaurant-news/index.html",
-        "sha256": "sha256:22a66e9972a7a5b3f3ae4800a572fe734e4abffc402e5cbb6f03e5c0bed462c5",
+        "sha256": "sha256:a74c6a187bf5afaf92fd4d860b73f3c3d33b567f90d214037b653b0a9c729a5e",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/12-restaurant-guide/10-fish-sauces-seep-onto-all-sorts-of-menus/index.html",
-        "sha256": "sha256:478571cb3bdb3e32df5c5fb2455db6405fbae7b2798664204231108c7df245bb",
+        "sha256": "sha256:4e834f98b21fdb6b80e795f012bc2541170d2555f7c8c18b82aa60744289a396",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/12-restaurant-guide/11-tortas-pambazos/index.html",
-        "sha256": "sha256:95b2e63a9a86b1b903b6bb0807cef3063dbcc2943e4b80ddf261b655a3234cf0",
+        "sha256": "sha256:22b3dc0b755b8d4714833cd55a226a6a85aed2551db02ae7daec09d1dc00ccc5",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/12-restaurant-guide/12-blt-on-pimento-cheese-biscuit/index.html",
-        "sha256": "sha256:1a92904217accdf123d3c00cc81e72b10d631c5c5870bfa0ac78975b9302c217",
+        "sha256": "sha256:a443274aacc6719f8b07975e48da1e32425984527f04ca0d452959d61d45262f",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/12-restaurant-guide/8-starbucks-faces-a-big-recall/index.html",
-        "sha256": "sha256:5a1a41d3febdd39d5ec189c7d7f3a79d5543e8d00f4ed0bf10f1723d2f93592a",
+        "sha256": "sha256:0bd31733a1bf675ca797175041c2236fa4ec54f3fd8c490fcdf05f8b651e7574",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/12-restaurant-guide/9-logan-s-said-to-be-weighing-bankruptcy/index.html",
-        "sha256": "sha256:297521c30d396e9f2469d007ba08db56dd92d74442a7c242e374c226875cc0bd",
+        "sha256": "sha256:b99ca0613139c02309d40471ebd7153121a84cddd5f160d3cb15013850e78dbd",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/12-restaurant-guide/index.html",
-        "sha256": "sha256:7dc99aac5cac7b38a4d66a60a2db413bba650e8d49792070ecc3966c31a99850",
+        "sha256": "sha256:78a253b40fd9c9d4a659ce2ff7479723b5cfa175893ac46b851c418c90f0efd9",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/8-restaurant-business/2-8-habits-that-can-improve-your-customer-service/index.html",
-        "sha256": "sha256:c6d471c56c2b0b4c68d0ee60bd5be39dcd2e3fa6d9483bb3a3a40c426c5f5c58",
+        "sha256": "sha256:b1a25eb0ba53bb75eacbc0c753780882c32c041f1cb34566314edaca70371d0d",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/8-restaurant-business/6-starbucks-brings-under-armour-exec-on-board/index.html",
-        "sha256": "sha256:f54d7c826db8a8d80b020e70d28bd3a3390fdbf4c192c207c472d14b7dc89f5e",
+        "sha256": "sha256:2b0289f86488eb85f3539312c3ecdbb940536ab8ebf53464b8322ff564ae1dca",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/8-restaurant-business/7-4-trends-trickling-down-to-mainstream-menus/index.html",
-        "sha256": "sha256:ed650ca00fa962145d313975112402108aabbd10c3a52a1434d371fd44fd8c66",
+        "sha256": "sha256:c20546ca9aadcec797574ecd03b21a2a859d6a5a155c71a74c9fce05f1dd3a4e",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/8-restaurant-business/index.html",
-        "sha256": "sha256:f0a811c36ff8d6244da8f153c9681c4c591f2728879c9ee4a8e9dda4af7afea0",
+        "sha256": "sha256:06752beddc1048df8455721dc08ed9c82ad9c37f73a15df4ce4f90804391d9de",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/9-restaurant-marketing/13-mcdonald-s-makes-clean-tweaks-to-some-menu-items/index.html",
-        "sha256": "sha256:339621d4054ea26982e0fb2598fa70ecc07981aed467fca2cc24bede954599b7",
+        "sha256": "sha256:5c89021787007b0f4741de8319c189106e0376edbf75bb40c4f4ba82cb2d0379",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/9-restaurant-marketing/14-how-the-gop-and-dems-differ-on-restaurant-issues/index.html",
-        "sha256": "sha256:474f37518e3c8e51bea8c81069043a581832a18ca41ca9950beb70e5d15314be",
+        "sha256": "sha256:e297eb3fec8aba890c22f15990f489405d0e181522dd7063a5b88b77668524c0",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/9-restaurant-marketing/3-chipotle-to-launch-burger-spinoff-this-fall/index.html",
-        "sha256": "sha256:530724d9aa03ad9b5d5afc8d52c5843e74ecb6595a0779529b15dbf62b8ac32b",
+        "sha256": "sha256:24f46d50a04d5c9585d77f90f2ca924020276839abacc8df7266ccc7e6d66c05",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/9-restaurant-marketing/4-how-to-help-your-chef-achieve-a-better-work-life-balance/index.html",
-        "sha256": "sha256:8f472141f00d000106de0688be85d71866ba90cf198a0c1738538858c5aa1d53",
+        "sha256": "sha256:a4a7e51656834cd24b82ae8fc12457112bee69bf884e7f0c76805268d0d35f9e",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/9-restaurant-marketing/index.html",
-        "sha256": "sha256:47f5cf9290a087abfba8866ce614500b9c9e303edf7da3e5411bf1d91a760b5f",
+        "sha256": "sha256:d23d933f835deb5dd5abbc923889c155e1356872b8b9d86a394bb4c9c2daa149",
         "disposition": "converted"
       },
       {
         "path": "index.php/blog/index.html",
-        "sha256": "sha256:e7890b12424551e4ab530d5446f6fa0157d258bac2550022495a9e6737edb906",
+        "sha256": "sha256:6525d343337f109fa51acae548a157024ff2c00967e194cd265b02133c6e4b4c",
         "disposition": "converted"
       },
       {
+        "path": "index.php/blog/index~start=10.html",
+        "sha256": "sha256:7fb45feecd2752f6c36ab82cfb596191c1eb3c5d309cfc1cd7015c9006b5e8b5",
+        "disposition": "excluded",
+        "reason": "the second and third page of the Blog list: the template pages the same list with ?page=n (BlogList.astro), so they are cells of the Blog page, not pages of their own (DECISIONS D64)"
+      },
+      {
+        "path": "index.php/blog/index~start=5.html",
+        "sha256": "sha256:c0187bf6d05cb74a26d30aae0a0213f9d1135c1d899260fa10a50b1e328feb90",
+        "disposition": "excluded",
+        "reason": "the second and third page of the Blog list: the template pages the same list with ?page=n (BlogList.astro), so they are cells of the Blog page, not pages of their own (DECISIONS D64)"
+      },
+      {
         "path": "index.php/component/tags/tag/fish/index.html",
-        "sha256": "sha256:b815499a4e14a6de46450183034f16820d79124a942e066c9fbc067cb2783d84",
+        "sha256": "sha256:aeb2baf2589feeaadc8f356a1e74121e6ba52c3599b522f7b10fff15963ace96",
         "disposition": "excluded",
         "reason": "Joomla tag listing: tags are printed as labels, not as links (content-gaps G-15)"
       },
       {
         "path": "index.php/component/tags/tag/menus/index.html",
-        "sha256": "sha256:119f6781edcdb04a8e5581ccf38746489108238b93c9902358780b0bf7dee24d",
+        "sha256": "sha256:0f6078301680b021622daa7399725cc0351ef8089c3b50432585bec03d3d163f",
         "disposition": "excluded",
         "reason": "Joomla tag listing: tags are printed as labels, not as links (content-gaps G-15)"
       },
       {
         "path": "index.php/component/tags/tag/seep/index.html",
-        "sha256": "sha256:7bb27caf5d1a897971e56b126d4a64704716facbebe37fbf325c9f945ce5b932",
+        "sha256": "sha256:307fcc12c414fcaee112b3c7c84d7ba6fc152f62fd60316208d0eaf80d44ae2f",
         "disposition": "excluded",
         "reason": "Joomla tag listing: tags are printed as labels, not as links (content-gaps G-15)"
       },
       {
         "path": "index.php/contact/contact-us/index.html",
-        "sha256": "sha256:6c14bd9520a8339e46d3c0306b7c145edb61043012e128b63b1413ef27c1ed0f",
+        "sha256": "sha256:9c4c62a996edd1de6ec2a8811d3b917292e874b27d46836c4200dc0a0ff6cd62",
         "disposition": "converted"
       },
       {
         "path": "index.php/contact/phone-reservation/index.html",
-        "sha256": "sha256:1a34656db5700c3e134c9425d271f9b1e1ff2fb98330f8788e283a9819685988",
+        "sha256": "sha256:2cdf8d43d9bebcbd9d56fc3e27cdfd190ad4af0ed7f42ac42b08ac5df14d2613",
         "disposition": "converted"
       },
       {
         "path": "index.php/explore/bonus-pages/erro-page/index.html",
-        "sha256": "sha256:909222e7c755c6b02aae5c680a8a5bf10d955185c344b5683fd0b6d9ac880518",
+        "sha256": "sha256:561758d5b27ba347394ab32d26ffa89b2b69dd23f81c4c25f4ca5b49ab429650",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/bonus-pages/offline-page/index.html",
-        "sha256": "sha256:543e23b918d0085cf466db70a94085774df8676af0fe06a5874d232500c9c74b",
+        "sha256": "sha256:2cc78e2423feaacf3b45ac802a75222d8dc92e80c004bc6bbd0b0dabda12fab2",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/j-pages/all-categories/index.html",
-        "sha256": "sha256:621baad9aa568fdff4a9f41444bd5904cd68c4fab11c95341a019868a6ba0838",
+        "sha256": "sha256:8e92b749a342bfe1b4cdcaaa9c4af05a5a398206a061f71fa8c8c543a44079ac",
         "disposition": "converted"
       },
       {
         "path": "index.php/explore/j-pages/category-blog/index.html",
-        "sha256": "sha256:f1b68aa507cf84e45658f75514952755a78e499452b5889882eb53d85c7fb80c",
+        "sha256": "sha256:666edfafe311fc1b1a9f1628534a3216b268a52eaa51b6b052ab204cac94957d",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/j-pages/featured-articles/index.html",
-        "sha256": "sha256:c66c77ef6715e9fcdf3b2093b6f22cd43afdf12c421233c8cf2768e48d258964",
+        "sha256": "sha256:ea678b514ec547f95ef0c9d8841193b9bcf3c605fb9eb53cef173dc3e05f487c",
         "disposition": "converted"
       },
       {
         "path": "index.php/explore/j-pages/login/index.html",
-        "sha256": "sha256:fb0a1b6149acfbc6e62d3b57b0b4ba09a03a8f59a96a55a92f4abaf57ed01bda",
+        "sha256": "sha256:461a269674f0354a3bc9757eaf1dfac17299f6063fca250f19749f1d42f12140",
         "disposition": "excluded",
         "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/j-pages/registration/index.html",
-        "sha256": "sha256:64a2de20692305b41cd5de94e6479a52af67439aaf88ada0f15757cbf2e896a9",
+        "sha256": "sha256:d1d393eb15d78181eb9df7d46dd3fcfaad781191131bd5781e43d725e9fe2bab",
         "disposition": "excluded",
         "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/j-pages/reminder/index.html",
-        "sha256": "sha256:db4367a60b7b0437ab78e6fc44694704e4e64acea17e8acc677c63528a7def8e",
+        "sha256": "sha256:51f9930ac3fa1802fae6c8bbdeb2aeee2c4839e53da11406058904e94a3e9dad",
         "disposition": "excluded",
         "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/j-pages/reset-password/index.html",
-        "sha256": "sha256:1fbf004111ed4b65625f9a0047ef22ed138ef11a4d5206700d4510830896622b",
+        "sha256": "sha256:166492c27b74d2f9022204231a2e8560c742251c6291b3278a0c1e31bbb2c381",
         "disposition": "excluded",
         "reason": "visitor accounts are not ported: a customer site has no front-end sign-in (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/j-pages/smart-search/index.html",
-        "sha256": "sha256:9220336e2628f55add893734023c2763ef92d7628765a5afac3b98d0446cc6e5",
+        "sha256": "sha256:594b4070f788d3be2511cdb637cb9fb4e60e111b96af763b7e15b9babe638d11",
         "disposition": "converted"
       },
       {
         "path": "index.php/explore/j-pages/tagged-items/index.html",
-        "sha256": "sha256:980f42fd8c3365281a6f16bdb00de806330c0009f5b89ce3a35f03f4e2539c4c",
+        "sha256": "sha256:5a24650d2060a987554123408cecc923e80536d4d4ea617a4fb76f0730ed1722",
         "disposition": "converted"
       },
       {
         "path": "index.php/explore/themes/blue-color/index.html",
-        "sha256": "sha256:f60f3a9cf1f17c40fee9fd0ed7f4fdb350ae57b2fd815d7892a39191745076f7",
+        "sha256": "sha256:51f68f0af4944524b06126408b7e41591361c6eae27a2ef77b21310ae8b92d72",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/themes/green-color/index.html",
-        "sha256": "sha256:ee2e44943356da01792816627a5da307c7e293688e744fb121a06d79df0f9f6b",
+        "sha256": "sha256:45411e09b5041eba7a72d73972fb6fbb577097cdfe654d5b4dd9cdd3f7c3751e",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/themes/pink-color/index.html",
-        "sha256": "sha256:7b5f874a1a52d0ae97fb76615c10f84948b8378f6a18ba675578a7be16f7a9d3",
+        "sha256": "sha256:67708d83fe84bf110a086eee297e1b814ebffada680da5cf30d8b46b02fed05e",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/explore/themes/purple-color/index.html",
-        "sha256": "sha256:911dd267cdf99954f257e0dde78c1208122aa9bb1cdd159ae55f339537dac696",
+        "sha256": "sha256:6ddd88666c58db1ab4f75457af6b0fabff5d623fb672ef4d9e10a35788d109c5",
         "disposition": "excluded",
         "reason": "demo page of the source (error and offline pages, colour variants, typography): not ported (DECISIONS D21)"
       },
       {
         "path": "index.php/gallery/18-sample-album-1/index.html",
-        "sha256": "sha256:4a43ab11cea491d47390a2e2f0156e676225b6f045b6022d752ea49fe6f3b63d",
+        "sha256": "sha256:2b21dc49bc10605d5eaad2b2fcfd321d7a0fbdb634cca826dd831916cae2abfc",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/19-sample-album-2/index.html",
-        "sha256": "sha256:f17ed68bea5575efe70e13d4ac76839f47fddca468dfd26088b9e4fda9507f49",
+        "sha256": "sha256:c98f8c75f81d4d50c674eaa879ba9592f2c529d60892e15d4b77cd58e219580f",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/20-sample-album-3/index.html",
-        "sha256": "sha256:a9bdffcd680aa82ec9d8f5080aaea73797ad567e5fa19e3bb28f42e0d6c5c32c",
+        "sha256": "sha256:1fe49848b331286570310ec4e9dd0f940fa3b0ef4e5103538a1f148158b2cd1a",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/21-sample-album-4/index.html",
-        "sha256": "sha256:b428c0f7bf4c7c949823208849fd747e992d3130ce9161109e2f686084661ca5",
+        "sha256": "sha256:60f5ce8bea702b66d8277949d0574b4e11130840b3ecc8ca18dcf73494c95b00",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/22-sample-album-5/index.html",
-        "sha256": "sha256:4223d18154a2450a1b3639f3e0debe2dfe0fa19ef046f4ad6b1b711e0153af90",
+        "sha256": "sha256:cb10ed4c228fec5a00431b251edb5750c51052d2d2091ed5609bc3784e73f53c",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/23-sample-album-6/index.html",
-        "sha256": "sha256:9242a79390ccb947e8a9212c5f0e0caa6990e3727ee691c496c3e121bba381a5",
+        "sha256": "sha256:c9efa3d6ed44fc23b506c2f9c5b87aa7a6cc051c13b3db82eed453169f2cf60a",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/24-sample-album-7/index.html",
-        "sha256": "sha256:b2a57d748b986b9a7dff62b0f30323438bab7d7eb4399c5e9dfa9022c43f04f9",
+        "sha256": "sha256:2fb5a8e63937469c5cb4b961d45a8f4ca87455502465286ea6d0c62820ed4cb7",
         "disposition": "converted"
       },
       {
         "path": "index.php/gallery/index.html",
-        "sha256": "sha256:2381138f2199a33f1ff682b006448eddb9c884c24340c05f4e50eb53c777c2dc",
+        "sha256": "sha256:e5b808189649cc77aec6ac4ebcac0854afb6ec81170aa033182705c5a42894e9",
         "disposition": "converted"
       },
       {
         "path": "index.php/menu/2-column-menu/index.html",
-        "sha256": "sha256:a39a3472b1c5893e45f34d4331aa92f11eaef6f9fa0e531954b332d07656c27b",
+        "sha256": "sha256:904633c0b70be21e33d9975ff9d38aba15d84473a21db298fe709f0be105d5f4",
         "disposition": "converted"
       },
       {
         "path": "index.php/menu/index.html",
-        "sha256": "sha256:e7fe333a5bafefdbe331883c48d28ca8ff97d4e4d956f97367d8fe8b4dfdacc4",
+        "sha256": "sha256:c54aeddd6df173ad52325b1b4086de14a9e7d1a81bb0cb3493c0610409db0812",
         "disposition": "converted"
       },
       {
         "path": "index.php/menu/menu-with-image/index.html",
-        "sha256": "sha256:0138b79651378879018641d83ff12565b38c4fe5015dca6af2b6044be4f532b6",
+        "sha256": "sha256:672266ef0fa8ddae8b3c173e12d9331c0071210251ee966a3e080a52e80dd08e",
         "disposition": "converted"
       },
       {
         "path": "index.php/menu/simple-menu/index.html",
-        "sha256": "sha256:c51a39f50bfb322da71d08b16cb50cd6f2321bc7758ee70fac5b73f37a5cd899",
+        "sha256": "sha256:18fc4ecadac94e891b4d3784dd54381428908866c674f0fdacfbffb96e0d306a",
         "disposition": "converted"
       },
       {
@@ -799,7 +811,7 @@
       },
       {
         "path": "index.php/offers/index.html",
-        "sha256": "sha256:be37e76d728ca7263db9b976fd3b980136ed6d33630a65c98f3102dcbaebcded",
+        "sha256": "sha256:6e311e0bbfd736b556d0bb93b862522bcd88348e05c0357a766b19e6462a94b6",
         "disposition": "converted"
       },
       {
@@ -2469,28 +2481,9 @@
             "text-transform": "uppercase",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgb(192, 56, 28)"
-          },
-          "390-light": {
-            "font-family": "\"Roboto Mono-c480660709c4b175\", ui-monospace, Menlo, monospace, \"Roboto Mono\", ui-monospace, monospace",
-            "font-size": "10px",
-            "font-weight": "400",
-            "line-height": "18.75px",
-            "letter-spacing": "1px",
-            "text-transform": "uppercase",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgb(192, 56, 28)"
-          },
-          "390-dark": {
-            "font-family": "\"Roboto Mono-c480660709c4b175\", ui-monospace, Menlo, monospace, \"Roboto Mono\", ui-monospace, monospace",
-            "font-size": "10px",
-            "font-weight": "400",
-            "line-height": "18.75px",
-            "letter-spacing": "1px",
-            "text-transform": "uppercase",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgb(192, 56, 28)"
           }
-        }
+        },
+        "optional": true
       },
       {
         "id": "side-title",
@@ -4445,9 +4438,9 @@
           },
           "390-light": {
             "font-family": "\"Noticia Text-bd1078a6a1a7b8de\", Georgia, \"Times New Roman\", serif, \"Noticia Text\", Georgia, serif",
-            "font-size": "22px",
+            "font-size": "28px",
             "font-weight": "700",
-            "line-height": "28.6px",
+            "line-height": "36.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
@@ -4455,9 +4448,9 @@
           },
           "390-dark": {
             "font-family": "\"Noticia Text-bd1078a6a1a7b8de\", Georgia, \"Times New Roman\", serif, \"Noticia Text\", Georgia, serif",
-            "font-size": "22px",
+            "font-size": "28px",
             "font-weight": "700",
-            "line-height": "28.6px",
+            "line-height": "36.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(244, 242, 231)",
@@ -5063,7 +5056,7 @@
     "selectors": ["h1", "h2", "h3", "p", "a", "button", "span", "li"],
     "platform": "Chromium (Playwright). Three Google families are self-hosted by Astro (src/fonts.json): Teko (display), Noticia Text (body), Roboto Mono (UI).",
     "allowed": {
-      "en": ["Teko", "Teko Light", "Noticia Text", "Roboto Mono"]
+      "en": ["Teko", "Teko Light", "Noticia Text", "Roboto Mono", "Roboto Mono Light"]
     }
   },
   "pages": [

@@ -124,7 +124,7 @@ const dateTag = ui(locale).tag
 		{tabs && menus.length > 0 && <MenuTabs tabs={tabs} menus={menus} />}
 
 		<div class="rs-wrap rs-main">
-			<div class="rs-main-grid">
+			<div class="rs-main-grid is-home">
 				<div>
 					<h2 class="rs-display" {...$page('title')}>{page.title}</h2>
 					{posts.map((p) => <PostCard post={p} locale={locale} tag={dateTag} tags />)}

@@ -36,6 +36,29 @@ export const MEASURED_MAP_KEYS = Object.freeze(['slotFitVersion', 'fitGroups'])
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 const LINK_FIELD = /(^|_)(url|href|webpage)\d*$|link\d*$|^link(_|$)/
 
+/** An address as an HTML attribute value. */
+const attr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+
+/**
+ * The words of a Portable Text block. A span a link mark covers is written as the `<a href>` the page prints (as a
+ * Joomla ACM field keeps its inline link in the sample), so a reader of the map can tell which words of a paragraph
+ * are a link and where it goes; every other span is plain words.
+ */
+function wordsOfBlock(block) {
+  const links = new Map(
+    (Array.isArray(block?.markDefs) ? block.markDefs : [])
+      .filter((d) => d?._type === 'link' && typeof d.href === 'string' && d.href.trim())
+      .map((d) => [d._key, d.href.trim()])
+  )
+  return (Array.isArray(block?.children) ? block.children : [])
+    .map((c) => {
+      const text = String(c?.text ?? '')
+      const href = (Array.isArray(c?.marks) ? c.marks : []).map((m) => links.get(m)).find(Boolean)
+      return href && text.trim() ? `<a href="${attr(href)}">${text}</a>` : text
+    })
+    .join('')
+}
+
 /** The plain words of a Portable Text value. */
 function plainOfPortableText(blocks) {
   const out = []
@@ -43,9 +66,7 @@ function plainOfPortableText(blocks) {
     // A picture block's caption is words a page prints under the picture.
     if (block?._type === 'image' && typeof block.caption === 'string' && block.caption.trim())
       out.push(block.caption.trim())
-    const text = (Array.isArray(block?.children) ? block.children : [])
-      .map((c) => String(c?.text ?? ''))
-      .join('')
+    const text = wordsOfBlock(block)
     if (text.trim()) out.push(text.trim())
   }
   return out.join('\n\n')
@@ -80,10 +101,73 @@ const titleCase = (slug) =>
     .replace(/^./, (c) => c.toUpperCase())
 
 /**
- * @param {{ seed: any, fieldMap: any, contentApiMap?: any, template: string, version: string }} input
+ * The character limits a theme declares for text slots that no visible box measures (a text used only as an accessible
+ * name, a placeholder, a menu label that opens on hover, a slide that is not showing). `seed/slot-limits.json`:
+ * `{ "limits": [{ "slot": "<slot key, * for a row number>", "maxCharacters": 15, "from": "how the number was found" }] }`.
+ * The number goes on the slot as `maxCharacters` with its `maxCharactersFrom`, which is how a Joomla map carries the
+ * length of a database column. A number needs a real source (a field's schema `maxLength` or a box that was measured):
+ * a text no page draws in any box (an `aria-label`, the document title) has none and is declared
+ * `{ "slot": "...", "nonVisual": true, "from": "where it is used and why no box limits it" }` instead: the slot carries
+ * `nonVisual: true` and `nonVisualFrom`, no `maxCharacters`, and the kit does not ask a limit of it. A declaration that matches no text slot is an error: a stale reason cannot sit in the file.
+ * @param {any[]} slots changed in place
+ * @param {any} file the parsed file, or null
+ */
+function declareLimits(slots, file) {
+  const rules = Array.isArray(file?.limits) ? file.limits : []
+  for (const [i, r] of rules.entries()) {
+    const at = `slot-limits.json limits[${i}]`
+    if (typeof r?.slot !== 'string' || !r.slot) throw new Error(`${at}: slot must be a slot key`)
+    const nonVisual = r.nonVisual === true
+    if (nonVisual && r.maxCharacters !== undefined)
+      throw new Error(`${at} (${r.slot}): a nonVisual slot has no limit; remove maxCharacters`)
+    if (!nonVisual && (!Number.isInteger(r.maxCharacters) || r.maxCharacters < 1))
+      throw new Error(
+        `${at} (${r.slot}): maxCharacters must be a positive whole number (or declare nonVisual: true)`
+      )
+    if (typeof r.from !== 'string' || !r.from.trim())
+      throw new Error(
+        `${at} (${r.slot}): from must say ${nonVisual ? 'where the text is used and why no box limits it' : 'how the number was found'}`
+      )
+    const test = new RegExp(
+      `^${r.slot
+        .split('*')
+        .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('\\d+')}$`
+    )
+    const hit = slots.filter((s) => s.type === 'text' && test.test(s.key))
+    if (hit.length === 0) throw new Error(`${at}: no text slot is named ${r.slot}`)
+    for (const slot of hit) {
+      if (nonVisual) {
+        delete slot.maxCharacters
+        delete slot.maxCharactersFrom
+        Object.assign(slot, { nonVisual: true, nonVisualFrom: r.from.trim() })
+        continue
+      }
+      const demo = String(slot.sample ?? '').trim().length
+      if (r.maxCharacters < demo)
+        throw new Error(
+          `${at}: ${slot.key} is ${demo} characters in the demo, over the declared ${r.maxCharacters}`
+        )
+      Object.assign(slot, {
+        maxCharacters: r.maxCharacters,
+        maxCharactersFrom: `declared by the theme: ${r.from.trim()}`
+      })
+    }
+  }
+}
+
+/**
+ * @param {{ seed: any, fieldMap: any, contentApiMap?: any, slotLimits?: any, template: string, version: string }} input
  * @returns {any} the content map
  */
-export function emdashContentMapOf({ seed, fieldMap: rawFieldMap, contentApiMap = null, template, version }) {
+export function emdashContentMapOf({
+  seed,
+  fieldMap: rawFieldMap,
+  contentApiMap = null,
+  slotLimits = null,
+  template,
+  version
+}) {
   const fieldMap = normalizeFieldMap(rawFieldMap, seed)
   const roleSlots = new Map(contentMapOfFieldMap({ seed, fieldMap }).slots.map((s) => [s.key, s]))
   const locale = seed?.defaultLocale ?? 'en'
@@ -209,6 +293,8 @@ export function emdashContentMapOf({ seed, fieldMap: rawFieldMap, contentApiMap 
     }
   }
 
+  declareLimits(slots, slotLimits)
+
   const menus = (Array.isArray(seed?.menus) ? seed.menus : [])
     .filter((m) => !m?.locale || m.locale === locale)
     .map((m) => ({ name: m.name, label: m.label, items: m.items ?? [] }))
@@ -231,6 +317,7 @@ export function emdashContentMapOfTheme(themeDir) {
   const pkg = readJson(join(themeDir, 'package.json'))
   const seedDir = join(themeDir, 'seed')
   const apiFile = join(seedDir, 'content-api-map.json')
+  const limitsFile = join(seedDir, 'slot-limits.json')
   const config = existsSync(join(themeDir, 'template.config.json'))
     ? readJson(join(themeDir, 'template.config.json'))
     : {}
@@ -244,6 +331,7 @@ export function emdashContentMapOfTheme(themeDir) {
       seed: readJson(join(seedDir, 'seed.json')),
       fieldMap: readJson(join(seedDir, 'field-map.json')),
       contentApiMap: existsSync(apiFile) ? readJson(apiFile) : null,
+      slotLimits: existsSync(limitsFile) ? readJson(limitsFile) : null,
       template,
       version: String(pkg.version)
     })

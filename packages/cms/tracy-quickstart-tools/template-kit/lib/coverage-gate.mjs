@@ -221,7 +221,11 @@ export function coverageGate(kit, { map, readings = new Map(), gapAccepts = {}, 
   for (const [id, block] of shown) {
     if (mapOf.get(id)?.type === 'text') checked++
     const e = listed.get(id)
-    if (mapOf.get(id)?.type !== 'text' || (e && Number.isFinite(e.maxCharacters) && e.maxCharactersFrom))
+    if (
+      mapOf.get(id)?.type !== 'text' ||
+      (e && Number.isFinite(e.maxCharacters) && e.maxCharactersFrom) ||
+      (mapOf.get(id)?.nonVisual && e?.nonVisual === true && e.maxCharactersFrom)
+    )
       continue
     parts.slotsMissing++
     fail(

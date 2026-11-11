@@ -263,3 +263,43 @@ test('a WordPress post is opened by its slug: "Read More : X" names the post tit
   linkLabelSlots(kit, map)
   assert.deepEqual(labels(kit), ['post-sourdough.title'])
 })
+
+test('a phone link printed in a rich text slot names that slot: the digits end the address, and the block owns the slot by its declared slots', () => {
+  const map = {
+    entities: [],
+    slots: [
+      {
+        key: 'reservation.title',
+        entity: 'reservation',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Reserve'
+      },
+      {
+        key: 'reservation.intro',
+        entity: 'reservation',
+        type: 'richtext',
+        sample: 'Call us at <a href="tel:+10845550110">(084) 555-0110</a> from 9 am.'
+      }
+    ]
+  }
+  const kit = {
+    blocks: [
+      {
+        id: 'block-reservation',
+        source: { entity: 'block-reservation' },
+        slots: [{ id: 'reservation.title' }],
+        links: [{ id: 'l1', label: '(084) 555-0110', target: 'tel:+10845550110' }]
+      }
+    ]
+  }
+  linkLabelSlots(kit, map)
+  assert.deepEqual(labels(kit), ['reservation.intro'])
+  // a number that is only a short tail of the address proves nothing
+  const short = structuredClone(kit)
+  short.blocks[0].links = [{ id: 'l1', label: '0110', target: 'tel:+10845550110' }]
+  map.slots[1].sample = 'Call <a href="tel:+10845550110">0110</a>'
+  delete short.blocks[0].links[0].labelId
+  linkLabelSlots(short, map)
+  assert.deepEqual(labels(short), [null])
+})
