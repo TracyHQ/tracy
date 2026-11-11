@@ -364,6 +364,10 @@ and every response is disposed. Responses over 16 MiB fall back to the browser (
 download limit). Skipped resources in the DOM pass stay skipped. Documents, scripts, APIs and same-site traffic keep
 their existing paths. Missing fonts are never replaced to obtain a passing measurement.
 
+Slot ownership additionally reads whole visible inline sentences in their DOM order, so a highlighted heading
+belongs to its own module even when an unrelated article prints the same words. This reading leaves atomic
+text counts and formatting unchanged; it never combines separate block paragraphs, nested blocks or hidden text.
+
 ### Page titles, sentences and stored fields
 
 The coverage gate (run by `cli.mjs assemble`) settles three things from what the page prints; none moves a slot, a list or a role.

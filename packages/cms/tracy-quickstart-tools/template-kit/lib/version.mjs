@@ -5,7 +5,8 @@
 //   3.1.0: text slots carry the whole demo text in `sample` and its lengths in `demoChars`.
 //   3.1.1: assigned T3 Section<N> chrome is captured as its module block.
 //   3.1.2: passive external assets use bounded request transport without changing their URLs or fonts.
-export const TOOL_VERSION = '3.1.2'
+//   3.1.3: inline sentences retain their visible order when choosing the owning block of a stored slot.
+export const TOOL_VERSION = '3.1.3'
 export const TOOL = `template-kit ${TOOL_VERSION}`
 
 /** Stamp a kit settled again by a no-browser command: the tool that did it and when. */

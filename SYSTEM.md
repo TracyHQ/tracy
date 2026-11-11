@@ -1149,6 +1149,8 @@ EmDash) never gets a record created for it.
   transport at their original URLs; same-site requests, documents, scripts and APIs keep their browser path.
   Each context bounds concurrent requests and disposes every response. A timeout or oversized response falls back
   to the original browser request; no font substitution or missing-resource success is recorded.
+  Slot ownership matches visible inline sentences in DOM order as well as atomic text, then prefers the block
+  of the slot's declared entity; hidden descendants and separate block paragraphs do not form sentence matches.
 - **The Customize your site check runs in the background on tracy-web** ([ADR 0029](docs/adr/0029-template-customization-question-readiness.md) §4,
   [`customize-readiness.js`](apps/tracy-web/src/lib/customize-readiness.js)). After each read of releases (every 10 minutes
   and at boot in `cron.js`, the Sync GitHub button, the release webhook, a write of `tracy_setting.json`), every release that has no

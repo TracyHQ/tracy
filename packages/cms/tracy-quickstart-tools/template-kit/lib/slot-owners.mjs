@@ -16,6 +16,13 @@ const pictureOf = (sample) =>
     .split('#')[0]
     .split('?')[0]
 
+/** Ownership also sees whole visible inline sentences, without changing atomic text counts or formatting. */
+export function ownerTextsOf(details) {
+  return [...(details?.texts ?? []), ...(details?.inlineTexts ?? [])]
+    .map((t) => String(t).replace(/\s+/g, ' ').trim().toLowerCase())
+    .join(' | ')
+}
+
 /** The slot ids a block lists as its own, and where. */
 function ownLists(b) {
   const out = []
