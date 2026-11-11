@@ -35,6 +35,7 @@ const PAGE_ROWS = 25
 // What an article prints around its words by default. A page of the site is not a post: no author, date or category.
 export const NOT_A_POST = Object.fromEntries(
   [
+    'show_intro',
     'show_category',
     'show_parent_category',
     'show_author',
@@ -157,6 +158,10 @@ async function writePage({ order, call, write, make, rows, owners, kit, category
       })
   if (article) {
     const fields = differing(article, wanted)
+    const kept = paramsOf(article.attribs)
+    const next = { ...kept, ...NOT_A_POST }
+    if (Object.keys(next).some((name) => String(kept[name]) !== String(next[name])))
+      fields.attribs = JSON.stringify(next)
     if (Object.keys(fields).length) await write('article', articleId, fields)
   }
   if (!item)
