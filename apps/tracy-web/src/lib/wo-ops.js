@@ -140,11 +140,21 @@ function errorTextOf(lastError) {
   return null
 }
 
+function demoContentRunning(opp, build) {
+  return (
+    ['done', 'completed'].includes(build?.state) &&
+    ['queued', 'quality-queued-v1'].includes(opp.customer_action_state) &&
+    !build.qa?.state &&
+    !build.handoff
+  )
+}
+
 /**
  * Derive the 0..7 lifecycle stage and attention state of a Website Opportunity row from its
  * latest job (`wo_job`), sources (`wo_source`), media (`wo_media`), revision (`wo_revision`),
  * and demo build (`wo_build`).
  */
+
 function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestRevision, latestBuild) {
   const blockedSources = sources.filter(
     (s) => s.status === 'blocked' || s.status === 'failed' || s.status === 'paused'
@@ -160,6 +170,20 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
     new Date(latestJob.lease_until).getTime() < Date.now()
 
   const jobErrText = errorTextOf(latestJob?.last_error)
+
+  // Base provisioning can finish before the durable demo action writes the site's content.
+  if (demoContentRunning(opp, latestBuild)) {
+    return {
+      stage: '6-uploading',
+      stepNum: 6,
+      needsAttention: false,
+      attentionReason: null,
+      researchRollup: 'success',
+      currentStep: 'Building demo site',
+      queueState: 'LEASED',
+      statusText: 'Building demo site'
+    }
+  }
 
   // Stage 7: Live demo site (handoff written or build state is ready/live or site_key provisioned with handoff)
   if (
@@ -826,7 +850,9 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
       const displayNumber = totalRows - idx
 
       let demoStatus = 'none'
-      if (
+      if (demoContentRunning(opp, latestBuild)) {
+        demoStatus = 'uploading'
+      } else if (
         latestBuild?.state === 'done' ||
         latestBuild?.state === 'completed' ||
         latestBuild?.state === 'live' ||
