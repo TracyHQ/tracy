@@ -48,10 +48,8 @@ import { bulkDelete, bulkDeleteAnswer, deleteOpportunityOf, deleteSelection } fr
 import { placeViewOf, searchRowPages } from './place-view.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { cleanProfileLinks, untrackedUrl } from '../domain/social-links.mjs'
-import { readPlaceProfile } from './place-profile-read.js'
-import { validatePlaceProfile } from '../domain/place-profile.mjs'
-import { factDecisions } from '../domain/fact-assessment.mjs'
-import { briefFactsOf } from '../domain/brief-facts.mjs'
+import { savedPlaceProfileOf } from './saved-profile-read.js'
+import { factValueEdit } from './fact-edit-door.js'
 import {
   FACT_OVERRIDES_MAX,
   KEY_MESSAGE_LABEL_MAX,
@@ -1388,8 +1386,8 @@ export function websiteOpportunitiesRoutes(deps) {
     return json(c, { outreach: row.outreach })
   })
 
-  // The place profile (ADR 0037): the place's research as the template-independent document, nothing of the
-  // account's brief or demo. The same owner check as the Details door.
+  // The place profile (ADR 0037) as the owner saved it (#537 R18): the place's research as the template-independent
+  // document with the owner's changes laid on, nothing of the account's brief or demo. The same owner check as Details.
   app.get(`${BASE}/:id/place-profile`, async (c) => {
     const who = await caller(c)
     if (who instanceof Response) return who
@@ -1400,44 +1398,15 @@ export function websiteOpportunitiesRoutes(deps) {
     const bands = bandsOf(opp.candidate?.factOverrides)
     if (!researched(await researchStateOf(pool, opp.id)))
       return json(c, { profile: null, decisions: [], bands })
-    // 🔒 One decision per fact (#1791): the profile the latest brief revision froze, judged at the time and with the
-    // dates its assessment used and the owner's choices of today, listing exactly the facts that brief states. Before
-    // any revision (or with a host that keeps none), the place profile of the current research.
-    const frozen =
-      (await deps.host?.frozenPlaceProfileOf?.(pool, { accountId: who.accountId, opportunityId: opp.id })) ??
-      null
-    const profile = frozen?.profile ?? (await readPlaceProfile(pool, { opportunityId: opp.id }))
-    if (!profile || !validatePlaceProfile(profile).ok)
+    // 🔒 The saved profile (#537 R18, `saved-profile-read.js`): what the next brief states, the owner's changes on it.
+    const saved = await savedPlaceProfileOf(pool, { host: deps.host, accountId: who.accountId, opp })
+    if (saved.error)
       return refuse(c, 502, 'PROFILE_UNAVAILABLE', 'The place profile could not be read. Try again later.')
-    const decided = factDecisions(profile, {
-      overrides: opp.candidate?.factOverrides ?? null,
-      origin: frozen?.origin ?? 'research',
-      at: frozen?.at ?? new Date().toISOString(),
-      seenAt: frozen?.seenAt ?? {}
-    })
-    const food = briefTradeOf({ candidate: opp.candidate ?? {}, googlePlace: null }) === 'food'
-    const stated = new Set(frozen?.factIds ?? [])
-    const decisions = briefFactsOf(profile, { food, decisions: decided })
-      .filter((f) => !frozen?.factIds || stated.has(f.id))
-      .map((f) => ({
-        factId: f.id,
-        field: f.field,
-        confidence: f.confidence,
-        onSite: f.onSite,
-        decidedBy: f.decidedBy,
-        reasons: f.reasons
-      }))
-    // While the name is held (the brief froze it off and the owner has not shown it since), the card names the neutral
-    // identity the site goes by instead (`siteNameOf`), so it never reads as the name on the site.
-    const nameOff = decisions.some((d) => d.field === 'name' && d.onSite === false)
     return json(c, {
-      profile,
-      decisions,
+      ...saved,
       // The Profile's bands (`domain/owner-site-picks.mjs BANDS`), each switched through this door's sibling `PUT /:id/facts`
       // with `factId: band_<band>`.
-      bands,
-      ...(frozen ? { revisionId: frozen.revisionId } : {}),
-      ...(nameOff && frozen?.siteName ? { siteName: frozen.siteName } : {})
+      bands
     })
   })
 
@@ -1496,6 +1465,11 @@ export function websiteOpportunitiesRoutes(deps) {
       builder ? builder.detailOf(opp, who.accountId) : {}
     ])
     const pasted = pastedLinksOf(opp)
+    // 🔒 The saved profile (#537 R18, `saved-profile-read.js`): the place profile with the owner's changes, the one the
+    // next brief states; null before this card's research, or when it cannot be read (the place-profile door says why).
+    const saved = shown
+      ? await savedPlaceProfileOf(pool, { host: deps.host, accountId: who.accountId, opp })
+      : null
     // The photos and videos the owner keeps off the site (`mediaPicks`, #537).
     const mediaHidden = hiddenSetOf(opp.candidate?.mediaPicks)
     return json(c, {
@@ -1541,6 +1515,9 @@ export function websiteOpportunitiesRoutes(deps) {
             })
           }
         : null,
+      // The saved profile `{profile, decisions, revisionId?, siteName?}` (`GET /:id/place-profile` answers the same). The
+      // `profile` above is the research as collected (Research details), kept for the readers that still draw it.
+      placeProfile: saved && !saved.error ? saved : null,
       media: media.map((m) => ({
         id: m.id,
         kind: m.kind,
@@ -1715,13 +1692,21 @@ export function websiteOpportunitiesRoutes(deps) {
 
   // One fact on or off the site, as the owner chose on the Profile card (#1791): `onSite` true or false wins over the
   // rule for every later brief, build and site check, Research again included; null lets the rule decide again.
+  // With `value` (#537 R18), the value the site states for that fact (`fact-edit-door.js`), `onSite` beside it optional.
   app.put(`${BASE}/:id/facts`, async (c) => {
     const who = await caller(c)
     if (who instanceof Response) return who
     const id = c.req.param('id')
     const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
     if (!opp) return notFound(c, 'opportunity')
-    const read = readFactOverride(await body(c))
+    const sent = await body(c)
+    if (sent && typeof sent === 'object' && !Array.isArray(sent) && 'value' in sent)
+      return factValueEdit(
+        c,
+        { pool, host: deps.host, refuse, notFound, json, opportunityShape },
+        { who, opp, body: sent }
+      )
+    const read = readFactOverride(sent)
     if (read.error === 'INVALID_FACT')
       return refuse(c, 400, 'INVALID_FACT', 'Send "factId" as the id of a fact of the place profile.')
     if (read.error) return refuse(c, 400, 'INVALID_ON_SITE', 'Send "onSite" as true, false or null.')

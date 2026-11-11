@@ -5,7 +5,16 @@ import { socialStatsOfRead } from './place-social-stats.js'
 import { currentSnapshotOf, snapshotMediaOf, snapshotProfileOf } from './places.js'
 
 /** Read the full research, including failed/pending collectors, without the brief's content limits. */
-export async function readPlaceProfile(db, { opportunityId, placeId } = {}) {
+export async function readPlaceProfile(db, ids = {}) {
+  return (await readPlaceProfileWithInputs(db, ids))?.profile ?? null
+}
+
+/**
+ * The place profile with what it was made from (`{profile, research, media}`): the research profile (the reading's team
+ * and the reviews) and the stored media rows, which the saved profile keys the owner's choices on (`saved-profile.mjs`).
+ * Null when the opportunity or place does not exist.
+ */
+export async function readPlaceProfileWithInputs(db, { opportunityId, placeId } = {}) {
   if (Boolean(opportunityId) === Boolean(placeId))
     throw new Error('Provide exactly one of opportunityId or placeId')
   let opportunity
@@ -78,14 +87,19 @@ export async function readPlaceProfile(db, { opportunityId, placeId } = {}) {
   const posts = sources
     .filter((s) => ['complete', 'partial'].includes(s.status) || s.collected_at)
     .flatMap((s) => (s.collected?.posts ?? []).map((p) => ({ source: s.source, ...p })))
-  return placeProfileFromResearch({
-    identity,
-    snapshot,
-    profile,
-    brand,
-    sources,
-    media: media.filter((m) => !m.revoked_at && m.status === 'stored'),
-    posts,
-    socialStats: await socialStatsOfRead(db, { profile, sources })
-  })
+  const stored = media.filter((m) => !m.revoked_at && m.status === 'stored')
+  return {
+    profile: placeProfileFromResearch({
+      identity,
+      snapshot,
+      profile,
+      brand,
+      sources,
+      media: stored,
+      posts,
+      socialStats: await socialStatsOfRead(db, { profile, sources })
+    }),
+    research: profile,
+    media: stored
+  }
 }

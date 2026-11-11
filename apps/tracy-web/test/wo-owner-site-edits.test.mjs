@@ -415,3 +415,69 @@ test(
     )
   }
 )
+
+test(
+  'the facts door edits the value of any fact; the saved profile and the next brief carry it (#537 R18)',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp } = await researchedCard(w)
+    await withReadTeam(w, opp)
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
+    const facts = (body) => w.call(A, 'PUT', `${BASE}/${opp.id}/facts`, body)
+    const before = (await w.call(A, 'GET', `${BASE}/${opp.id}/place-profile`)).body.profile
+    const phone = before.business.phone
+    const mira = before.people.find((p) => p.teamMemberId === MEMBER)
+    assert.ok(phone && mira, 'research read a phone and a person')
+
+    // Unknown fact, wrong kind, and a fact of no kind.
+    assert.equal((await facts({ factId: 'fact_unknown', value: 'x' })).status, 404)
+    assert.equal((await facts({ factId: 'not an id', value: 'x' })).body.code, 'INVALID_FACT')
+    const wrong = await facts({ factId: phone.id, value: 42 })
+    assert.equal(wrong.status, 400)
+    assert.equal(wrong.body.code, 'INVALID_VALUE')
+    assert.equal(wrong.body.expected, 'text')
+    assert.match(wrong.body.next, /text of 1 to 2000 characters/)
+    assert.equal((await facts({ factId: phone.id, value: 'x', onSite: 'no' })).body.code, 'INVALID_ON_SITE')
+
+    // A text fact and a person's name: the answer says the value saved and the one research read.
+    const edited = await facts({ factId: phone.id, value: '+1 555 0199' })
+    assert.equal(edited.status, 200, JSON.stringify(edited.body))
+    assert.deepEqual(edited.body.fact, {
+      id: phone.id,
+      kind: 'text',
+      value: '+1 555 0199',
+      researchValue: phone.value,
+      editedByOwner: true
+    })
+    assert.equal(edited.body.opportunity.candidate.factEdits[phone.id].value, '+1 555 0199')
+    const renamed = await facts({ factId: mira.id, value: 'Mira H.', onSite: true })
+    assert.equal(renamed.body.fact.value.name, 'Mira H.')
+    assert.equal(renamed.body.opportunity.candidate.factOverrides[mira.id].onSite, true)
+
+    // Both reads give the saved profile; the Profile needs review again.
+    const details = await w.call(A, 'GET', `${BASE}/${opp.id}`)
+    assert.equal(details.body.approval.profile, 'needed')
+    const saved = details.body.placeProfile.profile
+    assert.equal(saved.business.phone.value, '+1 555 0199')
+    assert.equal(saved.business.phone.researchValue, phone.value)
+    assert.equal(saved.business.phone.editedByOwner, true)
+    const read = (await w.call(A, 'GET', `${BASE}/${opp.id}/place-profile`)).body.profile
+    assert.equal(read.people.find((p) => p.id === mira.id).value.name, 'Mira H.')
+    assert.equal(read.people.find((p) => p.id === mira.id).decidedBy, 'owner')
+
+    // The next brief states the saved values.
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
+    const revision = await makeBrief(w, opp, 'owner-value-brief-01')
+    assert.equal(revision.brief.business.phone, '+1 555 0199')
+    const member = revision.brief.reading.team.find((p) => p.id === MEMBER)
+    assert.equal(member.label, 'Mira H.')
+    assert.equal(member.factId, mira.id)
+
+    // null gives the fact back the value research read.
+    const back = await facts({ factId: phone.id, value: null })
+    assert.equal(back.body.fact.value, phone.value)
+    assert.equal(back.body.fact.editedByOwner, false)
+    assert.equal(phone.id in back.body.opportunity.candidate.factEdits, false)
+  }
+)

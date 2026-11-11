@@ -1680,6 +1680,21 @@ declaration, holds Publish for a release not yet shown on Design inspiration and
 guards every committed sidecar. A revision reads the profile + assessment frozen in `wo_revision.place_profile`; if building
 the profile fails, the revision is still created with a null column (logged) and is read like an old revision.
 
+**Saved profile and the fact value door (11/11/2026, #537 R18).** The owner's choices stay stored as picks on
+`wo_opportunity.candidate` (no migration); the pure `domain/saved-profile.mjs savedProfileOf(candidate, researchProfile)`
+lays every one of them on the research place profile: switches (`factOverrides`, `onSite` + `decidedBy: owner`),
+value edits (`factEdits {[factId]: {value, at}}`, the research value kept as `researchValue`, `editedByOwner`), the team
+(`teamEdits`), the site's social links (`siteSocials`, owner facts `addedByOwner`), hidden photos and reviews
+(`ownerHidden`), and the band switches under `owner`. `src/saved-profile-read.js` is the one reader: `GET /:id`
+(`placeProfile`), `GET /:id/place-profile` and the brief (`domain/brief.mjs`) all read the saved profile, and a revision's
+`placeProfileOfRevision` applies it to the frozen research profile at read time (the freeze still stores the research
+profile). `PUT /:id/facts {factId, value}` (`src/fact-edit-door.js`) is the write path: the value is checked by the fact's
+kind (`domain/fact-value-kinds.mjs`: text, list, hours, boolean, number, url, flags; `400 INVALID_VALUE` with `next`,
+`404` for an unknown fact, `value: null` clears the edit), saved under the row lock, and marks the profile changed (brief
+stale, profile approval cleared). Google's hours, amenities, reservable flag and editorial summary are business facts
+(`business.hours`, `business.amenities`, `business.reservable`, `business.editorialSummary`) whose ids follow source and
+path, so they survive Research again; rating and social counts stay `claims.statistics`.
+
 **Code layout (24/10/2026, [ADR 0036](docs/adr/0036-website-opportunities-independent-public-repo.md)) — read before every paragraph below; older paragraphs that mention `opportunities/…` describe the path before this date.**
 
 | Layer | Where | Used by |

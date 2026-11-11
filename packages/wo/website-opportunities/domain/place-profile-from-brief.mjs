@@ -133,6 +133,11 @@ export function placeProfileFromBrief(briefV1) {
       profile.business.hours = fact(google.openingHours, '$.googlePlace.openingHours', provenance)
     for (const [kind, text] of Object.entries(google.summaries ?? {})) {
       if (!text) continue
+      // Google's editorial summary is a fact of the business, as research makes it (`place-profile-from-research.mjs`).
+      if (kind === 'editorial') {
+        profile.business.editorialSummary = fact(text, '$.googlePlace.editorialSummary', provenance)
+        continue
+      }
       const quote = fact(
         {
           kind: 'story',
@@ -143,8 +148,7 @@ export function placeProfileFromBrief(briefV1) {
         `$.googlePlace.summaries.${kind}`,
         provenance
       )
-      if (kind !== 'editorial')
-        quote.derivation = { method: 'provider-generated-summary', version: 'unrecorded' }
+      quote.derivation = { method: 'provider-generated-summary', version: 'unrecorded' }
       profile.quotes.push(quote)
     }
     for (const [i, review] of (google.reviews ?? []).entries())

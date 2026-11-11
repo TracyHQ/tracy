@@ -114,7 +114,11 @@ test(
     assert.equal(name.decidedBy, 'rule')
     assert.equal(typeof name.onSite, 'boolean')
     assert.ok(['corroborated', 'single-source', 'inferred'].includes(name.confidence))
-    assert.equal(validatePlaceProfile(res.body.profile).ok, true)
+    // The saved profile (#537 R18): the research's place profile, each fact with its decision on it and the owner's
+    // block beside; without them it is a valid place profile.
+    assert.equal(res.body.profile.business.name.onSite, name.onSite)
+    assert.deepEqual(res.body.profile.owner.bands, res.body.bands)
+    assert.equal(validatePlaceProfile(withoutSavedMarks(res.body.profile)).ok, true)
     assert.equal(res.body.profile.business.name.value, 'Pho Ba')
     assert.ok(res.body.profile.coverage.length > 0)
     for (const row of res.body.profile.coverage) assert.ok(COVERAGE.includes(row.status), row.target)
@@ -122,6 +126,23 @@ test(
       assert.equal(key in res.body.profile, false, key)
   }
 )
+
+/** A saved profile without what the saved profile adds to each fact and beside them. */
+function withoutSavedMarks(saved) {
+  const MARKS = ['onSite', 'decidedBy', 'confidence', 'reasons', 'mediaId', 'reviewKey', 'teamMemberId']
+  const strip = (v) => {
+    if (Array.isArray(v)) return v.map(strip)
+    if (!v || typeof v !== 'object') return v
+    const isFact = Object.hasOwn(v, 'value') && Array.isArray(v.evidenceRefs)
+    return Object.fromEntries(
+      Object.entries(v)
+        .filter(([k]) => !(isFact && MARKS.includes(k)))
+        .map(([k, child]) => [k, isFact && k === 'value' ? child : strip(child)])
+    )
+  }
+  const { owner: _owner, ...rest } = saved
+  return strip(rest)
+}
 
 test('another account, an unknown id and no session cannot read it', opts, async () => {
   const { call } = await world()

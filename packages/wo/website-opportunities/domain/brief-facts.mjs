@@ -103,7 +103,8 @@ export function briefFactsOf(profile, { food = false, decisions }) {
     const refs = fact.evidenceRefs.map((r) => evidence.get(r)).filter(Boolean)
     const first = sources.get(refs[0]?.sourceId)
     const field = fieldOf(path, fact, first?.kind, food)
-    if (!field) continue
+    // A person or link the owner added (`saved-profile.mjs`) reaches the brief through its team and links, not as a fact.
+    if (!field || fact.addedByOwner) continue
     const d = decisions.get(fact.id) ?? {
       confidence: 'single-source',
       onSite: false,
@@ -127,7 +128,11 @@ export function briefFactsOf(profile, { food = false, decisions }) {
       confidence: d.confidence,
       onSite: d.onSite,
       decidedBy: d.decidedBy,
-      reasons: d.reasons ?? []
+      reasons: d.reasons ?? [],
+      // The owner's value (#537 R18): `value` is what the site states, `researchValue` what research read.
+      ...(fact.editedByOwner && 'researchValue' in fact
+        ? { editedByOwner: true, researchValue: fact.researchValue }
+        : {})
     })
   }
   return out

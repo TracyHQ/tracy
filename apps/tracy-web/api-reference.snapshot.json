@@ -51074,9 +51074,10 @@
                     },
                     "onSite": {
                       "type": ["boolean", "null"]
-                    }
+                    },
+                    "value": {}
                   },
-                  "required": ["factId", "onSite"],
+                  "required": ["factId"],
                   "type": "object"
                 }
               }

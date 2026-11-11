@@ -308,6 +308,13 @@
             "minItems": 1,
             "items": { "type": "string" },
             "description": "observed facts only: the ids of the brief's assets the fact was seen in. Readers get the fact, never the photos or their per-photo descriptions."
+          },
+          "editedByOwner": {
+            "const": true,
+            "description": "The owner edited this fact's value on the Profile card: value is the owner's, the one the site states."
+          },
+          "researchValue": {
+            "description": "With editedByOwner: the value research read, before the owner's edit. Never stated on the site."
           }
         }
       }

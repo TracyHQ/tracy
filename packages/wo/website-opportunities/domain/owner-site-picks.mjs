@@ -227,7 +227,7 @@ export function teamPhotoIdsOf(held) {
   )
 }
 
-const EMPTY_READING = {
+export const EMPTY_READING = {
   method: 'owner',
   services: [],
   audience: [],

@@ -61,16 +61,14 @@ import {
 import { withKeyMessagePicks } from './business-reading.mjs'
 import { attemptsLine, briefSourceEntry, fetchedLine, suppliedBySource } from './brief-sources.mjs'
 import { liftReviewPeople, SHOWN_FROM_REVIEWS } from './brief-people.mjs'
+import { SOCIAL_NETWORKS, BANDS, bandFactId, reviewKeyOf } from './owner-site-picks.mjs'
+import { savedProfileOf } from './saved-profile.mjs'
 import {
-  SOCIAL_NETWORKS,
-  bandsOf,
-  hiddenSetOf,
-  otherSocialLabelOf,
-  reviewKeyOf,
-  siteSocialsOf,
-  teamPhotoIdsOf,
-  withTeamEdits
-} from './owner-site-picks.mjs'
+  businessFactOnSite,
+  readingWithSavedTeam,
+  savedSiteSocialsOf,
+  savedTeamPhotoIdsOf
+} from './saved-profile-reading.mjs'
 
 // 2 (#1791): every stated fact in one envelope (`facts`, `brief-facts.mjs`), `missing` a view over the withheld ones,
 // key messages; `contact.whatsapp` and the team carry a `factId` instead of their own flags. Readers take 1 and 2.
@@ -285,25 +283,52 @@ export function buildBrief({
   const food = trade === 'food'
   // The name on the site (`business-name.mjs`): the person's typed or picked name, else the one the sources agree on.
   // The site check holds the build to exactly this name, so it must never fall back to Google's when another was decided.
-  const name = nonEmpty(profile.nameCheck?.name)
+  let name = nonEmpty(profile.nameCheck?.name)
     ? profile.nameCheck.name
     : (profile.name ?? opportunity.name ?? cand.name)
   const branch = opportunity.branch ?? profile.branch ?? cand.branch ?? null
   // "Name (Branch)": never joined by a dash, which reads as machine written in the copy (#1791).
-  const displayName = branch ? `${name} (${branch})` : name
-  // 🔒 The owner's choices for the site itself (`owner-site-picks.mjs`, #537): the bands switched off, the photos, videos
-  // and reviews kept off, the team photos. A band off blanks what it feeds below; a hidden item fills no slot.
-  const bands = bandsOf(cand.factOverrides)
-  const hiddenMedia = hiddenSetOf(cand.mediaPicks)
-  const hiddenReviews = hiddenSetOf(cand.reviewPicks)
+  let displayName = branch ? `${name} (${branch})` : name
+  // 🔒 The saved profile (#537 R18, `saved-profile.mjs`): the place profile of this same research (or the one a revision
+  // froze) with every change the owner made on the Profile card, the one document the card shows. The brief reads the
+  // owner's choices from it: the bands switched off, the photos, videos and reviews kept off, the team, the links typed
+  // for the site, every fact switched or edited. A band off blanks what it feeds below; a hidden item fills no slot.
+  const allMedia = Array.isArray(media) ? media : []
+  const research =
+    placeProfile ??
+    placeProfileFromResearch({
+      // The same Google place and trade this brief reads, so the profile decides the hours and rating as it does.
+      identity: {
+        ...opportunity,
+        candidate: { ...opportunity.candidate, trade: cand.trade ?? trade }
+      },
+      profile: googlePlace ? { ...profile, googlePlace } : profile,
+      brand: brand ?? {},
+      sources,
+      media: allMedia,
+      posts: Array.isArray(posts) ? posts : [],
+      madeAt
+    })
+  // Overrides a caller passes replace the stored ones for the facts; the band switches stay the stored ones.
+  const bandSwitches = Object.fromEntries(
+    BANDS.map(bandFactId)
+      .filter((id) => cand.factOverrides && id in cand.factOverrides)
+      .map((id) => [id, cand.factOverrides[id]])
+  )
+  const saved = savedProfileOf(
+    factOverrides ? { ...cand, factOverrides: { ...bandSwitches, ...factOverrides } } : cand,
+    research,
+    { research: googlePlace ? { ...profile, googlePlace } : profile, media: allMedia }
+  )
+  const bands = saved.owner.bands
+  const hiddenMedia = new Set(saved.owner.hiddenMediaIds)
+  const hiddenReviews = new Set(saved.owner.hiddenReviewKeys)
   const reviewShown = (r) => bands.reviews && !hiddenReviews.has(reviewKeyOf(r))
-  const teamPhotos = teamPhotoIdsOf(cand.teamEdits)
+  const teamPhotos = savedTeamPhotoIdsOf(saved)
   const logoMedia = logoMediaIdsOf(brand)
   const mediaOnSite = (m) => bands.media && !hiddenMedia.has(m?.id)
   // A team photo or the logo stays an asset even with Photos & video off; it fills no photo slot then.
-  media = (Array.isArray(media) ? media : []).filter(
-    (m) => mediaOnSite(m) || teamPhotos.has(m?.id) || logoMedia.has(m?.id)
-  )
+  media = allMedia.filter((m) => mediaOnSite(m) || teamPhotos.has(m?.id) || logoMedia.has(m?.id))
   // Google's rating: shown from FEW_GOOGLE_REVIEWS reviews on, or when the person chose to show it (`google-rating.mjs`).
   const ratingDecided = decideGoogleRating({ googlePlace, candidate: cand, pick: ratingPickOf(cand) })
   const site = currentSiteSection(currentSite)
@@ -320,9 +345,9 @@ export function buildBrief({
   const hoursConflicting = hoursDecision.state === 'conflict' ? hoursDecision.claims : null
   const hoursDecided = hoursDecision.hours
   const cuisine = Array.isArray(profile.cuisine) ? profile.cuisine.filter(nonEmpty) : []
-  const address = nonEmpty(profile.address) ? profile.address : nonEmpty(cand.address) ? cand.address : null
-  const phone = nonEmpty(profile.phone) ? profile.phone : nonEmpty(cand.phone) ? cand.phone : null
-  const phoneSourced = Boolean(phone && (profile.provenance?.phone?.source || cand.phone === phone))
+  let address = nonEmpty(profile.address) ? profile.address : nonEmpty(cand.address) ? cand.address : null
+  let phone = nonEmpty(profile.phone) ? profile.phone : nonEmpty(cand.phone) ? cand.phone : null
+  let phoneSourced = Boolean(phone && (profile.provenance?.phone?.source || cand.phone === phone))
   // The business's other numbers (`business-phones.mjs`): its site lists them in the Contact section only.
   const otherPhones = (Array.isArray(profile.otherPhones) ? profile.otherPhones : [])
     .filter((p) => nonEmpty(p?.phone) && p.phone !== phone)
@@ -351,32 +376,16 @@ export function buildBrief({
   const bookings = (profile.booking ?? []).filter((b) => nonEmpty(b?.url))
   const booking = bookings.find((b) => b.verified === true)
   const bio = nonEmpty(profile.bio) ? profile.bio.trim() : null
-  // 🔒 One decision per fact (#1791, `brief-facts.mjs`): the place profile of this same research, each fact decided by
-  // the assessment's rules and the owner's on/off choices (`factOverrides`, keyed by fact id).
-  const held =
-    placeProfile ??
-    placeProfileFromResearch({
-      // The same Google place and trade this brief reads, so the profile decides the hours and rating as it does.
-      identity: {
-        ...opportunity,
-        candidate: { ...opportunity.candidate, trade: cand.trade ?? trade }
-      },
-      profile: googlePlace ? { ...profile, googlePlace } : profile,
-      brand: brand ?? {},
-      sources,
-      media,
-      posts: Array.isArray(posts) ? posts : [],
-      madeAt
-    })
+  // 🔒 One decision per fact (#1791, `brief-facts.mjs`): each fact of the saved profile decided by the assessment's rules
+  // and the owner's on/off choices the saved profile carries (a revision's frozen assessment when it passes one).
+  const held = saved
+  const decisions =
+    placeProfile && Array.isArray(factAssessment) ? decisionsOfAssessment(factAssessment) : decisionsOf(held)
   // A dish states a fact only when the brief keeps it (`menuItemsOf`: never one without a source).
   const dishes0 = new Set(read.map((i) => String(i.name).toLowerCase()))
-  const statedAsRead = briefFactsOf(held, {
-    food,
-    decisions:
-      placeProfile && Array.isArray(factAssessment)
-        ? decisionsOfAssessment(factAssessment)
-        : decisionsOf(held, { overrides: factOverrides ?? cand.factOverrides ?? null })
-  }).filter((f) => f.field !== 'menu' || dishes0.has(String(f.value?.name ?? '').toLowerCase()))
+  const statedAsRead = briefFactsOf(held, { food, decisions }).filter(
+    (f) => f.field !== 'menu' || dishes0.has(String((f.researchValue ?? f.value)?.name ?? '').toLowerCase())
+  )
   // 🔒 A person only reviews name, with a role or named in two reviews, is shown, flagged for the owner to check, and the
   // reviews naming them are no longer held (`brief-people.mjs`, product owner 29/10/2026).
   const statedLifted = liftReviewPeople(statedAsRead, {
@@ -393,17 +402,40 @@ export function buildBrief({
   )
   const stated = factsWithoutHeldQuotes(statedLifted, { names: heldPeople, held: heldReviews })
   const isOn = (field, match) => shown(factOf(stated, field, match))
+  // The fact of a field as research read it (`match` sees the value research read, before the owner's edit).
+  const readFactOf = (field, match) =>
+    stated.find((f) => f.field === field && match(f.researchValue ?? f.value)) ?? null
+  // 🔒 A value the owner edited is the value the site states (#537 R18): the name, address, phone and email.
+  const ownerEdited = (field) => {
+    const f = factOf(stated, field)
+    return f?.editedByOwner && 'researchValue' in f && nonEmpty(f.value) ? f.value : null
+  }
+  if (ownerEdited('name')) {
+    name = ownerEdited('name')
+    displayName = branch ? `${name} (${branch})` : name
+  }
+  if (ownerEdited('address')) address = ownerEdited('address')
+  if (ownerEdited('phone')) {
+    phone = ownerEdited('phone')
+    phoneSourced = true
+  }
   // Every social link cleaned of share tracking, old records included (`social-links.mjs`, #1780 item 10). A researched
   // link follows its fact (the owner's off keeps it off); the links the owner typed for the site follow (`siteSocials`),
   // and the Socials band off keeps every one off.
+  // A researched link the owner edited states the owner's address.
+  const editedSocials = Object.fromEntries(
+    stated
+      .filter((f) => f.field === 'socials' && f.editedByOwner && 'researchValue' in f && f.onSite)
+      .map((f) => [f.value?.kind, f.value?.url])
+      .filter(([net, url]) => nonEmpty(net) && nonEmpty(url))
+  )
   const researchedSocials = Object.fromEntries(
-    Object.entries(cleanSocials({ ...cand.socials, ...profile.socials })).filter(
+    Object.entries(cleanSocials({ ...cand.socials, ...profile.socials, ...editedSocials })).filter(
       ([net, url]) => nonEmpty(url) && isOn('socials', (v) => v?.kind === net)
     )
   )
-  const socials = bands.socials
-    ? cleanSocials({ ...researchedSocials, ...siteSocialsOf(cand.siteSocials) })
-    : {}
+  const siteSocials = savedSiteSocialsOf(saved)
+  const socials = bands.socials ? cleanSocials({ ...researchedSocials, ...siteSocials.socials }) : {}
   const usableReading = readingWithoutHeldReviews(profile.businessReading, {
     names: heldPeople,
     held: heldReviews
@@ -419,16 +451,22 @@ export function buildBrief({
   const words = tradeWords(trade, subTrade?.id)
   const noun = words.noun
   // What the business sells, who it is for, its team and story (`business-reading.mjs`), less what the person removed.
-  // The owner's team edits come first (`withTeamEdits`): the people added, and the label, role and photo they changed.
-  const readingPicked = withReadingPicks(withTeamEdits(usableReading, cand.teamEdits), cand.readingPicks)
+  // The owner's team comes first (`readingWithSavedTeam`): the people added, and the label, role and photo they changed.
+  const readingPicked = withReadingPicks(readingWithSavedTeam(usableReading, saved), cand.readingPicks)
   const sameName = (label) => (v) => String(v?.name ?? '').toLowerCase() === String(label).toLowerCase()
   const reading = readingPicked
     ? {
         ...readingPicked,
-        services: readingPicked.services.filter((i) => isOn('services', sameName(i.label))),
+        // A service the owner renamed (its fact's value edited) carries the owner's name.
+        services: readingPicked.services
+          .filter((i) => shown(readFactOf('services', sameName(i.label))))
+          .map((i) => {
+            const f = readFactOf('services', sameName(i.label))
+            return f?.editedByOwner && nonEmpty(f.value?.name) ? { ...i, label: f.value.name } : i
+          }),
         team: readingPicked.team.map((p) => {
           // A researched person keeps the fact of the label research read (`researchLabel`); an added one has none.
-          const f = p.owner ? null : factOf(stated, 'team', sameName(p.researchLabel ?? p.label))
+          const f = p.owner ? null : readFactOf('team', sameName(p.researchLabel ?? p.label))
           return { ...p, onSite: f ? f.onSite : p.onSite, ...(f ? { factId: f.id } : {}) }
         })
       }
@@ -444,6 +482,18 @@ export function buildBrief({
     ? { ...ratingDecided, state: ratingFact.onSite ? 'shown' : 'left' }
     : ratingDecided
   const place = googlePlaceSection(googlePlace, cand, ratingDecision)
+  // 🔒 Google's facts of the business follow their facts (#537 R18): one switched off is not stated, one edited states
+  // the owner's value. A profile made before they were facts states Google's own fields, as before.
+  const editorialFact = businessFactOnSite(saved, 'editorialSummary', decisions)
+  if (place) {
+    const amenities = businessFactOnSite(saved, 'amenities', decisions)
+    if (amenities) place.amenities = amenities.off ? {} : { ...amenities.value }
+    const reservable = businessFactOnSite(saved, 'reservable', decisions)
+    if (reservable?.off) delete place.reservable
+    else if (typeof reservable?.value === 'boolean') place.reservable = reservable.value
+    if (editorialFact?.off) delete place.summaries.editorial
+    else if (nonEmpty(editorialFact?.value)) place.summaries.editorial = editorialFact.value
+  }
   // A review the owner hid, or every one with the Reviews band off, is no testimonial (`reviewPicks`).
   if (place) place.reviews = place.reviews.filter(reviewShown)
   // The names the business's own marks give besides the held one (`otherNamesOf`): named to the builder, never printed.
@@ -462,13 +512,15 @@ export function buildBrief({
 
   // An email only with a source behind it: one the restaurant published, never a guess at a mailbox.
   const email =
-    nonEmpty(profile.email) && EMAIL_RE.test(profile.email.trim()) && profile.provenance?.email?.source
-      ? profile.email.trim()
-      : null
+    ownerEdited('email') && EMAIL_RE.test(ownerEdited('email').trim())
+      ? ownerEdited('email').trim()
+      : nonEmpty(profile.email) && EMAIL_RE.test(profile.email.trim()) && profile.provenance?.email?.source
+        ? profile.email.trim()
+        : null
 
   const business = { name, branch, address, phone, socials }
   // The label the owner gave an `other` link (`siteSocials.other.label`): the site names that link by it.
-  const otherLabel = socials.other ? otherSocialLabelOf(cand.siteSocials) : null
+  const otherLabel = socials.other ? siteSocials.otherLabel : null
   if (otherLabel) business.socialLabels = { other: otherLabel }
   if (phone && otherPhones.length) business.otherPhones = otherPhones
   // Where the business says it serves ("Locations across Dubai"), each with its short verbatim quote: never the address,
@@ -484,7 +536,16 @@ export function buildBrief({
   if (email) business.email = email
   // The hours show when their fact is on the site: a check's or the owner's off keeps them off, the owner's on shows them.
   const hoursFact = factOf(stated, 'hours')
-  const hours = hoursConflicting ? [] : hoursFact ? (hoursFact.onSite ? hoursFact.value : []) : hoursDecided
+  // Hours the owner edited are theirs, even where the sources disagreed.
+  const hoursOwned = hoursFact?.editedByOwner && 'researchValue' in hoursFact
+  const hours =
+    hoursConflicting && !hoursOwned
+      ? []
+      : hoursFact
+        ? hoursFact.onSite
+          ? hoursFact.value
+          : []
+        : hoursDecided
   if (hours.length) business.hours = hours
   for (const key of ['address', 'phone', 'email'])
     if (business[key] && !isOn(key)) business[key] = key === 'email' ? undefined : null
@@ -620,7 +681,11 @@ export function buildBrief({
     reading,
     keyMessages,
     bio,
-    editorial: googlePlace?.summaries?.editorial,
+    editorial: editorialFact
+      ? editorialFact.off
+        ? undefined
+        : editorialFact.value
+      : googlePlace?.summaries?.editorial,
     cuisine,
     noun
   })
