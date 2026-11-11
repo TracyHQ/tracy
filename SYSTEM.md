@@ -1145,8 +1145,8 @@ EmDash) never gets a record created for it.
   ([ADR 0017](docs/adr/0017-github-release-is-quickstart-source-of-truth.md)). There is no catalogue
   file in the repo. (`apps/tracy-web/src/quickstarts.json` only pins the Claude
   Cowork plugin version.)
-  Template-kit capture fetches only external passive images, fonts and stylesheets through Playwright's request
-  transport at their original URLs; same-site requests, documents, scripts and APIs keep their browser path.
+  Template-kit capture and content-coverage audits fetch only external passive images, fonts and stylesheets through
+  Playwright's request transport at their original URLs; same-site requests, documents, scripts and APIs keep their browser path.
   Each context bounds concurrent requests and disposes every response. A timeout or oversized response falls back
   to the original browser request; no font substitution or missing-resource success is recorded.
   Slot ownership matches visible inline sentences in DOM order as well as atomic text, then prefers the block
