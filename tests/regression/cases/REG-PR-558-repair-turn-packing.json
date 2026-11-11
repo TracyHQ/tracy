@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-558-repair-turn-packing",
+  "kind": "fix",
+  "title": "Repair packing handles growing comment budgets without losing grouped items",
+  "pr": 558,
+  "area": "wo/repair",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the real comment builder with a refused two-item prefix that fits after a short third item, plus group-only, suffix and refusal fixtures."
+  ],
+  "expect": [
+    "A refused prefix does not force an extra turn when a longer candidate fits the real builder.",
+    "An item refused alone is retained when a containing group fits; order is preserved and turns are minimized.",
+    "Unusable items are named, invalid builder errors propagate and the original prompt/footer remains unchanged."
+  ],
+  "selectors": {},
+  "fence": "Do not change prompts, consent policy, comment order or the comment builder's own budgets.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-nine-repair-parts.test.mjs"
+    ],
+    "tests": [
+      "a later short comment can make a refused prefix fit the real builder budget",
+      "an item refused alone is retained when a group containing it fits",
+      "packing minimizes turns across feasible suffixes and keeps original order",
+      "only items without any usable covering turn are omitted",
+      "invalid comment errors still propagate from the real builder"
+    ],
+    "needs": []
+  }
+}
