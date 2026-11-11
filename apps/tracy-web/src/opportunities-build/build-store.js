@@ -15,7 +15,11 @@ export async function revisionOf(pool, accountId, revisionId) {
 
 export async function revisionsOf(pool, opportunityId) {
   const { rows } = await pool.query(
-    `select id, opportunity_id, n, research_hash, created_at
+    // How its pictures were labelled and its labelled-share check: whether its labels are complete (`labelsIncomplete`).
+    `select id, opportunity_id, n, research_hash, created_at, brief->'assetLabelling' as asset_labelling,
+       (select c from jsonb_array_elements(case when jsonb_typeof(brief->'readiness'->'checks') = 'array'
+          then brief->'readiness'->'checks' else '[]'::jsonb end) c where c->>'id' = 'labelled-share' limit 1)
+         as labelled_share
      from wo_revision where opportunity_id = $1 order by n desc`,
     [opportunityId]
   )

@@ -1898,6 +1898,10 @@ function logoLines(br, words = tradeWords('food')) {
 function assetLabellingLine(n) {
   const failed = n.failed ? `, ${n.failed} failed (${n.reason ?? 'unknown'})` : ''
   const counts = `${n.labelled ?? 0} of ${n.asked ?? 0} asked${failed}, ${n.cached ?? 0} cached${n.max ? `, at most ${n.max}` : ''}`
+  if (n.reason === 'not_attempted')
+    return 'pictures were not labelled when this brief was made; a Refresh labels them'
+  if (n.reason === 'labels_pending')
+    return `${n.pending ?? 0} picture(s) were still being labelled (${counts}); a Refresh reads their labels`
   if (n.status === 'labelled') return `labelled by a vision model (${counts})`
   if (n.status === 'partial')
     return `labelled in part by a vision model (${counts}); each unlabelled asset says why`

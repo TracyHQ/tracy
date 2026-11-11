@@ -133,7 +133,21 @@ export async function revisionForAction(
     // 🔒 Never awaited here when it runs beside the caller (#250): the brief waits for the run's settled answer by
     // answering pending, never by holding the request, and never reads labels still being made.
     let pictureLabelling = null
-    if (pictureLabelRuns) {
+    // 🔒 As a Refresh does: a brief of this research with complete labels is adopted before any labelling is asked.
+    const reused =
+      pictureLabelRuns && !editorial
+        ? await completeRevisionOf(db, {
+            accountId: action.account_id,
+            opportunityId: action.opportunity_id,
+            revisionId: action.revision_id,
+            actionId: action.id,
+            frozenResearchRead: read.input,
+            domain,
+            now
+          })
+        : null
+    if (reused?.error) return reused
+    if (pictureLabelRuns && !reused) {
       const input = await pictureLabelInputOf(db, {
         accountId: action.account_id,
         opportunityId: action.opportunity_id,
@@ -148,19 +162,23 @@ export async function revisionForAction(
       if (got.labelling?.note?.reason === 'labelling_overdue') return { error: 'DEMO_PICTURE_LABELS_TIMEOUT' }
       pictureLabelling = got.labelling
     }
-    const made = await createRevision(db, {
-      accountId: action.account_id,
-      opportunityId: action.opportunity_id,
-      revisionId: action.revision_id,
-      actionId: action.id,
-      frozenResearchRead: read.input,
-      researchSnapshotAt: read.snapshotAt ?? action.selection?.snapshotAt,
-      domain,
-      now,
-      // What the brief's photographs show, asked before the brief is made (`brief-picture-labels.js`, F08).
-      ...(pictureLabelling ? { pictureLabelling } : pictureLabels ? { pictureLabels } : {}),
-      ...(editorial ? { editorial, choiceFor: (frozen) => choiceFor(frozen) ?? fail(failure) } : {})
-    }).catch((error) => (error?.code && error.code === failure ? { error: failure } : Promise.reject(error)))
+    const made =
+      reused ??
+      (await createRevision(db, {
+        accountId: action.account_id,
+        opportunityId: action.opportunity_id,
+        revisionId: action.revision_id,
+        actionId: action.id,
+        frozenResearchRead: read.input,
+        researchSnapshotAt: read.snapshotAt ?? action.selection?.snapshotAt,
+        domain,
+        now,
+        // What the brief's photographs show, asked before the brief is made (`brief-picture-labels.js`, F08).
+        ...(pictureLabelling ? { pictureLabelling } : pictureLabels ? { pictureLabels } : {}),
+        ...(editorial ? { editorial, choiceFor: (frozen) => choiceFor(frozen) ?? fail(failure) } : {})
+      }).catch((error) =>
+        error?.code && error.code === failure ? { error: failure } : Promise.reject(error)
+      ))
     if (made.error) return made
     revision = made.revision
   }
@@ -229,6 +247,17 @@ function choiceOfSelection({ selection, pref, cards, domain, revision, ops, now,
  *   | { error: 'BRIEF_INVALID', errors: string[] }>}
  */
 export async function createRevision(pool, argsIn) {
+  // 🔒 A brief of this research with complete labels is reused before anything is labelled: a Refresh of a good brief
+  // never calls the vision model (#555, #556 review).
+  if (
+    !argsIn.editorial &&
+    !argsIn.choiceFor &&
+    !argsIn.pictureLabelling &&
+    typeof argsIn.pictureLabels === 'function'
+  ) {
+    const reused = await completeRevisionOf(pool, argsIn)
+    if (reused) return reused
+  }
   const args = await withPictureLabelling(pool, argsIn)
   if (!args.editorial) return createBaseRevision(pool, args)
   const saved = await args.editorial.loadPrepared?.({
@@ -295,6 +324,15 @@ export async function createRevision(pool, argsIn) {
   }
 }
 
+/**
+ * The brief of this research whose labels are complete, adopted by the action (`actionId`) as a build would, or the
+ * error refusing it; null when there is none and labelling must come first (`createRevision`, `revisionForAction`).
+ */
+async function completeRevisionOf(pool, args) {
+  const found = await createBaseRevision(pool, { ...args, reuseOnly: true })
+  return found.miss ? null : found
+}
+
 async function createBaseRevision(pool, args) {
   const { accountId, opportunityId, domain, revisionId, actionId, now = Date.now } = args
   const client = await pool.connect()
@@ -335,18 +373,28 @@ async function createBaseRevision(pool, args) {
     const research = await researchOf(client, read, opp, view)
     // A quality-v1 brief holds an editorial plan made for one template: never shared (`choiceFor`).
     const hash = args.choiceFor ? null : researchKey(domain, research)
-    if (hash) {
-      const same = (
-        await client.query('select * from wo_revision where opportunity_id = $1 and research_hash = $2', [
-          opp.id,
-          hash
-        ])
-      ).rows[0]
-      if (same) {
-        if (actionId) await adoptRevision(client, actionId, accountId, same.id)
-        await client.query('commit')
-        return { revision: same, reused: true }
-      }
+    // 🔒 A brief of the same research is reused only when its labels are complete (#555, #556): one whose labels are
+    // absent, failed or pending is never changed, but a brief made now may replace it (`briefLabelsIncomplete`).
+    const slots = hash ? researchKeySlots(hash) : null
+    const held = slots
+      ? (
+          await client.query(
+            'select * from wo_revision where opportunity_id = $1 and research_hash = any($2::text[])',
+            [opp.id, [slots.key, slots.relabelled, slots.incomplete]]
+          )
+        ).rows
+      : []
+    const reuse = async (same) => {
+      if (actionId) await adoptRevision(client, actionId, accountId, same.id)
+      await client.query('commit')
+      return { revision: same, reused: true }
+    }
+    const complete = held.find((r) => !briefLabelsIncomplete(r.brief, domain))
+    if (complete) return reuse(complete)
+    // Asked before labelling (`createRevision`): no complete brief to reuse, so the caller labels and comes back.
+    if (args.reuseOnly) {
+      await client.query('rollback')
+      return { miss: true }
     }
     const madeAt = args.researchSnapshotAt ?? new Date(now()).toISOString()
     // The place profile is frozen first: the brief states its facts with its frozen decisions (#1791), so the card,
@@ -427,7 +475,18 @@ async function createBaseRevision(pool, args) {
       await client.query('commit')
       return { frozen }
     }
-    const inserted = await insertFrozenRevision(client, { ...frozen, research_hash: hash })
+    let researchHashOf = hash
+    if (slots) {
+      // An incomplete brief again: the one already kept stands (no revision per press). A complete one takes the key,
+      // or, when an incomplete brief of the same research holds it, the relabelled slot.
+      const incomplete = briefLabelsIncomplete(brief, domain)
+      if (incomplete && held.length) return reuse(held[0])
+      const taken = new Set(held.map((r) => r.research_hash))
+      researchHashOf = incomplete ? slots.incomplete : taken.has(slots.key) ? slots.relabelled : slots.key
+      const holder = held.find((r) => r.research_hash === researchHashOf)
+      if (holder) return reuse(holder)
+    }
+    const inserted = await insertFrozenRevision(client, { ...frozen, research_hash: researchHashOf })
     await client.query('commit')
     return { revision: inserted }
   } catch (error) {
@@ -452,7 +511,11 @@ export async function currentResearchKey(db, opp, domain) {
  * labelling, never a failed brief.
  */
 async function withPictureLabelling(pool, args) {
-  if (typeof args.pictureLabels !== 'function' || args.pictureLabelling) return args
+  if (args.pictureLabelling) return args
+  // 🔒 Never a brief that silently skips its labels (#555): it says they were not attempted, so the next labelled
+  // Refresh or build writes a new brief instead of reusing this one (`briefLabelsIncomplete`).
+  if (typeof args.pictureLabels !== 'function')
+    return { ...args, pictureLabelling: failedPictureLabelling('not_attempted') }
   try {
     const input = await pictureLabelInputOf(pool, args)
     if (!input) return args
@@ -460,6 +523,31 @@ async function withPictureLabelling(pool, args) {
   } catch {
     return { ...args, pictureLabelling: failedPictureLabelling('vision_failed') }
   }
+}
+
+/** Labelling outcomes that asking again may improve: nothing labelled, no model yet, or some pictures left out. */
+const INCOMPLETE_LABELLING = new Set(['failed', 'off', 'partial'])
+
+/**
+ * Whether a brief's picture labels are not all there yet, judged as readiness judges them (#555, #556): only when its
+ * `labelled-share` check is short of `pass` with photographs to label, and then when its labelling is absent (never
+ * attempted), failed, had no model (`off`), left pictures out (`partial`) or found some still being labelled
+ * (`pending`). A brief with no readiness measured (made before #50) is never called incomplete.
+ * @param {{assetLabelling?: any, labelledShare?: any}} labels - the brief's note and its `labelled-share` check
+ */
+export function labelsIncomplete({ assetLabelling: note, labelledShare: share }) {
+  if (!share || share.verdict === 'pass' || !(Number(share.measured?.photos) > 0)) return false
+  if (!note) return true
+  return INCOMPLETE_LABELLING.has(note.status) || Number(note.pending) > 0
+}
+
+/** `labelsIncomplete` of a whole brief: its kept readiness, else measured now when the domain is given. */
+export function briefLabelsIncomplete(brief, domain = null) {
+  const checks =
+    brief?.readiness?.checks ??
+    (brief?.assets && domain?.briefReadinessOf ? domain.briefReadinessOf(brief).checks : null)
+  const labelledShare = (Array.isArray(checks) ? checks : []).find((c) => c?.id === 'labelled-share')
+  return labelsIncomplete({ assetLabelling: brief?.assetLabelling, labelledShare })
 }
 
 /** A labelling that labelled nothing, and why: the brief says so (never a failed brief). */
@@ -545,8 +633,10 @@ async function researchOf(db, read, opp, view) {
 
 /** A picture as the research holds it: without the vision labels a brief step added (`researchKey`). */
 function withoutVisionLabels(m) {
-  if (!m?.labels || typeof m.labels !== 'object' || !('vision' in m.labels)) return m
-  const { vision: _vision, ...labels } = m.labels
+  if (!m?.labels || typeof m.labels !== 'object' || !('vision' in m.labels || 'visionUnanswered' in m.labels))
+    return m
+  // An own picture the model left unanswered (`brief-picture-labels.js`) is no research either.
+  const { vision: _vision, visionUnanswered: _unanswered, ...labels } = m.labels
   return { ...m, labels: Object.keys(labels).length ? labels : null }
 }
 
@@ -571,6 +661,19 @@ export function researchKey(domain, research) {
     research: evidenceData({ ...read, media: (read.media ?? []).map(withoutVisionLabels) }),
     ...(demoRequest ? { demoRequestHash: researchHash(demoRequest) } : {})
   })
+}
+
+/**
+ * The slots a brief of one research key may sit in (#555, #556): the key itself; the key of a brief labelled after an
+ * incomplete one of the same research already held the key (a revision is never changed, and the key is unique); the
+ * key of a brief whose labels are incomplete. A complete brief made with the key keeps it, so no stored hash changes.
+ */
+export function researchKeySlots(key) {
+  return {
+    key,
+    relabelled: researchHash({ researchKey: key, labels: 'complete' }),
+    incomplete: researchHash({ researchKey: key, labels: 'incomplete' })
+  }
 }
 
 /** The action builds from the brief of the same research: its frozen revision id moves to that brief. */

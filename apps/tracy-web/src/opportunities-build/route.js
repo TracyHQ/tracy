@@ -47,7 +47,13 @@ import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
-import { createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
+import {
+  createRevision,
+  currentResearchKey,
+  labelsIncomplete,
+  researchKeySlots,
+  resolveRevisionCms
+} from './revisions.js'
 
 const BASE = '/api/website-opportunities'
 
@@ -252,7 +258,16 @@ export function createWebsiteBuilder(deps) {
           throw error
         })
       : null
-    const same = key ? revisions.find((r) => r.research_hash === key) : null
+    // The brief of the current research, with its labels complete: one whose labels are absent, failed or pending
+    // offers Refresh (#555, #556), as does the brief of older research.
+    const slots = key ? researchKeySlots(key) : null
+    const same = slots
+      ? revisions.find(
+          (r) =>
+            (r.research_hash === slots.key || r.research_hash === slots.relabelled) &&
+            !labelsIncomplete({ assetLabelling: r.asset_labelling, labelledShare: r.labelled_share })
+        )
+      : null
     const shown = same ?? revisions[0]
     const known = Boolean(domain) && key !== undefined
     return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? Boolean(same) : null }
