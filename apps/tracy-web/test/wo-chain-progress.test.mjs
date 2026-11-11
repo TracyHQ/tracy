@@ -334,6 +334,30 @@ async function runOf(w) {
 
 const IDS = ['kit', 'brand', 'plan', 'copy', 'pictures', 'write']
 
+test('finished pictures do not hide the still running page texts', opts, async () => {
+  const w = await world()
+  await w.press()
+  await w.tick(0)
+  await w.chain(
+    'preparing',
+    running(
+      ['copy'],
+      [
+        done('kit', 0.03, 0),
+        done('brand', 8.01, 0.0527),
+        done('plan', 9.34, 0.0876),
+        done('pictures', 4.37, 0.1767)
+      ]
+    )
+  )
+  await w.tick()
+  assert.equal((await w.action()).step, 'copy')
+  const run = await runOf(w)
+  assert.equal(run.current, 'copy')
+  assert.equal(run.steps.find((s) => s.id === 'pictures').state, 'done')
+  assert.equal(run.steps.find((s) => s.id === 'copy').state, 'current')
+})
+
 test('the doors carry the steps, the current step, the start, the minutes and USD so far', opts, async () => {
   const w = await world()
   await w.press()
