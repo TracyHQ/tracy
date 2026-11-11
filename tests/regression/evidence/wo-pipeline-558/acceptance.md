@@ -77,3 +77,15 @@ An ordinary menu alias update succeeded for menu item 117, but its required turn
 The chain deliberately replaces the default 10/12-minute repair windows with its remaining two-hour preparation budget plus handover allowance. It continued to open additional native repair sessions after the failed required undo. The new stop guard immediately marks that base unverified and suppresses later pages, batches and resends, including failures during request numbering and native waiting. Accepted IDs remain tracked and existing writers still settle and are judged. All 105 step-nine tests passed with zero skips; the official undo-stop case passed on `bfae983a30`.
 
 The measured local retry remains a failed-quality diagnostic run until its terminal artifacts and final website have been reviewed. No supported whole-action stop exists for this internal Retry, and it has no public-demo cancel linkage. A native turn cancel alone cannot prove the orchestrator has stopped opening work. No database edit, container kill or undo replay was used to manufacture a terminal result.
+
+## Unknown overlay regression
+
+The picture context now distinguishes an unmeasured template overlay from a measured absence. Raw-picture text readability and the independent subject check remain strict. The draft looker prompt changes its frozen role and combined fingerprints; historical runs cannot silently resume under the changed prompt. The official surface-preparation case passed on `193bc37d55`, including 39 focused picture tests. This does not implement child bitmap gradients or responsive text bounds and does not establish hero acceptance.
+
+## Completed local repair findings
+
+The immutable `799ea3ccd1` diagnostic retry emitted its final step-nine artifacts. The direct write took 13.933 seconds, while native repair took 36 minutes 47.206 seconds across 19 closed turns in four page sessions. The page sessions are not duplicate whole-run retries. About-page repair alone used eight initial batches and three resend batches; 16 further faults were not sent because of the item cap. Native repair spend is unavailable and must not be reported as zero.
+
+The final write report has 114 written, 95 hidden, 30 skipped, 25 failed and one refused item. Final site check remains red with 120 blocking findings, 17 warnings and two unmeasured checks. The largest blocking groups are reachable pages (34), unaddressable items (24), demo pictures (18), demo words (17) and callable phones (9). This run does not pass customer acceptance. These measurements describe the old diagnostic runtime, before the required-undo stop and receiver alias fixes, and do not prove candidate behavior.
+
+At 14:43 UTC the existing David browser session still authenticated successfully. Dev reported `bb8ecd1769303d5c3029692ac88f9578bf02c34c`. No new login or dev server access was required.
