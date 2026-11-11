@@ -32,7 +32,7 @@ This establishes why the initial writer and closing ladder miss these blocks. It
 
 A fresh local Diner 1.0.9 candidate includes both missing blocks at desktop and phone widths. It remains unapproved due to outstanding coverage and visual review holds. No released artifact was modified or candidate silently selected.
 
-## BXR London: first attempt interrupted, retry running
+## BXR London: first attempt interrupted, retry failed
 
 A second independent WO uses the published JA Boxing Joomla 1.0.11 kit. Official business website and linked Instagram were researched. Research completed on its first attempt in 122.710 seconds with 258 saved items; the effective media view contained 242 photos and two videos. Source-photo screenshots were visually inspected; this is not a claim that every collected item was reviewed.
 
@@ -40,7 +40,28 @@ Brief generation took 131.967 seconds. All five brief sections were read, captur
 
 After the rollout completed, the supported build API accepted a retry at 18:36:18.379Z. The retry retains the original approved brief and existing site. It reruns brand and plan rather than claiming to resume completed model work. A private observer receipt failed after the first request was accepted; repeating exactly the persisted idempotency key recovered the same action and acceptance timestamp, without creating another action. The frontend Try again dispatch correction remains undeployed, so this backend retry is a disclosed browser API intervention, not a successful test of that button.
 
-No completed or accepted BXR site is claimed.
+The retry ended at write with `QA_NEEDS_REVIEW`, updated 2026-11-11T19:10:34.914Z. Its chain took 34.12 minutes, including 14.65 minutes in write/check/repair. Kit took 0.03 minutes; brand 2.03 minutes / $0.0442; plan 10.87 minutes / $0.1069; copy 8.37 minutes / $0.0852; pictures 8.55 minutes / $0.6706. The recorded write charge is unknown, so total spend is unknown with a known subtotal of $0.9069. No completed or accepted BXR site is claimed.
+
+### Actual repair trace
+
+The native session URL was opened in a dedicated browser tab, returned HTTP 200 and showed the actual conversation and site:
+
+https://cowork.tracy.site/bxr-london.tracy.site/s/session-cd7bbfac-93da-476b-9835-8bd5bb026b1b
+
+Terminal native evidence deduplicates four sessions, six started and completed turns, 88 steps, 398.748 seconds in model calls and 73.926 seconds in tools. Nine distinct failed tool calls occurred:
+
+| Code | Calls | Observed cause |
+| --- | ---: | --- |
+| CONFIRM_FIRST | 3 | Two generic module 161 background writes and one shared header/footer colour change required customer confirmation. |
+| INSPECT_FIRST | 2 | Contract apply had no valid inspection in that conversation. |
+| SLOT_IMAGE_INVALID | 1 | Article 15.5 required aspect 2.3311; the supplied image was 1.0244, beyond tolerance 0.02. |
+| REVISION_STALE | 1 | Content had changed since the supplied revision. |
+| SLOT_NOT_CONTENT | 1 | Article 16.7 was given markup or control characters. |
+| AGENT_DEMO_NOT_GRANTED | 1 | The repair session attempted a demo tool outside its grant. |
+
+The shared colour change originated from real unreadable-text findings on the privacy page, with observed contact-link contrast ratios 4.28, 3.10 and 3.48. This was not an arbitrary style change. The background refusal and the article image geometry refusal are separate targets and causes. Initial native `BASELINE_PENDING` was an isolated session authorization read without a populated gateway workspace baseline; the server repair establishes that baseline itself. It is not evidence of a WO readiness deadlock.
+
+The new step 9b hint resolves an exact image only when page, kit and native map identify one target. It uses the native receiver's fit and precise contract write route, while preserving fresh revision checks, consent refusals and frames that cannot hide. Module 161.2 has native aspect 1.5 and minimum width 2160, distinct from its kit presentation aspect 2.813. That artifact discrepancy is verified; the missing initial write report prevents claiming it caused the original background residue. All 115 focused step 9 tests passed without skips, and the formal picture contract regression passed on `ecb74aa5d3`. Actual model replay of the new hint remains pending at this checkpoint.
 
 ## Local verification checkpoint
 
