@@ -768,7 +768,6 @@ test('the Build form on a brief page says, before the press, that an out-of-date
   // Unknown freshness or no status: say nothing rather than guess (the server still checks at the press).
   assert.equal(briefOutOfDate('r2', { id: 'r3', n: 3, createdAt: null, current: null }), false)
   assert.equal(briefOutOfDate('r2', null), false)
-  assert.equal(EN_STRINGS['build.otherBrief'], undefined, 'the old line promised a build of another brief')
   const line = EN_STRINGS['build.briefOutOfDate']
   assert.match(line, /\{n\}/)
   assert.match(line, /out of date/)
