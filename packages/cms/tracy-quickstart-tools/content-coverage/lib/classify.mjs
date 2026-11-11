@@ -92,7 +92,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     (sourceIndex?.ini ?? []).filter((s) => labelKeys.includes(s.key)).map((s) => normText(s.value))
   )
   const generatedSelector =
-    /\.(?:hx-author__meta|hx-auaside__meta|hx-bloglist__count|hx-blogdate|hx-blogdate__m|hx-blogdatetxt|hx-blogmeta)(?=[:. >]|$)|^#(?:username|password|jform_name|jform_password1)-lbl$/
+    /\.(?:hx-author__meta|hx-related__m|hx-auaside__meta|hx-bloglist__count|hx-blogdate|hx-blogdate__m|hx-blogdatetxt|hx-blogmeta)(?=[:. >]|$)|^#(?:username|password|jform_name|jform_password1)-lbl$/
 
   function generated(item, context, match) {
     if (
@@ -139,7 +139,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
             entity?.kind === 'languageString' &&
             identity?.extension === `tpl_${tpl}` &&
             identity.key === l.key &&
-            normText(slot.sample) === normText(l.value) &&
+            canonical(slot.sample) === canonical(l.value) &&
             l.evidence.some(
               (e) => e.includes(`/${identity.language}/`) || e.includes(`/${identity.language}.override.ini `)
             )
@@ -156,6 +156,251 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           evidence
         }
       return { class: template.length ? 'b' : 'c', label: `source-bound ${label}`, evidence }
+    }
+    if (
+      tpl === 'ja_kinetic' &&
+      item.tag === 'span' &&
+      !item.attr &&
+      ['desktop', 'phone'].every((vp) => Array.isArray(item.viewports?.[vp]?.receivers)) &&
+      Object.values(item.viewports ?? {}).every((v) => Array.isArray(v?.receivers)) &&
+      copies.every((c) => typeof c.value === 'string' && c.value === item.value)
+    ) {
+      const nth = '(?::nth-of-type\\([1-9][0-9]*\\))?'
+      const archive = receiver(new RegExp(`\\bnav\\.hx-archmast__bc${nth} > span\\.hx-bc-tail${nth}$`))
+      const author = receiver(new RegExp(`\\bnav\\.hx-author__bc${nth} > span\\.hx-author__bc-trail${nth}$`))
+      const tag = receiver(
+        new RegExp(`\\bnav\\.hx-author__bc\\.kinetic-tags-bc${nth} > span\\.hx-author__bc-trail${nth}$`)
+      )
+      if (archive || author || tag) {
+        const breadcrumb = () => {
+          let page, route
+          try {
+            page = new URL(context.url)
+            route = decodeURIComponent(page.pathname)
+              .replace(/^\/(?:index\.php\/?)?/, '')
+              .replace(/\/$/, '')
+          } catch {
+            return null
+          }
+          const routing = ['option', 'view', 'layout', 'id', 'u_id', 'Itemid']
+          if (routing.some((k) => page.searchParams.getAll(k).length > 1)) return null
+          if ([...page.searchParams.keys()].some((k) => routing.some((r) => k.startsWith(r + '['))))
+            return null
+          const menus = contract.pages.flatMap((p) => {
+            if (contract.entityByKey.get(p.entity)?.kind !== 'menuItem' || !p.link) return []
+            try {
+              const parsedLink = new URL(p.link, page)
+              return parsedLink.origin === page.origin &&
+                routing.every((k) => parsedLink.searchParams.getAll(k).length <= 1)
+                ? [{ ...p, parsedLink }]
+                : []
+            } catch {
+              return []
+            }
+          })
+          const exact = menus.filter((p) =>
+            page.searchParams.has('Itemid')
+              ? String(p.sourceId) === page.searchParams.get('Itemid')
+              : p.route?.replace(/^\/|\/$/g, '') === route
+          )
+          if (exact.length > 1 || (page.searchParams.has('Itemid') && exact.length !== 1)) return null
+          if (!exact.length && route && routing.some((k) => page.searchParams.has(k))) return null
+          let mapped = exact[0],
+            sefEntity = null
+          const entities = [...contract.entityByKey.values()]
+          if (!mapped && !routing.some((k) => page.searchParams.has(k))) {
+            const found = []
+            for (const p of menus) {
+              const prefix = p.route?.replace(/^\/|\/$/g, '')
+              if (!prefix || !route.startsWith(prefix + '/')) continue
+              const link = p.parsedLink
+              const tail = route.slice(prefix.length + 1)
+              if (
+                author &&
+                link.searchParams.get('option') === 'com_content' &&
+                link.searchParams.get('view') === 'author' &&
+                link.searchParams.get('layout') === 'list' &&
+                /^author\/[^/]+$/.test(tail) &&
+                receiverProducer(
+                  sourceIndex,
+                  'plugins/system/t4/src/t4/MVC/Router/T4.php',
+                  /preg_match\("\/\\\/author\\\/\(\.\*\?\)\(\\\/\|\\\?\|\\&\|\$\)\/",\s*\$uri->toString\(array\('path',\s*'query',\s*'fragment'\)\),\s*\$matches\)/,
+                  /\$uid\s*=\s*intval\(\$this->getUserId\(\$matches\[1\]\)\)/,
+                  /\$vars\['view'\]\s*=\s*'author'/,
+                  /\$vars\['option'\]\s*=\s*'com_content'/,
+                  /\$vars\['layout'\]\s*=\s*'author'/,
+                  /\$vars\['id'\]\s*=\s*\$uid/,
+                  /->from\('#__users'\)\s*->where\('username = '\s*\.\s*\$this->db->quote\(\$username\)\)/
+                )
+              ) {
+                for (const entity of entities.filter(
+                  (e) => e.kind === 'user' && e.identity?.username === tail.slice(7)
+                ))
+                  found.push({ mapped: p, entity })
+              }
+              if (
+                tag &&
+                link.searchParams.get('option') === 'com_tags' &&
+                link.searchParams.get('view') === 'tags' &&
+                /^[^/:,]+$/.test(tail) &&
+                !/^\d+$/.test(tail) &&
+                receiverProducer(
+                  sourceIndex,
+                  'components/com_tags/src/Service/Router.php',
+                  /\$slug\s*=\s*\$this->fixSegment\(\$id\)/,
+                  /\$vars\['view'\]\s*=\s*'tag'/,
+                  /\$alias\s*=\s*str_replace\(':',\s*'-',\s*\$segment\)/,
+                  /->from\('#__tags'\)\s*->where\(\$this->db->quoteName\('alias'\)\s*\.\s*' = :alias'\)\s*->bind\(':alias',\s*\$alias\)/
+                )
+              ) {
+                for (const entity of entities.filter((e) => e.kind === 'tag' && e.identity?.alias === tail))
+                  found.push({ mapped: p, entity })
+              }
+            }
+            if (found.length !== 1) return null
+            mapped = found[0].mapped
+            sefEntity = found[0].entity
+          }
+          const link = mapped?.parsedLink
+          const param = (key) => page.searchParams.get(key) ?? link?.searchParams.get(key)
+          if (
+            link &&
+            ['option', 'view'].some(
+              (k) => page.searchParams.has(k) && page.searchParams.get(k) !== link.searchParams.get(k)
+            )
+          )
+            return null
+          const declared = (l) => {
+            if (!l) return null
+            const owners = [...contract.slotsByKey.values()].filter((s) => {
+              const e = contract.entityByKey.get(s.entity)
+              return (
+                s.type === 'text' &&
+                s.column === 'value' &&
+                !s.xpath &&
+                !s.jsonPath &&
+                !s.nestedJson &&
+                !s.leaf &&
+                e?.kind === 'languageString' &&
+                e.identity?.extension === `tpl_${tpl}` &&
+                e.identity.key === l.key &&
+                l.evidence.some(
+                  (v) =>
+                    v.includes(`/${e.identity.language}/`) ||
+                    v.includes(`/${e.identity.language}.override.ini `)
+                )
+              )
+            })
+            return owners.length === 1 && canonical(owners[0].sample) === canonical(l.value)
+              ? owners[0]
+              : null
+          }
+          const result = (file, langs, owner = null) => {
+            const slots = langs.map(declared)
+            if (slots.some((s) => !s)) return null
+            return {
+              status: 'matched',
+              by: 'source-bound declared breadcrumb',
+              slots: [...slots.map((s) => s.key), ...(owner ? [owner.key] : [])],
+              evidence: [
+                `source-bound breadcrumb: ${file}`,
+                ...langs.flatMap((l) => l.evidence),
+                ...(owner ? [`route entity: ${owner.entity}`] : [])
+              ]
+            }
+          }
+          if (archive) {
+            const file = base + 'archive/default.php'
+            const first = language('TPL_JA_KINETIC_BLOG_KICKER_CAP', templateLanguage)
+            const last = language('TPL_JA_KINETIC_ARCHIVE_CRUMB', templateLanguage)
+            if (
+              mapped &&
+              param('option') === 'com_content' &&
+              param('view') === 'archive' &&
+              (!param('layout') || param('layout') === 'default') &&
+              first &&
+              last &&
+              norm === canonical(`/ ${first.value} / ${last.value}`) &&
+              receiverProducer(
+                sourceIndex,
+                file,
+                /<span class=["']hx-bc-tail["']>\s*\/\s*<\?php\s+echo\s+Text::_\(['"]TPL_JA_KINETIC_BLOG_KICKER_CAP['"]\);\s*\?>\s*\/\s*<\?php\s+echo\s+Text::_\(['"]TPL_JA_KINETIC_ARCHIVE_CRUMB['"]\);\s*\?>\s*<\/span>/
+              )
+            )
+              return result(file, [first, last])
+            return null
+          }
+          const kind = author ? 'user' : 'tag'
+          const id = param('id')
+          if (page.searchParams.has('u_id') && page.searchParams.get('u_id') !== id) return null
+          const candidates = sefEntity
+            ? [sefEntity]
+            : /^[1-9][0-9]*$/.test(id ?? '')
+              ? entities.filter((e) => e.kind === kind && String(e.sourceId) === id)
+              : []
+          if (candidates.length !== 1) return null
+          const entity = candidates[0]
+          if (
+            !Number.isInteger(entity.sourceId) ||
+            entity.sourceId < 1 ||
+            entities.filter((e) => e.kind === kind && e.sourceId === entity.sourceId).length !== 1
+          )
+            return null
+          const owners = [...contract.slotsByKey.values()].filter(
+            (s) =>
+              s.entity === entity.key &&
+              s.type === 'text' &&
+              s.column === (author ? 'name' : 'title') &&
+              !s.xpath &&
+              !s.jsonPath &&
+              !s.nestedJson &&
+              !s.leaf &&
+              (!author || s.role === 'person.name')
+          )
+          if (owners.length !== 1) return null
+          const owner = owners[0]
+          const lang = language(
+            author ? 'TPL_JA_KINETIC_AUTHORS_CRUMB' : 'TPL_JA_KINETIC_TAGS_CRUMB',
+            templateLanguage
+          )
+          if (!lang || norm !== canonical(`/ ${lang.value} / ${owner.sample}`)) return null
+          if (author) {
+            const file = base + 'author/author.php'
+            if (
+              (sefEntity ||
+                (param('option') === 'com_content' &&
+                  param('view') === 'author' &&
+                  param('layout') === 'author')) &&
+              receiverProducer(
+                sourceIndex,
+                file,
+                /\$author\s*=\s*\$this->author;/,
+                /<span class=["']hx-author__bc-trail["']>\s*\/\s*<a class=["']hx-author__bc-link["'] href=["']<\?php echo \$authorsUrl; \?>["']>\s*<\?php echo Text::_\(['"]TPL_JA_KINETIC_AUTHORS_CRUMB['"]\); \?>\s*<\/a>\s*\/\s*<\?php echo \$this->escape\(\$author->name\); \?>\s*<\/span>/
+              )
+            )
+              return result(file, [lang], owner)
+          } else {
+            const file = `templates/${tpl}/html/com_tags/tag/default.php`
+            if (
+              (sefEntity ||
+                (param('option') === 'com_tags' &&
+                  param('view') === 'tag' &&
+                  (!param('layout') || param('layout') === 'default'))) &&
+              receiverProducer(
+                sourceIndex,
+                file,
+                /\$tagTitleHtml\s*=\s*HTMLHelper::_\('content.prepare',\s*\$this->tags_title,\s*'',\s*'com_tags.tag'\);/,
+                /\$hxTagName\s*=\s*trim\(strip_tags\(\(string\) \$tagTitleHtml\)\);/,
+                /<span class=["']hx-author__bc-trail["'] style=["'][^"']*["']>\s*\/\s*<a class=["']hx-author__bc-link["'] href=["']<\?php echo \$hxTagsUrl; \?>["'] style=["'][^"']*["']>\s*<\?php echo Text::_\(['"]TPL_JA_KINETIC_TAGS_CRUMB['"]\); \?>\s*<\/a>\s*\/\s*<\?php echo \$this->escape\(\$hxTagName\); \?>\s*<\/span>/
+              )
+            )
+              return result(file, [lang], owner)
+          }
+          return null
+        }
+        const result = breadcrumb()
+        if (result) return result
+      }
     }
     const covered = (part) => contract.index.text.has(normText(part))
     const integer = (value, lang, minimum = 0) => {
@@ -295,30 +540,74 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           return proved(dateFile, 'full date and duration receiver', ...langs, short)
       }
     }
-    if (receiver(/\bspan\.hx-author__meta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+    const authorMeta = /\bspan\.hx-author__meta(?::nth-of-type\([1-9][0-9]*\))?$/
+    const relatedMeta =
+      /\ba\.hx-related__card(?::nth-of-type\([1-9][0-9]*\))? > span\.hx-related__m(?::nth-of-type\([1-9][0-9]*\))?$/
+    if (
+      item.tag === 'span' &&
+      !item.attr &&
+      selectors.every((s) => authorMeta.test(s) || relatedMeta.test(s))
+    ) {
+      if (
+        typeof item.value !== 'string' ||
+        copies.some((c) => typeof c.value !== 'string' || c.value !== item.value)
+      )
+        return null
       const file = base + 'article/default.php'
+      const relatedFile = base + 'article/default_related.php'
       const lang = language('TPL_JA_KINETIC_BLOG_READMIN', templateLanguage)
       const pieces = norm.split(' . ')
       const duration = pieces.pop()
       const langs = pieces.length ? date(pieces[pieces.length - 1]) : null
       if (langs) pieces.pop()
+      const readtime = receiverProducer(
+        sourceIndex,
+        file,
+        /function\s+kinetic_readtime\(\$html\)/,
+        /str_word_count\(strip_tags\(\(string\)\s*\$html\)\)/,
+        /max\(1,\s*\(int\)\s*ceil\(\$words\s*\/\s*200\)\)/
+      )
+      const author =
+        receiverProducer(
+          sourceIndex,
+          file,
+          /class=['"]hx-author__meta['"]/,
+          /\$readmins\s*=\s*kinetic_readtime\(\(\$this->item->introtext\s*\?\?\s*['"]['"]\)\s*\.\s*['"] ['"]\s*\.\s*\(\$this->item->fulltext\s*\?\?\s*['"]['"]\)\)/,
+          /\$hxMeta\[\]\s*=\s*Text::sprintf\(['"]TPL_JA_KINETIC_BLOG_READMIN['"],\s*\$readmins\)/,
+          /implode\(['"] · ['"],\s*\$hxMeta\)/,
+          /\$this->escape\(\$authorRole\)/
+        ) &&
+        (!langs ||
+          receiverProducer(
+            sourceIndex,
+            file,
+            /\$hxMeta\[\]\s*=\s*HTMLHelper::_\(['"]date['"],\s*\$this->item->(?:created|publish_up),\s*Text::_\(['"]DATE_FORMAT_LC3['"]\)\)/
+          ))
+      const related =
+        langs &&
+        pieces.length === 0 &&
+        receiverProducer(sourceIndex, file, /\$this->loadTemplate\(['"]related['"]\)/) &&
+        receiverProducer(
+          sourceIndex,
+          relatedFile,
+          /class=['"]hx-related__card['"]/,
+          /\$rmin\s*=\s*kinetic_readtime\(\(\$rel->introtext\s*\?\?\s*['"]['"]\)\s*\.\s*['"] ['"]\s*\.\s*\(\$rel->fulltext\s*\?\?\s*['"]['"]\)\)/,
+          /class=['"]hx-related__m['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$rel->created,\s*Text::_\(['"]DATE_FORMAT_LC3['"]\)\)\s*\.\s*['"] · ['"]\s*\.\s*Text::sprintf\(['"]TPL_JA_KINETIC_BLOG_READMIN['"],\s*\$rmin\)\s*;\s*\?>\s*<\/span>/
+        )
       if (
+        readtime &&
         integer(duration, lang, 1) !== null &&
         pieces.length <= 1 &&
         pieces.every(covered) &&
-        producer(
-          file,
-          /class=['"]hx-author__meta['"]/,
-          /str_word_count\(strip_tags\(\(string\)\s*\$html\)\)/,
-          /max\(1,\s*\(int\)\s*ceil\(\$words\s*\/\s*200\)\)/,
-          /\$readmins\s*=\s*kinetic_readtime\(/,
-          /text::sprintf\(['"]tpl_ja_kinetic_blog_readmin['"],\s*\$readmins\)/,
-          /implode\(['"] · ['"],\s*\$hxmeta\)/,
-          /\$this->escape\(\$authorrole\)/
-        ) &&
-        (!langs || producer(file, /text::_\(['"]date_format_lc3['"]\)/))
+        // Equal words may come from different producers; every physical copy needs its own proof.
+        copies.every((c) => (authorMeta.test(c.selector) ? author : related))
       )
-        return proved(file, 'article duration receiver', lang, ...(langs ?? []))
+        return proved(
+          copies.some((c) => relatedMeta.test(c.selector)) ? `${file}, ${relatedFile}` : file,
+          'article duration receiver',
+          lang,
+          ...(langs ?? [])
+        )
     }
     if (receiver(/\bdiv\.hx-auaside__meta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
       const file = base + 'author/author_info.php'

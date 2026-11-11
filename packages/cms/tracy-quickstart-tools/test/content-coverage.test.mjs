@@ -871,7 +871,11 @@ function kinetic_readtime($html) { $words = str_word_count(strip_tags((string) $
 $readmins = kinetic_readtime(($this->item->introtext ?? '') . ' ' . ($this->item->fulltext ?? ''));
 ?><span class="hx-author__meta"><?php $hxMeta = []; if ($authorRole !== '') $hxMeta[] = $this->escape($authorRole);
 $hxMeta[] = HTMLHelper::_('date', $this->item->created, Text::_('DATE_FORMAT_LC3'));
-$hxMeta[] = Text::sprintf('TPL_JA_KINETIC_BLOG_READMIN', $readmins); echo implode(' · ', $hxMeta); ?></span>`,
+$hxMeta[] = Text::sprintf('TPL_JA_KINETIC_BLOG_READMIN', $readmins); echo implode(' · ', $hxMeta); ?></span>
+<?php echo $this->loadTemplate('related'); ?>`,
+    [base + 'article/default_related.php']: `<?php
+$rmin = kinetic_readtime(($rel->introtext ?? '') . ' ' . ($rel->fulltext ?? ''));
+?><a class="hx-related__card" href="<?php echo $link; ?>"><span class="hx-related__m"><?php echo HTMLHelper::_('date', $rel->created, Text::_('DATE_FORMAT_LC3')) . ' · ' . Text::sprintf('TPL_JA_KINETIC_BLOG_READMIN', $rmin); ?></span></a>`,
     [base + 'author/author_info.php']:
       `<?php ?><div class="hx-auaside__meta"><?php if ($haRole !== '') : ?><span class="hx-auaside__role"><?php echo $this->escape($haRole); ?></span> &middot; <?php endif; ?><span class="hx-auaside__c"><?php echo Text::plural('TPL_JA_KINETIC_N_ARTICLES', (int) $haCount); ?></span></div>`,
     [base + 'category/blog.php']:
@@ -1259,7 +1263,7 @@ test('causal receivers: generated composites bind declared template language ins
   const entries = [
     ['31', 'TPL_JA_KINETIC_BLOG_READMIN', '%d min read'],
     ['32', 'TPL_JA_KINETIC_BLOG_READMIN_SHORT', '%d min'],
-    ['33', 'TPL_JA_KINETIC_BLOG_POSTS_NEWEST', 'posts . newest first']
+    ['33', 'TPL_JA_KINETIC_BLOG_POSTS_NEWEST', 'posts · newest first']
   ]
   const dir = contractDir([
     { key: 'module-90.role', type: 'text', sample: 'Editor' },
@@ -1289,7 +1293,7 @@ test('causal receivers: generated composites bind declared template language ins
       createClassifier(contract, null, buildSourceIndex(f.root, contract.template))
     )[0]
   const article = () => f.item('Editor · 18 June 2026 · 2 min read', 'span.hx-author__meta')
-  const category = () => f.item('// 06 posts . newest first', 'span.hx-bloglist__count')
+  const category = () => f.item('// 06 posts · newest first', 'span.hx-bloglist__count')
   const full = () => f.item('Editor 18 June 2026 2 min', 'div.hx-blogmeta', { tag: 'div' })
   for (const [item, owner] of [
     [article(), 'languageString-31.0'],
@@ -1321,6 +1325,508 @@ test('causal receivers: generated composites bind declared template language ins
   contract.entityByKey.get('languageString-31').identity.key = entries[0][1]
   contract.slotsByKey.get('languageString-31.0').sample = '%d unrelated words'
   assert.equal(run(article()).status, 'hole', 'stale or different slot text cannot own the effective format')
+  const slot = contract.slotsByKey.get('languageString-33.0')
+  const entity = contract.entityByKey.get('languageString-33')
+  for (const [object, key, value] of [
+    [slot, 'entity', 'missing-entity'],
+    [slot, 'type', 'html'],
+    [slot, 'column', 'title'],
+    [slot, 'sample', 'posts · different promise'],
+    [entity, 'kind', 'module'],
+    [entity.identity, 'extension', 'tpl_other'],
+    [entity.identity, 'key', 'UNRELATED_KEY'],
+    [entity.identity, 'language', 'fr-FR']
+  ]) {
+    const previous = object[key]
+    object[key] = value
+    assert.equal(
+      run(category()).status,
+      'hole',
+      `${key} must still identify the exact declared language owner`
+    )
+    object[key] = previous
+  }
+  const file = f.base + 'category/blog.php'
+  for (const body of [
+    '',
+    '<?php /* ' + f.files[file] + ' */',
+    f.files[file].replace('str_pad((string) $hxTotal, 2', 'str_pad((string) $hxTotal, 3'),
+    f.files[file].replace('TPL_JA_KINETIC_BLOG_POSTS_NEWEST', 'UNRELATED_KEY')
+  ]) {
+    f.put(file, body)
+    assert.equal(run(category()).status, 'hole', 'equivalent scalar text cannot replace its producer formula')
+  }
+  f.put(file, f.files[file])
+  const incomplete = category()
+  incomplete.viewports.phone.count = 2
+  const foreign = category()
+  foreign.viewports.phone.selector = 'span.business'
+  for (const item of [
+    incomplete,
+    foreign,
+    { ...category(), inCode: true },
+    { ...category(), codeText: '// 06 posts · newest first' }
+  ])
+    assert.equal(run(item).status, 'hole', 'scalar equivalence cannot supply missing copies or prove CODE')
+  const duplicateMap = JSON.parse(readFileSync(mapPath, 'utf8'))
+  duplicateMap.slots.push({ ...slot, key: 'languageString-34.0', entity: 'languageString-34' })
+  duplicateMap.entities.push({ ...entity, key: 'languageString-34' })
+  writeFileSync(mapPath, JSON.stringify(duplicateMap))
+  const duplicate = loadContract(dir, SITE)
+  duplicate.template = 'ja_kinetic'
+  const duplicateClassifier = createClassifier(duplicate, null, buildSourceIndex(f.root, duplicate.template))
+  assert.equal(annotate([category()], createMatcher(duplicate, SITE), duplicateClassifier)[0].status, 'hole')
+  assert.notEqual(
+    duplicateClassifier(category(), { slots: ['languageString-33.0', 'languageString-34.0'] }).status,
+    'matched',
+    'two declared owners with the same identity and scalar remain ambiguous'
+  )
+})
+
+function breadcrumbReceiverFixture() {
+  const f = generatedReceiverFixture()
+  const entries = [
+    ['61', 'TPL_JA_KINETIC_BLOG_KICKER_CAP', 'Journal'],
+    ['62', 'TPL_JA_KINETIC_ARCHIVE_CRUMB', 'Archive'],
+    ['63', 'TPL_JA_KINETIC_AUTHORS_CRUMB', 'Authors'],
+    ['64', 'TPL_JA_KINETIC_TAGS_CRUMB', 'Topics']
+  ]
+  const dir = contractDir([
+    ...entries.map(([id, , sample]) => ({
+      key: `languageString-${id}.0`,
+      entity: `languageString-${id}`,
+      column: 'value',
+      type: 'text',
+      sample
+    })),
+    {
+      key: 'user-61.0',
+      entity: 'user-61',
+      column: 'name',
+      type: 'text',
+      role: 'person.name',
+      sample: 'Casey Rowan'
+    },
+    { key: 'tag-71.0', entity: 'tag-71', column: 'title', type: 'text', sample: 'Platform Reliability' },
+    ...['Journal', 'Archive', 'Authors', 'Topics', 'Casey Rowan', 'Platform Reliability'].map(
+      (sample, i) => ({
+        key: `module-90.foreign-${i}`,
+        entity: 'module-90',
+        column: 'params',
+        type: 'text',
+        sample
+      })
+    )
+  ])
+  const mapPath = path.join(dir, 'content-map.json')
+  const map = JSON.parse(readFileSync(mapPath, 'utf8'))
+  map.entities.push(
+    ...entries.map(([id, key]) => ({
+      key: `languageString-${id}`,
+      kind: 'languageString',
+      identity: { extension: 'tpl_ja_kinetic', language: 'en-GB', key }
+    })),
+    { key: 'user-61', kind: 'user', sourceId: 61, identity: { username: 'casey-test' } },
+    { key: 'tag-71', kind: 'tag', sourceId: 71, identity: { alias: 'platform-test' } },
+    ...[81, 82, 83].map((id) => ({ key: `menu-${id}`, kind: 'menuItem', sourceId: id }))
+  )
+  map.pages = [
+    { entity: 'menu-81', route: 'archive', link: 'index.php?option=com_content&view=archive' },
+    { entity: 'menu-82', route: 'people', link: 'index.php?option=com_content&view=author&layout=list' },
+    { entity: 'menu-83', route: 'topics', link: 'index.php?option=com_tags&view=tags' }
+  ]
+  writeFileSync(mapPath, JSON.stringify(map))
+  const contract = loadContract(dir, SITE)
+  contract.template = 'ja_kinetic'
+  const files = {
+    [f.base + 'archive/default.php']:
+      `<?php ?><span class="hx-bc-tail">/ <?php echo Text::_('TPL_JA_KINETIC_BLOG_KICKER_CAP'); ?> / <?php echo Text::_('TPL_JA_KINETIC_ARCHIVE_CRUMB'); ?></span>`,
+    [f.base + 'author/author.php']:
+      `<?php $author = $this->author; ?><span class="hx-author__bc-trail">/ <a class="hx-author__bc-link" href="<?php echo $authorsUrl; ?>"><?php echo Text::_('TPL_JA_KINETIC_AUTHORS_CRUMB'); ?></a> / <?php echo $this->escape($author->name); ?></span>`,
+    'templates/ja_kinetic/html/com_tags/tag/default.php': `<?php $tagTitleHtml = HTMLHelper::_('content.prepare', $this->tags_title, '', 'com_tags.tag'); $hxTagName = trim(strip_tags((string) $tagTitleHtml)); ?><span class="hx-author__bc-trail" style="color:var(--muted);">/ <a class="hx-author__bc-link" href="<?php echo $hxTagsUrl; ?>" style="color:var(--muted);"><?php echo Text::_('TPL_JA_KINETIC_TAGS_CRUMB'); ?></a> / <?php echo $this->escape($hxTagName); ?></span>`,
+    'plugins/system/t4/src/t4/MVC/Router/T4.php': `<?php if(preg_match("/\\/author\\/(.*?)(\\/|\\?|\\&|$)/", $uri->toString(array('path', 'query', 'fragment')), $matches)) { $uid = intval($this->getUserId($matches[1])); $vars['option'] = 'com_content'; $vars['view'] = 'author'; $vars['layout'] = 'author'; $vars['id'] = $uid; } function getUserId($username = '') { $q->from('#__users')->where('username = '. $this->db->quote($username)); }`,
+    'components/com_tags/src/Service/Router.php': `<?php $slug = $this->fixSegment($id); $ids[] = $slug; $vars['id'] = $ids; $vars['view'] = 'tag'; function fixSegment($segment) { $alias = str_replace(':', '-', $segment); $query->from('#__tags')->where($this->db->quoteName('alias') . ' = :alias')->bind(':alias', $alias); }`
+  }
+  f.put(
+    'language/en-GB/en-GB.tpl_ja_kinetic.ini',
+    entries.map(([, key, value]) => `${key}="${value}"`).join('\n')
+  )
+  for (const [file, body] of Object.entries(files)) f.put(file, body)
+  const selectors = {
+    archive: 'nav.hx-archmast__bc > span.hx-bc-tail',
+    author: 'nav.hx-author__bc > span.hx-author__bc-trail',
+    tag: 'nav.hx-author__bc.kinetic-tags-bc > span.hx-author__bc-trail'
+  }
+  const values = {
+    archive: '/ Journal / Archive',
+    author: '/ Authors / Casey Rowan',
+    tag: '/ Topics / Platform Reliability'
+  }
+  const urls = {
+    archive: `${SITE}index.php?Itemid=81`,
+    author: `${SITE}index.php?option=com_content&view=author&layout=author&id=61`,
+    tag: `${SITE}index.php?option=com_tags&view=tag&id=71`
+  }
+  const item = (kind) => {
+    const raw = { kind: 'text', tag: 'span', value: values[kind], selector: selectors[kind] }
+    return mergeViewports({ desktop: { items: [raw] }, phone: { items: [raw] } }, SITE)[0]
+  }
+  const run = (it, url) =>
+    annotate(
+      [it],
+      createMatcher(contract, SITE),
+      createClassifier(contract, null, buildSourceIndex(f.root, contract.template)),
+      { url }
+    )[0]
+  return { ...f, contract, mapPath, entries, files, selectors, values, urls, item, run }
+}
+
+test('breadcrumb receivers: source formulas bind unique declared archive, public author and tag owners', () => {
+  const f = breadcrumbReceiverFixture()
+  for (const [kind, owners] of [
+    ['archive', ['languageString-61.0', 'languageString-62.0']],
+    ['author', ['languageString-63.0', 'user-61.0']],
+    ['tag', ['languageString-64.0', 'tag-71.0']]
+  ]) {
+    const result = f.run(f.item(kind), f.urls[kind])
+    assert.equal(result.status, 'matched', kind)
+    assert.deepEqual(result.slots, owners)
+    assert.match(result.evidence.join(' '), /source-bound .*breadcrumb/)
+  }
+  assert.equal(f.run(f.item('author'), `${SITE}index.php/people/author/casey-test`).status, 'matched')
+  assert.equal(f.run(f.item('tag'), `${SITE}index.php/topics/platform-test`).status, 'matched')
+})
+
+test('breadcrumb receivers: absent raw copies, foreign selectors, mismatched bytes and CODE stay unproved', () => {
+  const f = breadcrumbReceiverFixture()
+  for (const change of [
+    (it) => {
+      delete it.viewports.phone
+    },
+    (it) => {
+      delete it.viewports.phone.receivers
+    },
+    (it) => {
+      it.viewports.phone.count++
+    },
+    (it) => {
+      it.viewports.phone.receivers.push(it.viewports.phone.receivers[0])
+      it.viewports.phone.count++
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].value += ' foreign'
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].value = it.value.toLowerCase()
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].selector = 'nav.foreign > span.hx-author__bc-trail'
+      it.viewports.phone.selector = it.viewports.phone.receivers[0].selector
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].inCode = true
+    },
+    (it) => {
+      it.inCode = true
+    },
+    (it) => {
+      it.codeText = it.value
+    },
+    (it) => {
+      it.attr = 'aria-label'
+    }
+  ]) {
+    const it = f.item('author')
+    change(it)
+    assert.notEqual(f.run(it, f.urls.author).status, 'matched')
+  }
+})
+
+test('breadcrumb receivers: route identity, unique real owner and connected formula cannot be borrowed', () => {
+  const f = breadcrumbReceiverFixture()
+  for (const kind of ['archive', 'tag'])
+    assert.notEqual(f.run(f.item(kind), `${f.urls[kind]}&layout=foreign`).status, 'matched')
+  for (const url of [
+    undefined,
+    `${SITE}index.php?option=com_users&view=author&id=61`,
+    `${SITE}index.php?option=com_content&view=author&layout=list&id=61`,
+    `${f.urls.author}&id=62`,
+    `${f.urls.author}&u_id=62`,
+    `${f.urls.author}&id[]=62`,
+    `${SITE}index.php?option=com_content&view=author&layout=author&id=62`,
+    `${SITE}foreign?option=com_content&view=author&layout=author&id=61`,
+    `${SITE}index.php/foreign/author/casey-test`,
+    `${SITE}index.php/people/author/unknown-test`
+  ])
+    assert.notEqual(f.run(f.item('author'), url).status, 'matched')
+  for (const [target, field, value] of [
+    [f.contract.slotsByKey.get('user-61.0'), 'column', 'username'],
+    [f.contract.slotsByKey.get('user-61.0'), 'type', 'html'],
+    [f.contract.slotsByKey.get('user-61.0'), 'role', 'editorial.paragraph'],
+    [f.contract.slotsByKey.get('user-61.0'), 'nestedJson', 'foreign-config'],
+    [f.contract.slotsByKey.get('user-61.0'), 'sample', 'A different person'],
+    [f.contract.entityByKey.get('user-61'), 'kind', 'module'],
+    [f.contract.entityByKey.get('languageString-63').identity, 'key', 'FOREIGN_KEY'],
+    [f.contract.entityByKey.get('languageString-63').identity, 'language', 'fr-FR']
+  ]) {
+    const previous = target[field]
+    target[field] = value
+    assert.notEqual(f.run(f.item('author'), f.urls.author).status, 'matched', field)
+    target[field] = previous
+  }
+  for (const [kind, file, changed] of [
+    ['archive', f.base + 'archive/default.php', (s) => s.replace('ARCHIVE_CRUMB', 'FOREIGN_CRUMB')],
+    ['author', f.base + 'author/author.php', (s) => s.replace('$author->name', '$author->username')],
+    [
+      'tag',
+      'templates/ja_kinetic/html/com_tags/tag/default.php',
+      (s) => s.replace("'com_tags.tag'", "'com_content.article'")
+    ]
+  ]) {
+    for (const body of ['', '<?php /* ' + f.files[file] + ' */', changed(f.files[file])]) {
+      f.put(file, body)
+      assert.notEqual(f.run(f.item(kind), f.urls[kind]).status, 'matched')
+    }
+    f.put(file, f.files[file])
+  }
+  const owner = f.contract.slotsByKey.get('user-61.0')
+  f.contract.slotsByKey.set('user-61.duplicate', { ...owner, key: 'user-61.duplicate' })
+  assert.notEqual(f.run(f.item('author'), f.urls.author).status, 'matched', 'duplicate name address')
+  f.contract.slotsByKey.delete('user-61.duplicate')
+  const lang = f.contract.slotsByKey.get('languageString-63.0')
+  f.contract.slotsByKey.set('languageString-63.duplicate', { ...lang, key: 'languageString-63.duplicate' })
+  assert.notEqual(f.run(f.item('author'), f.urls.author).status, 'matched', 'duplicate language owner')
+  f.contract.slotsByKey.get('languageString-63.duplicate').sample = 'A stale scalar'
+  assert.notEqual(
+    f.run(f.item('author'), f.urls.author).status,
+    'matched',
+    'stale duplicate identity is still ambiguous'
+  )
+  f.contract.slotsByKey.delete('languageString-63.duplicate')
+  f.contract.entityByKey.set('user-62', {
+    key: 'user-62',
+    kind: 'user',
+    sourceId: 61,
+    identity: { username: 'other-test' }
+  })
+  assert.notEqual(f.run(f.item('author'), f.urls.author).status, 'matched', 'duplicate numeric identity')
+  f.contract.entityByKey.get('user-62').sourceId = 62
+  f.contract.entityByKey.get('user-62').identity.username = 'casey-test'
+  assert.notEqual(
+    f.run(f.item('author'), `${SITE}index.php/people/author/casey-test`).status,
+    'matched',
+    'duplicate route identity'
+  )
+  f.contract.entityByKey.delete('user-62')
+  for (const [kind, file, url, changed] of [
+    [
+      'author',
+      'plugins/system/t4/src/t4/MVC/Router/T4.php',
+      `${SITE}index.php/people/author/casey-test`,
+      (s) => s.replace('getUserId($matches[1])', 'getDifferentId($matches[1])')
+    ],
+    [
+      'tag',
+      'components/com_tags/src/Service/Router.php',
+      `${SITE}index.php/topics/platform-test`,
+      (s) => s.replace("quoteName('alias')", "quoteName('title')")
+    ]
+  ]) {
+    f.put(file, changed(f.files[file]))
+    assert.notEqual(f.run(f.item(kind), url).status, 'matched', 'route resolver source must agree')
+    f.put(file, f.files[file])
+  }
+  f.contract.entityByKey.get('tag-71').identity.alias = '71'
+  assert.notEqual(
+    f.run(f.item('tag'), `${SITE}index.php/topics/71`).status,
+    'matched',
+    'numeric segment is not an alias lookup'
+  )
+  for (const link of [
+    'http://[',
+    'https://foreign.example.test/index.php?option=com_content&view=archive',
+    'index.php?option=com_content&view=archive&view=author'
+  ]) {
+    f.contract.pages[0].link = link
+    assert.notEqual(
+      f.run(f.item('archive'), f.urls.archive).status,
+      'matched',
+      'invalid or foreign mapped route'
+    )
+  }
+  const category = f.item('archive')
+  category.selector = 'nav.hxcat-bc > span.hxcat-bc__rest'
+  for (const v of Object.values(category.viewports)) {
+    v.selector = category.selector
+    v.receivers[0].selector = category.selector
+  }
+  assert.notEqual(
+    f.run(category, f.urls.archive).status,
+    'matched',
+    'conditional category breadcrumb is outside this proof'
+  )
+})
+
+function mixedMetadataFixture() {
+  const f = generatedReceiverFixture()
+  const dir = contractDir([
+    {
+      key: 'languageString-31.0',
+      entity: 'languageString-31',
+      column: 'value',
+      type: 'text',
+      sample: '%d min read'
+    },
+    { key: 'module-90.role', type: 'text', sample: 'Editor' }
+  ])
+  const file = path.join(dir, 'content-map.json')
+  const map = JSON.parse(readFileSync(file, 'utf8'))
+  map.entities.push({
+    key: 'languageString-31',
+    kind: 'languageString',
+    identity: { extension: 'tpl_ja_kinetic', language: 'en-GB', key: 'TPL_JA_KINETIC_BLOG_READMIN' }
+  })
+  writeFileSync(file, JSON.stringify(map))
+  const contract = loadContract(dir, SITE)
+  contract.template = 'ja_kinetic'
+  const author = 'div.hx-author > div.hx-author__c > span.hx-author__meta:nth-of-type(2)'
+  const related = 'section.hx-related > a.hx-related__card > span.hx-related__m:nth-of-type(3)'
+  const item = (value = '18 June 2026 · 2 min read', selectors = [author, related]) => {
+    const items = selectors.map((selector) => ({ kind: 'text', tag: 'span', value, selector }))
+    return mergeViewports({ desktop: { items }, phone: { items } }, SITE)[0]
+  }
+  const create = () => {
+    const match = createMatcher(contract, SITE)
+    const classify = createClassifier(contract, null, buildSourceIndex(f.root, contract.template))
+    return (it) => annotate([it], match, classify)[0]
+  }
+  return { ...f, contract, author, related, item, create }
+}
+
+test('mixed metadata receivers: every author or related copy binds its own producer and declared language', () => {
+  const f = mixedMetadataFixture(),
+    run = f.create()
+  for (const selectors of [[f.author, f.related], [f.related, f.author], [f.related]]) {
+    const result = run(f.item(undefined, selectors))
+    assert.equal(result.status, 'matched')
+    assert.deepEqual(result.slots, ['languageString-31.0'])
+    assert.equal(result.class, undefined)
+    assert.match(result.evidence.join(' '), /article\/default_related\.php/)
+    assert.match(result.evidence.join(' '), /article\/default\.php/)
+  }
+  assert.equal(run(f.item('Editor · 18 June 2026 · 2 min read', [f.author])).status, 'matched')
+})
+
+test('mixed metadata receivers: absent callers, source files and exact date/readtime formulas refuse', () => {
+  const f = mixedMetadataFixture()
+  const article = f.base + 'article/default.php'
+  const related = f.base + 'article/default_related.php'
+  const broken = [
+    [article, f.files[article].replace("$this->loadTemplate('related')", "$this->loadTemplate('other')")],
+    [article, f.files[article].replace('$words / 200', '$words / 100')],
+    [article, f.files[article].replace('str_word_count', 'strlen')],
+    [article, f.files[article].replace('$this->item->introtext', '$other->introtext')],
+    [article, f.files[article].replace('$this->item->fulltext', '$other->fulltext')],
+    [article, f.files[article].replace('$this->item->created', '$other->created')],
+    [article, f.files[article].replace("BLOG_READMIN', $readmins", "BLOG_READMIN', $Readmins")],
+    [related, ''],
+    [related, '<?php /* ' + f.files[related] + ' */'],
+    [related, f.files[related].replace('$rel->introtext', '$other->introtext')],
+    [related, f.files[related].replace('$rel->fulltext', '$other->fulltext')],
+    [related, f.files[related].replace('$rel->created', '$other->created')],
+    [related, f.files[related].replace("'DATE_FORMAT_LC3'", "'OTHER_FORMAT'")],
+    [related, f.files[related].replace("' · '", "' / '")],
+    [related, f.files[related].replace("BLOG_READMIN', $rmin", "BLOG_READMIN', $readmins")],
+    [related, f.files[related].replace("BLOG_READMIN', $rmin", "BLOG_READMIN', $RMIN")],
+    [related, f.files[related].replace('hx-related__m', 'business-meta')]
+  ]
+  for (const [file, body] of broken) {
+    f.put(file, body)
+    const result = f.create()(f.item())
+    assert.equal(result.status, 'hole', `${file} must not prove a changed producer`)
+    assert.doesNotMatch((result.evidence ?? []).join(' '), /source-bound/)
+    f.put(file, f.files[file])
+  }
+})
+
+test('mixed metadata receivers: all copies require exact raw strings, distinct selectors and non-CODE provenance', () => {
+  const f = mixedMetadataFixture()
+  const invalid = []
+  for (const value of [undefined, null, '18 June 2026  ·  2 min read', '18 June 2026 · 3 min read']) {
+    const it = f.item()
+    it.viewports.phone.receivers[1].value = value
+    invalid.push(it)
+  }
+  for (const change of [
+    (it) => {
+      it.viewports.phone.receivers[1].selector = 'div.business > span.hx-related__m'
+    },
+    (it) => {
+      it.viewports.phone.receivers[1].selector = f.author
+    },
+    (it) => {
+      it.viewports.phone.receivers[1].inCode = true
+    },
+    (it) => {
+      it.viewports.phone.receivers[1].tag = 'code'
+    },
+    (it) => {
+      it.viewports.phone.count = 3
+    },
+    (it) => {
+      delete it.viewports.phone.receivers
+    },
+    (it) => {
+      it.inCode = true
+    },
+    (it) => {
+      it.codeText = it.value
+    },
+    (it) => {
+      it.tag = 'div'
+      for (const v of Object.values(it.viewports)) for (const c of v.receivers) c.tag = 'div'
+    },
+    (it) => {
+      it.attr = 'title'
+      for (const v of Object.values(it.viewports)) for (const c of v.receivers) c.attr = 'title'
+    }
+  ]) {
+    const it = f.item()
+    change(it)
+    invalid.push(it)
+  }
+  for (const reverse of [false, true]) {
+    const entries = [[f.item(), 'matched'], ...invalid.map((it) => [it, 'hole'])]
+    if (reverse) entries.reverse()
+    const run = f.create()
+    for (const [it, status] of entries) assert.equal(run(structuredClone(it)).status, status)
+  }
+})
+
+test('mixed metadata receivers: related date/duration accepts no foreign prefix or stale language owner', () => {
+  const f = mixedMetadataFixture(),
+    run = f.create()
+  for (const value of [
+    'Editor · 18 June 2026 · 2 min read',
+    'Foreign claim · 18 June 2026 · 2 min read',
+    '18 June 2026 · 2 min read · Foreign claim',
+    '31 June 2026 · 2 min read',
+    '18 June 2026 · 0 min read',
+    '18 June 2026 · 02 min read'
+  ])
+    assert.equal(run(f.item(value)).status, 'hole', value)
+  assert.equal(run(f.item('2 min read')).status, 'matched', 'ordinary printf matching is unchanged')
+  assert.notEqual(
+    createClassifier(
+      f.contract,
+      null,
+      buildSourceIndex(f.root, f.contract.template)
+    )(f.item('2 min read'), { slots: ['languageString-31.0'] }).status,
+    'matched',
+    'a related producer cannot prove a date-less composite'
+  )
+  f.contract.entityByKey.get('languageString-31').identity.key = 'UNRELATED_KEY'
+  assert.equal(f.create()(f.item()).status, 'hole')
 })
 
 function teamAriaFixture(extra = {}, module = 'mod_ja_acm', additional = []) {
