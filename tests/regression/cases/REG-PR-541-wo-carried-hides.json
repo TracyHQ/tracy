@@ -1,0 +1,31 @@
+{
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "id": "REG-PR-541-wo-carried-hides",
+  "kind": "fix",
+  "title": "Carried menu links and form controls retain exact native parent outcomes",
+  "steps": [
+    "Hide a header link naming an already scheduled menu-item hide, including kept-page and native refusal cases.",
+    "Close a contact form through the full write step and inspect the hidden submit button and its label.",
+    "Reopen the menu item or form setting and run read-back; include shared controls and coincidental fixed-text labels."
+  ],
+  "expect": [
+    "Only the exact existing menu operation can carry a header link; its refusal and kept-page guard propagate.",
+    "Only a successful matching form closure carries its submit button, using the same ordered setting and read-back receipt.",
+    "Reopened native settings fail read-back. Unmatched parents, shared live controls and fixed-word substring matches stay blocked."
+  ],
+  "fence": "existing exact native menu/form receipts; no extra writes or inferred fixed-text removal",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-web/test/write-step-carried-hides.test.mjs",
+      "apps/tracy-web/test/write-step-form-close.test.mjs"
+    ],
+    "needs": []
+  },
+  "selectors": {}
+}

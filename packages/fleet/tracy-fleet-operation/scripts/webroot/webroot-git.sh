@@ -179,6 +179,18 @@ locked() {
   "$@"
 }
 
+read_locked() {
+  # Existing readers share admission, then serialize under the established repo writer lock.
+  # A missing repo still needs exclusive admission: no lock upgrade while holding other locks.
+  local mode=exclusive
+  repo_built && mode=shared
+  if ! tracy_webroot_init_lock "$STACK" 0 "$mode"; then
+    echo '{"ok":true,"building":true,"head":null,"latest":null,"since":null,"rows":[],"moments":[],"files":[],"hidden":[],"truncated":false,"sealed":null}'
+    return
+  fi
+  locked "$@"
+}
+
 # ── an orphaned index.lock ───────────────────────────────────────────────────────────────────
 # A git process killed mid-write (OOM, a container stopped, a deploy cancelled) leaves
 # `index.lock` behind, and every later write refuses with "remove the file manually to continue".
@@ -1311,9 +1323,9 @@ restore_reset() {
 
 case "$OP" in
   # The same words provision.sh's stage printed before the wait, so the step reads the build again.
-  ensure) HEAVY_RESUME_STAGE="building the webroot baseline (ADR 0073)" run_heavy ensure ;;
-  changes) locked changes ;;
-  history) locked history ;;
+  ensure) tracy_webroot_init_lock "$STACK" 0; HEAVY_RESUME_STAGE="building the webroot baseline (ADR 0073)" run_heavy ensure ;;
+  changes) read_locked changes ;;
+  history) read_locked history ;;
   moment) locked moment ;;
   seal-outside) locked seal_outside_op ;;
   turn-moments) turn_moments ;;

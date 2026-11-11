@@ -53,3 +53,15 @@ test('a row whose link is no network the template draws says so', () => {
   assert.deepEqual(out.changes, {})
   assert.equal(out.unknown[0].slot, 'block-9.0.icon')
 })
+
+test('YouTube uses the loaded Font Awesome family even when the demo list has no YouTube row', () => {
+  const out = linkIconChanges({ kit, links: { 'module-9.0': 'https://youtu.be/invented' } })
+  assert.deepEqual(out.changes, { 'module-9.4': 'fa fa-youtube' })
+  assert.deepEqual(out.unknown, [])
+  const mixed = structuredClone(kit)
+  mixed.blocks[0].lists[0].rows[1].slots[1].fieldValue = 'fab fa-instagram'
+  assert.equal(
+    linkIconChanges({ kit: mixed, links: { 'module-9.0': 'https://youtu.be/invented' } }).unknown.length,
+    1
+  )
+})

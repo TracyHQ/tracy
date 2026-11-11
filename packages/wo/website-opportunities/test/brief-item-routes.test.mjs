@@ -152,6 +152,25 @@ test('no item of a fictional brief is without a role or a reason', () => {
   }
 })
 
+test('original post facts route to article copy and dates without losing their source evidence', () => {
+  const brief = BRIEFS.club
+  const posts = brief.facts.filter((fact) => fact.field === 'posts')
+  assert.ok(posts.length > 0, 'the fixture must carry original business posts')
+  const frozenPosts = structuredClone(posts)
+  const result = routesOfBrief(brief)
+  assert.deepEqual(
+    result.routed.find((route) => route.kind === 'fact.posts'),
+    {
+      kind: 'fact.posts',
+      count: posts.length,
+      roles: ['article.title', 'article.lead', 'article.date']
+    }
+  )
+  assert.ok(!result.unrouted.some((route) => route.kind === 'fact.posts'))
+  assert.ok(!result.notShown.some((route) => route.kind === 'fact.posts'))
+  assert.deepEqual(posts, frozenPosts)
+})
+
 test('the table is well formed: a role of vocabulary 3 or a reason, never neither', () => {
   assert.deepEqual(routeTableErrors(), [])
   assert.ok(routeTableErrors({ 'section.x': {} }).length > 0)

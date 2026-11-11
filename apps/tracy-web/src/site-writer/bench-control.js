@@ -12,6 +12,7 @@ import { openKit, readableKits } from '../lib/template-kit-source.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_WRITER_RUN_ACTIVE } from './bench-store.js'
 import { CHECKER_VERSION } from './copy-check/check-copy.js'
 import { siteWriterDoor } from './door.js'
+import { WRITER_VISUAL_POLICY } from './visual-review.js'
 import { writerPrompt } from './writer-prompt.js'
 import { DEFAULT_PAGES_PER_TURN, pagesPerTurnProblem } from './writer-turns.js'
 
@@ -23,7 +24,8 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, plan: unknown, planSource: object, brief: unknown,
  *   briefSource: object, kitRef: string, startedBy: string, pagesPerTurn?: number | 'all',
- *   index?: Map<string, object> }} input `pagesPerTurn`: pages per writing turn, the whole site in one turn unless
+ *   index?: Map<string, object>, effort?: 'low' | 'high' | 'max' }} input `effort`: an explicit native DeepSeek Flash
+ *   run setting; omission keeps the measured model default. `pagesPerTurn`: pages per writing turn, the whole site in one turn unless
  *   given; `index`: the contracts to find kits in (tests).
  */
 export async function startWriterRun({
@@ -36,8 +38,10 @@ export async function startWriterRun({
   kitRef,
   startedBy,
   pagesPerTurn = DEFAULT_PAGES_PER_TURN,
+  effort,
   index,
-  noCaps = false
+  noCaps = false,
+  requireVisualReview = false
 }) {
   const turnProblem = pagesPerTurnProblem(pagesPerTurn)
   if (turnProblem) return refuse('SITE_WRITER_HARNESS', `The run cannot start: ${turnProblem}.`)
@@ -62,8 +66,20 @@ export async function startWriterRun({
   const contentMap = openContentMap(kitRef, where)
   if (contentMap?.invalid)
     return refuse('SITE_WRITER_CONTENT_MAP', `The run cannot start: ${contentMap.invalid}.`)
-  const door = await siteWriterDoor({ pool, secret })
+  const door = await siteWriterDoor({ pool, secret, requireImages: requireVisualReview })
   if (!door.ok) return refuse(door.code, door.reason)
+  let harness
+  try {
+    harness = capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId, { effort }), noCaps)
+  } catch (error) {
+    if (error.code !== 'BENCH_EFFORT_UNSUPPORTED') throw error
+    return refuse('SITE_WRITER_HARNESS', error.message)
+  }
+  if (requireVisualReview && harness.images === false)
+    return refuse(
+      'SITE_WRITER_MODEL_LACKS',
+      'This writer run requires actual image input; the selected model harness is text only.'
+    )
   const active = await activeRun(pool)
   if (active) return activeRefusal(active)
   const created = await createRun(pool, {
@@ -77,8 +93,9 @@ export async function startWriterRun({
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
     harness: {
-      ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
-      pagesPerTurn
+      ...harness,
+      pagesPerTurn,
+      ...(requireVisualReview ? { visualReview: WRITER_VISUAL_POLICY } : {})
     }
   })
   if (created.error === SITE_WRITER_RUN_ACTIVE) return activeRefusal(created.active)

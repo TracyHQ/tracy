@@ -80,11 +80,12 @@ test('fit_logo: picks one line, two lines or the mark from the letter height; ne
     assert.deepEqual(r.size2x, [s.width * 2, s.height * 2])
     assert.equal(r.writable, s.setting !== null)
     assert.deepEqual((await meta(ctx, r.file)).width, s.width * 2)
-    if (r.shows === 'logo') assert.ok(r.nameLetterHeightPx >= 14)
+    if (r.shows === 'logo' && s.where !== 'offcanvas') assert.ok(r.nameLetterHeightPx >= 14)
+    if (s.where === 'offcanvas') assert.notEqual(r.shows, 'mark', 'the phone menu identifies the business')
     if (r.shows === 'mark') assert.equal(r.nameLetterHeightPx, null)
   }
   assert.ok(Object.values(shows).includes('logo'))
-  assert.ok(Object.values(shows).includes('mark'), JSON.stringify(shows))
+  assert.ok(Object.values(shows).every((v) => ['logo', 'logo-2-lines', 'mark'].includes(v)))
   const first = spots[0]
   const again = await run('fit_logo', { logo: logo.sides[first.ground.side].file, spot: first.id }, ctx)
   assert.equal(again.run, 2)

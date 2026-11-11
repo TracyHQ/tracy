@@ -680,7 +680,7 @@ export function placeProfileFromResearch({
     const readingFact = (value, item, group, reason) =>
       fact(value, readingVia(item), `$.businessReading.${group}.${item.id}`, {
         locator: item.source?.url
-          ? { kind: 'post', value: item.source.url }
+          ? { kind: item.source.kind === 'website' ? 'url' : 'post', value: item.source.url }
           : { kind: 'jsonPath', value: `$.businessReading.${group}.${item.id}` },
         excerpt: item.quote,
         extraction: {
@@ -695,7 +695,9 @@ export function placeProfileFromResearch({
           {
             kind: item.kind ?? 'service',
             name: item.label,
-            variants: [{ price: { kind: 'unknown', raw: '' } }]
+            variants: [
+              { price: item.price ? { kind: 'exact', raw: item.price } : { kind: 'unknown', raw: '' } }
+            ]
           },
           item,
           'services',

@@ -25,6 +25,8 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck source=../lib/roots.sh
 . "$HERE/../lib/roots.sh"
+# shellcheck source=../lib/webroot-repo-git.sh
+. "$HERE/../lib/webroot-repo-git.sh"
 
 # ── WHERE THE MINUTES GO ─────────────────────────────────────────────────────────────────────────
 #
@@ -552,6 +554,15 @@ if ! flock -n 8; then
   exit 1
 fi
 
+# A first history read can already be building this missing repo. Wait before changing any files,
+# then keep readers out until the baseline and its database have both been captured.
+tracy_webroot_init_lock "$SITE_DIR" 120
+TRACY_INITIAL_BACKUP_BASELINE_EXISTED=0
+if git "${TRACY_REPO_GIT_CONFIG[@]}" --git-dir="$(tracy_repo_dir "$LABEL")" rev-parse --verify HEAD >/dev/null 2>&1; then
+  TRACY_INITIAL_BACKUP_BASELINE_EXISTED=1
+fi
+export TRACY_INITIAL_BACKUP_BASELINE_EXISTED
+
 # ── 0½. an imported copy's contract record goes before its files do ──────────────────────────────
 # `imported`: restored from an archive of the customer's own server (no --fresh, no quickstart, a
 # webroot key). Decided HERE, once, and read again at step 6e.
@@ -994,8 +1005,17 @@ fi
 # first point reads "File backup (no database)", which is true. EmDash gets its webroot repo here
 # too (its road never built one), so its v1 exists to carry the trailer.
 mark "taking the Initial backup (ADR 0024)"
-bash "$TRACY_FLEET_DIR/webroot/webroot-backup.sh" --label "$LABEL" --op initial-backup 1>&2 \
-  || echo "!! no Initial backup — the first point stays a file backup" >&2
+if [[ "$TRACY_INITIAL_BACKUP_BASELINE_EXISTED" = 1 ]]; then
+  # A previous first read or failed build owns v1. Capture this rebuild as a new matching file/DB point.
+  bash "$TRACY_FLEET_DIR/webroot/webroot-backup.sh" --label "$LABEL" --op create --title "Rebuilt site backup" 1>&2 \
+    || echo "!! no rebuilt-site backup — WO still requires a verified full point" >&2
+else
+  bash "$TRACY_FLEET_DIR/webroot/webroot-backup.sh" --label "$LABEL" --op initial-backup 1>&2 \
+    || echo "!! no Initial backup — the first point stays a file backup" >&2
+fi
+# The host's site-up marker comes later; its Step 9 readiness read must see this completed point.
+unset TRACY_WEBROOT_INIT_LOCK_HELD
+exec 5>&-
 
 # ── 6d½. a quickstart that installs to a 5xx is a failed install ───────────────────────────
 # The last guard, so it stays before 6e (below: no refusal after the folder is built). Only for a

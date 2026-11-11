@@ -548,7 +548,7 @@ test('every written brand line says what was ordered and how to read it, and rea
   assert.equal(line('siteSetting-1.0').readFrom.type, 'image')
   assert.equal(line('favicon-32').readFrom.type, 'contains')
   const result = await siteCheck(report, site.readDoor)
-  assert.equal(result.status, 'green', JSON.stringify(readBackOf(result).failures))
+  assert.equal(result.status, 'green', JSON.stringify(result))
   assert.equal(readBackOf(result).failures.filter((f) => f.level === 'warn').length, 0)
   assert.equal(readBackOf(result).lines['block-88.1'], 'match')
   assert.equal(readBackOf(result).lines.accent, 'match')

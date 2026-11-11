@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-541-planner-brief-view",
+  "kind": "fix",
+  "title": "Planner model inputs omit owner-photo metadata without changing other steps or replaying a historical paid run",
+  "pr": 541,
+  "area": "wo/planner",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the planner brief-view and approved-prompt tests without a database or model."],
+  "expect": [
+    "Both image-enabled and text-only planner inputs omit assets while preserving facts, evidence, missing information, readiness, acceptance, sitemap and owner contracts.",
+    "The raw brief is immutable and brand, writer and picture input builders retain their previous inputs.",
+    "Missing, historical or unknown view versions refuse before preparation I/O or conversation reconstruction.",
+    "The approved system prompt and required image-review tools remain intact."
+  ],
+  "selectors": {},
+  "fence": "Only planner model messages use the versioned view; stored briefs and other consumers remain complete. No provider calls or database writes.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-planner-brief-view.test.mjs",
+      "apps/tracy-web/test/site-planner-prompt.test.mjs"
+    ],
+    "tests": [
+      "planner model input omits assets with images=false",
+      "planner model input omits assets with images=true",
+      "a historical or unknown brief view refuses before preparation I/O and before conversation reconstruction",
+      "the planner view preserves briefs without assets and does not alter nested owner or write contracts",
+      "the shipped planner prompt is the approved one, byte for byte"
+    ],
+    "needs": []
+  }
+}

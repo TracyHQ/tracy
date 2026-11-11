@@ -155,8 +155,14 @@ function removalOf({ plan, kit, owners, onSite, changes, icons, menu, fixed, gon
  * write step puts words with no link in that cell; a link whose address is held by slots the plan hides follows them. Null when
  * no door holds it; a failed order when its holder stays.
  */
-function carriedLink(slot, { doorOf, removal, removedAlready, gone, changes, hiddenKeys, onSite }) {
+function carriedLink(slot, { doorOf, removal, removedAlready, gone, changes, hiddenKeys, onSite, menu }) {
   const door = doorOf(slot)
+  // The header has no entity of its own, but its captured navigation links name their exact menu items. Carry
+  // only an item already scheduled for removal; its kept-page refusal and native published receipt still apply.
+  if (door.via === 'menu') {
+    const parent = [...menu.values()].find((order) => order.item === `menuItem-${door.item}`)
+    if (parent) return { via: 'menu', ...parent }
+  }
   const leaves = (key) => key in removedAlready || removal?.remove.has(key)
   if (door.via === 'words') {
     const key = door.key
@@ -244,6 +250,38 @@ export function hideOrders({
   for (const claim of owners.values()) {
     if (claim.kind !== 'hide') continue
     const { slot } = claim
+    if (claim.hiddenList) {
+      const unit = claim.hiddenList
+      const blocked = unit.invalid
+        ? unit.list
+        : (unit.conflict ??
+          unit.children.find((id) => {
+            const key = contentMapKey(id)
+            const current = onSite.get(key)?.current
+            const owner = owners.get(id)
+            return (
+              typeof current !== 'string' ||
+              current.trim() !== '' ||
+              onSite.get(key)?.type !== unit.types[id] ||
+              key in changes ||
+              owner?.kind !== 'hide' ||
+              owner.hiddenList?.list !== unit.list
+            )
+          }))
+      const key = contentMapKey(slot)
+      orders.set(
+        slot,
+        blocked
+          ? {
+              via: 'failed',
+              key,
+              hiddenList: unit.list,
+              reason: `the hidden list ${unit.list} cannot be compiled: ${blocked} is missing, not already empty, or has a competing owner or write; no child was hidden`
+            }
+          : { via: 'empty', key, hiddenList: unit.list }
+      )
+      continue
+    }
     if (last.hidden(slot)) {
       orders.set(slot, { via: 'kept', line: last.line(slot) })
       continue
@@ -274,7 +312,8 @@ export function hideOrders({
         gone,
         changes,
         hiddenKeys,
-        onSite
+        onSite,
+        menu
       })
       if (carried) {
         orders.set(slot, carried)

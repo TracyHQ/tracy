@@ -4,6 +4,21 @@ import { requireHost } from './host.js'
 
 const MAX_PIXELS = 100_000_000
 
+// Downloads stay concurrent; native decoders share one permit across jobs and host adapters. Compressed
+// byte limits do not bound decoded memory, and pictureFeatures can decode the same input again.
+let nativeImageTail = Promise.resolve()
+
+/** @template T @param {() => Promise<T>} run @returns {Promise<T>} */
+function withNativeImage(run) {
+  const result = nativeImageTail.then(run)
+  // A rejected image must release the permit just like a successful measurement.
+  nativeImageTail = result.then(
+    () => undefined,
+    () => undefined
+  )
+  return result
+}
+
 /**
  * The measuring function, with the picture planner's numbers from `host.pictureFeatures`.
  * @param {Pick<import('./host.js').WoHost, 'pictureFeatures'>} host
@@ -11,7 +26,7 @@ const MAX_PIXELS = 100_000_000
  */
 export function imageInfoWith(host) {
   const { pictureFeatures } = requireHost(host, ['pictureFeatures'])
-  return (bytes) => measure(bytes, pictureFeatures)
+  return (bytes) => withNativeImage(() => measure(bytes, pictureFeatures))
 }
 
 /**
@@ -89,16 +104,18 @@ const LOGO_TOP = 24
  * @returns {Promise<{r: number, g: number, b: number, weight: number}[] | null>}
  */
 export async function logoPaletteOf(bytes) {
-  try {
-    const { data, info } = await sharp(Buffer.from(bytes), { limitInputPixels: MAX_PIXELS, failOn: 'none' })
-      .rotate()
-      .resize(LOGO_EDGE, LOGO_EDGE, { fit: 'inside', kernel: 'nearest' })
-      .ensureAlpha()
-      .raw()
-      .toBuffer({ resolveWithObject: true })
-    const palette = paletteOf(data, info.channels, { top: LOGO_TOP })
-    return palette.length ? palette : null
-  } catch {
-    return null
-  }
+  return withNativeImage(async () => {
+    try {
+      const { data, info } = await sharp(Buffer.from(bytes), { limitInputPixels: MAX_PIXELS, failOn: 'none' })
+        .rotate()
+        .resize(LOGO_EDGE, LOGO_EDGE, { fit: 'inside', kernel: 'nearest' })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      const palette = paletteOf(data, info.channels, { top: LOGO_TOP })
+      return palette.length ? palette : null
+    } catch {
+      return null
+    }
+  })
 }

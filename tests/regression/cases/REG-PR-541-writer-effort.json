@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-541-writer-effort",
+  "kind": "feat",
+  "title": "Writer effort comparisons preserve default harness settings and validate native provider support",
+  "pr": 541,
+  "area": "website-opportunities/writer",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the writer effort tests with a fake streamed native provider and an invalid CLI effort."],
+  "expect": [
+    "An explicit high effort reaches the native wire with the existing output limit and retry settings.",
+    "Omission retains max effort; unsupported profiles and malformed effort values refuse instead of guessing provider capabilities.",
+    "The no-caps harness retains the chosen effort, while invalid CLI effort accesses neither files nor the database."
+  ],
+  "selectors": {},
+  "fence": "explicit per-run native Flash effort frozen at writer start; existing model defaults and run snapshots are unchanged",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/site-writer-effort.test.mjs"],
+    "tests": [
+      "an explicit writer effort reaches the native wire without reducing answer capacity or changing retries",
+      "effort overrides accept only measured native Flash choices and never guess another profile support",
+      "the writer CLI rejects invalid effort before reading files or touching the database"
+    ],
+    "needs": []
+  }
+}

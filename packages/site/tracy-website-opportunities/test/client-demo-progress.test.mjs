@@ -177,3 +177,27 @@ test('the chain steps draw the standard sub-step row: done and waiting nodes, ru
   const finished = draw(chainRow(chainRun(), { state: 'completed' }))
   assert.equal((finished.match(/data-node="done"/g) ?? []).length, 6)
 })
+
+test('readiness failures name their repairable checks, before the chain starts and after it ran', () => {
+  const blocked = {
+    id: 'blocked',
+    state: 'failed',
+    step: 'build',
+    error: 'BRIEF_NOT_READY',
+    readiness: {
+      verdict: 'block',
+      next: 'research-again',
+      checks: ['labelled-share', 'source-and-credit', 'unknown-check'],
+      ownerQuestions: []
+    }
+  }
+  const refused = { ...chainRow(chainRun()), demoAction: blocked }
+  const stopped = chainRow(chainRun(), blocked)
+  for (const row of [refused, stopped]) {
+    const html = draw(row)
+    assert.match(html, /\[reason\.brief_not_ready\]/)
+    assert.match(html, /\[brief\.check\.labelled-share\]/)
+    assert.match(html, /\[brief\.check\.source-and-credit\]/)
+    assert.doesNotMatch(html, /unknown-check/)
+  }
+})

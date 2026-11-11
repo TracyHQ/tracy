@@ -27,6 +27,7 @@ import { claimPlaceJob } from './place-jobs.js'
 import { isPlaceholderName, nameClaimsOf, withNameDecision } from './business-name.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
 import { videoSize } from '../domain/video-size.mjs'
+import { withMediaAdmission } from './media-admission.js'
 import { LISTING_SOURCE, refsOfCandidate, refsOfUrls, SOCIAL_SOURCES, SOURCES } from './sources.js'
 
 const { hoursDisagree } = await import(pathToFileURL(path.join(WO_DOMAIN_DIR, 'opening-hours.mjs')).href)
@@ -576,7 +577,13 @@ export function createExecutor({
   })
 
   /** The media row of one collected item (`owner`: `opportunityOwner`, or a place's in `place-executor.js`). */
-  async function mediaRecord(domain, owner, m) {
+  function mediaRecord(domain, owner, m) {
+    return withMediaAdmission(m.kind === 'video' ? 'video' : 'image', () =>
+      admittedMediaRecord(domain, owner, m)
+    )
+  }
+
+  async function admittedMediaRecord(domain, owner, m) {
     const declared = m.kind === 'video' ? 'video' : 'image'
     const base = {
       ...owner.fields,
@@ -682,33 +689,37 @@ export function createExecutor({
     for (const [i, photo] of photos.entries()) {
       if (known.has(`${GOOGLE_PLACES_SOURCE}:${photo.name}`)) continue
       if (await ctx.pausePoint({ placePhotos: { done: i, total: photos.length } })) return FEATURE_OFF
-      let got
-      try {
-        got = await domain.fetchPlacePhoto(photo.name, {
-          ...domainDeps,
-          googleKey: keys.google,
-          attributions: photo.attributions ?? [],
-          maxBytes: IMAGE_MAX_BYTES
-        })
-      } catch (error) {
-        log.warn(`[opportunities] ${opp.id}: Google photo skipped (${error?.code ?? 'error'})`)
-        continue
-      }
-      const base = {
-        accountId: opp.account_id,
-        opportunityId: opp.id,
-        kind: 'image',
-        category: 'other',
-        caption: null,
-        alt: null,
-        source: GOOGLE_PLACES_SOURCE,
-        sourceUrl: got.sourceUrl,
-        postId: null,
-        postedAt: null
-      }
-      const record = await storedRecord(domain, opportunityOwner(opp), base, got.bytes, () => null)
+      const result = await withMediaAdmission('image', async () => {
+        let got
+        try {
+          got = await domain.fetchPlacePhoto(photo.name, {
+            ...domainDeps,
+            googleKey: keys.google,
+            attributions: photo.attributions ?? [],
+            maxBytes: IMAGE_MAX_BYTES
+          })
+        } catch (error) {
+          log.warn(`[opportunities] ${opp.id}: Google photo skipped (${error?.code ?? 'error'})`)
+          return null
+        }
+        const base = {
+          accountId: opp.account_id,
+          opportunityId: opp.id,
+          kind: 'image',
+          category: 'other',
+          caption: null,
+          alt: null,
+          source: GOOGLE_PLACES_SOURCE,
+          sourceUrl: got.sourceUrl,
+          postId: null,
+          postedAt: null
+        }
+        const record = await storedRecord(domain, opportunityOwner(opp), base, got.bytes, () => null)
+        return { record, attributions: got.attributions }
+      })
+      const { record, attributions } = result ?? {}
       if (!record) continue
-      record.labels = { ...record.labels, credit: { provider: 'Google', authors: got.attributions ?? [] } }
+      record.labels = { ...record.labels, credit: { provider: 'Google', authors: attributions ?? [] } }
       await fenced(pool, lease, (db) => insertMedia(db, record))
     }
     return null
@@ -733,6 +744,7 @@ export function createExecutor({
     apifyRun: { held: heldApifyRun, hooks: apifyRunHooks, spend: spendApifyRun },
     mediaRecord,
     storedRecord,
+    withMediaAdmission,
     imageMax: IMAGE_MAX_BYTES,
     placePhotosMax: PLACE_PHOTOS_MAX,
     mediaBudget: MEDIA_BUDGET,

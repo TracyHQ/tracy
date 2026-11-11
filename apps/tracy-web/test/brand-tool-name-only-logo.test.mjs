@@ -42,7 +42,7 @@ test('compose_logo nameOnly: a spot too small for the name still shows the name,
   const spot = kit.site.logoSpots[0]
   const fit = await run('fit_logo', { logo: r.sides[spot.ground.side].file, spot: spot.id }, ctx)
   assert.ok(['logo', 'logo-2-lines'].includes(fit.shows))
-  assert.match(fit.note.join(' '), /name only/)
+  assert.match(fit.note.join(' '), /name-only logo/)
 })
 
 test('compose_logo without nameOnly still needs a mark', async () => {

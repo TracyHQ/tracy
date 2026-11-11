@@ -86,7 +86,11 @@ export const DEFAULT_LIMITS = Object.freeze({
    * At a process's start: an open row whose heartbeat (every 5 s) has been silent this long has no live worker anywhere,
    * so it is settled then and there instead of after `staleMs` (run 1–3 on wo2, L3).
    */
-  lostAfterMs: 30_000
+  lostAfterMs: 30_000,
+  /** Startup recovery retries transient database outages, with bounded exponential backoff. */
+  recoveryRetryMs: 1000,
+  recoveryRetryMaxMs: 30_000,
+  recoveryAttempts: 20
 })
 
 /** The code a row settled at a process's start carries (`timings.lost`): its worker died with the process before. */
@@ -161,6 +165,7 @@ function withTimeout(promise, ms, message) {
  * @property {string} [jobId] - the host's provision job; with `host`, what lets the work notice the site is up before the wizard does
  * @property {string} [host] - the host that job runs on
  * @property {string} [retryActionId] - the server-held WO action resuming an existing failed brief
+ * @property {object} [retryAuthority] - the accepted failed chain generation, checked atomically at restart
  * @property {{about: string, goal: string | null, style: string | null}} brief
  */
 
@@ -176,6 +181,8 @@ function withTimeout(promise, ms, message) {
  * @property {{about: string, goal: string | null, style: string | null}} brief
  * @property {any} normalized - what `normalize` read out of the brief (name, languages, tone, ...)
  * @property {AbortSignal} signal
+ * @property {number} [webrootWaitMs] - chain setup job budget, including host admission and polling
+ * @property {() => Promise<void>} [commitSetupWrites] - during apply, commit scripted files before opening native repair turns
  * @property {(phase: string, ms: number) => void} time - record how long a phase of the engine took
  * @property {(chain: object) => Promise<void>} progress - keep what the engine measured so far on the row (`timings.chain`)
  * @property {(note: string) => void} note - say something the report should carry
@@ -188,6 +195,8 @@ function withTimeout(promise, ms, message) {
  * @typedef {object} BriefEngine
  * @property {(ctx: BriefContext) => Promise<unknown>} prepare - no live site is needed or available
  * @property {(ctx: BriefContext, prepared: unknown) => Promise<{wrote?: number, kept?: number}>} apply
+ * @property {(ctx: BriefContext | BriefInput) => Promise<unknown>} [validateBase] - verify the host holds a full recovery point before retry preparation and base readiness
+ * @property {boolean} [requiresSetupHold] - refuse content writes when the opening setup seal is unproven
  * @property {(prepared: unknown) => Promise<void>} [dispose] - whatever `prepare` left behind (files), whatever became of the run
  */
 
@@ -230,6 +239,19 @@ export function createBriefBuilds({
   const cap = { ...DEFAULT_LIMITS, ...limits }
   /** @type {Map<string, Promise<void>>} the runs this process is doing */
   const running = new Map()
+  let recoveryStopped = false
+  let cancelRecoveryWait = null
+  const recoveryWait = (ms) =>
+    new Promise((resolve) => {
+      const finish = () => {
+        clearTimeout(timer)
+        cancelRecoveryWait = null
+        resolve()
+      }
+      const timer = setTimeout(finish, Math.max(1, ms))
+      timer.unref?.()
+      cancelRecoveryWait = finish
+    })
 
   /**
    * Settle the open rows no live worker holds, the moment this process starts (it is built once, at boot). A row silent
@@ -249,7 +271,7 @@ export function createBriefBuilds({
       [['queued', 'preparing', 'ready', 'applying']]
     )
     const settle = async (/** @type {any} */ row) => {
-      if (running.has(row.site_key)) return
+      if (recoveryStopped || running.has(row.site_key)) return
       const ending = lostEnding(row)
       const { rowCount } = await pool.query(
         `update site_brief set state = $3, stage = null, error = $4,
@@ -266,17 +288,39 @@ export function createBriefBuilds({
       else fresh.push(row)
     }
     if (fresh.length === 0) return
-    await new Promise((resolve) => setTimeout(resolve, cap.lostAfterMs).unref?.())
+    await recoveryWait(cap.lostAfterMs)
     for (const row of fresh) await settle(row)
   }
-  const recovered =
-    pool && recoverOnStart
-      ? recoverLost().catch((error) =>
-          log.warn?.(
-            `[brief] could not settle the rows of a dead process: ${error instanceof Error ? error.message : error}`
-          )
+  async function recoverOnBoot() {
+    for (let attempt = 1; attempt <= cap.recoveryAttempts && !recoveryStopped; attempt++) {
+      try {
+        await recoverLost()
+        return
+      } catch (error) {
+        if (recoveryStopped) return
+        const code = String(error?.code ?? '')
+        const transient =
+          /^(08|53)/.test(code) ||
+          [
+            '57P01',
+            '57P02',
+            '57P03',
+            'EAI_AGAIN',
+            'ENOTFOUND',
+            'ECONNREFUSED',
+            'ECONNRESET',
+            'ETIMEDOUT'
+          ].includes(code)
+        const retry = transient && attempt < cap.recoveryAttempts
+        log.warn?.(
+          `[brief] could not settle the rows of a dead process: ${error instanceof Error ? error.message : error}; ${retry ? 'retrying startup recovery' : 'startup recovery stopped'}`
         )
-      : Promise.resolve()
+        if (!retry) return
+        await recoveryWait(Math.min(cap.recoveryRetryMaxMs, cap.recoveryRetryMs * 2 ** (attempt - 1)))
+      }
+    }
+  }
+  const recovered = pool && recoverOnStart ? recoverOnBoot() : Promise.resolve()
 
   /** Record a failure on the row, softly: the site is handed over as it is. */
   async function fail(siteKey, error) {
@@ -296,14 +340,17 @@ export function createBriefBuilds({
    * @param {number} until
    * @param {AbortSignal} [signal] - the run no longer needs to know
    */
-  async function waitProvisioned(input, until, signal) {
+  async function waitProvisioned(input, until, signal, validateBase) {
     const { siteKey } = input
     let nextHostLook = 0
     while (now() < until && !signal?.aborted) {
       const row = await briefOf(pool, siteKey)
       if (!row) return false
       if (row.state === 'failed') return false
-      if (row.timings?.provisionedAt) return true
+      if (row.timings?.provisionedAt) {
+        await validateBase?.()
+        return true
+      }
       if (hostJob && input.jobId && input.host && now() >= nextHostLook) {
         nextHostLook = now() + jobPollMs
         const job = await hostJob(input.host, input.jobId).catch(() => null)
@@ -319,6 +366,7 @@ export function createBriefBuilds({
             await sleep(pollMs)
             continue
           }
+          await validateBase?.()
           await updateBrief(pool, siteKey, { timings: { readyAt: now() } }).catch(() => {})
           return true
         }
@@ -400,17 +448,17 @@ export function createBriefBuilds({
   /**
    * SC-3: hold the site's webroot for the run, the way a chat turn holds it (`setup-moment.js`): `open` before the first
    * write seals what is already dirty as outside and marks the run's turn open; `close` once the writes are over commits
-   * what they left as Tracy's own moment. Each is bounded and soft: a webroot that cannot be held leaves its files to the
-   * next look, as before, and never fails the site.
+   * what they left as Tracy's own moment. Each wait is bounded. Legacy engines keep a soft hold; an engine that requires
+   * setup proof must receive an explicit successful opening receipt before it may write.
    * @param {'open' | 'close'} step
    * @param {BriefContext} ctx
    * @returns {Promise<boolean>} whether the step was done
    */
-  async function holdWebroot(step, ctx) {
+  async function holdWebroot(step, ctx, waitMs = cap.webrootMs, requireProof = false) {
     if (!webroot) return false
     try {
-      await withTimeout(webroot[step](ctx), cap.webrootMs, `the webroot ${step} took too long`)
-      return true
+      const result = await withTimeout(webroot[step](ctx), waitMs, `the webroot ${step} took too long`)
+      return requireProof ? result?.held === true : result?.held !== false
     } catch (error) {
       log.warn?.(
         `[brief] ${ctx.siteKey}: webroot ${step}: ${error instanceof Error ? error.message : String(error)}`
@@ -531,6 +579,7 @@ export function createBriefBuilds({
         applied,
         deadlineAt: startedAt + runCap.prepareMs
       }
+      if (engine.requiresSetupHold) ctx.webrootWaitMs = runCap.webrootMs
       // The words are made while the site is waited for, side by side: the site may come up first, and then the words
       // get `prepareGraceMs` from that moment (`preparedInTime`). `prepare` itself honours `ctx.deadlineAt` too.
       const t2 = now()
@@ -538,11 +587,18 @@ export function createBriefBuilds({
       preparing.catch(() => {})
       /** When the site came up, if it did. */
       let siteUpAt = 0
-      const siteUp = waitProvisioned(input, startedAt + runCap.runMs, waitStop.signal).then((up) => {
+      const siteUp = waitProvisioned(
+        input,
+        startedAt + runCap.runMs,
+        waitStop.signal,
+        engine.validateBase ? () => engine.validateBase(ctx) : undefined
+      ).then((up) => {
         if (up) siteUpAt = now()
         return up
       })
-      siteUp.catch(() => {})
+      siteUp.catch((error) => {
+        prepareStop.abort(error)
+      })
       const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt, runCap)
       const notUp = async () => {
         prepareStop.abort()
@@ -555,6 +611,8 @@ export function createBriefBuilds({
       time('prepareMs', preparedAt - t2)
       // How long the site waited for its words: what the grace bounds.
       if (siteUpAt > 0) time('wordsAfterUpMs', Math.max(0, preparedAt - siteUpAt))
+      // A chain cannot become ready before its base has a proven full recovery point.
+      if (engine.validateBase && !(await siteUp)) return await notUp()
       // Only from `preparing`: a row the host's failure abandoned is not put back to work.
       if (!(await advanceBrief(pool, siteKey, ['preparing'], { state: 'ready', timings: phase }))) return
 
@@ -563,7 +621,22 @@ export function createBriefBuilds({
       const upAt = now()
 
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
-      const held = await holdWebroot('open', ctx)
+      let held = await holdWebroot('open', ctx, runCap.webrootMs, engine.requiresSetupHold === true)
+      if (engine.requiresSetupHold && !held)
+        throw new Error('STEP_CHAIN_SETUP_HOLD_UNPROVEN: the opening seal did not finish successfully.')
+      // Native repairs own separate turns. Commit scripted setup files before their first seal,
+      // otherwise the setup marker makes it skip and their Undo includes the initial personalization.
+      const commitSetupWrites = async () => {
+        if (!held) throw new Error('The scripted setup has no proven webroot hold.')
+        const checkpoint = await withTimeout(
+          webroot.close(ctx),
+          runCap.webrootMs,
+          'committing the scripted setup took too long'
+        )
+        if (engine.requiresSetupHold && checkpoint?.held !== true)
+          throw new Error('The scripted setup checkpoint has no successful host receipt.')
+        held = false
+      }
       const t3 = now()
       let report = null
       let applyError = null
@@ -572,7 +645,10 @@ export function createBriefBuilds({
       const applyStop = new AbortController()
       try {
         report = await withTimeout(
-          engine.apply({ ...ctx, signal: AbortSignal.any([controller.signal, applyStop.signal]) }, prepared),
+          engine.apply(
+            { ...ctx, signal: AbortSignal.any([controller.signal, applyStop.signal]), commitSetupWrites },
+            prepared
+          ),
           made?.workflow === 'quickstart-first/1' ? runCap.runMs - 120_000 : runCap.applyMs,
           'writing into the site took too long'
         )
@@ -602,7 +678,7 @@ export function createBriefBuilds({
         }
       }
       // The writes are over, failed or not: what they left on the webroot is the run's (SC-3).
-      if (held) await holdWebroot('close', ctx)
+      if (held) await holdWebroot('close', ctx, runCap.webrootMs)
       if (applyError) throw applyError
       // 🔒 A STEP CHAIN RUN ENDS AS A FINISHED BUILD, WHATEVER STEP FAILED (#483, ADR 0044): the site is handed over with
       // what was written, and how the run ended is kept for staff (`timings.chain`), never said to the customer.
@@ -612,7 +688,13 @@ export function createBriefBuilds({
         // poll door's word, `readyAt` the frame's own look at the host job).
         const own = await briefOf(pool, siteKey).catch(() => null)
         const upMs = Number(own?.timings?.provisionedAt ?? own?.timings?.readyAt) || siteUpAt || upAt
-        const pressedMs = own?.created_at ? new Date(own.created_at).getTime() : startedAt
+        const attemptMs = Number(own?.timings?.attemptStartedAt)
+        const pressedMs =
+          Number.isFinite(attemptMs) && attemptMs > 0
+            ? attemptMs
+            : own?.created_at
+              ? new Date(own.created_at).getTime()
+              : startedAt
         const chain = withBaseSite(/** @type {any} */ (report).chain, upMs - Math.min(pressedMs, startedAt))
         await inTurn(() =>
           advanceBrief(pool, siteKey, ['applying'], {
@@ -708,6 +790,10 @@ export function createBriefBuilds({
      */
     async start(input) {
       try {
+        if (input.retryActionId) {
+          const engine = engineOf(input)
+          await engine?.validateBase?.(input)
+        }
         // A WO retry may restart only an existing failed brief, never create one for a replaced site.
         const { inserted } = input.retryActionId ? { inserted: false } : await putBrief(pool, input)
         // A second press of a build that is going is the same build; one whose install FAILED is provisioned again by
@@ -715,7 +801,13 @@ export function createBriefBuilds({
         if (
           !inserted &&
           (running.has(input.siteKey) ||
-            !(await restartBrief(pool, input.siteKey, input.brief, input.retryActionId)))
+            !(await restartBrief(
+              pool,
+              input.siteKey,
+              input.brief,
+              input.retryActionId,
+              input.retryAuthority
+            )))
         )
           return { started: false }
         const run = work(input)
@@ -727,7 +819,11 @@ export function createBriefBuilds({
         log.warn?.(
           `[brief] could not start ${input.siteKey}: ${error instanceof Error ? error.message : error}`
         )
-        return { started: false }
+        return {
+          started: false,
+          error: error instanceof Error ? error.message : String(error),
+          ...(typeof error?.code === 'string' ? { code: error.code } : {})
+        }
       }
     },
 
@@ -777,6 +873,12 @@ export function createBriefBuilds({
 
     /** The start-up settle of the rows a dead process left (`recoverLost`); resolved when it is over. */
     recovered,
+
+    /** Stop startup recovery before the server closes its pool; an in-flight query may still settle. */
+    stop() {
+      recoveryStopped = true
+      cancelRecoveryWait?.()
+    },
 
     /** Wait for the runs this process started (tests, shutdown). */
     async idle() {

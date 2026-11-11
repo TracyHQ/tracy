@@ -21,6 +21,32 @@ function nowSentence(t: Translate, row: OpportunityListRow, run: ChainRun): stri
   return knownChainStep(run.current) ? t(`progress.now.${run.current}`) : stepLabel(t, run, run.current)
 }
 
+const BRIEF_CHECKS = new Set([
+  'own-usable-photos',
+  'labelled-share',
+  'source-and-credit',
+  'hero-candidates',
+  'offerings-with-photo',
+  'offerings-with-description',
+  'people-with-portrait',
+  'items-routed',
+  'template-kinds'
+])
+
+/** The failed build's exact checks, in the interface language, rather than a paid Retry. */
+function BriefBlockers({ t, row }: { t: Translate; row: OpportunityListRow }): JSX.Element | null {
+  if (row.demoAction?.error !== 'BRIEF_NOT_READY') return null
+  const checks = [...new Set(row.demoAction.readiness?.checks ?? [])].filter((id) => BRIEF_CHECKS.has(id))
+  if (!checks.length) return null
+  return (
+    <ul className="tracy-wo-small" data-brief-blockers>
+      {checks.map((id) => (
+        <li key={id}>{t(`brief.check.${id}`)}</li>
+      ))}
+    </ul>
+  )
+}
+
 const usdText = (locale: string, usd: number): string =>
   new Intl.NumberFormat(locale, { style: 'currency', currency: 'USD' }).format(usd)
 
@@ -50,6 +76,16 @@ export function DemoProgress({
   const action = row.demoAction
   const run = action?.run
   if (!run) {
+    // A readiness refusal ends the build before any chain step runs: the card still names the checks to fix.
+    if (action?.state === 'failed' && action.error === 'BRIEF_NOT_READY') {
+      const refused = demoFailureKey(row)
+      return (
+        <div className="tracy-wo-progress" role="status">
+          {refused ? <span className="tracy-wo-error tracy-wo-small">{t(refused)}</span> : null}
+          <BriefBlockers t={t} row={row} />
+        </div>
+      )
+    }
     if (action?.state !== 'queued') return null
     return (
       <div className="tracy-wo-progress" role="status">
@@ -90,6 +126,7 @@ export function DemoProgress({
         <span className="tracy-wo-muted tracy-wo-small">{t('progress.firstBuild')}</span>
       ) : null}
       {why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
+      {failed ? <BriefBlockers t={t} row={row} /> : null}
       {open ? (
         <BuildColumns t={t} columns={buildColumns(t, run, action?.state, locale)} />
       ) : (

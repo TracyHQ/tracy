@@ -55,14 +55,12 @@ test('a gallery tile no new photo fits reuses a photo of its page, cut elsewhere
   const u2 = rungs(m, 'block-u.2')
   assert.ok(u2.some(([r, o]) => r === 'reuse' && o === 'skipped'))
   // With no drawer door the draw rungs are skipped (card AK sends a tile no photo fits to the draw rung).
-  assert.deepEqual(u2.slice(-4), [
+  assert.deepEqual(u2.slice(-2), [
     ['any-photo', 'skipped'],
-    ['draw', 'skipped'],
-    ['redraw', 'skipped'],
     ['best-rejected', 'placed']
   ])
   assert.match(
-    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-4).detail,
+    m.ladder.find((l) => l.frame === 'block-u.2').steps.at(-2).detail,
     /is in the neighbouring tile block-u\.1/
   )
   const u2Entry = e.get('block-u.2')

@@ -42,8 +42,15 @@ function indexKit(kit) {
   // The narrowest file the write door takes for a frame (the slot's fit.minWidth, SlotFit checkPicture): carried on the
   // frame, so every cut and every drawing for it is written at least that wide (card AI).
   for (const [id, f] of frames) {
-    const min = slots.get(contentMapKey(id))?.fit?.minWidth
-    if (isSize(min)) frames.set(id, { ...f, minWidth: min })
+    const fit = slots.get(contentMapKey(id))?.fit
+    const min = fit?.minWidth
+    // A photo frame can still require alpha (for example a customer-avatar strip). Its classification alone does
+    // not describe what the native slot accepts; retain the contract's requirement before choosing a JPEG cut.
+    frames.set(id, {
+      ...f,
+      ...(isSize(min) ? { minWidth: min } : {}),
+      ...(fit?.transparent === true ? { transparent: true } : {})
+    })
   }
   const demoSize = (frameId) => {
     const s = slots.get(contentMapKey(frameId))
@@ -124,6 +131,16 @@ export function indexInputs({ plan, kit, brief, files, icons }) {
     /** A gallery tile: an any-real frame of a picture list (gallery-tiles.js); it is never hidden alone. */
     galleryTile: (frameId) =>
       planIndex.wishes.get(frameId)?.match === 'any-real' ? kitIndex.gallery(frameId) : null,
+    // A real-photo request and a photo grounded in observations or an original post document the business.
+    // A cutout can remain a generic illustration; it does not claim to be a portrait of its staff.
+    documentaryFrame: (frameId) => {
+      const wish = planIndex.wishes.get(frameId)
+      if (wish?.match === 'any-real') return true
+      if (kitIndex.frames.get(frameId)?.kind !== 'photo') return false
+      return arr(wish?.factIds).some((id) =>
+        arr(brief?.facts).some((f) => f.id === id && (f.sourceKind === 'observed' || f.field === 'posts'))
+      )
+    },
     assets,
     personIds: (factId) => personIds(brief, factId),
     readFile: fileReader(files),

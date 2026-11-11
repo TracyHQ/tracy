@@ -1,8 +1,9 @@
 // What each picture of a brief is (F08): its size, orientation and resolution grade read from the file itself, and what it
 // shows with a short caption when a vision model has looked at it; "unlabelled" when none has, never "other".
-import { test } from 'node:test'
+
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import { test } from 'node:test'
 import * as domain from '../domain/index.mjs'
 import { fromPlace, makeSiteBrief, withCachedVision } from '../src/brief-research.js'
 
@@ -202,4 +203,26 @@ test('cached vision labels from the shared analysis table reach place pictures, 
     vision: { key: 'm|p3', model: 'm', labels: { subject: 'interior', content: 'venue-interior' } }
   })
   assert.equal(out[1], media[1])
+})
+
+test('the complete brief preserves known scene text independently from the overlay label and validates its enum', () => {
+  const brief = briefOf([
+    row(
+      'scene',
+      1200,
+      1200,
+      seen({
+        content: 'venue-interior',
+        textPresence: 'present',
+        hasTextOverlay: false,
+        hasTextOrWatermark: false
+      })
+    )
+  ])
+  const asset = brief.assets.find((a) => a.id === 'scene')
+  assert.equal(asset.textPresence, 'present')
+  assert.equal(asset.hasTextOrWatermark, false)
+  assert.deepEqual(domain.validateBrief(brief).errors, [])
+  asset.textPresence = 'invented'
+  assert.ok(domain.validateBrief(brief).errors.some((e) => String(e).includes('assets[0].textPresence')))
 })

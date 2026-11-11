@@ -8237,9 +8237,9 @@ export function sitesRoutes({
    *     it committed — one carrier `site_write` of the run naming the commit and its file count.
    * EmDash keeps no webroot history: nothing to hold. A failure is thrown for the run to log; it never fails the site.
    * @param {'open' | 'close'} step
-   * @param {{siteKey: string, runId: string, email: string}} run
+   * @param {{siteKey: string, runId: string, email: string, waitMs?: number}} run
    */
-  async function setupWebroot(step, { siteKey, runId, email }) {
+  async function setupWebroot(step, { siteKey, runId, email, waitMs }) {
     const turn = setupTurnOf(runId)
     if (!turn) throw new Error('not a setup run')
     const site = await siteByKey(pool, siteKey)
@@ -8250,7 +8250,9 @@ export function sitesRoutes({
       step === 'open'
         ? { kind: 'webroot-seal-outside', turn }
         : { kind: 'webroot-moment', title: SETUP_MOMENT_TITLE, turn },
-      SETUP_WEBROOT_WAIT_MS
+      waitMs ?? SETUP_WEBROOT_WAIT_MS,
+      undefined,
+      waitMs === undefined ? undefined : { bounded: true }
     )
     if (!job.ok) throw new Error(job.reason ?? 'the host did not take the job')
     const data = lastLine(job.output)
@@ -8260,6 +8262,9 @@ export function sitesRoutes({
         ...(Array.isArray(data.outside) ? data.outside : []),
         ...(data.sealed ? [{ ...data.sealed, cause: 'seal' }] : [])
       ])
+      // Another turn can hold dirty files on this webroot. A skipped seal does not prove which
+      // files belong to setup; do not let a later setup moment claim them as its own.
+      if (data.skipped != null) throw new Error('The setup opening seal was skipped.')
       return { held: true }
     }
     if (data.committed === true && typeof data.sha === 'string' && Number.isInteger(data.files)) {

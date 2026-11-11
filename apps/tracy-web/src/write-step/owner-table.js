@@ -57,7 +57,7 @@ export function hiddenTwins(kit, hides) {
  * A frame whose `twinOf` names a hidden frame is hidden with it, as the plan's claim `via: 'twin'` (`hiddenTwins`).
  */
 export function planClaims(
-  { plan, kit = null, hidden, menuHide, filled = new Set(), rowsGone = new Set() },
+  { plan, kit = null, hidden, menuHide, filled = new Set(), rowsGone = new Set(), hiddenLists = new Map() },
   file
 ) {
   const claims = []
@@ -90,7 +90,14 @@ export function planClaims(
   const hides = new Set([...hidden, ...menuHides, ...leaving])
   for (const slot of hides)
     if (typeof slot === 'string' && !linked.has(slot))
-      claims.push({ slot, owner: 'plan', file, kind: 'hide', content: '(hide)' })
+      claims.push({
+        slot,
+        owner: 'plan',
+        file,
+        kind: 'hide',
+        content: '(hide)',
+        ...(hiddenLists.has(slot) ? { hiddenList: hiddenLists.get(slot) } : {})
+      })
   // Only a twin on a kept block: one on a block the plan drops leaves with its block.
   const kept = new Set(keptBlocks(plan).map((d) => d.block))
   const blockOf = new Map(arr(kit?.blocks).flatMap((b) => arr(b?.frames).map((f) => [f?.id, b?.id])))
@@ -196,6 +203,11 @@ export function ownerTable(claims, { kit = null } = {}) {
 /** Every slot of the kit's kept blocks that no file claims: it still holds demo content unless something removes it. */
 export function unownedSlots({ plan, kit, owners }) {
   const blocks = new Map(arr(kit?.blocks).map((b) => [b?.id, b]))
+  const pages = new Set(
+    arr(plan?.pages)
+      .filter((page) => page?.decision === 'keep')
+      .map((page) => page.id)
+  )
   const seen = new Set()
   const out = []
   for (const { block } of keptBlocks(plan)) {
@@ -206,6 +218,9 @@ export function unownedSlots({ plan, kit, owners }) {
     ]
     for (const s of slots) {
       if (typeof s?.id !== 'string' || owners.has(s.id) || seen.has(s.id)) continue
+      // A derived title belongs only to its measured pages, even when their masthead block is shared with kept pages.
+      // Dropping those pages must not turn their otherwise untouched native fields into closing-ladder writes.
+      if (s.measuredTitleProjection === true && !arr(s.pageTitleOf).some((page) => pages.has(page))) continue
       seen.add(s.id)
       out.push({ slot: s.id, block, type: s.type ?? null })
     }

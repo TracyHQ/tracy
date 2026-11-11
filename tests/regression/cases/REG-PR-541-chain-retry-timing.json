@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-541-chain-retry-timing",
+  "kind": "fix",
+  "title": "A retried chain reports current-attempt timing without changing site generation",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Create a failed site brief two hours old. Accept its retry through restartBrief, then read the chain build table while it runs and finish its base-site step."
+  ],
+  "expect": [
+    "An accepted retry stamps attemptStartedAt and retains created_at and its WO retry action.",
+    "The table reports the attempt start and elapsed minutes; the base-site duration excludes the earlier failed attempt.",
+    "Rows without an attempt stamp retain their existing timing behavior."
+  ],
+  "selectors": {
+    "api": "/api/ops/wo/chain-builds"
+  },
+  "fence": "restartBrief attempt stamp and chain timing readers",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/ops-wo-chain-builds.test.mjs",
+      "apps/tracy-web/test/step-chain-build.test.mjs"
+    ],
+    "tests": [
+      "a retried chain measures its current attempt without changing the site generation",
+      "a retried chain base-site duration excludes the previous failed attempt"
+    ],
+    "needs": ["postgres"]
+  }
+}

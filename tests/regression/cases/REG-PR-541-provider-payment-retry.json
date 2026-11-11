@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-541-provider-payment-retry",
+  "kind": "fix",
+  "title": "Provider account refusals cannot start another paid customer research job",
+  "pr": 541,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": ["Run the fictional payment-recovery suite on this branch with an isolated PostgreSQL database."],
+  "expect": [
+    "HTTP_402 is kept out of the full preview and source-only request before another job is inserted.",
+    "A later operator setup save reopens collection; a save before the failure does not.",
+    "Automatic collection cannot repeatedly charge an unresolved provider refusal."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-research-again-plan.test.mjs",
+      "apps/tracy-web/test/website-opportunities-research-again.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  }
+}

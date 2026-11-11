@@ -75,7 +75,8 @@ test('wrong usage prints the usage, exits 2 and queues nothing', opts, async () 
     [['get', '00000000-0000-0000-0000-000000000000'], /get needs --out/],
     [['run', '--bogus'], /Unknown option/],
     [[...START, '--pages-per-turn', 'two'], /--pages-per-turn takes a positive whole number or "all"/],
-    [[...START, '--pages-per-turn', '0'], /--pages-per-turn takes a positive whole number or "all"/]
+    [[...START, '--pages-per-turn', '0'], /--pages-per-turn takes a positive whole number or "all"/],
+    [[...START, '--effort', 'medium'], /--effort takes low, high or max/]
   ]
   for (const [argv, message] of cases) {
     const r = await cli(...argv)
@@ -230,3 +231,23 @@ test(
     assert.equal((await harnessOf(all.out)).pagesPerTurn, 'all')
   }
 )
+
+test('an explicit no-caps writer effort is frozen and used by the worker', opts, async () => {
+  await assignWriterDoor(db.pool)
+  const started = await cli(...START, '--effort', 'high', '--no-caps')
+  assert.equal(started.code, 0, started.err)
+  const { harness } = (
+    await db.pool.query('select harness from site_writer_run where id = $1', [started.out])
+  ).rows[0]
+  assert.equal(harness.effort, 'high')
+  assert.equal(harness.maxTokens, 128000)
+  assert.equal(harness.budgetUsd, undefined)
+  assert.equal(harness.pagesPerTurn, 'all')
+  const model = scriptedModel([reply(writerAnswer())])
+  await drain(db.pool, {
+    fetchImpl: model.fetchImpl,
+    index: kits.index,
+    balanceFetch: balances([]).fetchImpl
+  })
+  assert.equal(model.requests[0].body.reasoning_effort, 'high')
+})

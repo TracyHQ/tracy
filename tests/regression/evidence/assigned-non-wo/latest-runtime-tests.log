@@ -1,0 +1,216 @@
+TAP version 13
+# Subtest: a timed price is chosen by the UTC dispatch time: peak hours on weekdays, off-peak otherwise
+ok 1 - a timed price is chosen by the UTC dispatch time: peak hours on weekdays, off-peak otherwise
+  ---
+  duration_ms: 3.546791
+  type: 'test'
+  ...
+# Subtest: each turn is costed at the rate of its own dispatch time, and records which rate it used
+ok 2 - each turn is costed at the rate of its own dispatch time, and records which rate it used
+  ---
+  duration_ms: 45.108
+  type: 'test'
+  ...
+# Subtest: a conversation past its budget stops before the next call with AGENT_BUDGET
+ok 3 - a conversation past its budget stops before the next call with AGENT_BUDGET
+  ---
+  duration_ms: 1.792542
+  type: 'test'
+  ...
+# Subtest: a conversation exactly at its budget dispatches no additional model call
+ok 4 - a conversation exactly at its budget dispatches no additional model call
+  ---
+  duration_ms: 0.908834
+  type: 'test'
+  ...
+# Subtest: a budgeted conversation stops after a call whose cost is unknown, including on resume
+ok 5 - a budgeted conversation stops after a call whose cost is unknown, including on resume
+  ---
+  duration_ms: 0.67825
+  type: 'test'
+  ...
+# Subtest: an unbudgeted conversation can continue after a call whose cost is unknown
+ok 6 - an unbudgeted conversation can continue after a call whose cost is unknown
+  ---
+  duration_ms: 0.765334
+  type: 'test'
+  ...
+# Subtest: the write step: after N answers that called tools, the message goes out and every later request carries tool_choice none
+ok 7 - the write step: after N answers that called tools, the message goes out and every later request carries tool_choice none
+  ---
+  duration_ms: 2.56525
+  type: 'test'
+  ...
+# Subtest: the write step: an answer whose every tool call was a repeat ends the reading at once
+ok 8 - the write step: an answer whose every tool call was a repeat ends the reading at once
+  ---
+  duration_ms: 0.758834
+  type: 'test'
+  ...
+# Subtest: a request with no tools sends no tools, no tool_choice, and on the DeepSeek wire no earlier reasoning_content
+ok 9 - a request with no tools sends no tools, no tool_choice, and on the DeepSeek wire no earlier reasoning_content
+  ---
+  duration_ms: 1.017708
+  type: 'test'
+  ...
+# (node:85600) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a 429 then an answer: one turn, answered, the retry recorded on it and the cost counted once
+ok 10 - a 429 then an answer: one turn, answered, the retry recorded on it and the cost counted once
+  ---
+  duration_ms: 39.781083
+  type: 'test'
+  ...
+# Subtest: Stop during retry backoff dispatches no second call and keeps the failed attempt
+ok 11 - Stop during retry backoff dispatches no second call and keeps the failed attempt
+  ---
+  duration_ms: 0.886875
+  type: 'test'
+  ...
+# Subtest: 503 five times: five attempts, then the run fails with the last reason and four retries recorded
+ok 12 - 503 five times: five attempts, then the run fails with the last reason and four retries recorded
+  ---
+  duration_ms: 1.741417
+  type: 'test'
+  ...
+# Subtest: 400, 401, 403 and 404 are never retried
+ok 13 - 400, 401, 403 and 404 are never retried
+  ---
+  duration_ms: 2.266917
+  type: 'test'
+  ...
+# Subtest: a network error before any response is retried
+ok 14 - a network error before any response is retried
+  ---
+  duration_ms: 0.847166
+  type: 'test'
+  ...
+# Subtest: an overloaded error object in a 200 body is retried, its reported usage counted with the answer
+ok 15 - an overloaded error object in a 200 body is retried, its reported usage counted with the answer
+  ---
+  duration_ms: 2.999166
+  type: 'test'
+  ...
+# Subtest: DeepSeek's overload answers are retried: a 503 service_unavailable_error and a 200 cut before its JSON ends
+ok 16 - DeepSeek's overload answers are retried: a 503 service_unavailable_error and a 200 cut before its JSON ends
+  ---
+  duration_ms: 2.537709
+  type: 'test'
+  ...
+# Subtest: a 200 that is never JSON fails after the attempts with the head of its body
+ok 17 - a 200 that is never JSON fails after the attempts with the head of its body
+  ---
+  duration_ms: 3.139583
+  type: 'test'
+  ...
+# Subtest: an error object in a 200 body with a 400 code, or a content filter answer, is not retried
+ok 18 - an error object in a 200 body with a 400 code, or a content filter answer, is not retried
+  ---
+  duration_ms: 2.251209
+  type: 'test'
+  ...
+# Subtest: Retry-After is honoured: the next attempt goes when it says, not before (fake timers)
+ok 19 - Retry-After is honoured: the next attempt goes when it says, not before (fake timers)
+  ---
+  duration_ms: 54.5665
+  type: 'test'
+  ...
+# Subtest: a Retry-After longer than the longest wait is capped at 60 s
+ok 20 - a Retry-After longer than the longest wait is capped at 60 s
+  ---
+  duration_ms: 0.746
+  type: 'test'
+  ...
+# Subtest: the bench Stop watcher aborts the active signal when the durable Stop flag is set
+ok 21 - the bench Stop watcher aborts the active signal when the durable Stop flag is set
+  ---
+  duration_ms: 4.711792
+  type: 'test'
+  ...
+# Subtest: a run whose calls already cost more than its budget stops before the next call
+ok 22 - a run whose calls already cost more than its budget stops before the next call
+  ---
+  duration_ms: 17674.997667
+  type: 'test'
+  ...
+# Subtest: a kit part read again is answered with where it was sent, and a read made only of repeats ends the reading
+ok 23 - a kit part read again is answered with where it was sent, and a read made only of repeats ends the reading
+  ---
+  duration_ms: 736.880042
+  type: 'test'
+  ...
+# Subtest: a run on DeepSeek's own API records the provider balance before and after, and status shows the difference
+ok 24 - a run on DeepSeek's own API records the provider balance before and after, and status shows the difference
+  ---
+  duration_ms: 723.400292
+  type: 'test'
+  ...
+# Subtest: a balance read that fails is recorded and never stops the run; a run on another provider reads none
+ok 25 - a balance read that fails is recorded and never stops the run; a run on another provider reads none
+  ---
+  duration_ms: 1736.838125
+  type: 'test'
+  ...
+# Subtest: Harbour Sport Club: services, who it is for, team and story read from its own words
+ok 26 - Harbour Sport Club: services, who it is for, team and story read from its own words
+  ---
+  duration_ms: 17873.574291
+  type: 'test'
+  ...
+# Subtest: without a model the rules read the bio and posts, and coverage says the model did not run
+ok 27 - without a model the rules read the bio and posts, and coverage says the model did not run
+  ---
+  duration_ms: 1662.382375
+  type: 'test'
+  ...
+# Subtest: the real template post: its placeholder line is cut, the rest of the post is kept (item 8)
+ok 28 - the real template post: its placeholder line is cut, the rest of the post is kept (item 8)
+  ---
+  duration_ms: 169.520541
+  type: 'test'
+  ...
+# Subtest: two key message saves in a row: the second does not undo the first removal or label
+ok 29 - two key message saves in a row: the second does not undo the first removal or label
+  ---
+  duration_ms: 2946.323041
+  type: 'test'
+  ...
+# Subtest: Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both
+ok 30 - Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both
+  ---
+  duration_ms: 747.152708
+  type: 'test'
+  ...
+# Subtest: a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer (\#251)
+ok 31 - a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer (\#251)
+  ---
+  duration_ms: 37.219083
+  type: 'test'
+  ...
+# Subtest: a reading without reasoning sends thinking off and a 4k answer budget, and still reads the business (\#251)
+ok 32 - a reading without reasoning sends thinking off and a 4k answer budget, and still reads the business (\#251)
+  ---
+  duration_ms: 315.178375
+  type: 'test'
+  ...
+# Subtest: a Research again from scratch reads the business again although its texts and version are unchanged
+ok 33 - a Research again from scratch reads the business again although its texts and version are unchanged
+  ---
+  duration_ms: 494.912375
+  type: 'test'
+  ...
+# Subtest: the final write report keeps each rejected picture and the looker fault names
+ok 34 - the final write report keeps each rejected picture and the looker fault names
+  ---
+  duration_ms: 1.085958
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25141.847375

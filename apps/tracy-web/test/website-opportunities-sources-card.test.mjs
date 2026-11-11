@@ -83,7 +83,7 @@ test('a source the place itself has nothing at is settled for thirty days', () =
   }
 })
 
-test('a source our setup failed on is tried again on the next research after a day', () => {
+test('transient setup failures are tried again on the next research after a day', () => {
   for (const [status, reason] of [
     ['blocked', 'credential_invalid'],
     ['blocked', 'credential_missing'],
@@ -91,7 +91,6 @@ test('a source our setup failed on is tried again on the next research after a d
     ['failed', 'provider_error'],
     ['partial', 'timeout'],
     ['failed', 'error'],
-    ['failed', 'HTTP_402'],
     ['skipped', 'switched_off']
   ]) {
     const row = { source: 'facebook', status, reason, attempted_at: at(SOURCE_RETRY_MS + 1) }
@@ -116,7 +115,7 @@ test('a refresh that found the page gone keeps the old data and waits thirty day
   assert.equal(sourceDue(key, NOW), true)
 })
 
-test('Tripadvisor not finding the place at this version waits thirty days, a provider failure a day', () => {
+test('Tripadvisor waits thirty days when absent and payment failures require a later setup repair', () => {
   const notFound = {
     source: 'tripadvisor',
     status: 'skipped',
@@ -131,7 +130,9 @@ test('Tripadvisor not finding the place at this version waits thirty days, a pro
     reason: 'HTTP_402',
     last_error: { status: 'failed', reason: 'HTTP_402', version: TRIPADVISOR_VERSION }
   }
-  assert.equal(sourceDue(paid, NOW, TRIPADVISOR_VERSION), true)
+  assert.equal(sourceDue(paid, NOW, TRIPADVISOR_VERSION), false)
+  assert.equal(sourceDue(paid, NOW + SOURCE_MAX_AGE_MS, TRIPADVISOR_VERSION), false)
+  assert.equal(sourceDue(paid, NOW, TRIPADVISOR_VERSION, { setupUpdatedAt: at(SOURCE_RETRY_MS) }), true)
 })
 
 test('the client lists the same sources and the same place reasons as the server', async () => {

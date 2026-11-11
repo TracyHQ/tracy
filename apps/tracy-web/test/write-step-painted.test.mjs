@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
+import { backdropOf } from '../src/lib/picture-paint/cutout-backdrop.js'
 import { runSiteCheck } from '../src/site-check/site-check.js'
 import { brandFile } from './_write-step-brand.mjs'
 import { CONTRACT } from './_write-step-run.mjs'
@@ -280,6 +281,66 @@ test('a role the brand file does not hold is never guessed: with no module the b
   assert.equal(backdrop.status, 'failed')
   assert.match(backdrop.reason, /surface/)
   assert.equal(line('block-3.icon').status, 'written', 'the accent is in the brand file')
+})
+
+test('an accent-only brand redraws a measured template backdrop in its actual neutral, without a colour module', async () => {
+  const original = await sharp(
+    Buffer.from(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="45" fill="#25252b"/></svg>'
+    )
+  )
+    .png()
+    .toBuffer()
+  const measured = await backdropOf(original, { accent: ACCENT })
+  assert.ok(measured)
+  const brand = brandFile()
+  brand.colours = { decision: 'kept-template', accent: ACCENT, module: null }
+  const { line, sent, bytesAt, figure } = await runPainted({
+    brand,
+    contentMap: { slots: [{ key: 'module-5.figure', type: 'image', sample: 'images/template-figure.png' }] },
+    templateFiles: async ({ file }) => (file === 'images/template-figure.png' ? original : null),
+    templateAccent: ACCENT,
+    items: (f) => [
+      backdropItem('block-5.figure', f, {
+        paint: measured.paint,
+        draw: { backdrop: measured.shape, figure: f.entry.sitePath }
+      })
+    ]
+  })
+  assert.notEqual(sent['module-5.figure'], figure.entry.sitePath)
+  assert.ok((await coloursIn(bytesAt(sent['module-5.figure']))).has('#25252b'))
+  assert.equal(line('block-5.figure').status, 'written')
+  assert.deepEqual(line('block-5.figure').painted.templateColour, {
+    file: 'images/template-figure.png',
+    role: 'surface',
+    colour: '#25252b'
+  })
+})
+
+test('a changed or unreadable template backdrop never supplies an invented surface colour', async () => {
+  const original = await sharp(
+    Buffer.from(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="45" fill="#25252b"/></svg>'
+    )
+  )
+    .png()
+    .toBuffer()
+  for (const bytes of [original, null, Buffer.from('not a picture')]) {
+    const brand = brandFile()
+    brand.colours = { decision: 'kept-template', accent: ACCENT, module: null }
+    const { line, sent, figure } = await runPainted({
+      brand,
+      contentMap: {
+        slots: [{ key: 'module-5.figure', type: 'image', sample: 'images/template-figure.png' }]
+      },
+      templateFiles: async () => bytes,
+      templateAccent: ACCENT,
+      items: (f) => [backdropItem('block-5.figure', f)]
+    })
+    assert.equal(sent['module-5.figure'], figure.entry.sitePath)
+    assert.equal(line('block-5.figure.backdrop').status, 'failed')
+    assert.match(line('block-5.figure.backdrop').reason, /surface/)
+  }
 })
 
 test('a brand file with no accent fails the painted frames in words and writes the rest', async () => {

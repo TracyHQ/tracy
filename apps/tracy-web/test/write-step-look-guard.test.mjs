@@ -733,3 +733,17 @@ test('words over a cell of social icons only, for a person with no social accoun
       .some((f) => /inline style/.test(f.reason))
   )
 })
+
+test('the phone theme correction is exact: arbitrary display changes remain refused', async () => {
+  const held = '<p>Existing head module</p>'
+  const options = { answers: headAnswers(held), reads: [headRead] }
+  const block = headBlock({ png32: 'images/b/32.png' })
+  await green(...headWrite(withBlock(held, block)), options)
+  await red(
+    [
+      ...headWrite(withBlock(held, block.replace('display:none!important', 'display:flex!important'))),
+      options
+    ],
+    { step: 'brand', names: 'display' }
+  )
+})

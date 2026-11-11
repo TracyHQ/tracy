@@ -63,13 +63,17 @@
           "type": "object",
           "required": ["kind"],
           "properties": {
-            "kind": { "enum": ["bio", "post", "review", "owner"] },
+            "kind": { "enum": ["bio", "post", "review", "owner", "website"] },
             "url": { "type": "string" },
             "source": { "type": "string" },
             "author": { "type": "string" }
           }
         },
         "kind": { "type": "string", "description": "services only: service, class, membership or package." },
+        "price": {
+          "type": "string",
+          "description": "services only: an exact quoted price and its billing period."
+        },
         "role": { "type": "string", "description": "team only: the role a text gives the person." },
         "photoAssetId": {
           "type": "string",
@@ -280,7 +284,7 @@
           "field": {
             "type": "string",
             "minLength": 1,
-            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, googleRating, rating, socialFigures, whatsapp, website, booking, socials, otherPhones, facility, activity or atmosphere."
+            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, posts, googleRating, rating, socialFigures, whatsapp, website, booking, socials, otherPhones, facility, activity or atmosphere."
           },
           "value": {},
           "evidence": {
@@ -936,6 +940,10 @@
           "isBlurry": {
             "type": ["boolean", "null"],
             "description": "The vision model found the photo out of focus or smeared by motion: a second opinion only, the measured sharpness of each cut decides. Null when no model answered (unknown, not bad)."
+          },
+          "textPresence": {
+            "enum": ["present", "absent"],
+            "description": "Whether any words, logo or watermark are visible, including signs within the scene. Preserves the vision label separately from the overlay-only hasTextOrWatermark answer; omitted when unknown."
           },
           "hasTextOrWatermark": {
             "type": ["boolean", "null"],

@@ -1,0 +1,3 @@
+- **Joomla push settlement copies live-generated versions before remembering their numbers and repairs older phantom version pairs** — Codex · #541 · `fix/david-issue-completion` · 2026-11-11
+  **Affects:** Joomla Sync to live and Sync from live (#550); rebuild the tracy-host image. Revision 2 forces one fresh merge for older maps, preserving another article's history instead of reporting a false delete conflict.
+  **Why / Measured:** real MariaDB reproduced both the absent version row after settlement and the false conflict after a later unrelated save. The regression covers the version row, counter, later save, live deletion and historical-pair repair.

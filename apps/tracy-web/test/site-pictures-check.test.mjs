@@ -1,4 +1,4 @@
-// Tests for the picture check site-pictures-check/1 (ADR 0043): one passing and one failing invented case per rule.
+// Tests for the picture check site-pictures-check/4 (ADR 0043): one passing and one failing invented case per rule.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
@@ -6,6 +6,8 @@ import {
   checkPictures,
   failureListText
 } from '../src/site-pictures/picture-check/check-pictures.js'
+import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
+import { rungsFor } from '../src/site-pictures/ladder-rungs.js'
 import { breaks, entryOf, inputs, ruleOf } from './_site-pictures-check.mjs'
 
 const ALL = ['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10', 'P11', 'P12', 'P13']
@@ -13,8 +15,8 @@ const ALL = ['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10
 test('the passing manifest passes every rule and the version is frozen', () => {
   const r = checkPictures(inputs())
   // test-quality: contract ADR 0043 freezes the checker name; a rule change must bump it on purpose
-  assert.equal(CHECKER_VERSION, 'site-pictures-check/1')
-  assert.equal(r.meta.checker, 'site-pictures-check/1')
+  assert.equal(CHECKER_VERSION, 'site-pictures-check/4')
+  assert.equal(r.meta.checker, 'site-pictures-check/4')
   assert.deepEqual(
     r.rules.map((x) => `${x.id}:${x.status}`),
     ALL.map((id) => `${id}:pass`)
@@ -229,7 +231,7 @@ test('P07 fails a drawn or extended picture in an any-real frame', () => {
       delete e.asset
       e.enlarge = null
     },
-    /any real photo, the source is drawn/
+    /any real photo or documents the business, the source is drawn/
   )
   breaks(
     'P07',
@@ -489,4 +491,40 @@ test('P05 keeps a low quality owner photo to small frames, even with a passed sh
   const r = ruleOf(large, 'P05')
   assert.equal(r.status, 'fail')
   assert.match(r.failures[0].detail, /frame of 640 x 160; it fits only frames up to 600 px/)
+})
+
+test('P09 rejects visible scene lettering despite the overlay-only direct answer being false', () => {
+  breaks(
+    'P09',
+    (i) => {
+      const e = entryOf(i, 'block-2.0')
+      const a = i.brief.assets.find((a) => a.id === e.asset)
+      a.hasTextOrWatermark = false
+      a.hasTextOverlay = false
+      a.textPresence = 'present'
+    },
+    /carries lettering or a watermark/
+  )
+})
+
+test('an observed place or owner-post photo stays documentary even when its wish says specific', () => {
+  for (const fact of [
+    { id: 'document', field: 'facility', sourceKind: 'observed', value: 'A bag room' },
+    { id: 'document', field: 'posts', value: { kind: 'post', text: 'Our event' } }
+  ]) {
+    const i = inputs()
+    i.brief.facts.push(fact)
+    const wish = i.plan.pages
+      .flatMap((p) => p.blocks ?? [])
+      .flatMap((b) => b.pictures ?? [])
+      .find((w) => w.frame === 'block-2.0')
+    wish.factIds = ['document']
+    const idx = indexInputs(i)
+    assert.ok(idx.documentaryFrame('block-2.0'))
+    assert.ok(!rungsFor(idx, 'block-2.0').some((r) => ['draw', 'redraw', 'redraw-alt'].includes(r)))
+    entryOf(i, 'block-2.0').source = 'drawn'
+    entryOf(i, 'block-2.0').asset = null
+    assert.equal(ruleOf(i, 'P07').status, 'fail')
+    assert.equal(idx.documentaryFrame('block-2.1'), false, 'a generic cutout remains an illustration')
+  }
 })

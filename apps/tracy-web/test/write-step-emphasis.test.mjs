@@ -101,6 +101,74 @@ test('the visible words are escaped and only the emphasis tags are markup', asyn
   assert.equal(results.get('module-2.1').stored, 'Fish &amp; chips<br/><span>Tom &amp; Jo</span>')
 })
 
+test('paragraph-only HTML params normalize through the guard while native ACM paragraphs keep their codes', async () => {
+  const sent = '((p))Fish & chips((/p))\n((p))Training < racing((/p))'
+  const slot = { ...HTML_SLOT, jsonPath: ['top-desc'], xpath: '/html/body/div/text()' }
+  const map = { slots: [slot, ACM_SLOT] }
+  const site = rowsDoor({
+    'module-2': { id: 2, params: params({ 'top-desc': sent.replace('&', '&amp;').replace('<', '&lt;') }) }
+  })
+  const guard = lookGuard({ kit: KIT().doc, contentMap: map })
+  const result = await runEmphasisStage({
+    door: guard.door(site.door),
+    siteKey: 'site-a',
+    contentMap: map,
+    written: [slot.key, ACM_SLOT.key],
+    ordered: { [slot.key]: sent, [ACM_SLOT.key]: sent }
+  })
+  const stored = '<p>Fish &amp; chips</p>\n<p>Training &lt; racing</p>'
+  assert.equal(JSON.parse(site.rows['module-2'].params)['top-desc'], stored)
+  assert.equal(result.get(slot.key).stored, stored)
+  assert.deepEqual(result.get(ACM_SLOT.key), { storage: 'codes' })
+  assert.deepEqual(guard.findings(), [])
+  assert.equal(site.calls.filter((c) => c.action === 'content.update').length, 1)
+  const replay = await runEmphasisStage({
+    door: guard.door(site.door),
+    siteKey: 'site-a',
+    contentMap: map,
+    written: [slot.key],
+    ordered: { [slot.key]: sent }
+  })
+  assert.equal(replay.get(slot.key).stored, stored)
+  assert.equal(replay.get(slot.key).blocking, undefined)
+  assert.equal(site.calls.filter((c) => c.action === 'content.update').length, 1)
+})
+
+test('HTML list normalization preserves its template class and the rest of the record', async () => {
+  const sent =
+    '((p))Start here((/p))\n((ul class="list-highlight"))\n((li))Move((/li))\n((li))Rest((/li))\n((/ul))'
+  const site = rowsDoor({ 'module-2': { id: 2, params: params({ 'main-section': sent }) } })
+  const guard = lookGuard({ kit: KIT().doc, contentMap: CONTENT_MAP })
+  await runEmphasisStage({
+    door: guard.door(site.door),
+    siteKey: 'site-a',
+    contentMap: CONTENT_MAP,
+    written: [HTML_SLOT.key],
+    ordered: { [HTML_SLOT.key]: sent }
+  })
+  assert.equal(
+    JSON.parse(site.rows['module-2'].params)['main-section'],
+    '<p>Start here</p>\n<ul class="list-highlight">\n<li>Move</li>\n<li>Rest</li>\n</ul>'
+  )
+  assert.equal(JSON.parse(site.rows['module-2'].params)['bg-color'], 'normal')
+  assert.deepEqual(guard.findings(), [])
+})
+
+test('unsupported paragraph attributes remain blocked and never become a site update', async () => {
+  const sent = '((p class="lead" onclick="run"))Start here((/p))'
+  const site = rowsDoor({ 'module-2': { id: 2, params: params({ 'main-section': sent }) } })
+  const result = await runEmphasisStage({
+    door: site.door,
+    siteKey: 'site-a',
+    contentMap: CONTENT_MAP,
+    written: [HTML_SLOT.key],
+    ordered: { [HTML_SLOT.key]: sent }
+  })
+  assert.equal(result.get(HTML_SLOT.key).blocking, true)
+  assert.match(result.get(HTML_SLOT.key).warning, /unsupported attributes/)
+  assert.equal(site.calls.filter((c) => c.action === 'content.update').length, 0)
+})
+
 test('a slot the content map says nothing of keeps its codes and warns; words not found once are not guessed', async () => {
   const site = rowsDoor({
     'module-2': { id: 2, params: params({ 'main-section': 'Something the owner wrote' }) }

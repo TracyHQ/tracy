@@ -1,0 +1,49 @@
+{
+  "id": "REG-PR-541-wo-full-backup-preflight",
+  "kind": "fix",
+  "title": "WO chains require host-proved full recovery points before retry spend and fresh-base readiness",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Request an existing failed WO retry with no verified full backup and inspect model calls and brief state.",
+    "Finish fresh provisioning with missing full backup while model preparation is pending; compare a healthy parallel build.",
+    "Run the public accepted Retry worker with the exact backup refusal and inspect its terminal action code."
+  ],
+  "expect": [
+    "A known bad retry makes zero paid preparation calls and preserves the failed brief.",
+    "A fresh unsafe base aborts preparation and never applies; healthy model preparation remains parallel with provisioning.",
+    "Only host-proved full metadata passes, and the public retry ends once with SITE_RECOVERY_POINT_UNAVAILABLE.",
+    "Cancellation while a bench start is pending cancels its eventual queued run before polling or export.",
+    "Brand preparation cancelled before the first round makes no paid model call and opens no round."
+  ],
+  "selectors": {
+    "api": "/api/sites/:key/backups"
+  },
+  "fence": "optional chain base-validation hook before retry restart and base readiness, using existing verified backup door",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-full-backup-preflight.test.mjs",
+      "apps/tracy-web/test/wo-step-chain-handoff.test.mjs",
+      "apps/tracy-web/test/step-chain-bench-cancellation.test.mjs",
+      "apps/tracy-web/test/brand-bench-failures.test.mjs"
+    ],
+    "tests": [
+      "an existing failed WO retry refuses a missing full baseline before any paid preparation",
+      "fresh WO base failure aborts parallel preparation and never becomes ready or applies",
+      "healthy fresh WO keeps base and model preparation parallel and applies after full-baseline validation",
+      "WO base validation reads host-proved full backup metadata and refuses file-only or unavailable points",
+      "a public chain Retry with no full recovery point ends with its exact refusal without restarting the writer",
+      "a bench run created after chain cancellation is cancelled before polling or export",
+      "a chain cancelled before bench creation never queues a run",
+      "a cancel asked while brand preparation is pending prevents the first paid call"
+    ],
+    "needs": ["postgres"]
+  }
+}

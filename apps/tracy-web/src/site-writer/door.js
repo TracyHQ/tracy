@@ -1,7 +1,7 @@
 // The site writer bench's model door (#329): the credential a run spends, or a refusal with its reason. Like the
 // planner's door it never falls back to the environment: an unset, disabled or unreadable door stops the run and says
 // why, because a bench run on a model nobody chose would not measure the prompt it claims to measure. The writer
-// reads everything from its first message, so it needs neither tool calls nor pictures.
+// keeps historical text-only input; a frozen WO visual policy requires tool calls and actual pictures.
 import { lookupDoor } from '../lib/llm-store.js'
 
 export const SITE_WRITER_DOOR = 'siteWriter'
@@ -35,7 +35,7 @@ const REFUSALS = {
  *   | { ok: false, code: string, reason: string }
  * >} `snapshot` is what a run stores: which provider, model and assignment revision it used, never the key.
  */
-export async function siteWriterDoor({ pool, secret }) {
+export async function siteWriterDoor({ pool, secret, requireImages = false }) {
   const found = await lookupDoor(pool, SITE_WRITER_DOOR, secret)
   if (found.state !== 'ok') {
     const [code, reason] = REFUSALS[found.state] ?? REFUSALS.unreadable
@@ -48,6 +48,15 @@ export async function siteWriterDoor({ pool, secret }) {
       code: 'SITE_WRITER_DOOR_UNSET',
       reason: `The "Site writer" door names no model. Set it in ${WHERE} (the writer runs on ${DEFAULT_NAMED}).`
     }
+  if (
+    requireImages &&
+    (found.snapshot.metadata?.vision === false || found.snapshot.metadata?.tools === false)
+  )
+    return {
+      ok: false,
+      code: 'SITE_WRITER_MODEL_LACKS',
+      reason: 'This writer run requires a model that reads pictures and calls tools.'
+    }
   return {
     ok: true,
     door: { providerId, baseUrl, apiKey, model },
@@ -55,7 +64,7 @@ export async function siteWriterDoor({ pool, secret }) {
       door: SITE_WRITER_DOOR,
       model,
       endpointHost: new URL(baseUrl).hostname,
-      images: false,
+      images: requireImages,
       ...found.snapshot
     }
   }

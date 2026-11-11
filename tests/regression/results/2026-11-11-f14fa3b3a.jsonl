@@ -1,0 +1,2 @@
+{"id":"REG-PR-541-post-fact-routing","verdict":"PASS","commit":"f14fa3b3a32bbce2626a6ad3642223f03b5db751","ran_at":"2026-11-11T09:14:40.517Z","evidence":"tests/regression/evidence/assigned-non-wo/final-integration/2026-11-11-f14fa3b3a/REG-PR-541-post-fact-routing.log"}
+{"id":"REG-PR-541-wo-alt-repair-capability","verdict":"PASS","commit":"f14fa3b3a32bbce2626a6ad3642223f03b5db751","ran_at":"2026-11-11T09:14:40.899Z","evidence":"tests/regression/evidence/assigned-non-wo/final-integration/2026-11-11-f14fa3b3a/REG-PR-541-wo-alt-repair-capability.log"}

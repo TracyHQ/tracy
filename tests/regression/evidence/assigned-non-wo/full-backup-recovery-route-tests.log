@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: chain recovery uses the real owner backup and restore routes with a verified full point
+ok 1 - chain recovery uses the real owner backup and restore routes with a verified full point
+  ---
+  duration_ms: 3643.455708
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4740.772208

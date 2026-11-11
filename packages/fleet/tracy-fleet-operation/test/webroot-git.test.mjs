@@ -24,6 +24,12 @@ import { dirname, join } from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { pathWithFlock } from './flock-shim.mjs'
+import {
+  checkOf,
+  failure,
+  fakeAgent,
+  stepNine
+} from '../../../../apps/tracy-web/test/_write-step-nine-repair.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const scripts = join(here, '..', 'scripts')
@@ -1463,6 +1469,64 @@ test('moment preserves same-size edits when rebuilding a racy cache-tree outside
     assert.equal(made.committed, true)
     assert.deepEqual(made.paths, [rel])
     assert.equal(git(s.srv, s.webroot, 'show', `HEAD:${rel}`), after)
+  } finally {
+    s.dispose()
+  }
+})
+
+test('step 9 commits setup files before native repair so whole-turn Undo preserves personalization', async () => {
+  const s = stack()
+  const setup = 'setup-0f6c8a52-6a63-4f0c-9d3e-3b1f2f0d7a11:1'
+  const native = 'session-repair:1'
+  const personalized = join(s.webroot, 'wp-content', 'themes', 'tracy', 'brand.json')
+  let repairMoment
+  let opening
+  try {
+    run(GIT, s.srv, ['--op', 'ensure'])
+    run(GIT, s.srv, ['--op', 'seal-outside', '--turn', setup])
+    // Initial content is dirty under the setup hold, exactly as the real script leaves it.
+    writeFileSync(personalized, '{"name":"GymNation","logo":"owner-logo.png"}\n')
+    writeFileSync(JCE_OF(s), '<?php // personalized settings\n')
+    const agent = fakeAgent({
+      behave: () => ({ changes: [{ action: 'files', outcome: 'ok', via: 'files', files: 1 }] }),
+      undo: () => {
+        const undone = run(GIT, s.srv, ['--op', 'restore-undo', '--sha', repairMoment.sha])
+        return { ok: undone.ok }
+      }
+    })
+    const open = agent.open
+    agent.open = async () => {
+      opening = run(GIT, s.srv, ['--op', 'seal-outside', '--turn', native])
+      return open()
+    }
+    const prompt = agent.prompt
+    agent.prompt = async (input) => {
+      writeFileSync(STYLE_OF(s), 'body { color: white }\n')
+      repairMoment = run(GIT, s.srv, ['--op', 'moment', '--title', 'Fix contrast', '--turn', native])
+      return prompt(input)
+    }
+    const { result } = await stepNine({
+      agent,
+      checks: [
+        checkOf([failure('words-over-picture', '/', null, 'unreadable heading')]),
+        checkOf([failure('brand-accent', '/', null, 'new colour regression')]),
+        checkOf([failure('words-over-picture', '/', null, 'unreadable heading')])
+      ],
+      input: {
+        beforeRepair: async () => {
+          const committed = run(GIT, s.srv, ['--op', 'moment', '--title', 'Tracy setup', '--turn', setup])
+          assert.equal(committed.files, 2)
+        }
+      }
+    })
+    assert.equal(result.repair.undone.length, 1)
+    assert.equal(result.repair.undone[0].ok, true)
+    assert.equal(existsSync(personalized), true, 'native Undo must retain the initial personalized asset')
+    assert.equal(readFileSync(personalized, 'utf8'), '{"name":"GymNation","logo":"owner-logo.png"}\n')
+    assert.equal(opening.skipped, null, 'the setup hold must be closed before native admission')
+    assert.deepEqual(repairMoment.paths, ['wp-content/themes/tracy/style.css'])
+    assert.equal(readFileSync(JCE_OF(s), 'utf8'), '<?php // personalized settings\n')
+    assert.equal(readFileSync(STYLE_OF(s), 'utf8'), 'body { margin: 0 }\n')
   } finally {
     s.dispose()
   }

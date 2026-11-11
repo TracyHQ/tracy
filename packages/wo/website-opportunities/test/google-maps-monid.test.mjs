@@ -328,7 +328,7 @@ test('the last try reads as a source row: due when never tried, fresh for 30 day
   )
   const failed = {
     collected: {
-      monid: { attemptedAt: new Date(now - 3600_000).toISOString(), lastError: { reason: 'HTTP_401' } }
+      monid: { attemptedAt: new Date(now - 3600_000).toISOString(), lastError: { reason: 'HTTP_502' } }
     }
   }
   assert.equal(sourceDue(monidAttemptOf(failed), now), false)

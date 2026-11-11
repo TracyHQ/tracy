@@ -90,6 +90,8 @@ function builds(pool, engines, extra = {}) {
     sleep: instant,
     pollMs: 1,
     recoverOnStart: false,
+    // The host boundary succeeds unless the scenario supplies its own opening-seal failure.
+    webroot: { open: async () => ({ held: true }), close: async () => ({ held: true }) },
     ...extra
   })
 }
@@ -526,6 +528,34 @@ test(
     assert.ok(Number.isFinite(site.minutes) && site.minutes >= 0)
   }
 )
+
+test('a retried chain base-site duration excludes the previous failed attempt', dbOpts, async () => {
+  const { pool } = db
+  const input = chainInput({ retryActionId: '1c6d56e2-9650-4ca9-bab7-f52fa86e837c' })
+  await pool.query(
+    `insert into site_brief (site_key, platform, quickstart, brief, state, created_at)
+     values ($1, 'joomla', $2, $3::jsonb, 'failed', now() - interval '2 hours')`,
+    [input.siteKey, input.quickstart, JSON.stringify(input.brief)]
+  )
+  const original = await briefOf(pool, input.siteKey)
+  const { steps } = fakeSteps({
+    kit: async () => {
+      const row = await briefOf(pool, input.siteKey)
+      await pool.query('update site_brief set timings = timings || $2::jsonb where site_key=$1', [
+        input.siteKey,
+        JSON.stringify({ provisionedAt: Number(row.timings.attemptStartedAt) + 60_000 })
+      ])
+      return { value: { ref: 'ja-boxing/j6/1.0.11' }, usd: 0 }
+    }
+  })
+  const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+  const b = builds(pool, { [STEP_CHAIN_WORKFLOW]: chain })
+  assert.equal((await b.start(input)).started, true)
+  assert.equal((await untilSettled(b, input.siteKey)).state, 'applied')
+  const row = await briefOf(pool, input.siteKey)
+  assert.equal(row.timings.chain.steps.find((s) => s.step === 'site').minutes, 1)
+  assert.equal(row.created_at.getTime(), original.created_at.getTime())
+})
 
 test(
   'the customer is told "working" until the chain has handed the site over, a soft failure included',

@@ -1,0 +1,26 @@
+{
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "id": "REG-PR-541-wo-hidden-list-compiler",
+  "kind": "fix",
+  "title": "Explicit hidden lists compile only into exact already-empty native children",
+  "steps": [
+    "Index a plan explicitly hiding a slots list and run the complete write step against matching empty native child values.",
+    "Repeat with missing, nonempty, null, wrong-type and absent current values, unresolved definitions and competing kept or writer content.",
+    "Read back the hidden child values after reopening one, and compare populated paid plans before and after indexing."
+  ],
+  "expect": [
+    "Exact declared children receive list provenance and live read-back, with no native child writes.",
+    "Any unresolved, mismatched or conflicting child blocks the whole list; nested concrete declarations compile and overlapping units do not.",
+    "Reopened children fail read-back. Existing paid plans and released contracts are not rewritten."
+  ],
+  "fence": "explicit plan list hides plus exact declared children and live native empty values; no activation or inferred removal capability",
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/write-step-hidden-lists.test.mjs"],
+    "needs": []
+  },
+  "selectors": {}
+}

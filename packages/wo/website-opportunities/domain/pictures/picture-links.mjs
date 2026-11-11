@@ -272,6 +272,7 @@ export function assetRelationsOf(m, { list = null, posts = [], businessName = nu
     peopleCount: seen && 'peopleCount' in seen ? seen.peopleCount : null,
     isGraphic,
     ...benchLabelsOf(raw),
+    ...(['present', 'absent'].includes(raw?.textPresence) ? { textPresence: raw.textPresence } : {}),
     isOwnPhoto: owner === 'owner' ? true : owner === 'customer' ? false : (seen?.isOwnPhoto ?? null)
   }
 }

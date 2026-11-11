@@ -359,7 +359,7 @@ export function ownSiteRoutes(app, h) {
       if (!own || job?.state !== 'paused')
         return { ...view, phase: 'research', job: job ? h.jobShape(job) : null }
       const resumes = Number(own.resumes ?? 0)
-      if (resumes >= OWN_SITE_RESUMES)
+      if (job.last_error?.code === 'RESEARCH_RECOVERY_LIMIT' || resumes >= OWN_SITE_RESUMES)
         return {
           ...view,
           phase: 'failed',
@@ -414,7 +414,7 @@ export function ownSiteRoutes(app, h) {
     const job = await researchJob(opp.id)
     if (job?.state === 'paused') {
       if (advance) return resumeResearch(accountId, opp, view)
-      if (Number(own.resumes ?? 0) >= OWN_SITE_RESUMES)
+      if (job.last_error?.code === 'RESEARCH_RECOVERY_LIMIT' || Number(own.resumes ?? 0) >= OWN_SITE_RESUMES)
         return {
           ...view,
           phase: 'failed',

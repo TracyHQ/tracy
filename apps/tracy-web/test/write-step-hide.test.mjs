@@ -126,7 +126,7 @@ for (const [address, xpath] of [
   ['a text node', '/html/body/div/text()[2]'],
   ['an attribute', '/html/body/div/img/@src']
 ]) {
-  test(`a slot addressed by ${address} is not sent, is failed naming #369, and the site check blames the contract`, async () => {
+  test(`a slot addressed by ${address} is not sent, is failed naming the contract capability gap, and the site check blames the contract`, async () => {
     const { report, site } = await runHide({
       site: { overSlot: (s) => (s.key === 'module-2.3' ? { xpath, canHide: undefined } : {}) }
     })
@@ -134,17 +134,24 @@ for (const [address, xpath] of [
     const line = lineOf(report, 'block-2.3')
     assert.equal(line.status, 'failed')
     assert.match(line.reason, /text node or attribute/)
-    assert.match(line.reason, /#369/)
+    assert.match(line.reason, /contract capability update required/)
     const check = await runSiteCheck({ door: site.door, report })
     assert.equal(check.status, 'red')
-    // Blamed once, on the template's contract (step 0, issue #369), and not on the write step through read-back.
+    // Blamed once, on the template's contract (step 0, contract capability gap), and not on the write step through read-back.
     const items = check.groups.find((g) => g.name === 'unaddressable-items').failures
-    assert.ok(items.some((f) => f.slot === 'block-2.3' && f.causingStep === 0 && /#369/.test(f.reason)))
+    assert.ok(
+      items.some(
+        (f) =>
+          f.slot === 'block-2.3' &&
+          f.causingStep === 0 &&
+          /contract capability update required/.test(f.reason)
+      )
+    )
     assert.ok(!failuresOf(check).some((f) => f.slot === 'block-2.3'))
   })
 }
 
-test('a slot the review does not list, a whole column, is failed with its reason and #369', async () => {
+test('a slot the review does not list, a whole column, is failed with its reason and contract capability gap', async () => {
   const { report, site } = await runHide({
     site: { overSlot: (s) => (s.key === 'module-2.3' ? { canHide: undefined, column: 'email_to' } : {}) }
   })
@@ -152,7 +159,7 @@ test('a slot the review does not list, a whole column, is failed with its reason
   const line = lineOf(report, 'block-2.3')
   assert.equal(line.status, 'failed')
   assert.match(line.reason, /email_to/)
-  assert.match(line.reason, /#369/)
+  assert.match(line.reason, /contract capability update required/)
 })
 
 test('a slot already empty on the site is hidden with no write', async () => {
@@ -186,7 +193,7 @@ test('a hidden icon goes by the slot its kit row names; one with no slot is fail
   assert.deepEqual([icon.status, icon.key], ['hidden', 'module-3.9'])
   const lost = lineOf(report, 'block-3.8.icon')
   assert.equal(lost.status, 'failed')
-  assert.match(lost.reason, /#369/)
+  assert.match(lost.reason, /contract capability update required/)
 })
 
 test('a slot another owner writes is not also emptied, and the line says so', async () => {

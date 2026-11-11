@@ -2,18 +2,19 @@
 // Alt text and post text that name one item link it without any model; a model's answer outside the list, or an unsure
 // one, is "general". The boxes, people count and graphic flag a model returns are held to their shape.
 // Fixtures are fictional: the Lantern Hill Racquet Club and its coaches do not exist.
-import { test } from 'node:test'
+
 import assert from 'node:assert/strict'
+import { test } from 'node:test'
 import {
-  GENERAL,
-  PHOTO_ROLES,
   assetRelationsOf,
   benchLabelsOf,
   closedListDigest,
   closedListOf,
   focusOfBox,
+  GENERAL,
   heldVisionLinks,
   ownershipOf,
+  PHOTO_ROLES,
   textLinksOf
 } from '../domain/pictures/picture-links.mjs'
 import { PLACE_CONTENT_ROLES_V3 } from '../domain/place-content-roles.mjs'
@@ -226,4 +227,15 @@ test('a brief asset carries the lettering and other-business labels the picture 
     hasTextOrWatermark: null,
     showsOtherBusiness: null
   })
+})
+
+test('brief assets preserve scene text presence without changing the legacy overlay-only risk answer', () => {
+  const result = assetRelationsOf({
+    id: 'scene',
+    kind: 'image',
+    vision: { textPresence: 'present', hasTextOverlay: false, hasTextOrWatermark: false }
+  })
+  assert.equal(result.textPresence, 'present')
+  assert.equal(result.hasTextOrWatermark, false)
+  assert.equal('textPresence' in assetRelationsOf({ id: 'unknown', kind: 'image', vision: {} }), false)
 })

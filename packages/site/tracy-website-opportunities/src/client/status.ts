@@ -100,6 +100,7 @@ export interface SourceRow {
 export function reasonKey(code: unknown): string | null {
   if (typeof code !== 'string' || code === '') return null
   const lower = code.toLowerCase()
+  if (lower === 'http_402') return 'reason.provider_payment_required'
   return REASONS.has(lower) ? `reason.${lower}` : 'reason.other'
 }
 
@@ -114,7 +115,13 @@ export function sourceRow(input: SourceInput): SourceRow {
     reasonKey: reasonKey(input.reason),
     fetched: typeof fetched === 'number' ? fetched : 0,
     total: typeof total === 'number' ? total : null,
-    retryable: input.shared === true && RETRYABLE_TONES.has(tone) && isShownSource(input.source)
+    retryable:
+      input.shared === true &&
+      RETRYABLE_TONES.has(tone) &&
+      isShownSource(input.source) &&
+      !/^(?:http_(?:401|402|403)|credential_missing|switched_off|feature_off|not_configured)$/i.test(
+        input.reason ?? ''
+      )
   }
 }
 

@@ -11,9 +11,11 @@ import { handOffToAgent } from './handoff-service.js'
 import { revisionForAction } from './revisions.js'
 import { createPictureLabelRuns } from './picture-label-runs.js'
 import { briefOf, CURRENT_BRIEF } from '../lib/site-brief-row.js'
+import { chainQaPassed } from '../lib/chain-bench-verdict.js'
 import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
 import { chainRunOpen, chainStepOf } from '../lib/wo-chain-builds.js'
 import { withHandoffLock } from './handoff.js'
+import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
 
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
@@ -180,13 +182,14 @@ export function createDemoRunner(deps) {
       }
       // The build whose site is made, and its step chain measurement: kept once the action completes (`onBuilt`).
       let builtSite = null
-      const finish = (state, error = null) => {
+      const finish = (state, error = null, readiness = null) => {
         const out = lease.finish({
           status: state,
           error,
           step,
           checked_at: new Date(now()),
-          updated_at: new Date(now())
+          updated_at: new Date(now()),
+          ...(readiness ? { selection: { ...action.selection, readiness } } : {})
         })
         // 🔒 After the action ended and outside its lease: the facts and the picture never hold or fail a build.
         if (state === 'completed' && builtSite && deps.onBuilt) {
@@ -217,7 +220,9 @@ export function createDemoRunner(deps) {
           if (!deps.clientDemo) return finish('failed', 'DEMO_CHAT_UNAVAILABLE')
           const result = await deps.clientDemo.reconcile(action)
           if (result?.step && result.step !== step) await mark(result.step)
-          return result?.terminal ? finish(result.state, result.error ?? null) : wait()
+          return result?.terminal
+            ? finish(result.state, result.error ?? null, result.readiness ?? null)
+            : wait()
         }
         const account = (await db.query('select email from account where id = $1', [action.account_id]))
           .rows[0]
@@ -281,7 +286,8 @@ export function createDemoRunner(deps) {
               error: answer.body.code ?? 'BUILD_UNREACHABLE',
               next_at: new Date(now() + POLL_MS)
             })
-          if (answer.status >= 300) return finish('failed', answer.body.code ?? 'BUILD_FAILED')
+          if (answer.status >= 300)
+            return finish('failed', answer.body.code ?? 'BUILD_FAILED', answer.body.readiness ?? null)
           build = answer.body.build
         }
         build = await settleBuild({ pool: db, request, origin, cookie, build })
@@ -303,22 +309,52 @@ export function createDemoRunner(deps) {
         // brief to send, no QA baseline to take and no fill to wait for. The action ends with the chain: the host
         // makes the base site long before the chain has written it (#516), so a brief row still running holds the
         // action open, and a finished one ends it.
-        // The row still reaches Outreach (it needs a passed QA state) and the demo keeps its retention clock, so the
-        // "send the link to the owner" step and the sweep treat it like any finished demo. The chain's own checks
-        // belong to the chain; a soft failure still hands the site over.
+        // Step 9 records `done` only after its final Site check and repair verification pass. Earlier model failures
+        // may still hand over a verified fallback, but a terminal frame alone never proves that the site passed.
         if (isStepChainBuild(build)) {
+          const authority = action.selection?.acceptedChainRetry
+          if (authority && chainRun?.timings?.woRetryActionId !== action.id) {
+            const current = await failedChainRetryBrief(db, build)
+            if (
+              !action.retry_of ||
+              authority.acceptedActionId !== action.id ||
+              authority.parentActionId !== action.retry_of ||
+              authority.accountId !== action.account_id ||
+              authority.buildId !== build.id ||
+              authority.siteKey !== build.site_key ||
+              authority.revisionId !== action.revision_id ||
+              current?.retry_hash !== authority.failedBriefHash
+            )
+              return finish('failed', 'CHAIN_RETRY_AUTHORITY_CHANGED')
+            if (!deps.resumeFill || !(await deps.resumeFill(build, account.email, action.id, authority)))
+              return finish('failed', 'CHAIN_RETRY_REFUSED')
+            return wait()
+          }
           if (chainRun && chainRunOpen(chainRun.state)) return wait()
+          const measured = chainRun?.timings?.chain
+          const write = Array.isArray(measured?.steps)
+            ? measured.steps.findLast((entry) => entry?.step === 'write')
+            : null
+          const passed = chainQaPassed(chainRun)
+          // Only bounded status fields cross into QA. Detailed findings remain on the original chain measurement.
+          const statusOf = (value, known) =>
+            value == null ? null : known.includes(value) ? value : 'unknown'
+          const qa = {
+            state: passed ? 'passed' : 'failed',
+            workflow: 'step-chain/1',
+            humanAccepted: false,
+            chain: {
+              briefState: statusOf(chainRun?.state, ['applied', 'failed', 'cancelled']),
+              ending: statusOf(measured?.ending, ['complete', 'soft-failure', 'running']),
+              writeOutcome: statusOf(write?.outcome, ['done', 'failed', 'stopped', 'skipped'])
+            }
+          }
           await db.query(
             `update wo_build set qa = coalesce(qa,'{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1 and account_id = $4`,
-            [
-              build.id,
-              JSON.stringify({ state: 'passed', workflow: 'step-chain/1', humanAccepted: false }),
-              new Date(now()),
-              action.account_id
-            ]
+            [build.id, JSON.stringify(qa), new Date(now()), action.account_id]
           )
           await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
-          return finish('completed')
+          return finish(passed ? 'completed' : 'failed', passed ? null : 'QA_NEEDS_REVIEW')
         }
         await startDemoClock(db, build.id, { now: now(), settings: (await runtime()).settings })
         // A manual quickstart-first build still owns its site's fill: the fill writes only while this
@@ -551,6 +587,7 @@ export function createDemoRunner(deps) {
         return wait()
       } catch (error) {
         if (error?.code === 'DEMO_LEASE_LOST') return
+        if (error?.code === 'SITE_RECOVERY_POINT_UNAVAILABLE') return finish('failed', error.code)
         if (action.attempts >= 3) return finish('failed', error?.code ?? 'DEMO_STEP_FAILED')
         return lease.finish({
           error: error?.code ?? 'DEMO_STEP_FAILED',

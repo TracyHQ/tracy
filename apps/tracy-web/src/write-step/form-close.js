@@ -12,6 +12,39 @@ const each = (value) => (Array.isArray(value) ? value : [])
 const CONTACT = /^contact-\d+$/
 const blocksOf = (page) => new Set(Object.values(page?.blocks ?? {}).flat())
 
+/** A closed form takes its submit label with it; another control sharing that label must still keep its words. */
+export function followClosedForms(lines, kit, forms) {
+  const closed = new Map(
+    forms.filter((line) => line.part === 'form' && line.status === 'hidden').map((line) => [line.slot, line])
+  )
+  const controls = new Map()
+  const formControls = new Set()
+  for (const block of each(kit?.blocks))
+    for (const link of each(block.links)) {
+      const receipt = link.opens?.kind === 'form' ? closed.get(block.id) : null
+      if (link.labelId) controls.set(link.labelId, [...(controls.get(link.labelId) ?? []), receipt])
+      if (link.id) {
+        controls.set(link.id, [...(controls.get(link.id) ?? []), receipt])
+        if (link.opens?.kind === 'form') formControls.add(link.id)
+      }
+    }
+  return lines.map((line) => {
+    if (line.status !== 'failed' || (line.part !== 'control-label' && !formControls.has(line.slot)))
+      return line
+    const receipts = controls.get(line.slot)
+    if (!receipts?.length || receipts.some((receipt) => !receipt)) return line
+    const receipt = receipts[0]
+    return {
+      ...line,
+      status: 'hidden',
+      reason: `the form ${receipt.slot} was closed, so its control and label left with it`,
+      ordered: receipt.ordered,
+      readFrom: receipt.readFrom,
+      readBack: null
+    }
+  })
+}
+
 /**
  * @param {{ door: { apply: Function }, siteKey: string, plan: object, kit: object, last?: object }} input
  * @returns {Promise<object[]>} one report line per hidden form of a contact page

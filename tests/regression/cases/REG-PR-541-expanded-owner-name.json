@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-expanded-owner-name",
+  "kind": "fix",
+  "title": "Expanded owner marks preserve the confirmed business name",
+  "pr": 541,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the specified mechanism suite against this checkout. All data in the suite is fictional."],
+  "expect": [
+    "Harrow Gym and Harrow Boxing Gym agree.",
+    "Different brands and substituted trade words still require owner confirmation."
+  ],
+  "selectors": {},
+  "fence": "Expanded owner marks preserve the confirmed business name",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-place-profile-own-marks.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

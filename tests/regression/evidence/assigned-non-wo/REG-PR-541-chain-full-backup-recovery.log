@@ -1,0 +1,196 @@
+$ node --test --test-reporter=tap apps/tracy-web/test/write-step-site-recovery.test.mjs apps/tracy-web/test/write-step-bench-door.test.mjs apps/tracy-web/test/backup-restore.test.mjs
+TAP version 13
+# Subtest: databaseOf: full only with the host’s proof and a hash; missing names why; none; an older host cannot tell
+ok 1 - databaseOf: full only with the host’s proof and a hash; missing names why; none; an older host cannot tell
+  ---
+  duration_ms: 1828.317416
+  type: 'test'
+  ...
+# Subtest: GET /backups: each backup says what it holds; a host that predates backups reads unknown-host
+ok 2 - GET /backups: each backup says what it holds; a host that predates backups reads unknown-host
+  ---
+  duration_ms: 448.48675
+  type: 'test'
+  ...
+# Subtest: GET /backups: says what THIS seat may restore, by the toolsets /restore refuses with (QA-I14)
+ok 3 - GET /backups: says what THIS seat may restore, by the toolsets /restore refuses with (QA-I14)
+  ---
+  duration_ms: 517.527916
+  type: 'test'
+  ...
+# Subtest: POST /backup: a viewer reads backups but makes none (ADR 0028)
+ok 4 - POST /backup: a viewer reads backups but makes none (ADR 0028)
+  ---
+  duration_ms: 53.592209
+  type: 'test'
+  ...
+# Subtest: POST /backup: the answer says what the new backup holds, and nothing of a ledger
+ok 5 - POST /backup: the answer says what the new backup holds, and nothing of a ledger
+  ---
+  duration_ms: 348.405958
+  type: 'test'
+  ...
+# Subtest: restore everything: the gate — site toolset, the word Restore, a FULL backup — before anything runs
+ok 6 - restore everything: the gate — site toolset, the word Restore, a FULL backup — before anything runs
+  ---
+  duration_ms: 655.160958
+  type: 'test'
+  ...
+# Subtest: restore everything: a renamed site is confirmed by the word Restore, never by its name or key (03/10/2026)
+ok 7 - restore everything: a renamed site is confirmed by the word Restore, never by its name or key (03/10/2026)
+  ---
+  duration_ms: 229.528167
+  type: 'test'
+  ...
+# Subtest: restore everything: pending row, the host job, verified database and commit → succeeded; audit; one event in Site changes
+ok 8 - restore everything: pending row, the host job, verified database and commit → succeeded; audit; one event in Site changes
+  ---
+  duration_ms: 651.953167
+  type: 'test'
+  ...
+# Subtest: restore everything with the files already the backup’s: the database moved, so it succeeds — no commit claimed, still one event
+ok 9 - restore everything with the files already the backup’s: the database moved, so it succeeds — no commit claimed, still one event
+  ---
+  duration_ms: 590.089791
+  type: 'test'
+  ...
+# Subtest: restore everything: what the host cannot prove is unknown; what it refuses is failed — and a retry answers the same
+ok 10 - restore everything: what the host cannot prove is unknown; what it refuses is failed — and a retry answers the same
+  ---
+  duration_ms: 1595.208375
+  type: 'test'
+  ...
+# Subtest: restore everything: the answer lost (timeout) is unknown, then settled from the job — never run twice
+ok 11 - restore everything: the answer lost (timeout) is unknown, then settled from the job — never run twice
+  ---
+  duration_ms: 462.617833
+  type: 'test'
+  ...
+# Subtest: undo and reset are unchanged: no confirmation word, no history read, the code toolset
+ok 12 - undo and reset are unchanged: no confirmation word, no history read, the code toolset
+  ---
+  duration_ms: 448.350125
+  type: 'test'
+  ...
+# Subtest: chain recovery uses the real owner backup and restore routes with a verified full point
+ok 13 - chain recovery uses the real owner backup and restore routes with a verified full point
+  ---
+  duration_ms: 859.097792
+  type: 'test'
+  ...
+# Subtest: create posts the customer request as the bench account and wants a 202 with a job id
+ok 14 - create posts the customer request as the bench account and wants a 202 with a job id
+  ---
+  duration_ms: 9.401583
+  type: 'test'
+  ...
+# Subtest: a quickstart no template card installs is refused before anything is asked of the server
+ok 15 - a quickstart no template card installs is refused before anything is asked of the server
+  ---
+  duration_ms: 0.222834
+  type: 'test'
+  ...
+# Subtest: a refused create keeps the code
+ok 16 - a refused create keeps the code
+  ---
+  duration_ms: 1.172583
+  type: 'test'
+  ...
+# Subtest: job states map to running, done and failed
+ok 17 - job states map to running, done and failed
+  ---
+  duration_ms: 1.155542
+  type: 'test'
+  ...
+# Subtest: inspect reads the contract through the Apply door
+ok 18 - inspect reads the contract through the Apply door
+  ---
+  duration_ms: 0.405083
+  type: 'test'
+  ...
+# Subtest: remove waits through a pending delete until the site is removed
+ok 19 - remove waits through a pending delete until the site is removed
+  ---
+  duration_ms: 0.96175
+  type: 'test'
+  ...
+# Subtest: apply hands back the plugin answer, per-slot errors included, and shapes a door refusal as a refusal
+ok 20 - apply hands back the plugin answer, per-slot errors included, and shapes a door refusal as a refusal
+  ---
+  duration_ms: 1.498
+  type: 'test'
+  ...
+# Subtest: recovery pins only a full backup and restores through one verified, idempotent customer operation
+ok 21 - recovery pins only a full backup and restores through one verified, idempotent customer operation
+  ---
+  duration_ms: 0.661458
+  type: 'test'
+  ...
+# Subtest: recovery refuses changed backup bytes and never restores a files-only point
+ok 22 - recovery refuses changed backup bytes and never restores a files-only point
+  ---
+  duration_ms: 0.503958
+  type: 'test'
+  ...
+# Subtest: a write that breaks a previously healthy site restores its pinned full backup and verifies the home
+ok 23 - a write that breaks a previously healthy site restores its pinned full backup and verifies the home
+  ---
+  duration_ms: 1.299
+  type: 'test'
+  ...
+# Subtest: ordinary content faults and transient reads never restore the template
+ok 24 - ordinary content faults and transient reads never restore the template
+  ---
+  duration_ms: 0.737958
+  type: 'test'
+  ...
+# Subtest: a missing full baseline refuses writes instead of advertising a files-only recovery point
+ok 25 - a missing full baseline refuses writes instead of advertising a files-only recovery point
+  ---
+  duration_ms: 0.198375
+  type: 'test'
+  ...
+# Subtest: an open repair writer prevents a full restore from racing its writes
+ok 26 - an open repair writer prevents a full restore from racing its writes
+  ---
+  duration_ms: 0.102125
+  type: 'test'
+  ...
+# Subtest: a pending restore or failed read-back is never reported as restored
+ok 27 - a pending restore or failed read-back is never reported as restored
+  ---
+  duration_ms: 0.173292
+  type: 'test'
+  ...
+# Subtest: home recovery probes distinguish confirmed CMS failure from network and access failures
+ok 28 - home recovery probes distinguish confirmed CMS failure from network and access failures
+  ---
+  duration_ms: 0.946417
+  type: 'test'
+  ...
+# Subtest: missing settlement evidence prevents a restore even when no open turn is listed
+ok 29 - missing settlement evidence prevents a restore even when no open turn is listed
+  ---
+  duration_ms: 0.144917
+  type: 'test'
+  ...
+# Subtest: step 9 proves native writer settlement from every prompted request record
+ok 30 - step 9 proves native writer settlement from every prompted request record
+  ---
+  duration_ms: 228.286667
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10169.783583
+
+--- stderr ---
+
+--- verdict ---
+PASS 

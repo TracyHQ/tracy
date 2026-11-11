@@ -1007,3 +1007,33 @@ test(
     assert.equal((await db.pool.query('select id from wo_demo_action')).rowCount, 0)
   }
 )
+
+test('a readiness refusal cannot be retried or charged against the same frozen revision', opts, async () => {
+  const { account, ids } = await fixture(1)
+  const initial = await acceptDemoActions(db.pool, {
+    accountId: account,
+    entries: [entry(ids[0], 'blocked-brief')]
+  })
+  const id = initial.body.actions[0].id
+  const readiness = {
+    verdict: 'block',
+    next: 'research-again',
+    checks: ['own-usable-photos'],
+    ownerQuestions: []
+  }
+  await db.pool.query(
+    "update wo_demo_action set status='failed', error='BRIEF_NOT_READY', selection=$2 where id=$1",
+    [id, { readiness }]
+  )
+  const before = await readDemoUsage(db.pool, account)
+  const retry = await acceptDemoActions(db.pool, {
+    accountId: account,
+    entries: [{ ...entry(ids[0], 'blocked-retry'), retryOf: id }]
+  })
+  assert.equal(retry.status, 409)
+  assert.equal(retry.body.code, 'BRIEF_NOT_READY')
+  assert.deepEqual(retry.body.readiness, readiness)
+  assert.deepEqual(await readDemoUsage(db.pool, account), before)
+  assert.equal((await db.pool.query('select id from wo_demo_action')).rowCount, 1)
+  assert.deepEqual((await demoActionOf(db.pool, account, id)).readiness, readiness)
+})

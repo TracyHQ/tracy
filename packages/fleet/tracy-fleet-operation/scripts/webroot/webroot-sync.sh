@@ -1189,8 +1189,8 @@ remember_read() { # theirs_commit
   done
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
-  # This merge pruned stale mappings and repaired the counters (#307, #536).
-  printf '1\n' > "$SYNC_DIR/id-map-revision"
+  # This merge repaired stale record/version pairs and counters (#307, #536, #550).
+  printf '2\n' > "$SYNC_DIR/id-map-revision"
   remember_kept
   # The files' sha1s as this read found them: the next read takes only what moved since.
   if [[ -f "$DIR/live/manifest.json" ]]; then
@@ -1615,7 +1615,7 @@ read_live() {
     fi
     # Older syncs could leave a deleted record in the map. Read once without the
     # fingerprint shortcut so even an unmoved live site can repair that map (#307).
-    if [[ -f "$ID_MAP" && ! -f "$SYNC_DIR/id-map-revision" ]]; then
+    if [[ -f "$ID_MAP" && "$(cat "$SYNC_DIR/id-map-revision" 2>/dev/null || true)" != 2 ]]; then
       fingerprint="" base_dump=""
     fi
     if [[ -z "$manifest" ]] && first_read_manifest; then manifest="$DIR/first-manifest.json"; fi

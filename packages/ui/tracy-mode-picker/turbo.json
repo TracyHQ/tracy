@@ -21,6 +21,7 @@
         "!$TURBO_ROOT$/**/__pycache__/**",
         "!$TURBO_ROOT$/**/.DS_Store",
         "!$TURBO_ROOT$/tests/regression/.runs/**",
+        "!$TURBO_ROOT$/tch/.credentials.yaml*",
         "!$TURBO_ROOT$/packages/cms/tracy-seeder/dist/**",
         "!$TURBO_ROOT$/vendor/tracy/dsh-better-sidebar/lib/**",
         "!$TURBO_ROOT$/vendor/tracy/dsh-passwords/dist/**",

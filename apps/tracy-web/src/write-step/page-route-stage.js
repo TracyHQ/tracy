@@ -16,6 +16,7 @@ import { answerWords, doorCall } from './settings-door.js'
 import { addressAfter, keptAt, routeLines, routeOrders } from './page-route-lines.js'
 import { freeHolder } from './page-route-parent.js'
 import { MENU_ITEM_ALIAS_DOOR } from './plugin-doors.js'
+import { visibleText } from '../lib/site-copy/emphasis-markup.js'
 
 /** The first release of the plugin whose `content.update` renames a menu item through `alias` (TracyHQ/claude-cowork#271). */
 export const ALIAS_DOOR = `Claude Cowork for Joomla ${MENU_ITEM_ALIAS_DOOR.since}`
@@ -82,7 +83,15 @@ export const hasPlanSlugs = (plan) =>
  * @returns {Promise<{ routes: object[], lines: object[], keptPages: { id: string, path: string }[] }>} `routes` is empty when
  *   no kept page has a plan slug to take
  */
-export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menutype = null }) {
+export async function runRouteStage({
+  door,
+  siteKey,
+  kit,
+  plan,
+  keptPages,
+  menutype = null,
+  copySlots = []
+}) {
   if (!hasPlanSlugs(plan)) return { routes: [], lines: [], keptPages }
   const call = doorCall(door, siteKey)
   let rows
@@ -104,7 +113,29 @@ export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menut
     return { routes, lines: routeLines(routes), keptPages }
   }
   const orders = routeOrders({ plan, kit, rows, menutype })
-  const landed = new Map()
+  const words = new Map(copySlots.map((s) => [s.slot, visibleText(s.items.join(' '))]))
+  const titles = new Map(each(kit?.pages).map((p) => [p.id, words.get(p.titleSlot)]))
+  // content.update owns Joomla's tree move and its undo. Read the parent back before changing any address.
+  for (const order of orders) {
+    if (!order.move || order.reason) continue
+    try {
+      await call('content.update', {
+        apply_id: `page-route-${digest(order.pageId)}`,
+        kind: 'menuItem',
+        id: order.itemId,
+        fields: { parent_id: order.move.after }
+      })
+      const current = (await call('content.get', { kind: 'menuItem', id: order.itemId }))?.item
+      if (Number(current?.parent_id) !== order.move.after)
+        throw new Error('the plugin did not move the menu item to the planned parent')
+      order.move.outcome = 'written'
+      rows = rows.map((r) => (Number(r.id) === order.itemId ? { ...r, parent_id: order.move.after } : r))
+    } catch (error) {
+      order.move.outcome = 'refused'
+      order.reason = `the page could not take its planned menu parent: ${error.message}`
+    }
+  }
+  const landed = new Map(orders.filter((o) => o.move?.outcome === 'written').map((o) => [o.itemId, o.alias]))
   const routes = []
   const articlePages = []
   for (const order of orders) {
@@ -132,8 +163,26 @@ export async function runRouteStage({ door, siteKey, kit, plan, keptPages, menut
     }
     const item = await renameItem(call, applyId, order)
     if (item.outcome !== 'refused') landed.set(order.itemId, order.slug)
+    // Breadcrumbs print the menu title, rather than its SEO title. Use the writer's actual page heading.
+    let title = null
+    const name = titles.get(order.pageId)
+    if (name) {
+      try {
+        await call('content.update', {
+          apply_id: applyId,
+          kind: 'menuItem',
+          id: order.itemId,
+          fields: { title: name }
+        })
+        const held = (await call('content.get', { kind: 'menuItem', id: order.itemId }))?.item?.title
+        if (held !== name) throw new Error('the menu kept its demo title after the write')
+        title = { ordered: name, outcome: 'written' }
+      } catch (error) {
+        title = { ordered: name, outcome: 'refused', reason: error.message }
+      }
+    }
     const article = order.articleId ? await renameArticle(call, applyId, order.articleId, order.slug) : null
-    routes.push({ ...entry, ...item, ...(article ? { article } : {}) })
+    routes.push({ ...entry, ...item, ...(title ? { title } : {}), ...(article ? { article } : {}) })
   }
   const at = keptAt(keptPages, { kit, rows, landed, menutype })
   const where = new Map(at.map((p) => [p.id, p.path]))
@@ -161,9 +210,8 @@ export async function restoreRoutes({ door, siteKey, routes }) {
   const renamed = each(routes).filter(
     (r) =>
       (r?.itemId || (r?.via === 'article' && r.articleId)) &&
-      ['written', 'already'].includes(r.outcome) &&
-      lastPart(r.from) &&
-      lastPart(r.from) !== r.slug
+      (r.move?.outcome === 'written' ||
+        (['written', 'already'].includes(r.outcome) && lastPart(r.from) && lastPart(r.from) !== r.slug))
   )
   if (!renamed.length) return { restored: [] }
   const call = doorCall(door, siteKey)
@@ -171,6 +219,17 @@ export async function restoreRoutes({ door, siteKey, routes }) {
   for (const route of renamed) {
     const alias = lastPart(route.from)
     try {
+      if (route.move?.outcome === 'written') {
+        await call('content.update', {
+          apply_id: `page-route-${digest(route.pageId)}`,
+          kind: 'menuItem',
+          id: route.itemId,
+          fields: { parent_id: route.move.before }
+        })
+        const current = (await call('content.get', { kind: 'menuItem', id: route.itemId }))?.item
+        if (Number(current?.parent_id) !== route.move.before)
+          throw new Error('the original menu parent was not restored')
+      }
       if (!route.itemId) {
         const back = await renameArticle(call, `page-route-${digest(route.pageId)}`, route.articleId, alias)
         if (back.outcome === 'refused') throw new Error(back.reason)

@@ -27,6 +27,7 @@ const ACTION_ICON: Readonly<Record<NextAction, typeof Play | null>> = {
   'open-site': ExternalLink,
   'open-demo-chat': ExternalLink,
   'retry-demo': Play,
+  'review-brief': null,
   'send-demo': ExternalLink
 }
 

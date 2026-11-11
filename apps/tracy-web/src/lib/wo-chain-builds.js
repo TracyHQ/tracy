@@ -68,10 +68,14 @@ const medianOf = (values) => {
  */
 export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT, now = Date.now } = {}) {
   const { rows } = await pool.query(
-    `select b.site_key, b.quickstart, b.state, b.created_at, b.timings -> 'chain' as chain, s.label
+    `select b.site_key, b.quickstart, b.state, b.created_at,
+            coalesce(case when b.timings ->> 'attemptStartedAt' ~ '^[1-9][0-9]{0,14}$'
+                          then (b.timings ->> 'attemptStartedAt')::numeric end,
+                     extract(epoch from b.created_at) * 1000) as attempt_started_at,
+            b.timings -> 'chain' as chain, s.label
        from site_brief b left join site s on s.site_key = b.site_key
       where b.timings ? 'chain' and ${CURRENT_BRIEF}
-      order by b.created_at desc
+      order by attempt_started_at desc
       limit $1`,
     [limit]
   )
@@ -79,7 +83,9 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
     const chain = row.chain ?? {}
     const steps = Array.isArray(chain.steps) ? chain.steps : []
     const spent = steps.reduce((sum, s) => sum + finiteOrZero(s.usd), 0)
-    const createdMs = new Date(row.created_at).getTime()
+    const attemptMs = Number(row.attempt_started_at)
+    const startedMs =
+      Number.isFinite(attemptMs) && attemptMs > 0 ? attemptMs : new Date(row.created_at).getTime()
     // A snapshot of a run that was going: still going while the row is open, otherwise it ended without finishing its
     // record (a hard failure), at the step that was under way (the write when none was).
     const unfinished = chain.ending === 'running'
@@ -97,10 +103,10 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       label: row.label ?? null,
       address: row.label && config.siteDomain ? bornSiteAddress(row.label, config) : null,
       template: chainTemplateOf(row.quickstart) || null,
-      startedAt: new Date(row.created_at).toISOString(),
+      startedAt: new Date(startedMs).toISOString(),
       // A running build counts its minutes from the press until now; spend is what the finished steps cost so far.
       totalMinutes: running
-        ? Math.round(((now() - createdMs) / 60_000) * 100) / 100
+        ? Math.round(((now() - startedMs) / 60_000) * 100) / 100
         : finiteOrZero(chain.totalMinutes),
       totalUsd: unfinished ? Math.round(spent * 10_000) / 10_000 : finiteOrZero(chain.totalUsd),
       ending,
