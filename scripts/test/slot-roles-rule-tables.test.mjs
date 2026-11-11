@@ -119,6 +119,127 @@ test('a Joomla menu entry that opens a social network is a contact card, the nth
   assert.equal(got['menuItem-7.0'][1], null)
 })
 
+const joomlaMenuMap = (links) => ({
+  entities: links.map((_, index) => ({
+    key: `menuItem-${index + 40}`,
+    kind: 'menuItem',
+    identity: { menutype: 'mainmenu' }
+  })),
+  slots: links.flatMap(({ href, title = 'Visit us', titleRole, linkRole }, index) => [
+    {
+      key: `menuItem-${index + 40}.0`,
+      entity: `menuItem-${index + 40}`,
+      column: 'title',
+      type: 'text',
+      sample: title,
+      ...(titleRole ? { role: titleRole } : {})
+    },
+    {
+      key: `menuItem-${index + 40}.1`,
+      entity: `menuItem-${index + 40}`,
+      column: 'link',
+      type: 'url',
+      sample: href,
+      ...(linkRole ? { role: linkRole } : {})
+    }
+  ])
+})
+
+test('Joomla internal menu links get only a navigation role in vocabulary 3', () => {
+  const hrefs = [
+    'about',
+    '/',
+    '/events',
+    'pages/contact?view=all#team',
+    'index.php?Itemid=44',
+    '?Itemid=44',
+    '#team'
+  ]
+  const input = joomlaMenuMap(hrefs.map((href) => ({ href })))
+  const { contentMap, unplaced } = proposeContentMapRoles(input, {
+    cms: 'joomla',
+    vocabulary: 'place-content-roles/3'
+  })
+  for (const slot of contentMap.slots.filter((s) => s.column === 'link')) {
+    assert.equal(slot.role, 'editorial.navigation_url', slot.sample)
+    assert.equal(slot.group, undefined)
+    assert.equal(slot.customize, 'keep')
+  }
+  assert.deepEqual(unplaced, [])
+  assert.equal(checkContentMapRoles(contentMap).ok, true)
+  assert.equal(input.slots[1].role, undefined)
+})
+
+test('Joomla internal menu links leave external, unsafe and ambiguous targets for review', () => {
+  const hrefs = [
+    'https://example.org/shop',
+    'http://example.org',
+    '//example.org',
+    '///example.org',
+    'javascript:alert(1)',
+    'data:text/html,test',
+    'mailto:team@example.org',
+    'tel:123',
+    'example.org/shop',
+    'www.example.org',
+    '../about',
+    '',
+    ' about',
+    'about\n',
+    '/\\example.org',
+    '/%2fexample.org',
+    '/%252fexample.org',
+    'java\tscript:alert(1)'
+  ]
+  const { contentMap } = proposeContentMapRoles(joomlaMenuMap(hrefs.map((href) => ({ href }))), {
+    cms: 'joomla',
+    vocabulary: 'place-content-roles/3'
+  })
+  for (const slot of contentMap.slots.filter((s) => s.column === 'link')) {
+    assert.equal(slot.role, undefined, JSON.stringify(slot.sample))
+    assert.equal(slot.group, undefined)
+  }
+})
+
+test('Joomla internal menu links preserve social precedence, numbering and assigned titles', () => {
+  const input = joomlaMenuMap([
+    { href: 'about' },
+    { href: '#', title: 'Instagram' },
+    { href: 'contact' },
+    { href: 'https://www.facebook.com/example', title: 'Our page' },
+    { href: '#', title: 'Threads', titleRole: 'editorial.menu_label' }
+  ])
+  const { contentMap } = proposeContentMapRoles(input, { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  const slots = Object.fromEntries(contentMap.slots.map((s) => [s.key, s]))
+  for (const [id, item] of [
+    [41, 0],
+    [43, 1],
+    [44, 2]
+  ]) {
+    assert.equal(slots[`menuItem-${id}.1`].role, 'contact.social_url')
+    assert.deepEqual(slots[`menuItem-${id}.1`].group, { id: `menuItem-${id}.social`, item, kind: 'contact' })
+  }
+  assert.equal(slots['menuItem-41.0'].role, 'contact.social_label')
+  assert.equal(slots['menuItem-43.0'].role, 'contact.social_label')
+  assert.equal(slots['menuItem-44.0'].role, 'editorial.menu_label')
+  assert.equal(slots['menuItem-44.0'].group, undefined)
+})
+
+test('Joomla internal menu links preserve assigned link roles and version 2 behavior', () => {
+  const input = joomlaMenuMap([{ href: '/contact', linkRole: 'contact.cta_url' }])
+  input.slots[1].group = { id: 'reviewed-contact', item: 0, kind: 'contact' }
+  const before = structuredClone(input.slots[1])
+  const { contentMap } = proposeContentMapRoles(input, { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  assert.deepEqual(contentMap.slots[1], before)
+  const v2 = proposeContentMapRoles(joomlaMenuMap([{ href: 'about' }]), { cms: 'joomla' })
+  assert.equal(v2.contentMap.slots[1].role, undefined)
+  const v2AssignedTitle = proposeContentMapRoles(
+    joomlaMenuMap([{ href: '#', title: 'Instagram', titleRole: 'editorial.menu_label' }]),
+    { cms: 'joomla' }
+  )
+  assert.equal(v2AssignedTitle.contentMap.slots[1].role, undefined)
+})
+
 test('a WordPress card whose name is no slot gets no group: its other slots fall back to an editorial role', () => {
   // A fictional bakery theme: the dish name heading carries inline price markup, so only the description is a slot.
   const map = {

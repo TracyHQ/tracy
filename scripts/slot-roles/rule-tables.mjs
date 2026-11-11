@@ -885,7 +885,7 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
       bySlot.set(slotKey, { slotKey, ...b })
     }
   }
-  // A Joomla menu entry that opens a social network: its title and its link, one contact card.
+  // Social menu entries are contact cards; version 3 internal links get only their navigation role.
   if (cms === 'joomla') {
     const placed = new Set([...bySlot.keys(), ...roleOnlyBySlot.keys()])
     const menutypeOf = new Map(
@@ -895,9 +895,14 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     )
     const links = proposeJoomlaMenuLinks(
       open.filter((slot) => !placed.has(String(slot.key))),
-      menutypeOf
+      menutypeOf,
+      { vocabulary3, titles: vocabulary3 ? slots : undefined }
     )
     for (const [slotKey, b] of links) {
+      if (b.groupId === null) {
+        roleOnlyBySlot.set(slotKey, b.role)
+        continue
+      }
       groupOf.set(b.groupId, { groupId: b.groupId, itemIndex: b.itemIndex, entityKind: b.entityKind })
       bySlot.set(slotKey, { slotKey, ...b })
     }
