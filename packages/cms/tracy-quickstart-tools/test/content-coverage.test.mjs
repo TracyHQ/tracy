@@ -1590,3 +1590,221 @@ test('K3 review R2: positional numeric formats conservatively stay whole-value o
     'ordinary independent integer fragments remain supported'
   )
 })
+
+test('remaining67 matching: complete literals keep ownership before overlapping numeric fragments', () => {
+  const slots = [
+    { key: 'languageString-71.0', type: 'text', sample: 'posts . newest first' },
+    { key: 'languageString-72.0', type: 'text', sample: '%d posts' },
+    { key: 'languageString-73.0', type: 'text', sample: '%d min read' },
+    { key: 'module-90.role', type: 'text', sample: 'Editor' }
+  ]
+  const match = createMatcher(loadContract(contractDir(slots), SITE), SITE)
+  const count = match({ kind: 'text', value: '// 12 posts . newest first' })
+  assert.ok(count.slots.includes('languageString-71.0'))
+  assert.equal(count.slots.includes('languageString-72.0'), false)
+  assert.equal(count.status, 'hole', 'only the genuine generated number remains for source classification')
+  assert.match(count.remainder, /12/)
+  const independent = match({ kind: 'text', value: 'Editor · 3 min read' })
+  assert.equal(independent.status, 'matched')
+  assert.deepEqual(new Set(independent.slots), new Set(['module-90.role', 'languageString-73.0']))
+  assert.deepEqual(match({ kind: 'text', value: '3 posts' }).slots, ['languageString-72.0'])
+  const foreign = match({ kind: 'text', value: '// 12 posts . newest first · foreign promise' })
+  assert.match(foreign.remainderParts.join(' '), /foreign promise/)
+  const ambiguous = createMatcher(
+    loadContract(contractDir([...slots, { ...slots[0], key: 'languageString-74.0' }]), SITE),
+    SITE
+  )
+  const refused = ambiguous({ kind: 'text', value: 'Editor · posts . newest first' })
+  assert.equal(refused.status, 'hole', 'composite literal ambiguity cannot choose the first slot')
+  assert.match(refused.remainderParts.join(' '), /posts . newest first/)
+  for (const flags of [{ inCode: true }, { codeText: '// 12 posts . newest first' }])
+    assert.equal(match({ kind: 'text', value: '// 12 posts . newest first', ...flags }).status, 'hole')
+})
+
+test('remaining67 matching: actual category producer binds the full literal and preserves ambiguity', () => {
+  const f = generatedReceiverFixture()
+  const dir = contractDir([
+    {
+      key: 'languageString-71.0',
+      entity: 'languageString-71',
+      column: 'value',
+      type: 'text',
+      sample: 'posts . newest first'
+    },
+    { key: 'languageString-72.0', type: 'text', sample: '%d posts' }
+  ])
+  const file = path.join(dir, 'content-map.json')
+  const map = JSON.parse(readFileSync(file, 'utf8'))
+  map.entities.push({
+    key: 'languageString-71',
+    kind: 'languageString',
+    identity: { extension: 'tpl_ja_kinetic', language: 'en-GB', key: 'TPL_JA_KINETIC_BLOG_POSTS_NEWEST' }
+  })
+  writeFileSync(file, JSON.stringify(map))
+  const run = () => {
+    const contract = loadContract(dir, SITE)
+    contract.template = 'ja_kinetic'
+    return annotate(
+      [f.item('// 12 posts . newest first', 'span.hx-bloglist__count')],
+      createMatcher(contract, SITE),
+      createClassifier(contract, null, buildSourceIndex(f.root, contract.template))
+    )[0]
+  }
+  const good = run()
+  assert.equal(good.status, 'matched')
+  assert.deepEqual(good.slots, ['languageString-71.0'])
+  assert.match(good.evidence.join(' '), /source-bound/)
+  map.slots.push({ ...map.slots.find((s) => s.key === 'languageString-71.0'), key: 'languageString-71.1' })
+  writeFileSync(file, JSON.stringify(map))
+  assert.equal(run().status, 'hole', 'duplicate complete literal slots cannot establish unique ownership')
+})
+
+test('remaining67 dates: exact full-date and month leaves bind their own source and locale', () => {
+  const f = generatedReceiverFixture()
+  const full = f.item(
+    '18 June 2026',
+    'a.hx-blogrow > div.hx-blogmeta:nth-of-type(2) > span.hx-blogdatetxt:nth-of-type(2)'
+  )
+  const month = f.item('Jun', 'a.hx-blogrow > time.hx-blogdate > span.hx-blogdate__m:nth-of-type(2)')
+  const c = f.create()
+  for (const item of [full, month]) {
+    const result = c(item, {})
+    assert.equal(result.class, 'c')
+    assert.match(result.label, /source-bound/)
+  }
+  for (const [item, value] of [
+    [full, '31 June 2026'],
+    [full, '00 June 2026'],
+    [full, '18 June 0000'],
+    [full, '18 Jun 2026'],
+    [full, '18 June 2026 foreign promise'],
+    [month, '06'],
+    [month, 'June']
+  ])
+    assert.notEqual(c({ ...item, value }, {}).class, 'c')
+  for (const item of [full, month])
+    for (const extra of [
+      { inCode: true },
+      { codeText: item.value },
+      { tag: 'div' },
+      { viewports: { desktop: { count: 2, selector: item.selector } } }
+    ])
+      assert.notEqual(c({ ...item, ...extra }, {}).class, 'c')
+  const file = f.base + 'category/blog_item.php'
+  f.put(file, f.files[file].replace("$dateField, 'M'", "$dateField, 'm'"))
+  assert.notEqual(f.create()(month, {}).class, 'c')
+  f.put(
+    file,
+    f.files[file].replace("$dateField, Text::_('DATE_FORMAT_LC3')", "$unrelated, Text::_('DATE_FORMAT_LC3')")
+  )
+  assert.notEqual(f.create()(full, {}).class, 'c')
+  f.put(file, '<?php /* ' + f.files[file] + ' */')
+  assert.notEqual(f.create()(full, {}).class, 'c')
+  f.put(file, f.files[file])
+  f.put('language/fr-FR/joomla.ini', 'DATE_FORMAT_LC3="d f Y"\nJUNE_SHORT="Juin"')
+  assert.notEqual(f.create()(full, {}).class, 'c')
+  assert.notEqual(f.create()(month, {}).class, 'c')
+})
+
+test('remaining67 dates: physical leaf copies and calendar bounds survive cache order', () => {
+  const f = generatedReceiverFixture()
+  const raw = (row) => ({
+    kind: 'text',
+    tag: 'span',
+    value: '18 June 2026',
+    selector: `a.hx-blogrow:nth-of-type(${row}) > div.hx-blogmeta > span.hx-blogdatetxt`
+  })
+  const good = mergeViewports(
+    { desktop: { items: [raw(1), raw(2)] }, phone: { items: [raw(1), raw(2)] } },
+    SITE
+  )[0]
+  const bad = []
+  for (const change of [
+    (v) => {
+      delete v.receivers
+    },
+    (v) => {
+      v.receivers[1].value = '18 June 2027'
+    },
+    (v) => {
+      v.receivers[1].selector = 'span.business'
+    },
+    (v) => {
+      v.receivers[1].inCode = true
+    },
+    (v) => {
+      v.receivers.pop()
+    }
+  ]) {
+    const item = structuredClone(good)
+    change(item.viewports.phone)
+    bad.push(item)
+  }
+  for (const reverse of [false, true]) {
+    const c = f.create(),
+      cases = [[good, true], ...bad.map((item) => [item, false])]
+    if (reverse) cases.reverse()
+    for (const [item, expected] of cases) assert.equal(c(item, {}).class === 'c', expected)
+  }
+  f.put('language/en-GB/joomla.ini', f.files['language/en-GB/joomla.ini'] + '\nFEBRUARY="February"')
+  f.put('libraries/src/Date/Date.php', f.files['libraries/src/Date/Date.php'] + "\nText::_('FEBRUARY');")
+  const selector = 'div.hx-blogmeta > span.hx-blogdatetxt'
+  const c = f.create()
+  assert.equal(c(f.item('29 February 2024', selector), {}).class, 'c')
+  for (const value of ['29 February 2026', '29 February 1900', '30 February 2024'])
+    assert.notEqual(c(f.item(value, selector), {}).class, 'c')
+  assert.equal(c(f.item('29 February 2000', selector), {}).class, 'c')
+})
+
+test('remaining67 forms: conflicting template/core phases never pick the observed same words', () => {
+  const f = generatedReceiverFixture(),
+    context = { url: SITE + '?option=com_users&view=registration' }
+  f.put('templates/ja_kinetic/language/en-GB/tpl_ja_kinetic.ini', 'COM_USERS_REGISTER_NAME_LABEL="Full name"')
+  // Static files do not establish which plugins loaded a language before the HTML form rendered.
+  f.put('libraries/src/Application/CMSApplication.php', '<?php $this->doExecute(); $this->render();')
+  f.put('libraries/src/Document/HtmlDocument.php', "<?php $lang->load('tpl_' . $template, JPATH_BASE);")
+  for (const value of ['Name *', 'Full name *'])
+    assert.doesNotMatch(
+      f.create()(f.item(value, '#jform_name-lbl', { tag: 'label' }), {}, context).label,
+      /source-bound/
+    )
+  f.put('templates/ja_kinetic/language/en-GB/tpl_ja_kinetic.ini', 'COM_USERS_REGISTER_NAME_LABEL="Name"')
+  assert.equal(f.create()(f.item('Name *', '#jform_name-lbl', { tag: 'label' }), {}, context).class, 'b')
+  f.put('language/overrides/en-GB.override.ini', 'COM_USERS_REGISTER_NAME_LABEL="Public name"')
+  const override = f.create()(f.item('Public name *', '#jform_name-lbl', { tag: 'label' }), {}, context)
+  assert.equal(override.class, 'b')
+  assert.match(override.label, /source-bound/)
+})
+
+test('remaining67 leaf boundaries: a producer prefix or ambiguous month cannot prove the whole scalar', () => {
+  const f = generatedReceiverFixture(),
+    file = f.base + 'category/blog_item.php'
+  const full = f.item('18 June 2026', 'div.hx-blogmeta > span.hx-blogdatetxt')
+  const month = f.item('Jun', 'time.hx-blogdate > span.hx-blogdate__m')
+  for (const item of [full, month]) assert.equal(f.create()(item, {}).class, 'c')
+  const fullEcho = "HTMLHelper::_('date', $dateField, Text::_('DATE_FORMAT_LC3'))"
+  const monthEcho = "HTMLHelper::_('date', $dateField, 'M')"
+  for (const [item, expression] of [
+    [full, fullEcho],
+    [month, monthEcho]
+  ]) {
+    f.put(file, f.files[file].replace(expression + ';', expression + " . ' extra';"))
+    assert.notEqual(f.create()(item, {}).class, 'c', 'the echo must be the complete leaf value')
+    f.put(file, f.files[file].replace(expression + '; ?></span>', expression + '; ?> extra</span>'))
+    assert.notEqual(
+      f.create()(item, {}).class,
+      'c',
+      'adjacent literal leaf content is not the old date alone'
+    )
+    f.put(file, f.files[file])
+    const orphan = { ...item, selector: item.selector.split(' > ').at(-1) }
+    orphan.viewports = { desktop: { count: 1, selector: orphan.selector } }
+    assert.notEqual(f.create()(orphan, {}).class, 'c', 'the exact generated parent is required')
+  }
+  f.put('language/en-GB/joomla.ini', f.files['language/en-GB/joomla.ini'] + '\nMAY_SHORT="Jun"')
+  f.put(
+    'libraries/src/Date/Date.php',
+    f.files['libraries/src/Date/Date.php'].replace('case 6:', "case 5: return Text::_('MAY_SHORT'); case 6:")
+  )
+  assert.notEqual(f.create()(month, {}).class, 'c', 'two source months with one label remain ambiguous')
+})

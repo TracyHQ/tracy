@@ -92,7 +92,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     (sourceIndex?.ini ?? []).filter((s) => labelKeys.includes(s.key)).map((s) => normText(s.value))
   )
   const generatedSelector =
-    /\.(?:hx-author__meta|hx-auaside__meta|hx-bloglist__count|hx-blogdate|hx-blogmeta)(?=[:. >]|$)|^#(?:username|password|jform_name|jform_password1)-lbl$/
+    /\.(?:hx-author__meta|hx-auaside__meta|hx-bloglist__count|hx-blogdate|hx-blogdate__m|hx-blogdatetxt|hx-blogmeta)(?=[:. >]|$)|^#(?:username|password|jform_name|jform_password1)-lbl$/
 
   function generated(item, context, match) {
     if (
@@ -167,15 +167,10 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       const m = new RegExp(`^${escaped}$`).exec(value)
       return m && Number(m[1]) >= minimum ? Number(m[1]) : null
     }
-    const date = (value, abbreviated = false) => {
-      const m = (
-        abbreviated ? /^(0[1-9]|[12][0-9]|3[01]) (.+)$/ : /^(0[1-9]|[12][0-9]|3[01]) (.+) ([1-9][0-9]{3})$/
-      ).exec(value)
-      if (!m) return null
-      const format = abbreviated ? null : language('DATE_FORMAT_LC3')
-      if (!abbreviated && format?.value.trim() !== 'd F Y') return null
+    const month = (value, abbreviated) => {
+      const found = []
       const file = 'libraries/src/Date/Date.php'
-      for (const key of [
+      for (const [index, key] of [
         'JANUARY',
         'FEBRUARY',
         'MARCH',
@@ -188,9 +183,9 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         'OCTOBER',
         'NOVEMBER',
         'DECEMBER'
-      ]) {
-        const month = language(key + (abbreviated ? '_SHORT' : ''))
-        if (!month || canonical(month.value) !== m[2]) continue
+      ].entries()) {
+        const lang = language(key + (abbreviated ? '_SHORT' : ''))
+        if (!lang || canonical(lang.value) !== value) continue
         if (
           !receiverProducer(
             sourceIndex,
@@ -202,9 +197,24 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           )
         )
           continue
-        return format ? [format, month] : [month]
+        found.push({ lang, number: index + 1 })
       }
-      return null
+      return found.length === 1 ? found[0] : null
+    }
+    const date = (value, abbreviated = false) => {
+      const m = (
+        abbreviated ? /^(0[1-9]|[12][0-9]|3[01]) (.+)$/ : /^(0[1-9]|[12][0-9]|3[01]) (.+) ([1-9][0-9]{3})$/
+      ).exec(value)
+      if (!m) return null
+      const format = abbreviated ? null : language('DATE_FORMAT_LC3')
+      if (!abbreviated && format?.value.trim() !== 'd F Y') return null
+      const found = month(m[2], abbreviated)
+      if (!found) return null
+      const year = Number(m[3])
+      const leap = abbreviated || (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0))
+      const days = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+      if (Number(m[1]) > days[found.number - 1]) return null
+      return format ? [format, found.lang] : [found.lang]
     }
     const dateFile = base + 'category/blog_item.php'
     const dateSource = producer(dateFile, /\$datefield\s*=.*\$item->created/, /\$item->publish_up/)
@@ -222,6 +232,45 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         )
       )
         return proved(dateFile, 'day/month date receiver', ...langs)
+    }
+    if (
+      item.tag === 'span' &&
+      copies.every((copy) => typeof copy.value === 'string' && canonical(copy.value) === norm)
+    ) {
+      if (
+        receiver(
+          /\bdiv\.hx-blogmeta(?::nth-of-type\([1-9][0-9]*\))? > span\.hx-blogdatetxt(?::nth-of-type\([1-9][0-9]*\))?$/
+        )
+      ) {
+        const langs = date(norm)
+        if (
+          langs &&
+          dateSource &&
+          receiverProducer(
+            sourceIndex,
+            dateFile,
+            /class=['"]hx-blogdatetxt['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*Text::_\(['"]DATE_FORMAT_LC3['"]\)\)\s*;\s*\?>\s*<\/span>/
+          )
+        )
+          return proved(dateFile, 'full date leaf receiver', ...langs)
+      }
+      if (
+        receiver(
+          /\btime\.hx-blogdate(?::nth-of-type\([1-9][0-9]*\))? > span\.hx-blogdate__m(?::nth-of-type\([1-9][0-9]*\))?$/
+        )
+      ) {
+        const found = month(norm, true)
+        if (
+          found &&
+          dateSource &&
+          receiverProducer(
+            sourceIndex,
+            dateFile,
+            /class=['"]hx-blogdate__m['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*['"]M['"]\)\s*;\s*\?>\s*<\/span>/
+          )
+        )
+          return proved(dateFile, 'abbreviated month leaf receiver', found.lang)
+      }
     }
     if (receiver(/\bdiv\.hx-blogmeta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
       const short = language('TPL_JA_KINETIC_BLOG_READMIN_SHORT', templateLanguage)
@@ -341,12 +390,14 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       for (const [form, field, id, key] of fields) {
         if (view !== form || !receiver(new RegExp(`^#${id}-lbl$`))) continue
         const file = `components/com_users/forms/${form}.xml`
-        const lang = language(
-          key,
-          key === 'JGLOBAL_PASSWORD' ? coreLanguage : /^language\/[^/]+\/com_users\.ini$/
-        )
+        const languageFile = key === 'JGLOBAL_PASSWORD' ? coreLanguage : /^language\/[^/]+\/com_users\.ini$/
+        const lang = language(key, languageFile)
+        const componentLanguage = receiverLanguage(sourceIndex, key, languageFile)
         if (
           lang &&
+          componentLanguage &&
+          // A conflicting template value has no proven early-loader phase for this HTML form.
+          canonical(lang.value) === canonical(componentLanguage.value) &&
           [canonical(lang.value), canonical(lang.value) + ' *'].includes(norm) &&
           producer(
             file,

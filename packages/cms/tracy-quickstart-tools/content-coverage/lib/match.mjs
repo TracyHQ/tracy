@@ -130,16 +130,7 @@ export function createMatcher(contract, siteUrl) {
       // Composite block: remove every slot sample found inside it; what is left is unmatched.
       let rest = v
       const slots = []
-      for (const p of [...patterns].filter((p) => p.fragment).sort((a, b) => b.length - a.length)) {
-        rest = rest.replace(p.fragment, (piece) => {
-          const owners = new Set(
-            patterns.filter((other) => other.fragment && other.re.test(piece)).map((other) => other.key)
-          )
-          if (owners.size !== 1) return piece
-          slots.push(p.key)
-          return ' \u0000 '
-        })
-      }
+      const ambiguous = []
       // A card excerpt joins a label, a title and the start of a paragraph, then cuts it ("... the component wrapper -
       // your..."): the longest cut tail that starts a slot's text is that slot.
       if (/(\.\.\.|…)$/.test(v)) {
@@ -159,8 +150,21 @@ export function createMatcher(contract, siteUrl) {
         if (s.norm.length > rest.length) continue
         const occ = occurrences(rest, s.norm)
         if (!occ.length) continue
-        slots.push(s.key)
+        const owners = [...new Set(text.get(s.norm))]
+        if (owners.length === 1) slots.push(...owners)
+        else ambiguous.push(s.norm)
         rest = rest.split(s.norm).join(' \u0000 ')
+      }
+      // Complete literals keep their owner before a numeric fragment can consume their beginning.
+      for (const p of [...patterns].filter((p) => p.fragment).sort((a, b) => b.length - a.length)) {
+        rest = rest.replace(p.fragment, (piece) => {
+          const owners = new Set(
+            patterns.filter((other) => other.fragment && other.re.test(piece)).map((other) => other.key)
+          )
+          if (owners.size !== 1) return piece
+          slots.push(p.key)
+          return ' \u0000 '
+        })
       }
       for (const f of shortFigures) {
         // Metadata separators and matched slots bound complete dates; an unrelated year slot cannot own them.
@@ -187,6 +191,7 @@ export function createMatcher(contract, siteUrl) {
               x.split(' ').every((w) => joined(compact(w)))
             )
         )
+      parts.push(...ambiguous)
       if (slots.length && !parts.length) res = { status: 'matched', by: 'composite', slots }
       else if (!parts.length) res = { status: 'matched', by: 'slot spans joined without a space', slots: [] }
       // The longest unexplained piece is what gets classified; every piece is reported.
