@@ -2490,6 +2490,15 @@ share one fallback: the kit's exact native contact body must identify one publis
 opening that same contact. Multiple candidates or conflicting owners remain unresolved; an exact kit path keeps
 precedence. The route receipt retains the actual original live path so a later restore returns to that alias.
 
+After content and menu writes, the write step may add callable phone links through the Claude Cowork plugin's optional
+`content.contract phone.link` operation. Both initial admission and a fresh inspection must advertise the exact
+HTML slot capability. The phone must be the whole successfully written value and match an on-site brief fact;
+scalar contact fields, prose and inferred country prefixes never enter this operation. Each call uses the inspected
+contract hash, sequential revision and fresh request identifiers. Only an explicit successful answer proving the
+unchanged text, exact dial target and resulting revision counts as written. An unverified answer stops later phone
+operations and marks the affected write report lines failed, so read-back cannot pass. Older Claude Cowork plugins keep the
+existing write path; rendered callability remains subject to Site check.
+
 The host's page measurement extractor counts the canonical items of a looping Owl carousel. It excludes copied
 subtrees only when an Owl item is directly under its stage inside a carousel with non-cloned siblings; identical
 original cards stay distinct. Site-check row requirements and unresolved-list reporting remain unchanged.
