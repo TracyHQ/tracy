@@ -3614,6 +3614,35 @@ test(
     assert.equal(pressedAgain.body.business.phase, 'build', JSON.stringify(pressedAgain.body))
     assert.equal(pressedAgain.body.business.action.id, action[0].id)
 
+    // A later research press must also find terminal own-site work whose base still exists.
+    // Otherwise this screen offers a template that acceptance rejects with BUILD_EXISTS.
+    const revision = (await w.call(A, 'POST', `${BASE}/${id}/revisions`, {})).body.revision
+    const base = (
+      await w.pool.query(
+        `insert into wo_build(account_id,revision_id,request_id,build_id,state,site_key,choice,choice_key)
+         values ($1,$2,$3,gen_random_uuid(),'done','smile.localhost',$4::jsonb,'fixture') returning id`,
+        [
+          action[0].account_id,
+          revision.id,
+          action[0].build_request_id,
+          JSON.stringify({ cms: tip.cms, template: tip })
+        ]
+      )
+    ).rows[0]
+    await w.pool.query(`update wo_demo_action set status='failed',error='QA_NEEDS_REVIEW' where id=$1`, [
+      action[0].id
+    ])
+    const stoppedAfterResearch = await w.call(A, 'GET', `${OWN}/${id}`)
+    assert.equal(stoppedAfterResearch.body.business.phase, 'build', JSON.stringify(stoppedAfterResearch.body))
+    assert.equal(stoppedAfterResearch.body.business.action.id, action[0].id)
+    assert.equal(stoppedAfterResearch.body.business.action.state, 'failed')
+    assert.equal((await w.call(B, 'GET', `${OWN}/${id}`)).status, 404)
+    await w.pool.query(`update wo_demo_action set status='completed',error=null where id=$1`, [action[0].id])
+    assert.equal((await w.call(A, 'GET', `${OWN}/${id}`)).body.business.action.id, action[0].id)
+    await w.pool.query(`update wo_build set state='deleted',demo_deleted_at=now() where id=$1`, [base.id])
+    assert.notEqual((await w.call(A, 'GET', `${OWN}/${id}`)).body.business.phase, 'build')
+    await w.pool.query(`update wo_demo_action set status='queued' where id=$1`, [action[0].id])
+
     // Its chat doors stay open with only this switch on, and close with it.
     await setSwitches(w.pool, { 'website-opportunities': false, 'site-from-business': true })
     const prepare = await w.call(A, 'POST', `${BASE}/demo/actions/${action[0].id}/chat/prepare`, {})

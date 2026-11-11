@@ -224,6 +224,7 @@ Template: JA Restaurant (tracy-restaurant). Default locale: en. Locales: en.
 | next_label | string | no | Next label |
 | more_label | string | no | More label |
 | photos_label | string | no | Photos label |
+| search_label | string | no | Search label |
 | gallery_link_label | string | no | Gallery link label |
 | not_found_code | string | no | Not found code |
 | not_found_title | string | no | Not found title |

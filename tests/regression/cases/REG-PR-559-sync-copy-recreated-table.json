@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-559-sync-copy-recreated-table",
+  "kind": "fix",
+  "title": "Sync retries missing tables recreated under the same name without accepting partial data",
+  "pr": 559,
+  "area": "site-changes/sync",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run copy-load integration tests with a real local MariaDB, including a first-dump missing-table error while the list stays unchanged, a brief concurrent writer and a permanently invalid view."
+  ],
+  "expect": [
+    "Both missing-table client error forms retry and load every site table plus all 400000 asset rows.",
+    "A briefly busy copy settles within the existing three tries.",
+    "An invalid view still stops with error 1356 and a redacted reason."
+  ],
+  "selectors": {
+    "read": "load_ours"
+  },
+  "fence": "Only a complete consistent copy can be accepted after a bounded retry; permanent view errors remain terminal.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-copy-load.test.mjs"
+    ],
+    "tests": [
+      "a table recreated under the same name retries a missing-table dump and loads every row",
+      "a copy busy for a few seconds after a chat turn loads once it settles; never a stop",
+      "a copy the server cannot read still stops, and says why with no name or value of the site"
+    ],
+    "timeout_s": 600
+  }
+}

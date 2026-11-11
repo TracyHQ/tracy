@@ -16,7 +16,7 @@ import ProseQuote from '@/components/site/ProseQuote.astro'
 import { mediaUrl } from '@/lib/media'
 import { stampBlocks, stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
-import { liveBlocks, livePosts } from '@/lib/link-gate'
+import { liveBlocks, liveLinks, livePosts } from '@/lib/link-gate'
 
 interface Props {
   chrome: Chrome
@@ -48,6 +48,12 @@ const idx = list.findIndex((p) => p.slug === slug)
 const older = idx >= 0 ? list[idx + 1] : undefined
 const newer = idx > 0 ? list[idx - 1] : undefined
 const categories = (cats as any[]).filter((c) => BLOG_SIDEBAR.includes(c.slug))
+// The label links to the category's list page only while that page exists and is live: the lists are the blog categories
+// (`[...path].astro`), so another category (Chefs sits in `pages`) is printed as plain text, never a link to a 404.
+const termLive = terms[0]
+  ? (await liveLinks(Astro.request, locale, [`/${terms[0].slug}`]))(`/${terms[0].slug}`)
+  : false
+const termLink = Boolean(terms[0] && BLOG_SIDEBAR.includes(terms[0].slug) && termLive)
 const cover = mediaUrl(a.cover)
 const dateTag = ui(locale).tag
 // On a stamped request each text block names itself and is printed by a renderer that carries the stamp.
@@ -65,7 +71,7 @@ const bodyComponents = $post.owner
 			<article class="rs-article">
 				<h1 {...$post('title')}>{a.title}</h1>
 				<div class="rs-meta">
-					{terms[0] && <a href={href(locale, `/${terms[0].slug}`)}>{terms[0].label}</a>} <span aria-hidden="true">/</span> <time datetime={a.date}>{formatDate(a.date, dateTag)}</time>
+					{terms[0] && (termLink ? <a href={href(locale, `/${terms[0].slug}`)}>{terms[0].label}</a> : terms[0].label)} <span aria-hidden="true">/</span> <time datetime={a.date}>{formatDate(a.date, dateTag)}</time>
 				</div>
 				{cover && <img class="rs-article-cover" src={cover} alt="" width="743" height="420" {...$post('cover')} />}
 				{tags.length > 0 && (

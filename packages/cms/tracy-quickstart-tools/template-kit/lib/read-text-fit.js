@@ -31,11 +31,14 @@ export function readTextFit({ block, texts }) {
   const all = [...root.querySelectorAll('*')].filter(
     (el) => !/^(SCRIPT|STYLE|NOSCRIPT|svg)$/i.test(el.tagName)
   )
-  const boxOf = (text) => {
+  const boxOf = (text, taken = new Set()) => {
     const want = norm(text)
     if (!want) return null
     // innerText reads a line break (a forced second line of an address) as a space between the words.
+    // An element a slot with the same words already took is that slot's: the next slot with these words (a heading and
+    // a button both reading "Subscribe") takes the next element, in page order, as the kit does for the slots themselves.
     const hits = all.filter((el) => {
+      if ([...taken].some((t) => t === el || t.contains(el) || el.contains(t))) return false
       const have = norm(el.innerText ?? el.textContent)
       return have === want || (want.length >= 40 && have.startsWith(want))
     })
@@ -59,8 +62,8 @@ export function readTextFit({ block, texts }) {
   const used = new Set()
   const out = {}
   for (const { id, text, lines: wanted } of texts) {
-    const el = boxOf(text)
-    if (!el || used.has(el)) continue
+    const el = boxOf(text, used)
+    if (!el) continue
     used.add(el)
     const saved = el.innerHTML
     // innerText, not textContent: a forced line break (<br>) is a space between the words, never words run together.

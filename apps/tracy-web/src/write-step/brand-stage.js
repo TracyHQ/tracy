@@ -19,7 +19,7 @@ const MODULE_MARK = '<style id="tracy-ds-slot"'
 const ENDED = 'the run ended before this item was written'
 
 /** The ways an order reaches the site apart from a word in the one contract call, which the contract call compares itself. */
-const OWN_WRITE = new Set(['identity', 'profile', 'small-logo', 'head', 'module'])
+const OWN_WRITE = new Set(['identity', 'profile', 'small-logo', 'head', 'module', 'emdash-setting'])
 
 const PARTS = { name: 'brand-name', logo: 'brand-logo', favicon: 'brand-favicon', accent: 'brand-accent' }
 

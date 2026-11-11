@@ -1,7 +1,7 @@
 /**
  * EmDash content map and content coverage on the Road to live (PR-A). A release's artifacts (content map, content
  * coverage, template kit, demo baseline) are looked up beside the theme's contract data, with no `manifest.json` and
- * with `contractFor` untouched; the two released themes (JA Diner 0.1.0, JA Restaurant 1.0.1) are read from the tree as
+ * with `contractFor` untouched; the two released themes (JA Diner 0.1.0, JA Restaurant 1.0.1 and 1.0.2) are read from the tree as
  * the image ships them.
  */
 import assert from 'node:assert/strict'
@@ -26,7 +26,8 @@ import { fixOf } from '../src/lib/template-readiness/fixes.js'
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../..')
 const RELEASES = [
   ['tracy-diner', '0.1.0', 'tracy-emdash-theme-diner'],
-  ['tracy-restaurant', '1.0.1', 'tracy-emdash-theme-restaurant']
+  ['tracy-restaurant', '1.0.1', 'tracy-emdash-theme-restaurant'],
+  ['tracy-restaurant', '1.0.2', 'tracy-emdash-theme-restaurant']
 ]
 const emdash = (template, version) => ({
   tag: `${template}/emdash-0.x`,
@@ -93,6 +94,15 @@ test('JA Restaurant 1.0.1: the dead link the audit found (every demo piece is ac
   assert.deepEqual([step.state, step.code], ['todo', 'coverage-holes'])
   assert.equal(step.params.holes, 0)
   assert.match(String(step.params.incomplete), /dead-link/)
+})
+
+test('JA Restaurant 1.0.2: the Chefs category label is no longer a link, so no page fails and the release is ready', () => {
+  const step = road(emdash('tracy-restaurant', '1.0.2'), '1.0.2')
+  assert.deepEqual(
+    [step.state, step.code, step.params.holes, step.params.hygiene],
+    ['done', 'coverage-ready', 0, 0]
+  )
+  assert.equal(step.params.pages.failed, 0)
 })
 
 test('the other readers take the same lookup: a template kit, a demo baseline and the kit map are not "no contract"', () => {
