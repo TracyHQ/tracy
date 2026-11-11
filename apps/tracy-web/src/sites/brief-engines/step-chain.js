@@ -74,6 +74,10 @@ const realTimer = (fire, ms) => {
 }
 
 const round = (n, places) => Math.round(n * 10 ** places) / 10 ** places
+
+/** When each running step started, ISO, from the clock readings the run keeps (`active`). */
+const sinceOf = (active) =>
+  Object.fromEntries([...active].map(([step, ms]) => [step, new Date(ms).toISOString()]))
 const messageOf = (error) => String(error instanceof Error ? error.message : error).slice(0, 300)
 
 /**
@@ -114,14 +118,20 @@ export function createStepChainEngine({
       const cancelTimer = timer(() => deadline.abort(new Error('the chain deadline')), deadlineMs)
       const signal = AbortSignal.any([ctx.signal, deadline.signal])
       let failed = null
-      /** The steps running now, and the snapshot of the run so far that the row keeps while the run is going. */
-      const active = new Set()
+      /**
+       * The steps running now (each with the clock reading it started at), and the snapshot of the run so far that the
+       * row keeps while the run is going. The start of each running step goes on the snapshot (`runningSince`) so the
+       * doors can say how long it has been running (#537).
+       */
+      const active = new Map()
       const snap = () =>
-        Promise.resolve(ctx.progress?.(chainSummary(record, failed, now() - t0, [...active]))).catch(() => {})
+        Promise.resolve(
+          ctx.progress?.(chainSummary(record, failed, now() - t0, [...active.keys()], sinceOf(active)))
+        ).catch(() => {})
       /** Run one step, timed and costed; a failure is kept, never thrown, and what the step still made is used. */
       const run = async (step, inputs) => {
         const start = now()
-        active.add(step)
+        active.set(step, start)
         await snap()
         try {
           const answer = await steps[step](ctx, inputs, { signal })
@@ -205,7 +215,7 @@ export function createStepChainEngine({
       let kept = 0
       if (prepared.inputs) {
         const start = now()
-        active.add('write')
+        active.set('write', start)
         await snap()
         try {
           const door = { apply: applyFor(ctx.email, ctx.runId) }
@@ -254,13 +264,18 @@ export function createStepChainEngine({
  * @param {string | null} failed
  * @param {number} totalMs
  * @param {string[] | null} [running]
+ * @param {Record<string, string> | null} [runningSince] - when each running step started, ISO
  */
-export function chainSummary(record, failed, totalMs, running = null) {
+export function chainSummary(record, failed, totalMs, running = null, runningSince = null) {
   return {
     // A snapshot of a run still going (`running`: the steps under way) says so; the row's state tells the reader whether
     // the run is still going or ended without finishing the record (a hard failure).
     ending: running ? 'running' : failed ? 'soft-failure' : 'complete',
-    ...(running ? { running } : failed ? { failedStep: failed } : {}),
+    ...(running
+      ? { running, ...(runningSince ? { runningSince } : {}) }
+      : failed
+        ? { failedStep: failed }
+        : {}),
     totalMinutes: round(totalMs / 60_000, 2),
     totalUsd: round(
       record.reduce((sum, s) => sum + (Number.isFinite(s.usd) ? s.usd : 0), 0),

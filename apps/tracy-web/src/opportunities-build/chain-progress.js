@@ -41,12 +41,14 @@ export async function withChainRuns(pool, actions, { now }) {
     const r = byId.get(action.id)
     if (!r) continue
     const open = r.brief_state ? chainRunOpen(r.brief_state) : action.state === 'queued'
+    const template = chainTemplateOf(r.quickstart ?? r.selection?.quickstart)
     action.run = chainRunView({
       chain: r.chain,
       open,
       startedAt: r.brief_at ?? r.accepted_at,
       now,
-      estimate: estimateOf(chainTemplateOf(r.quickstart ?? r.selection?.quickstart))
+      estimate: estimateOf(template),
+      stepEstimates: estimateOf.steps(template)
     })
   }
 }
