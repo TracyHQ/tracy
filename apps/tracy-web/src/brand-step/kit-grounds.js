@@ -50,7 +50,8 @@ export function kitProblem(k, world = {}) {
     return 'the kit has no quickstart.product and quickstart.version'
   if (!Array.isArray(k.site?.logoSpots) || !k.site.logoSpots.length) return 'the kit has no site.logoSpots'
   const t4 = keepsT4Profile(k)
-  const needsNoFrame = (via) => via === 'wordpress-option' || (t4 && PROFILE_PATHS.has(via))
+  const needsNoFrame = (via) =>
+    via === 'wordpress-option' || via === 'emdash-setting' || (t4 && PROFILE_PATHS.has(via))
   const unwritable = k.site.logoSpots
     .filter((s) => s?.shownIn?.length && !s.frameId && !needsNoFrame(logoWritePath(s, world).via))
     .map((s) => s.id)

@@ -17,6 +17,7 @@ import { ui } from '@/lib/ui'
 import { section } from '@/lib/content'
 import { stampFor } from '@/lib/stamps'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
+import { cutAtWord } from '@/lib/excerpt'
 import { livePosts } from '@/lib/link-gate'
 
 interface Props {
@@ -70,7 +71,7 @@ const title =
 
 <Base chrome={chrome} title={title} description={masthead?.description || undefined} currentPath={mode === 'category' ? '/blog' : path}>
 	<Masthead masthead={masthead} fallbackTitle={title} heading={!heading} />
-	<main id="main" class="rs-wrap rs-main">
+	<main id="main" class:list={['rs-wrap', 'rs-main', 'rs-main-list', mode === 'blog' && 'is-blog', mode === 'tagged' && 'is-tagged', mode === 'featured' && 'is-featured']}>
 		<div class:list={['rs-main-grid', wide && 'is-wide']}>
 			<div>
 				{heading && <h1 class="rs-display rs-list-title is-plain">{heading}</h1>}
@@ -81,7 +82,7 @@ const title =
 								{mediaUrl(p.cover) && <a href={href(locale, postPath(p))} tabindex="-1" aria-hidden="true"><img src={mediaUrl(p.cover)!} alt="" width="120" height="120" loading="lazy" decoding="async" /></a>}
 								<div>
 									<h3 class="rs-tag-title"><a href={href(locale, postPath(p))}>{p.title}</a></h3>
-									{p.excerpt && <span class="rs-tag-body">{p.excerpt.length > 100 ? `${p.excerpt.slice(0, 100).trimEnd()}...` : p.excerpt}</span>}
+									{p.excerpt && <span class="rs-tag-body">{cutAtWord(p.excerpt, 95)}</span>}
 								</div>
 							</li>
 						))}

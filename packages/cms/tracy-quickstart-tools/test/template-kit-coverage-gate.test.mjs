@@ -236,3 +236,24 @@ test('the main menu row takes its reading in the page, at every width it shows a
   assert.deepEqual([row.maxCharacters, row.narrowestWidth], [41, 1024])
   assert.match(row.maxCharactersFrom, /^kit frame: .*1440px 64, 1024px 41/)
 })
+
+test('a shown text slot the theme declares non-visual needs no limit; a number-less slot that is not declared still fails', () => {
+  const map = {
+    ...MAP,
+    slots: [
+      ...MAP.slots,
+      { key: 'chrome.label', type: 'text', sample: 'Switch appearance', nonVisual: true, nonVisualFrom: 'an aria-label' }
+    ]
+  }
+  const kit = kitOf()
+  applyCoverage(kit, { map })
+  const slot = { id: 'chrome.label', type: 'text', sample: 'Switch appearance', paragraphs: 1, bullets: 0 }
+  const extra = { id: 'block-9', slots: [slot], lists: [], demoOwned: [], links: [] }
+  Object.defineProperty(extra, 'shownSlots', { value: new Set(['chrome.label']) })
+  kit.blocks.push(extra)
+  Object.assign(slot, { nonVisual: true, maxCharactersFrom: 'not drawn in a box: an aria-label' })
+  assert.equal(coverageGate(kit, { map }), 0)
+  delete slot.nonVisual
+  assert.equal(coverageGate(kit, { map }) > 0, true)
+  assert.ok(kit.coverage.failures.some((f) => f.part === 'slotsMissing'))
+})

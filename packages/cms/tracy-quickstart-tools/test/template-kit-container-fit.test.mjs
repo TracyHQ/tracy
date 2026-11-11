@@ -110,3 +110,22 @@ test('a menu row holds the characters of every label filled together, and no row
     assert.equal(folded.shown, false)
   })
 })
+
+test('a heading and a button with the same words are measured as two texts, each on its own element', async (t) => {
+  const html = `<style>${FACE}h2{font:16px/20px monospace;margin:0;width:200px}button{font:16px/20px monospace;width:90px}</style>
+    <div data-kit-block="strip"><div><h2>Subscribe</h2></div><button>Subscribe</button></div>`
+  await withPage(t, html, 800, async (page) => {
+    const fit = await page.evaluate(readTextFit, {
+      block: 'strip',
+      texts: [
+        { id: 'title', text: 'Subscribe' },
+        { id: 'button', text: 'Subscribe' }
+      ]
+    })
+    assert.ok(fit.title && fit.button, JSON.stringify(fit))
+    assert.ok(
+      fit.title.limit > fit.button.limit,
+      `the wide heading holds more than the narrow button: ${JSON.stringify(fit)}`
+    )
+  })
+})

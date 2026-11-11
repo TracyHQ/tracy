@@ -780,6 +780,12 @@
 			"label": "Photos label",
 			"role": "editorial.button_label"
 		},
+		"chrome.search_label": {
+			"source": "text",
+			"target": "string",
+			"label": "Search label",
+			"role": "editorial.button_label"
+		},
 		"chrome.gallery_link_label": {
 			"source": "text",
 			"target": "string",

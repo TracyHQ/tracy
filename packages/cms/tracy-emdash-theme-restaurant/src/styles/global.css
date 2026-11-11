@@ -192,7 +192,6 @@
 		cursor: pointer;
 	}
 	.rs-slide-pages button.is-active { background: var(--color-accent); border-radius: var(--ds-btn-radius, 0); }
-	.rs-slide-bar { position: absolute; z-index: 2; left: 225px; right: 225px; bottom: 10px; height: 40px; background: var(--color-accent); }
 
 	/* ── generic section ────────────────────────────────────────────────────────────────────── */
 	.rs-section { position: relative; background-color: var(--color-bg); background-repeat: no-repeat; }
@@ -245,7 +244,7 @@
 	.rs-tabs-section { background-size: cover; background-position: center; padding: 180px 0; color: var(--color-on-ink); }
 	.rs-tabs-box { background: var(--color-surface); color: var(--color-fg); max-width: 893px; margin-inline: auto; padding: 120px 200px; }
 	.rs-tabs-box h2 { text-align: center; color: var(--color-fg); }
-	.rs-tablist { display: flex; margin-top: 40px; background: var(--color-ink); border-radius: var(--ds-btn-radius, 0); }
+	.rs-tablist { display: flex; margin-top: 28px; background: var(--color-ink); border-radius: var(--ds-btn-radius, 0); }
 	.rs-tablist button {
 		border-radius: var(--ds-btn-radius, 0);
 		font-family: var(--font-ui);
@@ -380,7 +379,6 @@
 		.rs-slideshow { height: auto; aspect-ratio: 390 / 195; }
 		.rs-slide-title { top: 55px; left: 98px; width: 195px; font-size: 22px; line-height: 28.6px; padding: 0; font-weight: 700; }
 		.rs-slide-pages { right: 25px; bottom: 8px; }
-		.rs-slide-bar { margin: 0; height: 40px; transform: none; margin-bottom: 0; }
 		.rs-hero, .rs-offers { padding: 60px 0; }
 		.rs-offers-grid { grid-template-columns: 1fr; }
 		.rs-offer-photo { height: 340px; }
@@ -436,7 +434,7 @@
 	.rs-offer-short, .rs-dish p { color: var(--color-faint); }
 	.rs-offer-short { font-size: 14px; }
 	.rs-offer-short::after { content: "×"; display: block; color: var(--color-faint); line-height: 20px; margin-top: 4px; }
-	.rs-dish { border-bottom: 1px dashed var(--color-line); padding: 30px 0 43px; }
+	.rs-dish { border-bottom: 1px dashed var(--color-line); padding: 30px 0 40px; }
 	.rs-dish p { font-size: 14px; line-height: 24px; }
 	.rs-post-thumb { position: relative; }
 	.rs-post-thumb .rs-cat-badge { position: absolute; top: 0; right: 0; background: var(--color-badge); color: var(--ds-c-accent-on, #fff); }
@@ -445,7 +443,7 @@
 	.rs-quote { font-size: 20px; line-height: 34px; }
 	.rs-article .rs-meta a { color: var(--color-meta); border-bottom: 1px dotted currentColor; }
 	.rs-pager { margin: 143px 0 30px; padding-top: 20px; border-top: 1px solid var(--color-line-soft); font-size: 14px; }
-	.rs-masthead { position: relative; padding-top: 41px; }
+	.rs-masthead { position: relative; padding-top: 41px; background-attachment: fixed; } /* the source paints the masthead photograph fixed, so it is cropped to the screen, not to the band */
 	.rs-masthead::before { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.3); }
 	html[data-theme="dark"] .rs-masthead::before { background: rgba(0, 0, 0, 0.5); }
 	.rs-masthead-detail { position: relative; }
@@ -459,14 +457,13 @@
 		.rs-header-logo { height: 50px; }
 		.rs-slideshow { height: 300px; aspect-ratio: auto; }
 		.rs-slide-title { left: 5%; width: 90%; top: 70px; font-size: 56px; line-height: 60px; }
-		.rs-slide-bar { left: 0; right: 0; }
 		.rs-slide-pages { right: 25px; bottom: 60px; }
 		.rs-offers-grid { grid-template-columns: repeat(3, 1fr); }
 		.rs-offer { --cell: 256px; }
 		.rs-offer.is-flip { flex-direction: column-reverse; }
 		.rs-offer-photo { height: var(--cell); }
 		.rs-offer-text { min-height: var(--cell); }
-		.rs-offer-text > div { padding: 60px 16px 20px; }
+		.rs-offer-text > div { padding: 60px 0 20px; }
 		.rs-offer-text p { display: none; }
 		.rs-tabs-box { padding: 120px 50px; }
 		.rs-main :is(h1, h2).rs-display { width: 100%; }
@@ -484,7 +481,6 @@
 	@media (max-width: 575px) {
 		.rs-slideshow { height: auto; aspect-ratio: 390 / 195; }
 		.rs-slide-title { left: 98px; width: 195px; top: 55px; font-size: 22px; line-height: 28.6px; }
-		.rs-slide-bar { bottom: 0; }
 		.rs-slide-pages { right: 25px; bottom: 50px; }
 		.rs-offers-grid { grid-template-columns: 1fr; }
 		.rs-offer-photo { height: auto; aspect-ratio: 1 / 1; }
@@ -545,10 +541,9 @@
 		.rs-main-grid { grid-template-columns: 1fr; }
 		.rs-main-grid > :first-child { padding: 0 25px; }
 		.rs-side { padding-inline: 25px; margin-top: 40px; }
-		.rs-slideshow { height: 340px; }
-		.rs-slide { bottom: 40px; }
-		.rs-slide-bar { left: 0; right: 0; bottom: 0; }
-		.rs-slide-pages { bottom: 60px; }
+		.rs-slideshow { height: 300px; }
+		.rs-slide { bottom: 0; }
+		.rs-slide-pages { bottom: 20px; }
 		.rs-hero-content { max-width: none; }
 		.rs-offer-short::after { display: none; }
 		.rs-footer-cols > div { padding: 50px 30px; }
@@ -557,12 +552,12 @@
 		.rs-pager { margin-top: 16px; padding-top: 80px; }
 	}
 	@media (max-width: 575px) {
-		.rs-slideshow { height: auto; aspect-ratio: 390 / 235; }
+		.rs-slideshow { height: auto; aspect-ratio: 390 / 195; }
 		.rs-slide-title { top: 55px; }
-		.rs-slide-pages { bottom: 50px; }
+		.rs-slide-pages { bottom: 10px; }
 		.rs-masthead h1, .rs-masthead .rs-masthead-title { font-size: 24px; line-height: 1.3; letter-spacing: 3px; }
 		.rs-masthead p { font-size: 18px; line-height: 1.5; }
-		.rs-footer-cols > div { padding: 30px 30px; }
+		.rs-footer-cols > div { padding: 30px 25px; }
 	}
 }
 
@@ -647,6 +642,7 @@
 	/* dishes: three looks */
 	.rs-flat-menu { padding: 180px 0; }
 	.rs-flat-menu-box { max-width: 893px; }
+	.rs-flat-menu .rs-dishes.is-style-3 { margin-top: 30px; }
 	.rs-dishes { padding-top: 30px; }
 	.rs-dish-item { margin-bottom: 30px; }
 	.rs-dish-name { font-family: var(--font-body); font-size: 22px; line-height: 28.6px; font-weight: 700; margin: 0 0 7.5px; color: var(--color-fg); }
@@ -668,7 +664,7 @@
 	.rs-dishes.is-style-3 .rs-dish-inner { position: relative; min-height: 125px; padding: 15px 15px 15px 145px; background: var(--color-surface); border-radius: var(--ds-card-radius, 2px); }
 	.rs-dish-img { position: absolute; left: 0; top: 0; width: 125px; height: 122px; border: 1px solid var(--ds-c-border-soft, var(--color-surface)); border-radius: var(--ds-card-radius, 2px) 0 0 var(--ds-card-radius, 2px); background: var(--color-ink); overflow: hidden; }
 	.rs-dish-img img { width: 123px; height: 123px; object-fit: cover; display: block; }
-	.rs-dishes.is-style-3 .rs-dish-name { font-size: 18px; line-height: 23.4px; margin: 5px 60px 15px 0; }
+	.rs-dishes.is-style-3 .rs-dish-name { font-size: 18px; line-height: 23.4px; margin: 5px 36px 15px 0; }
 	.rs-dishes.is-style-3 .rs-dish-cost { position: absolute; right: 15px; top: 15px; background: var(--color-photo-ground, var(--ds-c-surface-hover, #eee)); color: var(--color-fg); font-family: var(--font-display); font-size: 22px; line-height: 22px; padding: 5px 10px 2px; }
 	.rs-dishes.is-style-3 .rs-dish-desc { font-size: 14px; line-height: 21px; color: var(--color-meta); margin: 0; }
 	/* inside the dark tabs box */
@@ -956,11 +952,8 @@ html[data-theme="dark"] {
 		.rs-offer.is-flip .rs-offer-price { bottom: 0; top: auto; transform: translate(-50%, 50%); }
 		.rs-offer.is-flip .rs-offer-price::after { bottom: -8px; top: auto; border-bottom: 0; border-top: 8px solid var(--color-accent); }
 	}
-	@media (min-width: 576px) and (max-width: 991px) {
-		.rs-collage-item.is-even { margin-top: 400px; }
-	}
 	@media (min-width: 768px) and (max-width: 991px) {
-		.rs-hero { padding-bottom: 400px; }
+		.rs-hero { padding-bottom: 188px; }
 	}
 }
 
@@ -968,7 +961,7 @@ html[data-theme="dark"] {
 @layer components {
 	.rs-tabs-section.is-flat { padding: 120px 0 180px; }
 	.rs-tabs-section.is-flat .rs-tabs-box { background: transparent; padding: 0 25px; max-width: 942px; }
-	.rs-tabs-section.is-flat .rs-tablist { margin-top: 50px; }
+	.rs-tabs-section.is-flat .rs-tablist { margin-top: 30px; }
 	.rs-tabs-section.is-flat .rs-tabpanel { padding-top: 30px; }
 	.rs-tabs-section.is-flat .rs-dishes { padding-top: 0; }
 	.rs-tabs-section.is-flat .rs-dish-name { color: var(--color-fg); }
@@ -1238,10 +1231,10 @@ html[data-theme="dark"] {
 	}
 	@media (min-width: 992px) {
 		.rs-hh.is-style-1 .rs-hh-info { max-width: 480px; }
-		.rs-hh.is-style-1 .rs-hh-info > div { padding-inline: 40px; }
+		.rs-hh.is-style-1 .rs-hh-info > div { padding-inline: 60px; }
 	}
 	@media (min-width: 576px) {
-		.rs-hh.is-style-1 .rs-hh-info { margin-bottom: 100px; }
+		.rs-hh.is-style-1 .rs-hh-info { margin-bottom: 60px; }
 	}
 	@media (min-width: 992px) { .rs-reserve-title { margin-top: 80px; } }
 	.rs-main-grid.is-wide { padding-top: 30px; }
@@ -1271,10 +1264,10 @@ html[data-theme="dark"] {
 @layer components {
 	.rs-tabs-section.is-flat .rs-dishes.is-style-1 .rs-dish-item { padding-bottom: 17px; }
 	.rs-tabs-section.is-flat { padding-bottom: 120px; }
-	.rs-flat-menu { padding-bottom: 326px; }
+	.rs-flat-menu { padding-bottom: 300px; }
 	.rs-dishes.is-style-2 .rs-dish-inner { padding-right: 30px; }
 }
-@layer components { @media (max-width: 575px) { .rs-flat-menu { padding-bottom: 172px; } } }
+@layer components { @media (max-width: 575px) { .rs-flat-menu { padding-bottom: 150px; } } }
 @layer components { @media (min-width: 576px) and (max-width: 991px) { .rs-masthead h1, .rs-masthead .rs-masthead-title { margin-inline: -25px; } } }
 
 /* H6C: the cream gap between the Subscribe card and the footer is 30 px at 390 like the source */
@@ -1420,4 +1413,405 @@ html[data-theme="dark"] {
 		.rs-reserve-row + .rs-reserve-row { margin-top: 100px; }
 		.rs-reserve-online { margin-top: 100px; padding: 90px 60px; }
 	}
+}
+
+/* 1.0.2 (D65): Happy Hours banner 1 as the source draws it (side bands, dark words with a white edge, a ringed badge on two lines) and the
+   masthead words readable on a photograph. Fixed colours sit on a photograph, so they stay under every system (ds-keep). */
+@layer components {
+	.rs-hh.is-style-1 .rs-hh-inner::before, .rs-hh.is-style-1 .rs-hh-inner::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 15%; background: rgba(0, 0, 0, 0.15); pointer-events: none; } /* ds-keep: tint over a photograph: depth, not a role */
+	.rs-hh.is-style-1 .rs-hh-inner::after { left: auto; right: 0; }
+	.rs-hh.is-style-1 .rs-hh-inner { background-position: left top; }
+	.rs-hh.is-style-1 .rs-hh-card { position: relative; z-index: 1; }
+	.rs-hh.is-style-1 .rs-hh-desc { color: #3a352f; padding-inline: 25%; line-height: 1.4; text-shadow: 1px 1px 0 #fff; } /* ds-keep: words on a pale photograph: dark words with a white edge, as the source draws them */
+	.rs-hh.is-style-1 .rs-hh-info { width: 50%; max-width: none; }
+	.rs-hh.is-style-1 .rs-hh-badge { right: -50px; top: -50px; width: 140px; height: 140px; box-sizing: border-box; padding: 30px 35px; display: block; font-size: 36px; line-height: 1.2; background: var(--ds-c-accent, #2e7d32); box-shadow: inset 0 0 0 5px var(--ds-c-accent, #2e7d32), inset 0 0 0 7px #fff; } /* ds-keep: offer tile: the badge keeps its fixed green and white ring */
+	.rs-hh.is-style-2 .rs-hh-photo { object-position: left top; }
+	.rs-hh.is-style-2 .rs-hh-badge { width: 90px; height: 90px; box-sizing: border-box; padding: 15px; line-height: 1.1; text-align: center; box-shadow: 0 0 0 5px var(--color-surface), inset 0 0 0 2px #fff; } /* ds-keep: offer tile: the badge keeps its white ring */
+	.rs-masthead p { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55); } /* ds-keep: white words on a photograph: a soft shadow keeps them readable on a bright part of it */
+	@media (max-width: 991px) {
+		.rs-hh.is-style-1 .rs-hh-inner { padding: 30px 0; margin: 0; }
+		.rs-hh.is-style-1 .rs-hh-desc { padding-inline: 25%; font-size: 36px; line-height: 1.4; }
+		.rs-hh.is-style-1 .rs-hh-info { width: 50%; }
+		.rs-hh.is-style-1 .rs-hh-info > div { font-size: 36px; line-height: 1.4; padding: 30px 60px; }
+		.rs-hh.is-style-1 .rs-hh-badge { right: -50px; top: -50px; width: 140px; height: 140px; font-size: 36px; }
+	}
+	@media (max-width: 767px) {
+		.rs-hh.is-style-1 .rs-hh-desc { padding-inline: 30px; font-size: 18px; }
+		.rs-hh.is-style-1 .rs-hh-title { font-size: 58px; }
+		.rs-hh.is-style-1 .rs-hh-info { width: 90%; font-size: 18px; }
+		.rs-hh.is-style-1 .rs-hh-info > div { padding: 30px; font-size: 18px; line-height: 1.4; }
+		.rs-hh.is-style-1 .rs-hh-badge { right: auto; left: 50%; margin-left: -30px; top: -50px; width: 70px; height: 70px; padding: 8px 13px; font-size: 18px; box-shadow: inset 0 0 0 5px var(--ds-c-accent, #2e7d32), inset 0 0 0 7px #fff; }
+	}
+}
+
+/* 1.0.2 (D65): below 768 px the source moves the category label of a card from the photo into the meta line, as a dotted link-like word. */
+@layer components {
+	.rs-cat-meta, .rs-cat-sep { display: none; }
+	.rs-meta-row { display: flex; flex-wrap: wrap; align-items: baseline; }
+	.rs-timeline-title { text-wrap: balance; }
+	@media (max-width: 767px) {
+		.rs-post-thumb .rs-cat-badge { display: none; }
+		.rs-cat-meta, .rs-cat-sep { display: inline; }
+		.rs-cat-meta { color: var(--color-meta); border-bottom: 1px dotted currentColor; }
+		.rs-cat-sep { margin: 0 8px; }
+	}
+}
+
+/* 1.0.2 (D65): the contact form keeps the source's 50 px gutter to the card; a category card says it is a link. */
+@layer components {
+	@media (min-width: 992px) { .rs-contact { column-gap: 50px; } }
+	.rs-category-card h3 a { text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 4px; }
+	.rs-category-card h3 a:hover, .rs-category-card h3 a:focus-visible { color: var(--color-accent-text); text-decoration-color: currentColor; }
+}
+
+/* 1.0.2 (D65): dark theme: the highlight band behind the home heading and the fixed-colour offer tiles take the terracotta of the palette,
+   the team portraits lose the glare of their light backdrop, the Happy Hours 3 button follows the primary colour. */
+@layer components {
+	html[data-theme="dark"] .rs-hero h1::before { background: color-mix(in srgb, var(--color-accent) 32%, var(--color-bg)); }
+	html[data-theme="dark"] .rs-team img { filter: brightness(0.78) contrast(1.05); }
+	html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-inner { box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.5); } /* ds-keep: dims a pale photograph on the dark page */
+	html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-brand img { filter: invert(1) hue-rotate(180deg) brightness(0.95); }
+	html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-desc { color: #fff; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); } /* ds-keep: white words on a dimmed photograph */
+	html[data-theme="dark"] .rs-hh.is-style-3 .rs-btn { background: var(--color-accent); color: var(--ds-c-accent-on, #fff); }
+	html[data-theme="dark"] .rs-hh.is-style-2 .rs-hh-info { background: var(--color-bg); outline: 1px solid var(--color-line); outline-offset: -1px; }
+	html[data-theme="dark"] .rs-hh.is-style-2 .rs-hh-brand { background: #2f6a35; border-bottom-color: #25522a; } /* ds-keep: offer tile: fixed green, toned down for the dark page */
+	html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-badge { background: #2a6a30; box-shadow: inset 0 0 0 5px #2a6a30, inset 0 0 0 7px #fff; } /* ds-keep: offer tile: fixed green, toned down for the dark page */
+}
+
+/* 1.0.2 (D65): a telephone number in the contact card never breaks across two lines. */
+@layer components {
+	.rs-contact-card a[href^="tel:"] { white-space: nowrap; }
+}
+
+/* 1.0.2 (D65): the pager now carries Start and End as the source's does: at phone width it tightens so it never runs past the screen. */
+@layer components {
+	@media (max-width: 575px) {
+		.rs-pagination li a, .rs-pagination li span { padding: 8px 10px; }
+		.rs-pagination ul { flex-wrap: wrap; }
+	}
+}
+
+/* 1.0.2 (D65), review round 1: measured against the source. */
+@layer components {
+	@media (min-width: 992px) {
+		.rs-footer-cols > div:first-child { padding-inline: 75px; }
+		.rs-main-list.is-blog { padding-top: 60px; }
+		.rs-albums { column-gap: 47px; row-gap: 66px; }
+	}
+	@media (min-width: 992px) { .rs-categories { gap: 50px; } }
+	@media (min-width: 576px) and (max-width: 991px) { .rs-categories { row-gap: 50px; } }
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-side-mod.is-primary { padding-inline: 25px; }
+		.rs-album-stage { max-width: 536px; }
+	}
+	.rs-album-viewer { box-shadow: 0 4px 0 -1px var(--color-surface), 0 5px 0 -1px var(--color-line), 0 9px 0 -3px var(--color-surface), 0 10px 0 -3px var(--color-line); }
+	.rs-history-text p, .rs-team-card p, .rs-prose p { text-wrap: pretty; }
+	.rs-hh-link .rs-btn { padding: 20px 45px; line-height: 1; }
+	@media (min-width: 768px) { .rs-dishes.is-style-3 .rs-dish-cost { right: 2px; } }
+	.rs-flat-menu .rs-dishes.is-style-2 { margin-top: 30px; }
+	@media (max-width: 991px) {
+		.rs-reserve-intro { margin-bottom: 60px; }
+		.rs-collage-card { padding: 40px 50px; }
+	}
+	@media (max-width: 767px) {
+		.rs-hh.is-style-1 .rs-hh-badge { transform: none; }
+	}
+	@media (max-width: 575px) {
+		.rs-flat-menu { padding-top: 30px; }
+		.rs-flat-menu .rs-dishes.is-style-2 { margin-top: 0; }
+		.rs-pagination-count { order: -1; }
+	}
+	html[data-theme="dark"] .rs-team img { filter: brightness(0.6) contrast(1.05); }
+	html[data-theme="dark"] .rs-hh.is-style-3 .rs-hh-img { filter: brightness(0.35); }
+	html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-inner::before, html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-inner::after { display: none; }
+	html[data-theme="dark"] .rs-hh.is-style-2 .rs-hh-brand img { filter: invert(1) hue-rotate(180deg) brightness(0.95); }
+	.rs-reserve-intro { text-wrap: pretty; }
+	html[data-theme="dark"] .rs-hero h1::before { display: none; }
+	html[data-theme="dark"] .rs-hero { position: relative; background-image: none; }
+	html[data-theme="dark"] .rs-hero > * { position: relative; }
+	@media (min-width: 768px) {
+		html[data-theme="dark"] .rs-hero::before { content: ""; position: absolute; inset: 0; background: var(--hero-bg) no-repeat bottom right; filter: invert(1); mix-blend-mode: screen; opacity: 0.55; pointer-events: none; } /* ds-keep: the sketch is drawn as white lines on the dark page */
+	}
+}
+
+/* 1.0.2 (D65): in a search result the dash and the category name stay together. */
+@layer components {
+	.rs-search-results .rs-meta { white-space: nowrap; }
+}
+
+/* 1.0.2 (D65): the About rating bars and the Our Food Network text keep the source's measure. */
+@layer components {
+	@media (min-width: 992px) { .rs-features-body { padding-right: 0; } }
+	.rs-stats-list { margin-inline: 25px; }
+	@media (max-width: 575px) { .rs-features-text { padding-inline: 0; } .rs-features-image { padding-inline: 0; } }
+}
+
+/* 1.0.2 (D65), review round 3: measured against the source (computed boxes of both pages). */
+@layer components {
+	@media (min-width: 992px) { .rs-category-card h3 { margin-bottom: 12px; } .rs-category-card { padding-bottom: 80px; } }
+	@media (min-width: 992px) { .rs-categories { padding-bottom: 140px; } }
+	@media (max-width: 575px) { .rs-main-list.is-blog { padding-top: 60px; } }
+	@media (min-width: 576px) and (max-width: 991px) { .rs-reserve-intro { padding-inline: 27px; } }
+	@media (min-width: 768px) {
+		.rs-flat-menu .rs-dishes.is-style-2 .rs-dish-inner { align-items: start; align-content: start; grid-template-rows: auto auto 1fr; grid-template-columns: 250px minmax(0, 1fr) 89px; column-gap: 0; }
+	}
+	@media (min-width: 768px) {
+		.rs-flat-menu .rs-dishes.is-style-2 .rs-dish-name, .rs-flat-menu .rs-dishes.is-style-2 .rs-dish-desc { align-self: start; padding-left: 30px; }
+		.rs-flat-menu .rs-dishes.is-style-2 .rs-dish-photo { grid-row: 1 / span 3; }
+		.rs-flat-menu .rs-dishes.is-style-2 .rs-dish-cost { grid-row: 1 / span 3; align-self: center; padding-left: 24px; line-height: 108.75px; }
+	}
+	@media (min-width: 992px) {
+		.rs-flat-menu .rs-dishes.is-style-2 .rs-dish-inner { grid-template-columns: 250px 473px 89px; }
+	}
+	@media (min-width: 992px) {
+		.rs-reserve-online { padding-top: 119px; }
+		.rs-reserve-online p { margin-bottom: 11px; }
+		.rs-reserve-online .rs-btn-lg { padding: 14px 20px; }
+		.rs-album-prev, .rs-album-next { width: 80px; height: 80px; margin-top: -40px; font-size: 30px; }
+		.rs-album-prev { left: 31px; }
+		.rs-album-next { right: 31px; }
+	}
+}
+
+/* 1.0.2 (D65), review round 4: the eleven measured differences of round 3. */
+@layer components {
+	@media (min-width: 992px) {
+		.rs-features-text { padding-right: 0; }
+		.rs-features-text .rs-btn { margin-top: -1px; }
+		.rs-team { padding-bottom: 152px; }
+		.rs-main:has(.rs-article), .rs-main:has(.rs-search-results) { padding-bottom: 120px; }
+		.rs-main-list.is-featured { padding-bottom: 49px; }
+		.rs-main-grid.is-home > .rs-side { padding-top: 28px; }
+		.rs-reserve-row:not(.is-flip) .rs-reserve-text { padding-right: 34px; }
+		.rs-flat-menu .rs-dishes.is-style-2 .rs-dish-desc { padding-right: 4px; }
+	}
+	.rs-side-mod.is-primary li:first-child { padding-top: 12px; }
+	@media (max-width: 575px) {
+		.rs-reserve-text h3 { font-size: 28px; line-height: 36.4px; }
+		.rs-reserve-intro { font-size: 18px; line-height: 33.75px; padding-inline: 3px; }
+	}
+}
+
+/* 1.0.2 (D68), review round 5: the empty newsletter status line takes no room, as in the source (box 30 px below the field); phone: section and box padding 30 px. */
+@layer components {
+	.rs-subscribe-status:empty { margin: 0; min-height: 0; }
+	@media (max-width: 575px) {
+		.rs-subscribe { padding-block: 30px; }
+		.rs-subscribe-box { padding-block: 30px; }
+	}
+}
+
+/* 1.0.2 (D68), review round 5, measured against the source at each width. */
+@layer components {
+	.rs-main-list.is-blog { padding-top: 60px; }
+	@media (max-width: 991px) {
+		.rs-history { padding-top: 60px; }
+		.rs-side-mod.rs-banner { padding: 25px; }
+		.rs-banner img { width: calc(100% + 50px); margin: -25px -25px 0; }
+		.rs-banner-price { margin: 0 -25px 25px; }
+	}
+	.rs-side-mod.rs-banner li { padding: 15px 0 0 20px; margin-top: 15px; border: 0; border-top: 1px dotted var(--color-line); font-size: 16px; }
+	.rs-side-mod.rs-banner li:first-child { padding-top: 0; margin-top: 0; border-top: 0; }
+	.rs-banner-actions .rs-btn { padding: 9px 15px; }
+	@media (max-width: 575px) {
+		.rs-features-intro { padding-top: 30px; padding-bottom: 41px; }
+		.rs-team { padding-bottom: 59px; }
+		.rs-side-mod.is-primary li:first-child { padding-top: 0; }
+		.rs-team-card { margin-bottom: 40px; }
+		.rs-team-photo img { max-width: 280px; }
+		.rs-team .rs-section-desc { margin-inline: -25px; }
+	}
+}
+@layer components {
+	.rs-features-text .rs-btn { margin-top: -1px; }
+}
+@layer components {
+	.rs-stats-card .rs-btn { padding: 14px 33px; }
+	@media (min-width: 576px) { .rs-features-text { padding-right: 0; } }
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-team-grid { gap: 0 50px; }
+		.rs-team-card { padding: 50px; }
+		.rs-team-photo img { max-width: 234px; }
+		.rs-team { padding-bottom: 158px; }
+	}
+}
+@layer components {
+	.rs-lead p { white-space: pre-line; }
+	@media (min-width: 992px) { .rs-main-list.is-tagged .rs-side { padding-top: 30px; } }
+}
+@layer components {
+	@media (min-width: 992px) { .rs-stats::before { background-position: 50% 100px; background-attachment: fixed; } }
+	.rs-collage { background-position: 0 30%; }
+}
+@layer components {
+	.rs-search-form input { width: 100%; margin-bottom: 18px; vertical-align: top; }
+	.rs-search-form .rs-btn { height: 48px; padding: 9px 20px; vertical-align: top; }
+	.rs-search-form { padding-bottom: 80px; }
+}
+@layer components {
+	.rs-reserve { padding-bottom: 60px; }
+	.rs-reserve-online .rs-btn-lg { padding: 14px 20px; }
+	@media (min-width: 576px) and (max-width: 991px) { .rs-reserve-intro { font-size: 18px; line-height: 33.75px; margin-bottom: 104px; } }
+	@media (max-width: 575px) { .rs-reserve-intro { margin-bottom: 29px; } }
+}
+@layer components {
+	@media (max-width: 575px) { .rs-dish-photo { height: 168px; } .rs-flat-menu:has(.rs-dish-photo) { padding-bottom: 180px; } }
+}
+@layer components {
+	.rs-lead h2 { margin-top: 30px; }
+	.rs-lead p { margin-bottom: 15px; }
+	.rs-history { padding-bottom: 60px; }
+	@media (max-width: 575px) { .rs-lead { padding-block: 30px 64px; } .rs-timeline { padding-top: 30px; } }
+}
+@layer components {
+	.rs-timeline-item:first-child .rs-timeline-card img { aspect-ratio: 2 / 1; height: auto; object-fit: cover; }
+	@media (min-width: 992px) { .rs-timeline-item { margin-bottom: 74px; } }
+	@media (min-width: 576px) and (max-width: 991px) { .rs-timeline-item { margin-bottom: 72px; } }
+}
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) { .rs-main:has(.rs-banner) { padding-bottom: 120px; } }
+	@media (max-width: 575px) { .rs-main:has(.rs-banner) { padding-bottom: 90px; } }
+}
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) { .rs-main-list.is-featured { padding-bottom: 68px; } }
+	@media (max-width: 575px) { .rs-main-list.is-featured { padding-bottom: 67px; } }
+}
+
+/* 1.0.2 (D69), review round 6: the nine notes of round 5, each scoped to the page or width it was measured at. */
+@layer components {
+	.ec-form textarea, .ec-form textarea.ec-form-input { height: 320px; }
+	@media (min-width: 992px) {
+		.rs-offer-text > div { padding-top: 59px; }
+		.rs-main-grid.is-home > :first-child { padding-bottom: 20px; }
+		.rs-main-list.is-tagged { padding-bottom: 64px; }
+	}
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-side-mod.is-primary { padding-block: 25px; }
+		.rs-side-mod.is-primary .rs-side-title { margin-bottom: 20px; }
+		.rs-side-mod.is-primary li:first-child { padding-top: 0; padding-bottom: 30px; }
+		.rs-side-mod.is-primary li:not(:first-child) { padding-block: 30px; }
+		.rs-side-mod.is-primary li:last-child { padding-bottom: 15px; }
+	}
+	@media (max-width: 991px) { .rs-collage-img img { width: 100%; height: auto; aspect-ratio: 5 / 3; } }
+}
+
+/* 1.0.2 (D70), review round 7: the eight notes of round 6, each measured on the source at 1440, 768 and 390. */
+@layer components {
+	.rs-reserve-text .rs-btn { padding: 8px 11px; border: 1px solid transparent; }
+	.ec-form input[type="text"], .ec-form input[type="email"] { height: 50px; }
+	@media (min-width: 992px) {
+		.ec-form .ec-form-page { gap: 20px 50px; }
+		.rs-contact { padding-bottom: 80px; }
+		.rs-main-list.is-blog { padding-bottom: 120px; }
+	}
+	@media (max-width: 575px) {
+		.rs-hh.is-style-2 .rs-hh-other { right: auto; bottom: auto; padding-inline: 30px; }
+	}
+}
+@layer components {
+	.rs-team-grid { align-items: start; }
+	.rs-team-name { margin-bottom: 10px; }
+	@media (min-width: 992px) { .rs-team { padding-bottom: 132px; } }
+	@media (min-width: 576px) and (max-width: 991px) { .rs-team { padding-bottom: 138px; } }
+	@media (max-width: 575px) { .rs-team { padding-bottom: 19px; } }
+}
+
+/* 1.0.2 (D70), regression sweep: deltas of our own edits against the source at every width. */
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-slideshow, .rs-slideshow.is-plain { height: 358px; aspect-ratio: auto; }
+		.rs-slide > img { object-position: center bottom; }
+		.rs-hero { padding-bottom: 170px; }
+	}
+	.rs-side-mod.is-primary .rs-side-title { margin-bottom: 20px; }
+	.rs-side-mod.is-primary li:first-child { padding-top: 0; padding-bottom: 30px; }
+	.rs-side-mod.is-primary li:not(:first-child) { padding-block: 30px; }
+	.rs-side-mod.is-primary li:last-child { padding-bottom: 15px; }
+	@media (max-width: 575px) { .rs-team-card { padding: 30px; } .rs-side-mod.is-primary .rs-side-title { margin-bottom: 7.5px; } }
+	.rs-banner-actions .rs-btn { padding: 9px 12.5px; }
+	.rs-features-text .rs-btn { padding-inline: 15.5px; }
+}
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-collage { padding: 180px 0; }
+		.rs-collage-item.is-odd { top: -240px; }
+		.rs-collage-item.is-even { top: 240px; }
+		.rs-collage-card { padding: 30px 50px; }
+		.rs-hero { padding-top: 210px; padding-bottom: 180px; }
+	}
+	@media (max-width: 575px) { .rs-collage-card { padding: 30px 50px; } }
+}
+@layer components {
+	.rs-hh-link .rs-btn { font-size: 16px; line-height: 16px; }
+	@media (min-width: 576px) { .rs-hh.is-style-1 .rs-hh-desc { margin-top: -5px; } }
+	@media (max-width: 575px) { .rs-search-form .rs-btn { height: 41px; padding-block: 5px; } }
+}
+@layer components {
+	.rs-pagination ul { gap: 5px 6px; }
+	.rs-pagination li a, .rs-pagination li span { margin-left: 0; }
+	@media (max-width: 575px) { .rs-pagination li a, .rs-pagination li span { padding: 8px 15px; } }
+}
+@layer components {
+	.rs-hh.is-style-1 .rs-hh-link .rs-btn { padding-inline: 44.5px; }
+	.rs-hh.is-style-3 .rs-hh-link .rs-btn { font-size: 14px; line-height: 14px; padding-inline: 45px; }
+	@media (max-width: 575px) { .rs-reserve-intro { margin-bottom: 23px; } }
+}
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-collage-item.is-odd .rs-collage-card { min-height: 758px; }
+		.rs-collage-item.is-even .rs-collage-card { min-height: 701px; }
+	}
+	@media (max-width: 575px) {
+		.rs-collage-item.is-odd .rs-collage-card { min-height: 731px; }
+		.rs-collage-item.is-even .rs-collage-card { min-height: 611px; }
+		.rs-hero { padding-bottom: 70px; }
+		.rs-collage { padding-block: 30px; }
+	}
+}
+
+/* 1.0.2 (D71), review round 8: our own edits must not be worse than the shipped 1.0.1. */
+@layer components {
+	@media (min-width: 576px) { .rs-flat-menu:has(.rs-dishes.is-style-3) { padding-bottom: 326px; } }
+	@media (max-width: 575px) { .rs-flat-menu:has(.rs-dishes.is-style-3) { padding-bottom: 202px; } }
+}
+@layer components {
+	@media (max-width: 575px) {
+		.rs-main-list.is-tagged, .rs-main:has(.rs-search-results), .rs-main:has(.rs-albums), .rs-main:has(.rs-album) { padding-bottom: 70px; }
+		.rs-categories { padding-bottom: 100px; }
+		.rs-contact { padding-bottom: 70px; }
+		.rs-main:has(.rs-main-grid.is-home) { padding-bottom: 95px; }
+	}
+}
+
+/* 1.0.2 (D72), design system measurement: the Happy Hours title lies on a photograph, so in the dark theme it takes the system's text role under a system and keeps the template's accent-text value without one (the Add site preview read 2.84:1 on the photograph under one system against 3.96:1 on the template page). */
+@layer components {
+	html[data-theme="dark"] .rs-hh.is-style-1 .rs-hh-title { color: var(--ds-c-fg, #f08a68); } /* the words lie on a photograph: under a system they take its text role, not its accent; without a system the value is the template's own --color-accent-text of the dark theme */
+}
+
+/* 1.0.2 (D71), review round 8: the diamond of the first Categories row sits on the first line of its text (its row has 30 px under the text and none above, so a diamond centred on the row hung 15 px below the words). */
+@layer components {
+	.rs-side-mod.is-primary li:first-child::before { top: 11px; }
+}
+
+/* 1.0.2 (D71), review round 8: at 576-991 px the sidebar module's own top padding is the source's 25 px (HEAD 50 px), so the module moves 25 px down to keep its title where the shipped 1.0.1 and the source (title 145 px under the Prev link) draw it. */
+@layer components {
+	@media (min-width: 576px) and (max-width: 991px) {
+		.rs-main-grid:not(.is-home):not(.is-search) > .rs-side { margin-top: 65px; }
+	}
+}
+
+/* 1.0.2 (D73), template kit: the contact card's two telephone lines are links (`tel:`) and look as the source draws them, in the card's own colour. */
+@layer components {
+	.rs-contact-details a[href^="tel:"] { color: inherit; }
+}
+
+/* 1.0.2 (D74), review of the final tree against the shipped HEAD build: seven rules for places where ours was farther from the source or from HEAD. */
+@layer components {
+	@media (min-width: 992px) { .rs-features-text p { padding-right: 100px; } }
+	@media (max-width: 575px) { .rs-team-card p { word-spacing: 0.5px; } }
+	.rs-banner-points li { text-wrap: pretty; }
+	html[data-theme="dark"] .rs-contact-card img { filter: brightness(0.6) contrast(1.05); }
+	@media (min-width: 1200px) { .rs-dishes.is-style-2 .rs-dish-desc { word-spacing: -0.3px; } }
+	@media (max-width: 575px) { .rs-lead p { text-wrap: pretty; } }
+	html[data-theme="dark"] .rs-hh.is-style-3 .rs-hh-img { filter: brightness(0.55); }
 }

@@ -36,7 +36,8 @@ function labelResolver(map) {
     if (n) byWords.set(n, [...(byWords.get(n) ?? []), s])
   }
   const inLinks = new Map()
-  for (const s of text)
+  // A link inside a rich text slot (an EmDash Portable Text field keeps it as an `<a>` in its sample) is that slot's own words.
+  for (const s of (map.slots ?? []).filter((x) => x.type === 'text' || x.type === 'richtext'))
     for (const m of String(s.sample ?? '').matchAll(
       /(?:<a\b[^>]*>|\(\(a\b(?:(?!\)\)).)*\)\))(.*?)(?:<\/a>|\(\(\/a\)\))/gis
     )) {
@@ -129,15 +130,26 @@ function labelResolver(map) {
   }
   // A link that shows its own e-mail or phone address, written inside a text slot of the block's own item (a body
   // that prints `<a href="mailto:...">` in its text): that text slot, when it is the only one.
-  const addressIn = (b, l, n) => {
+  const addressIn = (b, l, n, declared) => {
     const to = String(l.target ?? '')
     if (!n || !/^(?:mailto|tel):/i.test(to)) return null
     const address = decodeURIComponent(to.replace(/^[a-z]+:/i, '').split('?')[0])
     const digits = (x) => x.replace(/\D/g, '')
-    const same = /^tel:/i.test(to) ? digits(address) === digits(n) : normText(address) === n
+    const same = /^tel:/i.test(to) ? digits(address).endsWith(digits(n)) && digits(n).length >= 7 : normText(address) === n
     if (!same) return null
-    const own = new Set([b.source?.entity, ...(b.source?.contains ?? [])].filter(Boolean))
-    const hits = text.filter((s) => own.has(s.entity) && wholeIn(normText(s.sample ?? ''), n))
+    // A block whose own entity is only its layout name (EmDash `block-…`) holds the entities of its declared slots.
+    const own = new Set(
+      [b.source?.entity, ...(b.source?.contains ?? []), ...[...(declared ?? [])].map((k) => entityOf.get(k))].filter(
+        Boolean
+      )
+    )
+    // The number is a text slot's words, or a rich text slot's (a Portable Text paragraph that prints the `tel:` link).
+    const hits = (map.slots ?? []).filter(
+      (s) =>
+        (s.type === 'text' || s.type === 'richtext') &&
+        own.has(s.entity) &&
+        wholeIn(normText(s.sample ?? ''), n)
+    )
     return hits.length === 1 ? neutralKey(hits[0].key) : null
   }
   const shownWords = (b, l, declared, used) => {
@@ -171,7 +183,7 @@ function labelResolver(map) {
       const named = shownWords(b, { ...l, label: name }, declared, used)
       if (named) return named
     }
-    return addressIn(b, l, n)
+    return addressIn(b, l, n, declared)
   }
 }
 

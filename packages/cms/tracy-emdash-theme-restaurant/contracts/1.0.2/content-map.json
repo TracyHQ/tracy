@@ -1171,6 +1171,8 @@
         "item": 0,
         "kind": "business"
       },
+      "nonVisual": true,
+      "nonVisualFrom": "the site title is used only in the document `<title>` and `og:site_name` (Base.astro): no page draws it in a box and the setting declares no maxLength, so it has no limit (the business name the footer prints is its own slot, chrome.brand_name, which is measured)",
       "fit": {
         "measured": false
       }
@@ -1452,22 +1454,22 @@
         "boxes": {
           "desktop": {
             "width": 1140,
-            "height": 68
+            "height": 101
           },
           "phone": {
             "width": 340,
-            "height": 135
+            "height": 169
           }
         },
         "lines": {
-          "desktop": 2,
-          "phone": 4
+          "desktop": 3,
+          "phone": 5
         },
         "maxChars": {
-          "desktop": 260,
-          "phone": 152
+          "desktop": 390,
+          "phone": 190
         },
-        "maxCharacters": 152,
+        "maxCharacters": 190,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -1484,6 +1486,8 @@
       "sample": "Phone Reservation",
       "label": "Title",
       "role": "editorial.heading",
+      "maxCharacters": 21,
+      "maxCharactersFrom": "declared by the theme: the page's menu label, a sub-menu item that opens on hover: its box is 218 px wide with 25 px of padding on each side and 7.9 px per character at 1440 px, measured with the menu open (the smallest of the menu's rows)",
       "fit": {
         "measured": false
       }
@@ -3143,7 +3147,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -3156,7 +3160,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 28,
+          "desktop": 27,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -3446,7 +3450,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -3459,7 +3463,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 27,
+          "desktop": 26,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -3749,7 +3753,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -3762,7 +3766,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 27,
+          "desktop": 26,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -4052,7 +4056,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -4065,7 +4069,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 27,
+          "desktop": 26,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -4275,7 +4279,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -4288,7 +4292,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 27,
+          "desktop": 26,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -4458,7 +4462,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -4471,7 +4475,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 27,
+          "desktop": 26,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -4761,7 +4765,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 263,
+            "width": 250,
             "height": 30
           },
           "phone": {
@@ -4774,7 +4778,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 28,
+          "desktop": 26,
           "phone": 17
         },
         "maxCharacters": 17,
@@ -5593,7 +5597,7 @@
         "field": "hero_intro"
       },
       "type": "richtext",
-      "sample": "Since 1982, RES has welcomed Brooklyn to one of the neighborhood\u2019s oldest buildings, at 4 5th Avenue at St. Marks Place, Cathedral District. Our kitchen cooks seasonal market produce over a wood fire, the bar pours local beer and classic cocktails, and every table gets the same warm welcome, whether you drop in for a quick lunch or stay for a long dinner.",
+      "sample": "Since 1982, RES has welcomed Brooklyn to one of the neighborhood\u2019s oldest buildings, at <a href=\"https://www.google.com/maps/search/?api=1&amp;query=4+5th+Avenue%2C+Brooklyn%2C+NY+11217\">4 5th Avenue at St. Marks Place, Cathedral District</a>. Our kitchen cooks seasonal market produce over a wood fire, the bar pours local beer and classic cocktails, and every table gets the same warm welcome, whether you drop in for a quick lunch or stay for a long dinner.",
       "label": "Hero intro"
     },
     {
@@ -5721,7 +5725,7 @@
         "field": "hero_intro"
       },
       "type": "richtext",
-      "sample": "Mattis quis senectus lobortis adipiscing felis vel commodo Integer elit vel. Vestibulum quis at nibh Quisque urna urna habitant Nam Morbi turpis. Vivamus tempor massa sit scelerisque parturient nibh id wisi semper elit. Justo velit malesuada ut Mauris lorem pretium tincidunt enim odio elit. Elit mauris justo magna vel consequat sit vestibulum vel nunc velit.",
+      "sample": "Mattis quis senectus lobortis adipiscing felis vel commodo Integer elit vel. Vestibulum quis at nibh <a href=\"#\">Quisque urna urna habitant</a> Nam Morbi turpis. Vivamus tempor massa sit scelerisque parturient nibh id wisi semper elit. Justo velit malesuada ut Mauris lorem pretium tincidunt enim odio elit. Elit mauris justo magna vel consequat sit vestibulum vel nunc velit.",
       "label": "Hero intro"
     },
     {
@@ -5848,7 +5852,7 @@
           },
           "phone": {
             "width": 390,
-            "height": 300
+            "height": 234
           }
         },
         "aspect": 1.6667,
@@ -5885,7 +5889,7 @@
             "height": 128
           },
           "phone": {
-            "width": 330,
+            "width": 290,
             "height": 44
           }
         },
@@ -5895,9 +5899,9 @@
         },
         "maxChars": {
           "desktop": 32,
-          "phone": 20
+          "phone": 18
         },
-        "maxCharacters": 20,
+        "maxCharacters": 18,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -5924,19 +5928,19 @@
             "height": 300
           },
           "phone": {
-            "width": 330,
-            "height": 360
+            "width": 290,
+            "height": 420
           }
         },
         "lines": {
           "desktop": 10,
-          "phone": 12
+          "phone": 14
         },
         "maxChars": {
           "desktop": 520,
-          "phone": 516
+          "phone": 532
         },
-        "maxCharacters": 516,
+        "maxCharacters": 520,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -5973,7 +5977,7 @@
         },
         "maxChars": {
           "desktop": 9,
-          "phone": 33
+          "phone": 29
         },
         "maxCharacters": 9,
         "casing": "upper",
@@ -6076,7 +6080,7 @@
           },
           "phone": {
             "width": 390,
-            "height": 300
+            "height": 234
           }
         },
         "aspect": 1.6667,
@@ -6113,7 +6117,7 @@
             "height": 128
           },
           "phone": {
-            "width": 330,
+            "width": 290,
             "height": 88
           }
         },
@@ -6123,7 +6127,7 @@
         },
         "maxChars": {
           "desktop": 30,
-          "phone": 40
+          "phone": 34
         },
         "maxCharacters": 30,
         "casing": "upper",
@@ -6152,17 +6156,17 @@
             "height": 210
           },
           "phone": {
-            "width": 330,
-            "height": 270
+            "width": 290,
+            "height": 300
           }
         },
         "lines": {
           "desktop": 7,
-          "phone": 9
+          "phone": 10
         },
         "maxChars": {
           "desktop": 364,
-          "phone": 396
+          "phone": 380
         },
         "maxCharacters": 364,
         "casing": "none",
@@ -6201,9 +6205,9 @@
         },
         "maxChars": {
           "desktop": 41,
-          "phone": 34
+          "phone": 30
         },
-        "maxCharacters": 34,
+        "maxCharacters": 30,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -7069,11 +7073,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 520,
+            "width": 545,
             "height": 64
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 44
           }
         },
@@ -7082,10 +7086,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 29,
-          "phone": 27
+          "desktop": 31,
+          "phone": 28
         },
-        "maxCharacters": 27,
+        "maxCharacters": 28,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -7099,7 +7103,7 @@
         "field": "description"
       },
       "type": "richtext",
-      "sample": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.\n\nMeet Our Team",
+      "sample": "Get started with the list of our best recipes. Narrow down those great options using our customised recipe filters. One you find the perfect dish, print & share your finds with friends. Sure you can make your meal planning a success.\n\n<a href=\"#our-team\">Meet Our Team</a>",
       "label": "Description"
     },
     {
@@ -7130,8 +7134,8 @@
             "height": 475
           },
           "phone": {
-            "width": 290,
-            "height": 379
+            "width": 340,
+            "height": 445
           }
         },
         "aspect": 0.7642,
@@ -11250,7 +11254,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -11362,7 +11366,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-2.jpg",
+      "sample": "images/joomlart/features-intro/intro-4.jpg",
       "label": "Items 2 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -11376,8 +11380,8 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
@@ -11387,7 +11391,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -11499,7 +11503,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-3.jpg",
+      "sample": "images/joomlart/gallery/intro-8.jpg",
       "label": "Items 3 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -11513,23 +11517,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 900,
+          "height": 900,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 250,
-            "height": 158
+            "width": 244,
+            "height": 244
           },
           "phone": {
-            "width": 267,
-            "height": 166
+            "width": 390,
+            "height": 390
           }
         },
-        "aspect": 1.5823,
+        "aspect": 1,
         "tolerance": 0.02,
-        "minWidth": 401,
+        "minWidth": 585,
         "crop": "cover"
       }
     },
@@ -11636,7 +11640,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-4.jpg",
+      "sample": "images/joomlart/food/fd-3.jpg",
       "label": "Items 4 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -11661,7 +11665,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -11773,7 +11777,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-5.jpg",
+      "sample": "images/joomlart/features-intro/intro-3.jpg",
       "label": "Items 5 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -11787,8 +11791,8 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
@@ -11798,7 +11802,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -11910,7 +11914,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-6.jpg",
+      "sample": "images/joomlart/food/fd-5.jpg",
       "label": "Items 6 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -11935,7 +11939,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -12047,7 +12051,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-7.jpg",
+      "sample": "images/joomlart/blog/rest-6.jpg",
       "label": "Items 7 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12061,23 +12065,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 1200,
+          "height": 600,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 250,
-            "height": 158
+            "width": 376,
+            "height": 250
           },
           "phone": {
-            "width": 267,
-            "height": 166
+            "width": 340,
+            "height": 170
           }
         },
-        "aspect": 1.5823,
+        "aspect": 1.504,
         "tolerance": 0.02,
-        "minWidth": 401,
+        "minWidth": 564,
         "crop": "cover"
       }
     },
@@ -12257,7 +12261,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-1.jpg",
+      "sample": "images/joomlart/food/fd-1.jpg",
       "label": "Items 1 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12271,23 +12275,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -12394,7 +12398,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-2.jpg",
+      "sample": "images/joomlart/features-intro/intro-4.jpg",
       "label": "Items 2 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12408,23 +12412,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -12531,7 +12535,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-3.jpg",
+      "sample": "images/joomlart/gallery/intro-8.jpg",
       "label": "Items 3 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12545,23 +12549,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 900,
+          "height": 900,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 244,
+            "height": 244
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 390,
+            "height": 390
           }
         },
         "aspect": 1,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 585,
         "crop": "cover"
       }
     },
@@ -12668,7 +12672,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-4.jpg",
+      "sample": "images/joomlart/food/fd-3.jpg",
       "label": "Items 4 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12682,23 +12686,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -12805,7 +12809,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-6.jpg",
+      "sample": "images/joomlart/features-intro/intro-3.jpg",
       "label": "Items 5 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12819,23 +12823,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -12942,7 +12946,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-7.jpg",
+      "sample": "images/joomlart/food/fd-5.jpg",
       "label": "Items 6 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -12956,23 +12960,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -13079,7 +13083,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-8.jpg",
+      "sample": "images/joomlart/blog/rest-6.jpg",
       "label": "Items 7 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -13093,23 +13097,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 600,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 376,
+            "height": 250
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 340,
+            "height": 170
           }
         },
-        "aspect": 1,
+        "aspect": 1.504,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 564,
         "crop": "cover"
       }
     },
@@ -13216,7 +13220,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-9.jpg",
+      "sample": "images/joomlart/blog/rest-7.jpg",
       "label": "Items 8 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -13230,23 +13234,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 600,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 245,
+            "height": 250
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 340,
+            "height": 170
           }
         },
-        "aspect": 1,
+        "aspect": 0.98,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 510,
         "crop": "cover"
       }
     },
@@ -13353,7 +13357,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-10.jpg",
+      "sample": "images/joomlart/icream/ic-11.jpg",
       "label": "Items 9 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -13490,7 +13494,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-11.jpg",
+      "sample": "images/joomlart/food/fd-2.jpg",
       "label": "Items 10 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -13504,8 +13508,8 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
@@ -15569,7 +15573,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -15613,7 +15617,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -15657,8 +15661,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 120,
-            "height": 58
+            "width": 89,
+            "height": 109
           },
           "phone": {
             "width": 65,
@@ -15701,7 +15705,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -15758,7 +15762,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -15790,7 +15794,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -15834,7 +15838,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -15912,7 +15916,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-2.jpg",
+      "sample": "images/joomlart/features-intro/intro-4.jpg",
       "label": "Items 2 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -15926,8 +15930,8 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
@@ -15937,7 +15941,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -15969,7 +15973,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -16013,7 +16017,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -16057,8 +16061,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 120,
-            "height": 58
+            "width": 89,
+            "height": 109
           },
           "phone": {
             "width": 63,
@@ -16101,7 +16105,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -16133,7 +16137,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-3.jpg",
+      "sample": "images/joomlart/gallery/intro-8.jpg",
       "label": "Items 3 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -16147,23 +16151,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 900,
+          "height": 900,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 250,
-            "height": 158
+            "width": 244,
+            "height": 244
           },
           "phone": {
-            "width": 267,
-            "height": 166
+            "width": 390,
+            "height": 390
           }
         },
-        "aspect": 1.5823,
+        "aspect": 1,
         "tolerance": 0.02,
-        "minWidth": 401,
+        "minWidth": 585,
         "crop": "cover"
       }
     },
@@ -16190,7 +16194,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -16234,7 +16238,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -16278,8 +16282,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 120,
-            "height": 58
+            "width": 89,
+            "height": 109
           },
           "phone": {
             "width": 63,
@@ -16333,7 +16337,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-4.jpg",
+      "sample": "images/joomlart/food/fd-3.jpg",
       "label": "Items 4 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -16358,7 +16362,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -16390,7 +16394,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -16434,7 +16438,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -16512,7 +16516,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-5.jpg",
+      "sample": "images/joomlart/features-intro/intro-3.jpg",
       "label": "Items 5 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -16526,8 +16530,8 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
@@ -16537,7 +16541,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -16569,7 +16573,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -16613,7 +16617,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -16657,8 +16661,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 120,
-            "height": 58
+            "width": 89,
+            "height": 109
           },
           "phone": {
             "width": 64,
@@ -16712,7 +16716,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-6.jpg",
+      "sample": "images/joomlart/food/fd-5.jpg",
       "label": "Items 6 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -16737,7 +16741,7 @@
           },
           "phone": {
             "width": 267,
-            "height": 166
+            "height": 168
           }
         },
         "aspect": 1.5823,
@@ -16769,7 +16773,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 29
           },
           "phone": {
@@ -16813,7 +16817,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 383,
+            "width": 473,
             "height": 48
           },
           "phone": {
@@ -16857,8 +16861,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 120,
-            "height": 58
+            "width": 89,
+            "height": 109
           },
           "phone": {
             "width": 66,
@@ -16912,7 +16916,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/food/fd-7.jpg",
+      "sample": "images/joomlart/blog/rest-6.jpg",
       "label": "Items 7 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -16926,23 +16930,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 250,
-          "height": 150,
+          "width": 1200,
+          "height": 600,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 250,
-            "height": 158
+            "width": 376,
+            "height": 250
           },
           "phone": {
-            "width": 267,
-            "height": 166
+            "width": 340,
+            "height": 170
           }
         },
-        "aspect": 1.5823,
+        "aspect": 1.504,
         "tolerance": 0.02,
-        "minWidth": 401,
+        "minWidth": 564,
         "crop": "cover"
       }
     },
@@ -17042,7 +17046,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -17055,10 +17059,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 20,
+          "desktop": 23,
           "phone": 26
         },
-        "maxCharacters": 20,
+        "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -17164,7 +17168,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-1.jpg",
+      "sample": "images/joomlart/food/fd-1.jpg",
       "label": "Items 1 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -17178,23 +17182,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -17221,7 +17225,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -17234,10 +17238,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 21,
+          "desktop": 24,
           "phone": 28
         },
-        "maxCharacters": 21,
+        "maxCharacters": 24,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -17343,7 +17347,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-2.jpg",
+      "sample": "images/joomlart/features-intro/intro-4.jpg",
       "label": "Items 2 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -17357,23 +17361,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -17400,7 +17404,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -17413,10 +17417,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 18,
+          "desktop": 20,
           "phone": 23
         },
-        "maxCharacters": 18,
+        "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -17543,7 +17547,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-3.jpg",
+      "sample": "images/joomlart/gallery/intro-8.jpg",
       "label": "Items 3 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -17557,23 +17561,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 900,
+          "height": 900,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 244,
+            "height": 244
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 390,
+            "height": 390
           }
         },
         "aspect": 1,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 585,
         "crop": "cover"
       }
     },
@@ -17600,7 +17604,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -17613,10 +17617,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 21,
+          "desktop": 24,
           "phone": 27
         },
-        "maxCharacters": 21,
+        "maxCharacters": 24,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -17743,7 +17747,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-4.jpg",
+      "sample": "images/joomlart/food/fd-3.jpg",
       "label": "Items 4 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -17757,23 +17761,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -17800,7 +17804,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -17813,10 +17817,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 16,
+          "desktop": 18,
           "phone": 20
         },
-        "maxCharacters": 16,
+        "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -17922,7 +17926,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-6.jpg",
+      "sample": "images/joomlart/features-intro/intro-3.jpg",
       "label": "Items 5 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -17936,23 +17940,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 1200,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -17979,7 +17983,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -17992,10 +17996,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 20,
+          "desktop": 22,
           "phone": 25
         },
-        "maxCharacters": 20,
+        "maxCharacters": 22,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -18122,7 +18126,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-7.jpg",
+      "sample": "images/joomlart/food/fd-5.jpg",
       "label": "Items 6 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -18136,23 +18140,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 250,
+            "height": 158
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 267,
+            "height": 168
           }
         },
-        "aspect": 1,
+        "aspect": 1.5823,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 401,
         "crop": "cover"
       }
     },
@@ -18179,7 +18183,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -18192,10 +18196,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 19,
+          "desktop": 22,
           "phone": 24
         },
-        "maxCharacters": 19,
+        "maxCharacters": 22,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -18322,7 +18326,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-8.jpg",
+      "sample": "images/joomlart/blog/rest-6.jpg",
       "label": "Items 7 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -18336,23 +18340,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 600,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 376,
+            "height": 250
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 340,
+            "height": 170
           }
         },
-        "aspect": 1,
+        "aspect": 1.504,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 564,
         "crop": "cover"
       }
     },
@@ -18379,8 +18383,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
-            "height": 47
+            "width": 211,
+            "height": 23
           },
           "phone": {
             "width": 180,
@@ -18388,14 +18392,14 @@
           }
         },
         "lines": {
-          "desktop": 2,
+          "desktop": 1,
           "phone": 1
         },
         "maxChars": {
-          "desktop": 38,
+          "desktop": 22,
           "phone": 25
         },
-        "maxCharacters": 25,
+        "maxCharacters": 22,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -18522,7 +18526,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-9.jpg",
+      "sample": "images/joomlart/blog/rest-7.jpg",
       "label": "Items 8 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -18536,23 +18540,23 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 1200,
+          "height": 600,
           "format": "jpg"
         },
         "boxes": {
           "desktop": {
-            "width": 123,
-            "height": 123
+            "width": 245,
+            "height": 250
           },
           "phone": {
-            "width": 123,
-            "height": 123
+            "width": 340,
+            "height": 170
           }
         },
-        "aspect": 1,
+        "aspect": 0.98,
         "tolerance": 0.02,
-        "minWidth": 185,
+        "minWidth": 510,
         "crop": "cover"
       }
     },
@@ -18579,7 +18583,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -18592,10 +18596,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 20,
+          "desktop": 22,
           "phone": 25
         },
-        "maxCharacters": 20,
+        "maxCharacters": 22,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -18701,7 +18705,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-10.jpg",
+      "sample": "images/joomlart/icream/ic-11.jpg",
       "label": "Items 9 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -18758,7 +18762,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 187,
+            "width": 211,
             "height": 23
           },
           "phone": {
@@ -18771,10 +18775,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 18,
+          "desktop": 20,
           "phone": 23
         },
-        "maxCharacters": 18,
+        "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -18880,7 +18884,7 @@
         "sub": "dish_image"
       },
       "type": "image",
-      "sample": "images/joomlart/icream/ic-11.jpg",
+      "sample": "images/joomlart/food/fd-2.jpg",
       "label": "Items 10 \u2014 Dish image",
       "role": "offering.image",
       "group": {
@@ -18894,8 +18898,8 @@
         "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 180,
-          "height": 180,
+          "width": 250,
+          "height": 150,
           "format": "jpg"
         },
         "boxes": {
@@ -19200,6 +19204,8 @@
         "item": 0,
         "kind": "quote"
       },
+      "maxCharacters": 132,
+      "maxCharactersFrom": "declared by the theme: the quote that is showing, filled until it needs another line (390 px: 132, 1440 px: 133); the other quotes of the slider share its layout and are hidden until their turn",
       "fit": {
         "measured": false
       }
@@ -19223,6 +19229,8 @@
         "item": 0,
         "kind": "quote"
       },
+      "maxCharacters": 30,
+      "maxCharactersFrom": "declared by the theme: the author line of the quote that is showing, filled until it needs another line (390 px: 36, 1440 px: 30); the other quotes share its layout",
       "fit": {
         "measured": false
       }
@@ -19292,6 +19300,8 @@
         "item": 1,
         "kind": "quote"
       },
+      "maxCharacters": 132,
+      "maxCharactersFrom": "declared by the theme: the quote that is showing, filled until it needs another line (390 px: 132, 1440 px: 133); the other quotes of the slider share its layout and are hidden until their turn",
       "fit": {
         "measured": false
       }
@@ -19315,6 +19325,8 @@
         "item": 1,
         "kind": "quote"
       },
+      "maxCharacters": 30,
+      "maxCharactersFrom": "declared by the theme: the author line of the quote that is showing, filled until it needs another line (390 px: 36, 1440 px: 30); the other quotes share its layout",
       "fit": {
         "measured": false
       }
@@ -19384,6 +19396,8 @@
         "item": 2,
         "kind": "quote"
       },
+      "maxCharacters": 132,
+      "maxCharactersFrom": "declared by the theme: the quote that is showing, filled until it needs another line (390 px: 132, 1440 px: 133); the other quotes of the slider share its layout and are hidden until their turn",
       "fit": {
         "measured": false
       }
@@ -19407,6 +19421,8 @@
         "item": 2,
         "kind": "quote"
       },
+      "maxCharacters": 30,
+      "maxCharactersFrom": "declared by the theme: the author line of the quote that is showing, filled until it needs another line (390 px: 36, 1440 px: 30); the other quotes share its layout",
       "fit": {
         "measured": false
       }
@@ -19476,6 +19492,8 @@
         "item": 3,
         "kind": "quote"
       },
+      "maxCharacters": 132,
+      "maxCharactersFrom": "declared by the theme: the quote that is showing, filled until it needs another line (390 px: 132, 1440 px: 133); the other quotes of the slider share its layout and are hidden until their turn",
       "fit": {
         "measured": false
       }
@@ -19499,6 +19517,8 @@
         "item": 3,
         "kind": "quote"
       },
+      "maxCharacters": 30,
+      "maxCharactersFrom": "declared by the theme: the author line of the quote that is showing, filled until it needs another line (390 px: 36, 1440 px: 30); the other quotes share its layout",
       "fit": {
         "measured": false
       }
@@ -19601,12 +19621,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 170,
-            "height": 56
+            "width": 196,
+            "height": 58
           },
           "phone": {
-            "width": 170,
-            "height": 56
+            "width": 196,
+            "height": 58
           }
         },
         "lines": {
@@ -19717,11 +19737,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 493,
+            "width": 443,
             "height": 30
           },
           "phone": {
-            "width": 330,
+            "width": 280,
             "height": 30
           }
         },
@@ -19730,10 +19750,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 62,
-          "phone": 40
+          "desktop": 56,
+          "phone": 34
         },
-        "maxCharacters": 40,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -19784,11 +19804,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 493,
+            "width": 443,
             "height": 30
           },
           "phone": {
-            "width": 330,
+            "width": 280,
             "height": 30
           }
         },
@@ -19797,10 +19817,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 57,
-          "phone": 37
+          "desktop": 51,
+          "phone": 31
         },
-        "maxCharacters": 37,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -19851,11 +19871,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 493,
+            "width": 443,
             "height": 30
           },
           "phone": {
-            "width": 330,
+            "width": 280,
             "height": 30
           }
         },
@@ -19864,10 +19884,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 55,
-          "phone": 36
+          "desktop": 49,
+          "phone": 30
         },
-        "maxCharacters": 36,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -19918,11 +19938,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 493,
+            "width": 443,
             "height": 30
           },
           "phone": {
-            "width": 330,
+            "width": 280,
             "height": 30
           }
         },
@@ -19931,10 +19951,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 55,
-          "phone": 35
+          "desktop": 49,
+          "phone": 30
         },
-        "maxCharacters": 35,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20068,8 +20088,8 @@
             "height": 288
           },
           "phone": {
-            "width": 288,
-            "height": 288
+            "width": 280,
+            "height": 280
           }
         },
         "aspect": 1,
@@ -20106,7 +20126,7 @@
             "height": 90
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 120
           }
         },
@@ -20116,9 +20136,9 @@
         },
         "maxChars": {
           "desktop": 174,
-          "phone": 152
+          "phone": 148
         },
-        "maxCharacters": 152,
+        "maxCharacters": 148,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20150,7 +20170,7 @@
             "height": 36
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 36
           }
         },
@@ -20160,9 +20180,9 @@
         },
         "maxChars": {
           "desktop": 40,
-          "phone": 26
+          "phone": 25
         },
-        "maxCharacters": 26,
+        "maxCharacters": 25,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -20194,7 +20214,7 @@
             "height": 30
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 30
           }
         },
@@ -20204,9 +20224,9 @@
         },
         "maxChars": {
           "desktop": 58,
-          "phone": 37
+          "phone": 36
         },
-        "maxCharacters": 37,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20246,8 +20266,8 @@
             "height": 288
           },
           "phone": {
-            "width": 288,
-            "height": 288
+            "width": 280,
+            "height": 280
           }
         },
         "aspect": 1,
@@ -20284,7 +20304,7 @@
             "height": 60
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 120
           }
         },
@@ -20294,7 +20314,7 @@
         },
         "maxChars": {
           "desktop": 120,
-          "phone": 156
+          "phone": 152
         },
         "maxCharacters": 120,
         "casing": "none",
@@ -20328,7 +20348,7 @@
             "height": 36
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 36
           }
         },
@@ -20338,9 +20358,9 @@
         },
         "maxChars": {
           "desktop": 41,
-          "phone": 26
+          "phone": 25
         },
-        "maxCharacters": 26,
+        "maxCharacters": 25,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -20372,7 +20392,7 @@
             "height": 30
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 30
           }
         },
@@ -20382,9 +20402,9 @@
         },
         "maxChars": {
           "desktop": 55,
-          "phone": 36
+          "phone": 35
         },
-        "maxCharacters": 36,
+        "maxCharacters": 35,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20424,8 +20444,8 @@
             "height": 288
           },
           "phone": {
-            "width": 288,
-            "height": 288
+            "width": 280,
+            "height": 280
           }
         },
         "aspect": 1,
@@ -20462,7 +20482,7 @@
             "height": 90
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 120
           }
         },
@@ -20472,9 +20492,9 @@
         },
         "maxChars": {
           "desktop": 171,
-          "phone": 148
+          "phone": 144
         },
-        "maxCharacters": 148,
+        "maxCharacters": 144,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20506,7 +20526,7 @@
             "height": 36
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 36
           }
         },
@@ -20516,9 +20536,9 @@
         },
         "maxChars": {
           "desktop": 41,
-          "phone": 26
+          "phone": 25
         },
-        "maxCharacters": 26,
+        "maxCharacters": 25,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -20550,7 +20570,7 @@
             "height": 30
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 30
           }
         },
@@ -20560,9 +20580,9 @@
         },
         "maxChars": {
           "desktop": 57,
-          "phone": 37
+          "phone": 36
         },
-        "maxCharacters": 37,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20602,8 +20622,8 @@
             "height": 288
           },
           "phone": {
-            "width": 288,
-            "height": 288
+            "width": 280,
+            "height": 280
           }
         },
         "aspect": 1,
@@ -20640,7 +20660,7 @@
             "height": 60
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 120
           }
         },
@@ -20650,7 +20670,7 @@
         },
         "maxChars": {
           "desktop": 122,
-          "phone": 160
+          "phone": 152
         },
         "maxCharacters": 122,
         "casing": "none",
@@ -20684,7 +20704,7 @@
             "height": 36
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 36
           }
         },
@@ -20694,9 +20714,9 @@
         },
         "maxChars": {
           "desktop": 43,
-          "phone": 28
+          "phone": 27
         },
-        "maxCharacters": 28,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -20728,7 +20748,7 @@
             "height": 30
           },
           "phone": {
-            "width": 290,
+            "width": 280,
             "height": 30
           }
         },
@@ -20738,9 +20758,9 @@
         },
         "maxChars": {
           "desktop": 54,
-          "phone": 35
+          "phone": 34
         },
-        "maxCharacters": 35,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20785,19 +20805,19 @@
             "height": 60
           },
           "phone": {
-            "width": 340,
-            "height": 150
+            "width": 390,
+            "height": 120
           }
         },
         "lines": {
           "desktop": 2,
-          "phone": 5
+          "phone": 4
         },
         "maxChars": {
           "desktop": 222,
-          "phone": 190
+          "phone": 180
         },
-        "maxCharacters": 190,
+        "maxCharacters": 180,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -20894,7 +20914,7 @@
         "sub": "image"
       },
       "type": "image",
-      "sample": "images/joomlart/map-contact.jpg",
+      "sample": "images/joomlart/features-intro/intro-2.jpg",
       "label": "Items 1 \u2014 Image",
       "role": "event.image",
       "group": {
@@ -20904,12 +20924,12 @@
       },
       "fit": {
         "measured": true,
-        "kind": "map",
-        "replace": "keep",
+        "kind": "photo",
+        "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 1200,
-          "height": 600,
+          "width": 500,
+          "height": 300,
           "format": "jpg"
         },
         "boxes": {
@@ -20925,9 +20945,8 @@
         "aspect": 2,
         "tolerance": 0.02,
         "minWidth": 435,
-        "crop": "none"
-      },
-      "customize": "keep"
+        "crop": "cover"
+      }
     },
     {
       "key": "timeline.our-history-timeline.items[0].title",
@@ -21270,14 +21289,14 @@
         "boxes": {
           "desktop": {
             "width": 290,
-            "height": 174
+            "height": 145
           },
           "phone": {
             "width": 220,
-            "height": 132
+            "height": 110
           }
         },
-        "aspect": 1.6667,
+        "aspect": 2,
         "tolerance": 0.02,
         "minWidth": 435,
         "crop": "cover"
@@ -21575,14 +21594,14 @@
         "boxes": {
           "desktop": {
             "width": 840,
-            "height": 1143
+            "height": 1147
           },
           "phone": {
             "width": 340,
-            "height": 666
+            "height": 664
           }
         },
-        "aspect": 0.7349,
+        "aspect": 0.7323,
         "tolerance": 0.02,
         "minWidth": 1260,
         "crop": "cover"
@@ -21716,8 +21735,8 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 472,
-            "height": 215
+            "width": 412,
+            "height": 266
           },
           "phone": {
             "width": 298,
@@ -21725,14 +21744,14 @@
           }
         },
         "lines": {
-          "desktop": 3,
+          "desktop": 4,
           "phone": 3
         },
         "maxChars": {
-          "desktop": 60,
+          "desktop": 56,
           "phone": 69
         },
-        "maxCharacters": 60,
+        "maxCharacters": 56,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -21762,14 +21781,14 @@
           }
         },
         "lines": {
-          "desktop": 3,
+          "desktop": 2,
           "phone": 3
         },
         "maxChars": {
-          "desktop": 30,
-          "phone": 30
+          "desktop": 10,
+          "phone": 18
         },
-        "maxCharacters": 30,
+        "maxCharacters": 10,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -21790,12 +21809,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 119,
-            "height": 58
+            "width": 175,
+            "height": 56
           },
           "phone": {
-            "width": 119,
-            "height": 58
+            "width": 175,
+            "height": 56
           }
         },
         "lines": {
@@ -21803,10 +21822,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 87,
-          "phone": 35
+          "desktop": 78,
+          "phone": 31
         },
-        "maxCharacters": 35,
+        "maxCharacters": 31,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -21900,14 +21919,14 @@
         "boxes": {
           "desktop": {
             "width": 840,
-            "height": 1206
+            "height": 1200
           },
           "phone": {
             "width": 340,
-            "height": 993
+            "height": 981
           }
         },
-        "aspect": 0.6965,
+        "aspect": 0.7,
         "tolerance": 0.02,
         "minWidth": 1260,
         "crop": "cover"
@@ -22078,23 +22097,23 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 100,
-            "height": 100
+            "width": 90,
+            "height": 90
           },
           "phone": {
-            "width": 100,
-            "height": 100
+            "width": 90,
+            "height": 90
           }
         },
         "lines": {
-          "desktop": 3,
-          "phone": 3
+          "desktop": 2,
+          "phone": 2
         },
         "maxChars": {
-          "desktop": 126,
-          "phone": 99
+          "desktop": 84,
+          "phone": 66
         },
-        "maxCharacters": 99,
+        "maxCharacters": 66,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -22115,12 +22134,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 119,
-            "height": 58
+            "width": 176,
+            "height": 56
           },
           "phone": {
-            "width": 119,
-            "height": 58
+            "width": 176,
+            "height": 56
           }
         },
         "lines": {
@@ -22128,10 +22147,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 42,
-          "phone": 34
+          "desktop": 38,
+          "phone": 30
         },
-        "maxCharacters": 34,
+        "maxCharacters": 30,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -22194,7 +22213,7 @@
         },
         "maxChars": {
           "desktop": 50,
-          "phone": 62
+          "phone": 58
         },
         "maxCharacters": 50,
         "casing": "upper",
@@ -22456,12 +22475,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 140,
-            "height": 58
+            "width": 188,
+            "height": 54
           },
           "phone": {
-            "width": 140,
-            "height": 58
+            "width": 188,
+            "height": 54
           }
         },
         "lines": {
@@ -22611,6 +22630,8 @@
         "item": 0,
         "kind": "business"
       },
+      "maxCharacters": 32,
+      "maxCharactersFrom": "declared by the theme: the business name is printed in the footer copyright line and nowhere else as visible words; filled until the line gains a row: 105 characters at 1440 px, 45 at 768 px, 32 at 390 px",
       "fit": {
         "measured": false
       }
@@ -22673,11 +22694,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 317,
+            "width": 247,
             "height": 48
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 48
           }
         },
@@ -22686,10 +22707,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 29,
-          "phone": 30
+          "desktop": 22,
+          "phone": 31
         },
-        "maxCharacters": 29,
+        "maxCharacters": 22,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -22715,11 +22736,11 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 317,
+            "width": 247,
             "height": 53
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 53
           }
         },
@@ -22728,10 +22749,10 @@
           "phone": 2
         },
         "maxChars": {
-          "desktop": 96,
-          "phone": 100
+          "desktop": 76,
+          "phone": 104
         },
-        "maxCharacters": 96,
+        "maxCharacters": 76,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -22770,10 +22791,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 46,
-          "phone": 48
+          "desktop": 36,
+          "phone": 49
         },
-        "maxCharacters": 46,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -22810,7 +22831,7 @@
             "height": 48
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 48
           }
         },
@@ -22820,7 +22841,7 @@
         },
         "maxChars": {
           "desktop": 29,
-          "phone": 30
+          "phone": 31
         },
         "maxCharacters": 29,
         "casing": "upper",
@@ -22849,7 +22870,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -22859,7 +22880,7 @@
         },
         "maxChars": {
           "desktop": 29,
-          "phone": 31
+          "phone": 32
         },
         "maxCharacters": 29,
         "casing": "none",
@@ -22893,7 +22914,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -22903,7 +22924,7 @@
         },
         "maxChars": {
           "desktop": 31,
-          "phone": 33
+          "phone": 34
         },
         "maxCharacters": 31,
         "casing": "none",
@@ -22932,7 +22953,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -22942,7 +22963,7 @@
         },
         "maxChars": {
           "desktop": 34,
-          "phone": 36
+          "phone": 38
         },
         "maxCharacters": 34,
         "casing": "none",
@@ -22976,7 +22997,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -22986,7 +23007,7 @@
         },
         "maxChars": {
           "desktop": 37,
-          "phone": 39
+          "phone": 41
         },
         "maxCharacters": 37,
         "casing": "none",
@@ -23015,7 +23036,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -23025,7 +23046,7 @@
         },
         "maxChars": {
           "desktop": 30,
-          "phone": 32
+          "phone": 33
         },
         "maxCharacters": 30,
         "casing": "none",
@@ -23059,7 +23080,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -23069,7 +23090,7 @@
         },
         "maxChars": {
           "desktop": 37,
-          "phone": 39
+          "phone": 40
         },
         "maxCharacters": 37,
         "casing": "none",
@@ -23096,7 +23117,7 @@
             "height": 48
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 48
           }
         },
@@ -23106,7 +23127,7 @@
         },
         "maxChars": {
           "desktop": 28,
-          "phone": 29
+          "phone": 30
         },
         "maxCharacters": 28,
         "casing": "upper",
@@ -23135,7 +23156,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -23145,7 +23166,7 @@
         },
         "maxChars": {
           "desktop": 30,
-          "phone": 32
+          "phone": 33
         },
         "maxCharacters": 30,
         "casing": "none",
@@ -23174,7 +23195,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -23184,7 +23205,7 @@
         },
         "maxChars": {
           "desktop": 39,
-          "phone": 41
+          "phone": 42
         },
         "maxCharacters": 39,
         "casing": "none",
@@ -23213,7 +23234,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -23223,7 +23244,7 @@
         },
         "maxChars": {
           "desktop": 33,
-          "phone": 35
+          "phone": 37
         },
         "maxCharacters": 33,
         "casing": "none",
@@ -23252,7 +23273,7 @@
             "height": 26
           },
           "phone": {
-            "width": 330,
+            "width": 340,
             "height": 26
           }
         },
@@ -23262,7 +23283,7 @@
         },
         "maxChars": {
           "desktop": 44,
-          "phone": 46
+          "phone": 48
         },
         "maxCharacters": 44,
         "casing": "none",
@@ -23319,7 +23340,7 @@
         },
         "maxChars": {
           "desktop": 43,
-          "phone": 44
+          "phone": 46
         },
         "maxCharacters": 43,
         "casing": "none",
@@ -23400,6 +23421,8 @@
       "sample": "Switch between light and dark appearance",
       "label": "Appearance label",
       "role": "editorial.button_label",
+      "nonVisual": true,
+      "nonVisualFrom": "the label is the accessible name (`aria-label`) of the light/dark icon button in the header (Header.astro): no page draws it in a box, and the field declares no maxLength, so it has no limit",
       "fit": {
         "measured": false
       }
@@ -23569,6 +23592,43 @@
       }
     },
     {
+      "key": "chrome.chrome.search_label",
+      "entity": "chrome.chrome",
+      "target": {
+        "collection": "chrome",
+        "entry": "chrome",
+        "field": "search_label"
+      },
+      "type": "text",
+      "sample": "Search",
+      "label": "Search label",
+      "role": "editorial.button_label",
+      "fit": {
+        "measured": true,
+        "boxes": {
+          "desktop": {
+            "width": 98,
+            "height": 48
+          },
+          "phone": {
+            "width": 98,
+            "height": 41
+          }
+        },
+        "lines": {
+          "desktop": 1,
+          "phone": 1
+        },
+        "maxChars": {
+          "desktop": 66,
+          "phone": 29
+        },
+        "maxCharacters": 29,
+        "casing": "upper",
+        "overflow": "rewrite"
+      }
+    },
+    {
       "key": "chrome.chrome.gallery_link_label",
       "entity": "chrome.chrome",
       "target": {
@@ -23673,8 +23733,8 @@
             "height": 23
           },
           "phone": {
-            "width": 128,
-            "height": 23
+            "width": 330,
+            "height": 29
           }
         },
         "lines": {
@@ -23683,7 +23743,7 @@
         },
         "maxChars": {
           "desktop": 15,
-          "phone": 15
+          "phone": 18
         },
         "maxCharacters": 15,
         "casing": "upper",
@@ -24937,11 +24997,11 @@
         "boxes": {
           "desktop": {
             "width": 247,
-            "height": 61
+            "height": 30
           },
           "phone": {
             "width": 290,
-            "height": 61
+            "height": 30
           }
         },
         "lines": {
@@ -24949,10 +25009,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 34,
-          "phone": 40
+          "desktop": 30,
+          "phone": 36
         },
-        "maxCharacters": 34,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -24976,11 +25036,11 @@
         "boxes": {
           "desktop": {
             "width": 247,
-            "height": 61
+            "height": 46
           },
           "phone": {
             "width": 290,
-            "height": 61
+            "height": 46
           }
         },
         "lines": {
@@ -24988,10 +25048,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 31,
-          "phone": 37
+          "desktop": 28,
+          "phone": 34
         },
-        "maxCharacters": 31,
+        "maxCharacters": 28,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -25015,11 +25075,11 @@
         "boxes": {
           "desktop": {
             "width": 247,
-            "height": 61
+            "height": 46
           },
           "phone": {
             "width": 290,
-            "height": 61
+            "height": 46
           }
         },
         "lines": {
@@ -25027,10 +25087,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 34,
-          "phone": 40
+          "desktop": 31,
+          "phone": 37
         },
-        "maxCharacters": 34,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -25054,22 +25114,22 @@
         "boxes": {
           "desktop": {
             "width": 247,
-            "height": 60
+            "height": 76
           },
           "phone": {
             "width": 290,
-            "height": 60
+            "height": 46
           }
         },
         "lines": {
-          "desktop": 1,
+          "desktop": 2,
           "phone": 1
         },
         "maxChars": {
-          "desktop": 32,
-          "phone": 38
+          "desktop": 58,
+          "phone": 35
         },
-        "maxCharacters": 32,
+        "maxCharacters": 35,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -25090,12 +25150,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 157,
-            "height": 58
+            "width": 140,
+            "height": 48
           },
           "phone": {
-            "width": 157,
-            "height": 58
+            "width": 140,
+            "height": 48
           }
         },
         "lines": {
@@ -25152,7 +25212,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 39,
+          "desktop": 38,
           "phone": 32
         },
         "maxCharacters": 32,
@@ -25176,7 +25236,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 455,
+            "width": 445,
             "height": 60
           },
           "phone": {
@@ -25189,7 +25249,7 @@
           "phone": 3
         },
         "maxChars": {
-          "desktop": 120,
+          "desktop": 118,
           "phone": 111
         },
         "maxCharacters": 111,
@@ -25221,17 +25281,17 @@
         },
         "boxes": {
           "desktop": {
-            "width": 455,
-            "height": 228
+            "width": 445,
+            "height": 223
           },
           "phone": {
             "width": 340,
             "height": 170
           }
         },
-        "aspect": 1.9956,
+        "aspect": 1.9955,
         "tolerance": 0.02,
-        "minWidth": 683,
+        "minWidth": 668,
         "crop": "cover"
       }
     },
@@ -25288,7 +25348,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 455,
+            "width": 445,
             "height": 60
           },
           "phone": {
@@ -25301,7 +25361,7 @@
           "phone": 3
         },
         "maxChars": {
-          "desktop": 120,
+          "desktop": 118,
           "phone": 111
         },
         "maxCharacters": 111,
@@ -25333,17 +25393,17 @@
         },
         "boxes": {
           "desktop": {
-            "width": 455,
-            "height": 228
+            "width": 445,
+            "height": 223
           },
           "phone": {
             "width": 340,
             "height": 170
           }
         },
-        "aspect": 1.9956,
+        "aspect": 1.9955,
         "tolerance": 0.02,
-        "minWidth": 683,
+        "minWidth": 668,
         "crop": "cover"
       }
     },
@@ -25400,7 +25460,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 455,
+            "width": 445,
             "height": 60
           },
           "phone": {
@@ -25413,7 +25473,7 @@
           "phone": 3
         },
         "maxChars": {
-          "desktop": 118,
+          "desktop": 116,
           "phone": 108
         },
         "maxCharacters": 108,
@@ -25445,17 +25505,17 @@
         },
         "boxes": {
           "desktop": {
-            "width": 455,
-            "height": 228
+            "width": 445,
+            "height": 223
           },
           "phone": {
             "width": 340,
             "height": 170
           }
         },
-        "aspect": 1.9956,
+        "aspect": 1.9955,
         "tolerance": 0.02,
-        "minWidth": 683,
+        "minWidth": 668,
         "crop": "cover"
       }
     },
@@ -25512,7 +25572,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 455,
+            "width": 445,
             "height": 60
           },
           "phone": {
@@ -25525,7 +25585,7 @@
           "phone": 3
         },
         "maxChars": {
-          "desktop": 118,
+          "desktop": 116,
           "phone": 108
         },
         "maxCharacters": 108,
@@ -25557,17 +25617,17 @@
         },
         "boxes": {
           "desktop": {
-            "width": 455,
-            "height": 228
+            "width": 445,
+            "height": 223
           },
           "phone": {
             "width": 340,
             "height": 170
           }
         },
-        "aspect": 1.9956,
+        "aspect": 1.9955,
         "tolerance": 0.02,
-        "minWidth": 683,
+        "minWidth": 668,
         "crop": "cover"
       }
     },
@@ -25657,6 +25717,8 @@
       "sample": "Email",
       "label": "Placeholder",
       "role": "editorial.button_label",
+      "maxCharacters": 15,
+      "maxCharactersFrom": "declared by the theme: the placeholder is drawn inside the e-mail field on one line: the field is 126 px wide inside its padding at 390 px (8.2 px per character, 15 characters) and 333 px at 1440 px (40 characters)",
       "fit": {
         "measured": false
       }
@@ -25730,7 +25792,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 664,
+            "width": 644,
             "height": 38
           },
           "phone": {
@@ -25743,7 +25805,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 59,
+          "desktop": 57,
           "phone": 30
         },
         "maxCharacters": 30,
@@ -25767,7 +25829,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 664,
+            "width": 644,
             "height": 23
           },
           "phone": {
@@ -25780,7 +25842,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 124,
+          "desktop": 121,
           "phone": 63
         },
         "maxCharacters": 63,
@@ -25834,7 +25896,7 @@
         "field": "card_text"
       },
       "type": "richtext",
-      "sample": "We take reservations for lunch and dinner.\n To make a reservation, please call us at (084) 555-0110 between 9 am and 5 pm,\n Monday to Friday.",
+      "sample": "We take reservations for lunch and dinner.\n To make a reservation, please call us at <a href=\"tel:+10845550110\">(084) 555-0110</a> between 9 am and 5 pm,\n Monday to Friday.",
       "label": "Card text"
     },
     {
@@ -25883,17 +25945,17 @@
         "field": "image"
       },
       "type": "image",
-      "sample": "images/joomlart/map-contact.jpg",
+      "sample": "images/joomlart/blog/rest-8.jpg",
       "label": "Image",
       "role": "editorial.decorative_image",
       "fit": {
         "measured": true,
-        "kind": "map",
-        "replace": "keep",
+        "kind": "photo",
+        "replace": "photo",
         "transparent": null,
         "source": {
-          "width": 1200,
-          "height": 600,
+          "width": 500,
+          "height": 700,
           "format": "jpg"
         },
         "boxes": {
@@ -25909,9 +25971,8 @@
         "aspect": 2,
         "tolerance": 0.02,
         "minWidth": 669,
-        "crop": "none"
-      },
-      "customize": "keep"
+        "crop": "cover"
+      }
     },
     {
       "key": "contact.contact.address",
@@ -26018,12 +26079,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 346,
-            "height": 26
+            "width": 84,
+            "height": 19
           },
           "phone": {
-            "width": 290,
-            "height": 26
+            "width": 84,
+            "height": 19
           }
         },
         "lines": {
@@ -26085,7 +26146,7 @@
         "field": "intro"
       },
       "type": "richtext",
-      "sample": "We take reservations for lunch and dinner. To make a reservation, please call us at (084) 555-0110 between 9 am and 5 pm, Monday to Friday.",
+      "sample": "We take reservations for lunch and dinner.\nTo make a reservation, please call us at <a href=\"tel:+10845550110\">(084) 555-0110</a> between 9 am and 5 pm, Monday to Friday.",
       "label": "Intro"
     },
     {
@@ -26164,7 +26225,7 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 545,
+            "width": 511,
             "height": 60
           },
           "phone": {
@@ -26177,10 +26238,10 @@
           "phone": 3
         },
         "maxChars": {
-          "desktop": 120,
+          "desktop": 110,
           "phone": 132
         },
-        "maxCharacters": 120,
+        "maxCharacters": 110,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -26221,12 +26282,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 177,
-            "height": 58
+            "width": 159,
+            "height": 48
           },
           "phone": {
-            "width": 177,
-            "height": 58
+            "width": 159,
+            "height": 48
           }
         },
         "lines": {
@@ -26234,7 +26295,7 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 56,
+          "desktop": 53,
           "phone": 35
         },
         "maxCharacters": 35,
@@ -26319,7 +26380,7 @@
           },
           "phone": {
             "width": 340,
-            "height": 29
+            "height": 36
           }
         },
         "lines": {
@@ -26328,9 +26389,9 @@
         },
         "maxChars": {
           "desktop": 38,
-          "phone": 30
+          "phone": 24
         },
-        "maxCharacters": 30,
+        "maxCharacters": 24,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -26410,12 +26471,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 186,
-            "height": 58
+            "width": 168,
+            "height": 48
           },
           "phone": {
-            "width": 186,
-            "height": 58
+            "width": 168,
+            "height": 48
           }
         },
         "lines": {
@@ -26535,12 +26596,12 @@
         "measured": true,
         "boxes": {
           "desktop": {
-            "width": 135,
-            "height": 66
+            "width": 115,
+            "height": 58
           },
           "phone": {
-            "width": 135,
-            "height": 66
+            "width": 115,
+            "height": 58
           }
         },
         "lines": {
@@ -26744,7 +26805,7 @@
     "menu.2-column-menu.items": {
       "items": 10,
       "shown": 10,
-      "uniform": true,
+      "uniform": false,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
@@ -26784,7 +26845,7 @@
     "menu.icream-and-juice.items": {
       "items": 10,
       "shown": 10,
-      "uniform": true,
+      "uniform": false,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
@@ -26794,7 +26855,7 @@
     "menu.menu-with-image.items": {
       "items": 7,
       "shown": 7,
-      "uniform": true,
+      "uniform": false,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
@@ -26804,7 +26865,7 @@
     "menu.sea-food.items": {
       "items": 7,
       "shown": 7,
-      "uniform": true,
+      "uniform": false,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",
@@ -26894,7 +26955,7 @@
     "timeline.our-history-timeline.items": {
       "items": 3,
       "shown": 3,
-      "uniform": false,
+      "uniform": true,
       "whenFewer": "neutral",
       "min": null,
       "minFrom": "unknown",

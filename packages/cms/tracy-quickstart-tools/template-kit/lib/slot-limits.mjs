@@ -68,6 +68,8 @@ function claimsOf(id, mapSlot, textFit) {
   const claims = []
   const notes = []
   const demo = demoLength(mapSlot?.sample)
+  // A text no page draws in a box (an accessible name, the document title) has no limit to claim: the theme says so.
+  if (mapSlot?.nonVisual) return { claims, notes, demo, nonVisual: mapSlot.nonVisualFrom ?? 'declared by the theme' }
   // The kit's frame reading fills the slot's real container; when it holds the demo words it stands for the frame,
   // and the content map's fit (an estimate from the demo words' box) is not used.
   const kitFit = textFit[id]
@@ -106,9 +108,11 @@ export function unifyLimits(kit, { mapSlots, textFit = {} }) {
   const all = slotPlaces(kit)
   const find = groupsOf(kit)
   const groups = new Map()
+  const nonVisual = new Map()
   for (const id of new Set(all.map((p) => p.id))) {
     const g = groups.get(find(id)) ?? { claims: [], notes: new Map(), demo: 0 }
     const own = claimsOf(id, mapOf.get(id), textFit)
+    if (own.nonVisual) nonVisual.set(id, own.nonVisual)
     g.claims.push(...own.claims)
     if (own.notes.length) g.notes.set(id, own.notes)
     g.demo = Math.max(g.demo, own.demo)
@@ -123,6 +127,12 @@ export function unifyLimits(kit, { mapSlots, textFit = {} }) {
     if (c) best.set(key, { ...c, notes: g.notes.get(c.id) ?? [] })
   }
   for (const { id, entry } of all) {
+    if (nonVisual.has(id)) {
+      delete entry.maxCharacters
+      delete entry.limitFrom
+      Object.assign(entry, { nonVisual: true, maxCharactersFrom: `not drawn in a box: ${nonVisual.get(id)}` })
+      continue
+    }
     const c = best.get(find(id))
     if (!c) continue
     const of = c.id !== id ? ` of ${c.id}` : ''
@@ -152,6 +162,8 @@ export function slotLimitChecks({ kit, errors }) {
   for (const p of slotPlaces(kit)) byId.set(p.id, [...(byId.get(p.id) ?? []), p.entry])
   let wrong = 0
   for (const [id, entries] of byId) {
+    // A non-visual slot (no box draws it) carries its reason in place of a number, in every place that lists it.
+    if (entries.every((e) => e.nonVisual === true && e.maxCharactersFrom && !('maxCharacters' in e))) continue
     const values = new Set(entries.map((e) => e.maxCharacters))
     const bare = entries.some((e) => !Number.isFinite(e.maxCharacters) || !e.maxCharactersFrom)
     if (!bare && values.size === 1) continue

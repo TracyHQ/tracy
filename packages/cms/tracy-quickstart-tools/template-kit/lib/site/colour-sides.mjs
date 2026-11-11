@@ -12,6 +12,9 @@ const GROUND = /^(?:html|body|\.t4-wrapper|\.t4-content|\.t3-wrapper|#t3-mainbod
 
 export const itemsOf = (selector) => selector.split(',').map((s) => s.trim())
 
+/** Whether a rule sits in no condition at all but a cascade layer (Tailwind v4 prints every rule inside `@layer`). */
+const unconditional = (at = []) => at.every((a) => /^@layer\b/i.test(a))
+
 /** The side one selector item belongs to, and the item without its marker. */
 export function sideOfItem(item, at = []) {
   const m = MODE.exec(item)
@@ -69,7 +72,7 @@ export function sidesOf(rules) {
     for (const item of itemsOf(r.selector)) {
       const { side, rest } = sideOfItem(item, r.at)
       if (!declared.has(side)) declared.set(side, new Map())
-      if (ROOTISH.test(rest) && (side !== 'base' || r.at.length === 0))
+      if (ROOTISH.test(rest) && (side !== 'base' || unconditional(r.at)))
         for (const d of r.decls)
           if (d.prop.startsWith('--'))
             declared.get(side)?.set(d.prop, { value: d.value, from: r.from ?? null })

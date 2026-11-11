@@ -766,3 +766,72 @@ test('media index: a record id is never a file key (the route serves the storage
   assert.equal(asMedia('direct-id').status, 'hole')
   assert.equal(asMedia('asset-id').status, 'hole')
 })
+
+test('the generator: a link mark inside Portable Text keeps its address in the field sample as an anchor', () => {
+  const seed = structuredClone(SEED)
+  seed.collections[0].fields.push({ slug: 'body', type: 'portableText' })
+  seed.content.cards[0].data.body = [
+    {
+      _type: 'block',
+      _key: 'b1',
+      markDefs: [{ _type: 'link', _key: 'l1', href: 'tel:+10845550110' }],
+      children: [
+        { _type: 'span', _key: 's1', text: 'Call us at ' },
+        { _type: 'span', _key: 's2', text: '(084) 555-0110', marks: ['l1'] }
+      ]
+    }
+  ]
+  const map = emdashContentMapOf({ seed, fieldMap: FIELD_MAP, template: 'tracy-cafe', version: '1.0.0' })
+  const body = map.slots.find((s) => s.key === 'cards.hot.body')
+  assert.match(body.sample, /<a href="tel:\+10845550110">\(084\) 555-0110<\/a>/)
+})
+
+test('slot limits: the theme declares a measured limit; a bad, stale or below-demo rule fails the build of the map', () => {
+  const build = (limits) =>
+    emdashContentMapOf({
+      seed: SEED,
+      fieldMap: FIELD_MAP,
+      slotLimits: { limits },
+      template: 'tracy-cafe',
+      version: '1.0.0'
+    })
+  const title = build([{ slot: 'cards.hot.title', maxCharacters: 30, from: 'measured at 390 px' }]).slots.find(
+    (s) => s.key === 'cards.hot.title'
+  )
+  assert.equal(title.maxCharacters, 30)
+  assert.equal(title.maxCharactersFrom, 'declared by the theme: measured at 390 px')
+  const cells = build([{ slot: 'cards.hot.items[*].name', maxCharacters: 20, from: 'row' }]).slots.filter(
+    (s) => s.maxCharacters === 20
+  )
+  assert.deepEqual(
+    cells.map((s) => s.key),
+    ['cards.hot.items[0].name']
+  )
+  assert.throws(() => build([{ slot: 'cards.hot.nope', maxCharacters: 9, from: 'x' }]), /no text slot is named/)
+  assert.throws(() => build([{ slot: 'cards.hot.title', maxCharacters: 3, from: 'x' }]), /over the declared 3/)
+  assert.throws(() => build([{ slot: 'cards.hot.title', maxCharacters: 30, from: ' ' }]), /from must say/)
+  assert.throws(() => build([{ slot: 'cards.hot.title', maxCharacters: 0, from: 'x' }]), /positive whole number/)
+})
+
+test('slot limits: a text no box draws is declared nonVisual with where it is used; a number on it, or no reason, fails', () => {
+  const build = (limits) =>
+    emdashContentMapOf({
+      seed: SEED,
+      fieldMap: FIELD_MAP,
+      slotLimits: { limits },
+      template: 'tracy-cafe',
+      version: '1.0.0'
+    })
+  const slot = build([{ slot: 'settings.title', nonVisual: true, from: 'the document title only' }]).slots.find(
+    (s) => s.key === 'settings.title'
+  )
+  assert.equal(slot.nonVisual, true)
+  assert.equal(slot.nonVisualFrom, 'the document title only')
+  assert.equal('maxCharacters' in slot, false)
+  assert.throws(
+    () => build([{ slot: 'settings.title', nonVisual: true, maxCharacters: 40, from: 'x' }]),
+    /nonVisual slot has no limit/
+  )
+  assert.throws(() => build([{ slot: 'settings.title', nonVisual: true, from: ' ' }]), /where the text is used/)
+  assert.throws(() => build([{ slot: 'settings.title', from: 'x' }]), /or declare nonVisual/)
+})

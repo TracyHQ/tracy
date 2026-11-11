@@ -2481,28 +2481,9 @@
             "text-transform": "uppercase",
             "color": "rgb(255, 255, 255)",
             "background-color": "rgb(192, 56, 28)"
-          },
-          "390-light": {
-            "font-family": "\"Roboto Mono-c480660709c4b175\", ui-monospace, Menlo, monospace, \"Roboto Mono\", ui-monospace, monospace",
-            "font-size": "10px",
-            "font-weight": "400",
-            "line-height": "18.75px",
-            "letter-spacing": "1px",
-            "text-transform": "uppercase",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgb(192, 56, 28)"
-          },
-          "390-dark": {
-            "font-family": "\"Roboto Mono-c480660709c4b175\", ui-monospace, Menlo, monospace, \"Roboto Mono\", ui-monospace, monospace",
-            "font-size": "10px",
-            "font-weight": "400",
-            "line-height": "18.75px",
-            "letter-spacing": "1px",
-            "text-transform": "uppercase",
-            "color": "rgb(255, 255, 255)",
-            "background-color": "rgb(192, 56, 28)"
           }
-        }
+        },
+        "optional": true
       },
       {
         "id": "side-title",
@@ -4457,9 +4438,9 @@
           },
           "390-light": {
             "font-family": "\"Noticia Text-bd1078a6a1a7b8de\", Georgia, \"Times New Roman\", serif, \"Noticia Text\", Georgia, serif",
-            "font-size": "22px",
+            "font-size": "28px",
             "font-weight": "700",
-            "line-height": "28.6px",
+            "line-height": "36.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(51, 51, 51)",
@@ -4467,9 +4448,9 @@
           },
           "390-dark": {
             "font-family": "\"Noticia Text-bd1078a6a1a7b8de\", Georgia, \"Times New Roman\", serif, \"Noticia Text\", Georgia, serif",
-            "font-size": "22px",
+            "font-size": "28px",
             "font-weight": "700",
-            "line-height": "28.6px",
+            "line-height": "36.4px",
             "letter-spacing": "normal",
             "text-transform": "none",
             "color": "rgb(244, 242, 231)",
@@ -5075,7 +5056,7 @@
     "selectors": ["h1", "h2", "h3", "p", "a", "button", "span", "li"],
     "platform": "Chromium (Playwright). Three Google families are self-hosted by Astro (src/fonts.json): Teko (display), Noticia Text (body), Roboto Mono (UI).",
     "allowed": {
-      "en": ["Teko", "Teko Light", "Noticia Text", "Roboto Mono"]
+      "en": ["Teko", "Teko Light", "Noticia Text", "Roboto Mono", "Roboto Mono Light"]
     }
   },
   "pages": [

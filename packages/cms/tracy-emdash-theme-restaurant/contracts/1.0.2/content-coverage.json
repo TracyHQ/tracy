@@ -7,23 +7,23 @@
   "platform": "emdash",
   "contract": {
     "id": "tracy-restaurant/emdash-0.x/1.0.2",
-    "contentMapSha256": "bb55d7b3c1447018427ca90978f145d608dbed306ce8f4948a92a097ce8129ae",
+    "contentMapSha256": "226469bc5d26527e24c555c561acdcd4c572f5e8381d2f16002caba151ed161e",
     "presentationLockSha256": null
   },
-  "measuredAt": "2026-11-09T16:26:15.212Z",
+  "measuredAt": "2026-11-11T07:58:43.566Z",
   "viewports": [
     "desktop",
     "phone"
   ],
   "bound": {
-    "stamp": 773,
-    "clone": 27,
+    "stamp": 775,
+    "clone": 26,
     "menu": 469,
-    "entry": 465,
-    "words": 273,
+    "entry": 464,
+    "words": 274,
     "date": 30,
     "composite": 217,
-    "media": 203,
+    "media": 202,
     "route": 92,
     "term": 100,
     "excerpt": 6
@@ -42,20 +42,20 @@
   },
   "counts": {
     "text": {
-      "total": 440,
+      "total": 442,
       "matched": 423,
       "locked": 0,
       "capture": 0,
       "captureLocked": 0,
-      "template": 12,
+      "template": 14,
       "core": 5,
       "unknown": 0,
       "catalogue": 0,
-      "ignored": 6
+      "ignored": 7
     },
     "images": {
-      "total": 117,
-      "matched": 113,
+      "total": 106,
+      "matched": 102,
       "locked": 2,
       "capture": 0,
       "captureLocked": 0,
@@ -66,8 +66,8 @@
       "ignored": 0
     },
     "links": {
-      "total": 82,
-      "matched": 82,
+      "total": 83,
+      "matched": 83,
       "locked": 0,
       "capture": 0,
       "captureLocked": 0,
@@ -79,7 +79,7 @@
     }
   },
   "coverage": {
-    "text": 97.2,
+    "text": 96.8,
     "images": 100,
     "links": 100
   },
@@ -116,6 +116,16 @@
     },
     {
       "kind": "text",
+      "value": "End",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "nav.rs-pagination > ul > li > a",
+      "pages": 3,
+      "firstPage": "/blog",
+      "accepted": "Interface wording of the pager the template prints around the page numbers (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
       "value": "Leave blank",
       "class": "template",
       "cause": "words in the template's own source",
@@ -143,6 +153,16 @@
       "pages": 1,
       "firstPage": "/explore/j-pages/smart-search",
       "accepted": "Interface wording of the template's search results page around the visitor's own query; carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Start",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "nav.rs-pagination > ul > li.is-disabled > span",
+      "pages": 3,
+      "firstPage": "/blog",
+      "accepted": "Interface wording of the pager the template prints around the page numbers (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
     }
   ],
   "hygiene": [],
@@ -413,8 +433,8 @@
     "applies": false,
     "r1": {
       "facts": 432,
-      "slots": 777,
-      "percent": 55.6
+      "slots": 778,
+      "percent": 55.5
     },
     "rules": {
       "R2": {
@@ -460,7 +480,7 @@
       },
       "R5": {
         "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
-        "count": 14,
+        "count": 13,
         "keys": [
           "features_intro.features-intro.items[0].img_icon",
           "features_intro.features-intro.items[1].img_icon",

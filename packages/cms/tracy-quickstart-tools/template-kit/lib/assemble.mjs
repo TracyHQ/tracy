@@ -6,6 +6,7 @@
 // stamp.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { readManifest } from './contract-manifest.mjs'
 import { readCheckAccepts } from './check-accepts.mjs'
 import { readContractCoverage, readContractMap } from './contract-read.mjs'
 import { applyCoverage, coverageGate } from './coverage-gate.mjs'
@@ -31,11 +32,29 @@ export const writeJson = (f, v) => writeFileSync(f, `${JSON.stringify(v, null, 1
 /** A person's reasons for reach and row pair check failures in the kit work folder `out` (check-accepts.mjs). */
 export const reachAcceptsOf = (out) => readCheckAccepts(join(out, 'reach-accepts.json'))
 
+/**
+ * An EmDash theme's version: its `package.json` in the site folder (`--webroot`), the file the theme is released from;
+ * without a folder, the version of the contract, which is the theme's own (`contracts/<version>`).
+ */
+function emdashTemplateVersion(o, manifest) {
+  const webroot = typeof o.webroot === 'string' ? o.webroot : null
+  const file = webroot ? join(webroot, 'package.json') : null
+  if (file && existsSync(file)) {
+    const version = readJson(file).version
+    if (typeof version === 'string') return { version, from: 'package.json in the site folder' }
+  }
+  return {
+    version: manifest.quickstart?.version ?? null,
+    from: 'the contract folder name (no --webroot to read package.json)'
+  }
+}
+
 /** The template version: the flag, else the one already in the kit, else the template's own file read on the site. */
 async function templateVersion(o, manifest, previous) {
   if (typeof o['template-version'] === 'string')
     return { version: o['template-version'], from: 'flag --template-version' }
   if (previous?.version) return { version: previous.version, from: previous.measuredFrom }
+  if (manifest.platform === 'emdash') return emdashTemplateVersion(o, manifest)
   const file = templateFileOf(manifest)
   if (!file) return { version: null, from: 'the contract names no template' }
   const host = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
@@ -47,7 +66,9 @@ async function templateVersion(o, manifest, previous) {
 /** Assemble and write template-kit.json; returns the kit. */
 export async function assembleKit(o, out, tool) {
   const capture = readJson(join(out, 'capture-index.json'))
-  const manifest = readJson(join(o.contract, 'manifest.json'))
+  const manifest = readManifest(o.contract, {
+    release: typeof o['release-tag'] === 'string' ? o['release-tag'] : undefined
+  })
   const previous = readIf(join(out, 'template-kit.json'))
   const tv = await templateVersion(o, manifest, previous?.template)
   const stamp = buildStamp({

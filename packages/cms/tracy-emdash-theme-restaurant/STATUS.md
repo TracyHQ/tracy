@@ -1,6 +1,6 @@
 # STATUS — tracy-restaurant (JA Restaurant → EmDash)
 
-End of coordinator session 6 (P8 finished). Version 1.0.2 (design-system ready from 1.0.1; the Chefs category label no longer links to a 404; 1.0.0 is published) is packed and release-prepared; 1.0.2 is not published.
+End of coordinator session 6 (P8 finished). Version 1.0.2 (design-system ready from 1.0.1; the Chefs category label no longer links to a 404; 1.0.0 is published) is packed (artifact hash `fefd0ce5…`, cycle 9: kit self-checks D73, final review D74, review findings D75) and its release folder is built (all 16 gates pass in its `VERIFICATION.json`, the visual-review gate after the eighth cycle with 0 open and 0 LEE in every tier; the differences the shipped 1.0.1 already had are deferred to 1.0.3 under D71 / G-22); 1.0.2 is not published (D65, D70, D71, D72, `perf/visual-review-1.0.2.md`).
 
 ## Gates
 | Phase | State | Evidence |
