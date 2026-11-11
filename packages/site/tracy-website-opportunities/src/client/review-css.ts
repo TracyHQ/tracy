@@ -38,9 +38,6 @@ export const REVIEW_CSS = `
 .tracy-wo-band-build .tracy-wo-progress { padding: 0; border: 0; background: transparent; }
 .tracy-wo-band-acts { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
 .tracy-wo-approve-end { height: 1px; }
-.tracy-wo-approve { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; margin-left: auto; min-width: 0; }
-.tracy-wo-approve > p { margin: 0; }
-.tracy-wo-approve-acts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .tracy-wo-add-media { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .tracy-wo-profile-media { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
 .tracy-wo-profile-media-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
@@ -52,15 +49,11 @@ export const REVIEW_CSS = `
 .tracy-wo-site-wait { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--muted-foreground); }
 .tracy-wo-site-wait .tracy-wo-icon { flex: none; }
 .tracy-wo-details-chip { flex: none; }
-.tracy-wo-subpage-acts { margin-left: auto; }
-.tracy-wo-subpage-acts:has(form) { flex: 1 1 100%; margin-left: 0; }
 @container (max-width: 719px) {
   .tracy-wo-band { grid-template-columns: minmax(0, 1fr); }
   .tracy-wo-band-list { border-right: 0; border-bottom: 1px solid var(--border); }
 }
 @container (max-width: 560px) {
-  .tracy-wo-approve-acts { width: 100%; }
-  .tracy-wo-approve-acts > :last-child { flex: 1 1 auto; }
   .tracy-wo-profile-media .tracy-wo-media-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 `

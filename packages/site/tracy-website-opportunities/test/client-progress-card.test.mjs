@@ -1,5 +1,5 @@
 /**
- * The Progress card of Details and its one line strip on a sub-page (`src/client/stepper.tsx`, layout C with stepper
+ * The Progress card of Details and the one step action a sub-page draws in its title row (`src/client/stepper.tsx`, layout C with stepper
  * style D). Bundles the real component with React 18 (the one dsh's page runs) and renders it to static markup.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-progress-card.test.mjs
@@ -34,7 +34,7 @@ before(async () => {
       contents: `
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
-        export { Stepper } from './stepper.tsx'
+        export { Stepper, StepButton } from './stepper.tsx'
         export { stepperView } from './stepper-model.ts'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
@@ -61,14 +61,13 @@ after(() => {
 
 const t = (key, params) => `[${key}${params ? JSON.stringify(params) : ''}]`
 const RESEARCHED = { state: 'done', researchedAt: '2026-11-09T08:00:00Z', done: true }
-const draw = (input, strip = false) =>
+const draw = (input) =>
   lib.renderToStaticMarkup(
     lib.createElement(lib.Stepper, {
       t,
       view: lib.stepperView(input),
       locale: 'en-US',
       busy: false,
-      strip,
       onAction: () => undefined
     })
   )
@@ -106,12 +105,18 @@ test('a running job reads Running, disabled; a ready demo leaves no button at al
   assert.doesNotMatch(done, /<button/)
 })
 
-test('the strip of a sub-page: the three names on one line and the same one action', () => {
-  const html = draw({ research: RESEARCHED, brief: null, demo: 'none' }, true)
-  assert.match(html, /tracy-wo-progress-strip/)
-  assert.deepEqual(states(html), ['done', 'current', 'future'])
-  assert.match(html, /\[brief\.make\]/)
-  assert.doesNotMatch(html, /stepper\.brief\.ready/)
+test('the step action of a sub-page title row: the same one action, alone, without the card', () => {
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.StepButton, {
+      t,
+      view: lib.stepperView({ research: RESEARCHED, brief: null, demo: 'none' }),
+      busy: false,
+      disabled: false,
+      onAction: () => undefined
+    })
+  )
+  assert.match(html, /^<button[^>]*>\[brief\.make\]<\/button>$/)
+  assert.doesNotMatch(html, /tracy-wo-progress/)
 })
 
 test('a stopped step says why it stopped, once, with Try again', () => {

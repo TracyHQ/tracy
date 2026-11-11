@@ -5,31 +5,28 @@
  */
 import type { JSX, ReactNode } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  Button
-} from '@tracy/ui'
+import { Button } from '@tracy/ui'
 
 import { ApprovalActions, type ApprovalView, useReachedEnd } from './seller-review.tsx'
 import { type SectionMeta, type SubSection, pageOf, pagerOf } from './section-model.ts'
+import type { StepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
+import { SubPageHeader } from './sub-page-header.tsx'
+
+/** The step each sub-page belongs to, from 1: the chip of its title row. */
+const STEP_OF: Record<SubSection, number> = { profile: 1, brief: 2, media: 1 }
 
 const metaLine = (t: Translate, meta: SectionMeta | undefined): string | null =>
   meta === undefined ? null : meta.status.map((s) => t(s.key, s.params)).join(', ')
 
-/** A section opened as a sub-page: breadcrumb, Progress strip, the section, and the pager. */
+/** A section opened as a sub-page: its header with the progress line, the section, and the pager. */
 export function SubPage({
   t,
   section,
   name,
   meta,
-  progress,
-  onList,
+  view,
+  stepAction = null,
   onSection,
   actions,
   approval = null,
@@ -40,14 +37,15 @@ export function SubPage({
   /** The place's name, as Details titles it. */
   name: string
   meta: SectionMeta | undefined
-  /** The one line Progress strip (`stepper.tsx` with `strip`). */
-  progress: ReactNode
-  onList: () => void
+  /** The steps of the place (`stepperView`), drawn as the progress line under the title. */
+  view: StepperView
+  /** The one action of the current step (`StepButton`), or null. */
+  stepAction?: ReactNode
   /** Another section, or null for Details. */
   onSection: (section: SubSection | null) => void
-  /** Buttons beside the sub-page title (Add source, #537). */
+  /** Secondary buttons in the title row, before the primary one. */
   actions?: ReactNode
-  /** Back and Approve in the header row (#537); null: none. */
+  /** Approve in the title row (#537); null: none. */
   approval?: ApprovalView | null
   children: ReactNode
 }): JSX.Element {
@@ -58,32 +56,19 @@ export function SubPage({
   const [endMarker, reached] = useReachedEnd()
   return (
     <div className="tracy-wo-subpage" data-section={pageOf(section)}>
-      <Breadcrumb label={t('crumbs.label')} className="tracy-wo-crumbs">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink render={<button type="button" onClick={onList} />}>
-              {t('list.title')}
-            </BreadcrumbLink>
-            <BreadcrumbSeparator />
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbLink render={<button type="button" onClick={() => onSection(null)} />}>
-              {name}
-            </BreadcrumbLink>
-            <BreadcrumbSeparator />
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{title}</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <div className="tracy-wo-subpage-head">
-        <h2 className="tracy-wo-page-title">{title}</h2>
-        {line ? <span className="tracy-wo-psec-meta">{line}</span> : null}
-        {actions ? <span className="tracy-wo-subpage-acts">{actions}</span> : null}
+      <SubPageHeader
+        t={t}
+        title={title}
+        step={STEP_OF[pageOf(section)]}
+        count={line}
+        name={name}
+        view={view}
+        onBack={() => onSection(null)}
+      >
+        {actions}
+        {stepAction}
         {approval === null ? null : <ApprovalActions t={t} view={approval} reached={reached} />}
-      </div>
-      {progress}
+      </SubPageHeader>
       <section className="tracy-wo-psec" aria-label={title}>
         {children}
       </section>

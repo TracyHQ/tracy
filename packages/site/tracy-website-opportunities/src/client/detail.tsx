@@ -35,7 +35,7 @@ import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, start
 import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
-import { Stepper } from './stepper.tsx'
+import { StepButton } from './stepper.tsx'
 import { type StepAction, bandSubSteps, effectiveOf, reviewChipOf, stepperView } from './stepper-model.ts'
 import { ProgressBand } from './progress-band.tsx'
 import { type ApprovalView, gateText } from './seller-review.tsx'
@@ -616,7 +616,7 @@ export function DetailView({
     if (command.kind === 'press') return void demoPress(command.press)
     window.open(command.href, '_blank', 'noopener,noreferrer')
   }
-  // The three steps with the ONE action of the current step: the Progress card, or one line on a sub-page.
+  // The three steps with the ONE action of the current step: the Progress band, or the title row of a sub-page.
   const stepperInput = {
     research,
     researchJob: job,
@@ -641,21 +641,20 @@ export function DetailView({
     const command = demoCommand('primary', row, body)
     if (command !== null) onDemo(command)
   }
-  // On a sub-page, the strip's Review press never points at the page already open.
+  // On a sub-page, the step action's Review press never points at the page already open.
   const stripView =
     section !== null &&
     ((stepper.action?.kind === 'review-profile' && pageOf(section) === 'profile') ||
       (stepper.action?.kind === 'review-brief' && pageOf(section) === 'brief'))
       ? { ...stepper, action: null }
       : stepper
-  const stepperBlock = (strip: boolean): JSX.Element => (
-    <Stepper
+  // The one action of the current step, in the title row of a sub-page.
+  const stepAction = (
+    <StepButton
       t={t}
-      view={strip ? stripView : stepper}
-      locale={locale}
+      view={stripView}
       busy={busy || briefJob.pressing}
       disabled={limitReached && ['build', 'retry-build', 'rebuild'].includes(stepper.action?.kind ?? '')}
-      strip={strip}
       onAction={onStep}
     />
   )
@@ -1032,8 +1031,8 @@ export function DetailView({
           {tableListsFacts ? <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p> : null}
         </>
       )
-    // Back and Approve in the header (#537): on the Profile once research is done, on the brief once one is made and
-    // current; elsewhere on those two pages only Back.
+    // Approve in the header (#537): on the Profile once research is done, on the brief once one is made and
+    // current; elsewhere on those two pages none.
     const approvalView: ApprovalView | null =
       approval === null
         ? null
@@ -1045,7 +1044,6 @@ export function DetailView({
                 approval.profile === 'approved'
                   ? approvedLine('approve.done.profile', approval.profileApprovedAt)
                   : null,
-              onBack: () => onSection(null),
               onApprove: approveProfile
             }
           : shown === 'brief'
@@ -1057,7 +1055,6 @@ export function DetailView({
                   effective.brief != null && approval.brief === 'approved'
                     ? approvedLine('approve.done.brief', approval.briefApprovedAt)
                     : null,
-                onBack: () => onSection(null),
                 onApprove: approveBrief
               }
             : null
@@ -1069,8 +1066,8 @@ export function DetailView({
           section={section}
           name={shownName}
           meta={metaOf(shown)}
-          progress={stepperBlock(true)}
-          onList={onList}
+          view={stripView}
+          stepAction={stepAction}
           onSection={onSection}
           approval={approvalView}
         >

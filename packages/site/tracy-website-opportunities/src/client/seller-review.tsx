@@ -1,7 +1,7 @@
 /**
  * The seller's own steps on Details (#537):
- *   - the approval actions in the header of the Profile and Business brief sub-pages: Back, and Approve ... and
- *     continue, enabled once the page has been scrolled to its end (at once when it fits without scrolling);
+ *   - the approval action in the header of the Profile and Business brief sub-pages: Approve ... and continue,
+ *     enabled once the page has been scrolled to its end (at once when it fits without scrolling);
  *   - Add more: one photo or video added to the Profile's Photos & video.
  * Each press goes through the door the caller passes and answers a refusal code (or null), shown in words here.
  */
@@ -47,19 +47,21 @@ export function useReachedEnd(): [(el: HTMLDivElement | null) => void, boolean] 
   return [setEl, reached]
 }
 
-/** What the header of a Profile or Business brief sub-page offers: Back, and Approve while it is pending. */
+/** What the header of a Profile or Business brief sub-page offers: Approve while it is pending. */
 export interface ApprovalView {
   kind: 'profile' | 'brief'
   /** Already approved: the line that says when (the button is gone). */
   approvedLine: string | null
-  /** Approval is possible now (research done / brief current); false: only Back shows. */
+  /** Approval is possible now (research done / brief current); false: no button. */
   pending: boolean
-  onBack: () => void
   /** Approves; answers the refusal code, or null when it went through. */
   onApprove: () => Promise<string | null>
 }
 
-/** Back and Approve ... and continue in the sub-page header, with the scroll hint under them while it is off. */
+/**
+ * Approve ... and continue at the right end of the sub-page title row (`sub-page-header.tsx`), with its one note
+ * before it: the refusal, when it was approved, or the scroll hint while the button is off.
+ */
 export function ApprovalActions({
   t,
   view,
@@ -84,17 +86,6 @@ export function ApprovalActions({
   const approvable = view.pending && view.approvedLine === null
   return (
     <div className="tracy-wo-approve" data-kind={view.kind}>
-      <div className="tracy-wo-approve-acts">
-        <Button type="button" size="sm" variant="outline" onClick={view.onBack}>
-          {t('approve.back')}
-        </Button>
-        {approvable ? (
-          <Button type="button" size="sm" disabled={!reached || busy} onClick={() => void press()}>
-            {busy ? <Spinner label={t('approve.saving')} /> : null}
-            {busy ? t('approve.saving') : label}
-          </Button>
-        ) : null}
-      </div>
       {refused !== null ? (
         <p className="tracy-wo-error tracy-wo-small" role="alert">
           {gateText(t, refused)}
@@ -102,7 +93,21 @@ export function ApprovalActions({
       ) : view.approvedLine !== null ? (
         <p className="tracy-wo-muted tracy-wo-small">{view.approvedLine}</p>
       ) : approvable && !reached ? (
-        <p className="tracy-wo-muted tracy-wo-small">{t('approve.scrollHint')}</p>
+        <p className="tracy-wo-muted tracy-wo-small" data-note="hint">
+          {t('approve.scrollHint')}
+        </p>
+      ) : null}
+      {approvable ? (
+        <Button
+          type="button"
+          size="sm"
+          disabled={!reached || busy}
+          title={reached ? undefined : t('approve.scrollHint')}
+          onClick={() => void press()}
+        >
+          {busy ? <Spinner label={t('approve.saving')} /> : null}
+          {busy ? t('approve.saving') : label}
+        </Button>
       ) : null}
     </div>
   )

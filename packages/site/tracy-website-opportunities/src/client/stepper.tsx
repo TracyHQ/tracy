@@ -2,8 +2,8 @@
  * The three steps of one place (spec #512, layout C with stepper style D). On Details it is the Progress card at the
  * top of the left column: a vertical list of numbered dots joined by a line, a done step with a check and "Done
  * <date>", the current step with its ring, its status line (or why it stopped) and the ONE action of the step (Running while a job runs,
- * why it stopped with Try again), an upcoming step muted. On a sub-page it is one line above the section: the three
- * names with their dots and the same action at the end. The view comes from `stepper-model.ts`.
+ * why it stopped with Try again), an upcoming step muted. A sub-page draws the same one action in its title row
+ * (`StepButton`, beside the progress line of `sub-page-header.tsx`). The view comes from `stepper-model.ts`.
  */
 import type { JSX } from 'react'
 import { Check } from 'lucide-react'
@@ -19,7 +19,7 @@ const shortDate = (iso: string | null, locale: string): string | null => {
 }
 
 /** The one action of the current step, a disabled Running while its job runs, or nothing. */
-function StepButton({
+export function StepButton({
   t,
   view,
   busy,
@@ -59,7 +59,6 @@ export function Stepper({
   locale,
   busy,
   disabled = false,
-  strip = false,
   onAction
 }: {
   t: Translate
@@ -69,8 +68,6 @@ export function Stepper({
   busy: boolean
   /** The action waits (the daily build limit is used up). */
   disabled?: boolean
-  /** One line above a sub-page instead of the Progress card. */
-  strip?: boolean
   onAction: (action: StepAction) => void
 }): JSX.Element {
   const line = view.lineKey === null ? null : t(view.lineKey)
@@ -80,31 +77,6 @@ export function Stepper({
       {state === 'done' ? <Check /> : i + 1}
     </span>
   )
-  if (strip)
-    return (
-      <section className="tracy-wo-progress-strip" aria-label={t('progress.title')}>
-        <ol className="tracy-wo-progress-strip-steps">
-          {view.steps.map((step, i) => (
-            <li
-              key={step.id}
-              className="tracy-wo-step"
-              data-state={step.state}
-              data-failed={step.failed ? '' : undefined}
-              aria-current={step.state === 'current' ? 'step' : undefined}
-            >
-              {dot(step.state, i)}
-              <span className="tracy-wo-step-name">{t(step.nameKey)}</span>
-            </li>
-          ))}
-        </ol>
-        {view.errorKey !== null ? (
-          <span className="tracy-wo-error tracy-wo-small" role="alert">
-            {t(view.errorKey)}
-          </span>
-        ) : null}
-        {button}
-      </section>
-    )
   return (
     <section className="tracy-wo-progress" aria-label={t('progress.title')}>
       <h3 className="tracy-wo-psec-title">{t('progress.title')}</h3>

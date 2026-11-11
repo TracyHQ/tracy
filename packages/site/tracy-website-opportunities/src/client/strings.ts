@@ -1326,7 +1326,6 @@ export const en = {
   /** The approval footer of the Profile and Business brief sub-pages (#537). */
   'approve.hint': 'Check every row. Edit anything that is wrong, then approve.',
   'approve.scrollHint': 'Scroll to the end to approve.',
-  'approve.back': 'Back',
   'approve.profile': 'Approve business facts and continue',
   'approve.brief': 'Approve site content brief and continue',
   'approve.saving': 'Approving…',
