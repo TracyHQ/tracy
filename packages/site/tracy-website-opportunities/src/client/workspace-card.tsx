@@ -116,15 +116,22 @@ function Row({
   const { id, state, expanded, expandable, linkKey } = section
   const title = t(`details.section.${id}`)
   const Icon = state === 'done' ? Check : ICONS[id]
+  const desc = t(`workspace.desc.${id}`)
   const head = (
     <>
       <span className="tracy-wo-ws-tile" aria-hidden="true">
         <Icon />
       </span>
-      <span className="tracy-wo-ws-name">
-        {title}
-        {/* A row that opens says so: a chevron beside its name, turned up while the body is open (owner, #537). */}
-        {expandable ? <ChevronDown className="tracy-wo-ws-chev" aria-hidden="true" /> : null}
+      <span className="tracy-wo-ws-main">
+        <span className="tracy-wo-ws-name">
+          {title}
+          {/* A row that opens says so: a chevron beside its name, turned up while the body is open (owner, #537). */}
+          {expandable ? <ChevronDown className="tracy-wo-ws-chev" aria-hidden="true" /> : null}
+        </span>
+        {/* One muted line under the name saying what the row holds; it truncates and keeps the full text in the title. */}
+        <span className="tracy-wo-ws-desc" title={desc}>
+          {desc}
+        </span>
       </span>
       <span className="tracy-wo-ws-sum">
         {/* Sources keeps its summary beside the title while open: it says how many links were read. */}

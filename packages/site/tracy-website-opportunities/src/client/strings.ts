@@ -1063,6 +1063,11 @@ export const en = {
   'pp.quote.tagline': 'Tagline',
   'pp.quote.review': 'Review',
   'pp.quote.testimonial': 'Testimonial',
+  // The one line under each Workspace row title: what the row holds (#537)
+  'workspace.desc.sources': 'Where Tracy read about your business.',
+  'workspace.desc.profile': 'What Tracy found, for you to check and approve.',
+  'workspace.desc.brief': 'The words your site will use, for you to approve.',
+  'workspace.desc.demo': 'The site Tracy builds from the approved brief.',
   'pp.quote.news': 'News',
   'pp.photoLinks': 'Photo links',
   'pp.relation.line': '{relation}: {target}',

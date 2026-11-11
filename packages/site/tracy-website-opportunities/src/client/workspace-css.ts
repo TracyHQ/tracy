@@ -29,8 +29,9 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-sec[data-state='done'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--success) 16%, transparent); color: color-mix(in oklab, var(--success) 80%, var(--foreground)); }
 .tracy-wo-ws-sec[data-state='open'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); }
 .tracy-wo-ws-sec[data-state='review'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
-.tracy-wo-ws-name { flex: none; min-width: 150px; font-weight: 600; white-space: nowrap; }
-.tracy-wo-ws-name { display: inline-flex; align-items: center; gap: 4px; }
+.tracy-wo-ws-main { display: flex; flex-direction: column; flex: 0 1 300px; min-width: 150px; }
+.tracy-wo-ws-name { display: inline-flex; align-items: center; gap: 4px; font-weight: 600; white-space: nowrap; }
+.tracy-wo-ws-desc { overflow: hidden; color: var(--muted-foreground); font-size: 12px; line-height: 1.4; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-ws-chev { flex: none; width: 14px; height: 14px; color: var(--muted-foreground); transition: transform 0.15s ease; }
 .tracy-wo-ws-sec[data-open] .tracy-wo-ws-chev { transform: rotate(180deg); }
 .tracy-wo-ws-sum { flex: 1 1 auto; min-width: 0; overflow: hidden; color: var(--muted-foreground); white-space: nowrap; text-overflow: ellipsis; }
@@ -50,7 +51,8 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
   .tracy-wo-ws-row { gap: 8px; padding: 6px 12px; }
   .tracy-wo-ws-toggle { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; row-gap: 0; }
   .tracy-wo-ws-tile { grid-row: span 2; }
-  .tracy-wo-ws-name { min-width: 0; white-space: normal; }
+  .tracy-wo-ws-main { min-width: 0; flex: 1 1 auto; }
+  .tracy-wo-ws-name { white-space: normal; }
   .tracy-wo-ws-sum { white-space: normal; }
   .tracy-wo-ws-sum:empty { display: none; }
   .tracy-wo-ws-body { padding: 10px 12px 12px; }
