@@ -2484,6 +2484,10 @@ share one fallback: the kit's exact native contact body must identify one publis
 opening that same contact. Multiple candidates or conflicting owners remain unresolved; an exact kit path keeps
 precedence. The route receipt retains the actual original live path so a later restore returns to that alias.
 
+The host's page measurement extractor counts the canonical items of a looping Owl carousel. It excludes copied
+subtrees only when an Owl item is directly under its stage inside a carousel with non-cloned siblings; identical
+original cards stay distinct. Site-check row requirements and unresolved-list reporting remain unchanged.
+
 **Step 9 whole and step 9b** (#448, ADR 0044 decision 30). `apps/tracy-web/src/write-step-nine.js` (`runStepNine`) is the
 one entry point of step 9: the write, the first site check (step 11's script; no model looks at screenshots), then step 9b
 (`write-step/repair-pass/`) on the customer-visible faults of that check: each page's faults become numbered comment
