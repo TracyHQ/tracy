@@ -4,9 +4,7 @@
   "title": "Documentary pictures cannot bypass P07 through failed best-artifact export",
   "pr": 558,
   "area": "wo/pictures",
-  "cms": [
-    "any"
-  ],
+  "cms": ["any"],
   "needs": [],
   "flaky_model": false,
   "steps": [
