@@ -1,6 +1,6 @@
 /**
- * The Business facts body of the Workspace card (#537, option B): two columns of facts in fixed slots (NA when not
- * found), a strip of three square tiles (+N on the third), no Open control of its own, one fixed height in every state.
+ * The Business facts body of the Workspace card (#537, option F): two groups of facts (Business, Contact) with an About line
+ * (NA when not found), a 3 by 2 photo mosaic (+N on the sixth), no Open control of its own, one fixed height.
  * Bundles the real model and component with React 18 (the one dsh's page runs) and renders them to static markup.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-facts-body.test.mjs
@@ -35,7 +35,8 @@ before(async () => {
       contents: `
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
-        export { FactsBody, countsText } from './facts-body.tsx'
+        export { FactsBody } from './facts-body.tsx'
+        export { FactsMosaic, countsText } from './facts-body-mosaic.tsx'
         export { factsBodyView, hoursSummary } from './facts-body-model.ts'
         export { mediaRowView, mediaTile } from './detail-model.ts'
         export { FACTS_BODY_CSS } from './facts-body-css.ts'
@@ -99,18 +100,20 @@ const draw = (v) =>
   lib.renderToStaticMarkup(lib.createElement(lib.FactsBody, { t, view: v, onOpen: () => {} }))
 const ids = (facts) => facts.map((f) => f.id)
 
-test('model: every fact present fills the fixed slots in order', () => {
+test('model: every fact present fills the two groups and the About line in order', () => {
   const v = view()
-  assert.deepEqual(ids(v.left), ['name', 'address', 'hours', 'about'])
-  assert.deepEqual(ids(v.right), ['phone', 'website', 'rating', 'followers'])
-  assert.equal(v.left[1].value.text, FULL.address)
-  assert.deepEqual(v.left[2].value.params, { from: '9:00 AM', to: '9:00 PM' })
-  assert.equal(v.left[2].value.key, 'facts.body.hoursToday')
-  assert.equal(v.left[3].value.title, FULL.bio)
-  assert.deepEqual(v.right[1].value, { kind: 'link', url: CANDIDATE.website, host: 'example.test' })
-  assert.equal(v.right[2].value.key, 'facts.body.ratingMany')
-  assert.deepEqual(v.right[2].value.params, { rating: '5.0', count: '4' })
-  assert.equal(v.right[3].value.text, '1,200')
+  assert.deepEqual(ids(v.business), ['name', 'hours', 'rating'])
+  assert.deepEqual(ids(v.contact), ['phone', 'website', 'address'])
+  assert.equal(v.about.id, 'about')
+  assert.equal(v.contact[2].value.text, FULL.address)
+  assert.deepEqual(v.business[1].value.params, { from: '9:00 AM', to: '9:00 PM' })
+  assert.equal(v.business[1].value.key, 'facts.body.hoursToday')
+  assert.equal(v.about.value.title, FULL.bio)
+  assert.equal(v.about.value.text, 'A padel club. Coaching for every level.')
+  assert.deepEqual(v.contact[1].value, { kind: 'link', url: CANDIDATE.website, host: 'example.test' })
+  assert.equal(v.business[2].value.key, 'facts.body.ratingMany')
+  assert.deepEqual(v.business[2].value.params, { rating: '5.0', count: '4' })
+  assert.equal(v.followers.value.text, '1,200')
   assert.deepEqual(
     v.tiles.map((x) => x.id),
     ['a', 'b', 'v']
@@ -120,28 +123,28 @@ test('model: every fact present fills the fixed slots in order', () => {
 })
 
 test('model: hours on a closed day, and on no named day', () => {
-  assert.equal(view({ today: 2 }).left[2].value.key, 'facts.body.hoursTodayText')
+  assert.equal(view({ today: 2 }).business[1].value.key, 'facts.body.hoursTodayText')
   const joined = lib.hoursSummary(['Every day 9 to 5'], 3)
   assert.equal(joined.kind, 'text')
   assert.equal(lib.hoursSummary([], 3), null)
 })
 
-test('model: sparse facts keep their slots, the listing fills what it knows', () => {
+test('model: sparse facts keep their places, the listing fills what it knows, no followers', () => {
   const v = view({ profile: { phone: '+1 555 0100' }, candidate: { address: 'Listing address' } })
-  assert.deepEqual(ids(v.left), ['name', 'address', 'hours', 'about'])
-  assert.equal(v.left[1].value.text, 'Listing address')
-  assert.equal(v.left[2].value, null)
-  assert.equal(v.right[1].value, null)
-  assert.equal(v.right[2].value, null)
-  assert.equal(v.right[3].id, 'spare')
-  assert.equal(v.right[3].labelKey, null)
+  assert.deepEqual(ids(v.business), ['name', 'hours', 'rating'])
+  assert.deepEqual(ids(v.contact), ['phone', 'website', 'address'])
+  assert.equal(v.contact[2].value.text, 'Listing address')
+  assert.equal(v.business[1].value, null)
+  assert.equal(v.contact[1].value, null)
+  assert.equal(v.business[2].value, null)
+  assert.equal(v.followers, null)
 })
 
-test('model: nothing known reads NA in every slot and there are no tiles', () => {
+test('model: nothing known reads NA in every fact and there are no tiles', () => {
   const v = view({ profile: null, candidate: {}, name: null, media: media([]) })
-  assert.ok([...v.left, ...v.right].every((f) => f.value === null))
-  assert.equal(v.left.length, 4)
-  assert.equal(v.right.length, 4)
+  assert.ok([...v.business, ...v.contact, v.about].every((f) => f.value === null))
+  assert.equal(v.business.length, 3)
+  assert.equal(v.contact.length, 3)
   assert.deepEqual(v.tiles, [])
   assert.equal(v.total, 0)
   assert.deepEqual(v.counts, { photos: 0, videos: 0 })
@@ -156,13 +159,23 @@ const clicked = (v) => {
   return { html, calls }
 }
 
-test('markup: two columns at most, three square tiles, no hero and no Open control', () => {
+test('markup: two labelled groups, an About line, six mosaic tiles, no hero and no Open control', () => {
   const html = draw(view())
-  assert.equal(html.match(/class="tracy-wo-fb-col"/g).length, 2)
-  assert.equal(html.match(/class="tracy-wo-fb-tile"/g).length, 3)
+  assert.equal(html.match(/class="tracy-wo-fb-group"/g).length, 2)
+  assert.ok(html.indexOf('[facts.body.groupBusiness]') < html.indexOf('[facts.body.groupContact]'))
+  const business = html.slice(html.indexOf('groupBusiness'), html.indexOf('groupContact'))
+  for (const f of ['name', 'hours', 'rating']) assert.ok(business.includes(`data-fact="${f}"`), f)
+  const contact = html.slice(html.indexOf('groupContact'), html.indexOf('data-fact="about"'))
+  for (const f of ['phone', 'website', 'address']) assert.ok(contact.includes(`data-fact="${f}"`), f)
+  assert.ok(!contact.includes('data-fact="name"'))
+  const about = html.slice(html.indexOf('data-fact="about"'), html.indexOf('tracy-wo-fb-strip'))
+  assert.match(about, /title="A padel club\.\nCoaching for every level\."/)
+  assert.ok(
+    html.indexOf('data-fact="about"') > html.indexOf('data-fact="address"'),
+    'About sits under both groups'
+  )
+  assert.equal(html.match(/tracy-wo-fb-tile/g).length, 6, 'six slots, three filled and three empty')
   assert.ok(!html.includes('hero'))
-  assert.ok(!html.includes('tracy-wo-fb-badge'))
-  assert.ok(html.includes('src="'))
   assert.ok(html.includes('data-kind="video"'), 'a video shows as a neutral tile with a play glyph')
   assert.ok(html.includes('class="tracy-wo-fb-strip" role="group" aria-label="[facts.body.counts'))
   assert.equal(
@@ -172,45 +185,34 @@ test('markup: two columns at most, three square tiles, no hero and no Open contr
     }),
     '25 photos \u00b7 10 videos'
   )
-  assert.ok(!html.includes('media.strip.open'))
   assert.ok(!html.includes('section.openNamed'))
   assert.ok(html.includes('aria-label="[facts.body.openPhotos]"'))
 })
 
-test('markup: 35 items render six tiles, each with its own +N rest count', () => {
+test('markup: 35 items render six tiles and only the sixth carries +N for the rest', () => {
   const v = view({ media: many(35) })
   assert.equal(v.tiles.length, 6)
   assert.equal(v.total, 35)
   const html = draw(v)
   assert.equal(html.match(/<button/g).length, 6)
-  const overlays = [...html.matchAll(/data-i="(\d)".*?<span class="tracy-wo-fb-more"[^>]*>\+(\d+)<\/span>/g)]
-  assert.equal(html.match(/class="tracy-wo-fb-more"/g).length, 6)
-  assert.deepEqual(
-    [...html.matchAll(/class="tracy-wo-fb-more"[^>]*>\+(\d+)</g)].map((m) => Number(m[1])),
-    [34, 33, 32, 31, 30, 29]
-  )
-  assert.ok(overlays.length >= 1)
-  assert.ok(html.includes('title="[facts.body.moreMedia{&quot;count&quot;:32}]"'))
+  assert.equal(html.match(/class="tracy-wo-fb-more"/g).length, 1)
+  assert.match(html, /data-i="6"[^>]*>.*<span class="tracy-wo-fb-more"[^>]*>\+29<\/span>/)
+  assert.ok(html.includes('title="[facts.body.moreMedia{&quot;count&quot;:29}]"'))
 })
 
-test('markup: a tile whose rest count is zero never dims', () => {
+test('markup: six items or fewer never dim a tile', () => {
   for (const n of [3, 6]) {
     const html = draw(view({ media: many(n) }))
     assert.equal(html.match(/<button/g).length, n)
-    assert.equal(
-      html.match(/tracy-wo-fb-more/g)?.length ?? 0,
-      n - 1,
-      `${n} items: the last tile has no overlay`
-    )
+    assert.ok(!html.includes('tracy-wo-fb-more'), `${n} items: no overlay`)
   }
-  assert.equal(draw(view({ media: many(4) })).match(/>\+1</g).length, 1)
+  assert.equal(draw(view({ media: many(7) })).match(/>\+1</g).length, 1)
 })
 
-test('markup: three items or fewer keep three slots; empty slots keep the row width', () => {
+test('markup: fewer than six items keep six slots; empty slots keep the mosaic shape', () => {
   const one = draw(view({ media: many(1) }))
   assert.ok(!one.includes('tracy-wo-fb-more'))
-  assert.equal(one.match(/class="tracy-wo-fb-tile"/g).length, 3, 'three slots drawn')
-  assert.equal(one.match(/data-empty=""/g).length, 2)
+  assert.equal(one.match(/data-empty=""/g).length, 5)
   assert.equal(one.match(/<button/g).length, 1)
 })
 
@@ -218,7 +220,7 @@ test('markup: a press on any tile opens the Business facts page', () => {
   const v = view({ media: many(3) })
   const { html } = clicked(v)
   assert.equal(html.match(/onClick/g), null, 'static markup holds no handler; the element is a button')
-  const el = lib.FactsBody({ t, view: v, onOpen: () => calls.push('profile') })
+  const el = lib.FactsMosaic({ t, view: v, onOpen: () => calls.push('profile') })
   const calls = []
   const buttons = []
   const walk = (n) => {
@@ -235,7 +237,7 @@ test('markup: a press on any tile opens the Business facts page', () => {
 
 test('markup: NA in muted slots, no photos keeps the box', () => {
   const html = draw(view({ profile: null, candidate: {}, name: null, media: media([]) }))
-  assert.equal(html.match(/data-na=""/g).length, 7, 'seven labelled slots, one reserved')
+  assert.equal(html.match(/data-na=""/g).length, 7, 'six facts and the About line')
   assert.ok(html.includes('[facts.body.na]'))
   assert.ok(html.includes('class="tracy-wo-fb-nophoto"'))
   assert.ok(html.includes('[facts.body.noPhotos]'))
@@ -266,35 +268,34 @@ test('strings: every key the body uses exists, English only, no long dashes', ()
   assert.equal(lib.en['facts.body.na'], 'N/A')
 })
 
-test('css: the profile section is the container, and the strip stacks below side-by-side room', () => {
+test('css: the profile section is the container, and the mosaic stacks below side-by-side room', () => {
   const css = lib.FACTS_BODY_CSS
   assert.match(
     css,
     /data-section='profile'\]:has\(> \.tracy-wo-ws-body > \.tracy-wo-fb\) \{ container: wofb \/ inline-size; \}/
   )
-  assert.match(css, /@container wofb \(max-width: 751px\)/)
-  assert.doesNotMatch(css, /@container \((max|min)-width: 7\d\dpx\) \{\n  \/\* The strip goes/)
-  const stacked = css.slice(css.indexOf('@container wofb (max-width: 751px)'))
-  assert.match(stacked, /--tracy-wo-fb-height: 340px/)
+  assert.match(css, /@container wofb \(max-width: 639px\)/)
+  const stacked = css.slice(css.indexOf('@container wofb (max-width: 639px)'))
+  assert.match(stacked, /--tracy-wo-fb-height: calc\(var\(--tracy-wo-fb-c\) \+ 12px \+ 56px \+ 26px\)/)
   assert.match(stacked, /\.tracy-wo-fb \{ grid-template-columns: minmax\(0, 1fr\)/)
+  assert.match(
+    stacked,
+    /\.tracy-wo-fb-strip \{ grid-template-columns: repeat\(6, 56px\); grid-template-rows: 56px; \}/
+  )
 })
 
-test('css: fixed height, overflow hidden, two-column facts, never three, three square tiles', () => {
+test('css: fixed height, overflow hidden, two groups, a 3 by 2 mosaic as tall as the facts block', () => {
   const css = lib.FACTS_BODY_CSS
-  assert.match(css, /--tracy-wo-fb-height: 192px/)
-  assert.match(css, /--tracy-wo-fb-height: 340px/)
+  assert.match(css, /--tracy-wo-fb-c: 117px/)
   assert.match(css, /height: var\(--tracy-wo-fb-height\); overflow: hidden;/)
-  assert.match(css, /\.tracy-wo-fb-facts \{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/)
-  assert.doesNotMatch(css, /repeat\(3, minmax\(0, 1fr\)\) *;[^}]*tracy-wo-fb-facts/)
-  assert.match(css, /\.tracy-wo-fb-tile \{[^}]*aspect-ratio: 1 \/ 1[^}]*border-radius: 8px/)
-  assert.match(css, /--tracy-wo-fb-gap: 8px/)
-  assert.match(css, /container-type: inline-size/)
-  for (const w of [504, 632, 760]) assert.match(css, new RegExp(`@container \\(min-width: ${w}px\\)`))
+  assert.match(css, /\.tracy-wo-fb-groups \{[^}]*grid-template-columns: repeat\(2, minmax\(0, 1fr\)\)/)
+  assert.match(css, /\.tracy-wo-fb-gt \{[^}]*font-size: 11px[^}]*text-transform: uppercase/)
+  assert.match(css, /\.tracy-wo-fb-facts \{[^}]*height: var\(--tracy-wo-fb-c\)/)
   assert.match(
     css,
-    /data-i='4'\], \.tracy-wo-fb-tile\[data-i='5'\], \.tracy-wo-fb-tile\[data-i='6'\] \{ display: none; \}/
+    /\.tracy-wo-fb-strip \{[^}]*repeat\(3, var\(--tracy-wo-fb-tile\)\)[^}]*repeat\(2, var\(--tracy-wo-fb-tile\)\)/
   )
-  assert.match(css, /minmax\(320px, 1fr\)/)
+  assert.match(css, /--tracy-wo-fb-tile: calc\(\(var\(--tracy-wo-fb-c\) - var\(--tracy-wo-fb-gap\)\) \/ 2\)/)
   assert.match(css, /\.tracy-wo-fb-more \{[^}]*color-mix\(in oklab, var\(--background\) 55%/)
   assert.doesNotMatch(css, /tracy-wo-fb-hero/)
   assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b|rgba?\(/i, 'tokens only')
@@ -305,9 +306,9 @@ test('css: fixed height, overflow hidden, two-column facts, never three, three s
 
 test('markup: a fact kept off the site shows its value dimmed, never N/A', () => {
   const v = view()
-  const off = { ...v, left: v.left.map((f) => (f.id === 'hours' ? { ...f, off: true } : f)) }
+  const off = { ...v, business: v.business.map((f) => (f.id === 'hours' ? { ...f, off: true } : f)) }
   const html = draw(off)
-  const hours = html.slice(html.indexOf('data-fact="hours"'), html.indexOf('data-fact="about"'))
+  const hours = html.slice(html.indexOf('data-fact="hours"'), html.indexOf('data-fact="rating"'))
   assert.match(hours, /data-off=""/)
   assert.match(hours, /facts\.body\.hoursToday/)
   assert.doesNotMatch(hours, /facts\.body\.na|data-na/)
@@ -315,7 +316,7 @@ test('markup: a fact kept off the site shows its value dimmed, never N/A', () =>
 })
 
 test('model: the followers slot reads Followers and the whole count', () => {
-  const f = view().right.find((x) => x.id === 'followers')
+  const f = view().followers
   assert.equal(f.labelKey, 'pp.stat.followers')
   assert.equal(f.value.text, '1,200')
 })
