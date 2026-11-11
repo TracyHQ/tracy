@@ -17,7 +17,8 @@
     "Kept shared owners, ambiguous bodies, invalid native state and plugin refusals remain blocked; archived and trashed articles are never restored.",
     "Existing non-article stock-screen and menu behavior remains intact.",
     "Native measured and unmeasured capabilities permit fallback; conditional rows require another exact row member and unknown tiers remain blocked.",
-    "Retrying a verified hidden row does not clear it again."
+    "Retrying a verified hidden row does not clear it again.",
+    "Created legal pages disable the separate native intro, read the setting back and upgrade old receipts without replacing native rows or unrelated settings."
   ],
   "selectors": {},
   "fence": "Exact native article ownership declared by the kit; no guessed aliases, direct database writes or CSS hiding",
@@ -33,7 +34,8 @@
       "apps/tracy-web/test/write-step-text-fallback.test.mjs",
       "apps/tracy-web/test/write-step-hide.test.mjs",
       "apps/tracy-web/test/write-step-run.test.mjs",
-      "apps/tracy-web/test/write-step-buttons.test.mjs"
+      "apps/tracy-web/test/write-step-buttons.test.mjs",
+      "apps/tracy-web/test/write-step-created-legal-layout.test.mjs"
     ],
     "needs": [],
     "timeout_s": 120
