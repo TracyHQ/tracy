@@ -8,7 +8,7 @@ import { cleanSocialUrl, untrackedUrl } from './social-links.mjs'
 import { brandNameOf } from './brand-social.mjs'
 import { candidateAsRead } from './candidate-as-read.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
-import { defaultOfferingKind, statedTradeOf, tradeOfPlace, tradeOfSchemaType } from './trades.mjs'
+import { statedTradeOf, tradeOfCategory, tradeOfPlace, tradeOfSchemaType } from './trades.mjs'
 import { emptyPlaceProfile, sourceRef, webAddress } from './place-profile.mjs'
 import { ownMarkNamesOf } from './own-marks.mjs'
 import { isTradeDescriptionName, placeWordsOf } from './trade-description-name.mjs'
@@ -17,7 +17,7 @@ import { directMessageUrlOf, ownChannelInvitesOf, socialNetworkOfUrl } from './o
 
 const VERSION = 'place-profile-from-research/1'
 const SOCIAL_NETWORKS = new Set(['facebook', 'instagram', 'tiktok', 'youtube'])
-const MAPPING = 'tracy-trade/1'
+const MAPPING = 'tracy-trade/2'
 const list = (value) => (Array.isArray(value) ? value : [])
 const present = (value) => value !== undefined && value !== null && value !== ''
 const iso = (value) => (value instanceof Date ? value.toISOString() : value)
@@ -376,6 +376,7 @@ export function placeProfileFromResearch({
     )
   // A site's own schema.org type, as its source row read it, when the merged profile did not keep it.
   const schemaTypes = present(profile.businessType) ? [profile.businessType] : []
+  const socialTrades = new Set()
   for (const row of sources.filter(readable)) {
     const category = row.collected?.profile?.category
     if (typeof category === 'string' && category)
@@ -386,6 +387,10 @@ export function placeProfileFromResearch({
           '$.collected.profile.category'
         )
       )
+    if (SOCIAL_NETWORKS.has(row.source)) {
+      const mapped = tradeOfCategory(category)
+      if (mapped && mapped !== 'other') socialTrades.add(mapped)
+    }
     const stated = row.collected?.profile?.businessType
     if (typeof stated === 'string' && stated && !schemaTypes.includes(stated)) {
       schemaTypes.push(stated)
@@ -400,6 +405,9 @@ export function placeProfileFromResearch({
   }
   let trade = tradeOfPlace(pick(types, ['primaryType', 'types']))
   for (const type of schemaTypes) if (trade === 'other') trade = tradeOfSchemaType(type)
+  // A source's explicit category is evidence, not a biography keyword. Conflicting recognized social trades stay
+  // unknown, and neither a social category nor its disagreement overrides an authoritative Google/schema trade.
+  if (trade === 'other' && socialTrades.size === 1) trade = [...socialTrades][0]
   // The trade rests on the categories it was read from; with none it is Tracy's default, said as such.
   const tradeValue = { taxonomy: 'tracy-trade', code: trade, mappingVersion: MAPPING }
   const tradeFact = {
@@ -418,7 +426,7 @@ export function placeProfileFromResearch({
           )
         ],
     derivation: {
-      method: 'tradeOfPlace/tradeOfSchemaType',
+      method: 'tradeOfPlace/tradeOfSchemaType/tradeOfCategory',
       version: MAPPING,
       inputRefs: providerCategories.map((f) => f.id)
     }
@@ -1150,7 +1158,9 @@ export function placeProfileFromResearch({
     ['website', 'google-places', 'facebook', 'instagram'].includes(s.source)
   )
   cover('menu', menuOfferings.length > 0, menuRows, {
-    applicable: defaultOfferingKind(statedTradeOf(doc)) === 'dish' || menuRows.length > 0
+    // An unmapped or conflicting category proves no non-food trade. Without a menu collector attempt, this is
+    // not researched, never a claim that a menu does not apply. Actual menu rows retain their measured outcome.
+    applicable: trade === 'food' || trade === 'other' || menuRows.length > 0
   })
   // The reading step looked for services and people: "found" or "looked, not there", and says when only rules read.
   const readingRows = reading

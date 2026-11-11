@@ -864,6 +864,14 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `wo_media_analysis` (vision labels by sha+model+key, claimed before the call). New columns: `wo_opportunity.place_id`,
   `wo_job.place_job_id`/`result_snapshot_id` (the account's request, state mirrored from the place job), `wo_revision.place_snapshot_id`/
   `profile_effective` (the manifest points to `wo_place_media` by id+sha, `origin: 'place'`; older revisions read `wo_media` as before).
+  The effective place view compares shared and private social sources by the existing native profile parser's identity
+  (including Facebook page IDs and case-sensitive YouTube channel IDs). A successful shared collection represents a pasted
+  alias of that same profile in the profile, source list and brief inputs; distinct profiles and failures without a successful
+  shared twin remain separate. This read-time selection never rewrites stored collector attempts or their failure reasons.
+  The saved place-profile adapter derives a trade from an exact collected social category only when its controlled
+  mapping recognizes one unambiguous trade and Google/schema types provide none. Biography text never supplies this
+  classification. An unknown trade with no menu collector attempt reports menu coverage as `not_researched`; only a
+  recognized non-food trade can establish `not_applicable` in the absence of actual menu evidence.
   Migration 168 (Research again): `wo_place_job.again_plan` — a run only revisits the parts
   that failed on our side / are older than 30 days / were never tried / whose rules changed; the scope is computed by [`website-opportunities/src/research-again.js`](packages/wo/website-opportunities/src/research-again.js)
   (one function for the three preview doors: the place card, /ops, `/find`, and for the run) and then frozen into the job; the run only drops parts that have

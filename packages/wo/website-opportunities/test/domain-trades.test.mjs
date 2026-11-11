@@ -164,13 +164,13 @@ test('a website-stated schema.org subtype, with no Google category, is its trade
     }
 })
 
-test('a bare LocalBusiness is a stated but unplaced category: services, never dishes', () => {
+test('a bare LocalBusiness keeps generic services without claiming an unattempted menu does not apply', () => {
   for (const where of ['profile', 'source-row']) {
     const doc = siteOnly('LocalBusiness', where)
     assert.equal(statedTradeOf(doc), 'other', where)
     assert.equal(defaultOfferingKind(statedTradeOf(doc)), 'service', where)
     const menu = doc.coverage.find((c) => c.target === 'menu')
-    assert.equal(menu.status, 'not_applicable', where)
+    assert.equal(menu.status, 'not_researched', where)
   }
 })
 
