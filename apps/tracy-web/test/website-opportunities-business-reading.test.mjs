@@ -5,27 +5,29 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
-import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
-import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
-import { createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
-import { createExecutor } from 'website-opportunities/src/executor.js'
-import { imageInfoWith } from 'website-opportunities/src/media-info.js'
-import { requestResearch } from 'website-opportunities/src/place-requests.js'
-import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
-import { addLink } from 'website-opportunities/src/places.js'
-import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
-import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
+import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
 import { briefResearchOf, makeSiteBrief } from 'website-opportunities/src/brief-research.js'
-import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
-import { BUSINESS_READING_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
 import {
   businessReadingDoorOf,
   businessReadingMaxTokens
 } from 'website-opportunities/src/business-reading.js'
-import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
+import { createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
+import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
+import { createExecutor } from 'website-opportunities/src/executor.js'
+import { imageInfoWith } from 'website-opportunities/src/media-info.js'
+import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
+import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { addLink } from 'website-opportunities/src/places.js'
+import { queueResearchAgain } from 'website-opportunities/src/research-again.js'
+import { insertOpportunity, saveKeyMessagePicks, saveReadingPick } from 'website-opportunities/src/store.js'
+import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
 import { fileDb } from './_db.mjs'
+
 // Whether a person shows lives in their fact (brief schema 2, #1791); an older brief said it on the item.
 const onSiteOf = (brief, p) => (p.factId ? brief.facts.find((f) => f.id === p.factId)?.onSite : p.onSite)
+
 import { createTracyWoHost } from '../src/wo-host.js'
 
 const woHost = createTracyWoHost()
@@ -83,7 +85,7 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     providerId: PLACE_ID,
     candidate: { provider: 'google-places', providerId: PLACE_ID, name: 'Harbour Sport Club', ...candidate }
   })
-  const calls = { model: 0, bodies: [], progress: [] }
+  const calls = { model: 0, bodies: [], progress: [], uspRetry: 0, uspBodies: [] }
   const real = await websiteOpportunitiesDomain()
   const blocked = { available: false, collect: async () => ({ status: 'blocked', media: [] }) }
   const domain = {
@@ -139,9 +141,18 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {}, effor
     apiFetch: async (url, init) => {
       if (String(url) === MODEL_URL) {
         const body = JSON.parse(init.body)
-        assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
         calls.model += 1
         calls.bodies.push(body)
+        if (body.messages[0].content === USP_RETRY_SYSTEM) {
+          calls.uspRetry += 1
+          calls.uspBodies.push(body)
+          return Response.json({
+            id: `usp-retry-${calls.uspRetry}`,
+            choices: [{ message: { content: JSON.stringify({ uspThemes: [] }) } }],
+            usage: { prompt_tokens: 1000, completion_tokens: 10 }
+          })
+        }
+        assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
         // What the page following the research reads while the reading runs (#251).
         calls.progress.push(
           (await pool.query('select stage, progress from wo_place_job order by created_at desc limit 1'))
@@ -208,7 +219,11 @@ test(
   opts,
   async () => {
     const r = await research()
-    assert.equal(r.calls.model, 1, 'one model call per research run')
+    assert.equal(r.calls.model, 2, 'one reading call and one USP retry for this fixture')
+    assert.deepEqual(
+      r.calls.bodies.map((body) => body.messages[0].content),
+      [BUSINESS_READING_SYSTEM, USP_RETRY_SYSTEM]
+    )
     // #251: while the reading runs, the job says so and names no source still being collected.
     assert.equal(r.calls.progress[0].stage, 'profile')
     assert.equal(r.calls.progress[0].progress.reading, 'business')
@@ -287,10 +302,20 @@ test(
     assert.equal(coverage.offerings.status, 'found')
     assert.equal(coverage.people.status, 'found')
 
-    // The ledger: one reserved and settled model call, for this purpose.
+    // The fixture proposes no USP: one full reading and one bounded USP retry, both settled on the same ledger.
+    assert.equal(r.calls.uspRetry, 1)
+    assert.equal(r.calls.uspBodies[0].messages[0].content, USP_RETRY_SYSTEM)
+    const storedReading = (
+      await r.pool.query(
+        "select profile->'businessReading' as reading from wo_place_snapshot_profile where profile ? 'businessReading'"
+      )
+    ).rows
+    assert.equal(storedReading.length, 1)
+    assert.equal(storedReading[0].reading.uspRetry, 'rejected')
+    assert.equal(storedReading[0].reading.uspThemes, null)
     const rows = (await r.pool.query("select * from wo_cost_ledger where purpose = 'business-reading'")).rows
-    assert.equal(rows.length, 1)
-    assert.equal(rows[0].provider, 'woEditorial')
+    assert.equal(rows.length, 2)
+    assert.ok(rows.every((row) => row.provider === 'woEditorial' && row.state === 'settled'))
   }
 )
 
@@ -456,7 +481,7 @@ test(
   opts,
   async () => {
     const r = await research({ effort: 'off' })
-    assert.equal(r.calls.model, 1)
+    assert.equal(r.calls.model, 2)
     assert.deepEqual(r.calls.bodies[0].thinking, { type: 'disabled' })
     assert.equal(r.calls.bodies[0].max_tokens, 4_000)
     assert.equal(r.calls.bodies[0].reasoning_effort, undefined)
@@ -469,7 +494,7 @@ test(
   opts,
   async () => {
     const r = await research()
-    assert.equal(r.calls.model, 1)
+    assert.equal(r.calls.model, 2)
     const again = (onlyParts) =>
       queueResearchAgain(r.pool, r.placeId, {
         now: Date.now(),
@@ -485,11 +510,11 @@ test(
     assert.ok(whole.plan.run.length > 0)
     assert.ok(whole.plan.run.every((p) => p.reason === 'again'))
     await r.drain()
-    assert.equal(r.calls.model, 2, 'the held reading is not reused')
+    assert.equal(r.calls.model, 4, 'the held reading is not reused')
     // A run limited to some parts keeps the reading it holds when nothing it reads changed.
     const limited = await again(['google-places'])
     assert.equal(limited.plan.fromScratch.whole, false)
     await r.drain()
-    assert.equal(r.calls.model, 2)
+    assert.equal(r.calls.model, 4)
   }
 )
