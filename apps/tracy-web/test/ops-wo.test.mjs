@@ -133,6 +133,7 @@ function createStandInPool({ role = 'admin', switchOn = true } = {}) {
         updated_at: new Date(NOW_ISO)
       }
     ],
+    demoActions: [],
     queries: []
   }
 
@@ -240,6 +241,10 @@ function createStandInPool({ role = 'admin', switchOn = true } = {}) {
       }
       if (norm.includes('from wo_revision')) {
         return { rows: state.revisions }
+      }
+      // Before `from wo_build`: the action query asks whether a build row exists for the action.
+      if (norm.includes('from wo_demo_action')) {
+        return { rows: state.demoActions }
       }
       if (norm.includes('from wo_build')) {
         return { rows: state.builds }
@@ -382,6 +387,151 @@ test('GET /api/ops/wo returns live queue across all users, lifecycle stages, tem
   // Verify hidden template warning is surfaced from quickstart_releases
   const joomlaPin = doc.templateStatuses.find((t) => t.cms === 'joomla')
   assert.equal(joomlaPin.inspirationHidden, true)
+})
+
+const REFUSED_OPP = '33333333-3333-4333-8333-333333333333'
+
+/** Portland City Boxing (#552): a brief exists, and its latest demo action was refused with no build of its own. */
+function addRefusedAction(pool, action = {}) {
+  pool.state.opportunities.push({
+    id: REFUSED_OPP,
+    account_id: 'aaaa1111-1111-4111-8111-111111111111',
+    name: 'Portland City Boxing',
+    branch: 'Portland',
+    provider: 'google-maps',
+    provider_id: 'ChIJ_portland_boxing',
+    candidate: { address: '1 Main St, Portland' },
+    status: 'ready',
+    created_at: new Date(NOW_ISO),
+    updated_at: new Date(NOW_ISO),
+    account_email: 'ceo@tracy.ai',
+    account_name: 'Lee'
+  })
+  pool.state.revisions.push({
+    id: '77773333-3333-4333-8333-333333333333',
+    opportunity_id: REFUSED_OPP,
+    account_id: 'aaaa1111-1111-4111-8111-111111111111',
+    n: 2,
+    asset_manifest: [],
+    created_at: new Date(NOW_ISO)
+  })
+  // The latest action per opportunity, as `distinct on` returns it: no `wo_build` row was made for it.
+  pool.state.demoActions.push({
+    opportunity_id: REFUSED_OPP,
+    status: 'failed',
+    step: 'brief',
+    error: 'BRIEF_NOT_READY',
+    has_build: false,
+    accepted_at: new Date(NOW_ISO),
+    updated_at: new Date(NOW_ISO),
+    ...action
+  })
+}
+
+test('GET /api/ops/wo: a demo action refused before any build shows its failure, not a passed build with a built template (#552)', async () => {
+  const pool = createStandInPool()
+  addRefusedAction(pool)
+  const doc = await (await requestWo({ pool })).json()
+
+  const row = doc.opportunities.find((r) => r.id === REFUSED_OPP)
+  assert.deepEqual(row.demoAction, {
+    status: 'failed',
+    step: 'brief',
+    error: 'BRIEF_NOT_READY',
+    hasBuild: false
+  })
+  assert.equal(row.needsAttention, true)
+  assert.equal(row.queueState, 'BLOCKED')
+  assert.match(row.attentionReason, /BRIEF_NOT_READY/)
+  assert.match(row.currentStep, /BRIEF_NOT_READY/)
+  // The research column keeps meaning research: the brief exists, so research passed.
+  assert.equal(row.researchRollup, 'success')
+  assert.equal(row.demoStatus, 'none')
+  // No build chose a template: the pinned default is named as the pin, never as the built template.
+  assert.equal(row.template, doc.settings.pinnedTemplates[row.cms])
+  assert.equal(row.templateSource, 'pinned')
+
+  // The nearest working case: a live build keeps its built template and no action failure.
+  const liveRow = doc.opportunities.find((r) => r.name === 'Anan Saigon')
+  assert.equal(liveRow.demoAction, null)
+  assert.equal(liveRow.stage, '7-live')
+  assert.equal(liveRow.needsAttention, false)
+})
+
+test('GET /api/ops/wo: a refused demo action keeps the research rollup rule — a paused or failed research job still reads as a failure (#552)', async () => {
+  for (const [jobState, rollup] of [
+    ['paused', 'failure'],
+    ['failed', 'failure'],
+    ['blocked', 'failure'],
+    ['completed', 'success']
+  ]) {
+    const pool = createStandInPool()
+    addRefusedAction(pool)
+    pool.state.jobs.push({
+      ...pool.state.jobs[0],
+      id: '99993333-3333-4333-8333-333333333333',
+      opportunity_id: REFUSED_OPP,
+      state: jobState
+    })
+    const doc = await (await requestWo({ pool })).json()
+    const row = doc.opportunities.find((r) => r.id === REFUSED_OPP)
+    assert.equal(row.researchRollup, rollup, `research job ${jobState}`)
+    assert.match(row.currentStep, /BRIEF_NOT_READY/, `research job ${jobState}`)
+  }
+})
+
+test('GET /api/ops/wo: a demo action refused after an older live build still needs attention; the old demo link stays (#552)', async () => {
+  const HOUR_AGO = new Date(Date.parse(NOW_ISO) - 3600_000)
+  const olderBuild = {
+    id: '88883333-3333-4333-8333-333333333333',
+    opportunity_id: REFUSED_OPP,
+    revision_id: '77773333-3333-4333-8333-333333333333',
+    site_key: 'portland-boxing.tracy.site',
+    site_job_id: 'job-3',
+    state: 'done',
+    receipt: { ok: true },
+    handoff: { ok: true },
+    pictures: {},
+    created_at: HOUR_AGO,
+    updated_at: HOUR_AGO
+  }
+  const rowOf = async (action) => {
+    const pool = createStandInPool()
+    addRefusedAction(pool, action)
+    pool.state.builds.push(olderBuild)
+    const doc = await (await requestWo({ pool })).json()
+    return doc.opportunities.find((r) => r.id === REFUSED_OPP)
+  }
+
+  // A second build was asked for after the live one and refused before it had a build of its own.
+  const refused = await rowOf({ accepted_at: new Date(NOW_ISO) })
+  assert.equal(refused.needsAttention, true)
+  assert.match(refused.attentionReason, /BRIEF_NOT_READY/)
+  assert.match(refused.currentStep, /BRIEF_NOT_READY/)
+  assert.equal(refused.queueState, 'BLOCKED')
+  assert.equal(refused.demoSite, 'portland-boxing.tracy.site')
+
+  // Nearest working case: the done build's own action completed — the live row is unchanged.
+  const built = await rowOf({ status: 'completed', error: null, has_build: true, accepted_at: HOUR_AGO })
+  assert.equal(built.stage, '7-live')
+  assert.equal(built.needsAttention, false)
+  assert.equal(built.queueState, 'IDLE')
+  assert.doesNotMatch(built.currentStep, /failed/)
+
+  // A refusal accepted before the live build was requested is history, not the row's state.
+  const older = await rowOf({ accepted_at: new Date(Date.parse(NOW_ISO) - 7200_000) })
+  assert.equal(older.stage, '7-live')
+  assert.equal(older.needsAttention, false)
+})
+
+test('GET /api/ops/wo reads demo actions only for the opportunities the list loaded (#552)', async () => {
+  const pool = createStandInPool()
+  addRefusedAction(pool)
+  await requestWo({ pool })
+  const reads = pool.state.queries.filter((q) => q.sql.includes('as has_build from wo_demo_action'))
+  assert.equal(reads.length, 1)
+  assert.match(reads[0].sql, /where a\.opportunity_id = any\(\$1/)
+  assert.deepEqual(reads[0].params, [pool.state.opportunities.map((o) => o.id)])
 })
 
 test('GET /api/ops/wo says per CMS pin whether Design inspiration still offers it', async () => {
