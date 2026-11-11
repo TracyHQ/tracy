@@ -1481,6 +1481,171 @@ function breadcrumbReceiverFixture() {
   return { ...f, contract, mapPath, entries, files, selectors, values, urls, item, run }
 }
 
+function stockTagBreadcrumbFixture() {
+  const f = breadcrumbReceiverFixture()
+  f.contract.entityByKey.get('tag-71').identity = { path: 'platform-test', language: '*' }
+  const router = 'components/com_tags/src/Service/Router.php'
+  const table = 'administrator/components/com_tags/src/Table/TagTable.php'
+  const nested = 'libraries/src/Table/Nested.php'
+  const files = {
+    [router]: f.files[router].replace("->from('#__tags')", "->from($this->db->quoteName('#__tags'))"),
+    [table]: `<?php class TagTable extends Nested implements CurrentUserInterface { public function __construct($db) { parent::__construct('#__tags', 'id', $db, $dispatcher); } }`,
+    [nested]: `<?php function rebuildPath($pk = null) {
+      $query = $db->createQuery()
+        ->select('p.alias')
+        ->from($this->_tbl . ' AS n, ' . $this->_tbl . ' AS p')
+        ->where('n.lft BETWEEN p.lft AND p.rgt')
+        ->where('n.' . $this->_tbl_key . ' = ' . (int) $pk)
+        ->order('p.lft');
+      $db->setQuery($query);
+      $segments = $db->loadColumn();
+      if (!empty($segments) && $segments[0] === 'root') { array_shift($segments); }
+      $path = trim(implode('/', $segments), ' /\\\\');
+      $query->clear()->update($this->_tbl)
+        ->set('path = ' . $db->quote($path))
+        ->where($this->_tbl_key . ' = ' . (int) $pk);
+      $db->setQuery($query)->execute();
+    }`
+  }
+  for (const [file, body] of Object.entries(files)) f.put(file, body)
+  return { ...f, stockFiles: files, router, table, nested, url: `${SITE}index.php/topics/platform-test` }
+}
+
+test('stock tag breadcrumbs: quoted router and single-segment stock path bind the declared title', () => {
+  const f = stockTagBreadcrumbFixture()
+  for (const identity of [
+    { path: 'platform-test', language: '*' },
+    { alias: 'platform-test' },
+    { alias: 'platform-test', path: 'platform-test', language: '*' }
+  ]) {
+    f.contract.entityByKey.get('tag-71').identity = identity
+    const result = f.run(f.item('tag'), f.url)
+    assert.equal(result.status, 'matched', JSON.stringify(identity))
+    assert.deepEqual(result.slots, ['languageString-64.0', 'tag-71.0'])
+  }
+  f.put(f.router, f.files[f.router])
+  assert.equal(
+    f.run(f.item('tag'), f.url).status,
+    'matched',
+    'legacy literal table expression remains supported'
+  )
+})
+
+test('stock tag breadcrumbs: conflicting, duplicate, nested and non-string identities refuse ownership', () => {
+  const f = stockTagBreadcrumbFixture()
+  const entity = f.contract.entityByKey.get('tag-71')
+  for (const identity of [
+    {},
+    { path: null },
+    { path: 71 },
+    { path: ['platform-test'] },
+    { path: 'parent/platform-test' },
+    { alias: 'platform-test', path: 'parent/platform-test' },
+    { alias: 'foreign', path: 'platform-test' },
+    { alias: null, path: 'platform-test' },
+    { alias: 'platform-test', path: null }
+  ]) {
+    entity.identity = identity
+    assert.notEqual(f.run(f.item('tag'), f.url).status, 'matched', JSON.stringify(identity))
+  }
+  for (const numeric of ['71', '7.1', '.71', '71.', '7e1', '+71', ' 71 ']) {
+    entity.identity = { path: numeric, language: '*' }
+    assert.notEqual(
+      f.run(f.item('tag'), `${SITE}index.php/topics/${encodeURIComponent(numeric)}`).status,
+      'matched',
+      'the stock router consumes numeric segments before alias lookup'
+    )
+  }
+  entity.identity = { path: 'platform-test', language: '*' }
+  f.contract.entityByKey.set('tag-72', {
+    key: 'tag-72',
+    kind: 'tag',
+    sourceId: 72,
+    identity: { path: 'platform-test', language: '*' }
+  })
+  assert.notEqual(
+    f.run(f.item('tag'), f.url).status,
+    'matched',
+    'duplicate path never selects the first owner'
+  )
+  f.contract.entityByKey.get('tag-72').identity = { alias: 'platform-test' }
+  assert.notEqual(f.run(f.item('tag'), f.url).status, 'matched', 'path and alias owners remain ambiguous')
+  f.contract.entityByKey.get('tag-72').identity = { path: 'platform-test', alias: 'foreign' }
+  assert.notEqual(
+    f.run(f.item('tag'), f.url).status,
+    'matched',
+    'a conflicting duplicate identity cannot be discarded to make the first owner unique'
+  )
+})
+
+test('stock tag breadcrumbs: connected path producer, route and every raw copy remain mandatory', () => {
+  const f = stockTagBreadcrumbFixture()
+  assert.equal(f.run(f.item('tag'), f.url).status, 'matched', 'positive production seam before refusals')
+  for (const [file, altered] of [
+    [f.router, (s) => s.replace("quoteName('#__tags')", "quoteName('#__foreign')")],
+    [f.router, (s) => s.replace("quoteName('alias')", "quoteName('title')")],
+    [f.table, (s) => s.replace('extends Nested', 'extends Foreign')],
+    [f.table, (s) => s.replace("'#__tags'", "'#__foreign'")],
+    [f.nested, (s) => s.replace("select('p.alias')", "select('p.title')")],
+    [f.nested, (s) => s.replace("->from($this->_tbl . ' AS n, ' . $this->_tbl . ' AS p')", '')],
+    [f.nested, (s) => s.replace("' AS n, '", "' AS foreign, '")],
+    [f.nested, (s) => s.replace("->where('n.lft BETWEEN p.lft AND p.rgt')", '')],
+    [f.nested, (s) => s.replace('n.lft BETWEEN p.lft AND p.rgt', 'n.lft BETWEEN p.rgt AND p.lft')],
+    [f.nested, (s) => s.replace("->where('n.' . $this->_tbl_key . ' = ' . (int) $pk)", '')],
+    [f.nested, (s) => s.replace("'n.' . $this->_tbl_key", "'p.' . $this->_tbl_key")],
+    [f.nested, (s) => s.replace('$db->setQuery($query);', '')],
+    [f.nested, (s) => s.replace('$db->setQuery($query);', '$db->setQuery($foreign);')],
+    [f.nested, (s) => s.replace('->update($this->_tbl)', '->update($foreign)')],
+    [f.nested, (s) => s.replace("->where($this->_tbl_key . ' = ' . (int) $pk)", '')],
+    [
+      f.nested,
+      (s) =>
+        s.replace(
+          "->where($this->_tbl_key . ' = ' . (int) $pk)",
+          "->where($this->_tbl_key . ' = ' . (int) $foreign)"
+        )
+    ],
+    [f.nested, (s) => s.replace('$db->setQuery($query)->execute()', '$db->setQuery($foreign)->execute()')],
+    [f.nested, (s) => s.replace('array_shift($segments)', 'array_pop($segments)')],
+    [f.nested, (s) => s.replace("implode('/', $segments)", "implode('-', $segments)")]
+  ]) {
+    for (const body of ['', `<?php /* ${f.stockFiles[file]} */`, altered(f.stockFiles[file])]) {
+      f.put(file, body)
+      assert.notEqual(f.run(f.item('tag'), f.url).status, 'matched', file)
+    }
+    f.put(file, f.stockFiles[file])
+  }
+  for (const url of [`${SITE}index.php/foreign/platform-test`, `${f.url}/extra`, `${f.url}?id=71`])
+    assert.notEqual(f.run(f.item('tag'), url).status, 'matched', 'unknown or conflicting route')
+  for (const change of [
+    (it) => {
+      delete it.viewports.phone
+    },
+    (it) => {
+      delete it.viewports.phone.receivers
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].value += ' foreign'
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].selector = 'span.foreign'
+    },
+    (it) => {
+      it.viewports.phone.receivers[0].inCode = true
+    },
+    (it) => {
+      it.inCode = true
+    },
+    (it) => {
+      it.codeText = it.value
+    }
+  ]) {
+    const item = f.item('tag')
+    change(item)
+    assert.notEqual(f.run(item, f.url).status, 'matched', 'all raw copies, viewport and CODE guards')
+  }
+})
+
 test('breadcrumb receivers: source formulas bind unique declared archive, public author and tag owners', () => {
   const f = breadcrumbReceiverFixture()
   for (const [kind, owners] of [

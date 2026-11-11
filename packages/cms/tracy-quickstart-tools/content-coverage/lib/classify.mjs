@@ -243,18 +243,46 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
                 link.searchParams.get('option') === 'com_tags' &&
                 link.searchParams.get('view') === 'tags' &&
                 /^[^/:,]+$/.test(tail) &&
-                !/^\d+$/.test(tail) &&
+                !/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(tail.trim()) &&
                 receiverProducer(
                   sourceIndex,
                   'components/com_tags/src/Service/Router.php',
                   /\$slug\s*=\s*\$this->fixSegment\(\$id\)/,
                   /\$vars\['view'\]\s*=\s*'tag'/,
                   /\$alias\s*=\s*str_replace\(':',\s*'-',\s*\$segment\)/,
-                  /->from\('#__tags'\)\s*->where\(\$this->db->quoteName\('alias'\)\s*\.\s*' = :alias'\)\s*->bind\(':alias',\s*\$alias\)/
+                  /->from\((?:'#__tags'|\$this->db->quoteName\('#__tags'\))\)\s*->where\(\$this->db->quoteName\('alias'\)\s*\.\s*' = :alias'\)\s*->bind\(':alias',\s*\$alias\)/
                 )
               ) {
-                for (const entity of entities.filter((e) => e.kind === 'tag' && e.identity?.alias === tail))
-                  found.push({ mapped: p, entity })
+                // Stock capture declares path: a single segment is an alias only under the nested-table producer.
+                const stockPath =
+                  receiverProducer(
+                    sourceIndex,
+                    'administrator/components/com_tags/src/Table/TagTable.php',
+                    /class TagTable extends Nested\b/,
+                    /parent::__construct\('#__tags',\s*'id',\s*\$db/
+                  ) &&
+                  receiverProducer(
+                    sourceIndex,
+                    'libraries/src/Table/Nested.php',
+                    /\$query\s*=\s*\$db->createQuery\(\)\s*->select\('p.alias'\)\s*->from\(\$this->_tbl \. ' AS n, ' \. \$this->_tbl \. ' AS p'\)\s*->where\('n.lft BETWEEN p.lft AND p.rgt'\)\s*->where\('n\.' \. \$this->_tbl_key \. ' = ' \. \(int\) \$pk\)\s*->order\('p.lft'\);\s*\$db->setQuery\(\$query\);\s*\$segments\s*=\s*\$db->loadColumn\(\);/,
+                    /if\s*\(!empty\(\$segments\) && \$segments\[0\] === 'root'\)\s*\{\s*array_shift\(\$segments\);\s*\}/,
+                    /\$path\s*=\s*trim\(implode\('\/',\s*\$segments\),/,
+                    /\$query->clear\(\)\s*->update\(\$this->_tbl\)\s*->set\('path = '\s*\.\s*\$db->quote\(\$path\)\)\s*->where\(\$this->_tbl_key \. ' = ' \. \(int\) \$pk\);\s*\$db->setQuery\(\$query\)->execute\(\);/
+                  )
+                const tagEntities = entities.filter(
+                  (e) => e.kind === 'tag' && (e.identity?.alias === tail || e.identity?.path === tail)
+                )
+                if (tagEntities.length > 1) return null
+                for (const entity of tagEntities) {
+                  const identity = entity.identity ?? {}
+                  if (
+                    (Object.hasOwn(identity, 'alias') && identity.alias !== tail) ||
+                    (Object.hasOwn(identity, 'path') && identity.path !== tail)
+                  )
+                    return null
+                  if (identity.alias === tail || (identity.path === tail && stockPath))
+                    found.push({ mapped: p, entity })
+                }
               }
             }
             if (found.length !== 1) return null
