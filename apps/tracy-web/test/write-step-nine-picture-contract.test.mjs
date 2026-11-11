@@ -25,6 +25,9 @@ test('a measured demo background gets the exact native contract replacement befo
   const [item] = await pageItems(pass, '/', [fault])
   assert.match(item.text, /content.contract operation apply for exact image slot module-161\.2/)
   assert.match(item.text, /fresh content.read or contract inspect and its expected_revision/)
+  // The real native replay refused a synthetic #joomlaImage fragment, then accepted the uploaded bare path.
+  assert.match(item.text, /existing media path exactly as upload or read returned it/)
+  assert.match(item.text, /do not append a Joomla image fragment or invent a library path/)
   assert.match(item.text, /aspect 1\.5, tolerance 0\.02, minimum width 2160px/)
   assert.doesNotMatch(item.text, /aspect 2\.813/)
   assert.match(item.text, /Do not .*patch the whole module params/)
