@@ -15,7 +15,7 @@ const PKG = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const CONTRACT = 'packages/cms/tracy-joomla-quickstart/contracts/tracy-apple/j6'
 
 /** A tree holding stand.mjs and one contract version; returns the stand's result. */
-function standAsking(version) {
+function standAsking(version, imagePolicy = null) {
   const root = mkdtempSync(join(tmpdir(), 'stand-version-'))
   try {
     const slot = join(root, 'packages/design/tracy-ds-slot')
@@ -25,6 +25,12 @@ function standAsking(version) {
     cpSync(join(PKG, 'src/release-manifest.mjs'), join(slot, 'src/release-manifest.mjs'))
     cpSync(join(PKG, 'src/stand-db.mjs'), join(slot, 'src/stand-db.mjs'))
     cpSync(join(PKG, 'src/stand-address.mjs'), join(slot, 'src/stand-address.mjs'))
+    cpSync(join(PKG, 'src/stand-images.mjs'), join(slot, 'src/stand-images.mjs'))
+    const fleet = join(root, 'packages/fleet/tracy-fleet-operation/web')
+    mkdirSync(fleet, { recursive: true })
+    if (imagePolicy === null)
+      cpSync(join(PKG, '../../fleet/tracy-fleet-operation/web/IMAGE_TAGS'), join(fleet, 'IMAGE_TAGS'))
+    else writeFileSync(join(fleet, 'IMAGE_TAGS'), imagePolicy)
     cpSync(join(PKG, 'src/stand-docker-host.mjs'), join(slot, 'src/stand-docker-host.mjs'))
     mkdirSync(join(root, CONTRACT, '1.3.0'), { recursive: true })
     writeFileSync(
@@ -69,4 +75,11 @@ test('a version the checkout has no contract for is refused, not stood in for by
   assert.notEqual(r.status, 0)
   assert.match(r.stderr, /know 1\.3\.1/)
   assert.doesNotMatch(r.stdout, /1\.3\.0\.tar\.gz/)
+})
+
+test('an invalid stand image policy refuses startup before any release download or container command', () => {
+  const r = standAsking('1.3.0', 'joomla=tracy/web-joomla:5-apache-20261027-r1\n')
+  assert.notEqual(r.status, 0)
+  assert.match(r.stderr, /IMAGE_TAGS must name exactly one wordpress:php8.3-apache/)
+  assert.doesNotMatch(r.stderr, /spawn.*(?:gh|docker)|ENOENT/)
 })

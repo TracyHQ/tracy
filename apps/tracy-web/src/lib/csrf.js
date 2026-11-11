@@ -114,6 +114,12 @@ const BODY_TYPES = [
   { method: 'POST', path: /^\/connect$/, types: ['application/x-www-form-urlencoded'] },
   // The logo and favicon of "Customize your site" (`sites/brand-files.js`).
   { method: 'POST', path: /^\/api\/sites\/brand-files$/, types: ['multipart/form-data'] },
+  // A photo or video the seller adds to a Website opportunity's Profile (`website-opportunities/src/seller-review-routes.js`).
+  {
+    method: 'POST',
+    path: /^\/api\/website-opportunities\/[0-9a-f-]{36}\/media$/i,
+    types: ['multipart/form-data']
+  },
   // A file the customer attaches to a Help question (`assistant/files.js`).
   { method: 'POST', path: /^\/api\/assistant\/attachments$/, types: ['multipart/form-data'] },
   // Real campaign uploads are binary, but keep the same session and origin checks.

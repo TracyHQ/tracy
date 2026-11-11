@@ -27,7 +27,11 @@ const TRACY_COPIES = {
   '0004-place-snapshot-guard.sql': '173-wo-place-snapshot-guard.sql',
   '0009-site-check-read-tier.sql': '176-wo-site-check-read-tier.sql',
   '0010-monid-key.sql': '186-wo-monid-key.sql',
-  '0011-bulk-request-delete.sql': '207-wo-bulk-request-delete.sql'
+  '0011-bulk-request-delete.sql': '207-wo-bulk-request-delete.sql',
+  '0012-opportunity-site-label.sql': '208-wo-opportunity-site-label.sql',
+  '0013-opportunity-approval.sql': '210-wo-opportunity-approval.sql',
+  '0014-opportunity-same-place.sql': '211-wo-opportunity-same-place.sql',
+  '0015-opportunity-approved-research.sql': '213-wo-opportunity-approved-research.sql'
 }
 const CARRIED = Object.keys(TRACY_COPIES)
 const afterBaseline = async () =>
@@ -250,9 +254,15 @@ test(
       'wo_place_job',
       'wo_cost_ledger'
     ]
+    // The columns each table has before 171/172; one a later migration adds (208 `wo_opportunity.site_label`) is not
+    // data 171/172 had to keep.
+    let columns = null
     const dump = async () => {
       const out = {}
       for (const t of tables) out[t] = (await pool.query(`select * from ${t} order by 1`)).rows
+      columns ??= Object.fromEntries(tables.map((t) => [t, Object.keys(out[t][0] ?? {})]))
+      for (const t of tables)
+        out[t] = out[t].map((row) => Object.fromEntries(columns[t].map((k) => [k, row[k]])))
       return out
     }
     const before = await dump()

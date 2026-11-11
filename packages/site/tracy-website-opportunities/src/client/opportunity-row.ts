@@ -4,6 +4,7 @@
  * pass `now`). The server's `stage` wins when it sends one, so filter counts and badges agree.
  */
 import type { DemoFacts } from '@tracy/wo-views'
+import { demoStateOf } from '@tracy/wo-views/demo-state'
 import type { DemoAction, OutreachDraft } from './outreach-model.ts'
 
 import { type JobInput, reasonKey } from './status.ts'
@@ -39,6 +40,8 @@ export interface OpportunityListRow {
   demoAction?: DemoAction | null
   outreach?: OutreachDraft | null
   stage?: string | null
+  /** The account's other cards of the same place, newest first (#537 R23). */
+  sameAs?: unknown
   /** `done` = its site was made (`site_creation`), which a site key alone does not prove. */
   latestBuild?: {
     id?: string
@@ -97,7 +100,7 @@ export function needsAttention(row: OpportunityListRow): boolean {
   )
 }
 
-export type BadgeTone = 'outline' | 'secondary' | 'destructive' | 'ok' | 'live'
+export type BadgeTone = 'outline' | 'secondary' | 'destructive' | 'ok' | 'live' | 'running'
 export interface StatusView {
   key: string
   variant: BadgeTone
@@ -108,6 +111,10 @@ export function statusView(row: OpportunityListRow): StatusView {
   const stage = stageOf(row)
   if (stage === 'outreach') return { key: 'v3.demoReady', variant: 'live', check: true }
   if (stage === 'demo') {
+    // A build under way says so, whatever an older check of the build it reuses decided.
+    const demoState = demoStateOf(row)
+    if (demoState === 'queued' || demoState === 'building')
+      return { key: 'v3.building', variant: 'secondary', check: false }
     if (
       row.demoAction?.state === 'failed' ||
       ['failed', 'refused'].includes(row.latestBuild?.state ?? '') ||
@@ -129,7 +136,7 @@ export function statusView(row: OpportunityListRow): StatusView {
   if (state === 'paused' || state === 'blocked')
     return { key: 'status.paused', variant: 'outline', check: false }
   return state
-    ? { key: 'status.researching', variant: 'secondary', check: false }
+    ? { key: 'status.researching', variant: 'running', check: false }
     : { key: 'v3.notStarted', variant: 'outline', check: false }
 }
 
@@ -154,7 +161,7 @@ export const ACTION_VIEW: Readonly<
   'retry-demo': { labelKey: 'action.retry', variant: 'outline' },
   'send-demo': { labelKey: 'v3.sendDemo', variant: 'default' },
   'open-demo-chat': { labelKey: 'v3.openDemoChat', variant: 'outline' },
-  'open-site': { labelKey: 'v3.reviewDemo', variant: 'outline' }
+  'open-site': { labelKey: 'demo.primary.open', variant: 'outline' }
 }
 const MOVING = new Set(['queued', 'running'])
 const hasJobId = (row: OpportunityListRow): boolean => typeof row.job?.id === 'string' && row.job.id !== ''

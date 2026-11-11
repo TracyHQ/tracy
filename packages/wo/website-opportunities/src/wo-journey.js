@@ -55,6 +55,9 @@ export function customerStatus({ stage: journeyStage, jobState, actionState: raw
     journeyStage === 'outreach' && actionState && actionState !== 'completed' ? 'demo' : journeyStage
   if (stage === 'outreach') return { key: 'v3.demoReady', label: 'Demo ready' }
   if (stage === 'demo') {
+    // A build under way says so, whatever an older check of the build it reuses decided (the client's statusView).
+    if (actionState && actionState !== 'completed' && actionState !== 'failed')
+      return { key: 'v3.building', label: 'Building…' }
     if (
       actionState === 'failed' ||
       ['failed', 'refused'].includes(build?.state) ||

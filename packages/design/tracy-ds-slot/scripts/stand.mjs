@@ -30,14 +30,10 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { manifestFromSetting } from '../src/release-manifest.mjs'
 import { standAddressOf } from '../src/stand-address.mjs'
+import { standImagesFrom } from '../src/stand-images.mjs'
 import { STAND_DB_ARGS } from '../src/stand-db.mjs'
 import { dockerEndpoint, remoteEngineProblem } from '../src/stand-docker-host.mjs'
 
-const IMAGES = {
-  wordpress: 'tracy/web-wordpress:php8.3-apache-20260923-r1',
-  joomla: 'tracy/web-joomla:6-apache-20260923-r1',
-  db: 'mariadb:11'
-}
 const REPO = 'JoomlArt-Products/joomlart-products'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const args = process.argv.slice(2)
@@ -103,6 +99,9 @@ const name =
     .slice(0, 40)
 if (!tag || !Number.isInteger(port) || !NAME_RE.test(name))
   throw new Error('up needs a release tag, --port and a valid --name')
+const IMAGES = standImagesFrom(
+  readFileSync(join(ROOT, 'packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS'), 'utf8')
+)
 const dir = join(opt('--dir') ?? join(tmpdir(), 'ds-stands'), name)
 rmSync(dir, { recursive: true, force: true })
 mkdirSync(join(dir, 'dl'), { recursive: true })

@@ -4,11 +4,12 @@
 // (lib/site-copy/slot-shape.js), the same numbers the writer is given.
 import { boundsOf, slotShape } from '../../lib/site-copy/slot-shape.js'
 import { sentencesOf } from '../../lib/site-copy/text-tools.js'
+import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
 
 /** A point may run this many times the longest demo point before it reads as a paragraph. */
 export const POINT_STRETCH_MAX = 1.5
 
-export function checkW15({ R, view, idx }) {
+export function checkW15({ R, view, idx, brief }) {
   const returned = new Set(view.returns.map((r) => r.slot).filter(Boolean))
   const seen = new Set()
   for (const s of view.slots) {
@@ -27,7 +28,8 @@ export function checkW15({ R, view, idx }) {
     else {
       const lead = boundsOf(shape.leadChars, 0)
       const n = s.items[0].trim().length
-      if (lead && (n < lead.floor || n > lead.ceiling))
+      const excerpt = ownerPostExcerptFor(s, idx, brief)?.valid === true
+      if (lead && ((!excerpt && n < lead.floor) || n > lead.ceiling))
         faults.push([
           `the lead paragraph is ${n} characters, the demo lead is ${shape.leadChars} (${lead.floor} to ${lead.ceiling})`,
           n < lead.floor ? 'lead-short' : 'lead-long'

@@ -14,9 +14,13 @@
  * `listing` (`saveListingSource`), merged into the profile at the lowest priority (`executor.js mergeProfile`).
  */
 import { dropTracking, judgeLinks, withoutTracking } from '../domain/link-kinds.mjs'
+// The hosts Tracy cannot read live with the other host tables, in the module the browser imports too.
+export { UNSUPPORTED_LINK_HOSTS, unsupportedLinkOf } from '../domain/link-kinds.mjs'
 import { isPlaceId } from './place-suggest.js'
 import { LISTING_SOURCE, SOCIAL_SOURCES, normalizeUrl, sourceOfUrl } from './sources.js'
 
+/** Most listing pages one opportunity keeps (the add-a-source door answers `TOO_MANY_SOURCES` past it). */
+export const LISTING_PAGES_MAX = 5
 /** Most entries a request's `links` may carry; past `MAX_LINKS` they are reported as `limit`, not used. */
 export const LINK_REQUEST_MAX = 20
 const LINK_MAX_CHARS = 2000
@@ -410,4 +414,28 @@ export async function saveListingSource(db, opportunityId, listings) {
       JSON.stringify({ listings: all, ...(profile ? { profile } : {}) })
     ]
   )
+}
+
+/**
+ * The `listing` source of an opportunity without the pages the person removed (`keep` says which stay): the row
+ * keeps the other pages as they were read, and goes when no page is left, so neither Details nor the next profile
+ * merge reads a page that is no longer one of its links. The place's shared research is not touched.
+ * @param {(url: string) => boolean} keep
+ */
+export async function pruneListingSource(db, opportunityId, keep) {
+  const row = (
+    await db.query('select collected from wo_source where opportunity_id = $1 and source = $2', [
+      opportunityId,
+      LISTING_SOURCE
+    ])
+  ).rows[0]
+  if (!row) return
+  const held = Array.isArray(row.collected?.listings) ? row.collected.listings : []
+  const kept = held.filter((l) => typeof l?.url === 'string' && keep(l.url))
+  if (kept.length === held.length) return
+  await db.query('delete from wo_source where opportunity_id = $1 and source = $2', [
+    opportunityId,
+    LISTING_SOURCE
+  ])
+  if (kept.length) await saveListingSource(db, opportunityId, kept)
 }

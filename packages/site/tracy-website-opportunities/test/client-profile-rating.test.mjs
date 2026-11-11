@@ -76,7 +76,7 @@ test('Dubai case: 5.0 ★ (4 reviews), Few reviews, left off until shown, both c
     html,
     /\[rating\.value\{&quot;rating&quot;:&quot;5\.0&quot;,&quot;count&quot;:&quot;4&quot;\}\]/
   )
-  assert.match(html, /tracy-wo-name-chip is-check[^>]*>\[rating\.few\]/)
+  assert.match(html, /data-pill="attention"[^>]*>.*?<span class="tracy-wo-pill-text">\[rating\.few\]/)
   assert.match(html, /\[rating\.fewNote\]/)
   assert.match(html, /\[rating\.show\][\s\S]*\[rating\.leave\]/)
 })
@@ -94,7 +94,7 @@ test('5 reviews and more: shown with no chip, Leave off the site; left off by th
     profile({ state: 'shown', score: 4.6, reviews: 812, few: false, choice: null })
   )
   const html = draw(many)
-  assert.doesNotMatch(html, /tracy-wo-name-chip|\[rating\.show\]/)
+  assert.doesNotMatch(html, /tracy-wo-pill|\[rating\.show\]/)
   assert.match(html, /\[rating\.leave\]/)
   const left = lib.ratingRowView(
     profile({ state: 'left', score: 4.6, reviews: 812, few: false, choice: 'leave' })

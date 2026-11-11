@@ -1,13 +1,14 @@
 /**
  * What the tab keeps in the page address, so a reload or a reopened tab lands where it was: the
- * sub-tab, My opportunities' filter and search, the row open in the Inspector, and the Details or
- * Brief page. dsh owns the address and offers a plugin no state of its own there, so these ride as
+ * sub-tab, My opportunities' filter and search, the row open in the Inspector, the Details or
+ * Brief page, and the section of Details opened as a sub-page. dsh owns the address and offers a plugin no state of its own there, so these ride as
  * `wo-*` parameters (like `wo-handoff`) beside dsh's and tracy-tab-link's, which are kept untouched.
  *
  * Read once when the tab mounts, written only on a press (as the Design inspiration tab does): a tab
  * nobody presses never overwrites the address of the tab in sight.
  */
 import { STAGES, type Stage } from './opportunity-row.ts'
+import { type SubSection, isSubSection } from './section-model.ts'
 
 export type SubTab = 'find' | 'mine'
 export type FilterValue = 'all' | Stage | 'attention'
@@ -23,6 +24,8 @@ export interface MyAddress {
   page: Page | null
   /** The site brief (revision) of the Brief page. */
   brief: string | null
+  /** The section of Details opened as a sub-page (`wo-section`); null = the two columns of Details. */
+  section: SubSection | null
 }
 
 export const BLANK_ADDRESS: MyAddress = Object.freeze({
@@ -31,7 +34,8 @@ export const BLANK_ADDRESS: MyAddress = Object.freeze({
   q: '',
   opp: null,
   page: null,
-  brief: null
+  brief: null,
+  section: null
 })
 
 const P = {
@@ -40,7 +44,8 @@ const P = {
   q: 'wo-q',
   opp: 'wo-opp',
   page: 'wo-page',
-  brief: 'wo-brief'
+  brief: 'wo-brief',
+  section: 'wo-section'
 } as const
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 /** The list door's own limit on a search. */
@@ -57,6 +62,7 @@ export function addressFromSearch(search: string): MyAddress {
   const opp = uuid(params.get(P.opp))
   const brief = uuid(params.get(P.brief))
   const asked = params.get(P.page)
+  const section = params.get(P.section)
   const page: Page | null =
     asked === 'details' && opp !== null
       ? 'details'
@@ -69,7 +75,8 @@ export function addressFromSearch(search: string): MyAddress {
     q: (params.get(P.q) ?? '').slice(0, Q_MAX),
     opp,
     page,
-    brief: page === 'brief' ? brief : null
+    brief: page === 'brief' ? brief : null,
+    section: page === 'details' && isSubSection(section) ? section : null
   }
 }
 
@@ -83,6 +90,8 @@ export function searchWithAddress(search: string, address: MyAddress): string {
   if (address.opp !== null) params.set(P.opp, address.opp)
   if (address.page !== null && address.opp !== null) params.set(P.page, address.page)
   if (address.page === 'brief' && address.brief !== null) params.set(P.brief, address.brief)
+  if (address.page === 'details' && address.opp !== null && address.section !== null)
+    params.set(P.section, address.section)
   // URLSearchParams escapes the colon of `tab=tracy:…`; tracy-tab-link writes it bare too.
   const query = params.toString().replace(/%3A/gi, ':')
   return query === '' ? '' : `?${query}`

@@ -1,0 +1,2 @@
+- **The build progress band spans the pane and shows time and cost per step: each build step carries its own time, cost and estimate, and a sub-step label is never cut** — Akemi · #522 · `feat/wo-ux-512` · 2026-11-11
+  **Affects:** Website Opportunities customers watching a demo build, operators, and API readers: the demo progress answer gains per-step `minutes`, `usd` and `estimate` fields (new fields only, existing fields unchanged); an estimate reads 20+ min when the measured range is open ended and explains itself on hover. New English strings, not translated yet.

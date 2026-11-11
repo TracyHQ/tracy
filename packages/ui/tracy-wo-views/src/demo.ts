@@ -80,3 +80,67 @@ export function demoView(demo: DemoFacts | null | undefined, now: number): DemoV
     ? { kind: 'live', level: 'soon', unit: 'day', left, qaPassed, extend: true }
     : { kind: 'live', level: 'calm', unit: 'day', left, qaPassed, extend: false }
 }
+
+/** What a step chain build is expected to take, measured from past builds (#516); null when none was measured. */
+export interface ChainEstimate {
+  minutes: number
+  usd: number
+}
+
+/** One step of a step chain build as the list and Details doors give it (`demoAction.run.steps`). */
+export interface ChainRunStep {
+  id: string
+  /** English label from the server; the card reads its own string table first. */
+  label: string
+  state: 'done' | 'current' | 'upcoming'
+  /** How long it took once done; how long it has run so far while current (null when its start is unknown). */
+  minutes: number | null
+  /** What it spent once done (#537); null while it runs or waits, since a step reports its spend when it ends. */
+  usd?: number | null
+  /** What a step not started usually takes, measured per step (#537); null when none was measured. */
+  estimate?: ChainEstimate | null
+}
+
+/** `demoAction.run`: the progress of a step chain build, measured by the run itself. */
+export interface ChainRun {
+  steps: ChainRunStep[]
+  /** The furthest step reached; null before the first starts. */
+  current: string | null
+  startedAt: string
+  minutes: number
+  usd: number
+  estimate: ChainEstimate | null
+}
+
+export interface ChainProgressView {
+  done: number
+  total: number
+  /** Steps done over all steps, 0 to 1. */
+  fraction: number
+  current: string | null
+  /** The estimate minus the time since the start, whole minutes, never below zero; null with no estimate. */
+  minutesLeft: number | null
+  /** Past the estimate: the minutes left reached zero while the build still runs. */
+  over: boolean
+  usd: number
+  steps: ChainRunStep[]
+}
+
+/** The progress card's numbers, from the run the server measured and the browser's clock (#516). */
+export function chainProgressView(run: ChainRun, now: number): ChainProgressView {
+  const total = run.steps.length
+  const done = run.steps.filter((s) => s.state === 'done').length
+  const started = time(run.startedAt)
+  const elapsed = started === null ? run.minutes : Math.max(0, (now - started) / 60_000)
+  const left = run.estimate ? Math.max(0, Math.round(run.estimate.minutes - elapsed)) : null
+  return {
+    done,
+    total,
+    fraction: total === 0 ? 0 : done / total,
+    current: run.current,
+    minutesLeft: left,
+    over: left === 0 && done < total,
+    usd: run.usd,
+    steps: run.steps
+  }
+}

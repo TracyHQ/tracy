@@ -343,9 +343,10 @@ ours_tables() {
 }
 
 # Whether a try that failed met the copy moving under it (see load_ours): a definition that changed
-# inside the dump's transaction (1412), or a table list that is no longer the one read.
+# inside the dump's transaction (1412), a missing table (1146 / Couldn't find table) even if
+# recreated under the same name before this check, or a table list that is no longer the one read.
 ours_moved() { # err-dir listed
-  grep -qsE '(Error|ERROR|error:) 1412\b|\(1412\)' "$1"/* && return 0
+  grep -qsE "(Error|ERROR|error:) (1412|1146)\\b|\\((1412|1146)\\)|^(mariadb-dump|mysqldump): Couldn't find table:" "$1"/* && return 0
   local now
   now="$(ours_tables 2>/dev/null)" || return 1
   [[ "$(cut -f1 <<< "$now")" != "$(cut -f1 <<< "$2")" ]]

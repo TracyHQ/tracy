@@ -1,0 +1,3 @@
+{"id":"REG-PR-522-wo-details-pill-locks-checklist","verdict":"PASS","commit":"f69a6974f0d9866eeedb494dcbcedc1d9efd0747","ran_at":"2026-11-11T16:16:48.888Z","evidence":"tests/regression/.runs/2026-11-11-f69a6974f/REG-PR-522-wo-details-pill-locks-checklist.log"}
+{"id":"REG-PR-565-copy-social-icon-family","verdict":"PASS","commit":"f69a6974f0d9866eeedb494dcbcedc1d9efd0747","ran_at":"2026-11-11T16:16:50.969Z","evidence":"tests/regression/.runs/2026-11-11-f69a6974f/REG-PR-565-copy-social-icon-family.log"}
+{"id":"REG-PR-565-owner-post-excerpts","verdict":"PASS","commit":"f69a6974f0d9866eeedb494dcbcedc1d9efd0747","ran_at":"2026-11-11T16:16:51.815Z","evidence":"tests/regression/.runs/2026-11-11-f69a6974f/REG-PR-565-owner-post-excerpts.log"}

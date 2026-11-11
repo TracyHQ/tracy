@@ -55,6 +55,10 @@ async function sendRound(pass, result, checks, { page, faults, round, sessionId 
   const made = []
   const kept = []
   for (const [k, part] of parts.entries()) {
+    if (pass.undoUnverified) {
+      result.notSent.push({ page, round, faults: parts.slice(k).flat().length, reason: 'undo-unverified' })
+      break
+    }
     if (pass.writerOpen) {
       result.notSent.push({ page, round, faults: parts.slice(k).flat().length, reason: 'open-turn' })
       break
@@ -90,6 +94,10 @@ async function sendRound(pass, result, checks, { page, faults, round, sessionId 
  * @param {{ check: object }} state the site as it now is
  */
 export async function repairPage(pass, { page, faults }, result, checks, state) {
+  if (pass.undoUnverified) {
+    result.notSent.push({ page, round: 1, faults: faults.length, reason: 'undo-unverified' })
+    return
+  }
   // A shared repair can clear a queued page while it waits for a free session.
   // Only a completed check can remove its faults; scoped checks retain the other pages.
   if (pass.writerOpen) {
@@ -128,7 +136,7 @@ export async function repairPage(pass, { page, faults }, result, checks, state) 
   const again = exposedFaults
     ? (exposedFaults.pages.find((p) => p.page === page)?.faults ?? [])
     : retryable.flatMap((t) => stillThere(t.faults, state.check))
-  if (!again.length || pass.clock.stopped() || pass.writerOpen) return
+  if (!again.length || pass.clock.stopped() || pass.writerOpen || pass.undoUnverified) return
   const { made } = await sendRound(pass, result, checks, { page, faults: again, round: 2, sessionId })
   for (const t of made) result.resent.push({ page, turnId: t.turnId, faults: t.faults.length })
 }

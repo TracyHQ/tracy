@@ -61,6 +61,10 @@ light letters over it would read. This fault is named only then:
 - text would not read: the picture is so bright, or so busy with detail, that white letters laid over most of it would
   not read.
 
+When the message says the template overlay is unknown, keep that uncertainty: do not assume there is no overlay or
+that an overlay makes the text readable. Apply the same strict text check to the raw picture you see; it does not
+prove how the finished page reads. Keep judging the picture's subject and all other allowed faults independently.
+
 Mood alone never fails a picture. Judge only what you can see; do not guess what is outside the picture.
 
 Answer with one JSON object and nothing before or after it:

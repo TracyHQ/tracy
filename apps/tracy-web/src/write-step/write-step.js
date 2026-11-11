@@ -22,51 +22,53 @@
 //
 // Given the last report of the same site, every stage sends only what differs from it, and its lines still come out as if all
 // had been written, so that a stage reading another's lines sees the whole site (last-report.js sorts them at the end).
-import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
-import { writeRecordAlts } from './record-alt-stage.js'
-import { PICTURE_OWNER } from './picture-package.js'
-import { seeder } from '../lib/seeder.js'
+
+import { menuRows } from '../lib/joomla-menu-rows.js'
 import { planShapeProblems } from '../lib/plan-shape.js'
+import { seeder } from '../lib/seeder.js'
+import { contentMapKey, exportContractMapping } from '../lib/site-copy/contract-mapping.js'
 import { indexInputs } from '../lib/site-copy/inputs-index.js'
 import { readCopy } from '../lib/site-copy-view.js'
-import { contentMapKey, exportContractMapping } from '../lib/site-copy/contract-mapping.js'
 import { prepareBrandStage } from './brand-stage.js'
+import { closeDemoLeft, withClosing } from './closing-ladder.js'
 import { writeContract } from './contract-write.js'
+import { hideOnCreatedPages } from './created-page-hide-stage.js'
+import { settleDialledPhones } from './dialled-phones.js'
+import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
+import { closeForms, followClosedForms } from './form-close.js'
+import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
 import { goneRowSlots } from './hide-rows.js'
 import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
-import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
-import { iconLinkLines, iconsOf, linkIconChanges, routeChanges } from './kit-slot-routes.js'
-import { closeForms, followClosedForms } from './form-close.js'
-import { settleDialledPhones } from './dialled-phones.js'
-import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
-import { climbTextFallback, withTextFallback } from './text-fallback.js'
-import { closeDemoLeft, withClosing } from './closing-ladder.js'
-import { hideEmptyVideoButtons } from './video-buttons-stage.js'
-import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
-import { hideHiddenPageLinks, relinkOrders } from './hidden-page-links-stage.js'
-import { hideOnCreatedPages } from './created-page-hide-stage.js'
-import { lookGuard } from './look-guard.js'
-import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
 import { buttonClaims } from './kit-buttons.js'
 import { kitSlotIds } from './kit-slot-ids.js'
-import { strandMenuItems, withEveryMenuHide } from './menu-hides.js'
+import { iconLinkLines, iconsOf, linkIconChanges, routeChanges } from './kit-slot-routes.js'
+import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { prepareLinks } from './link-stage.js'
-import { planLinkTable } from './plan-link-table.js'
+import { lookGuard } from './look-guard.js'
+import { strandMenuItems, withEveryMenuHide } from './menu-hides.js'
+import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
 import { createPages, pagesWithoutCopy } from './page-create-stage.js'
 import { routeLines } from './page-route-lines.js'
 import { hasPlanSlugs, restoreRoutes, runRouteStage } from './page-route-stage.js'
-import { phonesOf } from './phone-links.js'
-import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
 import { coordinatesOf, runPageSettings } from './page-settings-stage.js'
-import { copyClaims, ownerTable, planClaims, unownedSlots } from './owner-table.js'
+import { runPhoneLinksStage, withPhoneLinks } from './phone-link-stage.js'
+import { phonesOf } from './phone-links.js'
+import { PICTURE_OWNER } from './picture-package.js'
 import { preparePictureStage } from './picture-stage.js'
+import { planLinkTable } from './plan-link-table.js'
 import { runPrintedStage } from './printed-stage.js'
-import { runShareStage } from './share-stage.js'
-import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
-import { unaddressableOf, withGuardFindings, withUnaddressable } from './unaddressable-lines.js'
-import { menuRows } from '../lib/joomla-menu-rows.js'
+import { writeRecordAlts } from './record-alt-stage.js'
+import { followRenamedLinks, rewriteRenamedLinks } from './renamed-link-stage.js'
+import { hideSelfLinkButtons } from './self-link-buttons-stage.js'
 import { doorCall } from './settings-door.js'
+import { runShareStage } from './share-stage.js'
+import { correctionsReader, galleryAlts, pictureAltsOf } from './slot-corrections.js'
+import { keepSpaceAround, keptPagesOf, storedDemoClaims } from './stored-demo.js'
+import { climbTextFallback, withTextFallback } from './text-fallback.js'
+import { unaddressableOf, withGuardFindings, withUnaddressable } from './unaddressable-lines.js'
+import { hideEmptyVideoButtons } from './video-buttons-stage.js'
+import { countsOf, REPORT_VERSION, slotLines } from './write-report.js'
 
 /** What one contract call takes (the seeder's and the plugin's own limits); more is refused whole, so it is said first. */
 const MAX_SLOTS = 1500
@@ -182,6 +184,7 @@ export async function runWriteStep(input) {
   let restored = []
   let renamedLines = null
   let renamedLinks = null
+  let phoneLinks = null
   let emphasis = new Map()
   let pictureFiles = {}
   let fallbacks = new Map()
@@ -234,7 +237,7 @@ export async function runWriteStep(input) {
     // A value the renamed-link stage rewrote is read back as the site holds it now (renamed-link-stage.js).
     lines = followRenamedLinks(lines, renamedLinks)
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
-    lines = withTextFallback(withEmphasis(lines, emphasis), fallbacks)
+    lines = withPhoneLinks(withTextFallback(withEmphasis(lines, emphasis), fallbacks), phoneLinks)
     lines = withClosing(lines, closing, emptied)
     const followedForms = followClosedForms(lines, kit.doc, formLines)
     const discharged = new Set(followedForms.filter((line, i) => line !== lines[i]).map((line) => line.slot))
@@ -339,7 +342,26 @@ export async function runWriteStep(input) {
       plan,
       contentMap
     })
+    const provenanceProblems = exported.problems.filter((p) => p.code === 'ARTICLE_PROVENANCE')
+    const refusedCopy = new Set(provenanceProblems.map((p) => p.where))
+    leaveOut(
+      provenanceProblems.map((p) => ({
+        slot: String(p.where),
+        key: contentMapKey(String(p.where)),
+        owner: 'writer',
+        step: 6,
+        reason: `copy: ${p.detail}`
+      }))
+    )
     extras = exported.extras
+    const inventedPosts = exported.problems.filter((p) => p.code === 'ARTICLE_EXCERPT')
+    if (inventedPosts.length)
+      return {
+        stop: {
+          code: 'BAD_FILE',
+          reason: `Article copy needs correction: ${inventedPosts.map((p) => `${p.where}: ${p.detail}`).join('; ')}`
+        }
+      }
     // A page the plan creates with no words in the copy is not created, and said once on step 6; every other page is written.
     const wordless = new Set(pagesWithoutCopy(plan, extras.pages))
     leaveOut(
@@ -384,7 +406,10 @@ export async function runWriteStep(input) {
         reason: `copy: the kit has no slot ${s.slot}`
       }))
     )
-    const view = { ...copyView, slots: copyView.slots.filter((s) => known.has(s.slot)) }
+    const view = {
+      ...copyView,
+      slots: copyView.slots.filter((s) => known.has(s.slot) && !refusedCopy.has(s.slot))
+    }
     const fromPlan = planClaims(
       {
         plan,
@@ -813,6 +838,24 @@ export async function runWriteStep(input) {
   ]
   if (shared.cancelled) return finish('cancelled', null, written, wrote.refused)
   if (links) await timed('link-menus', () => links.writeMenu())
+  // After other content writes: inserting a verified phone wrapper changes the Claude Cowork plugin's slot paths and revision.
+  const phoneStarted = now()
+  phoneLinks = await runPhoneLinksStage({
+    door,
+    siteKey,
+    contract,
+    brief,
+    written,
+    ordered,
+    admitted: inspected.reading,
+    isCancelled
+  })
+  timings.phoneLinks = now() - phoneStarted
+  report.phoneLinks = {
+    ...phoneLinks,
+    results: [...phoneLinks.results].map(([key, result]) => ({ key, ...result }))
+  }
+  if (phoneLinks.cancelled) return finish('cancelled', null, written, wrote.refused)
   const done = finish('done', null, written, wrote.refused)
   if (input.pageHtml && done.status === 'done')
     report.printed = await timed('printed', () =>

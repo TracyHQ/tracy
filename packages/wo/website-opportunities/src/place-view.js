@@ -6,13 +6,19 @@
  *
  * Null when the place has no published snapshot: the reader falls back to the per-account rows
  * (`wo_source`, `wo_profile`, `wo_media`), which is also how data from before shared research reads.
+ *
+ * 🔒 An approved card reads the research it was approved with (`approved-research.js`, #537 R23): its pinned snapshot
+ * and source rows, never the place's current one, so another card's research of the same place changes nothing here.
  */
 import { mergeProfile } from './executor.js'
+import { withProfileEdits } from './profile-edits.js'
+import { mergeSamePageRows } from './source-rows.js'
 import { withNameDecision } from './business-name.js'
 import { withHoursDecision } from './business-hours.js'
 import { withRatingDecision } from './business-rating.js'
 import { withPhoneDecision } from './business-phones.js'
 import { readingCardOf } from '../domain/business-reading.mjs'
+import { withTeamEdits } from '../domain/owner-site-picks.mjs'
 import { briefTradeOf } from '../domain/trades.mjs'
 import { cleanProfileLinks } from '../domain/social-links.mjs'
 import {
@@ -26,17 +32,20 @@ import { LISTING_SOURCE, SOURCES } from './sources.js'
 import { judgedAs } from './link-rejudge.js'
 import { MENU_FILE_PART, menuApplicable } from './menu-items.js'
 import { MENU_PHOTOS_PART } from './menu-photo-reading.js'
+import { approvedResearchOf } from './approved-research.js'
 
 /**
  * @param {import('pg').Pool | import('pg').PoolClient} db
  * @param {object} opportunity - a `wo_opportunity` row
  * @returns {Promise<null | {snapshot: object, sources: object[], shown: object[], profile: object,
- *   brand: object | null, media: object[]}>} `sources` are `wo_source`-shaped with `shared` (true: the place's);
+ *   brand: object | null, media: object[], approved?: object}>} `sources` are `wo_source`-shaped with `shared` (true: the place's);
  *   `shown` is what the research card lists: every source the run tried, failures included; `media` rows carry
- *   `origin` ('place': `wo_place_media`, 'opportunity': `wo_media`); revoked place media are left out
+ *   `origin` ('place': `wo_place_media`, 'opportunity': `wo_media`); revoked place media are left out; `approved` the
+ *   card's pin (`wo_opportunity_approved_research` row) when its Business facts are approved
  */
 export async function placeViewOf(db, opportunity) {
-  const snapshot = await currentSnapshotOf(db, opportunity.place_id)
+  const pinned = await approvedResearchOf(db, opportunity)
+  const snapshot = pinned?.snapshot ?? (await currentSnapshotOf(db, opportunity.place_id))
   if (!snapshot) return null
   // Guest reviews reach the profile and brief only when collected; a failed refresh keeps the last quotations.
   const reviews = snapshot.sources
@@ -83,12 +92,14 @@ export async function placeViewOf(db, opportunity) {
       seed.ref !== seed.collected?.externalId
     )
       continue
-    const identity = (
-      await db.query(
-        "select 1 from wo_place_identity where place_id = $1 and namespace = 'google' and external_id = $2",
-        [snapshot.place_id, seed.ref]
-      )
-    ).rows[0]
+    const identity = pinned
+      ? pinned.googleIds.has(seed.ref)
+      : (
+          await db.query(
+            "select 1 from wo_place_identity where place_id = $1 and namespace = 'google' and external_id = $2",
+            [snapshot.place_id, seed.ref]
+          )
+        ).rows[0]
     if (identity)
       publicProfiles.push({
         source: 'google-places',
@@ -119,7 +130,8 @@ export async function placeViewOf(db, opportunity) {
     // With the trade the brief speaks in, so the card says Services, or What it offers for an unknown trade.
     profile.readingCard = {
       ...readingCardOf(
-        held.profile.businessReading,
+        // With the people the owner added and their changes (`owner-site-picks.mjs`, #537).
+        withTeamEdits(held.profile.businessReading, opportunity?.candidate?.teamEdits),
         opportunity?.candidate?.readingPicks,
         opportunity?.candidate?.keyMessagePicks,
         // The reviews the brief reads, so the card shows a person named in them as the brief does.
@@ -154,33 +166,42 @@ export async function placeViewOf(db, opportunity) {
     .map((m) => ({ ...m, origin: 'place' }))
   // Pictures of the sources only this opportunity names. `mergeProfile` reads the place's source of a kind
   // first, so a private page never outranks the place's own.
-  const ownMedia = ownKinds.size
-    ? (
-        await db.query('select * from wo_media where opportunity_id = $1 order by collected_at, id', [
-          opportunity.id
-        ])
-      ).rows
-        .filter((m) => ownKinds.has(m.source))
-        .map((m) => ({ ...m, origin: 'opportunity' }))
-    : []
+  // The photos and videos the seller added themself (source `owner`, #537) are this opportunity's too.
+  const ownMedia = (
+    await db.query('select * from wo_media where opportunity_id = $1 order by collected_at, id', [
+      opportunity.id
+    ])
+  ).rows
+    .filter((m) => ownKinds.has(m.source) || m.source === 'owner')
+    .map((m) => ({ ...m, origin: 'opportunity' }))
+  // A team member's photo the owner gave (#537): the media row as the media list shows it, or none once it is gone.
+  if (profile.readingCard?.team)
+    profile.readingCard.team = withTeamPhotos(profile.readingCard.team, [...placeMedia, ...ownMedia])
   // The research card lists every source the run tried, failures too; collected reviews read as above.
   const reviewOf = new Map(reviews.map((r) => [r.source, r]))
-  const shown = [
+  // A pasted link of a page the shared research holds is the same source: one row, the one with data (#524).
+  const shown = mergeSamePageRows([
     ...shownSourceRowsOf(snapshot.sources).map((s) => ({ ...(reviewOf.get(s.source) ?? s), shared: true })),
     ...own.map((s) => ({ ...s, shared: false }))
-  ]
+  ])
   const part = (name) => snapshot.sources.find((s) => s.source === name) ?? null
   return {
     snapshot,
+    // The card's pin (`approved-research.js`), when it is approved: its readers take the kept measurements from it.
+    ...(pinned ? { approved: pinned.approved } : {}),
     sources: rows,
     shown,
     // The hours and Google's rating on the site, with this account's choices (`business-hours.js`, `business-rating.js`),
     // and every phone the business lists, the main one first (`business-phones.js`). Links read without share tracking
     // whenever they were saved (`social-links.mjs`, #1780 item 10).
-    profile: cleanProfileLinks(
-      withPhoneDecision(withRatingDecision(withHoursDecision(profile, { opportunity }), { opportunity }), {
-        opportunity
-      })
+    // The seller's own edits on top (`profile-edits.js`), so Details and the brief read the same Profile.
+    profile: withProfileEdits(
+      cleanProfileLinks(
+        withPhoneDecision(withRatingDecision(withHoursDecision(profile, { opportunity }), { opportunity }), {
+          opportunity
+        })
+      ),
+      opportunity
     ),
     brand: held.brand ?? null,
     media: [...placeMedia, ...ownMedia],
@@ -191,6 +212,18 @@ export async function placeViewOf(db, opportunity) {
       menuPhotos: placeMedia.filter((m) => m.category === 'menu').length
     })
   }
+}
+
+/** Team card rows with `photo: {id, kind, width, height}` of the media row the owner chose, else `photo: null`. */
+export function withTeamPhotos(team, media) {
+  const byId = new Map(media.map((m) => [m.id, m]))
+  return team.map(({ photoMediaId, ...p }) => {
+    const m = photoMediaId ? byId.get(photoMediaId) : null
+    return {
+      ...p,
+      photo: m ? { id: m.id, kind: m.kind, width: m.width ?? null, height: m.height ?? null } : null
+    }
+  })
 }
 
 const iso = (v) => (v ? new Date(v).toISOString() : null)

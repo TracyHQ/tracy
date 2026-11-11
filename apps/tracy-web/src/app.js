@@ -118,6 +118,7 @@ import { createClientDemoService } from './opportunities-build/client-demo.js'
 import { createDemoContactPreview } from 'website-opportunities/src/contact-preview.js'
 import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { createDemoLook } from './opportunities-build/demo-look.js'
+import { createDemoBuilt } from './opportunities-build/demo-preview.js'
 import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
 import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
@@ -1498,6 +1499,31 @@ export function buildApp(deps) {
       picturesWhere,
       demoQa: woDemoQa,
       demoLook: woDemoLook,
+      // A finished build keeps what it took and a picture of its home page (`opportunities-build/demo-preview.js`),
+      // shot by the site's host (`/_host/capture`). Test-only override: a test's own hook.
+      onBuilt:
+        deps.websiteOpportunitiesOnBuilt ??
+        createDemoBuilt({
+          pool: deps.pool,
+          log: deps.log ?? console,
+          capture: deps.host
+            ? (site) =>
+                deps.host.hostCall(
+                  deps.config,
+                  site.host ?? deps.config.defaultHost,
+                  '/capture',
+                  {
+                    label: site.label,
+                    platform: site.platform,
+                    layouts: [{ key: 'home', path: '/' }],
+                    port: site.port ?? null,
+                    ...demoSelfNames(deps.config, site),
+                    maxBytes: 8 * 1024 * 1024
+                  },
+                  { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 120_000 }
+                )
+            : null
+        }),
       // The sweep's wordmark on a CMS dsh sets no logo on (Joomla, EmDash): its brand writer, as the account that
       // built the demo (`client-demo.js` `wornLogo`).
       wearLogo: async (build, site, { png, applyId }) => {

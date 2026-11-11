@@ -1,0 +1,3 @@
+{"id":"REG-PR-559-own-build-recovery","verdict":"PASS","commit":"7e2114c9b409ff952323e6275014898c82bfbd07","ran_at":"2026-11-11T16:13:18.496Z","evidence":"tests/regression/.runs/2026-11-11-7e2114c9b/REG-PR-559-own-build-recovery.log"}
+{"id":"REG-PR-565-copy-social-icon-family","verdict":"PASS","commit":"7e2114c9b409ff952323e6275014898c82bfbd07","ran_at":"2026-11-11T16:13:18.764Z","evidence":"tests/regression/.runs/2026-11-11-7e2114c9b/REG-PR-565-copy-social-icon-family.log"}
+{"id":"REG-PR-565-owner-post-excerpts","verdict":"PASS","commit":"7e2114c9b409ff952323e6275014898c82bfbd07","ran_at":"2026-11-11T16:13:18.919Z","evidence":"tests/regression/.runs/2026-11-11-7e2114c9b/REG-PR-565-owner-post-excerpts.log"}

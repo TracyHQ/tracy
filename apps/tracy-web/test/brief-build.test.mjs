@@ -929,7 +929,9 @@ test(
     const b = builds(pool, { wordpress: engine() })
     const g = await b.gate('began.tracy.test')
     assert.deepEqual(g, { open: false, step: null, state: 'failed', error: LOST_PLACING })
-    assert.equal((await briefOf(pool, 'began.tracy.test')).timings.lostFrom, 'applying')
+    const stopped = await briefOf(pool, 'began.tracy.test')
+    assert.equal(stopped.timings.lostFrom, 'applying')
+    assert.ok(Number(stopped.timings.interruptedAt) > Date.now() - 60_000)
     assert.deepEqual(
       await b.start({ siteKey: 'began.tracy.test', platform: 'wordpress', brief: { about: 'Retry' } }),
       { started: false }
@@ -1059,6 +1061,12 @@ test('a process that starts settles at once the open rows a dead process left', 
   assert.equal(prep.state, 'failed')
   assert.equal(prep.error, LOST_WORK)
   assert.equal(prep.timings.lost, LOST_ON_RESTART)
+  assert.ok(Number(prep.timings.interruptedAt) > Date.now() - 60_000)
+  const interruptedAt = prep.timings.interruptedAt
+  await pool.query("update site_brief set updated_at=now()+interval '1 hour' where site_key=$1", [
+    prep.site_key
+  ])
+  assert.equal((await briefOf(pool, prep.site_key)).timings.interruptedAt, interruptedAt)
   const apply = await briefOf(pool, 'dead-apply.tracy.test')
   assert.equal(apply.state, 'applied', 'words that reached the site are not called failed')
   assert.equal(apply.error, LOST_PART)

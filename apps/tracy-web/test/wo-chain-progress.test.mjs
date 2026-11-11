@@ -12,6 +12,7 @@ import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.j
 import { acceptDemoActions } from '../src/opportunities-build/demo-actions.js'
 import { createDemoRunner } from '../src/opportunities-build/demo-runner.js'
 import { revisionForAction } from '../src/opportunities-build/revisions.js'
+import { createWebsiteBuilder } from '../src/opportunities-build/route.js'
 import { fileDb } from './_db.mjs'
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
@@ -293,3 +294,128 @@ for (const [label, state, measurement] of [
     }
   })
 }
+
+/** A chain build of another place that already ended, as the run frame leaves its brief row. */
+async function past(
+  pool,
+  n,
+  { quickstart = 'quickstart/ja-boxing/j6/1.0.10', minutes, usd, ending = 'complete' }
+) {
+  await pool.query(
+    `insert into site_brief (site_key, platform, quickstart, brief, state, timings, created_at)
+     values ($1, 'joomla', $2, '{}'::jsonb, 'applied', $3::jsonb, $4)`,
+    [
+      `past-${n}.localhost`,
+      quickstart,
+      JSON.stringify({ chain: { ending, totalMinutes: minutes, totalUsd: usd, steps: [] } }),
+      new Date(T0 - (n + 1) * 86_400_000)
+    ]
+  )
+}
+
+/** What the list and the Details doors say of the place's current build. */
+async function runOf(w) {
+  const builder = createWebsiteBuilder({
+    config: w.deps.config,
+    pool: w.pool,
+    loadDomain: w.deps.loadDomain,
+    now: () => w.clock.at
+  })
+  const listed = (await builder.listedDemoOf(w.account, [w.opportunity])).get(w.opportunity).demoAction.run
+  const opp = (await w.pool.query('select * from wo_opportunity')).rows[0]
+  const detail = (await builder.detailOf(opp, w.account)).demoAction.run
+  assert.deepEqual(detail, listed, 'Details and the list say the same of one build')
+  return listed
+}
+
+const IDS = ['kit', 'brand', 'plan', 'copy', 'pictures', 'write']
+
+test('the doors carry the steps, the current step, the start, the minutes and USD so far', opts, async () => {
+  const w = await world()
+  await w.press()
+  // Pressed, nothing started yet: the steps are all upcoming and nothing is spent.
+  const pressed = await runOf(w)
+  assert.deepEqual(
+    pressed.steps.map((s) => [s.id, s.state]),
+    IDS.map((id) => [id, 'upcoming'])
+  )
+  assert.equal(pressed.current, null)
+  assert.equal(pressed.usd, 0)
+  assert.equal(pressed.steps[3].label, 'Page texts')
+  await w.tick(0)
+  await w.chain(
+    'preparing',
+    running(['brand', 'copy', 'pictures'], [done('kit', 0.1, 0), done('plan', 6, 0.25)])
+  )
+  await w.tick()
+  w.clock.at = T0 + 30_000 + 12 * 60_000
+  const run = await runOf(w)
+  assert.deepEqual(
+    run.steps.map((s) => [s.id, s.state]),
+    [
+      ['kit', 'done'],
+      ['brand', 'current'],
+      ['plan', 'done'],
+      ['copy', 'current'],
+      ['pictures', 'current'],
+      ['write', 'upcoming']
+    ]
+  )
+  assert.equal(run.current, 'pictures')
+  assert.deepEqual(
+    run.steps.map((s) => s.minutes),
+    [0.1, null, 6, null, null, null],
+    'a done step says how long it took'
+  )
+  assert.equal(run.startedAt, new Date(T0 + 30_000).toISOString())
+  assert.equal(run.minutes, 12)
+  assert.equal(run.usd, 0.25)
+  assert.equal(run.estimate, null, 'no chain build has ended yet: nothing to estimate from')
+})
+
+test('the estimate is the median of ended chain builds of the same template', opts, async () => {
+  const w = await world()
+  await past(w.pool, 1, { minutes: 10, usd: 1 })
+  await past(w.pool, 2, { minutes: 20, usd: 1.5 })
+  await past(w.pool, 3, { minutes: 60, usd: 4 })
+  // Other templates, a soft failure and a run that never finished say nothing about this template.
+  for (const n of [4, 5, 6])
+    await past(w.pool, n, { quickstart: 'quickstart/ja-other/j6/1.0.0', minutes: 100, usd: 9 })
+  await past(w.pool, 7, { minutes: 1, usd: 0.1, ending: 'soft-failure' })
+  await w.press()
+  assert.deepEqual((await runOf(w)).estimate, { minutes: 20, usd: 1.5 })
+})
+
+test(
+  'with fewer than three builds of the template the estimate is the median of every template',
+  opts,
+  async () => {
+    const w = await world()
+    await past(w.pool, 1, { minutes: 20, usd: 1 })
+    await past(w.pool, 2, { minutes: 30, usd: 2 })
+    await past(w.pool, 3, { quickstart: 'quickstart/ja-other/j6/1.0.0', minutes: 40, usd: 3 })
+    await w.press()
+    assert.deepEqual((await runOf(w)).estimate, { minutes: 30, usd: 2 })
+  }
+)
+
+test(
+  'the Build form offers each chain template its estimate, or null when none was measured',
+  opts,
+  async () => {
+    const w = await world()
+    const builder = createWebsiteBuilder({
+      config: w.deps.config,
+      pool: w.pool,
+      request: w.deps.request,
+      now: () => w.clock.at
+    })
+    const offered = async () =>
+      (await builder.templateChoicesOf(DEFAULT_WO_OPS_SETTINGS)).joomla.templates.find(
+        (t) => t.quickstart === CHAIN.quickstart
+      )
+    assert.equal((await offered()).estimate, null)
+    await past(w.pool, 1, { minutes: 26, usd: 1.84 })
+    assert.deepEqual((await offered()).estimate, { minutes: 26, usd: 1.84 })
+  }
+)
