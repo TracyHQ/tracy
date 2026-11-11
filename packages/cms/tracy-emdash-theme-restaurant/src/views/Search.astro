@@ -11,6 +11,7 @@ import { fillWords } from '@/lib/ui-words'
 import { section } from '@/lib/content'
 import { BLOG_SIDEBAR, blogPosts, loadPosts, postPath } from '@/lib/posts'
 import { livePosts } from '@/lib/link-gate'
+import { stampFor } from '@/lib/stamps'
 
 interface Props {
   chrome: Chrome
@@ -19,6 +20,7 @@ interface Props {
 }
 const { chrome, locale, path } = Astro.props
 const { w } = ui(locale)
+const $c = stampFor(Astro.request, 'chrome', chrome.entry)
 const [masthead, testimonials] = await Promise.all([
   section('masthead', 'smart-search', locale),
   section('testimonials', 'happy-customers', locale)
@@ -43,7 +45,7 @@ const results = found.map((r: any) => all.find((p) => p.slug === r.slug)).filter
 		<form class="rs-search-form" action={href(locale, path)} method="get" role="search">
 			<label for="rs-q" class="rs-display">{w.searchTerms}</label>
 			<input id="rs-q" type="search" name="q" value={q} autocomplete="off" />
-			<button type="submit" class="rs-btn">{w.search}</button>
+			<button type="submit" class="rs-btn" {...$c('search_label')}>{chrome.site.search_label?.trim() || w.search}</button>
 		</form>
 		{q && <p class="rs-search-line">{results.length > 0 ? fillWords(w.searchResultsLine, { count: results.length, query: q }) : fillWords(w.searchEmpty, { query: q })}</p>}
 		<ul class="rs-search-results">

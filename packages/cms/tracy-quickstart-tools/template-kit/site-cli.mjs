@@ -16,12 +16,15 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, resolve } from 'node:path'
 
+import { readManifest } from './lib/contract-manifest.mjs'
 import { readContractMap } from './lib/contract-read.mjs'
+import { settleEmdashSections } from './lib/site/emdash-sections-file.mjs'
 import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 import { pageIdOf } from './lib/ids.mjs'
 import { pathOfRoute, slugOfPath } from './lib/kit-paths.mjs'
 import { indexMap } from './lib/map-index.mjs'
 import { adapterFor, usePlatform } from './lib/site/adapters/index.mjs'
+import { readEmdashSettings } from './lib/site/adapters/emdash.mjs'
 import { siteWriter } from './lib/site/adapters/site-writer.mjs'
 import { siteSource } from './lib/site/adapters/source.mjs'
 import { buildBrandColours } from './lib/site/brand-colours.mjs'
@@ -51,7 +54,7 @@ export function pagesToRead(map, captureIndex, cap) {
     : [
         { path: '/', slug: 'home' },
         ...(map.pages ?? [])
-          .filter((p) => /[?&]option=/.test(p.link ?? '') && p.route !== 'home')
+          .filter((p) => (p.link == null || /[?&]option=/.test(p.link)) && p.route !== 'home')
           .map((p) => ({ path: pathOfRoute(p.route), slug: slugOfPath(pathOfRoute(p.route)) }))
       ]
   const seen = new Set()
@@ -62,6 +65,20 @@ export function pagesToRead(map, captureIndex, cap) {
 }
 
 /**
+ * What the EmDash adapter reads beyond the theme files: the site settings through the REST door (agent token file,
+ * `--token-file`) and the content map. Other platforms read everything through the source.
+ */
+async function extraOf({ manifest, map, o, hostHeader }) {
+  if (String(manifest.platform).toLowerCase() !== 'emdash') return undefined
+  const r = await readEmdashSettings({
+    siteUrl: o.site,
+    tokenFile: typeof o['token-file'] === 'string' ? o['token-file'] : undefined,
+    hostHeader
+  })
+  return { settings: r.settings, settingsReason: r.reason, map, template: manifest.template }
+}
+
+/**
  * The site part, for this CLI and for the kit's one-command pipeline: writes site.json and site-palette.html
  * into `out` and returns the document. Without a database or file command it reads the pages only, and the
  * fields only those can answer are named in `errors`.
@@ -69,17 +86,17 @@ export function pagesToRead(map, captureIndex, cap) {
  */
 export async function runSite({ o, out, chromium, capture = null, log: say = log }) {
   const map = readContractMap(o.contract)
-  const manifest = readJson(join(o.contract, 'manifest.json'))
+  const str = (v) => (typeof v === 'string' ? v : undefined)
+  const manifest = readManifest(o.contract, { release: str(o['release-tag']) })
   usePlatform(manifest.platform)
   const hostHeader = typeof o['host-header'] === 'string' ? o['host-header'] : undefined
-  const str = (v) => (typeof v === 'string' ? v : undefined)
   const source = siteSource({
     db: str(o.db),
     dbCommand: str(o['db-command']),
     filesCommand: str(o['files-command']),
     webroot: str(o.webroot)
   })
-  const adapter = adapterFor(manifest.platform, source)
+  const adapter = adapterFor(manifest.platform, source, await extraOf({ manifest, map, o, hostHeader }))
   say(
     'reads',
     source.describe.join(' and ') || 'the pages only',
@@ -168,13 +185,27 @@ async function main() {
   const capture = typeof o['capture-index'] === 'string' ? readJson(o['capture-index']) : null
   // WordPress pages are read as their sections, the way the kit run splits them (wordpress-sections-file.mjs).
   settleWordPressSections({
-    platform: readJson(join(o.contract, 'manifest.json')).platform,
+    platform: readManifest(o.contract).platform,
     out,
     db: typeof o.db === 'string' ? o.db : undefined,
     dbCommand: typeof o['db-command'] === 'string' ? o['db-command'] : undefined
   })
   const mod = await import(process.env.PLAYWRIGHT_MODULE ?? '@playwright/test')
   const chromium = mod.chromium ?? mod.default?.chromium
+  // An EmDash page is read as its parts (the layout's top bar, header, each section of main, footer), from the work
+  // folder's emdash-sections.json, or from the site when none is there yet.
+  const platform = readManifest(o.contract).platform
+  usePlatform(platform)
+  await settleEmdashSections({
+    platform,
+    out,
+    map: readJson(join(o.contract, 'content-map.json')),
+    siteUrl: o.site,
+    hostHeader: typeof o['host-header'] === 'string' ? o['host-header'] : undefined,
+    chromium,
+    tokenFile: typeof o['token-file'] === 'string' ? o['token-file'] : undefined,
+    reread: !!o['reread-sections']
+  })
   const doc = await runSite({ o, out, chromium, capture })
   return doc.errors.length ? 1 : 0
 }
