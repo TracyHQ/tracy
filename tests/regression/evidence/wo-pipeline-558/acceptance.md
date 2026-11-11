@@ -31,3 +31,9 @@ The new chain QA guard rejected the failed run rather than declaring it complete
 Local test and provisioning workloads overlapped during this verification. A local web container was observed OOM-killed with exit 137, and the fresh baseline Git operation took 883 of 943 provisioning seconds. These timings are infrastructure observations, not a representative WO performance benchmark. The exact owned test workload was stopped, its disposable database containers were removed, and the unchanged owned web container was restarted and verified healthy. Existing customer research and site data were preserved. No shared Docker restart or global prune was used.
 
 Final end-to-end WO timing, independent image-review completion and five-site customer acceptance remain outstanding.
+
+## Integrated regression verification
+
+Latest integration includes develop `bb8ecd1769` and the empty-fill guidance fix. Four official deterministic cases passed on `425c5f7d2e`: actual brand spot files (28 tests), selected-language input (10), empty-fill recovery (10), and interrupted measurement (72). All 120 tests passed with zero skips. Script cases execute this branch's code directly; the existing stand URL is not evidence that the stand runs the candidate.
+
+The final integrated lint, typecheck and formatting check passed in 41.75 seconds with 542 existing warnings. The actual dev website was read again through the existing authenticated David browser session: `/api/build` reported `bb8ecd1769`. No login interaction or dev server access was needed.
