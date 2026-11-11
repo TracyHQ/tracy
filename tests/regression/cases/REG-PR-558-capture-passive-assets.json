@@ -19,6 +19,7 @@
     "cmd": [
       "node",
       "--test",
+      "--test-reporter=tap",
       "packages/cms/tracy-quickstart-tools/test/template-kit-asset-transport.test.mjs"
     ],
     "tests": [
