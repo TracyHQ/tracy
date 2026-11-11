@@ -95,6 +95,7 @@ export function loadContract(dir, siteUrl) {
   const url = new Map() // normHref -> [slot keys]
   const audio = []
   const rawSample = new Map() // exact sample string -> [slot keys] (a video id, an e-mail address)
+  const socialAria = [] // exact ACM module/card/entry -> declared scalar and its derived network token
   const push = (m, k, v) => {
     if (!k) return
     const a = m.get(k)
@@ -142,16 +143,25 @@ export function loadContract(dir, siteUrl) {
         entityByKey.get(s.entity)?.identity?.module === 'mod_ja_acm' &&
         typeof s.sample === 'string'
       ) {
+        const networks = []
         for (const line of s.sample.split(/\r\n|\r|\n/)) {
-          const entry = /^\s*[a-z][a-z0-9_-]*\s*\|\s*(https?:\/\/[^\s|]+)\s*$/i.exec(line)
+          // The template renders every nonempty URL, even a malformed one: keep its ordinal unproved.
+          const pipe = line.indexOf('|')
+          if (pipe < 0 || !line.slice(pipe + 1).trim()) continue
+          networks.push(null)
+          const entry = /^\s*([a-z][a-z0-9_-]*)\s*\|\s*(https?:\/\/[^\s|]+)\s*$/i.exec(line)
           if (!entry) continue
           try {
-            new URL(entry[1])
+            new URL(entry[2])
           } catch {
             continue
           }
-          push(url, normHref(entry[1], siteUrl), s.key)
+          networks[networks.length - 1] = entry[1].toLowerCase()
+          push(url, normHref(entry[2], siteUrl), s.key)
         }
+        const moduleId = entityByKey.get(s.entity).sourceId
+        if (Number.isInteger(moduleId) && moduleId > 0)
+          socialAria.push({ key: s.key, moduleId, row: s.jsonPath[2], networks })
       }
       const n = normText(s.sample)
       if (!n) continue
@@ -193,7 +203,19 @@ export function loadContract(dir, siteUrl) {
     PLACEHOLDER.lastIndex = 0
     const fixed = s.sample.split(PLACEHOLDER).map((x) => normText(x).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
     if (letterCount(fixed.join('')) < 3) continue
-    patterns.push({ re: new RegExp(`^${fixed.join('\\s*(.+?)\\s*')}$`), key: s.key })
+    const numeric = (s.sample.match(PLACEHOLDER) ?? []).every((p) => /^%[du]$/.test(p))
+    patterns.push({
+      re: new RegExp(`^${fixed.join('\\s*(.+?)\\s*')}$`),
+      key: s.key,
+      // Only independent integer gaps project into composites; positional arguments and %s stay whole-value only.
+      fragment: numeric
+        ? new RegExp(
+            `(?<![\\p{L}\\p{N}.,+-])${fixed.join('\\s*(?:0|[1-9][0-9]*)\\s*')}(?![\\p{L}\\p{N}])`,
+            'gu'
+          )
+        : null,
+      length: s.sample.length
+    })
   }
 
   // Pages declared by the map: menu item id + route. `index.php?Itemid=<id>` opens any of them
@@ -248,7 +270,7 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { code, text, textCompact, textList, patterns, image, imageBase, url, rawSample, audio },
+    index: { code, text, textCompact, textList, patterns, image, imageBase, url, rawSample, socialAria, audio },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

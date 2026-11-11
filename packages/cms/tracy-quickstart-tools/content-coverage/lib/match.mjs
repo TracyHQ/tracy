@@ -110,6 +110,13 @@ export function createMatcher(contract, siteUrl) {
       const p = v.replace(/\s*(\.\.\.|…)$/, '')
       const hit = p.length >= 15 && textList.find((s) => s.norm.startsWith(p) || s.norm.includes(p))
       if (hit) res = { status: 'matched', by: 'truncated', slots: [hit.key] }
+      if (!res && contract.platform === 'joomla' && p.length >= 15) {
+        // Joomla StringHelper::truncate removes every internal space before an ellipsis too.
+        const keys = [
+          ...new Set(textList.filter((s) => s.norm.replaceAll(' ...', '...').startsWith(p)).map((s) => s.key))
+        ]
+        if (keys.length === 1) res = { status: 'matched', by: 'Joomla truncated spacing', slots: keys }
+      }
     }
     if (!res && v.length >= 20 && letterCount(v) >= 12) {
       const hit = textList.find((s) => s.norm.length > v.length && s.norm.includes(v))
@@ -123,6 +130,16 @@ export function createMatcher(contract, siteUrl) {
       // Composite block: remove every slot sample found inside it; what is left is unmatched.
       let rest = v
       const slots = []
+      for (const p of [...patterns].filter((p) => p.fragment).sort((a, b) => b.length - a.length)) {
+        rest = rest.replace(p.fragment, (piece) => {
+          const owners = new Set(
+            patterns.filter((other) => other.fragment && other.re.test(piece)).map((other) => other.key)
+          )
+          if (owners.size !== 1) return piece
+          slots.push(p.key)
+          return ' \u0000 '
+        })
+      }
       // A card excerpt joins a label, a title and the start of a paragraph, then cuts it ("... the component wrapper -
       // your..."): the longest cut tail that starts a slot's text is that slot.
       if (/(\.\.\.|…)$/.test(v)) {

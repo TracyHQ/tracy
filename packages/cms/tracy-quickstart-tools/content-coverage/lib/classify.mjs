@@ -9,6 +9,7 @@ import { searchDb } from './db-index.mjs'
 import { searchSources, receiverLanguage, receiverProducer } from './sources.mjs'
 import { normText, compact } from './normalize.mjs'
 import { videoId, isRenderedDate } from './match.mjs'
+import { physicalReceivers } from './items.mjs'
 
 const UPLOADS = 'wp-content/uploads/'
 /** A size WordPress generated from an upload (`cake-300x200.jpg`, `cake-scaled.jpg`): the upload, then the extension. */
@@ -93,7 +94,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
   const generatedSelector =
     /\.(?:hx-author__meta|hx-auaside__meta|hx-bloglist__count|hx-blogdate|hx-blogmeta)(?=[:. >]|$)|^#(?:username|password|jform_name|jform_password1)-lbl$/
 
-  function generated(item, context) {
+  function generated(item, context, match) {
     if (
       contract.platform !== 'joomla' ||
       !sourceIndex ||
@@ -102,10 +103,9 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       item.kind !== 'text'
     )
       return null
-    // A merged repeated item has only its first selector; every observed copy must have proof.
-    const views = Object.values(item.viewports ?? {})
-    if (views.some((v) => v.count !== 1 || !v.selector)) return null
-    const selectors = [item.selector, ...views.map((v) => v.selector)].filter(Boolean)
+    const copies = physicalReceivers(item)
+    if (!copies) return null
+    const selectors = [item.selector, ...copies.map((c) => c.selector)]
     const receiver = (re) => selectors.length > 0 && selectors.every((s) => re.test(s))
     const producer = (file, ...expressions) =>
       receiverProducer(
@@ -114,20 +114,49 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         ...expressions.map((re) => new RegExp(re.source, re.flags.includes('i') ? re.flags : re.flags + 'i'))
       )
 
-    const language = (key, file = coreLanguage) =>
-      receiverLanguage(
+    const language = (key, file = coreLanguage) => {
+      const found = receiverLanguage(
         sourceIndex,
         key,
         sourceIndex.ini.some((s) => s.key === key && templateLanguage.test(s.rel)) ? templateLanguage : file
       )
+      return found ? { ...found, key } : null
+    }
     const canonical = (value) => normText(value).replaceAll('·', '.')
     const norm = canonical(item.value)
     const base = `templates/${tpl}/html/com_content/`
-    const proved = (file, label, ...langs) => ({
-      class: langs.some((l) => l.class === 'b') ? 'b' : 'c',
-      label: `source-bound ${label}`,
-      evidence: [file, ...langs.flatMap((l) => l.evidence)]
-    })
+    const proved = (file, label, ...langs) => {
+      const evidence = [`source-bound ${label}: ${file}`, ...langs.flatMap((l) => l.evidence)]
+      const template = langs.filter((l) => l.class === 'b')
+      const owned = template.every((l) => {
+        const keys = (match.slots ?? []).filter((key) => {
+          const slot = contract.slotsByKey.get(key)
+          const entity = slot && contract.entityByKey.get(slot.entity)
+          const identity = entity?.identity
+          return (
+            slot?.type === 'text' &&
+            slot.column === 'value' &&
+            entity?.kind === 'languageString' &&
+            identity?.extension === `tpl_${tpl}` &&
+            identity.key === l.key &&
+            normText(slot.sample) === normText(l.value) &&
+            l.evidence.some(
+              (e) => e.includes(`/${identity.language}/`) || e.includes(`/${identity.language}.override.ini `)
+            )
+          )
+        })
+        return new Set(keys).size === 1
+      })
+      // The formula proves only generated numbers/dates; every template word still needs its declared slot owner.
+      if (template.length && owned)
+        return {
+          status: 'matched',
+          by: 'source-bound declared language composite',
+          slots: match.slots,
+          evidence
+        }
+      return { class: template.length ? 'b' : 'c', label: `source-bound ${label}`, evidence }
+    }
     const covered = (part) => contract.index.text.has(normText(part))
     const integer = (value, lang, minimum = 0) => {
       if (!lang || (lang.value.match(/%d/g) ?? []).length !== 1 || lang.value.replace('%d', '').includes('%'))
@@ -344,6 +373,77 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     return null
   }
 
+  function socialAria(item) {
+    if (
+      contract.platform !== 'joomla' ||
+      item.kind !== 'attr' ||
+      item.attr !== 'aria-label' ||
+      item.tag !== 'a' ||
+      !sourceIndex
+    )
+      return null
+    // Old merged observations cannot prove the module/card/entry of every physical receiver.
+    const views = Object.values(item.viewports ?? {})
+    if (!views.length || views.some((v) => !v || !Array.isArray(v.receivers))) return null
+    const copies = physicalReceivers(item)
+    if (!copies) return null
+    const file = `templates/${tpl}/acm/teams/tmpl/style-1.php`
+    if (
+      !receiverProducer(
+        sourceIndex,
+        file,
+        /\$count\s*=\s*\(int\)\s*\$helper->getRows\(['"]name['"]\)/,
+        /for\s*\(\$i\s*=\s*0;\s*\$i\s*<\s*\$count;\s*\$i\+\+\)/,
+        /preg_split\(['"]\/\\r\\n\|\\r\|\\n\/['"],\s*\(string\)\s*\$helper->get\(['"]socials['"],\s*\$i\)\)/,
+        /\$parts\s*=\s*array_map\(['"]trim['"],\s*explode\(['"]\|['"],\s*\$line,\s*2\)\)/,
+        /\$url\s*=\s*isset\(\$parts\[1\]\)\s*\?\s*\$parts\[1\]\s*:\s*['"]['"]/,
+        /if\s*\(\$url\s*===\s*['"]['"]\)\s*\{\s*continue;/,
+        /\$socials\[\]\s*=\s*array\(['"]net['"]\s*=>\s*strtolower\(\$parts\[0\]\),\s*['"]url['"]\s*=>\s*\$url\)/,
+        /class=['"]hx-cols['"]/,
+        /class=['"]hx-card hx-team-card['"]/,
+        /class=['"]hx-team-social['"]/,
+        /foreach\s*\(\$socials\s+as\s+\$s\)/,
+        /class=['"]hx-team-social-link['"]\s+href=['"]<\?php\s+echo\s+htmlspecialchars\(\$s\[['"]url['"]\],\s*ENT_QUOTES,\s*['"]UTF-8['"]\);\s*\?>/,
+        /aria-label=['"]<\?php\s+echo\s+htmlspecialchars\(\$s\[['"]net['"]\]\s*!==\s*['"]['"]\s*\?\s*\$s\[['"]net['"]\]\s*:\s*['"]website['"],\s*ENT_QUOTES,\s*['"]UTF-8['"]\);\s*\?>/
+      )
+    )
+      return null
+    const keys = new Set()
+    for (const copy of copies) {
+      if (typeof copy.value !== 'string' || !/^[a-z][a-z0-9_-]*$/.test(copy.value)) return null
+      const modules = Array.isArray(copy.scopes)
+        ? copy.scopes.filter((s) => /^acm-teams-[1-9][0-9]*$/.test(s))
+        : []
+      const receiver =
+        /(?:^| > )div\.hx-card\.hx-team-card(?::nth-of-type\(([1-9][0-9]*)\))? > div\.hx-team-social(?::nth-of-type\([1-9][0-9]*\))? > a\.hx-team-social-link(?::nth-of-type\(([1-9][0-9]*)\))?$/.exec(
+          copy.selector
+        )
+      if (modules.length !== 1 || !receiver) return null
+      const moduleId = Number(modules[0].slice('acm-teams-'.length))
+      const row = Number(receiver[1] ?? 1) - 1,
+        entry = Number(receiver[2] ?? 1) - 1
+      const owners = (contract.index.socialAria ?? []).filter(
+        (s) =>
+          s.moduleId === moduleId &&
+          s.row === row &&
+          Number.isSafeInteger(entry) &&
+          entry >= 0 &&
+          entry < s.networks.length &&
+          typeof s.networks[entry] === 'string' &&
+          s.networks[entry] === copy.value
+      )
+      const owned = new Set(owners.map((s) => s.key))
+      if (owned.size !== 1) return null
+      keys.add([...owned][0])
+    }
+    return {
+      status: 'matched',
+      by: 'source-bound ACM social aria',
+      slots: [...keys],
+      evidence: [file, ...keys]
+    }
+  }
+
   function classifyText(value) {
     const norm = normText(value)
     const datePieces = norm
@@ -494,15 +594,16 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       item.value,
       m.remainder,
       m.remainderParts,
+      m.slots,
       m.path,
       item.selector,
       item.inCode,
       item.codeText,
-      Object.values(item.viewports ?? {}).map((v) => [v.count, v.selector]),
+      Object.values(item.viewports ?? {}).map((v) => [v?.count, v?.selector, v?.receivers]),
       context.url
     ])
     if (cache.has(key)) return cache.get(key)
-    let res = item.zone ? null : generated(item, context)
+    let res = item.zone ? null : (socialAria(item) ?? generated(item, context, m))
     if (res) {
       cache.set(key, res)
       return res

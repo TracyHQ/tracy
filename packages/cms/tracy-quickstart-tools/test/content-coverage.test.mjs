@@ -13,7 +13,7 @@ import { createClassifier } from '../content-coverage/lib/classify.mjs'
 import { loadContract } from '../content-coverage/lib/contract.mjs'
 import { buildCoverageFile, holeKey } from '../content-coverage/lib/coverage-file.mjs'
 import { buildDbIndex } from '../content-coverage/lib/db-index.mjs'
-import { annotate, mergeViewports } from '../content-coverage/lib/items.mjs'
+import { annotate, mergeViewports, physicalReceivers } from '../content-coverage/lib/items.mjs'
 import { createMatcher } from '../content-coverage/lib/match.mjs'
 import { parseConfigurationPhp } from '../content-coverage/lib/site-config.mjs'
 import { buildSourceIndex, receiverProducer } from '../content-coverage/lib/sources.mjs'
@@ -1126,5 +1126,467 @@ test('generated receivers: month format M cannot be proved by the numeric-month 
     f.create()(meta, {}).label,
     /source-bound/,
     'case-distinct effective date formats conflict'
+  )
+})
+
+test('causal matching: Joomla truncation cleans internal ellipsis spaces without claiming short, wrong or ambiguous prose', () => {
+  const sample = 'Grouping ... uses declared columns before choosing the final calculation for each row.'
+  const slot = { key: 'article-8.intro', type: 'text', sample }
+  const match = createMatcher(loadContract(contractDir([slot]), SITE), SITE)
+  assert.deepEqual(match({ kind: 'text', value: 'Grouping... uses declared columns before...' }), {
+    status: 'matched',
+    by: 'Joomla truncated spacing',
+    slots: ['article-8.intro']
+  })
+  for (const value of [
+    'Grouping...',
+    'Grouping... invents an unrelated claim...',
+    'Unrelated grouping... uses columns...'
+  ])
+    assert.equal(match({ kind: 'text', value }).status, 'hole')
+  const ambiguous = createMatcher(
+    loadContract(
+      contractDir([
+        slot,
+        {
+          ...slot,
+          key: 'article-9.intro',
+          sample: 'Grouping ... uses declared columns before discarding every result.'
+        }
+      ]),
+      SITE
+    ),
+    SITE
+  )
+  assert.equal(
+    ambiguous({ kind: 'text', value: 'Grouping... uses declared columns before...' }).status,
+    'hole'
+  )
+  assert.equal(
+    match({
+      kind: 'text',
+      value: 'Grouping... uses declared columns before...',
+      codeText: 'Grouping... uses declared columns before...'
+    }).status,
+    'hole'
+  )
+  assert.equal(
+    match({ kind: 'text', value: 'Grouping... uses declared columns before...', inCode: true }).status,
+    'hole'
+  )
+})
+
+test('causal receivers: repeated dates require a complete distinct source-bound receipt for every physical copy', () => {
+  const f = generatedReceiverFixture()
+  const raw = (row, extra = {}) => ({
+    kind: 'text',
+    tag: 'time',
+    value: '18 Jun',
+    selector: `a.hx-blogrow:nth-of-type(${row}) > time.hx-blogdate`,
+    ...extra
+  })
+  const merge = (items) => mergeViewports({ desktop: { items }, phone: { items } }, SITE)[0]
+  const good = merge([raw(1), raw(2), raw(3)])
+  assert.equal(f.create()(good, {}).class, 'c')
+  assert.equal(good.viewports.desktop.count, 3)
+  assert.equal(good.viewports.desktop.receivers.length, 3)
+  const bad = [
+    merge([raw(1), raw(2, { selector: 'div.business' })]),
+    merge([raw(1), raw(2, { tag: 'div' })]),
+    merge([raw(1), raw(1)]),
+    merge([raw(1), raw(2, { selector: null })])
+  ]
+  for (const change of [
+    (v) => {
+      v.count++
+    },
+    (v) => {
+      v.receivers.pop()
+    },
+    (v) => {
+      v.receivers[1].inCode = true
+    },
+    (v) => {
+      delete v.receivers
+    },
+    (v) => {
+      v.selector = 'div.foreign'
+    }
+  ]) {
+    const item = structuredClone(good)
+    change(item.viewports.phone)
+    bad.push(item)
+  }
+  for (const reverse of [false, true]) {
+    const classify = f.create()
+    const cases = [[good, true], ...bad.map((item) => [item, false])]
+    if (reverse) cases.reverse()
+    for (const [item, expected] of cases) assert.equal(classify(item, {}).class === 'c', expected)
+  }
+})
+
+test('causal matching: declared numeric printf pieces keep their owner inside a composite and leave foreign residue', () => {
+  const slots = [
+    { key: 'module-90.role', type: 'text', sample: 'Editor' },
+    { key: 'languageString-10.0', type: 'text', sample: '%d min read' },
+    { key: 'languageString-11.0', type: 'text', sample: '%d min' }
+  ]
+  const match = createMatcher(loadContract(contractDir(slots), SITE), SITE)
+  const good = match({ kind: 'text', value: 'Editor · 4 min read' })
+  assert.equal(good.status, 'matched')
+  assert.deepEqual(new Set(good.slots), new Set(['module-90.role', 'languageString-10.0']))
+  for (const value of [
+    'Editor · many min read',
+    'Editor · 4 min read · foreign promise 987',
+    'Editor · 4 min readextra'
+  ])
+    assert.equal(match({ kind: 'text', value }).status, 'hole')
+  const residue = match({ kind: 'text', value: 'Editor · 4 min read · foreign promise 987' })
+  assert.match(residue.remainderParts.join(' '), /foreign promise 987/)
+  const ambiguous = createMatcher(
+    loadContract(contractDir([slots[0], slots[1], { ...slots[1], key: 'languageString-12.0' }]), SITE),
+    SITE
+  )
+  assert.equal(ambiguous({ kind: 'text', value: 'Editor · 4 min read' }).status, 'hole')
+  assert.equal(
+    match({ kind: 'text', value: 'Editor · 4 min read', codeText: 'Editor · 4 min read' }).status,
+    'hole'
+  )
+})
+
+test('causal receivers: generated composites bind declared template language instead of waiving template holes', () => {
+  const f = generatedReceiverFixture()
+  const entries = [
+    ['31', 'TPL_JA_KINETIC_BLOG_READMIN', '%d min read'],
+    ['32', 'TPL_JA_KINETIC_BLOG_READMIN_SHORT', '%d min'],
+    ['33', 'TPL_JA_KINETIC_BLOG_POSTS_NEWEST', 'posts . newest first']
+  ]
+  const dir = contractDir([
+    { key: 'module-90.role', type: 'text', sample: 'Editor' },
+    ...entries.map(([id, , sample]) => ({
+      key: `languageString-${id}.0`,
+      entity: `languageString-${id}`,
+      column: 'value',
+      type: 'text',
+      sample
+    }))
+  ])
+  const mapPath = path.join(dir, 'content-map.json')
+  const map = JSON.parse(readFileSync(mapPath, 'utf8'))
+  for (const [id, key] of entries)
+    map.entities.push({
+      key: `languageString-${id}`,
+      kind: 'languageString',
+      identity: { extension: 'tpl_ja_kinetic', language: 'en-GB', key }
+    })
+  writeFileSync(mapPath, JSON.stringify(map))
+  const contract = loadContract(dir, SITE)
+  contract.template = 'ja_kinetic'
+  const run = (item) =>
+    annotate(
+      [item],
+      createMatcher(contract, SITE),
+      createClassifier(contract, null, buildSourceIndex(f.root, contract.template))
+    )[0]
+  const article = () => f.item('Editor · 18 June 2026 · 2 min read', 'span.hx-author__meta')
+  const category = () => f.item('// 06 posts . newest first', 'span.hx-bloglist__count')
+  const full = () => f.item('Editor 18 June 2026 2 min', 'div.hx-blogmeta', { tag: 'div' })
+  for (const [item, owner] of [
+    [article(), 'languageString-31.0'],
+    [category(), 'languageString-33.0'],
+    [full(), 'languageString-32.0']
+  ]) {
+    const result = run(item)
+    assert.equal(result.status, 'matched')
+    assert.ok(result.slots.includes(owner))
+    assert.equal(result.class, undefined)
+    assert.match(result.evidence.join(' '), /source-bound/)
+  }
+  for (const item of [
+    f.item('Foreign promise · 18 June 2026 · 2 min read', 'span.hx-author__meta'),
+    f.item('Editor · 18 June 2026 · 2 min read · 987 dollars', 'span.hx-author__meta'),
+    f.item('Editor · 18 June 2026 · 2 min read', 'span.business'),
+    { ...article(), inCode: true }
+  ])
+    assert.equal(run(item).status, 'hole')
+  f.put(f.base + 'article/default.php', '<?php /* ' + f.files[f.base + 'article/default.php'] + ' */')
+  assert.equal(run(article()).status, 'hole')
+  f.put(f.base + 'article/default.php', f.files[f.base + 'article/default.php'])
+  contract.entityByKey.get('languageString-31').identity.key = 'UNRELATED_KEY'
+  assert.equal(
+    run(article()).status,
+    'hole',
+    'same-word slot from another language key is not source ownership'
+  )
+  contract.entityByKey.get('languageString-31').identity.key = entries[0][1]
+  contract.slotsByKey.get('languageString-31.0').sample = '%d unrelated words'
+  assert.equal(run(article()).status, 'hole', 'stale or different slot text cannot own the effective format')
+})
+
+function teamAriaFixture(extra = {}, module = 'mod_ja_acm', additional = []) {
+  const f = generatedReceiverFixture()
+  const social = teamSocialMatcher(
+    'Network-One|https://one.example.test/a\nnetwork-one|https://two.example.test/b\nnetwork-one|https://three.example.test/c',
+    extra,
+    module
+  )
+  if (additional.length) {
+    const map = JSON.parse(readFileSync(social.mapFile, 'utf8'))
+    const original = map.slots.find((s) => s.key === 'module-90.socials')
+    map.slots.push(...additional.map((s) => ({ ...original, ...s })))
+    writeFileSync(social.mapFile, JSON.stringify(map))
+    social.contract = loadContract(path.dirname(social.mapFile), SITE)
+    social.match = createMatcher(social.contract, SITE)
+  }
+  social.contract.template = 'ja_kinetic'
+  const file = 'templates/ja_kinetic/acm/teams/tmpl/style-1.php'
+  const source = `<?php $count = (int) $helper->getRows('name'); ?>
+<div class="hx-cols"><?php for ($i = 0; $i < $count; $i++) :
+$socials = array();
+foreach (preg_split('/\\r\\n|\\r|\\n/', (string) $helper->get('socials', $i)) as $line) {
+  $line = trim($line); if ($line === '') { continue; }
+  $parts = array_map('trim', explode('|', $line, 2));
+  $url = isset($parts[1]) ? $parts[1] : '';
+  if ($url === '') { continue; }
+  $socials[] = array('net' => strtolower($parts[0]), 'url' => $url);
+} ?><div class="hx-card hx-team-card"><div class="hx-team-social"><?php foreach ($socials as $s) : ?>
+<a class="hx-team-social-link" href="<?php echo htmlspecialchars($s['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($s['net'] !== '' ? $s['net'] : 'website', ENT_QUOTES, 'UTF-8'); ?>"></a>
+<?php endforeach; ?></div></div><?php endfor; ?></div>`
+  f.put(file, source)
+  const raw = (n, changes = {}) => ({
+    kind: 'attr',
+    attr: 'aria-label',
+    tag: 'a',
+    value: 'network-one',
+    selector: `div.hx-card.hx-team-card > div.hx-team-social > a.hx-team-social-link:nth-of-type(${n})`,
+    scopes: ['acm-teams-90'],
+    ...changes
+  })
+  const merge = (items) => mergeViewports({ desktop: { items }, phone: { items } }, SITE)[0]
+  const run = (item) =>
+    annotate(
+      [item],
+      social.match,
+      createClassifier(social.contract, null, buildSourceIndex(f.root, social.contract.template))
+    )[0]
+  return { ...f, ...social, raw, merge, run, file, source }
+}
+
+test('causal receivers: ACM social aria binds each exact module/card/entry and source-derived token to its scalar', () => {
+  const f = teamAriaFixture()
+  const item = f.merge([f.raw(1), f.raw(2), f.raw(3)])
+  const result = f.run(item)
+  assert.equal(result.status, 'matched')
+  assert.deepEqual(result.slots, ['module-90.socials'])
+  assert.equal(result.class, undefined)
+  assert.match(result.evidence.join(' '), /teams\/tmpl\/style-1.php/)
+  for (const raw of [
+    f.raw(4),
+    f.raw(1, { scopes: ['acm-teams-91'] }),
+    f.raw(1, { scopes: [] }),
+    f.raw(1, { scopes: ['acm-teams-90', 'acm-teams-91'] }),
+    f.raw(1, { value: 'other-network' }),
+    f.raw(1, { value: 'Network-One' }),
+    f.raw(1, {
+      selector: 'div.hx-card.hx-team-card:nth-of-type(2) > div.hx-team-social > a.hx-team-social-link'
+    }),
+    f.raw(1, { selector: 'a.unrelated-social-link' }),
+    f.raw(1, { tag: 'span' })
+  ])
+    assert.equal(f.run(f.merge([raw])).status, 'hole')
+  const mixed = f.merge([f.raw(1), f.raw(2, { scopes: ['acm-teams-91'] })])
+  assert.equal(f.run(mixed).status, 'hole')
+  const missing = f.merge([f.raw(1), f.raw(2)])
+  delete missing.viewports.phone.receivers
+  assert.equal(f.run(missing).status, 'hole')
+  f.put(f.file, f.source.replace("$s['net'] !== '' ? $s['net'] : 'website'", "'network-one'"))
+  assert.equal(
+    f.run(f.merge([f.raw(1)])).status,
+    'hole',
+    'hard-coded same word cannot stand in for scalar derivation'
+  )
+})
+
+test('causal receivers: ACM aria preserves scalar ambiguity, malformed entry ordinals, copy counts and source guards', () => {
+  const f = teamAriaFixture({}, 'mod_ja_acm', [
+    { key: 'module-90.second', jsonPath: ['teams', 'teams[socials]', 1] }
+  ])
+  const second = f.raw(1, {
+    selector: 'div.hx-card.hx-team-card:nth-of-type(2) > div.hx-team-social > a.hx-team-social-link'
+  })
+  const matched = f.run(f.merge([f.raw(1), second]))
+  assert.equal(matched.status, 'matched')
+  assert.deepEqual(new Set(matched.slots), new Set(['module-90.socials', 'module-90.second']))
+  const ambiguous = teamAriaFixture({}, 'mod_ja_acm', [{ key: 'module-90.duplicate' }])
+  assert.equal(ambiguous.run(ambiguous.merge([ambiguous.raw(1)])).status, 'hole')
+  const ordinal = teamAriaFixture({
+    sample: 'network-one|relative/path\nnetwork-one|https://valid.example.test/profile'
+  })
+  assert.equal(ordinal.run(ordinal.merge([ordinal.raw(1)])).status, 'hole')
+  assert.equal(ordinal.run(ordinal.merge([ordinal.raw(2)])).status, 'matched')
+  for (const extra of [
+    { column: 'content' },
+    { type: 'html' },
+    { role: 'editorial.paragraph' },
+    { nestedJson: 'other' },
+    { jsonPath: ['teams', 'teams[bio]', 0] },
+    { jsonPath: ['teams', 'teams[socials]', '0'] }
+  ]) {
+    const wrong = teamAriaFixture(extra)
+    assert.equal(wrong.run(wrong.merge([wrong.raw(1)])).status, 'hole')
+  }
+  const wrongModule = teamAriaFixture({}, 'mod_custom')
+  assert.equal(wrongModule.run(wrongModule.merge([wrongModule.raw(1)])).status, 'hole')
+  const valid = f.merge([f.raw(1), f.raw(2)])
+  const invalid = [
+    (v) => {
+      v.count++
+    },
+    (v) => {
+      v.receivers.pop()
+    },
+    (v) => {
+      v.receivers[1].inCode = true
+    },
+    (v) => {
+      v.receivers[1].scopes = ['acm-teams-91']
+    },
+    (v) => {
+      v.receivers[1].selector = v.receivers[0].selector
+    },
+    (v) => {
+      v.receivers[1] = null
+    }
+  ].map((change) => {
+    const item = structuredClone(valid)
+    change(item.viewports.phone)
+    return item
+  })
+  for (const reverse of [false, true]) {
+    const classify = createClassifier(f.contract, null, buildSourceIndex(f.root, f.contract.template))
+    const cases = [[valid, true], ...invalid.map((item) => [item, false])]
+    if (reverse) cases.reverse()
+    for (const [item, expected] of cases) assert.equal(classify(item, {}).status === 'matched', expected)
+  }
+  for (const source of [
+    '<?php /* ' + f.source + ' */',
+    f.source.replace("get('socials', $i)", "get('bio', $i)"),
+    f.source.replace('strtolower($parts[0])', '$parts[0]'),
+    f.source.replace("$s['url']", "'https://other.example.test/'")
+  ]) {
+    f.put(f.file, source)
+    assert.equal(f.run(f.merge([f.raw(1)])).status, 'hole')
+  }
+})
+
+test('causal receivers: receipts retain each raw href and attribute without borrowing the first copy', () => {
+  const raw = (n, extra = {}) => ({
+    kind: 'text',
+    tag: 'a',
+    value: 'Example Author',
+    selector: `a.author:nth-of-type(${n})`,
+    href: `index.php?author=${n}`,
+    ...extra
+  })
+  const item = mergeViewports({ desktop: { items: [raw(1), raw(2), raw(3, { href: undefined })] } }, SITE)[0]
+  assert.deepEqual(
+    physicalReceivers(item).map((c) => c.href),
+    ['index.php?author=1', 'index.php?author=2', undefined]
+  )
+  const attr = mergeViewports({ desktop: { items: [raw(1, { kind: 'attr', attr: 'aria-label' })] } }, SITE)[0]
+  assert.equal(physicalReceivers(attr)[0].attr, 'aria-label')
+  attr.viewports.desktop.receivers[0].attr = 'title'
+  assert.equal(physicalReceivers(attr), null, 'different attribute is not the same physical receiver')
+  const f = generatedReceiverFixture()
+  const date = f.item('18 Jun', 'time.hx-blogdate', { tag: 'time' })
+  for (const viewports of [{}, { desktop: null }]) {
+    const result = f.create()({ ...date, viewports }, {})
+    assert.notEqual(result.class, 'c', 'missing or malformed observations cannot prove all copies')
+  }
+})
+
+test('causal receivers: every ACM aria copy keeps its exact raw token despite normalized merging', () => {
+  const f = teamAriaFixture()
+  const mixed = f.merge([f.raw(1), f.raw(2, { value: 'Network-One' })])
+  assert.equal(f.run(mixed).status, 'hole', 'a same-normalized but different raw token is not source-derived')
+  const spaced = f.merge([f.raw(1), f.raw(2, { value: 'network-one ' })])
+  assert.equal(f.run(spaced).status, 'hole', 'raw attribute whitespace cannot borrow the first token')
+})
+
+test('K3 review R1: missing raw tokens cannot own absent or reserved ACM network entries', () => {
+  const f = teamAriaFixture({
+    sample:
+      'network-one|relative/path\nnetwork-one|https://valid.example.test/profile\nnetwork-one|https://another.example.test/profile'
+  })
+  const good = f.merge([f.raw(2), f.raw(3)])
+  const cases = [
+    (copy) => {
+      copy.selector = copy.selector.replace('nth-of-type(3)', 'nth-of-type(4)')
+      delete copy.value
+    },
+    (copy) => {
+      copy.selector = copy.selector.replace('nth-of-type(3)', 'nth-of-type(1)')
+      copy.value = null
+    },
+    (copy) => {
+      delete copy.value
+    },
+    (copy) => {
+      copy.value = null
+    },
+    (copy) => {
+      copy.value = ''
+    },
+    (copy) => {
+      copy.value = 0
+    }
+  ].map((change) => {
+    const item = structuredClone(good)
+    change(item.viewports.phone.receivers[1])
+    return item
+  })
+  for (const reverse of [false, true]) {
+    const classify = createClassifier(f.contract, null, buildSourceIndex(f.root, f.contract.template))
+    const entries = [[good, true], ...cases.map((item) => [item, false])]
+    if (reverse) entries.reverse()
+    for (const [item, expected] of entries) assert.equal(classify(item, {}).status === 'matched', expected)
+  }
+})
+
+test('K3 review R2: positional numeric formats conservatively stay whole-value only', () => {
+  const matchOf = (sample) =>
+    createMatcher(
+      loadContract(
+        contractDir([
+          { key: 'module-90.role', type: 'text', sample: 'Editor' },
+          { key: 'languageString-10.0', type: 'text', sample }
+        ]),
+        SITE
+      ),
+      SITE
+    )
+  const repeated = matchOf('Read %1$d of %1$d pages')
+  assert.equal(repeated({ kind: 'text', value: 'Editor · Read 2 of 3 pages' }).status, 'hole')
+  assert.equal(
+    repeated({ kind: 'text', value: 'Editor · Read 2 of 2 pages' }).status,
+    'hole',
+    'positional fragments are deliberately unsupported, even when equal'
+  )
+  const distinct = matchOf('Read %1$d of %2$u pages')
+  assert.equal(
+    distinct({ kind: 'text', value: 'Editor · Read 2 of 3 pages' }).status,
+    'hole',
+    'all positional fragments decline without a printf argument binder'
+  )
+  assert.equal(
+    repeated({ kind: 'text', value: 'Read 2 of 2 pages' }).status,
+    'matched',
+    'existing whole-value compatibility retained'
+  )
+  assert.equal(distinct({ kind: 'text', value: 'Read 2 of 3 pages' }).status, 'matched')
+  assert.equal(
+    matchOf('Read %d of %u pages')({ kind: 'text', value: 'Editor · Read 2 of 3 pages' }).status,
+    'matched',
+    'ordinary independent integer fragments remain supported'
   )
 })
