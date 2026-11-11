@@ -9,6 +9,7 @@ import { PROGRESS_BAND_CSS } from './progress-band-css.ts'
 import { FACTS_BANDS_CSS } from './facts-bands-css.ts'
 import { FACTS_OWNER_CSS } from './facts-owner-css.ts'
 import { FACTS_SAVED_CSS } from './facts-saved-css.ts'
+import { PAGE_HEADER_CSS } from './page-header-css.ts'
 import { SUB_PAGE_HEADER_CSS } from './sub-page-header-css.ts'
 export const DETAILS_CSS =
   `
@@ -187,4 +188,5 @@ export const DETAILS_CSS =
   FACTS_BANDS_CSS +
   FACTS_OWNER_CSS +
   FACTS_SAVED_CSS +
-  SUB_PAGE_HEADER_CSS
+  SUB_PAGE_HEADER_CSS +
+  PAGE_HEADER_CSS

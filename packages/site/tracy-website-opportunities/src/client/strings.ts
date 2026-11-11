@@ -137,6 +137,8 @@ export const en = {
   'off.body': 'An admin turned this feature off. Your saved opportunities and demo sites are kept.',
 
   'list.title': 'Added businesses',
+  'list.desc':
+    'The businesses you added and where each one stands on the way to its site. Open a row to review its business facts, approve the site content, and build the site.',
   'list.find': 'Find businesses',
   'list.empty.title': 'No opportunities yet',
   'list.empty.body': 'Search around a place, or paste the address of a restaurant’s website or social page.',
@@ -145,6 +147,8 @@ export const en = {
   'list.sites': '{count} demo sites',
 
   'find.title': 'Find businesses',
+  'find.desc':
+    'Search an area for businesses without a website, or add one business by its links. Added businesses appear in the Added businesses tab.',
   'find.useLocation': 'Use my location',
   'find.location.asking': 'Asking for your location…',
   'find.location.found': 'Searching around your location.',

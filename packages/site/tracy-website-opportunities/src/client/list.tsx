@@ -33,6 +33,7 @@ import { listMenu } from './list-menu-model.ts'
 import { SelectionBar } from './list-select-bar.tsx'
 import { pickState, useSelectMode } from './list-select-mode.ts'
 import { ListToolbar } from './list-toolbar.tsx'
+import { PageHeader } from './page-header.tsx'
 import type { FilterValue, MyAddress } from './my-address.ts'
 import {
   type AccountCounts,
@@ -624,33 +625,35 @@ export function MyOpportunitiesView({
   })
   return (
     <div className="tracy-wo-my tracy-wo-results">
-      {selecting.on ? (
-        <SelectionBar
-          t={t}
-          count={allMatching ? total : picked.size}
-          pick={pick}
-          busy={bulkBusy || deleteBusy}
-          deleteDisabled={allMatching || picked.size === 0}
-          cancelDisabled={!allMatching && jobs.cancel.length === 0}
-          onPickAll={togglePage}
-          onDelete={() => askDelete(deleteAsk(shown, picked))}
-          onCancelResearch={() => void bulk('cancel')}
-          onDone={selecting.leave}
-        />
-      ) : (
-        <ListToolbar
-          t={t}
-          attention={counts?.attention ?? null}
-          attentionOn={filter === 'attention'}
-          text={text}
-          onText={setText}
-          onAttention={(on) => onAddress({ stage: on ? 'attention' : 'all' })}
-          menu={menu}
-          onSelect={selecting.enter}
-          onView={chooseView}
-          onCancelled={(on) => onAddress({ stage: on ? 'cancelled' : 'all' })}
-        />
-      )}
+      <PageHeader title={t('list.title')} description={t('list.desc')}>
+        {selecting.on ? (
+          <SelectionBar
+            t={t}
+            count={allMatching ? total : picked.size}
+            pick={pick}
+            busy={bulkBusy || deleteBusy}
+            deleteDisabled={allMatching || picked.size === 0}
+            cancelDisabled={!allMatching && jobs.cancel.length === 0}
+            onPickAll={togglePage}
+            onDelete={() => askDelete(deleteAsk(shown, picked))}
+            onCancelResearch={() => void bulk('cancel')}
+            onDone={selecting.leave}
+          />
+        ) : (
+          <ListToolbar
+            t={t}
+            attention={counts?.attention ?? null}
+            attentionOn={filter === 'attention'}
+            text={text}
+            onText={setText}
+            onAttention={(on) => onAddress({ stage: on ? 'attention' : 'all' })}
+            menu={menu}
+            onSelect={selecting.enter}
+            onView={chooseView}
+            onCancelled={(on) => onAddress({ stage: on ? 'cancelled' : 'all' })}
+          />
+        )}
+      </PageHeader>
       {actionFailed ? (
         <p className="tracy-wo-error" role="alert">
           {t('action.failed')}
