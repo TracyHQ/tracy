@@ -117,3 +117,20 @@ on backup/david-issue-completion-before-consolidation. Delivery history is conso
 policy can judge clean contributions; mechanism receipts must be rerun on the consolidated commit before they can
 serve as branch evidence. No source behavior is changed by that history operation. The two Linux validation runs on
 the earlier delivery head were cancelled to avoid spending the lane on a superseded head.
+
+
+## Consolidated delivery verification
+
+The local contribution-history check on dcace88107bb39cfdcc04200f0a493febc0f5cd4 inspected one commit and 432 changed
+files with zero findings. All eleven selected mechanism regressions passed again on that consolidated commit;
+`tests/regression/results/2026-11-11-dcace8810.jsonl` is the current branch evidence. Receipts on the earlier delivery
+commits remain historical records, preserved with their original code on the backup branch.
+
+The large-file interrupted-apply scenario passed independently (1/1, zero skips, 92 seconds) without a behavioral
+source change; the added assertion now retains a failed merge answer. This does not turn the earlier 34/35 full run
+into a full green run. The final source differences from the prior pushed delivery are three normalized transcript
+lines, that diagnostic assertion and this report. The application and fleet implementation is identical.
+
+The final delivery remains draft. Full Linux CI and real MariaDB integration must be rerun on its published head.
+The local upstream fork failures, publication blockers and complete customer/deployed acceptance remain outstanding;
+no issue is closed and no develop merge or deployment is claimed.
