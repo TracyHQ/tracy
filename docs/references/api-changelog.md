@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-11: The Your site card shows the build's cost, time and a picture of its home page
+
+Added (internal): `GET /api/website-opportunities/:id/demo/preview` answers the latest build's home page picture (`image/webp`, 640 by 400, cached a day; 404 `NOT_FOUND` when none was taken). Changed (internal): the `demo` of `GET …/:id` and of each `GET /api/website-opportunities` row adds `built: {at, minutes, usd} | null`, `findings: string[]` (QA check ids failing in the last round) and `preview: {url, capturedAt} | null`. Public API v1 is unchanged.
+
 ## 2026-11-11: Approved facts and briefs are final; the same place can be added again
 
 Changed (internal): once the Profile is approved, `PUT /api/website-opportunities/:id/name`, `…/profile`, `…/hours`, `…/rating`, `…/reading`, `…/facts`, `…/key-messages`, `…/team`, `…/socials`, `…/media/:mediaId/visibility`, `…/reviews/visibility`, `POST …/:id/media` and `POST …/:id/research` (unless this card's research is `failed` or `not_started`) answer 409 `PROFILE_APPROVED` with `next: "The business facts are approved. To change them, add this business again as a new card."`; once the latest Content brief is approved, `POST …/:id/revisions` and `POST …/:id/revisions/:revId/edits` answer 409 `BRIEF_APPROVED` with `next: "The Site content brief is approved. To change it, add this business again as a new card."`. `POST /api/website-opportunities` makes a new card on every save (201), a place the account already has included, instead of answering 200 with the existing one; the answer, every `GET /api/website-opportunities` row and `GET …/:id` carry `opportunity.sameAs: [{id, createdAt, stage}]`, the account's other cards of the same place, newest first. Public API v1 is unchanged.

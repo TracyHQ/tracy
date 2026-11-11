@@ -172,8 +172,27 @@ export function createDemoRunner(deps) {
           new Date(now())
         ])
       }
-      const finish = (state, error = null) =>
-        lease.finish({ status: state, error, step, checked_at: new Date(now()), updated_at: new Date(now()) })
+      // The build whose site is made, and its step chain measurement: kept once the action completes (`onBuilt`).
+      let builtSite = null
+      const finish = (state, error = null) => {
+        const out = lease.finish({
+          status: state,
+          error,
+          step,
+          checked_at: new Date(now()),
+          updated_at: new Date(now())
+        })
+        // 🔒 After the action ended and outside its lease: the facts and the picture never hold or fail a build.
+        if (state === 'completed' && builtSite && deps.onBuilt) {
+          const ended = builtSite
+          void Promise.resolve(out)
+            .then(() => deps.onBuilt({ ...ended, acceptedAt: action.accepted_at, at: now() }))
+            .catch((e) =>
+              log.warn?.(`[wo-demo] after-build step failed: ${e?.code ?? e?.message ?? 'error'}`)
+            )
+        }
+        return out
+      }
       const wait = () =>
         lease.finish({
           status: 'queued',
@@ -269,6 +288,7 @@ export function createDemoRunner(deps) {
           if (!isStepChainBuild(build)) await mark('build')
           return wait()
         }
+        builtSite = { build, chain: chainRun?.timings?.chain ?? null }
         // 🔒 A STEP CHAIN BUILD HAS NO CHAT TO HAND OVER TO (#479): the chain writes the site, so there is no agent
         // brief to send, no QA baseline to take and no fill to wait for. The action ends with the chain: the host
         // makes the base site long before the chain has written it (#516), so a brief row still running holds the

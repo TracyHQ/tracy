@@ -42,6 +42,7 @@ import {
 } from './demo-actions.js'
 import { qaShape } from './demo-qa.js'
 import { reopenDemo, startDemoClock, touchDemo } from './demo-retention.js'
+import { latestPreviewOf } from './demo-preview.js'
 import { demoBuildRunning, prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
@@ -225,7 +226,16 @@ export function createWebsiteBuilder(deps) {
                  'done', coalesce(sc.state = 'done' and b.state <> 'deleted', false), 'siteState', sc.state,
                  'address', st.address, 'label', b.label, 'qa', b.qa->>'state', 'createdAt', b.created_at,
                  'expiresAt', b.demo_expires_at, 'frozenAt', b.demo_frozen_at,
-                 'deletedAt', b.demo_deleted_at)
+                 'deletedAt', b.demo_deleted_at, 'built', b.built,
+                 'chain', (select jsonb_build_object('at', sb.created_at, 'minutes', sb.timings->'chain'->'totalMinutes',
+                             'usd', sb.timings->'chain'->'totalUsd', 'ending', sb.timings->'chain'->>'ending')
+                             from site_brief sb left join site s on s.site_key = sb.site_key
+                            where sb.site_key = b.site_key and (s.created_at is null or sb.created_at >= s.created_at)
+                            order by sb.created_at desc limit 1),
+                 'findings', (select jsonb_agg(distinct f->>'id') from jsonb_array_elements(
+                     case when jsonb_typeof(b.qa->'rounds'->-1->'failed') = 'array'
+                       then b.qa->'rounds'->-1->'failed' else '[]'::jsonb end) f where f->>'id' is not null),
+                 'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id))
           from wo_build b join wo_revision r on r.id = b.revision_id
           left join site_creation sc on sc.account_id = b.account_id and sc.build_id = b.build_id::text
           left join site st on st.site_key = b.site_key
@@ -249,9 +259,9 @@ export function createWebsiteBuilder(deps) {
           // When a brief was last made or made again (`latestBriefAt`), for the card's approval (#537).
           latestBriefAt: r.brief_at ?? null,
           sites: r.sites ?? [],
-          latestBuild: r.latest_build ?? null,
+          latestBuild: latestBuildShape(r.latest_build),
           demoAction: r.demo_action,
-          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action)
+          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action, r.id)
         }
       ])
     )
@@ -884,6 +894,26 @@ export function createWebsiteBuilder(deps) {
       return json(c, { demo: demoOf(extended) })
     })
 
+    // The picture of the latest demo's home page (#537, `demo-preview.js`): image bytes, or 404 when none was taken.
+    // The Details answer names it with its capture time (`demo.preview.url`), so a new picture is a new address.
+    app.get(`${BASE}/:id/demo/preview`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const picture = who.accountId && UUID.test(id) ? await latestPreviewOf(pool, who.accountId, id) : null
+      if (!picture) return notFound(c, 'preview')
+      return new Response(new Uint8Array(picture.bytes), {
+        status: 200,
+        headers: {
+          'content-type': picture.contentType,
+          'content-length': String(picture.bytes.length),
+          'cache-control': 'private, max-age=86400',
+          'last-modified': new Date(picture.capturedAt).toUTCString(),
+          'x-content-type-options': 'nosniff'
+        }
+      })
+    })
+
     // The deleted demo made again from the same revision, through the same build path as the first.
     app.post(`${BASE}/:id/demo/rebuild`, async (c) => {
       const who = await caller(c)
@@ -1001,7 +1031,7 @@ export function createWebsiteBuilder(deps) {
  * once its action failed, and Building is timed from the queued action's own `acceptedAt` (27/10/2026). The build
  * row itself stays as the host left it: the Retry provisions on that same row.
  */
-function listedDemo(b, graceDays, config, action = null) {
+function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
   if (!b) return null
   const frozen = b.frozenAt ? Date.parse(b.frozenAt) : Number.NaN
   const own = b.state === 'refused' || b.siteState === 'failed' ? 'failed' : b.done ? 'done' : 'building'
@@ -1021,7 +1051,45 @@ function listedDemo(b, graceDays, config, action = null) {
         ? new Date(frozen + graceDays * 86_400_000).toISOString()
         : null,
     qa: b.qa ?? null,
-    build: { status, startedAt: startedAt ?? null }
+    build: { status, startedAt: startedAt ?? null },
+    // The Your site card (#537, option A), new fields only: what the finished build took, the failing QA checks of its
+    // last round (check ids), and its home page picture (`demo-preview.js`).
+    built: builtOfListed(b),
+    findings: Array.isArray(b.findings) ? b.findings.slice(0, 10) : [],
+    preview:
+      b.previewAt && opportunityId
+        ? {
+            url: `${BASE}/${opportunityId}/demo/preview?v=${Date.parse(b.previewAt)}`,
+            capturedAt: new Date(b.previewAt).toISOString()
+          }
+        : null
+  }
+}
+
+/** A listed row's latest build without the parts only its `demo` reads (`listedDemo`). */
+function latestBuildShape(b) {
+  if (!b) return null
+  const { built: _built, chain: _chain, findings: _findings, previewAt: _previewAt, ...rest } = b
+  return rest
+}
+
+/**
+ * What a finished build took: the facts kept when its action completed, else (a build finished before they were kept)
+ * its own step chain measurement, ended at its start plus its minutes. Null when neither says.
+ */
+function builtOfListed(b) {
+  const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null)
+  if (b.built && typeof b.built === 'object')
+    return { at: b.built.at ?? null, minutes: num(b.built.minutes), usd: num(b.built.usd) }
+  const chain = b.chain
+  const minutes = num(chain?.minutes)
+  if (!b.done || !chain || chain.ending !== 'complete' || minutes === null) return null
+  const start = Date.parse(chain.at)
+  const usd = num(chain.usd)
+  return {
+    at: Number.isFinite(start) ? new Date(start + minutes * 60_000).toISOString() : null,
+    minutes: Math.round(minutes * 10) / 10,
+    usd: usd === null ? null : Math.round(usd * 100) / 100
   }
 }
 

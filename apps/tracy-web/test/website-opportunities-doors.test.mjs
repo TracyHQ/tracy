@@ -2974,6 +2974,47 @@ test('reopen thaws a frozen demo; extend pushes a live one; each refuses the wro
   assert.equal((await demoRow(w.pool, build.id)).demo_frozen_at, null)
 })
 
+test(
+  'the Details demo carries what the build took and its picture; the picture door serves it to its owner only',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp, build } = await builtDemo(w)
+    const first = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.demo
+    // The completed action kept what the build took: minutes from the press; no step chain, so no cost figure.
+    assert.equal(first.built.minutes, 0)
+    assert.equal(first.built.usd, null)
+    assert.ok(Date.parse(first.built.at) > 0)
+    assert.equal(first.preview, null)
+    assert.deepEqual(first.findings, [])
+    assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}/demo/preview`)).status, 404)
+    const builtAt = '2026-11-11T10:42:00.000Z'
+    await w.pool.query(`update wo_build set built = $2::jsonb, qa = $3::jsonb where id = $1`, [
+      build.id,
+      JSON.stringify({ at: builtAt, minutes: 26, usd: 1.84 }),
+      JSON.stringify({
+        state: 'needs-review',
+        rounds: [{ n: 1, failed: [{ id: 'cta-real' }, { id: 'no-demo-words' }] }]
+      })
+    ])
+    await w.pool.query(
+      `insert into wo_build_preview (build_id, content_type, bytes, width, height, captured_at)
+     values ($1, 'image/webp', $2, 640, 400, $3)`,
+      [build.id, Buffer.from('RIFF0000WEBPVP8 fake'), '2026-11-11T10:43:00Z']
+    )
+    const demo = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.demo
+    assert.deepEqual(demo.built, { at: builtAt, minutes: 26, usd: 1.84 })
+    assert.deepEqual([...demo.findings].sort(), ['cta-real', 'no-demo-words'])
+    assert.equal(demo.preview.capturedAt, '2026-11-11T10:43:00.000Z')
+    assert.equal(demo.preview.url, `${BASE}/${opp.id}/demo/preview?v=${Date.parse('2026-11-11T10:43:00Z')}`)
+    const listed = (await w.call(A, 'GET', BASE)).body.opportunities[0]
+    assert.equal(listed.latestBuild.chain, undefined, 'the list row keeps its latestBuild shape')
+    const picture = await w.call(A, 'GET', `${BASE}/${opp.id}/demo/preview`)
+    assert.equal(picture.status, 200)
+    assert.equal((await w.call(B, 'GET', `${BASE}/${opp.id}/demo/preview`)).status, 404, 'not yours')
+  }
+)
+
 test('rebuild makes a new demo from the old revision once the old one was deleted', opts, async () => {
   const w = await world()
   const { opp, rev } = await builtDemo(w)

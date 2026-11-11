@@ -2894,6 +2894,15 @@ leftovers, broken layout, mixed languages); it does not judge aesthetics. The re
 along with the other checks. With no model, over budget or a failed capture, the check records `looked:false` (or `partly` with `unlooked`
 per page and viewport) and the reason, without failing the build; the build is still `needs-review`.
 
+**Your site card: build facts and a home page picture (#537).** When a demo action completes, the runner
+(`opportunities-build/demo-runner.js`, after the lease is released) calls `onBuilt` (`opportunities-build/demo-preview.js`):
+it writes `wo_build.built = {at, minutes, usd}` (a step chain build's own `timings.chain` totals, else minutes since the
+press and `usd` null), then asks the site's host for one layout (`/`) over `POST /_host/capture`, keeps the 1440 wide shot's
+first screen as a 640 by 400 WebP under 80 KB in `wo_build_preview` (one row per build, bytes kept out of `wo_build`), and
+the Details answer names it as `demo.preview: {url, capturedAt}`. `GET /api/website-opportunities/:id/demo/preview` serves
+the latest build's picture to its owner (404 when none). A failed capture or write is logged only: the build never fails
+for it, and the client draws the site's name on its brand colour instead (migration 212).
+
 The check runs in the background so the agent does not hold one request for minutes (24/10/2026): dsh calls the Apply door through the public
 origin, and Cloudflare cuts at ~100 s (524), while a whole-site check runs for several minutes. dsh's `tracy_demo check` sends
 `check.start` (returns at once, writes `wo_build.qa.clientCheck` = `running`; calling again while it runs joins the running

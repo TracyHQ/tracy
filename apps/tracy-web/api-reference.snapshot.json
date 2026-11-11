@@ -50980,6 +50980,32 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/{id}/demo/preview": {
+        "get": {
+          "operationId": "get_api_website_opportunities_id_demo_preview",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/{id}/demo/rebuild": {
         "post": {
           "operationId": "post_api_website_opportunities_id_demo_rebuild",
