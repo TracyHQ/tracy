@@ -834,7 +834,7 @@
   "media.error.MEDIA_ALREADY_ADDED": "Diese file ist bereits in Fotos & Videos.",
   "media.error.NOT_MEDIA": "Senden Sie ein Foto als JPEG, PNG, GIF, WebP oder AVIF oder ein Video als MP4 oder WebM.",
   "media.error.TOO_LARGE": "Diese file ist zu groß.",
-  "media.error.other": "Die file konnte nicht hochgeladen werden. Bitte erneut versuchen.",
+  "media.error.other": "Der upload der file ist fehlgeschlagen. Bitte erneut versuchen.",
   "media.file.pdf": "PDF",
   "media.file.read": "Für die Speisekarte gelesen: {count}",
   "media.files": "Files",
