@@ -1,6 +1,6 @@
 {
   "pr": 569,
-  "sourceCommit": "841121d2bd4f74ea40c074f9829ac667ae0bee65",
+  "sourceCommit": "db5669f0f8",
   "browserAcceptance": {
     "site": "https://portland-city-boxing-3.tracy.site/",
     "result": "FAIL before this fix; complete site acceptance remains pending",
@@ -24,7 +24,7 @@
       "excluded": ["tests", "turbo-config", "boot-graph"]
     },
     "finalSourceChecks": ["language", "test-quality", "scoped oxlint", "scoped biome format"],
-    "regression": "REG-PR-569-dropped-native-articles \u2014 PASS on sourceCommit",
+    "regression": "REG-PR-569-dropped-native-articles — PASS on db5669f0f8",
     "baselineComparison": "The original dropPages function fails five of six initial scenarios; these are local script fixtures, not a deployed CMS stand.",
     "completeWriteSuite": {
       "pass": 834,
