@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-568-research-read-identity",
+  "kind": "fix",
+  "title": "Canonical social research identity and grounded category evidence survive the effective profile read",
+  "pr": 568,
+  "area": "wo/research-read",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the source-identity and structured social-category mechanism suites against this branch using the commands in run.cmd. No stand, database, provider, model or browser is needed."
+  ],
+  "expect": [
+    "A shared complete Instagram source with the captured Arabian Tea House ?hl=en URL represents the www/trailing-slash private alias once in effective sources, profile.sources and shown rows, retaining complete status and fetched count 12.",
+    "Distinct Instagram handles, Facebook numeric page IDs and case-sensitive YouTube channel IDs remain distinct. Failed separate sources retain their operator reason; a failed shared alias does not gain canonical suppression.",
+    "The actual collected Facebook Cafe category maps to food through the controlled mapping when Google/schema provide no recognized trade; the category evidence remains attached and an unattempted menu is not_researched.",
+    "Google/schema precedence, known non-food trades, conflicting/unmapped social categories, unreadable and third-party inputs remain bounded. Biography keywords do not classify and real menu collector outcomes remain unchanged."
+  ],
+  "selectors": {},
+  "fence": "Use native social profile identities and existing controlled category mappings at the research read boundary. Never infer industry from prose, invent menu results, rewrite stored collector attempts or call a paid service.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/source-rows-identity.test.mjs",
+      "packages/wo/website-opportunities/test/domain-place-profile-social-category.test.mjs"
+    ],
+    "tests": [
+      "real place view uses the same one successful source for profile.sources, source data and display",
+      "distinct handles, Facebook IDs, source kinds and case-sensitive YouTube channel IDs stay distinct",
+      "a failed shared source cannot erase a private failure or overwrite either attempt status",
+      "real place view keeps failed distinct social profiles visible and retains operator failure reason",
+      "the collected Facebook Cafe category maps to food with its actual evidence and leaves an unattempted menu not researched",
+      "authoritative Google and schema trades retain precedence over a social category",
+      "conflicting or unmapped social categories stay unknown and cannot prove a menu does not apply",
+      "known non-food social categories remain non-food and blocked or third-party categories cannot classify",
+      "a real menu attempt keeps its measured outcome even while the business trade is unknown"
+    ],
+    "needs": ["postgres"]
+  }
+}
