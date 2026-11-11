@@ -6,6 +6,7 @@
  * decided here.
  */
 import { type Confidence, FIELD_KEYS, factRowsView, reasonKeys, spelledField } from './profile-facts-model.ts'
+import { type SourceLogoKey, sourceLogoKey } from './source-logo.ts'
 import type { Translate } from './strings.ts'
 
 export interface BriefRow {
@@ -18,6 +19,8 @@ export interface BriefRow {
   value: string
   /** Where it came from, one plain sentence. */
   source: string
+  /** The glyph of that source for its pill: the seller's own, a platform, the generic globe; none when worked out. */
+  sourceLogo?: SourceLogoKey | 'you' | null
   onSite: boolean
   /** The person switched it on or off themselves. */
   ownerChoice: boolean
@@ -75,6 +78,7 @@ export function websiteRow(rows: readonly BriefRow[], website: string | null, t:
     label: t('field.website'),
     value: website ?? t('cell.website.none'),
     source: website === null ? '' : t('brief.source.research'),
+    sourceLogo: website === null ? null : 'website',
     onSite: website !== null,
     ownerChoice: false,
     notes: [],
@@ -105,6 +109,14 @@ function listed(items: string[], locale?: string): string {
   } catch {
     return items.join(', ')
   }
+}
+
+/** The glyph for the pill of `sourceNote`: the first named kind's logo; none for a worked-out fact. */
+export function sourceLogoOf(kinds: readonly string[], confidence: Confidence): SourceLogoKey | 'you' | null {
+  if (kinds.includes(YOU)) return 'you'
+  if (confidence === 'inferred') return null
+  const named = NAMED.find(([kind]) => kinds.includes(kind))
+  return named === undefined ? 'website' : sourceLogoKey(named[0] === 'google' ? 'google-places' : named[0])
 }
 
 /** One plain sentence on where a fact came from. */
@@ -150,6 +162,7 @@ export function businessBriefRows(
     label: fieldLabel(row.field, t, row.statistic),
     value: row.label,
     source: sourceNote(row.sources, row.confidence, t, locale),
+    sourceLogo: sourceLogoOf(row.sources, row.confidence),
     onSite: row.onSite,
     ownerChoice: row.decidedBy === 'owner',
     notes: reasonKeys(row).map((key) => t(key)),

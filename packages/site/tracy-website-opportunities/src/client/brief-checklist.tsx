@@ -19,6 +19,7 @@ import {
   stepAfterMark
 } from './brief-steps-model.ts'
 import type { BriefRow } from './business-brief-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import { ApprovalActions, type ApprovalView, gateText } from './seller-review.tsx'
 import type { Translate } from './strings.ts'
 
@@ -132,9 +133,10 @@ export function BriefChecklist({
         <section className="tracy-wo-brief-pane" aria-label={t(step.titleKey)}>
           <div className="tracy-wo-brief-ph">
             <h3>{t(step.titleKey)}</h3>
-            <span className="tracy-wo-brief-count">
-              {t('brief.steps.onSite', { n: step.on + extra, total: step.items.length + extra })}
-            </span>
+            <StatusPill
+              state="info"
+              label={t('brief.steps.onSite', { n: step.on + extra, total: step.items.length + extra })}
+            />
             {editable.length > 0 ? (
               <button
                 type="button"

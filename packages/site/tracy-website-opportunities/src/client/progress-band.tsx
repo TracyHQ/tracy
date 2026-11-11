@@ -15,7 +15,7 @@
  */
 
 import { Button, Spinner } from '@tracy/ui'
-import { Check, Lock, Clock } from 'lucide-react'
+import { Check, Lock } from 'lucide-react'
 import type { JSX, ReactNode } from 'react'
 
 import { SubSteps } from './progress-band-subs.tsx'
@@ -156,10 +156,12 @@ export function ProgressBand({
                 {t(current.nameKey)}
               </h3>
               {view.estimateKey !== null ? (
-                <span className="tracy-wo-band-est" title={t(`${view.estimateKey}.why`)}>
-                  <Clock className="tracy-wo-icon" aria-hidden="true" />
-                  {t(view.estimateKey)}
-                </span>
+                <StatusPill
+                  state="info"
+                  className="tracy-wo-band-est"
+                  label={t(view.estimateKey)}
+                  title={t(`${view.estimateKey}.why`)}
+                />
               ) : null}
             </div>
             {view.lineKey !== null && view.errorKey === null ? (

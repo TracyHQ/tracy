@@ -1295,6 +1295,8 @@ export const en = {
     'What Tracy found about your business. Switch off anything that should not appear on the site and edit anything that is wrong, then approve.',
   'subhead.desc.brief':
     'What the site will say, section by section. Check each section and mark it reviewed, then approve.',
+  'subhead.desc.profile.locked': 'What Tracy found about your business, as approved for the site.',
+  'subhead.desc.brief.locked': 'What the site will say, section by section, as approved.',
   'approve.continue': 'Approve and continue',
   'approve.saving': 'Approving…',
   'approve.done.profile': 'Business facts approved {date}',
@@ -1382,6 +1384,7 @@ export const en = {
   'facts.addAgain': 'Add this business again',
   // The account's other cards of the same place (#537 R23); {stage} names the step that card reached.
   'sameAs.line': 'Also added on {date} ({stage})',
+  'sameAs.short': 'Also added {date}',
   'sameAs.more': '+{count} more',
   'facts.phone.others': 'Other: {list}.',
   'facts.messages.lead': 'The site leads with these',

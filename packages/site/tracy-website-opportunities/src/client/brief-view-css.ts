@@ -40,7 +40,6 @@ export const BRIEF_VIEW_CSS = `
 .tracy-wo-brief-pane { overflow: hidden; }
 .tracy-wo-brief-ph { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); }
 .tracy-wo-brief-ph h3 { margin: 0; font-size: 14px; font-weight: 600; }
-.tracy-wo-brief-count { display: inline-flex; align-items: center; padding: 0 9px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted-foreground); font-size: 11.5px; font-weight: 500; line-height: 20px; white-space: nowrap; }
 .tracy-wo-brief-ph .tracy-wo-brief-edit { margin-left: auto; }
 .tracy-wo-brief-edit { display: inline-flex; align-items: center; gap: 4px; padding: 0 2px; border: 1px solid transparent; border-radius: 4px; background: transparent; color: var(--primary); font: inherit; font-size: 12px; font-weight: 500; line-height: 20px; white-space: nowrap; cursor: pointer; }
 .tracy-wo-brief-edit:hover { text-decoration: underline; }
@@ -52,8 +51,8 @@ export const BRIEF_VIEW_CSS = `
 .tracy-wo-brief-it-v { display: flex; flex-direction: column; gap: 3px; min-width: 0; line-height: 20px; overflow-wrap: anywhere; white-space: pre-line; }
 .tracy-wo-brief-it[data-off] .tracy-wo-brief-it-lab, .tracy-wo-brief-it[data-off] .tracy-wo-brief-it-v > span:first-child { color: var(--muted-foreground); }
 .tracy-wo-brief-it .tracy-wo-brief-note { margin-top: 0; white-space: normal; }
-.tracy-wo-brief-off { align-self: flex-start; padding: 0 8px; border-radius: 10px; background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); font-size: 11.5px; font-weight: 500; line-height: 18px; white-space: normal; }
-.tracy-wo-brief-src { display: inline-flex; align-items: center; padding: 0 7px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--muted-foreground); font-size: 11px; font-weight: 500; line-height: 18px; white-space: nowrap; }
+.tracy-wo-brief-it .tracy-wo-brief-off { align-self: flex-start; height: auto; min-height: 22px; padding-block: 3px; white-space: normal; }
+.tracy-wo-brief-it .tracy-wo-brief-off .tracy-wo-pill-text { overflow: visible; white-space: normal; line-height: 1.3; }
 .tracy-wo-brief-it > span:nth-child(3) { padding-top: 1px; }
 .tracy-wo-brief-days { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; font-size: 12px; line-height: 17px; white-space: normal; }
 .tracy-wo-brief-days b { display: block; overflow: hidden; color: var(--muted-foreground); font-size: 10.5px; font-weight: 500; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }

@@ -98,7 +98,7 @@ const RESEARCHED = { state: 'done', researchedAt: '2026-11-09T08:00:00Z', done: 
 const NAME = 'Harbour Kite Lessons'
 
 /** Mounts a sub-page with the given steps input; records Details, approve and step presses. */
-function mount({ section = 'profile', input, approval = null, stepAction = null }) {
+function mount({ section = 'profile', input, approval = null, stepAction = null, locked = false }) {
   const calls = []
   const host = document.createElement('div')
   document.body.append(host)
@@ -113,6 +113,7 @@ function mount({ section = 'profile', input, approval = null, stepAction = null 
           name: NAME,
           view: lib.stepperView(input),
           stepAction,
+          locked,
           onSection: (s) => calls.push(['section', s]),
           approval:
             approval === null
@@ -219,15 +220,45 @@ test('an approved page shows when it was approved, with no button', () => {
   const acts = page.host.querySelector('.tracy-wo-subhead-acts')
   assert.equal(acts.querySelector('button'), null)
   assert.match(acts.textContent, /Approved Nov 9/)
+  assert.equal(page.host.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.profile.locked]')
   page.done()
 })
 
 test('the descriptions are formal English without dashes and never speak of steps', async () => {
   const { en } = await import('../src/client/strings.ts')
-  for (const key of ['subhead.desc.profile', 'subhead.desc.brief']) {
+  for (const key of [
+    'subhead.desc.profile',
+    'subhead.desc.brief',
+    'subhead.desc.profile.locked',
+    'subhead.desc.brief.locked'
+  ]) {
     assert.equal(typeof en[key], 'string')
     assert.doesNotMatch(en[key], /[\u2013\u2014]|\bstep|\bnext\b/i)
   }
   assert.equal(en['approve.continue'], 'Approve and continue')
   assert.equal(en['approve.scrollHint'], undefined)
+})
+
+test('an approved brief page says what the site says, as approved', () => {
+  const page = mount({
+    section: 'brief',
+    input: {
+      research: RESEARCHED,
+      brief: { id: 'b1', n: 1, createdAt: '2026-11-09T09:00:00Z' },
+      demo: 'none',
+      approval: { profile: 'approved', brief: 'approved' }
+    },
+    approval: { kind: 'brief', pending: true, approvedLine: 'Approved Nov 9' }
+  })
+  assert.equal(page.host.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.brief.locked]')
+  page.done()
+})
+
+test('approved Business facts have no header button but still say they are approved', () => {
+  const page = mount({
+    input: { research: RESEARCHED, demo: 'none', approval: { profile: 'approved', brief: 'none' } },
+    locked: true
+  })
+  assert.equal(page.host.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.profile.locked]')
+  page.done()
 })

@@ -303,6 +303,7 @@ test('sameAs: the newest other card in words, a link to it, and how many more', 
   assert.equal(cards.length, 2)
   const line = sameAsLine(t, cards, 'en-GB')
   assert.equal(line.text, '[sameAs.line{"date":"9 Nov","stage":"[v3.research]"}]')
+  assert.equal(line.short, '[sameAs.short{"date":"9 Nov"}]')
   assert.equal(line.more, '[sameAs.more{"count":1}]')
   assert.equal(sameAsLine(t, [], 'en'), null)
   assert.equal(sameAsLine(t, sameAsOf(null), 'en'), null)

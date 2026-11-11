@@ -408,6 +408,9 @@ test('the estimate pill explains itself on hover, and the build estimate is an o
     demo: 'none',
     approval: { research: 'ok', profile: 'approved', brief: 'approved' }
   })
-  assert.match(html, /class="tracy-wo-band-est" title="\[stepper\.estimate\.build\.why\]"/)
+  assert.match(
+    html,
+    /class="tracy-wo-pill tracy-wo-band-est" data-pill="info" title="\[stepper\.estimate\.build\.why\]"/
+  )
   assert.match(html, /\[stepper\.estimate\.build\]</)
 })

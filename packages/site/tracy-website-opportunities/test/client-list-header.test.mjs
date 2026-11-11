@@ -304,9 +304,13 @@ test('a place added again (#537 R23): its row and its card name the other card u
       `${view}: only the place added again has the line`
     )
     assert.match(html, /data-same-as="opp-old"/)
+    // The rows view has a narrow column: the short line, the full one on hover.
+    const shown = view === 'rows' ? 'Also added Nov 2' : 'Also added on Nov 2 \\(Demo site\\)'
     assert.match(
       html,
-      /<button type="button" title="Also added on Nov 2 \(Demo site\)">Also added on Nov 2 \(Demo site\)<\/button><span>\+1 more<\/span>/
+      new RegExp(
+        `<button type="button" title="Also added on Nov 2 \\(Demo site\\)">${shown}</button><span>\\+1 more</span>`
+      )
     )
   }
   assert.equal(count(places(), 'tracy-wo-same-as'), 0, 'no line without other cards')

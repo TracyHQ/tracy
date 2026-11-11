@@ -7,10 +7,11 @@
 import { type JSX, useState } from 'react'
 import { Button, Input, Switch } from '@tracy/ui'
 
-import { mediaUrl } from './api.ts'
 import type { BriefMediaView } from './brief-media-model.ts'
+import { SourcePill, Value } from './brief-checklist-value.tsx'
 import { leftOffKeys } from './brief-steps-model.ts'
 import type { BriefRow } from './business-brief-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** How the seller edits one item: its words now, and the door that saves new ones (answers whether it went through). */
@@ -19,83 +20,6 @@ export interface BriefEditDoor {
   multiline: boolean
   maxLength: number
   save: (typed: string) => Promise<boolean>
-}
-
-/** `Monday: Open 24 hours; Tuesday: ...` as day and words, when every part reads that way; else null. */
-export function hoursDays(value: string): { day: string; text: string }[] | null {
-  const parts = value
-    .split(/;|\n/)
-    .map((part) => part.trim())
-    .filter((part) => part !== '')
-  const days = parts.map((part) => {
-    const at = part.indexOf(':')
-    return at <= 0 ? null : { day: part.slice(0, at).trim(), text: part.slice(at + 1).trim() }
-  })
-  return days.length > 0 && days.every((d) => d !== null) ? (days as { day: string; text: string }[]) : null
-}
-
-function Value({
-  t,
-  row,
-  media
-}: {
-  t: Translate
-  row: BriefRow
-  media: BriefMediaView | null
-}): JSX.Element {
-  if (row.field === 'hours') {
-    const days = hoursDays(row.value)
-    if (days !== null)
-      return (
-        <div className="tracy-wo-brief-days">
-          {days.map((d) => (
-            <div key={d.day}>
-              {/* The day's first three letters fit seven columns; the whole name is its title. */}
-              <b title={d.day}>{d.day.slice(0, 3)}</b>
-              {d.text}
-            </div>
-          ))}
-        </div>
-      )
-  }
-  if (row.field === 'photos' && media !== null)
-    return (
-      <>
-        {media.tiles.length > 0 ? (
-          <span className="tracy-wo-brief-tiles">
-            {media.tiles.map((id) => (
-              <img
-                key={id}
-                src={mediaUrl(id)}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                // A photo the store can no longer serve leaves no empty tile behind.
-                onError={(event) => {
-                  event.currentTarget.hidden = true
-                }}
-              />
-            ))}
-          </span>
-        ) : null}
-        <span>{row.value}</span>
-      </>
-    )
-  if (row.field === 'brand' && media !== null)
-    return (
-      <span className="tracy-wo-brief-brand">
-        {media.logoId !== null ? (
-          <img className="tracy-wo-brief-logo" src={mediaUrl(media.logoId)} alt={t('media.logo')} />
-        ) : null}
-        {media.colors.map((hex) => (
-          <span key={hex} className="tracy-wo-brief-swatch">
-            <i style={{ background: hex }} />
-            {hex}
-          </span>
-        ))}
-      </span>
-    )
-  return <span>{row.value}</span>
 }
 
 function Editor({
@@ -202,18 +126,22 @@ export function BriefChecklistItem({
         ) : (
           <Value t={t} row={row} media={media} />
         )}
-        {notes.map((note) => (
-          <span key={note} className={off ? 'tracy-wo-brief-off' : 'tracy-wo-brief-note'}>
-            {note}
-          </span>
-        ))}
+        {notes.map((note) =>
+          off ? (
+            <StatusPill key={note} state="off" label={note} className="tracy-wo-brief-off" />
+          ) : (
+            <span key={note} className="tracy-wo-brief-note">
+              {note}
+            </span>
+          )
+        )}
         {refusal !== null ? (
           <span className="tracy-wo-error tracy-wo-small" role="alert">
             {refusal}
           </span>
         ) : null}
       </div>
-      <span>{row.source === '' ? null : <span className="tracy-wo-brief-src">{row.source}</span>}</span>
+      <span>{row.source === '' ? null : <SourcePill text={row.source} logo={row.sourceLogo} />}</span>
       <span>
         {canEdit && !editing ? (
           <button type="button" className="tracy-wo-brief-edit" onClick={() => onEdit(true)}>

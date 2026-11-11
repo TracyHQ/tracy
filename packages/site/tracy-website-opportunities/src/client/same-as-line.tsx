@@ -11,19 +11,22 @@ import type { Translate } from './strings.ts'
 export function SameAsLine({
   t,
   cards,
-  onOpen
+  onOpen,
+  short = false
 }: {
   t: Translate
   cards: readonly SameAsCard[]
   /** Opens the other card's Details. */
   onOpen: (id: string) => void
+  /** The narrow list column: "Also added Nov 11", the full line on hover. */
+  short?: boolean
 }): JSX.Element | null {
   const line = sameAsLine(t, cards, interfaceLocale() ?? 'en')
   if (line === null) return null
   return (
     <p className="tracy-wo-same-as" data-same-as={line.first.id}>
       <button type="button" title={line.text} onClick={() => onOpen(line.first.id)}>
-        {line.text}
+        {short ? line.short : line.text}
       </button>
       {line.more === null ? null : <span>{line.more}</span>}
     </p>

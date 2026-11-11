@@ -1048,6 +1048,7 @@ export function DetailView({
           stepAction={stepAction}
           onSection={onSection}
           approval={approvalView}
+          locked={shown === 'profile' && factsApproved}
         >
           {shown === 'profile' ? sameAsLine : null}
           {content}

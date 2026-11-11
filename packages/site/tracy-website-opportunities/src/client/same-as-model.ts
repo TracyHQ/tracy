@@ -37,7 +37,7 @@ export function sameAsLine(
   t: Translate,
   cards: readonly SameAsCard[],
   locale: string
-): { text: string; more: string | null; first: SameAsCard } | null {
+): { text: string; short: string; more: string | null; first: SameAsCard } | null {
   const first = cards[0]
   if (first === undefined) return null
   const ms = first.createdAt === null ? Number.NaN : Date.parse(first.createdAt)
@@ -48,6 +48,7 @@ export function sameAsLine(
   const stage = key === undefined ? t('v3.research') : t(key)
   return {
     text: t('sameAs.line', { date, stage }),
+    short: t('sameAs.short', { date }),
     more: cards.length > 1 ? t('sameAs.more', { count: cards.length - 1 }) : null,
     first
   }

@@ -24,6 +24,7 @@ export function SubPage({
   onSection,
   actions,
   approval = null,
+  locked = false,
   children
 }: {
   t: Translate
@@ -40,6 +41,8 @@ export function SubPage({
   actions?: ReactNode
   /** Approve in the title row (#537); null: none. */
   approval?: ApprovalView | null
+  /** The page's content is approved and locked: its description says so (#537). */
+  locked?: boolean
   children: ReactNode
 }): JSX.Element {
   // Photos & video open the Profile sub-page (#537).
@@ -50,7 +53,11 @@ export function SubPage({
         t={t}
         title={title}
         step={STEP_OF[pageOf(section)]}
-        description={t(`subhead.desc.${pageOf(section)}`)}
+        description={t(
+          locked || approval?.approvedLine != null
+            ? `subhead.desc.${pageOf(section)}.locked`
+            : `subhead.desc.${pageOf(section)}`
+        )}
         name={name}
         view={view}
         onBack={() => onSection(null)}

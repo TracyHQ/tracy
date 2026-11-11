@@ -8,6 +8,7 @@ import { type JSX, useEffect, useId, useState } from 'react'
 import { Button, Input, Spinner } from '@tracy/ui'
 
 import type { Api, SiteLabelInfo } from './api.ts'
+import { SourcePill } from './brief-checklist-value.tsx'
 import { type SiteLabelCheck, siteAddress, siteLabelVerdict } from './site-label-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -168,7 +169,7 @@ export function SiteNameRow({
       <div className="tracy-wo-brief-it tracy-wo-site-name">
         <span className="tracy-wo-brief-it-lab">{t('site.name.label')}</span>
         <div className="tracy-wo-brief-it-v">{value}</div>
-        <span>{source === null ? null : <span className="tracy-wo-brief-src">{source}</span>}</span>
+        <span>{source === null ? null : <SourcePill text={source} logo={info?.label ? 'you' : null} />}</span>
         <span />
         <span />
       </div>

@@ -49,7 +49,7 @@ export function NameCell({
       {p.place.type ? (
         <span className="tracy-wo-muted tracy-wo-small tracy-wo-p-type">{p.place.type}</span>
       ) : null}
-      <SameAsLine t={t} cards={p.sameAs} onOpen={onOpenOther} />
+      <SameAsLine t={t} cards={p.sameAs} onOpen={onOpenOther} short />
     </div>
   )
 }

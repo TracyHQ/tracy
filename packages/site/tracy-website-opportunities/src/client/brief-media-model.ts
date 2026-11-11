@@ -4,7 +4,7 @@
  * for reference only: no door edits them here and no switch keeps them off (Business facts does that).
  */
 import type { BriefRow } from './business-brief-model.ts'
-import { sourceNote } from './business-brief-model.ts'
+import { sourceLogoOf, sourceNote } from './business-brief-model.ts'
 import type { MediaRowView } from './detail-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -57,6 +57,7 @@ export function briefMediaRows(
       label: t('brief.item.photos'),
       value: t('brief.item.and', { a: count(t, 'photo', view.photos), b: count(t, 'video', view.videos) }),
       source: sourceNote([...new Set(kinds)], 'single-source', t, locale),
+      sourceLogo: sourceLogoOf(kinds, 'single-source'),
       onSite: true,
       ownerChoice: false,
       notes: [],
@@ -71,6 +72,7 @@ export function briefMediaRows(
       label: t('brief.item.brand'),
       value: view.colors.join(', '),
       source: sourceNote(source === null ? [] : [source], 'single-source', t, locale),
+      sourceLogo: sourceLogoOf(source === null ? [] : [source], 'single-source'),
       onSite: true,
       ownerChoice: false,
       notes: view.observedOnly ? [t('brief.item.brandNote')] : [],

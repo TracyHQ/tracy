@@ -36,7 +36,7 @@ before(async () => {
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
         export { BriefChecklist } from './brief-checklist.tsx'
-        export { hoursDays } from './brief-checklist-item.tsx'
+        export { hoursDays } from './brief-checklist-value.tsx'
         export { briefSteps, briefReview, markStep } from './brief-steps-model.ts'
         export { en } from './strings.ts'
       `,
