@@ -18,13 +18,16 @@ export function SiteNameRow({
   t,
   api,
   opportunityId,
-  readOnly = false
+  readOnly = false,
+  layout = 'row'
 }: {
   t: Translate
   api: Api
   opportunityId: string
   /** The compact brief of Details: the name shows, its Edit lives on the brief sub-page (#537). */
   readOnly?: boolean
+  /** `row`: a row of the Business brief table; `item`: an item of the brief checklist (`brief-checklist.tsx`). */
+  layout?: 'row' | 'item'
 }): JSX.Element {
   const [info, setInfo] = useState<SiteLabelInfo | null>(null)
   const [editing, setEditing] = useState(false)
@@ -87,96 +90,94 @@ export function SiteNameRow({
     setEditing(true)
   }
 
+  const value = (
+    <>
+      {editing && info !== null ? (
+        <span className="tracy-wo-stack">
+          <span className="tracy-wo-row tracy-wo-wrap">
+            <Input
+              id={inputId}
+              aria-label={t('site.name.input')}
+              aria-invalid={verdict.state === 'invalid' ? true : undefined}
+              value={draft}
+              autoComplete="off"
+              spellCheck={false}
+              autoFocus
+              onChange={(event) => setDraft(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') void save()
+                if (event.key === 'Escape') setEditing(false)
+              }}
+            />
+            <span className="tracy-wo-muted tracy-wo-small">.{info.domain}</span>
+          </span>
+          <span
+            className={
+              verdict.state === 'invalid' ? 'tracy-wo-error tracy-wo-small' : 'tracy-wo-muted tracy-wo-small'
+            }
+            role="status"
+          >
+            {verdict.key !== null
+              ? t(verdict.key)
+              : verdict.state === 'checking' && typed !== ''
+                ? t('site.name.checking')
+                : verdict.state === 'free'
+                  ? t('site.name.free')
+                  : t('site.name.limits', rules)}
+          </span>
+          <span className="tracy-wo-row">
+            <Button
+              type="button"
+              size="sm"
+              disabled={busy || verdict.state !== 'free'}
+              onClick={() => void save()}
+            >
+              {busy ? <Spinner label={t('site.name.save')} /> : null}
+              {t('site.name.save')}
+            </Button>
+            <Button type="button" size="sm" variant="ghost" disabled={busy} onClick={() => setEditing(false)}>
+              {t('site.name.cancel')}
+            </Button>
+          </span>
+          {failed ? (
+            <span className="tracy-wo-error tracy-wo-small" role="alert">
+              {t('site.name.failed')}
+            </span>
+          ) : null}
+        </span>
+      ) : (
+        <span className="tracy-wo-row tracy-wo-wrap">
+          {loadFailed ? (
+            <span className="tracy-wo-muted">{t('site.name.loadFailed')}</span>
+          ) : (
+            <span>{shown !== null && info !== null ? siteAddress(shown, info) : '…'}</span>
+          )}
+          {info !== null && !readOnly ? (
+            <Button type="button" size="sm" variant="link" className="tracy-wo-site-name-edit" onClick={open}>
+              {t('site.name.edit')}
+            </Button>
+          ) : null}
+        </span>
+      )}
+      <span className="tracy-wo-brief-note">{t('site.name.hint')}</span>
+    </>
+  )
+  const source = info === null ? null : info.label ? t('brief.source.you') : t('site.name.suggested')
+  if (layout === 'item')
+    return (
+      <div className="tracy-wo-brief-it tracy-wo-site-name">
+        <span className="tracy-wo-brief-it-lab">{t('site.name.label')}</span>
+        <div className="tracy-wo-brief-it-v">{value}</div>
+        <span>{source === null ? null : <span className="tracy-wo-brief-src">{source}</span>}</span>
+        <span />
+        <span />
+      </div>
+    )
   return (
     <tr className="tracy-wo-site-name">
       <th scope="row">{t('site.name.label')}</th>
-      <td>
-        {editing && info !== null ? (
-          <span className="tracy-wo-stack">
-            <span className="tracy-wo-row tracy-wo-wrap">
-              <Input
-                id={inputId}
-                aria-label={t('site.name.input')}
-                aria-invalid={verdict.state === 'invalid' ? true : undefined}
-                value={draft}
-                autoComplete="off"
-                spellCheck={false}
-                autoFocus
-                onChange={(event) => setDraft(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter') void save()
-                  if (event.key === 'Escape') setEditing(false)
-                }}
-              />
-              <span className="tracy-wo-muted tracy-wo-small">.{info.domain}</span>
-            </span>
-            <span
-              className={
-                verdict.state === 'invalid'
-                  ? 'tracy-wo-error tracy-wo-small'
-                  : 'tracy-wo-muted tracy-wo-small'
-              }
-              role="status"
-            >
-              {verdict.key !== null
-                ? t(verdict.key)
-                : verdict.state === 'checking' && typed !== ''
-                  ? t('site.name.checking')
-                  : verdict.state === 'free'
-                    ? t('site.name.free')
-                    : t('site.name.limits', rules)}
-            </span>
-            <span className="tracy-wo-row">
-              <Button
-                type="button"
-                size="sm"
-                disabled={busy || verdict.state !== 'free'}
-                onClick={() => void save()}
-              >
-                {busy ? <Spinner label={t('site.name.save')} /> : null}
-                {t('site.name.save')}
-              </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                disabled={busy}
-                onClick={() => setEditing(false)}
-              >
-                {t('site.name.cancel')}
-              </Button>
-            </span>
-            {failed ? (
-              <span className="tracy-wo-error tracy-wo-small" role="alert">
-                {t('site.name.failed')}
-              </span>
-            ) : null}
-          </span>
-        ) : (
-          <span className="tracy-wo-row tracy-wo-wrap">
-            {loadFailed ? (
-              <span className="tracy-wo-muted">{t('site.name.loadFailed')}</span>
-            ) : (
-              <span>{shown !== null && info !== null ? siteAddress(shown, info) : '…'}</span>
-            )}
-            {info !== null && !readOnly ? (
-              <Button
-                type="button"
-                size="sm"
-                variant="link"
-                className="tracy-wo-site-name-edit"
-                onClick={open}
-              >
-                {t('site.name.edit')}
-              </Button>
-            ) : null}
-          </span>
-        )}
-        <span className="tracy-wo-brief-note">{t('site.name.hint')}</span>
-      </td>
-      <td className="tracy-wo-muted">
-        {info === null ? null : info.label ? t('brief.source.you') : t('site.name.suggested')}
-      </td>
+      <td>{value}</td>
+      <td className="tracy-wo-muted">{source}</td>
       <td />
     </tr>
   )

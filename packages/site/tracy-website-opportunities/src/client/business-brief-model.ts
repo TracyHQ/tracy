@@ -23,6 +23,8 @@ export interface BriefRow {
   ownerChoice: boolean
   /** Why the rule leaves it off the site, or that it was worked out and kept, in plain sentences. */
   notes: string[]
+  /** The string keys of `notes` (`facts.reason.<code>`), so a view can say them its own way (`brief-steps-model.ts`). */
+  noteKeys?: string[]
   /** A row shown for reference only: no switch and no edit (the website, which no door edits). */
   readOnly?: boolean
 }
@@ -150,7 +152,8 @@ export function businessBriefRows(
     source: sourceNote(row.sources, row.confidence, t, locale),
     onSite: row.onSite,
     ownerChoice: row.decidedBy === 'owner',
-    notes: reasonKeys(row).map((key) => t(key))
+    notes: reasonKeys(row).map((key) => t(key)),
+    noteKeys: reasonKeys(row)
   }))
 }
 

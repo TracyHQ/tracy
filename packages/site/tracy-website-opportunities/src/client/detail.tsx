@@ -40,7 +40,6 @@ import { ProgressBand } from './progress-band.tsx'
 import { type ApprovalView, gateText } from './seller-review.tsx'
 import { type AddSourceRefusal, addAllowedIn } from './add-source-model.ts'
 import { AddSourcePopover } from './add-source-popover.tsx'
-import { EditableText } from './editable-text.tsx'
 import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
 import { useRevisionPage } from './revision-page.ts'
@@ -64,6 +63,11 @@ import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
 import { briefSummaryRows, businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
 import { BusinessBriefTable } from './business-brief-table.tsx'
+import { BriefChecklist } from './brief-checklist.tsx'
+import type { BriefEditDoor } from './brief-checklist-item.tsx'
+import { briefMediaRows, briefMediaView } from './brief-media-model.ts'
+import { useBriefReviewMarks } from './brief-review-store.ts'
+import { briefReview, briefSteps as briefChecklistSteps, markStep } from './brief-steps-model.ts'
 import { SiteNameRow } from './site-name-row.tsx'
 import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model.ts'
 import { DemoSiteBlock } from './demo-site-block.tsx'
@@ -348,6 +352,11 @@ export function DetailView({
     void reload()
     onChanged()
   })
+  // The owner's reviewed marks of the brief checklist (#537, option E): this browser only, per brief revision.
+  const briefMarks = useBriefReviewMarks(
+    id,
+    isRecord(body?.brief) && typeof body.brief.id === 'string' ? body.brief.id : null
+  )
   if (body === null || row === null) {
     return (
       <div className="tracy-wo-page">
@@ -448,30 +457,6 @@ export function DetailView({
   const profile = isRecord(body.profile) ? body.profile : null
   // This card's own research (#524): nothing researched shows, and the brief waits, until it is done.
   const research = researchOf(body)
-  const editProfileRow = (field: string, value: string, open = false): JSX.Element | null => {
-    const view = profileEditView(profile, field)
-    if (view === null) return null
-    return (
-      <EditableText
-        key={`${field}:${value}`}
-        t={t}
-        value={value}
-        label={t(`field.${field}`)}
-        edited={view.edited}
-        editedKey="profile.editedByYou"
-        multiline={field === 'bio'}
-        startOpen={open}
-        maxLength={field === 'bio' ? 1200 : field === 'phone' ? 40 : 300}
-        onSave={async (typed) => {
-          const sent = profileEditBody(field, typed, view.value)
-          if (sent === null) return true
-          const answer = await api.editProfile(id, sent.edits)
-          if (answer.ok) void reload()
-          return answer.ok
-        }}
-      />
-    )
-  }
   // The name the site carries (the person's pick, else the one the sources agree on) titles the page.
   const shownName = nameOnSite(profile, row.name)
   // A name the brief holds off the site says so, with the neutral identity the site goes by (#1791).
@@ -501,14 +486,17 @@ export function DetailView({
     return true
   }
   // Every fact with how sure Tracy is and whether the site says it, and the key messages (#1791).
-  const toggleFact = async (factId: string, onSite: boolean | null): Promise<boolean> => {
+  // Answers null once saved, else the refusal code (the brief checklist says a lock in words, #537).
+  const setFactCode = async (factId: string, onSite: boolean | null): Promise<string | null> => {
     const answer = await api.setFact(id, factId, onSite)
-    if (!answer.ok) return false
+    if (!answer.ok) return answer.code
     setDecisionsTick((n) => n + 1)
     await reload()
     onChanged()
-    return true
+    return null
   }
+  const toggleFact = async (factId: string, onSite: boolean | null): Promise<boolean> =>
+    (await setFactCode(factId, onSite)) === null
   const keyMessages = keyMessagesView(profile)
   const saveKeyMessages = async (before: KeyMessageView[], next: KeyMessageView[]): Promise<boolean> => {
     const answer = await api.setKeyMessages(
@@ -695,39 +683,6 @@ export function DetailView({
         titled={titled}
       />
     )
-  // The name and the hours keep their own doors (`setName`, `setHours`); in the table they edit like any other fact.
-  const editNameCell = (value: string): JSX.Element => (
-    <EditableText
-      key={`name:${value}`}
-      t={t}
-      value={value}
-      label={t('field.name')}
-      edited={false}
-      editedKey="profile.editedByYou"
-      maxLength={200}
-      onSave={async (typed) => (typed.trim() === value.trim() ? true : saveName(typed.trim()))}
-    />
-  )
-  const editHoursCell = (value: string): JSX.Element => {
-    const lines = hoursRow?.hours ?? value.split(';').map((line) => line.trim())
-    return (
-      <EditableText
-        key={`hours:${lines.join('|')}`}
-        t={t}
-        value={lines.join('\n')}
-        label={t('field.hours')}
-        edited={false}
-        editedKey="profile.editedByYou"
-        multiline
-        maxLength={1200}
-        onSave={async (typed) => {
-          const hours = typedHours(typed)
-          if (hours.length === 0 || hours.join('|') === lines.join('|')) return true
-          return (await saveHours({ choice: 'edit', hours })) === 'ok'
-        }}
-      />
-    )
-  }
   // A row the seller corrected (#524) came from them, whatever research said.
   const factRows = businessBriefRows(placeProfile.profile, placeProfile.decisions, t, locale).map((r) =>
     r.field !== null && profileEditView(profile, r.field)?.edited
@@ -745,16 +700,6 @@ export function DetailView({
   )
   // Once research is done and the brief lists its facts, the Business brief table is the one place to check them.
   const tableListsFacts = research.done && briefRows.length > 0
-  const briefValue = (row: (typeof briefRows)[number]): JSX.Element | null => {
-    // The website no door edits: its link, read only.
-    if (row.readOnly) return website === null ? null : websiteLink(website)
-    // The seller's own edit shows at once, before a new brief freezes it (#524).
-    if (row.field === null || !research.done) return null
-    if (row.field === 'name') return editNameCell(row.value)
-    if (row.field === 'hours') return editHoursCell(row.value)
-    const mine = profileEditView(profile, row.field)
-    return editProfileRow(row.field, mine?.edited ? mine.value : row.value)
-  }
   const summaryRows = briefSummaryRows(briefRows)
   const mediaView = mediaRowView({ profile, media, sources })
   const profileRows = profileFields(profile)
@@ -762,14 +707,91 @@ export function DetailView({
   // The saved profile (#537 R18): what the Business facts read, the owner's edits laid on.
   const savedProfile = isRecord(body.placeProfile) ? body.placeProfile.profile : placeProfile.profile
 
-  const briefTable = (full: boolean): JSX.Element => (
+  // The compact brief of Details: its first rows, read only; the sub-page is the checklist below.
+  const briefTable = (): JSX.Element => (
     <BusinessBriefTable
       t={t}
-      rows={full ? briefRows : summaryRows}
-      firstRow={<SiteNameRow t={t} api={api} opportunityId={id} readOnly={!full} />}
-      editValue={full ? briefValue : (r) => (r.readOnly && website !== null ? websiteLink(website) : null)}
-      readOnly={!full}
+      rows={summaryRows}
+      firstRow={<SiteNameRow t={t} api={api} opportunityId={id} readOnly />}
+      editValue={(r) => (r.readOnly && website !== null ? websiteLink(website) : null)}
+      readOnly
       onToggle={toggleFact}
+    />
+  )
+  // The Site content brief sub-page as a checklist of five steps (#537, option E); locked once approved.
+  const briefLocked = approval?.brief === 'approved'
+  const briefMedia = briefMediaView(mediaView)
+  const checkSteps = briefChecklistSteps([...briefRows, ...briefMediaRows(mediaView, briefMedia, t, locale)])
+  const checkReview = briefReview(checkSteps, briefMarks.marks, briefLocked)
+  const briefApproval: ApprovalView | null =
+    approval === null
+      ? null
+      : {
+          kind: 'brief',
+          pending: effective.brief != null && (approval.brief === 'needed' || approval.brief === 'approved'),
+          approvedLine:
+            effective.brief != null && approval.brief === 'approved'
+              ? approvedLine('approve.done.brief', approval.briefApprovedAt)
+              : null,
+          onApprove: approveBrief,
+          blockedReason: checkReview.all
+            ? null
+            : t('brief.steps.approveBlocked', { total: checkSteps.length })
+        }
+  const profileDoor = (field: string, value: string): BriefEditDoor | null => {
+    const view = profileEditView(profile, field)
+    if (view === null) return null
+    return {
+      value,
+      multiline: field === 'bio' || field === 'story',
+      maxLength: field === 'bio' ? 1200 : field === 'phone' ? 40 : 300,
+      save: async (typed) => {
+        const sent = profileEditBody(field, typed, view.value)
+        if (sent === null) return true
+        const answer = await api.editProfile(id, sent.edits)
+        if (answer.ok) void reload()
+        return answer.ok
+      }
+    }
+  }
+  const briefEditDoor = (r: (typeof briefRows)[number]): BriefEditDoor | null => {
+    if (r.readOnly || r.field === null || !research.done) return null
+    if (r.field === 'name')
+      return {
+        value: r.value,
+        multiline: false,
+        maxLength: 200,
+        save: async (typed) => (typed.trim() === r.value.trim() ? true : saveName(typed.trim()))
+      }
+    if (r.field === 'hours') {
+      const lines = hoursRow?.hours ?? r.value.split(';').map((line) => line.trim())
+      return {
+        value: lines.join('\n'),
+        multiline: true,
+        maxLength: 1200,
+        save: async (typed) => {
+          const hours = typedHours(typed)
+          if (hours.length === 0 || hours.join('|') === lines.join('|')) return true
+          return (await saveHours({ choice: 'edit', hours })) === 'ok'
+        }
+      }
+    }
+    const mine = profileEditView(profile, r.field)
+    return profileDoor(r.field, mine?.edited ? mine.value : r.value)
+  }
+  const briefChecklist = (
+    <BriefChecklist
+      key={isRecord(body.brief) ? String(body.brief.id ?? '') : ''}
+      t={t}
+      steps={checkSteps}
+      review={checkReview}
+      locked={briefLocked}
+      approval={briefApproval}
+      media={briefMedia}
+      siteName={<SiteNameRow t={t} api={api} opportunityId={id} readOnly={briefLocked} layout="item" />}
+      editDoor={briefEditDoor}
+      onMark={(step) => briefMarks.save(markStep(briefMarks.marks, step))}
+      onToggle={(factId, on) => setFactCode(factId, on)}
     />
   )
 
@@ -947,8 +969,10 @@ export function DetailView({
       ) : (
         <>
           {briefLine}
-          {briefTable(true)}
-          {tableListsFacts ? <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p> : null}
+          {briefChecklist}
+          {tableListsFacts && !briefLocked ? (
+            <p className="tracy-wo-muted tracy-wo-small">{t('profile.editNote')}</p>
+          ) : null}
         </>
       )
     // Approve in the header (#537): on the Profile once research is done, on the brief once one is made and
@@ -967,16 +991,7 @@ export function DetailView({
               onApprove: approveProfile
             }
           : shown === 'brief'
-            ? {
-                kind: 'brief',
-                pending:
-                  effective.brief != null && (approval.brief === 'needed' || approval.brief === 'approved'),
-                approvedLine:
-                  effective.brief != null && approval.brief === 'approved'
-                    ? approvedLine('approve.done.brief', approval.briefApprovedAt)
-                    : null,
-                onApprove: approveBrief
-              }
+            ? briefApproval
             : null
     return (
       <div className="tracy-wo-page tracy-wo-details" ref={page}>
@@ -1074,7 +1089,7 @@ export function DetailView({
           brief: (
             <div className="tracy-wo-stack">
               {briefLine}
-              {briefTable(false)}
+              {briefTable()}
             </div>
           ),
           demo: (

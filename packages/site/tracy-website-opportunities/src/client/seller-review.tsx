@@ -33,6 +33,8 @@ export interface ApprovalView {
   pending: boolean
   /** Approves; answers the refusal code, or null when it went through. */
   onApprove: () => Promise<string | null>
+  /** Why Approve cannot be pressed yet (the brief checklist has sections to review): drawn disabled, this as its title. */
+  blockedReason?: string | null
 }
 
 /**
@@ -61,10 +63,18 @@ export function ApprovalActions({ t, view }: { t: Translate; view: ApprovalView 
         <p className="tracy-wo-muted tracy-wo-small">{view.approvedLine}</p>
       ) : null}
       {approvable ? (
-        <Button type="button" size="sm" disabled={busy} onClick={() => void press()}>
-          {busy ? <Spinner label={t('approve.saving')} /> : null}
-          {t(busy ? 'approve.saving' : 'approve.continue')}
-        </Button>
+        // A disabled button shows no tooltip of its own: the reason sits on a wrapper.
+        <span className="tracy-wo-approve-btn" title={view.blockedReason ?? undefined}>
+          <Button
+            type="button"
+            size="sm"
+            disabled={busy || Boolean(view.blockedReason)}
+            onClick={() => void press()}
+          >
+            {busy ? <Spinner label={t('approve.saving')} /> : null}
+            {t(busy ? 'approve.saving' : 'approve.continue')}
+          </Button>
+        </span>
       ) : null}
     </div>
   )

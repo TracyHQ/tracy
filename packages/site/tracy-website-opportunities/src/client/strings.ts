@@ -1094,6 +1094,49 @@ export const en = {
   'brief.table.onSite': 'On the site',
   'brief.table.none': 'Nothing to show yet. The table fills in once research has run.',
   'brief.field.other': 'Other',
+  // The Site content brief page as a checklist, one section at a time (#537, option E)
+  'brief.steps.title': 'Check each section',
+  'brief.steps.1': 'Business, contact and hours',
+  'brief.steps.2': 'Services',
+  'brief.steps.3': 'Story, messages, audience',
+  'brief.steps.4': 'Team and guest reviews',
+  'brief.steps.5': 'Social, photos, brand',
+  'brief.steps.reviewed': 'Reviewed',
+  'brief.steps.count': '{n} of {total} sections reviewed',
+  'brief.steps.onSite': '{n} of {total} on the site',
+  'brief.steps.editSection': 'Edit section',
+  'brief.steps.doneEditing': 'Done editing',
+  'brief.steps.position': 'Section {n} of {total}',
+  'brief.steps.previous': 'Previous',
+  'brief.steps.next': 'Next section',
+  'brief.steps.markNext': 'Mark reviewed, next section',
+  'brief.steps.mark': 'Mark reviewed',
+  'brief.steps.empty': 'Nothing in this section for this business.',
+  'brief.steps.approveBlocked': 'Mark all {total} sections reviewed to approve.',
+  'brief.steps.locked':
+    'This site content brief is approved and can no longer be changed. To change it, add this business again as a new card.',
+  'brief.leftOff.owner': 'Left off: you chose to keep it off the site.',
+  'brief.leftOff.other': 'Left off the site.',
+  'brief.leftOff.not-on-demo': 'Left off: this fact is not allowed on a demo.',
+  'brief.leftOff.stale': 'Left off: the source is more than a year old.',
+  'brief.leftOff.evidence-not-found': 'Left off: the source it rests on could not be found.',
+  'brief.leftOff.sender-sensitive-fact': 'Left off: it came from the sender and needs a source.',
+  'brief.leftOff.few-reviews': 'Left off: fewer than 5 reviews stand behind it.',
+  'brief.leftOff.implausible-all-week-hours':
+    'Left off: open 24 hours every day is unlikely for this kind of business.',
+  'brief.leftOff.review-only-person': 'Left off: this person is named only in guest reviews.',
+  'brief.leftOff.name-differs-from-own-marks':
+    "Left off: the business's own logo or social page uses another name.",
+  'brief.leftOff.inferred-kind-not-allowed': 'Left off: Tracy worked this out and no source states it.',
+  'brief.leftOff.allowed-inferred-kind': 'Left off the site.',
+  'brief.item.photos': 'Photos and video',
+  'brief.item.photo.one': '1 photo',
+  'brief.item.photo.other': '{n} photos',
+  'brief.item.video.one': '1 video',
+  'brief.item.video.other': '{n} videos',
+  'brief.item.and': '{a} and {b}',
+  'brief.item.brand': 'Logo and colors',
+  'brief.item.brandNote': 'Seen in the photos and pages of the business. Not an official brand.',
   'brief.source.from': 'From {list}',
   'brief.source.you': 'You entered this',
   'brief.source.inferred': 'Tracy worked this out',
@@ -1246,7 +1289,7 @@ export const en = {
   'subhead.desc.profile':
     'What Tracy found about your business. Switch off anything that should not appear on the site and edit anything that is wrong, then approve.',
   'subhead.desc.brief':
-    'The words and sections Tracy wrote for your site from the approved facts. Edit anything you would say differently, then approve.',
+    'What the site will say, section by section. Check each section and mark it reviewed, then approve.',
   'approve.continue': 'Approve and continue',
   'approve.saving': 'Approving…',
   'approve.done.profile': 'Business facts approved {date}',
@@ -1259,6 +1302,10 @@ export const en = {
   'gate.NO_BRIEF': 'Make a site content brief first.',
   'gate.BRIEF_STALE':
     'This site content brief was made from older business facts. Make it again, then approve it.',
+  'gate.BRIEF_APPROVED':
+    'The site content brief is approved. To change it, add this business again as a new card.',
+  'gate.PROFILE_APPROVED':
+    'The business facts are approved. To change them, add this business again as a new card.',
   'gate.other': 'That did not work. Try again in a moment.',
 
   /** Add source (#537): one more link of the business. */
