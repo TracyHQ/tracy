@@ -3207,7 +3207,7 @@ Add site describes a server-owned wait as building, with elapsed minutes from th
 than promising a chat. The browser keeps its business reference through a failed build or failed poll so reopening
 follows the same work. An eligible failed action offers explicit Retry through the existing own-site build door with
 `retryOf`; it sends no new research or template selection. Blocked immutable briefs and lost or deleted sites have no
-retry control. A later research press also follows an earlier own-site action while its base still exists, including a stopped or completed action, instead of offering a template the build door would refuse with `BUILD_EXISTS`. Replaced actions and deleted bases are excluded. Retry still keeps the original frozen revision; research does not silently rewrite it.
+retry control. A later research press also follows an earlier own-site action while its base still exists, including a stopped or completed action, instead of offering a template the build door would refuse with `BUILD_EXISTS`. Replaced actions and deleted bases are excluded. Retry still keeps the original frozen revision; research does not silently rewrite it. The failed-build Try again controls on the opportunity list and Details send that action as `retryOf`, without opening the template picker. Missing parent actions stop before a build request. A newly approved content brief is not rebound onto an earlier failed build; a retry still operates on the earlier action’s frozen revision, and a refused retry never falls back to a new build.
 
 For a Joomla header without menu label slots, the write step can identify its main menu from an unambiguous
 intersection of the plan's kept page paths and the released content map's menu identities. It hides only unplanned
