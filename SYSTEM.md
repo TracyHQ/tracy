@@ -2497,7 +2497,10 @@ steps: a step still going then is stopped, its best version used, no new 9b work
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
-(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Once the site is up and every input
+(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. The brand boundary receives the
+frame's selected primary site language. Only when the research has no brand voice, it supplies that language name alone
+in the brand run's input and records `brand-brief-language/1` in `brief_source`; it invents no tone, preserves an authored voice,
+and never rewrites the WO revision. A missing or unknown selected language cannot supply a voice. Once the site is up and every input
 is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
 (`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. The write never leaves demo content: a step that
 fails does not stop the others (what reads its output is skipped), a failed run that still made versions hands over its best

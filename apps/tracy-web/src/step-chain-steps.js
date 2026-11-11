@@ -205,7 +205,14 @@ export function createStepChainSteps(deps) {
       const dir = path.join(await folderOf(ctx), 'brand')
       const ran = await benchRun(
         'brand',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), ...NO_CAPS],
+        [
+          '--kit',
+          kit.ref,
+          '--brief-revision',
+          revisionOf(ctx),
+          ...(ctx.normalized?.languages?.[0] ? ['--site-language', ctx.normalized.languages[0]] : []),
+          ...NO_CAPS
+        ],
         dir,
         signal
       )

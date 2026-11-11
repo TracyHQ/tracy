@@ -1,0 +1,3 @@
+- **Fill an absent brand voice from the build's selected site language at the brand bench boundary.** — WO pipeline maintainers · #558 · `fix/wo-brand-language-input` · 2026-11-11
+  **Affects:** Brand bench callers and WO step-chain builds. The chain passes its selected normalized language; the bench records a versioned input projection without changing research revisions or authored voice. Rebuild and deploy the web service to activate it.
+  **Why / Measured:** Website research may legitimately have no social voice. The previous shape gate refused such a brief before queueing a brand run. Missing or invalid selected languages still refuse; no business tone or language is inferred from research.

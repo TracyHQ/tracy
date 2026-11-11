@@ -13,7 +13,8 @@
  * The template kit is fetched and checked first, before anything forks. The Write step is step 9 whole
  * (`write-step-nine.js` `runStepNine`: write, Site check, 9b repair pass, recheck, hand-over); it waits for the base site,
  * the brand, the copy and the pictures. Every model step reads the research revision the benches read
- * (`brief.researchRevisionId`), with no adapter.
+ * (`brief.researchRevisionId`). The brand boundary alone can fill a missing voice from the frame's selected site language,
+ * recording that projection on the brand run without changing the revision.
  *
  * 🔒 EVERY WRITE GOES THROUGH THE SETUP DOOR UNDER THE RUN'S ID. The Write step is handed one site door,
  * `applyFor(email, runId)` (the Apply door as the person who pressed Build, `applyAs(..., { setupRun })`), so Site changes

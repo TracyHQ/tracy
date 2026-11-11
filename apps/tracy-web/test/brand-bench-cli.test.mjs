@@ -155,3 +155,46 @@ test(
     k.done()
   }
 )
+
+test(
+  'the CLI projects a missing brand voice from the selected language and records its origin without changing the input',
+  opts,
+  async () => {
+    const c = await brandCase()
+    delete c.brief.brand.voice
+    const original = JSON.stringify(c.brief)
+    const k = cli(c)
+    try {
+      await assignBrandDoors(db.pool)
+      writeFileSync(path.join(k.dir, 'brief.json'), original)
+      assert.equal(
+        await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--site-language', 'zz']),
+        1
+      )
+      assert.match(k.err.at(-1), /BRAND_SITE_LANGUAGE_REQUIRED/)
+      assert.equal((await db.pool.query('select count(*)::int as n from brand_run')).rows[0].n, 0)
+      assert.equal(
+        await k.run(['run', '--kit', KIT_REF, '--brief-file', 'brief.json', '--site-language', 'es']),
+        0
+      )
+      const row = (
+        await db.pool.query('select brief, brief_source from brand_run where id=$1', [k.out.at(-1)])
+      ).rows[0]
+      assert.equal(row.brief.brand.voice, 'Spanish')
+      assert.deepEqual(row.brief_source, {
+        kind: 'file',
+        name: 'brief.json',
+        brandBriefProjection: {
+          version: 'brand-brief-language/1',
+          source: 'selected-site-language',
+          tag: 'es',
+          language: 'Spanish'
+        }
+      })
+      assert.equal(readFileSync(path.join(k.dir, 'brief.json'), 'utf8'), original)
+      assert.equal(JSON.stringify(c.brief), original)
+    } finally {
+      k.done()
+    }
+  }
+)
