@@ -22102,6 +22102,48 @@
       "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
       "count": 1,
       "reason": "Exact line of the JA Diner WP7 1.0.4 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "e15b643bc50b25c45251d70454b377da48ffa62e9566dc176902e12344cbdcbf",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "22d97fa0a82f65955c75ce10140a85291269d39749ee6086f1a078d20283eb03",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "60cb539484098ee1d244125358a5302bf765cf6d2a4a80fd70a986e628b9f916",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "7f5d731edef7f8053f74cca1a60dbe2529596ec45de70cbe4d5671255f575a97",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "d330e22cc2e706ec25c6d78e0ced92f38a96c2e1614103772b990357a1716439",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "1073435f8906709bcfeaf8e2834015df547a3ae9011e2d346f2d2e6b90d2fe39",
+      "count": 2,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "7333d03274ee1f6f74ce44af34dfa0aa514f7d635b13cce7451b33bf8dbc1664",
+      "count": 2,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
     }
   ],
   "objects": [
