@@ -49,7 +49,7 @@ test('the same host on another port or scheme is another origin', () => {
 
 test('uploadPicture sends the bytes through that request and confirms the upload on the site', async () => {
   const calls = []
-  const api = async (method, route, body) => {
+  const api = async (method, route, _body) => {
     calls.push([method, route])
     if (route === '/_emdash/api/media/upload-url')
       return { mediaId: 'm1', uploadUrl: 'https://bucket.storage.example/up/m1?sig=1', headers: { 'x-amz-acl': 'private' } }
