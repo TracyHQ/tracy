@@ -37,3 +37,15 @@ Final end-to-end WO timing, independent image-review completion and five-site cu
 Latest integration includes develop `bb8ecd1769` and the empty-fill guidance fix. Four official deterministic cases passed on `425c5f7d2e`: actual brand spot files (28 tests), selected-language input (10), empty-fill recovery (10), and interrupted measurement (72). All 120 tests passed with zero skips. Script cases execute this branch's code directly; the existing stand URL is not evidence that the stand runs the candidate.
 
 The final integrated lint, typecheck and formatting check passed in 41.75 seconds with 542 existing warnings. The actual dev website was read again through the existing authenticated David browser session: `/api/build` reported `bb8ecd1769`. No login interaction or dev server access was needed.
+
+Of 62 integrated static gates, 60 passed initially. The vocabulary check caught three journal terms; the design registry caught the Diner pin's canonical provisioning copy not matching the web copy. Both were corrected in `799ea3ccd1`, and both gates passed on rerun. The private release-gallery comparison remains explicitly skipped because its token is not present.
+
+## Current runtime and coverage boundaries
+
+The owned local web was updated to an immutable `799ea3ccd1` source overlay. All 2,114 checked runtime files match, as does the host's canonical quickstart pin. Existing networks, stored research and historical run artifacts were preserved. This is source-overlay verification, not a clean native-image build.
+
+A fresh read of the local role assignments and persisted call receipts supersedes the older missing-provider handoff. Independent Brand review and Picture looker use `openai/gpt-6-luna` through OpenRouter; Picture drawer uses `google/gemini-3.1-flash-lite-image`. Their assignments are enabled and usable, and historical actual answered calls exist. Brand agent and Picture picker use DeepSeek. No provider or key was changed for this verification. Current end-to-end runs still need their own successful receipts.
+
+The failed dev FIGHTLAND site's public output was captured and opened at 1440 and 390 pixels: stock Boxing branding, hero copy and template title remain. There is no observed horizontal overflow at those widths, but the site fails customer personalization acceptance. This confirms the failed baseline run's QA decision; it is not a test of the follow-up deployment.
+
+The current release inventory has five published kit variants across four design families. Only Boxing J6 and Diner J6 are enabled for the full chain. Voyara J6 and Diner WP7 are outside its allowlist; Restaurant EmDash 1.0.2 also lacks production bench contract registration. Gallery visibility and kit approval alone do not prove full-chain support. Five businesses through Boxing do not satisfy five-template acceptance.

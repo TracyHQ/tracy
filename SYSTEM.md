@@ -2500,7 +2500,12 @@ queued through the bench's own command line on the revision and played by the be
 (`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. The brand boundary receives the
 frame's selected primary site language. Only when the research has no brand voice, it supplies that language name alone
 in the brand run's input and records `brand-brief-language/1` in `brief_source`; it invents no tone, preserves an authored voice,
-and never rewrites the WO revision. A missing or unknown selected language cannot supply a voice. Once the site is up and every input
+and never rewrites the WO revision. A missing or unknown selected language cannot supply a voice.
+New Brand runs also record `brand-held-name-check/1`: a missing or withheld name keeps `logo.name` and composed-name
+variants null instead of demanding unused name files. Fitted standalone marks still require independent review,
+contrast checks and the existing confirm-name owner task. The safe version uses the same recorded name decision,
+so reaching a gate or cost limit cannot render a withheld name. Historical runs retain their recorded checker.
+Once the site is up and every input
 is ready, step 9 runs whole (`runStepNine`), every Apply call through the setup door under the run's id
 (`applyAs(..., { setupRun })`), so Site changes shows one Tracy setup row. The write never leaves demo content: a step that
 fails does not stop the others (what reads its output is skipped), a failed run that still made versions hands over its best

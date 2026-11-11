@@ -78,7 +78,8 @@ export async function playRound(deps, { row, ready, round, followUp, leaseToken,
         brief: row.brief,
         kit: ready.kit.doc,
         files: ready.ctx.files,
-        spotCheck: row.harness.brandSpotCheck ?? null
+        spotCheck: row.harness.brandSpotCheck ?? null,
+        heldNameCheck: row.harness.brandHeldNameCheck ?? null
       })
     : { ok: false, rejected: [NO_FILE] }
   if (gate.ok) {

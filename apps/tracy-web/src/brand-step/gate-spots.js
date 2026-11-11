@@ -1,6 +1,6 @@
 // Validate the image a spot actually writes, independently of the agent's declared shown variant.
 import sharp from 'sharp'
-import { LOGO_BLOCK_SHARE, LOGO_GONE_RATIO } from '../site-check/theme-reads.js'
+import { LOGO_BLOCK_SHARE, LOGO_GONE_RATIO } from '../lib/logo-contrast.js'
 
 export const BRAND_SPOT_CHECK = 'brand-spot-check/1'
 

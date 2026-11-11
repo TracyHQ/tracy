@@ -18,7 +18,7 @@ import { BRAND_SPOT_CHECK, checkSpotImages } from './gate-spots.js'
 import { checkFaviconSet } from './gate-favicon.js'
 import { checkImages, checkOwnerTasks } from './gate-finish.js'
 import { createContext } from './gate-context.js'
-import { checkLooks, checkNameLogos, checkSpotsAndShown } from './gate-logo.js'
+import { BRAND_HELD_NAME_CHECK, checkLooks, checkNameLogos, checkSpotsAndShown } from './gate-logo.js'
 import { checkMaterialAndMark } from './gate-mark.js'
 import { checkColours, checkHeaderAndName } from './gate-name-colours.js'
 import { kitProblem } from './kit-grounds.js'
@@ -26,16 +26,26 @@ import { kitProblem } from './kit-grounds.js'
 const reject = (field, why) => ({ ok: false, rejected: [{ field, why }] })
 const isObject = (x) => x && typeof x === 'object' && !Array.isArray(x)
 
-export async function checkBrandFile({ brandFile, brief, kit, files, spotCheck = BRAND_SPOT_CHECK }) {
+export async function checkBrandFile({
+  brandFile,
+  brief,
+  kit,
+  files,
+  spotCheck = BRAND_SPOT_CHECK,
+  heldNameCheck = BRAND_HELD_NAME_CHECK
+}) {
   if (!isObject(brandFile)) return reject('(file)', 'the brand file must be a JSON object')
   if (!isObject(brief)) return reject('(brief)', 'the brief is needed to check the name and colours')
   if (spotCheck !== null && spotCheck !== BRAND_SPOT_CHECK)
     return reject('(spot check)', 'unsupported brand spot check version')
+  if (heldNameCheck !== null && heldNameCheck !== BRAND_HELD_NAME_CHECK)
+    return reject('(held name check)', 'unsupported held name check version')
   const problem = kitProblem(kit)
   if (problem) return reject('(kit)', problem)
   if (!files || typeof files.has !== 'function' || typeof files.read !== 'function')
     return reject('(files)', 'a file folder with has() and read() is needed')
   const ctx = createContext({ brandFile, brief, kit, files })
+  ctx.heldNameCheck = heldNameCheck
   try {
     checkHeaderAndName(ctx)
     checkColours(ctx)
