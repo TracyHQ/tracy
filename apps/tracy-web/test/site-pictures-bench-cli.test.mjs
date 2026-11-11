@@ -88,7 +88,7 @@ test(
       const status = await cli(['status', id], cwd)
       assert.equal(status.code, 0)
       assert.match(status.out.join('\n'), /state\s+succeeded \(after round 0\)/)
-      assert.match(status.out.join('\n'), /site-pictures-check\/3: \d+ pass, 0 fail/)
+      assert.match(status.out.join('\n'), /site-pictures-check\/4: \d+ pass, 0 fail/)
       assert.match((await cli(['list'], cwd)).out.join('\n'), new RegExp(id))
 
       const got = await cli(['get', id, '--out', 'run-files'], cwd)
