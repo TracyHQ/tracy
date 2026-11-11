@@ -307,7 +307,7 @@ export function readinessOfBuild(revision, domain) {
 }
 
 /** What a build keeps of a readiness: its verdict, next step, the checks that were not passed and the owner questions. */
-function readinessNote(readiness) {
+export function readinessNote(readiness) {
   return {
     verdict: readiness.verdict,
     next: readiness.next,

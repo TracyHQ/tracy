@@ -80,12 +80,11 @@ export const changeSentence = (fault) => {
  */
 function levelsOf(fault) {
   const record = recordOf(fault.slot) ?? recordOf(fault.block)
+  const writable = !fault.altBlocked
   return [
-    ...(fault.slot ? [{ kind: 'field', label: slotLabelOf(fault), writable: true }] : []),
-    ...(fault.block ? [{ kind: 'block', label: fault.block, writable: true }] : []),
-    ...(record
-      ? [{ kind: 'record', label: `${record.kind} ${record.id}`, native: record, writable: true }]
-      : [])
+    ...(fault.slot ? [{ kind: 'field', label: slotLabelOf(fault), writable }] : []),
+    ...(fault.block ? [{ kind: 'block', label: fault.block, writable }] : []),
+    ...(record ? [{ kind: 'record', label: `${record.kind} ${record.id}`, native: record, writable }] : [])
   ]
 }
 
@@ -98,7 +97,7 @@ function levelsOf(fault) {
  */
 export function commentItem(fault, { url, element = null, located = null }) {
   const levels = levelsOf(fault)
-  const answer = located?.answer ?? null
+  const answer = fault.altBlocked ? null : (located?.answer ?? null)
   const measured = typeof fault.measured === 'string' ? fault.measured : ''
   return {
     page: fault.page,
@@ -115,7 +114,9 @@ export function commentItem(fault, { url, element = null, located = null }) {
     },
     locate: answer ?? { status: 'unchecked', levels },
     locateFrom: answer ? 'content.locate' : 'fault',
-    ...(answer ? {} : { locateProblem: located?.problem ?? 'content.locate was not asked' })
+    ...(answer
+      ? {}
+      : { locateProblem: fault.altBlocked ?? located?.problem ?? 'content.locate was not asked' })
   }
 }
 
@@ -124,7 +125,7 @@ export function commentItem(fault, { url, element = null, located = null }) {
  * @param {(comment: object) => string} buildCommentTurn
  */
 export function pageTurn(buildCommentTurn, items, numbers) {
-  return buildCommentTurn({
+  const comments = buildCommentTurn({
     numbered: true,
     items: items.map((item, i) => ({
       n: numbers[i],
@@ -134,4 +135,5 @@ export function pageTurn(buildCommentTurn, items, numbers) {
       locate: item.locate
     }))
   })
+  return `${comments}\n\nThis is an automated site build with no person waiting in this session. Do not ask the user questions or wait for uploads or approval. Use the existing business assets; when none can replace a demo picture, remove or hide the demo content through the supported site doors. Preserve the site navigation and required controls. If a site door returns CONFIRM_FIRST or another refusal requiring customer consent, do not ask its question, retry with confirm:true, or bypass the refusal through files or another door. Record that change as blocked and continue with independent repairs. If a supported change is unavailable, record what remains and finish the turn. Never invent business facts or pictures.`
 }

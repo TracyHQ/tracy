@@ -16,6 +16,7 @@ export const USAGE = `usage: node scripts/site-planner-bench.mjs <command>
   run --kit <ref> --brief-revision <id>   queue a run on the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
       [--no-caps]                         run without the USD budget (a step of a chain build)
+      [--require-visual-review]           verify delivered kit images before accepting a WO plan
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, duration, checker summary
   get <runId> --out <dir>                 write every plan version, the check and failure list of each round,
@@ -48,6 +49,7 @@ export async function runCli(argv, deps) {
         'brief-revision': { type: 'string' },
         by: { type: 'string' },
         'no-caps': { type: 'boolean' },
+        'require-visual-review': { type: 'boolean' },
         limit: { type: 'string' },
         out: { type: 'string' }
       }
@@ -161,6 +163,7 @@ async function startRun(d, values) {
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     kitImages: d.kitImages,
     noCaps: values['no-caps'] === true,
+    requireVisualReview: values['require-visual-review'] === true,
     ...(d.index ? { index: d.index } : {})
   })
   if (!started.ok) return refused(d, `${started.code}: ${started.reason}`)

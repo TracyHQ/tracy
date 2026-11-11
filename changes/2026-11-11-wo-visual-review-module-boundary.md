@@ -1,0 +1,3 @@
+- **Share delivered kit-image evidence without crossing planner and writer domain boundaries.** — WO pipeline maintainer · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** Planner and writer visual-review readers; rebuild tracy-web. Both domains import the same pure evidence reader from `lib/kit-image-review.js`, while the planner preserves its existing exported API and each domain keeps its own coverage policy.
+  **Why / Measured:** The module graph gate rejected the writer importing the planner domain. No policy, hash validation, answered-turn ordering or image-delivery requirement changes.

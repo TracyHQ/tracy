@@ -62,7 +62,7 @@ test('a run whose calls already cost more than its budget stops before the next 
   assert.equal(run.harness.budgetUsd, 2)
   assert.match(
     run.error,
-    /^SITE_PLANNER_BUDGET: the conversation has cost \$3\.0000, past its budget of \$2\.00/
+    /^SITE_PLANNER_BUDGET: the conversation has cost \$3\.0000, at or past its budget of \$2\.00/
   )
   assert.equal(model.requests.length, 2, 'a call went out past the budget')
   assert.equal(run.costUsd, 3)

@@ -77,7 +77,8 @@ test('a turn that throws is logged for its page, the other pages proceed, and th
     agent,
     clock
   })
-  assert.equal(result.repair.status, 'done')
+  assert.equal(result.repair.status, 'incomplete')
+  assert.equal(result.report.status, 'stopped')
   assert.deepEqual(result.repair.turns.map((t) => t.page).sort(), ['/', '/contact'])
   assert.deepEqual(agent.sent.undone, [], 'the turns of the other pages are kept')
   assert.deepEqual(
@@ -90,4 +91,23 @@ test('a turn that throws is logged for its page, the other pages proceed, and th
     '/',
     '/contact'
   ])
+})
+
+test('a failed scripted write checkpoint stops before checks or native repair prompts', async () => {
+  const agent = fakeAgent()
+  const { result, checksRun, saved } = await stepNine({
+    checks: [checkOf([DEMO])],
+    agent,
+    input: {
+      beforeRepair: async () => {
+        throw new Error('setup moment did not finish')
+      }
+    }
+  })
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(result.report.cause.code, 'STEP_NINE_BASELINE_UNPROVEN')
+  assert.equal(checksRun, 0)
+  assert.equal(agent.sent.opened, 0)
+  assert.equal(agent.sent.prompts.length, 0)
+  assert.equal(saved.get('site-write-report.json').cause.reason, 'setup moment did not finish')
 })

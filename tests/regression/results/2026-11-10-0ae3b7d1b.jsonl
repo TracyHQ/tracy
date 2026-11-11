@@ -1,0 +1,2 @@
+{"id":"REG-PR-541-brief-startup-recovery","verdict":"PASS","commit":"0ae3b7d1b6caaa67b7e12daf24cea7d17241f847","ran_at":"2026-11-10T14:51:17.093Z","evidence":"REG-PR-541-brief-startup-recovery.log"}
+{"id":"REG-PR-541-failed-research-media-recovery","verdict":"PASS","commit":"0ae3b7d1b6caaa67b7e12daf24cea7d17241f847","ran_at":"2026-11-10T14:51:22.964Z","evidence":"REG-PR-541-failed-research-media-recovery.log"}

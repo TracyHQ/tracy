@@ -49,7 +49,8 @@ const frozenRead = () => ({
 })
 
 /** A pool that answers the statements `createRevision` sends for an opportunity with no place. */
-function fakePool() {
+function fakePool(initialRows = []) {
+  const revisions = [...initialRows]
   const opp = {
     id: 'opp-1',
     account_id: 'acc-1',
@@ -62,7 +63,12 @@ function fakePool() {
       const s = sql.replace(/\s+/g, ' ').trim()
       if (/^(begin|commit|rollback)$/.test(s)) return { rows: [] }
       if (s.startsWith('select * from wo_opportunity')) return { rows: [opp] }
-      if (s.startsWith('select * from wo_revision')) return { rows: [] }
+      if (s.startsWith('select * from wo_revision where opportunity_id'))
+        return {
+          rows: revisions.filter((r) => r.opportunity_id === params[0] && r.research_hash === params[1])
+        }
+      if (s.startsWith('select * from wo_revision where id'))
+        return { rows: revisions.filter((r) => r.id === params[0]) }
       if (s.startsWith('insert into wo_revision')) {
         const cols = s.slice(s.indexOf('(') + 1, s.indexOf(')')).split(',')
         const values = [...params]
@@ -71,13 +77,14 @@ function fakePool() {
         for (const key of Object.keys(row))
           if (typeof row[key] === 'string' && /^[[{n]/.test(row[key]) && key !== 'brief_md')
             row[key] = JSON.parse(row[key])
+        revisions.push(row)
         return { rows: [row] }
       }
       throw new Error(`unexpected statement: ${s}`)
     },
     release() {}
   }
-  return { connect: async () => client }
+  return { connect: async () => client, revisions }
 }
 
 const labelled = async () => ({
@@ -112,4 +119,56 @@ test('labels the store keeps on a picture (not vision) still count as research',
     media: read.media.map((m, i) => (i ? m : { ...m, labels: { category: 'menu' } }))
   }
   assert.notEqual(researchKey(domain, withOwn), researchKey(domain, read))
+})
+
+test('the scene-lettering brief rules make a fresh revision from cached research while preserving the historical brief', async () => {
+  const historical = {
+    id: 'legacy-rev',
+    opportunity_id: 'opp-1',
+    account_id: 'acc-1',
+    research_hash: researchKey({ ...domain, BRIEF_RULES_VERSION: 3 }, frozenRead()),
+    brief: { assets: [{ id: 'pool', hasTextOrWatermark: false }] }
+  }
+  const before = structuredClone(historical)
+  const pool = fakePool([historical])
+  const args = {
+    accountId: 'acc-1',
+    opportunityId: 'opp-1',
+    domain,
+    frozenResearchRead: frozenRead(),
+    researchSnapshotAt: at,
+    now: () => Date.parse(at),
+    pictureLabels: async () => ({
+      labels: new Map([
+        [
+          'pool',
+          {
+            key: 'm|p6',
+            model: 'm',
+            labels: {
+              content: 'venue-exterior',
+              textPresence: 'present',
+              hasTextOrWatermark: false,
+              hasTextOverlay: false
+            }
+          }
+        ]
+      ]),
+      note: { status: 'labelled', asked: 0, labelled: 1, cached: 1, max: 24 }
+    })
+  }
+  const made = await createRevision(pool, args)
+  assert.ok(made.revision, JSON.stringify(made))
+  assert.notEqual(made.revision.id, historical.id)
+  assert.notEqual(made.revision.research_hash, historical.research_hash)
+  assert.equal(made.reused, undefined)
+  const asset = made.revision.brief.assets.find((a) => a.id === 'pool')
+  assert.equal(asset.textPresence, 'present')
+  assert.equal(asset.hasTextOrWatermark, false)
+  assert.equal(made.revision.brief.assetLabelling.cached, 1)
+  assert.deepEqual(historical, before)
+  const same = await createRevision(pool, args)
+  assert.equal(same.reused, true)
+  assert.equal(same.revision.id, made.revision.id)
+  assert.equal(pool.revisions.length, 2)
 })

@@ -218,3 +218,29 @@ test('revisionForAction answers pending and makes no brief while the photographs
   assert.equal(made.revision.brief.assetLabelling.status, 'labelled')
   assert.equal(held.asked.length, 1)
 })
+
+test('an overdue picture run freezes no revision; a later prepare adopts its settled labels', async () => {
+  const db = fakeDb()
+  const held = heldLabelling()
+  let clock = at
+  const runs = createPictureLabelRuns({ label: held.label, now: () => clock })
+  const ask = () =>
+    revisionForAction(db, {
+      action,
+      domain,
+      templates: async () => [],
+      ops: {},
+      now: () => clock,
+      pictureLabelRuns: runs
+    })
+  assert.equal((await ask()).pending, true)
+  clock += PICTURE_LABELS_OVERDUE_MS
+  assert.deepEqual(await ask(), { error: 'DEMO_PICTURE_LABELS_TIMEOUT' })
+  assert.equal(db.inserted.length, 0, 'no permanent empty snapshot while paid labels are still in flight')
+  held.settle(labelled())
+  await runs.idle()
+  const made = await ask()
+  assert.equal(db.inserted.length, 1)
+  assert.equal(made.revision.brief.assetLabelling.status, 'labelled')
+  assert.equal(held.asked.length, 1, 'adopts the first run without another provider charge')
+})

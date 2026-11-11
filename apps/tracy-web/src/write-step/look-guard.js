@@ -29,6 +29,10 @@ const EXCEPTIONS = Object.freeze({
   'created-page-rows':
     'a created page is new, so its rows change nothing the template had; they carry the mark, and hold no setting that restyles anything',
   hide: 'taking a block, a row, a slot or a form off is the plan hide decision (decision 2): it removes an element and restyles none of those left',
+  'planned-menu-hierarchy':
+    'a kept menu item takes the parent explicitly selected by the plan through Joomla tree move and undo, and its breadcrumb title takes the writer page title; no layout changes',
+  'phone-logo-theme':
+    'the exact T4 offcanvas theme rules choose one existing light or dark logo wrapper, preserving Bootstrap breakpoint visibility; arbitrary display rules remain refused',
   'phone-logo-css':
     'when a template has no small logo setting the head block shows it by content:url, and height:auto keeps the picture in its own proportion',
   'picture-fallback':

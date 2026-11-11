@@ -1716,6 +1716,102 @@ test(
   }
 )
 
+test('setupWebroot: an explicit setup budget awaits the same opening job past 45 seconds', opts, async () => {
+  const { pool } = db
+  await ownedSite(pool)
+  await pool.query(`update site set platform = 'joomla' where site_key = 'lantern.localhost'`)
+  const { fetchImpl, calls } = fakeNetwork({
+    siteJob: {
+      states: ['running', 'done'],
+      output: JSON.stringify({ ok: true, head: 'a'.repeat(40), sealed: null, skipped: null, outside: [] })
+    }
+  })
+  const { app } = harness(pool, {
+    fetchImpl,
+    // Admission, its timeout, the first loop, the first poll, the second loop, the final poll.
+    now: stepClock([0, 0, 0, 60_000, 60_000, 105_000])
+  })
+  assert.deepEqual(
+    await app.setupWebroot('open', {
+      siteKey: 'lantern.localhost',
+      runId: '0f6c8a52-6a63-4f0c-9d3e-3b1f2f0d7a11',
+      email: 'owner@x.y',
+      waitMs: 180_000
+    }),
+    { held: true }
+  )
+  assert.deepEqual(
+    hostSiteCalls(calls).map((call) => JSON.parse(call.init.body)),
+    [{ kind: 'webroot-seal-outside', turn: 'setup-0f6c8a52-6a63-4f0c-9d3e-3b1f2f0d7a11:1', label: 'lantern' }]
+  )
+  assert.equal(calls.filter((call) => call.url.endsWith('/_host/jobs/site-job-1')).length, 2)
+  const { rows } = await pool.query('select id, state from job where id = $1', ['site-job-1'])
+  assert.deepEqual(rows, [{ id: 'site-job-1', state: 'done' }])
+})
+
+test('setupWebroot: an explicit setup budget still rejects a terminal opening failure', opts, async () => {
+  const { pool } = db
+  await ownedSite(pool)
+  await pool.query(`update site set platform = 'joomla' where site_key = 'lantern.localhost'`)
+  const { fetchImpl, calls } = fakeNetwork({
+    siteJob: { states: ['running', 'failed'], output: 'opening seal refused: disk full' }
+  })
+  const { app } = harness(pool, {
+    fetchImpl,
+    now: stepClock([0, 0, 0, 60_000, 60_000, 105_000])
+  })
+  await assert.rejects(
+    app.setupWebroot('open', {
+      siteKey: 'lantern.localhost',
+      runId: '0f6c8a52-6a63-4f0c-9d3e-3b1f2f0d7a11',
+      email: 'owner@x.y',
+      waitMs: 180_000
+    }),
+    /opening seal refused: disk full/
+  )
+  assert.equal(hostSiteCalls(calls).length, 1)
+  assert.equal(calls.filter((call) => call.url.endsWith('/_host/jobs/site-job-1')).length, 2)
+  assert.equal((await pool.query('select count(*)::int as count from site_write')).rows[0].count, 0)
+})
+
+test('setupWebroot: a skipped seal preserves outside history but proves no setup hold', opts, async () => {
+  const { pool } = db
+  await ownedSite(pool)
+  await pool.query(`update site set platform = 'joomla' where site_key = 'lantern.localhost'`)
+  const sha = 'c'.repeat(40)
+  for (const skipped of ['turn-open', 'future-host-refusal']) {
+    const { fetchImpl, calls } = fakeNetwork({
+      siteJob: {
+        output: JSON.stringify({
+          ok: true,
+          head: sha,
+          sealed: null,
+          skipped,
+          outside: [{ sha, files: ['old.css'], at: 1791700000, parentAt: 1791699900, cause: 'seal' }]
+        })
+      }
+    })
+    const { app } = harness(pool, { fetchImpl })
+    await assert.rejects(
+      app.setupWebroot('open', {
+        siteKey: 'lantern.localhost',
+        runId: '0f6c8a52-6a63-4f0c-9d3e-3b1f2f0d7a11',
+        email: 'owner@x.y'
+      }),
+      /setup opening seal was skipped/
+    )
+    assert.deepEqual(
+      hostSiteCalls(calls).map((c) => JSON.parse(c.init.body).kind),
+      ['webroot-seal-outside']
+    )
+  }
+  const { rows } = await pool.query('select sha, cause from site_outside where site_key = $1', [
+    'lantern.localhost'
+  ])
+  assert.deepEqual(rows, [{ sha, cause: 'seal' }])
+  assert.equal((await pool.query('select count(*)::int as count from site_write')).rows[0].count, 0)
+})
+
 test('setupWebroot: an EmDash site keeps no webroot history, so nothing is held', opts, async () => {
   const { pool } = db
   const { fetchImpl, calls } = fakeNetwork()
@@ -6586,7 +6682,7 @@ test(
 test(
   "option A: when the earlier moment ended in its door's wait, the next turn's first write waits not at all",
   opts,
-  async (t) => {
+  async () => {
     const { pool } = db
     const { createTurnBook } = await import('../../../packages/site/tracy-site-tabs/src/host/turn-record.mjs')
     const { held } = await lateHarness(pool, {
@@ -6623,11 +6719,17 @@ test(
     // ended in its own door's wait. Once the open has answered, writes go at once.
     assert.ok(sent.includes('turn/undone'), 'the second turn read its undone list early')
     await book.writeReady({ sessionId: 'session-pf' })
-    const started = performance.now()
-    assert.equal(await book.writeReady({ sessionId: 'session-pf' }), false)
-    const waited = performance.now() - started
-    t.diagnostic(`p5-no-wait ${waited.toFixed(3)} ms`)
-    assert.ok(waited < 5, `${waited.toFixed(2)} ms`)
+    const before = sent.length
+    let settled = false
+    const ready = book.writeReady({ sessionId: 'session-pf' }).then((waited) => {
+      settled = true
+      return waited
+    })
+    // A ready write settles in its first microtask, without waiting on an open, a hold or a door.
+    await Promise.resolve()
+    assert.equal(settled, true, 'the write needs no asynchronous wait')
+    assert.equal(await ready, false)
+    assert.equal(sent.length, before, 'a ready write opens no additional door')
     assert.equal(sent.includes('moment/wait'), false, 'tracy-web is not even asked')
   }
 )

@@ -192,7 +192,14 @@ export function scopedTo(check, pages) {
  * site agent fake, `files` frozen files beside the plan and copy (a brief). A check asked for some `pages` holds only
  * their failures (`scopedTo`).
  */
-export async function stepNine({ checks, agent, clock = fakeClock(), input = {}, files = {} }) {
+export async function stepNine({
+  checks,
+  agent,
+  clock = fakeClock(),
+  input = {},
+  files = {},
+  contentMap = null
+}) {
   const site = fakeSite()
   const frozen = frozenFiles(files)
   const ran = []
@@ -201,7 +208,7 @@ export async function stepNine({ checks, agent, clock = fakeClock(), input = {},
   const logged = []
   try {
     const result = await runStepNine({
-      write: { door: site.door, siteKey: SITE, kit: KIT(), contentMap: null, files: frozen.files },
+      write: { door: site.door, siteKey: SITE, kit: KIT(), contentMap, files: frozen.files },
       checkSite: async (report, options) => {
         ran.push(report)
         checkOptions.push(options)

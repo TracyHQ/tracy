@@ -633,6 +633,19 @@ frame with no picture too, and climbs the same ladder. Icons, cut-out backdrops 
 template keeps on purpose are not. A step chain build whose brand step made no file writes a stand-in brand file that only names
 the business from the brief (`write-step/stand-in-files.js`), so the site never keeps the template's name or its label.
 
+### Planned menu hierarchy and phone identity (2026-11-11, #546)
+
+The final route stage uses the plan's explicit main-menu hierarchy to move kept menu items out of demo-only
+ancestors. It writes `parent_id` through the plugin's undoable Joomla Table move, reads the parent back, then
+renames the alias. A rerun restores the old parent before restoring the demo alias. No raw tree columns are written.
+Breadcrumb titles take the writer's actual page-title slot, never an SEO intent or a guessed slug label, and are
+read back as separate report lines. Refused moves or titles fail their lines.
+
+The brand head block carries one exact T4 offcanvas theme rule to stop Bootstrap's phone `d-block` helper from
+showing both theme logos. Arbitrary display rules remain findings. Phone-menu logo fitting retains the name
+variant with the largest readable letters when neither variant reaches the preferred height, rather than losing
+the business name by showing only its symbol. The independent logo review still judges readability.
+
 ## Consequences
 
 - A plugin release carrying the kit's contract comes first (1.0.10 for the first kit). It is small and separate from the plugin changes in

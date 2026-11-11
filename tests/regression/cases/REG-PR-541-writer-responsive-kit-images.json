@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-541-writer-responsive-kit-images",
+  "kind": "fix",
+  "title": "WO writer visual review requires actual hashed desktop and mobile kit image delivery",
+  "pr": 541,
+  "area": "website-opportunities/writer",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Open real image files from a hashed kit zip using the writer image tool and send them through the shared model wire into an answered writing turn.",
+    "Exercise unanswered requests, another run, forged references, missing mobile captures and missing catalogue hashes; compare historical input."
+  ],
+  "expect": [
+    "Both responsive image payloads reach the model and WV01 passes only with answered matching evidence.",
+    "Incomplete or foreign evidence fails visual review; historical writer input remains text-only."
+  ],
+  "selectors": {},
+  "fence": "frozen writer visual policy and actual image references verified against the kit catalogue and answered run history",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-writer-visual-review.test.mjs",
+      "apps/tracy-web/test/site-writer-visual-review-queue.test.mjs"
+    ],
+    "tests": [
+      "writer opens hashed desktop and mobile kit files and delivers their actual pixels to an answered writing turn",
+      "writer refuses unviewed, unanswered, forged and other-run image evidence",
+      "writer image requirements reject missing mobile captures and hashes while historical requests keep their original input",
+      "a strict writer queue freezes image policy and passes only after answered responsive image delivery",
+      "a strict writer queue keeps blocking visual failures for valid copy without actual image delivery"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -9,6 +9,8 @@
 
 /** One emphasis code: a line break `((br/))`, the opening `((span attrs))` or the closing `((/span))`. */
 const EMPHASIS_CODE = /\(\(\s*(?:(br)\b([^()]*?)\s*\/?\s*|(span)\b([^()]*?)\s*|\/\s*(span)\s*)\)\)/gi
+/** The markup the copy exporter writes: emphasis, paragraphs and lists, with optional template classes. */
+const CONTENT_CODE = /\(\(\s*(\/?)\s*(br|span|p|ul|ol|li)\b([^()]*?)\s*\)\)/gi
 /** Any content map code, emphasis or not (`((p))`, `((ul class="x"))`). */
 const ANY_CODE = /\(\(\s*\/?[a-z][a-z0-9]*\b[^()]*\)\)/gi
 const BREAK_CODE = /\(\(\s*br\b[^()]*\)\)/gi
@@ -20,6 +22,9 @@ export const CODES_READ_BY_TEMPLATE = 'jatools-config'
 
 /** Whether a value holds an emphasis code. */
 export const hasEmphasisCodes = (value) => new RegExp(EMPHASIS_CODE.source, 'i').test(String(value ?? ''))
+
+/** Whether a value needs the exporter's markup normalized for its storage. */
+export const hasContentCodes = (value) => new RegExp(CONTENT_CODE.source, 'i').test(String(value ?? ''))
 
 /** Whether a printed text still shows content map codes as words (`WHAT WE((BR/))((SPAN))COACH`). */
 export const showsRawCodes = (text) => new RegExp(ANY_CODE.source, 'i').test(String(text ?? ''))
@@ -52,30 +57,42 @@ const attrsOf = (raw) => {
   return attrs ? ` ${attrs}` : ''
 }
 
+// Exported markup may carry template classes, never executable attributes or arbitrary tags.
+const safeAttrs = (raw) => /^\s*(?:class\s*=\s*(?:"[\w -]*"|'[\w -]*'))?\s*$/.test(raw)
+
 /**
- * The value with its emphasis codes as real tags, in the demo's own shape (`<br/>`, `<span attrs>`), and every other piece of
- * it escaped as text: only the emphasis tags are markup. Other content map codes are text here, escaped like the rest.
+ * The exporter's codes as real tags. Unknown codes and ordinary HTML stay escaped text. Malformed supported markup is
+ * left as text in its entirety; it must not turn a broken paragraph/list or an executable attribute into HTML.
  */
 export function codesToHtml(value) {
   const text = String(value ?? '')
   let out = ''
   let from = 0
-  for (const m of text.matchAll(EMPHASIS_CODE)) {
+  const stack = []
+  for (const m of text.matchAll(CONTENT_CODE)) {
+    const closing = Boolean(m[1])
+    const tag = m[2].toLowerCase()
+    const attrs = tag === 'br' ? m[3].replace(/\/\s*$/, '') : m[3]
+    if (!safeAttrs(attrs) || (closing && (attrs.trim() || tag === 'br'))) return escapeText(text)
+    if (closing) {
+      if (stack.pop() !== tag) return escapeText(text)
+    } else if (tag !== 'br') stack.push(tag)
     out += escapeText(text.slice(from, m.index))
-    if (m[1]) out += `<br${attrsOf(m[2])}/>`
-    else if (m[3]) out += `<span${attrsOf(m[4])}>`
-    else out += '</span>'
+    out += closing ? `</${tag}>` : `<${tag}${attrsOf(attrs)}${tag === 'br' ? '/' : ''}>`
     from = m.index + m[0].length
   }
+  if (stack.length) return escapeText(text)
   return out + escapeText(text.slice(from))
 }
 
-/** Real emphasis tags back as codes, so two values that differ only in the form of their emphasis read the same. */
+/** Supported tags back as codes, so the look guard accepts only a change of storage form. */
 export const tagsToCodes = (value) =>
-  String(value ?? '')
-    .replace(/<\s*br\b([^<>]*?)\s*\/?\s*>/gi, (_, a) => `((br${attrsOf(a)}/))`)
-    .replace(/<\s*span\b([^<>]*?)\s*>/gi, (_, a) => `((span${attrsOf(a)}))`)
-    .replace(/<\s*\/\s*span\s*>/gi, '((/span))')
+  String(value ?? '').replace(/<\s*(\/?)\s*(br|span|p|ul|ol|li)\b([^<>]*?)>/gi, (whole, close, name, raw) => {
+    const tag = name.toLowerCase()
+    const attrs = tag === 'br' ? raw.replace(/\/\s*$/, '') : raw
+    if (!safeAttrs(attrs) || (close && (attrs.trim() || tag === 'br'))) return whole
+    return `((${close}${tag}${attrsOf(attrs)}${tag === 'br' ? '/' : ''}))`
+  })
 
 const REFERENCES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
 

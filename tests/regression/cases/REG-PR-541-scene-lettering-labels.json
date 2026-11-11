@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-541-scene-lettering-labels",
+  "kind": "fix",
+  "title": "Native picture admission preserves known scene lettering and agrees with P09",
+  "pr": 541,
+  "area": "website-opportunities/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run brief-to-native photo eligibility and picture checker tests with deterministic labelled assets."
+  ],
+  "expect": [
+    "A known textPresence present label survives brief asset mapping alongside unchanged hasTextOrWatermark false.",
+    "Native photo eligibility rejects that asset before frame fallback.",
+    "P09 rejects a manually placed owner photo with the same labels.",
+    "Unknown presence stays omitted and legacy direct-only clean photos remain usable."
+  ],
+  "selectors": {},
+  "fence": "Preserve existing scene-text evidence through the brief and enforce existing strict P09 semantics without changing legacy overlay labels or research cache.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-pictures-photo-shortlist.test.mjs",
+      "apps/tracy-web/test/site-pictures-check.test.mjs"
+    ],
+    "tests": [
+      "scene text survives brief mapping and native photo eligibility follows the stricter P09 rule",
+      "P09 rejects visible scene lettering despite the overlay-only direct answer being false"
+    ],
+    "needs": []
+  }
+}

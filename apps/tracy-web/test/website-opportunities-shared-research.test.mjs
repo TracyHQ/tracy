@@ -21,7 +21,7 @@ import { cancelRequest, requestResearch } from 'website-opportunities/src/place-
 import { claimPlaceJob, finishPlaceJob, placeLease } from 'website-opportunities/src/place-jobs.js'
 import { createRevision } from '../src/opportunities-build/revisions.js'
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
-import { fenced, insertOpportunity } from 'website-opportunities/src/store.js'
+import { checkpoint, fenced, insertOpportunity } from 'website-opportunities/src/store.js'
 import { buildPlaced } from '../src/opportunities-build/build-store.js'
 import { fileDb, writeAsHistory } from './_db.mjs'
 import { createTracyWoHost } from '../src/wo-host.js'
@@ -2644,5 +2644,591 @@ test(
       ])
     ).rows[0]
     assert.deepEqual(placeJob, { only_source: 'website', force: false })
+  }
+)
+
+test(
+  'own site resumes a paused shared run behind a queued request once per poll batch, then stops at three',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'own-shared@tracy.test')
+    const opp = await saveGoogle(pool, a, { ownSite: { requestId: 'own-shared-pause' } })
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity: opp,
+      requestId: 'own-shared-pause:research'
+    })
+    const { domain } = await domainWith()
+    const { call } = await doors(pool, domain)
+    await pool.query(
+      `update ui_setting set overrides=overrides || '{"site-from-business":true}'::jsonb where id=true`
+    )
+    const pause = () =>
+      pool.query(
+        `update wo_place_job set state='paused',last_error='{"code":"SOURCE_PAUSED","reason":"rate_limited"}'::jsonb where id=$1`,
+        [job.place_job_id]
+      )
+    // The account's request never leaves queued. Only the upstream run changes its state.
+    for (let n = 1; n <= 3; n++) {
+      await pause()
+      assert.equal((await jobRow(pool, job.id)).state, 'queued')
+      const polls = await Promise.all(
+        Array.from({ length: 4 }, () =>
+          call('own-shared@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+        )
+      )
+      assert.ok(
+        polls.every((r) => r.status === 200 && r.body.business.phase === 'research'),
+        JSON.stringify(polls)
+      )
+      const saved = await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])
+      assert.equal(saved.candidate.ownSite.resumes, n, 'concurrent polls count one real resume')
+      assert.equal(
+        (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+        'queued'
+      )
+      const ordinary = await call('own-shared@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+      assert.equal(ordinary.body.business.phase, 'research')
+      assert.equal(
+        (await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])).candidate.ownSite
+          .resumes,
+        n
+      )
+    }
+    await pause()
+    const stopped = await call('own-shared@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+    assert.equal(stopped.body.business.phase, 'failed')
+    assert.equal(stopped.body.business.code, 'SOURCE_PAUSED')
+    assert.equal(stopped.body.business.job.state, 'paused')
+    assert.equal(
+      (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+      'paused'
+    )
+    assert.equal((await call('other@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)).status, 404)
+  }
+)
+
+test(
+  'shared resume follows the paused upstream run but refuses another account and terminal requests',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'shared-resume-owner@tracy.test')
+    const b = await account(pool, 'shared-resume-other@tracy.test')
+    const opp = await saveGoogle(pool, a)
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity: opp,
+      requestId: 'shared-resume-auth'
+    })
+    await pool.query(`update wo_place_job set state='paused' where id=$1`, [job.place_job_id])
+    assert.equal(await resumeRequest(pool, b, job.id, { shared: true }), null)
+    const resumed = await resumeRequest(pool, a, job.id, { shared: true })
+    assert.equal(resumed.state, 'queued')
+    assert.equal(
+      await resumeRequest(pool, a, job.id, { shared: true }),
+      null,
+      'a running or queued upstream is not resumed'
+    )
+    await pool.query(`update wo_place_job set state='paused' where id=$1`, [job.place_job_id])
+    await pool.query(`update wo_job set state='completed' where id=$1`, [job.id])
+    assert.equal(await resumeRequest(pool, a, job.id, { shared: true }), null)
+  }
+)
+
+test(
+  'own site exposes a shared resume failure without spending its automatic resume allowance',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'own-shared-error@tracy.test')
+    const opp = await saveGoogle(pool, a, { ownSite: { requestId: 'own-shared-error' } })
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity: opp,
+      requestId: 'own-shared-error:research'
+    })
+    await pool.query(`update wo_place_job set state='paused' where id=$1`, [job.place_job_id])
+    const { domain } = await domainWith()
+    const { call } = await doors(pool, domain)
+    await pool.query(
+      `update ui_setting set overrides=overrides || '{"site-from-business":true}'::jsonb where id=true`
+    )
+    await pool.query(
+      `create function reject_test_resume() returns trigger language plpgsql as $$ begin raise exception 'synthetic resume failure'; end; $$`
+    )
+    await pool.query(
+      `create trigger reject_test_resume before update on wo_job for each row execute function reject_test_resume()`
+    )
+    try {
+      const failed = await call('own-shared-error@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+      assert.equal(failed.status, 500, 'a failed resume is not silently reported as researching')
+      assert.equal(
+        (await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])).candidate.ownSite
+          .resumes,
+        undefined
+      )
+      assert.equal(
+        (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+        'paused',
+        'the transaction rolled back'
+      )
+    } finally {
+      await pool.query('drop trigger reject_test_resume on wo_job; drop function reject_test_resume()')
+    }
+    const recovered = await call('own-shared-error@tracy.test', 'GET', `/api/sites/from-business/${opp.id}`)
+    assert.equal(recovered.body.business.phase, 'research')
+    assert.equal(
+      (await one(pool, 'select candidate from wo_opportunity where id=$1', [opp.id])).candidate.ownSite
+        .resumes,
+      1
+    )
+  }
+)
+
+test(
+  'from-scratch research recovers failed downloads without reviving blocked or revoked media',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'media-recovery@tracy.test')
+    const opportunity = await saveGoogle(pool, a)
+    const urls = ['failed', 'stored', 'blocked', 'revoked', 'newly-blocked'].map(
+      (name) => `https://phoba.example/${name}.png`
+    )
+    const downloads = []
+    let healthy = false
+    const { domain } = await domainWith({
+      website: websiteOk(urls.map((url) => ({ url, kind: 'image' }))),
+      fetchLimited: async (url) => {
+        downloads.push(url)
+        if (url === urls[2] || (healthy && url === urls[4]))
+          throw Object.assign(new Error('blocked'), { code: 'URL_BLOCKED' })
+        if (url !== urls[1] && !healthy) throw new Error('temporary download failure')
+        return { url, status: 200, mime: 'image/png', bytes: url === urls[0] ? PNG2 : PNG, truncated: false }
+      }
+    })
+    const { ex, put } = executor(pool, domain)
+    const first = await requestResearch(pool, { accountId: a, opportunity, requestId: 'failed-media-first' })
+    await drain(ex)
+    const oldSnapshot = (await jobRow(pool, first.job.id)).result_snapshot_id
+    const before = (await pool.query('select * from wo_place_media order by source_url')).rows
+    assert.equal(before.length, 5)
+    const revoked = before.find((m) => m.source_url === urls[3])
+    await pool.query('update wo_place_media set revoked_at=now() where id=$1', [revoked.id])
+    const oldIds = (
+      await pool.query(
+        'select media_id from wo_place_snapshot_media where snapshot_id=$1 order by media_id',
+        [oldSnapshot]
+      )
+    ).rows
+    healthy = true
+    downloads.length = 0
+    await requestResearch(pool, { accountId: a, opportunity, requestId: 'failed-media-warm', force: true })
+    await drain(ex)
+    assert.deepEqual(downloads, [], 'an ordinary refresh reuses references')
+    const again = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'failed-media-recover',
+      again: {
+        domain,
+        keys: { google: 'AIza-test' },
+        settings: normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+        fromScratch: true
+      }
+    })
+    await drain(ex)
+    assert.deepEqual(downloads, [urls[0], urls[4]], 'only transient failed references are downloaded again')
+    const snapshot = (await jobRow(pool, again.job.id)).result_snapshot_id
+    const media = (
+      await pool.query(
+        'select m.* from wo_place_media m join wo_place_snapshot_media sm on sm.media_id=m.id where sm.snapshot_id=$1',
+        [snapshot]
+      )
+    ).rows
+    const recovered = media.find((m) => m.source_url === urls[0])
+    assert.equal(recovered?.status, 'stored', 'the new snapshot exposes the downloaded bytes')
+    assert.deepEqual(put.get(recovered.object_key), PNG2)
+    assert.ok(
+      media.some((m) => m.id === revoked.id && m.revoked_at),
+      'revocation survives research again'
+    )
+    assert.ok(media.some((m) => m.source_url === urls[2] && m.reason === 'url_blocked'))
+    assert.ok(
+      media.some((m) => m.source_url === urls[4] && m.reason === 'url_blocked'),
+      'a newly blocked retry keeps a new immutable reference'
+    )
+    assert.deepEqual(
+      (
+        await pool.query(
+          'select media_id from wo_place_snapshot_media where snapshot_id=$1 order by media_id',
+          [oldSnapshot]
+        )
+      ).rows,
+      oldIds,
+      'historical snapshot membership is unchanged'
+    )
+    assert.equal(
+      (
+        await one(pool, 'select status from wo_place_media where id=$1', [
+          before.find((m) => m.source_url === urls[0]).id
+        ])
+      ).status,
+      'reference'
+    )
+    downloads.length = 0
+    await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'failed-media-reuse',
+      again: {
+        domain,
+        keys: { google: 'AIza-test' },
+        settings: normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+        fromScratch: true
+      }
+    })
+    await drain(ex)
+    assert.deepEqual(downloads, [], 'stored bytes win over an older failed reference for the same URL')
+  }
+)
+
+test('from-scratch Tripadvisor research retries its failed media downloads', opts, async () => {
+  const { pool } = db
+  const a = await account(pool, 'tripadvisor-media-recovery@tracy.test')
+  const opportunity = await saveGoogle(pool, a)
+  const runner = await taExecutor(pool, { keys: { serpapi: 'test-private' } })
+  const originalFetch = runner.domain.fetchLimited
+  let healthy = false
+  const downloads = []
+  runner.domain.fetchLimited = async (url, options) => {
+    if (new URL(url).hostname === 'media-cdn.tripadvisor.com') {
+      downloads.push(url)
+      if (!healthy) throw new Error('temporary download failure')
+    }
+    return originalFetch(url, options)
+  }
+  const first = await requestResearch(pool, { accountId: a, opportunity, requestId: 'ta-media-failed' })
+  await drain(runner.ex)
+  const oldSnapshot = (await jobRow(pool, first.job.id)).result_snapshot_id
+  const failures = (
+    await pool.query("select id from wo_place_media where source='tripadvisor' and reason='download_failed'")
+  ).rows
+  assert.ok(failures.length > 0)
+  healthy = true
+  downloads.length = 0
+  const runtime = await runner.runtime()
+  const again = await requestResearch(pool, {
+    accountId: a,
+    opportunity,
+    requestId: 'ta-media-recover',
+    again: { ...runtime, domain: runner.domain, fromScratch: true, parts: ['tripadvisor'] }
+  })
+  assert.ok(again.plan.run.some((r) => r.part === 'tripadvisor'))
+  await drain(runner.ex)
+  assert.ok(downloads.length > 0, 'a planned optional media source is eligible for recovery')
+  const snapshot = (await jobRow(pool, again.job.id)).result_snapshot_id
+  assert.ok(
+    (
+      await one(
+        pool,
+        "select count(*)::int n from wo_place_snapshot_media sm join wo_place_media m on m.id=sm.media_id where sm.snapshot_id=$1 and m.source='tripadvisor' and m.status='stored'",
+        [snapshot]
+      )
+    ).n > 0
+  )
+  assert.equal(
+    (
+      await one(
+        pool,
+        "select count(*)::int n from wo_place_snapshot_media sm join wo_place_media m on m.id=sm.media_id where sm.snapshot_id=$1 and m.source='tripadvisor' and m.reason='download_failed'",
+        [oldSnapshot]
+      )
+    ).n,
+    failures.length
+  )
+})
+
+test(
+  'from-scratch research recovers failed media storage and keeps a newly blocked retry blocked',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'store-recovery@tracy.test')
+    const opportunity = await saveGoogle(pool, a)
+    const urls = ['storage', 'storage-blocked'].map((name) => `https://phoba.example/${name}.png`)
+    let healthy = false
+    const downloads = []
+    const stored = new Map()
+    const { domain } = await domainWith({
+      website: websiteOk(urls.map((url) => ({ url, kind: 'image' }))),
+      fetchLimited: async (url) => {
+        downloads.push(url)
+        if (healthy && url === urls[1]) throw Object.assign(new Error('blocked'), { code: 'URL_BLOCKED' })
+        return { url, status: 200, mime: 'image/png', bytes: PNG, truncated: false }
+      }
+    })
+    const { ex } = executor(pool, domain, {
+      objects: {
+        put: async (key, bytes) => {
+          if (!healthy) return false
+          stored.set(key, bytes)
+          return true
+        }
+      }
+    })
+    const first = await requestResearch(pool, { accountId: a, opportunity, requestId: 'storage-first' })
+    await drain(ex)
+    const oldSnapshot = (await jobRow(pool, first.job.id)).result_snapshot_id
+    const failures = (await pool.query("select id from wo_place_media where reason='store_failed'")).rows
+    assert.equal(failures.length, 2)
+    healthy = true
+    downloads.length = 0
+    const again = () => ({
+      domain,
+      keys: { google: 'AIza-test' },
+      settings: normalizeWoOpsSettings({ pageSpeedCheckEnabled: false, googlePlacesPhotos: false }),
+      fromScratch: true
+    })
+    const recovered = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'storage-recover',
+      again: again()
+    })
+    await drain(ex)
+    assert.deepEqual(downloads, urls)
+    const snapshot = (await jobRow(pool, recovered.job.id)).result_snapshot_id
+    const media = (
+      await pool.query(
+        'select m.* from wo_place_media m join wo_place_snapshot_media sm on sm.media_id=m.id where sm.snapshot_id=$1',
+        [snapshot]
+      )
+    ).rows
+    assert.equal(media.find((m) => m.source_url === urls[0])?.status, 'stored')
+    assert.deepEqual(stored.get(media.find((m) => m.source_url === urls[0]).object_key), PNG)
+    assert.equal(media.find((m) => m.source_url === urls[1])?.reason, 'url_blocked')
+    assert.equal(
+      (
+        await one(
+          pool,
+          "select count(*)::int n from wo_place_snapshot_media sm join wo_place_media m on m.id=sm.media_id where sm.snapshot_id=$1 and m.reason='store_failed'",
+          [oldSnapshot]
+        )
+      ).n,
+      2
+    )
+    downloads.length = 0
+    await requestResearch(pool, { accountId: a, opportunity, requestId: 'storage-reuse', again: again() })
+    await drain(ex)
+    assert.deepEqual(downloads, [], 'stored bytes and the new terminal blocked reference are reused')
+  }
+)
+
+test(
+  'two executor instances admit only five downloaded pictures until real media storage completes',
+  opts,
+  async () => {
+    const { pool } = db
+    const owner = await account(pool, 'media-admission@tracy.test')
+    const requests = []
+    for (const providerId of ['ChIJadmissionOne', 'ChIJadmissionTwo']) {
+      const { row: opportunity } = await insertOpportunity(pool, owner, {
+        name: 'Picture research',
+        branch: null,
+        provider: 'google-places',
+        providerId,
+        candidate: { provider: 'google-places', providerId, name: 'Picture research', socials: {} }
+      })
+      requests.push(
+        await requestResearch(pool, { accountId: owner, opportunity, requestId: `admit-${providerId}` })
+      )
+    }
+    let release
+    const stored = new Promise((resolve) => {
+      release = resolve
+    })
+    let entered
+    const full = new Promise((resolve) => {
+      entered = resolve
+    })
+    let downloads = 0
+    let awaitingStorage = 0
+    let peak = 0
+    const { domain } = await domainWith({
+      website: websiteOk(
+        Array.from({ length: 5 }, (_, i) => ({ url: `https://phoba.example/admit-${i}.png`, kind: 'image' }))
+      ),
+      fetchLimited: async (url) => {
+        downloads += 1
+        return { url, status: 200, mime: 'image/png', bytes: PNG, truncated: false }
+      }
+    })
+    const extra = {
+      objects: {
+        put: async () => {
+          awaitingStorage += 1
+          peak = Math.max(peak, awaitingStorage)
+          if (awaitingStorage === 5) entered()
+          await stored
+          awaitingStorage -= 1
+          return true
+        }
+      }
+    }
+    const first = await executor(pool, domain, extra).ex.tick()
+    const second = await executor(pool, domain, extra).ex.tick()
+    const complete = Promise.all([first.done, second.done])
+    try {
+      assert.ok(first.claimed)
+      assert.ok(second.claimed)
+      await Promise.race([
+        full,
+        complete.then(() => {
+          throw new Error('Research ended before reaching five pending stores')
+        })
+      ])
+      await new Promise((resolve) => setImmediate(resolve))
+      assert.equal(downloads, 5, 'the other executor cannot fetch buffers while all five stores are pending')
+      assert.equal(awaitingStorage, 5)
+    } finally {
+      release()
+      await complete
+    }
+    assert.equal(downloads, 10)
+    assert.equal(peak, 5)
+    for (const request of requests) {
+      assert.equal((await jobRow(pool, request.job.id)).state, 'completed')
+    }
+  }
+)
+
+test(
+  'foreground crash recovery stops after three takeovers and explicit resume keeps paid checkpoints',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'crash-recovery@tracy.test')
+    const opportunity = await saveGoogle(pool, a)
+    const { job: request } = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'crash-recovery'
+    })
+    let claimed = await claimPlaceJob(pool, 'first-worker', 60_000)
+    const snapshotId = claimed.snapshot_id
+    const paidRun = { source: 'instagram', offset: 0, id: 'already-paid-run', datasetId: 'already-paid-data' }
+    await checkpoint(pool, placeLease(claimed), { stage: 'media', progress: { apifyRun: paidRun } })
+    const expire = () =>
+      pool.query("update wo_place_job set lease_until=now()-interval '1 second' where id=$1", [claimed.id])
+    for (let recovery = 1; recovery <= 3; recovery++) {
+      const stale = placeLease(claimed)
+      await expire()
+      claimed = await claimPlaceJob(pool, `recovery-${recovery}`, 60_000)
+      assert.ok(claimed)
+      assert.equal(claimed.snapshot_id, snapshotId)
+      assert.equal(claimed.progress.crashRecoveries, recovery)
+      assert.deepEqual(claimed.progress.apifyRun, paidRun)
+      assert.equal(claimed.stage, 'media')
+      await assert.rejects(
+        fenced(pool, stale, () => {}),
+        (error) => error.code === 'STALE_LEASE'
+      )
+    }
+    const stale = placeLease(claimed)
+    await expire()
+    assert.equal(await claimPlaceJob(pool, 'would-loop-again', 60_000), null)
+    const stopped = await one(pool, 'select * from wo_place_job where id=$1', [claimed.id])
+    assert.equal(stopped.state, 'paused')
+    assert.equal(stopped.last_error.code, 'RESEARCH_RECOVERY_LIMIT')
+    assert.equal(stopped.attempt, 4, 'initial attempt plus three automatic recoveries')
+    assert.equal(stopped.lease_until, null)
+    assert.equal(stopped.lease_owner, null)
+    assert.equal((await jobRow(pool, request.id)).state, 'paused')
+    assert.equal((await jobRow(pool, request.id)).last_error.code, 'RESEARCH_RECOVERY_LIMIT')
+    assert.equal(
+      (await one(pool, 'select state from wo_place_snapshot where id=$1', [snapshotId])).state,
+      'preparing'
+    )
+    assert.equal(await finishPlaceJob(pool, stale, { state: 'completed' }), false)
+    await assert.rejects(
+      fenced(pool, stale, () => {}),
+      (error) => error.code === 'STALE_LEASE'
+    )
+    assert.equal(await claimPlaceJob(pool, 'poll-again', 60_000), null)
+    const resumed = await resumeRequest(pool, a, request.id, { shared: true })
+    assert.equal(resumed.state, 'queued')
+    claimed = await claimPlaceJob(pool, 'explicit-resume', 60_000)
+    assert.equal(claimed.id, stopped.id)
+    assert.equal(claimed.snapshot_id, snapshotId)
+    assert.equal(claimed.attempt, 5, 'lifetime claim history is retained')
+    assert.equal(claimed.progress.crashRecoveries, 0)
+    assert.deepEqual(claimed.progress.apifyRun, paidRun)
+    assert.equal(claimed.stage, 'media')
+  }
+)
+
+test('quota resumes with many prior attempts do not consume automatic crash recoveries', opts, async () => {
+  const { pool } = db
+  const a = await account(pool, 'quota-crash-budget@tracy.test')
+  const opportunity = await saveGoogle(pool, a)
+  const { job: request } = await requestResearch(pool, {
+    accountId: a,
+    opportunity,
+    requestId: 'quota-crash-budget'
+  })
+  let claimed = await claimPlaceJob(pool, 'quota-worker', 60_000)
+  await pool.query('update wo_place_job set attempt=20 where id=$1', [claimed.id])
+  await finishPlaceJob(pool, placeLease(claimed), {
+    state: 'paused',
+    lastError: { code: 'SOURCE_PAUSED', reason: 'quota' }
+  })
+  await resumeRequest(pool, a, request.id, { shared: true })
+  claimed = await claimPlaceJob(pool, 'quota-resumed', 60_000)
+  assert.equal(claimed.attempt, 21)
+  assert.equal(claimed.progress.crashRecoveries, 0)
+  await pool.query("update wo_place_job set lease_until=now()-interval '1 second' where id=$1", [claimed.id])
+  const recovery = await claimPlaceJob(pool, 'first-real-crash', 60_000)
+  assert.equal(recovery.progress.crashRecoveries, 1)
+  assert.equal(recovery.attempt, 22)
+})
+
+test(
+  'own site polling surfaces the crash recovery limit without automatically resuming it',
+  opts,
+  async () => {
+    const { pool } = db
+    const a = await account(pool, 'own-crash-limit@tracy.test')
+    const opportunity = await saveGoogle(pool, a, { ownSite: { requestId: 'own-crash-limit' } })
+    const { job } = await requestResearch(pool, {
+      accountId: a,
+      opportunity,
+      requestId: 'own-crash-limit:research'
+    })
+    await pool.query(
+      'update wo_place_job set state=\'paused\',last_error=\'{"code":"RESEARCH_RECOVERY_LIMIT"}\'::jsonb where id=$1',
+      [job.place_job_id]
+    )
+    const { domain } = await domainWith()
+    const { call } = await doors(pool, domain)
+    await pool.query(
+      `update ui_setting set overrides=overrides || '{"site-from-business":true}'::jsonb where id=true`
+    )
+    const result = await call(
+      'own-crash-limit@tracy.test',
+      'GET',
+      `/api/sites/from-business/${opportunity.id}`
+    )
+    assert.equal(result.status, 200)
+    assert.equal(result.body.business.phase, 'failed')
+    assert.equal(result.body.business.code, 'RESEARCH_RECOVERY_LIMIT')
+    assert.equal(
+      (await one(pool, 'select state from wo_place_job where id=$1', [job.place_job_id])).state,
+      'paused'
+    )
+    const saved = await one(pool, 'select candidate from wo_opportunity where id=$1', [opportunity.id])
+    assert.equal(saved.candidate.ownSite.resumes ?? 0, 0)
   }
 )

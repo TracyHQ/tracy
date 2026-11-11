@@ -13,7 +13,7 @@
 // once keeps its codes and its line blocks the write step (`blocking`), since the page would print the codes as words. Nothing
 // else of the row changes: the look guard holds the update to the emphasis form alone (look-guard-emphasis.js).
 import { createHash } from 'node:crypto'
-import { codesToHtml, escapeText, hasEmphasisCodes, storageOf } from '../lib/site-copy/emphasis-markup.js'
+import { codesToHtml, escapeText, hasContentCodes, storageOf } from '../lib/site-copy/emphasis-markup.js'
 import { doorCall } from './settings-door.js'
 
 const ENTITY = /^([a-zA-Z]+)-(\d+)$/
@@ -89,7 +89,7 @@ export async function runEmphasisStage({ door, siteKey, contentMap, written, ord
   const byEntity = new Map()
   for (const key of written) {
     const value = ordered[key]
-    if (typeof value !== 'string' || !hasEmphasisCodes(value)) continue
+    if (typeof value !== 'string' || !hasContentCodes(value)) continue
     const slot = slots.get(key)
     const storage = storageOf(slot)
     if (storage === 'codes') results.set(key, { storage })
@@ -132,15 +132,34 @@ export async function runEmphasisStage({ door, siteKey, contentMap, written, ord
         columns.set(column, path.length ? { json: parsed(item?.[column]) } : { text: item?.[column] })
       const held = columns.get(column)
       const needle = escapeText(value)
+      const stored = codesToHtml(value)
+      if (stored === needle) {
+        keep(key, 'the exported markup is malformed or contains unsupported attributes')
+        continue
+      }
       const { leaf, times } = findWritten(held, path, needle)
       if (!leaf) {
+        // A replay can reach this stage after the same text was already normalized.
+        const previous = times === 0 ? findWritten(held, path, stored).leaf : null
+        if (previous) {
+          results.set(key, {
+            storage: 'html',
+            stored,
+            readFrom: {
+              action: 'content.get',
+              params: { kind, id },
+              path: ['item', column, ...previous.path],
+              type: 'contains'
+            }
+          })
+          continue
+        }
         keep(
           key,
           `the stored HTML holds the written words ${times} times, not once (looked at every text of ${entity} ${column})`
         )
         continue
       }
-      const stored = codesToHtml(value)
       leaf.set(leaf.value.replace(needle, () => stored))
       held.changed = true
       done.push({

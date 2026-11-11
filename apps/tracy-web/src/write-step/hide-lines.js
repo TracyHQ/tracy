@@ -120,12 +120,23 @@ function claimResult(order, { blocks, words, gone, refused, settled, removed, re
     return { status, reason, key: heldKey, ordered, readFrom, part }
   }
   if (via === 'failed')
-    return { status: 'failed', reason: order.reason, key, ...(order.part ? { part: order.part } : {}) }
+    return {
+      status: 'failed',
+      reason: order.reason,
+      key,
+      ...(order.part ? { part: order.part } : {}),
+      ...(order.hiddenList ? { hiddenList: order.hiddenList } : {})
+    }
   if (via === 'fixed') return fixedResult(order, words)
   if (via === 'restored') return restoredResult(order, { refused, written })
   if (via === 'removed') return removedResult(order, removed)
   if (via === 'empty')
-    return { status: 'hidden', key, reason: `${PLAN_HIDES}: it is already empty on the site` }
+    return {
+      status: 'hidden',
+      key,
+      reason: `${PLAN_HIDES}: it is already empty on the site`,
+      ...(order.hiddenList ? { hiddenList: order.hiddenList } : {})
+    }
   if (via === 'rewritten') return rewrittenResult(order, refused)
   if (via === 'carried') return carriedResult(order, { gone, removed, relinked, refused })
   if (via === 'block') {

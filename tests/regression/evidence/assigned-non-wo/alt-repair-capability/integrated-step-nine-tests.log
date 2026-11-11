@@ -1,0 +1,664 @@
+TAP version 13
+# (node:6693) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: mapped contact image alt stays blocking without opening or repeating a native turn
+ok 1 - mapped contact image alt stays blocking without opening or repeating a native turn
+  ---
+  duration_ms: 3.056167
+  type: 'test'
+  ...
+# Subtest: supported article and module HTML alt storage still receives native repairs
+ok 2 - supported article and module HTML alt storage still receives native repairs
+  ---
+  duration_ms: 25.130667
+  type: 'test'
+  ...
+# Subtest: gallery alt slots preserve block to module aliases even when picture storage has no record alt
+ok 3 - gallery alt slots preserve block to module aliases even when picture storage has no record alt
+  ---
+  duration_ms: 2.63175
+  type: 'test'
+  ...
+# Subtest: absent or unmatched content maps retain the existing native repair path
+ok 4 - absent or unmatched content maps retain the existing native repair path
+  ---
+  duration_ms: 10.959166
+  type: 'test'
+  ...
+# Subtest: a supported independent fault still runs while unsupported contact alt remains red
+ok 5 - a supported independent fault still runs while unsupported contact alt remains red
+  ---
+  duration_ms: 7.85475
+  type: 'test'
+  ...
+# Subtest: direct unsupported comment metadata never claims the alt target is writable
+ok 6 - direct unsupported comment metadata never claims the alt target is writable
+  ---
+  duration_ms: 0.5965
+  type: 'test'
+  ...
+# Subtest: unsupported alts exposed after page recovery are recorded without a paid retry
+ok 7 - unsupported alts exposed after page recovery are recorded without a paid retry
+  ---
+  duration_ms: 2.842333
+  type: 'test'
+  ...
+# Subtest: runStepNine carries the write content map into unsupported alt scheduling and preserves failed handover
+ok 8 - runStepNine carries the write content map into unsupported alt scheduling and preserves failed handover
+  ---
+  duration_ms: 45.111917
+  type: 'test'
+  ...
+# (node:6694) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: step 9 is write, first check, 9b on its faults, a check of the changed pages; no finder stage
+ok 9 - step 9 is write, first check, 9b on its faults, a check of the changed pages; no finder stage
+  ---
+  duration_ms: 30.07425
+  type: 'test'
+  ...
+# Subtest: 9b sends the first check's customer-visible faults, never accent emphasis or a step's own check
+ok 10 - 9b sends the first check's customer-visible faults, never accent emphasis or a step's own check
+  ---
+  duration_ms: 7.8395
+  type: 'test'
+  ...
+# Subtest: a page whose faults do not fit one comment turn is split into several turns, each within the limit
+ok 11 - a page whose faults do not fit one comment turn is split into several turns, each within the limit
+  ---
+  duration_ms: 13.548625
+  type: 'test'
+  ...
+# Subtest: a turn that throws is logged for its page, the other pages proceed, and the second check runs
+ok 12 - a turn that throws is logged for its page, the other pages proceed, and the second check runs
+  ---
+  duration_ms: 6.241
+  type: 'test'
+  ...
+# Subtest: a failed scripted write checkpoint stops before checks or native repair prompts
+ok 13 - a failed scripted write checkpoint stops before checks or native repair prompts
+  ---
+  duration_ms: 3.806875
+  type: 'test'
+  ...
+# (node:6703) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an empty-controls fault keeps the button selector and the address it leads to
+ok 14 - an empty-controls fault keeps the button selector and the address it leads to
+  ---
+  duration_ms: 0.866583
+  type: 'test'
+  ...
+# Subtest: the wordless button is found on the served page by selector and address, inside its block
+ok 15 - the wordless button is found on the served page by selector and address, inside its block
+  ---
+  duration_ms: 4.510166
+  type: 'test'
+  ...
+# Subtest: step 9b sends the empty button with its element and says which button, not "as the note describes"
+ok 16 - step 9b sends the empty button with its element and says which button, not "as the note describes"
+  ---
+  duration_ms: 30.977375
+  type: 'test'
+  ...
+# (node:6704) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a fault naming the brief's own phone, e-mail, name or address is logged not-demo and never sent
+ok 17 - a fault naming the brief's own phone, e-mail, name or address is logged not-demo and never sent
+  ---
+  duration_ms: 42.571625
+  type: 'test'
+  ...
+# Subtest: a demo fault is sent as before when the step has no brief
+ok 18 - a demo fault is sent as before when the step has no brief
+  ---
+  duration_ms: 6.393208
+  type: 'test'
+  ...
+# Subtest: faults past the per-turn item cap are logged in notSent as item-cap, never dropped silently
+ok 19 - faults past the per-turn item cap are logged in notSent as item-cap, never dropped silently
+  ---
+  duration_ms: 19.010583
+  type: 'test'
+  ...
+# Subtest: every fault not sent says why by code; an unknown group or kind is unknown-kind, not dropped
+ok 20 - every fault not sent says why by code; an unknown group or kind is unknown-kind, not dropped
+  ---
+  duration_ms: 3.308958
+  type: 'test'
+  ...
+# (node:6713) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: two faults on two slots of one block are two comment items, neither folded into the other
+ok 21 - two faults on two slots of one block are two comment items, neither folded into the other
+  ---
+  duration_ms: 7.365917
+  type: 'test'
+  ...
+# Subtest: an article picture alt names the alt slot and its record, with a selector read from the page
+ok 22 - an article picture alt names the alt slot and its record, with a selector read from the page
+  ---
+  duration_ms: 1.666125
+  type: 'test'
+  ...
+# Subtest: a gallery alt the kit keeps in a slot of its own names that slot, beside its picture slot
+ok 23 - a gallery alt the kit keeps in a slot of its own names that slot, beside its picture slot
+  ---
+  duration_ms: 0.57575
+  type: 'test'
+  ...
+# Subtest: a kit with no alt slot beside a picture leaves the alt of the picture slot named
+ok 24 - a kit with no alt slot beside a picture leaves the alt of the picture slot named
+  ---
+  duration_ms: 0.417625
+  type: 'test'
+  ...
+# Subtest: when content.locate fails the item still carries its slot and record, unchecked
+ok 25 - when content.locate fails the item still carries its slot and record, unchecked
+  ---
+  duration_ms: 0.745833
+  type: 'test'
+  ...
+# Subtest: a resolved content.locate answer is kept, and the words still name the exact slot and record
+ok 26 - a resolved content.locate answer is kept, and the words still name the exact slot and record
+  ---
+  duration_ms: 0.319792
+  type: 'test'
+  ...
+# Subtest: a wrong alt says what the picture shows and what the alt reads now, and asks for an alt describing it
+ok 27 - a wrong alt says what the picture shows and what the alt reads now, and asks for an alt describing it
+  ---
+  duration_ms: 0.380792
+  type: 'test'
+  ...
+# Subtest: glued words are quoted and the instruction is to put the space back
+ok 28 - glued words are quoted and the instruction is to put the space back
+  ---
+  duration_ms: 1.49225
+  type: 'test'
+  ...
+# Subtest: a fault with nothing to look up is not sent to content.locate as an empty query
+ok 29 - a fault with nothing to look up is not sent to content.locate as an empty query
+  ---
+  duration_ms: 1.221166
+  type: 'test'
+  ...
+# (node:6714) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: whatever the customer sees is sent, glued words too; only missing accent emphasis is not
+ok 30 - whatever the customer sees is sent, glued words too; only missing accent emphasis is not
+  ---
+  duration_ms: 33.227333
+  type: 'test'
+  ...
+# Subtest: an explicit concurrency override still bounds page sessions to three turns at once
+ok 31 - an explicit concurrency override still bounds page sessions to three turns at once
+  ---
+  duration_ms: 16.495667
+  type: 'test'
+  ...
+# Subtest: the comment requests door is never asked for more items while twenty were asked in the last minute
+ok 32 - the comment requests door is never asked for more items while twenty were asked in the last minute
+  ---
+  duration_ms: 41.573875
+  type: 'test'
+  ...
+# Subtest: each turn is judged on the pages it changed: only the one that broke its page is undone, in its own session
+ok 33 - each turn is judged on the pages it changed: only the one that broke its page is undone, in its own session
+  ---
+  duration_ms: 5.385459
+  type: 'test'
+  ...
+# Subtest: a turn that changed design files is judged by a check of every page
+ok 34 - a turn that changed design files is judged by a check of every page
+  ---
+  duration_ms: 3.86525
+  type: 'test'
+  ...
+# Subtest: a turn cancelled while open at the time limit is judged by the check after it, with the writes read after the cancel
+ok 35 - a turn cancelled while open at the time limit is judged by the check after it, with the writes read after the cancel
+  ---
+  duration_ms: 17.207459
+  type: 'test'
+  ...
+# Subtest: repair-pass.json holds a timeline of the step: the first check, each turn and each check after
+ok 36 - repair-pass.json holds a timeline of the step: the first check, each turn and each check after
+  ---
+  duration_ms: 3.871917
+  type: 'test'
+  ...
+# Subtest: a write to a record is placed on the pages whose faults name that record's slots, so its check stays scoped
+ok 37 - a write to a record is placed on the pages whose faults name that record's slots, so its check stays scoped
+  ---
+  duration_ms: 5.552167
+  type: 'test'
+  ...
+# Subtest: default repair scheduling finishes and checks each page before another writer starts
+ok 38 - default repair scheduling finishes and checks each page before another writer starts
+  ---
+  duration_ms: 13.021375
+  type: 'test'
+  ...
+# (node:6716) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a demo picture is located by its image path, not by words in the page
+ok 39 - a demo picture is located by its image path, not by words in the page
+  ---
+  duration_ms: 4.582834
+  type: 'test'
+  ...
+# Subtest: an empty frame keeps the measured selector and the actual served element
+ok 40 - an empty frame keeps the measured selector and the actual served element
+  ---
+  duration_ms: 0.879291
+  type: 'test'
+  ...
+# Subtest: resolved native record levels scope a content-only write to every page that displays it
+ok 41 - resolved native record levels scope a content-only write to every page that displays it
+  ---
+  duration_ms: 0.152709
+  type: 'test'
+  ...
+# Subtest: another slotless demo finding does not resend text that was already repaired
+ok 42 - another slotless demo finding does not resend text that was already repaired
+  ---
+  duration_ms: 0.181
+  type: 'test'
+  ...
+# Subtest: a heading count that improved but still fails remains eligible for its second round
+ok 43 - a heading count that improved but still fails remains eligible for its second round
+  ---
+  duration_ms: 0.117375
+  type: 'test'
+  ...
+# Subtest: step 9 sends image and frame findings with usable locate queries and distinct element selectors
+ok 44 - step 9 sends image and frame findings with usable locate queries and distinct element selectors
+  ---
+  duration_ms: 35.653292
+  type: 'test'
+  ...
+# Subtest: step 9 does not spend a second turn on an already repaired slotless finding
+ok 45 - step 9 does not spend a second turn on an already repaired slotless finding
+  ---
+  duration_ms: 5.481375
+  type: 'test'
+  ...
+# Subtest: an unstamped empty frame keeps its exact selector without inventing native provenance
+ok 46 - an unstamped empty frame keeps its exact selector without inventing native provenance
+  ---
+  duration_ms: 5.764375
+  type: 'test'
+  ...
+# Subtest: queued pages do not open repair sessions after a shared repair clears their faults
+ok 47 - queued pages do not open repair sessions after a shared repair clears their faults
+  ---
+  duration_ms: 5.722959
+  type: 'test'
+  ...
+# Subtest: a scoped repair check preserves queued faults on pages it did not measure
+ok 48 - a scoped repair check preserves queued faults on pages it did not measure
+  ---
+  duration_ms: 6.860666
+  type: 'test'
+  ...
+# Subtest: a deeply nested demo image reaches the comment builder with a complete asset selector
+ok 49 - a deeply nested demo image reaches the comment builder with a complete asset selector
+  ---
+  duration_ms: 6.148667
+  type: 'test'
+  ...
+# Subtest: a demo picture in an inline background retains its element and image provenance
+ok 50 - a demo picture in an inline background retains its element and image provenance
+  ---
+  duration_ms: 0.513916
+  type: 'test'
+  ...
+# (node:6718) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an item carries the content.locate answer for its element and the served block selector, as the popover sends it
+ok 51 - an item carries the content.locate answer for its element and the served block selector, as the popover sends it
+  ---
+  duration_ms: 34.025625
+  type: 'test'
+  ...
+# Subtest: with content.locate unavailable the item keeps the fault levels (slot and record) and says so
+ok 52 - with content.locate unavailable the item keeps the fault levels (slot and record) and says so
+  ---
+  duration_ms: 5.587125
+  type: 'test'
+  ...
+# Subtest: a comment page address is the page as the site serves it; an agent with no page address is refused
+ok 53 - a comment page address is the page as the site serves it; an agent with no page address is refused
+  ---
+  duration_ms: 9.546708
+  type: 'test'
+  ...
+# Subtest: a prompt the queue runs after the resend gave up is judged and undone like the rest
+ok 54 - a prompt the queue runs after the resend gave up is judged and undone like the rest
+  ---
+  duration_ms: 10.456458
+  type: 'test'
+  ...
+# Subtest: a resend that yields two turns keeps both, and both are judged
+ok 55 - a resend that yields two turns keeps both, and both are judged
+  ---
+  duration_ms: 5.416167
+  type: 'test'
+  ...
+# Subtest: a turn still open at ten minutes is waited for, never judged while open, and the step returns by twelve
+ok 56 - a turn still open at ten minutes is waited for, never judged while open, and the step returns by twelve
+  ---
+  duration_ms: 9.218083
+  type: 'test'
+  ...
+# Subtest: a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse
+ok 57 - a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse
+  ---
+  duration_ms: 9.336083
+  type: 'test'
+  ...
+# Subtest: every agent call and the site check are raced against the time left; the comment request is told it
+ok 58 - every agent call and the site check are raced against the time left; the comment request is told it
+  ---
+  duration_ms: 4.515917
+  type: 'test'
+  ...
+# Subtest: the first check shares the step clock: a slow first check leaves 9b less time for new work
+ok 59 - the first check shares the step clock: a slow first check leaves 9b less time for new work
+  ---
+  duration_ms: 3.500792
+  type: 'test'
+  ...
+# Subtest: the pages a turn changed come from what it wrote, not only the page it was sent for
+ok 60 - the pages a turn changed come from what it wrote, not only the page it was sent for
+  ---
+  duration_ms: 7.792667
+  type: 'test'
+  ...
+# Subtest: a write the pass cannot place on a page counts as changing every page
+ok 61 - a write the pass cannot place on a page counts as changing every page
+  ---
+  duration_ms: 3.535584
+  type: 'test'
+  ...
+# Subtest: an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason
+ok 62 - an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason
+  ---
+  duration_ms: 3.829708
+  type: 'test'
+  ...
+# Subtest: a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole
+ok 63 - a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole
+  ---
+  duration_ms: 4.435375
+  type: 'test'
+  ...
+# Subtest: an automatic repair turn cannot wait on a human until the chain two-hour deadline
+ok 64 - an automatic repair turn cannot wait on a human until the chain two-hour deadline
+  ---
+  duration_ms: 7.885541
+  type: 'test'
+  ...
+# Subtest: a refused or unsettled Stop never judges an open writer or starts another page writer
+ok 65 - a refused or unsettled Stop never judges an open writer or starts another page writer
+  ---
+  duration_ms: 9.4325
+  type: 'test'
+  ...
+# Subtest: the native turn gets its execution window after rate waiting and request submission
+ok 66 - the native turn gets its execution window after rate waiting and request submission
+  ---
+  duration_ms: 1.879583
+  type: 'test'
+  ...
+# Subtest: a failed read after Stop leaves the writer unverified and prevents subsequent repairs
+ok 67 - a failed read after Stop leaves the writer unverified and prevents subsequent repairs
+  ---
+  duration_ms: 5.18275
+  type: 'test'
+  ...
+# (node:6732) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: page recovery keeps the successful write and repairs newly observable content in its bounded second round
+ok 68 - page recovery keeps the successful write and repairs newly observable content in its bounded second round
+  ---
+  duration_ms: 32.965166
+  type: 'test'
+  ...
+# Subtest: a new read-back failure during page recovery still rolls back the write
+ok 69 - a new read-back failure during page recovery still rolls back the write
+  ---
+  duration_ms: 5.759084
+  type: 'test'
+  ...
+# Subtest: a genuine regression after recovery is compared against the last completed check
+ok 70 - a genuine regression after recovery is compared against the last completed check
+  ---
+  duration_ms: 6.783333
+  type: 'test'
+  ...
+# Subtest: a closed no-op gets a fresh check and one retry, then can pass on measured evidence
+ok 71 - a closed no-op gets a fresh check and one retry, then can pass on measured evidence
+  ---
+  duration_ms: 5.037459
+  type: 'test'
+  ...
+# Subtest: persistent no-op never claims done and records the unresolved finding
+ok 72 - persistent no-op never claims done and records the unresolved finding
+  ---
+  duration_ms: 5.58425
+  type: 'test'
+  ...
+# Subtest: a no-op whose fresh check is green does not waste a retry
+ok 73 - a no-op whose fresh check is green does not waste a retry
+  ---
+  duration_ms: 4.222041
+  type: 'test'
+  ...
+# Subtest: availability repairs are serialized so a shared menu repair clears queued failures
+ok 74 - availability repairs are serialized so a shared menu repair clears queued failures
+  ---
+  duration_ms: 3.628292
+  type: 'test'
+  ...
+# Subtest: excluded faults remain blocking and unmeasured checks cannot claim acceptance
+ok 75 - excluded faults remain blocking and unmeasured checks cannot claim acceptance
+  ---
+  duration_ms: 6.523417
+  type: 'test'
+  ...
+# Subtest: an unavailable kept page asks to restore the page, not remove a link
+ok 76 - an unavailable kept page asks to restore the page, not remove a link
+  ---
+  duration_ms: 0.387666
+  type: 'test'
+  ...
+# Subtest: an unmeasured check never labels a no-op fixed
+ok 77 - an unmeasured check never labels a no-op fixed
+  ---
+  duration_ms: 5.325959
+  type: 'test'
+  ...
+# Subtest: step 9 refuses to unpublish a native default Home item even when its path is /home
+ok 78 - step 9 refuses to unpublish a native default Home item even when its path is /home
+  ---
+  duration_ms: 0.714083
+  type: 'test'
+  ...
+# Subtest: step 9 can still unpublish an ordinary menu item and publish a default Home item
+ok 79 - step 9 can still unpublish an ordinary menu item and publish a default Home item
+  ---
+  duration_ms: 0.651916
+  type: 'test'
+  ...
+# Subtest: a repair that loses a previously measured contract is undone even without explicit findings
+ok 80 - a repair that loses a previously measured contract is undone even without explicit findings
+  ---
+  duration_ms: 3.427708
+  type: 'test'
+  ...
+# Subtest: an unmeasured no-op preserves its unresolved faults without sending a blind retry
+ok 81 - an unmeasured no-op preserves its unresolved faults without sending a blind retry
+  ---
+  duration_ms: 3.067917
+  type: 'test'
+  ...
+# (node:6733) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: each visible fault is sent once, with its page, element and one sentence; faults of one page share one turn
+ok 82 - each visible fault is sent once, with its page, element and one sentence; faults of one page share one turn
+  ---
+  duration_ms: 32.488875
+  type: 'test'
+  ...
+# Subtest: what is not sent: missing accent emphasis, faults with no page, faults no visitor sees
+ok 83 - what is not sent: missing accent emphasis, faults with no page, faults no visitor sees
+  ---
+  duration_ms: 4.703583
+  type: 'test'
+  ...
+# Subtest: no faults means no turn, and the site is handed over with the first check
+ok 84 - no faults means no turn, and the site is handed over with the first check
+  ---
+  duration_ms: 5.752625
+  type: 'test'
+  ...
+# Subtest: step 9 saves the rejected-picture faults in its final report
+ok 85 - step 9 saves the rejected-picture faults in its final report
+  ---
+  duration_ms: 3.041208
+  type: 'test'
+  ...
+# Subtest: a turn that causes a new blocking failure on its page is undone, newest first
+ok 86 - a turn that causes a new blocking failure on its page is undone, newest first
+  ---
+  duration_ms: 6.241708
+  type: 'test'
+  ...
+# Subtest: a prompt that opens no turn is resent once after 60 seconds, then dropped and logged
+ok 87 - a prompt that opens no turn is resent once after 60 seconds, then dropped and logged
+  ---
+  duration_ms: 8.337417
+  type: 'test'
+  ...
+# Subtest: faults still there after the second check get one resend round, then the pass ends
+ok 88 - faults still there after the second check get one resend round, then the pass ends
+  ---
+  duration_ms: 5.163958
+  type: 'test'
+  ...
+# Subtest: past ten minutes no new turn starts, and the step returns by twelve
+ok 89 - past ten minutes no new turn starts, and the step returns by twelve
+  ---
+  duration_ms: 17.662625
+  type: 'test'
+  ...
+# Subtest: a site check that cannot run after the turns hands over the written site with the first check, its turns undone
+ok 90 - a site check that cannot run after the turns hands over the written site with the first check, its turns undone
+  ---
+  duration_ms: 5.562542
+  type: 'test'
+  ...
+# Subtest: a build’s agent retires every session of the pass once it is over, and the bench’s agent is never asked to
+ok 91 - a build’s agent retires every session of the pass once it is over, and the bench’s agent is never asked to
+  ---
+  duration_ms: 7.69875
+  type: 'test'
+  ...
+# Subtest: the sessions are retired when the pass was taken back too, and a retire that fails is logged, not thrown
+ok 92 - the sessions are retired when the pass was taken back too, and a retire that fails is logged, not thrown
+  ---
+  duration_ms: 3.540167
+  type: 'test'
+  ...
+# Subtest: a step 9 run with no site agent writes and checks, and says the repair pass did not run
+ok 93 - a step 9 run with no site agent writes and checks, and says the repair pass did not run
+  ---
+  duration_ms: 1.985875
+  type: 'test'
+  ...
+# Subtest: every site check of step 9 runs the page groups even when read-back is red, and read-back stays blocking
+ok 94 - every site check of step 9 runs the page groups even when read-back is red, and read-back stays blocking
+  ---
+  duration_ms: 2.965833
+  type: 'test'
+  ...
+# (node:6737) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: step 9 stops a green resend when the original accepted request has no terminal native record
+ok 95 - step 9 stops a green resend when the original accepted request has no terminal native record
+  ---
+  duration_ms: 32.88675
+  type: 'test'
+  ...
+# Subtest: step 9 completes and persists success when every accepted repair request has a terminal native record
+ok 96 - step 9 completes and persists success when every accepted repair request has a terminal native record
+  ---
+  duration_ms: 7.923917
+  type: 'test'
+  ...
+# Subtest: step 9 stops when an original repair turn writes another page during session retirement
+ok 97 - step 9 stops when an original repair turn writes another page during session retirement
+  ---
+  duration_ms: 9.569792
+  type: 'test'
+  ...
+# Subtest: step 9 stops when a terminal native turn gains write evidence after its site check
+ok 98 - step 9 stops when a terminal native turn gains write evidence after its site check
+  ---
+  duration_ms: 8.466208
+  type: 'test'
+  ...
+# Subtest: step 9 returns stopped at its deadline when retirement never answers
+ok 99 - step 9 returns stopped at its deadline when retirement never answers
+  ---
+  duration_ms: 9.494542
+  type: 'test'
+  ...
+# Subtest: step 9 returns stopped at its deadline when final native read never answers
+ok 100 - step 9 returns stopped at its deadline when final native read never answers
+  ---
+  duration_ms: 8.401291
+  type: 'test'
+  ...
+# (node:6738) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: an article picture and a picture in a record HTML take the alt step 8 wrote from them
+ok 101 - an article picture and a picture in a record HTML take the alt step 8 wrote from them
+  ---
+  duration_ms: 28.45125
+  type: 'test'
+  ...
+# Subtest: a frame step 8 wrote no alt for keeps the record as it is
+ok 102 - a frame step 8 wrote no alt for keeps the record as it is
+  ---
+  duration_ms: 6.820792
+  type: 'test'
+  ...
+# Subtest: an alt the site refuses fails on its line in the plugin words, and the run still ends done
+ok 103 - an alt the site refuses fails on its line in the plugin words, and the run still ends done
+  ---
+  duration_ms: 6.594584
+  type: 'test'
+  ...
+1..103
+# tests 103
+# suites 0
+# pass 103
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5581.976584

@@ -4,7 +4,7 @@
 // check after it (repair-check.js), undone when it made a page it changed worse. Site check faults still there once a turn
 // is kept get one resend round in the same session, packed and judged the same way.
 import { pageItems } from './repair-locate.js'
-import { stillThere } from './repair-faults.js'
+import { faultsToSend, stillThere } from './repair-faults.js'
 import { turnParts } from './repair-parts.js'
 import { cutShort, sendPageTurn } from './repair-turns.js'
 
@@ -55,6 +55,10 @@ async function sendRound(pass, result, checks, { page, faults, round, sessionId 
   const made = []
   const kept = []
   for (const [k, part] of parts.entries()) {
+    if (pass.writerOpen) {
+      result.notSent.push({ page, round, faults: parts.slice(k).flat().length, reason: 'open-turn' })
+      break
+    }
     const turnFaults = part.map((i) => capped[i])
     if (k > 0 && pass.clock.stopped()) {
       const rest = parts.slice(k).flat().length
@@ -86,6 +90,14 @@ async function sendRound(pass, result, checks, { page, faults, round, sessionId 
  * @param {{ check: object }} state the site as it now is
  */
 export async function repairPage(pass, { page, faults }, result, checks, state) {
+  // A shared repair can clear a queued page while it waits for a free session.
+  // Only a completed check can remove its faults; scoped checks retain the other pages.
+  if (pass.writerOpen) {
+    result.notSent.push({ page, round: 1, faults: faults.length, reason: 'open-turn' })
+    return
+  }
+  faults = stillThere(faults, state.check)
+  if (!faults.length) return
   const from = pass.clock.now()
   const opened = await pass.clock.bounded('the site agent session', () => pass.agent.open())
   if (!opened?.sessionId)
@@ -94,11 +106,29 @@ export async function repairPage(pass, { page, faults }, result, checks, state) 
   result.sessions.push(sessionId)
   pass.mark?.('session', from, { page })
   const { kept } = await sendRound(pass, result, checks, { page, faults, round: 1, sessionId })
-  // A turn that wrote nothing gave no check to resend from; a cut-short or undone one is not resent.
-  const again = kept
-    .filter((t) => !t.cancelled && t.changes.length)
-    .flatMap((t) => stillThere(t.faults, state.check))
-  if (!again.length || pass.clock.stopped()) return
+  // A completed no-op gets the same single retry as a write. Recovery can expose faults that could not be measured before.
+  const retryable = kept.filter((t) => !t.cancelled && t.verdict !== 'unverified')
+  const exposed = retryable.some((t) => t.newlyObserved?.length)
+  const exposedFaults = exposed
+    ? faultsToSend({
+        firstCheck: state.check,
+        brief: pass.brief,
+        altSlots: pass.altSlots,
+        contentMap: pass.contentMap
+      })
+    : null
+  for (const skipped of exposedFaults?.skipped ?? [])
+    if (
+      skipped.fault.page === page &&
+      !result.skipped.some(
+        (s) => s.code === skipped.code && s.fault.page === page && s.fault.slot === skipped.fault.slot
+      )
+    )
+      result.skipped.push(skipped)
+  const again = exposedFaults
+    ? (exposedFaults.pages.find((p) => p.page === page)?.faults ?? [])
+    : retryable.flatMap((t) => stillThere(t.faults, state.check))
+  if (!again.length || pass.clock.stopped() || pass.writerOpen) return
   const { made } = await sendRound(pass, result, checks, { page, faults: again, round: 2, sessionId })
   for (const t of made) result.resent.push({ page, turnId: t.turnId, faults: t.faults.length })
 }

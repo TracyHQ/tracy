@@ -146,12 +146,27 @@ export async function snapshotMediaOf(db, snapshotId) {
 
 const time = (v) => (v ? new Date(v).getTime() : Number.NaN)
 
+/** Payment/authentication failures need an operator repair. Saving setup after the failure permits a new check. */
+export function providerRepairReason(row, setupUpdatedAt = null) {
+  const reason = row?.last_error?.reason ?? row?.reason
+  if (!/^HTTP_(401|402|403)$/i.test(reason ?? '')) return null
+  const failedAt = time(row?.attempted_at ?? row?.last_error?.at)
+  const repairedAt = time(setupUpdatedAt)
+  return Number.isFinite(repairedAt) && Number.isFinite(failedAt) && repairedAt > failedAt ? null : reason
+}
+
 /**
  * Whether a snapshot source should be collected again (`manual`: a pressed Research again): never tried, or its last SUCCESS is older than
  * `SOURCE_MAX_AGE_MS` and its last try older than `SOURCE_RETRY_MS` (a source that keeps failing is not
  * hammered on every request) — or older than `SOURCE_MAX_AGE_MS` when that try said the place has nothing there.
  */
-export function sourceDue(row, now, version = null, { manual = false, maxAgeMs = SOURCE_MAX_AGE_MS } = {}) {
+export function sourceDue(
+  row,
+  now,
+  version = null,
+  { manual = false, maxAgeMs = SOURCE_MAX_AGE_MS, setupUpdatedAt = null } = {}
+) {
+  if (providerRepairReason(row, setupUpdatedAt)) return false
   // A pressed Research again looks again at once at what our setup failed on; what the place has not waits.
   const wait = placeSettled(row) ? maxAgeMs : manual ? 0 : SOURCE_RETRY_MS
   if (version && row?.collector_version !== version) {

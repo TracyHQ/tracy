@@ -113,6 +113,29 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
   }
 }
 
+/** The origin a published file shows for a site the builder ran on this machine. */
+export const LOCAL_ORIGIN = 'http://localhost'
+// loopback, wildcard, private IPv4 ranges, loopback IPv6, a docker host name, a .local/.test/.localhost name
+const MACHINE_HOST =
+  /^(?:127(?:\.\d{1,3}){3}|0\.0\.0\.0|10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}|\[(?:::1?|::ffff:127(?:\.\d{1,3}){3})\]|localhost|host\.docker\.internal|[\w.-]+\.(?:local|test|localhost))$/i
+
+/**
+ * An origin as a PUBLISHED file may show it: a site the builder served on this machine (a loopback or private address,
+ * a local name, any port) is written as LOCAL_ORIGIN, with no port; any other origin, and a value that is not a URL, is
+ * kept. Nobody else can reach the builder's stand, and its address and port describe the builder's machine.
+ * @param {unknown} origin
+ */
+export function shownOrigin(origin) {
+  if (typeof origin !== 'string') return origin
+  let host
+  try {
+    host = new URL(origin).hostname
+  } catch {
+    return origin
+  }
+  return MACHINE_HOST.test(host) ? LOCAL_ORIGIN : origin
+}
+
 /**
  * A path as a PUBLISHED file may show it: relative to `base` (the template) when it lies inside, else its last segment. A
  * release is read by other people's machines; the builder's user home or temp folder is not theirs to see.

@@ -74,11 +74,11 @@ export async function runBrandRun(deps, row, lease) {
     if (ready.logoSource) await must(setLogoSource(pool, { runId, logo: ready.logoSource, leaseToken }))
     for (;;) {
       const next = await nextRound(pool, runId)
+      // Preparation and round reads can outlive a cancellation; fence round zero and safe-version work too.
+      if (await cancelAsked(pool, runId)) return end('cancelled')
       if (next.end) return end(...next.end)
       if (next.safe) return await safeVersion(deps, { row, ready, reason: next.safe, leaseToken, must, end })
       const { round, followUp } = next
-      // A cancel asked during the last call of a round ends the run before the next round opens.
-      if (round > 0 && next.opening && (await cancelAsked(pool, runId))) return end('cancelled')
       await must(setProgress(pool, { runId, step: round ? 'fixing' : 'working', round, leaseToken }))
       if (next.opening) await must(saveRound(pool, { runId, round, state: 'working', leaseToken }))
       const verdict = await playRound(deps, { row, ready, round, followUp, leaseToken, must })

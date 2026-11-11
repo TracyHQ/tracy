@@ -37,6 +37,7 @@ import {
   onlyMinorFaults,
   surfaceFacts
 } from './looker-call.js'
+import { letteringRejection, negativeLookCache, negativeLookKey } from './looker-negative-cache.js'
 
 export const LOOK_CONCURRENCY = 4
 /** The sources whose picture the looker checks. */
@@ -93,7 +94,9 @@ export function createLooker({
   concurrency
 }) {
   const store = fileStore(storeDir)
-  const kept = (key) => path.join(store.dir, 'runs', String(runId), 'looks', `${key}.json`)
+  const runDir = path.join(store.dir, 'runs', String(runId))
+  const kept = (key) => path.join(runDir, 'looks', `${key}.json`)
+  const negative = negativeLookCache({ dir: runDir, model: door.model })
 
   async function lookAt(list, entry, memo) {
     const frame = idx.frames.get(entry.frame)
@@ -134,7 +137,7 @@ export function createLooker({
     const before = await readFile(kept(key), 'utf8')
       .then(JSON.parse)
       .catch(() => null)
-    if (before) return { list, entry, said: before, cached: true }
+    if (before && !letteringRejection(before)) return { list, entry, said: before, cached: true }
     const bytes = await store.readPicture(path.basename(entry.file))
     const unreadable = (problem, spent = {}) => ({
       verdict: 'fail',
@@ -150,38 +153,59 @@ export function createLooker({
       checks: Boolean(cutout),
       background: cutout?.pageBackground ?? null
     })
-    const ask = () =>
-      askLooker({
-        door,
-        system: prompt.text,
-        words,
-        image,
-        outlined: Boolean(realPart),
-        cutout,
-        anyReal,
-        surface,
-        alt,
-        fetchImpl
-      })
-    const first = await ask()
-    if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
-    // Asked once more; both calls are counted.
-    const second = await ask()
-    const spent = {
-      ms: first.ms + second.ms,
-      costUsd:
-        first.costUsd === null && second.costUsd === null
-          ? null
-          : (first.costUsd ?? 0) + (second.costUsd ?? 0)
+    const renderKey = negativeLookKey({
+      sourceSha256: entry.sha256,
+      renderedSha256: sha256Hex(Buffer.from(image.base64, 'base64')),
+      box,
+      realPart,
+      cutout,
+      anyReal,
+      surface,
+      providerId: door.providerId,
+      model: door.model,
+      promptSha256: prompt.sha256
+    })
+    if (before) {
+      // Derive a versioned proof from this exact historical question without modifying its paid record or alt.
+      await negative.remember(renderKey, key, before)
+      return { list, entry, said: before, cached: true }
     }
-    if (second.verdict) return { list, entry, said: await keep(key, { ...second, ...spent }), cached: false }
-    // An unreadable look is not kept: the next round or a resumed run asks again.
-    return {
-      list,
-      entry,
-      said: unreadable(`${first.problem}; asked again: ${second.problem}`, spent),
-      cached: false
-    }
+    const looked = await negative.run(renderKey, key, async () => {
+      const ask = () =>
+        askLooker({
+          door,
+          system: prompt.text,
+          words,
+          image,
+          outlined: Boolean(realPart),
+          cutout,
+          anyReal,
+          surface,
+          alt,
+          fetchImpl
+        })
+      const first = await ask()
+      if (first.verdict) return { list, entry, said: await keep(key, first), cached: false }
+      // Asked once more; both calls are counted.
+      const second = await ask()
+      const spent = {
+        ms: first.ms + second.ms,
+        costUsd:
+          first.costUsd === null && second.costUsd === null
+            ? null
+            : (first.costUsd ?? 0) + (second.costUsd ?? 0)
+      }
+      if (second.verdict)
+        return { list, entry, said: await keep(key, { ...second, ...spent }), cached: false }
+      // An unreadable look is not kept: the next round or a resumed run asks again.
+      return {
+        list,
+        entry,
+        said: unreadable(`${first.problem}; asked again: ${second.problem}`, spent),
+        cached: false
+      }
+    })
+    return { list, entry, ...looked }
   }
 
   async function keep(key, said) {
@@ -215,7 +239,8 @@ export function createLooker({
         model: said.model ?? door.model,
         ms: said.ms ?? 0,
         costUsd: said.costUsd ?? null,
-        cached: Boolean(cached)
+        cached: Boolean(cached),
+        ...(said.cacheSource ? { cacheSource: said.cacheSource } : {})
       })
       entry.seen = said.seen
       const alt = limit ? cleanAlt(said.alt, limit) : null

@@ -98,3 +98,30 @@ test('Find sources is open once research has started, done included, and closed 
   assert.match(draw(null), /<details><summary/)
   assert.match(draw({ state: 'queued' }), /<details><summary/)
 })
+
+test('readiness failures name their repairable checks in both progress views', () => {
+  const failed = {
+    ...row,
+    demoAction: {
+      id: 'blocked',
+      state: 'failed',
+      step: 'build',
+      error: 'BRIEF_NOT_READY',
+      readiness: {
+        verdict: 'block',
+        next: 'research-again',
+        checks: ['labelled-share', 'source-and-credit', 'unknown-check'],
+        ownerQuestions: []
+      }
+    }
+  }
+  for (const Component of [lib.ProgressCell, lib.Steps]) {
+    const html = lib.renderToStaticMarkup(
+      lib.createElement(Component, { t, row: failed, locale: 'en', now: 0 })
+    )
+    assert.match(html, /\[reason\.brief_not_ready\]/)
+    assert.match(html, /\[brief\.check\.labelled-share\]/)
+    assert.match(html, /\[brief\.check\.source-and-credit\]/)
+    assert.doesNotMatch(html, /unknown-check/)
+  }
+})

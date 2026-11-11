@@ -13,6 +13,7 @@ import path from 'node:path'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
 import { brandRunDir } from './brand-step/brand-wiring.js'
 import { hostCall } from './host/client.js'
+import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
 import { openContentMap } from './lib/content-map-source.js'
 import { defaultContracts } from './lib/contracts.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
@@ -29,6 +30,7 @@ import { siteByKey } from './sites/store.js'
 import { mintSeatSession } from './workspace/seat-door.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
 import { siteFileReader } from './write-step/site-file.js'
+import { probeSiteHome, runWithSiteRecovery } from './write-step/site-recovery.js'
 import { sitePageReader, siteSheetsReader } from './write-step/site-sheets.js'
 import { standInBrand, standInCopy, standInPlan } from './write-step/stand-in-files.js'
 import { benchRepairAgent } from './write-step-bench-repair-agent.js'
@@ -48,7 +50,8 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
 /**
  * @param {{ pool: import('pg').Pool, config: any, secret: string, kitImages: { ensure: Function },
  *   brandWiring: Function, picturesStoreDir: string, fetchImpl?: typeof fetch, sleep?: (ms: number) => Promise<void>,
- *   log?: { warn?: Function, info?: Function }, port?: string | number, keepFiles?: boolean }} deps `keepFiles`: leave a
+ *   log?: { warn?: Function, info?: Function }, port?: string | number, keepFiles?: boolean,
+ *   benchCli?: Partial<Record<'brand' | 'plan' | 'copy' | 'pictures', Function>> }} deps `keepFiles`: leave a
  *   run's files on disk after it ends
  */
 export function createStepChainSteps(deps) {
@@ -73,7 +76,7 @@ export function createStepChainSteps(deps) {
   /** One command of a bench, its output lines kept. */
   async function command(name, argv) {
     const lines = { out: [], err: [] }
-    const code = await benches[name].cli(argv, {
+    const code = await (deps.benchCli?.[name] ?? benches[name].cli)(argv, {
       ...benches[name].deps,
       out: (l) => lines.out.push(String(l)),
       err: (l) => lines.err.push(String(l))
@@ -101,10 +104,15 @@ export function createStepChainSteps(deps) {
     const cancel = () => void command(name, ['cancel', runId]).catch(() => {})
     signal.addEventListener('abort', cancel, { once: true })
     try {
+      // Starting a run can outlive the chain: an abort before listener registration must still cancel its row.
+      if (signal.aborted) {
+        cancel()
+        throw signal.reason ?? new Error('stopped')
+      }
       let row
       for (;;) {
         const { rows } = await pool.query(
-          `select status, error, ${benches[name].cost ?? 'cost_usd'} as cost_usd from ${benches[name].table} where id = $1`,
+          `select status, error, ${name !== 'brand' ? 'standing_failures,' : ''} ${benches[name].cost ?? 'cost_usd'} as cost_usd from ${benches[name].table} where id = $1`,
           [runId]
         )
         row = rows[0]
@@ -118,14 +126,9 @@ export function createStepChainSteps(deps) {
       // best version it made can be used (the write never falls back to demo content).
       await mkdir(dir, { recursive: true })
       const got = await command(name, ['get', runId, '--out', dir])
-      const failure =
-        row.status !== 'succeeded'
-          ? `the ${name} run ${runId} ended ${row.status}: ${String(row.error ?? '').slice(0, 200)}`
-          : got.code !== 0
-            ? `the ${name} run ${runId} files: ${got.err.join(' ').slice(0, 200)}`
-            : null
+      const failure = chainBenchFailure(name, runId, row, got)
       log.info?.(`[step-chain] ${name} run ${runId} ${failure ?? 'succeeded'}, ${usd} USD`)
-      return { runId, usd, failure }
+      return { runId, usd, failure, checkFailures: Boolean(String(row.standing_failures ?? '').trim()) }
     } finally {
       signal.removeEventListener('abort', cancel)
     }
@@ -151,12 +154,40 @@ export function createStepChainSteps(deps) {
    * A bench step's answer: its output when the run succeeded; when it failed, an error that still carries the output it
    * made (if any), so the chain uses the best version rather than nothing.
    */
-  async function answerOf({ usd, failure }, value, made) {
+  async function answerOf({ usd, failure, checkFailures }, value, made) {
     if (!failure) return { value, usd }
-    throw Object.assign(stepError(failure, usd), (await made) ? { value } : {})
+    throw Object.assign(
+      stepError(failure, usd),
+      checkFailures ? { code: CHAIN_BENCH_CHECK_FAILED } : {},
+      (await made) ? { value } : {}
+    )
+  }
+
+  function ownerSiteDoor(ctx, site) {
+    return httpSiteDoor({
+      baseUrl: `http://localhost:${deps.port ?? process.env.PORT ?? 8080}`,
+      ...(config.tracyOrigin ? { hostHeader: new URL(config.tracyOrigin).host } : {}),
+      secret,
+      email: ctx.email,
+      platform: site.platform,
+      templateOf: async (quickstart) => templateOfTag(await readReleases(pool), quickstart),
+      fetchImpl
+    })
   }
 
   return {
+    async validateBase(ctx) {
+      const site = await siteByKey(pool, ctx.siteKey)
+      const point = site ? await ownerSiteDoor(ctx, site).recoveryPoint(ctx.siteKey) : null
+      if (!point)
+        throw Object.assign(
+          new Error(
+            'SITE_RECOVERY_POINT_UNAVAILABLE: the host has no verified full backup for this WO base site.'
+          ),
+          { code: 'SITE_RECOVERY_POINT_UNAVAILABLE' }
+        )
+      return point
+    },
     // The template kit (the template profile the release is sealed with), fetched and checked before anything forks.
     async kit(ctx) {
       const ref = ctx.contract?.id
@@ -186,7 +217,7 @@ export function createStepChainSteps(deps) {
       const dir = path.join(await folderOf(ctx), 'plan')
       const ran = await benchRun(
         'plan',
-        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), ...NO_CAPS],
+        ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), '--require-visual-review', ...NO_CAPS],
         dir,
         signal
       )
@@ -210,6 +241,7 @@ export function createStepChainSteps(deps) {
         kit.ref,
         '--brief-revision',
         revisionOf(ctx),
+        '--require-visual-review',
         ...NO_CAPS
       ]
       const ran = await benchRun('copy', argv, dir, signal)
@@ -265,15 +297,7 @@ export function createStepChainSteps(deps) {
       if (!site) throw stepError(`no site ${ctx.siteKey}`)
       // The comment requests and turn undo of 9b go through the web app's own doors as the site owner; every Apply call of
       // the step, the write and the site check's reads, goes through the setup door under this run's id.
-      const http = httpSiteDoor({
-        baseUrl: `http://localhost:${deps.port ?? process.env.PORT ?? 8080}`,
-        ...(config.tracyOrigin ? { hostHeader: new URL(config.tracyOrigin).host } : {}),
-        secret,
-        email: ctx.email,
-        platform: site.platform,
-        templateOf: async (quickstart) => templateOfTag(await readReleases(pool), quickstart),
-        fetchImpl
-      })
+      const http = ownerSiteDoor(ctx, site)
       const siteDoor = { ...http, apply: door.apply }
       const manifest = inputs.pictures
         ? JSON.parse(await readFile(inputs.pictures.manifest, 'utf8').catch(() => 'null'))
@@ -319,16 +343,31 @@ export function createStepChainSteps(deps) {
       })
       const out = path.join(dir, 'step-9')
       await mkdir(out, { recursive: true })
-      const step = await runStepNine({
-        write,
-        checkSite,
-        agent,
-        baselines: contractBaselineStore({ index: defaultContracts() }),
-        pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
-        limits,
-        saveFile: (name, data) => writeFile(path.join(out, name), data),
-        log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
+      const step = await runWithSiteRecovery({
+        door: siteDoor,
+        siteKey: ctx.siteKey,
+        runId: ctx.runId,
+        probe: () => probeSiteHome({ site, readers, fetchImpl }),
+        sleep,
+        run: () =>
+          runStepNine({
+            write,
+            beforeRepair: async () => {
+              if (!ctx.commitSetupWrites) throw new Error('The chain has no setup write checkpoint.')
+              await ctx.commitSetupWrites()
+            },
+            checkSite,
+            pictures: manifest,
+            agent,
+            baselines: contractBaselineStore({ index: defaultContracts() }),
+            pageHtml: (page) => pageHtml({ siteKey: ctx.siteKey, path: page }),
+            limits,
+            saveFile: (name, data) => writeFile(path.join(out, name), data),
+            log: { warn: (line) => log.warn?.(`[step-chain] ${ctx.siteKey}: ${line}`) }
+          })
       })
+      await writeFile(path.join(out, 'site-recovery.json'), JSON.stringify(step.recovery, null, 2))
+      await writeFile(path.join(out, 'site-write-report.json'), JSON.stringify(step.report, null, 2))
       const usd = Number(step.repair?.costUsd?.agent ?? 0)
       return { value: { report: step.report, siteCheck: step.siteCheck?.status ?? null }, usd }
     },

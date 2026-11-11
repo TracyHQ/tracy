@@ -15,30 +15,70 @@ export function normalizePrimary(value) {
   return typeof value === 'string' && HEX.test(value.trim()) ? value.trim() : DEFAULT_PRIMARY
 }
 
-/**
- * The accent: dsh's brand tokens plus Tracy's own `--primary`/`--ring`, so a dsh button and a
- * Tracy button agree. Hover shades are mixed at use time by the browser — literal strings, no
- * variables — darker on light backgrounds, lighter on dark ones. The default terracotta is a fill
- * and words in its darker shade (`DEFAULT_PRIMARY_FILL`, as tokens.css): this layer is written on
- * `<body>`, over tokens.css, and painted #bf5b3d under every primary label (#228). A colour the
- * person picked is used as it is.
- */
+/** Relative luminance of an accepted hex colour (WCAG 2). */
+function luminance(hex) {
+  const full =
+    hex.length === 4
+      ? '#' +
+        hex
+          .slice(1)
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : hex
+  const channels = [1, 3, 5]
+    .map((i) => Number.parseInt(full.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722
+}
+
+/** Keep the chosen hue where possible, moving towards black or white until contrast passes. */
+function readable(color, background, minimum) {
+  const bg = luminance(background)
+  const ratio = (hex) => (Math.max(luminance(hex), bg) + 0.05) / (Math.min(luminance(hex), bg) + 0.05)
+  if (ratio(color) >= minimum) return color
+  const full =
+    color.length === 4
+      ? '#' +
+        color
+          .slice(1)
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : color
+  const channels = [1, 3, 5].map((i) => Number.parseInt(full.slice(i, i + 2), 16))
+  const target = bg > 0.179 ? 0 : 255
+  for (let percent = 1; percent <= 100; percent++) {
+    const shade =
+      '#' +
+      channels
+        .map((c) =>
+          Math.round(c + ((target - c) * percent) / 100)
+            .toString(16)
+            .padStart(2, '0')
+        )
+        .join('')
+    if (ratio(shade) >= minimum) return shade
+  }
+  return target ? '#ffffff' : '#000000'
+}
+
+/** Separate button fills, readable accent words and focus strokes from the chosen brand colour. */
 export function primaryTokens(value) {
   const color = normalizePrimary(value)
-  const fill = color.toLowerCase() === DEFAULT_PRIMARY ? DEFAULT_PRIMARY_FILL : color
+  const chosen = color.toLowerCase() === DEFAULT_PRIMARY ? DEFAULT_PRIMARY_FILL : color
+  const fill = readable(chosen, '#fafafa', 4.5)
+  const text = { light: readable(chosen, '#ffffff', 4.5), dark: readable(chosen, '#262626', 4.5) }
   return {
     '--dsw-alias-brand-primary': both(color),
-    '--dsw-alias-brand-text': both(fill),
+    '--dsw-alias-brand-text': text,
     '--dsw-alias-button-primary-fill': both(fill),
-    '--dsw-alias-button-primary-hover': {
-      light: `color-mix(in oklab, ${fill} 88%, black)`,
-      dark: `color-mix(in oklab, ${fill} 88%, white)`
-    },
+    '--dsw-alias-button-primary-hover': both(`color-mix(in oklab, ${fill} 88%, black)`),
     '--dsw-alias-button-primary-dimmed': both(`color-mix(in oklab, ${fill} 55%, transparent)`),
     '--dsw-alias-brand-primary-invert': both('#ffffff'),
-    '--dsw-alias-state-business-primary': both(color),
+    '--dsw-alias-state-business-primary': text,
     '--primary': both(fill),
-    '--ring': both(color)
+    '--ring': { light: readable(color, '#ffffff', 3), dark: readable(color, '#262626', 3) }
   }
 }
 

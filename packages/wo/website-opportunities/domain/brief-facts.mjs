@@ -6,6 +6,7 @@
 // 🔒 ONE DECISION PER FACT. A brief field a fact backs (the hours, a team member, the WhatsApp button, Google's rating)
 // shows only when its fact is on the site; nothing else turns it on or off.
 import { factDecisions } from './fact-assessment.mjs'
+import { PLACEHOLDER_RE } from './content-pool.mjs'
 import { ratingShownForms } from './google-rating.mjs'
 import { comparable, labelQuoted } from './business-reading.mjs'
 import { cleanSocialUrl } from './social-links.mjs'
@@ -35,6 +36,7 @@ function fieldOf(path, fact, sourceKind, food) {
     // A summary another platform wrote of its reviews ("Guests praise…", `attribution`) is not the business's story.
     if (fact.value?.attribution) return null
     if (reason.startsWith('story:') || fact.value?.kind === 'story') return 'story'
+    if (fact.value?.kind === 'post') return 'posts'
     return null
   }
   if (group === 'claims' && key === 'statistics') {
@@ -98,6 +100,15 @@ export function briefFactsOf(profile, { food = false, decisions }) {
     const first = sources.get(refs[0]?.sourceId)
     const field = fieldOf(path, fact, first?.kind, food)
     if (!field) continue
+    // Preserve the raw profile quote, but never send an unfilled source-template line to the builder.
+    const cleanPostText = (text) =>
+      text
+        .split(/\r?\n/)
+        .filter((line) => !PLACEHOLDER_RE.test(line))
+        .join('\n')
+        .trim()
+    const value = field === 'posts' ? { ...fact.value, text: cleanPostText(fact.value.text) } : fact.value
+    if (field === 'posts' && !value.text) continue
     const d = decisions.get(fact.id) ?? {
       confidence: 'single-source',
       onSite: false,
@@ -107,7 +118,7 @@ export function briefFactsOf(profile, { food = false, decisions }) {
     out.push({
       id: fact.id,
       field,
-      value: fact.value,
+      value,
       evidence: refs.map((e) => {
         const s = sources.get(e.sourceId)
         // A link reads as Tracy shows it, without share tracking (#1780 item 10), like every link of the brief.
@@ -115,7 +126,9 @@ export function briefFactsOf(profile, { food = false, decisions }) {
         return {
           source: sourceName(s?.kind),
           ...(ref ? { ref } : {}),
-          ...(typeof e.excerpt === 'string' && e.excerpt.length <= MAX_QUOTE ? { quote: e.excerpt } : {})
+          ...(typeof e.excerpt === 'string' && e.excerpt.length <= MAX_QUOTE
+            ? { quote: field === 'posts' ? cleanPostText(e.excerpt) : e.excerpt }
+            : {})
         }
       }),
       confidence: d.confidence,

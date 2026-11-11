@@ -22,6 +22,7 @@ import {
 import { DOOR, finalReply, scriptedModel, toolCallReply, usageOf } from './_agent-over-door-fake.mjs'
 import { fileDb } from './_db.mjs'
 import { brief } from './_site-plan-check-inputs.mjs'
+import { PLANNER_BRIEF_VIEW } from '../src/site-planner/brief-view.js'
 
 const db = fileDb()
 before(db.open)
@@ -39,6 +40,7 @@ const input = (over = {}) => ({
   checkerVersion: 'site-plan-check/1',
   door: { door: 'sitePlanner', providerId: 'openrouter', model: 'anthropic/claude-opus-5.5' },
   harness: {
+    briefView: PLANNER_BRIEF_VIEW,
     maxTokens: 64000,
     effort: 'high',
     cacheTtl: { system: '1h', rolling: '5m' },

@@ -35,6 +35,8 @@ export const SENT_KINDS = Object.freeze({
     'This text is hard to read over its background: make it readable, keeping its words and the template look.',
   'demo-fact': () =>
     "This still shows the template demo's words: put this business's own words in their place, or remove them when the site has none.",
+  'unavailable-page': () =>
+    'This kept page itself does not load: restore its existing CMS route and publication state so this exact page answers successfully, checking the default Home menu if several pages fail together; keep the page and its content.',
   'bad-link': () =>
     "This link leads to a missing page or to the template demo: point it at this site's own page or contact, or remove it.",
   'broken-layout': () =>
@@ -99,6 +101,8 @@ const UNKNOWN = 'no table of repair-kinds.js names it, so it is logged and not s
 
 /** The kind of a site check failure, or null when no table names its group. A demo link that dials or mails is a contact link. */
 export function kindOfFailure(f) {
+  if (f.group === 'dead-links' && String(f.reason ?? '').startsWith('A kept page does not answer ('))
+    return 'unavailable-page'
   const kind = CHECK_GROUP_KINDS[f.group] ?? null
   if (kind === 'bad-link' && f.group === 'demo-links' && /^(tel|mailto):/i.test(String(f.measured ?? '')))
     return 'demo-contact-link'

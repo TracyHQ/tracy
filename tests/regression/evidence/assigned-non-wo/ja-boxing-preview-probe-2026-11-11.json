@@ -1,0 +1,18 @@
+[
+  {
+    "mode": "mobile",
+    "url": "https://cowork.tracy.site/api/templates/ja-boxing/shots/ja-boxing-j6-home-390.png?v=1eca62d6",
+    "response": "200 image/png",
+    "bytes": 973772,
+    "png": true,
+    "dimensions": [780, 7200]
+  },
+  {
+    "mode": "desktop",
+    "url": "https://cowork.tracy.site/api/templates/ja-boxing/shots/ja-boxing-j6-home-1440.png?v=2e2339b0",
+    "response": "200 image/png",
+    "bytes": 1271112,
+    "png": true,
+    "dimensions": [1440, 3600]
+  }
+]

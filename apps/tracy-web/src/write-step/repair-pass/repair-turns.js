@@ -20,7 +20,7 @@ export const readTurns = (pass, sessionId, requestIds) =>
   pass.clock.bounded('the site turn records', () => pass.agent.turns({ sessionId, requestIds }))
 
 /** Waits for a turn on one of `requestIds`: the turn once ended, `{ open }` when time ran out on an open one, or null. */
-async function awaitTurn(pass, sessionId, requestIds, noTurnBy) {
+async function awaitTurn(pass, sessionId, requestIds, noTurnBy, turnBy) {
   const { clock } = pass
   let open = null
   for (;;) {
@@ -29,7 +29,9 @@ async function awaitTurn(pass, sessionId, requestIds, noTurnBy) {
     if (ended) return ended
     open = turns.find((t) => t.state === 'open') ?? open
     if (!open && (clock.now() >= noTurnBy || clock.workLeft() <= 0)) return null
-    const left = open ? clock.waitLeft() : Math.min(noTurnBy - clock.now(), clock.workLeft())
+    const left = open
+      ? Math.min(clock.waitLeft(), turnBy - clock.now())
+      : Math.min(noTurnBy - clock.now(), clock.workLeft())
     if (left <= 0) return open ? { ...open, open: true } : null
     await clock.sleep(Math.max(1, Math.min(clock.limits.pollMs, left)))
   }
@@ -93,18 +95,19 @@ export async function sweepTurns(pass, result) {
  */
 export async function cutShort(pass, entry) {
   const { clock } = pass
+  entry.leftOpen = true
+  pass.writerOpen = true
   if (typeof pass.agent.cancel !== 'function') {
     pass.log(
       `step 9b: ${entry.turnId} still open at the time limit, and the site agent cannot cancel; left open`
     )
-    entry.leftOpen = true
     return entry
   }
   const answer = await clock
     .bounded('the session cancel', () => pass.agent.cancel({ sessionId: entry.sessionId }))
     .catch((error) => ({ ok: false, code: String(error?.message ?? error) }))
   pass.log(
-    `step 9b: ${entry.turnId} still open at the time limit; its session's work was cancelled (${answer?.ok === false ? `refused: ${answer.code}` : 'accepted'}), and it is judged by what it wrote`
+    `step 9b: ${entry.turnId} still open at the time limit; its session's Stop was requested (${answer?.ok === false ? `refused: ${answer.code}` : 'accepted'}), waiting for its turn record to end`
   )
   entry.cancelled = true
   const until = Math.min(clock.now() + clock.limits.cancelSettleMs, clock.now() + clock.checkLeft())
@@ -115,6 +118,12 @@ export async function cutShort(pass, entry) {
     if (turn) refresh(entry, turn)
     if (!turn || entry.state !== 'open' || clock.now() >= until) break
     await clock.sleep(Math.max(1, Math.min(clock.limits.pollMs, until - clock.now())))
+  }
+  entry.leftOpen = entry.state === 'open'
+  pass.writerOpen = pass.ledger.turns.some((turn) => turn.leftOpen && turn.state === 'open')
+  if (entry.leftOpen) {
+    pass.writerOpen = true
+    pass.log(`step 9b: ${entry.turnId} has not ended after Stop; no further repairs or judgement`)
   }
   return entry
 }
@@ -146,14 +155,17 @@ export async function sendPageTurn(pass, { page, faults, items, round, sessionId
   ledger.records.set(requestId, record)
   if (!(await prompt(requestId)))
     return { ...record, refused: 'the session did not accept the prompt', ms: clock.now() - from }
-  let turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs)
+  // Waiting for quota, numbering and accepting a prompt is not native execution time.
+  const turnBy = clock.now() + clock.limits.turnMs
+  record.turnBy = turnBy
+  let turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs, turnBy)
   if (!turn && !clock.stopped()) {
     const again = `${requestId}-resend`
     record.requestIds.push(again)
     ledger.records.set(again, record)
     pass.log(`step 9b: no turn on ${page} after ${clock.limits.noTurnMs / 1000} s; resent once`)
     if (await prompt(again))
-      turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs)
+      turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs, turnBy)
   }
   const ms = clock.now() - from
   if (!turn) {

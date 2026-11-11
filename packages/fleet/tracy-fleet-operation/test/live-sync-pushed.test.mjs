@@ -705,9 +705,11 @@ test(
 )
 
 // ── #307: a record whose live delete the merge took leaves the id map and its copy-only rows ──────
-function joomlaMerge(names, map) {
+function joomlaMerge(names, map, pushed = null) {
   const file = join(root, `${names.ours}-map.json`)
   writeFileSync(file, JSON.stringify(map))
+  const pushedFile = `${file}.pushed`
+  if (pushed) writeFileSync(pushedFile, JSON.stringify({ records: pushed }))
   const r = spawnSync(
     'python3',
     [
@@ -728,7 +730,8 @@ function joomlaMerge(names, map) {
       '--prefer',
       'ours',
       '--id-map',
-      file
+      file,
+      ...(pushed ? ['--pushed', pushedFile] : [])
     ],
     { encoding: 'utf8', env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) } }
   )
@@ -850,7 +853,8 @@ test(
       guid: `${LIVE}/old-news/`,
       post_type: 'post'
     })}
-       INSERT INTO wp_postmeta VALUES (60, 30, 'subtitle', 'A subtitle');
+       INSERT INTO wp_postmeta VALUES (60, 30, 'subtitle', 'A subtitle'),
+         (62, 30, '_pingme', '1'), (63, 30, '_encloseme', '1');
        INSERT INTO wp_term_relationships VALUES (30, 1, 0);`
     schema('wk_base', SITE(LIVE, `${picture('rt-pic')} ${post}`))
     schema(
@@ -898,7 +902,7 @@ test(
     assert.deepEqual(rows('SELECT COUNT(*) FROM wp_term_relationships WHERE object_id = 30', 'wk_ours'), [
       ['0']
     ])
-    assert.equal(answer.counts.orphansRemoved, 2)
+    assert.equal(answer.counts.orphansRemoved, 4)
   }
 )
 
@@ -927,3 +931,201 @@ test(
     )
   }
 )
+
+for (const high of [false, true]) {
+  test(
+    `Joomla: repeated push with reversed live ids syncs without counter pollution (existing high ids: ${high}, #536)`,
+    opts,
+    () => {
+      const offset = high ? 2_000_000_000 : 0
+      schema('repeat_base', `${J_TABLES} ${ARTICLE_1}`)
+      schema('repeat_ours', `${J_TABLES} ${ARTICLE_1}`)
+      schema('repeat_theirs', `${J_TABLES} ${ARTICLE_1}`)
+      const first = joomlaMerge(
+        { base: 'repeat_base', ours: 'repeat_ours', theirs: 'repeat_theirs' },
+        { content: { 1: 1 } }
+      )
+      assert.equal(first.ok, true)
+      assert.equal(autoIncrement('repeat_ours', 'jos_content'), 2)
+      for (const [id, title] of [
+        [2, 'D2'],
+        [3, 'G1']
+      ]) {
+        sql(`INSERT INTO jos_content (id, title) VALUES (${offset + id}, '${title}');`, 'repeat_ours')
+        sql(`INSERT INTO jos_content (id, title) VALUES (${5 - id}, '${title}');`, 'repeat_theirs')
+      }
+      const map = { content: { 1: 1, 2: offset + 3, 3: offset + 2 } }
+      const answer = joomlaMerge({ base: 'repeat_base', ours: 'repeat_ours', theirs: 'repeat_theirs' }, map)
+      assert.equal(answer.ok, true)
+      assert.deepEqual(rows('SELECT id, title FROM jos_content ORDER BY id', 'repeat_ours'), [
+        ['1', 'Tracy news'],
+        [String(offset + 2), 'D2'],
+        [String(offset + 3), 'G1']
+      ])
+      assert.equal(autoIncrement('repeat_ours', 'jos_content'), offset + 4)
+    }
+  )
+}
+
+for (const high of [false, true]) {
+  test(
+    `WordPress: reversed pushed post ids sync with references (existing high ids: ${high}, #536)`,
+    opts,
+    () => {
+      const offset = high ? 2_000_000_000 : 0
+      schema('wr_base', SITE(LIVE, ''))
+      const post = (id, title) =>
+        wpRow({
+          ID: id,
+          post_title: title,
+          post_name: title.toLowerCase(),
+          post_type: 'post',
+          post_date: '2026-11-10 10:00:00'
+        })
+      schema(
+        'wr_ours',
+        SITE(
+          COPY,
+          `${post(offset + 700, 'D2')} ${post(offset + 701, 'G1')}
+      INSERT INTO wp_postmeta VALUES (900, ${offset + 700}, 'subtitle', 'D2 meta');`
+        )
+      )
+      schema(
+        'wr_theirs',
+        SITE(
+          LIVE,
+          `${post(701, 'D2')} ${post(700, 'G1')}
+      INSERT INTO wp_postmeta VALUES (900, 701, 'subtitle', 'D2 meta');`
+        )
+      )
+      const answer = wpMerge({ base: 'wr_base', ours: 'wr_ours', theirs: 'wr_theirs' }, null, {
+        posts: { 701: offset + 700, 700: offset + 701 }
+      })
+      assert.equal(answer.ok, true)
+      assert.deepEqual(rows(`SELECT ID, post_title FROM wp_posts WHERE ID >= 700 ORDER BY ID`, 'wr_ours'), [
+        [String(offset + 700), 'D2'],
+        [String(offset + 701), 'G1']
+      ])
+      assert.deepEqual(rows("SELECT post_id FROM wp_postmeta WHERE meta_key = 'subtitle'", 'wr_ours'), [
+        [String(offset + 700)]
+      ])
+      assert.equal(autoIncrement('wr_ours', 'wp_posts'), offset + 702)
+    }
+  )
+}
+
+test('Joomla: a taken mapped table preserves real counters before the holding move (#536)', opts, () => {
+  schema('counter_base', `${J_TABLES} ${ARTICLE_1}`)
+  schema(
+    'counter_ours',
+    `${J_TABLES} ${ARTICLE_1} UPDATE jos_content SET id = 2 WHERE id = 1; ALTER TABLE jos_content AUTO_INCREMENT = 50;`
+  )
+  schema(
+    'counter_theirs',
+    `${J_TABLES} ${ARTICLE_1} UPDATE jos_content SET title = 'Live edit' WHERE id = 1; ALTER TABLE jos_content AUTO_INCREMENT = 75;`
+  )
+  const answer = joomlaMerge(
+    { base: 'counter_base', ours: 'counter_ours', theirs: 'counter_theirs' },
+    { content: { 1: 2 } }
+  )
+  assert.equal(answer.ok, true)
+  assert.equal(answer.tables.jos_content, 'from-theirs')
+  assert.deepEqual(rows('SELECT id, title FROM jos_content', 'counter_ours'), [['2', 'Live edit']])
+  assert.equal(autoIncrement('counter_ours', 'jos_content'), 75)
+  sql("INSERT INTO jos_content (title) VALUES ('Next article');", 'counter_ours')
+  assert.deepEqual(rows("SELECT id FROM jos_content WHERE title = 'Next article'", 'counter_ours'), [['75']])
+})
+
+test('Joomla: a pushed article version is present before its number is remembered (#550)', opts, () => {
+  schema('jh_base', J_TABLES)
+  schema(
+    'jh_ours',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{"title":"Copy version"}');`
+  )
+  schema(
+    'jh_theirs',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{"title":"Live version"}');`
+  )
+  const settle = joomlaMerge(
+    { base: 'jh_base', ours: 'jh_ours', theirs: 'jh_theirs' },
+    { content: { 1: 1 } },
+    [{ table: 'content', entity: 'content', id: 1, match: { id: '1' }, create: true }]
+  )
+  assert.equal(settle.ok, true)
+  assert.deepEqual(settle.kept, [])
+  const copyVersion = settle.idMap.history?.['4']
+  assert.ok(copyVersion > 4, JSON.stringify(settle.idMap))
+  assert.deepEqual(
+    rows(`SELECT item_id, version_data FROM jos_history WHERE version_id = ${copyVersion}`, 'jh_ours'),
+    [['com_content.article.1', '{"title":"Live version"}']]
+  )
+  assert.ok(autoIncrement('jh_ours', 'jos_history') > copyVersion)
+
+  // A later unrelated save must never occupy the pushed version's remembered number.
+  sql(
+    "INSERT INTO jos_content (id, title) VALUES (2, 'Other article'); INSERT INTO jos_history (item_id, version_data) VALUES ('com_content.article.2', '{}');",
+    'jh_ours'
+  )
+  schema(
+    'jh_base2',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{"title":"Live version"}');`
+  )
+  schema('jh_theirs2', J_TABLES)
+  const deleted = joomlaMerge({ base: 'jh_base2', ours: 'jh_ours', theirs: 'jh_theirs2' }, settle.idMap)
+  assert.equal(deleted.ok, true)
+  assert.deepEqual(deleted.kept, [])
+  assert.equal(deleted.idMap.history, undefined)
+  assert.deepEqual(rows('SELECT item_id FROM jos_history', 'jh_ours'), [['com_content.article.2']])
+})
+
+test('Joomla: a historical phantom version mapping never names another article (#550)', opts, () => {
+  schema(
+    'jm_base',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{}');`
+  )
+  schema(
+    'jm_ours',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_content (id, title) VALUES (2, 'Other article');
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (5, 'com_content.article.2', '{"title":"Other article"}');`
+  )
+  schema('jm_theirs', J_TABLES)
+  const answer = joomlaMerge(
+    { base: 'jm_base', ours: 'jm_ours', theirs: 'jm_theirs' },
+    { content: { 1: 1 }, history: { 4: 5 } }
+  )
+  assert.equal(answer.ok, true)
+  assert.deepEqual(answer.kept, [])
+  assert.equal(answer.idMap.history, undefined)
+  assert.deepEqual(rows('SELECT version_id, item_id, version_data FROM jos_history', 'jm_ours'), [
+    ['5', 'com_content.article.2', '{"title":"Other article"}']
+  ])
+})
+
+test('Joomla: a real version pair survives its article number translation (#550)', opts, () => {
+  const version = (id, article) =>
+    `INSERT INTO jos_history (version_id, item_id, version_data) VALUES (${id}, 'com_content.article.${article}', '{}');`
+  schema('jn_base', `${J_TABLES} ${ARTICLE_1} ${version(4, 1)}`)
+  schema('jn_theirs', `${J_TABLES} ${ARTICLE_1} ${version(4, 1)}`)
+  schema(
+    'jn_ours',
+    `${J_TABLES} ${ARTICLE_1}
+    UPDATE jos_content SET id = 7 WHERE id = 1;
+    UPDATE jos_workflow_associations SET item_id = 7 WHERE item_id = 1;
+    ${version(5, 7)}`
+  )
+  const answer = joomlaMerge(
+    { base: 'jn_base', ours: 'jn_ours', theirs: 'jn_theirs' },
+    { content: { 1: 7 }, history: { 4: 5 } }
+  )
+  assert.equal(answer.ok, true)
+  assert.deepEqual(answer.kept, [])
+  assert.deepEqual(answer.idMap.history, { 4: 5 })
+  assert.deepEqual(rows('SELECT version_id, item_id FROM jos_history', 'jn_ours'), [
+    ['5', 'com_content.article.7']
+  ])
+})

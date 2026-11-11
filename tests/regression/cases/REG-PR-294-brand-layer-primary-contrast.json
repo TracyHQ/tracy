@@ -1,23 +1,23 @@
 {
   "id": "REG-PR-294-brand-layer-primary-contrast",
   "kind": "fix",
-  "title": "The brand theme layer paints the default primary at WCAG AA under labels and as words",
+  "title": "Primary controls and chosen accents keep readable labels, hover states, accent words and focus strokes",
   "pr": 294,
   "area": "ui/brand",
   "cms": ["wp", "jo", "em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "Read tracy-brand's default theme layer (primaryTokens('')) and tokens.css; compute contrast of --primary-foreground on each fill and of each fill on white."
+    "Run the primary contrast suite and render the real shared Button with generated add-site CSS and the brand theme layer in Chromium, for the default and eight chosen colours, in both modes, at rest and hovered."
   ],
   "expect": [
-    "--primary, the dsh button fill and brand text equal tokens.css --primary and read at least 4.5:1 both ways; --ring and the brand mark stay #bf5b3d."
+    "All 72 primary/destructive rendered states read at least 4.5:1. Derived accent words read at least 4.5:1 on their mode background, and focus strokes at least 3:1. The chosen brand mark is retained."
   ],
   "selectors": {},
   "evidence": "Issue #228 re-test: theme.mjs primaryTokens wrote --primary #bf5b3d inline on <body>, 4.21:1",
-  "fence": "tracy-brand theme.mjs primaryTokens",
+  "fence": "theme.mjs primaryTokens, shared Button variants and their generated CSS",
   "run": {
-    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/primary-contrast.test.mjs"],
-    "tests": ["the tracy-brand theme layer paints the same AA primary over tokens.css"]
+    "cmd": ["node", "tests/regression/scripts/REG-PR-294-brand-layer-primary-contrast.mjs"],
+    "timeout_s": 240
   }
 }

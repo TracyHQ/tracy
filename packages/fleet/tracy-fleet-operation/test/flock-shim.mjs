@@ -14,20 +14,23 @@ const SHIM = `#!/usr/bin/env python3
 import fcntl, sys, time
 args = sys.argv[1:]
 wait = None
+mode = fcntl.LOCK_EX
 while args and args[0].startswith('-'):
     flag = args.pop(0)
     if flag == '-n':
         wait = 0.0
+    elif flag == '-s':
+        mode = fcntl.LOCK_SH
     elif flag == '-w':
         wait = float(args.pop(0))
 fd = int(args[0])
 if wait is None:
-    fcntl.flock(fd, fcntl.LOCK_EX)
+    fcntl.flock(fd, mode)
     sys.exit(0)
 deadline = time.time() + wait
 while True:
     try:
-        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        fcntl.flock(fd, mode | fcntl.LOCK_NB)
         sys.exit(0)
     except BlockingIOError:
         if time.time() >= deadline:

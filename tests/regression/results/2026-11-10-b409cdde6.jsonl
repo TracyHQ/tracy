@@ -1,0 +1,3 @@
+{"id":"REG-PR-294-brand-layer-primary-contrast","verdict":"PASS","commit":"b409cdde66d9449ba18e2c8b04ab8ddb0e8f9a64","ran_at":"2026-11-10T15:51:48.261Z","evidence":"REG-PR-294-brand-layer-primary-contrast.log"}
+{"id":"REG-PR-311-taken-delete-leaves-id-map","verdict":"PASS","commit":"b409cdde66d9449ba18e2c8b04ab8ddb0e8f9a64","ran_at":"2026-11-10T15:52:09.187Z","evidence":"REG-PR-311-taken-delete-leaves-id-map.log"}
+{"id":"REG-PR-541-failed-import-progress","verdict":"PASS","commit":"b409cdde66d9449ba18e2c8b04ab8ddb0e8f9a64","ran_at":"2026-11-10T15:52:30.147Z","evidence":"REG-PR-541-failed-import-progress.log"}

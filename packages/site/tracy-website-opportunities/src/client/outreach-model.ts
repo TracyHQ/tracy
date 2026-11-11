@@ -8,6 +8,8 @@ export interface DemoUsage {
 export interface DemoAction {
   workflow?: string
   chatMode?: string
+  revisionId?: string
+  readiness?: { verdict: string; next: string; checks: string[]; ownerQuestions: unknown[] }
   opportunityId?: string
   chat?: { siteKey: string; sessionId: string; href: string } | null
   id: string

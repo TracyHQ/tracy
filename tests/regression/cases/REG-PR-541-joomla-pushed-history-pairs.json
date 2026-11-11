@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-541-joomla-pushed-history-pairs",
+  "kind": "fix",
+  "title": "Joomla push versions keep real rows and cannot claim another article's history",
+  "pr": 541,
+  "area": "sync/history",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the local MariaDB merge mechanism suite."],
+  "expect": [
+    "A pushed version exists under its mapped copy number before another save.",
+    "Live deletion preserves the unrelated article's version without a kept conflict.",
+    "Historical phantom version pairs are repaired before the next merge."
+  ],
+  "selectors": {},
+  "fence": "A Joomla version mapping names a real copy row of the same record",
+  "run": {
+    "cmd": ["node", "--test", "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs"],
+    "needs": [],
+    "timeout_s": 240
+  }
+}

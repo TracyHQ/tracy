@@ -95,7 +95,14 @@ export async function fillFrames({ plan, brief, kit, photoBytes, icons = null })
           'a cut-out is drawn on a plain ground that code removes, then looked at'
         )
       )
-    else if (wish.match === 'any-real' || wish.match === 'person') work.push({ frameId, wish, frame, list })
+    else if (frame.transparent === true) {
+      // The owner-photo path writes JPEG, including for person frames. Do not flatten an alpha-required avatar
+      // strip or generate new people to fill it: hide only when the kit proved that its layout holds without it.
+      const reason = 'this slot requires transparency, which the owner-photo JPEG path cannot preserve'
+      if (list === 'frames' && frame.canHide === true && !idx.galleryTile(frameId))
+        entries.set(frameId, { list, entry: hiddenEntry(frameId, reason) })
+      else returns.push({ frame: frameId, reason: `${reason}; the frame cannot be hidden alone` })
+    } else if (wish.match === 'any-real' || wish.match === 'person') work.push({ frameId, wish, frame, list })
     else
       pending.push(pendingEntry(wish, frame, WAITS_FOR.picker, 'a specific picture is chosen by the picker'))
   }

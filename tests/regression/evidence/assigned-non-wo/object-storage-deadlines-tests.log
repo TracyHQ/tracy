@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: presign: pinning `now` produces the exact same URL as pinning Date.now() itself — the port changed nothing
+ok 1 - presign: pinning `now` produces the exact same URL as pinning Date.now() itself — the port changed nothing
+  ---
+  duration_ms: 6.469917
+  type: 'test'
+  ...
+# Subtest: presign: expiresIn is honored, and a different key or method changes the signature
+ok 2 - presign: expiresIn is honored, and a different key or method changes the signature
+  ---
+  duration_ms: 1.441542
+  type: 'test'
+  ...
+# Subtest: presign: default expiresIn is PART_URL_TTL_S
+ok 3 - presign: default expiresIn is PART_URL_TTL_S
+  ---
+  duration_ms: 0.956417
+  type: 'test'
+  ...
+# Subtest: signedCall: signs a request and sends it through the given fetchImpl, never the real fetch
+ok 4 - signedCall: signs a request and sends it through the given fetchImpl, never the real fetch
+  ---
+  duration_ms: 9.264542
+  type: 'test'
+  ...
+# Subtest: artifactKey: a key under sites/<label>/, named by kind, and pinnable for a deterministic test
+ok 5 - artifactKey: a key under sites/<label>/, named by kind, and pinnable for a deterministic test
+  ---
+  duration_ms: 0.229292
+  type: 'test'
+  ...
+# Subtest: storeForSource: no public endpoint configured → the very same store, so every URL is signed as before
+ok 6 - storeForSource: no public endpoint configured → the very same store, so every URL is signed as before
+  ---
+  duration_ms: 0.050917
+  type: 'test'
+  ...
+# Subtest: storeForSource: a public endpoint signs the host the source site reaches, and only the host differs
+ok 7 - storeForSource: a public endpoint signs the host the source site reaches, and only the host differs
+  ---
+  duration_ms: 2.044667
+  type: 'test'
+  ...
+# Subtest: object PUT aborts stalled headers and releases its connection
+ok 8 - object PUT aborts stalled headers and releases its connection
+  ---
+  duration_ms: 107.630834
+  type: 'test'
+  ...
+# Subtest: object GET aborts stalled headers and releases its connection
+ok 9 - object GET aborts stalled headers and releases its connection
+  ---
+  duration_ms: 103.452792
+  type: 'test'
+  ...
+# Subtest: object HEAD aborts stalled headers and releases its connection
+ok 10 - object HEAD aborts stalled headers and releases its connection
+  ---
+  duration_ms: 103.140916
+  type: 'test'
+  ...
+# Subtest: object DELETE aborts stalled headers and releases its connection
+ok 11 - object DELETE aborts stalled headers and releases its connection
+  ---
+  duration_ms: 102.855208
+  type: 'test'
+  ...
+# Subtest: object GET deadline remains active after headers and first bytes
+ok 12 - object GET deadline remains active after headers and first bytes
+  ---
+  duration_ms: 153.601875
+  type: 'test'
+  ...
+# Subtest: caller cancellation aborts object GET body and PUT before the deadline
+ok 13 - caller cancellation aborts object GET body and PUT before the deadline
+  ---
+  duration_ms: 4.635125
+  type: 'test'
+  ...
+# Subtest: object responses preserve bytes and status; metadata calls release unused bodies
+ok 14 - object responses preserve bytes and status; metadata calls release unused bodies
+  ---
+  duration_ms: 10.305625
+  type: 'test'
+  ...
+# Subtest: injected object transports retain signals and failed requests retain false/null results
+ok 15 - injected object transports retain signals and failed requests retain false/null results
+  ---
+  duration_ms: 1.407542
+  type: 'test'
+  ...
+# Subtest: status-only object operations cancel unused bodies and reject missing or invalid sizes
+ok 16 - status-only object operations cancel unused bodies and reject missing or invalid sizes
+  ---
+  duration_ms: 3.132875
+  type: 'test'
+  ...
+# Subtest: caller cancellation interrupts an active object upload
+ok 17 - caller cancellation interrupts an active object upload
+  ---
+  duration_ms: 3.562625
+  type: 'test'
+  ...
+# Subtest: a shared key names the content, not the place, and its origin prefix
+ok 18 - a shared key names the content, not the place, and its origin prefix
+  ---
+  duration_ms: 1.007416
+  type: 'test'
+  ...
+# Subtest: Google-served media goes under google/: Places, Maps (also through SerpApi), and Google credits
+ok 19 - Google-served media goes under google/: Places, Maps (also through SerpApi), and Google credits
+  ---
+  duration_ms: 0.172125
+  type: 'test'
+  ...
+# Subtest: reads and writes go to the store the key prefix names; the shared bucket is never deleted from
+ok 20 - reads and writes go to the store the key prefix names; the shared bucket is never deleted from
+  ---
+  duration_ms: 11.604375
+  type: 'test'
+  ...
+# Subtest: the shared key is offered only when the shared store is configured
+ok 21 - the shared key is offered only when the shared store is configured
+  ---
+  duration_ms: 0.1125
+  type: 'test'
+  ...
+# Subtest: with neither store there are no objects; a media/ key without the shared store is unreadable
+ok 22 - with neither store there are no objects; a media/ key without the shared store is unreadable
+  ---
+  duration_ms: 0.210291
+  type: 'test'
+  ...
+# Subtest: routed media storage preserves caller cancellation through real storage requests
+ok 23 - routed media storage preserves caller cancellation through real storage requests
+  ---
+  duration_ms: 26.211875
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 810.646833

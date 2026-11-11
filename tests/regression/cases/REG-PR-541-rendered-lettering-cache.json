@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-541-rendered-lettering-cache",
+  "kind": "fix",
+  "title": "Identical rendered lettering failures do not pay repeatedly for different frame moods",
+  "pr": 541,
+  "area": "website-opportunities/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run deterministic picture looker tests with generated pixels and a scripted provider."],
+  "expect": [
+    "Three concurrent identical renders with different moods make one paid provider call and retain failure.",
+    "Reused negative evidence references the original look and carries no inherited alt, subject fault or extra paid cost.",
+    "Passes and other failures remain specific to their questions.",
+    "Changed source pixels, display, surface, model or prompt require a new provider look.",
+    "Controlled provider delays report model calls, service time and wall time separately.",
+    "A missing original paid look invalidates derived evidence and requires a fresh provider call.",
+    "An exact historical paid rejection can seed the versioned proof without rewriting its answer."
+  ],
+  "selectors": {},
+  "fence": "Exact rendered lettering rejection only; no asset blacklist, quality threshold change or reused pass.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-pictures-looker-negative-cache.test.mjs"
+    ],
+    "tests": [
+      "identical rendered lettering failures share one paid look across moods and concurrent calls without sharing alts",
+      "passes and subject-dependent failures never share verdicts across questions",
+      "changed pixels, display, surface, model and prompt require their own look",
+      "controlled provider delays report call, service and wall time separately for repeated versus distinct renders",
+      "a missing original paid look invalidates its derived negative proof",
+      "an exact historical lettering look seeds a versioned proof without rewriting its paid answer",
+      "an exact historical lettering look seeds a versioned proof without rewriting its paid answer"
+    ],
+    "needs": []
+  }
+}

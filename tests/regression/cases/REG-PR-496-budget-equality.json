@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-496-budget-equality",
+  "kind": "fix",
+  "title": "A budgeted agent stops before another call when known spend equals its limit",
+  "pr": 496,
+  "area": "ai/bench-budget",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run a scripted agent with a $1 budget and a first tool answer costing exactly $1.",
+    "S2: offer a second scripted answer and inspect the saved turn count and model request count."
+  ],
+  "expect": [
+    "S1: the first answered turn is kept with its $1 cost.",
+    "S2: the agent returns AGENT_BUDGET before dispatching the second request."
+  ],
+  "selectors": {
+    "guard": "apps/tracy-web/src/lib/agent-over-door.js",
+    "test": "apps/tracy-web/test/agent-over-door-guards.test.mjs"
+  },
+  "evidence": "The strict greater-than comparison treated a budget already consumed exactly as having room for another call.",
+  "fence": "Known spend at or above the budget never starts another model call.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=exactly at its budget",
+      "apps/tracy-web/test/agent-over-door-guards.test.mjs"
+    ],
+    "tests": ["a conversation exactly at its budget dispatches no additional model call"]
+  }
+}

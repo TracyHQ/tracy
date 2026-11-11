@@ -31,6 +31,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { after, before, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
+import { gunzipSync } from 'node:zlib'
 import { pathWithFlock } from './flock-shim.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
@@ -280,6 +281,48 @@ const liveTables = () =>
     .filter(Boolean)
 
 // ── EmDash: runs everywhere ─────────────────────────────────────────────────────────────────
+
+test('EmDash: provision retry preserves historical v1 and captures rebuilt files and database in a new point', () => {
+  const s = stack('emdash')
+  try {
+    writeFileSync(join(s.webroot, 'index.html'), 'earlier failed build')
+    s.run(GIT, ['--op', 'ensure'])
+    const oldTag = s.git('rev-parse', 'tracy-release/v1').trim()
+    assert.equal(point(s, 1).database, null)
+    writeFileSync(join(s.webroot, 'index.html'), 'rebuilt site')
+    sqlite(join(s.priv, 'data/data.db'), ["update posts set title='Rebuilt'"])
+    const source = readFileSync(join(scripts, 'provision/provision.sh'), 'utf8')
+    const start = source.indexOf('mark "taking the Initial backup (ADR 0024)"')
+    const end = source.indexOf('# ── 6d½.', start)
+    assert.ok(start >= 0 && end > start, 'exercise the actual provision backup branch')
+    const runner = join(s.srv, 'provision-backup.sh')
+    writeFileSync(
+      runner,
+      `set -euo pipefail
+LABEL="${LABEL}"
+TRACY_FLEET_DIR="${scripts}"
+. "${scripts}/lib/webroot-repo-git.sh"
+tracy_webroot_init_lock "${s.priv}" 120
+mark() { :; }
+${source.slice(start, end)}
+echo '{"ok":true}'
+`
+    )
+    s.run(runner, [], { TRACY_INITIAL_BACKUP_BASELINE_EXISTED: '1' })
+    assert.equal(s.git('rev-parse', 'tracy-release/v1').trim(), oldTag)
+    assert.equal(point(s, 1).database, null)
+    const rebuilt = point(s, 2)
+    assert.equal(rebuilt.title, 'Rebuilt site backup')
+    assert.equal(rebuilt.database.ok, true)
+    assert.equal(s.git('show', 'tracy-release/v1:index.html'), 'earlier failed build')
+    assert.equal(s.git('show', 'tracy-release/v2:index.html'), 'rebuilt site')
+    const dumped = join(s.srv, 'rebuilt-dump.sqlite')
+    writeFileSync(dumped, gunzipSync(readFileSync(join(s.backups, 'v2.sqlite.gz'))))
+    assert.deepEqual(sqliteRead(dumped, 'select title from posts'), [['Rebuilt']])
+  } finally {
+    s.dispose()
+  }
+})
 
 test('EmDash: the Initial backup builds the repo and puts the database on v1; a second call and a later point leave v1 alone', () => {
   const s = stack('emdash')

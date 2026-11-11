@@ -10,6 +10,7 @@ import { autoTemplate, chooseTemplate, templateRanking } from '../lib/wo-revisio
 import { failedQaHash } from './demo-qa.js'
 import { BUILD_LIVE } from './build-store.js'
 import { stepChainEnabled } from '../lib/step-chain-switch.js'
+import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
 
 const DAY_MS = 86_400_000
 
@@ -305,8 +306,7 @@ export async function acceptDemoActions(
       if (
         selection?.chatMode &&
         !e.retryOf &&
-        e.ownSite !== true &&
-        usageKind === 'demo' &&
+        ['demo', 'own-site'].includes(usageKind) &&
         stepChainEnabled({ quickstart: selection.quickstart })
       )
         delete selection.chatMode
@@ -337,15 +337,35 @@ export async function acceptDemoActions(
           ).rows[0]
         : null
       if (retry) retry.qa_failed = retryBuild?.qa?.state === 'failed'
+      const chainRetry =
+        retry &&
+        retryBuild?.revision_id === retry.revision_id &&
+        ['failed', 'quality-failed-v1', 'completed', 'quality-completed-v1'].includes(retry.status) &&
+        retry.protocol === 'legacy' &&
+        retry.selection?.chatMode !== 'client-send/1'
+          ? await failedChainRetryBrief(client, retryBuild, { lock: true })
+          : null
       if (
         e.retryOf &&
-        (!retry || (!['failed', 'quality-failed-v1'].includes(retry.status) && !retry.qa_failed))
+        (!retry ||
+          (!['failed', 'quality-failed-v1'].includes(retry.status) && !retry.qa_failed && !chainRetry))
       ) {
         await client.query('rollback')
         return refusal(
           409,
           'ACTION_NOT_FAILED',
           'Retry an action that has stopped, or wait for the current action.'
+        )
+      }
+      // A retry reuses the same immutable revision. Repeating a readiness refusal cannot repair it.
+      // Refuse before usage is incremented; a new build after research must freeze a new revision.
+      if (retry?.error === 'BRIEF_NOT_READY') {
+        await client.query('rollback')
+        return refusal(
+          409,
+          'BRIEF_NOT_READY',
+          'Resolve the brief checks and make a new revision before building again.',
+          { readiness: retry.selection?.readiness ?? null }
         )
       }
       if (retryBuild?.state === 'deleted' || retryBuild?.demo_deleted_at) {
@@ -380,7 +400,7 @@ export async function acceptDemoActions(
           actionId: active[0].id
         })
       }
-      fresh.push({ ...e, selection, fingerprint, retry, retryBuild })
+      fresh.push({ ...e, selection, fingerprint, retry, retryBuild, chainRetry })
     }
     await client.query(
       'insert into wo_demo_usage (account_id, day, kind) values ($1, $2::date, $3) on conflict do nothing',
@@ -401,8 +421,24 @@ export async function acceptDemoActions(
     }
     for (const e of fresh) {
       const id = randomUUID()
+      const retrySelection = e.chainRetry
+        ? {
+            ...e.retry.selection,
+            acceptedChainRetry: {
+              schemaVersion: 'tracy-wo-chain-retry/v1',
+              acceptedActionId: id,
+              parentActionId: e.retry.id,
+              accountId,
+              buildId: e.retryBuild.id,
+              siteKey: e.retryBuild.site_key,
+              revisionId: e.retry.revision_id,
+              failedBriefHash: e.chainRetry.retry_hash
+            }
+          }
+        : e.retry?.selection
       if (
         e.retry?.qa_failed &&
+        !e.chainRetry &&
         e.retry.selection?.chatMode !== 'client-send/1' &&
         (e.retry.protocol ?? protocol) === 'legacy'
       ) {
@@ -454,7 +490,7 @@ export async function acceptDemoActions(
           e.retry?.id ?? null,
           e.retry?.protocol ?? protocol,
           (e.retry?.protocol ?? protocol) === 'quality-v1' ? 'quality-queued-v1' : 'queued',
-          JSON.stringify(e.retry?.selection ?? e.selection ?? null)
+          JSON.stringify(retrySelection ?? e.selection ?? null)
         ]
       )
       actions.push(rows[0])
@@ -501,6 +537,8 @@ export function demoActionShape(a) {
       : {}),
     step: a.step,
     error: a.error ?? null,
+    ...(a.error === 'BRIEF_NOT_READY' && a.selection?.readiness ? { readiness: a.selection.readiness } : {}),
+    ...(agentDemo && !a.selection?.chatMode && a.chat_site_key ? { siteKey: a.chat_site_key } : {}),
     acceptedAt: a.accepted_at,
     updatedAt: a.updated_at
   }
@@ -508,7 +546,7 @@ export function demoActionShape(a) {
 
 // Only a receipted, server-created session is a navigation destination. The accepted action's
 // reserved session ID alone does not prove its site workspace or chat exists yet.
-const ACTION_WITH_CHAT = `select a.*, b.site_key as chat_site_key,
+const ACTION_WITH_CHAT = `select a.*, case when b.demo_deleted_at is null then b.site_key end as chat_site_key,
   case when b.demo_deleted_at is null then coalesce(b.content#>>'{agentDemo,clientChat,sessionId}', b.handoff->>'sessionId') end as chat_session_id
   from wo_demo_action a left join wo_build b
     on b.account_id=a.account_id and b.request_id=a.build_request_id`

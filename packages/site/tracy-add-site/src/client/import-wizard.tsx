@@ -1751,9 +1751,18 @@ export function ImportWizard({
         t={t}
         steps={[
           { id: 'source', label: t('wizard_adding') },
-          ...IMPORT_PAGES.map((id) => ({ id, label: labels[id] }))
+          ...IMPORT_PAGES.map((id) => ({ id, label: labels[id] })),
+          ...(!inForm
+            ? [
+                {
+                  id: 'import',
+                  label: t('import_progress_title', { domain: 'siteKey' in step ? step.siteKey : siteKey })
+                }
+              ]
+            : [])
         ]}
-        current={inForm ? page : 'complete'}
+        current={inForm ? page : step.at === 'handed_over' ? 'complete' : 'import'}
+        currentState={step.at === 'failed' || step.at === 'handover_failed' ? 'failed' : 'running'}
         done={inForm ? ['source', ...IMPORT_PAGES.slice(0, reached)] : ['source', ...IMPORT_PAGES]}
         onStep={
           inForm && !busy && !checkingAddress

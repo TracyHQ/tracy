@@ -84,11 +84,12 @@ function harness(pool) {
   return { post, provisions, started }
 }
 
-/** The two Joomla quickstarts the cases press, as published releases (ADR 0017). */
+/** The three Joomla quickstarts the cases press, as published releases (ADR 0017). */
 async function seedReleases(pool) {
   for (const [tag, label, card] of [
     ['quickstart/ja-boxing/j6', 'JA Boxing', 'ja-boxing'],
-    ['quickstart/ja-diner/j6', 'JA Diner', 'ja-diner']
+    ['quickstart/ja-diner/j6', 'JA Diner', 'ja-diner'],
+    ['quickstart/ja-kinetic/j6', 'JA Kinetic', 'ja-kinetic']
   ])
     await pool.query(
       `insert into quickstart_releases (tag, release, setting, tracy, reason) values ($1, $2::jsonb, $3::jsonb, 'ready', null)`,
@@ -142,27 +143,32 @@ const press = (revision, over = {}) => ({
   ...over
 })
 
-test(
-  'an enabled template asked for the step chain starts the frame with the research revision as its brief',
-  opts,
-  async () => {
-    const { pool } = db
-    const revision = await revisionOf(pool, 'owner@example.test')
-    const h = harness(pool)
-    const res = await h.post('owner@example.test', press(revision))
-    assert.equal(res.status, 202, await res.text())
-    assert.equal(h.provisions.length, 1, 'the base site is created from the quickstart')
-    assert.equal(h.started.length, 1)
-    assert.deepEqual(h.started[0].brief, {
-      about: '',
-      goal: null,
-      style: null,
-      workflow: STEP_CHAIN_WORKFLOW,
-      researchRevisionId: revision
-    })
-    assert.equal(h.started[0].quickstart, 'quickstart/ja-boxing/j6')
-  }
-)
+for (const design of ['ja-boxing', 'ja-diner'])
+  test(
+    `the enabled ${design} template starts the frame with the research revision as its brief`,
+    opts,
+    async () => {
+      const { pool } = db
+      const revision = await revisionOf(pool, 'owner@example.test')
+      const h = harness(pool)
+      const res = await h.post(
+        'owner@example.test',
+        press(revision, { design, quickstart: `quickstart/${design}/j6` })
+      )
+      assert.equal(res.status, 202, await res.text())
+      assert.equal(h.provisions.length, 1, 'the base site is created from the quickstart')
+      assert.equal(h.started.length, 1)
+      assert.deepEqual(h.started[0].brief, {
+        about: '',
+        goal: null,
+        style: null,
+        workflow: STEP_CHAIN_WORKFLOW,
+        researchRevisionId: revision
+      })
+      assert.equal(h.started[0].quickstart, `quickstart/${design}/j6`)
+      assert.equal(h.provisions[0].quickstart, `quickstart/${design}/j6`)
+    }
+  )
 
 test(
   'the step chain is refused, with nothing claimed, for another account’s revision, a template not enabled or the switch off',
@@ -176,7 +182,7 @@ test(
       ['stranger@example.test', press(revision), 404, 'RESEARCH_REVISION_UNKNOWN'],
       [
         'owner@example.test',
-        press(revision, { design: 'ja-diner', quickstart: 'quickstart/ja-diner/j6' }),
+        press(revision, { design: 'ja-kinetic', quickstart: 'quickstart/ja-kinetic/j6' }),
         409,
         'STEP_CHAIN_OFF'
       ],
@@ -189,8 +195,14 @@ test(
       assert.equal((await res.json()).code, code)
     }
     process.env.STEP_CHAIN_ENABLED = '0'
-    const off = await h.post('owner@example.test', press(revision))
-    assert.equal((await off.json()).code, 'STEP_CHAIN_OFF')
+    for (const design of ['ja-boxing', 'ja-diner']) {
+      const off = await h.post(
+        'owner@example.test',
+        press(revision, { design, quickstart: `quickstart/${design}/j6` })
+      )
+      assert.equal(off.status, 409)
+      assert.equal((await off.json()).code, 'STEP_CHAIN_OFF')
+    }
     assert.equal(h.provisions.length, 0)
     assert.equal(h.started.length, 0)
     assert.equal((await pool.query('select count(*)::int as n from site')).rows[0].n, 0)

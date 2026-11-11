@@ -1065,6 +1065,115 @@ test('a process that starts settles at once the open rows a dead process left', 
   assert.equal((await briefOf(pool, 'done.tracy.test')).state, 'applied', 'a settled row is left alone')
 })
 
+test('startup recovery retries a transient database failure without a customer poll', dbOpts, async () => {
+  const { pool } = db
+  for (const [index, code, phase] of [
+    [0, 'ENOTFOUND', 'read'],
+    [1, '53100', 'write'],
+    [2, 'ECONNRESET', 'write']
+  ]) {
+    const siteKey = `restart-retry-${index}.tracy.test`
+    await pool.query(
+      `insert into site_brief (site_key, platform, brief, state, updated_at)
+       values ($1, 'wordpress', '{"about":"Original"}', $2, now() - interval '1 minute')`,
+      [siteKey, index === 2 ? 'applying' : 'preparing']
+    )
+    let interrupted = false
+    const flaky = {
+      query(sql, params) {
+        const target =
+          phase === 'read' ? sql.includes('as idle_ms') : sql.includes("jsonb_build_object('lost'")
+        if (!interrupted && target) {
+          interrupted = true
+          return Promise.reject(Object.assign(new Error('temporary database outage'), { code }))
+        }
+        return pool.query(sql, params)
+      }
+    }
+    const b = builds(flaky, {}, { recoverOnStart: true, limits: { recoveryRetryMs: 1 } })
+    await b.recovered
+    assert.equal(interrupted, true)
+    const row = await briefOf(pool, siteKey)
+    assert.equal(row.state, 'failed', `${code} must not leave an orphaned run preparing`)
+    assert.equal(row.error, index === 2 ? LOST_PLACING : LOST_WORK)
+    assert.equal(row.timings.lost, LOST_ON_RESTART)
+    assert.equal(row.timings.lostFrom, index === 2 ? 'applying' : 'preparing')
+  }
+})
+
+test('startup recovery stops on permanent errors and after its transient retry budget', dbOpts, async () => {
+  for (const [code, expectedCalls] of [
+    ['42601', 1],
+    ['53100', 3]
+  ]) {
+    let calls = 0
+    const warnings = []
+    const pool = {
+      query() {
+        calls++
+        return Promise.reject(Object.assign(new Error('database unavailable'), { code }))
+      }
+    }
+    const b = builds(
+      pool,
+      {},
+      {
+        recoverOnStart: true,
+        limits: { recoveryRetryMs: 1, recoveryAttempts: 3 },
+        log: { warn: (message) => warnings.push(message) }
+      }
+    )
+    // The production recovery timer is unref'd; this referenced deadline also bounds this test.
+    const deadline = setTimeout(() => {}, 1000)
+    try {
+      await b.recovered
+    } finally {
+      clearTimeout(deadline)
+      b.stop()
+    }
+    assert.equal(calls, expectedCalls)
+    assert.match(warnings.at(-1), /startup recovery stopped/)
+  }
+})
+
+test('shutdown cancels startup recovery backoff before it can write an orphaned row', dbOpts, async () => {
+  const { pool } = db
+  const siteKey = 'restart-shutdown.tracy.test'
+  await pool.query(
+    `insert into site_brief (site_key, platform, brief, state, updated_at)
+     values ($1, 'wordpress', '{"about":"Original"}', 'preparing', now() - interval '1 minute')`,
+    [siteKey]
+  )
+  let failed
+  const interrupted = new Promise((resolve) => {
+    failed = resolve
+  })
+  let queries = 0
+  const flaky = {
+    query(...args) {
+      queries++
+      if (queries === 1)
+        return Promise.reject(Object.assign(new Error('database offline'), { code: 'ENOTFOUND' }))
+      return pool.query(...args)
+    }
+  }
+  const b = builds(
+    flaky,
+    {},
+    {
+      recoverOnStart: true,
+      limits: { recoveryRetryMs: 50 },
+      log: { warn: () => failed() }
+    }
+  )
+  await interrupted
+  b.stop()
+  await b.recovered
+  await new Promise((resolve) => setTimeout(resolve, 60))
+  assert.equal(queries, 1, 'a cancelled backoff never starts a second database query')
+  assert.equal((await briefOf(pool, siteKey)).state, 'preparing')
+})
+
 test(
   'a row too fresh to judge at start is settled once it misses its heartbeat, and a beating one is left alone',
   dbOpts,
@@ -1163,3 +1272,162 @@ test('a legacy uncertain-placement row without phase metadata cannot be replayed
   )
   assert.equal((await briefOf(pool, 'legacy-unknown.tracy.test')).error, LOST_PLACING)
 })
+
+test('a chain commits scripted setup before native repairs and does not close it twice', dbOpts, async () => {
+  const order = []
+  const entered = Promise.withResolvers()
+  const release = Promise.withResolvers()
+  const e = engine({
+    apply: async (ctx) => {
+      order.push('script-write')
+      entered.resolve()
+      await ctx.commitSetupWrites()
+      order.push('native-repair')
+      return { wrote: 3, kept: 0 }
+    }
+  })
+  e.writesBrand = true
+  const b = builds(
+    db.pool,
+    { wordpress: e },
+    {
+      webroot: {
+        open: async () => order.push('open'),
+        close: async () => {
+          order.push('commit-start')
+          await release.promise
+          order.push('commit-end')
+        }
+      }
+    }
+  )
+  await b.start(input())
+  await b.gate('bakery.tracy.test')
+  await entered.promise
+  await new Promise((resolve) => setImmediate(resolve))
+  assert.deepEqual(order, ['open', 'script-write', 'commit-start'])
+  release.resolve()
+  const done = await untilSettled(b, 'bakery.tracy.test')
+  assert.equal(done.state, 'applied')
+  assert.deepEqual(order, ['open', 'script-write', 'commit-start', 'commit-end', 'native-repair'])
+})
+
+test('a missing setup hold prevents a chain from opening native repairs', dbOpts, async () => {
+  let repairs = 0
+  const e = engine({
+    apply: async (ctx) => {
+      await ctx.commitSetupWrites()
+      repairs++
+      return { wrote: 3, kept: 0 }
+    }
+  })
+  const b = builds(
+    db.pool,
+    { wordpress: e },
+    {
+      webroot: {
+        open: async () => {
+          throw new Error('host seal failed')
+        },
+        close: async () => {
+          throw new Error('must not close an absent hold')
+        }
+      }
+    }
+  )
+  await b.start(input())
+  assert.equal((await untilSettled(b, 'bakery.tracy.test')).state, 'failed')
+  assert.equal(repairs, 0)
+})
+
+test('a required setup seal finishes within the engine budget before any content write', dbOpts, async () => {
+  const order = []
+  const e = engine({ apply: async () => (order.push('write'), { wrote: 1 }) })
+  e.requiresSetupHold = true
+  e.limits = { webrootMs: 200 }
+  const b = builds(
+    db.pool,
+    { wordpress: e },
+    {
+      limits: { webrootMs: 1 },
+      webroot: {
+        open: async (ctx) => {
+          assert.equal(ctx.webrootWaitMs, 200)
+          await new Promise((resolve) => setTimeout(resolve, 20))
+          order.push('sealed')
+          return { held: true }
+        },
+        close: async () => ({ held: true })
+      }
+    }
+  )
+  await b.start(input())
+  assert.equal((await untilSettled(b, 'bakery.tracy.test')).state, 'applied')
+  assert.deepEqual(order, ['sealed', 'write'])
+})
+
+test('a required setup hold refusal prevents all scripted and native writes', dbOpts, async () => {
+  let writes = 0
+  const e = engine({ apply: async () => (writes++, { wrote: 1 }) })
+  e.requiresSetupHold = true
+  const b = builds(
+    db.pool,
+    { wordpress: e },
+    {
+      webroot: { open: async () => ({ held: false }), close: async () => assert.fail('no hold to close') }
+    }
+  )
+  await b.start(input())
+  assert.equal((await untilSettled(b, 'bakery.tracy.test')).state, 'failed')
+  assert.equal(writes, 0)
+  assert.match((await briefOf(db.pool, 'bakery.tracy.test')).error, /STEP_CHAIN_SETUP_HOLD_UNPROVEN/)
+})
+
+for (const receipt of [undefined, {}, { held: false }]) {
+  test(
+    `a required setup hold rejects an unproven opening receipt: ${JSON.stringify(receipt)}`,
+    dbOpts,
+    async () => {
+      let writes = 0
+      const e = engine({ apply: async () => (writes++, { wrote: 1 }) })
+      e.requiresSetupHold = true
+      const b = builds(
+        db.pool,
+        { wordpress: e },
+        {
+          webroot: { open: async () => receipt, close: async () => assert.fail('no hold to close') }
+        }
+      )
+      await b.start(input())
+      assert.equal((await untilSettled(b, 'bakery.tracy.test')).state, 'failed')
+      assert.equal(writes, 0)
+      assert.match((await briefOf(db.pool, 'bakery.tracy.test')).error, /STEP_CHAIN_SETUP_HOLD_UNPROVEN/)
+    }
+  )
+  test(
+    `native repairs require an explicit scripted checkpoint receipt: ${JSON.stringify(receipt)}`,
+    dbOpts,
+    async () => {
+      let repairs = 0
+      const e = engine({
+        apply: async (ctx) => {
+          await ctx.commitSetupWrites()
+          repairs++
+          return { wrote: 1 }
+        }
+      })
+      e.requiresSetupHold = true
+      const b = builds(
+        db.pool,
+        { wordpress: e },
+        {
+          webroot: { open: async () => ({ held: true }), close: async () => receipt }
+        }
+      )
+      await b.start(input())
+      assert.equal((await untilSettled(b, 'bakery.tracy.test')).state, 'failed')
+      assert.equal(repairs, 0)
+      assert.match((await briefOf(db.pool, 'bakery.tracy.test')).error, /no successful host receipt/)
+    }
+  )
+}

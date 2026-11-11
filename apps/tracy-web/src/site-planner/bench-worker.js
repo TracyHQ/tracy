@@ -13,11 +13,12 @@
 // preloadedFirstMessage) and the run sends no tools, so its first answer is the plan. A run that reads with tools gets
 // the write step: after the harness's writeAfterToolTurns answers that called a tool, or an answer that only re-read
 // parts already sent, WRITE_STEP_MESSAGE goes out and every later request carries tool_choice "none". A run whose
-// answered calls cost more than the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
+// answered calls cost at least the harness's budgetUsd stops before its next call with SITE_PLANNER_BUDGET.
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
+import { PLANNER_BRIEF_VIEW, plannerBriefView } from './brief-view.js'
 import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
@@ -37,6 +38,7 @@ import {
 } from './plan-changes.js'
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
+import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
 
@@ -59,8 +61,17 @@ export const SITE_PLANNER_STEP = Object.freeze({
   prompt: plannerPrompt,
   checker: Object.freeze({
     version: CHECKER_VERSION,
-    check: ({ doc, row, ready }) =>
-      checkPlan({ plan: doc, kit: ready.kit.doc, brief: row.brief, briefRef: briefRefOf(row.brief_source) }),
+    check: ({ doc, row, ready, history }) => {
+      const result = checkPlan({
+        plan: doc,
+        kit: ready.kit.doc,
+        brief: row.brief,
+        briefRef: briefRefOf(row.brief_source)
+      })
+      return row.harness?.visualReview === VISUAL_REVIEW_POLICY
+        ? withVisualReview(result, { plan: doc, kit: ready.kit.doc, kitRef: row.kit.ref, history })
+        : result
+    },
     failureListText
   }),
   // After the model, before the checker: every stock screen of the kit (site.stockScreens) is dropped, on a whole plan and on the
@@ -123,13 +134,20 @@ export function createSitePlannerQueue({
 // no tools; a run that already went out with tools (saved before the kit was preloaded) keeps them, since its
 // conversation holds tool calls.
 function agentRequest({ row, ready, history }) {
+  const brief = plannerBriefView(row.brief, row.harness?.briefView)
   const preloaded = !ready.images && (history.length === 0 || !history[0].request?.tools?.length)
   const imageTool = Boolean(ready.images)
-  const writeAfter = row.harness?.writeAfterToolTurns
+  const strict = row.harness?.visualReview === VISUAL_REVIEW_POLICY
+  const writeAfter = strict ? null : row.harness?.writeAfterToolTurns
   return {
     firstUser: preloaded
-      ? preloadedFirstMessage({ kit: ready.kit, brief: row.brief })
-      : firstUserMessage({ kit: ready.kit, brief: row.brief, imageTool }),
+      ? preloadedFirstMessage({ kit: ready.kit, brief })
+      : firstUserMessage({
+          kit: ready.kit,
+          brief,
+          imageTool,
+          visualReviewText: strict ? visualReviewInstruction(ready.kit.doc) : undefined
+        }),
     tools: preloaded
       ? []
       : kitTools(ready.kit.doc, {
@@ -148,6 +166,12 @@ function agentRequest({ row, ready, history }) {
 // Everything the run was started with must still hold (the loop checks the prompt and the checker first): a run that
 // silently ran on another model, or a kit the server no longer reads, would not measure what it records.
 async function prepare({ pool, secret, index, kitImages }, row) {
+  if (row.harness?.briefView !== PLANNER_BRIEF_VIEW)
+    return {
+      ok: false,
+      code: 'SITE_PLANNER_BRIEF_VIEW_CHANGED',
+      reason: 'The planner brief view changed since the run started; start a new run instead of replaying it.'
+    }
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PLANNER_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }

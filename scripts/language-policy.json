@@ -21840,6 +21840,150 @@
       "reason": "Exact line of the JA Diner 1.0.5 content coverage file: the template's own English demo text sampled from its database, which contains a proper name with an accent or the word cafe with an accent. It is measured data, so the file is not edited."
     },
     {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "aca0508a924ea29320de9306f185a210af1dc498e3284cede07b479aeba509d8",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "044d53c52ac79250fd879ed5c3208e2780236f33af049269777a6bcd960460c3",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "5fa0726b4b6599f054f607028ebc0999a509c49cc664b7f20783ba90f0283c6d",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "1ed38428df66dc2f55ba7286ef142ce5bb7bfc759c8738063f89641b9d466bf8",
+      "count": 24,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "c0b93d5ea5c726ecee641b1d86d85af3332da659424eb81bb117b292c35ddf75",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "85b62f2d7b88cecc506eec856bbc6e9d49cd3a7169f169f205606cbacdb1c557",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/content-map.json",
+      "sha256": "da214005dd4f5836d39b0eae6869dec4953d1a163294889ebe19af39a9ae81b1",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.6/presentation-lock.json",
+      "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.6 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "aca0508a924ea29320de9306f185a210af1dc498e3284cede07b479aeba509d8",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "044d53c52ac79250fd879ed5c3208e2780236f33af049269777a6bcd960460c3",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "5fa0726b4b6599f054f607028ebc0999a509c49cc664b7f20783ba90f0283c6d",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "1ed38428df66dc2f55ba7286ef142ce5bb7bfc759c8738063f89641b9d466bf8",
+      "count": 24,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "c0b93d5ea5c726ecee641b1d86d85af3332da659424eb81bb117b292c35ddf75",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "85b62f2d7b88cecc506eec856bbc6e9d49cd3a7169f169f205606cbacdb1c557",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/content-map.json",
+      "sha256": "da214005dd4f5836d39b0eae6869dec4953d1a163294889ebe19af39a9ae81b1",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.7/presentation-lock.json",
+      "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.7 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "aca0508a924ea29320de9306f185a210af1dc498e3284cede07b479aeba509d8",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "044d53c52ac79250fd879ed5c3208e2780236f33af049269777a6bcd960460c3",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "5fa0726b4b6599f054f607028ebc0999a509c49cc664b7f20783ba90f0283c6d",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "1ed38428df66dc2f55ba7286ef142ce5bb7bfc759c8738063f89641b9d466bf8",
+      "count": 24,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "c0b93d5ea5c726ecee641b1d86d85af3332da659424eb81bb117b292c35ddf75",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "85b62f2d7b88cecc506eec856bbc6e9d49cd3a7169f169f205606cbacdb1c557",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/content-map.json",
+      "sha256": "da214005dd4f5836d39b0eae6869dec4953d1a163294889ebe19af39a9ae81b1",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-diner/j6/1.0.8/presentation-lock.json",
+      "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
+      "count": 1,
+      "reason": "Exact line of the sealed JA Diner 1.0.8 quickstart contract: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. The contract is hash-sealed, so the file is not edited."
+    },
+    {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-voyara/j6/1.0.12/template-kit.json",
       "sha256": "35b17504116a2534f80ab9eca594525ccb7341a9680344d1bd3d31b7b922e633",
       "count": 1,
@@ -21928,6 +22072,78 @@
       "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
       "count": 1,
       "reason": "Exact line of the JA Diner WP7 1.0.3 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.4/content-map.json",
+      "sha256": "000b1b3ed627290ff781a7af43ea7fd4f556975ae0016447b0e917f5d7ac907b",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.4 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.4/content-map.json",
+      "sha256": "4acd4ea97b86db7e8b23055be658673d2bc08223345d56be5e8e37efa337a00f",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.4 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.4/content-map.json",
+      "sha256": "b528d6530d923e2d813f55b000d1b52c85ca9233aa1d2fc928fe18b946190ff4",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.4 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.4/content-map.json",
+      "sha256": "4598a2534610e75691f9d0d17db91e4293131c8c4f895a47c235edfebf144a40",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.4 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-wordpress-quickstart/contracts/ja-diner/wp7/1.0.4/inventory.json",
+      "sha256": "24e81ac76098b378dd4c87e86ae3b7d4bedd03f3c8866eecdf13fa647ea8515e",
+      "count": 1,
+      "reason": "Exact line of the JA Diner WP7 1.0.4 contract capture: the template's own English demo text, which contains a proper name with an accent or the word cafe with an accent. Counted over the whole file at every commit of the pull request."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "e15b643bc50b25c45251d70454b377da48ffa62e9566dc176902e12344cbdcbf",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "22d97fa0a82f65955c75ce10140a85291269d39749ee6086f1a078d20283eb03",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "60cb539484098ee1d244125358a5302bf765cf6d2a4a80fd70a986e628b9f916",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "7f5d731edef7f8053f74cca1a60dbe2529596ec45de70cbe4d5671255f575a97",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "d330e22cc2e706ec25c6d78e0ced92f38a96c2e1614103772b990357a1716439",
+      "count": 1,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "1073435f8906709bcfeaf8e2834015df547a3ae9011e2d346f2d2e6b90d2fe39",
+      "count": 2,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-restaurant/contracts/1.0.2/template-kit.json",
+      "sha256": "7333d03274ee1f6f74ce44af34dfa0aa514f7d635b13cce7451b33bf8dbc1664",
+      "count": 2,
+      "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
     }
   ],
   "objects": [

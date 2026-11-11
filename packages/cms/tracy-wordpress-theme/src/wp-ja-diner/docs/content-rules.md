@@ -39,7 +39,8 @@ is not a decision of this port.
 - The Subscribe form draws the AcyMailing field and button and sends nothing: WordPress core has no
   mailing list (G1). Its placeholder "Email" and button "Subscribe" are fixed text of the pattern.
 - The source has no dark mode; the dark palette is derived (D-03, docs/design-system.md). The source has
-  one logo, so in dark mode the header prints the site name as text until `tracy_logo_dark` is set (D-34).
+  one logo; the demo ships its white copy (`jd-site-logo-dark.png`, the same artwork with every pixel white) as
+  `tracy_logo_dark`, and a site whose option is empty prints the site name as text in dark mode (D-34).
 - The sidebar's Login, Latest News and Categories modules are drawn by the theme's blocks; the source's
   read counter (hits) is not in the spec, so there is no "most read" list (G2).
 - Article dates read "10 September 2021" through `date_format` = `j F Y` (D-22). Registration stays open as
@@ -61,7 +62,7 @@ is not a decision of this port.
 | D-03 | Dark palette (page `#1a1816`, white boxes `#24211e`, text `#c9c3ba`, headings `#f2eee8`, borders `#3d3833`; accent `#c36349` and highlight `#ffcc00` kept) is a proposal | as listed |
 | D-31 | Home news cards: list picture or featured image | list picture (`jd_intro_image`); the blocks are about 170 px shorter than the source because the picture ratio differs |
 | D-33 | Side panel: push the page as the source does, or slide over it | slides over |
-| D-34 | Supply a logo for dark backgrounds? | the site name as text until `tracy_logo_dark` is set |
+| D-34 | Supply a logo for dark backgrounds? | the demo carries a white copy of the source logo in `tracy_logo_dark` (quickstart 1.0.4); with the option empty, the site name as text |
 | D-36 | Name of the off-canvas menu and group | `site-pages`, "Content" |
 | D-37 | Masthead default sentence | "Responsive WordPress theme for restaurant" |
 | D-38 | Keep the Error Page and Offline Page, or rewrite or drop them | kept, with the reworded sample line |

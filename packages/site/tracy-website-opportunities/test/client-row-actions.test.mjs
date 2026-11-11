@@ -171,3 +171,18 @@ test('build opens the picker with the opportunity’s trade ranking; no door or 
   await runAction(api, ids(), 'build', row(), pick)
   assert.deepEqual(seen.slice(1), [null, null, null])
 })
+
+test('a refused brief opens the failed revision without a build call or quota retry', async () => {
+  const { api, calls } = fakeApi()
+  const outcome = await runAction(
+    api,
+    ids(),
+    'review-brief',
+    row({
+      demoAction: { id: 'a1', state: 'failed', error: 'BRIEF_NOT_READY', revisionId: 'r-failed' },
+      latestRevision: { id: 'r-newer' }
+    })
+  )
+  assert.deepEqual(outcome, { kind: 'open-brief', revisionId: 'r-failed' })
+  assert.deepEqual(calls, [])
+})

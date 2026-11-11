@@ -14,6 +14,20 @@ export const answerWords = (answer) =>
  */
 export function doorCall(door, siteKey) {
   return async (action, params) => {
+    // A default Joomla menu item serves the root even when its stored path is "home".
+    // Path-based hide planning cannot recognize that dependency. Never take the active default offline.
+    if (action === 'content.update' && params.kind === 'menuItem' && Number(params.fields?.published) === 0) {
+      const current = await door.apply({
+        siteKey,
+        action: 'content.get',
+        params: { kind: 'menuItem', id: params.id }
+      })
+      if (current?.ok === false) throw new Error(answerWords(current))
+      if (Number(current?.item?.home) === 1)
+        throw new Error(
+          'The default Home menu item must stay published; hiding it would break the home page and other CMS pages.'
+        )
+    }
     let answer
     try {
       answer = await door.apply({ siteKey, action, params })

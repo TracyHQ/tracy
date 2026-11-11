@@ -103,7 +103,7 @@ export function benchRepairAgent({
       if (!rows.length) return []
       const { rows: writes } = await pool.query(
         `select turn_id, action, outcome, target, via from site_write
-          where turn_id = any($1::text[]) and outcome <> 'refused' order by at`,
+          where turn_id = any($1::text[]) and outcome <> 'refused' order by at, id`,
         [rows.map((r) => r.turn_id)]
       )
       return rows.map((r) => ({

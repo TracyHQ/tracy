@@ -166,6 +166,7 @@ export const REVIEWED_SKILLS = [
       'tests/regression/cases/REG-PR-1551-wp-skill-unmeasured-cells.json',
       'tests/regression/cases/REG-PR-1558-wp-verification-portable.json',
       'tests/regression/cases/REG-PR-1559-wp-skill-road-gates-early.json',
+      'tests/regression/cases/REG-PR-538-release-assets-no-stand-origin.json',
       'tests/regression/cases/REG-PR-928-ja-essence-wp7-behaviour-fixes.json',
       'tests/regression/cases/REG-PR-935-ja-nova-wp7-behaviour-layout-fixes.json',
       'tests/regression/cases/REG-PR-938-ja-impact-wp7-behaviour-layout-fixes.json',

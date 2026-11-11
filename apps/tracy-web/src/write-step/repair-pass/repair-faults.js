@@ -2,6 +2,7 @@
 // table names, and a fault with no page (a comment points at a page) are skipped with a code and a reason; so is a demo
 // fault naming a value the brief gives (`not-demo`, repair-brief-values.js). A fault the check names at two widths is
 // sent once. Faults are grouped by page, in the order their page was first named. Pure.
+import { unsupportedAlt } from './repair-alt-slots.js'
 import { pagePath } from '../../lib/hidden-page-links.js'
 import { notDemoReason } from './repair-brief-values.js'
 import { kindOfFailure, notSentOf } from './repair-kinds.js'
@@ -30,6 +31,8 @@ export function sameFault(a, b) {
  * the fault so 9b finds the element on the served page (repair-served-element.js).
  */
 function controlOf(f) {
+  if (f.group === 'empty-frames')
+    return { selector: f.selector ?? (typeof f.measured === 'string' ? f.measured : null) }
   if (f.group !== 'empty-controls' || typeof f.selector !== 'string' || !f.selector) return {}
   const arrow = typeof f.measured === 'string' ? f.measured.split(' -> ') : []
   const led = arrow.length === 2 && arrow[0] === f.selector ? arrow[1].trim() : null
@@ -60,7 +63,9 @@ export const blockingFailures = (check) =>
   )
 
 /** Why one fault is not sent, by code and reason, or null. */
-function skipOf(fault, brief) {
+function skipOf(fault, brief, capabilities) {
+  const blocked = unsupportedAlt(fault, capabilities)
+  if (blocked) return blocked
   const skip = notSentOf(fault)
   if (skip) return skip
   const notDemo = notDemoReason(fault, brief)
@@ -73,11 +78,11 @@ function skipOf(fault, brief) {
  * @returns {{ pages: { page: string, faults: object[] }[],
  *   skipped: { fault: object, code: string, reason: string }[] }}
  */
-export function faultsToSend({ firstCheck, brief = null }) {
+export function faultsToSend({ firstCheck, brief = null, altSlots = null, contentMap = null }) {
   const skipped = []
   const kept = []
   for (const fault of blockingFailures(firstCheck).map(fromFailure)) {
-    const skip = skipOf(fault, brief)
+    const skip = skipOf(fault, brief, { altSlots, contentMap })
     if (skip) skipped.push({ fault, ...skip })
     else if (!kept.some((k) => sameFault(k, fault))) kept.push(fault)
   }
@@ -101,7 +106,86 @@ export function newBlocking(first, later) {
 
 /** The faults among `faults` that `check` still fails on. */
 export function stillThere(faults, check) {
-  const place = (f) => [f.group, pageOf(f.page), f.slot ?? ''].join('\n')
-  const now = new Set(blockingFailures(check).map(place))
-  return faults.filter((f) => f.source === 'site-check' && now.has(place(f)))
+  const now = blockingFailures(check).map(fromFailure)
+  return faults.filter(
+    (f) =>
+      f.source === 'site-check' &&
+      ((check?.groups ?? []).some((g) => g.name === f.group && g.status === 'unmeasured') ||
+        check?.status === 'unmeasured' ||
+        now.some((later) => {
+          if (later.group !== f.group || later.page !== f.page) return false
+          if (f.slot) return later.slot === f.slot
+          if (f.selector) return later.selector === f.selector && later.href === f.href
+          // Counts (for example the number of h1 elements) can change while the same fault persists.
+          if (typeof f.measured !== 'string') return !later.slot && !later.selector
+          return sameFault(f, later)
+        }))
+  )
 }
+
+/** A kept page that could not render, rather than an ordinary broken link on a rendered page. */
+export const unavailablePage = (f) =>
+  f.group === 'dead-links' && String(f.reason ?? f.seen ?? '').startsWith('A kept page does not answer (')
+
+// These measurements need a rendered page. Their absence on a failed page is not a passing baseline.
+const RENDERED_GROUPS = new Set([
+  'alt-matches-picture',
+  'words-over-picture',
+  'band-contrast',
+  'demo-words',
+  'demo-links',
+  'dead-links',
+  'hidden-page-links',
+  'text-overflow',
+  'empty-controls',
+  'accent-emphasis',
+  'emphasis-codes-left',
+  'glued-words',
+  'main-heading',
+  'empty-frames',
+  'demo-pictures',
+  'cms-errors'
+])
+
+/** Separate newly measurable content after recovery from regressions against the latest completed check. */
+export function changedFindings(before, later) {
+  const unavailable = new Set(
+    blockingFailures(before)
+      .filter(unavailablePage)
+      .map((f) => pageOf(f.page))
+  )
+  const stillUnavailable = new Set(
+    blockingFailures(later)
+      .filter(unavailablePage)
+      .map((f) => pageOf(f.page))
+  )
+  const newlyObserved = []
+  const regressions = []
+  for (const f of newBlocking(before, later)) {
+    const page = pageOf(f.page)
+    const exposed =
+      page && unavailable.has(page) && !stillUnavailable.has(page) && RENDERED_GROUPS.has(f.group)
+    if (exposed) newlyObserved.push(f)
+    else regressions.push(f)
+  }
+  // Missing measurements have no failure rows. Losing a measured contract must not look like clearing its faults.
+  const measured = new Set((before?.groups ?? []).filter((g) => g.status !== 'unmeasured').map((g) => g.name))
+  for (const group of later?.groups ?? []) {
+    if (group.status !== 'unmeasured' || !measured.has(group.name)) continue
+    regressions.push({
+      group: group.name,
+      page: null,
+      kind: 'verification-lost',
+      level: 'block',
+      reason: group.reason ?? 'A previously measured site check is now unmeasured'
+    })
+  }
+  return { newlyObserved, regressions }
+}
+
+/** Acceptance requires a measured site check with no blocking failures. */
+export const checkAccepted = (check) =>
+  check?.status === 'green' &&
+  !blockingFailures(check).length &&
+  !(check.counts?.unmeasured > 0) &&
+  !(check.groups ?? []).some((g) => g.status === 'unmeasured')

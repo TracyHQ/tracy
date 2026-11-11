@@ -14,12 +14,14 @@
 // undone, the pages that failed, time and cost).
 import { randomUUID } from 'node:crypto'
 import { readFile } from 'node:fs/promises'
+import { isDeepStrictEqual } from 'node:util'
 import { buildCommentTurn } from './lib/comment-turn.js'
 import { defaultContracts } from './lib/contracts.js'
 import { contractBaselineStore } from './site-check/demo-baseline.js'
 import { withReadBack } from './site-check/read-back.js'
 import { kitAltSlots } from './write-step/repair-pass/repair-alt-slots.js'
 import { briefValues } from './write-step/repair-pass/repair-brief-values.js'
+import { checkAccepted } from './write-step/repair-pass/repair-faults.js'
 import { runRepairPass, undoTurns } from './write-step/repair-pass/repair-pass.js'
 import { sweepTurns } from './write-step/repair-pass/repair-turns.js'
 import { repairClock } from './write-step/repair-pass/repair-limits.js'
@@ -38,6 +40,27 @@ async function briefOf(files) {
   }
 }
 
+/** Frames the manifest kept with a picture the looker rejected. Keep the exact fault names in the final write report. */
+export function pictureReviewOf(manifest) {
+  return [
+    ...(Array.isArray(manifest?.frames) ? manifest.frames : []),
+    ...(Array.isArray(manifest?.siteSettings) ? manifest.siteSettings : [])
+  ]
+    .filter(
+      (entry) =>
+        entry?.filledBy?.rung === 'best-rejected' &&
+        typeof entry.frame === 'string' &&
+        Array.isArray(entry.filledBy.faults) &&
+        entry.filledBy.faults.every((fault) => typeof fault === 'string')
+    )
+    .map((entry) => ({
+      frame: entry.frame,
+      source: entry.source,
+      sitePath: entry.sitePath,
+      filledBy: { rung: 'best-rejected', faults: [...entry.filledBy.faults] }
+    }))
+}
+
 /** The address a comment names for a page: the agent's, never a bare path. */
 const pageAddressOf = (agent) => (page) => {
   if (typeof agent?.pageUrl !== 'function')
@@ -46,18 +69,24 @@ const pageAddressOf = (agent) => (page) => {
 }
 
 /** Ask the agent to retire each session of the pass (a build's agent offers it); one that cannot be is logged, never thrown. */
-async function retireSessions(agent, sessions, warn) {
-  if (typeof agent?.retire !== 'function') return
+async function retireSessions(agent, sessions, warn, clock) {
+  if (typeof agent?.retire !== 'function') return true
   for (const sessionId of sessions) {
     let done = null
     try {
-      done = await agent.retire({ sessionId })
+      const answer = await clock.within(() => agent.retire({ sessionId }), clock.returnLeft())
+      if (answer.late) {
+        warn(`step 9b: the session ${sessionId} retirement did not answer in the time left`)
+        return false
+      }
+      done = answer.value
     } catch (error) {
       done = { ok: false, reason: String(error?.message ?? error) }
     }
     if (!done?.ok)
       warn(`step 9b: the session ${sessionId} could not be retired${done?.reason ? `: ${done.reason}` : ''}`)
   }
+  return true
 }
 
 /** After a 9b error: every turn of the pass's request ids (a late one too) taken back, newest first, each undo kept. */
@@ -90,11 +119,47 @@ async function takeBack(pass, reason, firstCheck) {
   }
 }
 
+/** Native settlement and checked writes are separate: an ended late turn is safe to recover, but not to deliver. */
+async function repairWriterEvidence(agent, ledger, clock) {
+  if (!agent || !ledger.records.size) return { settled: true, checked: true }
+  const sessions = new Map()
+  for (const [id, record] of ledger.records)
+    sessions.set(record.sessionId, [...(sessions.get(record.sessionId) ?? []), id])
+  let checked = true
+  try {
+    for (const [sessionId, requestIds] of sessions) {
+      const turns = await clock.bounded('the final native repair records', () =>
+        agent.turns({ sessionId, requestIds })
+      )
+      if (
+        !Array.isArray(turns) ||
+        turns.some((t) => !['closed', 'stale'].includes(t.state)) ||
+        requestIds.some((id) => !turns.some((t) => t.rpcId === id))
+      )
+        return { settled: false, checked: false }
+      for (const turn of turns) {
+        const held = ledger.turns.find((t) => t.turnId === turn.turnId && t.sessionId === sessionId)
+        if (
+          !held ||
+          (!held.judged && !ledger.undone.has(turn.turnId)) ||
+          !isDeepStrictEqual(held.changes, turn.changes)
+        )
+          checked = false
+      }
+    }
+    return { settled: true, checked }
+  } catch {
+    return { settled: false, checked: false }
+  }
+}
+
 /**
  * @param {{ write: object, checkSite: (report: object, options: { baseline: object | null, allGroups: true,
  *     pages?: string[] }) => Promise<object>,
  *   baselines?: { read: (contract: string) => Promise<object | null> } | null, contracts?: Map<string, object>,
  *   agent?: object | null, saveFile?: ((name: string, data: string) => Promise<void>) | null,
+ *   beforeRepair?: (() => Promise<void>) | null,
+ *   pictures?: object | null,
  *   pageHtml?: ((page: string) => Promise<string | null>) | null,
  *   limits?: object | null, timer?: Function, now?: () => number, sleep?: (ms: number) => Promise<void>,
  *   log?: { warn: (line: string) => void } }} input `write` is the write step's input (write-step.js); `agent` the site
@@ -103,7 +168,7 @@ async function takeBack(pass, reason, firstCheck) {
  * @returns {Promise<{ report: object, siteCheck: object | null, firstCheck: object | null, repair: object | null }>}
  */
 export async function runStepNine(input) {
-  const { write, checkSite, baselines, contracts, agent = null, saveFile = null } = input
+  const { write, checkSite, baselines, contracts, agent = null, saveFile = null, pictures = null } = input
   const { limits = null, timer, now = Date.now, sleep = realSleep, log = console, pageHtml = null } = input
   const t0 = now()
   const timeline = []
@@ -111,7 +176,25 @@ export async function runStepNine(input) {
     timeline.push({ stage, ...extra, startMs: from - t0, endMs: now() - t0 })
   const written = await runWriteStep({ now, sleep, ...write })
   mark('write', t0)
-  if (written.status !== 'done') return { report: written, siteCheck: null, firstCheck: null, repair: null }
+  if (written.status !== 'done')
+    return { report: written, siteCheck: null, firstCheck: null, repair: null, writersSettled: true }
+  // The setup hold must end before a native turn opens. A failed checkpoint permits no repair
+  // prompt: its file moment could otherwise absorb the initial write and undo personalization.
+  if (input.beforeRepair) {
+    const checkpointFrom = now()
+    try {
+      await input.beforeRepair()
+      mark('setup-checkpoint', checkpointFrom)
+    } catch (error) {
+      const report = {
+        ...written,
+        status: 'stopped',
+        cause: { code: 'STEP_NINE_BASELINE_UNPROVEN', reason: String(error?.message ?? error) }
+      }
+      if (saveFile) await saveFile('site-write-report.json', `${JSON.stringify(report, null, 2)}\n`)
+      return { report, siteCheck: null, firstCheck: null, repair: null, writersSettled: true }
+    }
+  }
   // The demo baseline committed beside the contract at step 0 (demo-baseline.json), unless the caller gives its own lookup.
   const store = baselines ?? contractBaselineStore({ index: contracts ?? defaultContracts() })
   const baseline = await store.read(written.contract).catch(() => null)
@@ -143,6 +226,7 @@ export async function runStepNine(input) {
     pageHtml,
     // An alt fault names the slot the kit keeps that picture's alt in, when it is not the picture slot.
     altSlots: kitAltSlots(write.kit?.doc ?? null),
+    contentMap: write.contentMap ?? null,
     mark,
     log: (line) => log.warn(line),
     nextRequestId: () => `step9b-${runId}-${++sequence}`
@@ -158,10 +242,45 @@ export async function runStepNine(input) {
       outcome = await takeBack(pass, reason, firstCheck)
     }
   // The sessions of a build's repair pass are retired once it is over, whatever its outcome (a taken-back pass too).
-  await retireSessions(agent, pass.result?.sessions ?? [], (line) => log.warn(line))
+  const retiredInTime = await retireSessions(
+    agent,
+    pass.result?.sessions ?? [],
+    (line) => log.warn(line),
+    clock
+  )
+  const evidence = retiredInTime
+    ? await repairWriterEvidence(agent, ledger, clock)
+    : { settled: false, checked: false }
+  const writersSettled = evidence.settled
+  if ((!writersSettled || !evidence.checked) && outcome.status === 'done')
+    outcome = {
+      ...outcome,
+      status: 'incomplete',
+      reason: !writersSettled
+        ? 'Not every prompted repair request has a terminal native turn record.'
+        : 'A native repair turn or its writes appeared after the last verified site check.'
+    }
   const handed = outcome.check
   const repair = repairSummary({ outcome, clock, site: write.siteKey, timeline })
-  const report = withReadBack(written, handed)
+  const verified =
+    writersSettled &&
+    evidence.checked &&
+    checkAccepted(handed) &&
+    !['incomplete', 'failed'].includes(outcome.status)
+  const report = {
+    ...withReadBack(written, handed),
+    pictureReview: pictureReviewOf(pictures),
+    writeStatus: written.status,
+    ...(!verified
+      ? {
+          status: 'stopped',
+          cause: {
+            code: 'STEP_NINE_CHECK_FAILED',
+            reason: 'The write completed, but the final site check or repair verification did not pass.'
+          }
+        }
+      : {})
+  }
   if (saveFile) {
     const out = (name, value) => saveFile(name, `${JSON.stringify(value, null, 2)}\n`)
     await out('site-write-report.json', report)
@@ -169,5 +288,11 @@ export async function runStepNine(input) {
     await out('site-check.json', handed)
     await out('repair-pass.json', repair)
   }
-  return { report, siteCheck: handed, firstCheck, repair }
+  return {
+    report,
+    siteCheck: handed,
+    firstCheck,
+    repair,
+    writersSettled
+  }
 }

@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-541-media-admission",
+  "kind": "fix",
+  "title": "Research media admission bounds retained downloads until storage completes",
+  "pr": 541,
+  "area": "website-opportunities/media",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run media admission tests with twelve transfers across two job groups; hold object storage, enqueue an exclusive video before another image, and reject each pipeline phase.",
+    "Run two real executor instances for separate place research jobs against PostgreSQL, hold their object stores, and observe fetched buffer count before releasing storage."
+  ],
+  "expect": [
+    "Only five image callbacks enter while object storage remains pending.",
+    "A queued video enters after current images finish storage and before any later image.",
+    "Fetch, decoder and storage rejection all release image and exclusive video permits.",
+    "Two real executor instances fetch only five pictures until pending stores release, then both jobs finish with ten downloads."
+  ],
+  "selectors": {},
+  "fence": "one process-wide FIFO weighted permit held from before fetch through completed media storage",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=research jobs share|a queued video|fetch, decoder|two executor instances admit",
+      "apps/tracy-web/test/website-opportunities-media-admission.test.mjs",
+      "apps/tracy-web/test/website-opportunities-shared-research.test.mjs"
+    ],
+    "tests": [
+      "research jobs share five media slots held from fetch through completed object storage",
+      "a queued video waits for all image stores and prevents later images from overtaking it",
+      "fetch, decoder and object storage rejections release image and exclusive video permits",
+      "two executor instances admit only five downloaded pictures until real media storage completes"
+    ],
+    "needs": ["postgres"]
+  }
+}

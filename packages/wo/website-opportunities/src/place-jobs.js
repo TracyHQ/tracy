@@ -16,6 +16,7 @@ import { currentSnapshotOf, privateRefsDue, snapshotDue, snapshotFresh } from '.
 import { JobActiveError, ensureSource } from './store.js'
 
 export const PLACE_JOB_TABLE = 'wo_place_job'
+const CRASH_RECOVERIES_MAX = 3
 
 /** SQL: a stranger on `/find` waits on the place job aliased `job` (`wo_place_public_request`). */
 const PUBLIC_DEMAND = (job) =>
@@ -48,6 +49,7 @@ export async function joinPlace(
     prefetchCampaignId = null,
     requiredSources = {},
     onlySource = null,
+    resumeJobId = null,
     starter = null,
     againPlan = null,
     staleBefore = null
@@ -86,6 +88,18 @@ export async function joinPlace(
     const answers = active.find((j) => !j.only_source || j.only_source === onlySource)
     if (answers) return { job: answers }
     if (active.some((j) => j.state === 'queued')) throw new JobActiveError(null)
+    // An explicit resume keeps the stopped source run and its paid checkpoints, even with a fresh base snapshot.
+    if (resumeJobId) {
+      const { rows } = await client.query(
+        `update wo_place_job set state='queued', last_error=null, updated_at=now(),
+           progress=progress || '{"crashRecoveries":0}'::jsonb,
+           started_by=coalesce($4, started_by),
+           started_by_account_id=case when $4::text is null then started_by_account_id else $5::uuid end
+         where id=$1 and place_id=$2 and only_source=$3 and state in ('paused','blocked') returning *`,
+        [resumeJobId, placeId, onlySource, by, byAccount]
+      )
+      if (rows[0]) return { job: rows[0] }
+    }
     const { rows } = await client.query(
       `insert into wo_place_job (place_id, force, work_priority, research_mode, only_source, started_by, started_by_account_id)
        values ($1, false, 0, 'full', $2, $3, $4) returning *`,
@@ -114,6 +128,7 @@ export async function joinPlace(
       await client.query(
         `update wo_place_job set state = 'queued', again_plan = $2::jsonb, force = false, only_source = null,
            last_error = null, work_priority = 0, research_mode = 'full', updated_at = now(),
+           progress = progress || '{"crashRecoveries":0}'::jsonb,
            started_by = coalesce($3, started_by),
            started_by_account_id = case when $3::text is null then started_by_account_id else $4::uuid end
          where id = (select id from wo_place_job where place_id = $1 and state in ('paused', 'blocked')
@@ -205,6 +220,7 @@ export async function joinPlace(
       if (prefetchCampaignId && !stopped.prefetch_campaign_id) return { job: stopped }
       const { rows } = await client.query(
         `update wo_place_job set state = 'queued', force = force or $2, last_error = null, updated_at = now(),
+         progress = progress || '{"crashRecoveries":0}'::jsonb,
          stage=case when prefetch_campaign_id is not null and $3::text is null then 'discovery' else stage end,
          work_priority=case when $3::text is null then 0 else work_priority end,
          research_mode=case when $3::text is null then 'full' else research_mode end,
@@ -259,6 +275,22 @@ export async function claimPlaceJob(pool, owner, leaseMs, { kind = 'all' } = {})
         and not exists(select 1 from wo_job r where r.place_job_id=j.id and r.result_snapshot_id is null
           and r.state in ('queued','running','paused','blocked'))
         and not ${PUBLIC_DEMAND('j')}`)
+    // Three automatic takeovers after the first claim. Lifetime attempt also counts legitimate quota
+    // resumes, so it cannot identify a crash loop. Stop and fence the writer without discarding paid
+    // operation checkpoints or the preparing snapshot; only an explicit restart resets this counter.
+    await client.query(
+      `with stopped as (
+         update wo_place_job set state='paused', lease_token=lease_token+1,
+           lease_owner=null, lease_until=null, updated_at=now(),
+           last_error=jsonb_build_object('code','RESEARCH_RECOVERY_LIMIT','recoveries',$1::int)
+         where work_priority=0 and state='running' and lease_until<now()
+           and coalesce((progress->>'crashRecoveries')::int,0)>=$1
+         returning id,last_error)
+       update wo_job r set state='paused',last_error=s.last_error,updated_at=now()
+       from stopped s where r.place_job_id=s.id and r.result_snapshot_id is null
+         and r.state in ('queued','running','paused','blocked')`,
+      [CRASH_RECOVERIES_MAX]
+    )
     // Fence every expired background lease before measuring the single running slot.
     // A promoted job whose last user cancelled can otherwise deadlock a second expired job.
     await client.query(`update wo_place_job j set state=case
@@ -285,7 +317,11 @@ export async function claimPlaceJob(pool, owner, leaseMs, { kind = 'all' } = {})
          order by pj.work_priority, (pj.state = 'running') desc, pj.updated_at limit 1 for update skip locked)
        update wo_place_job j set state = 'running', lease_owner = $1, lease_token = j.lease_token + 1,
          lease_until = clock_timestamp() + ($2::int * interval '1 millisecond'), heartbeat_at = clock_timestamp(),
-         attempt = j.attempt + 1, updated_at = now()
+         attempt = j.attempt + 1,
+         progress = case when j.work_priority=0 and j.state='running' then
+           j.progress || jsonb_build_object('crashRecoveries',coalesce((j.progress->>'crashRecoveries')::int,0)+1)
+           else j.progress end,
+         updated_at = now()
        from next where j.id = next.id
        returning j.*`,
       [owner, leaseMs, kind]

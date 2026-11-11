@@ -60,6 +60,8 @@ export function chainRepairLimits(elapsedMs) {
  */
 export const STEP_CHAIN_LIMITS = Object.freeze({
   prepareMs: STEP_CHAIN_DEADLINE_MS,
+  // A queued opening seal must finish before setup writes or a backup history read can begin.
+  webrootMs: 3 * 60_000,
   // Counted from the site coming up: as long as the deadline, so it never fires before the engine's own deadline does.
   prepareGraceMs: STEP_CHAIN_DEADLINE_MS,
   applyMs: STEP_CHAIN_DEADLINE_MS + STEP_CHAIN_HANDOVER_MS,
@@ -104,6 +106,8 @@ export function createStepChainEngine({
     limits: STEP_CHAIN_LIMITS,
     /** The chain writes the brand itself (step 9), so the frame's own brand step does not run after it. */
     writesBrand: true,
+    requiresSetupHold: true,
+    ...(steps.validateBase ? { validateBase: (ctx) => steps.validateBase(ctx) } : {}),
 
     async prepare(ctx) {
       const t0 = now()
@@ -144,6 +148,7 @@ export function createStepChainEngine({
             endMs: now() - t0,
             usd: Number(error?.usd ?? 0),
             outcome: signal.aborted ? 'stopped' : made ? 'failed, best version used' : 'failed',
+            ...(typeof error?.code === 'string' ? { code: error.code } : {}),
             error: messageOf(error)
           })
           failed ??= step
@@ -222,6 +227,7 @@ export function createStepChainEngine({
             endMs: now() - t0,
             usd: Number(answer?.usd ?? 0),
             outcome: ok ? 'done' : 'failed',
+            ...(report?.recovery ? { recovery: report.recovery } : {}),
             ...(ok ? {} : { error: messageOf(report?.cause?.reason ?? report?.status ?? 'no write report') })
           })
           if (!ok) failed ??= 'write'

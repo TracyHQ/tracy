@@ -42,7 +42,7 @@ global flow gap so the source's margins decide.
 | Section pattern | `patterns/*.php`, registered as `wp-ja-diner/*` | inserted copies live in `post_content` |
 | Navigation | the header's two Navigation blocks: `nav.mainmenu` (desktop bar) and `nav.site-pages` (phone side panel) | `wp_navigation` posts `mainmenu`, `site-pages` and `usermenu`; the `header` row holds their `ref` |
 | Global styles | `theme.json`, `styles/wp-ja-diner.json` | the `wp_global_styles` row `wp-global-styles-wp-ja-diner` |
-| Site identity | none | `blogname` ("ja-diner" on the build stand), `blogdescription` (empty: the source has no tagline), `site_logo`, `tracy_logo_dark` (unset), `show_on_front` = `page`, `page_on_front` (the page `front-page`) |
+| Site identity | none | `blogname` ("ja-diner" on the build stand), `blogdescription` (empty: the source has no tagline), `site_logo`, `tracy_logo_dark` (the white copy of the logo), `show_on_front` = `page`, `page_on_front` (the page `front-page`) |
 | Footer location, hours, contact, copyright | `parts/footer.html` (`footer.location`, `footer.hours`, `footer.contact`, `footer.copyright`) | the `footer` template-part row |
 | 404 text | `patterns/part-404.php` ("404", "Page not found", a line, a list of pages) | none (see "Inert hooks") |
 | Retired-URL redirects | the hook in `inc/extra.php` | option `wp_ja_diner_redirects` (rules `from`, `to`, `status`) |
