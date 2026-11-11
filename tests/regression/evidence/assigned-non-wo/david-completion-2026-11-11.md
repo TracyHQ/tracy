@@ -147,3 +147,11 @@ The new regression initially failed two approved-prompt hash checks. The earlier
 the locked planner prompt. That change is removed: approved prompt bytes are restored, while the versioned article
 and documentary-photo checks remain in code. The complete prompt/input selection then passed 11/11 with no skips.
 The failed receipt on 8ed6c6b88f is retained honestly; a fresh committed-head receipt is required for the correction.
+
+
+The corrected planner brief-view case and both article/documentary-photo cases passed on committed source
+4d2495010c. The receipt `tests/regression/results/2026-11-11-4d2495010.jsonl` supersedes the earlier failed prompt
+measurement. Selected lint/typecheck/format, Turbo structure and source-language checks passed after the planner
+input integration; the vocabulary/test-quality tail is still being collected. Linux Tracy CI on 48e744973e was
+cancelled because it predates the prompt correction. The separate live-sync workflow on that head is still useful
+for unchanged fleet code and remains running. A final-head CI result is still required before readiness.
