@@ -57,6 +57,10 @@ while [ "$1" = -T ] || [ "$1" = -e ]; do
 done
 shift
 if [ "$1" = mariadb-dump ] && mkdir "$FAKE_STATE/dumped" 2>/dev/null; then
+  if [ -n "\${FAKE_DUMP_ERROR_ONCE:-}" ]; then
+    printf '%s\n' "$FAKE_DUMP_ERROR_ONCE" >&2
+    exit 2
+  fi
   if [ -n "\${FAKE_DUMP_HOOK:-}" ]; then
     "$REAL_DOCKER" exec -i -e MYSQL_PWD=t "$TEST_DB_CONTAINER" mariadb -uroot joomla -e "$FAKE_DUMP_HOOK" >&2
   fi
@@ -202,6 +206,22 @@ test(
     }
   }
 )
+
+test('a table recreated under the same name retries a missing-table dump and loads every row', opts, () => {
+  for (const error of [
+    'mariadb-dump: Couldn\'t find table: "jos_extra"',
+    "mariadb-dump: Couldn't execute 'show create table `jos_extra`': Table 'joomla.jos_extra' doesn't exist (1146)"
+  ]) {
+    copy()
+    const { rc, why, stderr } = loadOurs({ FAKE_DUMP_ERROR_ONCE: error })
+    assert.equal(rc, 0, `${why}\n${stderr}`)
+    assert.match(stderr, /dumping again/)
+    assert.deepEqual(tables('joomla_tracy_sync_merged'), siteTables())
+    assert.equal(sql('SELECT COUNT(*) FROM jos_assets', 'joomla_tracy_sync_merged'), '400000')
+    assert.equal(sql('SELECT id FROM jos_extra', 'joomla_tracy_sync_merged'), '1')
+    assert.equal(sql('SELECT title FROM jos_content WHERE id=2', 'joomla_tracy_sync_merged'), 'About')
+  }
+})
 
 test(
   'tables tied by a foreign key, loaded by two streams side by side, load whole: no stream takes a table lock',

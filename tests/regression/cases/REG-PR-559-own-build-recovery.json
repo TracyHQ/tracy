@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-559-own-build-recovery",
+  "kind": "fix",
+  "title": "Own-business server builds retain progress and explicitly retry the same failed action",
+  "pr": 559,
+  "area": "website-opportunities/build-from-business",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the actual FromBusiness component in Chromium through building, failure, reopening, explicit Retry and completion; repeat with a blocked immutable brief."
+  ],
+  "expect": [
+    "A server-owned action shows building and elapsed minutes without opening a chat.",
+    "Failure and remount retain the same business; Retry sends the same failed action ID without research or template selection.",
+    "The site opens and the kept business clears only after completion, with no chat preparation.",
+    "A blocked immutable brief preserves the business and exposes no futile retry."
+  ],
+  "selectors": {
+    "progress": "[data-own-build-progress]",
+    "failure": "[data-own-failed]"
+  },
+  "fence": "The real Add site component observes terminal server-owned actions and keeps recovery authority across remounts.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "--test-reporter=tap",
+      "packages/site/tracy-add-site/test/from-business-flow.test.mjs",
+      "packages/site/tracy-add-site/test/e2e/from-business-links.test.mjs"
+    ],
+    "tests": [
+      "a server-owned build shows building, survives reopening and retries the same site before opening",
+      "a blocked immutable brief has no futile own-site retry button"
+    ],
+    "timeout_s": 120
+  }
+}

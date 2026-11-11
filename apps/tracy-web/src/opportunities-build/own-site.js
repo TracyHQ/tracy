@@ -29,6 +29,7 @@ import { tradeOfWords } from '../lib/wo-revision-choice.js'
 import { uiSwitchOn } from '../lib/ui-setting.js'
 import { AGENT_DEMO } from './agent-demo.js'
 import { CLIENT_DEMO } from './client-demo.js'
+import { BUILD_LIVE } from './build-store.js'
 import { demoActionOf, recommendTemplate } from './demo-actions.js'
 import { freezeDemoResearchInput } from './revisions.js'
 import { bestKnownName } from 'website-opportunities/src/business-name.js'
@@ -399,15 +400,21 @@ export function ownSiteRoutes(app, h) {
       trade: opp.candidate.trade ?? 'other',
       requestId: own.requestId
     }
-    // This press's build, or one still open from an earlier press: a business has one build at a time, and pressing
-    // again opens it rather than offering a choice the build door then refuses (DEMO_BUILD_ACTIVE, 24/10/2026).
+    // Follow this press, active work, or an earlier own-site action whose base still exists.
+    // A fresh research press must not hide a failed/completed action behind a template choice
+    // that acceptance would refuse with BUILD_EXISTS. Deleted bases do not hold the customer here.
     const action = (
       await pool.query(
         `select a.id from wo_demo_action a where account_id = $1 and opportunity_id = $2
-           and (request_id = $3 or build_request_id = $3 or status in ('queued', 'quality-queued-v1'))
+           and (request_id = $3 or build_request_id = $3 or status in ('queued', 'quality-queued-v1')
+             or (a.selection->>'ownSite' = 'true'
+               and a.status in ('failed','quality-failed-v1','completed','quality-completed-v1')
+               and exists (select 1 from wo_build b where b.account_id = a.account_id
+                 and b.request_id = a.build_request_id and b.state = any($4::text[])
+                 and b.demo_deleted_at is null)))
            and not exists (select 1 from wo_demo_action replacement where replacement.retry_of = a.id)
          order by (status in ('queued', 'quality-queued-v1')) desc, accepted_at desc, id desc limit 1`,
-        [accountId, opp.id, `${own.requestId}:build`]
+        [accountId, opp.id, `${own.requestId}:build`, BUILD_LIVE]
       )
     ).rows[0]
     if (action) return { ...view, phase: 'build', action: await demoActionOf(pool, accountId, action.id) }
