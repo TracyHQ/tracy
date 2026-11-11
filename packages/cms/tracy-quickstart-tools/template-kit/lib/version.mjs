@@ -3,7 +3,8 @@
 // which tool last shaped its slots. A consumer that needs a slot field added in a given version compares the kit's
 // `tool` string with its own pinned minimum. Bump the minor when the kit's slot shape grows.
 //   3.1.0: text slots carry the whole demo text in `sample` and its lengths in `demoChars`.
-export const TOOL_VERSION = '3.1.0'
+//   3.1.1: assigned T3 Section<N> chrome is captured as its module block.
+export const TOOL_VERSION = '3.1.1'
 export const TOOL = `template-kit ${TOOL_VERSION}`
 
 /** Stamp a kit settled again by a no-browser command: the tool that did it and when. */
