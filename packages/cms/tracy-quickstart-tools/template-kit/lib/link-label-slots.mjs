@@ -135,13 +135,17 @@ function labelResolver(map) {
     if (!n || !/^(?:mailto|tel):/i.test(to)) return null
     const address = decodeURIComponent(to.replace(/^[a-z]+:/i, '').split('?')[0])
     const digits = (x) => x.replace(/\D/g, '')
-    const same = /^tel:/i.test(to) ? digits(address).endsWith(digits(n)) && digits(n).length >= 7 : normText(address) === n
+    const same = /^tel:/i.test(to)
+      ? digits(address).endsWith(digits(n)) && digits(n).length >= 7
+      : normText(address) === n
     if (!same) return null
     // A block whose own entity is only its layout name (EmDash `block-…`) holds the entities of its declared slots.
     const own = new Set(
-      [b.source?.entity, ...(b.source?.contains ?? []), ...[...(declared ?? [])].map((k) => entityOf.get(k))].filter(
-        Boolean
-      )
+      [
+        b.source?.entity,
+        ...(b.source?.contains ?? []),
+        ...[...(declared ?? [])].map((k) => entityOf.get(k))
+      ].filter(Boolean)
     )
     // The number is a text slot's words, or a rich text slot's (a Portable Text paragraph that prints the `tel:` link).
     const hits = (map.slots ?? []).filter(

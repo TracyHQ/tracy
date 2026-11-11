@@ -121,7 +121,9 @@ function declareLimits(slots, file) {
     if (nonVisual && r.maxCharacters !== undefined)
       throw new Error(`${at} (${r.slot}): a nonVisual slot has no limit; remove maxCharacters`)
     if (!nonVisual && (!Number.isInteger(r.maxCharacters) || r.maxCharacters < 1))
-      throw new Error(`${at} (${r.slot}): maxCharacters must be a positive whole number (or declare nonVisual: true)`)
+      throw new Error(
+        `${at} (${r.slot}): maxCharacters must be a positive whole number (or declare nonVisual: true)`
+      )
     if (typeof r.from !== 'string' || !r.from.trim())
       throw new Error(
         `${at} (${r.slot}): from must say ${nonVisual ? 'where the text is used and why no box limits it' : 'how the number was found'}`
@@ -143,8 +145,13 @@ function declareLimits(slots, file) {
       }
       const demo = String(slot.sample ?? '').trim().length
       if (r.maxCharacters < demo)
-        throw new Error(`${at}: ${slot.key} is ${demo} characters in the demo, over the declared ${r.maxCharacters}`)
-      Object.assign(slot, { maxCharacters: r.maxCharacters, maxCharactersFrom: `declared by the theme: ${r.from.trim()}` })
+        throw new Error(
+          `${at}: ${slot.key} is ${demo} characters in the demo, over the declared ${r.maxCharacters}`
+        )
+      Object.assign(slot, {
+        maxCharacters: r.maxCharacters,
+        maxCharactersFrom: `declared by the theme: ${r.from.trim()}`
+      })
     }
   }
 }

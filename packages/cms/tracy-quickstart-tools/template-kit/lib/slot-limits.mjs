@@ -69,7 +69,8 @@ function claimsOf(id, mapSlot, textFit) {
   const notes = []
   const demo = demoLength(mapSlot?.sample)
   // A text no page draws in a box (an accessible name, the document title) has no limit to claim: the theme says so.
-  if (mapSlot?.nonVisual) return { claims, notes, demo, nonVisual: mapSlot.nonVisualFrom ?? 'declared by the theme' }
+  if (mapSlot?.nonVisual)
+    return { claims, notes, demo, nonVisual: mapSlot.nonVisualFrom ?? 'declared by the theme' }
   // The kit's frame reading fills the slot's real container; when it holds the demo words it stands for the frame,
   // and the content map's fit (an estimate from the demo words' box) is not used.
   const kitFit = textFit[id]

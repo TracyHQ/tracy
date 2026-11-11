@@ -242,7 +242,13 @@ test('a shown text slot the theme declares non-visual needs no limit; a number-l
     ...MAP,
     slots: [
       ...MAP.slots,
-      { key: 'chrome.label', type: 'text', sample: 'Switch appearance', nonVisual: true, nonVisualFrom: 'an aria-label' }
+      {
+        key: 'chrome.label',
+        type: 'text',
+        sample: 'Switch appearance',
+        nonVisual: true,
+        nonVisualFrom: 'an aria-label'
+      }
     ]
   }
   const kit = kitOf()

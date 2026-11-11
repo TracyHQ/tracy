@@ -9,7 +9,7 @@ const SITE = 'http://127.0.0.1:4321'
 const TOKEN = 'ec_pat_secret'
 const o = { site: SITE, token: TOKEN, mime: 'image/png' }
 
-test('the site\'s own relative upload route carries the bearer and the request marker', () => {
+test("the site's own relative upload route carries the bearer and the request marker", () => {
   const { url, init } = uploadRequest({ uploadUrl: '/_emdash/api/media/m1/upload', method: 'PUT' }, o)
   assert.equal(url.href, `${SITE}/_emdash/api/media/m1/upload`)
   assert.equal(init.headers.get('authorization'), `Bearer ${TOKEN}`)
@@ -18,7 +18,7 @@ test('the site\'s own relative upload route carries the bearer and the request m
   assert.equal(init.redirect, 'error')
 })
 
-test('an absolute URL on the site\'s own origin is the site\'s own door', () => {
+test("an absolute URL on the site's own origin is the site's own door", () => {
   const { init } = uploadRequest({ uploadUrl: `${SITE}/_emdash/api/media/m1/upload` }, o)
   assert.equal(init.headers.get('authorization'), `Bearer ${TOKEN}`)
   assert.equal(init.method, 'PUT')
@@ -28,7 +28,12 @@ test('a signed URL on another origin gets no bearer and no marker, and keeps its
   const ask = {
     uploadUrl: 'https://bucket.storage.example/up/m1?X-Amz-Signature=abc',
     method: 'PUT',
-    headers: { 'x-amz-meta-owner': 'tracy', 'x-amz-acl': 'private', authorization: 'Bearer leak', 'X-EmDash-Request': '1' }
+    headers: {
+      'x-amz-meta-owner': 'tracy',
+      'x-amz-acl': 'private',
+      authorization: 'Bearer leak',
+      'X-EmDash-Request': '1'
+    }
   }
   const { url, init } = uploadRequest(ask, o)
   assert.equal(url.origin, 'https://bucket.storage.example')
@@ -52,7 +57,11 @@ test('uploadPicture sends the bytes through that request and confirms the upload
   const api = async (method, route, _body) => {
     calls.push([method, route])
     if (route === '/_emdash/api/media/upload-url')
-      return { mediaId: 'm1', uploadUrl: 'https://bucket.storage.example/up/m1?sig=1', headers: { 'x-amz-acl': 'private' } }
+      return {
+        mediaId: 'm1',
+        uploadUrl: 'https://bucket.storage.example/up/m1?sig=1',
+        headers: { 'x-amz-acl': 'private' }
+      }
     if (route === '/_emdash/api/media/m1') return { item: { id: 'm1', storageKey: 'k1', filename: 'a.png' } }
     return {}
   }
@@ -61,17 +70,30 @@ test('uploadPicture sends the bytes through that request and confirms the upload
     sent.push({ url: String(url), init })
     return { ok: true, status: 200 }
   }
-  const value = await uploadPicture(api, TOKEN, { bytes: Buffer.from('png'), mime: 'image/png', filename: 'a.png' }, { fetchImpl, site: SITE })
+  const value = await uploadPicture(
+    api,
+    TOKEN,
+    { bytes: Buffer.from('png'), mime: 'image/png', filename: 'a.png' },
+    { fetchImpl, site: SITE }
+  )
   assert.equal(sent.length, 1)
   assert.equal(sent[0].url, 'https://bucket.storage.example/up/m1?sig=1')
   assert.equal(sent[0].init.headers.get('authorization'), null)
   assert.equal(sent[0].init.headers.get('x-amz-acl'), 'private')
   assert.equal(sent[0].init.redirect, 'error')
-  assert.deepEqual(calls.map((c) => c[1]).slice(0, 2), ['/_emdash/api/media/upload-url', '/_emdash/api/media/m1/confirm'])
+  assert.deepEqual(calls.map((c) => c[1]).slice(0, 2), [
+    '/_emdash/api/media/upload-url',
+    '/_emdash/api/media/m1/confirm'
+  ])
   assert.equal(value.id, 'm1')
   // a refused upload is an error, not a silent picture
   await assert.rejects(
-    uploadPicture(api, TOKEN, { bytes: Buffer.from('png'), mime: 'image/png', filename: 'a.png' }, { fetchImpl: async () => ({ ok: false, status: 403 }), site: SITE }),
+    uploadPicture(
+      api,
+      TOKEN,
+      { bytes: Buffer.from('png'), mime: 'image/png', filename: 'a.png' },
+      { fetchImpl: async () => ({ ok: false, status: 403 }), site: SITE }
+    ),
     /HTTP 403/
   )
 })

@@ -268,7 +268,13 @@ test('a phone link printed in a rich text slot names that slot: the digits end t
   const map = {
     entities: [],
     slots: [
-      { key: 'reservation.title', entity: 'reservation', type: 'text', role: 'editorial.heading', sample: 'Reserve' },
+      {
+        key: 'reservation.title',
+        entity: 'reservation',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Reserve'
+      },
       {
         key: 'reservation.intro',
         entity: 'reservation',

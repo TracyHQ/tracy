@@ -795,9 +795,9 @@ test('slot limits: the theme declares a measured limit; a bad, stale or below-de
       template: 'tracy-cafe',
       version: '1.0.0'
     })
-  const title = build([{ slot: 'cards.hot.title', maxCharacters: 30, from: 'measured at 390 px' }]).slots.find(
-    (s) => s.key === 'cards.hot.title'
-  )
+  const title = build([
+    { slot: 'cards.hot.title', maxCharacters: 30, from: 'measured at 390 px' }
+  ]).slots.find((s) => s.key === 'cards.hot.title')
   assert.equal(title.maxCharacters, 30)
   assert.equal(title.maxCharactersFrom, 'declared by the theme: measured at 390 px')
   const cells = build([{ slot: 'cards.hot.items[*].name', maxCharacters: 20, from: 'row' }]).slots.filter(
@@ -807,10 +807,19 @@ test('slot limits: the theme declares a measured limit; a bad, stale or below-de
     cells.map((s) => s.key),
     ['cards.hot.items[0].name']
   )
-  assert.throws(() => build([{ slot: 'cards.hot.nope', maxCharacters: 9, from: 'x' }]), /no text slot is named/)
-  assert.throws(() => build([{ slot: 'cards.hot.title', maxCharacters: 3, from: 'x' }]), /over the declared 3/)
+  assert.throws(
+    () => build([{ slot: 'cards.hot.nope', maxCharacters: 9, from: 'x' }]),
+    /no text slot is named/
+  )
+  assert.throws(
+    () => build([{ slot: 'cards.hot.title', maxCharacters: 3, from: 'x' }]),
+    /over the declared 3/
+  )
   assert.throws(() => build([{ slot: 'cards.hot.title', maxCharacters: 30, from: ' ' }]), /from must say/)
-  assert.throws(() => build([{ slot: 'cards.hot.title', maxCharacters: 0, from: 'x' }]), /positive whole number/)
+  assert.throws(
+    () => build([{ slot: 'cards.hot.title', maxCharacters: 0, from: 'x' }]),
+    /positive whole number/
+  )
 })
 
 test('slot limits: a text no box draws is declared nonVisual with where it is used; a number on it, or no reason, fails', () => {
@@ -822,9 +831,9 @@ test('slot limits: a text no box draws is declared nonVisual with where it is us
       template: 'tracy-cafe',
       version: '1.0.0'
     })
-  const slot = build([{ slot: 'settings.title', nonVisual: true, from: 'the document title only' }]).slots.find(
-    (s) => s.key === 'settings.title'
-  )
+  const slot = build([
+    { slot: 'settings.title', nonVisual: true, from: 'the document title only' }
+  ]).slots.find((s) => s.key === 'settings.title')
   assert.equal(slot.nonVisual, true)
   assert.equal(slot.nonVisualFrom, 'the document title only')
   assert.equal('maxCharacters' in slot, false)
@@ -832,6 +841,9 @@ test('slot limits: a text no box draws is declared nonVisual with where it is us
     () => build([{ slot: 'settings.title', nonVisual: true, maxCharacters: 40, from: 'x' }]),
     /nonVisual slot has no limit/
   )
-  assert.throws(() => build([{ slot: 'settings.title', nonVisual: true, from: ' ' }]), /where the text is used/)
+  assert.throws(
+    () => build([{ slot: 'settings.title', nonVisual: true, from: ' ' }]),
+    /where the text is used/
+  )
   assert.throws(() => build([{ slot: 'settings.title', from: 'x' }]), /or declare nonVisual/)
 })

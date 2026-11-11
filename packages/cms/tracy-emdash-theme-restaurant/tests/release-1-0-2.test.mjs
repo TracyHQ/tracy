@@ -25,7 +25,11 @@ test('a list excerpt is cut at a whole word, never in the middle of one', () => 
   // 1.0.1 cut through the word at 100 characters, which is the defect this replaces.
   assert.equal(cutAtWord('x'.repeat(150), 95), '...')
   assert.equal(cutAtWord(`${'x'.repeat(120)} and more words`, 95), '...', 'the first space is past the limit')
-  assert.equal(cutAtWord(`${'x'.repeat(90)} nextword here`, 95), `${'x'.repeat(90)}...`, 'a space before the limit is used')
+  assert.equal(
+    cutAtWord(`${'x'.repeat(90)} nextword here`, 95),
+    `${'x'.repeat(90)}...`,
+    'a space before the limit is used'
+  )
   assert.equal(cutAtWord('a'.repeat(95), 95), 'a'.repeat(95), 'a text at the limit is whole')
 })
 
@@ -123,12 +127,19 @@ test('slot-limits.json holds only limits with a real source: a measured box, or 
   const { limits } = JSON.parse(read('seed/slot-limits.json'))
   assert.ok(limits.length >= 7)
   for (const rule of limits) {
-    assert.ok(String(rule.from).trim().length > 10, `${rule.slot} says where its number or its non-visual use comes from`)
+    assert.ok(
+      String(rule.from).trim().length > 10,
+      `${rule.slot} says where its number or its non-visual use comes from`
+    )
     if (rule.nonVisual === true) {
       assert.equal('maxCharacters' in rule, false, `${rule.slot} is not drawn in a box: no invented number`)
     } else {
       assert.ok(Number.isInteger(rule.maxCharacters) && rule.maxCharacters > 0, rule.slot)
-      assert.match(rule.from, /measured|filled|box|field is/i, `${rule.slot}: the number comes from a measured box`)
+      assert.match(
+        rule.from,
+        /measured|filled|box|field is/i,
+        `${rule.slot}: the number comes from a measured box`
+      )
     }
   }
   const nonVisual = limits.filter((r) => r.nonVisual).map((r) => r.slot)
@@ -138,11 +149,18 @@ test('slot-limits.json holds only limits with a real source: a measured box, or 
 test('the post category label never links to /pages (Chefs): the view links only a live blog category', () => {
   const view = read('src/views/Post.astro')
   // the old link was unconditional: a label link whose gate does not name the blog categories
-  assert.match(view, /const termLink = Boolean\(terms\[0\] && BLOG_SIDEBAR\.includes\(terms\[0\]\.slug\) && termLive\)/)
+  assert.match(
+    view,
+    /const termLink = Boolean\(terms\[0\] && BLOG_SIDEBAR\.includes\(terms\[0\]\.slug\) && termLive\)/
+  )
   assert.doesNotMatch(view, /const termLink = Boolean\(terms\[0\]\)/)
   assert.doesNotMatch(view, /\{terms\[0\] && <a href=/)
   const chefs = seed.content.posts.find((p) => p.slug === 'chefs')
-  assert.equal(chefs.taxonomies.category[0], 'pages', 'the Chefs article sits in the category with no list page')
+  assert.equal(
+    chefs.taxonomies.category[0],
+    'pages',
+    'the Chefs article sits in the category with no list page'
+  )
   const sidebar = /export const BLOG_SIDEBAR = \[([^\]]*)\]/.exec(read('src/lib/posts.ts'))[1]
   assert.doesNotMatch(sidebar, /'pages'/)
 })

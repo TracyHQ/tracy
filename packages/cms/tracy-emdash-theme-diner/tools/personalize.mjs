@@ -3287,7 +3287,12 @@ export function uploadRequest(ask, { site, token, mime }) {
  * Put one picture in the site's library and answer the value an image field holds — the same shape
  * `tools/seed-apply.mjs` writes, so the site resolves it the way it resolves the template's own.
  */
-export async function uploadPicture(api, token, { bytes, mime, filename, alt }, { fetchImpl = fetch, site = SITE } = {}) {
+export async function uploadPicture(
+  api,
+  token,
+  { bytes, mime, filename, alt },
+  { fetchImpl = fetch, site = SITE } = {}
+) {
   const hash = `sha1:${createHash('sha1').update(bytes).digest('hex')}`
   const ask = await api('POST', '/_emdash/api/media/upload-url', {
     filename,

@@ -268,7 +268,12 @@ test('a non-visual slot (no box draws it) takes no number: every place says so, 
       fit: { measured: false }
     }
   ]
-  kit.blocks[0].slots.push({ id: 'chrome.label', type: 'text', maxCharacters: 80, maxCharactersFrom: 'invented' })
+  kit.blocks[0].slots.push({
+    id: 'chrome.label',
+    type: 'text',
+    maxCharacters: 80,
+    maxCharactersFrom: 'invented'
+  })
   unifyLimits(kit, { mapSlots: map, textFit: TEXT_FIT })
   const label = kit.blocks[0].slots.find((s) => s.id === 'chrome.label')
   assert.equal('maxCharacters' in label, false, 'an invented number is dropped')
