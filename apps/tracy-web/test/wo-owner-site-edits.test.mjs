@@ -1,6 +1,6 @@
 // The owner's choices for the site itself on the Profile card (#537): the team door (add, rename, photograph, remove),
 // the social links typed for the site, a photo or review kept off the site, and a band switched off through the facts
-// door. Each is a Profile edit; the next Content brief reads it. Real Postgres, a fictional place, the real domain with
+// door. Each is a Profile edit, refused once the Profile is approved; the next Content brief reads it. Real Postgres, a fictional place, the real domain with
 // its network parts replaced.
 //
 //   TEST_DATABASE_URL=... node --test --test-concurrency=1 apps/tracy-web/test/wo-owner-site-edits.test.mjs
@@ -258,13 +258,12 @@ async function withReadTeam(w, opp) {
 }
 
 test(
-  'the team door adds, renames, photographs and removes people; each is a Profile edit',
+  'the team door adds, renames, photographs and removes people before approval; each is a Profile edit',
   opts,
   async () => {
     const w = await world()
     const { opp } = await researchedCard(w)
     await withReadTeam(w, opp)
-    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
     const team = (body) => w.call(A, 'PUT', `${BASE}/${opp.id}/team`, body)
 
     assert.equal((await team({ action: 'invite' })).body.code, 'INVALID_ACTION')
@@ -423,7 +422,6 @@ test(
     const w = await world()
     const { opp } = await researchedCard(w)
     await withReadTeam(w, opp)
-    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
     const facts = (body) => w.call(A, 'PUT', `${BASE}/${opp.id}/facts`, body)
     const before = (await w.call(A, 'GET', `${BASE}/${opp.id}/place-profile`)).body.profile
     const phone = before.business.phone
@@ -466,6 +464,13 @@ test(
     assert.equal(read.people.find((p) => p.id === mira.id).value.name, 'Mira H.')
     assert.equal(read.people.find((p) => p.id === mira.id).decidedBy, 'owner')
 
+    // null gives the fact back the value research read.
+    const back = await facts({ factId: phone.id, value: null })
+    assert.equal(back.body.fact.value, phone.value)
+    assert.equal(back.body.fact.editedByOwner, false)
+    assert.equal(phone.id in back.body.opportunity.candidate.factEdits, false)
+    assert.equal((await facts({ factId: phone.id, value: '+1 555 0199' })).status, 200)
+
     // The next brief states the saved values.
     assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
     const revision = await makeBrief(w, opp, 'owner-value-brief-01')
@@ -474,10 +479,9 @@ test(
     assert.equal(member.label, 'Mira H.')
     assert.equal(member.factId, mira.id)
 
-    // null gives the fact back the value research read.
-    const back = await facts({ factId: phone.id, value: null })
-    assert.equal(back.body.fact.value, phone.value)
-    assert.equal(back.body.fact.editedByOwner, false)
-    assert.equal(phone.id in back.body.opportunity.candidate.factEdits, false)
+    // Once approved, the value is final (#537 R23).
+    const locked = await facts({ factId: phone.id, value: null })
+    assert.equal(locked.status, 409)
+    assert.equal(locked.body.code, 'PROFILE_APPROVED')
   }
 )

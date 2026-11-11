@@ -79,12 +79,17 @@ export const APPROVAL_NEXT = Object.freeze({
   PROFILE_NOT_APPROVED: 'Approve the Profile first: open it, check every row, then approve.',
   BRIEF_NOT_APPROVED: 'Approve the latest Content brief first: open it, check every row, then approve.',
   NO_BRIEF: 'Make a Content brief first.',
-  BRIEF_STALE: 'This brief was made from an older Profile: make the brief again, then approve it.'
+  BRIEF_STALE: 'This brief was made from an older Profile: make the brief again, then approve it.',
+  // Approved is final (#537 R23): a change after approval is a new card of the same place (`POST /`).
+  PROFILE_APPROVED: 'The business facts are approved. To change them, add this business again as a new card.',
+  BRIEF_APPROVED: 'The Site content brief is approved. To change it, add this business again as a new card.'
 })
 
 /**
- * A Profile edit (any row, or a photo the seller added): the Profile needs review again, and a brief made before now
- * reads stale. Returns the updated row, or null when it is not this account's.
+ * A Profile edit (any row, or a photo the seller added) of a Profile not approved yet. The owner doors never reach it
+ * once the Profile is approved (`approval-locks.js`), so `profile_changed_at` after an approval, and the brief's
+ * `briefStale: 'profile'` it causes, are left only on rows made before that lock. Returns the updated row, or null when
+ * it is not this account's.
  */
 export async function markProfileChanged(db, accountId, id) {
   const { rows } = await db.query(

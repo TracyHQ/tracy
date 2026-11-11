@@ -784,9 +784,11 @@ export function createWebsiteBuilder(deps) {
           'RESEARCH_NOT_DONE',
           'Press Research first: the brief is made from its results.'
         )
-      // 🔒 The seller approves the Profile before a brief is made from it (#537).
-      const briefGate = briefGateOf(await approvalFor(opp))
+      // 🔒 The seller approves the Profile before a brief is made from it (#537); an approved brief is final (R23).
+      const approval = await approvalFor(opp)
+      const briefGate = briefGateOf(approval)
       if (briefGate) return refuse(c, 409, briefGate, APPROVAL_NEXT[briefGate])
+      if (approval.brief === 'approved') return refuse(c, 409, 'BRIEF_APPROVED', APPROVAL_NEXT.BRIEF_APPROVED)
       const b = (await body(c)) ?? {}
       if (b.requestId !== undefined && !REQUEST_ID.test(String(b.requestId)))
         return refuse(
@@ -807,7 +809,8 @@ export function createWebsiteBuilder(deps) {
       return json(c, { job: briefJobShape(started.job) }, 202)
     })
 
-    // The seller's edits of a Content brief (#524): a new revision marked edited, which Build then builds from.
+    // The seller's edits of a Content brief (#524): a new revision marked edited, which Build then builds from. Locked
+    // once the brief is approved (#537 R23): a change after approval is a new card of the same place.
     app.post(`${BASE}/:id/revisions/:revId/edits`, async (c) => {
       const who = await caller(c)
       if (who instanceof Response) return who
@@ -815,6 +818,8 @@ export function createWebsiteBuilder(deps) {
       const revId = c.req.param('revId')
       const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
       if (!opp || !UUID.test(revId)) return notFound(c, 'brief')
+      if ((await approvalFor(opp)).brief === 'approved')
+        return refuse(c, 409, 'BRIEF_APPROVED', APPROVAL_NEXT.BRIEF_APPROVED)
       const read = readBriefEdits(await body(c))
       if ('error' in read)
         return refuse(

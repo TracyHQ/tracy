@@ -186,20 +186,29 @@ test(
   }
 )
 
-test('{url} still works; pasting more links of a saved business adds them to it', opts, async () => {
+test('{url} still works; the same links again make a new card (#537 R23)', opts, async () => {
   const w = await world()
   const first = await w.call('POST', BASE, { url: 'https://coach.example/' })
   assert.equal(first.status, 201, JSON.stringify(first.body))
   assert.equal(first.body.opportunity.candidate.website, 'https://coach.example/')
   const again = await w.call('POST', BASE, { links: ['https://coach.example/', INSTA, MAGICPIN] })
-  assert.equal(again.status, 200, JSON.stringify(again.body))
-  assert.equal(again.body.opportunity.id, first.body.opportunity.id)
+  assert.equal(again.status, 201, JSON.stringify(again.body))
+  assert.notEqual(again.body.opportunity.id, first.body.opportunity.id)
+  assert.deepEqual(
+    again.body.opportunity.sameAs.map((o) => o.id),
+    [first.body.opportunity.id]
+  )
   assert.equal(
     again.body.opportunity.candidate.socials.instagram,
     'https://www.instagram.com/harbour.sportclub'
   )
   assert.deepEqual(again.body.opportunity.candidate.listings, [{ url: MAGICPIN, source: 'magicpin' }])
-  assert.ok(await listingRow(w.pool, first.body.opportunity.id))
+  assert.ok(await listingRow(w.pool, again.body.opportunity.id))
+  // The first card is left as it was.
+  const kept = (
+    await w.pool.query('select candidate from wo_opportunity where id = $1', [first.body.opportunity.id])
+  ).rows[0].candidate
+  assert.equal(kept.socials?.instagram, undefined)
   const blocked = await w.call('POST', BASE, { url: 'http://127.0.0.1/' })
   assert.equal(blocked.body.code, 'URL_BLOCKED')
   assert.equal((await w.call('POST', BASE, { links: [] })).body.code, 'INVALID_LINKS')
@@ -374,9 +383,14 @@ test(
     const brief = makeSiteBrief(domain, read, { opportunity: row, madeAt: '2026-10-26T00:00:00.000Z' })
     assert.equal(brief.business.name, 'Padel & Tennis Coach')
 
-    // Saving the business again with its links keeps the pick.
+    // Saving the business again makes a new card that starts fresh (#537 R23); the pick stays on its own card.
     const again = await w.call('POST', BASE, { links: [SHARE, MAGICPIN, INSTA] })
-    assert.equal(again.body.opportunity.candidate.namePick.name, 'Padel & Tennis Coach')
+    assert.equal(again.status, 201, JSON.stringify(again.body))
+    assert.equal(again.body.opportunity.candidate.namePick, undefined)
+    assert.deepEqual(
+      again.body.opportunity.sameAs.map((o) => o.id),
+      [opp.id]
+    )
 
     assert.equal((await w.call('PUT', `${BASE}/${opp.id}/name`, { name: ' ' })).body.code, 'INVALID_NAME')
     assert.equal((await w.call('PUT', `${BASE}/${opp.id}/name`, { name: 'x'.repeat(201) })).status, 400)

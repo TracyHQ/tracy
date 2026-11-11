@@ -6,6 +6,7 @@ import { researchRunOf } from './research-progress.js'
 import { stepProgressOf } from './step-progress.js'
 import { OWNER_MEDIA_SOURCE, sellerReviewRoutes } from './seller-review-routes.js'
 import { ownerEditRoutes } from './owner-edit-routes.js'
+import { lockApprovedProfile } from './approval-locks.js'
 import { SOCIAL_NETWORKS, bandsOf, hiddenSetOf, withReviewKeys } from '../domain/owner-site-picks.mjs'
 import { imageInfoWith } from './media-info.js'
 import { mediaJunk } from './media-junk.js'
@@ -85,7 +86,7 @@ import {
   decodeCursor,
   finishBulkRequest,
   insertJob,
-  insertOpportunity,
+  insertNewOpportunity,
   JobActiveError,
   jobOf,
   jobsOfOpportunity,
@@ -95,6 +96,7 @@ import {
   mediaOf,
   opportunityOf,
   placeMediaOf,
+  sameAsOf,
   NAME_PICK_MAX,
   profileOf,
   releaseBulkRequest,
@@ -514,11 +516,13 @@ export function websiteOpportunitiesRoutes(deps) {
               rows.map((r) => r.id)
             )
           : new Map()
-      for (const r of rows)
-        out.set(
-          `${provider}\n${r.provider_id}`,
-          facts.get(r.id)?.built ? 'demo' : r.researched ? 'researched' : 'seen'
-        )
+      // Several cards of one place (#537 R23): the one furthest along names it.
+      const RANK = { seen: 0, researched: 1, demo: 2 }
+      for (const r of rows) {
+        const key = `${provider}\n${r.provider_id}`
+        const mark = facts.get(r.id)?.built ? 'demo' : r.researched ? 'researched' : 'seen'
+        if (!out.has(key) || RANK[mark] > RANK[out.get(key)]) out.set(key, mark)
+      }
     }
     return out
   }
@@ -1007,6 +1011,9 @@ export function websiteOpportunitiesRoutes(deps) {
   }
 
   // ── Opportunities ─────────────────────────────────────────────────────────────────────────
+  // Every press makes a new card (201), a place the account already has included (#537 R23): an approved card is
+  // final, so a change after approval is made on a new card. `opportunity.sameAs` names the account's other cards of
+  // the same place.
   app.post(BASE, async (c) => {
     const who = await caller(c, { create: true })
     if (who instanceof Response) return who
@@ -1034,13 +1041,19 @@ export function websiteOpportunitiesRoutes(deps) {
         const { status, code, next, extra } = made.refusal
         return refuse(c, status, code, next, extra)
       }
-      const { row, created } = await insertOpportunity(pool, who.accountId, made.fields)
+      const { row } = await insertNewOpportunity(pool, who.accountId, made.fields)
       await saveListingSource(pool, row.id, made.listings)
-      return json(c, { opportunity: opportunityShape(row), links: made.links }, created ? 201 : 200)
+      return json(c, { ...(await createdShape(who.accountId, row)), links: made.links }, 201)
     }
-    const { row, created } = await insertOpportunity(pool, who.accountId, fields)
-    return json(c, { opportunity: opportunityShape(row) }, created ? 201 : 200)
+    const { row } = await insertNewOpportunity(pool, who.accountId, fields)
+    return json(c, await createdShape(who.accountId, row), 201)
   })
+
+  /** A created card's answer: the card, and the account's other cards of the same place (`sameAsOf`). */
+  async function createdShape(accountId, row) {
+    const same = await sameAsOf(pool, accountId, [row], { demoJourney })
+    return { opportunity: { ...opportunityShape(row), sameAs: same.get(row.id) ?? [] } }
+  }
 
   app.get(BASE, async (c) => {
     const who = await caller(c)
@@ -1083,13 +1096,16 @@ export function websiteOpportunitiesRoutes(deps) {
 
   /** Listed rows in their answer shape, with the builder's demo columns when this deployment builds. */
   async function listedRows(accountId, rows) {
-    const demos = builder
-      ? await builder.listedDemoOf(
-          accountId,
-          rows.map((r) => r.id)
-        )
-      : new Map()
-    return rows.map((r) => listedShape(r, demos.get(r.id)))
+    const [demos, same] = await Promise.all([
+      builder
+        ? builder.listedDemoOf(
+            accountId,
+            rows.map((r) => r.id)
+          )
+        : new Map(),
+      sameAsOf(pool, accountId, rows, { demoJourney })
+    ])
+    return rows.map((r) => ({ ...listedShape(r, demos.get(r.id)), sameAs: same.get(r.id) ?? [] }))
   }
 
   /**
@@ -1317,6 +1333,8 @@ export function websiteOpportunitiesRoutes(deps) {
     } catch {
       imageInfo = null
     }
+  // 🔒 Approved is final (#537 R23): before every door that writes the Business facts.
+  lockApprovedProfile(app, { pool, caller, refuse, opportunityOf, featureOn, UUID, BASE })
   sellerReviewRoutes(app, {
     pool,
     objects,
@@ -1472,8 +1490,10 @@ export function websiteOpportunitiesRoutes(deps) {
       : null
     // The photos and videos the owner keeps off the site (`mediaPicks`, #537).
     const mediaHidden = hiddenSetOf(opp.candidate?.mediaPicks)
+    // The account's other cards of the same place, newest first (#537 R23): "also added on …".
+    const sameAs = (await sameAsOf(pool, who.accountId, [opp], { demoJourney })).get(opp.id) ?? []
     return json(c, {
-      opportunity: opportunityShape(opp),
+      opportunity: { ...opportunityShape(opp), sameAs },
       research,
       demo: demo.demo,
       place: view

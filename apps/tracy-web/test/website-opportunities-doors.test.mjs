@@ -542,15 +542,63 @@ test('search answers deduplicated candidates; a radius over 50 km is refused', o
   assert.equal(wide.body.code, 'INVALID_SEARCH')
 })
 
-test('create: the same candidate twice is one opportunity (201 then 200)', opts, async () => {
-  const { call } = await world()
-  const first = await opportunity(call)
-  const again = await call(A, 'POST', BASE, {
-    candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
-  })
-  assert.equal(again.status, 200)
-  assert.equal(again.body.opportunity.id, first.id)
-})
+test(
+  'create: the same place again is a new card (201 each); list and detail name the others in sameAs',
+  opts,
+  async () => {
+    const { call } = await world()
+    const first = await opportunity(call)
+    assert.deepEqual(first.sameAs ?? [], [])
+    const again = await call(A, 'POST', BASE, {
+      candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
+    })
+    assert.equal(again.status, 201, JSON.stringify(again.body))
+    const second = again.body.opportunity
+    assert.notEqual(second.id, first.id)
+    assert.deepEqual(
+      second.sameAs.map((o) => o.id),
+      [first.id]
+    )
+    assert.equal(second.sameAs[0].stage, 'research')
+    assert.ok(Date.parse(second.sameAs[0].createdAt))
+    const third = (
+      await call(A, 'POST', BASE, {
+        candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
+      })
+    ).body.opportunity
+    // The new card starts fresh: no research of its own, nothing approved.
+    const detail = (await call(A, 'GET', `${BASE}/${third.id}`)).body
+    assert.equal(detail.research.state, 'not_started')
+    assert.equal(detail.approval.profile, 'none')
+    assert.deepEqual(
+      detail.opportunity.sameAs.map((o) => o.id),
+      [second.id, first.id],
+      'newest first'
+    )
+    for (const shape of [undefined, '?limit=10']) {
+      const listed = (await call(A, 'GET', `${BASE}${shape ?? ''}`)).body.opportunities
+      const ofPlace = listed.filter((o) => o.providerId === 'node/1')
+      assert.equal(ofPlace.length, 3)
+      const firstRow = ofPlace.find((o) => o.id === first.id)
+      assert.deepEqual(
+        firstRow.sameAs.map((o) => o.id),
+        [third.id, second.id]
+      )
+      assert.deepEqual(firstRow.sameAs[0], {
+        id: third.id,
+        createdAt: firstRow.sameAs[0].createdAt,
+        stage: 'research'
+      })
+    }
+    // Another account's card of the same place is never named.
+    const other = (
+      await call(B, 'POST', BASE, {
+        candidate: { provider: 'osm', providerId: 'node/1', name: 'Pho Ba', socials: {} }
+      })
+    ).body.opportunity
+    assert.deepEqual(other.sameAs, [])
+  }
+)
 
 test('create from a URL: a private, loopback or rebinding address is refused (SSRF)', opts, async () => {
   const privateDns = async () => [{ address: '10.0.0.5', family: 4 }]

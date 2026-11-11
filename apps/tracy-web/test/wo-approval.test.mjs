@@ -1,5 +1,6 @@
 // The seller approves the Profile, then the Content brief, before the next step unlocks (#537): the approve doors set
-// their times, a Profile edit or an added photo after approval asks for review again and marks the brief stale, sources
+// their times, an approved Profile or brief is final (#537 R23: every edit door answers PROFILE_APPROVED or
+// BRIEF_APPROVED; a stale brief survives only on data from before that lock), sources
 // are fixed once research starts (added or removed only before it or after it failed), and the brief and build doors
 // refuse with the reason.
 // Real Postgres, a fictional place, the real domain with its network parts replaced.
@@ -275,49 +276,144 @@ test(
   }
 )
 
-test('a Profile edit after approval asks for review again and marks the brief stale', opts, async () => {
-  const w = await world()
-  const { opp } = await researchedCard(w)
-  await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
-  await makeBrief(w, opp, 'stale-brief-01')
-  await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)
-  assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval.brief, 'approved')
+const PROFILE_APPROVED = {
+  code: 'PROFILE_APPROVED',
+  next: 'The business facts are approved. To change them, add this business again as a new card.'
+}
+const BRIEF_APPROVED = {
+  code: 'BRIEF_APPROVED',
+  next: 'The Site content brief is approved. To change it, add this business again as a new card.'
+}
+const refusedWith = (res, want, what) => {
+  assert.equal(res.status, 409, `${what}: ${JSON.stringify(res.body)}`)
+  assert.equal(res.body.code, want.code, what)
+  assert.equal(res.body.next, want.next, what)
+}
 
-  const edited = await w.call(A, 'PUT', `${BASE}/${opp.id}/profile`, { edits: { phone: '+1 555 0177' } })
-  assert.equal(edited.status, 200)
-  const after = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval
-  assert.equal(after.profile, 'needed')
-  assert.equal(after.profileApprovedAt, null)
-  assert.equal(after.brief, 'stale')
-  assert.equal(after.briefStale, 'profile')
-  assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).body.code, 'BRIEF_STALE')
-  assert.equal((await build(w, opp, 'stale-build-01')).body.code, 'PROFILE_NOT_APPROVED')
-  // Approve again, make the brief again from the edited Profile, approve it: Build opens again.
-  await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
-  assert.equal((await build(w, opp, 'stale-build-02')).body.code, 'BRIEF_NOT_APPROVED')
-  await makeBrief(w, opp, 'stale-brief-02')
-  assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval.brief, 'needed')
-  assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).status, 200)
-  // An edit that leaves what the brief reads as it was (an edit undone): making the brief again answers the same
-  // revision (`reused`), and the brief is no longer stale, only waiting for its approval.
-  await w.pool.query(
-    'update wo_opportunity set profile_changed_at = now(), profile_approved_at = null where id = $1',
-    [opp.id]
-  )
-  assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval.brief, 'stale')
-  await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
-  const pressed = await w.call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'stale-brief-03' })
-  const again = await settled(w.call, opp.id, pressed.body.job.id)
-  assert.equal(again.job.reused, true)
-  const listedAgain = (await w.call(A, 'GET', `${BASE}?limit=10`)).body.opportunities.find(
-    (o) => o.id === opp.id
-  )
-  assert.equal(listedAgain.approval.brief, 'needed')
-  const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
-  assert.equal(detail.approval.brief, 'needed')
-  assert.deepEqual(detail.stepProgress, { step: null, items: [] })
-  assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).status, 200)
-})
+test(
+  'a Profile edit before approval is saved; once approved, every Profile door answers PROFILE_APPROVED',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp } = await researchedCard(w)
+    // Before approval the owner edits freely.
+    const before = await w.call(A, 'PUT', `${BASE}/${opp.id}/profile`, { edits: { phone: '+1 555 0177' } })
+    assert.equal(before.status, 200, JSON.stringify(before.body))
+    const media = (await w.upload(A, `${BASE}/${opp.id}/media`, PNG)).body.media
+    assert.ok(media?.id, 'a photo added before approval')
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)).status, 200)
+    const approvedAt = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval.profileApprovedAt
+    const doors = [
+      ['PUT', 'name', { name: 'Harbour Gym' }],
+      ['PUT', 'profile', { edits: { phone: '+1 555 0199' } }],
+      ['PUT', 'hours', { choice: 'leave' }],
+      ['PUT', 'rating', { choice: 'leave' }],
+      ['PUT', 'reading', { item: 'kp_one', choice: 'remove' }],
+      ['PUT', 'facts', { factId: 'band_team', onSite: false }],
+      ['PUT', 'facts', { factId: 'contact_phone', value: '+1 555 0100' }],
+      ['PUT', 'key-messages', { removed: [], order: [] }],
+      ['PUT', 'team', { action: 'add', label: 'Ana Ruiz' }],
+      ['PUT', 'socials', { network: 'instagram', action: 'set', handle: 'harborgym' }],
+      ['PUT', `media/${media.id}/visibility`, { hidden: true }],
+      ['PUT', 'reviews/visibility', { key: 'r_0123456789ab', hidden: true }],
+      ['POST', 'research', { requestId: 'locked-research-01', again: true }],
+      ['POST', 'research', { requestId: 'locked-research-02', only: 'logo' }],
+      ['POST', 'research', { requestId: 'locked-research-03' }]
+    ]
+    for (const [method, path, body] of doors)
+      refusedWith(
+        await w.call(A, method, `${BASE}/${opp.id}/${path}`, body),
+        PROFILE_APPROVED,
+        `${method} ${path}`
+      )
+    refusedWith(
+      await w.upload(A, `${BASE}/${opp.id}/media`, new Uint8Array([...PNG, 0])),
+      PROFILE_APPROVED,
+      'POST media'
+    )
+    // Nothing moved: still approved, at the same time, with the edit made before approval.
+    const after = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+    assert.equal(after.approval.profile, 'approved')
+    assert.equal(after.approval.profileApprovedAt, approvedAt)
+    assert.equal(
+      after.approval.profileChangedAt === null || after.approval.profileChangedAt < approvedAt,
+      true
+    )
+    assert.equal(
+      (await w.pool.query('select count(*)::int as n from wo_job where opportunity_id = $1', [opp.id]))
+        .rows[0].n,
+      1
+    )
+    // Another account still reads 404, never the lock.
+    await w.accountOf(B)
+    assert.equal((await w.call(B, 'PUT', `${BASE}/${opp.id}/name`, { name: 'X' })).status, 404)
+  }
+)
+
+test(
+  'an approved brief is final: no new brief and no brief edits; a brief not approved yet is still edited',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp } = await researchedCard(w)
+    await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
+    const revision = await makeBrief(w, opp, 'locked-brief-01')
+    // Before its approval an edit is refused only for its words, never for the lock.
+    const early = await w.call(A, 'POST', `${BASE}/${opp.id}/revisions/${revision.id}/edits`, { edits: [] })
+    assert.notEqual(early.body?.code, 'BRIEF_APPROVED', JSON.stringify(early.body))
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).status, 200)
+    refusedWith(
+      await w.call(A, 'POST', `${BASE}/${opp.id}/revisions/${revision.id}/edits`, {
+        edits: [{ path: 'hero.title', value: 'New words' }]
+      }),
+      BRIEF_APPROVED,
+      'brief edits'
+    )
+    refusedWith(
+      await w.call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'locked-brief-02' }),
+      BRIEF_APPROVED,
+      'a new brief'
+    )
+    assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval.brief, 'approved')
+  }
+)
+
+test(
+  'a stale brief left by an edit after approval (data from before the lock) still reads stale and is made again',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp } = await researchedCard(w)
+    await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
+    await makeBrief(w, opp, 'stale-brief-01')
+    await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)
+    // What an edit after approval used to leave (no owner door makes it any more).
+    await w.pool.query(
+      'update wo_opportunity set profile_changed_at = now(), profile_approved_at = null where id = $1',
+      [opp.id]
+    )
+    const after = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.approval
+    assert.equal(after.profile, 'needed')
+    assert.equal(after.brief, 'stale')
+    assert.equal(after.briefStale, 'profile')
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).body.code, 'BRIEF_STALE')
+    assert.equal((await build(w, opp, 'stale-build-01')).body.code, 'PROFILE_NOT_APPROVED')
+    // Approve again, make the brief again (the same research: the same revision, `reused`), approve it.
+    await w.call(A, 'POST', `${BASE}/${opp.id}/profile/approve`)
+    const pressed = await w.call(A, 'POST', `${BASE}/${opp.id}/revisions`, { requestId: 'stale-brief-03' })
+    assert.equal(pressed.status, 202, JSON.stringify(pressed.body))
+    const again = await settled(w.call, opp.id, pressed.body.job.id)
+    assert.equal(again.job.reused, true)
+    const listedAgain = (await w.call(A, 'GET', `${BASE}?limit=10`)).body.opportunities.find(
+      (o) => o.id === opp.id
+    )
+    assert.equal(listedAgain.approval.brief, 'needed')
+    const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+    assert.equal(detail.approval.brief, 'needed')
+    assert.deepEqual(detail.stepProgress, { step: null, items: [] })
+    assert.equal((await w.call(A, 'POST', `${BASE}/${opp.id}/brief/approve`)).status, 200)
+  }
+)
 
 test('the Research sub steps read the place job serving the card and its snapshot', opts, async () => {
   const w = await world()
@@ -741,19 +837,29 @@ test(
 
     await requestResearch(w.pool, { accountId: a, opportunity: fresh, requestId: 'media-research-01' })
     await w.drain()
-    await w.call(A, 'POST', `${BASE}/${fresh.id}/profile/approve`)
     const second = new Uint8Array(
       await sharp({ create: { width: 30, height: 30, channels: 3, background: { r: 20, g: 120, b: 60 } } })
         .png()
         .toBuffer()
     )
+    // After research, before approval: still added, a Profile edit.
     const later = await w.upload(A, `${BASE}/${fresh.id}/media`, second)
     assert.equal(later.status, 201)
-    assert.equal(later.body.approval.profile, 'needed', 'an added photo asks for review again')
+    assert.equal(later.body.approval.profile, 'needed')
     const shown = await w.call(A, 'GET', `${BASE}/${fresh.id}`)
     assert.equal(shown.body.research?.state, 'done', 'but never for research again')
     assert.equal(shown.body.media.filter((m) => m.source === 'owner').length, 2)
     assert.ok(shown.body.media.length > 2, 'next to the collected photos')
     assert.equal(w.kept.size >= 2, true)
+    // Once approved, no photo is added any more (#537 R23).
+    await w.call(A, 'POST', `${BASE}/${fresh.id}/profile/approve`)
+    const third = new Uint8Array(
+      await sharp({ create: { width: 20, height: 30, channels: 3, background: { r: 90, g: 20, b: 160 } } })
+        .png()
+        .toBuffer()
+    )
+    const locked = await w.upload(A, `${BASE}/${fresh.id}/media`, third)
+    assert.equal(locked.status, 409)
+    assert.equal(locked.body.code, 'PROFILE_APPROVED')
   }
 )

@@ -6,8 +6,8 @@
  *   PUT /api/website-opportunities/:id/media/:mediaId/visibility  {hidden}
  *   PUT /api/website-opportunities/:id/reviews/visibility         {key, hidden}
  *
- * Each is a Profile edit (`approval.js markProfileChanged`: the Profile needs review again, a brief made before reads
- * stale) and answers `{opportunity}` plus what it changed. Kept on the candidate (`owner-site-edits.js`), where Research
+ * Each is a Profile edit (`approval.js markProfileChanged`), refused once the Profile is approved (`approval-locks.js`,
+ * 409 `PROFILE_APPROVED`), and answers `{opportunity}` plus what it changed. Kept on the candidate (`owner-site-edits.js`), where Research
  * again never reaches; read by the Details answer and every later brief. A band of the Profile switched off goes through
  * the facts door (`PUT /:id/facts` with `factId: band_<band>`, `domain/owner-site-picks.mjs BANDS`). Every door touches
  * only the caller's own opportunity: another account's answers 404.
