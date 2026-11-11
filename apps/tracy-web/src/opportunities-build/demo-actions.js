@@ -88,7 +88,8 @@ export async function acceptDemoActions(
     requireSelection = false,
     templates = null,
     pins = null,
-    usageKind: countedAs = null
+    usageKind: countedAs = null,
+    briefCurrent = null
   }
 ) {
   if (!['legacy', 'quality-v1'].includes(protocol)) throw new Error('QUALITY_PROTOCOL_INVALID')
@@ -140,7 +141,8 @@ export async function acceptDemoActions(
               : []),
             ...(e.workflow ? [e.workflow] : []),
             ...(e.chatMode ? [e.chatMode] : []),
-            ...(e.ownSite === true ? ['own-site'] : [])
+            ...(e.ownSite === true ? ['own-site'] : []),
+            ...(e.briefRevisionId ? [`brief:${e.briefRevisionId}`] : [])
           ])
         )
         .digest('hex')
@@ -299,6 +301,39 @@ export async function acceptDemoActions(
           return refusal(409, 'BUILD_EXISTS', 'This place already has a demo with this CMS and template.', {
             build: { id: live.id, siteKey: live.site_key, state: live.state }
           })
+        }
+      }
+      // A build pressed on a brief's page builds that brief (#553), and only while it is the brief the place's
+      // current research gives: checked here, under the account lock, before the day's charge.
+      if (e.briefRevisionId && protocol !== 'legacy') {
+        // A quality-v1 build writes its own brief, so no shown brief can be it. The brief page's agent builds are
+        // accepted as legacy in every mode (`route.js` `acceptActions`), so only an API caller meets this.
+        await client.query('rollback')
+        return refusal(
+          409,
+          'BRIEF_NOT_BINDABLE',
+          'This build writes its own brief from the latest research: send it without revisionId.'
+        )
+      }
+      if (e.briefRevisionId) {
+        const shown = (
+          await client.query(
+            'select id, research_hash, research from wo_revision where id = $1 and account_id = $2 and opportunity_id = $3',
+            [e.briefRevisionId, accountId, e.opportunityId]
+          )
+        ).rows[0]
+        if (!shown) {
+          await client.query('rollback')
+          return refusal(404, 'NOT_FOUND', 'Reload: this brief is gone or is not this place’s.')
+        }
+        if (!briefCurrent || !(await briefCurrent(client, e.opportunityId, shown))) {
+          await client.query('rollback')
+          return refusal(
+            409,
+            'BRIEF_STALE',
+            'This brief is not the one the latest research gives: refresh the brief, or build from the latest one.',
+            { revisionId: shown.id }
+          )
         }
       }
       // A build on the step chain has no chat (#479): the chain writes the site itself, so the press is no
@@ -481,12 +516,12 @@ export async function acceptDemoActions(
           e.requestId,
           e.fingerprint,
           new Date(at),
-          e.retry?.revision_id ?? e.revisionId ?? randomUUID(),
+          e.retry?.revision_id ?? e.revisionId ?? e.briefRevisionId ?? randomUUID(),
           e.retry?.build_request_id ?? e.buildRequestId ?? e.requestId,
           e.retry?.session_id ?? `wo-demo-${id}`,
           e.retry?.qa_failed ? true : (e.retry?.automatic ?? e.automatic !== false),
           e.retry?.label ?? e.label ?? '',
-          e.retry?.step ?? (e.revisionId ? 'build' : 'brief'),
+          e.retry?.step ?? (e.revisionId || e.briefRevisionId ? 'build' : 'brief'),
           e.retry?.id ?? null,
           e.retry?.protocol ?? protocol,
           (e.retry?.protocol ?? protocol) === 'quality-v1' ? 'quality-queued-v1' : 'queued',

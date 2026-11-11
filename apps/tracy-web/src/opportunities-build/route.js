@@ -47,7 +47,7 @@ import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
-import { createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
+import { briefIsCurrent, createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
 
 const BASE = '/api/website-opportunities'
 
@@ -255,7 +255,13 @@ export function createWebsiteBuilder(deps) {
     const same = key ? revisions.find((r) => r.research_hash === key) : null
     const shown = same ?? revisions[0]
     const known = Boolean(domain) && key !== undefined
-    return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? Boolean(same) : null }
+    // A quality-v1 brief has no hash: it is current while its frozen evidence is the research now (`briefIsCurrent`).
+    let current = Boolean(same)
+    if (known && !same && !shown.research_hash) {
+      const { rows } = await pool.query('select research from wo_revision where id = $1', [shown.id])
+      current = await briefIsCurrent(pool, opp, domain, { research_hash: null, research: rows[0]?.research })
+    }
+    return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? current : null }
   }
 
   /** The demo half of `GET /:id`: its demo, progress, revisions, brief, action, usage and builds. */
@@ -557,6 +563,14 @@ export function createWebsiteBuilder(deps) {
         )
       if (b.label !== undefined && typeof b.label !== 'string')
         return refuse(c, 400, 'INVALID_LABEL', 'Send the site name as "label", or leave it out.')
+      // The brief on screen (#553): the build uses exactly it, or is refused when it is not current.
+      if (b.revisionId !== undefined && (!UUID.test(String(b.revisionId)) || b.retryOf))
+        return refuse(
+          c,
+          400,
+          'INVALID_REVISION_ID',
+          'Send the shown brief’s id as "revisionId", or leave it out; a Retry keeps its own brief.'
+        )
       if (b.fromFind === true) {
         const [research] = await findResearchOf(
           pool,
@@ -592,9 +606,20 @@ export function createWebsiteBuilder(deps) {
             selection: b.selection,
             workflow: b.workflow,
             chatMode: b.chatMode,
-            ...(b.label === undefined ? {} : { label: b.label.trim() })
+            ...(b.label === undefined ? {} : { label: b.label.trim() }),
+            ...(b.revisionId === undefined ? {} : { briefRevisionId: b.revisionId })
           }
         ],
+        // Whether the shown brief reads the place's research now, inside the acceptance transaction (`BRIEF_STALE`).
+        briefCurrent: async (client, opportunityId, revision) => {
+          const place = (
+            await client.query('select * from wo_opportunity where id = $1 and account_id = $2', [
+              opportunityId,
+              who.accountId
+            ])
+          ).rows[0]
+          return place ? briefIsCurrent(client, place, await loadDomain(), revision) : false
+        },
         requireSelection: true,
         templates: b.retryOf ? null : await templateCards(),
         pins: pinsOf(await demoSettings()),

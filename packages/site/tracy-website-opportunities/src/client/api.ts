@@ -108,7 +108,9 @@ export interface Api {
     retryOf?: string,
     selection?: TemplatePick,
     label?: string,
-    fromFind?: boolean
+    fromFind?: boolean,
+    /** The brief on screen (#553): the server builds exactly it, or answers `BRIEF_STALE`. */
+    revisionId?: string
   ): Promise<Answer<{ actions: DemoAction[]; usage: DemoUsage }>>
   buildDemos(
     ids: string[],
@@ -321,13 +323,14 @@ export function createApi(fetchImpl: FetchLike): Api {
     reserveDemoChatSend: (actionId, input) =>
       call(`${BASE}/demo/actions/${id(actionId)}/chat/send`, 'POST', input),
     demoUsage: () => call(`${BASE}/demo/usage`),
-    buildDemo: (opportunityId, requestId, retryOf, selection, label, fromFind) =>
+    buildDemo: (opportunityId, requestId, retryOf, selection, label, fromFind, revisionId) =>
       call(`${BASE}/${id(opportunityId)}/demo/build`, 'POST', {
         requestId,
         ...(retryOf ? { retryOf } : { workflow: 'agent-demo/1', chatMode: 'client-send/1' }),
         ...(selection ? { selection } : {}),
         ...(label === undefined ? {} : { label }),
-        ...(fromFind ? { fromFind: true } : {})
+        ...(fromFind ? { fromFind: true } : {}),
+        ...(revisionId ? { revisionId } : {})
       }),
     buildDemos: (ids, requestId, selection) =>
       call(`${BASE}/demo/builds/bulk`, 'POST', {

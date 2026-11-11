@@ -444,6 +444,23 @@ export async function currentResearchKey(db, opp, domain) {
   return researchKey(domain, await researchOf(db, await liveRead(db, opp, view), opp, view))
 }
 
+/**
+ * Whether a brief still reads the place's research now (#553). A shared brief is current while its `research_hash`
+ * is the current key. A quality-v1 brief has none (never shared): it is current while the evidence it froze
+ * (`wo_revision.research`, what `brief.agentDemoResearch` hashes) is the evidence a brief made now would freeze,
+ * the vision labels aside as in `researchKey`.
+ */
+export async function briefIsCurrent(db, opp, domain, revision) {
+  if (revision.research_hash) return revision.research_hash === (await currentResearchKey(db, opp, domain))
+  if (!revision.research) return false
+  const view = opp.place_id ? await placeViewOf(db, opp) : null
+  const now = await researchOf(db, await liveRead(db, opp, view), opp, view)
+  return evidenceKey(revision.research) === evidenceKey(now)
+}
+
+const evidenceKey = (research) =>
+  researchHash(frozenResearchOf({ ...research, media: (research.media ?? []).map(withoutVisionLabels) }))
+
 /** What a brief made now reads; a frozen read (`freezeDemoResearchInput`) keeps what it held when frozen. */
 /**
  * What the brief's photographs show, asked BEFORE any transaction (F08): `args.pictureLabels` (`brief-picture-labels.js`,
