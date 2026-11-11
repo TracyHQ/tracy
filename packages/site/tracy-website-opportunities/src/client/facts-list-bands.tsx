@@ -140,7 +140,7 @@ export function ReviewsBand({
                 {r.text}
               </q>
               <span className="tracy-wo-facts-ln tracy-wo-facts-dim tracy-wo-small">
-                <span className="tracy-wo-facts-ell">
+                <span className="tracy-wo-facts-ell" title={r.author}>
                   {[r.rating === null ? null : `★ ${r.rating}`, r.author].filter(Boolean).join(' · ')}
                 </span>
                 <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />

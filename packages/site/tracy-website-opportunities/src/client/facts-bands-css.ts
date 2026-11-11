@@ -104,9 +104,10 @@ export const FACTS_BANDS_CSS = `
 .tracy-wo-facts-brand > .tracy-wo-facts-swatches li { flex: none; }
 /* What guests say: quote cards in one row. */
 .tracy-wo-facts-cards { display: flex; gap: 10px; align-items: stretch; width: 100%; height: 100%; min-width: 0; margin: 0; padding: 0; list-style: none; }
-.tracy-wo-facts-cards > li { flex: none; display: flex; flex-direction: column; justify-content: space-between; gap: 0; width: 300px; padding: 3px 10px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 9px; background: color-mix(in oklab, var(--muted) 50%, var(--card, var(--background))); }
+.tracy-wo-facts-cards > li { flex: none; display: flex; flex-direction: column; justify-content: space-between; gap: 0; width: 320px; padding: 3px 10px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 9px; background: color-mix(in oklab, var(--muted) 50%, var(--card, var(--background))); }
 .tracy-wo-facts-cards q { font-size: 12px; line-height: 16px; }
 .tracy-wo-facts-cards .tracy-wo-facts-ln { line-height: 16px; }
+.tracy-wo-facts-cards .tracy-wo-facts-ln > .tracy-wo-facts-ell { min-width: 9ch; }
 .tracy-wo-facts-band .tracy-wo-facts-stars { letter-spacing: 0; }
 /* Photos & video: the filters, then every tile in one filmstrip. */
 .tracy-wo-facts-mediarow { display: flex; align-items: center; gap: 12px; width: 100%; height: 100%; min-width: 0; }
@@ -134,7 +135,6 @@ export const FACTS_BANDS_CSS = `
 @container wo-facts (max-width: ${MID - 1}px) {
   .tracy-wo-facts { --wo-band-h: ${MID_H}px; }
   .tracy-wo-facts-ef { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .tracy-wo-facts-cards > li { width: 240px; }
 }
 @container wo-facts (max-width: ${NARROW - 1}px) {
   .tracy-wo-facts { --wo-band-h: ${NARROW_H}px; }
