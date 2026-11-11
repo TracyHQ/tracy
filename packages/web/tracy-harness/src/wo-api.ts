@@ -26,6 +26,12 @@ export const WO_CUSTOMER_LABEL_KEY: Record<WoCustomerStage, string> = {
   outreach: 'wo.customerStage.outreach',
   cancelled: 'wo.customerStage.cancelled'
 }
+/** The error code of a latest demo action that failed before any build, else null. */
+export function woActionFailureCode(row: WoOpportunityRow): string | null {
+  const action = row.demoAction
+  return action?.status === 'failed' && !action.hasBuild ? action.error || '—' : null
+}
+
 export function woNeedsAttention(row: WoOpportunityRow): boolean {
   return row.customerAttention ?? row.needsAttention
 }
@@ -87,6 +93,8 @@ export interface WoOpportunityRow {
   googlePlace?: WoGooglePlaceSummary | null
   cms: WoCms
   template: string
+  /** `pinned` when no build chose a template: `template` is then the operator's pin, not a built one. */
+  templateSource?: 'build' | 'pinned'
   stage: WoStage
   customerStage?: WoCustomerStage
   customerStatus?: string
@@ -110,6 +118,8 @@ export interface WoOpportunityRow {
   demoSite: string | null
   demoUrl: string | null
   demoStatus: 'live' | 'provisioning' | 'uploading' | 'failed' | 'none'
+  /** Latest `wo_demo_action`; `error` is its code (`BRIEF_NOT_READY`), `hasBuild` whether a build row exists. */
+  demoAction?: { status: string; step: string; error: string | null; hasBuild: boolean } | null
   queueState: 'IDLE' | 'QUEUED' | 'LEASED' | 'PAUSED' | 'BLOCKED' | 'DONE'
   statusText: string
   notes: string
