@@ -62,3 +62,17 @@ The import E2E test observed an HTTP response before React had consumed the new 
 The publication scan of final head 0595f10f and base bb8ecd1769 reported the same 107 inherited blockers and zero new findings. This is a comparison, not a clean-publication verdict; no allowlist was weakened and private findings are not committed.
 
 After the follow-up, the selected local gate command again passed all 63 gates, with tests, turbo-config and boot-graph explicitly excluded. Both committed-source regression cases passed on `7d8442d1497041fc1ec9baee2d55ead18ba734dc`: `REG-PR-559-own-build-recovery` and `REG-PR-559-sync-copy-recreated-table`. Final-head CI, deployment and customer-site acceptance remain required.
+
+## Further end-user recovery observation at 14:04 UTC
+
+The real customer pressed Use this template after the fresh completed research. The website returned HTTP 409 BUILD_EXISTS for the earlier Portland test site's base, whose provisioning build was done while its server chain had failed. The customer saw the generic could-not-build message, rather than access to that failed action. No second site build was accepted.
+
+The own-business state query matched terminal actions only for the latest request key. A later research press therefore hid the earlier stopped action even though its base still existed. The correction also finds terminal owned actions with an existing live base, retaining account isolation, replacement exclusion and the duplicate-build guard. Deleted bases are excluded; Retry retains the same frozen revision. The real PostgreSQL route case failed before this correction (research instead of build) and passed after it, including failure, completion, another account and deletion.
+
+Live Sync Integration 43033045711 passed on head 3b43198777: 305 tests passed, zero failures or skips. Tracy CI 43033045602 failed before browser testing because Ubuntu package download DNS resolution failed on its runner. The PR returned to draft. No test was removed and no infrastructure failure was presented as passing.
+
+The final publication scan at 3b43198777 still reported the same 107 inherited blockers as bb8ecd1769, with zero new unallowed paths. Its private reports stay outside git.
+
+The real Add site primary button on the deployed graph f6d2561e285c was also inspected in light and system-dark modes. In light mode its label contrast was 4.641:1 at rest and 6.122:1 hovered; the dark view passed both checks as well. Screenshots were visually inspected. Custom accents and destructive controls retain their existing local regression coverage; these particular website observations do not measure those states.
+
+The selected local gate command passed all 63 gates again after the terminal-action query change, with tests, turbo-config and boot-graph explicitly excluded. The next CI run uses the repository-supported `ci:self-hosted` label to avoid hosted Ubuntu package installation DNS failures; `ci:e2e` remains enabled. No workflow, test scope or merge gate is weakened.

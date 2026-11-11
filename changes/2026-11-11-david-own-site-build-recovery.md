@@ -5,3 +5,7 @@
 - **Sync retries a table recreated under its original name during the copy read** — David issue acceptance · #559 · `fix/david-dev-acceptance` · 2026-11-11
   **Affects:** Sync on every host. Missing-table errors now use the existing bounded retry even when the table list already matches again; permanent invalid views still stop. Rebuild the dsh image.
   **Why / Measured:** Final-head CI exposed a real read race, reproduced locally with MariaDB and a deterministic first-dump error before the fix. Import browser tests also wait for rendered preflight completion instead of assuming one virtual-clock jump commits all React effects.
+
+- **A later business research press reopens its existing stopped or completed build** — David issue acceptance · #559 · `fix/david-dev-acceptance` · 2026-11-11
+  **Affects:** Build from my business on web and desktop. An earlier owned action with a live base remains reachable for Retry or opening the finished site; deleted bases and replaced actions are excluded. The frozen revision and duplicate-build guard are preserved.
+  **Why / Measured:** The authenticated dev website returned BUILD_EXISTS after a fresh research offered JA Boxing over the earlier failed chain's base. A real PostgreSQL route regression failed before the change and passed after it.

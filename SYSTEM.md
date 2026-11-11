@@ -3070,7 +3070,7 @@ Add site describes a server-owned wait as building, with elapsed minutes from th
 than promising a chat. The browser keeps its business reference through a failed build or failed poll so reopening
 follows the same work. An eligible failed action offers explicit Retry through the existing own-site build door with
 `retryOf`; it sends no new research or template selection. Blocked immutable briefs and lost or deleted sites have no
-retry control.
+retry control. A later research press also follows an earlier own-site action while its base still exists, including a stopped or completed action, instead of offering a template the build door would refuse with `BUILD_EXISTS`. Replaced actions and deleted bases are excluded. Retry still keeps the original frozen revision; research does not silently rewrite it.
 
 An explicit Retry may also recover a historical completed chain action whose exact current owned site brief failed after
 the original action ended. Acceptance locks the build and brief, then records a server-held authority on the new action:
