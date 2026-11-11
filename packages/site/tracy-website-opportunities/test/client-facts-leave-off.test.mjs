@@ -258,10 +258,10 @@ test('source chips sit right after their values, and a photo carries its glyph b
     html,
     /title="12 Lagoon Walk">12 Lagoon Walk<\/span><span class="tracy-wo-sc" data-word="google" title="\[chip\.title\.collected/
   )
-  // A band heading's source line is the info status pill with the source logo.
+  // A section heading names its one source with the source logo (#537, layout B): "From Google".
   assert.match(
     head(html, 'hours'),
-    /<span class="tracy-wo-pill" data-pill="info" data-glyph="" title="\[chip\.title\.collected[^"]*"><svg[^>]*data-logo="maps"[\s\S]*?<span class="tracy-wo-pill-text">\[chip\.word\.google\]<\/span>/
+    /<span class="tracy-wo-facts-from"><svg[^>]*data-logo="maps"[\s\S]*?\[facts\.from\{&quot;source&quot;:&quot;\[chip\.word\.google\]&quot;\}\]<\/span>/
   )
   // No source for the phone: no chip.
   assert.doesNotMatch(

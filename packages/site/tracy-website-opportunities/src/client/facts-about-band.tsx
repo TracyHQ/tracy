@@ -13,6 +13,7 @@ import type { BandSwitchView } from './facts-band-actions.tsx'
 import { AboutEdit, type ProfileField } from './facts-band-edit.tsx'
 import { EditedChip, GenericCell, type SetFactOn, factsSwitch } from './facts-generic-row.tsx'
 import { ItemSwitch } from './facts-item-switch.tsx'
+import { mainChip } from './facts-section-model.ts'
 import { plainWords, readableKey } from './facts-value-model.ts'
 import { type SavedFact, factChipOf } from './saved-profile-model.ts'
 import type { SaveFactValue } from './facts-value-edit.tsx'
@@ -30,20 +31,35 @@ interface AboutProps {
   setOn: SetFactOn | null
 }
 
-/** A quote of the About band: its kind of text, the text in two lines, its chip, Edited and switch. */
-export function QuoteCell({ t, locale, view, fact, setOn }: AboutProps & { fact: SavedFact }): JSX.Element {
+/** A quote of the About band as a row: its kind of text (Post 2), the text in two lines, then its chip, Edited, switch. */
+export function QuoteCell({
+  t,
+  locale,
+  view,
+  fact,
+  setOn,
+  n = null
+}: AboutProps & { fact: SavedFact; n?: number | null }): JSX.Element {
   const v = rec(fact.value)
   const text = words(v.text) || plainWords(fact.value)
   const kind = words(v.kind)
-  const label = kind === '' ? readableKey(fact.key) : t(`pp.quote.${kind}`)
+  const label =
+    kind === ''
+      ? readableKey(fact.key)
+      : kind === 'post' && n !== null
+        ? t('facts.post.n', { n })
+        : t(`pp.quote.${kind}`)
   return (
     <div
       className="tracy-wo-facts-cell tracy-wo-facts-quote"
       data-fact={fact.id}
       data-off={fact.onSite ? undefined : ''}
     >
-      <span className="tracy-wo-facts-ln">
-        <span className="tracy-wo-facts-ck">{label}</span>
+      <span className="tracy-wo-facts-ck">{label}</span>
+      <p className="tracy-wo-facts-clamp2 tracy-wo-facts-qt" title={text}>
+        {text}
+      </p>
+      <span className="tracy-wo-facts-ln tracy-wo-facts-meta">
         <SourceChip t={t} chip={factChipOf(fact, view.sources)} locale={locale} />
         <EditedChip t={t} fact={fact} locale={locale} />
         <ItemSwitch
@@ -54,21 +70,33 @@ export function QuoteCell({ t, locale, view, fact, setOn }: AboutProps & { fact:
           set={setOn === null ? null : (on) => setOn(fact.id, on)}
         />
       </span>
-      <p className="tracy-wo-facts-clamp2 tracy-wo-facts-qt" title={text}>
-        {text}
-      </p>
     </div>
   )
 }
 
-/** The About body of the saved profile: every quote that is no guest review, then the claims in words. */
+const kindOf = (f: SavedFact): string => (f.group === 'quotes' ? words(rec(f.value).kind) : '')
+
+/** The About body of the saved profile: the story first, then every other quote (posts numbered), then the claims. */
 export function AboutCells({ t, locale, view, setOn }: AboutProps): JSX.Element {
   const facts = view.saved?.about ?? []
+  const ordered = [
+    ...facts.filter((f) => kindOf(f) === 'story'),
+    ...facts.filter((f) => kindOf(f) !== 'story')
+  ]
+  const posts = ordered.filter((f) => kindOf(f) === 'post')
   return (
-    <div className="tracy-wo-facts-cells tracy-wo-facts-row tracy-wo-facts-quotes">
-      {facts.map((f) =>
+    <div className="tracy-wo-facts-cells tracy-wo-facts-quotes">
+      {ordered.map((f) =>
         f.group === 'quotes' ? (
-          <QuoteCell key={f.id} t={t} locale={locale} view={view} fact={f} setOn={setOn} />
+          <QuoteCell
+            key={f.id}
+            t={t}
+            locale={locale}
+            view={view}
+            fact={f}
+            setOn={setOn}
+            n={posts.length > 1 && kindOf(f) === 'post' ? posts.indexOf(f) + 1 : null}
+          />
         ) : (
           <GenericCell key={f.id} t={t} locale={locale} fact={f} rows={view.sources} setOn={setOn} />
         )
@@ -117,9 +145,14 @@ export function AboutBand({
       id="about"
       label={t('field.bio')}
       title={t('field.bio')}
-      chips={
-        filled && facts === null ? <SourceChip t={t} chip={card?.chip ?? null} locale={locale} pill /> : null
+      source={
+        !filled
+          ? null
+          : facts === null
+            ? (card?.chip ?? null)
+            : mainChip(facts.map((f) => factChipOf(f, view.sources)))
       }
+      count={!filled ? null : (facts?.length ?? 1)}
       onSite={(facts === null ? null : factsSwitch(facts, setOn)) ?? onSite}
       edit={
         card === undefined || card.state === 'notCollected' || !editable

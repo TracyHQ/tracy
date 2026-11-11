@@ -188,8 +188,16 @@ test('locked: no Edit, no switch, no Add, no upload on any band; one notice; ite
   const m = mount({ line: 'approved line', addAgain: async () => null })
   try {
     for (const sel of WRITES) assert.equal(m.host.querySelectorAll(sel).length, 0, sel)
-    const buttons = [...m.host.querySelectorAll('button')].map((b) => b.textContent)
+    // The section rail only moves the page (#537, layout B): it writes nothing.
+    const buttons = [...m.host.querySelectorAll('button')]
+      .filter((b) => b.closest('.tracy-wo-facts-rail') === null)
+      .map((b) => b.textContent)
     assert.deepEqual(buttons, ['[facts.addAgain]'], 'the only button on the page is Add this business again')
+    assert.equal(
+      m.host.querySelector('.tracy-wo-facts-rail-f'),
+      null,
+      'no Approving locks line once approved'
+    )
     const notice = m.host.querySelectorAll('.tracy-wo-facts-locked')
     assert.equal(notice.length, 1)
     assert.equal(notice[0].querySelector('p').textContent, 'approved line')

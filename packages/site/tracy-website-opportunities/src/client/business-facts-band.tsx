@@ -1,15 +1,19 @@
 /**
- * One band of the Business facts sub-page (#537, design A): a header row (the title, its source chips, an amber
- * Check this chip when the band has a check note, a muted aside) with the action cluster at its right
- * (`facts-band-actions.tsx`), over a body of one fixed height. What does not fit in the body scrolls sideways in one
- * row (the mouse wheel scrolls it too); a band never grows by itself, only Edit makes it taller: Edit turns the body
- * into the band's fields, in place, with Cancel and Save at the band's bottom right. Missing facts read N/A.
+ * One section card of the Business facts sub-page (#537, layout B): a header row (the title, an amber Check this chip
+ * when the band has a check note, the section's one source, a muted aside) with the action cluster at its right
+ * (`facts-band-actions.tsx`), over its facts, one per row; a row chip naming the section's source is not drawn again
+ * (`SectionSource`). Edit turns the body into the band's fields, in place, with Cancel and Save at the bottom right.
+ * Each band reports its name, count, check flag and switch to the section rail (`facts-rail.tsx`). Missing facts read
+ * N/A.
  */
 import { type JSX, type ReactNode, useEffect, useRef, useState } from 'react'
 import { TriangleAlert } from 'lucide-react'
 
 import type { BandId } from './business-facts-model.ts'
 import { BandCluster, type BandSwitchView, type EditDoor } from './facts-band-actions.tsx'
+import { useBandReport } from './facts-rail.tsx'
+import type { SourceChipView } from './source-chip-model.ts'
+import { SectionFrom, SectionSource } from './source-chip.tsx'
 import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
@@ -90,6 +94,8 @@ export function FactsBand({
   title,
   label,
   chips,
+  source = null,
+  count = null,
   check,
   aside,
   add,
@@ -104,8 +110,12 @@ export function FactsBand({
   title: ReactNode
   /** The band's name in words, for the switch's accessible name. */
   label: string
-  /** The source chip or chips after the title. */
+  /** More chips after the title. */
   chips?: ReactNode
+  /** The section's one source ("From Google"); a row chip naming the same source is not drawn (#537, layout B). */
+  source?: SourceChipView | null
+  /** How many items the band holds, for the section rail. */
+  count?: number | null
   /** The band's check note: an amber Check this chip, the note on hover and as a strip in Edit. */
   check?: string | null
   aside?: ReactNode
@@ -120,6 +130,7 @@ export function FactsBand({
   const [editing, setEditing] = useState(false)
   const body = useRef<HTMLDivElement | null>(null)
   useSideWheel(body, editing)
+  useBandReport({ id, name: label, count, check: Boolean(check), on: onSite.on })
   const form = open ?? (editing && 'form' in edit ? edit.form(() => setEditing(false)) : null)
   return (
     <section
@@ -127,10 +138,13 @@ export function FactsBand({
       data-card={id}
       data-editing={form === null ? undefined : ''}
       data-off={onSite.on ? undefined : ''}
+      tabIndex={-1}
+      aria-label={label}
     >
       <div className="tracy-wo-facts-bh">
         <h3>{title}</h3>
         {check ? <CheckNote t={t} note={check} /> : null}
+        <SectionFrom t={t} chip={source} />
         {chips === undefined || chips === null ? null : (
           <span className="tracy-wo-facts-chips-h">{chips}</span>
         )}
@@ -147,7 +161,7 @@ export function FactsBand({
       </div>
       {form === null ? (
         <div ref={body} className="tracy-wo-facts-band-body">
-          {children}
+          <SectionSource.Provider value={source}>{children}</SectionSource.Provider>
         </div>
       ) : (
         <div ref={body} className="tracy-wo-facts-band-edit">

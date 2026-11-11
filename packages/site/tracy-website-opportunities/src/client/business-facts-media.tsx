@@ -100,6 +100,7 @@ export function FactsMedia({
       id="media"
       label={t('details.section.media')}
       title={t('details.section.media')}
+      count={tiles.length}
       add={<AddMedia t={t} onUpload={onUpload} act />}
       onSite={onSite}
       edit={{

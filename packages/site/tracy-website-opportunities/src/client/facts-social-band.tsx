@@ -120,6 +120,11 @@ export function SocialBand({
       id="social"
       label={t('facts.social.title')}
       title={t('facts.social.title')}
+      count={
+        view.saved !== null && view.saved.links.length > 0
+          ? view.saved.links.length
+          : view.social.length + owner.socials.length
+      }
       add={
         <button
           type="button"

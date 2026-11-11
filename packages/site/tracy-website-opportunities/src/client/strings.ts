@@ -1414,6 +1414,18 @@ export const en = {
   'facts.edit.brand': 'The logo and the colours cannot be edited here yet.',
   'facts.edit.social': 'Add a link with Add more. Pages found by research are sources and stay.',
   'facts.edit.reviews': 'Guest reviews are quoted as written, so they cannot be edited.',
+  // Business facts, layout B (#537): the section rail, the source of a section, the hours on one row, the services.
+  'facts.rail.label': 'Sections of this page',
+  'facts.rail.toCheck.one': '1 section to check',
+  'facts.rail.toCheck.other': '{count} sections to check',
+  'facts.rail.none': 'Nothing left to check',
+  'facts.rail.foot': 'Approving locks every section.',
+  'facts.from': 'From {source}',
+  'facts.from.website': 'From your website',
+  'facts.from.you': 'From you',
+  'facts.hours.range': '{from} to {to}',
+  'facts.services.tap': 'Tap a service to keep it off the site.',
+  'facts.post.n': 'Post {n}',
   // End of the Business facts bands block.
 
   /** Your site (#537): before the site is built, the block says which step is needed. */

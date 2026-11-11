@@ -6,7 +6,7 @@ export const CMS_LABEL: Readonly<Record<string, string>> = {
 }
 
 /** Social platforms, maps and chat apps: product names, shown as is in every language. */
-const SOCIAL_LABEL: Readonly<Record<string, string>> = {
+export const SOCIAL_LABEL: Readonly<Record<string, string>> = {
   tripadvisor: 'TripAdvisor',
   facebook: 'Facebook',
   instagram: 'Instagram',

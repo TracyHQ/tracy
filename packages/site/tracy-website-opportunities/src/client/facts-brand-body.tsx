@@ -1,6 +1,6 @@
 /**
  * The Brand body of the Business facts sub-page (#537): the logo and where it came from, the verdict on the logo and
- * the note on the colours (one line each, the whole sentence on hover), and the colours, in one row. The band's
+ * the note on the colours, then the colours, as two rows (#537, layout B). The band's
  * switch leaves the whole brand off the site (`band_brand`, #537 R16).
  */
 import type { JSX } from 'react'
@@ -15,11 +15,7 @@ import { useFactsLocked } from './facts-lock.tsx'
 import { LogoField } from './media-row.tsx'
 import type { Translate } from './strings.ts'
 
-/**
- * The brand in three cells side by side, no layer over another: the logo with where it came from and its size, the
- * verdict on the logo and the note on the colours (one line each, the whole sentence on hover), and the colours.
- * Under 560px the verdict and the note go to a second row.
- */
+/** The brand as two rows: the logo with where it came from, its size, the verdict and the colour note; the colours. */
 export function BrandBody({
   t,
   logo,
@@ -53,53 +49,47 @@ export function BrandBody({
       ? t(logo.viaKey, { source: logo.source === null ? '' : sourceLabel(t, logo.source) })
       : null
   return (
-    <div className="tracy-wo-facts-brand">
-      <div className="tracy-wo-facts-brand-logo">
-        {logo.state === 'found' ? (
-          <>
-            <span className="tracy-wo-logo">
-              <img src={mediaUrl(logo.mediaId)} alt={t('media.logo')} decoding="async" />
-            </span>
-            <span className="tracy-wo-facts-brand-via">
-              <Badge variant="outline" title={via ?? undefined}>
-                {via}
-              </Badge>
-              {size === null ? null : (
-                <span className="tracy-wo-facts-ell tracy-wo-facts-dim tracy-wo-small" title={size}>
-                  {size}
-                </span>
-              )}
-            </span>
-          </>
-        ) : locked ? (
-          <NotAvailable t={t} />
-        ) : (
-          <LogoField t={t} logo={logo} retry={retry} food={food} />
-        )}
-      </div>
-      {verdict === null && colorNote === null ? null : (
-        <div className="tracy-wo-facts-brand-notes">
-          {verdict === null ? null : (
-            <span className="tracy-wo-facts-ell" title={verdict}>
-              {verdict}
-            </span>
-          )}
-          {colorNote === null ? null : (
-            <span className="tracy-wo-facts-ell tracy-wo-facts-dim tracy-wo-small" title={colorNote}>
-              {colorNote}
-            </span>
+    <div className="tracy-wo-facts-cells tracy-wo-facts-brand">
+      <div className="tracy-wo-facts-cell">
+        <span className="tracy-wo-facts-ck">{t('media.logo')}</span>
+        <div className="tracy-wo-facts-brand-logo">
+          {logo.state === 'found' ? (
+            <>
+              <span className="tracy-wo-logo">
+                <img src={mediaUrl(logo.mediaId)} alt={t('media.logo')} decoding="async" />
+              </span>
+              <span className="tracy-wo-facts-brand-via">
+                <Badge variant="outline" title={via ?? undefined}>
+                  {via}
+                </Badge>
+                {[size, verdict, colorNote].map((line, i) =>
+                  line === null ? null : (
+                    <span key={i} className="tracy-wo-facts-dim tracy-wo-small" title={line}>
+                      {line}
+                    </span>
+                  )
+                )}
+              </span>
+            </>
+          ) : locked ? (
+            <NotAvailable t={t} />
+          ) : (
+            <LogoField t={t} logo={logo} retry={retry} food={food} />
           )}
         </div>
-      )}
+      </div>
       {colors.state === 'found' ? (
-        <ul className="tracy-wo-facts-swatches" title={colorNote ?? undefined}>
-          {colors.colors.map((c, i) => (
-            <li key={`${c.hex}-${i}`}>
-              <span style={{ backgroundColor: c.hex }} aria-hidden="true" />
-              {c.hex}
-            </li>
-          ))}
-        </ul>
+        <div className="tracy-wo-facts-cell">
+          <span className="tracy-wo-facts-ck">{t('detail.colors')}</span>
+          <ul className="tracy-wo-facts-swatches" title={colorNote ?? undefined}>
+            {colors.colors.map((c, i) => (
+              <li key={`${c.hex}-${i}`}>
+                <span style={{ backgroundColor: c.hex }} aria-hidden="true" />
+                {c.hex}
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
     </div>
   )
@@ -127,6 +117,17 @@ export function BrandBand({
       id="brand"
       label={t('media.brand')}
       title={t('media.brand')}
+      source={
+        !notCollected && media.logo.state === 'found' && media.logo.source !== null
+          ? { word: 'profile', source: media.logo.source, ref: null, at: null }
+          : null
+      }
+      count={
+        notCollected
+          ? null
+          : (media.logo.state === 'found' ? 1 : 0) +
+            (media.colors.state === 'found' ? media.colors.colors.length : 0)
+      }
       onSite={onSite}
       edit={{ why: t('facts.edit.brand') }}
     >

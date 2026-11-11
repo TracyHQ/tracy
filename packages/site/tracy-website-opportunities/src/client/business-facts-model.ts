@@ -42,14 +42,6 @@ export type CardId = (typeof CARD_IDS)[number]
 export const BAND_IDS = ['business', ...CARD_IDS, 'media'] as const
 export type BandId = (typeof BAND_IDS)[number]
 
-/**
- * The one collapsed height every band has, the same for every business, at three widths of the facts column: [wide
- * page (900px and more), mid page (under 900px), narrow page (under 560px)]. A band is a 40px header row (title, chips,
- * the action cluster) over a 76px body; what does not fit in the body scrolls sideways in one row. Only Edit makes a
- * band taller.
- */
-export const BAND_HEIGHT = [118, 118, 118] as const
-
 /** The widths of the facts column where the bands change their paddings and cell widths: mid under the first, narrow under the second. */
 export const BAND_BREAKPOINTS = [900, 560] as const
 

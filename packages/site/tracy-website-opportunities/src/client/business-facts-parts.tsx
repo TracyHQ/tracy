@@ -1,7 +1,7 @@
 /**
- * The business band of the Business facts sub-page (#537, design A): the mark with the name and type, phone, address,
+ * The business band of the Business facts sub-page (#537, layout B): the mark with the name and type, phone, address,
  * website, then every other fact of the saved profile's business group and extensions as a generic cell with its own
- * switch (#537 R18), in one row that scrolls sideways; a missing value reads N/A. Locked on the site; Edit is in place.
+ * switch (#537 R18), one row each; a missing value reads N/A. Locked on the site; Edit is in place.
  */
 import { Fragment, type JSX, type ReactNode } from 'react'
 
@@ -101,22 +101,26 @@ export function BusinessBand({
       id="business"
       label={t('facts.business')}
       title={t('facts.business')}
-      chips={<SourceChip t={t} chip={view.chips.name} locale={locale} pill />}
+      source={view.chips.name}
+      count={4 + more.length}
       onSite={{ on: true, set: null, lock: true, why: t('facts.lock.business') }}
       edit={edit === null ? { why: t('reason.not_collected') } : { form: edit }}
     >
       <div className="tracy-wo-facts-cells tracy-wo-facts-row">
         <div className="tracy-wo-facts-cell tracy-wo-facts-hero">
-          {mark}
-          <span className="tracy-wo-facts-hero-name">
-            {/* The full name: it ends in an ellipsis only past 40 characters or the width of the row. */}
-            <OneLine text={view.name} />
-            <span className="tracy-wo-facts-ln">
-              {view.category === null ? (
-                missing
-              ) : (
-                <StatusPill state="info" label={view.category} title={view.category} />
-              )}
+          <span className="tracy-wo-facts-ck">{t('field.name')}</span>
+          <span className="tracy-wo-facts-hero-v">
+            {mark}
+            <span className="tracy-wo-facts-hero-name">
+              {/* The full name: it ends in an ellipsis only past 40 characters or the width of the row. */}
+              <OneLine text={view.name} />
+              <span className="tracy-wo-facts-ln">
+                {view.category === null ? (
+                  missing
+                ) : (
+                  <StatusPill state="info" label={view.category} title={view.category} />
+                )}
+              </span>
             </span>
           </span>
         </div>

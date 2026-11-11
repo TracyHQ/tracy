@@ -11,6 +11,7 @@ import { FactsBand } from './business-facts-band.tsx'
 import { Missing } from './business-facts-bands.tsx'
 import { BandSwitch, type BandSwitchView } from './facts-band-actions.tsx'
 import { EditedChip, type SetFactOn } from './facts-generic-row.tsx'
+import { mainChip } from './facts-section-model.ts'
 import { TeamEdit } from './facts-team-edit.tsx'
 import type { OwnerDoors } from './owner-edits-model.ts'
 import type { ReadingItemView, ReadingPick } from './profile-reading-model.ts'
@@ -41,7 +42,7 @@ export const Avatar = ({ person }: { person: Pick<ReadingItemView, 'label' | 'ph
 )
 
 /**
- * The team: people in one row that scrolls sideways, each with its avatar, role, chip and own small switch. While the
+ * The team: one row per person (#537, layout B), each with its avatar, role, chip and own small switch. While the
  * Team band is off, no person can be put on the site: every switch is greyed, the reason on hover.
  */
 export function TeamPeople({
@@ -69,7 +70,7 @@ export function TeamPeople({
       return true
     }
   return (
-    <ul className="tracy-wo-facts-people tracy-wo-facts-row">
+    <ul className="tracy-wo-facts-people">
       {view.team.map((person) => (
         <li key={person.id} data-off={onSiteOf(person) ? undefined : ''}>
           <Avatar person={person} />
@@ -137,6 +138,8 @@ export function TeamBand({
       id="team"
       label={t('field.team')}
       title={t('field.team')}
+      source={card?.state === 'filled' ? mainChip(view.team.map((p) => itemChipOf(view, p))) : null}
+      count={card?.state === 'filled' ? view.team.length : null}
       onSite={onSite}
       edit={
         card === undefined || card.state === 'notCollected'

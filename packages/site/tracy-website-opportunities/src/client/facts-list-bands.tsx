@@ -1,6 +1,6 @@
 /**
- * The list bands of the Business facts sub-page (#537, design A): Services, Key messages, What guests say. Each draws
- * every item in one row that scrolls sideways inside the band (key messages are three cells); a band that research
+ * The list bands of the Business facts sub-page (#537, layout B): Services, Key messages, What guests say. Each draws
+ * its items as rows (a group of services as chips in one row, a message or a review per row); a band that research
  * left empty reads N/A alone. Each guest review has its own small switch (#537 R16): one kept off the site stays,
  * dimmed, and no part of the site quotes it. Google's rating and review count sit in the reviews header as small
  * figures, each with its switch (#537 R18). Social pages live in `facts-social-band.tsx`.
@@ -13,6 +13,7 @@ import { type BusinessFactsView, itemChipOf, messageChipOf, reviewChipOf } from 
 import type { BandSwitchView, EditDoor } from './facts-band-actions.tsx'
 import { FactFigure, type SetFactOn } from './facts-generic-row.tsx'
 import { ItemSwitch } from './facts-item-switch.tsx'
+import { mainChip } from './facts-section-model.ts'
 import { isReviewStat } from './saved-profile-model.ts'
 import type { ReadingItemView } from './profile-reading-model.ts'
 import { SourceChip } from './source-chip.tsx'
@@ -30,7 +31,7 @@ const cardOf = (view: BusinessFactsView, id: string) => view.cards.find((c) => c
 const body = (view: BusinessFactsView, t: Translate, id: string, draw: () => ReactNode): ReactNode =>
   cardOf(view, id)?.state === 'filled' ? draw() : <Missing t={t} card={cardOf(view, id)} />
 
-/** Services: the services chips, then the audience and the service areas, each after its muted label, in one row. */
+/** Services: the services chips, then the audience and the service areas, each group a row after its label. */
 export function ServicesBand({ t, locale, view, onSite, edit }: BandProps): JSX.Element {
   const groups = (
     [
@@ -54,24 +55,22 @@ export function ServicesBand({ t, locale, view, onSite, edit }: BandProps): JSX.
       id="services"
       label={t('field.services')}
       title={t('field.services')}
+      source={mainChip(groups.flatMap(([, items]) => items.map((i) => itemChipOf(view, i))))}
+      count={groups.reduce((n, [, items]) => n + items.length, 0)}
       onSite={onSite}
       edit={edit}
     >
       {body(view, t, 'services', () => (
-        <ul className="tracy-wo-facts-chiprow tracy-wo-facts-row">
+        <div className="tracy-wo-facts-cells">
           {groups.map(([key, items]) =>
-            items.length === 0
-              ? null
-              : [
-                  key === 'field.services' ? null : (
-                    <li key={key} className="tracy-wo-facts-ck tracy-wo-facts-group">
-                      {t(key)}
-                    </li>
-                  ),
-                  chips(items)
-                ]
+            items.length === 0 ? null : (
+              <div key={key} className="tracy-wo-facts-cell">
+                <span className="tracy-wo-facts-ck">{t(key)}</span>
+                <ul className="tracy-wo-facts-chiprow">{chips(items)}</ul>
+              </div>
+            )
           )}
-        </ul>
+        </div>
       ))}
     </FactsBand>
   )
@@ -85,6 +84,8 @@ export function MessagesBand({ t, locale, view, onSite, edit }: BandProps): JSX.
       id="messages"
       label={t('keyMessages.title')}
       title={t('keyMessages.title')}
+      source={mainChip(view.messages.map((m) => messageChipOf(view, m)))}
+      count={view.messages.length}
       aside={
         <span className="tracy-wo-facts-aside" title={t('facts.messages.lead')}>
           {t('facts.messages.lead')}
@@ -94,7 +95,7 @@ export function MessagesBand({ t, locale, view, onSite, edit }: BandProps): JSX.
       edit={edit}
     >
       {body(view, t, 'messages', () => (
-        <div className="tracy-wo-facts-cells tracy-wo-facts-row">
+        <div className="tracy-wo-facts-cells">
           {view.messages.map((m, i) => (
             <div key={m.id} className="tracy-wo-facts-cell">
               <span className="tracy-wo-facts-ck">{t('facts.message.n', { n: i + 1 })}</span>
@@ -114,7 +115,7 @@ export function MessagesBand({ t, locale, view, onSite, edit }: BandProps): JSX.
   )
 }
 
-/** What guests say: every review as a card, in one row. */
+/** What guests say: one review per row. */
 export function ReviewsBand({
   t,
   locale,
@@ -142,6 +143,8 @@ export function ReviewsBand({
       id="reviews"
       label={t('facts.reviews.title')}
       title={t('facts.reviews.title')}
+      source={mainChip(view.reviews.map((r) => reviewChipOf(view, r)))}
+      count={view.reviews.length}
       aside={
         figures.length === 0 ? undefined : (
           <span className="tracy-wo-facts-figs">
@@ -155,7 +158,7 @@ export function ReviewsBand({
       edit={edit}
     >
       {body(view, t, 'reviews', () => (
-        <ul className="tracy-wo-facts-cards tracy-wo-facts-row">
+        <ul className="tracy-wo-facts-cards">
           {view.reviews.map((r, i) => (
             <li
               key={r.factId ?? r.key ?? `${r.author}-${i}`}

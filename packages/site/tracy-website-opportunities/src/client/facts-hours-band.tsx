@@ -1,15 +1,13 @@
 /**
- * Hours and amenities, the band after the business on the Business facts sub-page (#537 R18): the opening hours as a
- * row of day cells (the check note as the amber chip in the header), then the amenities as chips of the names that are
- * true and whether the place takes bookings, each fact with its own switch through the facts door. Edit opens the
- * seven day fields (saved through the hours door, as before), a checkbox per amenity and Yes or No for bookings (saved
- * through the facts door). Before research made the saved profile, only the hours show, as research read them.
+ * Hours and amenities on the Business facts sub-page (#537 R18, layout B): the opening hours as one row when every day
+ * is the same, else a row per line (the check note as the amber chip in the header), then the amenities and bookings,
+ * each fact with its own switch through the facts door. Edit opens the day fields (hours door) and the other facts.
  */
 import { type JSX, useState } from 'react'
 import { Clock } from 'lucide-react'
 import { Input } from '@tracy/ui'
 
-import { FactsBand } from './business-facts-band.tsx'
+import { FactsBand, NotAvailable } from './business-facts-band.tsx'
 import { Missing } from './business-facts-bands.tsx'
 import { type BusinessFactsView, hoursLineParts } from './business-facts-model.ts'
 import { EditFooter } from './facts-band-actions.tsx'
@@ -19,14 +17,10 @@ import { ItemSwitch } from './facts-item-switch.tsx'
 import { type SaveFactValue, runSteps, useFactDrafts } from './facts-value-edit.tsx'
 import { type HoursChoice, type HoursSaved, sourceName } from './profile-hours-row.tsx'
 import { factChipOf } from './saved-profile-model.ts'
-import { SourceChip } from './source-chip.tsx'
+import { collapseHours, mainChip } from './facts-section-model.ts'
 import type { Translate } from './strings.ts'
 
-/**
- * Opening hours: one field per line (a day or a group of days), seven in a row on a wide page, wrapping when narrower,
- * then the band's other facts. Saving unchanged hours that wait for a check keeps them as they are; changed hours are
- * sent as typed.
- */
+/** Opening hours in Edit: a field per line, then the other facts; unchanged hours that wait for a check are kept. */
 export function HoursEdit({
   t,
   close,
@@ -121,6 +115,9 @@ export function HoursAmenitiesBand({
     (await saveHours({ choice: on ? 'keep' : 'leave' })) === 'ok'
   const title = saved === null ? t('field.hours') : t('facts.hoursAmenities')
   const chip = fact === null ? (card?.chip ?? null) : factChipOf(fact, view.sources)
+  const rows = collapseHours(lines, (from, to) => t('facts.hours.range', { from, to }))
+  const one = rows.length === 1 && lines.length > 1
+  const shown = rows.length === 0 && fact !== null ? [''] : rows
   return (
     <FactsBand
       t={t}
@@ -133,7 +130,8 @@ export function HoursAmenitiesBand({
         </>
       }
       check={note}
-      chips={filled && lines.length > 0 ? <SourceChip t={t} chip={chip} locale={locale} pill /> : null}
+      source={filled ? (mainChip([chip, ...others.map((f) => factChipOf(f, view.sources))]) ?? chip) : null}
+      count={filled ? shown.length + others.length : null}
       onSite={factsSwitch(all, setOn) ?? { on: !(hours?.left ?? false), set: canSet ? hoursDoor : null }}
       edit={
         !filled
@@ -155,37 +153,39 @@ export function HoursAmenitiesBand({
       {!filled ? (
         <Missing t={t} card={card} />
       ) : (
-        <div className="tracy-wo-facts-days tracy-wo-facts-cells tracy-wo-facts-row">
-          {fact === null ? null : (
-            <div className="tracy-wo-facts-cell" data-fact={fact.id} data-off={fact.onSite ? undefined : ''}>
-              <span className="tracy-wo-facts-ck">{t('field.hours')}</span>
-              <span className="tracy-wo-facts-ln tracy-wo-facts-meta">
-                <EditedChip t={t} fact={fact} locale={locale} />
-                {setOn === null ? null : (
-                  <ItemSwitch
-                    t={t}
-                    bare
-                    label={t('field.hours')}
-                    on={fact.onSite}
-                    set={(on) => setOn(fact.id, on)}
-                  />
-                )}
-              </span>
-            </div>
-          )}
-          {lines.map((line) => {
+        <div className="tracy-wo-facts-cells">
+          {shown.map((line, i) => {
             const { days, times } = hoursLineParts(line)
             return (
               <div
-                key={line}
+                key={`${line}-${i}`}
                 className="tracy-wo-facts-cell"
+                data-fact={i === 0 ? fact?.id : undefined}
                 data-off={fact?.onSite === false ? '' : undefined}
                 title={line}
               >
-                <span className="tracy-wo-facts-ck">{days}</span>
+                <span className="tracy-wo-facts-ck">{one || days === '' ? t('field.hours') : days}</span>
                 <span className="tracy-wo-facts-ln">
-                  <span className="tracy-wo-facts-ell">{times}</span>
+                  {line === '' ? (
+                    <NotAvailable t={t} />
+                  ) : (
+                    <span className="tracy-wo-facts-ell">{one ? line : times}</span>
+                  )}
                 </span>
+                {i > 0 || fact === null ? null : (
+                  <span className="tracy-wo-facts-ln tracy-wo-facts-meta">
+                    <EditedChip t={t} fact={fact} locale={locale} />
+                    {setOn === null ? null : (
+                      <ItemSwitch
+                        t={t}
+                        bare
+                        label={t('field.hours')}
+                        on={fact.onSite}
+                        set={(on) => setOn(fact.id, on)}
+                      />
+                    )}
+                  </span>
+                )}
               </div>
             )
           })}

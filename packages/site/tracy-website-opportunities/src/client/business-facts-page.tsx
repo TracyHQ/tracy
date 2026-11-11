@@ -1,5 +1,6 @@
 /**
- * The Business facts sub-page (#537, design A): one full-width band per group, top to bottom: the business, Hours and
+ * The Business facts sub-page (#537, layout B): the section rail (`facts-rail.tsx`) at the left of one column of
+ * section cards, one per group, top to bottom: the business, Hours and
  * amenities, Services (Menu for a food place), About, Team, Brand, Key messages, What guests say, Social pages, Photos
  * & video. Once research made the saved profile (#537 R18) the bands read its groups: the owner's
  * values with an Edited chip, what is kept off dimmed, and a fact of no special drawing as a generic cell with its own
@@ -12,7 +13,7 @@
 import type { JSX, ReactNode } from 'react'
 
 import { FactsMedia } from './business-facts-media.tsx'
-import type { BusinessFactsView, CardId } from './business-facts-model.ts'
+import { BAND_IDS, type BusinessFactsView, type CardId } from './business-facts-model.ts'
 import { BusinessBand, moreBusinessFacts } from './business-facts-parts.tsx'
 import type { LogoView, MediaRowView } from './detail-model.ts'
 import { type BandSwitchView, type EditDoor, EditFooter } from './facts-band-actions.tsx'
@@ -26,6 +27,7 @@ import { SocialBand } from './facts-social-band.tsx'
 import { TeamBand } from './facts-team-people.tsx'
 import type { FactsDoors } from './facts-doors.ts'
 import { FactsLocked, FactsLockedNotice, type FactsLockView } from './facts-lock.tsx'
+import { FactsRail, RailReport, useRailStore } from './facts-rail.tsx'
 import type { OwnerBand } from './owner-edits-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -89,97 +91,105 @@ export function BusinessFactsPage({
   const setOn = doors.setFactOn ?? null
   const saveValue = doors.saveFactValue ?? null
   const more = moreBusinessFacts(t, view.saved?.business ?? [])
+  const [bands, report] = useRailStore()
 
   return (
     <FactsLocked.Provider value={locked !== null}>
-      <div className="tracy-wo-facts">
-        {locked === null ? null : <FactsLockedNotice t={t} view={locked} />}
-        <BusinessBand
-          t={t}
-          locale={locale}
-          view={view.business}
-          logo={facts ? media.logo : NOT_COLLECTED_LOGO}
-          websiteLink={websiteLink}
-          more={more}
-          rows={view.sources}
-          setOn={setOn}
-          edit={
-            !facts
-              ? null
-              : (close) => (
-                  <BusinessEdit
-                    t={t}
-                    close={close}
-                    name={view.business.name}
-                    nameRow={doors.nameRow}
-                    saveName={doors.saveName}
-                    phone={phone}
-                    address={address}
-                    others={
-                      others.length === 0
-                        ? null
-                        : `${t('facts.phone.others', { list: others.map((o) => o.phone).join(', ') })} ${t('phone.othersNote')}`
-                    }
-                    more={{ facts: more, save: saveValue }}
-                  />
-                )
-          }
-          researched={facts}
-        />
-        <HoursAmenitiesBand {...shared} saveHours={doors.saveHours} setOn={setOn} saveValue={saveValue} />
-        {view.saved === null ? (
-          <ServicesBand
-            {...shared}
-            onSite={switchOf(['services', 'audience', 'serviceAreas'])}
-            edit={widgetEdit('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
-          />
-        ) : (
-          <OfferingsBand {...shared} setOn={setOn} saveValue={saveValue} food={food} />
-        )}
-        <AboutBand
-          {...shared}
-          field={about}
-          onSite={switchOf(['story', 'bio'])}
-          setOn={setOn}
-          saveValue={saveValue}
-        />
-        <TeamBand
-          {...shared}
-          onSite={switchOf(['team'])}
-          owner={owner}
-          pickReading={doors.pickReading}
-          setOn={setOn}
-        />
-        <BrandBand
-          t={t}
-          notCollected={cardOf('brand')?.state === 'notCollected'}
-          media={media}
-          retry={doors.retryLogo}
-          food={food}
-          onSite={bandOf('brand')}
-        />
-        <MessagesBand
-          {...shared}
-          onSite={bandOf('keyMessages')}
-          edit={widgetEdit('messages', () => doors.keyMessages)}
-        />
-        <ReviewsBand
-          {...shared}
-          onSite={bandOf('reviews')}
-          edit={{ why: t('facts.edit.reviews') }}
-          setHidden={owner.setReviewHidden}
-          setOn={setOn}
-        />
-        <SocialBand {...shared} onSite={bandOf('socials')} owner={owner} setOn={setOn} />
-        <FactsMedia
-          t={t}
-          media={media}
-          show={!running}
-          onUpload={doors.uploadMedia}
-          onSite={bandOf('media')}
-          setHidden={owner.setMediaHidden}
-        />
-      </div>
+      <RailReport.Provider value={report}>
+        <div className="tracy-wo-facts-page">
+          <FactsRail t={t} locale={locale} bands={bands} order={BAND_IDS} />
+          <div className="tracy-wo-facts">
+            {locked === null ? null : <FactsLockedNotice t={t} view={locked} />}
+            <BusinessBand
+              t={t}
+              locale={locale}
+              view={view.business}
+              logo={facts ? media.logo : NOT_COLLECTED_LOGO}
+              websiteLink={websiteLink}
+              more={more}
+              rows={view.sources}
+              setOn={setOn}
+              edit={
+                !facts
+                  ? null
+                  : (close) => (
+                      <BusinessEdit
+                        t={t}
+                        close={close}
+                        name={view.business.name}
+                        nameRow={doors.nameRow}
+                        saveName={doors.saveName}
+                        phone={phone}
+                        address={address}
+                        others={
+                          others.length === 0
+                            ? null
+                            : `${t('facts.phone.others', { list: others.map((o) => o.phone).join(', ') })} ${t('phone.othersNote')}`
+                        }
+                        more={{ facts: more, save: saveValue }}
+                      />
+                    )
+              }
+              researched={facts}
+            />
+            <HoursAmenitiesBand {...shared} saveHours={doors.saveHours} setOn={setOn} saveValue={saveValue} />
+            {view.saved === null ? (
+              <ServicesBand
+                {...shared}
+                onSite={switchOf(['services', 'audience', 'serviceAreas'])}
+                edit={widgetEdit('services', () =>
+                  doors.readingRows(['services', 'audience', 'serviceAreas'])
+                )}
+              />
+            ) : (
+              <OfferingsBand {...shared} setOn={setOn} saveValue={saveValue} food={food} />
+            )}
+            <AboutBand
+              {...shared}
+              field={about}
+              onSite={switchOf(['story', 'bio'])}
+              setOn={setOn}
+              saveValue={saveValue}
+            />
+            <TeamBand
+              {...shared}
+              onSite={switchOf(['team'])}
+              owner={owner}
+              pickReading={doors.pickReading}
+              setOn={setOn}
+            />
+            <BrandBand
+              t={t}
+              notCollected={cardOf('brand')?.state === 'notCollected'}
+              media={media}
+              retry={doors.retryLogo}
+              food={food}
+              onSite={bandOf('brand')}
+            />
+            <MessagesBand
+              {...shared}
+              onSite={bandOf('keyMessages')}
+              edit={widgetEdit('messages', () => doors.keyMessages)}
+            />
+            <ReviewsBand
+              {...shared}
+              onSite={bandOf('reviews')}
+              edit={{ why: t('facts.edit.reviews') }}
+              setHidden={owner.setReviewHidden}
+              setOn={setOn}
+            />
+            <SocialBand {...shared} onSite={bandOf('socials')} owner={owner} setOn={setOn} />
+            <FactsMedia
+              t={t}
+              media={media}
+              show={!running}
+              onUpload={doors.uploadMedia}
+              onSite={bandOf('media')}
+              setHidden={owner.setMediaHidden}
+            />
+          </div>
+        </div>
+      </RailReport.Provider>
     </FactsLocked.Provider>
   )
 }

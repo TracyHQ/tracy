@@ -13,6 +13,8 @@ import type { BusinessFactsView } from './business-facts-model.ts'
 import type { BandSwitchView, EditDoor } from './facts-band-actions.tsx'
 import { EditedChip, type SetFactOn, factsSwitch } from './facts-generic-row.tsx'
 import { ItemSwitch } from './facts-item-switch.tsx'
+import { useFactsLocked } from './facts-lock.tsx'
+import { mainChip } from './facts-section-model.ts'
 import { FactsEdit, type SaveFactValue } from './facts-value-edit.tsx'
 import { plainWords } from './facts-value-model.ts'
 import { type SavedFact, factChipOf } from './saved-profile-model.ts'
@@ -66,47 +68,59 @@ export function OfferingsBand({
   const facts = view.saved?.offerings ?? []
   const card = view.cards.find((c) => c.id === 'services')
   const title = t(food ? 'menu.title' : 'field.services')
+  const locked = useFactsLocked()
   return (
     <FactsBand
       t={t}
       id="services"
       label={title}
       title={title}
+      source={mainChip(facts.map((f) => factChipOf(f, view.sources)))}
+      count={facts.length}
       onSite={switchOf(t, facts, setOn)}
       edit={factsEditDoor(t, facts, saveValue)}
     >
       {facts.length === 0 ? (
         <Missing t={t} card={card} />
       ) : (
-        <ul className="tracy-wo-facts-chiprow tracy-wo-facts-row">
-          {facts.map((f) => {
-            // An offering of no kind this page knows reads its plain parts: nothing research found is dropped.
-            const name = words(rec(f.value).name) || plainWords(f.value)
-            const price = priceOf(f)
-            const shown = price === '' ? name : `${name} · ${price}`
-            return (
-              <li
-                key={f.id}
-                className="tracy-wo-facts-pill"
-                data-fact={f.id}
-                data-off={f.onSite ? undefined : ''}
-              >
-                <span className="tracy-wo-facts-ell" title={shown}>
-                  {shown}
-                </span>
-                <SourceChip t={t} chip={factChipOf(f, view.sources)} locale={locale} />
-                <EditedChip t={t} fact={f} locale={locale} />
-                <ItemSwitch
-                  t={t}
-                  bare
-                  label={name}
-                  on={f.onSite}
-                  set={setOn === null ? null : (on) => setOn(f.id, on)}
-                />
-              </li>
-            )
-          })}
-        </ul>
+        <div className="tracy-wo-facts-cells">
+          <div className="tracy-wo-facts-cell">
+            <span className="tracy-wo-facts-ck">{title}</span>
+            {/* Each chip is its own switch: pressing it keeps that one off the site (#537, layout B). */}
+            <ul className="tracy-wo-facts-chiprow tracy-wo-facts-toggles">
+              {facts.map((f) => {
+                // An offering of no kind this page knows reads its plain parts: nothing research found is dropped.
+                const name = words(rec(f.value).name) || plainWords(f.value)
+                const price = priceOf(f)
+                const shown = price === '' ? name : `${name} · ${price}`
+                return (
+                  <li
+                    key={f.id}
+                    className="tracy-wo-facts-pill"
+                    data-fact={f.id}
+                    data-off={f.onSite ? undefined : ''}
+                  >
+                    <ItemSwitch
+                      t={t}
+                      bare
+                      label={name}
+                      on={f.onSite}
+                      set={setOn === null ? null : (on) => setOn(f.id, on)}
+                    />
+                    <span className="tracy-wo-facts-ell" title={shown}>
+                      {shown}
+                    </span>
+                    <SourceChip t={t} chip={factChipOf(f, view.sources)} locale={locale} />
+                    <EditedChip t={t} fact={f} locale={locale} />
+                  </li>
+                )
+              })}
+            </ul>
+            {setOn === null || locked ? null : (
+              <span className="tracy-wo-facts-dim tracy-wo-small">{t('facts.services.tap')}</span>
+            )}
+          </div>
+        </div>
       )}
     </FactsBand>
   )

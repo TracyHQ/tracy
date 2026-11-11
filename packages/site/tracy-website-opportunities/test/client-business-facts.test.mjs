@@ -10,7 +10,6 @@ import { test } from 'node:test'
 
 import {
   BAND_BREAKPOINTS,
-  BAND_HEIGHT,
   BAND_IDS,
   businessFactsView,
   clipQuote,
@@ -229,8 +228,6 @@ test('the band set is complete and every band shares one collapsed height at eac
     'social',
     'media'
   ])
-  // A 40px header row over a 76px body, with 2px of border: the same at the wide, mid and narrow widths.
-  assert.deepEqual([...BAND_HEIGHT], [118, 118, 118])
   assert.deepEqual([...BAND_BREAKPOINTS], [900, 560])
 })
 

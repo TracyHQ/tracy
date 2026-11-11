@@ -16,7 +16,7 @@ import path from 'node:path'
 import { after, before, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
-import { BAND_BREAKPOINTS, BAND_HEIGHT, BAND_IDS } from '../src/client/business-facts-model.ts'
+import { BAND_IDS } from '../src/client/business-facts-model.ts'
 import { FACTS_BANDS_CSS } from '../src/client/facts-bands-css.ts'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -214,7 +214,7 @@ test('every band header holds one cluster, in one order: [Add more] on Photos & 
     assert.match(h, /\[profile\.edit\]<\/button><\/span><\/span><\/div><div class="$/, id)
   }
   // The slots keep fixed widths so the switches and Edit line up down the page, close together.
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-cl \{[^}]*gap: 8px; margin-left: auto; \}/)
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-cl \{[^}]*gap: 12px; margin-left: auto; \}/)
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-slot-sw \{ width: \d+px; \}/)
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-slot-edit \{ width: \d+px;/)
 })
@@ -289,52 +289,28 @@ test('Photos & video has exactly one Add more, in the cluster, the formats as it
   assert.equal((band(html, 'media').match(/class="tracy-wo-tile"/g) ?? []).length, 3)
 })
 
-test('every band shares one collapsed height per breakpoint; long rows scroll sideways, the scrollbar hidden', () => {
-  const [mid, narrow] = BAND_BREAKPOINTS
-  const [wideH, midH, narrowH] = BAND_HEIGHT
-  const midBlock = FACTS_BANDS_CSS.slice(
-    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${mid - 1}px)`),
-    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${narrow - 1}px)`)
-  )
-  const narrowBlock = FACTS_BANDS_CSS.slice(
-    FACTS_BANDS_CSS.indexOf(`@container wo-facts (max-width: ${narrow - 1}px)`)
-  )
+test('every card grows with its facts, one per row: a 160px label, the value, then the chip and switch column', () => {
+  // A card is as tall as its facts (#537, layout B): no shared fixed height is left.
+  assert.doesNotMatch(FACTS_BANDS_CSS, /--wo-band-h|height: var\(--wo-band-h\)/)
   assert.match(
     FACTS_BANDS_CSS,
-    new RegExp(`\\.tracy-wo-facts \\{ container: wo-facts / inline-size; --wo-band-h: ${wideH}px;`)
+    /\.tracy-wo-facts-cell \{ display: grid; grid-template-columns: 160px minmax\(0, 1fr\) auto;/
   )
-  assert.ok(midBlock.includes(`--wo-band-h: ${midH}px;`))
-  assert.ok(narrowBlock.includes(`--wo-band-h: ${narrowH}px;`))
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-band \{[^}]*height: var\(--wo-band-h\);[^}]*overflow: hidden;/
-  )
-  // Only Edit makes a band taller; no per-band height is left.
-  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-band\[data-editing\] \{ height: auto;/)
-  assert.doesNotMatch(
-    FACTS_BANDS_CSS,
-    /--wo-band-(business|hours|services|about|team|brand|messages|reviews|social|media)/
-  )
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\.tracy-wo-facts-row \{ overflow-x: auto; overflow-y: hidden; scrollbar-width: none;/
-  )
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-cell > \.tracy-wo-facts-meta \{ grid-column: 3;/)
+  // Labels are sentence case: nothing is set in capitals.
+  assert.doesNotMatch(FACTS_BANDS_CSS, /text-transform: uppercase/)
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-row::-webkit-scrollbar \{ display: none; \}/)
   // Tokens only: no colour literal, no alias of dsh, and no halo on focus.
   assert.doesNotMatch(FACTS_BANDS_CSS, /#[0-9a-f]{3,8}\b|rgba?\(|box-shadow: 0|--dsw-alias/i)
   assert.doesNotMatch(FACTS_BANDS_CSS, /`/)
-  const tiles = {
-    ...MEDIA,
-    videos: { tiles: [{ id: 'v1', kind: 'video', stored: true, source: 'instagram', sourceUrl: null }] }
-  }
   const { html } = draw({
     profile: { ...FULL, hoursCheck: { state: 'none' }, googleHours: [`Monday: 09:00 - 18:00`] },
     reviews: [review(1)],
-    media: tiles,
     sources: [{ source: 'instagram', ref: 'https://instagram.example/harbourkite' }]
   })
-  for (const id of ['services', 'reviews', 'media', 'social'])
-    assert.match(band(html, id), /tracy-wo-facts-row/, id)
+  // The facts sit in rows; the filmstrip of photos alone still scrolls sideways.
+  for (const id of ['services', 'reviews']) assert.doesNotMatch(band(html, id), /tracy-wo-facts-row/, id)
+  assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-row \{ overflow-x: auto;/)
 })
 
 test('the business band draws the whole name, then phone, address and website; no rating cell', () => {
@@ -368,17 +344,14 @@ test('the business band draws the whole name, then phone, address and website; n
   )
   const business = band(html, 'business')
   assert.match(business, new RegExp(`<span class="tracy-wo-facts-ell" title="${name}">${name}</span>`))
-  const labels = [...business.matchAll(/class="tracy-wo-facts-ck" title="([^"]*)"/g)].map((m) => m[1])
-  assert.deepEqual(labels, ['[field.phone]', '[field.address]', '[my.field.website]'])
+  const labels = [...business.matchAll(/class="tracy-wo-facts-ck"(?: title="[^"]*")?>([^<]*)</g)].map(
+    (m) => m[1]
+  )
+  assert.deepEqual(labels, ['[field.name]', '[field.phone]', '[field.address]', '[my.field.website]'])
   assert.doesNotMatch(business, /tracy-wo-facts-stars/)
   assert.match(
     business,
     /<span class="tracy-wo-facts-ell tracy-wo-facts-keep" title="\+10 555 0100">\+10 555 0100<\/span>/
-  )
-  // Four cells in one row on a wide page, then any other business fact; the row scrolls sideways when narrower.
-  assert.match(
-    FACTS_BANDS_CSS,
-    /\[data-card='business'\] \.tracy-wo-facts-cells \{ grid-template-columns: minmax\(200px, 1\.4fr\)/
   )
 })
 
@@ -398,7 +371,12 @@ test('the source chips still follow their values in the bands', () => {
     sources: [{ source: 'instagram', ref: 'https://instagram.example/harbourkite' }]
   })
   assert.match(band(html, 'services'), /Lesson 1<\/span><span class="tracy-wo-sc" data-word="bio"/)
-  assert.match(band(html, 'reviews'), /Guest 1<\/span><span class="tracy-wo-sc" data-word="review"/)
+  // A row chip naming the section's own source is not drawn: the header says it once (#537, layout B).
+  assert.match(
+    head(html, 'reviews'),
+    /class="tracy-wo-facts-from"[^]*facts\.from\{&quot;source&quot;:&quot;\[chip\.word\.google\]/
+  )
+  assert.doesNotMatch(band(html, 'reviews'), /Guest 1<\/span><span class="tracy-wo-sc"/)
   assert.match(
     band(html, 'social'),
     /<a href="https:\/\/instagram\.example\/harbourkite"[^>]*><svg[^>]*data-logo="instagram"/
