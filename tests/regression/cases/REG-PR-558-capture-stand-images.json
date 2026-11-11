@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-558-capture-stand-images",
+  "kind": "fix",
+  "title": "Capture stands resolve exact pinned fleet image identities before startup",
+  "pr": 558,
+  "area": "website-opportunities/template-kit",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the pure image-policy tests and isolated stand startup/version fixtures without Docker, model calls or release downloads."
+  ],
+  "expect": [
+    "The stand preserves Joomla6 and WordPressPHP8.3 bases and follows their exact canonical fleet policy rows.",
+    "Missing, duplicate, malformed, upstream, floating and wrong-base declarations fail without fallback.",
+    "Invalid policy refuses startup before a download or container command, and unknown release versions still refuse."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/design/tracy-ds-slot/test/stand-images.test.mjs",
+      "packages/design/tracy-ds-slot/test/stand-version.test.mjs",
+      "packages/design/tracy-ds-slot/test/stand-address.test.mjs",
+      "packages/design/tracy-ds-slot/test/stand-docker-host.test.mjs"
+    ],
+    "tests": [
+      "stand images follow the authoritative fleet policy and preserve exact CMS bases",
+      "stand image policy refuses missing, ambiguous, malformed and mismatched base declarations",
+      "an invalid stand image policy refuses startup before any release download or container command"
+    ],
+    "needs": []
+  }
+}
