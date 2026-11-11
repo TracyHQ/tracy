@@ -8,6 +8,7 @@ import { briefOfRevision } from '../lib/bench-sql.js'
 import { defaultContracts } from '../lib/contracts.js'
 import { headerSiteLogoBlockOf } from '../lib/template-kit/flow-reads.js'
 import { openKit, readableKits } from '../lib/template-kit-source.js'
+import { briefWithSiteLanguage } from './brand-input.js'
 import { brandBriefProblems } from './brand-brief-shape.js'
 import { brandDoors } from './brand-doors.js'
 import { brandHarnessFor } from './brand-harness.js'
@@ -40,7 +41,7 @@ export const toolInfo = (tools) => tools.map((t) => ({ name: t.name, version: t.
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
  *   startedBy: string, kitImages: { ensure: Function }, wiring: Function, index?: Map<string, object>,
- *   logo?: { bytes: Buffer, name: string },
+ *   logo?: { bytes: Buffer, name: string }, siteLanguage?: string,
  *   agentModel?: { model: string, reason: string, reviewerModel?: string } }} input `logo`: the logo file given at the start
  *   (--logo-file), staged in the run folder before the run is queued and recorded by its name; `agentModel`: a one-off agent model
  *   for this run (and, when given, an explicit reviewer model), recorded with its reason; `wiring` gives the tools and the template font (brand-wiring.js).
@@ -57,8 +58,15 @@ export async function startBrandRun({
   index,
   logo,
   agentModel,
-  noCaps = false
+  noCaps = false,
+  siteLanguage
 }) {
+  if (siteLanguage !== undefined) {
+    const input = briefWithSiteLanguage(brief, siteLanguage)
+    if (!input.ok) return input
+    brief = input.brief
+    if (input.projection) briefSource = { ...briefSource, brandBriefProjection: input.projection }
+  }
   const problems = brandBriefProblems(brief)
   if (problems.length)
     return refuse('BRAND_BRIEF_SHAPE', `The brief cannot run: ${problems.join('; ')}`, { problems })

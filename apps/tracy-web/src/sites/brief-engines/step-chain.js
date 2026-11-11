@@ -13,7 +13,8 @@
  * The template kit is fetched and checked first, before anything forks. The Write step is step 9 whole
  * (`write-step-nine.js` `runStepNine`: write, Site check, 9b repair pass, recheck, hand-over); it waits for the base site,
  * the brand, the copy and the pictures. Every model step reads the research revision the benches read
- * (`brief.researchRevisionId`), with no adapter.
+ * (`brief.researchRevisionId`). The brand boundary alone can fill a missing voice from the frame's selected site language,
+ * recording that projection on the brand run without changing the revision.
  *
  * 🔒 EVERY WRITE GOES THROUGH THE SETUP DOOR UNDER THE RUN'S ID. The Write step is handed one site door,
  * `applyFor(email, runId)` (the Apply door as the person who pressed Build, `applyAs(..., { setupRun })`), so Site changes
@@ -80,13 +81,13 @@ const messageOf = (error) => String(error instanceof Error ? error.message : err
 
 /**
  * @typedef {object} StepChainSteps
- * @property {(ctx: object, inputs: {}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} kit
- * @property {(ctx: object, inputs: {kit: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} brand
- * @property {(ctx: object, inputs: {kit: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} plan
- * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} copy
- * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number}>} pictures
+ * @property {(ctx: object, inputs: {}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} kit
+ * @property {(ctx: object, inputs: {kit: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} brand
+ * @property {(ctx: object, inputs: {kit: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} plan
+ * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} copy
+ * @property {(ctx: object, inputs: {kit: any, plan: any}, how: {signal: AbortSignal}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} pictures
  * @property {(ctx: object, inputs: {kit: any, plan: any, copy: any, brand: any, pictures: any},
- *   how: {signal: AbortSignal, door: {apply: Function}, limits: {stopNewWorkMs: number, returnByMs: number}}) => Promise<{value: any, usd?: number}>} write - step 9 whole; any
+ *   how: {signal: AbortSignal, door: {apply: Function}, limits: {stopNewWorkMs: number, returnByMs: number}}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} write - step 9 whole; any
  *   input but the kit may be null (its step made nothing), and its value carries the write report (`report`)
  * @property {(prepared: any) => Promise<void>} [dispose] - what the steps left behind (files), whatever became of the run
  */
@@ -111,7 +112,7 @@ export function createStepChainEngine({
 
     async prepare(ctx) {
       const t0 = now()
-      /** @type {Array<{step: string, startMs: number, endMs: number, usd: number, outcome: string, error?: string}>} */
+      /** @type {Array<{step: string, startMs: number, endMs: number, usd: number | null, knownUsd?: number, outcome: string, error?: string}>} */
       const record = []
       // The outer deadline stops the steps, not the run: the Write step runs after it on the run's own signal.
       const deadline = new AbortController()
@@ -134,7 +135,8 @@ export function createStepChainEngine({
             step,
             startMs: start - t0,
             endMs: now() - t0,
-            usd: Number(answer?.usd ?? 0),
+            usd: answer?.usd === null ? null : Number(answer?.usd ?? 0),
+            ...(answer?.usd === null ? { knownUsd: Number(answer?.knownUsd ?? 0) } : {}),
             outcome: 'done'
           })
           await snap()
@@ -146,7 +148,8 @@ export function createStepChainEngine({
             step,
             startMs: start - t0,
             endMs: now() - t0,
-            usd: Number(error?.usd ?? 0),
+            usd: error?.usd === null ? null : Number(error?.usd ?? 0),
+            ...(error?.usd === null ? { knownUsd: Number(error?.knownUsd ?? 0) } : {}),
             outcome: signal.aborted ? 'stopped' : made ? 'failed, best version used' : 'failed',
             ...(typeof error?.code === 'string' ? { code: error.code } : {}),
             error: messageOf(error)
@@ -225,7 +228,8 @@ export function createStepChainEngine({
             step: 'write',
             startMs: start - t0,
             endMs: now() - t0,
-            usd: Number(answer?.usd ?? 0),
+            usd: answer?.usd === null ? null : Number(answer?.usd ?? 0),
+            ...(answer?.usd === null ? { knownUsd: Number(answer?.knownUsd ?? 0) } : {}),
             outcome: ok ? 'done' : 'failed',
             ...(report?.recovery ? { recovery: report.recovery } : {}),
             ...(ok ? {} : { error: messageOf(report?.cause?.reason ?? report?.status ?? 'no write report') })
@@ -238,7 +242,8 @@ export function createStepChainEngine({
             step: 'write',
             startMs: start - t0,
             endMs: now() - t0,
-            usd: 0,
+            usd: error?.usd === null ? null : Number(error?.usd ?? 0),
+            ...(error?.usd === null ? { knownUsd: Number(error?.knownUsd ?? 0) } : {}),
             outcome: 'failed',
             error: messageOf(error)
           })
@@ -256,26 +261,32 @@ export function createStepChainEngine({
 
 /**
  * The measurement the row keeps (`timings.chain`): per step its minutes and USD, the totals, and how the run ended.
- * @param {Array<{step: string, startMs: number, endMs: number, usd: number, outcome: string, error?: string}>} record
+ * @param {Array<{step: string, startMs: number, endMs: number, usd: number | null, knownUsd?: number, outcome: string, error?: string}>} record
  * @param {string | null} failed
  * @param {number} totalMs
  * @param {string[] | null} [running]
  */
 export function chainSummary(record, failed, totalMs, running = null) {
+  const complete = record.every((s) => Number.isFinite(s.usd))
+  const knownUsd = round(
+    record.reduce(
+      (sum, s) => sum + (Number.isFinite(s.usd) ? s.usd : Number.isFinite(s.knownUsd) ? s.knownUsd : 0),
+      0
+    ),
+    4
+  )
   return {
     // A snapshot of a run still going (`running`: the steps under way) says so; the row's state tells the reader whether
     // the run is still going or ended without finishing the record (a hard failure).
     ending: running ? 'running' : failed ? 'soft-failure' : 'complete',
     ...(running ? { running } : failed ? { failedStep: failed } : {}),
     totalMinutes: round(totalMs / 60_000, 2),
-    totalUsd: round(
-      record.reduce((sum, s) => sum + (Number.isFinite(s.usd) ? s.usd : 0), 0),
-      4
-    ),
+    totalUsd: complete ? knownUsd : null,
+    ...(complete ? {} : { knownUsd }),
     steps: record.map((s) => ({
       ...s,
       minutes: round((s.endMs - s.startMs) / 60_000, 2),
-      usd: round(Number.isFinite(s.usd) ? s.usd : 0, 4)
+      usd: Number.isFinite(s.usd) ? round(s.usd, 4) : null
     }))
   }
 }

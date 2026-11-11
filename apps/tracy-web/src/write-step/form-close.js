@@ -83,7 +83,7 @@ export async function closeForms({ door, siteKey, plan, kit, last = NO_LAST }) {
     ]
   }
   for (const form of open) {
-    const opening = pagesOf(form.block).flatMap((page) => rowsOpening(page, rows))
+    const opening = pagesOf(form.block).flatMap((page) => rowsOpening(page, rows, null, kit))
     if (!opening.length) {
       lines.push(
         line(form.block, { status: 'failed', reason: 'no published menu item opens this form’s page' })

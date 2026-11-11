@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-558-unknown-native-spend",
+  "kind": "fix",
+  "title": "Unknown native repair spend remains partial through chain and Ops measurements",
+  "pr": 558,
+  "area": "wo/measurements",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Exercise repair summaries, the real chain engine and Ops projection with unknown, mixed, zero and historical reported costs."
+  ],
+  "expect": [
+    "Unknown native spend and total remain null, with the measured subtotal preserved separately.",
+    "A repair with no turns has zero native spend; historical measured numbers and genuine zero stay numeric.",
+    "Running snapshots preserve the same unknown and measured cost semantics.",
+    "The existing Ops amount formatter prints unavailable spend as an empty measurement marker, retaining genuine zero and measured cents."
+  ],
+  "selectors": {},
+  "fence": "Never estimate pricing or rewrite historical measurements.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-chain-unknown-spend.test.mjs",
+      "packages/web/tracy-harness/test/wo-chain-spend.test.mjs"
+    ],
+    "tests": [
+      "unknown and mixed native turn costs stay unknown with their known subtotal",
+      "the real chain engine retains an explicitly unknown repair answer",
+      "Ops keeps a terminal partial subtotal without zero filling unknown write spend",
+      "unknown chain spend is not printed as a measured zero"
+    ],
+    "needs": []
+  }
+}

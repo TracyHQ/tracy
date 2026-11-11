@@ -227,7 +227,7 @@ export async function runShareStage({
   if (await isCancelled()) return finish(true)
   for (const p of fresh) {
     const page = kitPages.get(p.id)
-    const opening = rowsOpening(page, rows, menutype)
+    const opening = rowsOpening(page, rows, menutype, kit)
     const article = opening.length ? null : articleOfPage(page, kit)
     const reason = reasonOf(p)
     let result

@@ -76,6 +76,78 @@ test('cut_mark: a transparent source keeps its alpha and has no fill; a bad box 
   await assert.rejects(cut({ mediaId: 'media/nope.png', box: [0, 0, 5, 5] }, ctx), /image not found/)
 })
 
+test('recolour_mark: an empty mask points to the existing opaque proof, whose recut supports a detailed inverse and fit', async () => {
+  const { ctx, r } = await cutRing()
+  const source = Buffer.from(ctx.files.read(r.file))
+  const transparent = await cut({ mediaId: r.file, box: [0, 0, 512, 512] }, ctx)
+  const before = new Map(ctx.files.list().map((f) => [f, Buffer.from(ctx.files.read(f))]))
+  assert.equal(transparent.fill.keptGroundPixels, 0)
+  let refusal
+  await assert.rejects(recolour({ mark: transparent.file, side: 'light' }, ctx), (error) => {
+    refusal = error
+    assert.ok(error instanceof BrandToolError)
+    assert.match(error.message, /mask has no kept fill/)
+    assert.match(error.message, /Solid mode discards internal colour detail/)
+    assert.match(error.message, /look_logo before use/)
+    assert.ok(error.message.includes(transparent.edges.proofs['on-white']))
+    return true
+  })
+  assert.deepEqual(ctx.files.list(), [...before.keys()], 'a refusal creates no image or review record')
+  assert.deepEqual(refusal.extra.recovery.cut, {
+    mediaId: transparent.edges.proofs['on-white'],
+    box: [0, 0, 512, 512]
+  })
+  const recut = await cut(refusal.extra.recovery.cut, ctx)
+  assert.ok(recut.fill.keptGroundPixels > 3000)
+  const inverse = await recolour({ mark: recut.file, side: refusal.extra.recovery.side }, ctx)
+  assert.equal(inverse.mode, 'invert')
+  const png = await pixels(ctx.files.read(inverse.file))
+  const ring = at(png, 256 - 215, 256)
+  const bar = at(png, 256, 256)
+  const fill = at(png, 256 - 60, 256)
+  assert.equal(fill.hex, '#ffffff')
+  assert.notEqual(ring.hex, bar.hex, 'the internal bar keeps a tone distinct from the enclosing ring')
+  assert.ok(contrastHex(ring.hex, fill.hex) >= 3)
+  assert.ok(contrastHex(bar.hex, fill.hex) >= 3)
+  const spot = KIT.site.logoSpots.find((s) => s.ground.side === 'light')
+  const fitted = await toolByName('fit_logo').run({ logo: inverse.file, spot: spot.id, markOnly: true }, ctx)
+  assert.equal(fitted.shows, 'mark')
+  const meta = await sharp(ctx.files.read(fitted.file)).metadata()
+  assert.deepEqual([meta.width, meta.height], [spot.width * 2, spot.height * 2])
+  assert.deepEqual(ctx.files.read(r.file), source)
+  for (const [file, bytes] of before) assert.deepEqual(ctx.files.read(file), bytes, file)
+  assert.equal(ctx.review, null, 'no fabricated reviewer verdict is needed to exercise the tools')
+})
+
+test('recolour_mark: an empty mask without an opaque proof warns about detail loss without offering a fabricated recovery', async () => {
+  const ctx = makeCtx()
+  const source = await markPng('#2a7f5f', 200)
+  ctx.files.write('mark/orphan.png', source)
+  ctx.files.write(
+    'mark/orphan.mask.png',
+    await sharp(Buffer.alloc(200 * 200), { raw: { width: 200, height: 200, channels: 1 } })
+      .png()
+      .toBuffer()
+  )
+  const original = Buffer.from(ctx.files.read('mark/orphan.png'))
+  for (const proof of [null, source, Buffer.from('unreadable')]) {
+    const mark = proof === null ? 'mark/orphan.png' : `mark/copy-${proof.length}.png`
+    if (proof !== null) {
+      ctx.files.write(mark, source)
+      ctx.files.write(mark.replace('.png', '.mask.png'), ctx.files.read('mark/orphan.mask.png'))
+      ctx.files.write(mark.replace('.png', '.on-white.png'), proof)
+    }
+    await assert.rejects(recolour({ mark, side: 'light' }, ctx), (error) => {
+      assert.match(error.message, /no readable opaque cut proof is available/)
+      assert.match(error.message, /Solid mode discards internal colour detail/)
+      assert.match(error.message, /look_logo before use/)
+      assert.equal(error.extra.recovery, undefined)
+      return true
+    })
+  }
+  assert.deepEqual(ctx.files.read('mark/orphan.png'), original)
+})
+
 for (const side of ['dark', 'light']) {
   test(`recolour_mark: a cut mark is inverted for the ${side} side and every figure tone reads there`, async () => {
     const { ctx, r } = await cutRing()
@@ -128,6 +200,8 @@ test('recolour_mark: palette mode for an icon recolours only the colours that do
   const px = await pixels(ctx.files.read(s.file))
   assert.equal(at(px, 1, 1).hex, '#112233')
   assert.equal(at(px, 32, 32).a, 255)
+  const explicit = await recolour({ mark: 'mark/lettermark.png', side: 'light', mode: 'solid' }, ctx)
+  assert.equal(explicit.mode, 'solid')
 })
 
 test('recolour_mark: refuses what the lab refuses and never overwrites', async () => {
