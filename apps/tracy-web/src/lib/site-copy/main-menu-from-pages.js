@@ -48,8 +48,7 @@ export function mainMenuFromPages({ plan, kit, entities, demo }) {
   if (byPath.size !== tree.length) return refusal('the inferred main menu has ambiguous duplicate paths')
   const known = new Set(pages.values())
   const keep = new Set(planned)
-  for (const p of each(plan?.pages))
-    if (p?.decision === 'keep' && pages.has(p.page)) keep.add(pages.get(p.page))
+  for (const p of each(plan?.pages)) if (p?.decision === 'keep' && pages.has(p.id)) keep.add(pages.get(p.id))
   // Unrepresented nodes are not authority to unpublish anything. Preserve them and every ancestor they need.
   // This includes the real default Home whose stored path is absent from the kit's page paths.
   for (const n of tree) if (!known.has(n.path)) keep.add(n.path)

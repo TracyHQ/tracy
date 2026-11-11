@@ -1,3 +1,3 @@
-- **Identify Joomla main menus from unambiguous planned page paths when the header has no label slots.** — WO pipeline maintainers · #541 · `fix/wo-artifact-integration` · 2026-11-11
+- **Identify Joomla main menus from unambiguous planned page paths when the header has no label slots.** — WO pipeline maintainers · #558 · `fix/wo-artifact-integration` · 2026-11-11
   **Affects:** WO writer and write step; rebuild tracy-web. Existing header-declared and WordPress menus retain their paths. The fallback hides only kit-mapped unplanned items, preserves kept descendants, unknown nodes and default Home aliases, and never creates writer label slots.
   **Why / Measured:** The actual Diner kit exposes only a logo in its header, so header votes were empty and no menu hides reached step 9. Pure replay now hides Blog, Offers and four Home variants while keeping Home and the three planned pages. Runtime changes and model calls are not part of this verification.

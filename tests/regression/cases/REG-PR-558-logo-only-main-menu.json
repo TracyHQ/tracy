@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-541-logo-only-main-menu",
+  "id": "REG-PR-558-logo-only-main-menu",
   "kind": "fix",
   "title": "Logo-only Joomla headers derive safe navigation hides from planned page identities",
-  "pr": 541,
+  "pr": 558,
   "area": "website-opportunities/step-nine",
   "cms": ["jo"],
   "needs": [],
@@ -38,7 +38,8 @@
       "the mapping export keeps hide authority without claiming any writer labels",
       "conflicting planned menu types refuse all hides",
       "administrator menu items are excluded from the fallback tree",
-      "existing header votes take priority over plan path inference"
+      "existing header votes take priority over plan path inference",
+      "a kept page outside mainMenu preserves its menu item and ancestors using the real plan id"
     ],
     "needs": []
   }

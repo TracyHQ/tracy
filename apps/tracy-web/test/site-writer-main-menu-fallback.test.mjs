@@ -15,8 +15,8 @@ function input() {
     plan: {
       mainMenu: [{ page: 'p0' }, { page: 'p1' }, { page: 'p2' }],
       pages: [
-        { page: 'p1', decision: 'keep' },
-        { page: 'p2', decision: 'keep' }
+        { id: 'p1', decision: 'keep' },
+        { id: 'p2', decision: 'keep' }
       ]
     },
     contentMap: {
@@ -89,7 +89,7 @@ test('other menus, unknown roots and unmapped descendants stay untouched', () =>
 test('a kept descendant preserves its navigation ancestors even without a kept top-level label', () => {
   const x = input()
   x.plan.mainMenu.push({ page: 'p4' })
-  x.plan.pages.push({ page: 'p4', decision: 'keep' })
+  x.plan.pages.push({ id: 'p4', decision: 'keep' })
   const m = mainMenuOf(x)
   assert.deepEqual(hidden(m), ['menuItem-106'])
   assert.equal(m.items.find((i) => i.item === 'menuItem-105').state, 'shown')
@@ -167,4 +167,13 @@ test('existing header votes take priority over plan path inference', () => {
     identity: { path: 'footer', menutype: 'header-declared-menu' }
   })
   assert.equal(mainMenuOf(x).menutype, 'header-declared-menu')
+})
+
+test('a kept page outside mainMenu preserves its menu item and ancestors using the real plan id', () => {
+  const x = input()
+  x.plan.pages.push({ id: 'p4', decision: 'keep' })
+  const m = mainMenuOf(x)
+  assert.deepEqual(hidden(m), ['menuItem-106'])
+  assert.equal(m.items.find((i) => i.item === 'menuItem-105').state, 'shown')
+  assert.equal(m.items.find((i) => i.item === 'menuItem-104').state, 'top')
 })
