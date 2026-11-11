@@ -1398,7 +1398,9 @@ export const en = {
     'Research has already run. Sources can be removed only before the research, or after it failed.',
   'source.remove.error.NOT_FOUND': 'This source is already gone.',
   'source.remove.error.GOOGLE_LINK_NOT_REMOVED': 'The Google listing identifies this business and stays.',
-  // facts.body.* begin: the Business facts body of the Workspace card, facts left and three square media tiles (#537).
+  // facts.body.* begin: the Business facts body of the Workspace card, facts in two groups and a 3 by 2 photo mosaic (#537).
+  'facts.body.groupBusiness': 'Business',
+  'facts.body.groupContact': 'Contact',
   'facts.body.label': 'Business facts at a glance',
   'facts.body.na': 'N/A',
   'facts.body.hours': 'Hours',
