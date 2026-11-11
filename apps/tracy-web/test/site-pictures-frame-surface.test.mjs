@@ -261,6 +261,33 @@ test('the surface: overlay found, none, or unknown; the article picture copied b
   assert.equal(alone.frames['block-31.1'].textOver, true)
 })
 
+test('an unknown template overlay stays unknown while raw text and subject checks remain strict', () => {
+  const image = { width: 10, height: 10, base64: '' }
+  const textOf = (surface) => lookMessage({ words: {}, image, outlined: false, surface })[0].text
+  const absent = surfaceFacts({ textOver: true, templateOverlay: null })
+  assert.equal(absent.overlayUnknown, undefined)
+  assert.match(textOf(absent), /with no overlay of the template/)
+  for (const templateOverlay of ['unknown', undefined]) {
+    const unknown = surfaceFacts({ textOver: true, templateOverlay })
+    assert.equal(unknown.overlayUnknown, true)
+    assert.equal(unknown.overlay, null, 'no covering overlay may be invented')
+    const message = textOf(unknown)
+    assert.match(message, /overlay over it is unknown/)
+    assert.doesNotMatch(message, /with no overlay of the template/)
+    assert.match(message, /Judge the raw picture conservatively/)
+    assert.match(message, /does not prove how the finished page reads/)
+    assert.ok(faultsFor({ surface: unknown }).includes('text would not read'))
+    assert.ok(faultsFor({ surface: unknown }).includes('wrong subject'))
+    const checked = readLook(
+      '{"verdict":"fail","faults":["wrong subject","text would not read"],"seen":"People eating at a bright table."}',
+      { surface: unknown }
+    )
+    assert.equal(checked.verdict, 'fail')
+    assert.deepEqual(checked.faults, ['wrong subject', 'text would not read'])
+    assert.deepEqual(checked.dropped, [])
+  }
+})
+
 test('an overlay of at least 0.45 is never darkened again; text over a picture with no overlay is', () => {
   const { surface } = surfaceOfZip()
   const doc = joinSurface(kit, surface)
