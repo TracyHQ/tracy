@@ -383,7 +383,9 @@ test('the workspace card body reads the saved profile: the edited phone, a fact 
     today: 1,
     locale: 'en'
   })
-  const of = (id) => [...view.left, ...view.right].find((x) => x.id === id)
+  // The body groups its facts: Business, Contact, About, and the followers at the end of the About line.
+  const all = (v) => [...v.business, ...v.contact, v.about, v.followers].filter(Boolean)
+  const of = (id) => all(view).find((x) => x.id === id)
   assert.equal(of('phone').value.text, '+10 555 0199')
   // Kept off the site is not missing: the value stays, marked off; N/A is only for a fact research did not find.
   assert.notEqual(of('hours').value, null)
@@ -406,7 +408,7 @@ test('the workspace card body reads the saved profile: the edited phone, a fact 
     running: false,
     today: 1,
     locale: 'en'
-  }).right.find((x) => x.id === 'rating')
+  }).business.find((x) => x.id === 'rating')
   assert.equal(dimmed.off, true)
   assert.equal(dimmed.value.key, 'facts.body.ratingMany')
 })
