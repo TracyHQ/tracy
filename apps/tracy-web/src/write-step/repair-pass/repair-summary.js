@@ -47,17 +47,14 @@ const turnLine = (t) => ({
   sent: t.text
 })
 
-const sum = (values) => {
-  const known = values.filter((v) => typeof v === 'number' && Number.isFinite(v))
-  return known.length ? known.reduce((a, b) => a + b, 0) : null
-}
-
 /**
  * @param {{ outcome: object, clock: { elapsed: () => number, limits: object }, site: string, timeline?: object[] }} input
  */
 export function repairSummary({ outcome, clock, site, timeline = [] }) {
   const turns = (outcome.turns ?? []).map(turnLine)
-  const agentUsd = sum(turns.map((t) => t.costUsd))
+  const measured = turns.filter((t) => Number.isFinite(t.costUsd))
+  const agentKnown = measured.reduce((sum, t) => sum + t.costUsd, 0)
+  const agentUsd = measured.length === turns.length ? agentKnown : null
   return {
     version: REPAIR_VERSION,
     site,
@@ -67,7 +64,7 @@ export function repairSummary({ outcome, clock, site, timeline = [] }) {
     sessions: outcome.sessions ?? [],
     ms: clock.elapsed(),
     limits: { stopNewWorkMs: clock.limits.stopNewWorkMs, returnByMs: clock.limits.returnByMs },
-    costUsd: { agent: agentUsd },
+    costUsd: { agent: agentUsd, ...(agentUsd === null ? { agentKnown } : {}) },
     sent: turns.reduce((n, t) => n + t.faults.length, 0),
     skipped: (outcome.skipped ?? []).map((s) => ({ ...faultLine(s.fault), code: s.code, reason: s.reason })),
     turns,

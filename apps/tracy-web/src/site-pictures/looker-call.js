@@ -110,14 +110,19 @@ const judgesText = (surface) => Boolean(surface?.textOver) && !surface?.overlay
 
 /**
  * What the looker is told of a frame's surface: { textOver, overlay: { colour, strength } | null } where `overlay` is
- * the template's own overlay strong enough to carry light text; null when the frame has neither (nothing to say).
+ * the template's own overlay strong enough to carry light text. `overlayUnknown` preserves a missing measurement;
+ * it never grants an exemption from the raw picture's text check. Null when the frame has neither (nothing to say).
  */
 export function surfaceFacts(frame) {
   const o = frame?.templateOverlay
   const covers = overlayCovers(frame)
   const textOver = frame?.textOver === true || frame?.shownAs === 'background'
   if (!covers && !textOver) return null
-  return { textOver, overlay: covers ? { colour: o.colour, strength: o.strength } : null }
+  return {
+    textOver,
+    overlay: covers ? { colour: o.colour, strength: o.strength } : null,
+    ...(o === 'unknown' || o === undefined ? { overlayUnknown: true } : {})
+  }
 }
 
 // The lines a frame's surface adds to the message.
@@ -125,6 +130,10 @@ function surfaceLines(surface) {
   if (surface.overlay)
     return [
       `On the site, the template lays its own dark overlay (${surface.overlay.colour}, ${percent(surface.overlay.strength)} strong) over this whole picture${surface.textOver ? ", and the page's heading and text sit on it" : ''}. You see the picture without it: do not judge how bright or dark the picture is.`
+    ]
+  if (surface.overlayUnknown)
+    return [
+      'On the site, the page\'s heading and text sit over this picture in light letters. Whether the template lays an overlay over it is unknown; no verified overlay or text bounds are shown here. Judge the raw picture conservatively, without assuming an overlay makes the text readable: name "text would not read" when the picture is so bright or so busy that white letters over most of it would not read. This raw-picture check does not prove how the finished page reads.'
     ]
   return [
     'On the site, the page\'s heading and text sit over this picture in light letters, with no overlay of the template over it. Judge whether light text would read on it: name "text would not read" when the picture is so bright or so busy that white letters over most of it would not read.'

@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-558-brand-site-language",
+  "kind": "fix",
+  "title": "The brand bench supplies an absent voice from the selected site language without modifying research",
+  "pr": 558,
+  "area": "wo/brand",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the brand site-language boundary tests and the existing chain cancellation tests without model calls."
+  ],
+  "expect": [
+    "A production research brief with absent brand.voice reproduces the former BRAND_BRIEF_SHAPE refusal.",
+    "Selected English, Spanish and Vietnamese language tags produce a language-only voice accepted by the shape gate, with explicit projection provenance.",
+    "Authored voice, research input, assets and facts remain unchanged; missing or invalid selected languages are refused instead of guessed.",
+    "The real chain forwards the selected first normalized language and the original revision identifier to the shared brand constructor.",
+    "Cancellation still prevents or cancels queued bench work."
+  ],
+  "selectors": {},
+  "fence": "Preserve the approved brand prompt, authored voice and historical research revisions. Never infer tone or writing language from a business location.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brand-site-language.test.mjs",
+      "apps/tracy-web/test/step-chain-bench-cancellation.test.mjs"
+    ],
+    "tests": [
+      "a production research brief without a social voice reproduces the brand refusal",
+      "missing or invalid selected languages refuse instead of guessing English",
+      "the production chain passes its selected normalized language to the shared brand boundary"
+    ],
+    "needs": []
+  }
+}

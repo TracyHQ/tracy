@@ -3,9 +3,10 @@
  * site until the person shows it), and Show on the site · Leave off the site. Nothing blocks the build.
  */
 import { type JSX, useState } from 'react'
-import { Badge, Button } from '@tracy/ui'
+import { Button } from '@tracy/ui'
 
 import { type RatingRowView, ratingActions, ratingText } from './profile-rating-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** What the person asks the server to keep (`PUT …/:id/rating`). */
@@ -47,11 +48,7 @@ export function ProfileRatingRow({
       <dd>
         <span className="tracy-wo-row tracy-wo-wrap">
           <span>{value}</span>
-          {view.few ? (
-            <Badge variant="outline" className="tracy-wo-name-chip is-check">
-              {t('rating.few')}
-            </Badge>
-          ) : null}
+          {view.few ? <StatusPill state="attention" label={t('rating.few')} /> : null}
         </span>
         {view.few && !view.chosen ? (
           <span className="tracy-wo-muted tracy-wo-small">{t('rating.fewNote')}</span>

@@ -19,7 +19,8 @@ export async function revisionsOf(pool, opportunityId) {
     `select id, opportunity_id, n, research_hash, created_at, brief->'assetLabelling' as asset_labelling,
        (select c from jsonb_array_elements(case when jsonb_typeof(brief->'readiness'->'checks') = 'array'
           then brief->'readiness'->'checks' else '[]'::jsonb end) c where c->>'id' = 'labelled-share' limit 1)
-         as labelled_share
+         as labelled_share,
+       brief->'edited'->>'fromHash' as edited_from_hash, brief->'edited'->>'by' as edited_by
      from wo_revision where opportunity_id = $1 order by n desc`,
     [opportunityId]
   )

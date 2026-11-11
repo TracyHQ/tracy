@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { type AgainPart, type Api, startResearch, startResearchAgain } from './api.ts'
 import { type AgainControl, useResearchAgain } from './research-again-dialog.tsx'
-import type { SourceRetry } from './inspector.tsx'
+import type { SourceRemove, SourceRetry } from './details-parts.tsx'
+import { type RemoveNotice, type RemoveStep, removeSource } from './source-remove-model.ts'
 import type { RequestIds } from './request-ids.ts'
 import type { ShownSource } from './status.ts'
 
@@ -52,4 +53,44 @@ export function useCardResearchAgain(
         : startResearchAgain(api, opportunityId, ids, parts),
     after
   })
+}
+
+/**
+ * Remove on a pasted source row (#537): the trash opens the dialog, Remove calls `DELETE …/sources` while the dialog
+ * shows its spinner, then `after` reloads Details and the dialog closes when the source went (or was already gone).
+ * A refusal stays in the dialog with Remove enabled again; Cancel closes it with nothing changed.
+ */
+export function useSourceRemove(
+  api: Pick<Api, 'removeSource'>,
+  opportunityId: string | null,
+  after: () => unknown
+): SourceRemove {
+  const [step, setStep] = useState<RemoveStep>(null)
+  const [notice, setNotice] = useState<RemoveNotice | null>(null)
+  const onConfirm = async (): Promise<void> => {
+    if (step === null || step.phase !== 'confirm' || opportunityId === null) return
+    const asked = step
+    setStep({ ...asked, phase: 'pending', error: null })
+    const outcome = await removeSource(api, opportunityId, asked.url)
+    if (!outcome.refresh) {
+      setStep({ ...asked, phase: 'confirm', error: outcome.noticeKey })
+      return
+    }
+    await after()
+    setStep(null)
+    setNotice(outcome.noticeKey === null ? null : { url: asked.url, key: outcome.noticeKey })
+  }
+  return {
+    step,
+    notice,
+    onAsk: ({ url, name, link }) => {
+      if (step?.phase === 'pending') return
+      setNotice(null)
+      setStep({ url, name, link, phase: 'confirm', error: null })
+    },
+    onCancel: () => {
+      if (step?.phase !== 'pending') setStep(null)
+    },
+    onConfirm: () => void onConfirm()
+  }
 }

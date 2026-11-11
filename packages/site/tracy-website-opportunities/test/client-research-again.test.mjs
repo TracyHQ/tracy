@@ -1,18 +1,11 @@
 /**
  * Research again, as the place card and the public Find draw it: the server's plan read safely, what will
- * run with its reason and price, what is kept, the total and who pays; refusals in the visitor's words; and
- * the pages a social search found, with their verdicts and short evidence.
+ * run with its reason and price, what is kept, the total and who pays; and refusals in the visitor's words.
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import {
-  againRefusalKey,
-  againView,
-  formatCents,
-  readAgainPreview,
-  searchPagesOf
-} from '../src/client/research-again.ts'
+import { againRefusalKey, againView, formatCents, readAgainPreview } from '../src/client/research-again.ts'
 
 const PLAN = {
   run: [
@@ -110,78 +103,6 @@ test('each refusal has its own words; an unknown one is a plain failure', () => 
   assert.equal(againRefusalKey('NOT_RESEARCHED'), 'again.error.notResearched')
   assert.equal(againRefusalKey('NETWORK'), 'again.error.network')
   assert.equal(againRefusalKey('HTTP_500'), 'again.error.failed')
-})
-
-test('a search row lists its pages, added first, each with its verdict and short evidence', () => {
-  const pages = searchPagesOf({
-    source: 'instagram-search',
-    status: 'complete',
-    reason: 'pending',
-    pages: [
-      {
-        url: 'https://www.instagram.com/samplesushi',
-        network: 'instagram',
-        verdict: 'pending',
-        title: 'Sample Sushi (@samplesushi)',
-        proofs: ['phone'],
-        reasons: ['name_near', 'page_closed', 'odd_new_reason']
-      },
-      {
-        url: 'https://www.facebook.com/samplesushibar',
-        network: 'facebook',
-        verdict: 'confirmed',
-        title: null,
-        proofs: ['address', 'phone'],
-        reasons: []
-      },
-      { url: 'javascript:alert(1)', network: 'facebook', verdict: 'confirmed', proofs: [], reasons: [] },
-      {
-        url: 'https://www.facebook.com/sampleramen',
-        network: 'facebook',
-        verdict: 'rejected',
-        proofs: [],
-        reasons: ['locality_mismatch']
-      }
-    ]
-  })
-  assert.deepEqual(
-    pages.map((p) => [p.verdictKey, p.url]),
-    [
-      ['again.page.confirmed', 'https://www.facebook.com/samplesushibar'],
-      ['again.page.pending', 'https://www.instagram.com/samplesushi'],
-      ['again.page.rejected', 'https://www.facebook.com/sampleramen']
-    ]
-  )
-  assert.deepEqual(pages[0].proofKeys, ['again.proof.address', 'again.proof.phone'])
-  assert.equal(pages[0].title, null)
-  assert.deepEqual(pages[1].reasonKeys, ['again.why.name_near', 'again.why.page_closed', 'again.why.other'])
-  assert.equal(pages[1].label, 'instagram.com/samplesushi')
-})
-
-test('a failed or empty search keeps its pages under coverage; other rows have none', () => {
-  const pages = searchPagesOf({
-    source: 'facebook-search',
-    status: 'skipped',
-    reason: 'not_found',
-    coverage: {
-      version: 'social-search-2',
-      queries: 3,
-      pages: [
-        {
-          url: 'https://facebook.com/other',
-          network: 'facebook',
-          verdict: 'rejected',
-          reasons: ['name_mismatch']
-        }
-      ]
-    }
-  })
-  assert.equal(pages.length, 1)
-  assert.deepEqual(pages[0].reasonKeys, ['again.why.name_mismatch'])
-  assert.deepEqual(
-    searchPagesOf({ source: 'website', status: 'complete', pages: [{ url: 'https://x.example' }] }),
-    []
-  )
 })
 
 test('a public Research again press: a run to follow by its receipt, up to date, or a refusal', async () => {

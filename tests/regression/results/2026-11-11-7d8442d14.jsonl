@@ -1,0 +1,2 @@
+{"id":"REG-PR-559-own-build-recovery","verdict":"PASS","commit":"7d8442d1497041fc1ec9baee2d55ead18ba734dc","ran_at":"2026-11-11T13:48:20.655Z","evidence":"tests/regression/.runs/2026-11-11-7d8442d14/REG-PR-559-own-build-recovery.log"}
+{"id":"REG-PR-559-sync-copy-recreated-table","verdict":"PASS","commit":"7d8442d1497041fc1ec9baee2d55ead18ba734dc","ran_at":"2026-11-11T13:51:20.219Z","evidence":"tests/regression/.runs/2026-11-11-7d8442d14/REG-PR-559-sync-copy-recreated-table.log"}

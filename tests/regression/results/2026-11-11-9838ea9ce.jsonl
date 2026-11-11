@@ -1,0 +1,2 @@
+{"id":"REG-PR-558-chain-file-lifetime","verdict":"PASS","commit":"9838ea9cebba7ec059c8cf73c20a142e836b69be","ran_at":"2026-11-11T14:18:08.292Z","evidence":"REG-PR-558-chain-file-lifetime.log"}
+{"id":"REG-PR-558-picture-surface-preparation","verdict":"PASS","commit":"9838ea9cebba7ec059c8cf73c20a142e836b69be","ran_at":"2026-11-11T14:18:08.483Z","evidence":"REG-PR-558-picture-surface-preparation.log"}

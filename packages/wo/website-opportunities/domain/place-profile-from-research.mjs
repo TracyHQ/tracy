@@ -4,7 +4,7 @@ import { decideGoogleRating, googleRatingOf, ratingPickOf } from './google-ratin
 import { copiedRatingVerdict } from './listing-page.mjs'
 import { offeringKindOf } from './offering-kind.mjs'
 import { withReadingPicks } from './business-reading.mjs'
-import { cleanSocialUrl } from './social-links.mjs'
+import { cleanSocialUrl, untrackedUrl } from './social-links.mjs'
 import { brandNameOf } from './brand-social.mjs'
 import { candidateAsRead } from './candidate-as-read.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
@@ -640,14 +640,24 @@ export function placeProfileFromResearch({
         `${group.path}[${i}]`
       )
     }
+  // 🔒 Google's editorial summary is a fact of the business (#537 R18), one the owner switches off or edits like any
+  // other; the summaries a model wrote of the place or its reviews stay quotes attributed to Google.
+  if (typeof google.summaries?.editorial === 'string' && google.summaries.editorial)
+    doc.business.editorialSummary = fact(
+      google.summaries.editorial,
+      googleSource(),
+      '$.googlePlace.editorialSummary',
+      {
+        locator: { kind: 'jsonPath', value: '$.googlePlace.summaries.editorial' }
+      }
+    )
   for (const [kind, text] of Object.entries(google.summaries ?? {})) {
+    if (kind === 'editorial') continue
     addQuote(
       { kind: 'story', text, attribution: 'Google', restrictions: [] },
       googleSource(),
       `$.googlePlace.summaries.${kind}`,
-      kind === 'editorial'
-        ? {}
-        : { derivation: { method: 'provider-generated-summary', version: 'unrecorded', reason: kind } }
+      { derivation: { method: 'provider-generated-summary', version: 'unrecorded', reason: kind } }
     )
   }
 
@@ -1061,7 +1071,9 @@ export function placeProfileFromResearch({
           {
             amount: held[key],
             label: key,
-            scope: entry.source.ref ?? entry.source.kind,
+            // The page counted, without share tracking, as every link Tracy shows (#1780 item 10).
+            scope:
+              (entry.source.ref && untrackedUrl(entry.source.ref)) ?? entry.source.ref ?? entry.source.kind,
             ...(entry.asOf ? { asOf: iso(entry.asOf) } : {}),
             restrictions: entry.restrictions ?? []
           },

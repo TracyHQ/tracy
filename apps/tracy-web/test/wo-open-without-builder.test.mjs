@@ -21,7 +21,7 @@ after(db.close)
 
 const BASE = '/api/website-opportunities'
 const ORIGIN = 'http://tracy.test:8080'
-const DEMO_FIELDS = ['demo', 'progress', 'revisions', 'brief', 'demoAction', 'usage', 'builds']
+const DEMO_FIELDS = ['demo', 'progress', 'revisions', 'brief', 'briefJob', 'demoAction', 'usage', 'builds']
 const LIST_DEMO_FIELDS = ['latestRevision', 'sites', 'latestBuild', 'demoAction', 'demo']
 
 async function world() {

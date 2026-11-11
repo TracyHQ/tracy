@@ -6,6 +6,7 @@ import {
   businessQuestionOf,
   chatEntryOf,
   failureKey,
+  fromBusinessApi,
   followBusiness,
   linkOf,
   linksStart,
@@ -14,6 +15,20 @@ import {
   placeLine,
   startOutcome
 } from '../src/client/from-business-flow.mjs'
+
+test('an own-site retry sends the failed action without a new research or template selection', async () => {
+  const calls = []
+  const api = fromBusinessApi(async (url, init) => {
+    calls.push({ url, ...init, body: JSON.parse(init.body) })
+    return new Response(JSON.stringify({ business: { phase: 'build' } }), { status: 202 })
+  })
+  const answer = await api.retry('business-1', 'failed-action-1')
+  assert.equal(answer.ok, true)
+  assert.equal(calls.length, 1)
+  assert.equal(calls[0].url, '/api/sites/from-business/business-1/build')
+  assert.equal(calls[0].method, 'POST')
+  assert.deepEqual(calls[0].body, { retryOf: 'failed-action-1' })
+})
 
 test('a link is told from a name: scheme, www. or a bare domain, never a name with spaces', () => {
   for (const link of [

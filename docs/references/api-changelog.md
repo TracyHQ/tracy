@@ -10,6 +10,44 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-11: The Your site card shows the build's cost, time and a picture of its home page
+
+Added (internal): `GET /api/website-opportunities/:id/demo/preview` answers the latest build's home page picture (`image/webp`, 640 by 400, cached a day; 404 `NOT_FOUND` when none was taken). Changed (internal): the `demo` of `GET …/:id` and of each `GET /api/website-opportunities` row adds `built: {at, minutes, usd} | null`, `findings: string[]` (QA check ids failing in the last round) and `preview: {url, capturedAt} | null`. Public API v1 is unchanged.
+
+## 2026-11-11: Approved facts and briefs are final; the same place can be added again
+
+Changed (internal): once the Profile is approved, `PUT /api/website-opportunities/:id/name`, `…/profile`, `…/hours`, `…/rating`, `…/reading`, `…/facts`, `…/key-messages`, `…/team`, `…/socials`, `…/media/:mediaId/visibility`, `…/reviews/visibility`, `POST …/:id/media` and `POST …/:id/research` (unless this card's research is `failed` or `not_started`) answer 409 `PROFILE_APPROVED` with `next: "The business facts are approved. To change them, add this business again as a new card."`; once the latest Content brief is approved, `POST …/:id/revisions` and `POST …/:id/revisions/:revId/edits` answer 409 `BRIEF_APPROVED` with `next: "The Site content brief is approved. To change it, add this business again as a new card."`. `POST /api/website-opportunities` makes a new card on every save (201), a place the account already has included, instead of answering 200 with the existing one; the answer, every `GET /api/website-opportunities` row and `GET …/:id` carry `opportunity.sameAs: [{id, createdAt, stage}]`, the account's other cards of the same place, newest first. Public API v1 is unchanged.
+
+## 2026-11-11: One saved profile, and a value edit for any fact
+
+Changed (internal): `GET /api/website-opportunities/:id/place-profile` answers the saved profile: the place profile with every change the owner made on the Profile card laid on, each fact of the seven groups carrying its decision (`onSite`, `decidedBy`, `confidence`, `reasons`) and, where the owner changed it, `value` with `researchValue`, `editedByOwner` and `editedAt`, `addedByOwner`, `teamMemberId`, `photoMediaId`, `mediaId`, `reviewKey`, `ownerHidden` or `replacedBy`, plus `profile.owner: {version, bands, hiddenMediaIds, hiddenReviewKeys}`; Google's editorial summary is the fact `business.editorialSummary` instead of a quote. `GET …/:id` adds `placeProfile`, the same answer. `PUT …/:id/facts` also takes `{factId, value, onSite?}`: the value the site states for any fact, checked against its kind (`text`, `list`, `hours`, `boolean`, `number`, `url`, `flags`), `value: null` to give back the value research read; answers `fact: {id, kind, value, researchValue, editedByOwner}`; 400 `INVALID_VALUE` (with `next` and `expected`), 400 `TOO_MANY_FACT_EDITS`, 404 for an unknown fact. The brief states the saved values, and `facts[]` gains `editedByOwner` and `researchValue` on an edited fact. Public API v1 is unchanged.
+
+## 2026-11-10: The owner edits the team, the social links and what the site shows
+
+Added (internal): `PUT /api/website-opportunities/:id/team` (`{action: add | update | remove, id?, label?, role?, photoMediaId?}`, answers `{opportunity, member}`; 400 `INVALID_ACTION`, `INVALID_MEMBER`, `INVALID_LABEL`, `INVALID_ROLE`, `INVALID_PHOTO`, 404, 409 `TOO_MANY_MEMBERS`, 422 `MEDIA_NOT_FOUND`), `PUT …/:id/socials` (`{network, action: set | remove, url? | handle? | number?, label?}`, answers `{opportunity, siteSocials}`; 400 `INVALID_NETWORK`, `INVALID_ACTION`, `INVALID_LABEL`, 422 `INVALID_URL`, `INVALID_PHONE`), `PUT …/:id/media/:mediaId/visibility` (`{hidden}`, answers `{opportunity, media: {id, ownerHidden}}`; 400 `INVALID_HIDDEN`, 404, 409 `TOO_MANY_HIDDEN`) and `PUT …/:id/reviews/visibility` (`{key, hidden}`, answers `{opportunity, review: {key, ownerHidden}}`; 400 `INVALID_REVIEW`, `INVALID_HIDDEN`, 409 `TOO_MANY_HIDDEN`). Changed (internal): `PUT …/:id/facts` also switches a band of the Profile with `factId` `band_brand`, `band_keyMessages`, `band_reviews`, `band_media` or `band_socials`; `POST …/:id/media` takes an optional `purpose: team` (`category: people`; 400 `INVALID_PURPOSE`), answers `media.category`, and its 409 `MEDIA_ALREADY_ADDED` carries `media: {id, kind}`; `GET …/:id` adds `bands`, `socialNetworks`, `media[].ownerHidden`, a `key` and `ownerHidden` on each review, and `owner`, `researchLabel` and `photo` on `profile.readingCard.team`; `GET …/:id/place-profile` adds `bands`. Public API v1 is unchanged.
+
+## 2026-11-10: Sources are fixed once research starts
+
+Changed `POST /api/website-opportunities/:id/sources` (internal): a source can be added only before research runs or after it failed, like a removal; otherwise 409 `RESEARCH_STARTED` with a `next` sentence, and 409 `JOB_ACTIVE` is no longer answered here. Removed (internal): `approval.research`, `approval.sourcesChangedAt` and `briefStale: "sources"`, and the 409 `RESEARCH_NEEDED` of the profile approve, brief approve, revisions and demo build doors, since a source never changes after research.
+
+## 2026-11-10: Adding a source refuses unreadable, duplicate and excess links clearly
+
+Changed `POST /api/website-opportunities/:id/sources` (internal): 422 `UNSUPPORTED_LINK` with `platform` for X, LinkedIn, Threads, Linktree and WhatsApp links (they were saved as the website); 409 `SOURCE_ALREADY_KNOWN` now means this exact link only, and the new 409 `PLATFORM_ALREADY_KNOWN` with `platform` means another page of a kind it already has; 409 `TOO_MANY_SOURCES` with `max: 5` for a sixth listing page. magicpin pages on any TLD (`magicpin.in`) read as listing pages.
+
+## 2026-11-10: Remove a source from an opportunity
+
+Added `DELETE /api/website-opportunities/:id/sources` (internal): body `{url}` removes one of the business's own links and answers 200 `{opportunity, approval}`; after research ran it asks for research again, as an added source does. 404 `NOT_FOUND`, 409 `LAST_SOURCE` (`next: "add"`), 409 `JOB_ACTIVE`, 422 `GOOGLE_LINK_NOT_REMOVED`. Changed (internal): `POST …/:id/sources` answers 409 `JOB_ACTIVE` while research runs.
+
+Changed `DELETE /api/website-opportunities/:id/sources` (internal): a source can be removed only before research runs or after it failed; while Research is running or once it is done it answers 409 `RESEARCH_STARTED` with a `next` sentence, and 409 `JOB_ACTIVE` is no longer answered here.
+
+## 2026-11-10: Research sub steps, a brief older than the Profile approval, sources before research
+
+Changed `GET /api/website-opportunities/:id` (internal, no field added): `stepProgress.items` for a running Research now lists the sources of the shared place job serving the request and a final `profile` item (Writing the business facts); `approval.brief` reads `stale` with `briefStale: "profile"` when the Profile was approved after the latest brief was made, and a build answers 409 `BRIEF_NOT_APPROVED` until the brief is made again and approved; approving an already approved Profile keeps its first time. Before the opportunity's own Research completed, every `sources` row reads not collected yet (`status`, `reason`, `coverage` and `collectedAt` null), also a listing link added through `POST …/:id/sources` whose page could not be fetched.
+
+## 2026-11-10: The seller approves the Profile and the Content brief
+
+Added (internal): `POST /api/website-opportunities/:id/profile/approve`, `POST /api/website-opportunities/:id/brief/approve`, `POST /api/website-opportunities/:id/sources` (one more link of the business) and `POST /api/website-opportunities/:id/media` (a photo or video the seller adds, multipart). `GET /api/website-opportunities/:id` and the rows of `GET /api/website-opportunities` add `approval`, and `GET …/:id` adds `stepProgress` (the sub steps of the step that runs now). Changed (internal): `POST …/:id/revisions` answers 409 `PROFILE_NOT_APPROVED` or `RESEARCH_NEEDED`; `POST …/:id/demo/build` and `POST …/demo/builds/bulk` answer 409 `PROFILE_NOT_APPROVED`, `BRIEF_NOT_APPROVED` or `RESEARCH_NEEDED` for a new build of the classic brief path. Public API v1 is unchanged.
+
 ## 2026-11-09: Research again from scratch
 
 Changed `POST /api/website-opportunities/:id/research` with `again: true` and `GET /api/website-opportunities/:id/research-again` (internal): the account's Research again runs every part this deployment can collect, whatever its age, with the new run reason `again`, and re-reads the logo and the business without reusing an earlier reading; `kept` holds only `unavailable` parts and menu photos the place has none of (`none`), and the plan carries `fromScratch: true`. 409 `NOTHING_DUE` now means no part can run here. The public `/find` Research again is unchanged.
@@ -17,6 +55,10 @@ Changed `POST /api/website-opportunities/:id/research` with `again: true` and `G
 ## 2026-11-09: Sources from pasted links
 
 Added optional field `pastedLink` on rows of `sources` in `GET /api/website-opportunities/:id` (internal): on a source that a link the person pasted feeds (Add a business by its links), the link as they pasted it; rows research found by itself carry none.
+
+## 2026-11-09: Research per opportunity and the Content brief as a job
+
+Changed (internal): `POST /api/website-opportunities/:id/revisions` answers 202 `{job}` and makes the brief in the background; 409 `RESEARCH_NOT_DONE` until the opportunity's own Research completed. Added `GET /api/website-opportunities/:id/brief-jobs/:jobId`, `POST /api/website-opportunities/:id/revisions/:revId/edits` (seller edits as a new revision) and `PUT /api/website-opportunities/:id/profile` (seller Profile edits). `GET /api/website-opportunities/:id` adds `research`, `briefJob` and `collectedAt` on source rows, and leaves `profile` null until the opportunity's own Research completed. Public API v1 is unchanged.
 
 ## 2026-11-09: Delete a saved opportunity
 

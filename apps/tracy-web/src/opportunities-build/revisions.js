@@ -33,6 +33,8 @@ import {
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
 import { closedListOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { withSocialStats } from 'website-opportunities/src/place-social-stats.js'
+import { approvedSocialStatsOf } from 'website-opportunities/src/approved-research.js'
+import { snapshotProfileOf } from 'website-opportunities/src/places.js'
 import { qualityHash } from './quality-dossier.js'
 import { makeBuildChoice, withBuildChoice } from './build-choice.js'
 import { withLogoResearch } from './logo-research.js'
@@ -608,7 +610,11 @@ function withPictureLabels(read, labelling) {
 }
 
 async function liveRead(db, opp, view) {
-  return withSocialStats(db, view ? fromPlace(view) : await fromOpportunity(db, opp))
+  // An approved card reads the social measurements kept with its pinned research (`approved-research.js`, #537 R23).
+  const frozen = view?.approved
+    ? await approvedSocialStatsOf(db, view, await snapshotProfileOf(db, view.snapshot.id))
+    : null
+  return withSocialStats(db, view ? fromPlace(view) : await fromOpportunity(db, opp), { frozen })
 }
 
 /** One shape for a live read and an action's frozen one (`freezeDemoResearchInput`), so both hash alike. */
@@ -648,10 +654,12 @@ export function researchKey(domain, research) {
   // labels a picture carries are the store's own and do count.
   // The rules that turn research into a brief count too: a brief made under older reading or brief rules is not what
   // the same research gives now, so it must offer Refresh. A missing version must fail loudly, never hash `undefined`.
+  // The reading counts by the version the profile STORES (#524): the code's constant only says whether that reading is
+  // old (`readingIsOld`), never makes the same reading look different.
   const rulesVersion = domain.BRIEF_RULES_VERSION
-  const readingVersion = domain.BUSINESS_READING_VERSION
-  if (rulesVersion == null || readingVersion == null)
+  if (rulesVersion == null || domain.BUSINESS_READING_VERSION == null)
     throw new Error('researchKey needs domain.BRIEF_RULES_VERSION and domain.BUSINESS_READING_VERSION')
+  const readingVersion = storedReadingVersion(research) ?? 'none'
   const { demoRequest, assetLabelling: _labelling, observedFacts: _observed, ...read } = research
   return researchHash({
     schemaVersion: domain.BRIEF_SCHEMA_VERSION,
@@ -674,6 +682,32 @@ export function researchKeySlots(key) {
     relabelled: researchHash({ researchKey: key, labels: 'complete' }),
     incomplete: researchHash({ researchKey: key, labels: 'incomplete' })
   }
+}
+
+/** The version of the business reading a research holds (`business-reading-5-<hash>`), or null without one. */
+function storedReadingVersion(research) {
+  const v = research?.profile?.businessReading?.version
+  return typeof v === 'string' && v ? v : null
+}
+
+/**
+ * Whether the research holds a business reading made under older reading rules than the code's (#524): a brief made from
+ * it offers Refresh. A research with no reading at all is not old (a place the reading never ran for).
+ */
+export function readingIsOld(domain, research) {
+  const v = storedReadingVersion(research)
+  return (
+    Boolean(v) &&
+    !v.startsWith(`${domain.BUSINESS_READING_VERSION}-`) &&
+    v !== domain.BUSINESS_READING_VERSION
+  )
+}
+
+/** The key of the research a brief made now would read, and whether its business reading is old (`readingIsOld`). */
+export async function currentResearchState(db, opp, domain) {
+  const view = opp.place_id ? await placeViewOf(db, opp) : null
+  const research = await researchOf(db, await liveRead(db, opp, view), opp, view)
+  return { key: researchKey(domain, research), readingOld: readingIsOld(domain, research) }
 }
 
 /** The action builds from the brief of the same research: its frozen revision id moves to that brief. */

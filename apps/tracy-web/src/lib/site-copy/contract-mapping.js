@@ -15,6 +15,9 @@ import { contentMapKey } from '../content-map-key.js'
 import { withEmphasis } from './inline-emphasis.js'
 import { kitSlotIndex } from '../template-kit/kit-slots.js'
 import { wordpressContractMapping } from './contract-mapping-wordpress.js'
+import { indexInputs } from './inputs-index.js'
+import { ownerPostExcerptFor } from './owner-post-excerpts.js'
+import { articleExportProblems } from './article-provenance.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
@@ -112,17 +115,35 @@ export function mainMenuExport({ plan, kit, contentMap, copy }) {
  */
 export function exportContractMapping({ copy, contract, revision, kit, brief, plan, contentMap, platform }) {
   const { view, problems } = readCopy(copy)
+  const idx = indexInputs({ plan, kit, brief })
+  const excerptProblems = view.slots.flatMap((s) => {
+    const excerpt = ownerPostExcerptFor(s, idx, brief)
+    return excerpt && !excerpt.valid
+      ? [{ where: s.slot, code: 'ARTICLE_EXCERPT', detail: excerpt.detail }]
+      : []
+  })
+  const articleProblems = articleExportProblems({ kit, plan, brief, view })
+  problems.push(...articleProblems, ...excerptProblems)
+  const blocked = new Set([...articleProblems, ...excerptProblems].map((p) => p.where))
+  view.slots = view.slots.filter((s) => !blocked.has(s.slot))
+  const safeCopy = blocked.size
+    ? { ...copy, slots: (copy.slots ?? []).filter((s) => !blocked.has(s.slot)) }
+    : copy
   if (platform === 'wordpress') {
     const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
     const out = wordpressContractMapping({
-      copy,
+      copy: safeCopy,
       contract,
       revision,
       brief,
       contentMap,
       menuSlots: new Set((mainMenu?.items ?? []).map((i) => i.slot))
     })
-    return { mapping: out.mapping, extras: extrasOf({ view, plan, kit, mainMenu }), problems: out.problems }
+    return {
+      mapping: out.mapping,
+      extras: extrasOf({ view, plan, kit, mainMenu }),
+      problems: [...articleProblems, ...excerptProblems, ...out.problems]
+    }
   }
   const kitSlots = kitSlotIndex(kit)
   const samples = new Map((contentMap?.slots ?? []).map((c) => [c?.key, c?.sample]))

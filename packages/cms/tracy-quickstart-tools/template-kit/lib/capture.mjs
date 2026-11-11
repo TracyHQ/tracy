@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { wakeLazyContent } from '../../content-coverage/lib/render.mjs'
+import { createAssetTransport, externalPassiveAsset } from './asset-transport.mjs'
 import { dropLinksTo } from './exclude.mjs'
 import { findBlocks, freezeFloating } from './find-blocks.js'
 import { readDetails } from './read-details.js'
@@ -25,11 +26,13 @@ export async function openKitContext(browser, { width, siteUrl, hostHeader, skip
     ignoreHTTPSErrors: true
   })
   const base = new URL(siteUrl)
+  const transportAsset = createAssetTransport()
   await ctx.route('**/*', async (route) => {
     const req = route.request()
     if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method())) return route.abort('blockedbyclient')
     // A pass that reads the DOM only skips what it never looks at (pictures, video, fonts).
     if (skip.includes(req.resourceType())) return route.abort('blockedbyclient')
+    if (externalPassiveAsset(req, { siteUrl, hostHeader }) && (await transportAsset(route))) return
     const u = new URL(req.url())
     const ours = u.host === base.host || (hostHeader && u.host.toLowerCase() === hostHeader.toLowerCase())
     if (!ours || !hostHeader) return route.continue()

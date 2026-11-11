@@ -27,6 +27,10 @@ export async function schedulePages(pass, { firstCheck, brief = null, result, ru
     if (exclusive) await Promise.all(running)
     while (running.size >= pass.clock.limits.turnsAtOnce) await Promise.race(running)
     started += 1
+    if (pass.undoUnverified) {
+      result.notSent.push({ page: p.page, round: 1, faults: p.faults.length, reason: 'undo-unverified' })
+      continue
+    }
     if (pass.clock.stopped()) {
       result.notSent.push({ page: p.page, round: 1, faults: p.faults.length, reason: 'time-limit' })
       continue

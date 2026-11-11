@@ -4,10 +4,20 @@
 // and of the side's mark when a spot shows the mark alone, passes. Unused variants need no look.
 import { HEX } from './gate-context.js'
 
+export const BRAND_HELD_NAME_CHECK = 'brand-held-name-check/1'
+
 export function checkNameLogos(ctx) {
   const { L, exact, bad, png } = ctx
   const N = L.name ?? {}
   ctx.N = N
+  if (ctx.heldNameCheck === BRAND_HELD_NAME_CHECK && ctx.NS.heldBack) {
+    if (L.name !== null) bad('logo.name', 'the name is held back: null, with no composed name files')
+    for (const side of ['light', 'dark', 'twoLines'])
+      if (L.logos?.[side] !== null)
+        bad(`logo.logos.${side}`, 'the name is held back: null; fit the independently reviewed mark alone')
+    ctx.twoLogos = null
+    return
+  }
   if (N.text !== exact) bad('logo.name.text', `must be exactly "${exact}"`)
   if (exact && ![exact, exact.toUpperCase()].includes(N.rendersAs))
     bad('logo.name.rendersAs', `"${exact}" or its capitals "${exact.toUpperCase()}"`)

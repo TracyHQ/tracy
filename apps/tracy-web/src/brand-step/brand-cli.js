@@ -21,6 +21,8 @@ export const USAGE = `usage: node scripts/brand-bench.mjs <command>
                                           use another agent model for this run only; the reason is recorded
       [--reviewer-model <model>]          also use another reviewer model for this run only (explicit, recorded with
                                           the reason); the two must still differ
+      [--site-language <BCP47>]            selected site language, used only when brand.voice is missing;
+                                          the run records this projection and keeps the source brief unchanged
   list [--limit <n>]                      the newest runs
   status <runId>                          state, round, gate verdict, cost split, duration
   get <runId> --out <dir>                 write the brand file, its images, every rejected attempt, the gate results
@@ -46,6 +48,7 @@ export async function runCli(argv, deps) {
         kit: { type: 'string' },
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
+        'site-language': { type: 'string' },
         'logo-file': { type: 'string' },
         by: { type: 'string' },
         'no-caps': { type: 'boolean' },

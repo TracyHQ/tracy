@@ -14,6 +14,8 @@ export interface FactRowView {
   id: string
   /** The server's field code (`hours`, `serviceAreas`, `story`...): what kind of fact this is. */
   field: string | null
+  /** The statistic code of a counted value (`rating`, `reviewCount`), so two facts of one field can be told apart. */
+  statistic: string | null
   /** What the fact says, as the site would; empty when the profile holds no readable value for it. */
   label: string
   confidence: Confidence
@@ -28,6 +30,8 @@ export interface FactRowView {
    * it (`logo`, `instagram`): only on the name row held back because its own marks call it something else.
    */
   alsoCalled: OtherNameView[]
+  /** The kinds of source its evidence cites (`google-places`, `website`, `account-overlay`...), each once, in order. */
+  sources: string[]
 }
 
 export interface OtherNameView {
@@ -87,6 +91,7 @@ export function factLabel(value: unknown): string | null {
     if (hit === null) continue
     if (field === 'label' && typeof v.amount === 'number') {
       const unit = text(v.unit)
+      if (CODE_LABEL.test(hit)) return countedLabel(hit, v.amount)
       return `${hit}: ${v.amount}${unit === null ? '' : ` ${unit}`}`
     }
     return hit
@@ -94,8 +99,29 @@ export function factLabel(value: unknown): string | null {
   return null
 }
 
+/** A counted fact's label that is a field code (`followers`, `reviewCount`) rather than words a person wrote. */
+const CODE_LABEL = /^[a-z][a-zA-Z0-9]*$/
+/** Codes whose plain word differs from the spelled-out code: [one, many]. */
+const COUNT_WORDS: Readonly<Record<string, readonly [string, string]>> = {
+  reviewCount: ['review', 'reviews'],
+  rating: ['star', 'stars']
+}
+
+/** `followers` 1819 reads "1,819 followers"; `rating` 5 reads "5.0 stars". */
+function countedLabel(code: string, amount: number): string {
+  const number =
+    code === 'rating'
+      ? amount.toLocaleString('en', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+      : amount.toLocaleString('en')
+  const spelled = spelledField(code).toLowerCase()
+  const [one, many] = COUNT_WORDS[code] ?? [spelled.replace(/s$/, ''), spelled]
+  return `${number} ${amount === 1 ? one : many}`
+}
+
+type Walked = { id: string; value: unknown; refs: unknown[] }
+
 /** Every `{id, value, evidenceRefs}` fact anywhere in the profile document, in document order. */
-function walk(node: unknown, out: { id: string; value: unknown }[]): void {
+function walk(node: unknown, out: Walked[]): void {
   if (node === null || typeof node !== 'object') return
   if (Array.isArray(node)) {
     for (const child of node) walk(child, out)
@@ -103,7 +129,7 @@ function walk(node: unknown, out: { id: string; value: unknown }[]): void {
   }
   const n = node as Rec
   if (typeof n.id === 'string' && 'value' in n && Array.isArray(n.evidenceRefs)) {
-    out.push({ id: n.id, value: n.value })
+    out.push({ id: n.id, value: n.value, refs: n.evidenceRefs })
     return
   }
   for (const child of Object.values(n)) walk(child, out)
@@ -120,6 +146,14 @@ function decisionsOf(v: unknown): Map<string, Rec> {
 }
 
 const list = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
+
+/** Evidence id to the kind of its source, read from the profile's `sources` and `evidence` lists. */
+function sourceKindOfEvidence(doc: Rec): (ref: unknown) => string | null {
+  const sourceOf = new Map(list(doc.sources).map((s) => [text(rec(s).id), text(rec(s).kind)]))
+  const evidenceSource = new Map(list(doc.evidence).map((e) => [text(rec(e).id), text(rec(e).sourceId)]))
+  return (ref) => sourceOf.get(evidenceSource.get(text(ref)) ?? null) ?? null
+}
+
 const OWN_MARKS_CODE = 'name-differs-from-own-marks'
 
 /**
@@ -128,8 +162,7 @@ const OWN_MARKS_CODE = 'name-differs-from-own-marks'
  */
 export function otherNamesOf(profile: unknown, held: string): OtherNameView[] {
   const doc = rec(profile)
-  const sourceOf = new Map(list(doc.sources).map((s) => [text(rec(s).id), text(rec(s).kind)]))
-  const evidenceSource = new Map(list(doc.evidence).map((e) => [text(rec(e).id), text(rec(e).sourceId)]))
+  const kindOf = sourceKindOfEvidence(doc)
   const conflict = list(doc.conflicts)
     .map(rec)
     .find((c) => c.target === 'business.name' && String(c.reason ?? '').startsWith(`${OWN_MARKS_CODE}:`))
@@ -139,7 +172,7 @@ export function otherNamesOf(profile: unknown, held: string): OtherNameView[] {
     if (name === null || name === held) return []
     const sources: string[] = []
     for (const ref of list(rec(v).evidenceRefs)) {
-      const kind = sourceOf.get(evidenceSource.get(text(ref)) ?? null)
+      const kind = kindOf(ref)
       if (kind && !sources.includes(kind)) sources.push(kind)
     }
     return [{ name, sources }]
@@ -168,9 +201,11 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
   const doc = rec(profile)
   const decided = decisionsOf(decisions)
   if (decided.size === 0) return null
-  const facts: { id: string; value: unknown }[] = []
+  const facts: Walked[] = []
   walk(doc, facts)
   const valueOf = new Map(facts.map((f) => [f.id, f.value]))
+  const refsOf = new Map(facts.map((f) => [f.id, f.refs]))
+  const kindOf = sourceKindOfEvidence(doc)
   const rows = [...decided].flatMap(([id, d]) => {
     const label = factLabel(valueOf.get(id))
     const field = text(d.field)
@@ -183,6 +218,7 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
       {
         id,
         field,
+        statistic: text(rec(valueOf.get(id)).label),
         label: label ?? '',
         confidence,
         onSite: d.onSite,
@@ -190,7 +226,15 @@ export function factRowsView(profile: unknown, decisions: unknown): FactRowView[
         reasons: (Array.isArray(d.reasons) ? d.reasons : []).flatMap((r) =>
           text(r) === null ? [] : [String(r)]
         ),
-        alsoCalled: field === 'name' ? otherNamesOf(doc, label ?? '') : []
+        alsoCalled: field === 'name' ? otherNamesOf(doc, label ?? '') : [],
+        sources: [
+          ...new Set(
+            (refsOf.get(id) ?? []).flatMap((ref) => {
+              const kind = kindOf(ref)
+              return kind === null ? [] : [kind]
+            })
+          )
+        ]
       }
     ]
   })

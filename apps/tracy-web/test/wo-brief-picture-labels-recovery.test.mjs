@@ -18,6 +18,7 @@ import { claimAnalyses, settleAnalysis } from '../src/opportunities-build/media-
 import { randomUUID } from 'node:crypto'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { createPictureLabelRuns } from '../src/opportunities-build/picture-label-runs.js'
+import { editRevision } from '../src/opportunities-build/brief-edits.js'
 import { createWebsiteBuilder } from '../src/opportunities-build/route.js'
 import {
   createRevision,
@@ -443,6 +444,26 @@ test(
         )
       ).rows[0]
       assert.equal((await builder.detailOf(opp, accountId)).brief.current, false, 'Details offers Refresh')
+      // A seller's edit of it (`brief-edits.js`) keeps its missing labels: still Refresh. It edits a text the brief holds.
+      const [field] = Object.entries(brief.business ?? {}).find(([, v]) => typeof v === 'string' && v) ?? []
+      assert.ok(field, JSON.stringify(brief.business))
+      const textPath = `business.${field}`
+      const rename = (revisionId) =>
+        editRevision(db.pool, {
+          accountId,
+          opportunityId: opp.id,
+          revisionId,
+          edits: [{ path: textPath, value: 'Harbour Sport Club Dubai' }],
+          domain
+        })
+      const editedOld = await rename(old.id)
+      assert.ok(editedOld.revision, JSON.stringify(editedOld))
+      assert.equal(editedOld.revision.brief.edited.fromHash, key)
+      assert.equal(
+        (await builder.detailOf(opp, accountId)).brief.current,
+        false,
+        'an edit of it still offers Refresh'
+      )
 
       const refreshed = await createRevision(db.pool, { ...args, pictureLabels: labelsAll })
       assert.equal(refreshed.reused, undefined, 'the incomplete brief is not reused')
@@ -451,6 +472,11 @@ test(
       assert.ok(refreshed.revision.brief.assets.every((a) => a.content === 'venue-exterior'))
       const status = (await builder.detailOf(opp, accountId)).brief
       assert.deepEqual([status.id, status.current], [refreshed.revision.id, true])
+      // A seller's edit of the labelled brief is the current one.
+      const edited = await rename(refreshed.revision.id)
+      assert.ok(edited.revision, JSON.stringify(edited))
+      const afterEdit = (await builder.detailOf(opp, accountId)).brief
+      assert.deepEqual([afterEdit.id, afterEdit.current], [edited.revision.id, true])
       const kept = (await db.pool.query('select * from wo_revision where id = $1', [old.id])).rows[0]
       assert.deepEqual(kept.brief, brief, 'the stored brief is never changed')
       assert.equal(kept.research_hash, key)

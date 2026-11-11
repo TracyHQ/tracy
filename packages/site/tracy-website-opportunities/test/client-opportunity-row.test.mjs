@@ -55,6 +55,12 @@ test('Attention includes failed research, pipeline and QA; a ready demo has one 
   assert.equal(needsAttention(row({ demo: { qa: 'passed' } })), false)
   assert.equal(statusView(row()).key, 'v3.notStarted')
   assert.equal(statusView(row({ job: job('completed') })).key, 'v3.readyToBuild')
+  // A running research reads as the brand colour (the 'running' tone, terracotta chip), not the neutral one.
+  assert.deepEqual(statusView(row({ job: job('running') })), {
+    key: 'status.researching',
+    variant: 'running',
+    check: false
+  })
   assert.equal(statusView(row({ demoAction: { state: 'queued' } })).key, 'v3.building')
   assert.equal(statusView(row({ demoAction: { state: 'failed' } })).key, 'v3.needsReview')
   assert.equal(statusView(row({ demo: { qa: 'passed' } })).key, 'v3.demoReady')
@@ -302,6 +308,33 @@ test('every code a failed demo action can carry names a reason in words; an unkn
   assert.equal(
     demoFailureKey({ id: 'o1', demoAction: { id: 'a1', state: 'failed', step: 'build', error: null } }),
     'reason.demo_failed'
+  )
+})
+
+test('a demo build under way reads Building, never Ready to build (spec #512)', () => {
+  const researched = { id: 'r', job: { id: 'j', state: 'completed' }, latestRevision: { id: 'rev' } }
+  assert.equal(
+    statusView({ ...researched, demoAction: { id: 'a', state: 'running', step: 'kit' } }).key,
+    'v3.building'
+  )
+  assert.equal(
+    statusView({ ...researched, demoAction: { id: 'a', state: 'queued', step: 'brief' } }).key,
+    'v3.building'
+  )
+  assert.equal(
+    statusView({
+      ...researched,
+      demo: {
+        siteKey: null,
+        url: null,
+        expiresAt: null,
+        frozenAt: null,
+        deletedAt: null,
+        qa: null,
+        build: { status: 'building', startedAt: null }
+      }
+    }).key,
+    'v3.building'
   )
 })
 

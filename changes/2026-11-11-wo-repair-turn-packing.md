@@ -1,0 +1,3 @@
+- **Repair turns evaluate every ordered candidate before splitting comments, preserving groups that fit only after the comment budget grows.** — WO pipeline maintainer · #558 · `fix/wo-repair-turn-packing` · 2026-11-11
+  **Affects:** Step 9b repair packing; rebuild the web image. Prompts, comment order, consent rules and the real comment builder remain unchanged.
+  **Why / Measured:** The real builder refuses two comments at 4,675 characters against a 4,673-character budget, but accepts the same comments with a short third comment. The previous greedy split sent two turns where one fits. Packing now minimizes omitted items, then turns, across all contiguous candidates.

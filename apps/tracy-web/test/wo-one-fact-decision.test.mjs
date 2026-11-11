@@ -99,6 +99,11 @@ async function world({ candidate = {}, listing = null } = {}) {
     )
   const accountId = (await db.pool.query('select account_id from wo_opportunity where id = $1', [opp.id]))
     .rows[0].account_id
+  // This card's own research finished (#524): only then does the card show the place profile.
+  await db.pool.query(
+    "insert into wo_job(account_id,opportunity_id,kind,request_id,state) values($1,$2,'research','seed-research-1','completed')",
+    [accountId, opp.id]
+  )
   let clock = Date.parse('2026-10-26T12:00:00.000Z')
   const revise = async () => {
     clock += 60_000

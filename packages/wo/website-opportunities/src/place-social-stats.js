@@ -39,15 +39,55 @@ const countOf = (v) => (v === null || v === undefined ? null : Number(v))
  * url; `followers` is null when only the post count was measured.
  * @param {{ query: Function }} db @param {{ profile?: object, sources?: object[] }} read
  * @param {SocialStatsSource} [source] - the deployment's (`useSocialStatsSource`)
+ * @param {{ frozen?: Record<string, object[]> | null }} [options] - `frozen`: the measurements kept for an approved card
  */
-export async function socialStatsOfRead(db, read, source = deploymentSource) {
+export async function socialStatsOfRead(db, read, source = deploymentSource, { frozen = null } = {}) {
+  const urls = statUrlsOf(read)
+  if (!urls.size) return []
+  // An approved card reads the measurements kept when it was approved (`approved-research.js`), never the cache's newer.
+  if (frozen) return frozenStatsOf(frozen, urls)
+  return statsOfUrls(db, urls, source)
+}
+
+/** The stat key of each profile URL a research read names, with the URL its measurement is cited to. */
+function statUrlsOf(read) {
   const urls = new Map()
   for (const h of handlesOf(read)) {
     const key = statKeyOf(h, parseSocialUrl)
     if (key && !urls.has(key)) urls.set(key, parseSocialUrl(h.url, { network: h.network })?.url ?? h.url)
   }
+  return urls
+}
+
+/**
+ * The measurements of every profile the reads name, by stat key (`{[key]: rows}`), to be kept for an approved card: the
+ * same rows `socialStatsOfRead` gives for that one profile today.
+ * @param {{ query: Function }} db @param {object[]} reads @param {SocialStatsSource} [source]
+ */
+export async function socialStatsByKey(db, reads, source = deploymentSource) {
+  const out = {}
+  for (const read of reads)
+    for (const [key, url] of statUrlsOf(read))
+      if (!(key in out)) out[key] = await statsOfUrls(db, new Map([[key, url]]), source)
+  return out
+}
+
+/** A read's measurements from the kept ones (`socialStatsByKey`): each profile's, one row per measurement, sorted. */
+function frozenStatsOf(frozen, urls) {
+  const seen = new Set()
+  const out = []
+  for (const key of urls.keys())
+    for (const row of Array.isArray(frozen[key]) ? frozen[key] : []) {
+      const id = JSON.stringify(row)
+      if (seen.has(id)) continue
+      seen.add(id)
+      out.push(row)
+    }
+  return out.toSorted((a, b) => a.network.localeCompare(b.network) || a.url.localeCompare(b.url))
+}
+
+async function statsOfUrls(db, urls, source) {
   const keys = [...urls.keys()]
-  if (!keys.length) return []
   if (source.role === 'client') return source.origin ? replicaStats(db, source.origin, urls) : []
   const { rows } = await db.query(
     `select distinct s.stat_key, s.network, s.url, s.handle, s.followers, s.posts, s.fetched_at, s.provider
@@ -108,8 +148,11 @@ async function replicaStats(db, origin, urls) {
   return out.toSorted((a, b) => a.network.localeCompare(b.network) || a.url.localeCompare(b.url))
 }
 
-/** A research read with the cache's measurements, as `socialStats`; a read with none is returned as it was. */
-export async function withSocialStats(db, read) {
-  const socialStats = await socialStatsOfRead(db, read)
+/**
+ * A research read with the cache's measurements, as `socialStats`; a read with none is returned as it was. `frozen`: the
+ * ones kept for an approved card (`approved-research.js approvedSocialStatsOf`).
+ */
+export async function withSocialStats(db, read, { frozen = null } = {}) {
+  const socialStats = await socialStatsOfRead(db, read, deploymentSource, { frozen })
   return socialStats.length ? { ...read, socialStats } : read
 }
