@@ -5818,7 +5818,8 @@ window.__ModuleLoader__.load({
           "brief.check.offerings-with-description": "Beschreibungen\u0020f\u00fcr\u0020die\u0020Angebote\u0020hinzuf\u00fcgen.",
           "brief.check.people-with-portrait": "Portr\u00e4ts\u0020der\u0020gezeigten\u0020Personen\u0020best\u00e4tigen.",
           "brief.check.items-routed": "Pr\u00fcfen,\u0020welche\u0020Seiten\u0020die\u0020Eintr\u00e4ge\u0020\u00f6ffnen.",
-          "brief.check.template-kinds": "Ein\u0020Template\u0020f\u00fcr\u0020die\u0020verf\u00fcgbaren\u0020Inhalte\u0020w\u00e4hlen."
+          "brief.check.template-kinds": "Ein\u0020Template\u0020f\u00fcr\u0020die\u0020verf\u00fcgbaren\u0020Inhalte\u0020w\u00e4hlen.",
+          "brief.check.business-content": "Keine\u0020Dienstleistungen,\u0020Men\u00fceintr\u00e4ge\u0020oder\u0020Produkte\u0020des\u0020Unternehmens\u0020gefunden,\u0020auch\u0020keine\u0020Geschichte\u0020oder\u0020Fakten.\u0020Erneut\u0020recherchieren:\u0020Eine\u0020Beschreibung\u0020oder\u0020Bio\u0020allein\u0020reicht\u0020nicht."
         }
       },
       "es": {
@@ -12624,7 +12625,8 @@ window.__ModuleLoader__.load({
           "brief.check.offerings-with-description": "A\u00f1ade\u0020descripciones\u0020de\u0020los\u0020productos\u0020o\u0020servicios.",
           "brief.check.people-with-portrait": "Confirma\u0020los\u0020retratos\u0020de\u0020las\u0020personas\u0020presentadas.",
           "brief.check.items-routed": "Comprueba\u0020qu\u00e9\u0020p\u00e1ginas\u0020abren\u0020los\u0020elementos.",
-          "brief.check.template-kinds": "Elige\u0020un\u0020template\u0020adecuado\u0020para\u0020el\u0020contenido\u0020disponible."
+          "brief.check.template-kinds": "Elige\u0020un\u0020template\u0020adecuado\u0020para\u0020el\u0020contenido\u0020disponible.",
+          "brief.check.business-content": "No\u0020se\u0020encontraron\u0020servicios,\u0020elementos\u0020del\u0020men\u00fa\u0020ni\u0020productos\u0020del\u0020negocio,\u0020ni\u0020su\u0020historia\u0020o\u0020datos.\u0020Investiga\u0020de\u0020nuevo:\u0020una\u0020descripci\u00f3n\u0020o\u0020biograf\u00eda\u0020sola\u0020no\u0020basta."
         },
         "trajectory": {
           "attachment.imageName": "Imagen\u0020{index}",
@@ -18764,7 +18766,8 @@ window.__ModuleLoader__.load({
           "brief.check.offerings-with-description": "Ajoutez\u0020des\u0020descriptions\u0020des\u0020offres.",
           "brief.check.people-with-portrait": "Confirmez\u0020les\u0020portraits\u0020des\u0020personnes\u0020pr\u00e9sent\u00e9es.",
           "brief.check.items-routed": "V\u00e9rifiez\u0020les\u0020pages\u0020ouvertes\u0020par\u0020les\u0020\u00e9l\u00e9ments.",
-          "brief.check.template-kinds": "Choisissez\u0020un\u0020template\u0020adapt\u00e9\u0020au\u0020contenu\u0020disponible."
+          "brief.check.template-kinds": "Choisissez\u0020un\u0020template\u0020adapt\u00e9\u0020au\u0020contenu\u0020disponible.",
+          "brief.check.business-content": "Aucun\u0020service,\u0020article\u0020du\u0020menu\u0020ni\u0020produit\u0020de\u0020l\u2019entreprise\u0020n\u2019a\u0020\u00e9t\u00e9\u0020trouv\u00e9,\u0020ni\u0020son\u0020histoire\u0020ou\u0020ses\u0020informations.\u0020Relancez\u0020la\u0020recherche\u0020:\u0020une\u0020description\u0020ou\u0020une\u0020bio\u0020seule\u0020ne\u0020suffit\u0020pas."
         }
       },
       "it": {
@@ -24575,7 +24578,8 @@ window.__ModuleLoader__.load({
           "brief.check.offerings-with-description": "Aggiungi\u0020descrizioni\u0020delle\u0020offerte.",
           "brief.check.people-with-portrait": "Conferma\u0020i\u0020ritratti\u0020delle\u0020persone\u0020presentate.",
           "brief.check.items-routed": "Controlla\u0020quali\u0020pagine\u0020aprono\u0020gli\u0020elementi.",
-          "brief.check.template-kinds": "Scegli\u0020un\u0020template\u0020adatto\u0020ai\u0020contenuti\u0020disponibili."
+          "brief.check.template-kinds": "Scegli\u0020un\u0020template\u0020adatto\u0020ai\u0020contenuti\u0020disponibili.",
+          "brief.check.business-content": "Nessun\u0020servizio,\u0020voce\u0020di\u0020menu\u0020o\u0020prodotto\u0020dell\u2019attivit\u00e0\u0020trovato,\u0020n\u00e9\u0020la\u0020sua\u0020storia\u0020o\u0020le\u0020sue\u0020informazioni.\u0020Ripeti\u0020la\u0020ricerca:\u0020una\u0020descrizione\u0020o\u0020una\u0020bio\u0020da\u0020sola\u0020non\u0020basta."
         }
       },
       "nl": {
@@ -30386,7 +30390,8 @@ window.__ModuleLoader__.load({
           "brief.check.offerings-with-description": "Voeg\u0020beschrijvingen\u0020van\u0020het\u0020aanbod\u0020toe.",
           "brief.check.people-with-portrait": "Bevestig\u0020de\u0020portretten\u0020van\u0020de\u0020getoonde\u0020personen.",
           "brief.check.items-routed": "Controleer\u0020welke\u0020pagina\u2019s\u0020de\u0020items\u0020openen.",
-          "brief.check.template-kinds": "Kies\u0020een\u0020template\u0020dat\u0020bij\u0020de\u0020beschikbare\u0020inhoud\u0020past."
+          "brief.check.template-kinds": "Kies\u0020een\u0020template\u0020dat\u0020bij\u0020de\u0020beschikbare\u0020inhoud\u0020past.",
+          "brief.check.business-content": "Geen\u0020diensten,\u0020menu-items\u0020of\u0020producten\u0020van\u0020het\u0020bedrijf\u0020gevonden,\u0020en\u0020ook\u0020geen\u0020verhaal\u0020of\u0020feiten.\u0020Onderzoek\u0020opnieuw:\u0020alleen\u0020een\u0020beschrijving\u0020of\u0020bio\u0020is\u0020niet\u0020genoeg."
         }
       },
       "zh": {
@@ -35519,7 +35524,8 @@ window.__ModuleLoader__.load({
           "brief.check.offerings-with-description": "\u4e3a\u4ea7\u54c1\u6216\u670d\u52a1\u6dfb\u52a0\u63cf\u8ff0\u3002",
           "brief.check.people-with-portrait": "\u786e\u8ba4\u6240\u4ecb\u7ecd\u4eba\u7269\u7684\u8096\u50cf\u3002",
           "brief.check.items-routed": "\u68c0\u67e5\u5404\u9879\u76ee\u6253\u5f00\u7684\u9875\u9762\u3002",
-          "brief.check.template-kinds": "\u9009\u62e9\u9002\u5408\u73b0\u6709\u5185\u5bb9\u7684\u0020template\u3002"
+          "brief.check.template-kinds": "\u9009\u62e9\u9002\u5408\u73b0\u6709\u5185\u5bb9\u7684\u0020template\u3002",
+          "brief.check.business-content": "\u672a\u627e\u5230\u8be5\u5546\u5bb6\u7684\u670d\u52a1\u3001\u83dc\u5355\u9879\u6216\u4ea7\u54c1\uff0c\u4e5f\u6ca1\u6709\u5176\u6545\u4e8b\u6216\u4fe1\u606f\u3002\u8bf7\u91cd\u65b0\u8c03\u7814\uff1a\u4ec5\u6709\u63cf\u8ff0\u6216\u7b80\u4ecb\u662f\u4e0d\u591f\u7684\u3002"
         }
       }
     }

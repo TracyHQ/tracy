@@ -24,7 +24,8 @@ const BRIEF_CHECKS = new Set([
   'offerings-with-description',
   'people-with-portrait',
   'items-routed',
-  'template-kinds'
+  'template-kinds',
+  'business-content'
 ])
 
 /** The failed build's exact checks, in the interface language, rather than a paid Retry. */

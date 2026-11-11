@@ -574,6 +574,8 @@ export const en = {
   'brief.check.people-with-portrait': 'Confirm portraits for the people shown.',
   'brief.check.items-routed': 'Check which pages the items open.',
   'brief.check.template-kinds': 'Choose a template that fits the available content.',
+  'brief.check.business-content':
+    'No services, menu items or products of the business were found, nor its story or facts. Research again: a description or bio alone does not count.',
   'reason.brief_not_ready':
     'The brief needs attention. Review its checks, complete the research or owner answers, then make a new brief before building again.',
   'reason.demo_brief_changed': 'The brief or its template changed after the demo started.',

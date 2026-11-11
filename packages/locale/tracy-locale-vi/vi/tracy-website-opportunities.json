@@ -1042,5 +1042,6 @@
   "brief.check.offerings-with-description": "Thêm mô tả cho các sản phẩm hoặc dịch vụ.",
   "brief.check.people-with-portrait": "Xác nhận ảnh chân dung của những người được giới thiệu.",
   "brief.check.items-routed": "Kiểm tra trang mà từng mục mở.",
-  "brief.check.template-kinds": "Chọn template phù hợp với nội dung hiện có."
+  "brief.check.template-kinds": "Chọn template phù hợp với nội dung hiện có.",
+  "brief.check.business-content": "Không tìm thấy dịch vụ, món trong thực đơn hay sản phẩm nào của doanh nghiệp, cũng không có câu chuyện hay thông tin. Hãy nghiên cứu lại: chỉ có mô tả hoặc tiểu sử thì không đủ."
 }

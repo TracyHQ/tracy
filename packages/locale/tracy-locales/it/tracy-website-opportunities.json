@@ -1042,5 +1042,6 @@
   "brief.check.offerings-with-description": "Aggiungi descrizioni delle offerte.",
   "brief.check.people-with-portrait": "Conferma i ritratti delle persone presentate.",
   "brief.check.items-routed": "Controlla quali pagine aprono gli elementi.",
-  "brief.check.template-kinds": "Scegli un template adatto ai contenuti disponibili."
+  "brief.check.template-kinds": "Scegli un template adatto ai contenuti disponibili.",
+  "brief.check.business-content": "Nessun servizio, voce di menu o prodotto dell’attività trovato, né la sua storia o le sue informazioni. Ripeti la ricerca: una descrizione o una bio da sola non basta."
 }

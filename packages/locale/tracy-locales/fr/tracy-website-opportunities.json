@@ -1042,5 +1042,6 @@
   "brief.check.offerings-with-description": "Ajoutez des descriptions des offres.",
   "brief.check.people-with-portrait": "Confirmez les portraits des personnes présentées.",
   "brief.check.items-routed": "Vérifiez les pages ouvertes par les éléments.",
-  "brief.check.template-kinds": "Choisissez un template adapté au contenu disponible."
+  "brief.check.template-kinds": "Choisissez un template adapté au contenu disponible.",
+  "brief.check.business-content": "Aucun service, article du menu ni produit de l’entreprise n’a été trouvé, ni son histoire ou ses informations. Relancez la recherche : une description ou une bio seule ne suffit pas."
 }

@@ -5139,7 +5139,8 @@ window.__ModuleLoader__.load({
               "brief.check.offerings-with-description": "Th\u00eam\u0020m\u00f4\u0020t\u1ea3\u0020cho\u0020c\u00e1c\u0020s\u1ea3n\u0020ph\u1ea9m\u0020ho\u1eb7c\u0020d\u1ecbch\u0020v\u1ee5.",
               "brief.check.people-with-portrait": "X\u00e1c\u0020nh\u1eadn\u0020\u1ea3nh\u0020ch\u00e2n\u0020dung\u0020c\u1ee7a\u0020nh\u1eefng\u0020ng\u01b0\u1eddi\u0020\u0111\u01b0\u1ee3c\u0020gi\u1edbi\u0020thi\u1ec7u.",
               "brief.check.items-routed": "Ki\u1ec3m\u0020tra\u0020trang\u0020m\u00e0\u0020t\u1eebng\u0020m\u1ee5c\u0020m\u1edf.",
-              "brief.check.template-kinds": "Ch\u1ecdn\u0020template\u0020ph\u00f9\u0020h\u1ee3p\u0020v\u1edbi\u0020n\u1ed9i\u0020dung\u0020hi\u1ec7n\u0020c\u00f3."
+              "brief.check.template-kinds": "Ch\u1ecdn\u0020template\u0020ph\u00f9\u0020h\u1ee3p\u0020v\u1edbi\u0020n\u1ed9i\u0020dung\u0020hi\u1ec7n\u0020c\u00f3.",
+              "brief.check.business-content": "Kh\u00f4ng\u0020t\u00ecm\u0020th\u1ea5y\u0020d\u1ecbch\u0020v\u1ee5,\u0020m\u00f3n\u0020trong\u0020th\u1ef1c\u0020\u0111\u01a1n\u0020hay\u0020s\u1ea3n\u0020ph\u1ea9m\u0020n\u00e0o\u0020c\u1ee7a\u0020doanh\u0020nghi\u1ec7p,\u0020c\u0169ng\u0020kh\u00f4ng\u0020c\u00f3\u0020c\u00e2u\u0020chuy\u1ec7n\u0020hay\u0020th\u00f4ng\u0020tin.\u0020H\u00e3y\u0020nghi\u00ean\u0020c\u1ee9u\u0020l\u1ea1i:\u0020ch\u1ec9\u0020c\u00f3\u0020m\u00f4\u0020t\u1ea3\u0020ho\u1eb7c\u0020ti\u1ec3u\u0020s\u1eed\u0020th\u00ec\u0020kh\u00f4ng\u0020\u0111\u1ee7."
       }
     }
 

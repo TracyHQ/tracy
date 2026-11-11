@@ -1042,5 +1042,6 @@
   "brief.check.offerings-with-description": "Beschreibungen für die Angebote hinzufügen.",
   "brief.check.people-with-portrait": "Porträts der gezeigten Personen bestätigen.",
   "brief.check.items-routed": "Prüfen, welche Seiten die Einträge öffnen.",
-  "brief.check.template-kinds": "Ein Template für die verfügbaren Inhalte wählen."
+  "brief.check.template-kinds": "Ein Template für die verfügbaren Inhalte wählen.",
+  "brief.check.business-content": "Keine Dienstleistungen, Menüeinträge oder Produkte des Unternehmens gefunden, auch keine Geschichte oder Fakten. Erneut recherchieren: Eine Beschreibung oder Bio allein reicht nicht."
 }

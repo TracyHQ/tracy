@@ -1042,5 +1042,6 @@
   "brief.check.offerings-with-description": "为产品或服务添加描述。",
   "brief.check.people-with-portrait": "确认所介绍人物的肖像。",
   "brief.check.items-routed": "检查各项目打开的页面。",
-  "brief.check.template-kinds": "选择适合现有内容的 template。"
+  "brief.check.template-kinds": "选择适合现有内容的 template。",
+  "brief.check.business-content": "未找到该商家的服务、菜单项或产品，也没有其故事或信息。请重新调研：仅有描述或简介是不够的。"
 }

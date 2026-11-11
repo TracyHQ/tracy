@@ -1042,5 +1042,6 @@
   "brief.check.offerings-with-description": "Voeg beschrijvingen van het aanbod toe.",
   "brief.check.people-with-portrait": "Bevestig de portretten van de getoonde personen.",
   "brief.check.items-routed": "Controleer welke pagina’s de items openen.",
-  "brief.check.template-kinds": "Kies een template dat bij de beschikbare inhoud past."
+  "brief.check.template-kinds": "Kies een template dat bij de beschikbare inhoud past.",
+  "brief.check.business-content": "Geen diensten, menu-items of producten van het bedrijf gevonden, en ook geen verhaal of feiten. Onderzoek opnieuw: alleen een beschrijving of bio is niet genoeg."
 }

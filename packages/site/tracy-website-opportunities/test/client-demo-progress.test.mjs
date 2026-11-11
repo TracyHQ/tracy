@@ -99,6 +99,31 @@ test('Find sources is open once research has started, done included, and closed 
   assert.match(draw({ state: 'queued' }), /<details><summary/)
 })
 
+test('an empty business reading names its own check, never only the generic refusal (#554)', () => {
+  const failed = {
+    ...row,
+    demoAction: {
+      id: 'empty-reading',
+      state: 'failed',
+      step: 'brief',
+      error: 'BRIEF_NOT_READY',
+      readiness: {
+        verdict: 'block',
+        next: 'research-again',
+        checks: ['business-content'],
+        ownerQuestions: []
+      }
+    }
+  }
+  for (const Component of [lib.ProgressCell, lib.Steps]) {
+    const html = lib.renderToStaticMarkup(
+      lib.createElement(Component, { t, row: failed, locale: 'en', now: 0 })
+    )
+    assert.match(html, /\[reason\.brief_not_ready\]/)
+    assert.match(html, /\[brief\.check\.business-content\]/)
+  }
+})
+
 test('readiness failures name their repairable checks in both progress views', () => {
   const failed = {
     ...row,
