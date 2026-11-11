@@ -422,6 +422,37 @@ for (const scenario of [
     assert.deepEqual((await w.pool.query('select qa from wo_build')).rows[0].qa, w.build.qa)
   })
 
+for (const scenario of ['lost-applying', 'lost-placement', 'successful-write', 'live-writer'])
+  test(`a failed chain action cannot reserve a no-op Retry for ${scenario}`, opts, async () => {
+    const w = await historicalChain()
+    await w.pool.query("update wo_demo_action set status='failed',error='QA_NEEDS_REVIEW' where id=$1", [
+      w.parent.id
+    ])
+    await w.pool.query("update wo_build set qa=jsonb_set(qa,'{state}','\"failed\"')")
+    if (scenario === 'lost-applying')
+      await w.pool.query('update site_brief set timings=timings||\'{"lostFrom":"applying"}\'::jsonb')
+    if (scenario === 'lost-placement')
+      await w.pool.query("update site_brief set error=$1,timings='{}'", [LOST_PLACING])
+    if (scenario === 'successful-write')
+      await w.pool.query(
+        `update site_brief set state='applied',timings='{"chain":{"ending":"complete","steps":[{"step":"write","outcome":"done"}]}}'`
+      )
+    if (scenario === 'live-writer')
+      await w.pool.query(
+        "insert into site_write_lease(site_key,holder_session,wrote_at) values($1,'another-writer',now())",
+        [w.build.site_key]
+      )
+    const usage = (await w.pool.query('select * from wo_demo_usage')).rows
+    const brief = (await w.pool.query('select * from site_brief')).rows
+    const refused = await w.retry(`failed-parent-no-op-${scenario}`)
+    assert.equal(refused.status, 409, JSON.stringify(refused.body))
+    assert.equal(refused.body.code, 'ACTION_NOT_FAILED')
+    assert.deepEqual((await w.pool.query('select * from wo_demo_usage')).rows, usage)
+    assert.deepEqual((await w.pool.query('select * from site_brief')).rows, brief)
+    assert.equal((await w.pool.query('select count(*)::int n from wo_demo_action')).rows[0].n, 1)
+    assert.deepEqual(w.resumed, [])
+  })
+
 for (const scenario of ['changed-brief', 'replaced', 'unowned', 'live-writer', 'forged-marker'])
   test(`accepted chain Retry cannot restart after ${scenario}`, opts, async () => {
     const w = await historicalChain()

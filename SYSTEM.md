@@ -3219,6 +3219,7 @@ the brief restart atomically checks the durable action, unchanged snapshot, owne
 active writer. Replaced sites, changed briefs, open work and lost placement attempts are refused. Replay adopts the same
 retry action; retrying a failed child obtains fresh authority for its own failed generation. This reuses the same site,
 revision and normal chain worker, with no new provision or chat writer.
+An existing chain build without this exact restart authority is refused before a new action or daily usage is reserved, even when its parent action already says failed or its stored QA failed. Such a press cannot merely repeat the old QA result as a newly accepted Retry.
 An applied brief is eligible only when its chain ended in `soft-failure`, its running steps are absent, null or empty,
 and its latest recorded write failed. Healthy applied generations, successful latest writes, missing or malformed
 measurements and running steps cannot authorize a full-chain restart. The application uses this same eligibility
