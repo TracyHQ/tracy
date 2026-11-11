@@ -47,6 +47,12 @@
  * The content map's slot whose `jsonPath` ends at that key (or at its first item) and samples the old value takes
  * the new one.
  *
+ * A row edit whose source uses HTML entities may name its exact DOMText `xpath`: only its decoded
+ * sample is edited; the dump and lock keep the literal source encoding. No whitespace normalization.
+ *
+ * For an existing multi-string array, `nestedJson` and the complete `jsonPath` (ending in its index)
+ * guard one member; `from`/`to` keep every other member and the array length, with `count` 1.
+ *
  * `"whole": true` (needs `field`) sets one column of the entity's row: `from` is the column's whole value as the
  * dump writes it (a quoted string, never NULL), `to` the new one, `count` 1 (JA Restaurant 1.0.6: articles of
  * one category given distinct `publish_up`, where the row's `modified` holds the same date).
@@ -59,6 +65,8 @@
  * Smart Search keeps PHP-serialized strings, whose length is written beside them: there `to` must keep `from`'s length.
  */
 import { readFileSync } from 'node:fs'
+import { parseHTML } from 'linkedom'
+import { unquote } from './release-dump-table.mjs'
 
 const SAFE = /^[\x20-\x7e]+$/
 const UNSAFE = /["'\\/]/
@@ -69,19 +77,71 @@ const UNSAFE_IN_ROW = /["'\\]/
 const JSON_PAIR = /^"([\w-]+)":("[^"]*"|-?\d+(\.\d+)?|true|false|null)$/
 /** A nested pair: the same, or an array of one string, and a key that may carry ACM's brackets (`f[button-link]`). */
 const NESTED_PAIR = /^"([\w[\]-]+)":("[^"]*"|\["[^"]*"\]|-?\d+(\.\d+)?|true|false|null)$/
-const pairOf = (e, v) => (e.nested === true ? NESTED_PAIR : JSON_PAIR).exec(v)
+const INDEXED_PAIR = /^"([\w[\]-]+)":(\["[^"]*"(?:,"[^"]*")*\])$/
+const pairOf = (e, v) =>
+  (e.jsonPath !== undefined ? INDEXED_PAIR : e.nested === true ? NESTED_PAIR : JSON_PAIR).exec(v)
 /** A nested pair's value type: an array of one string, a string, or a bare value. */
 const shapeOf = (value) => (value.startsWith('[') ? 'array' : value.startsWith('"') ? 'string' : 'value')
 /** A nested edit that turns a string into an array (or back) re-shapes the path a content slot samples: refused. */
 function sameShape(e, at) {
-  if (shapeOf(NESTED_PAIR.exec(e.from)[2]) !== shapeOf(NESTED_PAIR.exec(e.to)[2]))
+  if (shapeOf(pairOf(e, e.from)[2]) !== shapeOf(pairOf(e, e.to)[2]))
     throw new Error(
       `${at}: a nested pair edit keeps its value type (a string stays a string, an array an array)`
     )
 }
+/** An addressed array edit changes one existing string, retaining its siblings and length. */
+function indexedPair(e, at) {
+  const path = e.jsonPath
+  if (
+    e.nested !== true ||
+    e.json !== true ||
+    e.row !== true ||
+    !e.field ||
+    e.count !== 1 ||
+    typeof e.nestedJson !== 'string' ||
+    !/^[\w-]+$/.test(e.nestedJson) ||
+    !Array.isArray(path) ||
+    path.length < 2 ||
+    !path.slice(0, -1).every((p) => typeof p === 'string' && /^[\w[\]-]+$/.test(p)) ||
+    !Number.isInteger(path.at(-1)) ||
+    path.at(-1) < 0
+  )
+    throw new Error(`${at}: an indexed edit needs a nested JSON row, field, complete jsonPath and count 1`)
+  const from = INDEXED_PAIR.exec(e.from)
+  const to = INDEXED_PAIR.exec(e.to)
+  if (!from || !to || from[1] !== to[1] || path.at(-2) !== from[1])
+    throw new Error(`${at}: indexed pairs must name the addressed array of strings`)
+  const before = JSON.parse(from[2])
+  const after = JSON.parse(to[2])
+  const index = path.at(-1)
+  if (
+    before.length !== after.length ||
+    index >= before.length ||
+    before[index] === after[index] ||
+    before.some((v, i) => i !== index && v !== after[i])
+  )
+    throw new Error(`${at}: an indexed edit changes only its existing array member`)
+  return { before, after, index }
+}
+
+/** The literal pair must belong to this complete nested address, not an equal pair elsewhere. */
+function checkIndexedValue(value, e) {
+  const { before } = indexedPair(e, 'content edit')
+  const outer = JSON.parse(value)
+  if (typeof outer[e.nestedJson] !== 'string') throw new Error('content edit: nested JSON string missing')
+  let current = JSON.parse(outer[e.nestedJson])
+  for (const part of e.jsonPath.slice(0, -1)) {
+    if (!current || typeof current !== 'object' || !Object.hasOwn(current, part))
+      throw new Error('content edit: nested array address missing')
+    current = current[part]
+  }
+  if (JSON.stringify(current) !== JSON.stringify(before))
+    throw new Error('content edit: addressed array differs from from')
+}
 const NOT_IN_PAIR = /['\\/]/
 const NOT_IN_ROW_PAIR = /['\\]/
 const FIELD = /^[a-zA-Z_]+$/
+const TEXT_XPATH = /^\/html\/body\/div(?:\/[a-zA-Z][\w-]*(?:\[[1-9]\d*\])?)*\/text\(\)(?:\[[1-9]\d*\])?$/
 
 /** The text an edit's `from` / `to` is in a dump and in the lock file (a JSON pair's quotes as \"). */
 const asWritten = (e, k) =>
@@ -96,6 +156,19 @@ export function loadContentEdits(file) {
   if (!Array.isArray(edits) || !edits.length) throw new Error(`${file}: no "edits"`)
   for (const [i, e] of edits.entries()) {
     const at = `${file} edit ${i + 1}`
+    if (e.jsonPath !== undefined || e.nestedJson !== undefined) indexedPair(e, at)
+    if (
+      e.xpath !== undefined &&
+      (e.row !== true ||
+        !e.field ||
+        e.json !== undefined ||
+        e.whole !== undefined ||
+        e.table !== undefined ||
+        !TEXT_XPATH.test(e.xpath))
+    )
+      throw new Error(`${at}: decoded text names its row, field and exact text-node xpath`)
+    if (e.xpath !== undefined && (decodedText(e.from) === null || decodedText(e.to) === null))
+      throw new Error(`${at}: addressed text edits contain text, not markup`)
     if (e.table !== undefined) {
       if (e.entity !== undefined) throw new Error(`${at}: an edit names either "entity" or "table"`)
       if (!/^[a-z_]+$/.test(String(e.table)))
@@ -416,6 +489,7 @@ function editRow(out, e) {
   if (c < 0) throw new Error(`dump: ${e.entity} has no column ${e.field}`)
   const v = r.values[c]
   const now = text.slice(v.start, v.end)
+  if (e.jsonPath !== undefined) checkIndexedValue(unquote(now), e)
   if (e.whole === true) {
     if (now !== `'${e.from}'`)
       throw new Error(`dump: ${e.entity}.${e.field} is ${now}, the edit expects '${e.from}'`)
@@ -431,7 +505,10 @@ function editRow(out, e) {
     throw new Error(
       `dump: "${from}" occurs ${n} times in ${e.entity}.${e.field}, the edit expects ${e.count}`
     )
-  out[r.index] = text.slice(0, v.start) + now.split(from).join(asWritten(e, 'to')) + text.slice(v.end)
+  const next = now.split(from).join(asWritten(e, 'to'))
+  if (e.jsonPath !== undefined) checkIndexedValue(unquote(next), { ...e, from: e.to, to: e.from })
+  if (e.xpath !== undefined) checkTextEdit(unquote(now), unquote(next), e)
+  out[r.index] = text.slice(0, v.start) + next + text.slice(v.end)
 }
 
 /**
@@ -556,9 +633,13 @@ function editLockRow(lockText, e) {
   const entity = was.entities?.[e.entity]
   if (!entity || typeof entity !== 'object') throw new Error(`lock: no entities.${e.entity}`)
   // a column the lock does not pin (an article's `created`, JA Diner 1.0.3) is the dump's alone: nothing to drift
-  if (!Object.hasOwn(entity, e.field)) return lockText
+  if (!Object.hasOwn(entity, e.field)) {
+    if (e.jsonPath !== undefined || e.xpath !== undefined) throw new Error('lock: addressed field missing')
+    return lockText
+  }
   const value = entity[e.field]
   if (typeof value !== 'string') throw new Error(`lock: no entities.${e.entity}.${e.field}`)
+  if (e.jsonPath !== undefined) checkIndexedValue(value, e)
   const { start, end } = fieldSpan(lockText, entitySpan(lockText, e.entity), e)
   const literal = lockText.slice(start, end)
   let next
@@ -588,6 +669,9 @@ function editLockRow(lockText, e) {
   }
   const out = lockText.slice(0, start) + next + lockText.slice(end)
   const now = JSON.parse(out)
+  if (e.jsonPath !== undefined)
+    checkIndexedValue(now.entities[e.entity][e.field], { ...e, from: e.to, to: e.from })
+  if (e.xpath !== undefined) checkTextEdit(value, now.entities[e.entity][e.field], e)
   if (now.entities[e.entity][e.field] !== expected) throw new Error(`lock: ${e.entity}.${e.field} not edited`)
   now.entities[e.entity][e.field] = value
   if (JSON.stringify(now) !== JSON.stringify(was))
@@ -607,9 +691,10 @@ function editSampleText(out, slot, from, to) {
   const literal = out.slice(q, j + 1)
   if (JSON.parse(literal) !== slot.sample)
     throw new Error(`content map: ${slot.key} sample not found as text`)
-  const next = literal.split(from).join(to)
+  const next = literal.split(JSON.stringify(from).slice(1, -1)).join(JSON.stringify(to).slice(1, -1))
   if (JSON.parse(next) !== slot.sample.split(from).join(to))
     throw new Error(`content map: ${slot.key} sample not edited as text`)
+  slot.sample = JSON.parse(next)
   return out.slice(0, q) + next + out.slice(j + 1)
 }
 
@@ -618,6 +703,20 @@ function editSampleText(out, slot, from, to) {
  * the pair's key (a string value) or at the first item under it (an array of one string), sampling the old value.
  */
 function editNestedSamples(out, map, e, edited) {
+  if (e.jsonPath !== undefined) {
+    const { before, after, index } = indexedPair(e, 'content map')
+    const slots = (map.slots ?? []).filter(
+      (slot) =>
+        slot.entity === e.entity &&
+        slot.column === e.field &&
+        slot.nestedJson === e.nestedJson &&
+        JSON.stringify(slot.jsonPath) === JSON.stringify(e.jsonPath)
+    )
+    if (slots.length !== 1 || slots[0].sample !== before[index])
+      throw new Error('content map: indexed edit needs one exact address and sample')
+    edited.push(slots[0].key)
+    return setSample(out, slots[0], after[index])
+  }
   sameShape(e, `content map: ${e.entity}`)
   const [, key, fromValue] = NESTED_PAIR.exec(e.from)
   const [, , toValue] = NESTED_PAIR.exec(e.to)
@@ -657,11 +756,49 @@ function setSample(out, slot, next) {
   const literal = out.slice(q, j + 1)
   if (JSON.parse(literal) !== slot.sample)
     throw new Error(`content map: ${slot.key} sample not found as text`)
+  slot.sample = next
   return out.slice(0, q) + JSON.stringify(next) + out.slice(j + 1)
 }
 
 /** The text of a text-node edit (`>MT<` → `MT`), or null when the edit is not a whole text node. */
 const textNode = (s) => /^>([^<>]+)<$/.exec(s)?.[1] ?? null
+// Decode text only; markup and attribute slots never take this correspondence path.
+const decodedText = (s) =>
+  /[<>]/.test(s) ? null : parseHTML(`<span>${s}</span>`).document.firstChild.textContent
+
+/** Resolve only the capture's absolute child/text-node address, without a general XPath evaluator. */
+function textAt(value, xpath) {
+  if (!TEXT_XPATH.test(xpath)) throw new Error('content edit: invalid text-node address')
+  const { document } = parseHTML(`<html><body><div>${value}</div></body></html>`)
+  // linkedom splits character references into adjacent Text nodes; the capture/browser coalesces them.
+  document.normalize()
+  let nodes = [document]
+  for (const part of xpath.slice(1).split('/')) {
+    const [, tag, index] = /^(text\(\)|[\w-]+)(?:\[(\d+)\])?$/.exec(part)
+    nodes = nodes.flatMap((node) => {
+      const children = [...node.childNodes].filter((child) =>
+        tag === 'text()' ? child.nodeType === 3 : child.nodeType === 1 && child.localName === tag
+      )
+      return index ? children.slice(Number(index) - 1, Number(index)) : children
+    })
+  }
+  if (nodes.length !== 1 || nodes[0].nodeType !== 3)
+    throw new Error('content edit: text-node address is missing or ambiguous')
+  return nodes[0].textContent
+}
+
+function checkTextEdit(before, after, e) {
+  const from = decodedText(e.from)
+  const to = decodedText(e.to)
+  const text = textAt(before, e.xpath)
+  if (
+    from === null ||
+    to === null ||
+    occurrences(text, from) !== e.count ||
+    textAt(after, e.xpath) !== text.split(from).join(to)
+  )
+    throw new Error('content edit: addressed text does not match the literal row edit')
+}
 
 /**
  * The same edits in the content map's slot samples: a slot of the edited entity whose `sample` is the
@@ -689,12 +826,63 @@ export function editContentMap(mapText, edits) {
     const from = node ? textNode(e.from) : e.json === true ? null : e.from
     const to = node ? textNode(e.to) : e.to
     if (from === null || to === null) continue
+    const decodedFrom = e.xpath === undefined ? from : decodedText(from)
+    const decodedTo = e.xpath === undefined ? to : decodedText(to)
+    const rawSample = (map.slots ?? []).some(
+      (slot) =>
+        slot.entity === e.entity &&
+        slot.column === e.field &&
+        (e.xpath === undefined || slot.xpath === e.xpath) &&
+        typeof slot.sample === 'string' &&
+        slot.sample.includes(from)
+    )
+    const decoded =
+      e.xpath !== undefined &&
+      e.row === true &&
+      !node &&
+      e.json !== true &&
+      !rawSample &&
+      decodedFrom !== null &&
+      decodedFrom !== from
+    if (e.xpath !== undefined && !TEXT_XPATH.test(e.xpath))
+      throw new Error('content map: invalid text-node xpath')
+    if (
+      e.xpath !== undefined &&
+      (map.slots ?? []).filter(
+        (slot) =>
+          slot.entity === e.entity &&
+          slot.column === e.field &&
+          slot.type === 'text' &&
+          slot.xpath === e.xpath
+      ).length !== 1
+    )
+      throw new Error('content map: text edit needs one exact slot address')
+    let addressedCount = 0
     const kept = e.row === true || e.whole === true
     for (const slot of map.slots ?? []) {
       if (slot.entity !== e.entity) continue
       // a row-kept edit: only the slots of the edited column, and (`row`) the text inside a longer sample too
       // (JA Restaurant 1.0.6: module-100.0 samples "Welcome to RES ((br/))Bar &amp; Restaurant")
       if (kept && slot.column !== (e.field ?? 'content')) continue
+      if (e.xpath !== undefined && (slot.xpath !== e.xpath || slot.type !== 'text')) continue
+      if (decoded) {
+        if (
+          decodedTo === null ||
+          slot.type !== 'text' ||
+          slot.jsonPath !== undefined ||
+          slot.xpath !== e.xpath ||
+          typeof slot.sample !== 'string'
+        )
+          continue
+        const n = occurrences(slot.sample, decodedFrom)
+        if (!n) continue
+        addressedCount += n
+        out = editSampleText(out, slot, decodedFrom, decodedTo)
+        edited.push(slot.key)
+        continue
+      }
+      if (e.xpath !== undefined && typeof slot.sample === 'string')
+        addressedCount += occurrences(slot.sample, from)
       if (slot.sample !== from && e.row === true && !node && String(slot.sample ?? '').includes(from)) {
         out = editSampleText(out, slot, from, to)
         edited.push(slot.key)
@@ -709,8 +897,11 @@ export function editContentMap(mapText, edits) {
       const where = out.indexOf(field, at)
       if (where < 0 || where > close) throw new Error(`content map: ${slot.key} sample not found as text`)
       out = out.slice(0, where) + `"sample": ${JSON.stringify(to)}` + out.slice(where + field.length)
+      slot.sample = to
       edited.push(slot.key)
     }
+    if (e.xpath !== undefined && addressedCount !== e.count)
+      throw new Error('content map: decoded text count differs from the row edit')
   }
   return { text: out, edited }
 }

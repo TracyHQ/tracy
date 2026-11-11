@@ -993,3 +993,365 @@ test('a row edit skips the rows of a table emptied again later: the rows after t
   // without a reset two rows of one id are still refused
   assert.throws(() => editDump([base, custom.replace(/^DROP.*\n/, '')], [e]), /2 rows/)
 })
+
+// Synthetic fixtures exercise the stock dump/lock/map transforms without a site or release input.
+const scopedArrayEdit = {
+  entity: 'module-7',
+  field: 'params',
+  row: true,
+  json: true,
+  nested: true,
+  nestedJson: 'config',
+  jsonPath: ['tiles', 'image', 0],
+  from: '"image":["","keep.webp",""]',
+  to: '"image":["images/chart.webp","keep.webp",""]',
+  count: 1
+}
+const scopedSql = (s) => s.replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll("'", "\\'")
+const scopedMap = (slots) => JSON.stringify({ slots, unchanged: { pin: 'kept' } }, null, 2)
+const scopedImageSlot = {
+  key: 'module-7.1',
+  entity: 'module-7',
+  column: 'params',
+  type: 'image',
+  sample: '',
+  nestedJson: 'config',
+  jsonPath: ['tiles', 'image', 0]
+}
+
+test('scoped content: indexed array changes only its addressed string across dump lock and map', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const [e] = loadContentEdits(editsFile([scopedArrayEdit]))
+  const params = JSON.stringify({
+    config: JSON.stringify({ tiles: { image: ['', 'keep.webp', ''], span: ['2', '1', '1'] } }),
+    cache: '1'
+  })
+  const want = params.replace('\\"image\\":[\\"\\",', '\\"image\\":[\\"images/chart.webp\\",')
+  const dump = `INSERT INTO \`jd_modules\` (\`id\`,\`params\`) VALUES (7,'${scopedSql(params)}'),(8,'${scopedSql(params)}');\n`
+  assert.equal(editDump(dump, [e]), dump.replace(`(7,'${scopedSql(params)}')`, `(7,'${scopedSql(want)}')`))
+  const lock = JSON.stringify({ entities: { 'module-7': { params }, 'module-8': { params } } }, null, 2)
+  assert.equal(editLock(lock, [e]), lock.replace(JSON.stringify(params), JSON.stringify(want)))
+  const map = scopedMap([
+    scopedImageSlot,
+    { ...scopedImageSlot, key: 'module-7.2', jsonPath: ['tiles', 'image', 2] },
+    { ...scopedImageSlot, key: 'module-8.1', entity: 'module-8' }
+  ])
+  const result = editContentMap(map, [e])
+  assert.deepEqual(result.edited, ['module-7.1'])
+  assert.equal(result.text, map.replace('"sample": ""', '"sample": "images/chart.webp"'))
+})
+
+test('scoped content: array index shape count and nonselected members are guarded', () => {
+  for (const bad of [
+    { jsonPath: ['tiles', 'image', 1] },
+    { jsonPath: ['tiles', 'image', 3] },
+    { jsonPath: ['tiles', 'image', '0'] },
+    { jsonPath: undefined },
+    { nestedJson: undefined },
+    { count: 2 },
+    { nested: undefined },
+    { row: undefined },
+    { field: undefined },
+    { to: '"image":["images/chart.webp","changed",""]' },
+    { to: '"image":["images/chart.webp","keep.webp"]' },
+    { from: '"image":[0,"keep.webp",""]' },
+    { to: '"different":["images/chart.webp","keep.webp",""]' }
+  ])
+    assert.throws(() => loadContentEdits(editsFile([{ ...scopedArrayEdit, ...bad }])))
+})
+
+test('scoped content: nested array refuses wrong source address from type and ambiguous map', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const params = JSON.stringify({ config: JSON.stringify({ elsewhere: { image: ['', 'keep.webp', ''] } }) })
+  const lock = JSON.stringify({ entities: { 'module-7': { params } } })
+  const dump = `INSERT INTO \`jd_modules\` (\`id\`,\`params\`) VALUES (7,'${scopedSql(params)}');\n`
+  const [e] = loadContentEdits(editsFile([scopedArrayEdit]))
+  assert.throws(() => editDump(dump, [e]))
+  assert.throws(() => editLock(lock, [e]))
+  for (const bad of [
+    { entity: 'module-8' },
+    { column: 'title' },
+    { nestedJson: 'other' },
+    { jsonPath: ['elsewhere', 'image', 0] },
+    { sample: 'not empty' },
+    { sample: 0 }
+  ])
+    assert.throws(() => editContentMap(scopedMap([{ ...scopedImageSlot, ...bad }]), [e]))
+  assert.throws(() =>
+    editContentMap(scopedMap([scopedImageSlot, { ...scopedImageSlot, key: 'module-7.9' }]), [e])
+  )
+  assert.throws(() => editLock(lock, [{ ...e, from: '"image":["missing","keep.webp",""]' }]))
+})
+
+test('scoped content: sequential edits retain current samples and other slot bytes', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const sample = 'Use `first` then `second` then `third`.'
+  const edits = ['first', 'second', 'third'].map((s) => ({
+    entity: 'article-7',
+    field: 'fulltext',
+    row: true,
+    from: '`' + s + '`',
+    to: s,
+    count: 1
+  }))
+  const map = scopedMap([
+    {
+      key: 'article-7.1',
+      entity: 'article-7',
+      column: 'fulltext',
+      type: 'text',
+      xpath: '/html/body/div/p/text()',
+      sample,
+      role: 'editorial.paragraph'
+    },
+    { key: 'article-8.1', entity: 'article-8', column: 'fulltext', sample }
+  ])
+  const result = editContentMap(map, loadContentEdits(editsFile(edits)))
+  assert.equal(
+    result.text,
+    map.replace(JSON.stringify(sample), JSON.stringify('Use first then second then third.'))
+  )
+  assert.deepEqual(result.edited, ['article-7.1', 'article-7.1', 'article-7.1'])
+  const raw = '<p>' + sample + '</p>'
+  const lock = JSON.stringify({ entities: { 'article-7': { fulltext: raw } } })
+  assert.equal(
+    JSON.parse(editLock(lock, edits)).entities['article-7'].fulltext,
+    '<p>Use first then second then third.</p>'
+  )
+})
+
+test('scoped content: exact decoded DOMText correspondence keeps source entities and markup', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  for (const encoded of ['&gt;', '&#62;', '&#x3e;']) {
+    const e = {
+      entity: 'article-7',
+      field: 'fulltext',
+      row: true,
+      xpath: '/html/body/div/p/text()',
+      from: '`x ' + encoded + ' 5`',
+      to: 'x ' + encoded + ' 5',
+      count: 1
+    }
+    assert.deepEqual(loadContentEdits(editsFile([e])), [e])
+    for (const bad of [{ xpath: '/html/body/div/p/@title' }, { row: undefined }, { json: true }])
+      assert.throws(() => loadContentEdits(editsFile([{ ...e, ...bad }])))
+    const raw = '<p>Try ' + e.from + ' now.</p><a title="kept">End</a>'
+    const sample = 'Try `x > 5` now.'
+    const slot = {
+      key: 'article-7.1',
+      entity: 'article-7',
+      column: 'fulltext',
+      type: 'text',
+      xpath: '/html/body/div/p/text()',
+      sample
+    }
+    const map = scopedMap([
+      slot,
+      { ...slot, key: 'article-8.1', entity: 'article-8' },
+      { ...slot, key: 'article-7.2', column: 'introtext' },
+      { ...slot, key: 'article-7.3', type: 'link', xpath: '/html/body/a/@title' }
+    ])
+    const result = editContentMap(map, loadContentEdits(editsFile([e])))
+    assert.deepEqual(result.edited, ['article-7.1'])
+    assert.equal(result.text, map.replace(JSON.stringify(sample), JSON.stringify('Try x > 5 now.')))
+    const lock = JSON.stringify({ entities: { 'article-7': { fulltext: raw } } })
+    assert.equal(JSON.parse(editLock(lock, [e])).entities['article-7'].fulltext, raw.replace(e.from, e.to))
+    const dump = `INSERT INTO \`jd_content\` (\`id\`,\`fulltext\`) VALUES (7,'${scopedSql(raw)}');\n`
+    assert.equal(editDump(dump, [e]), dump.replace(e.from, e.to))
+    for (const bad of [
+      { xpath: '/html/body/div/p/@title' },
+      { xpath: '/html/body/div/aside/text()' },
+      { sample: 'Try `x >  5` now.' },
+      { sample: 'Try `X > 5` now.' }
+    ])
+      assert.throws(() => editContentMap(scopedMap([{ ...slot, ...bad }]), [e]))
+  }
+})
+
+test('scoped content: ordinary whole-node and nested single-string behavior remains compatible', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const slot = { key: 'module-7.1', entity: 'module-7', column: 'content', sample: 'old' }
+  const map = scopedMap([slot])
+  const result = editContentMap(map, [
+    { entity: 'module-7', from: '>old<', to: '>new<' },
+    { entity: 'module-7', from: '>new<', to: '>last<' }
+  ])
+  assert.equal(result.text, map.replace('"sample": "old"', '"sample": "last"'))
+  const nested = {
+    entity: 'module-7',
+    field: 'params',
+    row: true,
+    json: true,
+    nested: true,
+    count: 1,
+    from: '"image":["a"]',
+    to: '"image":["b"]'
+  }
+  assert.deepEqual(loadContentEdits(editsFile([nested])), [nested])
+  assert.equal(
+    JSON.parse(
+      editContentMap(scopedMap([{ ...scopedImageSlot, sample: 'a', jsonPath: ['image', 0] }]), [nested]).text
+    ).slots[0].sample,
+    'b'
+  )
+})
+
+test('scoped content: encoded ordinary samples retain literal compatibility and decoding happens once', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const e = {
+    entity: 'module-7',
+    field: 'params',
+    row: true,
+    from: 'Bar &amp; Place',
+    to: 'Bar & Place',
+    count: 1
+  }
+  const raw = scopedMap([
+    { key: 'module-7.1', entity: 'module-7', column: 'params', sample: 'Welcome Bar &amp; Place' }
+  ])
+  assert.equal(editContentMap(raw, [e]).text, raw.replace('Bar &amp; Place', 'Bar & Place'))
+  const edit = {
+    entity: 'article-7',
+    field: 'fulltext',
+    row: true,
+    xpath: '/html/body/div/p/text()',
+    from: '`a &amp;gt; b`',
+    to: 'a &amp;gt; b',
+    count: 1
+  }
+  const slot = {
+    key: 'article-7.1',
+    entity: 'article-7',
+    column: 'fulltext',
+    type: 'text',
+    xpath: '/html/body/div/p/text()',
+    sample: 'Try `a &gt; b`'
+  }
+  assert.equal(JSON.parse(editContentMap(scopedMap([slot]), [edit]).text).slots[0].sample, 'Try a &gt; b')
+  assert.throws(() => editContentMap(scopedMap([{ ...slot, sample: 'Try `a > b`' }]), [edit]))
+  const quoted = { ...edit, from: '`a &quot;b&quot;`', to: 'a &quot;b&quot;' }
+  assert.equal(
+    JSON.parse(editContentMap(scopedMap([{ ...slot, sample: 'Try `a "b"`' }]), [quoted]).text).slots[0]
+      .sample,
+    'Try a "b"'
+  )
+})
+
+test('scoped content: sequential addressed nested edits use the current sample', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const second = {
+    ...scopedArrayEdit,
+    from: scopedArrayEdit.to,
+    to: scopedArrayEdit.to.replace('chart.webp', 'other.webp')
+  }
+  const result = editContentMap(
+    scopedMap([scopedImageSlot]),
+    loadContentEdits(editsFile([scopedArrayEdit, second]))
+  )
+  assert.equal(JSON.parse(result.text).slots[0].sample, 'images/other.webp')
+})
+
+test('scoped content: equal array elsewhere cannot redirect a literal pair away from its address', () => {
+  const [e] = loadContentEdits(editsFile([scopedArrayEdit]))
+  // The addressed value is equal but spaced; the only compact literal belongs to a different parent.
+  const params = JSON.stringify({
+    config: '{"tiles":{"image": ["", "keep.webp", ""]},"elsewhere":{"image":["","keep.webp",""]}}'
+  })
+  const lock = JSON.stringify({ entities: { 'module-7': { params } } })
+  const dump = `INSERT INTO \`jd_modules\` (\`id\`,\`params\`) VALUES (7,'${scopedSql(params)}');\n`
+  assert.throws(() => editDump(dump, [e]), /addressed array differs/)
+  assert.throws(() => editLock(lock, [e]), /addressed array differs/)
+})
+
+test('scoped content: text address guards the source node rather than an equal attribute or sibling', () => {
+  const e = {
+    entity: 'article-7',
+    field: 'fulltext',
+    row: true,
+    xpath: '/html/body/div/p/text()',
+    from: '`x &gt; 5`',
+    to: 'x &gt; 5',
+    count: 1
+  }
+  for (const raw of [
+    '<p title="`x &gt; 5`">Try `x > 5`</p>',
+    '<p>Unchanged</p><aside>`x &gt; 5`</aside>',
+    '<p>`x &gt; 5`</p><p>Ambiguous address</p>'
+  ]) {
+    const lock = JSON.stringify({ entities: { 'article-7': { fulltext: raw } } })
+    const dump = `INSERT INTO \`jd_content\` (\`id\`,\`fulltext\`) VALUES (7,'${scopedSql(raw)}');\n`
+    assert.throws(() => editLock(lock, [e]))
+    assert.throws(() => editDump(dump, [e]))
+  }
+})
+
+test('accepted indexed ACM API edits the third empty leaf with dump lock map parity', async () => {
+  const { editContentMap } = await import('../src/release-content-edits.mjs')
+  const sql = (s) => s.replaceAll('\\', '\\\\').replaceAll('"', '\\"').replaceAll("'", "\\'")
+  const old = ''
+  const from = ['#', '#', old]
+  const to = ['#', '#', 'tel:+123']
+  const pair = (values) => `"f[links]":${JSON.stringify(values)}`
+  const edit = {
+    entity: 'module-121',
+    field: 'params',
+    row: true,
+    json: true,
+    nested: true,
+    nestedJson: 'jatools-config',
+    jsonPath: ['f[links]', 2],
+    from: pair(from),
+    to: pair(to),
+    count: 1
+  }
+  const e = loadContentEdits(editsFile([edit]))
+  const params = (values) =>
+    JSON.stringify({ 'jatools-config': JSON.stringify({ 'f[links]': values, keep: 'same' }), cache: '1' })
+  const before = params(from),
+    after = params(to)
+  const dump = `INSERT INTO \`jd_modules\` (\`id\`, \`params\`) VALUES (120,'${sql(before)}'),(121,'${sql(before)}');\n`
+  const next = editDump(dump, e)
+  assert.equal(next, dump.replace(`(121,'${sql(before)}')`, `(121,'${sql(after)}')`))
+  assert.throws(() => editDump(next, e), /addressed array differs from from/)
+  const lock = JSON.stringify(
+    { entities: { 'module-120': { params: before }, 'module-121': { title: 'Keep', params: before } } },
+    null,
+    2
+  )
+  assert.equal(
+    editLock(lock, e),
+    JSON.stringify(
+      { entities: { 'module-120': { params: before }, 'module-121': { title: 'Keep', params: after } } },
+      null,
+      2
+    )
+  )
+  assert.throws(() => editLock(editLock(lock, e), e), /addressed array differs from from/)
+  const slot = {
+    key: 'module-121.2',
+    entity: 'module-121',
+    column: 'params',
+    nestedJson: 'jatools-config',
+    jsonPath: ['f[links]', 2],
+    sample: old
+  }
+  const slots = [
+    { ...slot, key: 'module-121.0', jsonPath: ['f[links]', 0], sample: '#' },
+    { ...slot, key: 'module-121.1', jsonPath: ['f[links]', 1], sample: '#' },
+    slot,
+    { ...slot, key: 'module-120.2', entity: 'module-120' },
+    { ...slot, key: 'module-121.3', column: 'title' },
+    { ...slot, key: 'module-121.4', jsonPath: ['other', 2] }
+  ]
+  const map = JSON.stringify({ slots, marker: 'keep' }, null, 2)
+  const result = editContentMap(map, e)
+  assert.deepEqual(result.edited, [slot.key])
+  assert.equal(
+    result.text,
+    JSON.stringify(
+      { slots: slots.map((s) => (s.key === slot.key ? { ...s, sample: to[2] } : s)), marker: 'keep' },
+      null,
+      2
+    )
+  )
+})
