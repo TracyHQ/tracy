@@ -1,0 +1,109 @@
+{
+  "scope": "Controlled single-picture step 9b fixture on a legacy local Boxing site; not full WO or business-site acceptance",
+  "productionRepairSourceCommit": "caa9bbe6cf23a127f57cd361b0b5ae27afa696cb",
+  "pathHintCommit": "6fdc76a327",
+  "templateContract": "ja-boxing/j6/1.0.11",
+  "nativeRuntime": {
+    "existingLegacyQaImageCommit": "352d3556a80a35cc14582cf0810f0158257d48bd",
+    "dshCommit": "626ef50d882b24e25c1675899a67ebfa00f2689a",
+    "includesMergedNativePr569": false
+  },
+  "observedDevFailure": {
+    "target": "module 161 background",
+    "action": "content.update",
+    "outcome": "CONFIRM_FIRST",
+    "reason": "The generic module update changes a shared record without customer consent",
+    "imageCropErrorOnArticle15IsSeparate": true,
+    "guardsWeakened": false
+  },
+  "newRepairRoute": {
+    "target": "module-161.2",
+    "operation": "content.contract apply",
+    "freshExpectedRevision": true,
+    "nativeFit": {
+      "aspect": 1.5,
+      "tolerance": 0.02,
+      "minWidth": 2160
+    },
+    "kitAspectNotUsed": 2.813,
+    "canHide": false,
+    "uploadedAssetDimensions": [2160, 1440],
+    "assetSourceDimensions": [3840, 2160],
+    "upscaled": false,
+    "usesExactReturnedMediaPath": true,
+    "modelReadImage": true
+  },
+  "cleanReplay": {
+    "status": "done",
+    "finalCheck": "green",
+    "repairWallMs": 171842,
+    "recordedRepairSummaryMs": 171838,
+    "nativeElapsedMs": 69101,
+    "sessions": 1,
+    "turns": 1,
+    "closedTurns": 1,
+    "checksIncludingInitial": 2,
+    "undo": 0,
+    "modelSteps": 4,
+    "tools": 4,
+    "nativeFailedCalls": 0,
+    "structuralContractErrors": 0,
+    "contractApplyCalls": 1,
+    "finalNativeSlotMatchesUploadedAsset": true,
+    "servedHtmlReferencesAsset": true,
+    "httpStatus": 200,
+    "unknownCostUsd": true,
+    "auditSettlement": "The HTTP-only harness deliberately starts no cron or paid queues. One supported moment/wait request settled the native moment job after its normal 202 response. Repair wall time includes this harness delay; native time is separate."
+  },
+  "excludedAttempts": [
+    {
+      "reason": "Missing DNS alias prevented broker and audit calls; two immediate SUBSCRIPTION_UNAVAILABLE turns, no product verdict"
+    },
+    {
+      "reason": "A later attempt applied the picture after one synthetic Joomla-fragment SLOT_IMAGE_INVALID, but PostgreSQL disk failure interrupted orchestration and audit close. Its native 51977 ms completion is not a production repair PASS. The exact recorded native completion was later finalized through the supported moment door."
+    }
+  ],
+  "visualReview": {
+    "screenshotsRead": true,
+    "widths": [1440, 390],
+    "geometry": [
+      {
+        "viewportWidth": 1440,
+        "beforeHeight": 392,
+        "afterHeight": 392
+      },
+      {
+        "viewportWidth": 390,
+        "beforeHeight": 148,
+        "afterHeight": 148
+      }
+    ],
+    "result": "The official BXR photo replaces the demo background; the existing banner text and geometry remain. Other template demo content is outside this fixture.",
+    "retainedControlText": ["Free 7-day trial", "at 5-star clubs"],
+    "http200IsAvailabilityOnly": true
+  },
+  "resources": {
+    "observation": "One observation during the clean replay, not a measured peak",
+    "webMiB": 252.6,
+    "dshMiB": 313.9,
+    "postgresMiB": 27.02,
+    "siteWebMiB": 161.6,
+    "siteDbMiB": 212.6,
+    "httpContainerMemoryLimitMiB": 1024,
+    "vmFreeGiBObservedBeforeCleanReplay": 1.3
+  },
+  "backup": {
+    "fullSiteBackupVerifiedBeforeWrites": true,
+    "baselineBackupVersion": 2,
+    "beforeRestoreBackupVersion": 3,
+    "baselineFullRestoreThroughSupportedDoorSucceeded": true
+  },
+  "limitations": [
+    "The real agent and existing provider ran, with the current production repair orchestrator and exact new hint.",
+    "The local native runtime predates the newly merged native changes; this fixture does not validate their deployment.",
+    "The dedicated checker covers this one image slot, its readback, served image reference and HTTP availability; it is not the complete site QA suite.",
+    "The run supplied a real prepared business asset; it does not prove upstream asset sourcing, all picture roles, other templates or five full WOs.",
+    "No independent automated picture reviewer or complete-business acceptance is claimed.",
+    "Only module-161.2 image replacement was exercised. Demo control text intentionally remains; the newly merged full writer was not exercised."
+  ]
+}
