@@ -71,7 +71,7 @@ test('an icon class printed in an ordinary prose slot is still checked as prose'
 function socialGrade(
   network,
   iconClass,
-  { hidden = false, kept = true, field = 'block-171.10', link = 'block-171.6' } = {}
+  { hidden = false, kept = true, field = 'block-171.10', link = 'block-171.6', kit = frozenKit } = {}
 ) {
   const c = copy()
   c.slots = [{ slot: field, text: iconClass, owner: 'writer', factIds: [] }]
@@ -93,7 +93,7 @@ function socialGrade(
   b.facts = [
     { id: 'profile', field: 'socials', value: { kind: network, url: `https://${network}.com/studio` } }
   ]
-  return checkCopy({ copy: c, kit: frozenKit, plan, brief: b }).rules
+  return checkCopy({ copy: c, kit, plan, brief: b }).rules
 }
 
 test('a declared social glyph cannot pass for a different planned profile network', () => {
@@ -124,4 +124,41 @@ test('social network checking preserves matching declared icons and hidden or om
 test('an unavailable matching social class still cannot bypass kit icon constraints', () => {
   const result = rule(socialGrade('tiktok', 'fa fa-tiktok'), 'W03')
   assert.ok(result.failures.some((f) => f.cause === 'icon-field'))
+})
+
+test('YouTube copy uses the same evidenced font family as the link writer', () => {
+  const rules = socialGrade('youtube', 'fa fa-youtube')
+  for (const id of ['W03', 'W06', 'W07'])
+    assert.equal(
+      rule(rules, id).failures.some((f) => f.where === 'block-171.10'),
+      false
+    )
+})
+
+test('a supported replacement glyph still has to match the planned network', () => {
+  const rules = socialGrade('youtube', 'fa fa-facebook')
+  assert.ok(rule(rules, 'W03').failures.some((f) => f.cause === 'icon-network'))
+})
+
+test('the copy fix names the supported target class instead of returning a usable YouTube row to planner', () => {
+  const result = rule(socialGrade('youtube', 'fa fa-twitter'), 'W03')
+  const failure = result.failures.find((f) => f.cause === 'icon-network')
+  assert.match(failure.detail, /use fa fa-youtube/)
+  assert.doesNotMatch(failure.detail, /return.*planner/)
+})
+
+test('a copy cannot substitute a different font family or infer a glyph from mixed families', () => {
+  for (const value of ['fab fa-youtube', 'fa-brands fa-youtube'])
+    assert.ok(rule(socialGrade('youtube', value), 'W03').failures.some((f) => f.cause === 'icon-field'))
+  const mixed = structuredClone(frozenKit)
+  for (const block of mixed.blocks)
+    for (const list of block.lists ?? [])
+      for (const row of list.rows ?? [])
+        for (const slot of row.slots ?? [])
+          if (slot.type === 'icon' && slot.network === 'instagram') slot.fieldValue = 'fab fa-instagram'
+  assert.ok(
+    rule(socialGrade('youtube', 'fa fa-youtube', { kit: mixed }), 'W03').failures.some(
+      (f) => f.cause === 'icon-field'
+    )
+  )
 })
