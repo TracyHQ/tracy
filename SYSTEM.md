@@ -2513,6 +2513,11 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 `apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
 
+Dropped Joomla article pages are also unpublished through the existing `content.update` door, using the exact native
+article owner declared by the kit body. Removing a menu item alone does not remove an article from category lists or
+article navigation. An owner shared by a kept page, multiple owners or an unreadable article state refuses the drop;
+the report reads back the native article state. Paths, aliases and titles do not identify the article.
+
 When a kit contact page's original path has no published menu item, form closure, metadata, links and route writes
 share one fallback: the kit's exact native contact body must identify one published frontend component menu item
 opening that same contact. Multiple candidates or conflicting owners remain unresolved; an exact kit path keeps
