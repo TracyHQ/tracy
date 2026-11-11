@@ -28,7 +28,9 @@
 
 import sharp from 'sharp'
 import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
+import { platformRefusal, withCmsLine } from '../lib/cms-line.js'
 import { kitIdOf } from '../lib/kit-id.js'
+import { altAskFor } from './alt-ask.js'
 import { altCheckFor } from './alt-notes.js'
 import { SITE_PICTURES_STORE, saveFile } from './bench-store.js'
 import { demoPictureReader } from './demo-pictures.js'
@@ -45,7 +47,6 @@ import { createFinisher } from './ladder-step.js'
 import { runLookerDoor } from './looker-door.js'
 import { withLooker } from './looker-round.js'
 import { createLooker } from './looker-step.js'
-import { altAskFor } from './alt-ask.js'
 import { PICTURES_VERSION } from './manifest-shape.js'
 import { ownerPhotoBytes } from './owner-photos.js'
 import { usablePhotos } from './photo-shortlist.js'
@@ -62,7 +63,6 @@ import {
 } from './picker-picks.js'
 import { CHECKER_VERSION, checkPictures } from './picture-check/check-pictures.js'
 import { indexInputs } from './picture-check/inputs-index.js'
-import { platformRefusal, withCmsLine } from '../lib/cms-line.js'
 import { picturePrompts } from './picture-prompts.js'
 
 export { BENCH_QUEUE }
@@ -231,7 +231,8 @@ async function prepare(deps, row) {
       kit: kitIdOf(kit.doc, row.kit?.ref),
       planSha256: row.plan_sha256,
       briefSha256: row.brief_sha256,
-      prompts: row.prompts
+      prompts: row.prompts,
+      picturePolicy: picturePrompts().policy
     },
     altNotes: [],
     // Without the writer's copy file the alts are compared by the site check (step 11), and the manifest says so.

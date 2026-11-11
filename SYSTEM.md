@@ -2357,6 +2357,17 @@ A trial bench for the writer step (#326): one agent writes the copy of a whole s
 
 ### Picture bench (03/11/2026, [ADR 0043](docs/adr/0043-picture-step-manifest-check-and-fallback-ladder.md))
 
+Picture processing policy `readability-retry/1` participates in the persisted run lifetime fingerprint, separately
+from the unchanged picker, drawer and looker prompt hashes; a run started under earlier processing semantics must
+start fresh. When the independent looker names only `text would not read`, code makes at most one additional 45% black
+overlay for that frame/candidate before advancing its fallback ladder, even when mean luminance passed the brightness
+shortcut. Cut-outs and frames with a verified covering template overlay are excluded. `readabilityRetries` records
+the source/output SHA256, policy, strength and original faults; the transformed bytes must receive a fresh independent
+look with all visual checks intact. Deterministic file hashes and the existing per-run look cache prevent duplicate
+paid calls on crash replay; persisted retry hashes prevent a later round from reprocessing the same candidate.
+Picker fix rounds retain retry history and reuse transformed bytes when the same original photo is selected.
+
+
 A trial bench for the picture step (#336): every picture frame of a frozen site plan gets a file cut to the size the
 site needs, a hide, a return to the planner or a pending entry, written as one `site-pictures/1` manifest that the
 picture check grades. It builds no site, writes nothing to one and has **no screen, route or API endpoint**.
