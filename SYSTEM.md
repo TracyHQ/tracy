@@ -2468,6 +2468,11 @@ row of a run silent for 10 minutes is ended by the cancel itself. Code: `apps/tr
 `apps/tracy-web/src/write-step-bench-cli.js`; what it shares with the other steps is in `apps/tracy-web/src/lib/`
 (`site-copy/`, `brand-accent/`, `picture-paint/`).
 
+When a kit contact page's original path has no published menu item, form closure, metadata, links and route writes
+share one fallback: the kit's exact native contact body must identify one published frontend component menu item
+opening that same contact. Multiple candidates or conflicting owners remain unresolved; an exact kit path keeps
+precedence. The route receipt retains the actual original live path so a later restore returns to that alias.
+
 **Step 9 whole and step 9b** (#448, ADR 0044 decision 30). `apps/tracy-web/src/write-step-nine.js` (`runStepNine`) is the
 one entry point of step 9: the write, the first site check (step 11's script; no model looks at screenshots), then step 9b
 (`write-step/repair-pass/`) on the customer-visible faults of that check: each page's faults become numbered comment

@@ -22,7 +22,7 @@ function sitePath(url) {
 
 /** The address of a kit page on this site and how to read that it is still there, or the reason there is none. */
 function pageAddress(page, { kit, rows, articles }) {
-  const [row] = rowsOpening(page, rows)
+  const [row] = rowsOpening(page, rows, null, kit)
   if (row) {
     const id = Number(row.id)
     return {
