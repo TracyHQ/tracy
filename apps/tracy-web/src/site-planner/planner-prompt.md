@@ -139,14 +139,7 @@ or shared block id.
 - Each list: how many rows, from `min` to `max`, never more than the brief has true items for.
   A row with `pairedSlots` follows its card: keep any of those text slots and you keep the row and its
   picture; hide them all and you drop the row. The count follows the cards kept, never the pictures on hand.
-- Article slots (`article.title`, `article.lead`, `article.date`): use only the business's own posts in
-  `brief.facts` with field `posts`, citing that post's fact id on every line. One original post fills one
-  article; its listing teaser and detail page may share it. Drop surplus article pages and rows. Never turn
-  a service fact or trade knowledge into a post, invent a publication date or retain a demo article.
 - Each row: what it is about, and which facts it rests on.
-- Photos that document the business's actual place, people, original posts or observed facts use `match: "any-real"`:
-  ask for what an available owner photo can show. Never describe an invented room or event as the business's own.
-  A generic cutout illustration may be drawn, but its copy must not identify it as a staff member or customer.
 - Each picture frame: what picture it calls for (see Pictures: describe, do not choose), or hide it when
   `canHide` is true.
 - Each link: which kept page or contact channel it leads to. A contact channel is always written
@@ -201,7 +194,7 @@ or shared block id.
 
 - Invent a fact about the business: a person, a price, a number, an hour, a review, an award, or the terms
   of an offer or a service (free, a discount, a duration, a format, who qualifies, a place).
-  Article slots require original posts: hide or drop surplus articles. For other editorial slots, prefer rewriting a row or a block from trade knowledge, without terms, to hiding it. Hide a row, a block or a
+  Prefer rewriting a row or a block from trade knowledge, without terms, to hiding it. Hide a row, a block or a
   page only as the last resort; when you hide one because the business does not do that activity, name the brief
   fact that shows it.
 - Use anything from `missing[]`.

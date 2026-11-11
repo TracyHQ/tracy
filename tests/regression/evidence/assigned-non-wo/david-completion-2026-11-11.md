@@ -134,3 +134,16 @@ lines, that diagnostic assertion and this report. The application and fleet impl
 The final delivery remains draft. Full Linux CI and real MariaDB integration must be rerun on its published head.
 The local upstream fork failures, publication blockers and complete customer/deployed acceptance remain outstanding;
 no issue is closed and no develop merge or deployment is claimed.
+
+
+## Parallel planner input follow-up
+
+Reused parallel commit 95c34e5220 as cherry-pick 8ed6c6b88f, preserving clean delivery history. It removes unused owner
+photo metadata only from the model-visible planner brief, versions that view and refuses incompatible paid resumes;
+all other steps retain the full frozen brief. Its integrated planner/control/store/worker/article selection passed
+48/48 with no skips.
+
+The new regression initially failed two approved-prompt hash checks. The earlier issue implementation had changed
+the locked planner prompt. That change is removed: approved prompt bytes are restored, while the versioned article
+and documentary-photo checks remain in code. The complete prompt/input selection then passed 11/11 with no skips.
+The failed receipt on 8ed6c6b88f is retained honestly; a fresh committed-head receipt is required for the correction.
