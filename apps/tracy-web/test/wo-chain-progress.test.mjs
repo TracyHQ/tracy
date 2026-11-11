@@ -14,6 +14,10 @@ import { createDemoRunner } from '../src/opportunities-build/demo-runner.js'
 import { revisionForAction } from '../src/opportunities-build/revisions.js'
 import { createWebsiteBuilder } from '../src/opportunities-build/route.js'
 import { fileDb } from './_db.mjs'
+import { websiteOpportunitiesRoutes } from 'website-opportunities/src/route.js'
+import { createTracyWoHost } from '../src/wo-host.js'
+import { ensureAccount } from '../src/seats/store.js'
+import { mintSession } from '../src/lib/session.js'
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const db = fileDb()
@@ -419,3 +423,101 @@ test(
     assert.deepEqual((await offered()).estimate, { minutes: 26, usd: 1.84 })
   }
 )
+
+// Reproduces the saved dev first attempt: only kit/brand finished before restart during plan.
+const restartReceiptChain = () => ({
+  ending: 'running',
+  running: ['plan'],
+  totalMinutes: 3.23,
+  totalUsd: 0.0561,
+  steps: [
+    { step: 'kit', startMs: 0, endMs: 2750, minutes: 0.05, usd: 0, outcome: 'done' },
+    { step: 'brand', startMs: 2755, endMs: 193779, minutes: 3.18, usd: 0.0561, outcome: 'done' }
+  ]
+})
+
+for (const scenario of [
+  {
+    label: 'restart before writing',
+    state: 'failed',
+    chain: restartReceiptChain,
+    lost: 'LOST_ON_RESTART',
+    expected: 'LOST_ON_RESTART'
+  },
+  {
+    label: 'terminal site QA failure',
+    state: 'applied',
+    chain: () => ({
+      ending: 'soft-failure',
+      steps: [{ step: 'write', outcome: 'failed', error: 'private-model-error-sentinel' }]
+    }),
+    lost: null,
+    expected: 'QA_NEEDS_REVIEW'
+  },
+  {
+    label: 'untrusted interruption metadata',
+    state: 'failed',
+    chain: restartReceiptChain,
+    lost: 'private-model-error-sentinel',
+    expected: 'QA_NEEDS_REVIEW'
+  },
+  {
+    label: 'successful write with historical interruption metadata',
+    state: 'applied',
+    chain: () => ({ ending: 'complete', steps: [done('write', 1, 0)] }),
+    lost: 'LOST_ON_RESTART',
+    expected: null
+  }
+]) {
+  test(`chain QA reason distinguishes ${scenario.label} without exposing raw diagnostics`, opts, async () => {
+    const w = await world()
+    await w.press()
+    await w.tick(0)
+    w.host.job = 'done'
+    await w.chain(scenario.state, scenario.chain())
+    await w.pool.query(
+      `update site_brief set error='private-model-error-sentinel',
+      timings=timings || jsonb_build_object('lost',$2::text,'lostFrom','preparing',
+      'privateDiagnostic','private-model-error-sentinel') where site_key=$1`,
+      [SITE, scenario.lost]
+    )
+    await w.tick()
+    const action = await w.action()
+    assert.equal(
+      action.error,
+      scenario.expected === null ? null : 'QA_NEEDS_REVIEW',
+      'existing action error code stays compatible'
+    )
+    const { qa } = (await w.pool.query('select qa from wo_build')).rows[0]
+    assert.equal(qa.reason, scenario.expected)
+    assert.equal(JSON.stringify(qa).includes('private-model-error-sentinel'), false)
+    const builder = createWebsiteBuilder(w.deps)
+    const opp = (await w.pool.query('select * from wo_opportunity where id=$1', [w.opportunity])).rows[0]
+    const detail = await builder.detailOf(opp, w.account)
+    assert.equal(detail.builds[0].qa.reason, scenario.expected)
+    assert.equal(JSON.stringify(detail.builds[0].qa).includes('private-model-error-sentinel'), false)
+    if (scenario.label === 'restart before writing') {
+      await w.pool.query(`insert into ui_setting(id,overrides,updated_by) values(true,'{"website-opportunities":true}','test')
+        on conflict(id) do update set overrides=excluded.overrides`)
+      const app = websiteOpportunitiesRoutes({
+        ...w.deps,
+        builder,
+        ensureAccount,
+        host: createTracyWoHost(),
+        runtime: w.deps.runtime,
+        fetchImpl: async () => Response.json({ code: 'NO_NETWORK' }, { status: 500 })
+      })
+      const origin = w.deps.config.origin
+      const otherCookie = `tracy_sess=${await mintSession('other@test.example', w.deps.config.sessionSecret)}`
+      const other = await app.fetch(
+        new Request(`${origin}/api/website-opportunities/${w.opportunity}`, {
+          headers: { cookie: otherCookie }
+        })
+      )
+      assert.equal(other.status, 404)
+      assert.equal((await other.text()).includes('LOST_ON_RESTART'), false)
+      const anonymous = await app.fetch(new Request(`${origin}/api/website-opportunities/${w.opportunity}`))
+      assert.equal(anonymous.status, 401)
+    }
+  })
+}

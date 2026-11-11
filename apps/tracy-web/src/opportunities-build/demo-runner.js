@@ -341,6 +341,11 @@ export function createDemoRunner(deps) {
             value == null ? null : known.includes(value) ? value : 'unknown'
           const qa = {
             state: passed ? 'passed' : 'failed',
+            reason: passed
+              ? null
+              : chainRun?.timings?.lost === 'LOST_ON_RESTART'
+                ? 'LOST_ON_RESTART'
+                : 'QA_NEEDS_REVIEW',
             workflow: 'step-chain/1',
             humanAccepted: false,
             chain: {
