@@ -68,7 +68,7 @@ const medianOf = (values) => {
  */
 export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT, now = Date.now } = {}) {
   const { rows } = await pool.query(
-    `select b.site_key, b.quickstart, b.state, b.created_at,
+    `select b.site_key, b.quickstart, b.state, b.created_at, b.updated_at, b.error, b.timings,
             coalesce(case when b.timings ->> 'attemptStartedAt' ~ '^[1-9][0-9]{0,14}$'
                           then (b.timings ->> 'attemptStartedAt')::numeric end,
                      extract(epoch from b.created_at) * 1000) as attempt_started_at,
@@ -98,6 +98,26 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
           ? 'complete'
           : 'soft-failure'
     const underway = Array.isArray(chain.running) ? chain.running.map(String) : []
+    // A dead worker leaves its last progress snapshot, not a terminal measurement. Its settlement is
+    // immutable on new rows; legacy updated_at can include later edits and is only an upper bound.
+    const interrupted = unfinished && !running
+    const validEnd = (value) => Number.isFinite(value) && value >= startedMs && value <= now()
+    const stamped = /^[1-9][0-9]{0,14}$/.test(String(row.timings?.interruptedAt ?? ''))
+      ? Number(row.timings.interruptedAt)
+      : NaN
+    const updated = row.updated_at == null ? NaN : new Date(row.updated_at).getTime()
+    const endedMs = validEnd(stamped) ? stamped : validEnd(updated) ? updated : null
+    const interruption = interrupted
+      ? {
+          reason: typeof row.error === 'string' ? row.error : null,
+          endedAt: endedMs === null ? null : new Date(endedMs).toISOString(),
+          timeSource: validEnd(stamped) ? 'settled' : endedMs === null ? 'snapshot' : 'last-update',
+          bound: validEnd(stamped) ? null : endedMs === null ? 'lower' : 'upper',
+          // Settlement is not proof of the provider's execution end or its unreported spend.
+          executionEndedAt: null,
+          steps: underway.map((step) => ({ step, minutes: null, usd: null }))
+        }
+      : null
     return {
       siteKey: row.site_key,
       label: row.label ?? null,
@@ -107,7 +127,14 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       // A running build counts its minutes from the press until now; spend is what the finished steps cost so far.
       totalMinutes: running
         ? Math.round(((now() - startedMs) / 60_000) * 100) / 100
-        : finiteOrZero(chain.totalMinutes),
+        : interrupted && endedMs !== null
+          ? Math.max(
+              finiteOrZero(chain.totalMinutes),
+              Math.round(((endedMs - startedMs) / 60_000) * 100) / 100
+            )
+          : finiteOrZero(chain.totalMinutes),
+      rawChain: chain,
+      interruption,
       totalUsd: unfinished ? Math.round(spent * 10_000) / 10_000 : finiteOrZero(chain.totalUsd),
       ending,
       failedStep:

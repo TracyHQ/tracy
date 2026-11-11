@@ -2514,6 +2514,13 @@ At startup, the brief runner settles orphaned rows using their last observed `up
 heartbeat and the existing uncertain-write policy. Transient database or DNS failures retry that recovery at most 20
 times with exponential backoff from one second to 30 seconds; permanent errors or exhausted attempts are logged as stopped.
 Server shutdown cancels recovery waits before closing the pool. Recovery never resumes an interrupted content writer.
+Terminal failure and orphan settlement writes stamp `timings.interruptedAt` without changing their existing state or
+retry decisions. `/api/ops/wo/chain-builds` keeps the original `rawChain` snapshot and exposes `interruption` metadata
+when a closed brief still carries a running chain snapshot. Elapsed attempt time ends at that settlement stamp;
+legacy rows use their last update with `timeSource: last-update` and `bound: upper`, or retain the snapshot as a lower
+bound when no valid terminal time exists. Settlement is not proof of the provider's execution end: that remains null,
+as do unrecorded active-step minutes and USD. Later brief updates do not move a stamped interruption's elapsed time.
+
 
 A WO chain also validates the base through the existing owner/session `GET /api/sites/:key/backups` door before
 its base is considered ready. Fresh model preparation stays parallel with provisioning; a missing full backup aborts

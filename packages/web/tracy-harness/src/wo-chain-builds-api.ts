@@ -21,6 +21,16 @@ export interface ChainBuild {
   startedAt: string
   totalMinutes: number
   totalUsd: number
+  /** The original chain snapshot, retained separately from interruption accounting. */
+  rawChain: Record<string, unknown>
+  interruption: {
+    reason: string | null
+    endedAt: string | null
+    timeSource: 'settled' | 'last-update' | 'snapshot'
+    bound: 'upper' | 'lower' | null
+    executionEndedAt: null
+    steps: { step: string; minutes: null; usd: null }[]
+  } | null
   /** `running`: the run is going; `failed`: it died without finishing its record (a hard failure). */
   ending: 'complete' | 'soft-failure' | 'failed' | 'running'
   failedStep: string | null
