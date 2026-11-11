@@ -45,10 +45,25 @@ async function sendRound(pass, result, checks, { page, faults, round, sessionId 
       slots: slotsOf(faults.slice(cap))
     })
   const capped = faults.slice(0, cap)
-  const items = await pageItems(pass, page, capped)
+  const prepared = await pageItems(pass, page, capped)
+  const selected = []
+  for (const [i, item] of prepared.entries()) {
+    if (item.repairBlocked)
+      result.notSent.push({
+        page,
+        round,
+        faults: 1,
+        reason: 'target-unresolved',
+        detail: item.repairBlocked,
+        slots: slotsOf([capped[i]])
+      })
+    else selected.push(i)
+  }
+  const items = selected.map((i) => prepared[i])
+  const sendable = selected.map((i) => capped[i])
   const { parts, tooLong } = turnParts(pass.buildCommentTurn, items)
   if (tooLong.length) {
-    const left = tooLong.map((i) => capped[i])
+    const left = tooLong.map((i) => sendable[i])
     result.notSent.push({ page, round, faults: left.length, reason: 'too-long', slots: slotsOf(left) })
     pass.log(`step 9b: ${left.length} fault(s) on ${page} do not fit a comment turn even alone; not sent`)
   }
@@ -63,7 +78,7 @@ async function sendRound(pass, result, checks, { page, faults, round, sessionId 
       result.notSent.push({ page, round, faults: parts.slice(k).flat().length, reason: 'open-turn' })
       break
     }
-    const turnFaults = part.map((i) => capped[i])
+    const turnFaults = part.map((i) => sendable[i])
     if (k > 0 && pass.clock.stopped()) {
       const rest = parts.slice(k).flat().length
       result.notSent.push({ page, round, faults: rest, reason: 'time-limit' })

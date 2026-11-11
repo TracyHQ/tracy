@@ -6,6 +6,7 @@
 // picture) is looked for on the whole page by its words or alt. A fault whose block the page does not
 // hold, or whose words the page does not show, has no element. Pure.
 import { parse } from 'parse5'
+import { measuredTargetKey } from './repair-text-target.js'
 
 const MAX_TEXT = 300
 const MAX_MARKS = 12
@@ -100,6 +101,55 @@ export function servedPage(html) {
   }
   if (typeof html === 'string' && html) walk(parse(html))
   return { blocks, body }
+}
+
+/** Re-resolve the measured element without choosing among equal words or duplicate IDs. */
+function measuredTextElement(body, target) {
+  if (!body || !measuredTargetKey(target)) return null
+  const parts = target.path.split(' > ').map((part) => {
+    const id = /^#([A-Za-z][\w-]*)$/.exec(part)
+    if (id) return { id: id[1] }
+    if (part === 'body') return { tag: 'body' }
+    const child = /^([a-z][a-z0-9-]*):nth-of-type\(([1-9]\d*)\)$/.exec(part)
+    return child ? { tag: child[1], nth: Number(child[2]) } : null
+  })
+  if (!parts.length || parts.some((p) => !p)) return null
+  const matches = (node) => {
+    let at = node
+    for (let i = parts.length - 1; i >= 0; i--, at = at?.parentNode) {
+      const p = parts[i]
+      if (!at?.tagName || (p.id ? attrOf(at, 'id') !== p.id : at.tagName !== p.tag)) return false
+      if (p.nth) {
+        const peers = elements(at.parentNode ?? {}).filter((n) => n.tagName === at.tagName)
+        if (peers.indexOf(at) + 1 !== p.nth) return false
+      }
+    }
+    return true
+  }
+  const found = []
+  const walk = (node) => {
+    if (matches(node)) found.push(node)
+    for (const child of elements(node)) if (!SKIPPED.has(child.tagName)) walk(child)
+  }
+  walk(body)
+  if (found.length !== 1) return null
+  const el = found[0]
+  const rawText = (node) =>
+    node.nodeName === '#text' ? node.value : (node.childNodes ?? []).map(rawText).join('')
+  if (
+    el.tagName !== target.tag ||
+    flat(rawText(el)) !== target.text ||
+    JSON.stringify(marksUp(el)) !== JSON.stringify(target.marks)
+  )
+    return null
+  return {
+    selector: target.path,
+    path: target.path,
+    tag: el.tagName,
+    text: target.text,
+    marks: marksUp(el),
+    image: null
+  }
 }
 
 /** The words a fault names on the page: what was measured, else the words its sentence quotes. */
@@ -234,6 +284,7 @@ function servedControlOf(body, fault) {
  *   image: { src: string, alt: string } | null } | null}
  */
 export function servedElementOf({ blocks, body }, fault) {
+  if (fault.group === 'words-over-picture') return measuredTextElement(body, fault.target)
   if (fault.group === 'empty-controls' && fault.selector) return servedControlOf(body, fault)
   const n = blockNumberOf(fault.slot) ?? blockNumberOf(fault.block)
   const block = n ? blocks.get(n) : null

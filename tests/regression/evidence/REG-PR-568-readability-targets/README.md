@@ -1,0 +1,9 @@
+# Readability target fidelity
+
+A recorded native repair received three unresolved body comments containing full contrast diagnostics and chose text occurrence indices 0, 1 and 2. Those findings did not prove that three distinct elements existed. The host also grouped equal sibling text under a coarse baseline key before the checker could preserve their identity.
+
+The regression uses invented footer email nodes and the production host measurement, checker, fault grouping, served-element locator and delivered comment-turn builder. Four width/theme observations of one complete target become one repair retaining all four observations. Three equal email nodes remain three targets. Duplicate IDs, changed words, changed ownership and legacy measurements without a target are not submitted to the native agent. A browser check verifies three distinct paths on both themes and widths. An independent native look-door test verifies that the exact footer selector still returns CONFIRM_FIRST before any CSS or content write.
+
+The target proves a unique current path with matching text, tag and provenance. It does not establish persistent node identity after indistinguishable DOM nodes are reordered. The native consent guard is unchanged. The host turn reader currently lacks refused-tool telemetry, so this change does not claim to suppress its existing second round based on a native refusal.
+
+Before the implementation, all five initial web regression tests failed. Focused validation passed 12 host browser cases and four native consent cases with zero failures or skips. The web target suite additionally checks nested inline text with browser textContent semantics, including rejection after a real text change. A formal regression receipt is recorded after integration; no full pipeline acceptance is claimed here.
