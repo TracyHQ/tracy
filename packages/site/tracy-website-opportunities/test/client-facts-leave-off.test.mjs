@@ -1,6 +1,6 @@
 /**
  * The Business facts sub-page keeps what the seller left off the site (#537, design A): the item stays in its band,
- * and its switch reads Off the site. The rating keeps its own choice in its cell; Opening hours are kept or left off
+ * and its switch reads Off the site. Google's rating is no cell of the business band (#537 R18); Opening hours are kept or left off
  * by the band's switch (no Keep / Leave off links), with the check note as an amber Check this chip in the header;
  * each Team member has its own small switch. Bundles the real page with React 18 and renders it to static markup.
  *
@@ -132,7 +132,6 @@ const draw = (p, { media = MEDIA, running = true, sources = [] } = {}) => {
       doors,
       food: false,
       websiteLink: (u) => u,
-      researchDetails: null,
       running
     })
   )
@@ -148,11 +147,6 @@ const head = (html, card) => {
   const b = band(html, card)
   return b.slice(b.indexOf('tracy-wo-facts-bh'), b.indexOf('tracy-wo-facts-band-body'))
 }
-// The rating choice sits in the rating cell, after the stars, not in the header.
-const ratingLine = (html) => {
-  const at = html.indexOf('tracy-wo-facts-stars')
-  return html.slice(at, html.indexOf('class="tracy-wo-facts-cell"', at))
-}
 // The band switch in a header: its state and whether it can be pressed.
 const bandSwitch = (html, card) => {
   const h = head(html, card)
@@ -161,31 +155,21 @@ const bandSwitch = (html, card) => {
 const labels = (html) =>
   [...html.matchAll(/class="tracy-wo-facts-act"[^>]*>(?:<svg.*?<\/svg>)?([^<]*)</g)].map((m) => m[1])
 
-test('a rating left off stays in the business band with the tag; Show on the site sits in the rating cell, only Edit in the header', () => {
-  const html = draw(
-    profile({
-      rating: { state: 'left', score: 4.8, reviews: 40, few: false, choice: 'leave' },
-      hoursCheck: { state: 'agreed', hours: DAYS.map((d) => `${d}: 09:00-17:00`) },
-      team: []
-    })
-  )
-  assert.match(html, /tracy-wo-facts-stars/)
-  assert.match(band(html, 'business'), /tracy-wo-facts-off">\[facts\.leftOff\]/)
-  assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
-  assert.deepEqual(labels(ratingLine(html)), ['[rating.show]'])
-})
-
-test('a rating that shows offers Leave off the site in the rating cell and no tag', () => {
-  const html = draw(
-    profile({
-      rating: { state: 'shown', score: 4.8, reviews: 40, few: false, choice: 'show' },
-      hoursCheck: { state: 'agreed', hours: DAYS.map((d) => `${d}: 09:00-17:00`) },
-      team: []
-    })
-  )
-  assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
-  assert.deepEqual(labels(ratingLine(html)), ['[rating.leave]'])
-  assert.doesNotMatch(html, /facts\.leftOff/)
+test("the business band holds no rating: Google's rating is a figure of What guests say (#537 R18)", () => {
+  for (const rating of [
+    { state: 'left', score: 4.8, reviews: 40, few: false, choice: 'leave' },
+    { state: 'shown', score: 4.8, reviews: 40, few: false, choice: 'show' }
+  ]) {
+    const html = draw(
+      profile({
+        rating,
+        hoursCheck: { state: 'agreed', hours: DAYS.map((d) => `${d}: 09:00-17:00`) },
+        team: []
+      })
+    )
+    assert.doesNotMatch(band(html, 'business'), /my\.field\.rating|tracy-wo-facts-stars|rating\.(show|leave)/)
+    assert.deepEqual(labels(head(html, 'business')), ['[profile.edit]'])
+  }
 })
 
 test('hours left off keep their days, dimmed; the band switch reads Off the site and can put them back', () => {

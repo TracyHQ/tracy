@@ -1,89 +1,19 @@
 /**
- * The bands of the Business facts sub-page that hold their own state (#537, design A): Opening hours (the days as a
- * row of cells that shrink to fit, and scroll sideways when they cannot; the check note as the amber chip in the
- * header; the band's switch keeps the hours on the site or leaves them off) and Research details (locked off the
- * site, the sources research read). The Team row lives in `facts-team-people.tsx`.
+ * Shared pieces of the Business facts bands (#537, design A): the body of a band that is not filled, and Research
+ * details (locked off the site, the sources research read). Hours and amenities live in `facts-hours-band.tsx`, the
+ * Team row in `facts-team-people.tsx`.
  */
 import type { JSX } from 'react'
-import { Clock } from 'lucide-react'
 
 import { FactsBand, NotAvailable } from './business-facts-band.tsx'
-import { type BusinessFactsView, type FactsCardView, hoursLineParts } from './business-facts-model.ts'
+import type { BusinessFactsView, FactsCardView } from './business-facts-model.ts'
 import { sourceLabel } from './cms-label.ts'
-import { HoursEdit } from './facts-band-edit.tsx'
-import { type HoursChoice, type HoursSaved, sourceName } from './profile-hours-row.tsx'
-import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
 
 /** A band body for a state that is not filled: N/A, or Not collected yet before research. */
 export const Missing = ({ t, card }: { t: Translate; card: FactsCardView | undefined }): JSX.Element => (
   <NotAvailable t={t} state={card?.state === 'notCollected' ? 'notCollected' : 'none'} />
 )
-
-export function HoursBand({
-  t,
-  locale,
-  view,
-  saveHours
-}: {
-  t: Translate
-  locale: string
-  view: BusinessFactsView
-  saveHours: (choice: HoursChoice) => Promise<HoursSaved>
-}): JSX.Element {
-  const hours = view.hours
-  const card = view.cards.find((c) => c.id === 'hours')
-  const filled = card?.state === 'filled' && hours !== null
-  const lines = hours === null ? [] : hours.hours.length > 0 ? hours.hours : hours.sourceHours
-  const note = hours?.open ? t('hours.note', { source: sourceName(t, hours) }) : null
-  // On: the hours go to the site. Off: left off. Putting them back keeps what the source says.
-  const canSet = filled && (!hours.left || hours.sourceHours.length > 0)
-  const set = async (on: boolean): Promise<boolean> =>
-    (await saveHours({ choice: on ? 'keep' : 'leave' })) === 'ok'
-  return (
-    <FactsBand
-      t={t}
-      id="hours"
-      label={t('field.hours')}
-      title={
-        <>
-          <Clock aria-hidden="true" className="tracy-wo-icon" />
-          <span className="tracy-wo-facts-ell">{t('field.hours')}</span>
-        </>
-      }
-      check={note}
-      chips={filled ? <SourceChip t={t} chip={card?.chip ?? null} locale={locale} /> : null}
-      onSite={{ on: !(hours?.left ?? false), set: canSet ? set : null }}
-      edit={
-        !filled
-          ? { why: t('reason.not_collected') }
-          : {
-              form: (close) => (
-                <HoursEdit t={t} close={close} lines={lines} open={hours.open} saveHours={saveHours} />
-              )
-            }
-      }
-    >
-      {!filled ? (
-        <Missing t={t} card={card} />
-      ) : (
-        <div className="tracy-wo-facts-days tracy-wo-facts-cells tracy-wo-facts-row">
-          {lines.map((line) => {
-            const { days, times } = hoursLineParts(line)
-            return (
-              <div key={line} className="tracy-wo-facts-cell" title={line}>
-                <span className="tracy-wo-facts-ck">{days}</span>
-                <span className="tracy-wo-facts-ln">
-                  <span className="tracy-wo-facts-ell">{times}</span>
-                </span>
-              </div>
-            )
-          })}
-        </div>
-      )}
-    </FactsBand>
-  )
-}
 
 /** Research details: locked off the site, the sources research read in one row. */
 export function ResearchBand({ t, view }: { t: Translate; view: BusinessFactsView }): JSX.Element {

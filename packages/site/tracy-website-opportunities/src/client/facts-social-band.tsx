@@ -1,6 +1,8 @@
 /**
  * Social pages of the Business facts sub-page (#537 R15): the pages research found or the seller pasted (sources), then
- * the links the owner typed for the site, each a linked chip with its network's glyph, in one row. Add more opens one
+ * the links the owner typed for the site, each a linked chip with its network's glyph, in one row. Once research made
+ * the saved profile (#537 R18) the row is its links (the owner's among them), each with its switch and its counts
+ * (followers, posts) beside it (`facts-group-band.tsx SavedSocialRow`). Add more opens one
  * row inside the band (`facts-social-add.tsx`); Edit lists the owner's links, each with Remove. The pages research
  * found are sources of the research, so they are not removed here.
  */
@@ -13,6 +15,8 @@ import { Missing } from './business-facts-bands.tsx'
 import type { BusinessFactsView } from './business-facts-model.ts'
 import { sourceLabel } from './cms-label.ts'
 import { type BandSwitchView, EditFooter } from './facts-band-actions.tsx'
+import type { SetFactOn } from './facts-generic-row.tsx'
+import { SavedSocialRow } from './facts-social-row.tsx'
 import { SocialAddRow, socialErrorText } from './facts-social-add.tsx'
 import type { OwnerDoors, SiteSocialView } from './owner-edits-model.ts'
 import { sourceLogoKey } from './source-logo.ts'
@@ -94,14 +98,18 @@ function SocialEdit({
 
 export function SocialBand({
   t,
+  locale = 'en',
   view,
   onSite,
-  owner
+  owner,
+  setOn = null
 }: {
   t: Translate
+  locale?: string
   view: BusinessFactsView
   onSite: BandSwitchView
   owner: Pick<OwnerDoors, 'networks' | 'socials' | 'setSocial'>
+  setOn?: SetFactOn | null
 }): JSX.Element {
   const [adding, setAdding] = useState(false)
   const card = view.cards.find((c) => c.id === 'social')
@@ -141,7 +149,9 @@ export function SocialBand({
         ) : null
       }
     >
-      {empty ? (
+      {view.saved !== null && view.saved.links.length + view.saved.statistics.length > 0 ? (
+        <SavedSocialRow t={t} locale={locale} view={view} setOn={setOn} networks={owner.networks} />
+      ) : empty ? (
         <Missing t={t} card={card} />
       ) : (
         <ul className="tracy-wo-facts-chiprow tracy-wo-facts-row">

@@ -2,7 +2,8 @@
  * The list bands of the Business facts sub-page (#537, design A): Services, Key messages, What guests say. Each draws
  * every item in one row that scrolls sideways inside the band (key messages are three cells); a band that research
  * left empty reads N/A alone. Each guest review has its own small switch (#537 R16): one kept off the site stays,
- * dimmed, and no part of the site quotes it. Social pages live in `facts-social-band.tsx`.
+ * dimmed, and no part of the site quotes it. Google's rating and review count sit in the reviews header as small
+ * figures, each with its switch (#537 R18). Social pages live in `facts-social-band.tsx`.
  */
 import type { JSX, ReactNode } from 'react'
 
@@ -10,7 +11,9 @@ import { FactsBand, OneLine } from './business-facts-band.tsx'
 import { Missing } from './business-facts-bands.tsx'
 import { type BusinessFactsView, itemChipOf, messageChipOf, reviewChipOf } from './business-facts-model.ts'
 import type { BandSwitchView, EditDoor } from './facts-band-actions.tsx'
+import { FactFigure, type SetFactOn } from './facts-generic-row.tsx'
 import { ItemSwitch } from './facts-item-switch.tsx'
+import { isReviewStat } from './saved-profile-model.ts'
 import type { ReadingItemView } from './profile-reading-model.ts'
 import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
@@ -118,24 +121,46 @@ export function ReviewsBand({
   view,
   onSite,
   edit,
-  setHidden
+  setHidden,
+  setOn = null
 }: BandProps & {
   /** Keeps one review off the site, or puts it back, by its key. */
   setHidden: (key: string, hidden: boolean) => Promise<boolean>
+  /** The facts door's switch: the rating figures, and a review with no key. */
+  setOn?: SetFactOn | null
 }): JSX.Element {
+  const figures = (view.saved?.statistics ?? []).filter(isReviewStat)
+  const switchOf = (r: BusinessFactsView['reviews'][number]): ((on: boolean) => Promise<boolean>) | null =>
+    typeof r.key === 'string'
+      ? (on) => setHidden(r.key as string, !on)
+      : typeof r.factId === 'string' && setOn !== null
+        ? (on) => setOn(r.factId as string, on)
+        : null
   return (
     <FactsBand
       t={t}
       id="reviews"
       label={t('facts.reviews.title')}
       title={t('facts.reviews.title')}
+      aside={
+        figures.length === 0 ? undefined : (
+          <span className="tracy-wo-facts-figs">
+            {figures.map((f) => (
+              <FactFigure key={f.id} t={t} locale={locale} fact={f} setOn={setOn} />
+            ))}
+          </span>
+        )
+      }
       onSite={onSite}
       edit={edit}
     >
       {body(view, t, 'reviews', () => (
         <ul className="tracy-wo-facts-cards tracy-wo-facts-row">
           {view.reviews.map((r, i) => (
-            <li key={r.key ?? `${r.author}-${i}`} data-off={r.ownerHidden ? '' : undefined}>
+            <li
+              key={r.factId ?? r.key ?? `${r.author}-${i}`}
+              data-off={r.ownerHidden || r.onSite === false ? '' : undefined}
+            >
               <q className="tracy-wo-facts-clamp2" title={r.text}>
                 {r.text}
               </q>
@@ -144,14 +169,14 @@ export function ReviewsBand({
                   {[r.rating === null ? null : `★ ${r.rating}`, r.author].filter(Boolean).join(' · ')}
                 </span>
                 <SourceChip t={t} chip={reviewChipOf(view, r)} locale={locale} />
-                {typeof r.key === 'string' ? (
+                {switchOf(r) === null ? null : (
                   <ItemSwitch
                     t={t}
                     label={r.author}
-                    on={r.ownerHidden !== true}
-                    set={(on) => setHidden(r.key as string, !on)}
+                    on={r.ownerHidden !== true && r.onSite !== false}
+                    set={switchOf(r)}
                   />
-                ) : null}
+                )}
               </span>
             </li>
           ))}
