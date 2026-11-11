@@ -15,6 +15,7 @@ import {
 } from '../../lib/site-copy/slot-shape.js'
 
 import { iconsOf, iconClassOf, networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
 
 export const FLOOR_RATIO = DEMO_FLOOR_RATIO // W03: a text must reach this share of the demo text length ...
 export const FLOOR_DEMO_MIN = SHORT_DEMO_MAX // ... when the demo text is longer than this many characters.
@@ -88,7 +89,7 @@ export function checkW02({ R, view, idx }) {
 }
 
 /** The parts of a lead and points slot measured against the same parts of the demo. */
-function partFaults(kit, items) {
+function partFaults(kit, items, excerpt = false) {
   const shape = slotShape(kit)
   if (!shape.points || items.length < 2) return []
   const out = []
@@ -96,7 +97,7 @@ function partFaults(kit, items) {
   if (shape.lead) {
     const lead = boundsOf(shape.leadChars, 0)
     const n = items[0].trim().length
-    if (lead && n < lead.floor)
+    if (!excerpt && lead && n < lead.floor)
       out.push({
         detail: `lead paragraph ${n} characters, floor ${lead.floor} (${Math.round(FLOOR_RATIO * 100)}% of the ${shape.leadChars} character demo lead)`,
         cause: 'under'
@@ -112,7 +113,7 @@ function partFaults(kit, items) {
   if (part && points.length) {
     const mean = Math.round(points.reduce((a, t) => a + t.trim().length, 0) / points.length)
     const demo = Math.round(demoMean)
-    if (mean < part.floor)
+    if (!excerpt && mean < part.floor)
       out.push({
         detail: `points average ${mean} characters, floor ${part.floor} (${Math.round(FLOOR_RATIO * 100)}% of the ${demo} character average demo point)`,
         cause: 'under'
@@ -193,7 +194,8 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
     const chars = lengthOf(s.items)
     const demo = demoTotalFor(kit ?? {}, s.items.length)
     const bounds = kit ? boundsOf(demo) : null
-    const floor = bounds ? Math.min(bounds.floor, limit ?? Infinity) : 0
+    const excerpt = ownerPostExcerptFor(s, idx, brief)?.valid === true
+    const floor = bounds && !excerpt ? Math.min(bounds.floor, limit ?? Infinity) : 0
     const ceiling = bounds ? Math.min(bounds.ceiling, limit ?? Infinity) : null
     // A lead and points slot holds its lead paragraph and every point; otherwise the larger of the two counts.
     const shape = kit ? slotShape(kit) : null
@@ -233,7 +235,7 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
         `${chars} characters, ceiling ${ceiling} (the ${demo} character demo text is the top)`,
         'over-demo'
       )
-    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items)) fail(d.detail, d.cause)
+    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
     if (s.items.length > allowed)
       fail(`${s.items.length} paragraphs, the kit allows ${allowed}`, 'paragraphs')
     if (!bad) R.w03.ok()

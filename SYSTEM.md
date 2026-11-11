@@ -2351,6 +2351,13 @@ endpoint**.
 A trial bench for the writer step (#326): one agent writes the copy of a whole site from a frozen site plan into one
 `site-copy/1` file, and the copy check grades it. It builds no site and has **no screen, route or API endpoint**.
 
+Article body slots (`article.lead`) preserve a contiguous excerpt of their planned original owner post. The writer's
+kit input names this constraint. Copy checker 12 verifies the excerpt and matching post citation; only a verified
+excerpt is exempt from demo minimum length, while character ceilings and paragraph/point limits remain. Contract
+export excludes an unsupported body on both CMS paths, and step 9 stops before applying copy that has an
+`ARTICLE_EXCERPT` finding. A failed copy selected as the best attempt cannot bypass this fence. Approved prompt
+bytes and historical outputs are unchanged.
+
 - **Started and read from a command line** inside the tracy-web container:
   [`scripts/site-writer-bench.mjs`](apps/tracy-web/scripts/site-writer-bench.mjs) (`run --plan-file --kit
   --brief-file|--brief-revision`, `list`, `status`, `get`, `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-writer/bench-cli.js)).

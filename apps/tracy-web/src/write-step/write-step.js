@@ -340,6 +340,14 @@ export async function runWriteStep(input) {
       contentMap
     })
     extras = exported.extras
+    const inventedPosts = exported.problems.filter((p) => p.code === 'ARTICLE_EXCERPT')
+    if (inventedPosts.length)
+      return {
+        stop: {
+          code: 'BAD_FILE',
+          reason: `Article copy needs correction: ${inventedPosts.map((p) => `${p.where}: ${p.detail}`).join('; ')}`
+        }
+      }
     // A page the plan creates with no words in the copy is not created, and said once on step 6; every other page is written.
     const wordless = new Set(pagesWithoutCopy(plan, extras.pages))
     leaveOut(

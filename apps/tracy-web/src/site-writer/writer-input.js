@@ -116,6 +116,12 @@ const slimSlot = (s) => ({
   shape: slotShape(s),
   paragraphs: s.paragraphs ?? 0,
   bullets: s.bullets ?? 0,
+  ...(s.role === 'article.lead'
+    ? {
+        originalPost:
+          'Use one faithful contiguous excerpt of the planned original owner post, preserving its words and order. Do not add event details. A verified excerpt has no demo minimum length; maximum characters and paragraph limits still apply. Return surplus slots when no distinct truthful excerpt fits.'
+      }
+    : {}),
   ...(arr(s.pageTitleOf).length ? { pageTitleOf: s.pageTitleOf } : {}),
   ...(emphasisNoteOf(s) ? { inline: emphasisNoteOf(s) } : {})
 })
