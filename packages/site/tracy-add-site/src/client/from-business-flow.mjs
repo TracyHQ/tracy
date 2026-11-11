@@ -122,6 +122,8 @@ export function fromBusinessApi(fetchImpl = tracyWebFetch) {
     state: (id) => call(`${BASE}/${encodeURIComponent(id)}`),
     /** @param {string} id @param {{ cms: string, design: string, quickstart: string } | { auto: true }} selection */
     build: (id, selection) => call(`${BASE}/${encodeURIComponent(id)}/build`, 'POST', { selection }),
+    /** Retry the same failed build; the server keeps its site, brief and template. @param {string} id @param {string} actionId */
+    retry: (id, actionId) => call(`${BASE}/${encodeURIComponent(id)}/build`, 'POST', { retryOf: actionId }),
     /** The template catalogue (`GET /api/templates`), for the suggestion's picture, sentence and demo. */
     templates: () => call('/api/templates'),
     /** @param {string} actionId */

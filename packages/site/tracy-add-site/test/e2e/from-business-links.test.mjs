@@ -68,6 +68,29 @@ before(async () => {
         const t = (key, params = {}) =>
           Object.entries(params).reduce((text, [name, value]) => text.replaceAll('{' + name + '}', String(value)), en[key] ?? key)
         const root = createRoot(document.getElementById('root'))
+        window.showServerBuild = (initialError = null) => {
+          let action = { id: 'action-1', workflow: 'agent-demo/1', state: initialError ? 'failed' : 'queued',
+            error: initialError, siteKey: 'owner-site.tracy.test', acceptedAt: new Date(Date.now() - 120000).toISOString() }
+          const store = new Map([['tracy:from-business:v1', JSON.stringify({ id: 'business-1', name: 'Owner business', at: Date.now() })]])
+          const storage = { getItem: k => store.get(k) ?? null, setItem: (k,v) => store.set(k,v), removeItem: k => store.delete(k) }
+          const state = { retries: [], opened: [], prepares: 0, hasKept: () => store.has('tracy:from-business:v1'),
+            fail: () => { action = { ...action, state: 'failed', error: 'QA_NEEDS_REVIEW' } },
+            complete: () => { action = { ...action, state: 'completed', error: null } } }
+          const api = {
+            question: async () => ({ ok: true, body: {} }),
+            state: async () => ({ ok: true, body: { business: { id: 'business-1', phase: 'build', action } } }),
+            retry: async (id, actionId) => {
+              state.retries.push({ id, actionId })
+              action = { ...action, id: 'action-2', state: 'queued', error: null }
+              return { ok: true, body: { business: { phase: 'build', action } } }
+            },
+            prepare: async () => { state.prepares++; throw new Error('A chain must never prepare a chat') }
+          }
+          let mounts = 0
+          state.remount = () => root.render(<FromBusiness key={++mounts} t={t} lang="en" onBack={() => {}} api={api} storage={storage} open={href => state.opened.push(href)} />)
+          window.serverBuild = state
+          state.remount()
+        }
         const draftApi = {
           question: () => Promise.resolve({ ok: true, body: {} }),
           find: text => Promise.resolve({ ok: true, body: { candidates: [{ providerId: 'p1', name: text + ' result' }] } })
@@ -148,6 +171,43 @@ async function withPage(run) {
     await context.close()
   }
 }
+
+test('a server-owned build shows building, survives reopening and retries the same site before opening', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() => window.showServerBuild())
+    await page.getByRole('status').filter({ hasText: 'Building your site' }).waitFor()
+    assert.equal(
+      await page.getByText('Opening the chat where Tracy builds your site…', { exact: true }).count(),
+      0
+    )
+    assert.match(await page.locator('[data-own-build-progress]').innerText(), /2 min so far/)
+    await page.evaluate(() => window.serverBuild.fail())
+    await page.getByRole('button', { name: 'Try again', exact: true }).waitFor({ timeout: 10000 })
+    assert.equal(await page.evaluate(() => window.serverBuild.hasKept()), true)
+    await page.evaluate(() => window.serverBuild.remount())
+    await page.getByRole('button', { name: 'Try again', exact: true }).waitFor()
+    await page.getByRole('button', { name: 'Try again', exact: true }).click()
+    await page.getByRole('status').filter({ hasText: 'Building your site' }).waitFor()
+    assert.deepEqual(await page.evaluate(() => window.serverBuild.retries), [
+      { id: 'business-1', actionId: 'action-1' }
+    ])
+    assert.deepEqual(await page.evaluate(() => window.serverBuild.opened), [])
+    await page.evaluate(() => window.serverBuild.complete())
+    await page.waitForFunction(() => window.serverBuild.opened.length === 1, {}, { timeout: 10000 })
+    assert.deepEqual(await page.evaluate(() => window.serverBuild.opened), ['/owner-site.tracy.test'])
+    assert.equal(await page.evaluate(() => window.serverBuild.prepares), 0)
+    assert.equal(await page.evaluate(() => window.serverBuild.hasKept()), false)
+  })
+})
+
+test('a blocked immutable brief has no futile own-site retry button', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() => window.showServerBuild('BRIEF_NOT_READY'))
+    await page.locator('[data-own-failed]').waitFor()
+    assert.equal(await page.getByRole('button', { name: 'Try again', exact: true }).count(), 0)
+    assert.equal(await page.evaluate(() => window.serverBuild.hasKept()), true)
+  })
+})
 
 test('the mode switch fits a 276 px panel and a 390 px phone, both labels whole', async () => {
   await withPage(async (page) => {

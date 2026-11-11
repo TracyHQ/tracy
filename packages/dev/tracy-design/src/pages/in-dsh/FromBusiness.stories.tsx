@@ -53,6 +53,7 @@ function api({ find, start, state }: { find?: Answer; start?: Answer; state?: An
     // The research never ends in the story: the page stays on the reading state.
     state: async () => state ?? ok({ business: { id: 'b1', phase: 'research' } }),
     build: async () => ok({ business: { id: 'b1', phase: 'research' } }),
+    retry: async () => ok({ business: { id: 'b1', phase: 'build' } }),
     // The catalogue the suggestion's sentence and demo come from (`suggestionCardOf`).
     templates: async () =>
       ok({
@@ -89,6 +90,40 @@ export default meta
 type Story = StoryObj<typeof FromBusiness>
 
 export const Empty: Story = { args: { api: api() } }
+
+export const BuildingOnServer: Story = {
+  args: {
+    storage: {
+      length: 1,
+      clear: () => {},
+      key: () => 'tracy:from-business:v1',
+      getItem: () => JSON.stringify({ id: 'b1', name: 'Smile Dental Clinic', at: Date.now() }),
+      setItem: () => {},
+      removeItem: () => {}
+    },
+    api: api({
+      state: ok({
+        business: {
+          id: 'b1',
+          phase: 'build',
+          action: {
+            id: 'a1',
+            workflow: 'agent-demo/1',
+            state: 'queued',
+            siteKey: 'smile.tracy.test',
+            acceptedAt: new Date(Date.now() - 120000).toISOString()
+          }
+        }
+      })
+    })
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(await canvas.findByRole('status')).toHaveTextContent('Building your site')
+    await expect(canvas.queryByText(/Opening the chat/)).not.toBeInTheDocument()
+    await expect(await canvas.findByText(/min so far/)).toBeVisible()
+  }
+}
 
 export const Found: Story = {
   args: { api: api() },
