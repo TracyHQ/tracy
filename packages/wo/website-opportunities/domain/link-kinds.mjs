@@ -103,7 +103,7 @@ const NON_HANDLE_SEGMENTS = new Set([
 /** @param {string} host @param {string} suffix */
 function isListingMatch(host, suffix) {
   if (suffix.endsWith('.*')) {
-    const label = suffix.slice(0, -2).replace(/\./g, '\\.')
+    const label = suffix.slice(0, -2).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     return new RegExp(`^(?:.+\\.)?${label}\\.${TLD_TAIL}$`).test(host)
   }
   return host === suffix || host.endsWith(`.${suffix}`)
