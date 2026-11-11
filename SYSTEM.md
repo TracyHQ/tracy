@@ -2065,6 +2065,11 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   brief = current snapshot + the account's overlay ([`place-view.js`](packages/wo/website-opportunities/src/place-view.js)); a place
   without a snapshot → reads its own row as before. Flag off: new requests run the private path, place jobs are not claimed, published snapshots
   are still read; a shared request that is Resumed while the flag is off reruns on the private path.
+- **Ops shared research progress:** `/api/ops/wo` retains the account request's ID, state and start time for recovery,
+  while an outstanding shared research request reads stage, progress and worker lease diagnostics from its `wo_place_job`.
+  Source status merges private `wo_source` rows with that worker's current snapshot, never an earlier published snapshot.
+  A consumed result or terminal request keeps its own diagnostics. Queued/running elapsed time uses the current clock;
+  stopped requests retain their last update time. This read path does not write or restart either job.
 - **Place research across deployments** (23/10/2026, slice 1, migration 166):
   a sending deployment pushes the published research of a place to the **master**, which receives it through
   `POST /api/internal/wo-places/v1/ingest` ([`place-ingest-door.js`](packages/wo/website-opportunities/src/place-ingest-door.js)),

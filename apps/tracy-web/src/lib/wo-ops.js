@@ -288,7 +288,10 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
       latestJob?.state === 'blocked' ||
       opp.status === 'failed' ||
       leaseExpired
-    const activeSource = runningSources[0]
+    const activeSource =
+      latestJob?.progress?.collecting && latestJob.stage === 'collection'
+        ? { source: latestJob.progress.collecting }
+        : runningSources[0]
     const blockedSource = blockedSources[0]
 
     let currentStep = `Stage: ${latestJob?.stage || 'collection'} (${doneSources.length}/${Math.max(1, sources.length)} sources)`
@@ -647,12 +650,26 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
             limit 250`
       ),
       pool.query(
-        `select distinct on (opportunity_id)
-                  id, opportunity_id, account_id, kind, request_id, state, stage,
-                  progress, lease_owner, lease_token, lease_until, heartbeat_at,
-                  attempt, last_error, created_at, updated_at
-             from wo_job
-            order by opportunity_id, created_at desc, id desc`
+        `select distinct on (j.opportunity_id)
+                  j.id, j.opportunity_id, j.account_id, j.kind, j.request_id, j.state,
+                  case when pj.id is not null then pj.stage else j.stage end as stage,
+                  case when pj.id is not null then pj.progress else j.progress end as progress,
+                  case when pj.id is not null then pj.lease_owner else j.lease_owner end as lease_owner,
+                  case when pj.id is not null then pj.lease_token else j.lease_token end as lease_token,
+                  case when pj.id is not null then pj.lease_until else j.lease_until end as lease_until,
+                  case when pj.id is not null then pj.heartbeat_at else j.heartbeat_at end as heartbeat_at,
+                  case when pj.id is not null then pj.attempt else j.attempt end as attempt,
+                  case when pj.id is not null then pj.last_error else j.last_error end as last_error,
+                  j.created_at, j.updated_at,
+                  coalesce((select jsonb_agg(jsonb_build_object(
+                    'source', s.source, 'ref', s.ref, 'status', s.status,
+                    'reason', s.reason, 'coverage', s.coverage))
+                    from wo_place_snapshot_source s where s.snapshot_id = pj.snapshot_id), '[]'::jsonb) as live_sources
+             from wo_job j
+             left join wo_place_job pj on pj.id = j.place_job_id
+               and j.kind = 'research' and j.state in ('queued', 'running', 'paused', 'blocked')
+               and j.result_snapshot_id is null
+            order by j.opportunity_id, j.created_at desc, j.id desc`
       ),
       pool.query(
         `select opportunity_id, source, ref, status, reason, coverage, updated_at
@@ -717,7 +734,17 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
 
     const opportunities = oppRes.rows.map((opp, idx) => {
       const latestJob = jobsByOpp.get(opp.id) ?? null
-      const sources = sourcesByOpp.get(opp.id) ?? []
+      // The request keeps private sources; shared checkpoints live on the worker's current snapshot.
+      const sourceMap = new Map(
+        (sourcesByOpp.get(opp.id) ?? []).map((source) => [
+          JSON.stringify([source.source, source.ref]),
+          source
+        ])
+      )
+      for (const source of latestJob?.live_sources ?? []) {
+        sourceMap.set(JSON.stringify([source.source, source.ref]), source)
+      }
+      const sources = [...sourceMap.values()]
       const mediaStats = mediaByOpp.get(opp.id) ?? { totalCount: 0, storedCount: 0 }
       const latestRev = revByOpp.get(opp.id) ?? null
       const latestBuild = buildByOpp.get(opp.id) ?? null
@@ -784,7 +811,9 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         ? Math.max(
             1,
             Math.round(
-              (new Date(latestJob.updated_at || Date.now()).getTime() -
+              ((['queued', 'running'].includes(latestJob.state)
+                ? Date.now()
+                : new Date(latestJob.updated_at).getTime()) -
                 new Date(latestJob.created_at).getTime()) /
                 1000
             )
