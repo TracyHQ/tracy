@@ -49,3 +49,19 @@ A fresh read of the local role assignments and persisted call receipts supersede
 The failed dev FIGHTLAND site's public output was captured and opened at 1440 and 390 pixels: stock Boxing branding, hero copy and template title remain. There is no observed horizontal overflow at those widths, but the site fails customer personalization acceptance. This confirms the failed baseline run's QA decision; it is not a test of the follow-up deployment.
 
 The current release inventory has five published kit variants across four design families. Only Boxing J6 and Diner J6 are enabled for the full chain. Voyara J6 and Diner WP7 are outside its allowlist; Restaurant EmDash 1.0.2 also lacks production bench contract registration. Gallery visibility and kit approval alone do not prove full-chain support. Five businesses through Boxing do not satisfy five-template acceptance.
+
+## Held names and export boundaries
+
+The real Diner retry on `799ea3ccd1` passed Brand after two unnecessary repairs: its name was held, but the checker demanded unused rendered name files. New runs freeze `brand-held-name-check/1`, allow independently reviewed fitted standalone marks, and retain confirmation and contrast checks. The safe version also consumes the existing name-slots decision, so its gate bypass cannot compose an authored but withheld name. Historical runs retain their recorded policy; the approved prompt is unchanged.
+
+Separate deterministic reproductions demonstrated that failed-best artifacts could pass existing planner/picture failures and still reach export. Documentary pictures now reuse P07 before mapping, uploads and alts; article copy reuses R25 against both the frozen plan and actual writer citations before CMS writes. Invalid items are refused explicitly, while valid owner posts, real photos and generic illustrations remain available. Frozen inputs are not rewritten.
+
+Three new official cases passed on `5f00854cf3`: held-name, safe-version, domain-boundary and site-check tests (35); documentary export (8); original-post export and actual write-door boundary (9). All 52 tests passed with zero failures and skips. These deterministic tests are separate from customer-site acceptance.
+
+## Active Diner timing findings
+
+A supported Retry accepted at 13:47:11 UTC reran the core chain with new bench IDs on the previously provisioned Arabian Tea House site, after a verified full backup and RC installation. It is not fresh site provisioning. Actual Brand independent review and Picture looker/drawer calls answered using the existing role configuration. Brand, planner, writer and pictures reached successful bench outcomes; final site acceptance remains pending.
+
+The writer's initial full-copy call took 343.106 seconds, followed by a 15.518-second repair. Picture preparation recorded a confirmed five-minute quickstart installer timeout and fell back to unknown template overlays; its code timer began after that wait. These are measured causes of elapsed time, not evidence that every slow run has the same cause. During the write, shared local host pressure also caused Docker and API observation timeouts; the latest observed web cgroup peak was 830,357,504 bytes with zero OOM kills. The observation gap must not be presented as measured model work or a new web OOM.
+
+The 14:06 desktop and phone captures were opened during the write. Branding and copy had changed, but the hero showed a gradient without a restaurant photograph. The run was still applying, so this is an interim finding requiring terminal verification, not a final accepted output.
