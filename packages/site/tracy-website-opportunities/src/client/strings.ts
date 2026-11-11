@@ -1158,7 +1158,7 @@ export const en = {
   'workspace.sum.researching': 'research running',
   // The Sources table of the Workspace card (#537, option C): its two column heads and the State column
   'source.state.waiting': 'Waiting for research',
-  'source.state.collected': 'Data collected',
+  'source.state.collected': 'Data processed',
   /** Beside a collected row's pill: when research collected it, {ago} is relative words ("12 days ago"). */
   'source.collectedAgo': 'Collected {ago}',
   'source.state.failed': 'Could not collect',

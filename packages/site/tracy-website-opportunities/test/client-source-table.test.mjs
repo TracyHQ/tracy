@@ -35,10 +35,10 @@ test('before research every row waits, whatever it holds', () => {
   assert.equal(sourceStateOf({ source: 'website' }, 'en-US').state, 'waiting')
 })
 
-test('a collected row reads Data collected, and carries the time its data was collected for the phrase beside the pill', () => {
+test('a collected row reads Data processed, and carries the time its data was collected for the phrase beside the pill', () => {
   assert.equal(
     cell({ source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }),
-    'Data collected'
+    'Data processed'
   )
   assert.equal(
     collectedAt({ source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }),
@@ -50,7 +50,7 @@ test('a collected row reads Data collected, and carries the time its data was co
   )
   assert.equal(collectedAt({ source: 'website', status: 'complete', collectedAt: null }), null)
   assert.equal(collectedAt({ source: 'website', status: 'complete', collectedAt: 'not a date' }), null)
-  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: 'not a date' }), 'Data collected')
+  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: 'not a date' }), 'Data processed')
 })
 
 test('a failed row reads Could not collect, with the server reason only when it sends one the screen knows', () => {
