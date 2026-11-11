@@ -269,7 +269,7 @@ test('copy and collected-used share complete content evidence beyond the former 
               {
                 text:
                   'x'.repeat(120000) +
-                  ' At 245 California Street. Call +14154401234. Open 8AM to 8PM. Email hello@bakery.test.'
+                  ' At 245 California Street. Call +14155550123. Open 8AM to 8PM. Email hello@bakery.test.'
               }
             ]
           }
@@ -295,7 +295,7 @@ test('copy and collected-used share complete content evidence beyond the former 
       [
         {
           path: '/',
-          text: 'Bakery at 245 California Street. Call +14154401234. Email hello@bakery.test.',
+          text: 'Bakery at 245 California Street. Call +14155550123. Email hello@bakery.test.',
           images: []
         }
       ],
