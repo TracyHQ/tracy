@@ -1,0 +1,3 @@
+- **Add the JA Vega 1.0.10 contract, approved kit and brand profile row** — template readiness maintainers · PR pending · `feat/ja-vega-t4-road-to-live` · 2026-11-12
+  **Affects:** JA Vega in the Website opportunity flow once quickstart 1.0.10 is released and pinned. Until the pin moves, Tracy keeps serving 1.0.9 and these files are not read.
+  **Why / Measured:** 1.0.10 gives every tag its own non-empty listing page and fixes the empty `#` buttons. The content coverage step is green (139 pages, 0 holes, 12 accepted); the kit was rebuilt on the 1.0.10 pack (124 pages, 148 images), its five hidden fields replayed, all pages reviewed at 1440 and 390, and approved; demo measures are green on 124 pages; the demo baseline was measured on the 1.0.10 site.
