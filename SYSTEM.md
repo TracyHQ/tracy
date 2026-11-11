@@ -2185,6 +2185,10 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   verbatim quotes when the page shows the author, the Google source and the supplied link. Prices/hours inside a quote
   do not become evidence for business content. The check id `no-google-review-quoted` is kept for
   compatibility with old receipts; what it checks now is attribution. No provider or data store added.
+- **Agent demo QA fact budget**: `briefOf` leaves the frozen brief's `assets` catalogue out of its serialized
+  business prose. Photo identifiers, hashes, dimensions and detection labels are build input, not evidence for business
+  claims. The original brief and catalogue remain unchanged; complete content-only research and review testimony still
+  travel through their existing QA fields. Web and host retain the 400,000-character complete-evidence limit.
 - **Outreach v3** ([`outreach.js`](packages/wo/website-opportunities/src/outreach.js)): reads `placeViewOf` with the same snapshot/overlay
   as Details and the revision; calls no provider. `tinyld` lives in tracy-web, not in the domain package; a caption above the threshold
   beats the Google country/dialling code; multilingual countries or ones without a template use English. Templates in 12 languages are JSON data;

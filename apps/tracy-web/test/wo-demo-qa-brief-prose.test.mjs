@@ -80,6 +80,67 @@ test('briefOf keeps sourced hours after a large media catalogue through the host
   assert.ok(brief.briefText.length < 400000)
 })
 
+test('agent baseline excludes the frozen asset catalogue without losing late research or review evidence', async () => {
+  const { demoQaBody, checkFactsFromBrief } = await import('../../tracy-host/src/demo-qa.js')
+  const bundle = freezeAgentResearch({
+    accountId: 'account',
+    opportunityId: 'opp',
+    revisionId: 'revision',
+    at: '2026-11-12T00:00:00Z',
+    read: {
+      profile: { name: 'Bakery' },
+      media: [],
+      posts: [],
+      rawSources: [
+        {
+          source: 'website',
+          collected: { pages: [{ text: 'x'.repeat(120000) + ' Open 8AM to 8PM. Cookie $4.75. Since 1995.' }] }
+        }
+      ]
+    }
+  })
+  const assets = Array.from({ length: 2500 }, (_, id) => ({
+    id: `asset-${id}`,
+    width: 4096,
+    height: 2730,
+    sha256: 'a'.repeat(64),
+    unlabelledReason: 'Open 11PM. Cookie $777. Since 1998. Call +14159999999.'
+  }))
+  const revision = {
+    id: 'revision',
+    account_id: 'account',
+    brief_md: '# Bakery',
+    brief: {
+      quickstartWorkflow: AGENT_DEMO,
+      agentDemoSnapshot: bundle,
+      business: { name: 'Bakery' },
+      assets,
+      reviewSources: {
+        googleMaps: {
+          reviews: [{ text: 'My favourite cookie.', author: 'Pat', url: 'https://reviews.example.test/pat' }]
+        }
+      }
+    }
+  }
+  const before = JSON.stringify(revision)
+  assert.ok(JSON.stringify(assets).length > 400000, 'catalogue alone reproduces the old baseline cap')
+  const sent = briefOf(revision)
+  const asked = demoQaBody({ label: 'bakery', platform: 'wordpress', ...sent })
+  assert.equal(asked.error, null)
+  assert.ok(sent.briefText.indexOf('8AM') > 100000, 'complete late research still reaches the host')
+  assert.equal(
+    checkFactsFromBrief([{ path: '/', text: 'Open 8AM to 8PM. Cookie $4.75. Since 1995.' }], asked).pass,
+    true
+  )
+  for (const text of ['Open 11PM.', 'Cookie $777.', 'Since 1998.', 'Call +14159999999.'])
+    assert.equal(checkFactsFromBrief([{ path: '/', text }], asked).pass, false, text)
+  assert.doesNotMatch(sent.briefText + sent.briefProse, /asset-2499|unlabelledReason|sha256|4096|2730/)
+  assert.deepEqual(sent.googleReviewTestimonials, [
+    { text: 'My favourite cookie.', author: 'Pat', url: 'https://reviews.example.test/pat' }
+  ])
+  assert.equal(JSON.stringify(revision), before, 'the frozen research and asset catalogue remain intact')
+})
+
 test('content evidence excludes URLs, provider timestamps and review claims while retaining menu numbers and captions', async () => {
   const { demoFactEvidence, checkedFactText } = await import(
     '../src/opportunities-build/demo-fact-evidence.js'

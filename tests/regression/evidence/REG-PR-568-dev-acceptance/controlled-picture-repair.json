@@ -5,8 +5,7 @@
   "templateContract": "ja-boxing/j6/1.0.11",
   "nativeRuntime": {
     "existingLegacyQaImageCommit": "352d3556a80a35cc14582cf0810f0158257d48bd",
-    "dshCommit": "626ef50d882b24e25c1675899a67ebfa00f2689a",
-    "includesMergedNativePr569": false
+    "dshCommit": "626ef50d882b24e25c1675899a67ebfa00f2689a"
   },
   "observedDevFailure": {
     "target": "module 161 background",
@@ -100,10 +99,11 @@
   },
   "limitations": [
     "The real agent and existing provider ran, with the current production repair orchestrator and exact new hint.",
-    "The local native runtime predates the newly merged native changes; this fixture does not validate their deployment.",
+    "The existing local native runtime is older than current dev; this fixture does not prove runtime parity or exercise the full web-writer changes from PR #569.",
     "The dedicated checker covers this one image slot, its readback, served image reference and HTTP availability; it is not the complete site QA suite.",
     "The run supplied a real prepared business asset; it does not prove upstream asset sourcing, all picture roles, other templates or five full WOs.",
     "No independent automated picture reviewer or complete-business acceptance is claimed.",
     "Only module-161.2 image replacement was exercised. Demo control text intentionally remains; the newly merged full writer was not exercised."
-  ]
+  ],
+  "exercisedFullWriterPr569": false
 }
