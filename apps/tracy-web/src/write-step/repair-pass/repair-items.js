@@ -5,6 +5,7 @@
 // comment turn, built by the popover's own turn builder (lib/comment-turn.js) once the comment requests door has numbered
 // them, so the agent's writes can cite each number. Pure but for the builder it is given.
 import { SENT_KINDS } from './repair-kinds.js'
+import { pictureInstruction } from './repair-picture-slots.js'
 import { quotedWords } from './repair-served-element.js'
 
 const MAX_SEEN = 300
@@ -69,7 +70,7 @@ function whereOf(fault) {
 
 /** The words a person would type in the popover for this fault: what to do, what was seen, and where. One paragraph. */
 export const changeSentence = (fault) => {
-  const base = SENT_KINDS[fault.kind]()
+  const base = pictureInstruction(fault) ?? SENT_KINDS[fault.kind]()
   return `${base}${detailOf(fault)}${whereOf(fault)}`.replace(/\s+/g, ' ').trim()
 }
 
@@ -135,5 +136,5 @@ export function pageTurn(buildCommentTurn, items, numbers) {
       locate: item.locate
     }))
   })
-  return `${comments}\n\nThis is an automated site build with no person waiting in this session. Do not ask the user questions or wait for uploads or approval. Use the existing business assets; when none can replace a demo picture, remove or hide the demo content through the supported site doors. Preserve the site navigation and required controls. If a site door returns CONFIRM_FIRST or another refusal requiring customer consent, do not ask its question, retry with confirm:true, or bypass the refusal through files or another door. Record that change as blocked and continue with independent repairs. If a supported change is unavailable, record what remains and finish the turn. Never invent business facts or pictures.`
+  return `${comments}\n\nThis is an automated site build with no person waiting in this session. Do not ask the user questions or wait for uploads or approval. Use the existing business assets; when none can replace a demo picture, remove or hide it only when the measured frame permits hiding and a supported site door allows it. Preserve frames that cannot be hidden and report their unresolved pictures. For contract writes, read the affected content first and follow its writable next; use a fresh inspect revision as expected_revision. After REVISION_STALE, inspect again and reconsider the affected changes before applying; never replay a stale revision. Text slots take plain content, without HTML markup or control characters; preserve the declared slot limits. After SLOT_IMAGE_INVALID, prepare the image to the native slot fit before retrying. Preserve the site navigation and required controls. If a site door returns CONFIRM_FIRST or another refusal requiring customer consent, do not ask its question, retry with confirm:true, or bypass the refusal through files or another door. Record that change as blocked and continue with independent repairs. If a supported change is unavailable, record what remains and finish the turn. Never invent business facts or pictures.`
 }

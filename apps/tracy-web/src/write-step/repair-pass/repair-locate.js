@@ -5,6 +5,7 @@
 // locate) leaves the fault's own levels, and the item says why. Every call is held to the step clock.
 import { withAltSlot } from './repair-alt-slots.js'
 import { commentItem } from './repair-items.js'
+import { withPictureSlot } from './repair-picture-slots.js'
 import { quotedWords, servedElementOf, servedPage } from './repair-served-element.js'
 
 /** How long one served page read and one locate may take, at most (the door's own locate budget is 8 s). */
@@ -82,7 +83,9 @@ export async function pageItems(pass, page, faults) {
   const served = await servedOf(pass, page)
   const items = []
   const elements = []
-  for (const fault of faults.map((f) => withAltSlot(f, pass.altSlots, pass.contentMap))) {
+  for (const fault of faults.map((f) =>
+    withPictureSlot(withAltSlot(f, pass.altSlots, pass.contentMap), pass.kit, pass.contentMap)
+  )) {
     const element = served ? servedElementOf(served, fault) : null
     const words =
       typeof fault.measured === 'string' && fault.measured ? fault.measured : quotedWords(fault.seen)
