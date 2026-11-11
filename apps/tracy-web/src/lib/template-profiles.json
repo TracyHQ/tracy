@@ -2882,22 +2882,6 @@
           "proof": "default site_logo item-1.png lum 196"
         },
         "note": "Same logos as 1.0.8: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.8 (the two contracts' presentation locks compared); this release gives every page one h1, centres short card rows and uses the finder search form."
-      },
-      "1.0.10": {
-        "logos": "pair",
-        "brandReady": true,
-        "faviconReady": true,
-        "framework": "t4",
-        "profiles": ["default"],
-        "frame": {
-          "width": 139,
-          "height": 60
-        },
-        "darkSpots": {
-          "profiles": ["default"],
-          "proof": "Exact 1.0.10 item-1.png: 139 x 60, mean opaque-pixel luminance 196.470; header and opened offcanvas are dark in light and dark mode on a fresh exact-pack restore."
-        },
-        "note": "Measured from the exact 1.0.10 pack on a fresh restore (2026-11-09 UTC): stock media.upload and template.siteSettings through LOCAL unpublished Cowork 0.24.93 show the uploaded logo and one customer favicon on home at 1440 and 390 px in both modes. Distinct site_logo/site_logo_dark switch in the header; the offcanvas reads site_logo, so the stock writer puts the dark-background logo in both keys for default. Wide 1200 x 300 and tall 300 x 1200 uploads, padded by prepareBrand to the 139:60 frame, stay within the header cap (40 px; measured about 92.625 x 39.984) and offcanvas cap (32 px). No logoHeight or footerSlot: the template CSS caps uploaded pictures, and static logo-place reading must cover other public pages. All three diagnostic applies reverted to identical original settings; no released carrier or full live-page claim."
       }
     },
     "quickstart/ja-vega/wp7": {

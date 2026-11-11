@@ -72,6 +72,21 @@ test('audio postwrite step chain reaches its existing host reader before site ch
         calls.push(JSON.parse(init.body))
         return { ok: true, status: 200, json: async () => ({ pageMeasures: [] }) }
       }
+      // The chain write first reads the site's full backup through the owner door (write-step/site-recovery.js).
+      if (String(url).endsWith(`/api/sites/${encodeURIComponent(SITE)}/backups`)) {
+        const body = {
+          may: { restoreEverything: true },
+          rows: [
+            {
+              kind: 'backup',
+              version: 1,
+              sha: 'a'.repeat(40),
+              database: { state: 'full', sha256: 'b'.repeat(64) }
+            }
+          ]
+        }
+        return { ok: true, status: 200, text: async () => JSON.stringify(body) }
+      }
       // Existing printed-page reads use the same injected HTTP edge, never the network.
       return { ok: true, status: 200, text: async () => '<html><body></body></html>' }
     },

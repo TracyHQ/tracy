@@ -120,8 +120,8 @@ export function matchCmsStrings({ lines, files, slotTexts = [], rankFile = () =>
     if (!hit) continue
     // A short value is keyed by its line too: a content line that only seems to fit it is measured
     // and ruled out on its own, never taking a real CMS line of that value in the block down with it.
-    const receiver = l.receiver ? `|${JSON.stringify(l.receiver.path)}` : ''
-    const key = hit.short ? `${l.block}|${hit.constant}|${text}${receiver}` : `${l.block}|${hit.constant}`
+    const holder = l.holder ? `|${JSON.stringify(l.holder.path)}` : ''
+    const key = hit.short ? `${l.block}|${hit.constant}|${text}${holder}` : `${l.block}|${hit.constant}`
     const constants = [...new Set(hits.map((h) => h.constant))]
     const matching = strings.filter((s) => s.pattern.test(text))
     const formats = matching.some((s) => s.value.match(PLACEHOLDER))
@@ -138,9 +138,7 @@ export function matchCmsStrings({ lines, files, slotTexts = [], rankFile = () =>
       },
       placeholders: [...new Set(hit.value.match(PLACEHOLDER) ?? [])],
       printsName: NAME_PLACEHOLDER.test(hit.value),
-      at: l.path
-        ? { path: l.path, raw: l.raw ?? l.block, ...(l.receiver ? { receiver: l.receiver } : {}) }
-        : null,
+      at: l.path ? { path: l.path, raw: l.raw ?? l.block, ...(l.holder ? { holder: l.holder } : {}) } : null,
       pages: new Set()
     }
     if (l.pageId) rec.pages.add(l.pageId)
@@ -195,7 +193,7 @@ export function siteCmsTexts({ reads, idOf, cms, slotTexts, nameSetting }) {
         path: r.path,
         text: l.text,
         pageId: r.pageId,
-        receiver: l.receiver
+        holder: l.holder
       }))
   )
   const { fixedTexts, nameLines } = matchCmsStrings({

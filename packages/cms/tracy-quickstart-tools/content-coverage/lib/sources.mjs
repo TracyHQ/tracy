@@ -162,8 +162,8 @@ export function searchSources(index, { norm, raw }, limit = 3) {
   return out
 }
 
-/** The effective value of one proven receiver's language key; conflicting languages/overrides stay unproved. */
-export function receiverLanguage(index, key, file) {
+/** The effective value of one proven holder's language key; conflicting languages/overrides stay unproved. */
+export function holderLanguage(index, key, file) {
   const overrides = index?.ini.filter((s) => s.key === key && s.rel.startsWith('language/overrides/')) ?? []
   const hits = overrides.length
     ? overrides
@@ -175,7 +175,7 @@ export function receiverLanguage(index, key, file) {
 }
 
 /** Specific producer expressions, not a same-word hit from another extension or dead comment. */
-export function receiverProducer(index, file, ...expressions) {
+export function holderProducer(index, file, ...expressions) {
   const f = index?.files.find((s) => s.rel === file)
   if (!f) return false
   const source = f.code ?? f.raw

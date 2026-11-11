@@ -193,7 +193,9 @@ test('audio capability is a replaceable asset fact with neutral absence, not a k
   assert.equal(domain.isRole('business.audio', 'place-content-roles/2'), false)
   assert.equal(domain.isFactRole('business.audio'), true)
   assert.equal(domain.modeOfRole('business.audio'), 'asset')
+  // test-quality: contract a kept demo track would play the template's own audio on the customer's site
   assert.equal(domain.KEEP_DECISION_BY_ROLE['business.audio'], 'replace')
+  // test-quality: contract without a customer audio fact the source is emptied, never filled with a stand-in
   assert.deepEqual(domain.DEFAULT_NEUTRAL_BY_ROLE['business.audio'], { policy: 'empty' })
 })
 
@@ -242,7 +244,7 @@ test('audio capability validates MP3 addresses and preserves case, query and ins
     audioSourceIdentity('https://media.example/Track.mp3?t=A'),
     audioSourceIdentity('https://media.example/track.mp3?t=a')
   )
-  // The receiver roots /images and /media at the Joomla installation, including signed query bytes.
+  // The Claude Cowork plugin roots /images and /media at the Joomla installation, including signed query bytes.
   for (const dir of ['images', 'media']) {
     for (const value of [`${dir}/audio/Track.mp3`, `/${dir}/audio/Track.mp3`, `/sub/${dir}/audio/Track.mp3`])
       assert.equal(

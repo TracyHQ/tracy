@@ -270,7 +270,19 @@ export function loadContract(dir, siteUrl) {
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
-    index: { code, text, textCompact, textList, patterns, image, imageBase, url, rawSample, socialAria, audio },
+    index: {
+      code,
+      text,
+      textCompact,
+      textList,
+      patterns,
+      image,
+      imageBase,
+      url,
+      rawSample,
+      socialAria,
+      audio
+    },
     template: manifest.template ?? manifest.theme,
     prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }

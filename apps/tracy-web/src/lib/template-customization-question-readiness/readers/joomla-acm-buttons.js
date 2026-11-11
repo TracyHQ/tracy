@@ -11,7 +11,7 @@
  * - the one field the layout's nearest enclosing `if` tests before the link is printed is empty.
  * The layout is `acm/<group>/tmpl/<jatools-layout-<group>>.php` of the template. Anything this cannot
  * read (no lock row, no layout file, a condition on more than one field) counts as rendered.
- * Flat t4section action links also require an explicit disabled setting, matching layout receivers
+ * Flat t4section action links also require an explicit disabled setting, matching layout holders
  * and the chrome source's guarded assignment; unknown settings or source still count as rendered.
  */
 
@@ -60,14 +60,14 @@ function hiddenSectionAction(slot, lock, files) {
     if (!['0', 0].includes(params?.['section-link']) || !['0', 't4section'].includes(params?.style))
       return null
     if (typeof row.position !== 'string' || !row.position) return null
-    const receivers = Object.values(lock.entities)
+    const holders = Object.values(lock.entities)
       .filter((r) => r.group === 'layout')
       .flatMap((r) => {
         const value = typeof r.value === 'string' ? JSON.parse(r.value) : r.value
         return (value?.layout?.sections ?? []).flatMap((s) => s.contents ?? [])
       })
       .filter((c) => c.type === 'positions' && c.name === row.position)
-    if (!receivers.length || receivers.some((c) => c.style !== 't4section')) return null
+    if (!holders.length || holders.some((c) => c.style !== 't4section')) return null
     const chrome = files?.get('html/layouts/chromes/t4section.php') ?? ''
     // shortcut: recognize only this PHP-only reset/guard shape; extend with source-backed cases.
     if (!/^\s*<\?php\b/.test(chrome) || /\?>|<<<|`/.test(chrome)) return null

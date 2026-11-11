@@ -182,7 +182,7 @@ export const opensEmpty = (slot) => !phpEmpty(slot?.opensEmpty)
  *   requiresEvidence?: unknown, siteIdentity?: unknown, opensEmpty?: unknown, label?: string }} ContractSlot
  *   One slot of an inspect answer (or of `content-map.json`); `current` is not read here.
  * @typedef {'evidence' | 'cannot-empty' | 'cannot-fill' | 'no-markup' | 'no-directive'
- *   | 'max-characters' | 'url' | 'image'} ContractRule
+ *   | 'max-characters' | 'url' | 'image' | 'audio'} ContractRule
  * @typedef {{ rule: ContractRule, key: string, message: string, limit?: number, length?: number }} ContractRefusal
  *   `message` is the component's own sentence, word for word — a caller that answers it as a
  *   `contract_failed` gets the `next` `refusalNext` already gives that sentence.

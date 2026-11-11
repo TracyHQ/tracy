@@ -13,10 +13,10 @@ import { createClassifier } from '../content-coverage/lib/classify.mjs'
 import { loadContract } from '../content-coverage/lib/contract.mjs'
 import { buildCoverageFile, holeKey } from '../content-coverage/lib/coverage-file.mjs'
 import { buildDbIndex } from '../content-coverage/lib/db-index.mjs'
-import { annotate, mergeViewports, physicalReceivers } from '../content-coverage/lib/items.mjs'
+import { annotate, mergeViewports, physicalHolders } from '../content-coverage/lib/items.mjs'
 import { createMatcher } from '../content-coverage/lib/match.mjs'
 import { parseConfigurationPhp } from '../content-coverage/lib/site-config.mjs'
-import { buildSourceIndex, receiverProducer } from '../content-coverage/lib/sources.mjs'
+import { buildSourceIndex, holderProducer } from '../content-coverage/lib/sources.mjs'
 import {
   coverageFileProblem,
   judgeCoverage
@@ -857,7 +857,7 @@ test('ACM social URLs: malformed lines and prose stay holes while ordinary URL b
   assert.equal(match({ kind: 'text', value: 'Advanced Boxing' }).status, 'matched')
 })
 
-function generatedReceiverFixture() {
+function generatedHolderFixture() {
   const root = mkdtempSync(path.join(tmpdir(), 'cov-generated-'))
   const put = (file, body) => {
     const target = path.join(root, file)
@@ -916,8 +916,8 @@ $rmin = kinetic_readtime(($rel->introtext ?? '') . ' ' . ($rel->fulltext ?? ''))
   return { root, create, item, put, files, base, contract }
 }
 
-test('generated receivers: durations/counts preserve template language origin and covered role/date siblings', () => {
-  const f = generatedReceiverFixture(),
+test('generated holders: durations/counts preserve template language origin and covered role/date siblings', () => {
+  const f = generatedHolderFixture(),
     c = f.create()
   for (const [value, selector] of [
     [
@@ -943,8 +943,8 @@ test('generated receivers: durations/counts preserve template language origin an
     assert.doesNotMatch(c(f.item(value, selector), { remainder: '2 min read' }).label, /source-bound/)
 })
 
-test('generated receivers: exact localized day/month and full metadata formulas require their source', () => {
-  const f = generatedReceiverFixture(),
+test('generated holders: exact localized day/month and full metadata formulas require their source', () => {
+  const f = generatedHolderFixture(),
     c = f.create()
   const day = f.item('18 Jun', 'a.hx-blogrow > time.hx-blogdate', { tag: 'time' })
   assert.equal(c(day, {}).class, 'c')
@@ -963,8 +963,8 @@ test('generated receivers: exact localized day/month and full metadata formulas 
   assert.notEqual(f.create()(day, {}).class, 'c', 'conflicting effective source languages refuse')
 })
 
-test('generated receivers: required labels bind exact form/page, XML, renderlabel and effective language', () => {
-  const f = generatedReceiverFixture(),
+test('generated holders: required labels bind exact form/page, XML, renderlabel and effective language', () => {
+  const f = generatedHolderFixture(),
     c = f.create()
   const login = { url: SITE + '?option=com_users&view=login' }
   const registration = { url: SITE + '?option=com_users&view=registration' }
@@ -987,8 +987,8 @@ test('generated receivers: required labels bind exact form/page, XML, renderlabe
   assert.notEqual(f.create()(label, {}, login).class, 'c')
 })
 
-test('generated receivers: every viewport/count/selector/code and cache order is guarded', () => {
-  const f = generatedReceiverFixture()
+test('generated holders: every viewport/count/selector/code and cache order is guarded', () => {
+  const f = generatedHolderFixture()
   const valid = f.item('18 Jun', 'a.hx-blogrow > time.hx-blogdate', { tag: 'time' })
   const invalid = [
     { ...valid, inCode: true },
@@ -1018,8 +1018,8 @@ test('generated receivers: every viewport/count/selector/code and cache order is
   }
 })
 
-test('generated receivers: comments, wrong producers and unseen source do not prove generation', () => {
-  const f = generatedReceiverFixture(),
+test('generated holders: comments, wrong producers and unseen source do not prove generation', () => {
+  const f = generatedHolderFixture(),
     date = f.item('18 Jun', 'time.hx-blogdate', { tag: 'time' })
   const file = f.base + 'category/blog_item.php'
   for (const body of [
@@ -1040,8 +1040,8 @@ test('generated receivers: comments, wrong producers and unseen source do not pr
   assert.doesNotMatch(f.create()(duration, {}).label, /source-bound/)
 })
 
-test('generated receivers: annotate forwards page context transiently without changing occurrence records', () => {
-  const f = generatedReceiverFixture(),
+test('generated holders: annotate forwards page context transiently without changing occurrence records', () => {
+  const f = generatedHolderFixture(),
     context = { url: SITE + '?option=com_users&view=login' }
   const label = f.item('Password *', '#password-lbl', { tag: 'label' })
   const views = JSON.stringify(label.viewports)
@@ -1054,8 +1054,8 @@ test('generated receivers: annotate forwards page context transiently without ch
   assert.notEqual(annotate([absent], () => ({ status: 'hole' }), f.create())[0].class, 'c')
 })
 
-test('generated receivers: producer token guards keep markup and quoted URLs but remove real comments', () => {
-  const f = generatedReceiverFixture()
+test('generated holders: producer token guards keep markup and quoted URLs but remove real comments', () => {
+  const f = generatedHolderFixture()
   const file = 'templates/ja_kinetic/producer.php'
   // The source index itself is the production path; no synthetic normalized-only source index is substituted.
   f.put(
@@ -1064,20 +1064,20 @@ test('generated receivers: producer token guards keep markup and quoted URLs but
   )
   const index = buildSourceIndex(f.root, 'ja_kinetic')
   assert.equal(
-    receiverProducer(index, file, /https:\/\/example\.test\/path/, /visible_count/, /&#160;\*/, /\$alive/),
+    holderProducer(index, file, /https:\/\/example\.test\/path/, /visible_count/, /&#160;\*/, /\$alive/),
     true
   )
-  assert.equal(receiverProducer(index, file, /ignored_producer/), false)
-  assert.equal(receiverProducer(index, file, /hidden_producer/), false)
+  assert.equal(holderProducer(index, file, /ignored_producer/), false)
+  assert.equal(holderProducer(index, file, /hidden_producer/), false)
   const js = 'media/vendor/widget/widget.js'
-  f.put(js, 'const path=/\\//g; const receiver="real_receiver"; // fake_receiver')
+  f.put(js, 'const path=/\\//g; const holder="real_holder"; // fake_holder')
   const source = buildSourceIndex(f.root, 'ja_kinetic')
-  assert.equal(receiverProducer(source, js, /real_receiver/), true, 'pre-unescape source keeps regex slashes')
-  assert.equal(receiverProducer(source, js, /fake_receiver/), false)
+  assert.equal(holderProducer(source, js, /real_holder/), true, 'pre-unescape source keeps regex slashes')
+  assert.equal(holderProducer(source, js, /fake_holder/), false)
 })
 
-test('generated receivers: wrong category formula, template label origin and untouched cohorts remain guarded', () => {
-  const f = generatedReceiverFixture()
+test('generated holders: wrong category formula, template label origin and untouched cohorts remain guarded', () => {
+  const f = generatedHolderFixture()
   const file = f.base + 'category/blog.php'
   const count = f.item('// 03 posts · newest first', 'span.hx-bloglist__count')
   f.put(file, f.files[file].replace('count($rows)', 'count($unrelated)'))
@@ -1097,8 +1097,8 @@ test('generated receivers: wrong category formula, template label origin and unt
     assert.notEqual(c(item, {}).class, 'c')
 })
 
-test('generated receivers: month format M cannot be proved by the numeric-month m producer', () => {
-  const f = generatedReceiverFixture()
+test('generated holders: month format M cannot be proved by the numeric-month m producer', () => {
+  const f = generatedHolderFixture()
   const file = f.base + 'category/blog_item.php'
   const value = f.item('18 Jun', 'a.hx-blogrow > time.hx-blogdate', { tag: 'time' })
   assert.equal(f.create()(value, {}).class, 'c', 'named-month producer is proved')
@@ -1106,7 +1106,7 @@ test('generated receivers: month format M cannot be proved by the numeric-month 
   assert.notEqual(
     f.create()(value, {}).class,
     'c',
-    'same receiver/value/language with numeric format remains unproved'
+    'same holder/value/language with numeric format remains unproved'
   )
   const source = buildSourceIndex(f.root, 'ja_kinetic')
   assert.ok(
@@ -1180,8 +1180,8 @@ test('causal matching: Joomla truncation cleans internal ellipsis spaces without
   )
 })
 
-test('causal receivers: repeated dates require a complete distinct source-bound receipt for every physical copy', () => {
-  const f = generatedReceiverFixture()
+test('causal holders: repeated dates require a complete distinct source-bound receipt for every physical copy', () => {
+  const f = generatedHolderFixture()
   const raw = (row, extra = {}) => ({
     kind: 'text',
     tag: 'time',
@@ -1193,7 +1193,7 @@ test('causal receivers: repeated dates require a complete distinct source-bound 
   const good = merge([raw(1), raw(2), raw(3)])
   assert.equal(f.create()(good, {}).class, 'c')
   assert.equal(good.viewports.desktop.count, 3)
-  assert.equal(good.viewports.desktop.receivers.length, 3)
+  assert.equal(good.viewports.desktop.holders.length, 3)
   const bad = [
     merge([raw(1), raw(2, { selector: 'div.business' })]),
     merge([raw(1), raw(2, { tag: 'div' })]),
@@ -1205,13 +1205,13 @@ test('causal receivers: repeated dates require a complete distinct source-bound 
       v.count++
     },
     (v) => {
-      v.receivers.pop()
+      v.holders.pop()
     },
     (v) => {
-      v.receivers[1].inCode = true
+      v.holders[1].inCode = true
     },
     (v) => {
-      delete v.receivers
+      delete v.holders
     },
     (v) => {
       v.selector = 'div.foreign'
@@ -1258,8 +1258,8 @@ test('causal matching: declared numeric printf pieces keep their owner inside a 
   )
 })
 
-test('causal receivers: generated composites bind declared template language instead of waiving template holes', () => {
-  const f = generatedReceiverFixture()
+test('causal holders: generated composites bind declared template language instead of waiving template holes', () => {
+  const f = generatedHolderFixture()
   const entries = [
     ['31', 'TPL_JA_KINETIC_BLOG_READMIN', '%d min read'],
     ['32', 'TPL_JA_KINETIC_BLOG_READMIN_SHORT', '%d min'],
@@ -1383,8 +1383,8 @@ test('causal receivers: generated composites bind declared template language ins
   )
 })
 
-function breadcrumbReceiverFixture() {
-  const f = generatedReceiverFixture()
+function breadcrumbHolderFixture() {
+  const f = generatedHolderFixture()
   const entries = [
     ['61', 'TPL_JA_KINETIC_BLOG_KICKER_CAP', 'Journal'],
     ['62', 'TPL_JA_KINETIC_ARCHIVE_CRUMB', 'Archive'],
@@ -1482,7 +1482,7 @@ function breadcrumbReceiverFixture() {
 }
 
 function stockTagBreadcrumbFixture() {
-  const f = breadcrumbReceiverFixture()
+  const f = breadcrumbHolderFixture()
   f.contract.entityByKey.get('tag-71').identity = { path: 'platform-test', language: '*' }
   const router = 'components/com_tags/src/Service/Router.php'
   const table = 'administrator/components/com_tags/src/Table/TagTable.php'
@@ -1622,16 +1622,16 @@ test('stock tag breadcrumbs: connected path producer, route and every raw copy r
       delete it.viewports.phone
     },
     (it) => {
-      delete it.viewports.phone.receivers
+      delete it.viewports.phone.holders
     },
     (it) => {
-      it.viewports.phone.receivers[0].value += ' foreign'
+      it.viewports.phone.holders[0].value += ' foreign'
     },
     (it) => {
-      it.viewports.phone.receivers[0].selector = 'span.foreign'
+      it.viewports.phone.holders[0].selector = 'span.foreign'
     },
     (it) => {
-      it.viewports.phone.receivers[0].inCode = true
+      it.viewports.phone.holders[0].inCode = true
     },
     (it) => {
       it.inCode = true
@@ -1646,8 +1646,8 @@ test('stock tag breadcrumbs: connected path producer, route and every raw copy r
   }
 })
 
-test('breadcrumb receivers: source formulas bind unique declared archive, public author and tag owners', () => {
-  const f = breadcrumbReceiverFixture()
+test('breadcrumb holders: source formulas bind unique declared archive, public author and tag owners', () => {
+  const f = breadcrumbHolderFixture()
   for (const [kind, owners] of [
     ['archive', ['languageString-61.0', 'languageString-62.0']],
     ['author', ['languageString-63.0', 'user-61.0']],
@@ -1662,34 +1662,34 @@ test('breadcrumb receivers: source formulas bind unique declared archive, public
   assert.equal(f.run(f.item('tag'), `${SITE}index.php/topics/platform-test`).status, 'matched')
 })
 
-test('breadcrumb receivers: absent raw copies, foreign selectors, mismatched bytes and CODE stay unproved', () => {
-  const f = breadcrumbReceiverFixture()
+test('breadcrumb holders: absent raw copies, foreign selectors, mismatched bytes and CODE stay unproved', () => {
+  const f = breadcrumbHolderFixture()
   for (const change of [
     (it) => {
       delete it.viewports.phone
     },
     (it) => {
-      delete it.viewports.phone.receivers
+      delete it.viewports.phone.holders
     },
     (it) => {
       it.viewports.phone.count++
     },
     (it) => {
-      it.viewports.phone.receivers.push(it.viewports.phone.receivers[0])
+      it.viewports.phone.holders.push(it.viewports.phone.holders[0])
       it.viewports.phone.count++
     },
     (it) => {
-      it.viewports.phone.receivers[0].value += ' foreign'
+      it.viewports.phone.holders[0].value += ' foreign'
     },
     (it) => {
-      it.viewports.phone.receivers[0].value = it.value.toLowerCase()
+      it.viewports.phone.holders[0].value = it.value.toLowerCase()
     },
     (it) => {
-      it.viewports.phone.receivers[0].selector = 'nav.foreign > span.hx-author__bc-trail'
-      it.viewports.phone.selector = it.viewports.phone.receivers[0].selector
+      it.viewports.phone.holders[0].selector = 'nav.foreign > span.hx-author__bc-trail'
+      it.viewports.phone.selector = it.viewports.phone.holders[0].selector
     },
     (it) => {
-      it.viewports.phone.receivers[0].inCode = true
+      it.viewports.phone.holders[0].inCode = true
     },
     (it) => {
       it.inCode = true
@@ -1707,8 +1707,8 @@ test('breadcrumb receivers: absent raw copies, foreign selectors, mismatched byt
   }
 })
 
-test('breadcrumb receivers: route identity, unique real owner and connected formula cannot be borrowed', () => {
-  const f = breadcrumbReceiverFixture()
+test('breadcrumb holders: route identity, unique real owner and connected formula cannot be borrowed', () => {
+  const f = breadcrumbHolderFixture()
   for (const kind of ['archive', 'tag'])
     assert.notEqual(f.run(f.item(kind), `${f.urls[kind]}&layout=foreign`).status, 'matched')
   for (const url of [
@@ -1823,7 +1823,7 @@ test('breadcrumb receivers: route identity, unique real owner and connected form
   category.selector = 'nav.hxcat-bc > span.hxcat-bc__rest'
   for (const v of Object.values(category.viewports)) {
     v.selector = category.selector
-    v.receivers[0].selector = category.selector
+    v.holders[0].selector = category.selector
   }
   assert.notEqual(
     f.run(category, f.urls.archive).status,
@@ -1833,7 +1833,7 @@ test('breadcrumb receivers: route identity, unique real owner and connected form
 })
 
 function mixedMetadataFixture() {
-  const f = generatedReceiverFixture()
+  const f = generatedHolderFixture()
   const dir = contractDir([
     {
       key: 'languageString-31.0',
@@ -1868,7 +1868,7 @@ function mixedMetadataFixture() {
   return { ...f, contract, author, related, item, create }
 }
 
-test('mixed metadata receivers: every author or related copy binds its own producer and declared language', () => {
+test('mixed metadata holders: every author or related copy binds its own producer and declared language', () => {
   const f = mixedMetadataFixture(),
     run = f.create()
   for (const selectors of [[f.author, f.related], [f.related, f.author], [f.related]]) {
@@ -1882,7 +1882,7 @@ test('mixed metadata receivers: every author or related copy binds its own produ
   assert.equal(run(f.item('Editor · 18 June 2026 · 2 min read', [f.author])).status, 'matched')
 })
 
-test('mixed metadata receivers: absent callers, source files and exact date/readtime formulas refuse', () => {
+test('mixed metadata holders: absent callers, source files and exact date/readtime formulas refuse', () => {
   const f = mixedMetadataFixture()
   const article = f.base + 'article/default.php'
   const related = f.base + 'article/default_related.php'
@@ -1914,32 +1914,32 @@ test('mixed metadata receivers: absent callers, source files and exact date/read
   }
 })
 
-test('mixed metadata receivers: all copies require exact raw strings, distinct selectors and non-CODE provenance', () => {
+test('mixed metadata holders: all copies require exact raw strings, distinct selectors and non-CODE provenance', () => {
   const f = mixedMetadataFixture()
   const invalid = []
   for (const value of [undefined, null, '18 June 2026  ·  2 min read', '18 June 2026 · 3 min read']) {
     const it = f.item()
-    it.viewports.phone.receivers[1].value = value
+    it.viewports.phone.holders[1].value = value
     invalid.push(it)
   }
   for (const change of [
     (it) => {
-      it.viewports.phone.receivers[1].selector = 'div.business > span.hx-related__m'
+      it.viewports.phone.holders[1].selector = 'div.business > span.hx-related__m'
     },
     (it) => {
-      it.viewports.phone.receivers[1].selector = f.author
+      it.viewports.phone.holders[1].selector = f.author
     },
     (it) => {
-      it.viewports.phone.receivers[1].inCode = true
+      it.viewports.phone.holders[1].inCode = true
     },
     (it) => {
-      it.viewports.phone.receivers[1].tag = 'code'
+      it.viewports.phone.holders[1].tag = 'code'
     },
     (it) => {
       it.viewports.phone.count = 3
     },
     (it) => {
-      delete it.viewports.phone.receivers
+      delete it.viewports.phone.holders
     },
     (it) => {
       it.inCode = true
@@ -1949,11 +1949,11 @@ test('mixed metadata receivers: all copies require exact raw strings, distinct s
     },
     (it) => {
       it.tag = 'div'
-      for (const v of Object.values(it.viewports)) for (const c of v.receivers) c.tag = 'div'
+      for (const v of Object.values(it.viewports)) for (const c of v.holders) c.tag = 'div'
     },
     (it) => {
       it.attr = 'title'
-      for (const v of Object.values(it.viewports)) for (const c of v.receivers) c.attr = 'title'
+      for (const v of Object.values(it.viewports)) for (const c of v.holders) c.attr = 'title'
     }
   ]) {
     const it = f.item()
@@ -1968,7 +1968,7 @@ test('mixed metadata receivers: all copies require exact raw strings, distinct s
   }
 })
 
-test('mixed metadata receivers: related date/duration accepts no foreign prefix or stale language owner', () => {
+test('mixed metadata holders: related date/duration accepts no foreign prefix or stale language owner', () => {
   const f = mixedMetadataFixture(),
     run = f.create()
   for (const value of [
@@ -1995,7 +1995,7 @@ test('mixed metadata receivers: related date/duration accepts no foreign prefix 
 })
 
 function teamAriaFixture(extra = {}, module = 'mod_ja_acm', additional = []) {
-  const f = generatedReceiverFixture()
+  const f = generatedHolderFixture()
   const social = teamSocialMatcher(
     'Network-One|https://one.example.test/a\nnetwork-one|https://two.example.test/b\nnetwork-one|https://three.example.test/c',
     extra,
@@ -2043,7 +2043,7 @@ foreach (preg_split('/\\r\\n|\\r|\\n/', (string) $helper->get('socials', $i)) as
   return { ...f, ...social, raw, merge, run, file, source }
 }
 
-test('causal receivers: ACM social aria binds each exact module/card/entry and source-derived token to its scalar', () => {
+test('causal holders: ACM social aria binds each exact module/card/entry and source-derived token to its scalar', () => {
   const f = teamAriaFixture()
   const item = f.merge([f.raw(1), f.raw(2), f.raw(3)])
   const result = f.run(item)
@@ -2068,7 +2068,7 @@ test('causal receivers: ACM social aria binds each exact module/card/entry and s
   const mixed = f.merge([f.raw(1), f.raw(2, { scopes: ['acm-teams-91'] })])
   assert.equal(f.run(mixed).status, 'hole')
   const missing = f.merge([f.raw(1), f.raw(2)])
-  delete missing.viewports.phone.receivers
+  delete missing.viewports.phone.holders
   assert.equal(f.run(missing).status, 'hole')
   f.put(f.file, f.source.replace("$s['net'] !== '' ? $s['net'] : 'website'", "'network-one'"))
   assert.equal(
@@ -2078,7 +2078,7 @@ test('causal receivers: ACM social aria binds each exact module/card/entry and s
   )
 })
 
-test('causal receivers: ACM aria preserves scalar ambiguity, malformed entry ordinals, copy counts and source guards', () => {
+test('causal holders: ACM aria preserves scalar ambiguity, malformed entry ordinals, copy counts and source guards', () => {
   const f = teamAriaFixture({}, 'mod_ja_acm', [
     { key: 'module-90.second', jsonPath: ['teams', 'teams[socials]', 1] }
   ])
@@ -2114,19 +2114,19 @@ test('causal receivers: ACM aria preserves scalar ambiguity, malformed entry ord
       v.count++
     },
     (v) => {
-      v.receivers.pop()
+      v.holders.pop()
     },
     (v) => {
-      v.receivers[1].inCode = true
+      v.holders[1].inCode = true
     },
     (v) => {
-      v.receivers[1].scopes = ['acm-teams-91']
+      v.holders[1].scopes = ['acm-teams-91']
     },
     (v) => {
-      v.receivers[1].selector = v.receivers[0].selector
+      v.holders[1].selector = v.holders[0].selector
     },
     (v) => {
-      v.receivers[1] = null
+      v.holders[1] = null
     }
   ].map((change) => {
     const item = structuredClone(valid)
@@ -2150,7 +2150,7 @@ test('causal receivers: ACM aria preserves scalar ambiguity, malformed entry ord
   }
 })
 
-test('causal receivers: receipts retain each raw href and attribute without borrowing the first copy', () => {
+test('causal holders: receipts retain each raw href and attribute without borrowing the first copy', () => {
   const raw = (n, extra = {}) => ({
     kind: 'text',
     tag: 'a',
@@ -2161,14 +2161,14 @@ test('causal receivers: receipts retain each raw href and attribute without borr
   })
   const item = mergeViewports({ desktop: { items: [raw(1), raw(2), raw(3, { href: undefined })] } }, SITE)[0]
   assert.deepEqual(
-    physicalReceivers(item).map((c) => c.href),
+    physicalHolders(item).map((c) => c.href),
     ['index.php?author=1', 'index.php?author=2', undefined]
   )
   const attr = mergeViewports({ desktop: { items: [raw(1, { kind: 'attr', attr: 'aria-label' })] } }, SITE)[0]
-  assert.equal(physicalReceivers(attr)[0].attr, 'aria-label')
-  attr.viewports.desktop.receivers[0].attr = 'title'
-  assert.equal(physicalReceivers(attr), null, 'different attribute is not the same physical receiver')
-  const f = generatedReceiverFixture()
+  assert.equal(physicalHolders(attr)[0].attr, 'aria-label')
+  attr.viewports.desktop.holders[0].attr = 'title'
+  assert.equal(physicalHolders(attr), null, 'different attribute is not the same physical holder')
+  const f = generatedHolderFixture()
   const date = f.item('18 Jun', 'time.hx-blogdate', { tag: 'time' })
   for (const viewports of [{}, { desktop: null }]) {
     const result = f.create()({ ...date, viewports }, {})
@@ -2176,7 +2176,7 @@ test('causal receivers: receipts retain each raw href and attribute without borr
   }
 })
 
-test('causal receivers: every ACM aria copy keeps its exact raw token despite normalized merging', () => {
+test('causal holders: every ACM aria copy keeps its exact raw token despite normalized merging', () => {
   const f = teamAriaFixture()
   const mixed = f.merge([f.raw(1), f.raw(2, { value: 'Network-One' })])
   assert.equal(f.run(mixed).status, 'hole', 'a same-normalized but different raw token is not source-derived')
@@ -2213,7 +2213,7 @@ test('K3 review R1: missing raw tokens cannot own absent or reserved ACM network
     }
   ].map((change) => {
     const item = structuredClone(good)
-    change(item.viewports.phone.receivers[1])
+    change(item.viewports.phone.holders[1])
     return item
   })
   for (const reverse of [false, true]) {
@@ -2293,7 +2293,7 @@ test('remaining67 matching: complete literals keep ownership before overlapping 
 })
 
 test('remaining67 matching: actual category producer binds the full literal and preserves ambiguity', () => {
-  const f = generatedReceiverFixture()
+  const f = generatedHolderFixture()
   const dir = contractDir([
     {
       key: 'languageString-71.0',
@@ -2331,7 +2331,7 @@ test('remaining67 matching: actual category producer binds the full literal and 
 })
 
 test('remaining67 dates: exact full-date and month leaves bind their own source and locale', () => {
-  const f = generatedReceiverFixture()
+  const f = generatedHolderFixture()
   const full = f.item(
     '18 June 2026',
     'a.hx-blogrow > div.hx-blogmeta:nth-of-type(2) > span.hx-blogdatetxt:nth-of-type(2)'
@@ -2378,7 +2378,7 @@ test('remaining67 dates: exact full-date and month leaves bind their own source 
 })
 
 test('remaining67 dates: physical leaf copies and calendar bounds survive cache order', () => {
-  const f = generatedReceiverFixture()
+  const f = generatedHolderFixture()
   const raw = (row) => ({
     kind: 'text',
     tag: 'span',
@@ -2392,19 +2392,19 @@ test('remaining67 dates: physical leaf copies and calendar bounds survive cache 
   const bad = []
   for (const change of [
     (v) => {
-      delete v.receivers
+      delete v.holders
     },
     (v) => {
-      v.receivers[1].value = '18 June 2027'
+      v.holders[1].value = '18 June 2027'
     },
     (v) => {
-      v.receivers[1].selector = 'span.business'
+      v.holders[1].selector = 'span.business'
     },
     (v) => {
-      v.receivers[1].inCode = true
+      v.holders[1].inCode = true
     },
     (v) => {
-      v.receivers.pop()
+      v.holders.pop()
     }
   ]) {
     const item = structuredClone(good)
@@ -2428,7 +2428,7 @@ test('remaining67 dates: physical leaf copies and calendar bounds survive cache 
 })
 
 test('remaining67 forms: conflicting template/core phases never pick the observed same words', () => {
-  const f = generatedReceiverFixture(),
+  const f = generatedHolderFixture(),
     context = { url: SITE + '?option=com_users&view=registration' }
   f.put('templates/ja_kinetic/language/en-GB/tpl_ja_kinetic.ini', 'COM_USERS_REGISTER_NAME_LABEL="Full name"')
   // Static files do not establish which plugins loaded a language before the HTML form rendered.
@@ -2448,7 +2448,7 @@ test('remaining67 forms: conflicting template/core phases never pick the observe
 })
 
 test('remaining67 leaf boundaries: a producer prefix or ambiguous month cannot prove the whole scalar', () => {
-  const f = generatedReceiverFixture(),
+  const f = generatedHolderFixture(),
     file = f.base + 'category/blog_item.php'
   const full = f.item('18 June 2026', 'div.hx-blogmeta > span.hx-blogdatetxt')
   const month = f.item('Jun', 'time.hx-blogdate > span.hx-blogdate__m')

@@ -6,10 +6,10 @@
 //   e = a shop's catalogue (VirtueMart products, categories, manufacturers, prices, product media): the
 //       shop owner's inventory, managed in the shop component, never a content contract slot (listed, never blocking)
 import { searchDb } from './db-index.mjs'
-import { searchSources, receiverLanguage, receiverProducer } from './sources.mjs'
+import { searchSources, holderLanguage, holderProducer } from './sources.mjs'
 import { normText, compact } from './normalize.mjs'
 import { videoId, isRenderedDate } from './match.mjs'
-import { physicalReceivers } from './items.mjs'
+import { physicalHolders } from './items.mjs'
 
 const UPLOADS = 'wp-content/uploads/'
 /** A size WordPress generated from an upload (`cake-300x200.jpg`, `cake-scaled.jpg`): the upload, then the extension. */
@@ -103,19 +103,19 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       item.kind !== 'text'
     )
       return null
-    const copies = physicalReceivers(item)
+    const copies = physicalHolders(item)
     if (!copies) return null
     const selectors = [item.selector, ...copies.map((c) => c.selector)]
-    const receiver = (re) => selectors.length > 0 && selectors.every((s) => re.test(s))
+    const holder = (re) => selectors.length > 0 && selectors.every((s) => re.test(s))
     const producer = (file, ...expressions) =>
-      receiverProducer(
+      holderProducer(
         sourceIndex,
         file,
         ...expressions.map((re) => new RegExp(re.source, re.flags.includes('i') ? re.flags : re.flags + 'i'))
       )
 
     const language = (key, file = coreLanguage) => {
-      const found = receiverLanguage(
+      const found = holderLanguage(
         sourceIndex,
         key,
         sourceIndex.ini.some((s) => s.key === key && templateLanguage.test(s.rel)) ? templateLanguage : file
@@ -161,14 +161,14 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       tpl === 'ja_kinetic' &&
       item.tag === 'span' &&
       !item.attr &&
-      ['desktop', 'phone'].every((vp) => Array.isArray(item.viewports?.[vp]?.receivers)) &&
-      Object.values(item.viewports ?? {}).every((v) => Array.isArray(v?.receivers)) &&
+      ['desktop', 'phone'].every((vp) => Array.isArray(item.viewports?.[vp]?.holders)) &&
+      Object.values(item.viewports ?? {}).every((v) => Array.isArray(v?.holders)) &&
       copies.every((c) => typeof c.value === 'string' && c.value === item.value)
     ) {
       const nth = '(?::nth-of-type\\([1-9][0-9]*\\))?'
-      const archive = receiver(new RegExp(`\\bnav\\.hx-archmast__bc${nth} > span\\.hx-bc-tail${nth}$`))
-      const author = receiver(new RegExp(`\\bnav\\.hx-author__bc${nth} > span\\.hx-author__bc-trail${nth}$`))
-      const tag = receiver(
+      const archive = holder(new RegExp(`\\bnav\\.hx-archmast__bc${nth} > span\\.hx-bc-tail${nth}$`))
+      const author = holder(new RegExp(`\\bnav\\.hx-author__bc${nth} > span\\.hx-author__bc-trail${nth}$`))
+      const tag = holder(
         new RegExp(`\\bnav\\.hx-author__bc\\.kinetic-tags-bc${nth} > span\\.hx-author__bc-trail${nth}$`)
       )
       if (archive || author || tag) {
@@ -221,7 +221,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
                 link.searchParams.get('view') === 'author' &&
                 link.searchParams.get('layout') === 'list' &&
                 /^author\/[^/]+$/.test(tail) &&
-                receiverProducer(
+                holderProducer(
                   sourceIndex,
                   'plugins/system/t4/src/t4/MVC/Router/T4.php',
                   /preg_match\("\/\\\/author\\\/\(\.\*\?\)\(\\\/\|\\\?\|\\&\|\$\)\/",\s*\$uri->toString\(array\('path',\s*'query',\s*'fragment'\)\),\s*\$matches\)/,
@@ -244,7 +244,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
                 link.searchParams.get('view') === 'tags' &&
                 /^[^/:,]+$/.test(tail) &&
                 !/^[+-]?(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(tail.trim()) &&
-                receiverProducer(
+                holderProducer(
                   sourceIndex,
                   'components/com_tags/src/Service/Router.php',
                   /\$slug\s*=\s*\$this->fixSegment\(\$id\)/,
@@ -255,13 +255,13 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
               ) {
                 // Stock capture declares path: a single segment is an alias only under the nested-table producer.
                 const stockPath =
-                  receiverProducer(
+                  holderProducer(
                     sourceIndex,
                     'administrator/components/com_tags/src/Table/TagTable.php',
                     /class TagTable extends Nested\b/,
                     /parent::__construct\('#__tags',\s*'id',\s*\$db/
                   ) &&
-                  receiverProducer(
+                  holderProducer(
                     sourceIndex,
                     'libraries/src/Table/Nested.php',
                     /\$query\s*=\s*\$db->createQuery\(\)\s*->select\('p.alias'\)\s*->from\(\$this->_tbl \. ' AS n, ' \. \$this->_tbl \. ' AS p'\)\s*->where\('n.lft BETWEEN p.lft AND p.rgt'\)\s*->where\('n\.' \. \$this->_tbl_key \. ' = ' \. \(int\) \$pk\)\s*->order\('p.lft'\);\s*\$db->setQuery\(\$query\);\s*\$segments\s*=\s*\$db->loadColumn\(\);/,
@@ -349,7 +349,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
               first &&
               last &&
               norm === canonical(`/ ${first.value} / ${last.value}`) &&
-              receiverProducer(
+              holderProducer(
                 sourceIndex,
                 file,
                 /<span class=["']hx-bc-tail["']>\s*\/\s*<\?php\s+echo\s+Text::_\(['"]TPL_JA_KINETIC_BLOG_KICKER_CAP['"]\);\s*\?>\s*\/\s*<\?php\s+echo\s+Text::_\(['"]TPL_JA_KINETIC_ARCHIVE_CRUMB['"]\);\s*\?>\s*<\/span>/
@@ -399,7 +399,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
                 (param('option') === 'com_content' &&
                   param('view') === 'author' &&
                   param('layout') === 'author')) &&
-              receiverProducer(
+              holderProducer(
                 sourceIndex,
                 file,
                 /\$author\s*=\s*\$this->author;/,
@@ -414,7 +414,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
                 (param('option') === 'com_tags' &&
                   param('view') === 'tag' &&
                   (!param('layout') || param('layout') === 'default'))) &&
-              receiverProducer(
+              holderProducer(
                 sourceIndex,
                 file,
                 /\$tagTitleHtml\s*=\s*HTMLHelper::_\('content.prepare',\s*\$this->tags_title,\s*'',\s*'com_tags.tag'\);/,
@@ -460,7 +460,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         const lang = language(key + (abbreviated ? '_SHORT' : ''))
         if (!lang || canonical(lang.value) !== value) continue
         if (
-          !receiverProducer(
+          !holderProducer(
             sourceIndex,
             file,
             abbreviated
@@ -491,27 +491,27 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     }
     const dateFile = base + 'category/blog_item.php'
     const dateSource = producer(dateFile, /\$datefield\s*=.*\$item->created/, /\$item->publish_up/)
-    if (item.tag === 'time' && receiver(/\btime\.hx-blogdate(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+    if (item.tag === 'time' && holder(/\btime\.hx-blogdate(?::nth-of-type\([1-9][0-9]*\))?$/)) {
       const langs = date(norm, true)
       if (
         langs &&
         dateSource &&
-        // PHP date-format literals are case-sensitive; bind each one to its exact receiver.
-        receiverProducer(
+        // PHP date-format literals are case-sensitive; bind each one to its exact holder.
+        holderProducer(
           sourceIndex,
           dateFile,
           /class=['"]hx-blogdate__d['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*['"]d['"]\)/,
           /class=['"]hx-blogdate__m['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*['"]M['"]\)/
         )
       )
-        return proved(dateFile, 'day/month date receiver', ...langs)
+        return proved(dateFile, 'day/month date holder', ...langs)
     }
     if (
       item.tag === 'span' &&
       copies.every((copy) => typeof copy.value === 'string' && canonical(copy.value) === norm)
     ) {
       if (
-        receiver(
+        holder(
           /\bdiv\.hx-blogmeta(?::nth-of-type\([1-9][0-9]*\))? > span\.hx-blogdatetxt(?::nth-of-type\([1-9][0-9]*\))?$/
         )
       ) {
@@ -519,16 +519,16 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         if (
           langs &&
           dateSource &&
-          receiverProducer(
+          holderProducer(
             sourceIndex,
             dateFile,
             /class=['"]hx-blogdatetxt['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*Text::_\(['"]DATE_FORMAT_LC3['"]\)\)\s*;\s*\?>\s*<\/span>/
           )
         )
-          return proved(dateFile, 'full date leaf receiver', ...langs)
+          return proved(dateFile, 'full date leaf holder', ...langs)
       }
       if (
-        receiver(
+        holder(
           /\btime\.hx-blogdate(?::nth-of-type\([1-9][0-9]*\))? > span\.hx-blogdate__m(?::nth-of-type\([1-9][0-9]*\))?$/
         )
       ) {
@@ -536,16 +536,16 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         if (
           found &&
           dateSource &&
-          receiverProducer(
+          holderProducer(
             sourceIndex,
             dateFile,
             /class=['"]hx-blogdate__m['"]>\s*<\?php\s+echo\s+HTMLHelper::_\(['"]date['"],\s*\$dateField,\s*['"]M['"]\)\s*;\s*\?>\s*<\/span>/
           )
         )
-          return proved(dateFile, 'abbreviated month leaf receiver', found.lang)
+          return proved(dateFile, 'abbreviated month leaf holder', found.lang)
       }
     }
-    if (receiver(/\bdiv\.hx-blogmeta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+    if (holder(/\bdiv\.hx-blogmeta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
       const short = language('TPL_JA_KINETIC_BLOG_READMIN_SHORT', templateLanguage)
       for (const prefix of ['', ...contract.index.text.keys()]) {
         if (prefix && !norm.startsWith(canonical(prefix) + ' ')) continue
@@ -565,7 +565,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
             /text::sprintf\(['"]tpl_ja_kinetic_blog_readmin_short['"],\s*\$readmins\)/
           )
         )
-          return proved(dateFile, 'full date and duration receiver', ...langs, short)
+          return proved(dateFile, 'full date and duration holder', ...langs, short)
       }
     }
     const authorMeta = /\bspan\.hx-author__meta(?::nth-of-type\([1-9][0-9]*\))?$/
@@ -588,7 +588,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       const duration = pieces.pop()
       const langs = pieces.length ? date(pieces[pieces.length - 1]) : null
       if (langs) pieces.pop()
-      const readtime = receiverProducer(
+      const readtime = holderProducer(
         sourceIndex,
         file,
         /function\s+kinetic_readtime\(\$html\)/,
@@ -596,7 +596,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         /max\(1,\s*\(int\)\s*ceil\(\$words\s*\/\s*200\)\)/
       )
       const author =
-        receiverProducer(
+        holderProducer(
           sourceIndex,
           file,
           /class=['"]hx-author__meta['"]/,
@@ -606,7 +606,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           /\$this->escape\(\$authorRole\)/
         ) &&
         (!langs ||
-          receiverProducer(
+          holderProducer(
             sourceIndex,
             file,
             /\$hxMeta\[\]\s*=\s*HTMLHelper::_\(['"]date['"],\s*\$this->item->(?:created|publish_up),\s*Text::_\(['"]DATE_FORMAT_LC3['"]\)\)/
@@ -614,8 +614,8 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       const related =
         langs &&
         pieces.length === 0 &&
-        receiverProducer(sourceIndex, file, /\$this->loadTemplate\(['"]related['"]\)/) &&
-        receiverProducer(
+        holderProducer(sourceIndex, file, /\$this->loadTemplate\(['"]related['"]\)/) &&
+        holderProducer(
           sourceIndex,
           relatedFile,
           /class=['"]hx-related__card['"]/,
@@ -632,12 +632,12 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       )
         return proved(
           copies.some((c) => relatedMeta.test(c.selector)) ? `${file}, ${relatedFile}` : file,
-          'article duration receiver',
+          'article duration holder',
           lang,
           ...(langs ?? [])
         )
     }
-    if (receiver(/\bdiv\.hx-auaside__meta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+    if (holder(/\bdiv\.hx-auaside__meta(?::nth-of-type\([1-9][0-9]*\))?$/)) {
       const file = base + 'author/author_info.php'
       const pieces = norm.split(' . '),
         phrase = pieces.pop()
@@ -661,9 +661,9 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           /\$this->escape\(\$harole\)/
         )
       )
-        return proved(file, 'author article count receiver', lang)
+        return proved(file, 'author article count holder', lang)
     }
-    if (receiver(/\bspan\.hx-bloglist__count(?::nth-of-type\([1-9][0-9]*\))?$/)) {
+    if (holder(/\bspan\.hx-bloglist__count(?::nth-of-type\([1-9][0-9]*\))?$/)) {
       const file = base + 'category/blog.php'
       const lang = language('TPL_JA_KINETIC_BLOG_POSTS_NEWEST', templateLanguage)
       const m = /^\/\/ (0[0-9]|[1-9][0-9]+) (.+)$/.exec(norm)
@@ -679,7 +679,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
           /text::_\(['"]tpl_ja_kinetic_blog_posts_newest['"]\)/
         )
       )
-        return proved(file, 'category padded count receiver', lang)
+        return proved(file, 'category padded count holder', lang)
     }
     if (item.tag === 'label') {
       let page
@@ -705,11 +705,11 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         ['registration', 'password1', 'jform_password1', 'COM_USERS_PROFILE_PASSWORD1_LABEL']
       ]
       for (const [form, field, id, key] of fields) {
-        if (view !== form || !receiver(new RegExp(`^#${id}-lbl$`))) continue
+        if (view !== form || !holder(new RegExp(`^#${id}-lbl$`))) continue
         const file = `components/com_users/forms/${form}.xml`
         const languageFile = key === 'JGLOBAL_PASSWORD' ? coreLanguage : /^language\/[^/]+\/com_users\.ini$/
         const lang = language(key, languageFile)
-        const componentLanguage = receiverLanguage(sourceIndex, key, languageFile)
+        const componentLanguage = holderLanguage(sourceIndex, key, languageFile)
         if (
           lang &&
           componentLanguage &&
@@ -735,7 +735,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
             /&#160;\*/
           )
         )
-          return proved(file, 'required form label receiver', lang)
+          return proved(file, 'required form label holder', lang)
       }
     }
     return null
@@ -750,14 +750,14 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       !sourceIndex
     )
       return null
-    // Old merged observations cannot prove the module/card/entry of every physical receiver.
+    // Old merged observations cannot prove the module/card/entry of every physical holder.
     const views = Object.values(item.viewports ?? {})
-    if (!views.length || views.some((v) => !v || !Array.isArray(v.receivers))) return null
-    const copies = physicalReceivers(item)
+    if (!views.length || views.some((v) => !v || !Array.isArray(v.holders))) return null
+    const copies = physicalHolders(item)
     if (!copies) return null
     const file = `templates/${tpl}/acm/teams/tmpl/style-1.php`
     if (
-      !receiverProducer(
+      !holderProducer(
         sourceIndex,
         file,
         /\$count\s*=\s*\(int\)\s*\$helper->getRows\(['"]name['"]\)/,
@@ -782,14 +782,14 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       const modules = Array.isArray(copy.scopes)
         ? copy.scopes.filter((s) => /^acm-teams-[1-9][0-9]*$/.test(s))
         : []
-      const receiver =
+      const holder =
         /(?:^| > )div\.hx-card\.hx-team-card(?::nth-of-type\(([1-9][0-9]*)\))? > div\.hx-team-social(?::nth-of-type\([1-9][0-9]*\))? > a\.hx-team-social-link(?::nth-of-type\(([1-9][0-9]*)\))?$/.exec(
           copy.selector
         )
-      if (modules.length !== 1 || !receiver) return null
+      if (modules.length !== 1 || !holder) return null
       const moduleId = Number(modules[0].slice('acm-teams-'.length))
-      const row = Number(receiver[1] ?? 1) - 1,
-        entry = Number(receiver[2] ?? 1) - 1
+      const row = Number(holder[1] ?? 1) - 1,
+        entry = Number(holder[2] ?? 1) - 1
       const owners = (contract.index.socialAria ?? []).filter(
         (s) =>
           s.moduleId === moduleId &&
@@ -967,7 +967,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       item.selector,
       item.inCode,
       item.codeText,
-      Object.values(item.viewports ?? {}).map((v) => [v?.count, v?.selector, v?.receivers]),
+      Object.values(item.viewports ?? {}).map((v) => [v?.count, v?.selector, v?.holders]),
       context.url
     ])
     if (cache.has(key)) return cache.get(key)
@@ -1005,7 +1005,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     )
       res = fromDb({ norm: normText(item.value) }) ?? {
         class: 'd',
-        label: 'generated value without a proven source receiver',
+        label: 'generated value without a proven source holder',
         evidence: res.evidence
       }
     if (!dbIndex && !sourceIndex && res.class === 'd')

@@ -93,9 +93,9 @@ async function readBlock(ctx, { siteUrl, idx, at, physical = false }) {
   }
 }
 
-/** A structural receiver must remain unique; an ordinal that now points at a different shape is not its identity. */
-function receiverLine(read, at) {
-  const want = at.receiver
+/** A structural holder must remain unique; an ordinal that now points at a different shape is not its identity. */
+function holderLine(read, at) {
+  const want = at.holder
   if (
     !want?.unique ||
     !want.pure ||
@@ -106,18 +106,18 @@ function receiverLine(read, at) {
   )
     return null
   const lines = (read.textLines ?? []).filter(
-    (l) => l.block === at.raw && JSON.stringify(l.receiver?.path) === JSON.stringify(want.path)
+    (l) => l.block === at.raw && JSON.stringify(l.holder?.path) === JSON.stringify(want.path)
   )
-  return lines.length === 1 && JSON.stringify(lines[0].receiver) === JSON.stringify(want) ? lines[0] : null
+  return lines.length === 1 && JSON.stringify(lines[0].holder) === JSON.stringify(want) ? lines[0] : null
 }
 
-/** Prove constant causality at one receiver, not an inferred PHP call or a priority between matching formats. */
+/** Prove constant causality at one holder, not an inferred PHP call or a priority between matching formats. */
 async function physicalSource(ctx, { siteUrl, idx, f, override, readFile, writer }) {
   const alternatives = f.source.formats
   const binding = {
     alternatives,
     controls: [],
-    method: 'individual language overrides at one structural receiver'
+    method: 'individual language overrides at one structural holder'
   }
   const refused = (reason) => ({ binding, reason })
   if (!Array.isArray(alternatives)) return refused('the matching language formats are malformed')
@@ -140,7 +140,7 @@ async function physicalSource(ctx, { siteUrl, idx, f, override, readFile, writer
     return refused('the candidate language files or constants are not independently identifiable')
   const options = { siteUrl, idx, at: f.at, physical: true }
   const before = await readBlock(ctx, options)
-  const originalLine = receiverLine(before, f.at)
+  const originalLine = holderLine(before, f.at)
   const count = (read) =>
     (read.textLines ?? []).filter((l) => l.shown && formats.some((f) => f.pattern.test(norm(l.text)))).length
   if (
@@ -148,8 +148,8 @@ async function physicalSource(ctx, { siteUrl, idx, f, override, readFile, writer
     count(before) !== 1 ||
     !formats.every((f) => f.pattern.test(norm(originalLine.text)))
   )
-    return refused('no unique complete receiver for the competing language formats')
-  binding.receiverBefore = originalLine
+    return refused('no unique complete holder for the competing language formats')
+  binding.holderBefore = originalLine
   const original = readFile(override.file)
   const responders = []
   for (const format of formats) {
@@ -162,13 +162,13 @@ async function physicalSource(ctx, { siteUrl, idx, f, override, readFile, writer
       else writer.writeFile(override.file, original)
     }
     const restored = await readBlock(ctx, options)
-    const returned = receiverLine(restored, f.at)
+    const returned = holderLine(restored, f.at)
     const restoredExactly =
       returned?.shown &&
       returned.text === originalLine.text &&
       count(restored) === 1 &&
       JSON.stringify(restored.layout?.block) === JSON.stringify(before.layout?.block)
-    const line = receiverLine(after, f.at)
+    const line = holderLine(after, f.at)
     const outcome = !line
       ? 'unbound'
       : !line.text && count(after) === 0
@@ -182,20 +182,20 @@ async function physicalSource(ctx, { siteUrl, idx, f, override, readFile, writer
     binding.controls.push({
       constant: format.constant,
       outcome,
-      receiverAfter: line,
+      holderAfter: line,
       restoration: {
         original:
           original === null ? 'absence restored by stock writer' : 'original bytes restored by stock writer',
-        receiverReturned: Boolean(restoredExactly),
-        receiver: returned,
+        holderReturned: Boolean(restoredExactly),
+        holder: returned,
         block: restored.layout?.block ?? null
       }
     })
     if (!restoredExactly || outcome === 'unbound' || outcome === 'mixed-or-reflowed')
-      return refused('the receiver or its restoration was missing, shifted, mixed or unreadable')
+      return refused('the holder or its restoration was missing, shifted, mixed or unreadable')
     if (outcome === 'removed') responders.push({ format, after })
   }
-  if (responders.length !== 1) return refused('no single constant independently removed the receiver')
+  if (responders.length !== 1) return refused('no single constant independently removed the holder')
   const {
     format: { pattern: _pattern, ...format },
     after

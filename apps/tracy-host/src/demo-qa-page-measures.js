@@ -771,7 +771,7 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     if (attribute)
       videoButtons.push({ selector: selectorOf(el), attribute, address: el.getAttribute(attribute) })
   }
-  // Exact receiver markers bind a source, its own UI row and its list; repeated IDs never identify a track.
+  // Exact player markers bind a source, its own UI row and its list; repeated IDs never identify a track.
   const audioSources = [],
     audioRows = [],
     audioLists = []

@@ -280,7 +280,7 @@ test('dynamic CMS reflow cannot turn a remaining counter into a successful hide'
 })
 
 // Drive the real measurement entry with an in-memory site and browser transport, never a live stand.
-const counterReceiver = () => ({
+const counterHolder = () => ({
   path: [0],
   lineage: [{ shape: 'P||counter', siblings: ['P||counter'] }],
   root: 'MAIN||',
@@ -294,7 +294,7 @@ const COUNTERS = [
 ]
 function physicalCounter({
   effect = (c) => (c === 'TOTAL' ? '' : 'Page 1 of 3'),
-  receiver = counterReceiver(),
+  holder = counterHolder(),
   copies = 1,
   absent = false,
   fail = false,
@@ -318,10 +318,10 @@ function physicalCounter({
       block: 'main-body',
       text: text(),
       shown: Boolean(text()),
-      receiver: {
-        ...receiver,
+      holder: {
+        ...holder,
         path: [i],
-        unique: receiver.unique && copies === 1,
+        unique: holder.unique && copies === 1,
         ...((shifted && current()) || (restorationDrift && writes.length && !current())
           ? { lineage: [{ shape: 'P||replacement', siblings: ['P||replacement'] }] }
           : {})
@@ -383,7 +383,7 @@ function physicalCounter({
     }
   }
   const f = matchCmsStrings({
-    lines: [{ block: 'body-a', raw: 'main-body', path: '/listing', text: 'Page 1 of 3', receiver }],
+    lines: [{ block: 'body-a', raw: 'main-body', path: '/listing', text: 'Page 1 of 3', holder }],
     files: [{ file: 'cms.ini', text: formats.map((f) => `${f.constant}="${f.value}"`).join('\n') }]
   }).fixedTexts[0]
   // Keep deliberately duplicated file candidates visible to the proof boundary.
@@ -413,7 +413,7 @@ function physicalCounter({
 
 test('physical CMS proof selects one causal constant with negative controls and restores the override', async () => {
   const fixture = physicalCounter()
-  assert.deepEqual(fixture.f.at.receiver, counterReceiver(), 'discovery must retain its own receiver')
+  assert.deepEqual(fixture.f.at.holder, counterHolder(), 'discovery must retain its own holder')
   const errors = await fixture.run()
   assert.deepEqual(errors, [])
   assert.equal(fixture.f.source.constant, 'TOTAL')
@@ -424,10 +424,10 @@ test('physical CMS proof selects one causal constant with negative controls and 
     fixture.f.evidence.sourceBinding.controls.map((c) => c.outcome),
     ['unchanged', 'removed']
   )
-  assert.equal(fixture.f.evidence.sourceBinding.controls[1].receiverAfter.text, '')
+  assert.equal(fixture.f.evidence.sourceBinding.controls[1].holderAfter.text, '')
   assert.deepEqual(
-    fixture.f.evidence.sourceBinding.controls[1].restoration.receiver,
-    fixture.f.evidence.sourceBinding.receiverBefore
+    fixture.f.evidence.sourceBinding.controls[1].restoration.holder,
+    fixture.f.evidence.sourceBinding.holderBefore
   )
   assert.equal(
     fixture.writes.filter((v) => v?.includes('TOTAL=""')).length,
@@ -448,14 +448,14 @@ test('physical CMS proof refuses a numeric-changing negative control despite exa
   assert.equal(fixture.f.canHide, null)
   assert.deepEqual(fixture.f.source, before, 'the competing formats remain unproved')
   assert.equal(fixture.f.evidence.sourceBinding.controls[0].outcome, 'mixed-or-reflowed')
-  assert.equal(fixture.f.evidence.sourceBinding.controls[0].restoration.receiverReturned, true)
+  assert.equal(fixture.f.evidence.sourceBinding.controls[0].restoration.holderReturned, true)
   const state = fixture.state()
   assert.equal(state.file, state.original)
   assert.equal(state.closed, true)
   assert.equal(state.opened, state.pageCloses)
 })
 
-test('physical CMS proof refuses noncounter, multiple responders, copies and uncertain receivers/files', async () => {
+test('physical CMS proof refuses noncounter, multiple responders, copies and uncertain holders/files', async () => {
   for (const options of [
     { effect: () => 'Page 1 of 3' },
     { effect: () => '' },
@@ -464,9 +464,9 @@ test('physical CMS proof refuses noncounter, multiple responders, copies and unc
     { copies: 2 },
     { shifted: true },
     { restorationDrift: true },
-    { receiver: { ...counterReceiver(), unique: false } },
-    { receiver: { ...counterReceiver(), pure: false } },
-    { receiver: { ...counterReceiver(), complete: false } },
+    { holder: { ...counterHolder(), unique: false } },
+    { holder: { ...counterHolder(), pure: false } },
+    { holder: { ...counterHolder(), complete: false } },
     { formats: [...COUNTERS, { ...COUNTERS[1], file: 'other.ini' }] }
   ]) {
     const fixture = physicalCounter(options)
@@ -507,15 +507,15 @@ test('physical CMS proof restores bytes on write/transport cancellation and refu
 })
 
 test('physical CMS producer retains separate occurrences through site discovery', () => {
-  const receiver = counterReceiver()
+  const holder = counterHolder()
   const r = siteCmsTexts({
     reads: [
       {
         path: '/listing',
         pageId: 'page-a',
         textLines: [
-          { block: 'main-body', text: 'Page 1 of 3', receiver },
-          { block: 'main-body', text: 'Page 1 of 3', receiver: { ...receiver, path: [1] } }
+          { block: 'main-body', text: 'Page 1 of 3', holder },
+          { block: 'main-body', text: 'Page 1 of 3', holder: { ...holder, path: [1] } }
         ]
       }
     ],
@@ -526,7 +526,7 @@ test('physical CMS producer retains separate occurrences through site discovery'
   })
   assert.equal(r.fixedTexts.length, 2, 'two physical copies must not collapse to a block/text row')
   assert.deepEqual(
-    r.fixedTexts.map((f) => f.at.receiver.path),
+    r.fixedTexts.map((f) => f.at.holder.path),
     [[0], [1]]
   )
   assert.ok(r.fixedTexts.every((f) => f.canHide === null && f.source.formats.length === 2))
@@ -569,25 +569,17 @@ test('physical CMS DOM reader binds structure and refuses identical shapes and m
       return readPage({ cmsBlock: 'main-body' }).textLines
     }
     const original = read([element('P', 'counter', 'Page 1 of 3')])[0]
-    assert.equal(original.receiver.pure, true)
-    assert.equal(original.receiver.unique, true)
+    assert.equal(original.holder.pure, true)
+    assert.equal(original.holder.unique, true)
     const empty = read([element('P', 'counter')])[0]
-    assert.deepEqual(
-      empty.receiver,
-      original.receiver,
-      'empty receiver keeps its physical structural identity'
-    )
+    assert.deepEqual(empty.holder, original.holder, 'empty holder keeps its physical structural identity')
     assert.equal(empty.text, '')
     const duplicate = read([element('P', 'counter', 'Page 1 of 3'), element('P', 'counter', 'Page 1 of 3')])
-    assert.ok(duplicate.every((l) => !l.receiver.unique))
+    assert.ok(duplicate.every((l) => !l.holder.unique))
     const shifted = read([element('P', 'other', 'Other'), element('P', 'counter', 'Page 1 of 3')])[1]
-    assert.notDeepEqual(
-      shifted.receiver,
-      original.receiver,
-      'a shifted ordinal cannot be the original binding'
-    )
+    assert.notDeepEqual(shifted.holder, original.holder, 'a shifted ordinal cannot be the original binding')
     const mixed = read([element('P', 'counter', 'Page ', [element('SPAN', '', '1 of 3')])])[0]
-    assert.equal(mixed.receiver.pure, false)
+    assert.equal(mixed.holder.pure, false)
   } finally {
     if (documentBefore === undefined) delete globalThis.document
     else globalThis.document = documentBefore

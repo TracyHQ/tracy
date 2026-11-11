@@ -14,14 +14,14 @@ const keyOf = (it, siteUrl) => {
 /** A block's chrome id (Joomla: `Mod160`, `mod-articles-160`, `module-160`; T4 ACM: `acm-hero-wrap-156`). */
 export const BLOCK_CHROME = /^(?:mod|module)[-_a-z]*\d+$|^acm-[-_a-z]*\d+$/i
 
-/** Complete physical receivers, or null when merging discarded or mixed any copy's provenance. */
-export function physicalReceivers(item) {
+/** Complete physical holders, or null when merging discarded or mixed any copy's provenance. */
+export function physicalHolders(item) {
   if (!item.selector || item.inCode || typeof item.codeText === 'string') return null
   const out = []
   for (const v of Object.values(item.viewports ?? {})) {
     if (!v || !Number.isInteger(v.count) || v.count < 1 || !v.selector) return null
     const copies =
-      v.receivers === undefined
+      v.holders === undefined
         ? v.count === 1
           ? [
               {
@@ -35,7 +35,7 @@ export function physicalReceivers(item) {
               }
             ]
           : null
-        : v.receivers
+        : v.holders
     if (
       !Array.isArray(copies) ||
       copies.length !== v.count ||
@@ -109,10 +109,10 @@ export function mergeViewports(byViewport, siteUrl) {
         count: 0,
         rect: null,
         selector: it.selector,
-        receivers: []
+        holders: []
       })
       v.count++
-      v.receivers.push({
+      v.holders.push({
         selector: it.selector,
         tag: it.tag,
         value: it.value,

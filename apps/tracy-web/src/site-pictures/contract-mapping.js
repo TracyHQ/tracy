@@ -24,7 +24,6 @@ import { paintKindOf } from '../lib/picture-paint/paint.js'
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
 import { retainedRejectionProblem } from './looker-call.js'
 import { readPictures } from './manifest-shape.js'
-import { paintKindOf } from '../lib/picture-paint/paint.js'
 import { indexInputs } from './picture-check/inputs-index.js'
 import { documentarySourceProblem } from './picture-check/rules-sources.js'
 
@@ -209,17 +208,17 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
   for (const e of frames.values()) {
     const keys = writesOf.get(e.frame) ?? [contentMapKey(e.frame)]
     const key = keys[0]
-    const provenance = sourceProblem(e)
-    if (provenance) {
-      bad(e.frame, provenance)
-      continue
-    }
     // shortcut: layout hide/paint stays refused until downstream stages address every bound slot.
     if (writesOf.has(e.frame) && (e.source === 'hide' || e.paint || e.backdrop)) {
       bad(
         e.frame,
         'layout backgrounds support file placement only; hide and painted writes are not supported'
       )
+      continue
+    }
+    const provenance = sourceProblem(e)
+    if (provenance) {
+      bad(e.frame, provenance)
       continue
     }
     if (e.source === 'hide') {

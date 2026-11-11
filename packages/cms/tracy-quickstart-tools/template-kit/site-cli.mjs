@@ -34,7 +34,6 @@ import { logoSlotsOf } from './lib/site/logo-spots.mjs'
 import { writePaletteHtml } from './lib/site/palette.mjs'
 import { buildSite } from './lib/site/site-kit.mjs'
 import { pathsOnStyles, stylesOfOpeningTheme } from './lib/site/theme-styles.mjs'
-import { settleWordPressSections } from './lib/site/wordpress-sections-file.mjs'
 
 const log = (...a) => console.error('[template-kit site]', ...a)
 const readJson = (f) => JSON.parse(readFileSync(f, 'utf8'))

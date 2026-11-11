@@ -1,7 +1,12 @@
 // Audio is a source address, never a picture, navigation target or generated customer fact.
+/** @param {{ type?: string, role?: string } | null | undefined} slot */
 export const isAudioSlot = (slot) => slot?.type === 'url' && slot?.role === 'business.audio'
 
-/** Syntax only: local file existence/type and remote playback still belong to the receiver/readback. */
+/**
+ * Syntax only: local file existence/type and remote playback still belong to the Claude Cowork plugin and the readback.
+ * @param {unknown} value
+ * @returns {string | null}
+ */
 export function audioSourceProblem(value) {
   if (typeof value !== 'string' || !value || /[\s\\<>"`{}|^#]/u.test(value)) return 'unsupported audio source'
   if (/%(?![0-9a-f]{2})/i.test(value)) return 'invalid audio source encoding'
@@ -40,7 +45,12 @@ export function audioSourceProblem(value) {
     : 'expected an existing MP3 in the site media library'
 }
 
-/** Match the receiver's installation-root resolution, then the browser's URL serialization; never rebase an absolute URL. */
+/**
+ * Match the Claude Cowork plugin's installation-root resolution, then the browser's URL serialization; never rebase an absolute URL.
+ * @param {unknown} value
+ * @param {string | undefined} siteUrl
+ * @returns {string | null}
+ */
 export function audioSourceIdentity(value, siteUrl) {
   if (typeof value !== 'string' || !value || value.startsWith('//')) return null
   try {
@@ -55,7 +65,13 @@ export function audioSourceIdentity(value, siteUrl) {
   }
 }
 
-/** The plan explicitly assigns one supplied audio fact to this source slot; no automatic reuse by row or URL. */
+/**
+ * The plan explicitly assigns one supplied audio fact to this source slot; no automatic reuse by row or URL.
+ * @param {any} link
+ * @param {string} value
+ * @param {Iterable<any>} facts
+ * @returns {string | null}
+ */
 export function audioDecisionProblem(link, value, facts) {
   if (link?.action !== 'media-source' || link.mediaKind !== 'audio' || !link.sourceSlot)
     return 'the kit has no exact audio source binding'
@@ -66,7 +82,7 @@ export function audioDecisionProblem(link, value, facts) {
       f?.field === 'audio' &&
       f.onSite !== false &&
       (f.source === 'stated' ||
-        (Array.isArray(f.evidence) && f.evidence.some((e) => e?.source === 'stated'))) &&
+        (Array.isArray(f.evidence) && f.evidence.some((/** @type {any} */ e) => e?.source === 'stated'))) &&
       (typeof f.value === 'string' ? f.value : f.value?.url) === value
   )
   return matches.length === 1 ? null : 'audio source needs one explicit customer audio fact and its evidence'

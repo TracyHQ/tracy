@@ -64,7 +64,7 @@ export function readPage({ siteName, contactPattern, cmsBlock }) {
           block,
           text,
           shown: shown(el),
-          receiver: {
+          holder: {
             path,
             lineage,
             root: shape(root),
@@ -77,10 +77,10 @@ export function readPage({ siteName, contactPattern, cmsBlock }) {
         })
       }
     }
-    for (const l of lines) l.receiver.complete = complete
+    for (const l of lines) l.holder.complete = complete
     return { textLines: lines, cmsLinesComplete: complete }
   }
-  // The same producer reads empty/hidden receivers after an override, without losing their identity.
+  // The same producer reads empty/hidden holders after an override, without losing their identity.
   if (cmsBlock !== undefined) return cmsLines()
   const meta = {}
   for (const m of document.querySelectorAll('meta[property], meta[name]')) {
