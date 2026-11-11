@@ -152,10 +152,17 @@ function demoContentRunning(opp, build) {
 /**
  * Derive the 0..7 lifecycle stage and attention state of a Website Opportunity row from its
  * latest job (`wo_job`), sources (`wo_source`), media (`wo_media`), revision (`wo_revision`),
- * and demo build (`wo_build`).
+ * demo build (`wo_build`) and latest demo action (`wo_demo_action`).
  */
-
-function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestRevision, latestBuild) {
+function deriveOpportunityLifecycle(
+  opp,
+  latestJob,
+  sources,
+  mediaStats,
+  latestRevision,
+  latestBuild,
+  latestAction = null
+) {
   const blockedSources = sources.filter(
     (s) => s.status === 'blocked' || s.status === 'failed' || s.status === 'paused'
   )
@@ -170,6 +177,31 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
     new Date(latestJob.lease_until).getTime() < Date.now()
 
   const jobErrText = errorTextOf(latestJob?.last_error)
+
+  // The latest demo action was refused before it had a build of its own (`BRIEF_NOT_READY` and the like),
+  // and was accepted after the latest build was requested: an older refusal is history (#552). The
+  // research rollup keeps meaning research; the refusal is the row's attention.
+  const refusedCode =
+    latestAction?.status === 'failed' &&
+    !latestAction.has_build &&
+    (!latestBuild ||
+      new Date(latestAction.accepted_at).getTime() > new Date(latestBuild.created_at).getTime())
+      ? latestAction.error || 'unknown error'
+      : null
+  const refusedAction = (stage, stepNum) => {
+    const researchStopped =
+      latestJob?.state === 'paused' || latestJob?.state === 'blocked' || latestJob?.state === 'failed'
+    return {
+      stage,
+      stepNum,
+      needsAttention: true,
+      attentionReason: `Demo action failed before any build (${refusedCode})`,
+      researchRollup: researchStopped ? 'failure' : 'success',
+      currentStep: `Demo action failed · ${refusedCode}`,
+      queueState: 'BLOCKED',
+      statusText: 'Demo action failed'
+    }
+  }
 
   // Base provisioning can finish before the durable demo action writes the site's content.
   if (demoContentRunning(opp, latestBuild)) {
@@ -194,6 +226,8 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
     latestBuild?.handoff ||
     opp.status === 'built'
   ) {
+    // An older demo stays live (its link is kept); a newer action refused before building is the news.
+    if (refusedCode) return refusedAction('7-live', 7)
     const partialWarning = blockedSources.length > 0
     const qa = latestBuild?.qa && typeof latestBuild.qa === 'object' ? latestBuild.qa : null
     const qaState = qa?.state ?? null
@@ -283,6 +317,7 @@ function deriveOpportunityLifecycle(opp, latestJob, sources, mediaStats, latestR
 
   // Stage 4: Brief ready (revision synthesized, waiting to build demo site)
   if (latestRevision || latestJob?.state === 'completed' || opp.status === 'ready') {
+    if (refusedCode) return refusedAction('4-brief-ready', 4)
     const pausedOrFailed =
       latestJob?.state === 'paused' || latestJob?.state === 'blocked' || latestJob?.state === 'failed'
     return {
@@ -736,6 +771,18 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         : Promise.resolve({ rows: [] })
     ])
 
+    // Latest demo action per opportunity, and whether a build row was ever made for it (#552).
+    const actionRes = await pool.query(
+      `select distinct on (a.opportunity_id)
+                a.opportunity_id, a.status, a.step, a.error, a.accepted_at, a.updated_at,
+                exists (select 1 from wo_build b
+                         where b.account_id = a.account_id and b.request_id = a.build_request_id) as has_build
+           from wo_demo_action a
+          where a.opportunity_id = any($1::uuid[])
+          order by a.opportunity_id, a.accepted_at desc, a.id desc`,
+      [oppRes.rows.map((o) => o.id)]
+    )
+
     const jobsByOpp = new Map(jobRes.rows.map((r) => [r.opportunity_id, r]))
     const sourcesByOpp = new Map()
     for (const s of sourceRes.rows) {
@@ -751,6 +798,7 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
     )
     const revByOpp = new Map(revRes.rows.map((r) => [r.opportunity_id, r]))
     const buildByOpp = new Map(buildRes.rows.map((r) => [r.opportunity_id, r]))
+    const actionByOpp = new Map(actionRes.rows.map((r) => [r.opportunity_id, r]))
     const prefByAccount = new Map(prefRes.rows.map((r) => [r.account_id, r.cms]))
     const readSet = new Set(readRes.rows.map((r) => r.opportunity_id))
 
@@ -774,6 +822,7 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
       const mediaStats = mediaByOpp.get(opp.id) ?? { totalCount: 0, storedCount: 0 }
       const latestRev = revByOpp.get(opp.id) ?? null
       const latestBuild = buildByOpp.get(opp.id) ?? null
+      const latestAction = actionByOpp.get(opp.id) ?? null
       const candidate = opp.candidate && typeof opp.candidate === 'object' ? opp.candidate : {}
 
       const lifecycle = deriveOpportunityLifecycle(
@@ -782,7 +831,8 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         sources,
         mediaStats,
         latestRev,
-        latestBuild
+        latestBuild,
+        latestAction
       )
       const customer = customerStatus({
         stage: opp.customer_stage,
@@ -828,10 +878,10 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         prefByAccount.get(opp.account_id) ||
         settings.defaultCms ||
         DEFAULT_WO_OPS_SETTINGS.defaultCms
+      // Only a build's choice is the built template; without one the row names the pin as a pin.
+      const builtTemplate = latestBuild?.template?.quickstart || null
       const templateSlug =
-        latestBuild?.template?.quickstart ||
-        settings.pinnedTemplates?.[cms] ||
-        DEFAULT_WO_OPS_SETTINGS.pinnedTemplates.joomla
+        builtTemplate || settings.pinnedTemplates?.[cms] || DEFAULT_WO_OPS_SETTINGS.pinnedTemplates.joomla
 
       const durationSec = latestJob
         ? Math.max(
@@ -923,6 +973,7 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
           : null,
         cms,
         template: templateSlug,
+        templateSource: builtTemplate ? 'build' : 'pinned',
         stage: lifecycle.stage,
         stepNum: lifecycle.stepNum,
         customerStage: opp.customer_stage,
@@ -946,6 +997,14 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         demoSite: demoStatus === 'none' ? null : demoSlug,
         demoUrl: demoLabel ? bornSiteAddress(demoLabel, config) : demoSlug ? `https://${demoSlug}` : null,
         demoStatus,
+        demoAction: latestAction
+          ? {
+              status: latestAction.status,
+              step: latestAction.step,
+              error: latestAction.error ?? null,
+              hasBuild: Boolean(latestAction.has_build)
+            }
+          : null,
         queueState: lifecycle.queueState,
         statusText: lifecycle.statusText,
         notes: notesParts.join(' · ') || 'Saved on map',

@@ -32,6 +32,8 @@ export const en = {
   'wo.rollup.paused': 'Paused',
   'wo.rollup.running': 'Running',
   'wo.rollup.idle': 'Idle',
+  'wo.demoAction.failed': 'Demo action failed · {code}',
+  'wo.template.pinned': 'pinned, not built',
 
   'wo.error.title': 'Website Opportunities error',
   'wo.error.dismiss': 'Dismiss',
