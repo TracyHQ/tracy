@@ -27,7 +27,7 @@ for (const status of ['done', 'stopped']) {
 }
 
 test('a failed final check retains fault identities and skipped repairs without private prose', () => {
-  const privateText = 'Bearer private-secret /Users/operator/private prompt@example.test'
+  const privateText = 'Bearer private-secret /Users/example/private prompt@example.test'
   const group = {
     name: 'read-back',
     status: 'red',
@@ -120,7 +120,7 @@ test('zero-turn unmeasured checks remain distinct from a passing nothing-to-send
 
 test('oversized and hostile reports remain bounded without losing overall failure counts', () => {
   const failures = Array.from({ length: 400 }, () => ({
-    page: '/Users/operator/private',
+    page: '/Users/example/private',
     slot: '/tmp/secret',
     kind: 'Bearer secret',
     reason: 'private'
