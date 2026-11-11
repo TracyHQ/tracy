@@ -62,8 +62,15 @@ export function mergeSite(kit, doc, map, words = null, previous = null) {
       for (const p of kit.pages)
         if (`body-${p.id.replace(/^page-/, '')}` === f.block) contactPaths.add(p.path)
   const roleOf = new Map((map.slots ?? []).map((s) => [neutralKey(s.key), s.role ?? null]))
+  // where each CMS copy sits in its block (site.json `at.holder.path`), kept out of the kit's own entry
+  const holderOf = new WeakMap()
   const fixedOf = (id) =>
-    (doc?.site?.fixedTexts ?? []).filter((f) => f.block === id).map(({ block: _b, at: _a, ...f }) => f)
+    (doc?.site?.fixedTexts ?? [])
+      .filter((f) => f.block === id)
+      .map(({ block: _b, at, ...f }) => {
+        if (at?.holder?.path) holderOf.set(f, at.holder.path)
+        return f
+      })
   const namedOf = (id) =>
     (doc?.site?.nameSlots ?? []).filter((n) => n.source && n.block === id).map((n) => n.text ?? n.sample)
   for (const b of kit.blocks) {
@@ -120,11 +127,23 @@ export function mergeSite(kit, doc, map, words = null, previous = null) {
   // Every piece of fixed text gets its id, the code a planner names to hide it.
   for (const b of kit.blocks) {
     const perConstant = new Map()
+    const perWords = new Map()
+    const count = (m, k) => m.set(k, (m.get(k) ?? 0) + 1)
+    const wordsOf = (t) => `${t.source?.constant}|${normText(t.text)}`
     for (const t of b.fixedText ?? [])
-      if (t.source?.constant)
-        perConstant.set(t.source.constant, (perConstant.get(t.source.constant) ?? 0) + 1)
+      if (t.source?.constant) {
+        count(perConstant, t.source.constant)
+        count(perWords, wordsOf(t))
+      }
     for (const t of b.fixedText ?? [])
-      t.id = fixedTextId(b.id, t, { shared: (perConstant.get(t.source?.constant) ?? 0) > 1 })
+      t.id = fixedTextId(b.id, t, {
+        shared: (perConstant.get(t.source?.constant) ?? 0) > 1,
+        // the same words printed once per card are separate copies: their place in the block tells them apart
+        copy:
+          t.source?.constant && perWords.get(wordsOf(t)) > 1 && holderOf.has(t)
+            ? JSON.stringify(holderOf.get(t))
+            : ''
+      })
   }
   kit.checks = {
     ...kit.checks,
@@ -145,12 +164,15 @@ const slug = (s) =>
  * the block shows two lines of that constant; template words by their text.
  * @param {string} blockId
  * @param {{text: string, source?: {constant?: string}}} t
- * @param {{shared?: boolean}} [o]
+ * @param {{shared?: boolean, copy?: string}} [o] `copy`: the holder of one of several copies of the same words
  */
-export function fixedTextId(blockId, t, { shared = false } = {}) {
+export function fixedTextId(blockId, t, { shared = false, copy = '' } = {}) {
   const constant = t.source?.constant
   const words = normText(t.text)
-  const hash = createHash('sha256').update(words).digest('hex').slice(0, 6)
+  const hash = createHash('sha256')
+    .update(copy ? `${words}|${copy}` : words)
+    .digest('hex')
+    .slice(0, 6)
   // Two lines of one constant in a block (two short lines of one value) are told apart by their words.
   if (constant) return `${blockId}.fixed-${slug(constant)}${shared ? `-${hash}` : ''}`
   const head = slug(words).slice(0, 32).replace(/-+$/, '')

@@ -46,6 +46,19 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, drives }) {
   const text = normText(page.h1?.text ?? oneText(page.h1?.texts))
   if (!text) return { slot: null, candidates: measured }
   const same = (id) => samples.get(id)?.type === 'text' && normText(samples.get(id).sample) === text
+  // The page reading took the title from a parameter of the page's menu item (Joomla `page_title`): that field is it,
+  // even when the item's own title holds the same words.
+  if (page.h1?.via === 'menu-param' && page.h1.param) {
+    const param = ownersOf(page)
+      .flatMap((e) => slotsOfEntity.get(e) ?? [])
+      .filter((id) => {
+        const s = samples.get(id)
+        return (
+          same(id) && s.column === 'params' && s.jsonPath?.length === 1 && s.jsonPath[0] === page.h1.param
+        )
+      })
+    if (param.length === 1) return { slot: param[0], from: 'menu parameter' }
+  }
   // A link's label names another page, whatever words it shares with this page's title.
   const inBlock = (id) => {
     const block = blocks.get(id) ?? {}
@@ -126,8 +139,20 @@ export function settlePageTitles(kit, { map, drives = {} }) {
     page.titleSlot = t.slot
     delete page.titleCandidates
     if (t.candidates?.length) page.titleCandidates = t.candidates
-    if (t.slot) titles.set(t.slot, [...(titles.get(t.slot) ?? []), page.id])
   }
+  // A later page of a list (`?start=20`) prints the title of its first page: the slot settled there, when it is one
+  // of the slots this page could not tell apart.
+  const byPath = new Map((kit.pages ?? []).map((p) => [p.path, p]))
+  for (const page of kit.pages ?? []) {
+    if (page.titleSlot || !page.titleCandidates) continue
+    const first = byPath.get(page.path.replace(/[?&](limit)?start=\d+$/, ''))
+    if (first?.titleSlot && page.titleCandidates.includes(first.titleSlot)) {
+      page.titleSlot = first.titleSlot
+      delete page.titleCandidates
+    }
+  }
+  for (const page of kit.pages ?? [])
+    if (page.titleSlot) titles.set(page.titleSlot, [...(titles.get(page.titleSlot) ?? []), page.id])
   for (const b of kit.blocks) markSlots(b, titles)
   return kit
 }

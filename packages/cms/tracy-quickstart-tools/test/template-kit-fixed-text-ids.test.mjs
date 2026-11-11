@@ -274,3 +274,28 @@ test('dynamic CMS merge keeps one source-bound counter instead of stale unbound 
     'format binding is block-local'
   )
 })
+
+test('copies of one CMS word printed in every card of a row get distinct ids by their place in the block', () => {
+  // JA Nova 1.0.12: the career module prints TPL_SHOW_MORE once per card; each copy is its own record (its holder)
+  const MAP = { entities: [], slots: [], pages: [] }
+  const copy = (path) => ({
+    block: 'block-145',
+    text: 'Show more',
+    source: { file: 'tpl.ini', constant: 'TPL_SHOW_MORE', short: true, constants: ['TPL_SHOW_MORE'] },
+    at: { path: '/career', raw: 'module-145', holder: { path } },
+    canHide: true
+  })
+  const kitOf = () => ({
+    pages: [],
+    errors: [],
+    blocks: [{ id: 'block-145', lists: [], links: [], frames: [], fixedText: [] }]
+  })
+  const site = (fixedTexts) => ({ site: { fixedTexts }, mainHeadings: [], errors: [] })
+  const kit = mergeSite(kitOf(), site([copy([0, 1, 0]), copy([0, 1, 1]), copy([0, 1, 2])]), MAP)
+  const ids = kit.blocks[0].fixedText.map((t) => t.id)
+  assert.equal(new Set(ids).size, 3)
+  assert.equal(kit.checks.fixedTextIdsInvalid, 0)
+  // a single copy keeps the id it had before copies were told apart
+  const alone = mergeSite(kitOf(), site([copy([0, 1, 0])]), MAP).blocks[0].fixedText[0].id
+  assert.equal(alone, 'block-145.fixed-tpl-show-more')
+})

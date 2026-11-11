@@ -323,3 +323,40 @@ test('two measured H1 fields remain ambiguous', () => {
   assert.equal(measured.titleSlot, null)
   assert.deepEqual(measured.titleCandidates, ['article-3.0', 'article-3.1'])
 })
+
+test('a title the page reading took from a menu parameter is the slot of that parameter; later pages of a list share it', () => {
+  // JA Nova 1.0.12: /tagged-items prints its menu item's page_title, which holds the same words as the item's title,
+  // and /tagged-items?start=20 is the second page of that list
+  const map = {
+    ...MAP,
+    slots: [
+      ...MAP.slots,
+      slot('menuItem-48.0', 'Tagged Items', { column: 'title' }),
+      slot('menuItem-48.1', 'Tagged Items', { column: 'params', jsonPath: ['page_title'] })
+    ],
+    pages: [...MAP.pages, { entity: 'menuItem-48', route: 'tagged-items' }]
+  }
+  const tagged = (id, path, h1) => ({ id, path, blocks: { 1440: ['header'] }, h1 })
+  const k = kit([
+    tagged('page-tagged-2', '/tagged-items?start=20', {
+      via: 'content-slot',
+      slot: 'menuItem-48.0',
+      text: 'Tagged Items'
+    }),
+    tagged('page-tagged', '/tagged-items', { via: 'menu-param', param: 'page_title', text: 'Tagged Items' })
+  ])
+  settlePageTitles(k, { map })
+  assert.deepEqual(
+    k.pages.map((p) => [p.path, p.titleSlot, p.titleCandidates]),
+    [
+      ['/tagged-items?start=20', 'menuItem-48.1', undefined],
+      ['/tagged-items', 'menuItem-48.1', undefined]
+    ]
+  )
+  // a parameter the page did not read its title from settles nothing
+  const other = kit([
+    tagged('page-tagged', '/tagged-items', { via: 'menu-param', param: 'layout_type', text: 'Tagged Items' })
+  ])
+  settlePageTitles(other, { map })
+  assert.equal(other.pages[0].titleSlot, null)
+})
