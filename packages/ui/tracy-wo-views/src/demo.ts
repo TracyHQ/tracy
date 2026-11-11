@@ -93,8 +93,12 @@ export interface ChainRunStep {
   /** English label from the server; the card reads its own string table first. */
   label: string
   state: 'done' | 'current' | 'upcoming'
-  /** How long it took, once done. */
+  /** How long it took once done; how long it has run so far while current (null when its start is unknown). */
   minutes: number | null
+  /** What it spent once done (#537); null while it runs or waits, since a step reports its spend when it ends. */
+  usd?: number | null
+  /** What a step not started usually takes, measured per step (#537); null when none was measured. */
+  estimate?: ChainEstimate | null
 }
 
 /** `demoAction.run`: the progress of a step chain build, measured by the run itself. */

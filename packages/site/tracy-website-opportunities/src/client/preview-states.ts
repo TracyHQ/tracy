@@ -266,11 +266,21 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
     }
 
   if (state === 'building') {
-    const step = (id: string, s: string, minutes: number | null = null) => ({
+    // Each step's time and cost as the server sends them (#537, `wo-chain-builds.js chainRunView`): a done step its
+    // minutes and spend, a running step its minutes so far and no spend yet, a waiting step its measured estimate.
+    const step = (
+      id: string,
+      s: string,
+      minutes: number | null = null,
+      usd: number | null = null,
+      estimate: { minutes: number; usd: number } | null = null
+    ) => ({
       id,
       label: id,
       state: s,
-      minutes
+      minutes,
+      usd,
+      ...(s === 'upcoming' ? { estimate } : {})
     })
     return {
       ...withBrief,
@@ -285,17 +295,17 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
         updatedAt: at(0),
         run: {
           steps: [
-            step('kit', 'done', 0.1),
-            step('brand', 'done', 2),
-            step('plan', 'done', 6),
-            step('copy', 'current'),
-            step('pictures', 'current'),
-            step('write', 'upcoming')
+            step('kit', 'done', 0.1, 0.01),
+            step('brand', 'done', 2, 0.06),
+            step('plan', 'done', 6, 0.08),
+            step('copy', 'current', 3),
+            step('pictures', 'current', 2),
+            step('write', 'upcoming', null, null, { minutes: 4, usd: 0.3 })
           ],
           current: 'pictures',
           startedAt: at(-8),
           minutes: 8,
-          usd: 0.25,
+          usd: 0.15,
           estimate: { minutes: 26, usd: 1.84 }
         }
       }

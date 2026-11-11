@@ -6,6 +6,8 @@ import { chainProgressView } from '@tracy/wo-views'
 import type { ChainEstimate, ChainRun } from '@tracy/wo-views'
 import { chainStepLabel as stepLabel, chainSubSteps, knownChainStep } from './band-sub-steps-model.ts'
 import { demoFailureKey, type OpportunityListRow } from './opportunity-row.ts'
+import { BuildColumns } from './progress-band-build.tsx'
+import { buildColumns } from './progress-band-build-model.ts'
 import { SubSteps } from './progress-band-subs.tsx'
 import type { Translate } from './strings.ts'
 
@@ -39,7 +41,10 @@ export function DemoProgress({
   row: OpportunityListRow
   locale?: string
   now?: number
-  /** The steps start unfolded (the Progress band lists them, #537). */
+  /**
+   * The Progress band draws the card (#537): the steps are shown as six columns with each step's time and cost
+   * (`progress-band-build.tsx`) instead of the folded row.
+   */
   open?: boolean
 }): JSX.Element | null {
   const action = row.demoAction
@@ -85,11 +90,15 @@ export function DemoProgress({
         <span className="tracy-wo-muted tracy-wo-small">{t('progress.firstBuild')}</span>
       ) : null}
       {why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
-      <details open={open}>
-        <summary className="tracy-wo-small">{t('progress.show', { n: view.total })}</summary>
-        {/* The same sub-step row as research and the brief (#537): ring, spinner, check or cross, plain labels. */}
-        <SubSteps t={t} items={chainSubSteps(t, run, action?.state)} />
-      </details>
+      {open ? (
+        <BuildColumns t={t} columns={buildColumns(t, run, action?.state, locale)} />
+      ) : (
+        <details>
+          <summary className="tracy-wo-small">{t('progress.show', { n: view.total })}</summary>
+          {/* The same sub-step row as research and the brief (#537): ring, spinner, check or cross, plain labels. */}
+          <SubSteps t={t} items={chainSubSteps(t, run, action?.state)} />
+        </details>
+      )}
     </div>
   )
 }

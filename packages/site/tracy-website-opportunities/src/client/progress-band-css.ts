@@ -10,7 +10,9 @@
  * Width: the left list is as wide as its content and no wider (fit-content track capped at min(46%, 400px)); its
  * min-content is the widest name with its pill (both never shrink), so a step name never truncates, while a purpose
  * line contributes only its longest word to that minimum and clamps to one line past the cap (full text on hover).
- * The right pane takes the rest. Research, brief and build draw the same sub-step row (.tracy-wo-band-subs).
+ * The right pane takes the rest. Research and the brief draw the sub-step row (.tracy-wo-band-subs); the build draws
+ * its six steps as columns with their time and cost (.tracy-wo-band-cols, option A), and only then the band grows past
+ * its fixed height to fit them (two rows of three on a narrow pane).
  */
 export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] { --wo-band-h: 176px; box-sizing: border-box; height: var(--wo-band-h); grid-template-columns: fit-content(min(46%, 400px)) minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
@@ -68,7 +70,33 @@ export const PROGRESS_BAND_CSS = `
 .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress { gap: 6px; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-now:not(:only-child), .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress-bar, .tracy-wo-band[data-fixed] .tracy-wo-band-build details > summary { display: none; }
 .tracy-wo-band[data-fixed] .tracy-wo-band-build .tracy-wo-progress > span.tracy-wo-small { height: 16px; line-height: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* The build's six steps as columns (progress-band-build.tsx, option A): the band grows to fit them, never below its height. */
+.tracy-wo-band[data-fixed]:has(> .tracy-wo-band-pane[data-build]) { height: auto; min-height: var(--wo-band-h); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-build { container-type: inline-size; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-pane[data-build] .tracy-wo-band-acts { padding-top: 6px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0 8px; margin: 8px 0 0; padding: 0; list-style: none; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li { position: relative; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; padding-right: 4px; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li::after { content: ''; position: absolute; top: 8px; left: 26px; right: 2px; height: 2px; border-radius: 1px; background: var(--border); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li[data-state='done']::after { background: var(--success); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li:last-child::after { display: none; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-node { box-sizing: border-box; display: grid; place-items: center; flex: none; width: 18px; height: 18px; margin-bottom: 6px; border-radius: 999px; border: 2px solid color-mix(in oklab, var(--muted-foreground) 35%, transparent); background: var(--wo-pane-bg); color: var(--background); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-node > svg { width: 10px; height: 10px; stroke-width: 3; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-node[data-node='done'] { border-color: var(--success); background: var(--success); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-node[data-node='failed'] { border-color: var(--destructive); background: var(--destructive); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-node[data-node='running'] { border-color: color-mix(in oklab, var(--primary) 25%, transparent); border-top-color: var(--primary); animation: tracy-wo-pill-spin 1.1s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .tracy-wo-band[data-fixed] .tracy-wo-band-col-node[data-node='running'] { animation: none; } }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-name { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12.5px; line-height: 16px; font-weight: 500; color: var(--foreground); }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li[data-state='running'] .tracy-wo-band-col-name { color: var(--primary); font-weight: 600; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li[data-state='failed'] .tracy-wo-band-col-name { color: var(--destructive); font-weight: 600; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li[data-state='waiting'] .tracy-wo-band-col-name { color: var(--muted-foreground); font-weight: 400; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-col-fig { display: block; margin-top: 2px; font-size: 11.5px; line-height: 15px; color: var(--muted-foreground); text-wrap: balance; }
+.tracy-wo-band[data-fixed] .tracy-wo-band-cols > li[data-state='running'] .tracy-wo-band-col-fig { color: var(--foreground); }
+@container (max-width: 560px) {
+  .tracy-wo-band[data-fixed] .tracy-wo-band-cols { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 14px; }
+  .tracy-wo-band[data-fixed] .tracy-wo-band-cols > li:nth-child(3)::after { display: none; }
+}
 @container (max-width: 719px) {
   .tracy-wo-band[data-fixed] { height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--wo-band-h) var(--wo-band-h); }
+  .tracy-wo-band[data-fixed]:has(> .tracy-wo-band-pane[data-build]) { grid-template-rows: var(--wo-band-h) auto; }
 }
 `

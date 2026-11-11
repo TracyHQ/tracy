@@ -41,6 +41,7 @@ before(async () => {
         export { DETAILS_CSS } from './details-css.ts'
         export { DemoProgress } from './demo-progress.tsx'
         export { briefControlView } from './research-gate-model.ts'
+        export { buildColumns } from './progress-band-build-model.ts'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
       loader: 'tsx'
@@ -285,30 +286,32 @@ test('the brief job draws the research row: the same nodes, one state per item, 
   assert.doesNotMatch(html, /tracy-wo-demo-|tracy-wo-progress-steps/)
 })
 
-const step = (id, state, minutes = null) => ({ id, label: id, state, minutes })
+const step = (id, state, minutes = null, usd = null, estimate) => ({
+  id,
+  label: id,
+  state,
+  minutes,
+  usd,
+  ...(estimate === undefined ? {} : { estimate })
+})
+const buildRun = () => ({
+  steps: [
+    step('kit', 'done', 0.1, 0.01),
+    step('brand', 'done', 2, 0.06),
+    step('plan', 'done', 6, 0.08),
+    step('copy', 'current', 3),
+    step('pictures', 'current', null),
+    step('write', 'upcoming', null, null, { minutes: 4, usd: 0.3 })
+  ],
+  current: 'pictures',
+  startedAt: new Date(Date.parse('2026-11-10T10:00:00Z') - 8 * 60_000).toISOString(),
+  minutes: 8,
+  usd: 0.15,
+  estimate: { minutes: 26, usd: 1.84 }
+})
 const buildRow = (actionState = 'running') => ({
   id: 'o1',
-  demoAction: {
-    id: 'a1',
-    state: actionState,
-    step: 'pictures',
-    error: null,
-    run: {
-      steps: [
-        step('kit', 'done', 0.1),
-        step('brand', 'done', 2),
-        step('plan', 'done', 6),
-        step('copy', 'current'),
-        step('pictures', 'current'),
-        step('write', 'upcoming')
-      ],
-      current: 'pictures',
-      startedAt: new Date(Date.parse('2026-11-10T10:00:00Z') - 8 * 60_000).toISOString(),
-      minutes: 8,
-      usd: 0.25,
-      estimate: { minutes: 26, usd: 1.84 }
-    }
-  }
+  demoAction: { id: 'a1', state: actionState, step: 'pictures', error: null, run: buildRun() }
 })
 const drawBuild = (row) =>
   draw(
@@ -328,19 +331,65 @@ const drawBuild = (row) =>
       })
     }
   )
+const colStates = (html) =>
+  [...html.matchAll(/class="tracy-wo-band-col-node" data-node="(\w+)"/g)].map((m) => m[1])
 
-test('the build run draws the research row too: done, running and waiting nodes, the time and cost line kept', () => {
+test('the build run spans the pane as six columns: a node, the name always shown, the time and cost line kept above', () => {
   const html = drawBuild(buildRow())
   assert.match(html, /data-build=""/)
-  assert.deepEqual(nodeStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
-  assert.deepEqual(liStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
-  assert.match(html, /class="tracy-wo-pill-text">\[progress\.step\.copy\]</)
-  // The minutes left and the cost so far stay on their line above the row.
+  assert.equal((html.match(/<ol class="tracy-wo-band-cols"/g) ?? []).length, 1)
+  assert.deepEqual(colStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
+  for (const id of ['kit', 'brand', 'plan', 'copy', 'pictures', 'write'])
+    assert.match(html, new RegExp(`class="tracy-wo-band-col-name">\\[progress\\.step\\.${id}\\]<`), id)
+  // The minutes left and the cost so far stay on their line above the columns.
   assert.match(html, /\[progress\.left\{&quot;n&quot;:18\}\] · \[progress\.spent/)
-  assert.ok(html.indexOf('[progress.left') < html.indexOf('class="tracy-wo-band-subs"'))
-  // No other node set, no chain icons and no demo classes inside the band.
-  assert.doesNotMatch(html, /tracy-wo-demo-|tracy-wo-progress-steps|<b>/)
-  assert.doesNotMatch(rowHtml(html), /lucide-circle-check|lucide-circle-x|lucide-clock/)
+  assert.ok(html.indexOf('[progress.left') < html.indexOf('class="tracy-wo-band-cols"'))
+  // No folded row, no sub-step row and no demo classes inside the band.
+  assert.doesNotMatch(html, /tracy-wo-band-subs|<details|tracy-wo-demo-|tracy-wo-progress-steps|<b>/)
+})
+
+test('each column says its time and cost: done what it took, running how long so far, waiting what it usually takes', () => {
+  const cols = lib.buildColumns(t, buildRun(), 'running', 'en')
+  const fig = Object.fromEntries(cols.map((c) => [c.key, c.figure]))
+  assert.equal(fig.kit, '[progress.col.done{"time":"[progress.col.underMinute]","usd":"$0.01"}]')
+  assert.equal(fig.plan, '[progress.col.done{"time":"[progress.minutes{\\"n\\":6}]","usd":"$0.08"}]')
+  assert.equal(fig.copy, '[progress.col.runningFor{"time":"[progress.minutes{\\"n\\":3}]"}]')
+  assert.equal(fig.pictures, '[progress.col.running]', 'a running step with no start says only running')
+  assert.equal(fig.write, '[progress.col.about{"time":"[progress.minutes{\\"n\\":4}]","usd":"$0.30"}]')
+  // A running step with a known spend says it, and a waiting step never measured says nothing.
+  const run = buildRun()
+  run.steps[3].usd = 0.07
+  run.steps[5].estimate = null
+  const more = Object.fromEntries(lib.buildColumns(t, run, 'running', 'en').map((c) => [c.key, c.figure]))
+  assert.equal(more.copy, '[progress.col.runningSpent{"time":"[progress.minutes{\\"n\\":3}]","usd":"$0.07"}]')
+  assert.equal(more.write, null)
+  // An older answer with no per-step cost keeps the time alone.
+  const old = buildRun()
+  delete old.steps[1].usd
+  assert.equal(lib.buildColumns(t, old, 'running', 'en')[1].figure, '[progress.minutes{"n":2}]')
+})
+
+test('a stopped build marks its step Stopped, a finished one every step done', () => {
+  const stopped = lib.buildColumns(t, buildRun(), 'failed', 'en')
+  assert.deepEqual(
+    stopped.map((c) => c.state),
+    ['done', 'done', 'done', 'failed', 'failed', 'waiting']
+  )
+  assert.equal(stopped[3].figure, '[progress.col.stopped]')
+  const finished = lib.buildColumns(t, buildRun(), 'completed', 'en')
+  assert.ok(finished.every((c) => c.state === 'done'))
+})
+
+test('the build columns CSS: six equal columns, two rows of three on a narrow pane, the band grows only for them', () => {
+  const css = lib.PROGRESS_BAND_CSS
+  assert.match(css, /\.tracy-wo-band-cols \{[^}]*grid-template-columns: repeat\(6, minmax\(0, 1fr\)\)/)
+  assert.match(css, /@container \(max-width: 560px\) \{\s*[^}]*repeat\(3, minmax\(0, 1fr\)\)/)
+  assert.match(
+    css,
+    /:has\(> \.tracy-wo-band-pane\[data-build\]\) \{ height: auto; min-height: var\(--wo-band-h\)/
+  )
+  assert.match(css, /li\[data-state='done'\]::after \{ background: var\(--success\)/)
+  assert.match(css, /data-node='running'\] \{[^}]*border-top-color: var\(--primary\)/)
 })
 
 test('the sub-step connector is one continuous 1px line: no gaps, segment pseudo elements, label masked by the pane colour', () => {

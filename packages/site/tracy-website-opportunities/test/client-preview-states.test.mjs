@@ -231,6 +231,12 @@ test('after research every pasted link of a card never researched reads as a col
 test('the demo states: building has a progress run, ready has a demo address', () => {
   const building = applyPreview(REAL, 'building', NOW)
   assert.equal(building.demoAction.run.current, 'pictures')
+  // Each step carries its time and cost as the server sends them (#537): spend once done, an estimate while waiting.
+  const steps = Object.fromEntries(building.demoAction.run.steps.map((s) => [s.id, s]))
+  assert.equal(steps.plan.usd, 0.08)
+  assert.equal(steps.copy.minutes, 3)
+  assert.equal(steps.copy.usd, null)
+  assert.deepEqual(steps.write.estimate, { minutes: 4, usd: 0.3 })
   assert.equal(draw(building).demo, 'building')
   const ready = applyPreview(REAL, 'built', NOW)
   assert.match(ready.demo.url, /^https:\/\/harbour-lane-bakery\.example\.test\/$/)
