@@ -6,7 +6,8 @@
  * switch and Edit through the facts door. Every band has one header row (title, source chips, Check this, then [Add
  * more] · On the site · Edit) and the same collapsed height; what does not fit scrolls sideways, a missing fact reads
  * N/A, and Edit turns a band into its fields in place. Before research the bands say Not collected yet. The owner's own
- * choices (bands off, team, social links, items kept off, #537 R14 to R16) go through `doors.owner`.
+ * choices (bands off, team, social links, items kept off, #537 R14 to R16) go through `doors.owner`. Approved facts
+ * are final (#537 R23): with `locked` the page reads only, under one notice offering Add this business again.
  */
 import type { JSX, ReactNode } from 'react'
 
@@ -24,6 +25,7 @@ import { MessagesBand, ReviewsBand, ServicesBand } from './facts-list-bands.tsx'
 import { SocialBand } from './facts-social-band.tsx'
 import { TeamBand } from './facts-team-people.tsx'
 import type { FactsDoors } from './facts-doors.ts'
+import { FactsLocked, FactsLockedNotice, type FactsLockView } from './facts-lock.tsx'
 import type { OwnerBand } from './owner-edits-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -39,7 +41,8 @@ export function BusinessFactsPage({
   doors,
   food,
   websiteLink,
-  running
+  running,
+  locked = null
 }: {
   t: Translate
   locale: string
@@ -50,6 +53,8 @@ export function BusinessFactsPage({
   websiteLink: (url: string) => JSX.Element
   /** Research runs: the photos and videos wait for it to finish, only Add more stays (#537). */
   running: boolean
+  /** The facts are approved: the notice with Add this business again, and no control that writes. */
+  locked?: FactsLockView | null
 }): JSX.Element {
   const cardOf = (id: CardId) => view.cards.find((c) => c.id === id)
   const facts = view.researched
@@ -86,92 +91,95 @@ export function BusinessFactsPage({
   const more = moreBusinessFacts(t, view.saved?.business ?? [])
 
   return (
-    <div className="tracy-wo-facts">
-      <BusinessBand
-        t={t}
-        locale={locale}
-        view={view.business}
-        logo={facts ? media.logo : NOT_COLLECTED_LOGO}
-        websiteLink={websiteLink}
-        more={more}
-        rows={view.sources}
-        setOn={setOn}
-        edit={
-          !facts
-            ? null
-            : (close) => (
-                <BusinessEdit
-                  t={t}
-                  close={close}
-                  name={view.business.name}
-                  nameRow={doors.nameRow}
-                  saveName={doors.saveName}
-                  phone={phone}
-                  address={address}
-                  others={
-                    others.length === 0
-                      ? null
-                      : `${t('facts.phone.others', { list: others.map((o) => o.phone).join(', ') })} ${t('phone.othersNote')}`
-                  }
-                  more={{ facts: more, save: saveValue }}
-                />
-              )
-        }
-        researched={facts}
-      />
-      <HoursAmenitiesBand {...shared} saveHours={doors.saveHours} setOn={setOn} saveValue={saveValue} />
-      {view.saved === null ? (
-        <ServicesBand
-          {...shared}
-          onSite={switchOf(['services', 'audience', 'serviceAreas'])}
-          edit={widgetEdit('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
+    <FactsLocked.Provider value={locked !== null}>
+      <div className="tracy-wo-facts">
+        {locked === null ? null : <FactsLockedNotice t={t} view={locked} />}
+        <BusinessBand
+          t={t}
+          locale={locale}
+          view={view.business}
+          logo={facts ? media.logo : NOT_COLLECTED_LOGO}
+          websiteLink={websiteLink}
+          more={more}
+          rows={view.sources}
+          setOn={setOn}
+          edit={
+            !facts
+              ? null
+              : (close) => (
+                  <BusinessEdit
+                    t={t}
+                    close={close}
+                    name={view.business.name}
+                    nameRow={doors.nameRow}
+                    saveName={doors.saveName}
+                    phone={phone}
+                    address={address}
+                    others={
+                      others.length === 0
+                        ? null
+                        : `${t('facts.phone.others', { list: others.map((o) => o.phone).join(', ') })} ${t('phone.othersNote')}`
+                    }
+                    more={{ facts: more, save: saveValue }}
+                  />
+                )
+          }
+          researched={facts}
         />
-      ) : (
-        <OfferingsBand {...shared} setOn={setOn} saveValue={saveValue} food={food} />
-      )}
-      <AboutBand
-        {...shared}
-        field={about}
-        onSite={switchOf(['story', 'bio'])}
-        setOn={setOn}
-        saveValue={saveValue}
-      />
-      <TeamBand
-        {...shared}
-        onSite={switchOf(['team'])}
-        owner={owner}
-        pickReading={doors.pickReading}
-        setOn={setOn}
-      />
-      <BrandBand
-        t={t}
-        notCollected={cardOf('brand')?.state === 'notCollected'}
-        media={media}
-        retry={doors.retryLogo}
-        food={food}
-        onSite={bandOf('brand')}
-      />
-      <MessagesBand
-        {...shared}
-        onSite={bandOf('keyMessages')}
-        edit={widgetEdit('messages', () => doors.keyMessages)}
-      />
-      <ReviewsBand
-        {...shared}
-        onSite={bandOf('reviews')}
-        edit={{ why: t('facts.edit.reviews') }}
-        setHidden={owner.setReviewHidden}
-        setOn={setOn}
-      />
-      <SocialBand {...shared} onSite={bandOf('socials')} owner={owner} setOn={setOn} />
-      <FactsMedia
-        t={t}
-        media={media}
-        show={!running}
-        onUpload={doors.uploadMedia}
-        onSite={bandOf('media')}
-        setHidden={owner.setMediaHidden}
-      />
-    </div>
+        <HoursAmenitiesBand {...shared} saveHours={doors.saveHours} setOn={setOn} saveValue={saveValue} />
+        {view.saved === null ? (
+          <ServicesBand
+            {...shared}
+            onSite={switchOf(['services', 'audience', 'serviceAreas'])}
+            edit={widgetEdit('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
+          />
+        ) : (
+          <OfferingsBand {...shared} setOn={setOn} saveValue={saveValue} food={food} />
+        )}
+        <AboutBand
+          {...shared}
+          field={about}
+          onSite={switchOf(['story', 'bio'])}
+          setOn={setOn}
+          saveValue={saveValue}
+        />
+        <TeamBand
+          {...shared}
+          onSite={switchOf(['team'])}
+          owner={owner}
+          pickReading={doors.pickReading}
+          setOn={setOn}
+        />
+        <BrandBand
+          t={t}
+          notCollected={cardOf('brand')?.state === 'notCollected'}
+          media={media}
+          retry={doors.retryLogo}
+          food={food}
+          onSite={bandOf('brand')}
+        />
+        <MessagesBand
+          {...shared}
+          onSite={bandOf('keyMessages')}
+          edit={widgetEdit('messages', () => doors.keyMessages)}
+        />
+        <ReviewsBand
+          {...shared}
+          onSite={bandOf('reviews')}
+          edit={{ why: t('facts.edit.reviews') }}
+          setHidden={owner.setReviewHidden}
+          setOn={setOn}
+        />
+        <SocialBand {...shared} onSite={bandOf('socials')} owner={owner} setOn={setOn} />
+        <FactsMedia
+          t={t}
+          media={media}
+          show={!running}
+          onUpload={doors.uploadMedia}
+          onSite={bandOf('media')}
+          setHidden={owner.setMediaHidden}
+        />
+      </div>
+    </FactsLocked.Provider>
   )
 }

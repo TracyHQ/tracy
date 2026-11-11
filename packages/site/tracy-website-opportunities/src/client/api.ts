@@ -165,7 +165,7 @@ export interface Api {
   ): Promise<Answer<{ label?: unknown; lat?: unknown; lon?: unknown }>>
   create(
     body: { candidate: unknown } | { url: string } | LinksBody
-  ): Promise<Answer<{ opportunity?: { id?: string }; links?: ServerLink[] }>>
+  ): Promise<Answer<{ opportunity?: { id?: string; sameAs?: unknown }; links?: ServerLink[] }>>
   list(): Promise<Answer<{ opportunities?: unknown[] }>>
   /** One page of My opportunities: `query` from `listParams` (or `ids=…` for the poll). */
   listPage(query: string): Promise<Answer<Record<string, unknown>>>
@@ -620,6 +620,52 @@ export async function sendLinks(
   const links = created.body?.links
   if (!started.ok || !Array.isArray(links)) return started
   return { ...started, body: { ...started.body, links } }
+}
+
+type Rec = Record<string, unknown>
+const recOf = (v: unknown): Rec =>
+  v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {}
+const textOf = (v: unknown): string | null => (typeof v === 'string' && v.trim() !== '' ? v.trim() : null)
+
+/**
+ * The create body that makes this card again (#537 R23), from what the card holds (`opportunity.candidate`): a card
+ * made from pasted links sends the same links (`pastedLinks`) with the name the person typed, and its Google place as
+ * `place` so the link is never asked about again; a card picked on Find sends its candidate as the search gave it.
+ * Null when the card holds neither. Nothing the owner changed later (edits, kept-off items) is sent: a new card starts
+ * from research.
+ */
+export function againBodyOf(opportunity: unknown): { candidate: unknown } | LinksBody | null {
+  const c = recOf(recOf(opportunity).candidate)
+  const links = (Array.isArray(c.pastedLinks) ? c.pastedLinks : [])
+    .map((l) => textOf(recOf(l).url))
+    .filter((u): u is string => u !== null)
+  const provider = textOf(c.provider)
+  const providerId = textOf(c.providerId)
+  const name = textOf(c.name)
+  if (links.length > 0) {
+    const typed = textOf(c.typedName)
+    return {
+      links,
+      ...(typed === null ? {} : { name: typed }),
+      ...(provider === 'google-places' && providerId !== null && name !== null
+        ? { place: { provider: 'google-places', providerId, name } }
+        : {})
+    }
+  }
+  return provider !== null && providerId !== null && name !== null ? { candidate: c } : null
+}
+
+/**
+ * Add this business again (#537 R23): one press of the create door with the card's own inputs (`againBodyOf`). No
+ * research is started: the new card waits for its owner like any new card. The new card's id, or the refusal code.
+ */
+export async function addAgain(api: Api, opportunity: unknown): Promise<{ id: string } | { code: string }> {
+  const body = againBodyOf(opportunity)
+  if (body === null) return { code: 'INVALID_REQUEST' }
+  const created = await api.create(body)
+  if (!created.ok) return { code: created.code }
+  const id = textOf(created.body?.opportunity?.id)
+  return id === null ? { code: 'HTTP_200' } : { id }
 }
 
 /** How long the page waits for an earlier hand-off press of the same build: 36 × 5 s = 3 minutes. */

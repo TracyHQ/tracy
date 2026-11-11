@@ -18,12 +18,7 @@ import type { Translate } from './strings.ts'
 
 export function Mark({ t, mark }: { t: Translate; mark: EditMark }): JSX.Element | null {
   if (mark === null) return null
-  return (
-    <StatusPill
-      state={mark === 'afterApproval' ? 'attention' : 'info'}
-      label={t(mark === 'afterApproval' ? 'facts.editedAfter' : 'profile.editedByYou')}
-    />
-  )
+  return <StatusPill state="info" label={t('profile.editedByYou')} />
 }
 
 /** A cell of the business band: a small label over its value. */

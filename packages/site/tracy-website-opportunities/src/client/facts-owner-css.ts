@@ -1,7 +1,8 @@
 /**
  * The owner's edits on the Business facts bands (#537 R14 to R16): the small switch on each photo tile and review
  * card, an item kept off the site dimmed, a person's photo in the avatar, the Team rows in Edit, the Social pages
- * links in Edit and the Add more row. Tracy tokens only. No backtick may appear inside the template below.
+ * links in Edit and the Add more row, the locked notice of approved facts and the line naming the same place's
+ * other cards. Tracy tokens only. No backtick may appear inside the template below.
  */
 export const FACTS_OWNER_CSS = `
 .tracy-wo-facts-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -30,6 +31,18 @@ export const FACTS_OWNER_CSS = `
 /* Social pages in Edit: the owner's links, each with Remove. */
 .tracy-wo-facts-social-ed > li { display: grid; grid-template-columns: 16px minmax(0, 0.6fr) minmax(0, 1.4fr) auto; align-items: center; gap: 8px; min-width: 0; font-size: 12.5px; }
 .tracy-wo-facts-social-ed svg { color: var(--muted-foreground); }
+/* Approved facts (#537 R23): one calm notice over the bands, its button at the end of the line. */
+.tracy-wo-facts-locked { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--muted); color: var(--muted-foreground); font-size: 13px; }
+.tracy-wo-facts-locked > p { flex: 1 1 240px; margin: 0; min-width: 0; }
+.tracy-wo-facts-locked > .tracy-wo-error { flex-basis: 100%; }
+/* A line naming the account's other cards of the same place. */
+.tracy-wo-same-as { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin: 0; color: var(--muted-foreground); font-size: 12px; }
+.tracy-wo-same-as > button { padding: 0; border: 0; background: none; color: var(--foreground); font: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.tracy-wo-same-as > button:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; }
+/* Under a list row's name: one line, cut with an ellipsis, the whole line on hover. */
+.tracy-wo-p-place > .tracy-wo-same-as { flex-wrap: nowrap; min-width: 0; max-width: 100%; }
+.tracy-wo-p-place > .tracy-wo-same-as > button { min-width: 0; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; }
+.tracy-wo-p-place > .tracy-wo-same-as > span { flex: none; }
 @container wo-facts (max-width: 559px) {
   .tracy-wo-facts-team-ed > li, .tracy-wo-facts-team-ed > li.tracy-wo-facts-team-add { grid-template-columns: 32px minmax(0, 1fr) auto; }
   .tracy-wo-facts-team-ed > li > input:nth-of-type(2) { grid-column: 2 / -1; }

@@ -20,6 +20,7 @@ import {
 } from './opportunity-row.ts'
 import { type ResearchState, researchOf } from './research-gate-model.ts'
 import { type RowStep, rowStepOf } from './row-step-model.ts'
+import { type SameAsCard, sameAsOf } from './same-as-model.ts'
 import { type StepperInput, type StepperView, stepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -53,6 +54,8 @@ export interface PlacePieces {
   /** Step n of 3 and the state of the current step, from the same stepper view as the Details band (#537). */
   step: RowStep
   next: { label: string; run: NextRun | null; disabled: boolean; look: 'primary' | 'outline' | 'quiet' }
+  /** The account's other cards of the same place (#537 R23): a line under the name. */
+  sameAs: SameAsCard[]
 }
 
 export interface PieceOptions {
@@ -226,6 +229,7 @@ export function placePieces(row: OpportunityListRow, t: Translate, opts: PieceOp
     demo: demoPiece(state, row, t, opts),
     status: statusOf,
     step,
-    next
+    next,
+    sameAs: sameAsOf(row.sameAs)
   }
 }

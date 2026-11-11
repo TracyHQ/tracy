@@ -3,7 +3,7 @@
  * sorted into the business band on top and one band per group of facts (hours, services, about, team, brand, key
  * messages, guest reviews, social pages), each with where its facts come from and whether the seller changed one.
  * Every band is always drawn, with N/A when research found nothing. Nothing is decided here: every value is the
- * server's (`profile`, `candidate`, `approval`), only grouped and labelled for the screen.
+ * server's (`profile`, `candidate`), only grouped and labelled for the screen.
  */
 import { type SourceLogoKey, sourceLogoKey } from './source-logo.ts'
 import { type PhonesView, phonesView } from './profile-phones-model.ts'
@@ -92,8 +92,8 @@ export type Origin =
   | { kind: 'reading'; from: 'bio' | 'post' | 'review' }
   | { kind: 'you' }
 
-/** A seller's edit of a fact: before the facts were approved (or with no approval yet), or after (#537). */
-export type EditMark = 'byYou' | 'afterApproval' | null
+/** A seller's edit of a fact (#537). Approved facts take no edit (#537 R23), so every edit was made before approval. */
+export type EditMark = 'byYou' | null
 
 /**
  * `filled`: the card has its facts. `none`: research ran and found none. `notCollected`: research has not finished,
@@ -182,9 +182,6 @@ export interface BusinessFactsInput {
   /** The name the site carries (`nameOnSite`). */
   name: string
   researched: boolean
-  approval: unknown
-  /** When the latest brief was made, or null before the first one. */
-  briefCreatedAt: string | null
   /** The brand colours as observed (`colorsView`), primary first. */
   colors: { hex: string; role: string | null }[]
   /** The guest reviews research kept (Google's, then TripAdvisor's). */
@@ -234,21 +231,10 @@ export function markColorsOf(colors: { hex: string; role: string | null }[]): Bu
   }
 }
 
-/**
- * How a seller's edit of `field` reads. The server keeps one time per edited field (`candidate.profileEdits`); a
- * brief is only made from approved facts, so an edit made after the latest brief, while the facts wait for approval
- * again, was made after approval.
- */
-export function editMarkOf(
-  input: Pick<BusinessFactsInput, 'profile' | 'candidate' | 'approval' | 'briefCreatedAt'>,
-  field: string
-): EditMark {
+/** Whether the seller edited `field`: the server lists every edited field in `profile.editedBySeller`. */
+export function editMarkOf(input: Pick<BusinessFactsInput, 'profile'>, field: string): EditMark {
   const edited = rec(input.profile).editedBySeller
-  if (!Array.isArray(edited) || !edited.includes(field)) return null
-  const at = Date.parse(text(rec(rec(rec(input.candidate).profileEdits)[field]).at) ?? '')
-  const brief = Date.parse(input.briefCreatedAt ?? '')
-  const waiting = rec(input.approval).profile === 'needed'
-  return waiting && Number.isFinite(at) && Number.isFinite(brief) && at > brief ? 'afterApproval' : 'byYou'
+  return Array.isArray(edited) && edited.includes(field) ? 'byYou' : null
 }
 
 function uniqueOrigins(list: Origin[]): Origin[] {

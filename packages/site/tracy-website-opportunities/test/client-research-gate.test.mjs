@@ -117,7 +117,7 @@ test('a source row says when its data was collected, never when the job ended', 
   assert.equal(collectedLine(t, {}, 'en'), null)
 })
 
-test('a Profile edit newer than the brief says so, and Refresh is offered even for an older reading', () => {
+test('an out of date brief names the research or the rules, never a Profile edit (approved facts take none)', () => {
   const brief = {
     id: 'b',
     n: 3,
@@ -126,18 +126,11 @@ test('a Profile edit newer than the brief says so, and Refresh is offered even f
     readingOld: true,
     sameResearch: false
   }
-  assert.equal(briefLineKey(brief, '2026-11-09T15:00:00Z'), 'brief.staleEdits')
-  assert.equal(briefLineKey(brief, '2026-11-09T13:00:00Z'), 'brief.stale')
-  assert.equal(briefLineKey({ ...brief, current: true }, '2026-11-09T15:00:00Z'), 'brief.current')
-  const view = briefControlView({
-    research: { state: 'done' },
-    brief,
-    profileEditedAt: '2026-11-09T15:00:00Z'
-  })
-  assert.equal(view.mode, 'make')
-  assert.equal(view.labelKey, 'brief.refresh')
-  assert.equal(view.noteKey, null, 'no line about an older reading when the edit is the news')
-  assert.match(en['brief.staleEdits'], /edits to the business facts are newer/)
+  assert.equal(briefLineKey(brief), 'brief.stale')
+  assert.equal(briefLineKey({ ...brief, current: true }), 'brief.current')
+  assert.equal(en['brief.staleEdits'], undefined)
+  const view = briefControlView({ research: { state: 'done' }, brief })
+  assert.equal(view.noteKey, 'brief.readingOld')
 })
 
 test('a failed brief job names the step that stopped, never its raw code', () => {

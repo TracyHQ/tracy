@@ -125,12 +125,6 @@ const EXPECTED = {
     action: 'review-brief',
     tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
   },
-  'edited-after-approval': {
-    current: 'research',
-    running: false,
-    action: 'review-profile',
-    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'mute' }
-  },
   'old-brief-profile-review': {
     current: 'research',
     running: false,
@@ -260,4 +254,8 @@ test('the flag is read from the query string or the hash', () => {
   assert.equal(previewFlag('', '#/x?wo-preview=1'), true)
   assert.equal(previewFlag('?wo-preview=0', ''), false)
   assert.equal(previewFlag('', ''), false)
+})
+
+test('no Edited after approval state: approved facts take no edit (#537 R23)', () => {
+  assert.equal(PREVIEW_STATES.includes('edited-after-approval'), false)
 })

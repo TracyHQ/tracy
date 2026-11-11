@@ -1222,8 +1222,6 @@ export const en = {
   'brief.job.error.at.reading': 'The brief could not be made: reading the business did not finish.',
   'brief.job.error.at.labelling': 'The brief could not be made: labelling the photos did not finish.',
   'brief.job.error.at.writing': 'The brief could not be made: writing the brief did not finish.',
-  'brief.staleEdits':
-    'Brief {n} · made {when}. Your edits to the business facts are newer. Refresh to use them.',
   'profile.collecting': 'Collecting…',
   'profile.filling': 'Filling in as sources finish.',
   'source.posts.one': '{count} post',
@@ -1378,7 +1376,13 @@ export const en = {
 
   /** The Business facts sub-page as grouped cards (#537, design A). */
   'facts.done': 'Done',
-  'facts.editedAfter': 'Edited after approval',
+  // Approved Business facts are final (#537 R23): the notice over the bands and its one button.
+  'facts.locked.line':
+    'Business facts approved on {date}. To change them, add this business again as a new card.',
+  'facts.addAgain': 'Add this business again',
+  // The account's other cards of the same place (#537 R23); {stage} names the step that card reached.
+  'sameAs.line': 'Also added on {date} ({stage})',
+  'sameAs.more': '+{count} more',
   'facts.phone.others': 'Other: {list}.',
   'facts.messages.lead': 'The site leads with these',
   'facts.reviews.title': 'What guests say',

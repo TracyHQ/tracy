@@ -4,12 +4,13 @@
  * slots and right-aligns the same way on every band, so the switches and the Edit controls line up down the page.
  * A locked band shows its switch disabled with a lock and the reason on hover; a band with no Edit shows Edit disabled
  * with the reason on hover. Edit saves through the band's own form, whose footer (Cancel, Save) sits at the band's
- * bottom right.
+ * bottom right. On approved facts (`FactsLocked`) the cluster and every switch are not drawn at all (#537 R23).
  */
 import { type JSX, type ReactNode, useState } from 'react'
 import { Lock, Pencil } from 'lucide-react'
 import { Button, Switch } from '@tracy/ui'
 
+import { useFactsLocked } from './facts-lock.tsx'
 import type { Translate } from './strings.ts'
 
 /** A band's place on the site: on or off, and the call that changes it (null: the switch cannot be pressed). */
@@ -39,9 +40,11 @@ export function BandSwitch({
   bare?: boolean
   /** The accessible name: what the switch puts on the site. */
   label: string
-}): JSX.Element {
+}): JSX.Element | null {
+  const locked = useFactsLocked()
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
+  if (locked) return null
   const set = view.set
   const flip = async (on: boolean): Promise<void> => {
     if (set === null || busy) return
@@ -105,7 +108,8 @@ export function BandCluster({
   edit: EditDoor
   editing: boolean
   onEdit: () => void
-}): JSX.Element {
+}): JSX.Element | null {
+  if (useFactsLocked()) return null
   const why = 'why' in edit ? edit.why : undefined
   return (
     <span className="tracy-wo-facts-cl">

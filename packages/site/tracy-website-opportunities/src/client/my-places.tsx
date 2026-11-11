@@ -14,6 +14,7 @@ import type { AddedAgo } from './added-ago.ts'
 import { AddedCell, AddressCell, ListHead, NameCell } from './list-row.tsx'
 import type { NextRun, PlacePieces } from './opportunity-pieces.ts'
 import { ActionPiece, StepPiece } from './place-step-cells.tsx'
+import { SameAsLine } from './same-as-line.tsx'
 import { type PillState, StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
@@ -37,7 +38,17 @@ const OWN_JOB = 'a, button, input, label, [role="checkbox"], [role="menu"], [dat
 const opensDetails = (e: MouseEvent<HTMLElement>): boolean =>
   !(e.target instanceof Element && e.target.closest(OWN_JOB))
 
-function PlacePiece({ t, p, onOpen }: { t: Translate; p: PlacePieces; onOpen(): void }): JSX.Element {
+function PlacePiece({
+  t,
+  p,
+  onOpen,
+  onOpenOther
+}: {
+  t: Translate
+  p: PlacePieces
+  onOpen(): void
+  onOpenOther(id: string): void
+}): JSX.Element {
   return (
     <div className="tracy-wo-p-place">
       <button type="button" className="tracy-wo-p-name" onClick={onOpen}>
@@ -57,6 +68,7 @@ function PlacePiece({ t, p, onOpen }: { t: Translate; p: PlacePieces; onOpen(): 
           <MapPin aria-hidden="true" />
         </a>
       </span>
+      <SameAsLine t={t} cards={p.sameAs} onOpen={onOpenOther} />
     </div>
   )
 }
@@ -154,12 +166,12 @@ export function MyPlaces({
           {/* Row style 2: name and type, the address, the step, Added, the action; one grid track each. */}
           {view === 'cards' ? (
             <>
-              <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} />
+              <PlacePiece t={t} p={p} onOpen={() => onOpen(p.id)} onOpenOther={onOpen} />
               <AddedCell t={t} added={added.get(p.id)} card />
             </>
           ) : (
             <>
-              <NameCell p={p} onOpen={() => onOpen(p.id)} />
+              <NameCell t={t} p={p} onOpen={() => onOpen(p.id)} onOpenOther={onOpen} />
               <AddressCell t={t} p={p} />
               <StepPiece t={t} p={p} />
               <AddedCell t={t} added={added.get(p.id)} card={false} />

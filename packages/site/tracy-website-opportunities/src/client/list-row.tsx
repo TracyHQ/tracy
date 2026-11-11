@@ -9,6 +9,7 @@ import type { JSX } from 'react'
 
 import type { AddedAgo } from './added-ago.ts'
 import type { PlacePieces } from './opportunity-pieces.ts'
+import { SameAsLine } from './same-as-line.tsx'
 import type { Translate } from './strings.ts'
 
 /** The column titles over the rows; the same grid tracks as every row, so each title sits over its cells. */
@@ -24,8 +25,22 @@ export function ListHead({ t }: { t: Translate }): JSX.Element {
   )
 }
 
-/** Name in bold with the type under it; the name is the keyboard way into Details. */
-export function NameCell({ p, onOpen }: { p: PlacePieces; onOpen(): void }): JSX.Element {
+/**
+ * Name in bold with the type under it, then the line naming the account's other cards of the same place (#537 R23);
+ * the name is the keyboard way into Details.
+ */
+export function NameCell({
+  t,
+  p,
+  onOpen,
+  onOpenOther
+}: {
+  t: Translate
+  p: PlacePieces
+  onOpen(): void
+  /** Opens another card of the same place. */
+  onOpenOther(id: string): void
+}): JSX.Element {
   return (
     <div className="tracy-wo-p-place" data-col="place">
       <button type="button" className="tracy-wo-p-name" title={p.place.name} onClick={onOpen}>
@@ -34,6 +49,7 @@ export function NameCell({ p, onOpen }: { p: PlacePieces; onOpen(): void }): JSX
       {p.place.type ? (
         <span className="tracy-wo-muted tracy-wo-small tracy-wo-p-type">{p.place.type}</span>
       ) : null}
+      <SameAsLine t={t} cards={p.sameAs} onOpen={onOpenOther} />
     </div>
   )
 }

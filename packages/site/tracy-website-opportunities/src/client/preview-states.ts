@@ -19,7 +19,6 @@ export const PREVIEW_STATES = [
   'brief-failed',
   'brief-review',
   'brief-approved',
-  'edited-after-approval',
   'building',
   'built'
 ] as const
@@ -35,7 +34,6 @@ export const PREVIEW_LABELS: Readonly<Record<PreviewStateId, string>> = {
   'brief-failed': 'Site content brief failed',
   'brief-review': 'Site content brief needs review',
   'brief-approved': 'Site content brief approved',
-  'edited-after-approval': 'Edited after approval',
   building: 'Building',
   built: 'Built'
 }
@@ -253,17 +251,6 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
   if (state === 'brief-review')
     return { ...withBrief, ...noDemo, approval: approval({ ...approved, brief: 'needed' }) }
   if (state === 'brief-approved') return { ...withBrief, ...noDemo, approval: briefOk }
-  if (state === 'edited-after-approval')
-    return {
-      ...withBrief,
-      ...noDemo,
-      approval: approval({
-        profile: 'needed',
-        profileChangedAt: at(-5),
-        brief: 'stale',
-        briefStale: 'profile'
-      })
-    }
 
   if (state === 'building') {
     // Each step's time and cost as the server sends them (#537, `wo-chain-builds.js chainRunView`): a done step its

@@ -263,6 +263,7 @@ function Flow({
         )}
         {page === 'details' && address.opp !== null && (
           <DetailView
+            key={address.opp}
             t={t}
             api={api}
             ids={ids}
@@ -274,6 +275,7 @@ function Flow({
             onChanged={() => void account.refresh()}
             onOpenRevision={(revisionId, focus) => openBrief(address.opp ?? '', revisionId, focus)}
             openBriefTab={openBriefTab}
+            onOpenOpportunity={(opp) => openDetails(opp)}
           />
         )}
         {page === 'brief' && address.opp !== null && address.brief !== null && (

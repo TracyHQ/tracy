@@ -52,14 +52,11 @@ const ERRORS = new Set(['BRIEF_INTERRUPTED', 'BRIEF_INVALID', 'RESEARCH_NOT_DONE
 export function briefControlView({
   research,
   brief,
-  briefJob,
-  profileEditedAt = null
+  briefJob
 }: {
   research: unknown
   brief: unknown
   briefJob?: unknown
-  /** When the seller last edited the Profile (`profileEditedAt`), or null. */
-  profileEditedAt?: string | null
 }): BriefControlView {
   const view: BriefControlView = {
     mode: 'none',
@@ -113,12 +110,6 @@ export function briefControlView({
     view.labelKey = 'brief.make'
     return view
   }
-  if (b.current === false && editsNewer(b.createdAt, profileEditedAt)) {
-    // The seller's Profile edit is newer than the brief: a Refresh writes a brief with it, whatever the reading.
-    view.mode = 'make'
-    view.labelKey = 'brief.refresh'
-    return view
-  }
   if (b.current === false) {
     // The brief job cannot read the business again, so a brief that is out of date only because its reading is
     // older gets the note pointing to Research again, and no Refresh that would make the same brief.
@@ -130,21 +121,15 @@ export function briefControlView({
   return view
 }
 
-const editsNewer = (briefAt: unknown, editedAt: string | null): boolean => {
-  const brief = typeof briefAt === 'string' ? Date.parse(briefAt) : Number.NaN
-  const edit = editedAt === null ? Number.NaN : Date.parse(editedAt)
-  return Number.isFinite(brief) && Number.isFinite(edit) && edit > brief
-}
-
 /**
- * The line of the Site brief block: up to date, out of date because the seller's Profile edit is newer than it, or
- * out of date because the research or the rules moved on.
+ * The line of the Site brief block: up to date, or out of date because the research or the rules moved on. A brief
+ * is made only from approved facts, and approved facts take no edit (#537 R23), so no Profile edit is ever newer.
  */
-export function briefLineKey(brief: unknown, profileEditedAt: string | null): string {
+export function briefLineKey(brief: unknown): string {
   const b = rec(brief)
   if (b.current === true) return 'brief.current'
   if (b.current !== false) return 'brief.number'
-  return editsNewer(b.createdAt, profileEditedAt) ? 'brief.staleEdits' : 'brief.stale'
+  return 'brief.stale'
 }
 
 /** "Collected 26 Oct" of a source row with collected data, or null. */

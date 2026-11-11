@@ -40,6 +40,8 @@ export interface OpportunityListRow {
   demoAction?: DemoAction | null
   outreach?: OutreachDraft | null
   stage?: string | null
+  /** The account's other cards of the same place, newest first (#537 R23). */
+  sameAs?: unknown
   /** `done` = its site was made (`site_creation`), which a site key alone does not prove. */
   latestBuild?: {
     id?: string

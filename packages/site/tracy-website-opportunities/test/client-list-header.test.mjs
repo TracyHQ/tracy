@@ -272,3 +272,42 @@ test('Columns, the step filter, the order line and bulk build are gone from the 
   for (const key of ['my.columns.note', 'list.order', 'my.field.type', 'v3.buildSelected', 'filter.label'])
     assert.equal(key in lib.en, false, key)
 })
+
+test('a place added again (#537 R23): its row and its card name the other card under the name, with a link to it', () => {
+  const again = {
+    ...ROWS[0],
+    sameAs: [
+      { id: 'opp-old', createdAt: '2026-11-02T09:00:00Z', stage: 'demo' },
+      { id: 'opp-older', createdAt: '2026-10-20T09:00:00Z', stage: 'research' }
+    ]
+  }
+  const draw = (view) =>
+    lib.renderToStaticMarkup(
+      lib.createElement(lib.MyPlaces, {
+        t,
+        view,
+        places: [lib.placePieces(again, t, { now: NOW, locale: 'en' }), ...pieces().slice(1)],
+        added: added(),
+        selecting: false,
+        selected: new Set(),
+        busy: new Set(),
+        onToggle() {},
+        onOpen() {},
+        onNext() {}
+      })
+    )
+  for (const view of ['rows', 'cards']) {
+    const html = draw(view)
+    assert.equal(
+      count(html, 'class="tracy-wo-same-as"'),
+      1,
+      `${view}: only the place added again has the line`
+    )
+    assert.match(html, /data-same-as="opp-old"/)
+    assert.match(
+      html,
+      /<button type="button" title="Also added on Nov 2 \(Demo site\)">Also added on Nov 2 \(Demo site\)<\/button><span>\+1 more<\/span>/
+    )
+  }
+  assert.equal(count(places(), 'tracy-wo-same-as'), 0, 'no line without other cards')
+})

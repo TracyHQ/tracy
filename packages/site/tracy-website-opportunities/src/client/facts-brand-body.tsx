@@ -11,6 +11,7 @@ import { FactsBand, NotAvailable } from './business-facts-band.tsx'
 import { sourceLabel } from './cms-label.ts'
 import type { ColorsView, LogoView, MediaRowView } from './detail-model.ts'
 import type { BandSwitchView } from './facts-band-actions.tsx'
+import { useFactsLocked } from './facts-lock.tsx'
 import { LogoField } from './media-row.tsx'
 import type { Translate } from './strings.ts'
 
@@ -32,6 +33,8 @@ export function BrandBody({
   retry: { busy: boolean; failed: boolean; onPress: () => void }
   food: boolean
 }): JSX.Element {
+  // Approved facts (#537 R23): no Try again for the logo, which would research the card again.
+  const locked = useFactsLocked()
   const verdict =
     logo.state === 'found' && logo.recognised !== null ? t(`media.logo.recognised.${logo.recognised}`) : null
   const colorNote =
@@ -68,6 +71,8 @@ export function BrandBody({
               )}
             </span>
           </>
+        ) : locked ? (
+          <NotAvailable t={t} />
         ) : (
           <LogoField t={t} logo={logo} retry={retry} food={food} />
         )}

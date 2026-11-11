@@ -30,7 +30,7 @@ import {
 } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
-import { type Api, type BuildChoices, handOffBuild, pressDemo, startResearch } from './api.ts'
+import { type Api, type BuildChoices, addAgain, handOffBuild, pressDemo, startResearch } from './api.ts'
 import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
@@ -40,7 +40,7 @@ import { ProgressBand } from './progress-band.tsx'
 import { type ApprovalView, gateText } from './seller-review.tsx'
 import { type AddSourceRefusal, addAllowedIn } from './add-source-model.ts'
 import { AddSourcePopover } from './add-source-popover.tsx'
-import { profileEditBody, profileEditView, profileEditedAt, typedHours } from './profile-edit-model.ts'
+import { profileEditBody, profileEditView, typedHours } from './profile-edit-model.ts'
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
 import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
@@ -96,6 +96,9 @@ import {
 } from './profile-key-messages-model.ts'
 import { ProfileReadingRows } from './profile-reading-rows.tsx'
 import { BusinessFactsPage } from './business-facts-page.tsx'
+import { useApprovedRefusal } from './approval-lock-api.ts'
+import { SameAsLine } from './same-as-line.tsx'
+import { sameAsOf } from './same-as-model.ts'
 import { businessFactsView } from './business-facts-model.ts'
 import { CMS_LABEL } from './cms-label.ts'
 import { BuildEstimate, DemoProgress } from './demo-progress.tsx'
@@ -280,7 +283,8 @@ export function DetailView({
   onSection = () => undefined,
   onChanged,
   onOpenRevision,
-  openBriefTab = null
+  openBriefTab = null,
+  onOpenOpportunity = () => undefined
 }: {
   t: Translate
   api: Api
@@ -288,6 +292,8 @@ export function DetailView({
   id: string
   cms: string | null
   onList: () => void
+  /** Opens another card's Details: a card of the same place, or the one Add this business again made (#537 R23). */
+  onOpenOpportunity?: (id: string) => void
   /** The section open as a sub-page (`wo-section`); null = the two columns of Details. */
   section?: SubSection | null
   /** Opens a section as a sub-page, or null to come back to Details. */
@@ -300,8 +306,17 @@ export function DetailView({
 }): JSX.Element {
   // [TAM] preview panel: with wo-preview=1 a chosen state replaces the answer and every write door is a toast.
   const preview = usePreview()
-  const api = usePreviewApi(realApi, preview)
+  // A write that reaches approved facts (409 PROFILE_APPROVED, #537 R23): its sentence in the error line, then Details
+  // is read again so the page draws the facts locked.
+  const [approvedRefusal, setApprovedRefusal] = useState(false)
+  const reloadRef = useRef<() => Promise<void>>(async () => undefined)
+  const onApprovedRefusal = useCallback(() => {
+    setApprovedRefusal(true)
+    void reloadRef.current()
+  }, [])
+  const api = useApprovedRefusal(usePreviewApi(realApi, preview), onApprovedRefusal)
   const { body: realBody, failed, reload } = useDetail(api, id)
+  reloadRef.current = reload
   const body = useMemo(() => applyPreview(realBody, preview.state, Date.now()), [realBody, preview.state])
   const [logoWait, setLogoWait] = useState(false)
   const beginDemoChat = useDemoChatNavigation(api, true, setLogoWait)
@@ -541,7 +556,6 @@ export function DetailView({
       ? '$'.repeat(candidate.priceLevel)
       : null
   const website = typeof candidate.website === 'string' && candidate.website !== '' ? candidate.website : null
-  const editedAt = profileEditedAt(body.opportunity)
   const meta = [typeof candidate.category === 'string' ? candidate.category : null, distance, price].filter(
     Boolean
   )
@@ -666,7 +680,10 @@ export function DetailView({
   const addSourceButton = (
     <AddSourcePopover t={t} locked={researchRunning || !addAllowedIn(research.state)} onAdd={addSource} />
   )
+  // Approved facts are final (#537 R23): Research again would rewrite them, so it is not offered.
+  const factsApproved = approval?.profile === 'approved'
   const researchAgainOpen =
+    !factsApproved &&
     job !== null &&
     !researchRunning &&
     !(researchAgain.phase === 'ready' && researchAgain.preview?.plan === null)
@@ -809,7 +826,6 @@ export function DetailView({
       brief={body.brief}
       research={body.research}
       briefJob={briefJob}
-      profileEditedAt={editedAt}
       review={approval === null ? null : { lockKey: stepper.steps[1]?.lockKey ?? null }}
       onOpen={openBrief}
     />
@@ -828,6 +844,11 @@ export function DetailView({
     ) : null
   const errors = (
     <>
+      {approvedRefusal ? (
+        <p className="tracy-wo-error" role="alert">
+          {gateText(t, 'PROFILE_APPROVED')}
+        </p>
+      ) : null}
       {actionFailed || deleteFailed !== null ? (
         <p className="tracy-wo-error" role="alert">
           {t(deleteFailed ?? 'action.failed')}
@@ -855,6 +876,30 @@ export function DetailView({
     </>
   )
   const previewPanel = <PreviewPanel preview={preview} /> // [TAM]
+  // The account's other cards of the same place (#537 R23), named at the top of Details and of Business facts.
+  const sameAsLine = (
+    <SameAsLine
+      t={t}
+      cards={sameAsOf(isRecord(body.opportunity) ? body.opportunity.sameAs : null)}
+      onOpen={onOpenOpportunity}
+    />
+  )
+  // Approved facts are final (#537 R23): the page reads only, and Add this business again makes a new card of the
+  // same place from this card's own inputs, then opens it.
+  const factsLock =
+    factsApproved && approval !== null
+      ? {
+          // With no approval time known, the same sentence without the date.
+          line: approvedLine('facts.locked.line', approval.profileApprovedAt) ?? t('gate.PROFILE_APPROVED'),
+          addAgain: async (): Promise<string | null> => {
+            const made = await addAgain(api, body.opportunity)
+            if ('code' in made) return made.code
+            onChanged()
+            onOpenOpportunity(made.id)
+            return null
+          }
+        }
+      : null
 
   // A section opened as a sub-page: that section alone, whole.
   if (section !== null) {
@@ -869,9 +914,6 @@ export function DetailView({
             candidate,
             name: shownName,
             researched: research.done && !researchMoving,
-            approval,
-            briefCreatedAt:
-              isRecord(body.brief) && typeof body.brief.createdAt === 'string' ? body.brief.createdAt : null,
             colors: mediaView.colors.state === 'found' ? mediaView.colors.colors : [],
             reviews: [
               ...(googlePlaceView(profile?.googlePlace)?.reviews ?? []).map((r) => ({
@@ -888,6 +930,7 @@ export function DetailView({
           food={profile?.trade === 'food'}
           running={researchMoving}
           websiteLink={websiteLink}
+          locked={factsLock}
           doors={{
             nameRow:
               nameRow === null ? null : (
@@ -977,8 +1020,9 @@ export function DetailView({
       )
     // Approve in the header (#537): on the Profile once research is done, on the brief once one is made and
     // current; elsewhere on those two pages none.
+    // Approved facts show their date in the locked notice instead (#537 R23).
     const approvalView: ApprovalView | null =
-      approval === null
+      approval === null || (shown === 'profile' && factsApproved)
         ? null
         : shown === 'profile'
           ? {
@@ -1005,6 +1049,7 @@ export function DetailView({
           onSection={onSection}
           approval={approvalView}
         >
+          {shown === 'profile' ? sameAsLine : null}
           {content}
         </SubPage>
         {dialogs}
@@ -1034,6 +1079,7 @@ export function DetailView({
           onDelete: () => setDeleting({ ids: [row.id], withSite: hasLiveDemo(row) ? 1 : 0, name: shownName })
         }}
       />
+      {sameAsLine}
       {errors}
       {progressBand}
       <WorkspaceCard
@@ -1181,7 +1227,6 @@ function BriefLine({
   brief,
   research,
   briefJob,
-  profileEditedAt,
   review = null,
   onOpen
 }: {
@@ -1191,8 +1236,6 @@ function BriefLine({
   research: unknown
   /** The Content brief job (#524), made in the background and pressed from the stepper (`brief-control.tsx`). */
   briefJob: BriefJobControl
-  /** When the seller last edited the Profile: a newer edit makes the brief out of date in its own words. */
-  profileEditedAt: string | null
   /**
    * The seller's approvals (#537), when the server sends them: the brief step's lock line (it replaces Make and
    * Refresh while the Profile waits for approval). Its words replace the older out-of-date line.
@@ -1204,10 +1247,10 @@ function BriefLine({
   const status = briefStatus(brief)
   const edited = isRecord(brief) && brief.editedBySeller === true
   const when = status ? relativeTime(status.createdAt, Date.now(), locale) : ''
-  const view = briefControlView({ research, brief, briefJob: briefJob.job, profileEditedAt })
+  const view = briefControlView({ research, brief, briefJob: briefJob.job })
   const chip = briefChip(view)
   // While a new brief is being made, the old one is only named: its out-of-date reason is already being acted on.
-  const lineKey = chip === 'working' || review != null ? 'brief.number' : briefLineKey(brief, profileEditedAt)
+  const lineKey = chip === 'working' || review != null ? 'brief.number' : briefLineKey(brief)
   return (
     <div className="tracy-wo-stack">
       {status === null ? (

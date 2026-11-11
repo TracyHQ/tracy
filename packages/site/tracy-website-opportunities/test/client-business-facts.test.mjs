@@ -177,18 +177,8 @@ const MARKS = [
   ['not edited', { ...base }, 'address', null],
   ['edited, no brief yet', base, 'phone', 'byYou'],
   ['edited before the latest brief', { ...base, briefCreatedAt: '2026-03-03T10:00:00Z' }, 'phone', 'byYou'],
-  [
-    'edited after the latest brief, facts waiting again',
-    { ...base, briefCreatedAt: '2026-03-01T10:00:00Z' },
-    'phone',
-    'afterApproval'
-  ],
-  [
-    'edited after the brief, approved again',
-    { ...base, approval: { profile: 'approved' }, briefCreatedAt: '2026-03-01T10:00:00Z' },
-    'phone',
-    'byYou'
-  ]
+  // Approved facts take no edit (#537 R23): an edit is the seller's, whenever the brief was made.
+  ['edited, a brief made before', { ...base, briefCreatedAt: '2026-03-01T10:00:00Z' }, 'phone', 'byYou']
 ]
 for (const [name, input, field, expected] of MARKS)
   test(`edit mark: ${name}`, () => {
