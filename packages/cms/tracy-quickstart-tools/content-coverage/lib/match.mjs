@@ -151,8 +151,12 @@ export function createMatcher(contract, siteUrl) {
         const occ = occurrences(rest, s.norm)
         if (!occ.length) continue
         const owners = [...new Set(text.get(s.norm))]
-        if (owners.length === 1) slots.push(...owners)
-        else ambiguous.push(s.norm)
+        // Two language strings with the same words: which one prints is for the source classifier to prove, so the
+        // piece stays unexplained. Content slots that repeat a sample (a label in every card) all own it, as a
+        // whole-value match records.
+        if (owners.length > 1 && owners.some((key) => key.startsWith('languageString-')))
+          ambiguous.push(s.norm)
+        else slots.push(...owners)
         rest = rest.split(s.norm).join(' \u0000 ')
       }
       // Complete literals keep their owner before a numeric fragment can consume their beginning.
@@ -237,6 +241,15 @@ export function createMatcher(contract, siteUrl) {
       .split('?')[0]
     if (addr !== String(item.value).trim() && rawSample.has(decodeURIComponent(addr)))
       return { status: 'matched', by: 'address slot', slots: rawSample.get(decodeURIComponent(addr)) }
+    // A phone link dials the number a slot writes with spaces, dashes or dots (`tel:+12025550160` for +1-202-555-0160).
+    if (/^tel:/i.test(String(item.value).trim())) {
+      const digits = decodeURIComponent(addr).replace(/[^\d+]/g, '')
+      const keys = [...rawSample]
+        .filter(([sample]) => sample.replace(/[^\d+]/g, '') === digits)
+        .flatMap(([, k]) => k)
+      if (digits.replace('+', '').length >= 7 && keys.length)
+        return { status: 'matched', by: 'phone number slot', slots: [...new Set(keys)] }
+    }
     // Joomla's e-mail cloaking turns an address written in a slot's text into a mailto link.
     if (/^mailto:/i.test(String(item.value).trim()) && addr.includes('@')) {
       const a = decodeURIComponent(addr).toLowerCase()

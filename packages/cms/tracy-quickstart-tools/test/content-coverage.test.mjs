@@ -2479,3 +2479,30 @@ test('remaining67 leaf boundaries: a producer prefix or ambiguous month cannot p
   )
   assert.notEqual(f.create()(month, {}).class, 'c', 'two source months with one label remain ambiguous')
 })
+
+test('a composite piece several content slots repeat is owned by all of them; a phone link matches its slot by digits', () => {
+  // JA Nova 1.0.12: every career card repeats "Job level:" in its own module field, and the Contact page links the
+  // number its contact slot writes with dashes as `tel:+12025550160`
+  const match = createMatcher(
+    loadContract(
+      contractDir([
+        { key: 'module-145.10', type: 'text', sample: 'Job level:' },
+        { key: 'module-145.11', type: 'text', sample: 'Job level:' },
+        { key: 'module-146.0', type: 'text', sample: 'Junior' },
+        { key: 'contact-1.2', type: 'text', sample: '+1-202-555-0160' }
+      ]),
+      SITE
+    ),
+    SITE
+  )
+  const card = match({ kind: 'text', value: 'Job level: Junior' })
+  assert.equal(card.status, 'matched')
+  assert.deepEqual(new Set(card.slots), new Set(['module-145.10', 'module-145.11', 'module-146.0']))
+  const phone = match({ kind: 'link', value: 'tel:+12025550160', source: 'a', role: 'content' })
+  assert.equal(phone.status, 'matched')
+  assert.deepEqual(phone.slots, ['contact-1.2'])
+  assert.equal(
+    match({ kind: 'link', value: 'tel:+12025550199', source: 'a', role: 'content' }).status,
+    'hole'
+  )
+})
