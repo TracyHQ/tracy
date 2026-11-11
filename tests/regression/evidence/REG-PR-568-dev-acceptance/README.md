@@ -102,3 +102,21 @@ Bu Qtair was a separate researched case. The site source and collected pictures 
 The target fidelity change preserves complete measured paths, clean words and ownership through the checker and repair. It merges repeated width/theme observations only for the same verified element, keeps equal email nodes separate and rejects ambiguous, changed or oversized identities. A new 135-test step 9/fact-budget selection passed without failures or skips. Separate real-browser host tests passed 12/12, and native consent cases passed 4/4. The new formal target regression passed on `2a39089b0f`.
 
 The subsequent real hero attempt did not pass readability acceptance. It delivered the correct target, but encountered native browser loading failures and a separate harness write error. Its controlled side effect was preserved in a backup and removed through normal full-site restore. See [the complete negative receipt](controlled-readability-attempt.md). No full WO or complete-site success is claimed from these local fixtures.
+
+## OneLife baseline deadline failure and existing pipeline integration
+
+OneLife D3 completed research in 164.722 seconds and brief creation in 128.641 seconds. Its explicit readiness checks passed with 100 usable photos, 100 of 103 labelled photos and seven of nine offerings covered. Actual collected photo contact sheets and all five brief sections were read before approval. The normal UI started one published JA Diner WordPress 1.0.4 build on develop `5737e84dae68` with approved revision `834ad4e1-b87d-44bb-8244-bb44a89149f6`.
+
+The build action `c0121ce8-3dc1-4445-9722-9db577265573` failed with `QA_NEEDS_REVIEW` after 772.748 seconds. The native turn ran for 765.181 seconds, with 27 steps, 93.432 seconds of model time, 649.242 seconds of tools and 8,650 decode tokens. The initial QA baseline never completed; no content was written, and QA recorded zero rounds and zero repairs. The exact baseline attempt count is not exposed by the owner serializer. The native turn ended naturally 33.248 seconds after the action failed.
+
+The first causal QA boundary was `DEMO_QA_DEADLINE`; the final wait returned `DEMO_BASELINE_UNAVAILABLE`. Two earlier calls returned `COWORK_WEB_UNREACHABLE`, including a 209.652-second timeout. Later action-closed reads are consequences. This run did not hit the fact-evidence size limit. Public desktop 1440 and phone 390 screenshots were opened and showed untouched Harry / Three Broomsticks / Hogsmeade template content. The site is not accepted.
+
+- Site: https://one-life.tracy.site/
+- Ops: https://cowork.tracy.site/ops/wo?open=adb38fd8-6738-4488-ac77-2f30e323487a
+- Actual session: https://cowork.tracy.site/one-life.tracy.site/s/wo-demo-c0121ce8-3dc1-4445-9722-9db577265573
+
+Source inspection confirms a deadline contract defect. Initial capture has no baseline yet, so `woDemoQa` allocates 45 seconds for pages plus 90 seconds for inventory routes, and waits 175 seconds. The host hard timer included only pages plus a 15-second margin, aborting after 60 seconds and discarding the baseline. The separately allocated route time never reached that timer. This explains a reproduced premature QA boundary; it does not identify which actual page or host queue consumed the available time.
+
+This branch integrates the existing scoped deadline implementation from PR #296, head `145792df18fabc003d929839294c4e314bd879c4`. Its host source is reused unchanged; tests additionally cover the actual initial-capture payload. The deadline is now 150 seconds, below the unchanged 175-second web and 180-second native transports. Individual phase budgets, caps, queue accounting and caller cancellation remain intact; partial baselines still cannot pass. Eight focused deadline tests and 113 adjacent host tests passed without skips. These are mechanism tests, not a successful dev retry.
+
+The 209.652-second wait is consistent with the native loop checking its 30-second waiting window only after an awaited status request, which itself can reach a 180-second transport timeout. Requests for the same action are serialized by the existing PostgreSQL advisory lock. The trace does not expose exact host queue occupancy, so no host queue duration is invented.
