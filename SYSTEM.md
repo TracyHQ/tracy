@@ -2333,6 +2333,11 @@ approval or chain eligibility. Explicit custom indexes remain isolated from depl
   and picture steps. Missing or unsupported view versions refuse before preparation or model calls, including a
   resumed paid conversation. The approved system prompt and required kit-image review remain unchanged. This
   reduces payload size; runtime savings require a separate measurement.
+- **Hidden list link closure:** before checking whole plans and fix-round edits, the planner fills only missing
+  link hides already implied by an explicitly hidden list or a row the shared pure `lib/plan-rows.js`
+  `goneRowSlots` selection removes; the writer keeps its existing `write-step/hide-rows.js` import wrapper.
+  Unique row ownership and no explicit kept content are required. Existing link decisions and non-leading kept rows
+  remain intact; visible or ambiguous missing links still fail the unchanged checker. This adds no provider calls.
 - **Started and read from a command line** inside the tracy-web container:
   [`scripts/site-planner-bench.mjs`](apps/tracy-web/scripts/site-planner-bench.mjs) (`kits`, `run`, `list`, `status`, `get`,
   `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-planner/bench-cli.js)). It calls the bench service directly with the
