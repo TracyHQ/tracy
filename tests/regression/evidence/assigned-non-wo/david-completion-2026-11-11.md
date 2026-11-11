@@ -155,3 +155,17 @@ measurement. Selected lint/typecheck/format, Turbo structure and source-language
 input integration; the vocabulary/test-quality tail is still being collected. Linux Tracy CI on 48e744973e was
 cancelled because it predates the prompt correction. The separate live-sync workflow on that head is still useful
 for unchanged fleet code and remains running. A final-head CI result is still required before readiness.
+
+
+## Original-post routing integration
+
+An independent check on clean c74af5fea4 reproduced three brief-route failures: the newly collected `fact.posts`
+kind had no route-table row. Across all twenty brief suites, 163 tests passed and three failed. Reused parallel
+commit 9120294336 as cherry-pick 3d83477e9f. Original post facts now route to existing article title, lead and date
+roles; their evidence is preserved. The pictures CLI expectation also follows the already-versioned check/4 contract.
+
+The combined brief, article and PostgreSQL-backed pictures CLI selection passed 173/173 across 22 files, with
+zero skips. The scripted post-routing regression passed on committed source 3d83477e9f. The imported receipt had
+attributed a dirty-tree PASS to c74af5fea4; it is corrected to FAIL with the independently reproduced baseline log.
+Only the fresh committed-source receipt serves as proof of this fix. The five selected planner follow-up gates
+previously described as collecting have all passed. Full final-head CI and customer/deployed acceptance remain owed.
