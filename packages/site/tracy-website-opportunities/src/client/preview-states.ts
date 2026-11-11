@@ -302,10 +302,11 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
     }
   }
 
-  // built
+  // built: the site was made AFTER the seller approved the brief. `effectiveOf` (stepper-model.ts) drops a demo whose
+  // brief was approved after it was built, so the approval here predates the build (demoAction.updatedAt below).
   return {
     ...withBrief,
-    approval: briefOk,
+    approval: approval({ ...approved, brief: 'approved', briefApprovedAt: at(-24 * 60 - 30) }),
     builds: [],
     demo: {
       siteKey: `${slug}-demo`,

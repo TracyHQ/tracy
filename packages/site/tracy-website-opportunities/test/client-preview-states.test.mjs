@@ -59,6 +59,7 @@ function draw(body) {
     briefJob: body.briefJob,
     brief,
     demo,
+    demoAt: demo === 'ready' ? (row.demoAction?.updatedAt ?? null) : null,
     approval: body.approval ?? null
   })
   const metas = sectionMetas({
@@ -234,6 +235,17 @@ test('the demo states: building has a progress run, ready has a demo address', (
   const ready = applyPreview(REAL, 'built', NOW)
   assert.match(ready.demo.url, /^https:\/\/harbour-lane-bakery\.example\.test\/$/)
   assert.equal(draw(ready).demo, 'ready')
+})
+
+test('the Built state reads built on the Progress band: the site was made after the brief was approved', () => {
+  const ready = applyPreview(REAL, 'built', NOW)
+  const { stepper } = draw(ready)
+  assert.equal(stepper.current, null, 'no step is current once the build is done')
+  assert.deepEqual(
+    stepper.steps.map((s) => s.state),
+    ['done', 'done', 'done']
+  )
+  assert.ok(Date.parse(ready.approval.briefApprovedAt) < Date.parse(ready.demoAction.updatedAt))
 })
 
 test('the flag is read from the query string or the hash', () => {
