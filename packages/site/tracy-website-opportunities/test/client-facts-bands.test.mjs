@@ -142,7 +142,6 @@ function draw({
       doors: { ...DOORS, ...doors },
       food: false,
       websiteLink: (u) => u,
-      researchDetails: null,
       running: false
     })
   )
@@ -191,8 +190,8 @@ test('an empty profile still draws every band, in order, each with N/A', () => {
     'research'
   ])
     assert.ok(band(html, id).includes(NA), `${id} reads N/A`)
-  // The business band: no type, phone, rating, address or website read N/A.
-  assert.equal((band(html, 'business').match(/\[facts\.na\]/g) ?? []).length, 5)
+  // The business band: no type, phone, address or website read N/A (the rating sits in What guests say).
+  assert.equal((band(html, 'business').match(/\[facts\.na\]/g) ?? []).length, 4)
 })
 
 test('a missing value reads N/A alone: no source chip, no Not found chip, no second line', () => {
@@ -354,7 +353,7 @@ test('every band shares one collapsed height per breakpoint; long rows scroll si
     assert.match(band(html, id), /tracy-wo-facts-row/, id)
 })
 
-test('the business band draws the whole name, then phone, rating, address and website; the rating is one string', () => {
+test('the business band draws the whole name, then phone, address and website; no rating cell', () => {
   const name = 'Harbour Kite Lessons and Paddle Club Bay'
   const view = lib.businessFactsView({
     profile: {
@@ -380,23 +379,19 @@ test('the business band draws the whole name, then phone, rating, address and we
       doors: DOORS,
       food: false,
       websiteLink: (u) => u,
-      researchDetails: null,
       running: false
     })
   )
   const business = band(html, 'business')
   assert.match(business, new RegExp(`<span class="tracy-wo-facts-ell" title="${name}">${name}</span>`))
   const labels = [...business.matchAll(/class="tracy-wo-facts-ck" title="([^"]*)"/g)].map((m) => m[1])
-  assert.deepEqual(labels, ['[field.phone]', '[my.field.rating]', '[field.address]', '[my.field.website]'])
-  assert.match(
-    business,
-    /<span class="tracy-wo-facts-ell tracy-wo-facts-rating" title="★ 4\.8 · \[facts\.reviews\.other\{&quot;count&quot;:&quot;40&quot;\}\]\n[^"]*"><span class="tracy-wo-facts-stars" aria-hidden="true">★<\/span> <b>4\.8<\/b><span class="tracy-wo-facts-dim"> · \[facts\.reviews\.other/
-  )
+  assert.deepEqual(labels, ['[field.phone]', '[field.address]', '[my.field.website]'])
+  assert.doesNotMatch(business, /tracy-wo-facts-stars/)
   assert.match(
     business,
     /<span class="tracy-wo-facts-ell tracy-wo-facts-keep" title="\+10 555 0100">\+10 555 0100<\/span>/
   )
-  // Five cells in one row on a wide page; the row scrolls sideways when the column is narrower.
+  // Four cells in one row on a wide page, then any other business fact; the row scrolls sideways when narrower.
   assert.match(
     FACTS_BANDS_CSS,
     /\[data-card='business'\] \.tracy-wo-facts-cells \{ grid-template-columns: minmax\(200px, 1\.4fr\)/

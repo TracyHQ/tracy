@@ -110,7 +110,7 @@ test('model: every fact present fills the fixed slots in order', () => {
   assert.deepEqual(v.right[1].value, { kind: 'link', url: CANDIDATE.website, host: 'example.test' })
   assert.equal(v.right[2].value.key, 'facts.body.ratingMany')
   assert.deepEqual(v.right[2].value.params, { rating: '5.0', count: '4' })
-  assert.deepEqual(v.right[3].value.params, { count: '1,200' })
+  assert.equal(v.right[3].value.text, '1,200')
   assert.deepEqual(
     v.tiles.map((x) => x.id),
     ['a', 'b', 'v']
@@ -251,7 +251,7 @@ test('markup: while research runs a missing fact reads Collecting', () => {
 
 test('strings: every key the body uses exists, English only, no long dashes', () => {
   const keys = Object.keys(lib.en).filter((k) => k.startsWith('facts.body.'))
-  assert.ok(keys.length >= 20)
+  assert.ok(keys.length >= 17)
   for (const k of keys) assert.ok(!LONG_DASHES.some((d) => lib.en[k].includes(d)), k)
   for (const k of [
     'field.name',
@@ -259,7 +259,8 @@ test('strings: every key the body uses exists, English only, no long dashes', ()
     'field.bio',
     'field.phone',
     'field.website',
-    'profile.collecting'
+    'profile.collecting',
+    'pp.stat.followers'
   ])
     assert.ok(lib.en[k], k)
   assert.equal(lib.en['facts.body.na'], 'N/A')
@@ -300,4 +301,21 @@ test('css: fixed height, overflow hidden, two-column facts, never three, three s
   assert.doesNotMatch(css, /box-shadow/)
   assert.doesNotMatch(css, /`/)
   assert.ok(lib.WORKSPACE_CSS.includes(css), 'the Workspace stylesheet carries it')
+})
+
+test('markup: a fact kept off the site shows its value dimmed, never N/A', () => {
+  const v = view()
+  const off = { ...v, left: v.left.map((f) => (f.id === 'hours' ? { ...f, off: true } : f)) }
+  const html = draw(off)
+  const hours = html.slice(html.indexOf('data-fact="hours"'), html.indexOf('data-fact="about"'))
+  assert.match(hours, /data-off=""/)
+  assert.match(hours, /facts\.body\.hoursToday/)
+  assert.doesNotMatch(hours, /facts\.body\.na|data-na/)
+  assert.match(lib.FACTS_BODY_CSS, /\.tracy-wo-fb-fact\[data-off\] > \.tracy-wo-fb-v \{ opacity: 0\.5; \}/)
+})
+
+test('model: the followers slot reads Followers and the whole count', () => {
+  const f = view().right.find((x) => x.id === 'followers')
+  assert.equal(f.labelKey, 'pp.stat.followers')
+  assert.equal(f.value.text, '1,200')
 })

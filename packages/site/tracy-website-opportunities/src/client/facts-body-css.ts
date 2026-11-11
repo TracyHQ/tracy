@@ -19,6 +19,7 @@ export const FACTS_BODY_CSS = `
 .tracy-wo-fb-k { max-width: 64px; color: var(--muted-foreground); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tracy-wo-fb-v { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--foreground); }
 .tracy-wo-fb-v[data-na] { color: var(--muted-foreground); }
+.tracy-wo-fb-fact[data-off] > .tracy-wo-fb-v { opacity: 0.5; }
 a.tracy-wo-fb-v { color: var(--primary); text-decoration: none; }
 a.tracy-wo-fb-v:hover { text-decoration: underline; }
 a.tracy-wo-fb-v:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; border-radius: 2px; }

@@ -19,6 +19,8 @@ import {
   readingChip,
   youChip
 } from './source-chip-model.ts'
+import type { SavedBands, SavedFact } from './saved-profile-model.ts'
+import { withSavedProfile } from './facts-saved-view.ts'
 
 type Rec = Record<string, unknown>
 const rec = (v: unknown): Rec => (v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {})
@@ -113,6 +115,9 @@ export interface ReviewQuoteView {
   key?: string | null
   /** The owner keeps this review off the site (#537 R16). */
   ownerHidden?: boolean
+  /** The review's fact in the saved profile (#537 R18), switched through the facts door when it has no key. */
+  factId?: string
+  onSite?: boolean
   author: string
   text: string
   rating: number | null
@@ -143,6 +148,8 @@ export interface BusinessCardView {
     /** One per other phone, in the order of `phones.others`. */
     others: (SourceChipView | null)[]
   }
+  /** The saved profile's phone and address facts (#537 R18), for their Edited chip; absent before research. */
+  facts?: { phone: SavedFact | null; address: SavedFact | null }
 }
 
 export interface BusinessFactsView {
@@ -164,6 +171,8 @@ export interface BusinessFactsView {
   sources: ChipSourceRow[]
   /** The platform the bio was read from (a reading item from the bio carries none), or null. */
   bioPlatform: string | null
+  /** The saved profile sorted into the bands (#537 R18): what the bands read once research made it; null before. */
+  saved: SavedBands | null
 }
 
 export interface BusinessFactsInput {
@@ -182,6 +191,8 @@ export interface BusinessFactsInput {
   reviews: ReviewQuoteView[]
   /** The source rows of the opportunity (`body.sources`): kind, page address, collected time. */
   sources?: ChipSourceRow[]
+  /** The saved profile (`placeProfile.profile` of `GET …/:id`), with the owner's edits laid on (#537 R18). */
+  savedProfile?: unknown
 }
 
 /** "Tennis & Padel Coach" reads TP; one word gives its first letter; nothing readable gives "?". */
@@ -421,7 +432,7 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     if (c.id === 'about') c.chip = mark('bio') !== null ? youChip(editedAt('bio')) : chipOf('bio', about)
   }
   // Every band stays, the ones research found nothing for read N/A.
-  return {
+  const base: BusinessFactsView = {
     researched,
     business,
     cards,
@@ -435,8 +446,10 @@ export function businessFactsView(input: BusinessFactsInput): BusinessFactsView 
     reviews,
     social,
     sources: rows,
-    bioPlatform: researched ? bioPlatform : null
+    bioPlatform: researched ? bioPlatform : null,
+    saved: null
   }
+  return withSavedProfile(base, input.savedProfile)
 }
 
 /** A long guest review cut at a word near `max` characters, with an ellipsis. */

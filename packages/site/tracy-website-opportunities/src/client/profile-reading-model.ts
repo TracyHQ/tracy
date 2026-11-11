@@ -32,6 +32,12 @@ export interface ReadingItemView {
   photoId: string | null
   /** Team only: the name research read, when the owner renamed the person; else null. */
   researchLabel: string | null
+  /** Team only: the person's fact in the saved profile (#537 R18); one the reading does not name switches through it. */
+  factId?: string
+  /** Team only: whether that fact is on the site. */
+  factOn?: boolean
+  /** Team only: the owner changed this person in the saved profile. */
+  edited?: boolean
 }
 
 export interface ReadingRowsView {

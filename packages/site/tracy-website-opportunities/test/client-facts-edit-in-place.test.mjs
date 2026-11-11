@@ -175,7 +175,6 @@ function mount() {
         doors,
         food: false,
         websiteLink: (u) => u,
-        researchDetails: null,
         running: false
       })
     )

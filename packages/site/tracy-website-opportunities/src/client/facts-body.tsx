@@ -45,7 +45,7 @@ function FactSlot({ t, fact, running }: { t: Translate; fact: Fact; running: boo
       </span>
     )
   return (
-    <div className="tracy-wo-fb-fact" data-fact={fact.id}>
+    <div className="tracy-wo-fb-fact" data-fact={fact.id} data-off={fact.off ? '' : undefined}>
       <span className="tracy-wo-fb-k">{t(fact.labelKey)}</span>
       {value}
     </div>

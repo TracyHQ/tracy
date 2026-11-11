@@ -1,13 +1,14 @@
 /**
- * The body of the Business facts row in the Workspace card (#537, option B): a fixed grid of facts in two columns on
- * the left and a strip of three to six square media tiles on the right. Every slot is always there, so the body never changes height: a fact the
- * research has not found reads NA (or Collecting… while research runs). Reads the same views the Business facts
- * sub-page reads; nothing is decided here.
+ * The body of the Business facts row in the Workspace card (#537, option B): a fixed grid of facts in two columns and
+ * a strip of three to six square media tiles. Every slot is always there, so the body never changes height: a fact not
+ * found reads NA (or Collecting… while research runs). Once research made the saved profile (#537 R18) it reads its
+ * facts, as the sub-page does: an owner's value shows edited, a fact kept off reads NA. Nothing is decided here.
  */
 import { profileFields, type MediaRowView, type MediaTile } from './detail-model.ts'
 import { hoursRowView } from './profile-hours-model.ts'
 import { phonesView } from './profile-phones-model.ts'
 import { ratingRowView, ratingText } from './profile-rating-model.ts'
+import { factsBodyFromSaved as fromSaved, followersSlot } from './facts-body-saved.ts'
 
 type Rec = Record<string, unknown>
 
@@ -39,6 +40,8 @@ export interface Fact {
   labelKey: string | null
   /** null: not found (NA, or Collecting… while research runs). */
   value: FactValue | null
+  /** Kept off the site by the owner or a rule: the value shows, dimmed (#537 R18). */
+  off?: boolean
 }
 
 export interface FactsBodyView {
@@ -57,6 +60,8 @@ export interface FactsBodyView {
 
 export interface FactsBodyInput {
   profile: Rec | null
+  /** The saved profile (`placeProfile.profile`), or null before research made it. */
+  saved?: unknown
   candidate: Rec
   /** The name the site carries (the person's pick, else the one the sources agree on, else the listing's). */
   name: string | null
@@ -72,7 +77,6 @@ const text = (v: unknown): string | null => (typeof v === 'string' && v.trim() !
 const plain = (s: string | null): FactValue | null =>
   s === null ? null : { kind: 'text', text: s.replace(/\s+/g, ' '), title: s }
 
-/** Hours lines name their days in English (Google's weekday descriptions). */
 /** The dash between two times: a hyphen, an en dash or an em dash (code points, so the source holds no long dash). */
 const RANGE = new RegExp(`\\s*[-${String.fromCharCode(0x2013, 0x2014)}]\\s*`)
 
@@ -118,41 +122,44 @@ function ratingValue(profile: Rec | null, locale: string): FactValue | null {
   }
 }
 
-/** Instagram followers, the one extra fact worth the slot; null when the research did not count them. */
+/** Instagram followers, the one extra fact worth the slot; the reserved slot when research did not count them. */
 function followersFact(profile: Rec | null, locale: string): Fact {
   const followers = rec(rec(profile?.socialStats).instagram).followers
   if (typeof followers !== 'number' || !Number.isFinite(followers) || followers < 0)
     return { id: 'spare', labelKey: null, value: null }
-  return {
-    id: 'followers',
-    labelKey: 'facts.body.instagram',
-    value: {
-      kind: 'say',
-      key: followers === 1 ? 'facts.body.followersOne' : 'facts.body.followersMany',
-      params: { count: new Intl.NumberFormat(locale).format(followers) },
-      title: null
-    }
-  }
+  return followersSlot(followers, locale)
 }
 
 export function factsBodyView(input: FactsBodyInput): FactsBodyView {
   const { profile, candidate, media, locale } = input
   const rows = profileFields(profile)
-  const field = (f: string): string | null => rows.find((r) => r.field === f)?.value ?? null
-  const hours = hoursRowView(profile)
-  const about = field('bio')
+  const saved = fromSaved(input.saved, locale)
+  const raw = (f: string): string | null => rows.find((r) => r.field === f)?.value ?? null
+  const rawHours = hoursRowView(profile)
+  const hours =
+    saved?.hours === undefined ? (rawHours === null || rawHours.left ? null : rawHours.hours) : saved.hours
+  // The saved profile's value first (null when kept off), the raw research's where it has none.
+  const about = saved?.about === undefined ? raw('bio') : saved.about
   // A photo or video the owner keeps off the site is not a thumbnail of the business (#537 R16).
   const photos = media.photos.groups.flatMap((g) => g.tiles).filter((m) => m.stored && !m.ownerHidden)
   const videos = media.videos.tiles.filter((m) => m.stored && !m.ownerHidden)
   const items = [...photos, ...videos]
+  const off = (id: Fact['id']): boolean => saved?.off.has(id as never) === true
+  const marked = (facts: Fact[]): Fact[] => facts.map((f) => (off(f.id) ? { ...f, off: true } : f))
   return {
-    left: [
-      { id: 'name', labelKey: 'field.name', value: plain(text(input.name) ?? field('name')) },
-      { id: 'address', labelKey: 'field.address', value: plain(field('address') ?? text(candidate.address)) },
+    left: marked([
+      { id: 'name', labelKey: 'field.name', value: plain(text(input.name) ?? raw('name')) },
+      {
+        id: 'address',
+        labelKey: 'field.address',
+        value: plain(
+          saved?.address === undefined ? (raw('address') ?? text(candidate.address)) : saved.address
+        )
+      },
       {
         id: 'hours',
         labelKey: 'facts.body.hours',
-        value: hours === null || hours.left ? null : hoursSummary(hours.hours, input.today)
+        value: hours === null ? null : hoursSummary(hours, input.today)
       },
       // About keeps its line breaks for the two clamped lines; the title holds the whole text.
       {
@@ -160,17 +167,23 @@ export function factsBodyView(input: FactsBodyInput): FactsBodyView {
         labelKey: 'field.bio',
         value: about === null ? null : { kind: 'text', text: about, title: about }
       }
-    ],
-    right: [
+    ]),
+    right: marked([
       {
         id: 'phone',
         labelKey: 'field.phone',
-        value: plain(phonesView(profile)?.main ?? text(candidate.phone))
+        value: plain(
+          saved?.phone === undefined ? (phonesView(profile)?.main ?? text(candidate.phone)) : saved.phone
+        )
       },
       { id: 'website', labelKey: 'field.website', value: websiteValue(candidate.website) },
-      { id: 'rating', labelKey: 'facts.body.rating', value: ratingValue(profile, locale) },
-      followersFact(profile, locale)
-    ],
+      {
+        id: 'rating',
+        labelKey: 'facts.body.rating',
+        value: saved === null ? ratingValue(profile, locale) : saved.rating
+      },
+      saved === null ? followersFact(profile, locale) : saved.followers
+    ]),
     tiles: items.slice(0, STRIP_MAX),
     total: items.length,
     counts: { photos: photos.length, videos: videos.length },

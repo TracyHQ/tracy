@@ -1,15 +1,15 @@
 /**
  * The fields a Business facts band turns into when Edit is pressed (#537, design A): drawn in place of the band's
  * body, with Cancel and Save at the band's bottom right (`EditFooter`). Save sends only what changed, through the
- * calls the page already had (the name, the profile rows, the hours), then the band closes. A field nothing can save
- * is not drawn.
+ * calls the page already had (the name, the profile rows), then the facts of the saved profile the band also holds,
+ * each through the facts door (`facts-value-edit.tsx`), and the band closes. A field nothing can save is not drawn.
  */
 import { type JSX, type ReactNode, useState } from 'react'
 import { Input, Textarea } from '@tracy/ui'
 
-import { hoursLineParts } from './business-facts-model.ts'
 import { EditFooter } from './facts-band-actions.tsx'
-import type { HoursChoice, HoursSaved } from './profile-hours-row.tsx'
+import { type SaveFactValue, runSteps, useFactDrafts } from './facts-value-edit.tsx'
+import type { SavedFact } from './saved-profile-model.ts'
 import type { Translate } from './strings.ts'
 
 /** One profile row that can be edited: its words now and the call that saves new words. */
@@ -33,10 +33,10 @@ const Field = ({
   </label>
 )
 
-/** Runs the saves of the fields that changed, one after another; false at the first that fails. */
-async function saveChanged(steps: Array<(() => Promise<boolean>) | null>): Promise<boolean> {
-  for (const step of steps) if (step !== null && !(await step())) return false
-  return true
+/** The band's other facts of the saved profile, edited through the facts door after the band's own fields. */
+export interface MoreFacts {
+  facts: readonly SavedFact[]
+  save: SaveFactValue | null
 }
 
 /** The business band: the name (or its own name row with choices), the phone and the address. */
@@ -48,7 +48,8 @@ export function BusinessEdit({
   saveName,
   phone,
   address,
-  others
+  others,
+  more
 }: {
   t: Translate
   close: () => void
@@ -60,7 +61,9 @@ export function BusinessEdit({
   address: ProfileField | null
   /** The other numbers, read only: no call edits them. */
   others: string | null
+  more?: MoreFacts
 }): JSX.Element {
+  const extra = useFactDrafts(t, more?.facts ?? [], more?.save ?? null)
   const [draft, setDraft] = useState({ name, phone: phone?.value ?? '', address: address?.value ?? '' })
   const set = (key: keyof typeof draft) => (e: { target: { value: string } }) =>
     setDraft((d) => ({ ...d, [key]: e.target.value }))
@@ -87,17 +90,19 @@ export function BusinessEdit({
         )}
       </div>
       {others === null ? null : <p className="tracy-wo-muted tracy-wo-small">{others}</p>}
+      {extra.fields}
       <EditFooter
         t={t}
         note={t('facts.edit.note')}
         onCancel={close}
         onSave={() =>
-          saveChanged([
+          runSteps([
             nameRow !== null || draft.name.trim() === '' || draft.name.trim() === name
               ? null
               : () => saveName(draft.name.trim()),
             changed(phone, draft.phone),
-            changed(address, draft.address)
+            changed(address, draft.address),
+            ...extra.steps()
           ])
         }
       />
@@ -109,89 +114,41 @@ export function BusinessEdit({
 export function AboutEdit({
   t,
   close,
-  about
+  about,
+  more
 }: {
   t: Translate
   close: () => void
-  about: ProfileField
+  /** The bio and its own door; null when no call edits it (the other texts still edit through the facts door). */
+  about: ProfileField | null
+  more?: MoreFacts
 }): JSX.Element {
-  const [draft, setDraft] = useState(about.value)
+  const extra = useFactDrafts(t, more?.facts ?? [], more?.save ?? null)
+  const [draft, setDraft] = useState(about?.value ?? '')
   return (
     <>
-      <Field label={t('field.bio')}>
-        <Textarea
-          value={draft}
-          maxLength={1200}
-          rows={4}
-          autoFocus
-          onChange={(e) => setDraft(e.target.value)}
-        />
-      </Field>
+      {about === null ? null : (
+        <Field label={t('field.bio')}>
+          <Textarea
+            value={draft}
+            maxLength={1200}
+            rows={4}
+            autoFocus
+            onChange={(e) => setDraft(e.target.value)}
+          />
+        </Field>
+      )}
+      {extra.fields}
       <EditFooter
         t={t}
         note={t('facts.edit.note')}
         onCancel={close}
         onSave={() =>
-          saveChanged([draft.trim() === about.value.trim() ? null : () => about.save(draft.trim())])
+          runSteps([
+            about === null || draft.trim() === about.value.trim() ? null : () => about.save(draft.trim()),
+            ...extra.steps()
+          ])
         }
-      />
-    </>
-  )
-}
-
-/**
- * Opening hours: one field per line (a day or a group of days), seven in a row on a wide page, wrapping when narrower. Saving unchanged hours that
- * wait for a check keeps them as they are; changed hours are sent as typed.
- */
-export function HoursEdit({
-  t,
-  close,
-  lines,
-  open,
-  saveHours
-}: {
-  t: Translate
-  close: () => void
-  lines: string[]
-  /** The hours wait for a check: Save confirms them even unchanged. */
-  open: boolean
-  saveHours: (choice: HoursChoice) => Promise<HoursSaved>
-}): JSX.Element {
-  const parts = lines.map(hoursLineParts)
-  const [times, setTimes] = useState(parts.map((p) => p.times))
-  const next = parts
-    .map((p, i) => {
-      const typed = (times[i] ?? '').trim()
-      return p.days === '' ? typed : `${p.days}: ${typed}`
-    })
-    .filter((line) => line !== '')
-  const same = next.join('|') === lines.join('|')
-  return (
-    <>
-      <div className="tracy-wo-facts-ef" data-days="">
-        {parts.map((p, i) => (
-          <Field key={`${p.days}-${i}`} label={p.days === '' ? t('field.hours') : p.days}>
-            <Input
-              value={times[i] ?? ''}
-              maxLength={120}
-              autoComplete="off"
-              autoFocus={i === 0}
-              title={times[i]}
-              onChange={(e) => setTimes((all) => all.map((v, j) => (j === i ? e.target.value : v)))}
-            />
-          </Field>
-        ))}
-      </div>
-      <EditFooter
-        t={t}
-        note={t('facts.edit.note')}
-        onCancel={close}
-        onSave={async () => {
-          if (same && !open) return true
-          if (next.length === 0) return false
-          const sent: HoursChoice = same ? { choice: 'keep' } : { choice: 'edit', hours: next }
-          return (await saveHours(sent)) === 'ok'
-        }}
       />
     </>
   )

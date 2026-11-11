@@ -1,56 +1,34 @@
 /**
- * The Business facts sub-page (#537, design A): one full-width band per group, top to bottom: the business, Opening
- * hours, Services, About, Team, Brand, Key messages, What guests say, Social pages, Photos & video and Research
- * details. Every band has one header row (title, source chips, Check this, then the action cluster: [Add more] ·
- * On the site switch · Edit) and the same collapsed height; what does not fit scrolls sideways in one row, a missing
- * fact reads N/A. Edit turns a band into its fields in place, with Cancel and Save at its bottom right; nothing opens
- * elsewhere. Before research, and while it runs, the bands say Not collected yet and hold nothing partial. The
- * owner's own choices (bands off, team, social links, items kept off, #537 R14 to R16) go through `doors.owner`.
+ * The Business facts sub-page (#537, design A): one full-width band per group, top to bottom: the business, Hours and
+ * amenities, Services (Menu for a food place), About, Team, Brand, Key messages, What guests say, Social pages, Photos
+ * & video and Research details. Once research made the saved profile (#537 R18) the bands read its groups: the owner's
+ * values with an Edited chip, what is kept off dimmed, and a fact of no special drawing as a generic cell with its own
+ * switch and Edit through the facts door. Every band has one header row (title, source chips, Check this, then [Add
+ * more] · On the site · Edit) and the same collapsed height; what does not fit scrolls sideways, a missing fact reads
+ * N/A, and Edit turns a band into its fields in place. Before research the bands say Not collected yet. The owner's own
+ * choices (bands off, team, social links, items kept off, #537 R14 to R16) go through `doors.owner`.
  */
 import type { JSX, ReactNode } from 'react'
 
-import { HoursBand, ResearchBand } from './business-facts-bands.tsx'
+import { ResearchBand } from './business-facts-bands.tsx'
 import { FactsMedia } from './business-facts-media.tsx'
 import type { BusinessFactsView, CardId } from './business-facts-model.ts'
-import { BusinessBand } from './business-facts-parts.tsx'
+import { BusinessBand, moreBusinessFacts } from './business-facts-parts.tsx'
 import type { LogoView, MediaRowView } from './detail-model.ts'
-import type { BandSwitchView, EditDoor } from './facts-band-actions.tsx'
-import { BusinessEdit, type ProfileField } from './facts-band-edit.tsx'
-import { EditFooter } from './facts-band-actions.tsx'
+import { type BandSwitchView, type EditDoor, EditFooter } from './facts-band-actions.tsx'
+import { BusinessEdit } from './facts-band-edit.tsx'
 import { BrandBand } from './facts-brand-body.tsx'
 import { AboutBand } from './facts-about-band.tsx'
+import { OfferingsBand } from './facts-group-band.tsx'
+import { HoursAmenitiesBand } from './facts-hours-band.tsx'
 import { MessagesBand, ReviewsBand, ServicesBand } from './facts-list-bands.tsx'
 import { SocialBand } from './facts-social-band.tsx'
 import { TeamBand } from './facts-team-people.tsx'
-import type { OwnerBand, OwnerDoors } from './owner-edits-model.ts'
-import type { HoursChoice, HoursSaved } from './profile-hours-row.tsx'
-import type { RatingChoice } from './profile-rating-row.tsx'
-import type { ReadingPick } from './profile-reading-model.ts'
+import type { FactsDoors } from './facts-doors.ts'
+import type { OwnerBand } from './owner-edits-model.ts'
 import type { Translate } from './strings.ts'
 
-/** The calls the bands save through: each one the Business facts rows already had. */
-export interface FactsDoors {
-  /** "Name on the site" with its own choices, or null when research decided no name (the plain field then). */
-  nameRow: JSX.Element | null
-  saveName: (name: string) => Promise<boolean>
-  /** A plain profile row (`phone`, `address`, `bio`) with its save, or null when no call edits it. */
-  profileField: (field: string, value: string) => ProfileField | null
-  saveHours: (choice: HoursChoice) => Promise<HoursSaved>
-  saveRating: (choice: RatingChoice) => Promise<boolean>
-  pickReading: (item: string, pick: ReadingPick) => Promise<boolean>
-  /** The site's facts of some fields on or off together (`setFact`), or null when the brief states none of them. */
-  factSwitch: (fields: readonly string[]) => BandSwitchView | null
-  /** Reading rows of some groups, with Remove / Put back / Show / Leave off. */
-  readingRows: (
-    groups: ReadonlyArray<'services' | 'audience' | 'team' | 'serviceAreas'>
-  ) => JSX.Element | null
-  /** The key messages editor (labels, order, delete). */
-  keyMessages: JSX.Element | null
-  uploadMedia: (file: File) => Promise<string | null>
-  retryLogo: { busy: boolean; failed: boolean; onPress: () => void }
-  /** The owner's choices for the site: band switches, team, social links, photos and reviews kept off. */
-  owner: OwnerDoors
-}
+export type { FactsDoors }
 
 const NOT_COLLECTED_LOGO = { state: 'notCollected' } as LogoView
 
@@ -62,7 +40,6 @@ export function BusinessFactsPage({
   doors,
   food,
   websiteLink,
-  researchDetails,
   running
 }: {
   t: Translate
@@ -72,8 +49,6 @@ export function BusinessFactsPage({
   doors: FactsDoors
   food: boolean
   websiteLink: (url: string) => JSX.Element
-  /** Menu, Google Place, reviews, current website, social figures and place profile, read only under the bands; null when none. */
-  researchDetails: ReactNode | null
   /** Research runs: the photos and videos wait for it to finish, only Add more stays (#537). */
   running: boolean
 }): JSX.Element {
@@ -87,7 +62,6 @@ export function BusinessFactsPage({
     on: owner.bands[band],
     set: (on) => owner.setBand(band, on)
   })
-  const teamSwitch = switchOf(['team'])
   // A band that research has not filled yet has nothing to edit; its fields save themselves (Done only).
   const widgetEdit = (id: CardId, widget: () => ReactNode, why = t('facts.edit.none')): EditDoor =>
     cardOf(id) === undefined || cardOf(id)?.state === 'notCollected'
@@ -107,8 +81,10 @@ export function BusinessFactsPage({
   const address = doors.profileField('address', view.business.address ?? '')
   const about = doors.profileField('bio', view.about ?? '')
 
-  const aboutCard = cardOf('about')
   const shared = { t, locale, view }
+  const setOn = doors.setFactOn ?? null
+  const saveValue = doors.saveFactValue ?? null
+  const more = moreBusinessFacts(t, view.saved?.business ?? [])
 
   return (
     <div className="tracy-wo-facts">
@@ -118,7 +94,9 @@ export function BusinessFactsPage({
         view={view.business}
         logo={facts ? media.logo : NOT_COLLECTED_LOGO}
         websiteLink={websiteLink}
-        onRating={doors.saveRating}
+        more={more}
+        rows={view.sources}
+        setOn={setOn}
         edit={
           !facts
             ? null
@@ -136,32 +114,35 @@ export function BusinessFactsPage({
                       ? null
                       : `${t('facts.phone.others', { list: others.map((o) => o.phone).join(', ') })} ${t('phone.othersNote')}`
                   }
+                  more={{ facts: more, save: saveValue }}
                 />
               )
         }
         researched={facts}
       />
-      <HoursBand t={t} locale={locale} view={view} saveHours={doors.saveHours} />
-      <ServicesBand
-        {...shared}
-        onSite={switchOf(['services', 'audience', 'serviceAreas'])}
-        edit={widgetEdit('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
-      />
+      <HoursAmenitiesBand {...shared} saveHours={doors.saveHours} setOn={setOn} saveValue={saveValue} />
+      {view.saved === null ? (
+        <ServicesBand
+          {...shared}
+          onSite={switchOf(['services', 'audience', 'serviceAreas'])}
+          edit={widgetEdit('services', () => doors.readingRows(['services', 'audience', 'serviceAreas']))}
+        />
+      ) : (
+        <OfferingsBand {...shared} setOn={setOn} saveValue={saveValue} food={food} />
+      )}
       <AboutBand
-        t={t}
-        locale={locale}
-        card={aboutCard}
-        about={view.about}
+        {...shared}
         field={about}
         onSite={switchOf(['story', 'bio'])}
+        setOn={setOn}
+        saveValue={saveValue}
       />
       <TeamBand
-        t={t}
-        locale={locale}
-        view={view}
-        onSite={teamSwitch}
+        {...shared}
+        onSite={switchOf(['team'])}
         owner={owner}
         pickReading={doors.pickReading}
+        setOn={setOn}
       />
       <BrandBand
         t={t}
@@ -181,8 +162,9 @@ export function BusinessFactsPage({
         onSite={bandOf('reviews')}
         edit={{ why: t('facts.edit.reviews') }}
         setHidden={owner.setReviewHidden}
+        setOn={setOn}
       />
-      <SocialBand t={t} view={view} onSite={bandOf('socials')} owner={owner} />
+      <SocialBand {...shared} onSite={bandOf('socials')} owner={owner} setOn={setOn} />
       <FactsMedia
         t={t}
         media={media}
@@ -192,9 +174,6 @@ export function BusinessFactsPage({
         setHidden={owner.setMediaHidden}
       />
       <ResearchBand t={t} view={view} />
-      {facts && researchDetails !== null ? (
-        <div className="tracy-wo-facts-more">{researchDetails}</div>
-      ) : null}
     </div>
   )
 }

@@ -1,18 +1,18 @@
 /**
- * The business band of the Business facts sub-page (#537, design A) and its edit marks: the mark with the name and
- * the type, then phone, rating, address and website, five cells in one row that scrolls sideways when the column is
- * narrower, each value on one line followed by its source chip (`source-chip.tsx`); a missing value reads N/A alone.
- * The band is locked on the site; its Edit turns the cells into fields in place.
+ * The business band of the Business facts sub-page (#537, design A): the mark with the name and type, phone, address,
+ * website, then every other fact of the saved profile's business group and extensions as a generic cell with its own
+ * switch (#537 R18), in one row that scrolls sideways; a missing value reads N/A. Locked on the site; Edit is in place.
  */
 import { Fragment, type JSX, type ReactNode } from 'react'
 import { Badge } from '@tracy/ui'
 
 import { mediaUrl } from './api.ts'
 import { FactsBand, NotAvailable, OneLine } from './business-facts-band.tsx'
-import type { BusinessCardView, EditMark } from './business-facts-model.ts'
+import type { BusinessCardView, BusinessFactsView, EditMark } from './business-facts-model.ts'
 import type { LogoView } from './detail-model.ts'
-import { RatingCell } from './facts-rating-cell.tsx'
-import type { RatingChoice } from './profile-rating-row.tsx'
+import { EditedChip, GenericCell, type SetFactOn } from './facts-generic-row.tsx'
+import { displayText, factDisplay } from './facts-value-model.ts'
+import type { SavedFact } from './saved-profile-model.ts'
 import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
 
@@ -38,26 +38,44 @@ const Cell = ({ label, children }: { label: string; children: ReactNode }): JSX.
   </div>
 )
 
-/** The business band: the name, then phone, rating, address and website. */
+/** The keys the business band draws in its own cells: the name, the phone (and the other phones), the address. */
+const DRAWN = new Set(['name', 'phone', 'address', 'research:otherPhones'])
+
+/** The business facts the own cells do not draw; a fact in the words of a drawn one (the phone again) is no cell. */
+export function moreBusinessFacts(t: Translate, facts: readonly SavedFact[]): SavedFact[] {
+  const drawn = new Set(
+    facts.filter((f) => DRAWN.has(f.key)).map((f) => displayText(factDisplay(t, f)).trim().toLowerCase())
+  )
+  return facts.filter(
+    (f) => !DRAWN.has(f.key) && !drawn.has(displayText(factDisplay(t, f)).trim().toLowerCase())
+  )
+}
+
+/** The business band: the name, then phone, address and website, then the other business facts. */
 export function BusinessBand({
   t,
   locale,
   view,
   logo,
   websiteLink,
-  onRating,
   edit,
-  researched
+  researched,
+  more = [],
+  rows = [],
+  setOn = null
 }: {
   t: Translate
   locale: string
   view: BusinessCardView
   logo: LogoView
   websiteLink: (url: string) => JSX.Element
-  onRating: (choice: RatingChoice) => Promise<boolean>
   /** The name, address and phone as fields in place; null before research (nothing to edit yet). */
   edit: ((close: () => void) => ReactNode) | null
   researched: boolean
+  /** The other facts of the business group (`moreBusinessFacts`), each a generic cell. */
+  more?: readonly SavedFact[]
+  rows?: BusinessFactsView['sources']
+  setOn?: SetFactOn | null
 }): JSX.Element {
   const missing = <NotAvailable t={t} state={researched ? 'none' : 'notCollected'} />
   const mark =
@@ -120,7 +138,11 @@ export function BusinessBand({
                 {phones.main}
               </span>
               <SourceChip t={t} chip={view.chips.phone} locale={locale} />
-              <Mark t={t} mark={view.marks.phone} />
+              {view.facts?.phone ? (
+                <EditedChip t={t} fact={view.facts.phone} locale={locale} />
+              ) : (
+                <Mark t={t} mark={view.marks.phone} />
+              )}
             </span>
           )}
           {others.length > 0 ? (
@@ -139,26 +161,17 @@ export function BusinessBand({
             </span>
           ) : null}
         </Cell>
-        <Cell label={t('my.field.rating')}>
-          {view.rating === null ? (
-            <span className="tracy-wo-facts-ln">{missing}</span>
-          ) : (
-            <RatingCell
-              t={t}
-              view={view.rating}
-              locale={locale}
-              chip={view.chips.rating}
-              onRating={onRating}
-            />
-          )}
-        </Cell>
         <Cell label={t('field.address')}>
           {view.address === null ? (
             <span className="tracy-wo-facts-ln">{missing}</span>
           ) : (
             <OneLine text={view.address}>
               <SourceChip t={t} chip={view.chips.address} locale={locale} />
-              <Mark t={t} mark={view.marks.address} />
+              {view.facts?.address ? (
+                <EditedChip t={t} fact={view.facts.address} locale={locale} />
+              ) : (
+                <Mark t={t} mark={view.marks.address} />
+              )}
             </OneLine>
           )}
         </Cell>
@@ -177,6 +190,9 @@ export function BusinessBand({
             )}
           </span>
         </Cell>
+        {more.map((f) => (
+          <GenericCell key={f.id} t={t} locale={locale} fact={f} rows={rows} setOn={setOn} />
+        ))}
       </div>
     </FactsBand>
   )

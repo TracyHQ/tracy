@@ -10,14 +10,15 @@ import { type BusinessFactsView, initialsOf, itemChipOf } from './business-facts
 import { FactsBand } from './business-facts-band.tsx'
 import { Missing } from './business-facts-bands.tsx'
 import { BandSwitch, type BandSwitchView } from './facts-band-actions.tsx'
+import { EditedChip, type SetFactOn } from './facts-generic-row.tsx'
 import { TeamEdit } from './facts-team-edit.tsx'
 import type { OwnerDoors } from './owner-edits-model.ts'
 import type { ReadingItemView, ReadingPick } from './profile-reading-model.ts'
 import { SourceChip } from './source-chip.tsx'
 import type { Translate } from './strings.ts'
 
-/** A person is on the site unless removed, or named only in reviews and not shown. */
-const onSiteOf = (p: ReadingItemView): boolean => !p.removed && (!p.reviewsOnly || p.onSite)
+/** A person is on the site unless removed, or named only in reviews and not shown; the saved profile's fact decides first. */
+const onSiteOf = (p: ReadingItemView): boolean => p.factOn ?? (!p.removed && (!p.reviewsOnly || p.onSite))
 
 /** The reading picks that put a person on the site, or take them off it. */
 export function personPicks(p: ReadingItemView, on: boolean): ReadingPick[] {
@@ -48,7 +49,8 @@ export function TeamPeople({
   locale,
   view,
   pickReading,
-  bandOn = true
+  bandOn = true,
+  setOn = null
 }: {
   t: Translate
   locale: string
@@ -56,10 +58,13 @@ export function TeamPeople({
   pickReading: (item: string, pick: ReadingPick) => Promise<boolean>
   /** The Team band's switch: off disables every person's switch. */
   bandOn?: boolean
+  /** The facts door's switch: a person of the saved profile switches through it (#537 R18). */
+  setOn?: SetFactOn | null
 }): JSX.Element {
   const set =
     (person: ReadingItemView) =>
     async (on: boolean): Promise<boolean> => {
+      if (person.factId !== undefined && setOn !== null) return setOn(person.factId, on)
       for (const pick of personPicks(person, on)) if (!(await pickReading(person.id, pick))) return false
       return true
     }
@@ -74,6 +79,16 @@ export function TeamPeople({
                 {person.label}
               </span>
               <SourceChip t={t} chip={itemChipOf(view, person)} locale={locale} />
+              <EditedChip
+                t={t}
+                locale={locale}
+                fact={{
+                  edited: person.edited === true,
+                  researchValue: { name: person.researchLabel ?? '' },
+                  group: 'people',
+                  kind: 'text'
+                }}
+              />
             </span>
             {person.role === null ? null : (
               <small className="tracy-wo-facts-ell" title={person.role}>
@@ -104,7 +119,8 @@ export function TeamBand({
   view,
   onSite,
   owner,
-  pickReading
+  pickReading,
+  setOn = null
 }: {
   t: Translate
   locale: string
@@ -112,6 +128,7 @@ export function TeamBand({
   onSite: BandSwitchView
   owner: Pick<OwnerDoors, 'team' | 'uploadTeamPhoto'>
   pickReading: (item: string, pick: ReadingPick) => Promise<boolean>
+  setOn?: SetFactOn | null
 }): JSX.Element {
   const card = view.cards.find((c) => c.id === 'team')
   return (
@@ -132,7 +149,14 @@ export function TeamBand({
       }
     >
       {card?.state === 'filled' ? (
-        <TeamPeople t={t} locale={locale} view={view} pickReading={pickReading} bandOn={onSite.on} />
+        <TeamPeople
+          t={t}
+          locale={locale}
+          view={view}
+          pickReading={pickReading}
+          bandOn={onSite.on}
+          setOn={setOn}
+        />
       ) : (
         <Missing t={t} card={card} />
       )}

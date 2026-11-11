@@ -31,7 +31,7 @@ import {
 } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 
-import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
+import { type Api, type BuildChoices, handOffBuild, pressDemo, startResearch } from './api.ts'
 import { buildChoice, buildLabel, buildLabelHintKey } from './build-choice.ts'
 import { BriefUnderstanding } from './brief-understanding.tsx'
 import { BriefControl, type BriefJobControl, briefChip, useBriefJob } from './brief-control.tsx'
@@ -46,20 +46,8 @@ import { profileEditBody, profileEditView, profileEditedAt, typedHours } from '.
 import { briefControlView, briefLineKey, researchOf } from './research-gate-model.ts'
 import { useRevisionPage } from './revision-page.ts'
 import type { BriefTabSeed } from './brief-tab.tsx'
+import { formatDistance, hostOf as viewsHostOf } from '@tracy/wo-views'
 import {
-  LOW_WEBSITE_SCORE,
-  SOCIAL_NAME,
-  type SocialLine,
-  SocialStatLine,
-  ageInDays,
-  formatAgo,
-  formatDistance,
-  hostOf as viewsHostOf,
-  providerLabel
-} from '@tracy/wo-views'
-import {
-  type GooglePlaceView,
-  type PageSpeedView,
   buildFailure,
   briefStatus,
   demoRows,
@@ -67,18 +55,13 @@ import {
   mediaRowView,
   mediaTile,
   failureReasonText,
-  pageSpeedView,
   profileFields,
-  socialStatsLines,
   tripadvisorReviewView
 } from './detail-model.ts'
-import { MenuBlock } from './menu-block.tsx'
-import { PlaceProfileBlock } from './place-profile-block.tsx'
 import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
 import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
 import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
-import type { RatingChoice } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
 import { briefSummaryRows, businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
 import { BusinessBriefTable } from './business-brief-table.tsx'
@@ -111,8 +94,6 @@ import {
 import { ProfileReadingRows } from './profile-reading-rows.tsx'
 import { BusinessFactsPage } from './business-facts-page.tsx'
 import { businessFactsView } from './business-facts-model.ts'
-import { menuAgainTarget, readMenu } from './menu-model.ts'
-import { TripadvisorReviews } from './tripadvisor-reviews.tsx'
 import { CMS_LABEL } from './cms-label.ts'
 import { BuildEstimate, DemoProgress } from './demo-progress.tsx'
 import { SendDemo } from './send-demo.tsx'
@@ -146,12 +127,6 @@ const CHIP_CLASS: Record<string, string> = {
   mute: 'tracy-wo-chip-mute'
 }
 const isRecord = (v: unknown): v is Body => typeof v === 'object' && v !== null && !Array.isArray(v)
-
-function formatDate(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-  return new Intl.DateTimeFormat(interfaceLocale(), { dateStyle: 'medium' }).format(date)
-}
 
 function useDetail(
   api: Api,
@@ -352,18 +327,6 @@ export function DetailView({
       onChanged()
     }
   )
-  // Only a place with a Menu previews Read menu again (`menuAgainTarget`).
-  const readMenuAgain = useCardResearchAgain(
-    api,
-    ids,
-    menuAgainTarget(id, body?.menu),
-    `${row?.job?.state ?? ''}:${row?.job?.updatedAt ?? ''}`,
-    async () => {
-      await reload()
-      onChanged()
-    },
-    MENU_PARTS
-  )
   // A section opened as a sub-page, or the pager to the next one, starts at the top of the page.
   const page = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
@@ -521,13 +484,6 @@ export function DetailView({
     onChanged()
     return 'ok'
   }
-  const saveRating = async (choice: RatingChoice): Promise<boolean> => {
-    const answer = await api.setRating(id, choice)
-    if (!answer.ok) return false
-    await reload()
-    onChanged()
-    return true
-  }
   // What the business sells, who it is for and its team, as the research read them (#1780).
   const readingRows = readingRowsView(profile)
   const pickReading = async (item: string, choice: ReadingPick): Promise<boolean> => {
@@ -578,7 +534,6 @@ export function DetailView({
     const tile = mediaTile(m)
     return tile === null ? [] : [tile]
   })
-  const menu = readMenu(body.menu)
   const revisions = asArray<Revision>(body.revisions).filter((r) => typeof r?.id === 'string')
   const candidate = isRecord(row.candidate) ? row.candidate : {}
   const job = row.job ?? null
@@ -797,16 +752,8 @@ export function DetailView({
   const mediaView = mediaRowView({ profile, media, sources })
   const profileRows = profileFields(profile)
   const researchMoving = researchMovingOf({ research, researchJob: job })
-  // What else research read about the place (menu, Google, reviews, current website, social, place profile).
-  const hasMore =
-    research.done &&
-    (menu !== null ||
-      googlePlaceView(profile?.googlePlace) !== null ||
-      pageSpeedView(profile?.pageSpeed) !== null ||
-      socialStatsLines(profile, now).length > 0 ||
-      placeProfile.profile !== null ||
-      placeProfile.failed ||
-      tripadvisorReviewView(profile, media).length > 0)
+  // The saved profile (#537 R18): what the Business facts read, the owner's edits laid on.
+  const savedProfile = isRecord(body.placeProfile) ? body.placeProfile.profile : placeProfile.profile
 
   const briefTable = (full: boolean): JSX.Element => (
     <BusinessBriefTable
@@ -905,7 +852,8 @@ export function DetailView({
               ...tripadvisorReviewView(profile, media).map((r) => ({ ...r, source: 'tripadvisor' }))
             ],
             // Each chip's collected time and page address (#537).
-            sources
+            sources,
+            savedProfile
           })}
           media={mediaView}
           food={profile?.trade === 'food'}
@@ -948,7 +896,6 @@ export function DetailView({
               }
             },
             saveHours,
-            saveRating,
             pickReading,
             readingRows: (groups) =>
               readingRows === null ? null : (
@@ -957,6 +904,16 @@ export function DetailView({
             keyMessages: keyMessagesRows(false),
             uploadMedia,
             retryLogo: { busy: logoBusy, failed: logoFailed, onPress: () => void retryLogo() },
+            // Any fact of the saved profile: on or off, and its value by kind (#537 R18).
+            setFactOn: toggleFact,
+            saveFactValue: async (factId, value) => {
+              const answer = await api.setFactValue(id, factId, value)
+              if (!answer.ok) return false
+              setDecisionsTick((n) => n + 1)
+              await reload()
+              onChanged()
+              return true
+            },
             // The owner's choices for the site (#537 R14 to R16).
             owner: ownerDoorsOf({
               api,
@@ -969,22 +926,6 @@ export function DetailView({
               }
             })
           }}
-          researchDetails={
-            hasMore ? (
-              <div className="tracy-wo-psec-more">
-                <MenuBlock t={t} locale={locale} menu={menu} name={shownName} again={readMenuAgain} />
-                <GooglePlace
-                  t={t}
-                  place={googlePlaceView(profile?.googlePlace)}
-                  food={profile?.trade === 'food'}
-                />
-                <TripadvisorReviews t={t} profile={profile} media={media} />
-                <CurrentSite t={t} site={pageSpeedView(profile?.pageSpeed)} />
-                <Social t={t} lines={socialStatsLines(profile, now)} />
-                <PlaceProfileBlock t={t} profile={placeProfile.profile} failed={placeProfile.failed} />
-              </div>
-            ) : null
-          }
         />
       ) : !research.done ? (
         <p className="tracy-wo-psec-lock">{t('section.locked.research')}</p>
@@ -1114,6 +1055,7 @@ export function DetailView({
               t={t}
               view={factsBodyView({
                 profile,
+                saved: research.done && !researchMoving ? savedProfile : null,
                 candidate,
                 name: shownName,
                 media: mediaView,
@@ -1158,177 +1100,6 @@ export function DetailView({
       {dialogs}
       {previewPanel /* [TAM] */}
     </div>
-  )
-}
-
-const answer = (t: Translate, v: boolean | null): string =>
-  t(v === true ? 'answer.yes' : v === false ? 'answer.no' : 'answer.unknown')
-
-/** What Google lists for the place; every fact is Google's, so reviews are quoted as written, with their author. */
-/** `food`: the profile's trade is food, so Google's reservable reads Book a table; any other trade reads Takes bookings. */
-function GooglePlace({
-  t,
-  place,
-  food
-}: {
-  t: Translate
-  place: GooglePlaceView | null
-  food: boolean
-}): JSX.Element | null {
-  if (place === null) return null
-  const amenities = (ids: string[]) => ids.map((id) => t(`amenity.${id}`)).join(', ')
-  return (
-    <Section title={t('detail.google')}>
-      <dl className="tracy-wo-fields">
-        {place.offered.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.offered')}</dt>
-            <dd>{amenities(place.offered)}</dd>
-          </div>
-        )}
-        {place.notOffered.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.notOffered')}</dt>
-            <dd>{amenities(place.notOffered)}</dd>
-          </div>
-        )}
-        <div className="tracy-wo-field">
-          <dt className="tracy-wo-muted tracy-wo-small">
-            {t(food ? 'detail.google.reservable' : 'detail.google.reservable.any')}
-          </dt>
-          <dd>{answer(t, place.reservable)}</dd>
-        </div>
-        {place.price !== null && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.price')}</dt>
-            <dd>{place.price === 'free' ? t('detail.google.price.free') : place.price}</dd>
-          </div>
-        )}
-        {place.summaries.map((s) => (
-          <div key={s.kind} className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t(`detail.google.summary.${s.kind}`)}</dt>
-            <dd>{s.text}</dd>
-          </div>
-        ))}
-        {place.openingHours.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('field.hours')}</dt>
-            <dd>
-              {place.openingHours.map((h) => (
-                <span key={h}>{h}</span>
-              ))}
-            </dd>
-          </div>
-        )}
-        {place.reviews.length > 0 && (
-          <div className="tracy-wo-field">
-            <dt className="tracy-wo-muted tracy-wo-small">{t('detail.google.reviews')}</dt>
-            <dd className="tracy-wo-reviews">
-              {place.reviews.map((r, i) => (
-                <blockquote key={`${r.author}-${i}`} className="tracy-wo-review">
-                  <q>{r.text}</q>
-                  <span className="tracy-wo-muted tracy-wo-small tracy-wo-review-author">
-                    {r.authorAvatarUrl ? (
-                      <img
-                        src={r.authorAvatarUrl}
-                        alt=""
-                        width={28}
-                        height={28}
-                        loading="lazy"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : null}
-                    {r.authorUri ? (
-                      <a href={r.authorUri} target="_blank" rel="noopener noreferrer">
-                        {r.rating === null
-                          ? t('detail.google.by', { author: r.author })
-                          : t('detail.google.byRated', { author: r.author, rating: r.rating })}
-                      </a>
-                    ) : r.rating === null ? (
-                      t('detail.google.by', { author: r.author })
-                    ) : (
-                      t('detail.google.byRated', { author: r.author, rating: r.rating })
-                    )}
-                  </span>
-                </blockquote>
-              ))}
-            </dd>
-          </div>
-        )}
-      </dl>
-    </Section>
-  )
-}
-
-/** Mobile PageSpeed of the place's own website, as measured; a score under 50 reads red like the Website column. */
-function CurrentSite({ t, site }: { t: Translate; site: PageSpeedView | null }): JSX.Element | null {
-  if (site === null) return null
-  const scoreText = (v: number | null) =>
-    v === null ? (
-      t('answer.unknown')
-    ) : (
-      <span className="tracy-wo-web-score" data-low={v < LOW_WEBSITE_SCORE}>
-        {t('cell.website.score', { score: v })}
-      </span>
-    )
-  const lcp =
-    site.lcpSeconds === null
-      ? t('answer.unknown')
-      : new Intl.NumberFormat(interfaceLocale(), {
-          style: 'unit',
-          unit: 'second',
-          unitDisplay: 'short',
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1
-        }).format(site.lcpSeconds)
-  const facts: Array<[string, JSX.Element | string]> = [
-    ['detail.site.performance', scoreText(site.performance)],
-    ['detail.site.seo', scoreText(site.seo)],
-    ['detail.site.lcp', lcp],
-    ['detail.site.https', answer(t, site.https)],
-    ['detail.site.mobileFriendly', answer(t, site.mobileFriendly)]
-  ]
-  return (
-    <Section title={t('detail.site')}>
-      <p className="tracy-wo-facts">
-        {facts.map(([key, value], i) => (
-          <span key={key}>
-            {i > 0 ? ' · ' : null}
-            <span className="tracy-wo-muted">{t(key)}</span> {value}
-          </span>
-        ))}
-      </p>
-      <p className="tracy-wo-muted tracy-wo-small">
-        {t('detail.site.checked', { date: formatDate(site.checkedAt) })}
-      </p>
-    </Section>
-  )
-}
-
-/** Followers, last post and posts a month per page, with where they came from; nothing until research stored some. */
-function Social({ t, lines }: { t: Translate; lines: SocialLine[] }): JSX.Element | null {
-  if (lines.length === 0) return null
-  const locale = interfaceLocale() ?? 'en'
-  const now = Date.now()
-  return (
-    <Section title={t('columns.social')}>
-      <ul className="tracy-wo-stack">
-        {lines.map((line) => {
-          const days = ageInDays(line.fetchedAt, now)
-          const source = [
-            SOCIAL_NAME[line.network],
-            line.provider ? providerLabel(line.provider) : null,
-            days !== null ? t('cell.social.checked', { ago: formatAgo(days, locale) }) : null
-          ].filter(Boolean)
-          return (
-            <li key={line.network} className="tracy-wo-row tracy-wo-wrap">
-              <SocialStatLine t={t} line={line} locale={locale} />
-              <span className="tracy-wo-muted tracy-wo-small">{source.join(' · ')}</span>
-            </li>
-          )
-        })}
-      </ul>
-    </Section>
   )
 }
 

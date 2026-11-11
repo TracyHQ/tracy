@@ -223,7 +223,6 @@ function mount({ bands = {}, teamOn = true, answers = {} } = {}) {
         doors,
         food: false,
         websiteLink: (u) => u,
-        researchDetails: null,
         running: false
       })
     )

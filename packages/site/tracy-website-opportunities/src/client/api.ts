@@ -195,6 +195,15 @@ export interface Api {
     factId: string,
     onSite: boolean | null
   ): Promise<Answer<{ opportunity?: unknown }>>
+  /**
+   * One fact's value as the owner edits it, checked against the fact's kind, or `null` to give back what research read
+   * (`PUT …/:id/facts {factId, value}`, #537 R18).
+   */
+  setFactValue(
+    opportunityId: string,
+    factId: string,
+    value: unknown
+  ): Promise<Answer<{ opportunity?: unknown; fact?: unknown }>>
   /** The owner's key message picks: ids removed, ids in order, labels retyped (`PUT …/:id/key-messages`, #1791). */
   setKeyMessages(
     opportunityId: string,
@@ -468,6 +477,8 @@ export function createApi(fetchImpl: FetchLike): Api {
     placeProfile: (opportunityId) => call(`${BASE}/${id(opportunityId)}/place-profile`),
     setFact: (opportunityId, factId, onSite) =>
       call(`${BASE}/${id(opportunityId)}/facts`, 'PUT', { factId, onSite }),
+    setFactValue: (opportunityId, factId, value) =>
+      call(`${BASE}/${id(opportunityId)}/facts`, 'PUT', { factId, value }),
     setKeyMessages: (opportunityId, picks) => call(`${BASE}/${id(opportunityId)}/key-messages`, 'PUT', picks),
     siteLabel: (opportunityId) => call(`${BASE}/${id(opportunityId)}/site-label`),
     checkSiteLabel: (opportunityId, label) =>
