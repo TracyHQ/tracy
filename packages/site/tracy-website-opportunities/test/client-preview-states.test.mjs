@@ -148,6 +148,18 @@ const EXPECTED = {
     running: false,
     action: null,
     tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'ok' }
+  },
+  'built-plain': {
+    current: null,
+    running: false,
+    action: null,
+    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'ok' }
+  },
+  'built-review': {
+    current: null,
+    running: false,
+    action: null,
+    tones: { profile: 'ok', sources: 'ok', brief: 'ok', media: 'ok', demo: 'ok' }
   }
 }
 
@@ -258,4 +270,17 @@ test('the flag is read from the query string or the hash', () => {
 
 test('no Edited after approval state: approved facts take no edit (#537 R23)', () => {
   assert.equal(PREVIEW_STATES.includes('edited-after-approval'), false)
+})
+
+test('the Built states carry the Your site card facts: a picture, none, and QA needing review with findings', () => {
+  const built = applyPreview(REAL, 'built', NOW).demo
+  assert.match(built.preview.url, /^data:image\/svg\+xml,/)
+  assert.deepEqual(built.built.minutes, 26)
+  assert.equal(built.qa, 'passed')
+  assert.deepEqual(built.findings, [])
+  const plain = applyPreview(REAL, 'built-plain', NOW).demo
+  assert.equal(plain.preview, null)
+  const review = applyPreview(REAL, 'built-review', NOW).demo
+  assert.equal(review.qa, 'needs-review')
+  assert.ok(review.findings.length > 0)
 })

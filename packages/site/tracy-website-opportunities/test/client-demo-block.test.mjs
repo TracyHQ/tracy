@@ -36,7 +36,8 @@ before(async () => {
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
         export { DemoSiteBlock } from './demo-site-block.tsx'
-        export { demoBlockView, demoCommand } from './demo-block-model.ts'
+        export { demoBlockView, demoCommand, siteCardView } from './demo-block-model.ts'
+        export { fallbackStyle } from './site-card.tsx'
         export { en } from './strings.ts'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
@@ -176,11 +177,99 @@ test('the block draws the line and Open demo, never a raw code, an old control o
     for (const press of ['Build demo', 'Build again', 'Building'])
       assert.doesNotMatch(html, new RegExp(`<button[^>]*>(?:<[^>]+>)*${press}<`), `${name} draws ${press}`)
   }
-  assert.match(draw('ready'), />Open demo</)
+  assert.match(draw('ready'), />Open site</)
   assert.match(draw('ready'), /aria-label="More demo actions"/)
   assert.doesNotMatch(draw('none'), /More demo actions/, 'no menu when it would be empty')
 })
 
-test('the build limit leaves Open demo pressable', () => {
-  assert.doesNotMatch(draw('ready', { limitReached: true }), disabledButton('Open demo'))
+test('the build limit leaves Open site pressable', () => {
+  assert.doesNotMatch(draw('ready', { limitReached: true }), disabledButton('Open site'))
+})
+
+/** The Details answer of a built demo with the Your site card facts (#537, option A). */
+const detailOf = (extra = {}) => ({
+  demo: {
+    ...demo(),
+    qa: 'passed',
+    built: { at: '2026-11-09T10:42:00Z', minutes: 26.2, usd: 1.84 },
+    findings: [],
+    preview: { url: '/api/website-opportunities/opp-1/demo/preview?v=1', capturedAt: '2026-11-09T10:43:00Z' },
+    ...extra
+  }
+})
+const card = (extra) =>
+  lib.siteCardView(row({ stage: 'outreach', demo: { ...demo(), ...extra } }), detailOf(extra), t, {
+    now: NOW,
+    locale: 'en'
+  })
+
+test('a built demo reads its address, QA, build facts, expiry and picture', () => {
+  const v = card({ qa: 'passed' })
+  assert.equal(v.host, 'blue-cove-sailing.example.test')
+  assert.equal(v.href, 'https://blue-cove-sailing.example.test/')
+  assert.equal(v.qa, 'passed')
+  assert.match(v.builtLine, /^Built Nov 9, \d{2}:\d{2}( [AP]M)? · 26 min · \$1\.84$/)
+  assert.equal(v.expiryLine, 'Expires in 14 days (Nov 23, 2026)')
+  assert.equal(v.preview, '/api/website-opportunities/opp-1/demo/preview?v=1')
+  assert.deepEqual(v.findings, [])
+  // Unknown facts are left off, never made up.
+  const bare = lib.siteCardView(ROWS.ready, null, t, { now: NOW, locale: 'en' })
+  assert.equal(bare.builtLine, null)
+  assert.equal(bare.preview, null)
+  assert.equal(bare.qa, 'none')
+})
+
+test('QA needing review lists each failing check as one plain sentence, never its code', () => {
+  const v = card({
+    qa: 'needs-review',
+    findings: ['cta-real', 'no-demo-pictures', 'brand-new-1', 'brand-new-2']
+  })
+  assert.equal(v.qa, 'review')
+  assert.deepEqual(v.findings, [
+    'A button or contact link does not lead anywhere real.',
+    'Some photos are still the template photos.',
+    'Another check needs a look.'
+  ])
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.DemoSiteBlock, {
+      t,
+      row: row({ stage: 'outreach', demo: { ...demo(), qa: 'needs-review' } }),
+      detail: detailOf({ qa: 'needs-review', findings: ['cta-real'] }),
+      locale: 'en',
+      now: NOW,
+      busy: false,
+      onCommand: () => {}
+    })
+  )
+  assert.match(html, /Needs review/)
+  assert.match(html, /1 finding to check before you send it/)
+  assert.doesNotMatch(html, /cta-real/)
+})
+
+test('the card draws the picture, else the site name on its brand colour, and the four actions', () => {
+  const props = {
+    t,
+    row: row({ stage: 'outreach', demo: demo({ qa: 'passed' }) }),
+    locale: 'en',
+    now: NOW,
+    busy: false,
+    onCommand: () => {},
+    siteName: 'Blue Cove Sailing'
+  }
+  const withPicture = lib.renderToStaticMarkup(
+    lib.createElement(lib.DemoSiteBlock, { ...props, detail: detailOf() })
+  )
+  assert.match(withPicture, /<img[^>]*src="\/api\/website-opportunities\/opp-1\/demo\/preview\?v=1"/)
+  assert.match(withPicture, /alt="Home page of Blue Cove Sailing"/)
+  for (const label of ['Open site', 'Copy link', 'Send to the business', 'Ready · Checked'])
+    assert.ok(withPicture.includes(label), label)
+  const fallback = lib.renderToStaticMarkup(
+    lib.createElement(lib.DemoSiteBlock, { ...props, detail: detailOf({ preview: null }), brand: '#2a6f5b' })
+  )
+  assert.doesNotMatch(fallback, /<img/)
+  assert.match(fallback, /data-fallback=""[^>]*style="background:#2a6f5b/)
+  assert.match(fallback, />Blue Cove Sailing</)
+  assert.deepEqual(lib.fallbackStyle(null), undefined)
+  assert.match(lib.fallbackStyle('#f5e6a8').color, /black/)
+  assert.match(lib.fallbackStyle('#1d3557').color, /white/)
 })

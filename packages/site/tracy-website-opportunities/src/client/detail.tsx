@@ -1152,6 +1152,8 @@ export function DetailView({
                 now={now}
                 busy={busy}
                 bare
+                siteName={shownName}
+                brand={mediaView.colors.state === 'found' ? (mediaView.colors.colors[0]?.hex ?? null) : null}
                 limitReached={limitReached}
                 onCommand={onDemo}
                 estimate={

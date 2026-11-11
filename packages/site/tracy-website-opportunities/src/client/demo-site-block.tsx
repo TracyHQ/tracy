@@ -23,8 +23,10 @@ import {
   type DemoCommand,
   type DemoControl,
   demoBlockView,
-  demoCommand
+  demoCommand,
+  siteCardView
 } from './demo-block-model.ts'
+import { SiteCard } from './site-card.tsx'
 import type { ChainEstimate } from '@tracy/wo-views'
 import { BuildEstimate } from './demo-progress.tsx'
 import type { OpportunityListRow } from './opportunity-row.ts'
@@ -44,7 +46,9 @@ export function DemoSiteBlock({
   onCommand,
   progress,
   estimate,
-  bare = false
+  bare = false,
+  siteName = '',
+  brand = null
 }: {
   t: Translate
   row: OpportunityListRow
@@ -62,6 +66,10 @@ export function DemoSiteBlock({
   estimate?: ChainEstimate | null
   /** Inside the Demo site section of Details, which carries the title: no card of its own. */
   bare?: boolean
+  /** The site's name, drawn on the Your site card's picture box when there is no picture. */
+  siteName?: string
+  /** The first brand colour of the saved profile, the ground of that box; null for the theme's primary. */
+  brand?: string | null
 }): JSX.Element {
   const view = demoBlockView(row, detail, t, { now, locale })
   const press = (control: DemoControl): void => {
@@ -71,6 +79,25 @@ export function DemoSiteBlock({
   const failed = view.state === 'failed'
   const showProgress = view.state === 'queued' || view.state === 'building' || failed
   const builds = view.primary.action === 'build' || view.primary.action === 'rebuild'
+  // A built demo is the Your site card (#537, option A); every other state keeps its line and the progress card.
+  if (view.state === 'ready')
+    return (
+      <Section title={t('demoBlock.title')} bare={bare}>
+        <div className="tracy-wo-demo-block" data-state={view.state}>
+          <SiteCard
+            t={t}
+            view={siteCardView(row, detail, t, { now, locale })}
+            siteName={siteName || row.name || ''}
+            brand={brand}
+            busy={busy}
+            limitReached={limitReached}
+            onOpen={() => press('primary')}
+            onSend={() => press('send')}
+            onRebuild={() => press('rebuild')}
+          />
+        </div>
+      </Section>
+    )
   return (
     <Section title={t('demoBlock.title')} bare={bare}>
       <div className="tracy-wo-demo-block" data-state={view.state}>

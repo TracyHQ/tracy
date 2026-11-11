@@ -45,6 +45,24 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-pill[data-kind='review']:hover > svg { color: var(--primary-foreground); }
 .tracy-wo-ws-sec[data-state='locked'] .tracy-wo-ws-name { color: var(--muted-foreground); }
 .tracy-wo-ws-body { padding: 12px 16px 14px; }
+.tracy-wo-site-card { display: flex; gap: 16px; align-items: stretch; min-width: 0; }
+.tracy-wo-site-thumb { position: relative; display: grid; place-items: center; flex: none; width: 160px; height: 100px; overflow: hidden; border: 1px solid var(--border); border-radius: 8px; background: var(--muted); }
+.tracy-wo-site-thumb > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+/* No picture: the site's name on its brand colour (inline, from the saved profile), else the theme's primary. */
+.tracy-wo-site-thumb[data-fallback] { background: var(--primary); color: var(--primary-foreground); border-color: transparent; }
+.tracy-wo-site-thumb-name { display: -webkit-box; max-width: 100%; padding: 0 12px; overflow: hidden; font-size: 14px; font-weight: 650; line-height: 1.25; text-align: center; overflow-wrap: anywhere; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.tracy-wo-site-info { display: flex; flex: 1 1 auto; flex-direction: column; gap: 6px; min-width: 0; }
+.tracy-wo-site-l1 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; min-width: 0; }
+.tracy-wo-site-addr { display: inline-flex; align-items: center; gap: 6px; min-width: 0; color: var(--foreground); font-weight: 600; text-decoration: underline; text-decoration-color: color-mix(in oklab, var(--foreground) 30%, transparent); text-underline-offset: 3px; }
+.tracy-wo-site-addr > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.tracy-wo-site-addr > svg { flex: none; width: 13px; height: 13px; color: var(--muted-foreground); }
+.tracy-wo-site-addr:hover { text-decoration-color: currentColor; }
+.tracy-wo-site-addr:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 3px; }
+.tracy-wo-site-meta { margin: 0; color: var(--muted-foreground); }
+.tracy-wo-site-finds { margin: 0; padding: 8px 10px 8px 12px; border-left: 3px solid var(--warning); border-radius: 0 8px 8px 0; background: color-mix(in oklab, var(--warning) 14%, var(--card, var(--background))); color: var(--foreground); font-size: 12.5px; }
+.tracy-wo-site-finds > b { font-weight: 600; }
+.tracy-wo-site-finds > ul { margin: 2px 0 0; padding-left: 18px; list-style: disc; }
+.tracy-wo-site-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: auto; padding-top: 4px; }
 @container (max-width: 560px) {
   .tracy-wo-ws-row { gap: 8px; padding: 6px 12px; }
   .tracy-wo-ws-toggle { display: grid; grid-template-columns: 24px minmax(0, 1fr); column-gap: 10px; row-gap: 0; }
@@ -54,5 +72,6 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
   .tracy-wo-ws-sum { white-space: normal; }
   .tracy-wo-ws-sum:empty { display: none; }
   .tracy-wo-ws-body { padding: 10px 12px 12px; }
+  .tracy-wo-site-card { flex-direction: column; }
 }
 ` + FACTS_BODY_CSS

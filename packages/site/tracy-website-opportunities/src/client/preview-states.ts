@@ -9,6 +9,16 @@ import { pastedLinksOf } from './source-links-model.ts'
 
 type Body = Record<string, unknown>
 
+/** A small drawn home page (header, hero, three cards) standing in for the build's picture. */
+const PREVIEW_PICTURE = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400"><rect width="640" height="400" fill="rgb(247,244,238)"/>' +
+    '<rect width="640" height="44" fill="rgb(255,255,255)"/><rect x="24" y="15" width="90" height="14" rx="3" fill="rgb(40,60,52)"/>' +
+    '<rect x="380" y="18" width="220" height="8" rx="4" fill="rgb(190,190,180)"/><rect y="44" width="640" height="200" fill="rgb(52,92,74)"/>' +
+    '<rect x="40" y="100" width="300" height="26" rx="4" fill="rgb(255,255,255)"/><rect x="40" y="140" width="220" height="10" rx="5" fill="rgb(210,226,216)"/>' +
+    '<rect x="40" y="176" width="110" height="32" rx="6" fill="rgb(214,150,74)"/><rect x="40" y="268" width="170" height="110" rx="8" fill="rgb(229,221,206)"/>' +
+    '<rect x="235" y="268" width="170" height="110" rx="8" fill="rgb(229,221,206)"/><rect x="430" y="268" width="170" height="110" rx="8" fill="rgb(229,221,206)"/></svg>'
+)}`
+
 export const PREVIEW_STATES = [
   'real',
   'new',
@@ -20,7 +30,9 @@ export const PREVIEW_STATES = [
   'brief-review',
   'brief-approved',
   'building',
-  'built'
+  'built',
+  'built-plain',
+  'built-review'
 ] as const
 export type PreviewStateId = (typeof PREVIEW_STATES)[number]
 
@@ -35,7 +47,9 @@ export const PREVIEW_LABELS: Readonly<Record<PreviewStateId, string>> = {
   'brief-review': 'Site content brief needs review',
   'brief-approved': 'Site content brief approved',
   building: 'Building',
-  built: 'Built'
+  built: 'Built',
+  'built-plain': 'Built, no picture',
+  'built-review': 'Built, QA needs review'
 }
 
 export const isPreviewState = (v: unknown): v is PreviewStateId =>
@@ -299,7 +313,7 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
     }
   }
 
-  // built: the site was made AFTER the seller approved the brief. `effectiveOf` (stepper-model.ts) drops a demo whose
+  // built (and its two variants, #537 option A): the site was made AFTER the seller approved the brief. `effectiveOf` (stepper-model.ts) drops a demo whose
   // brief was approved after it was built, so the approval here predates the build (demoAction.updatedAt below).
   return {
     ...withBrief,
@@ -312,8 +326,12 @@ export function applyPreview(real: Body | null, state: PreviewStateId, now: numb
       frozenAt: null,
       deletedAt: null,
       deletesAt: null,
-      qa: 'passed',
-      build: { status: 'done', startedAt: at(-24 * 60) }
+      qa: state === 'built-review' ? 'needs-review' : 'passed',
+      build: { status: 'done', startedAt: at(-24 * 60) },
+      // What the build took, its failing checks and its picture (`GET …/:id` demo, #537 option A).
+      built: { at: at(-60), minutes: 26, usd: 1.84 },
+      findings: state === 'built-review' ? ['cta-real', 'no-demo-pictures'] : [],
+      preview: state === 'built-plain' ? null : { url: PREVIEW_PICTURE, capturedAt: at(-59) }
     },
     demoAction: {
       id: 'preview-demo-action',
