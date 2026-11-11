@@ -20,7 +20,7 @@ import { failureListText } from '../../lib/failure-list-text.js'
 
 // Stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title, a threshold, a failure
 // text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-copy-check/11'
+export const CHECKER_VERSION = 'site-copy-check/12'
 
 const RUN_ORDER = [
   checkW02,
