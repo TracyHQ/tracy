@@ -61,8 +61,7 @@ import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
 import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
-import { briefSummaryRows, businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
-import { BusinessBriefTable } from './business-brief-table.tsx'
+import { businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
 import { BriefChecklist } from './brief-checklist.tsx'
 import type { BriefEditDoor } from './brief-checklist-item.tsx'
 import { briefMediaRows, briefMediaView } from './brief-media-model.ts'
@@ -73,9 +72,7 @@ import { type DemoCommand, demoBlockView, demoCommand } from './demo-block-model
 import { DemoSiteBlock } from './demo-site-block.tsx'
 import { SubPage } from './details-sections.tsx'
 import { WorkspaceCard, demoHostOf } from './workspace-card.tsx'
-import { FactsBody } from './facts-body.tsx'
 import { ownerDoorsOf } from './owner-doors.ts'
-import { factsBodyView } from './facts-body-model.ts'
 import { type SubSection, pageOf, researchRunning as researchMovingOf } from './section-model.ts'
 import { overviewSourcesOf, sourcesToShow } from './source-links-model.ts'
 import { BackButton } from './back-button.tsx'
@@ -715,24 +712,12 @@ export function DetailView({
   )
   // Once research is done and the brief lists its facts, the Business brief table is the one place to check them.
   const tableListsFacts = research.done && briefRows.length > 0
-  const summaryRows = briefSummaryRows(briefRows)
   const mediaView = mediaRowView({ profile, media, sources })
   const profileRows = profileFields(profile)
   const researchMoving = researchMovingOf({ research, researchJob: job })
   // The saved profile (#537 R18): what the Business facts read, the owner's edits laid on.
   const savedProfile = isRecord(body.placeProfile) ? body.placeProfile.profile : placeProfile.profile
 
-  // The compact brief of Details: its first rows, read only; the sub-page is the checklist below.
-  const briefTable = (): JSX.Element => (
-    <BusinessBriefTable
-      t={t}
-      rows={summaryRows}
-      firstRow={<SiteNameRow t={t} api={api} opportunityId={id} readOnly />}
-      editValue={(r) => (r.readOnly && website !== null ? websiteLink(website) : null)}
-      readOnly
-      onToggle={toggleFact}
-    />
-  )
   // The Site content brief sub-page as a checklist of five steps (#537, option E); locked once approved.
   const briefLocked = approval?.brief === 'approved'
   const briefMedia = briefMediaView(mediaView)
@@ -803,7 +788,7 @@ export function DetailView({
       locked={briefLocked}
       approval={briefApproval}
       media={briefMedia}
-      siteName={<SiteNameRow t={t} api={api} opportunityId={id} readOnly={briefLocked} layout="item" />}
+      siteName={<SiteNameRow t={t} api={api} opportunityId={id} readOnly={briefLocked} />}
       editDoor={briefEditDoor}
       onMark={(step) => briefMarks.save(markStep(briefMarks.marks, step))}
       onToggle={(factId, on) => setFactCode(factId, on)}
@@ -1112,29 +1097,6 @@ export function DetailView({
                 researchState={research.state}
               />
               {cancelButton !== null ? <span className="tracy-wo-row">{cancelButton}</span> : null}
-            </div>
-          ),
-          // Facts left, one hero photo right, one fixed height (#537, option B); the hero opens the sub-page.
-          profile: (
-            <FactsBody
-              t={t}
-              view={factsBodyView({
-                profile,
-                saved: research.done && !researchMoving ? savedProfile : null,
-                candidate,
-                name: shownName,
-                media: mediaView,
-                running: researchMoving,
-                today: new Date(now).getDay(),
-                locale
-              })}
-              onOpen={() => onSection('profile')}
-            />
-          ),
-          brief: (
-            <div className="tracy-wo-stack">
-              {briefLine}
-              {briefTable()}
             </div>
           ),
           demo: (

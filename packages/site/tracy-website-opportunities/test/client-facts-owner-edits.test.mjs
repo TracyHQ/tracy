@@ -2,8 +2,7 @@
  * Business facts, the owner's own edits (#537 R14 to R16): the band switches read `bands` and write `band_<band>`;
  * a person's switch is greyed while the Team band is off; each review card and photo tile has its own switch that
  * flips at once and flips back on a refusal; the Team band edits its people in place and adds one; the Social pages
- * band adds a link from the preset networks in a row of its own, with a sentence per refusal; and a photo kept off
- * the site is not a thumbnail of the Workspace card. The page is mounted with React 18 in jsdom against stubbed
+ * band adds a link from the preset networks in a row of its own, with a sentence per refusal. The page is mounted with React 18 in jsdom against stubbed
  * doors. Every business and person in this file is invented.
  *
  *   node --test --test-concurrency=1 packages/site/tracy-website-opportunities/test/client-facts-owner-edits.test.mjs
@@ -73,7 +72,6 @@ before(async () => {
         export { createRoot } from 'react-dom/client'
         export { BusinessFactsPage } from './business-facts-page.tsx'
         export { businessFactsView } from './business-facts-model.ts'
-        export { factsBodyView } from './facts-body-model.ts'
         export { mediaRowView, mediaTile } from './detail-model.ts'
         export { ownerDoorsOf } from './owner-doors.ts'
         export { ownerBandsOf, socialSetBody, uploadedMediaId } from './owner-edits-model.ts'
@@ -449,21 +447,6 @@ test('Edit of Social pages removes a link the owner typed; research pages are no
   } finally {
     m.done()
   }
-})
-
-test('a photo kept off the site is not a thumbnail of the Workspace card', () => {
-  const media = lib.mediaRowView({ profile: PROFILE, media: MEDIA_ROWS.map(lib.mediaTile), sources: [] })
-  const body = lib.factsBodyView({
-    profile: PROFILE,
-    candidate: {},
-    media,
-    locale: 'en',
-    name: 'Harbour Kite Lessons'
-  })
-  assert.deepEqual(
-    body.tiles.map((m) => m.id),
-    [MEDIA_ROWS[0].id]
-  )
 })
 
 test('a person the owner added reads as theirs, with no quote, even before any reading', () => {

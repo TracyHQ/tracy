@@ -1,13 +1,11 @@
 /**
  * The Workspace card of Details (#537, option D, `workspace-card.tsx`): one card, a row per section with a tile, the
  * title and a folded summary, open sections below their row, locked rows muted. Reads only Tracy tokens, so light and
- * dark follow the theme. The Business facts body brings its own rules (`facts-body-css.ts`). No backtick may appear
- * inside the template below.
+ * dark follow the theme. The Business facts and brief rows are one button each that opens the sub-page. No backtick
+ * may appear inside the template below.
  */
-import { FACTS_BODY_CSS } from './facts-body-css.ts'
 
-export const WORKSPACE_CSS =
-  `
+export const WORKSPACE_CSS = `
 .tracy-wo-ws { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--card, var(--background)); overflow: hidden; }
 /* The Add source popover hangs below the Sources row: the card stops clipping while it is open. */
 .tracy-wo-ws:has(.tracy-wo-addsrc-pop) { overflow: visible; }
@@ -24,6 +22,12 @@ export const WORKSPACE_CSS =
 .tracy-wo-ws-toggle { display: flex; align-items: center; gap: 10px; flex: 1 1 auto; min-width: 0; margin: 0; padding: 4px 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; }
 button.tracy-wo-ws-toggle { cursor: pointer; }
 button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outline-offset: 2px; border-radius: 4px; }
+/* A link row (Business facts, the brief): the whole row is the button that opens the sub-page, its pill drawn inside. */
+button.tracy-wo-ws-link { width: 100%; margin: 0; border: 0; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+button.tracy-wo-ws-link:focus-visible { outline: 1px solid var(--ring); outline-offset: -2px; }
+.tracy-wo-ws-link:hover .tracy-wo-ws-pill { background: color-mix(in oklab, var(--muted) 60%, var(--card, var(--background))); }
+.tracy-wo-ws-link:hover .tracy-wo-ws-pill[data-kind='review'] { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+.tracy-wo-ws-link:hover .tracy-wo-ws-pill[data-kind='review'] > svg { color: var(--primary-foreground); }
 .tracy-wo-ws-tile { display: grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 7px; background: color-mix(in oklab, var(--muted) 70%, var(--card, var(--background))); color: var(--muted-foreground); }
 .tracy-wo-ws-tile > svg { width: 14px; height: 14px; }
 .tracy-wo-ws-sec[data-state='done'] .tracy-wo-ws-tile { background: color-mix(in oklab, var(--success) 16%, transparent); color: color-mix(in oklab, var(--success) 80%, var(--foreground)); }
@@ -74,4 +78,4 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
   .tracy-wo-ws-body { padding: 10px 12px 12px; }
   .tracy-wo-site-card { flex-direction: column; }
 }
-` + FACTS_BODY_CSS
+`

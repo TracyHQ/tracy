@@ -96,7 +96,7 @@ const CASES = [
     input: {},
     want: [
       'sources done: 2 of 3 read · Nov 10',
-      'profile review +: 6 fields [Needs your review]',
+      'profile review: 6 fields [Needs your review]',
       'brief locked: Approve the business facts first',
       'demo locked: Approve the business facts and the brief first'
     ]
@@ -106,7 +106,7 @@ const CASES = [
     input: { brief: OLD_BRIEF },
     want: [
       'sources done: 2 of 3 read · Nov 10',
-      'profile review +: 6 fields [Needs your review]',
+      'profile review: 6 fields [Needs your review]',
       'brief locked: Approve the business facts first',
       'demo locked: Approve the business facts and the brief first'
     ]
@@ -116,7 +116,7 @@ const CASES = [
     input: { approval: { ...APPROVED, brief: 'none', briefApprovedAt: null } },
     want: [
       'sources done: 2 of 3 read · Nov 10',
-      'profile open +: 6 fields · approved Nov 10',
+      'profile open: 6 fields · approved Nov 10',
       'brief locked: Ready to write. Start it in Progress above.',
       'demo locked: Approve the site content brief first'
     ]
@@ -129,7 +129,7 @@ const CASES = [
     },
     want: [
       'sources done: 2 of 3 read · Nov 10',
-      'profile open +: 6 fields · approved Nov 10',
+      'profile open: 6 fields · approved Nov 10',
       'brief locked: The site content brief is being written. Progress is shown above.',
       'demo locked: Approve the site content brief first'
     ]
@@ -140,7 +140,7 @@ const CASES = [
     want: [
       'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
-      'brief review +: Brief 4 [Needs your review]',
+      'brief review: Brief 4 [Needs your review]',
       'demo locked: Approve the site content brief first'
     ]
   },
@@ -150,7 +150,7 @@ const CASES = [
     want: [
       'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
-      'brief open +: Brief 4 · approved Nov 10',
+      'brief open: Brief 4 · approved Nov 10',
       'demo locked: Ready to build. Start it in Progress above.'
     ]
   },
@@ -160,7 +160,7 @@ const CASES = [
     want: [
       'sources done: 2 of 3 read · Nov 10',
       'profile done: 6 fields · approved Nov 10',
-      'brief open +: Brief 4 · approved Nov 10',
+      'brief open: Brief 4 · approved Nov 10',
       'demo locked: Not available yet. The build is shown in Progress above.'
     ]
   },
@@ -185,7 +185,7 @@ const CASES = [
     ]
   },
   {
-    name: 'the seller folds the current section and opens a finished one',
+    name: 'the seller opens a finished Sources; a stored choice for the brief changes nothing',
     input: { brief: BRIEF, approval: APPROVED, opened: { brief: false, sources: true, demo: true } },
     want: [
       'sources done +: 2 of 3 read · Nov 10',
@@ -236,8 +236,22 @@ test('workspace: the pill reads Review on a review, Open on a complete row, neve
 test('workspace: the stored open/closed choices keep only booleans of known sections', () => {
   assert.deepEqual(readOpened(null), {})
   assert.deepEqual(readOpened('not json'), {})
-  assert.deepEqual(readOpened('{"brief":true,"demo":"yes","other":false,"sources":false}'), {
-    brief: true,
+  // Business facts and the brief never open in place, so their choices are not kept.
+  assert.deepEqual(readOpened('{"brief":true,"profile":true,"demo":"yes","other":false,"sources":false}'), {
     sources: false
   })
+})
+
+test('workspace: Business facts and the brief are link rows that never expand, Sources and Your site expand', () => {
+  const sections = sectionsOf({ brief: BRIEF, approval: APPROVED, opened: { profile: true, brief: true } })
+  const by = Object.fromEntries(sections.map((s) => [s.id, s]))
+  for (const id of ['profile', 'brief']) {
+    assert.equal(by[id].kind, 'link', id)
+    assert.equal(by[id].expandable, false, id)
+    assert.equal(by[id].expanded, false, id)
+    assert.equal(by[id].linkKey, 'section.open', id)
+  }
+  assert.equal(by.sources.kind, 'expand')
+  assert.equal(by.sources.expandable, true)
+  assert.equal(by.demo.kind, 'expand')
 })

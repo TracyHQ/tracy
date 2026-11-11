@@ -17,7 +17,6 @@ import { after, before, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import { createApi } from '../src/client/api.ts'
-import { factsBodyView } from '../src/client/facts-body-model.ts'
 import { draftOf, sentValueOf } from '../src/client/facts-value-model.ts'
 import { RAW_BUSINESS_DUPLICATES, savedBandsOf, savedFactsOf } from '../src/client/saved-profile-model.ts'
 import { en } from '../src/client/strings.ts'
@@ -367,48 +366,4 @@ test('the raw Research details block is gone from the page and its words from th
     assert.ok(!Object.hasOwn(en, key), key)
   const detail = readFileSync(path.join(here, '..', 'src', 'client', 'detail.tsx'), 'utf8')
   assert.doesNotMatch(detail, /researchDetails|PlaceProfileBlock|GooglePlace\b|TripadvisorReviews/)
-})
-
-test('the workspace card body reads the saved profile: the edited phone, a fact kept off shows its value dimmed, not NA', () => {
-  const off = structuredClone(SAVED)
-  off.business.hours.onSite = false
-  off.claims.statistics[0].onSite = false
-  const view = factsBodyView({
-    profile: { phone: '+10 555 0100', address: '12 Lagoon Walk, Sandbar Bay' },
-    saved: off,
-    candidate: {},
-    name: 'Harbour Kite Lessons',
-    media: MEDIA,
-    running: false,
-    today: 1,
-    locale: 'en'
-  })
-  // The body groups its facts: Business, Contact, About, and the followers at the end of the About line.
-  const all = (v) => [...v.business, ...v.contact, v.about, v.followers].filter(Boolean)
-  const of = (id) => all(view).find((x) => x.id === id)
-  assert.equal(of('phone').value.text, '+10 555 0199')
-  // Kept off the site is not missing: the value stays, marked off; N/A is only for a fact research did not find.
-  assert.notEqual(of('hours').value, null)
-  assert.equal(of('hours').off, true)
-  assert.equal(of('followers').value.text, '1,819')
-  assert.equal(of('followers').labelKey, 'pp.stat.followers')
-  assert.equal(of('followers').off, true)
-  assert.equal(of('phone').off, undefined)
-  // The rating is on, its count kept off: the rating alone, not dimmed.
-  assert.equal(of('rating').value.key, 'facts.body.ratingNoCount')
-  assert.equal(of('rating').off, undefined)
-  const offRating = structuredClone(SAVED)
-  offRating.claims.statistics[1].onSite = false
-  const dimmed = factsBodyView({
-    profile: null,
-    saved: offRating,
-    candidate: {},
-    name: 'Harbour Kite Lessons',
-    media: MEDIA,
-    running: false,
-    today: 1,
-    locale: 'en'
-  }).business.find((x) => x.id === 'rating')
-  assert.equal(dimmed.off, true)
-  assert.equal(dimmed.value.key, 'facts.body.ratingMany')
 })

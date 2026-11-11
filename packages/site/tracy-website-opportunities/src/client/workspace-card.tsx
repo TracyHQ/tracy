@@ -1,9 +1,10 @@
 /**
  * The Workspace card of Details (#537, option D): one full width card under the Progress band, its four sections drawn
- * from `workspace-model.ts`. A section with content is a row that opens and folds on a press (several may be open); a
- * locked section is one muted row with a lock pill. The status pill is the single trailing action; the Sources row
- * also carries Add source before it, and keeps its summary (a progress bar and how many links were read) while open.
- * The seller's open/closed choices live in session storage per place.
+ * from `workspace-model.ts`. Sources and Your site are rows that open and fold on a press (both may be open); Business
+ * facts and the brief are one link row each that opens its sub-page, the status pill drawn inside it (owner, #537). A
+ * locked section is one muted row with a lock pill. The Sources row also carries Add source before its pill, and keeps
+ * its summary (a progress bar and how many links were read) while open. The seller's open/closed choices live in
+ * session storage per place.
  */
 
 import { hostOf } from '@tracy/wo-views'
@@ -26,6 +27,8 @@ import type { SourceState } from './source-table-model.ts'
 import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 import {
+  type ExpandableId,
+  isExpandable,
   readOpened,
   type WorkspaceId,
   type WorkspaceInput,
@@ -42,7 +45,7 @@ const ICONS: Record<WorkspaceId, typeof Link2> = {
   demo: AppWindow
 }
 
-function readStore(key: string): Partial<Record<WorkspaceId, boolean>> {
+function readStore(key: string): Partial<Record<ExpandableId, boolean>> {
   try {
     return readOpened(window.sessionStorage.getItem(key))
   } catch {
@@ -50,7 +53,7 @@ function readStore(key: string): Partial<Record<WorkspaceId, boolean>> {
   }
 }
 
-function writeStore(key: string, value: Partial<Record<WorkspaceId, boolean>>): void {
+function writeStore(key: string, value: Partial<Record<ExpandableId, boolean>>): void {
   try {
     window.sessionStorage.setItem(key, JSON.stringify(value))
   } catch {
@@ -66,6 +69,8 @@ function useOpened(opportunityId: string) {
   const toggle = useCallback(
     (id: WorkspaceId, now: boolean) =>
       setOpened((prev) => {
+        // Only Sources and Your site open and fold; the link rows are never stored.
+        if (!isExpandable(id)) return prev
         const next = { ...prev, [id]: !now }
         writeStore(key, next)
         return next
@@ -114,7 +119,8 @@ function Row({
   onSection: (id: SubSection) => void
 }): JSX.Element {
   const bodyId = useId()
-  const { id, state, expanded, expandable, linkKey } = section
+  const sumId = useId()
+  const { id, state, kind, expanded, expandable, linkKey } = section
   const title = t(`details.section.${id}`)
   const Icon = state === 'done' ? Check : ICONS[id]
   const desc = t(`workspace.desc.${id}`)
@@ -134,7 +140,7 @@ function Row({
           {desc}
         </span>
       </span>
-      <span className="tracy-wo-ws-sum">
+      <span className="tracy-wo-ws-sum" id={sumId}>
         {/* Sources keeps its summary beside the title while open: it says how many links were read. */}
         {expanded && id !== 'sources' ? (
           ''
@@ -147,11 +153,37 @@ function Row({
       </span>
     </>
   )
+  const named = t(state === 'review' ? 'workspace.reviewNamed' : 'section.openNamed', { section: title })
+  // Business facts and the brief (owner, #537): the whole row is one button that opens the sub-page, the status pill
+  // drawn inside it. No chevron, no body, no aria-expanded.
+  if (!isExpandable(id) && state !== 'locked' && linkKey !== null)
+    return (
+      <div className="tracy-wo-ws-sec" data-section={id} data-state={state} data-kind="link">
+        <button
+          type="button"
+          className="tracy-wo-ws-row tracy-wo-ws-link"
+          aria-label={named}
+          aria-describedby={sumId}
+          onClick={() => onSection(id)}
+        >
+          <span className="tracy-wo-ws-toggle">{head}</span>
+          <span
+            className="tracy-wo-ws-pill"
+            data-kind={state === 'review' ? 'review' : 'open'}
+            aria-hidden="true"
+          >
+            {t(linkKey)}
+            <ChevronRight aria-hidden="true" />
+          </span>
+        </button>
+      </div>
+    )
   return (
     <div
       className="tracy-wo-ws-sec"
       data-section={id}
       data-state={state}
+      data-kind={kind}
       data-open={expanded ? '' : undefined}
     >
       <div className="tracy-wo-ws-row">
@@ -176,19 +208,6 @@ function Row({
             glyph={<Lock aria-hidden="true" className="tracy-wo-pill-glyph" />}
             label={t('workspace.locked')}
           />
-        ) : linkKey !== null && id !== 'demo' && id !== 'sources' ? (
-          <button
-            type="button"
-            className="tracy-wo-ws-pill"
-            data-kind={state === 'review' ? 'review' : 'open'}
-            aria-label={t(state === 'review' ? 'workspace.reviewNamed' : 'section.openNamed', {
-              section: title
-            })}
-            onClick={() => onSection(id)}
-          >
-            {t(linkKey)}
-            <ChevronRight aria-hidden="true" />
-          </button>
         ) : null}
       </div>
       {expanded ? (
@@ -212,8 +231,8 @@ export function WorkspaceCard({
   opportunityId: string
   /** What the sections read, without the seller's open/closed choices (this card keeps those). */
   input: Omit<WorkspaceInput, 'opened'>
-  /** The content of each section when it is open. */
-  bodies: Record<WorkspaceId, ReactNode>
+  /** The content of each section that opens in place, when it is open (the link rows have none). */
+  bodies: Record<ExpandableId, ReactNode>
   /** The Add source button of the Sources row, drawn whether the row is open or folded. */
   addSource?: ReactNode
   onSection: (id: SubSection) => void
@@ -231,7 +250,7 @@ export function WorkspaceCard({
           key={s.id}
           t={t}
           section={s}
-          body={bodies[s.id]}
+          body={isExpandable(s.id) ? bodies[s.id] : null}
           lead={s.id === 'sources' ? <SourcesBar states={input.sources} /> : undefined}
           tool={s.id === 'sources' && s.state !== 'locked' ? addSource : undefined}
           onToggle={toggle}

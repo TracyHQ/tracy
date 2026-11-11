@@ -1,6 +1,6 @@
 /**
  * The brief view as drawn (#520): "How Tracy understands {business}" with only the cards the brief covers, the raw
- * brief behind a Full brief control that starts closed; and Site name on Tracy as the Business brief's first row
+ * brief behind a Full brief control that starts closed; and Site name on Tracy as an item of the brief checklist
  * (#519). Bundles the real components with React 18. The business is made up.
  *
  *   node --test packages/site/tracy-website-opportunities/test/client-brief-understanding.test.mjs
@@ -35,7 +35,6 @@ before(async () => {
       contents: `
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
-        export { BusinessBriefTable } from './business-brief-table.tsx'
         export { BriefUnderstanding } from './brief-understanding.tsx'
         export { SiteNameRow } from './site-name-row.tsx'
         export { en } from './strings.ts'
@@ -105,17 +104,12 @@ test('a brief with nothing readable says so and still offers the full brief', ()
   assert.match(html, />Full brief</)
 })
 
-test('Site name on Tracy is the first row of the Business brief, even before research has run', () => {
+test('Site name on Tracy is an item of the brief checklist, drawn before the name is known', () => {
   const api = { siteLabel: () => new Promise(() => {}) }
-  const html = lib.renderToStaticMarkup(
-    lib.createElement(lib.BusinessBriefTable, {
-      t,
-      rows: [],
-      firstRow: lib.createElement(lib.SiteNameRow, { t, api, opportunityId: 'o1' }),
-      onToggle: async () => true
-    })
+  const html = lib.renderToStaticMarkup(lib.createElement(lib.SiteNameRow, { t, api, opportunityId: 'o1' }))
+  assert.match(
+    html,
+    /^<div class="tracy-wo-brief-it tracy-wo-site-name"><span class="tracy-wo-brief-it-lab">Site name on Tracy<\/span>/
   )
-  assert.match(html, /<tbody><tr class="tracy-wo-site-name"><th scope="row">Site name on Tracy<\/th>/)
   assert.match(html, /The address of the demo, and of the site when the business takes it over\./)
-  assert.match(html, /Nothing to show yet\./)
 })

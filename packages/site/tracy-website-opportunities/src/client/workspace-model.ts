@@ -1,8 +1,10 @@
 /**
  * The Workspace card of Details (#537, option D): one card under the Progress band with four sections in a fixed
- * order (Sources, Business facts, Site content brief, Your site). The section of the current step is open, finished
- * sections fold to a one line summary, sections waiting for the seller's review are open with a Needs your review chip,
- * and sections that cannot hold anything yet are one muted row with the line of what they wait for.
+ * order (Sources, Business facts, Site content brief, Your site). Sources and Your site open and fold: the section of
+ * the current step is open, finished sections fold to a one line summary. Business facts and the brief never open in
+ * place: their row is one link to its sub-page (owner, #537). A section waiting for the seller's review carries a
+ * Needs your review chip, and sections that cannot hold anything yet are one muted row with the line of what they
+ * wait for.
  * A step that runs shows its progress in the Progress band only: its section is the muted row while it runs.
  * Reads the stepper (`stepper-model.ts`) plus a few counts, and the seller's own open/closed choice per section.
  * Pure: no DOM, no fetch, no clock read. Dates are formatted with the locale it is given.
@@ -14,6 +16,15 @@ import type { StepperView } from './stepper-model.ts'
 
 export type WorkspaceId = 'sources' | 'profile' | 'brief' | 'demo'
 export const WORKSPACE_IDS: readonly WorkspaceId[] = Object.freeze(['sources', 'profile', 'brief', 'demo'])
+
+/** The sections that open and fold in place; the others are a row that opens their sub-page (owner, #537). */
+export type ExpandableId = 'sources' | 'demo'
+export const EXPANDABLE_IDS: readonly ExpandableId[] = Object.freeze(['sources', 'demo'])
+export const isExpandable = (id: WorkspaceId): id is ExpandableId =>
+  (EXPANDABLE_IDS as readonly WorkspaceId[]).includes(id)
+
+/** expand: a row that opens and folds its body · link: a row that opens its sub-page, with no body. */
+export type WorkspaceKind = 'expand' | 'link'
 
 /**
  * open: the section of the current step · done: finished, folds to its summary · review: waits for the seller's
@@ -27,9 +38,10 @@ export type WorkspaceText = { key: string; params?: Record<string, string | numb
 export interface WorkspaceSection {
   id: WorkspaceId
   state: WorkspaceState
-  /** Drawn open now: the seller's own choice, else open for the current section and a review. */
+  kind: WorkspaceKind
+  /** Drawn open now: the seller's own choice, else open for the current section and a review. Never for a link row. */
   expanded: boolean
-  /** A locked row never opens. */
+  /** An expand row with something to show; a locked row and a link row never open. */
   expandable: boolean
   /**
    * The one line beside the title while the section is folded (Sources keeps it while open too); for a locked row,
@@ -60,8 +72,8 @@ export interface WorkspaceInput {
   demo: DemoState
   /** The address of the ready demo, when known. */
   demoHost: string | null
-  /** The seller's own open/closed choice per section (session storage). */
-  opened: Partial<Record<WorkspaceId, boolean>>
+  /** The seller's own open/closed choice per expand section (session storage). */
+  opened: Partial<Record<ExpandableId, boolean>>
   locale?: string
 }
 
@@ -113,21 +125,22 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
     summary: WorkspaceText[],
     extra: Partial<Pick<WorkspaceSection, 'chipKey' | 'linkKey'>> = {}
   ): WorkspaceSection => {
-    const expandable = state !== 'locked'
+    const kind: WorkspaceKind = isExpandable(id) ? 'expand' : 'link'
+    const expandable = isExpandable(id) && state !== 'locked'
     const byDefault = state === 'open' || state === 'review'
-    const expanded = expandable && (input.opened[id] ?? byDefault)
+    const expanded = expandable && isExpandable(id) && (input.opened[id] ?? byDefault)
     // The pill is the row's one action: Review when it waits for the seller, Open when it is complete. A locked row
     // shows a lock instead; the demo row and Sources have no sub-page (the Sources table on the overview is the
     // whole of it, #537).
     const linkKey =
       extra.linkKey !== undefined
         ? extra.linkKey
-        : id === 'demo' || id === 'sources' || !expandable
+        : kind === 'expand' || state === 'locked'
           ? null
           : state === 'review'
             ? 'section.review'
             : 'section.open'
-    return { id, state, expanded, expandable, summary, chipKey: extra.chipKey ?? null, linkKey }
+    return { id, state, kind, expanded, expandable, summary, chipKey: extra.chipKey ?? null, linkKey }
   }
   const locked = (id: WorkspaceId, waitKey: string): WorkspaceSection =>
     section(id, 'locked', [{ key: waitKey }])
@@ -203,17 +216,17 @@ export function workspaceSections(input: WorkspaceInput): WorkspaceSection[] {
   return [sources, profile, brief, demo]
 }
 
-/** The session storage key of the seller's open/closed choices for one opportunity. */
+/** The session storage key of the seller's open/closed choices for one opportunity (expand sections only). */
 export const workspaceStoreKey = (opportunityId: string): string => `tracy-wo-workspace:${opportunityId}`
 
-/** The stored choices, or none when the stored text is missing or not ours. */
-export function readOpened(raw: string | null): Partial<Record<WorkspaceId, boolean>> {
+/** The stored choices of the expand sections, or none when the stored text is missing or not ours. */
+export function readOpened(raw: string | null): Partial<Record<ExpandableId, boolean>> {
   if (raw === null) return {}
   try {
     const parsed: unknown = JSON.parse(raw)
     if (typeof parsed !== 'object' || parsed === null) return {}
-    const out: Partial<Record<WorkspaceId, boolean>> = {}
-    for (const id of WORKSPACE_IDS) {
+    const out: Partial<Record<ExpandableId, boolean>> = {}
+    for (const id of EXPANDABLE_IDS) {
       const v = (parsed as Record<string, unknown>)[id]
       if (typeof v === 'boolean') out[id] = v
     }

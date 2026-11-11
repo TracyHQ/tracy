@@ -14,7 +14,6 @@ import {
   sectionMetas,
   sourceCounts
 } from '../src/client/section-model.ts'
-import { briefSummaryRows } from '../src/client/business-brief-model.ts'
 import { en as STRINGS } from '../src/client/strings.ts'
 
 const DONE = { state: 'done', done: true }
@@ -152,31 +151,6 @@ test('source counts: found gave data, settled is no longer waiting', () => {
       { source: 'website' }
     ]),
     { found: 2, settled: 3, total: 4 }
-  )
-})
-
-test('the collapsed Business brief: one row each of name, description, services and team, else its first rows', () => {
-  const row = (field) => ({
-    id: field,
-    field,
-    label: field,
-    value: field,
-    source: '',
-    onSite: true,
-    ownerChoice: false,
-    notes: []
-  })
-  const rows = ['name', 'address', 'phone', 'hours', 'bio', 'services', 'services', 'audience', 'team'].map(
-    row
-  )
-  assert.deepEqual(
-    briefSummaryRows(rows).map((r) => r.field),
-    ['name', 'bio', 'services', 'team']
-  )
-  const other = ['address', 'phone', 'hours', 'website', 'email'].map(row)
-  assert.deepEqual(
-    briefSummaryRows(other).map((r) => r.field),
-    ['address', 'phone', 'hours', 'website']
   )
 })
 

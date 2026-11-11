@@ -179,7 +179,6 @@ const KEPT_VERBATIM = new Set<string>([
   'tracy-website-opportunities.brief.source.tripadvisor',
   'tracy-website-opportunities.brief.source.youtube',
   'tracy-website-opportunities.chip.word.google',
-  'tracy-website-opportunities.facts.body.counts',
   'tracy-website-opportunities.media.moreShort',
   'tracy-website-opportunities.progress.col.done'
 ])

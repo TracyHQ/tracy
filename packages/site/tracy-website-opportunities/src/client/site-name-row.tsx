@@ -1,5 +1,5 @@
 /**
- * Site name on Tracy (#519), the first row of the Business brief table: the address the demo is built under
+ * Site name on Tracy (#519), the first item of the brief checklist (`brief-checklist.tsx`): the address the demo is built under
  * (`<label>.<domain>`, parts named by the server), where the name came from, and Edit. Editing checks as the seller
  * types (`site-label-model.ts`): characters and length at once, then whether the name is free through the check door.
  * Saved on the opportunity, a build sent without a label uses it.
@@ -19,16 +19,13 @@ export function SiteNameRow({
   t,
   api,
   opportunityId,
-  readOnly = false,
-  layout = 'row'
+  readOnly = false
 }: {
   t: Translate
   api: Api
   opportunityId: string
-  /** The compact brief of Details: the name shows, its Edit lives on the brief sub-page (#537). */
+  /** An approved brief: the name shows, with no Edit (#537). */
   readOnly?: boolean
-  /** `row`: a row of the Business brief table; `item`: an item of the brief checklist (`brief-checklist.tsx`). */
-  layout?: 'row' | 'item'
 }): JSX.Element {
   const [info, setInfo] = useState<SiteLabelInfo | null>(null)
   const [editing, setEditing] = useState(false)
@@ -164,22 +161,13 @@ export function SiteNameRow({
     </>
   )
   const source = info === null ? null : info.label ? t('brief.source.you') : t('site.name.suggested')
-  if (layout === 'item')
-    return (
-      <div className="tracy-wo-brief-it tracy-wo-site-name">
-        <span className="tracy-wo-brief-it-lab">{t('site.name.label')}</span>
-        <div className="tracy-wo-brief-it-v">{value}</div>
-        <span>{source === null ? null : <SourcePill text={source} logo={info?.label ? 'you' : null} />}</span>
-        <span />
-        <span />
-      </div>
-    )
   return (
-    <tr className="tracy-wo-site-name">
-      <th scope="row">{t('site.name.label')}</th>
-      <td>{value}</td>
-      <td className="tracy-wo-muted">{source}</td>
-      <td />
-    </tr>
+    <div className="tracy-wo-brief-it tracy-wo-site-name">
+      <span className="tracy-wo-brief-it-lab">{t('site.name.label')}</span>
+      <div className="tracy-wo-brief-it-v">{value}</div>
+      <span>{source === null ? null : <SourcePill text={source} logo={info?.label ? 'you' : null} />}</span>
+      <span />
+      <span />
+    </div>
   )
 }

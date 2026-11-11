@@ -1099,11 +1099,7 @@ export const en = {
   'workspace.wait.site': 'After the site content brief',
 
   /** The Business brief table: label, value, where it came from, on the site. */
-  'brief.table.fact': 'Fact',
-  'brief.table.value': 'Value',
-  'brief.table.source': 'Source',
   'brief.table.onSite': 'On the site',
-  'brief.table.none': 'Nothing to show yet. The table fills in once research has run.',
   'brief.field.other': 'Other',
   // The Site content brief page as a checklist, one section at a time (#537, option E)
   'brief.steps.title': 'Check each section',
@@ -1226,7 +1222,6 @@ export const en = {
   'brief.job.error.at.reading': 'The brief could not be made: reading the business did not finish.',
   'brief.job.error.at.labelling': 'The brief could not be made: labelling the photos did not finish.',
   'brief.job.error.at.writing': 'The brief could not be made: writing the brief did not finish.',
-  'profile.collecting': 'Collecting…',
   'profile.filling': 'Filling in as sources finish.',
   'source.posts.one': '{count} post',
   'source.posts.other': '{count} posts',
@@ -1510,28 +1505,6 @@ export const en = {
     'Research has already run. Sources can be removed only before the research, or after it failed.',
   'source.remove.error.NOT_FOUND': 'This source is already gone.',
   'source.remove.error.GOOGLE_LINK_NOT_REMOVED': 'The Google listing identifies this business and stays.',
-  // facts.body.* begin: the Business facts body of the Workspace card, facts in two groups and a 3 by 2 photo mosaic (#537).
-  'facts.body.groupBusiness': 'Business',
-  'facts.body.groupContact': 'Contact',
-  'facts.body.label': 'Business facts at a glance',
-  'facts.body.na': 'N/A',
-  'facts.body.hours': 'Hours',
-  'facts.body.rating': 'Rating',
-  'facts.body.hoursToday': 'Open today {from} to {to}',
-  'facts.body.hoursTodayText': 'Today: {times}',
-  'facts.body.ratingMany': '{rating} · {count} Google reviews',
-  'facts.body.ratingOne': '{rating} · 1 Google review',
-  'facts.body.ratingNoCount': '{rating} on Google',
-  'facts.body.photosMany': '{count} photos',
-  'facts.body.photosOne': '1 photo',
-  'facts.body.videosMany': '{count} videos',
-  'facts.body.videosOne': '1 video',
-  'facts.body.counts': '{photos} · {videos}',
-  'facts.body.moreMedia': '{count} more photos and videos',
-  'facts.body.openPhotos': 'Open Business facts to see every photo and video',
-  'facts.body.noPhotos': 'No photos found',
-  'facts.body.noPhotosNote': 'Add photos on the Business facts page.',
-  // facts.body.* end
   // The owner's own edits on Business facts (#537 R14, R15): the team rows and the social links.
   'team.name': 'Name',
   'team.role': 'Role',

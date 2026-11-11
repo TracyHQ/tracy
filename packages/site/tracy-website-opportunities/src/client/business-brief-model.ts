@@ -169,19 +169,3 @@ export function businessBriefRows(
     noteKeys: reasonKeys(row)
   }))
 }
-
-/** The fields the collapsed Business brief shows under Site name, in this order (layout B, spec #512). */
-export const BRIEF_SUMMARY_FIELDS: readonly string[] = Object.freeze(['name', 'bio', 'services', 'team'])
-
-/**
- * The rows of the collapsed Business brief: the first row of each summary field the brief states, in that order; when
- * it states none of them, its first rows instead, so a collapsed brief is never empty while the full table is not.
- */
-export function briefSummaryRows(rows: readonly BriefRow[], fallback = 4): BriefRow[] {
-  // One row per field: a field the brief states several times (three services) shows its first.
-  const picked = BRIEF_SUMMARY_FIELDS.flatMap((field) => {
-    const row = rows.find((r) => r.field === field)
-    return row === undefined ? [] : [row]
-  })
-  return picked.length > 0 ? picked : rows.slice(0, fallback)
-}
