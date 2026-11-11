@@ -18,6 +18,7 @@ import { BENCH_QUEUE, createBenchQueue } from '../lib/bench-run-loop.js'
 import { withStockScreensDropped } from '../lib/stock-screens.js'
 import { SITE_PLANNER_STORE } from './bench-store.js'
 import { sitePlannerDoor } from './door.js'
+import { PLANNER_BRIEF_VIEW, plannerBriefView } from './brief-view.js'
 import { kitImagesFor } from './kit-images.js'
 import {
   FIRST_MESSAGE_PARTS,
@@ -133,16 +134,17 @@ export function createSitePlannerQueue({
 // no tools; a run that already went out with tools (saved before the kit was preloaded) keeps them, since its
 // conversation holds tool calls.
 function agentRequest({ row, ready, history }) {
+  const brief = plannerBriefView(row.brief, row.harness?.briefView)
   const preloaded = !ready.images && (history.length === 0 || !history[0].request?.tools?.length)
   const imageTool = Boolean(ready.images)
   const strict = row.harness?.visualReview === VISUAL_REVIEW_POLICY
   const writeAfter = strict ? null : row.harness?.writeAfterToolTurns
   return {
     firstUser: preloaded
-      ? preloadedFirstMessage({ kit: ready.kit, brief: row.brief })
+      ? preloadedFirstMessage({ kit: ready.kit, brief })
       : firstUserMessage({
           kit: ready.kit,
-          brief: row.brief,
+          brief,
           imageTool,
           visualReviewText: strict ? visualReviewInstruction(ready.kit.doc) : undefined
         }),
@@ -164,6 +166,12 @@ function agentRequest({ row, ready, history }) {
 // Everything the run was started with must still hold (the loop checks the prompt and the checker first): a run that
 // silently ran on another model, or a kit the server no longer reads, would not measure what it records.
 async function prepare({ pool, secret, index, kitImages }, row) {
+  if (row.harness?.briefView !== PLANNER_BRIEF_VIEW)
+    return {
+      ok: false,
+      code: 'SITE_PLANNER_BRIEF_VIEW_CHANGED',
+      reason: 'The planner brief view changed since the run started; start a new run instead of replaying it.'
+    }
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_PLANNER_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }

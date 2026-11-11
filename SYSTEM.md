@@ -2283,6 +2283,12 @@ endpoint**.
   closing ladder through a shared masthead. Native writes and rendered checks remain authoritative. Planner checker
   6, copy checker 10 and picture checker 3 freeze the changed view; older paid runs refuse before preparation or
   provider calls instead of resuming against changed inputs.
+- **Planner brief view:** new runs freeze `harness.briefView = "site-planner-brief/1"`. Only the planner's model
+  message omits the unused `assets` metadata; facts and their evidence, missing information, readiness, acceptance,
+  sitemap and all other brief fields remain intact. The frozen full brief still feeds the checker, brand, writer
+  and picture steps. Missing or unsupported view versions refuse before preparation or model calls, including a
+  resumed paid conversation. The approved system prompt and required kit-image review remain unchanged. This
+  reduces payload size; runtime savings require a separate measurement.
 - **Started and read from a command line** inside the tracy-web container:
   [`scripts/site-planner-bench.mjs`](apps/tracy-web/scripts/site-planner-bench.mjs) (`kits`, `run`, `list`, `status`, `get`,
   `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-planner/bench-cli.js)). It calls the bench service directly with the

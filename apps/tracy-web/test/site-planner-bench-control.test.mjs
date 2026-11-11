@@ -13,6 +13,7 @@ import {
   startBenchRun
 } from '../src/site-planner/bench-control.js'
 import { readRun } from '../src/site-planner/bench-store.js'
+import { PLANNER_BRIEF_VIEW } from '../src/site-planner/brief-view.js'
 import { CHECKER_VERSION } from '../src/site-planner/plan-check/check-plan.js'
 import { plannerPrompt } from '../src/site-planner/planner-prompt.js'
 import { fileDb } from './_db.mjs'
@@ -65,8 +66,12 @@ test('a started run stores what it will run on, and never the key', opts, async 
   assert.equal(full.checkerVersion, CHECKER_VERSION)
   assert.equal(full.door.model, MODEL)
   assert.equal(full.door.providerId, 'openrouter')
-  assert.deepEqual(full.harness, benchHarnessFor(MODEL))
-  assert.deepEqual(full.harness, { ...BENCH_HARNESS, modelProfile: 'anthropic' })
+  assert.deepEqual(full.harness, { ...benchHarnessFor(MODEL), briefView: PLANNER_BRIEF_VIEW })
+  assert.deepEqual(full.harness, {
+    ...BENCH_HARNESS,
+    modelProfile: 'anthropic',
+    briefView: PLANNER_BRIEF_VIEW
+  })
   assert.equal(full.harness.toolImages, 'inline')
   assert.equal(full.harness.cacheMarkers, true)
   // Parity with the Claude Code harness of the reference run: its output budget, a call long enough for it, retries.
@@ -84,7 +89,7 @@ test('a run on DeepSeek V4.1 Flash records the harness chosen for that model', o
   const run = await startRun(pool)
   const full = await readRun(pool, run.id)
   assert.equal(full.door.model, DEEPSEEK_FLASH)
-  assert.deepEqual(full.harness, benchHarnessFor(DEEPSEEK_FLASH))
+  assert.deepEqual(full.harness, { ...benchHarnessFor(DEEPSEEK_FLASH), briefView: PLANNER_BRIEF_VIEW })
   assert.equal(full.harness.modelProfile, 'deepseek-v4.1-flash')
   // Images only in user messages, no cache markers (DeepSeek caches on its own), effort high (the model has no
   // medium), one provider for the whole run, and an output budget every endpoint of the model allows.
@@ -104,7 +109,10 @@ test(
     const run = await startRun(pool)
     const full = await readRun(pool, run.id)
     assert.equal(full.door.providerId, 'deepseek')
-    assert.deepEqual(full.harness, benchHarnessFor(DEEPSEEK_NATIVE_FLASH, 'deepseek'))
+    assert.deepEqual(full.harness, {
+      ...benchHarnessFor(DEEPSEEK_NATIVE_FLASH, 'deepseek'),
+      briefView: PLANNER_BRIEF_VIEW
+    })
     assert.equal(full.harness.modelProfile, 'deepseek-flash-native')
   }
 )

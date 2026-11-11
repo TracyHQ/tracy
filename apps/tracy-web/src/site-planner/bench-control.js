@@ -6,6 +6,7 @@ import { benchHarnessFor, capsOf, sendsImages } from '../lib/bench-harness.js'
 import { briefOfRevision, UUID } from '../lib/bench-sql.js'
 import { activeRun, createRun, readRun, requestCancel, SITE_PLANNER_RUN_ACTIVE } from './bench-store.js'
 import { briefShapeProblems } from './brief-shape.js'
+import { PLANNER_BRIEF_VIEW } from './brief-view.js'
 import { sitePlannerDoor } from './door.js'
 import { openKit, readableKits } from './kit-source.js'
 import { CHECKER_VERSION } from './plan-check/check-plan.js'
@@ -80,6 +81,7 @@ export async function startBenchRun({
     door: door.snapshot,
     harness: {
       ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
+      briefView: PLANNER_BRIEF_VIEW,
       ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
     }
   })

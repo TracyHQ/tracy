@@ -154,6 +154,40 @@ test('a door changed after the start fails the run before any call', opts, async
   assert.deepEqual(run.rounds, [])
 })
 
+test(
+  'a historical paid run without the frozen brief view fails before image preparation or provider calls',
+  opts,
+  async () => {
+    const { pool } = db
+    await assignPlannerDoor(pool)
+    const started = await startRun(pool)
+    await pool.query("update site_planner_run set status='cancelled' where id=$1", [started.id])
+    const {
+      rows: [legacy]
+    } = await pool.query(
+      `insert into site_planner_run (started_by,brief,brief_source,brief_sha256,kit,prompt_sha256,checker_version,door,harness)
+     select started_by,brief,brief_source,brief_sha256,kit,prompt_sha256,checker_version,door,harness-'briefView'
+     from site_planner_run where id=$1 returning id`,
+      [started.id]
+    )
+    const model = scriptedModel([])
+    const images = readyKitImages()
+    await createSitePlannerQueue({
+      pool,
+      secret: SECRET,
+      fetchImpl: model.fetchImpl,
+      kitImages: images,
+      log: quiet
+    }).drain()
+    const run = await readRun(pool, legacy.id)
+    assert.equal(run.status, 'failed')
+    assert.match(run.error, /^SITE_PLANNER_BRIEF_VIEW_CHANGED/)
+    assert.equal(model.requests.length, 0)
+    assert.equal(images.calls.ensure, 0)
+    assert.deepEqual(run.rounds, [])
+  }
+)
+
 test('a cancel asked during a call stops the run after that call', opts, async () => {
   const { pool } = db
   const { run, model } = await runOnce(pool, [readGroups(), planReply()], {
