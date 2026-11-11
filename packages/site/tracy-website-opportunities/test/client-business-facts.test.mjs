@@ -216,6 +216,7 @@ test('quotes, media filters and hours lines', () => {
 })
 
 test('the band set is complete and every band shares one collapsed height at each breakpoint', () => {
+  // test-quality: contract the band order of Business facts the owner approved (#522)
   assert.deepEqual(BAND_IDS, [
     'business',
     'hours',

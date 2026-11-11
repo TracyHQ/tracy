@@ -454,7 +454,10 @@ test('sources are fixed once research runs: Add source is off with the reason in
       lib.act(() => m.root.unmount())
     }
   }
+  // test-quality: contract the approved locked wording, and the retired keys must stay gone (#522)
   assert.equal(en['source.add.locked'], 'Sources are fixed once the research has run.')
+  // test-quality: contract the approved locked wording, and the retired keys must stay gone (#522)
   assert.equal(en['source.add.submitAgain'], undefined)
+  // test-quality: contract the approved locked wording, and the retired keys must stay gone (#522)
   assert.equal(en['source.add.afterResearch'], undefined)
 })

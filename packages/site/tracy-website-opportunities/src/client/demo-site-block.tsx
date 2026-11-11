@@ -7,16 +7,8 @@
  */
 import type { JSX, ReactNode } from 'react'
 import { ExternalLink, Ellipsis } from 'lucide-react'
-import {
-  Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  Spinner,
-  buttonVariants
-} from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
+import { Button, Spinner } from '@tracy/ui'
+import { Popover, PopoverItem } from '@tracy/core/site-tabs/popover'
 
 import {
   type DemoBlockView,
@@ -118,28 +110,34 @@ export function DemoSiteBlock({
               />
             ) : null}
             {view.menu.length > 0 ? (
-              <DropdownMenu>
-                {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
-                <DropdownMenuTrigger
-                  type="button"
-                  disabled={busy}
-                  className={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }))}
-                  aria-label={t('demoBlock.more')}
-                >
-                  <Ellipsis aria-hidden="true" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {view.menu.map((item) => (
-                    <DropdownMenuItem
-                      key={item.id}
-                      disabled={item.id === 'rebuild' && limitReached}
-                      onClick={() => press(item.id === 'send' ? 'send' : 'rebuild')}
-                    >
-                      {item.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Popover
+                align="end"
+                // Portalled out of the plugin root, so it carries the root class to keep the scoped reset.
+                scopeClass="tracy-wo"
+                trigger={(props) => (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon-sm"
+                    disabled={busy}
+                    aria-label={t('demoBlock.more')}
+                    {...props}
+                  >
+                    <Ellipsis aria-hidden="true" />
+                  </Button>
+                )}
+              >
+                {view.menu.map((item) => (
+                  <PopoverItem
+                    key={item.id}
+                    itemId={item.id}
+                    disabled={item.id === 'rebuild' && limitReached}
+                    onClick={() => press(item.id === 'send' ? 'send' : 'rebuild')}
+                  >
+                    {item.label}
+                  </PopoverItem>
+                ))}
+              </Popover>
             ) : null}
           </div>
         ) : null}

@@ -255,7 +255,9 @@ test(
     const approved = await w.call(A, 'POST', `${BASE}/${fresh.id}/profile/approve`)
     assert.equal(approved.status, 200, JSON.stringify(approved.body))
     assert.equal(approved.body.approval.profile, 'approved')
-    assert.ok(Date.parse(approved.body.approval.profileApprovedAt) > Date.now() - 60_000)
+    // PostgreSQL stamps the approval with its own now(): compare it with the database clock, not Date.now().
+    const { rows: dbClock } = await w.pool.query('select now() as now')
+    assert.ok(Date.parse(approved.body.approval.profileApprovedAt) > dbClock[0].now.getTime() - 60_000)
     assert.equal((await w.call(A, 'POST', `${BASE}/${fresh.id}/brief/approve`)).body.code, 'NO_BRIEF')
 
     await makeBrief(w, fresh, 'approval-brief-02')
@@ -439,7 +441,9 @@ test('the Research sub steps read the place job serving the card and its snapsho
     [opp.id]
   )
   await w.pool.query(
-    `update wo_place_snapshot_source set attempted_at = attempted_at - interval '1 day'
+    // Before the snapshot was made, on the database clock that stamped it (the worker stamps attempts with its own).
+    `update wo_place_snapshot_source pss set attempted_at = (select s.created_at from wo_place_snapshot s
+        where s.id = pss.snapshot_id) - interval '1 day'
       where source = 'website' and snapshot_id = (select pj.snapshot_id from wo_place_job pj join wo_job rj on
         rj.place_job_id = pj.id where rj.opportunity_id = $1 and rj.kind = 'research' limit 1)`,
     [opp.id]

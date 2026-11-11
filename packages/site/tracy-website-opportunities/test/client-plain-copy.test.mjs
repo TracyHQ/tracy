@@ -74,7 +74,10 @@ test('the old step names Brief, Build, Fill and Check are not step labels', () =
 })
 
 test('the chain steps use the plain words of the progress card', () => {
+  // test-quality: contract plain labels the owner approved (#522)
   assert.equal(en['progress.step.kit'], 'Template')
+  // test-quality: contract plain labels the owner approved (#522)
   assert.equal(en['action.failed'], 'That did not work. Try again.')
+  // test-quality: contract plain labels the owner approved (#522)
   assert.equal(en['cell.demo.qaPassed'], 'Checked')
 })

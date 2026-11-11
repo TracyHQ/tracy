@@ -4,15 +4,8 @@
  */
 import type { JSX, ReactNode } from 'react'
 import { Ellipsis } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  buttonVariants
-} from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
+import { Button } from '@tracy/ui'
+import { Popover, PopoverItem, PopoverSeparator } from '@tracy/core/site-tabs/popover'
 
 import { BackButton } from './back-button.tsx'
 import type { Translate } from './strings.ts'
@@ -62,28 +55,33 @@ export function DetailsHeader({
           ) : null}
         </div>
         <div className="tracy-wo-row tracy-wo-details-head-acts">
-          <DropdownMenu>
-            {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
-            <DropdownMenuTrigger
-              type="button"
-              disabled={busy}
-              className={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }))}
-              aria-label={t('details.more')}
-            >
-              <Ellipsis aria-hidden="true" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {menu.onResearchAgain ? (
-                <DropdownMenuItem onClick={menu.onResearchAgain}>
-                  {t('details.researchAgain')}
-                </DropdownMenuItem>
-              ) : null}
-              {menu.onResearchAgain ? <DropdownMenuSeparator /> : null}
-              <DropdownMenuItem variant="destructive" onClick={menu.onDelete}>
-                {t('details.delete')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Popover
+            align="end"
+            // Portalled out of the plugin root, so it carries the root class to keep the scoped reset.
+            scopeClass="tracy-wo"
+            trigger={(props) => (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                disabled={busy}
+                aria-label={t('details.more')}
+                {...props}
+              >
+                <Ellipsis aria-hidden="true" />
+              </Button>
+            )}
+          >
+            {menu.onResearchAgain ? (
+              <PopoverItem itemId="research-again" onClick={menu.onResearchAgain}>
+                {t('details.researchAgain')}
+              </PopoverItem>
+            ) : null}
+            {menu.onResearchAgain ? <PopoverSeparator /> : null}
+            <PopoverItem itemId="delete" danger onClick={menu.onDelete}>
+              {t('details.delete')}
+            </PopoverItem>
+          </Popover>
         </div>
       </div>
     </header>

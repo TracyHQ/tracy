@@ -38,6 +38,7 @@ const line = (entry) =>
     .join(', ')
 
 test('five sections in page order: Profile, Sources, Business brief, Photos & video, Demo site', () => {
+  // test-quality: contract the order of the Details sections the owner approved (#522)
   assert.deepEqual(SECTION_IDS, ['profile', 'sources', 'brief', 'media', 'demo'])
   assert.deepEqual(
     sectionMetas(base).map((e) => e.id),
@@ -161,6 +162,7 @@ test('section strings are English with no dash', () => {
 })
 
 test('three sections open as a sub-page, Sources is no sub-page', () => {
+  // test-quality: contract the order of the Details sections the owner approved (#522)
   assert.deepEqual(SUB_SECTIONS, ['profile', 'brief', 'media'])
   assert.equal(isSubSection('brief'), true)
   assert.equal(isSubSection('demo'), false)

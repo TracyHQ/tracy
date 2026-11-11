@@ -213,9 +213,13 @@ for (const [name, approval, demo, demoAt, over, brief, built] of CASCADE) {
 }
 
 test('the seller reads Business facts, never Profile, in the review copy', () => {
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['details.section.profile'], 'Business facts')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['chip.profileReview'], 'Business facts need review')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.reviewProfile'], 'Review business facts ›')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['approve.continue'], 'Approve and continue')
   const keys = Object.keys(en).filter((k) =>
     /^(stepper|band|chip|approve|gate|site\.notYet|brief\.chip)/.test(k)
@@ -224,9 +228,13 @@ test('the seller reads Business facts, never Profile, in the review copy', () =>
 })
 
 test('step 1 reads Research business facts, its first press too; Research again stays', () => {
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['step.research'], 'Research business facts')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['job.start'], 'Research business facts')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['details.researchAgain'], 'Research again')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.lock.profile'], 'Approve the business facts first')
 })
 
@@ -235,11 +243,17 @@ test('the steps read Research business facts, Write site content brief, Build yo
     ['step.research', 'step.brief', 'step.build'].map((k) => en[k]),
     ['Research business facts', 'Write site content brief', 'Build your site']
   )
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['details.section.brief'], 'Site content brief')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['chip.briefReview'], 'Site content brief needs review')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['brief.make'], 'Make site content brief')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['brief.refresh'], 'Refresh')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.lock.brief'], 'Approve the site content brief first')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(
     en['site.notYet.brief'],
     'Not available yet. Approve the site content brief, then build the site.'
@@ -327,13 +341,17 @@ for (const [name, over, at, key, action] of STATUS_CASES)
 test('a new place reads Ready to start with the plain sentence and the Research business facts button', () => {
   const v = stepperView({ research: NOT_STARTED, researchJob: null, demo: 'none' })
   assert.equal(v.lineKey, 'stepper.research.notStarted')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(
     en['stepper.research.notStarted'],
     'Tracy reads the links you added and collects this business’s details.'
   )
   assert.equal(v.estimateKey, 'stepper.estimate.research')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.estimate.research'], 'Est. 2 to 4 min')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.estimate.brief'], 'Est. 2 min')
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.estimate.build'], 'Est. 20+ min')
   assert.doesNotMatch(
     Object.values(en)
@@ -341,6 +359,7 @@ test('a new place reads Ready to start with the plain sentence and the Research 
       .join(' '),
     /minutes/
   )
+  // test-quality: contract the seller wording of the steps the owner approved (#522)
   assert.equal(en['stepper.ready'], 'Ready to start')
   assert.equal(en[v.action.labelKey], 'Research business facts')
 })

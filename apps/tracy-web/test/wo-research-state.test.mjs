@@ -218,7 +218,12 @@ test(
     assert.ok(done.body.profile, 'the Profile fills after this card is researched')
     assert.ok(done.body.media.length > 0)
     assert.notEqual(done.body.research.researchedAt, firstAt)
-    assert.ok(Date.parse(done.body.research.researchedAt) > Date.now() - 60_000, 'researched at its own time')
+    // PostgreSQL stamps the research with its own now(): compare it with the database clock, not Date.now().
+    const { rows: dbClock } = await pool.query('select now() as now')
+    assert.ok(
+      Date.parse(done.body.research.researchedAt) > dbClock[0].now.getTime() - 60_000,
+      'researched at its own time'
+    )
     const listedDone = await call(A, 'GET', `${BASE}?limit=10`)
     assert.equal(listedDone.body.opportunities.find((o) => o.id === again.id).research.state, 'done')
   }

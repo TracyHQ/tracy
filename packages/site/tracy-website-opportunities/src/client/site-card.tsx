@@ -7,15 +7,8 @@
  */
 import { Copy, Ellipsis, ExternalLink, Send } from 'lucide-react'
 import { type CSSProperties, type JSX, useEffect, useState } from 'react'
-import {
-  Button,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  buttonVariants
-} from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
+import { Button } from '@tracy/ui'
+import { Popover, PopoverItem } from '@tracy/core/site-tabs/popover'
 
 import type { SiteCardView } from './demo-block-model.ts'
 import { StatusPill } from './status-pill.tsx'
@@ -155,22 +148,27 @@ export function SiteCard({
             {t('siteCard.send')}
             <Send aria-hidden="true" />
           </Button>
-          <DropdownMenu>
-            {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
-            <DropdownMenuTrigger
-              type="button"
-              disabled={busy}
-              className={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }))}
-              aria-label={t('demoBlock.more')}
-            >
-              <Ellipsis aria-hidden="true" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem disabled={limitReached} onClick={onRebuild}>
-                {t('demo.menu.rebuild')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Popover
+            align="end"
+            // Portalled out of the plugin root, so it carries the root class to keep the scoped reset.
+            scopeClass="tracy-wo"
+            trigger={(props) => (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                disabled={busy}
+                aria-label={t('demoBlock.more')}
+                {...props}
+              >
+                <Ellipsis aria-hidden="true" />
+              </Button>
+            )}
+          >
+            <PopoverItem itemId="rebuild" disabled={limitReached} onClick={onRebuild}>
+              {t('demo.menu.rebuild')}
+            </PopoverItem>
+          </Popover>
         </div>
       </div>
     </div>

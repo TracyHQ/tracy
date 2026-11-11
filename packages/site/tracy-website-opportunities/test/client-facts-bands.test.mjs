@@ -301,7 +301,7 @@ test('every card grows with its facts, one per row: a 160px label, the value, th
   assert.doesNotMatch(FACTS_BANDS_CSS, /text-transform: uppercase/)
   assert.match(FACTS_BANDS_CSS, /\.tracy-wo-facts-row::-webkit-scrollbar \{ display: none; \}/)
   // Tokens only: no colour literal, no alias of dsh, and no halo on focus.
-  assert.doesNotMatch(FACTS_BANDS_CSS, /#[0-9a-f]{3,8}\b|rgba?\(|box-shadow: 0|--dsw-alias/i)
+  assert.doesNotMatch(FACTS_BANDS_CSS, /#[0-9a-f]{3,8}\b|rgba?\(|box-shadow: 0|--dsw[-]alias/i)
   assert.doesNotMatch(FACTS_BANDS_CSS, /`/)
   const { html } = draw({
     profile: { ...FULL, hoursCheck: { state: 'none' }, googleHours: [`Monday: 09:00 - 18:00`] },

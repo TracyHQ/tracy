@@ -19,7 +19,7 @@ export const MY_LIST_CSS = `
 .tracy-wo-my-danger:hover { color: var(--destructive); background: color-mix(in oklab, var(--destructive) 8%, transparent); }
 .tracy-wo-my-danger:focus-visible { border-color: var(--destructive); }
 .tracy-wo-my-dots { color: var(--muted-foreground); }
-.tracy-wo-my-dots[data-popup-open] { color: var(--foreground); background: color-mix(in oklab, var(--foreground) 8%, var(--card)); }
+.tracy-wo-my-dots[aria-expanded="true"] { color: var(--foreground); background: color-mix(in oklab, var(--foreground) 8%, var(--card)); }
 .tracy-wo-my-menu { width: 232px; }
 .tracy-wo-my-menu-n { margin-left: auto; font-variant-numeric: tabular-nums; }
 .tracy-wo-my-menu-note { margin: 0; padding: 6px 8px 4px; font-size: 11.5px; line-height: 16px; color: var(--muted-foreground); }

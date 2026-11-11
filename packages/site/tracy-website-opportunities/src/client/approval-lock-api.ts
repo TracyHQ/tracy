@@ -20,8 +20,8 @@ export const isProfileApproved = (answer: unknown): boolean =>
 /** The API with every answer watched for `PROFILE_APPROVED`; `onLocked` hears each one. */
 export function watchApprovedRefusal(api: Api, onLocked: () => void): Api {
   return new Proxy(api, {
-    get(target, key, receiver) {
-      const value = Reflect.get(target, key, receiver)
+    get(target, key, proxy) {
+      const value = Reflect.get(target, key, proxy)
       if (typeof value !== 'function') return value
       return (...args: unknown[]) => {
         const out = value.apply(target, args)

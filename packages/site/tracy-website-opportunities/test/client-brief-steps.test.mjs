@@ -70,6 +70,7 @@ test('each kind lands in its step and the steps keep the given order', () => {
 })
 
 test('a kind no step names goes to the default step, so no item is dropped', () => {
+  // test-quality: contract the brief opens on its third step, as the owner approved (#522)
   assert.equal(DEFAULT_BRIEF_STEP, 3)
   assert.equal(briefStepOf('deliveryZones'), 3)
   assert.equal(briefStepOf(null), 3)

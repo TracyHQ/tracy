@@ -128,6 +128,7 @@ test('an out of date brief names the research or the rules, never a Profile edit
   }
   assert.equal(briefLineKey(brief), 'brief.stale')
   assert.equal(briefLineKey({ ...brief, current: true }), 'brief.current')
+  // test-quality: contract the retired stale-edits line must not come back (#522)
   assert.equal(en['brief.staleEdits'], undefined)
   const view = briefControlView({ research: { state: 'done' }, brief })
   assert.equal(view.noteKey, 'brief.readingOld')

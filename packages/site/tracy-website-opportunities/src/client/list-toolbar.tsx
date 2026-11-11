@@ -4,23 +4,8 @@
  * selection mode the line gives way to the selection bar (`list-select-bar.tsx`).
  */
 
-import {
-  Button,
-  buttonVariants,
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  InputGroup,
-  InputGroupAddon,
-  InputGroupInput
-} from '@tracy/ui'
+import { Popover, PopoverItem, PopoverLabel, PopoverSeparator } from '@tracy/core/site-tabs/popover'
+import { Button, InputGroup, InputGroupAddon, InputGroupInput } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
 import {
   CircleAlert,
@@ -55,41 +40,43 @@ function MenuEntry({
   switch (entry.kind) {
     case 'select':
       return (
-        <DropdownMenuItem onClick={onSelect}>
-          <SquareCheck aria-hidden="true" />
+        <PopoverItem itemId="select" icon={<SquareCheck aria-hidden="true" />} onClick={onSelect}>
           {entry.label}
-        </DropdownMenuItem>
+        </PopoverItem>
       )
     case 'views':
       return (
-        <DropdownMenuGroup>
-          <DropdownMenuLabel>{entry.label}</DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={entry.value}
-            onValueChange={(next: unknown) => {
-              const v = entry.options.find((o) => o.value === next)
-              if (v) onView(v.value)
-            }}
-          >
-            {entry.options.map((o) => {
-              const Icon = VIEW_ICON[o.value]
-              return (
-                <DropdownMenuRadioItem key={o.value} value={o.value} data-view={o.value}>
-                  <Icon aria-hidden="true" />
-                  {o.label}
-                </DropdownMenuRadioItem>
-              )
-            })}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
+        <div role="group" aria-label={entry.label}>
+          <PopoverLabel>{entry.label}</PopoverLabel>
+          {entry.options.map((o) => {
+            const Icon = VIEW_ICON[o.value]
+            return (
+              <PopoverItem
+                key={o.value}
+                itemId={`view-${o.value}`}
+                selected={o.value === entry.value}
+                icon={<Icon aria-hidden="true" />}
+                onClick={() => onView(o.value)}
+              >
+                {o.label}
+              </PopoverItem>
+            )
+          })}
+        </div>
       )
     case 'cancelled':
       return (
-        <DropdownMenuCheckboxItem checked={entry.checked} onCheckedChange={(on: boolean) => onCancelled(on)}>
-          <EyeIcon aria-hidden="true" />
+        <PopoverItem
+          itemId="cancelled"
+          selected={entry.checked}
+          icon={<EyeIcon aria-hidden="true" />}
+          onClick={() => onCancelled(!entry.checked)}
+          end={
+            entry.count ? <span className="tracy-wo-muted tracy-wo-my-menu-n">{entry.count}</span> : undefined
+          }
+        >
           {entry.label}
-          {entry.count ? <span className="tracy-wo-muted tracy-wo-my-menu-n">{entry.count}</span> : null}
-        </DropdownMenuCheckboxItem>
+        </PopoverItem>
       )
     case 'quota':
       return (
@@ -153,25 +140,32 @@ export function ListToolbar({
           onChange={(event) => onText(event.target.value)}
         />
       </InputGroup>
-      <DropdownMenu>
-        {/* The trigger IS the button (React 18 drops a ref passed to a function component). */}
-        <DropdownMenuTrigger
-          type="button"
-          aria-label={t('my.menu.label')}
-          title={t('my.menu.label')}
-          className={cn(buttonVariants({ variant: 'outline', size: 'icon-sm' }), 'tracy-wo-my-dots')}
-        >
-          <MoreHorizontal aria-hidden="true" />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="tracy-wo-my-menu">
-          {menu.map((entry, i) => (
-            <Fragment key={entry.kind}>
-              {i > 0 ? <DropdownMenuSeparator /> : null}
-              <MenuEntry entry={entry} onSelect={onSelect} onView={onView} onCancelled={onCancelled} />
-            </Fragment>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Popover
+        align="end"
+        // Portalled out of the plugin root, so it carries the root class to keep the scoped reset.
+        scopeClass="tracy-wo"
+        className="tracy-wo-my-menu"
+        trigger={(props) => (
+          <Button
+            type="button"
+            variant="outline"
+            size="icon-sm"
+            aria-label={t('my.menu.label')}
+            title={t('my.menu.label')}
+            className="tracy-wo-my-dots"
+            {...props}
+          >
+            <MoreHorizontal aria-hidden="true" />
+          </Button>
+        )}
+      >
+        {menu.map((entry, i) => (
+          <Fragment key={entry.kind}>
+            {i > 0 ? <PopoverSeparator /> : null}
+            <MenuEntry entry={entry} onSelect={onSelect} onView={onView} onCancelled={onCancelled} />
+          </Fragment>
+        ))}
+      </Popover>
     </div>
   )
 }

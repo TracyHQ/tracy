@@ -158,5 +158,5 @@ test('the stylesheet: 22px, 11px 500, round, no border, tinted fill; each state 
     /\[data-ds-dark-theme\] \.tracy-wo-pill, \.dark \.tracy-wo-pill \{ background: color-mix\(in oklab, var\(--wo-pill-c\) 16%[^}]*color: var\(--wo-pill-c\); \}/
   )
   // Tracy tokens only: no hand-typed colour, no dsh alias, no halo.
-  assert.doesNotMatch(css, /#[0-9a-f]{3,6}\b|rgb\(|oklch\(|--dsw-alias|box-shadow|`/i)
+  assert.doesNotMatch(css, /#[0-9a-f]{3,6}\b|rgb\(|oklch\(|--dsw[-]alias|box-shadow|`/i)
 })

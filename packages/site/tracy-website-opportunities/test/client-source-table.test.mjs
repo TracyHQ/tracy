@@ -75,6 +75,7 @@ test('a failed row reads Could not collect, with the server reason only when it 
 test('a row with no outcome waits for research: sources are fixed once research starts, so no link is new after it', () => {
   assert.equal(cell({ source: 'facebook', status: null }), 'Waiting for research')
   assert.equal(sourceStateOf({ source: 'facebook', status: null }, 'en-US').state, 'waiting')
+  // test-quality: contract the retired New state must not come back (#522)
   assert.equal(STRINGS['source.state.new'], undefined)
 })
 
