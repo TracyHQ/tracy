@@ -89,3 +89,9 @@ The immutable `799ea3ccd1` diagnostic retry emitted its final step-nine artifact
 The final write report has 114 written, 95 hidden, 30 skipped, 25 failed and one refused item. Final site check remains red with 120 blocking findings, 17 warnings and two unmeasured checks. The largest blocking groups are reachable pages (34), unaddressable items (24), demo pictures (18), demo words (17) and callable phones (9). This run does not pass customer acceptance. These measurements describe the old diagnostic runtime, before the required-undo stop and receiver alias fixes, and do not prove candidate behavior.
 
 At 14:43 UTC the existing David browser session still authenticated successfully. Dev reported `bb8ecd1769303d5c3029692ac88f9578bf02c34c`. No new login or dev server access was required.
+
+## Reversible Diner receiver candidate
+
+The companion receiver PR is https://github.com/TracyHQ/claude-cowork/pull/310. Both CI and CodeQL passed on exact head `278b8ad0379cf37bd6ac66fbed9526f39d1f2e88`. The local GD-enabled PHP suite passed 6,713 assertions with zero failures in 238 seconds. Its dedicated container peaked at 893,898,752 bytes under a 1,280 MiB cap, with zero OOM events, and exited cleanly. Earlier missing-GD and smaller PHP-limit attempts remain failed attempts rather than full-suite passes.
+
+The development prerelease `joomla-v0.24.95-rc.2` points at that exact commit. All 248 uploaded asset sizes and SHA256 digests match the reviewed local bytes. Package SHA256 is `03cffa0c939ae18b60905d32dd374ad6b6b780c4da057d23137e47a43407af81`. Stable Latest remains `joomla-v0.24.94`; stable update feeds were not changed. Both canonical Diner provisioning entries now pin this exact receiver. Actual receiver installation, full recovery and customer-site acceptance are separate checks.
