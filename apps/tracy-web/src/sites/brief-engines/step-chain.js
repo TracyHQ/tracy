@@ -246,6 +246,7 @@ export function createStepChainEngine({
             ...(answer?.usd === null ? { knownUsd: Number(answer?.knownUsd ?? 0) } : {}),
             outcome: ok ? 'done' : 'failed',
             ...(report?.recovery ? { recovery: report.recovery } : {}),
+            ...(answer?.value?.diagnostics ? { diagnostics: answer.value.diagnostics } : {}),
             ...(ok ? {} : { error: messageOf(report?.cause?.reason ?? report?.status ?? 'no write report') })
           })
           if (!ok) failed ??= 'write'

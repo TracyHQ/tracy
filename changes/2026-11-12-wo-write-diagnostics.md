@@ -1,0 +1,2 @@
+- **Retain bounded structural step 9 diagnostics after temporary reports are removed** — WO pipeline maintainers · PR pending · `fix/wo-dev-full-flow-acceptance` · 2026-11-12
+  **Affects:** Operators investigating new WO chain failures through the existing staff-only chain-builds raw measurement; rebuild and deploy tracy-web. Historical runs have no recovered evidence. The summary contains check groups, fault identities and repair counts without raw error or prompt content; its serialized size is capped at 8 KiB with explicit truncation.

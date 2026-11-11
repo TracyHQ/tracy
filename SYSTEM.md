@@ -2599,6 +2599,12 @@ queued through the bench's own command line on the revision and played by the be
 (`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Parallel steps persist
 their chain progress snapshots in order through one promise queue per run, so a late earlier update cannot erase
 another step's start, completion or measured spend. Progress storage failures remain non-fatal and do not poison later updates.
+The write step retains a structural diagnostic summary in `site_brief.timings.chain.steps[write].diagnostics`,
+read through the existing staff-only `/api/ops/wo/chain-builds` raw measurement. It records first/final check statuses,
+group counts and bounded fault identities, repair status, skip codes, turn counts and timing stages, including early
+stopped writes. The summary is limited to 8 KiB and explicitly marks truncation. It excludes raw errors, reasons,
+prompts, measured values, credentials, external URLs and local filesystem paths. Temporary full reports are still
+removed normally; no new store or read door is introduced. Earlier runs without the summary remain unknown.
 The brand boundary receives the
 frame's selected primary site language. Only when the research has no brand voice, it supplies that language name alone
 in the brand run's input and records `brand-brief-language/1` in `brief_source`; it invents no tone, preserves an authored voice,
