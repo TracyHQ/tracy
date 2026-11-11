@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-558-capture-passive-assets",
+  "kind": "fix",
+  "title": "Template capture preserves passive asset bytes with bounded transport and cleanup",
+  "pr": 558,
+  "area": "website-opportunities/template-kit",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the passive asset transport regression without external services or model calls."],
+  "expect": [
+    "Only external GET images, fonts and stylesheets enter request transport.",
+    "Original response bytes, headers, status and redirect behavior are preserved.",
+    "Timeout, oversized response and queue saturation retain browser fallback.",
+    "Each response is disposed and context concurrency stays bounded."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-asset-transport.test.mjs"
+    ],
+    "tests": [
+      "external passive asset transport",
+      "passive transport preserves",
+      "oversized or failed passive fetches",
+      "one context bounds",
+      "body and fulfillment errors"
+    ],
+    "needs": []
+  }
+}

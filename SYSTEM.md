@@ -1145,6 +1145,10 @@ EmDash) never gets a record created for it.
   ([ADR 0017](docs/adr/0017-github-release-is-quickstart-source-of-truth.md)). There is no catalogue
   file in the repo. (`apps/tracy-web/src/quickstarts.json` only pins the Claude
   Cowork plugin version.)
+  Template-kit capture fetches only external passive images, fonts and stylesheets through Playwright's request
+  transport at their original URLs; same-site requests, documents, scripts and APIs keep their browser path.
+  Each context bounds concurrent requests and disposes every response. A timeout or oversized response falls back
+  to the original browser request; no font substitution or missing-resource success is recorded.
 - **The Customize your site check runs in the background on tracy-web** ([ADR 0029](docs/adr/0029-template-customization-question-readiness.md) §4,
   [`customize-readiness.js`](apps/tracy-web/src/lib/customize-readiness.js)). After each read of releases (every 10 minutes
   and at boot in `cron.js`, the Sync GitHub button, the release webhook, a write of `tracy_setting.json`), every release that has no

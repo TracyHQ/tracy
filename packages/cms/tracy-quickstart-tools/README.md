@@ -357,6 +357,13 @@ back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
 `images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
 in a block's `source`.
 
+External images, fonts and stylesheets retain their original URLs, status, headers and bytes, but use Playwright's
+request transport so a stalled Chromium asset connection does not consume every page's load timeout. Each context
+allows six active requests and 32 waiting requests; fetches time out after 15 seconds, redirects remain browser-followed,
+and every response is disposed. Responses over 16 MiB fall back to the browser (a fulfilled-body limit, not a hard
+download limit). Skipped resources in the DOM pass stay skipped. Documents, scripts, APIs and same-site traffic keep
+their existing paths. Missing fonts are never replaced to obtain a passing measurement.
+
 ### Page titles, sentences and stored fields
 
 The coverage gate (run by `cli.mjs assemble`) settles three things from what the page prints; none moves a slot, a list or a role.
