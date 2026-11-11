@@ -4,7 +4,8 @@ import {
   acceptDemoActions,
   demoActionOf,
   demoActionsOf,
-  readDemoUsage
+  readDemoUsage,
+  refundUnbilledDemoUsage
 } from '../src/opportunities-build/demo-actions.js'
 import { failedQaHash } from '../src/opportunities-build/demo-qa.js'
 import { demoLeasePool } from '../src/opportunities-build/demo-runner.js'
@@ -414,6 +415,8 @@ function qaAcceptanceWorld({ rejectMarker = false, beforeBuildLock = null } = {}
             ['queued', 'quality-queued-v1'].includes(a.status)
         )
       )
+    // No failed action of this fixture was refused before its work (#564): nothing to give back.
+    if (q.startsWith('with refunded as')) return result()
     if (q.startsWith('insert into wo_demo_usage')) return result()
     if (q.startsWith('select used from wo_demo_usage')) return result([{ used: state.used }])
     if (q.startsWith("update wo_build set qa=jsonb_set(qa,'{acceptedRetry}'")) {
@@ -1036,4 +1039,166 @@ test('a readiness refusal cannot be retried or charged against the same frozen r
   assert.deepEqual(await readDemoUsage(db.pool, account), before)
   assert.equal((await db.pool.query('select id from wo_demo_action')).rowCount, 1)
   assert.deepEqual((await demoActionOf(db.pool, account, id)).readiness, readiness)
+})
+
+// #564: a press refused before any billable work (no site, no chat, no build model run) gives its daily build back.
+const charged = async (account, kind = 'demo') =>
+  (
+    await db.pool.query(
+      'select day::text, used from wo_demo_usage where account_id=$1 and kind=$2 order by day',
+      [account, kind]
+    )
+  ).rows
+const failAs = (id, error, status = 'failed') =>
+  db.pool.query('update wo_demo_action set status=$2, error=$3 where id=$1', [id, status, error])
+
+test('a first press refused BRIEF_NOT_READY gives its daily build back', opts, async () => {
+  const { account, ids } = await fixture(2)
+  const first = await acceptDemoActions(db.pool, {
+    accountId: account,
+    limit: 1,
+    entries: [entry(ids[0], 'nr-1')]
+  })
+  assert.equal(first.body.usage.used, 1)
+  await failAs(first.body.actions[0].id, 'BRIEF_NOT_READY')
+  assert.equal((await readDemoUsage(db.pool, account, 1)).used, 0)
+  const next = await acceptDemoActions(db.pool, {
+    accountId: account,
+    limit: 1,
+    entries: [entry(ids[1], 'nr-2')]
+  })
+  assert.equal(next.status, 202, 'the slot given back is usable again')
+  assert.equal(next.body.usage.used, 1)
+})
+
+test('a refund happens once, however often the failure is recorded or the refund runs', opts, async () => {
+  const { account, ids } = await fixture(2)
+  const accepted = await acceptDemoActions(db.pool, {
+    accountId: account,
+    entries: [entry(ids[0], 'once-1'), entry(ids[1], 'once-2')]
+  })
+  const id = accepted.body.actions[0].id
+  await failAs(id, 'BRIEF_NOT_READY')
+  await Promise.all([1, 2, 3].map(() => refundUnbilledDemoUsage(db.pool, account)))
+  await failAs(id, 'BRIEF_NOT_READY')
+  await refundUnbilledDemoUsage(db.pool, account)
+  assert.equal((await readDemoUsage(db.pool, account, 20)).used, 1)
+  // Never below zero, even when the counted row was already lowered by hand.
+  await db.pool.query('update wo_demo_usage set used=0 where account_id=$1', [account])
+  await failAs(accepted.body.actions[1].id, 'BRIEF_NOT_READY')
+  assert.equal((await readDemoUsage(db.pool, account, 20)).used, 0)
+})
+
+test('a refund lands on the day it was charged, never on today', opts, async () => {
+  const { account, ids } = await fixture(2)
+  let at = Date.parse('2030-05-01T23:00:00Z')
+  const args = { accountId: account, limit: 5, now: () => at }
+  const old = await acceptDemoActions(db.pool, { ...args, entries: [entry(ids[0], 'day-1')] })
+  at += 2 * 3600_000
+  await acceptDemoActions(db.pool, { ...args, entries: [entry(ids[1], 'day-2')] })
+  await failAs(old.body.actions[0].id, 'BRIEF_NOT_READY')
+  assert.equal((await readDemoUsage(db.pool, account, 5, at)).used, 1, 'today keeps its own press')
+  assert.deepEqual(await charged(account), [
+    { day: '2030-05-01', used: 0 },
+    { day: '2030-05-02', used: 1 }
+  ])
+})
+
+test('an own-site build refused before its work gives back an own-site build', opts, async () => {
+  const { account, ids } = await fixture(2)
+  await db.pool.query(`update wo_opportunity set candidate='{"ownSite":{}}'::jsonb where id=$1`, [ids[1]])
+  const press = (id, requestId, own) => ({
+    accountId: account,
+    requireSelection: true,
+    templates: offeredTemplates,
+    entries: [
+      {
+        ...entry(id, requestId),
+        selection: chosenTemplate,
+        workflow: 'agent-demo/1',
+        ...(own ? { ownSite: true } : {})
+      }
+    ]
+  })
+  await acceptDemoActions(db.pool, press(ids[0], 'kind-demo', false))
+  const own = await acceptDemoActions(db.pool, press(ids[1], 'kind-own', true))
+  await failAs(own.body.actions[0].id, 'BRIEF_NOT_READY')
+  assert.equal((await readDemoUsage(db.pool, account, 5, Date.now(), 'own-site')).used, 0)
+  assert.equal((await readDemoUsage(db.pool, account, 5)).used, 1)
+})
+
+test('an action that reached a site, failed another way, or ran quality-v1 stays charged', opts, async () => {
+  const { account, ids } = await fixture(3)
+  const sited = await acceptDemoActions(db.pool, {
+    accountId: account,
+    entries: [entry(ids[0], 'kept-site')]
+  })
+  const held = (await db.pool.query('select * from wo_demo_action where id=$1', [sited.body.actions[0].id]))
+    .rows[0]
+  await db.pool.query(
+    `insert into wo_revision (id, opportunity_id, account_id, n, brief, brief_md) values ($1,$2,$3,1,'{}','')`,
+    [held.revision_id, ids[0], account]
+  )
+  await db.pool.query(
+    `insert into wo_build (account_id,revision_id,request_id,build_id,site_key,state, choice, choice_key)
+     values ($1,$2,$3,$4,'kept.tracy.test','failed', '{"cms":"joomla","cmsSource":"default","template":{"platform":"joomla","quickstart":"fixture","design":"fixture","version":"1"}}'::jsonb, 'fixture')`,
+    [account, held.revision_id, held.build_request_id, held.id]
+  )
+  await failAs(held.id, 'BRIEF_NOT_READY')
+  const late = await acceptDemoActions(db.pool, { accountId: account, entries: [entry(ids[1], 'kept-late')] })
+  await failAs(late.body.actions[0].id, 'HANDOFF_PROMPT_FAILED')
+  const quality = await acceptDemoActions(db.pool, {
+    accountId: account,
+    protocol: 'quality-v1',
+    entries: [entry(ids[2], 'kept-quality')]
+  })
+  await failAs(quality.body.actions[0].id, 'BRIEF_NOT_READY', 'quality-failed-v1')
+  assert.equal((await readDemoUsage(db.pool, account, 20)).used, 3)
+  assert.equal(
+    (await db.pool.query('select count(*)::int as n from wo_demo_action where usage_refunded_at is not null'))
+      .rows[0].n,
+    0
+  )
+})
+
+test('a labels timeout, paid brief work or a build row keeps the daily build', opts, async () => {
+  const { account, ids } = await fixture(3)
+  const press = async (i) =>
+    (await acceptDemoActions(db.pool, { accountId: account, entries: [entry(ids[i], `paid-${i}`)] })).body
+      .actions[0].id
+  const timedOut = await press(0)
+  await failAs(timedOut, 'DEMO_PICTURE_LABELS_TIMEOUT')
+  const labelled = await press(1)
+  await db.pool.query('update wo_demo_action set work_started_at=now() where id=$1', [labelled])
+  await failAs(labelled, 'BRIEF_NOT_READY')
+  const rowed = await press(2)
+  const held = (await db.pool.query('select * from wo_demo_action where id=$1', [rowed])).rows[0]
+  await db.pool.query(
+    `insert into wo_revision (id, opportunity_id, account_id, n, brief, brief_md) values ($1,$2,$3,1,'{}','')`,
+    [held.revision_id, ids[2], account]
+  )
+  await db.pool.query(
+    `insert into wo_build (account_id,revision_id,request_id,build_id,state, choice, choice_key)
+     values ($1,$2,$3,$4,'requesting', '{"cms":"joomla","cmsSource":"default","template":{"platform":"joomla","quickstart":"fixture","design":"fixture","version":"1"}}'::jsonb, 'fixture')`,
+    [account, held.revision_id, held.build_request_id, held.id]
+  )
+  await failAs(rowed, 'TEMPLATE_UNAVAILABLE')
+  assert.equal((await readDemoUsage(db.pool, account, 20)).used, 3)
+})
+
+test('after a refund, two presses at the cap still get exactly one build', opts, async () => {
+  const { account, ids } = await fixture(3)
+  const first = await acceptDemoActions(db.pool, {
+    accountId: account,
+    limit: 1,
+    entries: [entry(ids[0], 'race-0')]
+  })
+  await failAs(first.body.actions[0].id, 'BRIEF_NOT_READY')
+  const results = await Promise.all(
+    [1, 2].map((i) =>
+      acceptDemoActions(db.pool, { accountId: account, limit: 1, entries: [entry(ids[i], `race-${i}`)] })
+    )
+  )
+  assert.deepEqual(results.map((r) => r.status).sort(), [202, 429])
+  assert.equal((await readDemoUsage(db.pool, account, 1)).used, 1)
 })

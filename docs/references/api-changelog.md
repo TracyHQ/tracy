@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-11: Builds refused before their work are given back
+
+Changed `GET /api/website-opportunities/demo/usage` (internal) and the daily cap of `POST /api/website-opportunities/:id/demo/build` and `POST /api/website-opportunities/demo/builds/bulk`: a build is still counted when it is accepted, but one that fails before any billable work (no site, chat or build model run, and no paid photo labelling or logo research run of its own: `BRIEF_NOT_READY`, a template or choice no longer offered) is given back once, on the UTC day and count (demo or own site) it was charged on. A build that reached its create step, or whose brief made a paid labelling call or queued its own logo research, stays counted. A brief with no photographs to label, or only cached labels and no other paid call, makes no paid call.
+
 ## 2026-11-09: Research again from scratch
 
 Changed `POST /api/website-opportunities/:id/research` with `again: true` and `GET /api/website-opportunities/:id/research-again` (internal): the account's Research again runs every part this deployment can collect, whatever its age, with the new run reason `again`, and re-reads the logo and the business without reusing an earlier reading; `kept` holds only `unavailable` parts and menu photos the place has none of (`none`), and the plan carries `fromScratch: true`. 409 `NOTHING_DUE` now means no part can run here. The public `/find` Research again is unchanged.

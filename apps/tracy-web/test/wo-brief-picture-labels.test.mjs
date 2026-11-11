@@ -249,3 +249,38 @@ test('without a vision model nothing is asked and the brief says so', opts, asyn
     unlabelled: { a: 'no_vision_model' }
   })
 })
+
+// #564: a demo action whose brief made a paid model call keeps its daily build; one that made none gets it back.
+test('beforePaidCall is awaited before each paid call and never when nothing is paid', opts, async () => {
+  const objects = store()
+  const media = await seedPlace(db.pool, objects, 3)
+  const run = (observe) => {
+    const events = []
+    const { label } = fakeLabel()
+    const labelPictures = createBriefPictureLabels({
+      pool: db.pool,
+      objects,
+      visionFor: async () => VISION,
+      observe,
+      label,
+      chargeable: async (spec, invoke) => {
+        events.push(`charge:${spec.purpose}`)
+        return invoke()
+      }
+    })
+    return async (input) => {
+      await labelPictures({ ...input, beforePaidCall: async () => events.push('mark') })
+      return events
+    }
+  }
+  const input = { media, brand: null, accountId: null, trade: 'fitness' }
+  assert.deepEqual(await run(null)({ ...input, media: [] }), [], 'no photographs: no call, no mark')
+  assert.deepEqual(await run(null)(input), ['mark', 'charge:picture-labels'], 'pictures needing a label')
+  assert.deepEqual(await run(null)(input), [], 'every label cached: no call, no mark')
+  // The observation of cached labels is a paid call of its own: it is marked too.
+  const observed = await run(async () => ({ facts: [], usage: {} }))(input)
+  assert.equal(
+    observed.filter((e) => e === 'mark').length,
+    observed.filter((e) => e.startsWith('charge')).length
+  )
+})

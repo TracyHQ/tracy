@@ -66,6 +66,7 @@ export function createBriefPictureLabels({
    * @returns {Promise<{labels: Map<string, {key: string, model: string, labels: any}>, note: Record<string, any>}>}
    */
   async function labelOnly({ media, brand, accountId, trade, closedList = null, businessName = null }, ctx) {
+    const charge = ctx.chargeable ?? chargeable
     const digest = closedListDigest(closedList)
     /** A label made against this closed list (none made against none). */
     const current = (l) => l && typeof l === 'object' && (l.closedList ?? null) === digest
@@ -164,7 +165,7 @@ export function createBriefPictureLabels({
         return done({ ...note, status: labels.size ? 'cached' : 'failed', reason: 'no_bytes' })
       }
       const model = vision.door.model
-      const answer = await chargeable(
+      const answer = await charge(
         {
           provider: 'vision',
           operation: model,
@@ -220,7 +221,16 @@ export function createBriefPictureLabels({
    *   observed?: {facts: any[], note: Record<string, any>}}>}
    */
   return async function labelBriefPictures(input) {
-    const ctx = {}
+    // `beforePaidCall`: awaited right before each paid model call this labelling makes (#564: the demo action that
+    // started it keeps its daily build). Cached labels, no photographs or no vision model make no call and never ask.
+    const before = input?.beforePaidCall
+    const paid = before
+      ? async (spec, call) => {
+          await before()
+          return chargeable(spec, call)
+        }
+      : chargeable
+    const ctx = { chargeable: paid }
     const out = await labelOnly(input, ctx)
     if (!observe || !ctx.vision || !out.labels.size) return out
     const observed = await observeBriefPictures({
@@ -232,7 +242,7 @@ export function createBriefPictureLabels({
       door: ctx.vision.door,
       accountId: input.accountId ?? null,
       observe,
-      chargeable
+      chargeable: paid
     })
     return { ...out, observed }
   }

@@ -31,7 +31,8 @@ export function logoResearchDoor({ request, origin, cookie }) {
         body: JSON.stringify({ requestId: `logo-${action.id}`, only: 'logo' })
       }
     )
-    if (response.ok) return { ok: true }
+    // Queued for this action's own request id: a run of its own. JOB_ACTIVE joins a run someone else started.
+    if (response.ok) return { ok: true, queued: true }
     const body = await response.json().catch(() => null)
     if (body?.code === 'JOB_ACTIVE') return { ok: true }
     return { ok: false, code: body?.code ?? `HTTP_${response.status}` }
@@ -83,6 +84,9 @@ export async function withLogoResearch(
       ok: false,
       code: failure?.code ?? 'LOGO_RESEARCH_UNREACHABLE'
     }))
+    // A run queued for this action is its own paid work (#564). The brief waits for it, so the action cannot fail,
+    // and be refunded, before this mark.
+    if (asked.queued) await markActionWorkStarted(db, action, requestedAt)
     if (!asked.ok) return save({ state: 'failed', requestedAt, code: asked.code })
     state = { state: 'requested', requestedAt }
     await save(state)
@@ -92,6 +96,19 @@ export async function withLogoResearch(
   const retryAt = state.requestedAt + waitMs
   if (now() >= retryAt) return save({ ...state, state: 'timeout' })
   return { input, logoResearch: state, pending: true, retryAt }
+}
+
+/**
+ * Record that this demo action's brief made paid work of its own before its build (#564): a logo research run queued
+ * for it, or a photo labelling about to send pictures or labels to a model. A failure after it never gives the daily
+ * build back (`refundUnbilledDemoUsage`). The first time is kept.
+ */
+export async function markActionWorkStarted(db, action, at = Date.now()) {
+  if (!action?.id) return
+  await db.query('update wo_demo_action set work_started_at = coalesce(work_started_at, $2) where id = $1', [
+    action.id,
+    new Date(at)
+  ])
 }
 
 /**

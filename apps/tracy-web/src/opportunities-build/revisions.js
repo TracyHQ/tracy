@@ -35,7 +35,7 @@ import { closedListOf } from 'website-opportunities/domain/pictures/picture-link
 import { withSocialStats } from 'website-opportunities/src/place-social-stats.js'
 import { qualityHash } from './quality-dossier.js'
 import { makeBuildChoice, withBuildChoice } from './build-choice.js'
-import { withLogoResearch } from './logo-research.js'
+import { markActionWorkStarted, withLogoResearch } from './logo-research.js'
 import { freezePlaceProfileOrNull, PROFILE_SNAPSHOT_VERSION } from './profile-revision.js'
 
 // Re-exported for callers that chose a template through this module before the choice moved to `lib/`.
@@ -73,7 +73,10 @@ export async function revisionForAction(
     historical,
     logoResearch,
     pictureLabels,
-    pictureLabelRuns
+    pictureLabelRuns,
+    // Records that this action's brief is about to make a paid model call (#564). A labelling run may outlive the
+    // caller's lease, so the runner passes one on its own pool.
+    markWork = () => markActionWorkStarted(db, action, now())
   }
 ) {
   const built = (
@@ -139,8 +142,10 @@ export async function revisionForAction(
         opportunityId: action.opportunity_id,
         frozenResearchRead: read.input ?? null
       }).catch(() => null)
+      // A run this action starts marks it right before its first paid call (#564); a run warmed before the press,
+      // or started by another, keeps the callback of whoever started it.
       const got = input
-        ? pictureLabelRuns.answer(input)
+        ? pictureLabelRuns.answer({ ...input, beforePaidCall: markWork })
         : { labelling: failedPictureLabelling('vision_failed') }
       if (got.pending) return { pending: true, retryAt: got.retryAt, waitingFor: 'pictures' }
       // An overdue run may still return paid-for labels. Never freeze its temporary empty result as a permanent
@@ -158,7 +163,11 @@ export async function revisionForAction(
       domain,
       now,
       // What the brief's photographs show, asked before the brief is made (`brief-picture-labels.js`, F08).
-      ...(pictureLabelling ? { pictureLabelling } : pictureLabels ? { pictureLabels } : {}),
+      ...(pictureLabelling
+        ? { pictureLabelling }
+        : pictureLabels
+          ? { pictureLabels: (input) => pictureLabels({ ...input, beforePaidCall: markWork }) }
+          : {}),
       ...(editorial ? { editorial, choiceFor: (frozen) => choiceFor(frozen) ?? fail(failure) } : {})
     }).catch((error) => (error?.code && error.code === failure ? { error: failure } : Promise.reject(error)))
     if (made.error) return made
