@@ -925,7 +925,7 @@ const fullInventory = () => {
   inv.users = [
     { id: '44', name: 'Drew Stokes ', username: 'Drew_Stokes', admin: '0' },
     { id: '52', name: 'Site Owner', username: 'owner', admin: '0' },
-    // The release's Super User wrote a post too, but a provision takes that account over.
+    // The release's administrator wrote a post too; its public name remains author content.
     { id: '42', name: 'Tracy Agent', username: 'tracyagent', admin: '1' }
   ]
   inv.user_profiles = [
@@ -952,6 +952,131 @@ const described = (run) =>
     .slots.map((s) =>
       [s.entity, s.column, (s.jsonPath ?? []).join('|'), s.type, s.sample, s.customize ?? '-'].join(' ')
     )
+
+test(
+  '--full-coverage keeps shipped administrator author names without exposing account fields',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.content[0].created_by = '73'
+    inv.content.push(article('4', { alias: 'second-post', created_by: '74' }))
+    inv.users = [
+      { id: '73', name: 'Release Author', username: 'release-author', admin: '1' },
+      { id: '74', name: 'Other Author', username: 'other-author', admin: '0' },
+      { id: '75', name: 'Unused Administrator', username: 'unused-admin', admin: '1' },
+      { id: '76', name: 'Added Account', username: 'added-account', admin: '0' }
+    ].map((user) => ({
+      ...user,
+      password: 'synthetic-security-sentinel',
+      email: 'synthetic-security-sentinel',
+      groups: ['synthetic-security-sentinel'],
+      otpKey: 'synthetic-security-sentinel'
+    }))
+    inv.user_profiles = [
+      { user_id: '73', profile_key: 'profile.user_avatar', profile_value: '"images/owner.png"' },
+      { user_id: '74', profile_key: 'profile.user_jobtitle', profile_value: '"Editor"' }
+    ]
+    const run = capture(inv, { args: ['--full-coverage'] })
+    assertWritten(run)
+    const map = run.read('content-map.json')
+    const lock = run.read('presentation-lock.json')
+    const owner = map.entities.find((e) => e.key === 'user-73')
+    assert.deepEqual(owner, {
+      key: 'user-73',
+      kind: 'user',
+      identity: { username: 'release-author' },
+      sourceId: 73
+    })
+    for (const [id, name] of [
+      ['73', 'Release Author'],
+      ['74', 'Other Author']
+    ]) {
+      const slots = map.slots.filter((s) => s.entity === `user-${id}`)
+      assert.equal(slots.length, 1)
+      assert.equal(slots[0].key, `user-${id}.0`)
+      assert.equal(slots[0].column, 'name')
+      assert.equal(slots[0].sample, name)
+      assert.equal(slots[0].type, 'text')
+      assert.equal(slots[0].customize, 'keep')
+    }
+    assert.deepEqual(lock.entities['user-73'], { name: 'Release Author', username: 'release-author' })
+    assert.deepEqual(lock.entities['user-74'], { name: 'Other Author', username: 'other-author' })
+    assert.deepEqual(
+      map.entities.find((e) => e.key === 'userProfile-7303'),
+      {
+        key: 'userProfile-7303',
+        kind: 'userProfile',
+        identity: { field: 'user_avatar', user_id: '73' },
+        sourceId: 7303
+      }
+    )
+    assert.deepEqual(
+      map.entities.find((e) => e.key === 'userProfile-7401'),
+      {
+        key: 'userProfile-7401',
+        kind: 'userProfile',
+        identity: { field: 'user_jobtitle' },
+        identityReferences: { user_id: 'user-74' },
+        sourceId: 7401
+      }
+    )
+    for (const id of ['75', '76']) {
+      assert.ok(!map.entities.some((e) => e.key === `user-${id}`))
+      assert.ok(!lock.entities[`user-${id}`])
+    }
+    assert.ok(!('user' in lock.inventoryCounts) && !('userProfile' in lock.inventoryCounts))
+    assert.ok(!JSON.stringify([map, lock]).includes('synthetic-security-sentinel'))
+  }
+)
+
+test('--full-coverage refuses ambiguous shipped author usernames across admin categories', needsPhp, () => {
+  const inv = clean()
+  inv.content[0].created_by = '73'
+  inv.users = [
+    { id: '73', name: 'Release Author', username: 'same-author', admin: '1' },
+    { id: '74', name: 'Unused Account', username: 'same-author', admin: '0' }
+  ]
+  const run = capture(inv, { args: ['--full-coverage'] })
+  assertRefused(run)
+  assert.match(run.stderr, /user-73 \(user\).*matches 2 rows/)
+})
+
+test(
+  '--full-coverage keeps numeric administrator custom-field identities beside their public name',
+  needsPhp,
+  () => {
+    const inv = clean()
+    inv.content[0].created_by = '73'
+    inv.content.push(article('4', { alias: 'second-post', created_by: '74' }))
+    inv.users = [
+      { id: '73', name: 'Release Author', username: 'release-author', admin: '1' },
+      { id: '74', name: 'Other Author', username: 'other-author', admin: '0' }
+    ]
+    inv.fields = [{ id: '1', name: 'bio', context: 'com_users.user', state: '1', type: 'text' }]
+    inv.fields_values = [
+      { field_id: '1', item_id: '73', value: 'Owner biography' },
+      { field_id: '1', item_id: '74', value: 'Editor biography' }
+    ]
+    const run = capture(inv, { args: ['--full-coverage'] })
+    assertWritten(run)
+    const fields = run.read('content-map.json').entities.filter((e) => e.kind === 'fieldValue')
+    assert.deepEqual(fields, [
+      {
+        key: 'fieldValue-1000000073',
+        kind: 'fieldValue',
+        identity: { field: 'bio', context: 'com_users.user', item_id: '73' },
+        sourceId: 1000000073
+      },
+      {
+        key: 'fieldValue-1000000074',
+        kind: 'fieldValue',
+        identity: { field: 'bio', context: 'com_users.user' },
+        identityReferences: { item_id: 'user-74' },
+        sourceId: 1000000074
+      }
+    ])
+  }
+)
 
 test('--full-coverage declares the rest of what a visitor reads, each kept from Customize', needsPhp, () => {
   const args = ['--module-prefix', '', '--list-items']
@@ -991,6 +1116,7 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
     'tag-4 title  text Boxer keep',
     'field-1 label  text Phone keep',
     'field-1 params hint text Your phone keep',
+    'user-42 name  text Tracy Agent keep',
     'user-44 name  text Drew Stokes  keep',
     'userProfile-4401 value  text Boxer keep',
     'userProfile-4403 value  image images/author/pic-4.jpg keep',
@@ -1028,16 +1154,18 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
       .filter((e) => ['user', 'userProfile'].includes(e.kind))
       .map((e) => [e.key, e.identity, e.identityReferences ?? null, e.sourceId]),
     [
+      ['user-42', { username: 'tracyagent' }, null, 42],
       ['user-44', { username: 'Drew_Stokes' }, null, 44],
       ['userProfile-4401', { field: 'user_jobtitle' }, { user_id: 'user-44' }, 4401],
       ['userProfile-4403', { field: 'user_avatar' }, { user_id: 'user-44' }, 4403],
       ['userProfile-4404', { field: 'address1' }, { user_id: 'user-44' }, 4404],
-      // The Super User has no `user` entity (its username changes); its picture is matched by the account id.
+      // The existing administrator profile keeps its numeric identity beside the new public name slot.
       ['userProfile-4203', { field: 'user_avatar', user_id: '42' }, null, 4203]
     ]
   )
   // The lock keeps an author's name and username, never the account.
   const lock = run.read('presentation-lock.json')
+  assert.deepEqual(lock.entities['user-42'], { name: 'Tracy Agent', username: 'tracyagent' })
   assert.deepEqual(lock.entities['user-44'], { name: 'Drew Stokes ', username: 'Drew_Stokes' })
   // The plugin counts every row of a kind it governs; the lock says how many the release has.
   // People are not counted: every provision adds the owner's account.

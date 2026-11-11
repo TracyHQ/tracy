@@ -576,10 +576,11 @@ if a.full_coverage:
   try:d=json.loads(v)
   except (TypeError,ValueError):return v or ''
   return d if isinstance(d,str) else v
- # A Super User is the account a provision takes over (renamed, its username changed): not the demo's author.
+ # Provision resets authentication, not public names or usernames; a shipped administrator can be an author too.
  users={r['id']:r for r in inv.get('users',[]) if str(r.get('admin') or '0')!='1'}
  owners={r['id']:r for r in inv.get('users',[]) if str(r.get('admin') or '0')=='1'}
- people_rows['user']=list(users.values())
+ authors={**users,**owners}
+ people_rows['user']=list(authors.values())
  for r in inv.get('user_profiles',[]):
   if r['profile_key'] in PROFILE_FIELDS and (r['user_id'] in users or r['user_id'] in owners) and words(r['profile_value']).strip():
    people_rows['userProfile'].append({'id':str(int(r['user_id'])*100+PROFILE_FIELDS.index(r['profile_key'])),'user_id':r['user_id'],'field':r['profile_key'][len('profile.'):],'value':words(r['profile_value'])})
@@ -594,14 +595,12 @@ if a.full_coverage:
    # An entity only when it has a slot (a bio of markup with no words has none).
    if any(sl['entity']==pid for sl in slots):entities.append({'key':pid,'kind':'userProfile','identity':{'field':pr['field'],**identity_extra},**({'identityReferences':references} if references else {}),'sourceId':int(pr['id']),'initial':{'value':pr['value']}})
  article_ids={str(e['sourceId']) for e in entities if e['kind']=='article'}
- for uid in sorted({r['created_by'] for r in inv['content'] if r['id'] in article_ids and r.get('created_by') in users},key=int):
-  u=users[uid];eid=f'user-{uid}'
+ for uid in sorted({r['created_by'] for r in inv['content'] if r['id'] in article_ids and r.get('created_by') in authors},key=int):
+  u=authors[uid];eid=f'user-{uid}'
   entities.append({'key':eid,'kind':'user','identity':{'username':u['username']},'sourceId':int(uid),'initial':{'name':u['name'],'username':u['username']}})
   slots.append({'key':f'{eid}.0','entity':eid,'column':'name','type':'text','sample':u['name'],'maxCharacters':max(40,min(2000,len(u['name'])*2+20)),'requiresEvidence':False,'label':u['name'].strip()+' / name','customize':'keep'})
-  declare_profiles(uid,u['name'],{},{'user_id':eid})
- # The Super User's picture, bio and job title are the demo's too (the demo admin is the byline of its first posts and has an
- # author page), but the account itself is not: its username changes. So no `user` entity; the profile is matched by the
- # account's id, which a provision keeps (it only resets the password).
+  if uid in users:declare_profiles(uid,u['name'],{},{'user_id':eid})
+ # Keep existing administrator profiles matched by numeric account id, even when their public name now has a slot.
  for uid in sorted(owners,key=int):declare_profiles(uid,owners[uid]['name'],{'user_id':str(uid)},None)
 # Custom field values (--full-coverage): words an author page prints from a user's custom field (JA Vega's `info` field holds
 # each team member's skill bars, `#__fields_values`, field 1 x users 42-50). A `fieldValue` entity per value that is the one
@@ -632,7 +631,8 @@ if a.full_coverage:
   else:declare_text(add,'value',value,label,'image' if f.get('type')=='media' else 'text')
   if not any(sl['entity']==eid for sl in slots):continue
   owner=f'{"article" if article else "user"}-{r["item_id"]}'
-  identity={'field':f['name'],'context':f['context'],**({} if any(e['key']==owner for e in entities) else {'item_id':str(r['item_id'])})}
+  # Administrator custom fields keep their existing numeric identity beside a newly declared public name.
+  identity={'field':f['name'],'context':f['context'],**({} if (article or r['item_id'] in users) and any(e['key']==owner for e in entities) else {'item_id':str(r['item_id'])})}
   entities.append({'key':eid,'kind':'fieldValue','identity':identity,**({'identityReferences':{'item_id':owner}} if 'item_id' not in identity else {}),'sourceId':fid,'initial':{'value':value}})
   people_rows['fieldValue'].append({'id':str(fid),'field':f['name'],'context':f['context'],'item_id':str(r['item_id'])})
 # Template language strings (--full-coverage): words a template keeps in its language file and prints itself (JA Boxing's
