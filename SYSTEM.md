@@ -3113,6 +3113,12 @@ follows the same work. An eligible failed action offers explicit Retry through t
 `retryOf`; it sends no new research or template selection. Blocked immutable briefs and lost or deleted sites have no
 retry control. A later research press also follows an earlier own-site action while its base still exists, including a stopped or completed action, instead of offering a template the build door would refuse with `BUILD_EXISTS`. Replaced actions and deleted bases are excluded. Retry still keeps the original frozen revision; research does not silently rewrite it.
 
+For a Joomla header without menu label slots, the write step can identify its main menu from an unambiguous
+intersection of the plan's kept page paths and the released content map's menu identities. It hides only unplanned
+kit-mapped items, preserves kept descendants and their ancestors, and leaves unrepresented nodes such as a default
+Home alias intact. This fallback creates no writer label slots. Ambiguous identities produce no menu hides; the
+runtime default-Home guard still refuses to unpublish the active root menu item.
+
 An explicit Retry may also recover a historical completed chain action whose exact current owned site brief failed after
 the original action ended. Acceptance locks the build and brief, then records a server-held authority on the new action:
 account, parent action, build, site, frozen revision and a PostgreSQL hash of the failed brief generation. Historical

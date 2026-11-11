@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-541-logo-only-main-menu",
+  "kind": "fix",
+  "title": "Logo-only Joomla headers derive safe navigation hides from planned page identities",
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the pure navigation fallback and existing header, WordPress and runtime Home guard tests. No provider or running site is needed."
+  ],
+  "expect": [
+    "A header with no label slots identifies the unique menu and exports unplanned kit-mapped hides without writer labels.",
+    "Ambiguous or conflicting identities yield no hides; other menus and administrator items remain untouched.",
+    "Kept descendants preserve their ancestors, and unrepresented roots and descendants remain published.",
+    "Existing header votes take priority and the runtime door refuses to unpublish default Home."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/site-writer-main-menu-fallback.test.mjs",
+      "apps/tracy-web/test/site-writer-main-menu.test.mjs",
+      "apps/tracy-web/test/site-writer-wordpress.test.mjs",
+      "apps/tracy-web/test/write-step-settings.test.mjs"
+    ],
+    "tests": [
+      "a logo-only header derives navigation and hides unplanned pages without inventing writer slots",
+      "duplicate path evidence in two menus cannot identify a main menu",
+      "other menus, unknown roots and unmapped descendants stay untouched",
+      "a kept descendant preserves its navigation ancestors even without a kept top-level label",
+      "a duplicate path within the inferred menu refuses the fallback",
+      "runtime default Home cannot be unpublished even when planned by a stale map",
+      "the mapping export keeps hide authority without claiming any writer labels",
+      "conflicting planned menu types refuse all hides",
+      "administrator menu items are excluded from the fallback tree",
+      "existing header votes take priority over plan path inference"
+    ],
+    "needs": []
+  }
+}
