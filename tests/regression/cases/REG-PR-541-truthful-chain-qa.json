@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-541-truthful-chain-qa",
+  "kind": "fix",
+  "title": "A chain passes QA only after its verified final write",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run wo-chain-progress.test.mjs against isolated PostgreSQL. Finish base provisioning with missing, failed, stopped or unmeasured content work; also finish a fallback with a verified final write."
+  ],
+  "expect": [
+    "Missing or unsuccessful final writes fail the action with QA_NEEDS_REVIEW and qa.state failed.",
+    "A final write with a passed Site check can complete after an earlier model failure, with humanAccepted false.",
+    "The failed attempt retains its build identity, site identity and original chain findings."
+  ],
+  "selectors": {
+    "table": "wo_demo_action",
+    "brief": "site_brief"
+  },
+  "fence": "Step-chain demo runner requires an applied brief, terminal chain measurement and final write outcome done.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/wo-chain-progress.test.mjs"
+    ],
+    "tests": [
+      "a soft-failed model step can hand over when the final write and site check passed",
+      "a chain with missing brief never passes QA after base provisioning",
+      "a chain with failed final write never passes QA after base provisioning"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  }
+}

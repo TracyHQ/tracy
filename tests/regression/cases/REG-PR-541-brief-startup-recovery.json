@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-541-brief-startup-recovery",
+  "kind": "fix",
+  "title": "Startup brief recovery survives transient database outages and stops on shutdown",
+  "pr": 541,
+  "area": "website-opportunities/chain",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run brief-build startup recovery cases against PostgreSQL. Inject ENOTFOUND during its first read, SQLSTATE 53100 during its settlement write, and ECONNRESET for an uncertain applying row. Also exercise a permanent SQL error, transient retry exhaustion and shutdown during backoff."
+  ],
+  "expect": [
+    "Transient startup failures settle orphaned rows without a customer poll and retain LOST_ON_RESTART and lostFrom metadata.",
+    "An uncertain applying row retains LOST_PLACING and cannot silently become safe to replay.",
+    "Permanent errors stop after one query; transient failures stop at the configured attempt budget with a terminal log.",
+    "Shutdown cancels the backoff before another query or row write. Existing live heartbeat protection still passes."
+  ],
+  "selectors": {
+    "table": "site_brief"
+  },
+  "fence": "Bounded transient retry of recoverLost with observed updated_at fencing and cancellable recovery waits",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "--test-name-pattern=startup recovery|a row too fresh to judge at start",
+      "apps/tracy-web/test/brief-build.test.mjs"
+    ],
+    "tests": [
+      "startup recovery retries a transient database failure without a customer poll",
+      "startup recovery stops on permanent errors and after its transient retry budget",
+      "shutdown cancels startup recovery backoff before it can write an orphaned row",
+      "a row too fresh to judge at start is settled once it misses its heartbeat, and a beating one is left alone"
+    ],
+    "needs": ["postgres"],
+    "timeout_s": 180
+  }
+}

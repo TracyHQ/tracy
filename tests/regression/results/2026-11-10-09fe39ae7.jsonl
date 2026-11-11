@@ -1,0 +1,4 @@
+{"id":"REG-PR-541-media-admission","verdict":"PASS","commit":"09fe39ae7d6389750162b4305df03a3f8d6ac0f5","ran_at":"2026-11-10T15:40:34.150Z","evidence":"REG-PR-541-media-admission.log"}
+{"id":"REG-PR-541-object-storage-deadlines","verdict":"PASS","commit":"09fe39ae7d6389750162b4305df03a3f8d6ac0f5","ran_at":"2026-11-10T15:40:35.272Z","evidence":"REG-PR-541-object-storage-deadlines.log"}
+{"id":"REG-PR-541-research-crash-recovery","verdict":"PASS","commit":"09fe39ae7d6389750162b4305df03a3f8d6ac0f5","ran_at":"2026-11-10T15:40:53.287Z","evidence":"REG-PR-541-research-crash-recovery.log"}
+{"id":"REG-PR-541-truthful-chain-qa","verdict":"PASS","commit":"09fe39ae7d6389750162b4305df03a3f8d6ac0f5","ran_at":"2026-11-10T15:41:04.242Z","evidence":"REG-PR-541-truthful-chain-qa.log"}

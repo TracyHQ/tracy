@@ -62,3 +62,14 @@ test('measured sharpness is primary; the vision blur answer refuses only without
   assert.equal(photoRefusal(blurry), 'blurry')
   assert.equal(photoRefusal({ ...blurry, sharpness: measuredPoor }), 'blurry')
 })
+
+test('scene text survives brief mapping and native photo eligibility follows the stricter P09 rule', () => {
+  const source = { ...vision, textPresence: 'present', hasTextOverlay: false, hasTextOrWatermark: false }
+  const asset = briefAsset(source)
+  assert.equal(asset.textPresence, 'present')
+  assert.equal(asset.hasTextOrWatermark, false, 'the legacy overlay-only label remains unchanged')
+  assert.equal(photoRefusal(asset), 'lettering or a watermark')
+  assert.equal(photoRefusal(briefAsset({ ...source, textPresence: 'absent' })), null)
+  const unknown = briefAsset({ ...source, textPresence: 'invented' })
+  assert.equal('textPresence' in unknown, false)
+})

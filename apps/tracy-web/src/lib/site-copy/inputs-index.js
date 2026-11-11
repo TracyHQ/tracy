@@ -2,6 +2,7 @@
 // Indexes the plan, the kit and the brief for the copy check rules (ADR 0042). Reads tolerantly: a missing or
 // oddly shaped part yields an empty index and never throws. Nothing here modifies an input.
 import { mainMenuOf, planCopyEntries } from './main-menu.js'
+import { hiddenListsOf } from './hidden-lists.js'
 import { sentencesOf, stripEllipsis, textOfValue, wordsOf } from './text-tools.js'
 import { blockSlotsOf } from '../template-kit/kit-slots.js'
 
@@ -66,7 +67,7 @@ function indexFooterHeadings(plan, kit, kitIdx) {
   return out
 }
 
-function indexPlan(plan, kitIdx, headings) {
+function indexPlan(plan, kitIdx, headings, kit, compileHiddenLists) {
   const decisions = [...arr(plan?.sharedBlocks), ...arr(plan?.pages).flatMap((p) => arr(p?.blocks))].filter(
     isObject
   )
@@ -112,7 +113,20 @@ function indexPlan(plan, kitIdx, headings) {
         maxCharacters: null,
         isReview: false
       })
-  for (const id of expected.keys()) hidden.delete(id)
+  const hiddenLists = new Map()
+  for (const [id, unit] of compileHiddenLists ? hiddenListsOf(plan, kit) : []) {
+    if (!hidden.has(id)) continue
+    if (!unit) {
+      hiddenLists.set(id, { list: id, children: [], invalid: true })
+      continue
+    }
+    hidden.delete(id)
+    for (const child of unit.children) {
+      hidden.add(child)
+      hiddenLists.set(child, unit)
+    }
+  }
+  for (const id of expected.keys()) if (!hiddenLists.has(id)) hidden.delete(id)
   const pages = arr(plan?.pages)
     .filter((p) => isObject(p) && p.decision === 'keep' && typeof p.id === 'string')
     .map((p) => p.id)
@@ -123,7 +137,7 @@ function indexPlan(plan, kitIdx, headings) {
     .filter((l) => isObject(l) && l.use === 'create')
     .map((l) => (typeof l.id === 'string' ? l.id : `legal:${l.kind}`))
   if (isObject(plan?.site?.notFound)) textPages.push('notFound')
-  return { expected, hidden, frames, pages, textPages }
+  return { expected, hidden, frames, pages, textPages, ...(compileHiddenLists ? { hiddenLists } : {}) }
 }
 
 const reviewTexts = (brief) => {
@@ -137,10 +151,11 @@ const reviewTexts = (brief) => {
 }
 
 // What the template's demo business left behind: its sentences (at least three words) and its proper names.
-function indexDemo(kit, kitIdx) {
+function indexDemo(kit, kitIdx, iconFields) {
   const sentences = []
   const names = new Set()
   for (const s of kitIdx.slots.values()) {
+    if (iconFields.get(s.id)?.has(s.sample)) continue
     const sample = typeof s.sample === 'string' ? stripEllipsis(s.sample) : ''
     for (const sentence of sentencesOf(sample))
       if (wordsOf(sentence).length >= 3) sentences.push(wordsOf(sentence).join(' '))
@@ -206,24 +221,36 @@ function labelConflicts(plan) {
     }))
 }
 
-export function indexInputs({ plan, kit, brief, contentMap }) {
+// Only the write step opts into compiling list hides; writer and copy-check semantics stay frozen.
+export function indexInputs({ plan, kit, brief, contentMap, compileHiddenLists = false }) {
   const kitIdx = indexKit(kit)
+  // A CMS text field can back an icon. Only the kit's explicit icon declaration establishes that relationship.
+  const iconFields = new Map()
+  for (const block of arr(kit?.blocks))
+    for (const slot of blockSlotsOf(block)) {
+      if (slot.type !== 'icon' || !kitIdx.slots.has(slot.field) || typeof slot.fieldValue !== 'string')
+        continue
+      const values = iconFields.get(slot.field) ?? new Set()
+      values.add(slot.fieldValue)
+      iconFields.set(slot.field, values)
+    }
   const headings = indexFooterHeadings(plan, kit, kitIdx)
   const facts = new Map()
   for (const f of arr(brief?.facts))
     if (isObject(f) && typeof f.id === 'string') facts.set(f.id, textOfValue(f.value))
-  const planIdx = indexPlan(plan, kitIdx, headings)
+  const planIdx = indexPlan(plan, kitIdx, headings, kit, compileHiddenLists)
   const menu =
     contentMap === undefined ? { slots: [], hidden: [], problems: [] } : mainMenuOf({ plan, kit, contentMap })
   indexMainMenu(menu, kitIdx, planIdx)
   return {
     kitSlots: kitIdx.slots,
+    iconFields,
     ...planIdx,
     menuProblems: menu.problems,
     labelConflicts: labelConflicts(plan),
     facts,
     reviews: reviewTexts(brief),
-    demo: indexDemo(kit, kitIdx)
+    demo: indexDemo(kit, kitIdx, iconFields)
   }
 }
 

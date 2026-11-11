@@ -139,6 +139,7 @@ export type NextAction =
   | 'start'
   | 'build'
   | 'retry-demo'
+  | 'review-brief'
   | 'send-demo'
   | 'open-site'
   | 'open-demo-chat'
@@ -149,6 +150,7 @@ export const ACTION_VIEW: Readonly<
   resume: { labelKey: 'job.resume', variant: 'outline' },
   start: { labelKey: 'job.start', variant: 'outline' },
   build: { labelKey: 'v3.buildDemo', variant: 'default' },
+  'review-brief': { labelKey: 'brief.view', variant: 'outline' },
   'retry-demo': { labelKey: 'action.retry', variant: 'outline' },
   'send-demo': { labelKey: 'v3.sendDemo', variant: 'default' },
   'open-demo-chat': { labelKey: 'v3.openDemoChat', variant: 'outline' },
@@ -159,6 +161,7 @@ const hasJobId = (row: OpportunityListRow): boolean => typeof row.job?.id === 's
 
 export function nextAction(row: OpportunityListRow): NextAction {
   const stage = stageOf(row)
+  if (row.demoAction?.state === 'failed' && row.demoAction.error === 'BRIEF_NOT_READY') return 'review-brief'
   if (stage === 'outreach') return 'send-demo'
   if (
     row.demoAction?.state === 'failed' ||
@@ -190,6 +193,7 @@ export function stopReasonKey(job: RowJob | null | undefined): string {
  * reads. Codes `reasonKey` already knows keep theirs; anything else reads the generic `reason.demo_failed`.
  */
 const DEMO_FAILURES: Record<string, string> = {
+  BRIEF_NOT_READY: 'reason.brief_not_ready',
   PROVISION_FAILED: 'reason.provision_failed',
   BUILD_FAILED: 'reason.provision_failed',
   BUILD_UNREACHABLE: 'reason.provision_failed',

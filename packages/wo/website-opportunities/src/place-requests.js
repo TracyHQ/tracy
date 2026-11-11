@@ -12,7 +12,7 @@
  * pages) are researched for it alone, after the place's answer (`place-jobs.js answerOne`).
  */
 import { answerOne, joinPlace, releasePlaceJob } from './place-jobs.js'
-import { placeAgainPlan } from './research-again.js'
+import { placeAgainPlan, providerRepairReason, providerSetupUpdatedAt } from './research-again.js'
 import { JobActiveError, cancelJob, ensurePlaceOf, jobOf, resumeJob } from './store.js'
 
 const RESUMABLE = ['paused', 'blocked', 'failed', 'cancelled']
@@ -111,6 +111,24 @@ export async function requestResearch(
       await client.query('select 1 from wo_place where id = $1 for no key update', [placeId])
       againPlan = await placeAgainPlan(client, placeId, { now: now(), ...again })
       if (!againPlan.run.length) throw new NothingDueError(againPlan)
+    }
+    // A source-only retry must honor the same payment fence as the full preview, before any job or quota.
+    if (onlySource) {
+      await client.query('select 1 from wo_place where id = $1 for no key update', [placeId])
+      const row = (
+        await client.query(
+          `select s.* from wo_place p join wo_place_snapshot_source s on s.snapshot_id = p.current_snapshot_id
+         where p.id = $1 and s.source = $2`,
+          [placeId, onlySource]
+        )
+      ).rows[0]
+      const repair = providerRepairReason(row, await providerSetupUpdatedAt(client, { [onlySource]: row }))
+      if (repair)
+        throw new NothingDueError({
+          run: [],
+          kept: [{ part: onlySource, reason: 'unavailable', detail: repair }],
+          ceilingCents: 0
+        })
     }
     const joined = await joinPlace(client, placeId, {
       force,
@@ -227,8 +245,33 @@ export async function resumeRequest(
         )
       ).rows[0]
     } else {
+      // Resume the persisted source scope; this operation has no caller-supplied onlySource argument.
+      await client.query('select 1 from wo_place where id = $1 for no key update', [placeId])
+      const previousRun = own.place_job_id
+        ? (await client.query('select only_source from wo_place_job where id = $1', [own.place_job_id]))
+            .rows[0]
+        : null
+      const onlySource = previousRun?.only_source ?? null
+      if (onlySource) {
+        const row = (
+          await client.query(
+            `select s.* from wo_place p join wo_place_snapshot_source s on s.snapshot_id = p.current_snapshot_id
+         where p.id = $1 and s.source = $2`,
+            [placeId, onlySource]
+          )
+        ).rows[0]
+        const repair = providerRepairReason(row, await providerSetupUpdatedAt(client, { [onlySource]: row }))
+        if (repair)
+          throw new NothingDueError({
+            run: [],
+            kept: [{ part: onlySource, reason: 'unavailable', detail: repair }],
+            ceilingCents: 0
+          })
+      }
       const joined = await joinPlace(client, placeId, {
         now: now(),
+        onlySource,
+        resumeJobId: own.place_job_id,
         requiredSources,
         starter: { kind: 'account', accountId }
       })

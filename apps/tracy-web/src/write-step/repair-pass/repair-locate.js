@@ -82,7 +82,7 @@ export async function pageItems(pass, page, faults) {
   const served = await servedOf(pass, page)
   const items = []
   const elements = []
-  for (const fault of faults.map((f) => withAltSlot(f, pass.altSlots))) {
+  for (const fault of faults.map((f) => withAltSlot(f, pass.altSlots, pass.contentMap))) {
     const element = served ? servedElementOf(served, fault) : null
     const words =
       typeof fault.measured === 'string' && fault.measured ? fault.measured : quotedWords(fault.seen)

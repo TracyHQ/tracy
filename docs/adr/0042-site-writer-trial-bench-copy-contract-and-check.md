@@ -157,7 +157,9 @@ Thresholds and decisions (named constants in the code):
   whitespace and case normalised, as a whole token in the values of the facts the slot cites; phones compare by
   digits only. The cited facts are the plan's `factIds` for the slot plus the writer's own; an unknown fact id fails.
   Alt text, titles and descriptions cite no fact, so their details must exist in some fact of the brief. Number
-  words ("two coaches") are not extracted.
+  words ("two coaches") are not extracted. Since `site-copy-check/7`, a plain integer from 0 to 20 may also be
+  backed by its standalone English cardinal word in the same allowed facts (`2` by `two Dubai studios`). Parts of
+  compound numbers, decimals, times, phones, email addresses and links do not gain this equivalence.
 - **W05 quoted passage.** Text between double quote marks (`"..."`, curly, or guillemets) in a slot that is under a
   reviews or testimonial block, or whose plan `says` mentions a quote, review or testimonial. After collapsing
   whitespace, unifying apostrophes and trimming end punctuation, it must be a substring of a review text. Reviews

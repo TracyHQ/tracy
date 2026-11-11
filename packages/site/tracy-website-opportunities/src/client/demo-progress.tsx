@@ -15,6 +15,32 @@ import type { Translate } from './strings.ts'
 import { CMS_LABEL } from './cms-label.ts'
 import { type AgainControl, ResearchAgainButton } from './research-again-dialog.tsx'
 
+const BRIEF_CHECKS = new Set([
+  'own-usable-photos',
+  'labelled-share',
+  'source-and-credit',
+  'hero-candidates',
+  'offerings-with-photo',
+  'offerings-with-description',
+  'people-with-portrait',
+  'items-routed',
+  'template-kinds'
+])
+
+/** The failed build's exact checks, in the interface language, rather than a paid Retry. */
+function BriefBlockers({ t, row }: { t: Translate; row: OpportunityListRow }): JSX.Element | null {
+  if (row.demoAction?.error !== 'BRIEF_NOT_READY') return null
+  const checks = [...new Set(row.demoAction.readiness?.checks ?? [])].filter((id) => BRIEF_CHECKS.has(id))
+  if (!checks.length) return null
+  return (
+    <ul className="tracy-wo-small" data-brief-blockers>
+      {checks.map((id) => (
+        <li key={id}>{t(`brief.check.${id}`)}</li>
+      ))}
+    </ul>
+  )
+}
+
 const BUILD_STEPS = ['brief', 'build', 'fill', 'check'] as const
 export function buildProgress(row: OpportunityListRow) {
   const action = row.demoAction
@@ -69,6 +95,7 @@ export function ProgressCell({
       <StepsBar t={t} step={p.done ? 5 : p.step} steps={4} />
       <span className="tracy-wo-muted tracy-wo-small">{t('research.step', { step: p.step, steps: 4 })}</span>
       {p.failed && why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
+      {p.failed ? <BriefBlockers t={t} row={row} /> : null}
     </div>
   )
 }
@@ -200,6 +227,7 @@ export function Steps({
                   </span>
                 ) : null}
                 {failed && why ? <span className="tracy-wo-error tracy-wo-small">{t(why)}</span> : null}
+                {failed ? <BriefBlockers t={t} row={row} /> : null}
               </div>
             </li>
           )

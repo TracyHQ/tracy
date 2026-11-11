@@ -2,6 +2,7 @@
 // table names, and a fault with no page (a comment points at a page) are skipped with a code and a reason; so is a demo
 // fault naming a value the brief gives (`not-demo`, repair-brief-values.js). A fault the check names at two widths is
 // sent once. Faults are grouped by page, in the order their page was first named. Pure.
+import { unsupportedAlt } from './repair-alt-slots.js'
 import { pagePath } from '../../lib/hidden-page-links.js'
 import { notDemoReason } from './repair-brief-values.js'
 import { kindOfFailure, notSentOf } from './repair-kinds.js'
@@ -62,7 +63,9 @@ export const blockingFailures = (check) =>
   )
 
 /** Why one fault is not sent, by code and reason, or null. */
-function skipOf(fault, brief) {
+function skipOf(fault, brief, capabilities) {
+  const blocked = unsupportedAlt(fault, capabilities)
+  if (blocked) return blocked
   const skip = notSentOf(fault)
   if (skip) return skip
   const notDemo = notDemoReason(fault, brief)
@@ -75,11 +78,11 @@ function skipOf(fault, brief) {
  * @returns {{ pages: { page: string, faults: object[] }[],
  *   skipped: { fault: object, code: string, reason: string }[] }}
  */
-export function faultsToSend({ firstCheck, brief = null }) {
+export function faultsToSend({ firstCheck, brief = null, altSlots = null, contentMap = null }) {
   const skipped = []
   const kept = []
   for (const fault of blockingFailures(firstCheck).map(fromFailure)) {
-    const skip = skipOf(fault, brief)
+    const skip = skipOf(fault, brief, { altSlots, contentMap })
     if (skip) skipped.push({ fault, ...skip })
     else if (!kept.some((k) => sameFault(k, fault))) kept.push(fault)
   }

@@ -1,0 +1,23 @@
+PR #541 native picture measurement acceptance evidence
+
+Command: node --test apps/tracy-web/test/website-opportunities-media-info.test.mjs
+Before source change: concurrency regression FAIL, peak feature readers5, expected1.
+After source change: all4 tests PASS. Original byte equality, dimensions, EXIF orientation,
+palette weight, feature values, decoder release after malformed input and optional feature failure,
+and logo waiting on the same native permit are checked.
+
+Bounded synthetic memory measurement (not a reproduction of the deployment OOM):
+Node22.23.1, Sharp0.35.5, libvips8.18.7. Fresh child process for each before/after sample.
+One generated5000x4000 RGB solid-colour PNG,279251 compressed bytes, five concurrent imageInfo calls,
+each using the real pictureFeatures adapter. Outputs all retained5000x4000 size, dHash and features.
+Measured process.resourceUsage().maxRSS; one native permit includes metadata, palette and features.
+No Docker runtime mutation and no global Sharp configuration changes.
+{"version":"before","pixelsPerImage":20000000,"concurrentCalls":5,"compressedBytes":279251,"baselineRssMiB":81,"maxRssMiB":158,"elapsedMs":475,"sharp":"0.35.5","vips":"8.18.7"}
+{"version":"after","pixelsPerImage":20000000,"concurrentCalls":5,"compressedBytes":279251,"baselineRssMiB":71,"maxRssMiB":119,"elapsedMs":1347,"sharp":"0.35.5","vips":"8.18.7"}
+{"version":"before","pixelsPerImage":20000000,"concurrentCalls":5,"compressedBytes":279251,"baselineRssMiB":77,"maxRssMiB":148,"elapsedMs":927,"sharp":"0.35.5","vips":"8.18.7"}
+{"version":"after","pixelsPerImage":20000000,"concurrentCalls":5,"compressedBytes":279251,"baselineRssMiB":80,"maxRssMiB":123,"elapsedMs":1315,"sharp":"0.35.5","vips":"8.18.7"}
+
+Two samples show maxRSS148–158MiB before and119–123MiB after. Native serialization costs
+throughput (475–927ms before,1315–1347ms after). This demonstrates bounded simultaneous decoding
+and reduced peak in this workload, not a bound on every supported100MP input or proof that native
+decoding alone caused the web container's2GB OOM. Concurrent downloads remain unchanged.

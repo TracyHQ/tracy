@@ -131,3 +131,20 @@ test('R21 slots hidden for another reason pass', () => {
   ])
   assert.equal(rule.status, 'pass')
 })
+
+test('R21 original article fields may be hidden when there is no original post', () => {
+  const k = kit()
+  k.blocks[0].slots.push(
+    { id: 'post.title', role: 'article.title' },
+    { id: 'post.lead', role: 'article.lead' }
+  )
+  const result = checkPlan({
+    kit: k,
+    brief: brief(),
+    plan: plan([
+      { slot: 'post.title', why: 'No original post in the brief.' },
+      { slot: 'post.lead', why: 'No original post in the brief.' }
+    ])
+  }).rules.find((r) => r.id === 'R21')
+  assert.equal(result.status, 'pass')
+})

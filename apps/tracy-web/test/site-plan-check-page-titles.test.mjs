@@ -13,6 +13,9 @@ const TITLE = `${BODY}.title`
 function inputs(write) {
   const k = kit()
   k.pages.find((p) => p.id === CONTACT).titleSlot = TITLE
+  k.blocks
+    .find((b) => b.id === BODY)
+    .slots.push({ id: TITLE, type: 'text', role: 'editorial.heading', sample: 'Contact', maxCharacters: 40 })
   const p = plan()
   write?.(decisionOf(p, BODY), p)
   return { plan: p, kit: k, brief: brief() }
@@ -58,6 +61,15 @@ test('R20 a copy entry with neither words nor intent is not a title', () => {
 test('R20 a page the kit could not settle passes on any slot it names', () => {
   const input = inputs((d) => (d.copy = [...(d.copy ?? []), says(`${BODY}.other`)]))
   const page = input.kit.pages.find((p) => p.id === CONTACT)
+  input.kit.blocks
+    .find((b) => b.id === BODY)
+    .slots.push({
+      id: `${BODY}.other`,
+      type: 'text',
+      role: 'editorial.heading',
+      sample: 'Contact',
+      maxCharacters: 40
+    })
   page.titleSlot = null
   page.titleCandidates = [TITLE, `${BODY}.other`]
   assert.equal(r20(input).status, 'pass')

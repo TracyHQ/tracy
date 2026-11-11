@@ -95,7 +95,9 @@ export interface AgainView {
 export function againView(plan: AgainPlan, locale?: string): AgainView {
   const kept: AgainView['kept'] = []
   for (const k of plan.kept) {
-    const reasonKey = `again.kept.${k.reason}`
+    const reasonKey = /^http_(401|402|403)$/i.test(k.detail ?? '')
+      ? 'reason.provider_payment_required'
+      : `again.kept.${k.reason}`
     const group = kept.find((g) => g.reasonKey === reasonKey)
     if (group) group.parts.push(k.part)
     else kept.push({ parts: [k.part], reasonKey })

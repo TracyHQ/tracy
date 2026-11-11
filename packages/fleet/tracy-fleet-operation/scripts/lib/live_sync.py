@@ -1603,8 +1603,46 @@ class DbMerge:
         finally:
             self.sql.run("SET FOREIGN_KEY_CHECKS=1;")
 
+    def repair_history_map(self) -> list[dict]:
+        """Discard Joomla version pairs missing on the copy or belonging to another record (#550)."""
+        mapping = self.ids.map.get("history", {})
+        if self.platform != "joomla" or not mapping:
+            return []
+        table = self.prefix + "history"
+        if not all(self.ids.column_exists(schema, "history", "item_id")
+                   and self.ids.column_exists(schema, "history", "version_id") for schema in self.names.values()):
+            return []
+        owners = {}
+        for side, schema in self.names.items():
+            numbers = sorted(set(mapping.values() if side == "ours" else mapping))
+            owners[side] = {}
+            for start in range(0, len(numbers), 500):
+                listed = ", ".join(str(n) for n in numbers[start:start + 500])
+                owners[side].update((int(number), owner) for number, owner in self.sql.run(
+                    f"SELECT version_id, item_id FROM {q(schema)}.{q(table)} WHERE version_id IN ({listed});"))
+        names = [(entity, template) for entity, rule in self.ids.entities
+                 for ref_table, column, template in rule.get("names", [])
+                 if ref_table == "history" and column == "item_id"]
+        def copy_owner(owner):
+            for entity, template in names:
+                head, tail = template.split("{id}")
+                if owner.startswith(head) and (not tail or owner.endswith(tail)):
+                    number = owner[len(head):len(owner) - len(tail) if tail else len(owner)]
+                    if number.isdigit():
+                        return template.format(id=self.ids.map.get(entity, {}).get(int(number), int(number)))
+            return owner
+        forgotten = []
+        for live, copy in list(mapping.items()):
+            owner = owners["ours"].get(copy)
+            if owner is None or any(live in owners[side] and copy_owner(owners[side][live]) != owner
+                                    for side in ("base", "theirs")):
+                del mapping[live]
+                forgotten.append({"table": "history", "live": live, "copy": copy})
+        return forgotten
+
     def _run(self) -> dict:
         self.sql.database = self.names["ours"]
+        repaired_history = self.repair_history_map()
         # Where a merge's time goes, on stderr (webroot-sync.sh keeps it in the job's log).
         started = time.monotonic()
         # With the sync's own clock (TRACY_SYNC_T0, webroot-sync.sh), each phase is a timed step of
@@ -1675,7 +1713,7 @@ class DbMerge:
             existing = {row[0] for row in self.sql.run(
                 f"SELECT table_name FROM information_schema.tables WHERE table_schema = {sql_str(self.names['ours'])};")}
             self.rebuild.intersection_update(existing)
-        forgotten = self.ids.forget_gone(self.names["ours"], self.names["theirs"])
+        forgotten = repaired_history + self.ids.forget_gone(self.names["ours"], self.names["theirs"])
         if forgotten:
             phase(f"{len(forgotten)} deleted record(s) left the id map")
         keep_files = _WORDPRESS.kept_media_files(self.sql, self.names, self.prefix) if self.platform == "wordpress" else []
@@ -1987,6 +2025,11 @@ class DbMerge:
                               f" WHERE CAST(r.{q(column)} AS CHAR) = {sql_str(ident)}{cond}"
                               f" AND {self._absent(full, 'r', self._pk(t, full), cols)};")
             for ref_table, column, template in rule.get("names", []):
+                # A live-generated version must enter the copy through the row merge. Seeding it
+                # into the base alone makes its absence on the copy look like a local deletion,
+                # leaving the id map pointing at a number the copy can give another article (#550).
+                if self.platform == "joomla" and ref_table == "history":
+                    continue
                 full = self.prefix + ref_table
                 if not all(self._has(s, full) for s in (b, t)):
                     continue

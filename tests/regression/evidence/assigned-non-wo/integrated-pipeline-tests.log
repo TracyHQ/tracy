@@ -1,0 +1,1404 @@
+TAP version 13
+# Subtest: an allow-listed template with the switch on runs the step chain, not the CMS engine
+ok 1 - an allow-listed template with the switch on runs the step chain, not the CMS engine
+  ---
+  duration_ms: 3789.417583
+  type: 'test'
+  ...
+# Subtest: a build that did not ask for the chain runs the CMS engine exactly as today
+    # Subtest: a typed brief
+    ok 1 - a typed brief
+      ---
+      duration_ms: 25.909666
+      type: 'test'
+      ...
+    # Subtest: another workflow
+    ok 2 - another workflow
+      ---
+      duration_ms: 165.752667
+      type: 'test'
+      ...
+    1..2
+ok 2 - a build that did not ask for the chain runs the CMS engine exactly as today
+  ---
+  duration_ms: 307.103042
+  type: 'test'
+  ...
+# Subtest: a chain build stays on the chain when the switch is turned off after the press, never falling back to the old build
+ok 3 - a chain build stays on the chain when the switch is turned off after the press, never falling back to the old build
+  ---
+  duration_ms: 52.292292
+  type: 'test'
+  ...
+# Subtest: the kit comes first; base site, brand and planner run together; the Write step waits for the site and every input
+ok 4 - the kit comes first; base site, brand and planner run together; the Write step waits for the site and every input
+  ---
+  duration_ms: 96.405959
+  type: 'test'
+  ...
+# Subtest: a Write step on a site that is not up yet waits for the base site
+ok 5 - a Write step on a site that is not up yet waits for the base site
+  ---
+  duration_ms: 64.618083
+  type: 'test'
+  ...
+# Subtest: every Write step write carries the run id, and Site changes shows exactly one Tracy setup row for the build
+ok 6 - every Write step write carries the run id, and Site changes shows exactly one Tracy setup row for the build
+  ---
+  duration_ms: 299.592
+  type: 'test'
+  ...
+# Subtest: a failing picture step still writes the plan, copy and brand, and the run ends as a soft failure
+ok 7 - a failing picture step still writes the plan, copy and brand, and the run ends as a soft failure
+  ---
+  duration_ms: 27.646167
+  type: 'test'
+  ...
+# Subtest: a planner that made nothing still lets the Write step run, with the brand and no plan or copy, so no demo is left
+ok 8 - a planner that made nothing still lets the Write step run, with the brand and no plan or copy, so no demo is left
+  ---
+  duration_ms: 28.464958
+  type: 'test'
+  ...
+# Subtest: a writer whose versions the checks all rejected hands over its best one, which the Write step uses
+ok 9 - a writer whose versions the checks all rejected hands over its best one, which the Write step uses
+  ---
+  duration_ms: 143.585125
+  type: 'test'
+  ...
+# Subtest: a template kit that cannot be read hands the base site over as created, ending as a soft failure at the kit
+ok 10 - a template kit that cannot be read hands the base site over as created, ending as a soft failure at the kit
+  ---
+  duration_ms: 25.461334
+  type: 'test'
+  ...
+# Subtest: a Write step that stops or throws still hands the site over, ending as a soft failure at the write
+ok 11 - a Write step that stops or throws still hands the site over, ending as a soft failure at the write
+  ---
+  duration_ms: 52.133334
+  type: 'test'
+  ...
+# Subtest: the row keeps minutes and USD per step, the totals and the ending
+ok 12 - the row keeps minutes and USD per step, the totals and the ending
+  ---
+  duration_ms: 32.755333
+  type: 'test'
+  ...
+# Subtest: the base site is a step of its own: minutes from the press until the host had it up, no USD
+ok 13 - the base site is a step of its own: minutes from the press until the host had it up, no USD
+  ---
+  duration_ms: 30.43875
+  type: 'test'
+  ...
+# Subtest: the customer is told "working" until the chain has handed the site over, a soft failure included
+ok 14 - the customer is told "working" until the chain has handed the site over, a soft failure included
+  ---
+  duration_ms: 49.179083
+  type: 'test'
+  ...
+# Subtest: while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way
+ok 15 - while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way
+  ---
+  duration_ms: 77.350125
+  type: 'test'
+  ...
+# Subtest: a chain build past the frame's old 25 minute cut is not cut (\#478)
+ok 16 - a chain build past the frame's old 25 minute cut is not cut (\#478)
+  ---
+  duration_ms: 34.261583
+  type: 'test'
+  ...
+# Subtest: at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (\#478)
+ok 17 - at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (\#478)
+  ---
+  duration_ms: 27.140959
+  type: 'test'
+  ...
+# [sites] harbourpadel.localhost: no design record at provision (TEMPLATE_WEARS_NONE, quickstart/ja-boxing/j6)
+# Subtest: an enabled template asked for the step chain starts the frame with the research revision as its brief
+ok 18 - an enabled template asked for the step chain starts the frame with the research revision as its brief
+  ---
+  duration_ms: 3937.8465
+  type: 'test'
+  ...
+# Subtest: the step chain is refused, with nothing claimed, for another account’s revision, a template not enabled or the switch off
+ok 19 - the step chain is refused, with nothing claimed, for another account’s revision, a template not enabled or the switch off
+  ---
+  duration_ms: 64.5995
+  type: 'test'
+  ...
+# Subtest: the frame keeps its 25 minute run cut for every other engine, the chain has the 2 hour deadline
+ok 20 - the frame keeps its 25 minute run cut for every other engine, the chain has the 2 hour deadline
+  ---
+  duration_ms: 0.572708
+  type: 'test'
+  ...
+# Subtest: withoutCaps drops the planner budget and nothing else; the default harness keeps it
+ok 21 - withoutCaps drops the planner budget and nothing else; the default harness keeps it
+  ---
+  duration_ms: 0.525375
+  type: 'test'
+  ...
+# Subtest: a brand harness for a chain build has no cost cap; the default keeps 1 USD
+ok 22 - a brand harness for a chain build has no cost cap; the default keeps 1 USD
+  ---
+  duration_ms: 0.151417
+  type: 'test'
+  ...
+# Subtest: the brand spend check stops at a cap and never stops without one
+ok 23 - the brand spend check stops at a cap and never stops without one
+  ---
+  duration_ms: 0.242666
+  type: 'test'
+  ...
+# Subtest: step 9b keeps its windows by default; in a chain build it runs to the deadline and returns by 15 minutes after it
+ok 24 - step 9b keeps its windows by default; in a chain build it runs to the deadline and returns by 15 minutes after it
+  ---
+  duration_ms: 0.196959
+  type: 'test'
+  ...
+# Subtest: lost-run detection is untouched: the frame's stale clocks and the bench queue's lease and attempts
+ok 25 - lost-run detection is untouched: the frame's stale clocks and the bench queue's lease and attempts
+  ---
+  duration_ms: 0.084333
+  type: 'test'
+  ...
+# Subtest: acceptance is durable before any effect; two replicas build/fill/handoff once and only QA PASS reaches Outreach
+ok 26 - acceptance is durable before any effect; two replicas build/fill/handoff once and only QA PASS reaches Outreach
+  ---
+  duration_ms: 3678.960417
+  type: 'test'
+  ...
+# Subtest: a receipted provision failure stops its action; a new Retry alone asks the same build again
+ok 27 - a receipted provision failure stops its action; a new Retry alone asks the same build again
+  ---
+  duration_ms: 332.307875
+  type: 'test'
+  ...
+# Subtest: a crash before the failed provision receipt replays the same build without another charge
+ok 28 - a crash before the failed provision receipt replays the same build without another charge
+  ---
+  duration_ms: 168.0615
+  type: 'test'
+  ...
+# Subtest: restart after site creation but before its receipt reconciles one site and one revision without another charge
+ok 29 - restart after site creation but before its receipt reconciles one site and one revision without another charge
+  ---
+  duration_ms: 228.560625
+  type: 'test'
+  ...
+# Subtest: restart after a chat accepted the prompt but before its receipt repeats the same session and prompt id
+ok 30 - restart after a chat accepted the prompt but before its receipt repeats the same session and prompt id
+  ---
+  duration_ms: 295.769792
+  type: 'test'
+  ...
+# Subtest: a failed fill never starts the agent; Retry resumes that fill on the same site
+ok 31 - a failed fill never starts the agent; Retry resumes that fill on the same site
+  ---
+  duration_ms: 287.773917
+  type: 'test'
+  ...
+# Subtest: a Retry whose fill fails again stops instead of resuming its own failure
+ok 32 - a Retry whose fill fails again stops instead of resuming its own failure
+  ---
+  duration_ms: 186.161792
+  type: 'test'
+  ...
+# Subtest: a later Retry cannot resume writes or mint an agent seat after the creator loses site access
+ok 33 - a later Retry cannot resume writes or mint an agent seat after the creator loses site access
+  ---
+  duration_ms: 162.997292
+  type: 'test'
+  ...
+# Subtest: the same QA action terminates after its retry fails instead of polling or resetting repairs
+ok 34 - the same QA action terminates after its retry fails instead of polling or resetting repairs
+  ---
+  duration_ms: 17.99825
+  type: 'test'
+  ...
+# Subtest: an explicit QA retry gets one attempt; its own later failure needs a new accepted action
+ok 35 - an explicit QA retry gets one attempt; its own later failure needs a new accepted action
+  ---
+  duration_ms: 22.806291
+  type: 'test'
+  ...
+# Subtest: a lost explicit QA retry prompt receipt recovers after mode legacy without resetting its finite attempt
+ok 36 - a lost explicit QA retry prompt receipt recovers after mode legacy without resetting its finite attempt
+  ---
+  duration_ms: 31.377666
+  type: 'test'
+  ...
+# Subtest: a lost explicit QA retry prompt receipt recovers after mode initial-baseline without resetting its finite attempt
+ok 37 - a lost explicit QA retry prompt receipt recovers after mode initial-baseline without resetting its finite attempt
+  ---
+  duration_ms: 29.591833
+  type: 'test'
+  ...
+# Subtest: a fill Retry cannot acquire a later QA failure without an accepted QA marker
+ok 38 - a fill Retry cannot acquire a later QA failure without an accepted QA marker
+  ---
+  duration_ms: 27.798667
+  type: 'test'
+  ...
+# Subtest: historical retry ids without acceptance proof never authorize an undelivered prompt
+ok 39 - historical retry ids without acceptance proof never authorize an undelivered prompt
+  ---
+  duration_ms: 38.266792
+  type: 'test'
+  ...
+# Subtest: QA retry CAS refuses a changed generation, measured content or acceptance marker before sending
+ok 40 - QA retry CAS refuses a changed generation, measured content or acceptance marker before sending
+  ---
+  duration_ms: 58.758792
+  type: 'test'
+  ...
+# Subtest: an accepted retry with a lost prompt receipt cannot rebase recovery onto another QA generation
+ok 41 - an accepted retry with a lost prompt receipt cannot rebase recovery onto another QA generation
+  ---
+  duration_ms: 34.849041
+  type: 'test'
+  ...
+# Subtest: a historical receipted QA prompt can finish without granting another prompt or repair budget
+ok 42 - a historical receipted QA prompt can finish without granting another prompt or repair budget
+  ---
+  duration_ms: 30.699042
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA resume refuses a concurrent generation change with actual CAS
+ok 43 - PostgreSQL QA resume refuses a concurrent generation change with actual CAS
+  ---
+  duration_ms: 239.1945
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA resume refuses a concurrent content change with actual CAS
+ok 44 - PostgreSQL QA resume refuses a concurrent content change with actual CAS
+  ---
+  duration_ms: 181.038291
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA resume refuses a concurrent marker change with actual CAS
+ok 45 - PostgreSQL QA resume refuses a concurrent marker change with actual CAS
+  ---
+  duration_ms: 186.308459
+  type: 'test'
+  ...
+# Subtest: PostgreSQL QA prompt receipt recovery uses one CAS generation and the same request and prompt
+ok 46 - PostgreSQL QA prompt receipt recovery uses one CAS generation and the same request and prompt
+  ---
+  duration_ms: 238.286708
+  type: 'test'
+  ...
+# Subtest: new quickstart builds require finite QA receipts and never hand off to an agent
+ok 47 - new quickstart builds require finite QA receipts and never hand off to an agent
+  ---
+  duration_ms: 141.428292
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build keeps its action open until the fill applies, then stops without QA or hand-off
+ok 48 - a manual quickstart-first build keeps its action open until the fill applies, then stops without QA or hand-off
+  ---
+  duration_ms: 443.701833
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build whose fill fails ends SITE_FILL_FAILED
+ok 49 - a manual quickstart-first build whose fill fails ends SITE_FILL_FAILED
+  ---
+  duration_ms: 437.859584
+  type: 'test'
+  ...
+# Subtest: a manual Retry resumes the failed fill once, waits for it and completes without hand-off
+ok 50 - a manual Retry resumes the failed fill once, waits for it and completes without hand-off
+  ---
+  duration_ms: 359.521834
+  type: 'test'
+  ...
+# Subtest: a manual Retry that lost site access stops before resuming the fill
+ok 51 - a manual Retry that lost site access stops before resuming the fill
+  ---
+  duration_ms: 171.59075
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build whose site is deleted while its fill runs stops
+ok 52 - a manual quickstart-first build whose site is deleted while its fill runs stops
+  ---
+  duration_ms: 142.845292
+  type: 'test'
+  ...
+# Subtest: a manual quickstart-first build whose create door started no fill completes at once
+ok 53 - a manual quickstart-first build whose create door started no fill completes at once
+  ---
+  duration_ms: 129.856125
+  type: 'test'
+  ...
+# Subtest: a manual build at a reused address never inherits the deleted site's failed brief
+ok 54 - a manual build at a reused address never inherits the deleted site's failed brief
+  ---
+  duration_ms: 125.573208
+  type: 'test'
+  ...
+# Subtest: an automatic build at a reused address never inherits the deleted site's failed brief
+ok 55 - an automatic build at a reused address never inherits the deleted site's failed brief
+  ---
+  duration_ms: 163.4625
+  type: 'test'
+  ...
+# Subtest: a build at a reused address follows the brief its own create door started
+ok 56 - a build at a reused address follows the brief its own create door started
+  ---
+  duration_ms: 142.680166
+  type: 'test'
+  ...
+# Subtest: an automatic legacy build at a reused address follows its own applied brief to hand-off
+ok 57 - an automatic legacy build at a reused address follows its own applied brief to hand-off
+  ---
+  duration_ms: 163.302042
+  type: 'test'
+  ...
+# Subtest: a manual legacy build still completes as soon as its site is built
+ok 58 - a manual legacy build still completes as soon as its site is built
+  ---
+  duration_ms: 95.250041
+  type: 'test'
+  ...
+# Subtest: finite quickstart strict receipts finish as needs-review without a chat session or Outreach
+ok 59 - finite quickstart strict receipts finish as needs-review without a chat session or Outreach
+  ---
+  duration_ms: 144.352834
+  type: 'test'
+  ...
+# Subtest: finite quickstart source variants receipts finish as needs-review without a chat session or Outreach
+ok 60 - finite quickstart source variants receipts finish as needs-review without a chat session or Outreach
+  ---
+  duration_ms: 167.028916
+  type: 'test'
+  ...
+# Subtest: finite quickstart placeholders receipts finish as needs-review without a chat session or Outreach
+ok 61 - finite quickstart placeholders receipts finish as needs-review without a chat session or Outreach
+  ---
+  duration_ms: 171.222167
+  type: 'test'
+  ...
+# Subtest: finite quickstart placeholder reason without placeholders receipts fail closed
+ok 62 - finite quickstart placeholder reason without placeholders receipts fail closed
+  ---
+  duration_ms: 131.103709
+  type: 'test'
+  ...
+# Subtest: finite quickstart passed QA over a placeholder fill receipts fail closed
+ok 63 - finite quickstart passed QA over a placeholder fill receipts fail closed
+  ---
+  duration_ms: 126.358583
+  type: 'test'
+  ...
+# Subtest: finite quickstart source variants reason over a placeholder fill receipts fail closed
+ok 64 - finite quickstart source variants reason over a placeholder fill receipts fail closed
+  ---
+  duration_ms: 122.670666
+  type: 'test'
+  ...
+# Subtest: finite quickstart placeholder count without a placeholder receipt receipts fail closed
+ok 65 - finite quickstart placeholder count without a placeholder receipt receipts fail closed
+  ---
+  duration_ms: 141.464958
+  type: 'test'
+  ...
+# Subtest: finite quickstart a gap without its placeholder receipt receipts fail closed
+ok 66 - finite quickstart a gap without its placeholder receipt receipts fail closed
+  ---
+  duration_ms: 115.510458
+  type: 'test'
+  ...
+# Subtest: the asynchronous demo worker provisions the explicit choice even with a different CMS default
+ok 67 - the asynchronous demo worker provisions the explicit choice even with a different CMS default
+  ---
+  duration_ms: 115.240583
+  type: 'test'
+  ...
+# Subtest: agent demo provisions intact quickstart without old brief fill and replays one frozen site/chat/prompt
+ok 68 - agent demo provisions intact quickstart without old brief fill and replays one frozen site/chat/prompt
+  ---
+  duration_ms: 302.576333
+  type: 'test'
+  ...
+# Subtest: Stop in the ordinary agent handoff blocks QA wakes and Retry keeps the same snapshot, site and chat
+ok 69 - Stop in the ordinary agent handoff blocks QA wakes and Retry keeps the same snapshot, site and chat
+  ---
+  duration_ms: 268.121334
+  type: 'test'
+  ...
+# Subtest: agent media import persists real PostgreSQL claim/receipt and never reuploads a confirmed or revoked asset
+ok 70 - agent media import persists real PostgreSQL claim/receipt and never reuploads a confirmed or revoked asset
+  ---
+  duration_ms: 191.631541
+  type: 'test'
+  ...
+# Subtest: accepted pre-baseline Retry resumes the original frozen prompt once, without provisioning or changing chat
+ok 71 - accepted pre-baseline Retry resumes the original frozen prompt once, without provisioning or changing chat
+  ---
+  duration_ms: 330.040625
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: client-send reserves real chat and one native user request before provision; agent tools own install/check and server prompt stays zero
+ok 72 - client-send reserves real chat and one native user request before provision; agent tools own install/check and server prompt stays zero
+  ---
+  duration_ms: 577.701541
+  type: 'test'
+  ...
+# Subtest: only a signed real owner follow-up after normally completed accepted turns can extend client demo authority by CAS
+ok 73 - only a signed real owner follow-up after normally completed accepted turns can extend client demo authority by CAS
+  ---
+  duration_ms: 155.678792
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: a client-send turn that ends completed without a passing check fails the action instead of filling forever
+ok 74 - a client-send turn that ends completed without a passing check fails the action instead of filling forever
+  ---
+  duration_ms: 220.631208
+  type: 'test'
+  ...
+# Subtest: a client-send turn that ends completed while its check still runs waits for that check
+ok 75 - a client-send turn that ends completed while its check still runs waits for that check
+  ---
+  duration_ms: 76.89175
+  type: 'test'
+  ...
+# Subtest: a native inventory that keeps failing counts as a baseline try and ends DEMO_BASELINE_UNAVAILABLE
+ok 76 - a native inventory that keeps failing counts as a baseline try and ends DEMO_BASELINE_UNAVAILABLE
+  ---
+  duration_ms: 403.322125
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: a template post no plan row writes is swept from the build structure, not from the saved plan
+ok 77 - a template post no plan row writes is swept from the build structure, not from the saved plan
+  ---
+  duration_ms: 285.288167
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# [demo-check] pho-ba.localhost incremental: inventory 0.0s, page reads 0.0s (1 page(s), 1 unchanged), look left to the full read
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# [demo-check] pho-ba.localhost incremental sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# Subtest: dev 27/10/2026: the check after a sweep round asks the host to read again only the pages whose document changed
+ok 78 - dev 27/10/2026: the check after a sweep round asks the host to read again only the pages whose document changed
+  ---
+  duration_ms: 135.368958
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full sweep round: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look skipped
+# Subtest: the sweep's neutral wording is in the language the build wrote the site's slot fills in (Vietnamese)
+ok 79 - the sweep's neutral wording is in the language the build wrote the site's slot fills in (Vietnamese)
+  ---
+  duration_ms: 125.249625
+  type: 'test'
+  ...
+# [demo-check] pho-ba.localhost full: inventory 0.0s, page reads 0.0s (1 page(s), 0 unchanged), look 0.0s (1 page(s) looked at, 0 kept)
+# Subtest: a slot the replace job refuses to empty, with no wording for it, is no call: the check still names it unresolved
+ok 80 - a slot the replace job refuses to empty, with no wording for it, is no call: the check still names it unresolved
+  ---
+  duration_ms: 411.085
+  type: 'test'
+  ...
+# Subtest: an action with no selection builds on the account CMS, else the /ops default, with that CMS pinned template
+ok 81 - an action with no selection builds on the account CMS, else the /ops default, with that CMS pinned template
+  ---
+  duration_ms: 38.151833
+  type: 'test'
+  ...
+# Subtest: a client demo waiting for its logo research is never prepared inside a request, and the runner builds it after the deadline with the wordmark
+ok 82 - a client demo waiting for its logo research is never prepared inside a request, and the runner builds it after the deadline with the wordmark
+  ---
+  duration_ms: 205.246458
+  type: 'test'
+  ...
+# Subtest: an own-site build never waits for its photo labelling inside prepare: pending until the run settles, then the runner briefs it (\#250)
+ok 83 - an own-site build never waits for its photo labelling inside prepare: pending until the run settles, then the runner briefs it (\#250)
+  ---
+  duration_ms: 160.369208
+  type: 'test'
+  ...
+# Subtest: a historical server build keeps its existing brief path without new photo-label waits
+ok 84 - a historical server build keeps its existing brief path without new photo-label waits
+  ---
+  duration_ms: 126.287292
+  type: 'test'
+  ...
+# Subtest: a server-owned build waits for the shared photo labels before freezing its first brief
+ok 85 - a server-owned build waits for the shared photo labels before freezing its first brief
+  ---
+  duration_ms: 223.022583
+  type: 'test'
+  ...
+# Subtest: a client demo whose logo research answers in time is briefed from the place read again
+ok 86 - a client demo whose logo research answers in time is briefed from the place read again
+  ---
+  duration_ms: 53.208916
+  type: 'test'
+  ...
+# Subtest: an agent that ended in error before any provision fails the action through its failed moment, and Retry is taken
+ok 87 - an agent that ended in error before any provision fails the action through its failed moment, and Retry is taken
+  ---
+  duration_ms: 91.145875
+  type: 'test'
+  ...
+# Subtest: a turn that went stale with no end reason fails the action as lost, saying no more than that
+ok 88 - a turn that went stale with no end reason fails the action as lost, saying no more than that
+  ---
+  duration_ms: 63.650375
+  type: 'test'
+  ...
+# Subtest: a failed QA verdict with no provision job yet ends the action instead of awaiting the agent
+ok 89 - a failed QA verdict with no provision job yet ends the action instead of awaiting the agent
+  ---
+  duration_ms: 67.268708
+  type: 'test'
+  ...
+# Subtest: the 2 h deadline ends an action whose run hangs with its heartbeat alive, and its late result changes nothing after Retry
+ok 90 - the 2 h deadline ends an action whose run hangs with its heartbeat alive, and its late result changes nothing after Retry
+  ---
+  duration_ms: 101.771584
+  type: 'test'
+  ...
+# Subtest: the 2 h deadline ends a queued action while the queue switch is off and claims nothing
+ok 91 - the 2 h deadline ends a queued action while the queue switch is off and claims nothing
+  ---
+  duration_ms: 57.66975
+  type: 'test'
+  ...
+# Subtest: the 2 h deadline waits while the build chat is alive, so status and chat agree, and holds past twice that (\#247)
+ok 92 - the 2 h deadline waits while the build chat is alive, so status and chat agree, and holds past twice that (\#247)
+  ---
+  duration_ms: 118.742958
+  type: 'test'
+  ...
+# Subtest: a provision that succeeded stays done when the agent fails afterwards; only the action fails
+ok 93 - a provision that succeeded stays done when the agent fails afterwards; only the action fails
+  ---
+  duration_ms: 136.772667
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s failed check before its own brief is sent
+ok 94 - a Retry is not ended by the previous attempt’s failed check before its own brief is sent
+  ---
+  duration_ms: 82.018792
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s passed machine check before its own brief is sent
+ok 95 - a Retry is not ended by the previous attempt’s passed machine check before its own brief is sent
+  ---
+  duration_ms: 83.276708
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s turn that ended unchecked before its own brief is sent
+ok 96 - a Retry is not ended by the previous attempt’s turn that ended unchecked before its own brief is sent
+  ---
+  duration_ms: 112.81575
+  type: 'test'
+  ...
+# Subtest: a Retry is not ended by the previous attempt’s failed provision before its own brief is sent
+ok 97 - a Retry is not ended by the previous attempt’s failed provision before its own brief is sent
+  ---
+  duration_ms: 108.42475
+  type: 'test'
+  ...
+# Subtest: after a Retry’s brief is sent, a provision failure only ends it when this attempt started that provision
+ok 98 - after a Retry’s brief is sent, a provision failure only ends it when this attempt started that provision
+  ---
+  duration_ms: 123.165459
+  type: 'test'
+  ...
+# Subtest: after a Retry’s brief is sent, a failed check before any provision ends it only when the verdict is its own
+ok 99 - after a Retry’s brief is sent, a failed check before any provision ends it only when the verdict is its own
+  ---
+  duration_ms: 169.572208
+  type: 'test'
+  ...
+# Subtest: a failed latest action leaves the Demo column failed, never Building, while its build still provisions
+ok 100 - a failed latest action leaves the Demo column failed, never Building, while its build still provisions
+  ---
+  duration_ms: 90.96275
+  type: 'test'
+  ...
+# Subtest: a queued Retry over a build still provisioning reads Building, timed from the Retry, not the first build
+ok 101 - a queued Retry over a build still provisioning reads Building, timed from the Retry, not the first build
+  ---
+  duration_ms: 85.800542
+  type: 'test'
+  ...
+# Subtest: a latest action that is queued over an older passed check puts its opportunity in demo
+ok 102 - a latest action that is queued over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 68.245458
+  type: 'test'
+  ...
+# Subtest: a latest action that is quality-queued-v1 over an older passed check puts its opportunity in demo
+ok 103 - a latest action that is quality-queued-v1 over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 50.925791
+  type: 'test'
+  ...
+# Subtest: a latest action that is failed over an older passed check puts its opportunity in demo
+ok 104 - a latest action that is failed over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 50.561583
+  type: 'test'
+  ...
+# Subtest: a latest action that is quality-failed-v1 over an older passed check puts its opportunity in demo
+ok 105 - a latest action that is quality-failed-v1 over an older passed check puts its opportunity in demo
+  ---
+  duration_ms: 51.460125
+  type: 'test'
+  ...
+# Subtest: a latest action that is completed over an older passed check puts its opportunity in outreach
+ok 106 - a latest action that is completed over an older passed check puts its opportunity in outreach
+  ---
+  duration_ms: 51.626417
+  type: 'test'
+  ...
+# Subtest: a latest action that is quality-completed-v1 over an older passed check puts its opportunity in outreach
+ok 107 - a latest action that is quality-completed-v1 over an older passed check puts its opportunity in outreach
+  ---
+  duration_ms: 51.464583
+  type: 'test'
+  ...
+# Subtest: a failed latest action keeps its opportunity in Demo with attention, whatever an older check passed
+ok 108 - a failed latest action keeps its opportunity in Demo with attention, whatever an older check passed
+  ---
+  duration_ms: 52.810125
+  type: 'test'
+  ...
+# Subtest: a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions
+ok 109 - a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions
+  ---
+  duration_ms: 62.971125
+  type: 'test'
+  ...
+# Subtest: a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged
+ok 110 - a blocked client-send brief fails promptly with its readiness cause and leaves the frozen revision unchanged
+  ---
+  duration_ms: 599.204959
+  type: 'test'
+  ...
+# Subtest: client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results
+ok 111 - client-send photo-label timeout fails with its actual cause without freezing a brief or adopting late results
+  ---
+  duration_ms: 117.028959
+  type: 'test'
+  ...
+# Subtest: a client-send preparation outage retains the runner bounded retry policy
+ok 112 - a client-send preparation outage retains the runner bounded retry policy
+  ---
+  duration_ms: 36.644791
+  type: 'test'
+  ...
+# Subtest: a warned brief builds and its build carries the owner questions
+ok 113 - a warned brief builds and its build carries the owner questions
+  ---
+  duration_ms: 130.509125
+  type: 'test'
+  ...
+# Subtest: Dubai pre-runs the full customer Research stages and a later user receives its warm profile and photos
+ok 114 - Dubai pre-runs the full customer Research stages and a later user receives its warm profile and photos
+  ---
+  duration_ms: 3607.489792
+  type: 'test'
+  ...
+# Subtest: two accounts, one Google place: ONE place job; the second request waits and gets the same snapshot
+ok 115 - two accounts, one Google place: ONE place job; the second request waits and gets the same snapshot
+  ---
+  duration_ms: 375.094958
+  type: 'test'
+  ...
+# Subtest: cancel from one account stops its own request only; the place job goes on for the other
+ok 116 - cancel from one account stops its own request only; the place job goes on for the other
+  ---
+  duration_ms: 248.897834
+  type: 'test'
+  ...
+# Subtest: a worker whose lease was taken publishes nothing: the snapshot stays preparing, current unchanged
+ok 117 - a worker whose lease was taken publishes nothing: the snapshot stays preparing, current unchanged
+  ---
+  duration_ms: 65.028084
+  type: 'test'
+  ...
+# Subtest: a failed refresh keeps the published snapshot; freshness is per source, from its last success
+ok 118 - a failed refresh keeps the published snapshot; freshness is per source, from its last success
+  ---
+  duration_ms: 345.179334
+  type: 'test'
+  ...
+# Subtest: a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
+ok 119 - a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
+  ---
+  duration_ms: 167.564291
+  type: 'test'
+  ...
+# Subtest: a brief of a researched place makes its content from the posts the place collected
+ok 120 - a brief of a researched place makes its content from the posts the place collected
+  ---
+  duration_ms: 176.747208
+  type: 'test'
+  ...
+# Subtest: a brief made before a refresh still builds the same media after it: the manifest pins id and sha256
+ok 121 - a brief made before a refresh still builds the same media after it: the manifest pins id and sha256
+  ---
+  duration_ms: 733.977459
+  type: 'test'
+  ...
+# Subtest: poisoning: a fake website or social in a client's candidate never becomes a source of the shared place
+ok 122 - poisoning: a fake website or social in a client's candidate never becomes a source of the shared place
+  ---
+  duration_ms: 484.127166
+  type: 'test'
+  ...
+# Subtest: doors: research, list, detail and media read through the place; a revoked picture is withdrawn
+ok 123 - doors: research, list, detail and media read through the place; a revoked picture is withdrawn
+  ---
+  duration_ms: 397.810333
+  type: 'test'
+  ...
+# Subtest: WO_SHARED_RESEARCH=0: a new request runs the per-account research; place jobs are not claimed
+ok 124 - WO_SHARED_RESEARCH=0: a new request runs the per-account research; place jobs are not claimed
+  ---
+  duration_ms: 242.028375
+  type: 'test'
+  ...
+# Subtest: a paid call over Tracy's research cap pauses the place job with 'budget'; what it reserved is in the ledger
+ok 125 - a paid call over Tracy's research cap pauses the place job with 'budget'; what it reserved is in the ledger
+  ---
+  duration_ms: 237.435291
+  type: 'test'
+  ...
+# Subtest: abuse limit: an account sends at most newPlacesPerAccountPerDay never-researched places; a known one is free
+ok 126 - abuse limit: an account sends at most newPlacesPerAccountPerDay never-researched places; a known one is free
+  ---
+  duration_ms: 164.697875
+  type: 'test'
+  ...
+# Subtest: a restart during a place job’s paid Apify run: the next holder reads the recorded run, one reservation
+ok 127 - a restart during a place job’s paid Apify run: the next holder reads the recorded run, one reservation
+  ---
+  duration_ms: 145.260667
+  type: 'test'
+  ...
+# Subtest: a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
+ok 128 - a warm Google seed supplies public contact evidence without a client echo or cross-account overlay
+  ---
+  duration_ms: 83.443709
+  type: 'test'
+  ...
+# Subtest: a user joins the running full campaign job; cancellation preserves campaign demand and Stop blocks further stages
+ok 129 - a user joins the running full campaign job; cancellation preserves campaign demand and Stop blocks further stages
+  ---
+  duration_ms: 228.396167
+  type: 'test'
+  ...
+# Subtest: TripAdvisor enriches a previously fresh snapshot once, is shared and reaches profile and brief without replacing Google
+ok 130 - TripAdvisor enriches a previously fresh snapshot once, is shared and reaches profile and brief without replacing Google
+  ---
+  duration_ms: 308.835042
+  type: 'test'
+  ...
+# Subtest: TripAdvisor identity collision is recorded without merging places or fetching reviews
+ok 131 - TripAdvisor identity collision is recorded without merging places or fetching reviews
+  ---
+  duration_ms: 134.568292
+  type: 'test'
+  ...
+# Subtest: TripAdvisor failure preserves successful reviews and budget refusal pauses without a provider call
+ok 132 - TripAdvisor failure preserves successful reviews and budget refusal pauses without a provider call
+  ---
+  duration_ms: 318.003042
+  type: 'test'
+  ...
+# Subtest: TripAdvisor response after cancellation cannot publish or leave an identity
+ok 133 - TripAdvisor response after cancellation cannot publish or leave an identity
+  ---
+  duration_ms: 85.643792
+  type: 'test'
+  ...
+# Subtest: TripAdvisor paused budget resumes its persisted search without paying for it twice
+ok 134 - TripAdvisor paused budget resumes its persisted search without paying for it twice
+  ---
+  duration_ms: 183.40975
+  type: 'test'
+  ...
+# Subtest: OneAPI primary success does not call Litescrape and charges each actual primary attempt
+ok 135 - OneAPI primary success does not call Litescrape and charges each actual primary attempt
+  ---
+  duration_ms: 142.210792
+  type: 'test'
+  ...
+# Subtest: OneAPI failure 401 falls back once with separate provider accounting
+ok 136 - OneAPI failure 401 falls back once with separate provider accounting
+  ---
+  duration_ms: 165.446083
+  type: 'test'
+  ...
+# Subtest: OneAPI failure 402 falls back once with separate provider accounting
+ok 137 - OneAPI failure 402 falls back once with separate provider accounting
+  ---
+  duration_ms: 181.98425
+  type: 'test'
+  ...
+# Subtest: OneAPI failure 403 falls back once with separate provider accounting
+ok 138 - OneAPI failure 403 falls back once with separate provider accounting
+  ---
+  duration_ms: 187.514416
+  type: 'test'
+  ...
+# Subtest: OneAPI failure 429 falls back once with separate provider accounting
+ok 139 - OneAPI failure 429 falls back once with separate provider accounting
+  ---
+  duration_ms: 163.975625
+  type: 'test'
+  ...
+# Subtest: OneAPI failure 503 falls back once with separate provider accounting
+ok 140 - OneAPI failure 503 falls back once with separate provider accounting
+  ---
+  duration_ms: 174.824791
+  type: 'test'
+  ...
+# Subtest: OneAPI failure application falls back once with separate provider accounting
+ok 141 - OneAPI failure application falls back once with separate provider accounting
+  ---
+  duration_ms: 227.405125
+  type: 'test'
+  ...
+# Subtest: OneAPI legitimate empty search does not spend fallback quota
+ok 142 - OneAPI legitimate empty search does not spend fallback quota
+  ---
+  duration_ms: 218.08375
+  type: 'test'
+  ...
+# Subtest: budget refusal between failed primary and fallback pauses before fallback network
+ok 143 - budget refusal between failed primary and fallback pauses before fallback network
+  ---
+  duration_ms: 96.245458
+  type: 'test'
+  ...
+# Subtest: missing OneAPI branch evidence uses an optional same-brand website association without fallback
+ok 144 - missing OneAPI branch evidence uses an optional same-brand website association without fallback
+  ---
+  duration_ms: 182.721708
+  type: 'test'
+  ...
+# Subtest: OneAPI conflicting branch phone keeps a same-brand review source without creating branch identity
+ok 145 - OneAPI conflicting branch phone keeps a same-brand review source without creating branch identity
+  ---
+  duration_ms: 153.833792
+  type: 'test'
+  ...
+# Subtest: fallback cannot replace a primary matched identity when its review call fails
+ok 146 - fallback cannot replace a primary matched identity when its review call fails
+  ---
+  duration_ms: 237.570958
+  type: 'test'
+  ...
+# Subtest: unknown primary outcome is not paid twice after budget pauses the fallback
+ok 147 - unknown primary outcome is not paid twice after budget pauses the fallback
+  ---
+  duration_ms: 631.531417
+  type: 'test'
+  ...
+# Subtest: refresh cannot remap an existing TripAdvisor source or mix another branch reviews
+ok 148 - refresh cannot remap an existing TripAdvisor source or mix another branch reviews
+  ---
+  duration_ms: 581.9395
+  type: 'test'
+  ...
+# Subtest: new research retries a recovered provider instead of inheriting the previous job failure checkpoint
+ok 149 - new research retries a recovered provider instead of inheriting the previous job failure checkpoint
+  ---
+  duration_ms: 450.553667
+  type: 'test'
+  ...
+# Subtest: customer Details omits optional provider failures and keeps previous reviews after refresh quota failure
+ok 150 - customer Details omits optional provider failures and keeps previous reviews after refresh quota failure
+  ---
+  duration_ms: 411.200167
+  type: 'test'
+  ...
+# Subtest: user journey saves a place, starts Research, opens Details and creates an attributed TripAdvisor brief
+ok 151 - user journey saves a place, starts Research, opens Details and creates an attributed TripAdvisor brief
+  ---
+  duration_ms: 308.983041
+  type: 'test'
+  ...
+# Subtest: SerpApi primary persists reviews, avatars and attached photos through customer Details and demo manifest
+ok 152 - SerpApi primary persists reviews, avatars and attached photos through customer Details and demo manifest
+  ---
+  duration_ms: 321.673541
+  type: 'test'
+  ...
+# Subtest: SerpApi 401 falls through RapidAPI quota to Litescrape with separate attempt records
+ok 153 - SerpApi 401 falls through RapidAPI quota to Litescrape with separate attempt records
+  ---
+  duration_ms: 186.360625
+  type: 'test'
+  ...
+# Subtest: SerpApi 429 falls through RapidAPI quota to Litescrape with separate attempt records
+ok 154 - SerpApi 429 falls through RapidAPI quota to Litescrape with separate attempt records
+  ---
+  duration_ms: 230.351542
+  type: 'test'
+  ...
+# Subtest: SerpApi 429 once is retried after its wait, and the reviews come from SerpApi
+ok 155 - SerpApi 429 once is retried after its wait, and the reviews come from SerpApi
+  ---
+  duration_ms: 192.466583
+  type: 'test'
+  ...
+# Subtest: SerpApi 503 once is retried after its wait, and the reviews come from SerpApi
+ok 156 - SerpApi 503 once is retried after its wait, and the reviews come from SerpApi
+  ---
+  duration_ms: 247.624042
+  type: 'test'
+  ...
+# Subtest: SerpApi 402 (paid quota spent) is not retried: the next provider is asked at once
+ok 157 - SerpApi 402 (paid quota spent) is not retried: the next provider is asked at once
+  ---
+  duration_ms: 162.270875
+  type: 'test'
+  ...
+# Subtest: SerpApi empty search ends enrichment without fallback while transient review failure reuses the verified ID
+ok 158 - SerpApi empty search ends enrichment without fallback while transient review failure reuses the verified ID
+  ---
+  duration_ms: 271.571125
+  type: 'test'
+  ...
+# Subtest: the operator order on /ops/wo decides which Tripadvisor provider is asked first
+ok 159 - the operator order on /ops/wo decides which Tripadvisor provider is asked first
+  ---
+  duration_ms: 197.044208
+  type: 'test'
+  ...
+# Subtest: an empty Tripadvisor order switches the reviews off
+ok 160 - an empty Tripadvisor order switches the reviews off
+  ---
+  duration_ms: 81.374542
+  type: 'test'
+  ...
+# Subtest: missing photo capability falls back per step without losing successful SerpApi review photos
+ok 161 - missing photo capability falls back per step without losing successful SerpApi review photos
+  ---
+  duration_ms: 186.788125
+  type: 'test'
+  ...
+# Subtest: SerpApi budget pause resumes operation checkpoints without double payment
+ok 162 - SerpApi budget pause resumes operation checkpoints without double payment
+  ---
+  duration_ms: 195.463792
+  type: 'test'
+  ...
+# Subtest: provider-switch refresh keeps same-review author links, avatar and attached stored photos
+ok 163 - provider-switch refresh keeps same-review author links, avatar and attached stored photos
+  ---
+  duration_ms: 327.924084
+  type: 'test'
+  ...
+# Subtest: TripAdvisor photo capability upgrade leaves fresh Google facts and other collectors cached
+ok 164 - TripAdvisor photo capability upgrade leaves fresh Google facts and other collectors cached
+  ---
+  duration_ms: 318.444333
+  type: 'test'
+  ...
+# Subtest: photo budget refusal keeps good reviews and resumes only the missing gallery operation
+ok 165 - photo budget refusal keeps good reviews and resumes only the missing gallery operation
+  ---
+  duration_ms: 370.008666
+  type: 'test'
+  ...
+# Subtest: ordinary Research retries a previous not-found source and collects no-website restaurant reviews without creating branch identity
+ok 166 - ordinary Research retries a previous not-found source and collects no-website restaurant reviews without creating branch identity
+  ---
+  duration_ms: 571.457042
+  type: 'test'
+  ...
+# Subtest: SerpApi twenty reviews reach the shared profile and brief; a fresh reader costs no extra calls
+ok 167 - SerpApi twenty reviews reach the shared profile and brief; a fresh reader costs no extra calls
+  ---
+  duration_ms: 246.832167
+  type: 'test'
+  ...
+# Subtest: SerpApi refresh reuses the accepted place ID without another search and preserves identity checks
+ok 168 - SerpApi refresh reuses the accepted place ID without another search and preserves identity checks
+  ---
+  duration_ms: 386.252459
+  type: 'test'
+  ...
+# Subtest: doors: the detail lists Google with the collected sources, and Retry on one source queues that source alone
+ok 169 - doors: the detail lists Google with the collected sources, and Retry on one source queues that source alone
+  ---
+  duration_ms: 197.647125
+  type: 'test'
+  ...
+# Subtest: own site resumes a paused shared run behind a queued request once per poll batch, then stops at three
+ok 170 - own site resumes a paused shared run behind a queued request once per poll batch, then stops at three
+  ---
+  duration_ms: 200.400791
+  type: 'test'
+  ...
+# Subtest: shared resume follows the paused upstream run but refuses another account and terminal requests
+ok 171 - shared resume follows the paused upstream run but refuses another account and terminal requests
+  ---
+  duration_ms: 49.036334
+  type: 'test'
+  ...
+# error: synthetic resume failure
+#     at <checkout>/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+#     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+#     at async resumeRequest (file://<checkout>/packages/wo/website-opportunities/src/place-requests.js:236:9)
+#     at async resumeResearch (file://<checkout>/apps/tracy-web/src/opportunities-build/own-site.js:369:23)
+#     at async file://<checkout>/apps/tracy-web/src/opportunities-build/own-site.js:220:22
+#     at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
+#     at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
+#     at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
+#     at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
+#     at async dispatch (file://<checkout>/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11) {
+#   length: 142,
+#   severity: 'ERROR',
+#   code: 'P0001',
+#   detail: undefined,
+#   hint: undefined,
+#   position: undefined,
+#   internalPosition: undefined,
+#   internalQuery: undefined,
+#   where: 'PL/pgSQL function reject_test_resume() line 1 at RAISE',
+#   schema: undefined,
+#   table: undefined,
+#   column: undefined,
+#   dataType: undefined,
+#   constraint: undefined,
+#   file: 'pl_exec.c',
+#   line: '3897',
+#   routine: 'exec_stmt_raise'
+# }
+# Subtest: own site exposes a shared resume failure without spending its automatic resume allowance
+ok 172 - own site exposes a shared resume failure without spending its automatic resume allowance
+  ---
+  duration_ms: 116.579834
+  type: 'test'
+  ...
+# Subtest: one run per input: pending while it labels, its settled answer after, asked once (\#250)
+ok 173 - one run per input: pending while it labels, its settled answer after, asked once (\#250)
+  ---
+  duration_ms: 1.381625
+  type: 'test'
+  ...
+# Subtest: the run is keyed by what it reads: labels a picture already carries never start another, a new closed list does
+ok 174 - the run is keyed by what it reads: labels a picture already carries never start another, a new closed list does
+  ---
+  duration_ms: 0.1775
+  type: 'test'
+  ...
+# Subtest: a run still out past its bound is an honest failed labelling, never a longer wait
+ok 175 - a run still out past its bound is an honest failed labelling, never a longer wait
+  ---
+  duration_ms: 0.834541
+  type: 'test'
+  ...
+# Subtest: a labelling that throws settles as failed, so the brief is still made
+ok 176 - a labelling that throws settles as failed, so the brief is still made
+  ---
+  duration_ms: 0.198708
+  type: 'test'
+  ...
+# Subtest: revisionForAction answers pending and makes no brief while the photographs are labelled, then briefs them
+ok 177 - revisionForAction answers pending and makes no brief while the photographs are labelled, then briefs them
+  ---
+  duration_ms: 17.645541
+  type: 'test'
+  ...
+# Subtest: an overdue picture run freezes no revision; a later prepare adopts its settled labels
+ok 178 - an overdue picture run freezes no revision; a later prepare adopts its settled labels
+  ---
+  duration_ms: 4.110042
+  type: 'test'
+  ...
+# Subtest: a Build press on a chain template asks for the chain workflow with the research revision and sends no chat
+ok 179 - a Build press on a chain template asks for the chain workflow with the research revision and sends no chat
+  ---
+  duration_ms: 2512.034
+  type: 'test'
+  ...
+# Subtest: a template that is not on the chain keeps the agent-demo build and its chat
+ok 180 - a template that is not on the chain keeps the agent-demo build and its chat
+  ---
+  duration_ms: 21.231958
+  type: 'test'
+  ...
+# Subtest: with the master switch off a chain template keeps the agent-demo build
+ok 181 - with the master switch off a chain template keeps the agent-demo build
+  ---
+  duration_ms: 20.924875
+  type: 'test'
+  ...
+# Subtest: a non-chat press on a template that is not on the chain still creates an agent-demo site
+ok 182 - a non-chat press on a template that is not on the chain still creates an agent-demo site
+  ---
+  duration_ms: 147.602375
+  type: 'test'
+  ...
+# Subtest: an own-site Build press also selects the chain without a second chat writer or retention clock
+ok 183 - an own-site Build press also selects the chain without a second chat writer or retention clock
+  ---
+  duration_ms: 97.911625
+  type: 'test'
+  ...
+# Subtest: an item carries the content.locate answer for its element and the served block selector, as the popover sends it
+ok 184 - an item carries the content.locate answer for its element and the served block selector, as the popover sends it
+  ---
+  duration_ms: 43.675208
+  type: 'test'
+  ...
+# Subtest: with content.locate unavailable the item keeps the fault levels (slot and record) and says so
+ok 185 - with content.locate unavailable the item keeps the fault levels (slot and record) and says so
+  ---
+  duration_ms: 6.580709
+  type: 'test'
+  ...
+# Subtest: a comment page address is the page as the site serves it; an agent with no page address is refused
+ok 186 - a comment page address is the page as the site serves it; an agent with no page address is refused
+  ---
+  duration_ms: 9.299208
+  type: 'test'
+  ...
+# Subtest: a prompt the queue runs after the resend gave up is judged and undone like the rest
+ok 187 - a prompt the queue runs after the resend gave up is judged and undone like the rest
+  ---
+  duration_ms: 11.702583
+  type: 'test'
+  ...
+# Subtest: a resend that yields two turns keeps both, and both are judged
+ok 188 - a resend that yields two turns keeps both, and both are judged
+  ---
+  duration_ms: 6.650625
+  type: 'test'
+  ...
+# Subtest: a turn still open at ten minutes is waited for, never judged while open, and the step returns by twelve
+ok 189 - a turn still open at ten minutes is waited for, never judged while open, and the step returns by twelve
+  ---
+  duration_ms: 10.866667
+  type: 'test'
+  ...
+# Subtest: a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse
+ok 190 - a turn still open at the return is cancelled through its session, logged, and kept when it made nothing worse
+  ---
+  duration_ms: 12.356417
+  type: 'test'
+  ...
+# Subtest: every agent call and the site check are raced against the time left; the comment request is told it
+ok 191 - every agent call and the site check are raced against the time left; the comment request is told it
+  ---
+  duration_ms: 5.837208
+  type: 'test'
+  ...
+# Subtest: the first check shares the step clock: a slow first check leaves 9b less time for new work
+ok 192 - the first check shares the step clock: a slow first check leaves 9b less time for new work
+  ---
+  duration_ms: 3.277833
+  type: 'test'
+  ...
+# Subtest: the pages a turn changed come from what it wrote, not only the page it was sent for
+ok 193 - the pages a turn changed come from what it wrote, not only the page it was sent for
+  ---
+  duration_ms: 7.196666
+  type: 'test'
+  ...
+# Subtest: a write the pass cannot place on a page counts as changing every page
+ok 194 - a write the pass cannot place on a page counts as changing every page
+  ---
+  duration_ms: 2.976417
+  type: 'test'
+  ...
+# Subtest: an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason
+ok 195 - an undo the site refuses, or that throws, is kept in repair-pass.json as undo-failed with its reason
+  ---
+  duration_ms: 3.35875
+  type: 'test'
+  ...
+# Subtest: a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole
+ok 196 - a turn that only changed design files counts as changing every page: a new blocking failure anywhere undoes it whole
+  ---
+  duration_ms: 2.931541
+  type: 'test'
+  ...
+# Subtest: an automatic repair turn cannot wait on a human until the chain two-hour deadline
+ok 197 - an automatic repair turn cannot wait on a human until the chain two-hour deadline
+  ---
+  duration_ms: 8.579875
+  type: 'test'
+  ...
+# Subtest: a refused or unsettled Stop never judges an open writer or starts another page writer
+ok 198 - a refused or unsettled Stop never judges an open writer or starts another page writer
+  ---
+  duration_ms: 7.500583
+  type: 'test'
+  ...
+# Subtest: the native turn gets its execution window after rate waiting and request submission
+ok 199 - the native turn gets its execution window after rate waiting and request submission
+  ---
+  duration_ms: 0.742458
+  type: 'test'
+  ...
+# Subtest: a failed read after Stop leaves the writer unverified and prevents subsequent repairs
+ok 200 - a failed read after Stop leaves the writer unverified and prevents subsequent repairs
+  ---
+  duration_ms: 3.359
+  type: 'test'
+  ...
+# Subtest: a link is told from a name: scheme, www. or a bare domain, never a name with spaces
+ok 201 - a link is told from a name: scheme, www. or a bare domain, never a name with spaces
+  ---
+  duration_ms: 1.109917
+  type: 'test'
+  ...
+# Subtest: the field is the questionnaire’s business question; a set without one offers nothing
+ok 202 - the field is the questionnaire’s business question; a set without one offers nothing
+  ---
+  duration_ms: 0.693875
+  type: 'test'
+  ...
+# Subtest: the chat entry is the claimed site’s session carrying the action, and nothing else
+ok 203 - the chat entry is the claimed site’s session carrying the action, and nothing else
+  ---
+  duration_ms: 0.183875
+  type: 'test'
+  ...
+# Subtest: the page follows the research, then prepares the chat once and opens it
+ok 204 - the page follows the research, then prepares the chat once and opens it
+  ---
+  duration_ms: 0.418708
+  type: 'test'
+  ...
+# Subtest: a chat whose logo research is still pending is asked again on the next beat, never failed
+ok 205 - a chat whose logo research is still pending is asked again on the next beat, never failed
+  ---
+  duration_ms: 0.366
+  type: 'test'
+  ...
+# Subtest: a pending logo research is asked again on the next beat, sooner only when its retryAt deadline is nearer
+ok 206 - a pending logo research is asked again on the next beat, sooner only when its retryAt deadline is nearer
+  ---
+  duration_ms: 0.943458
+  type: 'test'
+  ...
+# Subtest: the logo line goes when the walk stops while the research is still pending
+ok 207 - the logo line goes when the walk stops while the research is still pending
+  ---
+  duration_ms: 0.184833
+  type: 'test'
+  ...
+# Subtest: a chat whose photos are still being labelled is asked again, with its own line, never failed (\#250)
+ok 208 - a chat whose photos are still being labelled is asked again, with its own line, never failed (\#250)
+  ---
+  duration_ms: 0.344042
+  type: 'test'
+  ...
+# Subtest: a failed research, a refused chat and Stop each end the walk, said with their own message
+ok 209 - a failed research, a refused chat and Stop each end the walk, said with their own message
+  ---
+  duration_ms: 0.46375
+  type: 'test'
+  ...
+# Subtest: a press’s request id on a plain-http stand, where crypto.randomUUID is missing
+ok 210 - a press’s request id on a plain-http stand, where crypto.randomUUID is missing
+  ---
+  duration_ms: 1.901459
+  type: 'test'
+  ...
+# Subtest: researched, the walk stops at choose with Tracy’s pick; nothing is prepared until the person chooses
+ok 211 - researched, the walk stops at choose with Tracy’s pick; nothing is prepared until the person chooses
+  ---
+  duration_ms: 0.369709
+  type: 'test'
+  ...
+# Subtest: researchProgressOf: the source being read, the photos saved and the minutes, from the job the state door answers
+ok 212 - researchProgressOf: the source being read, the photos saved and the minutes, from the job the state door answers
+  ---
+  duration_ms: 0.176417
+  type: 'test'
+  ...
+# Subtest: researchProgressOf: while the research reads the business it says so, and names no source left behind
+ok 213 - researchProgressOf: while the research reads the business it says so, and names no source left behind
+  ---
+  duration_ms: 0.149792
+  type: 'test'
+  ...
+# Subtest: keptBusiness: a started business is kept for a day; forgetting it, a broken or throwing storage start afresh
+ok 214 - keptBusiness: a started business is kept for a day; forgetting it, a broken or throwing storage start afresh
+  ---
+  duration_ms: 0.310583
+  type: 'test'
+  ...
+# Subtest: keptBusiness: a business started from links keeps its links and typed name; one from a place keeps none
+ok 215 - keptBusiness: a business started from links keeps its links and typed name; one from a place keeps none
+  ---
+  duration_ms: 0.168
+  type: 'test'
+  ...
+# Subtest: researchNameOf: the server's best known name, unless it is a host and the line already has a real name
+ok 216 - researchNameOf: the server's best known name, unless it is a host and the line already has a real name
+  ---
+  duration_ms: 0.188041
+  type: 'test'
+  ...
+# Subtest: startNameOf: the typed words, else the first link host without www, never empty for a link
+ok 217 - startNameOf: the typed words, else the first link host without www, never empty for a link
+  ---
+  duration_ms: 0.275166
+  type: 'test'
+  ...
+# Subtest: suggestionCardOf: the suggested template’s picture, sentence and demo from the catalogue, each null when absent
+ok 218 - suggestionCardOf: the suggested template’s picture, sentence and demo from the catalogue, each null when absent
+  ---
+  duration_ms: 0.214833
+  type: 'test'
+  ...
+# Subtest: a start from links sends the links, the words next to them and, after a pick, the place
+ok 219 - a start from links sends the links, the words next to them and, after a pick, the place
+  ---
+  duration_ms: 0.220334
+  type: 'test'
+  ...
+# Subtest: startOutcome: started, a Google link to pick a place for, no usable link, or a failure by its key
+ok 220 - startOutcome: started, a Google link to pick a place for, no usable link, or a failure by its key
+  ---
+  duration_ms: 0.21475
+  type: 'test'
+  ...
+# Subtest: startOutcome keeps the server verdict of each link on a started business
+ok 221 - startOutcome keeps the server verdict of each link on a started business
+  ---
+  duration_ms: 0.078291
+  type: 'test'
+  ...
+# Subtest: a server-owned chain build is followed without preparing or sending a legacy chat brief
+ok 222 - a server-owned chain build is followed without preparing or sending a legacy chat brief
+  ---
+  duration_ms: 0.121334
+  type: 'test'
+  ...
+# Subtest: a failed chain build reports its error and never opens a site as completed
+ok 223 - a failed chain build reports its error and never opens a site as completed
+  ---
+  duration_ms: 0.077583
+  type: 'test'
+  ...
+1..223
+# tests 225
+# suites 0
+# pass 225
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27779.409166

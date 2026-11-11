@@ -36,6 +36,7 @@ export function httpSiteDoor(input) {
         ...(hostHeader ? { host: hostHeader } : {}),
         ...(body === undefined ? {} : { 'content-type': 'application/json' })
       },
+      signal: AbortSignal.timeout(120_000),
       ...(body === undefined ? {} : { body: JSON.stringify(body) })
     })
     const text = await response.text()
@@ -139,8 +140,62 @@ export function httpSiteDoor(input) {
     async undoTurn(siteKey, body) {
       const answer = await call('POST', `${keyPath(siteKey)}/turns/undo`, body)
       const b = answer.body ?? {}
-      if (answer.status < 400 && b.ok !== false) return { ok: true, ...b }
-      return { ...b, ok: false, status: answer.status, code: b.code ?? `HTTP_${answer.status}` }
+      if (answer.status === 200 && b.ok === true && b.complete === true) return { ...b, ok: true }
+      return {
+        ...b,
+        ok: false,
+        status: answer.status,
+        code: b.code ?? (answer.status === 200 ? 'TURN_UNDO_UNVERIFIED' : `HTTP_${answer.status}`)
+      }
+    },
+    /** The newest point the host proves holds files and a database, pinned before any chain write. */
+    async recoveryPoint(siteKey) {
+      const answer = await call('GET', `${keyPath(siteKey)}/backups`)
+      if (answer.status === 202)
+        throw Object.assign(new Error('The backup history is still running.'), {
+          code: 'SITE_RECOVERY_POINT_PENDING'
+        })
+      if (answer.status !== 200 || answer.body?.may?.restoreEverything !== true) return null
+      const points = (answer.body?.rows ?? [])
+        .filter(
+          (p) =>
+            p.kind === 'backup' &&
+            Number.isSafeInteger(p.version) &&
+            p.version > 0 &&
+            /^[a-f0-9]{40,64}$/.test(p.sha ?? '') &&
+            p.database?.state === 'full' &&
+            /^[a-f0-9]{64}$/.test(p.database.sha256 ?? '')
+        )
+        .sort((a, b) => b.version - a.version)
+      const point = points[0]
+      return point ? { version: point.version, sha: point.sha, database: point.database } : null
+    },
+    /** Replays one restore operation until verified; a pending/unknown host answer never means success. */
+    async restorePoint(siteKey, point, idemKey) {
+      const current = await call('GET', `${keyPath(siteKey)}/backups`)
+      const same = current.body?.rows?.find((p) => p.kind === 'backup' && p.version === point.version)
+      if (
+        current.status !== 200 ||
+        same?.sha !== point.sha ||
+        same.database?.state !== 'full' ||
+        same.database.sha256 !== point.database.sha256
+      )
+        return { ok: false, code: 'RECOVERY_POINT_CHANGED' }
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const answer = await call('POST', `${keyPath(siteKey)}/restore`, {
+          mode: 'everything',
+          version: point.version,
+          confirm: 'restore',
+          idemKey
+        })
+        const b = answer.body ?? {}
+        if (answer.status === 200 && b.ok === true && b.status === 'succeeded')
+          return { ok: true, operationId: b.operationId, version: point.version, head: b.head }
+        if (!b.operationId || !['pending', 'unknown'].includes(b.status))
+          return { ok: false, code: b.code ?? `HTTP_${answer.status}`, operationId: b.operationId }
+        await sleep(10_000)
+      }
+      return { ok: false, code: 'RESTORE_PENDING' }
     },
     async remove(siteKey) {
       for (let attempt = 0; attempt < 30; attempt++) {

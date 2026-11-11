@@ -77,6 +77,11 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     ? new Set(kit.contentMap.slots.filter((s) => s.type === 'image').map((s) => s.key))
     : null
   const tooNarrow = narrowerThanSlot(kit?.contentMap)
+  const transparentSlots = new Set(
+    (Array.isArray(kit?.contentMap?.slots) ? kit.contentMap.slots : [])
+      .filter((s) => s?.fit?.transparent === true)
+      .map((s) => s.key)
+  )
   // The kit block of each frame, and the cuts of each owner photo already placed in each block: two cuts of one photo
   // in one block share at most ANY_PHOTO_MAX_OVERLAP (card AK: a near duplicate reads as the same picture twice).
   const blockOf = new Map()
@@ -173,6 +178,13 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     }
     if (imageSlots && !imageSlots.has(key)) {
       bad(e.frame, `the kit has no image slot ${key}`)
+      continue
+    }
+    // Historical manifests and twins can still carry an opaque photo. JPEG has no alpha; refuse it before upload
+    // instead of waiting for SLOT_IMAGE_OPAQUE after the rest of the site has been written. Native validation also
+    // checks alpha-capable formats against their actual bytes.
+    if (transparentSlots.has(key) && /\.jpe?g$/i.test(String(e.file))) {
+      bad(e.frame, `the kit slot ${key} requires transparency; its JPEG file is opaque`)
       continue
     }
     if (e.paint) {

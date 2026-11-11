@@ -1,0 +1,2 @@
+- **Check the current picture-checker version in the bench CLI status regression.** — pipeline maintainers · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** local and CI picture bench tests; no runtime behavior changes. The status fixture now expects `site-pictures-check/2`, matching the scene-lettering validation already introduced on this branch. The full gate reproduced a successful run with 13 passing checks that failed only because its assertion still expected version 1. No check is skipped or weakened.

@@ -80,12 +80,11 @@ export const changeSentence = (fault) => {
  */
 function levelsOf(fault) {
   const record = recordOf(fault.slot) ?? recordOf(fault.block)
+  const writable = !fault.altBlocked
   return [
-    ...(fault.slot ? [{ kind: 'field', label: slotLabelOf(fault), writable: true }] : []),
-    ...(fault.block ? [{ kind: 'block', label: fault.block, writable: true }] : []),
-    ...(record
-      ? [{ kind: 'record', label: `${record.kind} ${record.id}`, native: record, writable: true }]
-      : [])
+    ...(fault.slot ? [{ kind: 'field', label: slotLabelOf(fault), writable }] : []),
+    ...(fault.block ? [{ kind: 'block', label: fault.block, writable }] : []),
+    ...(record ? [{ kind: 'record', label: `${record.kind} ${record.id}`, native: record, writable }] : [])
   ]
 }
 
@@ -98,7 +97,7 @@ function levelsOf(fault) {
  */
 export function commentItem(fault, { url, element = null, located = null }) {
   const levels = levelsOf(fault)
-  const answer = located?.answer ?? null
+  const answer = fault.altBlocked ? null : (located?.answer ?? null)
   const measured = typeof fault.measured === 'string' ? fault.measured : ''
   return {
     page: fault.page,
@@ -115,7 +114,9 @@ export function commentItem(fault, { url, element = null, located = null }) {
     },
     locate: answer ?? { status: 'unchecked', levels },
     locateFrom: answer ? 'content.locate' : 'fault',
-    ...(answer ? {} : { locateProblem: located?.problem ?? 'content.locate was not asked' })
+    ...(answer
+      ? {}
+      : { locateProblem: fault.altBlocked ?? located?.problem ?? 'content.locate was not asked' })
   }
 }
 

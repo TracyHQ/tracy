@@ -90,6 +90,7 @@ export const RULE_TITLES = [
     'R24',
     'A control that stays on the page keeps its label; a label one slot shares across blocks is written, never hidden'
   ],
+  ['r25', 'R25', 'Every article rests on one original owner post; surplus articles are dropped'],
   ['r10h', 'R10h', 'Judgement items (needs reviewer): listed as skip']
 ]
 

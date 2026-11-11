@@ -87,6 +87,48 @@ test('a queued run nobody holds is cancelled at once', opts, async () => {
   assert.equal((await cancelBrandRun(pool, run.id)).code, 'BRAND_RUN_NOT_ACTIVE')
 })
 
+test('a cancel asked while brand preparation is pending prevents the first paid call', opts, async () => {
+  const { pool } = db
+  await assignBrandDoors(pool)
+  const c = await brandCase()
+  const run = await startRun(pool, c)
+  const preparing = Promise.withResolvers()
+  const release = Promise.withResolvers()
+  const model = modelRouter({ agent: [saveCall(c.brand), done()] })
+  const images = readyKitImages()
+  const pending = createBrandQueue({
+    pool,
+    secret: SECRET,
+    fetchImpl: model.fetchImpl.bind(model),
+    kitImages: {
+      async ensure(kit) {
+        preparing.resolve()
+        await release.promise
+        return images.ensure(kit)
+      }
+    },
+    wiring: fakeWiring({ files: c.files }),
+    log: quiet,
+    retry: { attempts: 1 }
+  }).drain()
+  try {
+    await preparing.promise
+    const cancelled = await cancelBrandRun(pool, run.id)
+    assert.equal(cancelled.ok, true)
+    release.resolve()
+    await pending
+    const after = await readRun(pool, run.id)
+    assert.equal(after.status, 'cancelled')
+    assert.equal(model.requests.length, 0, 'cancellation during preparation prevents every paid call')
+    assert.equal(after.rounds.length, 0, 'round zero never opens after cancellation')
+    const { rows } = await pool.query('select count(*)::int as n from brand_call where run_id=$1', [run.id])
+    assert.equal(rows[0].n, 0)
+  } finally {
+    release.resolve()
+    await pending
+  }
+})
+
 test('one brand run at a time; a planner run in flight does not block it', opts, async () => {
   const { pool } = db
   await assignBrandDoors(pool)

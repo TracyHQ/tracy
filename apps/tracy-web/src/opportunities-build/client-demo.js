@@ -19,7 +19,14 @@ import {
   templatePostsLeft
 } from './agent-demo.js'
 import { liveReadinessOf } from './live-readiness.js'
-import { deterministicBuildId, readinessOfBuild, suggestedLabel, startBuild, settleBuild } from './builds.js'
+import {
+  deterministicBuildId,
+  readinessOfBuild,
+  readinessNote,
+  suggestedLabel,
+  startBuild,
+  settleBuild
+} from './builds.js'
 import { freezeDemoResearchInput, pictureLabelInputOf, revisionForAction } from './revisions.js'
 import { createPictureLabelRuns, PICTURE_LABELS_PENDING } from './picture-label-runs.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
@@ -427,8 +434,9 @@ export function createClientDemoService(deps) {
         state.revision = made.revision
       }
       // A blocked brief claims no site and no chat (#50): the same verdict `startBuild` honours.
-      if (!state.build && readinessOfBuild(state.revision, domain)?.verdict === 'block')
-        throw error('BRIEF_NOT_READY')
+      const readiness = !state.build ? readinessOfBuild(state.revision, domain) : null
+      if (readiness?.verdict === 'block')
+        throw Object.assign(error('BRIEF_NOT_READY'), { readiness: readinessNote(readiness) })
       if (!state.build)
         state.build = (
           await insertBuild(pool, {
@@ -661,7 +669,13 @@ export function createClientDemoService(deps) {
         // clearing it on every poll until the two-hour deadline calls it DEMO_STEP_TIMEOUT. Other failures follow
         // the runner's bounded retry policy, including temporary template/network outages.
         if (PREPARATION_FAILURES.has(failure?.code))
-          return { terminal: true, state: 'failed', step: 'brief', error: failure.code }
+          return {
+            terminal: true,
+            state: 'failed',
+            step: 'brief',
+            error: failure.code,
+            ...(failure.readiness ? { readiness: failure.readiness } : {})
+          }
         if (failure?.code !== LOGO_RESEARCH_PENDING && failure?.code !== PICTURE_LABELS_PENDING) throw failure
       }
     }

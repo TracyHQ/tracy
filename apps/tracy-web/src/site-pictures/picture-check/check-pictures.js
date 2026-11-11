@@ -15,7 +15,7 @@ import { checkP06, checkP07, checkP08, checkP09, checkP10, checkP11 } from './ru
 
 // Stored on every bench run next to the prompt hashes. Bump it whenever a rule, a rule title, a threshold, a failure
 // text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-pictures-check/1'
+export const CHECKER_VERSION = 'site-pictures-check/4'
 
 // The failure list a fix round sends back: the same text as the copy check's, one line per failure,
 // "<rule id> | <rule title> | <where> | <detail>".

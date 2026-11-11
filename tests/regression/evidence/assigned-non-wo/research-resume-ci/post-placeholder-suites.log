@@ -1,0 +1,62 @@
+(node:23992) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Harbour Sport Club: services, who it is for, team and story read from its own words (1513.42925ms)
+✔ without a model the rules read the bio and posts, and coverage says the model did not run (173.759375ms)
+✔ the real template post: its placeholder line is cut, the rest of the post is kept (item 8) (13.207083ms)
+✔ two key message saves in a row: the second does not undo the first removal or label (107.072084ms)
+✔ Remove takes an item off the brief; Show on the site puts a review-only person on it; the card shows both (184.449084ms)
+✔ a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer (#251) (10.871167ms)
+✔ a reading without reasoning sends thinking off and a 4k answer budget, and still reads the business (#251) (97.623875ms)
+✔ a Research again from scratch reads the business again although its texts and version are unchanged (220.25875ms)
+(node:24003) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ the fictional briefs are valid, so the routing is tested on real brief shapes (2.20375ms)
+✔ no item of a fictional brief is without a role or a reason (0.719584ms)
+✔ original post facts route to article copy and dates without losing their source evidence (0.494584ms)
+✔ the table is well formed: a role of vocabulary 3 or a reason, never neither (0.156042ms)
+✔ a kind with no row is reported as unrouted (0.447ms)
+✔ every kind the brief schema and the builder can produce has a row (a new kind fails here) (0.399708ms)
+✔ a price the owner did not publish yields an owner question (0.152791ms)
+✔ every missing or withheld fact of a brief has an owner question, none is a silent gap (0.248625ms)
+✔ a source that failed is a research problem: no owner question, routed as not shown with its reason (0.419792ms)
+✔ a missing field with no owner wording is never asked with its raw id, it is routed as not shown (0.401291ms)
+✔ a missing field with owner wording keeps its question (0.337959ms)
+(node:24004) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ Harbour Sport Club: one envelope per fact, the inferred WhatsApp on, Google’s 4-review rating off (52.501417ms)
+✔ key messages: kept on their quotes and tied to the facts they rest on, led with in the prompt (15.072042ms)
+✔ the owner’s choices win, survive a second brief of the same research, and reorder or reword key messages (22.262958ms)
+✔ a key message resting only on facts off the site is dropped; thin evidence gives none (12.2355ms)
+✔ two sources stating the same phone corroborate it; disagreeing sources do not (1.93075ms)
+✔ a schema 1 brief stored before the change still validates and renders, its own flags read as before (12.277625ms)
+✔ a bakery keeps a key message on its own words, tied to the story fact it rests on (0.929917ms)
+✔ a key message ties only facts quoted from its own source, and never carries a withheld value to the builder (11.237667ms)
+✔ the planner receives original owner posts as assessed facts, with their publication date and evidence (11.879791ms)
+(node:24006) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+--import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("<test-loader>", pathToFileURL("./"));'
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ the reading prompt lists the trade’s kinds of business and the facts the pick may quote (1.696541ms)
+✔ a model pick whose quotes all stand becomes the sub-trade, with its quotes and sources (49.760417ms)
+✔ a pick with a quote that is not in its source is dropped: the Google type table decides (4.234542ms)
+✔ the name alone is never evidence, and an id off the trade’s list is dropped (3.539917ms)
+✔ sports_club with no usable model answer keeps the fitness words (17.889375ms)
+✔ Harbour Sport Club as coaching: no gym, class or schedule word in the brief or the build prompt (21.923167ms)
+✔ Iron Works: the model's quoted pick gives its own words (gym) (1.44875ms)
+✔ Lotus Room: the model's quoted pick gives its own words (studio) (0.743541ms)
+✔ Westside Racquet Club: the model's quoted pick gives its own words (club) (0.659791ms)
+✔ without a model, Google types settle a gym and a yoga studio, never a sports club (0.149792ms)
+✔ every sub-trade has its own word set, of the shape of its trade’s (0.204667ms)
+✔ the gallery, like the hero, holds photographs only: no logo, no profile picture (7.75825ms)
+✔ a profile picture that is no logo stays out of the gallery too (0.811292ms)
+✔ the template’s words of another kind of business are named only where the business does not use them (1.663542ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3469.855833

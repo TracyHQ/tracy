@@ -1,6 +1,6 @@
 // A group that checked nothing is never green (ADR 0044, decision 27): it is unmeasured, or not applicable when it says why, and
 // neither turns the verdict red. And the plugin's refusals for want of a contract slot are blamed once, on the template's contract
-// (issue #369), never on the write step through read-back. Sites, kits, slots and words are invented.
+// (contract capability gaps), never on the write step through read-back. Sites, kits, slots and words are invented.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkLines } from '../src/site-check/check-lines.js'
@@ -13,7 +13,7 @@ import { fakeHost, pageRead, pagedSite, writtenReport } from './_site-check-page
 
 const group = (check, name) => check.groups.find((g) => g.name === name)
 const NO_SLOT = (slot) =>
-  `${slot} is no slot of this site, so nothing can empty it; a new contract would need one (tracked as issue #369)`
+  `${slot} is no slot of this site, so nothing can empty it; a new contract would need one (contract capability update required)`
 
 test('a group that checked 0 with no reason is unmeasured, counted, and the verdict is not red', async () => {
   const silent = { name: 'quiet-measure', causingStep: 9, run: async () => ({ checked: 0, failures: [] }) }
@@ -134,7 +134,7 @@ test('broken-sentence with a written sentence slot that no page was found printi
   assert.equal(group(check, 'broken-sentence').status, 'unmeasured')
 })
 
-test('unaddressable-items lists each slot the plugin refused for want of a contract slot, on the contract (step 0, issue #369)', async () => {
+test('unaddressable-items lists each slot the plugin refused for want of a contract slot, on the contract (step 0, contract capability gaps)', async () => {
   const check = await runSiteCheck({
     door: checkSite({}).door,
     groups: WRITE_FINDING_GROUPS,
@@ -165,7 +165,7 @@ test('unaddressable-items lists each slot the plugin refused for want of a contr
       ['block-30.cta', 0]
     ]
   )
-  assert.match(g.failures[1].reason, /contract.*issue #369/)
+  assert.match(g.failures[1].reason, /contract capability update required/)
 })
 
 test('a report that left nothing out and was refused nothing is not applicable, not green', async () => {

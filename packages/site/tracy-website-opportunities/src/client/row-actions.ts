@@ -57,6 +57,12 @@ export async function runAction(
       return typeof jobId === 'string' ? settled(await api.cancel(jobId)) : missing
     case 'resume':
       return typeof jobId === 'string' ? settled(await api.resume(jobId)) : missing
+    case 'review-brief':
+      return row.demoAction?.revisionId
+        ? { kind: 'open-brief', revisionId: row.demoAction.revisionId }
+        : row.latestRevision?.id
+          ? { kind: 'open-brief', revisionId: row.latestRevision.id }
+          : missing
     case 'start':
       return settled(await startResearch(api, row.id, ids))
     case 'send-demo':

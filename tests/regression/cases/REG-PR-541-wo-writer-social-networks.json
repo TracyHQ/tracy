@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-541-wo-writer-social-networks",
+  "kind": "fix",
+  "title": "Declared social icons must match the profile network selected by the plan",
+  "pr": 541,
+  "area": "website-opportunities/writer",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run node --test apps/tracy-web/test/site-copy-check-icon-fields.test.mjs apps/tracy-web/test/site-copy-check-structure.test.mjs."
+  ],
+  "expect": [
+    "A kit-declared Twitter icon attached to a planned TikTok profile fails W03 with icon-network and return-to-planner guidance.",
+    "Matching declared Twitter icons, including the brief network alias x, remain valid.",
+    "A hidden social URL or hidden block produces no icon-network failure.",
+    "An undeclared TikTok class still fails icon-field; the checker never assumes that a font includes an unsupported glyph.",
+    "The checker records site-copy-check/9."
+  ],
+  "selectors": {},
+  "fence": "The kept plan link selects the social fact, the fact names its network, and the same explicit kit row names its icon backing field and declared network.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-copy-check-icon-fields.test.mjs",
+      "apps/tracy-web/test/site-copy-check-structure.test.mjs"
+    ],
+    "tests": [
+      "a declared social glyph cannot pass for a different planned profile network",
+      "social network checking preserves matching declared icons and hidden or omitted links",
+      "an unavailable matching social class still cannot bypass kit icon constraints"
+    ],
+    "needs": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "historicalPictureReplay": {
+    "rule": "P07",
+    "status": "fail",
+    "rejectedFrames": [
+      "block-166.7",
+      "block-166.8",
+      "block-166.9",
+      "block-166.6",
+      "block-156.0",
+      "block-161.2",
+      "article-1.16",
+      "article-1.8",
+      "article-1.9",
+      "article-1.17",
+      "article-3.16",
+      "article-3.8",
+      "article-3.9",
+      "article-3.17",
+      "siteSettings block-162.picture-1"
+    ],
+    "manifestShapeProblems": 0
+  },
+  "historicalNameReplay": {
+    "chosenPreserved": true,
+    "conflictingMarks": 0
+  },
+  "scope": "Pure local replay of frozen dev inputs, no live customer writes or model calls; this verifies the provenance and name fences, not end-to-end delivery."
+}

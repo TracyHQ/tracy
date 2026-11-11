@@ -20,6 +20,8 @@
 // and the instruction to write come last.
 import { defaultContracts } from './contracts.js'
 import { kitOfContract } from './template-kit/reader.js'
+import { withMeasuredTitles } from './template-kit/measured-titles.js'
+import { openContentMap } from './content-map-source.js'
 import { compactForPlanner, lookTextOf } from './template-kit-planner-view.js'
 
 export { compactForPlanner, lookTextOf, PLANNER_DROPPED_KIT_FIELDS } from './template-kit-planner-view.js'
@@ -86,7 +88,7 @@ export function openKit(ref, { index = defaultContracts() } = {}) {
           release: key.slice(0, at),
           version: key.slice(at + 1),
           platform: contract.platform ?? '',
-          doc: kit.doc
+          doc: withMeasuredTitles(kit.doc, openContentMap(ref, { index })?.doc, { contract: ref })
         }
       : null
   }
@@ -357,9 +359,9 @@ export const FIRST_MESSAGE_PARTS = Object.freeze(['contents'])
  * neither) and, when the kit has looks, where they are read, then the kit's "contents" (so the first call need not
  * read it), then the brief: the kit before the brief, as in a preloaded message. `imageTool: false` (a model given no
  * images, door.js): only the part tool is described, and the message says there are no images and the looks stand in.
- * @param {{ kit: { ref: string, doc: any }, brief: object, imageTool?: boolean }} input
+ * @param {{ kit: { ref: string, doc: any }, brief: object, imageTool?: boolean, visualReviewText?: string }} input
  */
-export function firstUserMessage({ kit, brief, imageTool = true }) {
+export function firstUserMessage({ kit, brief, imageTool = true, visualReviewText }) {
   const { readPart, openImage } = KIT_TOOL_NAMES
   const template = kit.doc.template ? ` (template ${kit.doc.template.name} ${kit.doc.template.version})` : ''
   const hasLooks = [...list(kit.doc.pages), ...list(kit.doc.blocks)].some((item) => lookTextOf(item.look))
@@ -375,7 +377,7 @@ export function firstUserMessage({ kit, brief, imageTool = true }) {
       : []),
     ...(imageTool
       ? [
-          `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. Open an image only where your instructions say a look cannot settle a decision.`,
+          `- ${openImage}(id) opens one kit image by its id. Where your instructions say "the image tool", they mean ${openImage}. ${visualReviewText || 'Open an image only where your instructions say a look cannot settle a decision.'}`,
           '- You may call the tools several times in the same turn: ask for every part and image you need next at once, rather than one per turn.'
         ]
       : [

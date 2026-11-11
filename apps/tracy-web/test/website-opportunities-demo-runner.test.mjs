@@ -3496,8 +3496,10 @@ test(
     const w = await world({ readiness: 'measured' })
     await w.accept()
     await w.runner().drain()
-    const action = (await w.pool.query('select status, error from wo_demo_action')).rows[0]
+    const action = (await w.pool.query('select status, error, selection from wo_demo_action')).rows[0]
     assert.deepEqual([action.status, action.error], ['failed', 'BRIEF_NOT_READY'])
+    assert.ok(action.selection.readiness.checks.includes('own-usable-photos'))
+    assert.equal(action.selection.readiness.next, 'research-again')
     assert.equal(w.creates(), 0, 'the create door was never asked')
     assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
     const { readiness } = (await w.pool.query('select brief from wo_revision')).rows[0].brief
@@ -3530,6 +3532,8 @@ test(
       await w.pool.query('select status,error,step from wo_demo_action where id=$1', [actionId])
     ).rows[0]
     assert.deepEqual(action, { status: 'failed', error: 'BRIEF_NOT_READY', step: 'brief' })
+    const metadata = (await w.pool.query('select selection from wo_demo_action')).rows[0].selection.readiness
+    assert.ok(metadata.checks.includes('own-usable-photos'))
     assert.deepEqual((await w.pool.query('select * from wo_revision')).rows, frozen)
     assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
     assert.equal(w.creates(), 0)

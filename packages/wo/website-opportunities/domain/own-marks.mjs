@@ -7,7 +7,7 @@
 // sources' choice; this module says which other names the business's own marks give, so the name waits for the owner.
 
 import { logoNameSpelling, nameKey } from './business-name.mjs'
-import { namesMatch } from './google-link.mjs'
+import { normalName, namesMatch } from './google-link.mjs'
 import { logoFactsOf } from './logo-facts.mjs'
 
 /** The sources whose words are the business's own mark: its logo and its social pages. */
@@ -39,6 +39,18 @@ function trimEdgePunctuation(text) {
 
 /** Two keys of one name: the same, or one holding the other (a logo that adds the city). */
 const sameKey = (a, b) => a === b || (Math.min(a.length, b.length) >= 4 && (a.includes(b) || b.includes(a)))
+
+// Linked owner pages may expand the middle of a name ("Harrow Gym" / "Harrow Boxing Gym").
+// Preserve both ends and every word of the shorter name; a different brand or a substituted word still conflicts.
+function expandedName(a, b) {
+  const names = [normalName(a).split(' '), normalName(b).split(' ')].sort((x, y) => x.length - y.length)
+  const [short, long] = names
+  if (short.length < 2 || short[0].length < 4 || short[0] !== long[0] || short.at(-1) !== long.at(-1))
+    return false
+  let at = 0
+  for (const word of long) if (word === short[at]) at += 1
+  return at === short.length
+}
 
 /**
  * The names the business's own marks give that are not `chosen`, each with the marks that give it.
@@ -92,6 +104,12 @@ export function ownMarkNamesOf({ chosen, claims = [], logo = null } = {}) {
     if (at) add(at, { source: c.source, via: 'handle', text, index }, null)
   })
   return [...groups.entries()]
-    .filter(([key, g]) => g.name !== null && !sameKey(key, chosenKey) && !namesMatch(g.name, chosen))
+    .filter(
+      ([key, g]) =>
+        g.name !== null &&
+        !sameKey(key, chosenKey) &&
+        !namesMatch(g.name, chosen) &&
+        !expandedName(g.name, chosen)
+    )
     .map(([, g]) => ({ name: g.name, marks: g.marks }))
 }

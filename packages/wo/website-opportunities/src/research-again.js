@@ -13,6 +13,7 @@ import {
   currentSnapshotOf,
   linksOf,
   placeSettled,
+  providerRepairReason,
   snapshotMediaOf,
   snapshotProfileOf,
   sourceDue
@@ -40,6 +41,12 @@ export const SEARCH_NETWORKS = Object.freeze(['facebook', 'instagram'])
 export const AGAIN_PARTS = SHOWN_SOURCES
 
 const time = (v) => (v ? new Date(v).getTime() : Number.NaN)
+
+/** No keys or source content leave this read. The operator's existing setup save is the recovery acknowledgement. */
+export async function providerSetupUpdatedAt(db, rows) {
+  if (!Object.values(rows).some((row) => providerRepairReason(row))) return null
+  return (await db.query('select updated_at from wo_ops_setting where id')).rows[0]?.updated_at ?? null
+}
 
 /**
  * The `parts` a door was sent to limit a Research again to ("Read menu again" = `menu-file,menu-photos`): a list or a
@@ -77,6 +84,7 @@ function runReason(row, now, version) {
  * press keeps the due-only plan: Tracy pays for it.
  */
 export const AGAIN_REASON = 'again'
+export { providerRepairReason } from './places.js'
 
 /**
  * @param {Record<string, object>} rows the place's rows by part (`wo_place_snapshot_source` shape)
@@ -92,13 +100,28 @@ export const AGAIN_REASON = 'again'
  */
 export function researchAgainPlan(
   rows,
-  { now, parts, versions = {}, unavailable = {}, prices = {}, capCents, custom = {}, fromScratch = false }
+  {
+    now,
+    parts,
+    versions = {},
+    unavailable = {},
+    prices = {},
+    capCents,
+    custom = {},
+    fromScratch = false,
+    setupUpdatedAt = null
+  }
 ) {
   let run = []
   const kept = []
   for (const part of parts) {
     if (unavailable[part]) {
       kept.push({ part, reason: 'unavailable', detail: unavailable[part] })
+      continue
+    }
+    const repair = providerRepairReason(rows[part], setupUpdatedAt)
+    if (repair) {
+      kept.push({ part, reason: 'unavailable', detail: repair })
       continue
     }
     const own = custom[part]
@@ -126,7 +149,7 @@ export function researchAgainPlan(
     }
     const row = rows[part]
     const version = versions[part] ?? null
-    if (!row || sourceDue(row, now, version, { manual: true }))
+    if (!row || sourceDue(row, now, version, { manual: true, setupUpdatedAt }))
       run.push({ part, reason: runReason(row, now, version), ceilingCents: prices[part] ?? 0 })
     else kept.push({ part, reason: placeSettled(row) ? 'none' : 'up-to-date' })
   }
@@ -224,6 +247,7 @@ export async function placeAgainPlan(
       ])
     ).rows.length > 0
   const rows = Object.fromEntries(snapshot.sources.map((s) => [s.source, s]))
+  const setupUpdatedAt = await providerSetupUpdatedAt(db, rows)
   const parts = []
   const unavailable = {}
   const prices = {}
@@ -309,7 +333,8 @@ export async function placeAgainPlan(
       prices,
       capCents,
       custom,
-      fromScratch
+      fromScratch,
+      setupUpdatedAt
     }),
     researched: true,
     ...(fromScratch ? { fromScratch: { at: new Date(now).toISOString(), whole: !onlyParts } } : {})

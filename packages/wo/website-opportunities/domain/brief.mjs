@@ -69,7 +69,9 @@ export const BRIEF_SCHEMA_VERSIONS = Object.freeze([1, 2])
 // Bump whenever a brief made from the same research would come out differently (reading rules, people, name, facts).
 // It goes into the freshness key, so existing briefs offer Refresh. The schema version above is for the shape only.
 // 3 (09/11/2026): the reading carries its USP themes (`reading.uspThemes`), and the hero its USP statement (`hero.usp`).
-export const BRIEF_RULES_VERSION = 3
+// 4 (11/11/2026): assets retain known scene textPresence separately from the overlay-only label.
+// 5 (11/11/2026): owner website reading, original post facts and expanded owner names.
+export const BRIEF_RULES_VERSION = 5
 /** The contact copy of a business whose hours wait for a check, when it can be called or written to. */
 // The contact line of a business whose hours wait for a check; the channels to book on follow it, each once.
 export const BY_APPOINTMENT = 'By appointment.'
@@ -828,7 +830,8 @@ export function buildBrief({
         'offerings',
         `No ${words.listBlock === 'Services' ? 'service' : 'offering'} list was collected: leave its items empty or neutral, never a service of your own.`
       )
-    miss('prices', 'No price was collected: show no price.')
+    if (!(reading?.services ?? []).some((item) => item.price))
+      miss('prices', 'No supported price is available in the business reading: show no price.')
   } else if (!menus.length && dishes.length) {
     miss('menu-link', 'No full menu was found; the menu page shows only the dishes the restaurant posted.')
     miss('prices', 'No price list; show a price only where a content item quotes it.')
@@ -1397,6 +1400,8 @@ function assetRelationErrors(a) {
     !(Number.isInteger(a.peopleCount) && a.peopleCount >= 0)
   )
     out.push({ field: 'peopleCount', msg: 'must be a whole number, or null when no model looked' })
+  if ('textPresence' in a && !['present', 'absent'].includes(a.textPresence))
+    out.push({ field: 'textPresence', msg: 'must be present or absent when known' })
   for (const field of ['isGraphic', 'isOwnPhoto', ...PHOTO_RISK_LABELS])
     if (field in a && a[field] !== null && typeof a[field] !== 'boolean')
       out.push({ field, msg: 'must be a boolean, or null when not known' })
@@ -2029,6 +2034,7 @@ function shownFromReviews(brief, factId) {
 /** Where a reading item came from, as the brief names it: the bio, a post's address, a reviewer. */
 function readingSourceLabel(source = {}) {
   if (source.kind === 'bio') return 'bio'
+  if (source.kind === 'website') return `website${source.url ? ` ${q(source.url)}` : ''}`
   if (source.kind === 'review') return `review${source.author ? ` by ${source.author}` : ''}`
   return `post${source.url ? ` ${q(source.url)}` : ''}`
 }

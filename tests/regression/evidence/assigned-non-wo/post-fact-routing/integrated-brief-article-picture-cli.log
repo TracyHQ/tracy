@@ -1,0 +1,1114 @@
+TAP version 13
+# (node:99736) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: run, status, list and get: the output folder holds the manifest, files, check results and turns
+ok 1 - run, status, list and get: the output folder holds the manifest, files, check results and turns
+  ---
+  duration_ms: 1997.390208
+  type: 'test'
+  ...
+# Subtest: a photo not named by its hash refuses the run; a brief file without photos is wrong usage
+ok 2 - a photo not named by its hash refuses the run; a brief file without photos is wrong usage
+  ---
+  duration_ms: 26.854875
+  type: 'test'
+  ...
+# Subtest: cancel ends a queued run nobody holds; a second run waits for none
+ok 3 - cancel ends a queued run nobody holds; a second run waits for none
+  ---
+  duration_ms: 59.401833
+  type: 'test'
+  ...
+# (node:99755) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: article copy cannot be invented from trade knowledge, a service or a withheld post
+ok 4 - article copy cannot be invented from trade knowledge, a service or a withheld post
+  ---
+  duration_ms: 6.938625
+  type: 'test'
+  ...
+# Subtest: two cards cannot turn one owner post into two articles
+ok 5 - two cards cannot turn one owner post into two articles
+  ---
+  duration_ms: 1.235375
+  type: 'test'
+  ...
+# Subtest: a post can have one detail page, plus its listing teaser, but never two detail pages
+ok 6 - a post can have one detail page, plus its listing teaser, but never two detail pages
+  ---
+  duration_ms: 1.610583
+  type: 'test'
+  ...
+# (node:99756) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: brief assets link to the brief offerings and people only, general otherwise, graphics flagged
+ok 7 - brief assets link to the brief offerings and people only, general otherwise, graphics flagged
+  ---
+  duration_ms: 13.222333
+  type: 'test'
+  ...
+# Subtest: a picture the model calls a graphic is never a hero candidate, whatever else it shows
+ok 8 - a picture the model calls a graphic is never a hero candidate, whatever else it shows
+  ---
+  duration_ms: 1.603416
+  type: 'test'
+  ...
+# Subtest: validation refuses a relation outside its shape
+ok 9 - validation refuses a relation outside its shape
+  ---
+  duration_ms: 12.424
+  type: 'test'
+  ...
+# (node:99758) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: every brief asset carries source, credit and uploader role from research
+ok 10 - every brief asset carries source, credit and uploader role from research
+  ---
+  duration_ms: 11.26925
+  type: 'test'
+  ...
+# Subtest: Google Places photos keep their author attribution in the brief
+ok 11 - Google Places photos keep their author attribution in the brief
+  ---
+  duration_ms: 1.843666
+  type: 'test'
+  ...
+# Subtest: validation rejects an asset without a source, a credit or an uploader role
+ok 12 - validation rejects an asset without a source, a credit or an uploader role
+  ---
+  duration_ms: 6.465083
+  type: 'test'
+  ...
+# Subtest: a brief stored before the fields (assets with none) is still tolerated by readers
+ok 13 - a brief stored before the fields (assets with none) is still tolerated by readers
+  ---
+  duration_ms: 1.064042
+  type: 'test'
+  ...
+# (node:99759) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Harbour Sport Club's hero offers its three largest Google photos, the logo none of them
+ok 14 - Harbour Sport Club's hero offers its three largest Google photos, the logo none of them
+  ---
+  duration_ms: 14.484042
+  type: 'test'
+  ...
+# Subtest: with only a logo and a profile picture the hero has no picture at all
+ok 15 - with only a logo and a profile picture the hero has no picture at all
+  ---
+  duration_ms: 1.170458
+  type: 'test'
+  ...
+# Subtest: a Google Maps menu photo leaves the hero candidates, and nothing takes its place
+ok 16 - a Google Maps menu photo leaves the hero candidates, and nothing takes its place
+  ---
+  duration_ms: 2.022542
+  type: 'test'
+  ...
+# (node:99760) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the fictional briefs are valid, so the routing is tested on real brief shapes
+ok 17 - the fictional briefs are valid, so the routing is tested on real brief shapes
+  ---
+  duration_ms: 2.529292
+  type: 'test'
+  ...
+# Subtest: no item of a fictional brief is without a role or a reason
+ok 18 - no item of a fictional brief is without a role or a reason
+  ---
+  duration_ms: 0.7035
+  type: 'test'
+  ...
+# Subtest: original post facts route to article copy and dates without losing their source evidence
+ok 19 - original post facts route to article copy and dates without losing their source evidence
+  ---
+  duration_ms: 0.997458
+  type: 'test'
+  ...
+# Subtest: the table is well formed: a role of vocabulary 3 or a reason, never neither
+ok 20 - the table is well formed: a role of vocabulary 3 or a reason, never neither
+  ---
+  duration_ms: 0.265791
+  type: 'test'
+  ...
+# Subtest: a kind with no row is reported as unrouted
+ok 21 - a kind with no row is reported as unrouted
+  ---
+  duration_ms: 0.46675
+  type: 'test'
+  ...
+# Subtest: every kind the brief schema and the builder can produce has a row (a new kind fails here)
+ok 22 - every kind the brief schema and the builder can produce has a row (a new kind fails here)
+  ---
+  duration_ms: 0.399083
+  type: 'test'
+  ...
+# Subtest: a price the owner did not publish yields an owner question
+ok 23 - a price the owner did not publish yields an owner question
+  ---
+  duration_ms: 0.207292
+  type: 'test'
+  ...
+# Subtest: every missing or withheld fact of a brief has an owner question, none is a silent gap
+ok 24 - every missing or withheld fact of a brief has an owner question, none is a silent gap
+  ---
+  duration_ms: 0.277542
+  type: 'test'
+  ...
+# Subtest: a source that failed is a research problem: no owner question, routed as not shown with its reason
+ok 25 - a source that failed is a research problem: no owner question, routed as not shown with its reason
+  ---
+  duration_ms: 0.543375
+  type: 'test'
+  ...
+# Subtest: a missing field with no owner wording is never asked with its raw id, it is routed as not shown
+ok 26 - a missing field with no owner wording is never asked with its raw id, it is routed as not shown
+  ---
+  duration_ms: 0.598875
+  type: 'test'
+  ...
+# Subtest: a missing field with owner wording keeps its question
+ok 27 - a missing field with owner wording keeps its question
+  ---
+  duration_ms: 0.317166
+  type: 'test'
+  ...
+# (node:99762) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the club: every check passes and the build may start
+ok 28 - the club: every check passes and the build may start
+  ---
+  duration_ms: 14.149917
+  type: 'test'
+  ...
+# Subtest: the cafe: three own photos and none labelled block, and the owner is asked for photos
+ok 29 - the cafe: three own photos and none labelled block, and the owner is asked for photos
+  ---
+  duration_ms: 1.657916
+  type: 'test'
+  ...
+# Subtest: the clinic: six own photos, half its services shown and described, no portrait: it warns and asks
+ok 30 - the clinic: six own photos, half its services shown and described, no portrait: it warns and asks
+  ---
+  duration_ms: 1.702208
+  type: 'test'
+  ...
+# Subtest: own usable photos: 8 pass, 7 and 4 warn, 3 block
+ok 31 - own usable photos: 8 pass, 7 and 4 warn, 3 block
+  ---
+  duration_ms: 6.735208
+  type: 'test'
+  ...
+# Subtest: a graphic, a thumbnail or a customer photo is not an own usable photo
+ok 32 - a graphic, a thumbnail or a customer photo is not an own usable photo
+  ---
+  duration_ms: 0.904625
+  type: 'test'
+  ...
+# Subtest: labelled share: 90% passes, 89% and 60% warn, 59% blocks; an unlabelled general is not labelled
+ok 33 - labelled share: 90% passes, 89% and 60% warn, 59% blocks; an unlabelled general is not labelled
+  ---
+  duration_ms: 4.566625
+  type: 'test'
+  ...
+# Subtest: source and credit: every asset names its source, and a third-party photo its author
+ok 34 - source and credit: every asset names its source, and a third-party photo its author
+  ---
+  duration_ms: 1.795
+  type: 'test'
+  ...
+# Subtest: hero candidates: 2 pass, 1 warns, 0 blocks
+ok 35 - hero candidates: 2 pass, 1 warns, 0 blocks
+  ---
+  duration_ms: 3.6495
+  type: 'test'
+  ...
+# Subtest: offerings with a linked photo: 60% passes, 50% and 30% warn, none never blocks
+ok 36 - offerings with a linked photo: 60% passes, 50% and 30% warn, none never blocks
+  ---
+  duration_ms: 6.389417
+  type: 'test'
+  ...
+# Subtest: offerings with a description: 80% passes, 75% and 50% warn
+ok 37 - offerings with a description: 80% passes, 75% and 50% warn
+  ---
+  duration_ms: 3.695708
+  type: 'test'
+  ...
+# Subtest: named people: a portrait passes, a missing one warns and asks
+ok 38 - named people: a portrait passes, a missing one warns and asks
+  ---
+  duration_ms: 1.68325
+  type: 'test'
+  ...
+# Subtest: an item with neither a role nor a reason warns
+ok 39 - an item with neither a role nor a reason warns
+  ---
+  duration_ms: 1.09925
+  type: 'test'
+  ...
+# Subtest: template content kinds: unknown without a template, block when one it shows is missing
+ok 40 - template content kinds: unknown without a template, block when one it shows is missing
+  ---
+  duration_ms: 3.80825
+  type: 'test'
+  ...
+# Subtest: the withheld facts of a brief are asked too, once each
+ok 41 - the withheld facts of a brief are asked too, once each
+  ---
+  duration_ms: 1.381292
+  type: 'test'
+  ...
+# (node:99772) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a place's social photo keeps its post, so the post's words can name the dish it shows
+ok 42 - a place's social photo keeps its post, so the post's words can name the dish it shows
+  ---
+  duration_ms: 30.102208
+  type: 'test'
+  ...
+# (node:99773) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a brief of Harbour Sport Club's 23 photos keeps one copy of each, the sharper Google one
+ok 43 - a brief of Harbour Sport Club's 23 photos keeps one copy of each, the sharper Google one
+  ---
+  duration_ms: 7.508917
+  type: 'test'
+  ...
+# Subtest: different pictures with close fingerprints all reach the brief
+ok 44 - different pictures with close fingerprints all reach the brief
+  ---
+  duration_ms: 1.836584
+  type: 'test'
+  ...
+# Subtest: the logo is never set aside as a copy, even of a larger picture
+ok 45 - the logo is never set aside as a copy, even of a larger picture
+  ---
+  duration_ms: 0.837208
+  type: 'test'
+  ...
+# Subtest: the hero candidates of Harbour Sport Club's brief are its three largest Google photos, never the logo
+ok 46 - the hero candidates of Harbour Sport Club's brief are its three largest Google photos, never the logo
+  ---
+  duration_ms: 4.421334
+  type: 'test'
+  ...
+# Subtest: a profile picture is no hero candidate even when no logo was chosen
+ok 47 - a profile picture is no hero candidate even when no logo was chosen
+  ---
+  duration_ms: 0.421708
+  type: 'test'
+  ...
+# Subtest: videos, pictures without a size and logo candidates are no hero candidates; none left is an empty list
+ok 48 - videos, pictures without a size and logo candidates are no hero candidates; none left is an empty list
+  ---
+  duration_ms: 0.2345
+  type: 'test'
+  ...
+# (node:99777) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a failed source keeps its code, its HTTP status and every provider it tried
+ok 49 - a failed source keeps its code, its HTTP status and every provider it tried
+  ---
+  duration_ms: 1.307958
+  type: 'test'
+  ...
+# Subtest: fromPlace carries every source the run tried, failures included, never a pending one
+ok 50 - fromPlace carries every source the run tried, failures included, never a pending one
+  ---
+  duration_ms: 0.277791
+  type: 'test'
+  ...
+# Subtest: withAttemptedSources adds the sources a brief left out and says what a failed one leaves missing
+ok 51 - withAttemptedSources adds the sources a brief left out and says what a failed one leaves missing
+  ---
+  duration_ms: 0.199625
+  type: 'test'
+  ...
+# Subtest: a site brief made from research lists Google Maps 429 and TripAdvisor 402, and still validates
+ok 52 - a site brief made from research lists Google Maps 429 and TripAdvisor 402, and still validates
+  ---
+  duration_ms: 48.358083
+  type: 'test'
+  ...
+# Subtest: a brief made without attempted sources keeps its sources as before (schema 2 readers)
+ok 53 - a brief made without attempted sources keeps its sources as before (schema 2 readers)
+  ---
+  duration_ms: 12.932792
+  type: 'test'
+  ...
+# (node:99778) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a dish photo vision confirmed reaches the brief as an accepted photo with its evidence
+ok 54 - a dish photo vision confirmed reaches the brief as an accepted photo with its evidence
+  ---
+  duration_ms: 36.758542
+  type: 'test'
+  ...
+# Subtest: a candidate travels in the brief but the Markdown never offers it as the dish photo
+ok 55 - a candidate travels in the brief but the Markdown never offers it as the dish photo
+  ---
+  duration_ms: 3.58225
+  type: 'test'
+  ...
+# Subtest: a post of the place names the dish of its only photo
+ok 56 - a post of the place names the dish of its only photo
+  ---
+  duration_ms: 8.634625
+  type: 'test'
+  ...
+# Subtest: a photo research linked to the dish (profile.menuItems[].photo) keeps the link, as an asset id
+ok 57 - a photo research linked to the dish (profile.menuItems[].photo) keeps the link, as an asset id
+  ---
+  duration_ms: 2.042583
+  type: 'test'
+  ...
+# Subtest: the validator refuses a dish photo outside assets or of an unknown status
+ok 58 - the validator refuses a dish photo outside assets or of an unknown status
+  ---
+  duration_ms: 4.24875
+  type: 'test'
+  ...
+# Subtest: brief-schema.json describes the dish photo
+ok 59 - brief-schema.json describes the dish photo
+  ---
+  duration_ms: 0.78475
+  type: 'test'
+  ...
+# Subtest: photos posted together under one text reach the brief as a candidate naming its siblings
+ok 60 - photos posted together under one text reach the brief as a candidate naming its siblings
+  ---
+  duration_ms: 1.926334
+  type: 'test'
+  ...
+# (node:99779) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a business with a branch is written "name (branch)", with no dash anywhere in the copy
+ok 61 - a business with a branch is written "name (branch)", with no dash anywhere in the copy
+  ---
+  duration_ms: 10.119709
+  type: 'test'
+  ...
+# (node:99788) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: 1. the name the business calls itself on its logo and Instagram reaches the brief, with its marks
+ok 62 - 1. the name the business calls itself on its logo and Instagram reaches the brief, with its marks
+  ---
+  duration_ms: 76.556792
+  type: 'test'
+  ...
+# Subtest: 2. the contact line names the channels on the site in the order of the call to action
+ok 63 - 2. the contact line names the channels on the site in the order of the call to action
+  ---
+  duration_ms: 70.909583
+  type: 'test'
+  ...
+# Subtest: 3. a video without a known size says null, never 0 x 0, and still validates
+ok 64 - 3. a video without a known size says null, never 0 x 0, and still validates
+  ---
+  duration_ms: 22.138292
+  type: 'test'
+  ...
+# Subtest: 4. a DM channel quotes only the business's invitations; Google's website field never corroborates it
+ok 65 - 4. a DM channel quotes only the business's invitations; Google's website field never corroborates it
+  ---
+  duration_ms: 27.895416
+  type: 'test'
+  ...
+# Subtest: 5. a review naming someone held off the site is not offered for the site
+ok 66 - 5. a review naming someone held off the site is not offered for the site
+  ---
+  duration_ms: 41.7165
+  type: 'test'
+  ...
+# Subtest: 6. one name conflict per other name, and no link of no kind repeating the Instagram page
+ok 67 - 6. one name conflict per other name, and no link of no kind repeating the Instagram page
+  ---
+  duration_ms: 1.774042
+  type: 'test'
+  ...
+# Subtest: 7. Google Places reports what it gave, and a complete search never reads as pending
+ok 68 - 7. Google Places reports what it gave, and a complete search never reads as pending
+  ---
+  duration_ms: 20.404417
+  type: 'test'
+  ...
+# Subtest: 8. services joined into prose read in sentence case; quotes keep their capitals
+ok 69 - 8. services joined into prose read in sentence case; quotes keep their capitals
+  ---
+  duration_ms: 19.560583
+  type: 'test'
+  ...
+# Subtest: 9. the brief markdown carries no em or en dash outside the quotes it holds
+ok 70 - 9. the brief markdown carries no em or en dash outside the quotes it holds
+  ---
+  duration_ms: 26.524792
+  type: 'test'
+  ...
+# Subtest: A. By appointment is recorded as inferred from implausible hours, never cited with an hours excerpt
+ok 71 - A. By appointment is recorded as inferred from implausible hours, never cited with an hours excerpt
+  ---
+  duration_ms: 39.643833
+  type: 'test'
+  ...
+# Subtest: B. the contact text names each channel once, in the order of the call to action
+ok 72 - B. the contact text names each channel once, in the order of the call to action
+  ---
+  duration_ms: 18.134083
+  type: 'test'
+  ...
+# Subtest: D. a fully title-cased quote lowercases only common words; a place name keeps its capital
+ok 73 - D. a fully title-cased quote lowercases only common words; a place name keeps its capital
+  ---
+  duration_ms: 0.067
+  type: 'test'
+  ...
+# Subtest: E. the other name is held from the site text, while the logo may still show it
+ok 74 - E. the other name is held from the site text, while the logo may still show it
+  ---
+  duration_ms: 20.432542
+  type: 'test'
+  ...
+# Subtest: F. while the business name is held, the brand names nobody and points to the held name
+ok 75 - F. while the business name is held, the brand names nobody and points to the held name
+  ---
+  duration_ms: 17.716958
+  type: 'test'
+  ...
+# Subtest: F. the place profile's brand name follows the held business name, so no site fill falls back to it
+ok 76 - F. the place profile's brand name follows the held business name, so no site fill falls back to it
+  ---
+  duration_ms: 1.832625
+  type: 'test'
+  ...
+# Subtest: G. while the business name is held, the site is named by the neutral identity the brief already uses
+ok 77 - G. while the business name is held, the site is named by the neutral identity the brief already uses
+  ---
+  duration_ms: 19.555875
+  type: 'test'
+  ...
+# (node:99790) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a quote is from a held review when it names a held person, cites a held review or is part of one
+ok 78 - a quote is from a held review when it names a held person, cites a held review or is part of one
+  ---
+  duration_ms: 1.217
+  type: 'test'
+  ...
+# Subtest: a fact's evidence keeps its source but no held review's words; owner text and usable reviews keep theirs
+ok 79 - a fact's evidence keeps its source but no held review's words; owner text and usable reviews keep theirs
+  ---
+  duration_ms: 1.659375
+  type: 'test'
+  ...
+# Subtest: a held review is named, never quoted: its split keeps no text
+ok 80 - a held review is named, never quoted: its split keeps no text
+  ---
+  duration_ms: 0.173959
+  type: 'test'
+  ...
+# Subtest: the reading less held reviews keeps owner text and usable reviews only
+ok 81 - the reading less held reviews keeps owner text and usable reviews only
+  ---
+  duration_ms: 0.342792
+  type: 'test'
+  ...
+# Subtest: 3. the kind of business and every other quote pick evidence from owner text and usable reviews only
+ok 82 - 3. the kind of business and every other quote pick evidence from owner text and usable reviews only
+  ---
+  duration_ms: 130.405167
+  type: 'test'
+  ...
+# Subtest: 2. while the name is held, the business name and the heading are the neutral identity
+ok 83 - 2. while the name is held, the business name and the heading are the neutral identity
+  ---
+  duration_ms: 21.946125
+  type: 'test'
+  ...
+# Subtest: 2. a brief stored with the held name as its business name renders the neutral identity too
+ok 84 - 2. a brief stored with the held name as its business name renders the neutral identity too
+  ---
+  duration_ms: 19.564791
+  type: 'test'
+  ...
+# Subtest: 2. counter-case: a name on the site is the business name and the heading
+ok 85 - 2. counter-case: a name on the site is the business name and the heading
+  ---
+  duration_ms: 18.755625
+  type: 'test'
+  ...
+# Subtest: 4. nameHeld is an object {missing, reasons} wherever the brief says the name is held
+ok 86 - 4. nameHeld is an object {missing, reasons} wherever the brief says the name is held
+  ---
+  duration_ms: 19.116333
+  type: 'test'
+  ...
+# (node:99791) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the hero is key message 1 and the on-site services, up to three, each with its quote as evidence
+ok 87 - the hero is key message 1 and the on-site services, up to three, each with its quote as evidence
+  ---
+  duration_ms: 99.439208
+  type: 'test'
+  ...
+# Subtest: the home page carries an SEO title and description of on-site facts, within limits, checked by acceptance
+ok 88 - the home page carries an SEO title and description of on-site facts, within limits, checked by acceptance
+  ---
+  duration_ms: 35.8425
+  type: 'test'
+  ...
+# Subtest: dashes never reach generated prose: the prompt forbids them and code replaces them
+ok 89 - dashes never reach generated prose: the prompt forbids them and code replaces them
+  ---
+  duration_ms: 14.62925
+  type: 'test'
+  ...
+# Subtest: praise themes from reviews become key message candidates on verbatim review quotes, naming nobody
+ok 90 - praise themes from reviews become key message candidates on verbatim review quotes, naming nobody
+  ---
+  duration_ms: 41.013541
+  type: 'test'
+  ...
+# Subtest: a name held off the site appears in no hero, SEO line, about copy or acceptance line
+ok 91 - a name held off the site appears in no hero, SEO line, about copy or acceptance line
+  ---
+  duration_ms: 33.076541
+  type: 'test'
+  ...
+# Subtest: the contact section and call to action use the channel the business names itself ("DM us")
+ok 92 - the contact section and call to action use the channel the business names itself ("DM us")
+  ---
+  duration_ms: 21.230792
+  type: 'test'
+  ...
+# Subtest: a website field that holds a social page is no website of the brief
+ok 93 - a website field that holds a social page is no website of the brief
+  ---
+  duration_ms: 25.214083
+  type: 'test'
+  ...
+# Subtest: the markdown tells the build a held name is not to be written
+ok 94 - the markdown tells the build a held name is not to be written
+  ---
+  duration_ms: 41.2175
+  type: 'test'
+  ...
+# (node:99825) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: observed facts join the brief, held to its own sharp, own photos
+ok 95 - observed facts join the brief, held to its own sharp, own photos
+  ---
+  duration_ms: 9.964667
+  type: 'test'
+  ...
+# Subtest: no observation, no observed fact
+ok 96 - no observation, no observed fact
+  ---
+  duration_ms: 1.020584
+  type: 'test'
+  ...
+# Subtest: an observed fact must name photos of the brief
+ok 97 - an observed fact must name photos of the brief
+  ---
+  duration_ms: 1.416083
+  type: 'test'
+  ...
+# Subtest: the markdown and the schema state the rule observed facts are read by
+ok 98 - the markdown and the schema state the rule observed facts are read by
+  ---
+  duration_ms: 1.780084
+  type: 'test'
+  ...
+# (node:99827) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the spaces and stops a line ends on are taken off, as the old regex took them
+ok 99 - the spaces and stops a line ends on are taken off, as the old regex took them
+  ---
+  duration_ms: 2.826541
+  type: 'test'
+  ...
+# Subtest: a long run of tabs inside a line reads fast
+ok 100 - a long run of tabs inside a line reads fast
+  ---
+  duration_ms: 1.12575
+  type: 'test'
+  ...
+# (node:99828) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: trade words: food
+ok 101 - trade words: food
+  ---
+  duration_ms: 10.255167
+  type: 'test'
+  ...
+# Subtest: trade words: a known trade (fitness)
+ok 102 - trade words: a known trade (fitness)
+  ---
+  duration_ms: 1.558208
+  type: 'test'
+  ...
+# Subtest: trade words: an unknown trade
+ok 103 - trade words: an unknown trade
+  ---
+  duration_ms: 1.796667
+  type: 'test'
+  ...
+# Subtest: trade words: an old food record without a trade
+ok 104 - trade words: an old food record without a trade
+  ---
+  duration_ms: 1.347208
+  type: 'test'
+  ...
+# Subtest: a record without a trade or types that holds collected menu items stays food; none is unknown
+ok 105 - a record without a trade or types that holds collected menu items stays food; none is unknown
+  ---
+  duration_ms: 0.172333
+  type: 'test'
+  ...
+# (node:99829) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: the brief carries the kept USP theme with its rung and quotes, and the dropped ones with why
+ok 106 - the brief carries the kept USP theme with its rung and quotes, and the dropped ones with why
+  ---
+  duration_ms: 57.090292
+  type: 'test'
+  ...
+# Subtest: a reading without USP themes gives no uspThemes key; the hero falls back to a theme read in code
+ok 107 - a reading without USP themes gives no uspThemes key; the hero falls back to a theme read in code
+  ---
+  duration_ms: 16.364917
+  type: 'test'
+  ...
+# Subtest: the hero says the kept theme line, rests on its quotes only, and the brief and prompt ask for it
+ok 108 - the hero says the kept theme line, rests on its quotes only, and the brief and prompt ask for it
+  ---
+  duration_ms: 14.6815
+  type: 'test'
+  ...
+# Subtest: a theme that fails the USP gate is not the hero: its quote must be in a review the site may show
+ok 109 - a theme that fails the USP gate is not the hero: its quote must be in a review the site may show
+  ---
+  duration_ms: 2.3305
+  type: 'test'
+  ...
+# Subtest: a USP theme drops the quote of a review that names someone held off the site, and goes when none is left
+ok 110 - a USP theme drops the quote of a review that names someone held off the site, and goes when none is left
+  ---
+  duration_ms: 3.828667
+  type: 'test'
+  ...
+# (node:99831) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Harbour Sport Club: one envelope per fact, the inferred WhatsApp on, Google’s 4-review rating off
+ok 111 - Harbour Sport Club: one envelope per fact, the inferred WhatsApp on, Google’s 4-review rating off
+  ---
+  duration_ms: 60.70475
+  type: 'test'
+  ...
+# Subtest: key messages: kept on their quotes and tied to the facts they rest on, led with in the prompt
+ok 112 - key messages: kept on their quotes and tied to the facts they rest on, led with in the prompt
+  ---
+  duration_ms: 15.686166
+  type: 'test'
+  ...
+# Subtest: the owner’s choices win, survive a second brief of the same research, and reorder or reword key messages
+ok 113 - the owner’s choices win, survive a second brief of the same research, and reorder or reword key messages
+  ---
+  duration_ms: 24.631417
+  type: 'test'
+  ...
+# Subtest: a key message resting only on facts off the site is dropped; thin evidence gives none
+ok 114 - a key message resting only on facts off the site is dropped; thin evidence gives none
+  ---
+  duration_ms: 13.262125
+  type: 'test'
+  ...
+# Subtest: two sources stating the same phone corroborate it; disagreeing sources do not
+ok 115 - two sources stating the same phone corroborate it; disagreeing sources do not
+  ---
+  duration_ms: 2.210958
+  type: 'test'
+  ...
+# Subtest: a schema 1 brief stored before the change still validates and renders, its own flags read as before
+ok 116 - a schema 1 brief stored before the change still validates and renders, its own flags read as before
+  ---
+  duration_ms: 10.859708
+  type: 'test'
+  ...
+# Subtest: a bakery keeps a key message on its own words, tied to the story fact it rests on
+ok 117 - a bakery keeps a key message on its own words, tied to the story fact it rests on
+  ---
+  duration_ms: 0.97025
+  type: 'test'
+  ...
+# Subtest: a key message ties only facts quoted from its own source, and never carries a withheld value to the builder
+ok 118 - a key message ties only facts quoted from its own source, and never carries a withheld value to the builder
+  ---
+  duration_ms: 10.32925
+  type: 'test'
+  ...
+# Subtest: the planner receives original owner posts as assessed facts, with their publication date and evidence
+ok 119 - the planner receives original owner posts as assessed facts, with their publication date and evidence
+  ---
+  duration_ms: 10.2205
+  type: 'test'
+  ...
+# (node:99835) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Harbour Sport Club: no source says WhatsApp, so the main number (Google first) is inferred from +971 5x
+ok 120 - Harbour Sport Club: no source says WhatsApp, so the main number (Google first) is inferred from +971 5x
+  ---
+  duration_ms: 22.786
+  type: 'test'
+  ...
+# Subtest: which number: Google first, else the number the most sources state; a UAE landline infers nothing
+ok 121 - which number: Google first, else the number the most sources state; a UAE landline infers nothing
+  ---
+  duration_ms: 2.73425
+  type: 'test'
+  ...
+# Subtest: a number its source labels WhatsApp is verified by that source, whichever country
+ok 122 - a number its source labels WhatsApp is verified by that source, whichever country
+  ---
+  duration_ms: 2.291583
+  type: 'test'
+  ...
+# Subtest: no phone at all: no contact.whatsapp, and the brief stays valid
+ok 123 - no phone at all: no contact.whatsapp, and the brief stays valid
+  ---
+  duration_ms: 0.689084
+  type: 'test'
+  ...
+# Subtest: the rules read "Locations across Dubai" as a service area with a short verbatim quote, never the address
+ok 124 - the rules read "Locations across Dubai" as a service area with a short verbatim quote, never the address
+  ---
+  duration_ms: 19.844625
+  type: 'test'
+  ...
+# Subtest: the model's service area survives only with a short quote found word for word, from the business's own words
+ok 125 - the model's service area survives only with a short quote found word for word, from the business's own words
+  ---
+  duration_ms: 3.525917
+  type: 'test'
+  ...
+# Subtest: no service area read: the brief has no serviceAreas field
+ok 126 - no service area read: the brief has no serviceAreas field
+  ---
+  duration_ms: 1.663084
+  type: 'test'
+  ...
+# Subtest: the brief carries the logo's accent and says its colours were read from the logo
+ok 127 - the brief carries the logo's accent and says its colours were read from the logo
+  ---
+  duration_ms: 2.131417
+  type: 'test'
+  ...
+# (node:99836) ExperimentalWarning: `--experimental-loader` may be removed in the future; instead use `register()`:
+# --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("/tmp/tracy-david-loader.mjs", pathToFileURL("./"));'
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: a full brief is valid and names no CMS or template: one brief serves every build
+ok 128 - a full brief is valid and names no CMS or template: one brief serves every build
+  ---
+  duration_ms: 18.210583
+  type: 'test'
+  ...
+# Subtest: a brief seen from a build carries the build’s CMS and template, and is valid
+ok 129 - a brief seen from a build carries the build’s CMS and template, and is valid
+  ---
+  duration_ms: 4.964833
+  type: 'test'
+  ...
+# Subtest: restaurant sitemap: menu only with a menu source, gallery only with 4+ images
+ok 130 - restaurant sitemap: menu only with a menu source, gallery only with 4+ images
+  ---
+  duration_ms: 2.3025
+  type: 'test'
+  ...
+# Subtest: sections only reference assets listed in the brief
+ok 131 - sections only reference assets listed in the brief
+  ---
+  duration_ms: 1.088875
+  type: 'test'
+  ...
+# Subtest: booking CTA appears only with a verified booking source
+ok 132 - booking CTA appears only with a verified booking source
+  ---
+  duration_ms: 2.061458
+  type: 'test'
+  ...
+# Subtest: social-only: unknown price, menu, hours, phone and booking go to missing, never into copy
+ok 133 - social-only: unknown price, menu, hours, phone and booking go to missing, never into copy
+  ---
+  duration_ms: 1.169791
+  type: 'test'
+  ...
+# Subtest: crawled text is carried as quoted evidence, not as copy
+ok 134 - crawled text is carried as quoted evidence, not as copy
+  ---
+  duration_ms: 0.9385
+  type: 'test'
+  ...
+# Subtest: old event posts are listed as stale, not as current events
+ok 135 - old event posts are listed as stale, not as current events
+  ---
+  duration_ms: 0.7625
+  type: 'test'
+  ...
+# Subtest: sources are reported in a fixed order with their real status
+ok 136 - sources are reported in a fixed order with their real status
+  ---
+  duration_ms: 0.982625
+  type: 'test'
+  ...
+# Subtest: validateBrief rejects bad CMS fields and template/CMS mismatches
+ok 137 - validateBrief rejects bad CMS fields and template/CMS mismatches
+  ---
+  duration_ms: 2.736875
+  type: 'test'
+  ...
+# Subtest: validateBrief enforces the no-invented-data rules
+ok 138 - validateBrief enforces the no-invented-data rules
+  ---
+  duration_ms: 0.778417
+  type: 'test'
+  ...
+# Subtest: brief-schema.json is draft 2020-12 and agrees with the validator on required keys
+ok 139 - brief-schema.json is draft 2020-12 and agrees with the validator on required keys
+  ---
+  duration_ms: 0.493625
+  type: 'test'
+  ...
+# Subtest: markdown is deterministic and quotes collected text as data
+ok 140 - markdown is deterministic and quotes collected text as data
+  ---
+  duration_ms: 3.394416
+  type: 'test'
+  ...
+# Subtest: a chat link from the map listing becomes an unverified chat integration, never a booking
+ok 141 - a chat link from the map listing becomes an unverified chat integration, never a booking
+  ---
+  duration_ms: 4.513334
+  type: 'test'
+  ...
+# Subtest: Google Place facts land in an optional googlePlace section; the brief stays valid and schema 2
+ok 142 - Google Place facts land in an optional googlePlace section; the brief stays valid and schema 2
+  ---
+  duration_ms: 3.383333
+  type: 'test'
+  ...
+# Subtest: the restaurant's own hours win over Google's when both say the same
+ok 143 - the restaurant's own hours win over Google's when both say the same
+  ---
+  duration_ms: 1.30025
+  type: 'test'
+  ...
+# Subtest: hours the sources disagree on are left out and listed under Missing with each source
+ok 144 - hours the sources disagree on are left out and listed under Missing with each source
+  ---
+  duration_ms: 1.408208
+  type: 'test'
+  ...
+# Subtest: hours two of the restaurant's own sources disagree on are left out even without Google
+ok 145 - hours two of the restaurant's own sources disagree on are left out even without Google
+  ---
+  duration_ms: 0.831833
+  type: 'test'
+  ...
+# Subtest: hours in a format Tracy cannot read are not called a conflict
+ok 146 - hours in a format Tracy cannot read are not called a conflict
+  ---
+  duration_ms: 0.85325
+  type: 'test'
+  ...
+# Subtest: validateBrief rejects a googlePlace review without its author
+ok 147 - validateBrief rejects a googlePlace review without its author
+  ---
+  duration_ms: 1.110208
+  type: 'test'
+  ...
+# Subtest: markdown includes collected reviews by default as attributed testimonials, with an explicit opt-out
+ok 148 - markdown includes collected reviews by default as attributed testimonials, with an explicit opt-out
+  ---
+  duration_ms: 0.673458
+  type: 'test'
+  ...
+# Subtest: markdown renders the Google Place section with amenities, booking, summaries and attributed reviews
+ok 149 - markdown renders the Google Place section with amenities, booking, summaries and attributed reviews
+  ---
+  duration_ms: 1.550041
+  type: 'test'
+  ...
+# Subtest: the current website's PageSpeed lands in an optional currentSite section; the brief stays valid
+ok 150 - the current website's PageSpeed lands in an optional currentSite section; the brief stays valid
+  ---
+  duration_ms: 3.536291
+  type: 'test'
+  ...
+# Subtest: markdown renders the current website's mobile scores
+ok 151 - markdown renders the current website's mobile scores
+  ---
+  duration_ms: 2.150917
+  type: 'test'
+  ...
+# Subtest: the restaurant’s own posts become sourced content: blog, events and offers pages, a menu from the dishes it posted
+ok 152 - the restaurant’s own posts become sourced content: blog, events and offers pages, a menu from the dishes it posted
+  ---
+  duration_ms: 49.122375
+  type: 'test'
+  ...
+# Subtest: without a menu link, the menu page lists the dishes the restaurant posted, and says there is no full menu
+ok 153 - without a menu link, the menu page lists the dishes the restaurant posted, and says there is no full menu
+  ---
+  duration_ms: 25.904542
+  type: 'test'
+  ...
+# Subtest: the markdown hands the content items over as quoted data with their source and when they run
+ok 154 - the markdown hands the content items over as quoted data with their source and when they run
+  ---
+  duration_ms: 26.125875
+  type: 'test'
+  ...
+# Subtest: a brief made before posts were read keeps today’s pages
+ok 155 - a brief made before posts were read keeps today’s pages
+  ---
+  duration_ms: 0.349709
+  type: 'test'
+  ...
+# Subtest: the template’s design system travels with the brief by name only, and the agent’s markdown says who keeps it
+ok 156 - the template’s design system travels with the brief by name only, and the agent’s markdown says who keeps it
+  ---
+  duration_ms: 2.528584
+  type: 'test'
+  ...
+# Subtest: acceptance holds the template’s design system when the brief names one
+ok 157 - acceptance holds the template’s design system when the brief names one
+  ---
+  duration_ms: 1.294791
+  type: 'test'
+  ...
+# Subtest: the brief markdown names the logo accent as the one colour exception, and only when there is one
+ok 158 - the brief markdown names the logo accent as the one colour exception, and only when there is one
+  ---
+  duration_ms: 1.628125
+  type: 'test'
+  ...
+# Subtest: acceptance carries the accent exception only when the brief has an accent
+ok 159 - acceptance carries the accent exception only when the brief has an accent
+  ---
+  duration_ms: 1.495083
+  type: 'test'
+  ...
+# Subtest: an email the restaurant published becomes business.email; one with no source, or not an email, stays out
+ok 160 - an email the restaurant published becomes business.email; one with no source, or not an email, stays out
+  ---
+  duration_ms: 2.045167
+  type: 'test'
+  ...
+# Subtest: a business of another trade: no menu page, the trade kept, and its words say business, not restaurant
+ok 161 - a business of another trade: no menu page, the trade kept, and its words say business, not restaurant
+  ---
+  duration_ms: 2.741584
+  type: 'test'
+  ...
+# Subtest: a menu item printed in thousands keeps its printed price and says the amount in the brief
+ok 162 - a menu item printed in thousands keeps its printed price and says the amount in the brief
+  ---
+  duration_ms: 7.26425
+  type: 'test'
+  ...
+# Subtest: every sourced menu item reaches the menu page with its provenance; the verified flag still says which were checked
+ok 163 - every sourced menu item reaches the menu page with its provenance; the verified flag still says which were checked
+  ---
+  duration_ms: 3.591833
+  type: 'test'
+  ...
+# Subtest: a dish read only off a photo still gives the site a menu page, its photo as the source
+ok 164 - a dish read only off a photo still gives the site a menu page, its photo as the source
+  ---
+  duration_ms: 0.948792
+  type: 'test'
+  ...
+# Subtest: a menu item with no source never reaches the brief
+ok 165 - a menu item with no source never reaches the brief
+  ---
+  duration_ms: 0.795791
+  type: 'test'
+  ...
+# Subtest: a price two sources disagree on travels empty with its flag; a dish with no price is still a dish
+ok 166 - a price two sources disagree on travels empty with its flag; a dish with no price is still a dish
+  ---
+  duration_ms: 0.892
+  type: 'test'
+  ...
+# Subtest: a verified menu item must still carry a price and a page or PDF source
+ok 167 - a verified menu item must still carry a price and a page or PDF source
+  ---
+  duration_ms: 1.342167
+  type: 'test'
+  ...
+# Subtest: what the research did not collect stays empty or neutral, never sample content; collected data wins
+ok 168 - what the research did not collect stays empty or neutral, never sample content; collected data wins
+  ---
+  duration_ms: 0.413917
+  type: 'test'
+  ...
+# Subtest: the brief says where the chosen logo came from, how sure that is, and keeps the other candidates; no logo is said, not skipped
+ok 169 - the brief says where the chosen logo came from, how sure that is, and keeps the other candidates; no logo is said, not skipped
+  ---
+  duration_ms: 3.6995
+  type: 'test'
+  ...
+# Subtest: the listing's Google rating, its review count and its price range reach the brief, credited to Google
+ok 170 - the listing's Google rating, its review count and its price range reach the brief, credited to Google
+  ---
+  duration_ms: 1.310292
+  type: 'test'
+  ...
+# Subtest: every Google review collected stays in the brief
+ok 171 - every Google review collected stays in the brief
+  ---
+  duration_ms: 0.5515
+  type: 'test'
+  ...
+# Subtest: a guest photo of a review site is a dish's photo by its own review's words
+ok 172 - a guest photo of a review site is a dish's photo by its own review's words
+  ---
+  duration_ms: 3.320292
+  type: 'test'
+  ...
+# Subtest: the brief tells the agent the follower and like counts research collected, with platform and link (product owner, 26/10/2026)
+ok 173 - the brief tells the agent the follower and like counts research collected, with platform and link (product owner, 26/10/2026)
+  ---
+  duration_ms: 0.518875
+  type: 'test'
+  ...
+1..173
+# tests 173
+# suites 0
+# pass 173
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12001.402666

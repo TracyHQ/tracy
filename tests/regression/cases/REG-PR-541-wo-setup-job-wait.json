@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-541-wo-setup-job-wait",
+  "kind": "fix",
+  "title": "Step nine awaits its opening job and requires explicit setup checkpoint evidence",
+  "pr": 541,
+  "area": "website-opportunities/step-nine",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the database-backed brief and site-route tests with an isolated scratch database.",
+    "Simulate a setup seal completing at 105 seconds, refusals and missing host receipts; return a pending backup history response."
+  ],
+  "expect": [
+    "The three-minute setup budget polls one accepted job and does not submit a duplicate seal.",
+    "No scripted write starts without an explicit opening receipt, and native repairs cannot start without an explicit scripted checkpoint receipt.",
+    "Pending or failed backup reads stop writes with uncertainty preserved, rather than reporting a nonexistent full backup."
+  ],
+  "fence": "Bounded same-job polling and explicit receipt gates; no backup creation bypass or write after an unproven setup hold",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-name-pattern=required setup|explicit scripted checkpoint|chain commits scripted|missing setup hold|explicit setup budget|pending|uncertain",
+      "apps/tracy-web/test/brief-build.test.mjs",
+      "apps/tracy-web/test/sites-route.test.mjs",
+      "apps/tracy-web/test/write-step-bench-door.test.mjs",
+      "apps/tracy-web/test/write-step-site-recovery.test.mjs"
+    ],
+    "needs": ["postgres"]
+  },
+  "selectors": {}
+}

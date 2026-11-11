@@ -9,17 +9,18 @@
  * labels again instead of reading an old answer.
  */
 import sharp from 'sharp'
-import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from './vision-challenge.js'
 import {
   ASSET_CAPTION_MAX,
   ASSET_CONTENT_KINDS
 } from 'website-opportunities/domain/pictures/asset-labels.mjs'
 import {
-  PHOTO_ROLES,
   closedListDigest,
   focusOfBox,
-  heldVisionLinks
+  heldVisionLinks,
+  PHOTO_ROLES
 } from 'website-opportunities/domain/pictures/picture-links.mjs'
+import { noReasoningBody } from './seed-model.js'
+import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from './vision-challenge.js'
 
 // p3: the image-only code; p4: the content kind and caption the site brief shows for each asset (F08); p5: the brief's
 // offerings and team as a closed list, links with evidence, a v3 role, boxes instead of a focus word (#48); p6: three
@@ -60,6 +61,51 @@ const BOOLS = ['heroWorthy', 'isCollage', 'hasTextOverlay']
 // Per-call ceiling: a safety net against a hung provider, not an expected duration. A batch of 8 pictures with the p6
 // prompt (three risk questions per picture) takes well over a minute on some models, so we wait for the model.
 const CALL_MS = 600_000
+
+/**
+ * The most output any call on the vision door asks for: DeepSeek's chat models refuse a larger `max_tokens`
+ * (DeepSeek's documented output limit for its chat model).
+ */
+export const VISION_MAX_TOKENS = 8192
+/**
+ * The output one label call may write: room for each picture's label and for the JSON around them (the image code). A
+ * label with its evidence, boxes and flags is ~250 tokens (deepseek-flash, dev 30/10/2026), so one picture has 4× its
+ * label and a batch of 8 about 3×, under `VISION_MAX_TOKENS`.
+ */
+const LABEL_TOKENS_PER_PICTURE = 800
+const LABEL_FRAME_TOKENS = 512
+/** @param {number} pictures - the pictures one call asks about */
+export const labelMaxTokens = (pictures) =>
+  Math.min(VISION_MAX_TOKENS, LABEL_FRAME_TOKENS + Math.max(1, pictures) * LABEL_TOKENS_PER_PICTURE)
+
+/**
+ * One request to the vision door, the model asked not to reason, and asked once more without that field when the
+ * provider refuses it (a 400 that names thinking or reasoning, as `seed-model.js` reads it).
+ *
+ * Requests quiet reasoning where the provider supports it. PR #296's historical measurements on 02/11/2026
+ * recorded 5–7K reasoning tokens and roughly 36 seconds for default calls, compared with 1.3–2.8 seconds for
+ * small quiet look calls. Those measurements do not represent the current five-business acceptance run.
+ * `noReasoningBody` uses each provider's fields; compatibility fallback may restore that provider's defaults.
+ * @param {{door: {url: string, key: string}, bodyFor: (quiet: Record<string, unknown>) => string,
+ *   fetchImpl?: typeof fetch, signal?: AbortSignal}} request - `bodyFor`: the request's JSON with these fields added
+ * @returns {Promise<Response>}
+ */
+export async function postVisionDoor({ door, bodyFor, fetchImpl = fetch, signal }) {
+  const quiet = noReasoningBody(door.url)
+  const send = (/** @type {Record<string, unknown>} */ fields) =>
+    fetchImpl(door.url, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
+      body: bodyFor(fields),
+      signal
+    })
+  const res = await send(quiet)
+  if (res.status !== 400 || !Object.keys(quiet).length) return res
+  const said = await Promise.resolve()
+    .then(() => res.clone().text())
+    .catch(() => '')
+  return /think|reason/i.test(said) ? send({}) : res
+}
 
 /** The closed list as the prompt shows it: one line per item, its id first. */
 function listLines(closedList) {
@@ -247,15 +293,18 @@ export async function labelWithVision({
     }
     const asked = new Set(group.map((p) => p.id))
     try {
-      const res = await fetchImpl(door.url, {
-        method: 'POST',
-        headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model: door.model,
-          temperature: 0,
-          response_format: { type: 'json_object' },
-          messages: [{ role: 'user', content }]
-        }),
+      const res = await postVisionDoor({
+        door,
+        bodyFor: (quiet) =>
+          JSON.stringify({
+            model: door.model,
+            temperature: 0,
+            max_tokens: labelMaxTokens(group.length),
+            response_format: { type: 'json_object' },
+            messages: [{ role: 'user', content }],
+            ...quiet
+          }),
+        fetchImpl,
         signal: AbortSignal.any([AbortSignal.timeout(CALL_MS), ...(signal ? [signal] : [])])
       })
       if (!res.ok) throw new CallFailed('http_error')

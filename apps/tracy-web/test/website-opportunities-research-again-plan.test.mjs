@@ -150,3 +150,33 @@ test('from scratch, every part runs again whatever its age; only parts this serv
   )
   assert.deepEqual(due.run, [])
 })
+
+test('payment refusals stay out of both paid research plans until the operator saves repaired setup', () => {
+  const failed = { status: 'failed', reason: 'HTTP_402', attempted_at: at(HOUR) }
+  assert.equal(
+    sourceDue(failed, NOW + 40 * 24 * HOUR),
+    false,
+    'automatic scheduling cannot charge the broken provider again'
+  )
+  for (const fromScratch of [false, true]) {
+    const options = { now: NOW, parts: ['tripadvisor'], prices: { tripadvisor: 12 }, fromScratch }
+    const refused = researchAgainPlan({ tripadvisor: failed }, options)
+    assert.deepEqual(refused.run, [])
+    assert.equal(refused.ceilingCents, 0)
+    assert.deepEqual(refused.kept, [{ part: 'tripadvisor', reason: 'unavailable', detail: 'HTTP_402' }])
+    assert.equal(
+      researchAgainPlan({ tripadvisor: failed }, { ...options, setupUpdatedAt: at(2 * HOUR) }).run.length,
+      0
+    )
+    assert.equal(
+      researchAgainPlan({ tripadvisor: failed }, { ...options, setupUpdatedAt: at(1000) }).run.length,
+      1
+    )
+  }
+  const freshFailure = { ...failed, last_error: { reason: 'HTTP_503' } }
+  assert.equal(
+    researchAgainPlan({ tripadvisor: freshFailure }, { now: NOW, parts: ['tripadvisor'], fromScratch: true })
+      .run.length,
+    1
+  )
+})

@@ -124,7 +124,53 @@ function partFaults(kit, items) {
   return out
 }
 
-export function checkW03({ R, view, idx }) {
+// Compare explicit row metadata and the authoritative planned social fact. A class may be valid in the
+// template and still draw the wrong network for its link; a citation alone does not establish the link.
+function socialIconTargets({ plan, kit, brief }) {
+  const arr = (value) => (Array.isArray(value) ? value : [])
+  const blocks = new Map(arr(kit?.blocks).map((b) => [b?.id, b]))
+  const facts = new Map(arr(brief?.facts).map((f) => [f?.id, f]))
+  const out = new Map()
+  // The research brief calls Twitter "x"; the released kit names the same network "twitter".
+  const networkOf = (value) => {
+    const name = value.trim().toLowerCase()
+    return name === 'x' ? 'twitter' : name
+  }
+  const decisions = [...arr(plan?.sharedBlocks), ...arr(plan?.pages).flatMap((p) => arr(p?.blocks))]
+  for (const decision of decisions) {
+    if (decision?.decision !== 'keep') continue
+    const block = blocks.get(decision.block)
+    const hidden = new Set(arr(decision.hiddenSlots).map((s) => s?.slot))
+    for (const list of arr(block?.lists))
+      for (const row of arr(list?.rows)) {
+        const urls = arr(row?.slots).filter((s) => s?.type === 'url' && s.role === 'contact.social_url')
+        if (urls.length !== 1) continue
+        const url = urls[0]
+        const link = arr(decision.links).find((l) => l?.link === url.id)
+        const label = arr(block?.links).find((l) => l?.id === url.id)?.labelId
+        if (hidden.has(url.id) || (label && hidden.has(label))) continue
+        const match = /^social:(.+)$/.exec(String(link?.leadsTo ?? ''))
+        const fact = match && facts.get(match[1])
+        if (fact?.field !== 'socials' || typeof fact.value?.kind !== 'string') continue
+        const target = networkOf(fact.value.kind)
+        if (!target) continue
+        for (const icon of arr(row?.slots)) {
+          if (
+            icon?.type !== 'icon' ||
+            typeof icon.field !== 'string' ||
+            typeof icon.fieldValue !== 'string' ||
+            typeof icon.network !== 'string'
+          )
+            continue
+          out.set(icon.field, { target, network: networkOf(icon.network), value: icon.fieldValue })
+        }
+      }
+  }
+  return out
+}
+
+export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
+  const socialTargets = socialIconTargets({ plan, kit: templateKit, brief })
   const returned = new Set(view.returns.map((r) => r.slot).filter(Boolean))
   const seen = new Set()
   for (const s of view.slots) {
@@ -151,6 +197,14 @@ export function checkW03({ R, view, idx }) {
       R.w03.fail(s.slot, `${s.slot}: ${detail}`, cause)
     }
     const pct = (n) => `${Math.round(n * 100)}%`
+    if (idx.iconFields?.has(s.slot) && !idx.iconFields.get(s.slot).has(s.items.join(' ')))
+      fail('icon field must use a class declared by its kit icon', 'icon-field')
+    const social = socialTargets.get(s.slot)
+    if (social && s.items.join(' ') === social.value && social.network !== social.target)
+      fail(
+        `declared ${social.network} icon links to the planned ${social.target} profile; return this row to planner when the kit declares no matching icon class`,
+        'icon-network'
+      )
     if (chars === 0) fail('text is empty', 'empty')
     else if (limit !== null && chars > limit) fail(`${chars} characters, limit ${limit}`, 'over')
     else if (floor && chars < floor)

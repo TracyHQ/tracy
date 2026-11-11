@@ -267,3 +267,33 @@ test('a bio that says "WhatsApp us" backs the WhatsApp button with its own words
   assert.notEqual(factDecisions(doc).get(wa.id).confidence, 'inferred')
   assert.deepEqual(validatePlaceProfile(doc).errors ?? [], [])
 })
+
+test('an owner name expanded by its trade keeps the business name instead of a generic country label', () => {
+  const doc = research({
+    profile: {
+      name: 'Harrow Gym',
+      nameCheck: { name: 'Harrow Gym', state: 'check' },
+      nameClaims: [
+        { source: 'website', via: 'name', name: 'Harrow Boxing Gym' },
+        { source: 'facebook', via: 'name', name: 'Harrow Boxing Gym' },
+        { source: 'instagram', via: 'name', name: 'Harrow Gym' }
+      ]
+    }
+  })
+  assert.equal(doc.business.name.value, 'Harrow Gym')
+  assert.equal(factDecisions(doc).get(doc.business.name.id).onSite, true)
+  assert.deepEqual(
+    ownMarkNamesOf({
+      chosen: 'Harrow Gym',
+      claims: [{ source: 'facebook', via: 'name', name: 'Harrow Boxing Gym' }]
+    }),
+    []
+  )
+  assert.equal(
+    ownMarkNamesOf({
+      chosen: 'Harrow Tennis Club',
+      claims: [{ source: 'facebook', via: 'name', name: 'Harrow Boxing Club' }]
+    }).length,
+    1
+  )
+})

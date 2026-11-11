@@ -5,7 +5,8 @@
 //
 // Round 0 is written in writing turns (#330): harness.pagesPerTurn cuts the writing order into turns, and the loop
 // asks for them one after another through the step's turn hooks (nextTurn, mergeTurns; lib/bench-run-round.js). The
-// writer gets no tools and no image: each turn's only user message carries the fixed part (plan, cited facts, quoted
+// historical writer runs get no tools or images; WO runs opt into responsive kit images through the shared image tool.
+// Each writing turn carries the fixed part (plan, cited facts, quoted
 // reviews, slim kit view, handed-over name slots), the pages of the turn and the copy notebook of the earlier turns
 // (writer-turns.js); the partial answers are merged before the copy is put together and checked, once. Its answer is put together into site-copy/1 by code (copy-changes.js
 // assembleCopy: version, fingerprint, the plan's label slots) and graded by checkCopy. Failing entries go back with
@@ -34,6 +35,9 @@ import { siteWriterDoor } from './door.js'
 import { writerInput } from './writer-input.js'
 import { writerPrompt } from './writer-prompt.js'
 import { firstUserMessage, mergeTurnAnswers, nextTurnMessage } from './writer-turns.js'
+import { kitImagesFor } from '../lib/template-kit-images.js'
+import { kitTools } from '../lib/template-kit-source.js'
+import { WRITER_VISUAL_POLICY, writerVisualInstruction, withWriterVisualReview } from './visual-review.js'
 import { kitIdOf } from '../lib/kit-id.js'
 
 export { BENCH_QUEUE }
@@ -50,14 +54,24 @@ export const SITE_WRITER_STEP = Object.freeze({
   prompt: writerPrompt,
   checker: Object.freeze({
     version: CHECKER_VERSION,
-    check: ({ doc, row, ready }) =>
-      checkCopy({
+    check: ({ doc, row, ready, history }) => {
+      const result = checkCopy({
         copy: doc,
         plan: row.plan,
         kit: ready.kit.doc,
         brief: row.brief,
         contentMap: ready.contentMap
-      }),
+      })
+      return row.harness?.visualReview === WRITER_VISUAL_POLICY
+        ? withWriterVisualReview(result, {
+            plan: row.plan,
+            kit: ready.kit.doc,
+            kitRef: row.kit.ref,
+            history,
+            runId: row.id
+          })
+        : result
+    },
     failureListText
   }),
   changes: Object.freeze({
@@ -74,7 +88,10 @@ export const SITE_WRITER_STEP = Object.freeze({
   }),
   readAnswer,
   // Writing turns: the user message of the next turn of round 0, or null once all are written; then the merge.
-  nextTurn: ({ row, ready, answers }) => nextTurnMessage(ready.input, answers, row.harness?.pagesPerTurn),
+  nextTurn: ({ row, ready, answers }) => {
+    const message = nextTurnMessage(ready.input, answers, row.harness?.pagesPerTurn)
+    return message === null ? null : visualMessage(message, row, ready)
+  },
   mergeTurns: mergeTurnAnswers,
   prepare,
   agentRequest
@@ -85,8 +102,13 @@ export const SITE_WRITER_STEP = Object.freeze({
  *   index?: Map<string, object>, log?: Console, now?: () => number, retry?: object }} deps `index`: the contracts to
  *   find kits in (tests); `retry` replaces the run's retry policy (tests).
  */
-export function createSiteWriterQueue({ log = console, now, ...deps }) {
-  return createBenchQueue(SITE_WRITER_STEP, { ...deps, log, now })
+export function createSiteWriterQueue({ log = console, now, config, kitImages, ...deps }) {
+  return createBenchQueue(SITE_WRITER_STEP, {
+    ...deps,
+    kitImages: kitImages ?? kitImagesFor({ pool: deps.pool, config, fetchImpl: deps.fetchImpl }),
+    log,
+    now
+  })
 }
 
 /** The fingerprint a run's copy carries (ADR 0042 section 1): the kit id and the hashes of plan, brief and prompt. */
@@ -106,21 +128,40 @@ function readAnswer(value, { round, row, ready }) {
   )
 }
 
-// The writer reads everything from its first message: no tools, no image.
-function agentRequest({ ready }) {
-  return { firstUser: ready.firstUser, tools: [] }
+// Historical runs retain text input. Frozen WO visual policy adds only the shared kit image tool.
+function visualMessage(message, row, ready) {
+  return row.harness?.visualReview === WRITER_VISUAL_POLICY
+    ? `${writerVisualInstruction(row.plan, ready.kit.doc)}\n\n${message}`
+    : message
+}
+
+function agentRequest({ row, ready, history }) {
+  const strict = row.harness?.visualReview === WRITER_VISUAL_POLICY
+  return {
+    firstUser: visualMessage(ready.firstUser, row, ready),
+    tools: strict
+      ? kitTools(ready.kit.doc, { images: ready.images, history }).filter(
+          (tool) => tool.name === 'open_kit_image'
+        )
+      : [],
+    ...(strict ? { resolveImage: ready.images.resolve } : {})
+  }
 }
 
 // Everything the run was started with must still hold (the loop checks the prompt and the checker first): a run that
 // silently ran on another model, a kit the server no longer reads, or a changed content map would not measure what it
 // records.
-async function prepare({ pool, secret, index }, row) {
+async function prepare({ pool, secret, index, kitImages }, row) {
   const kit = openKit(row.kit?.ref, index ? { index } : {})
   if (!kit)
     return { ok: false, code: 'SITE_WRITER_KIT_GONE', reason: `the kit ${row.kit?.ref} cannot be read` }
   const map = contentMapOf(row, index)
   if (!map.ok) return map
-  const door = await siteWriterDoor({ pool, secret })
+  const door = await siteWriterDoor({
+    pool,
+    secret,
+    requireImages: row.harness?.visualReview === WRITER_VISUAL_POLICY
+  })
   if (!door.ok) return door
   const same = ['providerId', 'model', 'endpointHost'].every((k) => door.snapshot[k] === row.door?.[k])
   const contentMap = map.doc
@@ -136,9 +177,16 @@ async function prepare({ pool, secret, index }, row) {
       code: 'SITE_WRITER_DOOR_CHANGED',
       reason: `the door now uses ${door.snapshot.providerId} ${door.snapshot.model}, the run was started on ${row.door?.providerId} ${row.door?.model}`
     }
+  let images = null
+  if (row.harness?.visualReview === WRITER_VISUAL_POLICY) {
+    const opened = await kitImages.ensure(kit)
+    if (!opened.ok) return opened
+    images = opened.images
+  }
   return {
     ok: true,
     kit,
+    images,
     door: door.door,
     contentMap,
     index: indexInputs({ plan: row.plan, kit: kit.doc, brief: row.brief, contentMap }),

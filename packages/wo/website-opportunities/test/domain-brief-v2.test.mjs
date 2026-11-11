@@ -300,3 +300,25 @@ test('a key message ties only facts quoted from its own source, and never carrie
   const prompt = renderAgentPrompt({ revision: { id: 'r1', n: 1, cms: 'joomla', brief, brief_md: md } })
   assert.doesNotMatch(prompt + md, /Coaching with Alex/)
 })
+
+test('the planner receives original owner posts as assessed facts, with their publication date and evidence', () => {
+  const brief = dscBrief()
+  const posts = brief.facts.filter((f) => f.field === 'posts')
+  assert.ok(posts.length > 0)
+  for (const post of posts) {
+    assert.equal(post.value.kind, 'post')
+    assert.ok(
+      HSC.posts.some(
+        (p) =>
+          (p.caption ?? p.text)
+            .split(/\r?\n/)
+            .filter((line) => !line.includes('[Your Location]'))
+            .join('\n')
+            .trim() === post.value.text
+      )
+    )
+    assert.doesNotMatch(JSON.stringify(post), /\[Your Location\]/)
+    assert.ok(post.evidence.length > 0)
+  }
+  assert.deepEqual(validateBrief(brief), { ok: true, errors: [] })
+})
