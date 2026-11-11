@@ -2425,6 +2425,14 @@ New WO briefs retain known vision `textPresence` separately from the legacy over
 overlay answer is false; unknown presence remains omitted. Picture checker version `site-pictures-check/2`
 records this behavior. Existing frozen briefs and paid research labels are not rewritten.
 
+Picture preparation includes the frame-surface cache lookup and any cold installer download in the
+manifest's `timing.code`. Concurrent surface requests share an in-process operation only when their
+store destination, kit id, release, pinned installer and complete kit/content-map inputs match.
+Successful surfaces retain the existing atomic disk cache; temporary writes have unique names. A
+failed download remains unknown with its reason, is not cached and can be retried by a later request.
+The five-minute cold-download deadline is unchanged; this prevents duplicate work and accounts for
+its wait, but does not remove a genuinely cold network delay. Historical timing records are unchanged.
+
 The picture bench's mapping export reuses P07's documentary-source rule with the run's original plan,
 brief and kit before placing a generated or extended picture in a write package. A rejected documentary
 frame, its twins and setting pictures are omitted from changes, uploads and alts with explicit package

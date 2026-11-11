@@ -169,6 +169,8 @@ async function prepare(deps, row) {
   const rounds = await SITE_PICTURES_STORE.roundsOf(deps.pool, row.id)
   const recorded = rounds.some((r) => r.state === 'checked')
   const store = fileStore(deps.storeDir)
+  // Preparation includes a cold surface download; it is code time even before owner-photo work starts.
+  const started = Date.now()
   // The frame surface (ADR 0043 section 3e): text over each picture and the template's own overlay over it, read once
   // per kit version and quickstart and joined into the kit's frames; it never changes the kit itself.
   const surface = await surfaceFor({
@@ -178,7 +180,6 @@ async function prepare(deps, row) {
     fetchAsset: deps.quickstart ?? null
   })
   kit = { ...kit, doc: joinSurface(kit.doc, surface.surface) }
-  const started = Date.now()
   const photoBytes = await ownerPhotoBytes({ ...deps, store }, row)
   // The icon step (#345): library icons ranked by a text model, styled like the kit's demo icons.
   const iconStep = await iconStepFor({
