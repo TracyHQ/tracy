@@ -2485,6 +2485,9 @@ frame, its twins and setting pictures are omitted from changes, uploads and alts
 problems. Missing original context refuses generated provenance rather than assuming an illustration;
 generic illustrations with their original context remain available. This also checks failed and historical
 final manifests when exported again; it does not rewrite their saved records or previously exported files.
+The kit's `business.gallery_image` role establishes documentary purpose even when a plan asks for
+`specific` pictures without observed fact citations. Such gallery frames retain the real-photo reuse
+ladder, never draw or extend a scene, and refuse generated files at check and export, including twins.
 
 The copy export also reuses the planner's original-owner-post article rule on both the frozen plan and
 the writer's actual fact citations. Invalid article titles, leads and dates are omitted before Joomla or
