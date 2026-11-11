@@ -168,7 +168,20 @@ const KEPT_VERBATIM = new Set<string>([
   'tracy-design-inspiration.ds.industry_agency',
   'tracy-design-inspiration.ds.industry_ai',
   'tracy-design-inspiration.ds.industry_fintech',
-  'tracy-design-inspiration.ds.industry_crypto'
+  'tracy-design-inspiration.ds.industry_crypto',
+  // Website Opportunities (#537): source names are product names (Google, Instagram, TikTok, ...),
+  // and three figures are nothing but placeholders and separators, so there is nothing to translate.
+  'tracy-website-opportunities.brief.source.facebook',
+  'tracy-website-opportunities.brief.source.google',
+  'tracy-website-opportunities.brief.source.instagram',
+  'tracy-website-opportunities.brief.source.osm',
+  'tracy-website-opportunities.brief.source.tiktok',
+  'tracy-website-opportunities.brief.source.tripadvisor',
+  'tracy-website-opportunities.brief.source.youtube',
+  'tracy-website-opportunities.chip.word.google',
+  'tracy-website-opportunities.facts.body.counts',
+  'tracy-website-opportunities.media.moreShort',
+  'tracy-website-opportunities.progress.col.done'
 ])
 
 type Dict = Record<string, string>
