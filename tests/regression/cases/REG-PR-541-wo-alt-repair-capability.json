@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-541-wo-alt-repair-capability",
+  "kind": "fix",
+  "title": "Step 9b does not dispatch mapped unsupported image alt repairs",
+  "pr": 541,
+  "area": "wo/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the step 9b capability behavioral tests with fake site-agent turns and real repair scheduling."
+  ],
+  "expect": [
+    "Known unsupported mapped image alts open no native sessions and remain blocking with an explicit reason.",
+    "Supported article, module HTML and gallery alt repairs still dispatch.",
+    "Missing, unmatched and incomplete content maps retain the previous repair path.",
+    "New unsupported alts exposed by recovery are recorded without a paid retry."
+  ],
+  "selectors": {},
+  "fence": "This change schedules existing supported doors only; it does not change QA acceptance, write through another door or assert customer consent.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-nine-alt-capability.test.mjs"
+    ],
+    "tests": [
+      "mapped contact image alt stays blocking without opening or repeating a native turn",
+      "supported article and module HTML alt storage still receives native repairs",
+      "gallery alt slots preserve block to module aliases even when picture storage has no record alt",
+      "absent or unmatched content maps retain the existing native repair path",
+      "a supported independent fault still runs while unsupported contact alt remains red",
+      "direct unsupported comment metadata never claims the alt target is writable",
+      "unsupported alts exposed after page recovery are recorded without a paid retry",
+      "runStepNine carries the write content map into unsupported alt scheduling and preserves failed handover"
+    ],
+    "needs": []
+  }
+}

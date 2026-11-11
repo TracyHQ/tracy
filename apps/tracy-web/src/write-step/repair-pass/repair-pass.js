@@ -75,7 +75,7 @@ export async function runRepairPass(pass, { firstCheck, brief = null }) {
     result,
     run: (page) => repairPage(pass, page, result, checks, state)
   })
-  result.skipped = skipped
+  result.skipped = [...skipped, ...result.skipped]
   if (!started)
     return {
       ...result,

@@ -109,9 +109,24 @@ export async function repairPage(pass, { page, faults }, result, checks, state) 
   // A completed no-op gets the same single retry as a write. Recovery can expose faults that could not be measured before.
   const retryable = kept.filter((t) => !t.cancelled && t.verdict !== 'unverified')
   const exposed = retryable.some((t) => t.newlyObserved?.length)
-  const again = exposed
-    ? (faultsToSend({ firstCheck: state.check, brief: pass.brief }).pages.find((p) => p.page === page)
-        ?.faults ?? [])
+  const exposedFaults = exposed
+    ? faultsToSend({
+        firstCheck: state.check,
+        brief: pass.brief,
+        altSlots: pass.altSlots,
+        contentMap: pass.contentMap
+      })
+    : null
+  for (const skipped of exposedFaults?.skipped ?? [])
+    if (
+      skipped.fault.page === page &&
+      !result.skipped.some(
+        (s) => s.code === skipped.code && s.fault.page === page && s.fault.slot === skipped.fault.slot
+      )
+    )
+      result.skipped.push(skipped)
+  const again = exposedFaults
+    ? (exposedFaults.pages.find((p) => p.page === page)?.faults ?? [])
     : retryable.flatMap((t) => stillThere(t.faults, state.check))
   if (!again.length || pass.clock.stopped() || pass.writerOpen) return
   const { made } = await sendRound(pass, result, checks, { page, faults: again, round: 2, sessionId })

@@ -9,7 +9,12 @@ import { faultsToSend, unavailablePage } from './repair-faults.js'
  * @returns {Promise<{ skipped: object[], started: number }>} the faults not sent with why, and how many pages ran
  */
 export async function schedulePages(pass, { firstCheck, brief = null, result, run }) {
-  const { pages, skipped } = faultsToSend({ firstCheck, brief })
+  const { pages, skipped } = faultsToSend({
+    firstCheck,
+    brief,
+    altSlots: pass.altSlots,
+    contentMap: pass.contentMap
+  })
   const running = new Set()
   let started = 0
   // Recover failed pages first, one at a time: a shared menu repair can restore all of them.
