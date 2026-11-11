@@ -1832,6 +1832,223 @@ test('breadcrumb holders: route identity, unique real owner and connected formul
   )
 })
 
+function categoryBreadcrumbFixture() {
+  const f = breadcrumbHolderFixture()
+  const map = JSON.parse(readFileSync(f.mapPath, 'utf8'))
+  map.entities.push(
+    ...[
+      [20, 'journal'],
+      [21, 'journal/operations']
+    ].map(([id, route]) => ({
+      key: `category-${id}`,
+      kind: 'category',
+      sourceId: id,
+      identity: { extension: 'com_content', language: '*', path: route }
+    })),
+    ...[84, 85].map((id) => ({ key: `menu-${id}`, kind: 'menuItem', sourceId: id }))
+  )
+  map.slots.push({
+    key: 'category-21.0',
+    entity: 'category-21',
+    type: 'text',
+    column: 'title',
+    sample: 'Operations'
+  })
+  map.pages.push(
+    {
+      entity: 'menu-84',
+      route: 'journal/operations',
+      link: 'index.php?option=com_content&view=category&layout=thumbs&id=21'
+    },
+    {
+      entity: 'menu-85',
+      route: 'journal',
+      link: 'index.php?option=com_content&view=category&layout=blog&id=20'
+    }
+  )
+  writeFileSync(f.mapPath, JSON.stringify(map))
+  const contract = loadContract(path.dirname(f.mapPath), SITE)
+  contract.template = 'ja_kinetic'
+  const file = f.base + 'category/thumbs.php'
+  const source = `<?php $cat = $this->category; ?>
+<span class="hxcat-bc__rest">/
+<?php if (!empty($cat->getParent()) && (int) $cat->parent_id > 1) : ?>
+<a class="hxcat-bc__crumb" href="<?php echo Route::_(RouteHelper::getCategoryRoute($cat->parent_id, $cat->getParent()->language ?? '*')); ?>"><?php echo Text::_('TPL_JA_KINETIC_BLOG_KICKER_CAP'); ?></a> /
+<?php endif; ?>
+<?php echo $this->escape($this->category->title); ?>
+</span>`
+  f.put(file, source)
+  const item = () => {
+    const raw = {
+      kind: 'text',
+      tag: 'span',
+      value: '/ Journal / Operations',
+      href: '/index.php/journal',
+      selector: 'nav.hxcat-bc > span.hxcat-bc__rest'
+    }
+    return mergeViewports({ desktop: { items: [raw] }, phone: { items: [raw] } }, SITE)[0]
+  }
+  const url = `${SITE}index.php?Itemid=84`
+  const run = (it = item(), route = url) =>
+    annotate(
+      [it],
+      createMatcher(contract, SITE),
+      createClassifier(contract, null, buildSourceIndex(f.root, contract.template)),
+      { url: route }
+    )[0]
+  return { ...f, contract, file, source, item, run, url }
+}
+
+test('category breadcrumb: declared route and observed parent branch bind both real owners', () => {
+  const f = categoryBreadcrumbFixture()
+  const item = f.item()
+  for (const view of Object.values(item.viewports)) {
+    view.count = 2
+    view.holders.push({ ...view.holders[0], selector: view.selector + ':nth-of-type(2)' })
+  }
+  const result = f.run(item)
+  assert.equal(result.status, 'matched')
+  assert.equal(result.matchBy, 'source-bound declared breadcrumb')
+  assert.deepEqual(result.slots, ['languageString-61.0', 'category-21.0'])
+  assert.match(result.evidence.join(' '), /category\/thumbs.php/)
+})
+
+test('category breadcrumb: each real parent link, declared route and immediate path remain mandatory', () => {
+  const f = categoryBreadcrumbFixture()
+  for (const href of [
+    undefined,
+    '',
+    '#',
+    '/unknown',
+    'https://foreign.example.test/index.php/journal',
+    '/index.php/journal/operations',
+    '/index.php?Itemid=85&id=21',
+    '/index.php/foreign?Itemid=85',
+    '/index.php?Itemid=85&Itemid=84',
+    '/index.php?Itemid[]=85',
+    '/index.php/journal#foreign'
+  ]) {
+    const item = f.item()
+    item.viewports.phone.holders[0].href = href
+    assert.notEqual(f.run(item).status, 'matched', String(href))
+  }
+  for (const url of [
+    `${f.url}&id=20`,
+    `${f.url}&layout=blog`,
+    `${f.url}&view=article`,
+    `${f.url}&Itemid=85`,
+    `${SITE}index.php/foreign?Itemid=84`,
+    `${SITE}unknown`,
+    `${SITE}index.php?option=com_content&view=category&layout=thumbs&id=21`
+  ])
+    assert.notEqual(f.run(f.item(), url).status, 'matched', url)
+  const current = f.contract.entityByKey.get('category-21')
+  for (const [field, value] of [
+    ['path', 'elsewhere/operations'],
+    ['path', 'journal/nested/operations'],
+    ['language', 'fr-FR'],
+    ['extension', 'com_users']
+  ]) {
+    const before = current.identity[field]
+    current.identity[field] = value
+    assert.notEqual(f.run().status, 'matched', field)
+    current.identity[field] = before
+  }
+  const menu = f.contract.pages.find((p) => p.entity === 'menu-85')
+  f.contract.entityByKey.set('duplicate-parent-menu', {
+    key: 'duplicate-parent-menu',
+    kind: 'menuItem',
+    sourceId: 86
+  })
+  f.contract.pages.push({ ...menu, entity: 'duplicate-parent-menu' })
+  assert.notEqual(f.run().status, 'matched', 'ambiguous parent menu')
+})
+
+test('category breadcrumb: unique scalar category and language owners cannot be borrowed', () => {
+  const f = categoryBreadcrumbFixture()
+  for (const [key, field, value] of [
+    ['category-21.0', 'entity', 'module-90'],
+    ['category-21.0', 'column', 'description'],
+    ['category-21.0', 'xpath', '/html/body/div/text()'],
+    ['category-21.0', 'sample', 'Another category'],
+    ['languageString-61.0', 'sample', 'Another heading'],
+    ['languageString-61.0', 'type', 'html']
+  ]) {
+    const target = f.contract.slotsByKey.get(key),
+      before = target[field]
+    target[field] = value
+    assert.notEqual(f.run().status, 'matched', field)
+    if (before === undefined) delete target[field]
+    else target[field] = before
+  }
+  const language = f.contract.entityByKey.get('languageString-61')
+  language.identity.language = 'fr-FR'
+  assert.notEqual(f.run().status, 'matched', 'foreign language')
+  language.identity.language = 'en-GB'
+  for (const key of ['languageString-61.0', 'category-21.0']) {
+    f.contract.slotsByKey.set(key + '.duplicate', {
+      ...f.contract.slotsByKey.get(key),
+      key: key + '.duplicate',
+      sample: 'Stale different sample'
+    })
+    assert.notEqual(f.run().status, 'matched', 'duplicate owner')
+    f.contract.slotsByKey.delete(key + '.duplicate')
+  }
+  const category = f.contract.entityByKey.get('category-21')
+  f.contract.entityByKey.set('duplicate-category', { ...category, key: 'duplicate-category' })
+  assert.notEqual(f.run().status, 'matched', 'duplicate category identity')
+})
+
+test('category breadcrumb: source formula, complete raw copies and CODE guards stay connected', () => {
+  const f = categoryBreadcrumbFixture()
+  for (const change of [
+    (s) => s.replace('$cat = $this->category', '$cat = $otherCategory'),
+    (s) => s.replace('parent_id > 1', 'parent_id > 0'),
+    (s) => s.replace('getCategoryRoute($cat->parent_id', 'getCategoryRoute($cat->id'),
+    (s) => s.replace('getParent()->language', 'language'),
+    (s) => s.replace('BLOG_KICKER_CAP', 'FOREIGN_HEADING'),
+    (s) => s.replace('$this->category->title', '$cat->description'),
+    (s) => s.replace('</a> /', '</a> +'),
+    (s) => '<?php /* ' + s + ' */',
+    () => ''
+  ]) {
+    f.put(f.file, change(f.source))
+    assert.notEqual(f.run().status, 'matched', 'changed producer')
+  }
+  f.put(f.file, f.source)
+  for (const change of [
+    (it) => {
+      delete it.viewports.phone.holders
+    },
+    (it) => {
+      delete it.viewports.phone
+    },
+    (it) => {
+      it.viewports.phone.holders[0].value += ' foreign'
+    },
+    (it) => {
+      it.viewports.phone.holders[0].selector = 'div.foreign'
+    },
+    (it) => {
+      it.viewports.phone.holders[0].inCode = true
+    },
+    (it) => {
+      it.inCode = true
+    },
+    (it) => {
+      it.codeText = it.value
+    },
+    (it) => {
+      it.viewports.phone.holders.push({ ...it.viewports.phone.holders[0] })
+      it.viewports.phone.count++
+    }
+  ]) {
+    const item = f.item()
+    change(item)
+    assert.notEqual(f.run(item).status, 'matched', 'missing, foreign, duplicate or CODE copy')
+  }
+})
+
 function mixedMetadataFixture() {
   const f = generatedHolderFixture()
   const dir = contractDir([

@@ -171,7 +171,8 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
       const tag = holder(
         new RegExp(`\\bnav\\.hx-author__bc\\.kinetic-tags-bc${nth} > span\\.hx-author__bc-trail${nth}$`)
       )
-      if (archive || author || tag) {
+      const category = holder(new RegExp(`\\bnav\\.hxcat-bc${nth} > span\\.hxcat-bc__rest${nth}$`))
+      if (archive || author || tag || category) {
         const breadcrumb = () => {
           let page, route
           try {
@@ -336,6 +337,138 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
                 ...(owner ? [`route entity: ${owner.entity}`] : [])
               ]
             }
+          }
+          if (category) {
+            const file = base + 'category/thumbs.php'
+            const lang = language('TPL_JA_KINETIC_BLOG_KICKER_CAP', templateLanguage)
+            const languageOwner = declared(lang)
+            if (
+              !mapped ||
+              !Number.isInteger(mapped.sourceId) ||
+              mapped.sourceId < 1 ||
+              (route && route !== mapped.route?.replace(/^\/|\/$/g, '')) ||
+              entities.filter((e) => e.kind === 'menuItem' && e.sourceId === mapped.sourceId).length !== 1 ||
+              param('option') !== 'com_content' ||
+              param('view') !== 'category' ||
+              param('layout') !== 'thumbs' ||
+              page.searchParams.has('u_id') ||
+              ['id', 'layout'].some(
+                (k) => page.searchParams.has(k) && page.searchParams.get(k) !== link?.searchParams.get(k)
+              ) ||
+              !languageOwner ||
+              !/^[1-9][0-9]*$/.test(param('id') ?? '')
+            )
+              return null
+            const candidates = entities.filter(
+              (e) => e.kind === 'category' && String(e.sourceId) === param('id')
+            )
+            if (candidates.length !== 1) return null
+            const entity = candidates[0]
+            const identity = entity.identity
+            const languageTag = contract.entityByKey.get(languageOwner.entity)?.identity?.language
+            if (
+              !Number.isInteger(entity.sourceId) ||
+              identity?.extension !== 'com_content' ||
+              !['*', languageTag].includes(identity.language) ||
+              typeof identity.path !== 'string' ||
+              !identity.path.split('/').every((p) => p && p !== '.' && p !== '..') ||
+              !identity.path.includes('/') ||
+              entities.filter(
+                (e) =>
+                  e.kind === 'category' &&
+                  e.identity?.extension === identity.extension &&
+                  e.identity?.language === identity.language &&
+                  e.identity?.path === identity.path
+              ).length !== 1
+            )
+              return null
+            const owners = [...contract.slotsByKey.values()].filter(
+              (s) =>
+                s.entity === entity.key &&
+                s.type === 'text' &&
+                s.column === 'title' &&
+                !s.xpath &&
+                !s.jsonPath &&
+                !s.nestedJson &&
+                !s.leaf
+            )
+            if (owners.length !== 1 || norm !== canonical(`/ ${lang.value} / ${owners[0].sample}`))
+              return null
+            const parentPath = identity.path.slice(0, identity.path.lastIndexOf('/'))
+            const parents = entities.filter(
+              (e) =>
+                e.kind === 'category' &&
+                e.identity?.extension === identity.extension &&
+                e.identity?.language === identity.language &&
+                e.identity?.path === parentPath
+            )
+            if (
+              parents.length !== 1 ||
+              !Number.isInteger(parents[0].sourceId) ||
+              parents[0].sourceId <= 1 ||
+              entities.filter((e) => e.kind === 'category' && e.sourceId === parents[0].sourceId).length !== 1
+            )
+              return null
+            if (
+              !copies.every((c) => {
+                if (typeof c.href !== 'string' || !c.href.trim()) return false
+                let parentUrl, parentRoute
+                try {
+                  parentUrl = new URL(c.href, page)
+                  parentRoute = decodeURIComponent(parentUrl.pathname)
+                    .replace(/^\/(?:index\.php\/?)?/, '')
+                    .replace(/\/$/, '')
+                } catch {
+                  return false
+                }
+                if (
+                  parentUrl.origin !== page.origin ||
+                  parentUrl.hash ||
+                  parentUrl.username ||
+                  parentUrl.password ||
+                  routing.some((k) => parentUrl.searchParams.getAll(k).length > 1) ||
+                  [...parentUrl.searchParams.keys()].some((k) => routing.some((r) => k.startsWith(r + '[')))
+                )
+                  return false
+                const targets = menus.filter((p) =>
+                  parentUrl.searchParams.has('Itemid')
+                    ? String(p.sourceId) === parentUrl.searchParams.get('Itemid')
+                    : p.route?.replace(/^\/|\/$/g, '') === parentRoute
+                )
+                if (targets.length !== 1) return false
+                if (parentRoute && parentRoute !== targets[0].route?.replace(/^\/|\/$/g, '')) return false
+                if (
+                  !Number.isInteger(targets[0].sourceId) ||
+                  targets[0].sourceId < 1 ||
+                  entities.filter((e) => e.kind === 'menuItem' && e.sourceId === targets[0].sourceId)
+                    .length !== 1
+                )
+                  return false
+                const target = targets[0].parsedLink
+                return (
+                  ['option', 'view', 'layout', 'id', 'u_id'].every(
+                    (k) =>
+                      !parentUrl.searchParams.has(k) ||
+                      parentUrl.searchParams.get(k) === target.searchParams.get(k)
+                  ) &&
+                  target.searchParams.get('option') === 'com_content' &&
+                  target.searchParams.get('view') === 'category' &&
+                  target.searchParams.get('id') === String(parents[0].sourceId)
+                )
+              })
+            )
+              return null
+            // The direct-link holder and this exact branch witness the render, not raw parent lookup state.
+            if (
+              !holderProducer(
+                sourceIndex,
+                file,
+                /\$cat\s*=\s*\$this->category;/,
+                /<span class=["']hxcat-bc__rest["']>\s*\/\s*<\?php if\s*\(!empty\(\$cat->getParent\(\)\) && \(int\) \$cat->parent_id > 1\)\s*:\s*\?>\s*<a class=["']hxcat-bc__crumb["'] href=["']<\?php echo Route::_\(RouteHelper::getCategoryRoute\(\$cat->parent_id, \$cat->getParent\(\)->language \?\? '\*'\)\);\s*\?>["']><\?php echo Text::_\(['"]TPL_JA_KINETIC_BLOG_KICKER_CAP['"]\);\s*\?><\/a>\s*\/\s*<\?php endif;\s*\?>\s*<\?php echo \$this->escape\(\$this->category->title\);\s*\?>\s*<\/span>/
+              )
+            )
+              return null
+            return result(file, [lang], owners[0])
           }
           if (archive) {
             const file = base + 'archive/default.php'
