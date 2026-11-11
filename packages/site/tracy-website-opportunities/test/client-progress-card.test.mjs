@@ -93,13 +93,17 @@ test('brief ready: two steps done with their date, Build demo the one action', (
   assert.match(html, /\[v3\.buildDemo\]/)
 })
 
-test('a running job reads Running, disabled; a ready demo leaves no button at all', () => {
+test('a running job reads Running in the running status pill; a ready demo leaves no button at all', () => {
   const running = draw({
     research: RESEARCHED,
     briefJob: { id: 'j', state: 'running', step: 'reading' },
     demo: 'none'
   })
-  assert.match(running, /<button[^>]*disabled[^>]*>.*\[stepper\.running\]/)
+  assert.match(
+    running,
+    /<span class="tracy-wo-pill" data-pill="running"[^>]*>.*<span class="tracy-wo-pill-text">\[stepper\.running\]</
+  )
+  assert.doesNotMatch(running, /<button[^>]*disabled[^>]*>.*\[stepper\.running\]/)
   const done = draw({ research: RESEARCHED, brief: { id: 'b1', n: 1 }, demo: 'ready' })
   assert.deepEqual(states(done), ['done', 'done', 'done'])
   assert.doesNotMatch(done, /<button/)

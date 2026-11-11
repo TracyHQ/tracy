@@ -54,8 +54,6 @@ export const MY_LIST_CSS = `
 .tracy-wo-p-addr { display: flex; align-items: flex-start; gap: 2px; min-width: 0; font-size: 12.5px; line-height: 17px; }
 .tracy-wo-p-addr .tracy-wo-p-pin { width: 18px; height: 18px; margin-top: -1px; }
 .tracy-wo-p-addr-text { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-width: 0; overflow: hidden; overflow-wrap: anywhere; }
-.tracy-wo-my-rows .tracy-wo-p-step-state { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tracy-wo-my-rows .tracy-wo-p-step-state > svg, .tracy-wo-my-rows .tracy-wo-p-step-state > [data-slot='spinner'] { display: inline-block; margin-right: 6px; vertical-align: -2px; }
 .tracy-wo-p-added { min-width: 0; font-size: 12.5px; line-height: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tracy-wo-p-added time { cursor: default; text-decoration: underline dotted color-mix(in oklab, var(--foreground) 30%, transparent); text-underline-offset: 3px; }
 .tracy-wo-my-rows .tracy-wo-p-status { flex-wrap: nowrap; min-width: 0; }

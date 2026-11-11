@@ -23,6 +23,7 @@ import type { DemoCommand } from './demo-block-model.ts'
 
 import type { SubSection } from './section-model.ts'
 import type { SourceState } from './source-table-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 import {
   readOpened,
@@ -170,9 +171,11 @@ function Row({
         )}
         {tool}
         {state === 'locked' ? (
-          <span className="tracy-wo-ws-pill" data-kind="locked" role="img" aria-label={t('workspace.locked')}>
-            <Lock aria-hidden="true" />
-          </span>
+          <StatusPill
+            state="neutral"
+            glyph={<Lock aria-hidden="true" className="tracy-wo-pill-glyph" />}
+            label={t('workspace.locked')}
+          />
         ) : linkKey !== null && id !== 'demo' && id !== 'sources' ? (
           <button
             type="button"

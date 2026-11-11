@@ -117,7 +117,9 @@ export function AboutBand({
       id="about"
       label={t('field.bio')}
       title={t('field.bio')}
-      chips={filled && facts === null ? <SourceChip t={t} chip={card?.chip ?? null} locale={locale} /> : null}
+      chips={
+        filled && facts === null ? <SourceChip t={t} chip={card?.chip ?? null} locale={locale} pill /> : null
+      }
       onSite={(facts === null ? null : factsSwitch(facts, setOn)) ?? onSite}
       edit={
         card === undefined || card.state === 'notCollected' || !editable

@@ -4,13 +4,14 @@
 
 import { type JSX, useEffect, useRef } from 'react'
 
+import { StatusPill } from './status-pill.tsx'
 import { SubStepNode } from './step-node.tsx'
 import type { BandSubStep } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
 /**
  * The running step's sub-steps as one horizontal row (#537): a small node per sub-step (check, spinner, cross or
- * dot) and a short label clamped with its full text and state on hover, joined by a thin line. The row never wraps:
+ * dot) and a short label clamped (the running one is the running status pill, `status-pill.tsx`) with its full text and state on hover, joined by a thin line. The row never wraps:
  * a set of more than five (research has up to six sources and the facts) folds its done nodes to the check alone
  * (label on hover), and what still does not fit scrolls sideways inside the row, the running node kept in view.
  */
@@ -39,8 +40,14 @@ export function SubSteps({ t, items }: { t: Translate; items: BandSubStep[] }): 
         const state = t(`brief.job.state.${s.state}`)
         return (
           <li key={s.key} data-state={s.state} title={`${s.label}: ${state}`}>
-            <SubStepNode state={s.state} label={s.label} />
-            <span className="tracy-wo-band-sub-label">{s.label}</span>
+            {s.state === 'running' ? (
+              <StatusPill state="running" label={s.label} />
+            ) : (
+              <>
+                <SubStepNode state={s.state} label={s.label} />
+                <span className="tracy-wo-band-sub-label">{s.label}</span>
+              </>
+            )}
             <span className="tracy-wo-band-sub-state">{state}</span>
           </li>
         )

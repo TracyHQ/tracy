@@ -353,7 +353,7 @@ test('an edited value shows the owner value with an Edited chip, what research r
   assert.match(business, /\+10 555 0199/)
   assert.match(
     business,
-    /title="\[facts\.edited\.research\{&quot;value&quot;:&quot;\+10 555 0100&quot;\}\]"[^>]*>\[facts\.edited\]/
+    /data-pill="info" title="\[facts\.edited\.research\{&quot;value&quot;:&quot;\+10 555 0100&quot;\}\]"><span class="tracy-wo-pill-text">\[facts\.edited\]/
   )
 })
 

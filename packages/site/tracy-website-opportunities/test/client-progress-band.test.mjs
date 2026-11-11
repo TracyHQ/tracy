@@ -89,17 +89,25 @@ const subs = (n, running = 1) =>
     label: `Source number ${i + 1}`,
     state: i < running ? 'done' : i === running ? 'running' : 'waiting'
   }))
-const rowHtml = (html) => html.slice(html.indexOf('<ol class="tracy-wo-band-subs"'))
+const rowHtml = (html) => {
+  const from = html.indexOf('<ol class="tracy-wo-band-subs"')
+  return from < 0 ? '' : html.slice(from, html.indexOf('</ol>', from) + 5)
+}
 const rowOf = (html) => html.match(/<ol class="tracy-wo-band-subs"[^>]*>/)?.[0] ?? ''
 
 test('the running step lists its sub-steps as ONE horizontal row of nodes, each with its label and state on hover', () => {
   const html = draw(researching, { subSteps: subs(2) })
   assert.match(rowOf(html), /data-layout="row"/)
   assert.equal((html.match(/<ol class="tracy-wo-band-subs"/g) ?? []).length, 1)
-  assert.equal((rowHtml(html).match(/class="tracy-wo-band-sub-node"/g) ?? []).length, 2)
+  // The done sub-step is a node with its label; the running one is the running status pill with its label.
+  assert.equal((rowHtml(html).match(/class="tracy-wo-band-sub-node"/g) ?? []).length, 1)
   assert.match(html, /<li data-state="done" title="Source number 1: \[brief\.job\.state\.done\]">/)
   assert.match(html, /<li data-state="running" title="Source number 2: \[brief\.job\.state\.running\]">/)
-  assert.match(html, /class="tracy-wo-band-sub-label">Source number 2</)
+  assert.match(html, /class="tracy-wo-band-sub-label">Source number 1</)
+  assert.match(
+    rowHtml(html),
+    /<li data-state="running"[^>]*><span class="tracy-wo-pill" data-pill="running" data-glyph=""><svg[^>]*data-spin=""[\s\S]*?<span class="tracy-wo-pill-text">Source number 2<\/span>/
+  )
   // The state word stays in the markup for screen readers (hidden on screen by the band CSS).
   assert.match(html, /class="tracy-wo-band-sub-state">\[brief\.job\.state\.running\]</)
 })
@@ -115,6 +123,7 @@ test('a long sub-step set stays one row: no second list, the done nodes fold (da
   assert.doesNotMatch(rowOf(short), /data-many/)
   assert.match(rowOf(long), /data-many=""/)
   assert.equal((long.match(/<ol class="tracy-wo-band-subs"/g) ?? []).length, 1)
+  // Six done nodes and the failed one (no sub-step runs here).
   assert.equal((rowHtml(long).match(/class="tracy-wo-band-sub-node"/g) ?? []).length, 7)
   assert.match(
     long,
@@ -150,7 +159,7 @@ test('the band carries data-fixed, and a refused press sits in the button row in
   )
 })
 
-test('a locked step shows only a lock icon in its pill, the reason on hover and as the aria-label, no word Locked', () => {
+test('a locked step shows a neutral Locked pill with a lock glyph, the reason on hover', () => {
   const html = draw({
     research: RESEARCHED,
     brief: { id: 'b-1', n: 1, createdAt: '2026-11-09T09:00:00Z' },
@@ -159,10 +168,9 @@ test('a locked step shows only a lock icon in its pill, the reason on hover and 
   })
   assert.match(
     html,
-    /<span class="tracy-wo-stab-pill tracy-wo-band-pill" data-state="locked" role="img" title="\[stepper\.lock\.profile\]" aria-label="\[stepper\.lock\.profile\]"><svg[\s\S]*?<\/svg><\/span>/
+    /<span class="tracy-wo-pill" data-pill="neutral" data-glyph="" title="\[stepper\.lock\.profile\]"><svg[^>]*lucide-lock[^>]*>[\s\S]*?<\/svg><span class="tracy-wo-pill-text">\[stepper\.locked\]<\/span><\/span>/
   )
   assert.doesNotMatch(html, /tracy-wo-band-lock|>\[stepper\.lock\.profile\]</)
-  assert.doesNotMatch(html, /\[stepper\.locked\]/)
   assert.doesNotMatch(html, /brief\.chip\.older|tracy-wo-band-stale/)
 })
 
@@ -172,13 +180,21 @@ test('the brief job running shows no sub-step row when the server sent none, onl
   assert.match(html, /class="tracy-wo-band-running" role="status"/)
 })
 
+test('while a job runs the button row shows the Running status pill, never a disabled Running button', () => {
+  const html = draw({ research: RESEARCHED, briefJob: RUNNING_BRIEF, demo: 'none' })
+  const acts = html.slice(html.indexOf('class="tracy-wo-band-acts"'))
+  assert.match(acts, /<span class="tracy-wo-pill" data-pill="running" data-glyph=""><svg[^>]*data-spin=""/)
+  assert.match(acts, /<span class="tracy-wo-pill-text">\[stepper\.running\]<\/span>/)
+  assert.doesNotMatch(acts, /<button[^>]*disabled/)
+})
+
 test('the band CSS fixes one height, lays the sub-steps in a row and is joined to the Details stylesheet', () => {
   const css = lib.PROGRESS_BAND_CSS
   assert.match(css, /\.tracy-wo-band\[data-fixed\] \{[^}]*height: var\(--wo-band-h\)/)
   assert.match(css, /\.tracy-wo-band-subs \{[^}]*flex-direction: row;[^}]*overflow-x: auto/)
   assert.match(css, /-webkit-line-clamp: 2/)
   assert.ok(!css.includes('`'), 'no backtick inside the template')
-  // The Details stylesheet joins the band CSS after the step node CSS; the facts bands come after it.
+  // The Details stylesheet joins the band CSS; the facts bands come after it.
   assert.ok(lib.DETAILS_CSS.includes(css))
 })
 
@@ -188,33 +204,32 @@ test('each step shows its status as a pill right of the name and one fixed purpo
   assert.equal(rows.length, 3)
   assert.match(
     rows[0],
-    /class="tracy-wo-band-top"><span class="tracy-wo-step-name"[^>]*>\[step\.research\]<\/span><span class="tracy-wo-stab-pill tracy-wo-band-pill" data-state="reading"/
+    /class="tracy-wo-band-top"><span class="tracy-wo-step-name"[^>]*>\[step\.research\]<\/span><span class="tracy-wo-pill" data-pill="running" data-glyph="" title="\[stepper\.running\]"><svg[^>]*lucide-loader-circle/
   )
-  assert.match(rows[0], /<span class="tracy-wo-band-sub-node" data-node="running"/)
-  assert.match(rows[0], /tracy-wo-band-pill-text">\[stepper\.running\]</)
+  assert.match(rows[0], /tracy-wo-pill-text">\[stepper\.running\]</)
   assert.match(rows[0], /class="tracy-wo-band-purpose"[^>]*>\[band\.purpose\.research\]</)
   assert.match(rows[1], /class="tracy-wo-band-purpose"[^>]*>\[band\.purpose\.brief\]</)
   assert.match(rows[2], /class="tracy-wo-band-purpose"[^>]*>\[band\.purpose\.build\]</)
   assert.doesNotMatch(html, /tracy-wo-step-sub|tracy-wo-band-status/)
 })
 
-test('done is a success pill with a check, review is amber, up next is neutral, failed is danger', () => {
+test('a finished step has no pill, review is attention, up next is neutral, failed is the red failed pill', () => {
   const review = draw({ research: RESEARCHED, demo: 'none', approval: { research: 'ok', profile: 'needed' } })
   assert.match(
     review,
-    /data-state="review"[^>]*>(<span[^>]*><\/span>)?<span class="tracy-wo-band-pill-text">\[stepper\.needsReview\]</
+    /data-pill="attention" data-glyph=""[^>]*><svg[^>]*lucide-triangle-alert[\s\S]*?<span class="tracy-wo-pill-text">\[stepper\.needsReview\]</
   )
-  assert.match(draw(researching), /data-state="next"[^>]*title="\[stepper\.upNext\]"/)
+  assert.match(draw(researching), /data-pill="neutral" data-glyph="" title="\[stepper\.upNext\]"/)
   const done = draw({ research: RESEARCHED, brief: { id: 'b-1', n: 1 }, demo: 'none' })
   // A finished step shows only its green check in the dot: no "Done" pill (owner, #537).
-  assert.doesNotMatch(done, /tracy-wo-band-pill" data-state="collected"/)
+  assert.doesNotMatch(done, /data-pill="done"/)
   assert.match(done, /class="tracy-wo-step" data-state="done"[\s\S]*?lucide-check/)
   const failed = draw({
     research: { state: 'failed', researchedAt: null, done: false },
     researchJob: { state: 'failed' },
     demo: 'none'
   })
-  assert.match(failed, /data-state="failed"[^>]*><span class="tracy-wo-band-sub-node" data-node="failed"/)
+  assert.match(failed, /data-pill="failed" data-glyph=""[^>]*><svg[^>]*lucide-x /)
 })
 
 test('the left pane is as wide as its content: a capped fit-content track, names and pills never shrink', () => {
@@ -227,9 +242,9 @@ test('the left pane is as wide as its content: a capped fit-content track, names
   // The list never goes below its min-content (the widest name with its pill), even though it clips vertically.
   assert.match(css, /\.tracy-wo-band-list \{[^}]*min-width: min-content;[^}]*overflow: hidden/)
   assert.match(css, /\.tracy-wo-band\[data-fixed\] \.tracy-wo-step \{ grid-template-columns: 22px auto; \}/)
-  assert.match(css, /\.tracy-wo-band-top > \.tracy-wo-band-pill \{[^}]*flex: none/)
+  // The pill itself never shrinks (status-pill-css.ts) and the band keeps no pill rule of its own.
   assert.match(css, /\.tracy-wo-band-top > \.tracy-wo-step-name \{ flex: none; \}/)
-  assert.doesNotMatch(css, /\.tracy-wo-band-top > \.tracy-wo-band-pill \{[^}]*max-width/)
+  assert.doesNotMatch(css, /tracy-wo-band-pill|tracy-wo-stab-pill/)
   // A purpose line wraps for sizing (min-content is one word) and shows one clamped line.
   assert.match(css, /\.tracy-wo-band-purpose \{[^}]*-webkit-line-clamp: 1;[^}]*white-space: normal/)
   assert.match(css, /--wo-band-h: 176px/)
@@ -252,8 +267,13 @@ const briefSubs = () =>
   lib
     .briefControlView({ research: { state: 'done' }, brief: null, briefJob: BRIEF_RUNNING })
     .steps.map((s) => ({ key: s.step, label: t(s.labelKey), state: s.state }))
+/** Each sub-step's look: a node by its state, or the running status pill. */
 const nodeStates = (html) =>
-  [...rowHtml(html).matchAll(/class="tracy-wo-band-sub-node" data-node="(\w+)"/g)].map((m) => m[1])
+  [
+    ...rowHtml(html).matchAll(
+      /class="tracy-wo-band-sub-node" data-node="(\w+)"|class="tracy-wo-pill" data-pill="(running)"/g
+    )
+  ].map((m) => m[1] ?? m[2])
 const liStates = (html) => [...rowHtml(html).matchAll(/<li data-state="(\w+)"/g)].map((m) => m[1])
 
 test('the brief job draws the research row: the same nodes, one state per item, no other look', () => {
@@ -261,7 +281,7 @@ test('the brief job draws the research row: the same nodes, one state per item, 
   assert.equal((html.match(/<ol class="tracy-wo-band-subs" data-layout="row"/g) ?? []).length, 1)
   assert.deepEqual(nodeStates(html), ['done', 'running', 'waiting'])
   assert.deepEqual(liStates(html), ['done', 'running', 'waiting'])
-  assert.match(html, /class="tracy-wo-band-sub-label">\[brief\.job\.step\.labelling\]</)
+  assert.match(html, /class="tracy-wo-pill-text">\[brief\.job\.step\.labelling\]</)
   assert.doesNotMatch(html, /tracy-wo-demo-|tracy-wo-progress-steps/)
 })
 
@@ -314,7 +334,7 @@ test('the build run draws the research row too: done, running and waiting nodes,
   assert.match(html, /data-build=""/)
   assert.deepEqual(nodeStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
   assert.deepEqual(liStates(html), ['done', 'done', 'done', 'running', 'running', 'waiting'])
-  assert.match(html, /class="tracy-wo-band-sub-label">\[progress\.step\.copy\]</)
+  assert.match(html, /class="tracy-wo-pill-text">\[progress\.step\.copy\]</)
   // The minutes left and the cost so far stay on their line above the row.
   assert.match(html, /\[progress\.left\{&quot;n&quot;:18\}\] · \[progress\.spent/)
   assert.ok(html.indexOf('[progress.left') < html.indexOf('class="tracy-wo-band-subs"'))

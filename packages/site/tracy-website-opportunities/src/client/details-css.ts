@@ -6,7 +6,6 @@
  * inside the template below.
  */
 import { PROGRESS_BAND_CSS } from './progress-band-css.ts'
-import { STEP_NODE_CSS } from './step-node-css.ts'
 import { FACTS_BANDS_CSS } from './facts-bands-css.ts'
 import { FACTS_OWNER_CSS } from './facts-owner-css.ts'
 import { FACTS_SAVED_CSS } from './facts-saved-css.ts'
@@ -45,10 +44,6 @@ export const DETAILS_CSS =
 .tracy-wo-brief-table td:last-child { width: 80px; }
 .tracy-wo-brief-table tr[data-off] th, .tracy-wo-brief-table tr[data-off] td { color: var(--muted-foreground); }
 .tracy-wo-brief-note { display: block; margin-top: 2px; color: var(--muted-foreground); font-size: 12px; }
-.tracy-wo-chip-ok { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); border-color: transparent; }
-.tracy-wo-chip-brand { background: color-mix(in oklab, var(--primary) 12%, transparent); color: color-mix(in oklab, var(--primary) 80%, var(--foreground)); border-color: transparent; }
-.tracy-wo-chip-bad { background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); border-color: transparent; }
-.tracy-wo-chip-mute { background: var(--muted); color: var(--muted-foreground); border-color: transparent; }
 .tracy-wo-brief-steps { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 13px; }
 .tracy-wo-brief-steps li { display: flex; align-items: center; gap: 8px; }
 .tracy-wo-brief-steps li > span:last-child { margin-left: auto; color: var(--muted-foreground); font-size: 12px; }
@@ -73,12 +68,7 @@ export const DETAILS_CSS =
 .tracy-wo-stab-name { flex: 0 0 var(--tracy-wo-stab-name-w, 140px); min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }
 .tracy-wo-stab-state { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex: none; min-width: 0; margin-left: auto; padding-left: 12px; font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
-.tracy-wo-stab-pill { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 9px 2px 6px; border-radius: 999px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 7%, transparent); color: var(--muted-foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
-.tracy-wo-stab-pill[data-state='reading'] { border-color: color-mix(in oklab, var(--primary) 28%, transparent); background: color-mix(in oklab, var(--primary) 12%, transparent); color: var(--primary); font-weight: 600; }
-.tracy-wo-stab-pill[data-state='collected'] { border-color: color-mix(in oklab, var(--success) 28%, transparent); background: color-mix(in oklab, var(--success) 12%, transparent); color: var(--success); }
-.tracy-wo-stab-pill[data-state='failed'] { border-color: color-mix(in oklab, var(--destructive) 28%, transparent); background: color-mix(in oklab, var(--destructive) 12%, transparent); color: var(--destructive); }
 .tracy-wo-stab-detail { max-width: 34ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 12px; color: var(--muted-foreground); opacity: 0.85; }
-.tracy-wo-stab-state > .tracy-wo-stab-pill { flex: none; }
 .tracy-wo-stab-act { margin: 0; padding: 0; border: 0; background: none; color: var(--primary); font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; }
 .tracy-wo-stab-act:hover:not(:disabled) { text-decoration: underline; text-underline-offset: 2px; }
 .tracy-wo-stab-act:disabled { color: var(--muted-foreground); cursor: default; }
@@ -171,10 +161,6 @@ export const DETAILS_CSS =
 .tracy-wo-facts-bdg svg { width: 11px; height: 11px; }
 .tracy-wo-facts-logo[data-neutral] { background: var(--muted); color: var(--muted-foreground); border: 1px solid var(--border); }
 .tracy-wo-facts-logo img { width: 100%; height: 100%; object-fit: cover; }
-.tracy-wo-facts .tracy-wo-chip-warn, .tracy-wo-facts .tracy-wo-chip-ok, .tracy-wo-facts .tracy-wo-chip-mute, .tracy-wo-facts .tracy-wo-name-chip, .tracy-wo-facts .tracy-wo-edited { display: inline-flex; align-items: center; padding: 0 8px; border: 1px solid var(--border); border-radius: 999px; font-size: 11.5px; font-weight: 500; line-height: 18px; white-space: nowrap; }
-.tracy-wo-facts .tracy-wo-chip-warn { border-color: transparent; background: color-mix(in oklab, var(--warning) 16%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
-.tracy-wo-facts .tracy-wo-chip-ok { border-color: transparent; background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
-.tracy-wo-facts .tracy-wo-chip-mute { border-color: transparent; background: var(--muted); color: var(--muted-foreground); }
 .tracy-wo-facts-note { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border: 1px solid color-mix(in oklab, var(--warning) 40%, transparent); border-radius: 8px; background: color-mix(in oklab, var(--warning) 12%, var(--background)); font-size: 12.5px; }
 .tracy-wo-facts-about { margin: 0; white-space: pre-line; line-height: 1.6; overflow-wrap: anywhere; }
 .tracy-wo-facts-people { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
@@ -197,7 +183,6 @@ export const DETAILS_CSS =
   .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { grid-template-columns: minmax(0, 1fr); }
 }
 ` +
-  STEP_NODE_CSS +
   PROGRESS_BAND_CSS +
   FACTS_BANDS_CSS +
   FACTS_OWNER_CSS +

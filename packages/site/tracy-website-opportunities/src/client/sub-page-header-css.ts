@@ -10,7 +10,6 @@ export const SUB_PAGE_HEADER_CSS = `
 .tracy-wo-subhead-back:hover { background: color-mix(in oklab, var(--foreground) 10%, var(--muted)); }
 .tracy-wo-subhead-back:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
 .tracy-wo-subhead-title { margin: 0; font-size: 22px; line-height: 30px; font-weight: 600; white-space: nowrap; flex: none; }
-.tracy-wo-subhead-chip { flex: none; display: inline-flex; align-items: center; padding: 0 9px; border: 1px solid var(--border); border-radius: 999px; background: var(--background); font-size: 11.5px; line-height: 20px; font-weight: 500; color: var(--muted-foreground); white-space: nowrap; }
 .tracy-wo-subhead-acts { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-left: auto; min-width: 0; }
 .tracy-wo-subhead-acts:empty { display: none; }
 .tracy-wo-subhead-desc { margin: 0 0 0 46px; font-size: 13px; line-height: 20px; color: var(--muted-foreground); }

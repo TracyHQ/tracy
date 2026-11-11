@@ -91,12 +91,6 @@ export const CSS = `
 .tracy-wo-results { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .tracy-wo-more { align-self: center; }
 /* My opportunities: Status, Research and Action cells, the stage bar and the Inspector. */
-.tracy-wo-badge-ok { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); border-color: transparent; }
-.tracy-wo-badge-ok svg { color: var(--success); }
-.tracy-wo-badge-live { background: color-mix(in oklab, var(--success) 14%, transparent); color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
-.tracy-wo-name-chip.is-check { background: color-mix(in oklab, var(--warning) 16%, transparent); border-color: color-mix(in oklab, var(--warning) 40%, transparent); color: color-mix(in oklab, var(--warning) 45%, var(--foreground)); }
-.tracy-wo-name-chip.is-checked { background: color-mix(in oklab, var(--success) 14%, transparent); border-color: transparent; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
-.tracy-wo-name-chip.is-held { background: color-mix(in oklab, var(--muted-foreground) 10%, transparent); border-color: transparent; color: var(--muted-foreground); }
 .tracy-wo-name-actions { gap: 12px; }
 .tracy-wo-name-actions [data-slot='button'] { padding-inline: 0; height: auto; }
 .tracy-wo-hours-lines { display: flex; flex-direction: column; }
@@ -125,7 +119,6 @@ export const CSS = `
 .tracy-wo-attn:hover, .tracy-wo-attn.is-on { background: color-mix(in oklab, var(--destructive) 10%, transparent); color: var(--destructive); }
 .tracy-wo-attn.is-on { border-color: color-mix(in oklab, var(--destructive) 50%, transparent); }
 .tracy-wo-attn:focus-visible { border-color: color-mix(in oklab, var(--destructive) 70%, var(--border)); }
-.tracy-wo-attn-pill { padding: 1px 6px; border-radius: 999px; background: color-mix(in oklab, var(--destructive) 10%, transparent); font-weight: 600; }
 .tracy-wo-insp { position: sticky; top: 12px; display: flex; flex-direction: column; gap: 10px; min-width: 0; max-height: calc(100vh - 24px); overflow-y: auto; padding: 12px 14px 14px; border: 1px solid color-mix(in oklab, var(--primary) 25%, var(--border)); border-radius: 14px; background: var(--card); font-size: 12px; line-height: 17px; }
 /* Title block and close button share the first row; the actions take a full-width row below. */
 .tracy-wo-insp-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 8px; }
@@ -212,7 +205,6 @@ export const CSS = `
 .tracy-wo-p-demo-text { display: flex; flex-direction: column; min-width: 0; }
 .tracy-wo-p-live { font-size: 12px; font-weight: 500; color: color-mix(in oklab, var(--success) 70%, var(--foreground)); }
 .tracy-wo-p-site { overflow-wrap: anywhere; }
-.tracy-wo-p-alert { width: 14px; height: 14px; flex: 0 0 auto; color: var(--destructive); }
 .tracy-wo-p-status { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
 .tracy-wo-my-cards .tracy-wo-p-status { justify-content: space-between; margin-top: auto; }
 /* The step a place reached (#537, option A): three segments, Step n of 3, and the state in the tone of the band. */
@@ -227,9 +219,7 @@ export const CSS = `
 .tracy-wo-p-segs i { width: 22px; height: 4px; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 12%, transparent); }
 .tracy-wo-p-segs i[data-state='done'] { background: var(--success); }
 .tracy-wo-p-segs i[data-state='current'] { background: var(--tracy-wo-tone); }
-.tracy-wo-p-step-state { display: inline-flex; align-items: center; gap: 6px; min-width: 0; font-weight: 500; color: var(--tracy-wo-tone); overflow-wrap: anywhere; }
-.tracy-wo-p-step[data-tone='mute'] .tracy-wo-p-step-state { color: var(--muted-foreground); }
-.tracy-wo-p-step-check { width: 14px; height: 14px; flex: 0 0 auto; }
+.tracy-wo-p-step > .tracy-wo-pill { align-self: flex-start; }
 .tracy-wo-p-quiet { color: var(--muted-foreground); }
 .tracy-wo-p-quiet:hover { color: var(--foreground); }
 .tracy-wo-insp > .tracy-wo-insp-sec, .tracy-wo-insp .tracy-wo-insp-sec .tracy-wo-insp-sec { border: 0; border-radius: 0; background: transparent; padding: 14px 0; }
@@ -302,5 +292,4 @@ export const CSS = `
 .tracy-wo-editable { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
 .tracy-wo-editable-text { min-width: 0; overflow-wrap: anywhere; white-space: pre-line; }
 .tracy-wo-editable > :not(.tracy-wo-editable-text) { flex-shrink: 0; }
-.tracy-wo-edited { font-size: 11px; line-height: 15px; color: var(--muted-foreground); }
 `

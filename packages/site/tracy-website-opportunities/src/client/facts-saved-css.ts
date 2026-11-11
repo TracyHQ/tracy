@@ -13,7 +13,6 @@ export const FACTS_SAVED_CSS = `
 .tracy-wo-facts-pill > a > .tracy-wo-facts-ell { min-width: 6ch; }
 .tracy-wo-facts-minis { gap: 4px; overflow: hidden; }
 .tracy-wo-facts-mini { flex: none; padding: 0 7px; border: 1px solid var(--border); border-radius: 999px; font-size: 11.5px; line-height: 18px; white-space: nowrap; }
-.tracy-wo-facts-edited { flex: none; font-size: 10.5px; cursor: help; }
 .tracy-wo-facts-fig { display: inline-flex; align-items: center; gap: 4px; flex: none; min-width: 0; padding-left: 8px; border-left: 1px solid var(--border); color: var(--muted-foreground); font-size: 12px; font-variant-numeric: tabular-nums; }
 .tracy-wo-facts-fig[data-off] > .tracy-wo-facts-ell { opacity: 0.5; }
 .tracy-wo-facts-figs { display: inline-flex; align-items: center; gap: 8px; flex: 0 1 auto; min-width: 0; overflow: hidden; }

@@ -14,23 +14,36 @@ import {
   normalSource
 } from './source-chip-model.ts'
 import { SourceGlyph } from './source-logo.tsx'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 export function SourceChip({
   t,
   chip,
   locale,
-  looked
+  looked,
+  pill = false
 }: {
   t: Translate
   chip: SourceChipView | null
   locale: string
   /** What research read, named, for the Not found title. */
   looked?: string[]
+  /** The source line of a band heading: the info status pill with the source logo (`status-pill.tsx`). */
+  pill?: boolean
 }): JSX.Element | null {
   if (chip === null) return null
   const logo = chipLogo(chip)
   const title = chipTitle(t, chip, locale, (s, ref) => sourceLabel(t, s, ref), looked)
+  if (pill)
+    return (
+      <StatusPill
+        state="info"
+        glyph={logo === 'you' ? <User aria-hidden="true" /> : <SourceGlyph logo={logo} />}
+        label={t(`chip.word.${chip.word}`)}
+        title={title}
+      />
+    )
   return (
     <span className="tracy-wo-sc" data-word={chip.word} title={title}>
       {logo === 'you' ? (

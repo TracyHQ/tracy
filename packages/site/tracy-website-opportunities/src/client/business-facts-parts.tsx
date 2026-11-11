@@ -4,7 +4,6 @@
  * switch (#537 R18), in one row that scrolls sideways; a missing value reads N/A. Locked on the site; Edit is in place.
  */
 import { Fragment, type JSX, type ReactNode } from 'react'
-import { Badge } from '@tracy/ui'
 
 import { mediaUrl } from './api.ts'
 import { FactsBand, NotAvailable, OneLine } from './business-facts-band.tsx'
@@ -14,17 +13,16 @@ import { EditedChip, GenericCell, type SetFactOn } from './facts-generic-row.tsx
 import { displayText, factDisplay } from './facts-value-model.ts'
 import type { SavedFact } from './saved-profile-model.ts'
 import { SourceChip } from './source-chip.tsx'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 export function Mark({ t, mark }: { t: Translate; mark: EditMark }): JSX.Element | null {
   if (mark === null) return null
   return (
-    <Badge
-      variant="outline"
-      className={mark === 'afterApproval' ? 'tracy-wo-chip-warn tracy-wo-edited' : 'tracy-wo-edited'}
-    >
-      {t(mark === 'afterApproval' ? 'facts.editedAfter' : 'profile.editedByYou')}
-    </Badge>
+    <StatusPill
+      state={mark === 'afterApproval' ? 'attention' : 'info'}
+      label={t(mark === 'afterApproval' ? 'facts.editedAfter' : 'profile.editedByYou')}
+    />
   )
 }
 
@@ -108,7 +106,7 @@ export function BusinessBand({
       id="business"
       label={t('facts.business')}
       title={t('facts.business')}
-      chips={<SourceChip t={t} chip={view.chips.name} locale={locale} />}
+      chips={<SourceChip t={t} chip={view.chips.name} locale={locale} pill />}
       onSite={{ on: true, set: null, lock: true, why: t('facts.lock.business') }}
       edit={edit === null ? { why: t('reason.not_collected') } : { form: edit }}
     >
@@ -122,9 +120,7 @@ export function BusinessBand({
               {view.category === null ? (
                 missing
               ) : (
-                <Badge variant="outline" className="tracy-wo-chip-mute" title={view.category}>
-                  {view.category}
-                </Badge>
+                <StatusPill state="info" label={view.category} title={view.category} />
               )}
             </span>
           </span>

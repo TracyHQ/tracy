@@ -5,15 +5,24 @@
 
 import { Button, Spinner } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
-import { AlertCircle, CheckIcon } from 'lucide-react'
 import type { JSX } from 'react'
 
 import type { NextRun, PlacePieces } from './opportunity-pieces.ts'
+import { type PillState, StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
+
+/** The tone of the current step as the one status pill's state (`status-pill.tsx`). */
+const PILL_OF: Record<PlacePieces['step']['tone'], PillState> = {
+  ok: 'done',
+  warn: 'attention',
+  run: 'running',
+  error: 'failed',
+  mute: 'neutral'
+}
 
 /**
  * The step the place has reached (#537, option A): three segments with Step n of 3, the state of the current step in
- * the Details page's own words, and the one action of that step. Both come from `rowStepOf`, the Details band's view.
+ * the Details page's own words as a status pill, and the one action of that step. Both come from `rowStepOf`, the Details band's view.
  */
 export function StepPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element {
   const s = p.step
@@ -27,12 +36,11 @@ export function StepPiece({ t, p }: { t: Translate; p: PlacePieces }): JSX.Eleme
         </span>
         {t(s.kickerKey, s.kickerParams)}
       </span>
-      <span className="tracy-wo-p-step-state">
-        {s.running ? <Spinner label={t(s.stateKey)} className="size-3" /> : null}
-        {s.tone === 'error' ? <AlertCircle aria-hidden="true" className="tracy-wo-p-alert" /> : null}
-        {s.allDone ? <CheckIcon aria-hidden="true" className="tracy-wo-p-step-check" /> : null}
-        {t(s.stateKey)}
-      </span>
+      <StatusPill
+        state={s.running ? 'running' : PILL_OF[s.tone]}
+        label={t(s.stateKey)}
+        title={t(s.stateKey)}
+      />
     </div>
   )
 }

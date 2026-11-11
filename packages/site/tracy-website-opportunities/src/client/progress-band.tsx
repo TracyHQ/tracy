@@ -1,7 +1,7 @@
 /**
  * The Progress band at the top of Details (#537, option D): one full width band with two panes. The left pane lists
  * the three steps (a dot, the name with the status as a pill on its right, and one fixed line saying what the step does;
- * a step that waits shows only a lock icon in its pill, the short reason on hover). The right pane is the current step: "Step 2 of 3", its name, its one status line,
+ * a step that waits shows a Locked pill with a lock, the short reason on hover). Every pill is `status-pill.tsx`. The right pane is the current step: "Step 2 of 3", its name, its one status line,
  * why it stopped, the REAL sub-steps of a running job, and the action buttons at its bottom right.
  *
  * Sub-steps come only from what the server sends: the Content brief job's steps (`briefControlView`), the build's
@@ -19,7 +19,7 @@ import { Check, Lock, Clock } from 'lucide-react'
 import type { JSX, ReactNode } from 'react'
 
 import { SubSteps } from './progress-band-subs.tsx'
-import { type StepNodeState, SubStepNode } from './step-node.tsx'
+import { type PillState, StatusPill } from './status-pill.tsx'
 import type { BandSubStep, StepAction, StepId, StepperView, StepView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -42,44 +42,32 @@ const PURPOSE_OF: Record<StepId, string> = {
   build: 'band.purpose.build'
 }
 
-/** The pill of a step, to the right of its name: the state as a pill, or only a lock icon (reason on hover) for a locked step. */
-function StatusPill({
-  t,
-  step,
-  locale
-}: {
-  t: Translate
-  step: StepView
-  locale: string
-}): JSX.Element | null {
-  if (step.lockKey !== null) {
-    const reason = t(step.lockKey)
+/** A step's tone as the one status pill's state (`status-pill.tsx`). */
+const PILL_OF: Record<StepView['status']['tone'], PillState> = {
+  run: 'running',
+  error: 'failed',
+  warn: 'attention',
+  mute: 'neutral',
+  ok: 'done'
+}
+
+/** The pill of a step, to the right of its name: the state as a pill, or a Locked pill with a lock (reason on hover). */
+function StepPill({ t, step, locale }: { t: Translate; step: StepView; locale: string }): JSX.Element | null {
+  if (step.lockKey !== null)
     return (
-      <span
-        className="tracy-wo-stab-pill tracy-wo-band-pill"
-        data-state="locked"
-        role="img"
-        title={reason}
-        aria-label={reason}
-      >
-        <Lock aria-hidden="true" className="tracy-wo-icon" />
-      </span>
+      <StatusPill
+        state="neutral"
+        glyph={<Lock aria-hidden="true" className="tracy-wo-pill-glyph" />}
+        label={t('stepper.locked')}
+        title={t(step.lockKey)}
+      />
     )
-  }
-  const full = statusText(t, step, locale)
   const tone = step.status.tone
   // A finished step already shows its green check in the number dot: no pill repeats "Done" (owner, #537). The
   // finish date stays readable on the step name through its title.
   if (tone === 'ok') return null
-  const text = full
-  const node: StepNodeState | null = tone === 'run' ? 'running' : tone === 'error' ? 'failed' : null
-  const state = { run: 'reading', error: 'failed', warn: 'review', mute: 'next' }[tone]
-  return (
-    <span className="tracy-wo-stab-pill tracy-wo-band-pill" data-state={state} title={full}>
-      {node !== null ? <SubStepNode state={node} label={text} /> : null}
-      <span className="tracy-wo-band-pill-text">{text}</span>
-    </span>
-  )
+  const full = statusText(t, step, locale)
+  return <StatusPill state={PILL_OF[tone]} label={full} title={full} />
 }
 
 export function ProgressBand({
@@ -138,7 +126,7 @@ export function ProgressBand({
                 <span className="tracy-wo-step-name" title={t(step.nameKey)}>
                   {t(step.nameKey)}
                 </span>
-                <StatusPill t={t} step={step} locale={locale} />
+                <StepPill t={t} step={step} locale={locale} />
               </span>
               <span className="tracy-wo-band-purpose" title={t(PURPOSE_OF[step.id])}>
                 {t(PURPOSE_OF[step.id])}
@@ -206,10 +194,7 @@ export function ProgressBand({
               </p>
             ) : null}
             {view.running ? (
-              <Button type="button" size="sm" variant="outline" disabled>
-                <Spinner label={t('stepper.running')} />
-                {t('stepper.running')}
-              </Button>
+              <StatusPill state="running" label={t('stepper.running')} />
             ) : action !== null ? (
               <Button
                 type="button"

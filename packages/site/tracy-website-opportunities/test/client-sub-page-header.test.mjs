@@ -140,7 +140,10 @@ test('Business facts: title, Step 1 chip and the description; no count, no progr
   const head = page.host.querySelector('.tracy-wo-subhead')
   const row = head.querySelector('.tracy-wo-subhead-row')
   assert.equal(row.querySelector('h2').textContent, '[details.section.profile]')
-  assert.equal(row.querySelector('.tracy-wo-subhead-chip').textContent, '[band.kicker{"n":1,"total":3}]')
+  assert.equal(
+    row.querySelector(':scope > .tracy-wo-pill[data-pill="info"]').textContent,
+    '[band.kicker{"n":1,"total":3}]'
+  )
   assert.equal(head.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.profile]')
   assert.equal(head.querySelector('.tracy-wo-subhead-count'), null)
   assert.equal(head.querySelector('ol, .tracy-wo-subhead-line'), null)
@@ -196,7 +199,7 @@ test('the brief page: Step 2 chip and its own description', () => {
     approval: { kind: 'brief', pending: true, approvedLine: null }
   })
   assert.equal(
-    page.host.querySelector('.tracy-wo-subhead-chip').textContent,
+    page.host.querySelector('.tracy-wo-subhead-row > .tracy-wo-pill[data-pill="info"]').textContent,
     '[band.kicker{"n":2,"total":3}]'
   )
   assert.equal(page.host.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.brief]')

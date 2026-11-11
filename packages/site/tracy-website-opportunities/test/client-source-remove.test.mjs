@@ -256,7 +256,7 @@ test('the trash opens a dialog naming the source and its short link; Cancel clos
     assert.ok(m.button(dialog, '[source.remove.confirm]'))
     // No inline confirm on the row: it keeps its pill.
     assert.doesNotMatch(m.host.textContent, /source\.remove\.(ask|keep|confirm)/)
-    assert.ok(m.rowOf(INSTAGRAM).querySelector('.tracy-wo-stab-pill'))
+    assert.ok(m.rowOf(INSTAGRAM).querySelector('.tracy-wo-pill'))
     m.press(m.button(dialog, '[source.remove.cancel]'))
     assert.equal(m.dialog(), null)
     assert.equal(m.calls.length, 0)
@@ -301,7 +301,7 @@ test('Remove calls the door with the row link, spins in the dialog while the row
     assert.equal(pending.getAttribute('aria-busy'), 'true')
     assert.ok(pending.hasAttribute('data-pending'))
     assert.equal(pending.querySelector('.tracy-wo-stab-remove').disabled, true)
-    assert.equal(pending.querySelector('.tracy-wo-stab-pill'), null)
+    assert.equal(pending.querySelector('.tracy-wo-pill'), null)
     await m.settle({ ok: true, status: 200, body: { opportunity: {}, approval: {} } })
     assert.equal(m.rowOf(INSTAGRAM), undefined)
     assert.equal(m.dialog(), null)
@@ -333,7 +333,7 @@ test('each refusal stays in the dialog with Remove enabled again; the row stays 
       assert.ok(row, line)
       assert.equal(row.getAttribute('aria-busy'), null)
       assert.equal(row.querySelector('[role="alert"]'), null)
-      assert.ok(row.querySelector('.tracy-wo-stab-pill'))
+      assert.ok(row.querySelector('.tracy-wo-pill'))
       // A second press tries again and clears the line while it runs.
       m.press(m.button(dialog, '[source.remove.confirm]'))
       assert.equal(m.calls.length, 2, line)

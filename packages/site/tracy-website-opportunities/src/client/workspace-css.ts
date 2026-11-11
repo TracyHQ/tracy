@@ -43,8 +43,6 @@ button.tracy-wo-ws-toggle:focus-visible { outline: 1px solid var(--ring); outlin
 .tracy-wo-ws-pill[data-kind='review'] > svg { color: var(--primary); }
 .tracy-wo-ws-pill[data-kind='review']:hover { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
 .tracy-wo-ws-pill[data-kind='review']:hover > svg { color: var(--primary-foreground); }
-.tracy-wo-ws-pill[data-kind='locked'] { padding: 0 9px; border-style: dashed; background: transparent; color: var(--muted-foreground); cursor: default; }
-.tracy-wo-ws-pill[data-kind='locked']:hover { background: transparent; }
 .tracy-wo-ws-sec[data-state='locked'] .tracy-wo-ws-name { color: var(--muted-foreground); }
 .tracy-wo-ws-body { padding: 12px 16px 14px; }
 @container (max-width: 560px) {

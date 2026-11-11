@@ -1,7 +1,7 @@
 /**
  * The 14px node of a sub-step (#537): a hollow ring while it waits, a spinner while it runs, a filled check when it
- * is done and a filled cross when it failed. Shared by the Progress band's sub-step row and the State pills of the
- * Sources table, so the two draw the same thing. Its look is `step-node-css.ts`.
+ * is done and a filled cross when it failed. Drawn by the Progress band's sub-step row (a running sub-step there is the
+ * running status pill, `status-pill.tsx`). Its look is in `progress-band-css.ts`.
  */
 
 import { Spinner } from '@tracy/ui'

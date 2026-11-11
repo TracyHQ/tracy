@@ -9,6 +9,7 @@ import type { JSX } from 'react'
 import { Check } from 'lucide-react'
 import { Button, Spinner } from '@tracy/ui'
 
+import { StatusPill } from './status-pill.tsx'
 import type { StepAction, StepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
 
@@ -18,7 +19,7 @@ const shortDate = (iso: string | null, locale: string): string | null => {
   return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' }).format(ms)
 }
 
-/** The one action of the current step, a disabled Running while its job runs, or nothing. */
+/** The one action of the current step, the Running status pill while its job runs, or nothing. */
 export function StepButton({
   t,
   view,
@@ -32,13 +33,7 @@ export function StepButton({
   disabled: boolean
   onAction: (action: StepAction) => void
 }): JSX.Element | null {
-  if (view.running)
-    return (
-      <Button type="button" size="sm" variant="outline" disabled>
-        <Spinner label={t('stepper.running')} />
-        {t('stepper.running')}
-      </Button>
-    )
+  if (view.running) return <StatusPill state="running" label={t('stepper.running')} />
   if (view.action === null) return null
   return (
     <Button

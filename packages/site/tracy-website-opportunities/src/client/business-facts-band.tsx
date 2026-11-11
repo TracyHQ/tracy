@@ -10,6 +10,7 @@ import { TriangleAlert } from 'lucide-react'
 
 import type { BandId } from './business-facts-model.ts'
 import { BandCluster, type BandSwitchView, type EditDoor } from './facts-band-actions.tsx'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** A missing fact: N/A, muted, the reason in its title. */
@@ -57,10 +58,7 @@ export function CheckNote({
       <span>{note}</span>
     </div>
   ) : (
-    <span className="tracy-wo-facts-chk" title={note}>
-      <TriangleAlert aria-hidden="true" />
-      {t('name.chip.check')}
-    </span>
+    <StatusPill state="attention" label={t('name.chip.check')} title={note} />
   )
 }
 

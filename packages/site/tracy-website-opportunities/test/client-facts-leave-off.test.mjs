@@ -196,7 +196,7 @@ test('hours that wait for a check show the amber Check this chip with the note o
   )
   assert.match(
     head(html, 'hours'),
-    /<span class="tracy-wo-facts-chk" title="\[hours\.note[^"]*"><svg.*?<\/svg>\[name\.chip\.check\]<\/span>/
+    /<span class="tracy-wo-pill" data-pill="attention" data-glyph="" title="\[hours\.note[^"]*"><svg[^>]*lucide-triangle-alert.*?<\/svg><span class="tracy-wo-pill-text">\[name\.chip\.check\]<\/span><\/span>/
   )
   assert.match(bandSwitch(html, 'hours'), /aria-checked="true"/)
   assert.deepEqual(labels(head(html, 'hours')), ['[profile.edit]'])
@@ -258,7 +258,11 @@ test('source chips sit right after their values, and a photo carries its glyph b
     html,
     /title="12 Lagoon Walk">12 Lagoon Walk<\/span><span class="tracy-wo-sc" data-word="google" title="\[chip\.title\.collected/
   )
-  assert.match(head(html, 'hours'), /tracy-wo-sc" data-word="google"/)
+  // A band heading's source line is the info status pill with the source logo.
+  assert.match(
+    head(html, 'hours'),
+    /<span class="tracy-wo-pill" data-pill="info" data-glyph="" title="\[chip\.title\.collected[^"]*"><svg[^>]*data-logo="maps"[\s\S]*?<span class="tracy-wo-pill-text">\[chip\.word\.google\]<\/span>/
+  )
   // No source for the phone: no chip.
   assert.doesNotMatch(
     html.slice(

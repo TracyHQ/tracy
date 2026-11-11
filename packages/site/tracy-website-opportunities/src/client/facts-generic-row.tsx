@@ -5,7 +5,6 @@
  * band), and the switch of a whole band of facts. A fact off the site stays, dimmed.
  */
 import type { JSX } from 'react'
-import { Badge } from '@tracy/ui'
 
 import { OneLine } from './business-facts-band.tsx'
 import type { BandSwitchView } from './facts-band-actions.tsx'
@@ -14,6 +13,7 @@ import { displayText, factDisplay, factLabel, readableKey } from './facts-value-
 import { type SavedFact, factChipOf } from './saved-profile-model.ts'
 import type { ChipSourceRow } from './source-chip-model.ts'
 import { SourceChip } from './source-chip.tsx'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** Puts one fact on the site or keeps it off (`PUT …/:id/facts {factId, onSite}`); answers whether it went through. */
@@ -34,13 +34,11 @@ export function EditedChip({
     factDisplay(t, { group: fact.group, kind: fact.kind, value: fact.researchValue }, locale)
   )
   return (
-    <Badge
-      variant="outline"
-      className="tracy-wo-edited tracy-wo-facts-edited"
+    <StatusPill
+      state="info"
+      label={t('facts.edited')}
       title={was === '' ? undefined : t('facts.edited.research', { value: was })}
-    >
-      {t('facts.edited')}
-    </Badge>
+    />
   )
 }
 

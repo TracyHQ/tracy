@@ -133,7 +133,7 @@ export function HoursAmenitiesBand({
         </>
       }
       check={note}
-      chips={filled && lines.length > 0 ? <SourceChip t={t} chip={chip} locale={locale} /> : null}
+      chips={filled && lines.length > 0 ? <SourceChip t={t} chip={chip} locale={locale} pill /> : null}
       onSite={factsSwitch(all, setOn) ?? { on: !(hours?.left ?? false), set: canSet ? hoursDoor : null }}
       edit={
         !filled

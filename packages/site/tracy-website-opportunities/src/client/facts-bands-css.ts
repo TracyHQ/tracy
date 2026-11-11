@@ -19,10 +19,8 @@ export const FACTS_BANDS_CSS = `
 .tracy-wo-facts-bh > h3 { flex: none; display: flex; align-items: center; gap: 6px; max-width: 40%; min-width: 0; margin: 0; overflow: hidden; font-size: 13.5px; font-weight: 600; line-height: 20px; white-space: nowrap; }
 .tracy-wo-facts-bh > h3 > .tracy-wo-icon { flex: none; width: 15px; height: 15px; color: var(--muted-foreground); }
 .tracy-wo-facts-chips-h { display: inline-flex; align-items: center; gap: 4px; min-width: 0; overflow: hidden; }
-.tracy-wo-facts-chips-h > .tracy-wo-sc { margin-left: 0; }
 .tracy-wo-facts-bh > .tracy-wo-facts-aside { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tracy-wo-facts-chk { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px; border: 1px solid color-mix(in oklab, var(--warning) 40%, transparent); border-radius: 999px; background: color-mix(in oklab, var(--warning) 14%, transparent); color: ${amber}; font-size: 11.5px; font-weight: 600; line-height: 18px; white-space: nowrap; cursor: help; }
-.tracy-wo-facts-chk svg, .tracy-wo-facts-note svg { flex: none; width: 12px; height: 12px; }
+.tracy-wo-facts-note svg { flex: none; width: 12px; height: 12px; }
 /* The cluster: [Add more] then the switch slot and the Edit slot, fixed widths, right-aligned on every band. */
 .tracy-wo-facts-cl { flex: none; display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .tracy-wo-facts-cl > span { display: flex; align-items: center; }
@@ -64,7 +62,7 @@ export const FACTS_BANDS_CSS = `
 .tracy-wo-facts-logo { flex: none; display: grid; place-items: center; width: 40px; height: 40px; overflow: hidden; border-radius: 10px; font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
 .tracy-wo-facts-ln > b { color: var(--foreground); font-weight: 600; }
 .tracy-wo-facts-ln > .tracy-wo-facts-keep { flex: 0 0 auto; max-width: 100%; }
-.tracy-wo-facts-ln > .tracy-wo-edited { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.tracy-wo-facts-ln > .tracy-wo-pill { flex: 0 1 auto; min-width: 0; }
 /* Opening hours: seven cells share the row and shrink; under that they scroll sideways. */
 .tracy-wo-facts-days { grid-auto-columns: minmax(84px, 1fr); }
 .tracy-wo-facts-days > .tracy-wo-facts-cell { padding: 0 10px; }

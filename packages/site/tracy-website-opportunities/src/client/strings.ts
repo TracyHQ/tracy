@@ -1234,6 +1234,8 @@ export const en = {
   // My opportunities row, option A (#537, row-step-model.ts): words the band and the header chip do not already have.
   'row.researching': 'Researching business facts…',
   'row.failed.research': 'Research failed',
+  // The word of a locked step's pill, beside its lock; the reason is on hover (#537)
+  'stepper.locked': 'Locked',
   'row.failed.brief': 'Site content brief failed',
   'row.open': 'Open ›',
   'row.openSite': 'Open your site ›',

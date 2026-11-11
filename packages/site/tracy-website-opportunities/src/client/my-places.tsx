@@ -6,15 +6,15 @@
  * checkbox shows only in selection mode; Rows sit under one header of column titles (#537, header C, row style 2).
  */
 
-import { Badge, Checkbox } from '@tracy/ui'
-import { cn } from '@tracy/ui/cn'
-import { CheckIcon, MapPin } from 'lucide-react'
+import { Checkbox } from '@tracy/ui'
+import { MapPin } from 'lucide-react'
 import type { JSX, MouseEvent } from 'react'
 
 import type { AddedAgo } from './added-ago.ts'
 import { AddedCell, AddressCell, ListHead, NameCell } from './list-row.tsx'
 import type { NextRun, PlacePieces } from './opportunity-pieces.ts'
 import { ActionPiece, StepPiece } from './place-step-cells.tsx'
+import { type PillState, StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 export interface MyPlacesProps {
@@ -36,15 +36,6 @@ export interface MyPlacesProps {
 const OWN_JOB = 'a, button, input, label, [role="checkbox"], [role="menu"], [data-slot="tooltip-content"]'
 const opensDetails = (e: MouseEvent<HTMLElement>): boolean =>
   !(e.target instanceof Element && e.target.closest(OWN_JOB))
-
-const BADGE = {
-  outline: 'outline',
-  secondary: 'secondary',
-  destructive: 'destructive',
-  ok: 'outline',
-  live: 'secondary',
-  running: 'outline'
-} as const
 
 function PlacePiece({ t, p, onOpen }: { t: Translate; p: PlacePieces; onOpen(): void }): JSX.Element {
   return (
@@ -95,22 +86,19 @@ function DemoThumb({ t, p }: { t: Translate; p: PlacePieces }): JSX.Element | nu
   )
 }
 
+/** A place status tone as the one status pill's state (`status-pill.tsx`). */
+const PILL_OF_TONE: Record<PlacePieces['status']['tone'], PillState> = {
+  outline: 'neutral',
+  secondary: 'running',
+  destructive: 'failed',
+  ok: 'done',
+  live: 'done',
+  running: 'running'
+}
+
 /** The status chip of a place (`placeStatus`); the Details header draws the same one. */
 export function StatusBadge({ status }: { status: PlacePieces['status'] }): JSX.Element {
-  return (
-    <Badge
-      variant={BADGE[status.tone]}
-      className={cn(
-        status.tone === 'live' && 'tracy-wo-badge-live',
-        status.tone === 'ok' && 'tracy-wo-badge-ok',
-        // A job running (Researching): the brand terracotta, as in the mocks.
-        status.tone === 'running' && 'tracy-wo-chip-brand'
-      )}
-    >
-      {status.tone === 'live' ? <CheckIcon aria-hidden="true" /> : null}
-      {status.label}
-    </Badge>
-  )
+  return <StatusPill state={PILL_OF_TONE[status.tone]} label={status.label} />
 }
 
 export function MyPlaces({

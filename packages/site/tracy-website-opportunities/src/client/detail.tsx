@@ -17,7 +17,6 @@ import { useDemoChatNavigation } from './demo-chat.ts'
 import { type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Bot, ChevronLeft, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
-  Badge,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
@@ -105,6 +104,7 @@ import { placeStatus } from './opportunity-pieces.ts'
 import { type NextAction, relativeTime } from './opportunity-row.ts'
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
+import { type PillState, StatusPill } from './status-pill.tsx'
 import { rankingFor, runAction } from './row-actions.ts'
 import { type SourceInput, buildView, reasonKey, shouldPoll } from './status.ts'
 import type { Translate } from './strings.ts'
@@ -118,13 +118,20 @@ type Revision = {
 }
 
 const asArray = <T,>(value: unknown): T[] => (Array.isArray(value) ? (value as T[]) : [])
-/** The header chip's look by tone (#537). */
-const CHIP_CLASS: Record<string, string> = {
-  ok: 'tracy-wo-chip-ok',
-  warn: 'tracy-wo-chip-warn',
-  run: 'tracy-wo-chip-brand',
-  error: 'tracy-wo-chip-bad',
-  mute: 'tracy-wo-chip-mute'
+/** The header chip's status pill state by tone (#537, `status-pill.tsx`). */
+const PILL_OF_TONE: Record<string, PillState> = {
+  ok: 'done',
+  warn: 'attention',
+  run: 'running',
+  error: 'failed',
+  mute: 'neutral'
+}
+/** A demo build's phase as a status pill state. */
+const DEMO_PILL: Record<string, PillState> = {
+  running: 'running',
+  done: 'done',
+  failed: 'failed',
+  deleted: 'neutral'
 }
 const isRecord = (v: unknown): v is Body => typeof v === 'object' && v !== null && !Array.isArray(v)
 
@@ -1002,9 +1009,7 @@ export function DetailView({
           reviewChip === null ? (
             <StatusBadge status={placeStatus(row, t)} />
           ) : (
-            <Badge variant="outline" className={`tracy-wo-details-chip ${CHIP_CLASS[reviewChip.tone]}`}>
-              {t(reviewChip.key)}
-            </Badge>
+            <StatusPill state={PILL_OF_TONE[reviewChip.tone] ?? 'neutral'} label={t(reviewChip.key)} />
           )
         }
         busy={busy}
@@ -1130,17 +1135,11 @@ function DemoHistory({
             relativeTime(r.createdAt, Date.now(), locale),
             r.briefN === null ? null : t('demos.fromBrief', { n: r.briefN })
           ].filter(Boolean)
-          const live = r.phase === 'done'
           return (
             <li key={r.id} className="tracy-wo-brief-row">
               <span className="tracy-wo-name">{t('demos.number', { n: r.n })}</span>
               <span className="tracy-wo-muted tracy-wo-small tracy-wo-brief-facts">{facts.join(' · ')}</span>
-              <Badge
-                variant={live ? 'secondary' : 'outline'}
-                className={live ? 'tracy-wo-badge-live' : undefined}
-              >
-                {t(`demos.state.${r.phase}`)}
-              </Badge>
+              <StatusPill state={DEMO_PILL[r.phase] ?? 'neutral'} label={t(`demos.state.${r.phase}`)} />
               {r.siteKey !== null && r.phase !== 'deleted' ? (
                 <span className="tracy-wo-row tracy-wo-brief-acts">
                   <a className="tracy-wo-action-link" href={`/${encodeURIComponent(r.siteKey)}/`}>
@@ -1204,12 +1203,7 @@ function BriefLine({
         <div className="tracy-wo-row tracy-wo-wrap">
           <p className="tracy-wo-muted">{t(lineKey, { n: status.n, when })}</p>
           {chip === null ? null : (
-            <Badge
-              variant="outline"
-              className={chip === 'working' ? 'tracy-wo-chip-brand' : 'tracy-wo-chip-bad'}
-            >
-              {t(`brief.chip.${chip}`)}
-            </Badge>
+            <StatusPill state={chip === 'working' ? 'running' : 'failed'} label={t(`brief.chip.${chip}`)} />
           )}
           <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
             <FileText aria-hidden="true" />

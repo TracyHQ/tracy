@@ -4,9 +4,9 @@
  * and the others only in its Contact section.
  */
 import type { JSX } from 'react'
-import { Badge } from '@tracy/ui'
 
 import type { PhonesView } from './profile-phones-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 /** Product names stay as they are written; the other sources are words of the interface. */
@@ -34,16 +34,8 @@ export function ProfilePhonesRows({ t, view }: { t: Translate; view: PhonesView 
         <dd>
           <span className="tracy-wo-row tracy-wo-wrap">
             <span>{view.main}</span>
-            {many ? (
-              <Badge variant="outline" className="tracy-wo-name-chip">
-                {t('phone.main')}
-              </Badge>
-            ) : null}
-            {view.mainWhatsapp ? (
-              <Badge variant="outline" className="tracy-wo-name-chip">
-                {PRODUCT_NAME.whatsapp}
-              </Badge>
-            ) : null}
+            {many ? <StatusPill state="info" label={t('phone.main')} /> : null}
+            {view.mainWhatsapp ? <StatusPill state="info" label={PRODUCT_NAME.whatsapp} /> : null}
           </span>
         </dd>
       </div>
@@ -57,11 +49,7 @@ export function ProfilePhonesRows({ t, view }: { t: Translate; view: PhonesView 
                 return (
                   <span key={o.phone} className="tracy-wo-row tracy-wo-wrap">
                     <span>{o.phone}</span>
-                    {o.whatsapp ? (
-                      <Badge variant="outline" className="tracy-wo-name-chip">
-                        {PRODUCT_NAME.whatsapp}
-                      </Badge>
-                    ) : null}
+                    {o.whatsapp ? <StatusPill state="info" label={PRODUCT_NAME.whatsapp} /> : null}
                     {from.length > 0 ? (
                       <span className="tracy-wo-muted tracy-wo-small">{from.join(', ')}</span>
                     ) : null}

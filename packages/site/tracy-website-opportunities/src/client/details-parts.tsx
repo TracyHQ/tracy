@@ -25,7 +25,7 @@ import {
   removeAllowedIn
 } from './source-remove-model.ts'
 import { type SourceProgress, type SourceState, sourceStateOf } from './source-table-model.ts'
-import { type StepNodeState, SubStepNode } from './step-node.tsx'
+import { type PillState, StatusPill } from './status-pill.tsx'
 import { type ShownSource, type SourceInput, isShownSource, sourceRow } from './status.ts'
 import type { Translate } from './strings.ts'
 export function Section({
@@ -70,9 +70,9 @@ export interface SourceRemove {
   onConfirm: () => void
 }
 
-/** The band node each row state is drawn with (the same node as the Progress band's sub-steps). */
-const NODE_OF: Readonly<Record<SourceState, StepNodeState>> = {
-  waiting: 'waiting',
+/** The status pill state each row state is drawn with (`status-pill.tsx`, the same pill as the Progress band's). */
+const PILL_OF: Readonly<Record<SourceState, PillState>> = {
+  waiting: 'neutral',
   reading: 'running',
   collected: 'done',
   failed: 'failed'
@@ -205,10 +205,7 @@ export function SourcesTable({
                         {t('source.retryFailed')}
                       </span>
                     ) : null}
-                    <span className="tracy-wo-stab-pill" data-state={view.state}>
-                      <SubStepNode state={NODE_OF[view.state]} label={t(view.key)} />
-                      <span className="tracy-wo-stab-word">{t(view.key)}</span>
-                    </span>
+                    <StatusPill state={PILL_OF[view.state]} label={t(view.key)} />
                   </span>
                 )}
                 {removeUrl !== null && remove !== undefined ? (

@@ -109,7 +109,7 @@ test('every source of the place is listed by name with its state pill, never a k
     'Google Maps',
     'TripAdvisor'
   ])
-  assert.equal((html.match(/class="tracy-wo-stab-word">\[source\.state\.failed\]/g) ?? []).length, 3)
+  assert.equal((html.match(/class="tracy-wo-pill-text">\[source\.state\.failed\]/g) ?? []).length, 3)
   assert.doesNotMatch(html, /\[reason\.other\]|\[source\.status\.blocked\]|<details|tracy-wo-src-chip/)
 })
 
@@ -119,7 +119,7 @@ test('Try again sits left of the pill of each source not collected, and only whe
   // Under the pill: inside the State part of a failed row, after its pill.
   assert.match(
     html,
-    /data-state="failed">(?:(?!<\/li>).)*class="tracy-wo-stab-act"[^>]*>\[action\.retry\]<\/button><span class="tracy-wo-stab-pill" data-state="failed">/s
+    /data-state="failed">(?:(?!<\/li>).)*class="tracy-wo-stab-act"[^>]*>\[action\.retry\]<\/button><span class="tracy-wo-pill" data-pill="failed"/s
   )
   assert.doesNotMatch(draw(SAGA), /\[action\.retry\]/)
   // A collected row never offers it.
@@ -261,25 +261,23 @@ test('the Sources table of the Workspace card: one line per source, the state pi
   // The date sits before the pill, on the same line, with the full text on hover.
   assert.match(
     html,
-    /<span class="tracy-wo-stab-detail" title="Nov 10, 2026, \d\d:\d\d">\[source\.collectedAgo\{&quot;ago&quot;:&quot;3 hours ago&quot;\}\]<\/span><span class="tracy-wo-stab-pill" data-state="collected"/
+    /<span class="tracy-wo-stab-detail" title="Nov 10, 2026, \d\d:\d\d">\[source\.collectedAgo\{&quot;ago&quot;:&quot;3 hours ago&quot;\}\]<\/span><span class="tracy-wo-pill" data-pill="done"/
   )
   assert.match(
     html,
     /<span class="tracy-wo-stab-detail" title="\[reason\.login_required\]">\[reason\.login_required\]<\/span>(?:(?!<\/li>).)*\[source\.state\.failed\]</
   )
-  // Each state is a pill that carries the Progress band's node: check, cross, hollow ring.
+  // Each state is the one status pill with its glyph: check, cross, hollow ring (status-pill.tsx).
   const pills = [
-    ...html.matchAll(
-      /class="tracy-wo-stab-pill" data-state="(\w+)"><span class="tracy-wo-band-sub-node" data-node="(\w+)"/g
-    )
+    ...html.matchAll(/class="tracy-wo-pill" data-pill="(\w+)" data-glyph=""><svg[^>]*class="([^"]*)"/g)
   ]
   assert.deepEqual(
     pills.map((m) => [m[1], m[2]]),
     [
-      ['collected', 'done'],
-      ['failed', 'failed'],
-      ['failed', 'failed'],
-      ['waiting', 'waiting']
+      ['done', 'lucide lucide-check tracy-wo-pill-glyph'],
+      ['failed', 'lucide lucide-x tracy-wo-pill-glyph'],
+      ['failed', 'lucide lucide-x tracy-wo-pill-glyph'],
+      ['neutral', 'tracy-wo-pill-glyph']
     ]
   )
   assert.equal((html.match(/tracy-wo-stab-detail/g) ?? []).length, 2)
@@ -291,7 +289,7 @@ test('the Sources table of the Workspace card: one line per source, the state pi
   )
 })
 
-test('while research runs, a row whose band item runs reads Reading now with the spinner node, in an accent pill', () => {
+test('while research runs, a row whose band item runs reads Reading now in the running pill with its spinner', () => {
   const sources = [
     { source: 'google-places', status: null },
     { source: 'instagram', status: null, pastedLink: 'https://www.instagram.com/sample_bistro' },
@@ -303,12 +301,12 @@ test('while research runs, a row whose band item runs reads Reading now with the
   ])
   const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, progress }))
   assert.deepEqual(
-    [...html.matchAll(/class="tracy-wo-stab-pill" data-state="(\w+)"/g)].map((m) => m[1]),
-    ['collected', 'reading', 'waiting']
+    [...html.matchAll(/class="tracy-wo-pill" data-pill="(\w+)"/g)].map((m) => m[1]),
+    ['done', 'running', 'neutral']
   )
-  assert.match(html, /data-state="reading"><span class="tracy-wo-band-sub-node" data-node="running"/)
+  assert.match(html, /data-pill="running" data-glyph=""><svg[^>]*lucide-loader-circle[^>]*data-spin=""/)
   assert.match(html, /\[source\.state\.reading\]/)
-  assert.equal((html.match(/data-node="waiting"/g) ?? []).length, 1)
+  assert.equal((html.match(/data-pill="neutral"/g) ?? []).length, 1)
 })
 
 test('before research, the pasted links and the Google listing of a search read Waiting for research', () => {
@@ -388,7 +386,7 @@ test('pressing the trash asks in a dialog, never on the row: the row keeps its p
   assert.doesNotMatch(html, /source\.remove\.(ask|keep)|data-danger|tracy-wo-stab-ask/)
   assert.match(
     html,
-    /data-state="collected"><span class="tracy-wo-stab-line">(?:(?!<\/li>).)*instagram\.com\/sample_bistro(?:(?!<\/li>).)*class="tracy-wo-stab-pill"/s
+    /data-state="collected"><span class="tracy-wo-stab-line">(?:(?!<\/li>).)*instagram\.com\/sample_bistro(?:(?!<\/li>).)*class="tracy-wo-pill"/s
   )
   // The row asked about keeps its control on show while its dialog is open.
   assert.match(html, /class="tracy-wo-stab-remove is-on"/)

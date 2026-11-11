@@ -36,6 +36,7 @@ import { Fragment, type JSX } from 'react'
 
 import type { MyView } from './column-prefs.ts'
 import type { ListMenuEntry } from './list-menu-model.ts'
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 const VIEW_ICON = { cards: LayoutGridIcon, rows: Rows3Icon, map: MapIcon } as const
@@ -136,7 +137,7 @@ export function ListToolbar({
         >
           <CircleAlert aria-hidden="true" />
           {t('filter.attention')}
-          <span className="tracy-wo-attn-pill">{attention ?? 0}</span>
+          <StatusPill state="failed" glyph={null} label={attention ?? 0} />
         </Button>
       ) : null}
       <InputGroup className="tracy-wo-q">

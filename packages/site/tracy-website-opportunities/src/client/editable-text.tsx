@@ -4,8 +4,9 @@
  * whether the save went through; a failed save keeps the field open with its words.
  */
 import { type JSX, useState } from 'react'
-import { Badge, Button, Input } from '@tracy/ui'
+import { Button, Input } from '@tracy/ui'
 
+import { StatusPill } from './status-pill.tsx'
 import type { Translate } from './strings.ts'
 
 export function EditableText({
@@ -62,11 +63,7 @@ export function EditableText({
     return (
       <span className="tracy-wo-editable">
         <span className="tracy-wo-editable-text">{value}</span>
-        {edited ? (
-          <Badge variant="outline" className="tracy-wo-edited">
-            {t(editedKey)}
-          </Badge>
-        ) : null}
+        {edited ? <StatusPill state="info" label={t(editedKey)} /> : null}
         <Button type="button" size="xs" variant="link" onClick={open}>
           {t(keys.edit)}
         </Button>
