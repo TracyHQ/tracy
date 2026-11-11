@@ -5,16 +5,18 @@
 // on a channel nobody listed (an action, an operation or a parameter) is never sent, so a new channel fails loudly. Nothing here
 // names a template; what a template may take is read from its kit, its content map and its own stylesheets. Everything it cannot
 // see is listed in the ADR.
-import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
-import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
-import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
+
 import { createdPageHideOf } from '../lib/created-page-hide.js'
+import { emptyVideoButtonsOf } from '../lib/empty-video-buttons.js'
+import { hiddenPageLinksOf } from '../lib/hidden-page-links.js'
+import { selfLinkButtonsOf } from '../lib/self-link-buttons.js'
 import { ownerStep, stepName } from '../lib/site-build-steps.js'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { hasMarkup, markupFaults } from './look-guard-markup.js'
 import { batchFaults, updateFaults } from './look-guard-rows.js'
 import { SOCIAL_ICONS_REASON, SOCIAL_ICONS_RULE, socialIconsAllowed } from './look-guard-social.js'
 import { MARK } from './page-create-lines.js'
+import { international, phonesOf } from './phone-links.js'
 
 const WRITE = 9
 const PICTURE = /^\/?(?!.*\.\.)[\w./%~ -]+\.(?:png|jpe?g|webp|gif|avif|ico|svg)(?:#.*)?$/i
@@ -72,7 +74,18 @@ const PARAMS = {
       'evidence'
     ],
     'blocks.unpublish': ['operation', 'apply_id', 'request_id', 'expected_revision', 'blocks'],
-    'rows.remove': ['operation', 'apply_id', 'request_id', 'expected_revision', 'slots', 'keep']
+    'rows.remove': ['operation', 'apply_id', 'request_id', 'expected_revision', 'slots', 'keep'],
+    'phone.link': [
+      'operation',
+      'contract',
+      'contract_hash',
+      'expected_revision',
+      'key',
+      'expected',
+      'tel',
+      'apply_id',
+      'request_id'
+    ]
   },
   'template.siteSettings': { set: ['operation', 'template', 'fields', 'profiles', 'apply_id'] },
   'template.languageOverrides': { setSource: ['operation', 'apply_id', 'template', 'strings'] },
@@ -139,6 +152,7 @@ export function lookGuard({ kit, contentMap = null }) {
     accents: new Set(),
     routes: null,
     inspected: new Map(),
+    phoneReading: null,
     // The kit's play buttons with an empty video address: the one hide rule the head injection block may carry for them.
     videoSelectors: emptyVideoButtonsOf(kit).selectors,
     // The kit's containers of "more" buttons that may lead to their own page: what the self link block's rules may name.
@@ -151,6 +165,7 @@ export function lookGuard({ kit, contentMap = null }) {
   let owners = new Map()
   /** The brief facts the copy cites, by content map key: who or what a cell speaks of. */
   let subjects = new Map()
+  let phones = []
   const findings = []
   const allowed = []
 
@@ -181,9 +196,51 @@ export function lookGuard({ kit, contentMap = null }) {
     return kept.map((said) => fault(step, key, `${key}: ${said}`))
   }
 
+  function phoneFaults(p) {
+    const reading = state.phoneReading
+    const capability = reading?.phoneLinks
+    const matches = each(reading?.slots).filter((slot) => slot?.key === p.key)
+    const phone = phones.find((fact) => fact.digits === international(p.expected) && fact.tel === p.tel)
+    if (
+      !reading ||
+      capability?.version !== 1 ||
+      capability.storage !== 'html' ||
+      capability.scalar !== false ||
+      capability.match !== 'whole-slot' ||
+      !each(capability.supportedKeys).includes(p.key) ||
+      matches.length !== 1 ||
+      typeof p.expected !== 'string' ||
+      !/^ *(?:\+|00)?(?:[0-9]+|\([0-9]+\))(?:[ .-]*(?:[0-9]+|\([0-9]+\)))* *$/.test(p.expected) ||
+      matches[0].current !== p.expected ||
+      !phone ||
+      !/^(?:\+[1-9]|[0-9])[0-9]{5,14}$/.test(p.tel) ||
+      p.contract !== reading.contract ||
+      p.contract_hash !== reading.contractHash ||
+      !/^[a-f0-9]{64}$/i.test(String(p.contract_hash ?? '')) ||
+      typeof p.expected_revision !== 'string' ||
+      !p.expected_revision ||
+      p.expected_revision !== reading.revision ||
+      typeof p.apply_id !== 'string' ||
+      !/^contract-[A-Za-z0-9._:-]+$/.test(p.apply_id) ||
+      typeof p.request_id !== 'string' ||
+      !/^[A-Za-z0-9._:-]{1,100}$/.test(p.request_id)
+    )
+      return [
+        channelFault(
+          'content.contract phone.link',
+          'phone.link requires the exact advertised HTML slot, fresh contract revision and verified whole phone fact'
+        )
+      ]
+    return []
+  }
+
   const JUDGES = {
     'content.contract': (p) =>
-      p.operation === 'apply' ? Object.entries(p.changes ?? {}).flatMap(([k, v]) => slotFaults(k, v)) : [],
+      p.operation === 'apply'
+        ? Object.entries(p.changes ?? {}).flatMap(([k, v]) => slotFaults(k, v))
+        : p.operation === 'phone.link'
+          ? phoneFaults(p)
+          : [],
     'template.siteSettings': (p) => settingFaults(p, settings),
     'template.languageOverrides': (p) =>
       Object.entries(p.strings ?? {}).flatMap(([name, value]) =>
@@ -248,7 +305,16 @@ export function lookGuard({ kit, contentMap = null }) {
 
   /** Learns from what the site answers: what a row holds, which layouts are the template's, what this run made. */
   function learn({ action, params = {} }, answer) {
-    if (answer?.ok === false) return
+    if (action === 'content.contract' && params.operation === 'inspect') state.phoneReading = null
+    else if (
+      !isRead({ action, params }) &&
+      !(action === 'content.contract' && params.operation === 'phone.link')
+    )
+      state.phoneReading = null
+    if (answer?.ok === false) {
+      if (action === 'content.contract' && params.operation === 'phone.link') state.phoneReading = null
+      return
+    }
     const keep = (kind, row) => {
       if (!row) return
       state.rows.set(`${kind}:${row.id}`, row)
@@ -265,8 +331,24 @@ export function lookGuard({ kit, contentMap = null }) {
     }
     if (action === 'content.get') keep(params.kind, answer?.item && { id: params.id, ...answer.item })
     if (action === 'content.list') for (const row of each(answer?.items)) keep(params.kind, row)
-    if (action === 'content.contract' && params.operation === 'inspect')
+    if (action === 'content.contract' && params.operation === 'inspect') {
+      state.phoneReading = answer?.ok === true && answer.error == null ? answer : null
       for (const slot of each(answer?.slots)) state.inspected.set(slot?.key, slot)
+    }
+    if (action === 'content.contract' && params.operation === 'phone.link' && state.phoneReading) {
+      // Only a verified semantic result may advance the capability's revision for the next exact slot.
+      const verified =
+        answer?.ok === true &&
+        answer.error == null &&
+        answer.key === params.key &&
+        typeof answer.afterRevision === 'string' &&
+        answer.afterRevision &&
+        answer.tel === params.tel &&
+        answer.readBack?.text === params.expected &&
+        answer.readBack?.href === 'tel:' + params.tel &&
+        typeof answer.already === 'boolean'
+      state.phoneReading = verified ? { ...state.phoneReading, revision: answer.afterRevision } : null
+    }
     if (action === 'content.batch')
       for (const op of each(params.operations)) {
         const id = answer?.ids?.[op.key]
@@ -285,6 +367,7 @@ export function lookGuard({ kit, contentMap = null }) {
 
     /** What the guard learns once the files are read: who owns each slot, and the accent routes of this template. */
     know({ owners: claims, routes, copy, brief }) {
+      if (brief !== undefined) phones = phonesOf(brief)
       if (claims) owners = claims
       if (routes !== undefined) state.routes = routes
       if (copy) {

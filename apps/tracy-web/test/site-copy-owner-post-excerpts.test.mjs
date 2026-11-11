@@ -121,6 +121,20 @@ test('export refuses invented article bodies even when a failed copy is selected
   }
 })
 
+test('provenance and excerpt export guards both survive reconciliation', () => {
+  const input = fixture('Nobody left early.')
+  input.kit.blocks[1].slots[0].role = 'article.title'
+  const before = JSON.stringify(input)
+  for (const platform of [undefined, 'wordpress']) {
+    const result = exportContractMapping({ ...input, contract: 'demo', revision: 'one', platform })
+    assert.ok(result.problems.some((p) => p.code === 'ARTICLE_PROVENANCE'))
+    assert.ok(result.problems.some((p) => p.code === 'ARTICLE_EXCERPT'))
+    assert.equal(result.mapping.changes['module-2.1'], undefined)
+    assert.equal(result.mapping.changes['module-2.2'], undefined)
+  }
+  assert.equal(JSON.stringify(input), before, 'both guards preserve frozen inputs')
+})
+
 test('the writer receives the original-post rule and truthful length exception in its kit input', () => {
   const input = fixture()
   assert.match(fixedPart(writerInput(input)), /faithful contiguous excerpt/)

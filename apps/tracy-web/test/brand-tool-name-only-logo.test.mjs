@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
 import { buildSafeVersion } from '../src/brand-step/brand-safe-version.js'
+import { BRAND_HELD_NAME_CHECK } from '../src/brand-step/gate-logo.js'
 import { brandTools, toolByName } from '../src/brand-step/tools/index.js'
 import { BRIEF, KIT, makeCtx } from './_brand-tool-fixtures.mjs'
 
@@ -51,23 +52,31 @@ test('compose_logo without nameOnly still needs a mark', async () => {
   await assert.rejects(run('compose_logo', { name: name.sidecar }, ctx), /usage/)
 })
 
-test('the safe version shows the name alone on every spot and the initials only in the favicon', async () => {
-  const ctx = makeCtx()
-  const calls = []
-  const tools = brandTools.map((t) => ({
-    ...t,
-    run: (input, c) => (calls.push([t.name, input]), t.run(input, c))
-  }))
-  const file = await buildSafeVersion({ tools, ctx, kit: { doc: KIT }, brief: BRIEF, reason: 'gate' })
-  const compose = calls.find(([n]) => n === 'compose_logo')[1]
-  assert.equal(compose.nameOnly, true)
-  assert.equal(compose.mark, undefined, 'no mark goes into the logo')
-  const sidecar = JSON.parse(ctx.files.read('logo/logo.json'))
-  assert.ok(Object.values(sidecar.sides).every((s) => s.markBox === null))
-  assert.equal(file.logo.spots.length, KIT.site.logoSpots.length)
-  assert.ok(file.logo.spots.every((s) => ['logo', 'logo-2-lines'].includes(s.shows)))
-  // The mark is still the initials: the favicon is made from it.
-  assert.equal(file.logo.mark.decision, 'lettermark')
-  assert.equal(file.logo.mark.letters, 'HP')
-  assert.equal(file.favicon.mark, file.logo.mark.file)
-})
+for (const heldNameCheck of [null, BRAND_HELD_NAME_CHECK])
+  test(`the safe version shows the name alone on every spot and the initials only in the favicon (${heldNameCheck ?? 'legacy'})`, async () => {
+    const ctx = makeCtx()
+    const calls = []
+    const tools = brandTools.map((t) => ({
+      ...t,
+      run: (input, c) => (calls.push([t.name, input]), t.run(input, c))
+    }))
+    const file = await buildSafeVersion({
+      tools,
+      ctx,
+      kit: { doc: KIT },
+      brief: BRIEF,
+      reason: 'gate',
+      heldNameCheck
+    })
+    const compose = calls.find(([n]) => n === 'compose_logo')[1]
+    assert.equal(compose.nameOnly, true)
+    assert.equal(compose.mark, undefined, 'no mark goes into the logo')
+    const sidecar = JSON.parse(ctx.files.read('logo/logo.json'))
+    assert.ok(Object.values(sidecar.sides).every((s) => s.markBox === null))
+    assert.equal(file.logo.spots.length, KIT.site.logoSpots.length)
+    assert.ok(file.logo.spots.every((s) => ['logo', 'logo-2-lines'].includes(s.shows)))
+    // The mark is still the initials: the favicon is made from it.
+    assert.equal(file.logo.mark.decision, 'lettermark')
+    assert.equal(file.logo.mark.letters, 'HP')
+    assert.equal(file.favicon.mark, file.logo.mark.file)
+  })

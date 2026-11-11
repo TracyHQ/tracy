@@ -140,8 +140,20 @@ export async function cutShort(pass, entry) {
 export async function sendPageTurn(pass, { page, faults, items, round, sessionId }) {
   const { agent, clock, buildCommentTurn, ledger } = pass
   const from = clock.now()
+  const refused = () => ({
+    page,
+    round,
+    faults,
+    items,
+    sessionId,
+    refused: 'undo-unverified',
+    requestIds: [],
+    ms: clock.now() - from
+  })
+  if (pass.undoUnverified) return refused()
   if (pass.rate && !(await pass.rate.take(items.length)))
     return { page, round, faults, items, sessionId, timeLimit: true, ms: clock.now() - from }
+  if (pass.undoUnverified) return refused()
   const requestId = pass.nextRequestId()
   const { numbers } = await clock.bounded('the comment requests door', () =>
     agent.request({ sessionId, requestId, items, timeLeftMs: clock.workLeft() })
@@ -151,15 +163,21 @@ export async function sendPageTurn(pass, { page, faults, items, round, sessionId
   const text = pageTurn(buildCommentTurn, items, numbers)
   const record = { page, round, faults, items, numbers, requestIds: [requestId], text, sessionId }
   const prompt = (id) =>
-    clock.bounded('the site session prompt', () => agent.prompt({ sessionId, requestId: id, text }))
+    clock.bounded('the site session prompt', () =>
+      pass.undoUnverified ? false : agent.prompt({ sessionId, requestId: id, text })
+    )
   ledger.records.set(requestId, record)
   if (!(await prompt(requestId)))
-    return { ...record, refused: 'the session did not accept the prompt', ms: clock.now() - from }
+    return {
+      ...record,
+      refused: pass.undoUnverified ? 'undo-unverified' : 'the session did not accept the prompt',
+      ms: clock.now() - from
+    }
   // Waiting for quota, numbering and accepting a prompt is not native execution time.
   const turnBy = clock.now() + clock.limits.turnMs
   record.turnBy = turnBy
   let turn = await awaitTurn(pass, sessionId, record.requestIds, clock.now() + clock.limits.noTurnMs, turnBy)
-  if (!turn && !clock.stopped()) {
+  if (!turn && !clock.stopped() && !pass.undoUnverified) {
     const again = `${requestId}-resend`
     record.requestIds.push(again)
     ledger.records.set(again, record)
@@ -169,6 +187,10 @@ export async function sendPageTurn(pass, { page, faults, items, round, sessionId
   }
   const ms = clock.now() - from
   if (!turn) {
+    if (pass.undoUnverified) {
+      pass.log(`step 9b: no turn on ${page}; resend suppressed because a required undo is unverified`)
+      return { ...record, dropped: 'undo-unverified', ms }
+    }
     pass.log(`step 9b: no turn on ${page} after the resend; dropped (its request ids stay followed)`)
     return { ...record, dropped: 'no turn opened after one resend', ms }
   }

@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-558-inline-slot-owner",
+  "kind": "fix",
+  "title": "An inline heading retains its module slot owner beside duplicate article text",
+  "pr": 558,
+  "area": "website-opportunities/template-kit",
+  "cms": ["any"],
+  "needs": ["browser:chromium"],
+  "flaky_model": false,
+  "steps": ["Run the real-browser inline ownership fixture without model calls or a running customer site."],
+  "expect": [
+    "Visible inline heading text retains DOM sentence order for ownership matching.",
+    "The owning module wins over an unrelated article with identical words.",
+    "Hidden inline descendants and nested blocks do not form a sentence match.",
+    "Atomic text readings and legacy capture support remain unchanged."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/template-kit-inline-owner.test.mjs"
+    ],
+    "tests": ["inline heading keeps its own module owner"],
+    "needs": []
+  }
+}

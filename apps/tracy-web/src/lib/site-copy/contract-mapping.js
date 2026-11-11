@@ -17,6 +17,7 @@ import { kitSlotIndex } from '../template-kit/kit-slots.js'
 import { wordpressContractMapping } from './contract-mapping-wordpress.js'
 import { indexInputs } from './inputs-index.js'
 import { ownerPostExcerptFor } from './owner-post-excerpts.js'
+import { articleExportProblems } from './article-provenance.js'
 
 const BULLET_ALL = (slot) => Number(slot?.bullets) > 0 && !(Number(slot?.paragraphs) > 0)
 
@@ -121,11 +122,12 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
       ? [{ where: s.slot, code: 'ARTICLE_EXCERPT', detail: excerpt.detail }]
       : []
   })
-  problems.push(...excerptProblems)
-  const blockedExcerpts = new Set(excerptProblems.map((p) => p.where))
-  view.slots = view.slots.filter((s) => !blockedExcerpts.has(s.slot))
-  const safeCopy = blockedExcerpts.size
-    ? { ...copy, slots: (copy.slots ?? []).filter((s) => !blockedExcerpts.has(s.slot)) }
+  const articleProblems = articleExportProblems({ kit, plan, brief, view })
+  problems.push(...articleProblems, ...excerptProblems)
+  const blocked = new Set([...articleProblems, ...excerptProblems].map((p) => p.where))
+  view.slots = view.slots.filter((s) => !blocked.has(s.slot))
+  const safeCopy = blocked.size
+    ? { ...copy, slots: (copy.slots ?? []).filter((s) => !blocked.has(s.slot)) }
     : copy
   if (platform === 'wordpress') {
     const mainMenu = plan && contentMap ? mainMenuExport({ plan, kit, contentMap, copy }) : null
@@ -140,7 +142,7 @@ export function exportContractMapping({ copy, contract, revision, kit, brief, pl
     return {
       mapping: out.mapping,
       extras: extrasOf({ view, plan, kit, mainMenu }),
-      problems: [...excerptProblems, ...out.problems]
+      problems: [...articleProblems, ...excerptProblems, ...out.problems]
     }
   }
   const kitSlots = kitSlotIndex(kit)

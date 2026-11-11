@@ -3,6 +3,10 @@ import { ANY_PHOTO_MAX_OVERLAP, cropOverlap, neighbours, REUSE_MAX_OVERLAP } fro
 import { OWNER_SOURCES as OWNER } from '../manifest-shape.js'
 
 const MADE_UP = new Set(['drawn', 'owner-photo-extended'])
+export const documentarySourceProblem = (idx, entry) =>
+  idx.documentaryFrame(entry.frame) && MADE_UP.has(entry.source)
+    ? `the plan asks for any real photo or documents the business, the source is ${entry.source}`
+    : null
 const where = (e) => (e.list === 'siteSettings' ? `siteSettings ${e.frame}` : e.frame)
 const framesOnly = (view) => view.entries.filter((e) => e.list === 'frames')
 
@@ -57,12 +61,8 @@ export function checkP07({ R, view, idx }) {
   const r = R.p07
   for (const e of view.entries) {
     if (!idx.documentaryFrame(e.frame)) continue
-    if (MADE_UP.has(e.source))
-      r.fail(
-        where(e),
-        `the plan asks for any real photo or documents the business, the source is ${e.source}`,
-        'pictures'
-      )
+    const problem = documentarySourceProblem(idx, e)
+    if (problem) r.fail(where(e), problem, 'pictures')
     else r.ok()
   }
 }

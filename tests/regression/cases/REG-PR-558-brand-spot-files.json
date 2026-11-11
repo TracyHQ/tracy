@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-558-brand-spot-files",
+  "kind": "fix",
+  "title": "Brand spot files match their actual fitted geometry, reviewed side image and existing site-check ink rule",
+  "pr": 558,
+  "area": "wo/brand",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the brand spot image and composed/name-only fitting tests without a model or database."],
+  "expect": [
+    "A raw 512x512 mark formerly accepted for a 128x80 spot is rejected before a site write.",
+    "A passing review of a recoloured side mark cannot approve another final file; blocked actual ink remains rejected even with a passing look.",
+    "The standalone mark path fits the selected existing source to a transparent 256x160 output without a business name.",
+    "The approved composed-logo default remains valid, and missing, opaque, empty or escaping mark inputs are rejected.",
+    "New runs record the spot check version; historical runs explicitly retain their original checker."
+  ],
+  "selectors": {},
+  "fence": "Validate actual files before writes; preserve independent image review, the approved prompt and the existing site-check contrast thresholds.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/brand-spot-images.test.mjs",
+      "apps/tracy-web/test/brand-tool-name-logo.test.mjs",
+      "apps/tracy-web/test/brand-tool-name-only-logo.test.mjs"
+    ],
+    "tests": [
+      "the complete legacy gate accepts a raw 512 square; the new frozen gate rejects that actual file",
+      "reviewing a recoloured side mark does not cover an unrecoloured actual spot",
+      "fit_logo markOnly supports held names and writes a real 2x transparent spot",
+      "fit_logo markOnly rejects escaping paths and empty transparent marks"
+    ],
+    "needs": []
+  }
+}

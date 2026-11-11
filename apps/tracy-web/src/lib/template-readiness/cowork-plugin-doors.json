@@ -2,6 +2,16 @@
   "platform": "joomla",
   "from": "0.24.80",
   "releases": {
+    "0.24.95-rc.2": {
+      "sha256": "03cffa0c939ae18b60905d32dd374ad6b6b780c4da057d23137e47a43407af81",
+      "evidence": {
+        "'hide_ops' =>": true,
+        "'rows_remove' =>": true,
+        "'page_create' =>": true,
+        "'slot_corrections' =>": true,
+        "function urlSafeAlias(": true
+      }
+    },
     "0.24.37": {
       "sha256": "34a591e8abbd3568a705291b2fcbf0c70bb0667419763e281888ceda76426d10",
       "evidence": {
