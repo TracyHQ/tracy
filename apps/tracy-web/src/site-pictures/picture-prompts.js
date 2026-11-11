@@ -2,7 +2,7 @@
 // once per process with their hashes and recorded on every run. The picker's prompt (#342) is picker-prompt.md, the
 // looker's (#343) looker-prompt.md and the drawer's fixed template (#344) drawing-prompt.md, DRAFTS until the owner
 // approves real output, then locked by a hash test. A run started on another prompt set is refused (the bench run loop
-// compares the combined hash). The picker's text is the system prompt of the run's model calls.
+// compares the combined prompt and processing-policy hash). The picker's text is the system prompt of the run's model calls.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { PROMPT_ROLES } from './manifest-shape.js'
@@ -12,6 +12,9 @@ export const DRAWING_PROMPT_FILE = new URL('./drawing-prompt.md', import.meta.ur
 export const LOOKER_PROMPT_FILE = new URL('./looker-prompt.md', import.meta.url)
 
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex')
+
+// Processing semantics share the persisted lifetime fingerprint, while all three approved role prompts stay unchanged.
+export const PICTURE_PROCESSING_POLICY = 'readability-retry/1'
 
 let loaded = null
 
@@ -35,7 +38,7 @@ export function drawingParts(text) {
 /**
  * { text, looker, drawing, sha256, roles }: `text` the picker's prompt, `looker` the looker's, `drawing` the drawer's
  * template parts, `roles` each role's own hash of its bytes (the manifest fingerprint's `prompts`), `sha256` the hash of
- * all three together.
+ * all three and the explicit processing policy together; `policy` names those processing semantics.
  */
 export function picturePrompts() {
   if (loaded) return loaded
@@ -49,7 +52,10 @@ export function picturePrompts() {
     text: bytes.picker.toString('utf8'),
     looker: bytes.looker.toString('utf8'),
     drawing: drawingParts(bytes.drawing.toString('utf8')),
-    sha256: sha(PROMPT_ROLES.map((role) => `${role} ${roles[role]}`).join('\n')),
+    policy: PICTURE_PROCESSING_POLICY,
+    sha256: sha(
+      `policy ${PICTURE_PROCESSING_POLICY}\n${PROMPT_ROLES.map((role) => `${role} ${roles[role]}`).join('\n')}`
+    ),
     roles: Object.freeze(roles)
   })
   return loaded

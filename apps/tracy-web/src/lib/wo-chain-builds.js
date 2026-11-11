@@ -4,8 +4,9 @@
  * `sites/brief-engines/step-chain.js` and `brief-build.js`). The numbers are the runs' own minutes and spend; nothing here
  * is estimated. Staff only: the door (`ops/wo.js`) admits internal emails and nobody else.
  */
-import { CURRENT_BRIEF } from './site-brief-row.js'
+
 import { bornSiteAddress } from './site-address.js'
+import { CURRENT_BRIEF } from './site-brief-row.js'
 import { chainTemplateOf } from './step-chain-switch.js'
 
 /** A run is "far above the usual" when it took more than this many times the median of the builds listed. */
@@ -52,6 +53,7 @@ export const chainRunOpen = (state) => OPEN_STATES.includes(String(state))
 export const CHAIN_BUILDS_LIMIT = 200
 
 const finiteOrZero = (value) => (Number.isFinite(Number(value)) ? Number(value) : 0)
+const measuredUsd = (value) => (value == null ? null : Number.isFinite(Number(value)) ? Number(value) : null)
 
 const medianOf = (values) => {
   if (values.length === 0) return 0
@@ -68,7 +70,7 @@ const medianOf = (values) => {
  */
 export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT, now = Date.now } = {}) {
   const { rows } = await pool.query(
-    `select b.site_key, b.quickstart, b.state, b.created_at,
+    `select b.site_key, b.quickstart, b.state, b.created_at, b.updated_at, b.error, b.timings,
             coalesce(case when b.timings ->> 'attemptStartedAt' ~ '^[1-9][0-9]{0,14}$'
                           then (b.timings ->> 'attemptStartedAt')::numeric end,
                      extract(epoch from b.created_at) * 1000) as attempt_started_at,
@@ -82,7 +84,8 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
   const builds = rows.map((row) => {
     const chain = row.chain ?? {}
     const steps = Array.isArray(chain.steps) ? chain.steps : []
-    const spent = steps.reduce((sum, s) => sum + finiteOrZero(s.usd), 0)
+    const spent = steps.reduce((sum, s) => sum + (measuredUsd(s.usd) ?? measuredUsd(s.knownUsd) ?? 0), 0)
+    const partial = steps.some((s) => measuredUsd(s.usd) === null)
     const attemptMs = Number(row.attempt_started_at)
     const startedMs =
       Number.isFinite(attemptMs) && attemptMs > 0 ? attemptMs : new Date(row.created_at).getTime()
@@ -98,6 +101,26 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
           ? 'complete'
           : 'soft-failure'
     const underway = Array.isArray(chain.running) ? chain.running.map(String) : []
+    // A dead worker leaves its last progress snapshot, not a terminal measurement. Its settlement is
+    // immutable on new rows; legacy updated_at can include later edits and is only an upper bound.
+    const interrupted = unfinished && !running
+    const validEnd = (value) => Number.isFinite(value) && value >= startedMs && value <= now()
+    const stamped = /^[1-9][0-9]{0,14}$/.test(String(row.timings?.interruptedAt ?? ''))
+      ? Number(row.timings.interruptedAt)
+      : NaN
+    const updated = row.updated_at == null ? NaN : new Date(row.updated_at).getTime()
+    const endedMs = validEnd(stamped) ? stamped : validEnd(updated) ? updated : null
+    const interruption = interrupted
+      ? {
+          reason: typeof row.error === 'string' ? row.error : null,
+          endedAt: endedMs === null ? null : new Date(endedMs).toISOString(),
+          timeSource: validEnd(stamped) ? 'settled' : endedMs === null ? 'snapshot' : 'last-update',
+          bound: validEnd(stamped) ? null : endedMs === null ? 'lower' : 'upper',
+          // Settlement is not proof of the provider's execution end or its unreported spend.
+          executionEndedAt: null,
+          steps: underway.map((step) => ({ step, minutes: null, usd: null }))
+        }
+      : null
     return {
       siteKey: row.site_key,
       label: row.label ?? null,
@@ -107,8 +130,22 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       // A running build counts its minutes from the press until now; spend is what the finished steps cost so far.
       totalMinutes: running
         ? Math.round(((now() - startedMs) / 60_000) * 100) / 100
-        : finiteOrZero(chain.totalMinutes),
-      totalUsd: unfinished ? Math.round(spent * 10_000) / 10_000 : finiteOrZero(chain.totalUsd),
+        : interrupted && endedMs !== null
+          ? Math.max(
+              finiteOrZero(chain.totalMinutes),
+              Math.round(((endedMs - startedMs) / 60_000) * 100) / 100
+            )
+          : finiteOrZero(chain.totalMinutes),
+      rawChain: chain,
+      interruption,
+      totalUsd: unfinished
+        ? partial
+          ? null
+          : Math.round(spent * 10_000) / 10_000
+        : measuredUsd(chain.totalUsd),
+      ...((unfinished ? partial : measuredUsd(chain.totalUsd) === null)
+        ? { knownUsd: Math.round((measuredUsd(chain.knownUsd) ?? spent) * 10_000) / 10_000 }
+        : {}),
       ending,
       failedStep:
         ending === 'failed'
@@ -120,7 +157,8 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       steps: steps.map((s) => ({
         step: String(s.step),
         minutes: finiteOrZero(s.minutes),
-        usd: finiteOrZero(s.usd),
+        usd: measuredUsd(s.usd),
+        ...(measuredUsd(s.usd) === null ? { knownUsd: measuredUsd(s.knownUsd) ?? 0 } : {}),
         outcome: String(s.outcome ?? ''),
         error: typeof s.error === 'string' ? s.error : null
       })),

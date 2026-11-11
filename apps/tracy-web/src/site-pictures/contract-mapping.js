@@ -24,6 +24,8 @@ import { contentMapKey } from '../lib/content-map-key.js'
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from '../lib/picture-paint/paint.js'
+import { indexInputs } from './picture-check/inputs-index.js'
+import { documentarySourceProblem } from './picture-check/rules-sources.js'
 
 /**
  * A return that is not the picture step's to fill: the brand step places the logo, and a frame the kit marks not
@@ -55,7 +57,7 @@ export const LEFT_EMPTY = 'the plan wants a picture here and the picture step le
 export { contentMapKey }
 
 /**
- * @param {{ pictures: object, contract: string, revision: string, kit?: object }} input
+ * @param {{ pictures: object, contract: string, revision: string, kit?: object, plan?: object, brief?: object }} input
  * @returns {{
  *   mapping: { contract: string, revision: string, changes: Record<string,string>, evidence: {}, pending: [], emptyLinks: [] },
  *   uploads: { sitePath: string, file: string, sha256: string, width: number, height: number }[],
@@ -70,9 +72,42 @@ export { contentMapKey }
  *   problems: { where: string, detail: string }[]
  * }}
  */
-export function exportPictureMapping({ pictures, contract, revision, kit }) {
+export function exportPictureMapping({ pictures, contract, revision, kit, plan, brief }) {
   const { view, problems } = readPictures(pictures)
+  const entries = new Map(view.entries.map((e) => [e.frame, e]))
   const frames = new Map(view.entries.filter((e) => e.list === 'frames').map((e) => [e.frame, e]))
+  const idx = indexInputs({ kit, plan, brief })
+  const knownContext = Array.isArray(kit?.blocks) && Array.isArray(plan?.pages) && Array.isArray(brief?.facts)
+  // The plan check's existing match enum; a sameAs twin inherits the root's established purpose.
+  const knownWish = (wish) =>
+    ['any-real', 'specific', 'person'].includes(wish?.match) ||
+    (typeof wish?.sameAs === 'string' &&
+      ['any-real', 'specific', 'person'].includes(idx.wishes.get(wish.sameAs)?.match))
+  const factIds = new Set((Array.isArray(brief?.facts) ? brief.facts : []).map((f) => f.id))
+  // A failed or historical manifest still goes through this boundary. Never export a generated documentary
+  // substitute, including a twin of one; missing original inputs cannot establish an illustrative purpose.
+  const sourceProblem = (entry) => {
+    let root = entry
+    const seen = new Set()
+    while (root.source === 'twin' && !seen.has(root.frame)) {
+      seen.add(root.frame)
+      root = entries.get(root.twinOf) ?? root
+    }
+    if (!['drawn', 'owner-photo-extended'].includes(root.source)) return null
+    const wishes = [entry, root].map((e) => idx.wishes.get(e.frame))
+    if (
+      !knownContext ||
+      [entry, root].some((e) => !idx.frames.has(e.frame)) ||
+      wishes.some(
+        (wish) =>
+          !knownWish(wish) || (Array.isArray(wish?.factIds) && wish.factIds.some((id) => !factIds.has(id)))
+      )
+    )
+      return 'generated picture provenance is unknown without its original kit, plan wish and brief facts'
+    return (
+      documentarySourceProblem(idx, { ...entry, source: root.source }) ?? documentarySourceProblem(idx, root)
+    )
+  }
   const imageSlots = kit?.contentMap?.slots
     ? new Set(kit.contentMap.slots.filter((s) => s.type === 'image').map((s) => s.key))
     : null
@@ -162,6 +197,11 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
 
   for (const e of frames.values()) {
     const key = contentMapKey(e.frame)
+    const provenance = sourceProblem(e)
+    if (provenance) {
+      bad(e.frame, provenance)
+      continue
+    }
     if (e.source === 'hide') {
       hidden.push({ frame: e.frame, key, reason: e.reason })
       continue
@@ -247,6 +287,11 @@ export function exportPictureMapping({ pictures, contract, revision, kit }) {
     if (!NOT_OURS.test(r.reason) && !frames.has(r.frame)) bad(r.frame, `${LEFT_EMPTY}: ${r.reason}`)
   const siteSettings = view.entries
     .filter((e) => e.list === 'siteSettings')
+    .filter((e) => {
+      const provenance = sourceProblem(e)
+      if (provenance) bad(e.frame, provenance)
+      return !provenance
+    })
     .map((e) => ({
       frame: e.frame,
       writeDoor: 'none',

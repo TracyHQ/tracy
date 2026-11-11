@@ -58,8 +58,8 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
     const kitPage = kitPages.get(page.id)
     const slug = slugOf(page.slug)
     if (!kitPage || typeof kitPage.path !== 'string' || !slug || trimmed(kitPage.path) === '') continue
-    const from = `/${trimmed(kitPage.path)}`
-    const [row] = rowsOpening(kitPage, rows, menutype)
+    const [row] = rowsOpening(kitPage, rows, menutype, kit)
+    const from = `/${trimmed(row?.path ?? kitPage.path)}`
     // No item of its own: the page may be its parent item's article, renamed through the article's alias (card P).
     const parent = row ? null : parentOrder(kitPage, { kit, rows, menutype })
     if (parent) {
@@ -227,7 +227,7 @@ export function keptAt(keptPages, { kit, rows, landed, menutype = null }) {
   return each(keptPages).map((page) => {
     const kitPage = kitPages.get(page.id)
     if (!kitPage || trimmed(page.path) === '') return page
-    const [row] = rowsOpening(kitPage, rows, menutype)
+    const [row] = rowsOpening(kitPage, rows, menutype, kit)
     if (row) return { ...page, path: addressAfter(row, rows, landed) }
     const now = addressNow(page.path, moves)
     return now ? { ...page, path: now } : page
@@ -247,7 +247,7 @@ export function menuPlacements({ plan, kit, rows, menutype = null }) {
     for (const entry of each(entries)) {
       const page = pages.get(entry.page)
       if (!page || !kept.has(entry.page)) continue
-      const row = rowsOpening(page, rows, menutype)[0]
+      const row = rowsOpening(page, rows, menutype, kit)[0]
       if (!row) continue
       if (Number(row.home) !== 1) out.set(Number(row.id), parent)
       walk(entry.children, Number(row.id))

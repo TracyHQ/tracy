@@ -422,13 +422,26 @@ export function measurePageInPage({ tolerance, stretch, caps }) {
     [el, ...el.querySelectorAll('*')].filter(
       (n) => /url\(/.test(getComputedStyle(n).backgroundImage) && shown(n)
     ).length
+  // Owl inserts extra copies around its original items for looping. A plain `.cloned` class proves nothing: only
+  // an Owl item directly under an Owl stage inside its carousel, with canonical siblings present, is a copy.
+  // Keep original siblings distinct even when their words and pictures are identical, and exclude copied subtrees
+  // so a nested list inside a clone cannot become a competing row-count candidate.
+  const owlCopy = (el) => {
+    const copy = el.closest('.owl-item.cloned')
+    const stage = copy?.parentElement
+    return Boolean(
+      stage?.matches('.owl-stage') &&
+        stage.closest('.owl-carousel') &&
+        [...stage.children].some((item) => item.matches('.owl-item:not(.cloned)'))
+    )
+  }
   const lists = []
   for (const parent of document.body.querySelectorAll('*')) {
     if (lists.length >= caps.lists) break
-    if (SKIP.has(parent.tagName.toUpperCase()) || parent.children.length < 2) continue
+    if (SKIP.has(parent.tagName.toUpperCase()) || parent.children.length < 2 || owlCopy(parent)) continue
     const groups = new Map()
     for (const c of parent.children) {
-      if (SKIP.has(c.tagName.toUpperCase()) || !shown(c)) continue
+      if (SKIP.has(c.tagName.toUpperCase()) || !shown(c) || owlCopy(c)) continue
       const shape = shapeOf(c)
       groups.set(shape, [...(groups.get(shape) ?? []), c])
     }

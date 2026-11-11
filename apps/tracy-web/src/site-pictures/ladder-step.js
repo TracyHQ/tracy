@@ -29,10 +29,11 @@ import { WAITS_FOR } from './fill-frames.js'
 import { fileFields } from './frame-entries.js'
 import { climbAll, DRAW_CONCURRENCY, NEXT_PHOTO_TRIES, REDRAW_ALT_TRIES } from './ladder-climb.js'
 import { ladderState } from './ladder-state.js'
-import { LOOK_UNREADABLE } from './looker-call.js'
+import { LOOK_UNREADABLE, TEXT_OVER_FAULT } from './looker-call.js'
 import { LOOKED_SOURCES } from './looker-step.js'
 import { OWNER_SOURCES } from './manifest-shape.js'
 import { WAITS_FOR_DRAWER } from './picker-picks.js'
+import { PICTURE_PROCESSING_POLICY } from './picture-prompts.js'
 
 export { DRAW_CONCURRENCY, NEXT_PHOTO_TRIES, REDRAW_ALT_TRIES }
 
@@ -91,6 +92,51 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
     const memo = new Map()
     const darkChecked = new Set()
     let paidLooks = 0
+    // Persist source and output hashes so a later round cannot retry the same candidate. Crash replay produces the
+    // same bytes and therefore reuses the looker's per-run disk cache, including the independent transformed look.
+    const readabilityRetries = [...(doc.readabilityRetries ?? [])]
+    const retried = new Set(
+      readabilityRetries.flatMap((r) => [`${r.frame} ${r.sourceSha256}`, `${r.frame} ${r.sha256}`])
+    )
+    async function retryReadability() {
+      let changed = false
+      for (const [frameId, held] of s.entries) {
+        const e = held.entry
+        if (
+          e.looker?.verdict !== 'fail' ||
+          !e.looker.faults.length ||
+          !e.looker.faults.every((fault) => fault === TEXT_OVER_FAULT) ||
+          !LOOKED_SOURCES.has(e.source) ||
+          e.cutout ||
+          idx.frames.get(frameId)?.kind === 'cutout' ||
+          !wantsDark(idx.frames.get(frameId)) ||
+          retried.has(`${frameId} ${e.sha256}`)
+        )
+          continue
+        const bytes = await store.readPicture(path.basename(e.file))
+        if (!bytes) continue
+        const dark = await darkenPicture(bytes, { minimumStrength: 0.45 })
+        if (!dark || dark.sha256 === e.sha256) continue
+        await store.putPicture(dark.bytes, dark.ext)
+        s.keepFile(dark)
+        const record = {
+          frame: frameId,
+          sourceSha256: e.sha256,
+          sha256: dark.sha256,
+          policy: PICTURE_PROCESSING_POLICY,
+          strength: dark.overlay.strength,
+          faults: [...e.looker.faults]
+        }
+        readabilityRetries.push(record)
+        retried.add(`${frameId} ${e.sha256}`)
+        retried.add(`${frameId} ${dark.sha256}`)
+        held.entry = { ...e, ...fileFields(dark), darkened: true, overlay: dark.overlay, seen: null }
+        delete held.entry.looker
+        s.note(frameId, 'readability', 'darkened', JSON.stringify(record))
+        changed = true
+      }
+      return changed
+    }
 
     // 1. The frames that wait for the drawer start at their first rung. Never an any-real or a person frame, whatever
     // waits: only a specific picture is drawn.
@@ -138,6 +184,13 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
         if (held && held.entry.sha256 === e.sha256)
           held.entry = { ...held.entry, seen: e.seen, looker: e.looker }
       }
+      // A visual readability failure overrides the mean-brightness shortcut exactly once for this candidate. Do
+      // not advance any fallback until the changed bytes receive their own independent look. Other faults remain
+      // recorded on the transform and are judged again, never removed or turned into an automatic pass.
+      if (await retryReadability()) {
+        climbing = []
+        continue
+      }
       // 4. Every rejected frame that may climb climbs one more rung.
       climbing = []
       for (const [frameId, { list, entry }] of s.entries) {
@@ -169,6 +222,7 @@ export function createFinisher({ idx, plan, kit, usable, photoBytes, store, look
         ...out,
         looker: { ...out.looker, calls: lookCalls },
         rows: s.rows,
+        readabilityRetries,
         ladder: [...s.ladder].map(([frame, steps]) => ({ frame, steps })),
         drawer: {
           model: drawer?.model ?? null,

@@ -35,7 +35,7 @@ async function readAddresses({ call, kit, leads }) {
   const pages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
   const rowless = leads
     .map((l) => pages.get(l.leadsTo))
-    .filter((p) => p && !rowsOpening(p, rows).length && articleOfPage(p, kit) !== null)
+    .filter((p) => p && !rowsOpening(p, rows, null, kit).length && articleOfPage(p, kit) !== null)
   return { rows, articles: rowless.length ? await articleRows(call) : new Map() }
 }
 

@@ -182,6 +182,44 @@ test(
   }
 )
 
+test(
+  'an interrupted retry keeps its settlement elapsed time and original snapshot after later updates',
+  dbOpts,
+  async () => {
+    await seedSnapshot(db.pool, 'interrupted-retry.tracy.site', {
+      at: '2026-11-07T08:00:00Z',
+      state: 'failed',
+      running: ['plan']
+    })
+    await db.pool.query(
+      `update site_brief set timings=timings||$2::jsonb,error=$3,updated_at=$4 where site_key=$1`,
+      [
+        'interrupted-retry.tracy.site',
+        JSON.stringify({
+          attemptStartedAt: Date.parse('2026-11-07T10:00:00Z'),
+          interruptedAt: Date.parse('2026-11-07T10:12:00Z')
+        }),
+        'The process stopped during preparation.',
+        '2026-11-07T11:00:00Z'
+      ]
+    )
+    const { builds } = await listChainBuilds(db.pool, CONFIG, {
+      now: () => Date.parse('2026-11-07T12:00:00Z')
+    })
+    const build = builds[0]
+    assert.equal(build.totalMinutes, 12)
+    assert.equal(build.rawChain.totalMinutes, 1)
+    assert.equal(build.interruption.reason, 'The process stopped during preparation.')
+    assert.equal(build.interruption.timeSource, 'settled')
+    assert.deepEqual(build.interruption.steps, [{ step: 'plan', minutes: null, usd: null }])
+    const { rows } = await db.pool.query('select state,timings from site_brief where site_key=$1', [
+      'interrupted-retry.tracy.site'
+    ])
+    assert.equal(rows[0].state, 'failed')
+    assert.equal(rows[0].timings.chain.ending, 'running', 'reading leaves the historical snapshot unchanged')
+  }
+)
+
 test('with too few builds there is no usual duration, so nothing is highlighted', dbOpts, async () => {
   const { pool } = db
   await seedBuild(pool, 'a.tracy.site', { at: '2026-11-01T10:00:00Z', minutes: 5, usd: 1 })
