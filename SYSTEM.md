@@ -3065,6 +3065,12 @@ the destination page sends the brief as with a demo. On an http stand (no `crypt
 For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
 follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
 a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds. The durable action follows the chain's recorded step and stays queued while its current site brief is queued, preparing, ready or applying, even when the host has finished base provisioning. A live chain also holds the action deadline within the existing maximum action window; a terminal chain passes QA only when its current brief is applied, its measurement has ended, no measured steps are active, and the last write outcome is done (the write step's final check passed). Earlier model soft failures may retain a verified fallback; missing, failed, stopped or unmeasured writes end with QA_NEEDS_REVIEW. This is machine verification, never human acceptance. Historical pre-fix completed actions are not rewritten.
+Add site describes a server-owned wait as building, with elapsed minutes from the action's acceptance time, rather
+than promising a chat. The browser keeps its business reference through a failed build or failed poll so reopening
+follows the same work. An eligible failed action offers explicit Retry through the existing own-site build door with
+`retryOf`; it sends no new research or template selection. Blocked immutable briefs and lost or deleted sites have no
+retry control.
+
 An explicit Retry may also recover a historical completed chain action whose exact current owned site brief failed after
 the original action ended. Acceptance locks the build and brief, then records a server-held authority on the new action:
 account, parent action, build, site, frozen revision and a PostgreSQL hash of the failed brief generation. Historical
