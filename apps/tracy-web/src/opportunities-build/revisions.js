@@ -145,6 +145,9 @@ export async function revisionForAction(
         ? pictureLabelRuns.answer(input)
         : { labelling: failedPictureLabelling('vision_failed') }
       if (got.pending) return { pending: true, retryAt: got.retryAt, waitingFor: 'pictures' }
+      // An overdue run may still return paid-for labels. Never freeze its temporary empty result as a permanent
+      // research snapshot: a later prepare or explicit Retry can adopt the same run's settled answer.
+      if (got.labelling?.note?.reason === 'labelling_overdue') return { error: 'DEMO_PICTURE_LABELS_TIMEOUT' }
       pictureLabelling = got.labelling
     }
     const made = await createRevision(db, {

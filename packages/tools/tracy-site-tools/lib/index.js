@@ -47821,7 +47821,7 @@ async function acquireSiteLease(config, plan, key, label, sessionId) {
       }
     );
     const body = await res.json().catch(() => null);
-    if (res.ok) return { ...body, ok: true };
+    if (res.ok && body?.ok === true) return { ...body, ok: true };
     if (res.status === 409 && body?.code === "SITE_BUSY") return { ...body, ok: false, httpStatus: 409 };
     return { ok: false, code: "LEASE_DOOR_UNAVAILABLE", httpStatus: res.status };
   } catch (error) {
@@ -48907,11 +48907,13 @@ function apply(ctx, config = {}) {
     }
   });
   const emdashWriteLease = async (label, sessionId) => {
-    if (!sessionId) return null;
+    if (!sessionId)
+      return { ok: false, code: "LEASE_DOOR_UNAVAILABLE", error: "Site editing is unavailable right now." };
     const signal = turnSignal.getStore() ?? null;
     if (signal?.aborted) return stoppedAnswer();
     const { plan } = planFor(sessionId);
-    if (plan === null) return null;
+    if (plan === null)
+      return { ok: false, code: "LEASE_DOOR_UNAVAILABLE", error: "Site editing is unavailable right now." };
     const seat = flightSeat();
     const answer = await waitOutLease(
       () => acquireSiteLease(config, plan, "_conversation", label, sessionId),
@@ -48928,9 +48930,14 @@ function apply(ctx, config = {}) {
     }
     if (isTurnStopped(answer) || isLeaseBusy(answer)) return answer;
     warn(
-      `[site-tools] ${label}: the write lease could not be asked (${String(answer.code)}); the EmDash write goes on`
+      `[site-tools] ${label}: the write lease could not be taken (${String(answer.code)}); the EmDash write was refused`
     );
-    return null;
+    return {
+      ...answer,
+      ok: false,
+      code: String(answer.code ?? "LEASE_DOOR_UNAVAILABLE"),
+      error: "Site editing is unavailable right now."
+    };
   };
   const emdashRequestWrites = (request) => {
     const r = request;

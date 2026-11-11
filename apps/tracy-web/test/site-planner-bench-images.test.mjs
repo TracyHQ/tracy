@@ -42,6 +42,8 @@ after(db.close)
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const quiet = { error() {}, warn() {}, log() {} }
+// Image replay cases measure transport and persistence; budget behavior has dedicated tests.
+const startImageRun = (pool) => startRun(pool, { noCaps: true })
 const openImage = (id) => toolCallReply({ calls: [[KIT_TOOL_NAMES.openImage, { id }]] })
 const dataUrl = (id) => `data:image/jpeg;base64,${inventedImageBytes(id).toString('base64')}`
 
@@ -145,7 +147,7 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool)
-    const started = await startRun(pool)
+    const started = await startImageRun(pool)
     // The first process: the planner opens an image, then the process dies while the next call waits for its answer.
     const first = readyKitImages()
     await drain(pool, scriptedModel([openImage('header-1440')]), first, { killOn: 2 })
@@ -182,7 +184,7 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool)
-    const started = await startRun(pool)
+    const started = await startImageRun(pool)
     const bad = plan()
     delete bad.site
     const images = readyKitImages()
@@ -215,7 +217,7 @@ test(
   async () => {
     const { pool } = db
     await assignPlannerDoor(pool, { model: DEEPSEEK_FLASH })
-    const started = await startRun(pool)
+    const started = await startImageRun(pool)
     const details = [{ type: 'reasoning.text', text: 'the header shows a logo', format: 'unknown' }]
     const model = scriptedModel([
       toolCallReply({

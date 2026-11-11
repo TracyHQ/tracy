@@ -23,7 +23,21 @@ function register(config) {
         setup()
       },
       on: () => {},
-      get: () => undefined
+      get: (name) =>
+        name === 'sessions'
+          ? {
+              get: () => ({
+                snapshotEvents: () => [
+                  {
+                    type: 'user/message',
+                    data: { source: { kind: 'user', prompter: { user: 'An', email: 'an@example.test' } } }
+                  }
+                ]
+              })
+            }
+          : name === 'tracyAssertion'
+            ? { mint: (email) => `signed:${email}` }
+            : undefined
     },
     config
   )
@@ -45,6 +59,8 @@ const mcpReply = (result) => ({
   stdout: `TRACY_MCP 200\n${JSON.stringify({ jsonrpc: '2.0', id: 1, result })}`
 })
 const config = ({ mcp }) => ({
+  origin: 'http://door.test',
+  fetch: async () => new Response(JSON.stringify({ ok: true }), { status: 200 }),
   emdash: { cms: async () => 'emdash' },
   exec: async (input) =>
     input.argv[1] === '-i' ? mcp(input) : { code: 0, stdout: '', stderr: '', timedOut: false }

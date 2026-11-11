@@ -207,7 +207,13 @@ export async function resumeRequest(
         accountId
       ])
     ).rows[0]
-    if (!own || !RESUMABLE.includes(own.state)) {
+    // A waiting request stays queued while the shared place run pauses. Its upstream
+    // run decides resumability; a cancelled/completed request never follows it again.
+    const upstream =
+      own?.place_job_id && !own.result_snapshot_id && ['queued', 'running'].includes(own.state)
+        ? (await client.query('select state from wo_place_job where id = $1', [own.place_job_id])).rows[0]
+        : null
+    if (!own || !RESUMABLE.includes(upstream?.state ?? own.state)) {
       await client.query('rollback')
       return null
     }

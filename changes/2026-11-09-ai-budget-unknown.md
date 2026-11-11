@@ -1,0 +1,3 @@
+- **Budgeted model loops stop before another call when a previous answer has no known cost** — Codex · #496 · `docs/ai-capabilities-audit-2026-11-08` · 2026-11-09
+  **Affects:** planner and other `agent-over-door` callers that set `budgetUsd`; they now receive `AGENT_BUDGET_UNKNOWN` instead of treating an unpriced answer as zero. Unbudgeted chain runs keep their existing behavior.
+  **Why / Measured:** the scripted model test returns one tool answer without a cost, then offers a second answer. With a budget, only the first call is dispatched, including after resume; without a budget, both calls run.

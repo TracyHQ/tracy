@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-496-bench-stop-in-flight",
+  "kind": "fix",
+  "title": "Stop aborts a bench model call and prevents another retry while keeping an uncertain receipt",
+  "pr": 496,
+  "area": "ai/bench-stop",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: start a scripted model call that remains in flight, then abort its bench signal.",
+    "S2: start a scripted model that returns a retryable 429, then abort during backoff before the next attempt.",
+    "S3: set the bench's durable Stop flag while its watcher is running."
+  ],
+  "expect": [
+    "S1: AGENT_ABORTED ends the call, the turn has a failed uncertain receipt, one request was dispatched, and resume does not replay it.",
+    "S2: AGENT_ABORTED ends the backoff, the failed attempt stays on the receipt, and no second request is dispatched.",
+    "S3: the watcher observes the Stop flag and aborts the active signal."
+  ],
+  "selectors": {
+    "call": "apps/tracy-web/src/lib/agent-over-door-call.js",
+    "retry": "apps/tracy-web/src/lib/agent-over-door-retry.js",
+    "tests": "apps/tracy-web/test/agent-over-door.test.mjs apps/tracy-web/test/agent-over-door-retry.test.mjs apps/tracy-web/test/bench-stop-watch.test.mjs"
+  },
+  "evidence": "The shared bench loop previously read cancellation only after an answered model turn, leaving an in-flight request running until its call timeout.",
+  "fence": "An interrupted provider call is never silently replayed, and cancellation cannot dispatch another retry attempt.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/agent-over-door.test.mjs",
+      "apps/tracy-web/test/agent-over-door-retry.test.mjs",
+      "apps/tracy-web/test/bench-stop-watch.test.mjs"
+    ],
+    "tests": [
+      "an abort during a model call saves an uncertain receipt and never retries it",
+      "Stop during retry backoff dispatches no second call and keeps the failed attempt",
+      "the bench Stop watcher aborts the active signal when the durable Stop flag is set"
+    ]
+  }
+}

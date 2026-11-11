@@ -267,6 +267,18 @@
         },
         "logoHeight": 80,
         "note": "Same logos as 1.0.6; 1.0.7 writes logoimage_dark inside the five template style rows of the installer's demo data (1.0.6 set it by an UPDATE appended to custom.sql, which the static dump readers do not apply, so the lock and the dump disagreed: STAB-1, STAB-6, LOGO-2), sets the dark page's site name text in the template's display face (Alegreya on Vietnamese pages, LANG-2), and fills the contact page's social buttons on the link itself on hover (HOVER-1). Built from the 1.0.6 installer pack with its contract; no logo file or logo rule changed."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t3",
+        "frame": {
+          "width": 128,
+          "height": 80
+        },
+        "logoHeight": 80,
+        "note": "Same logos as 1.0.7; 1.0.8 sets a text logo (logotype text) in the template display face (Alegreya on Vietnamese pages), keeps one menu button on small screens, prints no server path on the error page, and gives the dark page dark alerts and a light T3 footer badge. Built from the 1.0.7 installer pack with its contract; no logo file, logo param or logo rule changed."
       }
     },
     "quickstart/ja-directory/j6": {

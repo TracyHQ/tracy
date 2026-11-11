@@ -38,6 +38,7 @@ async function judgeTheRest(pass, result, checks) {
     }
     if (t.state === 'open') await cutShort(pass, t)
   }
+  if (pass.writerOpen) return
   await Promise.all(rest.filter((t) => !t.leftOpen).map((t) => checks.judge(t)))
 }
 
@@ -83,7 +84,7 @@ export async function runRepairPass(pass, { firstCheck, brief = null }) {
       check: firstCheck
     }
   await judgeTheRest(pass, result, checks)
-  await checks.recheck()
+  if (!pass.writerOpen) await checks.recheck()
   const accepted =
     checkAccepted(state.check) &&
     !result.errors.length &&

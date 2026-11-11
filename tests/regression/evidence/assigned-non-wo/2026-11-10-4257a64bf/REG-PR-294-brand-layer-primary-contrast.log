@@ -1,0 +1,47 @@
+$ node tests/regression/scripts/REG-PR-294-brand-layer-primary-contrast.mjs
+TAP version 13
+# Subtest: tokens.css: a label on the primary colour and the primary colour on white both read at AA (\#228)
+ok 1 - tokens.css: a label on the primary colour and the primary colour on white both read at AA (\#228)
+  ---
+  duration_ms: 4.666041
+  type: 'test'
+  ...
+# Subtest: page-shell.js: a label on the primary colour and the primary colour on white both read at AA (\#228)
+ok 2 - page-shell.js: a label on the primary colour and the primary colour on white both read at AA (\#228)
+  ---
+  duration_ms: 0.109041
+  type: 'test'
+  ...
+# Subtest: the tracy-brand theme layer paints the same AA primary over tokens.css, the mark and rings kept (\#228)
+ok 3 - the tracy-brand theme layer paints the same AA primary over tokens.css, the mark and rings kept (\#228)
+  ---
+  duration_ms: 10.224042
+  type: 'test'
+  ...
+# Subtest: page-shell.js redeclares the same primary as tokens.css
+ok 4 - page-shell.js redeclares the same primary as tokens.css
+  ---
+  duration_ms: 0.85325
+  type: 'test'
+  ...
+# Subtest: every accepted accent derives AA fills and words, and visible focus strokes (\#316)
+ok 5 - every accepted accent derives AA fills and words, and visible focus strokes (\#316)
+  ---
+  duration_ms: 4.912375
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 164.665167
+ok - 72 rendered primary/destructive states meet AA; minimum 4.51:1
+
+--- stderr ---
+
+--- verdict ---
+PASS

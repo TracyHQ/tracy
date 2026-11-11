@@ -305,8 +305,7 @@ export async function acceptDemoActions(
       if (
         selection?.chatMode &&
         !e.retryOf &&
-        e.ownSite !== true &&
-        usageKind === 'demo' &&
+        ['demo', 'own-site'].includes(usageKind) &&
         stepChainEnabled({ quickstart: selection.quickstart })
       )
         delete selection.chatMode
@@ -501,6 +500,7 @@ export function demoActionShape(a) {
       : {}),
     step: a.step,
     error: a.error ?? null,
+    ...(agentDemo && !a.selection?.chatMode && a.chat_site_key ? { siteKey: a.chat_site_key } : {}),
     acceptedAt: a.accepted_at,
     updatedAt: a.updated_at
   }
@@ -508,7 +508,7 @@ export function demoActionShape(a) {
 
 // Only a receipted, server-created session is a navigation destination. The accepted action's
 // reserved session ID alone does not prove its site workspace or chat exists yet.
-const ACTION_WITH_CHAT = `select a.*, b.site_key as chat_site_key,
+const ACTION_WITH_CHAT = `select a.*, case when b.demo_deleted_at is null then b.site_key end as chat_site_key,
   case when b.demo_deleted_at is null then coalesce(b.content#>>'{agentDemo,clientChat,sessionId}', b.handoff->>'sessionId') end as chat_session_id
   from wo_demo_action a left join wo_build b
     on b.account_id=a.account_id and b.request_id=a.build_request_id`

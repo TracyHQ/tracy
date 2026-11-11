@@ -83,6 +83,17 @@ export async function undoTurns(pass, turns, why) {
   const undone = []
   for (const turn of turns) {
     const entry = { turnId: turn.turnId, page: turn.page, why }
+    // File moments belong to the whole site. Never roll back while a writer can still commit.
+    if (pass.ledger.turns.some((t) => t.state === 'open')) {
+      undone.push({
+        ...entry,
+        status: 'undo-failed',
+        ok: false,
+        code: 'TURN_STILL_OPEN',
+        reason: 'a repair turn is still open; wait for its writes to settle before undoing'
+      })
+      continue
+    }
     if (pass.clock.returnLeft() <= 0) {
       undone.push({
         ...entry,

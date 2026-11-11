@@ -1026,8 +1026,6 @@ class IdMap:
     number it was given, and the customer's later edits of it come over to that record. New clashes
     found in this merge are added; the caller stores the map only once the merge is in place."""
 
-    OFFSET = 2_000_000_000
-
     def __init__(self, sql: Sql, prefix: str, entities: list, mapping: dict):
         self.sql, self.prefix, self.entities = sql, prefix, entities
         self.map: dict[str, dict[int, int]] = {t: {int(k): int(v) for k, v in m.items()} for t, m in mapping.items()}
@@ -1122,16 +1120,29 @@ class IdMap:
         return out
 
     def renumber(self, schema: str, table: str, rule: dict, pairs: list[tuple[int, int]]) -> None:
-        """Every `old` id of `table` in `schema` becomes `new`, with what points at it. Through a far
-        offset first, so a chain (a → b while b → c) never meets itself on the primary key.
+        """Every `old` id of `table` in `schema` becomes `new`, with what points at it. Through unused
+        holding numbers first, so a chain (a → b while b → c) never meets itself on the primary key.
 
         One statement per column and step, every pair in it, rather than one per pair: a reference
         column has no index, and each statement read the whole table — every remembered number,
         each sync, twice over (#1649). A text column is rewritten by every pair's replacement in
         turn, as the statements one after the other did."""
+        pairs = [(old, new) for old, new in pairs if old != new]
         if not pairs:
             return
-        steps = [[(old, old + self.OFFSET) for old, _ in pairs], [(old + self.OFFSET, new) for old, new in pairs]]
+        # A previous release leaked the old offset into the copy's real ids (#536). Choose
+        # unused holding numbers within the existing range, so swaps of those ids also work
+        # on signed INT columns and never collide with records or dangling references.
+        occupied = self.ids(schema, table) | self.referenced(schema, rule)
+        occupied.update(n for pair in pairs for n in pair)
+        holding, candidate = [], 1
+        for _ in pairs:
+            while candidate in occupied:
+                candidate += 1
+            holding.append(candidate)
+            candidate += 1
+        steps = [[(old, held) for (old, _), held in zip(pairs, holding)],
+                 [(held, new) for (_, new), held in zip(pairs, holding)]]
         key = q(self.key(table))
 
         def moved(column: str, step: list[tuple[int, int]], quoted: bool = False) -> tuple[str, str]:
@@ -1522,7 +1533,8 @@ class IdMap:
         gone = []
         for t in tables:
             for raw, copy in sorted(self.map[t].items()):
-                if copy not in live[(theirs, t)]:
+                if (copy not in live[(theirs, t)] or
+                        self.applied.get(theirs, {}).get(t, {}).get(copy) != raw):
                     del self.map[t][raw]
                     gone.append({"table": t, "live": raw, "copy": copy})
         return gone
@@ -1610,6 +1622,12 @@ class DbMerge:
             phase("reads prepared")
         if self.platform == "wordpress":
             self.policy = {**self.policy, **_WORDPRESS.counting_policy(self.sql, self.names, self.prefix)}
+        # Save real counters before renumbering the reads; temporary holding numbers must
+        # never become the next number handed to a record on the copy (#536).
+        counters = self.sql.run("SELECT table_schema, table_name, auto_increment FROM information_schema.tables"
+                                f" WHERE table_schema IN ({', '.join(sql_str(n) for n in self.names.values())})"
+                                " AND auto_increment IS NOT NULL;")
+        self.counters = {(schema, table): int(value) for schema, table, value in counters}
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])
@@ -2086,11 +2104,8 @@ class DbMerge:
         return aside
 
     def drop_owned(self, aside: dict[str, str], B: Schema, M: Schema, T: Schema) -> int:
-        """The copy's own rows of a record this merge deleted (a live delete it took): rows neither
-        read of the live site holds — versions and revisions Tracy's edits made, meta numbered apart
-        from the live site's. Rows the live site had go or stay with the merge as before; only these
-        were left behind, naming a record that no longer exists, and inherited by the next record
-        given its number (#307). Answers how many rows went."""
+        """Remove owned rows after taking their parent's deletion, including operational meta
+        the normal row merge preserves. A kept parent retains all its owned rows (#307)."""
         rules = self.owned_rules()
         removed = 0
         now = {r[0] for r in self.sql.run("SELECT table_name FROM information_schema.tables WHERE table_schema ="
@@ -2123,10 +2138,9 @@ class DbMerge:
                 cond = [f"r.{q(column)} IN (SELECT {named} FROM {gone} g)"]
                 if where:
                     cond.append(f"({self.ids.cond(self.names['ours'], where)})")
-                for side, schema in (("base", B), ("theirs", T)):
-                    if child in schema.columns:
-                        on = " AND ".join(f"x.{q(c)} <=> r.{q(c)}" for c in pk)
-                        cond.append(f"NOT EXISTS (SELECT 1 FROM {self.ref(side, child)} x WHERE {on})")
+                # Once the parent deletion was taken, none of its owned rows can remain.
+                # In particular WordPress preserves volatile ping meta during row merging,
+                # even when that same meta existed in a live read (#307).
                 got = self.sql.run(f"DELETE r FROM {self.ref('ours', child)} r WHERE {' AND '.join(cond)};"
                                    " SELECT ROW_COUNT();")
                 n = int(got[-1][0]) if got else 0
@@ -2195,10 +2209,7 @@ class DbMerge:
         holds, and the copy's next record took the number of one the live site deleted — read as
         that record from then on (#307), and heir to its versions and revisions."""
         m, t = self.ref("ours", table), self.ref("theirs", table)
-        counter = self.sql.run(
-            "SELECT MAX(auto_increment) FROM information_schema.tables WHERE table_name = "
-            f"{sql_str(table)} AND table_schema IN ({sql_str(self.names['ours'])}, {sql_str(self.names['theirs'])});")
-        top = int(counter[0][0]) if counter and counter[0][0] not in (None, "", "NULL") else 0
+        top = max(self.counters.get((self.names[side], table), 0) for side in ("ours", "theirs"))
         keys = [k for k in self.foreign_keys if k["table"] == table]
         writable = self.sql.run(f"SELECT column_name FROM information_schema.columns WHERE table_schema = {sql_str(self.names['theirs'])}"
                                 f" AND table_name = {sql_str(table)} AND extra NOT LIKE '%VIRTUAL GENERATED%'"

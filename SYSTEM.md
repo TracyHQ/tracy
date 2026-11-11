@@ -138,6 +138,10 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    `/design-inspiration` (public), `/tracy-badge.js`, beta, sign-in (`identity/`), seats
    (`seats/`, `lanes/`), `/api/sites/*` (`sites/`), public REST `/v1` (`api/`), notifications,
    `/ops` (`ops/`), the AI assistant `/api/assistant/*` (`assistant/`: answers with a model, hands over to a real person via Telegram; read-only, never writes to a site).
+   Help permits at most two concurrent model streams per account in one web process. A slot is
+   claimed before the provider's first response and released when the answer ends or startup
+   fails. The minute and day limits use shared Postgres buckets; the concurrent limit is
+   process-local, so a multi-process deployment has a higher aggregate ceiling.
    On the new-site screen, pressing a setup action calls `POST /api/assistant/onboarding-draft`.
    It reads only the signed-in account's current session conversation and uses the Help model to
    extract an editable draft from the canonical CMS question feeds. It never creates a site,
@@ -445,8 +449,9 @@ success to `POST /api/sites/:key/changed`. Since 20/10/2026: before **every** Em
 `POST /api/sites/:key/lease/acquire` (held within the session's site by `conversationSite`, signed as the person typing,
 carrying `x-tracy-session` + `x-tracy-turn`; a seat that cannot write → 403); `SITE_BUSY` is waited out as on the
 Apply path (`lease-wait.mjs`, outside the flight, cut by Stop — a Stop during the wait sends nothing), and the lease is released
-at the end of the turn (`/lease/release`). If tracy-web does not answer this door (older version, unreachable), the write
-still goes ahead as before. Look changes (`look.set`/`look.revert`) take no lease, on all three CMSs.
+at the end of the turn (`/lease/release`). If tracy-web does not answer this door (older version, unreachable),
+or the answer does not confirm the lease, the EmDash write is refused before it reaches the site. Look changes
+(`look.set`/`look.revert`) take no lease, on all three CMSs.
 The text of EmDash contact forms (plugin `emdash-forms`, stored in the plugin's own store, which no content tool reaches)
 goes through the **form door** of `tracy_emdash` (25/10/2026): `form_list` reads, `form_words` changes exactly the words the customer reads (labels, hints,
 option labels with the same count, submit button, thank-you message) — the host reads the form, then sends `forms/update` back with only those words changed;
@@ -710,6 +715,7 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   scratch schemas over several connections (`tracy_db_load_dump`, `dump_sections.py split`: 2 + 2 in the merge, 4 for the
   preview's base; 2026-10-27). The two reads load beside the copy's dump (`load_reads`, in the background), not after it. A machine runs
   `TRACY_HEAVY_SLOTS` heavy webroot jobs at once (default 2; `lib/heavy-slots.sh`, slot 0 the old lock file).
+- **Record IDs and recovery:** renumbering uses unused holding numbers instead of a fixed offset, including when older syncs left real copy IDs above 2,000,000,000. Whole-table replacement preserves the original copy/live counters captured before renumbering. Taking a parent deletion also removes its owned operational rows. A site with an older `sync/id-map.json` and no `sync/id-map-revision` bypasses fingerprint and database reuse once; a successful merge prunes stale mappings and writes the revision marker, so an unchanged live site can recover.
 - **WordPress counters after Sync:** the merge queues native recounts when posts, comments or term relationships change, including whole-table replacement and deletion. After restoring the complete merged DB, WordPress recalculates term counts using each taxonomy's own counter and approved-comment counts through its native API. Kept column conflicts that change no row queue no recount, and absent final target tables are omitted.
 - **Conflicts: Tracy's version wins** (20/10/2026). Where both sites edited the same thing differently, the copy's version is kept —
   files with `git merge-file --ours` (colliding hunks take Tracy's, the rest of the live file still comes over), DB with
@@ -2283,8 +2289,14 @@ endpoint**.
   DeepSeek's own API (streamed), one computed from DeepSeek's published prices. DeepSeek Flash reads the kit's text
   looks with tool calls, at reasoning effort max. A run whose model reads no pictures (DeepSeek V4 Pro on DeepSeek's own API) gets the whole kit in its first message and
   no tools; a run that reads with tools is told to write after 20 reading calls or a read of parts it already had. Every
-  run stops past its cost budget (2 USD by default). On DeepSeek's own API the bench also reads the account balance
+  budgeted runs stop before another model call once their known cost reaches the budget (2 USD by default), or once
+  an answered call has no known cost and the budget can no longer be checked. One call can cross its cap before its
+  answer returns. On DeepSeek's own API the bench also reads the account balance
   (`GET /user/balance`) before and after a run and stores it on the run.
+- **Stop during a model call:** the shared bench loop reads cancellation every two seconds while a call is active and
+  aborts the provider request. The dispatched turn is saved as failed with an uncertain outcome: the provider may have
+  charged before the abort. Stop also interrupts retry backoff before another request is sent. A cancelled run is not
+  replayed automatically; its receipt remains in the turn history.
 - **Kit images** ([`kit-images.js`](apps/tracy-web/src/site-planner/kit-images.js)): the first time a kit version is needed,
   tracy-web **downloads the kit zip from GitHub** (the `template-kit-<template>-<version>.zip` asset of the kit's quickstart
   release, found through `quickstart_releases`, read with the releases credential), checks every image against the sha256 the
@@ -2409,6 +2421,9 @@ step's return is stopped with `session/cancel` and judged by what it wrote. A pa
 on; only a site check that cannot run takes the turns back and hands over the written site; the pass never throws to the
 step. Before the contract call the closing rule (`write-step/closing-ladder.js`, ADR 0044 decision 31) empties every kept slot that holds no customer content (returned by the writer, filled by no file, or a frame the picture step left without a picture) with its whole list row, or reports that its demo remains; the lines are the write report's `closing`. The bench reaches it with `run --repair --out <dir>` (`write-step-bench-step-nine.js`,
 `write-step-bench-repair-agent.js`).
+The final `site-write-report.json` also carries `pictureReview`: each picture that the fallback ladder kept after a
+looker rejection, with its frame, source, site path, rung and exact fault names. This is handover evidence, not a
+passing visual verdict.
 Repair prompts explicitly run unattended: they use existing assets or supported removal and do not ask for uploads or approval. Consent-required refusals such as `CONFIRM_FIRST` remain blocked; the repair instruction prohibits asking, asserting consent, or bypassing them through another door. Each repair turn has a ten-minute cap independent of the chain preparation deadline; expired turns are cancelled, checked, and retain unresolved findings. Deep image targets use compact asset selectors, and inline backgrounds carry their actual source URL.
 Queued repair pages are checked against the latest completed site check before opening a session. Before a scripted menu unpublish, step 9 reads the native record and refuses when `home: 1`; its stored `/home` path is not evidence that the root does not depend on it. Unavailable kept pages ask the agent to restore the CMS route and publication state, rather than remove a link. Failed-page repairs
 run first because a shared menu repair can restore several pages; all pages use the serial default. A
@@ -2420,6 +2435,11 @@ its bounded second round. New read-back failures and later regressions still und
 summary records per-turn verdicts, regressions, newly observed findings, remaining failures and any structured reasons the undo door supplies for a refusal. A red or unmeasured
 final check, failed repair verification or open turn makes the final report `stopped` with `STEP_NINE_CHECK_FAILED`
 and `writeStatus: done`; the chain cannot count a completed write as an accepted site.
+A Stop acknowledgement is not proof that a native turn ended. If its record remains open after the settle window,
+or cannot be read after Stop, no further repair writer starts and no undo runs while a turn remains open.
+The result retains the open turn as unverified. Rate waiting and comment request submission count toward the overall
+step deadline, but the native turn's execution window starts only after its prompt is accepted. Within one site check,
+HTML reads of the exact same path are shared across groups, including failures; the next check reads fresh pages.
 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
@@ -2857,6 +2877,12 @@ Since 22/10/2026, new Ask Tracy actions keep `selection.chatMode=client-send/1`.
 
 The agent reads research before a container exists through the `_conversation` context, calls `tracy_demo` provision.start/status/wait itself, reads the structure/baseline snapshot and saves a grouped plan before writing, then checks in the same turn. The backend only reconciles the job; it sends no initial/continuation/repair/wake prompt in the new mode. Site/session/native-turn permissions, Stop and write readiness are checked on the server. Retry keeps marker/site/session. Bulk opens each action's session in turn to send the user messages. The Open demo chat button restores navigation without creating a new build.
 
+Before a client-send build exists, reconciliation also checks an already frozen brief or requested logo/photo work.
+Pending research keeps waiting; terminal readiness, invalid input, withdrawn template and photo-label timeout failures
+end the action with their original code, allowing explicit Retry rather than waiting for the two-hour action timeout.
+Temporary preparation outages use the queue's bounded retry policy. Frozen revisions and late photo-label results never
+reopen an action that has failed.
+
 QA takes publicOrigin from the server-managed site address, checking that the hostname matches the site before using an alias. The origin keeps the real scheme/port, including Joomla force_ssl without canonical HTML; the port is not inferred from the template nor hard-coded per stand.
 
 In client-send mode, the user can continue the demo with a new message in the same chat after every accepted turn has finished normally. The new permission must come from an authenticated turn book: actor owner, source panel, open native prompt message ID/RPC, owner seat still present; CAS keeps one winning turn and accepts the same proof again on parallel/replay. Deadline/budget/baseline/research/plan are not reset. Any Stop/error/stale in the chain blocks continuation and requires an explicit Retry. Catalogue/plan.read/structure.read return a planGuide with canonical sources leading to the frozen bundle, field paths and native target samples; a wrong plan returns diagnostics, with no CMS write.
@@ -2923,13 +2949,29 @@ this kind (`SHEET_KINDS`).
 Doors (`apps/tracy-web/src/opportunities-build/own-site.js`, registered in the WO app): `GET /api/sites/from-business/find`,
 `POST /api/sites/from-business` (stores the business as the account's own opportunity, `candidate.ownSite` +
 `trade`, runs the shared research), `GET /api/sites/from-business/:id` (when research is `completed`, phase `choose`
-with `recommended`: the `autoTemplate` template suggested by trade), `POST /api/sites/from-business/:id/build`
+with `recommended`: the `autoTemplate` template suggested by trade). A waiting shared request reads its place run's
+state and error: a paused place run resumes through `resumeRequest`, at most three successful automatic resumes per
+business; a nonblocking advisory lock serialises concurrent polls without using up retries, and a resume failure is
+returned rather than hidden as continuing research. `POST /api/sites/from-business/:id/build`
 (`{selection:{cms,design,quickstart}}` chosen by the customer — keep the suggestion or pick another in the Design templates popup, which
 opens with a "Tracy's pick" frame from `requestTemplatePick(…, {recommended})`; accepts exactly one `agent-demo/1` +
 `client-send/1` action with `ownSite:true` and `suggested.taken`; quota `ownSiteBuildsPerAccountPerDay`, default 3, in
 `/ops` WO). The browser calls WO's `chat/prepare` then opens `/<site>/s/<session>?wo-demo-chat=<action>`; the WO plugin on
 the destination page sends the brief as with a demo. On an http stand (no `crypto.subtle`) the plugin does not re-hash the brief itself; the
 `chat/send` door still matches `briefHash`.
+
+For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
+follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
+a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds.
+Server-owned `agent-demo/1` actions share the picture-label run warmed during template choice. Pending labels queue
+the action until `retryAt` without freezing a revision or provisioning a site. A label run past its five-minute
+bound returns `DEMO_PICTURE_LABELS_TIMEOUT` without freezing empty labels; a later prepare or explicit Retry can
+adopt the same run's settled answer. Historical server actions without that workflow keep their existing brief path.
+An explicit `POST …/:id/build` with `{retryOf:<failed action id>}` retries the same owned business using the shared
+acceptance path: the original revision, build request, template and session remain frozen. The Retry request id is
+stable per failed action, and state reads follow the replacement action. Sending a new template with Retry is refused.
+The writer and plan guide require a review quote only when frozen usable review evidence contains one; absent reviews
+do not prevent writing articles or other pages. Existing review attribution and hold rules still apply.
 
 The customer's site is not a demo: no retention clock (`startDemoClock` skips `ownSite` actions), not shown
 in the WO list (`stagedSql`), no outreach. The message shown in chat is a single sentence; the steps are in
