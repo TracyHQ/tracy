@@ -4,6 +4,7 @@
 // cache write costs more and buys nothing here), images to the agent at a 512 px long edge (the largest logo spot is
 // 195 by 56), and an output budget and effort sized for a brand file, not a site plan. The cost cap is 1 USD per run,
 // checked before every model call (brand-spend.js).
+import { BRAND_SPOT_CHECK } from './gate-spots.js'
 import { benchHarnessFor } from '../lib/bench-harness.js'
 
 /** The most one run may spend on model calls, all three parts together, in USD. */
@@ -28,6 +29,7 @@ export function brandHarnessFor(model, providerId, { noCaps = false } = {}) {
   } = benchHarnessFor(model, providerId)
   return {
     ...base,
+    brandSpotCheck: BRAND_SPOT_CHECK,
     effort: 'high',
     maxTokens: BRAND_MAX_TOKENS,
     cacheTtl: { system: '5m', rolling: '5m' },

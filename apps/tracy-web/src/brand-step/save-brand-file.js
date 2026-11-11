@@ -14,6 +14,7 @@
 // Recomputed here: the accent lift (accent-lift rule), the favicon code check
 // on both browser tabs, the plate contrast, the name slots (name_slots rule), transparency of every image and the
 // exact colours of an icon. The order of the checks, and so the order of the rejected list, is the approved lab gate's.
+import { BRAND_SPOT_CHECK, checkSpotImages } from './gate-spots.js'
 import { checkFaviconSet } from './gate-favicon.js'
 import { checkImages, checkOwnerTasks } from './gate-finish.js'
 import { createContext } from './gate-context.js'
@@ -25,9 +26,11 @@ import { kitProblem } from './kit-grounds.js'
 const reject = (field, why) => ({ ok: false, rejected: [{ field, why }] })
 const isObject = (x) => x && typeof x === 'object' && !Array.isArray(x)
 
-export async function checkBrandFile({ brandFile, brief, kit, files }) {
+export async function checkBrandFile({ brandFile, brief, kit, files, spotCheck = BRAND_SPOT_CHECK }) {
   if (!isObject(brandFile)) return reject('(file)', 'the brand file must be a JSON object')
   if (!isObject(brief)) return reject('(brief)', 'the brief is needed to check the name and colours')
+  if (spotCheck !== null && spotCheck !== BRAND_SPOT_CHECK)
+    return reject('(spot check)', 'unsupported brand spot check version')
   const problem = kitProblem(kit)
   if (problem) return reject('(kit)', problem)
   if (!files || typeof files.has !== 'function' || typeof files.read !== 'function')
@@ -40,6 +43,7 @@ export async function checkBrandFile({ brandFile, brief, kit, files }) {
     checkNameLogos(ctx)
     checkLooks(ctx)
     checkSpotsAndShown(ctx)
+    if (spotCheck === BRAND_SPOT_CHECK) await checkSpotImages(ctx)
     await checkFaviconSet(ctx)
     checkOwnerTasks(ctx)
     await checkImages(ctx)

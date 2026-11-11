@@ -77,7 +77,8 @@ export async function playRound(deps, { row, ready, round, followUp, leaseToken,
         brandFile: attempt,
         brief: row.brief,
         kit: ready.kit.doc,
-        files: ready.ctx.files
+        files: ready.ctx.files,
+        spotCheck: row.harness.brandSpotCheck ?? null
       })
     : { ok: false, rejected: [NO_FILE] }
   if (gate.ok) {
