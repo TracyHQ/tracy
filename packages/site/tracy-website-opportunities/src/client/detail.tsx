@@ -60,7 +60,6 @@ import {
 import {
   type GooglePlaceView,
   type PageSpeedView,
-  PROFILE_FIELDS,
   buildFailure,
   briefStatus,
   demoRows,
@@ -79,7 +78,6 @@ import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
 import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
 import { type HoursChoice, type HoursSaved } from './profile-hours-row.tsx'
-import { ratingRowView } from './profile-rating-model.ts'
 import type { RatingChoice } from './profile-rating-row.tsx'
 import { type ReadingPick, readingRowsView } from './profile-reading-model.ts'
 import { briefSummaryRows, businessBriefRows, orderBriefRows, websiteRow } from './business-brief-model.ts'
@@ -92,14 +90,7 @@ import { WorkspaceCard, demoHostOf } from './workspace-card.tsx'
 import { FactsBody } from './facts-body.tsx'
 import { ownerDoorsOf } from './owner-doors.ts'
 import { factsBodyView } from './facts-body-model.ts'
-import {
-  type SectionId,
-  type SubSection,
-  pageOf,
-  researchRunning as researchMovingOf,
-  sectionMetas,
-  sourceCounts
-} from './section-model.ts'
+import { type SubSection, pageOf, researchRunning as researchMovingOf } from './section-model.ts'
 import { overviewSourcesOf, sourcesToShow } from './source-links-model.ts'
 import { DetailsHeader } from './details-header.tsx'
 // [TAM] preview panel (temporary, never ships)
@@ -530,7 +521,6 @@ export function DetailView({
     onChanged()
     return 'ok'
   }
-  const ratingRow = ratingRowView(profile)
   const saveRating = async (choice: RatingChoice): Promise<boolean> => {
     const answer = await api.setRating(id, choice)
     if (!answer.ok) return false
@@ -807,24 +797,6 @@ export function DetailView({
   const mediaView = mediaRowView({ profile, media, sources })
   const profileRows = profileFields(profile)
   const researchMoving = researchMovingOf({ research, researchJob: job })
-  const metas = sectionMetas({
-    research,
-    researchJob: job,
-    profile: {
-      filled: profileRows.length + (ratingRow === null ? 0 : 1) + (readingRows === null ? 0 : 1),
-      total: PROFILE_FIELDS.length + 2
-    },
-    sources: sourceCounts(shownSources),
-    briefJob: briefJob.job,
-    brief: isRecord(body.brief) ? body.brief : null,
-    media: {
-      photos: mediaView.photos.groups.reduce((n, g) => n + g.tiles.filter((m) => m.stored).length, 0),
-      videos: mediaView.videos.tiles.filter((m) => m.stored).length
-    },
-    demo: demoView.state,
-    locale
-  })
-  const metaOf = (id: SectionId) => metas.find((e) => e.id === id)
   // What else research read about the place (menu, Google, reviews, current website, social, place profile).
   const hasMore =
     research.done &&
@@ -1065,7 +1037,6 @@ export function DetailView({
           t={t}
           section={section}
           name={shownName}
-          meta={metaOf(shown)}
           view={stripView}
           stepAction={stepAction}
           onSection={onSection}

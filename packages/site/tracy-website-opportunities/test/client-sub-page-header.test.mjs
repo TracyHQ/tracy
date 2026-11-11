@@ -1,8 +1,7 @@
 /**
  * The header of a Details sub-page (#537, option B with a round back button): one title row with the back button,
- * the title, the "Step n of 3" chip, the page's count and its actions, and the thin progress line whose segments read
- * done, current or upcoming from the same `stepperView` the Progress band draws. The real SubPage is mounted with
- * React 18 in jsdom. Every business in this file is invented.
+ * the title, the "Step n of 3" chip and the page's actions, and one muted line that says what the page is for. The
+ * real SubPage is mounted with React 18 in jsdom. Every business in this file is invented.
  *
  *   node --test --test-concurrency=1 packages/site/tracy-website-opportunities/test/client-sub-page-header.test.mjs
  */
@@ -99,7 +98,7 @@ const RESEARCHED = { state: 'done', researchedAt: '2026-11-09T08:00:00Z', done: 
 const NAME = 'Harbour Kite Lessons'
 
 /** Mounts a sub-page with the given steps input; records Details, approve and step presses. */
-function mount({ section = 'profile', input, approval = null, meta, stepAction = null }) {
+function mount({ section = 'profile', input, approval = null, stepAction = null }) {
   const calls = []
   const host = document.createElement('div')
   document.body.append(host)
@@ -112,7 +111,6 @@ function mount({ section = 'profile', input, approval = null, meta, stepAction =
           t,
           section,
           name: NAME,
-          meta,
           view: lib.stepperView(input),
           stepAction,
           onSection: (s) => calls.push(['section', s]),
@@ -130,34 +128,22 @@ function mount({ section = 'profile', input, approval = null, meta, stepAction =
       el.dispatchEvent(new window.MouseEvent('click', { bubbles: true }))
       await new Promise((r) => setTimeout(r, 10))
     })
-  const segs = () => [...host.querySelectorAll('.tracy-wo-subhead-seg')]
   const done = () => lib.act(() => root.unmount())
-  return { host, calls, press, segs, done }
+  return { host, calls, press, done }
 }
 
-test('Business facts waiting for review: step 1 current, the rest upcoming; chip, count and title on one row', async () => {
+test('Business facts: title, Step 1 chip and the description; no count, no progress line, no breadcrumb', async () => {
   const page = mount({
     input: { research: RESEARCHED, demo: 'none', approval: { profile: 'needed', brief: 'none' } },
-    approval: { kind: 'profile', pending: true, approvedLine: null },
-    meta: { status: [{ key: 'section.meta.profile.fields.other', params: { count: 6 } }] }
+    approval: { kind: 'profile', pending: true, approvedLine: null }
   })
-  const row = page.host.querySelector('.tracy-wo-subhead-row')
+  const head = page.host.querySelector('.tracy-wo-subhead')
+  const row = head.querySelector('.tracy-wo-subhead-row')
   assert.equal(row.querySelector('h2').textContent, '[details.section.profile]')
   assert.equal(row.querySelector('.tracy-wo-subhead-chip').textContent, '[band.kicker{"n":1,"total":3}]')
-  assert.equal(
-    row.querySelector('.tracy-wo-subhead-count').textContent,
-    '[section.meta.profile.fields.other{"count":6}]'
-  )
-  assert.deepEqual(
-    page.segs().map((s) => s.dataset.state),
-    ['current', 'future', 'future']
-  )
-  assert.equal(page.segs()[0].getAttribute('aria-current'), 'step')
-  assert.deepEqual(
-    page.segs().map((s) => s.textContent),
-    ['1. [details.section.profile]', '2. [details.section.brief]', '3. [step.build]']
-  )
-  // No breadcrumb, no text Back button, no step band.
+  assert.equal(head.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.profile]')
+  assert.equal(head.querySelector('.tracy-wo-subhead-count'), null)
+  assert.equal(head.querySelector('ol, .tracy-wo-subhead-line'), null)
   assert.equal(page.host.querySelector('.tracy-wo-crumbs'), null)
   assert.equal(page.host.querySelector('.tracy-wo-progress-strip'), null)
   assert.equal(
@@ -188,14 +174,17 @@ test('the primary Approve stays at the end of the title row and still approves',
   const buttons = [...acts.querySelectorAll('button')]
   assert.deepEqual(
     buttons.map((b) => b.textContent),
-    ['step', '[approve.profile]']
+    ['step', '[approve.continue]']
   )
+  // No scroll gate: Approve is on at once, and no scroll note stands beside it.
+  assert.equal(buttons[1].disabled, false)
+  assert.doesNotMatch(acts.textContent, /scrollHint/)
   await page.press(buttons[1])
   assert.deepEqual(page.calls, [['approve', 'profile']])
   page.done()
 })
 
-test('the brief page after the facts were approved: step 1 done with a check, step 2 current, chip Step 2', () => {
+test('the brief page: Step 2 chip and its own description', () => {
   const page = mount({
     section: 'brief',
     input: {
@@ -210,17 +199,11 @@ test('the brief page after the facts were approved: step 1 done with a check, st
     page.host.querySelector('.tracy-wo-subhead-chip').textContent,
     '[band.kicker{"n":2,"total":3}]'
   )
-  assert.deepEqual(
-    page.segs().map((s) => s.dataset.state),
-    ['done', 'current', 'future']
-  )
-  assert.notEqual(page.segs()[0].querySelector('svg'), null)
-  assert.equal(page.segs()[1].querySelector('svg'), null)
-  assert.equal(page.host.querySelector('.tracy-wo-subhead-count'), null)
+  assert.equal(page.host.querySelector('.tracy-wo-subhead-desc').textContent, '[subhead.desc.brief]')
   page.done()
 })
 
-test('both approved and the site built: every segment done; an approved page shows when, no button', () => {
+test('an approved page shows when it was approved, with no button', () => {
   const page = mount({
     input: {
       research: RESEARCHED,
@@ -230,12 +213,18 @@ test('both approved and the site built: every segment done; an approved page sho
     },
     approval: { kind: 'profile', pending: true, approvedLine: 'Approved Nov 9' }
   })
-  assert.deepEqual(
-    page.segs().map((s) => s.dataset.state),
-    ['done', 'done', 'done']
-  )
   const acts = page.host.querySelector('.tracy-wo-subhead-acts')
   assert.equal(acts.querySelector('button'), null)
   assert.match(acts.textContent, /Approved Nov 9/)
   page.done()
+})
+
+test('the descriptions are formal English without dashes and never speak of steps', async () => {
+  const { en } = await import('../src/client/strings.ts')
+  for (const key of ['subhead.desc.profile', 'subhead.desc.brief']) {
+    assert.equal(typeof en[key], 'string')
+    assert.doesNotMatch(en[key], /[\u2013\u2014]|\bstep|\bnext\b/i)
+  }
+  assert.equal(en['approve.continue'], 'Approve and continue')
+  assert.equal(en['approve.scrollHint'], undefined)
 })

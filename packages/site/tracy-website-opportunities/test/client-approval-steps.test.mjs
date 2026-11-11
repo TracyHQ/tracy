@@ -216,7 +216,7 @@ test('the seller reads Business facts, never Profile, in the review copy', () =>
   assert.equal(en['details.section.profile'], 'Business facts')
   assert.equal(en['chip.profileReview'], 'Business facts need review')
   assert.equal(en['stepper.reviewProfile'], 'Review business facts ›')
-  assert.equal(en['approve.profile'], 'Approve business facts and continue')
+  assert.equal(en['approve.continue'], 'Approve and continue')
   const keys = Object.keys(en).filter((k) =>
     /^(stepper|band|chip|approve|gate|site\.notYet|brief\.chip)/.test(k)
   )

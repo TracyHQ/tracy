@@ -1325,9 +1325,12 @@ export const en = {
 
   /** The approval footer of the Profile and Business brief sub-pages (#537). */
   'approve.hint': 'Check every row. Edit anything that is wrong, then approve.',
-  'approve.scrollHint': 'Scroll to the end to approve.',
-  'approve.profile': 'Approve business facts and continue',
-  'approve.brief': 'Approve site content brief and continue',
+  // The one line under the title of a Details sub-page (#537)
+  'subhead.desc.profile':
+    'What Tracy found about your business. Switch off anything that should not appear on the site and edit anything that is wrong, then approve.',
+  'subhead.desc.brief':
+    'The words and sections Tracy wrote for your site from the approved facts. Edit anything you would say differently, then approve.',
+  'approve.continue': 'Approve and continue',
   'approve.saving': 'Approving…',
   'approve.done.profile': 'Business facts approved {date}',
   'approve.done.brief': 'Site content brief approved {date}',

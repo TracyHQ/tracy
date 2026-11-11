@@ -1,11 +1,11 @@
 /**
  * The seller's own steps on Details (#537):
- *   - the approval action in the header of the Profile and Business brief sub-pages: Approve ... and continue,
- *     enabled once the page has been scrolled to its end (at once when it fits without scrolling);
+ *   - the approval action in the header of the Profile and Business brief sub-pages: Approve and continue,
+ *     enabled as soon as the page can be approved;
  *   - Add more: one photo or video added to the Profile's Photos & video.
  * Each press goes through the door the caller passes and answers a refusal code (or null), shown in words here.
  */
-import { type JSX, useEffect, useRef, useState } from 'react'
+import { type JSX, useRef, useState } from 'react'
 import { Plus } from 'lucide-react'
 import { Button, Spinner } from '@tracy/ui'
 
@@ -24,29 +24,6 @@ export function gateText(t: Translate, code: string | null): string | null {
 const codeText = (t: Translate, prefix: string, code: string): string =>
   t(known(`${prefix}.${code}`) ? `${prefix}.${code}` : `${prefix}.other`)
 
-/**
- * True once the end marker has been seen inside the page's scroll box: scrolled to the end, or the content fits
- * without scrolling. Without IntersectionObserver (an old browser) it is true at once, never a dead button.
- */
-export function useReachedEnd(): [(el: HTMLDivElement | null) => void, boolean] {
-  const [el, setEl] = useState<HTMLDivElement | null>(null)
-  const [reached, setReached] = useState(false)
-  useEffect(() => {
-    if (el === null || reached) return
-    if (typeof IntersectionObserver === 'undefined') return setReached(true)
-    const root = el.closest<HTMLElement>('.tracy-wo-tab')
-    const seen = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setReached(true)
-      },
-      { root, threshold: 0 }
-    )
-    seen.observe(el)
-    return () => seen.disconnect()
-  }, [el, reached])
-  return [setEl, reached]
-}
-
 /** What the header of a Profile or Business brief sub-page offers: Approve while it is pending. */
 export interface ApprovalView {
   kind: 'profile' | 'brief'
@@ -59,19 +36,10 @@ export interface ApprovalView {
 }
 
 /**
- * Approve ... and continue at the right end of the sub-page title row (`sub-page-header.tsx`), with its one note
- * before it: the refusal, when it was approved, or the scroll hint while the button is off.
+ * Approve and continue at the right end of the sub-page title row (`sub-page-header.tsx`), with its one note
+ * before it: the refusal, or when it was approved.
  */
-export function ApprovalActions({
-  t,
-  view,
-  reached
-}: {
-  t: Translate
-  view: ApprovalView
-  /** The content has been scrolled to its end (or fits). */
-  reached: boolean
-}): JSX.Element {
+export function ApprovalActions({ t, view }: { t: Translate; view: ApprovalView }): JSX.Element {
   const [busy, setBusy] = useState(false)
   const [refused, setRefused] = useState<string | null>(null)
   const press = async (): Promise<void> => {
@@ -82,7 +50,6 @@ export function ApprovalActions({
     setBusy(false)
     if (code !== null) setRefused(code)
   }
-  const label = t(view.kind === 'profile' ? 'approve.profile' : 'approve.brief')
   const approvable = view.pending && view.approvedLine === null
   return (
     <div className="tracy-wo-approve" data-kind={view.kind}>
@@ -92,21 +59,11 @@ export function ApprovalActions({
         </p>
       ) : view.approvedLine !== null ? (
         <p className="tracy-wo-muted tracy-wo-small">{view.approvedLine}</p>
-      ) : approvable && !reached ? (
-        <p className="tracy-wo-muted tracy-wo-small" data-note="hint">
-          {t('approve.scrollHint')}
-        </p>
       ) : null}
       {approvable ? (
-        <Button
-          type="button"
-          size="sm"
-          disabled={!reached || busy}
-          title={reached ? undefined : t('approve.scrollHint')}
-          onClick={() => void press()}
-        >
+        <Button type="button" size="sm" disabled={busy} onClick={() => void press()}>
           {busy ? <Spinner label={t('approve.saving')} /> : null}
-          {busy ? t('approve.saving') : label}
+          {t(busy ? 'approve.saving' : 'approve.continue')}
         </Button>
       ) : null}
     </div>

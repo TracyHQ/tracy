@@ -37,7 +37,6 @@ export const REVIEW_CSS = `
 .tracy-wo-band-sub-state { margin-left: auto; font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-band-build .tracy-wo-progress { padding: 0; border: 0; background: transparent; }
 .tracy-wo-band-acts { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
-.tracy-wo-approve-end { height: 1px; }
 .tracy-wo-add-media { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .tracy-wo-profile-media { display: flex; flex-direction: column; gap: 8px; padding-top: 10px; border-top: 1px solid var(--border); }
 .tracy-wo-profile-media-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
