@@ -19,6 +19,8 @@
       "!docs/generated/**",
       // The generated content map and the coverage file measured against its bytes (their sha256 is bound): never reformatted.
       "!contracts/*/content-*.json",
+      // The approved template kit is the copy its zip carries byte for byte: never reformatted.
+      "!contracts/*/template-kit.json",
       "!seed/**",
       "!evidence/**",
       "!data/**",

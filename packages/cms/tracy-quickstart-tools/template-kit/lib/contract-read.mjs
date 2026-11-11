@@ -8,6 +8,7 @@ import { join } from 'node:path'
 
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { inlineOf } from './inline-marks.mjs'
+import { withEmdashPages } from './site/adapters/emdash-map.mjs'
 import { withWordPressPages } from './site/adapters/wordpress-map.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
@@ -102,13 +103,31 @@ export function useWordPressSections(sectionsByPost) {
 }
 
 /**
+ * The parts of each EmDash page, by page path, that this run read from the site (site/emdash-sections-file.mjs); null
+ * until a run sets them (cli.mjs, once, beside `usePlatform`), and the pages then stay header, main body and footer.
+ * @type {Record<string, object>|null}
+ */
+let emdashSections = null
+/** The served path of the file each picture slot holds, by slot key; null when the run could not read it. */
+let emdashMedia = null
+
+/** Settle, once per run, the EmDash page sections every read of the contract map splits pages by. */
+export function useEmdashSections(sectionsByPath, mediaBySlot = null) {
+  emdashSections = sectionsByPath ?? null
+  emdashMedia = mediaBySlot ?? null
+}
+
+/**
  * The content map in the shape the kit reads, whatever the platform: a WordPress map lists no pages, so they are
  * derived from its page entities and the release inventory beside it (`wordpress-map.mjs`), each page's post content
- * split into its sections when the run read them.
+ * split into its sections when the run read them; an EmDash map lists its pages but not what a page prints around its
+ * entry, so their parts come from the run's reading of the site (`emdash-map.mjs`).
  * @param {object} map
  * @param {string} contract the contract folder
  */
 function withPlatformShape(map, contract) {
+  if (/\/emdash\//.test(String(map.schemaVersion ?? '')))
+    return withEmdashPages(map, emdashSections, emdashMedia)
   const manifest = readIf(join(contract, 'manifest.json'))
   if (String(manifest?.platform ?? '').toLowerCase() !== 'wordpress') return map
   return withWordPressPages(map, readIf(join(contract, 'inventory.json')), wordpressSections)

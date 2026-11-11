@@ -291,6 +291,7 @@ export interface Chrome {
   next_label?: string;
   more_label?: string;
   photos_label?: string;
+  search_label?: string;
   gallery_link_label?: string;
   not_found_code?: string;
   not_found_title?: string;

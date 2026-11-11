@@ -1,0 +1,524 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage (emdash)",
+    "version": "1.8.0"
+  },
+  "platform": "emdash",
+  "contract": {
+    "id": "tracy-restaurant/emdash-0.x/1.0.2",
+    "contentMapSha256": "226469bc5d26527e24c555c561acdcd4c572f5e8381d2f16002caba151ed161e",
+    "presentationLockSha256": null
+  },
+  "measuredAt": "2026-11-11T07:58:43.566Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "bound": {
+    "stamp": 775,
+    "clone": 26,
+    "menu": 469,
+    "entry": 464,
+    "words": 274,
+    "date": 30,
+    "composite": 217,
+    "media": 202,
+    "route": 92,
+    "term": 100,
+    "excerpt": 6
+  },
+  "lockedFiles": [
+    "/brand/masthead-default.jpg",
+    "/brand/subscribe-decor.png"
+  ],
+  "pages": {
+    "audited": 43,
+    "inMap": 37,
+    "notInMap": 6,
+    "failed": 0,
+    "failures": [],
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 442,
+      "matched": 423,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 14,
+      "core": 5,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 7
+    },
+    "images": {
+      "total": 106,
+      "matched": 102,
+      "locked": 2,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 2,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 83,
+      "matched": 83,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 3
+    }
+  },
+  "coverage": {
+    "text": 96.8,
+    "images": 100,
+    "links": 100
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "# article",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-wrap > div.rs-category-card > h3 > span.rs-count",
+      "pages": 1,
+      "firstPage": "/explore/j-pages/all-categories",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "# articles",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-wrap > div.rs-category-card > h3 > span.rs-count",
+      "pages": 3,
+      "firstPage": "/explore/j-pages/all-categories",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "# Photos",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "section.rs-gallery-strip > div.rs-strip-row > a.rs-strip-item > span.rs-photos-badge",
+      "pages": 6,
+      "firstPage": "/",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "End",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "nav.rs-pagination > ul > li > a",
+      "pages": 3,
+      "firstPage": "/blog",
+      "accepted": "Interface wording of the pager the template prints around the page numbers (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-wrap > div.rs-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact/contact-us",
+      "accepted": "Label of the Forms plugin's anti-spam field; interface wording, not demo content a customer rewrites."
+    },
+    {
+      "kind": "text",
+      "value": "Page # of #",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-main-grid > div > nav.rs-pagination > div.rs-pagination-count",
+      "pages": 3,
+      "firstPage": "/blog",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Search Terms:",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.rs-main-grid > div > form.rs-search-form > label.rs-display",
+      "pages": 1,
+      "firstPage": "/explore/j-pages/smart-search",
+      "accepted": "Interface wording of the template's search results page around the visitor's own query; carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Start",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "nav.rs-pagination > ul > li.is-disabled > span",
+      "pages": 3,
+      "firstPage": "/blog",
+      "accepted": "Interface wording of the pager the template prints around the page numbers (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    }
+  ],
+  "hygiene": [],
+  "sitePages": [
+    {
+      "entity": "pages.home",
+      "title": "Read the latest News + Blog",
+      "route": "/",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.about-us",
+      "title": "About us",
+      "route": "/about-us",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.menu",
+      "title": "About us",
+      "route": "/menu",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.featured-articles",
+      "title": "Featured Articles",
+      "route": "/explore/j-pages/featured-articles",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.all-categories",
+      "title": "All Categories",
+      "route": "/explore/j-pages/all-categories",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.our-history",
+      "title": "History",
+      "route": "/about-us/our-history",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.phone-reservation",
+      "title": "Phone Reservation",
+      "route": "/contact/phone-reservation",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.contact-us",
+      "title": "Contact Us",
+      "route": "/contact/contact-us",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.simple-menu",
+      "title": "Simple Menu",
+      "route": "/menu/simple-menu",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.menu-with-image",
+      "title": "Menu with Image",
+      "route": "/menu/menu-with-image",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.2-column-menu",
+      "title": "2 Column Menu",
+      "route": "/menu/2-column-menu",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.offers",
+      "title": "Offers",
+      "route": "/offers",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.blog",
+      "title": "Blog",
+      "route": "/blog",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.gallery",
+      "title": "Gallery",
+      "route": "/gallery",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.smart-search",
+      "title": "Smart Search",
+      "route": "/explore/j-pages/smart-search",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.tagged-items",
+      "title": "Tagged Items",
+      "route": "/explore/j-pages/tagged-items",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.4-habits-that-can-improve-your-customer-service",
+      "title": "4 Habits That Can Improve Your Customer Service",
+      "route": "/restaurant-business/4-habits-that-can-improve-your-customer-service",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.chipotle-to-launch-burger-spinoff-this-fall",
+      "title": "Chipotle to launch burger spinoff this fall",
+      "route": "/restaurant-marketing/chipotle-to-launch-burger-spinoff-this-fall",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.how-to-help-your-chef-achieve-a-better-work-life-balance",
+      "title": "How To Help Your Chef Achieve A Better Work-Life Balance",
+      "route": "/restaurant-marketing/how-to-help-your-chef-achieve-a-better-work-life-balance",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.indies-aren-t-sold-on-tech",
+      "title": "Indies aren't sold on tech",
+      "route": "/restaurant-news/indies-aren-t-sold-on-tech",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.starbucks-brings-under-armour-exec-on-board",
+      "title": "Starbucks brings Under Armour exec on board",
+      "route": "/restaurant-business/starbucks-brings-under-armour-exec-on-board",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.8-trends-trickling-down-to-mainstream-menus",
+      "title": "8 trends trickling down to mainstream menus",
+      "route": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.starbucks-faces-a-big-recall",
+      "title": "Starbucks faces a big recall",
+      "route": "/restaurant-guide/starbucks-faces-a-big-recall",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.logan-s-said-to-be-weighing-bankruptcy",
+      "title": "Logan's said to be weighing bankruptcy",
+      "route": "/restaurant-guide/logan-s-said-to-be-weighing-bankruptcy",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.fish-sauces-seep-onto-all-sorts-of-menus",
+      "title": "Fish sauces seep onto all sorts of menus",
+      "route": "/restaurant-guide/fish-sauces-seep-onto-all-sorts-of-menus",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.denny-s-adopts-a-pancake-guarantee",
+      "title": "Denny\u2019s adopts a pancake guarantee",
+      "route": "/restaurant-guide/denny-s-adopts-a-pancake-guarantee",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.blt-on-pimento-cheese-biscuit",
+      "title": "BLT on Pimento Cheese Biscuit",
+      "route": "/restaurant-guide/blt-on-pimento-cheese-biscuit",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+      "title": "McDonald\u2019s makes 'clean' tweaks to some menu items",
+      "route": "/restaurant-marketing/mcdonald-s-makes-clean-tweaks-to-some-menu-items",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.how-the-gop-and-dems-differ-on-restaurant-issues",
+      "title": "How the GOP and Dems differ on restaurant issues",
+      "route": "/restaurant-marketing/how-the-gop-and-dems-differ-on-restaurant-issues",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-1",
+      "title": "Sample Album 1",
+      "route": "/gallery/sample-album-1",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-2",
+      "title": "Sample Album 2",
+      "route": "/gallery/sample-album-2",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-3",
+      "title": "Sample Album 3",
+      "route": "/gallery/sample-album-3",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-4",
+      "title": "Sample Album 4",
+      "route": "/gallery/sample-album-4",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-5",
+      "title": "Sample Album 5",
+      "route": "/gallery/sample-album-5",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-6",
+      "title": "Sample Album 6",
+      "route": "/gallery/sample-album-6",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.sample-album-7",
+      "title": "Sample Album 7",
+      "route": "/gallery/sample-album-7",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.chefs",
+      "title": "Chefs",
+      "route": "/pages/chefs",
+      "opens": "live",
+      "status": 200
+    }
+  ],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/2",
+    "applies": false,
+    "r1": {
+      "facts": 432,
+      "slots": 778,
+      "percent": 55.5
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 19,
+        "keys": [
+          "menu.snacks-x-salads.items[5].dish_description",
+          "menu.icream-and-juice.items[5].dish_description",
+          "menu.icream-and-juice.items[6].dish_description",
+          "menu.simple-menu.items[5].dish_description",
+          "menu.simple-menu.items[6].dish_description",
+          "menu.2-column-menu.items[5].dish_description",
+          "menu.2-column-menu.items[6].dish_description",
+          "timeline.our-history-timeline.items[2].description",
+          "happyhours.happy-hours-style-2.hp_info",
+          "happyhours.happy-hours-style-2.hp_other_info",
+          "happyhours.happy-hours-style-3.hp_info",
+          "happyhours.happy-hours-style-3.hp_other_info"
+        ]
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 15,
+        "keys": [
+          "slideshow.slideshow.items[0].slide_link",
+          "slideshow.slideshow.items[1].slide_link",
+          "slideshow.slideshow.items[2].slide_link",
+          "features_intro.features-intro.items[0].btn_link",
+          "features_intro.features-intro.items[1].btn_link",
+          "statistics.you-re-in-good-restaurant.button_link",
+          "happyhours.happy-hours-style-1.hp_link",
+          "happyhours.happy-hours-style-2.hp_link",
+          "happyhours.happy-hours-style-3.hp_link",
+          "chrome.chrome.footer_map_url",
+          "chrome.chrome.footer_contact[2].href",
+          "banner.banner.button_link"
+        ]
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 0,
+        "keys": []
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 13,
+        "keys": [
+          "features_intro.features-intro.items[0].img_icon",
+          "features_intro.features-intro.items[1].img_icon",
+          "features_intro.special-offers.items[0].img_icon",
+          "features_intro.special-offers.items[1].img_icon",
+          "features_intro.special-offers.items[2].img_icon",
+          "testimonials.happy-customers.items[0].author_img",
+          "testimonials.happy-customers.items[1].author_img",
+          "testimonials.happy-customers.items[2].author_img",
+          "testimonials.happy-customers.items[3].author_img",
+          "teams.our-team.items[0].member_image",
+          "teams.our-team.items[1].member_image",
+          "teams.our-team.items[2].member_image"
+        ]
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 2,
+        "keys": [
+          "taxonomy.tag.fish + taxonomy.tag.menus",
+          "taxonomy.tag.menus + taxonomy.tag.seep"
+        ]
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  }
+}

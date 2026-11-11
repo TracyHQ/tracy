@@ -114,12 +114,14 @@ export function siteAddress(href, siteUrl, aliasHosts = []) {
  * How the site spells a page address: `index-php` (Joomla with no URL rewrite: pages live under /index.php) or
  * `pretty-slash` (WordPress pretty permalinks, `/%postname%/`: a page answers at its path with a trailing slash, and
  * any other spelling redirects to the site's own address, which a site served under a Host header cannot follow).
+ * `plain` (EmDash, Astro: a page answers at its path with no trailing slash and no prefix).
  * Set once per run from the contract's platform (`usePlatform` in lib/site/adapters/index.mjs).
  */
 let urlStyle = 'index-php'
-/** @param {'index-php'|'pretty-slash'} style */
+/** @param {'index-php'|'pretty-slash'|'plain'} style */
 export function setUrlStyle(style) {
-  if (style !== 'index-php' && style !== 'pretty-slash') throw new Error(`unknown url style ${style}`)
+  if (style !== 'index-php' && style !== 'pretty-slash' && style !== 'plain')
+    throw new Error(`unknown url style ${style}`)
   urlStyle = style
 }
 
@@ -133,6 +135,7 @@ export function urlOfPath(path, siteUrl) {
     const tail = p === '/' || /\.[a-z0-9]+$/i.test(p) ? p : `${p.replace(/\/+$/, '')}/`
     return new URL(`${tail}${query}`, base).href
   }
+  if (urlStyle === 'plain') return new URL(`${p}${query}`, base).href
   const tail = p === '/' ? '' : p
   return new URL(`/index.php${tail}${query}`, base).href
 }

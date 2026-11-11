@@ -22,6 +22,8 @@ export interface UiWords {
   onepageNav: string
   onepageFooter: string
   pagination: string
+  pageStart: string
+  pageEnd: string
   by: string
   categoryLabel: string
   adjacentArticles: string
@@ -69,6 +71,8 @@ export const UI_WORDS: Record<string, Partial<UiWords>> = {
     onepageNav: 'Onepage',
     onepageFooter: 'Onepage footer',
     pagination: 'Pagination',
+    pageStart: 'Start',
+    pageEnd: 'End',
     by: 'By',
     categoryLabel: 'Category:',
     adjacentArticles: 'Adjacent articles',

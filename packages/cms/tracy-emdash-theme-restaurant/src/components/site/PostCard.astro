@@ -25,7 +25,7 @@ const live = (await liveLinks(Astro.request, locale, [postPath(p)]))(postPath(p)
 	</div>
 	<div>
 		<h2>{live ? <a href={href(locale, postPath(p))}>{p.title}</a> : p.title}</h2>
-		<div class="rs-meta"><time datetime={p.date}>{formatDate(p.date, tag)}</time></div>
+		<div class="rs-meta-row">{p.category && <><span class="rs-cat-meta">{p.category.label}</span><span class="rs-cat-sep" aria-hidden="true">/</span></>}<div class="rs-meta"><time datetime={p.date}>{formatDate(p.date, tag)}</time></div></div>
 		{p.excerpt && <p>{p.excerpt}</p>}
 		{tags && p.tags.length > 0 && <div class="rs-tags">{p.tags.map((t) => <span class="rs-tag">{t.label}</span>)}</div>}
 	</div>

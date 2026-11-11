@@ -3259,10 +3259,40 @@ async function personaliseForm(api, { model, rule, facts, locale, journal = null
 }
 
 /**
+ * How to send the bytes of an upload EmDash asked for (`POST /_emdash/api/media/upload-url`). The answer is either the
+ * site's own relative route or a signed URL on the storage's origin (`upload-url.ts`). The site's token goes to the
+ * site's own origin only: a signed URL carries its own authority, so a foreign origin never sees the bearer, and the
+ * headers the answer names (the signed ones) are kept. A redirect is refused: it could carry the request, and the
+ * headers with it, to another origin.
+ * @param {{ uploadUrl: string, method?: string, headers?: Record<string, string> }} ask
+ * @param {{ site: string, token: string, mime: string }} o
+ */
+export function uploadRequest(ask, { site, token, mime }) {
+  const target = new URL(ask.uploadUrl, site)
+  const own = target.origin === new URL(site).origin
+  const headers = new Headers(ask.headers ?? {})
+  if (own) {
+    // The site's own door wants the same bearer the API calls carry: without it the PUT is answered 401.
+    headers.set('authorization', `Bearer ${token}`)
+    headers.set('X-EmDash-Request', '1')
+  } else {
+    headers.delete('authorization')
+    headers.delete('x-emdash-request')
+  }
+  headers.set('content-type', mime)
+  return { url: target, init: { method: ask.method ?? 'PUT', headers, redirect: 'error' } }
+}
+
+/**
  * Put one picture in the site's library and answer the value an image field holds — the same shape
  * `tools/seed-apply.mjs` writes, so the site resolves it the way it resolves the template's own.
  */
-async function uploadPicture(api, token, { bytes, mime, filename, alt }) {
+export async function uploadPicture(
+  api,
+  token,
+  { bytes, mime, filename, alt },
+  { fetchImpl = fetch, site = SITE } = {}
+) {
   const hash = `sha1:${createHash('sha1').update(bytes).digest('hex')}`
   const ask = await api('POST', '/_emdash/api/media/upload-url', {
     filename,
@@ -3273,17 +3303,8 @@ async function uploadPicture(api, token, { bytes, mime, filename, alt }) {
     ensureUniqueFilename: true
   })
   if (!ask.existing) {
-    // The upload door is the site's own, and it wants the same bearer the API calls carry —
-    // without it the PUT is answered 401 and the picture is drawn for nothing (measured 15/09).
-    const headers = new Headers(ask.headers ?? {})
-    headers.set('authorization', `Bearer ${token}`)
-    headers.set('X-EmDash-Request', '1')
-    headers.set('content-type', mime)
-    const put = await fetch(ask.uploadUrl.startsWith('http') ? ask.uploadUrl : `${SITE}${ask.uploadUrl}`, {
-      method: ask.method ?? 'PUT',
-      headers,
-      body: bytes
-    })
+    const { url, init } = uploadRequest(ask, { site, token, mime })
+    const put = await fetchImpl(url, { ...init, body: bytes })
     if (!put.ok) throw new Error(`upload ${filename} → HTTP ${String(put.status)}`)
     await api('POST', `/_emdash/api/media/${ask.mediaId}/confirm`, { contentHash: hash, size: bytes.length })
   }

@@ -307,6 +307,21 @@ export function buildBlock({
   // A text printed by several elements is several slots: each further element takes the next slot of the block's
   // own entities with those words, in content map order, never the first one again.
   const counts = desk?.textCounts ?? {}
+  // The same holds when one of the elements is a link whose label is a slot (a "Subscribe" heading above a "Subscribe"
+  // button): the links take their label slots, and the elements left over take the next slots with those words that no
+  // link names. Without this the heading's slot is declared nowhere and the coverage gate asks for it.
+  const labelIds = new Set(links.map((l) => l.labelId).filter(Boolean))
+  for (const t of textsShown.slice()) {
+    const k = counts[t.text] ?? 1
+    if (k < 2 || !t.label) continue
+    const n = normText(t.text)
+    const left = k - links.filter((l) => normText(l.label ?? '') === n).length
+    const twins = slots.filter(
+      (x) => x.type === 'text' && normText(x.sample) === n && !labelIds.has(neutralKey(x.key))
+    )
+    for (const x of twins.slice(0, Math.max(0, left)))
+      textsShown.push({ text: t.text, slot: neutralKey(x.key), source: x, how: 'whole' })
+  }
   for (const t of textsShown.slice()) {
     const k = counts[t.text] ?? 1
     if (k < 2 || !t.source || t.label || !ownKeys.has(t.source.key) || t.how !== 'whole') continue
