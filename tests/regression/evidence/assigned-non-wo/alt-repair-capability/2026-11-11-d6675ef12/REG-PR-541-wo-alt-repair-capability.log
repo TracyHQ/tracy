@@ -1,0 +1,64 @@
+$ node --test --test-reporter=tap apps/tracy-web/test/write-step-nine-alt-capability.test.mjs
+TAP version 13
+# Subtest: mapped contact image alt stays blocking without opening or repeating a native turn
+ok 1 - mapped contact image alt stays blocking without opening or repeating a native turn
+  ---
+  duration_ms: 1.722417
+  type: 'test'
+  ...
+# Subtest: supported article and module HTML alt storage still receives native repairs
+ok 2 - supported article and module HTML alt storage still receives native repairs
+  ---
+  duration_ms: 29.531208
+  type: 'test'
+  ...
+# Subtest: gallery alt slots preserve block to module aliases even when picture storage has no record alt
+ok 3 - gallery alt slots preserve block to module aliases even when picture storage has no record alt
+  ---
+  duration_ms: 2.786917
+  type: 'test'
+  ...
+# Subtest: absent or unmatched content maps retain the existing native repair path
+ok 4 - absent or unmatched content maps retain the existing native repair path
+  ---
+  duration_ms: 7.268292
+  type: 'test'
+  ...
+# Subtest: a supported independent fault still runs while unsupported contact alt remains red
+ok 5 - a supported independent fault still runs while unsupported contact alt remains red
+  ---
+  duration_ms: 2.575625
+  type: 'test'
+  ...
+# Subtest: direct unsupported comment metadata never claims the alt target is writable
+ok 6 - direct unsupported comment metadata never claims the alt target is writable
+  ---
+  duration_ms: 0.156541
+  type: 'test'
+  ...
+# Subtest: unsupported alts exposed after page recovery are recorded without a paid retry
+ok 7 - unsupported alts exposed after page recovery are recorded without a paid retry
+  ---
+  duration_ms: 1.3165
+  type: 'test'
+  ...
+# Subtest: runStepNine carries the write content map into unsupported alt scheduling and preserves failed handover
+ok 8 - runStepNine carries the write content map into unsupported alt scheduling and preserves failed handover
+  ---
+  duration_ms: 21.66725
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 316.530833
+
+--- stderr ---
+
+--- verdict ---
+PASS 

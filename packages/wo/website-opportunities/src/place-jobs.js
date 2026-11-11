@@ -49,6 +49,7 @@ export async function joinPlace(
     prefetchCampaignId = null,
     requiredSources = {},
     onlySource = null,
+    resumeJobId = null,
     starter = null,
     againPlan = null,
     staleBefore = null
@@ -87,6 +88,18 @@ export async function joinPlace(
     const answers = active.find((j) => !j.only_source || j.only_source === onlySource)
     if (answers) return { job: answers }
     if (active.some((j) => j.state === 'queued')) throw new JobActiveError(null)
+    // An explicit resume keeps the stopped source run and its paid checkpoints, even with a fresh base snapshot.
+    if (resumeJobId) {
+      const { rows } = await client.query(
+        `update wo_place_job set state='queued', last_error=null, updated_at=now(),
+           progress=progress || '{"crashRecoveries":0}'::jsonb,
+           started_by=coalesce($4, started_by),
+           started_by_account_id=case when $4::text is null then started_by_account_id else $5::uuid end
+         where id=$1 and place_id=$2 and only_source=$3 and state in ('paused','blocked') returning *`,
+        [resumeJobId, placeId, onlySource, by, byAccount]
+      )
+      if (rows[0]) return { job: rows[0] }
+    }
     const { rows } = await client.query(
       `insert into wo_place_job (place_id, force, work_priority, research_mode, only_source, started_by, started_by_account_id)
        values ($1, false, 0, 'full', $2, $3, $4) returning *`,

@@ -245,7 +245,13 @@ export async function resumeRequest(
         )
       ).rows[0]
     } else {
-      // A source-only retry must honor the same payment fence as the full preview, before any job or quota.
+      // Resume the persisted source scope; this operation has no caller-supplied onlySource argument.
+      await client.query('select 1 from wo_place where id = $1 for no key update', [placeId])
+      const previousRun = own.place_job_id
+        ? (await client.query('select only_source from wo_place_job where id = $1', [own.place_job_id]))
+            .rows[0]
+        : null
+      const onlySource = previousRun?.only_source ?? null
       if (onlySource) {
         const row = (
           await client.query(
@@ -264,6 +270,8 @@ export async function resumeRequest(
       }
       const joined = await joinPlace(client, placeId, {
         now: now(),
+        onlySource,
+        resumeJobId: own.place_job_id,
         requiredSources,
         starter: { kind: 'account', accountId }
       })

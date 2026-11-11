@@ -10,7 +10,7 @@ not ok 2 - no item of a fictional brief is without a role or a reason
   ---
   duration_ms: 1.727209
   type: 'test'
-  location: '/Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:129:1'
+  location: 'packages/wo/website-opportunities/test/brief-item-routes.test.mjs:129:1'
   failureType: 'testCodeFailure'
   error: |-
     club: kinds with no role and no reason
@@ -33,7 +33,7 @@ not ok 2 - no item of a fictional brief is without a role or a reason
       count: 39
   operator: 'deepStrictEqual'
   stack: |-
-    TestContext.<anonymous> (file:///Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:132:12)
+    TestContext.<anonymous> (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:132:12)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)
@@ -52,7 +52,7 @@ not ok 4 - a kind with no row is reported as unrouted
   ---
   duration_ms: 0.713167
   type: 'test'
-  location: '/Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:162:1'
+  location: 'packages/wo/website-opportunities/test/brief-item-routes.test.mjs:162:1'
   failureType: 'testCodeFailure'
   error: |-
     Expected values to be strictly deep-equal:
@@ -84,7 +84,7 @@ not ok 4 - a kind with no row is reported as unrouted
       count: 39
   operator: 'deepStrictEqual'
   stack: |-
-    TestContext.<anonymous> (file:///Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:165:10)
+    TestContext.<anonymous> (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:165:10)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)
@@ -97,7 +97,7 @@ not ok 5 - every kind the brief schema and the builder can produce has a row (a 
   ---
   duration_ms: 0.165875
   type: 'test'
-  location: '/Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:168:1'
+  location: 'packages/wo/website-opportunities/test/brief-item-routes.test.mjs:168:1'
   failureType: 'testCodeFailure'
   error: 'no role or reason for fact.posts: add it to BRIEF_ITEM_ROUTES'
   code: 'ERR_ASSERTION'
@@ -106,8 +106,8 @@ not ok 5 - every kind the brief schema and the builder can produce has a row (a 
   actual: false
   operator: '=='
   stack: |-
-    has (file:///Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:170:12)
-    TestContext.<anonymous> (file:///Users/binhnam/TCH-worktrees/david-issue-completion/packages/wo/website-opportunities/test/brief-item-routes.test.mjs:177:63)
+    has (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:170:12)
+    TestContext.<anonymous> (file://packages/wo/website-opportunities/test/brief-item-routes.test.mjs:177:63)
     Test.runInAsyncScope (node:async_hooks:214:14)
     Test.run (node:internal/test_runner/test:1047:25)
     Test.processPendingSubtests (node:internal/test_runner/test:744:18)

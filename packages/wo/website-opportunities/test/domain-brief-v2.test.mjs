@@ -307,7 +307,17 @@ test('the planner receives original owner posts as assessed facts, with their pu
   assert.ok(posts.length > 0)
   for (const post of posts) {
     assert.equal(post.value.kind, 'post')
-    assert.ok(HSC.posts.some((p) => (p.caption ?? p.text) === post.value.text))
+    assert.ok(
+      HSC.posts.some(
+        (p) =>
+          (p.caption ?? p.text)
+            .split(/\r?\n/)
+            .filter((line) => !line.includes('[Your Location]'))
+            .join('\n')
+            .trim() === post.value.text
+      )
+    )
+    assert.doesNotMatch(JSON.stringify(post), /\[Your Location\]/)
     assert.ok(post.evidence.length > 0)
   }
   assert.deepEqual(validateBrief(brief), { ok: true, errors: [] })

@@ -90,6 +90,8 @@ function builds(pool, engines, extra = {}) {
     sleep: instant,
     pollMs: 1,
     recoverOnStart: false,
+    // The host boundary succeeds unless the scenario supplies its own opening-seal failure.
+    webroot: { open: async () => ({ held: true }), close: async () => ({ held: true }) },
     ...extra
   })
 }

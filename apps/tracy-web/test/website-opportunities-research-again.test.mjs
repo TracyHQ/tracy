@@ -7,7 +7,7 @@ import { normalizeWoOpsSettings } from 'website-opportunities/src/wo-settings.js
 import { createExecutor } from 'website-opportunities/src/executor.js'
 import { imageInfoWith } from 'website-opportunities/src/media-info.js'
 import { joinPlace } from 'website-opportunities/src/place-jobs.js'
-import { requestResearch } from 'website-opportunities/src/place-requests.js'
+import { requestResearch, resumeRequest } from 'website-opportunities/src/place-requests.js'
 import { SOURCE_RETRY_MS } from 'website-opportunities/src/places.js'
 import { placeAgainPlan, queueResearchAgain } from 'website-opportunities/src/research-again.js'
 import { insertOpportunity } from 'website-opportunities/src/store.js'
@@ -647,11 +647,21 @@ test(
   'provider payment failure blocks the preview and source-only request before quota; repaired setup reopens it',
   opts,
   async () => {
-    const { domain } = await domainWith({ current: {} })
+    const { domain, calls } = await domainWith({ current: {} })
     const clock = { now: Date.parse('2026-10-24T05:00:00Z') }
     const { accountId, placeId } = await researchOnce(db.pool, executor(db.pool, domain, clock))
     const opportunity = (await db.pool.query('select * from wo_opportunity where account_id=$1', [accountId]))
       .rows[0]
+    // This retry was accepted before the provider failed, then paused with its original source scope.
+    const waiting = await requestResearch(db.pool, {
+      accountId,
+      opportunity,
+      requestId: 'source-before-provider-failure',
+      onlySource: 'google-places',
+      now: () => clock.now
+    })
+    await db.pool.query("update wo_place_job set state='paused' where id=$1", [waiting.job.place_job_id])
+    await db.pool.query("update wo_job set state='paused' where id=$1", [waiting.job.id])
     await writeAsHistory(
       db.pool,
       `update wo_place_snapshot_source set attempted_at=$2, last_error=$3::jsonb
@@ -693,11 +703,40 @@ test(
       }),
       { code: 'NOTHING_DUE' }
     )
-    assert.equal(await jobs(), before, 'neither retry creates a chargeable research run')
+    await assert.rejects(
+      resumeRequest(db.pool, accountId, waiting.job.id, { shared: true, now: () => config.now }),
+      { code: 'NOTHING_DUE' }
+    )
+    assert.equal(
+      (await db.pool.query('select state from wo_place_job where id=$1', [waiting.job.place_job_id])).rows[0]
+        .state,
+      'paused',
+      'blocked resume does not queue the provider again'
+    )
+    assert.equal(await jobs(), before, 'neither retry nor resume creates a chargeable research run')
     await db.pool.query('update wo_ops_setting set updated_at=$1 where id', [new Date(clock.now + 1000)])
     assert.deepEqual(
       (await placeAgainPlan(db.pool, placeId, config)).run.map((r) => r.part),
       ['google-places']
+    )
+    const resumed = await resumeRequest(db.pool, accountId, waiting.job.id, {
+      shared: true,
+      now: () => config.now
+    })
+    assert.equal(resumed.state, 'queued')
+    assert.equal(resumed.place_job_id, waiting.job.place_job_id, 'resume retains its paid checkpoints')
+    assert.equal(
+      (await db.pool.query('select only_source from wo_place_job where id=$1', [resumed.place_job_id]))
+        .rows[0].only_source,
+      'google-places'
+    )
+    const ex = executor(db.pool, domain, clock)
+    clock.now = config.now
+    await drain(ex)
+    assert.equal(calls.details, 2, 'only the repaired source is collected again')
+    assert.equal(
+      (await db.pool.query('select state from wo_job where id=$1', [waiting.job.id])).rows[0].state,
+      'completed'
     )
   }
 )

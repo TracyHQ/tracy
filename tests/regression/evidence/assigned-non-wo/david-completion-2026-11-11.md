@@ -169,3 +169,74 @@ zero skips. The scripted post-routing regression passed on committed source 3d83
 attributed a dirty-tree PASS to c74af5fea4; it is corrected to FAIL with the independently reproduced baseline log.
 Only the fresh committed-source receipt serves as proof of this fix. The five selected planner follow-up gates
 previously described as collecting have all passed. Full final-head CI and customer/deployed acceptance remain owed.
+
+
+## Final parallel repair integration and Linux sync proof
+
+Reviewed and integrated parallel dfea38b5d3 and its committed-source receipts through 050cf77224. The exact mapped
+unsupported alt targets no longer launch futile native repair turns. They remain blocking failures; this change
+creates no missing write capability and does not accept the observed Diner site. Supported article, module HTML
+and separate gallery alt targets retain the repair path. Independently exercised all twelve step-nine/record-alt
+suites: 103/103 passed with no skips. Fresh post-routing and alt-capability regression receipts on f14fa3b3a3 are
+committed beside their logs. All 63 non-test gates passed using the repository's Node 24.11.1; tests, Turbo input
+tracing and the independently measured boot graph were explicitly excluded from that invocation.
+
+GitHub Live Sync Integration run 42990304606 passed all 304 real MariaDB live-sync, live-push and live-write tests,
+with zero failures or skips, in 1263 seconds. Its source is 48e744973e. A direct comparison confirms the fleet and
+host implementation is unchanged in the current delivery. This is full Linux sync evidence, while final-head full
+Tracy CI, complete customer acceptance and deployment remain separate requirements.
+
+The publication scan of current develop 73b44d40d3 reports the same 107 blockers as the earlier delivery d6c0af4bef:
+45 secret-rule hits, 43 emails, one IP, seven machine paths, ten phone numbers and one submodule. Comparing exact
+blocking records while ignoring shifted line numbers found zero added or removed blockers. Raw scanner details
+remain private. No allow list was broadened, and this is not a clean-publication verdict. A final-source scan is
+running to measure the subsequent routing and capability changes.
+
+The parallel real Diner run still uses a75d745079. Its diagnostic explicitly records demo text, a reverted header
+logo and unsupported contact-picture alt repairs, with zero accepted local or dev sites. It cannot prove acceptance
+of this later source. PR 541 remains draft; no develop merge, deployment or post-merge acceptance has occurred.
+
+
+## Research wording and current preview probe
+
+The smaller #509 research-duration symptom remained in two English strings and all seven translations. Removed
+the fixed ten-minute sentence from both source descriptions in every interface language. Existing elapsed-time,
+source and photo progress are retained. Updated exactly those two source fingerprints and rebuilt add-site plus
+both locale bundles. No new timing estimate or provider call is introduced.
+
+The read-only dev catalogue currently supplies JA Boxing home preview URLs. Both actual image requests returned
+HTTP 200 and image/png: desktop 1440 by 3600 pixels (1271112 bytes), mobile 780 by 7200 pixels (973772 bytes).
+This verifies current asset delivery, not the original browser symptom or post-merge acceptance. The borrowed
+local stand has null image/shot fields for this template; missing stand metadata is not proof that dev lacks them.
+Photo labelling already has a five-minute overdue boundary in picture-label-runs.js. Its reported four-and-a-half
+minute run is within that boundary; no arbitrary shorter timeout was introduced to hide incomplete labels.
+
+The final-source scanner on f14fa3b3a3 found the 107 inherited blockers plus seven machine paths in this task's new
+baseline diagnostic log. Those checkout prefixes are now removed from the transcript while preserving errors,
+line numbers and stack frames; no scanner policy is changed. A new committed-source scan must verify the result.
+
+
+## Full Linux CI findings and source-scope recovery
+
+Manual Tracy CI run 42991181876 on c74af5fea4 failed the checks and tests-2 rows. It caught a real undefined
+onlySource reference in shared Resume, missing successful setup receipts in the chain-build fixture, provider
+account-refusal expectations that still assumed a daily retry, original-post routing gaps, and unfilled source
+template lines newly exposed as post facts. The older run was cancelled after its completed failure logs were
+collected; it cannot serve as final-head evidence.
+
+Resume now reads the original place job's source scope under the place lock, applies the provider-account fence
+before queueing, and reuses that paused source job after an operator setup repair. The integration test proves
+blocked resumes queue nothing, repaired resumes retain their job and scope, exactly one additional provider
+collection occurs, and the customer's request completes. Full shared resume tests also pass.
+
+The seven selected research, shared-state, source-card, chain-build and domain suites passed 145 of 145 tests,
+with zero failures or skips. A further four business-reading, brief-fact, routing and sub-trade suites passed
+42 of 42, with zero failures or skips. These selections overlap earlier evidence. Original source post text
+remains in the research profile; the builder's fact value and excerpt omit only unfilled template lines, using
+the existing content-pool placeholder rule. The regression still requires every remaining post word to come
+from the owner.
+
+The site-tools generated host bundle was rebuilt with dependency paths relative to the installation, removing
+checkout-specific paths without changing the build gate. The two research strings and all seven translations
+no longer promise a fixed ten-minute duration. Full local and final-head Linux gate results remain separate
+from these focused passes; no customer site, develop deployment or post-merge test is accepted here.

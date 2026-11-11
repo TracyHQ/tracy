@@ -1957,6 +1957,9 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   lifetime attempts and quota resumes. At the limit, claim atomically pauses the job and waiting requests with
   `RESEARCH_RECOVERY_LIMIT` and fences the old worker. Explicit Resume/Research again resets that recovery counter
   while retaining the snapshot and paid-operation checkpoints; own-site polling surfaces the limit without auto-resuming it.
+  Shared source-only Resume reads the persisted `wo_place_job.only_source` under the place lock. An unresolved
+  HTTP 401/402/403 refuses before queueing; a later operator setup save acknowledges repair. A paused/blocked source
+  run resumes with the same job, source scope and paid checkpoints, even when the base snapshot is still fresh.
 - **TripAdvisor reviews and pictures: SerpApi → OneAPI → Litescrape** (21/10/2026): migration 149 adds
   `litescrape_key_cipher`/namespace `tripadvisor`; migration 150 adds `serpapi_key_cipher`. `/ops/wo` Settings
   Save/Clear/Test use the same provider API; a stored override takes priority over env `SERPAPI_API_KEY`/`RAPIDAPI_KEY`/
