@@ -559,7 +559,7 @@
   "detail.noProfile": "还没有商家资料。调研完成后会显示在这里。",
   "detail.profile": "商家资料",
   "detail.stale": "可能已过时（见于 {date}）",
-  "details.back": "返回",
+  "details.backToList": "返回已添加的商家",
   "details.delete": "删除",
   "details.more": "更多操作",
   "details.researchAgain": "重新调研",

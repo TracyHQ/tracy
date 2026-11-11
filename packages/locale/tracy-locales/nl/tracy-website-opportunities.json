@@ -559,7 +559,7 @@
   "detail.noProfile": "Nog geen bedrijfsgegevens. Ze verschijnen zodra het onderzoek heeft gedraaid.",
   "detail.profile": "Bedrijfsgegevens",
   "detail.stale": "Mogelijk verouderd (gezien {date})",
-  "details.back": "Terug",
+  "details.backToList": "Terug naar Toegevoegde zaken",
   "details.delete": "Verwijderen",
   "details.more": "Meer acties",
   "details.researchAgain": "Opnieuw onderzoeken",

@@ -15,7 +15,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * opened it).
  */
 import { type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
-import { Bot, ChevronLeft, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
+import { Bot, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -78,6 +78,7 @@ import { ownerDoorsOf } from './owner-doors.ts'
 import { factsBodyView } from './facts-body-model.ts'
 import { type SubSection, pageOf, researchRunning as researchMovingOf } from './section-model.ts'
 import { overviewSourcesOf, sourcesToShow } from './source-links-model.ts'
+import { BackButton } from './back-button.tsx'
 import { DetailsHeader } from './details-header.tsx'
 // [TAM] preview panel (temporary, never ships)
 import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
@@ -375,10 +376,7 @@ export function DetailView({
   if (body === null || row === null) {
     return (
       <div className="tracy-wo-page">
-        <Button type="button" size="sm" variant="ghost" className="tracy-wo-details-back" onClick={onList}>
-          <ChevronLeft aria-hidden="true" />
-          {t('details.back')}
-        </Button>
+        <BackButton label={t('details.backToList')} onClick={onList} />
         <PageState
           t={t}
           failed={failed || (body !== null && row === null)}

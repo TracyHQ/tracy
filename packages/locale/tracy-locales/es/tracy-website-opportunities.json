@@ -559,7 +559,7 @@
   "detail.noProfile": "Aún no hay datos del negocio. Aparecen cuando se ejecuta la investigación.",
   "detail.profile": "Datos del negocio",
   "detail.stale": "Puede estar desactualizado (visto el {date})",
-  "details.back": "Atrás",
+  "details.backToList": "Volver a Negocios añadidos",
   "details.delete": "Eliminar",
   "details.more": "Más acciones",
   "details.researchAgain": "Investigar de nuevo",

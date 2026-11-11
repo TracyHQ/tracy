@@ -559,7 +559,7 @@
   "detail.noProfile": "Chưa có thông tin doanh nghiệp. Thông tin sẽ hiện sau khi nghiên cứu chạy.",
   "detail.profile": "Thông tin doanh nghiệp",
   "detail.stale": "Có thể đã cũ (thấy lúc {date})",
-  "details.back": "Quay lại",
+  "details.backToList": "Quay lại Doanh nghiệp đã thêm",
   "details.delete": "Xoá",
   "details.more": "Thêm thao tác",
   "details.researchAgain": "Nghiên cứu lại",

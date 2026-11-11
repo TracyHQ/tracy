@@ -4655,7 +4655,7 @@ window.__ModuleLoader__.load({
               "detail.noProfile": "Ch\u01b0a\u0020c\u00f3\u0020th\u00f4ng\u0020tin\u0020doanh\u0020nghi\u1ec7p.\u0020Th\u00f4ng\u0020tin\u0020s\u1ebd\u0020hi\u1ec7n\u0020sau\u0020khi\u0020nghi\u00ean\u0020c\u1ee9u\u0020ch\u1ea1y.",
               "detail.profile": "Th\u00f4ng\u0020tin\u0020doanh\u0020nghi\u1ec7p",
               "detail.stale": "C\u00f3\u0020th\u1ec3\u0020\u0111\u00e3\u0020c\u0169\u0020(th\u1ea5y\u0020l\u00fac\u0020{date})",
-              "details.back": "Quay\u0020l\u1ea1i",
+              "details.backToList": "Quay\u0020l\u1ea1i\u0020Doanh\u0020nghi\u1ec7p\u0020\u0111\u00e3\u0020th\u00eam",
               "details.delete": "Xo\u00e1",
               "details.more": "Th\u00eam\u0020thao\u0020t\u00e1c",
               "details.researchAgain": "Nghi\u00ean\u0020c\u1ee9u\u0020l\u1ea1i",

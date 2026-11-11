@@ -559,7 +559,7 @@
   "detail.noProfile": "Noch keine Unternehmensdaten. Sie erscheinen, sobald die Recherche gelaufen ist.",
   "detail.profile": "Unternehmensdaten",
   "detail.stale": "Möglicherweise veraltet (gesehen {date})",
-  "details.back": "Zurück",
+  "details.backToList": "Zurück zu Hinzugefügte Unternehmen",
   "details.delete": "Löschen",
   "details.more": "Weitere Aktionen",
   "details.researchAgain": "Erneut recherchieren",

@@ -1021,7 +1021,7 @@ export const en = {
   'pp.quote.news': 'News',
 
   /** Details (#517): the sticky header and its menu, then two columns of section cards (layout C, spec #512). */
-  'details.back': 'Back',
+  'details.backToList': 'Back to Added businesses',
   'details.more': 'More actions',
   'details.researchAgain': 'Research again',
   'details.delete': 'Delete',

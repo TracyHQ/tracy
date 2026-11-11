@@ -559,7 +559,7 @@
   "detail.noProfile": "Ancora nessun dato dell'attività. Compaiono dopo la ricerca.",
   "detail.profile": "Dati dell'attività",
   "detail.stale": "Potrebbe non essere aggiornato (visto il {date})",
-  "details.back": "Indietro",
+  "details.backToList": "Torna ad Attività aggiunte",
   "details.delete": "Elimina",
   "details.more": "Altre azioni",
   "details.researchAgain": "Ripeti la ricerca",

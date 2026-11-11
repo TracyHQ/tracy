@@ -16,8 +16,8 @@ export const DETAILS_CSS =
 .tracy-wo-details .tracy-wo-insp-sec { display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; }
 .tracy-wo-details .tracy-wo-insp-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .tracy-wo-details-head { position: sticky; top: 0; z-index: 4; display: flex; flex-direction: column; gap: 6px; margin: -12px -12px 0; padding: 8px 12px 10px; background: var(--background); border-bottom: 1px solid var(--border); }
-.tracy-wo-details-head-top { display: flex; align-items: center; }
-.tracy-wo-details-back { margin-left: -8px; }
+.tracy-wo-details-head-line { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.tracy-wo-details-head-facts { margin: 0 0 0 46px; }
 .tracy-wo-details-head-main { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .tracy-wo-details-head-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 260px; }
 .tracy-wo-details-head-acts { flex: none; }

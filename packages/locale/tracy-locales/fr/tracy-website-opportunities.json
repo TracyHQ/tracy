@@ -559,7 +559,7 @@
   "detail.noProfile": "Pas encore d’informations sur l’entreprise. Elles apparaissent une fois la recherche effectuée.",
   "detail.profile": "Informations de l’entreprise",
   "detail.stale": "Peut-être obsolète (vu le {date})",
-  "details.back": "Retour",
+  "details.backToList": "Retour à Entreprises ajoutées",
   "details.delete": "Supprimer",
   "details.more": "Plus d’actions",
   "details.researchAgain": "Rechercher à nouveau",

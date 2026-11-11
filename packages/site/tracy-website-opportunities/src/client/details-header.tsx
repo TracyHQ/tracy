@@ -1,11 +1,10 @@
 /**
- * The sticky header of Details (#517): Back, the place's name and type, its status, and a ⋯ menu with Research again
- * and Delete. It stays in sight while the cards below scroll.
+ * The sticky header of Details (#517): the round back button, the place's name and type, its status, and a ⋯ menu
+ * with Research again and Delete. It stays in sight while the cards below scroll.
  */
 import type { JSX, ReactNode } from 'react'
-import { ChevronLeft, Ellipsis } from 'lucide-react'
+import { Ellipsis } from 'lucide-react'
 import {
-  Button,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -15,6 +14,7 @@ import {
 } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
 
+import { BackButton } from './back-button.tsx'
 import type { Translate } from './strings.ts'
 
 export interface HeaderMenu {
@@ -45,22 +45,21 @@ export function DetailsHeader({
 }): JSX.Element {
   return (
     <header className="tracy-wo-details-head">
-      <div className="tracy-wo-details-head-top">
-        <Button type="button" size="sm" variant="ghost" className="tracy-wo-details-back" onClick={onBack}>
-          <ChevronLeft aria-hidden="true" />
-          {t('details.back')}
-        </Button>
-      </div>
       <div className="tracy-wo-details-head-main">
         <div className="tracy-wo-details-head-name">
-          <div className="tracy-wo-row tracy-wo-wrap">
-            <h2 className="tracy-wo-page-title">
-              {name}
-              {branch ? <span className="tracy-wo-muted">{` · ${branch}`}</span> : null}
-            </h2>
-            {status}
+          <div className="tracy-wo-details-head-line">
+            <BackButton label={t('details.backToList')} onClick={onBack} />
+            <div className="tracy-wo-row tracy-wo-wrap">
+              <h2 className="tracy-wo-page-title">
+                {name}
+                {branch ? <span className="tracy-wo-muted">{` · ${branch}`}</span> : null}
+              </h2>
+              {status}
+            </div>
           </div>
-          {facts.length > 0 ? <p className="tracy-wo-muted tracy-wo-small">{facts.join(' · ')}</p> : null}
+          {facts.length > 0 ? (
+            <p className="tracy-wo-muted tracy-wo-small tracy-wo-details-head-facts">{facts.join(' · ')}</p>
+          ) : null}
         </div>
         <div className="tracy-wo-row tracy-wo-details-head-acts">
           <DropdownMenu>

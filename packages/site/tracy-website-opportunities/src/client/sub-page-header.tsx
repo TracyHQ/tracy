@@ -6,8 +6,8 @@
  * Details draws.
  */
 import type { JSX, ReactNode } from 'react'
-import { ArrowLeft } from 'lucide-react'
 
+import { BackButton } from './back-button.tsx'
 import { StatusPill } from './status-pill.tsx'
 import type { StepperView } from './stepper-model.ts'
 import type { Translate } from './strings.ts'
@@ -42,15 +42,7 @@ export function SubPageHeader({
   return (
     <header className="tracy-wo-subhead">
       <div className="tracy-wo-subhead-row">
-        <button
-          type="button"
-          className="tracy-wo-subhead-back"
-          aria-label={back}
-          title={back}
-          onClick={onBack}
-        >
-          <ArrowLeft aria-hidden="true" />
-        </button>
+        <BackButton label={back} onClick={onBack} />
         <h2 className="tracy-wo-subhead-title">{title}</h2>
         <StatusPill state="info" label={t('band.kicker', { n: step, total: view.steps.length })} />
         <span className="tracy-wo-subhead-acts">{children}</span>
