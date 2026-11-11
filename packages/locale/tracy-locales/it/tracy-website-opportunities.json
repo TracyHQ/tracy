@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "Questo server non può ancora aggiungere fonti. Ricarica la pagina e riprova.",
   "source.add.error.NO_USABLE_LINKS": "Questo link non può essere letto. Prova con l'indirizzo di un sito web, di una pagina social o di una pagina di elenco.",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "Questa attività ha già una pagina {platform} come fonte. Rimuovila prima per usarne un'altra.",
-  "source.add.error.PREVIEW_BLOCKED": "La preview mostra uno stato di prova. Passa a Dati reali per aggiungere una fonte.",
   "source.add.error.PRIVATE_ADDRESS": "Questo è un indirizzo privato. Incolla l'indirizzo pubblico della pagina.",
   "source.add.error.RESEARCH_STARTED": "La ricerca è già stata eseguita. Le fonti sono fisse dopo l'avvio della ricerca: si possono cambiare solo prima, o dopo un errore.",
   "source.add.error.SOURCE_ALREADY_KNOWN": "Questo link è già nell'elenco delle fonti.",

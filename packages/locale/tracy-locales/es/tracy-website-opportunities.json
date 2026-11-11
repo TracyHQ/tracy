@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "Este servidor aún no puede añadir fuentes. Recarga la página e inténtalo de nuevo.",
   "source.add.error.NO_USABLE_LINKS": "No se puede leer este link. Prueba con la dirección de un sitio web, una página social o una página de ficha.",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "Este negocio ya tiene una página de {platform} como fuente. Quítala primero para usar otra.",
-  "source.add.error.PREVIEW_BLOCKED": "El preview muestra un estado de prueba. Cambia a Datos reales para añadir una fuente.",
   "source.add.error.PRIVATE_ADDRESS": "Esta es una dirección privada. Pega la dirección pública de la página.",
   "source.add.error.RESEARCH_STARTED": "La investigación ya se ejecutó. Las fuentes quedan fijas cuando empieza la investigación; solo se pueden cambiar antes de ella o después de que falle.",
   "source.add.error.SOURCE_ALREADY_KNOWN": "Este link ya está en la lista de fuentes.",

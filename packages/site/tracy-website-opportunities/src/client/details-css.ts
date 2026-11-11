@@ -46,7 +46,6 @@ export const DETAILS_CSS =
 .tracy-wo-brief-steps .tracy-wo-icon.is-done { color: var(--success); }
 .tracy-wo-brief-steps .tracy-wo-icon.is-failed { color: var(--destructive); }
 .tracy-wo-brief-steps .tracy-wo-icon.is-waiting { color: var(--muted-foreground); }
-.tracy-wo-details-cols { display: grid; grid-template-columns: minmax(0, 34fr) minmax(0, 66fr); gap: 16px; align-items: start; }
 .tracy-wo-open { flex: none; display: inline-flex; align-items: center; gap: 2px; padding: 0; border: 0; background: transparent; color: var(--primary); font: inherit; font-size: 12.5px; white-space: nowrap; cursor: pointer; }
 .tracy-wo-open svg { width: 14px; height: 14px; }
 .tracy-wo-open:hover { text-decoration: underline; text-underline-offset: 2px; }
@@ -168,9 +167,6 @@ export const DETAILS_CSS =
 .tracy-wo-facts-filters button[aria-pressed='true'] { background: var(--muted); color: var(--foreground); font-weight: 500; }
 .tracy-wo-facts-filters button:focus-visible { outline: 1px solid var(--ring); outline-offset: 1px; }
 .tracy-wo-facts-owner { position: absolute; left: 6px; bottom: 6px; }
-@container (max-width: 719px) {
-  .tracy-wo-details-cols { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-}
 @container (max-width: 560px) {
   .tracy-wo-media-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tracy-wo-profile-card .tracy-wo-fields > .tracy-wo-field { grid-template-columns: minmax(0, 1fr); }

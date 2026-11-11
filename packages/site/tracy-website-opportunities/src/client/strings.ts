@@ -1360,8 +1360,6 @@ export const en = {
   'source.add.error.NOT_FOUND': 'This business was removed. Go back to Added businesses.',
   'source.add.error.FEATURE_OFF': 'Website Opportunities is turned off right now. Try again later.',
   'source.add.error.NO_DOOR': 'This server cannot add sources yet. Reload the page and try again.',
-  'source.add.error.PREVIEW_BLOCKED':
-    'The preview is showing a test state. Switch to Real data to add a source.', // [TAM]
 
   /** Photos & video inside the Profile (#537). */
   'media.strip.open': 'Open',

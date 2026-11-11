@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "Dieser Server kann noch keine Quellen hinzufügen. Laden Sie die Seite neu und versuchen Sie es erneut.",
   "source.add.error.NO_USABLE_LINKS": "Dieser link kann nicht gelesen werden. Versuchen Sie die Adresse einer Website, einer Social-Media-Seite oder einer Eintragsseite.",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "Dieses Unternehmen hat bereits eine {platform}-Seite als Quelle. Entfernen Sie sie zuerst, um eine andere zu verwenden.",
-  "source.add.error.PREVIEW_BLOCKED": "Die preview zeigt einen Testzustand. Wechseln Sie zu Echte Daten, um eine Quelle hinzuzufügen.",
   "source.add.error.PRIVATE_ADDRESS": "Das ist eine private Adresse. Fügen Sie die öffentliche Adresse der Seite ein.",
   "source.add.error.RESEARCH_STARTED": "Die Recherche ist bereits gelaufen. Quellen sind fest, sobald die Recherche beginnt. Sie lassen sich nur davor oder nach einem Fehlschlag ändern.",
   "source.add.error.SOURCE_ALREADY_KNOWN": "Dieser link steht bereits in der Liste der Quellen.",

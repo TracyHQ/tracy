@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "Deze server kan nog geen bronnen toevoegen. Laad de pagina opnieuw en probeer het nogmaals.",
   "source.add.error.NO_USABLE_LINKS": "Deze link kan niet worden gelezen. Probeer het adres van een website, socialemediapagina of vermeldingspagina.",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "Deze zaak heeft al een {platform}-pagina als bron. Verwijder die eerst om een andere te gebruiken.",
-  "source.add.error.PREVIEW_BLOCKED": "De preview toont een testtoestand. Schakel over naar Echte gegevens om een bron toe te voegen.",
   "source.add.error.PRIVATE_ADDRESS": "Dit is een privéadres. Plak het openbare adres van de pagina.",
   "source.add.error.RESEARCH_STARTED": "Het onderzoek heeft al gedraaid. Bronnen liggen vast zodra het onderzoek start; ze kunnen alleen ervoor worden gewijzigd, of nadat het is mislukt.",
   "source.add.error.SOURCE_ALREADY_KNOWN": "Deze link staat al in de lijst met bronnen.",

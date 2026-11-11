@@ -100,7 +100,6 @@ test('every refusal of the add door has its own line; only a 5xx or an unknown c
   assert.equal(line('NOT_SIGNED_IN', 401).key, 'source.add.error.NOT_SIGNED_IN')
   assert.equal(line('HTTP_401', 401).key, 'source.add.error.NOT_SIGNED_IN')
   assert.equal(line('NETWORK', 0).key, 'source.add.error.NETWORK')
-  assert.equal(line('PREVIEW_BLOCKED', 0).key, 'source.add.error.PREVIEW_BLOCKED')
   assert.equal(line('HTTP_405', 405).key, 'source.add.error.NO_DOOR')
   assert.equal(line('HTTP_404', 404).key, 'source.add.error.NO_DOOR')
   assert.equal(line('GOOGLE_LINK_NOT_ADDED', 422).key, 'source.add.error.GOOGLE_LINK_NOT_ADDED')
@@ -144,7 +143,6 @@ test('every key the model can name exists in English, with no dash in the words'
     'FEATURE_OFF',
     'NOT_SIGNED_IN',
     'NETWORK',
-    'PREVIEW_BLOCKED',
     'HTTP_405',
     'HTTP_500'
   ])

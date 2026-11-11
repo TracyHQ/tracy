@@ -14,7 +14,7 @@ import { useDemoChatNavigation } from './demo-chat.ts'
  * read-only beside the Build form, where the person chooses both (the name field is focused when "Build demo site"
  * opened it).
  */
-import { type JSX, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
+import { type JSX, useCallback, useEffect, useId, useRef, useState } from 'react'
 import { Bot, ExternalLink, FileText, Hammer, Lock } from 'lucide-react'
 import {
   Breadcrumb,
@@ -77,9 +77,6 @@ import { type SubSection, pageOf, researchRunning as researchMovingOf } from './
 import { overviewSourcesOf, sourcesToShow } from './source-links-model.ts'
 import { BackButton } from './back-button.tsx'
 import { DetailsHeader } from './details-header.tsx'
-// [TAM] preview panel (temporary, never ships)
-import { PreviewPanel, usePreview, usePreviewApi } from './preview-panel.tsx'
-import { applyPreview } from './preview-states.ts'
 import { Section, SourcesTable } from './details-parts.tsx'
 import { sourceProgressOf, sourceStateOf } from './source-table-model.ts'
 import { type DeleteAsk, deleteFailedKey, deleteOpportunities, hasLiveDemo } from './delete-model.ts'
@@ -302,8 +299,6 @@ export function DetailView({
   /** Opens a brief in its own side-card tab; null → the Brief page instead. */
   openBriefTab?: ((seed: BriefTabSeed) => void) | null
 }): JSX.Element {
-  // [TAM] preview panel: with wo-preview=1 a chosen state replaces the answer and every write door is a toast.
-  const preview = usePreview()
   // A write that reaches approved facts (409 PROFILE_APPROVED, #537 R23): its sentence in the error line, then Details
   // is read again so the page draws the facts locked.
   const [approvedRefusal, setApprovedRefusal] = useState(false)
@@ -312,10 +307,9 @@ export function DetailView({
     setApprovedRefusal(true)
     void reloadRef.current()
   }, [])
-  const api = useApprovedRefusal(usePreviewApi(realApi, preview), onApprovedRefusal)
-  const { body: realBody, failed, reload } = useDetail(api, id)
+  const api = useApprovedRefusal(realApi, onApprovedRefusal)
+  const { body, failed, reload } = useDetail(api, id)
   reloadRef.current = reload
-  const body = useMemo(() => applyPreview(realBody, preview.state, Date.now()), [realBody, preview.state])
   const [logoWait, setLogoWait] = useState(false)
   const beginDemoChat = useDemoChatNavigation(api, true, setLogoWait)
   const [busy, setBusy] = useState(false)
@@ -386,7 +380,6 @@ export function DetailView({
   const locale = interfaceLocale() ?? 'en'
   const now = Date.now()
   const act = async (action: NextAction): Promise<void> => {
-    if (preview.block(action)) return // [TAM]
     if (busy) return
     setBusy(true)
     setActionFailed(false)
@@ -580,7 +573,6 @@ export function DetailView({
   const stepper = stepperView(stepperInput)
   const approval = isRecord(body.approval) ? body.approval : null
   const onStep = (step: StepAction): void => {
-    if (!step.startsWith('review-') && preview.block(step)) return // [TAM]
     if (step === 'start-research') return void act('start')
     if (step === 'resume-research') return void act('resume')
     if (step === 'make-brief' || step === 'retry-brief') return void briefJob.press()
@@ -858,7 +850,6 @@ export function DetailView({
       />
     </>
   )
-  const previewPanel = <PreviewPanel preview={preview} /> // [TAM]
   // The account's other cards of the same place (#537 R23), named at the top of Details and of Business facts.
   const sameAsLine = (
     <SameAsLine
@@ -1037,7 +1028,6 @@ export function DetailView({
           {content}
         </SubPage>
         {dialogs}
-        {previewPanel /* [TAM] */}
       </div>
     )
   }
@@ -1127,7 +1117,6 @@ export function DetailView({
         }}
       />
       {dialogs}
-      {previewPanel /* [TAM] */}
     </div>
   )
 }

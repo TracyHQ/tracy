@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "这台服务器暂时无法添加来源。请刷新页面后重试。",
   "source.add.error.NO_USABLE_LINKS": "无法读取这个 link。请尝试网站、社交页面或商家目录页面的地址。",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "这家商家已有一个 {platform} 页面作为来源。请先将其移除，再使用另一个。",
-  "source.add.error.PREVIEW_BLOCKED": "preview 正在显示测试状态。请切换到“真实数据”后再添加来源。",
   "source.add.error.PRIVATE_ADDRESS": "这是私有地址。请粘贴页面的公开地址。",
   "source.add.error.RESEARCH_STARTED": "调研已经运行。调研开始后来源即固定，只能在调研之前或调研失败之后更改。",
   "source.add.error.SOURCE_ALREADY_KNOWN": "这个 link 已在来源列表中。",

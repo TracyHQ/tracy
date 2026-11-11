@@ -130,9 +130,6 @@ export function addSourceRefusal(refusal: AddSourceRefusal): AddSourceMessage {
     case 'FEATURE_OFF':
     case 'NOT_SIGNED_IN':
       return msg(`source.add.error.${code}`)
-    // The [TAM] developer preview panel blocks every write while it shows a test state (`preview-panel.tsx`).
-    case 'PREVIEW_BLOCKED':
-      return msg('source.add.error.PREVIEW_BLOCKED')
     case 'UNSUPPORTED_LINK':
       return typeof refusal.platform === 'string' && refusal.platform !== ''
         ? msg('source.add.error.UNSUPPORTED_LINK', { platform: refusal.platform })

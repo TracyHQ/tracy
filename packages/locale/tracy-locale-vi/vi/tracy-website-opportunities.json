@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "Máy chủ này chưa thêm được nguồn. Hãy tải lại trang và thử lại.",
   "source.add.error.NO_USABLE_LINKS": "Không đọc được link này. Hãy thử địa chỉ của một website, trang mạng xã hội hoặc trang niêm yết.",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "Doanh nghiệp này đã có một trang {platform} làm nguồn. Hãy gỡ trang đó trước để dùng trang khác.",
-  "source.add.error.PREVIEW_BLOCKED": "Bản preview đang hiện một trạng thái thử nghiệm. Hãy chuyển sang Dữ liệu thật để thêm nguồn.",
   "source.add.error.PRIVATE_ADDRESS": "Đây là địa chỉ riêng tư. Hãy dán địa chỉ công khai của trang.",
   "source.add.error.RESEARCH_STARTED": "Nghiên cứu đã chạy. Nguồn được cố định khi nghiên cứu bắt đầu; chỉ đổi được trước đó, hoặc sau khi nghiên cứu thất bại.",
   "source.add.error.SOURCE_ALREADY_KNOWN": "Link này đã có trong danh sách nguồn.",

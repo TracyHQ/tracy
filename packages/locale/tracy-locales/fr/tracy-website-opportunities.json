@@ -1284,7 +1284,6 @@
   "source.add.error.NO_DOOR": "Ce serveur ne peut pas encore ajouter de sources. Rechargez la page et réessayez.",
   "source.add.error.NO_USABLE_LINKS": "Ce link ne peut pas être lu. Essayez l’adresse d’un site web, d’une page sociale ou d’une page de fiche.",
   "source.add.error.PLATFORM_ALREADY_KNOWN": "Cette entreprise a déjà une page {platform} comme source. Retirez-la d’abord pour en utiliser une autre.",
-  "source.add.error.PREVIEW_BLOCKED": "Le preview affiche un état de test. Passez à Données réelles pour ajouter une source.",
   "source.add.error.PRIVATE_ADDRESS": "Cette adresse est privée. Collez l’adresse publique de la page.",
   "source.add.error.RESEARCH_STARTED": "La recherche a déjà été effectuée. Les sources sont figées une fois la recherche lancée ; elles ne peuvent être modifiées qu’avant, ou après un échec.",
   "source.add.error.SOURCE_ALREADY_KNOWN": "Ce link est déjà dans la liste des sources.",
