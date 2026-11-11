@@ -113,16 +113,16 @@
 ✔ own site resumes a paused shared run behind a queued request once per poll batch, then stops at three (211.983167ms)
 ✔ shared resume follows the paused upstream run but refuses another account and terminal requests (104.544542ms)
 error: synthetic resume failure
-    at /Users/binhnam/Desktop/m2anifet6/tch/node_modules/.pnpm/pg@8.23.0/node_modules/pg/lib/client.js:694:17
+    at <local-checkout>:694:17
     at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
     at async resumeRequest (file://<checkout>/packages/wo/website-opportunities/src/place-requests.js:279:9)
     at async resumeResearch (file://<checkout>/apps/tracy-web/src/opportunities-build/own-site.js:369:23)
     at async file://<checkout>/apps/tracy-web/src/opportunities-build/own-site.js:220:22
-    at async dispatch (file:///Users/binhnam/Desktop/m2anifet6/tch/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
-    at async dispatch (file:///Users/binhnam/Desktop/m2anifet6/tch/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
-    at async dispatch (file:///Users/binhnam/Desktop/m2anifet6/tch/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
-    at async dispatch (file:///Users/binhnam/Desktop/m2anifet6/tch/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11)
-    at async dispatch (file:///Users/binhnam/Desktop/m2anifet6/tch/node_modules/.pnpm/hono@4.13.11/node_modules/hono/dist/compose.js:35:11) {
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11)
+    at async dispatch (file://<local-checkout>:35:11) {
   length: 142,
   severity: 'ERROR',
   code: 'P0001',
