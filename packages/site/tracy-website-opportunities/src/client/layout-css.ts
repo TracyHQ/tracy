@@ -11,7 +11,6 @@ export const CSS = `
 .tracy-wo-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .tracy-wo-wrap { flex-wrap: wrap; }
 .tracy-wo-between { justify-content: space-between; }
-.tracy-wo-back { align-self: flex-start; }
 .tracy-wo-h2 { font-size: 15px; line-height: 20px; font-weight: 600; overflow-wrap: anywhere; }
 .tracy-wo-h3 { font-size: 13px; line-height: 18px; font-weight: 600; }
 .tracy-wo-label { font-size: 12px; font-weight: 500; color: var(--muted-foreground); }
@@ -44,10 +43,6 @@ export const CSS = `
 .tracy-wo-sticky-note { flex: 1 1 auto; min-width: 0; }
 .tracy-wo-fields { display: flex; flex-direction: column; gap: 8px; }
 .tracy-wo-field dd { display: flex; flex-direction: column; gap: 2px; overflow-wrap: anywhere; }
-.tracy-wo-review-author { display: flex; align-items: center; gap: 6px; }
-.tracy-wo-review-author img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-.tracy-wo-reviews { gap: 8px; }
-.tracy-wo-review { display: flex; flex-direction: column; gap: 2px; margin: 0; padding-left: 10px; border-left: 2px solid var(--border); }
 .tracy-wo-facts { overflow-wrap: anywhere; }
 .tracy-wo-swatches { display: flex; flex-wrap: wrap; gap: 10px; }
 .tracy-wo-swatch { display: flex; align-items: center; gap: 6px; }
@@ -167,21 +162,10 @@ export const CSS = `
 .tracy-wo-again-item.is-kept { color: var(--muted-foreground); }
 .tracy-wo-again-dialog { max-width: min(28rem, calc(100% - 2rem)); }
 .tracy-wo-quote { padding-left: 8px; border-left: 2px solid var(--border); }
-.tracy-wo-menu-chip.is-file { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
-.tracy-wo-menu-chip.is-photo { color: var(--primary); }
-.tracy-wo-menu-sec { display: flex; flex-direction: column; gap: 2px; }
 .tracy-wo-menu-sec-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 4px; }
 .tracy-wo-menu-sec-title { font-size: 12px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-foreground); }
-.tracy-wo-menu-items { display: flex; flex-direction: column; }
-.tracy-wo-menu-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 5px 0; border-bottom: 1px dashed var(--border); overflow-wrap: anywhere; }
-.tracy-wo-menu-price { white-space: nowrap; font-variant-numeric: tabular-nums; }
-.tracy-wo-menu-price.is-none { color: var(--muted-foreground); }
-.tracy-wo-menu-other { grid-column: 1 / -1; }
-.tracy-wo-menu-status { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 4px 10px; padding: 4px 0; }
 .tracy-wo-menu-status-why { grid-column: 1 / -1; }
 .tracy-wo-menu-status-act { justify-content: flex-end; }
-.tracy-wo-menu-dot { width: 8px; height: 8px; flex: 0 0 auto; border-radius: 50%; background: var(--muted-foreground); }
-.tracy-wo-menu-dot.is-warn { background: color-mix(in oklab, var(--primary) 70%, var(--foreground)); }
 .tracy-wo-menu-photo .is-ok { color: color-mix(in oklab, var(--success) 75%, var(--foreground)); }
 .tracy-wo-insp .tracy-wo-swatches { gap: 6px; }
 .tracy-wo-thumbs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }

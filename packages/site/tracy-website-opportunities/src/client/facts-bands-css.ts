@@ -56,20 +56,15 @@ export const FACTS_BANDS_CSS = `
 .tracy-wo-facts-cell > q { display: block; font-size: 12px; }
 .tracy-wo-facts-clamp2 { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .tracy-wo-facts-band .tracy-wo-facts-about { flex: 1 1 auto; min-width: 0; line-height: 20px; }
-/* The business: the mark and the name, then phone, rating, address and website, in one row of five cells. */
-.tracy-wo-facts-band[data-card='business'] .tracy-wo-facts-cells { grid-template-columns: minmax(200px, 1.4fr) minmax(150px, 1.15fr) minmax(170px, 1.25fr) minmax(150px, 1.15fr) minmax(100px, 0.7fr); grid-auto-columns: unset; }
+/* The business: the mark and the name, then phone, address and website, then any other business fact, one row. */
+.tracy-wo-facts-band[data-card='business'] .tracy-wo-facts-cells { grid-template-columns: minmax(200px, 1.4fr) minmax(150px, 1.15fr) minmax(150px, 1.15fr) minmax(100px, 0.7fr); grid-auto-columns: minmax(150px, 1fr); }
 .tracy-wo-facts-hero { flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; }
 .tracy-wo-facts-hero-name { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 auto; }
 .tracy-wo-facts-hero-name > .tracy-wo-facts-ln:first-child { font-size: 14.5px; font-weight: 600; }
 .tracy-wo-facts-logo { flex: none; display: grid; place-items: center; width: 40px; height: 40px; overflow: hidden; border-radius: 10px; font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
-.tracy-wo-facts-ln > b, .tracy-wo-facts-rating > b { color: var(--foreground); font-weight: 600; }
+.tracy-wo-facts-ln > b { color: var(--foreground); font-weight: 600; }
 .tracy-wo-facts-ln > .tracy-wo-facts-keep { flex: 0 0 auto; max-width: 100%; }
 .tracy-wo-facts-ln > .tracy-wo-edited { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.tracy-wo-facts-rating { flex: 0 1 auto; min-width: 5.5ch; }
-.tracy-wo-facts-rating-acts { flex-wrap: nowrap; gap: 4px 8px; min-width: 0; overflow: hidden; }
-.tracy-wo-facts-rating-acts > .tracy-wo-facts-act { flex: none; }
-.tracy-wo-facts-rating-acts > .tracy-wo-chip-warn { display: block; flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.tracy-wo-facts-rating-acts .tracy-wo-facts-off { margin-left: 0; flex: none; }
 /* Opening hours: seven cells share the row and shrink; under that they scroll sideways. */
 .tracy-wo-facts-days { grid-auto-columns: minmax(84px, 1fr); }
 .tracy-wo-facts-days > .tracy-wo-facts-cell { padding: 0 10px; }
@@ -108,7 +103,6 @@ export const FACTS_BANDS_CSS = `
 .tracy-wo-facts-cards q { font-size: 12px; line-height: 16px; }
 .tracy-wo-facts-cards .tracy-wo-facts-ln { line-height: 16px; }
 .tracy-wo-facts-cards .tracy-wo-facts-ln > .tracy-wo-facts-ell { min-width: 9ch; }
-.tracy-wo-facts-band .tracy-wo-facts-stars { letter-spacing: 0; }
 /* Photos & video: the filters, then every tile in one filmstrip. */
 .tracy-wo-facts-mediarow { display: flex; align-items: center; gap: 12px; width: 100%; height: 100%; min-width: 0; }
 .tracy-wo-facts-mediarow > .tracy-wo-facts-filters { flex: none; flex-wrap: nowrap; justify-content: flex-start; }
@@ -130,8 +124,6 @@ export const FACTS_BANDS_CSS = `
 .tracy-wo-facts-bf { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 2px -16px 0; padding: 10px 14px 0 16px; border-top: 1px solid var(--border); }
 .tracy-wo-facts-bf-note { margin-right: auto; min-width: 0; font-size: 12px; color: var(--muted-foreground); }
 .tracy-wo-facts-band-edit .tracy-wo-facts-people { flex-direction: column; }
-/* What research read beyond the facts, under the bands. */
-.tracy-wo-facts-more { min-width: 0; }
 @container wo-facts (max-width: ${MID - 1}px) {
   .tracy-wo-facts { --wo-band-h: ${MID_H}px; }
   .tracy-wo-facts-ef { grid-template-columns: repeat(2, minmax(0, 1fr)); }
