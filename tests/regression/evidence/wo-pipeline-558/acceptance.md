@@ -95,3 +95,17 @@ At 14:43 UTC the existing David browser session still authenticated successfully
 The companion receiver PR is https://github.com/TracyHQ/claude-cowork/pull/310. Both CI and CodeQL passed on exact head `278b8ad0379cf37bd6ac66fbed9526f39d1f2e88`. The local GD-enabled PHP suite passed 6,713 assertions with zero failures in 238 seconds. Its dedicated container peaked at 893,898,752 bytes under a 1,280 MiB cap, with zero OOM events, and exited cleanly. Earlier missing-GD and smaller PHP-limit attempts remain failed attempts rather than full-suite passes.
 
 The development prerelease `joomla-v0.24.95-rc.2` points at that exact commit. All 248 uploaded asset sizes and SHA256 digests match the reviewed local bytes. Package SHA256 is `03cffa0c939ae18b60905d32dd374ad6b6b780c4da057d23137e47a43407af81`. Stable Latest remains `joomla-v0.24.94`; stable update feeds were not changed. Both canonical Diner provisioning entries now pin this exact receiver. Actual receiver installation, full recovery and customer-site acceptance are separate checks.
+
+## Repair comment packing
+
+The comment builder has a growing per-comment budget, so a rejected prefix does not prove that a longer group will fail. A real-builder regression reproduces two comments exceeding 4,673 characters by two characters, then fitting after a short third comment. Ordered partitioning now evaluates every contiguous candidate and minimizes omissions before turns. The focused reproduction changed from two turns to one without changing prompts, the shared builder, safety footer or comment order. Related repair tests passed. Official packing, undo-stop and picture-surface cases passed again on integrated `afab1ff901`.
+
+The persisted diagnostic request records omit the original locate payload, while report items are sanitized. An exact replay of its batching is therefore unavailable; the saved reconstruction without locate gives one turn before and after and is explicitly not an actual-run speed measurement. No reduction of the real run's 19 turns is claimed.
+
+The Diner pin regression also passed on `bd1465c738`, including unchanged installer and contract hashes and both canonical pin copies. The native diagnostic baseline was mixed: all 27 host/native source mismatches were already present before Retry and remained byte-identical throughout it. This establishes no mid-run drift, not a clean final native-image acceptance.
+
+## Logo-only header menu reconciliation
+
+The exact released Diner kit has no header menu-label slots. The previous header-only vote returned no menu type and exported no menu hides, even though the plan retained only four menu pages. The new fallback joins planned page paths to released menu identities only when they identify one unambiguous menu. It preserves unknown nodes, default Home, every kept page and its ancestors, and excludes other menus and administrator items. It creates no writer-label slots.
+
+Pure replay of the frozen Diner input changes zero hides to six: Blog 108, Offers 141 and alternate Home items 145 through 148. Home 101, Contact 117, About 142 and Reservation 144 remain. The actual shape `plan.pages[].id` is tested with a kept descendant omitted from `mainMenu`; that regression failed before the correction. All 47 focused safety and existing navigation/settings tests passed; the official case passed on integrated `a6f22713da`. No claim that the 34 reachable-page findings have disappeared from an actual new WO is made before a runtime rerun.

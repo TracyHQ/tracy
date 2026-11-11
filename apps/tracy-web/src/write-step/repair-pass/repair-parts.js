@@ -33,7 +33,7 @@ export function turnParts(buildCommentTurn, items) {
   // The budget grows with the number of comments: a refused prefix can fit after another item is
   // added. Check every contiguous candidate, then choose the suffix with the fewest omissions and
   // turns. Longer first parts win ties. At most n * (n + 1) / 2 builder calls, with n + 1 states.
-  const best = new Array(items.length + 1)
+  const best = Array.from({ length: items.length + 1 })
   best[items.length] = { dropped: 0, turns: 0 }
   for (let start = items.length - 1; start >= 0; start -= 1) {
     best[start] = {

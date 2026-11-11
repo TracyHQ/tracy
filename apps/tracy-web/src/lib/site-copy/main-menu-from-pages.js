@@ -52,7 +52,7 @@ export function mainMenuFromPages({ plan, kit, entities, demo }) {
   // Unrepresented nodes are not authority to unpublish anything. Preserve them and every ancestor they need.
   // This includes the real default Home whose stored path is absent from the kit's page paths.
   for (const n of tree) if (!known.has(n.path)) keep.add(n.path)
-  for (const path of [...keep]) {
+  for (const path of keep) {
     let parent = up(path)
     while (parent !== null) {
       if (byPath.has(parent)) keep.add(parent)
