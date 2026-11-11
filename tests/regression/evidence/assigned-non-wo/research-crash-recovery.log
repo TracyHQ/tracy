@@ -1,0 +1,33 @@
+PR #541 foreground research crash recovery
+
+Policy: initial claim plus at most three automatic expired-lease takeovers. A subsequent
+expiry pauses the job and waiting requests with RESEARCH_RECOVERY_LIMIT, clears the lease,
+and advances the fencing token. Lifetime attempt remains monotonic. An explicit stopped
+Resume or Research again resets only progress.crashRecoveries; paid operation IDs, source
+cursors, stage and the preparing snapshot remain. Own-site automatic polling cannot restart
+RESEARCH_RECOVERY_LIMIT. Existing background prefetch attempt policy remains unchanged.
+
+Focused real PostgreSQL tests:3/3 PASS,0 skipped,3100.52ms.
+- foreground crash recovery stops after three takeovers and explicit resume keeps paid checkpoints
+- quota resumes with many prior attempts do not consume automatic crash recoveries
+- own site polling surfaces the crash recovery limit without automatically resuming it
+
+Mutation: raising the automatic-recovery bound from3 to99 makes the real boundary test FAIL:
+a fifth running claim was returned where null and a mirrored pause were expected.
+Original source restored in finally before full verification.
+
+node --test --test-concurrency=1 --test-reporter=tap
+  apps/tracy-web/test/website-opportunities-shared-research.test.mjs
+Result:66/66 PASS,0 skipped,0 failed,12112.26ms.
+Includes paid Apify restart, quota/budget resume and new fencing/counter coverage.
+
+node --test --test-concurrency=1 --test-reporter=tap
+  apps/tracy-web/test/website-opportunities-dubai-stop.test.mjs
+  apps/tracy-web/test/website-opportunities-dubai-parallel.test.mjs
+  apps/tracy-web/test/website-opportunities-dubai-prefetch.test.mjs
+Result:24/24 PASS,0 skipped,0 failed,9949.12ms.
+
+Biome formatting, focused oxlint, regression-case validation and git diff --check: PASS.
+Focused oxlint used the existing checkout .pnpm package executable directly because its
+.bin launcher still referenced a removed temporary dependency tree. No dependencies changed.
+No runtime job started and no commit made.

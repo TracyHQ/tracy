@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-541-wo-explicit-chain-retry",
+  "kind": "fix",
+  "title": "Explicit Retry resumes only the exact owned failed chain generation and preserves historical records",
+  "pr": 541,
+  "area": "website-opportunities/chain-retry",
+  "cms": ["jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the handoff integration suite against a scratch PostgreSQL database with TEST_DATABASE_URL set."
+  ],
+  "expect": [
+    "A historical completed action with an owned current failed chain brief can accept one explicit Retry, preserving its site, frozen revision, old action and QA during restart.",
+    "Request replay returns the same action; a failed child Retry obtains fresh authority for its newly failed brief.",
+    "An applied terminal soft failure grants explicit full-chain retry authority only when its latest write failed and no steps are running; its site and frozen revision stay unchanged while new inputs are prepared.",
+    "Healthy applied, successful latest write, missing or malformed measurements, running steps, ready, replaced, unowned, wrong-revision, open-turn, QA-lease, live-writer and lost-placement briefs do not grant recovery authority.",
+    "An atomic restart refuses changed snapshots, changed applied write measurements, replaced sites, revoked owners, live writers and forged authority; missing terminal measurements never pass QA."
+  ],
+  "selectors": {},
+  "fence": "Server-held action authority and an atomic comparison of the exact failed brief generation",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/wo-step-chain-handoff.test.mjs"
+    ],
+    "tests": [
+      "an explicit historical chain Retry preserves the old verdict and resumes the same failed generation once",
+      "a failed child Retry receives fresh authority for its own failed chain generation",
+      "an applied soft failure with a failed write explicitly restarts the same chain with a new generation",
+      "accepted applied chain Retry refuses a changed terminal write measurement before restarting",
+      "a done host build without the chain measurement cannot hand over as QA passed"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -29,6 +29,7 @@ import { PLACEHOLDER_RE } from './content-pool.mjs'
 import { inSentence, withoutDashes } from './plain-prose.mjs'
 import { isSubTradeOf, subTradeChoicesOf } from './sub-trades.mjs'
 import { excludedPostOffer, postOfferCandidates } from './post-offerings.mjs'
+import { websiteReadingSources } from './website-reading-sources.mjs'
 import { shownByReviewRule } from './brief-people.mjs'
 import { OFFERING_KIND_NOUNS, alternationOf, formsOf } from './trade-word-classes.mjs'
 
@@ -40,7 +41,7 @@ import { OFFERING_KIND_NOUNS, alternationOf, formsOf } from './trade-word-classe
 // 40 items a group), proposes what customers say sets the business apart (`uspThemes`), and its examples name no trade.
 // 6: a USP theme is kept by a ladder (two reviews, else one review, else the business's own words), a quote naming a
 // review-only person drops that quote only, and every dropped theme is recorded with why (`uspThemesDropped`).
-export const BUSINESS_READING_VERSION = 'business-reading-6'
+export const BUSINESS_READING_VERSION = 'business-reading-7'
 /** The groups a reading holds, in the order the Profile card and the brief show them. */
 export const READING_GROUPS = Object.freeze([
   'services',
@@ -89,9 +90,9 @@ const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
  * review the sources list twice). Template lines are taken out before anything is read.
  * @param {{bio?: string | null, posts?: any[], reviews?: any[]}} input `posts`: `{source, id, url, caption}`;
  *   `reviews`: `{author, text, source?}`
- * @returns {{ref: string, kind: 'bio' | 'post' | 'review', text: string, url?: string, author?: string, source?: string}[]}
+ * @returns {{ref: string, kind: 'bio' | 'post' | 'review' | 'website', text: string, url?: string, author?: string, source?: string}[]}
  */
-export function readingSourcesOf({ bio = null, posts = [], reviews = [] } = {}) {
+export function readingSourcesOf({ bio = null, posts = [], reviews = [], websitePages = [] } = {}) {
   const out = []
   const bioText = withoutPlaceholders(bio)
   if (bioText) out.push({ ref: 'bio', kind: 'bio', text: bioText.slice(0, MAX_TEXT) })
@@ -122,7 +123,12 @@ export function readingSourcesOf({ bio = null, posts = [], reviews = [] } = {}) 
       source: nonEmpty(r.source) ? r.source : 'google'
     })
   }
-  return out.slice(0, MAX_SOURCES)
+  const website = websiteReadingSources(websitePages)
+  if (!website.length) return out.slice(0, MAX_SOURCES)
+  // Reserve space for reviews as well as own text; posts must not consume the entire reading budget.
+  const own = out.filter((s) => s.kind !== 'review').slice(0, 10)
+  const customer = out.filter((s) => s.kind === 'review')
+  return [...own, ...website, ...customer.slice(0, MAX_SOURCES - own.length - website.length)]
 }
 
 // Google types that say nothing of what a business is.
@@ -150,9 +156,10 @@ export function readingFactsOf({ googleTypes = [], categories = [] } = {}) {
   return out
 }
 
-export const BUSINESS_READING_SYSTEM = `You read what a local business says about itself (its bio and posts) and what its customers say (reviews). List only what these texts say, as JSON: {"services": [{"name": "", "quote": "", "ref": ""}], "audience": [{"label": "", "quote": "", "ref": ""}], "team": [{"name": "", "role": "", "quote": "", "ref": ""}], "story": [{"text": "", "quote": "", "ref": ""}], "serviceAreas": [{"text": "", "quote": "", "ref": ""}], "facts": [{"text": "", "quote": "", "ref": ""}], "subTrade": {"id": "", "quotes": [{"quote": "", "ref": ""}]}, "keyMessages": [{"label": "", "quotes": [{"quote": "", "ref": ""}]}], "praise": [{"theme": "", "quotes": [{"quote": "", "ref": ""}]}], "uspThemes": [{"label": "", "line": "", "accent": "", "who": "", "quotes": [{"quote": "", "ref": ""}]}]}. A services or audience item may also hold "basis": "repeated" and "mentions": [{"quote": "", "ref": ""}].
+export const BUSINESS_READING_SYSTEM = `You read what a local business says about itself (its website pages, bio and posts) and what its customers say (reviews). List only what these texts say, as JSON: {"services": [{"name": "", "quote": "", "ref": ""}], "audience": [{"label": "", "quote": "", "ref": ""}], "team": [{"name": "", "role": "", "quote": "", "ref": ""}], "story": [{"text": "", "quote": "", "ref": ""}], "serviceAreas": [{"text": "", "quote": "", "ref": ""}], "facts": [{"text": "", "quote": "", "ref": ""}], "subTrade": {"id": "", "quotes": [{"quote": "", "ref": ""}]}, "keyMessages": [{"label": "", "quotes": [{"quote": "", "ref": ""}]}], "praise": [{"theme": "", "quotes": [{"quote": "", "ref": ""}]}], "uspThemes": [{"label": "", "line": "", "accent": "", "who": "", "quotes": [{"quote": "", "ref": ""}]}]}. A services or audience item may also hold "basis": "repeated" and "mentions": [{"quote": "", "ref": ""}].
 - services: what the business sells or teaches (a class, treatment, course, consultation, menu, membership, product line, legal service). name: 2 to 5 words, each taken from its quote. Never a slogan, a motivation line, a feeling or a hashtag.
 - A quoted label that joins two offerings ("Cakes & Pastries", "Hair & Nails") may be listed as two services, each keeping that same quote.
+- Read EVERY provided website passage for services, classes, memberships, people and prices. Website passages are the business's own statements, not reviews. A service may include "price": the exact price and period copied from its quote (for example "$69 monthly"). Never infer a currency, price, period or inclusion.
 - Read EVERY own post for offerings, not just the bio or listing. A product or service the business itself offers with a call to book or buy is a stated offering on that single post, even absent from the bio. Keep its exact quote and post ref; do not mark it "repeated". Never turn a one-off event, a partner's product or a hashtag alone into an offering.
 - mentions (services and audience): up to 3 more exact quotes, each from a different post or review than the item's quote, that name the item; the first two describe a service on the site. Leave it out when no other text names it.
 - basis "repeated": an inferred service or audience that no bio OR own post explicitly offers, but that at least 2 different posts or reviews name ("wedding cakes" in several posts of a bakery whose bio says "Cakes"). Its quote and mentions come from those posts or reviews, each naming it. An inferred theme named once is not listed; an explicit own-post offer does not need repetition.
@@ -319,6 +326,14 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
         quote: exactQuote(source.text, quote),
         source: sourceOf(source),
         ...(group === 'services' ? { kind: serviceKindOf(label) } : {}),
+        ...(group === 'services' &&
+        source.kind !== 'review' &&
+        typeof raw.price === 'string' &&
+        /\d/.test(raw.price) &&
+        quotedIn(raw.price, source) &&
+        comparable(quote).includes(comparable(raw.price))
+          ? { price: exactQuote(source.text, raw.price) }
+          : {}),
         ...(group === 'team' && role && labelQuoted(role, source.text) ? { role } : {}),
         // A person only reviews name is held in the brief, off the site until the person turns them on.
         ...(group === 'team' ? { reviewsOnly: source.kind === 'review' } : {}),

@@ -55,7 +55,7 @@ export function routeChanges(changes, kit, slots) {
     const icon = icons.get(slot)
     if (!icon) continue
     const name = String(changes[key] ?? '').trim()
-    const value = icon.classes.get(name.toLowerCase())
+    const value = classOf(icon.classes, name.toLowerCase())
     delete out[key]
     if (icon.field && value) {
       const target = contentMapKey(icon.field)
@@ -90,8 +90,19 @@ const ALIASES = {
   'facebook-f': ['facebook'],
   'linkedin-in': ['linkedin']
 }
-const classOf = (classes, network) =>
-  (ALIASES[network] ?? [network]).map((n) => classes.get(n)).find((v) => typeof v === 'string') ?? null
+// These brand glyphs exist in both Font Awesome 4 and 5. A demo list is a sample, not the font's catalogue.
+// Infer only a family already evidenced by this list; unknown and mixed families stay refused.
+const COMMON_GLYPHS = new Set(['facebook', 'instagram', 'twitter', 'youtube', 'linkedin', 'pinterest'])
+function classOf(classes, network) {
+  const found = (ALIASES[network] ?? [network]).map((n) => classes.get(n)).find((v) => typeof v === 'string')
+  if (found) return found
+  const name = network === 'x' || network === 'x-twitter' ? 'twitter' : network
+  if (!COMMON_GLYPHS.has(name)) return null
+  const families = [...classes.values()].map((v) => /^(fa|fab|fa-brands) fa-[a-z-]+$/.exec(v)?.[1])
+  return families.length && families[0] && families.every((f) => f === families[0])
+    ? `${families[0]} fa-${name}`
+    : null
+}
 
 /** The network an icon class draws (`fa-brands fa-instagram`, `fab fa-x-twitter`), or null. */
 export function networkOfClass(value) {

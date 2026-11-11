@@ -35,6 +35,7 @@ export function needsPicker(idx) {
     const frame = idx.frames.get(frameId)
     if (!frame || (frame.writable === false && frame.paintedBehind !== true) || isTwin(idx, frameId)) continue
     if (['logo', 'icon', 'cutout'].includes(frame.kind)) continue
+    if (frame.transparent === true) continue
     if (wish.match !== 'any-real' && wish.match !== 'person') return true
   }
   return false

@@ -10,6 +10,7 @@ import { after, before, beforeEach, test } from 'node:test'
 import { mintSession, SESSION_COOKIE } from '../src/lib/session.js'
 import { listChainBuilds, SLOW_FACTOR } from '../src/lib/wo-chain-builds.js'
 import { woOpsRoutes } from '../src/ops/wo.js'
+import { briefOf, restartBrief } from '../src/sites/brief-store.js'
 import { fileDb } from './_db.mjs'
 
 const SECRET = 'ops-wo-chain-secret-32-chars-min!'
@@ -188,6 +189,72 @@ test('with too few builds there is no usual duration, so nothing is highlighted'
   const { builds, slowAfterMinutes } = await listChainBuilds(pool, CONFIG)
   assert.equal(slowAfterMinutes, null)
   assert.ok(builds.every((b) => !b.slow))
+})
+
+test(
+  'a retried chain measures its current attempt without changing the site generation',
+  dbOpts,
+  async () => {
+    const key = 'retried.tracy.site'
+    await seedSnapshot(db.pool, key, {
+      at: '2026-11-07T08:00:00Z',
+      state: 'failed',
+      running: ['plan']
+    })
+    const original = await briefOf(db.pool, key)
+    const databaseNow = async () =>
+      Number(
+        (await db.pool.query('select floor(extract(epoch from clock_timestamp()) * 1000) as ms')).rows[0].ms
+      )
+    const before = await databaseNow()
+    const action = 'f344e3b6-9d85-4eca-b2c5-7600793a8c29'
+    assert.equal(await restartBrief(db.pool, key, {}, action), true)
+    const row = await briefOf(db.pool, key)
+    const start = Number(row.timings.attemptStartedAt)
+    assert.ok(start >= before && start <= (await databaseNow()), 'the accepted retry stamps its own start')
+    assert.equal(row.created_at.getTime(), original.created_at.getTime())
+    assert.equal(row.timings.woRetryActionId, action)
+    await db.pool.query('update site_brief set timings = timings || $2::jsonb where site_key=$1', [
+      key,
+      JSON.stringify({ chain: { ending: 'running', running: ['plan'], steps: [] } })
+    ])
+    const { builds } = await listChainBuilds(db.pool, CONFIG, { now: () => start + 120_000 })
+    assert.equal(builds[0].startedAt, new Date(start).toISOString())
+    assert.equal(builds[0].totalMinutes, 2)
+  }
+)
+
+test('chain attempt ordering uses the retry start and ignores malformed legacy stamps', dbOpts, async () => {
+  await seedSnapshot(db.pool, 'retry-order.tracy.site', {
+    at: '2026-11-07T08:00:00Z',
+    state: 'preparing',
+    running: ['plan']
+  })
+  await seedSnapshot(db.pool, 'invalid-order.tracy.site', {
+    at: '2026-11-07T09:00:00Z',
+    state: 'preparing',
+    running: ['plan']
+  })
+  const start = Date.parse('2026-11-07T09:50:00Z')
+  for (const [key, stamp] of [
+    ['retry-order.tracy.site', start],
+    ['invalid-order.tracy.site', 'not-a-timestamp']
+  ])
+    await db.pool.query('update site_brief set timings=timings || $2::jsonb where site_key=$1', [
+      key,
+      JSON.stringify({ attemptStartedAt: stamp })
+    ])
+  const { builds } = await listChainBuilds(db.pool, CONFIG, {
+    now: () => Date.parse('2026-11-07T10:00:00Z')
+  })
+  assert.deepEqual(
+    builds.map((b) => [b.siteKey, b.totalMinutes]),
+    [
+      ['retry-order.tracy.site', 10],
+      ['invalid-order.tracy.site', 60]
+    ]
+  )
+  assert.equal(builds[1].startedAt, '2026-11-07T09:00:00.000Z')
 })
 
 /** A pool that only knows who is staff and what the read would return. */

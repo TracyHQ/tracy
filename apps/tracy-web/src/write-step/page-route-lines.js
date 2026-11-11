@@ -46,6 +46,11 @@ const articleOfLink = (link) =>
  *   from: string, to: string | null, reason?: string }[]}
  */
 export function routeOrders({ plan, kit, rows, menutype = null }) {
+  const before = new Map(rows.map((r) => [Number(r.id), Number(r.parent_id)]))
+  const placements = menuPlacements({ plan, kit, rows, menutype })
+  rows = rows.map((r) =>
+    placements.has(Number(r.id)) ? { ...r, parent_id: placements.get(Number(r.id)) } : r
+  )
   const kitPages = new Map(each(kit?.pages).map((p) => [p?.id, p]))
   const orders = []
   for (const page of each(plan?.pages)) {
@@ -80,6 +85,9 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
       itemId: Number(row.id),
       articleId: articleOfLink(row.link),
       alias: aliasOf(row),
+      ...(placements.has(Number(row.id)) && before.get(Number(row.id)) !== Number(row.parent_id)
+        ? { move: { before: before.get(Number(row.id)), after: Number(row.parent_id) } }
+        : {}),
       from,
       to: null,
       row
@@ -102,7 +110,7 @@ export function routeOrders({ plan, kit, rows, menutype = null }) {
         (renamed.get(Number(r.id)) ?? aliasOf(r)) === order.slug &&
         sameLanguage(String(r.language ?? '*'), language)
     )
-    if (!holder || order.alias === order.slug) continue
+    if (!holder || (order.alias === order.slug && !order.move)) continue
     // A url item routes nothing, so the slug it holds is freed first (card P); a routed item holding it is never touched.
     const free =
       holder.type === 'url'
@@ -149,6 +157,28 @@ export function routeLines(routes) {
           ? readRow('article', route.articleId, 'alias')
           : null
     ),
+    ...(route.move
+      ? [
+          line(
+            `${route.pageId}:menu-parent`,
+            'page-menu-parent',
+            route.move.after,
+            { ...route.move, status: statusOf(route.move.outcome) },
+            readRow('menuItem', route.itemId, 'parent_id')
+          )
+        ]
+      : []),
+    ...(route.title
+      ? [
+          line(
+            `${route.pageId}:menu-title`,
+            'page-menu-title',
+            route.title.ordered,
+            { ...route.title, status: statusOf(route.title.outcome) },
+            readRow('menuItem', route.itemId, 'title')
+          )
+        ]
+      : []),
     ...(route.cleared
       ? [
           line(
@@ -189,7 +219,7 @@ export function keptAt(keptPages, { kit, rows, landed, menutype = null }) {
       .map((id) => byId.get(id))
       .filter(Boolean)
       .map((row) => ({
-        from: addressAfter(row, rows),
+        from: `/${trimmed(row.path)}`,
         to: addressAfter(row, rows, landed),
         outcome: 'written'
       }))
@@ -202,4 +232,27 @@ export function keptAt(keptPages, { kit, rows, landed, menutype = null }) {
     const now = addressNow(page.path, moves)
     return now ? { ...page, path: now } : page
   })
+}
+
+/** Parent menu ids explicitly selected by the planner's main menu. Home is never moved. */
+export function menuPlacements({ plan, kit, rows, menutype = null }) {
+  const pages = new Map(each(kit?.pages).map((p) => [p.id, p]))
+  const kept = new Set(
+    each(plan?.pages)
+      .filter((p) => p.decision === 'keep')
+      .map((p) => p.id)
+  )
+  const out = new Map()
+  const walk = (entries, parent = 1) => {
+    for (const entry of each(entries)) {
+      const page = pages.get(entry.page)
+      if (!page || !kept.has(entry.page)) continue
+      const row = rowsOpening(page, rows, menutype)[0]
+      if (!row) continue
+      if (Number(row.home) !== 1) out.set(Number(row.id), parent)
+      walk(entry.children, Number(row.id))
+    }
+  }
+  walk(plan?.mainMenu)
+  return out
 }

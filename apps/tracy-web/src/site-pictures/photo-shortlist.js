@@ -14,6 +14,8 @@ const bool = (x) => (typeof x === 'boolean' ? x : null)
 
 /** Lettering or a watermark: the brief label, else the vision label names the picture check also reads (P09). */
 export function letteringOf(a) {
+  // P09 forbids scene lettering too; a direct overlay-only false cannot override visible words.
+  if (a.textPresence === 'present' || a.hasTextOverlay === true) return true
   const own = bool(a.hasTextOrWatermark)
   if (own !== null) return own
   const vision = [

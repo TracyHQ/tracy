@@ -705,9 +705,11 @@ test(
 )
 
 // ── #307: a record whose live delete the merge took leaves the id map and its copy-only rows ──────
-function joomlaMerge(names, map) {
+function joomlaMerge(names, map, pushed = null) {
   const file = join(root, `${names.ours}-map.json`)
   writeFileSync(file, JSON.stringify(map))
+  const pushedFile = `${file}.pushed`
+  if (pushed) writeFileSync(pushedFile, JSON.stringify({ records: pushed }))
   const r = spawnSync(
     'python3',
     [
@@ -728,7 +730,8 @@ function joomlaMerge(names, map) {
       '--prefer',
       'ours',
       '--id-map',
-      file
+      file,
+      ...(pushed ? ['--pushed', pushedFile] : [])
     ],
     { encoding: 'utf8', env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) } }
   )
@@ -1031,4 +1034,98 @@ test('Joomla: a taken mapped table preserves real counters before the holding mo
   assert.equal(autoIncrement('counter_ours', 'jos_content'), 75)
   sql("INSERT INTO jos_content (title) VALUES ('Next article');", 'counter_ours')
   assert.deepEqual(rows("SELECT id FROM jos_content WHERE title = 'Next article'", 'counter_ours'), [['75']])
+})
+
+test('Joomla: a pushed article version is present before its number is remembered (#550)', opts, () => {
+  schema('jh_base', J_TABLES)
+  schema(
+    'jh_ours',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{"title":"Copy version"}');`
+  )
+  schema(
+    'jh_theirs',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{"title":"Live version"}');`
+  )
+  const settle = joomlaMerge(
+    { base: 'jh_base', ours: 'jh_ours', theirs: 'jh_theirs' },
+    { content: { 1: 1 } },
+    [{ table: 'content', entity: 'content', id: 1, match: { id: '1' }, create: true }]
+  )
+  assert.equal(settle.ok, true)
+  assert.deepEqual(settle.kept, [])
+  const copyVersion = settle.idMap.history?.['4']
+  assert.ok(copyVersion > 4, JSON.stringify(settle.idMap))
+  assert.deepEqual(
+    rows(`SELECT item_id, version_data FROM jos_history WHERE version_id = ${copyVersion}`, 'jh_ours'),
+    [['com_content.article.1', '{"title":"Live version"}']]
+  )
+  assert.ok(autoIncrement('jh_ours', 'jos_history') > copyVersion)
+
+  // A later unrelated save must never occupy the pushed version's remembered number.
+  sql(
+    "INSERT INTO jos_content (id, title) VALUES (2, 'Other article'); INSERT INTO jos_history (item_id, version_data) VALUES ('com_content.article.2', '{}');",
+    'jh_ours'
+  )
+  schema(
+    'jh_base2',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{"title":"Live version"}');`
+  )
+  schema('jh_theirs2', J_TABLES)
+  const deleted = joomlaMerge({ base: 'jh_base2', ours: 'jh_ours', theirs: 'jh_theirs2' }, settle.idMap)
+  assert.equal(deleted.ok, true)
+  assert.deepEqual(deleted.kept, [])
+  assert.equal(deleted.idMap.history, undefined)
+  assert.deepEqual(rows('SELECT item_id FROM jos_history', 'jh_ours'), [['com_content.article.2']])
+})
+
+test('Joomla: a historical phantom version mapping never names another article (#550)', opts, () => {
+  schema(
+    'jm_base',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (4, 'com_content.article.1', '{}');`
+  )
+  schema(
+    'jm_ours',
+    `${J_TABLES} ${ARTICLE_1}
+    INSERT INTO jos_content (id, title) VALUES (2, 'Other article');
+    INSERT INTO jos_history (version_id, item_id, version_data) VALUES (5, 'com_content.article.2', '{"title":"Other article"}');`
+  )
+  schema('jm_theirs', J_TABLES)
+  const answer = joomlaMerge(
+    { base: 'jm_base', ours: 'jm_ours', theirs: 'jm_theirs' },
+    { content: { 1: 1 }, history: { 4: 5 } }
+  )
+  assert.equal(answer.ok, true)
+  assert.deepEqual(answer.kept, [])
+  assert.equal(answer.idMap.history, undefined)
+  assert.deepEqual(rows('SELECT version_id, item_id, version_data FROM jos_history', 'jm_ours'), [
+    ['5', 'com_content.article.2', '{"title":"Other article"}']
+  ])
+})
+
+test('Joomla: a real version pair survives its article number translation (#550)', opts, () => {
+  const version = (id, article) =>
+    `INSERT INTO jos_history (version_id, item_id, version_data) VALUES (${id}, 'com_content.article.${article}', '{}');`
+  schema('jn_base', `${J_TABLES} ${ARTICLE_1} ${version(4, 1)}`)
+  schema('jn_theirs', `${J_TABLES} ${ARTICLE_1} ${version(4, 1)}`)
+  schema(
+    'jn_ours',
+    `${J_TABLES} ${ARTICLE_1}
+    UPDATE jos_content SET id = 7 WHERE id = 1;
+    UPDATE jos_workflow_associations SET item_id = 7 WHERE item_id = 1;
+    ${version(5, 7)}`
+  )
+  const answer = joomlaMerge(
+    { base: 'jn_base', ours: 'jn_ours', theirs: 'jn_theirs' },
+    { content: { 1: 7 }, history: { 4: 5 } }
+  )
+  assert.equal(answer.ok, true)
+  assert.deepEqual(answer.kept, [])
+  assert.deepEqual(answer.idMap.history, { 4: 5 })
+  assert.deepEqual(rows('SELECT version_id, item_id FROM jos_history', 'jn_ours'), [
+    ['5', 'com_content.article.7']
+  ])
 })

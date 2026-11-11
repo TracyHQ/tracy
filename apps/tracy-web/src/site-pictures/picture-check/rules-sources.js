@@ -51,16 +51,18 @@ export function checkP06({ R, view, idx }) {
   }
 }
 
-// P07. A frame the plan asks to fill with any real photo holds a real photo, or is hidden; never drawn or extended.
-// The one exception (card AK): a gallery tile drawn by its ladder's draw rung after no owner photo was left for it
-// (`filledBy.rung` "draw").
+// P07. A documentary frame holds an owner photo or is hidden/returned, never drawn or extended. This includes
+// any-real galleries and photo wishes grounded in observed facts or original posts (#548).
 export function checkP07({ R, view, idx }) {
   const r = R.p07
   for (const e of view.entries) {
-    if (idx.wishes.get(e.frame)?.match !== 'any-real') continue
-    const tileDrawn = e.source === 'drawn' && e.filledBy?.rung === 'draw' && Boolean(idx.galleryTile(e.frame))
-    if (MADE_UP.has(e.source) && !tileDrawn)
-      r.fail(where(e), `the plan asks for any real photo, the source is ${e.source}`, 'pictures')
+    if (!idx.documentaryFrame(e.frame)) continue
+    if (MADE_UP.has(e.source))
+      r.fail(
+        where(e),
+        `the plan asks for any real photo or documents the business, the source is ${e.source}`,
+        'pictures'
+      )
     else r.ok()
   }
 }
@@ -100,6 +102,8 @@ const bool = (x) => (typeof x === 'boolean' ? x : null)
 // The brief labels `hasTextOrWatermark` and `showsOtherBusiness` (true, false or null). When a label is absent, the
 // vision label names are read instead (textPresence, hasTextOverlay; otherBusiness). null means nobody knows.
 function lettering(a) {
+  // P09 forbids scene lettering too; a direct overlay-only false cannot override visible words.
+  if (a.textPresence === 'present' || a.hasTextOverlay === true) return true
   const own = bool(a.hasTextOrWatermark)
   if (own !== null) return own
   const vision = [

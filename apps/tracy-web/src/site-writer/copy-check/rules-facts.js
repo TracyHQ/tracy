@@ -7,6 +7,52 @@ const URL_RE = /\b(?:https?:\/\/|www\.)[^\s"'<>)]+/gi
 const PHONE = /\+?\d[\d\s().-]{5,}\d/g
 const TIME = /\b\d{1,2}[:.]\d{2}\s?(?:am|pm)?(?!\d)|\b\d{1,2}\s?(?:am|pm)\b/gi
 const NUMBER = /\d[\d.,]*/g
+const COUNT_WORDS = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+  'eleven',
+  'twelve',
+  'thirteen',
+  'fourteen',
+  'fifteen',
+  'sixteen',
+  'seventeen',
+  'eighteen',
+  'nineteen',
+  'twenty'
+]
+// Consume a whole number phrase so "two" inside "twenty-two" or "two hundred" never backs 2.
+const NUMBER_WORD = [
+  ...COUNT_WORDS,
+  'thirty',
+  'forty',
+  'fifty',
+  'sixty',
+  'seventy',
+  'eighty',
+  'ninety',
+  'hundred',
+  'thousand',
+  'million',
+  'billion',
+  'trillion',
+  'half',
+  'quarter'
+].join('|')
+const COUNT_PHRASE = new RegExp(
+  `(?<![\\p{L}\\p{N}_@/.-])(?:${NUMBER_WORD})(?:[\\s-]+(?:${NUMBER_WORD}|and|a|point))*` +
+    `(?![\\p{L}\\p{N}_@/-]|[.,][\\p{L}\\p{N}])`,
+  'giu'
+)
 
 const tidy = (s) => s.replace(/[.,;:!?)]+$/, '')
 const squash = (s) =>
@@ -40,7 +86,14 @@ function backed({ kind, token }, factsText) {
   if (kind === 'phone') return digits(factsText).includes(digits(token))
   const t = squash(token)
   const re = new RegExp(`(?<![\\p{L}\\p{N}.,@/])${escapeRegExp(t)}(?![\\p{N}@]|[.,]\\p{N})`, 'u')
-  return re.test(squash(factsText))
+  if (re.test(squash(factsText))) return true
+  if (kind !== 'number' || !/^(?:0|[1-9]\d*)$/.test(token)) return false
+  const word = COUNT_WORDS[Number(token)]
+  if (!word) return false
+  // This changes only support for plain digit counts. Addresses, phones, times and decimals keep
+  // their existing exact checks, and a word inside a URL or email cannot supply a count.
+  const prose = factsText.replace(EMAIL, ' ').replace(URL_RE, ' ')
+  return [...prose.matchAll(COUNT_PHRASE)].some((match) => match[0].toLowerCase() === word)
 }
 
 export function checkW04({ R, view, idx }) {

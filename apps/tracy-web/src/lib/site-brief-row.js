@@ -14,6 +14,10 @@
  */
 export const CURRENT_BRIEF = `(s.created_at is null or b.created_at >= s.created_at)`
 
+/** A lost placement with no saved receipt cannot safely replay writes. Shared by brief restart and Retry acceptance. */
+export const LOST_PLACING =
+  'Tracy restarted just as your text and pictures were being placed, so the site may still have the template’s own words.'
+
 /**
  * 🔒 A REMOVED SITE TAKES ITS `site_brief` ROW (#1749). The table has no foreign key on purpose: a quality build writes
  * its brief before the site row exists (`putQualityBrief`, `opportunities-build/quality-protocol.js`). A brief left

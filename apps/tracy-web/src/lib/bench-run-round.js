@@ -193,7 +193,7 @@ export async function playRound(ctx, { round, followUp, base, reading: prior }) 
       changes = askedFix ? [...carried.validChanges, ...read.value.changes] : read.value.changes
     }
     await must(store.setProgress(pool, { runId, step: 'checking', round, leaseToken }))
-    const checkResult = step.checker.check({ doc, row, ready: ctx.ready })
+    const checkResult = step.checker.check({ doc, row, ready: ctx.ready, history: result.turns })
     await save('checked', {
       answer: result.answer,
       [docColumn]: doc,

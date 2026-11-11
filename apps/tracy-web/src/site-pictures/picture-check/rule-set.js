@@ -7,7 +7,7 @@ export const RULE_TITLES = [
   ['p04', 'P04', "Aspect matches the site's demo file within 0.02 and the size is not below the display box"],
   ['p05', 'P05', 'Enlarged at most 1.5 times, and the sharpness gate passed'],
   ['p06', 'P06', 'No photo twice on one page'],
-  ['p07', 'P07', 'Nothing drawn or extended in an any-real frame'],
+  ['p07', 'P07', 'Nothing drawn or extended in a documentary frame'],
   ['p08', 'P08', 'Person frames hold only a confirmed portrait or initials, never drawn'],
   ['p09', 'P09', 'Owner photos carry no lettering and no other business'],
   ['p10', 'P10', 'Icons have light and dark files and names that exist in the library'],

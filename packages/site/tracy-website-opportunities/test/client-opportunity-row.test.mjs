@@ -304,3 +304,13 @@ test('every code a failed demo action can carry names a reason in words; an unkn
     'reason.demo_failed'
   )
 })
+
+test('a readiness refusal offers brief review instead of a paid retry', () => {
+  const failed = row({ demoAction: { id: 'a1', state: 'failed', error: 'BRIEF_NOT_READY' } })
+  assert.equal(nextAction(failed), 'review-brief')
+  assert.equal(demoFailureKey(failed), 'reason.brief_not_ready')
+  assert.equal(
+    nextAction(row({ demoAction: { id: 'a2', state: 'failed', error: 'TEMPORARY' } })),
+    'retry-demo'
+  )
+})

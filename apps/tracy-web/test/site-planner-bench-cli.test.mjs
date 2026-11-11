@@ -168,7 +168,7 @@ test('status, list and get show a finished run, and nothing written carries a ke
   assert.deepEqual(JSON.parse(read('plan-v1.json')), plan())
   const meta = JSON.parse(read('run.json'))
   assert.match(meta.promptSha256, /^[0-9a-f]{64}$/)
-  assert.equal(meta.checkerVersion, 'site-plan-check/5')
+  assert.equal(meta.checkerVersion, 'site-plan-check/7')
   assert.equal(meta.door.model, MODEL)
   assert.equal(meta.harness.effort, 'medium')
   const turns = read('turns.jsonl').trim().split('\n').map(JSON.parse)
@@ -187,4 +187,21 @@ test('cancel ends a waiting run; a second cancel is refused', opts, async () => 
   assert.match(cancelled.out, /cancelled/)
   assert.equal((await cli('cancel', id)).code, 1)
   assert.equal((await cli('status', 'not-a-run')).code, 1)
+})
+
+test('the WO CLI visual-review flag freezes the mandatory policy on its queued run', opts, async () => {
+  await assignPlannerDoor(db.pool)
+  const queued = await cli(
+    'run',
+    '--brief-file',
+    'hsc.json',
+    '--kit',
+    KIT_REF,
+    '--require-visual-review',
+    '--no-caps'
+  )
+  assert.equal(queued.code, 0, queued.err)
+  const row = (await db.pool.query('select harness from site_planner_run where id=$1', [queued.out])).rows[0]
+  assert.equal(row.harness.visualReview, 'kit-images/1')
+  assert.equal(row.harness.budgetUsd, undefined)
 })

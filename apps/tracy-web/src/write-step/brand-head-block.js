@@ -21,7 +21,7 @@ export function headBlock(paths, menuCss = null) {
     ...Object.keys(LINKS)
       .filter((name) => paths[name])
       .map((name) => LINKS[name](paths[name])),
-    ...(menuCss ? [`<style>${menuCss}</style>`] : []),
+    `<style>${menuThemeCss}${menuCss ?? ''}</style>`,
     HEAD_END
   ].join('\n')
 }
@@ -41,3 +41,11 @@ export const menuCssFor = ({ light, dark }) =>
   (dark && light
     ? `.dark-active .offcanvas .navbar-brand img,.dark-active .t4-offcanvas .navbar-brand img{content:url(${url(dark)})}`
     : '')
+
+// Bootstrap's d-block helper on T4's phone logo wrappers overrides the theme's normal d-dark/d-light rule.
+// Keep exactly the active theme's logo visible, including inside the off-canvas header without navbar-brand.
+export const menuThemeCss =
+  '.t4-offcanvas .t4-off-canvas-header .d-dark{display:none!important}' +
+  '.dark-active .t4-offcanvas .t4-off-canvas-header .d-light{display:none!important}' +
+  '@media(max-width:575.98px){.dark-active .t4-offcanvas .t4-off-canvas-header .d-dark.d-block{display:block!important}}' +
+  '@media(min-width:576px){.dark-active .t4-offcanvas .t4-off-canvas-header .d-dark.d-sm-block{display:block!important}}'

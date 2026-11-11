@@ -383,6 +383,11 @@ webroot_locked() {
 # already has a later point, or whose v1 already carries a database, is NOT given one: a dump taken
 # today and pinned to v1 would lie about the mark.
 initial_backup() {
+  # A retry must not put today's database on an older reader/failed-provision baseline.
+  # Keep that historical v1 intact; a subsequent normal backup can create a new full point.
+  if [[ "${TRACY_INITIAL_BACKUP_BASELINE_EXISTED:-0}" = 1 ]]; then
+    echo '{"ok":true,"initial":false,"reason":"baseline predates this provision"}'; return
+  fi
   if ! { [[ -d "$REPO_DIR" ]] && g rev-parse --verify HEAD >/dev/null 2>&1; }; then
     # EmDash's road never built the webroot repo at provision; the Initial backup needs its v1.
     bash "$HERE/webroot-git.sh" --label "$LABEL" --op ensure 1>&2

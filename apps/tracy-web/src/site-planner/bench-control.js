@@ -10,6 +10,7 @@ import { sitePlannerDoor } from './door.js'
 import { openKit, readableKits } from './kit-source.js'
 import { CHECKER_VERSION } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
+import { VISUAL_REVIEW_POLICY } from './visual-review.js'
 
 export {
   BENCH_HARNESS,
@@ -27,7 +28,7 @@ const refuse = (code, reason, extra = {}) => ({ ok: false, code, reason, ...extr
 /**
  * Queue one run, or refuse it with a reason and nothing written.
  * @param {{ pool: import('pg').Pool, secret: string, brief: unknown, briefSource: object, kitRef: string,
- *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object> }} input `kitImages`: the kit
+ *   startedBy: string, kitImages: { ensure: Function }, index?: Map<string, object>, noCaps?: boolean, requireVisualReview?: boolean }} input `kitImages`: the kit
  *   images of this server (kit-images.js kitImagesFor); `index`: the contracts to find kits in (tests); `noCaps`: the
  *   run is a step of a chain build, so it carries no USD budget (#478).
  */
@@ -40,7 +41,8 @@ export async function startBenchRun({
   startedBy,
   kitImages,
   index,
-  noCaps = false
+  noCaps = false,
+  requireVisualReview = false
 }) {
   const problems = briefShapeProblems(brief)
   if (problems.length)
@@ -55,6 +57,11 @@ export async function startBenchRun({
   const opened = openKit(kitRef, index ? { index } : {})
   const door = await sitePlannerDoor({ pool, secret, kit: opened, sendsImages })
   if (!door.ok) return refuse(door.code, door.reason, door.lacking ? { lacking: door.lacking } : {})
+  if (requireVisualReview && !door.snapshot.images)
+    return refuse(
+      'SITE_PLANNER_VISUAL_REVIEW_UNAVAILABLE',
+      'This WO run requires a model that receives kit images.'
+    )
   const active = await activeRun(pool)
   if (active) return activeRefusal(active)
   // Last, since the first use of a kit version downloads its image zip: a kit whose images are unusable never queues.
@@ -71,7 +78,10 @@ export async function startBenchRun({
     promptSha256: plannerPrompt().sha256,
     checkerVersion: CHECKER_VERSION,
     door: door.snapshot,
-    harness: capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps)
+    harness: {
+      ...capsOf(benchHarnessFor(door.snapshot.model, door.snapshot.providerId), noCaps),
+      ...(requireVisualReview ? { visualReview: VISUAL_REVIEW_POLICY } : {})
+    }
   })
   if (created.error === SITE_PLANNER_RUN_ACTIVE) return activeRefusal(created.active)
   return { ok: true, run: created.run }

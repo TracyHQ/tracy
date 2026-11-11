@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-quiet-picture-analysis",
+  "kind": "fix",
+  "title": "Picture analysis disables optional reasoning while preserving labels and provider compatibility",
+  "pr": 541,
+  "area": "website-opportunities/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run quiet picture analysis wire tests with fake provider responses."],
+  "expect": [
+    "Provider-specific reasoning controls and bounded outputs reach label and observation requests.",
+    "A provider rejecting the optional reasoning field is retried once with the same cancellation signal and output bound.",
+    "Unrelated refusals are not retried by the compatibility fallback.",
+    "An unrelated provider refusal retains its readable response body for the caller."
+  ],
+  "selectors": {},
+  "fence": "Quiet request fields only; current p6 risk labels, image coverage and cache key remain intact.",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/vision-door-no-reasoning.test.mjs"],
+    "tests": [
+      "photo labels: a provider that refuses the field is asked once more without it",
+      "photo labels: a 400 about something else is not asked again",
+      "quiet fallback preserves cancellation and output bounds without retrying an unrelated refusal",
+      "photo observations retry a refused quiet field once and retain their output bound",
+      "an unrelated provider refusal keeps its readable body and request boundaries"
+    ],
+    "needs": []
+  }
+}

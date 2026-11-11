@@ -642,3 +642,62 @@ test('/ops adds a social page the search did not find; Research again then colle
     (e) => e.code === 'PLACE_NOT_FOUND'
   )
 })
+
+test(
+  'provider payment failure blocks the preview and source-only request before quota; repaired setup reopens it',
+  opts,
+  async () => {
+    const { domain } = await domainWith({ current: {} })
+    const clock = { now: Date.parse('2026-10-24T05:00:00Z') }
+    const { accountId, placeId } = await researchOnce(db.pool, executor(db.pool, domain, clock))
+    const opportunity = (await db.pool.query('select * from wo_opportunity where account_id=$1', [accountId]))
+      .rows[0]
+    await writeAsHistory(
+      db.pool,
+      `update wo_place_snapshot_source set attempted_at=$2, last_error=$3::jsonb
+     where source='google-places' and snapshot_id=(select current_snapshot_id from wo_place where id=$1)`,
+      [
+        placeId,
+        new Date(clock.now),
+        JSON.stringify({ reason: 'HTTP_402', at: new Date(clock.now).toISOString() })
+      ]
+    )
+    await db.pool.query(
+      `insert into wo_ops_setting(id,settings,updated_at,updated_by) values(true,'{}',$1,'owner@example.test')
+    on conflict(id) do update set updated_at=excluded.updated_at`,
+      [new Date(clock.now - 1000)]
+    )
+    const config = {
+      ...keysAndSettings(domain),
+      now: clock.now + 2000,
+      onlyParts: ['google-places'],
+      fromScratch: true
+    }
+    const plan = await placeAgainPlan(db.pool, placeId, config)
+    assert.deepEqual(plan.run, [])
+    assert.deepEqual(plan.kept, [{ part: 'google-places', reason: 'unavailable', detail: 'HTTP_402' }])
+    const jobs = async () => (await db.pool.query('select count(*)::int as n from wo_place_job')).rows[0].n
+    const before = await jobs()
+    const queued = await queueResearchAgain(db.pool, placeId, {
+      ...config,
+      starter: { kind: 'account', accountId }
+    })
+    assert.equal(queued.job, undefined)
+    await assert.rejects(
+      requestResearch(db.pool, {
+        accountId,
+        opportunity,
+        requestId: 'paid-source-retry',
+        onlySource: 'google-places',
+        now: () => config.now
+      }),
+      { code: 'NOTHING_DUE' }
+    )
+    assert.equal(await jobs(), before, 'neither retry creates a chargeable research run')
+    await db.pool.query('update wo_ops_setting set updated_at=$1 where id', [new Date(clock.now + 1000)])
+    assert.deepEqual(
+      (await placeAgainPlan(db.pool, placeId, config)).run.map((r) => r.part),
+      ['google-places']
+    )
+  }
+)

@@ -1472,7 +1472,8 @@ test(
       // The same, and the agent deletes the large file: it stays deleted.
       write(s.live, { 'media/videos/intro.mp4': Buffer.alloc(51 * 1024 * 1024, 8) })
       const dir5 = s.read(true)
-      assert.equal(s.merge(dir5).state, 'ready')
+      const fifthPlan = s.merge(dir5)
+      assert.equal(fifthPlan.state, 'ready', JSON.stringify(fifthPlan))
       s.applyKilledAt(dir5, 'after')
       rmSync(join(s.webroot, 'media/videos/intro.mp4'))
       const fifth = s.merge(s.read(true))
@@ -1701,7 +1702,7 @@ test('an unchanged live site bypasses the fingerprint once to repair an old id m
     assert.equal(s.sync(s.read()).state, 'applied')
     const syncDir = join(s.priv, 'sync')
     writeFileSync(join(syncDir, 'id-map.json'), JSON.stringify({ content: { 999: 2 } }))
-    rmSync(join(syncDir, 'id-map-revision'), { force: true })
+    writeFileSync(join(syncDir, 'id-map-revision'), '1\n')
     const read = s.read()
     const shim = join(dirname(s.live), 'repair-node')
     mkdirSync(shim)
@@ -1725,7 +1726,7 @@ echo '{"ok":true,"liveReadAt":"2026-11-10T10:00:00.000Z"}'
     assert.equal(answer.state, 'applied', JSON.stringify(answer))
     assert.deepEqual(JSON.parse(readFileSync(handed, 'utf8')), { fingerprint: '', db: '' })
     assert.deepEqual(JSON.parse(readFileSync(join(syncDir, 'id-map.json'), 'utf8')), {})
-    assert.equal(existsSync(join(syncDir, 'id-map-revision')), true)
+    assert.equal(readFileSync(join(syncDir, 'id-map-revision'), 'utf8'), '2\n')
     assert.deepEqual(rows('SELECT title FROM jos_content WHERE id=2'), [['About']])
   } finally {
     s.dispose()

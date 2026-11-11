@@ -175,3 +175,29 @@ test('settings and build refusals the server names have their own words', () => 
   assert.equal(reasonKey('NO_TEMPLATE_FOR_CMS'), 'reason.no_template_for_cms')
   assert.equal(reasonKey('TEMPLATES_UNREADABLE'), 'reason.templates_unreadable')
 })
+
+test('provider payment and credential failures require repair before Retry is offered', () => {
+  for (const reason of [
+    'HTTP_402',
+    'http_401',
+    'HTTP_403',
+    'credential_missing',
+    'not_configured',
+    'feature_off'
+  ])
+    assert.equal(
+      sourceRow({ source: 'tripadvisor', status: 'failed', reason, shared: true }).retryable,
+      false,
+      reason
+    )
+  assert.equal(
+    sourceRow({ source: 'tripadvisor', status: 'failed', reason: 'timeout', shared: true }).retryable,
+    true
+  )
+})
+
+test('provider payment refusal explains the account repair and has no futile Retry', () => {
+  const r = sourceRow({ source: 'tripadvisor', status: 'failed', reason: 'HTTP_402', shared: true })
+  assert.equal(r.reasonKey, 'reason.provider_payment_required')
+  assert.equal(r.retryable, false)
+})

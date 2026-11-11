@@ -37,7 +37,7 @@ import { runHideStage } from './hide-stage.js'
 import { readFrozenFiles } from './input-files.js'
 import { againstLast, lastReportProblem, needsNewSite, readLastReport } from './last-report.js'
 import { iconLinkLines, iconsOf, linkIconChanges, routeChanges } from './kit-slot-routes.js'
-import { closeForms } from './form-close.js'
+import { closeForms, followClosedForms } from './form-close.js'
 import { settleDialledPhones } from './dialled-phones.js'
 import { runEmphasisStage, withEmphasis } from './emphasis-stage.js'
 import { climbTextFallback, withTextFallback } from './text-fallback.js'
@@ -175,6 +175,7 @@ export async function runWriteStep(input) {
   let emptied = []
   let relinked = new Map()
   let shareLines = []
+  let formLines = []
   let settingLines = []
   let links = null
   let created = { pages: new Map(), results: [], lines: [], kept: [], opened: [] }
@@ -235,6 +236,10 @@ export async function runWriteStep(input) {
     lines = withGuardFindings(withUnaddressable(lines, report.unaddressable), report.guard.findings)
     lines = withTextFallback(withEmphasis(lines, emphasis), fallbacks)
     lines = withClosing(lines, closing, emptied)
+    const followedForms = followClosedForms(lines, kit.doc, formLines)
+    const discharged = new Set(followedForms.filter((line, i) => line !== lines[i]).map((line) => line.slot))
+    lines = followedForms
+    if (report.noWayOut) report.noWayOut = report.noWayOut.filter((item) => !discharged.has(item.slot))
     if (closing.length) report.closing = closing
     if (emphasis.size)
       report.emphasis = [...emphasis].map(([key, e]) => ({
@@ -357,7 +362,13 @@ export async function runWriteStep(input) {
           }
         }
       : plan
-    const index = indexInputs({ plan, kit: kit.doc, brief, contentMap: contentMap ?? undefined })
+    const index = indexInputs({
+      plan,
+      kit: kit.doc,
+      brief,
+      contentMap: contentMap ?? undefined,
+      compileHiddenLists: true
+    })
     // A copy slot the kit does not have has nothing to write to: it is left out and said as refused, and the rest is written.
     const known = kitSlotIds(kit.doc)
     for (const slot of index.kitSlots.keys()) known.add(slot)
@@ -379,6 +390,7 @@ export async function runWriteStep(input) {
         plan,
         kit: kit.doc,
         hidden: index.hidden,
+        hiddenLists: index.hiddenLists,
         menuHide: extras.mainMenu?.hide,
         filled: index.expected,
         rowsGone: goneRowSlots({ plan, kit: kit.doc, filled: index.expected })
@@ -423,6 +435,12 @@ export async function runWriteStep(input) {
     for (const [slot, source] of buttons.twins)
       exported.mapping.changes[contentMapKey(slot)] = exported.mapping.changes[contentMapKey(source)]
     const speaking = [...filing, ...buttons.claims]
+    const keptClaims = new Set(speaking.filter((claim) => claim.kind !== 'hide').map((claim) => claim.slot))
+    for (const claim of fromPlan) {
+      if (!claim.hiddenList) continue
+      const conflict = claim.hiddenList.children.find((slot) => keptClaims.has(slot))
+      if (conflict) claim.hiddenList = { ...claim.hiddenList, conflict }
+    }
     table = ownerTable(
       [
         ...speaking,
@@ -474,6 +492,7 @@ export async function runWriteStep(input) {
     return {
       plan,
       brief,
+      copySlots: view.slots,
       mapping: {
         ...exported.mapping,
         changes: allChanges,
@@ -783,9 +802,10 @@ export async function runWriteStep(input) {
     isCancelled,
     last
   })
+  formLines = await closeForms({ door, siteKey, plan, kit: kit.doc, last })
   shareLines = [
     ...shared.lines,
-    ...(await closeForms({ door, siteKey, plan, kit: kit.doc, last })),
+    ...formLines,
     // After the contract call, which saves the head block's module in its own form: the kit's empty video button rule.
     ...(await hideEmptyVideoButtons({ door, siteKey, kit: kit.doc })),
     // And the kit's blocks a created page must not show, on those pages only (card AT).
@@ -827,6 +847,7 @@ export async function runWriteStep(input) {
         siteKey,
         kit: kit.doc,
         plan,
+        copySlots: checked.copySlots,
         keptPages: report.keptPages ?? [],
         menutype: hide.settingsExtras?.mainMenu?.menutype ?? null
       })

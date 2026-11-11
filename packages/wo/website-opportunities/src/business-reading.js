@@ -110,7 +110,7 @@ export const businessReadingCeilingCents = (model, prompt, maxTokens = MAX_OUTPU
  * reserves the call on the ledger. Never throws for the model's sake: the rules answer instead, with the reason.
  * `googleTypes` and `categories` (each social profile's own category, `{source, text}`) are what the sub-trade may
  * quote besides the texts (`readingFactsOf`).
- * @param {{bio?: string | null, posts?: any[], reviews?: any[], name?: string | null, trade?: string | null,
+ * @param {{bio?: string | null, posts?: any[], reviews?: any[], websitePages?: any[], name?: string | null, trade?: string | null,
  *   googleTypes?: string[], categories?: {source: string, text: string}[],
  *   door: {state: string, door?: any, reason?: string}, held?: any,
  *   charge: (spec: object, call: () => Promise<any>) => Promise<any>, fetchImpl?: typeof fetch, now?: () => number,
@@ -121,6 +121,7 @@ export async function readBusiness({
   bio = null,
   posts = [],
   reviews = [],
+  websitePages = [],
   name = null,
   trade = null,
   googleTypes = [],
@@ -132,7 +133,7 @@ export async function readBusiness({
   now = Date.now,
   log = console
 }) {
-  const sources = readingSourcesOf({ bio, posts, reviews })
+  const sources = readingSourcesOf({ bio, posts, reviews, websitePages })
   if (!sources.length) return null
   const ready = door?.state === 'ready' ? door.door : null
   const version = businessReadingVersion(ready)

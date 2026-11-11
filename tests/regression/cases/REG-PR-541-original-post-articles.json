@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-original-post-articles",
+  "kind": "fix",
+  "title": "Article cards and pages require distinct original owner posts",
+  "pr": 541,
+  "area": "website-opportunities/planning",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the specified mechanism suite against this checkout. All data in the suite is fictional."],
+  "expect": [
+    "Trade knowledge and service facts cannot authorize invented articles.",
+    "The same post cannot fill two cards of one list or two detail pages."
+  ],
+  "selectors": {},
+  "fence": "Article cards and pages require distinct original owner posts",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-plan-check-articles.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

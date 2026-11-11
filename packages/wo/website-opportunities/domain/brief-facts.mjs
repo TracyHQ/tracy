@@ -35,6 +35,7 @@ function fieldOf(path, fact, sourceKind, food) {
     // A summary another platform wrote of its reviews ("Guests praise…", `attribution`) is not the business's story.
     if (fact.value?.attribution) return null
     if (reason.startsWith('story:') || fact.value?.kind === 'story') return 'story'
+    if (fact.value?.kind === 'post') return 'posts'
     return null
   }
   if (group === 'claims' && key === 'statistics') {

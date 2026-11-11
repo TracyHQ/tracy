@@ -532,6 +532,15 @@ in the last round (no picker round follows), from draw, when the looker rejects 
 that could not be read is no rejection: the picture fails L01 and the next round asks again. Each rung is recorded in
 `ladder` and the entry's reason.
 
+### Documentary pictures (2026-11-11, #548)
+
+A request for `any-real`, including gallery tiles, never takes a drawing or an extended photo. A photo frame
+whose wish cites observed business facts or an original owner post is documentary too, even if its match was
+`specific`. Its ladder uses real owner photos, supported row reduction or hiding, then returns the shortage.
+It never invents a picture of the actual premises, staff or event. Generic illustrative cutouts remain available.
+This supersedes the earlier gallery drawing exception. P07 enforces the rule independently of the ladder;
+`site-pictures-check/3` rejects old manifests that used the exception.
+
 ## Consequences
 
 - The picture bench (#336), the mapping export and the write step read one stable manifest shape.

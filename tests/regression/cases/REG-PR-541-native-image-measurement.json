@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-541-native-image-measurement",
+  "kind": "fix",
+  "title": "Concurrent website research shares one native picture decoder across host adapters and logos",
+  "pr": 541,
+  "area": "website-opportunities/media",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the media-info tests with five concurrent picture measurements across two adapters, a blocked feature reader, logo extraction, malformed inputs and feature failures."
+  ],
+  "expect": [
+    "At most one native picture measurement enters its feature reader at a time across adapters.",
+    "Logo extraction waits for the same permit; malformed images and optional feature errors release it.",
+    "Original bytes, orientation, dimensions, palette and features retain their existing values."
+  ],
+  "selectors": {},
+  "fence": "one process-wide native image permit held through optional host picture features and shared with logo decoding",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/website-opportunities-media-info.test.mjs"
+    ],
+    "tests": [
+      "native picture measurement is bounded across adapters while preserving input and features",
+      "malformed images and failed optional features release the native image permit",
+      "logo decoding waits for a picture feature decoder to finish"
+    ],
+    "needs": []
+  }
+}

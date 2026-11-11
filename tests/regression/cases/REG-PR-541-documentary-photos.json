@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-541-documentary-photos",
+  "kind": "fix",
+  "title": "Documentary photos never substitute drawings of the actual business",
+  "pr": 541,
+  "area": "website-opportunities/pictures",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the specified mechanism suite against this checkout. All data in the suite is fictional."],
+  "expect": [
+    "Observed business scenes and original post photos are documentary even under specific wishes.",
+    "P07 refuses generated pictures independently of the ladder."
+  ],
+  "selectors": {},
+  "fence": "Documentary photos never substitute drawings of the actual business",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/site-pictures-check.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 180
+  }
+}

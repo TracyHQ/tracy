@@ -225,6 +225,51 @@ test('a bind that is not retried says what the Claude Cowork plugin answered, an
   )
 })
 
+test('unreadable bind responses expose bounded categories without leaking response data', {
+  skip: PHP_SKIP
+}, () => {
+  for (const [raw, mime, expected] of [
+    [
+      '<!DOCTYPE html><html>secret-token credential-url</html>',
+      'text/html; token=secret-header',
+      /content-type=text\/html/
+    ],
+    ['Warning: private-secret in private-path\n{"ok":true}', 'application/json', /php-warning=yes/],
+    [JSON.stringify({ 'secret-key-name': 'secret-body-value' }), 'attacker-secret-mime', /content-type=other/]
+  ]) {
+    const result = run(`
+      [$answer, $transport, $status] = tracy_decode_door_response(${asPhp(raw)}, '', 200, ${asPhp(mime)});
+      echo json_encode(['accepted' => tracy_bind_accepted($answer, 'ja-boxing/j6/1.0.11', $status),
+        'status' => $status, 'failure' => tracy_bind_failure($answer, $transport, $status)]);
+    `)
+    assert.equal(result.accepted, false)
+    assert.equal(result.status, 200)
+    assert.match(result.failure, expected)
+    assert.match(result.failure, /bytes=\d+; json-error=\d+; known-fields=0/)
+    assert.doesNotMatch(result.failure, /secret|credential|private-path|private-secret|attacker/)
+    assert.ok(result.failure.length <= 500)
+  }
+})
+
+test('response diagnostics preserve successful binds and HTTP refusals', { skip: PHP_SKIP }, () => {
+  const accepted = { ok: true, bound: true, contract: 'ja-boxing/j6/1.0.11' }
+  assert.deepEqual(
+    run(
+      `echo json_encode(tracy_decode_door_response(${asPhp(JSON.stringify(accepted))}, '', 200, 'application/json'));`
+    ),
+    [accepted, '', 200]
+  )
+  const refused = run(`
+    [$answer, $transport, $status] = tracy_decode_door_response('<html>secret-body</html>', '', 503, 'text/html');
+    echo json_encode(['accepted' => tracy_bind_accepted($answer, 'ja-boxing/j6/1.0.11', $status),
+      'failure' => tracy_bind_failure($answer, $transport, $status)]);
+  `)
+  assert.equal(refused.accepted, false)
+  assert.match(refused.failure, /^Quickstart contract binding failed: HTTP 503 /)
+  assert.doesNotMatch(refused.failure, /secret-body/)
+  assert.match(SOURCE, /return tracy_decode_door_response\(\$raw, \$error, \$status, \$mime\)/)
+})
+
 // ── The whole first boot, against a site that answers like one (#722) ─────────────────────────
 //
 // `tracy_bootstrap()` is the bootstrap itself, handed its database and its door instead of opening

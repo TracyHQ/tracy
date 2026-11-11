@@ -1,0 +1,2 @@
+- **The writer bench accepts an explicit native DeepSeek Flash effort per run and records it with the frozen harness.** — Pipeline maintainers · #541 · `fix/wo-artifact-integration` · 2026-11-11
+  **Affects:** Local writer comparisons may use `--effort low|high|max`, including with `--no-caps`. Omission retains the measured max default and full output capacity; unsupported models or efforts refuse before queueing. Existing runs, planner defaults and retry settings are unchanged. This enables controlled measurements and makes no claim of a measured speedup.

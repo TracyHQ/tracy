@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-541-step-nine-native-verification",
+  "kind": "fix",
+  "title": "Step nine requires settled native repair requests and verified complete Undo results",
+  "pr": 541,
+  "area": "website-opportunities/write",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the pure step-nine entry point with an accepted original request that produces no native turn, a closed resend, and a fresh green site check. Compare with a repair whose every request has a terminal native record.",
+    "Call the real bench Undo adapter with HTTP 200 accepted responses carrying incomplete, unknown and verified complete results, and a pending HTTP 202 result.",
+    "Complete an original queued native turn during session retirement after a successful resend check, then exercise late write evidence on an already terminal turn.",
+    "Leave session retirement or the final native-record read pending forever and advance the configured fake return deadline."
+  ],
+  "expect": [
+    "The missing original record keeps the returned and persisted write report stopped and repair summary incomplete despite the green check; terminal records permit success.",
+    "Only HTTP 200 with ok true and complete true marks Undo successful. Partial, unknown and pending results remain failures.",
+    "Late or changed native write evidence keeps delivery stopped and the repair summary incomplete. Physical writer settlement remains true, preserving recovery eligibility only when the independent recovery probes prove the site broken.",
+    "Pending cleanup returns at the existing step deadline with stopped delivery, incomplete repair and writersSettled false; timeout never authorizes backup recovery."
+  ],
+  "selectors": {
+    "api": "/api/sites/:key/turns/undo"
+  },
+  "fence": "positive native request settlement before persisted completion and explicit complete service Undo outcome",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-nine-settlement.test.mjs",
+      "apps/tracy-web/test/write-step-bench-door.test.mjs"
+    ],
+    "tests": [
+      "step 9 stops a green resend when the original accepted request has no terminal native record",
+      "step 9 completes and persists success when every accepted repair request has a terminal native record",
+      "turn undo requires verified completion even when the service accepted the request",
+      "step 9 stops when an original repair turn writes another page during session retirement",
+      "step 9 stops when a terminal native turn gains write evidence after its site check",
+      "step 9 returns stopped at its deadline when retirement never answers",
+      "step 9 returns stopped at its deadline when final native read never answers"
+    ],
+    "needs": []
+  }
+}

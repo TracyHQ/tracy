@@ -965,7 +965,9 @@ export function websiteOpportunitiesRoutes(deps) {
             refusal: {
               status: 409,
               code: 'NOTHING_DUE',
-              next: 'Everything about this place is up to date; nothing to look at again yet.',
+              next: error.plan.kept.some((k) => /^HTTP_(401|402|403)$/i.test(k.detail ?? ''))
+                ? 'Ask the operator to repair the source provider account and save its setup before retrying.'
+                : 'Everything about this place is up to date; nothing to look at again yet.',
               extra: { plan: againShape(error.plan) }
             }
           }

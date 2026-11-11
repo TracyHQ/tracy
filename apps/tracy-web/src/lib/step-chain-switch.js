@@ -9,7 +9,7 @@
 export const STEP_CHAIN_WORKFLOW = 'step-chain/1'
 
 /** The templates (as `<design>/<kind>`, no version) the chain builds. */
-export const STEP_CHAIN_TEMPLATES = ['ja-boxing/j6']
+export const STEP_CHAIN_TEMPLATES = ['ja-boxing/j6', 'ja-diner/j6']
 
 /** A quickstart tag without its release prefix or version suffix: `quickstart/ja-boxing/j6/1.0.10` is `ja-boxing/j6`. */
 export function chainTemplateOf(quickstart) {

@@ -1,4 +1,5 @@
-import { briefOf, CURRENT_BRIEF as CURRENT } from '../lib/site-brief-row.js'
+import { briefOf, CURRENT_BRIEF as CURRENT, LOST_PLACING } from '../lib/site-brief-row.js'
+import { CHAIN_RETRY_BRIEF_HASH, CHAIN_RETRY_SAFE } from '../lib/chain-retry-authority.js'
 
 /**
  * The rows behind "Apply" in the Add site popup (`db/migrations/052-site-brief.sql`).
@@ -9,9 +10,7 @@ import { briefOf, CURRENT_BRIEF as CURRENT } from '../lib/site-brief-row.js'
  * at most once (`claimWork`, `markProvisioned`) are decided by the database, not by a variable.
  */
 
-/** The sentence a failed row carries when its worker died just as writing began, before any write was kept on the row. */
-export const LOST_PLACING =
-  'Tracy restarted just as your text and pictures were being placed, so the site may still have the template’s own words.'
+export { LOST_PLACING }
 
 /** @typedef {'queued'|'preparing'|'ready'|'applying'|'applied'|'failed'} BriefState */
 
@@ -46,21 +45,50 @@ export async function putBrief(pool, { siteKey, accountId, platform, quickstart,
 }
 
 /**
- * Put a FAILED row back at the start for another attempt of the same build: the host could not install the site, the
+ * Put a failed row back at the start for another attempt of the same build: the host could not install the site, the
  * customer pressed Create again, and the creation door provisions it once more under the same address. A row that is
- * still going is left alone.
+ * still going is left alone. Server-held chain retry authority can also restart an applied terminal soft failure whose
+ * latest write failed; it preserves the site's identity and prepares a fresh chain rather than provisioning again.
  * @param {import('pg').Pool} pool
  * @param {string} siteKey
  * @param {object} brief
  * @param {string | null} [retryActionId] - the server-held WO action; one restart per action
  * @returns {Promise<boolean>} whether the row was put back
  */
-export async function restartBrief(pool, siteKey, brief, retryActionId = null) {
+export async function restartBrief(pool, siteKey, brief, retryActionId = null, retryAuthority = null) {
+  if (retryAuthority) {
+    const { rowCount } = await pool.query(
+      `update site_brief b set state='queued',stage=null,error=null,normalized=null,
+       timings=jsonb_build_object('attemptStartedAt',floor(extract(epoch from clock_timestamp())*1000),
+         'woRetryActionId',$3::text), brief=$2::jsonb,updated_at=now()
+       from wo_build w,site s
+       where b.site_key=$1 and s.site_key=b.site_key and w.id=($5::jsonb->>'buildId')::uuid
+         and ${CHAIN_RETRY_SAFE} and b.error is distinct from $4::text and b.brief=$2::jsonb
+         and ${CHAIN_RETRY_BRIEF_HASH}=$5::jsonb->>'failedBriefHash'
+         and exists(select 1 from wo_demo_action a where a.id=$3::uuid and a.status='queued'
+           and a.account_id=w.account_id and a.revision_id=w.revision_id and a.build_request_id=w.request_id
+           and a.opportunity_id=(select r.opportunity_id from wo_revision r where r.id=w.revision_id
+             and r.account_id=w.account_id) and a.protocol='legacy'
+           and a.retry_of=($5::jsonb->>'parentActionId')::uuid
+           and a.selection->'acceptedChainRetry'=$5::jsonb
+           and a.id::text=$5::jsonb->>'acceptedActionId'
+           and exists(select 1 from wo_demo_action p where p.id=a.retry_of
+             and p.status in ('failed','quality-failed-v1','completed','quality-completed-v1') and p.account_id=a.account_id
+             and p.opportunity_id=a.opportunity_id and p.revision_id=a.revision_id
+             and p.build_request_id=a.build_request_id)
+           and a.account_id::text=$5::jsonb->>'accountId'
+           and a.revision_id::text=$5::jsonb->>'revisionId'
+           and w.site_key=$5::jsonb->>'siteKey')`,
+      [siteKey, JSON.stringify(brief), retryActionId, LOST_PLACING, JSON.stringify(retryAuthority)]
+    )
+    return rowCount === 1
+  }
   const { rowCount } = await pool.query(
     `update site_brief as b set
        state = 'queued', stage = null, error = null, normalized = null,
-       timings = case when $3::text is null then '{}'::jsonb
-                      else jsonb_build_object('woRetryActionId', $3::text) end,
+       timings = jsonb_build_object('attemptStartedAt', floor(extract(epoch from clock_timestamp()) * 1000))
+                 || case when $3::text is null then '{}'::jsonb
+                         else jsonb_build_object('woRetryActionId', $3::text) end,
        brief = $2::jsonb, updated_at = now()
      where site_key = $1 and state = 'failed'
        and coalesce(timings->>'lostFrom', '') <> 'applying'

@@ -34,8 +34,26 @@ test('codes become the demo tags, and only the tags are markup', () => {
     codesToHtml('Fish & chips <b>((br/))((span))Tom & Jo((/span))'),
     'Fish &amp; chips &lt;b&gt;<br/><span>Tom &amp; Jo</span>'
   )
-  // A code that is not emphasis stays text.
-  assert.equal(codesToHtml('((p))One((/p))'), '((p))One((/p))')
+  assert.equal(codesToHtml('((p))One((/p))'), '<p>One</p>')
+})
+
+test('exported paragraphs and lists normalize without making unknown tags or unsafe attributes executable', () => {
+  const codes = '((p))Fish & chips((/p))\n((ol class="list-highlight"))\n((li))One < two((/li))\n((/ol))'
+  const html = '<p>Fish &amp; chips</p>\n<ol class="list-highlight">\n<li>One &lt; two</li>\n</ol>'
+  assert.equal(codesToHtml(codes), html)
+  assert.equal(tagsToCodes(html), codes.replace('&', '&amp;').replace('<', '&lt;'))
+  assert.equal(
+    codesToHtml('((p))((script))alert(1)((/script))((/p))'),
+    '<p>((script))alert(1)((/script))</p>'
+  )
+  for (const bad of [
+    '((p onclick="run()"))Words((/p))',
+    '((ul style="display:none"))((li))Words((/li))((/ul))',
+    '((p))Unclosed',
+    '((ul))((li))Wrong close((/ul))((/li))'
+  ])
+    assert.equal(codesToHtml(bad), bad)
+  assert.equal(tagsToCodes('<p onclick="run()">Words</p>'), '<p onclick="run()">Words((/p))')
 })
 
 test('tags read back as the codes they were made from', () => {

@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-541-research-crash-recovery",
+  "kind": "fix",
+  "title": "Foreground research has three automatic crash recoveries and preserves paid checkpoints on explicit resume",
+  "pr": 541,
+  "area": "website-opportunities/research",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Claim foreground research, save a paid Apify checkpoint and expire/reclaim three leases. Expire the fourth worker, poll own-site research and explicitly resume. Separately resume quota-paused research with twenty prior claims."
+  ],
+  "expect": [
+    "After the initial claim and three takeovers, the next expiry pauses the place job and its requests with RESEARCH_RECOVERY_LIMIT and fences the old worker.",
+    "Explicit resume keeps the preparing snapshot, stage and paid-run IDs and resets the crash counter while lifetime attempts remain monotonic.",
+    "Quota resumes do not consume automatic recovery budget; own-site polling refuses to bypass the recovery limit."
+  ],
+  "selectors": { "api": "/api/sites/from-business/:id" },
+  "fence": "transactional expired-lease recovery counter distinct from lifetime claims, mirrored pause and own-site automatic restart refusal",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=foreground crash recovery|quota resumes with many|own site polling surfaces",
+      "apps/tracy-web/test/website-opportunities-shared-research.test.mjs"
+    ],
+    "tests": [
+      "foreground crash recovery stops after three takeovers and explicit resume keeps paid checkpoints",
+      "quota resumes with many prior attempts do not consume automatic crash recoveries",
+      "own site polling surfaces the crash recovery limit without automatically resuming it"
+    ],
+    "needs": ["postgres"]
+  }
+}

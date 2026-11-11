@@ -16,7 +16,9 @@ export const USAGE = `usage: node scripts/site-writer-bench.mjs <command>
   run --plan-file <path> --kit <ref> --brief-file <path>     queue a run on a plan and a brief JSON file
   run --plan-file <path> --kit <ref> --brief-revision <id>   queue a run on a plan and the brief of a WO revision
       [--by <label>]                      who started it (stored as cli:<label>)
+      [--require-visual-review]           require answered desktop and mobile kit image delivery
       [--no-caps]                         run without the USD budget (a step of a chain build)
+      [--effort <low|high|max>]           native DeepSeek Flash only, frozen with the run (default unchanged)
       [--pages-per-turn <n|all>]          pages per writing turn, frozen with the run (default all: one turn)
   list [--limit <n>]                      the newest runs
   status <runId>                          state, step, turns, cost, balance, duration, checker summary
@@ -48,7 +50,9 @@ export async function runCli(argv, deps) {
         'brief-file': { type: 'string' },
         'brief-revision': { type: 'string' },
         by: { type: 'string' },
+        'require-visual-review': { type: 'boolean' },
         'no-caps': { type: 'boolean' },
+        effort: { type: 'string' },
         'pages-per-turn': { type: 'string' },
         limit: { type: 'string' },
         out: { type: 'string' }
@@ -132,6 +136,8 @@ async function startRun(d, values) {
     throw new Usage('run needs exactly one of --brief-file and --brief-revision')
   if (values.by !== undefined && !LABEL.test(values.by))
     throw new Usage('--by takes letters, digits and . _ @ - only, up to 64')
+  if (values.effort !== undefined && !['low', 'high', 'max'].includes(values.effort))
+    throw new Usage('--effort takes low, high or max on native DeepSeek Flash')
   const perTurn = values['pages-per-turn']
   if (perTurn !== undefined && perTurn !== 'all' && !/^[1-9][0-9]{0,3}$/.test(perTurn))
     throw new Usage('--pages-per-turn takes a positive whole number or "all"')
@@ -156,6 +162,8 @@ async function startRun(d, values) {
     kitRef: values.kit,
     startedBy: values.by ? `cli:${values.by}` : 'cli',
     noCaps: values['no-caps'] === true,
+    requireVisualReview: values['require-visual-review'] === true,
+    ...(values.effort !== undefined ? { effort: values.effort } : {}),
     ...(perTurn !== undefined ? { pagesPerTurn: perTurn === 'all' ? 'all' : Number(perTurn) } : {}),
     ...(d.index ? { index: d.index } : {})
   })

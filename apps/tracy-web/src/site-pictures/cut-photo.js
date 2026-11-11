@@ -102,6 +102,7 @@ async function rectOf(bytes, size, crop) {
  *   | {ok: false, refused: string, sharpness?: object}>}
  */
 export async function cutPhoto(bytes, asset, frame, demo, { matches = false, anyReal = false } = {}) {
+  if (frame.transparent === true) return { ok: false, refused: 'requires-transparent-image' }
   const size = await sizeOf(bytes)
   if (!size.width || !size.height) return { ok: false, refused: 'unreadable' }
   const box = { width: Number(frame.width), height: Number(frame.height) }
@@ -131,6 +132,7 @@ export async function cutPhoto(bytes, asset, frame, demo, { matches = false, any
  * @param {boolean} low the photo is labelled low quality
  */
 export async function writeRect(bytes, rect, frame, demo, low) {
+  if (frame.transparent === true) return { ok: false, refused: 'requires-transparent-image' }
   const box = { width: Number(frame.width), height: Number(frame.height), minWidth: frame.minWidth }
   if (Number.isInteger(frame.minWidth) && rect.width < frame.minWidth)
     return { ok: false, refused: 'narrower-than-min-width' }
