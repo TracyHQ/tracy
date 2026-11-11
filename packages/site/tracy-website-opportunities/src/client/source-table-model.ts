@@ -32,8 +32,10 @@ export interface SourceStateView {
   state: SourceState
   /** The first line of the State column. */
   key: string
-  /** The muted second line: the date it was collected, or the reason it could not be; null when there is none. */
+  /** The text beside the pill: the reason it could not be; null when there is none. */
   detail: WorkspaceText | null
+  /** When research collected this row's data (ISO), for the relative phrase beside the pill; null when unknown. */
+  collectedAt: string | null
 }
 
 const STATE_KEY: Readonly<Record<SourceState, string>> = {
@@ -64,30 +66,33 @@ export function shortDate(iso: unknown, locale: string, timeZone?: string): stri
  */
 export function sourceStateOf(
   s: SourceInput,
-  locale: string,
+  _locale: string,
   progress: SourceProgress = NO_PROGRESS
 ): SourceStateView {
   const { tone } = sourceRow(s)
   // While research runs, the band's item with this row's source key is the truth: running reads now, done is
   // already collected, failed could not be collected. No matching item: the row stays as its own data says.
   const item = tone === 'ok' || tone === 'partial' || tone === 'failed' ? undefined : progress.get(s.source)
-  if (item === 'running') return { state: 'reading', key: STATE_KEY.reading, detail: null }
-  if (item === 'done') return { state: 'collected', key: STATE_KEY.collected, detail: null }
-  if (item === 'failed') return { state: 'failed', key: STATE_KEY.failed, detail: null }
+  if (item === 'running') return { state: 'reading', key: STATE_KEY.reading, detail: null, collectedAt: null }
+  if (item === 'done')
+    return { state: 'collected', key: STATE_KEY.collected, detail: null, collectedAt: null }
+  if (item === 'failed') return { state: 'failed', key: STATE_KEY.failed, detail: null, collectedAt: null }
   if (tone === 'ok' || tone === 'partial') {
-    // The day its data was collected (#524), in UTC like the Sources sub-page.
-    const date = shortDate(s.collectedAt, locale, 'UTC')
-    return { state: 'collected', key: STATE_KEY.collected, detail: date === null ? null : { text: date } }
+    // When its data was collected (#524): the screen words it relative to now (`added-ago.ts`).
+    const at =
+      typeof s.collectedAt === 'string' && Number.isFinite(Date.parse(s.collectedAt)) ? s.collectedAt : null
+    return { state: 'collected', key: STATE_KEY.collected, detail: null, collectedAt: at }
   }
   if (tone === 'failed' || tone === 'blocked' || tone === 'skipped') {
     const key = reasonKey(s.reason)
     return {
       state: 'failed',
       key: STATE_KEY.failed,
-      detail: key === null || NO_REASON.has(key) ? null : { key }
+      detail: key === null || NO_REASON.has(key) ? null : { key },
+      collectedAt: null
     }
   }
-  return { state: 'waiting', key: STATE_KEY.waiting, detail: null }
+  return { state: 'waiting', key: STATE_KEY.waiting, detail: null, collectedAt: null }
 }
 
 export interface SourcesSummaryInput {

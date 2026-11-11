@@ -90,7 +90,8 @@ const SAGA = [
 ]
 const draw = (sources, extra = {}) =>
   lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources, ...extra }))
-const names = (html) => [...html.matchAll(/tracy-wo-stab-name">([^<]+)</g)].map((m) => m[1])
+const names = (html) =>
+  [...html.matchAll(/tracy-wo-stab-name"(?: title="[^"]*")?>([^<]+)</g)].map((m) => m[1])
 const noRetry = { busy: null, failed: null, onPress: () => {} }
 
 test('the Sources sub-page list is gone: only the table is drawn', () => {
@@ -210,11 +211,17 @@ test('no Also looked at group and no search pages after research, whatever the r
   assert.match(html, /<a href="https:\/\/maps\.app\.goo\.gl\/SampleBistro"/)
 })
 
-test('a listing row is named Listing with its host, and plain Listing when its address has none', () => {
+test('a listing row is named Website whatever its address, since the link beside it shows the host', () => {
   const plain = draw([{ source: 'listing', ref: null, status: 'complete' }])
-  assert.deepEqual(names(plain), ['[source.listingPlain]'])
+  assert.deepEqual(names(plain), ['[source.website]'])
   const fromRef = draw([{ source: 'listing', ref: 'https://listing.example/p/1', status: 'complete' }])
-  assert.deepEqual(names(fromRef), ['[source.listing{&quot;host&quot;:&quot;listing.example&quot;}]'])
+  assert.deepEqual(names(fromRef), ['[source.website]'])
+  const unknown = draw([{ source: 'some-directory', ref: 'https://dir.example/p/1', status: 'complete' }])
+  assert.deepEqual(names(unknown), ['[source.website]'])
+})
+
+test('the source name sits in a fixed column so every link starts at the same x', () => {
+  assert.match(lib.DETAILS_CSS, /\.tracy-wo-stab-name \{[^}]*flex: 0 0 var\(--tracy-wo-stab-name-w, 140px\)/)
 })
 
 test('a pasted link that is not an http address is not trusted as one', () => {
@@ -241,7 +248,9 @@ test('the Sources table of the Workspace card: one line per source, the state pi
     { source: 'website', ref: 'https://bistro.example/', status: 'failed' },
     { source: 'facebook', ref: 'https://www.facebook.com/sample_bistro', status: null }
   ]
-  const html = lib.renderToStaticMarkup(lib.createElement(lib.SourcesTable, { t, sources }))
+  const html = lib.renderToStaticMarkup(
+    lib.createElement(lib.SourcesTable, { t, sources, now: Date.parse('2026-11-10T11:00:00Z') })
+  )
   assert.doesNotMatch(html, /<details|<summary|tracy-wo-src-chip|role="table"|role="cell"/)
   assert.match(html, /<ul class="tracy-wo-stab" aria-label="\[details\.section\.sources\]">/)
   assert.deepEqual(
@@ -252,7 +261,7 @@ test('the Sources table of the Workspace card: one line per source, the state pi
   // The date sits before the pill, on the same line, with the full text on hover.
   assert.match(
     html,
-    /<span class="tracy-wo-stab-detail" title="Nov 10">Nov 10<\/span><span class="tracy-wo-stab-pill" data-state="collected"/
+    /<span class="tracy-wo-stab-detail" title="Nov 10, 2026, \d\d:\d\d">\[source\.collectedAgo\{&quot;ago&quot;:&quot;3 hours ago&quot;\}\]<\/span><span class="tracy-wo-stab-pill" data-state="collected"/
   )
   assert.match(
     html,
@@ -344,7 +353,7 @@ test('before research, each pasted link has a trash control after its pill; the 
   const labels = [...html.matchAll(/class="tracy-wo-stab-remove"[^>]*aria-label="([^"]+)"/g)].map((m) => m[1])
   assert.equal(labels.length, 2)
   assert.equal(labels[0], '[source.remove.label{&quot;name&quot;:&quot;Instagram&quot;}]')
-  assert.match(labels[1], /^\[source\.remove\.label\{&quot;name&quot;:&quot;\[source\.listing/)
+  assert.match(labels[1], /^\[source\.remove\.label\{&quot;name&quot;:&quot;\[source\.website/)
   // A trash icon (lucide Trash2), not a cross, at the end of the row's line after the pill.
   assert.match(html, /class="tracy-wo-stab-remove"[^>]*aria-haspopup="dialog"[^>]*><svg[^>]*lucide-trash2?/)
   assert.doesNotMatch(html, /lucide-x"/)

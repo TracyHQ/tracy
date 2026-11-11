@@ -71,7 +71,7 @@ export const DETAILS_CSS =
 .tracy-wo-stab-row { display: flex; flex-direction: column; min-width: 0; }
 .tracy-wo-stab-row[data-pending] { opacity: 0.55; }
 .tracy-wo-stab-line { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 0; }
-.tracy-wo-stab-name { flex: none; white-space: nowrap; }
+.tracy-wo-stab-name { flex: 0 0 var(--tracy-wo-stab-name-w, 140px); min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .tracy-wo-stab-link { min-width: 0; overflow: hidden; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; overflow-wrap: normal; }
 .tracy-wo-stab-state { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex: none; min-width: 0; margin-left: auto; padding-left: 12px; font-size: 12.5px; line-height: 1.35; text-align: right; color: var(--muted-foreground); }
 .tracy-wo-stab-pill { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 2px 9px 2px 6px; border-radius: 999px; border: 1px solid var(--border); background: color-mix(in oklab, var(--foreground) 7%, transparent); color: var(--muted-foreground); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
@@ -119,7 +119,11 @@ export const DETAILS_CSS =
 .tracy-wo-addsrc-notice-text { flex: none; }
 .tracy-wo-addsrc-notice[data-phase="failed"] .tracy-wo-addsrc-notice-text { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .tracy-wo-addsrc-notice-link { min-width: 0; max-width: 180px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; opacity: .8; }
+@container (max-width: 760px) {
+  .tracy-wo-stab { --tracy-wo-stab-name-w: 110px; }
+}
 @container (max-width: 560px) {
+  .tracy-wo-stab-name { flex: none; }
   .tracy-wo-stab-line { flex-wrap: wrap; row-gap: 2px; }
   .tracy-wo-stab-state { flex-wrap: wrap; row-gap: 2px; }
   .tracy-wo-stab-detail { max-width: none; white-space: normal; }

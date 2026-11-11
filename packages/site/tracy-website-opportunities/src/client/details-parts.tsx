@@ -10,6 +10,7 @@ import type { JSX, ReactNode } from 'react'
 import { Spinner } from '@tracy/ui'
 import { cn } from '@tracy/ui/cn'
 
+import { addedAgo } from './added-ago.ts'
 import { sourceLabel } from './cms-label.ts'
 import { pastedLinkOf } from './source-groups.ts'
 import { safeHttpUrl, shortUrl } from './source-links-model.ts'
@@ -89,7 +90,8 @@ export function SourcesTable({
   progress,
   retry,
   remove,
-  researchState
+  researchState,
+  now = Date.now()
 }: {
   t: Translate
   sources: SourceInput[]
@@ -101,6 +103,8 @@ export function SourcesTable({
   remove?: SourceRemove
   /** The card's research: the trash shows only while it is `not_started` or `failed` (slot only otherwise). */
   researchState?: ResearchState
+  /** The clock for "Collected 3 days ago"; tests pass a fixed one. */
+  now?: number
 }): JSX.Element {
   const locale = interfaceLocale() ?? 'en'
   const links = new Set(sources.map(removableLinkOf).filter((l): l is string => l !== null))
@@ -131,8 +135,16 @@ export function SourcesTable({
           const pastedLink = pastedLinkOf(s)
           const link = safeHttpUrl(pastedLink) ?? safeHttpUrl(s.ref)
           const view = sourceStateOf(s, locale, progress)
+          const ago = addedAgo(view.collectedAt, now, locale)
           const detail =
-            view.detail === null ? null : 'text' in view.detail ? view.detail.text : t(view.detail.key)
+            ago !== null
+              ? t('source.collectedAgo', { ago: ago.text })
+              : view.detail === null
+                ? null
+                : 'text' in view.detail
+                  ? view.detail.text
+                  : t(view.detail.key)
+          const detailTitle = ago !== null ? ago.exact : detail
           const name = sourceLabel(t, s.source, pastedLink ?? s.ref)
           const row = sourceRow(s)
           const retrySource: ShownSource | null =
@@ -152,7 +164,9 @@ export function SourcesTable({
             >
               <span className="tracy-wo-stab-line">
                 <SourceLogo source={s.source} href={link ?? s.ref} />
-                <span className="tracy-wo-stab-name">{name}</span>
+                <span className="tracy-wo-stab-name" title={name}>
+                  {name}
+                </span>
                 {link !== null ? (
                   <a
                     href={link}
@@ -172,7 +186,7 @@ export function SourcesTable({
                   <span className="tracy-wo-stab-state">
                     {/* The date or reason sits left of the pill on the same line (owner, #537): a column, not a second row. */}
                     {detail !== null ? (
-                      <span className="tracy-wo-stab-detail" title={detail}>
+                      <span className="tracy-wo-stab-detail" title={detailTitle ?? undefined}>
                         {detail}
                       </span>
                     ) : null}

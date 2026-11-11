@@ -24,23 +24,33 @@ function cell(source) {
   return [STRINGS[v.key], v.detail === null ? null : words([v.detail])].filter(Boolean).join(' / ')
 }
 
+/** The collected time the screen words relative to now (empty when the row has none). */
+function collectedAt(source) {
+  return sourceStateOf(source, 'en-US').collectedAt
+}
+
 test('before research every row waits, whatever it holds', () => {
   assert.equal(cell({ source: 'instagram', status: null }), 'Waiting for research')
   assert.equal(cell({ source: 'website' }), 'Waiting for research')
   assert.equal(sourceStateOf({ source: 'website' }, 'en-US').state, 'waiting')
 })
 
-test('a collected row reads Collected, with the day its data was collected on the second line', () => {
+test('a collected row reads Data collected, and carries the time its data was collected for the phrase beside the pill', () => {
   assert.equal(
     cell({ source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }),
-    'Collected / Nov 10'
+    'Data collected'
   )
   assert.equal(
-    cell({ source: 'website', status: 'partial', collectedAt: '2026-11-09T23:30:00Z' }),
-    'Collected / Nov 9'
+    collectedAt({ source: 'instagram', status: 'complete', collectedAt: '2026-11-10T08:00:00Z' }),
+    '2026-11-10T08:00:00Z'
   )
-  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: null }), 'Collected')
-  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: 'not a date' }), 'Collected')
+  assert.equal(
+    collectedAt({ source: 'website', status: 'partial', collectedAt: '2026-11-09T23:30:00Z' }),
+    '2026-11-09T23:30:00Z'
+  )
+  assert.equal(collectedAt({ source: 'website', status: 'complete', collectedAt: null }), null)
+  assert.equal(collectedAt({ source: 'website', status: 'complete', collectedAt: 'not a date' }), null)
+  assert.equal(cell({ source: 'website', status: 'complete', collectedAt: 'not a date' }), 'Data collected')
 })
 
 test('a failed row reads Could not collect, with the server reason only when it sends one the screen knows', () => {

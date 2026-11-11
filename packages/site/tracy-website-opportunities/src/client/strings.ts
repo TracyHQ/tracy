@@ -444,10 +444,6 @@ export const en = {
   'source.website': 'Website',
   /** The source of an opportunity added by pasting one address. */
   'source.link': 'The link you added',
-  /** A listing page's source row (magicpin and the like), named with the host of its address. */
-  'source.listing': 'Listing · {host}',
-  /** A listing page's source row when its address has no readable host. */
-  'source.listingPlain': 'Listing',
 
   'source.status.complete': 'Complete',
   'source.status.partial': 'Partial',
@@ -1162,7 +1158,9 @@ export const en = {
   'workspace.sum.researching': 'research running',
   // The Sources table of the Workspace card (#537, option C): its two column heads and the State column
   'source.state.waiting': 'Waiting for research',
-  'source.state.collected': 'Collected',
+  'source.state.collected': 'Data collected',
+  /** Beside a collected row's pill: when research collected it, {ago} is relative words ("12 days ago"). */
+  'source.collectedAgo': 'Collected {ago}',
   'source.state.failed': 'Could not collect',
   'source.state.reading': 'Reading now',
   'workspace.sum.approved': 'approved {date}',
