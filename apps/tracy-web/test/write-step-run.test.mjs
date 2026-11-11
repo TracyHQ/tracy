@@ -199,7 +199,7 @@ test('the same slot twice in the copy with different words is a dispute settled 
 test('a slot in a kept block with no owner is reported, does not stop the run, and fails while its demo stays', async () => {
   const c = copy()
   c.slots = c.slots.filter((s) => s.slot !== 'block-5.1')
-  const { report, line } = await run({ copy: c })
+  const { report, line } = await run({ copy: c }, { overSlot: () => ({ canHide: false }) })
   assert.equal(report.status, 'done')
   // The site cannot empty it, so the closing rule says its demo remains (closing-ladder.js).
   assert.deepEqual(

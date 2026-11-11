@@ -109,14 +109,21 @@ test('hidden slots still go when every change is refused, and nothing is sent on
     Object.fromEntries(keys.map((key) => [key, { code: 'SLOT_TOO_LONG', message: 'too long' }]))
   const { site: first } = await runHide()
   const changes = Object.keys(applies(first)[0].params.changes)
-  const { report, site } = await runHide({ site: { refuse: nothingFits(changes) } })
+  const { report, site } = await runHide({
+    site: { refuse: nothingFits(changes), overSlot: (slot) => ({ canHide: slot.key === 'module-2.3' }) }
+  })
   assert.equal(report.status, 'done', JSON.stringify(report.cause))
   const last = applies(site).at(-1)
   assert.equal(last.params.changes, undefined)
   assert.deepEqual(last.params.empty_slots, ['module-2.3'])
   assert.equal(lineOf(report, 'block-2.3').status, 'hidden')
 
-  const all = await runHide({ site: { refuse: nothingFits([...changes, 'module-2.3']) } })
+  const all = await runHide({
+    site: {
+      refuse: nothingFits([...changes, 'module-2.3']),
+      overSlot: (slot) => ({ canHide: slot.key === 'module-2.3' })
+    }
+  })
   assert.equal(all.report.status, 'done', JSON.stringify(all.report.cause))
   assert.equal(lineOf(all.report, 'block-2.3').status, 'failed')
   assert.equal(all.report.counts.written, 0)
