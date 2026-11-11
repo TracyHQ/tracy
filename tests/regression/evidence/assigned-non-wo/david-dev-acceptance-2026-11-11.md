@@ -124,3 +124,10 @@ The user merged #558 into develop as `05c0e3bba4`. Source `11dc73869a` reconcile
 Local verification on this committed source passed 22 focused cases, 977 broader copy/writer/write cases with 33 explicit environment skips, 32 real PostgreSQL cases with no skips, and 12 Playwright review cases with no skips. Four official regressions passed: #558 original-post export/write provenance, #559 own-build recovery, and #565 social icon family and owner-post excerpts. The selected gate run completed all other gates but lint found an ignored synthetic operation-result file left by a test; that exact generated file was removed and lint rerun separately. Tests, turbo-config and boot-graph remain explicit worktree exclusions. Website content acceptance remains incomplete.
 
 The separate lint rerun passed oxlint, all 14 TypeScript projects, formatting and lint. Together with the completed gate run, all 63 selected gates passed; the three stated exclusions remain.
+
+
+## Opportunities reconciliation after the same merge
+
+Source `cb674960bf` merges #565 at `423cd2b59e` into #522 without replacing its implementation. The step-chain conflict combines running-step timestamps with unknown-spend accounting; evidence from both lines is retained. GitHub reports both branches mergeable against develop. Local client and flow suites passed 818/818 with no skips; running-step and unknown-spend suites passed 11/11 with no skips. All four official regressions passed on `cb674960bf`. Final-head CI and deployed content acceptance remain separate obligations.
+
+The complete eight-suite PostgreSQL run on `cb674960bf` passed 130 cases with no skips, failures or cancellations.
