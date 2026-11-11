@@ -10,6 +10,7 @@ import {
   brandColors,
   brandObservation,
   buildFailure,
+  failureReasonText,
   googlePlaceView,
   mediaRowView,
   mediaTile,
@@ -136,7 +137,8 @@ test('a stored photo is drawn; one kept only as a link points to its source, wit
       credit: null,
       width: null,
       height: null,
-      hidden: null
+      hidden: null,
+      ownerHidden: false
     }
   )
   const ref = mediaTile({
@@ -218,14 +220,18 @@ test('Google Place: amenities split into offered / not offered, booking yes/no/u
     text: 'Best pho',
     rating: 5,
     authorUri: null,
-    authorAvatarUrl: null
+    authorAvatarUrl: null,
+    key: null,
+    ownerHidden: false
   })
   assert.deepEqual(view.reviews[1], {
     author: 'Minh',
     text: 'Good',
     rating: null,
     authorUri: null,
-    authorAvatarUrl: null
+    authorAvatarUrl: null,
+    key: null,
+    ownerHidden: false
   })
 })
 
@@ -440,7 +446,7 @@ test('TripAdvisor Details keeps exact quotes with real author and source links, 
     tripadvisorReviewView({
       reviewSources: { tripadvisor: { reviews: [raw] } }
     }),
-    [{ ...raw, authorAvatarUrl: null, photos: [] }]
+    [{ ...raw, authorAvatarUrl: null, photos: [], key: null, ownerHidden: false }]
   )
   for (const review of [
     { ...raw, url: 'javascript:alert(1)' },
@@ -483,7 +489,7 @@ test('optional TripAdvisor quota and provider failures leave no empty or technic
         tripadvisor: { reviews: [raw], lastError: { reason: 'HTTP_429' } }
       }
     }),
-    [{ ...raw, authorAvatarUrl: null, photos: [] }]
+    [{ ...raw, authorAvatarUrl: null, photos: [], key: null, ownerHidden: false }]
   )
 })
 
@@ -755,4 +761,14 @@ test('Google amenities any trade can have read as amenities: restroom, accessibi
   )
   assert.deepEqual(view.notOffered, ['acceptsCashOnly'])
   for (const id of ids) assert.equal(typeof EN_STRINGS[`amenity.${id}`], 'string', id)
+})
+
+test('a build failure reason that is a code reads as its plain sentence; a sentence is shown as is', () => {
+  const t = (key) => `[${key}]`
+  assert.equal(failureReasonText('DEMO_STEP_TIMEOUT', t), '[demo.reason.timeout]')
+  assert.equal(failureReasonText('SOMETHING_NEW_HERE', t), '[demo.reason.unknown]')
+  assert.equal(
+    failureReasonText('The server did not answer in time.', t),
+    'The server did not answer in time.'
+  )
 })

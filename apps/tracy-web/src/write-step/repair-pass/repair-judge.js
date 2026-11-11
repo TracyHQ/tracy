@@ -81,11 +81,16 @@ export function turnsToUndo(turns, first, later, recordPages) {
 /** Undoes `turns` in the order given (newest first), each whole; each that fails is kept as `undo-failed` with why. */
 export async function undoTurns(pass, turns, why) {
   const undone = []
+  const record = (entry) => {
+    undone.push(entry)
+    // A failed required rollback leaves the base unverified even while other rollback calls are pending.
+    if (!entry.ok) pass.undoUnverified = true
+  }
   for (const turn of turns) {
     const entry = { turnId: turn.turnId, page: turn.page, why }
     // File moments belong to the whole site. Never roll back while a writer can still commit.
     if (pass.ledger.turns.some((t) => t.state === 'open')) {
-      undone.push({
+      record({
         ...entry,
         status: 'undo-failed',
         ok: false,
@@ -95,7 +100,7 @@ export async function undoTurns(pass, turns, why) {
       continue
     }
     if (pass.clock.returnLeft() <= 0) {
-      undone.push({
+      record({
         ...entry,
         status: 'undo-failed',
         ok: false,
@@ -112,7 +117,7 @@ export async function undoTurns(pass, turns, why) {
       .catch((error) => ({ ok: false, code: null, reason: String(error?.message ?? error) }))
     const ok = answer?.ok === true
     const reason = ok ? null : (answer?.reason ?? answer?.code ?? 'the undo door gave no answer')
-    undone.push({
+    record({
       ...entry,
       status: ok ? 'undone' : 'undo-failed',
       ok,

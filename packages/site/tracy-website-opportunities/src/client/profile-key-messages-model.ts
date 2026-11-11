@@ -16,6 +16,8 @@ export interface KeyMessageView {
   quotes: string[]
   /** The label is the owner's (it differs from the one the reading proposed). */
   edited: boolean
+  /** The text the first quote is from (its kind, platform and post address), when the server says. */
+  from?: { kind: 'bio' | 'post' | 'review'; platform: string | null; url: string | null } | null
 }
 
 /** The owner's picks as the server keeps them (`candidate.keyMessagePicks`). */
@@ -38,11 +40,24 @@ export function keyMessagesView(profile: unknown): KeyMessageView[] {
       const id = text(m.id)
       const label = text(m.label)
       if (id === null || label === null || m.removed === true) return []
-      const quotes = (Array.isArray(m.quotes) ? m.quotes : []).flatMap((q) => {
+      const given = Array.isArray(m.quotes) ? m.quotes : []
+      const quotes = given.flatMap((q) => {
         const body = text(rec(q).quote) ?? text(rec(q).text)
         return body === null ? [] : [body]
       })
-      return [{ id, label, quotes, edited: m.edited === true }]
+      const first = rec(rec(given.find((q) => (text(rec(q).quote) ?? text(rec(q).text)) !== null)).source)
+      const kind: 'bio' | 'post' | 'review' | null =
+        first.kind === 'bio' || first.kind === 'post' || first.kind === 'review' ? first.kind : null
+      const url = text(first.url)
+      const from: KeyMessageView['from'] =
+        kind === null
+          ? null
+          : {
+              kind,
+              platform: text(first.source),
+              url: url !== null && url.startsWith('https://') ? url : null
+            }
+      return [{ id, label, quotes, edited: m.edited === true, from }]
     })
     .slice(0, MAX_KEY_MESSAGES)
 }

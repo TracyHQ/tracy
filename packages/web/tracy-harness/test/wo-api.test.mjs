@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { filterWoRows, sortWoRows, woProgressPercent } from '../src/wo-api.ts'
+import { filterWoRows, sortWoRows, woActionFailureCode, woProgressPercent } from '../src/wo-api.ts'
 import { customerStatus, journeySql } from 'website-opportunities/src/wo-journey.js'
 import { statusView } from '../../../../packages/site/tracy-website-opportunities/src/client/opportunity-row.ts'
 import { en } from '../../../../packages/site/tracy-website-opportunities/src/client/strings.ts'
@@ -250,4 +250,14 @@ test('socialCapRows: one row per provider budget, in chain order, with the cap t
     )
   )
   assert.equal(socialCapRows(undefined)[0].cap, 0, 'missing settings read as off')
+})
+
+test('woActionFailureCode names a demo action that failed before any build, and nothing else (#552)', () => {
+  const failed = { status: 'failed', step: 'brief', error: 'BRIEF_NOT_READY', hasBuild: false }
+  assert.equal(woActionFailureCode({ demoAction: failed }), 'BRIEF_NOT_READY')
+  // A build exists: its own failure is the build's column, not a refused action.
+  assert.equal(woActionFailureCode({ demoAction: { ...failed, hasBuild: true } }), null)
+  assert.equal(woActionFailureCode({ demoAction: { ...failed, status: 'done' } }), null)
+  assert.equal(woActionFailureCode({ demoAction: null }), null)
+  assert.equal(woActionFailureCode({}), null)
 })

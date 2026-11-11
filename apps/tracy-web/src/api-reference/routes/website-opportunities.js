@@ -2,7 +2,22 @@
 
 const OFF =
   '404 `FEATURE_OFF` while the `website-opportunities` switch is off (or cannot be read); 401 `NOT_SIGNED_IN`.'
+const APPROVAL_ANSWER =
+  '`approval: {profile: "none" | "needed" | "approved", profileApprovedAt, profileChangedAt, brief: "none" | "needed" | "approved" | "stale", briefApprovedAt, briefStale: "profile" | null}` is the seller’s review of this opportunity (#537): the Profile is approved before a Content brief is made, the latest brief before a demo is built. `profile` is `none` before research; a Profile edit, or a photo the seller adds, after approval makes it `needed` again. `brief` is `stale` (with `briefStale: "profile"`) when the Profile changed or the Profile was approved after the latest brief was made, and `needed` until that brief is approved; making the brief again (even when it answers the same revision) ends `stale`. Sources are fixed once research starts, so a source never changes the approvals.'
 const OWN = 'Another account’s row answers 404 `NOT_FOUND`, exactly like a missing one.'
+/** Approved is final (#537 R23, `approval-locks.js`): a change after approval is a new card of the same place. */
+const PROFILE_LOCKED =
+  '409 `{code: "PROFILE_APPROVED", next: "The business facts are approved. To change them, add this business again as a new card."}` once the Profile is approved (`approval.profile` is `approved`): no door changes approved Business facts.'
+const RESEARCH_LOCKED =
+  '409 `PROFILE_APPROVED` (the same `next`) once the Profile is approved, for every press (Research again, Try again, `only`), since research would rewrite the approved facts; a card whose `research.state` is `failed` or `not_started` is never refused for it.'
+const BRIEF_LOCKED =
+  '409 `{code: "BRIEF_APPROVED", next: "The Site content brief is approved. To change it, add this business again as a new card."}` once the latest Content brief is approved (`approval.brief` is `approved`).'
+/** The networks a social link the owner types may name (`domain/owner-site-picks.mjs SOCIAL_NETWORKS`). */
+export const SOCIAL_NETWORKS_DOC =
+  '`facebook`, `instagram`, `tiktok`, `youtube`, `x`, `linkedin`, `telegram`, `whatsapp`, `pinterest`, `snapchat`, `threads` and `other` (with a `label`); each listed as `{id, label, placeholder}` in the Details answer’s `socialNetworks`. The website has its own field and is not one of them.'
+/** What the Details answer says of the owner's choices for the site itself (#537). */
+const OWNER_SITE_ANSWER =
+  'Of the owner’s choices for the site (#537): each `media` row has `ownerHidden` (kept off the site by `PUT …/:id/media/:mediaId/visibility`; `hidden` stays the junk reason); each review of `profile.googlePlace.reviews` and `profile.reviewSources.*.reviews` has `key` (its own `id` when the source gives one, else `rv_<hash>` of author, time and text) and `ownerHidden`; `profile.readingCard.team` rows carry `owner: true` for a person the owner added, `researchLabel` when the owner renamed a person research read, and `photo: {id, kind, width, height} | null`; `bands: {brand, keyMessages, reviews, media, socials}` (booleans); `socialNetworks: [{id, label, placeholder}]`; the candidate holds `teamEdits`, `siteSocials`, `mediaPicks` and `reviewPicks`.'
 const REQUEST_ID = {
   type: 'string',
   description:
@@ -203,7 +218,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/demo/build',
     summary: 'Build a demo in one press',
-    description: `Requires selection:{cms,design,quickstart} for a new build (the person chooses the CMS and the template); a CMS sent without design and quickstart takes the template pinned for it on /ops/wo. No account default and no automatic pick: {auto:true} is refused with 400 DEMO_TEMPLATE_REQUIRED. Records the explicit choice and the per-CMS release version/archive checksums before revision or site creation, then the worker creates the pinned brief/template, provisions, waits for deterministic fill, hands off and checks the site. retryOf resumes the failed action’s same revision, CMS, template, site, session and work ids but is a new charged action; sending selection with Retry is refused. Internal retry and request replay never add a charge; an action that fails before any billable work (no site, chat or build model run) is given back once. ${OWN} ${OFF}`,
+    description: `Requires selection:{cms,design,quickstart} for a new build (the person chooses the CMS and the template); a CMS sent without design and quickstart takes the template pinned for it on /ops/wo. No account default and no automatic pick: {auto:true} is refused with 400 DEMO_TEMPLATE_REQUIRED. Records the explicit choice and the per-CMS release version/archive checksums before revision or site creation, then the worker creates the pinned brief/template, provisions, waits for deterministic fill, hands off and checks the site. retryOf resumes the failed action’s same revision, CMS, template, site, session and work ids but is a new charged action; sending selection with Retry is refused. Internal retry and request replay never add a charge; an action that fails before any billable work (no site, chat or build model run) is given back once. A new build (not a retry, not a Find quick build) needs the seller's approvals (#537): 409 \`PROFILE_NOT_APPROVED\`, 409 \`BRIEF_NOT_APPROVED\` until the latest Content brief is approved (\`POST …/:id/brief/approve\`); with the quality protocol on, the demo action prepares its own brief and is not gated. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -242,7 +257,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/demo/builds/bulk',
     summary: 'Accept a batch of demo builds atomically',
-    description: `1–100 distinct owned opportunity ids and one explicit selection:{cms,design,quickstart} for the whole batch (a CMS without design and quickstart takes its /ops/wo pin). No automatic pick. An account/day transaction accepts the whole batch or none; the batch request id derives one stable id per opportunity. Partial replay does not recharge already accepted actions. ${OWN} ${OFF}`,
+    description: `1–100 distinct owned opportunity ids and one explicit selection:{cms,design,quickstart} for the whole batch (a CMS without design and quickstart takes its /ops/wo pin). No automatic pick. An account/day transaction accepts the whole batch or none; the batch request id derives one stable id per opportunity. Partial replay does not recharge already accepted actions. Every id needs the approvals a single build needs (#537): the first refusal's code with \`ids: [{id, code}]\` naming each refused one, and nothing is accepted. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -285,13 +300,14 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
   {
     method: 'GET',
     path: '/api/website-opportunities/:id/place-profile',
-    summary: 'Read the place profile of an opportunity',
-    description: `The place's research as the validated, template-independent place profile (\`website-opportunities/place-profile\` 1.0.0): business facts, offerings with variants and printed prices, people, claims, FAQs, quotations (Google and Tripadvisor reviews keep their author, avatar, source and date and may be shown on a demo), media relations and one \`coverage\` row per target with one of seven statuses. Nothing of the account's brief or demo. With it \`decisions\`, one per fact: \`{factId, confidence, onSite, decidedBy, reasons}\`, where \`confidence\` is \`corroborated\`, \`single-source\` or \`inferred\` (computed from the evidence, never a sender's claim), \`onSite\` says whether the site may show the fact, \`decidedBy\` is \`rule\` or \`owner\` (the owner's choice from \`PUT …/:id/facts\` wins) and \`reasons\` are the reason codes. While the latest brief holds the business name off the site and the owner has not shown it since, \`siteName\` is the neutral identity the site goes by instead (the brief's home page title made without the name); absent otherwise. Read-only, no provider call. 502 \`PROFILE_UNAVAILABLE\`. ${OWN}`,
+    summary: 'Read the saved place profile of an opportunity',
+    description: `The saved profile: the place's research as the template-independent place profile (\`website-opportunities/place-profile\` 1.0.0): business facts, offerings with variants and printed prices, people, claims, FAQs, quotations (Google and Tripadvisor reviews keep their author, avatar, source and date and may be shown on a demo), media relations and one \`coverage\` row per target with one of seven statuses, with every change the owner made on the Profile card laid on, so it is what the next brief states. Each fact of \`business\`, \`offerings\`, \`people\`, \`claims\`, \`quotes\`, \`links\` and \`extensions\` keeps its envelope \`{id, value, evidenceRefs}\` and carries its decision (\`onSite\`, \`decidedBy\`, \`confidence\`, \`reasons\`); a fact the owner edited carries the owner's \`value\` with \`researchValue\`, \`editedByOwner: true\` and \`editedAt\`; a person or social link the owner added carries \`addedByOwner: true\` (id \`fact_owner_<member id>\` or \`fact_owner_social_<network>\`, cited to the source \`source_owner\`); a person carries \`teamMemberId\` and \`photoMediaId\`, a media fact \`mediaId\` and \`ownerHidden\`, a review quote \`reviewKey\` and \`ownerHidden\`, a researched link replaced by one the owner typed \`replacedBy\`. Google's opening hours, amenities, reservable and editorial summary are facts of \`business\` (\`hours\`, \`amenities\`, \`reservable\`, \`editorialSummary\`), its rating and the social counts statistics of \`claims\`. \`profile.owner: {version, bands, hiddenMediaIds, hiddenReviewKeys}\` holds what is no single fact. Nothing of the account's brief or demo. With it \`decisions\`, one per fact: \`{factId, confidence, onSite, decidedBy, reasons}\`, where \`confidence\` is \`corroborated\`, \`single-source\` or \`inferred\` (computed from the evidence, never a sender's claim), \`onSite\` says whether the site may show the fact, \`decidedBy\` is \`rule\` or \`owner\` (the owner's choice from \`PUT …/:id/facts\` wins) and \`reasons\` are the reason codes. While the latest brief holds the business name off the site and the owner has not shown it since, \`siteName\` is the neutral identity the site goes by instead (the brief's home page title made without the name); absent otherwise. Read-only, no provider call. 502 \`PROFILE_UNAVAILABLE\`. ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: '`{profile, decisions:[{factId,confidence,onSite,decidedBy,reasons}]}`'
+    answers:
+      '`{profile, decisions:[{factId,confidence,onSite,decidedBy,reasons}], bands, revisionId?, siteName?}`; `revisionId` names the brief revision whose frozen research the profile is made from; `bands: {brand, keyMessages, reviews, media, socials}` (booleans, also before research) says which bands of the Profile the owner left on; one is switched with `PUT …/:id/facts` and `factId: band_<band>`.'
   },
 
   // website-opportunities/src/route.js
@@ -668,7 +684,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities',
     summary: 'Save a business as an opportunity, from a search candidate or from its links',
-    description: `From a search \`candidate\`, or from up to 5 \`links\` of ONE business (a Google Maps or share link, its website, its Facebook, Instagram, TikTok or YouTube page, its page on a listing site such as magicpin or Tripadvisor); the old \`url\` means \`links: [url]\`. Its identity is the Google place the Google link names (a short link followed by its redirects on Google hosts only, then matched by Google Places to exactly one place: its id, its cid, or one result of the same name near the coordinates or with the phone a listing page states, or the typed \`name\`), else the website, else the first social page, else the first listing page; every other link is that opportunity's own (researched for it alone), and a listing page is read once, never crawled. Each link is checked to be a public address. Partial success: \`links\` reports each link in order as \`{url, kind, source?, used, reason?}\`, \`reason\` one of \`invalid\`, \`not-public\`, \`duplicate\`, \`limit\`, \`one-google\`, \`one-website\`, \`unresolvable\` (a Google link that cannot be turned into a place) or \`blocked\` (failed the public-address check). One opportunity per account and identity: saving it again answers 200 with the existing one and adds the links it did not have, a new one 201. 409 \`GOOGLE_LINK_AMBIGUOUS\` with \`candidates\` (at most 5, \`{provider: "google-places", providerId, name, address?, rating?, category?}\`) and \`links\` when the Google link matches more than one place: send the same body again with the picked one as \`place\`. 422 \`NO_USABLE_LINKS\` with \`links\` when none can be used. 400 \`INVALID_CANDIDATE\`, \`INVALID_LINKS\`, \`INVALID_PLACE\` or \`INVALID_REQUEST\`; the old \`url\` body keeps its own refusals (400 \`INVALID_URL\`, 422 \`URL_BLOCKED\` for private, loopback, link-local or metadata addresses, 422 \`URL_UNRESOLVABLE\`). ${OFF}`,
+    description: `From a search \`candidate\`, or from up to 5 \`links\` of ONE business (a Google Maps or share link, its website, its Facebook, Instagram, TikTok or YouTube page, its page on a listing site such as magicpin or Tripadvisor); the old \`url\` means \`links: [url]\`. Its identity is the Google place the Google link names (a short link followed by its redirects on Google hosts only, then matched by Google Places to exactly one place: its id, its cid, or one result of the same name near the coordinates or with the phone a listing page states, or the typed \`name\`), else the website, else the first social page, else the first listing page; every other link is that opportunity's own (researched for it alone), and a listing page is read once, never crawled. Each link is checked to be a public address. Partial success: \`links\` reports each link in order as \`{url, kind, source?, used, reason?}\`, \`reason\` one of \`invalid\`, \`not-public\`, \`duplicate\`, \`limit\`, \`one-google\`, \`one-website\`, \`unresolvable\` (a Google link that cannot be turned into a place) or \`blocked\` (failed the public-address check). Every save is a new card (201), a place the account already has included (#537 R23): the new card starts fresh (no research of its own, nothing approved) and is independent of the others, which \`opportunity.sameAs\` names. 409 \`GOOGLE_LINK_AMBIGUOUS\` with \`candidates\` (at most 5, \`{provider: "google-places", providerId, name, address?, rating?, category?}\`) and \`links\` when the Google link matches more than one place: send the same body again with the picked one as \`place\`. 422 \`NO_USABLE_LINKS\` with \`links\` when none can be used. 400 \`INVALID_CANDIDATE\`, \`INVALID_LINKS\`, \`INVALID_PLACE\` or \`INVALID_REQUEST\`; the old \`url\` body keeps its own refusals (400 \`INVALID_URL\`, 422 \`URL_BLOCKED\` for private, loopback, link-local or metadata addresses, 422 \`URL_UNRESOLVABLE\`). ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -693,7 +709,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       }
     },
     answers:
-      '`{opportunity}`; from links also `links: [{url, kind, source?, used, reason?}]`; 409 `{code: "GOOGLE_LINK_AMBIGUOUS", candidates, links}`; 422 `{code: "NO_USABLE_LINKS", links}`'
+      '201 `{opportunity}` with `opportunity.sameAs: [{id, createdAt, stage}]`, the account\'s other cards of the same place (same `provider` and `providerId`), newest first; from links also `links: [{url, kind, source?, used, reason?}]`; 409 `{code: "GOOGLE_LINK_AMBIGUOUS", candidates, links}`; 422 `{code: "NO_USABLE_LINKS", links}`'
   },
   // website-opportunities/src/route.js
   {
@@ -701,7 +717,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     path: '/api/website-opportunities',
     summary: 'List my opportunities',
     description:
-      'The signed-in account’s opportunities, newest first (`createdAt`, then id), each with its latest job, latest revision, the sites built from it, its latest build (`done` once its site finished being created), its `stage` and whether it needs `attention`, and what `POST …/search` would show for the same place: `score` (the opportunity score, computed from the stored candidate), `siteCheck`, `social` and `socials` (read from the shared caches only — listing never queues a check or a stat; all null when the server cannot compute them, and the list still answers). `stage` is `research` until research completes, `demo` once research, a revision or a build action exists, and `outreach` only after the latest live demo has QA PASS; `cancelled` is outside these three steps. `attention` includes stopped research, failed demo actions/builds and QA needs-review. `demoAction` reports the durable action and its step; `outreach` contains read-only contacts, messageLanguage and drafts only for a live QA-passed demo. With no query parameter the answer is every row as `{opportunities}`, as it always was. With any of `stage`, `attention`, `q`, `cursor`, `limit`, `ids` the answer is one page plus `counts` (per filter button under the same `q`: `all` counts every row, a row needing attention counts in `attention` and not in its step) and `total` (rows matching the filter); pass `nextCursor` back as `cursor` for the next page (null on the last). A `stage` filter leaves out rows needing attention unless `attention=1` is sent too. `ids` answers exactly those rows of yours, whatever their stage, for polling. Readable while the switch is off. 400 `INVALID_STAGE`, `INVALID_ATTENTION`, `INVALID_QUERY`, `INVALID_LIMIT`, `INVALID_CURSOR`, `INVALID_IDS`; 401 `NOT_SIGNED_IN`.',
+      'The signed-in account’s opportunities, newest first (`createdAt`, then id), each with its latest job, latest revision, the sites built from it, its latest build (`done` once its site finished being created), its `stage` and whether it needs `attention`, and what `POST …/search` would show for the same place: `score` (the opportunity score, computed from the stored candidate), `siteCheck`, `social` and `socials` (read from the shared caches only — listing never queues a check or a stat; all null when the server cannot compute them, and the list still answers). `stage` is `research` until research completes, `demo` once research, a revision or a build action exists, and `outreach` only after the latest live demo has QA PASS; `cancelled` is outside these three steps. `attention` includes stopped research, failed demo actions/builds and QA needs-review. `demoAction` reports the durable action and its step (for a step chain build the chain’s own step: `kit`, `brand`, `plan`, `copy`, `pictures`, `write`), and for a step chain build `demoAction.run: {steps: [{id, label, state: "done" | "current" | "upcoming", minutes}], current, startedAt, minutes, usd, estimate: {minutes, usd} | null}` (minutes and USD so far from the run’s own measurement; `estimate` is the median of chain builds that ended complete for the same template, every template when it has fewer than three, null when none ended; the same on `GET …/:id`); `outreach` contains read-only contacts, messageLanguage and drafts only for a live QA-passed demo. With no query parameter the answer is every row as `{opportunities}`, as it always was. With any of `stage`, `attention`, `q`, `cursor`, `limit`, `ids` the answer is one page plus `counts` (per filter button under the same `q`: `all` counts every row, a row needing attention counts in `attention` and not in its step) and `total` (rows matching the filter); pass `nextCursor` back as `cursor` for the next page (null on the last). A `stage` filter leaves out rows needing attention unless `attention=1` is sent too. `ids` answers exactly those rows of yours, whatever their stage, for polling. Readable while the switch is off. 400 `INVALID_STAGE`, `INVALID_ATTENTION`, `INVALID_QUERY`, `INVALID_LIMIT`, `INVALID_CURSOR`, `INVALID_IDS`; 401 `NOT_SIGNED_IN`.',
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -716,7 +732,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       }
     },
     answers:
-      '`{opportunities: [{…opportunity, job, latestRevision, sites, stage, attention, latestBuild: {id, state, siteKey, done} | null, score: {score, grade: "A" | "B" | "C", pending, reasons} | null, siteCheck: <check> | null, social: {<network>: <stat>} | null, socials?}]}`; with a parameter also `counts: {all, research, demo, outreach, cancelled, attention}, nextCursor: string | null, total`'
+      '`{opportunities: [{…opportunity, sameAs: [{id, createdAt, stage}], job, latestRevision, sites, stage, attention, latestBuild: {id, state, siteKey, done} | null, score: {score, grade: "A" | "B" | "C", pending, reasons} | null, siteCheck: <check> | null, social: {<network>: <stat>} | null, socials?}]}`; with a parameter also `counts: {all, research, demo, outreach, cancelled, attention}, nextCursor: string | null, total`'
   },
   // website-opportunities/src/route.js
   {
@@ -728,7 +744,93 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: `\`{opportunity, place, menu, sources, profile, media, jobs, revisions, builds}\`; ${MENU_ANSWER}`
+    answers: `\`{opportunity, place, menu, sources, profile, placeProfile, media, jobs, revisions, builds, research, briefJob, approval, stepProgress, bands, socialNetworks}\`; \`opportunity.sameAs: [{id, createdAt, stage}]\` names the account's other cards of the same place, newest first (#537 R23); \`placeProfile\` is the saved profile, the answer of \`GET …/:id/place-profile\` without \`bands\` (null before this opportunity's research or when it cannot be read), and \`profile\` the research as collected; ${OWNER_SITE_ANSWER} ${MENU_ANSWER} ${APPROVAL_ANSWER} \`stepProgress: {step: "research" | "brief" | "build" | null, items: [{key, label, state: "done" | "running" | "waiting" | "failed", at}]}\` is the step that runs now (else the one whose latest attempt failed, else null) with its sub steps, read from recorded data only: a Content brief job's own step (reading, labelling, writing; \`at\` on the current one), a step chain build's chain steps (\`demoAction.run\`), and for Research the shared place job serving the request: one item per source of its snapshot (\`key\` the source, \`label\` its name as the Sources card shows it, \`at\` when it was tried) then \`{key: "profile", label: "Writing the business facts"}\`, no items while that job is queued; a build of another workflow records no sub steps. \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` holds only the seller's own photos and videos and \`sources\` holds only its own rows, each reading not collected yet (\`status\`, \`reason\`, \`coverage\` and \`collectedAt\` null, as a pasted link), even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`. \`demo\` (the latest build's demo, as on a listed row) also carries \`built: {at, minutes, usd} | null\` (when the finished build ended, its minutes and its USD, null when unmeasured), \`findings: string[]\` (the QA check ids that failed in its last round) and \`preview: {url, capturedAt} | null\` (its home page picture, see \`GET …/:id/demo/preview\`) (#537).`
+  },
+  // website-opportunities/src/route.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/profile',
+    summary: "Save the seller's Profile edits",
+    description: `Body \`{edits: {phone?, address?, email?, bio?}}\`, each a string (at most 40, 300, 200 and 1200 characters) or null to drop the edit. The edits are stored on this opportunity and laid over the shared research: the Details door and every new Content brief read the edited value, with provenance \`seller\`. The shared place is never changed. 400 \`INVALID_EDITS\`. ${OWN} ${PROFILE_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{opportunity}`'
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/profile/approve',
+    summary: 'Approve the Profile',
+    description: `The seller read the Profile and approves it (#537): it unlocks the Content brief. Approved is final (#537 R23): every edit door of the Profile card, \`POST …/:id/media\` and Research then answer 409 \`PROFILE_APPROVED\`, and a change is made on a new card of the same place (\`POST /api/website-opportunities\`). No body. 409 \`RESEARCH_NOT_DONE\` before this opportunity's own Research completed. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: `\`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // src/opportunities-build/route.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/brief/approve',
+    summary: 'Approve the latest Content brief',
+    description: `The seller read the latest Content brief and approves it (#537): it unlocks Build demo. A newer brief (a Refresh, or the seller's own brief edits) needs its own approval. No body. 409 \`NO_BRIEF\` before the first brief; 409 \`BRIEF_STALE\` when the Profile changed or was approved after the brief was made (make it again first); 409 \`PROFILE_NOT_APPROVED\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: `\`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/sources',
+    summary: 'Add a source to an opportunity',
+    description: `Body \`{url}\`: one more link of the business (a website, a social page or a listing page), judged as the links of a create are. It joins the opportunity's own links (\`candidate.pastedLinks\`). Allowed only while this opportunity's Research has not started or after it failed: sources are fixed once the research starts. Adding never changes the approvals. 400 \`INVALID_URL\`; 422 \`GOOGLE_LINK_NOT_ADDED\` for a Google link (it names the business itself); 422 \`UNSUPPORTED_LINK\` with \`platform\` for a page of a platform Tracy cannot read, never saved as the website (hosts and their subdomains: \`x.com\`, \`twitter.com\` (X), \`linkedin.com\` (LinkedIn), \`threads.net\`, \`threads.com\` (Threads), \`linktr.ee\` (Linktree), \`wa.me\`, \`whatsapp.com\` (WhatsApp), the list \`UNSUPPORTED_LINK_HOSTS\` of \`website-opportunities/domain/link-kinds.mjs\`); 422 \`NO_USABLE_LINKS\` when the link cannot be read; 409 \`SOURCE_ALREADY_KNOWN\` when the business already has this exact link (scheme, \`www.\`, a trailing slash and share tracking aside); 409 \`PLATFORM_ALREADY_KNOWN\` with \`platform\` (\`website\` or the social network) when it already has another page of that kind (one website, one page per social network); 409 \`TOO_MANY_SOURCES\` with \`max: 5\` for a sixth listing page; 409 \`RESEARCH_STARTED\` with \`next\` (a sentence) unless \`research.state\` is \`not_started\` or \`failed\`. ${OWN} ${OFF}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['url'],
+      properties: {
+        url: { type: 'string', description: 'The address of a website, social page or listing page' }
+      }
+    },
+    answers: `201 \`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'DELETE',
+    path: '/api/website-opportunities/:id/sources',
+    summary: 'Remove a source from an opportunity',
+    description: `Body \`{url}\`: one of the business's own links (its website, a social page or a listing page) removed from the opportunity's links (\`candidate.website\`, \`candidate.socials\`, \`candidate.listings\`, \`candidate.pastedLinks\`) and from its own listing row, so the list and Details stop showing it. The link matches as stored, as shown or as pasted: scheme, \`www.\`, a trailing slash and share-tracking parameters aside. Allowed only while this opportunity's Research has not started or after it failed (a bad link often causes the failure): while it is queued or running, and once it is done, the link stays. Removing never changes the approvals. What research collected for the place stays in its shared research. 400 \`INVALID_URL\`; 404 \`NOT_FOUND\` when the link is not one of its sources; 422 \`GOOGLE_LINK_NOT_REMOVED\` for its Google link (it names the business itself); 409 \`LAST_SOURCE\` with \`next: "add"\` when it is the last link research reads (add another first); 409 \`RESEARCH_STARTED\` with \`next\` (a sentence) unless \`research.state\` is \`not_started\` or \`failed\`. ${OWN} ${OFF}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['url'],
+      properties: {
+        url: { type: 'string', description: 'One of the links the opportunity lists' }
+      }
+    },
+    answers: `200 \`{opportunity, approval}\`; ${APPROVAL_ANSWER}`
+  },
+  // website-opportunities/src/seller-review-routes.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/media',
+    summary: 'Add a photo or video to an opportunity',
+    description: `\`multipart/form-data\` with one file in the field \`file\`: a JPEG, PNG, GIF, WebP or AVIF photo (at most 25 MB) or an MP4 or WebM video (at most 200 MB). An optional field \`purpose: team\` files a photo with the people pictures (\`category: people\`, else \`other\`) for a team member (\`PUT …/:id/team\`); 400 \`INVALID_PURPOSE\` for another value, 415 \`NOT_MEDIA\` for a video. Stored like a collected picture with source \`owner\`, it shows in Photos & video (also before research) and the next Content brief and build read it like the others. It counts as a Profile edit (before the Profile is approved), research does not. 400 \`INVALID_FILE\`; 413 \`TOO_LARGE\`; 415 \`NOT_MEDIA\` or \`IMAGE_UNREADABLE\`; 409 \`MEDIA_ALREADY_ADDED\` for the same bytes again, with \`media: {id, kind}\` of the row already held; 503 \`STORE_UNAVAILABLE\` without a file store; 502 \`STORE_FAILED\`. ${OWN} ${OFF} ${PROFILE_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: `201 \`{opportunity, approval, media: {id, kind, category, source: "owner", width, height}}\`; ${APPROVAL_ANSWER}`
   },
   // website-opportunities/src/route.js
   {
@@ -747,7 +849,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'PUT',
     path: '/api/website-opportunities/:id/name',
     summary: 'Set the name the business’s site carries',
-    description: `The person’s pick for the name on the site (Keep, Use the other name or Edit on the Profile card): final for every later brief, build and site check, and the opportunity’s \`name\`. Saving the opportunity again keeps it. Answers the opportunity, its candidate holding \`namePick: {name, at}\`. 400 \`INVALID_NAME\` for a name that is empty or longer than 200 characters after spaces are folded. ${OWN}`,
+    description: `The person’s pick for the name on the site (Keep, Use the other name or Edit on the Profile card): final for every later brief, build and site check, and the opportunity’s \`name\`. Saving the place again makes a new card, which starts without it. Answers the opportunity, its candidate holding \`namePick: {name, at}\`. 400 \`INVALID_NAME\` for a name that is empty or longer than 200 characters after spaces are folded. ${OWN} ${PROFILE_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -759,12 +861,53 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     },
     answers: '`{opportunity}`'
   },
+  // src/opportunities-build/site-label-route.js
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/site-label',
+    summary: 'Read the Site name on Tracy of an opportunity',
+    description: `The site label the person saved for this opportunity's demo (\`label\`, null when none), the label a build would get without it (\`suggested\`, from the latest brief or the place's name, first free of \`-2\`, \`-3\`…; null when the plugin is unavailable), how this deployment writes an address (\`<prefix><label>.<domain>\`) and the length limits of a label. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{label: string | null, suggested: string | null, prefix, domain, min, max}`'
+  },
+  // src/opportunities-build/site-label-route.js
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/site-label/check',
+    summary: 'Check a typed Site name on Tracy',
+    description: `Whether a typed label can name this opportunity's demo: the create door's own rule (6 to 30 lowercase letters, digits and hyphens, not a reserved word), then every name this deployment holds (sites, the shard directory, live holds, custom names). Reserves nothing. \`reason\`: \`shape\`, \`reserved\`, \`looks_imported\` or \`taken\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' }, query: { label: 'The typed label' } },
+    answers: '`{label, available: boolean, reason?}`'
+  },
+  // src/opportunities-build/site-label-route.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/site-label',
+    summary: 'Save the Site name on Tracy of an opportunity',
+    description: `Saves the site label a demo of this opportunity is built under; a build sent without a \`label\` then uses it. \`null\` clears it, and builds name the site from the business again. Checked as the check door does: 400 \`INVALID_LABEL\` with \`reason\`, 409 \`LABEL_TAKEN\`. Reserves nothing: a name taken before the build starts is refused by the create door. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['label'],
+      properties: { label: { type: ['string', 'null'], description: 'The site label, or null to clear it' } }
+    },
+    answers: '`{label: string | null}`'
+  },
   // website-opportunities/src/route.js
   {
     method: 'PUT',
     path: '/api/website-opportunities/:id/hours',
     summary: 'Set the opening hours the business’s site shows',
-    description: `The person’s choice for the opening hours on the site (Keep, Edit hours or Leave off the site on the Profile card): \`keep\` confirms hours waiting for a check, \`leave\` shows none, \`edit\` shows the \`hours\` sent, one line per group of days (\`Mo-Fr 09:00-18:00\`, \`Sa closed\`, or Google’s \`Monday: Open 24 hours\`). Final for every later brief, build and site check. Answers the opportunity, its candidate holding \`hoursPick: {choice, hours?, at}\`. 400 \`INVALID_CHOICE\`, 400 \`INVALID_HOURS\` when a line cannot be read or there are more than 14. ${OWN}`,
+    description: `The person’s choice for the opening hours on the site (Keep, Edit hours or Leave off the site on the Profile card): \`keep\` confirms hours waiting for a check, \`leave\` shows none, \`edit\` shows the \`hours\` sent, one line per group of days (\`Mo-Fr 09:00-18:00\`, \`Sa closed\`, or Google’s \`Monday: Open 24 hours\`). Final for every later brief, build and site check. Answers the opportunity, its candidate holding \`hoursPick: {choice, hours?, at}\`. 400 \`INVALID_CHOICE\`, 400 \`INVALID_HOURS\` when a line cannot be read or there are more than 14. ${OWN} ${PROFILE_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -788,7 +931,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'PUT',
     path: '/api/website-opportunities/:id/rating',
     summary: 'Show or leave off Google’s rating on the business’s site',
-    description: `The person’s choice for Google’s rating on the site (Show on the site or Leave off the site on the Profile card): \`show\` gives the rating and its review count to the site, credited to Google, \`leave\` keeps them off. Without a choice a rating from 5 reviews on is shown and one from fewer is left off. Final for every later brief, build and site check. Answers the opportunity, its candidate holding \`ratingPick: {choice, at}\`. 400 \`INVALID_CHOICE\`. ${OWN}`,
+    description: `The person’s choice for Google’s rating on the site (Show on the site or Leave off the site on the Profile card): \`show\` gives the rating and its review count to the site, credited to Google, \`leave\` keeps them off. Without a choice a rating from 5 reviews on is shown and one from fewer is left off. Final for every later brief, build and site check. Answers the opportunity, its candidate holding \`ratingPick: {choice, at}\`. 400 \`INVALID_CHOICE\`. ${OWN} ${PROFILE_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -805,7 +948,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'PUT',
     path: '/api/website-opportunities/:id/reading',
     summary: 'Remove an item of the business reading, or show a team member on the site',
-    description: `The person’s pick on the reading of the Profile card (Services, Who it is for, Team, story: what the research read from the business’s bio, posts and reviews, each item with its quote): \`remove\` takes an item off every later brief and site, \`restore\` brings it back; \`show\` puts a person named only in reviews on the site (off by default), \`hide\` takes them off again. Never blocks Build. Answers the opportunity, its candidate holding \`readingPicks: {removed, shown, at}\`. 400 \`INVALID_ITEM\`, 400 \`INVALID_CHOICE\`. \${OWN}`,
+    description: `The person’s pick on the reading of the Profile card (Services, Who it is for, Team, story: what the research read from the business’s bio, posts and reviews, each item with its quote): \`remove\` takes an item off every later brief and site, \`restore\` brings it back; \`show\` puts a person named only in reviews on the site (off by default), \`hide\` takes them off again. Never blocks Build. Answers the opportunity, its candidate holding \`readingPicks: {removed, shown, at}\`. 400 \`INVALID_ITEM\`, 400 \`INVALID_CHOICE\`. \${OWN} ${PROFILE_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -824,28 +967,32 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
   {
     method: 'PUT',
     path: '/api/website-opportunities/:id/facts',
-    summary: 'Put one fact of the place profile on the site, or leave it off',
-    description: `The owner’s choice for one fact on the Profile card: \`onSite: true\` puts it on the site, \`false\` leaves it off, whatever the rule decided (a rating from few reviews, all-week 24-hour hours, a person named only in reviews, an inferred contact); \`null\` lets the rule decide again. Kept on the opportunity, so it holds for every later brief, build and site check, Research again included; a choice for a fact research no longer finds is kept but changes nothing. Answers the opportunity, its candidate holding \`factOverrides: {<factId>: {onSite, at}}\`. 400 \`INVALID_FACT\`, 400 \`INVALID_ON_SITE\`. ${OWN}`,
+    summary: 'Put one fact of the place profile on the site, leave it off, or edit its value',
+    description: `The owner’s choice for one fact on the Profile card: \`onSite: true\` puts it on the site, \`false\` leaves it off, whatever the rule decided (a rating from few reviews, all-week 24-hour hours, a person named only in reviews, an inferred contact); \`null\` lets the rule decide again. Kept on the opportunity, so it holds for every later brief, build and site check, Research again included; a choice for a fact research no longer finds is kept but changes nothing. A whole band of the Profile is switched the same way, with \`factId\` \`band_brand\` (no brand observation: \`brief.brand\` is null and no fact is read off the logo), \`band_keyMessages\` (no \`brief.keyMessages\`, so none leads the hero), \`band_reviews\` (no review in \`brief.googlePlace.reviews\` or the review sites), \`band_media\` (no photo or video in any section, hero or gallery; only the logo and team photos stay assets) or \`band_socials\` (\`brief.business.socials\` empty); \`true\` or \`null\` puts it back. Answers the opportunity, its candidate holding \`factOverrides: {<factId>: {onSite, at}}\`. With \`value\` (\`onSite\` beside it optional) it sets the value the site states for any fact of the saved profile (\`GET …/:id/place-profile\`), checked against the fact's kind: \`text\` (1 to 2000 characters; a name 1 to 200), \`list\` (1 to 50 texts), \`hours\` (1 to 14 lines), \`boolean\`, \`number\`, \`url\` (http or https) or \`flags\` (names to true or false, such as Google's amenities); a person's or an offering's name, a quote's text, a link's url and a statistic's amount are the part of a record it edits. \`value: null\` gives the fact back the value research read. Kept as \`factEdits: {<factId>: {value, at}}\`, a Profile edit like the others (the brief reads stale and the Profile needs review again), and answered with \`fact: {id, kind, value, researchValue, editedByOwner}\`. 400 \`INVALID_FACT\`, 400 \`INVALID_ON_SITE\`, 400 \`INVALID_VALUE\` with \`next\` naming the shape and \`expected\` the kind (\`none\` for a fact that cannot be edited, such as a map location), 400 \`TOO_MANY_FACT_EDITS\` past 200, 404 for a fact the saved profile does not hold. ${OWN} ${PROFILE_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
     body: {
       type: 'object',
-      required: ['factId', 'onSite'],
+      required: ['factId'],
       properties: {
         factId: { type: 'string', description: 'The id of a fact of the place profile' },
-        onSite: { type: ['boolean', 'null'], description: 'true or false; null clears the choice' }
+        onSite: { type: ['boolean', 'null'], description: 'true or false; null clears the choice' },
+        value: {
+          description:
+            "The value the site states, of the fact's kind; null gives back the value research read"
+        }
       }
     },
-    answers: '`{opportunity}`'
+    answers: '`{opportunity}`, and with `value` also `fact: {id, kind, value, researchValue, editedByOwner}`'
   },
   // website-opportunities/src/route.js
   {
     method: 'PUT',
     path: '/api/website-opportunities/:id/key-messages',
     summary: 'Edit the key messages the business’s site leads with',
-    description: `The owner’s edits of the key messages on the Profile card (the two or three points the business reading proposed, each resting on facts and quotes): \`removed\` lists the key messages taken off, \`order\` the order they lead in, \`labels\` a new label for a key message (1 to 60 characters). A save is merged into the stored picks: removed ids are added to the ones already removed, a label sent replaces that message’s label and one not sent is kept, \`order\` replaces the stored order; a key message’s facts and quotes cannot be edited. Kept on the opportunity for every later brief and build, Research again included. Answers the opportunity, its candidate holding \`keyMessagePicks: {removed, order, labels, at}\`. 400 \`INVALID_KEY_MESSAGES\`. ${OWN}`,
+    description: `The owner’s edits of the key messages on the Profile card (the two or three points the business reading proposed, each resting on facts and quotes): \`removed\` lists the key messages taken off, \`order\` the order they lead in, \`labels\` a new label for a key message (1 to 60 characters). A save is merged into the stored picks: removed ids are added to the ones already removed, a label sent replaces that message’s label and one not sent is kept, \`order\` replaces the stored order; a key message’s facts and quotes cannot be edited. Kept on the opportunity for every later brief and build, Research again included. Answers the opportunity, its candidate holding \`keyMessagePicks: {removed, order, labels, at}\`. 400 \`INVALID_KEY_MESSAGES\`. ${OWN} ${PROFILE_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -864,12 +1011,101 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     },
     answers: '`{opportunity}`'
   },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/team',
+    summary: 'Add, change or remove a person of the team',
+    description: `The team as the owner keeps it on the Profile card (#537): \`add\` a person (\`label\` 1 to 80 characters, \`role\` up to 60, \`photoMediaId\` optional), \`update\` one (a person the owner added, or one research read: their name, role or photo; \`role: null\` or \`""\` clears the role, \`photoMediaId: null\` the photo), or \`remove\` one (a person the owner added is deleted; one research read is taken off as the reading’s Remove does, \`readingPicks.removed\`, and comes back with \`PUT …/:id/reading\` \`restore\`). Show and hide stay the reading door’s. A photo is a photo of this business first (\`POST …/:id/media\`, best with \`purpose: team\`); it stays in Photos & video. A Profile edit: the Profile needs review again. The next brief names the people in \`reading.team\` (an added person with \`source.kind: owner\`, a photo as \`photoAssetId\`) and its team section lists the photos in \`assetIds\`. 400 \`INVALID_ACTION\`, \`INVALID_MEMBER\`, \`INVALID_LABEL\`, \`INVALID_ROLE\`, \`INVALID_PHOTO\`; 404 \`NOT_FOUND\` for a person this team does not have; 409 \`TOO_MANY_MEMBERS\` (\`max: 30\` added people); 422 \`MEDIA_NOT_FOUND\` when \`photoMediaId\` is no stored photo of this opportunity. ${OWN} ${PROFILE_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['action'],
+      properties: {
+        action: { type: 'string', enum: ['add', 'update', 'remove'] },
+        id: { type: 'string', description: 'The person’s id (update and remove)' },
+        label: { type: 'string', description: 'The person’s name, 1 to 80 characters (required to add)' },
+        role: { type: ['string', 'null'], description: 'Their role, up to 60 characters; null clears it' },
+        photoMediaId: {
+          type: ['string', 'null'],
+          description: 'A photo of this opportunity (a media id); null clears it'
+        }
+      }
+    },
+    answers: '201 (add) or 200 `{opportunity, member: {id, label, role, photoMediaId} | null}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/socials',
+    summary: 'Set or remove a social link the site shows',
+    description: `A social link the owner types on the Profile card (#537), shown on the site and never a research source: research reads the links the opportunity was saved with, which this door never changes, so the research link rules (\`UNSUPPORTED_LINK\`) do not apply. \`network\` is one of ${SOCIAL_NETWORKS_DOC} \`set\` takes \`url\` (an http or https link on that network’s own site; any site for \`other\`) or \`handle\` (\`@name\`, made into the network’s link; LinkedIn and \`other\` need a link), and for \`whatsapp\` a \`number\` with its country code (8 to 15 digits), kept as \`https://wa.me/<digits>\`. One link per network; \`remove\` takes it off. The next brief shows it in \`business.socials\` beside the researched links (the owner’s wins), and the label of \`other\` in \`business.socialLabels.other\`. A Profile edit. 400 \`INVALID_NETWORK\`, \`INVALID_ACTION\`, \`INVALID_LABEL\` (\`other\` needs a label of 1 to 40 characters); 422 \`INVALID_URL\`, 422 \`INVALID_PHONE\`. ${OWN} ${PROFILE_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['network', 'action'],
+      properties: {
+        network: { type: 'string', description: 'A network id of `socialNetworks`' },
+        action: { type: 'string', enum: ['set', 'remove'] },
+        url: { type: 'string', description: 'An http or https link' },
+        handle: { type: 'string', description: 'A handle, with or without @' },
+        number: { type: 'string', description: 'WhatsApp only: the number with its country code' },
+        label: { type: 'string', description: '`other` only: the link’s name, 1 to 40 characters' }
+      }
+    },
+    answers: '`{opportunity, siteSocials: {<network>: {url, label?, at}}}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/media/:mediaId/visibility',
+    summary: 'Keep one photo or video off the site, or put it back',
+    description: `One photo or video of this opportunity (its own or its place’s) kept off the site (#537): it stays in Photos & video with \`ownerHidden: true\` and fills no section, hero or gallery of a later brief, nor is it an asset (unless it is a team photo). A Profile edit. 400 \`INVALID_HIDDEN\`; 404 \`NOT_FOUND\` for a media id this opportunity does not have; 409 \`TOO_MANY_HIDDEN\` (\`max: 500\`). ${OWN} ${PROFILE_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id', mediaId: 'A media id of the Details answer' } },
+    body: {
+      type: 'object',
+      required: ['hidden'],
+      properties: {
+        hidden: { type: 'boolean', description: 'true keeps it off the site, false puts it back' }
+      }
+    },
+    answers: '`{opportunity, media: {id, ownerHidden}}`'
+  },
+  // website-opportunities/src/owner-edit-routes.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/reviews/visibility',
+    summary: 'Keep one review off the site, or put it back',
+    description: `One review kept off the site (#537), by the \`key\` the Details answer gives each review (its source’s own id, else \`rv_<hash>\` of author, time and text): no later brief quotes it as a testimonial. A key no review has is kept and changes nothing. A Profile edit. 400 \`INVALID_REVIEW\` (1 to 200 of \`A-Z a-z 0-9 _ . : -\`), 400 \`INVALID_HIDDEN\`; 409 \`TOO_MANY_HIDDEN\` (\`max: 500\`). ${OWN} ${PROFILE_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['key', 'hidden'],
+      properties: {
+        key: { type: 'string', description: 'The review’s key, as the Details answer gives it' },
+        hidden: { type: 'boolean', description: 'true keeps it off the site, false puts it back' }
+      }
+    },
+    answers: '`{opportunity, review: {key, ownerHidden}}`'
+  },
   // website-opportunities/src/route.js
   {
     method: 'POST',
     path: '/api/website-opportunities/:id/research',
     summary: 'Start collecting an opportunity’s website, social pages and media',
-    description: `Queues a durable research job (discovery, collection per source, media, profile, brand), run by the server in the background and resumable. Each social source takes its 20 most recent posts of the last 12 months, one Apify run capped by Apify at the operator's ceiling ($0.25 unless changed); the account has 40 Apify collection runs a day, and past them the job pauses with \`SOURCE_PAUSED\`/\`quota\` until resumed. The same \`requestId\` answers the same job; 409 \`JOB_ACTIVE\` while another job of this opportunity is queued or running, 409 \`REQUEST_ID_REUSED\` for a key used on another opportunity. With \`only: "logo"\` on a place that was researched before, it runs just the logo again: the home page is read for the logo it points at, the logo candidates are downloaded and looked at, and no other source is collected. With \`only\` naming one source (\`website\`, \`facebook\`, \`instagram\`, \`tiktok\`, \`youtube\`, \`google-places\`, \`google-maps\`, \`tripadvisor\`) it collects that source again now, even when it was tried recently, and no other source; the profile, pictures and brand are rebuilt from what it found, through the same cost ledger and limits as a whole research. A whole research, or a run of the same part, already waiting or running answers it instead; a waiting run of another part refuses it (409 \`JOB_ACTIVE\`, ask again once it ran), a running one is followed by this part's run; a whole research asked for later turns a waiting one-part run into a whole one; on a place never researched the whole research runs. A Google or Tripadvisor part this deployment cannot collect for the place answers 409 \`ONLY_UNAVAILABLE\`. 400 \`INVALID_ONLY\`, 409 \`ONLY_UNSUPPORTED\`. \`only\` also takes \`facebook-search\` or \`instagram-search\`: the web search for that network's page of a place with no website of its own, then the collection of a page it confirms (409 \`ONLY_UNAVAILABLE\` without a web search provider). With \`again: true\` (and no \`force\` or \`only\`) it is Research again, from scratch: every part this deployment can collect for the place runs again whatever its age (reason \`again\`, see \`GET …/research-again\`), and the run reads the logo candidates and the business again without reusing an earlier reading; it is frozen into a run the account starts, reserving every part's ceiling; a run already going is joined as it is (\`again.joined\`). 409 \`NOTHING_DUE\` with the \`plan\` only when no part can run (each one unavailable here), 429 \`RESEARCH_AGAIN_LIMIT\` past the account's runs of the day, 409 \`AGAIN_UNSUPPORTED\` for an opportunity that names no shared place, 400 \`INVALID_AGAIN\`. With \`again: true\`, \`parts\` limits the run to those parts (Read menu again sends \`menu-file\` and \`menu-photos\`); \`parts\` without \`again\`, or naming something that is not a part, is 400 \`INVALID_PARTS\`. \`only\` also takes \`menu-file\` or \`menu-photos\`. ${OWN} ${OFF}`,
+    description: `Queues a durable research job (discovery, collection per source, media, profile, brand), run by the server in the background and resumable. Each social source takes its 20 most recent posts of the last 12 months, one Apify run capped by Apify at the operator's ceiling ($0.25 unless changed); the account has 40 Apify collection runs a day, and past them the job pauses with \`SOURCE_PAUSED\`/\`quota\` until resumed. The same \`requestId\` answers the same job; 409 \`JOB_ACTIVE\` while another job of this opportunity is queued or running, 409 \`REQUEST_ID_REUSED\` for a key used on another opportunity. With \`only: "logo"\` on a place that was researched before, it runs just the logo again: the home page is read for the logo it points at, the logo candidates are downloaded and looked at, and no other source is collected. With \`only\` naming one source (\`website\`, \`facebook\`, \`instagram\`, \`tiktok\`, \`youtube\`, \`google-places\`, \`google-maps\`, \`tripadvisor\`) it collects that source again now, even when it was tried recently, and no other source; the profile, pictures and brand are rebuilt from what it found, through the same cost ledger and limits as a whole research. A whole research, or a run of the same part, already waiting or running answers it instead; a waiting run of another part refuses it (409 \`JOB_ACTIVE\`, ask again once it ran), a running one is followed by this part's run; a whole research asked for later turns a waiting one-part run into a whole one; on a place never researched the whole research runs. A Google or Tripadvisor part this deployment cannot collect for the place answers 409 \`ONLY_UNAVAILABLE\`. 400 \`INVALID_ONLY\`, 409 \`ONLY_UNSUPPORTED\`. \`only\` also takes \`facebook-search\` or \`instagram-search\`: the web search for that network's page of a place with no website of its own, then the collection of a page it confirms (409 \`ONLY_UNAVAILABLE\` without a web search provider). With \`again: true\` (and no \`force\` or \`only\`) it is Research again, from scratch: every part this deployment can collect for the place runs again whatever its age (reason \`again\`, see \`GET …/research-again\`), and the run reads the logo candidates and the business again without reusing an earlier reading; it is frozen into a run the account starts, reserving every part's ceiling; a run already going is joined as it is (\`again.joined\`). 409 \`NOTHING_DUE\` with the \`plan\` only when no part can run (each one unavailable here), 429 \`RESEARCH_AGAIN_LIMIT\` past the account's runs of the day, 409 \`AGAIN_UNSUPPORTED\` for an opportunity that names no shared place, 400 \`INVALID_AGAIN\`. With \`again: true\`, \`parts\` limits the run to those parts (Read menu again sends \`menu-file\` and \`menu-photos\`); \`parts\` without \`again\`, or naming something that is not a part, is 400 \`INVALID_PARTS\`. \`only\` also takes \`menu-file\` or \`menu-photos\`. ${OWN} ${OFF} ${RESEARCH_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -982,25 +1218,50 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
   {
     method: 'POST',
     path: '/api/website-opportunities/:id/revisions',
-    summary: 'Refresh the site brief',
-    description: `The site brief of the opportunity's current research: an immutable snapshot of the research (profile, sources, media, posts, the account's overlay) with its Markdown and asset manifest. A brief names no CMS or template — each build chooses both and keeps them — so one brief feeds demos on any CMS and template. The same research answers the brief already made for it (200); changed research writes the next one (201). A demo build makes its brief itself, so a client never has to. 422 \`BRIEF_INVALID\`. ${OWN} ${OFF}`,
+    summary: 'Start the Content brief as a background job',
+    description: `Starts the site brief of the opportunity's current research as a job and answers 202 at once; poll \`GET …/:id/brief-jobs/:jobId\`. The brief is an immutable snapshot of the research (profile with the seller's Profile edits, sources, media, posts, the account's overlay) with its Markdown and asset manifest. A brief names no CMS or template, so one brief feeds demos on any CMS and template. The same research answers the brief already made for it (the job ends \`done\` with \`reused: true\`); changed research writes the next one. Body \`{requestId?}\` (8 to 100 of letters, digits, \`.\`, \`_\`, \`:\`, \`-\`): the same id answers the same job. 409 \`RESEARCH_NOT_DONE\` until this opportunity's own Research has completed; 409 \`PROFILE_NOT_APPROVED\` until the seller approved the Profile (\`POST …/:id/profile/approve\`); 409 \`REQUEST_ID_REUSED\` for an id used on another opportunity. One job runs per opportunity: a second press answers the running one. ${OWN} ${OFF} ${BRIEF_LOCKED}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: '201 `{revision}` (new), 200 `{revision}` (the research has not changed)'
+    answers:
+      '202 `{job: {id, opportunityId, state: running|done|failed, step: reading|labelling|writing|null, revisionId, reused, error: {code, message?} | null, startedAt, updatedAt}}`'
+  },
+  // src/opportunities-build/route.js
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/brief-jobs/:jobId',
+    summary: 'Read a Content brief job',
+    description: `The job and, once \`done\`, the revision it made or reused. A job whose worker stopped answering for 5 minutes reads \`done\` when a brief was written after it started, else \`failed\` with \`BRIEF_INTERRUPTED\`. Other failure codes: \`BRIEF_INVALID\`, \`NOT_FOUND\`, \`BRIEF_FAILED\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id', jobId: 'Brief job id' } },
+    answers: '`{job, revision?}`'
+  },
+  // src/opportunities-build/route.js
+  {
+    method: 'POST',
+    path: '/api/website-opportunities/:id/revisions/:revId/edits',
+    summary: "Save the seller's edits of a Content brief as a new revision",
+    description: `Body \`{edits: [{path, value}]}\`, at most 60 edits of at most 2000 characters. A path names an existing line of the brief: \`business.name|phone|address|website\`, \`reading.about\`, \`reading.services|story|audience|facts.N.label\`, \`keyMessages.N.label\`. The edited brief is validated, written as the next revision with \`brief.edited: {by: "seller", at, from, fromHash, paths}\`, and counts as current for the research it came from; Build uses the latest revision. 400 \`INVALID_EDITS\` or \`UNKNOWN_PATH\`; 422 \`BRIEF_INVALID\`. ${OWN} ${OFF} ${BRIEF_LOCKED}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id', revId: 'Revision id the edits start from' } },
+    answers: '201 `{revision}`'
   },
   // website-opportunities/src/route.js
   {
     method: 'GET',
     path: '/api/website-opportunities/revisions/:revId',
     summary: 'Read a brief revision',
-    description: `The revision with its brief JSON and its builds, or its Markdown with \`?format=md\` (generated from the JSON, never a second source). \`suggestedLabel\` is the site name a build without a \`label\` would get now: the place’s name as a site label, with \`-2\`, \`-3\`… when this deployment already holds it (null when the plugin is unavailable). Readable while the switch is off. ${OWN}`,
+    description: `The revision with its brief JSON and its builds, or its Markdown with \`?format=md\` (generated from the JSON, never a second source). \`suggestedLabel\` is the site name a build without a \`label\` would get now: the Site name on Tracy saved on the opportunity (\`siteLabel\`) when there is one, else the place’s name as a site label, with \`-2\`, \`-3\`… when this deployment already holds it (null when the plugin is unavailable). Readable while the switch is off. ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { revId: 'Revision id' }, query: { format: '`md` for the brief as text/markdown' } },
-    answers: '`{revision, builds: [build], suggestedLabel: string | null}`'
+    answers: '`{revision, builds: [build], suggestedLabel: string | null, siteLabel: string | null}`'
   },
   // website-opportunities/src/route.js
   {
@@ -1063,6 +1324,17 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     internal: true,
     params: { path: { id: 'Opportunity id' } },
     answers: '`{demo: {siteKey, expiresAt, touchedAt, frozenAt, deletedAt}}`'
+  },
+  {
+    method: 'GET',
+    path: '/api/website-opportunities/:id/demo/preview',
+    summary: 'Read the picture of the latest demo site',
+    description: `A 640 by 400 WebP of the home page of the opportunity’s latest build, taken when its demo action completed. The Details answer names it as \`demo.preview.url\` with its capture time, so the address changes with the picture and the answer is cached for a day. 404 \`NOT_FOUND\` when no picture was taken (the capture failed or the build is not finished): the build itself is never failed by it. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`image/webp` bytes'
   },
   {
     method: 'POST',

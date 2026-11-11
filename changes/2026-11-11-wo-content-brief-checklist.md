@@ -1,0 +1,2 @@
+- **The Site content brief page reads as a five step checklist and is locked after approval, with Approve and continue in the sub-page header** — Akemi · #522 · `feat/wo-ux-512` · 2026-11-11
+  **Affects:** Website Opportunities customers on the brief: each step shows its own state with the one status pill, and once the brief is approved the page reads only (the server answers 409 `BRIEF_APPROVED` to edits). A stale brief no longer mentions sources. The plugin client bundle is rebuilt.

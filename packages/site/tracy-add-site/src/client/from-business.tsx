@@ -605,16 +605,18 @@ export function FromBusiness({
       ) : null}
       {stage.at === 'failed' ? (
         <Alert variant="destructive" data-own-failed={stage.key}>
-          <AlertDescription>{t(stage.key)}</AlertDescription>
-          {stage.retry ? (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => stage.retry && void retryBuild(stage.retry)}
-            >
-              {t('progress_retry')}
-            </Button>
-          ) : null}
+          <AlertDescription>
+            <p>{t(stage.key)}</p>
+            {stage.retry ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => stage.retry && void retryBuild(stage.retry)}
+              >
+                {t('progress_retry')}
+              </Button>
+            ) : null}
+          </AlertDescription>
         </Alert>
       ) : null}
       <div>

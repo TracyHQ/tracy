@@ -16,6 +16,8 @@ import { brandDoors } from './brand-doors.js'
 import { BRAND_PRICES, priceFor } from './brand-prices.js'
 import { createReview } from './brand-reviewer.js'
 import { nextRound, playRound } from './brand-rounds.js'
+import { BRAND_SPOT_CHECK } from './gate-spots.js'
+import { BRAND_HELD_NAME_CHECK } from './gate-logo.js'
 import { buildSafeVersion } from './brand-safe-version.js'
 import { saveRound } from './brand-round-store.js'
 import { cancelAsked, setLogoSource, setProgress } from './brand-store.js'
@@ -98,7 +100,8 @@ async function safeVersion(deps, { row, ready, reason, leaseToken, must, end }) 
       ctx: ready.ctx,
       kit: ready.kit,
       brief: row.brief,
-      reason
+      reason,
+      heldNameCheck: row.harness?.brandHeldNameCheck ?? null
     })
     return end('succeeded', null, {
       outcome: 'safe-version',
@@ -114,6 +117,18 @@ async function safeVersion(deps, { row, ready, reason, leaseToken, must, end }) 
 // server no longer reads would not measure what it records.
 async function prepare(deps, row) {
   const { pool, secret, index, kitImages } = deps
+  if (row.harness?.brandHeldNameCheck != null && row.harness.brandHeldNameCheck !== BRAND_HELD_NAME_CHECK)
+    return {
+      ok: false,
+      code: 'BRAND_HELD_NAME_CHECK_CHANGED',
+      reason: 'the recorded held name check is unsupported'
+    }
+  if (row.harness?.brandSpotCheck != null && row.harness.brandSpotCheck !== BRAND_SPOT_CHECK)
+    return {
+      ok: false,
+      code: 'BRAND_SPOT_CHECK_CHANGED',
+      reason: 'the recorded brand spot check is unsupported'
+    }
   const prompt = brandPrompt()
   if (prompt.sha256 !== row.prompt_sha256)
     return { ok: false, code: 'BRAND_PROMPT_CHANGED', reason: 'the approved prompt changed since the start' }

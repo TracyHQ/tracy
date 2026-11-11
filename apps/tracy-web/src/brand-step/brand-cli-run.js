@@ -70,6 +70,7 @@ export async function startRunCommand(d, values) {
     ...(logo ? { logo } : {}),
     kitImages: d.kitImages,
     noCaps: values['no-caps'] === true,
+    ...(values['site-language'] !== undefined ? { siteLanguage: values['site-language'] } : {}),
     wiring: d.wiring,
     ...(values['agent-model']
       ? {

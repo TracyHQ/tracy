@@ -13,6 +13,7 @@
   "expect": [
     "A server-owned action shows building and elapsed minutes without opening a chat.",
     "Failure and remount retain the same business; Retry sends the same failed action ID without research or template selection.",
+    "At 276, 390 and 800 pixels the complete Retry label stays inside its clickable button and the button stays inside the failure alert.",
     "The site opens and the kept business clears only after completion, with no chat preparation.",
     "A blocked immutable brief preserves the business and exposes no futile retry."
   ],

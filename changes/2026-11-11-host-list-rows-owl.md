@@ -1,0 +1,3 @@
+- **Count original Owl carousel cards in list measurements without counting their loop copies.** — pipeline maintainers · #558 · `fix/assigned-non-wo-issues` · 2026-11-11
+  **Affects:** Rebuild the host image to update page measurements. The site-check row-count rule is unchanged. Copies are excluded only when an Owl item is directly under its stage inside its carousel and canonical siblings exist; real repeated cards and unverified classes remain separate rows.
+  **Why / Measured:** Arabian Diner has two canonical cards and four Owl loop copies at both desktop and mobile widths. The old extractor emitted a four-copy list that won the judge's word-match ranking over the two-original list. A real-browser fixture covers copied subtrees and repeated-content controls.

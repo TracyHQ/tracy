@@ -5,7 +5,7 @@
 import type { SourceInput } from './status.ts'
 
 export interface SourceGroups {
-  /** Sources a pasted link feeds, in the server's order. */
+  /** Sources a pasted link feeds (and, before research, the Google listing picked in a search), in the server's order. */
   pasted: SourceInput[]
   /** Sources research found by itself, in the server's order. */
   found: SourceInput[]
@@ -20,6 +20,6 @@ export function pastedLinkOf(source: SourceInput): string | null {
 export function sourceGroups(sources: readonly SourceInput[]): SourceGroups {
   const pasted: SourceInput[] = []
   const found: SourceInput[] = []
-  for (const s of sources) (pastedLinkOf(s) === null ? found : pasted).push(s)
+  for (const s of sources) (pastedLinkOf(s) === null && s.fromSearch !== true ? found : pasted).push(s)
   return { pasted, found }
 }

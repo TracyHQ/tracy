@@ -12,7 +12,7 @@ test('the stale brief line names the number, the time and both causes', () => {
   assert.match(line, /\{n\}/)
   assert.match(line, /\{when\}/)
   assert.match(line, /research/)
-  assert.match(line, /brief rules/)
+  assert.match(line, /rules have changed/)
   assert.doesNotMatch(line, /[–—]/)
   assert.notEqual(line, en['brief.current'])
 })

@@ -11,7 +11,7 @@ import { Badge, Button } from '@tracy/ui'
 import { mediaUrl } from './api.ts'
 import { sourceLabel } from './cms-label.ts'
 import type { FileTile, LogoView, MediaRowView, MediaTile } from './detail-model.ts'
-import { Section } from './inspector.tsx'
+import { Section } from './details-parts.tsx'
 import { MenuPhotoLine } from './menu-block.tsx'
 import type { Menu } from './menu-model.ts'
 import type { Translate } from './strings.ts'
@@ -53,7 +53,7 @@ function NotCollected({
   )
 }
 
-function LogoField({
+export function LogoField({
   t,
   logo,
   retry,
@@ -143,7 +143,7 @@ function Photo({ t, tile, menu }: { t: Translate; tile: MediaTile; menu: Menu | 
   )
 }
 
-function File({ t, file }: { t: Translate; file: FileTile }): JSX.Element {
+export function File({ t, file }: { t: Translate; file: FileTile }): JSX.Element {
   return (
     <li className="tracy-wo-photo">
       <a className="tracy-wo-tile tracy-wo-file" href={file.url} target="_blank" rel="noopener noreferrer">
@@ -164,7 +164,7 @@ function File({ t, file }: { t: Translate; file: FileTile }): JSX.Element {
 }
 
 /** The pictures kept but not shown as photographs (icons, maps, spacers, rows that did not download), on demand. */
-function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX.Element | null {
+export function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX.Element | null {
   const [open, setOpen] = useState(false)
   if (tiles.length === 0) return null
   return (
@@ -204,12 +204,58 @@ function HiddenPictures({ t, tiles }: { t: Translate; tiles: MediaTile[] }): JSX
   )
 }
 
+/** How many tiles the Photos & video card of Details shows (two rows); past it, the last tile counts the rest. */
+const MEDIA_STRIP = 16
+
+/** The Photos & video card of Details: the first photos and videos, the last tile counting the rest. */
+function MediaStrip({ t, view }: { t: Translate; view: MediaRowView }): JSX.Element {
+  const tiles = [...view.photos.groups.flatMap((g) => g.tiles), ...view.videos.tiles].filter((m) => m.stored)
+  if (tiles.length === 0) return <None t={t} />
+  const more = tiles.length > MEDIA_STRIP ? tiles.length - (MEDIA_STRIP - 1) : 0
+  const shown = more > 0 ? tiles.slice(0, MEDIA_STRIP - 1) : tiles
+  return (
+    <ul className="tracy-wo-media-strip">
+      {shown.map((tile) => {
+        const source = tile.source === null ? '' : sourceLabel(t, tile.source)
+        const category = tile.kind === 'video' ? t('media.video') : t(`media.category.${tile.category}`)
+        return (
+          <li key={tile.id} className="tracy-wo-tile" data-video={tile.kind === 'video' ? '' : undefined}>
+            {tile.kind === 'video' ? (
+              <video
+                src={mediaUrl(tile.id)}
+                preload="metadata"
+                muted
+                playsInline
+                aria-label={t('media.item', { category, source })}
+              />
+            ) : (
+              <img
+                src={mediaUrl(tile.id)}
+                alt={t('media.item', { category, source })}
+                loading="lazy"
+                decoding="async"
+              />
+            )}
+          </li>
+        )
+      })}
+      {more > 0 ? (
+        <li className="tracy-wo-tile tracy-wo-media-more" aria-label={t('media.more', { count: more })}>
+          {t('media.moreShort', { count: more })}
+        </li>
+      ) : null}
+    </ul>
+  )
+}
+
 export function MediaRow({
   t,
   view,
   retryLogo,
   menu = null,
-  food = false
+  food = false,
+  open = true,
+  bare = false
 }: {
   t: Translate
   view: MediaRowView
@@ -218,10 +264,20 @@ export function MediaRow({
   food?: boolean
   /** The Menu field: each menu photo gets its number and reading result. */
   menu?: Menu | null
+  /** False: only the first tiles (the card of Details; its sub-page opens the rest). */
+  open?: boolean
+  /** Inside the Photos & video section of Details, which carries the title: no card of its own. */
+  bare?: boolean
 }): JSX.Element {
   const { colors, photos, files, videos } = view
+  if (!open)
+    return (
+      <Section title={t('media.title')} bare={bare}>
+        <MediaStrip t={t} view={view} />
+      </Section>
+    )
   return (
-    <Section title={t('media.title')}>
+    <Section title={t('media.title')} bare={bare}>
       <h4 className="tracy-wo-h3">{t('media.brand')}</h4>
       <dl className="tracy-wo-fields">
         <div className="tracy-wo-field">

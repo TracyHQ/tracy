@@ -7,9 +7,11 @@
  * bumps the token, so the old writer's next write throws `StaleLeaseError` instead of landing.
  */
 
+import { RESEARCH_STATE_COLUMNS } from './research-state.js'
 import { resolvePlace } from './places.js'
 import { LISTING_SOURCE } from './sources.js'
 import { nextReadingPicks } from '../domain/business-reading.mjs'
+import { dropTracking } from '../domain/link-kinds.mjs'
 import { mergeKeyMessagePicks, nextFactOverrides } from './owner-fact-picks.js'
 import { journeySql } from './wo-journey.js'
 
@@ -112,34 +114,198 @@ export function candidateWithNewRefs(held, sent, now = new Date()) {
 }
 
 /**
- * Insert once per (account, provider, providerId), with the place it names (`places.js`; null when the
- * provider id names none). A row saved before places existed gets its place on the next save. Saving it again
- * with more links (`candidateWithNewRefs`) adds them to the saved candidate: they are researched as its own.
+ * The spelling two links of one page share: scheme, `www.`, a trailing slash, the fragment and share-tracking
+ * parameters aside, host in lower case. Null when it is no address. Used to find the link a person asks to remove,
+ * whether she sends it as stored, as shown (without tracking) or as she pasted it.
+ * @param {unknown} raw
+ */
+export function linkKeyOf(raw) {
+  if (typeof raw !== 'string' || !raw.trim()) return null
+  try {
+    const text = raw.trim()
+    const u = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `https://${text}`)
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null
+    dropTracking(u.searchParams)
+    u.searchParams.sort()
+    const host = u.hostname.toLowerCase().replace(/^www\./, '')
+    const path = u.pathname.replace(/\/+$/, '')
+    return `${host}${path}${u.search}`
+  } catch {
+    return null
+  }
+}
+
+/**
+ * The saved candidate without one link the person pasted or added (its website, a social page, a listing page), and
+ * that link's research source: `{candidate, source}`, or null when the candidate holds no such link. Its entries in
+ * `pastedLinks` go with it; `linksAddedAt` is set, as for an added link, so the place's last research is not current
+ * for this opportunity any more (`place-requests.js`). A Google link is the business itself and is never removed here:
+ * `{google: true}` when the link only names the Google place.
+ */
+export function candidateWithoutLink(held, url, now = new Date()) {
+  const key = linkKeyOf(url)
+  if (!key || !held || typeof held !== 'object') return null
+  const same = (u) => linkKeyOf(u) === key
+  const out = { ...held }
+  let source = null
+  if (same(held.website)) {
+    delete out.website
+    source = 'website'
+  }
+  for (const [network, u] of Object.entries(held.socials ?? {}))
+    if (same(u)) {
+      out.socials = Object.fromEntries(Object.entries(out.socials).filter(([n]) => n !== network))
+      source ??= network
+    }
+  if (Array.isArray(held.listings) && held.listings.some((l) => same(l?.url))) {
+    out.listings = held.listings.filter((l) => !same(l?.url))
+    if (!out.listings.length) delete out.listings
+    source ??= LISTING_SOURCE
+  }
+  const pasted = Array.isArray(held.pastedLinks) ? held.pastedLinks : []
+  if (!source) {
+    const named = pasted.find((l) => same(l?.url))
+    return named?.source === 'google-places' ? { google: true } : null
+  }
+  if (pasted.length) out.pastedLinks = pasted.filter((l) => l?.source === 'google-places' || !same(l?.url))
+  out.linksAddedAt = now.toISOString()
+  return { candidate: out, source }
+}
+
+/** Whether the saved candidate already holds this exact link (any spelling `linkKeyOf` treats as the same page). */
+export function candidateHasLink(held, url) {
+  const key = linkKeyOf(url)
+  if (!key || !held || typeof held !== 'object') return false
+  const links = [
+    held.website,
+    ...Object.values(held.socials ?? {}),
+    ...(Array.isArray(held.listings) ? held.listings.map((l) => l?.url) : []),
+    ...(Array.isArray(held.pastedLinks) ? held.pastedLinks.map((l) => l?.url) : [])
+  ]
+  return links.some((u) => linkKeyOf(u) === key)
+}
+
+/**
+ * How many links research still reads for an opportunity: its Google place (the business itself), its website, its
+ * social pages and its listing pages. An opportunity needs one at least.
+ */
+export function researchLinkCountOf(provider, candidate) {
+  const c = candidate ?? {}
+  return (
+    (provider === 'google-places' ? 1 : 0) +
+    (typeof c.website === 'string' && c.website ? 1 : 0) +
+    Object.values(c.socials ?? {}).filter((u) => typeof u === 'string' && u).length +
+    (Array.isArray(c.listings) ? c.listings.filter((l) => typeof l?.url === 'string').length : 0)
+  )
+}
+
+/** Advisory key serialising saves of one place by one account (`insertOpportunity`): `$1` account, `$2` place key. */
+const placeSaveLockSql = `hashtextextended('wo_opportunity:' || $1::text || ':' || $2::text, 0)`
+
+/**
+ * A new card of a place, always (#537 R23): the create door accepts a place the account already has, since an
+ * approved card is final and a change after approval is made on a new card. The new card starts fresh (no research
+ * of its own, nothing approved) and is independent of the others; `sameAsOf` names them. With the place it names
+ * (`places.js`; null when the provider id names none).
+ * @returns {Promise<{row: object, created: true}>}
+ */
+export async function insertNewOpportunity(
+  pool,
+  accountId,
+  { name, branch, provider, providerId, candidate }
+) {
+  const placeId = await resolvePlace(pool, { provider, providerId, name })
+  const { rows } = await pool.query(
+    `insert into wo_opportunity (account_id, name, branch, provider, provider_id, candidate, place_id)
+     values ($1, $2, $3, $4, $5, $6, $7) returning *`,
+    [accountId, name, branch ?? null, provider, providerId, JSON.stringify(candidate), placeId]
+  )
+  return { row: rows[0], created: true }
+}
+
+/**
+ * The account's newest card of this (provider, providerId), or a new one when it has none: Build from my business
+ * (`own-site.js`) and the readers that save one card per place. A row saved before places existed gets its place on
+ * the next save. Saving it again with more links (`candidateWithNewRefs`) adds them to the saved candidate: they are
+ * researched as its own. One save of a place at a time per account (an advisory lock), since the table no longer holds
+ * one row per place (migration `0014`).
  * @returns {Promise<{row: object, created: boolean}>}
  */
 export async function insertOpportunity(pool, accountId, { name, branch, provider, providerId, candidate }) {
   const placeId = await resolvePlace(pool, { provider, providerId, name })
-  const { rows } = await pool.query(
-    `insert into wo_opportunity (account_id, name, branch, provider, provider_id, candidate, place_id)
-     values ($1, $2, $3, $4, $5, $6, $7)
-     on conflict (account_id, provider, provider_id) do nothing
-     returning *`,
-    [accountId, name, branch ?? null, provider, providerId, JSON.stringify(candidate), placeId]
+  const client = await pool.connect()
+  try {
+    await client.query('begin')
+    await client.query(`select pg_advisory_xact_lock(${placeSaveLockSql})`, [
+      accountId,
+      `${provider}\n${providerId}`
+    ])
+    const held = (
+      await client.query(
+        `select * from wo_opportunity where account_id = $1 and provider = $2 and provider_id = $3
+         order by created_at desc, id desc limit 1 for update`,
+        [accountId, provider, providerId]
+      )
+    ).rows[0]
+    let result
+    if (!held) {
+      const { rows } = await client.query(
+        `insert into wo_opportunity (account_id, name, branch, provider, provider_id, candidate, place_id)
+         values ($1, $2, $3, $4, $5, $6, $7) returning *`,
+        [accountId, name, branch ?? null, provider, providerId, JSON.stringify(candidate), placeId]
+      )
+      result = { row: rows[0], created: true }
+    } else {
+      const merged = candidateWithNewRefs(held.candidate, candidate)
+      const { rows } = await client.query(
+        `update wo_opportunity set place_id = coalesce(place_id, $2),
+           candidate = coalesce($3::jsonb, candidate),
+           updated_at = case when $3::jsonb is null then updated_at else now() end
+         where id = $1 returning *`,
+        [held.id, placeId, merged ? JSON.stringify(merged) : null]
+      )
+      result = { row: rows[0] ?? held, created: false }
+    }
+    await client.query('commit')
+    return result
+  } catch (error) {
+    await client.query('rollback').catch(() => {})
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
+/**
+ * The account's other cards of the same place as each row (same provider and providerId), newest first, as
+ * `Map(row id -> [{id, createdAt, stage}])`; a row with none is left out. A customer's own business (`ownSite`) is not
+ * listed, as in the list. `rows` are `wo_opportunity` rows.
+ */
+export async function sameAsOf(pool, accountId, rows, { demoJourney } = {}) {
+  const out = new Map()
+  const keyed = (rows ?? []).filter((r) => r?.id && r.provider && r.provider_id)
+  if (!accountId || keyed.length === 0) return out
+  const params = []
+  const staged = stagedSql(params, accountId, { demoJourney })
+  params.push(keyed.map((r) => r.provider))
+  const providers = `$${params.length}`
+  params.push(keyed.map((r) => r.provider_id))
+  const providerIds = `$${params.length}`
+  const { rows: found } = await pool.query(
+    `with ${staged}
+     select o.id, o.provider, o.provider_id, o.created_at, s.stage
+     from staged s join wo_opportunity o on o.id = s.id
+     where (o.provider, o.provider_id) in (select * from unnest(${providers}::text[], ${providerIds}::text[]))
+     order by o.created_at desc, o.id desc`,
+    params
   )
-  if (rows[0]) return { row: rows[0], created: true }
-  const existing = await pool.query(
-    `update wo_opportunity set place_id = coalesce(place_id, $4)
-     where account_id = $1 and provider = $2 and provider_id = $3 returning *`,
-    [accountId, provider, providerId, placeId]
-  )
-  const row = existing.rows[0]
-  const merged = row ? candidateWithNewRefs(row.candidate, candidate) : null
-  if (!merged) return { row, created: false }
-  const updated = await pool.query(
-    'update wo_opportunity set candidate = $2::jsonb, updated_at = now() where id = $1 returning *',
-    [row.id, JSON.stringify(merged)]
-  )
-  return { row: updated.rows[0] ?? row, created: false }
+  for (const row of keyed) {
+    const same = found
+      .filter((f) => f.provider === row.provider && f.provider_id === row.provider_id && f.id !== row.id)
+      .map((f) => ({ id: f.id, createdAt: f.created_at, stage: f.stage }))
+    if (same.length) out.set(row.id, same)
+  }
+  return out
 }
 
 /** The opportunity's place, resolved now when it has none yet (saved before places existed). */
@@ -450,7 +616,7 @@ export async function listOpportunities(pool, accountId, opts = {}) {
   }
   const { rows } = await pool.query(
     `with ${staged}
-     select o.*, s.stage, s.attention, ${CURSOR_KEY_SQL} as cursor_key,
+     select o.*, s.stage, s.attention, ${CURSOR_KEY_SQL} as cursor_key, ${RESEARCH_STATE_COLUMNS},
        (select to_jsonb(j) || ${PLACE_PROGRESS_JSON} from wo_job j where j.id = s.latest_job_id) as job
      from staged s join wo_opportunity o on o.id = s.id
      where ${where}

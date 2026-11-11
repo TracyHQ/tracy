@@ -183,6 +183,21 @@ test('a server-owned build shows building, survives reopening and retries the sa
     assert.match(await page.locator('[data-own-build-progress]').innerText(), /2 min so far/)
     await page.evaluate(() => window.serverBuild.fail())
     await page.getByRole('button', { name: 'Try again', exact: true }).waitFor({ timeout: 10000 })
+    for (const width of [276, 390, 800]) {
+      await page.setViewportSize({ width, height: 900 })
+      const box = await page.getByRole('button', { name: 'Try again', exact: true }).evaluate((button) => {
+        const label = document.createRange()
+        label.selectNodeContents(button)
+        return {
+          button: button.getBoundingClientRect().toJSON(),
+          label: label.getBoundingClientRect().toJSON(),
+          alert: button.closest('[role="alert"]').getBoundingClientRect().toJSON()
+        }
+      })
+      assert.ok(box.label.left >= box.button.left, `${width}px: retry label starts outside its button`)
+      assert.ok(box.label.right <= box.button.right, `${width}px: retry label ends outside its button`)
+      assert.ok(box.button.right <= box.alert.right, `${width}px: retry button leaves its alert`)
+    }
     assert.equal(await page.evaluate(() => window.serverBuild.hasKept()), true)
     await page.evaluate(() => window.serverBuild.remount())
     await page.getByRole('button', { name: 'Try again', exact: true }).waitFor()
