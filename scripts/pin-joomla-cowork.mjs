@@ -67,15 +67,24 @@ const CONTRACT_INDEX = 'administrator/lib/contracts.json'
 
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
 
-/** `0.24.9` -> [0, 24, 9]; anything else (a release candidate included) is not pinned. */
+/** Stable destination versions only: a release candidate cannot be selected as a new pin. */
 function triple(version) {
   const m = /^(\d+)\.(\d+)\.(\d+)$/.exec(String(version ?? ''))
   return m ? m.slice(1).map(Number) : null
 }
+/** An explicitly recorded RC may be promoted to stable after the usual contract checks. */
+function existingVersion(version) {
+  const stable = triple(version)
+  if (stable) return { parts: stable, candidate: false }
+  const m = /^(\d+)\.(\d+)\.(\d+)-rc\.(0|[1-9]\d*)$/.exec(String(version ?? ''))
+  return m ? { parts: m.slice(1, 4).map(Number), candidate: true } : null
+}
+/** Compare an existing pin with the stable destination; an RC precedes its matching stable release. */
 function compare(a, b) {
-  const [x, y] = [triple(a), triple(b)]
+  const current = existingVersion(a)
+  const [x, y] = [current.parts, triple(b)]
   for (let i = 0; i < 3; i += 1) if (x[i] !== y[i]) return x[i] < y[i] ? -1 : 1
-  return 0
+  return current.candidate ? -1 : 0
 }
 
 /**
@@ -471,7 +480,8 @@ export function main(argv) {
       problems.push(
         `${id}: pinned by githubAssetId ${pin.githubAssetId} (a copy on the private releases repository); move it by hand`
       )
-    else if (!triple(pin.version)) problems.push(`${id}: pinned version ${pin.version} is not X.Y.Z`)
+    else if (!existingVersion(pin.version))
+      problems.push(`${id}: pinned version ${pin.version} is not X.Y.Z or X.Y.Z-rc.N`)
     else if (compare(pin.version, version) > 0) plan.push({ id, from: pin.version, action: 'newer' })
     else {
       problems.push(...contractProblems(id, entry, carried, index, file))
