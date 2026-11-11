@@ -11,6 +11,7 @@ import { siteAddress, siteLabelVerdict } from '../src/client/site-label-model.ts
 const rules = { min: 6, max: 30 }
 
 test('a typed name with anything but lowercase letters, digits and hyphens is refused at once, no check asked', () => {
+  // The third name carries a letter outside a to z (an escape keeps this file ASCII).
   for (const typed of ['Pho Ba', 'pho_ba', 'stra\u00dfe-ba', 'PHOBA1'])
     assert.deepEqual(siteLabelVerdict(typed, '', rules, null), { state: 'invalid', key: 'site.name.chars' })
 })
