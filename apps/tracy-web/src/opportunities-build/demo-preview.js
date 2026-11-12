@@ -164,10 +164,11 @@ export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = 
       log.warn?.(`[wo-demo] site of ${build.site_key} unreadable: ${error?.code ?? error?.message ?? 'error'}`)
       return
     }
-    // A completed build without a site has no address: PageSpeed keeps `no_address` rather than nothing.
+    // Measured at the address Details gives the demo: the site's own, else the one its build's label is born at; a
+    // completed build with neither keeps `no_address` rather than nothing.
     await Promise.all([
       capture && site ? keepPreview(build, site, at) : null,
-      pageSpeed ? keepPageSpeed(build, site) : null
+      pageSpeed ? keepPageSpeed(build, site ?? (build.label ? { label: build.label } : null)) : null
     ])
   }
 }

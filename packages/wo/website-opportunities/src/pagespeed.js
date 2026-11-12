@@ -16,7 +16,9 @@ const VIEWPORT_AUDITS = ['viewport-insight', 'viewport']
 const TAP_TARGET_AUDITS = ['target-size', 'tap-targets']
 
 const score = (category) => {
-  const n = Number(category?.score)
+  // Lighthouse sends `score: null` for a category it could not score: unmeasured, never 0 (`Number(null)` is 0).
+  if (category?.score === null || category?.score === undefined) return null
+  const n = Number(category.score)
   return Number.isFinite(n) ? Math.round(n * 100) : null
 }
 
@@ -192,9 +194,10 @@ export async function measurePageSpeed(
   try {
     if (!address) return miss('no_address')
     if (!enabled) return miss('switched_off')
-    if (!key) return miss('no_key')
+    // An address Google cannot reach says so whether or not a key is set: a stand never reads "no key".
     const blocked = await pageSpeedUnreachable(address, { resolve })
     if (blocked) return miss(blocked)
+    if (!key) return miss('no_key')
     let answer = null
     let thrown = null
     let timedOut = false
