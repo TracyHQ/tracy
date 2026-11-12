@@ -1,7 +1,7 @@
 // Webhooks of `/v1/demos` (`opportunities-build/demo-webhooks.js`, migration 217): one https address per account,
 // registered through the account-token doors; events made by the sweep from committed rows, once each; a signed POST
-// per attempt, delivered, retried with back-off or given up. The account token, DNS, the photo fetch and the webhook
-// receiver are fakes: no call leaves the machine.
+// per attempt, delivered, retried with back-off or given up. The account token, DNS, the photo fetch and the account's
+// own server behind the webhook are fakes: no call leaves the machine.
 import assert from 'node:assert/strict'
 import { createHmac } from 'node:crypto'
 import { after, before, beforeEach, test } from 'node:test'
@@ -63,7 +63,7 @@ function world() {
     isApiHost: () => true,
     requireAccountToken: async (c, scope) => {
       const m = /^Bearer acct:(.+)$/.exec(c.req.header('authorization') ?? '')
-      if (/^Bearer trk_/.test(c.req.header('authorization') ?? '')) return c.json({}, 500)
+      if ((c.req.header('authorization') ?? '').startsWith('Bearer trk_')) return c.json({}, 500)
       if (!m || scope !== 'demos') return c.json({ error: { code: 'NOT_SIGNED_IN' } }, 401)
       return { accountId: m[1], grantId: null }
     },
@@ -96,7 +96,7 @@ function world() {
   const webhooks = createDemoWebhooks({
     pool: db.pool,
     sessionSecret: SECRET,
-    // The receiver: each attempt is kept; `answers` says what it answers (a status, or an Error to throw).
+    // The account's server: each attempt is kept; `answers` says what it answers (a status, or an Error to throw).
     fetchImpl: async (url, init) => {
       sent.push({ url, init, at: clock.at })
       const answer = answers.shift() ?? 200
@@ -164,7 +164,7 @@ const events = async (acct) =>
 test('the signature is the hex HMAC-SHA256 of "<t>.<body>" keyed with the whole secret', () => {
   const secret = 'whsec_dGVzdC12ZWN0b3Itc2VjcmV0'
   const body = '{"id":"4d2c1b0a-0000-4000-8000-000000000001","type":"demo.accepted"}'
-  // Computed apart with `openssl dgst -sha256 -hmac`: a change of the scheme breaks every receiver.
+  // Computed apart with `openssl dgst -sha256 -hmac`: a change of the scheme breaks every account's check.
   assert.equal(
     signatureHeader(secret, body, 1762905600),
     't=1762905600,v1=dd23e53f0c15ffa6949b481e57089c164c817cfcdbbac38b9954d5d70d2c4d19'
@@ -180,7 +180,9 @@ test('the signature is the hex HMAC-SHA256 of "<t>.<body>" keyed with the whole 
     [1, 2, 3, 4, 5, 6, 7].map(retryDelayMs),
     [30_000, 90_000, 270_000, 810_000, 2_430_000, 7_290_000, 21_600_000]
   )
+  // test-quality: contract the public reference promises 8 attempts and a 10 s wait (`api-reference/routes/demos.js`)
   assert.equal(WEBHOOK_LIMITS.maxAttempts, 8)
+  // test-quality: contract the public reference promises 8 attempts and a 10 s wait (`api-reference/routes/demos.js`)
   assert.equal(WEBHOOK_LIMITS.timeoutMs, 10_000)
   assert.ok(WEBHOOK_LIMITS.keepDays >= WEBHOOK_LIMITS.lookbackDays, 'a kept event is its own dedupe key')
 })
@@ -395,7 +397,7 @@ test(
     await webhooks.enqueue()
     const [event] = await events(acct)
 
-    // 1. The receiver fails: kept, retried after 30 s, with the same body and id.
+    // 1. The account's server fails: kept, retried after 30 s, with the same body and id.
     answers.push(500)
     assert.deepEqual(await webhooks.deliver(), { delivered: 0, retried: 1, gaveUp: 0 })
     assert.equal(sent.length, 1)

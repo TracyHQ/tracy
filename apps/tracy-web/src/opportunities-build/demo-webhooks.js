@@ -11,7 +11,7 @@
  * the account's webhook was registered (`since`); each demo has each event once (`dedupe_key`).
  *
  * 🔒 THE OUTBOX IS THE ONLY WAY OUT. Each event's body is frozen when it is made (`{id, type, createdAt, demo}`, `demo`
- * the shape `GET /v1/demos/:id` answers), so every attempt sends the same bytes and the same `id`; a receiver dedupes
+ * the shape `GET /v1/demos/:id` answers), so every attempt sends the same bytes and the same `id`; the account's server dedupes
  * on `id`. Delivery is at least once: a process that stops between the POST and its settle sends that event again.
  * Each attempt is signed `X-Tracy-Signature: t=<unix>,v1=<hex HMAC-SHA256(secret, "<t>.<body>")>`, waits at most
  * 10 s, follows no redirect, and goes through the crawler's pinned fetch (`app.js` `crawlFetch`), which refuses a
