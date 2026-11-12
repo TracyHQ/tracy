@@ -46,7 +46,7 @@ function stubPsi(answer) {
   return { asked, fetchImpl }
 }
 
-test('a demo PageSpeed scores is kept with its facts, measured on mobile at the demo address', async () => {
+test('a demo PageSpeed score is kept with its facts, measured on mobile at the demo address', async () => {
   const psi = stubPsi(() => Response.json(lighthouse(0.92)))
   const measured = await measurePageSpeed('https://pho-ba.tracy.site/', 'AIza-test', {
     fetch: psi.fetchImpl,
