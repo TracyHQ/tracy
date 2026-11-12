@@ -2987,6 +2987,44 @@ test(
   }
 )
 
+test(
+  'build: a dead create-door claim (no site, no job, idle or refused) does not keep a request alive; one with a job does',
+  opts,
+  async () => {
+    const { pool, call } = await world()
+    const opp = await opportunity(call)
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const accountId = (await pool.query('select id from account where email = $1', [A])).rows[0].id
+    const { deterministicBuildId } = await import('../src/opportunities-build/builds.js')
+    const stale = async (requestId, claim) => {
+      const buildId = deterministicBuildId(accountId, rev.id, requestId)
+      await pool.query(
+        `insert into site_creation (account_id, build_id, payload_hash, state, job_id, updated_at)
+         values ($1, $2, 'h', $3, $4, now() - interval '11 minutes')`,
+        [accountId, buildId, claim.state, claim.jobId ?? null]
+      )
+      return (
+        await pool.query(
+          `insert into wo_build (account_id, revision_id, request_id, build_id, updated_at, choice, choice_key)
+         values ($1, $2, $3, $4, now() - interval '11 minutes', '{"cms":"joomla","cmsSource":"default","template":{"platform":"joomla","quickstart":"fixture","design":"fixture","version":"1"}}'::jsonb, $5) returning id`,
+          [accountId, rev.id, requestId, buildId, `fixture-${requestId}`]
+        )
+      ).rows[0].id
+    }
+    // Comptoir 102 on dev (12/11/2026): a claim that never reached a site or a host job held the build `requesting`.
+    for (const [requestId, claim, expected] of [
+      ['build-dead-claim', { state: 'claiming' }, 'failed'],
+      ['build-refused-claim', { state: 'refused' }, 'failed'],
+      ['build-job-claim', { state: 'provisioning', jobId: 'job-1' }, 'requesting']
+    ]) {
+      const id = await stale(requestId, claim)
+      const read = await call(A, 'GET', `${BASE}/builds/${id}`)
+      assert.equal(read.body.build.state, expected, requestId)
+      if (expected === 'failed') assert.equal(read.body.build.receipt.failure.code, 'REQUEST_LOST')
+    }
+  }
+)
+
 // ── Find box autocomplete (tasks/todo-wo-social-stats.md item F) ──
 
 const SESSION = '0f8b8c1e-4a8e-4c1e-9d55-6a9b1f2b9c11'
