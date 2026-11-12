@@ -143,6 +143,7 @@ const frozenRead = () => ({
 /** A database answering what `revisionForAction` and `createRevision` send for an action whose build chose already. */
 function fakeDb() {
   const inserted = []
+  const marked = []
   const opp = {
     id: 'opp-1',
     account_id: 'acc-1',
@@ -159,6 +160,11 @@ function fakeDb() {
       }
     if (s.startsWith('select * from wo_opportunity')) return { rows: [opp] }
     if (s.startsWith('select * from wo_revision')) return { rows: [] }
+    // The labelling run this action starts is paid work of its own (#564).
+    if (s.startsWith('update wo_demo_action set work_started_at')) {
+      marked.push(params[0])
+      return { rows: [] }
+    }
     if (s.startsWith('insert into wo_revision')) {
       const cols = s.slice(s.indexOf('(') + 1, s.indexOf(')')).split(',')
       const values = [...params]
@@ -172,7 +178,7 @@ function fakeDb() {
     }
     throw new Error(`unexpected statement: ${s}`)
   }
-  return { inserted, query, connect: async () => ({ query, release() {} }) }
+  return { inserted, marked, query, connect: async () => ({ query, release() {} }) }
 }
 
 const action = {
@@ -217,6 +223,10 @@ test('revisionForAction answers pending and makes no brief while the photographs
   assert.equal(byId.get('court').content, 'unlabelled')
   assert.equal(made.revision.brief.assetLabelling.status, 'labelled')
   assert.equal(held.asked.length, 1)
+  // The run carries the action's mark; the labeller awaits it only before a paid call (#564).
+  assert.deepEqual(db.marked, [], 'starting a run is not a paid call')
+  await held.asked[0].beforePaidCall()
+  assert.deepEqual(db.marked, ['act-1'])
 })
 
 test('an overdue picture run freezes no revision; a later prepare adopts its settled labels', async () => {

@@ -1067,6 +1067,43 @@ test(
   }
 )
 
+test(
+  'build from a brief page (#553): a bound build that fails before any work gives its daily build back (#566)',
+  opts,
+  async () => {
+    const { app, pool, call, state } = await world()
+    const opp = await opportunity(call)
+    const rev = (await call(A, 'POST', `${BASE}/${opp.id}/revisions`, {})).body.revision
+    const used = async () =>
+      (await pool.query("select coalesce(sum(used), 0)::int n from wo_demo_usage where kind = 'demo'"))
+        .rows[0].n
+    const accepted = await call(A, 'POST', `${BASE}/${opp.id}/demo/build`, {
+      requestId: 'brief-refund-0001',
+      selection: { cms: 'joomla', design: 'ja-restaurant', quickstart: 'ja-restaurant/j6' },
+      revisionId: rev.id
+    })
+    assert.equal(accepted.status, 202, JSON.stringify(accepted.body))
+    assert.equal(await used(), 1)
+    // The template is withdrawn before the worker runs: the bound brief is reused as it is, so no labelling or logo
+    // research ran for this action, and the failure is one that gives the build back.
+    state.cards = CARDS.filter((c) => c.id !== 'ja-restaurant')
+    await pool.query('update wo_demo_action set next_at = null')
+    await app.demoRunner.tick()
+    await app.demoRunner.drain()
+    const action = (
+      await pool.query(
+        "select status, error, revision_id, work_started_at, usage_refunded_at from wo_demo_action where request_id = 'brief-refund-0001'"
+      )
+    ).rows[0]
+    assert.equal(action.status, 'failed')
+    assert.equal(action.error, 'TEMPLATE_UNAVAILABLE')
+    assert.equal(action.revision_id, rev.id, 'the bound brief is the one the action held')
+    assert.equal(action.work_started_at, null, 'no paid call ran for a bound brief')
+    assert.notEqual(action.usage_refunded_at, null)
+    assert.equal(await used(), 0)
+  }
+)
+
 test('build: a template withdrawn after acceptance is refused before anything is created', opts, async () => {
   const { app, pool, call, state, forwarded } = await world()
   const opp = await opportunity(call)

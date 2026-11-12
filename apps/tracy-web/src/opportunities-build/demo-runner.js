@@ -9,6 +9,7 @@ import { startDemoClock } from './demo-retention.js'
 import { createDurableQueue } from 'website-opportunities/src/durable-queue.js'
 import { handOffToAgent } from './handoff-service.js'
 import { revisionForAction } from './revisions.js'
+import { markActionWorkStarted } from './logo-research.js'
 import { createPictureLabelRuns } from './picture-label-runs.js'
 import { briefOf, CURRENT_BRIEF } from '../lib/site-brief-row.js'
 import { chainQaPassed } from '../lib/chain-bench-verdict.js'
@@ -16,6 +17,7 @@ import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
 import { chainRunOpen, chainStepOf } from '../lib/wo-chain-builds.js'
 import { withHandoffLock } from './handoff.js'
 import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
+import { refundUnbilledDemoUsage, UNBILLED_FAILURES } from './demo-actions.js'
 
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
@@ -182,8 +184,8 @@ export function createDemoRunner(deps) {
       }
       // The build whose site is made, and its step chain measurement: kept once the action completes (`onBuilt`).
       let builtSite = null
-      const finish = (state, error = null, readiness = null) => {
-        const out = lease.finish({
+      const finish = async (state, error = null, readiness = null) => {
+        const out = await lease.finish({
           status: state,
           error,
           step,
@@ -200,6 +202,12 @@ export function createDemoRunner(deps) {
               log.warn?.(`[wo-demo] after-build step failed: ${e?.code ?? e?.message ?? 'error'}`)
             )
         }
+        // Refused before any billable work: its daily build is given back now. The next usage read or press gives it
+        // back if this process stops first (`refundUnbilledDemoUsage` is idempotent).
+        if (state === 'failed' && UNBILLED_FAILURES.includes(error))
+          await refundUnbilledDemoUsage(pool, action.account_id, now()).catch((failure) =>
+            log.error?.(`[wo-demo] usage refund failed: ${failure?.code ?? failure?.message ?? 'error'}`)
+          )
         return out
       }
       const wait = (retryAt = now() + POLL_MS) =>
@@ -244,6 +252,7 @@ export function createDemoRunner(deps) {
           },
           ops: (await runtime()).settings,
           now,
+          markWork: () => markActionWorkStarted(pool, action, now()),
           ...(pictureRuns && action.selection?.workflow === 'agent-demo/1'
             ? { pictureLabelRuns: pictureRuns }
             : {})
