@@ -24,7 +24,8 @@ export default {
         reason: 'trade.missing',
         params: { trade: mustHaves.trade, missing, unknown }
       }
-    if (unknown.length) return { points: null, reason: 'trade.unknown', params: { trade: mustHaves.trade, unknown } }
+    if (unknown.length)
+      return { points: null, reason: 'trade.unknown', params: { trade: mustHaves.trade, unknown } }
     return { points: 0, reason: 'trade.complete', params: { trade: mustHaves.trade } }
   }
 }

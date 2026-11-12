@@ -92,7 +92,15 @@ test('a one-page site that shows its menu or a booking line in its text is never
   assert.equal(a.offers.menu.state, 'present')
   assert.equal(a.offers.booking.state, 'present')
   const vi = oldSiteReadOf(
-    row('complete', { pages: [page(SITE, 'Ph\u1edf B\u00e0', 'Th\u1ef1c \u0111\u01a1n h\u00f4m nay. \u0110\u1eb7t b\u00e0n qua \u0111i\u1ec7n tho\u1ea1i.')] })
+    row('complete', {
+      pages: [
+        page(
+          SITE,
+          'Ph\u1edf B\u00e0',
+          'Th\u1ef1c \u0111\u01a1n h\u00f4m nay. \u0110\u1eb7t b\u00e0n qua \u0111i\u1ec7n tho\u1ea1i.'
+        )
+      ]
+    })
   )
   const b = assessMustHaves({ trade: 'food', website: SITE, read: vi })
   assert.equal(b.offers.menu.state, 'present', 'the Vietnamese word for menu')
@@ -101,7 +109,9 @@ test('a one-page site that shows its menu or a booking line in its text is never
 
 test('unknown is unknown: no read, a failed read, a partial read, an undetectable capability, forms', () => {
   const none = assessMustHaves({ trade: 'beauty', website: SITE, read: oldSiteReadOf(null) })
-  assert.deepEqual(none.mustHaves, [{ id: 'booking', anyOf: ['booking'], state: 'unknown', reason: 'no-read' }])
+  assert.deepEqual(none.mustHaves, [
+    { id: 'booking', anyOf: ['booking'], state: 'unknown', reason: 'no-read' }
+  ])
   const failed = assessMustHaves({ trade: 'food', website: SITE, read: oldSiteReadOf(row('failed')) })
   assert.ok(failed.mustHaves.every((m) => m.state === 'unknown' && m.reason === 'read-failed'))
   const partial = assessMustHaves({
@@ -214,7 +224,13 @@ test('an outreach line only for a capability known missing that the demo really 
 
 test('score: a missing must-have is a reason worth its share of 15; without an assessment nothing changes', () => {
   const candidate = { website: SITE, phone: '+84 1', reviews: 10, rating: 4.5 }
-  const siteCheck = { status: 'done', performance: 90, https: true, mobileFriendly: true, copyrightYear: 2026 }
+  const siteCheck = {
+    status: 'done',
+    performance: 90,
+    https: true,
+    mobileFriendly: true,
+    copyrightYear: 2026
+  }
   const before = scoreOpportunity({ candidate, siteCheck, now: NOW })
   assert.ok(!before.reasons.some(([key]) => key.startsWith('trade.')))
   const read = oldSiteReadOf(row('complete', { pages: [page(SITE, 'Pho Ba', 'Fresh noodles.')] }))
