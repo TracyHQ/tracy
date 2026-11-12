@@ -108,3 +108,40 @@ export function demoPointMean(slot) {
   const points = demoCharsOf(slot).bullets.filter((n) => n > 0)
   return points.length ? mean(points) : null
 }
+
+/**
+ * The window W03 holds a written text to (copy check, site-writer/copy-check/rules-slots.js), so the writer can be given the same
+ * numbers: `limit`, the smaller of the kit's and the plan's maxCharacters; `demo`, the demo length compared with for `written`
+ * items; `floor`, 80% of the demo (none for a short demo or a verified owner-post excerpt) and `ceiling`, the demo plus the
+ * rounding tolerance (none for a short demo), each never over the limit.
+ * @param {{ slot?: object | null, planLimit?: number | null, written?: number, excerpt?: boolean }} input
+ * @returns {{ limit: number | null, demo: number, floor: number, ceiling: number | null }}
+ */
+export function lengthWindow({ slot = null, planLimit = null, written = 1, excerpt = false }) {
+  const limits = [slot?.maxCharacters, planLimit].filter((n) => typeof n === 'number' && n > 0)
+  const limit = limits.length ? Math.min(...limits) : null
+  const demo = demoTotalFor(slot ?? {}, written)
+  const bounds = slot ? boundsOf(demo) : null
+  return {
+    limit,
+    demo,
+    floor: bounds && !excerpt ? Math.min(bounds.floor, limit ?? Infinity) : 0,
+    ceiling: bounds ? Math.min(bounds.ceiling, limit ?? Infinity) : null
+  }
+}
+
+/**
+ * The parts of a lead and points slot W03 also judges: the lead paragraph against the demo lead and the average point against
+ * the average demo point, each from 80% of it to it plus the rounding tolerance; null for a part the slot does not have.
+ * @param {object} slot the kit slot
+ * @returns {{ lead: { floor: number, ceiling: number } | null, point: { floor: number, ceiling: number } | null }}
+ */
+export function partWindows(slot) {
+  const shape = slotShape(slot)
+  if (!shape.points) return { lead: null, point: null }
+  const mean = demoPointMean(slot)
+  return {
+    lead: shape.lead ? boundsOf(shape.leadChars, 0) : null,
+    point: boundsOf(mean === null ? null : Math.round(mean), 0)
+  }
+}

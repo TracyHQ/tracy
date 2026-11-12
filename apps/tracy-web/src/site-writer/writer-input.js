@@ -8,7 +8,7 @@
 // - From the kit, a slim view of every block the plan uses (every block decision but "hide", on shared blocks and
 //   kept pages): its look text and, per text slot (its own and its `demoOwned` ones), id, role, type, maxCharacters, a preview of the sample (its first
 //   SAMPLE_PREVIEW characters), demoChars and shape (lib/site-copy/slot-shape.js: the demo's lengths, which the copy
-//   check judges against; 2026-11-04), paragraphs and bullets, and `inline`, a note naming the words the demo draws in the
+//   check judges against; 2026-11-04), `characters` (the window W03 holds the text to, below), paragraphs and bullets, and `inline`, a note naming the words the demo draws in the
 //   accent colour when it marks some with a span (lib/site-copy/inline-emphasis.js); per
 //   list, its row slots and the slots of demo rows the row slots do not name. Also the footer column headings
 //   (the kit's navigation group of each `site.footerMenu[].group`) and the two name slots the brand step hands over
@@ -20,7 +20,8 @@
 // No image: the writer reads the block look text instead.
 import { mainMenuOf } from '../lib/site-copy/main-menu.js'
 import { emphasisNoteOf } from '../lib/site-copy/inline-emphasis.js'
-import { demoCharsOf, slotShape } from '../lib/site-copy/slot-shape.js'
+import { indexInputs } from '../lib/site-copy/inputs-index.js'
+import { demoCharsOf, lengthWindow, partWindows, slotShape } from '../lib/site-copy/slot-shape.js'
 import { planLabelSlots } from './plan-labels.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
@@ -106,7 +107,48 @@ const demoCharsFor = (s) => {
   return { total, lead, bullets }
 }
 
-const slimSlot = (s) => ({
+// The length window the copy check's W03 holds each text slot to, given with the slot so the writer need not work it out
+// (Central Padel 12/11/2026: 6 of round 0's 9 W03 failures were texts under the 80% floor, one over the demo ceiling and one
+// over the limit). The numbers come from the same kit slot and plan limit the check reads (lib/site-copy/inputs-index.js) and
+// the same arithmetic (lib/site-copy/slot-shape.js lengthWindow, partWindows), for as many items as the demo shows: `min` is
+// the floor (none for a short demo or an article lead, whose owner-post excerpt has no floor), `max` the demo plus the
+// rounding tolerance or the limit, whichever is smaller; a lead and points slot adds `lead` and `point` (its average point).
+export const LENGTH_WINDOW_NOTE =
+  'Each text slot\'s "characters" is how long the copy check holds the written text, counted the way it counts (the items of a text joined by one space): at least min and at most max characters. max is the most the check accepts: the demo length plus 3 characters of rounding, never over the smaller of the kit\'s and the plan\'s maxCharacters; a slot without min has no floor (a demo of 40 characters or less, or an owner post excerpt). For a lead and points slot, min and max hold the whole text with as many points as the demo shows, and lead and point hold its lead paragraph and its average point the same way.'
+
+const windowRange = (w, floorless) => {
+  const out = {}
+  if (!floorless && w.floor > 0) out.min = w.floor
+  if (w.ceiling !== null && w.ceiling !== undefined) out.max = w.ceiling
+  return out
+}
+
+/** The `characters` window of each text slot by id, or null when the check holds the slot to no length. */
+function lengthWindows({ plan, kit, brief, contentMap }) {
+  const idx = indexInputs({ plan, kit, brief, contentMap: contentMap ?? undefined })
+  return (s) => {
+    const slot = idx.kitSlots.get(s.id) ?? s
+    const floorless = slot.role === 'article.lead'
+    const shape = slotShape(slot)
+    const written = shape.points ? (shape.lead ? 1 : 0) + shape.points : 1
+    const whole = lengthWindow({
+      slot,
+      planLimit: idx.expected.get(s.id)?.maxCharacters ?? null,
+      written,
+      excerpt: floorless
+    })
+    const out = windowRange({ floor: whole.floor, ceiling: whole.ceiling ?? whole.limit }, floorless)
+    const parts = partWindows(slot)
+    if (parts.lead) out.lead = windowRange(parts.lead, floorless)
+    if (parts.point) out.point = windowRange(parts.point, floorless)
+    // A window that only repeats the slot's own maxCharacters (a short demo the plan does not narrow) adds nothing.
+    const keys = Object.keys(out)
+    if (!keys.length || (keys.length === 1 && out.max === s.maxCharacters)) return null
+    return out
+  }
+}
+
+const slimSlot = (s, windowOf) => ({
   id: s.id,
   role: s.role ?? null,
   type: s.type ?? null,
@@ -114,6 +156,7 @@ const slimSlot = (s) => ({
   sample: preview(s.sample),
   demoChars: demoCharsFor(s),
   shape: slotShape(s),
+  ...(windowOf?.(s) ? { characters: windowOf(s) } : {}),
   paragraphs: s.paragraphs ?? 0,
   bullets: s.bullets ?? 0,
   ...(s.role === 'article.lead'
@@ -132,27 +175,30 @@ const ownAndDemoOwned = (b) => {
   const named = new Set(own.map((s) => s?.id))
   return [...own, ...arr(b.demoOwned).filter((s) => !named.has(s?.id))]
 }
-const textSlots = (slots) =>
+const textSlots = (slots, windowOf) =>
   arr(slots)
     .filter((s) => isObject(s) && s.type === 'text')
-    .map(slimSlot)
+    .map((s) => slimSlot(s, windowOf))
 
-function slimBlock(b) {
+function slimBlock(b, windowOf) {
   const look = typeof b.look === 'string' ? b.look : typeof b.look?.text === 'string' ? b.look.text : null
   return {
     id: b.id,
     role: b.role ?? null,
     ...(b.shared ? { shared: true } : {}),
     look,
-    slots: textSlots(ownAndDemoOwned(b)),
+    slots: textSlots(ownAndDemoOwned(b), windowOf),
     lists: arr(b.lists)
       .filter(isObject)
       .map((l) => {
-        const rowSlots = textSlots(l.rowSlots)
+        const rowSlots = textSlots(l.rowSlots, windowOf)
         const named = new Set(rowSlots.map((s) => s.id))
         const rows = arr(l.rows)
           .filter(isObject)
-          .map((r) => ({ index: r.index ?? null, slots: textSlots(r.slots).filter((s) => !named.has(s.id)) }))
+          .map((r) => ({
+            index: r.index ?? null,
+            slots: textSlots(r.slots, windowOf).filter((s) => !named.has(s.id))
+          }))
           .filter((r) => r.slots.length)
         return { id: l.id, rowSlots, ...(rows.length ? { rows } : {}) }
       }),
@@ -223,6 +269,7 @@ export function writerInput({ plan, brief, kit, contentMap = null }) {
       .filter(isObject)
       .map((b) => [b.id, b])
   )
+  const windowOf = lengthWindows({ plan, kit, brief, contentMap })
   return {
     plan,
     facts,
@@ -233,7 +280,7 @@ export function writerInput({ plan, brief, kit, contentMap = null }) {
     ),
     blocks: usedBlockIds(plan)
       .filter((id) => blocks.has(id))
-      .map((id) => slimBlock(blocks.get(id))),
+      .map((id) => slimBlock(blocks.get(id), windowOf)),
     footerHeadings: footerHeadings(plan, kit),
     nameSlots: nameSlots(kit),
     labels: planLabelSlots({ plan, kit, contentMap }),

@@ -6,10 +6,10 @@
 // the total, the lead paragraph against the demo lead, and the average point against the average demo point. A short heading
 // (demo of 40 characters or less) keeps only its limit.
 import {
-  boundsOf,
   DEMO_FLOOR_RATIO,
   demoPointMean,
-  demoTotalFor,
+  lengthWindow,
+  partWindows,
   SHORT_DEMO_MAX,
   slotShape
 } from '../../lib/site-copy/slot-shape.js'
@@ -95,8 +95,9 @@ function partFaults(kit, items, excerpt = false) {
   if (!shape.points || items.length < 2) return []
   const out = []
   const points = shape.lead ? items.slice(1) : items
+  const windows = partWindows(kit)
   if (shape.lead) {
-    const lead = boundsOf(shape.leadChars, 0)
+    const lead = windows.lead
     const n = items[0].trim().length
     if (!excerpt && lead && n < lead.floor)
       out.push({
@@ -110,7 +111,7 @@ function partFaults(kit, items, excerpt = false) {
       })
   }
   const demoMean = demoPointMean(kit)
-  const part = boundsOf(demoMean === null ? null : Math.round(demoMean), 0)
+  const part = windows.point
   if (part && points.length) {
     const mean = Math.round(points.reduce((a, t) => a + t.trim().length, 0) / points.length)
     const demo = Math.round(demoMean)
@@ -138,14 +139,16 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
     const kit = idx.kitSlots.get(s.slot)
     const exp = idx.expected.get(s.slot)
     if (!kit && !exp) continue
-    const limits = [kit?.maxCharacters, exp?.maxCharacters].filter((n) => typeof n === 'number' && n > 0)
-    const limit = limits.length ? Math.min(...limits) : null
     const chars = lengthOf(s.items)
-    const demo = demoTotalFor(kit ?? {}, s.items.length)
-    const bounds = kit ? boundsOf(demo) : null
     const excerpt = ownerPostExcerptFor(s, idx, brief)?.valid === true
-    const floor = bounds && !excerpt ? Math.min(bounds.floor, limit ?? Infinity) : 0
-    const ceiling = bounds ? Math.min(bounds.ceiling, limit ?? Infinity) : null
+    // The same window the writer is given for the slot (writer-input.js), for as many items as were written.
+    const { limit, demo, floor, ceiling } = lengthWindow({
+      slot: kit ?? null,
+      planLimit: exp?.maxCharacters ?? null,
+      written: s.items.length,
+      excerpt
+    })
+    const longDemo = ceiling !== null
     // A lead and points slot holds its lead paragraph and every point; otherwise the larger of the two counts.
     const shape = kit ? slotShape(kit) : null
     const allowed = shape?.lead
@@ -184,7 +187,7 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
         `${chars} characters, ceiling ${ceiling} (the ${demo} character demo text is the top)`,
         'over-demo'
       )
-    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
+    if (chars > 0 && kit && longDemo) for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
     if (s.items.length > allowed)
       fail(`${s.items.length} paragraphs, the kit allows ${allowed}`, 'paragraphs')
     if (!bad) R.w03.ok()
