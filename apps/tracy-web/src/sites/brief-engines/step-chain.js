@@ -60,7 +60,10 @@ export function chainRepairLimits(elapsedMs) {
   const left = Math.max(0, STEP_CHAIN_DEADLINE_MS - elapsedMs)
   if (left === 0) return { stopNewWorkMs: 0, returnByMs: STEP_CHAIN_HANDOVER_MS }
   const stopNewWorkMs = Math.min(left, REPAIR_WINDOWS.stopNewWorkMs)
-  return { stopNewWorkMs, returnByMs: stopNewWorkMs + (REPAIR_WINDOWS.returnByMs - REPAIR_WINDOWS.stopNewWorkMs) }
+  return {
+    stopNewWorkMs,
+    returnByMs: stopNewWorkMs + (REPAIR_WINDOWS.returnByMs - REPAIR_WINDOWS.stopNewWorkMs)
+  }
 }
 
 /**

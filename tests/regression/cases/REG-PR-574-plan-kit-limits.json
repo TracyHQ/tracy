@@ -4,9 +4,7 @@
   "title": "The planner's answer gets each missing maxCharacters from the kit before the plan check, so R06 sends no fix round for it",
   "pr": 574,
   "area": "website-opportunities/site-planner",
-  "cms": [
-    "jo"
-  ],
+  "cms": ["jo"],
   "needs": [],
   "flaky_model": false,
   "steps": [
@@ -19,12 +17,7 @@
   ],
   "selectors": {},
   "run": {
-    "cmd": [
-      "node",
-      "--test",
-      "--test-reporter=tap",
-      "apps/tracy-web/test/site-planner-kit-limits.test.mjs"
-    ],
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/site-planner-kit-limits.test.mjs"],
     "needs": [],
     "tests": [
       "a copy entry without maxCharacters gets the kit limit R06 reads, and the plan passes every rule",

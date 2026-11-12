@@ -353,7 +353,9 @@ export function createDemoRunner(deps) {
             deps.resumeFill &&
             (await deps.resumeFill(build, account.email, action.id, null))
           ) {
-            log.warn?.(`[wo-demo] ${build.site_key}: the chain was lost on a restart before the write; started again`)
+            log.warn?.(
+              `[wo-demo] ${build.site_key}: the chain was lost on a restart before the write; started again`
+            )
             return wait()
           }
           const measured = chainRun?.timings?.chain

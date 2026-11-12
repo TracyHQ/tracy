@@ -179,7 +179,13 @@ test('a link whose label slot the decision hides is hidden with it', () => {
 test('a written label, a label other blocks print and a link the plan decided stay with the planner', () => {
   {
     const { kit, value, decision } = contactWithHiddenLabel()
-    decision.copy.push({ slot: mapLabel, says: 'map button', text: 'Open map', basis: 'trade', maxCharacters: 26 })
+    decision.copy.push({
+      slot: mapLabel,
+      says: 'map button',
+      text: 'Open map',
+      basis: 'trade',
+      maxCharacters: 26
+    })
     assert.strictEqual(normalize(value, kit), value)
   }
   {
@@ -192,7 +198,9 @@ test('a written label, a label other blocks print and a link the plan decided st
     call.hiddenSlots = [{ slot: 'block-176.1', why: 'no phone' }]
     const result = normalize(value, kit)
     assert.ok(
-      !result.sharedBlocks.find((block) => block.block === 'block-176').hiddenSlots.some((h) => h.slot === 'block-176.link-1')
+      !result.sharedBlocks
+        .find((block) => block.block === 'block-176')
+        .hiddenSlots.some((h) => h.slot === 'block-176.link-1')
     )
     assert.ok(r10bWhere(result, kit).some((where) => where.endsWith('link block-176.link-1')))
   }

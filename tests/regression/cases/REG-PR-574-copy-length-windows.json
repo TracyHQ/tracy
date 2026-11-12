@@ -4,9 +4,7 @@
   "title": "The writer input gives each text slot the length window W03 applies",
   "pr": 574,
   "area": "website-opportunities/site-writer",
-  "cms": [
-    "any"
-  ],
+  "cms": ["any"],
   "needs": [],
   "flaky_model": false,
   "steps": [

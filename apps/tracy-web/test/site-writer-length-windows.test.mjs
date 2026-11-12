@@ -18,7 +18,10 @@ const chars = (n) =>
 /** The kit with block-2.2 changed: `changes` are merged into the slot. */
 function kitWith(changes) {
   const k = kit()
-  Object.assign(k.blocks.find((b) => b.id === 'block-2').slots.find((s) => s.id === 'block-2.2'), changes)
+  Object.assign(
+    k.blocks.find((b) => b.id === 'block-2').slots.find((s) => s.id === 'block-2.2'),
+    changes
+  )
   return k
 }
 const windowOf = (k, p, id = 'block-2.2') =>
@@ -88,5 +91,7 @@ test('a short demo the plan does not narrow gets no window; an article lead gets
 
 test('the fixed part says how to read the windows', () => {
   const text = fixedPart(writerInput({ plan: plan(), brief: brief(), kit: kit() }))
-  assert.ok(text.includes(`## The kit: how long each text slot is written\n\n${JSON.stringify(LENGTH_WINDOW_NOTE)}\n`))
+  assert.ok(
+    text.includes(`## The kit: how long each text slot is written\n\n${JSON.stringify(LENGTH_WINDOW_NOTE)}\n`)
+  )
 })

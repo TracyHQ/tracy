@@ -48,7 +48,11 @@ export function chainStepOf(chain) {
 
 /** An error code as the steps write them (`CHAIN_BENCH_CHECK_FAILED`, `STEP_NINE_CHECK_FAILED`); anything else is `unknown`. */
 const codeOf = (value) =>
-  value == null || value === '' ? null : /^[A-Z][A-Z0-9_]{2,63}$/.test(String(value)) ? String(value) : 'unknown'
+  value == null || value === ''
+    ? null
+    : /^[A-Z][A-Z0-9_]{2,63}$/.test(String(value))
+      ? String(value)
+      : 'unknown'
 
 /**
  * Where a finished chain run went wrong, in bounded fields only: the first step that failed (`timings.chain.failedStep`),

@@ -306,12 +306,19 @@ test('a failed chain names the step and the check that stopped it, in bounded co
     failedStep: 'copy',
     steps: [
       done('kit', 0.05, 0),
-      { step: 'copy', outcome: 'failed, best version used', code: 'CHAIN_BENCH_CHECK_FAILED', error: 'W03 | block-171.10' },
+      {
+        step: 'copy',
+        outcome: 'failed, best version used',
+        code: 'CHAIN_BENCH_CHECK_FAILED',
+        error: 'W03 | block-171.10'
+      },
       {
         step: 'write',
         outcome: 'failed',
         error: 'The write completed, but the final site check or repair verification did not pass.',
-        diagnostics: { write: { status: 'stopped', causeCode: 'STEP_NINE_CHECK_FAILED', writeStatus: 'done' } }
+        diagnostics: {
+          write: { status: 'stopped', causeCode: 'STEP_NINE_CHECK_FAILED', writeStatus: 'done' }
+        }
       }
     ]
   }
@@ -321,7 +328,11 @@ test('a failed chain names the step and the check that stopped it, in bounded co
   w.host.job = 'done'
   await w.chain('applied', measurement)
   await w.tick()
-  assert.equal((await w.action()).error, 'QA_NEEDS_REVIEW', 'the action keeps the code the screens already read')
+  assert.equal(
+    (await w.action()).error,
+    'QA_NEEDS_REVIEW',
+    'the action keeps the code the screens already read'
+  )
   const { qa } = (await w.pool.query('select qa from wo_build')).rows[0]
   assert.equal(qa.reason, 'QA_NEEDS_REVIEW')
   assert.deepEqual(

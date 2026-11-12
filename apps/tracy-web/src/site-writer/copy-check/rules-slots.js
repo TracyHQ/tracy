@@ -187,7 +187,8 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
         `${chars} characters, ceiling ${ceiling} (the ${demo} character demo text is the top)`,
         'over-demo'
       )
-    if (chars > 0 && kit && longDemo) for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
+    if (chars > 0 && kit && longDemo)
+      for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
     if (s.items.length > allowed)
       fail(`${s.items.length} paragraphs, the kit allows ${allowed}`, 'paragraphs')
     if (!bad) R.w03.ok()

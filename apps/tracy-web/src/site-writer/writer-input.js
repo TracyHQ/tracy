@@ -114,7 +114,7 @@ const demoCharsFor = (s) => {
 // the floor (none for a short demo or an article lead, whose owner-post excerpt has no floor), `max` the demo plus the
 // rounding tolerance or the limit, whichever is smaller; a lead and points slot adds `lead` and `point` (its average point).
 export const LENGTH_WINDOW_NOTE =
-  'Each text slot\'s "characters" is how long the copy check holds the written text, counted the way it counts (the items of a text joined by one space): at least min and at most max characters. max is the most the check accepts: the demo length plus 3 characters of rounding, never over the smaller of the kit\'s and the plan\'s maxCharacters; a slot without min has no floor (a demo of 40 characters or less, or an owner post excerpt). For a lead and points slot, min and max hold the whole text with as many points as the demo shows, and lead and point hold its lead paragraph and its average point the same way.'
+  "Each text slot's \"characters\" is how long the copy check holds the written text, counted the way it counts (the items of a text joined by one space): at least min and at most max characters. max is the most the check accepts: the demo length plus 3 characters of rounding, never over the smaller of the kit's and the plan's maxCharacters; a slot without min has no floor (a demo of 40 characters or less, or an owner post excerpt). For a lead and points slot, min and max hold the whole text with as many points as the demo shows, and lead and point hold its lead paragraph and its average point the same way."
 
 const windowRange = (w, floorless) => {
   const out = {}

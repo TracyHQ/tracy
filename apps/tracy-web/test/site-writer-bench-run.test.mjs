@@ -213,7 +213,10 @@ test(
         ]
       }
     ])
-    assert.match(part('The kit: how long each text slot is written'), /at least min and at most max characters/)
+    assert.match(
+      part('The kit: how long each text slot is written'),
+      /at least min and at most max characters/
+    )
     assert.deepEqual(part('The kit: footer column headings'), [
       { group: 'group-footer-a', titleSlot: 'block-6.1', heading: 'Useful links' },
       { group: 'group-footer-b', titleSlot: 'block-6.2', heading: 'Find out more' }

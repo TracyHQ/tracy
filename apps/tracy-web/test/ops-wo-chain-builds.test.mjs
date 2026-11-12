@@ -357,7 +357,11 @@ test('nobody signed in is sent to sign in, and gets no table data', async () => 
 })
 
 test('a failed chain is named by its first failed step and code; free text and odd values never pass', () => {
-  const write = (causeCode, outcome = 'failed') => ({ step: 'write', outcome, diagnostics: { write: { causeCode } } })
+  const write = (causeCode, outcome = 'failed') => ({
+    step: 'write',
+    outcome,
+    diagnostics: { write: { causeCode } }
+  })
   const copy = { step: 'copy', outcome: 'failed, best version used', code: 'CHAIN_BENCH_CHECK_FAILED' }
   const central = chainFailureOf({ failedStep: 'copy', steps: [copy, write('STEP_NINE_CHECK_FAILED')] })
   assert.deepEqual(central, {

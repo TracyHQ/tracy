@@ -4,9 +4,7 @@
   "title": "A link whose label slot the plan hides is hidden with it before the plan check, so R10b sends no fix round for it",
   "pr": 574,
   "area": "website-opportunities/site-planner",
-  "cms": [
-    "jo"
-  ],
+  "cms": ["jo"],
   "needs": [],
   "flaky_model": false,
   "steps": [
