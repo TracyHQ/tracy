@@ -3020,7 +3020,11 @@ test(
     const w = await world({ historical: false, agentWorkflow: true, readiness: 'measured' })
     const actionId = (await w.accept()).body.actions[0].id
     await freezeResearch(w, actionId, { reading: null })
-    w.deps.pictureLabels = async () => labelAll()
+    // Labelling good photos is a paid vision call: the labeller marks the action first (#564), so it stays charged.
+    w.deps.pictureLabels = async (input) => {
+      await input.beforePaidCall?.()
+      return labelAll()
+    }
     w.deps.clientDemo = createClientDemoService(w.deps)
     const usage = async () =>
       (
@@ -3576,9 +3580,14 @@ test(
     // The fictional restaurant of these worlds has no photo at all: measured, its brief blocks.
     const w = await world({ readiness: 'measured' })
     await w.accept()
+    const charged = 'select used from wo_demo_usage where account_id=$1'
+    assert.equal((await w.pool.query(charged, [w.account])).rows[0].used, 1, 'the press reserves its build')
     await w.runner().drain()
     const action = (await w.pool.query('select status, error, selection from wo_demo_action')).rows[0]
     assert.deepEqual([action.status, action.error], ['failed', 'BRIEF_NOT_READY'])
+    // #564: refused before any billable work, the build is given back as the action fails (raw row: no read sweep).
+    assert.equal((await w.pool.query(charged, [w.account])).rows[0].used, 0)
+    assert.equal((await readDemoUsage(w.pool, w.account, 20, w.deps.now())).used, 0)
     assert.ok(action.selection.readiness.checks.includes('own-usable-photos'))
     assert.equal(action.selection.readiness.next, 'research-again')
     assert.equal(w.creates(), 0, 'the create door was never asked')
@@ -3613,6 +3622,11 @@ test(
       await w.pool.query('select status,error,step from wo_demo_action where id=$1', [actionId])
     ).rows[0]
     assert.deepEqual(action, { status: 'failed', error: 'BRIEF_NOT_READY', step: 'brief' })
+    assert.equal(
+      (await w.pool.query('select used from wo_demo_usage where account_id=$1', [w.account])).rows[0].used,
+      0,
+      'a client-send press refused before its site gives its build back (#564)'
+    )
     const metadata = (await w.pool.query('select selection from wo_demo_action')).rows[0].selection.readiness
     assert.ok(metadata.checks.includes('own-usable-photos'))
     assert.deepEqual((await w.pool.query('select * from wo_revision')).rows, frozen)
@@ -3640,10 +3654,13 @@ test(
       [actionId]
     )
     let settle
-    w.deps.pictureLabels = () =>
-      new Promise((resolve) => {
+    // A vision call in flight: marked as paid work before it is sent, then it hangs.
+    w.deps.pictureLabels = async (input) => {
+      await input.beforePaidCall?.()
+      return new Promise((resolve) => {
         settle = resolve
       })
+    }
     w.deps.clientDemo = createClientDemoService(w.deps)
     await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
       code: PICTURE_LABELS_PENDING
@@ -3660,6 +3677,12 @@ test(
       (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
       { status: 'failed', error: 'DEMO_PICTURE_LABELS_TIMEOUT' }
     )
+    // #564: the labelling run this action started may have made paid vision calls, so its build stays counted.
+    assert.ok(
+      (await w.pool.query('select work_started_at from wo_demo_action where id=$1', [actionId])).rows[0]
+        .work_started_at
+    )
+    assert.equal((await readDemoUsage(w.pool, w.account, 20, w.deps.now())).used, 1)
     settle({ labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0 } })
     await w.deps.clientDemo.pictureRuns.idle()
     await w.advance()
@@ -3685,6 +3708,46 @@ test(
     assert.equal(w.messages.size, 0)
   }
 )
+
+// #564: the labelling run this action starts marks it only when it sends a picture to a paid model call.
+for (const [name, sends, used] of [
+  ['with no photograph to label gives its daily build back', false, 0],
+  ['after its own labelling run sent pictures keeps its daily build', true, 1]
+])
+  test(`a blocked brief ${name} (#564)`, opts, async () => {
+    const w = await world({
+      historical: false,
+      agentWorkflow: true,
+      chatMode: 'client-send/1',
+      readiness: 'measured'
+    })
+    const actionId = (await w.accept()).body.actions[0].id
+    await w.pool.query(
+      `update wo_demo_action set selection=selection || '{"ownSite":true}'::jsonb where id=$1`,
+      [actionId]
+    )
+    let labelled = 0
+    // The labeller calls `beforePaidCall` right before its paid vision call, as `brief-picture-labels.js` does.
+    w.deps.pictureLabels = async (input) => {
+      labelled++
+      if (sends) await input.beforePaidCall()
+      return { labels: new Map(), note: { status: 'none', asked: sends ? 1 : 0, labelled: 0, cached: 0 } }
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), {
+      code: PICTURE_LABELS_PENDING
+    })
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await w.runner().drain()
+    assert.equal(labelled, 1)
+    assert.deepEqual(
+      (await w.pool.query('select status,error from wo_demo_action where id=$1', [actionId])).rows[0],
+      { status: 'failed', error: 'BRIEF_NOT_READY' }
+    )
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.equal((await readDemoUsage(w.pool, w.account, 20, w.deps.now())).used, used)
+  })
 
 test('a client-send preparation outage retains the runner bounded retry policy', opts, async () => {
   const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })

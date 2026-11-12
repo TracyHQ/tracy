@@ -18,8 +18,63 @@ export function demoUsageAt(used, limit, at = Date.now()) {
   return { used, limit, resetsAt: new Date(Math.floor(at / DAY_MS) * DAY_MS + DAY_MS).toISOString() }
 }
 
+/**
+ * 🔒 A BUILD REFUSED BEFORE ITS WORK GIVES ITS DAILY BUILD BACK (#564): the slot is reserved at accept, before the
+ * brief is made, so a press whose brief is not ready used a build that never ran. Given back only when no paid work
+ * ran for the action: one of these failures, no build row for its request (the row is written before a site is asked
+ * for, so no site, chat or build model), and no paid call of its own while its brief was made (`work_started_at`:
+ * set right before a labelling run it started sends a paid call, or when a logo research run is queued for it). quality-v1 makes its editorial plan with a model, so it is never
+ * refunded. Every code here is raised in `demo-runner.js`, `revisions.js` or `builds.js` before `insertBuild`.
+ * `DEMO_PICTURE_LABELS_TIMEOUT` is not here: its labelling run may have made paid vision calls.
+ */
+export const UNBILLED_FAILURES = Object.freeze([
+  'BRIEF_NOT_READY',
+  'BRIEF_INVALID',
+  'TEMPLATES_UNREADABLE',
+  'TEMPLATE_UNAVAILABLE',
+  'TEMPLATE_VERSION_CHANGED',
+  'TEMPLATE_PIN_UNAVAILABLE',
+  'INVALID_TEMPLATE',
+  'DEMO_WORKFLOW_CHANGED',
+  'DEMO_SELECTION_CHANGED',
+  'DEMO_CHAT_UNAVAILABLE',
+  'BUILD_EXISTS'
+])
+
+// One statement: the marker and the decrement commit together, so a refund happens once (`usage_refunded_at`), on
+// the day and kind the action was charged on, never below zero.
+const REFUND_UNBILLED = `with refunded as (
+    update wo_demo_action a set usage_refunded_at = $2
+    where a.account_id = $1 and a.status = 'failed' and a.usage_day is not null and a.usage_refunded_at is null
+      and a.protocol = 'legacy' and a.error = any($3::text[]) and a.work_started_at is null
+      and not exists (select 1 from wo_build b where b.account_id = a.account_id and b.request_id = a.build_request_id)
+    returning a.usage_day, a.usage_kind
+  ), counted as (select usage_day, usage_kind, count(*)::int as n from refunded group by usage_day, usage_kind)
+  update wo_demo_usage u set used = greatest(0, u.used - c.n) from counted c
+  where u.account_id = $1 and u.day = c.usage_day and u.kind = c.usage_kind`
+
+/**
+ * Give back the daily builds of this account's actions that failed before any billable work (`UNBILLED_FAILURES`).
+ * Idempotent; holds the account's acceptance lock, so it never races a press counting the same row.
+ */
+export async function refundUnbilledDemoUsage(pool, accountId, at = Date.now()) {
+  const client = await pool.connect()
+  try {
+    await client.query('begin')
+    await client.query('select pg_advisory_xact_lock(hashtextextended($1, 0))', [`wo-demo:${accountId}`])
+    await client.query(REFUND_UNBILLED, [accountId, new Date(at), UNBILLED_FAILURES])
+    await client.query('commit')
+  } catch (error) {
+    await client.query('rollback').catch(() => {})
+    throw error
+  } finally {
+    client.release()
+  }
+}
+
 /** `kind`: `demo` (Website Opportunities) or `own-site` (Build from my business), each its own daily count. */
 export async function readDemoUsage(pool, accountId, limit, at = Date.now(), kind = 'demo') {
+  await refundUnbilledDemoUsage(pool, accountId, at)
   const { rows } = await pool.query(
     'select used from wo_demo_usage where account_id = $1 and day = $2::date and kind = $3',
     [accountId, new Date(at).toISOString().slice(0, 10), kind]
@@ -417,6 +472,8 @@ export async function acceptDemoActions(
       }
       fresh.push({ ...e, selection, fingerprint, retry, retryBuild, chainRetry })
     }
+    // A refund not yet given (its runner stopped between the failure and the refund) is given before counting.
+    await client.query(REFUND_UNBILLED, [accountId, new Date(at), UNBILLED_FAILURES])
     await client.query(
       'insert into wo_demo_usage (account_id, day, kind) values ($1, $2::date, $3) on conflict do nothing',
       [accountId, day, usageKind]
@@ -487,8 +544,9 @@ export async function acceptDemoActions(
       }
       const { rows } = await client.query(
         `insert into wo_demo_action (id, account_id, opportunity_id, request_id, fingerprint, accepted_at,
-           revision_id, build_request_id, session_id, automatic, label, queued_at, step, retry_of,protocol,status,selection)
-         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$6,$12,$13,$14,$15,$16::jsonb) returning *`,
+           revision_id, build_request_id, session_id, automatic, label, queued_at, step, retry_of,protocol,status,selection,
+           usage_day, usage_kind)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$6,$12,$13,$14,$15,$16::jsonb,$17::date,$18) returning *`,
         [
           id,
           accountId,
@@ -505,7 +563,9 @@ export async function acceptDemoActions(
           e.retry?.id ?? null,
           e.retry?.protocol ?? protocol,
           (e.retry?.protocol ?? protocol) === 'quality-v1' ? 'quality-queued-v1' : 'queued',
-          JSON.stringify(retrySelection ?? e.selection ?? null)
+          JSON.stringify(retrySelection ?? e.selection ?? null),
+          day,
+          usageKind
         ]
       )
       actions.push(rows[0])
