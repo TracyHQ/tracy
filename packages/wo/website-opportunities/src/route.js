@@ -34,6 +34,7 @@ import { apifySearchDaySpent, newPlacesDaySpent, refundApifySearch } from './api
 import { requireHost } from './host.js'
 import { decorateFindCandidates } from './find-ranking.js'
 import { withOutreach } from './outreach.js'
+import { pagespeedPair } from './pagespeed.js'
 import { creditOf, fetchPlacePhotoName, isPhotoName, isPlaceId, placeIdOfPhotoName } from './place-photo.js'
 import {
   AgainLimitError,
@@ -1498,6 +1499,8 @@ export function websiteOpportunitiesRoutes(deps) {
       opportunity: { ...opportunityShape(opp), sameAs },
       research,
       demo: demo.demo,
+      // The current site's mobile PageSpeed (`profile.pageSpeed`) beside the demo's own (`demo.pagespeed`), as scores.
+      pagespeed: pagespeedPair(profile?.profile?.pageSpeed ?? null, demo.demo?.pagespeed ?? null),
       place: view
         ? { id: opp.place_id, snapshotId: view.snapshot.id, publishedAt: view.snapshot.published_at }
         : null,

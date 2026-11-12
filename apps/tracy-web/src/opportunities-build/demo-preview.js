@@ -8,12 +8,14 @@
  * - a small picture of the demo's home page (`wo_build_preview`): the host's own screenshotter (`POST /_host/capture`,
  *   the browser lives in tracy-host, not in this container) shoots the home page at 1440 by 900; the first screen is
  *   cut out of the full page shot and scaled to a 640 by 400 WebP under 80 KB.
+ * - the demo's own mobile PageSpeed (`built.pagespeed`, `demo-pagespeed.js`), measured while the picture is shot.
  *
- * 🔒 NEVER FAILS A BUILD. Both are written after the action has completed and outside its lease: a capture that times
+ * 🔒 NEVER FAILS A BUILD. All are written after the action has completed and outside its lease: a capture that times
  * out, a host without a browser or an image that cannot be read is logged and leaves the build without a picture,
- * which the client draws as the site's name on its brand colour.
+ * which the client draws as the site's name on its brand colour; a PageSpeed run that cannot score the demo keeps why.
  */
 import sharp from 'sharp'
+import { saveDemoPageSpeed } from './demo-pagespeed.js'
 
 /** The picture's size: twice the 160 by 100 box of the card, for sharp edges on a 2x screen. */
 export const PREVIEW_WIDTH = 640
@@ -108,22 +110,14 @@ export async function latestPreviewOf(pool, accountId, opportunityId) {
 
 /**
  * The hook the demo runner calls once a build's action completed (`demo-runner.js`). `capture(site)` asks the site's
- * host for its home page (`app.js`); null leaves the build without a picture. Never throws.
- * @param {{ pool: any, capture?: ((site: any) => Promise<{ ok: boolean, body?: any }>) | null, log?: any }} deps
+ * host for its home page (`app.js`); null leaves the build without a picture. `pageSpeed(site)` measures the demo's
+ * address (`demo-pagespeed.js` `createDemoPageSpeed`); null measures nothing. The two run side by side. Never throws.
+ * @param {{ pool: any, capture?: ((site: any) => Promise<{ ok: boolean, body?: any }>) | null,
+ *   pageSpeed?: ((site: any) => Promise<object>) | null, log?: any }} deps
  */
-export function createDemoBuilt({ pool, capture = null, log = console }) {
-  return async function demoBuilt({ build, chain = null, acceptedAt = null, at }) {
+export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = console }) {
+  const keepPreview = async (build, site, at) => {
     try {
-      await saveBuiltFacts(pool, build.id, builtFacts({ chain, acceptedAt, at }))
-    } catch (error) {
-      log.warn?.(
-        `[wo-demo] build facts not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`
-      )
-    }
-    if (!capture || !build.site_key) return
-    try {
-      const site = (await pool.query('select * from site where site_key = $1', [build.site_key])).rows[0]
-      if (!site) return
       const answer = await capture(site)
       const shots = Array.isArray(answer?.body?.shots) ? answer.body.shots : []
       const shot = shots.find((s) => s?.ok && s.width === DESKTOP_WIDTH && typeof s.png === 'string')
@@ -140,5 +134,40 @@ export function createDemoBuilt({ pool, capture = null, log = console }) {
         `[wo-demo] no preview of ${build.site_key}: ${error?.code ?? error?.message ?? 'error'}`.slice(0, 300)
       )
     }
+  }
+  const keepPageSpeed = async (build, site) => {
+    try {
+      const measured = await pageSpeed(site)
+      if (measured && typeof measured === 'object') await saveDemoPageSpeed(pool, build.id, measured)
+      if (measured?.reason)
+        log.info?.(`[wo-demo] no PageSpeed score for ${build.site_key ?? build.id}: ${measured.reason}`)
+    } catch (error) {
+      log.warn?.(
+        `[wo-demo] PageSpeed not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`.slice(0, 300)
+      )
+    }
+  }
+  return async function demoBuilt({ build, chain = null, acceptedAt = null, at }) {
+    try {
+      await saveBuiltFacts(pool, build.id, builtFacts({ chain, acceptedAt, at }))
+    } catch (error) {
+      log.warn?.(
+        `[wo-demo] build facts not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`
+      )
+    }
+    if (!capture && !pageSpeed) return
+    let site = null
+    try {
+      if (build.site_key)
+        site = (await pool.query('select * from site where site_key = $1', [build.site_key])).rows[0] ?? null
+    } catch (error) {
+      log.warn?.(`[wo-demo] site of ${build.site_key} unreadable: ${error?.code ?? error?.message ?? 'error'}`)
+      return
+    }
+    // A completed build without a site has no address: PageSpeed keeps `no_address` rather than nothing.
+    await Promise.all([
+      capture && site ? keepPreview(build, site, at) : null,
+      pageSpeed ? keepPageSpeed(build, site) : null
+    ])
   }
 }

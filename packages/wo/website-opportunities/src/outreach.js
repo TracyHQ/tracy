@@ -2,6 +2,7 @@
 import { whatsappLinkOf } from '../domain/business-phones.mjs'
 import { placeViewOf } from './place-view.js'
 import { messageLanguage } from './message-language.js'
+import { pagespeedPair, pagespeedProof } from './pagespeed.js'
 import { DEMO_TEMPLATES as TEMPLATES } from './plugins/outreach.js'
 import { requireHost } from './host.js'
 const fill = (text, values) => text.replace(/\{(place|url|expires)\}/g, (_, key) => values[key] ?? '')
@@ -148,7 +149,12 @@ export async function withOutreach(pool, accountId, rows, host) {
               expiresAt: row.demo.expiresAt,
               signature,
               language: language.language
-            })
+            }),
+            // Data, never part of the drafts: "Current site 34 → demo 92 on mobile" when both sites were measured and
+            // the demo scores higher (`pagespeed.js` `pagespeedProof`), else null.
+            pagespeedProof: pagespeedProof(
+              pagespeedPair(profileById.get(row.id)?.pageSpeed ?? null, row.demo.pagespeed ?? null)
+            )
           }
         ]
       })
