@@ -153,6 +153,7 @@
   "brief.cards.none": "Tracy chưa đọc đủ về doanh nghiệp này. Brief đầy đủ nằm ở bên dưới.",
   "brief.cards.title": "Tracy hiểu về {business} như thế nào",
   "brief.cards.titleNoName": "Tracy hiểu về doanh nghiệp này như thế nào",
+  "brief.check.business-content": "Không tìm thấy dịch vụ, món trong thực đơn hay sản phẩm nào của doanh nghiệp, cũng không có câu chuyện hay thông tin. Hãy nghiên cứu lại: chỉ có mô tả hoặc tiểu sử thì không đủ.",
   "brief.check.hero-candidates": "Thêm ảnh phù hợp cho ảnh chính.",
   "brief.check.items-routed": "Kiểm tra trang mà từng mục mở.",
   "brief.check.labelled-share": "Nghiên cứu lại nhãn ảnh.",

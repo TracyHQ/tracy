@@ -153,6 +153,7 @@
   "brief.cards.none": "Tracy n’a pas encore assez lu sur cette entreprise. Le brief complet est ci-dessous.",
   "brief.cards.title": "Comment Tracy comprend {business}",
   "brief.cards.titleNoName": "Comment Tracy comprend cette entreprise",
+  "brief.check.business-content": "Aucun service, article du menu ni produit de l’entreprise n’a été trouvé, ni son histoire ou ses informations. Relancez la recherche : une description ou une bio seule ne suffit pas.",
   "brief.check.hero-candidates": "Ajoutez une photo adaptée à l’image principale.",
   "brief.check.items-routed": "Vérifiez les pages ouvertes par les éléments.",
   "brief.check.labelled-share": "Relancez la recherche des étiquettes des photos.",
