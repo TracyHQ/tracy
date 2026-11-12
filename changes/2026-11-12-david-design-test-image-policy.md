@@ -1,2 +1,0 @@
-- **Design-system stand tests hash the fleet image policy they read** — agent · #570 · `fix/david-demo-content-residue` · 2026-11-12
-  **Affects:** the design-system test task in pull-request CI. A fleet image policy change invalidates its cached result. The previous package run passed its assertions but failed the input coverage audit because `packages/fleet/tracy-fleet-operation/web/IMAGE_TAGS` was missing from the task inputs.
