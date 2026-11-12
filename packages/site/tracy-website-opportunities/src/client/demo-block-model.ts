@@ -21,7 +21,7 @@ export type DemoControl = 'primary' | 'send' | 'rebuild'
 
 /** What a press does: a row action (`runAction`), a demo press (`pressDemo`) or opening the demo in a new tab. */
 export type DemoCommand =
-  | { kind: 'action'; action: 'build' | 'send-demo' }
+  | { kind: 'action'; action: 'build' | 'retry-demo' | 'send-demo' }
   | { kind: 'press'; press: 'rebuild' | 'reopen' }
   | { kind: 'open'; href: string }
   | null
@@ -59,8 +59,9 @@ export function demoCommand(control: DemoControl, row: OpportunityListRow, detai
   const state = demoStateOf(full)
   switch (state) {
     case 'none':
-    case 'failed':
       return { kind: 'action', action: 'build' }
+    case 'failed':
+      return { kind: 'action', action: 'retry-demo' }
     case 'ready': {
       const href = demoHref(full.demo, detail)
       return href === null ? null : { kind: 'open', href }

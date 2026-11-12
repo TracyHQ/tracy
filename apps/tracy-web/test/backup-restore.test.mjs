@@ -696,3 +696,37 @@ test(
     assert.equal(operation.resulting_sha, HEAD)
   }
 )
+
+test('pending backup history resumes one authorized host job across two door deadlines', opts, async () => {
+  const { pool } = db
+  await site(pool)
+  let clock = Date.now()
+  const host = fakeHost(
+    { 'webroot-history': HISTORY },
+    {
+      'webroot-history': (job) => {
+        if (job.polls <= 2) {
+          clock += 45_001
+          return 'running'
+        }
+        return 'done'
+      }
+    }
+  )
+  const { cookieFor, send } = harness(pool, host.fetchImpl, () => clock)
+  const owner = await cookieFor('owner@x.y')
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const pending = await send('GET', `/api/sites/${SITE}/backups`, owner)
+    assert.equal(pending.status, 202)
+    assert.equal((await pending.json()).code, 'FLEET_JOB_PENDING')
+  }
+  const denied = await send('GET', `/api/sites/${SITE}/backups`, await cookieFor('stranger@x.y'))
+  assert.equal(denied.status, 403)
+  const full = await send('GET', `/api/sites/${SITE}/backups`, owner)
+  assert.equal(full.status, 200)
+  const body = await full.json()
+  assert.equal(body.may.restoreEverything, true)
+  assert.equal(body.rows.find((row) => row.version === 3).database.sha256, DB3)
+  assert.equal(host.calls.filter((call) => call.kind === 'webroot-history').length, 1)
+  assert.equal(host.jobs.get('job-1').polls, 3)
+})

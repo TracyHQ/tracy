@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-568-picture-repair-contract",
+  "kind": "fix",
+  "title": "Measured picture repairs use exact native slot geometry and preserve consent and hide constraints",
+  "pr": 568,
+  "area": "website-opportunities/step-nine",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the production repair item and delivered-turn tests against the published Boxing 1.0.11 artifacts."
+  ],
+  "expect": [
+    "The measured background resolves uniquely to module-161.2 and its native aspect 1.5 instead of the presentation aspect 2.813.",
+    "Unmatched paths, ambiguous slots and unmeasured fit do not invent a target.",
+    "The delivered turn preserves canHide:false and consent refusals, and explains fresh revisions and native content validation."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-nine-picture-contract.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a measured demo background gets the exact native contract replacement before a generic module write",
+      "explicit block and native image keys resolve only on the measured page",
+      "ambiguous image paths and duplicate native declarations do not invent a binding",
+      "unmatched paths, unrelated kinds and unmeasured native fit preserve the original fault",
+      "the delivered turn retains consent refusals and explains recoverable native write errors"
+    ]
+  }
+}

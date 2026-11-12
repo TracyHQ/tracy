@@ -16,6 +16,7 @@ import { hostCall } from './host/client.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
 import { openContentMap } from './lib/content-map-source.js'
 import { defaultContracts } from './lib/contracts.js'
+import { stepNineDiagnostics } from './step-chain-write-diagnostics.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
 import { openKit, readableKits } from './lib/template-kit-source.js'
 import { demoSelfNames } from './ops/quickstarts.js'
@@ -184,7 +185,9 @@ export function createStepChainSteps(deps) {
   return {
     async validateBase(ctx) {
       const site = await siteByKey(pool, ctx.siteKey)
-      const point = site ? await ownerSiteDoor(ctx, site).recoveryPoint(ctx.siteKey) : null
+      const point = site
+        ? await ownerSiteDoor(ctx, site).recoveryPoint(ctx.siteKey, { signal: ctx.signal })
+        : null
       if (!point)
         throw Object.assign(
           new Error(
@@ -357,6 +360,7 @@ export function createStepChainSteps(deps) {
       const out = path.join(dir, 'step-9')
       await mkdir(out, { recursive: true })
       const step = await runWithSiteRecovery({
+        signal: ctx.signal,
         door: siteDoor,
         siteKey: ctx.siteKey,
         runId: ctx.runId,
@@ -383,7 +387,11 @@ export function createStepChainSteps(deps) {
       await writeFile(path.join(out, 'site-write-report.json'), JSON.stringify(step.report, null, 2))
       const usd = step.repair ? (step.repair.costUsd?.agent ?? null) : 0
       return {
-        value: { report: step.report, siteCheck: step.siteCheck?.status ?? null },
+        value: {
+          report: step.report,
+          siteCheck: step.siteCheck?.status ?? null,
+          diagnostics: stepNineDiagnostics(step)
+        },
         usd,
         ...(usd === null ? { knownUsd: step.repair?.costUsd?.agentKnown ?? 0 } : {})
       }

@@ -69,6 +69,7 @@ export async function runAction(
       return { kind: 'send-demo' }
     case 'retry-demo':
     case 'build': {
+      if (action === 'retry-demo' && !row.demoAction?.id) return missing
       let selection: TemplatePick | undefined
       if (action === 'build') {
         try {

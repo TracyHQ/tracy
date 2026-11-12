@@ -32,16 +32,16 @@ export const CHAIN_STEPS = Object.freeze([
 const CHAIN_IDS = CHAIN_STEPS.map((s) => s.id)
 
 /**
- * The furthest chain step a measurement has started (running or recorded), or null before the first. Steps run side by
- * side (brand beside the plan, copy beside the pictures), so the furthest one is the step the build has reached.
+ * The furthest active chain step, falling back to the furthest recorded step when none is active. Steps run side by
+ * side: completed pictures must not hide the page texts that are still running.
  * @param {{ running?: unknown, steps?: unknown } | null | undefined} chain
  * @returns {string | null}
  */
 export function chainStepOf(chain) {
-  const started = [
-    ...(Array.isArray(chain?.running) ? chain.running : []),
-    ...(Array.isArray(chain?.steps) ? chain.steps.map((s) => s?.step) : [])
-  ]
+  const active = (Array.isArray(chain?.running) ? chain.running : []).filter((id) =>
+    CHAIN_IDS.includes(String(id))
+  )
+  const started = active.length ? active : Array.isArray(chain?.steps) ? chain.steps.map((s) => s?.step) : []
   const furthest = Math.max(-1, ...started.map((id) => CHAIN_IDS.indexOf(String(id))))
   return furthest < 0 ? null : CHAIN_IDS[furthest]
 }
@@ -104,6 +104,8 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
     // A dead worker leaves its last progress snapshot, not a terminal measurement. Its settlement is
     // immutable on new rows; legacy updated_at can include later edits and is only an upper bound.
     const interrupted = unfinished && !running
+    // A worker lost during an active step cannot report that step's final provider charge.
+    const unknownSpend = partial || (interrupted && underway.length > 0)
     const validEnd = (value) => Number.isFinite(value) && value >= startedMs && value <= now()
     const stamped = /^[1-9][0-9]{0,14}$/.test(String(row.timings?.interruptedAt ?? ''))
       ? Number(row.timings.interruptedAt)
@@ -139,11 +141,11 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       rawChain: chain,
       interruption,
       totalUsd: unfinished
-        ? partial
+        ? unknownSpend
           ? null
           : Math.round(spent * 10_000) / 10_000
         : measuredUsd(chain.totalUsd),
-      ...((unfinished ? partial : measuredUsd(chain.totalUsd) === null)
+      ...((unfinished ? unknownSpend : measuredUsd(chain.totalUsd) === null)
         ? { knownUsd: Math.round((measuredUsd(chain.knownUsd) ?? spent) * 10_000) / 10_000 }
         : {}),
       ending,

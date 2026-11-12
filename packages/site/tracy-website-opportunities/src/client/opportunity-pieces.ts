@@ -200,8 +200,9 @@ function nextOf(
     case 'retry-brief':
       return { label, run: { kind: 'brief' }, disabled: false, look }
     case 'build':
-    case 'retry-build':
       return { label, run: { kind: 'demo', action: 'build' }, disabled: blocked, look }
+    case 'retry-build':
+      return { label, run: { kind: 'row', action: 'retry-demo' }, disabled: blocked, look }
     case 'rebuild':
       return { label, run: { kind: 'demo', action: 'rebuild' }, disabled: blocked, look }
     case 'review-profile':

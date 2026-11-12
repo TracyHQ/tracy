@@ -1,0 +1,2 @@
+{"id":"REG-PR-568-picture-repair-contract","verdict":"PASS","commit":"59359d1abda493608bcfb318edfdbd401e845af5","ran_at":"2026-11-11T19:41:09.694Z","evidence":"REG-PR-568-picture-repair-contract.log"}
+{"id":"REG-PR-568-planner-hidden-list-links","verdict":"PASS","commit":"59359d1abda493608bcfb318edfdbd401e845af5","ran_at":"2026-11-11T19:41:12.045Z","evidence":"REG-PR-568-planner-hidden-list-links.log"}

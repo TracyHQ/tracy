@@ -14,7 +14,7 @@ export const LOOKER_PROMPT_FILE = new URL('./looker-prompt.md', import.meta.url)
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex')
 
 // Processing semantics share the persisted lifetime fingerprint, while all three approved role prompts stay unchanged.
-export const PICTURE_PROCESSING_POLICY = 'readability-retry/1'
+export const PICTURE_PROCESSING_POLICY = 'readability-retry/2'
 
 let loaded = null
 

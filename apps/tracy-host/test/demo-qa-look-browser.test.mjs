@@ -99,6 +99,14 @@ const PAGES = {
     '<section class="band"',
     '<section class="mask" id="Mod4"><p>Words on a veiled picture</p></section><section class="band"'
   ),
+  '/repeated-targets': THEMED().replace(
+    '<section class="hero" id="Mod2"><p>Grey words over a mid picture</p></section>',
+    `<section class="hero" id="Mod2" data-tracy-src="module:2">${[1, 2, 3].map(() => '<p><a href="mailto:contact@example.test">contact@example.test</a></p>').join('')}</section>`
+  ),
+  '/bounded-targets': THEMED().replace(
+    '<section class="hero" id="Mod2"><p>Grey words over a mid picture</p></section>',
+    `<section class="hero" id="Mod2"><p id="${'x'.repeat(1000)}">Huge identity</p><p data-tracy-src="${'x'.repeat(241)}">Long owner</p>${Array.from({ length: 13 }, (_, i) => `<span data-tracy-src="module:${i}">`).join('')}<p id="many-owners">Many owners</p>${'</span>'.repeat(13)}<p>${'long '.repeat(61)}</p>${'<div>'.repeat(14)}<p>Deep path</p>${'</div>'.repeat(14)}</section>`
+  ),
   '/noswitch':
     '<!doctype html><html><body><div class="ja-dark-mode">Mode</div><p>Plain words here</p></body></html>',
   '/faults': `<!doctype html><html><head><title>Quay | About</title><style>.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}</style></head><body class="view-article">
@@ -267,5 +275,56 @@ test('self links, hidden headings and content controls are read as a visitor has
     assert.ok(keys.some((k) => k.includes('a.facebook')))
     assert.ok(!keys.some((k) => k.startsWith('nav')), 'a menu is shared')
     assert.equal(keys.filter((k) => k.endsWith('>a')).length, 0, 'a plain link in a line is no control')
+  })
+})
+
+test('equal email words keep distinct proven DOM paths across both widths and themes', opts, async () => {
+  await withPage('/repeated-targets', async (page) => {
+    const paths = []
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 })
+      const { sides } = await readLook(page, width)
+      for (const side of Object.values(sides)) {
+        const rows = side.over.filter((w) => w.text === 'contact@example.test')
+        assert.equal(rows.length, 3, 'coarse baseline keys must not drop sibling elements')
+        assert.equal(new Set(rows.map((w) => w.key)).size, 1, 'the historical baseline key remains coarse')
+        assert.equal(new Set(rows.map((w) => w.target.path)).size, 3)
+        paths.push(rows.map((w) => w.target.path))
+        for (const row of rows) {
+          assert.equal(row.target.complete, true)
+          assert.equal(row.target.text, 'contact@example.test')
+          assert.deepEqual(row.target.marks, ['module:2'])
+          assert.equal(await page.locator(row.target.path).count(), 1)
+          assert.equal(await page.locator(row.target.path).textContent(), row.target.text)
+        }
+      }
+    }
+    assert.ok(paths.every((p) => JSON.stringify(p) === JSON.stringify(paths[0])))
+  })
+})
+
+test('new target transport is bounded and ownership overflow never claims completeness', opts, async () => {
+  await withPage('/bounded-targets', async (page) => {
+    const { sides } = await readLook(page, 1440)
+    for (const side of Object.values(sides)) {
+      const targets = side.over.map((w) => w.target)
+      assert.ok(targets.length >= 5, JSON.stringify(targets.map((t) => t.text)))
+      for (const t of targets) {
+        assert.ok(t.path.length <= 180)
+        assert.ok(t.text.length <= 300)
+        assert.ok(t.marks.length <= 12)
+        assert.ok(t.marks.every((m) => m.length <= 240))
+      }
+      const huge = targets.find((t) => t.text === 'Huge identity')
+      assert.ok(huge.complete)
+      assert.ok(!huge.path.includes('x'.repeat(100)), 'an oversized ID is never a CSS anchor')
+      for (const text of ['Long owner', 'Many owners', 'Deep path'])
+        assert.equal(targets.find((t) => t.text === text)?.complete, false, text)
+      assert.equal(
+        targets.find((t) => t.text.length === 300)?.complete,
+        false,
+        'long text is only incomplete evidence'
+      )
+    }
   })
 })

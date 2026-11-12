@@ -104,7 +104,11 @@ export function briefOf(revision) {
   const quoted = [...googleQuoted, ...maps.map((r) => r.text), ...tripadvisor.map((r) => r.text)]
   // The research a brief froze is evidence, not a fact the brief states: an older brief's embedded copy and a newer
   // brief's reference to it are both left out of the facts (#1791 V2).
-  const { agentDemoSnapshot: _snapshot, agentDemoResearch: _reference, ...facts } = heldFacts
+  const { agentDemoSnapshot: _snapshot, agentDemoResearch: _reference, ...withAssets } = heldFacts
+  // The frozen photo catalogue is build input, not business prose: dimensions, hashes and detector labels must not
+  // consume the complete fact-evidence budget or make a number look sourced. Research content still travels below.
+  const { assets: _assets, ...withoutAssets } = withAssets
+  const facts = isAgentDemo(revision) ? withoutAssets : withAssets
   // A revision stored before reviews left the markdown still prints them there, one line each.
   const md = String(revision?.brief_md ?? '')
     .split('\n')

@@ -1,0 +1,3 @@
+- **Treat generic call-to-action notes as button intent rather than a promised phone call** — WO pipeline maintainers · #568 · `fix/wo-dev-full-flow-acceptance` · 2026-11-12
+  **Affects:** New site planner checks; rebuild and deploy tracy-web. Checker version 8 keeps historical paid runs from resuming against the changed rule. No active run is changed by this source patch.
+  **Why / Measured:** Two class-page notes saying “closing call to action: book an assessment” incorrectly demanded phone links. R12 now excludes only the generic phrase from its phone-word check. Actual call, phone or ring-us promises elsewhere in the same note or label still require phone targets; WhatsApp and direct-message checks are unchanged.

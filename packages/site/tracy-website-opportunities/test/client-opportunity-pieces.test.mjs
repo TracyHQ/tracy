@@ -154,7 +154,7 @@ test('Demo: a failed demo shows the reason in words, never the code; next Try ag
   assert.equal(p.status.tone, 'destructive')
   assert.deepEqual(p.next, {
     label: 'Try again',
-    run: { kind: 'demo', action: 'build' },
+    run: { kind: 'row', action: 'retry-demo' },
     disabled: false,
     look: 'primary'
   })

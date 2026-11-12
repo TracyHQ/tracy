@@ -8,16 +8,51 @@
  * - BEFORE RESEARCH every row reads not collected yet (#537): a source added before research is not a failed one.
  */
 import { untrackedUrl } from '../domain/social-links.mjs'
+import { parseSocialUrl } from '../domain/social-stats/handles.mjs'
 
 /** Reasons that name this server's setup, not the place: shown to operators only. */
 export const SERVER_KEY_REASONS = Object.freeze(['credential_invalid', 'credential_missing'])
 const RANK = { complete: 0, partial: 1, skipped: 2, blocked: 3, failed: 4 }
+const SOCIAL = new Set(['facebook', 'instagram', 'tiktok', 'youtube'])
 
-/** The page a row reads, as one comparable string: no scheme, no `www.`, no tracking, no trailing slash, lower case. */
+/** A known social profile's native identity, never a guessed match of two handles or channels. */
+export function socialPageKey(source, ref) {
+  if (!SOCIAL.has(source) || typeof ref !== 'string') return null
+  const page = parseSocialUrl(ref, { network: source })
+  if (!page) return null
+  // Facebook slugs are case-insensitive; numeric page IDs and YouTube channel IDs keep their own identity.
+  return `${source}\n${page.pageSlug ? page.url.toLowerCase() : page.url}`
+}
+
+/**
+ * The account's extra sources: a successful shared social profile already represents its private alias.
+ * A failed shared source never suppresses an additional alias by canonical identity. Existing exact-ref precedence
+ * stays the same, and neither source's status is rewritten. Stored attempts remain available to operators.
+ */
+export function privateSourceRows(shared, own) {
+  const exact = new Set(shared.map((row) => `${row.source}\n${row.ref}`))
+  const collected = new Set(
+    shared
+      .filter((row) => ['complete', 'partial'].includes(row.status))
+      .map((row) => socialPageKey(row.source, row.ref))
+      .filter(Boolean)
+  )
+  return own.filter(
+    (row) =>
+      !exact.has(`${row.source}\n${row.ref}`) &&
+      !(socialPageKey(row.source, row.ref) && collected.has(socialPageKey(row.source, row.ref)))
+  )
+}
+
+/** A social profile's native identity, else the existing comparable website key (unknown social URLs stay exact). */
 export function samePageKey(source, ref) {
   if (typeof ref !== 'string' || !ref) return null
+  const social = socialPageKey(source, ref)
+  if (social) return social
   try {
     const u = new URL(untrackedUrl(ref, source))
+    // Unknown social URLs are not identities: keep their path case and query instead of merging unrelated pages.
+    if (SOCIAL.has(source)) return `${source}\n${u.hostname.toLowerCase()}${u.pathname}${u.search}`
     return `${source}\n${u.hostname.replace(/^www\./, '').toLowerCase()}${u.pathname.replace(/\/+$/, '').toLowerCase()}`
   } catch {
     return `${source}\n${ref.trim().toLowerCase()}`

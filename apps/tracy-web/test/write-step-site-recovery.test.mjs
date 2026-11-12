@@ -163,3 +163,31 @@ test('step 9 proves native writer settlement from every prompted request record'
   })
   assert.equal(missing.result.writersSettled, false, 'a dropped native request can still run later')
 })
+
+test('a canceled recovery read receives the run signal and cannot start health probes or writes', async () => {
+  const controller = new AbortController()
+  controller.abort(new Error('run canceled'))
+  let probes = 0
+  let writes = 0
+  const result = await runWithSiteRecovery({
+    siteKey: 'fitness.sites.example',
+    runId: 'canceled-run',
+    signal: controller.signal,
+    door: {
+      recoveryPoint: async (_key, { signal }) => {
+        signal.throwIfAborted()
+      }
+    },
+    probe: async () => {
+      probes++
+      return { state: 'healthy' }
+    },
+    run: async () => {
+      writes++
+    },
+    sleep: async () => {}
+  })
+  assert.equal(result.report.status, 'stopped')
+  assert.equal(probes, 0)
+  assert.equal(writes, 0)
+})

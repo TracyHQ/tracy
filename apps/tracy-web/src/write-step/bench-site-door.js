@@ -25,9 +25,10 @@ export function httpSiteDoor(input) {
     platform,
     templateOf,
     fetchImpl = fetch,
-    sleep = sleepFor
+    sleep = sleepFor,
+    now = Date.now
   } = input
-  async function call(method, path, body) {
+  async function call(method, path, body, { signal, timeoutMs = 120_000 } = {}) {
     const token = await mintSession(email, secret)
     const response = await fetchImpl(`${baseUrl}${path}`, {
       method,
@@ -36,7 +37,9 @@ export function httpSiteDoor(input) {
         ...(hostHeader ? { host: hostHeader } : {}),
         ...(body === undefined ? {} : { 'content-type': 'application/json' })
       },
-      signal: AbortSignal.timeout(120_000),
+      signal: signal
+        ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
+        : AbortSignal.timeout(timeoutMs),
       ...(body === undefined ? {} : { body: JSON.stringify(body) })
     })
     const text = await response.text()
@@ -149,12 +152,34 @@ export function httpSiteDoor(input) {
       }
     },
     /** The newest point the host proves holds files and a database, pinned before any chain write. */
-    async recoveryPoint(siteKey) {
-      const answer = await call('GET', `${keyPath(siteKey)}/backups`)
-      if (answer.status === 202)
-        throw Object.assign(new Error('The backup history is still running.'), {
+    async recoveryPoint(siteKey, { signal, waitMs = 180_000 } = {}) {
+      const until = now() + Math.max(0, waitMs)
+      const pending = () =>
+        Object.assign(new Error('The backup history is still running.'), {
           code: 'SITE_RECOVERY_POINT_PENDING'
         })
+      let answer
+      for (let attempt = 0; ; attempt++) {
+        signal?.throwIfAborted()
+        if (attempt > 0 && (now() >= until || attempt >= 4)) throw pending()
+        try {
+          answer = await call('GET', `${keyPath(siteKey)}/backups`, undefined, {
+            signal,
+            timeoutMs: Math.max(1, Math.min(120_000, until - now()))
+          })
+        } catch (error) {
+          // A caller's cancellation keeps its own reason, even when both deadlines expire.
+          signal?.throwIfAborted()
+          if (attempt > 0 && error?.name === 'TimeoutError' && now() >= until) throw pending()
+          throw error
+        }
+        if (answer.status !== 202) break
+        if (answer.body?.code !== 'FLEET_JOB_PENDING' || now() >= until) throw pending()
+        // Each door read already waits up to 45 seconds. Only legitimate unfinished history
+        // is retried; refusal, failed reads and missing full-backup proof stay fail-closed.
+        const delay = Math.min(1000, Math.max(0, until - now()))
+        await sleep(delay)
+      }
       if (answer.status !== 200 || answer.body?.may?.restoreEverything !== true) return null
       const points = (answer.body?.rows ?? [])
         .filter(
