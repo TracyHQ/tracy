@@ -190,7 +190,10 @@ test('no address, the operator switch and a missing key each keep their reason; 
 
 test('the measurer reads the key and the switch from the runtime and the address Details gives the demo', async () => {
   const config = { origin: 'https://tracy.example', siteDomain: 'tracy.site' }
-  assert.equal(demoAddressOf({ address: 'https://pho-ba.tracy.site/', label: 'x' }, config), 'https://pho-ba.tracy.site/')
+  assert.equal(
+    demoAddressOf({ address: 'https://pho-ba.tracy.site/', label: 'x' }, config),
+    'https://pho-ba.tracy.site/'
+  )
   assert.equal(demoAddressOf({ label: 'pho-ba' }, config), 'https://pho-ba.tracy.site/')
   assert.equal(demoAddressOf(null, config), null)
   const psi = stubPsi(() => Response.json(lighthouse(0.95)))
@@ -285,7 +288,10 @@ test('a PageSpeed measurer that throws or a build without a site never fails the
       throw new Error('boom')
     }
   })({ build: { id: 'b-1', site_key: 'pho-ba.tracy.site' }, at: AT })
-  assert.equal(pool.asked.some((q) => /'pagespeed'/.test(q.sql)), false)
+  assert.equal(
+    pool.asked.some((q) => /'pagespeed'/.test(q.sql)),
+    false
+  )
   assert.equal(warned.length, 1)
   // No site row: measured at the address its build's label is born at.
   const bare = recordingPool(null)
