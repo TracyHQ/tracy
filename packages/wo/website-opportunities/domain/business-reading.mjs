@@ -731,8 +731,16 @@ export function readingCardOf(reading, picks, keyMessagePicks = null, { reviews 
     ...(reading.reason ? { reason: reading.reason } : {}),
     services: card(reading.services),
     audience: card(reading.audience),
-    team: card(reading.team).map((p, n) => {
-      const reviewsOnly = reading.team[n]?.reviewsOnly === true
+    team: card(reading.team).map((p0, n) => {
+      const held = reading.team[n] ?? {}
+      const reviewsOnly = held.reviewsOnly === true
+      // The owner's team edits (`owner-site-picks.mjs withTeamEdits`): who they added, and the photo they gave.
+      const p = {
+        ...p0,
+        ...(held.owner === true ? { owner: true } : {}),
+        ...(typeof held.photoMediaId === 'string' ? { photoMediaId: held.photoMediaId } : {}),
+        ...(typeof held.researchLabel === 'string' ? { researchLabel: held.researchLabel } : {})
+      }
       if (!reviewsOnly || shown.has(p.id)) return { ...p, reviewsOnly, onSite: true }
       const lifted = shownByReviewRule(reviews, p.label, p.role)
       return { ...p, reviewsOnly, onSite: lifted, ...(lifted ? { fromReviews: true } : {}) }

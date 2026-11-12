@@ -37,28 +37,38 @@ export function localStore(): Store | null {
   }
 }
 
-/** My opportunities' own Columns choice: Opportunity and Demo show by default (Lee 19/10), the rest until shown (plan C1). */
-export const MY_COLUMNS_KEY = 'tracy-wo:my-columns'
-export type MyColumn = 'score' | 'web' | 'google' | 'social' | 'contact' | 'demo'
-export const MY_COLUMNS: readonly MyColumn[] = ['score', 'web', 'demo', 'google', 'social', 'contact']
-const MY_DEFAULT_HIDDEN: readonly MyColumn[] = ['web', 'google', 'social', 'contact']
-export const isMyColumn = (v: unknown): v is MyColumn => MY_COLUMNS.some((c) => c === v)
+/**
+ * My opportunities' view (spec #512): Cards or Compact rows, and Map only where the deployment has a browser map
+ * key. Remembered through the same door as Find's Columns choice. The Table view is Find's alone now.
+ */
+export const MY_VIEW_KEY = 'tracy-wo:my-view'
+export type MyView = 'cards' | 'rows' | 'map'
+const MY_VIEWS: readonly MyView[] = ['cards', 'rows', 'map']
 
-export function readMyHiddenColumns(store: Store | null): MyColumn[] {
+/** The list opens as rows (the owner's chosen table layout, #537); Cards stays a choice in the list menu. */
+export function readMyView(store: Store | null): MyView {
   try {
-    const raw = store?.getItem(MY_COLUMNS_KEY)
-    if (raw === null || raw === undefined) return [...MY_DEFAULT_HIDDEN]
-    const parsed: unknown = JSON.parse(raw)
-    return Array.isArray(parsed) ? parsed.filter(isMyColumn) : [...MY_DEFAULT_HIDDEN]
+    const raw = store?.getItem(MY_VIEW_KEY)
+    return MY_VIEWS.find((v) => v === raw) ?? 'rows'
   } catch {
-    return [...MY_DEFAULT_HIDDEN]
+    return 'rows'
   }
 }
 
-export function writeMyHiddenColumns(store: Store | null, hidden: ReadonlySet<MyColumn>): void {
+export function writeMyView(store: Store | null, view: MyView): void {
   try {
-    store?.setItem(MY_COLUMNS_KEY, JSON.stringify([...hidden]))
+    store?.setItem(MY_VIEW_KEY, view)
   } catch {
     // Private window or blocked storage: the choice lasts until the tab closes.
   }
+}
+
+/** The views offered: Map only with a browser map key (`GET /capabilities` `maps.browserKey`); hidden, not disabled. */
+export function myViews(browserKey: string | null | undefined): readonly MyView[] {
+  return typeof browserKey === 'string' && browserKey !== '' ? MY_VIEWS : ['cards', 'rows']
+}
+
+/** The remembered view when it is offered here, else Cards. */
+export function shownMyView(chosen: MyView, offered: readonly MyView[]): MyView {
+  return offered.includes(chosen) ? chosen : 'cards'
 }

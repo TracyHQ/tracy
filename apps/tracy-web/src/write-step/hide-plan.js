@@ -387,9 +387,22 @@ export function hideOrders({
     .filter((p) => p?.decision === 'drop')
     .map((p) => each(kit?.pages).find((k) => k?.id === p.id))
     .filter(Boolean)
+  const droppedGroups = new Set(
+    each(plan?.pageGroups)
+      .filter((g) => g?.decision === 'drop')
+      .map((g) => g.id)
+  )
+  for (const page of each(kit?.pages))
+    if (
+      droppedGroups.has(page?.group) &&
+      articleOwners(page, kit).length > 0 &&
+      !each(plan?.pages).some((p) => p.id === page.id && p.decision === 'keep') &&
+      !planDrops.some((p) => p.id === page.id)
+    )
+      planDrops.push(page)
   const stock = stockScreensToDrop(kit, plan).filter((s) => !planDrops.some((page) => page.id === s.id))
   const pages = [...planDrops, ...stock.map(({ id, path }) => ({ id, path }))]
-    .filter((page) => !taken.has(slashless(page.path)))
+    .filter((page) => !taken.has(slashless(page.path)) || articleOwners(page, kit).length > 0)
     .map((page) => ({ page, depends: pageDependingOn(page.path, { plan, kit }) }))
   const claimed = new Set(
     [...owners.values()]
@@ -425,4 +438,19 @@ export function hideOrders({
     restored: guarded.restored,
     controls: guarded.controls
   }
+}
+
+/** Exact native article owners declared by a page's body blocks; paths and aliases never identify them. */
+export function articleOwners(page, kit) {
+  const defined = page?.blocks ? page : each(kit?.pages).find((p) => p?.id === page?.id)
+  const shown = new Set(Object.values(defined?.blocks ?? {}).flat())
+  return [
+    ...new Set(
+      each(kit?.blocks)
+        .filter((block) => shown.has(block?.id) && block?.source?.ownerKind === 'article')
+        .map((block) => /^article-([1-9]\d*)$/.exec(String(block.source.owner))?.[1])
+        .filter(Boolean)
+        .map(Number)
+    )
+  ]
 }

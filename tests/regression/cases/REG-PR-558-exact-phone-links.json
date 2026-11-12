@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-558-exact-phone-links",
+  "kind": "fix",
+  "title": "The write step links only verified whole-phone facts through a guarded cowork capability",
+  "pr": 558,
+  "area": "website-opportunities/write-step",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the real write-step hook and guard against a stateful cowork fixture with frozen inputs."],
+  "expect": [
+    "Only successful whole-phone text writes matching on-site brief facts enter the advertised HTML slot operation.",
+    "Exact contract, hash, current text and sequential revision remain required through the write guard.",
+    "Unverified, refused or malformed replies stop subsequent phone operations and block read-back QA.",
+    "Scalar fields, unknown slots, inferred country codes and general HTML do not enter the operation."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-phone-link-stage.test.mjs",
+      "apps/tracy-web/test/write-step-phone-link-guard.test.mjs",
+      "apps/tracy-web/test/write-step-phone-link-run.test.mjs"
+    ],
+    "tests": [
+      "runWriteStep links successful whole-phone writes",
+      "runWriteStep blocks QA after a phone-link missing success flag",
+      "whole numeric values only"
+    ],
+    "needs": []
+  }
+}

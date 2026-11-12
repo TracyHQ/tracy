@@ -262,7 +262,10 @@ test('an icon this server cannot draw as recorded fails, it does not become anot
 })
 
 test('letters code cannot draw fail: the tile does not turn into a figure', async () => {
-  const { line } = await runPainted({ items: () => [initialsItem('block-4.face', '')] })
+  const { line } = await runPainted({
+    items: () => [initialsItem('block-4.face', '')],
+    site: { contract: { overSlot: () => ({ canHide: false }) } }
+  })
   assert.equal(line('block-4.face').status, 'failed')
   assert.match(line('block-4.face').reason, /letters/)
 })

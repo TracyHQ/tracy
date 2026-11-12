@@ -14,6 +14,9 @@ import {
   slotShape
 } from '../../lib/site-copy/slot-shape.js'
 
+import { iconsOf, iconClassOf, networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
+
 export const FLOOR_RATIO = DEMO_FLOOR_RATIO // W03: a text must reach this share of the demo text length ...
 export const FLOOR_DEMO_MIN = SHORT_DEMO_MAX // ... when the demo text is longer than this many characters.
 
@@ -86,7 +89,7 @@ export function checkW02({ R, view, idx }) {
 }
 
 /** The parts of a lead and points slot measured against the same parts of the demo. */
-function partFaults(kit, items) {
+function partFaults(kit, items, excerpt = false) {
   const shape = slotShape(kit)
   if (!shape.points || items.length < 2) return []
   const out = []
@@ -94,7 +97,7 @@ function partFaults(kit, items) {
   if (shape.lead) {
     const lead = boundsOf(shape.leadChars, 0)
     const n = items[0].trim().length
-    if (lead && n < lead.floor)
+    if (!excerpt && lead && n < lead.floor)
       out.push({
         detail: `lead paragraph ${n} characters, floor ${lead.floor} (${Math.round(FLOOR_RATIO * 100)}% of the ${shape.leadChars} character demo lead)`,
         cause: 'under'
@@ -110,7 +113,7 @@ function partFaults(kit, items) {
   if (part && points.length) {
     const mean = Math.round(points.reduce((a, t) => a + t.trim().length, 0) / points.length)
     const demo = Math.round(demoMean)
-    if (mean < part.floor)
+    if (!excerpt && mean < part.floor)
       out.push({
         detail: `points average ${mean} characters, floor ${part.floor} (${Math.round(FLOOR_RATIO * 100)}% of the ${demo} character average demo point)`,
         cause: 'under'
@@ -128,6 +131,7 @@ function partFaults(kit, items) {
 // template and still draw the wrong network for its link; a citation alone does not establish the link.
 function socialIconTargets({ plan, kit, brief }) {
   const arr = (value) => (Array.isArray(value) ? value : [])
+  const icons = iconsOf(kit)
   const blocks = new Map(arr(kit?.blocks).map((b) => [b?.id, b]))
   const facts = new Map(arr(brief?.facts).map((f) => [f?.id, f]))
   const out = new Map()
@@ -162,7 +166,13 @@ function socialIconTargets({ plan, kit, brief }) {
             typeof icon.network !== 'string'
           )
             continue
-          out.set(icon.field, { target, network: networkOf(icon.network), value: icon.fieldValue })
+          const classes = icons.get(icon.id)?.classes
+          out.set(icon.field, {
+            target,
+            network: networkOf(icon.network),
+            value: icon.fieldValue,
+            expected: classes ? iconClassOf(classes, target) : null
+          })
         }
       }
   }
@@ -184,7 +194,8 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
     const chars = lengthOf(s.items)
     const demo = demoTotalFor(kit ?? {}, s.items.length)
     const bounds = kit ? boundsOf(demo) : null
-    const floor = bounds ? Math.min(bounds.floor, limit ?? Infinity) : 0
+    const excerpt = ownerPostExcerptFor(s, idx, brief)?.valid === true
+    const floor = bounds && !excerpt ? Math.min(bounds.floor, limit ?? Infinity) : 0
     const ceiling = bounds ? Math.min(bounds.ceiling, limit ?? Infinity) : null
     // A lead and points slot holds its lead paragraph and every point; otherwise the larger of the two counts.
     const shape = kit ? slotShape(kit) : null
@@ -198,11 +209,18 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
     }
     const pct = (n) => `${Math.round(n * 100)}%`
     if (idx.iconFields?.has(s.slot) && !idx.iconFields.get(s.slot).has(s.items.join(' ')))
-      fail('icon field must use a class declared by its kit icon', 'icon-field')
+      fail('icon field must use a class supported by its kit icon family', 'icon-field')
     const social = socialTargets.get(s.slot)
-    if (social && s.items.join(' ') === social.value && social.network !== social.target)
+    const glyph = networkOfClass(s.items.join(' '))
+    const actualNetwork =
+      { 'x-twitter': 'twitter', 'facebook-f': 'facebook', 'linkedin-in': 'linkedin' }[glyph] ??
+      glyph ??
+      (s.items.join(' ') === social?.value ? social.network : null)
+    if (social && actualNetwork && actualNetwork !== social.target)
       fail(
-        `declared ${social.network} icon links to the planned ${social.target} profile; return this row to planner when the kit declares no matching icon class`,
+        social.expected
+          ? `declared ${actualNetwork} icon links to the planned ${social.target} profile; use ${social.expected} from the template icon family`
+          : `declared ${actualNetwork} icon links to the planned ${social.target} profile; return this row to planner when the kit declares no matching icon class`,
         'icon-network'
       )
     if (chars === 0) fail('text is empty', 'empty')
@@ -217,7 +235,7 @@ export function checkW03({ R, view, idx, plan, kit: templateKit, brief }) {
         `${chars} characters, ceiling ${ceiling} (the ${demo} character demo text is the top)`,
         'over-demo'
       )
-    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items)) fail(d.detail, d.cause)
+    if (chars > 0 && kit && bounds) for (const d of partFaults(kit, s.items, excerpt)) fail(d.detail, d.cause)
     if (s.items.length > allowed)
       fail(`${s.items.length} paragraphs, the kit allows ${allowed}`, 'paragraphs')
     if (!bad) R.w03.ok()

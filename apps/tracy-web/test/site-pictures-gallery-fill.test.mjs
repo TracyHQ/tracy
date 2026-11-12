@@ -2,7 +2,10 @@
 // the business’s place (#548). Invented Harrow Lane Climbing Wall (_site-pictures-gallery.mjs).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { byFrame, finished, rule, SQUARE, TALL, tiles } from './_site-pictures-gallery.mjs'
+import { byFrame, finished, kit, plan, rule, SQUARE, TALL, tiles } from './_site-pictures-gallery.mjs'
+
+import { indexInputs } from '../src/site-pictures/picture-check/inputs-index.js'
+import { rungsFor } from '../src/site-pictures/ladder-rungs.js'
 
 const SIX = [['page-t', 'block-t', 6, true]]
 
@@ -68,4 +71,19 @@ test('the check fails a gallery tile hidden alone, not one dropped with its row'
     ]
   }
   assert.equal(rule(await check(dropped), 'P12').status, 'pass')
+})
+
+test('a specific business gallery keeps the real-photo reuse ladder without any drawing rung', () => {
+  const k = kit(SIX)
+  const p = plan(SIX)
+  for (const frame of k.blocks[0].frames) frame.role = 'business.gallery_image'
+  for (const item of p.pages[0].blocks[0].lists[0].items) item.pictures[0].match = 'specific'
+  const idx = indexInputs({ kit: k, plan: p, brief: { facts: [], assets: [] } })
+  for (const frame of k.blocks[0].frames) {
+    assert.ok(idx.galleryTile(frame.id), 'the template still requires a whole gallery grid')
+    const rungs = rungsFor(idx, frame.id)
+    assert.ok(rungs.includes('reuse'))
+    assert.ok(rungs.includes('any-photo'))
+    assert.ok(!rungs.some((r) => ['draw', 'redraw', 'redraw-alt'].includes(r)))
+  }
 })

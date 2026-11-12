@@ -7,8 +7,13 @@
 
 /** Who uploaded a picture: the business, one of its customers, or not known. */
 export const UPLOADER_ROLES = Object.freeze(['owner', 'customer', 'unknown'])
-/** Sources that are the business's own channels: whatever they hold, the business published. */
+/**
+ * Sources that are the business's own channels: whatever they hold, the business published. `owner` is a photo or video
+ * the seller uploaded on the Profile card (`seller-review-routes.js OWNER_MEDIA_SOURCE`, #537): it ranks with the
+ * business's own photos under the brief's picture cap, and still passes the junk filter (`media-junk.js`) like any other.
+ */
 const OWN_CHANNELS = new Set([
+  'owner',
   'website',
   'facebook',
   'instagram',

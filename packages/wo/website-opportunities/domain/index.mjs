@@ -128,6 +128,7 @@ export { SUB_TRADE_WORDS, TRADE_WORDS, businessWords, otherKindWords, tradeWords
 export { SUB_TRADES, decideSubTrade, subTradeChoicesOf, subTradeOfGoogleTypes } from './sub-trades.mjs'
 export { validatePlaceProfile } from './place-profile.mjs'
 export { placeProfileFromResearch } from './place-profile-from-research.mjs'
+export { savedProfileOf, stampDecisions, factsWithPaths, ownerChoicesOf } from './saved-profile.mjs'
 export { placeProfileFromBrief } from './place-profile-from-brief.mjs'
 export { placeProfileFromDemoRequest } from './place-profile-from-demo-request.mjs'
 export { placeProfileForHost } from './place-profile-for-host.mjs'

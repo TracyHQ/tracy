@@ -5,6 +5,7 @@ import { mainMenuOf, planCopyEntries } from './main-menu.js'
 import { hiddenListsOf } from './hidden-lists.js'
 import { sentencesOf, stripEllipsis, textOfValue, wordsOf } from './text-tools.js'
 import { blockSlotsOf } from '../template-kit/kit-slots.js'
+import { iconsOf, iconClassOptions } from '../template-kit/icon-classes.js'
 
 const arr = (x) => (Array.isArray(x) ? x : [])
 const isObject = (x) => Boolean(x) && typeof x === 'object' && !Array.isArray(x)
@@ -234,6 +235,10 @@ export function indexInputs({ plan, kit, brief, contentMap, compileHiddenLists =
       values.add(slot.fieldValue)
       iconFields.set(slot.field, values)
     }
+  for (const { field, classes } of iconsOf(kit).values()) {
+    if (!iconFields.has(field)) continue
+    for (const value of iconClassOptions(classes)) iconFields.get(field).add(value)
+  }
   const headings = indexFooterHeadings(plan, kit, kitIdx)
   const facts = new Map()
   for (const f of arr(brief?.facts))

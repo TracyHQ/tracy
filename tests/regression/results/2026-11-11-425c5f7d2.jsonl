@@ -1,0 +1,4 @@
+{"id":"REG-PR-558-brand-empty-fill-recovery","verdict":"PASS","commit":"425c5f7d2efea75102309bcc9230797065b002af","ran_at":"2026-11-11T13:30:49.276Z","evidence":"REG-PR-558-brand-empty-fill-recovery.log"}
+{"id":"REG-PR-558-brand-site-language","verdict":"PASS","commit":"425c5f7d2efea75102309bcc9230797065b002af","ran_at":"2026-11-11T13:30:49.945Z","evidence":"REG-PR-558-brand-site-language.log"}
+{"id":"REG-PR-558-brand-spot-files","verdict":"PASS","commit":"425c5f7d2efea75102309bcc9230797065b002af","ran_at":"2026-11-11T13:30:52.177Z","evidence":"REG-PR-558-brand-spot-files.log"}
+{"id":"REG-PR-558-interrupted-chain-measurement","verdict":"PASS","commit":"425c5f7d2efea75102309bcc9230797065b002af","ran_at":"2026-11-11T13:30:56.977Z","evidence":"REG-PR-558-interrupted-chain-measurement.log"}

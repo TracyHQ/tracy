@@ -9,6 +9,7 @@
 // { sides: { light, dark: { file, variants: { twoLines } } } }, fit_logo { file, shows }, make_favicon { ok, files,
 // tabIcons, tileGround, tileMark, tileMarkRecoloured, phoneMark, phoneGround, check, candidates }.
 import { kitIdOf } from './brand-first-message.js'
+import { BRAND_HELD_NAME_CHECK } from './gate-logo.js'
 
 const parsed = (result) => {
   if (typeof result === 'string') {
@@ -65,10 +66,12 @@ export function faviconBlockOf(made, mark) {
 }
 
 /**
- * @param {{ tools: Array<{ name: string, run: Function }>, ctx: object, kit: { doc: any }, brief: any, reason: 'gate' | 'cost-cap' }} input
+ * @param {{ tools: Array<{ name: string, run: Function }>, ctx: object, kit: { doc: any }, brief: any, reason: 'gate' | 'cost-cap', heldNameCheck?: string | null }} input
  * @returns {Promise<object>} the safe brand file; throws when a tool it needs fails
  */
-export async function buildSafeVersion({ tools, ctx, kit, brief, reason }) {
+export async function buildSafeVersion({ tools, ctx, kit, brief, reason, heldNameCheck = null }) {
+  if (heldNameCheck !== null && heldNameCheck !== BRAND_HELD_NAME_CHECK)
+    throw new Error('BRAND_HELD_NAME_CHECK_CHANGED: the recorded held name check is unsupported')
   const call = async (name, args) => {
     const tool = tools.find((t) => t.name === name)
     if (!tool) throw new Error(`BRAND_SAFE_VERSION: the tool ${name} is missing`)
@@ -82,8 +85,16 @@ export async function buildSafeVersion({ tools, ctx, kit, brief, reason }) {
   }
   const doc = kit.doc
   const accent = doc.site.brandColours.primary?.value
-  const name = typeof brief.brand?.name === 'string' && brief.brand.name.trim() ? brief.brand.name : null
   const slots = await call('name_slots', {})
+  // The safe version bypasses the agent gate, so it must respect the same frozen name decision itself.
+  const name =
+    heldNameCheck === BRAND_HELD_NAME_CHECK
+      ? slots.heldBack
+        ? null
+        : slots.name
+      : typeof brief.brand?.name === 'string' && brief.brand.name.trim()
+        ? brief.brand.name
+        : null
   const tasks = [...(slots.ownerTasks ?? [])]
   const logos = { light: null, dark: null, twoLines: null }
   const spots = []

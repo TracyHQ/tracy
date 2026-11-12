@@ -5,7 +5,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import * as domain from 'website-opportunities/domain'
-import { researchKey } from '../src/opportunities-build/revisions.js'
+import { readingIsOld, researchKey } from '../src/opportunities-build/revisions.js'
 
 const research = () => ({
   opportunity: { name: 'Harbour Sport Club', branch: null, candidate: { trade: 'fitness' } },
@@ -28,16 +28,37 @@ test('the same research under the same rules gives the same key', () => {
   assert.equal(researchKey(domain, research()), researchKey(withDomain({}), research()))
 })
 
-test('a new brief rules version or reading version changes the key', () => {
+test('a new brief rules version changes the key', () => {
   const base = researchKey(domain, research())
   assert.notEqual(
     researchKey(withDomain({ BRIEF_RULES_VERSION: domain.BRIEF_RULES_VERSION + 1 }), research()),
     base
   )
-  assert.notEqual(
-    researchKey(withDomain({ BUSINESS_READING_VERSION: 'business-reading-next' }), research()),
-    base
+})
+
+// #524: the key holds the reading version the profile STORES, not the code's constant: a code change alone never makes
+// a brief of the same reading look different, and `readingIsOld` says when the stored reading is older than the code's.
+const readAs = (version) => ({
+  ...research(),
+  profile: { ...research().profile, businessReading: { version, services: [] } }
+})
+
+test('the key follows the reading version stored in the profile, not the constant in the code', () => {
+  const four = `business-reading-4-5e46f68738ff`
+  assert.equal(
+    researchKey(withDomain({ BUSINESS_READING_VERSION: 'business-reading-next' }), readAs(four)),
+    researchKey(domain, readAs(four))
   )
+  assert.notEqual(
+    researchKey(domain, readAs(four)),
+    researchKey(domain, readAs('business-reading-5-6ca821c381fd'))
+  )
+})
+
+test('a stored reading older than the code is old; a current one or none is not', () => {
+  assert.equal(readingIsOld(domain, readAs('business-reading-4-5e46f68738ff')), true)
+  assert.equal(readingIsOld(domain, readAs(`${domain.BUSINESS_READING_VERSION}-6ca821c381fd`)), false)
+  assert.equal(readingIsOld(domain, research()), false, 'no reading at all is not an old one')
 })
 
 test('a domain without a version throws instead of hashing undefined', () => {

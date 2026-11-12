@@ -275,7 +275,8 @@ export function createBriefBuilds({
       const ending = lostEnding(row)
       const { rowCount } = await pool.query(
         `update site_brief set state = $3, stage = null, error = $4,
-           timings = timings || jsonb_build_object('lost', $5::text, 'lostFrom', $2::text), updated_at = now()
+           timings = timings || jsonb_build_object('lost', $5::text, 'lostFrom', $2::text,
+             'interruptedAt', floor(extract(epoch from clock_timestamp()) * 1000)), updated_at = now()
          where site_key = $1 and state = $2 and updated_at = $6::timestamptz`,
         [row.site_key, row.state, ending.state, ending.error, LOST_ON_RESTART, row.seen]
       )
@@ -329,7 +330,8 @@ export function createBriefBuilds({
     await advanceBrief(pool, siteKey, ['queued', 'preparing', 'ready', 'applying'], {
       state: 'failed',
       stage: null,
-      error: message.slice(0, 500)
+      error: message.slice(0, 500),
+      timings: { interruptedAt: now() }
     }).catch(() => {})
   }
 
@@ -773,7 +775,7 @@ export function createBriefBuilds({
       const taken = await advanceBrief(pool, siteKey, [row.state], {
         ...ending,
         stage: null,
-        timings: { lostFrom: row.state }
+        timings: { lostFrom: row.state, interruptedAt: now() }
       })
       // Another process settled the row between the read and the write: say what it settled.
       if (!taken) return gate(siteKey)
@@ -867,7 +869,8 @@ export function createBriefBuilds({
       await advanceBrief(pool, siteKey, ['queued', 'preparing', 'ready', 'applying'], {
         state: 'failed',
         stage: null,
-        error: reason
+        error: reason,
+        timings: { interruptedAt: now() }
       })
     },
 

@@ -7,7 +7,7 @@
 // cannot take is failed instead of pretended. Whatever is refused is failed in the plugin's words and the rest goes. What the
 // last report says is off the site already is not ordered off it again, and its line reads as it did.
 import { hideLines } from './hide-lines.js'
-import { hideOrders } from './hide-plan.js'
+import { articleOwners, hideOrders } from './hide-plan.js'
 import { dropPages, emptyConstants, hideOpsOf, removeRows, unpublishBlocks } from './hide-writes.js'
 import { NO_LAST } from './no-last-report.js'
 import { answerWords } from './settings-door.js'
@@ -74,13 +74,24 @@ export async function runHideStage(input) {
       }
     }
   const pages = new Map()
-  const gonePage = ({ page }) => last.hidden(page.id)
+  const gonePage = ({ page }) => {
+    if (!last.hidden(page.id)) return false
+    const articles = articleOwners(page, kit)
+    const read = last.line(page.id)?.readFrom
+    return (
+      !articles.length ||
+      (articles.length === 1 &&
+        read?.params?.kind === 'article' &&
+        read.params.id === articles[0] &&
+        read.path?.join('.') === 'item.state')
+    )
+  }
   for (const entry of order.pages.filter(gonePage)) {
     const { status, reason, ordered, readFrom } = last.line(entry.page.id)
     pages.set(entry.page.id, { status, reason, ordered, readFrom })
   }
   const toDrop = order.pages.filter((entry) => !gonePage(entry))
-  let wrote = await dropPages({ door, siteKey, pages: toDrop, results: pages })
+  let wrote = await dropPages({ door, siteKey, pages: toDrop, results: pages, kit, plan })
   let words = { refusedAll: null, refused: new Map() }
   if (Object.keys(order.strings).length) {
     const template = kit?.template?.name

@@ -6,6 +6,7 @@
  * Every door reads the signed-in person through the open router's `caller` and touches only that
  * account's rows: another account's revision, build or action answers 404, like one that does not exist.
  */
+import { withChainRuns, withTemplateEstimates } from './chain-progress.js'
 import { json } from '../lib/http.js'
 import { bornSiteAddress } from '../lib/site-address.js'
 import { woRuntime } from '../lib/wo-ops.js'
@@ -28,7 +29,8 @@ import {
   revisionsOf,
   siteOfBuild
 } from './build-store.js'
-import { settleBuild, suggestedLabel } from './builds.js'
+import { savedSiteLabel, settleBuild, suggestedLabel } from './builds.js'
+import { siteLabelRoutes } from './site-label-route.js'
 import {
   acceptDemoActions,
   templateRankingOf,
@@ -40,6 +42,7 @@ import {
 } from './demo-actions.js'
 import { qaShape } from './demo-qa.js'
 import { reopenDemo, startDemoClock, touchDemo } from './demo-retention.js'
+import { latestPreviewOf } from './demo-preview.js'
 import { demoBuildRunning, prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
@@ -47,9 +50,32 @@ import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
-import { briefIsCurrent, createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
+import {
+  briefIsCurrent,
+  createRevision,
+  currentResearchState,
+  labelsIncomplete,
+  readsResearchKey,
+  resolveRevisionCms
+} from './revisions.js'
+import { randomUUID } from 'node:crypto'
+import { briefJobShape, createBriefJobs } from './brief-jobs.js'
+import { editRevision, readBriefEdits } from './brief-edits.js'
+import { researched, researchStateOf } from 'website-opportunities/src/research-state.js'
+import {
+  APPROVAL_NEXT,
+  approvalOf,
+  approveBrief,
+  briefGateOf,
+  buildGateOf
+} from 'website-opportunities/src/approval.js'
 
 const BASE = '/api/website-opportunities'
+
+/** `at`: the later of the latest revision and the latest brief job that ended done, of the opportunity `$1` (#537). */
+const LATEST_BRIEF_AT_SQL = `select greatest(
+    (select max(created_at) from wo_revision where opportunity_id = $1),
+    (select max(updated_at) from wo_brief_job where opportunity_id = $1 and state = 'done')) as at`
 
 /**
  * @param {object} deps the open router's own deps (`app.js`), read at request time: `clientDemo` and
@@ -77,6 +103,30 @@ export function createWebsiteBuilder(deps) {
   const templateCards = () => readTemplateCards(request, origin)
 
   const demoSettings = async () => (await runtime()).settings
+  // The Content brief as a background job (#524): the brief step labels the photographs, then writes the brief.
+  const briefJobs = createBriefJobs({
+    pool,
+    log: deps.log ?? console,
+    make: async ({ accountId, opportunityId, onStep }) => {
+      const label = deps.pictureLabels ?? null
+      return createRevision(pool, {
+        accountId,
+        opportunityId,
+        domain: await loadDomain(),
+        now,
+        pictureLabels: label
+          ? async (input) => {
+              onStep('labelling')
+              try {
+                return await label(input)
+              } finally {
+                onStep('writing')
+              }
+            }
+          : null
+      })
+    }
+  })
   const qualityMode = (accountId) => qualityModeOf(pool, accountId, { available: deps.quality?.available })
   async function acceptActions(args) {
     if (args.entries.some((entry) => entry.workflow === AGENT_DEMO))
@@ -171,6 +221,7 @@ export function createWebsiteBuilder(deps) {
       `select o.id,
        (select to_jsonb(a) from wo_demo_action a where a.opportunity_id = o.id and a.account_id = $1
           order by a.accepted_at desc, a.id desc limit 1) as demo_action,
+       (${LATEST_BRIEF_AT_SQL.replaceAll('$1', 'o.id')}) as brief_at,
        (select jsonb_build_object('id', r.id, 'n', r.n, 'createdAt', r.created_at,
                  'cms', lb.choice->'cms', 'template', lb.choice->'template')
           from wo_revision r left join lateral (select b.choice from wo_build b join wo_revision br on br.id = b.revision_id
@@ -182,7 +233,16 @@ export function createWebsiteBuilder(deps) {
                  'done', coalesce(sc.state = 'done' and b.state <> 'deleted', false), 'siteState', sc.state,
                  'address', st.address, 'label', b.label, 'qa', b.qa->>'state', 'createdAt', b.created_at,
                  'expiresAt', b.demo_expires_at, 'frozenAt', b.demo_frozen_at,
-                 'deletedAt', b.demo_deleted_at)
+                 'deletedAt', b.demo_deleted_at, 'built', b.built,
+                 'chain', (select jsonb_build_object('at', sb.created_at, 'minutes', sb.timings->'chain'->'totalMinutes',
+                             'usd', sb.timings->'chain'->'totalUsd', 'ending', sb.timings->'chain'->>'ending')
+                             from site_brief sb left join site s on s.site_key = sb.site_key
+                            where sb.site_key = b.site_key and (s.created_at is null or sb.created_at >= s.created_at)
+                            order by sb.created_at desc limit 1),
+                 'findings', (select jsonb_agg(distinct f->>'id') from jsonb_array_elements(
+                     case when jsonb_typeof(b.qa->'rounds'->-1->'failed') = 'array'
+                       then b.qa->'rounds'->-1->'failed' else '[]'::jsonb end) f where f->>'id' is not null),
+                 'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id))
           from wo_build b join wo_revision r on r.id = b.revision_id
           left join site_creation sc on sc.account_id = b.account_id and sc.build_id = b.build_id::text
           left join site st on st.site_key = b.site_key
@@ -193,15 +253,22 @@ export function createWebsiteBuilder(deps) {
     )
     const { settings } = await runtime()
     for (const r of rows) r.demo_action = r.demo_action ? demoActionShape(r.demo_action) : null
+    await withChainRuns(
+      pool,
+      rows.map((r) => r.demo_action),
+      { now: now() }
+    )
     return new Map(
       rows.map((r) => [
         r.id,
         {
           latestRevision: r.latest_revision ?? null,
+          // When a brief was last made or made again (`latestBriefAt`), for the card's approval (#537).
+          latestBriefAt: r.brief_at ?? null,
           sites: r.sites ?? [],
-          latestBuild: r.latest_build ?? null,
+          latestBuild: latestBuildShape(r.latest_build),
           demoAction: r.demo_action,
-          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action)
+          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action, r.id)
         }
       ])
     )
@@ -213,7 +280,7 @@ export function createWebsiteBuilder(deps) {
    */
   /** The Build form's choices: each CMS's templates and the one `/ops/wo` pins there. */
   async function templateChoicesOf(settings) {
-    return templateChoices(await templateCards(), settings)
+    return withTemplateEstimates(pool, templateChoices(await templateCards(), settings))
   }
 
   async function demoFactsOf(accountId, ids) {
@@ -246,22 +313,66 @@ export function createWebsiteBuilder(deps) {
   async function briefStatus(opp, revisions) {
     if (!revisions.length) return null
     const domain = await loadDomain().catch(() => null)
-    const key = domain
-      ? await currentResearchKey(pool, opp, domain).catch((error) => {
+    const live = domain
+      ? await currentResearchState(pool, opp, domain).catch((error) => {
           if (error?.code === 'DEMO_REQUEST_MISSING') return undefined
           throw error
         })
       : null
-    const same = key ? revisions.find((r) => r.research_hash === key) : null
+    const key = live?.key ?? null
+    // The newest brief of the current research, a seller's edit of it included (`brief-edits.js`), with its labels
+    // complete: one whose labels are absent, failed or pending offers Refresh (#555, #556), as does the brief of older
+    // research. A labelled brief may sit in the relabelled slot of the key (`researchKeySlots`).
+    const same = key
+      ? revisions.find(
+          (r) =>
+            readsResearchKey({ researchHash: r.research_hash, editedFromHash: r.edited_from_hash }, key) &&
+            !labelsIncomplete({ assetLabelling: r.asset_labelling, labelledShare: r.labelled_share })
+        )
+      : null
     const shown = same ?? revisions[0]
-    const known = Boolean(domain) && key !== undefined
+    const known = Boolean(domain) && live !== undefined
+    // A brief of a reading made under older rules is not current either (#524). The brief job cannot read the
+    // business again, so `sameResearch` says whether a Refresh would change anything: when the brief already
+    // matches this research, only Research again brings the reading up to the latest rules.
+    const readingOld = live?.readingOld === true
     // A quality-v1 brief has no hash: it is current while its frozen evidence is the research now (`briefIsCurrent`).
     let current = Boolean(same)
-    if (known && !same && !shown.research_hash) {
-      const { rows } = await pool.query('select research from wo_revision where id = $1', [shown.id])
-      current = await briefIsCurrent(pool, opp, domain, { research_hash: null, research: rows[0]?.research })
+    if (known && live && !same && !readingOld && !shown.research_hash && !shown.edited_from_hash) {
+      const { rows } = await pool.query('select research, brief from wo_revision where id = $1', [shown.id])
+      if (rows[0]) current = await briefIsCurrent(pool, opp, domain, { research_hash: null, ...rows[0] })
     }
-    return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? current : null }
+    return {
+      id: shown.id,
+      n: shown.n,
+      createdAt: shown.created_at,
+      current: known ? current && !readingOld : null,
+      ...(shown.edited_by === 'seller' ? { editedBySeller: true } : {}),
+      ...(readingOld ? { readingOld: true, sameResearch: Boolean(same) } : {})
+    }
+  }
+
+  /**
+   * When a Content brief of an opportunity was last made or made again, or null before the first: the latest revision,
+   * or a later brief job that ended done. A job that found the same research answers an existing revision (`reused`),
+   * so without the job's time a brief marked stale by a Profile edit that left the research as it was (an edit undone)
+   * would stay stale however often it is made again.
+   */
+  async function latestBriefAt(opportunityId) {
+    const { rows } = await pool.query(LATEST_BRIEF_AT_SQL, [opportunityId])
+    return rows[0]?.at ?? null
+  }
+
+  /** The seller's approvals of one opportunity (#537, `approval.js`), read now. */
+  async function approvalFor(opp) {
+    const [research, briefAt] = await Promise.all([researchStateOf(pool, opp.id), latestBriefAt(opp.id)])
+    return approvalOf({ opportunity: opp, research, latestBriefAt: briefAt })
+  }
+
+  /** A demo action with its chain progress (`chain-progress.js`), when its build runs the step chain. */
+  async function withChainRun(action) {
+    await withChainRuns(pool, [action], { now: now() })
+    return action
   }
 
   /** The demo half of `GET /:id`: its demo, progress, revisions, brief, action, usage and builds. */
@@ -278,9 +389,16 @@ export function createWebsiteBuilder(deps) {
     return {
       demo: (await listedDemoOf(accountId, [opp.id])).get(opp.id)?.demo ?? null,
       progress: demoProgress(builds[0]),
-      revisions: revisions.map((r) => ({ id: r.id, n: r.n, createdAt: r.created_at })),
+      revisions: revisions.map((r) => ({
+        id: r.id,
+        n: r.n,
+        createdAt: r.created_at,
+        ...(r.edited_by === 'seller' ? { editedBySeller: true } : {})
+      })),
       brief: await briefStatus(opp, revisions),
-      demoAction: (await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null,
+      // The latest Content brief job (#524): a running one shows its progress after a reload, a failed one its reason.
+      briefJob: briefJobShape(await briefJobs.latestOf(opp.id)),
+      demoAction: await withChainRun((await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null),
       usage: await readDemoUsage(pool, accountId, settings.demoBuildsPerAccountPerDay, now()),
       builds: builds.map(buildShape)
     }
@@ -303,6 +421,47 @@ export function createWebsiteBuilder(deps) {
         cancelRun: deps.quality?.cancelRun
       })
     )
+    /**
+     * The 409 of a build whose brief is not approved yet (#537), or null. Only the classic brief path is gated: with the
+     * quality protocol on (`quality-protocol.js`) a demo action prepares its own durable brief, which no seller reviews
+     * here. A batch names every refused opportunity in `ids`.
+     */
+    async function buildGateRefusal(c, accountId, opps) {
+      let mode
+      try {
+        mode = await qualityMode(accountId)
+      } catch {
+        return null
+      }
+      if (mode !== 'off') return null
+      const refused = []
+      for (const opp of opps) {
+        const gate = buildGateOf(await approvalFor(opp))
+        if (gate) refused.push({ id: opp.id, code: gate })
+      }
+      if (!refused.length) return null
+      const code = refused[0].code
+      return refuse(c, 409, code, APPROVAL_NEXT[code], opps.length > 1 ? { ids: refused } : {})
+    }
+
+    // The seller approves the latest Content brief (#537): it unlocks Build demo. A brief made from an older Profile is made
+    // again first.
+    app.post(`${BASE}/:id/brief/approve`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp) return notFound(c, 'opportunity')
+      const before = await approvalFor(opp)
+      if (before.brief === 'none') return refuse(c, 409, 'NO_BRIEF', APPROVAL_NEXT.NO_BRIEF)
+      if (before.brief === 'stale') return refuse(c, 409, 'BRIEF_STALE', APPROVAL_NEXT.BRIEF_STALE)
+      if (before.profile !== 'approved')
+        return refuse(c, 409, 'PROFILE_NOT_APPROVED', APPROVAL_NEXT.PROFILE_NOT_APPROVED)
+      const row = await approveBrief(pool, who.accountId, opp.id)
+      if (!row) return notFound(c, 'opportunity')
+      return json(c, { opportunity: ctx.opportunityShape(row), approval: await approvalFor(row) })
+    })
+
     /** A customer's own-site action (`own-site.js`) keeps its chat doors while Build from my business is on. */
     const ownActionOpen = async (accountId, actionId) =>
       (await ownSiteOn(pool)) && (await isOwnSiteAction(pool, accountId, actionId))
@@ -349,7 +508,9 @@ export function createWebsiteBuilder(deps) {
           null,
         usage: await readDemoUsage(pool, who.accountId, settings.demoBuildsPerAccountPerDay, now()),
         builds: builds.map(buildShape),
-        suggestedLabel: domain ? await suggestedLabel({ pool, config, domain, revision }) : null
+        suggestedLabel: domain ? await suggestedLabel({ pool, config, domain, revision }) : null,
+        // Site name on Tracy (#519): the label the person saved on the opportunity, or null.
+        siteLabel: await savedSiteLabel(pool, revision.opportunity_id)
       })
     })
 
@@ -528,6 +689,11 @@ export function createWebsiteBuilder(deps) {
         new Set(b.ids).size !== b.ids.length
       )
         return refuse(c, 400, 'INVALID_BATCH', 'Send a requestId and 1–100 distinct opportunity ids.')
+      const opps = (await Promise.all(b.ids.map((id) => opportunityOf(pool, who.accountId, id)))).filter(
+        Boolean
+      )
+      const bulkRefusal = await buildGateRefusal(c, who.accountId, opps)
+      if (bulkRefusal) return bulkRefusal
       const result = await acceptActions({
         accountId: who.accountId,
         entries: b.ids.map((id) => ({
@@ -596,6 +762,12 @@ export function createWebsiteBuilder(deps) {
             }
           )
       }
+      // 🔒 A demo is built from an approved brief (#537): a retry continues its own accepted build, and a Find quick build
+      // (`fromFind`) is its own flow with no Details page to approve on.
+      if (!b.retryOf && b.fromFind !== true) {
+        const refusal = await buildGateRefusal(c, who.accountId, [opp])
+        if (refusal) return refusal
+      }
       const result = await acceptActions({
         accountId: who.accountId,
         entries: [
@@ -654,21 +826,88 @@ export function createWebsiteBuilder(deps) {
       }
       const domain = await domainOr(c)
       if (domain instanceof Response) return domain
+      // 🔒 A brief is made from THIS card's research (#524): locked until it finished.
+      if (!researched(await researchStateOf(pool, opp.id)))
+        return refuse(
+          c,
+          409,
+          'RESEARCH_NOT_DONE',
+          'Press Research first: the brief is made from its results.'
+        )
+      // 🔒 The seller approves the Profile before a brief is made from it (#537); an approved brief is final (R23).
+      const approval = await approvalFor(opp)
+      const briefGate = briefGateOf(approval)
+      if (briefGate) return refuse(c, 409, briefGate, APPROVAL_NEXT[briefGate])
+      if (approval.brief === 'approved') return refuse(c, 409, 'BRIEF_APPROVED', APPROVAL_NEXT.BRIEF_APPROVED)
+      const b = (await body(c)) ?? {}
+      if (b.requestId !== undefined && !REQUEST_ID.test(String(b.requestId)))
+        return refuse(
+          c,
+          400,
+          'INVALID_REQUEST_ID',
+          'Send a requestId of 8–100 letters, digits, ".", "_", ":" or "-", or leave it out.'
+        )
       // Refresh: the brief of the current research, the latest one when nothing changed. No template: a build chooses.
-      const result = await createRevision(pool, {
+      // It runs in the background (`brief-jobs.js`): poll `GET …/:id/brief-jobs/:jobId`.
+      const started = await briefJobs.start({
         accountId: who.accountId,
         opportunityId: opp.id,
-        domain,
-        now,
-        pictureLabels: deps.pictureLabels ?? null
+        requestId: b.requestId ?? `brief-${randomUUID()}`
       })
-      if ('error' in result && result.error === 'NOT_FOUND') return notFound(c, 'opportunity')
-      if ('error' in result)
-        return refuse(c, 422, 'BRIEF_INVALID', 'Run the research again: the brief did not pass its schema.', {
-          errors: result.errors
-        })
-      if (result.reused) return json(c, { revision: revisionShape(result.revision) }, 200)
+      if (started.reused)
+        return refuse(c, 409, 'REQUEST_ID_REUSED', 'Send a new requestId for another opportunity.')
+      return json(c, { job: briefJobShape(started.job) }, 202)
+    })
+
+    // The seller's edits of a Content brief (#524): a new revision marked edited, which Build then builds from. Locked
+    // once the brief is approved (#537 R23): a change after approval is a new card of the same place.
+    app.post(`${BASE}/:id/revisions/:revId/edits`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const revId = c.req.param('revId')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp || !UUID.test(revId)) return notFound(c, 'brief')
+      if ((await approvalFor(opp)).brief === 'approved')
+        return refuse(c, 409, 'BRIEF_APPROVED', APPROVAL_NEXT.BRIEF_APPROVED)
+      const read = readBriefEdits(await body(c))
+      if ('error' in read)
+        return refuse(
+          c,
+          400,
+          'INVALID_EDITS',
+          'Send "edits" as a list of {"path", "value"}: a text of the brief and its new words, 1 to 2000 characters.'
+        )
+      const domain = await domainOr(c)
+      if (domain instanceof Response) return domain
+      const result = await editRevision(pool, {
+        accountId: who.accountId,
+        opportunityId: opp.id,
+        revisionId: revId,
+        edits: read.edits,
+        domain,
+        now
+      })
+      if (result.error === 'NOT_FOUND') return notFound(c, 'brief')
+      if (result.error === 'UNKNOWN_PATH')
+        return refuse(c, 400, 'UNKNOWN_PATH', `This brief has no text at ${result.path}.`)
+      if (result.error)
+        return refuse(c, 422, 'BRIEF_INVALID', 'These words do not fit the brief.', { errors: result.errors })
       return json(c, { revision: revisionShape(result.revision) }, 201)
+    })
+
+    // The Content brief job (#524): its step while it runs; once done, the revision it made.
+    app.get(`${BASE}/:id/brief-jobs/:jobId`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const jobId = c.req.param('jobId')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp || !UUID.test(jobId)) return notFound(c, 'brief job')
+      const job = await briefJobs.read(who.accountId, opp.id, jobId)
+      if (!job) return notFound(c, 'brief job')
+      const revision = job.revision_id ? await revisionOf(pool, who.accountId, job.revision_id) : null
+      return json(c, { job: briefJobShape(job), ...(revision ? { revision: revisionShape(revision) } : {}) })
     })
 
     // ── A demo's life (`demo-retention.js`) ─────────────────────────────────────────────────────
@@ -693,6 +932,26 @@ export function createWebsiteBuilder(deps) {
       const extended = await touchDemo(pool, found.demo.id, { now: now(), settings: await demoSettings() })
       if (!extended) return refuse(c, 409, 'DEMO_KEPT', 'This demo is kept for good: it has no expiry.')
       return json(c, { demo: demoOf(extended) })
+    })
+
+    // The picture of the latest demo's home page (#537, `demo-preview.js`): image bytes, or 404 when none was taken.
+    // The Details answer names it with its capture time (`demo.preview.url`), so a new picture is a new address.
+    app.get(`${BASE}/:id/demo/preview`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const picture = who.accountId && UUID.test(id) ? await latestPreviewOf(pool, who.accountId, id) : null
+      if (!picture) return notFound(c, 'preview')
+      return new Response(new Uint8Array(picture.bytes), {
+        status: 200,
+        headers: {
+          'content-type': picture.contentType,
+          'content-length': String(picture.bytes.length),
+          'cache-control': 'private, max-age=86400',
+          'last-modified': new Date(picture.capturedAt).toUTCString(),
+          'x-content-type-options': 'nosniff'
+        }
+      })
     })
 
     // The deleted demo made again from the same revision, through the same build path as the first.
@@ -753,6 +1012,9 @@ export function createWebsiteBuilder(deps) {
       return json(c, { ...accepted.body, build: build ? buildShape(build) : null }, 202)
     })
 
+    // Site name on Tracy (#519): the label a demo of this opportunity is built under.
+    siteLabelRoutes(app, { pool, config, loadDomain, caller, refuse, notFound, body, UUID, opportunityOf })
+
     // Add site's Build from my business: the customer's own business, researched and built like a demo.
     ownSiteRoutes(app, {
       pool,
@@ -785,8 +1047,11 @@ export function createWebsiteBuilder(deps) {
     saveSettings,
     listedDemoOf,
     detailOf,
+    latestBriefAt,
     demoFactsOf,
     demoJourneySql,
+    // Settles every Content brief job this process runs (tests, shutdown).
+    briefJobsIdle: () => briefJobs.idle(),
     templateChoicesOf,
     templateCards,
     // Before an opportunity is deleted: its live demo sites torn down (`demo-removal.js`), with `deps.demoTeardown`.
@@ -806,7 +1071,7 @@ export function createWebsiteBuilder(deps) {
  * once its action failed, and Building is timed from the queued action's own `acceptedAt` (27/10/2026). The build
  * row itself stays as the host left it: the Retry provisions on that same row.
  */
-function listedDemo(b, graceDays, config, action = null) {
+function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
   if (!b) return null
   const frozen = b.frozenAt ? Date.parse(b.frozenAt) : Number.NaN
   const own = b.state === 'refused' || b.siteState === 'failed' ? 'failed' : b.done ? 'done' : 'building'
@@ -826,7 +1091,45 @@ function listedDemo(b, graceDays, config, action = null) {
         ? new Date(frozen + graceDays * 86_400_000).toISOString()
         : null,
     qa: b.qa ?? null,
-    build: { status, startedAt: startedAt ?? null }
+    build: { status, startedAt: startedAt ?? null },
+    // The Your site card (#537, option A), new fields only: what the finished build took, the failing QA checks of its
+    // last round (check ids), and its home page picture (`demo-preview.js`).
+    built: builtOfListed(b),
+    findings: Array.isArray(b.findings) ? b.findings.slice(0, 10) : [],
+    preview:
+      b.previewAt && opportunityId
+        ? {
+            url: `${BASE}/${opportunityId}/demo/preview?v=${Date.parse(b.previewAt)}`,
+            capturedAt: new Date(b.previewAt).toISOString()
+          }
+        : null
+  }
+}
+
+/** A listed row's latest build without the parts only its `demo` reads (`listedDemo`). */
+function latestBuildShape(b) {
+  if (!b) return null
+  const { built: _built, chain: _chain, findings: _findings, previewAt: _previewAt, ...rest } = b
+  return rest
+}
+
+/**
+ * What a finished build took: the facts kept when its action completed, else (a build finished before they were kept)
+ * its own step chain measurement, ended at its start plus its minutes. Null when neither says.
+ */
+function builtOfListed(b) {
+  const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : null)
+  if (b.built && typeof b.built === 'object')
+    return { at: b.built.at ?? null, minutes: num(b.built.minutes), usd: num(b.built.usd) }
+  const chain = b.chain
+  const minutes = num(chain?.minutes)
+  if (!b.done || !chain || chain.ending !== 'complete' || minutes === null) return null
+  const start = Date.parse(chain.at)
+  const usd = num(chain.usd)
+  return {
+    at: Number.isFinite(start) ? new Date(start + minutes * 60_000).toISOString() : null,
+    minutes: Math.round(minutes * 10) / 10,
+    usd: usd === null ? null : Math.round(usd * 100) / 100
   }
 }
 
@@ -861,7 +1164,8 @@ function revisionShape(r) {
     n: r.n,
     brief: r.brief,
     assetManifest: r.asset_manifest,
-    createdAt: r.created_at
+    createdAt: r.created_at,
+    ...(r.brief?.edited?.by === 'seller' ? { editedBySeller: true } : {})
   }
 }
 

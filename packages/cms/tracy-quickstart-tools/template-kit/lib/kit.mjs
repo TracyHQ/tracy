@@ -14,7 +14,7 @@ import { representativeChecks } from './pack.mjs'
 import { detailPageChecks, groupPages, LISTING, mixedGroupChecks } from './page-groups.mjs'
 import { sampleIndex } from './sample-index.mjs'
 import { judgeShowcase, showcaseChecks } from './showcase-pages.mjs'
-import { assignSlotOwners, slotOwnerChecks } from './slot-owners.mjs'
+import { assignSlotOwners, ownerTextsOf, slotOwnerChecks } from './slot-owners.mjs'
 import { formatTextSlots } from './text-format.mjs'
 import { harmonizeLimits, limitChecks } from './text-limits.mjs'
 
@@ -267,14 +267,7 @@ export function buildKit({
   // One limit per slot kind of a list, measured from the frame (text-limits.mjs).
   for (const b of blocks) for (const l of b.lists ?? []) harmonizeLimits(l, textFit)
   // One block per slot: the block that renders it, read from the shown words of the read pass (slot-owners.mjs).
-  const wordsOf = new Map(
-    recs.map((r) => [
-      r.id,
-      (r.widths?.[desk]?.details?.texts ?? [])
-        .map((t) => String(t).replace(/\s+/g, ' ').trim().toLowerCase())
-        .join(' | ')
-    ])
-  )
+  const wordsOf = new Map(recs.map((r) => [r.id, ownerTextsOf(r.widths?.[desk]?.details)]))
   const slotByKitId = new Map((map.slots ?? []).map((sl) => [neutralKey(sl.key), sl]))
   assignSlotOwners({
     blocks,

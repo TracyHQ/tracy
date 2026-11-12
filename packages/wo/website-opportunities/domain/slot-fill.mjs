@@ -305,8 +305,9 @@ export function planSlotFill({ slotRoles, profile, assessment, locale = 'en', ne
       [
         name?.id,
         ...(role === 'business.tagline' ? [fact(profile?.brand?.tagline)?.id] : []),
+        // Google's editorial summary is a fact of the business (#537 R18), no longer a story quote.
         ...(role === 'business.summary' || role === 'business.long_description'
-          ? found.stories.map((s) => s.id)
+          ? [...found.stories.map((s) => s.id), fact(b.editorialSummary)?.id]
           : []),
         ...(role === 'business.category_label'
           ? list(profile?.classification?.derivedCategories)

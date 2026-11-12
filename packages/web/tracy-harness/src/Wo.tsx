@@ -96,6 +96,7 @@ import {
   WO_STAGE_META,
   WO_CUSTOMER_STAGES,
   WO_CUSTOMER_LABEL_KEY,
+  woActionFailureCode,
   woNeedsAttention,
   type WoCms,
   type WoDubaiPrefetch,
@@ -1583,6 +1584,10 @@ export function Wo({ entry, navigate }: { entry?: object; navigate?: WoNavigate 
                                   {row.demoSite}
                                   <ExternalLink className="size-3" />
                                 </a>
+                              ) : woActionFailureCode(row) ? (
+                                <span className="font-mono text-[11px] text-destructive">
+                                  {t('wo.demoAction.failed', { code: woActionFailureCode(row) ?? '' })}
+                                </span>
                               ) : (
                                 <span className="text-muted-foreground">—</span>
                               )}
@@ -1613,6 +1618,11 @@ export function Wo({ entry, navigate }: { entry?: object; navigate?: WoNavigate 
                               <span className="text-muted-foreground uppercase">{row.cms}</span>
                               <span className="mx-1 text-muted-foreground">·</span>
                               <span>{row.template}</span>
+                              {row.templateSource === 'pinned' ? (
+                                <span className="ml-1 text-muted-foreground">
+                                  ({t('wo.template.pinned')})
+                                </span>
+                              ) : null}
                             </TableCell>
                             <TableCell className="max-w-[240px] truncate text-muted-foreground">
                               {row.notes}
@@ -1937,6 +1947,7 @@ function WoInspectorPanel({
             <span className="font-semibold text-foreground">{t('wo.col.demoSite')}</span>
             <Badge variant="outline" className="font-mono text-[10px] uppercase">
               {row.cms} · {row.template}
+              {row.templateSource === 'pinned' ? ` (${t('wo.template.pinned')})` : ''}
             </Badge>
           </div>
           {row.demoSite && row.demoUrl ? (
@@ -1953,6 +1964,10 @@ function WoInspectorPanel({
               <Badge variant="outline" className="text-[10px]">
                 {row.demoStatus}
               </Badge>
+            </div>
+          ) : woActionFailureCode(row) ? (
+            <div className="mt-1 font-mono text-destructive">
+              {t('wo.demoAction.failed', { code: woActionFailureCode(row) ?? '' })}
             </div>
           ) : (
             <div className="mt-1 text-muted-foreground">{t('wo.inspector.noDemo', { rev: row.revId })}</div>

@@ -2,6 +2,7 @@
  * An opportunity's answer, read for the screen. Only what the server sent is drawn: an empty field is
  * left out (it belongs in the brief's `missing` list, not on screen as a guess).
  */
+import { failureReason } from '@tracy/wo-views/demo-state'
 import { SOCIAL_NETWORKS, socialLine, type SocialLine } from '@tracy/wo-views/model'
 
 import { toSocialStat } from './flow.ts'
@@ -200,6 +201,8 @@ export interface MediaTile {
   height: number | null
   /** Why the server does not show it as a photograph (`media-junk.js`), null when it does. */
   hidden: string | null
+  /** The owner keeps it off the site (#537 R16); it stays in Photos & video, dimmed. */
+  ownerHidden: boolean
 }
 
 /** `{provider, authors: [{displayName}]}` → "Google: Minh, Hoa"; null for anything else. */
@@ -231,7 +234,8 @@ export function mediaTile(raw: Record<string, unknown> | null | undefined): Medi
     credit: creditText(raw.credit),
     width: size(raw.width),
     height: size(raw.height),
-    hidden: HIDDEN_REASONS.has(String(raw.hidden)) ? String(raw.hidden) : null
+    hidden: HIDDEN_REASONS.has(String(raw.hidden)) ? String(raw.hidden) : null,
+    ownerHidden: raw.ownerHidden === true
   }
 }
 
@@ -469,6 +473,10 @@ export interface GooglePlaceView {
     rating: number | null
     authorUri: string | null
     authorAvatarUrl: string | null
+    /** The server's key of the review (#537 R16), null when it gives none. */
+    key: string | null
+    /** The owner keeps it off the site. */
+    ownerHidden: boolean
   }[]
 }
 
@@ -515,7 +523,9 @@ export function googlePlaceView(raw: unknown): GooglePlaceView | null {
           text: body,
           rating,
           authorUri: googleLink(r.authorUri),
-          authorAvatarUrl: googleLink(r.authorAvatarUrl, true)
+          authorAvatarUrl: googleLink(r.authorAvatarUrl, true),
+          key: text(r.key),
+          ownerHidden: r.ownerHidden === true
         }
       ]
     })
@@ -669,6 +679,9 @@ export interface TripadvisorReviewView {
   rating: number | null
   url: string
   authorUrl: string | null
+  /** The server's key of the review (#537 R16), null when it gives none. */
+  key: string | null
+  ownerHidden: boolean
 }
 
 const tripadvisorLink = (value: unknown): string | null => {
@@ -745,9 +758,19 @@ export function tripadvisorReviewView(profile: unknown, media: MediaTile[] = [])
               return [{ url: image, mediaId: stored?.id ?? null }]
             })
             .slice(0, 10),
-          rating: typeof raw.rating === 'number' && raw.rating >= 0 && raw.rating <= 5 ? raw.rating : null
+          rating: typeof raw.rating === 'number' && raw.rating >= 0 && raw.rating <= 5 ? raw.rating : null,
+          key: text(raw.key),
+          ownerHidden: raw.ownerHidden === true
         }
       ]
     })
     .slice(0, 10)
+}
+
+/** A server reason that is a code (`ALL_CAPS_WITH_UNDERSCORES`) reads as its plain sentence; a sentence stays as is. */
+export function failureReasonText(
+  reason: string,
+  t: (key: string, params?: Record<string, unknown>) => string
+): string {
+  return /^[A-Z][A-Z0-9]*(_[A-Z0-9]+)+$/.test(reason.trim()) ? failureReason(reason.trim(), t) : reason
 }
