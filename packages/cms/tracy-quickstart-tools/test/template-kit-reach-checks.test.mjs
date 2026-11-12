@@ -93,6 +93,12 @@ test('a control with words and no door counts; one with something it opens, an a
   )
 })
 
+test('the current page number of a pager prints no address and needs none, so it is no dead control', () => {
+  const pageNumber = { id: 'b.link-3', action: 'page-control', label: '3', current: true }
+  assert.equal(isDeadControl(pageNumber), false)
+  assert.equal(isDeadControl({ ...pageNumber, current: undefined }), true)
+})
+
 test('a map button with no slot and an embedded map with no map-location slot count; a tied map does not', () => {
   const kit = studio()
   assert.equal(reachChecks(kit).mapLocationUnmapped, 2)

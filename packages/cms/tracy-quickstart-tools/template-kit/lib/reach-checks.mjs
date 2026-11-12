@@ -35,10 +35,14 @@ function slotsOf(block) {
   ]
 }
 
-/** A link with words and no door: the template prints it, and nothing can send it anywhere. */
+/**
+ * A link with words and no door: the template prints it, and nothing can send it anywhere. The current page of a
+ * pagination prints no address on purpose (template-gaps.mjs skips it the same way).
+ */
 export const isDeadControl = (link) =>
   link?.action === 'page-control' &&
   hasWords(link.label) &&
+  !link.current &&
   !link.opens &&
   !link.target &&
   !link.menu &&

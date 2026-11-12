@@ -116,6 +116,14 @@ test('a heading whose first slot is another item ("Tagged: Reefs" beside a featu
   // The matcher gave the tag's words to the feature alone: the words still tie the tag.
   findings.pages.at(-1).items[0].slots = ['module-5.0']
   assert.deepEqual(Object.keys(tagListsOf({ map, findings }).itemLists), ['tag-7.items', 'tag-8.items'])
+  // The matcher gave the heading to the template string that prints it ("Tagged: %s"): filled with the tag's title,
+  // it ties the tag.
+  map.slots.push(slot('languageString-9.0', 'value', 'text', 'Tagged: %s', 'editorial.heading'))
+  findings.pages.at(-1).items[0].slots = ['languageString-9.0']
+  assert.deepEqual(Object.keys(tagListsOf({ map, findings }).itemLists), ['tag-7.items', 'tag-8.items'])
+  findings.pages.at(-1).items[0].value = 'Tagged: kelp'
+  assert.deepEqual(Object.keys(tagListsOf({ map, findings }).itemLists), ['tag-7.items'])
+  findings.pages.at(-1).items[0].value = 'Tagged: reefs'
   // A heading printing other words ties nothing.
   map.slots.push(slot('module-6.0', 'title', 'text', 'kelp', 'offering.name'))
   findings.pages.at(-1).items[0].slots = ['module-6.0']

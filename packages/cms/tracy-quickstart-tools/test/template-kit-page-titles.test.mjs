@@ -159,6 +159,35 @@ test('a page titled by a person or a menu item the page belongs to takes that sl
   assert.equal(onePage(own).pages[0].titleSlot, 'menuItem-7.0')
 })
 
+test('an image text alternative and the menu label of the page are no printed title beside the item the page shows', () => {
+  const map = {
+    ...MAP,
+    slots: [
+      ...MAP.slots,
+      slot('article-5.4', 'Pool Rules', { column: 'images', jsonPath: ['image_intro_alt'] }),
+      slot('menuItem-20.0', 'News'),
+      slot('category-6.0', 'News', { role: 'editorial.heading' })
+    ],
+    pages: [
+      ...MAP.pages,
+      { entity: 'menuItem-20', route: 'news', link: 'index.php?option=com_content&view=category&id=6' },
+      { entity: 'menuItem-21', route: 'pool-rules', link: 'index.php?option=com_content&view=article&id=5' }
+    ]
+  }
+  const titled = (path, text, via = 'template') => {
+    const k = kit([{ id: `page${path}`, path, blocks: { 1440: ['header'] }, h1: { via, text } }])
+    settlePageTitles(k, { map })
+    return k.pages[0]
+  }
+  assert.equal(titled('/pool-rules', 'Pool Rules').titleSlot, 'article-5.0')
+  assert.equal(titled('/news', 'News').titleSlot, 'category-6.0')
+  assert.deepEqual(
+    titled('/news', 'News', 'page-heading').titleCandidates,
+    ['category-6.0', 'menuItem-20.0'],
+    'a page heading may print the menu item title: that stays open'
+  )
+})
+
 test('the gate names every page without exactly one title slot', () => {
   const k = kit([
     page('page-lessons', '/lessons', 'Our Lessons', ['block-9']),
@@ -255,6 +284,27 @@ test('a tag page printing its tag with a mark of the template around it is title
     .slots.push({ id: 'article-5.9', type: 'text', sample: 'Squads' })
   settlePageTitles(k, { map: TAG_MAP })
   assert.equal(k.pages[0].titleSlot, 'tag-4.0', 'the mark is matched on the page entity only, not on a card')
+})
+
+test('a tag page printing its tag inside a template string ("Tagged: %s") is titled by the tag', () => {
+  const tagged = (format) => {
+    const k = kit([
+      {
+        id: 'page-club_topics_squads',
+        path: '/club/topics/squads',
+        blocks: { 1440: ['body-rules'] },
+        h1: { via: 'template', text: 'Tagged: Squads', block: 'body-rules' }
+      }
+    ])
+    const map = {
+      ...TAG_MAP,
+      slots: [...TAG_MAP.slots, slot('languageString-1.0', format, { role: 'editorial.heading' })]
+    }
+    settlePageTitles(k, { map })
+    return k.pages[0].titleSlot
+  }
+  assert.equal(tagged('Tagged: %s'), 'tag-4.0')
+  assert.equal(tagged('Topic: %s'), null, 'a template string printing other words is no proof')
 })
 
 const noH1 = (id, path) => ({
