@@ -34,6 +34,7 @@ import { apifySearchDaySpent, newPlacesDaySpent, refundApifySearch } from './api
 import { requireHost } from './host.js'
 import { decorateFindCandidates } from './find-ranking.js'
 import { withOutreach } from './outreach.js'
+import { markOutreach, OUTREACH_MARKS, outreachStatesOf } from './outreach-state.js'
 import { creditOf, fetchPlacePhotoName, isPhotoName, isPlaceId, placeIdOfPhotoName } from './place-photo.js'
 import {
   AgainLimitError,
@@ -253,6 +254,8 @@ export function websiteOpportunitiesRoutes(deps) {
   }
 
   const builder = deps.builder ?? null
+  // The builder's share link of a ready demo (`withOutreach`): the draft hands it out so the builder can count opens.
+  const outreachOptions = { shareLinks: builder?.shareLinksOf ?? null }
   // The builder's half of a row's stage; without it the stage reads research alone (`opportunities/wo-journey.js`).
   const demoJourney = builder?.demoJourneySql ?? null
 
@@ -1071,7 +1074,8 @@ export function websiteOpportunitiesRoutes(deps) {
           pool,
           who.accountId,
           await scoredRows(who.accountId, await listedRows(who.accountId, rows)),
-          host
+          host,
+          outreachOptions
         )
       })
     }
@@ -1091,23 +1095,34 @@ export function websiteOpportunitiesRoutes(deps) {
       pool,
       who.accountId,
       await scoredRows(who.accountId, await listedRows(who.accountId, rows)),
-      host
+      host,
+      outreachOptions
     )
     return json(c, { opportunities, counts, nextCursor, total: total ?? rows.length })
   })
 
   /** Listed rows in their answer shape, with the builder's demo columns when this deployment builds. */
   async function listedRows(accountId, rows) {
-    const [demos, same] = await Promise.all([
+    const [demos, same, states] = await Promise.all([
       builder
         ? builder.listedDemoOf(
             accountId,
             rows.map((r) => r.id)
           )
         : new Map(),
-      sameAsOf(pool, accountId, rows, { demoJourney })
+      sameAsOf(pool, accountId, rows, { demoJourney }),
+      outreachStatesOf(
+        pool,
+        accountId,
+        rows.map((r) => r.id)
+      )
     ])
-    return rows.map((r) => ({ ...listedShape(r, demos.get(r.id)), sameAs: same.get(r.id) ?? [] }))
+    return rows.map((r) => ({
+      ...listedShape(r, demos.get(r.id)),
+      sameAs: same.get(r.id) ?? [],
+      // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+      outreachState: states.get(r.id)
+    }))
   }
 
   /**
@@ -1400,10 +1415,32 @@ export function websiteOpportunitiesRoutes(deps) {
     const { rows } = await listOpportunities(pool, who.accountId, { ids: [id], demoJourney })
     if (!rows.length) return notFound(c, 'opportunity')
     const shaped = await listedRows(who.accountId, rows)
-    const [row] = await withOutreach(pool, who.accountId, await scoredRows(who.accountId, shaped), host)
+    const [row] = await withOutreach(
+      pool,
+      who.accountId,
+      await scoredRows(who.accountId, shaped),
+      host,
+      outreachOptions
+    )
     if (!row.outreach)
       return refuse(c, 409, 'DEMO_NOT_READY', 'Finish the site check, or reopen the demo before sharing it.')
     return json(c, { outreach: row.outreach })
+  })
+
+  // Where the seller's outreach to this business stands (`outreach-state.js`): they mark it sent, replied, won or lost
+  // themselves (`none` clears every mark). It records, never sends, so the feature switch does not gate it.
+  app.put(`${BASE}/:id/outreach/state`, async (c) => {
+    const who = await caller(c)
+    if (who instanceof Response) return who
+    const id = c.req.param('id')
+    const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+    if (!opp) return notFound(c, 'opportunity')
+    const mark = (await body(c))?.state
+    if (typeof mark !== 'string' || !OUTREACH_MARKS.includes(mark))
+      return refuse(c, 400, 'INVALID_OUTREACH_STATE', `Send "state": one of ${OUTREACH_MARKS.join(', ')}.`)
+    const outreachState = await markOutreach(pool, who.accountId, opp.id, mark, now())
+    if (!outreachState) return notFound(c, 'opportunity')
+    return json(c, { outreachState })
   })
 
   // The place profile (ADR 0037) as the owner saved it (#537 R18): the place's research as the template-independent
@@ -1498,6 +1535,8 @@ export function websiteOpportunitiesRoutes(deps) {
       opportunity: { ...opportunityShape(opp), sameAs },
       research,
       demo: demo.demo,
+      // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+      outreachState: (await outreachStatesOf(pool, who.accountId, [opp.id])).get(opp.id),
       place: view
         ? { id: opp.place_id, snapshotId: view.snapshot.id, publishedAt: view.snapshot.published_at }
         : null,

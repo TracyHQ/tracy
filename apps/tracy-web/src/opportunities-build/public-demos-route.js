@@ -6,6 +6,9 @@
  *   GET  /v1/demos/options      the CMS and templates a demo may name → {cms, defaultCms, accepts, demos}
  *   GET  /v1/demos/:id          → {demo, demos}
  *   POST /v1/demos/:id/cancel   → {demo, demos}
+ *   GET  /v1/demos/webhook      → {webhook | null}
+ *   PUT  /v1/demos/webhook      {url} → {webhook: {…, secret}}: the signing secret, shown this once (`demo-webhooks.js`)
+ *   DELETE /v1/demos/webhook    → {webhook: null, removed}
  *
  * WHO is an account token of scope `demos` (`requireAccountToken`, part A), never a seat key: a seat key names one
  * site and is refused 403 here. Refusals speak `/v1`'s envelope `{ error: { code, message } }`.
@@ -15,8 +18,10 @@ import { json } from '../lib/http.js'
 import { clientIp } from '../lib/login-mail-rate.js'
 import { overLimitDetail } from '../lib/rate.js'
 import { createPublicDemos, fingerprintOf } from './public-demos.js'
+import { checkWebhookUrl, registerWebhook, removeWebhook, webhookOf } from './demo-webhooks.js'
 
 export const DEMO_REQUEST_MAX_BYTES = 512 * 1024
+const WEBHOOK_BODY_MAX_BYTES = 8 * 1024
 /** Calls an hour, per account and per address, over all five doors; creating a demo has its own lower cap. */
 export const DEMO_RATE = Object.freeze({ accountHour: 600, addressHour: 1200, createsAccountHour: 60 })
 const IDEMPOTENCY_KEY = /^[A-Za-z0-9._:-]{8,100}$/
@@ -156,6 +161,67 @@ export function publicDemoRoutes(deps) {
       const auth = await who(c)
       if (auth instanceof Response) return auth
       return json(c, await demos.options(auth.accountId))
+    })
+  )
+
+  // The account's one webhook (`demo-webhooks.js`), before `/:id`, which would read `webhook` as an id.
+  app.get(
+    '/v1/demos/webhook',
+    onHost(async (c) => {
+      const auth = await who(c)
+      if (auth instanceof Response) return auth
+      return json(c, { webhook: await webhookOf(deps.pool, auth.accountId) })
+    })
+  )
+
+  app.put(
+    '/v1/demos/webhook',
+    onHost(async (c) => {
+      const auth = await who(c)
+      if (auth instanceof Response) return auth
+      const text = await c.req.text()
+      if (Buffer.byteLength(text) > WEBHOOK_BODY_MAX_BYTES)
+        return refuse(
+          c,
+          413,
+          'REQUEST_TOO_LARGE',
+          `A webhook body is at most ${WEBHOOK_BODY_MAX_BYTES} bytes.`
+        )
+      let raw
+      try {
+        raw = JSON.parse(text)
+      } catch {
+        return refuse(c, 400, 'INVALID_JSON', 'The body is not JSON.')
+      }
+      const checked = await checkWebhookUrl(raw?.url, {
+        domain: await deps.loadDomain(),
+        resolve: deps.resolve
+      })
+      if ('code' in checked)
+        return refuse(
+          c,
+          422,
+          'INVALID_WEBHOOK_URL',
+          'Send {"url"}: an https address on the default port, with no user or password, whose host is public.',
+          { errors: [{ path: 'url', code: checked.code }] }
+        )
+      const made = await registerWebhook(deps.pool, {
+        accountId: auth.accountId,
+        url: checked.url,
+        grantId: auth.grantId ?? null,
+        sessionSecret: deps.config.sessionSecret,
+        now: now()
+      })
+      return json(c, { webhook: { ...made.webhook, secret: made.secret } })
+    })
+  )
+
+  app.delete(
+    '/v1/demos/webhook',
+    onHost(async (c) => {
+      const auth = await who(c)
+      if (auth instanceof Response) return auth
+      return json(c, { webhook: null, removed: await removeWebhook(deps.pool, auth.accountId, now()) })
     })
   )
 
