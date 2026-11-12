@@ -65,7 +65,9 @@ function fakePool(initialRows = []) {
       if (s.startsWith('select * from wo_opportunity')) return { rows: [opp] }
       if (s.startsWith('select * from wo_revision where opportunity_id'))
         return {
-          rows: revisions.filter((r) => r.opportunity_id === params[0] && r.research_hash === params[1])
+          rows: revisions.filter(
+            (r) => r.opportunity_id === params[0] && [params[1]].flat().includes(r.research_hash)
+          )
         }
       if (s.startsWith('select * from wo_revision where id'))
         return { rows: revisions.filter((r) => r.id === params[0]) }
