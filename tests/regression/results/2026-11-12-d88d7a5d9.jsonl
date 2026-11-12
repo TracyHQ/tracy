@@ -1,0 +1,1 @@
+{"id":"REG-PR-572-emdash-apply-keeps-imported-pictures","verdict":"PASS","commit":"d88d7a5d9635b148221a239a287d9194e4294f87","ran_at":"2026-11-12T02:09:46.828Z","evidence":"tests/regression/.runs/2026-11-12-d88d7a5d9/REG-PR-572-emdash-apply-keeps-imported-pictures.log"}
