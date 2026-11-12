@@ -9,6 +9,8 @@
  *   deleted   frozen past `demoFreezeGraceDays`: the site's own teardown, then `demo_deleted_at` and
  *             `state = 'deleted'`. The
  *             brief, QA, screenshots and cost ledger stay — a build is a pure function of its revision
+ *   kept      handed over to its business (`keepDemo`, the handover door `handover.js`): no expiry for good, so it
+ *             is never frozen, capped or deleted by the sweep
  *   caps      over `demoMaxPerAccount` / `demoMaxPerHost` / `demoDiskHighWaterPct` the coldest live
  *             demos are frozen (never deleted) until under the cap
  *
@@ -62,6 +64,27 @@ export async function touchDemo(pool, buildId, { now, settings }) {
     [buildId, new Date(now), expiryFrom(now, rows[0].handoff, settings)]
   )
   return updated.rows[0] ?? null
+}
+
+/**
+ * The demo handed over to its business (`handover.js`): kept for good, the migration's `demo_expires_at = null` ("the
+ * owner took the site"). A frozen mark is lifted, and the touch is stamped so the clock never starts again
+ * (`startDemoClock` starts only a build never touched); the sweep and the caps act only on clocked demos.
+ * `kept` when this call stopped the clock, `already` when it was stopped before, `gone` for a build with no live site.
+ * @returns {Promise<{state: 'kept' | 'already' | 'gone', build: Record<string, any> | null}>}
+ */
+export async function keepDemo(pool, buildId, { now }) {
+  const { rows } = await pool.query(
+    `update wo_build set demo_expires_at = null, demo_frozen_at = null, demo_touched_at = $2
+      where id = $1 and site_key is not null and demo_deleted_at is null
+        and (demo_expires_at is not null or demo_frozen_at is not null or demo_touched_at is null)
+      returning *`,
+    [buildId, new Date(now)]
+  )
+  if (rows[0]) return { state: 'kept', build: rows[0] }
+  const held = (await pool.query('select * from wo_build where id = $1', [buildId])).rows[0] ?? null
+  if (!held?.site_key || held.demo_deleted_at) return { state: 'gone', build: held }
+  return { state: 'already', build: held }
 }
 
 /** Freeze a live demo (its term ran out, or a cap chose it). Null when it was not live. */
