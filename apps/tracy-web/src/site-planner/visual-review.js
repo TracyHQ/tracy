@@ -20,11 +20,49 @@ export function representativeImages(kit) {
   ]
 }
 
+// The images V01 may require, by what requires them, so the first message can name each exact id before the plan
+// exists: per page group its representative's desktop image and the phone images of its pages (in every kit so far
+// one, the representative's: a kept page's 390 image is its group's), and per block its desktop image (blocks often
+// share one, so a block's image id cannot be guessed from the block id). Whatever the plan keeps, V01's required set
+// is a subset of these ids.
+export function visualReviewImages(kit) {
+  const pages = new Map(list(kit?.pages).map((page) => [page.id, page]))
+  const groups = []
+  for (const group of list(kit?.pageGroups)) {
+    const desktop = pages.get(group.representative ?? group.root)?.images?.['1440']
+    const phone = [
+      ...new Set(
+        list(kit?.pages)
+          .filter((page) => page.group === group.id)
+          .map((page) => page.images?.['390'])
+          .filter(Boolean)
+      )
+    ]
+    const ids = [...new Set([desktop, ...phone].filter(Boolean))]
+    if (ids.length) groups.push({ group: group.id, ids })
+  }
+  const blocks = {}
+  for (const block of list(kit?.blocks)) {
+    const image = block?.images?.['1440']
+    if (typeof block?.id === 'string' && image) blocks[block.id] = image
+  }
+  return { groups, blocks }
+}
+
+// The policy's part of the planner's first message. Asking for the images of "every block your plan prints" failed
+// in practice: the plan only exists in the final answer, so a planner wrote it without opening them and paid a fix
+// round (Central Padel 12/11/2026: 29 of 41 required images missing after round 0, all of them blocks the planner had
+// read and phone images of kept pages). So the message names each exact id and ties every open to a step the planner
+// takes anyway: each page group's desktop and phone images together first, and each block's image in the same call
+// that reads the block. V01 itself is unchanged: only an image the planner opened, delivered to an answered turn,
+// counts.
 export function visualReviewInstruction(kit) {
+  const { groups, blocks } = visualReviewImages(kit)
   return [
-    'This run requires visual review before the plan can pass. Text looks do not satisfy this requirement.',
-    `First open these representative page images with open_kit_image, batching the tool calls: ${representativeImages(kit).join(', ')}.`,
-    'Then open the 1440 images of every block your plan prints (every decision except hide) and the 390 images of its kept pages. Reuse images already delivered in this conversation.',
+    'This run requires visual review before the plan can pass. Text looks do not satisfy this requirement, and the check counts only images you opened with open_kit_image.',
+    `First open these representative page images, the desktop (1440) and phone (390) images of each page group together, batching the tool calls: ${groups.flatMap((g) => g.ids).join(', ')}. They hold the phone image of every page, so they cover every page you keep.`,
+    `Then open each block's 1440 image in the same call that reads the block with read_kit_part: every block your plan prints (every decision except hide) needs its image opened, a block you hide needs none. Blocks often share an image, so take each id from this list, by block id: ${JSON.stringify(blocks)}.`,
+    'Before you write the plan, open in one batch the image of any printed block not opened yet. Reuse images already delivered in this conversation.',
     'Read needed kit parts in batches alongside these images. Every image is opened individually; never invent image ids or claim a review without opening it.'
   ].join('\n')
 }

@@ -2376,9 +2376,12 @@ approval or chain eligibility. Explicit custom indexes remain isolated from depl
 - **WO visual review:** the WO chain starts new planner runs with `--require-visual-review`, freezing
   `harness.visualReview = "kit-images/1"`. The additional V01 rule requires desktop page-group representatives,
   mobile images of kept pages and desktop images of every printed block. Evidence is the exact kit image hash
-  delivered in an answered model turn after its image-tool call. Missing coverage goes through the same fix rounds;
-  these runs keep image tools available instead of forcing text-only writing after 20 reads. A text-only model is
-  refused for this policy. Existing runs and standalone benches preserve their previous policy.
+  delivered in an answered model turn after its image-tool call. The first message names every image id V01 can
+  require (each page group's desktop and phone images, each block's desktop image) and asks for the group images first
+  and each block's image in the same call that reads the block, so round 0 can pass before the plan exists. Missing
+  coverage goes through the same fix rounds; these runs keep image tools available instead of forcing text-only
+  writing after 20 reads. A text-only model is refused for this policy. Existing runs and standalone benches preserve
+  their previous policy.
 
 ### Site writer bench (03/11/2026, [ADR 0042](docs/adr/0042-site-writer-trial-bench-copy-contract-and-check.md))
 
