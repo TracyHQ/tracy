@@ -119,6 +119,7 @@ import { createDemoContactPreview } from 'website-opportunities/src/contact-prev
 import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { createDemoLook } from './opportunities-build/demo-look.js'
 import { createDemoBuilt } from './opportunities-build/demo-preview.js'
+import { createDemoPageSpeed } from './opportunities-build/demo-pagespeed.js'
 import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
 import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
@@ -1522,7 +1523,15 @@ export function buildApp(deps) {
                   },
                   { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 120_000 }
                 )
-            : null
+            : null,
+          // The demo's own mobile PageSpeed beside the research's score of the current site (`demo-pagespeed.js`).
+          pageSpeed: createDemoPageSpeed({
+            config: deps.config,
+            runtime: woRuntimeOf,
+            fetchImpl: deps.fetchImpl ?? fetch,
+            resolve,
+            ...(deps.now ? { now: deps.now } : {})
+          })
         }),
       // The sweep's wordmark on a CMS dsh sets no logo on (Joomla, EmDash): its brand writer, as the account that
       // built the demo (`client-demo.js` `wornLogo`).

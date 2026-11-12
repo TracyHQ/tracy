@@ -12,6 +12,7 @@ import { bornSiteAddress } from '../lib/site-address.js'
 import { woRuntime } from '../lib/wo-ops.js'
 import { pinsOf, readTemplateCards, templateChoices } from '../lib/wo-revision-choice.js'
 import { findResearchOf, usableResearch } from 'website-opportunities/src/find-research.js'
+import { demoPageSpeedOf } from 'website-opportunities/src/pagespeed.js'
 import {
   insertOpportunity,
   jobsOfOpportunity,
@@ -1095,6 +1096,9 @@ function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
     // The Your site card (#537, option A), new fields only: what the finished build took, the failing QA checks of its
     // last round (check ids), and its home page picture (`demo-preview.js`).
     built: builtOfListed(b),
+    // The demo's own mobile PageSpeed, measured once its build completed (`demo-pagespeed.js`): `{score, measuredAt}`,
+    // else `{reason}` (`not_measured` while none is kept).
+    pagespeed: demoPageSpeedOf(b.built && typeof b.built === 'object' ? b.built.pagespeed : null),
     findings: Array.isArray(b.findings) ? b.findings.slice(0, 10) : [],
     preview:
       b.previewAt && opportunityId
