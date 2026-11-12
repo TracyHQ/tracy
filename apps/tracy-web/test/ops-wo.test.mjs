@@ -903,6 +903,35 @@ test('the Live Queue carries the PageSpeed facts of the research profile', async
   assert.ok(pool.state.queries.some((q) => q.sql.includes("p.profile->'pageSpeed' as page_speed")))
 })
 
+test('the Live Queue sets the current site score beside the latest demo’s own PageSpeed', async () => {
+  const pool = createStandInPool()
+  pool.state.opportunities[0].page_speed = { performance: 41, checkedAt: NOW_ISO }
+  pool.state.opportunities[1].page_speed = { performance: 34, checkedAt: '2026-11-01T08:00:00Z' }
+  pool.state.builds[0].built_pagespeed = {
+    url: 'https://anan-saigon.tracy.site/',
+    performance: 92,
+    checkedAt: '2026-11-12T09:00:00Z'
+  }
+  const doc = await (await requestWo({ pool })).json()
+  const row = (name) => doc.opportunities.find((r) => r.name === name)
+  assert.deepEqual(row('Anan Saigon').pagespeed, {
+    old: { score: 34, measuredAt: '2026-11-01T08:00:00.000Z' },
+    demo: { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' }
+  })
+  // No build: no demo; the old score stays as research measured it.
+  assert.deepEqual(row('Bếp Nhà Xứ Quảng').pagespeed, {
+    old: { score: 41, measuredAt: new Date(NOW_ISO).toISOString() },
+    demo: { reason: 'no_demo' }
+  })
+  // A demo PageSpeed could not reach keeps its reason, never a number.
+  pool.state.builds[0].built_pagespeed = { url: 'http://anan.tracy.test:51710/', reason: 'not_public' }
+  const again = await (await requestWo({ pool })).json()
+  assert.deepEqual(again.opportunities.find((r) => r.name === 'Anan Saigon').pagespeed.demo, {
+    reason: 'not_public'
+  })
+  assert.ok(pool.state.queries.some((q) => q.sql.includes("b.built->'pagespeed' as built_pagespeed")))
+})
+
 test('the Live Queue carries a short Google Places summary: amenities, reviews and stored photos', async () => {
   const pool = createStandInPool()
   pool.state.opportunities[1].google_place = { amenities: 4, reviews: 5, fetchedAt: NOW_ISO }
