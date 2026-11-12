@@ -70,7 +70,8 @@ test('explicit links and row content remain intact even when a row count is smal
   const { kit, value, decision } = input()
   decision.hiddenSlots = []
   decision.links = [{ link: missing, labelSlot: 'block-171.2', leadsTo: 'https://example.com/verified' }]
-  decision.copy = [{ slot: 'block-171.3', says: 'a verified profile' }]
+  // With the kit's limit already copied, so the comparison below sees only what the link closure does.
+  decision.copy = [{ slot: 'block-171.3', says: 'a verified profile', maxCharacters: 40 }]
   decision.lists = [{ list: 'block-171.social', rows: 1, items: [] }]
   const result = normalize(value, kit)
   const got = result.sharedBlocks.find((block) => block.block === social.id)
