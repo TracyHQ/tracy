@@ -16,6 +16,8 @@ export function scoreOpportunity(input?: {
   status?: string
   slowSiteThreshold?: number
   now?: Date
+  /** The trade must-haves of the place's current website (`trade-must-haves.mjs assessMustHaves`), or null. */
+  mustHaves?: Record<string, any> | null
 }): Score
 
 export interface ScoringEvidence {
@@ -24,6 +26,7 @@ export interface ScoringEvidence {
   social: { lastPostAt?: string | null } | null
   slowSiteThreshold: number
   now: Date
+  mustHaves: Record<string, any> | null
 }
 export interface ScoringRule {
   id: string
