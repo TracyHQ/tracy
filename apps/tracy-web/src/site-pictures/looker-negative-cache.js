@@ -5,7 +5,8 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { sha256Hex } from './file-store.js'
 
-export const NEGATIVE_LOOK_POLICY = 'rendered-lettering/1'
+// /2 (12/11/2026): scene text no longer counts as stray lettering, so no rejection made under /1 is reused.
+export const NEGATIVE_LOOK_POLICY = 'rendered-lettering/2'
 const HEX = /^[a-f0-9]{64}$/
 export const letteringRejection = (said) =>
   said?.verdict === 'fail' && said?.faults?.includes('stray lettering')
@@ -20,7 +21,7 @@ export function negativeLookKey(input) {
 
 export function negativeLookCache({ dir, model }) {
   const active = new Map()
-  const proofDir = path.join(dir, 'negative-looks', 'rendered-lettering-1')
+  const proofDir = path.join(dir, 'negative-looks', 'rendered-lettering-2')
   async function reuse(key) {
     const proof = await readJson(path.join(proofDir, `${key}.json`))
     if (proof?.policy !== NEGATIVE_LOOK_POLICY || proof.renderKey !== key || !HEX.test(proof.sourceKey))

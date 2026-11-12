@@ -1,6 +1,7 @@
 // P06 repeats on a page, P07 any-real frames, P08 person frames, P09 owner photo labels, P10 icons, P11 twins.
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap, neighbours, REUSE_MAX_OVERLAP } from '../gallery-tiles.js'
 import { OWNER_SOURCES as OWNER } from '../manifest-shape.js'
+import { letteringOf } from '../photo-shortlist.js'
 
 const MADE_UP = new Set(['drawn', 'owner-photo-extended'])
 export const documentarySourceProblem = (idx, entry) =>
@@ -100,18 +101,9 @@ export function checkP08({ R, view, idx }) {
 
 const bool = (x) => (typeof x === 'boolean' ? x : null)
 // The brief labels `hasTextOrWatermark` and `showsOtherBusiness` (true, false or null). When a label is absent, the
-// vision label names are read instead (textPresence, hasTextOverlay; otherBusiness). null means nobody knows.
-function lettering(a) {
-  // P09 forbids scene lettering too; a direct overlay-only false cannot override visible words.
-  if (a.textPresence === 'present' || a.hasTextOverlay === true) return true
-  const own = bool(a.hasTextOrWatermark)
-  if (own !== null) return own
-  const vision = [
-    a.textPresence === 'present' ? true : a.textPresence === 'absent' ? false : null,
-    bool(a.hasTextOverlay)
-  ].filter((x) => x !== null)
-  return vision.length ? vision.includes(true) : null
-}
+// vision label names are read instead (textPresence, hasTextOverlay; otherBusiness). null means nobody knows. The
+// lettering rule is the shortlist's own (`photo-shortlist.js` letteringOf), so code never picks what the check fails.
+const lettering = letteringOf
 const otherBusiness = (a) => bool(a.showsOtherBusiness) ?? bool(a.otherBusiness)
 
 // P09. An owner photo is a brief asset whose labels show no lettering (words, logo, watermark) and no other business.

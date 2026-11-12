@@ -22,7 +22,9 @@ Look at the picture first, then compare it with the words. The picture fails whe
   the chin or a cap, or a person is shown with no head at all. Look at every person in the picture, in the background
   too.
 - distorted face or body: a face, hand or body looks malformed, melted, doubled or missing parts.
-- stray lettering: readable text, a logo, a watermark or another business's branding is in the picture.
+- stray lettering: words or a logo added on top of the photo, a watermark or stamp, or another business's name or logo
+  shown prominently. Text that belongs to the scene is not stray lettering: the business's own name or logo on its
+  walls, courts, vehicles or clothing, a sign at its place, small print on equipment.
 - visible drawing seam: a line, a change of light or style, or a repeated pattern shows where a picture was extended or
   drawn onto.
 
