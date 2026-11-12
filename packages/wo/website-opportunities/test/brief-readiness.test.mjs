@@ -14,8 +14,12 @@ const sha = (n) => String(n).padStart(64, '0')
  * A reading of a business: each offering named in its bio, the first `described` of them also named by a review (its
  * description), and its team.
  */
-function readingOf({ name, offerings, described = offerings.length, team = [] }) {
-  const bio = `${name} offers ${offerings.join(', ')}.${team.map((p) => ` ${p.role} ${p.name} works here.`).join('')}`
+function readingOf({ name, offerings, described = offerings.length, team = [], story = [], facts = [] }) {
+  const bio = [
+    `${name} offers ${offerings.join(', ')}.`,
+    ...team.map((p) => ` ${p.role} ${p.name} works here.`),
+    ...[...story, ...facts].map((t) => ` ${t}`)
+  ].join('')
   const reviews = offerings
     .slice(0, described)
     .map((o) => ({ author: 'A guest', text: `We loved the ${o}, warmly done.` }))
@@ -30,7 +34,9 @@ function readingOf({ name, offerings, described = offerings.length, team = [] })
           ref: 'bio',
           ...(i < described ? { mentions: [{ quote: `the ${o}`, ref: `review:${i + 1}` }] } : {})
         })),
-        team: team.map((p) => ({ name: p.name, role: p.role, quote: `${p.role} ${p.name}`, ref: 'bio' }))
+        team: team.map((p) => ({ name: p.name, role: p.role, quote: `${p.role} ${p.name}`, ref: 'bio' })),
+        story: story.map((t) => ({ text: t, quote: t, ref: 'bio' })),
+        facts: facts.map((t) => ({ text: t, quote: t, ref: 'bio' }))
       },
       sources
     )
@@ -61,13 +67,13 @@ const photo = (extra = {}) => {
 const photos = (count, extra) => Array.from({ length: count }, () => photo(extra))
 const unlabelled = (count) => photos(count, { vision: null })
 
-function briefOf({ name, trade, reading = null, media }) {
+function briefOf({ name, trade, reading = null, media, sources = [], brand = null, profile = {} }) {
   const brief = makeSiteBrief(
     domain,
     fromPlace({
-      sources: [],
-      profile: { name, ...(reading ? { businessReading: reading } : {}) },
-      brand: null,
+      sources,
+      profile: { name, ...profile, ...(reading ? { businessReading: reading } : {}) },
+      brand,
       media
     }),
     { opportunity: { id: 'o1', name, candidate: { trade } }, madeAt: AT }
@@ -310,6 +316,197 @@ test('named people: a portrait passes, a missing one warns and asks', () => {
   assert.deepEqual(without.ownerQuestions.find((q) => q.id === 'owner.portraits').items, [
     'Rosa Quillfeather'
   ])
+})
+
+// --- A reading with nothing of the business in it (#554): good photos, a hero and credits, yet no offering, story or fact.
+const BOXING = 'Riverside Boxing Gym'
+test('a reading with no offering, story or fact blocks: research again or add the business information', () => {
+  const r = readinessOf({
+    name: BOXING,
+    trade: 'fitness',
+    reading: readingOf({ name: BOXING, offerings: [] }),
+    media: clubMedia()
+  })
+  for (const id of ['own-usable-photos', 'source-and-credit', 'hero-candidates', 'people-with-portrait'])
+    assert.equal(check(r, id).verdict, 'pass', id)
+  const c = check(r, 'business-content')
+  assert.equal(c.verdict, 'block')
+  assert.deepEqual(c.measured, { offerings: 0, menus: 0, story: 0, facts: 0, items: 0 })
+  assert.deepEqual([r.verdict, r.next], ['block', 'research-again'])
+  assert.ok(r.ownerQuestions.some((q) => q.id === 'owner.business-content'))
+})
+
+test('Portland-like: a bio, sharp labelled photos and an empty reading still block (the bio is no business content)', () => {
+  const r = readinessOf({
+    name: BOXING,
+    trade: 'fitness',
+    profile: { bio: 'Boxing for everyone in town. Come train with us.' },
+    reading: readingOf({ name: BOXING, offerings: [] }),
+    media: clubMedia()
+  })
+  assert.equal(check(r, 'business-content').verdict, 'block')
+  assert.deepEqual([r.verdict, r.next], ['block', 'research-again'])
+})
+
+// --- Every other source of what a business offers counts, so a real brief is never refused for its shape. ---
+const DINER = 'Lanternfish Noodle Bar'
+test('a published menu alone passes: the Menu page shows it from its source', () => {
+  const r = readinessOf(
+    {
+      name: DINER,
+      trade: 'food',
+      profile: { menus: [{ url: 'https://example.test/menu.pdf', source: 'website' }] },
+      media: clubMedia()
+    },
+    { templateKinds: ['business', 'gallery'] }
+  )
+  const c = check(r, 'business-content')
+  assert.deepEqual([c.verdict, c.measured.menus], ['pass', 1])
+  assert.deepEqual(
+    r.checks.filter((x) => x.verdict !== 'pass').map((x) => x.id),
+    []
+  )
+  assert.deepEqual([r.verdict, r.next], ['pass', 'build'])
+})
+
+test('menu lines a menu reader collected pass, as offering facts and as Menu page items', () => {
+  const r = readinessOf({
+    name: DINER,
+    trade: 'food',
+    profile: {
+      menuItems: [
+        {
+          name: 'Beef noodle soup',
+          price: '12',
+          source: { kind: 'pdf', url: 'https://example.test/menu.pdf' }
+        }
+      ]
+    },
+    media: clubMedia()
+  })
+  const c = check(r, 'business-content')
+  assert.equal(c.verdict, 'pass')
+  assert.ok(c.measured.offerings >= 1 && c.measured.items >= 1, JSON.stringify(c.measured))
+})
+
+// A demo request's typed `business.items` arrive as `profile.menuItems` and its `business.description` as the bio
+// (`public-demos.js` `importSnapshot`): the items count, the description alone does not.
+const typedItems = (url) => [
+  {
+    name: 'Beginner boxing class',
+    price: '20',
+    currency: 'USD',
+    section: null,
+    source: { kind: 'page', url },
+    verified: false
+  }
+]
+test('offering items typed into a demo request pass, for a trade with or without a menu', () => {
+  for (const trade of ['fitness', 'food']) {
+    const r = readinessOf({
+      name: BOXING,
+      trade,
+      profile: { bio: 'Boxing for everyone in town.', menuItems: typedItems('https://example.test/') },
+      media: clubMedia()
+    })
+    const c = check(r, 'business-content')
+    assert.equal(c.verdict, 'pass', trade)
+    assert.ok(c.measured.offerings >= 1, JSON.stringify(c.measured))
+  }
+  const described = readinessOf({
+    name: BOXING,
+    trade: 'fitness',
+    profile: { bio: 'Boxing for everyone in town.' },
+    media: clubMedia()
+  })
+  assert.equal(check(described, 'business-content').verdict, 'block', 'a typed description alone')
+})
+
+test('a news post of the business passes', () => {
+  const caption =
+    'Big news for the neighbourhood: from next month our gym stays open late on Fridays and Saturdays, and the whole crew is ready to welcome night owls with open sparring, pads and bag work for every level. See you there for a late round with friends and family.'
+  const r = readinessOf({
+    name: BOXING,
+    trade: 'fitness',
+    media: clubMedia(),
+    sources: [
+      {
+        source: 'instagram',
+        ref: 'riverside',
+        status: 'complete',
+        collected: { posts: [{ id: 'post1', caption, url: 'https://example.test/p/1' }] }
+      }
+    ]
+  })
+  const c = check(r, 'business-content')
+  assert.deepEqual([c.verdict, c.measured.items], ['pass', 1])
+})
+
+test('no reading at all is no business content either', () => {
+  const r = readinessOf({ name: BOXING, trade: 'fitness', media: clubMedia() })
+  assert.equal(check(r, 'business-content').verdict, 'block')
+  assert.equal(r.verdict, 'block')
+})
+
+test('a business with offerings and no named team still passes: zero people is no warning', () => {
+  const reading = readingOf({ name: CLUB, offerings: CLUB_OFFERINGS })
+  const r = readinessOf({ name: CLUB, trade: 'fitness', reading, media: clubMedia() })
+  assert.equal(check(r, 'people-with-portrait').measured.people, 0)
+  assert.equal(check(r, 'people-with-portrait').verdict, 'pass')
+  assert.equal(check(r, 'business-content').verdict, 'pass')
+  assert.deepEqual([r.verdict, r.next], ['pass', 'build'])
+})
+
+test('a business with no offering but its own story and facts passes the content check', () => {
+  const reading = readingOf({
+    name: BOXING,
+    offerings: [],
+    story: ['Founded by two friends who wanted a ring for everyone in town'],
+    facts: ['Open every day from seven in the morning']
+  })
+  const r = readinessOf({ name: BOXING, trade: 'fitness', reading, media: clubMedia() })
+  const c = check(r, 'business-content')
+  assert.deepEqual([c.verdict, c.measured.story, c.measured.facts], ['pass', 1, 1])
+  assert.equal(r.verdict, 'pass')
+})
+
+test('a story only a post tells is business content', () => {
+  const caption =
+    'Our story began in a small garage. Founded in 2009 by two coaches, the gym opened its doors to everyone who wanted to learn to box, and it still welcomes beginners every week.'
+  const r = readinessOf({
+    name: BOXING,
+    trade: 'fitness',
+    reading: readingOf({ name: BOXING, offerings: [] }),
+    media: clubMedia(),
+    sources: [
+      {
+        source: 'instagram',
+        ref: 'riverside',
+        status: 'complete',
+        collected: { posts: [{ id: 'post1', caption, url: 'https://example.test/p/1' }] }
+      }
+    ]
+  })
+  const c = check(r, 'business-content')
+  assert.deepEqual([c.verdict, c.measured.story], ['pass', 1])
+  assert.equal(r.verdict, 'pass')
+})
+
+test('a fact only the logo states is business content', () => {
+  const logo = photo({ vision: null })
+  const r = readinessOf({
+    name: BOXING,
+    trade: 'fitness',
+    reading: readingOf({ name: BOXING, offerings: [] }),
+    media: [logo, ...clubMedia()],
+    brand: {
+      logo: logo.id,
+      logoResearch: { chosen: { readsAs: 'RIVERSIDE BOXING EST. 1998', mediaId: logo.id } }
+    }
+  })
+  const c = check(r, 'business-content')
+  assert.deepEqual([c.verdict, c.measured.facts], ['pass', 1])
+  assert.equal(r.verdict, 'pass')
 })
 
 test('an item with neither a role nor a reason warns', () => {

@@ -110,7 +110,12 @@ test('new acceptances do not reuse a legacy revision, while explicit retries ret
     )
   ).rows[0]
   assert.equal((await createRevision(db.pool, { ...args, revisionId: old.id })).revision.place_profile, null)
-  const made = (await createRevision(db.pool, args)).revision
+  // As a Refresh makes it: with its photograph labelling (here, nothing to label).
+  const pictureLabels = async () => ({
+    labels: new Map(),
+    note: { status: 'none', asked: 0, labelled: 0, cached: 0 }
+  })
+  const made = (await createRevision(db.pool, { ...args, pictureLabels })).revision
   assert.notEqual(made.id, old.id)
   assert.equal(made.place_profile.profile.business.name.value, 'North Studio')
   assert.equal(await currentResearchKey(db.pool, opp, domain), made.research_hash)

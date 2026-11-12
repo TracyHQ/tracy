@@ -2507,6 +2507,9 @@ frame, its twins and setting pictures are omitted from changes, uploads and alts
 problems. Missing original context refuses generated provenance rather than assuming an illustration;
 generic illustrations with their original context remain available. This also checks failed and historical
 final manifests when exported again; it does not rewrite their saved records or previously exported files.
+The kit's `business.gallery_image` role establishes documentary purpose even when a plan asks for
+`specific` pictures without observed fact citations. Such gallery frames retain the real-photo reuse
+ladder, never draw or extend a scene, and refuse generated files at check and export, including twins.
 
 The copy export also reuses the planner's original-owner-post article rule on both the frozen plan and
 the writer's actual fact citations. Invalid article titles, leads and dates are omitted before Joomla or
@@ -3258,6 +3261,7 @@ the brief restart atomically checks the durable action, unchanged snapshot, owne
 active writer. Replaced sites, changed briefs, open work and lost placement attempts are refused. Replay adopts the same
 retry action; retrying a failed child obtains fresh authority for its own failed generation. This reuses the same site,
 revision and normal chain worker, with no new provision or chat writer.
+An existing chain build without this exact restart authority is refused before a new action or daily usage is reserved, even when its parent action already says failed or its stored QA failed. Such a press cannot merely repeat the old QA result as a newly accepted Retry.
 An applied brief is eligible only when its chain ended in `soft-failure`, its running steps are absent, null or empty,
 and its latest recorded write failed. Healthy applied generations, successful latest writes, missing or malformed
 measurements and running steps cannot authorize a full-chain restart. The application uses this same eligibility
