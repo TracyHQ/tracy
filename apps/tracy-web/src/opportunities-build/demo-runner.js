@@ -340,6 +340,22 @@ export function createDemoRunner(deps) {
             return wait()
           }
           if (chainRun && chainRunOpen(chainRun.state)) return wait()
+          // 🔒 A RESTART BEFORE THE WRITE RESUMES THE CHAIN ONCE (12/11/2026: deploys on dev ended Arabian Tea House and
+          // Fightland mid-plan as LOST_ON_RESTART). Nothing reached the site before `applying`, so the same action
+          // starts the chain again from its brief; `restartBrief` admits one restart per action and never a run lost
+          // while placing (`lostFrom: applying`), which keeps failing with LOST_ON_RESTART for a person to Retry.
+          if (
+            !authority &&
+            chainRun?.state === 'failed' &&
+            chainRun.timings?.lost === 'LOST_ON_RESTART' &&
+            chainRun.timings?.lostFrom !== 'applying' &&
+            chainRun.timings?.woRetryActionId !== action.id &&
+            deps.resumeFill &&
+            (await deps.resumeFill(build, account.email, action.id, null))
+          ) {
+            log.warn?.(`[wo-demo] ${build.site_key}: the chain was lost on a restart before the write; started again`)
+            return wait()
+          }
           const measured = chainRun?.timings?.chain
           const write = Array.isArray(measured?.steps)
             ? measured.steps.findLast((entry) => entry?.step === 'write')
