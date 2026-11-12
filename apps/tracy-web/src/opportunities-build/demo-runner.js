@@ -14,7 +14,7 @@ import { createPictureLabelRuns } from './picture-label-runs.js'
 import { briefOf, CURRENT_BRIEF } from '../lib/site-brief-row.js'
 import { chainQaPassed } from '../lib/chain-bench-verdict.js'
 import { STEP_CHAIN_WORKFLOW } from '../lib/step-chain-switch.js'
-import { chainRunOpen, chainStepOf } from '../lib/wo-chain-builds.js'
+import { chainFailureOf, chainRunOpen, chainStepOf } from '../lib/wo-chain-builds.js'
 import { withHandoffLock } from './handoff.js'
 import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
 import { refundUnbilledDemoUsage, UNBILLED_FAILURES } from './demo-actions.js'
@@ -360,7 +360,9 @@ export function createDemoRunner(deps) {
             chain: {
               briefState: statusOf(chainRun?.state, ['applied', 'failed', 'cancelled']),
               ending: statusOf(measured?.ending, ['complete', 'soft-failure', 'running']),
-              writeOutcome: statusOf(write?.outcome, ['done', 'failed', 'stopped', 'skipped'])
+              writeOutcome: statusOf(write?.outcome, ['done', 'failed', 'stopped', 'skipped']),
+              // Which step and which check stopped it (bounded codes), so /ops/wo names them.
+              ...(passed ? {} : chainFailureOf(measured))
             }
           }
           await db.query(

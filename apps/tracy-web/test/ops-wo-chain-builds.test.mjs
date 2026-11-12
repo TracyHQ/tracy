@@ -8,7 +8,7 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { mintSession, SESSION_COOKIE } from '../src/lib/session.js'
-import { listChainBuilds, SLOW_FACTOR } from '../src/lib/wo-chain-builds.js'
+import { chainFailureLine, chainFailureOf, listChainBuilds, SLOW_FACTOR } from '../src/lib/wo-chain-builds.js'
 import { woOpsRoutes } from '../src/ops/wo.js'
 import { briefOf, restartBrief } from '../src/sites/brief-store.js'
 import { fileDb } from './_db.mjs'
@@ -354,4 +354,32 @@ test('nobody signed in is sent to sign in, and gets no table data', async () => 
   const res = await ask(pool, { signedIn: false })
   assert.notEqual(res.status, 200)
   assert.ok(!pool.asked.some((q) => q.includes('from site_brief')))
+})
+
+test('a failed chain is named by its first failed step and code; free text and odd values never pass', () => {
+  const write = (causeCode, outcome = 'failed') => ({ step: 'write', outcome, diagnostics: { write: { causeCode } } })
+  const copy = { step: 'copy', outcome: 'failed, best version used', code: 'CHAIN_BENCH_CHECK_FAILED' }
+  const central = chainFailureOf({ failedStep: 'copy', steps: [copy, write('STEP_NINE_CHECK_FAILED')] })
+  assert.deepEqual(central, {
+    failedStep: 'copy',
+    failedCode: 'CHAIN_BENCH_CHECK_FAILED',
+    writeCode: 'STEP_NINE_CHECK_FAILED'
+  })
+  assert.equal(
+    chainFailureLine(central),
+    'Build stopped at copy (CHAIN_BENCH_CHECK_FAILED); write: STEP_NINE_CHECK_FAILED'
+  )
+  // A write that failed on its own carries its cause as the step's code.
+  const onlyWrite = chainFailureOf({ failedStep: 'write', steps: [write('STEP_NINE_CHECK_FAILED')] })
+  assert.equal(chainFailureLine(onlyWrite), 'Build stopped at write (STEP_NINE_CHECK_FAILED)')
+  // A write that ended done has no write code; a step name or a code outside the known shapes is `unknown`.
+  assert.equal(chainFailureOf({ failedStep: 'copy', steps: [copy, write('X', 'done')] }).writeCode, null)
+  assert.deepEqual(chainFailureOf({ failedStep: 'rm -rf', steps: [{ step: 'rm -rf', code: 'a b' }] }), {
+    failedStep: 'unknown',
+    failedCode: 'unknown',
+    writeCode: null
+  })
+  // Nothing named: no line, so /ops/wo keeps its older wording.
+  assert.equal(chainFailureLine(chainFailureOf({ steps: [] })), null)
+  assert.equal(chainFailureLine(null), null)
 })

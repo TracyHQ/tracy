@@ -17,6 +17,7 @@ import { rateCountsOf } from './rate.js'
 import { openSecret, sealSecret } from './secret-box.js'
 import { saveUiSwitches, uiSwitchOn } from './ui-setting.js'
 import { FENCED_ACTIONS, runFencedResearchAction } from './wo-operator-fence.js'
+import { chainFailureLine } from './wo-chain-builds.js'
 import { demoJourneySql } from '../opportunities-build/journey-sql.js'
 import { customerStatus, journeySql } from 'website-opportunities/src/wo-journey.js'
 import { menuVisionDoorFor } from 'website-opportunities/src/menu-photo-reading.js'
@@ -238,8 +239,12 @@ function deriveOpportunityLifecycle(
 
     let attentionReason = null
     if (qaFailed) {
+      // A chain build names the step and the check that stopped it (`qa.chain`, demo-runner.js); a lost run says so.
+      const chainLine = qa?.reason === 'LOST_ON_RESTART' ? null : chainFailureLine(qa?.chain)
       attentionReason =
-        qa?.reason || `Demo QA gate failed after ${qaRepairs} repair round${qaRepairs === 1 ? '' : 's'}`
+        chainLine ||
+        qa?.reason ||
+        `Demo QA gate failed after ${qaRepairs} repair round${qaRepairs === 1 ? '' : 's'}`
     } else if (partialWarning) {
       attentionReason = `${blockedSources.map((s) => s.source).join(', ')} skipped (${blockedSources[0]?.reason || 'partial'})`
     }
