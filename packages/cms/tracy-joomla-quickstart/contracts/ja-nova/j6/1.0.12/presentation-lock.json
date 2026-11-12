@@ -1936,7 +1936,7 @@
       "catid": "13",
       "publish_up": "2023-07-19 03:06:05",
       "publish_down": null,
-      "images": "{\"image_intro\":\"images\\/joomlart\\/project\\/illustration\\/detail\\/item-4.jpg#joomlaImage:\\/\\/local-images\\/joomlart\\/project\\/illustration\\/detail\\/item-4.jpg?width=1344&height=672\",\"image_intro_alt\":\"\",\"float_intro\":\"\",\"image_intro_caption\":\"\",\"image_fulltext\":\"images\\/joomlart\\/project\\/illustration\\/detail\\/item-4.jpg#joomlaImage:\\/\\/local-images\\/joomlart\\/project\\/illustration\\/detail\\/item-4.jpg?width=1344&height=672\",\"image_fulltext_alt\":\"\",\"float_fulltext\":\"\",\"image_fulltext_caption\":\"\"}",
+      "images": "{\"image_intro\":\"images\\/joomlart\\/project\\/illustration\\/intro\\/item-4.jpg#joomlaImage:\\/\\/local-images\\/joomlart\\/project\\/illustration\\/intro\\/item-4.jpg?width=592&height=419\",\"image_intro_alt\":\"\",\"float_intro\":\"\",\"image_intro_caption\":\"\",\"image_fulltext\":\"images\\/joomlart\\/project\\/illustration\\/detail\\/item-4.jpg#joomlaImage:\\/\\/local-images\\/joomlart\\/project\\/illustration\\/detail\\/item-4.jpg?width=1344&height=672\",\"image_fulltext_alt\":\"\",\"float_fulltext\":\"\",\"image_fulltext_caption\":\"\"}",
       "urls": "{\"urla\":\"\",\"urlatext\":\"\",\"targeta\":\"\",\"urlb\":\"\",\"urlbtext\":\"\",\"targetb\":\"\",\"urlc\":\"\",\"urlctext\":\"\",\"targetc\":\"\"}",
       "attribs": "{\"article_layout\":\"_:default\",\"show_title\":\"\",\"link_titles\":\"\",\"show_tags\":\"0\",\"show_intro\":\"\",\"info_block_position\":\"\",\"info_block_show_title\":\"\",\"show_category\":\"0\",\"link_category\":\"0\",\"show_parent_category\":\"\",\"link_parent_category\":\"\",\"show_author\":\"0\",\"link_author\":\"\",\"show_create_date\":\"\",\"show_modify_date\":\"\",\"show_publish_date\":\"0\",\"show_item_navigation\":\"0\",\"show_hits\":\"0\",\"show_noauth\":\"\",\"urls_position\":\"\",\"alternative_readmore\":\"\",\"article_page_title\":\"\",\"show_publishing_options\":\"\",\"show_article_options\":\"\",\"show_urls_images_backend\":\"\",\"show_urls_images_frontend\":\"\"}",
       "ordering": "2",
@@ -3113,6 +3113,10 @@
       "created_user_id": "42",
       "modified_time": "2023-07-07 07:55:59",
       "access": "1"
+    },
+    "user-42": {
+      "name": "Admin",
+      "username": "admin"
     },
     "user-43": {
       "name": "Henry Delgado ",
@@ -12659,7 +12663,7 @@
     "templates/ja_nova/fonts/be-vietnam-pro-OFL.txt": "6b7f8f73609a25ea78c891e34cf37b06f8a676b7ea986e941e43b009110f2a85",
     "templates/ja_nova/fonts/index.html": "446e1b6e8c95d9b12b55136da13b95cf7d2aaadc7504e88c4195775fa8c5cc0c",
     "templates/ja_nova/html/com_contact/contact/default.php": "8fcfce1bdc5d1a7e2d6f7f330b68a38cb17e7ad1fa2a5cd69056805e10024eb2",
-    "templates/ja_nova/html/com_contact/contact/default_address.php": "7f77612dbc5a997d8fc80b5acdf6493ad291d829f4d24102a48866d0a8a680db",
+    "templates/ja_nova/html/com_contact/contact/default_address.php": "bfaabd2a6c4065b0746a0ce3a2daf4b31cc2f1fa8535ef0bc7fd3c3a08e16992",
     "templates/ja_nova/html/com_contact/contact/default_form.php": "1ff26b1ee4102bca5f6301a972c71d29ed947c1fac11d0c4b0b30075dc508352",
     "templates/ja_nova/html/com_contact/contact/default_links.php": "36910452ad0c84c2b81915a495ca2ba459cb5c4f1fbd5f1e6d2c4125976dad60",
     "templates/ja_nova/html/com_content/article/default.php": "18d3d43c9a28b89649c2b8b2185a955c8d0c87b4eb08a4e4dc7510be6f68c40e",
@@ -12688,7 +12692,7 @@
     "templates/ja_nova/html/mod_custom/default.php": "9cc34c6fc1105598e90eda24937a04caa14362b5c2eb6f1015fcb81a81712e3a",
     "templates/ja_nova/html/mod_jaquickcontact/default.php": "1b4389a001147a2888ffc0c0ca801485fae9fa1c8597d7786f255565e48e8b5d",
     "templates/ja_nova/html/mod_related_items/default.php": "734fdc0782198c9ea9589ea32703206b66616ebd5e62e7736ede24627caaa406",
-    "templates/ja_nova/html/mod_related_items/project.php": "a693f03044027d4a93b460b46834a7f9ededae563a9bee7784102a7eb5c507c5",
+    "templates/ja_nova/html/mod_related_items/project.php": "66205648084d0929e4269aef291a33953e7c1b52a71228c718dcdbcdaec06e52",
     "templates/ja_nova/images/ic-left.png": "b8c3713807915fde4b036d084b1fd52e3874452fe18f4d9570f07dbc2bf634d1",
     "templates/ja_nova/images/ic-right.png": "f3ba0a8537d89148be5aeb093f066b7812e2caa5e8919470562ac01f374df3d5",
     "templates/ja_nova/images/icon-decor/bg-1.png": "f0c7b0264e5294ce4f728a424aa26f1a7a886c437a34a76abddef82006378bae",

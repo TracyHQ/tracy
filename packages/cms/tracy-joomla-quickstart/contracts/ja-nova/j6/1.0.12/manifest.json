@@ -19,21 +19,21 @@
     "parts": {
       "webroot": {
         "file": "ja-nova-j6-webroot-1.0.12.tar.gz",
-        "bytes": 56802459,
-        "sha256": "481a23907bbb890fd178cbc525a60fcf4324436be68a5c638a63ff6c5dba03a2"
+        "bytes": 56102855,
+        "sha256": "cbaab83246a6555d189636dae6474a475d990540e6f14c7782ba550ddb7135cf"
       },
       "database": {
         "file": "ja-nova-j6-database-1.0.12.sql.gz",
-        "bytes": 88108,
-        "sha256": "763892568d21a793d58bc2c1ca997519db5731ae124da124bd829a27b4498b0c"
+        "bytes": 88180,
+        "sha256": "38642a7c39b91a5828093ddc6a92504ea9d010b7c84b86b2c6a8dcb4f01f366c"
       }
     },
     "passwordsBlanked": true,
-    "createdAt": "2026-11-10T10:48:57.999Z",
+    "createdAt": "2026-11-12T04:11:05.668Z",
     "builtFrom": {
-      "from": "quickstart/ja-nova/j6@1.0.11",
-      "by": "tracy-ds-slot release-joomla.mjs",
-      "change": "repaired: 2 files replaced (templates/ja_nova/css, templates/ja_nova/scss); demo content: 2 edits (module-110, contact-1); ucm rows resynced from content: 47; stylesheets read the worn design system (--ds-c-*)"
+      "site": "ja-nova-j6-112",
+      "tag": "local:pack",
+      "by": "tracy-dev"
     },
     "release": "quickstart/ja-nova/j6",
     "repository": "JoomlArt-Products/joomlart-products"

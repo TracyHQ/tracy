@@ -1,0 +1,298 @@
+{
+  "schemaVersion": "tracy-demo-measures/v1",
+  "quickstart": {
+    "slug": "ja-nova",
+    "version": "1.0.12"
+  },
+  "widths": [
+    1440,
+    390
+  ],
+  "pages": [
+    "/",
+    "/login-form",
+    "/registration-form",
+    "/category-blog",
+    "/featured-articles",
+    "/author-listting",
+    "/blog-detail",
+    "/about-us-2/contact",
+    "/project",
+    "/about-us-2",
+    "/project/branding",
+    "/project/ui-ux-design",
+    "/project/illustration",
+    "/services",
+    "/project/project-detail",
+    "/about-us-2/career",
+    "/illustration",
+    "/development",
+    "/mobile-application",
+    "/cloud-solutions",
+    "/it-infrastructure",
+    "/cybersecurity",
+    "/virtualization",
+    "/tagged-items",
+    "/tags",
+    "/category-blog/beyond-the-funeral-navigating-grief-in-the-age-of-business-technology",
+    "/category-blog/digital-tributes-examining-the-changing-face-of-mourning-with-business-technology",
+    "/category-blog/embracing-the-virtual-goodbye-the-role-of-business-technology-in-modern-mourning",
+    "/category-blog/how-business-technology-changed-how-we-think-about-death",
+    "/category-blog/why-the-biggest-myths-about-business-may-actually-be-right",
+    "/category-blog/how-to-create-an-awesome-software-video-about-success-busines",
+    "/category-blog/the-digital-age-of-death-how-business-technology-is-transforming-end-of-life",
+    "/tags/company",
+    "/tags/computer",
+    "/tags/devops",
+    "/tags/developer",
+    "/tags/careers",
+    "/tags/design",
+    "/tags/team",
+    "/tags/coding",
+    "/tags/digital",
+    "/tags/programming",
+    "/category-blog/from-legacy-planning-to-digital-estates-business-techs-influence-on-inheritance",
+    "/category-blog/the-rise-of-online-funeral-services-business-technologys-role",
+    "/category-blog/tech-enabled-funeral-industry-changing-the-paradigm-of-saying-goodbye",
+    "/category-blog/revolutionizing-death-care-the-business-tech-disruption-in-funeral-services",
+    "/category-blog/how-business-technology-is-shaping-the-way-we-remember-2023",
+    "/category-blog/examining-the-role-of-business-technology-in-the-mourning-process",
+    "/category-blog/mourning-in-the-digital-age-unpacking-the-influence-of-business-technology",
+    "/category-blog/the-evolving-landscape-of-mourning-business-technologys-role-in-the-digital-era",
+    "/category-blog?start=9",
+    "/category-blog?start=18",
+    "/category-blog/transforming-grief-exploring-the-impact-of-business-technology-on-memorialization",
+    "/category-blog/the-digital-remembrance-investigating-the-role-of-business-technology-in-grief",
+    "/category-blog/from-offline-to-online-how-business-technology-is-transforming-the-mourning-journey",
+    "/featured-articles?start=7",
+    "/author-listting/author/henry delgado",
+    "/author-listting/author/lucy reid",
+    "/author-listting/author/brian jennings",
+    "/author-listting/author/elijah knight",
+    "/author-listting/author/antoinette huff",
+    "/author-listting/author/dewey mann",
+    "/author-listting?start=6",
+    "/project/branding/landing-page-design",
+    "/project/branding/design-system-ul-kit",
+    "/project/branding/realistic-scenarios",
+    "/project/branding/mobile-app-design",
+    "/project/branding/muckup-design",
+    "/project/branding/web-application-design",
+    "/project/ui-ux-design/corporate-website-design",
+    "/project/ui-ux-design/blog-design-layout",
+    "/project/ui-ux-design/social-media-graphics",
+    "/project/ui-ux-design/brand-identity-design",
+    "/project/ui-ux-design/logo-design-branding",
+    "/project/ui-ux-design/infographic-design",
+    "/project/illustration/email-newsletter-design",
+    "/project/illustration/presentation-design",
+    "/project/illustration/packaging-design",
+    "/project/illustration/poster-banner-design",
+    "/project/illustration/event-invitation-design",
+    "/tagged-items?start=20",
+    "/tagged-items?start=40",
+    "/tags/devops-platform",
+    "/tags/news",
+    "/tags/office",
+    "/tags/open-source",
+    "/tags/technology",
+    "/category-blog/the-digital-mourning-ritual-examining-the-influence-of-business-technology",
+    "/category-blog/the-influence-of-business-technology-on-mourning-practices-2023",
+    "/category-blog/remembering-beyond-borders-the-global-impact-of-business-technology-on-mourning",
+    "/tags/company?start=20",
+    "/category-blog/mourning-in-the-cloud-the-role-of-business-technology-in-remembering-loved-ones",
+    "/category-blog/mourning-in-the-digital-world-examining-the-impact-of-business-technology",
+    "/category-blog/remembering-in-the-digital-era-unpacking-the-role-of-business-technology-in-grief",
+    "/category-blog/the-virtual-funeral-how-business-technology-is-reshaping-the-mourning-process",
+    "/tags/computer?start=20",
+    "/tags/devops?start=20",
+    "/tags/developer?start=20",
+    "/category-blog/virtual-connections-exploring-how-business-technology-is-redefining-mourning",
+    "/author-listting/author/antoinette huff?start=4",
+    "/author-listting/author/antoinette huff?start=8",
+    "/author-listting/author/antoinette huff?start=12",
+    "/author-listting/author/antoinette huff?start=16",
+    "/author-listting/author/antoinette huff?start=20",
+    "/author-listting/author/antoinette huff?start=24",
+    "/author-listting/author/hubert santos",
+    "/author-listting/author/warren stevens"
+  ],
+  "status": "red",
+  "groups": [
+    {
+      "name": "main-heading",
+      "status": "green",
+      "checked": 107,
+      "failures": [
+        {
+          "group": "main-heading",
+          "page": "/index.php/author-listting",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/project",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/about-us-2",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/services",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/about-us-2/career",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/tagged-items",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/tags",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/author-listting?start=6",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/tagged-items?start=20",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        },
+        {
+          "group": "main-heading",
+          "page": "/index.php/tagged-items?start=40",
+          "width": null,
+          "measured": "no main heading",
+          "level": "warn",
+          "reason": "No main heading a visitor can read"
+        }
+      ]
+    },
+    {
+      "name": "empty-frames",
+      "status": "green",
+      "checked": 107,
+      "failures": []
+    },
+    {
+      "name": "text-overflow",
+      "status": "green",
+      "checked": 107,
+      "failures": []
+    },
+    {
+      "name": "orphan-row",
+      "status": "red",
+      "checked": 107,
+      "failures": [
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/henry%20delgado",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        },
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/lucy%20reid",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        },
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/brian%20jennings",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        },
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/elijah%20knight",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        },
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/dewey%20mann",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        },
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/hubert%20santos",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        },
+        {
+          "group": "orphan-row",
+          "page": "/index.php/author-listting/author/warren%20stevens",
+          "width": 1440,
+          "measured": "div.content-item",
+          "level": "block",
+          "reason": "1 cards on the last row of 2, leaving 688 px empty",
+          "selector": "div.content-item"
+        }
+      ]
+    },
+    {
+      "name": "blank-footer-column",
+      "status": "green",
+      "checked": 107,
+      "failures": []
+    }
+  ]
+}
