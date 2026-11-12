@@ -8,7 +8,9 @@ const TOKEN =
 const COUNT =
   '`demos: {live, limit}`: the account’s live demo sites made through this door and the most it may have at once.'
 const DEMO =
-  '`demo`: `{id, status, statusUrl, createdAt, business: {name}, cms, template, site: {key, url, editUrl} | null, error: {code} | null, retention: {expiresAt, frozenAt, deletedAt}, model: "tracy" | "account", photos: {stored, skipped}}`. `status` is `queued`, `waiting-for-you`, `building`, `needs-review`, `ready` (only with its site check passed), `failed` or `cancelled`. A demo is built by the AI the account uses in Tracy (its own AI account, or Tracy’s model) in the site’s chat: `waiting-for-you` means the site exists and `site.editUrl` opens that chat, which sends the build brief; it is `building` once the brief is sent. `retention` is the Website Opportunities demo clock, started when the site exists; reading a demo never extends it.'
+  '`demo`: `{id, status, statusUrl, createdAt, business: {name}, cms, template, site: {key, url, editUrl, shareUrl} | null, error: {code} | null, retention: {expiresAt, frozenAt, deletedAt}, model: "tracy" | "account", photos: {stored, skipped}, opens: {total, phone, desktop, lastOpenedAt, firstOpenedAt} | null}`. `status` is `queued`, `waiting-for-you`, `building`, `needs-review`, `ready` (only with its site check passed), `failed` or `cancelled`. A demo is built by the AI the account uses in Tracy (its own AI account, or Tracy’s model) in the site’s chat: `waiting-for-you` means the site exists and `site.editUrl` opens that chat, which sends the build brief; it is `building` once the brief is sent. `retention` is the Website Opportunities demo clock, started when the site exists; reading a demo never extends it. `site.shareUrl` is the link to send the business: `GET /d/{token}` on Tracy’s origin, which opens `site.url` and counts the open; it is made the first time a finished demo (`ready` or `needs-review`) is read, and null before. `opens` counts the opens of that link (people only: no bot, link preview or prefetch, not the account’s own signed-in session; nothing that names the visitor is kept), `phone` and `desktop` by device class; null until the demo has a link.'
+const WEBHOOK =
+  'One https address per account receives a POST for each event of the account’s demos accepted after the address was registered (a replaced address keeps that time): `demo.accepted`, `demo.completed` (the demo with its `site`), `demo.failed` (with `error.code`, a bounded code) and `demo.opened` (each counted open of `site.shareUrl`). Body `{id, type, createdAt, demo}`, `demo` as `GET /v1/demos/{id}` answers it when the event was made; `id` is the same on every attempt of one event, and a demo has each event once (each open once). Headers: `Content-Type: application/json`, `X-Tracy-Event-Id`, `X-Tracy-Event-Type` and `X-Tracy-Signature: t=<unix seconds>,v1=<hex>`, where `v1` is HMAC-SHA256 over `<t>.<raw body>` keyed with the whole signing secret (`whsec_…`): recompute it, compare in constant time and refuse an old `t`. A 2xx answer within 10 s delivers the event; a redirect, another status, a timeout or a network error is tried again after 30 s, 90 s, 4.5 min and tripling up to 6 h, 8 attempts in all, then the event is given up. Delivery is at least once and in no fixed order: dedupe on `id`, order by `createdAt` and `demo.status`. Events are made within seconds of the change, from committed state only; a webhook never holds or fails a build.'
 const PROFILE =
   'Only when `GET /v1/demos/options` announces `profile/1` in `accepts`, the host also accepts `website-opportunities/demo-request/v2`: `{schema, profile, photos: [{url, caption?, alt?}], cms?, template?: {quickstart, design?}}`. The host freezes the original profile and its own fact assessment into the build revision. The profile must name the business in `business.name.value` and follow `website-opportunities/place-profile` version `1.0.0`; collections contain facts whose entities are in `.value`. The entire UTF-8 JSON body is at most 512 KiB, with at most 200 offerings, 50 people, 100 quotes and 24 photos. Every `profile.media[].value.url` and `profile.brand.logo.value.url` must be in `photos[].url`; the logo counts toward the 24 in v2. Any `assessment` or `verified` key anywhere in the profile is refused as `SENDER_CANNOT_ASSESS`, including inside extensions. Unknown fields and invalid evidence references are refused. Every fact cites at least one evidence item, and every address in the profile is http(s) (`URL_SCHEME` otherwise), except `tel:`/`mailto:` on a link of kind `phone`/`email`. Names are at most 200 characters, texts and quotes at most 2000, addresses at most 2048 (`MAX_LENGTH`). Declared research sources remain sender statements: only identity, contact, offerings and hours are accepted under the host policy; people, claims, testimonials and reviews are withheld, except a review or rating whose every source is a Google (`google-maps`, `google-places`) or Tripadvisor (`tripadvisor`) page cited by its https address, which is accepted verbatim with its author. Other unassessed quotations stay in the frozen profile and are not imported into legacy content. Facts older than 365 days are marked stale at the frozen assessment time. Without that capability, send v1. If a v2 request receives 422 `SCHEMA_UNSUPPORTED` (possibly in the `errors` of `INVALID_DEMO_REQUEST`), a sender may fall back once to v1 using a NEW idempotency key and logging the downgrade; never send a changed body under the old key.'
 const ID = { id: 'The demo id `POST /v1/demos` answered.' }
@@ -51,6 +53,42 @@ export const DEMO_ROUTES = [
     auth: 'token',
     internal: false,
     answers: `\`{cms: [{cms, pinned, templates: [{design, quickstart, label}]}], defaultCms, accepts, demos}\`. \`accepts\` names the optional parts of demo-request/v1 this Tracy takes to the demo (\`items.size\`, \`items.priceScale\`, \`items.photo\`, \`brand\`, \`links\`, \`posts\`); send only those. It may also name \`profile/1\`, which alone announces support for demo-request/v2 with a place profile 1.0.0. ${COUNT}`
+  },
+  {
+    method: 'GET',
+    path: '/v1/demos/webhook',
+    summary: 'Read the webhook this account registered',
+    description: `Never the signing secret. ${WEBHOOK} ${TOKEN}`,
+    audience: ['public'],
+    auth: 'token',
+    internal: false,
+    answers:
+      '`{webhook: {url, events, createdAt, since, deliveries: {pending, failed, lastDeliveredAt}} | null}`: `since` is when the account’s events began, `failed` counts the events given up since then.'
+  },
+  {
+    method: 'PUT',
+    path: '/v1/demos/webhook',
+    summary: 'Register or replace the webhook that receives this account’s demo events',
+    description: `Body \`{url}\` (at most 8 KiB): an https address on the default port, with no user or password in it, whose host answers only public addresses; the fragment is dropped. Refused 422 \`INVALID_WEBHOOK_URL\` with \`errors: [{path: "url", code}]\`, \`code\` one of \`INVALID_URL\`, \`HTTPS_REQUIRED\`, \`CREDENTIALS_NOT_ALLOWED\`, \`PORT_NOT_ALLOWED\`, \`PRIVATE_ADDRESS\` (private, loopback, link-local or cloud metadata) and \`HOST_NOT_FOUND\`; 400 \`INVALID_JSON\`; 413 \`REQUEST_TOO_LARGE\`. Each call makes a new signing secret, answered this once: keep it. The address it replaces receives nothing more, and its pending events go to the new one. ${WEBHOOK} ${TOKEN}`,
+    audience: ['public'],
+    auth: 'token',
+    internal: false,
+    body: {
+      type: 'object',
+      required: ['url'],
+      properties: { url: { type: 'string', format: 'uri', maxLength: 2048 } }
+    },
+    answers: '`{webhook: {url, events, createdAt, since, deliveries, secret}}`'
+  },
+  {
+    method: 'DELETE',
+    path: '/v1/demos/webhook',
+    summary: 'Remove the webhook of this account',
+    description: `Pending events are given up; events are made again only once an address is registered again, for demos accepted from then on. Removing twice answers \`removed: false\`. ${TOKEN}`,
+    audience: ['public'],
+    auth: 'token',
+    internal: false,
+    answers: '`{webhook: null, removed}`'
   },
   {
     method: 'GET',

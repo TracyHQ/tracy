@@ -5,6 +5,15 @@ const OFF =
 const APPROVAL_ANSWER =
   '`approval: {profile: "none" | "needed" | "approved", profileApprovedAt, profileChangedAt, brief: "none" | "needed" | "approved" | "stale", briefApprovedAt, briefStale: "profile" | null}` is the seller’s review of this opportunity (#537): the Profile is approved before a Content brief is made, the latest brief before a demo is built. `profile` is `none` before research; a Profile edit, or a photo the seller adds, after approval makes it `needed` again. `brief` is `stale` (with `briefStale: "profile"`) when the Profile changed or the Profile was approved after the latest brief was made, and `needed` until that brief is approved; making the brief again (even when it answers the same revision) ends `stale`. Sources are fixed once research starts, so a source never changes the approvals.'
 const OWN = 'Another account’s row answers 404 `NOT_FOUND`, exactly like a missing one.'
+/** What the seller marked of their outreach (`website-opportunities/src/outreach-state.js`). */
+const OUTREACH_STATE =
+  '`outreachState: {state: "sent" | "replied" | "won" | "lost" | null, sentAt, repliedAt, wonAt, lostAt, updatedAt}`: the furthest step the seller marked (`won` or `lost`, else `replied`, else `sent`) and when each was marked, all null before the first mark.'
+/** The share link of a demo (`lib/wo-demo-links.js`), said once for its two doors. */
+const SHARE_LINK =
+  'No sign-in. Sends whoever opens it to the demo’s address (302, `Cache-Control: no-store`, `Referrer-Policy: no-referrer`, the query string kept) and counts the open: its time, the path asked and the device class (`phone` for a phone or tablet, else `desktop`), read from the User-Agent and not kept. Nothing that names the visitor is stored: no address, no cookie, no User-Agent, no referrer. Not counted: a HEAD, a prefetch, a link preview or any other program (a User-Agent that is not a browser’s or names a bot), the signed-in seller who made the link, and opens past 60 an hour for one link. The counts are read on the opportunity (`demo.opens`), on `/v1/demos` (`opens`) and on /ops/wo (`demoOpens`).'
+/** The share link and its opens on a demo answer (`opportunities-build/route.js` `listedDemo`). */
+const DEMO_SHARE =
+  '`demo.shareUrl` is the demo’s share link (`GET /d/{token}`), made by the first outreach read of a ready demo, null before; `demo.opens: {total, phone, desktop, lastOpenedAt, firstOpenedAt} | null` counts its opens (null while the demo never had a link).'
 /** Approved is final (#537 R23, `approval-locks.js`): a change after approval is a new card of the same place. */
 const PROFILE_LOCKED =
   '409 `{code: "PROFILE_APPROVED", next: "The business facts are approved. To change them, add this business again as a new card."}` once the Profile is approved (`approval.profile` is `approved`): no door changes approved Business facts.'
@@ -291,13 +300,71 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'GET',
     path: '/api/website-opportunities/:id/outreach',
     summary: 'Read demo contacts and message drafts',
-    description: `Read-only, owner-scoped shared research view. No provider call, sending or sent state. Available only after QA PASS and before freeze/delete. Language: confident captions, then Google country or unambiguous phone country, then English. Twelve message templates; the account display name signs once at the end. Local/English/bilingual drafts are not saved edits. 409 DEMO_NOT_READY. ${OWN}`,
+    description: `Owner-scoped shared research view. No provider call and nothing sent; whether it was sent is the seller's to mark (\`PUT …/:id/outreach/state\`). Available only after QA PASS and before freeze/delete. Language: confident captions, then Google country or unambiguous phone country, then English. Twelve message templates; the account display name signs once at the end. Local/English/bilingual drafts are not saved edits. The draft hands out the demo's share link (\`GET /d/{token}\`, which opens the demo and counts the open), made by the first read of a ready demo, instead of the demo's address; \`url\` is that link and \`siteUrl\` the demo's own address (\`url\` is the address itself when no link could be made). 409 DEMO_NOT_READY. ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
     answers:
-      '`{outreach:{contacts:[{channel,value,url}],messageLanguage,url,expiresAt,message:{auto,local,english,subject}}}`'
+      '`{outreach:{contacts:[{channel,value,url}],messageLanguage,url,siteUrl,expiresAt,message:{auto,local,english,subject}}}`'
+  },
+
+  // website-opportunities/src/route.js
+  {
+    method: 'PUT',
+    path: '/api/website-opportunities/:id/outreach/state',
+    summary: 'Mark where the outreach to this business stands',
+    description: `Body \`{state}\`: \`sent\`, \`replied\`, \`won\`, \`lost\`, or \`none\` to clear every mark (a step marked by mistake). Each step keeps the time it was first marked (marking it again changes nothing); \`won\` and \`lost\` end the outreach and each clears the other. Tracy sends nothing and reads no message: the state is only what the seller marked. Private to the seller. Not gated by the feature switch: it records, it starts no work. 400 \`INVALID_OUTREACH_STATE\`. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    body: {
+      type: 'object',
+      required: ['state'],
+      properties: { state: { type: 'string', enum: ['sent', 'replied', 'won', 'lost', 'none'] } }
+    },
+    answers: `\`{outreachState}\`; ${OUTREACH_STATE}`
+  },
+
+  // opportunities-build/route.js
+  {
+    method: 'DELETE',
+    path: '/api/website-opportunities/:id/demo/link',
+    summary: "Stop the demo's share link",
+    description: `Every live share link of this opportunity's demos stops: its \`/d/{token}\` answers 404 from now on, and the next outreach read hands out a new link. The opens counted so far stay. ${OWN}`,
+    audience: ['customer', 'desktop'],
+    auth: 'session',
+    internal: true,
+    params: { path: { id: 'Opportunity id' } },
+    answers: '`{revoked}`: how many links stopped (0 when none was live).'
+  },
+
+  // opportunities-build/demo-link-route.js
+  {
+    method: 'GET',
+    path: '/d/:token',
+    summary: 'Open a demo through its share link',
+    description: SHARE_LINK,
+    audience: ['public'],
+    auth: 'none',
+    internal: false,
+    params: { path: { token: 'The 32-character token of the link' } },
+    answers:
+      '302 to the demo; 404 for an unknown or stopped link, 410 when the demo was deleted, both with no body.'
+  },
+  {
+    method: 'GET',
+    path: '/d/:token/*',
+    summary: 'Open one page of a demo through its share link',
+    description: `The same as \`GET /d/{token}\`, to that path of the demo: \`/d/{token}/menu\` opens \`<demo address>/menu\`. A path longer than 200 characters, with a dot segment or characters a path does not hold opens the home page. ${SHARE_LINK}`,
+    audience: ['public'],
+    auth: 'none',
+    internal: false,
+    params: {
+      path: { token: 'The 32-character token of the link', '*': 'The path of the demo to open' }
+    },
+    answers: '302 to that page of the demo; 404 or 410 as `GET /d/{token}`.'
   },
 
   // website-opportunities/src/route.js
@@ -735,8 +802,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
         ids: 'Up to 100 opportunity ids, comma-separated: just those rows (no other filter applies)'
       }
     },
-    answers:
-      '`{opportunities: [{…opportunity, sameAs: [{id, createdAt, stage}], job, latestRevision, sites, stage, attention, latestBuild: {id, state, siteKey, done} | null, score: {score, grade: "A" | "B" | "C", pending, reasons} | null, siteCheck: <check> | null, social: {<network>: <stat>} | null, socials?}]}`; with a parameter also `counts: {all, research, demo, outreach, cancelled, attention}, nextCursor: string | null, total`'
+    answers: `\`{opportunities: [{…opportunity, sameAs: [{id, createdAt, stage}], job, latestRevision, sites, stage, attention, latestBuild: {id, state, siteKey, done} | null, score: {score, grade: "A" | "B" | "C", pending, reasons} | null, siteCheck: <check> | null, social: {<network>: <stat>} | null, socials?, outreachState}]}\`; with a parameter also \`counts: {all, research, demo, outreach, cancelled, attention}, nextCursor: string | null, total\`. Each row's ${OUTREACH_STATE} ${DEMO_SHARE} A ready row's \`outreach.url\` is that share link.`
   },
   // website-opportunities/src/route.js
   {
@@ -748,7 +814,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     auth: 'session',
     internal: true,
     params: { path: { id: 'Opportunity id' } },
-    answers: `\`{opportunity, place, menu, sources, profile, placeProfile, media, jobs, revisions, builds, research, briefJob, approval, stepProgress, bands, socialNetworks}\`; \`opportunity.sameAs: [{id, createdAt, stage}]\` names the account's other cards of the same place, newest first (#537 R23); \`placeProfile\` is the saved profile, the answer of \`GET …/:id/place-profile\` without \`bands\` (null before this opportunity's research or when it cannot be read), and \`profile\` the research as collected; ${OWNER_SITE_ANSWER} ${MENU_ANSWER} ${APPROVAL_ANSWER} \`stepProgress: {step: "research" | "brief" | "build" | null, items: [{key, label, state: "done" | "running" | "waiting" | "failed", at}]}\` is the step that runs now (else the one whose latest attempt failed, else null) with its sub steps, read from recorded data only: a Content brief job's own step (reading, labelling, writing; \`at\` on the current one), a step chain build's chain steps (\`demoAction.run\`), and for Research the shared place job serving the request: one item per source of its snapshot (\`key\` the source, \`label\` its name as the Sources card shows it, \`at\` when it was tried) then \`{key: "profile", label: "Writing the business facts"}\`, no items while that job is queued; a build of another workflow records no sub steps. \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` holds only the seller's own photos and videos and \`sources\` holds only its own rows, each reading not collected yet (\`status\`, \`reason\`, \`coverage\` and \`collectedAt\` null, as a pasted link), even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`. \`demo\` (the latest build's demo, as on a listed row) also carries \`built: {at, minutes, usd} | null\` (when the finished build ended, its minutes and its USD, null when unmeasured), \`findings: string[]\` (the QA check ids that failed in its last round) and \`preview: {url, capturedAt} | null\` (its home page picture, see \`GET …/:id/demo/preview\`) (#537).`
+    answers: `\`{opportunity, place, menu, sources, profile, placeProfile, media, jobs, revisions, builds, research, briefJob, approval, stepProgress, bands, socialNetworks}\`; \`opportunity.sameAs: [{id, createdAt, stage}]\` names the account's other cards of the same place, newest first (#537 R23); \`placeProfile\` is the saved profile, the answer of \`GET …/:id/place-profile\` without \`bands\` (null before this opportunity's research or when it cannot be read), and \`profile\` the research as collected; ${OWNER_SITE_ANSWER} ${MENU_ANSWER} ${APPROVAL_ANSWER} \`stepProgress: {step: "research" | "brief" | "build" | null, items: [{key, label, state: "done" | "running" | "waiting" | "failed", at}]}\` is the step that runs now (else the one whose latest attempt failed, else null) with its sub steps, read from recorded data only: a Content brief job's own step (reading, labelling, writing; \`at\` on the current one), a step chain build's chain steps (\`demoAction.run\`), and for Research the shared place job serving the request: one item per source of its snapshot (\`key\` the source, \`label\` its name as the Sources card shows it, \`at\` when it was tried) then \`{key: "profile", label: "Writing the business facts"}\`, no items while that job is queued; a build of another workflow records no sub steps. \`research: {state: "not_started" | "running" | "done" | "failed", researchedAt}\` is this opportunity's own Research, read from its own jobs: until one has completed, \`profile\` is null, \`media\` holds only the seller's own photos and videos and \`sources\` holds only its own rows, each reading not collected yet (\`status\`, \`reason\`, \`coverage\` and \`collectedAt\` null, as a pasted link), even when the shared place was researched for someone else. \`briefJob\` is the latest Content brief job (see \`GET …/:id/brief-jobs/:jobId\`) or null. Every source row carries \`collectedAt\` (null unless complete or partial); one page reached through both a pasted link and research is one row; a failure of the deployment's own key reads \`skipped\` with reason \`not_collected\`. \`profile.editedBySeller\` lists the fields the seller changed through \`PUT …/:id/profile\`. \`demo\` (the latest build's demo, as on a listed row) also carries \`built: {at, minutes, usd} | null\` (when the finished build ended, its minutes and its USD, null when unmeasured), \`findings: string[]\` (the QA check ids that failed in its last round) and \`preview: {url, capturedAt} | null\` (its home page picture, see \`GET …/:id/demo/preview\`) (#537). ${DEMO_SHARE} ${OUTREACH_STATE}`
   },
   // website-opportunities/src/route.js
   {
