@@ -3341,7 +3341,14 @@ test(
     // A demo PageSpeed could not reach keeps its reason: no number, no proof.
     await w.pool.query(
       `update wo_build set built = built || jsonb_build_object('pagespeed', $2::jsonb) where id = $1`,
-      [build.id, JSON.stringify({ url: 'https://phoba.localhost', reason: 'not_public', checkedAt: '2026-11-12T09:00:00Z' })]
+      [
+        build.id,
+        JSON.stringify({
+          url: 'https://phoba.localhost',
+          reason: 'not_public',
+          checkedAt: '2026-11-12T09:00:00Z'
+        })
+      ]
     )
     const unreachable = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.pagespeed
     assert.deepEqual(unreachable.demo, { reason: 'not_public' })

@@ -143,7 +143,10 @@ export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = 
         log.info?.(`[wo-demo] no PageSpeed score for ${build.site_key ?? build.id}: ${measured.reason}`)
     } catch (error) {
       log.warn?.(
-        `[wo-demo] PageSpeed not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`.slice(0, 300)
+        `[wo-demo] PageSpeed not kept for ${build.id}: ${error?.code ?? error?.message ?? 'error'}`.slice(
+          0,
+          300
+        )
       )
     }
   }
@@ -161,7 +164,9 @@ export function createDemoBuilt({ pool, capture = null, pageSpeed = null, log = 
       if (build.site_key)
         site = (await pool.query('select * from site where site_key = $1', [build.site_key])).rows[0] ?? null
     } catch (error) {
-      log.warn?.(`[wo-demo] site of ${build.site_key} unreadable: ${error?.code ?? error?.message ?? 'error'}`)
+      log.warn?.(
+        `[wo-demo] site of ${build.site_key} unreadable: ${error?.code ?? error?.message ?? 'error'}`
+      )
       return
     }
     // Measured at the address Details gives the demo: the site's own, else the one its build's label is born at; a
