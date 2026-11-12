@@ -59,7 +59,8 @@ const REASONS = new Set([
   'demo_step_timeout',
   'agent_demo_turn_stopped',
   'agent_demo_turn_lost',
-  'agent_demo_ended_unchecked'
+  'agent_demo_ended_unchecked',
+  'brief_stale'
 ])
 
 const JOB_STATES = new Set(['queued', 'running', 'paused', 'blocked', 'failed', 'cancelled', 'completed'])

@@ -54,6 +54,7 @@ import {
   mediaTile,
   failureReasonText,
   profileFields,
+  briefOutOfDate,
   tripadvisorReviewView
 } from './detail-model.ts'
 import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
@@ -1258,6 +1259,8 @@ export function RevisionView({
   const page = useRevisionPage(api, revisionId)
   const { revision, markdown, lastBuildId, usage, suggestedLabel, siteLabel, failed } = page
   const [name, setName] = useState<string | null>(null)
+  // Whether this brief is out of date, so Build would be refused (#553): the place's brief status says.
+  const [outOfDate, setOutOfDate] = useState(false)
   // The breadcrumb names the place; the brief alone does not carry its name.
   useEffect(() => {
     let live = true
@@ -1267,11 +1270,13 @@ export function RevisionView({
           ? answer.body.opportunity
           : null
       if (live && typeof opportunity?.name === 'string') setName(opportunity.name)
+      if (live && answer.ok && isRecord(answer.body))
+        setOutOfDate(briefOutOfDate(revisionId, briefStatus(answer.body.brief)))
     })
     return () => {
       live = false
     }
-  }, [api, opportunityId])
+  }, [api, opportunityId, revisionId])
   useTabLoading(revision === null && !failed)
   const n = typeof revision?.n === 'number' ? revision.n : ''
   const crumbs = (
@@ -1314,6 +1319,8 @@ export function RevisionView({
             usage={usage}
             initialBuildId={lastBuildId}
             focusName={focusName}
+            outOfDateN={outOfDate && typeof revision.n === 'number' ? revision.n : null}
+            onDetails={onDetails}
           />
         </div>
       </div>
@@ -1367,7 +1374,9 @@ export function Build({
   siteLabel = null,
   usage: initialUsage,
   initialBuildId = null,
-  focusName = false
+  focusName = false,
+  outOfDateN = null,
+  onDetails = null
 }: {
   t: Translate
   api: Api
@@ -1384,6 +1393,10 @@ export function Build({
   /** The revision's latest build, so a reload still shows its site and the handoff. */
   initialBuildId?: string | null
   focusName?: boolean
+  /** The number of the brief on screen when it is out of date and Build would be refused (`briefOutOfDate`). */
+  outOfDateN?: number | null
+  /** The business's page, where a stale brief is refreshed; none in the brief side tab. */
+  onDetails?: (() => void) | null
 }): JSX.Element {
   const labelId = useId()
   const locale = interfaceLocale() ?? 'en'
@@ -1436,15 +1449,27 @@ export function Build({
       const outcome = await runAction(
         {
           ...api,
-          buildDemo: async (id, requestId, retryOf, selection) => {
-            const answer = await api.buildDemo(id, requestId, retryOf, selection, label.trim())
+          buildDemo: async (id, requestId, retryOf, selection, _label, fromFind, shown) => {
+            const answer = await api.buildDemo(
+              id,
+              requestId,
+              retryOf,
+              selection,
+              label.trim(),
+              fromFind,
+              shown
+            )
             accepted = answer.ok
             return answer
           }
         },
         ids,
         'build',
-        { id: opportunityId }
+        { id: opportunityId },
+        // The shared template picker opens (#524).
+        undefined,
+        // The brief on screen (#553): built exactly, or refused as stale before anything is charged.
+        revisionId
       )
       if (outcome.kind === 'demo-chat' && !(await followChat(outcome.actions))) setStartCode('HTTP_500')
       if (outcome.kind === 'failed') setStartCode(outcome.code)
@@ -1527,8 +1552,24 @@ export function Build({
         />
         <span className="tracy-wo-muted tracy-wo-small">{t(buildLabelHintKey(typed, siteLabel))}</span>
       </label>
+      {buildId === null && outOfDateN !== null ? (
+        <>
+          <p className="tracy-wo-note" role="status">
+            {t('build.briefOutOfDate', { n: outOfDateN })}
+          </p>
+          {onDetails ? (
+            <Button type="button" variant="outline" onClick={onDetails}>
+              {t('build.openPlace')}
+            </Button>
+          ) : null}
+        </>
+      ) : null}
       {buildId === null ? (
-        <Button type="button" disabled={busy || usageFull(usage)} onClick={() => void start()}>
+        <Button
+          type="button"
+          disabled={busy || usageFull(usage) || outOfDateN !== null}
+          onClick={() => void start()}
+        >
           {busy ? <Spinner label={t('build.running')} /> : <Hammer aria-hidden="true" />}
           {t('build.start')}
         </Button>
@@ -1541,6 +1582,11 @@ export function Build({
             reason: t(reasonKey(startCode) ?? 'reason.other')
           })}
         </p>
+      )}
+      {startCode === 'BRIEF_STALE' && outOfDateN === null && onDetails && (
+        <Button type="button" variant="outline" onClick={onDetails}>
+          {t('build.openPlace')}
+        </Button>
       )}
       {buildId !== null && (status === null || status.phase === 'running') && (
         <p className="tracy-wo-note" role="status">

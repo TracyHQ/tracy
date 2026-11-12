@@ -514,6 +514,42 @@ export async function currentResearchKey(db, opp, domain) {
   return researchKey(domain, await researchOf(db, await liveRead(db, opp, view), opp, view))
 }
 
+/**
+ * Whether a brief's hash, or the hash a seller's edit of a brief was made from (`brief-edits.js`), sits in a slot of
+ * the research key `key` (`researchKeySlots`): the brief, or a relabelled brief, of that research.
+ * @param {{researchHash?: string | null, editedFromHash?: string | null}} hashes
+ */
+export function readsResearchKey({ researchHash: hash, editedFromHash }, key) {
+  if (!key) return false
+  const slots = researchKeySlots(key)
+  const of = (h) => Boolean(h) && (h === slots.key || h === slots.relabelled)
+  return of(hash) || of(editedFromHash)
+}
+
+/**
+ * Whether a brief (a `wo_revision` row) is the place's current brief now (#553), by the rule the Details page shows
+ * (`briefStatus`): it reads the current research key (`readsResearchKey`) with its labels complete, and the business
+ * reading is not old. A quality-v1 brief has no hash (never shared): it is current while the evidence it froze
+ * (`wo_revision.research`, what `brief.agentDemoResearch` hashes) is the evidence a brief made now would freeze, the
+ * vision labels aside as in `researchKey`.
+ */
+export async function briefIsCurrent(db, opp, domain, revision) {
+  const view = opp.place_id ? await placeViewOf(db, opp) : null
+  const now = await researchOf(db, await liveRead(db, opp, view), opp, view)
+  if (readingIsOld(domain, now)) return false
+  const editedFromHash = revision.brief?.edited?.fromHash ?? null
+  if (revision.research_hash || editedFromHash)
+    return (
+      readsResearchKey({ researchHash: revision.research_hash, editedFromHash }, researchKey(domain, now)) &&
+      !briefLabelsIncomplete(revision.brief, domain)
+    )
+  if (!revision.research) return false
+  return evidenceKey(revision.research) === evidenceKey(now)
+}
+
+const evidenceKey = (research) =>
+  researchHash(frozenResearchOf({ ...research, media: (research.media ?? []).map(withoutVisionLabels) }))
+
 /** What a brief made now reads; a frozen read (`freezeDemoResearchInput`) keeps what it held when frozen. */
 /**
  * What the brief's photographs show, asked BEFORE any transaction (F08): `args.pictureLabels` (`brief-picture-labels.js`,

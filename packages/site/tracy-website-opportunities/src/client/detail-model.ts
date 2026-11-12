@@ -660,6 +660,16 @@ export function briefStatus(brief: unknown): BriefStatus | null {
   }
 }
 
+/**
+ * Whether the brief `revisionId` on its page is out of date (#553): the server builds only the brief of the current
+ * research and refuses any other with `BRIEF_STALE`. True when the place's brief status (`briefStatus`) is another
+ * brief or not current; false when that cannot be told (the server still checks at the press).
+ */
+export function briefOutOfDate(revisionId: string, status: BriefStatus | null): boolean {
+  if (status === null || status.current === null) return false
+  return status.current === false || status.id !== revisionId
+}
+
 export interface TripadvisorReviewView {
   authorAvatarUrl: string | null
   photos: { url: string; mediaId: string | null }[]

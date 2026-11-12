@@ -51,10 +51,11 @@ import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
 import {
+  briefIsCurrent,
   createRevision,
   currentResearchState,
   labelsIncomplete,
-  researchKeySlots,
+  readsResearchKey,
   resolveRevisionCms
 } from './revisions.js'
 import { randomUUID } from 'node:crypto'
@@ -322,12 +323,10 @@ export function createWebsiteBuilder(deps) {
     // The newest brief of the current research, a seller's edit of it included (`brief-edits.js`), with its labels
     // complete: one whose labels are absent, failed or pending offers Refresh (#555, #556), as does the brief of older
     // research. A labelled brief may sit in the relabelled slot of the key (`researchKeySlots`).
-    const slots = key ? researchKeySlots(key) : null
-    const ofKey = (hash) => Boolean(hash) && (hash === slots.key || hash === slots.relabelled)
-    const same = slots
+    const same = key
       ? revisions.find(
           (r) =>
-            (ofKey(r.research_hash) || ofKey(r.edited_from_hash)) &&
+            readsResearchKey({ researchHash: r.research_hash, editedFromHash: r.edited_from_hash }, key) &&
             !labelsIncomplete({ assetLabelling: r.asset_labelling, labelledShare: r.labelled_share })
         )
       : null
@@ -337,11 +336,17 @@ export function createWebsiteBuilder(deps) {
     // business again, so `sameResearch` says whether a Refresh would change anything: when the brief already
     // matches this research, only Research again brings the reading up to the latest rules.
     const readingOld = live?.readingOld === true
+    // A quality-v1 brief has no hash: it is current while its frozen evidence is the research now (`briefIsCurrent`).
+    let current = Boolean(same)
+    if (known && live && !same && !readingOld && !shown.research_hash && !shown.edited_from_hash) {
+      const { rows } = await pool.query('select research, brief from wo_revision where id = $1', [shown.id])
+      if (rows[0]) current = await briefIsCurrent(pool, opp, domain, { research_hash: null, ...rows[0] })
+    }
     return {
       id: shown.id,
       n: shown.n,
       createdAt: shown.created_at,
-      current: known ? Boolean(same) && !readingOld : null,
+      current: known ? current && !readingOld : null,
       ...(shown.edited_by === 'seller' ? { editedBySeller: true } : {}),
       ...(readingOld ? { readingOld: true, sameResearch: Boolean(same) } : {})
     }
@@ -724,6 +729,14 @@ export function createWebsiteBuilder(deps) {
         )
       if (b.label !== undefined && typeof b.label !== 'string')
         return refuse(c, 400, 'INVALID_LABEL', 'Send the site name as "label", or leave it out.')
+      // The brief on screen (#553): the build uses exactly it, or is refused when it is not current.
+      if (b.revisionId !== undefined && (!UUID.test(String(b.revisionId)) || b.retryOf))
+        return refuse(
+          c,
+          400,
+          'INVALID_REVISION_ID',
+          'Send the shown brief’s id as "revisionId", or leave it out; a Retry keeps its own brief.'
+        )
       if (b.fromFind === true) {
         const [research] = await findResearchOf(
           pool,
@@ -765,9 +778,20 @@ export function createWebsiteBuilder(deps) {
             selection: b.selection,
             workflow: b.workflow,
             chatMode: b.chatMode,
-            ...(b.label === undefined ? {} : { label: b.label.trim() })
+            ...(b.label === undefined ? {} : { label: b.label.trim() }),
+            ...(b.revisionId === undefined ? {} : { briefRevisionId: b.revisionId })
           }
         ],
+        // Whether the shown brief reads the place's research now, inside the acceptance transaction (`BRIEF_STALE`).
+        briefCurrent: async (client, opportunityId, revision) => {
+          const place = (
+            await client.query('select * from wo_opportunity where id = $1 and account_id = $2', [
+              opportunityId,
+              who.accountId
+            ])
+          ).rows[0]
+          return place ? briefIsCurrent(client, place, await loadDomain(), revision) : false
+        },
         requireSelection: true,
         templates: b.retryOf ? null : await templateCards(),
         pins: pinsOf(await demoSettings()),

@@ -218,7 +218,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'POST',
     path: '/api/website-opportunities/:id/demo/build',
     summary: 'Build a demo in one press',
-    description: `Requires selection:{cms,design,quickstart} for a new build (the person chooses the CMS and the template); a CMS sent without design and quickstart takes the template pinned for it on /ops/wo. No account default and no automatic pick: {auto:true} is refused with 400 DEMO_TEMPLATE_REQUIRED. Records the explicit choice and the per-CMS release version/archive checksums before revision or site creation, then the worker creates the pinned brief/template, provisions, waits for deterministic fill, hands off and checks the site. retryOf resumes the failed action’s same revision, CMS, template, site, session and work ids but is a new charged action; sending selection with Retry is refused. Internal retry and request replay never add a charge; an action that fails before any billable work (no site, chat or build model run) is given back once. A new build (not a retry, not a Find quick build) needs the seller's approvals (#537): 409 \`PROFILE_NOT_APPROVED\`, 409 \`BRIEF_NOT_APPROVED\` until the latest Content brief is approved (\`POST …/:id/brief/approve\`); with the quality protocol on, the demo action prepares its own brief and is not gated. ${OWN} ${OFF}`,
+    description: `Requires selection:{cms,design,quickstart} for a new build (the person chooses the CMS and the template); a CMS sent without design and quickstart takes the template pinned for it on /ops/wo. No account default and no automatic pick: {auto:true} is refused with 400 DEMO_TEMPLATE_REQUIRED. Records the explicit choice and the per-CMS release version/archive checksums before revision or site creation, then the worker creates the pinned brief/template, provisions, waits for deterministic fill, hands off and checks the site. retryOf resumes the failed action’s same revision, CMS, template, site, session and work ids but is a new charged action; sending selection with Retry is refused. revisionId binds the build to that brief: accepted only while it is this opportunity's brief of the current research (a quality-v1 brief, which has no research hash, while the evidence it froze is the research now), then the worker builds exactly it; a brief that is not current is refused with 409 BRIEF_STALE before anything is charged, and a build that writes its own brief (quality-v1, never the agent-demo/1 workflow) with 409 BRIEF_NOT_BINDABLE. Without revisionId the worker uses the brief of the latest research. Internal retry and request replay never add a charge; an action that fails before any billable work (no site, chat or build model run) is given back once. A new build (not a retry, not a Find quick build) needs the seller's approvals (#537): 409 \`PROFILE_NOT_APPROVED\`, 409 \`BRIEF_NOT_APPROVED\` until the latest Content brief is approved (\`POST …/:id/brief/approve\`); with the quality protocol on, the demo action prepares its own brief and is not gated. ${OWN} ${OFF}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,
@@ -234,6 +234,10 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
           description: 'New builds only; Retry inherits the original frozen workflow.'
         },
         retryOf: { type: 'string', description: 'Failed action id' },
+        revisionId: {
+          type: 'string',
+          description: 'The brief shown when Build was pressed; not with retryOf'
+        },
         selection: {
           type: 'object',
           required: ['cms'],
@@ -250,7 +254,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
       }
     },
     answers:
-      '202 `{actions,usage}`; 429 DEMO_BUILD_DAILY_LIMIT `{code,next,usage:{used,limit,resetsAt},remaining}`'
+      '202 `{actions,usage}`; 400 INVALID_REVISION_ID; 404 NOT_FOUND (a revisionId that is not this opportunity’s); 409 BRIEF_STALE `{code,next,revisionId}`; 409 BRIEF_NOT_BINDABLE; 429 DEMO_BUILD_DAILY_LIMIT `{code,next,usage:{used,limit,resetsAt},remaining}`'
   },
   // website-opportunities/src/route.js
   {

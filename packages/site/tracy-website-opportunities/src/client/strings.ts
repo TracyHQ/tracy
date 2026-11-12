@@ -607,6 +607,9 @@ export const en = {
   'reason.qa_needs_review': 'This demo needs a look from you. Open it and check it before you try again.',
   'reason.store_unavailable': 'Saving files is not available right now',
   'reason.demo_step_timeout': 'The demo took longer than two hours, so Tracy stopped it.',
+  /** Build on a brief page whose brief the latest research no longer gives (#553): refused before any charge. */
+  'reason.brief_stale':
+    'This brief is no longer the one the latest research gives, so nothing was built or counted. Refresh the brief on the business’s page, then build from it.',
   'reason.agent_demo_turn_stopped': 'Tracy stopped before the demo was finished.',
   'reason.agent_demo_turn_lost': 'Tracy lost its connection before the demo was finished.',
   'reason.agent_demo_ended_unchecked': 'The demo was finished but did not pass its final check.',
@@ -933,8 +936,13 @@ export const en = {
   'build.failed': 'The build stopped: {reason}',
   'build.cmsNote': 'No template is offered right now.',
   'build.openSite': 'Open the site',
+  /** After a stale-brief refusal: the business's page, where the brief is refreshed. */
+  'build.openPlace': 'Go to the business',
   'build.openLive': 'View the live site',
   'build.after': 'After the build, the buttons to open the site and to let Tracy finish it appear here.',
+  /** On a brief page whose brief is not the current one: the server refuses a build of it (`BRIEF_STALE`). */
+  'build.briefOutOfDate':
+    'Brief {n} is out of date: the latest research gives another brief, so a build of it would be refused. Go to the business and Refresh the brief first.',
 
   /** Gives the ready demo site its photos and the brief's prompt, then opens the site. */
   'handoff.start': 'Let Tracy finish it',

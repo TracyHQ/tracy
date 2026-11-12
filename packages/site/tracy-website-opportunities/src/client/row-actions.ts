@@ -49,7 +49,9 @@ export async function runAction(
   action: NextAction,
   row: OpportunityListRow,
   pickTemplate: (ranking: TemplateRanking | null) => Promise<TemplatePick | null> = (ranking) =>
-    requestTemplatePick(undefined, { ranking })
+    requestTemplatePick(undefined, { ranking }),
+  /** Build pressed on a brief's page (#553): the brief on screen, which the server builds or refuses as stale. */
+  revisionId?: string
 ): Promise<ActionOutcome> {
   const jobId = row.job?.id
   switch (action) {
@@ -81,14 +83,13 @@ export async function runAction(
         }
       }
       const choiceKey = selection ? `:${selection.cms}:${selection.design}:${selection.quickstart}` : ''
-      const key = `demo:${row.id}:${action === 'retry-demo' ? (row.demoAction?.id ?? '') : ''}${choiceKey}`
+      const brief = action === 'build' && revisionId ? revisionId : undefined
+      const key = `demo:${row.id}:${action === 'retry-demo' ? (row.demoAction?.id ?? '') : ''}${choiceKey}${brief ? `:${brief}` : ''}`
       const { id: requestId } = ids.begin(key)
-      const answer = await api.buildDemo(
-        row.id,
-        requestId,
-        action === 'retry-demo' ? row.demoAction?.id : undefined,
-        selection
-      )
+      const retryOf = action === 'retry-demo' ? row.demoAction?.id : undefined
+      const answer = brief
+        ? await api.buildDemo(row.id, requestId, retryOf, selection, undefined, undefined, brief)
+        : await api.buildDemo(row.id, requestId, retryOf, selection)
       if (answer.ok) ids.succeed(key)
       else ids.fail(key)
       return answer.ok && answer.body.actions?.some((item) => item.workflow === 'agent-demo/1')

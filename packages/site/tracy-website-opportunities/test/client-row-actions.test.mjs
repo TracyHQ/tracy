@@ -186,3 +186,29 @@ test('a refused brief opens the failed revision without a build call or quota re
   assert.deepEqual(outcome, { kind: 'open-brief', revisionId: 'r-failed' })
   assert.deepEqual(calls, [])
 })
+
+test('Build on a brief page sends that brief’s id; the row build sends none (#553)', async () => {
+  const { api, calls } = fakeApi({ ok: true, status: 202, body: {} })
+  const requestIds = ids()
+  const pick = async () => ({ cms: 'wordpress', quickstart: 'ja-test/wp', design: 'ja-test' })
+  await runAction(api, requestIds, 'build', row(), pick)
+  await runAction(api, requestIds, 'build', row(), pick, 'rev-2')
+  assert.equal(calls[0].length, 5, 'the row build calls exactly as before')
+  assert.equal(calls[1][7], 'rev-2')
+  assert.notEqual(calls[1][2], calls[0][2], 'another brief is another request')
+})
+
+test('the build door carries revisionId only when one is given (#553)', async () => {
+  const { createApi } = await import('../src/client/api.ts')
+  const sent = []
+  const api = createApi(async (url, init) => {
+    sent.push({ url: String(url), body: JSON.parse(init.body) })
+    return new Response('{"actions":[]}', { status: 202, headers: { 'content-type': 'application/json' } })
+  })
+  const selection = { cms: 'joomla', design: 'd', quickstart: 'q' }
+  await api.buildDemo('o1', 'req-a', undefined, selection, 'pho')
+  await api.buildDemo('o1', 'req-b', undefined, selection, 'pho', undefined, 'rev-2')
+  assert.equal('revisionId' in sent[0].body, false)
+  assert.equal(sent[1].body.revisionId, 'rev-2')
+  assert.match(sent[1].url, /\/o1\/demo\/build$/)
+})

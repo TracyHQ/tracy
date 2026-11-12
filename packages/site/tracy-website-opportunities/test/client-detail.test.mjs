@@ -763,6 +763,33 @@ test('Google amenities any trade can have read as amenities: restroom, accessibi
   for (const id of ids) assert.equal(typeof EN_STRINGS[`amenity.${id}`], 'string', id)
 })
 
+test('the Build form on a brief page says, before the press, that an out-of-date brief will be refused (#553)', async () => {
+  const { briefOutOfDate } = await import('../src/client/detail-model.ts')
+  // Brief 2 shown while the research moved on: the server refuses a build of it (BRIEF_STALE).
+  assert.equal(briefOutOfDate('r2', { id: 'r2', n: 2, createdAt: null, current: false }), true)
+  // A newer brief already reads the current research: Brief 2 is out of date too.
+  assert.equal(briefOutOfDate('r2', { id: 'r3', n: 3, createdAt: null, current: true }), true)
+  // The brief on screen is the current one: the build uses it, nothing to say.
+  assert.equal(briefOutOfDate('r2', { id: 'r2', n: 2, createdAt: null, current: true }), false)
+  // Unknown freshness or no status: say nothing rather than guess (the server still checks at the press).
+  assert.equal(briefOutOfDate('r2', { id: 'r3', n: 3, createdAt: null, current: null }), false)
+  assert.equal(briefOutOfDate('r2', null), false)
+  const line = EN_STRINGS['build.briefOutOfDate']
+  assert.match(line, /\{n\}/)
+  assert.match(line, /out of date/)
+  assert.match(line, /refused/)
+  assert.match(line, /Refresh/)
+  assert.doesNotMatch(line, /uses a brief/)
+})
+
+test('a stale-brief refusal reads as its own reason, not "Not available" (#553)', async () => {
+  const { reasonKey } = await import('../src/client/status.ts')
+  assert.equal(reasonKey('BRIEF_STALE'), 'reason.brief_stale')
+  assert.match(EN_STRINGS['reason.brief_stale'], /latest research/)
+  assert.match(EN_STRINGS['reason.brief_stale'], /Refresh the brief/)
+  assert.ok(EN_STRINGS['build.openPlace'])
+})
+
 test('a build failure reason that is a code reads as its plain sentence; a sentence is shown as is', () => {
   const t = (key) => `[${key}]`
   assert.equal(failureReasonText('DEMO_STEP_TIMEOUT', t), '[demo.reason.timeout]')
