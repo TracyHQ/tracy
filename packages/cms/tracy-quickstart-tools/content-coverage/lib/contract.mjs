@@ -126,12 +126,13 @@ export function loadContract(dir, siteUrl) {
       // writes the whole value: each href in the sample is the slot's address.
       for (const m of String(s.sample ?? '').matchAll(/\(\(a\s[^()]*?\bhref="([^"]+)"/gi))
         push(url, normHref(m[1], siteUrl), s.key)
-      // ACM teams render each complete network|URL line from this one declared scalar.
+      // ACM teams render each complete network|URL line from this one declared scalar, a team member's profile links
+      // (`person.social_url`) or plain navigation addresses.
       if (
         platform === 'joomla' &&
         s.type === 'text' &&
         s.column === 'params' &&
-        s.role === 'editorial.navigation_url' &&
+        (s.role === 'editorial.navigation_url' || s.role === 'person.social_url') &&
         s.nestedJson === 'jatools-config' &&
         Array.isArray(s.jsonPath) &&
         s.jsonPath.length === 3 &&

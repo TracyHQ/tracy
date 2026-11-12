@@ -820,6 +820,16 @@ test('ACM social URLs: two newline network|URL entries bind their existing scala
   assert.equal(match({ kind: 'link', value: 'https://one.example.test/other' }).status, 'hole')
 })
 
+test('ACM social URLs: a team member line keeps its URL projection under the person social URL role', () => {
+  const value = 'https://one.example.test/profile'
+  const { match } = teamSocialMatcher(`network-one|${value}`, { role: 'person.social_url' })
+  assert.deepEqual(match({ kind: 'link', value }), {
+    status: 'matched',
+    by: 'href',
+    slots: ['module-90.socials']
+  })
+})
+
 test('ACM social URLs: wrong source address, type, role or module never gains a URL projection', () => {
   const value = 'https://gated.example.test/profile'
   const sample = `network|${value}`
