@@ -185,7 +185,9 @@ export function createStepChainSteps(deps) {
   return {
     async validateBase(ctx) {
       const site = await siteByKey(pool, ctx.siteKey)
-      const point = site ? await ownerSiteDoor(ctx, site).recoveryPoint(ctx.siteKey) : null
+      const point = site
+        ? await ownerSiteDoor(ctx, site).recoveryPoint(ctx.siteKey, { signal: ctx.signal })
+        : null
       if (!point)
         throw Object.assign(
           new Error(
@@ -358,6 +360,7 @@ export function createStepChainSteps(deps) {
       const out = path.join(dir, 'step-9')
       await mkdir(out, { recursive: true })
       const step = await runWithSiteRecovery({
+        signal: ctx.signal,
         door: siteDoor,
         siteKey: ctx.siteKey,
         runId: ctx.runId,

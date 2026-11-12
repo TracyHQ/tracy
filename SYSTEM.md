@@ -2697,8 +2697,12 @@ stale-marker expiry still applies. Ordinary engines retain their end-of-apply se
 The chain forwards its bounded three-minute setup-job budget through the brief runner to the host job poller,
 waiting on the same accepted opening job before any content application. A refused, missing or unfinished
 opening receipt stops all chain writes with `STEP_CHAIN_SETUP_HOLD_UNPROVEN`; it cannot start a backup history
-read behind a still-running seal. A pending backup-history answer is `SITE_RECOVERY_POINT_PENDING`, and a failed
-read is unverified evidence, never proof that no full backup exists. Both refuse writes.
+read behind a still-running seal. A legitimate `FLEET_JOB_PENDING` backup-history answer waits for full proof
+through at most four owner-door reads within three minutes, honoring run cancellation. A bounded history wait
+retains the unfinished host job identity for up to ten minutes; the next reader resumes polling that job rather
+than filing another whole-webroot read. A write invalidates that identity, and completed responses are never cached.
+An exhausted or unrelated pending answer is `SITE_RECOVERY_POINT_PENDING`; a failed read is unverified evidence,
+never proof that no full backup exists. Both refuse writes.
 
 Before the chain's first write, code pins the newest backup whose existing owner/session `GET /api/sites/:key/backups`
 answer proves a full database dump and file commit. Missing full backup or an unhealthy initial home refuses the write.

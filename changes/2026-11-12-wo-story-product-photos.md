@@ -1,0 +1,3 @@
+- **Keep positively labelled retail product and equipment photographs out of business story slots** — Codex · #568 · `fix/wo-dev-full-flow-acceptance` · 2026-11-12
+  **Affects:** Website Opportunities brief generation. Rebuild tracy-web. Existing product assets and gallery choices remain available; new briefs use rules version 7 and regenerate the story selection.
+  **Why / Measured:** Central Padel research contained apparel categorized as people and isolated bags categorized as space. Four deterministic regression tests cover positive labels, stored labels, product-only sources and unknown labels; the broader domain brief suite passes 124 tests. This does not claim full WO site acceptance.

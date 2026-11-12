@@ -263,6 +263,6 @@ test('processing policy changes the run lifetime fingerprint without changing ro
       .map(([role, hash]) => `${role} ${hash}`)
       .join('\n')
   )
-  assert.equal(prompts.policy, 'readability-retry/1')
+  assert.equal(prompts.policy, 'readability-retry/2')
   assert.notEqual(prompts.sha256, legacy)
 })

@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-568-planner-generic-cta",
+  "kind": "fix",
+  "title": "Generic call-to-action notes do not invent a phone-channel requirement",
+  "pr": 568,
+  "area": "website-opportunities/planner",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run run.cmd without a server or model calls.",
+    "Verify generic notes on both class pages pass R12, while genuine and mixed phone promises retain their phone-link requirement."
+  ],
+  "expect": [
+    "The two notes saying closing call to action: book an assessment no longer fail R12.",
+    "A generic CTA phrase in notes or labels, including case and hyphen variants, does not imply a phone call.",
+    "Mixed call to action: call +971 wording and genuine phone or ring-us promises still fail without a phone target.",
+    "A real phone target satisfies the phone requirement; WhatsApp and direct-message requirements remain unchanged."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": ["node", "--test", "apps/tracy-web/test/site-plan-check-content.test.mjs"],
+    "needs": [],
+    "tests": [
+      "R12 generic call-to-action notes on two class pages do not promise a phone channel",
+      "R12 generic CTA wording is ignored in notes and labels regardless of case or hyphenation",
+      "R12 generic CTA wording does not conceal a real phone promise in the same note or label",
+      "R12 real phone promises still pass with a phone target, while WhatsApp and DM requirements remain"
+    ]
+  }
+}
