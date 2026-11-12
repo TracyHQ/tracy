@@ -9,6 +9,14 @@
 import { withChainRuns, withTemplateEstimates } from './chain-progress.js'
 import { json } from '../lib/http.js'
 import { bornSiteAddress } from '../lib/site-address.js'
+import {
+  demoLinkUrl,
+  ensureDemoLinks,
+  liveTokenSql,
+  opensJsonSql,
+  opensShape,
+  revokeDemoLinks
+} from '../lib/wo-demo-links.js'
 import { woRuntime } from '../lib/wo-ops.js'
 import { pinsOf, readTemplateCards, templateChoices } from '../lib/wo-revision-choice.js'
 import { findResearchOf, usableResearch } from 'website-opportunities/src/find-research.js'
@@ -86,6 +94,7 @@ const LATEST_BRIEF_AT_SQL = `select greatest(
  *   settingsOf: (domain: any, accountId: string | null) => Promise<object>,
  *   saveSettings: (domain: any, accountId: string, sent: any) => Promise<{status: number, body: object}>,
  *   listedDemoOf: (accountId: string, ids: string[]) => Promise<Map<string, object>>,
+ *   shareLinksOf: (accountId: string, rows: object[]) => Promise<Map<string, string>>,
  *   detailOf: (opp: object, accountId: string) => Promise<object>,
  *   demoFactsOf: (accountId: string, ids: string[]) => Promise<Map<string, {built: boolean,
  *     liveSiteKey: string | null, queuedActionId: string | null}>>,
@@ -243,7 +252,8 @@ export function createWebsiteBuilder(deps) {
                  'findings', (select jsonb_agg(distinct f->>'id') from jsonb_array_elements(
                      case when jsonb_typeof(b.qa->'rounds'->-1->'failed') = 'array'
                        then b.qa->'rounds'->-1->'failed' else '[]'::jsonb end) f where f->>'id' is not null),
-                 'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id))
+                 'previewAt', (select p.captured_at from wo_build_preview p where p.build_id = b.id),
+                 'shareToken', ${liveTokenSql('b')}, 'opens', ${opensJsonSql('b')})
           from wo_build b join wo_revision r on r.id = b.revision_id
           left join site_creation sc on sc.account_id = b.account_id and sc.build_id = b.build_id::text
           left join site st on st.site_key = b.site_key
@@ -269,7 +279,7 @@ export function createWebsiteBuilder(deps) {
           sites: r.sites ?? [],
           latestBuild: latestBuildShape(r.latest_build),
           demoAction: r.demo_action,
-          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action, r.id)
+          demo: listedDemo(r.latest_build, settings.demoFreezeGraceDays, config, r.demo_action, r.id, origin)
         }
       ])
     )
@@ -368,6 +378,26 @@ export function createWebsiteBuilder(deps) {
   async function approvalFor(opp) {
     const [research, briefAt] = await Promise.all([researchStateOf(pool, opp.id), latestBriefAt(opp.id)])
     return approvalOf({ opportunity: opp, research, latestBriefAt: briefAt })
+  }
+
+  /**
+   * The share link of each listed row's latest build, made when it has none (`lib/wo-demo-links.js`): what the outreach
+   * draft hands out instead of the demo's bare address, so an open is counted. A build of another account gets none.
+   * @returns {Promise<Map<string, string>>} opportunity id → share link
+   */
+  async function shareLinksOf(accountId, rows) {
+    const builds = rows.map((r) => [r.id, r.latestBuild?.id]).filter(([, build]) => build)
+    const tokens = await ensureDemoLinks(
+      pool,
+      accountId,
+      builds.map(([, build]) => build),
+      now()
+    )
+    return new Map(
+      builds
+        .filter(([, build]) => tokens.has(build))
+        .map(([id, build]) => [id, demoLinkUrl(origin, tokens.get(build))])
+    )
   }
 
   /** A demo action with its chain progress (`chain-progress.js`), when its build runs the step chain. */
@@ -955,6 +985,24 @@ export function createWebsiteBuilder(deps) {
       })
     })
 
+    // Stop the demo's share link (`lib/wo-demo-links.js`): its token answers 404 from now on, and the next outreach read
+    // hands out a new one. The opens counted so far stay on the build.
+    app.delete(`${BASE}/:id/demo/link`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('id')
+      const opp = who.accountId && UUID.test(id) ? await opportunityOf(pool, who.accountId, id) : null
+      if (!opp) return notFound(c, 'opportunity')
+      const builds = await buildsOfOpportunity(pool, opp.id)
+      const revoked = await revokeDemoLinks(
+        pool,
+        who.accountId,
+        builds.map((b) => b.id),
+        now()
+      )
+      return json(c, { revoked })
+    })
+
     // The deleted demo made again from the same revision, through the same build path as the first.
     app.post(`${BASE}/:id/demo/rebuild`, async (c) => {
       const who = await caller(c)
@@ -1047,6 +1095,7 @@ export function createWebsiteBuilder(deps) {
     settingsOf,
     saveSettings,
     listedDemoOf,
+    shareLinksOf,
     detailOf,
     latestBriefAt,
     demoFactsOf,
@@ -1072,7 +1121,7 @@ export function createWebsiteBuilder(deps) {
  * once its action failed, and Building is timed from the queued action's own `acceptedAt` (27/10/2026). The build
  * row itself stays as the host left it: the Retry provisions on that same row.
  */
-function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
+function listedDemo(b, graceDays, config, action = null, opportunityId = null, origin = '') {
   if (!b) return null
   const frozen = b.frozenAt ? Date.parse(b.frozenAt) : Number.NaN
   const own = b.state === 'refused' || b.siteState === 'failed' ? 'failed' : b.done ? 'done' : 'building'
@@ -1106,14 +1155,26 @@ function listedDemo(b, graceDays, config, action = null, opportunityId = null) {
             url: `${BASE}/${opportunityId}/demo/preview?v=${Date.parse(b.previewAt)}`,
             capturedAt: new Date(b.previewAt).toISOString()
           }
-        : null
+        : null,
+    // The share link the outreach hands out (`lib/wo-demo-links.js`), made by the first outreach read; null before.
+    shareUrl: b.shareToken ? demoLinkUrl(origin, b.shareToken) : null,
+    // Counted opens of this build's share links; null while it never had one (nothing was measured).
+    opens: opensShape(b.opens)
   }
 }
 
 /** A listed row's latest build without the parts only its `demo` reads (`listedDemo`). */
 function latestBuildShape(b) {
   if (!b) return null
-  const { built: _built, chain: _chain, findings: _findings, previewAt: _previewAt, ...rest } = b
+  const {
+    built: _built,
+    chain: _chain,
+    findings: _findings,
+    previewAt: _previewAt,
+    shareToken: _shareToken,
+    opens: _opens,
+    ...rest
+  } = b
   return rest
 }
 

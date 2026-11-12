@@ -79,9 +79,12 @@ The tool does the finding and the homework; the selling stays yours. A typical r
      (`PUT /api/website-opportunities/:id/manual/built`), and a button for it is planned.
 3. **Reach out with the demo.** The outreach draft is written in the business's language for the channel it
    answers on (email, WhatsApp, phone) and carries the demo link. Nothing is sent
-   for you: you read it, change it and send it yourself.
-4. **Follow up and close.** Tracking who you contacted and what they answered is not in the app yet (planned);
-   keep it in your own CRM or sheet for now. Price, domain, hosting and handover are yours to agree with the
+   for you: you read it, change it and send it yourself. When Tracy built the demo, the link is a Tracy share link
+   that opens the demo and counts each time someone opens it (when, which page, phone or desktop; nothing that
+   identifies them, and not your own visits while you are signed in to Tracy).
+4. **Follow up and close.** The API keeps where each outreach stands, as you mark it: sent, replied, won or lost,
+   with the time of each (`PUT /api/website-opportunities/:id/outreach/state`); buttons for it in the app are
+   planned, so keep your own CRM or sheet until then. Price, domain, hosting and handover are yours to agree with the
    owner. Many sellers offer hosting and small monthly changes, which turns one sale into a recurring one.
 
 Contact businesses the way your local rules allow: some countries limit unsolicited email or messages to

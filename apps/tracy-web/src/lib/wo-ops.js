@@ -14,6 +14,8 @@
 import { readReleases, templateCards } from './quickstart-releases.js'
 import { bornSiteAddress } from './site-address.js'
 import { rateCountsOf } from './rate.js'
+import { opensOf } from './wo-demo-links.js'
+import { outreachStateShape } from 'website-opportunities/src/outreach-state.js'
 import { openSecret, sealSecret } from './secret-box.js'
 import { saveUiSwitches, uiSwitchOn } from './ui-setting.js'
 import { FENCED_ACTIONS, runFencedResearchAction } from './wo-operator-fence.js'
@@ -790,6 +792,18 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
       [oppRes.rows.map((o) => o.id)]
     )
 
+    // The share link opens of each latest build (`wo-demo-links.js`) and what each seller marked of their outreach.
+    const [opensByBuild, outreachRes] = await Promise.all([
+      opensOf(
+        pool,
+        buildRes.rows.map((b) => b.id)
+      ),
+      pool.query('select * from wo_outreach where opportunity_id = any($1::uuid[])', [
+        oppRes.rows.map((o) => o.id)
+      ])
+    ])
+    const outreachByOpp = new Map(outreachRes.rows.map((r) => [r.opportunity_id, r]))
+
     const jobsByOpp = new Map(jobRes.rows.map((r) => [r.opportunity_id, r]))
     const sourcesByOpp = new Map()
     for (const s of sourceRes.rows) {
@@ -1010,6 +1024,10 @@ export async function listWoQueue(pool, config, viewerAccount = null) {
         demoSite: demoStatus === 'none' ? null : demoSlug,
         demoUrl: demoLabel ? bornSiteAddress(demoLabel, config) : demoSlug ? `https://${demoSlug}` : null,
         demoStatus,
+        // Counted opens of the latest build's share link; null while it never had one (`wo-demo-links.js`).
+        demoOpens: latestBuild ? (opensByBuild.get(latestBuild.id) ?? null) : null,
+        // What the seller marked of their outreach (`outreach-state.js`); `state: null` when nothing.
+        outreachState: outreachStateShape(outreachByOpp.get(opp.id) ?? null),
         demoAction: latestAction
           ? {
               status: latestAction.status,

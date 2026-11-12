@@ -1,4 +1,7 @@
-/** Read-only outreach drafts. Tracy never sends a message or records a sent state. */
+/**
+ * Read-only outreach drafts. Nothing is sent for the seller; whether they sent it, and how it went, is theirs to mark
+ * (`outreach-state.js`).
+ */
 import { whatsappLinkOf } from '../domain/business-phones.mjs'
 import { placeViewOf } from './place-view.js'
 import { messageLanguage } from './message-language.js'
@@ -74,17 +77,29 @@ export function outreachContacts(candidate = {}, siteCheck = {}) {
   return contacts
 }
 
+/** A row whose demo may be handed to the business: its site check passed, and it is neither frozen nor deleted. */
+export const outreachReady = (r) =>
+  r.demo?.qa === 'passed' && Boolean(r.demo.url) && !r.demo.deletedAt && !r.demo.frozenAt
+
 /**
  * Ready demos read the same shared snapshot + private overlay as Details and revision; no provider call.
  * The signature is `host.displayNameOf` of the principal.
+ *
+ * `shareLinks(accountId, readyRows)` (the builder's `shareLinksOf`, when this deployment builds) answers the link to
+ * hand out per opportunity id instead of the demo's bare address, so the builder can count who opens it; the draft
+ * names it as `url` and the demo's own address as `siteUrl`. Without it, or when it fails, `url` is the address.
  */
-export async function withOutreach(pool, accountId, rows, host) {
+export async function withOutreach(pool, accountId, rows, host, { shareLinks = null } = {}) {
   const { displayNameOf } = requireHost(host, ['displayNameOf'])
-  const ready = rows.filter(
-    (r) => r.demo?.qa === 'passed' && r.demo.url && !r.demo.deletedAt && !r.demo.frozenAt
-  )
+  const ready = rows.filter(outreachReady)
   if (!ready.length) return rows.map((r) => ({ ...r, outreach: null }))
   const ids = ready.map((r) => r.id)
+  const links = shareLinks
+    ? await shareLinks(accountId, ready).catch((error) => {
+        console.warn(`[website-opportunities] outreach without share links: ${error?.code ?? error?.message}`)
+        return new Map()
+      })
+    : new Map()
   const [displayName, profiles, sources, opportunities] = await Promise.all([
     displayNameOf(pool, accountId),
     pool.query(
@@ -141,11 +156,12 @@ export async function withOutreach(pool, accountId, rows, host) {
               row.siteCheck
             ),
             messageLanguage: language,
-            url: row.demo.url,
+            url: links.get(row.id) ?? row.demo.url,
+            siteUrl: row.demo.url,
             expiresAt: row.demo.expiresAt ?? null,
             message: outreachMessage({
               place: row.name,
-              url: row.demo.url,
+              url: links.get(row.id) ?? row.demo.url,
               expiresAt: row.demo.expiresAt,
               signature,
               language: language.language
@@ -159,5 +175,9 @@ export async function withOutreach(pool, accountId, rows, host) {
         ]
       })
   )
-  return rows.map((r) => ({ ...r, outreach: drafts.get(r.id) ?? null }))
+  return rows.map((r) => ({
+    ...r,
+    ...(links.has(r.id) && drafts.has(r.id) ? { demo: { ...r.demo, shareUrl: links.get(r.id) } } : {}),
+    outreach: drafts.get(r.id) ?? null
+  }))
 }

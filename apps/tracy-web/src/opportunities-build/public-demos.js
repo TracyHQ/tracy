@@ -22,11 +22,13 @@ import { CLIENT_DEMO, LOGO_RESEARCH_PENDING } from './client-demo.js'
 import { fetchDemoPhotos } from './public-demo-photos.js'
 import { readPublicDemoSettings } from '../lib/wo-public-demo-settings.js'
 import { snapshotRequest } from './public-demo-profile.js'
+import { demoLinkUrl, ensureDemoLinks, liveTokenSql, opensJsonSql, opensShape } from '../lib/wo-demo-links.js'
 
 export const PUBLIC_DEMO_PROVIDER = 'external:website-opportunities'
 const SOURCE = 'website-opportunities'
-const FAILED = ['failed', 'quality-failed-v1']
-const COMPLETED = ['completed', 'quality-completed-v1']
+/** The action statuses of a demo that failed, and of one that completed (`statusOf`; the webhook sweep reads them). */
+export const FAILED = Object.freeze(['failed', 'quality-failed-v1'])
+export const COMPLETED = Object.freeze(['completed', 'quality-completed-v1'])
 /**
  * The request capabilities this host takes all the way to the brief (`GET /v1/demos/options` `accepts`).
  * A part is listed only once its whole road (store, brief, build) is in: a client sends only what is listed.
@@ -51,7 +53,8 @@ const refusal = (status, code, message, extra = {}) => ({
 const DEMO_ROW = `select d.*, a.status as action_status, a.step as action_step, a.error as action_error,
     a.selection as action_selection, a.session_id as action_session_id, b.content as build_content,
     b.id as build_id, b.site_key, b.state as build_state, b.qa as build_qa, b.choice as build_choice,
-    b.demo_expires_at, b.demo_frozen_at, b.demo_deleted_at, st.address as site_address
+    b.demo_expires_at, b.demo_frozen_at, b.demo_deleted_at, st.address as site_address,
+    ${liveTokenSql('b')} as share_token, ${opensJsonSql('b')} as opens
   from wo_public_demo d
   join wo_demo_action a on a.id = d.action_id
   left join wo_build b on b.account_id = a.account_id and b.request_id = a.build_request_id
@@ -164,9 +167,13 @@ export function createPublicDemos(deps) {
         ? {
             key: row.site_key,
             url: row.site_address ?? null,
-            editUrl: editUrlOf(origin, row)
+            editUrl: editUrlOf(origin, row),
+            // The link to send the business (`lib/wo-demo-links.js`): it opens `url` and counts each open.
+            shareUrl: row.share_token ? demoLinkUrl(origin, row.share_token) : null
           }
         : null,
+      // Counted opens of the share link; null until the demo has one.
+      opens: opensShape(row.opens),
       error: row.cancelled_at
         ? null
         : FAILED.includes(row.action_status)
@@ -191,6 +198,36 @@ export function createPublicDemos(deps) {
   async function rowOf(db, accountId, id) {
     const { rows } = await db.query(`${DEMO_ROW} where d.account_id = $1 and d.id = $2`, [accountId, id])
     return rows[0] ?? null
+  }
+
+  /**
+   * A finished demo whose site stands gets its share link (`lib/wo-demo-links.js`) the first time it is read, so the
+   * answer names the link to send the business. Rows are changed in place and returned.
+   */
+  async function withShareLinks(accountId, rows) {
+    const due = rows.filter(
+      (row) =>
+        row.build_id &&
+        row.site_key &&
+        !row.share_token &&
+        !row.cancelled_at &&
+        !row.demo_deleted_at &&
+        row.build_state !== 'deleted' &&
+        COMPLETED.includes(row.action_status)
+    )
+    if (!due.length) return rows
+    const tokens = await ensureDemoLinks(
+      pool,
+      accountId,
+      due.map((row) => row.build_id),
+      now()
+    )
+    for (const row of due) {
+      row.share_token = tokens.get(row.build_id) ?? null
+      // A link made just now has no open yet: counted, and zero.
+      if (row.share_token && !row.opens) row.opens = { total: 0, phone: 0, desktop: 0 }
+    }
+    return rows
   }
 
   /** The template a request names, checked against what is offered, before anything is fetched or written. */
@@ -588,7 +625,16 @@ export function createPublicDemos(deps) {
     const found = await rowOf(pool, accountId, id)
     if (found && !found.site_key) await prepareChat(accountId, found)
     const row = found && !found.site_key ? await rowOf(pool, accountId, id) : found
+    if (row) await withShareLinks(accountId, [row])
     return row ? { demo: shape(row), demos: await demosOf(pool, accountId) } : null
+  }
+
+  /** The demo as `GET /v1/demos/:id` shapes it, with no other effect than its share link: a webhook event's `demo`. */
+  async function snapshot(accountId, id) {
+    const row = await rowOf(pool, accountId, id)
+    if (!row) return null
+    await withShareLinks(accountId, [row])
+    return shape(row)
   }
 
   /** Newest first; `cursor` is the last row's `[createdAt, id]`. */
@@ -599,7 +645,7 @@ export function createPublicDemos(deps) {
        order by d.created_at desc, d.id desc limit $4`,
       [accountId, after?.[0] ?? null, after?.[1] ?? null, limit + 1]
     )
-    const page = rows.slice(0, limit)
+    const page = await withShareLinks(accountId, rows.slice(0, limit))
     const last = page.at(-1)
     return {
       data: page.map(shape),
@@ -667,7 +713,7 @@ export function createPublicDemos(deps) {
     return { status: 200, body: await view(accountId, id) }
   }
 
-  return { submit, view, list, options, cancel }
+  return { submit, view, snapshot, list, options, cancel }
 }
 
 /**
