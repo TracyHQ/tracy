@@ -40,7 +40,8 @@
       "register, read and remove: the secret is answered once and kept sealed; the token decides the account",
       "each event of a demo accepted after registration is made once, from committed state, with the demo as GET answers it",
       "delivery: a signed POST, 2xx delivers; a failure waits and retries; the 8th failure, or no address, gives up",
-      "the sweep makes then sends in one tick, one tick at a time, and keeps old settled events a month"
+      "the sweep makes then sends in one tick, one tick at a time, and keeps old settled events a month",
+      "the app answers the webhook doors on the api host only, seals with its own secret and wires the sweep"
     ]
   }
 }

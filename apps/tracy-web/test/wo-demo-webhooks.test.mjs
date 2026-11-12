@@ -7,6 +7,7 @@ import { createHmac } from 'node:crypto'
 import { after, before, beforeEach, test } from 'node:test'
 import { Hono } from 'hono'
 import * as domain from 'website-opportunities/domain'
+import { buildApp } from '../src/app.js'
 import { publicDemoRoutes } from '../src/opportunities-build/public-demos-route.js'
 import { COMPLETED, createPublicDemos, FAILED } from '../src/opportunities-build/public-demos.js'
 import {
@@ -518,5 +519,56 @@ test(
     clock.at += (WEBHOOK_LIMITS.keepDays + 1) * 86_400_000
     await webhooks.tick()
     assert.equal((await events(acct)).length, 0, 'a delivered event older than the month is deleted')
+  }
+)
+
+test(
+  'the app answers the webhook doors on the api host only, seals with its own secret and wires the sweep',
+  opts,
+  async () => {
+    const acct = await account()
+    const sent = []
+    const app = buildApp({
+      config: {
+        origin: 'http://tracy.test:8080',
+        secure: false,
+        siteDomain: 'tracy.test',
+        sessionSecret: SECRET,
+        sessionDomain: null,
+        apiOrigin: 'https://api.tracy.test'
+      },
+      pool: db.pool,
+      mail: { send: async () => {} },
+      requireAccountToken: async () => ({ accountId: acct }),
+      dnsResolve: PUBLIC_DNS,
+      demoWebhookFetch: async (url, init) => {
+        sent.push({ url, init })
+        return new Response(null, { status: 204 })
+      }
+    })
+    const onApi = (path, init = {}) =>
+      app.request(`http://api.tracy.test${path}`, {
+        ...init,
+        headers: { host: 'api.tracy.test', ...init.headers }
+      })
+    const put = await onApi('/v1/demos/webhook', {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ url: HOOK })
+    })
+    assert.equal(put.status, 200)
+    const { secret } = (await put.json()).webhook
+    const row = (await db.pool.query('select secret_box from wo_demo_webhook where account_id = $1', [acct]))
+      .rows[0]
+    assert.equal(await openSecret(row.secret_box, SECRET), secret)
+    assert.equal((await onApi('/v1/demos/webhook')).status, 200)
+    // The share link lives on Tracy's own origin, never on the api host.
+    assert.equal((await onApi(`/d/${'x'.repeat(32)}`)).status, 404)
+    const off = await app.request('http://tracy.test:8080/v1/demos/webhook', {
+      headers: { host: 'tracy.test:8080' }
+    })
+    assert.notEqual(off.headers.get('x-tracy-api-version'), 'v1', 'not this door off the api host')
+    assert.deepEqual(await app.demoWebhooksTick(), { made: 0, delivered: 0, retried: 0, gaveUp: 0 })
+    assert.deepEqual(sent, [])
   }
 )
