@@ -50,7 +50,13 @@ import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
-import { createRevision, currentResearchState, resolveRevisionCms } from './revisions.js'
+import {
+  createRevision,
+  currentResearchState,
+  labelsIncomplete,
+  researchKeySlots,
+  resolveRevisionCms
+} from './revisions.js'
 import { randomUUID } from 'node:crypto'
 import { briefJobShape, createBriefJobs } from './brief-jobs.js'
 import { editRevision, readBriefEdits } from './brief-edits.js'
@@ -313,8 +319,18 @@ export function createWebsiteBuilder(deps) {
         })
       : null
     const key = live?.key ?? null
-    // The newest brief of the current research, a seller's edit of it included (`brief-edits.js`).
-    const same = key ? revisions.find((r) => r.research_hash === key || r.edited_from_hash === key) : null
+    // The newest brief of the current research, a seller's edit of it included (`brief-edits.js`), with its labels
+    // complete: one whose labels are absent, failed or pending offers Refresh (#555, #556), as does the brief of older
+    // research. A labelled brief may sit in the relabelled slot of the key (`researchKeySlots`).
+    const slots = key ? researchKeySlots(key) : null
+    const ofKey = (hash) => Boolean(hash) && (hash === slots.key || hash === slots.relabelled)
+    const same = slots
+      ? revisions.find(
+          (r) =>
+            (ofKey(r.research_hash) || ofKey(r.edited_from_hash)) &&
+            !labelsIncomplete({ assetLabelling: r.asset_labelling, labelledShare: r.labelled_share })
+        )
+      : null
     const shown = same ?? revisions[0]
     const known = Boolean(domain) && live !== undefined
     // A brief of a reading made under older rules is not current either (#524). The brief job cannot read the

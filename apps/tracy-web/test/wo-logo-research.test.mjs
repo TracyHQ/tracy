@@ -26,15 +26,22 @@ function rig({ found = null, foundAfterMs = Infinity, held, brand = {} } = {}) {
     }
   }
   const start = at
+  const marked = []
   return {
     action,
     saved,
     asked,
+    marked,
     tick: (ms) => {
       at += ms
     },
     db: {
       query: async (sql, params) => {
+        // A logo run queued for this action is paid work of its own (#564).
+        if (sql.startsWith('update wo_demo_action set work_started_at')) {
+          marked.push({ id: params[0], asked: asked.length })
+          return { rows: [] }
+        }
         assert.match(sql, /update wo_demo_action set selection = selection \|\| \$2::jsonb/)
         saved.push(JSON.parse(params[1]))
         return { rows: [] }
@@ -45,7 +52,7 @@ function rig({ found = null, foundAfterMs = Infinity, held, brand = {} } = {}) {
       now: () => at,
       research: async (a) => {
         asked.push(a.id)
-        return { ok: true }
+        return { ok: true, queued: true }
       },
       freeze: async () => ({
         placeSnapshotId: 'snap-2',
@@ -69,6 +76,7 @@ test('a brief with no logo research asks for it once, answers pending at once, a
   const r = rig({ found, foundAfterMs: 9_000 })
   const first = await quick(withLogoResearch(r.db, r.options))
   assert.deepEqual(r.asked, ['act-1'])
+  assert.deepEqual(r.marked, [{ id: 'act-1', asked: 1 }], 'a run queued for this action marks it (#564)')
   assert.equal(first.pending, true)
   assert.equal(first.retryAt, Date.parse('2026-10-24T10:00:00Z') + LOGO_RESEARCH_WAIT_MS)
   assert.equal(first.logoResearch.state, 'requested')
@@ -144,6 +152,11 @@ test('a refused logo research never stops the build: it goes on, and the check n
     throw new Error('connect ECONNREFUSED')
   }
   assert.equal((await withLogoResearch(thrown.db, thrown.options)).logoResearch.state, 'failed')
+  // No run of its own, no paid work: a refusal, a failed ask, or a run someone else started (JOB_ACTIVE).
+  const joined = rig()
+  joined.options.research = async () => ({ ok: true })
+  await withLogoResearch(joined.db, joined.options)
+  assert.deepEqual([r.marked, thrown.marked, joined.marked], [[], [], []])
 })
 
 test('a brief whose research already looked for the logo, even finding none, asks nothing', async () => {
@@ -171,7 +184,10 @@ test('the research door asks for the logo alone, and an active run counts as ask
         return new Response(JSON.stringify(body), { status })
       }
     })
-  assert.deepEqual(await door(202, { job: {} })({ id: 'act-1', opportunity_id: 'opp 1' }), { ok: true })
+  assert.deepEqual(await door(202, { job: {} })({ id: 'act-1', opportunity_id: 'opp 1' }), {
+    ok: true,
+    queued: true
+  })
   assert.deepEqual(seen[0], {
     path: '/api/website-opportunities/opp%201/research',
     body: { requestId: 'logo-act-1', only: 'logo' },

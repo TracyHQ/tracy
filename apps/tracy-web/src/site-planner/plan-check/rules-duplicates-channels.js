@@ -122,7 +122,10 @@ export function checkR12(ctx) {
         return
       const words = `${str(c.says)} ${str(c.text)}`
       for (const [kind, re] of KINDS) {
-        if (!re.test(words)) continue
+        // A generic CTA describes the button's job, not a telephone promise. Keep any real call or phone
+        // wording elsewhere in the same note or label, and leave the other channel checks untouched.
+        const channelWords = kind === 'phone' ? words.replace(/\bcall[\s-]+to[\s-]+action\b/gi, '') : words
+        if (!re.test(channelWords)) continue
         if (linked.has(kind)) r.ok()
         else
           r.fail(

@@ -1830,27 +1830,32 @@ export function sitesRoutes({
    * `file(jobId)` (opt-in): writes the job's `job` row in place of the plain `putJob` — `runOwedJob`
    * writes it in one statement with what its door owes the job (`door-follow-up.js`).
    */
-  async function runSiteJobOnce(site, input, deadlineMs, onJob, { bounded = false, file } = {}) {
+  async function runSiteJobOnce(site, input, deadlineMs, onJob, { bounded = false, file, resumeJobId } = {}) {
     const started = bounded ? now() : 0
     const left = () => (bounded ? { timeoutMs: Math.max(1, deadlineMs - (now() - started)) } : {})
-    const answer = await host.hostCall(
-      config,
-      site.host,
-      '/site',
-      { ...input, label: site.label },
-      { fetchImpl, ...left() }
-    )
-    if (answer.timedOut) return { ok: false, reason: 'timeout' }
-    if (!answer.ok || typeof answer.body?.jobId !== 'string') {
-      // The host's own refusal names why (`{code: 'BAD_REQUEST', why}` from its job validator); keep
-      // it, so a door can tell "this file is a configuration file" from "the host is down".
-      const why = typeof answer.body?.why === 'string' ? `: ${answer.body.why}` : ''
-      return { ok: false, reason: `${answer.body?.code ?? 'FLEET_REFUSED'}${why}` }
+    // A history reader whose bounded wait expired resumes the same host job. Retrying the
+    // browser door must not queue another whole-webroot read behind the unfinished one.
+    let jobId = input.kind === 'webroot-history' ? resumeJobId : undefined
+    if (!jobId) {
+      const answer = await host.hostCall(
+        config,
+        site.host,
+        '/site',
+        { ...input, label: site.label },
+        { fetchImpl, ...left() }
+      )
+      if (answer.timedOut) return { ok: false, reason: 'timeout' }
+      if (!answer.ok || typeof answer.body?.jobId !== 'string') {
+        // The host's own refusal names why (`{code: 'BAD_REQUEST', why}` from its job validator); keep
+        // it, so a door can tell "this file is a configuration file" from "the host is down".
+        const why = typeof answer.body?.why === 'string' ? `: ${answer.body.why}` : ''
+        return { ok: false, reason: `${answer.body?.code ?? 'FLEET_REFUSED'}${why}` }
+      }
+      jobId = answer.body.jobId
+      if (file) await file(jobId)
+      else await putJob(pool, { id: jobId, siteKey: site.site_key, host: site.host, kind: input.kind })
+      if (onJob) await onJob(jobId)
     }
-    const jobId = answer.body.jobId
-    if (file) await file(jobId)
-    else await putJob(pool, { id: jobId, siteKey: site.site_key, host: site.host, kind: input.kind })
-    if (onJob) await onJob(jobId)
     // Bounded, the deadline counts from the first call (the POST included); unbounded, as before.
     const begun = bounded ? started : now()
     for (let attempt = 0; now() - begun < deadlineMs; attempt++) {
@@ -1869,7 +1874,7 @@ export function sitesRoutes({
       }
     }
     // `pending`: the host took the job and had not ended it when the wait ran out — it goes on.
-    return { ok: false, reason: 'timeout', pending: true }
+    return { ok: false, reason: 'timeout', pending: true, jobId }
   }
 
   /**

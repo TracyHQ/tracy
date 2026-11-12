@@ -38,6 +38,7 @@ import {
 } from './plan-changes.js'
 import { CHECKER_VERSION, checkPlan, failureListText } from './plan-check/check-plan.js'
 import { plannerPrompt } from './planner-prompt.js'
+import { withHiddenListLinks } from './plan-hidden-links.js'
 import { VISUAL_REVIEW_POLICY, visualReviewInstruction, withVisualReview } from './visual-review.js'
 
 export { BENCH_QUEUE }
@@ -78,12 +79,17 @@ export const SITE_PLANNER_STEP = Object.freeze({
   // plan a fix round's change list leaves, so no answer keeps one (lib/stock-screens.js). A kit without the field changes nothing.
   readAnswer: (value, { ready }) =>
     value && typeof value === 'object' && !isChangeList(value)
-      ? withStockScreensDropped(value, ready?.kit?.doc)
+      ? withHiddenListLinks(withStockScreensDropped(value, ready?.kit?.doc), ready?.kit?.doc)
       : value,
   changes: Object.freeze({
     applyValidChanges: (previous, list, { ready } = {}) => {
       const applied = PLAN_CHANGE_RULES.applyValidChanges(previous, list)
-      return applied.ok ? { ...applied, doc: withStockScreensDropped(applied.doc, ready?.kit?.doc) } : applied
+      return applied.ok
+        ? {
+            ...applied,
+            doc: withHiddenListLinks(withStockScreensDropped(applied.doc, ready?.kit?.doc), ready?.kit?.doc)
+          }
+        : applied
     },
     oversized: oversizedReplacements,
     smallEditsMessage,

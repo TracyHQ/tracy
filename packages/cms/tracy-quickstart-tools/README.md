@@ -357,6 +357,7 @@ back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
 `images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
 in a block's `source`.
 
+Template-kit capture and content-coverage audits, including their module-box review, share this transport.
 External images, fonts and stylesheets retain their original URLs, status, headers and bytes, but use Playwright's
 request transport so a stalled Chromium asset connection does not consume every page's load timeout. Each context
 allows six active requests and 32 waiting requests; fetches time out after 15 seconds, redirects remain browser-followed,

@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-568-ops-shared-research-progress",
+  "kind": "fix",
+  "title": "Ops follows shared research worker checkpoints and active request elapsed time without replacing account request identity",
+  "pr": 568,
+  "area": "website-opportunities/ops-shared-research",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In the TCH checkout with dependencies installed and TEST_DATABASE_URL pointing to a disposable PostgreSQL test server, run run.cmd. The test uses fileDb to create its own isolated database or schema.",
+    "S2: Confirm all seven tests run, with zero failures and zero skipped tests."
+  ],
+  "expect": [
+    "An active shared research request retains the account request job ID/state, while stage, current source, worker lease, attempt and cleared errors come from its shared worker.",
+    "Current snapshot source status replaces stale private status for the same source/ref; other private sources remain.",
+    "Running elapsed time advances from the request creation time instead of stopping at its old updated_at.",
+    "Completed, cancelled and failed requests keep their own diagnostics and terminal duration; consumed shared results do not override a private follow-up.",
+    "Private research remains independent; shared work with no snapshot still exposes its checkpoint."
+  ],
+  "selectors": {
+    "queue": "/api/ops/wo"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/ops-wo-shared-research.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "Ops follows the active shared worker and current snapshot, preserving request identity",
+      "Ops keeps completed request diagnostics and frozen duration",
+      "Ops keeps cancelled request diagnostics and frozen duration",
+      "Ops keeps failed request diagnostics and frozen duration",
+      "private research keeps its own diagnostics and live elapsed duration",
+      "shared work without a snapshot still exposes worker checkpoints",
+      "consumed shared results do not override private follow-up diagnostics"
+    ]
+  }
+}

@@ -7,7 +7,9 @@ import { REPAIR_LIMITS } from '../src/write-step/repair-pass/repair-limits.js'
 import { checkOf, failure, fakeAgent, fakeClock, stepNine } from './_write-step-nine-repair.mjs'
 
 const ALT = failure('alt-matches-picture', '/index.php/about', 'module-4.1', 'Demo coach lifting weights')
-const OVER = failure('words-over-picture', '/index.php/about', 'module-4.2', 'Join the class')
+const OVER = failure('words-over-picture', '/index.php/about', 'module-4.2', 'Join the class', {
+  target: { path: '#readable', tag: 'p', text: 'Join the class', marks: [], complete: true }
+})
 const DEMO = failure('demo-words', '/', 'module-2.1', 'Call Demo Gym today')
 
 const itemsOf = (agent) => agent.sent.requests.flatMap((r) => r.items)
@@ -16,7 +18,11 @@ test('each visible fault is sent once, with its page, element and one sentence; 
   const agent = fakeAgent()
   const LAYOUT = failure('text-overflow', '/', 'module-3.1', 'The heading runs off the page', { width: 390 })
   const first = checkOf([ALT, OVER, DEMO, { ...ALT, width: 390 }, LAYOUT])
-  const { result } = await stepNine({ checks: [first, checkOf([])], agent })
+  const { result } = await stepNine({
+    checks: [first, checkOf([])],
+    agent,
+    input: { pageHtml: async () => '<body><p id="readable">Join the class</p></body>' }
+  })
   assert.equal(result.report.status, 'done')
   // Two pages, two turns, each page in a session of its own.
   assert.equal(agent.sent.opened, 2)

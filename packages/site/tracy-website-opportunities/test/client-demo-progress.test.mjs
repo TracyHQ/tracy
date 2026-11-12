@@ -201,3 +201,20 @@ test('readiness failures name their repairable checks, before the chain starts a
     assert.doesNotMatch(html, /unknown-check/)
   }
 })
+
+test('an empty business reading names its own check, never only the generic refusal (#554)', () => {
+  const blocked = {
+    id: 'empty-reading',
+    state: 'failed',
+    step: 'brief',
+    error: 'BRIEF_NOT_READY',
+    readiness: { verdict: 'block', next: 'research-again', checks: ['business-content'], ownerQuestions: [] }
+  }
+  const refused = { ...chainRow(chainRun()), demoAction: blocked }
+  const stopped = chainRow(chainRun(), blocked)
+  for (const row of [refused, stopped]) {
+    const html = draw(row)
+    assert.match(html, /\[reason\.brief_not_ready\]/)
+    assert.match(html, /\[brief\.check\.business-content\]/)
+  }
+})

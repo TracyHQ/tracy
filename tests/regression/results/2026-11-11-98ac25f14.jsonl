@@ -1,0 +1,7 @@
+{"id":"REG-PR-568-build-progress-and-diagnostics","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:05.477Z","evidence":"REG-PR-568-build-progress-and-diagnostics.log"}
+{"id":"REG-PR-568-chain-measurements","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:05.580Z","evidence":"REG-PR-568-chain-measurements.log"}
+{"id":"REG-PR-568-chain-restart-reason","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:09.778Z","evidence":"REG-PR-568-chain-restart-reason.log"}
+{"id":"REG-PR-568-coverage-passive-assets","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:09.860Z","evidence":"REG-PR-568-coverage-passive-assets.log"}
+{"id":"REG-PR-568-ops-shared-research-progress","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:12.056Z","evidence":"REG-PR-568-ops-shared-research-progress.log"}
+{"id":"REG-PR-568-research-read-identity","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:12.207Z","evidence":"REG-PR-568-research-read-identity.log"}
+{"id":"REG-PR-568-wo-retry-dispatch","verdict":"PASS","commit":"98ac25f147811a578c56ce8b649751ee720f175e","ran_at":"2026-11-11T18:15:13.087Z","evidence":"REG-PR-568-wo-retry-dispatch.log"}

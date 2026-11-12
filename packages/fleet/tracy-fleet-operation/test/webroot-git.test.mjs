@@ -1505,14 +1505,19 @@ test('step 9 commits setup files before native repair so whole-turn Undo preserv
       repairMoment = run(GIT, s.srv, ['--op', 'moment', '--title', 'Fix contrast', '--turn', native])
       return prompt(input)
     }
+    // A readability fault is sent only with a complete measured target the fresh page still serves.
+    const unreadable = failure('words-over-picture', '/', null, 'unreadable heading', {
+      target: { path: '#heading', tag: 'h1', text: 'unreadable heading', marks: [], complete: true }
+    })
     const { result } = await stepNine({
       agent,
       checks: [
-        checkOf([failure('words-over-picture', '/', null, 'unreadable heading')]),
+        checkOf([unreadable]),
         checkOf([failure('brand-accent', '/', null, 'new colour regression')]),
-        checkOf([failure('words-over-picture', '/', null, 'unreadable heading')])
+        checkOf([unreadable])
       ],
       input: {
+        pageHtml: async () => '<body><h1 id="heading">unreadable heading</h1></body>',
         beforeRepair: async () => {
           const committed = run(GIT, s.srv, ['--op', 'moment', '--title', 'Tracy setup', '--turn', setup])
           assert.equal(committed.files, 2)

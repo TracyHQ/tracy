@@ -15,6 +15,7 @@ import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
 import { readActivityV2 } from '../src/sites/activity-v2.js'
 import { createBriefBuilds } from '../src/sites/brief-build.js'
 import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
+import { stepNineDiagnostics } from '../src/step-chain-write-diagnostics.js'
 import { briefOf } from '../src/sites/brief-store.js'
 import { writeComponent } from '../src/sites/store.js'
 import { fileDb } from './_db.mjs'
@@ -122,6 +123,45 @@ test(
     assert.ok(log.includes('write:end'), log.join(' '))
     const row = await briefOf(pool, 'harbourpadel.tracy.test')
     assert.equal(row.timings.chain.ending, 'complete')
+  }
+)
+
+test(
+  'stopped write diagnostics survive terminal persistence and temporary-file disposal',
+  dbOpts,
+  async () => {
+    const diagnostic = stepNineDiagnostics({
+      report: { status: 'stopped', writeStatus: 'done', cause: { code: 'STEP_NINE_CHECK_FAILED' } },
+      firstCheck: { status: 'unmeasured', groups: [{ name: 'read-back', status: 'unmeasured', checked: 0 }] },
+      siteCheck: { status: 'unmeasured', groups: [{ name: 'read-back', status: 'unmeasured', checked: 0 }] },
+      repair: { status: 'incomplete', turns: [], checks: 1 },
+      writersSettled: true
+    })
+    let disposed = false
+    const { steps } = fakeSteps({
+      write: async () => ({
+        value: {
+          report: {
+            status: 'stopped',
+            counts: { written: 2 },
+            cause: { reason: 'Final check did not pass' }
+          },
+          diagnostics: diagnostic
+        },
+        usd: 0
+      })
+    })
+    steps.dispose = async () => {
+      disposed = true
+    }
+    const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+    const b = builds(db.pool, { [STEP_CHAIN_WORKFLOW]: chain })
+    await b.start(chainInput())
+    await untilSettled(b, 'harbourpadel.tracy.test')
+    const row = await briefOf(db.pool, 'harbourpadel.tracy.test')
+    assert.equal(row.timings.chain.ending, 'soft-failure')
+    assert.deepEqual(row.timings.chain.steps.find((s) => s.step === 'write').diagnostics, diagnostic)
+    assert.equal(disposed, true)
   }
 )
 

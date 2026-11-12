@@ -12,7 +12,7 @@
  */
 import { mergeProfile } from './executor.js'
 import { withProfileEdits } from './profile-edits.js'
-import { mergeSamePageRows } from './source-rows.js'
+import { mergeSamePageRows, privateSourceRows } from './source-rows.js'
 import { withNameDecision } from './business-name.js'
 import { withHoursDecision } from './business-hours.js'
 import { withRatingDecision } from './business-rating.js'
@@ -66,11 +66,13 @@ export async function placeViewOf(db, opportunity) {
     ...sourceRowsOf(snapshot.sources).filter((s) => s.ref && judgedAs(s.source, s.ref)),
     ...reviews
   ]
-  const sharedRefs = new Set(shared.map((s) => `${s.source}\n${s.ref}`))
   // The opportunity's own rows but the ones the place already has (its per-account research from before).
-  const own = (
-    await db.query('select * from wo_source where opportunity_id = $1 order by source', [opportunity.id])
-  ).rows.filter((s) => s.ref && judgedAs(s.source, s.ref) && !sharedRefs.has(`${s.source}\n${s.ref}`))
+  const own = privateSourceRows(
+    shared,
+    (
+      await db.query('select * from wo_source where opportunity_id = $1 order by source', [opportunity.id])
+    ).rows.filter((s) => s.ref && judgedAs(s.source, s.ref))
+  )
   const ownKinds = new Set(own.map((s) => s.source))
   const rows = [
     ...shared.map((s) => ({ ...s, shared: true })),

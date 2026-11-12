@@ -32,7 +32,7 @@ import { checkR21 } from './rules-trade-hidden.js'
 
 // The checker's version, stored on every bench run next to the prompt hash. Bump it whenever a rule, a rule title,
 // a failure text or the result shape changes, so two runs scored by different checkers are never compared as equal.
-export const CHECKER_VERSION = 'site-plan-check/7'
+export const CHECKER_VERSION = 'site-plan-check/8'
 
 const RUN_ORDER = [
   checkR00,

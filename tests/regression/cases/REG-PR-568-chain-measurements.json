@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-568-chain-measurements",
+  "kind": "fix",
+  "title": "Parallel WO snapshots stay ordered and interrupted active steps retain unknown final spend",
+  "pr": 568,
+  "area": "website-opportunities/chain-measurements",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the real chain engine snapshot ordering reproduction and interrupted cost projections without models or paid services."
+  ],
+  "expect": [
+    "A delayed older brand snapshot cannot overwrite the running parallel planner.",
+    "Interrupted active steps leave totalUsd null and retain knownUsd without rewriting original chain measurements.",
+    "Completed numeric measurements, live elapsed time and settlement bounds retain their existing semantics."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/step-chain-progress-order.test.mjs",
+      "apps/tracy-web/test/wo-chain-interruption.test.mjs",
+      "apps/tracy-web/test/wo-chain-unknown-spend.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "a late brand progress write cannot erase the running parallel planner",
+      "an interrupted planner retains measured spend as a subtotal and leaves its final cost unknown",
+      "running and completed chains retain their existing timing and verdicts",
+      "Ops preserves historical measured numeric totals and genuine zero costs"
+    ]
+  }
+}

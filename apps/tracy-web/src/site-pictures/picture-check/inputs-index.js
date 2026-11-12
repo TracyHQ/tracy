@@ -128,13 +128,18 @@ export function indexInputs({ plan, kit, brief, files, icons }) {
   return {
     ...kitIndex,
     ...planIndex,
-    /** A gallery tile: an any-real frame of a picture list (gallery-tiles.js); it is never hidden alone. */
+    /** A gallery tile: a real-photo wish or business gallery role in a picture list; never hidden alone. */
     galleryTile: (frameId) =>
-      planIndex.wishes.get(frameId)?.match === 'any-real' ? kitIndex.gallery(frameId) : null,
-    // A real-photo request and a photo grounded in observations or an original post document the business.
+      planIndex.wishes.get(frameId)?.match === 'any-real' ||
+      kitIndex.frames.get(frameId)?.role === 'business.gallery_image'
+        ? kitIndex.gallery(frameId)
+        : null,
+    // The kit's business gallery role, a real-photo request and a photo grounded in observations or an original post
+    // document the business. A planner's specific wish cannot turn its gallery into an illustration.
     // A cutout can remain a generic illustration; it does not claim to be a portrait of its staff.
     documentaryFrame: (frameId) => {
       const wish = planIndex.wishes.get(frameId)
+      if (kitIndex.frames.get(frameId)?.role === 'business.gallery_image') return true
       if (wish?.match === 'any-real') return true
       if (kitIndex.frames.get(frameId)?.kind !== 'photo') return false
       return arr(wish?.factIds).some((id) =>

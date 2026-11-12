@@ -864,6 +864,14 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `wo_media_analysis` (vision labels by sha+model+key, claimed before the call). New columns: `wo_opportunity.place_id`,
   `wo_job.place_job_id`/`result_snapshot_id` (the account's request, state mirrored from the place job), `wo_revision.place_snapshot_id`/
   `profile_effective` (the manifest points to `wo_place_media` by id+sha, `origin: 'place'`; older revisions read `wo_media` as before).
+  The effective place view compares shared and private social sources by the existing native profile parser's identity
+  (including Facebook page IDs and case-sensitive YouTube channel IDs). A successful shared collection represents a pasted
+  alias of that same profile in the profile, source list and brief inputs; distinct profiles and failures without a successful
+  shared twin remain separate. This read-time selection never rewrites stored collector attempts or their failure reasons.
+  The saved place-profile adapter derives a trade from an exact collected social category only when its controlled
+  mapping recognizes one unambiguous trade and Google/schema types provide none. Biography text never supplies this
+  classification. An unknown trade with no menu collector attempt reports menu coverage as `not_researched`; only a
+  recognized non-food trade can establish `not_applicable` in the absence of actual menu evidence.
   Migration 168 (Research again): `wo_place_job.again_plan` — a run only revisits the parts
   that failed on our side / are older than 30 days / were never tried / whose rules changed; the scope is computed by [`website-opportunities/src/research-again.js`](packages/wo/website-opportunities/src/research-again.js)
   (one function for the three preview doors: the place card, /ops, `/find`, and for the run) and then frozen into the job; the run only drops parts that have
@@ -1145,8 +1153,8 @@ EmDash) never gets a record created for it.
   ([ADR 0017](docs/adr/0017-github-release-is-quickstart-source-of-truth.md)). There is no catalogue
   file in the repo. (`apps/tracy-web/src/quickstarts.json` only pins the Claude
   Cowork plugin version.)
-  Template-kit capture fetches only external passive images, fonts and stylesheets through Playwright's request
-  transport at their original URLs; same-site requests, documents, scripts and APIs keep their browser path.
+  Template-kit capture and content-coverage audits fetch only external passive images, fonts and stylesheets through
+  Playwright's request transport at their original URLs; same-site requests, documents, scripts and APIs keep their browser path.
   Each context bounds concurrent requests and disposes every response. A timeout or oversized response falls back
   to the original browser request; no font substitution or missing-resource success is recorded.
   Slot ownership matches visible inline sentences in DOM order as well as atomic text, then prefers the block
@@ -2065,6 +2073,11 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   brief = current snapshot + the account's overlay ([`place-view.js`](packages/wo/website-opportunities/src/place-view.js)); a place
   without a snapshot → reads its own row as before. Flag off: new requests run the private path, place jobs are not claimed, published snapshots
   are still read; a shared request that is Resumed while the flag is off reruns on the private path.
+- **Ops shared research progress:** `/api/ops/wo` retains the account request's ID, state and start time for recovery,
+  while an outstanding shared research request reads stage, progress and worker lease diagnostics from its `wo_place_job`.
+  Source status merges private `wo_source` rows with that worker's current snapshot, never an earlier published snapshot.
+  A consumed result or terminal request keeps its own diagnostics. Queued/running elapsed time uses the current clock;
+  stopped requests retain their last update time. This read path does not write or restart either job.
 - **Place research across deployments** (23/10/2026, slice 1, migration 166):
   a sending deployment pushes the published research of a place to the **master**, which receives it through
   `POST /api/internal/wo-places/v1/ingest` ([`place-ingest-door.js`](packages/wo/website-opportunities/src/place-ingest-door.js)),
@@ -2172,6 +2185,10 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   verbatim quotes when the page shows the author, the Google source and the supplied link. Prices/hours inside a quote
   do not become evidence for business content. The check id `no-google-review-quoted` is kept for
   compatibility with old receipts; what it checks now is attribution. No provider or data store added.
+- **Agent demo QA fact budget**: `briefOf` leaves the frozen brief's `assets` catalogue out of its serialized
+  business prose. Photo identifiers, hashes, dimensions and detection labels are build input, not evidence for business
+  claims. The original brief and catalogue remain unchanged; complete content-only research and review testimony still
+  travel through their existing QA fields. Web and host retain the 400,000-character complete-evidence limit.
 - **Outreach v3** ([`outreach.js`](packages/wo/website-opportunities/src/outreach.js)): reads `placeViewOf` with the same snapshot/overlay
   as Details and the revision; calls no provider. `tinyld` lives in tracy-web, not in the domain package; a caption above the threshold
   beats the Google country/dialling code; multilingual countries or ones without a template use English. Templates in 12 languages are JSON data;
@@ -2320,6 +2337,11 @@ approval or chain eligibility. Explicit custom indexes remain isolated from depl
   and picture steps. Missing or unsupported view versions refuse before preparation or model calls, including a
   resumed paid conversation. The approved system prompt and required kit-image review remain unchanged. This
   reduces payload size; runtime savings require a separate measurement.
+- **Hidden list link closure:** before checking whole plans and fix-round edits, the planner fills only missing
+  link hides already implied by an explicitly hidden list or a row the shared pure `lib/plan-rows.js`
+  `goneRowSlots` selection removes; the writer keeps its existing `write-step/hide-rows.js` import wrapper.
+  Unique row ownership and no explicit kept content are required. Existing link decisions and non-leading kept rows
+  remain intact; visible or ambiguous missing links still fail the unchanged checker. This adds no provider calls.
 - **Started and read from a command line** inside the tracy-web container:
   [`scripts/site-planner-bench.mjs`](apps/tracy-web/scripts/site-planner-bench.mjs) (`kits`, `run`, `list`, `status`, `get`,
   `cancel`; [`bench-cli.js`](apps/tracy-web/src/site-planner/bench-cli.js)). It calls the bench service directly with the
@@ -2485,6 +2507,9 @@ frame, its twins and setting pictures are omitted from changes, uploads and alts
 problems. Missing original context refuses generated provenance rather than assuming an illustration;
 generic illustrations with their original context remain available. This also checks failed and historical
 final manifests when exported again; it does not rewrite their saved records or previously exported files.
+The kit's `business.gallery_image` role establishes documentary purpose even when a plan asks for
+`specific` pictures without observed fact citations. Such gallery frames retain the real-photo reuse
+ladder, never draw or extend a scene, and refuse generated files at check and export, including twins.
 
 The copy export also reuses the planner's original-owner-post article rule on both the frozen plan and
 the writer's actual fact citations. Invalid article titles, leads and dates are omitted before Joomla or
@@ -2567,6 +2592,8 @@ The final `site-write-report.json` also carries `pictureReview`: each picture th
 looker rejection, with its frame, source, site path, rung and exact fault names. This is handover evidence, not a
 passing visual verdict.
 Repair prompts explicitly run unattended: they use existing assets or supported removal and do not ask for uploads or approval. Consent-required refusals such as `CONFIRM_FIRST` remain blocked; the repair instruction prohibits asking, asserting consent, or bypassing them through another door. Each repair turn has a ten-minute cap independent of the chain preparation deadline; expired turns are cancelled, checked, and retain unresolved findings. Deep image targets use compact asset selectors, and inline backgrounds carry their actual source URL.
+Step 9b binds a demo picture to a precise contract image slot only when its measured page, kit frame and native mapping identify one unique target. Replacement instructions name that slot, require a fresh read/revision and use native image fit rather than presentation geometry; frames without measured permission to hide remain unresolved when no suitable business picture exists. The turn also explains fresh inspection after stale revisions and plain content without markup or control characters. These are repair hints, not new write permissions: native validation and consent refusals still apply.
+Words-over-picture measurements carry a separate bounded DOM target (path up to 180 characters, clean element text up to 300, tag and up to 12 provenance marks of 240 characters each) beside the coarse baseline key. Overflow makes the target incomplete; oversized IDs are not used as path anchors. The judge preserves that target and each width/theme observation; step 9b groups only observations with the same complete target, retaining every observation. Before creating a readability comment, it resolves the path again in freshly served HTML and requires exactly one element with the same text, tag and ownership marks. Missing, ambiguous, overlong or changed targets remain `target-unresolved` without an agent request; legacy diagnostic strings never become body targets. The delivered turn names the exact selector for `page.look` and `look.set`, and prohibits deriving an occurrence index from a finding. This validates the current DOM path and content, not persistent node identity across reordering of indistinguishable nodes. Native consent checks remain unchanged. Refusal details are not currently exposed by the repair turn reader, so the existing bounded second-round policy is unchanged.
 Step 9b checks mapped image-alt capability before opening a repair session or sending newly exposed findings. An exact image storage declaration without a gallery alt slot or supported article/HTML record alt is recorded as `unsupported-alt-target`; the original checker failure remains blocking and the pass stays incomplete. Missing or unmatched content maps preserve the existing repair path.
 Queued repair pages are checked against the latest completed site check before opening a session. Before a scripted menu unpublish, step 9 reads the native record and refuses when `home: 1`; its stored `/home` path is not evidence that the root does not depend on it. Unavailable kept pages ask the agent to restore the CMS route and publication state, rather than remove a link. Failed-page repairs
 run first because a shared menu repair can restore several pages; all pages use the serial default. A
@@ -2597,7 +2624,16 @@ steps: a step still going then is stopped, its best version used, no new 9b work
 detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
-(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. The brand boundary receives the
+(`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Parallel steps persist
+their chain progress snapshots in order through one promise queue per run, so a late earlier update cannot erase
+another step's start, completion or measured spend. Progress storage failures remain non-fatal and do not poison later updates.
+The write step retains a structural diagnostic summary in `site_brief.timings.chain.steps[write].diagnostics`,
+read through the existing staff-only `/api/ops/wo/chain-builds` raw measurement. It records first/final check statuses,
+group counts and bounded fault identities, repair status, skip codes, turn counts and timing stages, including early
+stopped writes. The summary is limited to 8 KiB and explicitly marks truncation. It excludes raw errors, reasons,
+prompts, measured values, credentials, external URLs and local filesystem paths. Temporary full reports are still
+removed normally; no new store or read door is introduced. Earlier runs without the summary remain unknown.
+The brand boundary receives the
 frame's selected primary site language. Only when the research has no brand voice, it supplies that language name alone
 in the brand run's input and records `brand-brief-language/1` in `brief_source`; it invents no tone, preserves an authored voice,
 and never rewrites the WO revision. A missing or unknown selected language cannot supply a voice.
@@ -2664,8 +2700,12 @@ stale-marker expiry still applies. Ordinary engines retain their end-of-apply se
 The chain forwards its bounded three-minute setup-job budget through the brief runner to the host job poller,
 waiting on the same accepted opening job before any content application. A refused, missing or unfinished
 opening receipt stops all chain writes with `STEP_CHAIN_SETUP_HOLD_UNPROVEN`; it cannot start a backup history
-read behind a still-running seal. A pending backup-history answer is `SITE_RECOVERY_POINT_PENDING`, and a failed
-read is unverified evidence, never proof that no full backup exists. Both refuse writes.
+read behind a still-running seal. A legitimate `FLEET_JOB_PENDING` backup-history answer waits for full proof
+through at most four owner-door reads within three minutes, honoring run cancellation. A bounded history wait
+retains the unfinished host job identity for up to ten minutes; the next reader resumes polling that job rather
+than filing another whole-webroot read. A write invalidates that identity, and completed responses are never cached.
+An exhausted or unrelated pending answer is `SITE_RECOVERY_POINT_PENDING`; a failed read is unverified evidence,
+never proof that no full backup exists. Both refuse writes.
 
 Before the chain's first write, code pins the newest backup whose existing owner/session `GET /api/sites/:key/backups`
 answer proves a full database dump and file commit. Missing full backup or an unhealthy initial home refuses the write.
@@ -2682,6 +2722,8 @@ finite reported cost; `costUsd.agentKnown` retains the measured subtotal. No nat
 Step and chain records preserve unknown `usd` and `totalUsd` as null and carry `knownUsd` for their measured subtotal.
 The Ops data response preserves these nulls and subtotals. Historical numeric measurements, including zero, are read
 unchanged; historical artifacts are not reinterpreted or rewritten.
+An interrupted running snapshot with active steps has an unknown final cost: Ops exposes the recorded charges as
+`knownUsd` and leaves `totalUsd` null, without rewriting its original chain measurement.
 
 Bench execution and checked quality are separate. Planner, writer and picture runs can finish `succeeded` with
 `standing_failures` after their bounded fix rounds. The chain still exports and writes their best available output,
@@ -3198,12 +3240,12 @@ the destination page sends the brief as with a demo. On an http stand (no `crypt
 
 For an enabled chain template, acceptance removes `client-send/1` for an own-site build too. Add site's existing
 follower polls that action without preparing a second chat writer, then opens its receipted `siteKey` when complete;
-a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds. The durable action follows the chain's recorded step and stays queued while its current site brief is queued, preparing, ready or applying, even when the host has finished base provisioning. A live chain also holds the action deadline within the existing maximum action window; a terminal chain passes QA only when its current brief is applied, its measurement has ended, no measured steps are active, and the last write outcome is done (the write step's final check passed). Earlier model soft failures may retain a verified fallback; missing, failed, stopped or unmeasured writes end with QA_NEEDS_REVIEW. This is machine verification, never human acceptance. Historical pre-fix completed actions are not rewritten.
+a failed action returns its actual error. This is the same template allow-list and master switch as regular WO builds. The durable action follows the chain's recorded step and stays queued while its current site brief is queued, preparing, ready or applying, even when the host has finished base provisioning. A live chain also holds the action deadline within the existing maximum action window; a terminal chain passes QA only when its current brief is applied, its measurement has ended, no measured steps are active, and the last write outcome is done (the write step's final check passed). Earlier model soft failures may retain a verified fallback; missing, failed, stopped or unmeasured writes end with QA_NEEDS_REVIEW. This is machine verification, never human acceptance. Historical pre-fix completed actions are not rewritten. A terminal chain settled with `timings.lost=LOST_ON_RESTART` keeps the compatible action error `QA_NEEDS_REVIEW` and exposes `LOST_ON_RESTART` through the existing build `qa.reason`; other nonpassing chains use `QA_NEEDS_REVIEW`, and a passing chain clears the reason. Raw brief errors and model diagnostics do not cross into that reason.
 Add site describes a server-owned wait as building, with elapsed minutes from the action's acceptance time, rather
 than promising a chat. The browser keeps its business reference through a failed build or failed poll so reopening
 follows the same work. An eligible failed action offers explicit Retry through the existing own-site build door with
 `retryOf`; it sends no new research or template selection. Blocked immutable briefs and lost or deleted sites have no
-retry control. A later research press also follows an earlier own-site action while its base still exists, including a stopped or completed action, instead of offering a template the build door would refuse with `BUILD_EXISTS`. Replaced actions and deleted bases are excluded. Retry still keeps the original frozen revision; research does not silently rewrite it.
+retry control. A later research press also follows an earlier own-site action while its base still exists, including a stopped or completed action, instead of offering a template the build door would refuse with `BUILD_EXISTS`. Replaced actions and deleted bases are excluded. Retry still keeps the original frozen revision; research does not silently rewrite it. The failed-build Try again controls on the opportunity list and Details send that action as `retryOf`, without opening the template picker. Missing parent actions stop before a build request. A newly approved content brief is not rebound onto an earlier failed build; a retry still operates on the earlier action’s frozen revision, and a refused retry never falls back to a new build.
 
 For a Joomla header without menu label slots, the write step can identify its main menu from an unambiguous
 intersection of the plan's kept page paths and the released content map's menu identities. It hides only unplanned
@@ -3219,6 +3261,7 @@ the brief restart atomically checks the durable action, unchanged snapshot, owne
 active writer. Replaced sites, changed briefs, open work and lost placement attempts are refused. Replay adopts the same
 retry action; retrying a failed child obtains fresh authority for its own failed generation. This reuses the same site,
 revision and normal chain worker, with no new provision or chat writer.
+An existing chain build without this exact restart authority is refused before a new action or daily usage is reserved, even when its parent action already says failed or its stored QA failed. Such a press cannot merely repeat the old QA result as a newly accepted Retry.
 An applied brief is eligible only when its chain ended in `soft-failure`, its running steps are absent, null or empty,
 and its latest recorded write failed. Healthy applied generations, successful latest writes, missing or malformed
 measurements and running steps cannot authorize a full-chain restart. The application uses this same eligibility

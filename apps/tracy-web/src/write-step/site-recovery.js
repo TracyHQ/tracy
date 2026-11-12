@@ -1,7 +1,7 @@
 // A chain write keeps the provisioner's full backup outside the agent. Content faults keep their
 // written content; only a newly broken home (two explicit server failures) may restore that point.
 // Network failures are unknown, never evidence that replacing the site's database would help.
-export async function runWithSiteRecovery({ door, siteKey, runId, probe, run, sleep }) {
+export async function runWithSiteRecovery({ door, siteKey, runId, probe, run, sleep, signal }) {
   const stopped = (code, recovery, result = {}) => ({
     ...result,
     report: { ...result.report, status: 'stopped', cause: { code, reason: code }, recovery },
@@ -9,7 +9,7 @@ export async function runWithSiteRecovery({ door, siteKey, runId, probe, run, sl
   })
   let point
   try {
-    point = await door.recoveryPoint(siteKey)
+    point = await door.recoveryPoint(siteKey, { signal })
   } catch (error) {
     const pending = error?.code === 'SITE_RECOVERY_POINT_PENDING'
     return stopped(pending ? 'SITE_RECOVERY_POINT_PENDING' : 'SITE_RECOVERY_POINT_UNVERIFIED', {

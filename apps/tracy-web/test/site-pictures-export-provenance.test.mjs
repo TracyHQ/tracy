@@ -117,3 +117,21 @@ test('a generated picture cannot infer an illustrative purpose from a missing or
     assert.ok(!out.uploads.some((u) => u.sha256 === source(i).sha256))
   }
 })
+
+for (const made of ['drawn', 'owner-photo-extended']) {
+  test(`a business gallery role rejects ${made} even when the plan asks for a specific illustration`, () => {
+    const i = inputs()
+    const frame = i.kit.blocks.flatMap((b) => b.frames ?? []).find((f) => f.id === 'block-7.1')
+    frame.role = 'business.gallery_image'
+    assert.equal(wishOf(i, frame.id).match, 'specific')
+    Object.assign(source(i), { source: made, alt: 'Real photos from our classes' })
+    if (made === 'owner-photo-extended') source(i).asset = 'a-wheel'
+    assert.equal(checkPictures(i).rules.find((r) => r.id === 'P07').status, 'fail')
+    const out = exported(i)
+    assert.ok(!('module-7.1' in out.mapping.changes))
+    assert.ok(!('module-7.2' in out.mapping.changes), 'a twin cannot carry the rejected gallery picture')
+    assert.ok(!out.uploads.some((u) => u.sha256 === source(i).sha256))
+    assert.ok(!('block-7.1' in out.alts))
+    assert.ok(out.problems.some((p) => p.where === frame.id && /documents the business/.test(p.detail)))
+  })
+}

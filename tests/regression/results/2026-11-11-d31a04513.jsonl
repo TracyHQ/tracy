@@ -1,0 +1,10 @@
+{"id":"REG-PR-568-chain-measurements","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:43:28.505Z","evidence":"REG-PR-568-chain-measurements.log"}
+{"id":"REG-PR-568-chain-restart-reason","verdict":"FAIL","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:45:28.748Z","evidence":"REG-PR-568-chain-restart-reason.log"}
+{"id":"REG-PR-568-coverage-passive-assets","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:45:29.101Z","evidence":"REG-PR-568-coverage-passive-assets.log"}
+{"id":"REG-PR-568-chain-measurements","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:46:04.512Z","evidence":"REG-PR-568-chain-measurements.log"}
+{"id":"REG-PR-568-chain-restart-reason","verdict":"FAIL","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:48:15.965Z","evidence":"REG-PR-568-chain-restart-reason.log"}
+{"id":"REG-PR-568-coverage-passive-assets","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:48:16.272Z","evidence":"REG-PR-568-coverage-passive-assets.log"}
+{"id":"REG-PR-568-ops-shared-research-progress","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:48:27.000Z","evidence":"REG-PR-568-ops-shared-research-progress.log"}
+{"id":"REG-PR-568-research-read-identity","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:48:27.546Z","evidence":"REG-PR-568-research-read-identity.log"}
+{"id":"REG-PR-568-wo-retry-dispatch","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:48:28.506Z","evidence":"REG-PR-568-wo-retry-dispatch.log"}
+{"id":"REG-PR-568-chain-restart-reason","verdict":"PASS","commit":"d31a04513c80f75bfa3d1d74100c90b62d941af5","ran_at":"2026-11-11T17:49:52.338Z","evidence":"REG-PR-568-chain-restart-reason.log"}

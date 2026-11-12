@@ -79,7 +79,8 @@ export const BRIEF_SCHEMA_VERSIONS = Object.freeze([1, 2])
 // 3 (09/11/2026): the reading carries its USP themes (`reading.uspThemes`), and the hero its USP statement (`hero.usp`).
 // 4 (11/11/2026): assets retain known scene textPresence separately from the overlay-only label.
 // 5 (11/11/2026): owner website reading, original post facts and expanded owner names.
-export const BRIEF_RULES_VERSION = 5
+// 7 (12/11/2026): known product and equipment photographs stay out of business story slots.
+export const BRIEF_RULES_VERSION = 7
 /** The contact copy of a business whose hours wait for a check, when it can be called or written to. */
 // The contact line of a business whose hours wait for a check; the channels to book on follow it, each once.
 export const BY_APPOINTMENT = 'By appointment.'
@@ -638,6 +639,11 @@ export function buildBrief({
   )
   const videos = usable.filter((m) => m.kind === 'video')
   const imagesOf = (cat) => images.filter((m) => m.category === cat).map((m) => m.id)
+  // Products and equipment stay available to their offerings and gallery, never the business story.
+  const storyImagesOf = (cat) =>
+    images
+      .filter((m) => m.category === cat && !['product', 'equipment'].includes(assetLabelsOf(m).content))
+      .map((m) => m.id)
   // Up to three pictures for the build step to open the site with, the most pixels first; never the logo or a profile
   // picture, and none at all when nothing qualifies (#1780).
   const heroes = heroCandidates(
@@ -796,7 +802,7 @@ export function buildBrief({
       (cuisine.length
         ? `${nameOn ? displayName : `This ${noun}`} serves ${cuisine.join(', ')} cuisine.`
         : `About ${nameOn ? displayName : `this ${noun}`}.`),
-    assetIds: [...imagesOf('people'), ...imagesOf('space')].slice(0, 3)
+    assetIds: [...storyImagesOf('people'), ...storyImagesOf('space')].slice(0, 3)
   }
   const storyEvidence = [
     ...(bio ? [{ quote: bio, source: 'profile.bio' }] : []),
@@ -2044,6 +2050,10 @@ function logoLines(br, words = tradeWords('food')) {
 function assetLabellingLine(n) {
   const failed = n.failed ? `, ${n.failed} failed (${n.reason ?? 'unknown'})` : ''
   const counts = `${n.labelled ?? 0} of ${n.asked ?? 0} asked${failed}, ${n.cached ?? 0} cached${n.max ? `, at most ${n.max}` : ''}`
+  if (n.reason === 'not_attempted')
+    return 'pictures were not labelled when this brief was made; a Refresh labels them'
+  if (n.reason === 'labels_pending')
+    return `${n.pending ?? 0} picture(s) were still being labelled (${counts}); a Refresh reads their labels`
   if (n.status === 'labelled') return `labelled by a vision model (${counts})`
   if (n.status === 'partial')
     return `labelled in part by a vision model (${counts}); each unlabelled asset says why`
