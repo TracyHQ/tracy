@@ -12,6 +12,7 @@
         "$TURBO_ROOT$/apps/tracy-web/**",
         "$TURBO_ROOT$/packages/cms/tracy-joomla-quickstart/**",
         "$TURBO_ROOT$/packages/cms/tracy-wordpress-theme/**",
+        "$TURBO_ROOT$/packages/fleet/tracy-fleet-operation/**",
         "$TURBO_ROOT$/vendor/tracy/od-design-system/**",
         "$TURBO_ROOT$/vendor/tracy/refero/**",
         "$TURBO_ROOT$/packages/design/tracy-ds-slot/test/fixtures/ds-sweep-2026-10-13-moxie/**",

@@ -695,7 +695,14 @@ export async function runWriteStep(input) {
       : [],
     changes: mapping.changes,
     // A slot the hide stage removes with its row is not kept, so it is no demo left.
-    emptySlots: [...mapping.emptySlots, ...(hide.takenSlots ?? [])]
+    emptySlots: [
+      ...mapping.emptySlots,
+      ...(hide.takenSlots ?? []),
+      ...last
+        .held()
+        .filter((line) => line.status === 'hidden' && typeof line.key === 'string')
+        .map((line) => line.key)
+    ]
   })
   closing = closed.lines
   for (const key of closed.dropped) {

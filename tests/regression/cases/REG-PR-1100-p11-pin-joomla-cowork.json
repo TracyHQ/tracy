@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-1100-p11-pin-joomla-cowork",
   "kind": "fix",
-  "title": "scripts/pin-joomla-cowork.mjs moves the Joomla quickstarts' Claude Cowork pins onto a published release — five values per older pin, the same text in both quickstarts.json copies, nothing else — and refuses, writing nothing, when the release does not carry the profiles a pin records byte for byte or the download is not what GitHub states",
+  "title": "scripts/pin-joomla-cowork.mjs moves the Joomla quickstarts' Claude Cowork pins onto a published release \u2014 five values per older pin, the same text in both quickstarts.json copies, nothing else \u2014 and refuses, writing nothing, when the release does not carry the profiles a pin records byte for byte or the download is not what GitHub states",
   "pr": 1100,
   "area": "quickstart/pins",
   "cms": ["jo"],
@@ -19,7 +19,9 @@
     "A release missing a recorded profile, a recorded file, or carrying a changed or unrecorded file in a recorded profile is refused with that file named, exit 1, nothing written.",
     "A size or digest that disagrees with GitHub, a package declaring another version, a draft, a pre-release, an asset served elsewhere or not uploaded is refused; a release-candidate tag exits 2.",
     "Two catalogues that already differ, and a pin fetched by githubAssetId, are refused.",
-    "On the committed catalogues and this tree's own profile files, every Joomla pin moves with five lines each and nothing else changes."
+    "On the committed catalogues and this tree's own profile files, every Joomla pin moves with five lines each and nothing else changes.",
+    "An explicitly recorded X.Y.Z-rc.N pin can move to its matching or newer stable release, with dry-run leaving both catalogues unchanged and only the five release values changing on apply.",
+    "A newer RC is never downgraded to an older stable release. Malformed candidate versions and incompatible RC contracts are refused without writes; selecting a new RC destination remains forbidden."
   ],
   "selectors": {
     "script": "scripts/pin-joomla-cowork.mjs",
@@ -37,7 +39,9 @@
       "a release that does not carry a recorded profile byte for byte is refused",
       "a download or a release that is not what it claims is refused",
       "two catalogues that already differ, or a pin fetched by githubAssetId, are refused",
-      "the committed catalogues move whole"
+      "the committed catalogues move whole",
+      "an existing RC can move to its stable release, but never back to an older stable version",
+      "existing RC pins still refuse incompatible contracts and malformed candidate versions without writes"
     ]
   }
 }

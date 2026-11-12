@@ -11,6 +11,7 @@
 // file to colour it, a drawing that failed). Every resolution is a line in `report.closing`.
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { kitSlotIndex } from '../lib/template-kit/kit-slots.js'
+import { slotCanEmpty } from './contract-write.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 /** Slot types that print as content; an icon, a url or a setting goes with its row, never alone. */
@@ -90,8 +91,9 @@ export function closeDemoLeft({
     }
     const { unit, ids } = unitOf(kit, slot)
     const keys = ids.map((id) => ({ id, key: contentMapKey(id) }))
+    const nativeUnit = keys.map(({ key: k }) => onSite.get(k))
     const hideable = keys.every(
-      ({ id, key: k }) => onSite.get(k)?.canHide === true && kitSlots.get(id)?.canHide !== false
+      ({ id, key: k }) => slotCanEmpty(onSite.get(k), nativeUnit) && kitSlots.get(id)?.canHide !== false
     )
     for (const { id, key: k } of keys) {
       done.add(id)
