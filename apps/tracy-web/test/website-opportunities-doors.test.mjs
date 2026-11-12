@@ -3292,6 +3292,71 @@ test(
   }
 )
 
+test(
+  'Details sets the current site’s PageSpeed beside the demo’s own; outreach offers the proof line only with both',
+  opts,
+  async () => {
+    const w = await world()
+    const { opp, build } = await builtDemo(w)
+    // The completed action measured its demo after it ended (`onBuilt`): a `*.localhost` demo is never sent to Google.
+    let kept = null
+    for (let i = 0; i < 200 && !kept; i += 1) {
+      kept = (await w.pool.query(`select built->'pagespeed' as p from wo_build where id = $1`, [build.id]))
+        .rows[0]?.p
+      if (!kept) await new Promise((r) => setTimeout(r, 10))
+    }
+    assert.equal(kept?.reason, 'not_public', JSON.stringify(kept))
+    assert.equal(
+      w.fetched.some((u) => u.includes('pagespeedonline')),
+      false
+    )
+    // Research measured the current site; the demo's measurement is kept with its build (`demo-pagespeed.js`).
+    await w.pool.query(
+      `insert into wo_profile (opportunity_id, profile) values ($1, $2::jsonb)
+       on conflict (opportunity_id) do update set profile = excluded.profile`,
+      [opp.id, JSON.stringify({ pageSpeed: { performance: 34, seo: 80, checkedAt: '2026-11-01T08:00:00Z' } })]
+    )
+    await w.pool.query(`update wo_build set built = $2::jsonb, qa = $3::jsonb where id = $1`, [
+      build.id,
+      JSON.stringify({
+        at: '2026-11-12T08:58:00.000Z',
+        minutes: 26,
+        usd: 1.84,
+        pagespeed: { url: 'https://phoba.localhost', performance: 92, checkedAt: '2026-11-12T09:00:00Z' }
+      }),
+      JSON.stringify({ state: 'passed' })
+    ])
+    const detail = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body
+    assert.deepEqual(detail.pagespeed, {
+      old: { score: 34, measuredAt: '2026-11-01T08:00:00.000Z' },
+      demo: { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' }
+    })
+    assert.deepEqual(detail.demo.pagespeed, { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' })
+    assert.deepEqual(detail.demo.built, { at: '2026-11-12T08:58:00.000Z', minutes: 26, usd: 1.84 })
+    const listed = (await w.call(A, 'GET', BASE)).body.opportunities[0]
+    assert.deepEqual(listed.demo.pagespeed, detail.demo.pagespeed)
+    const outreach = (await w.call(A, 'GET', `${BASE}/${opp.id}/outreach`)).body.outreach
+    assert.equal(outreach.pagespeedProof, 'Current site 34 → demo 92 on mobile')
+    assert.doesNotMatch(outreach.message.auto, /PageSpeed|→/, 'the drafts are worded as before')
+    // A demo PageSpeed could not reach keeps its reason: no number, no proof.
+    await w.pool.query(
+      `update wo_build set built = built || jsonb_build_object('pagespeed', $2::jsonb) where id = $1`,
+      [build.id, JSON.stringify({ url: 'https://phoba.localhost', reason: 'not_public', checkedAt: '2026-11-12T09:00:00Z' })]
+    )
+    const unreachable = (await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.pagespeed
+    assert.deepEqual(unreachable.demo, { reason: 'not_public' })
+    assert.equal((await w.call(A, 'GET', `${BASE}/${opp.id}/outreach`)).body.outreach.pagespeedProof, null)
+    // A build measured before this was kept reads not_measured; no research score reads old null.
+    await w.pool.query(`update wo_build set built = built - 'pagespeed' where id = $1`, [build.id])
+    await w.pool.query(`update wo_profile set profile = '{}'::jsonb where opportunity_id = $1`, [opp.id])
+    assert.deepEqual((await w.call(A, 'GET', `${BASE}/${opp.id}`)).body.pagespeed, {
+      old: null,
+      demo: { reason: 'not_measured' }
+    })
+    assert.equal((await w.call(B, 'GET', `${BASE}/${opp.id}`)).status, 404, 'not yours')
+  }
+)
+
 test('rebuild makes a new demo from the old revision once the old one was deleted', opts, async () => {
   const w = await world()
   const { opp, rev } = await builtDemo(w)
