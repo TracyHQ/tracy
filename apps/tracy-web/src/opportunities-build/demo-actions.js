@@ -9,7 +9,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { autoTemplate, chooseTemplate, templateRanking } from '../lib/wo-revision-choice.js'
 import { failedQaHash } from './demo-qa.js'
 import { BUILD_LIVE } from './build-store.js'
-import { stepChainEnabled } from '../lib/step-chain-switch.js'
+import { STEP_CHAIN_WORKFLOW, stepChainEnabled } from '../lib/step-chain-switch.js'
 import { failedChainRetryBrief } from '../lib/chain-retry-authority.js'
 
 const DAY_MS = 86_400_000
@@ -410,6 +410,21 @@ export async function acceptDemoActions(
           409,
           'ACTION_NOT_FAILED',
           'Retry an action that has stopped, or wait for the current action.'
+        )
+      }
+      // A failed action alone cannot authorize another write on an existing chain site. Without an exact
+      // restart authority the runner would only read the old failure, after reserving another daily build.
+      if (
+        e.retryOf &&
+        retryBuild?.state === 'done' &&
+        retryBuild.receipt?.workflow === STEP_CHAIN_WORKFLOW &&
+        !chainRetry
+      ) {
+        await client.query('rollback')
+        return refusal(
+          409,
+          'ACTION_NOT_FAILED',
+          'This site cannot safely resume its build. Start a new site from the business.'
         )
       }
       // A retry reuses the same immutable revision. Repeating a readiness refusal cannot repair it.

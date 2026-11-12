@@ -153,6 +153,7 @@
   "brief.cards.none": "Tracy 对这家商家的了解还不够。完整 brief 在下方。",
   "brief.cards.title": "Tracy 如何理解 {business}",
   "brief.cards.titleNoName": "Tracy 如何理解这家商家",
+  "brief.check.business-content": "未找到该商家的服务、菜单项或产品，也没有其故事或信息。请重新调研：仅有描述或简介是不够的。",
   "brief.check.hero-candidates": "为主图添加合适的照片。",
   "brief.check.items-routed": "检查各项目打开的页面。",
   "brief.check.labelled-share": "重新研究照片标签。",

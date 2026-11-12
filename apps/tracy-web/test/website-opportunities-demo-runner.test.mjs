@@ -18,7 +18,13 @@ import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.js'
-import { acceptDemoActions, demoProgress, readDemoUsage } from '../src/opportunities-build/demo-actions.js'
+import {
+  acceptDemoActions,
+  demoActionOf,
+  demoProgress,
+  readDemoUsage
+} from '../src/opportunities-build/demo-actions.js'
+import { checkBusinessReading, readingSourcesOf } from 'website-opportunities/domain/business-reading.mjs'
 import {
   claimAndRunQa,
   failedQaHash,
@@ -2958,28 +2964,107 @@ test(
   }
 )
 
+/** Eight sharp photographs of the fictional restaurant's own website, as a frozen research input holds them. */
+const ownPhotos = () =>
+  Array.from({ length: 8 }, (_, i) => ({
+    id: `photo-${i}`,
+    kind: 'image',
+    origin: 'place',
+    source: 'website',
+    sourceUrl: `https://phoba.example/photo-${i}.jpg`,
+    sha256: String(i).repeat(64),
+    width: 2000,
+    height: 1200,
+    category: 'other'
+  }))
+/** What the fictional restaurant offers, read from its bio: business content a brief can build on (#554). */
+const phoBaReading = () => {
+  const bio = 'Pho Ba serves beef noodle soup and fresh spring rolls.'
+  return {
+    method: 'model',
+    ...checkBusinessReading(
+      { services: [{ name: 'Beef noodle soup', quote: 'beef noodle soup', ref: 'bio' }], team: [] },
+      readingSourcesOf({ bio, reviews: [] })
+    )
+  }
+}
+/** Freeze the photos (and, unless left out, the reading) into an accepted action's research input. */
+async function freezeResearch(w, actionId, { reading = phoBaReading() } = {}) {
+  await w.pool.query(
+    `update wo_demo_action set selection = jsonb_set(
+       jsonb_set(selection || '{"ownSite":true}'::jsonb, '{researchInput,media}', $2::jsonb),
+       '{researchInput,profile}', coalesce(selection#>'{researchInput,profile}', '{}'::jsonb) || $3::jsonb)
+     where id=$1`,
+    [actionId, JSON.stringify(ownPhotos()), JSON.stringify(reading ? { businessReading: reading } : {})]
+  )
+}
+/** Answer every photo's label at once, as the shared picture-label run does. */
+const labelAll = () => ({
+  labels: new Map(
+    ownPhotos().map((m) => [
+      m.id,
+      {
+        key: 'fixture|p3',
+        model: 'fixture',
+        labels: { content: 'venue-exterior', caption: 'The restaurant exterior' }
+      }
+    ])
+  ),
+  note: { status: 'labelled', asked: 8, labelled: 8, cached: 0, max: 60 }
+})
+
+test(
+  'a brief with good photos but no offering, story or fact is refused with its own reason and charges nothing more (#554)',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, readiness: 'measured' })
+    const actionId = (await w.accept()).body.actions[0].id
+    await freezeResearch(w, actionId, { reading: null })
+    // Labelling good photos is a paid vision call: the labeller marks the action first (#564), so it stays charged.
+    w.deps.pictureLabels = async (input) => {
+      await input.beforePaidCall?.()
+      return labelAll()
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    const usage = async () =>
+      (
+        await w.pool.query('select kind, used from wo_demo_usage where account_id=$1 order by kind', [
+          w.account
+        ])
+      ).rows
+    const accepted = await usage()
+    const runner = w.runner()
+    await runner.drain()
+    await w.deps.clientDemo.pictureRuns.idle()
+    await w.advance()
+    await runner.drain()
+    const brief = (await w.pool.query('select brief from wo_revision')).rows[0].brief
+    const verdicts = Object.fromEntries(brief.readiness.checks.map((c) => [c.id, c.verdict]))
+    assert.equal(verdicts['labelled-share'], 'pass')
+    assert.equal(verdicts['source-and-credit'], 'pass')
+    assert.equal(verdicts['business-content'], 'block')
+    assert.deepEqual([brief.readiness.verdict, brief.readiness.next], ['block', 'research-again'])
+    const action = (await w.pool.query('select status, error from wo_demo_action where id=$1', [actionId]))
+      .rows[0]
+    assert.deepEqual([action.status, action.error], ['failed', 'BRIEF_NOT_READY'])
+    // The seller's row carries the reason the progress views name (`brief.check.business-content`).
+    const shown = await demoActionOf(w.pool, w.account, actionId)
+    assert.ok(shown.readiness.checks.includes('business-content'), shown.readiness.checks.join(', '))
+    assert.ok(!shown.readiness.checks.includes('own-usable-photos'))
+    assert.equal(w.creates(), 0, 'no site was asked for')
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    assert.deepEqual(await usage(), accepted, 'the refusal adds no usage to what the press reserved')
+  }
+)
+
 test(
   'a server-owned build waits for the shared photo labels before freezing its first brief',
   opts,
   async () => {
     const w = await world({ historical: false, agentWorkflow: true, readiness: 'measured' })
     const actionId = (await w.accept()).body.actions[0].id
-    const media = Array.from({ length: 8 }, (_, i) => ({
-      id: `photo-${i}`,
-      kind: 'image',
-      origin: 'place',
-      source: 'website',
-      sourceUrl: `https://phoba.example/photo-${i}.jpg`,
-      sha256: String(i).repeat(64),
-      width: 2000,
-      height: 1200,
-      category: 'other'
-    }))
-    await w.pool.query(
-      `update wo_demo_action set selection = jsonb_set(selection || '{"ownSite":true}'::jsonb,
-        '{researchInput,media}', $2::jsonb) where id=$1`,
-      [actionId, JSON.stringify(media)]
-    )
+    const media = ownPhotos()
+    await freezeResearch(w, actionId)
     const asked = []
     let settle
     const answer = new Promise((resolve) => {

@@ -1,0 +1,50 @@
+{
+  "pr": 570,
+  "issue": 509,
+  "baseline": {
+    "commit": "5737e84dae68e3ac8cc05aeb7e1c156685f708ee",
+    "chainTests": {
+      "pass": 37,
+      "fail": 4,
+      "skip": 0
+    },
+    "observed": "Authenticated dev accepted an explicit retry for an interrupted owned placement, then returned the prior QA failure in less than two seconds without running the writer."
+  },
+  "fixed": {
+    "regressionCommit": "fa3e4e9e8a",
+    "chainTests": {
+      "pass": 41,
+      "fail": 0,
+      "skip": 0
+    },
+    "relatedTests": {
+      "pass": 171,
+      "fail": 0,
+      "skip": 0
+    },
+    "selectedGates": {
+      "passed": 63,
+      "excluded": ["tests", "turbo-config", "boot-graph"]
+    },
+    "unchangedOnRefusal": ["daily usage", "action count", "site brief"],
+    "remaining": "Post-deployment API acceptance and a complete clean-site content acceptance are still required."
+  },
+  "devContent": {
+    "pages": 20,
+    "widths": [1440, 390],
+    "checks": 109,
+    "failedChecks": 15,
+    "accepted": false,
+    "observed": [
+      "Previously dropped articles remain published",
+      "Template gallery and class pictures remain",
+      "Privacy policy paragraphs still print twice"
+    ]
+  },
+  "temporaryQaSetting": {
+    "setting": "ownSiteBuildsPerAccountPerDay",
+    "before": 3,
+    "during": 4,
+    "afterReadback": 3
+  }
+}

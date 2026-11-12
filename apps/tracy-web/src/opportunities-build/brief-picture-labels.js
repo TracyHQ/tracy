@@ -23,7 +23,13 @@ import { closedListDigest, ownershipOf } from 'website-opportunities/domain/pict
 import { labelWithVision } from '../lib/picture-vision.js'
 import { observeWithModel } from '../lib/picture-observations.js'
 import { observeBriefPictures } from './brief-picture-observations.js'
-import { claimAnalyses, doneAnalyses, reopenAnalyses, settleAnalysis } from './media-analysis.js'
+import {
+  claimAnalyses,
+  doneAnalyses,
+  reopenAnalyses,
+  settleAnalysis,
+  unansweredAnalyses
+} from './media-analysis.js'
 import { briefPictureBytes } from '../lib/brief-picture-bytes.js'
 
 export const BRIEF_VISION_MAX_PICTURES = 60
@@ -33,6 +39,9 @@ const OWNERSHIP_RANK = { owner: 0, unknown: 1, customer: 2 }
 const BATCH = 8
 /** A picture smaller than this on its long side is never shown to the model: no place on a site takes it. */
 const MIN_EDGE = 480
+
+/** Why a picture went unanswered that may pass when asked later: never kept as unanswered. */
+const TRANSIENT = new Set(['http_error', 'timeout'])
 
 /** Rounds a failed call is sent again; the charge's ceiling covers them. */
 const RETRY = 1
@@ -57,6 +66,16 @@ export function createBriefPictureLabels({
   log = console
 }) {
   const bytesOf = (rows, accountId) => briefPictureBytes({ pool, objects }, rows, accountId)
+  /** An opportunity's own pictures the model was shown under this key and gave no label for: id to why. */
+  async function ownUnansweredOf(ids, accountId, vision) {
+    if (!ids.length || !accountId) return new Map()
+    const { rows } = await pool.query(
+      `select id::text as id, labels->'visionUnanswered'->>'reason' as reason from wo_media
+       where id::text = any($1::text[]) and account_id = $2 and labels->'visionUnanswered'->>'key' = $3`,
+      [ids.map(String), accountId, vision.key]
+    )
+    return new Map(rows.map((r) => [r.id, r.reason]))
+  }
 
   /**
    * @param {{media: any[], brand: any, accountId: string | null, trade: string | null,
@@ -143,7 +162,32 @@ export function createBriefPictureLabels({
         }
       }
       note.cached = labels.size
-      if (!ask.length) return done({ ...note, status: 'cached' })
+      // 🔒 Never paid for twice in vain: a picture the model was shown and gave no label for under this key is not
+      // asked again by a brief (a build still may); it stays unlabelled with the model's reason.
+      const unanswered = await unansweredAnalyses(
+        pool,
+        ask.filter((m) => m.origin === 'place').map((m) => m.sha256),
+        vision
+      )
+      // An opportunity's own picture keeps its unanswered outcome on its row, read here and not from the brief's read
+      // (a demo action's frozen read predates it).
+      const ownUnanswered = await ownUnansweredOf(
+        ask.filter((m) => m.origin !== 'place').map((m) => m.id),
+        accountId,
+        vision
+      )
+      const whyBefore = (m) =>
+        m.origin === 'place' ? unanswered.get(m.sha256) : ownUnanswered.get(String(m.id))
+      const before = ask.filter((m) =>
+        m.origin === 'place' ? unanswered.has(m.sha256) : ownUnanswered.has(String(m.id))
+      )
+      for (const m of before) mark([m.id], whyBefore(m) || 'not_in_answer')
+      if (before.length) ask.splice(0, ask.length, ...ask.filter((m) => !before.includes(m)))
+      if (!ask.length) {
+        if (!before.length) return done({ ...note, status: 'cached' })
+        const reason = commonest(before.map((m) => unlabelled[m.id]))
+        return done({ ...note, status: labels.size ? 'partial' : 'failed', failed: before.length, reason })
+      }
       // A shared label made against another list is asked again: open it for the claim below.
       await reopenAnalyses(pool, stale, vision)
       claimed = await claimAnalyses(
@@ -151,6 +195,10 @@ export function createBriefPictureLabels({
         ask.filter((m) => m.origin === 'place').map((m) => m.sha256),
         vision
       )
+      // Claimed by another request still labelling them (#556): their labels land in the shared cache, not here, so
+      // the note says they are pending and a later Refresh or build reads them (`revisions.js labelsIncomplete`).
+      const waiting = ask.filter((m) => m.origin === 'place' && !claimed.has(m.sha256)).length
+      if (waiting) note.pending = waiting
       sent = ask.filter((m) => m.origin !== 'place' || claimed.has(m.sha256))
       const pictures = await bytesOf(sent, accountId)
       const read = new Set(pictures.map((p) => p.id))
@@ -162,7 +210,12 @@ export function createBriefPictureLabels({
       if (!pictures.length) {
         for (const sha of claimed) await settleAnalysis(pool, sha, null, vision)
         claimed = new Set()
-        return done({ ...note, status: labels.size ? 'cached' : 'failed', reason: 'no_bytes' })
+        return done({
+          ...note,
+          status: !labels.size ? 'failed' : before.length ? 'partial' : 'cached',
+          ...(before.length ? { failed: before.length } : {}),
+          reason: waiting ? 'labels_pending' : 'no_bytes'
+        })
       }
       const model = vision.door.model
       const answer = await charge(
@@ -180,24 +233,49 @@ export function createBriefPictureLabels({
       )
       for (const m of sent) {
         const got = answer.labels.get(m.id) ?? null
-        if (m.origin === 'place' && claimed.has(m.sha256)) await settleAnalysis(pool, m.sha256, got, vision)
+        // Shown and not answered for a reason asking again would not change: kept so a brief never asks it again.
+        const why = !got && read.has(m.id) ? (answer.reasons?.get(m.id) ?? 'not_in_answer') : null
+        const kept = why && !TRANSIENT.has(why) ? why : null
+        if (m.origin === 'place' && claimed.has(m.sha256))
+          await settleAnalysis(pool, m.sha256, got, vision, kept)
         if (!got) {
-          if (read.has(m.id)) mark([m.id], answer.reasons?.get(m.id) ?? 'not_in_answer')
+          if (why) mark([m.id], why)
+          // An opportunity's own picture keeps it on its row, beside where its label would be.
+          if (kept && m.origin !== 'place' && accountId)
+            await pool.query(
+              `update wo_media set labels = coalesce(labels, '{}'::jsonb) || jsonb_build_object('visionUnanswered', $2::jsonb)
+               where id::text = $1 and account_id = $3`,
+              [
+                m.id,
+                JSON.stringify({
+                  key: vision.key,
+                  model: vision.door.model,
+                  reason: kept,
+                  at: new Date().toISOString()
+                }),
+                accountId
+              ]
+            )
           continue
         }
         labels.set(m.id, entryOf(vision, got))
         note.labelled += 1
         if (m.origin !== 'place' && accountId)
           await pool.query(
-            `update wo_media set labels = coalesce(labels, '{}'::jsonb) || jsonb_build_object('vision', $2::jsonb)
+            `update wo_media set labels = (coalesce(labels, '{}'::jsonb) - 'visionUnanswered') || jsonb_build_object('vision', $2::jsonb)
              where id = $1 and account_id = $3`,
             [m.id, JSON.stringify({ ...entryOf(vision, got), at: new Date().toISOString() }), accountId]
           )
       }
       claimed = new Set()
-      const failed = note.asked - note.labelled
-      if (!failed) return done({ ...note, status: 'labelled' })
-      const reason = commonest(sent.map((m) => unlabelled[m.id]).filter(Boolean)) ?? 'no_answer'
+      const failed = note.asked - note.labelled + before.length
+      if (!failed)
+        return done({
+          ...note,
+          ...(waiting ? { status: 'partial', reason: 'labels_pending' } : { status: 'labelled' })
+        })
+      const reason =
+        commonest([...sent, ...before].map((m) => unlabelled[m.id]).filter(Boolean)) ?? 'no_answer'
       return done({ ...note, status: note.labelled ? 'partial' : 'failed', failed, reason })
     } catch (error) {
       // The claims go back: a later build asks again.
