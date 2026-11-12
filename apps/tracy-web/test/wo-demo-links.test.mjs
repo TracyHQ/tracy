@@ -169,7 +169,7 @@ test('the device class and what counts as a person are read from the request alo
   for (const ua of [
     'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
     `${MAC} facebookexternalhit/1.1 Facebot Twitterbot/1.0`,
-    'WhatsApp/2.23.20.0 A',
+    'WhatsApp/2.24 A',
     'TelegramBot (like TwitterBot)',
     'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
     'Slackbot-LinkExpanding 1.0 (+https://api.slack.com/robots)',
@@ -254,7 +254,7 @@ test(
     const notCounted = [
       await open(`/d/${token}`, { method: 'HEAD' }),
       await open(`/d/${token}`, { ua: 'facebookexternalhit/1.1' }),
-      await open(`/d/${token}`, { ua: 'WhatsApp/2.23.20.0 A' }),
+      await open(`/d/${token}`, { ua: 'WhatsApp/2.24 A' }),
       await open(`/d/${token}`, { ua: 'curl/8.4.0' }),
       await open(`/d/${token}`, { ua: null }),
       await open(`/d/${token}`, { headers: { 'sec-purpose': 'prefetch' } }),

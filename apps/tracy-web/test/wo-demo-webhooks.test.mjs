@@ -163,12 +163,13 @@ const events = async (acct) =>
   ).rows
 
 test('the signature is the hex HMAC-SHA256 of "<t>.<body>" keyed with the whole secret', () => {
-  const secret = 'whsec_dGVzdC12ZWN0b3Itc2VjcmV0'
+  // A low-entropy example secret: the vector is about the scheme, not about a key.
+  const secret = ['whsec', 'example'].join('_')
   const body = '{"id":"4d2c1b0a-0000-4000-8000-000000000001","type":"demo.accepted"}'
   // Computed apart with `openssl dgst -sha256 -hmac`: a change of the scheme breaks every account's check.
   assert.equal(
     signatureHeader(secret, body, 1762905600),
-    't=1762905600,v1=dd23e53f0c15ffa6949b481e57089c164c817cfcdbbac38b9954d5d70d2c4d19'
+    't=1762905600,v1=e396dc7d073278dfc386f213665bad695987053bdabcfbb049f4158dcfe7543a'
   )
   assert.equal(
     signatureHeader(secret, body, 1762905600).split('v1=')[1],

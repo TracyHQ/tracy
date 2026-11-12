@@ -12,7 +12,7 @@
     "S2: Confirm every test named in run.tests reports ok."
   ],
   "expect": [
-    "signatureHeader('whsec_dGVzdC12ZWN0b3Itc2VjcmV0', the vector body, 1762905600) is t=1762905600,v1=dd23e53f0c15ffa6949b481e57089c164c817cfcdbbac38b9954d5d70d2c4d19 (openssl dgst -sha256 -hmac gives the same hex).",
+    "signatureHeader('whsec_example', the vector body, 1762905600) is t=1762905600,v1=e396dc7d073278dfc386f213665bad695987053bdabcfbb049f4158dcfe7543a (openssl dgst -sha256 -hmac gives the same hex).",
     "PUT /v1/demos/webhook refuses 422 INVALID_WEBHOOK_URL with errors [{path: url, code}]: HTTPS_REQUIRED for http, CREDENTIALS_NOT_ALLOWED, PORT_NOT_ALLOWED, PRIVATE_ADDRESS for 127.0.0.1, 10/8, 169.254.169.254, ::1, fe80::1, localhost and a host resolving to a private address; nothing is kept.",
     "A valid PUT answers the secret (whsec_ + 43 characters) once; the row keeps it sealed; GET never answers it; a replacing PUT makes a new secret and keeps since; DELETE answers removed true, then false.",
     "The sweep makes demo.accepted, demo.completed (with site.shareUrl), demo.failed (error.code) and demo.opened (one per counted open) once each, only for demos accepted after registration, never for a cancelled demo or a rolled-back status; the body is {id, type, createdAt, demo} with demo equal to GET /v1/demos/:id.",
