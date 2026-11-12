@@ -16,6 +16,12 @@ const published = JSON.parse(
 const social = published.blocks.find((block) => block.id === 'block-171')
 const normalize = (value, kit) => SITE_PLANNER_STEP.readAnswer(value, { ready: { kit: { doc: kit } } })
 const missing = 'block-171.6'
+// The kit label slot of the missing link. keepHidingAll hides it with every demo slot; a test of the row closure alone
+// leaves it undecided, since a hidden label closes its link on its own (the label rule below).
+const missingLabel = 'block-171.2'
+const leaveLabelUndecided = (decision) => {
+  decision.hiddenSlots = decision.hiddenSlots.filter((entry) => entry.slot !== missingLabel)
+}
 function input() {
   const kit = fixtureKit()
   kit.blocks[kit.blocks.findIndex((block) => block.id === social.id)] = structuredClone(social)
@@ -45,6 +51,7 @@ test('a hidden social parent closes its missing child link without a model round
 
 test('a visible undecided child link remains a checker failure', () => {
   const { kit, value, decision } = input()
+  leaveLabelUndecided(decision)
   decision.hiddenSlots = decision.hiddenSlots.filter((entry) => entry.slot !== 'block-171.social')
   decision.lists = [{ list: 'block-171.social', rows: 4, items: [] }]
   assert.strictEqual(normalize(value, kit), value)
@@ -113,6 +120,7 @@ test('a fix-round change receives the same hidden-parent closure', () => {
 test('ambiguous row ownership and contradictory parent decisions stay unresolved', () => {
   for (const kind of ['ambiguous', 'contradictory']) {
     const { kit, value, decision } = input()
+    leaveLabelUndecided(decision)
     if (kind === 'ambiguous') {
       const block = kit.blocks.find((entry) => entry.id === social.id)
       block.lists.push({ ...structuredClone(block.lists[0]), id: 'another-list' })
@@ -133,4 +141,81 @@ test('a page-local kept block closes its hidden row, while dropped pages remain 
     const slots = result.pages[0].blocks[0].hiddenSlots.map((entry) => entry.slot)
     assert.equal(slots.includes(missing), pageDecision === 'keep')
   }
+})
+
+// A label slot the plan hides takes its undecided link with it (the spec: "hide its label slot, and the link with it").
+const contactBlock = 'body-about-us_contact'
+const mapButton = 'body-about-us_contact.button-1'
+const mapLabel = 'languageString-30910664.0'
+function contactWithHiddenLabel() {
+  const kit = fixtureKit()
+  const value = plan()
+  const decision = value.pages.flatMap((page) => page.blocks).find((block) => block.block === contactBlock)
+  decision.copy = decision.copy.filter((entry) => entry.slot !== mapLabel)
+  decision.links = decision.links.filter((entry) => entry.link !== mapButton)
+  decision.hiddenSlots.push({ slot: mapLabel, why: 'no map to open' })
+  return { kit, value, decision }
+}
+const ruleOn = (id, value, kit) =>
+  checkPlan({ plan: value, kit, brief: brief() }).rules.find((entry) => entry.id === id)
+const r10bWhere = (value, kit) => ruleOn('R10b', value, kit).failures.map((f) => f.where)
+
+test('a link whose label slot the decision hides is hidden with it', () => {
+  const { kit, value } = contactWithHiddenLabel()
+  const before = structuredClone(value)
+  assert.ok(r10bWhere(value, kit).some((where) => where.endsWith(`link ${mapButton}`)))
+  const result = normalize(value, kit)
+  const got = result.pages.flatMap((page) => page.blocks).find((block) => block.block === contactBlock)
+  assert.deepEqual(got.hiddenSlots.at(-1), {
+    slot: mapButton,
+    why: `its label slot ${mapLabel} is hidden by the plan`
+  })
+  assert.equal(ruleOn('R10b', result, kit).status, 'pass')
+  assert.equal(ruleOn('R24', result, kit).failures.length, 0)
+  assert.deepEqual(value, before)
+  assert.strictEqual(normalize(result, kit), result)
+})
+
+test('a written label, a label other blocks print and a link the plan decided stay with the planner', () => {
+  {
+    const { kit, value, decision } = contactWithHiddenLabel()
+    decision.copy.push({ slot: mapLabel, says: 'map button', text: 'Open map', basis: 'trade', maxCharacters: 26 })
+    assert.strictEqual(normalize(value, kit), value)
+  }
+  {
+    // block-176.1 is printed by the header and by block-176: R24 wants it written, so hiding the link settles nothing.
+    const kit = fixtureKit()
+    const value = plan()
+    const call = value.sharedBlocks.find((block) => block.block === 'block-176')
+    call.copy = []
+    call.links = []
+    call.hiddenSlots = [{ slot: 'block-176.1', why: 'no phone' }]
+    const result = normalize(value, kit)
+    assert.ok(
+      !result.sharedBlocks.find((block) => block.block === 'block-176').hiddenSlots.some((h) => h.slot === 'block-176.link-1')
+    )
+    assert.ok(r10bWhere(result, kit).some((where) => where.endsWith('link block-176.link-1')))
+  }
+  {
+    const { kit, value, decision } = contactWithHiddenLabel()
+    decision.links.push({ link: mapButton, labelSlot: mapLabel, leadsTo: 'map:f-address' })
+    const result = normalize(value, kit)
+    const got = result.pages.flatMap((page) => page.blocks).find((block) => block.block === contactBlock)
+    assert.ok(!got.hiddenSlots.some((h) => h.slot === mapButton))
+  }
+})
+
+test('a menu item label printed by the header and the mobile menu still takes the header link with it', () => {
+  const kit = fixtureKit()
+  const value = plan()
+  const header = keepHidingAll(kit, 'header')
+  header.hiddenSlots = header.hiddenSlots.filter((h) => h.slot !== 'header.link-5')
+  if (!header.hiddenSlots.some((h) => h.slot === 'menuItem-169.0'))
+    header.hiddenSlots.push({ slot: 'menuItem-169.0', why: 'no plans page' })
+  const at = value.sharedBlocks.findIndex((block) => block.block === 'header')
+  if (at >= 0) value.sharedBlocks[at] = header
+  else value.sharedBlocks.push(header)
+  assert.ok(r10bWhere(value, kit).some((where) => where.endsWith('link header.link-5')))
+  const result = normalize(value, kit)
+  assert.ok(!r10bWhere(result, kit).some((where) => where.endsWith('link header.link-5')))
 })
