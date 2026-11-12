@@ -1,0 +1,42 @@
+{
+  "id": "REG-PR-568-build-progress-and-diagnostics",
+  "kind": "fix",
+  "title": "Active parallel progress and structural write evidence survive terminal persistence",
+  "pr": 568,
+  "area": "website-opportunities/build-progress",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the focused PostgreSQL progress and terminal persistence cases alongside the bounded structural diagnostic tests."
+  ],
+  "expect": [
+    "Completed pictures never hide page texts that are still running.",
+    "Done and stopped write diagnostics survive chain persistence and temporary-file disposal.",
+    "Unmeasured checks and zero-turn repairs retain distinct statuses without private prose.",
+    "Oversized diagnostic input remains within 8192 bytes and reports truncation.",
+    "A provisioned base with an active content action remains building; terminal QA and legacy completed actions retain their verdicts."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/wo-chain-progress.test.mjs",
+      "apps/tracy-web/test/step-chain-write-diagnostics.test.mjs",
+      "apps/tracy-web/test/step-chain-build.test.mjs",
+      "apps/tracy-web/test/ops-wo.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "finished pictures do not hide the still running page texts",
+      "stopped write diagnostics survive terminal persistence and temporary-file disposal",
+      "zero-turn unmeasured checks remain distinct from a passing nothing-to-send repair",
+      "oversized and hostile reports remain bounded without losing overall failure counts",
+      "Ops distinguishes base installed while content action runs from a completed content build"
+    ]
+  }
+}

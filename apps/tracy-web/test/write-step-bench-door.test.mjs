@@ -7,7 +7,7 @@ import { httpSiteDoor } from '../src/write-step/bench-site-door.js'
 
 const SECRET = 'test-secret-test-secret-test-secret-0000'
 
-function door(answers) {
+function door(answers, options = {}) {
   const seen = []
   const fetchImpl = async (url, init) => {
     seen.push({ url, init })
@@ -23,7 +23,8 @@ function door(answers) {
       platform: 'joomla',
       templateOf: async (quickstart) => (quickstart === 'no-card/j6' ? null : 'demo-gym'),
       fetchImpl,
-      sleep: async () => {}
+      sleep: async () => {},
+      ...options
     })
   }
 }
@@ -170,8 +171,10 @@ test('recovery refuses changed backup bytes and never restores a files-only poin
 })
 
 test('pending backup history is not reported as an absent full recovery point', async () => {
-  const { door: d } = door([[202, { code: 'FLEET_JOB_PENDING' }]])
-  await assert.rejects(d.recoveryPoint('k.sites.example'), { code: 'SITE_RECOVERY_POINT_PENDING' })
+  const { door: d } = door([[202, { code: 'FLEET_JOB_PENDING' }]], { now: () => 0 })
+  await assert.rejects(d.recoveryPoint('k.sites.example', { waitMs: 0 }), {
+    code: 'SITE_RECOVERY_POINT_PENDING'
+  })
 })
 
 test('turn undo requires verified completion even when the service accepted the request', async () => {
@@ -191,4 +194,155 @@ test('turn undo requires verified completion even when the service accepted the 
     assert.equal(answer.code, i === 4 ? 'HTTP_202' : 'TURN_UNDO_UNVERIFIED')
   }
   assert.equal((await d.undoTurn('k.sites.example', body)).ok, true)
+})
+
+test('pending backup history waits for full proof before returning a recovery point', async () => {
+  const point = {
+    kind: 'backup',
+    version: 1,
+    sha: 'a'.repeat(40),
+    database: { state: 'full', sha256: 'b'.repeat(64) }
+  }
+  const { door: d, seen } = door([
+    [202, { code: 'FLEET_JOB_PENDING' }],
+    [200, { may: { restoreEverything: true }, rows: [point] }]
+  ])
+  assert.deepEqual(await d.recoveryPoint('k.sites.example'), {
+    version: point.version,
+    sha: point.sha,
+    database: point.database
+  })
+  assert.equal(seen.length, 2)
+})
+
+test('pending recovery reads stop at their deadline without another request', async () => {
+  let time = 0
+  const { door: d, seen } = door([[202, { code: 'FLEET_JOB_PENDING' }]], {
+    now: () => time,
+    sleep: async (ms) => {
+      time += ms
+    }
+  })
+  await assert.rejects(d.recoveryPoint('k.sites.example', { waitMs: 500 }), {
+    code: 'SITE_RECOVERY_POINT_PENDING'
+  })
+  assert.equal(seen.length, 1)
+})
+
+test('canceling a pending recovery read prevents further requests', async () => {
+  const controller = new AbortController()
+  const { door: d, seen } = door([[202, { code: 'FLEET_JOB_PENDING' }]], {
+    sleep: async () => {
+      controller.abort(new Error('run canceled'))
+    }
+  })
+  await assert.rejects(d.recoveryPoint('k.sites.example', { signal: controller.signal }), /run canceled/)
+  assert.equal(seen.length, 1)
+})
+
+test('repeated pending recovery reads have a finite attempt limit even with a fixed clock', async () => {
+  const { door: d, seen } = door(
+    Array.from({ length: 4 }, () => [202, { code: 'FLEET_JOB_PENDING' }]),
+    { now: () => 0 }
+  )
+  await assert.rejects(d.recoveryPoint('k.sites.example'), { code: 'SITE_RECOVERY_POINT_PENDING' })
+  assert.equal(seen.length, 4)
+})
+
+test('an unrelated 202 never starts recovery polling', async () => {
+  const { door: d, seen } = door([[202, { code: 'OTHER_PENDING' }]])
+  await assert.rejects(d.recoveryPoint('k.sites.example'), { code: 'SITE_RECOVERY_POINT_PENDING' })
+  assert.equal(seen.length, 1)
+})
+
+test('canceling a recovery request aborts the in-flight owner fetch', async () => {
+  const controller = new AbortController()
+  let requested = 0
+  const { door: d } = door([], {
+    fetchImpl: async (_url, init) => {
+      requested++
+      return new Promise((_resolve, reject) => {
+        init.signal.addEventListener('abort', () => reject(init.signal.reason), { once: true })
+        controller.abort(new Error('run canceled in request'))
+      })
+    }
+  })
+  await assert.rejects(
+    d.recoveryPoint('k.sites.example', { signal: controller.signal }),
+    /run canceled in request/
+  )
+  assert.equal(requested, 1)
+})
+
+test('the overall deadline expiring during a pending recovery request retains the pending code', async () => {
+  let requests = 0
+  let clock = 0
+  const keepAlive = setTimeout(() => {}, 2000)
+  const { door: d } = door([], {
+    now: () => clock,
+    sleep: async () => {},
+    fetchImpl: async (_url, init) => {
+      if (++requests === 1)
+        return { status: 202, text: async () => JSON.stringify({ code: 'FLEET_JOB_PENDING' }) }
+      return new Promise((_resolve, reject) => {
+        init.signal.addEventListener(
+          'abort',
+          () => {
+            clock = 60
+            reject(init.signal.reason)
+          },
+          { once: true }
+        )
+      })
+    }
+  })
+  try {
+    await assert.rejects(d.recoveryPoint('k.sites.example', { waitMs: 60 }), {
+      code: 'SITE_RECOVERY_POINT_PENDING'
+    })
+    assert.equal(requests, 2)
+  } finally {
+    clearTimeout(keepAlive)
+  }
+})
+
+test('a pending recovery request keeps a network failure even at its wait deadline', async () => {
+  let requests = 0
+  let clock = 0
+  const failure = new TypeError('network failed')
+  const { door: d } = door([], {
+    now: () => clock,
+    sleep: async () => {},
+    fetchImpl: async () => {
+      if (++requests === 1)
+        return { status: 202, text: async () => JSON.stringify({ code: 'FLEET_JOB_PENDING' }) }
+      clock = 60
+      throw failure
+    }
+  })
+  await assert.rejects(d.recoveryPoint('k.sites.example', { waitMs: 60 }), (error) => error === failure)
+  assert.equal(requests, 2)
+})
+
+test('external timeout cancellation wins over a pending recovery deadline', async () => {
+  let requests = 0
+  let clock = 0
+  const controller = new AbortController()
+  const reason = new DOMException('external run deadline', 'TimeoutError')
+  const { door: d } = door([], {
+    now: () => clock,
+    sleep: async () => {},
+    fetchImpl: async () => {
+      if (++requests === 1)
+        return { status: 202, text: async () => JSON.stringify({ code: 'FLEET_JOB_PENDING' }) }
+      clock = 60
+      controller.abort(reason)
+      throw reason
+    }
+  })
+  await assert.rejects(
+    d.recoveryPoint('k.sites.example', { waitMs: 60, signal: controller.signal }),
+    (error) => error === reason
+  )
+  assert.equal(requests, 2)
 })

@@ -60,6 +60,22 @@ export const MINOR_FAULTS = Object.freeze([
 /** Whether a look's faults are all minor (and at least one is named). */
 export const onlyMinorFaults = (faults) =>
   Array.isArray(faults) && faults.length > 0 && faults.every((f) => MINOR_FAULTS.includes(f))
+/**
+ * A fallback keeps the best available file in its manifest, but only the existing minor-fault
+ * tolerance permits acceptance. Historical exports retain filledBy even when no look record survives.
+ */
+export function retainedRejectionProblem(entry) {
+  if (entry?.filledBy?.rung !== 'best-rejected') return null
+  const faults = [
+    ...new Set([
+      ...(Array.isArray(entry.filledBy.faults) ? entry.filledBy.faults : []),
+      ...(Array.isArray(entry.looker?.faults) ? entry.looker.faults : [])
+    ])
+  ]
+  if (onlyMinorFaults(faults)) return null
+  return `the retained picture still has the looker's hard rejection (${faults.join(', ') || 'no verified minor faults'}); it saw: ${entry.seen ?? entry.looker?.seen ?? 'no observation recorded'}`
+}
+
 /** Every fault the looker model may name. */
 export const MODEL_FAULTS = Object.freeze([...PICTURE_FAULTS, ...CUTOUT_FAULTS, TEXT_OVER_FAULT])
 /** The fault code records when the looker could not look at a picture, twice: it fails the picture. */

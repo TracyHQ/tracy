@@ -57,6 +57,17 @@ test('an interrupted chain freezes settlement time after later unrelated brief u
   assert.equal(b.interruption.endedAt, new Date(start + 12 * 60_000).toISOString())
 })
 
+test('an interrupted planner retains measured spend as a subtotal and leaves its final cost unknown', async () => {
+  const chain = snapshot()
+  chain.steps.push({ step: 'brand', minutes: 3.18, usd: 0.0561, outcome: 'done' })
+  chain.totalUsd = 0.0561
+  const b = await read(row({ chain }))
+  assert.equal(b.totalUsd, null)
+  assert.equal(b.knownUsd, 0.0561)
+  assert.equal(b.interruption.steps[0].usd, null)
+  assert.deepEqual(b.rawChain, chain)
+})
+
 test('a legacy interrupted snapshot reports last-update elapsed as an upper bound', async () => {
   const b = await read(row())
   assert.equal(b.totalMinutes, 12)

@@ -136,7 +136,7 @@ test('every demo state has its one primary button, its menu and its line', () =>
 
 test('each press goes to the door that does it', () => {
   assert.deepEqual(lib.demoCommand('primary', ROWS.none, null), { kind: 'action', action: 'build' })
-  assert.deepEqual(lib.demoCommand('primary', ROWS.failed, null), { kind: 'action', action: 'build' })
+  assert.deepEqual(lib.demoCommand('primary', ROWS.failed, null), { kind: 'action', action: 'retry-demo' })
   assert.deepEqual(lib.demoCommand('primary', ROWS.ready, null), {
     kind: 'open',
     href: 'https://blue-cove-sailing.example.test/'

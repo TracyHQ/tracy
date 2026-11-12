@@ -1,4 +1,6 @@
 // Open one page at one viewport, read-only, wake lazy content, extract items, take a full-page shot.
+
+import { createAssetTransport, externalPassiveAsset } from '../../template-kit/lib/asset-transport.mjs'
 import { extractPage, measurePictures } from './browser-extract.js'
 import { extractHeader } from './browser-header.js'
 
@@ -9,7 +11,7 @@ export const VIEWPORTS = {
 const MAX_SHOT_HEIGHT = 16000 // Chromium cannot paint taller surfaces reliably.
 
 /** One browser context per viewport; every non-GET request is aborted so the audit can never write. */
-export async function openContext(browser, name) {
+export async function openContext(browser, name, { siteUrl } = {}) {
   const vp = VIEWPORTS[name]
   const ctx = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
@@ -21,9 +23,12 @@ export async function openContext(browser, name) {
       ? 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1 TracyCoverageAudit'
       : undefined
   })
-  await ctx.route('**/*', (route) => {
-    const m = route.request().method()
-    return m === 'GET' || m === 'HEAD' || m === 'OPTIONS' ? route.continue() : route.abort('blockedbyclient')
+  const transport = createAssetTransport()
+  await ctx.route('**/*', async (route) => {
+    const request = route.request()
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method())) return route.abort('blockedbyclient')
+    if (siteUrl && externalPassiveAsset(request, { siteUrl }) && (await transport(route))) return
+    return route.continue()
   })
   return ctx
 }

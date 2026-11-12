@@ -1230,3 +1230,31 @@ test('SerpApi Settings seals its key and checks credits without spending search 
     'env-test'
   )
 })
+
+for (const [label, actionState, qa, stage, queueState, demoStatus] of [
+  ['base installed while content action runs', 'queued', null, '6-uploading', 'LEASED', 'uploading'],
+  ['terminal QA passed', 'queued', { state: 'passed' }, '7-live', 'DONE', 'live'],
+  ['terminal QA failed', 'queued', { state: 'failed' }, '7-live', 'BLOCKED', 'live'],
+  ['legacy completed action without QA', 'completed', null, '7-live', 'IDLE', 'live']
+]) {
+  test(`Ops distinguishes ${label} from a completed content build`, async () => {
+    const pool = createStandInPool()
+    const opp = pool.state.opportunities[1]
+    opp.customer_action_state = actionState
+    const build = pool.state.builds[0]
+    build.state = 'done'
+    build.handoff = null
+    build.qa = qa
+    const response = await requestWo({ pool })
+    assert.equal(response.status, 200)
+    const row = (await response.json()).opportunities.find((row) => row.id === opp.id)
+    assert.equal(row.stage, stage)
+    assert.equal(row.queueState, queueState)
+    assert.equal(row.demoStatus, demoStatus)
+    if (stage === '6-uploading') {
+      assert.equal(row.builtAt, null)
+      assert.equal(row.currentStep.includes('Demo built'), false)
+      assert.equal(row.needsAttention, false)
+    }
+  })
+}

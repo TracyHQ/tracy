@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-568-wo-retry-dispatch",
+  "kind": "fix",
+  "title": "Failed demo Try again uses retryOf instead of starting a duplicate same-template build",
+  "pr": 568,
+  "area": "website-opportunities/client-retry",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run run.cmd in the installed TCH checkout.",
+    "S2: Confirm all four cases pass with no failures or skipped tests."
+  ],
+  "expect": [
+    "List and Details failed-build controls dispatch retry-demo and POST requestId+retryOf without a template picker or new build selection.",
+    "A missing parent action sends no HTTP build request.",
+    "An existing latest approved brief2 does not replace the original failed action brief1; the request contains no revisionId and neither input is mutated.",
+    "An authority refusal is retained as its server diagnostic, with no fallback new build."
+  ],
+  "selectors": {
+    "build": "/api/website-opportunities/:id/demo/build"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/site/tracy-website-opportunities/test/client-retry-dispatch.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "list Try again sends the failed action as retryOf without a template picker or replacing the current brief",
+      "details Try again sends the failed action as retryOf without a template picker or replacing the current brief",
+      "a retry without its parent action fails without sending a fresh build",
+      "a refused retry retains the server diagnostic and never falls back to building approved brief2"
+    ]
+  }
+}

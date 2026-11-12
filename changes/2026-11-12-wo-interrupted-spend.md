@@ -1,0 +1,3 @@
+- **Keep interrupted WO costs unknown until every active step reports its charge.** — pipeline maintainers · #568 · `fix/wo-dev-full-flow-acceptance` · 2026-11-12
+  **Affects:** Ops chain build measurements; rebuild the web image. Recorded charges remain available as `knownUsd`; an interrupted planner's unreported spend is no longer presented as a complete total.
+  **Why / Measured:** The dev acceptance run retained a measured brand charge of USD 0.0561 while its interrupted planner had no charge record. A regression reproduced the misleading numeric total before the fix; interruption and unknown-spend tests pass afterwards. Running subtotal semantics and historical terminal measurements remain unchanged.

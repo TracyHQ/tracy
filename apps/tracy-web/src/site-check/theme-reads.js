@@ -174,7 +174,7 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         const id =
           kind === 'grey'
             ? `grey ${side} ${w.selector} ${w.fg} ${fileOf(w.underSrc)}`
-            : `${m.path} ${m.width} ${side} ${w.selector} ${w.fg}`
+            : `${m.path} ${m.width} ${side} ${w.target?.path ?? w.selector} ${w.fg}`
         if (seen.has(id)) continue
         seen.add(id)
         const before = w.fgOff ? overPictureRatio(w.fgOff, w.under) : ratio
@@ -188,6 +188,11 @@ export function judgeWordsOverPicture(entries, { report, baseline } = {}) {
         const base = {
           page: m.path,
           width: m.width,
+          side,
+          key: w.key,
+          selector: w.selector,
+          text: w.text,
+          ...(w.target ? { target: w.target } : {}),
           measured: `${w.selector} "${w.text}" ${rgb(w.fg)} reads ${round(ratio)}:1 over ${fileOf(w.underSrc) || 'a gradient'}${was === null ? '' : `, ${round(was)}:1 on the untouched site`}`,
           file: w.underSrc ?? null
         }

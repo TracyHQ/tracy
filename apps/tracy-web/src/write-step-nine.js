@@ -226,6 +226,7 @@ export async function runStepNine(input) {
     pageHtml,
     // An alt fault names the slot the kit keeps that picture's alt in, when it is not the picture slot.
     altSlots: kitAltSlots(write.kit?.doc ?? null),
+    kit: write.kit?.doc ?? null,
     contentMap: write.contentMap ?? null,
     mark,
     log: (line) => log.warn(line),

@@ -5,6 +5,7 @@
 // locate) leaves the fault's own levels, and the item says why. Every call is held to the step clock.
 import { withAltSlot } from './repair-alt-slots.js'
 import { commentItem } from './repair-items.js'
+import { withPictureSlot } from './repair-picture-slots.js'
 import { quotedWords, servedElementOf, servedPage } from './repair-served-element.js'
 
 /** How long one served page read and one locate may take, at most (the door's own locate budget is 8 s). */
@@ -53,9 +54,10 @@ async function locateOne(pass, params) {
  */
 function apart(items, elements, faults) {
   const bySelector = new Map()
-  items.forEach((item, i) =>
-    bySelector.set(item.element.selector, [...(bySelector.get(item.element.selector) ?? []), i])
-  )
+  items.forEach((item, i) => {
+    if (!item.repairBlocked)
+      bySelector.set(item.element.selector, [...(bySelector.get(item.element.selector) ?? []), i])
+  })
   const taken = new Set(bySelector.keys())
   for (const [selector, members] of bySelector) {
     if (members.length < 2) continue
@@ -82,8 +84,18 @@ export async function pageItems(pass, page, faults) {
   const served = await servedOf(pass, page)
   const items = []
   const elements = []
-  for (const fault of faults.map((f) => withAltSlot(f, pass.altSlots, pass.contentMap))) {
+  for (const fault of faults.map((f) =>
+    withPictureSlot(withAltSlot(f, pass.altSlots, pass.contentMap), pass.kit, pass.contentMap)
+  )) {
     const element = served ? servedElementOf(served, fault) : null
+    if (fault.group === 'words-over-picture' && !element) {
+      elements.push(null)
+      items.push({
+        ...commentItem(fault, { url }),
+        repairBlocked: 'the measured text target is missing, ambiguous or changed on the fresh page'
+      })
+      continue
+    }
     const words =
       typeof fault.measured === 'string' && fault.measured ? fault.measured : quotedWords(fault.seen)
     // A control's measure (`a.btn -> /contact`) is not words the page shows: a found control is looked up by its own words.

@@ -129,6 +129,66 @@ export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSe
       .map((c) => `.${c}`)
       .join('')
 
+  // Keep a DOM identity separate from the coarse baseline key shared by repeated rows.
+  const targetOf = (el) => {
+    let complete = true
+    const steps = []
+    for (let at = el; at && at !== document.body; at = at.parentElement) {
+      if (
+        at.id &&
+        at.id.length <= 160 &&
+        STABLE_ID.test(at.id) &&
+        document.querySelectorAll(`#${at.id}`).length === 1
+      ) {
+        steps.unshift(`#${at.id}`)
+        break
+      }
+      const peers = [...(at.parentElement?.children ?? [])].filter((n) => n.tagName === at.tagName)
+      steps.unshift(`${at.tagName.toLowerCase()}:nth-of-type(${peers.indexOf(at) + 1})`)
+      if (steps.join(' > ').length > 180) {
+        complete = false
+        break
+      }
+    }
+    if (!steps[0]?.startsWith('#')) steps.unshift('body')
+    const candidate = steps.join(' > ')
+    const path = candidate.length <= 180 ? candidate : ''
+    if (!path) complete = false
+    const text = el.textContent.replace(/\s+/g, ' ').trim()
+    const tag = el.tagName.toLowerCase()
+    if (text.length > 300 || tag.length > 64) complete = false
+    const marks = []
+    const keep = (value) => {
+      const mark = value?.trim()
+      if (!mark || marks.includes(mark)) return
+      if (mark.length > 240 || marks.length >= 12) {
+        complete = false
+        return
+      }
+      marks.push(mark)
+    }
+    for (let at = el, depth = 0; at && complete; at = at.parentElement, depth++) {
+      if (depth >= 64) {
+        complete = false
+        break
+      }
+      keep(at.getAttribute('data-tracy-src'))
+      for (const child of at.children)
+        if (child.tagName === 'TEMPLATE') keep(child.getAttribute('data-tracy-owner'))
+      if (at.tagName === 'LI') {
+        const id = /(?:^|\s)item-(\d+)(?:\s|$)/.exec(at.className)?.[1] ?? at.getAttribute('data-id')
+        if (id && /^\d+$/.test(id)) keep(`menuItem:${id}`)
+      }
+    }
+    return {
+      path,
+      tag: tag.length <= 64 ? tag : '',
+      text: text.slice(0, 300),
+      marks,
+      complete: complete && document.querySelectorAll(path).length === 1
+    }
+  }
+
   const canvas = new OffscreenCanvas(1, 1)
   const pen = canvas.getContext('2d', { willReadFrequently: true })
   const known = new Map()
@@ -259,7 +319,8 @@ export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSe
   for (const h of held) {
     const selector = selectorOf(h.el)
     if (h.ground.picture) {
-      const id = `${keyOf(h.el)}|${h.fg}|${h.ground.src}`
+      const target = targetOf(h.el)
+      const id = target.path ? `${target.path}|${h.fg}|${h.ground.src}` : h.el
       if (over.has(id)) continue
       if (over.size >= caps.over) {
         side.truncated = true
@@ -271,6 +332,7 @@ export function readLookSideInPage({ caps, withLogos, overAttr, logoAttr, logoSe
         over: n,
         overImage: true,
         key: keyOf(h.el),
+        target,
         fg: h.fg.slice(0, 3),
         fgOff: h.fgOff?.slice(0, 3) ?? null,
         large: h.large,

@@ -80,3 +80,48 @@ test('a read that fails is not kept either', async () => {
   await assert.rejects(run(SITE, { kind: 'webroot-history' }, 45_000))
   assert.equal(host.calls.length, 2)
 })
+
+test('a bounded pending history read resumes its host job instead of starting another', async () => {
+  const options = []
+  const run = shareHistoryJobs(async (_site, _input, _deadline, _onJob, how) => {
+    options.push(how)
+    return options.length === 1
+      ? { ok: false, reason: 'timeout', pending: true, jobId: 'history-one' }
+      : { ok: true, output: 'full history' }
+  })
+  await run(SITE, { kind: 'webroot-history' }, 45_000, undefined, { bounded: true })
+  assert.equal(
+    (await run(SITE, { kind: 'webroot-history' }, 45_000, undefined, { bounded: true })).output,
+    'full history'
+  )
+  assert.equal(options[1].resumeJobId, 'history-one')
+})
+
+test('a write invalidates a pending history identity so later reads observe the write', async () => {
+  const options = []
+  const run = shareHistoryJobs(async (_site, input, _deadline, _onJob, how) => {
+    options.push({ kind: input.kind, ...how })
+    return { ok: false, pending: true, jobId: 'old-history' }
+  })
+  await run(SITE, { kind: 'webroot-history' }, 45_000)
+  await run(SITE, { kind: 'webroot-backup' }, 45_000)
+  await run(SITE, { kind: 'webroot-history' }, 45_000)
+  assert.equal(options[2].resumeJobId, undefined)
+})
+
+test('an invalidated old read cannot delete the newer pending identity', async () => {
+  const host = fakeHost()
+  const run = shareHistoryJobs(host.run)
+  const old = run(SITE, { kind: 'webroot-history' }, 45_000)
+  const write = run(SITE, { kind: 'webroot-backup' }, 45_000)
+  const current = run(SITE, { kind: 'webroot-history' }, 45_000)
+  host.calls[0].resolve({ ok: true, output: 'old' })
+  await old
+  const joined = run(SITE, { kind: 'webroot-history' }, 45_000)
+  assert.equal(host.calls.length, 3)
+  host.calls[1].resolve({ ok: true })
+  host.calls[2].resolve({ ok: true, output: 'new' })
+  await write
+  assert.equal((await current).output, 'new')
+  assert.equal((await joined).output, 'new')
+})

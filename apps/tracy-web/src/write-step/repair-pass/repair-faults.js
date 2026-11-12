@@ -3,6 +3,7 @@
 // fault naming a value the brief gives (`not-demo`, repair-brief-values.js). A fault the check names at two widths is
 // sent once. Faults are grouped by page, in the order their page was first named. Pure.
 import { unsupportedAlt } from './repair-alt-slots.js'
+import { measuredTargetKey } from './repair-text-target.js'
 import { pagePath } from '../../lib/hidden-page-links.js'
 import { notDemoReason } from './repair-brief-values.js'
 import { kindOfFailure, notSentOf } from './repair-kinds.js'
@@ -18,6 +19,10 @@ const quoted = (text) =>
 /** Whether two faults are one: same page and kind, and the same slot, block or quoted words. */
 export function sameFault(a, b) {
   if (a.page !== b.page || a.kind !== b.kind) return false
+  if (a.group === 'words-over-picture' || b.group === 'words-over-picture') {
+    const key = measuredTargetKey(a.target)
+    return Boolean(key && key === measuredTargetKey(b.target))
+  }
   if (a.slot && b.slot) return a.slot === b.slot
   if (a.block && b.block) return a.block === b.block
   const qa = quoted(a.seen) ?? (typeof a.measured === 'string' ? a.measured.toLowerCase() : null)
@@ -51,7 +56,23 @@ const fromFailure = (f) => ({
   width: f.width ?? null,
   measured: f.measured ?? null,
   seen: f.reason ?? null,
-  ...controlOf(f)
+  ...controlOf(f),
+  ...(f.group === 'words-over-picture'
+    ? {
+        target: f.target ?? null,
+        observations: [
+          {
+            width: f.width ?? null,
+            side: f.side ?? null,
+            key: f.key ?? null,
+            selector: f.selector ?? null,
+            text: f.text ?? null,
+            measured: f.measured ?? null,
+            file: f.file ?? null
+          }
+        ]
+      }
+    : {})
 })
 
 /** Every blocking failure of a site check, named by its group. */
@@ -84,7 +105,11 @@ export function faultsToSend({ firstCheck, brief = null, altSlots = null, conten
   for (const fault of blockingFailures(firstCheck).map(fromFailure)) {
     const skip = skipOf(fault, brief, { altSlots, contentMap })
     if (skip) skipped.push({ fault, ...skip })
-    else if (!kept.some((k) => sameFault(k, fault))) kept.push(fault)
+    else {
+      const held = kept.find((k) => sameFault(k, fault))
+      if (!held) kept.push(fault)
+      else if (fault.observations) held.observations.push(...fault.observations)
+    }
   }
   const pages = []
   for (const fault of kept) {
@@ -96,7 +121,14 @@ export function faultsToSend({ firstCheck, brief = null, altSlots = null, conten
 }
 
 /** The key a failure is compared by between two checks: group, page, slot and width. */
-export const failureKey = (f) => [f.group, pageOf(f.page), f.slot ?? '', f.width ?? ''].join('\n')
+export const failureKey = (f) =>
+  [
+    f.group,
+    pageOf(f.page),
+    f.slot ?? '',
+    f.width ?? '',
+    ...(f.group === 'words-over-picture' ? [measuredTargetKey(f.target) ?? '', f.side ?? ''] : [])
+  ].join('\n')
 
 /** Blocking failures of `later` that `first` did not have. */
 export function newBlocking(first, later) {
@@ -114,6 +146,8 @@ export function stillThere(faults, check) {
         check?.status === 'unmeasured' ||
         now.some((later) => {
           if (later.group !== f.group || later.page !== f.page) return false
+          if (f.group === 'words-over-picture')
+            return measuredTargetKey(f.target) ? sameFault(f, later) : later.measured === f.measured
           if (f.slot) return later.slot === f.slot
           if (f.selector) return later.selector === f.selector && later.href === f.href
           // Counts (for example the number of h1 elements) can change while the same fault persists.

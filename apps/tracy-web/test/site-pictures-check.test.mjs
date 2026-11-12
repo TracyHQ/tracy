@@ -1,4 +1,4 @@
-// Tests for the picture check site-pictures-check/4 (ADR 0043): one passing and one failing invented case per rule.
+// Tests for the picture check site-pictures-check/5 (ADR 0043): one passing and one failing invented case per rule.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
@@ -15,8 +15,8 @@ const ALL = ['P01', 'P02', 'P03', 'P04', 'P05', 'P06', 'P07', 'P08', 'P09', 'P10
 test('the passing manifest passes every rule and the version is frozen', () => {
   const r = checkPictures(inputs())
   // test-quality: contract ADR 0043 freezes the checker name; a rule change must bump it on purpose
-  assert.equal(CHECKER_VERSION, 'site-pictures-check/4')
-  assert.equal(r.meta.checker, 'site-pictures-check/4')
+  assert.equal(CHECKER_VERSION, 'site-pictures-check/5')
+  assert.equal(r.meta.checker, 'site-pictures-check/5')
   assert.deepEqual(
     r.rules.map((x) => `${x.id}:${x.status}`),
     ALL.map((id) => `${id}:pass`)

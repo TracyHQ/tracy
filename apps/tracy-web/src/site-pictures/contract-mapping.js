@@ -22,6 +22,7 @@
 // package, never silently left out: only the logo frame, which the brand step fills, is not.
 import { contentMapKey } from '../lib/content-map-key.js'
 import { ANY_PHOTO_MAX_OVERLAP, cropOverlap } from './gallery-tiles.js'
+import { retainedRejectionProblem } from './looker-call.js'
 import { readPictures } from './manifest-shape.js'
 import { paintKindOf } from '../lib/picture-paint/paint.js'
 import { indexInputs } from './picture-check/inputs-index.js'
@@ -84,8 +85,9 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
     (typeof wish?.sameAs === 'string' &&
       ['any-real', 'specific', 'person'].includes(idx.wishes.get(wish.sameAs)?.match))
   const factIds = new Set((Array.isArray(brief?.facts) ? brief.facts : []).map((f) => f.id))
-  // A failed or historical manifest still goes through this boundary. Never export a generated documentary
-  // substitute, including a twin of one; missing original inputs cannot establish an illustrative purpose.
+  // A failed or historical manifest still goes through this boundary. A retained hard rejection
+  // and its twins cannot be uploaded. Generated documentary substitutes also remain refused;
+  // missing original inputs cannot establish an illustrative purpose.
   const sourceProblem = (entry) => {
     let root = entry
     const seen = new Set()
@@ -93,6 +95,8 @@ export function exportPictureMapping({ pictures, contract, revision, kit, plan, 
       seen.add(root.frame)
       root = entries.get(root.twinOf) ?? root
     }
+    const rejection = retainedRejectionProblem(entry) ?? retainedRejectionProblem(root)
+    if (rejection) return rejection
     if (!['drawn', 'owner-photo-extended'].includes(root.source)) return null
     const wishes = [entry, root].map((e) => idx.wishes.get(e.frame))
     if (
