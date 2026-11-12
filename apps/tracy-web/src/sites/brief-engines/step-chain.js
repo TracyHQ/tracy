@@ -33,7 +33,7 @@
  * Steps are injected (`app.js` wires the real ones, `step-chain-steps.js`); each answers `{ value, usd }` or throws (an
  * error may carry the `value` it still made, and the `usd` it spent), and is given the run's `AbortSignal`.
  */
-import { REPAIR_LIMITS } from '../../write-step/repair-pass/repair-limits.js'
+import { REPAIR_WINDOWS } from '../../lib/repair-windows.js'
 
 /**
  * The outer deadline of a chain run (#478): the model steps get this long, counted from the start of `prepare`. A step
@@ -47,7 +47,7 @@ export const STEP_CHAIN_HANDOVER_MS = 15 * 60_000
 
 /**
  * Step 9b's windows for a chain build, from how far into the run the Write step starts. 9b keeps its own 10 and 12 minute
- * windows (`REPAIR_LIMITS`), cut shorter when the deadline is nearer; once the deadline has passed it starts no new work
+ * windows (`lib/repair-windows.js`, the repair pass's own `REPAIR_LIMITS`), cut shorter when the deadline is nearer; once the deadline has passed it starts no new work
  * and returns within the handover window.
  *
  * 🔒 THE DEADLINE BOUNDS THE MODEL STEPS, NOT 9b'S WINDOW. #478 let 9b run until the 2 hour deadline. Measured on the local
@@ -59,8 +59,8 @@ export const STEP_CHAIN_HANDOVER_MS = 15 * 60_000
 export function chainRepairLimits(elapsedMs) {
   const left = Math.max(0, STEP_CHAIN_DEADLINE_MS - elapsedMs)
   if (left === 0) return { stopNewWorkMs: 0, returnByMs: STEP_CHAIN_HANDOVER_MS }
-  const stopNewWorkMs = Math.min(left, REPAIR_LIMITS.stopNewWorkMs)
-  return { stopNewWorkMs, returnByMs: stopNewWorkMs + (REPAIR_LIMITS.returnByMs - REPAIR_LIMITS.stopNewWorkMs) }
+  const stopNewWorkMs = Math.min(left, REPAIR_WINDOWS.stopNewWorkMs)
+  return { stopNewWorkMs, returnByMs: stopNewWorkMs + (REPAIR_WINDOWS.returnByMs - REPAIR_WINDOWS.stopNewWorkMs) }
 }
 
 /**

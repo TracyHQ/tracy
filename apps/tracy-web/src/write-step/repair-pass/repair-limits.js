@@ -13,9 +13,10 @@
 //   - `cancelSettleMs`: after a turn still open at the limit is cancelled, how long its record is read until it ends.
 //   - `judgeGatherMs`: how long the check after the turns waits for other turns ending at the same moment, to read them
 //     in one check.
+import { REPAIR_WINDOWS } from '../../lib/repair-windows.js'
+
 export const REPAIR_LIMITS = Object.freeze({
-  stopNewWorkMs: 10 * 60_000,
-  returnByMs: 12 * 60_000,
+  ...REPAIR_WINDOWS,
   undoReserveMs: 30_000,
   judgeReserveMs: 60_000,
   noTurnMs: 60_000,

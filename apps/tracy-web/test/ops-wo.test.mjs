@@ -311,6 +311,14 @@ function createStandInPool({ role = 'admin', switchOn = true } = {}) {
       if (norm.startsWith('delete from rate_bucket')) {
         return { rows: [] }
       }
+      // The latest builds' share link opens (`lib/wo-demo-links.js` opensOf) and the sellers' outreach marks
+      // (`outreach-state.js`): none recorded in this world unless a test seeds them.
+      if (norm.includes('from wo_build b where b.id = any(')) {
+        return { rows: (state.demoOpens ?? []).filter((r) => params[0].includes(r.id)) }
+      }
+      if (norm.startsWith('select * from wo_outreach')) {
+        return { rows: (state.outreach ?? []).filter((r) => params[0].includes(r.opportunity_id)) }
+      }
       throw new Error(`Unexpected SQL in ops-wo test: ${norm}`)
     }
   }
