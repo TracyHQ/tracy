@@ -222,7 +222,11 @@ export function createPublicDemos(deps) {
       due.map((row) => row.build_id),
       now()
     )
-    for (const row of due) row.share_token = tokens.get(row.build_id) ?? null
+    for (const row of due) {
+      row.share_token = tokens.get(row.build_id) ?? null
+      // A link made just now has no open yet: counted, and zero.
+      if (row.share_token && !row.opens) row.opens = { total: 0, phone: 0, desktop: 0 }
+    }
     return rows
   }
 

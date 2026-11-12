@@ -35,7 +35,10 @@ export const WEBHOOK_LIMITS = Object.freeze({
   enqueueBatch: 100,
   /** How far back a demo (or an open) is looked at for events still to make. */
   lookbackDays: 30,
-  /** Delivered or given-up events are deleted this long after they were made. */
+  /**
+   * Delivered or given-up events are deleted this long after they were made. Never shorter than `lookbackDays`: an
+   * event is its own dedupe key, so one deleted while its demo is still looked at would be made again.
+   */
   keepDays: 30
 })
 const DAY_MS = 86_400_000

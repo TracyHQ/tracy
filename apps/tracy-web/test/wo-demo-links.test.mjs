@@ -109,7 +109,7 @@ async function world() {
         [email, name]
       )
     ).rows[0].id
-  return { pool, config, call, open, accountOf, fetched }
+  return { app, pool, config, call, open, accountOf, fetched }
 }
 
 /** An opportunity with a finished demo whose site check passed: what the outreach is offered for. */
@@ -204,7 +204,9 @@ test(
   'the outreach hands out a share link that sends people to the demo and counts them, never the seller or a bot',
   opts,
   async () => {
-    const { pool, call, open, accountOf, fetched } = await world()
+    const { app, pool, call, open, accountOf, fetched } = await world()
+    // The webhook sweep that turns these opens into `demo.opened` events is wired for the cron (`server.js`).
+    assert.equal(typeof app.demoWebhooksTick, 'function')
     const a = await accountOf(A, 'Lee Nguyen')
     await accountOf(B, 'Somebody')
     const { opp, buildId } = await readyDemo(pool, a)
