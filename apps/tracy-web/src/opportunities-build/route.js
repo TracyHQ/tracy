@@ -21,6 +21,7 @@ import { woRuntime } from '../lib/wo-ops.js'
 import { pinsOf, readTemplateCards, templateChoices } from '../lib/wo-revision-choice.js'
 import { findResearchOf, usableResearch } from 'website-opportunities/src/find-research.js'
 import { demoPageSpeedOf } from 'website-opportunities/src/pagespeed.js'
+import { demoOffersOfBrief } from 'website-opportunities/domain/trade-must-haves.mjs'
 import {
   insertOpportunity,
   jobsOfOpportunity,
@@ -55,6 +56,7 @@ import { latestPreviewOf } from './demo-preview.js'
 import { demoBuildRunning, prepareOpportunityDelete } from './demo-removal.js'
 import { withHandoffLock } from './handoff.js'
 import { handOffToAgent } from './handoff-service.js'
+import { handOverDemo, withHandoverLock } from './handover.js'
 import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
@@ -80,6 +82,8 @@ import {
 } from 'website-opportunities/src/approval.js'
 
 const BASE = '/api/website-opportunities'
+/** The shape the Team invite door accepts (`seats/route.js` EMAIL_SHAPE): checked here so a typo is a 400, not a step. */
+const HANDOVER_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 /** `at`: the later of the latest revision and the latest brief job that ended done, of the opportunity `$1` (#537). */
 const LATEST_BRIEF_AT_SQL = `select greatest(
@@ -96,6 +100,7 @@ const LATEST_BRIEF_AT_SQL = `select greatest(
  *   listedDemoOf: (accountId: string, ids: string[]) => Promise<Map<string, object>>,
  *   shareLinksOf: (accountId: string, rows: object[]) => Promise<Map<string, string>>,
  *   detailOf: (opp: object, accountId: string) => Promise<object>,
+ *   demoOffersOf: (opportunityId: string) => Promise<Record<string, boolean> | null>,
  *   demoFactsOf: (accountId: string, ids: string[]) => Promise<Map<string, {built: boolean,
  *     liveSiteKey: string | null, queuedActionId: string | null}>>,
  *   demoJourneySql: typeof demoJourneySql,
@@ -431,8 +436,26 @@ export function createWebsiteBuilder(deps) {
       briefJob: briefJobShape(await briefJobs.latestOf(opp.id)),
       demoAction: await withChainRun((await demoActionsOf(pool, accountId, [opp.id]))[opp.id] ?? null),
       usage: await readDemoUsage(pool, accountId, settings.demoBuildsPerAccountPerDay, now()),
-      builds: builds.map(buildShape)
+      builds: builds.map(buildShape),
+      demoOffers: await demoOffersOf(opp.id, builds)
     }
+  }
+
+  /**
+   * What the opportunity's latest live demo offers a customer, from the brief it was built from
+   * (`trade-must-haves.mjs demoOffersOfBrief`): the trade must-haves' outreach lines claim only these. Null without a
+   * live demo.
+   */
+  async function demoOffersOf(opportunityId, builds = null) {
+    const list = builds ?? (await buildsOfOpportunity(pool, opportunityId))
+    const live = list.find((b) => b.site_key && !b.demo_deleted_at)
+    if (!live) return null
+    const { rows } = await pool.query(
+      `select brief->'integrations' as integrations, brief->'sitemap' as sitemap, brief->'missing' as missing
+         from wo_revision where id = $1`,
+      [live.revision_id]
+    )
+    return rows[0] ? demoOffersOfBrief(rows[0]) : null
   }
 
   /**
@@ -629,6 +652,58 @@ export function createWebsiteBuilder(deps) {
       const handoff =
         found.qa && !found.qa.baseline && found.handoff.state === 'ready' ? waiting : found.handoff
       return json(c, { handoff, qa: qaShape(found.qa), site: { key: found.site_key } })
+    })
+
+    // Hand the demo SITE to its business owner (`handover.js`): Team invite, Owner role, demo kept for good, and the
+    // owner's own domain when asked, each through its own door and each reported. Only the build's own account: another
+    // account's build answers 404 like a missing one.
+    app.post(`${BASE}/builds/:buildId/handover`, async (c) => {
+      const who = await caller(c)
+      if (who instanceof Response) return who
+      const id = c.req.param('buildId')
+      const found = who.accountId && UUID.test(id) ? await buildOf(pool, who.accountId, id) : null
+      if (!found) return notFound(c, 'build')
+      if (!(await featureOn())) return featureOff(c)
+      const sent = await body(c)
+      const email = typeof sent?.email === 'string' ? sent.email.trim().toLowerCase() : ''
+      if (!sent || typeof sent !== 'object' || Array.isArray(sent) || !HANDOVER_EMAIL.test(email))
+        return refuse(c, 400, 'INVALID_EMAIL', 'Send {"email": the business owner’s email address}.')
+      const extra = Object.keys(sent).find((key) => key !== 'email' && key !== 'domain')
+      if (extra !== undefined)
+        return refuse(c, 400, 'INVALID_REQUEST', `This door takes email and domain, not ${extra}.`)
+      if (sent.domain !== undefined && sent.domain !== null && typeof sent.domain !== 'string')
+        return refuse(c, 400, 'INVALID_DOMAIN', 'Send domain as text, or leave it out.')
+      const domain =
+        typeof sent.domain === 'string' && sent.domain.trim() ? sent.domain.trim().toLowerCase() : null
+      if (email === String(who.email ?? '').toLowerCase())
+        return refuse(c, 422, 'HANDOVER_TO_SELF', 'Name the business owner’s email, not your own.')
+      if (!found.site_key || found.state === 'deleted')
+        return refuse(c, 409, 'NO_DEMO', 'This build has no live site to hand over.')
+      const demoRefusal = demoStateRefusal(c, found)
+      if (demoRefusal) return demoRefusal
+      const held = await withHandoverLock(pool, found.id, () =>
+        handOverDemo({
+          pool,
+          request,
+          origin,
+          cookie: c.req.header('cookie') ?? '',
+          build: found,
+          email,
+          domain,
+          now
+        })
+      )
+      if (!held.locked)
+        return refuse(
+          c,
+          409,
+          'HANDOVER_IN_PROGRESS',
+          'This demo is being handed over; wait, then press again.'
+        )
+      const { steps, complete } = held.value
+      const handover = { buildId: found.id, siteKey: found.site_key, email, complete, steps }
+      // A step that failed makes the answer a 207: the steps before and after it are still reported.
+      return json(c, { handover }, steps.some((s) => s.state === 'failed') ? 207 : 200)
     })
 
     // One press is persisted before any brief, site or agent session is created.
@@ -1097,6 +1172,8 @@ export function createWebsiteBuilder(deps) {
     listedDemoOf,
     shareLinksOf,
     detailOf,
+    // What the latest live demo offers (`demoOffersOfBrief`): the open layer's trade must-have outreach lines.
+    demoOffersOf: (opportunityId) => demoOffersOf(opportunityId),
     latestBriefAt,
     demoFactsOf,
     demoJourneySql,

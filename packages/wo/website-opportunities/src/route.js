@@ -36,6 +36,7 @@ import { decorateFindCandidates } from './find-ranking.js'
 import { withOutreach } from './outreach.js'
 import { pagespeedPair } from './pagespeed.js'
 import { markOutreach, OUTREACH_MARKS, outreachStatesOf } from './outreach-state.js'
+import { mustHavesView } from './must-haves-view.js'
 import { creditOf, fetchPlacePhotoName, isPhotoName, isPlaceId, placeIdOfPhotoName } from './place-photo.js'
 import {
   AgainLimitError,
@@ -1425,7 +1426,9 @@ export function websiteOpportunitiesRoutes(deps) {
     )
     if (!row.outreach)
       return refuse(c, 409, 'DEMO_NOT_READY', 'Finish the site check, or reopen the demo before sharing it.')
-    return json(c, { outreach: row.outreach })
+    return json(c, {
+      outreach: { ...row.outreach, arguments: await outreachArgumentsOf(rows[0], who.accountId) }
+    })
   })
 
   // Where the seller's outreach to this business stands (`outreach-state.js`): they mark it sent, replied, won or lost
@@ -1443,6 +1446,25 @@ export function websiteOpportunitiesRoutes(deps) {
     if (!outreachState) return notFound(c, 'opportunity')
     return json(c, { outreachState })
   })
+  /**
+   * The outreach lines of the trade must-haves (`must-haves-view.js`) for a ready demo: one per capability the old site
+   * is known to lack and the demo's brief offers. From this card's own research only; empty when it has none, and when
+   * anything it rests on cannot be read (the draft never fails for them).
+   */
+  async function outreachArgumentsOf(listed, accountId) {
+    try {
+      const opp = await opportunityOf(pool, accountId, listed.id)
+      if (!opp || !researched(await researchStateOf(pool, opp.id))) return []
+      const view = opp.place_id ? await placeViewOf(pool, opp) : null
+      const sources = view ? view.shown : await sourcesOf(pool, opp.id)
+      const profile = view ? view.profile : ((await profileOf(pool, opp.id))?.profile ?? null)
+      const demoOffers = builder?.demoOffersOf ? await builder.demoOffersOf(opp.id) : null
+      return mustHavesView({ opportunity: opp, profile, sources, demoOffers })?.arguments ?? []
+    } catch (error) {
+      console.warn(`[website-opportunities] outreach without must-have lines: ${error?.message ?? error}`)
+      return []
+    }
+  }
 
   // The place profile (ADR 0037) as the owner saved it (#537 R18): the place's research as the template-independent
   // document with the owner's changes laid on, nothing of the account's brief or demo. The same owner check as Details.
@@ -1582,6 +1604,16 @@ export function websiteOpportunitiesRoutes(deps) {
       // The saved profile `{profile, decisions, revisionId?, siteName?}` (`GET /:id/place-profile` answers the same). The
       // `profile` above is the research as collected (Research details), kept for the readers that still draw it.
       placeProfile: saved && !saved.error ? saved : null,
+      // What the trade's customers expect on the current website and what it lacks (`must-haves-view.js`), from this
+      // card's own research only: null before it, for a trade with no must-haves, or a place with no website of its own.
+      mustHaves: shown
+        ? mustHavesView({
+            opportunity: opp,
+            profile: profile?.profile ?? null,
+            sources,
+            demoOffers: demo.demoOffers ?? null
+          })
+        : null,
       media: media.map((m) => ({
         id: m.id,
         kind: m.kind,

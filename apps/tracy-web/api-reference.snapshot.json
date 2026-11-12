@@ -49802,6 +49802,51 @@
           "x-internal": true
         }
       },
+      "/api/website-opportunities/builds/{buildId}/handover": {
+        "post": {
+          "operationId": "post_api_website_opportunities_builds_buildId_handover",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "buildId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "domain": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["email"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Website Opportunities"],
+          "x-audience": ["customer", "desktop"],
+          "x-internal": true
+        }
+      },
       "/api/website-opportunities/capabilities": {
         "get": {
           "operationId": "get_api_website_opportunities_capabilities",
