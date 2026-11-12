@@ -14,7 +14,8 @@ import {
   slotShape
 } from '../../lib/site-copy/slot-shape.js'
 
-import { iconsOf, iconClassOf, networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { networkOfClass } from '../../lib/template-kit/icon-classes.js'
+import { socialIconTargets } from '../../lib/template-kit/social-icon-targets.js'
 import { ownerPostExcerptFor } from '../../lib/site-copy/owner-post-excerpts.js'
 
 export const FLOOR_RATIO = DEMO_FLOOR_RATIO // W03: a text must reach this share of the demo text length ...
@@ -123,58 +124,6 @@ function partFaults(kit, items, excerpt = false) {
         detail: `points average ${mean} characters, ceiling ${part.ceiling} (the ${demo} character average demo point is the top)`,
         cause: 'over-demo'
       })
-  }
-  return out
-}
-
-// Compare explicit row metadata and the authoritative planned social fact. A class may be valid in the
-// template and still draw the wrong network for its link; a citation alone does not establish the link.
-function socialIconTargets({ plan, kit, brief }) {
-  const arr = (value) => (Array.isArray(value) ? value : [])
-  const icons = iconsOf(kit)
-  const blocks = new Map(arr(kit?.blocks).map((b) => [b?.id, b]))
-  const facts = new Map(arr(brief?.facts).map((f) => [f?.id, f]))
-  const out = new Map()
-  // The research brief calls Twitter "x"; the released kit names the same network "twitter".
-  const networkOf = (value) => {
-    const name = value.trim().toLowerCase()
-    return name === 'x' ? 'twitter' : name
-  }
-  const decisions = [...arr(plan?.sharedBlocks), ...arr(plan?.pages).flatMap((p) => arr(p?.blocks))]
-  for (const decision of decisions) {
-    if (decision?.decision !== 'keep') continue
-    const block = blocks.get(decision.block)
-    const hidden = new Set(arr(decision.hiddenSlots).map((s) => s?.slot))
-    for (const list of arr(block?.lists))
-      for (const row of arr(list?.rows)) {
-        const urls = arr(row?.slots).filter((s) => s?.type === 'url' && s.role === 'contact.social_url')
-        if (urls.length !== 1) continue
-        const url = urls[0]
-        const link = arr(decision.links).find((l) => l?.link === url.id)
-        const label = arr(block?.links).find((l) => l?.id === url.id)?.labelId
-        if (hidden.has(url.id) || (label && hidden.has(label))) continue
-        const match = /^social:(.+)$/.exec(String(link?.leadsTo ?? ''))
-        const fact = match && facts.get(match[1])
-        if (fact?.field !== 'socials' || typeof fact.value?.kind !== 'string') continue
-        const target = networkOf(fact.value.kind)
-        if (!target) continue
-        for (const icon of arr(row?.slots)) {
-          if (
-            icon?.type !== 'icon' ||
-            typeof icon.field !== 'string' ||
-            typeof icon.fieldValue !== 'string' ||
-            typeof icon.network !== 'string'
-          )
-            continue
-          const classes = icons.get(icon.id)?.classes
-          out.set(icon.field, {
-            target,
-            network: networkOf(icon.network),
-            value: icon.fieldValue,
-            expected: classes ? iconClassOf(classes, target) : null
-          })
-        }
-      }
   }
   return out
 }
