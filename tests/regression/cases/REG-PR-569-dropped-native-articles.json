@@ -1,0 +1,45 @@
+{
+  "id": "REG-PR-569-dropped-native-articles",
+  "kind": "fix",
+  "title": "Dropped native articles and permitted demo fallback leave no silently retained demo content",
+  "pr": 569,
+  "area": "write-step/page-drop",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the native article drop suite against this branch, including the shipped JA Boxing kit and full write entry point."
+  ],
+  "expect": [
+    "Dropped category-routed articles leave published lists even when no menu item opens their kit path.",
+    "Both native article and menu records are unpublished when applicable, with exact native state read-back.",
+    "A historical menu-only receipt cannot suppress the missing article write.",
+    "Kept shared owners, ambiguous bodies, invalid native state and plugin refusals remain blocked; archived and trashed articles are never restored.",
+    "Existing non-article stock-screen and menu behavior remains intact.",
+    "Native measured and unmeasured capabilities permit fallback; conditional rows require another exact row member and unknown tiers remain blocked.",
+    "Retrying a verified hidden row does not clear it again.",
+    "Created legal pages disable the separate native intro, read the setting back and upgrade old receipts without replacing native rows or unrelated settings.",
+    "Unsupported article copy is never sent: native permission either empties the demo slot or leaves an explicit refusal, and uncertain prior hides cannot claim a successful retry."
+  ],
+  "selectors": {},
+  "fence": "Exact native article ownership declared by the kit; no guessed aliases, direct database writes or CSS hiding",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/write-step-drop-articles.test.mjs",
+      "apps/tracy-web/test/write-step-stock-screens.test.mjs",
+      "apps/tracy-web/test/write-step-hide-frame.test.mjs",
+      "apps/tracy-web/test/write-step-closing-ladder.test.mjs",
+      "apps/tracy-web/test/write-step-text-fallback.test.mjs",
+      "apps/tracy-web/test/write-step-hide.test.mjs",
+      "apps/tracy-web/test/write-step-run.test.mjs",
+      "apps/tracy-web/test/write-step-buttons.test.mjs",
+      "apps/tracy-web/test/write-step-created-legal-layout.test.mjs",
+      "apps/tracy-web/test/site-copy-export-article-provenance.test.mjs"
+    ],
+    "needs": [],
+    "timeout_s": 120
+  }
+}
