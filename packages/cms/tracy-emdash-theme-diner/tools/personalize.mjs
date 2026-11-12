@@ -2787,6 +2787,46 @@ export function keepSiteRowKeys(value, live) {
   })
 }
 
+/**
+ * What the run writes, with every picture path of the seed that the importer replaced on this site put back to the picture.
+ *
+ * 🔒 A SEED MAY HOLD THE SOURCE'S PICTURE PATH WHERE THE IMPORTER PUTS THE PICTURE (TCH, measured 11/11/2026 on dev, JA
+ * Restaurant 1.0.2 through Add site). Restaurant and Diner keep `images/joomlart/slideshow/slide-1.jpg` at
+ * `items[0].image` (`seed/media-map.json` names the spot), and the importer replaces it with the picture on the site; the
+ * kit's seeds leave the spot empty. A list rewritten from the seed (`blocks`, `replace`) carried the path, a key the
+ * written row names wins (`keepSiteRowKeys`), and the path is no file on the site: the home slideshow, the offer cards
+ * and the menu pages showed 33 broken pictures at /images/joomlart/... . A path is matched by its value, not its row, so a
+ * row moved up keeps its own picture; a value the run chose (drawn, uploaded, emptied) is no seed path and still wins.
+ * @param {Record<string, unknown>} fields - what the run writes, by field @param {Record<string, unknown>} live - the
+ * site's data @param {Record<string, unknown> | undefined} seedData - the seed's data of the entry @param {string[]}
+ * targets - the media-map paths of the entry (`items[0].image`)
+ */
+export function keepImportedPictures(fields, live, seedData, targets) {
+  const steps = (/** @type {string} */ p) => p.replace(/\[(\d+)\]/g, '.$1').split('.')
+  const at = (/** @type {unknown} */ data, /** @type {string} */ p) =>
+    steps(p).reduce((/** @type {any} */ node, k) => (node == null ? undefined : node[k]), data)
+  /** The seed's path → the picture the site holds in its place. */
+  const imported = new Map()
+  for (const p of targets) {
+    const was = at(seedData, p)
+    const now = at(live, p)
+    if (typeof was === 'string' && was !== '' && now != null && now !== was && !imported.has(was))
+      imported.set(was, now)
+  }
+  if (imported.size === 0) return fields
+  const out = structuredClone(fields)
+  for (const p of targets) {
+    const parts = steps(p)
+    const holder = parts.length > 1 ? at(out, parts.slice(0, -1).join('.')) : out
+    const last = parts[parts.length - 1]
+    if (holder === null || typeof holder !== 'object') continue
+    const value = /** @type {any} */ (holder)[last]
+    if (typeof value === 'string' && imported.has(value))
+      /** @type {any} */ (holder)[last] = structuredClone(imported.get(value))
+  }
+  return out
+}
+
 /** JSON with every object's keys sorted, so the same answers hash the same however they were typed. */
 export function canonical(v) {
   if (Array.isArray(v)) return `[${v.map(canonical).join(',')}]`
@@ -3941,6 +3981,24 @@ async function main() {
       )
     return siteFields.get(collection)
   }
+  /** `collection/slug/locale` → the paths the importer fills with a file of the template (`seed/media-map.json`). */
+  const pictureSpotsOf = new Map()
+  for (const item of Array.isArray(mediaMap?.items)
+    ? mediaMap.items
+    : Array.isArray(mediaMap)
+      ? mediaMap
+      : [])
+    for (const t of Array.isArray(item?.targets) ? item.targets : []) {
+      if (typeof t?.path !== 'string') continue
+      const at = `${t.collection}/${t.slug}/${t.locale ?? seed.defaultLocale ?? 'en'}`
+      if (!pictureSpotsOf.has(at)) pictureSpotsOf.set(at, [])
+      pictureSpotsOf.get(at).push(t.path)
+    }
+  /** The seed's own data of one entry: what the importer started from, before any row was trimmed. */
+  const seedDataOf = (collection, slug, locale) =>
+    (seed.content?.[collection] ?? []).find(
+      (e) => e.slug === slug && (e.locale ?? seed.defaultLocale ?? 'en') === locale
+    )?.data
   const writeEntry = async (k) => {
     const planned = patches.get(k)
     if (!planned) return
@@ -3970,11 +4028,16 @@ async function main() {
     for (const f of Object.keys(gate.ok))
       if (known && !known.has(f))
         skipped.push({ rule: `${k}.${f}`, why: "this site's release of the template has no such field" })
-    // A list keeps the keys only the site's rows hold (the importer's pictures), before anything is hashed or journaled.
+    // A list keeps the keys only the site's rows hold (the importer's pictures), and a seed's picture path the picture the
+    // importer put in its place (`keepImportedPictures`), before anything is hashed or journaled.
+    const pictured = keepImportedPictures(
+      Object.fromEntries(Object.entries(gate.ok).filter(([f]) => !known || known.has(f))),
+      liveData,
+      seedDataOf(p.collection, p.slug, p.locale),
+      pictureSpotsOf.get(`${p.collection}/${p.slug}/${p.locale}`) ?? []
+    )
     const fields = Object.fromEntries(
-      Object.entries(gate.ok)
-        .filter(([f]) => !known || known.has(f))
-        .map(([f, v]) => [f, keepSiteRowKeys(v, liveData[f])])
+      Object.entries(pictured).map(([f, v]) => [f, keepSiteRowKeys(v, liveData[f])])
     )
     if (Object.keys(fields).length === 0) return
     const receipt = receipts.entries[k]
