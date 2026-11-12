@@ -1123,6 +1123,15 @@
         "framework": "t4",
         "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
         "note": "Template ja_kinetic (T4) 1.0.11 pairs the site logo with the site name: the default, blueprint and signal profiles set site_logo (kinetic-logo.png, -blueprint.png, -signal.png, 78 x 120) and site_logo_dark (the -dark twins), printed by html/layouts/t4/element/logo.php as a .d-light/.d-dark pair, each followed by the site name, and swapped by [data-bs-theme=\"dark\"] (scss/_logo-pair.scss); Blog and home-magz keep the blank T4 logo. The CSS caps the header logo at 40px high, so no logoHeight; the footer brand (acm-social) wears the same pair, so there is no footer slot. other_faviconFile is empty in every profile. Read from the 1.0.11 pack's files; the brand writer and favicon proof was not run on this layout, hence unverified."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "unverified": ["brandReady", "faviconReady"],
+        "framework": "t4",
+        "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
+        "note": "Same logos and profiles as 1.0.11: template ja_kinetic is still 1.0.3 and the 26 profile, logo-layout and logo-style files of the 1.0.12 pack are byte-identical to the 1.0.11 pack. 1.0.12 changes the T4 router, author-page pagination, the sign-in password field corners and some section stylesheets, and edits 29 articles and 1 module; none of them touches the logo, the profiles or the favicon. The brand writer and favicon proof was not run on this layout, hence unverified."
       }
     },
     "quickstart/ja-kinetic/wp7": {
