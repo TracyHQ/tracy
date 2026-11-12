@@ -1477,6 +1477,24 @@
         },
         "logoHeight": 49,
         "note": "Same logos as 1.0.9: the logo pictures, logo layouts and T4 site profile files are byte for byte those of 1.0.9 (the two contracts' presentation locks compared); this release gives every page one h1, uses the finder search form and adds an author info override."
+      },
+      "1.0.12": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-132.0",
+        "darkSpots": {
+          "footer": true,
+          "proof": "footer item-2.png lum 163, the site_logo_dark picture"
+        },
+        "frame": {
+          "width": 161,
+          "height": 49
+        },
+        "logoHeight": 49,
+        "note": "Same logos as 1.0.10: the 64 logo pictures, logo layouts, favicon and T4 site profile files are byte for byte those of 1.0.10 (the two contracts' presentation locks compared; the 7 files that differ hold no logo spot), and the footer slot module-132.0 still holds images/joomlart/logo/item-2.png. This release hides an empty related projects module, prints the contact phone as a link and fixes article headings."
       }
     },
     "quickstart/ja-nova/wp7": {
