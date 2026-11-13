@@ -10,7 +10,9 @@ import {
   buildNeedsProfile,
   needsProfileOf
 } from '../domain/needs-profile.mjs'
-import { MAX_QUESTIONS, QUESTION_TOPICS } from '../domain/needs-profile-questions.mjs'
+import { QUESTION_TOPICS, questionProblems } from '../domain/build-contract-questions.mjs'
+import { reporterFor } from '../domain/build-contract-shared.mjs'
+import { ASKED_TOPICS, MAX_QUESTIONS } from '../domain/needs-profile-questions.mjs'
 import { GROUP_KINDS_V3, ROLE_VOCABULARY_V3, isGroupKind, isRole } from '../domain/place-content-roles.mjs'
 
 const CLUB = JSON.parse(
@@ -169,9 +171,12 @@ test('questions: only the main button when contact and language are known', asyn
   const { profile } = await clubProfile()
   assert.deepEqual(
     profile.questions.map((q) => q.topic),
-    ['main_cta']
+    ['main-button']
   )
-  assert.equal(profile.questions[0].recommended, 'book')
+  assert.deepEqual(
+    profile.questions[0].choices.filter((c) => c.recommended).map((c) => c.id),
+    ['book']
+  )
 })
 
 test('questions: a contact question only when no phone, email or booking link was found', async () => {
@@ -184,7 +189,7 @@ test('questions: a contact question only when no phone, email or booking link wa
   })
   assert.deepEqual(
     profile.questions.map((q) => q.topic),
-    ['main_cta', 'contact_method']
+    ['main-button', 'contact-method']
   )
 })
 
@@ -203,12 +208,12 @@ test('questions: at most three, only on the agreed topics, conflicts never asked
   assert.ok(profile.conflicts.length >= 1)
   assert.deepEqual(
     profile.questions.map((q) => q.topic),
-    ['main_cta', 'contact_method', 'site_language']
+    ['main-button', 'contact-method', 'site-language']
   )
   assert.ok(profile.questions.length <= MAX_QUESTIONS)
   for (const q of profile.questions) {
-    assert.ok(QUESTION_TOPICS.includes(q.topic))
-    for (const words of [q.text, ...q.options.map((o) => o.label)]) assert.doesNotMatch(words, DASHES)
+    assert.ok(ASKED_TOPICS.includes(q.topic))
+    for (const words of [q.prompt, ...q.choices.map((o) => o.label)]) assert.doesNotMatch(words, DASHES)
   }
 })
 
@@ -229,12 +234,33 @@ test('the site language follows the public sources; mixed sources default to the
   })
   assert.equal(mixed.profile.language.value, 'en')
   assert.deepEqual(mixed.profile.language.options, ['en', 'es'])
-  const asked = mixed.profile.questions.find((q) => q.topic === 'site_language')
+  const asked = mixed.profile.questions.find((q) => q.topic === 'site-language')
   assert.deepEqual(
-    asked.options.map((o) => o.label),
+    asked.choices.map((o) => o.label),
     ['English', 'Spanish']
   )
-  assert.equal(asked.recommended, 'en')
+  assert.deepEqual(
+    asked.choices.filter((c) => c.recommended).map((c) => c.id),
+    ['en']
+  )
+})
+
+test('every question the needs profile asks passes the Contract B question check', async () => {
+  const { profile } = await clubProfile((c) => {
+    delete c.research.sources.find((s) => s.id === 'gmaps').fields['contact.phone']
+    c.reading.facts = c.reading.facts.filter(
+      (f) => !['contact.phone', 'contact.email', 'contact.cta_url'].includes(f.kind)
+    )
+    c.research.sources.find((s) => s.id === 'insta').language = 'es'
+    return c
+  })
+  assert.equal(profile.questions.length, 3)
+  for (const q of profile.questions) {
+    const problems = []
+    questionProblems(q, reporterFor(problems))
+    assert.deepEqual(problems, [], `${q.id}: ${JSON.stringify(problems)}`)
+    assert.ok(QUESTION_TOPICS.includes(q.topic))
+  }
 })
 
 test('a model fact with no evidence in its source, an unknown source or an unknown kind is dropped, never kept', () => {

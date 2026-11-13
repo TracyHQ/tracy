@@ -3,11 +3,16 @@
 // The site language follows the language the business uses publicly. Questions are produced for three cases only, so
 // setup stays short: the main button goal (always), a contact method when no source gave one, and the site language
 // when the public sources mix languages. Everything else (conflicts included) is shown on the plan, never asked here.
+//
+// Every question is a Contract B question (`build-contract-questions.mjs`, ticket #590): the chat renders it as it is.
+import { QUESTION_SCHEMA } from './build-contract-questions.mjs'
 import { TRUST_ORDER } from './needs-profile-merge.mjs'
 
-/** The only topics a needs profile may ask about, in the order they are asked. */
-export const QUESTION_TOPICS = Object.freeze(['main_cta', 'contact_method', 'site_language'])
+/** The Contract B topics a needs profile asks about, in the order they are asked. */
+export const ASKED_TOPICS = Object.freeze(['main-button', 'contact-method', 'site-language'])
 export const MAX_QUESTIONS = 3
+/** How long a free text answer may be, per topic. */
+const FREE_TEXT_MAX = Object.freeze({ 'main-button': 80, 'contact-method': 120, 'site-language': 40 })
 /** Facts that let a visitor reach the business: any one of them means no contact question. */
 export const CONTACT_KINDS = Object.freeze(['contact.phone', 'contact.email', 'contact.cta_url'])
 
@@ -45,52 +50,60 @@ export function siteLanguageOf(sources, read = {}) {
 const has = (facts, kind) => (facts[kind]?.length ?? 0) > 0
 
 /** What the main button can do with the facts found, the first one recommended. */
-function ctaOptions(facts) {
-  const options = []
-  if (has(facts, 'contact.cta_url')) options.push({ value: 'book', label: 'Book online' })
-  if (has(facts, 'contact.phone')) options.push({ value: 'call', label: 'Call us' })
-  if (has(facts, 'contact.email')) options.push({ value: 'email', label: 'Email us' })
-  if (has(facts, 'contact.social_url')) options.push({ value: 'message', label: 'Message us' })
-  if (has(facts, 'contact.address')) options.push({ value: 'visit', label: 'Visit us' })
-  if (options.length === 0) options.push({ value: 'contact', label: 'Contact us' })
-  return options
+function ctaChoices(facts) {
+  const choices = []
+  if (has(facts, 'contact.cta_url')) choices.push({ id: 'book', label: 'Book online' })
+  if (has(facts, 'contact.phone')) choices.push({ id: 'call', label: 'Call us' })
+  if (has(facts, 'contact.email')) choices.push({ id: 'email', label: 'Email us' })
+  if (has(facts, 'contact.social_url')) choices.push({ id: 'message', label: 'Message us' })
+  if (has(facts, 'contact.address')) choices.push({ id: 'visit', label: 'Visit us' })
+  if (choices.length === 0) choices.push({ id: 'contact', label: 'Contact us' })
+  return choices
 }
 
+/** A Contract B question on `topic`; the choice with id `recommended` is marked recommended. */
+const question = (topic, prompt, choices, recommended) => ({
+  schema: QUESTION_SCHEMA,
+  id: topic,
+  topic,
+  prompt,
+  choices: choices.map((c) => (c.id === recommended ? { ...c, recommended: true } : c)),
+  freeText: { maxLength: FREE_TEXT_MAX[topic], placeholder: 'Type your answer' }
+})
+
 /**
- * The questions for the customer, at most `MAX_QUESTIONS`, each on one of `QUESTION_TOPICS`.
+ * The questions for the customer, at most `MAX_QUESTIONS`, each a Contract B question on one of `ASKED_TOPICS`.
  * @param {{facts: Record<string, unknown[]>, language: ReturnType<typeof siteLanguageOf>}} profile
  */
 export function questionsOf({ facts, language }) {
   const questions = []
-  const cta = ctaOptions(facts)
-  questions.push({
-    id: 'main_cta',
-    topic: 'main_cta',
-    text: 'What should the main button on your site ask visitors to do?',
-    options: cta,
-    recommended: cta[0].value
-  })
+  const cta = ctaChoices(facts)
+  questions.push(
+    question('main-button', 'What should the main button on your site ask visitors to do?', cta, cta[0].id)
+  )
   if (!CONTACT_KINDS.some((kind) => has(facts, kind))) {
-    questions.push({
-      id: 'contact_method',
-      topic: 'contact_method',
-      text: 'We found no phone, email or booking link. How should visitors contact you?',
-      options: [
-        { value: 'phone', label: 'A phone number' },
-        { value: 'email', label: 'An email address' },
-        { value: 'link', label: 'A booking or contact link' }
-      ],
-      recommended: 'phone'
-    })
+    questions.push(
+      question(
+        'contact-method',
+        'We found no phone, email or booking link. How should visitors contact you?',
+        [
+          { id: 'phone', label: 'A phone number' },
+          { id: 'email', label: 'An email address' },
+          { id: 'link', label: 'A booking or contact link' }
+        ],
+        'phone'
+      )
+    )
   }
   if (language?.mixed) {
-    questions.push({
-      id: 'site_language',
-      topic: 'site_language',
-      text: 'Your public pages use more than one language. Which language should your site use?',
-      options: language.options.map((tag) => ({ value: tag, label: languageName(tag) })),
-      recommended: language.value
-    })
+    questions.push(
+      question(
+        'site-language',
+        'Your public pages use more than one language. Which language should your site use?',
+        language.options.map((tag) => ({ id: tag, label: languageName(tag) })),
+        language.value
+      )
+    )
   }
   return questions.slice(0, MAX_QUESTIONS)
 }
