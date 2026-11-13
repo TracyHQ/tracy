@@ -8,13 +8,22 @@
  * - its slots are the released slots of those entities, byte for byte, but for each slot the blank site empties: its
  *   sample is the value the blank site leaves there and it opens empty (`blank-site-contract-samples.mjs`), so no
  *   demo text the blank site no longer has is left in it, and no other slot changed;
+ * - its lock rows are the released rows of the kept entities with the places the blank site empties empty (the step
+ *   run on the contract's own rows), so the lock holds no demo text the blank site no longer has;
  * - no entity the blank site removes is named anywhere in it;
  * - every mapping location naming a slot of a record the blank site keeps has that slot in it, and no location on a
  *   record the build creates does.
  */
 
 import { BLANK_SITE_STEPS, produceBlankSite } from './blank-site.mjs'
-import { BLANK_CONTRACT_DIR, blankSiteContractId, lockDump, removedEntities } from './blank-site-contract.mjs'
+import { emptyDeclaredFieldsStep } from './blank-site-empty-fields.mjs'
+import {
+  BLANK_CONTRACT_DIR,
+  blankLockRows,
+  blankSiteContractId,
+  lockDump,
+  removedEntities
+} from './blank-site-contract.mjs'
 import { blankSlot, emptiedSamples } from './blank-site-contract-samples.mjs'
 import { mappingLocations } from './door-proof-cases.mjs'
 
@@ -54,11 +63,21 @@ export function checkBlankSiteContract({ mapping, released, blank, emptyHtml }) 
       )
 
   const own = lockDump(released)
-  const removed = removedEntities({
-    contentMap: released.contentMap,
-    before: own,
-    after: produceBlankSite(own, { steps: BLANK_SITE_STEPS }).sql
+  // The blank site step on the contract's own rows. Those rows hold blocks and custom fields only, so places of a
+  // record stored elsewhere (newsletter settings) are left to the step on the real demo data.
+  const rowsOnly = {
+    ...mapping,
+    entities: Object.fromEntries(
+      Object.entries(mapping.entities ?? {}).filter(([, e]) => e.kind === 'module' || e.kind === 'field')
+    )
+  }
+  const empty = emptyDeclaredFieldsStep({
+    mapping: rowsOnly,
+    readFile: () => null,
+    ...(emptyHtml ? { emptyHtml } : {})
   })
+  const ownAfter = produceBlankSite(own, { steps: [...BLANK_SITE_STEPS, empty] }).sql
+  const removed = removedEntities({ contentMap: released.contentMap, before: own, after: ownAfter })
   const gone = new Set(removed)
   const kept = released.contentMap.entities.filter((e) => !gone.has(e.key))
   const entities = blank.contentMap.entities ?? []
@@ -110,11 +129,22 @@ export function checkBlankSiteContract({ mapping, released, blank, emptyHtml }) 
     json(Object.keys(blank.lock.entities ?? {})) !==
     json(Object.keys(released.lock.entities).filter((k) => !gone.has(k)))
   )
-    add('presentation-lock.json', 'entities', 'must be the released rows of the kept entities')
-  else
+    add('presentation-lock.json', 'entities', 'must be the rows of the kept entities')
+  else {
+    const rows = blankLockRows({
+      contentMap: released.contentMap,
+      lock: released.lock,
+      gone,
+      after: ownAfter
+    })
     for (const [key, row] of Object.entries(blank.lock.entities))
-      if (json(row) !== json(released.lock.entities[key]))
-        add('presentation-lock.json', `entities.${key}`, 'differs from the released row')
+      if (json(row) !== json(rows[key]))
+        add(
+          'presentation-lock.json',
+          `entities.${key}`,
+          'differs from the released row with the emptied places empty'
+        )
+  }
 
   const named = new Set(blankSlots.map((s) => s.key))
   for (const { at, loc } of mappingLocations(mapping)) {

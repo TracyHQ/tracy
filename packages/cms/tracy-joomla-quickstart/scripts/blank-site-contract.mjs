@@ -141,6 +141,27 @@ function blankIdentity(entity, afterDump) {
   return JSON.stringify(identity) === JSON.stringify(entity.identity) ? entity : { ...entity, identity }
 }
 
+/**
+ * The lock rows of the kept entities as the blank site stores them: each column the released row locks, read from the
+ * blank site's row of that record (the places the blank site emptied are empty there), in the released column order.
+ * An entity with no row in the demo data (a file kind) keeps its released row.
+ */
+export function blankLockRows({ contentMap, lock, gone, after }) {
+  const afterDump = typeof after === 'string' ? parseDump(after) : after
+  const byKey = new Map(contentMap.entities.map((e) => [e.key, e]))
+  const out = {}
+  for (const [key, released] of Object.entries(lock.entities)) {
+    if (gone.has(key)) continue
+    const e = byKey.get(key)
+    const table = e && ENTITY_TABLES[e.kind]
+    const row = table && records(afterDump, table).find((r) => r.id === String(e.sourceId))
+    out[key] = row
+      ? Object.fromEntries(Object.entries(released).map(([c, v]) => [c, c in row ? row[c] : v]))
+      : released
+  }
+  return out
+}
+
 /** Whether `value` names one of `keys` anywhere: a key, an entity value, a key prefix (`article-14.video`). */
 function names(value, keys) {
   if (typeof value === 'string') return keys.has(value) || keys.has(value.split('.')[0])
@@ -204,7 +225,7 @@ export function blankSiteContract({
   )
   const lockOut = {}
   for (const [k, v] of Object.entries(lock)) {
-    if (k === 'entities') lockOut[k] = Object.fromEntries(Object.entries(v).filter(([key]) => !gone.has(key)))
+    if (k === 'entities') lockOut[k] = blankLockRows({ contentMap, lock, gone, after: afterDump })
     else if (k === 'assignments')
       lockOut[k] = v.filter((a) => {
         const pair = `${a.moduleid}:${a.menuid}`

@@ -575,7 +575,8 @@ What it holds (`packages/cms/tracy-joomla-quickstart/scripts/blank-site-contract
   emptied its whole table, or when its identity names a removed record (a profile line of a deleted account). The
   command reads this from the demo data before and after the step, and refuses to write when the contract's own rows
   (`lockDump`) give another answer. The content map keeps the entities and slots of the kept records and drops every
-  entry naming a removed one; the lock keeps their rows, the module assignments the step did not remove, the access
+  entry naming a removed one; the lock keeps their rows as the blank site stores them (each locked column read from
+  the blank row, so an emptied place is empty there too), the module assignments the step did not remove, the access
   rules of kept records, an inventory count of 0 for a kind with no kept record (the plugin reads the count through
   the entities it resolves), and the sha256 of each file the blank site adds under a locked folder (T4's
   `local/etc/global.json`).
@@ -612,8 +613,9 @@ limits only, and `rows.remove` removes a node of an HTML value but no reviewed r
 `node scripts/ai-quickstart/check.mjs` requires `blank-site-contract/` and checks it against the released contract
 its `blankSiteOf.contract` names (`blank-site-contract-check.mjs`): the id; the sha256 of each released file (a
 changed release means making the blank site contract again); the entities, in released order and equal but for
-identity; every slot equal to the released one, or, for a place the blank site empties, opened as above; no removed
-record named anywhere; every mapping location on a kept record has its slot, and none on a record the build creates.
+identity; every slot equal to the released one, or, for a place the blank site empties, opened as above; every lock
+row equal to the released row with the places the blank site empties empty (the step run on the contract's own rows);
+no removed record named anywhere; every mapping location on a kept record has its slot, and none on a record the build creates.
 
 **The door proof.** `scripts/ai-quickstart/door-proof.mjs <AI quickstart folder>` proves on a throwaway blank site that
 the build writes through the real door (gate #585). The site runs the plugin release the quickstart pins, its

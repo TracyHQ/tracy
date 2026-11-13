@@ -56,6 +56,12 @@ test('it keeps the records the blank site keeps and names none it removes', () =
   assert.deepEqual(blank.contentMap.pages, [])
   assert.deepEqual(blank.contentMap.itemPages, {})
   assert.deepEqual(Object.keys(blank.lock.entities), ['module-90', 'module-91'])
+  assert.match(
+    blank.lock.entities['module-90'].params,
+    /\\"title\\":\[\\"\\"\]/,
+    'the hero row holds the emptied heading'
+  )
+  assert.doesNotMatch(JSON.stringify(blank.lock), /Bread, slowly/)
   assert.deepEqual(blank.lock.assignments, [], 'the blank site assigns its blocks to no page')
   assert.deepEqual(blank.lock.inventoryCounts, { module: 2, category: 0, article: 0, menuItem: 0 })
   assert.deepEqual(blank.lock.access.entityRules, { 'modules.90': '{}' })
@@ -141,6 +147,11 @@ test('the check names each way a blank site contract goes wrong', () => {
       'a slot changed that the blank site keeps',
       (b) => (b.contentMap.slots[2].maxCharacters = 5),
       /differs from the released slot/
+    ],
+    [
+      'a lock row that keeps demo text',
+      (b) => (b.lock.entities['module-90'] = releasedContract().lock.entities['module-90']),
+      /module-90: differs from the released row with the emptied places empty/
     ],
     [
       'a removed record named',
