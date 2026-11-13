@@ -378,3 +378,16 @@ is the fence). The preset itself is Tracy's (`buildAgent` in `config/mode-matrix
 Test: the two build cases in `test/tracy/native-session.test.ts` (every wider preset, prefix and seat refused),
 `test/tracy/build-agent.test.ts` (the fence, through the real guard) and the build allocation case in
 `seat-door.test.ts`.
+
+## Addendum 13/11/2026: the build engine tool joins the build grant (`2.7.7-tracy.21`)
+
+The build chat calls Tracy's build engine (TracyHQ/tracy#609): the tool `tracy_build` (actions `research`,
+`templates`, `plan`, `edit`) from the plugin `@tracy/dsh-build-chat`. `src/tracy/build-agent.ts` adds it to
+`BUILD_AGENT_TOOLS`, so a build session, its children and any `site-builder` session may call it; every other
+tool of a build session is still refused. The other way round, `tracy_build` is a build only tool: Tracy's bundle
+registers it for every session, but outside a build session there is no account draft behind it, so the same H19
+guard refuses it to every session that is not a build session. No other session changes, no upstream core edit,
+no new hook.
+
+Test: `test/tracy/build-agent.test.ts` (granted in a build session and its child, refused to a widget, demo or
+plain session, refused through the real guard to a site seat that may run code, other tools still refused).

@@ -10,7 +10,7 @@ const agentOf = (id: string, header: Record<string, unknown> = {}) => ({ id, ses
 
 test('a build session may call exactly the build tools; every other tool is refused before its body', () => {
   const agent = agentOf(buildId, { agentPreset: 'site-builder' });
-  assert.deepEqual([...BUILD_AGENT_TOOLS].sort(), ['ask_user_question', 'web_fetch', 'web_search']);
+  assert.deepEqual([...BUILD_AGENT_TOOLS].sort(), ['ask_user_question', 'tracy_build', 'web_fetch', 'web_search']);
   for (const name of BUILD_AGENT_TOOLS) assert.equal(buildToolRefusal(agent, name), undefined, name);
   for (const name of ['bash', 'write', 'edit', 'read', 'tracy_site', 'tracy_guide', 'tracy_demo', 'tracy_emdash',
     'tracy_site_build_joomla', 'tracy_design_system', 'subagent', 'run_code', 'skill']) {
@@ -26,10 +26,21 @@ test('the fence follows the session, not the chosen preset: a build session swit
   assert.equal(typeof buildToolRefusal(agentOf('child-1', { parentSession: buildId }), 'tracy_site'), 'string');
 });
 
-test('every other session is left exactly as it was', () => {
+test('every other session is left exactly as it was, and never reaches the build tool', () => {
   for (const agent of [agentOf('session-widget-77777777-7777-4777-8777-777777777777', { agentPreset: 'designer-wordpress' }),
     agentOf('wo-demo-88888888-8888-4888-8888-888888888888', { agentPreset: 'designer-joomla' }), agentOf('session-2'), undefined]) {
     for (const name of ['bash', 'tracy_site', 'web_fetch']) assert.equal(buildToolRefusal(agent, name), undefined);
+    // TracyHQ/tracy#609: the build tool belongs to the build chat only; a site session cannot call it.
+    assert.equal(typeof buildToolRefusal(agent, 'tracy_build'), 'string', JSON.stringify(agent));
+  }
+});
+
+test('the build tool is granted to a build session and to its child (TracyHQ/tracy#609)', () => {
+  assert.equal(buildToolRefusal(agentOf(buildId, { agentPreset: 'site-builder' }), 'tracy_build'), undefined);
+  assert.equal(buildToolRefusal(agentOf('child-2', { parentSession: buildId }), 'tracy_build'), undefined);
+  // Granting it widened nothing else: the site and shell tools stay refused in the build session.
+  for (const name of ['bash', 'tracy_site', 'tracy_guide', 'tracy_build_site', 'tracy_builder']) {
+    assert.equal(typeof buildToolRefusal(agentOf(buildId, { agentPreset: 'site-builder' }), name), 'string', name);
   }
 });
 
@@ -53,6 +64,8 @@ test('the seat tool guard refuses a non build tool in a build session even for a
   assert.equal(typeof guard!({ agent: build, name: 'bash' }), 'string');
   assert.equal(typeof guard!({ agent: build, name: 'tracy_site' }), 'string');
   assert.equal(guard!({ agent: build, name: 'web_fetch' }), undefined);
+  assert.equal(guard!({ agent: build, name: 'tracy_build' }), undefined);
+  assert.equal(typeof guard!({ agent: site, name: 'tracy_build' }), 'string', 'a site session never calls the build tool');
   assert.equal(guard!({ agent: site, name: 'bash' }), undefined, 'a site seat keeps its code tools');
   assert.equal(guard!({ agent: site, name: 'tracy_site' }), undefined);
 });
@@ -60,7 +73,7 @@ test('the seat tool guard refuses a non build tool in a build session even for a
 test('a build session does not even see the tools it may not call', () => {
   const masks: Record<string, unknown>[] = [];
   const agent = { ...agentOf(buildId, { agentPreset: 'site-builder' }), ctx: { tools: { restrict(filter: Record<string, unknown>) { masks.push(filter); return () => {}; } } } };
-  const schemas = () => ['web_fetch', 'web_search', 'ask_user_question', 'tracy_site', 'tracy_guide', 'bash'].map((name) => ({ name }));
+  const schemas = () => ['web_fetch', 'web_search', 'ask_user_question', 'tracy_build', 'tracy_site', 'tracy_guide', 'bash'].map((name) => ({ name }));
   hideNonBuildTools(agent, schemas);
   assert.deepEqual(masks, [{ deny: ['tracy_site', 'tracy_guide', 'bash'] }]);
   masks.length = 0;

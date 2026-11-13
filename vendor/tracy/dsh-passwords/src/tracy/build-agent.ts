@@ -18,11 +18,19 @@ const BUILD_SESSION = /^session-build-/i;
 
 /**
  * The tools a build session may call. Research (`web_search`, `web_fetch`) and questions with
- * buttons (`ask_user_question`), from the preset's own rows. EXTENSION POINT: the template
+ * buttons (`ask_user_question`), from the preset's own rows, and the build engine (`tracy_build`,
+ * TracyHQ/tracy#609). EXTENSION POINT: the template
  * choice, plan and build tools join this list in the tickets that add them (TracyHQ/tracy#603 to
  * #610 and Part 3); a tool missing here is refused, never silently granted.
  */
-export const BUILD_AGENT_TOOLS: ReadonlySet<string> = new Set(['web_search', 'web_fetch', 'ask_user_question']);
+export const BUILD_AGENT_TOOLS: ReadonlySet<string> = new Set(['web_search', 'web_fetch', 'ask_user_question', 'tracy_build']);
+
+/**
+ * The tools that exist for the build chat alone (TracyHQ/tracy#609): `tracy_build` (research, templates,
+ * plan, edit) is registered by Tracy's bundle for every session, but outside a build session there is no
+ * account draft behind it, so any other session is refused it.
+ */
+const BUILD_ONLY_TOOLS: ReadonlySet<string> = new Set(['tracy_build']);
 
 interface AgentLike {
   id?: unknown;
@@ -41,9 +49,12 @@ export function isBuildAgent(agent: AgentLike | undefined): boolean {
 /** The text the model reads when it calls a tool the build chat does not grant. */
 const REFUSAL = 'This tool is not available while building a site in the chat.';
 
-/** A refusal for a tool outside the build grant, or undefined when the call may go on to the next check. */
+/** The text the model reads when a session outside the build chat calls a build only tool. */
+const BUILD_ONLY_REFUSAL = 'This tool is only available while building a new site in the chat.';
+
+/** A refusal for a tool outside the build grant (or a build only tool outside a build session), or undefined when the call may go on to the next check. */
 export function buildToolRefusal(agent: AgentLike | undefined, name: string): string | undefined {
-  if (!isBuildAgent(agent)) return undefined;
+  if (!isBuildAgent(agent)) return BUILD_ONLY_TOOLS.has(name) ? BUILD_ONLY_REFUSAL : undefined;
   return BUILD_AGENT_TOOLS.has(name) ? undefined : REFUSAL;
 }
 

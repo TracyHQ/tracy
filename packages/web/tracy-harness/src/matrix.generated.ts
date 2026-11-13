@@ -263,6 +263,20 @@ export const generated = {
       "platforms": {}
     },
     {
+      "id": "tracy-build-chat",
+      "group": "build",
+      "tools": [
+        "tracy_build"
+      ],
+      "roles": {
+        "designer": false,
+        "developer": false,
+        "writer": false,
+        "seo-geo": false
+      },
+      "platforms": {}
+    },
+    {
       "id": "tool-ask-user",
       "group": "planning",
       "tools": [
@@ -1161,6 +1175,7 @@ export const generated = {
     "plan-mode": "@deepseek-ai/dsh-plan-mode",
     "tool-goal": "@deepseek-ai/dsh-tool-goal",
     "tool-todo": "@deepseek-ai/dsh-tool-todo",
+    "tracy-build-chat": "@tracy/dsh-build-chat",
     "tool-ask-user": "@deepseek-ai/dsh-tool-ask-user",
     "compaction-basic": "@deepseek-ai/dsh-compaction-basic",
     "command-compact": "@deepseek-ai/dsh-command-compact",

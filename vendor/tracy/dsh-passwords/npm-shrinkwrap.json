@@ -1,12 +1,12 @@
 {
   "name": "dsh-passwords",
-  "version": "2.7.7-tracy.20",
+  "version": "2.7.7-tracy.21",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "dsh-passwords",
-      "version": "2.7.7-tracy.20",
+      "version": "2.7.7-tracy.21",
       "license": "GPL-3.0-only",
       "dependencies": {
         "bcryptjs": "^3.0.2",

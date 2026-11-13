@@ -32,6 +32,6 @@
     "@tracy/dsh-webroot-read": "workspace:^",
     "dsh-locale-vi": "0.1.0-tracy.14",
     "@tracy/dsh-mode-picker": "workspace:^",
-    "dsh-passwords": "2.7.7-tracy.20"
+    "dsh-passwords": "2.7.7-tracy.21"
   }
 }

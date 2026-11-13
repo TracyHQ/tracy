@@ -76,7 +76,10 @@ const COMPOSITIONS = [
   'vendor/tracy/deepseek-harness/packages/bundle/web-app/presets/cordis.patch.yml',
   'vendor/tracy/deepseek-harness/packages/bundle/web-app/presets/minimal.patch.yml',
   'vendor/tracy/deepseek-harness/packages/bundle/web-app/cordis.patch.yml',
-  'packages/bundle/tracy-cowork/cordis.patch.yml'
+  'packages/bundle/tracy-cowork/cordis.patch.yml',
+  // The build chat engine (`tracy-build-chat`, the tool `tracy_build`, TracyHQ/tracy#609): the plugin
+  // declares its own row, and only the build agent's preset lists it.
+  'packages/ui/tracy-build-chat/cordis.patch.yml'
 ]
 
 interface Row {
