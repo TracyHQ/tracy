@@ -290,6 +290,21 @@ test('a paid social page past the day count is set aside; nothing else read is r
   assert.ok(sources.some((s) => s.id === 'facebook'))
 })
 
+test('the link guard always gets a DNS resolver, even when the server injects none', async () => {
+  // The server (`app.js`) passes no resolver of its own in production. Without one the real guard refuses every
+  // website as `dns_unavailable`, so every owner link was set aside and research stopped (#609, first real run).
+  const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  const handed = []
+  const guard = domain.assertPublicUrl
+  domain.assertPublicUrl = async (url, deps) => {
+    handed.push(typeof deps?.resolve)
+    return guard(url, deps)
+  }
+  await gatherer(domain)({ links: [SITE], description: null }, {})
+  assert.ok(handed.length > 0, 'the guard was asked')
+  assert.deepEqual([...new Set(handed)], ['function'])
+})
+
 test('the owner description reaches the brief as the seller typed bio', async () => {
   const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
   const description = 'Family bakery, rye and sourdough, open early for commuters.'

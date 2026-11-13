@@ -3,6 +3,7 @@
 // table `build_draft_picture`). It sits beside app.js because it composes another domain's pieces, and a domain
 // directory imports only `lib/` and `db/`.
 import { createHash, randomUUID } from 'node:crypto'
+import { lookup as dnsLookup } from 'node:dns/promises'
 import path from 'node:path'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { apifyDaySpent } from 'website-opportunities/src/apify-budget.js'
@@ -176,7 +177,10 @@ export function preSiteGatherer({
     fetchImpl ??
     createPinnedFetch({ isBlockedAddress: async () => (await loadDomain()).isBlockedAddress })
   let host = null
-  const resolve = overrides.resolve ?? dnsResolve
+  // Same fallback as the Website Opportunities doors (`app.js`): the link guard refuses every host it cannot
+  // resolve, so with no resolver every owner link would be set aside as a private address.
+  const resolve =
+    overrides.resolve ?? dnsResolve ?? ((name) => dnsLookup(name, { all: true, verbatim: true }))
   const domainDeps = () => ({ fetch, ...(resolve ? { resolve } : {}), now })
   const stored =
     overrides.objects !== undefined
