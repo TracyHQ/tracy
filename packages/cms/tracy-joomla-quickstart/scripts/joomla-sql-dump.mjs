@@ -121,6 +121,11 @@ export function sqlQuote(value) {
   return "'" + Array.from(String(value), (c) => map[c] ?? c).join('') + "'"
 }
 
+/** The text a quoted SQL literal holds: `inner` is what sits between the quotes. */
+export function sqlUnquote(inner) {
+  return inner.replace(/\\(.)|''/gs, (m, c) => (m === "''" ? "'" : (UNESCAPE[c] ?? c)))
+}
+
 function inserts(dump, table) {
   return dump.parts.filter((p) => p.kind === 'insert' && p.table === table)
 }
