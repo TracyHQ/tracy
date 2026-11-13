@@ -20,6 +20,8 @@ export const QUESTION_TOPICS = Object.freeze([
 ])
 /** The topic of the free text question for a name the site may show: it carries no choice. */
 export const SITE_NAME_TOPIC = 'site-name'
+/** The most characters a site name answer may hold (the `site-name` cap of the needs profile's free text). */
+export const SITE_NAME_MAX_LENGTH = 120
 
 /** Report every problem of one question through `report(at, message)`. */
 export function questionProblems(question, report) {
@@ -75,6 +77,8 @@ export function questionProblems(question, report) {
         'placeholder',
         'a placeholder is a short text'
       )
+    if (question.topic === SITE_NAME_TOPIC && free.maxLength > SITE_NAME_MAX_LENGTH)
+      report('freeText.maxLength', `a site-name question accepts at most ${SITE_NAME_MAX_LENGTH} characters`)
   }
   if (question.skippable !== undefined && typeof question.skippable !== 'boolean')
     report('skippable', 'skippable is true or false')

@@ -59,7 +59,7 @@ test('3: a different name becomes business.name and the site name, the original 
   assert.deepEqual(settled.facts['business.name'], [
     { value: OTHER, sources: [ANSWER_SOURCE], confidence: 'single-source' }
   ])
-  assert.deepEqual(settled.withheld, { name: true, siteName: OTHER, names: [HELD] })
+  assert.deepEqual(settled.withheld, { name: true, siteName: OTHER, names: [HELD], heldNames: [HELD] })
   assert.deepEqual(
     settled.rows.map((r) => r.id),
     ['row-plain']
@@ -80,7 +80,7 @@ test('3: the held name typed by the customer is their choice to show it: nothing
   assert.deepEqual(settled.facts['business.name'], [
     { value: name, sources: [ANSWER_SOURCE], confidence: 'single-source' }
   ])
-  assert.deepEqual(settled.withheld, { name: true, siteName: name })
+  assert.deepEqual(settled.withheld, { name: true, siteName: name, heldNames: [HELD] })
   assert.deepEqual(
     settled.rows.map((r) => r.id),
     ['row-held', 'row-plain']
@@ -94,7 +94,7 @@ test('3: the held name typed by the customer is their choice to show it: nothing
 })
 
 test('3: an answer is trimmed with its white space collapsed, and an empty one is refused', () => {
-  // A tab is a control character (`checkAnswer`), so only spaces collapse here.
+  // Tabs and no-break spaces collapse too (`normalisedSiteName`); a line break stays a control character.
   const settled = settleAnswers(pending(), [answer(' Ambermoor   Blooms')], LIMITS)
   assert.equal(settled.profile.facts['business.name'][0].value, OTHER)
   for (const text of ['', '   '])
@@ -104,7 +104,7 @@ test('3: an answer is trimmed with its white space collapsed, and an empty one i
     )
   assert.throws(
     () => settleAnswers(pending(), [{ ...answer(OTHER), text: undefined, skipped: true }], LIMITS),
-    (e) => e.code === 'answer_invalid'
+    (e) => e.code === 'site_name_invalid'
   )
 })
 

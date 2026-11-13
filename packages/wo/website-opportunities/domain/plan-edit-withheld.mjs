@@ -21,7 +21,8 @@ function refusal(id, data, withheld) {
     }
   return {
     code: 'edit_invalid',
-    message: 'This change cannot be saved: it names something that is not part of your plan.'
+    message: 'This change cannot be saved: it names something that is not part of your plan.',
+    details: { problems: [{ message: 'the edit names an id the plan does not hold' }] }
   }
 }
 

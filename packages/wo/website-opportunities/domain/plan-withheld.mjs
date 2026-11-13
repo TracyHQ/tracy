@@ -89,7 +89,7 @@ export function withWithheld(profile, research, template = {}) {
         .map((f) => f?.value)
         .filter((v) => typeof v === 'string' && v.trim() !== '')
     : []
-  const withheld = { ...research.withheld, ...(names.length ? { names } : {}) }
+  const withheld = { ...research.withheld, ...(names.length ? { names, heldNames: names } : {}) }
   const people = heldTextsOf(withheld)
   const facts = { ...profile.facts }
   if (name && withheld.siteName) {

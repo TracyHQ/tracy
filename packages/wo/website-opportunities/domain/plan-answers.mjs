@@ -18,7 +18,12 @@ import { checkAnswer } from './build-contract-questions.mjs'
 import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
-import { settleSiteName, siteNameErrorDetails, siteNameProblems } from './plan-site-name.mjs'
+import {
+  normalisedSiteName,
+  settleSiteName,
+  siteNameErrorDetails,
+  siteNameProblems
+} from './plan-site-name.mjs'
 
 /** The source id an answer's value carries in the settled profile; its origin `answer` reads "Your answer". */
 export const ANSWER_SOURCE = 'customer-answer'
@@ -102,11 +107,19 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
     const question = questions.get(answer?.question)
     if (!question)
       return problems.push({ at: `answers[${i}].question`, message: 'not a question of the profile' })
-    if (seen.has(question.id))
-      problems.push({ at: `answers[${i}]`, message: 'the question is answered twice' })
+    const isName = question.topic === 'site-name'
+    if (seen.has(question.id)) {
+      const twice = { at: `answers[${i}]`, message: 'the question is answered twice' }
+      problems.push(twice)
+      if (isName) nameProblems.push(twice)
+    }
     seen.add(question.id)
-    const isName = question.topic === 'site-name' && typeof answer?.text === 'string'
-    for (const p of checkAnswer(answer, question).problems) {
+    // A site name is normalised before it is checked: a tab or a no-break space is a space, not a control character.
+    const checked =
+      isName && typeof answer?.text === 'string'
+        ? { ...answer, text: normalisedSiteName(answer.text) }
+        : answer
+    for (const p of checkAnswer(checked, question).problems) {
       const found = { at: `answers[${i}]${p.at ? `.${p.at}` : ''}`, message: p.message }
       problems.push(found)
       if (isName) nameProblems.push(found)
@@ -119,8 +132,13 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
       !contactKindOf(answer.text.trim())
     )
       problems.push({ at: `answers[${i}].text`, message: 'not a phone number, an email address or a link' })
-    if (isName) {
-      const named = siteNameProblems(answer.text, limits, `answers[${i}].text`)
+    if (isName && typeof answer?.text === 'string') {
+      const named = siteNameProblems(
+        answer.text,
+        limits,
+        `answers[${i}].text`,
+        list(profile?.withheld?.people)
+      )
       problems.push(...named.problems)
       if (named.tooLong) tooLong ??= named.tooLong
       else nameProblems.push(...named.problems)

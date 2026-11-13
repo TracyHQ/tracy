@@ -19,6 +19,8 @@ import { picturesOf } from './plan-look-pictures.mjs'
 import { withheldWhatOf } from './plan-withheld.mjs'
 import { replanRows } from './plan-edit-rows.mjs'
 import { editedIdProblems } from './plan-edit-withheld.mjs'
+import { editRefusals } from './plan-edit-words.mjs'
+import { editedNameProblems } from './plan-edit-site-name.mjs'
 import { normalisedSiteName, withheldShowing } from './plan-site-name.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -84,17 +86,13 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
     }))
   }
   const edited = Array.isArray(edit?.changes) && edit.changes.every((c) => c && typeof c === 'object')
+  // The edited name is checked first: a name that names a held person would otherwise read as a held item.
+  const nameProblems = edited ? editedNameProblems({ plan, edit, profile, blockStore, library }) : []
+  if (nameProblems.length > 0) return failed(nameProblems)
   const early = edited ? editedIdProblems({ plan, edit, profile: profileAfterEdit(profile, edit) }) : []
   if (early.length > 0) return failed(early)
   const checked = checkPlanEdit(edit, Array.isArray(plan?.pages) ? bare : plan)
-  if (!checked.ok)
-    return failed(
-      checked.problems.map((p) => ({
-        code: 'edit_invalid',
-        at: p.at,
-        message: `This change cannot be saved: ${p.message}.`
-      }))
-    )
+  if (!checked.ok) return failed(editRefusals(checked.problems, plan))
   const next = checked.plan
   const blocks = blockMapOf(blockStore, library)
   const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))
@@ -144,13 +142,6 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
   }
   next.pictures = counted
   const contract = checkBuildDocument(next).problems
-  if (contract.length > 0)
-    return failed(
-      contract.map((p) => ({
-        code: 'edit_invalid',
-        at: p.at,
-        message: `This change cannot be saved: ${p.message}.`
-      }))
-    )
+  if (contract.length > 0) return failed(editRefusals(contract, next))
   return { ok: true, plan: next, profile: after, problems: [] }
 }
