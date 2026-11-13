@@ -58,6 +58,7 @@ const entryOf = (vision, labels) => ({ key: vision.key, model: vision.door.model
 export function createBriefPictureLabels({
   pool,
   objects,
+  openDraftPicture = null,
   visionFor,
   label = labelWithVision,
   chargeable = createChargeable(null),
@@ -65,7 +66,7 @@ export function createBriefPictureLabels({
   observe = observeWithModel,
   log = console
 }) {
-  const bytesOf = (rows, accountId) => briefPictureBytes({ pool, objects }, rows, accountId)
+  const bytesOf = (rows, accountId) => briefPictureBytes({ pool, objects, openDraftPicture }, rows, accountId)
   /** An opportunity's own pictures the model was shown under this key and gave no label for: id to why. */
   async function ownUnansweredOf(ids, accountId, vision) {
     if (!ids.length || !accountId) return new Map()

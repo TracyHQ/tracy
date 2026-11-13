@@ -1296,6 +1296,7 @@ export function buildApp(deps) {
           secret: deps.config.sessionSecret,
           objects:
             deps.websiteOpportunitiesObjects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
+          openDraftPicture: (id, opts) => app.openDraftPicture?.(id, opts) ?? null,
           storeDir: defaultStoreDir(),
           webroot: releaseWebroot({
             pool: deps.pool,
@@ -1639,6 +1640,7 @@ export function buildApp(deps) {
         createBriefPictureLabels({
           pool: deps.pool,
           objects,
+          openDraftPicture: (id, opts) => app.openDraftPicture?.(id, opts) ?? null,
           chargeable: createChargeable(
             createCostLedger({
               pool: deps.pool,

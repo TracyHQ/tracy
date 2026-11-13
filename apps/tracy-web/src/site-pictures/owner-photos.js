@@ -7,6 +7,8 @@
 import { briefPictureBytes } from '../lib/brief-picture-bytes.js'
 import { UUID } from '../lib/bench-sql.js'
 
+// `draft` is a customer's own picture stored at research time; every other origin than `place` is `own`.
+const ORIGINS = new Set(['place', 'draft'])
 const HEX64 = /^[0-9a-f]{64}$/
 
 /** The brief's still images with a hash, the only assets whose bytes are read. */
@@ -21,7 +23,7 @@ export const briefImages = (brief) =>
  * @param {{ brief: object, photo_source: { kind: string, revisionId?: string } }} row the run row
  * @returns {Promise<Map<string, Buffer>>} by brief asset id
  */
-export async function ownerPhotoBytes({ pool, objects = null, store }, row) {
+export async function ownerPhotoBytes({ pool, objects = null, store, openDraftPicture = null }, row) {
   const images = briefImages(row.brief)
   const found = new Map()
   if (row.photo_source?.kind === 'folder') {
@@ -37,10 +39,14 @@ export async function ownerPhotoBytes({ pool, objects = null, store }, row) {
   ])
   if (!rows[0]) return found
   const origin = new Map(
-    (rows[0].asset_manifest ?? []).map((m) => [m?.id, m?.origin === 'place' ? 'place' : 'own'])
+    (rows[0].asset_manifest ?? []).map((m) => [m?.id, ORIGINS.has(m?.origin) ? m.origin : 'own'])
   )
   const wanted = images.map((a) => ({ id: a.id, sha256: a.sha256, origin: origin.get(a.id) ?? 'own' }))
-  for (const { id, bytes } of await briefPictureBytes({ pool, objects }, wanted, rows[0].account_id))
+  for (const { id, bytes } of await briefPictureBytes(
+    { pool, objects, openDraftPicture },
+    wanted,
+    rows[0].account_id
+  ))
     found.set(id, bytes)
   return found
 }
