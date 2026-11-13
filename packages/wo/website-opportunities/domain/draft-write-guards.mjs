@@ -14,9 +14,13 @@
 //   held_text_in_value           a held name or person in any value written, alt text or record title
 //   block_not_approved           a block of the order the approved plan does not place
 //   pair_incomplete              one half of a button (label, address) or of an icon pair written without the other
+//   library_html_stale           a library block's HTML that does not show a shown field of the order
+//   library_html_unsafe          a library block's HTML with markup that runs code (script, on* handler, javascript:)
 import { DraftWriteError, lengthOf } from './draft-write-error.mjs'
+import { libraryHtmlProblems } from './draft-write-library-check.mjs'
 import { heldTextsOf, namesHeldInAnyForm } from './plan-withheld.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
+import { markupNotDeclared } from './write-order-check-entries.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const TAG = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
@@ -27,8 +31,6 @@ export const visibleOf = (text) =>
     .replace(MARKER, '')
     .replace(TAG, '')
     .replace(/&(amp|lt|gt|quot);/g, 'x')
-const tagsIn = (text) =>
-  [...String(text).matchAll(TAG), ...String(text).matchAll(MARKER)].map((m) => m[1].toLowerCase())
 
 function valueProblems(op, value, ctx, report) {
   const { loc, entry } = value
@@ -65,13 +67,9 @@ function orderProblems(order, { approved, iconKeys }, report) {
       if (allowed && !allowed.has(`${page.id}/${block.id}/${block.block}`))
         report('block_not_approved', { page: page.id, block: block.id })
   for (const { place } of placesOfOrder(order))
-    for (const e of list(place.fields)) {
-      if (typeof e.value !== 'string' || !/[<>]|\(\(/.test(e.value)) continue
-      const inline = e.declared?.inline
-      const allowedTags = new Set([...list(inline?.emphasis).map((p) => p.tag), ...list(inline?.wrapper)])
-      if (!inline || tagsIn(e.value).some((t) => !allowedTags.has(t)))
+    for (const e of list(place.fields))
+      if (markupNotDeclared(e))
         report('markup_forbidden', { entry: e.place, via: 'field_inline', length: lengthOf(e.value) })
-    }
   if (Array.isArray(iconKeys))
     for (const icon of list(order.icons))
       if (icon.source !== 'none' && icon.storage === 'image-file' && !iconKeys.includes(icon.icon?.name))
@@ -86,13 +84,14 @@ function pictureProblems(op, report) {
   report(/^https?:\/\//i.test(op.ref ?? '') ? 'picture_web_address_only' : 'picture_not_stored', at)
 }
 
-/** The texts of the plan a held name may not reach: every string value, alt text and record title. */
+/** The texts of the plan a held name may not reach: every string value, alt text, record title and library HTML. */
 function textsOf(plan) {
   const texts = []
   for (const op of plan.ops) {
     for (const v of list(op.values)) if (typeof v.value === 'string') texts.push(v.value)
     if (op.alt) texts.push(op.alt)
     if (op.fields?.title) texts.push(op.fields.title, op.fields.alias)
+    if (typeof op.html === 'string') texts.push(op.html, visibleOf(op.html))
   }
   return texts
 }
@@ -113,6 +112,7 @@ export function guardPlan(plan, ctx) {
   orderProblems(ctx.order, ctx, report)
   for (const op of plan.ops) {
     if (op.kind === 'picture.upload') pictureProblems(op, report)
+    if (op.kind === 'library.create') libraryHtmlProblems(op, report)
     for (const v of list(op.values)) valueProblems(op, v, guard, report)
   }
   for (const c of list(plan.controls))

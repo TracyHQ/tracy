@@ -30,10 +30,14 @@ function writeAt(state, at, loc, value, { entry, rule, inline }) {
   const via = target.init.kind === 'store' ? 'contract' : 'open'
   const slot = loc.slot ? state.kit.slots.get(loc.slot) : undefined
   const written = typeof value === 'string' ? textAt(value, { loc, inline, via, slot }) : { value, rules: [] }
+  // The record's own subject page: its words win a place a teaser on another page also writes.
+  const own =
+    target.init.kind === 'created' && state.site.pageOfSubject(target.init.subject)?.id === at.page.id
   const record = put(state.sink, target.key, loc, written.value, {
     entry,
     rule: [rule, ...written.rules].filter(Boolean).join('+'),
-    init: target.init
+    init: target.init,
+    own
   })
   record.pages.add(at.page.id)
 }

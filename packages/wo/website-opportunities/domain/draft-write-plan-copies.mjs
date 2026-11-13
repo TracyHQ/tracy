@@ -2,22 +2,17 @@
 // element taken out, a setting that hides an empty button), the `resets` of its placement (the category it lists, the
 // position of its container, the ordering of its recipe), its module title and the mark a resumed run finds it by.
 // Pure; part of `writePlanOf`. Spec: `docs/references/ai-quickstart-contract.md`, "Copies and blocks written in place".
-import { addressOf, rowIndexOf } from './draft-write-codec.mjs'
+import { rowIndexOf } from './draft-write-codec.mjs'
+import { emptyControl, holdsField, omitRows } from './draft-write-plan-hides.mjs'
 import { put, recordOf, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
-/** Whether a block field holds a value on the record (any of its locations). */
-function holds(state, record, field) {
-  const me = state.kit.mapping.blocks?.[record.block]?.fields?.[field]
-  if (!me?.entity) return false
-  return record.values.has(addressOf(me))
-}
 const elementOf = (xpath) => String(xpath ?? '').replace(/\/(@[\w-]+|text\(\)(\[\d+\])?)$/, '')
 
 function applyHides(state, record) {
   for (const hide of list(state.kit.mapping.hides?.[record.block])) {
-    if (hide.by === 'row' && record.kind === 'copy') {
+    if (hide.by === 'row' && record.kind === 'copy')
       for (const row of Array.isArray(hide.row) ? hide.row : [hide.row]) {
         const kept = [
           ...new Set([...record.values.values()].map((v) => rowIndexOf(v.loc, row)).filter((i) => i !== null))
@@ -25,10 +20,12 @@ function applyHides(state, record) {
         record.cuts.push({ row, kept, rule: 'hides.row' })
         if (row.keys) unproven(state.sink, 'row_form_keys', { record: record.key })
       }
-      continue
-    }
+  }
+  // The controls after the rows are cut: an `empty` hide writes only into the rows the copy keeps.
+  for (const hide of list(state.kit.mapping.hides?.[record.block])) {
     if (!hide.control) continue
-    const written = hide.control.map((f) => holds(state, record, f))
+    if (hide.by === 'empty') emptyControl(state, record, hide)
+    const written = hide.control.map((f) => holdsField(state, record, f))
     record.controls.push({ fields: hide.control, written, by: hide.by })
     if (written.some(Boolean)) continue
     if (hide.by === 'rows.remove') {
@@ -46,6 +43,9 @@ function applyHides(state, record) {
       else record.settings.push({ loc: hide.location, value: hide.value, rule: 'hides.setting' })
     }
   }
+  // After the rows are cut: an omitted row element is named where it stands once the cut rows are gone.
+  for (const hide of list(state.kit.mapping.hides?.[record.block]))
+    if (hide.by === 'omit') omitRows(state, record, hide)
 }
 
 function applyResets(state, record, placement) {

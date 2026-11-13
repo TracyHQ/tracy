@@ -61,20 +61,16 @@ test('plain text means one line with no HTML tag, no markdown marker and no cont
     '[Book](x)',
     '`code` here',
     '- a court',
-    '> quoted',
     '__big__ day',
     '1. First',
     '*soft* touch'
   ])
     assert.deepEqual(codes(heading, value), ['markdown'], value)
-  for (const value of [
-    'a & b <3',
-    '5* rating',
-    'Rates 2 * 3',
-    'Courts, lessons and more.',
-    '...',
-    'Mon to Fri'
-  ])
+  assert.deepEqual(codes(heading, '> quoted'), ['angle_bracket', 'markdown'])
+  // A stray angle bracket is no tag, but the write step refuses it (#597): the writer rewrites it.
+  for (const value of ['a & b <3', 'Weddings > events'])
+    assert.deepEqual(codes(heading, value), ['angle_bracket'], value)
+  for (const value of ['a & b', '5* rating', 'Rates 2 * 3', 'Courts, lessons and more.', '...', 'Mon to Fri'])
     assert.deepEqual(codes(heading, value), [], value)
 })
 

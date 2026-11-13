@@ -9,6 +9,28 @@
 import { aliasesOf, assignOf, copyOp, createOp, drawOf, valuesOf } from './draft-write-plan-records.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
+/** The fields `site.identity` writes (its read answers these and no other key of the configuration file). */
+export const IDENTITY_FIELDS = ['sitename', 'MetaDesc', 'sitename_pagetitles']
+
+/**
+ * The site identity: the fields its door writes. A fact place on another key (Joomla's mail sender name, `fromname`)
+ * has no door: it is left to the installer and reported `identity_field_no_door`.
+ */
+function identityOp(state, record) {
+  const values = valuesOf(record).filter((v) => {
+    if (IDENTITY_FIELDS.includes(v.loc.column)) return true
+    state.sink.unproven.push({ code: 'identity_field_no_door', column: v.loc.column })
+    return false
+  })
+  return {
+    key: 'identity',
+    kind: 'site.identity',
+    record: record.key,
+    values,
+    entries: record.entries,
+    rules: ['fact:name']
+  }
+}
 const RANK = { category: 1, article: 2, contact: 2, user: 2, tag: 2, userProfile: 2, field: 2 }
 
 /**
@@ -35,6 +57,9 @@ export function opsOf(state) {
   }))
   const menus = created.filter((r) => r.recordKind === 'menuItem')
   const home = menus.filter((r) => r.home)
+  // Every page item of the main menu before the items of other menus, which link to them (`page:` alias).
+  const main = menus.filter((r) => !r.home && r.menutype === state.kit.mainMenu)
+  const rest = menus.filter((r) => !r.home && r.menutype !== state.kit.mainMenu)
   const others = created
     .filter((r) => r.recordKind !== 'menuItem')
     .sort((a, b) => (RANK[a.recordKind] ?? 3) - (RANK[b.recordKind] ?? 3))
@@ -46,7 +71,8 @@ export function opsOf(state) {
     ...pictures,
     ...home.map(createOp),
     ...others.map(createOp),
-    ...menus.filter((r) => !r.home).map(createOp),
+    ...main.map(createOp),
+    ...rest.map(createOp),
     ...copies.map(copyOp),
     ...records
       .filter((r) => r.kind === 'library')
@@ -56,6 +82,7 @@ export function opsOf(state) {
         record: r.key,
         mark: r.key,
         html: r.html,
+        expects: r.expects ?? [],
         position: r.position,
         page: r.page,
         ordering: r.rank ?? null,
@@ -100,16 +127,7 @@ export function opsOf(state) {
         entries: [],
         rules: ['hides.setting']
       })),
-    ...records
-      .filter((r) => r.kind === 'identity' && r.values.size)
-      .map((r) => ({
-        key: 'identity',
-        kind: 'site.identity',
-        record: r.key,
-        values: valuesOf(r),
-        entries: r.entries,
-        rules: ['fact:name']
-      })),
+    ...records.filter((r) => r.kind === 'identity' && r.values.size).map((r) => identityOp(state, r)),
     ...records
       .filter((r) => r.kind === 'look')
       .map((r) => ({
@@ -119,7 +137,8 @@ export function opsOf(state) {
         accent: r.accent,
         accentDark: r.accentDark,
         variables: r.variables,
-        entries: r.entries,
+        // Nothing writes the accent yet: its entries are skipped (`planLook`), never counted written.
+        entries: [],
         rules: ['look'],
         ...(r.variables ? {} : { unproven: 'accent_variables_not_declared' })
       }))

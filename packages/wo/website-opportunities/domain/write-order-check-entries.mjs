@@ -13,6 +13,21 @@ const TEXT_DATA_FROM = new Set(['data', 'answer', 'no-data'])
 const hasValue = (e) => e.value !== undefined && e.value !== null && e.value !== ''
 const asText = (value) => (typeof value === 'number' ? String(value) : value)
 
+const TAG = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
+const MARKER = /\(\(\/?([a-z][a-z0-9]*)\/?\)\)/gi
+/**
+ * Whether a text entry holds markup its field does not declare: a `<`, `>` or marker in a field with no `inline` part,
+ * or a tag its `inline` does not list. The write step refuses it before any door (`markup_forbidden`, #597).
+ */
+export function markupNotDeclared(e) {
+  if (typeof e.value !== 'string' || !/[<>]|\(\(/.test(e.value)) return false
+  const inline = e.declared?.inline
+  if (!inline) return true
+  const allowed = new Set([...list(inline.emphasis).map((p) => p.tag), ...list(inline.wrapper)])
+  const tags = [...e.value.matchAll(TAG), ...e.value.matchAll(MARKER)].map((m) => m[1].toLowerCase())
+  return tags.some((t) => !allowed.has(t))
+}
+
 /** Every plan id the order names, by id: `{what: 'fact' | 'item' | 'row' | 'source', ...}`. */
 export function dataIndexOfOrder(order) {
   const ids = new Map()
@@ -49,6 +64,8 @@ export function entryProblems(places, order, entries, report) {
       } else if (!hasValue(e) && !ACTIONS.has(e.action))
         report('entry_empty', e.place, 'an entry holds a value or an action (hide or fallback)')
       if (e.type === 'design') report('design_field', e.place, 'a design field is never written')
+      if (e.type === 'text' && markupNotDeclared(e))
+        report('markup_forbidden', e.place, 'markup or an angle bracket the field does not declare')
       if ((e.type === 'link' || e.type === 'number') && !DATA_FROM.has(e.from))
         report(
           'link_not_from_data',

@@ -5,6 +5,7 @@
 // before any door is called. Spec: docs/references/draft-write-step.md.
 import { DraftWriteError } from './draft-write-error.mjs'
 import { guardPlan } from './draft-write-guards.mjs'
+import { libraryExpectsOf } from './draft-write-library-check.mjs'
 import { planBlocks } from './draft-write-plan-blocks.mjs'
 import { planCopies } from './draft-write-plan-copies.mjs'
 import { planFacts, planLook } from './draft-write-plan-facts.mjs'
@@ -18,6 +19,8 @@ import { checkWriteOrder } from './write-order-check.mjs'
 export { draftWriteCoverage, entriesOfOrder } from './draft-write-coverage.mjs'
 export const DRAFT_WRITE_PLAN_SCHEMA = 'tracy-draft-write-plan/v1'
 
+/** The kinds of record the write creates (`step-chain-draft-write-kinds.js` runs exactly these). */
+export const CREATED_KINDS = ['menuItem', 'article', 'category', 'contact']
 const list = (value) => (Array.isArray(value) ? value : [])
 
 /** What the planner reads of the kit, indexed once (the guards' `kit`). */
@@ -28,6 +31,9 @@ export function draftWriteKitOf(aiq) {
       'kit_missing',
       'the draft write needs the block store and the mapping file with placements'
     )
+  // Without the blank site contract's slots every slot guard (limit, quote, opens empty) would silently pass.
+  if (!Array.isArray(aiq.blankContract?.slots) || aiq.blankContract.slots.length === 0)
+    throw new DraftWriteError('kit_missing', 'the draft write needs the blank site contract and its slots')
   const ownerOf = new Map()
   for (const [block, p] of Object.entries(mapping.placements)) if (p.entity) ownerOf.set(p.entity, block)
   const rowHides = new Map()
@@ -39,7 +45,9 @@ export function draftWriteKitOf(aiq) {
     slots: new Map(list(aiq.blankContract?.slots).map((s) => [s.key, s])),
     ownerOf,
     rowHides,
-    mainMenu: mainMenuOf(mapping)
+    mainMenu: mainMenuOf(mapping),
+    // The main block of each page type's recipe: the block a list page lists its records with.
+    mainBlocks: new Map(list(aiq.pageRecipes?.recipes).map((r) => [r.pageType, r.mainBlock]))
   }
 }
 
@@ -68,8 +76,10 @@ function planLibrary(state) {
       html: at.block.library?.html ?? '',
       position: at.block.position?.resolved ?? at.block.position?.request ?? null,
       page: at.page.id,
-      rank: at.page.blocks.indexOf(at.block) + 1
+      rank: at.page.blocks.indexOf(at.block) + 1,
+      expects: []
     })
+    record.expects.push(...libraryExpectsOf(at.place))
     for (const id of [
       ...list(at.place.fields).map((e) => e.place),
       ...list(at.place.pictures).map((p) => p.frame),
@@ -125,6 +135,12 @@ export function writePlanOf(order, aiq, options = {}) {
       )
       record.title = title?.value ?? state.site.pageOfSubject(record.subject)?.name ?? record.subject
     }
+  for (const record of sink.records.values())
+    if (record.kind === 'created' && !CREATED_KINDS.includes(record.recordKind))
+      throw new DraftWriteError('record_kind_unsupported', `the write cannot create a ${record.recordKind}`, {
+        record: record.key,
+        recordKind: record.recordKind
+      })
   const ops = opsOf(state)
   for (const op of ops)
     if (op.unproven === 'created_record_frame' || op.unproven === 'initials_drawn_as_figure')
@@ -139,6 +155,10 @@ export function writePlanOf(order, aiq, options = {}) {
     },
     ops,
     skipped: sink.skipped.filter((s) => !sink.consumed.has(s.entry)),
+    // Two entries with other words for one place: the losing one, its place and the lengths, never the words.
+    conflicts: sink.skipped
+      .filter((s) => s.reason === 'address_conflict' && !sink.consumed.has(s.entry))
+      .map(({ entry, by, record, kept }) => ({ entry, by, record, kept })),
     unproven: sink.unproven,
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))

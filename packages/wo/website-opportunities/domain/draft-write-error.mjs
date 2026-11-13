@@ -8,6 +8,8 @@
 export const DRAFT_WRITE_NO_RERUN = Object.freeze([
   'order_invalid',
   'kit_missing',
+  'record_kind_unsupported',
+  'write_record_stale',
   'block_not_approved',
   'text_over_limit',
   'straight_quote_in_open_slot',
@@ -19,6 +21,8 @@ export const DRAFT_WRITE_NO_RERUN = Object.freeze([
   'picture_not_stored',
   'initials_drawer_missing',
   'held_text_in_value',
+  'library_html_stale',
+  'library_html_unsafe',
   'pair_incomplete',
   'location_unresolved',
   'ref_unresolved',

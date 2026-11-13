@@ -3,7 +3,7 @@
 // places that sits on a record of the site (a copy or store record placed on some page, the contact the build creates,
 // the site identity); a place on a record the site does not have is not written. The first order entry of a fact is
 // the one written; every other entry of that fact is listed as fanned out, never written twice.
-import { consume, put, recordOf, skip, unproven } from './draft-write-sink.mjs'
+import { put, recordOf, skip, unproven } from './draft-write-sink.mjs'
 import { textAt } from './draft-write-values.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -89,11 +89,15 @@ export function planLook(state) {
     accentDark: look.accentDark ?? null,
     variables
   })
-  for (const id of entries) consume(state.sink, id, record.key)
-  if (!variables)
-    unproven(state.sink, 'accent_variables_not_declared', {
-      op: 'look',
-      why: 'the mapping file names no colour variable the accent is written into'
-    })
+  // No door writes the accent yet (the mapping declares no colour variable, #584): its entries are skipped with the
+  // unproven reason, never counted written.
+  const reason = variables ? 'accent_door_missing' : 'accent_variables_not_declared'
+  for (const id of entries) skip(state.sink, id, reason, { record: record.key })
+  unproven(state.sink, reason, {
+    op: 'look',
+    why: variables
+      ? 'no door of the write step writes the template colour variables'
+      : 'the mapping file names no colour variable the accent is written into'
+  })
   return entries
 }

@@ -22,7 +22,7 @@ test('entries in = entries written + entries skipped with a reason, 0 unexplaine
   )
   assert.deepEqual(coverage.unexplained, [])
   assert.deepEqual(coverage.twice, [])
-  assert.equal(coverage.in, coverage.written + coverage.skipped)
+  assert.equal(coverage.in, coverage.written + coverage.skipped + coverage.conflicted)
   assert.equal(coverage.in, entriesOfOrder(site.order).length)
   assert.ok(coverage.written > 100)
 })

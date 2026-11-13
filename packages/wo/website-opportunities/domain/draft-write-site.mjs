@@ -24,7 +24,7 @@ export function siteOf(order, kit, sink) {
       if (kit.store.get(block.block)?.placement === 'created')
         for (const e of list(block.fields)) if (e.from === 'data' && itemIds.has(e.data)) shown.add(e.data)
       for (const item of list(block.items))
-        if (!listedBy.has(item.data)) listedBy.set(item.data, { page, block })
+        listedBy.set(item.data, [...(listedBy.get(item.data) ?? []), { page, block }])
       if (placement?.holds) holding = blockRecordOf(kit, page, block)?.key ?? null
       else if (placement?.inside && holding) {
         const key = blockRecordOf(kit, page, block)?.key
@@ -41,21 +41,29 @@ export function siteOf(order, kit, sink) {
   const setsOf = (entity) =>
     Object.values(kit.mapping.buildSets ?? {}).find((s) => s.entity === entity && s.sets === 'category')
   const listedTypeOf = (subject) => {
-    const at = listedBy.get(subject)
-    const entity = at && kit.mapping.placements?.[at.block.block]?.entity
-    return (entity && setsOf(entity)?.pageType) ?? null
+    for (const at of listedBy.get(subject) ?? []) {
+      const entity = kit.mapping.placements?.[at.block.block]?.entity
+      const type = entity && setsOf(entity)?.pageType
+      if (type) return type
+    }
+    return null
   }
   const name = list(order.facts).find((f) => f.kind === 'business.name')?.value ?? null
   return {
     subjectOf,
     pageOfSubject,
     listedTypeOf,
-    /** The title of a category: the name of the first page listing its records, else the business name. */
+    /**
+     * The title of a category: the name of the list page of its page type (a page whose main block, by its recipe,
+     * lists the records), else of another page listing them that is not the home page, else the business name.
+     */
     listTitleOf: (pageType) => {
-      for (const [subject, at] of listedBy)
-        if (listedTypeOf(subject) === pageType && pageOfSubject(subject)?.id !== at.page.id)
-          return at.page.name
-      return name
+      const pages = []
+      for (const [subject, ats] of listedBy)
+        if (listedTypeOf(subject) === pageType)
+          for (const at of ats) if (pageOfSubject(subject)?.id !== at.page.id) pages.push(at)
+      const main = pages.find((at) => kit.mainBlocks?.get(at.page.pageType) === at.block.block)
+      return (main ?? pages.find((at) => !at.page.home))?.page.name ?? name
     },
     /** The record a page's SEO goes on (`mapping.seo.pageTypes`): its article, or its menu item in the main menu. */
     pageRecordOf: (page) => {

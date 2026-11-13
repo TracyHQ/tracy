@@ -12,7 +12,10 @@
 // Plain text, the only form a text field holds: one line of characters a reader sees. No HTML tag, no markdown marker
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
 // a `code` span, a `[link](target)`), no line break (LF, CR, U+2028, U+2029) and no other control character. A value
-// made only of spaces and invisible characters (zero width, format characters, fillers) is empty.
+// made only of spaces and invisible characters (zero width, format characters, fillers) is empty. No `<` or `>` either,
+// even outside a tag (`we <3 roses`): the write step refuses one before any door (`markup_forbidden`, #597), since a
+// blank site contract slot refuses it and an HTML or codes place reads it as markup, so it goes back to the writer here,
+// where a rewrite can still fix it.
 import { aboutThePageOf } from './copy-about-the-page.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
@@ -68,6 +71,8 @@ export function fieldValueProblems(field, value, { known, foreign, avoid } = {})
   if (value !== value.trim())
     problems.push({ code: 'edge_space', message: 'the value starts or ends with a space' })
   if (MARKUP.test(value)) problems.push({ code: 'markup', message: 'plain text only, no HTML tags' })
+  else if (/[<>]/.test(value))
+    problems.push({ code: 'angle_bracket', message: 'plain text only: no < or > character' })
   if (LINE_BREAK.test(value)) problems.push({ code: 'line_break', message: 'one line only: no line break' })
   else if (CONTROL.test(value))
     problems.push({ code: 'control_character', message: 'no tab or other control character' })

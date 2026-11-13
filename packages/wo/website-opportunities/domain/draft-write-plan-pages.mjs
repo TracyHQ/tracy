@@ -78,7 +78,12 @@ export function planPages(state) {
   }
 }
 
-/** The items of the menu blocks (a footer menu): one menu item per item, its label and its page together. */
+/**
+ * The items of the menu blocks: one menu item per item, its label and its page together. A menu block that draws the
+ * main menu (the phone menu) shows the page items `planPages` made: its items make no rival record, and their entries
+ * are skipped (`menu_item_is_page_item`), since the page's own item already holds its label and page. Run after
+ * `planPages`, so a footer item's page has its main menu item.
+ */
 export function planMenuItems(state) {
   const byItem = new Map()
   for (const { at, entry } of state.menuLinks) {
@@ -93,6 +98,13 @@ export function planMenuItems(state) {
     const target = link?.target?.page
     if (!label || !target) {
       for (const g of group) skip(state.sink, g.entry.place, 'menu_item_without_page')
+      continue
+    }
+    if (menutype === state.kit.mainMenu) {
+      for (const g of group)
+        skip(state.sink, g.entry.place, 'menu_item_is_page_item', {
+          record: `menuItem:${menutype}:${target}`
+        })
       continue
     }
     const key = `menuItem:${menutype}:${target}`

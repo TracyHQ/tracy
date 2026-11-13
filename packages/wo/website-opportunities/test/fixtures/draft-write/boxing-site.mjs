@@ -2,11 +2,14 @@
 // (`write-order/boxing-florist.mjs`) plus a page title block (the masthead, one copy for the site) on the list and
 // contact pages, the workout cards with their light and dark icons and the call to action on the home page, and a plans
 // page with one plans container holding two tab blocks (the gate places a block once per page: two containers on one
-// page are made in the test from this one, as #584 measured them). Invented packages join the florist's profile. Every
-// step value is made by the real module with scripted fake models; nothing here is a real business, person or link.
+// page are made in the test from this one, as #584 measured them). The home and contact pages also hold the phone menu
+// (block-187, the main menu) and a footer menu (block-174, the site-map menu) with menu items (`withMenuItems`).
+// Invented packages join the florist's profile. Every step value is made by the real module with scripted fake models;
+// nothing here is a real business, person or link.
 import { readFileSync } from 'node:fs'
 import { buildWriteOrder } from '../../../domain/write-order.mjs'
 import { boxingFloristBuild, boxingProfile } from '../write-order/boxing-florist.mjs'
+import { withMenuItems, withMenus } from './boxing-site-menus.mjs'
 
 const KIT = new URL(
   '../../../../../cms/tracy-joomla-quickstart/ai-quickstarts/ja-boxing/j6/1.0.11/',
@@ -138,10 +141,14 @@ export async function boxingSite({ write } = {}) {
     profile,
     composition: siteComposition(profile),
     write,
-    extend: withPlansPage
+    extend: (plan) => {
+      withPlansPage(plan)
+      withMenus(plan)
+    }
   })
   build.aiq.mapping = kit.mapping
   const order = buildWriteOrder(build)
+  withMenuItems(order, build.aiq)
   const stored = Object.fromEntries(
     [...order.pictures.map((p) => p.frame), ...order.icons.map((i) => i.id)].map((id) => [
       id,
