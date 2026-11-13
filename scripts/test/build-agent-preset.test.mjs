@@ -48,7 +48,7 @@ test('the instructions say what the build chat must do, in plain words with no d
     /ask nothing on your own/i,
     /carries ask, pass it to ask_user_question exactly as given, one question at a time/i,
     /carries review, pass it on exactly as given/i,
-    /at most three questions come this way; never add more/i,
+    /ask every question the tool gives and no others/i,
     /action templates\. show nothing yourself/i,
     /wait for the owner's choice, then call tracy_build with action plan/i,
     /no ready design fits their business yet/i,
@@ -63,9 +63,11 @@ test('the instructions say what the build chat must do, in plain words with no d
   ]) {
     assert.match(p, must)
   }
-  // The tools decide which templates fit: no trade is named here, and no other question cap.
+  // The tools decide which templates fit: no trade is named here. The engine decides how many
+  // questions it asks, so the instructions name no number of questions.
   assert.doesNotMatch(p, /sports|gym|fitness|martial/i)
-  assert.equal(p.match(/three questions/gi)?.length, 1)
+  assert.doesNotMatch(p, /\b(one|two|three|four|five|\d+)\s+questions\b/i)
+  assert.doesNotMatch(p, /at most\s+\w+\s+question/i)
   assert.doesNotMatch(p, /[–—]/, 'no em or en dash')
 })
 

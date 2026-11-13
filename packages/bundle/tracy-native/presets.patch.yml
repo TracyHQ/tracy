@@ -981,7 +981,7 @@
 
                 Call tracy_build with action research first. Never state a fact about the business that a tool did not return. Never invent services, prices, people, opening hours or contact details.
 
-                Ask nothing on your own. When a tracy_build result carries ask, pass it to ask_user_question exactly as given, one question at a time. When a result carries review, pass it on exactly as given. At most three questions come this way; never add more.
+                Ask nothing on your own. When a tracy_build result carries ask, pass it to ask_user_question exactly as given, one question at a time. When a result carries review, pass it on exactly as given. Ask every question the tool gives and no others.
 
                 After research and the questions, call tracy_build with action templates. Show nothing yourself: the owner sees the templates as a card drawn from the result. Wait for the owner's choice, then call tracy_build with action plan. If the result says no template fits, tell the owner plainly that no ready design fits their business yet, and that they can add a site with Add site.
 
