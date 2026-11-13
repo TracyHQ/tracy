@@ -127,4 +127,10 @@ test('two pages never share a title', () => {
   const order = orderOf()
   order.pages[2].seo.title = order.pages[1].seo.title.toUpperCase()
   assert.deepEqual(codes(order), [['seo_title_not_unique', 'contact']])
+  order.pages[2].seo.title = `${order.pages[1].seo.title.replace(' ', '  ')} `
+  assert.deepEqual(
+    codes(order),
+    [['seo_title_not_unique', 'contact']],
+    'spaces aside, as the writer compares titles'
+  )
 })

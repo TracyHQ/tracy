@@ -1,5 +1,6 @@
 // The place, picture, icon and page rules of `checkWriteOrder` (ticket #597), read from the order alone. Pure.
 import { SEO_DESCRIPTION_LIMIT, SEO_TITLE_LIMIT } from './write-order-pages.mjs'
+import { titleKey } from './seo-limits.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -95,7 +96,7 @@ export function pageProblems(order, report) {
     const { title, description, shareImage } = page.seo ?? {}
     if (!isText(title)) report('seo_title_empty', page.id, 'every page has a title')
     else {
-      const key = title.trim().toLowerCase()
+      const key = titleKey(title)
       if (titles.has(key))
         report('seo_title_not_unique', page.id, `page ${titles.get(key)} has the same title`)
       else titles.set(key, page.id)

@@ -22,15 +22,16 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount } from './page-copy-check.mjs'
 import { placeLimitsOf } from './field-place-limits.mjs'
-import { PageWriterError, blockDescriptionsOf, knownValuesOf, pageFieldsOf } from './page-writer-fields.mjs'
-import { callPage, pageFailing, pageOut } from './page-writer-page.mjs'
+import { PageWriterError, blockDescriptionsOf, knownEntriesOf, pageFieldsOf } from './page-writer-fields.mjs'
+import { pageOut } from './page-writer-page.mjs'
+import { writeAll } from './page-writer-rounds.mjs'
 import { foreignValuesOf } from './page-writer-rows.mjs'
-import { siteCopyFailing } from './page-writer-site-check.mjs'
 import { planDataOf } from './plan-data.mjs'
 import { seoLimitsOf } from './seo-limits.mjs'
 
 export { PageWriterError } from './page-writer-fields.mjs'
 export { readWriterReply, readWriterSeo } from './page-writer-page.mjs'
+export { PAGE_WRITE_ATTEMPTS } from './page-writer-rounds.mjs'
 
 /** The draft prompt (product owner review: #600). Its hash is recorded with every page it wrote. */
 export const PAGE_WRITER_PROMPT_FILE = 'page-writer-prompt.md'
@@ -39,47 +40,6 @@ export const PAGE_WRITER_PROMPT = readFileSync(
   'utf8'
 )
 const PROMPT_SHA256 = createHash('sha256').update(PAGE_WRITER_PROMPT).digest('hex')
-/** How many calls a page may take: the first writing and one rewrite of the failing fields. */
-export const PAGE_WRITE_ATTEMPTS = 2
-
-/** A page's failing fields: its own check, then the site check against every other written page. */
-function failingOf(states, context, others) {
-  const site = siteCopyFailing(
-    [...others, ...states.map((s) => ({ id: s.page.id, fields: pageOut(s), seo: s.seo }))],
-    { known: context.known, own: new Set(states.map((s) => s.page.id)) }
-  )
-  return states.map((state) => {
-    const failing = pageFailing(state, context)
-    for (const f of site.filter((x) => x.page === state.page.id)) {
-      const same = failing.find((x) => x.key === f.key)
-      if (same) same.problems.push(...f.problems)
-      else failing.push({ key: f.key, value: f.value, problems: f.problems })
-    }
-    return failing
-  })
-}
-
-/** Every page written in parallel, checked together, its failing fields rewritten once, checked together again. */
-async function writeAll(states, { plan, context, model, signal, others }) {
-  let rewrite = new Map(states.map((s) => [s, undefined]))
-  for (let n = 0; n < PAGE_WRITE_ATTEMPTS; n++) {
-    const calling = states.filter((s) => s.slots.length > 0 && rewrite.has(s))
-    const settled = await Promise.allSettled(
-      calling.map((state) => callPage(state, { plan, context, model, signal, rewrite: rewrite.get(state) }))
-    )
-    const rejected = settled.find((r) => r.status === 'rejected')
-    if (rejected) throw rejected.reason
-    const failing = failingOf(states, context, others)
-    rewrite = new Map()
-    states.forEach((state, i) => {
-      if (calling.includes(state)) state.attempts.push({ asked: state.asked, failing: failing[i] })
-      state.failing = failing[i]
-      if (failing[i].length) rewrite.set(state, failing[i])
-    })
-    if (rewrite.size === 0) break
-  }
-}
-
 /**
  * The step chain keeps at most this many bytes of an error's details as JSON and cuts heavier ones (the engine's
  * `MAX_ERROR_DETAILS_BYTES`); the writer's details stay under it, with room for `attempts` and the count.
@@ -150,7 +110,7 @@ export async function writePages({
     byId,
     data,
     placeLimits: placeLimitsOf(blocks.values()),
-    known: knownValuesOf(byId, data.rowsById),
+    known: knownEntriesOf(byId, data.rowsById),
     voice: profile?.voice,
     seoLimits: seoLimitsOf(mapping),
     prompt: PAGE_WRITER_PROMPT

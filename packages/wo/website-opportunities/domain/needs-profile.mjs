@@ -145,7 +145,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
   const asked = new Map(
     accounting.map((a) => [a.conflict, a.question ? { question: a.question } : { notAsked: a.reason }])
   )
-  const voice = voiceOf(reading?.voice, sources)
+  const voice = voiceOf(reading?.voice, sources, { facts, items })
   const unread = language.unread.map(({ source, said: word, from }) => ({
     from,
     source,

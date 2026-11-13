@@ -180,13 +180,19 @@ export function pageFieldsOf(page, { blocks, byId, data = { byId }, placeLimits 
 /** The slots of one page: its COPY fields only, the fields the model writes (`pageFieldsOf`, `from: 'writer'`). */
 export const pageSlotsOf = (page, context) => pageFieldsOf(page, context).filter((f) => f.from === 'writer')
 
-/** Every value of the plan data as text (facts and item fields), for the guard against invented data in copy. */
-export function knownValuesOf(byId, rowsById = new Map()) {
-  const values = []
+/** Every value of the plan data as `{kind, value}` (facts, item and row fields), for the guard against invented data. */
+export function knownEntriesOf(byId, rowsById = new Map()) {
+  const entries = []
   for (const entry of byId.values()) {
-    if (entry.what === 'fact') values.push(textOf(entry.entry.value))
-    else for (const f of Object.values(entry.source?.fields ?? {})) values.push(textOf(f?.value))
+    if (entry.what === 'fact') entries.push({ kind: entry.kind ?? null, value: textOf(entry.entry.value) })
+    else
+      for (const [kind, f] of Object.entries(entry.source?.fields ?? {}))
+        entries.push({ kind, value: textOf(f?.value) })
   }
-  for (const row of rowsById.values()) values.push(...Object.values(row.values).flat())
-  return values.filter((v) => v !== null)
+  for (const row of rowsById.values())
+    for (const [kind, v] of Object.entries(row.values))
+      for (const value of [v].flat()) entries.push({ kind, value })
+  return entries.filter((e) => typeof e.value === 'string')
 }
+/** Every value of the plan data as text (`knownEntriesOf`). */
+export const knownValuesOf = (byId, rowsById) => knownEntriesOf(byId, rowsById).map((e) => e.value)

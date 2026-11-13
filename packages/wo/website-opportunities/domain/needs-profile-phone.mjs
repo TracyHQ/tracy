@@ -14,7 +14,11 @@ const MIN_NATIONAL_DIGITS = 6
 
 /** A written phone as `{international, digits}`: digits without the extension, the 00 or + prefix, or the trunk 0. */
 function parsePhone(value) {
-  const written = String(value).trim().replace(EXTENSION, '')
+  // A trunk 0 written in brackets after the country code (`+44 (0)20`) is not dialled from abroad.
+  const written = String(value)
+    .trim()
+    .replace(EXTENSION, '')
+    .replace(/\(\s*0\s*\)/g, '')
   const digits = written.replace(/\D+/g, '')
   if (written.startsWith('+')) return { international: true, digits }
   if (digits.startsWith('00')) return { international: true, digits: digits.slice(2) }

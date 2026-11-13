@@ -13,7 +13,7 @@
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
 // a `code` span, a `[link](target)`), no line break (LF, CR, U+2028, U+2029) and no other control character. A value
 // made only of spaces and invisible characters (zero width, format characters, fillers) is empty.
-import { selfDescribingOf } from './copy-repeats.mjs'
+import { aboutThePageOf } from './copy-about-the-page.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
 
@@ -85,7 +85,7 @@ export function fieldValueProblems(field, value, { known, foreign, avoid } = {})
         code: 'invented_data',
         message: `the ${what} ${JSON.stringify(text)} is not in the business data: remove it, the data fields show it`
       })
-  const about = selfDescribingOf(value)
+  const about = aboutThePageOf(value)
   if (about)
     problems.push({
       code: 'about_the_page',

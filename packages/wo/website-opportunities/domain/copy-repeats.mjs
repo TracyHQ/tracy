@@ -27,11 +27,14 @@ export const sentencesOf = (s) =>
     .map((x) => x.trim())
     .filter(Boolean)
 
-/** W10: sentences that describe the page or the section itself instead of the business. Case-insensitive. */
+/**
+ * W10 of the step chain's site writer: sentences that describe the page or the section itself instead of the
+ * business. Case-insensitive. Kept as the step chain had it; the page writer reads its own wider list
+ * (`copy-about-the-page.mjs`).
+ */
 export const SELF_DESCRIBING = [
   /\bthis (section|page|block|row|card|banner|layout|template)\b/i,
   /\bhere you (will|can) find\b/i,
-  /\bon this (page|site|website) you\b/i,
   /\b(show|shows|showing) the shape of\b/i,
   /\bmade to show\b/i,
   /\b(section|block|page) (above|below)\b/i,
@@ -39,9 +42,9 @@ export const SELF_DESCRIBING = [
   /\blorem ipsum\b/i
 ]
 
-/** The first words of a text that describe the page or a section of it, or null. */
-export function selfDescribingOf(text) {
-  const hit = SELF_DESCRIBING.map((re) => re.exec(String(text))).find(Boolean)
+/** The first words of a text that describe the page or a section of it (by `patterns`), or null. */
+export function selfDescribingOf(text, patterns = SELF_DESCRIBING) {
+  const hit = patterns.map((re) => re.exec(String(text))).find(Boolean)
   return hit ? hit[0] : null
 }
 
@@ -49,12 +52,23 @@ export function selfDescribingOf(text) {
  * Every sentence of `entries`, in order, each with the earlier sentence it repeats (`hit`), or `hit: null`. The first
  * of two repeating sentences is kept; the later one is the repeat.
  * @param {Array<{where: string, text: string}>} entries the written texts, in the order they are read
- * @param {{facts?: Iterable<unknown>}} [options] `facts`: the business values a shared run may lie inside
+ * @param {{facts?: Iterable<unknown>, short?: (entry: object, words: string[]) => boolean, factSlack?: number}}
+ *   [options] `facts`: the business values a shared run may lie inside; `short`: whether a sentence is a label (a
+ *   button, a menu entry, a short heading), which may be the same on every page: the whole sentence rule skips it,
+ *   the five word run rule still holds; `factSlack`: a sentence that is a business value of two words or more plus at most this
+ *   many other words ("Visit us at <address>.") is no repeat. Both off by default (the step chain's W06).
  * @returns {Array<{entry: object, words: string[], hit: {other: {where: string}, run: string} | null}>}
  */
-export function repeatsOf(entries, { facts = [] } = {}) {
-  const factTexts = [...facts].map((v) => ` ${wordsOf(v).join(' ')} `).filter((v) => v.trim() !== '')
+export function repeatsOf(entries, { facts = [], short = () => false, factSlack = 0 } = {}) {
+  const factWords = [...facts].map((v) => wordsOf(v)).filter((w) => w.length > 0)
+  const factTexts = factWords.map((w) => ` ${w.join(' ')} `)
   const isFact = (run) => factTexts.some((f) => f.includes(` ${run} `))
+  const isFactSentence = (words) =>
+    factSlack > 0 &&
+    factWords.some(
+      (f, i) =>
+        f.length >= 2 && words.length - f.length <= factSlack && ` ${words.join(' ')} `.includes(factTexts[i])
+    )
   const grams = new Map()
   const whole = new Map()
   const out = []
@@ -65,9 +79,16 @@ export function repeatsOf(entries, { facts = [] } = {}) {
       const id = n++
       let hit = null
       const full = words.join(' ')
-      if (words.length >= MIN_EQUAL_WORDS && whole.has(full) && !isFact(full))
+      const exempt = isFactSentence(words)
+      if (
+        words.length >= MIN_EQUAL_WORDS &&
+        whole.has(full) &&
+        !isFact(full) &&
+        !exempt &&
+        !short(entry, words)
+      )
         hit = { other: whole.get(full), run: full }
-      for (let i = 0; !hit && i + RUN_WORDS <= words.length; i++) {
+      for (let i = 0; !hit && !exempt && i + RUN_WORDS <= words.length; i++) {
         const run = words.slice(i, i + RUN_WORDS).join(' ')
         if (grams.has(run) && grams.get(run).id !== id && !isFact(run)) hit = { other: grams.get(run), run }
       }

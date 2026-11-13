@@ -3,23 +3,47 @@
 // together and finds:
 //   repeated_copy          a sentence that repeats, or nearly repeats, one written earlier on the site (the shared
 //                          rule of `copy-repeats.mjs`: five words in a row, or the same sentence of three words or more;
-//                          a run inside a business value, such as the address, is no repeat);
+//                          a run inside a business value, such as the address, is no repeat, nor a sentence that is a
+//                          business value plus four other words at most; a label (a button, a menu entry, a field of
+//                          40 characters or less, a heading of four words or less) may be the same whole sentence on
+//                          every page, a body sentence may not);
 //   seo_title_not_unique   a page title another page already has.
 // The earlier one is kept and the later one is the offender, in page order: so the page that repeats is the page that
 // is rewritten, by the writer's own one rewrite (`page-writer.mjs`). Pure.
 import { repeatsOf } from './copy-repeats.mjs'
 import { PageWriterError, knownValuesOf } from './page-writer-fields.mjs'
 import { planDataOf } from './plan-data.mjs'
+import { titleKey } from './seo-limits.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
-const titleKey = (title) => title.normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim()
+
+/** Labels: a button, a menu entry, a short badge, any field of at most this many characters. */
+const LABEL_LIMIT = 40
+const LABEL_KIND = /(?:button|menu|newsletter|cta|social|map)_label$|\.badge$/
+const HEADING_KIND = /\.heading$|\.tagline$/
+const HEADING_WORDS = 4
+/** A label may be the same whole sentence on every page ("Book now", "Contact us today"); five words in a row still repeat. */
+const isLabel = (entry, words) =>
+  (Number.isInteger(entry.limit) && entry.limit <= LABEL_LIMIT) ||
+  (typeof entry.kind === 'string' && LABEL_KIND.test(entry.kind)) ||
+  (words.length <= HEADING_WORDS &&
+    (typeof entry.kind === 'string' ? HEADING_KIND.test(entry.kind) : !/[.!?]\s*$/.test(entry.text)))
+/** Other words a sentence made of a business value may have and still be no repeat ("Visit us at <address>."). */
+const FACT_SLACK = 4
 
 /** The texts of one written page the repeat rule reads: its written copy fields and its search description. */
 function entriesOf(page) {
   const entries = list(page.fields)
     .filter((f) => f.from === 'writer' && isText(f.value))
-    .map((f) => ({ page: page.id, key: f.key, where: `${page.id}: ${f.key}`, text: f.value }))
+    .map((f) => ({
+      page: page.id,
+      key: f.key,
+      kind: f.kind,
+      limit: f.limit,
+      where: `${page.id}: ${f.key}`,
+      text: f.value
+    }))
   if (isText(page.seo?.description))
     entries.push({
       page: page.id,
@@ -34,7 +58,8 @@ function entriesOf(page) {
  * The fields of the written pages that fail the site check.
  * @param {Array<{id: string, fields?: object[], seo?: {title?: string, description?: string}}>} pages the written
  *   pages in page order: the copy of pages written before (`others`) first, then the pages being written
- * @param {{known?: string[], own?: Set<string>}} [options] `known`: every value of the plan data; `own`: the pages that
+ * @param {{known?: Array<string | {value: string}>, own?: Set<string>}} [options] `known`: every value of the plan
+ *   data; `own`: the pages that
  *   may be rewritten (all when not given): a field of another page is never reported
  * @returns {Array<{page: string, key: string, value: string, problems: Array<{code: string, message: string}>}>}
  */
@@ -46,7 +71,14 @@ export function siteCopyFailing(pages, { known = [], own } = {}) {
     if (!failing.has(at)) failing.set(at, { page, key, value, problems: [] })
     failing.get(at).problems.push(problem)
   }
-  for (const { entry, hit } of repeatsOf(list(pages).flatMap(entriesOf), { facts: known }))
+  const facts = list(known)
+    .map((k) => (typeof k === 'string' ? k : k?.value))
+    .filter(isText)
+  for (const { entry, hit } of repeatsOf(list(pages).flatMap(entriesOf), {
+    facts,
+    short: isLabel,
+    factSlack: FACT_SLACK
+  }))
     if (hit)
       fail(entry.page, entry.key, entry.text, {
         code: 'repeated_copy',

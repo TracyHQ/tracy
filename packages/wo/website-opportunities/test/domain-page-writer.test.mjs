@@ -258,9 +258,70 @@ test('a sentence another page already says is rewritten on the later page, once;
   )
 })
 
+test('in the rewrite round the rewritten page is the offender: a clean page is never failed by it', async () => {
+  const { plan, profile } = await approvedPlan()
+  const SAME = 'Coaching for all ages here'
+  const seen = {}
+  const model = overlappingModel((request) => {
+    const page = pageOf(request)
+    seen[page] = (seen[page] ?? 0) + 1
+    return answer((f) => {
+      if (page === 'team' && f.key === 'team-b1/heading') return SAME
+      if (page === 'home' && f.key === 'home-b2/heading') return seen.home === 1 ? 'x'.repeat(500) : SAME
+      return undefined
+    })(request)
+  })
+  await assert.rejects(
+    writePages({ plan, profile, blockStore: blockStore(), library: library(), model }),
+    (error) => {
+      assert.equal(error.code, 'copy_check_failed')
+      assert.deepEqual(
+        error.details.failing.map((f) => [f.page, f.key, f.problems[0].code]),
+        [['home', 'home-b2/heading', 'repeated_copy']]
+      )
+      return true
+    }
+  )
+  assert.equal(model.calls.length, WRITTEN.length + 1, 'only home is called again; team passed and stays')
+})
+
+test('a label may be the same on every page; a body sentence may not', async () => {
+  const { siteCopyFailing } = await import('../domain/page-writer-site-check.mjs')
+  const page = (id, fields) => ({ id, fields: fields.map((f) => ({ from: 'writer', ...f })) })
+  const failing = (fields) => siteCopyFailing([page('home', fields), page('about', fields)]).map((f) => f.key)
+  assert.deepEqual(
+    failing([{ key: 'b', kind: 'editorial.button_label', limit: 60, value: 'Book your trial class' }]),
+    []
+  )
+  assert.deepEqual(
+    failing([{ key: 'c', kind: 'editorial.paragraph', limit: 30, value: 'Book a class.' }]),
+    []
+  )
+  assert.deepEqual(
+    failing([{ key: 'h', kind: 'editorial.heading', limit: 80, value: 'Contact us today' }]),
+    []
+  )
+  assert.deepEqual(
+    failing([{ key: 'p', kind: 'editorial.paragraph', limit: 400, value: 'Contact us today.' }]),
+    ['p']
+  )
+  const address = ['12 Fern Lane, Brookfield']
+  const at = (value) => page('x', [{ key: 'p', kind: 'editorial.paragraph', limit: 400, value }])
+  assert.deepEqual(
+    siteCopyFailing(
+      [
+        { ...at('Find us at 12 Fern Lane, Brookfield.'), id: 'home' },
+        { ...at('Visit us at 12 Fern Lane, Brookfield.'), id: 'about' }
+      ],
+      { known: address }
+    ),
+    []
+  )
+})
+
 test('copy of pages written by another writer step is held against this page', async () => {
   const { plan, profile } = await approvedPlan()
-  const SAME = 'Coaching for every age'
+  const SAME = 'Coaching for every age group'
   const others = [{ id: 'home', fields: [{ key: 'home-b2/heading', from: 'writer', value: SAME }] }]
   const model = overlappingModel(answer((f) => (f.key === 'team-b1/heading' ? SAME : undefined)))
   const team = plan.pages.find((p) => p.id === 'team')
@@ -340,4 +401,39 @@ test('after parallel writer steps, the site check names the later page to write 
   assert.deepEqual(error.details.failing, [
     { page: 'team', key: 'team-b1/heading', problems: [{ code: 'repeated_copy' }] }
   ])
+})
+
+test('the step chain wiring: two writer steps in parallel, the site check names the later page, its re-run has one rewrite', async () => {
+  const { plan, profile } = await approvedPlan()
+  const SAME = 'Coaching for all ages here'
+  const step = (id, model, others = []) =>
+    writePages({
+      plan: { ...plan, pages: [plan.pages.find((p) => p.id === id)] },
+      profile,
+      blockStore: blockStore(),
+      library: library(),
+      model,
+      others
+    })
+  const repeating = answer((f) =>
+    f.key === 'home-b2/heading' || f.key === 'team-b1/heading' ? SAME : undefined
+  )
+  const [home, team] = await Promise.all([
+    step('home', overlappingModel(repeating)),
+    step('team', overlappingModel(repeating))
+  ])
+  const error = siteCopyError({ pages: [...home.pages, ...team.pages], profile })
+  assert.equal(error.code, 'site_copy_failed')
+  assert.deepEqual(error.details.pages, ['team'], 'the later page is re-run, the earlier one stays')
+  const fixing = overlappingModel(
+    answer((f, user) => (f.key === 'team-b1/heading' && !user.rewrite ? SAME : undefined))
+  )
+  const rerun = await step('team', fixing, home.pages)
+  assert.equal(fixing.calls.length, 2, 'the re-run writes, sees the repeat of home and rewrites it once')
+  assert.equal(siteCopyError({ pages: [...home.pages, ...rerun.pages], profile }), null)
+  await assert.rejects(step('team', overlappingModel(repeating), home.pages), (e) => {
+    assert.equal(e.code, 'copy_check_failed')
+    assert.equal(e.noRerun, true, 'still repeated after its own rewrite: the build stops')
+    return true
+  })
 })

@@ -171,7 +171,7 @@ A logo frame (`logo_from_brand_step`) counts as shown: the write step fills it f
 - pages: exactly one home page, written first (`home_count`, `home_not_first`, `page_repeated`); every page has a title
   and a description (`seo_title_empty`, `seo_description_empty`) within the limits (`seo_title_over_limit`,
   `seo_description_over_limit`), never `X | X` (`seo_title_repeated`) or a page id (`seo_page_id`), never the title of another page
-  (`seo_title_not_unique`); a share image is a
+  (`seo_title_not_unique`, compared as the writer compares them: `titleKey`, case and spacing aside); a share image is a
   shown picture (`share_image_none`), present when the order has one (`share_image_missing`);
 - places: a state is `show`, `hidden` or `fallback` (`state_unknown`); every place not shown is in `hidden`
   (`hidden_unlisted`) and `hidden` names only places and lists not shown (`hidden_shown`, `hidden_unknown`); every

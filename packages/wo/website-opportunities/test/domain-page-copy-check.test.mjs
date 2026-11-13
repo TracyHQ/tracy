@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { charCount, checkPageCopy, fieldValueProblems } from '../domain/page-copy-check.mjs'
 import { inventedDataOf } from '../domain/page-writer-data-guard.mjs'
+import { SELF_DESCRIBING, selfDescribingOf } from '../domain/copy-repeats.mjs'
 
 const heading = { name: 'heading', type: 'text', kind: 'editorial.heading', limit: 30 }
 const codes = (field, value, context) => fieldValueProblems(field, value, context).map((p) => p.code)
@@ -145,6 +146,123 @@ test('copy cannot carry opening hours, a year, a count or an award the plan data
   assert.deepEqual(what('Open 24 hours', ['Open 24 hours']), [])
 })
 
+// A studio of invented test data: two addresses, one phone, hours every day, a founding year, a review count.
+const studio = [
+  { kind: 'business.name', value: 'Meadow Loom Studio' },
+  { kind: 'contact.address', value: '12 Fern Lane, Brookfield' },
+  { kind: 'contact.address', value: '40 Oak Road, Millbridge' },
+  { kind: 'contact.phone', value: '+44 20 7946 0123' },
+  { kind: 'contact.hours', value: 'Mon-Sun 09:00 to 17:00' },
+  { kind: 'business.summary', value: 'Founded in 2011 by Ana' },
+  { kind: 'quote.rating_or_source', value: 'Rated 5 out of 5 by 40 reviews' },
+  { kind: 'offering.price', value: 'Linen shirt £45' },
+  { kind: 'claim.award_or_cert', value: 'Certified yoga coach' },
+  '100% cotton tote'
+]
+
+test('a phone in copy is the same number as a known phone, written any way: a trunk 0, brackets, spaces', () => {
+  assert.deepEqual(what('Call 020 7946 0123', studio), [])
+  assert.deepEqual(what('Call +44 (0)20 7946 0123', studio), [])
+  assert.deepEqual(what('WhatsApp +49 30 1234567', ['+49 (0)30 123 45 67']), [])
+  assert.deepEqual(what('Call 0800 123 456', studio), ['phone'])
+  assert.deepEqual(what('Room 101 is ready', studio), [])
+})
+
+test('a price is money of its own currency: a sign, its code and its word are one currency', () => {
+  assert.deepEqual(what('Linen shirt for 45 pounds', studio), [])
+  assert.deepEqual(what('Linen shirt GBP 45', studio), [])
+  assert.deepEqual(what('Monatskarte 1200 EUR', ['Monatskarte 1 200 €']), [])
+  assert.deepEqual(what('Card 1 200 €', ['Card €1.200']), [])
+  assert.deepEqual(what('Linen shirt €45', ['Linen shirt £45, gift card €10']), ['price'])
+  assert.deepEqual(what('Linen shirt 45 dollars', studio), ['price'])
+})
+
+test('hours fail only as a claim of a time the business does not keep; a duration is no time', () => {
+  for (const honest of [
+    'Open every day from 9am to 5pm',
+    'Open 9am-5pm',
+    'Open 9 to 5',
+    'Täglich von 9 bis 17 Uhr geöffnet',
+    'Ouvert de 9h à 17h',
+    'Abierto de 9:00 a 17:00',
+    'A partir de las 9',
+    'Please give 24 hour notice',
+    'Book in 60 seconds',
+    'A 3 step booking',
+    'Classes for ages 4 to 12',
+    'Enfants de 4 à 12 ans',
+    'Open 7 days a week',
+    'Studio open 365 days'
+  ])
+    assert.deepEqual(what(honest, studio), [], honest)
+  for (const invented of [
+    "Ouvert jusqu'à 22h",
+    'Geöffnet bis 22 Uhr',
+    'Open until 10 pm',
+    'Open 24 hours',
+    'Open 24/7'
+  ])
+    assert.deepEqual(what(invented, studio), ['hours'], invented)
+  assert.deepEqual(what('Open 7 days a week', ['Mon-Fri 09:00 to 17:00']), ['hours'])
+})
+
+test('a number fails only as a year or a count of a claim the plan data does not hold; any other number passes', () => {
+  for (const honest of [
+    'Visit our 2 locations',
+    'Two locations, one team',
+    'Since 2011 we weave',
+    'Seit 2011 für Sie da',
+    'Over 40 happy reviews',
+    '100% cotton bags',
+    'Our top 10 tips',
+    'COVID-19 safe studio',
+    'Get 1 free class',
+    'Free parking for 50 cars',
+    'Version 2.0 classes'
+  ])
+    assert.deepEqual(what(honest, studio), [], honest)
+  for (const [invented, kind] of [
+    ['Established 1998', 'year'],
+    ['Depuis 1998', 'year'],
+    ['Over 500 members', 'number'],
+    ['Plus de 500 membres', 'number'],
+    ['Más de 500 socios', 'number'],
+    ['20 years of experience', 'number'],
+    ['fifty members', 'number'],
+    ['Seit über zwanzig Jahren', 'number'],
+    ['Visit our 3 locations', 'number']
+  ])
+    assert.deepEqual(what(invented, studio), [kind], invented)
+  assert.deepEqual(
+    what('20 years of experience', ['Call +44 20 7946 0123']),
+    ['number'],
+    'a phone holds no count'
+  )
+  assert.deepEqual(
+    what('Since 1998', ['12 Fern Lane, Brookfield 1998']),
+    ['year'],
+    'an address holds no year'
+  )
+})
+
+test('an award or a superlative fails in six languages unless the plan data says it', () => {
+  for (const invented of [
+    'An award-winning studio',
+    '#1 in town',
+    'Voted best studio in Brookfield',
+    'Trusted by thousands',
+    'Preisgekrönt seit Jahren',
+    'Studio primé',
+    'Galardonado estudio',
+    'Studio premiato',
+    'Estúdio premiado',
+    'ISO 9001 approved'
+  ])
+    assert.deepEqual(what(invented, studio), ['award'], invented)
+  assert.deepEqual(what('Classes with a certified coach', studio), [])
+  assert.deepEqual(what('A first class welcome', studio), [])
+})
+
 test('copy never describes the page or a section of it', () => {
   for (const value of [
     'On this page you will find our classes',
@@ -153,6 +271,24 @@ test('copy never describes the page or a section of it', () => {
   ])
     assert.deepEqual(codes({ ...heading, limit: 200 }, value), ['about_the_page'], value)
   assert.deepEqual(codes({ ...heading, limit: 200 }, 'Coaching for every level'), [])
+  for (const value of [
+    'Prices see below',
+    'Home | Template Demo',
+    'Auf dieser Seite finden Sie unsere Kurse',
+    'Sur cette page, nos cours',
+    'En esta página verás nuestras clases',
+    'In questa pagina trovi i corsi',
+    'Nesta página estão as aulas'
+  ])
+    assert.deepEqual(codes({ ...heading, limit: 200 }, value), ['about_the_page'], value)
+  for (const value of ['Gift this card to a friend', 'Our banner year', 'Row with us on Sundays'])
+    assert.deepEqual(codes({ ...heading, limit: 200 }, value), [], value)
+})
+
+test('the step chain keeps its own W10 list as it was; the wider list is the page writer only', () => {
+  assert.equal(SELF_DESCRIBING.length, 7)
+  assert.equal(selfDescribingOf('On this site you can rest'), null)
+  assert.equal(selfDescribingOf('Gift this card to a friend'), 'this card')
 })
 
 test('copy never uses a phrase the business voice avoids', () => {

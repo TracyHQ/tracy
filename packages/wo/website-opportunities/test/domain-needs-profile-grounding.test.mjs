@@ -51,3 +51,12 @@ test('any other literal keeps a number whole: Class 2 is not inside Class 2.5', 
   assert.equal(proven('offering.name', 'Class 2', 'Class 2.5 Advanced'), false)
   assert.equal(proven('offering.name', 'Level 1', 'Level 1, 2 and 3'), true)
 })
+
+test('a currency sign, its code and its word are one currency; another currency never proves a price', () => {
+  assert.equal(proven('offering.price', '20 USD', 'Drop in class $20 per visit'), true)
+  assert.equal(proven('offering.price', '$20', 'Drop in 20 dollars'), true)
+  assert.equal(proven('offering.price', '£20', 'Drop in GBP 20'), true)
+  assert.equal(proven('offering.price', '1200 EUR', 'Year pass 1 200 €'), true)
+  assert.equal(proven('offering.price', '€45', 'Shirt £45, gift card €10'), false)
+  assert.equal(proven('offering.price', '20 USD', 'Drop in £20'), false)
+})

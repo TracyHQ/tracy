@@ -317,15 +317,25 @@ test('the business voice is kept: its own words only when a source says them, th
   const { research, reading } = club()
   reading.voice = {
     summary: 'Friendly and practical, for families and adult beginners.',
-    ownWords: ['rackets up', 'Junior coaching is back', 'world famous coaching'],
-    avoid: ['elite', 'cheap']
+    ownWords: [
+      'rackets up',
+      'junior COACHING is back',
+      'world famous coaching',
+      'coaching is',
+      'ing is back'
+    ],
+    avoid: ['elite', 'cheap', 'tennis club', 'x'.repeat(81)]
   }
   const profile = needsProfileOf(research, reading)
   assert.deepEqual(profile.voice, {
     summary: 'Friendly and practical, for families and adult beginners.',
-    ownWords: ['rackets up', 'Junior coaching is back'],
+    ownWords: ['rackets up', 'Junior coaching is back', 'coaching is'],
     avoid: ['elite', 'cheap']
   })
+  const codes = (value) => profile.dropped.filter((d) => d.value === value).map((d) => d.code)
+  assert.deepEqual(codes('ing is back'), ['voice_words_not_found'], 'whole words only')
+  assert.deepEqual(codes('tennis club'), ['voice_avoid_in_business'], 'the business data uses it')
+  assert.deepEqual(codes('x'.repeat(81)), ['voice_phrase_too_long'])
   assert.ok(
     profile.dropped.some((d) => d.code === 'voice_words_not_found' && d.value === 'world famous coaching'),
     'own words no source says are dropped'

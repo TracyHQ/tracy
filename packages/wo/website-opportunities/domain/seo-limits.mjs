@@ -16,3 +16,9 @@ export function seoLimitsOf(mapping) {
     description: positive(mapping?.seo?.descriptionLimit, SEO_DESCRIPTION_LIMIT)
   }
 }
+
+/**
+ * A page title as the form two titles compare in: NFKC, case folded, spaces collapsed and trimmed, so `Meadow Loom`
+ * and `meadow  loom ` are one title. The writer's site check and the write order check share it.
+ */
+export const titleKey = (title) => String(title).normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim()
