@@ -58,14 +58,19 @@ export function listEntries(zip) {
   return entries
 }
 
-/** The uncompressed bytes of one entry. */
+/** The uncompressed bytes of one entry, checked against the CRC-32 and size the archive records for it. */
 export function readEntry(zip, name) {
   const entry = listEntries(zip).find((e) => e.name === name)
   if (!entry) throw new Error(`the archive has no entry ${name}`)
   const data = zip.subarray(entry.dataStart, entry.dataStart + entry.compressedSize)
-  if (entry.method === 0) return Buffer.from(data)
-  if (entry.method === 8) return inflateRawSync(data)
-  throw new Error(`entry ${name} uses compression method ${entry.method}`)
+  let content
+  if (entry.method === 0) content = Buffer.from(data)
+  else if (entry.method === 8) content = inflateRawSync(data)
+  else throw new Error(`entry ${name} uses compression method ${entry.method}`)
+  if (content.length !== entry.size || crc32(content) !== entry.crc) {
+    throw new Error(`entry ${name} does not match its recorded CRC-32 or size`)
+  }
+  return content
 }
 
 /** A new archive: `name` holds `content`, every other entry and the archive comment are copied unchanged. */

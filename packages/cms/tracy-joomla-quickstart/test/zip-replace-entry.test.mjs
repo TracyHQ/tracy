@@ -6,6 +6,7 @@
 
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { crc32 } from 'node:zlib'
 import { makeZip } from './fixtures/blank-site/make-zip.mjs'
 import { listEntries, readEntry, replaceEntry } from '../scripts/zip-replace-entry.mjs'
 
@@ -46,4 +47,22 @@ test('the same replacement gives the same archive, byte for byte', () => {
 
 test('replacing an entry the archive does not hold is refused', () => {
   assert.throws(() => replaceEntry(SOURCE, 'nope.sql', Buffer.from('')), /no entry nope\.sql/)
+})
+
+test('the replaced entry records the CRC-32 of its new content, in both headers', () => {
+  const content = Buffer.from('-- blank site, invented content\n')
+  const out = replaceEntry(SOURCE, 'installation/sql/mysql/custom.sql', content)
+  const entry = listEntries(out).find((e) => e.name === 'installation/sql/mysql/custom.sql')
+  assert.equal(entry.crc, crc32(content))
+  assert.equal(out.readUInt32LE(entry.localOffset + 14), crc32(content), 'the local header agrees')
+  assert.equal(entry.size, content.length)
+})
+
+test('reading an entry checks its CRC, so a damaged entry is refused', () => {
+  const zip = makeZip([['notes.txt', 'invented notes, stored as they are', false]])
+  const [entry] = listEntries(zip)
+  const damaged = Buffer.from(zip)
+  damaged[entry.dataStart] ^= 0xff
+  assert.equal(readEntry(zip, 'notes.txt').toString(), 'invented notes, stored as they are')
+  assert.throws(() => readEntry(damaged, 'notes.txt'), /CRC/)
 })
