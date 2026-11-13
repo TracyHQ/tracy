@@ -5,10 +5,12 @@ sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-field-keys.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-inline.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-items-of.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping-seo.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping-coverage.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-inline-markup.mjs
+  - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-items-of.mjs
   - packages/wo/website-opportunities/domain/place-content-roles.mjs
   - scripts/ai-quickstart/check.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-library.mjs
@@ -322,6 +324,54 @@ A nested list stores its rows per row of its parent list:
 ```
 
 Paragraphs of running article text are not a list: they stay single fields of the block, one per stored place.
+
+### Blocks that list the same records
+
+Several blocks may show the same records: the home page's class cards and the classes page list the same class
+articles, the phone menu lists the main menu's items. The build creates each record once, as an item of the block that
+**owns** it. A block that only shows records another block owns says so with `itemsOf`, and every block of such a group
+says the order it lists them in with `itemsOrder`:
+
+```json
+{
+  "id": "home-classes",
+  "items": { "min": 1, "max": 4 },
+  "itemsOrder": { "by": "title", "direction": "asc", "from": "the module's own ordering setting" },
+  "itemsOf": {
+    "block": "class-list",
+    "select": "all",
+    "fields": { "name": "name", "heading-2": "heading", "link": "link" },
+    "why": "the cards list the class pages of the category the build files them in"
+  }
+}
+```
+
+| Key | Rule |
+|---|---|
+| `itemsOrder.by` | `title`, `published`, `created`, `ordering` (the manual order), `hits`, `menu` (the menu's own order) or `path` (the menu path of the page shown) |
+| `itemsOrder.direction` | `asc` or `desc` |
+| `itemsOrder.from` | the setting the order is read from: the module's own ordering, or the global component setting when the menu item sets none |
+| `itemsOf.block` | the owner: another block of the store with item fields, which names no owner itself |
+| `itemsOf.select` | `all`, or a sentence naming which of the owner's records it shows (`the featured posts`) |
+| `itemsOf.fields` | for every item field that is not `design`, the owner item field of the same type it draws; the draft matches them by stored place (a derived field by its derivation) |
+| `itemsOf.why` | why the records are the owner's |
+
+The block keeps only its own data: its count (`items`), its order and its limits. A place it shares with the owner is
+written within the smallest limit of the fields that store it. The check holds:
+
+- two blocks whose item fields store places on the same records are linked: one names the other, or both name the same
+  owner;
+- every block of a linked group declares its order (`itemsOrder`);
+- two linked blocks that list their common records in another order do not declare the same order.
+
+**How a block finds new records after blanking.** A block of this kind does not store its records: the site selects
+them when the page is shown, from the block's own settings. A category list (`mod_articles_category`) shows the
+published articles of its category (`catid`) in its order, up to its count; a featured or author view shows the posts
+marked featured or written by the page's person, in the component's global order; a menu module shows the items of its
+menu. So the build writes the records once, through the owner, files them where the showing block selects (the
+category the build writes into the module, a `buildSets` place such as `module-160:params:catid.0`), and each block
+shows them in its declared order, cut to its count. A record the build adds later shows at the position its order gives
+it.
 
 ## `page-recipes.json`
 

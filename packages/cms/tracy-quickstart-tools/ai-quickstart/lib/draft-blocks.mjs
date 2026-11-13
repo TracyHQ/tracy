@@ -7,6 +7,7 @@
 // list; the first repeating list becomes `itemFields` with `items`; a list of a module the block contains becomes a
 // block of its own (`inside:<container>`). Menu labels and template strings are written by the build elsewhere (page
 // titles, language overrides) and are listed in `derived`, except in a navigation block, whose menu is its items.
+import { linkItemsOf } from './draft-items-of.mjs'
 import { mapKeyOf } from './draft-fields.mjs'
 import { draftOne, listSlotIds } from './draft-one-block.mjs'
 
@@ -223,5 +224,6 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
   }
   delete out.nested
   applySameBox(blocks, decisions.sameBoxAs, out)
+  linkItemsOf(blocks, out)
   return { blocks, storeIdOf, ...out }
 }

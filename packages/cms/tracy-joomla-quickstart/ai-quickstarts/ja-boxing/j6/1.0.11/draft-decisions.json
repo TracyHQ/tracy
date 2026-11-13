@@ -219,6 +219,7 @@
   },
   "blocks": {
     "header": {
+      "itemsOrder": { "by": "menu", "direction": "asc", "from": "the main menu (mainmenu) in its own order" },
       "type": "header",
       "position": "header",
       "nav": true,
@@ -256,6 +257,16 @@
       ]
     },
     "block-187": {
+      "itemsOrder": {
+        "by": "menu",
+        "direction": "asc",
+        "from": "module 187 shows mainmenu (mod_menu menutype mainmenu) in its own order"
+      },
+      "itemsOf": {
+        "block": "header",
+        "select": "all",
+        "why": "the phone menu (mod_menu, mainmenu) shows the items of the main menu the header shows; the build creates each menu item once, as an item of header"
+      },
       "type": "header",
       "nav": true,
       "noData": {
@@ -281,6 +292,16 @@
       }
     },
     "block-160": {
+      "itemsOrder": {
+        "by": "title",
+        "direction": "asc",
+        "from": "module 160's own setting: article_ordering a.title, article_ordering_direction ASC (mod_articles_category)"
+      },
+      "itemsOf": {
+        "block": "class-list",
+        "select": "all",
+        "why": "the home page's class cards (mod_articles_category, catid 9, count 4) list the class pages of the category the build files them in; the build creates each class once, as an item of class-list, and writes the category id into this module (buildSets module-160:params:catid.0)"
+      },
       "type": "services",
       "fields": [
         {
@@ -540,6 +561,16 @@
       ]
     },
     "block-17": {
+      "itemsOrder": {
+        "by": "path",
+        "direction": "asc",
+        "from": "the breadcrumbs module (mod_breadcrumbs) lists the menu path of the page shown, from the top"
+      },
+      "itemsOf": {
+        "block": "header",
+        "select": "the menu path of the page shown",
+        "why": "the breadcrumbs name the menu items on the path to the page shown; the build creates each menu item once, as an item of header"
+      },
       "type": "text",
       "nav": true,
       "noData": {
@@ -876,6 +907,16 @@
       ]
     },
     "block-159": {
+      "itemsOrder": {
+        "by": "title",
+        "direction": "asc",
+        "from": "module 159's own setting: article_ordering a.title, article_ordering_direction ASC (mod_articles_category)"
+      },
+      "itemsOf": {
+        "block": "class-list",
+        "select": "all",
+        "why": "the related classes on a class page (mod_articles_category, catid 9, count 2) list the class pages of the same category; the build creates each class once, as an item of class-list, and writes the category id into this module (buildSets module-159:params:catid.0)"
+      },
       "type": "services",
       "itemLists": [
         {
@@ -917,6 +958,11 @@
     {
       "match": "^body-pages_j-content_category-blog(--start-\\d+)?$",
       "id": "news-list",
+      "itemsOrder": {
+        "by": "published",
+        "direction": "desc",
+        "from": "the blog menu item (163) sets no order, so com_content's global order applies: orderby_sec rdate, order_date published (newest first)"
+      },
       "type": "posts"
     },
     {
@@ -955,6 +1001,16 @@
     {
       "match": "^body-pages_j-content_featured-articles(--start-\\d+)?$",
       "id": "featured-list",
+      "itemsOrder": {
+        "by": "published",
+        "direction": "desc",
+        "from": "the featured menu item (164) sets no order, so com_content's global order applies: orderby_sec rdate, order_date published (newest first)"
+      },
+      "itemsOf": {
+        "block": "news-list",
+        "select": "the featured posts",
+        "why": "the featured page lists the posts marked featured; every post the build creates is an item of news-list"
+      },
       "type": "posts"
     },
     {
@@ -973,6 +1029,16 @@
     {
       "match": "^body-pages_j-content_author-listting_author_",
       "id": "author-profile",
+      "itemsOrder": {
+        "by": "published",
+        "direction": "desc",
+        "from": "the author view (menu item 165) sets no order, so com_content's global order applies: orderby_sec rdate, order_date published (newest first)"
+      },
+      "itemsOf": {
+        "block": "news-list",
+        "select": "the posts the page's person wrote",
+        "why": "an author page lists the posts written by its person (checked on the demo: admin lists posts 1, 3 and 11, newest first); every post the build creates is an item of news-list"
+      },
       "type": "team",
       "sparse": {
         "article-1.16": "an article's intro image: 3 of the 6 demo articles listed store one, the others are listed without a picture. It is the image of the item's own post page (block news-post), shown here, not a field of this block."
@@ -981,6 +1047,11 @@
     {
       "match": "^body-classes$",
       "id": "class-list",
+      "itemsOrder": {
+        "by": "published",
+        "direction": "desc",
+        "from": "the classes menu item (167) sets no order, so com_content's global order applies: orderby_pri order (the category's own order, one category here), then orderby_sec rdate, order_date published (newest first)"
+      },
       "type": "services",
       "itemLists": [
         {

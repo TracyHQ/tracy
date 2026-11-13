@@ -12,6 +12,7 @@
 // places are taken out of every other field and report list), `keys` (block fields keyed to a page:
 // `{name, column, jsonPath, pageType}`), `fieldKeys` (field name -> keys set on the drafted field: `theme`,
 // `variantOf`, `for`).
+import { applyItemsOf } from './draft-items-of.mjs'
 import {
   baseNameOf,
   fieldOf,
@@ -258,6 +259,8 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   if (itemFields.length) block.itemFields = itemFields
   applyItems(block, decision, { items, from: itemsFrom }, out)
   for (const key of ['lists', 'itemLists']) if (childLists[key].length) block[key] = childLists[key]
+  // Whose records the items are, and in which order the block lists them (draft-items-of.mjs).
+  applyItemsOf(block, decision)
   const itemPlaces = (block.itemFields ?? []).find((f) => Array.isArray(f.slots))?.slots.map(entityOf)
   if (block.itemLists && repeating && itemPlaces && itemPlaces.join() !== repeating.shown.join())
     childReport.problem(

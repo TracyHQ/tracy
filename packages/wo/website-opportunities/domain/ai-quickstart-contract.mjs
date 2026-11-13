@@ -13,6 +13,7 @@ import {
   sharedPlacesOf
 } from './ai-quickstart-field-keys.mjs'
 import { inlineCoverageProblems, inlineShapeProblems } from './ai-quickstart-inline.mjs'
+import { itemsOfStoreProblems } from './ai-quickstart-items-of.mjs'
 import { mappingProblems } from './ai-quickstart-mapping.mjs'
 import { ROLE_VOCABULARY_V3, isBlockType, isRole } from './place-content-roles.mjs'
 
@@ -222,6 +223,7 @@ function blockStoreProblems(store, report) {
   insideProblems(store, ids, report)
   sharedPlaceProblems(store, report)
   inlineShapeProblems(store, report)
+  itemsOfStoreProblems(store, report)
 }
 
 /** A field keyed to a page type (`pageType`) names a page type whose recipe places its block. */
