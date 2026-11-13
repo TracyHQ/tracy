@@ -171,6 +171,13 @@ test('a child field placed for fewer parent places than the block takes fails', 
 test('a child field whose location is a design line is a design value typed as content', () => {
   const set = valid()
   mappedSessions(set).day[0][0] = { entity: 'module-13', column: 'params', jsonPath: ['layout'] }
+  // The moved place stays inside a declared row, so the only problem left is the design line itself.
+  set.mapping.hides['services-grid'][1].row.push({
+    entity: 'module-13',
+    column: 'params',
+    parent: [],
+    keys: ['layout']
+  })
   assertOneProblem(set, {
     file: 'block-store.json',
     at: `${SESSIONS}.fields[day].type`,

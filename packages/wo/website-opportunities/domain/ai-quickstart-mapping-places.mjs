@@ -9,12 +9,15 @@
 //   - no place falls out of the file unnoticed (language strings, fact places, notEmptied):
 //     `ai-quickstart-mapping-coverage.mjs`;
 //   - every build-sets reference and every unlisted `fact` place of the draft report is set by the mapping file;
+//   - every button and every list whose rows can be fewer, on a record the blank site keeps, says how an empty one
+//     leaves the page (`hides`): `ai-quickstart-mapping-hides.mjs`;
 //   - a store with a network icon kept as a class name (`iconOf: "network"`, `storage: "class-name"`) has the
 //     template's table from network to icon class (`networkIconClasses`), its networks those the build recognises.
 import { locationKey, locationProblem } from './ai-quickstart-mapping-entry.mjs'
 import { scopesOf, sharedPlacesOf } from './ai-quickstart-field-keys.mjs'
 import { SOCIAL_NETWORKS } from './icon-social.mjs'
 import { mappingCoverageProblems } from './ai-quickstart-mapping-coverage.mjs'
+import { hideProblems } from './ai-quickstart-mapping-hides.mjs'
 import { libraryProblems, seoProblems } from './ai-quickstart-mapping-seo.mjs'
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -137,4 +140,5 @@ export function mappingPlaceProblems(mapping, { report, blockStore, pageRecipes,
   draftReportProblems(mapping, writers, draftReport, report)
   networkIconProblems(mapping.networkIconClasses, blockStore, report)
   mappingCoverageProblems(mapping, writers, { report, blockStore, draftReport })
+  hideProblems(mapping, blockStore, report)
 }

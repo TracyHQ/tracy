@@ -332,6 +332,451 @@
       }
     ]
   },
+  "hides": {
+    "block-156": [
+      {
+        "control": ["section-cta-label", "section-cta-url"],
+        "by": "empty",
+        "why": "the template prints the button only when its label holds words (acm/hero style-1); with label and address empty nothing is printed. Measured on the blank site"
+      }
+    ],
+    "block-157": [
+      {
+        "control": ["button-label", "navigation-url"],
+        "by": "rows.remove",
+        "slots": ["module-157.22", "module-157.23"],
+        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow); rows.remove takes the element out. Measured on the blank site: the element left the value and the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-157",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[description]",
+            "features-intro[img-icon]",
+            "features-intro[img-light-icon]",
+            "features-intro[link]",
+            "features-intro[title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-160": [
+      {
+        "control": ["button-label", "button-link"],
+        "by": "setting",
+        "location": {
+          "entity": "module-160",
+          "column": "params",
+          "jsonPath": ["section-link"]
+        },
+        "value": "0",
+        "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      }
+    ],
+    "block-161": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "empty",
+        "why": "the template prints the button row only when the first button address holds words (acm/cta style-1); with label and address empty nothing is printed. Measured on the blank site"
+      }
+    ],
+    "block-162": [
+      {
+        "rows": "pages",
+        "by": "row",
+        "row": {
+          "entity": "module-162",
+          "column": "params",
+          "parent": ["menuitem_config"],
+          "arrays": ["background", "description", "item_id", "title"]
+        },
+        "why": "the masthead keeps one row of settings per page (menuitem_config), printed only on that page; a row of a page the build does not make is taken out so no row names a page the site lacks"
+      }
+    ],
+    "block-163": [
+      {
+        "control": ["button-label", "button-link"],
+        "by": "setting",
+        "location": {
+          "entity": "module-163",
+          "column": "params",
+          "jsonPath": ["section-link"]
+        },
+        "value": "0",
+        "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-163",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["teams", "teams-intro[data]"],
+          "arrays": [
+            "teams-intro[data][img]",
+            "teams-intro[data][link]",
+            "teams-intro[data][team-info]",
+            "teams-intro[data][title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      },
+      {
+        "rows": "social",
+        "by": "omit",
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+      }
+    ],
+    "block-165": [
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-165",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": ["features-intro[description]", "features-intro[title]"]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-166": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "setting",
+        "location": {
+          "entity": "module-166",
+          "column": "params",
+          "jsonPath": ["section-link"]
+        },
+        "value": "0",
+        "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-166",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["gallery", "isotope[gallery]"],
+          "arrays": ["isotope[gallery][alt]", "isotope[gallery][img]", "isotope[gallery][selectitem]"]
+        },
+        "why": "the template prints one card for every row its lists hold (gallery), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-167": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "empty",
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-167",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[img-icon]",
+            "features-intro[info]",
+            "features-intro[item-info]",
+            "features-intro[link-btn]",
+            "features-intro[price]",
+            "features-intro[title-btn]",
+            "features-intro[title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      },
+      {
+        "rows": "features",
+        "by": "omit",
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+      }
+    ],
+    "block-171": [
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-171",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["social"],
+          "arrays": ["social-intro[font-icon]", "social-intro[link]", "social-intro[title]"]
+        },
+        "why": "the template prints one card for every row its lists hold (social: an empty row is an empty circle linking to the home page), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-172": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "empty",
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-172",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[info]",
+            "features-intro[link-btn]",
+            "features-intro[price]",
+            "features-intro[title-btn]",
+            "features-intro[title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-176": [
+      {
+        "control": ["button-label", "button-link"],
+        "by": "rows.remove",
+        "slots": ["module-176.0", "module-176.1"],
+        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow); rows.remove takes the element out. Measured on the blank site: the element left the value and the page"
+      }
+    ],
+    "block-177": [
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-177",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[align-media]",
+            "features-intro[info-desc]",
+            "features-intro[info-email-label]",
+            "features-intro[info-email]",
+            "features-intro[info-link]",
+            "features-intro[info-note]",
+            "features-intro[info-phone-label]",
+            "features-intro[info-phone]",
+            "features-intro[info-title]",
+            "features-intro[intro-img]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-178": [
+      {
+        "control": ["button-label", "button-link"],
+        "by": "setting",
+        "location": {
+          "entity": "module-178",
+          "column": "params",
+          "jsonPath": ["section-link"]
+        },
+        "value": "0",
+        "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-178",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["teams", "teams-intro[data]"],
+          "arrays": [
+            "teams-intro[data][img]",
+            "teams-intro[data][link]",
+            "teams-intro[data][team-info]",
+            "teams-intro[data][title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      },
+      {
+        "rows": "social",
+        "by": "omit",
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+      }
+    ],
+    "block-180": [
+      {
+        "rows": "social",
+        "by": "row",
+        "row": {
+          "entity": "module-180",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["hero"],
+          "arrays": ["hero[social-intro][font-icon]", "hero[social-intro][link]", "hero[social-intro][title]"]
+        },
+        "why": "the template prints one card for every row its lists hold (hero social: an empty row is an empty circle linking to the home page), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-181": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "setting",
+        "location": {
+          "entity": "module-181",
+          "column": "params",
+          "jsonPath": ["section-link"]
+        },
+        "value": "0",
+        "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-181",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": ["features-intro[img-icon]", "features-intro[link]", "features-intro[title]"]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ],
+    "block-182": [
+      {
+        "control": ["button-label", "button-link"],
+        "by": "setting",
+        "location": {
+          "entity": "module-182",
+          "column": "params",
+          "jsonPath": ["section-link"]
+        },
+        "value": "0",
+        "why": "the section chrome of the template (html/layouts/chromes/t4section.php) prints the section button whenever the module setting section-link is on, empty or not (an empty one is a box with an arrow linking to the home page); with section-link 0 it prints no button. Measured on the blank site: the button left the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-182",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["teams", "teams-intro[data]"],
+          "arrays": [
+            "teams-intro[data][img]",
+            "teams-intro[data][link]",
+            "teams-intro[data][team-info]",
+            "teams-intro[data][title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      },
+      {
+        "rows": "social",
+        "by": "omit",
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+      }
+    ],
+    "block-188": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "empty",
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-188",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[img-icon]",
+            "features-intro[info]",
+            "features-intro[item-info]",
+            "features-intro[link-btn]",
+            "features-intro[price]",
+            "features-intro[title-btn]",
+            "features-intro[title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      },
+      {
+        "rows": "features",
+        "by": "omit",
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+      }
+    ],
+    "block-189": [
+      {
+        "control": ["cta-label", "cta-url"],
+        "by": "empty",
+        "why": "the template prints every card button from the first card label and address (acm/features-intro style-5 and style-6 read title-btn and link-btn with no index), and prints no button while that label is empty; the build writes the same label and address into every card, or empties them all"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-189",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[img-icon]",
+            "features-intro[info]",
+            "features-intro[item-info]",
+            "features-intro[link-btn]",
+            "features-intro[price]",
+            "features-intro[title-btn]",
+            "features-intro[title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      },
+      {
+        "rows": "features",
+        "by": "omit",
+        "why": "the rows are elements of one stored HTML value the build writes whole: a row it does not fill is left out of the value. Measured on the blank site: the value with fewer elements was accepted and printed only those"
+      }
+    ],
+    "block-190": [
+      {
+        "control": ["button-label", "navigation-url"],
+        "by": "rows.remove",
+        "slots": ["module-190.22", "module-190.23"],
+        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow); rows.remove takes the element out. Measured on the blank site: the element left the value and the page"
+      },
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-190",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "parent": ["features-intro"],
+          "arrays": [
+            "features-intro[description]",
+            "features-intro[img-icon]",
+            "features-intro[img-light-icon]",
+            "features-intro[link]",
+            "features-intro[title]"
+          ]
+        },
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+      }
+    ]
+  },
   "notEmptied": [
     {
       "entity": "module-179",

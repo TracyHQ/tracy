@@ -186,6 +186,47 @@
       "why": "invented: each button carries its own link field"
     }
   ],
+  "hides": {
+    "header-main": [
+      {
+        "control": ["cta_label", "cta_link"],
+        "by": "empty",
+        "why": "the invented header prints its button only while the label holds words"
+      }
+    ],
+    "services-grid": [
+      {
+        "rows": "items",
+        "by": "row",
+        "row": {
+          "entity": "module-13",
+          "column": "params",
+          "parent": ["items"],
+          "keys": ["0", "1", "2"]
+        },
+        "why": "one card per stored item"
+      },
+      {
+        "rows": "sessions",
+        "by": "row",
+        "row": [
+          {
+            "entity": "module-13",
+            "column": "params",
+            "parent": ["items", "0", "sessions"],
+            "keys": ["0", "1"]
+          },
+          {
+            "entity": "module-13",
+            "column": "params",
+            "parent": ["items", "1", "sessions"],
+            "keys": ["0"]
+          }
+        ],
+        "why": "one line per stored session"
+      }
+    ]
+  },
   "notEmptied": [
     {
       "entity": "module-11",

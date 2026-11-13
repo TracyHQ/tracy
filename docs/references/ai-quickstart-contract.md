@@ -582,6 +582,38 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   `replyto_name`, `replyto_email`), the sender identity the site owner sets with the sending mailbox in AcyMailing's
   configuration, which the door does not write; the blank site empties the demo values (the configuration page loads
   with them empty, checked on the blank site restored on a real Joomla).
+- **`hides`**: `{"<block id>": [entry]}`, how a place the build leaves empty leaves the page, for every place on a
+  record the blank site keeps where an empty field leaves visible damage. An entry names a control or rows:
+  `{"control": ["<label field>", "<link field>"], "by", ..., "why"}` for a button (a link field and a label field of
+  kind `*.button_label` or `*.cta_label` in the same scope, the block's fields or each item's; a label kept in a
+  template language string is the template's own words, not a button), or `{"rows": "items" | "<list name>", "by",
+  ..., "why"}` for the items of a block or the rows of a list whose count can be lower than the places the template
+  holds (`items.min < items.max`). `by` is one of:
+
+  | `by` | the build | extra keys |
+  |---|---|---|
+  | `empty` | writes `""` into every location of the named fields, label and address together; the template prints the control only while they hold words | none |
+  | `rows.remove` | names `slots` in one `rows.remove` of the plugin, which takes their element out of the stored HTML value | `slots`: content map keys, every location of the named fields among them, each with an xpath |
+  | `setting` | writes `value` at `location`, a record setting no content map slot holds, with `content.get` and `content.update` | `location`, `value` (a string) |
+  | `omit` | leaves a row it does not fill out of the value it writes: the rows are pieces of one stored value | none (every location of the list's fields is a piece) |
+  | `row` | names every slot of a row it does not fill in one `rows.remove` | `row`: `{entity, column, nestedJson?, parent}` with `arrays` or `keys`, the shape of the plugin's reviewed rows (parallel lists read across by index, or one row per key), or a list of them; every location of the rows lies in one |
+
+  The check (`ai-quickstart-mapping-hides.mjs`) fails a button field or a list whose rows can be fewer, on a kept
+  record, that no entry names, and an entry whose way does not fit its places. A created record needs no entry: the
+  build writes it with what it has. JA Boxing, measured on the blank site restored on a real Joomla with plugin
+  0.24.85 (every field of the last item and every button emptied through the door, then the page loaded): an empty
+  section button prints a box with an arrow linking to the home page, an empty card prints its frame, an empty
+  social row an empty circle linking to the home page. The section chrome of the template prints its button while
+  the module setting `section-link` is on, so blocks 160, 163, 166, 178, 181 and 182 take `setting` (`section-link`
+  `"0"`); the hero and the call to action print a button only while its label or address holds words (`empty`); the
+  buttons of blocks 157, 176 and 190 are elements of a stored HTML value (`rows.remove`); the pricing cards print every
+  card button from the first card's label and address (`empty`, all cards at once); trainer social links and plan
+  features are pieces of one value (`omit`); every other list is a row of the template's parallel lists (`row`, the
+  rows the plugin reviews for the released contract, which the blank site keeps unchanged). Plugin 0.24.85 reads
+  reviewed rows only for the released contract (`lib/hideable-slots.json`, keyed by contract id and content map
+  hash), so it refuses `row` on the blank site (`SLOT_NOT_REMOVABLE`, no reviewed row holds it) until the plugin
+  carries these rows for the blank site contract; writing the lists shorter with `content.update` instead breaks
+  every later inspect (`CONTRACT_FAILED`, a JSON slot is missing).
 - **`inlineMarkup`**: `{class, count, owners}`, the class of the fields whose stored value carries inline markup (each
   declares its `inline` in the block store) and its owners: the write step (#597) and the gate (#585).
 - **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,
@@ -702,7 +734,7 @@ the corrected state itself, by rule (`blank-site-contract-fit.mjs`), for every s
 The check fails a written slot whose door limit differs from the kit's limit for the place, or that keeps a keep flag.
 `scripts/ai-quickstart/door-limits.mjs <folder>` proves it on a throwaway blank site: a value of exactly the kit's
 limit is written into every whole text place in one apply, and the limit plus one is refused (`SLOT_TOO_LONG`) for
-each. `rows.remove` removes a node of an HTML value but no reviewed row.
+each. `rows.remove` removes a node of an HTML value but no reviewed row (the mapping file's `hides`).
 
 **The contract check guards it.** For a Joomla AI quickstart folder with a written mapping file,
 `node scripts/ai-quickstart/check.mjs` requires `blank-site-contract/` and checks it against the released contract

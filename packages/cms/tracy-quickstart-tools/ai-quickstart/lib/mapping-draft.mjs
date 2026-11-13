@@ -133,6 +133,7 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     overrides,
     emptiedNotWritten,
     notEmptied,
+    hides: decisions.hides ?? {},
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,
