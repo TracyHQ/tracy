@@ -5,7 +5,7 @@
  * WHY a parser that writes back: the AI quickstart production step (ADR 0045) removes demo rows and must leave every
  * other row exactly as the template shipped it, so its result can be compared with the human quickstart byte for
  * byte. The dump is kept as a list of parts: opaque text (DROP/CREATE TABLE, comments, LOCK lines), INSERT statements
- * split into rows and cells, and UPDATE statements. Only a cell somebody sets is re-encoded.
+ * split into rows and cells, UPDATE statements, and DELETE statements kept as written. Only a cell somebody sets is re-encoded.
  *
  * Read side only `mysqldump.mjs` (tracy-quickstart-tools) exists; it does not keep the source text, so it cannot
  * write a dump back. This one does both for the installer form (`CREATE TABLE IF NOT EXISTS`, a column list, one row
@@ -13,7 +13,7 @@
  */
 
 // Any case, indented, and the INSERT forms mysqldump or a hand edit may use.
-const STATEMENT = /^[ \t]*(INSERT(?: IGNORE)? INTO|REPLACE INTO|UPDATE) `([^`]+)`/gim
+const STATEMENT = /^[ \t]*(INSERT(?: IGNORE)? INTO|REPLACE INTO|UPDATE|DELETE FROM) `([^`]+)`/gim
 // A data statement left in a text part was not read; the dump cannot be trusted to say what rows it holds.
 const DATA_LINE = /^[ \t]*(?:insert|replace|update|delete)\b[^\n]*/gim
 const PREFIX = '#__'
@@ -43,6 +43,11 @@ export function parseDump(sql) {
       const end = statementEnd(sql, m.index)
       const text = sql.slice(m.index, end)
       parts.push({ kind: 'update', table, text, id: updateTargetId(text) })
+      at = end
+    } else if (m[1].toUpperCase() === 'DELETE FROM') {
+      // A DELETE only takes rows away (a release removing a few demo rows by id); it is kept as it was written.
+      const end = statementEnd(sql, m.index)
+      parts.push({ kind: 'delete', table, text: sql.slice(m.index, end) })
       at = end
     } else {
       const part = readInsert(sql, m.index, table, createColumns)

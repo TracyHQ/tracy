@@ -212,7 +212,7 @@ test('a data statement the parser cannot read fails the check instead of staying
     'a table with a literal prefix':
       "INSERT INTO `jos_users` (`id`, `username`) VALUES (7,'invented-user');\n",
     'a statement without a backticked table': "REPLACE INTO jos_session VALUES ('invented-session');\n",
-    'an indented delete': '  delete from `#__users` where `id` = 7;\n',
+    'a delete of a literal prefix table': '  delete from `jos_users` where `id` = 7;\n',
     'an update of a literal prefix table': "UPDATE `jos_users` SET `username` = 'invented-user';\n"
   }
   for (const [label, statement] of Object.entries(forms)) {
@@ -223,6 +223,20 @@ test('a data statement the parser cannot read fails the check instead of staying
     )
   }
   assert.deepEqual(checkBlankSite(blankSql), [], 'a clean blank site has no such problem')
+})
+
+test('a DELETE of demo rows (JA Boxing 1.0.11 removes three trashed menu items so) is read and kept as written', () => {
+  const statement = 'DELETE FROM `#__menu` WHERE `id` IN (198, 199) AND `published` = -2 AND `client_id` = 0;'
+  const sql = `${FIXTURE}\n${statement}\n`
+  const { sql: out } = produceBlankSite(sql)
+  assert.ok(out.includes(statement))
+  assert.deepEqual(checkBlankSite(out), [])
+  assert.deepEqual(
+    parseDump(sql)
+      .parts.filter((p) => p.kind === 'delete')
+      .map((p) => p.table),
+    ['menu']
+  )
 })
 
 test('insert forms in other cases are read like the plain one, so their rows are removed', () => {
