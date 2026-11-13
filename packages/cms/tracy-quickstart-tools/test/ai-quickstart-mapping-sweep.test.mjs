@@ -5,6 +5,8 @@
 //      place, a field the build writes, a record the build creates, or a place the draft report classes;
 //   C. every stored place has one writer unless the block store shares it (the contract check), and every
 //      build-sets reference of the draft report is set;
+//   E. the page types the featured view shows (their demo menu items open view=featured) are exactly
+//      seo.featuredView.pageTypes: the build must keep a published featured article for their share tags;
 //   D. after the blank site step every place of a kept record is empty and its address still names exactly one node
 //      (the demo rows as the contract holds them, through the real step).
 import assert from 'node:assert/strict'
@@ -175,4 +177,15 @@ test('D. after the blank site step every place of a kept record is empty and sti
   )
   assert.deepEqual(bad, [])
   assert.ok(html.length > 250, `${html.length} HTML addresses`)
+})
+
+test('E. seo.featuredView lists exactly the page types whose demo pages are the featured view', () => {
+  const recipes = read(DIR, 'page-recipes.json').recipes
+  const byPage = new Map(contentMap.pages.map((p) => [`page-${p.route.replace(/\//g, '_')}`, p]))
+  const featured = recipes
+    .filter((r) => (r.from ?? []).some((id) => /[?&]view=featured(&|$)/.test(byPage.get(id)?.link ?? '')))
+    .map((r) => r.pageType)
+    .sort()
+  assert.ok(featured.length > 0)
+  assert.deepEqual([...mapping.seo.featuredView.pageTypes].sort(), featured)
 })

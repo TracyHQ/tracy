@@ -498,7 +498,17 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
     heading the page shows: the build writes the page's `title` value again at those locations, within `titleLimit`.
     On T4 an empty og_title falls back to the article title on an article page and to the contact's name on the
     contact page, so JA Boxing writes it on every page (a menu item's `params.og_title`, an article's
-    `attribs.og_title`).
+    `attribs.og_title`). The share description likewise: an article's own `attribs.og_desc` is printed first (and
+    wins over the menu item's `og_desc`), so JA Boxing writes an article's description at `metadesc` and
+    `attribs.og_desc`.
+  - `featuredView` (optional): `{"pageTypes": [...], "needs": "a published featured article", "why"}`, the page types
+    the CMS shows with its featured view. JA Boxing (T4) prints Open Graph for such a page only from the content
+    events of the featured articles it lists: with none published, the page has no og:title, og:description or
+    og:image; with one, the menu item's `og_title`, `og_desc` and `og_img` are printed (measured on 1.0.11, the
+    home layout drawing no component output). The build keeps at least one published featured article (a post it
+    creates, marked featured) on a site that has a page of these types. The check requires recipe page types whose
+    SEO record is a menu item and the exact `needs`; a test reads the demo menu items (`view=featured`) to keep the
+    list complete. JA Boxing: `home`, `featured-posts`, `about`, `trainers`, `trainer`.
 - **`library`**: `{"position": "<position>", "pageTypes"?: {"<page type>": "<position>"}, "containerClass": "<class>",
   "why"}`, the template position the Tracy library blocks are published in, the page types whose layout lacks it with
   the position they use instead, and the class of the template's own page width container a library block's content

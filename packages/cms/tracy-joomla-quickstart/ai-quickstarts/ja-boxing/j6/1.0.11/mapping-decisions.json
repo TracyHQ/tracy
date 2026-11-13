@@ -168,12 +168,20 @@
     },
     "article": {
       "title": [{ "entity": "page", "column": "attribs", "jsonPath": ["article_page_title"] }],
-      "description": [{ "entity": "page", "column": "metadesc" }],
+      "description": [
+        { "entity": "page", "column": "metadesc" },
+        { "entity": "page", "column": "attribs", "jsonPath": ["og_desc"] }
+      ],
       "shareImage": [{ "entity": "page", "column": "attribs", "jsonPath": ["og_img"] }],
       "ogTitle": {
         "sameAs": "title",
         "locations": [{ "entity": "page", "column": "attribs", "jsonPath": ["og_title"] }]
       }
+    },
+    "featuredView": {
+      "pageTypes": ["home", "featured-posts", "about", "trainers", "trainer"],
+      "needs": "a published featured article",
+      "why": "Checked on the running 1.0.11 site with Open Graph on: these page types are the featured view of the articles (their demo menu items open view=featured; the home layout draws no component output on home, about, trainers and trainer). T4 prints Open Graph for an article view only from its content events, and the featured view fires them once per featured article it lists: with none published, the page prints its title and meta description but no og:title, og:description or og:image (measured on the home page with every featured article unpublished). With one published, the page prints og:title, og:description and og:image from its own menu item's og_title, og_desc and og_img, which win over the article's own (measured with both set). So the build keeps at least one published featured article on a site that has a page of these types: a post it creates, marked featured. Without any post, these pages print no share title, description or image; no template or plugin change is made for it."
     },
     "pageTypes": {
       "home": "menuItem",
@@ -199,7 +207,7 @@
         "ogTitle": { "sameAs": "title", "derived": "the person's name and role, the author page's title" }
       }
     },
-    "why": "Checked on the running 1.0.11 site with the T4 Open Graph setting on: a page made from a menu item prints page_title as its title, menu-meta_description as its description and og_img as og:image; an article prints article_page_title, metadesc and its own og_img (else the og_img of the menu item it is reached through). JA Boxing ships Open Graph off; the override system_opengraph turns it on. With Open Graph on, T4 prints og:title and the meta title (name=\"title\") from og_title: a menu item's params, an article's attribs (checked: a value set there is printed). Left empty, it falls back to the browser title on a category or featured page, to the article title on an article, and to the contact's name on the contact page; the build writes each page's SEO title (the browser title, which carries the business name) into ogTitle too (sameAs: title), so the share title is never the short heading of the page and no fallback is drawn."
+    "why": "Checked on the running 1.0.11 site with the T4 Open Graph setting on: a page made from a menu item prints page_title as its title, menu-meta_description as its description and og_img as og:image; an article prints article_page_title, metadesc and its own og_img (else the og_img of the menu item it is reached through). JA Boxing ships Open Graph off; the override system_opengraph turns it on. With Open Graph on, T4 prints og:title and the meta title (name=\"title\") from og_title: a menu item's params, an article's attribs (checked: a value set there is printed). Left empty, it falls back to the browser title on a category or featured page, to the article title on an article, and to the contact's name on the contact page; the build writes each page's SEO title (the browser title, which carries the business name) into ogTitle too (sameAs: title), so the share title is never the short heading of the page and no fallback is drawn. An article's og:description is its own attribs og_desc first (checked: a value set there is printed, and wins over the og_desc of the menu item the article is reached through), else its metadesc, else its intro text: the build writes the description at both places of an article, as it does at menu-meta_description and og_desc of a menu item."
   },
   "library": {
     "position": "section-6",

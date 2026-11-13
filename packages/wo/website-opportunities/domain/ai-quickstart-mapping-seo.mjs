@@ -5,6 +5,8 @@
 //   - every page type of the recipes has its title, description and share image (`seo.pageTypes`), the share image
 //     in the 1200x630 frame, and its share title (`ogTitle`): `{sameAs: "title", locations | derived}`, the value of
 //     the SEO title written where the template prints og:title, never the short heading of the page;
+//   - `seo.featuredView` (optional): the page types whose page is the CMS's featured view, which prints its share tags
+//     only while the site has a published featured article (`needs`), so the build keeps one;
 //   - the library names a template position (`library.position`, with per page type exceptions) and the class of the
 //     template's own page width container its blocks sit in (`library.containerClass`).
 import { locationProblem } from './ai-quickstart-mapping-entry.mjs'
@@ -39,6 +41,26 @@ function ogTitleProblem(v) {
   return null
 }
 
+/** The vocabulary of `seo.featuredView.needs`: what the build keeps on the site so those pages print share tags. */
+export const FEATURED_VIEW_NEEDS = 'a published featured article'
+
+/** `seo.featuredView`: `{pageTypes, needs, why}`, page types of the recipes whose SEO record is a menu item. */
+function featuredViewProblems(seo, types, report) {
+  const fv = seo.featuredView
+  if (fv === undefined) return
+  if (!isObject(fv) || !Array.isArray(fv.pageTypes) || fv.pageTypes.length === 0)
+    return report('seo.featuredView', '{pageTypes, needs, why}: the page types shown by the featured view')
+  for (const type of fv.pageTypes)
+    if (!types.includes(type) || seo.pageTypes?.[type] !== 'menuItem')
+      report(
+        `seo.featuredView.pageTypes[${type}]`,
+        'a page type of the recipes whose SEO fields are those of a menu item'
+      )
+  if (fv.needs !== FEATURED_VIEW_NEEDS)
+    report('seo.featuredView.needs', `what the build keeps on the site: "${FEATURED_VIEW_NEEDS}"`)
+  if (!isName(fv.why)) report('seo.featuredView.why', 'say how the template prints share tags on such a page')
+}
+
 export function seoProblems(seo, pageRecipes, report) {
   if (!isObject(seo)) return
   seoLimitProblems(seo, report)
@@ -66,6 +88,7 @@ export function seoProblems(seo, pageRecipes, report) {
     const og = ogTitleProblem(record.ogTitle)
     if (og) report(`${at}.ogTitle`, og)
   }
+  featuredViewProblems(seo, types, report)
 }
 
 export function libraryProblems(library, pageRecipes, report) {

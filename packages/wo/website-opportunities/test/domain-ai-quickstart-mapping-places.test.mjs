@@ -287,3 +287,32 @@ test('notEmptied: every kept place the file writes nowhere is classed with its r
   set.mapping.notEmptied[1].slot = 'module-12.9'
   assert.deepEqual(problemsOf(set), [])
 })
+
+test('seo.featuredView names menu item page types of the recipes, and what the build keeps for them (#584)', () => {
+  const set = valid()
+  set.mapping.seo = {
+    titleLimit: 60,
+    descriptionLimit: 160,
+    limitsWhy: 'invented: search result display limits',
+    shareImageFrame: { width: 1200, height: 630 },
+    menuItem: {
+      ...PAGE_SEO,
+      ogTitle: { sameAs: 'title', locations: [{ entity: 'page', column: 'params', jsonPath: ['og_title'] }] }
+    },
+    pageTypes: { home: 'menuItem', services: 'menuItem' },
+    featuredView: {
+      pageTypes: ['home'],
+      needs: 'a published featured article',
+      why: 'invented: the featured view prints share tags only from its articles'
+    }
+  }
+  assert.deepEqual(problemsOf(set), [])
+  set.mapping.seo.featuredView = { pageTypes: ['home', 'blog'], needs: 'anything', why: '' }
+  const problems = problemsOf(set).join('\n')
+  assert.match(problems, /seo.featuredView.pageTypes\[blog\]: a page type of the recipes/)
+  assert.match(
+    problems,
+    /seo.featuredView.needs: what the build keeps on the site: "a published featured article"/
+  )
+  assert.match(problems, /seo.featuredView.why/)
+})
