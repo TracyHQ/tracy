@@ -99,6 +99,8 @@ export async function boxingFloristBuild(options = {}) {
     library: TRACY_LIBRARY,
     template: { slug: 'ja-boxing', name: 'JA Boxing', version: '1.0.11', accent: '#c00000' },
     brand: { website: { colors: [{ hex: '#9C3D54', role: 'primary' }] } },
+    // A research brand, not the brand step's record (#616): read through the test-only fallback.
+    allowTemplateLook: true,
     planId: 'plan-boxing-florist',
     model: scriptedModel(reply, reply)
   })

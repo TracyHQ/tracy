@@ -1,0 +1,56 @@
+// The two colour measures the look record needs (ticket #616): whether a colour has a visible hue (OKLCH chroma at or
+// over 0.03, the brand step's own threshold) and the WCAG contrast of two colours. The brand step keeps its frozen copy
+// in apps/tracy-web/src/lib/brand-accent/colour-math.js, and the design system slot its twin in
+// packages/design/tracy-ds-slot/src/colour.mjs; neither package can be imported from here, so this is the same maths
+// again, held to the same values by its test (#042515 has chroma 0.0495, #1a1a1a none). Pure.
+
+/** OKLCH chroma under this = black, grey or white (no hue a visitor can see). */
+export const NEUTRAL_CHROMA = 0.03
+/** The contrast text and buttons need (hard rule). */
+export const MIN_RATIO = 3
+
+function rgbOf(hex) {
+  const m = /^#([0-9a-f]{6})$/i.exec(String(hex ?? ''))
+  if (!m) return null
+  const n = Number.parseInt(m[1], 16)
+  return { r: n >> 16, g: (n >> 8) & 255, b: n & 255 }
+}
+
+const oklabLinear = (c) => {
+  const v = c / 255
+  return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+}
+
+/** OKLCH chroma of a #rrggbb colour, or null when it is not one. */
+export function chromaOf(hex) {
+  const c = rgbOf(hex)
+  if (!c) return null
+  const [r, g, b] = [c.r, c.g, c.b].map(oklabLinear)
+  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
+  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
+  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s
+  return +Math.hypot(A, B).toFixed(4)
+}
+
+/** Whether a #rrggbb colour is black, grey or white: no visible hue. */
+export const isNeutral = (hex) => {
+  const chroma = chromaOf(hex)
+  return chroma !== null && chroma < NEUTRAL_CHROMA
+}
+
+const wcagLinear = (c) => {
+  const v = c / 255
+  return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+}
+const luminance = ({ r, g, b }) => 0.2126 * wcagLinear(r) + 0.7152 * wcagLinear(g) + 0.0722 * wcagLinear(b)
+
+/** WCAG contrast ratio of two #rrggbb colours, two decimals; null when either is not one. */
+export function contrastOf(a, b) {
+  const A = rgbOf(a)
+  const B = rgbOf(b)
+  if (!A || !B) return null
+  const [hi, lo] = [luminance(A), luminance(B)].sort((x, y) => y - x)
+  return +((hi + 0.05) / (lo + 0.05)).toFixed(2)
+}

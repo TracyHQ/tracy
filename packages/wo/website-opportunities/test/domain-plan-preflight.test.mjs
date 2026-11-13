@@ -33,11 +33,18 @@ const change = (make, edit) => {
 }
 
 const CASES = {
+  // The template fallback (tests only) with a template that has no usable accent.
   look_incomplete: [
-    { template: { slug: 'example-court', name: 'Example Court', version: '1.0.0' }, brand: null },
+    {
+      template: { slug: 'example-court', name: 'Example Court', version: '1.0.0' },
+      brand: null,
+      allowTemplateLook: true
+    },
     { template: undefined },
-    { template: { ...template(), accent: 'teal' }, brand: null }
+    { template: { ...template(), accent: 'teal' }, brand: null, allowTemplateLook: true }
   ],
+  // The product path: no brand step result, or one that is not the brand step's record (#616).
+  brand_missing: [{ brand: null }, { brand: undefined }, { brand: { website: { colors: [] } } }],
   block_store_invalid: [
     {
       blockStore: change(

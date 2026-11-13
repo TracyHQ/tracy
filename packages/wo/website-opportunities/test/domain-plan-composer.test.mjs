@@ -126,9 +126,18 @@ test('an unreadable reply counts as a failed attempt and is composed again', asy
   await assert.rejects(composePlan(inputs(undefined)), (e) => e.code === 'model_missing')
 })
 
-test('with no brand colour and no logo the template colour and a text logo are kept, as assumptions', async () => {
-  const model = scriptedModel(JSON.stringify(goodComposition()))
-  const { plan } = await composePlan(inputs(model, { brand: null }))
+test('without a brand record no plan is composed; the template fallback lives behind a test flag', async () => {
+  let calls = 0
+  const model = async () => {
+    calls += 1
+    return JSON.stringify(goodComposition())
+  }
+  await assert.rejects(
+    composePlan(inputs(model, { brand: null })),
+    (e) => e instanceof PlanComposerError && e.code === 'brand_missing' && e.noRerun === true
+  )
+  assert.equal(calls, 0)
+  const { plan } = await composePlan(inputs(model, { brand: null, allowTemplateLook: true }))
   assert.equal(plan.look.accent, '#225588')
   assert.deepEqual(plan.look.logo, { kind: 'text' })
   assert.deepEqual(

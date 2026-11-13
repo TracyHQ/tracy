@@ -143,6 +143,8 @@ export async function floristBuild() {
     library: TRACY_LIBRARY,
     template: FLORIST_TEMPLATE,
     brand: { website: { colors: [{ hex: '#9C3D54', role: 'primary' }] } },
+    // A research brand, not the brand step's record (#616): read through the test-only fallback.
+    allowTemplateLook: true,
     planId: 'plan-larkspur',
     model: scriptedModel(JSON.stringify(floristComposition(services, photos)))
   })

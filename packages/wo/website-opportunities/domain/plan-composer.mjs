@@ -68,8 +68,10 @@ export function blockMapOf(blockStore, library = []) {
 /**
  * What the composer works from: the profile's data with plan ids (after the customer's answers), every block of the
  * store and of the Tracy library, the recipes, the look and the assumptions the profile and the look bring. `profile`
- * in the result is the settled profile: the page writer reads its item fields.
- * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question
+ * in the result is the settled profile: the page writer reads its item fields. The look comes from the brand step's
+ * record (`brandLookOf`, #616); only `allowTemplateLook: true`, for tests, keeps the old template fallback.
+ * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question; `brand_missing` without a
+ *   brand record; `brand_accent_unsettled` when the brand step kept the template accent in a case no rule covers
  */
 export function composerContextOf({
   profile: given,
@@ -79,14 +81,19 @@ export function composerContextOf({
   library = [],
   template,
   brand,
-  planId = 'plan'
+  planId = 'plan',
+  allowTemplateLook = false
 }) {
   const blocks = blockMapOf(blockStore, library)
   const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()))
   const profile = settled.profile
   const data = addItemFieldFacts(profile, planDataOf(profile))
   const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))
-  const { look, assumptions: lookAssumptions } = lookOf(template, brand)
+  const {
+    look,
+    assumptions: lookAssumptions,
+    sources: lookSources
+  } = lookOf(template, brand, { allowTemplateLook })
   const language = isText(profile?.language?.value) ? profile.language.value : 'en'
   const languageAssumption = isText(profile?.language?.value)
     ? []
@@ -106,6 +113,7 @@ export function composerContextOf({
     blocks,
     recipes,
     look,
+    lookSources,
     assumptions: [...conflicts.assumptions, ...lookAssumptions, ...languageAssumption],
     leftOut: settled.leftOut,
     conflicts: conflicts.accounting
@@ -145,7 +153,8 @@ export function readComposerReply(reply) {
  * Compose the plan: one model call, the gate, and at most one more call with the gate's problems.
  * @param {Parameters<typeof composerContextOf>[0] & {model: (request: object) => Promise<unknown>}} input
  * @returns {Promise<{plan: object, profile: object, attempts: Array<{problems: object[]}>, placed: object[],
- *   accounting: object, rows: object[], conflicts: object[], prompt: object}>} `rows`: the child list rows and row
+ *   accounting: object, rows: object[], conflicts: object[], lookSources: object, prompt: object}>} `lookSources`:
+ *   where the look's accent and logo came from (`{accent: {from, name}, logo: {from, name}}`); `rows`: the child list rows and row
  *   fields the gate's rules dropped, with their codes (`plan-rows.mjs`) `profile`: the profile after the answers, for the page
  *   writer; `accounting`: where every fact and item went; `conflicts`: how every conflict of the profile is settled
  */
@@ -175,6 +184,7 @@ export async function composePlan(input) {
         accounting: gated.accounting,
         rows: gated.rows,
         conflicts: context.conflicts,
+        lookSources: context.lookSources,
         prompt: { file: PLAN_COMPOSER_PROMPT_FILE, sha256: PROMPT_SHA256 }
       }
     problems = gated.problems
@@ -192,15 +202,21 @@ export async function composePlan(input) {
  * @param {{research: object, model: Function, brandStep: () => Promise<object | null>,
  *   answers?: object[] | ((profile: object) => object[] | Promise<object[]>)} &
  *   Omit<Parameters<typeof composerContextOf>[0], 'profile' | 'brand' | 'answers'>} input `brandStep` runs the existing
- *   brand step and resolves to its record; `answers` are the customer's answers, or a function that asks the
- *   profile's questions and resolves to them
+ *   brand step and resolves to its record (`runBrandBeforeSite(...).record`, #616); `answers` are the customer's
+ *   answers, or a function that asks the profile's questions and resolves to them
  */
 export async function buildPlanStep({ research, model, brandStep, answers = [], ...rest }) {
   if (typeof brandStep !== 'function')
     throw new PlanComposerError('brand_step_missing', 'no brand step was given')
   // Started first and not awaited: the brand step runs while the needs profile is built.
   const brandRun = (async () => brandStep())().catch((error) => {
-    throw new PlanComposerError('brand_step_failed', String(error?.message ?? error), { cause: error })
+    // A brand step that already ran twice (`runBrandBeforeSite`) is not run again by the step chain.
+    throw new PlanComposerError(
+      'brand_step_failed',
+      String(error?.message ?? error),
+      { cause: error },
+      { noRerun: Boolean(error?.noRerun) }
+    )
   })
   const [profile, brand] = await Promise.all([
     buildNeedsProfile({ research, model, blockStore: rest.blockStore, library: rest.library }),

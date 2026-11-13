@@ -40,7 +40,7 @@ export const CONTRACT_SHAPES = Object.freeze({
   row: shape(['id', 'label', 'sources'], [], { plan: true }),
   'child list': shape(['name', 'rows'], ['item'], { plan: true }),
   'planned row': shape([], ['data', 'page', 'lists'], { plan: true }),
-  look: shape(['template', 'accent', 'logo'], [], { plan: true }),
+  look: shape(['template', 'accent', 'logo'], ['accentDark'], { plan: true }),
   template: shape(['slug', 'name', 'version'], [], { plan: true }),
   logo: shape(['kind'], ['source'], { plan: true }),
   pictures: shape(['own', 'generated'], [], { plan: true }),

@@ -65,6 +65,14 @@ export function lookProblems(look, report) {
   }
   if (typeof look.accent !== 'string' || !HEX_COLOUR.test(look.accent))
     report('look.accent', 'the brand accent colour must be a #rrggbb colour')
+  if (
+    look.accentDark !== undefined &&
+    (typeof look.accentDark !== 'string' || !HEX_COLOUR.test(look.accentDark))
+  )
+    report(
+      'look.accentDark',
+      'the accent colour of the dark theme, when it differs, must be a #rrggbb colour'
+    )
   const logo = look.logo
   if (!isObject(logo) || !LOGO_KINDS.includes(logo.kind))
     return report(

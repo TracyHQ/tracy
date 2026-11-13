@@ -166,6 +166,24 @@ export { placeExtraData } from './plan-placement.mjs'
 export { placeExtraFacts } from './plan-placement-facts.mjs'
 export { lookOf, picturesOf } from './plan-look-pictures.mjs'
 export {
+  BRAND_FILE_VERSION,
+  BRAND_LOOK_SCHEMA,
+  BrandStepError,
+  brandLookOf,
+  isBrandLook,
+  lookOfBrandRecord
+} from './brand-before-site.mjs'
+export {
+  ACCENT_FROM_LOGO,
+  ACCENT_LOGO_WITHOUT_HUE,
+  ACCENT_NO_LOGO,
+  ACCENT_UNSETTLED,
+  NO_HUE_ACCENT,
+  accentOfBrandFile
+} from './brand-look-accent.mjs'
+export { BRAND_STEP_ATTEMPTS, BRAND_STEP_PROMPT, runBrandBeforeSite } from './brand-before-site-run.mjs'
+export { lookProblemsOf } from './brand-look-problems.mjs'
+export {
   CANDIDATES_MAX,
   ICON_STOP_WORDS,
   contentCatalog,

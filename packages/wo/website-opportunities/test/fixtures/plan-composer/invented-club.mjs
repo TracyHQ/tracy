@@ -2,6 +2,7 @@
 // invented template's block store, page recipes and Tracy library, an invented brand record, a composition that passes
 // the gate, and a scripted fake build model. Nothing here is a real business, template or model.
 import { readFileSync } from 'node:fs'
+import { brandLookOf } from '../../../domain/brand-before-site.mjs'
 import { needsProfileOf } from '../../../domain/needs-profile.mjs'
 
 const json = (path) => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8'))
@@ -60,10 +61,34 @@ export const template = () => ({
   version: '1.0.0',
   accent: '#225588'
 })
-export const brand = () => ({
-  website: { origin: 'website', colors: [{ hex: '#1F7A4D', role: 'primary' }] },
+/** The research's brand part of the invented club (the brief's `brand`). */
+export const researchBrand = () => ({
+  origin: 'social',
+  official: false,
+  colorsFrom: 'logo',
+  colors: [{ hex: '#1F7A4D', role: 'primary' }],
+  logo: 'm1',
   logoResearch: { status: 'found', chosen: { mediaId: 'm1', source: 'instagram' } }
 })
+/** The brand file the brand step wrote for the invented club (the parts the look reads). */
+export const brandFile = () => ({
+  kind: 'brand-file',
+  version: 10,
+  kit: 'example-court@1.0.0',
+  name: { value: 'Brindlewick Tennis Club', from: 'brief.brand.name' },
+  colours: {
+    decision: 'new-accent',
+    why: 'The logo green has a visible hue.',
+    brandColour: '#1f7a4d',
+    lift: null,
+    accent: '#1f7a4d',
+    replaces: '#225588',
+    keeps: 'template'
+  },
+  logo: { material: { mediaId: 'm1' }, mark: { decision: 'cut' } }
+})
+/** The brand step's record of the invented club (`brandLookOf`). */
+export const brand = () => brandLookOf({ brandFile: brandFile(), brief: { brand: researchBrand() } })
 
 export const SERVICES = [
   'service-junior-coaching',

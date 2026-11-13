@@ -1,6 +1,7 @@
 // The look section and the pictures summary of a build plan (ticket #593, Contract B `build-contract-plan.mjs`).
 // Pure: the template, the brand step's record and the placed blocks in, the two plan sections and the assumptions they
-// bring out. The brand step itself is unchanged; this only reads its record.
+// bring out. The brand step itself is unchanged; this only reads its record (`brand-before-site.mjs`, #616).
+import { isBrandLook, lookOfBrandRecord, logoSourceName } from './brand-before-site.mjs'
 import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
 import { ownPicturesOf } from './picture-frames.mjs'
 import { assignPictures } from './picture-policy.mjs'
@@ -8,17 +9,9 @@ import { assignPictures } from './picture-policy.mjs'
 const HEX_COLOUR = /^#[0-9a-fA-F]{6}$/
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const list = (value) => (Array.isArray(value) ? value : [])
-/** How the customer reads where a logo came from, per `logoResearch.chosen.source` of the brand step. */
-const LOGO_SOURCE_NAMES = Object.freeze({
-  website: 'Website',
-  google: 'Google listing',
-  instagram: 'Instagram profile',
-  facebook: 'Facebook page',
-  tiktok: 'TikTok profile'
-})
 
-/** The brand accent colour the brand step read: the website's first, then the social profiles'. */
-function brandAccentOf(brand) {
+/** The brand accent colour the research read: the website's first, then the social profiles'. Tests only. */
+function researchAccentOf(brand) {
   for (const observed of [brand?.website, brand?.social]) {
     if (!observed) continue
     const colors = list(observed.colors)
@@ -34,14 +27,12 @@ function brandAccentOf(brand) {
 }
 
 /**
- * The look section from the chosen template and the brand step's record, and the assumptions it makes.
- * @param {{slug: string, name: string, version: string, accent?: string}} template the chosen template; `accent` is its
- *   own accent colour, kept when the brand step found none
- * @param {object | null} brand the brand step's record (`place-executor.js` stage `brand`)
+ * The look of the old fallback, for tests only (`allowTemplateLook`): the research's own colours read directly, and
+ * without any the template's accent and a text logo. Never on the product path (#616).
  */
-export function lookOf(template, brand) {
+function templateFallbackLookOf(template, brand) {
   const assumptions = []
-  let accent = brandAccentOf(brand)
+  let accent = researchAccentOf(brand)
   if (!accent) {
     accent = HEX_COLOUR.test(template?.accent ?? '') ? template.accent.toLowerCase() : null
     assumptions.push({
@@ -52,10 +43,8 @@ export function lookOf(template, brand) {
   }
   const chosen = brand?.logoResearch?.chosen
   let logo
-  if (chosen || isText(brand?.logo)) {
-    const name = LOGO_SOURCE_NAMES[chosen?.source] ?? (isText(chosen?.source) ? chosen.source : 'Your pages')
-    logo = { kind: 'own', source: name }
-  } else {
+  if (chosen || isText(brand?.logo)) logo = { kind: 'own', source: logoSourceName(chosen?.source) }
+  else {
     logo = { kind: 'text' }
     assumptions.push({
       id: 'logo',
@@ -64,7 +53,26 @@ export function lookOf(template, brand) {
     })
   }
   const { slug, name, version } = template ?? {}
-  return { look: { template: { slug, name, version }, accent, logo }, assumptions }
+  return {
+    look: { template: { slug, name, version }, accent, logo },
+    assumptions,
+    sources: { accent: { from: 'template-fallback' }, logo: { from: 'template-fallback' } }
+  }
+}
+
+/**
+ * The look section from the chosen template and the brand step's record (`brandLookOf`, #616), the assumptions it
+ * makes, and where the accent and the logo came from (`sources`). On the product path a missing brand record is a
+ * `brand_missing` error: the plan never falls back to the template's look.
+ * @param {{slug: string, name: string, version: string, accent?: string}} template the chosen template
+ * @param {object | null} brand the brand step's record (`brand-before-site.mjs`)
+ * @param {{allowTemplateLook?: boolean}} [options] `allowTemplateLook` (tests only, default false): a brand that is no
+ *   record reads as the old fallback
+ */
+export function lookOf(template, brand, { allowTemplateLook = false } = {}) {
+  if (isBrandLook(brand)) return lookOfBrandRecord(template, brand)
+  if (allowTemplateLook) return templateFallbackLookOf(template, brand)
+  return lookOfBrandRecord(template, null)
 }
 
 /** Why the plan drops an item of an image block, as the customer reads it (`picture-fit.mjs` reasons). */

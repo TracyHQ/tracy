@@ -148,7 +148,9 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   the block type (a `team` block shows `person` items); a block type without items, such as `contact`, shows facts
   only.
 - **`look`**: the chosen `template` `{slug, name, version}`, the brand `accent` as `#rrggbb`, and the `logo`, either
-  `{kind: "own", source}` or `{kind: "text"}` (the business name set as text).
+  `{kind: "own", source}` or `{kind: "text"}` (the business name set as text). An optional `accentDark` (`#rrggbb`,
+  #616) is the accent of the dark theme when it differs from the light one: a logo with no hue gives black on the
+  light theme (`accent`) and white on the dark theme (`accentDark`). Without it, `accent` is worn on both themes.
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
   to be generated, at most 6 (`MAX_GENERATED_FRAMES`), with a `reason` when above zero.
 - **`look`** also: an own logo names its `source`; a text logo has none.
@@ -329,7 +331,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `row` | `id`, `label`, `sources` |
 | `child list` | `name`, `rows`, `item?` |
 | `planned row` | `data?`, `page?`, `lists?` |
-| `look` | `template`, `accent`, `logo` |
+| `look` | `template`, `accent`, `logo`, `accentDark?` |
 | `template` | `slug`, `name`, `version` |
 | `logo` | `kind`, `source?` |
 | `pictures` | `own`, `generated` |
