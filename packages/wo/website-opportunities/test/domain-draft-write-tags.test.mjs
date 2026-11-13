@@ -80,6 +80,8 @@ const CASES = [
   ['an emoticon', 'See you soon ((:', null],
   ['words that name a scheme', 'Data: we keep only what you send', null],
   ['a scheme in a title attribute', '<span title="Learn JavaScript: fast">a</span>', null],
+  ['a scheme first in a title attribute', '<span title="JavaScript: fast">a</span>', null],
+  ['scheme words in an alt text', '<img src="a.jpg" alt="Data: kept safe">', null],
   ['a line break and an emphasis marker', 'THE((br/)) ((span))DRILL((/span))', null],
   ['a void tag closed by a slash', 'One<br/>two<br>three', null],
   ['a data: PNG picture', '<img src="data:image/png;base64,AAAA">', null],
