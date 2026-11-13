@@ -38,17 +38,17 @@ export function draftAiQuickstart({ kit, contentMap, decisions = {}, measured = 
 /** Counts a reviewer reads first: blocks, fields by type, limits by source, open items. */
 export function summaryOf({ blockStore, pageRecipes, report }) {
   const byType = {}
-  const limits = { kitFrame390: 0, contentMapFitPhone: 0, measuredOnSite: 0, notDrawn: 0, missing: 0 }
+  const limits = { kitFrame390: 0, measuredOnSite: 0, notDrawn: 0, other: 0, missing: 0 }
   for (const b of blockStore.blocks)
     for (const f of [...b.fields, ...(b.itemFields ?? [])]) {
       byType[f.type] = (byType[f.type] ?? 0) + 1
       if (f.type !== 'text') continue
       const from = String(f.limitFrom ?? '')
       if (!Number.isInteger(f.limit)) limits.missing++
-      else if (from.startsWith('measured at 390px')) limits.measuredOnSite++
-      else if (from.startsWith('not drawn at any width')) limits.notDrawn++
-      else if (/content map fit/.test(from) && !/kit frame/.test(from)) limits.contentMapFitPhone++
-      else limits.kitFrame390++
+      else if (/not drawn at any width/.test(from)) limits.notDrawn++
+      else if (/measured at \d+px on the running template/.test(from)) limits.measuredOnSite++
+      else if (/kit frame[^;]*\b390px \d+/.test(from)) limits.kitFrame390++
+      else limits.other++
     }
   return {
     blocks: blockStore.blocks.length,

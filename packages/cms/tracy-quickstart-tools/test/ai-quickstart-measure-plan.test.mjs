@@ -2,7 +2,12 @@
 // could not give, and what to fill there. Invented template only.
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { limitFromReadings, planMeasurements, shownTextOf } from '../ai-quickstart/lib/measure-plan.mjs'
+import {
+  MEASURE_WIDTHS,
+  limitFromReadings,
+  planMeasurements,
+  shownTextOf
+} from '../ai-quickstart/lib/measure-plan.mjs'
 
 const contentMap = {
   slots: [
@@ -42,10 +47,10 @@ test('each slot is filled on the first page that shows its block at 390 px, on t
   ])
 })
 
-test('a slot with no demo words, or a block no page shows at 390 px, is skipped with its reason', () => {
+test('a slot with no demo words, or a block no page shows at any width, is skipped with its reason', () => {
   const unmeasured = [
     { block: 'block-7', slot: 'module-7.1' },
-    { block: 'block-8', slot: 'module-8.0' }
+    { block: 'block-9', slot: 'module-8.0' }
   ]
   const plan = planMeasurements({ unmeasured, blockStore, kit, contentMap })
   assert.equal(plan.pages.length, 0)
@@ -82,10 +87,28 @@ test('a decision moves a slot to another page and opens a tab first', () => {
   ])
 })
 
-test('a text the phone layout hides is measured at the widest width, and says so', () => {
-  const rec = limitFromReadings({ 1440: { limit: 18, demo: 10, lines: 1 } }, '/', { hiddenAtNarrowest: true })
-  assert.equal(rec.limit, 18)
-  assert.match(rec.limitFrom, /^measured at 1440px .* hides it at 390px/)
+test('a text the phone layout hides is measured at the narrowest width that draws it, 768 px included', () => {
+  const readings = { 768: { limit: 14, demo: 10, lines: 1 }, 1440: { limit: 18, demo: 10, lines: 1 } }
+  const rec = limitFromReadings(readings, '/', { hiddenAt: [390] })
+  assert.equal(rec.limit, 14)
+  assert.match(rec.limitFrom, /^measured at 768px on the running template, page \/: 768px 14 .*1440px 18/)
+  assert.match(rec.limitFrom, /hides it at 390px/)
+  assert.equal(limitFromReadings(readings, '/'), null, 'a text not read at 390 px and not hidden there')
+})
+
+test('the measured widths are the phone, the tablet and the desktop width of the kit', () => {
+  assert.deepEqual(MEASURE_WIDTHS, [390, 768, 1440])
+})
+
+test('a block no page shows at 390 px is opened on a page that shows it at a wider width', () => {
+  const wide = { pages: [{ path: '/wide', blocks: { 390: ['header'], 768: ['header', 'block-8'] } }] }
+  const plan = planMeasurements({
+    unmeasured: [{ block: 'block-8', slot: 'module-8.0' }],
+    blockStore,
+    kit: wide,
+    contentMap
+  })
+  assert.equal(plan.pages[0].path, '/wide')
 })
 
 test('the tight form of a sample joins the words a hidden line break splits', () => {

@@ -13,10 +13,21 @@ test('a kit frame reading at 390 px is a measured limit, and the limit is the sm
   assert.deepEqual(limit, { limit: 32, limitFrom: 'kit frame (390px 32, 1440px 60)', measured: true })
 })
 
-test('a content map fit with a phone reading is measured; the phone viewport of the audit is 390 px', () => {
-  const limit = limitOf({ maxCharacters: 15, maxCharactersFrom: 'content map fit (desktop 108, phone 15)' })
-  assert.equal(limit.measured, true)
-  assert.equal(limit.limit, 15)
+test('a content map fit is no measurement: its box is a whole section, so its number is the demo length', () => {
+  for (const from of [
+    'content map fit (desktop 108, phone 15)',
+    'content map fit (desktop 259, phone 259)',
+    'content map fit of block-9.7 (desktop 27, phone 27)'
+  ]) {
+    const limit = limitOf({ maxCharacters: 15, maxCharactersFrom: from })
+    assert.equal(limit.measured, false, from)
+    assert.equal(limit.limit, null)
+  }
+})
+
+test('a kit frame reading at 390 px still counts when the kit also names a content map fit', () => {
+  const from = 'kit frame (390px 31, 1440px 40); content map fit (desktop 90, phone 90)'
+  assert.equal(limitOf({ maxCharacters: 31, maxCharactersFrom: from }).measured, true)
 })
 
 test('a declared store cap is no measurement, so it gives no limit', () => {

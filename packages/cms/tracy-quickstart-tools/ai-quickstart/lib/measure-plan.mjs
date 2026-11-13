@@ -23,7 +23,6 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
   const kitIdsOf = new Map(
     blockStore.blocks.map((b) => [b.id, (b.from?.kit ?? []).map((k) => k.split(' ')[0])])
   )
-  const width = String(NARROWEST_WIDTH)
   const byPath = new Map()
   const skipped = []
   const seen = new Set()
@@ -36,11 +35,13 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
       continue
     }
     const kitIds = new Set(kitIdsOf.get(block) ?? [])
+    // The first page that shows the block at 390 px, else at the next wider width (a header button the phone hides).
+    const shows = (w) => (p) => (p.blocks?.[w] ?? []).some((k) => kitIds.has(k))
     const page = measureOn[slot]?.path
       ? { path: measureOn[slot].path }
-      : (kit.pages ?? []).find((p) => (p.blocks?.[width] ?? []).some((k) => kitIds.has(k)))
+      : MEASURE_WIDTHS.map((w) => (kit.pages ?? []).find(shows(String(w)))).find(Boolean)
     if (!page) {
-      skipped.push({ slot, why: `no kit page shows ${block} at ${width} px` })
+      skipped.push({ slot, why: `no kit page shows ${block} at ${MEASURE_WIDTHS.join(', ')} px` })
       continue
     }
     // No `lines` from the content map: its fit of these slots is the box of a whole section (13 lines for a two
@@ -58,31 +59,41 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
   return { pages, skipped }
 }
 
-/** The width a measured limit must hold at too: the widest the kit reads, where a heading may have fewer lines. */
-export const WIDEST_WIDTH = 1440
+/** The widths a limit is read at: the phone, the tablet and the desktop width of the kit. */
+export const MEASURE_WIDTHS = Object.freeze([NARROWEST_WIDTH, 768, 1440])
 
 /**
- * The recorded limit of a slot from its readings per width (`{390: reading, 1440: reading}`): the smallest, as the
- * kit takes, so copy fits the phone and the desktop layout. Null without a reading at the narrowest width.
+ * The recorded limit of a slot from its readings per width (`{390: reading, 768: reading, 1440: reading}`): the
+ * smallest over every width that draws the text, as the kit takes, so copy fits the phone, the tablet and the
+ * desktop layout. A text must be read at 390 px, unless the layout hides it there (`hiddenAt`, its box drawn 0 by 0):
+ * then the narrowest width that draws it stands in, and the record says so. Null otherwise.
+ * @param {Record<string, {limit: number, demo: number, lines: number, how?: string}>} readings
+ * @param {string} path
+ * @param {{hiddenAt?: number[]}} [options]
  */
-export function limitFromReadings(readings, path, { hiddenAtNarrowest = false } = {}) {
-  if (!readings[NARROWEST_WIDTH] && !(hiddenAtNarrowest && readings[WIDEST_WIDTH])) return null
-  const widths = Object.keys(readings).sort((a, b) => Number(a) - Number(b))
+export function limitFromReadings(readings, path, { hiddenAt = [] } = {}) {
+  const hidden = new Set(hiddenAt.map(Number))
+  const widths = Object.keys(readings)
+    .map(Number)
+    .filter((w) => !hidden.has(w))
+    .sort((a, b) => a - b)
+  if (widths.length === 0) return null
+  const narrowest = widths[0]
+  if (narrowest !== NARROWEST_WIDTH && !hidden.has(NARROWEST_WIDTH)) return null
   const limit = Math.min(...widths.map((w) => readings[w].limit))
-  const how = Object.values(readings).some((r) => r.how === 'placeholder')
+  const how = widths.some((w) => readings[w].how === 'placeholder')
     ? `the form field's placeholder repeated until it was wider than the field`
     : 'the box filled until the text needed more lines than the demo shows, grew the page or pushed another text'
   const parts = widths.map((w) => {
     const r = readings[w]
     return `${w}px ${r.limit} (demo ${r.demo} characters on ${r.lines} line(s))`
   })
-  if (!readings[NARROWEST_WIDTH])
-    return {
-      limit,
-      limitFrom: `measured at ${WIDEST_WIDTH}px on the running template, page ${path}: ${parts.join(', ')}; ${how}; the block hides it at ${NARROWEST_WIDTH}px (its box is drawn 0 by 0), so ${WIDEST_WIDTH}px is the narrowest kit width that shows it`
-    }
+  const hiddenNote =
+    narrowest === NARROWEST_WIDTH
+      ? ''
+      : `; the layout hides it at ${[...hidden].sort((a, b) => a - b).join(' and ')}px (its box is drawn 0 by 0), so ${narrowest}px is the narrowest width that draws it`
   return {
     limit,
-    limitFrom: `measured at ${NARROWEST_WIDTH}px on the running template, page ${path}: ${parts.join(', ')}; ${how}`
+    limitFrom: `measured at ${narrowest}px on the running template, page ${path}: ${parts.join(', ')}; ${how}${hiddenNote}`
   }
 }

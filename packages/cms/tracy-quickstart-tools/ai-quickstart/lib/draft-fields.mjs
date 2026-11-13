@@ -2,11 +2,10 @@
 // template-kit.json in, a field of block-store.json out. The format is docs/references/ai-quickstart-contract.md.
 //
 // A text field's limit is the most characters it holds at the narrowest width. The kit already measured most slots
-// (`maxCharactersFrom`: its own frame reading at 390 and 1440 px, or the content map's Slot fit, ADR 0039, whose phone
-// viewport is 390 px); its number is the smallest of its readings, so it holds at 390 px too. A declared store cap,
-// a reading at the widest width only, or a fit that is only the box of the demo words is not a measurement: such a
-// field gets no limit from the kit, and needs one measured on the running template (`measured` below), or the
-// contract check reports it.
+// (`maxCharactersFrom`: its own frame reading at 390 and 1440 px); its number is the smallest of its readings, so it
+// holds at 390 px too. A declared store cap, a reading at the widest width only, and a content map fit (ADR 0039: its
+// box is a whole section, so its number is the demo length) are not measurements: such a field gets no limit from the
+// kit, and needs one measured on the running template (`measured` below), or the contract check reports it.
 
 /** The narrowest width a limit is measured at: the phone viewport of the kit and the coverage audit. */
 export const NARROWEST_WIDTH = 390
@@ -33,11 +32,14 @@ export function fieldTypeOf({ role, type }) {
   return 'text'
 }
 
-/** Whether a kit's `maxCharactersFrom` says the number was read at the narrowest width. */
+/**
+ * Whether a kit's `maxCharactersFrom` says the number was read at the narrowest width: only the kit's own frame
+ * reading at 390 px. A content map fit is never one: its box is the whole section the text sits in (711 characters
+ * in a box one line high, measured on JA Boxing), so its number is the demo sample's length, not what the box holds.
+ */
 function measuredAtNarrowest(from) {
   if (/box of the demo words/.test(from)) return false
-  if (new RegExp(`\\b${NARROWEST_WIDTH}px \\d+`).test(from)) return true
-  return /^content map fit\b/.test(from) && /\bphone \d+/.test(from)
+  return new RegExp(`\\bkit frame[^;]*\\b${NARROWEST_WIDTH}px \\d+`).test(from)
 }
 
 /**

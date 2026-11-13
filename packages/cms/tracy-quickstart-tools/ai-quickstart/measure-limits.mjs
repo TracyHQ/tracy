@@ -2,8 +2,10 @@
 /**
  * Measure, on a running copy of the template at the narrowest width (390 px), the text limits the kit could not give
  * (ticket #583). Reads <out>/draft-report.json (its `unmeasured` list, written by draft.mjs) and <out>/block-store.json;
- * opens each page in headless Chromium at 390 px and again at 1440 px (the limit is the smaller, as the kit takes) and runs the kit's own frame reading (`readTextFit`): the demo text's box is
- * filled longer and longer until it needs more lines than the demo shows, grows the page or pushes another text.
+ * opens each page in headless Chromium at 390, 768 and 1440 px (the limit is the smallest over the widths that draw
+ * the text, as the kit takes) and runs the kit's own frame reading (`readTextFit`): the demo text's box is filled
+ * longer and longer until it needs more lines than the demo shows, grows the page or pushes another text. A text the
+ * layout hides at 390 px is measured at the narrowest width that draws it.
  * Writes <out>/measured-limits.json, which draft.mjs reads on its next run. Nothing on the site is written.
  *
  *   PLAYWRIGHT_MODULE=<path to @playwright/test> node packages/cms/tracy-quickstart-tools/ai-quickstart/measure-limits.mjs \
@@ -16,7 +18,7 @@ import path from 'node:path'
 import { readTextFit } from '../template-kit/lib/read-text-fit.js'
 import { NARROWEST_WIDTH } from './lib/draft-fields.mjs'
 import { readHiddenTexts, readPlaceholderFit, wrapTextNodes } from './lib/read-box-state.js'
-import { WIDEST_WIDTH, limitFromReadings, planMeasurements } from './lib/measure-plan.mjs'
+import { MEASURE_WIDTHS, limitFromReadings, planMeasurements } from './lib/measure-plan.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 /** Opens a kit page path; a site without URL rewriting serves it under /index.php. */
@@ -61,12 +63,12 @@ async function main(argv) {
   const mod = await import(process.env.PLAYWRIGHT_MODULE ?? '@playwright/test')
   const browser = await (mod.chromium ?? mod.default.chromium).launch()
   const readings = {}
-  const hidden = new Set()
+  const hidden = {}
   try {
-    for (const width of [NARROWEST_WIDTH, WIDEST_WIDTH]) {
-      const phone = width === NARROWEST_WIDTH
+    for (const width of MEASURE_WIDTHS) {
+      const phone = width < 768
       const context = await browser.newContext({
-        viewport: { width, height: phone ? 844 : 900 },
+        viewport: { width, height: phone ? 844 : width < 1440 ? 1024 : 900 },
         isMobile: phone,
         hasTouch: phone,
         deviceScaleFactor: 1
@@ -97,10 +99,10 @@ async function main(argv) {
         const placeholders = await page.evaluate(readPlaceholderFit, { texts: rest })
         for (const t of texts)
           if (placeholders[t.id]) readings[t.slot] = { ...readings[t.slot], [width]: placeholders[t.id] }
-        if (width === NARROWEST_WIDTH) {
-          const gone = await page.evaluate(readHiddenTexts, { texts: rest })
-          for (const t of texts) if (gone[t.id]) hidden.add(t.slot)
-        }
+        const gone = await page.evaluate(readHiddenTexts, {
+          texts: texts.filter((t) => !readings[t.slot]?.[width]).map((t) => ({ id: t.id, text: t.text }))
+        })
+        for (const t of texts) if (gone[t.id]) hidden[t.slot] = [...(hidden[t.slot] ?? []), width]
       }
       await context.close()
     }
@@ -109,20 +111,19 @@ async function main(argv) {
   }
   for (const { texts, path: pagePath } of plan.pages)
     for (const t of texts) {
-      const rec = limitFromReadings(readings[t.slot] ?? {}, pagePath, {
-        hiddenAtNarrowest: hidden.has(t.slot)
-      })
+      const rec = limitFromReadings(readings[t.slot] ?? {}, pagePath, { hiddenAt: hidden[t.slot] ?? [] })
       if (rec) limits[t.slot] = rec
       else
         notFound.push({
           slot: t.slot,
-          why: `no shown box on ${pagePath} at ${NARROWEST_WIDTH} px holds the demo words`
+          why: `no shown box on ${pagePath} at ${MEASURE_WIDTHS.join(', ')} px holds the demo words`
         })
     }
   const doc = {
     $comment:
-      'Text limits measured at the narrowest width on a running copy of the template by measure-limits.mjs (ticket #583); draft.mjs reads them.',
+      'Text limits measured on a running copy of the template by measure-limits.mjs (ticket #583): the smallest reading over the widths that draw the text, read at 390 px unless the layout hides it there. draft.mjs reads them.',
     width: NARROWEST_WIDTH,
+    widths: MEASURE_WIDTHS,
     measuredOn: siteLabel,
     limits,
     notFound: [...plan.skipped, ...notFound]
