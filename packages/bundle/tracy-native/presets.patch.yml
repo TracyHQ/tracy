@@ -992,6 +992,8 @@
                 Keep every message short and plain, with no technical words. Write in the language of the owner's interface. Never claim a site was made or built.
           - id: tracy-build-chat
             name: '@tracy/dsh-build-chat'
+            config:
+              tool: true
           - id: tool-ask-user
             name: '@deepseek-ai/dsh-tool-ask-user'
           - id: compaction

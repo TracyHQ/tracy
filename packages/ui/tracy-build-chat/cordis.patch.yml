@@ -1,7 +1,8 @@
 # Insert this plugin's row. Whichever bundle loads this package puts the row in the loader tree.
 #
-# Not named by any bundle yet (TracyHQ/tracy#609 wires the cards to the build session's real tool results): until then
-# no customer page loads it.
+# Both Tracy bundles name it (the cards draw for the build chat, behind the UI switch `chat-build`). With no config
+# the host half registers nothing; the `site-builder` preset mounts the package again with `config.tool: true`, which
+# registers the engine tool `tracy_build` and its question guard in the build agent's own scope (TracyHQ/tracy#609).
 - insert:
     - id: tracy-build-chat
       name: '@tracy/dsh-build-chat'

@@ -222,6 +222,9 @@ importers:
       '@tracy/dsh-brand':
         specifier: workspace:^
         version: link:../../brand/tracy-brand
+      '@tracy/dsh-build-chat':
+        specifier: workspace:^
+        version: link:../../ui/tracy-build-chat
       '@tracy/dsh-chat-input':
         specifier: workspace:^
         version: link:../../ui/tracy-chat-input
@@ -267,6 +270,9 @@ importers:
       '@tracy/dsh-brand-engine':
         specifier: workspace:^
         version: link:../../design/tracy-brand-engine
+      '@tracy/dsh-build-chat':
+        specifier: workspace:^
+        version: link:../../ui/tracy-build-chat
       '@tracy/dsh-chat-input':
         specifier: workspace:^
         version: link:../../ui/tracy-chat-input

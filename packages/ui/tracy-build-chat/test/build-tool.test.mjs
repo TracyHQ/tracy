@@ -1,0 +1,411 @@
+/**
+ * The build chat's engine tool `tracy_build` (TracyHQ/tracy#609): it only forwards to tracy-web's build draft doors,
+ * as the person who typed, and guards the build session's questions. The fake fetch below follows the door contract
+ * in `src/host/doors.ts`. Every business here is invented.
+ *
+ *   node --test --test-concurrency=1 packages/ui/tracy-build-chat/test/build-tool.test.mjs
+ */
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+
+import { BUILD_RUNNING_SAY, BUILD_STOPPED_SAY, createBuildTool } from '../src/host/build-tool.mjs'
+
+const SESSION = 'session-build-0f3c2a8e-1b2d-4c5e-8f90-a1b2c3d4e5f6'
+const ORIGIN = 'https://tracy.example'
+
+/** A Contract B question of the invented club: a fact conflict offers the conflicting values as its choices. */
+const PHONE = {
+  schema: 'tracy-build-question/v1',
+  id: 'phone',
+  topic: 'fact-conflict',
+  fact: 'contact.phone',
+  prompt: 'Two sources show different phone numbers. Which is correct?',
+  choices: [
+    { id: 'website', label: '04 000 0000', detail: 'From your website', recommended: true },
+    { id: 'maps', label: '04 000 0009', detail: 'From the map listing' }
+  ],
+  freeText: { maxLength: 40 }
+}
+const LANGUAGE = {
+  schema: 'tracy-build-question/v1',
+  id: 'language',
+  topic: 'site-language',
+  prompt: 'Which language should the site use?',
+  choices: [{ id: 'en', label: 'English', recommended: true }],
+  freeText: { maxLength: 40 },
+  skippable: true
+}
+const ASK = {
+  questions: [
+    { id: 'phone', question: PHONE.prompt, options: [{ label: '04 000 0000' }, { label: '04 000 0009' }] },
+    { id: 'language', question: LANGUAGE.prompt, options: [{ label: 'English' }] }
+  ]
+}
+const PROFILE = { business: 'Harbour Lane Tennis Club', counts: { services: 4, facts: 9 } }
+const PLAN = {
+  schema: 'tracy-build-plan/v1',
+  id: 'plan-harbour-lane',
+  revision: 1,
+  name: 'Harbour Lane Tennis Club',
+  language: 'en',
+  facts: [],
+  items: [],
+  look: { template: 'ja-sport', accent: '#205080', logo: { kind: 'own' } },
+  pages: [{ id: 'home', name: 'Home', blocks: [] }],
+  pictures: { own: { frames: 0, from: [] }, generated: { frames: 0 } },
+  assumptions: [],
+  leftOut: []
+}
+
+/** A fake tracy-web: `routes['METHOD /path']` answers `{ status, body }`, or a function of the request. */
+function fakeWeb(routes) {
+  const calls = []
+  const http = async (url, init = {}) => {
+    const { pathname } = new URL(url)
+    const method = init.method ?? 'GET'
+    const body = init.body === undefined ? undefined : JSON.parse(init.body)
+    calls.push({ method, path: pathname, headers: init.headers ?? {}, body })
+    let answer = routes[`${method} ${pathname}`]
+    if (typeof answer === 'function') answer = answer(body, calls)
+    if (Array.isArray(answer)) answer = answer.length > 1 ? answer.shift() : answer[0]
+    if (answer === undefined) return new Response('not found', { status: 404 })
+    return new Response(JSON.stringify(answer.body ?? {}), {
+      status: answer.status ?? 200,
+      headers: { 'content-type': 'application/json' }
+    })
+  }
+  return { http, calls }
+}
+
+/** A tool with a clock the test moves: each sleep advances it. */
+function toolWith(web, { events = [], waitMs = 90_000, pollMs = 2_000, actor = 'signed-assertion' } = {}) {
+  let clock = 0
+  return createBuildTool({
+    http: web.http,
+    origin: () => ORIGIN,
+    actorFor: () => actor,
+    eventsOf: () => events,
+    now: () => clock,
+    sleep: async (ms) => {
+      clock += ms
+    },
+    waitMs,
+    pollMs
+  })
+}
+
+const run = (tool, args, sessionId = SESSION) => tool.execute(args, { agent: { session: { id: sessionId } } })
+const runIn = (tool, args, sessionId) => tool.execute(args, { agent: { session: { id: sessionId } } })
+
+const researchDone = {
+  step: 'research',
+  state: 'done',
+  result: { profile: PROFILE, questions: [PHONE, LANGUAGE], ask: ASK }
+}
+
+test('refuses outside a build chat session and calls no door', async () => {
+  const web = fakeWeb({})
+  const tool = toolWith(web)
+  for (const id of ['session-0f3c2a8e-1b2d-4c5e-8f90-a1b2c3d4e5f6', 'session-build-nope', undefined]) {
+    const answer = await runIn(tool, { action: 'research', links: ['https://harbour-lane.example'] }, id)
+    assert.equal(answer.refused, true)
+    assert.equal(answer.ask, undefined)
+  }
+  assert.equal(web.calls.length, 0)
+})
+
+test('research forwards links and description as the person who typed, and returns ask unchanged', async () => {
+  const web = fakeWeb({ 'POST /api/build-draft/research': { body: researchDone } })
+  const tool = toolWith(web)
+  const answer = await run(tool, {
+    action: 'research',
+    links: ['https://harbour-lane.example', 'https://maps.example/harbour-lane'],
+    description: 'A small tennis club by the harbour'
+  })
+  assert.deepEqual(answer, { profile: PROFILE, ask: ASK })
+  const [call] = web.calls
+  assert.equal(call.path, '/api/build-draft/research')
+  assert.deepEqual(call.body, {
+    links: ['https://harbour-lane.example', 'https://maps.example/harbour-lane'],
+    description: 'A small tennis club by the harbour'
+  })
+  assert.equal(call.headers['x-tracy-actor'], 'signed-assertion')
+  assert.equal(call.headers['x-tracy-session'], SESSION)
+})
+
+test('research with neither a link nor a description asks the agent for one and calls no door', async () => {
+  const web = fakeWeb({})
+  const answer = await run(toolWith(web), { action: 'research', links: [] })
+  assert.equal(answer.refused, true)
+  assert.equal(web.calls.length, 0)
+})
+
+test('the replies in the session log are stored through the answers door before the next call, once each', async () => {
+  const events = [
+    {
+      type: 'tool/call',
+      data: { name: 'ask_user_question', callId: 'q1', arguments: JSON.stringify(ASK) }
+    },
+    {
+      type: 'tool/result',
+      data: {
+        message: {
+          source: { callId: 'q1' },
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({
+                answers: [
+                  { id: 'phone', selected: ['04 000 0009'] },
+                  { id: 'language', selected: [] }
+                ]
+              })
+            }
+          ]
+        }
+      }
+    }
+  ]
+  const web = fakeWeb({
+    'POST /api/build-draft/research': { body: researchDone },
+    'PUT /api/build-draft/answers': { body: { draft: {} } },
+    'GET /api/build-draft/templates': { body: { templates: [] } }
+  })
+  const tool = toolWith(web, { events })
+  await run(tool, { action: 'research', description: 'A small tennis club by the harbour' })
+  await run(tool, { action: 'templates' })
+  await run(tool, { action: 'templates' })
+  const order = web.calls.map((c) => `${c.method} ${c.path}`)
+  // The log already holds replies before research: the engine door is asked once what it issued (nothing yet).
+  assert.deepEqual(order, [
+    'GET /api/build-draft/engine',
+    'POST /api/build-draft/research',
+    'PUT /api/build-draft/answers',
+    'PUT /api/build-draft/answers',
+    'GET /api/build-draft/templates',
+    'GET /api/build-draft/templates'
+  ])
+  const stored = web.calls.filter((c) => c.method === 'PUT').map((c) => c.body)
+  assert.deepEqual(stored, [
+    {
+      question: PHONE,
+      answer: { schema: 'tracy-build-answer/v1', question: 'phone', choice: 'maps' }
+    },
+    {
+      question: LANGUAGE,
+      answer: { schema: 'tracy-build-answer/v1', question: 'language', skipped: true }
+    }
+  ])
+  for (const c of web.calls) assert.equal(c.headers['x-tracy-session'], SESSION)
+})
+
+test('long work answers running, and status returns the result when it is done', async () => {
+  const running = { body: { step: 'compose', state: 'running' } }
+  const done = {
+    body: { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'own' } }
+  }
+  // 90 seconds of polls every 2 seconds still running, then done on the call after.
+  const engine = Array.from({ length: 45 }, () => running)
+  engine.push(done)
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { status: 202, body: { step: 'compose', state: 'running' } },
+    'GET /api/build-draft/engine': engine
+  })
+  const tool = toolWith(web)
+  const first = await run(tool, { action: 'plan' })
+  assert.deepEqual(first, {
+    running: true,
+    say: BUILD_RUNNING_SAY,
+    next: 'Say the sentence in say, then call tracy_build with action status to keep waiting.'
+  })
+  const second = await run(tool, { action: 'status' })
+  assert.deepEqual(second.plan, { id: 'plan-harbour-lane', revision: 1 })
+  assert.equal(second.review.questions[0].intent.kind, 'plan-review')
+  assert.equal(second.stopped, undefined)
+})
+
+test('a stopped door answer yields stopped with the owner sentence and no ask', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/research': {
+      body: {
+        step: 'research',
+        state: 'stopped',
+        say: 'Your site plan could not be prepared. The Tracy team has the details and will look into it.',
+        result: { ask: ASK }
+      }
+    }
+  })
+  const answer = await run(toolWith(web), { action: 'research', description: 'A small tennis club' })
+  assert.deepEqual(answer, {
+    stopped: true,
+    say: 'Your site plan could not be prepared. The Tracy team has the details and will look into it.'
+  })
+})
+
+test('faults never leak: a refused door, an unreachable tracy-web and nobody to act as all say the stopped sentence', async () => {
+  const forbidden = fakeWeb({
+    'POST /api/build-draft/compose': { status: 403, body: { code: 'NOT_BUILD_SESSION' } }
+  })
+  assert.deepEqual(await run(toolWith(forbidden), { action: 'plan' }), {
+    stopped: true,
+    say: BUILD_STOPPED_SAY
+  })
+  const broken = {
+    http: async () => {
+      throw new Error('connect ECONNREFUSED')
+    }
+  }
+  assert.deepEqual(await run(toolWith(broken), { action: 'templates' }), {
+    stopped: true,
+    say: BUILD_STOPPED_SAY
+  })
+  const nobody = fakeWeb({})
+  assert.deepEqual(await run(toolWith(nobody, { actor: null }), { action: 'templates' }), {
+    stopped: true,
+    say: BUILD_STOPPED_SAY
+  })
+  assert.equal(nobody.calls.length, 0)
+})
+
+test('brand unavailable yields stopped: the plan is never composed with the template standing in', async () => {
+  for (const body of [
+    { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'unavailable' } },
+    { step: 'compose', state: 'stopped', reason: 'brand-unavailable' }
+  ]) {
+    const web = fakeWeb({ 'POST /api/build-draft/compose': { body } })
+    assert.deepEqual(await run(toolWith(web), { action: 'plan', request: 'Make it feel calm' }), {
+      stopped: true,
+      say: BUILD_STOPPED_SAY
+    })
+    assert.deepEqual(web.calls[0].body, { request: 'Make it feel calm' })
+  }
+})
+
+test('templates come back as the card options; edit forwards changes and returns the review', async () => {
+  const option = {
+    slug: 'ja-sport',
+    name: 'Sport',
+    version: '1.0.0',
+    picture: 'https://tracy.example/t/ja-sport.png',
+    reason: 'Made for clubs with classes and coaches',
+    quickstart: 'released',
+    fits: true
+  }
+  const web = fakeWeb({
+    'GET /api/build-draft/templates': {
+      body: { templates: [option, { ...option, slug: 'ja-old', fits: false }] }
+    },
+    'POST /api/build-draft/edit': (body) => ({
+      body: {
+        step: 'edit',
+        state: 'done',
+        result: { plan: { ...PLAN, revision: 2 }, brand: 'own' },
+        echo: body
+      }
+    })
+  })
+  const tool = toolWith(web)
+  assert.deepEqual(await run(tool, { action: 'templates' }), { options: [option], none: false })
+  const changes = [{ field: 'pages[home].name', value: 'Welcome' }]
+  const edited = await run(tool, { action: 'edit', changes })
+  assert.deepEqual(web.calls[1].body, { changes })
+  assert.deepEqual(edited.plan, { id: 'plan-harbour-lane', revision: 2 })
+  assert.ok(edited.review)
+})
+
+test('an edit the plan refuses comes back with owner readable problems, not as a question', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/edit': {
+      status: 422,
+      body: { code: 'INVALID_EDIT', problems: ['The page name is too long.'] }
+    }
+  })
+  const answer = await run(toolWith(web), {
+    action: 'edit',
+    changes: [{ field: 'pages[home].name', value: 'x' }]
+  })
+  assert.equal(answer.refused, true)
+  assert.deepEqual(answer.problems, ['The page name is too long.'])
+  assert.equal(answer.ask, undefined)
+})
+
+/** One `ask_user_question` dispatch as dsh's tool guard sees it. */
+const asking = (ids, sessionId = SESSION) => ({
+  name: 'ask_user_question',
+  agent: { session: { id: sessionId } },
+  arguments: { questions: ids.map((id) => ({ id, question: `Question ${id}?` })) }
+})
+
+test('the guard refuses a question the engine did not issue, and allows issued ones and the plan review', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/research': { body: researchDone },
+    'POST /api/build-draft/compose': {
+      body: { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'own' } }
+    }
+  })
+  const tool = toolWith(web)
+  // Before the engine issued anything, no question passes.
+  assert.equal(typeof tool.guard(asking(['phone'])), 'string')
+  assert.equal(typeof tool.guard(asking(['plan-review'])), 'string')
+  await run(tool, { action: 'research', description: 'A small tennis club' })
+  assert.equal(tool.guard(asking(['phone', 'language'])), undefined)
+  assert.equal(typeof tool.guard(asking(['phone', 'opening-hours'])), 'string')
+  assert.equal(typeof tool.guard(asking([])), 'string')
+  assert.equal(typeof tool.guard(asking(['plan-review'])), 'string', 'no plan, no review')
+  const planned = await run(tool, { action: 'plan' })
+  assert.equal(tool.guard(asking([planned.review.questions[0].id])), undefined)
+  // Other tools, and sessions that are not build chats, are not this guard's business.
+  assert.equal(tool.guard({ ...asking(['anything']), name: 'web_search' }), undefined)
+  assert.equal(tool.guard(asking(['anything'], 'session-0f3c2a8e-1b2d-4c5e-8f90-a1b2c3d4e5f6')), undefined)
+  // Arguments sent as a JSON string are read the same way.
+  assert.equal(
+    typeof tool.guard({ ...asking([]), arguments: JSON.stringify({ questions: [{ id: 'made-up' }] }) }),
+    'string'
+  )
+})
+
+test('the engine may issue more than three questions: every issued one passes the guard', async () => {
+  const many = Array.from({ length: 6 }, (_, n) => ({ ...PHONE, id: `conflict-${n}`, fact: `fact.${n}` }))
+  const web = fakeWeb({
+    'POST /api/build-draft/research': {
+      body: { step: 'research', state: 'done', result: { profile: PROFILE, questions: many } }
+    }
+  })
+  const tool = toolWith(web)
+  await run(tool, { action: 'research', description: 'A small tennis club' })
+  assert.equal(tool.guard(asking(many.map((q) => q.id))), undefined)
+})
+
+test('the issued questions are learned again from the engine door after a restart', async () => {
+  const events = [
+    { type: 'tool/call', data: { name: 'ask_user_question', callId: 'q1', arguments: ASK } },
+    {
+      type: 'tool/result',
+      data: {
+        message: {
+          source: { callId: 'q1' },
+          content: [
+            {
+              type: 'text',
+              text: JSON.stringify({ answers: [{ id: 'phone', selected: [], custom: '04 000 0001' }] })
+            }
+          ]
+        }
+      }
+    }
+  ]
+  const web = fakeWeb({
+    'GET /api/build-draft/engine': { body: { step: 'research', state: 'done', result: researchDone.result } },
+    'PUT /api/build-draft/answers': { body: { draft: {} } },
+    'GET /api/build-draft/templates': { body: { templates: [] } }
+  })
+  const tool = toolWith(web, { events })
+  const answer = await run(tool, { action: 'templates' })
+  assert.deepEqual(answer, { options: [], none: true })
+  const put = web.calls.find((c) => c.method === 'PUT')
+  assert.deepEqual(put.body.answer, {
+    schema: 'tracy-build-answer/v1',
+    question: 'phone',
+    text: '04 000 0001'
+  })
+})

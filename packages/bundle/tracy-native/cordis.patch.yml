@@ -175,6 +175,13 @@
     - id: tracy-assistant
       name: '@tracy/dsh-assistant'
 
+    # The build chat (TracyHQ/tracy#602, #609): its cards in the browser half. Loaded for every session so the cards
+    # can draw, but its host half is inert here: the engine tool `tracy_build` is registered only where the
+    # `site-builder` preset mounts this package again with `config.tool: true` (`scripts/gen-presets.ts`), in that
+    # agent's own scope. Operator switch: `chat-build`.
+    - id: tracy-build-chat
+      name: '@tracy/dsh-build-chat'
+
     # Website Opportunities (tasks/spec-website-opportunities-contracts.md): one side-card tab
     # (`tracy:website-opportunities`) and a Settings section (Default CMS). Client only; every door
     # is tracy-web's `/api/website-opportunities/…`. Operator switch: `website-opportunities`.

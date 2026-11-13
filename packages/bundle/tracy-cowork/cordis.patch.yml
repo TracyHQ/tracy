@@ -106,6 +106,13 @@
     - id: tracy-assistant
       name: '@tracy/dsh-assistant'
 
+    # The build chat (TracyHQ/tracy#602, #609): its cards in the browser half. Loaded for every session so the cards
+    # can draw, but its host half is inert here: the engine tool `tracy_build` is registered only where the
+    # `site-builder` preset mounts this package again with `config.tool: true` (`scripts/gen-presets.ts`), in that
+    # agent's own scope. Operator switch: `chat-build`.
+    - id: tracy-build-chat
+      name: '@tracy/dsh-build-chat'
+
     # Mode+Platform picker (Storybook mockup Option C), on the new-session hero. It takes the
     # single `conversation.hero.agentPreset` slot, so `ui-agent-preset` must stand down (below,
     # next to the `agent-preset-registry` row it shares a theme with) — the same "second declaration

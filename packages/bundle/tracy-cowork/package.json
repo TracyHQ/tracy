@@ -25,6 +25,7 @@
     "@huanlin/dsh-plugin-better-locale": "0.3.0-tracy.13",
     "@tracy/dsh-brand": "workspace:^",
     "@tracy/dsh-assistant": "workspace:^",
+    "@tracy/dsh-build-chat": "workspace:^",
     "@tracy/dsh-chat-input": "workspace:^",
     "@tracy/dsh-settings": "workspace:^",
     "@tracy/dsh-tracy-locale-vi": "workspace:^",

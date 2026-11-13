@@ -863,6 +863,12 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   read from `packages/cms/tracy-joomla-quickstart/ai-quickstarts/` (COPYed to `src/ai-quickstarts/` in the image): a kit
   is offered for a trade only when its `kit-manifest.json` says released and lists the trade, its mapping is written and
   the AI quickstart contract check passes.
+  The build chat's agent reaches the engine only through the tool `tracy_build` (`@tracy/dsh-build-chat` host half,
+  registered in the `site-builder` agent's scope), which forwards to the engine doors under `/api/build-draft/`
+  (`research`, `templates`, `compose`, `edit`, `engine`, contract in `packages/ui/tracy-build-chat/README.md`) as the
+  person who typed (`x-tracy-actor`) with the build session id (`x-tracy-session`), and stores the owner's question
+  replies through `PUT /api/build-draft/answers`. It holds no secret and no engine logic; long engine work is read
+  back from `GET /api/build-draft/engine`, never held open in one call.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,

@@ -77,7 +77,12 @@ test('both bundles carry the generated build agent with the build engine row', (
     const start = yml.indexOf('- id: preset-site-builder')
     assert.ok(start > 0, file)
     const preset = yml.slice(start)
-    assert.match(preset, /- id: tracy-build-chat\n\s+name: '@tracy\/dsh-build-chat'/, file)
+    // Only this mount registers the engine tool (`config.tool: true`); the bundle row leaves the host half inert.
+    assert.match(
+      preset,
+      /- id: tracy-build-chat\n\s+name: '@tracy\/dsh-build-chat'\n\s+config:\n\s+tool: true\n/,
+      file
+    )
     assert.match(preset, /Call tracy_build with action research first\./, file)
     assert.doesNotMatch(preset, /sports businesses/, file)
     for (const banned of ['tool-bash', 'tool-fs', 'tool-skill', 'skill-filesystem', 'tracy-webroot-read']) {

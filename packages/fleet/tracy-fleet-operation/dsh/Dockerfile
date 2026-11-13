@@ -332,6 +332,8 @@ COPY packages/site/tracy-site-tabs           /desk-home/profiles/native/node_mod
 COPY packages/site/tracy-website-opportunities /desk-home/profiles/native/node_modules/@tracy/dsh-website-opportunities
 COPY packages/ui/tracy-ask-form              /desk-home/profiles/native/node_modules/@tracy/dsh-ask-form
 COPY packages/ui/tracy-assistant             /desk-home/profiles/native/node_modules/@tracy/dsh-assistant
+# The build chat: its cards, and its host half (`tracy_build`, bundled into `lib/index.js` with `@tracy/core`).
+COPY packages/ui/tracy-build-chat            /desk-home/profiles/native/node_modules/@tracy/dsh-build-chat
 # Three Build plugins, one per CMS (09/09; EmDash 15/09). `@tracy/site-build-core` — everything they share —
 # is a SOURCE library bundled into each plugin's `lib/`, so it is NOT copied: a copy here would be a
 # second, unbundled answer to what the two `lib/index.js` already carry.

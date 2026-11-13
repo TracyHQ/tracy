@@ -322,6 +322,10 @@ function presetLines(preset: {
     }
     // This preset's own skills (`SKILL_SETS`, built in the image from `skillSetsJson`).
     if (row.id === 'skill-filesystem') cfg('customSkillDirs:', `  - /opt/tracy/skill-sets/${preset.id}`)
+    // The build chat engine (TracyHQ/tracy#609): the bundles load `@tracy/dsh-build-chat` for its cards with no
+    // config, which leaves its host half inert; only this mount, in the build agent's own scope, registers
+    // `tracy_build` and its question guard. So the tool is registered once, and only where the preset lists it.
+    if (row.id === 'tracy-build-chat') cfg('tool: true')
     /**
      * A catalog line is a summary for CHOOSING a skill, and dsh re-sends the whole catalog on every
      * step: at dsh's default of 500 characters a line, the Designer's catalog was 6,695–7,506

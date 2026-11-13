@@ -1,7 +1,7 @@
 {
   "name": "@tracy/dsh-build-chat",
   "version": "0.1.0",
-  "description": "The build chat's own cards: the template choice, the build task list with its timer, and the notice of a build that could not finish",
+  "description": "The build chat: its own cards (the template choice, the build task list with its timer, the notice of a build that could not finish) and the engine tool tracy_build",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -14,8 +14,9 @@
     "cordis.patch.yml"
   ],
   "scripts": {
-    "build": "node scripts/build-client.mjs",
-    "typecheck": "tsc --noEmit"
+    "build": "node scripts/build-client.mjs && node scripts/build-host.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs"
   },
   "dsh": {
     "bundle": {
