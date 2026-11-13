@@ -683,7 +683,7 @@ test(
 )
 
 test(
-  'while the chain runs the row keeps a snapshot, and a hard failure leaves it at the step that was under way',
+  'while the chain runs the row keeps a snapshot, and a hard failure ends it stopped with the frame reason',
   dbOpts,
   async () => {
     const { pool } = db
@@ -712,8 +712,10 @@ test(
       seen.steps.some((st) => st.step === 'brand' && st.usd === 0.1),
       'finished steps and their spend are there'
     )
+    // The frame ends the run with its reason: the row no longer stays at a snapshot (#591).
     const row = (await briefOf(pool, 'harbourpadel.tracy.test')).timings.chain
-    assert.equal(row.ending, 'running', 'the last snapshot stays; the reader sees the row failed')
+    assert.equal(row.ending, 'stopped')
+    assert.equal(row.stop.error, 'the run died')
   }
 )
 

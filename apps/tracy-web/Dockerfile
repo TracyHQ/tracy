@@ -264,6 +264,8 @@ RUN useradd --system --create-home --shell /usr/sbin/nologin tracy-web && chown 
 # An empty named volume inherits this private mountpoint's owner/mode on its first mount.
 # No campaign key is built into this image or copied into a database backup.
 RUN install -d -m 0700 -o tracy-web -g tracy-web /var/lib/tracy/invitations-real-keys
+# The step chain's run records (ADR 0047, decision 5): a named volume in deploy/compose.yml, so they outlive the container.
+RUN install -d -m 0700 -o tracy-web -g tracy-web /var/lib/tracy/step-chain-records
 USER tracy-web
 ENV NODE_ENV=production PORT=8080
 EXPOSE 8080

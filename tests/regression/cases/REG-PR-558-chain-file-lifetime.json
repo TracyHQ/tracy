@@ -12,7 +12,8 @@
   ],
   "expect": [
     "Both exports share the same run folder under the step records folder.",
-    "After disposal both exports are still there, with the run record beside them (ADR 0047, decision 5); cancellation remains supported."
+    "After disposal both exports are still there, with the run record beside them (ADR 0047, decision 5); cancellation remains supported.",
+    "A re-run writes into its own attempt folder, a record that cannot be written is logged as an error, and records in the temporary folder are warned about at startup (#591)."
   ],
   "selectors": {},
   "fence": "Disposal keeps the run folder and writes the run record; it deletes nothing.",
@@ -26,7 +27,10 @@
     ],
     "tests": [
       "parallel brand and planner exports share one run folder, and disposal keeps them with the record",
-      "a run that stopped before any step made a file still keeps its record"
+      "a run that stopped before any step made a file still keeps its record",
+      "a re-run writes into its own folder, so the files of the failed attempt stay as they were",
+      "a record that cannot be written is logged loudly and fails the disposal, never silently",
+      "records in the temporary folder are warned about once at startup; a set folder is not"
     ],
     "needs": []
   }

@@ -20,7 +20,11 @@ test('a running snapshot keeps when each running step started; an ended run does
   assert.deepEqual(running.runningSince, { brand: iso(1), plan: iso(1) })
   const ended = chainSummary(record, null, 60_000)
   assert.equal(ended.runningSince, undefined)
-  assert.equal(ended.ending, 'complete')
+  // An ended run whose record does not end with a completed Write step is never complete (#591).
+  assert.equal(ended.ending, 'stopped')
+  assert.equal(ended.stop.code, 'STEP_CHAIN_INCOMPLETE')
+  const written = [...record, { step: 'write', startMs: 6_000, endMs: 9_000, usd: 0, outcome: 'done' }]
+  assert.equal(chainSummary(written, null, 60_000).ending, 'complete')
   // An older caller with no starts still writes the snapshot it wrote before.
   assert.equal(chainSummary(record, null, 60_000, ['brand']).runningSince, undefined)
 })

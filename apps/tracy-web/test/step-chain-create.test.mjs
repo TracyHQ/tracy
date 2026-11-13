@@ -42,7 +42,8 @@ const env = {
   SEAT_local_SECRET: 'k'
 }
 
-function harness(pool) {
+/** The app at the edge; `chainDoors` answers which model doors are empty (none by default). */
+function harness(pool, { chainDoors = async () => [] } = {}) {
   const provisions = []
   const started = []
   const fetchImpl = async (input, init) => {
@@ -63,6 +64,7 @@ function harness(pool) {
     sites: dbSitesResolver(pool, config),
     host: { hostCall, hostJob },
     fetchImpl,
+    chainDoors,
     briefs: {
       async start(input) {
         started.push(input)
@@ -204,6 +206,26 @@ test(
       assert.equal((await off.json()).code, 'STEP_CHAIN_OFF')
     }
     assert.equal(h.provisions.length, 0)
+    assert.equal(h.started.length, 0)
+    assert.equal((await pool.query('select count(*)::int as n from site')).rows[0].n, 0)
+  }
+)
+
+test(
+  'an empty model door refuses the press before the base site is created or the frame starts',
+  opts,
+  async () => {
+    const { pool } = db
+    const revision = await revisionOf(pool, 'owner@example.test')
+    let asked = 0
+    const h = harness(pool, {
+      chainDoors: async () => ((asked += 1), [{ door: 'siteWriter', state: 'unassigned' }])
+    })
+    const res = await h.post('owner@example.test', press(revision))
+    assert.equal(res.status, 409, await res.clone().text())
+    assert.equal((await res.json()).code, 'STEP_CHAIN_DOORS_EMPTY')
+    assert.equal(asked, 1)
+    assert.equal(h.provisions.length, 0, 'no base site is created')
     assert.equal(h.started.length, 0)
     assert.equal((await pool.query('select count(*)::int as n from site')).rows[0].n, 0)
   }

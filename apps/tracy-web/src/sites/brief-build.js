@@ -198,6 +198,8 @@ function withTimeout(promise, ms, message) {
  * @property {(ctx: BriefContext | BriefInput) => Promise<unknown>} [validateBase] - verify the host holds a full recovery point before retry preparation and base readiness
  * @property {boolean} [requiresSetupHold] - refuse content writes when the opening setup seal is unproven
  * @property {(prepared: unknown) => Promise<void>} [dispose] - whatever `prepare` left behind (files), whatever became of the run
+ * @property {(prepared: unknown, reason?: unknown) => object | null} [end] - a step chain run the frame failed outside the
+ *   engine: its stop names `reason`, and the final measurement it returns is what the row keeps (#591)
  */
 
 /**
@@ -482,6 +484,28 @@ export function createBriefBuilds({
     return engines[input.platform]
   }
 
+  /** A run's record that could not be kept is said loudly (ADR 0047, decision 5). */
+  function disposeFailed(/** @type {string} */ siteKey, /** @type {unknown} */ error) {
+    ;(log.error ?? log.warn)?.call(
+      log,
+      `[brief] ${siteKey}: what the run left could not be kept: ${error instanceof Error ? error.message : String(error)}`
+    )
+  }
+
+  /**
+   * The final chain measurement of a run that settled after its row was failed: written only while the row is still that
+   * failed run (state `failed`, its chain still a snapshot), never over a run pressed again since.
+   * @param {string} siteKey @param {object} chain
+   */
+  async function keepLateChain(siteKey, chain) {
+    await pool.query(
+      `update site_brief set timings = timings || jsonb_build_object('chain', $2::jsonb), updated_at = now()
+        where site_key = $1 and state = 'failed'
+          and coalesce(timings->'chain'->>'ending', 'running') = 'running'`,
+      [siteKey, JSON.stringify(chain)]
+    )
+  }
+
   /** @param {BriefInput} input */
   async function work(input) {
     const { siteKey } = input
@@ -549,6 +573,21 @@ export function createBriefBuilds({
     }
     /** What `prepare` handed back, so the engine can clear what it left whatever happens next. */
     let made
+    /** Why the frame failed the run, when it did: the reason a step chain's stop names (`engine.end`). */
+    let failure
+    /** Whether the row already holds the run's final chain measurement. */
+    let chainKept = false
+    /**
+     * 🔒 THE ROW AND THE KEPT RECORD AGREE (#591). A step chain run the frame fails outside the engine (the site never came
+     * up, the setup hold was not proven, the apply timed out) is ended with that reason (`engine.end`), and the row keeps
+     * the same final measurement the run's record will keep.
+     * @param {unknown} prepared @param {unknown} reason
+     */
+    const endedChain = (prepared, reason) => {
+      if (chainKept || prepared === undefined || !(/** @type {any} */ (engine).end)) return undefined
+      chainKept = true
+      return /** @type {any} */ (engine).end(prepared, reason) ?? undefined
+    }
     /** @type {Promise<unknown> | undefined} */
     let preparing
     // `prepare` alone is told to hand back what it has once the site is up and the grace is over; `apply` runs on the run's signal.
@@ -604,8 +643,12 @@ export function createBriefBuilds({
       const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt, runCap)
       const notUp = async () => {
         prepareStop.abort()
+        failure = Object.assign(new Error('the site did not come up in time'), { code: 'SITE_NOT_UP' })
         const row = await briefOf(pool, siteKey)
-        if (row && isOpen(row)) await fail(siteKey, 'the site did not come up in time')
+        if (!row || !isOpen(row)) return
+        const chain = endedChain(made, failure)
+        if (chain) await inTurn(() => updateBrief(pool, siteKey, { timings: timingsNow({ chain }) }))
+        await fail(siteKey, failure.message)
       }
       if ('down' in outcome) return await notUp()
       const prepared = (made = outcome.value)
@@ -625,7 +668,10 @@ export function createBriefBuilds({
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
       let held = await holdWebroot('open', ctx, runCap.webrootMs, engine.requiresSetupHold === true)
       if (engine.requiresSetupHold && !held)
-        throw new Error('STEP_CHAIN_SETUP_HOLD_UNPROVEN: the opening seal did not finish successfully.')
+        throw Object.assign(
+          new Error('STEP_CHAIN_SETUP_HOLD_UNPROVEN: the opening seal did not finish successfully.'),
+          { code: 'STEP_CHAIN_SETUP_HOLD_UNPROVEN' }
+        )
       // Native repairs own separate turns. Commit scripted setup files before their first seal,
       // otherwise the setup marker makes it skip and their Undo includes the initial personalization.
       const commitSetupWrites = async () => {
@@ -698,6 +744,7 @@ export function createBriefBuilds({
               ? new Date(own.created_at).getTime()
               : startedAt
         const chain = withBaseSite(/** @type {any} */ (report).chain, upMs - Math.min(pressedMs, startedAt))
+        chainKept = true
         await inTurn(() =>
           advanceBrief(pool, siteKey, ['applying'], {
             state: 'applied',
@@ -739,7 +786,10 @@ export function createBriefBuilds({
     } catch (error) {
       // A stopped step chain build (ADR 0047) carries its final measurement and the report for the Tracy team: the row
       // keeps them, and its error is the sentence the customer is told (`brief-engines/step-chain.js`).
-      const chain = /** @type {any} */ (error)?.chain
+      failure = error
+      const stopped = /** @type {any} */ (error)?.chain
+      if (stopped) chainKept = true
+      const chain = stopped ?? endedChain(made, error)
       await inTurn(() => updateBrief(pool, siteKey, { timings: timingsNow(chain ? { chain } : {}) })).catch(
         () => {}
       )
@@ -754,21 +804,31 @@ export function createBriefBuilds({
       clearInterval(beat)
       waitStop.abort()
       if (made !== undefined) {
+        // A run that left the frame early (its row moved on without it) still ends with a reason the row shares.
+        const chain = endedChain(made, failure ?? new Error('the run ended before the write step completed'))
+        if (chain) await updateBrief(pool, siteKey, { timings: { chain } }).catch(() => {})
         try {
           await engine.dispose?.(made)
-        } catch {
-          // A file that would not go is not worth failing a finished site over.
+        } catch (error) {
+          // A file that would not go is not worth failing a finished site over, but it is never silent.
+          disposeFailed(siteKey, error)
         }
       } else if (preparing && engine.dispose) {
         // Given up on before it handed anything back: whatever it hands back later is cleared then.
         const dispose = engine.dispose
-        // A `prepare` that stopped hands back what it left on its error (`prepared`), so its record is kept too.
-        preparing
-          .then(
-            (late) => dispose(late),
-            (error) => (error?.prepared ? dispose(error.prepared) : undefined)
+        // A `prepare` that stopped hands back what it left on its error (`prepared`), so its record is kept too, and
+        // the failed row gets the same final measurement, unless the row has moved on to another run since.
+        const late = async (/** @type {unknown} */ prepared) => {
+          const chain = endedChain(
+            prepared,
+            failure ?? new Error('the run ended before the write step completed')
           )
-          .catch(() => {})
+          if (chain) await keepLateChain(siteKey, chain).catch(() => {})
+          await dispose(prepared)
+        }
+        preparing
+          .then(late, (error) => (error?.prepared ? late(error.prepared) : undefined))
+          .catch((error) => disposeFailed(siteKey, error))
       }
     }
   }

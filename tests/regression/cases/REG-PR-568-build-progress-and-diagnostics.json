@@ -13,8 +13,8 @@
   "expect": [
     "Completed pictures never hide page texts that are still running.",
     "Done and stopped write diagnostics survive chain persistence and temporary-file disposal.",
-    "Unmeasured checks and zero-turn repairs retain distinct statuses without private prose.",
-    "Oversized diagnostic input remains within 8192 bytes and reports truncation.",
+    "The write summary keeps the cause code and counts and nothing of a site check or a repair pass, without private prose (#591).",
+    "Unknown cause codes and hostile counts stay bounded within 8192 bytes and never leak.",
     "A provisioned base with an active content action remains building; terminal QA and legacy completed actions retain their verdicts."
   ],
   "selectors": {},
@@ -34,8 +34,8 @@
     "tests": [
       "finished pictures do not hide the still running page texts",
       "a Write step that stops twice keeps its diagnostics and record on the row, and the record still goes to dispose",
-      "zero-turn unmeasured checks remain distinct from a passing nothing-to-send repair",
-      "oversized and hostile reports remain bounded without losing overall failure counts",
+      "the write summary keeps the cause code and counts, and nothing of a site check or a repair pass",
+      "an unknown cause code and hostile counts stay bounded and never leak",
       "Ops distinguishes base installed while content action runs from a completed content build"
     ]
   }

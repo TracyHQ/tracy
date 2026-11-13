@@ -34,8 +34,12 @@ services:
       TRACY_VISION_API_KEY: ${TRACY_VISION_API_KEY:-${MODEL_API_KEY:-}}
       # Local only; the server override removes this default and uses its explicit env_file.
       INVITATIONS_REAL_KEY_DIR: /var/lib/tracy/invitations-real-keys
+      # The step chain's run records and the files each step made (ADR 0047, decision 5): on a named volume, so they
+      # outlive the container and its temporary folder (`apps/tracy-web/src/step-chain-steps.js`).
+      TRACY_STEP_CHAIN_RECORDS_DIR: /var/lib/tracy/step-chain-records
     volumes:
       - invitations-real-keys:/var/lib/tracy/invitations-real-keys
+      - step-chain-records:/var/lib/tracy/step-chain-records
       # Each co-located site's access key (`bar/site-access.js`), written by
       # `tools/issue-site-access-key.sh`; read-only — tracy-web signs with them, never writes them.
       - ${TRACY_PRIVATE_ROOT}/.site-access:/var/lib/tracy/site-access:ro
@@ -370,6 +374,7 @@ volumes:
   tracy-minio: {}
   tracy-host-jobs: {}
   invitations-real-keys: {}
+  step-chain-records: {}
 
 networks:
   # dsh and the proxy, and nothing else — `internal: true` gives this network no gateway, so the

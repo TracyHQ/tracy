@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-591-chain-stop-report-review",
+  "kind": "fix",
+  "title": "A stopped chain build is reported the same on the row and in the kept record, and no failure escapes the stop path",
+  "pr": 591,
+  "area": "website-opportunities/chain",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the engine stop report cases (no database), the run frame ending cases and the creation door cases on PostgreSQL, and the import graph walk, each file on its own with Node 24."
+  ],
+  "expect": [
+    "A record is complete only when its last line is a completed Write step; a run the frame fails (site not up, hold unproven, apply timed out, run died, prepare settled late) leaves the row and the kept record with the same stopped ending and stop.",
+    "A door check that throws stops the build at doors with the customer sentence; an empty door is not re-run and refuses the press before any base site is created.",
+    "A step answering no value fails at that step; each attempt gets its own deep copy of its inputs; error details are kept bounded on the line and the stop; a noRerun error stops at once.",
+    "No module reachable from the chain is a site check or a repair pass."
+  ],
+  "selectors": {},
+  "fence": "The engine's single re-run is the only retry; the stop path is the only way a chain run fails.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "apps/tracy-web/test/step-chain-stop-report.test.mjs",
+      "apps/tracy-web/test/step-chain-frame-endings.test.mjs",
+      "apps/tracy-web/test/step-chain-create.test.mjs",
+      "apps/tracy-web/test/step-chain-no-repair.test.mjs"
+    ],
+    "tests": [
+      "a door check that throws stops the build at doors with the customer sentence, and the record is kept",
+      "an error marked noRerun stops the build at once, without the second attempt",
+      "each attempt gets its own copy of its inputs and its number: a parallel step or an attempt cannot change them",
+      "error details are kept on the line and the stop report, bounded and JSON safe",
+      "prepare done, the site never comes up: the row fails and both say stopped, the site not up",
+      "the apply times out: both say stopped at the write, and no late snapshot replaces the row",
+      "an empty model door refuses the press before the base site is created or the frame starts",
+      "no module reachable from the chain is a repair pass, a repair agent or a site check"
+    ],
+    "needs": ["postgres"]
+  }
+}

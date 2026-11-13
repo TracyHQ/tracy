@@ -34,8 +34,33 @@
  * them on disk with the files they name (`step-chain-steps.js`), with no flag.
  *
  * Steps are injected (`app.js` wires the real ones, `step-chain-steps.js`); each answers `{ value, usd }` or throws (an
- * error may carry the `value` it still made, and the `usd` it spent), and is given the run's `AbortSignal`.
+ * error may carry the `value` it still made, the `usd` it spent, bounded `details` naming what failed, and `noRerun: true`
+ * when the step already made its own second attempt), and is given the run's `AbortSignal` and the attempt's number. An
+ * answer with no value is a failure of that step. Each attempt gets its own deep copy of its inputs.
+ *
+ * 🔒 THE RECORD AND THE ROW AGREE. A run ends `complete` only when its last record line is a completed Write step. When
+ * the run frame fails a run outside the engine (the site never came up, the setup hold was not proven, the apply timed
+ * out), it calls `end(run, error)`: the run's stop names that reason, and the row and the kept record both carry it.
  */
+import {
+  chainSummary,
+  detailsOf,
+  messageOf,
+  recordedInputs,
+  recordedValue,
+  sinceOf,
+  spendOf,
+  STEP_CHAIN_RUN_FAILED,
+  writeExtras
+} from './step-chain-record.js'
+
+export {
+  chainSummary,
+  recordedValue,
+  STEP_CHAIN_INCOMPLETE,
+  STEP_CHAIN_RUN_FAILED,
+  withBaseSite
+} from './step-chain-record.js'
 
 /**
  * The outer deadline of a chain run (#478): the model steps get this long, counted from the start of `prepare`. A step
@@ -83,43 +108,11 @@ const realTimer = (fire, ms) => {
   return () => clearTimeout(handle)
 }
 
-const round = (n, places) => Math.round(n * 10 ** places) / 10 ** places
+/** The code of a step failure when a step answered no value at all (`{ value: null }` or nothing). */
+export const STEP_CHAIN_NO_OUTPUT = 'STEP_CHAIN_NO_OUTPUT'
 
-/** When each running step started, ISO, from the clock readings the run keeps (`active`). */
-const sinceOf = (active) =>
-  Object.fromEntries([...active].map(([step, ms]) => [step, new Date(ms).toISOString()]))
-const messageOf = (error) => String(error instanceof Error ? error.message : error).slice(0, 300)
-
-/**
- * A value as the record keeps it: a template kit by its ref (its document is the kit's own file), a Write step's answer by
- * its report's status, counts and cause, anything else as it is (file paths, small objects).
- * @param {any} value
- */
-export function recordedValue(value) {
-  if (!value || typeof value !== 'object') return value ?? null
-  if (typeof value.ref === 'string' && ('doc' in value || 'contentMap' in value)) return { ref: value.ref }
-  if (value.report && typeof value.report === 'object') {
-    const { status, counts, cause } = value.report
-    return { report: { status: status ?? null, counts: counts ?? null, ...(cause ? { cause } : {}) } }
-  }
-  return value
-}
-
-/** A step's inputs as the record keeps them, each by `recordedValue`. */
-const recordedInputs = (inputs) =>
-  Object.fromEntries(Object.entries(inputs ?? {}).map(([name, value]) => [name, recordedValue(value)]))
-
-/** The USD fields of a record line, from a step's answer or its error. */
-const spendOf = (from) => ({
-  usd: from?.usd === null ? null : Number(from?.usd ?? 0),
-  ...(from?.usd === null ? { knownUsd: Number(from?.knownUsd ?? 0) } : {})
-})
-
-/** What a Write step's value adds to its record line: the site recovery and the structural diagnostics it measured. */
-const writeExtras = (value) => ({
-  ...(value?.report?.recovery ? { recovery: value.report.recovery } : {}),
-  ...(value?.diagnostics ? { diagnostics: value.diagnostics } : {})
-})
+/** The inputs of one attempt: its own deep copy, so no step sees what a parallel step or an earlier attempt changed. */
+const ownCopy = (inputs) => structuredClone(inputs ?? {})
 
 /**
  * The error a stopped build throws. Its message is what the customer is told; `stop` is the report for the Tracy team;
@@ -177,7 +170,8 @@ export function createStepChainEngine({
 
   /**
    * Run one step, timed and costed, at most `STEP_CHAIN_ATTEMPTS` times from the same inputs. Every attempt is a record
-   * line. A second failure (or one under a stopped signal) stops the build: `run.stop` names it, `halt` stops the rest.
+   * line, and every attempt gets its own deep copy of the inputs. A second failure (or one under a stopped signal, or an
+   * error marked `noRerun`) stops the build: `run.stop` names it, `halt` stops the rest.
    */
   async function attempt(run, ctx, step, inputs, how) {
     for (let n = 1; ; n += 1) {
@@ -186,7 +180,15 @@ export function createStepChainEngine({
       run.active.set(step, start)
       await run.snap()
       try {
-        const answer = await (step === 'write' ? writeOnce : steps[step])(ctx, inputs, how)
+        // A run already stopped (its deadline, the frame) starts no step: the attempt is recorded as stopped.
+        if (how.signal.aborted) throw how.signal.reason ?? new Error('the build stopped')
+        const answer = await runStep(step)(ctx, ownCopy(inputs), { ...how, attempt: n })
+        if (answer?.value === undefined || answer?.value === null)
+          throw Object.assign(new Error(`the ${step} step answered no value`), {
+            code: STEP_CHAIN_NO_OUTPUT,
+            usd: answer?.usd,
+            knownUsd: answer?.knownUsd
+          })
         run.active.delete(step)
         run.record.push({
           step,
@@ -196,15 +198,20 @@ export function createStepChainEngine({
           ...spendOf(answer),
           outcome: 'done',
           inputs: recordedInputs(inputs),
-          output: recordedValue(answer?.value ?? null),
-          ...(step === 'write' ? writeExtras(answer?.value) : {})
+          output: recordedValue(answer.value),
+          ...(step === 'write' ? writeExtras(answer.value) : {})
         })
         await run.snap()
-        return answer?.value ?? null
+        return answer.value
       } catch (error) {
         run.active.delete(step)
         const stopped = how.signal.aborted
-        const last = stopped || n >= STEP_CHAIN_ATTEMPTS
+        // 🔒 ONE RE-RUN, OWNED BY THE ENGINE (ADR 0047, decision 2). A step of the new build path must not retry inside
+        // itself beyond what its own ticket defines: the engine's single re-run is the retry. A step that already made its
+        // own second attempt (the plan composer's `plan_gate_failed`) marks its error `noRerun: true`, and the build stops
+        // at once. The bench steps still run their own fix rounds (`MAX_FIX_ROUNDS`) inside every attempt: they are the
+        // old steps, replaced when the new writer and picture policy are wired in.
+        const last = stopped || error?.noRerun === true || n >= STEP_CHAIN_ATTEMPTS
         const line = {
           step,
           attempt: n,
@@ -214,6 +221,7 @@ export function createStepChainEngine({
           outcome: stopped ? 'stopped' : last ? 'failed' : 'failed, re-running',
           ...(typeof error?.code === 'string' ? { code: error.code } : {}),
           error: messageOf(error),
+          ...detailsOf(error),
           inputs: recordedInputs(inputs),
           output: recordedValue(error?.value ?? null),
           ...(step === 'write' ? writeExtras(error?.value) : {})
@@ -225,6 +233,7 @@ export function createStepChainEngine({
             attempts: n,
             ...(line.code ? { code: line.code } : {}),
             error: line.error,
+            ...(line.details !== undefined ? { details: line.details } : {}),
             inputs: line.inputs,
             output: line.output
           }
@@ -234,6 +243,19 @@ export function createStepChainEngine({
         if (last) throw HALTED
       }
     }
+  }
+
+  /** The function one step runs: the Write step and the door check carry the engine's own judgement of their answer. */
+  const runStep = (step) => (step === 'write' ? writeOnce : step === 'doors' ? doorsOnce : steps[step])
+
+  /** The door check once: an empty door is a failure that is not re-run (a door does not fill itself in a second). */
+  async function doorsOnce(ctx) {
+    const empty = (await steps.doors(ctx)) ?? []
+    if (!empty.length) return { value: { empty: [] }, usd: 0 }
+    throw Object.assign(
+      new Error(`empty model doors: ${empty.map((d) => `${d.door} (${d.state})`).join(', ')}`),
+      { code: STEP_CHAIN_DOORS_EMPTY, value: { empty }, noRerun: true, usd: 0 }
+    )
   }
 
   /** The Write step once: a report that is not `done` is a failure of the step, carrying what it wrote. */
@@ -276,6 +298,8 @@ export function createStepChainEngine({
       const run = { runId: ctx.runId, t0, record: [], stop: null, halt, active: new Map(), inputs: null }
       let progressWrite = Promise.resolve()
       run.snap = () => {
+        // Once the frame has ended the run (`end`), the row holds the final measurement: no late snapshot replaces it.
+        if (run.ended) return progressWrite
         const summary = summaryOf(run, [...run.active.keys()])
         // Parallel steps share one row. Persist snapshots in order so a slower earlier write
         // cannot erase another step's start, completion or measured spend.
@@ -284,31 +308,8 @@ export function createStepChainEngine({
       }
       const how = { signal }
       try {
-        if (steps.doors) {
-          const start = now()
-          const empty = await steps.doors(ctx)
-          const line = { step: 'doors', attempt: 1, startMs: start - t0, endMs: now() - t0, usd: 0 }
-          if (empty.length) {
-            const error = `empty model doors: ${empty.map((d) => `${d.door} (${d.state})`).join(', ')}`
-            run.record.push({
-              ...line,
-              outcome: 'failed',
-              code: STEP_CHAIN_DOORS_EMPTY,
-              error,
-              output: { empty }
-            })
-            run.stop = {
-              step: 'doors',
-              attempts: 1,
-              code: STEP_CHAIN_DOORS_EMPTY,
-              error,
-              inputs: {},
-              output: { empty }
-            }
-            throw HALTED
-          }
-          run.record.push({ ...line, outcome: 'done' })
-        }
+        // Every model door first, through the same path as a step: an error there stops the build at `doors`.
+        if (steps.doors) await attempt(run, ctx, 'doors', {}, how)
         const kit = await attempt(run, ctx, 'kit', {}, how)
         const [brand, planned] = await settled(run, [
           attempt(run, ctx, 'brand', { kit }, how),
@@ -348,63 +349,33 @@ export function createStepChainEngine({
       }
     },
 
+    /**
+     * The run frame failed the run outside the engine: the run's stop names `reason` (unless a step already stopped it),
+     * and the measurement it hands back is the one the row keeps. A run already complete stays complete only when
+     * no reason is given.
+     * @param {any} run
+     * @param {unknown} [reason]
+     */
+    end(run, reason) {
+      if (!run?.record) return null
+      run.ended = true
+      if (!run.stop && reason !== undefined) {
+        run.stop = {
+          step: [...run.active.keys()][0] ?? 'run',
+          attempts: 0,
+          code: typeof reason?.code === 'string' ? reason.code : STEP_CHAIN_RUN_FAILED,
+          error: messageOf(reason),
+          ...detailsOf(reason)
+        }
+        run.halt?.abort(new Error('the run failed'))
+      }
+      return summaryOf(run)
+    },
+
     /** The run's record goes to the steps' `dispose` with it, which keeps it (ADR 0047, decision 5). */
     async dispose(run) {
       if (!run) return
       await steps.dispose?.({ ...run, chain: summaryOf(run) })
     }
   }
-}
-
-/**
- * The measurement the row keeps (`timings.chain`): per step attempt its minutes and USD, the totals, and how the run
- * ended: `running`, `complete` (every step, ending with the Write step, completed) or `stopped` (a step failed twice,
- * or a model door was empty; `failedStep` and `stop` name it).
- * @param {Array<{step: string, startMs: number, endMs: number, usd: number | null, knownUsd?: number, outcome: string, error?: string}>} record
- * @param {string | null} failed
- * @param {number} totalMs
- * @param {string[] | null} [running] - the steps under way, for a snapshot of a run still going
- * @param {Record<string, string> | null} [runningSince] - when each running step started, ISO
- * @param {object | null} [stop] - the stop report, when the build stopped
- */
-export function chainSummary(record, failed, totalMs, running = null, runningSince = null, stop = null) {
-  const complete = record.every((s) => Number.isFinite(s.usd))
-  const knownUsd = round(
-    record.reduce(
-      (sum, s) => sum + (Number.isFinite(s.usd) ? s.usd : Number.isFinite(s.knownUsd) ? s.knownUsd : 0),
-      0
-    ),
-    4
-  )
-  return {
-    // A snapshot of a run still going (`running`: the steps under way) says so; the row's state tells the reader whether
-    // the run is still going or ended without finishing the record (a hard failure).
-    ending: running ? 'running' : failed ? 'stopped' : 'complete',
-    ...(running
-      ? { running, ...(runningSince ? { runningSince } : {}) }
-      : failed
-        ? { failedStep: failed }
-        : {}),
-    // The report for the Tracy team when the build stopped: the step, its inputs, its output and the error (ADR 0047).
-    ...(stop ? { stop } : {}),
-    totalMinutes: round(totalMs / 60_000, 2),
-    totalUsd: complete ? knownUsd : null,
-    ...(complete ? {} : { knownUsd }),
-    steps: record.map((s) => ({
-      ...s,
-      minutes: round((s.endMs - s.startMs) / 60_000, 2),
-      usd: Number.isFinite(s.usd) ? round(s.usd, 4) : null
-    }))
-  }
-}
-
-/**
- * The base site as a step of the measurement. The host makes it beside the model steps, from the press until the host
- * says it is up, so it is not timed by the chain's own clock: its minutes are given. It costs no model money.
- * @param {ReturnType<typeof chainSummary>} chain
- * @param {number} ms - from the press until the site was up
- */
-export function withBaseSite(chain, ms) {
-  const minutes = round(Math.max(0, Number.isFinite(ms) ? ms : 0) / 60_000, 2)
-  return { ...chain, steps: [{ step: 'site', minutes, usd: 0, outcome: 'done' }, ...chain.steps] }
 }

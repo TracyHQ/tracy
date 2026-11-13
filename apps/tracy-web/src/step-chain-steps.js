@@ -17,21 +17,15 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
 import { brandRunDir } from './brand-step/brand-wiring.js'
-import { BRAND_AGENT_DOOR, BRAND_REVIEWER_DOOR } from './brand-step/brand-doors.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
 import { openContentMap } from './lib/content-map-source.js'
-import { lookupDoor } from './lib/llm-store.js'
+import { emptyChainDoors, STEP_CHAIN_MODEL_DOORS } from './step-chain-doors.js'
 import { stepNineDiagnostics } from './step-chain-write-diagnostics.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
 import { openKit, readableKits } from './lib/template-kit-source.js'
-import { PICTURE_PICKER_DOOR } from './site-pictures/door.js'
-import { PICTURE_DRAWER_DOOR } from './site-pictures/drawer-door.js'
-import { PICTURE_LOOKER_DOOR } from './site-pictures/looker-door.js'
 import { runCli as picturesCli } from './site-pictures/bench-cli.js'
-import { SITE_PLANNER_DOOR } from './site-planner/door.js'
 import { runCli as plannerCli } from './site-planner/bench-cli.js'
 import { runCli as writerCli } from './site-writer/bench-cli.js'
-import { SITE_WRITER_DOOR } from './site-writer/door.js'
 import { designSystemSiteReaders } from './sites/design-system-site-readers.js'
 import { siteByKey } from './sites/store.js'
 import { httpSiteDoor } from './write-step/bench-site-door.js'
@@ -42,24 +36,21 @@ import { runWriteStep } from './write-step/write-step.js'
 
 const BY = 'step-chain'
 
-/**
- * The model doors a chain build spends, checked before any model work (ADR 0047): the brand agent and its reviewer, the
- * planner, the writer, and the picture step's picker, looker and drawer. The picture icon ranker is not among them: an
- * unset ranker door never stops a picture run, the shortlist order decides (lib/llm-catalog.js).
- */
-export const STEP_CHAIN_MODEL_DOORS = Object.freeze([
-  BRAND_AGENT_DOOR,
-  BRAND_REVIEWER_DOOR,
-  SITE_PLANNER_DOOR,
-  SITE_WRITER_DOOR,
-  PICTURE_PICKER_DOOR,
-  PICTURE_LOOKER_DOOR,
-  PICTURE_DRAWER_DOOR
-])
+export { STEP_CHAIN_MODEL_DOORS }
 
-/** The step records folder: TRACY_STEP_CHAIN_RECORDS_DIR, else a folder in the system's temporary directory. */
+/**
+ * The step records folder: TRACY_STEP_CHAIN_RECORDS_DIR, else a folder in the system's temporary directory. Run records
+ * must outlive the temporary folder (ADR 0047, decision 5), so a deployment sets the variable to a mounted data path;
+ * without it the server warns once at startup (`createStepChainSteps`).
+ */
 export const defaultRecordsDir = (env = process.env) =>
   env.TRACY_STEP_CHAIN_RECORDS_DIR || path.join(tmpdir(), 'tracy-step-chain-records')
+
+/** The startup warning when the step records folder is the temporary one, or null when it is set. */
+export const recordsDirWarning = (env = process.env) =>
+  env.TRACY_STEP_CHAIN_RECORDS_DIR
+    ? null
+    : `[step-chain] TRACY_STEP_CHAIN_RECORDS_DIR is not set: step chain run records are kept in a temporary folder (${defaultRecordsDir(env)}) and will not outlive it. Set it to a mounted data path.`
 
 /** The file a run's record is kept in, in the run's own folder. */
 export const STEP_RECORDS_FILE = 'step-records.json'
@@ -84,6 +75,10 @@ export function createStepChainSteps(deps) {
   const { pool, config, secret, kitImages, brandWiring, picturesStoreDir } = deps
   const { fetchImpl = fetch, sleep = realSleep, log = console } = deps
   const recordsDir = deps.recordsDir ?? defaultRecordsDir()
+  if (!deps.recordsDir) {
+    const warning = recordsDirWarning()
+    if (warning) log.warn?.(warning)
+  }
   const benches = {
     brand: {
       cli: brandCli,
@@ -150,7 +145,7 @@ export function createStepChainSteps(deps) {
       }
       const usd = Number(row.cost_usd ?? 0)
       // A run that failed may still have made versions the checks rejected: its files are taken out all the same, so the
-      // best version it made can be used (the write never falls back to demo content).
+      // stop report and the kept record point at what it made. A failed step's output is never written (ADR 0047).
       await mkdir(dir, { recursive: true })
       const got = await command(name, ['get', runId, '--out', dir])
       const failure = chainBenchFailure(name, runId, row, got)
@@ -178,6 +173,12 @@ export function createStepChainSteps(deps) {
     }
     return folders.get(ctx.runId)
   }
+  /**
+   * The folder of one attempt of a step: `<run>/<step>` for the first, `<run>/<step>-attempt-<n>` for a re-run, so a
+   * re-run never overwrites the files of the attempt before it and each record line points at its own files.
+   */
+  const stepDir = async (ctx, step, how) =>
+    path.join(await folderOf(ctx), Number(how?.attempt) > 1 ? `${step}-attempt-${Number(how.attempt)}` : step)
   const revisionOf = (ctx) => String(ctx.brief?.researchRevisionId ?? '')
   const exists = (file) =>
     stat(file).then(
@@ -186,7 +187,7 @@ export function createStepChainSteps(deps) {
     )
   /**
    * A bench step's answer: its output when the run succeeded; when it failed, an error that still carries the output it
-   * made (if any), so the chain uses the best version rather than nothing.
+   * made (if any), for the stop report and the kept record only.
    */
   async function answerOf({ usd, failure, checkFailures }, value, made) {
     if (!failure) return { value, usd }
@@ -237,8 +238,9 @@ export function createStepChainSteps(deps) {
       return { value: { ref, doc: kit.doc, contentMap: map?.doc ?? null }, usd: 0 }
     },
 
-    async brand(ctx, { kit }, { signal }) {
-      const dir = path.join(await folderOf(ctx), 'brand')
+    async brand(ctx, { kit }, how) {
+      const { signal } = how
+      const dir = await stepDir(ctx, 'brand', how)
       const ran = await benchRun(
         'brand',
         [
@@ -256,8 +258,9 @@ export function createStepChainSteps(deps) {
       return answerOf(ran, { file }, exists(file))
     },
 
-    async plan(ctx, { kit }, { signal }) {
-      const dir = path.join(await folderOf(ctx), 'plan')
+    async plan(ctx, { kit }, how) {
+      const { signal } = how
+      const dir = await stepDir(ctx, 'plan', how)
       const ran = await benchRun(
         'plan',
         ['--kit', kit.ref, '--brief-revision', revisionOf(ctx), '--require-visual-review', ...NO_CAPS],
@@ -275,8 +278,9 @@ export function createStepChainSteps(deps) {
       return answerOf(ran, { file }, true)
     },
 
-    async copy(ctx, { kit, plan }, { signal }) {
-      const dir = path.join(await folderOf(ctx), 'copy')
+    async copy(ctx, { kit, plan }, how) {
+      const { signal } = how
+      const dir = await stepDir(ctx, 'copy', how)
       const argv = [
         '--plan-file',
         plan.file,
@@ -292,8 +296,9 @@ export function createStepChainSteps(deps) {
       return answerOf(ran, { file }, exists(file))
     },
 
-    async pictures(ctx, { kit, plan }, { signal }) {
-      const dir = path.join(await folderOf(ctx), 'pictures')
+    async pictures(ctx, { kit, plan }, how) {
+      const { signal } = how
+      const dir = await stepDir(ctx, 'pictures', how)
       const argv = [
         '--plan-file',
         plan.file,
@@ -310,7 +315,8 @@ export function createStepChainSteps(deps) {
 
     // The Write step: the write step alone (write-step/write-step.js), inside the site recovery guard. No site check and
     // no repair pass run inside a build (ADR 0047, decisions 1 and 3); its report `done` is the step completing.
-    async write(ctx, inputs, { door }) {
+    async write(ctx, inputs, how) {
+      const { door } = how
       for (const input of ['plan', 'copy', 'brand', 'pictures'])
         if (!inputs[input]?.file) throw stepError(`the write step has no ${input} file`)
       const dir = await folderOf(ctx)
@@ -340,7 +346,7 @@ export function createStepChainSteps(deps) {
         templateFiles: siteFileReader({ siteOf, readers, fetchImpl }),
         pageHtml
       }
-      const out = path.join(dir, 'write')
+      const out = await stepDir(ctx, 'write', how)
       await mkdir(out, { recursive: true })
       const step = await runWithSiteRecovery({
         signal: ctx.signal,
@@ -366,13 +372,7 @@ export function createStepChainSteps(deps) {
     // Before any model work: the doors of STEP_CHAIN_MODEL_DOORS that cannot be answered (unset, switched off, a key that
     // will not open, no model named). None means every door the chain spends is ready.
     async doors() {
-      const empty = []
-      for (const door of STEP_CHAIN_MODEL_DOORS) {
-        const found = await lookupDoor(pool, door, secret)
-        if (found.state !== 'ok') empty.push({ door, state: found.state })
-        else if (!found.credential?.model) empty.push({ door, state: 'no-model' })
-      }
-      return empty
+      return emptyChainDoors(pool, secret)
     },
 
     // What the run left on disk stays, with the run's record beside it (ADR 0047, decision 5): no flag, whatever became
@@ -387,10 +387,18 @@ export function createStepChainSteps(deps) {
           : null
       if (!dir) return
       if (prepared.chain)
-        await writeFile(
-          path.join(dir, STEP_RECORDS_FILE),
-          `${JSON.stringify({ runId: prepared.runId, chain: prepared.chain }, null, 2)}\n`
-        )
+        try {
+          await writeFile(
+            path.join(dir, STEP_RECORDS_FILE),
+            `${JSON.stringify({ runId: prepared.runId, chain: prepared.chain }, null, 2)}\n`
+          )
+        } catch (error) {
+          // A record that could not be kept is never silent: the Tracy team reads it here, and the caller sees it fail.
+          log.error?.(
+            `[step-chain] run ${prepared.runId}: the run record could not be written to ${dir}: ${error instanceof Error ? error.message : error}`
+          )
+          throw error
+        }
       log.info?.(`[step-chain] run ${prepared.runId}: record kept`)
     }
   }

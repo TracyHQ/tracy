@@ -1322,6 +1322,10 @@ export function sitesRoutes({
   labels = null,
   now = Date.now,
   fetchImpl = fetch,
+  // The model doors a step chain build spends that cannot be answered (`step-chain-doors.js`), handed in by `app.js`:
+  // `() => Promise<Array<{door, state}>>`. A chain press with an empty door is refused before the base site is created.
+  // Null: no door check at the press (the chain still checks its doors first, ADR 0047).
+  chainDoors = null,
   // The `content.locate` snapshot store's factory. Overridable so a test can see a call reach the
   // store and hold a build until every overlapping call has joined it, instead of racing a timer.
   locateStoreFactory = createLocateStore,
@@ -3328,7 +3332,8 @@ export function sitesRoutes({
 
   /**
    * Why a press asking for the step chain cannot have it, or null: the research revision must be the caller's own, and
-   * the template enabled with the master switch on. Nothing is claimed before this answers.
+   * the template enabled with the master switch on, and every model door the chain spends answerable. Nothing is claimed
+   * before this answers.
    * @param {any} body
    * @param {string | null} quickstart
    * @param {string} accountId
@@ -3342,6 +3347,8 @@ export function sitesRoutes({
     if (!stepChainEnabled({ quickstart })) return { code: 'STEP_CHAIN_OFF', status: 409 }
     if (!(await researchRevisionOwned(pool, body.researchRevisionId, accountId)))
       return { code: 'RESEARCH_REVISION_UNKNOWN', status: 404 }
+    // Every model door the chain spends, before anything is created: an empty door creates no base site (#591).
+    if (chainDoors && (await chainDoors()).length > 0) return { code: 'STEP_CHAIN_DOORS_EMPTY', status: 409 }
     return null
   }
 

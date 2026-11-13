@@ -238,6 +238,7 @@ import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
 import { createStepChainEngine } from './sites/brief-engines/step-chain.js'
 import { createStepChainSteps } from './step-chain-steps.js'
+import { emptyChainDoors } from './step-chain-doors.js'
 import { researchBusinessName } from './lib/research-revision.js'
 import { STEP_CHAIN_WORKFLOW } from './lib/step-chain-switch.js'
 import { createSiteBrand, setSiteBrand } from './sites/brief-engines/brand.js'
@@ -2294,6 +2295,7 @@ export function buildApp(deps) {
     }
     const sites = sitesRoutes({
       pool: deps.pool,
+      chainDoors: deps.chainDoors ?? (() => emptyChainDoors(deps.pool, deps.config.sessionSecret)),
       resumeLiveJobs: deps.resumeLiveJobs === true,
       doorProbeToken: doorHealth ? doorProbeToken : null,
       doorHealth,

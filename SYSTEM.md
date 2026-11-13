@@ -2624,7 +2624,8 @@ HTML reads of the exact same path are shared across groups, including failures; 
 **The step chain as one build** (#483, spec #472). A build of an allow-listed template (`apps/tracy-web/src/lib/step-chain-switch.js`:
 the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment's master switch) reaches `POST /api/sites` with
 `workflow: 'step-chain/1'` and `researchRevisionId` (a `wo_revision` of the caller's own; no `brief`). The door refuses before
-anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or the revision is not the caller's (404); otherwise
+anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`), the revision is not the caller's (404), or a model
+door the chain spends is empty (409 `STEP_CHAIN_DOORS_EMPTY`, `step-chain-doors.js`: no base site is created); otherwise
 the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
 frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps and the brand cost cap do not
@@ -2632,17 +2633,26 @@ apply to it (its bench runs start with `--no-caps`). A 2 hour outer deadline bou
 15 minute window (the run's hard stop is about 2 h 15 min). Lost-run
 detection (stale lease, the queue's attempt count) is unchanged.
 **Failure policy (ADR 0047, #591).** Before any model work the engine asks whether every model door the chain spends can be
-answered (`STEP_CHAIN_MODEL_DOORS` in `step-chain-steps.js`: brand agent and reviewer, planner, writer, picture picker, looker
-and drawer; the optional icon ranker is not among them); an empty door stops the build up front. A step that fails (it throws,
-or the Write step's report is not `done`) is re-run once from the same inputs; a second failure, or a step stopped by the
-deadline, stops the whole build: the steps still running are stopped, nothing later starts, nothing is written, the row ends
+answered (`STEP_CHAIN_MODEL_DOORS` in `step-chain-doors.js`: brand agent and reviewer, planner, writer, picture picker,
+looker and drawer; the optional icon ranker is not among them), through the same path as a step: an empty door stops the
+build up front without a re-run, and a door check that throws is a failed `doors` step. A step that fails (it throws, answers
+no value, or is the Write step with a report that is not `done`) is re-run once, each attempt from its own deep copy of the
+stored inputs and writing into its own folder (`<step>-attempt-2`); a step whose error says `noRerun: true` (it already made
+its own second attempt) is not re-run. New path steps must not retry inside themselves beyond what their own ticket
+defines; the bench steps still run their own fix rounds. A second failure, or a step stopped by the deadline, stops the whole
+build: the steps still running are stopped, nothing later starts, nothing is written, the row ends
 `failed` with the sentence the customer is told (`STEP_CHAIN_STOPPED_MESSAGE`), and `timings.chain` ends `stopped` with
-`failedStep` and `stop` (the step, its attempts, its inputs, its output and the error) for the Tracy team. There are no
-stand-in files and no "best version": a run ends `complete`, and the row `applied`, only when every step, ending with the
-Write step, completed. The Write step is the write step alone (`write-step/write-step.js` inside the site recovery guard): no
+`failedStep` and `stop` (the step, its attempts, its inputs, its output, the error and its bounded `details`, such as the
+failing fields or pictures) for the Tracy team. There are no stand-in files and no "best version": a run ends `complete`,
+and the row `applied`, only when the last record line is a completed Write step. When the run frame fails a run outside the
+engine (the site never comes up, the setup hold is not proven, the apply times out), it ends the run with that reason
+(`engine.end`), so the row and the kept record carry the same `stopped` ending and stop; a run that ends with neither is kept
+`stopped` with `STEP_CHAIN_INCOMPLETE`. The Write step is the write step alone (`write-step/write-step.js` inside the site recovery guard): no
 site check and no 9b repair pass run inside a build. Each attempt of each step is a record line (time, USD, outcome,
 inputs, output); the run's files live in a folder of their own under the step records folder (`TRACY_STEP_CHAIN_RECORDS_DIR`,
-default in the system's temporary directory) and stay there after the run with the record (`step-records.json`), with no flag.
+the named volume `step-chain-records` in `deploy/compose.yml`; unset, a temporary folder, and the server warns at startup)
+and stay there after the run with the record (`step-records.json`), with no flag. A record that cannot be written is logged
+as an error, never dropped silently.
 While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
@@ -2650,9 +2660,9 @@ queued through the bench's own command line on the revision and played by the be
 their chain progress snapshots in order through one promise queue per run, so a late earlier update cannot erase
 another step's start, completion or measured spend. Progress storage failures remain non-fatal and do not poison later updates.
 The write step retains a structural diagnostic summary in `site_brief.timings.chain.steps[write].diagnostics`,
-read through the existing staff-only `/api/ops/wo/chain-builds` raw measurement. It records first/final check statuses,
-group counts and bounded fault identities, repair status, skip codes, turn counts and timing stages, including early
-stopped writes. The summary is limited to 8 KiB and explicitly marks truncation. It excludes raw errors, reasons,
+read through the existing staff-only `/api/ops/wo/chain-builds` raw measurement. It records the write's status, cause code
+and counts, and whether the writers settled, including early stopped writes; it has no site check or repair parts (no
+module reachable from the chain is a site check or a repair pass, `test/step-chain-no-repair.test.mjs`). It excludes raw errors, reasons,
 prompts, measured values, credentials, external URLs and local filesystem paths. The full write report stays in the run's
 folder with the run record; no new read door is introduced. Earlier runs without the summary remain unknown.
 The brand boundary receives the
