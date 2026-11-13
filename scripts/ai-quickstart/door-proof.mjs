@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * Prove on a real blank site that the build writes into the places the blank site emptied (ticket #584, gate #585).
+ * It writes the store records themselves through the blank site contract: the part of the build that writes in place
+ * (single-instance chrome and site language strings). In-page blocks are copies of the store records, proved by
+ * `copy-proof.mjs`.
  *
  *   TRACY_DOOR_URL=<site base URL> TRACY_DOOR_TOKEN=<the site's Claude Cowork token> \
  *     node scripts/ai-quickstart/door-proof.mjs <AI quickstart folder> [--report <file.json>]

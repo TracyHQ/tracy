@@ -9,6 +9,9 @@ sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-labels.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping-seo.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping-coverage.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-placement.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-mapping-hides.mjs
+  - scripts/ai-quickstart/copy-proof.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-inline-markup.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-items-of.mjs
@@ -88,6 +91,7 @@ The snippets below are excerpts of it.
 | `id` | unique in the store; page recipes and the mapping file name blocks by it |
 | `type` | a block type of `BLOCK_TYPES` |
 | `source` | optional: `template` (default) or `library`, a Tracy library block for data the template lacks (shape designed with Part 3) |
+| `placement` | required: how the build writes the block, `copy`, `in-place` or `created`, see [Copies and blocks written in place](#copies-and-blocks-written-in-place) |
 | `positions` | the layout positions the block may be placed in, at least one. `inside:<block id>` places the block inside another block of the store (a module whose list the container shows); the id must name a block of the store |
 | `items` | required on every block: `{min, max}`, whole numbers, `0 <= min <= max`, `max >= 1`. A block that shows one thing is `{min: 1, max: 1}` |
 | `noData` | required: `{"rule": "hide"}`, or `{"rule": "fallback", "fallback": "<what the block shows instead>"}` |
@@ -229,14 +233,15 @@ class `inline-markup-in-text`, `inlineMarkup` in `draft-report.json`) declares i
   (measured on the blank site restored on a real Joomla, one write per shape read back on the page):
   - `codes`: an ACM module's data (`nestedJson: "jatools-config"`, no xpath). The value carries the content map's
     markers as they are, `((br/))`, `((span))words((/span))`, `((p))words((/p))` (and `((ul))((li))` for a list), and
-    goes through `content.contract` apply unchanged; the template turns them into tags when it draws. Measured: a
+    is written unchanged (`content.contract` apply in place, the copy's `content.update` on a copy); the template turns them into tags when it draws. Measured: a
     hero heading `((span))ACE1((/span)) INVENTED GYM` draws `<span>ACE1</span>` in the accent colour, a price
     `$99.00((span))/class((/span))` draws its unit span, `((p))...((/p))` draws a paragraph.
   - `html`: a text of a stored HTML value (an xpath, no nested JSON; a module's `main-section` or `introtext`, a
     custom module's content, an article's extra field, a language string). The stored value holds real tags.
     `content.contract` refuses `<` and `>` (`SLOT_NOT_CONTENT`), and markers written through it are stored and printed
-    as words (`THE((br/)) ((span))DRILL((/span))` on the page). So the build writes the words with markers through
-    `content.contract`, then reads the record (`content.get {kind, id}`), replaces the written markers, found once in
+    as words (`THE((br/)) ((span))DRILL((/span))` on the page). On a copy the build writes the value with its tags in
+    the copy's own `content.update`, which takes them as they are. On a block written in place it writes the words
+    with markers through `content.contract`, then reads the record (`content.get {kind, id}`), replaces the written markers, found once in
     the stored value, by the same tags (`THE<br/> <span>DRILL</span>`), and saves the column (`content.update {apply_id,
     kind, id, fields}`): the older write step's emphasis stage. Where the build creates the record (an article) or
     writes a language override, it writes the tags itself. Measured: the heading draws `<br>` and the accent span,
@@ -257,6 +262,7 @@ class `inline-markup-in-text`, `inlineMarkup` in `draft-report.json`) declares i
   the report found in its value (`ai-quickstart-inline.mjs`).
 - The Claude Cowork plugin's `content.contract` apply (0.24.85) refuses `<` and `>` in a value (`SLOT_NOT_CONTENT`):
   markers carry no angle bracket and pass it; a real HTML element goes through `content.update` (`write: "html"`).
+  This binds only a block written in place: a copy is written with `content.update` from the start.
 
 **A child field is stored on its parent's record.** Every stored place of a child field, and every `keyAt` location, is
 on the record of its parent place (the block's record for `lists`, the item's record for `itemLists`). A place on
@@ -442,11 +448,12 @@ A **location** has the shape a content map slot already uses, so the existing wr
 "title", 0], "xpath": "/html/body/div/h2"}`. Only `entity` and `column` are required:
 
 - `slot` names the content map slot the location is, when it is one; its `entity`, `column`, `jsonPath`, `nestedJson`
-  and `xpath` are then the slot's own, byte for byte. The Claude Cowork plugin writes a site by slot key
+  and `xpath` are then the slot's own, byte for byte. The Claude Cowork plugin writes a store record in place by slot key
   (`content.contract` apply: `checkValue`, then `changeRow` with `ContentSlots::htmlPatch` and `jsonPatch`); test
   `ai-quickstart-mapping-writes.test.mjs` runs the plugin release the quickstart pins on the demo rows as the blank site
   step leaves them, for a plain slot, an xpath piece, an attribute piece, a nested JSON place, a child list row, a fact
-  place and every text node place, and reads each value back.
+  place and every text node place, and reads each value back. On a copy of a block the location is read on the copy's
+  own record (same column, JSON path and xpath), which the build writes with `content.update`.
 - `jsonPath` holds keys and list indexes (integers); `nestedJson` names a key of the column whose value is itself a JSON
   string (a JA ACM block's `jatools-config`), read and written back in the form PHP's `json_encode` writes.
 - `xpath` uses the plugin's convention, a synthetic `/html/body/div` root around the stored HTML. A JA ACM value keeps
@@ -593,10 +600,10 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   | `by` | the build | extra keys |
   |---|---|---|
   | `empty` | writes `""` into every location of the named fields, label and address together; the template prints the control only while they hold words | none |
-  | `rows.remove` | names `slots` in one `rows.remove` of the plugin, which takes their element out of the stored HTML value | `slots`: content map keys, every location of the named fields among them, each with an xpath |
+  | `rows.remove` | takes the button element out of the stored HTML value: on a block written in place, by naming `slots` in one `rows.remove` of the plugin; on a copy, out of the value it writes on the copy | `slots`: content map keys, every location of the named fields among them, each with an xpath |
   | `setting` | writes `value` at `location`, a record setting no content map slot holds, with `content.get` and `content.update` | `location`, `value` (a string) |
   | `omit` | leaves a row it does not fill out of the value it writes: the rows are pieces of one stored value | none (every location of the list's fields is a piece) |
-  | `row` | names every slot of a row it does not fill in one `rows.remove` | `row`: `{entity, column, nestedJson?, parent}` with `arrays` or `keys`, the shape of the plugin's reviewed rows (parallel lists read across by index, or one row per key), or a list of them; every location of the rows lies in one |
+  | `row` | cuts every row it does not fill out of the copy's lists (`content.update`); only a copy holds such rows | `row`: `{entity, column, nestedJson?, parent}` with `arrays` or `keys` (parallel lists read across by index, or one row per key), or a list of them; every location of the rows lies in one |
 
   The check (`ai-quickstart-mapping-hides.mjs`) fails a button field or a list whose rows can be fewer, on a kept
   record, that no entry names, and an entry whose way does not fit its places. A created record needs no entry: the
@@ -608,12 +615,13 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   `"0"`); the hero and the call to action print a button only while its label or address holds words (`empty`); the
   buttons of blocks 157, 176 and 190 are elements of a stored HTML value (`rows.remove`); the pricing cards print every
   card button from the first card's label and address (`empty`, all cards at once); trainer social links and plan
-  features are pieces of one value (`omit`); every other list is a row of the template's parallel lists (`row`, the
-  rows the plugin reviews for the released contract, which the blank site keeps unchanged). Plugin 0.24.85 reads
-  reviewed rows only for the released contract (`lib/hideable-slots.json`, keyed by contract id and content map
-  hash), so it refuses `row` on the blank site (`SLOT_NOT_REMOVABLE`, no reviewed row holds it) until the plugin
-  carries these rows for the blank site contract; writing the lists shorter with `content.update` instead breaks
-  every later inspect (`CONTRACT_FAILED`, a JSON slot is missing).
+  features are pieces of one value (`omit`); every other list is a row of the template's parallel lists (`row`).
+  Every block holding such rows is a copy, so the build cuts the rows out of the copy and never out of the store
+  record: plugin 0.24.85 reads reviewed rows only for the released contract (`lib/hideable-slots.json`, keyed by
+  contract id and content map hash), so it refuses a row removal on the blank site (`SLOT_NOT_REMOVABLE`), and the
+  store record written shorter with `content.update` breaks every later inspect (`CONTRACT_FAILED`, a JSON slot is
+  missing). A copy is no record of the contract: its lists are its own (measured, `copy-proof.mjs`: a copy cut to two
+  rows prints two cards). The check fails a `row` entry on a block that is not a copy.
 - **`inlineMarkup`**: `{class, count, owners}`, the class of the fields whose stored value carries inline markup (each
   declares its `inline` in the block store) and its owners: the write step (#597) and the gate (#585).
 - **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,
@@ -652,10 +660,121 @@ written out, so its address, and the index of every text node after it, would be
 keeps both. A place counts as empty when its value, trimmed, is empty. Test D of `ai-quickstart-mapping-sweep.test.mjs`
 runs the step on the demo rows and resolves every address of the mapping file.
 
+## Copies and blocks written in place
+
+**An in-page block is a copy of its store record** ([ADR 0045](../adr/0045-sites-are-built-from-an-ai-quickstart-not-from-the-demo.md),
+decision 2). A page recipe may place one block on many pages, each with its own words, and one page may hold a block
+twice; one store record can hold neither. So every block of the store says, in `placement`, how the build writes it:
+
+| `placement` | the build | through |
+|---|---|---|
+| `copy` | copies the store record into a new record for every placed block, writes the copy and assigns it to its page | the plugin's open writes |
+| `in-place` | writes the store record itself and assigns it to every page that places it: single-instance site chrome (the header button, the phone menu, the footer columns, the copyright line, the breadcrumbs) | `content.contract` on the bound [blank site contract](#the-blank-site-contract) |
+| `created` | creates the records the block shows (articles, a contact, menu items): a page body | the open writes |
+
+**The copy procedure: three door calls per placed block** (plugin 0.24.85):
+
+1. `content.get {kind: "module", id: <store record id>}` reads the store record.
+2. `content.update {apply_id, kind: "module", id: 0, fields}` creates the copy: the record's `title`, `note`,
+   `content`, `position`, `module`, `access`, `showtitle`, `params`, `published`, `language` and `ordering`, with the
+   build's values already set in them (the words at their places, the rows cut, the resets below applied).
+3. `content.update {apply_id, kind: "moduleAssignment", id: <copy id>, fields: {menuids: "[<page id>]"}}` assigns the
+   copy. The list replaces the copy's pages; `"[0]"` is every page.
+
+The copy is no record of the blank site contract, so the plugin guards none of its values: no limit, no icon or alt
+correction, no refusal of tags. The build keeps the kit's rules on a copy itself (the field limits, `inline`, `hides`,
+the icon fields) and reads the copy back. A store record written in place keeps every guard of the contract.
+
+**What a copy inherits.** A copy starts as the store record, so it carries every setting the record holds. The mapping
+file says, per copy and in-place block, in **`placements`**: `{"<block id>": entry}`, what the build must change
+(`ai-quickstart-placement.mjs`):
+
+```json
+"block-160": {
+  "entity": "module-160",
+  "assign": "page",
+  "title": { "drawn": "no", "why": "..." },
+  "resets": [
+    { "location": { "entity": "module-160", "column": "params", "jsonPath": ["catid", 0] }, "from": "buildSets", "why": "..." },
+    { "location": { "entity": "module-160", "column": "params", "jsonPath": ["section-link"] }, "from": "hides", "why": "..." }
+  ]
+}
+```
+
+- `entity`: the store record copied or written (a copy copies a module). `assign`: `page` (the page the copy is placed
+  on) or `pages` (every page whose recipe places it); a block written in place is assigned to `pages`.
+- `title`: `{drawn, field?, why}`, whether a page draws the module title and as what: `content` (printed as the
+  block's heading), `tab-label` (a plans container prints it as the tab of the module it holds), `aria-label` (the
+  breadcrumbs print it as the accessible name of their nav), or `no`. A title drawn as `content` or `tab-label` names
+  `field: {block, name}`, the store field written at that title.
+- `resets`: `[{location, from, why}]`, every inherited setting the copy changes. `from` says where the new value comes
+  from: `buildSets` (a place the build sets, such as the category an article list reads), `hides` (a `setting` hide
+  of the block, such as `section-link` `"0"`), `container` (the position of the container copy that holds it),
+  `recipe` (an `ordering` that follows the recipe, for two blocks sharing a position) or `demo` (a demo value with no
+  other place, such as a trainer name kept as a module title).
+- `inside` and `holds`: a block placed `inside:<id>` names its container, `{block, why}`; the container names the
+  blocks it holds and the location of the position it draws, `{blocks, position, why}`.
+- `menu`: `{menutype, why}`, the menu a menu block draws: the build creates its items in that menu (the blank site
+  keeps the menus, empty).
+
+**Who enforces what.**
+
+- The contract check (`scripts/ai-quickstart/check.mjs`, `placementProblems`) fails a block with no `placement` or an
+  unknown one; a copy or in-place block with no `placements` entry, or a created block with one; a copy whose entity
+  is not a module the blank site keeps; an in-place block not assigned to `pages`; a module with no `title`, and a
+  drawn title whose field is not stored at that title; a reset off the copied record, with an unknown `from` or no
+  `why`; a `buildSets` place or a `setting` hide on a copy's record that no reset names, and a reset that names no
+  such entry; a menu block with no `menu`; a held block whose container does not hold it or whose position is not
+  reset from the container; a `row` hide on a block that is not a copy; and a copy block field stored on a record it
+  does not copy (only its own record, a record it holds, a created record or a site language string).
+- The build (#597) runs the procedure above and applies every reset; the gate (#585) reads the built pages.
+- The plugin guards only what is written through the blank site contract: the in-place records and the site language
+  strings.
+
+**A language string is one for every copy.** A field stored in a site language string (the item button label of the
+class list) is written once, in place, through the blank site contract, and every copy prints it. Until it is written
+each article of the list prints an empty button (measured).
+
+**The inventory warning.** After the first copy, `content.contract` inspect warns `Quickstart inventory changed` (the
+plugin counts the modules), and assigning an in-place record warns `Module assignment drift: module-<id>`. Both are
+expected on a built site: inspect still answers, and an apply on an in-place slot is still written (measured).
+
+**JA Boxing**, measured on the blank site restored on a real Joomla with plugin 0.24.85 (`copy-proof.mjs`): 24 copies,
+10 blocks written in place, 10 created.
+
+- Every copy block and every module type (`mod_ja_acm`, `mod_custom`, `mod_menu`, `mod_articles_category`, `mod_acym`,
+  `mod_footer`, `mod_breadcrumbs`, `mod_related_items`, `mod_jamasthead`) was copied, written at the kit's limits,
+  assigned, drawn and read back. One block copied onto two pages prints its own words on each. Inline codes print as
+  markup, a picture path prints, a copy cut to fewer rows prints only those rows, a button element taken out of the
+  copy's value leaves no empty anchor.
+- A text often prints only beside its companion: a button label with its address, an image alt with its image, a
+  contact label with its email, the gallery stat at the picture its show-on setting names. The build writes them
+  together.
+- Two plans containers on one page: two copies naming one position each draw the tabs of both. Each container copy
+  writes a position of its own (`holds.position`) and the copies it holds take it (a `container` reset): each then
+  draws only its own tabs. Two plans blocks on one page are supported this way.
+- The footer social block (171) is one copy assigned to every page (`"[0]"`), its rows cut on the copy. The masthead
+  (162) is one copy per page holding the one row of `menuitem_config` keyed to that page.
+- A plain copy of the class list (160) keeps the removed demo category and `section-link` on: it lists nothing and
+  prints an empty button. With the declared resets (the category the build files the classes in, `section-link`
+  `"0"`) and the language string written, it lists the article and prints no empty button.
+- A copy with the dark icon written and the light icon empty prints a broken picture (`src="/"`): both icon versions
+  are written.
+- Not verified by the proof: the class detail list (159, `detail-bottom-1`) and the post related items (191,
+  `main-bottom-2`) are on positions only the article detail layouts print, which the build makes (#597); their copies
+  are written and read back.
+
+**The copy proof.** `scripts/ai-quickstart/copy-proof.mjs <AI quickstart folder>` runs all of the above on a throwaway
+blank site, with the same site and environment as the door proof (`TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`, php on PATH),
+and checks the plugin version did not change during the run.
+
 ## The blank site contract
 
+**The blank site contract serves what the build writes in place**: the store records of the blocks placed
+`in-place` and the site language strings. A copy is written with the open writes (above).
+
 **The build binds the blank site to the blank site contract, never to the released contract.** The Claude Cowork
-plugin writes a site only through `content.contract` apply on a bound site, and its bind finds every entity of the
+plugin writes a store record by slot only through `content.contract` apply on a bound site, and its bind finds every entity of the
 contract by its identity, refusing a site where one is missing (`Missing or ambiguous entity`). The released contract
 of the template (`packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/<version>/`) names every demo page,
 article, category, contact and account, and the blank site deletes them, so binding it fails. The released contract
@@ -734,7 +853,8 @@ the corrected state itself, by rule (`blank-site-contract-fit.mjs`), for every s
 The check fails a written slot whose door limit differs from the kit's limit for the place, or that keeps a keep flag.
 `scripts/ai-quickstart/door-limits.mjs <folder>` proves it on a throwaway blank site: a value of exactly the kit's
 limit is written into every whole text place in one apply, and the limit plus one is refused (`SLOT_TOO_LONG`) for
-each. `rows.remove` removes a node of an HTML value but no reviewed row (the mapping file's `hides`).
+each. `rows.remove` removes a node of an HTML value but no reviewed row (the mapping file's `hides`). These limits
+guard a record written in place only; a copy has none, and the build keeps the kit's limit on it.
 
 **The contract check guards it.** For a Joomla AI quickstart folder with a written mapping file,
 `node scripts/ai-quickstart/check.mjs` requires `blank-site-contract/` and checks it against the released contract
@@ -745,7 +865,8 @@ row equal to the released row with the places the blank site empties empty (the 
 no removed record named anywhere; every mapping location on a kept record has its slot, and none on a record the build creates.
 
 **The door proof.** `scripts/ai-quickstart/door-proof.mjs <AI quickstart folder>` proves on a throwaway blank site that
-the build writes through the real door (gate #585). The site runs the plugin release the quickstart pins, its
+the build writes through the real door (gate #585) the part it writes in place: the store records through the blank
+site contract. The copies are proved by `copy-proof.mjs` (above). The site runs the plugin release the quickstart pins, its
 `contract` parameter names the blank site contract and that profile is on disk; the URL and the site token come from
 the environment (`TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`). It binds, writes one place of every address kind and every text
 node place in one apply, reads each back, checks three refusals (a removed record, an unknown slot, emptying an

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 /**
  * Prove on a real blank site that the door holds every text place to the kit's own limit (ticket #584, gate #585).
+ * The door guards a store record written in place through the blank site contract (an in-place block, a language
+ * string); a copy of an in-page block is written with the open write and has no door limit: the build keeps the
+ * kit's limit on a copy (`copy-proof.mjs` writes a value past it and it is taken).
  *
  *   TRACY_DOOR_URL=<site base URL> TRACY_DOOR_TOKEN=<the site's Claude Cowork token> \
  *     node scripts/ai-quickstart/door-limits.mjs <AI quickstart folder> [--report <file.json>]
