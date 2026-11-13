@@ -1,24 +1,17 @@
-// Child list rows through the page writer and the icon step (ticket #615), and the coverage of every child list
-// field the real JA Boxing block store declares. An invented pottery studio, invented items, a scripted fake writer and
-// a scripted fake ranking model; no real model. The JA Boxing store is read for its declaration only.
+// Child list rows through the page writer and the icon step (ticket #615): an invented pottery studio, a scripted
+// fake writer and a scripted fake ranking model; no real model. The real JA Boxing store: `domain-child-lists-boxing`.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-child-lists-writer.test.mjs
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { writePages } from '../domain/page-writer.mjs'
 import { blocksOf, picturesStep } from '../domain/picture-step.mjs'
 import { composePlan } from '../domain/plan-composer.mjs'
 import { planDataOf } from '../domain/plan-data.mjs'
 import { declaredRowFieldsOf, rowFieldAccountOf } from '../domain/plan-row-coverage.mjs'
-import { planRows } from '../domain/plan-rows.mjs'
 import { composeInputs, HAND, ODILE, potteryStore, WHEEL } from './fixtures/child-lists/invented-pottery.mjs'
 import { firstCandidate, scriptedModel, scriptedWriter } from './fixtures/icon-fields/invented-yoga.mjs'
 
-const BOXING = new URL(
-  '../../../cms/tracy-joomla-quickstart/ai-quickstarts/ja-boxing/j6/1.0.11/block-store.json',
-  import.meta.url
-)
 const writer = () => scriptedWriter((key) => (key.includes('tip') ? 'Press firmly' : 'Calm practice'))
 const icons = () => ({
   set: '@phosphor-icons/core@2.1.1',
@@ -56,8 +49,8 @@ test('the writer reports every declared field of every planned row, row N of the
   assert.deepEqual(
     [1, 2].map((n) => pick(entry(copy, `${team}/${ODILE}/links.${n}/link`))),
     [
-      ['data', 'https://social.example/kilnmere.odile'],
-      ['data', 'https://video.example/odile-throws']
+      ['data', 'https://instagram.com/kilnmere.odile'],
+      ['data', 'https://youtube.com/@odile-throws']
     ]
   )
   assert.deepEqual(pick(entry(copy, `${team}/${ODILE}/links.1/network-icon`)), ['no-data', 'network'])
@@ -75,9 +68,10 @@ test('the writer reports every declared field of every planned row, row N of the
   const declared = declaredRowFieldsOf(plan.pages, blocksOf(potteryStore()), planDataOf(profile))
   const account = rowFieldAccountOf(declared, copy)
   console.log(
-    `pottery child list fields: declared ${account.declared}, decisions ${JSON.stringify(account.decisions)}`
+    `pottery child list fields: declared ${account.declared} (stored ${account.stored}), decisions ${JSON.stringify(account.decisions)}`
   )
-  assert.deepEqual([account.missing, account.extra, account.unexplained], [[], [], 0])
+  assert.deepEqual([account.unexplained, account.extra], [[], []])
+  assert.equal(account.decided, account.declared)
 })
 
 test('with written row text the icon step chooses row icons instead of icon_words_missing', async () => {
@@ -107,89 +101,4 @@ test('with written row text the icon step chooses row icons instead of icon_word
     after.map((i) => i.source),
     ['library', 'library']
   )
-})
-
-/** JA Boxing with every block that declares a child list placed, and invented items and rows for them. */
-function boxingPlan(store) {
-  const sources = ['site']
-  const items = { service: [], person: [] }
-  const pages = []
-  const row = (owner, n, fields) => ({ id: `${owner}-row-${n}`, fields, sources })
-  for (const block of store.blocks.filter((b) => b.lists || b.itemLists)) {
-    const people = block.type === 'team'
-    const data = []
-    // A post shows the business's own rows (its points); a block of one class or coach shows that item's rows.
-    const count = block.type === 'posts' ? 0 : block.lists ? 1 : block.items.max
-    for (let n = 1; n <= count; n++) {
-      const id = `${block.id}-item-${n}`
-      const name = people
-        ? { 'person.name': { value: `Coach ${n}`, sources } }
-        : { 'offering.name': { value: `Class ${n}`, sources } }
-      const rows = people
-        ? [1, 2, 3, 4, 5].map((r) =>
-            row(id, r, { 'person.social_url': { value: `https://social.example/coach-${n}-${r}` } })
-          )
-        : [
-            ...[1, 2, 3].map((r) =>
-              row(id, r, { 'offering.schedule': { value: [`Day ${r}`, `${r + 8}:00 to ${r + 9}:00`] } })
-            ),
-            ...[1, 2, 3, 4, 5].map((r) =>
-              row(id, r + 3, { 'offering.description': { value: `Feature ${r} of class ${n}` } })
-            )
-          ]
-      items[people ? 'person' : 'service'].push({
-        id,
-        kind: people ? 'person' : 'service',
-        fields: name,
-        sources,
-        rows
-      })
-      data.push(id)
-    }
-    if (block.id === 'block-180') data.splice(1, 0, 'contact-social-url', 'contact-social-url-2')
-    pages.push({ id: block.id, blocks: [{ id: 'b1', type: block.type, block: block.id, data }] })
-  }
-  const profile = {
-    sources: [{ id: 'site', origin: 'website' }],
-    facts: {
-      'contact.social_url': ['https://social.example/club', 'https://video.example/club'].map((value) => ({
-        value,
-        sources
-      }))
-    },
-    items,
-    rows: [1, 2, 3, 4, 5].map((n) =>
-      row('business', n, { 'article.lead': { value: `Point ${n} of the article` } })
-    )
-  }
-  const data = planDataOf(profile)
-  const planned = planRows(pages, blocksOf(store), data)
-  return { plan: { language: 'en', pages: planned.pages }, profile, data, dropped: planned.dropped }
-}
-
-test('JA Boxing: every declared child list field has a decision, none unexplained, values in order', async () => {
-  const store = JSON.parse(readFileSync(BOXING, 'utf8'))
-  const { plan, profile, data, dropped } = boxingPlan(store)
-  const copy = await writePages({ plan, profile, blockStore: store, model: writer() })
-  const declared = declaredRowFieldsOf(plan.pages, blocksOf(store), data)
-  const account = rowFieldAccountOf(declared, copy)
-  const cut = dropped.reduce((acc, d) => ({ ...acc, [d.code]: (acc[d.code] ?? 0) + 1 }), {})
-  console.log(
-    `JA Boxing child list fields: declared ${account.declared} = decided ${account.decided}; ` +
-      `${JSON.stringify(account.decisions)}; unexplained ${account.unexplained}; rows and fields dropped ${JSON.stringify(cut)}`
-  )
-  assert.equal(account.declared, account.decided)
-  assert.deepEqual([account.missing, account.extra, account.unexplained], [[], [], 0])
-  const network = declared.filter((d) => d.field.iconOf === 'network').length
-  assert.equal(network, 68)
-  // Row N of the business lands in place N: the calendar of class 1, the links of coach 2, the article points.
-  const value = (page, item, row, field) =>
-    account.byId.get([page, 'b1', item, row, field].filter(Boolean).join('.'))?.value
-  assert.equal(value('block-160', 'block-160-item-1', 'calendar.2', 'days'), 'Day 2')
-  assert.equal(value('block-160', 'block-160-item-1', 'calendar.2', 'times'), '10:00 to 11:00')
-  assert.equal(value('block-163', 'block-163-item-2', 'social.4', 'link'), 'https://social.example/coach-2-4')
-  assert.equal(value('news-post', null, 'points.3', 'point'), 'Point 3 of the article')
-  assert.equal(value('class-detail', null, 'features.4', 'description'), 'Calm practice')
-  assert.equal(value('block-180', null, 'social.2', 'link'), 'https://video.example/club')
-  assert.equal(account.byId.get('block-162.b1.pages.1.page').action, 'derived')
 })

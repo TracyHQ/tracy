@@ -71,7 +71,8 @@ const withoutId = ({ id: _id, ...entry }) => entry
  *   the answers and the look bring
  * @returns {{ok: boolean, problems: Array<{code: string, at: string, message: string}>, plan?: object,
  *   placed?: object[], accounting?: ReturnType<typeof dataAccountingOf>, rows?: object[]}} `rows`: the rows and row
- *   fields the rules dropped, each with its `code` (`CHILD_LIST_REASONS`, `plan-rows.mjs`)
+ *   fields the rules dropped and the lists below their minimum, each with its `code` and `reason` (`CHILD_LIST_REASONS`,
+ *   `plan-rows-fit.mjs`)
  */
 export function gatePlan(composition, context) {
   const problems = []

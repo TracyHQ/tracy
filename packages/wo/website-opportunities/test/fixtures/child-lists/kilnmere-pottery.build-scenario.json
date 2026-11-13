@@ -194,7 +194,7 @@
       },
       {
         "id": "person-odile-brannoch-row-1",
-        "label": "https://social.example/kilnmere.odile",
+        "label": "https://instagram.com/kilnmere.odile",
         "sources": [
           {
             "kind": "website",
@@ -204,7 +204,7 @@
       },
       {
         "id": "person-odile-brannoch-row-2",
-        "label": "https://video.example/odile-throws",
+        "label": "https://youtube.com/@odile-throws",
         "sources": [
           {
             "kind": "website",

@@ -2,8 +2,8 @@
 // model placed, placed by the gate's rules, or left out with a reason. Nothing disappears without a report. The rules
 // gate holds every plan to it (`data_unaccounted`), and the tests count it: total = shown + placed + left out.
 // A fact that stands for an item field (`plan-conflicts.mjs`) counts with its item. Rows of the profile (ticket #615)
-// count too: shown when a child list of the plan holds them, left out with their item or parent row, or reported. A
-// fact a list holds as a row (a social link) is shown.
+// count too: shown when a child list of the plan holds them, left out with their item (left out, or shown on no page)
+// or parent row, or reported. A fact a list holds as a row (a social link) is shown.
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -45,6 +45,8 @@ export function dataAccountingOf({ data, pages, placed, leftOutIds }) {
     else if (leftOutIds.has(id) || leftOutIds.has(record.parent) || leftOutIds.has(record.owner))
       out.leftOut.push(id)
     else if (record.parent !== null && !inRows.has(record.parent)) out.leftOut.push(id)
+    // A row of an item no page shows goes with its item, which the item accounting reports.
+    else if (record.owner !== null && !onPages.has(record.owner)) out.leftOut.push(id)
     else out.unexplained.push(id)
   }
   return out

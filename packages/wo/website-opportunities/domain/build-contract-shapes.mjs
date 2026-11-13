@@ -65,6 +65,7 @@ export const CONTRACT_SHAPES = Object.freeze({
 /** Longest text, in code points, per field. A card shows a label on one line and a reason in a sentence or two. */
 export const TEXT_LIMITS = Object.freeze({
   label: 80,
+  'lists[].name': 64,
   'pages[].name': 40,
   'sources[].name': 80,
   what: 80,

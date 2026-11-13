@@ -34,8 +34,9 @@ Rules:
    project) or for the business itself (the lines of its opening times), give each line as a row: inside the item as
    `rows`, or for the business in the top level `rows` with the source's `id`. A row has `fields` by data kind, using
    the business kinds of rule 4 and `offering.schedule` (a day or a time a session runs), `step.title`,
-   `step.description` and `person.social_url` (one profile link of a person per row), and its own `evidence`, under
-   the same rules as any fact. When the source writes a value in parts set apart, such as the days and then the times
+   `step.description`, `package.feature_item` (one thing a package or membership includes), `article.lead` (one
+   point of a post the business wrote) and `person.social_url` (one profile link of a person per row), and its own
+   `evidence`, which holds every word of every value of the row, under the same rules as any fact. When the source writes a value in parts set apart, such as the days and then the times
    of one session, give it as a list of those parts in the order written (`["Tue and Thu", "18:00 to 20:00"]`). A row
    may hold `rows` of its own (the steps of one project). Never write a row the source does not state.
 6. For every picture with an `alt` or a caption that says what it shows, give a short label of what it shows.

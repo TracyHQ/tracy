@@ -13,6 +13,7 @@
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
 // a `code` span, a `[link](target)`), no line break (LF, CR, U+2028, U+2029) and no other control character. A value
 // made only of spaces and invisible characters (zero width, format characters, fillers) is empty.
+import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
 
 // Figure dash, en dash, em dash, horizontal bar, minus sign, two and three em dashes, small em dash.
@@ -42,11 +43,12 @@ export const charCount = (value) => [...String(value)].length
  * The problems of one written value against its declared field. An empty list means the value fits.
  * @param {{name: string, type: string, limit?: number}} field the field as the block store declares it
  * @param {unknown} value what the model wrote
- * @param {{known?: string[]}} [context] `known`: every value of the plan data, so copy never carries an invented phone
- *   number, email address, URL or price (`page-writer-data-guard.mjs`)
+ * @param {{known?: string[], foreign?: string[]}} [context] `known`: every value of the plan data, so copy never carries
+ *   an invented phone number, email address, URL or price (`page-writer-data-guard.mjs`); `foreign`: for a child list
+ *   row's copy field, the values of the other rows, none of which it may carry (whole words, `tokensIn`)
  * @returns {Array<{code: string, message: string}>}
  */
-export function fieldValueProblems(field, value, { known } = {}) {
+export function fieldValueProblems(field, value, { known, foreign } = {}) {
   if (!WRITER_FIELD_TYPES.includes(field?.type))
     return [{ code: 'not_a_copy_field', message: `a ${field?.type} field is not written by the writer` }]
   if (value === undefined || value === null)
@@ -81,6 +83,12 @@ export function fieldValueProblems(field, value, { known } = {}) {
         code: 'invented_data',
         message: `the ${what} ${JSON.stringify(text)} is not in the business data: remove it, the data fields show it`
       })
+  for (const other of foreign ?? [])
+    if (tokensIn(other, value))
+      problems.push({
+        code: 'other_row_data',
+        message: `${JSON.stringify(other)} belongs to another row: write this field from its own row's data only`
+      })
   return problems
 }
 
@@ -93,9 +101,9 @@ export function fieldValueProblems(field, value, { known } = {}) {
  */
 export function checkPageCopy(slots, values, context) {
   const failing = []
-  for (const { key, field } of slots) {
+  for (const { key, field, foreign } of slots) {
     const value = values?.[key]
-    const problems = fieldValueProblems(field, value, context)
+    const problems = fieldValueProblems(field, value, foreign ? { ...context, foreign } : context)
     if (problems.length > 0) failing.push({ key, value, problems })
   }
   return { ok: failing.length === 0, failing }

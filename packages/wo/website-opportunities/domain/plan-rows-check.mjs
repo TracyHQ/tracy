@@ -3,24 +3,27 @@
 // the plan does not show is reported in the left out list. Pure.
 //
 // Codes: `unknown_list` (a list the block does not declare there), `list_item_not_shown` (an item list for an item
-// the block does not show), `too_many_rows` (more than `items.max`, or than the most rows a parent place stores),
+// the block does not show), `too_many_rows` (more than `items.max`, or than the parent place of the list stores: item
+// N of the block's data is written to stored place N, a nested list's parent row to its row's place),
 // `row_unknown` (not a row or fact of the plan data, or not a page of the plan), `row_fields_undeclared` (a row
 // holding no data kind of the list), `row_not_owned` (a row of another item), `row_repeated`.
-import { fitsList, isPageKeyed, listKindsOf, shownItemIds, storedRowsOf } from './plan-rows.mjs'
+import { NO_LIST_REASON } from './plan-rows-fit.mjs'
+import { firstRowOf, fitsList, isPageKeyed, listKindsOf, roomOf, shownItemIds } from './plan-rows.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-const maxOf = (child) => (Number.isInteger(child?.items?.max) ? child.items.max : 0)
 
-/** `expect`: `{owner}` (an item id or null) for a top level list, `{parent}` (a row id) for a nested one. */
-function rowsProblems(child, planned, expect, at, ctx) {
-  const stored = storedRowsOf(child)
-  const most = Math.min(maxOf(child), stored ? Math.max(0, ...stored) : maxOf(child))
+/**
+ * `expect`: `{owner}` (an item id or null) for a top level list, `{parent}` (a row id) for a nested one; `place`: the
+ * index of the parent place the rows are written to.
+ */
+function rowsProblems(child, planned, expect, at, ctx, place) {
+  const most = roomOf(child, place)
   const rows = list(planned?.rows)
   if (rows.length > most)
     ctx.problem(
       'too_many_rows',
       `${at}.rows`,
-      `${rows.length} rows for list ${child.name}: it shows at most ${most}, the most rows a stored place holds`
+      `${rows.length} rows for list ${child.name}: its place ${place + 1} holds at most ${most}`
     )
   const kinds = listKindsOf(child)
   const seen = new Set()
@@ -65,7 +68,14 @@ function rowsProblems(child, planned, expect, at, ctx) {
         )
     for (const n of list(child.lists))
       if (nested.has(n.name))
-        rowsProblems(n, nested.get(n.name), { parent: record?.id }, `${rowAt}.lists[${n.name}]`, ctx)
+        rowsProblems(
+          n,
+          nested.get(n.name),
+          { parent: record?.id },
+          `${rowAt}.lists[${n.name}]`,
+          ctx,
+          firstRowOf(child, place) + i
+        )
   })
 }
 
@@ -89,30 +99,38 @@ export function rowListProblems(pages, blocks, data, problem) {
         if (key === 'itemLists' && !items.includes(planned.item))
           return problem('list_item_not_shown', at, `the block does not show item ${planned.item}`)
         const owner = key === 'itemLists' ? planned.item : items.length === 1 ? items[0] : null
-        rowsProblems(child, planned, { owner }, at, ctx)
+        rowsProblems(
+          child,
+          planned,
+          { owner },
+          at,
+          ctx,
+          key === 'itemLists' ? items.indexOf(planned.item) : 0
+        )
       })
     }
 }
 
-/** The left out entries of the profile's rows the plan does not show, each naming its row `id`. */
-export function rowsLeftOut(data, planned, dropped, leftOutIds) {
-  const why = new Map(
-    dropped.filter((d) => d.row && d.code !== 'row_field_undeclared').map((d) => [d.row, d])
-  )
+/**
+ * The left out entries of the profile's rows the plan does not show, each naming its row `id` and the reason of the
+ * code that dropped it (`CHILD_LIST_REASONS`). A row goes with what holds it: a row of an item left out or of an item
+ * no page shows (`shownItems`, when given), or of a parent row not shown, is reported with it, never twice.
+ */
+export function rowsLeftOut(data, planned, dropped, leftOutIds, shownItems = null) {
+  const why = new Map()
+  for (const d of dropped)
+    if (d.row && d.code !== 'row_field_undeclared' && !why.has(d.row)) why.set(d.row, d)
   const out = []
   for (const record of data.rowsById.values()) {
     if (planned.has(record.id)) continue
-    // A row goes with what holds it: an item left out, or a parent row not shown, already reports it.
     if (record.parent !== null && !planned.has(record.parent)) continue
     if (record.owner !== null && leftOutIds.has(record.owner)) continue
-    const cut = why.get(record.id)
+    if (record.owner !== null && shownItems && !shownItems.has(record.owner)) continue
     out.push({
       id: record.id,
       what: record.entry.label,
       kind: 'item',
-      reason: cut
-        ? 'The section that shows these has room for fewer rows than you have.'
-        : 'No section of the template shows rows like this one.'
+      reason: why.get(record.id)?.reason ?? NO_LIST_REASON
     })
   }
   return out

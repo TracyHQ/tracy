@@ -205,15 +205,20 @@ export { rowDataOf, rowValuesOf } from './plan-row-data.mjs'
 export {
   CHILD_LIST_REASONS,
   PAGE_ROW,
+  firstRowOf,
   fitsList,
   isPageKeyed,
   listKindsOf,
+  placeOrder,
   planRows,
+  roomOf,
   storedRowsOf
 } from './plan-rows.mjs'
+export { NO_LIST_REASON, fitCandidates, rowMisfitOf } from './plan-rows-fit.mjs'
+export { limitOf, placeLimitsOf, placesOfField } from './field-place-limits.mjs'
 export { rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 export { declaredRowFieldsOf, rowFieldAccountOf } from './plan-row-coverage.mjs'
-export { rowContextOf, rowFieldsOf } from './page-writer-rows.mjs'
+export { foreignValuesOf, rowContextOf, rowFieldsOf } from './page-writer-rows.mjs'
 export {
   MAX_ROW_DEPTH,
   MAX_ROW_PARTS,

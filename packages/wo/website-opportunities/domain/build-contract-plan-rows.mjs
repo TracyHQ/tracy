@@ -3,7 +3,8 @@
 // - `rows` on the plan: the rows the business stated (`[{id, label, sources}]`), in the id space of facts and items;
 // - `lists` on a block: the rows each child list of the block shows (`[{name, item?, rows: [{data} | {page},
 //   lists?]}]`). A row names a row or a fact of the plan (`data`), or a page of the plan (`page`) for a list keyed to
-//   pages; `item` names the item of the block an item list belongs to; `lists` holds a row's nested lists.
+//   pages; `item` names the item (never a fact) of the block an item list belongs to; `lists` holds a row's nested
+//   lists. A list `name` is at most 64 characters (`TEXT_LIMITS`).
 // Like the rest of the plan these are closed shapes with no written copy. How many rows a list may show is held by the
 // rules gate against the block store (`plan-rows-check.mjs`), not here: Contract B does not know the template.
 import { sourcesProblems } from './build-contract-plan-parts.mjs'
@@ -61,13 +62,23 @@ function listsProblems(lists, at, ctx, depth, block) {
     const listAt = `${at}[${i}]`
     if (!isObject(entry)) return ctx.report(listAt, 'a child list must be an object {name, item?, rows}')
     closedShapeProblems(entry, 'child list', listAt, ctx.report)
-    if (!isName(entry.name))
-      ctx.report(`${listAt}.name`, 'a child list needs the name the block store gives it')
+    textProblems(
+      entry.name,
+      `${listAt}.name`,
+      ctx.report,
+      'lists[].name',
+      'a child list needs the name the block store gives it'
+    )
     const key = `${entry.name}|${entry.item ?? ''}`
     if (seen.has(key)) ctx.report(listAt, `list ${JSON.stringify(entry.name)} appears twice for one place`)
     seen.add(key)
     if (entry.item !== undefined && (!block || !block.data?.includes(entry.item)))
       ctx.report(`${listAt}.item`, 'item names an item the block shows; a nested list has none')
+    else if (entry.item !== undefined && ctx.known.get(entry.item)?.what !== 'item')
+      ctx.report(
+        `${listAt}.item`,
+        `${JSON.stringify(entry.item)} is not an item of the plan: a fact has no item list`
+      )
     rowsProblems(entry.rows, listAt, ctx, depth)
   })
 }

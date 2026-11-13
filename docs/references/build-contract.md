@@ -193,8 +193,12 @@ and a block without `lists` shows no rows.
 - **`rows`** (on the plan): the rows the business stated, each `{id, label, sources}`, in the same id space as facts
   and items. A label is held to the `label` limit. A block's `data` never names a row.
 - **`lists`** (on a block): one entry per child list of the block, `{name, rows}`, and per item for a list inside
-  each item, `{name, item, rows}` where `item` is an item of the block's `data`. `rows` may be empty: a list with no
-  business data is planned empty, never filled with invented rows.
+  each item, `{name, item, rows}` where `item` is an item (never a fact) of the block's `data`. `name` is held to the
+  `lists[].name` limit. `rows` may be empty: a list with no business data is planned empty, never filled with invented
+  rows.
+- **Item N of a block's `data` is written to stored place N.** The rules put a block's items in the order of the
+  places that hold their rows (the item with the most rows in the place that stores the most), so the order of `data`
+  is the place order; no extra key says it.
 - **A planned row** is `{data}`, a row or a fact of the plan (a social link fact is one row of a links list), or
   `{page}`, a page of the plan, for a list whose rows are keyed to pages. It may hold `lists`, the nested lists of
   that row, at most three levels deep. A row appears once per list.
@@ -325,6 +329,7 @@ reason in a sentence or two. A test compares this table with the code.
 | Field | Limit | Applies to |
 |---|---|---|
 | `label` | 80 | fact, item, block, step and choice labels; an item alternative's value |
+| `lists[].name` | 64 | the name of a child list of a block |
 | `pages[].name` | 40 | a page name, what its menu item shows |
 | `sources[].name` | 80 | a source name, of a fact, an item or an alternative |
 | `what` | 80 | a left out entry |

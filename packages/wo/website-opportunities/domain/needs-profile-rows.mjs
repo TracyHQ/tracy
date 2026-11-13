@@ -5,11 +5,12 @@
 // The model reads a row as `{fields: {"<data kind>": value | [part, ...]}, evidence, rows?: [...]}`. A value may be a
 // list of the parts the source writes apart, in the order it writes them (the days, then the times, of one session):
 // the n-th field of that data kind in a list's row shows the n-th part. Every row carries its own evidence, found in
-// the words of the source its item cites, and is grounded like any other fact (`needs-profile-grounding.mjs`): a
-// literal value or part its evidence does not hold drops the whole row, a summary that says more drops that field.
+// the words of the source its item cites, and every part of every field, a summary kind's too, must stand inside that
+// quote as whole words (`rowProvenBy`, `needs-profile-grounding.mjs`): a literal part the quote does not hold drops
+// the whole row, a summary part it does not hold drops that field.
 // Nothing is set aside silently: every row or field left out is listed in `dropped` with a code and a reason.
 import { textKey } from './needs-profile-merge.mjs'
-import { SUMMARY_ROLES, provenBy } from './needs-profile-grounding.mjs'
+import { SUMMARY_ROLES, rowProvenBy } from './needs-profile-grounding.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
 import { ROLE_VOCABULARY_V3, isRole } from './place-content-roles.mjs'
 
@@ -59,9 +60,9 @@ export function groundRows(rows, context, path = 'rows', depth = 1) {
       else if (!parts) dropped.push(drop('not_text', { ...at, field: role }, 'field'))
       else fields[role] = parts
     }
-    // A literal part the quote does not prove drops the whole row; a summary that says more drops that field only.
+    // A literal part the quote does not hold drops the whole row; a summary part it does not hold drops that field.
     const unproven = Object.entries(fields).filter(([role, parts]) =>
-      parts.some((p) => !provenBy(role, p, row.evidence))
+      parts.some((p) => !rowProvenBy(role, p, row.evidence))
     )
     const literal = unproven.find(([role]) => !SUMMARY_ROLES.includes(role))
     if (literal)

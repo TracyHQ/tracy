@@ -6,21 +6,17 @@
 //
 // Right after a page is written the pure copy check (`page-copy-check.mjs`) measures every field against its declared
 // type and limit, and holds that copy carries no phone number, email address, URL or price the plan data does not hold
-// (`invented_data`). Only the failing fields go back to the model, in ONE more call for that page. A field that still fails
+// (`invented_data`), and that a child list row's copy carries no value of another row (`other_row_data`). Only the
+// failing fields go back to the model, in ONE more call for that page. A field that still fails
 // throws a `PageWriterError` with code `copy_check_failed` and every failing field, for the stop and report rule
 // (ADR 0047, #591).
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount, checkPageCopy } from './page-copy-check.mjs'
-import { sharedPlacesOf } from './ai-quickstart-field-keys.mjs'
-import {
-  PageWriterError,
-  blockDescriptionsOf,
-  knownValuesOf,
-  pageFieldsOf,
-  sharedLimitsOf
-} from './page-writer-fields.mjs'
+import { placeLimitsOf } from './field-place-limits.mjs'
+import { PageWriterError, blockDescriptionsOf, knownValuesOf, pageFieldsOf } from './page-writer-fields.mjs'
 import { pageWriterUser } from './page-writer-request.mjs'
+import { foreignValuesOf } from './page-writer-rows.mjs'
 import { planDataOf } from './plan-data.mjs'
 
 export { PageWriterError } from './page-writer-fields.mjs'
@@ -136,14 +132,20 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
   const data = planDataOf(profile)
   const { byId } = data
+  const blocks = blockDescriptionsOf(blockStore, library)
   const context = {
-    blocks: blockDescriptionsOf(blockStore, library),
+    blocks,
     byId,
     data,
-    sharedLimits: sharedLimitsOf(sharedPlacesOf(blockStore)),
+    placeLimits: placeLimitsOf(blocks.values()),
     known: knownValuesOf(byId, data.rowsById)
   }
-  const fieldsByPage = plan.pages.map((page) => pageFieldsOf(page, context))
+  // A row's copy field is checked against the other rows' values: it never carries another row's data.
+  const fieldsByPage = plan.pages.map((page) =>
+    pageFieldsOf(page, context).map((f) =>
+      f.row && f.from === 'writer' ? { ...f, foreign: foreignValuesOf(f.rowData, data) } : f
+    )
+  )
   const over = dataOverLimit(fieldsByPage)
   if (over.length > 0)
     throw new PageWriterError(

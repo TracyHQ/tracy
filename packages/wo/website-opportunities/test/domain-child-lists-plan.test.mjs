@@ -145,12 +145,20 @@ test('the gate rejects rows over the limit, rows of another kind, unknown lists 
   const bad = structuredClone(plan.pages)
   const grid = bad[0].blocks.find((b) => b.block === 'services-grid')
   listOf(grid, 'sessions', WHEEL).rows.push({ data: `${WHEEL}-row-3` })
+  // Hand building sits in place 2, which stores one session row: a second row is too many for ITS place.
   listOf(grid, 'sessions', HAND).rows.push({ data: `${WHEEL}-row-4` })
   listOf(grid, 'steps', HAND).rows.push({ data: `${WHEEL}-row-5` })
   grid.lists.push({ name: 'prices', item: WHEEL, rows: [] })
   assert.deepEqual(
     problems(bad).map((p) => p.code),
-    ['too_many_rows', 'row_not_owned', 'row_fields_undeclared', 'row_not_owned', 'unknown_list']
+    [
+      'too_many_rows',
+      'too_many_rows',
+      'row_not_owned',
+      'row_fields_undeclared',
+      'row_not_owned',
+      'unknown_list'
+    ]
   )
 })
 

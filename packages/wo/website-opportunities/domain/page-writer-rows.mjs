@@ -101,3 +101,20 @@ export function rowContextOf(fields) {
   }
   return [...rows.values()]
 }
+
+/**
+ * The values of every OTHER row of the plan data, for the copy check of a row's copy field (`other_row_data`): a tip
+ * of one step must not carry the times of a session. The row's own values and its parent rows' values are its own, a
+ * value too short to tell (under 3 characters) is never matched.
+ */
+export function foreignValuesOf(rowData, data) {
+  const own = new Set()
+  for (let id = rowData; id; id = data.rowsById?.get(id)?.parent)
+    for (const parts of Object.values(data.rowsById?.get(id)?.values ?? {})) for (const p of parts) own.add(p)
+  const out = new Set()
+  for (const [id, record] of data.rowsById ?? new Map())
+    if (id !== rowData)
+      for (const parts of Object.values(record.values))
+        for (const p of parts) if (!own.has(p) && [...p].length >= 3) out.add(p)
+  return [...out]
+}

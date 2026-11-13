@@ -4,7 +4,8 @@
 // The rule, per field:
 // - LITERAL fields must be found inside the quote: every business fact (name, founded year, phone, email, address,
 //   hours, links) and, for an item, its name, its price, a quote's text and author, and any field not listed below.
-//   Text compares on letters and digits only, whole words, case and spacing aside; a phone compares as a number
+//   Text compares on letters and digits only, whole words (a number with its separators is one word), case and
+//   spacing aside; a phone compares as a number
 //   (`samePhone`); an email or a link compares as written, case aside. Hours may be rewritten as days and times
 //   (`Mo-Fr 07:00-22:00` for "Monday to Friday 7am to 10pm"): then every time in the value must be a time of the quote.
 // - SUMMARY fields (`SUMMARY_ROLES`: a description, a duration or period, a role, a bio) may reword the quote, but
@@ -33,6 +34,23 @@ const linkless = (value) =>
 const currencies = (value) => String(value).match(/\p{Sc}/gu) ?? []
 const numbers = (value) => String(value).match(/\d+/g) ?? []
 const wordsOf = (value) => new Set(textKey(value).split(' '))
+/**
+ * The words of a text as whole tokens: a number keeps its separators (`18:00`, `7.30`, `1,200`), so part of a number is
+ * never a token of its own (`00 to 20` is not inside `18:00 to 20:00`). Case, accents and other punctuation aside.
+ */
+export const tokenKey = (value) =>
+  (
+    String(value)
+      .normalize('NFKD')
+      .replace(/\p{M}+/gu, '')
+      .toLowerCase()
+      .match(/\p{N}+(?:[:.,]\p{N}+)*|\p{L}+/gu) ?? []
+  ).join(' ')
+/** Whether the words of `value` stand, whole and in order, inside the words of `evidence`. */
+export const tokensIn = (value, evidence) => {
+  const key = tokenKey(value)
+  return key !== '' && ` ${tokenKey(evidence)} `.includes(` ${key} `)
+}
 
 /** The times written in `text`, in minutes after midnight: `07:00`, `7.30`, `7am`, `10 pm`. */
 function timesOf(text) {
@@ -52,8 +70,7 @@ function literalIn(role, value, evidence) {
   if (role === 'contact.phone') return phonesIn(evidence).some((p) => samePhone(p, value))
   if (role === 'contact.email') return lower(evidence).includes(lower(value))
   if (role.endsWith('_url')) return linkless(evidence).includes(urlKey(value))
-  const key = textKey(value)
-  const words = key !== '' && ` ${textKey(evidence)} `.includes(` ${key} `)
+  const words = tokensIn(value, evidence)
   if (PRICE_ROLES.has(role)) return words && currencies(value).every((c) => evidence.includes(c))
   if (role === 'contact.hours' && !words) {
     const [said, quoted] = [timesOf(value), new Set(timesOf(evidence))]
@@ -87,6 +104,17 @@ function summaryIn(value, evidence) {
 /** Whether `evidence` is long enough to prove anything. */
 export const evidenceLongEnough = (evidence) =>
   textKey(evidence).replace(/ /g, '').length >= MIN_EVIDENCE_CHARS
+
+/**
+ * Whether `evidence` proves one part of a row value (ticket #615): a row's quote is the row itself, so every part of
+ * every data kind, a summary kind's included, must stand inside it, whole tokens in order (a phone, an email and a
+ * link as for any fact).
+ */
+export function rowProvenBy(role, value, evidence) {
+  if (role === 'contact.phone' || role === 'contact.email' || role.endsWith('_url'))
+    return literalIn(role, value, evidence)
+  return tokensIn(value, evidence)
+}
 
 /** Whether `evidence` proves `value` for field or fact kind `role` (rules above). */
 export function provenBy(role, value, evidence) {

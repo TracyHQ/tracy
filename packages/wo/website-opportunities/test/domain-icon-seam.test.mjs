@@ -17,8 +17,11 @@ import { iconLibrary, scriptedWriter } from './fixtures/icon-fields/invented-yog
 function storeWithWrittenHeadings() {
   const store = F.blockStore()
   const services = store.blocks.find((b) => b.id === 'services-grid')
-  // Stored in the places the item name is stored in, as Contract A asks of every item field.
-  const { slots } = services.itemFields.find((f) => f.name === 'name')
+  // Stored in a place of its own on each item record, as Contract A asks of every item field. Not the name's places:
+  // a place two fields share is written within the smaller limit, and the heading is not meant to share one.
+  const slots = services.itemFields
+    .find((f) => f.name === 'name')
+    .slots.map((s) => s.replace(/\.name$/, '.title'))
   services.itemFields.unshift({ name: 'title', kind: 'editorial.heading', type: 'text', limit: 30, slots })
   services.itemFields.find((f) => f.type === 'icon').frame = { width: 64, height: 64 }
   return store

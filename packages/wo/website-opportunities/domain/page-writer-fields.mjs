@@ -9,6 +9,7 @@
 // Data comes only from the plan data the block shows (`block.data`, plan ids of `planDataOf`): a fact of the field's
 // kind for a block field, the item's own field value for an item field. The block store and the library are read for
 // their declared shape only; a stray demo or example value on a block or a field is never read.
+import { limitOf } from './field-place-limits.mjs'
 import { WRITER_FIELD_TYPES } from './page-copy-check.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
 import { rowFieldsOf } from './page-writer-rows.mjs'
@@ -46,11 +47,12 @@ export function blockDescriptionsOf(blockStore, library = []) {
 export const slotKey = (blockId, fieldName, itemId) =>
   itemId === undefined ? `${blockId}/${fieldName}` : `${blockId}/${itemId}/${fieldName}`
 
-const declared = ({ name, type, kind, limit }, shared) => ({
-  name,
-  type,
-  ...(kind ? { kind } : {}),
-  limit: Number.isInteger(shared) && Number.isInteger(limit) ? Math.min(limit, shared) : limit
+/** The field as the writer reads it: its limit is the smallest of the stored places it writes (`limitOf`). */
+const declared = (field, placeLimits) => ({
+  name: field.name,
+  type: field.type,
+  ...(field.kind ? { kind: field.kind } : {}),
+  limit: limitOf(field, placeLimits)
 })
 
 /** The origin of a text field (`data` or `copy`), or false for a field the writer never fills. */
@@ -98,15 +100,15 @@ function noDataOf(description) {
  * item the block shows. Design, image, icon, link and number fields of a block or an item are never listed: the writer
  * fills text only. Then every declared field of every planned child list row (`page-writer-rows.mjs`), with `row`.
  * @param {object} page a page of the plan (`plan.pages[]`)
- * @param {{blocks: Map<string, object>, byId: Map<string, object>, data?: object, sharedLimits?: Map<string, number>}}
- *   context `byId`: the plan data (`planDataOf`); `data`: the whole plan data, its rows included; `sharedLimits`: the
- *   smallest limit of the stored places a field shares with others, by `<block>/<field>` (`sharedLimitsOf`),
- *   applied to child list row fields (block and item fields keep their declared limit, as before #615)
+ * @param {{blocks: Map<string, object>, byId: Map<string, object>, data?: object, placeLimits?: Map<string, number>}}
+ *   context `byId`: the plan data (`planDataOf`); `data`: the whole plan data, its rows included; `placeLimits`: the
+ *   smallest limit of each stored place (`placeLimitsOf`): every field, a block's, an item's or a row's, is written
+ *   within the smallest limit of the places it writes
  * @returns {Array<{key: string, page: string, block: string, item?: string, row?: string, field: object,
  *   from: 'writer' | 'data' | 'no-data', value?: string, data?: string,
  *   action?: 'hide' | 'fallback' | 'derived' | 'network' | 'pictures', fallback?: string}>}
  */
-export function pageFieldsOf(page, { blocks, byId, data = { byId }, sharedLimits = new Map() }) {
+export function pageFieldsOf(page, { blocks, byId, data = { byId }, placeLimits = new Map() }) {
   const out = []
   for (const block of list(page.blocks)) {
     const description = blocks.get(block.block)
@@ -120,7 +122,7 @@ export function pageFieldsOf(page, { blocks, byId, data = { byId }, sharedLimits
         page: page.id,
         block: block.id,
         ...(item === undefined ? {} : { item }),
-        field: declared(field)
+        field: declared(field, placeLimits)
       }
       if (origin === 'copy') return out.push({ ...base, from: 'writer' })
       const found = dataValueOf({ field, block, item, byId })
@@ -136,25 +138,10 @@ export function pageFieldsOf(page, { blocks, byId, data = { byId }, sharedLimits
       page: page.id,
       block: block.id,
       ...(item === undefined ? {} : { item }),
-      field: declared(field, sharedLimits.get(`${block.block}/${field.name}`))
+      field: declared(field, placeLimits)
     })
     out.push(...rowFieldsOf(block, description, { data, base, originOf }))
   }
-  return out
-}
-
-/**
- * The smallest text limit of every field whose stored place another field also uses (Contract A: a shared place is
- * written within the smallest limit of its fields), by `<block>/<field>`.
- */
-export function sharedLimitsOf(shared) {
-  const out = new Map()
-  for (const { limit, uses } of shared)
-    if (Number.isInteger(limit))
-      for (const use of uses) {
-        const key = `${use.block}/${use.field}`
-        out.set(key, Math.min(limit, out.get(key) ?? limit))
-      }
   return out
 }
 

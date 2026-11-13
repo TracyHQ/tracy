@@ -1,8 +1,10 @@
 // The row data a build plan may show (ticket #615): every row of the needs profile (`needs-profile-rows.mjs`), of an
 // item or of the business, nested rows included, gets a plan id, a label and its sources, like facts and items
 // (`plan-data.mjs`). A person's own profile link field (`person.social_url`) is a row of that person too: Contract A
-// keeps a trainer's links as a child list. The plan names rows only by these ids (`plan-rows.mjs`), so a planned row
-// always stands for something the business stated. Pure.
+// keeps a trainer's links as a child list, one row per link when the field lists several. The plan names rows only by
+// these ids (`plan-rows.mjs`), so a planned row always stands for something the business stated. A row id another fact,
+// item or row already uses (an item named "Boxing row 1" next to the first row of "Boxing") takes the first free
+// `<id>-<n>`, so no row is ever lost to a name. Pure.
 import { partsOf } from './needs-profile-rows.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -33,19 +35,25 @@ export function rowDataOf(profile, data, { sourcesOf, short, origins }) {
   const rows = []
   const rowsById = new Map()
   const byOwner = new Map()
+  const taken = (id) => rowsById.has(id) || data.byId.has(id)
+  const freeId = (id) => {
+    let n = 2
+    while (taken(`${id}-${n}`)) n += 1
+    return taken(id) ? `${id}-${n}` : id
+  }
   const add = (row, owner, parent, inherited) => {
     const values = rowValuesOf(row?.fields)
-    if (!isText(row?.id) || rowsById.has(row.id) || data.byId.has(row.id)) return null
-    if (Object.keys(values).length === 0) return null
+    if (!isText(row?.id) || Object.keys(values).length === 0) return null
     const sources = sourcesOf(list(row.sources).length ? row.sources : inherited, origins)
     if (sources.length === 0) return null
+    const id = freeId(row.id)
     const label = short(Object.values(values).flat().join(', '))
-    const entry = { id: row.id, label, sources }
-    const record = { id: row.id, owner, parent, values, entry, rows: [] }
+    const entry = { id, label, sources }
+    const record = { id, owner, parent, values, entry, rows: [] }
     rows.push(entry)
-    rowsById.set(row.id, record)
+    rowsById.set(id, record)
     for (const child of list(row.rows)) {
-      const kept = add(child, owner, row.id, list(row.sources).length ? row.sources : inherited)
+      const kept = add(child, owner, id, list(row.sources).length ? row.sources : inherited)
       if (kept) record.rows.push(kept.id)
     }
     return record
@@ -62,9 +70,18 @@ export function rowDataOf(profile, data, { sourcesOf, short, origins }) {
       if (data.byId.get(item?.id)?.what !== 'item') continue
       for (const row of list(item.rows)) top(item.id, row, item.sources)
       const link = item.fields?.[PERSON_LINK]
-      const stated = list(item.rows).some((r) => r?.fields?.[PERSON_LINK]?.value === link?.value)
-      if (isText(link?.value) && !stated)
-        top(item.id, { id: `${item.id}-link`, fields: { [PERSON_LINK]: link } }, link.sources ?? item.sources)
+      const links = (Array.isArray(link?.value) ? link.value : [link?.value]).filter(isText)
+      const stated = (url) =>
+        list(item.rows).some((r) => partsOf(r?.fields?.[PERSON_LINK]?.value)?.includes(url))
+      links
+        .filter((url) => !stated(url))
+        .forEach((url, n) =>
+          top(
+            item.id,
+            { id: `${item.id}-link-${n + 1}`, fields: { [PERSON_LINK]: { value: url } } },
+            link.sources ?? item.sources
+          )
+        )
     }
   return { rows, rowsById, rowsOf: (owner) => byOwner.get(owner ?? null) ?? [] }
 }

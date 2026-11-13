@@ -4,19 +4,22 @@
 // library checks on the edited plan, and counts the pictures summary again (`picturesOf`, #595). Problems are worded
 // for the customer. A changed fact value is written back to the needs profile, item fields included, so the page
 // writer reads the customer's value. The child list rows follow the edited data: they are planned again by the same
-// rules (`plan-rows.mjs`, an item taken off a block takes its rows with it) and held to the block store.
+// rules (`plan-rows.mjs`, an item taken off a block takes its rows with it) and held to the block store; the rows the
+// plan left out before are reported again from the new rows, and every row is accounted for (`data_unaccounted`).
 import { checkPlanEdit } from './build-contract-plan-edit.mjs'
 import { checkBuildDocument } from './build-contract.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { ANSWER_SOURCE } from './plan-answers.mjs'
+import { dataAccountingOf } from './plan-accounting.mjs'
 import { blockMapOf } from './plan-composer.mjs'
 import { addItemFieldFacts } from './plan-conflicts.mjs'
 import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
+import { ROW_REASONS } from './plan-rows-fit.mjs'
 import { planRows } from './plan-rows.mjs'
-import { rowListProblems } from './plan-rows-check.mjs'
+import { rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const FACT_VALUE = /^facts\[([^\]]+)\]\.value$/
@@ -55,6 +58,34 @@ function profileAfterEdit(profile, edit) {
   if (changed && !list(next.sources).some((s) => s.id === ANSWER_SOURCE))
     next.sources = [...list(next.sources), { id: ANSWER_SOURCE, origin: 'answer' }]
   return next
+}
+
+const withoutId = ({ id: _id, ...entry }) => entry
+
+/**
+ * The plan's rows after the edit: `rows` lists the rows of the profile (as `items` lists every item), the left out
+ * entries of rows are reported again from the new rows, and every row is shown, left out, or goes with its item.
+ */
+function refreshRows(next, rows, data, problems) {
+  const labels = new Set(list(data.rows).map((r) => r.label))
+  const isRow = (e) => e?.kind === 'item' && ROW_REASONS.has(e.reason) && labels.has(e.what)
+  const shown = new Set(next.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
+  const out = rowsLeftOut(data, rows.planned, rows.dropped, new Set(), shown)
+  next.leftOut = [...list(next.leftOut).filter((e) => !isRow(e)), ...out.map(withoutId)]
+  if (list(data.rows).length) next.rows = data.rows
+  else delete next.rows
+  const accounting = dataAccountingOf({
+    data,
+    pages: next.pages,
+    placed: [],
+    leftOutIds: new Set(out.map((e) => e.id))
+  })
+  for (const id of accounting.unexplained.filter((x) => data.rowsById.has(x)))
+    problems.push({
+      code: 'data_unaccounted',
+      at: `rows[${id}]`,
+      message: 'A row of your business details is shown nowhere.'
+    })
 }
 
 /**
@@ -116,11 +147,13 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
     }
   }
   if (problems.length > 0) return failed(problems)
-  next.pages = planRows(next.pages, blocks, data).pages
+  const rows = planRows(next.pages, blocks, data)
+  next.pages = rows.pages
   const label = (at) => next.pages.flatMap((p) => p.blocks).find((b) => at.includes(`blocks[${b.id}]`))?.label
   rowListProblems(next.pages, blocks, data, (code, at) =>
     problems.push({ code, at, message: `The ${label(at) ?? 'changed'} section cannot show these rows.` })
   )
+  refreshRows(next, rows, data, problems)
   if (problems.length > 0) return failed(problems)
   // The pictures summary follows the edited pages; a generated count the customer lowered is kept.
   const counted = picturesOf(next.pages, blocks, data).pictures
