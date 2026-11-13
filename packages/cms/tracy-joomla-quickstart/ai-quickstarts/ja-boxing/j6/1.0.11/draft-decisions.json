@@ -173,6 +173,38 @@
       "path": "/",
       "clickSelector": ["#triggerButton"],
       "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "module-188.20": {
+      "path": "/plans",
+      "click": "Memberships"
+    },
+    "module-188.21": {
+      "path": "/plans",
+      "click": "Memberships"
+    },
+    "module-188.22": {
+      "path": "/plans",
+      "click": "Memberships"
+    },
+    "module-188.23": {
+      "path": "/plans",
+      "click": "Memberships"
+    },
+    "module-189.20": {
+      "path": "/plans",
+      "click": "Kids credits"
+    },
+    "module-189.21": {
+      "path": "/plans",
+      "click": "Kids credits"
+    },
+    "module-189.22": {
+      "path": "/plans",
+      "click": "Kids credits"
+    },
+    "module-189.23": {
+      "path": "/plans",
+      "click": "Kids credits"
     }
   },
   "sameBoxAs": {
@@ -544,10 +576,60 @@
       ]
     },
     "block-167": {
-      "type": "pricing"
+      "type": "pricing",
+      "itemLists": [
+        {
+          "name": "features",
+          "column": "params",
+          "html": {
+            "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
+            "row": "li"
+          },
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "measured on the running template 1.0.11, page /plans, with a card's list cut to fewer lines: with one line the card keeps its price, name, period, one feature and its button (the button stays on the row's common bottom line at 768 and 1440 px; at 390 px the stacked card is 425 px tall); with no line the lower panel holds only its divider and the button (401 px at 390 px, a panel as tall as the row with nothing above the button at 1440 px), so one line is the least a plan card lays out with",
+            "max": "the lines each stored plan value holds (7, 8, 9 and 10 list lines in the four stored values of each of the three plan blocks): the most is 10"
+          },
+          "fields": [
+            {
+              "name": "feature",
+              "kind": "package.feature_item",
+              "type": "text",
+              "xpath": "/html/body/ul/li[{1}]"
+            }
+          ]
+        }
+      ]
     },
     "block-188": {
-      "type": "pricing"
+      "type": "pricing",
+      "itemLists": [
+        {
+          "name": "features",
+          "column": "params",
+          "html": {
+            "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
+            "row": "li"
+          },
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "measured on the running template 1.0.11, page /plans, with a card's list cut to fewer lines: with one line the card keeps its price, name, period, one feature and its button (the button stays on the row's common bottom line at 768 and 1440 px; at 390 px the stacked card is 425 px tall); with no line the lower panel holds only its divider and the button (401 px at 390 px, a panel as tall as the row with nothing above the button at 1440 px), so one line is the least a plan card lays out with",
+            "max": "the lines each stored plan value holds (7, 8, 9 and 10 list lines in the four stored values of each of the three plan blocks): the most is 10"
+          },
+          "fields": [
+            {
+              "name": "feature",
+              "kind": "package.feature_item",
+              "type": "text",
+              "xpath": "/html/body/ul/li[{1}]"
+            }
+          ]
+        }
+      ]
     },
     "block-189": {
       "type": "pricing",
@@ -558,7 +640,32 @@
       "itemsFrom": {
         "min": "the kit could not measure the minimum (a closed tab); the same layout measured min 1 in the two open tabs (block-167, block-188)",
         "max": "the places the template stores: one per demo item"
-      }
+      },
+      "itemLists": [
+        {
+          "name": "features",
+          "column": "params",
+          "html": {
+            "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
+            "row": "li"
+          },
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "measured on the running template 1.0.11, page /plans, with a card's list cut to fewer lines: with one line the card keeps its price, name, period, one feature and its button (the button stays on the row's common bottom line at 768 and 1440 px; at 390 px the stacked card is 425 px tall); with no line the lower panel holds only its divider and the button (401 px at 390 px, a panel as tall as the row with nothing above the button at 1440 px), so one line is the least a plan card lays out with",
+            "max": "the lines each stored plan value holds (7, 8, 9 and 10 list lines in the four stored values of each of the three plan blocks): the most is 10"
+          },
+          "fields": [
+            {
+              "name": "feature",
+              "kind": "package.feature_item",
+              "type": "text",
+              "xpath": "/html/body/ul/li[{1}]"
+            }
+          ]
+        }
+      ]
     },
     "block-172": {
       "type": "pricing",

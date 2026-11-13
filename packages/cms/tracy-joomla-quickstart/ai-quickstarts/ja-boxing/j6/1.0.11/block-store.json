@@ -2670,18 +2670,71 @@
             "module-167.18",
             "module-167.19"
           ]
-        },
+        }
+      ],
+      "itemLists": [
         {
-          "name": "features-list",
-          "kind": "package.features_list",
-          "type": "text",
-          "limit": 206,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 245 (demo 131 characters on 7 line(s)), 768px 225 (demo 131 characters on 7 line(s)), 1440px 206 (demo 131 characters on 8 line(s)); the limit is the smallest reading, 206 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": [
-            "module-167.20",
-            "module-167.21",
-            "module-167.22",
-            "module-167.23"
+          "name": "features",
+          "items": {
+            "min": 1,
+            "max": 10
+          },
+          "itemsFrom": {
+            "min": "measured on the running template 1.0.11, page /plans, with a card's list cut to fewer lines: with one line the card keeps its price, name, period, one feature and its button (the button stays on the row's common bottom line at 768 and 1440 px; at 390 px the stacked card is 425 px tall); with no line the lower panel holds only its divider and the button (401 px at 390 px, a panel as tall as the row with nothing above the button at 1440 px), so one line is the least a plan card lays out with",
+            "max": "the lines each stored plan value holds (7, 8, 9 and 10 list lines in the four stored values of each of the three plan blocks): the most is 10"
+          },
+          "fields": [
+            {
+              "name": "feature",
+              "kind": "package.feature_item",
+              "type": "text",
+              "limit": 24,
+              "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 32 (demo 17 characters on 1 line(s)), 768px 31 (demo 17 characters on 1 line(s)), 1440px 24 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 24 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+              "slots": [
+                [
+                  "module-167.20@/html/body/ul/li[1]",
+                  "module-167.20@/html/body/ul/li[2]",
+                  "module-167.20@/html/body/ul/li[3]",
+                  "module-167.20@/html/body/ul/li[4]",
+                  "module-167.20@/html/body/ul/li[5]",
+                  "module-167.20@/html/body/ul/li[6]",
+                  "module-167.20@/html/body/ul/li[7]"
+                ],
+                [
+                  "module-167.21@/html/body/ul/li[1]",
+                  "module-167.21@/html/body/ul/li[2]",
+                  "module-167.21@/html/body/ul/li[3]",
+                  "module-167.21@/html/body/ul/li[4]",
+                  "module-167.21@/html/body/ul/li[5]",
+                  "module-167.21@/html/body/ul/li[6]",
+                  "module-167.21@/html/body/ul/li[7]",
+                  "module-167.21@/html/body/ul/li[8]"
+                ],
+                [
+                  "module-167.22@/html/body/ul/li[1]",
+                  "module-167.22@/html/body/ul/li[2]",
+                  "module-167.22@/html/body/ul/li[3]",
+                  "module-167.22@/html/body/ul/li[4]",
+                  "module-167.22@/html/body/ul/li[5]",
+                  "module-167.22@/html/body/ul/li[6]",
+                  "module-167.22@/html/body/ul/li[7]",
+                  "module-167.22@/html/body/ul/li[8]",
+                  "module-167.22@/html/body/ul/li[9]"
+                ],
+                [
+                  "module-167.23@/html/body/ul/li[1]",
+                  "module-167.23@/html/body/ul/li[2]",
+                  "module-167.23@/html/body/ul/li[3]",
+                  "module-167.23@/html/body/ul/li[4]",
+                  "module-167.23@/html/body/ul/li[5]",
+                  "module-167.23@/html/body/ul/li[6]",
+                  "module-167.23@/html/body/ul/li[7]",
+                  "module-167.23@/html/body/ul/li[8]",
+                  "module-167.23@/html/body/ul/li[9]",
+                  "module-167.23@/html/body/ul/li[10]"
+                ]
+              ]
+            }
           ]
         }
       ],
@@ -2774,18 +2827,71 @@
             "module-188.18",
             "module-188.19"
           ]
-        },
+        }
+      ],
+      "itemLists": [
         {
-          "name": "features-list",
-          "kind": "package.features_list",
-          "type": "text",
-          "limit": 230,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 288 (demo 155 characters on 8 line(s)), 768px 255 (demo 155 characters on 8 line(s)), 1440px 230 (demo 155 characters on 9 line(s)); the limit is the smallest reading, 230 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": [
-            "module-188.20",
-            "module-188.21",
-            "module-188.22",
-            "module-188.23"
+          "name": "features",
+          "items": {
+            "min": 1,
+            "max": 10
+          },
+          "itemsFrom": {
+            "min": "measured on the running template 1.0.11, page /plans, with a card's list cut to fewer lines: with one line the card keeps its price, name, period, one feature and its button (the button stays on the row's common bottom line at 768 and 1440 px; at 390 px the stacked card is 425 px tall); with no line the lower panel holds only its divider and the button (401 px at 390 px, a panel as tall as the row with nothing above the button at 1440 px), so one line is the least a plan card lays out with",
+            "max": "the lines each stored plan value holds (7, 8, 9 and 10 list lines in the four stored values of each of the three plan blocks): the most is 10"
+          },
+          "fields": [
+            {
+              "name": "feature",
+              "kind": "package.feature_item",
+              "type": "text",
+              "limit": 24,
+              "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 32 (demo 17 characters on 1 line(s)), 768px 31 (demo 17 characters on 1 line(s)), 1440px 24 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 24 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+              "slots": [
+                [
+                  "module-188.20@/html/body/ul/li[1]",
+                  "module-188.20@/html/body/ul/li[2]",
+                  "module-188.20@/html/body/ul/li[3]",
+                  "module-188.20@/html/body/ul/li[4]",
+                  "module-188.20@/html/body/ul/li[5]",
+                  "module-188.20@/html/body/ul/li[6]",
+                  "module-188.20@/html/body/ul/li[7]"
+                ],
+                [
+                  "module-188.21@/html/body/ul/li[1]",
+                  "module-188.21@/html/body/ul/li[2]",
+                  "module-188.21@/html/body/ul/li[3]",
+                  "module-188.21@/html/body/ul/li[4]",
+                  "module-188.21@/html/body/ul/li[5]",
+                  "module-188.21@/html/body/ul/li[6]",
+                  "module-188.21@/html/body/ul/li[7]",
+                  "module-188.21@/html/body/ul/li[8]"
+                ],
+                [
+                  "module-188.22@/html/body/ul/li[1]",
+                  "module-188.22@/html/body/ul/li[2]",
+                  "module-188.22@/html/body/ul/li[3]",
+                  "module-188.22@/html/body/ul/li[4]",
+                  "module-188.22@/html/body/ul/li[5]",
+                  "module-188.22@/html/body/ul/li[6]",
+                  "module-188.22@/html/body/ul/li[7]",
+                  "module-188.22@/html/body/ul/li[8]",
+                  "module-188.22@/html/body/ul/li[9]"
+                ],
+                [
+                  "module-188.23@/html/body/ul/li[1]",
+                  "module-188.23@/html/body/ul/li[2]",
+                  "module-188.23@/html/body/ul/li[3]",
+                  "module-188.23@/html/body/ul/li[4]",
+                  "module-188.23@/html/body/ul/li[5]",
+                  "module-188.23@/html/body/ul/li[6]",
+                  "module-188.23@/html/body/ul/li[7]",
+                  "module-188.23@/html/body/ul/li[8]",
+                  "module-188.23@/html/body/ul/li[9]",
+                  "module-188.23@/html/body/ul/li[10]"
+                ]
+              ]
+            }
           ]
         }
       ],
@@ -2878,18 +2984,71 @@
             "module-189.18",
             "module-189.19"
           ]
-        },
+        }
+      ],
+      "itemLists": [
         {
-          "name": "features-list",
-          "kind": "package.features_list",
-          "type": "text",
-          "limit": 251,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 319 (demo 176 characters on 9 line(s)), 768px 288 (demo 176 characters on 9 line(s)), 1440px 251 (demo 176 characters on 10 line(s)); the limit is the smallest reading, 251 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": [
-            "module-189.20",
-            "module-189.21",
-            "module-189.22",
-            "module-189.23"
+          "name": "features",
+          "items": {
+            "min": 1,
+            "max": 10
+          },
+          "itemsFrom": {
+            "min": "measured on the running template 1.0.11, page /plans, with a card's list cut to fewer lines: with one line the card keeps its price, name, period, one feature and its button (the button stays on the row's common bottom line at 768 and 1440 px; at 390 px the stacked card is 425 px tall); with no line the lower panel holds only its divider and the button (401 px at 390 px, a panel as tall as the row with nothing above the button at 1440 px), so one line is the least a plan card lays out with",
+            "max": "the lines each stored plan value holds (7, 8, 9 and 10 list lines in the four stored values of each of the three plan blocks): the most is 10"
+          },
+          "fields": [
+            {
+              "name": "feature",
+              "kind": "package.feature_item",
+              "type": "text",
+              "limit": 24,
+              "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 32 (demo 17 characters on 1 line(s)), 768px 31 (demo 17 characters on 1 line(s)), 1440px 24 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 24 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+              "slots": [
+                [
+                  "module-189.20@/html/body/ul/li[1]",
+                  "module-189.20@/html/body/ul/li[2]",
+                  "module-189.20@/html/body/ul/li[3]",
+                  "module-189.20@/html/body/ul/li[4]",
+                  "module-189.20@/html/body/ul/li[5]",
+                  "module-189.20@/html/body/ul/li[6]",
+                  "module-189.20@/html/body/ul/li[7]"
+                ],
+                [
+                  "module-189.21@/html/body/ul/li[1]",
+                  "module-189.21@/html/body/ul/li[2]",
+                  "module-189.21@/html/body/ul/li[3]",
+                  "module-189.21@/html/body/ul/li[4]",
+                  "module-189.21@/html/body/ul/li[5]",
+                  "module-189.21@/html/body/ul/li[6]",
+                  "module-189.21@/html/body/ul/li[7]",
+                  "module-189.21@/html/body/ul/li[8]"
+                ],
+                [
+                  "module-189.22@/html/body/ul/li[1]",
+                  "module-189.22@/html/body/ul/li[2]",
+                  "module-189.22@/html/body/ul/li[3]",
+                  "module-189.22@/html/body/ul/li[4]",
+                  "module-189.22@/html/body/ul/li[5]",
+                  "module-189.22@/html/body/ul/li[6]",
+                  "module-189.22@/html/body/ul/li[7]",
+                  "module-189.22@/html/body/ul/li[8]",
+                  "module-189.22@/html/body/ul/li[9]"
+                ],
+                [
+                  "module-189.23@/html/body/ul/li[1]",
+                  "module-189.23@/html/body/ul/li[2]",
+                  "module-189.23@/html/body/ul/li[3]",
+                  "module-189.23@/html/body/ul/li[4]",
+                  "module-189.23@/html/body/ul/li[5]",
+                  "module-189.23@/html/body/ul/li[6]",
+                  "module-189.23@/html/body/ul/li[7]",
+                  "module-189.23@/html/body/ul/li[8]",
+                  "module-189.23@/html/body/ul/li[9]",
+                  "module-189.23@/html/body/ul/li[10]"
+                ]
+              ]
+            }
           ]
         }
       ],

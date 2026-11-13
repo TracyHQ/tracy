@@ -3,13 +3,13 @@
     "blocks": 44,
     "fieldsByType": {
       "image": 34,
-      "text": 181,
+      "text": 178,
       "link": 38,
       "icon": 5,
       "design": 2
     },
     "childFieldsByType": {
-      "text": 16,
+      "text": 19,
       "link": 8,
       "icon": 6,
       "image": 2
