@@ -11,6 +11,7 @@ import path from 'node:path'
 import { stoppedOf } from '../src/build-draft/engine.js'
 import { SAY } from '../src/build-draft/engine-state.js'
 import { draftBrandStep, kitRefOf } from '../src/build-draft-wiring.js'
+import { STEP_CHAIN_NO_OUTPUT } from '../src/sites/brief-engines/step-chain.js'
 
 const template = { slug: 'example-court', name: 'Example Court', version: '1.0.0' }
 const kits = [{ ref: 'example-court/j6/0.9.0' }, { ref: 'example-court/j6/1.0.0' }, { ref: 'other/j6/1.0.0' }]
@@ -82,8 +83,9 @@ test('without a brief, or with a kit this server does not have, the step stops w
     noRerun: true,
     message: 'no template kit on this server for example-court 9.9.9'
   })
-  // Both input faults stop with the brand sentence, never the generic one.
-  for (const code of ['brand_input_missing', 'brand_input_ambiguous'])
+  // Both input faults, and a brand step that ended without a brand file, stop with the brand sentence, never the
+  // generic one.
+  for (const code of ['brand_input_missing', 'brand_input_ambiguous', STEP_CHAIN_NO_OUTPUT])
     assert.deepEqual(stoppedOf({ code, noRerun: true }), {
       state: 'stopped',
       say: SAY.brand,

@@ -30,7 +30,9 @@ const BRAND_CODES = new Set([
   'brand_step_failed',
   'brand_file_unreadable',
   'brand_input_missing',
-  'brand_input_ambiguous'
+  'brand_input_ambiguous',
+  // A brand step that ended without a brand file (`step-chain.js` `STEP_CHAIN_NO_OUTPUT`, after its one rerun).
+  'STEP_CHAIN_NO_OUTPUT'
 ])
 /** The rules gate's look problems (D40, D42): a plan that failed the gate on them stops like a missing brand. */
 const LOOK_PROBLEMS = new Set(['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
