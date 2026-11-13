@@ -1,7 +1,9 @@
 // Step 1 of the picture policy (ticket #595, spec #577): the own pictures, wherever they fit a frame. Pure.
 //
 //   - a frame of an item, or of the named person it shows, takes that item's or person's own photo, an unused one
-//     first; a used one shows again only in a frame of the same shape class on another page (`picture-reuse.mjs`);
+//     first; a used one shows again only in a frame of the same shape class on another page (`picture-reuse.mjs`).
+//     A person's own photo may show again anywhere it fits, the same page too: a person is never drawn, and the real
+//     photo twice beats initials beside it; initials only when no own photo of the person fits;
 //   - a video frame takes a fitting own video;
 //   - the hero and the other block and row frames take a free gallery photo, one the plan shows nowhere else, the hero
 //     first and by fit. A gallery photo is used once. A frame of a gallery kind (`gallery_own_photos_only`) takes one
@@ -47,7 +49,7 @@ export function placeOwn(frames, usable, take) {
       (p) =>
         p.item === owner &&
         fitsFrame(p, frame) &&
-        (free(p) || (p.itemKind !== 'gallery' && mayReuse(uses.get(p.id), frame)))
+        (free(p) || (p.itemKind !== 'gallery' && (frame.people || mayReuse(uses.get(p.id), frame))))
     )
     // An unused photo of the item first, the item's own picture first among them; then one shown before.
     const unused = mine.filter(free)

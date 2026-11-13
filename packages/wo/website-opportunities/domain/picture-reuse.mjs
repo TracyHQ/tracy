@@ -1,7 +1,8 @@
 // When one picture may show in several frames (ticket #595, review 13/11). A drawing or an own photo of an item shows
 // again only in a frame of the same shape class (portrait, landscape or square, by the frame's declared size), never
 // twice on one page; a frame without a declared size reuses nothing and gets its own picture. A gallery photo is used
-// once (`picture-policy-own.mjs`). Exception: none. Pure.
+// once (`picture-policy-own.mjs`). The one exception: a person's own photo may repeat wherever it fits, the same page
+// too, for a person is never drawn and the real photo twice beats initials beside it. Pure.
 
 /** A frame's shape class by its declared size, or null when it has none (it then reuses nothing). */
 export const shapeClassOf = (frame) =>
@@ -20,7 +21,9 @@ export function mayReuse(uses, frame) {
 /** Which picture a decided frame shows, for grouping its reuses; null for a frame that shows no shared picture. */
 function shownOf(frame) {
   if (frame.sameAs) return null
-  if (frame.source === 'own' && frame.itemKind !== 'gallery') return `own:${frame.picture}`
+  // A person's own photo may show in every frame of that person it fits (people are never drawn).
+  if (frame.source === 'own' && (frame.itemKind === 'gallery' || frame.people)) return null
+  if (frame.source === 'own') return `own:${frame.picture}`
   if (frame.source === 'generated') return `drawn:${frame.reuses ?? frame.id}`
   return null
 }

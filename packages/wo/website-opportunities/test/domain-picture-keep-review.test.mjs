@@ -74,14 +74,9 @@ test('a gallery picture frame that is no gallery item takes a free own photo; on
 })
 
 test('a block level frame of the one person its block shows is that person: own photo, else initials', async () => {
-  const alone = extended()
-  alone.plan.pages[1].blocks = alone.plan.pages[1].blocks.filter((b) => b.id !== 'team-b1')
-  const withPhoto = await run(alone)
+  const withPhoto = await run(extended())
   const portrait = frame(withPhoto, 'team.team-b3.portrait')
   assert.deepEqual([portrait.person, portrait.source], [COACH, 'own'])
-  // Beside the coach card on the same page, the one photo is shown once: the feature shows the initials.
-  const besideCard = frame(await run(extended()), 'team.team-b3.portrait')
-  assert.deepEqual([besideCard.source, besideCard.substitute.initials], ['initials', 'IV'])
   const profile = pictureProfile()
   delete profile.items.person[0].fields['person.image']
   const without = frame(await run({ profile, ...extended() }), 'team.team-b3.portrait')

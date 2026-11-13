@@ -10,7 +10,12 @@ import { ownPicturesOf } from '../domain/picture-frames.mjs'
 import { reuseProblemsOf } from '../domain/picture-reuse.mjs'
 import { assignPictures } from '../domain/picture-policy.mjs'
 import { planDataOf } from '../domain/plan-data.mjs'
-import { pictureBlocks, pictureProfile, SERVICES } from './fixtures/picture-policy/invented-pictures.mjs'
+import {
+  COACH,
+  pictureBlocks,
+  pictureProfile,
+  SERVICES
+} from './fixtures/picture-policy/invented-pictures.mjs'
 
 const [JUNIOR, , HIRE] = SERVICES
 const sized = (id, width, height) => ({
@@ -23,9 +28,17 @@ const sized = (id, width, height) => ({
     { name: 'photo', kind: 'offering.image', type: 'image', frame: { width, height } }
   ]
 })
+const coachBlock = (id, width, height) => ({
+  id,
+  type: 'about',
+  items: { min: 1, max: 1 },
+  fields: [{ name: 'portrait', kind: 'person.image', type: 'image', frame: { width, height } }]
+})
 function blocks() {
   const all = pictureBlocks()
   for (const b of [sized('wide', 1600, 600), sized('wide-2', 1200, 500), sized('tall', 600, 900)])
+    all.set(b.id, b)
+  for (const b of [coachBlock('coach-wide', 1600, 600), coachBlock('coach-square', 400, 400)])
     all.set(b.id, b)
   return all
 }
@@ -40,9 +53,14 @@ const block = (id, kind, data) => ({
 })
 const page = (id, ...placed) => ({ id, name: id, pageType: 'services', blocks: placed })
 
-/** The club's profile; `second` gives the court hire a second own photo. */
-function run(pages, { second = false } = {}) {
+/** The club's profile; `second` gives the court hire a second own photo, `coachSecond` the coach one. */
+function run(pages, { second = false, coachSecond = false } = {}) {
   const profile = pictureProfile()
+  if (coachSecond)
+    profile.items.person.find((p) => p.id === COACH).fields['person.detail_image'] = {
+      value: 'https://brindlewick-tennis.example/img/coach-2.jpg',
+      sources: ['site']
+    }
   if (second)
     profile.items.service.find((s) => s.id === HIRE).fields['offering.detail_image'] = {
       value: 'https://brindlewick-tennis.example/img/hire-2.jpg',
@@ -150,4 +168,21 @@ test('the rule check names a reuse across shapes or on one page', () => {
       ['reuse_shape_unfit', 'c']
     ]
   )
+})
+
+test("a person's own photo repeats where it fits, the same page and another shape too; an unused one first", () => {
+  const about = (...placed) =>
+    page('about', ...placed.map(([id, kind]) => ({ ...block(id, kind, [COACH]), type: 'about' })))
+  const once = run([about(['c1', 'coach-wide'], ['c2', 'coach-square'])])
+  assert.deepEqual(
+    ['about.c1.portrait', 'about.c2.portrait'].map((id) => [at(once, id).source, at(once, id).picture]),
+    [
+      ['own', `${COACH}:person.image`],
+      ['own', `${COACH}:person.image`]
+    ],
+    'the real photo twice, never initials beside it'
+  )
+  assert.deepEqual(reuseProblemsOf(once.frames), [])
+  const two = run([about(['c1', 'coach-wide'], ['c2', 'coach-square'])], { coachSecond: true })
+  assert.notEqual(at(two, 'about.c1.portrait').picture, at(two, 'about.c2.portrait').picture)
 })
