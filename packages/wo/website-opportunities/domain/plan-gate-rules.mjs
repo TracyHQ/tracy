@@ -5,8 +5,10 @@
 // - a template block sits only on a page type whose recipe lists it, and at most once per page (Contract A declares
 //   no repetition, so none is allowed);
 // - `targets` names fields of the block and never a design typed field;
-// - an item the model leaves out is not also shown; customer text carries no dash.
+// - an item the model leaves out is not also shown; customer text carries no dash;
+// - the page rules restored from the locked planner (`plan-gate-page-rules.mjs`).
 import { blockItemProblems } from './plan-gate-items.mjs'
+import { pageRuleProblems } from './plan-gate-page-rules.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { fitsRecipe } from './plan-placement-pages.mjs'
 
@@ -144,4 +146,5 @@ export function compositionProblems(composition, context, problem) {
   ;(composition.assumptions ?? []).forEach((a, i) => {
     if (isText(a.said)) dashFree(a.said, `assumptions[${i}].said`, problem)
   })
+  pageRuleProblems(composition, context, problem)
 }

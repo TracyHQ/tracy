@@ -32,6 +32,7 @@ import {
   overLimitLeftOut
 } from './plan-data-limits.mjs'
 import { planRows } from './plan-rows.mjs'
+import { WITHHELD_REASON } from './plan-withheld.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -102,6 +103,9 @@ export function gatePlan(composition, context) {
   }
   const modelLeftOut = list(composition.leftOut)
   const leftOutIds = new Set(modelLeftOut.map((e) => e.item).filter((id) => id !== undefined))
+  // What the owner keeps off the site is never placed, and the plan reports it as left out (`plan-withheld.mjs`).
+  const withheld = [...(context.data.withheld ?? [])].filter((id) => !leftOutIds.has(id))
+  for (const id of withheld) leftOutIds.add(id)
   const placement = { data: context.data, blocks: context.blocks, recipes: context.recipes, leftOutIds }
   const items = placeExtraData(dropped.pages, placement)
   const facts = placeExtraFacts(items.pages, placement)
@@ -127,19 +131,22 @@ export function gatePlan(composition, context) {
   const accounting = dataAccountingOf({ data: context.data, pages: rows.pages, placed, leftOutIds })
   for (const id of accounting.unexplained)
     problem('data_unaccounted', `data[${id}]`, `${JSON.stringify(id)} is shown nowhere and not left out`)
-  const fromModel = modelLeftOut.map(({ item, what, kind, reason }) => {
+  const withheldOut = withheld.map((item) => ({ item, reason: WITHHELD_REASON }))
+  const fromModel = [...modelLeftOut, ...withheldOut].map(({ item, what, kind, reason }) => {
     if (item === undefined) return { what, kind, reason }
     const record = context.data.byId.get(item)
     return { what: record.entry.label, kind: record.what === 'fact' ? 'feature' : 'item', reason }
   })
+  const kept = ({ id }) =>
+    !context.data.withheld?.has(id) && !context.data.withheld?.has(context.data.rowsById?.get(id)?.owner)
   const plan = {
     schema: BUILD_PLAN_SCHEMA,
     id: context.planId,
     revision: 1,
     language: context.language,
-    facts: context.data.facts,
-    items: context.data.items,
-    ...(list(context.data.rows).length ? { rows: context.data.rows } : {}),
+    facts: context.data.facts.filter(kept),
+    items: context.data.items.filter(kept),
+    ...(list(context.data.rows).filter(kept).length ? { rows: context.data.rows.filter(kept) } : {}),
     pages: rows.pages,
     look: context.look,
     pictures: pictures.pictures,

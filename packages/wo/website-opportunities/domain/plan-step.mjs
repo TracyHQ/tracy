@@ -7,6 +7,7 @@ import { isBrandLook } from './brand-before-site.mjs'
 import { buildNeedsProfile } from './needs-profile.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { composePlan } from './plan-composer.mjs'
+import { withWithheld } from './plan-withheld.mjs'
 
 /** The brand record of the step: the one given, or the one `brandStep` resolves to. */
 async function brandRecordOf({ brand, brandStep }) {
@@ -40,12 +41,14 @@ async function brandRecordOf({ brand, brandStep }) {
  */
 export async function buildPlanStep({ research, model, brand, brandStep, answers = [], ...rest }) {
   const record = await brandRecordOf({ brand, brandStep })
-  const profile = await buildNeedsProfile({
+  // What the owner keeps off the site rides on the profile (`plan-withheld.mjs`).
+  const built = await buildNeedsProfile({
     research,
     model,
     blockStore: rest.blockStore,
     library: rest.library
   })
+  const profile = withWithheld(built, research)
   const given = typeof answers === 'function' ? await answers(profile) : answers
   const composed = await composePlan({ ...rest, profile, answers: given, brand: record, model })
   return { needsProfile: profile, brand: record, ...composed }

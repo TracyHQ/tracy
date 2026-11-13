@@ -4,6 +4,7 @@
 // have. Pure: a profile in, the plan's facts and items out, in the Contract B shape (`build-contract-plan.mjs`).
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { rowDataOf } from './plan-row-data.mjs'
+import { withheldIdsOf } from './plan-withheld.mjs'
 
 /** How the customer reads where a fact came from, per source origin of the needs profile. */
 export const SOURCE_NAMES = Object.freeze({
@@ -76,7 +77,8 @@ function itemLabel(item) {
 /**
  * The plan's facts and items from a needs profile, each with a plan id, a label and its sources in Contract B form,
  * plus `byId` (plan id -> `{what: 'fact' | 'item', kind, entry, source}` where `source` is the profile record), and
- * the profile's rows (`rows`, `rowsById`, `rowsOf`: `plan-row-data.mjs`), in their own map.
+ * the profile's rows (`rows`, `rowsById`, `rowsOf`: `plan-row-data.mjs`), in their own map, and `withheld`: the ids the
+ * owner keeps off the site (`plan-withheld.mjs`).
  * @param {object} profile a needs profile (`needs-profile.mjs`)
  */
 export function planDataOf(profile) {
@@ -105,19 +107,23 @@ export function planDataOf(profile) {
     }
   }
   const { rows, rowsById, rowsOf } = rowDataOf(profile, { byId }, { sourcesOf, short, origins })
-  return { facts, items, byId, rows, rowsById, rowsOf }
+  const withheld = withheldIdsOf({ byId }, profile?.withheld)
+  return { facts, items, byId, rows, rowsById, rowsOf, withheld }
 }
 
 /**
  * What the model reads of the business: every fact and item by plan id, with its values; never a source's text. A fact
  * that stands for a field of an item (`plan-conflicts.mjs`) is not listed: the model reads it among the item's fields.
+ * What the owner keeps off the site (`data.withheld`) is not listed either.
  */
 export function modelViewOf(data) {
+  const shown = ({ id }) => !data.withheld?.has(id)
   return {
     facts: data.facts
       .filter(({ id }) => !data.byId.get(id).itemField)
+      .filter(shown)
       .map(({ id, kind, label, value }) => ({ id, kind, label, value })),
-    items: data.items.map(({ id, kind, label }) => {
+    items: data.items.filter(shown).map(({ id, kind, label }) => {
       const fields = data.byId.get(id).source.fields ?? {}
       return {
         id,

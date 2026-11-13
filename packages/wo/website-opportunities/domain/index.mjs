@@ -158,6 +158,8 @@ export {
   planComposerRequest
 } from './plan-composer.mjs'
 export { gatePlan } from './plan-gate.mjs'
+export { CONTACT_CHANNEL_KINDS, pageRuleProblems } from './plan-gate-page-rules.mjs'
+export { WITHHELD_REASON, withheldIdsOf, withheldOfBrief, withWithheld } from './plan-withheld.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
 export { ANSWER_SOURCE, settleAnswers } from './plan-answers.mjs'
 export { dataAccountingOf } from './plan-accounting.mjs'

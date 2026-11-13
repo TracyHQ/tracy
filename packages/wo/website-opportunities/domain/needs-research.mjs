@@ -13,9 +13,10 @@
 //   - the opening hours Google lists (`googlePlace.openingHours`) when the brief holds no hours fact at all;
 //   - the posts the brief keeps (`content.items`) are `captions` of their source, never one credited to someone else;
 //   - Google's reviews the brief keeps; the own photos and videos it keeps for the site (`needs-research-media.mjs`).
-// A fact the brief keeps off the site is not research for the site. Everything lands in exactly one place, counted in
-// `taken`, or in `setAside` with a reason.
+// A fact the brief keeps off the site is not research for the site; a held name and held people are `withheld`
+// (`plan-withheld.mjs`). Everything lands in exactly one place, counted in `taken`, or in `setAside` with a reason.
 import { mediaOf } from './needs-research-media.mjs'
+import { withheldOfBrief } from './plan-withheld.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -110,7 +111,8 @@ const ownWords = (value) => [value, value?.text, value?.name, value?.label].find
  * @returns {{sources: object[], videos: object[], setAside: Array<{what: string, id?: string, reason: string}>,
  *   taken: {fields: string[], text: string[], captions: number}}} `sources`: the `{sources}` input of
  *   `buildNeedsProfile`; `videos`: own video records for the pictures step; `taken`: the fact ids that became fields
- *   or text and the posts read as captions
+ *   or text and the posts read as captions; `withheld` (only when the brief holds something off the site): the held
+ *   name and people, passed on with the research so the needs profile carries them
  */
 export function researchOf(brief, { manifest = [] } = {}) {
   const sources = new Map()
@@ -221,6 +223,7 @@ export function researchOf(brief, { manifest = [] } = {}) {
     })),
     videos: media.videos,
     setAside,
-    taken
+    taken,
+    ...withheldOfBrief(brief)
   }
 }

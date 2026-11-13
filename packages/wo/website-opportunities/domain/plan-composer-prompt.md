@@ -34,6 +34,14 @@ Rules:
 8. List in `leftOut` every page, block or item you chose not to show, with the reason in one sentence. For an item,
    give its id as `item`. Never list an item you also show.
 9. Use exactly the keys of the shape below, nothing else, and list an id at most once in a `data` list.
+10. The same item (a service, a person, a review, a photo) is shown by one block of a page, never by two. Another
+    block of that page takes a job of its own or is left out.
+11. Every contact channel the business has (phone, email, address, booking link, each social profile) goes on the
+    contact page (the page whose main block is a `contact` block), in a block with a field of that channel's `kind`.
+    A block every recipe lists (a header, a footer) shows on every page, so a channel it holds counts.
+12. A `newsletter` block is a form: keep it only when the business has an email its answers can go to.
+13. A `map` block shows the business's address fact; without an address, leave it out.
+14. What the owner keeps off the site is not in `business`: never name it.
 
 Reply with JSON only, in this shape:
 

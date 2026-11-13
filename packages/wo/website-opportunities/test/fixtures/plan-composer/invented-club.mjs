@@ -140,7 +140,12 @@ export const goodComposition = () => ({
       pageType: 'contact',
       name: 'Contact',
       blocks: [
-        block('contact-strip', 'Contact', ['contact-email', 'contact-phone'], 'Messages reach your email.')
+        block(
+          'contact-strip',
+          'Contact',
+          ['contact-email', 'contact-phone', 'contact-address'],
+          'Messages reach your email.'
+        )
       ]
     }
   ],

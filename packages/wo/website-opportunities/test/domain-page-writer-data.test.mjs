@@ -105,7 +105,7 @@ test('a data field without data follows the block no data rule and never stops t
   assert.deepEqual(
     contact.fields.map((f) => [f.key, f.from, f.action]),
     [
-      ['contact-b1/address', 'no-data', 'hide'],
+      ['contact-b1/address', 'data', undefined],
       ['contact-b1/hours', 'no-data', 'hide']
     ]
   )
@@ -124,7 +124,10 @@ test('a data value longer than its field is a plan matter: data_over_limit, befo
     assert.equal(error.code, 'data_over_limit')
     assert.deepEqual(
       error.details.fields.map((f) => [f.key, f.length, f.limit]),
-      [['home-b5/address', 29, 10]]
+      [
+        ['home-b5/address', 29, 10],
+        ['contact-b1/address', 29, 10]
+      ]
     )
     return true
   })
