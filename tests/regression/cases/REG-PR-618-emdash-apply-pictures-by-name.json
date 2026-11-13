@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-TBD-emdash-apply-pictures-by-name",
+  "id": "REG-PR-618-emdash-apply-pictures-by-name",
   "kind": "fix",
   "title": "EmDash Apply finds an imported picture by its file name, including a name the media library renamed, not by its row: JA Restaurant and JA Diner keep every picture on a fresh import and after an Apply that moved rows",
-  "pr": "TBD",
+  "pr": 618,
   "area": "emdash-theme-restaurant/personalize",
   "cms": ["em"],
   "needs": ["node"],
