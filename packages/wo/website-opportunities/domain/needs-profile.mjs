@@ -7,7 +7,8 @@
 // - a fact the model reports is kept only when it cites a known source and its evidence is found in that source's text;
 // - structured listing fields and reviews are taken as they are, without the model;
 // - disagreements become conflicts with a trust order default (`needs-profile-merge.mjs`);
-// - the site language and the at most three questions follow rules (`needs-profile-questions.mjs`).
+// - the site language and the questions (important conflicts, main button, contact, language) follow rules
+//   (`needs-profile-questions.mjs`, `needs-profile-conflict-questions.mjs`).
 //
 // Research, as this step reads it:
 //   { sources: [{ id, origin: 'website' | 'google' | 'social', ref?, language?, text?, captions?: string[],
@@ -126,6 +127,11 @@ export function needsProfileOf(research, reading) {
       .map((l) => [l.source, l.language])
   )
   const language = siteLanguageOf(sources, said)
+  const { questions, accounting } = questionsOf({ facts, items, conflicts, sources, language })
+  // Every conflict says whether a question asks it (`question`) or why none does (`notAsked`).
+  const asked = new Map(
+    accounting.map((a) => [a.conflict, a.question ? { question: a.question } : { notAsked: a.reason }])
+  )
   const unread = language.unread.map(({ source, said: word, from }) => ({
     from,
     source,
@@ -143,8 +149,8 @@ export function needsProfileOf(research, reading) {
     language,
     facts,
     items,
-    conflicts,
-    questions: questionsOf({ facts, language }),
+    conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
+    questions,
     dropped: [...unusableSourcesOf(research), ...structured.dropped, ...read.dropped, ...unread]
   }
 }

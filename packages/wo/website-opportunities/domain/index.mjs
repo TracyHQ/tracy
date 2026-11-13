@@ -135,7 +135,8 @@ export {
   needsProfileRequest
 } from './needs-profile.mjs'
 export { TRUST_ORDER } from './needs-profile-merge.mjs'
-export { ASKED_TOPICS, MAX_QUESTIONS } from './needs-profile-questions.mjs'
+export { ASKED_TOPICS } from './needs-profile-questions.mjs'
+export { IMPORTANT_CONFLICTS } from './needs-profile-conflict-questions.mjs'
 export {
   BUILD_SCENARIO_SCHEMA,
   checkBuildDocument,

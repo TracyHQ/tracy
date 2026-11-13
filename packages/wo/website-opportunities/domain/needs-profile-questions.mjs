@@ -1,16 +1,18 @@
 // The site language and the customer questions of a needs profile (ticket #592). Pure rules, no model.
 //
-// The site language follows the language the business uses publicly. Questions are produced for three cases only, so
-// setup stays short: the main button goal (always), a contact method when no source gave one, and the site language
-// when the public sources mix languages. Everything else (conflicts included) is shown on the plan, never asked here.
+// The site language follows the language the business uses publicly. There is no fixed number of questions, but only
+// important ones are asked (product decision of 13/11): the customer confirms an important fact the sources disagree
+// on (`needs-profile-conflict-questions.mjs`), picks the main button goal (always), gives a contact method when no
+// source gave one, and picks the site language when the public sources mix languages. Any other conflict is shown on
+// the plan with its trust order default, never asked.
 //
 // Every question is a Contract B question (`build-contract-questions.mjs`, ticket #590): the chat renders it as it is.
 import { QUESTION_SCHEMA } from './build-contract-questions.mjs'
+import { conflictQuestionsOf } from './needs-profile-conflict-questions.mjs'
 import { TRUST_ORDER } from './needs-profile-merge.mjs'
 
-/** The Contract B topics a needs profile asks about, in the order they are asked. */
-export const ASKED_TOPICS = Object.freeze(['main-button', 'contact-method', 'site-language'])
-export const MAX_QUESTIONS = 3
+/** The Contract B topics a needs profile asks about (contact conflicts come first, price conflicts last). */
+export const ASKED_TOPICS = Object.freeze(['fact-conflict', 'main-button', 'contact-method', 'site-language'])
 /** How long a free text answer may be, per topic. */
 const FREE_TEXT_MAX = Object.freeze({ 'main-button': 80, 'contact-method': 120, 'site-language': 40 })
 /** Facts that let a visitor reach the business: any one of them means no contact question. */
@@ -117,11 +119,15 @@ const question = (topic, prompt, choices, recommended) => ({
 })
 
 /**
- * The questions for the customer, at most `MAX_QUESTIONS`, each a Contract B question on one of `ASKED_TOPICS`.
- * @param {{facts: Record<string, unknown[]>, language: ReturnType<typeof siteLanguageOf>}} profile
+ * The questions for the customer, each a Contract B question on one of `ASKED_TOPICS`, most important first: contact
+ * conflicts, the main button, the contact method, the site language, then price conflicts. `accounting` says, for
+ * every conflict, which question asks it or why none does.
+ * @param {{facts: Record<string, unknown[]>, items?: Record<string, object[]>, conflicts?: object[],
+ *   sources?: {id: string, origin: string, ref?: string}[], language: ReturnType<typeof siteLanguageOf>}} profile
  */
-export function questionsOf({ facts, language }) {
-  const questions = []
+export function questionsOf({ facts, items, conflicts, sources, language }) {
+  const asked = conflictQuestionsOf({ conflicts, items, sources })
+  const questions = [...asked.contact]
   const cta = ctaChoices(facts)
   questions.push(
     question('main-button', 'What should the main button on your site ask visitors to do?', cta, cta[0].id)
@@ -150,5 +156,6 @@ export function questionsOf({ facts, language }) {
       )
     )
   }
-  return questions.slice(0, MAX_QUESTIONS)
+  questions.push(...asked.price)
+  return { questions, accounting: asked.accounting }
 }

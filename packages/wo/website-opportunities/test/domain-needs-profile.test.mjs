@@ -12,7 +12,7 @@ import {
 } from '../domain/needs-profile.mjs'
 import { QUESTION_TOPICS, questionProblems } from '../domain/build-contract-questions.mjs'
 import { reporterFor } from '../domain/build-contract-shared.mjs'
-import { ASKED_TOPICS, MAX_QUESTIONS } from '../domain/needs-profile-questions.mjs'
+import { ASKED_TOPICS } from '../domain/needs-profile-questions.mjs'
 import { GROUP_KINDS_V3, ROLE_VOCABULARY_V3, isGroupKind, isRole } from '../domain/place-content-roles.mjs'
 
 const CLUB = JSON.parse(
@@ -167,14 +167,15 @@ test('the same phone written with and without the country code is one fact, not 
   assert.equal(profile.conflicts.length, 0)
 })
 
-test('questions: only the main button when contact and language are known', async () => {
+test('questions: the phone conflict is confirmed first, then the main button, when contact and language are known', async () => {
   const { profile } = await clubProfile()
   assert.deepEqual(
     profile.questions.map((q) => q.topic),
-    ['main-button']
+    ['fact-conflict', 'main-button']
   )
+  assert.equal(profile.questions[0].fact, 'contact.phone')
   assert.deepEqual(
-    profile.questions[0].choices.filter((c) => c.recommended).map((c) => c.id),
+    profile.questions[1].choices.filter((c) => c.recommended).map((c) => c.id),
     ['book']
   )
 })
@@ -193,14 +194,14 @@ test('questions: a contact question only when no phone, email or booking link wa
   )
 })
 
-test('questions: at most three, only on the agreed topics, conflicts never asked, no dash in any customer text', async () => {
+test('questions: only on the agreed topics, an important conflict first, no dash in any customer text', async () => {
   const { profile } = await clubProfile((c) => {
     delete c.research.sources.find((s) => s.id === 'gmaps').fields['contact.phone']
     c.reading.facts = c.reading.facts.filter(
       (f) => !['contact.phone', 'contact.email', 'contact.cta_url'].includes(f.kind)
     )
     c.research.sources.find((s) => s.id === 'insta').language = 'es'
-    // A conflict stays a conflict on the plan; it is not a question.
+    // An address that differs is an important conflict: the customer confirms it before anything else.
     c.research.sources.find((s) => s.id === 'gmaps').fields['contact.address'] =
       '16 Quillmoor Lane, Fernhollow'
     return c
@@ -208,12 +209,13 @@ test('questions: at most three, only on the agreed topics, conflicts never asked
   assert.ok(profile.conflicts.length >= 1)
   assert.deepEqual(
     profile.questions.map((q) => q.topic),
-    ['main-button', 'contact-method', 'site-language']
+    ['fact-conflict', 'main-button', 'contact-method', 'site-language']
   )
-  assert.ok(profile.questions.length <= MAX_QUESTIONS)
+  assert.equal(profile.questions[0].fact, 'contact.address')
   for (const q of profile.questions) {
     assert.ok(ASKED_TOPICS.includes(q.topic))
-    for (const words of [q.prompt, ...q.choices.map((o) => o.label)]) assert.doesNotMatch(words, DASHES)
+    for (const words of [q.prompt, ...q.choices.flatMap((o) => [o.label, o.detail ?? ''])])
+      assert.doesNotMatch(words, DASHES)
   }
 })
 
@@ -253,9 +255,14 @@ test('every question the needs profile asks passes the Contract B question check
       (f) => !['contact.phone', 'contact.email', 'contact.cta_url'].includes(f.kind)
     )
     c.research.sources.find((s) => s.id === 'insta').language = 'es'
+    c.research.sources.find((s) => s.id === 'gmaps').fields['contact.address'] =
+      '16 Quillmoor Lane, Fernhollow'
     return c
   })
-  assert.equal(profile.questions.length, 3)
+  assert.deepEqual(
+    profile.questions.map((q) => q.topic),
+    ['fact-conflict', 'main-button', 'contact-method', 'site-language']
+  )
   for (const q of profile.questions) {
     const problems = []
     questionProblems(q, reporterFor(problems))
