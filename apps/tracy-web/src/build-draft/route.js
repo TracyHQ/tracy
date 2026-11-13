@@ -22,6 +22,7 @@ const REFUSALS = {
   NO_KIT: [409, 'The template of this plan has no AI quickstart kit on this server.'],
   INVALID_REQUEST: [400, 'Send the JSON body this door reads.'],
   INVALID_TEMPLATE: [400, 'Send "template" as {slug, name, version}.'],
+  TEMPLATE_NOT_OFFERED: [422, 'This design is not offered for your business. Pick one of the designs shown.'],
   INVALID_ANSWER: [422, 'The answer does not fit its question.'],
   INVALID_EDIT: [422, 'The edit does not fit the plan.'],
   STALE_EDIT: [
@@ -38,7 +39,7 @@ const REFUSALS = {
  * @param {import('pg').Pool} deps.pool
  * @param {(pool: import('pg').Pool, email: string) => Promise<{id: string}>} deps.ensureAccount - the seats
  *   domain's account upsert, injected by `app.js` (a domain directory imports only `lib/` and `db/`)
- * @param {{loadKit: (slug: string) => object | null}} deps.kits - the AI quickstart catalogue (`ai-quickstarts.js`)
+ * @param {{loadKit: (slug: string) => object | null, templatesFor: (trade: string) => object[]}} deps.kits - the AI quickstart catalogue (`ai-quickstarts.js`)
  *   the edit gate reads the plan's kit from
  * @param {(email: string) => Promise<string>} deps.buildSessionIdOf - the person's build session id (`workspace/`)
  * @param {(accountId: string) => Promise<unknown>} [deps.templateChosen] - called after a template is chosen: the
@@ -102,7 +103,7 @@ export function buildDraftRoutes({
   app.put(
     `${BASE}/template`,
     write('template', async (id, body) => {
-      const chosen = await chooseTemplate(pool, id, body.template)
+      const chosen = await chooseTemplate(pool, id, body.template, kits)
       // The brand step runs in the background; a failure of it is its own engine state, never this door's answer.
       if (!chosen.error)
         await templateChosen(id).catch((error) =>

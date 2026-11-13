@@ -115,11 +115,23 @@ export function saveAnswer(pool, accountId, { question, answer }) {
   }))
 }
 
-/** Choose the template before a plan exists; afterwards the plan's `look.template` is changed by a plan edit. */
-export function chooseTemplate(pool, accountId, sent) {
+/**
+ * Choose the template before a plan exists; afterwards the plan's `look.template` is changed by a plan edit. Only a
+ * template the catalogue offers now for the draft's researched trade (same slug and version) is stored: a draft with
+ * no researched trade is offered nothing.
+ * @param {{templatesFor: (trade: string) => Array<{slug: string, version: string}>}} kits the AI quickstart catalogue
+ */
+export function chooseTemplate(pool, accountId, sent, kits) {
   const template = readTemplate(sent)
   if (!template) return { error: 'INVALID_TEMPLATE' }
-  return changeDraft(pool, accountId, (row) => (row.plan ? { error: 'PLAN_EXISTS' } : { template }))
+  return changeDraft(pool, accountId, (row) => {
+    if (row.plan) return { error: 'PLAN_EXISTS' }
+    const trade = row.research?.trade
+    const offered = typeof trade === 'string' ? kits.templatesFor(trade) : []
+    if (!offered.some((o) => o.slug === template.slug && o.version === template.version))
+      return { error: 'TEMPLATE_NOT_OFFERED' }
+    return { template }
+  })
 }
 
 /**

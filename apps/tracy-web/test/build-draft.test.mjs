@@ -44,7 +44,15 @@ mkdirSync(kitDir, { recursive: true })
 for (const file of ['block-store.json', 'page-recipes.json'])
   cpSync(path.join(WO_FIXTURES, 'plan-composer', file), path.join(kitDir, file))
 writeFileSync(path.join(kitDir, 'mapping.pending.json'), JSON.stringify({ ticket: '#1' }))
-const aiQuickstarts = aiQuickstartCatalogue({ root: kitRoot, library: club.library() })
+const catalogue = aiQuickstartCatalogue({ root: kitRoot, library: club.library() })
+// The pending mapping keeps the real offer rule from listing this kit (its own test: build-draft-kits.test.mjs), so the
+// offer list is a stand-in: the invented club template for the trade 'fitness' only.
+const OFFERED_TRADE = 'fitness'
+const aiQuickstarts = {
+  loadKit: catalogue.loadKit,
+  skipped: catalogue.skipped,
+  templatesFor: (trade) => (trade === OFFERED_TRADE ? [{ ...club.template() }] : [])
+}
 
 /** A plan the composer returns for the invented club, through its rules gate. */
 const compose = () =>
@@ -167,6 +175,9 @@ test(
     await call(OWNER, 'POST')
     const answered = await call(OWNER, 'PUT', '/answers', { question, answer: scenario.answers[0] })
     assert.equal(answered.status, 200)
+    await db.pool.query(`update build_draft set research = $1::jsonb`, [
+      JSON.stringify({ trade: OFFERED_TRADE })
+    ])
     const chosen = await call(OWNER, 'PUT', '/template', { template })
     assert.equal(chosen.status, 200)
     assert.deepEqual(chosen.body.draft.template, template)
@@ -227,6 +238,35 @@ test(
     const badTemplate = await call(OWNER, 'PUT', '/template', { template: { slug: 'x' } })
     assert.equal(badTemplate.status, 400)
     assert.equal((await call(OWNER, 'GET')).body.draft.plan, null)
+  }
+)
+
+test(
+  'a template the catalogue does not offer for the researched trade is refused and not stored',
+  opts,
+  async () => {
+    await call(OWNER, 'POST')
+    const body = (t) => ({ template: t })
+    const noTrade = await call(OWNER, 'PUT', '/template', body(template))
+    assert.equal(noTrade.status, 422, 'no researched trade offers nothing')
+    assert.equal(noTrade.body.code, 'TEMPLATE_NOT_OFFERED')
+    assert.match(noTrade.body.next, /not offered/)
+    await db.pool.query(`update build_draft set research = $1::jsonb`, [
+      JSON.stringify({ trade: OFFERED_TRADE })
+    ])
+    for (const sent of [
+      { ...template, slug: 'invented-other-template' },
+      { ...template, version: '9.9.9' }
+    ]) {
+      const refused = await call(OWNER, 'PUT', '/template', body(sent))
+      assert.equal(refused.status, 422)
+      assert.equal(refused.body.code, 'TEMPLATE_NOT_OFFERED')
+    }
+    await db.pool.query(`update build_draft set research = $1::jsonb`, [
+      JSON.stringify({ trade: 'other-trade' })
+    ])
+    assert.equal((await call(OWNER, 'PUT', '/template', body(template))).status, 422)
+    assert.equal((await call(OWNER, 'GET')).body.draft.template, null)
   }
 )
 
