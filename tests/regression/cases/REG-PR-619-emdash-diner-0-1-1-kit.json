@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-619-emdash-diner-0-1-1-kit",
+  "kind": "feat",
+  "title": "JA Diner EmDash 0.1.1 passes its template kit self-checks: menu tabs name their label slot, footer phones are tel: links, slots the kit cannot measure carry declared limits, and the 0.1.1 content map covers them",
+  "pr": 619,
+  "area": "emdash-theme-diner/kit",
+  "cms": ["em"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/cms/tracy-emdash-theme-diner/tests/release-0-1-1.test.mjs packages/cms/tracy-quickstart-tools/test/content-coverage-emdash.test.mjs",
+    "S2: Record the exit code and the # tests, # pass, # fail lines."
+  ],
+  "expect": [
+    "S1 exits 0 with # fail 0: each Home menu tab button carries the field stamp of its menu entry title; menu.title maps to editorial.menu_label; each footer phone line is a tel: link whose href keeps the + and the digits; seed/slot-limits.json holds only measured limits or nonVisual declarations; contracts/0.1.1/content-map.json carries those limits and the menu label role; the EmDash content coverage of Diner reads 0.1.1."
+  ],
+  "selectors": {
+    "theme": "packages/cms/tracy-emdash-theme-diner/src/views/Home.astro, src/components/Footer.astro, src/lib/tel.ts",
+    "seed": "packages/cms/tracy-emdash-theme-diner/seed/field-map.json, seed/slot-limits.json",
+    "contract": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/content-map.json"
+  },
+  "evidence": "Template kit self-check on the 0.1.0 release: menu tabs had no label slot, footer phones were plain text, brand name and subscribe placeholder had no measurable limit. On the 0.1.1 release zip the kit reads 118 images, 31 pages, 8 dead controls all explained, 1 accepted gap (D-K1), only todo kit-zip-missing.",
+  "fence": "The Diner theme source and seed the kit reads: a visible slot is either stamped and mapped, or declared in seed/slot-limits.json, and the content map of the released version lists it.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-diner/tests/release-0-1-1.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/content-coverage-emdash.test.mjs"
+    ],
+    "tests": [
+      "each menu tab button is stamped with its menu entry title, so the kit names its label slot and its panel",
+      "the menu title is a menu label, not a heading: it is printed only as the tab label",
+      "the footer prints each phone line as a tel: link drawn as the plain line the source prints",
+      "telHref keeps the + and the digits of each demo phone line and drops the line prefix",
+      "slot-limits.json holds only limits with a real source: a measured box, or a nonVisual declaration with no number",
+      "the 0.1.1 content map carries the declared limits and the menu label role"
+    ]
+  }
+}
