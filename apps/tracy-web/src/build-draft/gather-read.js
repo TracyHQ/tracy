@@ -3,73 +3,38 @@
  * stores, in memory: the source rows go through the research executor's own profile merge (`mergeProfile`) and brand
  * observation (`brandFromSocial`), the profile through the decisions a brief read applies (`decideProfile`, as
  * `brief-research.js` `fromOpportunity`), the read through `fromPlace` and the brief through `makeSiteBrief`, checked
- * by `validateBrief` as a revision is. The WO pieces are injected (`parts`, `build-draft-wiring.js`).
+ * by `validateBrief` as a revision is. The WO pieces are injected (`parts`, `build-draft-gather-wiring.js`).
  *
- * 🔒 PICTURES ARE KEPT AS REFERENCES. No bytes are downloaded or stored before a site exists: each collected picture
- * becomes the record the executor writes when it cannot store one (`status: 'reference'`, sha256 of `ref:<url>`), with
- * no size, type or palette. The manifest names it by that id and its source address, which is what the needs profile
- * reads (`needs-research-media.mjs`). A step that needs the stored picture (the brand bench, picture labelling, the
- * writer's image placement) has nothing to open.
+ * 🔒 PICTURES ARE STORED COPIES. The pictures come in stored (`pictures.js`: downloaded and measured by the Website
+ * Opportunities media rules, kept under a draft key, one `build_draft_picture` row each), so the manifest names each by
+ * an id that opens again, with its real size, type and palette, as a website opportunity's revision does.
  *
  * The owner's description is laid over the profile as the seller's typed bio (`profile-edits.js`, field `bio`), the
  * one typed description the Website Opportunities flow has.
  */
 
-/** The executor's media budget (`executor.js` `MEDIA_BUDGET`): pictures kept, shared fairly between sources. */
-export const MEDIA_BUDGET = 300
 /** The longest seller bio (`profile-edits.js` `EDITABLE_PROFILE_FIELDS.bio`). */
 export const BIO_MAX = 1200
-const TEXT_MAX = 2000
-
-const textOr = (value) => (typeof value === 'string' ? value.slice(0, TEXT_MAX) : null)
-
-/** The reference records of the pictures the rows collected, in the brief read's shape (`fromPlace` media). */
-export function pictureReferences({ rows, domain, fairShare }) {
-  const queue = new Map()
-  for (const r of rows)
-    for (const m of r.collected?.media ?? [])
-      if (typeof m?.url === 'string' && !queue.has(m.url)) queue.set(m.url, { ...m, source: r.source })
-  return fairShare([...queue.values()], MEDIA_BUDGET).map((m) => {
-    const sha256 = domain.sha256Hex(new TextEncoder().encode(`ref:${m.url}`))
-    return {
-      id: `ref-${sha256.slice(0, 32)}`,
-      kind: m.kind === 'video' ? 'video' : 'image',
-      category: domain.classifyMedia({ caption: m.caption, alt: m.alt, url: m.url }),
-      sha256,
-      mime: null,
-      width: null,
-      height: null,
-      source: m.source,
-      sourceUrl: m.url,
-      ...(typeof m.postId === 'string' ? { postId: m.postId } : {}),
-      labels: null,
-      caption: textOr(m.caption),
-      alt: textOr(m.alt),
-      bytes: null,
-      postedAt:
-        m.postedAt && !Number.isNaN(Date.parse(m.postedAt)) ? new Date(m.postedAt).toISOString() : null
-    }
-  })
-}
 
 /** The brand observations of the executor's brand stage (`executor.js` `brand`), from the rows and the profile. */
-function brandOf({ rows, profile, name, domain, parts }) {
+function brandOf({ rows, media, profile, name, domain, parts }) {
   const collectedFrom = (pick) =>
     rows.some((r) => pick(r.source) && ['complete', 'partial'].includes(r.status))
-  // A referenced picture has no palette: the observation reads the bio and the name only.
-  const observe = (origin) => ({
+  const observe = (origin, pick) => ({
     ...domain.brandFromSocial({
-      palette: parts.mergePalettes([]),
+      palette: parts.mergePalettes(media.filter((m) => pick(m.source))),
       bio: profile.bio ?? null,
       name: profile.name ?? name,
       avatarUrl: profile.avatarUrl ?? null
     }),
     origin
   })
+  const isWebsite = (s) => s === 'website'
+  // Google listing photos are visitors' shots, not the business's own: no part of its brand colours.
   const isSocial = (s) => parts.socialSources.includes(s)
   return {
-    website: collectedFrom((s) => s === 'website') ? observe('website') : null,
-    social: collectedFrom(isSocial) ? observe('social') : null
+    website: collectedFrom(isWebsite) ? observe('website', isWebsite) : null,
+    social: collectedFrom(isSocial) ? observe('social', isSocial) : null
   }
 }
 
@@ -91,11 +56,11 @@ export function tradeOf(domain, profile, name, tradeOfWords) {
 
 /**
  * The brief and manifest of what was read.
- * @param {{opp: object, rows: object[], googlePlace: object | null, description: string | null, madeAt: string,
- *   domain: object, parts: object}} input
+ * @param {{opp: object, rows: object[], media?: object[], googlePlace: object | null, description: string | null,
+ *   madeAt: string, domain: object, parts: object}} input `media`: the stored pictures (`pictures.js`), as rows
  * @returns {{brief: object, manifest: object[]} | {invalid: object[]}}
  */
-export function briefOf({ opp, rows, googlePlace, description, madeAt, domain, parts }) {
+export function briefOf({ opp, rows, media = [], googlePlace, description, madeAt, domain, parts }) {
   const bio =
     typeof description === 'string' && description.trim() ? description.trim().slice(0, BIO_MAX) : null
   const owned = {
@@ -107,9 +72,9 @@ export function briefOf({ opp, rows, googlePlace, description, madeAt, domain, p
   const trade = tradeOf(domain, merged, owned.name, parts.tradeOfWords)
   if (trade !== 'other') owned.candidate.trade = trade
   const profile = parts.decideProfile(merged, owned, null)
-  const brand = brandOf({ rows, profile, name: owned.name, domain, parts })
-  const read = parts.fromPlace({ sources: rows, profile, brand, media: [], shown: rows })
-  read.media = pictureReferences({ rows, domain, fairShare: parts.fairShare })
+  const brand = brandOf({ rows, media, profile, name: owned.name, domain, parts })
+  // The stored pictures go through the brief read's own filters (junk, near copies) and mapping (`fromPlace`).
+  const read = parts.fromPlace({ sources: rows, profile, brand, media, shown: rows })
   const brief = parts.makeSiteBrief(domain, read, { opportunity: parts.opportunityOf(owned), madeAt })
   const checked = domain.validateBrief(brief)
   if (!checked?.ok) return { invalid: checked?.errors ?? [] }

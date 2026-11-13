@@ -1,18 +1,18 @@
 // The build chat's research gatherer before a site exists (#609, `build-draft/gather.js`), as the app wires it
-// (`build-draft-wiring.js` `preSiteGatherer`): the Website Opportunities domain and its pieces are the real ones, only
-// the doors that reach the network are fakes (`build-draft-gather-fakes.mjs`). No database, no network, no key.
+// (`build-draft-gather-wiring.js` `preSiteGatherer`): the Website Opportunities domain and its pieces are the real ones,
+// only the doors that reach the network, the objects and the draft picture table are fakes (`build-draft-gather-fakes.mjs`;
+// the pictures are invented bytes, measured for real). No database, no network, no key.
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/build-draft-gather.test.mjs
 import assert from 'node:assert/strict'
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-import { EXT, IMAGE_MAX_BYTES } from 'website-opportunities/src/executor.js'
-import { withMediaAdmission } from 'website-opportunities/src/media-admission.js'
-import { createLogoSaver } from '../src/build-draft/logo-file.js'
+import { EXT } from 'website-opportunities/src/media-store.js'
+import { createLogoWriter } from '../src/build-draft/logo-file.js'
 import { researchOf } from 'website-opportunities/domain'
-import { preSiteGatherer } from '../src/build-draft-wiring.js'
+import { draftPictureReader, draftPictures, preSiteGatherer } from '../src/build-draft-wiring.js'
 import { assetManifestOf } from '../src/opportunities-build/asset-manifest.js'
 import {
   FACEBOOK,
@@ -22,6 +22,9 @@ import {
   connector,
   facebookResult,
   fakeDomain,
+  fakeObjects,
+  fakePicturePool,
+  pngOf,
   runtimeWith,
   websiteResult
 } from './build-draft-gather-fakes.mjs'
@@ -29,9 +32,26 @@ import {
 const LOGO = 'https://hollowmere-bakehouse.example/img/hollowmere-logo.png'
 const noFetch = async () => assert.fail('no fetch outside the fakes')
 
-function gatherer(domain, { keys = {}, settings = {}, paid = async () => true, ...rest } = {}) {
+/**
+ * A picture store of invented bytes: the domain's download door answers `served` (an address to its bytes, else 404),
+ * the objects and the table are held in memory, and the pictures are measured by the real measuring (`sharp`).
+ */
+function storing(domain, served, { objects = fakeObjects() } = {}) {
+  const asked = []
+  domain.fetchLimited = async (url, deps) => {
+    asked.push({ url, maxBytes: deps.maxBytes })
+    const bytes = served[url]
+    return bytes
+      ? { status: 200, bytes, truncated: false }
+      : { status: 404, bytes: new Uint8Array(), truncated: false }
+  }
+  const pool = fakePicturePool()
+  return { pool, objects, asked, doors: { pool, objects } }
+}
+
+function gatherer(domain, { keys = {}, settings = {}, paid = async () => true, pool = null, ...rest } = {}) {
   return preSiteGatherer({
-    pool: null,
+    pool,
     config: null,
     overrides: {
       loadDomain: async () => domain,
@@ -43,7 +63,7 @@ function gatherer(domain, { keys = {}, settings = {}, paid = async () => true, .
   })
 }
 
-test('a website link: its facts, its pictures as references, and the social page it links to', async () => {
+test('a website link: its facts, its pictures stored as draft pictures, and the social page it links to', async () => {
   const asked = []
   const { domain } = await fakeDomain({
     connectors: {
@@ -51,12 +71,19 @@ test('a website link: its facts, its pictures as references, and the social page
       facebook: connector(facebookResult(), asked)
     }
   })
+  const served = {
+    'https://hollowmere-bakehouse.example/img/loaves.jpg': await pngOf(640, 480),
+    'https://hollowmere-bakehouse.example/img/oven.jpg': await pngOf(480, 640, { r: 40, g: 40, b: 44 })
+  }
+  const store = storing(domain, served)
   const paidFor = []
   const gather = gatherer(domain, {
     keys: { apify: 'apify-test' },
-    paid: async (id) => (paidFor.push(id), true)
+    paid: async (id) => (paidFor.push(id), true),
+    pool: store.pool,
+    objects: store.objects
   })
-  const { brief, manifest, setAside } = await gather(
+  const { brief, manifest, setAside, picturesSetAside, pictureRun } = await gather(
     { links: [SITE], description: null },
     { accountId: 'acc-1' }
   )
@@ -72,13 +99,125 @@ test('a website link: its facts, its pictures as references, and the social page
   assert.equal(brief.business.name, 'Hollowmere Bakehouse')
   assert.ok(brief.facts.some((f) => f.field === 'phone' && f.value === '+1 555 0142 318'))
   assert.equal(brief.trade, 'food')
-  assert.equal(manifest.length, 3)
+  // The two website pictures are stored copies of their real size; the social one did not download and is set aside.
   assert.deepEqual(manifest, assetManifestOf(manifest), 'the revision manifest shape')
-  assert.ok(manifest.every((m) => m.width === null && m.mime === null && m.sourceUrl.startsWith('https:')))
+  assert.deepEqual(
+    manifest.map((m) => [m.sourceUrl.split('/').pop(), m.origin, m.mime, m.width, m.height]).sort(),
+    [
+      ['loaves.jpg', 'draft', 'image/png', 640, 480],
+      ['oven.jpg', 'draft', 'image/png', 480, 640]
+    ]
+  )
+  assert.ok(
+    manifest.every((m) => /^[0-9a-f]{64}$/.test(m.sha256) && store.pool.rows.some((r) => r.id === m.id))
+  )
+  assert.deepEqual(picturesSetAside, [
+    { url: 'https://cdn.social.example/hollowmere/rye.jpg', reason: 'the picture could not be downloaded' }
+  ])
+  assert.ok(store.pool.rows.every((r) => r.research_run === pictureRun && r.account_id === 'acc-1'))
+  assert.deepEqual(
+    [...store.objects.held.keys()].sort(),
+    store.pool.rows.map((r) => r.object_key).sort(),
+    'each stored row has its object under the draft key'
+  )
+  assert.ok([...store.objects.held.keys()].every((k) => k.startsWith('build-drafts/acc-1/')))
+  // A stored picture opens again by its manifest id, its bytes checked against its sha256.
+  const open = draftPictureReader(draftPictures({ pool: store.pool, objects: store.objects }))
+  const loaves = manifest.find((m) => m.sourceUrl.endsWith('/loaves.jpg'))
+  const opened = await open(loaves.id)
+  assert.deepEqual(
+    [opened.sha256, opened.mime, opened.width, opened.height],
+    [loaves.sha256, 'image/png', 640, 480]
+  )
+  assert.deepEqual(opened.bytes, Buffer.from(served['https://hollowmere-bakehouse.example/img/loaves.jpg']))
+  assert.equal(await open(loaves.id, { accountId: '00000000-0000-4000-8000-00000000ffff' }), null)
   const { sources } = researchOf(brief, { manifest })
   const website = sources.find((s) => s.id === 'website')
   assert.equal(website.fields['business.name'], 'Hollowmere Bakehouse')
   assert.ok(website.pictures.some((p) => p.ref.endsWith('/img/oven.jpg')))
+})
+
+test('without a picture store every picture is set aside with its reason, none is in the manifest', async () => {
+  const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  const { manifest, picturesSetAside, pictureRun } = await gatherer(domain)(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
+  assert.deepEqual(manifest, [])
+  assert.equal(pictureRun, undefined)
+  assert.equal(picturesSetAside.length, 2)
+  assert.ok(picturesSetAside.every((p) => p.reason === 'this server has no store to keep pictures in'))
+})
+
+test('a picture the store refuses, or one not reached by the deadline, is set aside and not in the manifest', async () => {
+  const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  const served = {
+    'https://hollowmere-bakehouse.example/img/loaves.jpg': await pngOf(64, 48),
+    'https://hollowmere-bakehouse.example/img/oven.jpg': new TextEncoder().encode(
+      '<html>not a picture</html>'
+    )
+  }
+  const refused = storing(domain, served, { objects: fakeObjects({ refuse: true }) })
+  const one = await gatherer(domain, refused.doors)(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
+  assert.deepEqual(one.manifest, [])
+  assert.deepEqual(one.picturesSetAside.map((p) => p.reason).sort(), [
+    'the address is not a picture or a video',
+    'the picture could not be kept'
+  ])
+  assert.deepEqual(refused.pool.rows, [])
+  // A download that never answers: the research's deadline sets it aside, what was read is still the brief.
+  const { domain: slow } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  const late = storing(slow, {})
+  slow.fetchLimited = () => new Promise(() => {})
+  const two = await gatherer(slow, { ...late.doors, budgetMs: 200 })(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
+  assert.equal(two.brief.business.name, 'Hollowmere Bakehouse')
+  assert.deepEqual(two.manifest, [])
+  assert.ok(two.picturesSetAside.length === 2)
+  assert.ok(
+    two.picturesSetAside.every(
+      (p) => p.reason === 'the research ran out of time before this picture was kept'
+    )
+  )
+})
+
+test('a newer research replaces the pictures: same bytes keep their id, the others and their objects go', async () => {
+  const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  const loaves = await pngOf(640, 480)
+  const store = storing(domain, {
+    'https://hollowmere-bakehouse.example/img/loaves.jpg': loaves,
+    'https://hollowmere-bakehouse.example/img/oven.jpg': await pngOf(480, 640, { r: 10, g: 120, b: 90 })
+  })
+  const pictures = draftPictures({ pool: store.pool, objects: store.objects })
+  const first = await gatherer(domain, store.doors)(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
+  assert.equal(first.manifest.length, 2)
+  // The oven picture is gone from the website; the loaves are the same bytes.
+  const { domain: later } = await fakeDomain({
+    connectors: {
+      website: connector({ ...websiteResult(), media: [websiteResult().media[0]] })
+    }
+  })
+  later.fetchLimited = domain.fetchLimited
+  const second = await gatherer(later, store.doors)(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
+  assert.equal(second.manifest.length, 1)
+  assert.equal(second.manifest[0].id, first.manifest.find((m) => m.sourceUrl.endsWith('/loaves.jpg')).id)
+  assert.equal(await pictures.prune('acc-1', second.pictureRun), 1)
+  assert.deepEqual(
+    store.pool.rows.map((r) => r.id),
+    [second.manifest[0].id]
+  )
+  assert.deepEqual([...store.objects.held.keys()], [store.pool.rows[0].object_key])
 })
 
 test('a Google Maps link: the place facts from Google, read with the server key', async () => {
@@ -215,47 +354,42 @@ test('a listing page is read once and kept as the private listing source, throug
   await assert.rejects(gatherer(domain)({ links: [listing], description: null }), { code: 'research_empty' })
 })
 
-/** Invented bytes that sniff as a PNG: the signature and a few made-up bytes after it. */
-const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3, 4, 5, 6, 7, 8])
-
-test('the logo is saved as a file through the media admission rules; anything else is refused', async () => {
+test('the logo file is written from its stored copy; anything that is not a stored image is no file', async () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
-  const { domain } = await fakeDomain()
-  const asked = []
-  const answer = { status: 200, bytes: PNG, truncated: false }
-  domain.fetchLimited = async (url, deps) => (
-    asked.push({ url, maxBytes: deps.maxBytes, fetch: deps.fetch }), answer
-  )
-  const save = createLogoSaver({ dir, admit: withMediaAdmission, maxBytes: IMAGE_MAX_BYTES, ext: EXT })
-  const fakeFetch = async () => assert.fail('fetchLimited is the fake here')
-  const file = await save(LOGO, { domain, deps: { fetch: fakeFetch } })
-  assert.equal(path.dirname(file), dir)
-  assert.match(path.basename(file), /^[0-9a-f]{64}\.png$/)
-  assert.deepEqual(new Uint8Array(readFileSync(file)), PNG)
-  assert.deepEqual(asked, [{ url: LOGO, maxBytes: IMAGE_MAX_BYTES, fetch: fakeFetch }])
-  // Not an image, cut short, or refused by the guard: no file.
-  answer.bytes = new TextEncoder().encode('<html>not a picture</html>')
-  assert.equal(await save(LOGO, { domain, deps: {} }), null)
-  Object.assign(answer, { bytes: PNG, truncated: true })
-  assert.equal(await save(LOGO, { domain, deps: {} }), null)
-  domain.fetchLimited = async () => {
-    throw Object.assign(new Error('blocked'), { code: 'URL_BLOCKED' })
-  }
-  assert.equal(await save(LOGO, { domain, deps: {} }), null)
+  const write = createLogoWriter({ dir, ext: EXT })
+  const bytes = await pngOf(32, 32)
+  const sha256 = 'a'.repeat(64)
+  const file = await write({ sha256, mime: 'image/png', bytes })
+  assert.equal(file, path.join(dir, `${sha256}.png`))
+  assert.deepEqual(new Uint8Array(readFileSync(file)), bytes)
+  assert.equal(await write(null), null)
+  assert.equal(await write({ sha256, mime: 'video/mp4', bytes }), null)
+  assert.equal(await write({ sha256: '../escape', mime: 'image/png', bytes }), null)
   rmSync(dir, { recursive: true, force: true })
 })
 
-test('research keeps the logo the website names as a file for the brand step; no logo hint, no file', async () => {
+test('research keeps the logo the website names as a file, from its stored copy; no logo hint, no file', async () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
   const withLogo = { ...websiteResult(), logos: [{ url: LOGO, via: 'jsonld-logo' }] }
   const { domain } = await fakeDomain({ connectors: { website: connector(withLogo) } })
-  domain.fetchLimited = async () => ({ status: 200, bytes: PNG, truncated: false })
-  const gathered = await gatherer(domain, { logoDir: dir })({ links: [SITE], description: null })
+  const logo = await pngOf(120, 40)
+  const store = storing(domain, { [LOGO]: logo })
+  const gathered = await gatherer(domain, { ...store.doors, logoDir: dir })(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
   assert.equal(path.dirname(gathered.logoFile), dir)
-  assert.ok(existsSync(gathered.logoFile))
+  assert.deepEqual(new Uint8Array(readFileSync(gathered.logoFile)), logo)
+  assert.equal(
+    store.asked.filter((a) => a.url === LOGO).length,
+    1,
+    'the logo is downloaded once, when stored'
+  )
   const { domain: plain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
-  plain.fetchLimited = async () => assert.fail('no logo to download')
-  const none = await gatherer(plain, { logoDir: dir })({ links: [SITE], description: null })
+  const none = await gatherer(plain, { ...storing(plain, {}).doors, logoDir: dir })(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
   assert.equal(none.logoFile, undefined)
   rmSync(dir, { recursive: true, force: true })
 })

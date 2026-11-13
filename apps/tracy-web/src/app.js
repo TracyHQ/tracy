@@ -116,7 +116,7 @@ import { buildDraftRoutes } from './build-draft/route.js'
 import { buildModelDoor } from './build-draft/build-model.js'
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
-import { draftBrandStep, preSiteGatherer } from './build-draft-wiring.js'
+import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
 import { researchOfRevision } from './opportunities-build/revision-research.js'
@@ -1200,6 +1200,17 @@ export function buildApp(deps) {
         fetchImpl: deps.fetchImpl ?? fetch,
         log: deps.log ?? console
       })
+    // The pictures the research stores before a site exists (`build_draft_picture`), through the objects Website
+    // Opportunities stores its own pictures through; `app.openDraftPicture(id)` opens one again by its manifest id.
+    const draftPictureStore = draftPictures({
+      pool: deps.pool,
+      config: deps.config,
+      // `pictureDoors` replaces the objects and the measuring in tests.
+      objects:
+        buildEngine.pictureDoors?.objects ?? placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
+      ...(buildEngine.pictureDoors?.imageInfo ? { imageInfo: buildEngine.pictureDoors.imageInfo } : {})
+    })
+    app.openDraftPicture = draftPictureReader(draftPictureStore)
     app.buildDraftEngine = createEngine({
       pool: deps.pool,
       kits,
@@ -1209,12 +1220,14 @@ export function buildApp(deps) {
         preSiteGatherer({
           pool: deps.pool,
           config: deps.config,
+          pictures: draftPictureStore,
           fetchImpl: deps.fetchImpl,
           dnsResolve: deps.dnsResolve,
           ...(deps.now ? { now: deps.now } : {}),
           overrides: buildEngine.gatherDoors ?? {}
         }),
       brandStep: buildEngine.brandStep ?? draftBrandStep({ pool: deps.pool, stepsOf: brandSteps }),
+      prunePictures: buildEngine.prunePictures ?? draftPictureStore.prune,
       now: deps.now
     })
     app.route(

@@ -115,3 +115,91 @@ export const connector = (result, asked = []) => ({
 export const runtimeWith =
   (keys = {}, settings = {}) =>
   async () => ({ keys, settings })
+
+/** Invented picture bytes: a PNG of one plain colour, of a real size (`sharp` makes it, so it measures as one). */
+export async function pngOf(width, height, background = { r: 180, g: 92, b: 60 }) {
+  const { default: sharp } = await import('sharp')
+  return new Uint8Array(
+    await sharp({ create: { width, height, channels: 3, background } })
+      .png()
+      .toBuffer()
+  )
+}
+
+/** An objects door held in memory (`put`, `get`, `delete`, as `lib/store-objects.js`), with what it holds. */
+export function fakeObjects({ refuse = false } = {}) {
+  const held = new Map()
+  return {
+    held,
+    async put(key, bytes, mime) {
+      if (refuse) return false
+      held.set(key, { bytes: new Uint8Array(bytes), mime })
+      return true
+    },
+    async get(key) {
+      const o = held.get(key)
+      return o ? { ok: true, arrayBuffer: async () => o.bytes.buffer.slice(0) } : { ok: false }
+    },
+    async delete(key) {
+      return held.delete(key)
+    }
+  }
+}
+
+/**
+ * The `build_draft_picture` table held in memory, for the gatherer's tests without a database: the three statements of
+ * `pictures.js` (the upsert by account and sha256, the open by id, the prune by run). The Postgres test runs the real
+ * table (`build-draft-engine.test.mjs`).
+ */
+export function fakePicturePool() {
+  const rows = []
+  let n = 0
+  const COLS = [
+    'account_id',
+    'research_run',
+    'kind',
+    'category',
+    'source',
+    'source_url',
+    'post_id',
+    'posted_at'
+  ]
+  const MORE = ['caption', 'alt', 'sha256', 'object_key', 'mime', 'bytes', 'width', 'height', 'duration_s']
+  const LAST = ['palette', 'dhash', 'labels']
+  return {
+    rows,
+    async query(sql, params) {
+      if (/^\s*insert into build_draft_picture/.test(sql)) {
+        const given = Object.fromEntries([...COLS, ...MORE, ...LAST].map((c, i) => [c, params[i]]))
+        given.palette = given.palette ? JSON.parse(given.palette) : null
+        given.labels = given.labels ? JSON.parse(given.labels) : null
+        const old = rows.find((r) => r.account_id === given.account_id && r.sha256 === given.sha256)
+        if (old) {
+          for (const c of [
+            'research_run',
+            'source',
+            'source_url',
+            'post_id',
+            'posted_at',
+            'caption',
+            'alt',
+            'category'
+          ])
+            old[c] = given[c]
+          return { rows: [old] }
+        }
+        const row = { id: `00000000-0000-4000-8000-${String(++n).padStart(12, '0')}`, ...given }
+        rows.push(row)
+        return { rows: [row] }
+      }
+      if (/^\s*delete from build_draft_picture/.test(sql)) {
+        const gone = rows.filter((r) => r.account_id === params[0] && r.research_run !== params[1])
+        for (const g of gone) rows.splice(rows.indexOf(g), 1)
+        return { rows: gone }
+      }
+      if (/^\s*select .* from build_draft_picture/s.test(sql))
+        return { rows: rows.filter((r) => r.id === params[0] && (!params[1] || r.account_id === params[1])) }
+      throw new Error(`no fake for: ${sql.slice(0, 60)}`)
+    }
+  }
+}

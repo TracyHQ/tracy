@@ -5,7 +5,7 @@
  *
  * RESEARCH BEFORE A SITE EXISTS. `gather({links, description})` produces the research brief and its asset manifest in
  * the shapes a website opportunity's revision stores (`wo_revision.brief`, `wo_revision.asset_manifest`), which is
- * what `researchOf` reads. It is injected: the default (`gather.js`, wired in `build-draft-wiring.js`) reads the links
+ * what `researchOf` reads. It is injected: the default (`gather.js`, wired in `build-draft-gather-wiring.js`) reads the links
  * with the Website Opportunities collectors in memory and writes no `wo_*` row. The links it set aside, each with a
  * plain reason, are kept in the research record (`setAside`).
  *
@@ -62,7 +62,13 @@ export async function researchStep({ links, description }, { gather, model, kit,
     profile,
     ...(Array.isArray(gathered.setAside) && gathered.setAside.length ? { setAside: gathered.setAside } : {}),
     // The business logo the gatherer saved as a file (the brand step reads it); kept so a rerun reads the same file.
-    ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {})
+    ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {}),
+    // The research run its stored pictures belong to (`pictures.js`), and the pictures that were not stored, each with
+    // its plain reason: they are not in the manifest.
+    ...(isText(gathered.pictureRun) ? { pictureRun: gathered.pictureRun } : {}),
+    ...(Array.isArray(gathered.picturesSetAside) && gathered.picturesSetAside.length
+      ? { picturesSetAside: gathered.picturesSetAside }
+      : {})
   }
 }
 

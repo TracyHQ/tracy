@@ -877,12 +877,19 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   with a fault; the composed plan and its step's done state are one write (`putComposed` with the runner). A failed
   step runs once more with the same inputs, never after a `noRerun` failure; the second failure records `fault` and the
   owner reads one sentence. Research reads the owner's links in memory ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js),
-  wired in `build-draft-wiring.js` `preSiteGatherer`): the Website Opportunities link door judges and guards them, the
+  wired in `build-draft-gather-wiring.js` `preSiteGatherer`): the Website Opportunities link door judges and guards them, the
   executor's connectors read the website and social pages (its page, post and charge limits, the account's daily paid
   run count), Google Place Details reads a matched Google place, and `mergeProfile` / `fromPlace` / `makeSiteBrief`
-  make the brief and `assetManifestOf` the manifest a revision stores. No `wo_*` row is written; pictures are
-  references by source address, except the business logo (`place-logo.js` rule), saved as a file in `build-draft-logos/`
-  beside the brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. Unread links are set aside with a reason; nothing read is
+  make the brief and `assetManifestOf` the manifest a revision stores. No `wo_*` row is written. The collected pictures
+  are stored within the same deadline by the executor's own media rules (`media-store.js` `createMediaStore`: admission,
+  limits, sniffing, measuring) as draft pictures ([`build-draft/pictures.js`](apps/tracy-web/src/build-draft/pictures.js)):
+  migration 218 adds `build_draft_picture` (one row per picture bytes of an account, cascading with the draft), the bytes
+  in the Website Opportunities objects door under `build-drafts/<account>/<sha256>.<ext>`. The manifest names them by
+  row id with origin `draft`; `app.openDraftPicture(id)` opens one again; a picture not stored is out of the manifest,
+  in `research.picturesSetAside` with its reason. Once a research step's record is in the draft, the rows and objects of
+  older research runs are pruned; an account deletion drops the rows but not the objects (no object cleanup hook yet).
+  The business logo (`place-logo.js` rule) is written from its stored copy as a file in `build-draft-logos/` beside the
+  brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. Unread links are set aside with a reason; nothing read is
   `research_empty`; the whole step is bounded to three minutes. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and

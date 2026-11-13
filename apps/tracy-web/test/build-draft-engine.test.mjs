@@ -22,6 +22,8 @@ import {
   connector,
   facebookResult,
   fakeDomain,
+  fakeObjects,
+  pngOf,
   runtimeWith,
   websiteResult
 } from './build-draft-gather-fakes.mjs'
@@ -77,7 +79,7 @@ function server(buildEngine = {}) {
     await app.buildDraftEngine.settled(await accountId())
     return { started, ended: await call('GET', '/engine') }
   }
-  return { call, run, accountId, engine: app.buildDraftEngine }
+  return { app, call, run, accountId, engine: app.buildDraftEngine }
 }
 
 const row = async (s) =>
@@ -218,39 +220,87 @@ async function woRows() {
 }
 
 test(
-  'research through the server own gatherer reads the links in memory: no wo_* row is written',
+  'research through the server own gatherer reads the links in memory and stores its pictures: no wo_* row is written',
   opts,
   async () => {
+    // The website shows two pictures, then only one: the second research replaces the first one's pictures.
+    let media = websiteResult().media
     const { domain } = await fakeDomain({
-      connectors: { website: connector(websiteResult()), facebook: connector(facebookResult()) }
+      connectors: {
+        website: connector(() => ({ ...websiteResult(), media })),
+        facebook: connector(facebookResult())
+      }
     })
+    const served = {
+      [media[0].url]: await pngOf(640, 480),
+      [media[1].url]: await pngOf(480, 640, { r: 30, g: 60, b: 140 })
+    }
+    domain.fetchLimited = async (url) =>
+      served[url]
+        ? { status: 200, bytes: served[url], truncated: false }
+        : { status: 404, bytes: new Uint8Array(), truncated: false }
+    const objects = fakeObjects()
     const s = server({
-      ...research(undefined, club.scriptedModel(JSON.stringify(needsReading()))),
+      ...research(
+        undefined,
+        club.scriptedModel(JSON.stringify(needsReading()), JSON.stringify(needsReading()))
+      ),
       gatherDoors: {
         loadDomain: async () => domain,
         runtime: runtimeWith({ google: 'google-test' }),
         fetch: async () => assert.fail('no fetch outside the fakes')
-      }
+      },
+      pictureDoors: { objects }
     })
     // The account first: its trigger gives it a `wo_principal`, which is the account's, not the research's.
-    await ensureAccount(db.pool, OWNER)
+    const account = await ensureAccount(db.pool, OWNER)
     const before = await woRows()
     assert.ok(Object.keys(before).length > 10, 'the WO tables exist in the test schema')
     const { ended } = await s.run('POST', '/research', {
       links: [GATHER_SITE, GATHER_MAPS, 'http://localhost:8080/'],
       description: 'Family bakery, open early.'
     })
-    assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
+    assert.equal(ended.body.state, 'done', JSON.stringify((await row(s)).fault))
     assert.deepEqual(await woRows(), before, 'no wo_* table changed')
     const stored = await row(s)
     assert.equal(stored.research.brief.business.name, 'Hollowmere Bakehouse')
     assert.equal(stored.research.brief.googlePlace.placeId, 'ChIJinventedHollowmere0001')
     assert.equal(stored.research.trade, 'food')
-    assert.ok(stored.research.manifest.length >= 2)
     // Only the owner's private link is set aside; the social page the website links to is read too.
     assert.deepEqual(stored.research.setAside, [
       { link: 'http://localhost:8080/', reason: 'a private address, not a page on the internet' }
     ])
+    // The pictures are stored copies: one draft picture row each, its object under the draft key, opened by its id.
+    const { manifest, pictureRun } = stored.research
+    assert.deepEqual(manifest.map((m) => [m.origin, m.mime, m.width, m.height]).sort(), [
+      ['draft', 'image/png', 480, 640],
+      ['draft', 'image/png', 640, 480]
+    ])
+    const pictures = async () =>
+      (await db.pool.query('select id, research_run, object_key from build_draft_picture order by id')).rows
+    const first = await pictures()
+    assert.deepEqual(first.map((r) => r.id).sort(), manifest.map((m) => m.id).sort())
+    assert.ok(first.every((r) => r.research_run === pictureRun))
+    assert.deepEqual([...objects.held.keys()].sort(), first.map((r) => r.object_key).sort())
+    assert.ok(first.every((r) => r.object_key.startsWith(`build-drafts/${account.id}/`)))
+    const opened = await s.app.openDraftPicture(manifest[0].id)
+    assert.equal(opened.sha256, manifest[0].sha256)
+    assert.deepEqual(stored.research.picturesSetAside, [
+      { url: 'https://cdn.social.example/hollowmere/rye.jpg', reason: 'the picture could not be downloaded' }
+    ])
+    // Research again with one picture gone: the same bytes keep their id, the other row and its object go.
+    media = [media[0]]
+    const again = await s.run('POST', '/research', { links: [GATHER_SITE] })
+    assert.equal(again.ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    const kept = await pictures()
+    const loaves = manifest.find((m) => m.sourceUrl === media[0].url)
+    assert.deepEqual(
+      kept.map((r) => r.id),
+      [loaves.id]
+    )
+    assert.equal(kept[0].research_run, (await row(s)).research.pictureRun)
+    assert.deepEqual([...objects.held.keys()], [kept[0].object_key])
+    assert.deepEqual(await woRows(), before, 'no wo_* table changed by a second research either')
   }
 )
 

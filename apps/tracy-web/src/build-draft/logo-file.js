@@ -1,37 +1,27 @@
 /**
  * The business logo of the build chat's research (#609) as a file the brand step reads (`brand-before-site.js`
- * `logoFile`). It is the one picture stored before a site exists; every other picture stays a reference by address.
- *
- * Downloaded as the research executor stores a picture (`executor.js` `admittedMediaRecord`): through the admission
- * slots (`withMediaAdmission`), `domain.fetchLimited` with the image byte limit and the guarded fetch, a body read whole
- * (a truncated one is refused), and kept only when its bytes sniff as an image type the executor stores (`EXT`). The
- * file is named by its sha256 in `dir`, so the same logo is one file and a rerun reads the same path.
+ * `logoFile`), written from the logo's stored copy (`pictures.js` `open`: the bytes the research downloaded and kept
+ * by the Website Opportunities media rules), never downloaded a second time. The file is named by its sha256 in `dir`,
+ * so the same logo is one file and a rerun reads the same path. Only an image type the executor stores (`EXT`) is
+ * written; anything else is no file.
  */
 import { mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 /**
- * @param {{dir: string, admit: (kind: 'image', run: () => Promise<any>) => Promise<any>, maxBytes: number,
- *   ext: Record<string, string>, timeoutMs?: number}} deps
- * @returns {(url: string, ctx: {domain: object, deps: {fetch: typeof fetch, resolve?: Function}}) =>
- *   Promise<string | null>} the absolute file path, or null when the logo is refused
+ * @param {{dir: string, ext: Record<string, string>}} deps
+ * @returns {(picture: {sha256: string, mime: string, bytes: Uint8Array} | null) => Promise<string | null>} the
+ *   absolute file path, or null when there is nothing to write
  */
-export function createLogoSaver({ dir, admit, maxBytes, ext, timeoutMs = 60_000 }) {
+export function createLogoWriter({ dir, ext }) {
   const root = path.resolve(dir)
-  return (url, { domain, deps }) =>
-    admit('image', async () => {
-      let got
-      try {
-        got = await domain.fetchLimited(url, { ...deps, maxBytes, timeoutMs })
-      } catch {
-        return null
-      }
-      if (!got || got.status >= 400 || got.truncated || !got.bytes?.length) return null
-      const mime = domain.sniffMime(got.bytes)
-      if (!mime?.startsWith('image/') || !ext[mime]) return null
-      const file = path.join(root, `${domain.sha256Hex(got.bytes)}.${ext[mime]}`)
-      await mkdir(root, { recursive: true })
-      await writeFile(file, got.bytes)
-      return file
-    })
+  return async (picture) => {
+    const mime = picture?.mime
+    if (!picture?.bytes?.length || !mime?.startsWith('image/') || !ext[mime]) return null
+    if (!/^[0-9a-f]{64}$/.test(picture.sha256 ?? '')) return null
+    const file = path.join(root, `${picture.sha256}.${ext[mime]}`)
+    await mkdir(root, { recursive: true })
+    await writeFile(file, picture.bytes)
+    return file
+  }
 }

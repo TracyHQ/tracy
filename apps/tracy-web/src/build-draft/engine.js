@@ -69,16 +69,30 @@ export const brandFor = (row, template) =>
  *   Promise<{brief: object, manifest: object[], setAside?: object[]}>} deps.gather
  * @param {(input: {research: object, template: object, kit: object}) => Promise<object | null>} deps.brandStep the
  *   pre site brand step (#616): answers the look record (`tracy-brand-look/v1`)
+ * @param {(accountId: string, run: string) => Promise<unknown>} [deps.prunePictures] deletes the pictures an older
+ *   research stored (`pictures.js` `prune`), called once a research step's record is in the draft
  * @param {() => number} [deps.now]
  */
-export function createEngine({ pool, kits, buildModel, gather, brandStep, now = Date.now }) {
+export function createEngine({ pool, kits, buildModel, gather, brandStep, prunePictures, now = Date.now }) {
   const runner = randomUUID()
   /** @type {Map<string, Promise<void>>} the steps this process runs, by account */
   const jobs = new Map()
 
+  /** A research run whose success prunes the pictures of the research it replaced. */
+  const withPrune = (accountId, run) => async () => {
+    const ran = await run()
+    const pictureRun = ran?.ok ? ran.columns?.research?.pictureRun : null
+    return pictureRun && prunePictures ? { ...ran, after: () => prunePictures(accountId, pictureRun) } : ran
+  }
+
   async function finish(accountId, step, run) {
     const ran = await run().catch((error) => ({ ok: false, error, attempts: 1 }))
-    if (ran.ok) return endStep(pool, accountId, runner, { state: 'done' }, ran.columns, now)
+    if (ran.ok) {
+      const ended = await endStep(pool, accountId, runner, { state: 'done' }, ran.columns, now)
+      // Once the draft names the new research, what it replaced goes (the pictures of older research runs).
+      await ran.after?.().catch(() => null)
+      return ended
+    }
     const fault = faultOf(step, ran)
     await recordFault(pool, accountId, fault)
     return endStep(pool, accountId, runner, stoppedOf(fault), {}, now)
@@ -155,16 +169,19 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, now = 
         accountId,
         'research',
         inputs,
-        ranWith(
-          (copy, model) => researchStep(copy, { gather, model, kit, accountId }),
-          inputs,
-          // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
-          // New research makes the brand record stale: the brand step reads the research.
-          (record) => ({
-            research: record,
-            brand: null,
-            ...(row?.plan ? {} : { needs_profile: record.profile })
-          })
+        withPrune(
+          accountId,
+          ranWith(
+            (copy, model) => researchStep(copy, { gather, model, kit, accountId }),
+            inputs,
+            // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
+            // New research makes the brand record stale: the brand step reads the research.
+            (record) => ({
+              research: record,
+              brand: null,
+              ...(row?.plan ? {} : { needs_profile: record.profile })
+            })
+          )
         )
       )
     },
