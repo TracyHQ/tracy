@@ -7,6 +7,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createDraftSteps } from '../src/step-chain-draft-steps.js'
+import { runDraftWrite } from '../src/step-chain-draft-write.js'
 import { blankSite, florist, floristPlan, openStored, snapshotOf } from './draft-write-fixtures.mjs'
 
 const inputs = () => ({
@@ -83,4 +84,41 @@ test('a door that fails twice stops the step with the report of what ran; a late
   const clean = blankSite()
   await writeOf(wiringOf(clean))({ runId: 'r4' }, inputs())
   assert.deepEqual(snapshotOf(memory), snapshotOf(clean))
+})
+
+test('an icon picture of the order must be a name of the icon library the icons step chose from', async () => {
+  const memory = blankSite()
+  const iconic = inputs()
+  const icon = iconic.order.order.icons.find((i) => i.storage === 'image-file')
+  Object.assign(icon, { source: 'library', icon: { name: 'flower-unknown' } })
+  const library = () => ({ set: 'invented', icons: [{ name: 'flower-rose' }] })
+  const write = createDraftSteps({ draftWrite: wiringOf(memory), iconLibrary: library }).write
+  assert.equal((await failure(write({ runId: 'r5' }, iconic))).code, 'icon_not_in_list')
+  assert.equal((await failure(writeOf(wiringOf(memory))({ runId: 'r5' }, iconic))).code, 'icon_not_in_list')
+  assert.equal(memory.calls, 0)
+})
+
+test('a step with no write order, an operation of no known kind, a reference to no site id: typed stops', async () => {
+  const none = inputs()
+  none.order = {}
+  assert.equal(
+    (await failure(writeOf(wiringOf(blankSite()))({ runId: 'r6' }, none))).code,
+    'write_order_missing'
+  )
+  const memory = blankSite()
+  const run = (ops) =>
+    runDraftWrite({ plan: { ...floristPlan, ops }, doors: memory.doors, record: {}, openStored })
+  assert.equal((await failure(run([{ key: 'x', kind: 'menu.reorder', entries: [] }]))).code, 'op_unknown')
+  const assignOp = {
+    key: 'a',
+    kind: 'module.assign',
+    record: 'copy:none',
+    sourceId: 1,
+    menuids: [{ ref: 'page:none', form: 'id' }]
+  }
+  // A typed stop inside an operation is not redone: the write stops at once, its code kept as the cause.
+  const unresolved = await failure(run([assignOp]))
+  assert.equal(unresolved.code, 'redo_failed')
+  assert.equal(unresolved.details.cause, 'ref_unresolved')
+  assert.equal(memory.calls, 0)
 })

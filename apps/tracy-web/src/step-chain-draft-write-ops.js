@@ -5,13 +5,14 @@
 import { createHash } from 'node:crypto'
 import { MODULE_COLUMNS } from 'website-opportunities/domain/ai-quickstart-placement.mjs'
 import {
+  addressOf,
   cutRows,
   getAt,
-  movedAfterCut,
   removeAt,
   setAt
 } from 'website-opportunities/domain/draft-write-codec.mjs'
-import { DraftWriteError, lengthOf } from 'website-opportunities/domain/draft-write-error.mjs'
+import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
+import { frameOf } from 'website-opportunities/domain/draft-write-frame.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const EXT = { 'image/png': 'png', 'image/webp': 'webp', 'image/svg+xml': 'svg' }
@@ -75,33 +76,28 @@ export function baseFieldsOf(op, ctx) {
   }
 }
 
+/** A created record's empty HTML values given the frame their pieces name (`created_record_frame`). */
+function framed(fields, op, ctx) {
+  if (!op.kind.endsWith('.create')) return fields
+  const groups = new Map()
+  for (const v of list(op.values))
+    if (v.loc.xpath) {
+      const at = { ...v.loc, xpath: undefined }
+      groups.set(addressOf(at), { at, xpaths: [...(groups.get(addressOf(at))?.xpaths ?? []), v.loc.xpath] })
+    }
+  let out = fields
+  for (const { at, xpaths } of groups.values())
+    if (String(getAt(out, at, ctx.html) ?? '').trim() === '') out = setAt(out, at, frameOf(xpaths), ctx.html)
+  return out
+}
+
 /** The fields with every value of the op set, its rows cut and its button elements taken out. */
 export function writtenFields(fields, op, ctx) {
-  let out = fields
+  let out = framed(fields, op, ctx)
   for (const v of list(op.values)) out = setAt(out, v.loc, resolved(v.value, ctx), ctx.html)
   for (const cut of list(op.cuts)) out = cutRows(out, cut.row, cut.kept)
   for (const r of list(op.removes)) out = removeAt(out, r.loc, r.xpath, ctx.html)
   return out
-}
-
-/** Compare every value of the op with the record the site holds now; a difference is a typed error, no text. */
-export function readBack(row, op, ctx) {
-  for (const v of list(op.values)) {
-    let loc = v.loc
-    for (const cut of list(op.cuts)) loc = loc && movedAfterCut(loc, cut.row, cut.kept)
-    if (!loc) continue
-    const meant = String(resolved(v.value, ctx))
-    const got = getAt(row, loc, ctx.html)
-    if (String(got ?? '') !== meant)
-      throw new DraftWriteError('read_back_mismatch', `${op.key} reads another value than it wrote`, {
-        op: op.key,
-        entity: v.loc.entity,
-        slot: v.loc.slot ?? null,
-        column: v.loc.column,
-        expected: lengthOf(meant),
-        got: lengthOf(got)
-      })
-  }
 }
 
 /** A module copy's fields: the store record's columns as the blank site holds them. */
@@ -126,7 +122,7 @@ export async function madeOnce(op, kind, ctx, fields) {
   }
   state.pending[op.key] = true
   await ctx.save()
-  const { id } = await ctx.doors.update({ applyId: ctx.applyId(op), kind, id: 0, fields: fields() })
+  const { id } = await ctx.doors.update({ applyId: ctx.applyId(op, 'create'), kind, id: 0, fields: fields() })
   return keep(ctx, op.key, id)
 }
 async function keep(ctx, key, id) {

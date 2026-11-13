@@ -14,6 +14,7 @@ import { blankSite, florist, floristPlan, pageItemsOf, planOf, runOn } from './d
 
 const memory = blankSite()
 await runOn(memory)
+const refusal = (code) => (error) => error.code === code
 const moduleOf = (site, note) => [...site.site.records.module.values()].find((r) => r.note === note)
 const paramsOf = (row) => JSON.parse(row.params)
 const acmOf = (row) => JSON.parse(paramsOf(row)['jatools-config'])
@@ -98,7 +99,8 @@ test('rule 6: a button with no label and no address is removed from its HTML (15
   const control = floristPlan.controls.find((c) => c.record === 'copy:home.home-b4')
   assert.deepEqual([control.by, control.written], ['rows.remove', [false, false]])
   const html = paramsOf(moduleOf(memory, 'copy:home.home-b4'))['top-desc']
-  assert.equal(memory.doors.html.read(html).pieces['removed:/html/body/div/div/a'], true)
+  assert.throws(() => memory.doors.html.get(html, '/html/body/div/div/a'), refusal('HTML_SLOT_MISSING'))
+  assert.equal(memory.doors.html.get(html, '/html/body/div/div/@class'), 'bottom-actions')
 })
 
 test('rule 6: social rows with no link are cut, never left as empty circles linking to "/"', async () => {
@@ -154,4 +156,15 @@ test('rule 6: both versions of an icon are written (157 light and dark), one alo
     () => planOf(one, { iconKeys: ['flower-rose'] }),
     (error) => error.code === 'pair_incomplete'
   )
+})
+
+test('hides omit: a plan card on the plans page shows no empty feature bullet; its button is written empty', async () => {
+  const memory = blankSite()
+  await runOn(memory)
+  for (const id of ['plans-b4', 'plans-b5']) {
+    const cards = acmOf(moduleOf(memory, `copy:plans.${id}`))['features-intro']
+    assert.equal(cards['features-intro[item-info]'].length, 1, id)
+    assert.doesNotMatch(cards['features-intro[item-info]'][0], /\(\(li\)\)/, id)
+    assert.deepEqual(cards['features-intro[title-btn]'], [''], id)
+  }
 })

@@ -210,7 +210,7 @@ export function createDraftSteps(deps) {
 
     /** The write of a draft run: through the injected site doors, or a typed stop when none are wired. */
     async write(ctx, inputs) {
-      return draftWriteStep(deps.draftWrite, ctx, inputs)
+      return draftWriteStep(deps.draftWrite, ctx, inputs, { iconLibrary: deps.iconLibrary })
     }
   }
 }

@@ -11,8 +11,8 @@
 //   blankContract(kit)       the blank site contract's content map of the kit (its slots, limits and `opensEmpty`)
 //   drawInitials(draw)       optional: draws an initials picture (default: `lib/initials-avatar.js`)
 import { writePlanOf } from 'website-opportunities/domain/draft-write-plan.mjs'
-import { runDraftWrite } from './step-chain-draft-write.js'
 import { draftError } from './step-chain-draft-source.js'
+import { runDraftWrite } from './step-chain-draft-write.js'
 
 /** The initials picture of a person with no photo, drawn in the frame (strokes A to Z, else the neutral figure). */
 async function drawInitials(draw) {
@@ -25,8 +25,10 @@ async function drawInitials(draw) {
  * @param {object | undefined} wiring `deps.draftWrite`
  * @param {object} ctx the run
  * @param {{kit: object, plan: object, order: {order: object}}} inputs the outputs of the kit, plan and order steps
+ * @param {{iconLibrary?: () => {icons?: Array<{name: string}>}}} [chain] the icon library the icons step chose from: an
+ *   icon picture of the order must be one of its names (no library wired: none is)
  */
-export async function draftWriteStep(wiring, ctx, inputs) {
+export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary } = {}) {
   if (typeof wiring?.doors !== 'function')
     throw draftError(
       'write_not_ready_for_draft',
@@ -41,7 +43,8 @@ export async function draftWriteStep(wiring, ctx, inputs) {
   const plan = writePlanOf(order, aiq, {
     stored: (await wiring.stored?.(order, ctx)) ?? {},
     withheld: inputs.plan?.profile?.withheld,
-    approved: inputs.plan?.plan
+    approved: inputs.plan?.plan,
+    iconKeys: (iconLibrary?.()?.icons ?? []).map((icon) => icon?.name)
   })
   const record = (await wiring.record?.(ctx)) ?? {}
   try {

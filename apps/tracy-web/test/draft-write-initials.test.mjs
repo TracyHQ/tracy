@@ -54,7 +54,7 @@ test('a person with no photo and a Latin name: the initials are drawn in the fra
   assert.equal((await run(plan, memory)).status, 'done')
   assert.deepEqual(drawn, [op.draw])
   const letters = await initialsAvatar(op.draw)
-  assert.ok([...memory.site.uploads.values()].includes(letters.bytes.length))
+  assert.ok([...memory.site.uploads.values()].some((bytes) => Buffer.from(bytes).equals(letters.bytes)))
 })
 
 test('a name in another script is drawn as the neutral figure, and the plan flags it unproven', async () => {
