@@ -5,16 +5,18 @@
 // the business uses publicly.
 //
 // Right after a page is written the pure copy check (`page-copy-check.mjs`) measures every field against its declared
-// type and limit. Only the failing fields go back to the model, in ONE more call for that page. A field that still fails
+// type and limit, and holds that copy carries no phone number, email address, URL or price the plan data does not hold
+// (`invented_data`). Only the failing fields go back to the model, in ONE more call for that page. A field that still fails
 // throws a `PageWriterError` with code `copy_check_failed` and every failing field, for the stop and report rule
 // (ADR 0047, #591).
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { checkPageCopy } from './page-copy-check.mjs'
-import { PageWriterError, blockDescriptionsOf, pageSlotsOf, pageWriterUser } from './page-writer-request.mjs'
+import { charCount, checkPageCopy } from './page-copy-check.mjs'
+import { PageWriterError, blockDescriptionsOf, knownValuesOf, pageFieldsOf } from './page-writer-fields.mjs'
+import { pageWriterUser } from './page-writer-request.mjs'
 import { planDataOf } from './plan-data.mjs'
 
-export { PageWriterError } from './page-writer-request.mjs'
+export { PageWriterError } from './page-writer-fields.mjs'
 
 /** The draft prompt (product owner review: #600). Its hash is recorded with every page it wrote. */
 export const PAGE_WRITER_PROMPT_FILE = 'page-writer-prompt.md'
@@ -48,14 +50,14 @@ const unreadable = (slots) =>
   }))
 
 /** One page: written, checked, its failing fields rewritten once, checked again. */
-async function writePage({ plan, page, context, model, signal }) {
-  const slots = pageSlotsOf(page, context)
+async function writePage({ plan, page, fields, context, model, signal }) {
+  const slots = fields.filter((f) => f.from === 'writer')
   const values = {}
   const attempts = []
   let rewrite
   for (let n = 0; n < PAGE_WRITE_ATTEMPTS && slots.length > 0; n++) {
     if (signal?.aborted) throw signal.reason ?? new Error('stopped')
-    const user = pageWriterUser({ plan, page, slots, ...context, rewrite })
+    const user = pageWriterUser({ plan, page, slots, shown: fields, ...context, rewrite })
     let reply
     try {
       reply = await model({ system: PAGE_WRITER_PROMPT, user: JSON.stringify(user), format: 'json' })
@@ -69,20 +71,41 @@ async function writePage({ plan, page, context, model, signal }) {
     const asked = rewrite ? slots.filter((s) => rewrite.some((f) => f.key === s.key)) : slots
     // Only the slots this call was asked for are taken: a value for any other key is dropped, never written.
     if (written) for (const { key } of asked) if (Object.hasOwn(written, key)) values[key] = written[key]
-    const failing = written ? checkPageCopy(asked, values).failing : unreadable(asked)
+    const failing = written
+      ? checkPageCopy(asked, values, { known: context.known }).failing
+      : unreadable(asked)
     attempts.push({ asked: asked.map((s) => s.key), failing })
     if (failing.length === 0) break
     rewrite = failing
   }
   const failing = attempts.at(-1)?.failing ?? []
-  const copy = slots.map(({ key, block, item, field }) => ({
+  const out = fields.map(({ key, block, item, field, from, value, data, action, fallback }) => ({
     key,
     block,
     ...(item ? { item } : {}),
     field: field.name,
-    value: values[key]
+    kind: field.kind,
+    from,
+    ...(from === 'writer' ? { value: values[key] } : {}),
+    ...(from === 'data' ? { value, data } : {}),
+    ...(from === 'no-data' ? { action, ...(fallback === undefined ? {} : { fallback }) } : {})
   }))
-  return { id: page.id, copy, attempts, failing }
+  return { id: page.id, fields: out, attempts, failing }
+}
+
+/** Every data field whose value is longer than its field holds, on every page: a plan matter, never shortened. */
+function dataOverLimit(fieldsByPage) {
+  return fieldsByPage
+    .flat()
+    .filter((f) => f.from === 'data' && charCount(f.value) > f.field.limit)
+    .map(({ page, key, field, value, data }) => ({
+      page,
+      key,
+      kind: field.kind,
+      data,
+      length: charCount(value),
+      limit: field.limit
+    }))
 }
 
 /**
@@ -90,15 +113,27 @@ async function writePage({ plan, page, context, model, signal }) {
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], model: (request: object) =>
  *   Promise<unknown>, signal?: AbortSignal}} input `plan`: the approved plan (`composePlan`); `profile`: the needs
  *   profile it was composed from, which holds the item field values
- * @returns {Promise<{pages: Array<{id: string, copy: object[], attempts: object[]}>, prompt: object}>}
+ * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[]}>, prompt: object}>} each page's
+ *   text fields in block order: `{key, block, item?, field, kind, from}` plus `value` for `from: 'writer'` (written by
+ *   the model) and `from: 'data'` (copied, with `data`: the plan id it came from), or `action` (`hide` | `fallback`)
+ *   and `fallback` for `from: 'no-data'`
  */
 export async function writePages({ plan, profile, blockStore, library = [], model, signal }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
-  const context = { blocks: blockDescriptionsOf(blockStore, library), byId: planDataOf(profile).byId }
+  const { byId } = planDataOf(profile)
+  const context = { blocks: blockDescriptionsOf(blockStore, library), byId, known: knownValuesOf(byId) }
+  const fieldsByPage = plan.pages.map((page) => pageFieldsOf(page, context))
+  const over = dataOverLimit(fieldsByPage)
+  if (over.length > 0)
+    throw new PageWriterError(
+      'data_over_limit',
+      `${over.length} data value(s) are longer than their field holds: ${over.map((f) => `${f.key} (${f.length} of ${f.limit})`).join(', ')}`,
+      { fields: over }
+    )
   const settled = await Promise.allSettled(
-    plan.pages.map((page) => writePage({ plan, page, context, model, signal }))
+    plan.pages.map((page, i) => writePage({ plan, page, fields: fieldsByPage[i], context, model, signal }))
   )
   const rejected = settled.find((s) => s.status === 'rejected')
   if (rejected) throw rejected.reason
@@ -111,7 +146,7 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
       { failing, pages }
     )
   return {
-    pages: pages.map(({ id, copy, attempts }) => ({ id, copy, attempts })),
+    pages: pages.map(({ id, fields, attempts }) => ({ id, fields, attempts })),
     prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 }
   }
 }

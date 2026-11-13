@@ -163,7 +163,13 @@ export {
   readWriterReply,
   writePages
 } from './page-writer.mjs'
-export { blockDescriptionsOf, pageSlotsOf, pageWriterUser, slotKey } from './page-writer-request.mjs'
+export {
+  blockDescriptionsOf,
+  pageFieldsOf,
+  pageSlotsOf,
+  pageWriterUser,
+  slotKey
+} from './page-writer-request.mjs'
 export { WRITER_FIELD_TYPES, charCount, checkPageCopy, fieldValueProblems } from './page-copy-check.mjs'
 export {
   neutralItemName,

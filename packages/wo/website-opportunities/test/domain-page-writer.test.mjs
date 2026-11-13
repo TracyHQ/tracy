@@ -17,6 +17,8 @@ import {
 } from './fixtures/plan-composer/invented-club.mjs'
 
 const DEMO = 'Welcome to the demo club of the template'
+/** The pages with a copy field: the contact page shows data fields only, so it needs no call. */
+const WRITTEN = ['home', 'team']
 
 async function approvedPlan(language) {
   const profile = clubProfile()
@@ -72,9 +74,9 @@ test('pages are written in parallel, one call per page, each with only its own f
   store.blocks[1].fields[0].example = DEMO
   const model = overlappingModel(answer())
   const { pages, prompt } = await writePages({ plan, profile, blockStore: store, library: library(), model })
-  assert.equal(model.calls.length, plan.pages.length)
-  assert.equal(model.maxOpen, plan.pages.length, 'every page call is open at the same time')
-  assert.deepEqual(model.calls.map(pageOf).sort(), plan.pages.map((p) => p.id).sort())
+  assert.equal(model.calls.length, WRITTEN.length)
+  assert.equal(model.maxOpen, WRITTEN.length, 'every page call is open at the same time')
+  assert.deepEqual(model.calls.map(pageOf).sort(), WRITTEN)
   assert.equal(prompt.file, 'page-writer-prompt.md')
   assert.match(PAGE_WRITER_PROMPT, /DRAFT, not approved/)
   for (const call of model.calls) {
@@ -95,19 +97,17 @@ test('pages are written in parallel, one call per page, each with only its own f
   const services = home.blocks.find((b) => b.id === 'home-b3')
   assert.deepEqual(
     services.fields.map((f) => f.key),
-    [
-      'home-b3/heading',
-      'home-b3/service-junior-coaching/name',
-      'home-b3/service-adult-group-lessons/name',
-      'home-b3/service-court-hire/name',
-      'home-b3/service-cardio-tennis/name'
-    ],
-    'text fields only: the price (number) and the icon are not written'
+    ['home-b3/heading'],
+    'copy fields only: the service names are data, the price (number) and the icon are not written'
+  )
+  assert.deepEqual(
+    services.shows.map((f) => f.value),
+    ['Junior coaching', 'Adult group lessons', 'Court hire', 'Cardio tennis']
   )
   assert.equal(services.data[0].fields['offering.name'], 'Junior coaching')
   assert.ok(!home.blocks.some((b) => b.fields.some((f) => f.name === 'sticky' || f.name === 'background')))
   assert.ok(!home.blocks.some((b) => b.id === 'home-b4'), 'the gallery has no text field to write')
-  const written = pages.flatMap((p) => p.copy)
+  const written = pages.flatMap((p) => p.fields).filter((f) => f.from !== 'no-data')
   assert.ok(written.every((c) => typeof c.value === 'string' && c.value.length > 0))
 })
 
@@ -137,7 +137,7 @@ test('only failing fields are rewritten, once, and the rewrite keeps the good fi
   const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
   const homeCalls = model.calls.filter((c) => pageOf(c) === 'home').map((c) => JSON.parse(c.user))
   assert.equal(homeCalls.length, 2)
-  assert.equal(model.calls.length, plan.pages.length + 1, 'pages that passed are not called again')
+  assert.equal(model.calls.length, WRITTEN.length + 1, 'pages that passed are not called again')
   const asked = homeCalls[1].blocks.flatMap((b) => b.fields.map((f) => f.key)).sort()
   assert.deepEqual(asked, ['home-b1/cta_label', 'home-b2/heading'])
   assert.deepEqual(homeCalls[1].rewrite.map((r) => r.key).sort(), asked)
@@ -145,8 +145,8 @@ test('only failing fields are rewritten, once, and the rewrite keeps the good fi
   assert.equal(heading.written, tooLong)
   assert.match(heading.problems[0], /43 characters, the field holds at most 42/)
   const home = pages.find((p) => p.id === 'home')
-  assert.equal(home.copy.find((c) => c.key === 'home-b2/heading').value, 'Courts open all week')
-  assert.equal(home.copy.find((c) => c.key === 'home-b3/heading').value, 'heading ok')
+  assert.equal(home.fields.find((c) => c.key === 'home-b2/heading').value, 'Courts open all week')
+  assert.equal(home.fields.find((c) => c.key === 'home-b3/heading').value, 'heading ok')
   assert.deepEqual(home.attempts.at(-1).failing, [])
 })
 
@@ -174,12 +174,12 @@ test('an unreadable reply sends every field back once; a failing model call is a
   const model = overlappingModel((request) => {
     const page = pageOf(request)
     seen[page] = (seen[page] ?? 0) + 1
-    return page === 'contact' && seen[page] === 1 ? 'not json' : answer()(request)
+    return page === 'team' && seen[page] === 1 ? 'not json' : answer()(request)
   })
   const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
-  const contact = pages.find((p) => p.id === 'contact')
-  assert.equal(contact.attempts.length, 2)
-  assert.deepEqual(contact.attempts[1].asked, contact.attempts[0].asked)
+  const team = pages.find((p) => p.id === 'team')
+  assert.equal(team.attempts.length, 2)
+  assert.deepEqual(team.attempts[1].asked, team.attempts[0].asked)
   const broken = async () => {
     throw new Error('door closed')
   }
