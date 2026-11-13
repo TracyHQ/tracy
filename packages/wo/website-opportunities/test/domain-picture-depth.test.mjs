@@ -96,5 +96,7 @@ test('an icon field the step would not see shows as missing against the declarat
   const { plan, profile, result } = await stepOn(store)
   const declared = declaredMediaOf(plan.pages, blocksOf(store), planDataOf(profile))
   const blind = { ...result, icons: result.icons.filter((i) => !i.row) }
-  assert.deepEqual(mediaAccountOf(declared, blind).icon.missing.length, 8)
+  // 8 feature icons of the class page, and 68 network icons of the social link rows of the trainer blocks (block-163,
+  // block-178, block-182: 4 links per trainer; block-180: 4 links), child lists since #583.
+  assert.deepEqual(mediaAccountOf(declared, blind).icon.missing.length, 76)
 })
