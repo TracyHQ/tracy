@@ -61,10 +61,13 @@ function rowsOfBlock(block, shown, byId, data, pages) {
  * The user message of one writer call. On a rewrite, `rewrite` lists the failing slots with what was written and why
  * it failed, and only those slots (and the blocks that hold them) are sent. `shown` (the page's data fields, from
  * `pageFieldsOf`) gives each block the values its data fields show: context, never a field to write.
+ * `voice` (the needs profile's, optional) is how the business sounds; `seo` (`{title, description}` limits) asks for the
+ * page's search title and description, and is left out of a rewrite that does not ask for them.
  * @param {{plan: object, page: object, slots: object[], shown?: object[], byId: Map<string, object>,
- *   blocks: Map<string, object>, rewrite?: Array<{key: string, value: unknown, problems: object[]}>}} input
+ *   blocks: Map<string, object>, rewrite?: Array<{key: string, value: unknown, problems: object[]}>, voice?: object,
+ *   seo?: {title: number, description: number}}} input
  */
-export function pageWriterUser({ plan, page, slots, shown = [], byId, data, blocks, rewrite }) {
+export function pageWriterUser({ plan, page, slots, shown = [], byId, data, blocks, rewrite, voice, seo }) {
   const wanted = rewrite ? new Set(rewrite.map((f) => f.key)) : null
   const asked = wanted ? slots.filter((s) => wanted.has(s.key)) : slots
   const name = list(plan.facts).find((f) => f.kind === 'business.name')?.value
@@ -72,6 +75,8 @@ export function pageWriterUser({ plan, page, slots, shown = [], byId, data, bloc
     language: plan.language,
     business: isText(name) ? { name } : {},
     page: { id: page.id, name: page.name, pageType: page.pageType },
+    ...(voice ? { voice } : {}),
+    ...(seo ? { seo: { titleLimit: seo.title, descriptionLimit: seo.description } } : {}),
     blocks: list(page.blocks)
       .map((block) => ({
         id: block.id,

@@ -252,3 +252,22 @@ test('a malformed input is a typed error with a code', () => {
     code: 'plan_missing'
   })
 })
+
+test('the writer title and description are preferred; a page the writer gave none keeps the code built ones', () => {
+  const values = fresh()
+  const bouquet = values.writers.find((w) => w.page.id === 'bouquet').page
+  bouquet.seo = {
+    title: 'Wild meadow bouquets in Ambermoor',
+    description: 'Seasonal wild meadow bouquets, tied to order.'
+  }
+  const order = orderOf(values)
+  assert.deepEqual(
+    [page(order, 'bouquet').seo.title, page(order, 'bouquet').seo.description],
+    ['Wild meadow bouquets in Ambermoor', 'Seasonal wild meadow bouquets, tied to order.']
+  )
+  assert.equal(page(order, 'contact').seo.title, 'Visit us | Example Larkspur Florist')
+  assert.deepEqual(checkWriteOrder(order), [])
+  const limited = fresh()
+  limited.aiq.mapping = { seo: { titleLimit: 30, descriptionLimit: 100 } }
+  assert.deepEqual(buildWriteOrder(limited).seo, { title: 30, description: 100 })
+})

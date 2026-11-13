@@ -53,9 +53,12 @@ memorySite({ failOn }) -> { apply(order) -> Promise<{ report, site }>, calls, si
 
 `facts`, `items`, `rows` and `sources` are every plan id the order may name, with its values, so the check holds every
 data value to the plan from the order alone. `seo` holds the limits: the title limit of the mapping
-(`mapping.seo.titleLimit`) when it declares one, else 60; the description limit is 160.
+(`mapping.seo.titleLimit`) when it declares one, else 60; the description limit of the mapping
+(`mapping.seo.descriptionLimit`) when it declares one, else 160.
 
-Pages come in write order: the home page first, exactly one. The menu label is the plan's page name. The SEO title is
+Pages come in write order: the home page first, exactly one. The menu label is the plan's page name. The SEO title and
+description are the ones the writer wrote for the page (`seo` of a written page, optional, #594); a page the writer gave
+none falls back to the code built ones below. The code built SEO title is
 the business name on the home page and `<page name> | <business name>` elsewhere; the page name alone when both are the
 same or the pair is over the limit; never a page id. The description joins the page name, the business name, the
 tagline and the address (no added words, so it reads the same in every language), and is never empty. The share image
@@ -167,7 +170,8 @@ A logo frame (`logo_from_brand_step`) counts as shown: the write step fills it f
 
 - pages: exactly one home page, written first (`home_count`, `home_not_first`, `page_repeated`); every page has a title
   and a description (`seo_title_empty`, `seo_description_empty`) within the limits (`seo_title_over_limit`,
-  `seo_description_over_limit`), never `X | X` (`seo_title_repeated`) or a page id (`seo_page_id`); a share image is a
+  `seo_description_over_limit`), never `X | X` (`seo_title_repeated`) or a page id (`seo_page_id`), never the title of another page
+  (`seo_title_not_unique`); a share image is a
   shown picture (`share_image_none`), present when the order has one (`share_image_missing`);
 - places: a state is `show`, `hidden` or `fallback` (`state_unknown`); every place not shown is in `hidden`
   (`hidden_unlisted`) and `hidden` names only places and lists not shown (`hidden_shown`, `hidden_unknown`); every

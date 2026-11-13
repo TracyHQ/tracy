@@ -4,22 +4,8 @@ const WORD = '[\\p{L}\\p{N}]'
 
 export const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-// Lowercase words with punctuation stripped: the form W06 and W07 compare in.
-export const wordsOf = (s) =>
-  String(s)
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}]+/gu, ' ')
-    .trim()
-    .split(' ')
-    .filter(Boolean)
-
-// Sentences of a text: split after . ! ? and at line breaks.
-export const sentencesOf = (s) =>
-  String(s)
-    .split(/(?<=[.!?])\s+|\n+/)
-    .map((x) => x.trim())
-    .filter(Boolean)
+// The form W06 and W07 compare in, and the sentences of a text: shared with the AI quickstart page writer.
+export { sentencesOf, wordsOf } from 'website-opportunities/domain/copy-repeats.mjs'
 
 // Whole-phrase, case-insensitive match: the phrase may not start or end inside a longer word.
 export function hasPhrase(haystack, phrase) {

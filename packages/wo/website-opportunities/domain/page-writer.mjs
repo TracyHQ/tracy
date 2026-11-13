@@ -4,23 +4,33 @@
 // block shows (`page-writer-request.mjs`); it never reads demo copy. Copy is written in the plan's language, the language
 // the business uses publicly.
 //
-// Right after a page is written the pure copy check (`page-copy-check.mjs`) measures every field against its declared
-// type and limit, and holds that copy carries no phone number, email address, URL or price the plan data does not hold
-// (`invented_data`), and that a child list row's copy carries no value of another row (`other_row_data`). Only the
-// failing fields go back to the model, in ONE more call for that page. A field that still fails throws a
+// Each call also writes the page's search title and description (`seo`, locked brand decision 21) within the template's
+// limits (`seoLimitsOf`), and follows the business's own voice when the needs profile carries one (`voice`).
+//
+// Once every page is written the pure copy check (`page-copy-check.mjs`) measures every field against its declared
+// type and limit, and holds that copy carries no business value the plan data does not hold (`invented_data`: a phone
+// number, email address, URL, price, opening hours, year, count or award), never describes the page itself
+// (`about_the_page`), never uses a phrase the voice avoids (`avoided_phrase`), and that a child list row's copy carries
+// no value of another row (`other_row_data`). The site check (`page-writer-site-check.mjs`) then reads every page
+// together, with the copy of pages written before (`others`): a repeated sentence (`repeated_copy`) or a title another
+// page has (`seo_title_not_unique`) fails on the later page. Only the failing fields go back to the model, in ONE more
+// call for that page. A field that still fails throws a
 // `PageWriterError` with code `copy_check_failed`, the failing fields (key and problem codes, as many as the step
 // chain's record keeps) and the `attempts` made, marked `noRerun`: the writer made its own second attempt, so the build
 // stops at once (ADR 0047, #591; #597). `data_over_limit` is a plan matter a re-run repeats: `noRerun` too.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { charCount, checkPageCopy } from './page-copy-check.mjs'
+import { charCount } from './page-copy-check.mjs'
 import { placeLimitsOf } from './field-place-limits.mjs'
 import { PageWriterError, blockDescriptionsOf, knownValuesOf, pageFieldsOf } from './page-writer-fields.mjs'
-import { pageWriterUser } from './page-writer-request.mjs'
+import { callPage, pageFailing, pageOut } from './page-writer-page.mjs'
 import { foreignValuesOf } from './page-writer-rows.mjs'
+import { siteCopyFailing } from './page-writer-site-check.mjs'
 import { planDataOf } from './plan-data.mjs'
+import { seoLimitsOf } from './seo-limits.mjs'
 
 export { PageWriterError } from './page-writer-fields.mjs'
+export { readWriterReply, readWriterSeo } from './page-writer-page.mjs'
 
 /** The draft prompt (product owner review: #600). Its hash is recorded with every page it wrote. */
 export const PAGE_WRITER_PROMPT_FILE = 'page-writer-prompt.md'
@@ -32,74 +42,42 @@ const PROMPT_SHA256 = createHash('sha256').update(PAGE_WRITER_PROMPT).digest('he
 /** How many calls a page may take: the first writing and one rewrite of the failing fields. */
 export const PAGE_WRITE_ATTEMPTS = 2
 
-/** The written values of a reply by slot key, or null when the reply is not the JSON object the prompt asks for. */
-export function readWriterReply(reply) {
-  let value = reply
-  if (typeof reply === 'string') {
-    try {
-      value = JSON.parse(reply.trim().replace(/^```(?:json)?\s*|\s*```$/g, ''))
-    } catch {
-      return null
+/** A page's failing fields: its own check, then the site check against every other written page. */
+function failingOf(states, context, others) {
+  const site = siteCopyFailing(
+    [...others, ...states.map((s) => ({ id: s.page.id, fields: pageOut(s), seo: s.seo }))],
+    { known: context.known, own: new Set(states.map((s) => s.page.id)) }
+  )
+  return states.map((state) => {
+    const failing = pageFailing(state, context)
+    for (const f of site.filter((x) => x.page === state.page.id)) {
+      const same = failing.find((x) => x.key === f.key)
+      if (same) same.problems.push(...f.problems)
+      else failing.push({ key: f.key, value: f.value, problems: f.problems })
     }
-  }
-  const fields = value?.fields
-  return fields && typeof fields === 'object' && !Array.isArray(fields) ? fields : null
+    return failing
+  })
 }
 
-const unreadable = (slots) =>
-  slots.map(({ key }) => ({
-    key,
-    value: undefined,
-    problems: [{ code: 'reply_unreadable', message: 'the reply was not the JSON object {"fields": {...}}' }]
-  }))
-
-/** One page: written, checked, its failing fields rewritten once, checked again. */
-async function writePage({ plan, page, fields, context, model, signal }) {
-  const slots = fields.filter((f) => f.from === 'writer')
-  const values = {}
-  const attempts = []
-  let rewrite
-  for (let n = 0; n < PAGE_WRITE_ATTEMPTS && slots.length > 0; n++) {
-    if (signal?.aborted) throw signal.reason ?? new Error('stopped')
-    const user = pageWriterUser({ plan, page, slots, shown: fields, ...context, rewrite })
-    let reply
-    try {
-      reply = await model({ system: PAGE_WRITER_PROMPT, user: JSON.stringify(user), format: 'json' })
-    } catch (error) {
-      throw new PageWriterError('writer_call_failed', `page ${page.id}: ${error?.message ?? error}`, {
-        page: page.id,
-        cause: error
-      })
-    }
-    const written = readWriterReply(reply)
-    const asked = rewrite ? slots.filter((s) => rewrite.some((f) => f.key === s.key)) : slots
-    // Only the slots this call was asked for are taken: a value for any other key is dropped, never written.
-    if (written) for (const { key } of asked) if (Object.hasOwn(written, key)) values[key] = written[key]
-    const failing = written
-      ? checkPageCopy(asked, values, { known: context.known }).failing
-      : unreadable(asked)
-    attempts.push({ asked: asked.map((s) => s.key), failing })
-    if (failing.length === 0) break
-    rewrite = failing
-  }
-  const failing = attempts.at(-1)?.failing ?? []
-  const out = fields.map(
-    ({ key, block, item, row, list, field, from, value, data, action, fallback, derived }) => ({
-      key,
-      block,
-      ...(item ? { item } : {}),
-      ...(row ? { row, list } : {}),
-      field: field.name,
-      kind: field.kind,
-      from,
-      ...(from === 'writer' ? { value: values[key] } : {}),
-      ...(from === 'data' ? { value, data } : {}),
-      ...(from === 'no-data'
-        ? { action, ...(fallback === undefined ? {} : { fallback }), ...(derived ? { derived } : {}) }
-        : {})
+/** Every page written in parallel, checked together, its failing fields rewritten once, checked together again. */
+async function writeAll(states, { plan, context, model, signal, others }) {
+  let rewrite = new Map(states.map((s) => [s, undefined]))
+  for (let n = 0; n < PAGE_WRITE_ATTEMPTS; n++) {
+    const calling = states.filter((s) => s.slots.length > 0 && rewrite.has(s))
+    const settled = await Promise.allSettled(
+      calling.map((state) => callPage(state, { plan, context, model, signal, rewrite: rewrite.get(state) }))
+    )
+    const rejected = settled.find((r) => r.status === 'rejected')
+    if (rejected) throw rejected.reason
+    const failing = failingOf(states, context, others)
+    rewrite = new Map()
+    states.forEach((state, i) => {
+      if (calling.includes(state)) state.attempts.push({ asked: state.asked, failing: failing[i] })
+      state.failing = failing[i]
+      if (failing[i].length) rewrite.set(state, failing[i])
     })
-  )
-  return { id: page.id, fields: out, attempts, failing }
+    if (rewrite.size === 0) break
+  }
 }
 
 /**
@@ -139,16 +117,28 @@ function dataOverLimit(fieldsByPage) {
 
 /**
  * Write every page of a plan, in parallel.
- * @param {{plan: object, profile: object, blockStore: object, library?: object[], model: (request: object) =>
- *   Promise<unknown>, signal?: AbortSignal}} input `plan`: the approved plan (`composePlan`); `profile`: the needs
- *   profile it was composed from, which holds the item field values
- * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[]}>, prompt: object}>} `attempts`:
+ * @param {{plan: object, profile: object, blockStore: object, library?: object[], mapping?: object, others?: object[],
+ *   model: (request: object) => Promise<unknown>, signal?: AbortSignal}} input `plan`: the approved plan
+ *   (`composePlan`); `profile`: the needs profile it was composed from, which holds the item field values and the
+ *   business's voice; `mapping`: the template mapping, for its SEO limits; `others`: pages written before by another
+ *   writer step (`{id, fields, seo?}`), which this call's pages must not repeat
+ * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[], seo?: object}>, prompt: object}>}
+ *   `seo`: the page's search `title` and `description` when the writer wrote them; `attempts`:
  *   one entry per call that page took (1, or 2 after a rewrite); each page's
  *   text fields in block order: `{key, block, item?, row?, list?, field, kind, from}` plus `value` for `from: 'writer'` (written by
  *   the model) and `from: 'data'` (copied, with `data`: the plan id it came from), or `action` (`hide` | `fallback`)
  *   and `fallback` for `from: 'no-data'`
  */
-export async function writePages({ plan, profile, blockStore, library = [], model, signal }) {
+export async function writePages({
+  plan,
+  profile,
+  blockStore,
+  library = [],
+  mapping,
+  others = [],
+  model,
+  signal
+}) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
@@ -160,7 +150,10 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
     byId,
     data,
     placeLimits: placeLimitsOf(blocks.values()),
-    known: knownValuesOf(byId, data.rowsById)
+    known: knownValuesOf(byId, data.rowsById),
+    voice: profile?.voice,
+    seoLimits: seoLimitsOf(mapping),
+    prompt: PAGE_WRITER_PROMPT
   }
   // A row's copy field is checked against the other rows of its own list: it never carries a sibling row's data.
   const fieldsByPage = plan.pages.map((page) => {
@@ -177,12 +170,24 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
       boundedDetails('fields', over, (f) => f),
       { noRerun: true }
     )
-  const settled = await Promise.allSettled(
-    plan.pages.map((page, i) => writePage({ plan, page, fields: fieldsByPage[i], context, model, signal }))
-  )
-  const rejected = settled.find((s) => s.status === 'rejected')
-  if (rejected) throw rejected.reason
-  const pages = settled.map((s) => s.value)
+  const states = plan.pages.map((page, i) => ({
+    page,
+    fields: fieldsByPage[i],
+    slots: fieldsByPage[i].filter((f) => f.from === 'writer'),
+    values: {},
+    seo: undefined,
+    attempts: [],
+    unreadable: [],
+    failing: []
+  }))
+  await writeAll(states, { plan, context, model, signal, others: Array.isArray(others) ? others : [] })
+  const pages = states.map((s) => ({
+    id: s.page.id,
+    fields: pageOut(s),
+    attempts: s.attempts,
+    failing: s.failing,
+    ...(s.seo ? { seo: s.seo } : {})
+  }))
   const failing = pages.flatMap((p) => p.failing.map((f) => ({ page: p.id, ...f })))
   // The writer already made its own second attempt (the rewrite): the engine does not run it twice more (#597, Q4).
   // `attempts` is how many calls the most tried page took, the attempt the build reports for the step.
@@ -201,7 +206,7 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
       { noRerun: true }
     )
   return {
-    pages: pages.map(({ id, fields, attempts }) => ({ id, fields, attempts })),
+    pages: pages.map(({ id, fields, attempts, seo }) => ({ id, fields, attempts, ...(seo ? { seo } : {}) })),
     prompt: { file: PAGE_WRITER_PROMPT_FILE, sha256: PROMPT_SHA256 }
   }
 }

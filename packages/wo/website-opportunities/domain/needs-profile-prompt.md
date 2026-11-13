@@ -44,6 +44,10 @@ Rules:
 6. For every picture with an `alt` or a caption that says what it shows, give a short label of what it shows.
 7. For every source, give the language its words are written in, as a language tag: a two letter code (`en`), with
    the region when the words show it (`pt-BR`). Never a language name.
+8. Give the business's own voice, from how its sources write about it: `summary`, one or two sentences on its tone and
+   who it speaks to; `ownWords`, at most 8 short phrases the business writes about itself, each copied character for
+   character from one source; `avoid`, at most 8 words or phrases that would clash with how it speaks. Leave out any
+   part the sources do not show.
 
 Reply with JSON only, no other words:
 
@@ -53,5 +57,6 @@ Reply with JSON only, no other words:
   "items": [{"source": "<id>", "kind": "<kind>", "fields": {"<field>": "<value>"}, "evidence": "<exact passage>",
              "rows": [{"fields": {"<field>": "<value>"}, "evidence": "<exact passage>"}]}],
   "rows": [{"source": "<id>", "fields": {"<field>": "<value>"}, "evidence": "<exact passage>"}],
-  "pictures": [{"source": "<id>", "picture": "<picture id>", "label": "<what it shows>"}]
+  "pictures": [{"source": "<id>", "picture": "<picture id>", "label": "<what it shows>"}],
+  "voice": {"summary": "<tone>", "ownWords": ["<exact phrase>"], "avoid": ["<word or phrase>"]}
 }

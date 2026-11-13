@@ -1,9 +1,10 @@
 // W06 and W07 (ADR 0042): nothing repeats, and nothing of the demo business survives.
 import { allTexts } from './copy-view.js'
-import { hasPhrase, sentencesOf, wordsOf } from '../../lib/site-copy/text-tools.js'
+import { repeatsOf } from 'website-opportunities/domain/copy-repeats.mjs'
+import { hasPhrase, wordsOf } from '../../lib/site-copy/text-tools.js'
 
-export const RUN_WORDS = 5 // W06: two sentences sharing this many consecutive words are near-duplicates.
-export const MIN_EQUAL_WORDS = 3 // W06 and W07: shortest sentence that counts as a sentence on its own.
+// The rule itself is shared with the AI quickstart page writer: `website-opportunities/domain/copy-repeats.mjs`.
+export { MIN_EQUAL_WORDS, RUN_WORDS } from 'website-opportunities/domain/copy-repeats.mjs'
 
 const clip = (words) => (words.length > 8 ? `${words.slice(0, 8).join(' ')} ...` : words.join(' '))
 
@@ -12,10 +13,6 @@ const clip = (words) => (words.length > 8 ? `${words.slice(0, 8).join(' ')} ...`
 // equal sentence) that lies wholly inside the normalised value of any brief fact is not a repeat: a phone number,
 // an address or opening hours must be free to appear on every page that needs them.
 export function checkW06({ R, view, idx }) {
-  const factTexts = [...(idx?.facts?.values() ?? [])]
-    .map((v) => ` ${wordsOf(v).join(' ')} `)
-    .filter((v) => v.trim() !== '')
-  const isFact = (run) => factTexts.some((f) => f.includes(` ${run} `))
   const entries = []
   for (const s of view.slots)
     if (s.owner === 'writer' && !idx.iconFields?.get(s.slot)?.has(s.items.join(' ')))
@@ -23,35 +20,14 @@ export function checkW06({ R, view, idx }) {
   for (const p of view.pages)
     p.body.forEach((t, i) => entries.push({ where: `${p.page} (body ${i + 1})`, text: t }))
   for (const s of view.seo) entries.push({ where: `${s.page} (description)`, text: s.description })
-  const grams = new Map()
-  const whole = new Map()
-  let n = 0
-  for (const e of entries) {
-    for (const sentence of sentencesOf(e.text)) {
-      const words = wordsOf(sentence)
-      const id = n++
-      let hit = null
-      const full = words.join(' ')
-      if (words.length >= MIN_EQUAL_WORDS && whole.has(full) && !isFact(full))
-        hit = { other: whole.get(full), run: full }
-      for (let i = 0; !hit && i + RUN_WORDS <= words.length; i++) {
-        const run = words.slice(i, i + RUN_WORDS).join(' ')
-        if (grams.has(run) && grams.get(run).id !== id && !isFact(run)) hit = { other: grams.get(run), run }
-      }
-      if (hit)
-        R.w06.fail(
-          e.where,
-          `${e.where}: "${clip(words)}" repeats ${hit.other.where}: shared run "${hit.run}"`,
-          'repeat'
-        )
-      else R.w06.ok()
-      if (words.length >= MIN_EQUAL_WORDS && !whole.has(full)) whole.set(full, { id, where: e.where })
-      for (let i = 0; i + RUN_WORDS <= words.length; i++) {
-        const run = words.slice(i, i + RUN_WORDS).join(' ')
-        if (!grams.has(run)) grams.set(run, { id, where: e.where })
-      }
-    }
-  }
+  for (const { entry: e, words, hit } of repeatsOf(entries, { facts: idx?.facts?.values() ?? [] }))
+    if (hit)
+      R.w06.fail(
+        e.where,
+        `${e.where}: "${clip(words)}" repeats ${hit.other.where}: shared run "${hit.run}"`,
+        'repeat'
+      )
+    else R.w06.ok()
 }
 
 export function checkW07({ R, view, idx }) {

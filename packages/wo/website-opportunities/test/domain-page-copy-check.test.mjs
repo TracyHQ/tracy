@@ -3,6 +3,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { charCount, checkPageCopy, fieldValueProblems } from '../domain/page-copy-check.mjs'
+import { inventedDataOf } from '../domain/page-writer-data-guard.mjs'
 
 const heading = { name: 'heading', type: 'text', kind: 'editorial.heading', limit: 30 }
 const codes = (field, value, context) => fieldValueProblems(field, value, context).map((p) => p.code)
@@ -94,7 +95,7 @@ test('copy cannot carry a phone, an email, a link or a price the plan data does 
     'desk@brindlewick.example',
     'https://brindlewick.example/book',
     'Junior coaching',
-    '45'
+    '£45 a term'
   ]
   const smuggled = (value) => codes({ ...heading, limit: 200 }, value, { known })
   assert.deepEqual(smuggled('Call +1 555 0100 today'), ['invented_data'])
@@ -107,7 +108,60 @@ test('copy cannot carry a phone, an email, a link or a price the plan data does 
   assert.deepEqual(smuggled('Write to DESK@brindlewick.example'), [])
   assert.deepEqual(smuggled('Book at brindlewick.example/book'), [])
   assert.deepEqual(smuggled('Junior coaching from £45'), [])
-  assert.deepEqual(smuggled('Open since 2008, four courts'), [])
+  assert.deepEqual(smuggled('Four courts, all weather'), [])
   const problem = fieldValueProblems({ ...heading, limit: 200 }, 'Call +1 555 0100', { known })[0]
   assert.match(problem.message, /phone/)
+})
+
+const what = (value, known) => inventedDataOf(value, known).map((f) => f.what)
+
+test('a price in copy is proven only by a known price: same amount, same currency, never a bare number', () => {
+  assert.deepEqual(what('Lessons from $9', ['Mon 9:00 to 10:00']), ['price'])
+  assert.deepEqual(what('Lessons from $2010', ['Founded in 2010']), ['price'])
+  assert.deepEqual(what('Hire a court for $5', ['5 rounds of pads']), ['price'])
+  assert.deepEqual(what('Classes from 20 AUD', ['A 20 minute class']), ['price'])
+  assert.deepEqual(what('Classes from €20', ['Classes from $20']), ['price'])
+  assert.deepEqual(what('Membership €1.200 a year', ['Membership €1,200']), [])
+  assert.deepEqual(what('Membership 1.200,00 € a year', ['Membership €1,200']), [])
+  assert.deepEqual(what('Court hire $20.50 an hour', ['$20.5']), [])
+  assert.deepEqual(what('Court hire $18 an hour', ['Court hire from $18 an hour']), [])
+})
+
+test('copy cannot carry opening hours, a year, a count or an award the plan data does not hold', () => {
+  const known = ['Mo-Fr 07:00-22:00; Sa 08:00-18:00', 'Founded in 1987', 'Ages 6 to 15', '4.8']
+  assert.deepEqual(what('Open from 7am to 10pm on weekdays', known), [])
+  assert.deepEqual(what('Courts open at 06:30', known), ['hours'])
+  assert.deepEqual(what('We are open 24/7', known), ['hours'])
+  assert.deepEqual(what('Open 24 hours', known), ['hours'])
+  assert.deepEqual(what('Coaching since 1987', known), [])
+  assert.deepEqual(what('Coaching since 1998', known), ['year'])
+  assert.deepEqual(what('Juniors aged 6 to 15', known), [])
+  assert.deepEqual(what('Over 500+ members', known), ['number'])
+  assert.deepEqual(what('Rated 4.8 by players', known), [])
+  assert.deepEqual(what('An award-winning club', known), ['award'])
+  assert.deepEqual(what('Certified coaches on every court', known), ['award'])
+  assert.deepEqual(what('Coached by a national champion', known), ['award'])
+  assert.deepEqual(what('Certified coaches on every court', [...known, 'All coaches are certified']), [])
+  assert.deepEqual(what('Open 24 hours', ['Open 24 hours']), [])
+})
+
+test('copy never describes the page or a section of it', () => {
+  for (const value of [
+    'On this page you will find our classes',
+    'This section shows our coaches',
+    'Here you can find prices'
+  ])
+    assert.deepEqual(codes({ ...heading, limit: 200 }, value), ['about_the_page'], value)
+  assert.deepEqual(codes({ ...heading, limit: 200 }, 'Coaching for every level'), [])
+})
+
+test('copy never uses a phrase the business voice avoids', () => {
+  const avoid = ['cheap', 'world class']
+  assert.deepEqual(codes({ ...heading, limit: 200 }, 'World-class coaching', { avoid }), ['avoided_phrase'])
+  assert.deepEqual(codes({ ...heading, limit: 200 }, 'Coaching for every level', { avoid }), [])
+  assert.deepEqual(
+    codes({ ...heading, limit: 200 }, 'Cheaper by the term', { avoid }),
+    [],
+    'whole words only'
+  )
 })

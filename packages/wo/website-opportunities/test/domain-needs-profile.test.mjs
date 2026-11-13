@@ -312,3 +312,27 @@ test('an unreadable model reply or research with no source stops the step with a
   const profile = await buildNeedsProfile({ research, model: fenced })
   assert.equal(profile.items.service.length, 4)
 })
+
+test('the business voice is kept: its own words only when a source says them, the summary and the avoid list', () => {
+  const { research, reading } = club()
+  reading.voice = {
+    summary: 'Friendly and practical, for families and adult beginners.',
+    ownWords: ['rackets up', 'Junior coaching is back', 'world famous coaching'],
+    avoid: ['elite', 'cheap']
+  }
+  const profile = needsProfileOf(research, reading)
+  assert.deepEqual(profile.voice, {
+    summary: 'Friendly and practical, for families and adult beginners.',
+    ownWords: ['rackets up', 'Junior coaching is back'],
+    avoid: ['elite', 'cheap']
+  })
+  assert.ok(
+    profile.dropped.some((d) => d.code === 'voice_words_not_found' && d.value === 'world famous coaching'),
+    'own words no source says are dropped'
+  )
+  assert.equal(
+    'voice' in needsProfileOf(research, club().reading),
+    false,
+    'a reading without voice adds no key'
+  )
+})

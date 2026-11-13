@@ -122,3 +122,9 @@ test('every page carries a title and a description within their limits, never a 
   contact.seo.title = 'A'.repeat(61)
   assert.deepEqual(codes(order).at(-1), ['seo_title_over_limit', 'contact'])
 })
+
+test('two pages never share a title', () => {
+  const order = orderOf()
+  order.pages[2].seo.title = order.pages[1].seo.title.toUpperCase()
+  assert.deepEqual(codes(order), [['seo_title_not_unique', 'contact']])
+})

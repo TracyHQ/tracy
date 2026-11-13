@@ -90,10 +90,15 @@ export function pageProblems(order, report) {
   const anyImage =
     list(order?.pictures).some((p) => p.source === 'own' || p.source === 'generated') ||
     order?.look?.logo?.kind === 'own'
+  const titles = new Map()
   for (const page of list(order?.pages)) {
     const { title, description, shareImage } = page.seo ?? {}
     if (!isText(title)) report('seo_title_empty', page.id, 'every page has a title')
     else {
+      const key = title.trim().toLowerCase()
+      if (titles.has(key))
+        report('seo_title_not_unique', page.id, `page ${titles.get(key)} has the same title`)
+      else titles.set(key, page.id)
       if (length(title) > limits.title)
         report('seo_title_over_limit', page.id, `${length(title)} characters for ${limits.title}`)
       if (/^(.+) \| \1$/.test(title)) report('seo_title_repeated', page.id, 'a title never repeats one name')

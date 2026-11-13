@@ -203,16 +203,25 @@ export const HEADINGS = {
   'class-passes': ['Studio passes', 'Ten visits, shared with a friend.']
 }
 
-/** A scripted page writer: each slot key it is asked gets the text `write(key, slot)` gives, cut to its limit. */
+/** Two letters per number (`aa`, `ab`, ...): a word that is never a repeat and holds no digit. */
+const lettersOf = (n) => String.fromCharCode(97 + (Math.floor(n / 26) % 26), 97 + (n % 26))
+
+/**
+ * A scripted page writer: each slot key it is asked gets the text `write(key, slot)` gives, cut to its limit. Asked to
+ * rewrite a field (a repeat of another page or field, #594), it answers as a model that obeys: a short text of its own.
+ */
 export const scriptedWriter = (write) => {
   const calls = []
+  let rewrites = 0
   const model = async (request) => {
     calls.push(request)
     const user = JSON.parse(request.user)
     const fields = {}
     for (const block of user.blocks)
       for (const slot of block.fields) {
-        const text = write(slot.key, slot) ?? 'Calm practice'
+        const text = user.rewrite
+          ? `Item ${lettersOf(rewrites++)}`
+          : (write(slot.key, slot) ?? 'Calm practice')
         fields[slot.key] = text.slice(0, slot.limit ?? text.length)
       }
     return JSON.stringify({ fields })

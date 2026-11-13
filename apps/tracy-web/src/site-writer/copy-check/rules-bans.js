@@ -3,21 +3,14 @@ import { allTexts } from './copy-view.js'
 import { bannedPhrases } from '../../lib/site-copy/inputs-index.js'
 import { hasPhrase } from '../../lib/site-copy/text-tools.js'
 import { ALT_MAX } from '../../lib/site-copy/slot-shape.js'
+import { selfDescribingOf } from 'website-opportunities/domain/copy-repeats.mjs'
 
 export { ALT_MAX }
 export const TITLE_MAX = 60
 export const DESCRIPTION_MAX = 160
 
-// W10: sentences that describe the page or the section itself instead of the business. Case-insensitive.
-export const SELF_DESCRIBING = [
-  /\bthis (section|page|block|row|card|banner|layout|template)\b/i,
-  /\bhere you (will|can) find\b/i,
-  /\b(show|shows|showing) the shape of\b/i,
-  /\bmade to show\b/i,
-  /\b(section|block|page) (above|below)\b/i,
-  /\bdemo (text|content)\b/i,
-  /\blorem ipsum\b/i
-]
+// W10: sentences that describe the page or the section itself, shared with the AI quickstart page writer.
+export { SELF_DESCRIBING } from 'website-opportunities/domain/copy-repeats.mjs'
 
 // U+2014 and U+2013, built from code points so this file holds no long dash itself.
 const LONG_DASH = new RegExp(`[${String.fromCharCode(0x2014)}${String.fromCharCode(0x2013)}]`, 'g')
@@ -81,9 +74,9 @@ export function checkW09({ R, view, idx }) {
 
 export function checkW10({ R, view }) {
   for (const t of allTexts(view).filter(isWritten)) {
-    const hit = SELF_DESCRIBING.map((re) => re.exec(t.text)).find(Boolean)
+    const hit = selfDescribingOf(t.text)
     if (hit)
-      R.w10.fail(t.where, `${t.where}: sentence describes the page itself ("${hit[0]}")`, 'self-describing')
+      R.w10.fail(t.where, `${t.where}: sentence describes the page itself ("${hit}")`, 'self-describing')
     else R.w10.ok()
   }
 }

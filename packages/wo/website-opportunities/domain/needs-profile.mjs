@@ -22,6 +22,7 @@ import { modelObservations, structuredObservations } from './needs-profile-obser
 import { questionsOf, siteLanguageOf } from './needs-profile-questions.mjs'
 import { kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
 import { mergeRows } from './needs-profile-rows.mjs'
+import { voiceOf } from './needs-profile-voice.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
 /** The draft prompt (product owner review: #600). Its hash is recorded on every profile it made. */
@@ -105,7 +106,8 @@ export function readModelReply(reply) {
 /**
  * The needs profile from research and the model's reading of it. Pure: the same inputs give the same profile.
  * @param {{sources: object[]}} research
- * @param {{facts?: object[], items?: object[], pictures?: object[], languages?: object[]}} reading
+ * @param {{facts?: object[], items?: object[], pictures?: object[], languages?: object[], voice?: object}} reading
+ *   `voice` (optional): the business's own voice (`needs-profile-voice.mjs`), kept on the profile as `voice`
  * @param {{blockStore?: object, library?: object[]}} [template] the template's block store and the Tracy library, when
  *   known: a typed answer and every offered choice then fit the template's fields (`answer-field-limits.mjs`)
  */
@@ -143,6 +145,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
   const asked = new Map(
     accounting.map((a) => [a.conflict, a.question ? { question: a.question } : { notAsked: a.reason }])
   )
+  const voice = voiceOf(reading?.voice, sources)
   const unread = language.unread.map(({ source, said: word, from }) => ({
     from,
     source,
@@ -161,9 +164,17 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     facts,
     items,
     ...(rows.length ? { rows } : {}),
+    ...(voice.voice ? { voice: voice.voice } : {}),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
     questions,
-    dropped: [...unusableSourcesOf(research), ...structured.dropped, ...read.dropped, ...unread, ...notes]
+    dropped: [
+      ...unusableSourcesOf(research),
+      ...structured.dropped,
+      ...read.dropped,
+      ...voice.dropped,
+      ...unread,
+      ...notes
+    ]
   }
 }
 

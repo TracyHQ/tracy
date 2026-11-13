@@ -18,6 +18,9 @@
 // - A quote is at least `MIN_EVIDENCE_CHARS` letters and digits long.
 import { textKey, urlKey } from './needs-profile-merge.mjs'
 import { phonesIn, samePhone } from './needs-profile-phone.mjs'
+import { currencies, priceIn, tokenKey, withoutMoney } from './price-in.mjs'
+
+export { tokenKey } from './price-in.mjs'
 
 export const MIN_EVIDENCE_CHARS = 4
 /** Item fields the model may word itself, under the summary guard. */
@@ -35,83 +38,21 @@ const linkless = (value) =>
   lower(value)
     .replace(/https?:\/\//g, '')
     .replace(/\bwww\./g, '')
-const currencies = (value) => String(value).match(/\p{Sc}/gu) ?? []
 const numbers = (value) => String(value).match(/\d+/g) ?? []
 const wordsOf = (value) => new Set(textKey(value).split(' '))
-/**
- * The words of a text as whole tokens: a number keeps its separators (`18:00`, `7.30`, `1,200`), so part of a number is
- * never a token of its own (`00 to 20` is not inside `18:00 to 20:00`). Case, accents and other punctuation aside.
- */
-export const tokenKey = (value) =>
-  (
-    String(value)
-      .normalize('NFKD')
-      .replace(/\p{M}+/gu, '')
-      .toLowerCase()
-      .match(/\p{N}+(?:[:.,]\p{N}+)*|\p{L}+/gu) ?? []
-  ).join(' ')
 /** Whether the words of `value` stand, whole and in order, inside the words of `evidence`. */
 export const tokensIn = (value, evidence) => {
   const key = tokenKey(value)
   return key !== '' && ` ${tokenKey(evidence)} `.includes(` ${key} `)
 }
 
-const NUMBER = String.raw`\d+(?:[.,']\d+)*`
-const CURRENCY = String.raw`\p{Sc}|(?<!\p{L})(?:USD|EUR|GBP|AUD|CAD|CHF|JPY|AED|SGD|NZD|HKD|INR|VND|SEK|NOK|DKK|PLN|CZK|BRL|MXN|ZAR)(?!\p{L})`
-const CURRENCY_WORD = String.raw`(?:dollars?|euros?|pounds?|dirhams?|francs?|yen|rupees?|kronor|kroner|reais|dong)(?!\p{L})`
-/** An amount written as money: a currency sign or code before or after it, or a currency word after it. */
-const MONEY = new RegExp(
-  String.raw`(?:${CURRENCY})\s?(${NUMBER})|(${NUMBER})\s?(?:${CURRENCY}|${CURRENCY_WORD})`,
-  'giu'
-)
+/** A clock time candidate: hours, then minutes or am/pm (a bare number is not a time; `timesOf` skips it). */
+export const TIME_PATTERN = /\b(\d{1,2})(?:[:.h](\d{2}))?\s*(a\.?m\.?|p\.?m\.?)?(?![\d])/gi
 
-/**
- * The value of one written number: one or two digits after the last separator are the decimals (`20.5`, `15,00`); a
- * group of exactly three digits after a separator groups thousands (`1,200`, `1.200`). Any other grouping (`1,2345`)
- * is no amount (NaN), so it proves nothing.
- */
-function amountOf(written) {
-  const groups = written.split(/[.,']/)
-  if (groups.length === 1) return Number(written)
-  const last = groups.at(-1)
-  const decimals = last.length <= 2
-  const whole = decimals ? groups.slice(0, -1) : groups
-  const grouped = whole.length === 1 || (whole[0].length <= 3 && whole.slice(1).every((g) => g.length === 3))
-  if (!grouped || (!decimals && last.length !== 3)) return Number.NaN
-  return Number(whole.join('')) + (decimals ? Number(last) / 10 ** last.length : 0)
-}
-
-/** Every number written in `text`, as an amount. */
-const amountsOf = (text) => (String(text).match(new RegExp(NUMBER, 'g')) ?? []).map(amountOf)
-/** The amounts `text` writes as money only (`$35`, `15,00 €`, `20 EUR`, `20 dollars`). */
-const moneyIn = (text) => [...String(text).matchAll(MONEY)].map((m) => amountOf(m[1] ?? m[2]))
-/** `text` with every amount written as money taken out: a year or a name is never proven by a price. */
-const withoutMoney = (text) => String(text).replace(MONEY, ' ')
-
-/**
- * Whether a price `value` is in `evidence`: each of its amounts written as MONEY in the quote (never an equal number
- * that is not a price, `20` in "a 20 minute class"), its currency signs and its words.
- */
-function priceIn(rawValue, rawEvidence) {
-  // A space, a no-break space or a narrow no-break space may group thousands (`1 200 €` is `€1,200`).
-  const joined = (text) => String(text).replace(/(?<=\d)[ \u00a0\u202f](?=\d{3}(?!\d))/gu, '')
-  const [value, evidence] = [joined(rawValue), joined(rawEvidence)]
-  const amounts = amountsOf(value)
-  const quoted = new Set(moneyIn(evidence))
-  const words = tokenKey(evidence).split(' ')
-  const ownWords = tokenKey(value).match(/\p{L}+/gu) ?? []
-  return (
-    amounts.length > 0 &&
-    amounts.every((a) => quoted.has(a)) &&
-    currencies(value).every((c) => evidence.includes(c)) &&
-    ownWords.every((w) => words.includes(w))
-  )
-}
-
-/** The times written in `text`, in minutes after midnight: `07:00`, `7.30`, `7am`, `10 pm`. */
-function timesOf(text) {
+/** The times written in `text`, in minutes after midnight: `07:00`, `7.30`, `7am`, `10 pm`. Shared with the copy guard. */
+export function timesOf(text) {
   const times = []
-  for (const m of String(text).matchAll(/\b(\d{1,2})(?:[:.h](\d{2}))?\s*(a\.?m\.?|p\.?m\.?)?(?![\d])/gi)) {
+  for (const m of String(text).matchAll(TIME_PATTERN)) {
     const [, h, min, half] = m
     if (min === undefined && !half) continue
     let hour = Number(h) % (half ? 12 : 24)

@@ -149,7 +149,8 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
           ? orderPages[0].seo.shareImage
           : null,
       logo: orderLook?.logo,
-      limits
+      limits,
+      written: written.get(page.id)?.seo
     })
   const unplaced = [...writtenByPlace.entries()]
     // A row field the writer leaves to the pictures or the icon step is held by `pictures` or `icons`.

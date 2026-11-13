@@ -323,8 +323,13 @@ export {
   PAGE_WRITE_ATTEMPTS,
   PageWriterError,
   readWriterReply,
+  readWriterSeo,
   writePages
 } from './page-writer.mjs'
+export { siteCopyError, siteCopyFailing } from './page-writer-site-check.mjs'
+export { inventedDataOf } from './page-writer-data-guard.mjs'
+export { voiceOf } from './needs-profile-voice.mjs'
+export { seoLimitsOf } from './seo-limits.mjs'
 export {
   blockDescriptionsOf,
   pageFieldsOf,

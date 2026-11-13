@@ -4,6 +4,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { PAGE_WRITER_PROMPT, PageWriterError, writePages } from '../domain/page-writer.mjs'
+import { siteCopyError } from '../domain/page-writer-site-check.mjs'
 import { composePlan } from '../domain/plan-composer.mjs'
 import {
   blockStore,
@@ -187,4 +188,156 @@ test('an unreadable reply sends every field back once; a failing model call is a
     writePages({ plan, profile, blockStore: blockStore(), library: library(), model: broken }),
     (error) => error instanceof PageWriterError && error.code === 'writer_call_failed'
   )
+})
+
+/** Answers like `answer`, with the page's search details from `seo(user)` when the call asks for them. */
+const withSeo = (seo, override) => (request) => {
+  const user = JSON.parse(request.user)
+  const out = JSON.parse(answer(override)(request))
+  return JSON.stringify(user.seo ? { ...out, seo: seo(user) } : out)
+}
+
+test('the writer follows the business voice: the profile voice reaches every call, its avoid list is held', async () => {
+  const { plan, profile } = await approvedPlan()
+  profile.voice = { summary: 'Warm and practical.', ownWords: ['rackets up'], avoid: ['elite'] }
+  const seen = {}
+  const model = overlappingModel((request) => {
+    const page = pageOf(request)
+    seen[page] = (seen[page] ?? 0) + 1
+    return answer((f) => (f.key === 'home-b2/heading' && seen[page] === 1 ? 'Elite coaching' : undefined))(
+      request
+    )
+  })
+  const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
+  for (const call of model.calls) assert.deepEqual(JSON.parse(call.user).voice, profile.voice)
+  const rewrite = JSON.parse(model.calls.filter((c) => pageOf(c) === 'home')[1].user).rewrite
+  assert.deepEqual(
+    rewrite.map((r) => r.key),
+    ['home-b2/heading']
+  )
+  assert.match(rewrite[0].problems[0], /avoids/)
+  assert.notEqual(pages[0].fields.find((f) => f.key === 'home-b2/heading').value, 'Elite coaching')
+  assert.match(PAGE_WRITER_PROMPT, /never about the page/)
+  assert.match(PAGE_WRITER_PROMPT, /contact channel/)
+})
+
+test('a sentence another page already says is rewritten on the later page, once; still repeated is a typed error', async () => {
+  const { plan, profile } = await approvedPlan()
+  const SAME = 'Coaching for all ages here'
+  const seen = {}
+  const model = overlappingModel((request) => {
+    const page = pageOf(request)
+    seen[page] = (seen[page] ?? 0) + 1
+    return answer((f) =>
+      (f.key === 'home-b2/heading' || f.key === 'team-b1/heading') && seen[page] === 1 ? SAME : undefined
+    )(request)
+  })
+  const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
+  assert.equal(model.calls.length, WRITTEN.length + 1, 'only the later page is called again')
+  const again = JSON.parse(model.calls.at(-1).user)
+  assert.equal(again.page.id, 'team')
+  assert.deepEqual(
+    again.rewrite.map((r) => r.key),
+    ['team-b1/heading']
+  )
+  assert.match(again.rewrite[0].problems[0], /repeats home: home-b2\/heading/)
+  assert.equal(pages[0].fields.find((f) => f.key === 'home-b2/heading').value, SAME)
+  const stubborn = overlappingModel(
+    answer((f) => (f.key === 'home-b2/heading' || f.key === 'team-b1/heading' ? SAME : undefined))
+  )
+  await assert.rejects(
+    writePages({ plan, profile, blockStore: blockStore(), library: library(), model: stubborn }),
+    (error) => {
+      assert.equal(error.code, 'copy_check_failed')
+      assert.deepEqual(
+        error.details.failing.map((f) => [f.page, f.key, f.problems[0].code]),
+        [['team', 'team-b1/heading', 'repeated_copy']]
+      )
+      return true
+    }
+  )
+})
+
+test('copy of pages written by another writer step is held against this page', async () => {
+  const { plan, profile } = await approvedPlan()
+  const SAME = 'Coaching for every age'
+  const others = [{ id: 'home', fields: [{ key: 'home-b2/heading', from: 'writer', value: SAME }] }]
+  const model = overlappingModel(answer((f) => (f.key === 'team-b1/heading' ? SAME : undefined)))
+  const team = plan.pages.find((p) => p.id === 'team')
+  await assert.rejects(
+    writePages({
+      plan: { ...plan, pages: [team] },
+      profile,
+      blockStore: blockStore(),
+      library: library(),
+      model,
+      others
+    }),
+    (error) =>
+      error.code === 'copy_check_failed' && error.details.failing[0].problems[0].code === 'repeated_copy'
+  )
+  assert.equal(model.calls.length, 2)
+})
+
+test('the writer writes each page search title and description within the template limits, unique across pages', async () => {
+  const { plan, profile } = await approvedPlan()
+  const mapping = { seo: { titleLimit: 40, descriptionLimit: 120 } }
+  const seen = {}
+  const model = overlappingModel((request) => {
+    const page = pageOf(request)
+    seen[page] = (seen[page] ?? 0) + 1
+    return withSeo((user) =>
+      user.page.id === 'team' && seen[page] === 1
+        ? { title: 'Brindlewick Tennis Club', description: 'x'.repeat(121) }
+        : user.page.id === 'team'
+          ? { title: 'Coaches of Brindlewick Tennis Club', description: 'Meet the coaches of the club.' }
+          : { title: 'Brindlewick Tennis Club', description: 'Tennis lessons and court hire in Fernhollow.' }
+    )(request)
+  })
+  const { pages } = await writePages({
+    plan,
+    profile,
+    blockStore: blockStore(),
+    library: library(),
+    mapping,
+    model
+  })
+  const first = JSON.parse(model.calls[0].user)
+  assert.deepEqual(first.seo, { titleLimit: 40, descriptionLimit: 120 })
+  const again = JSON.parse(model.calls.at(-1).user)
+  assert.equal(again.page.id, 'team')
+  assert.deepEqual(again.rewrite.map((r) => [r.key, r.problems.length]).sort(), [
+    ['seo.description', 1],
+    ['seo.title', 1]
+  ])
+  assert.deepEqual(again.seo, { titleLimit: 40, descriptionLimit: 120 })
+  assert.deepEqual(pages.find((p) => p.id === 'home').seo, {
+    title: 'Brindlewick Tennis Club',
+    description: 'Tennis lessons and court hire in Fernhollow.'
+  })
+  assert.equal(pages.find((p) => p.id === 'team').seo.title, 'Coaches of Brindlewick Tennis Club')
+  assert.equal(pages.find((p) => p.id === 'contact').seo, undefined, 'a page with no call has no written seo')
+})
+
+test('after parallel writer steps, the site check names the later page to write again', async () => {
+  const { plan, profile } = await approvedPlan()
+  const written = await writePages({
+    plan,
+    profile,
+    blockStore: blockStore(),
+    library: library(),
+    model: overlappingModel(answer())
+  })
+  assert.equal(siteCopyError({ pages: written.pages, profile }), null)
+  const [home, team] = written.pages
+  home.fields.find((f) => f.key === 'home-b2/heading').value = 'Coaching for all ages here'
+  team.fields.find((f) => f.key === 'team-b1/heading').value = 'Coaching for all ages here'
+  const error = siteCopyError({ pages: written.pages, profile })
+  assert.ok(error instanceof PageWriterError)
+  assert.equal(error.code, 'site_copy_failed')
+  assert.equal(error.noRerun, undefined)
+  assert.deepEqual(error.details.pages, ['team'])
+  assert.deepEqual(error.details.failing, [
+    { page: 'team', key: 'team-b1/heading', problems: [{ code: 'repeated_copy' }] }
+  ])
 })

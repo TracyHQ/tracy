@@ -13,6 +13,7 @@
 // (a heading `#`, a list `-`, `*`, `+` or `1.` or a quote `>` at the start, `**strong**`, `__strong__`, `*soft*`,
 // a `code` span, a `[link](target)`), no line break (LF, CR, U+2028, U+2029) and no other control character. A value
 // made only of spaces and invisible characters (zero width, format characters, fillers) is empty.
+import { selfDescribingOf } from './copy-repeats.mjs'
 import { tokensIn } from './needs-profile-grounding.mjs'
 import { inventedDataOf } from './page-writer-data-guard.mjs'
 
@@ -45,10 +46,11 @@ export const charCount = (value) => [...String(value)].length
  * @param {unknown} value what the model wrote
  * @param {{known?: string[], foreign?: string[]}} [context] `known`: every value of the plan data, so copy never carries
  *   an invented phone number, email address, URL or price (`page-writer-data-guard.mjs`); `foreign`: for a child list
- *   row's copy field, the values of the other rows, none of which it may carry (whole words, `tokensIn`)
+ *   row's copy field, the values of the other rows, none of which it may carry (whole words, `tokensIn`); `avoid`: the
+ *   phrases the business's voice avoids (needs profile `voice.avoid`), none of which copy may use (whole words)
  * @returns {Array<{code: string, message: string}>}
  */
-export function fieldValueProblems(field, value, { known, foreign } = {}) {
+export function fieldValueProblems(field, value, { known, foreign, avoid } = {}) {
   if (!WRITER_FIELD_TYPES.includes(field?.type))
     return [{ code: 'not_a_copy_field', message: `a ${field?.type} field is not written by the writer` }]
   if (value === undefined || value === null)
@@ -82,6 +84,18 @@ export function fieldValueProblems(field, value, { known, foreign } = {}) {
       problems.push({
         code: 'invented_data',
         message: `the ${what} ${JSON.stringify(text)} is not in the business data: remove it, the data fields show it`
+      })
+  const about = selfDescribingOf(value)
+  if (about)
+    problems.push({
+      code: 'about_the_page',
+      message: `${JSON.stringify(about)} describes the page itself: write about the business, never about the page or a section`
+    })
+  for (const phrase of avoid ?? [])
+    if (tokensIn(phrase, value))
+      problems.push({
+        code: 'avoided_phrase',
+        message: `${JSON.stringify(phrase)} is a phrase the business avoids: say it another way`
       })
   for (const other of foreign ?? [])
     if (tokensIn(other, value))
