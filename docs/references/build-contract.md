@@ -1,5 +1,5 @@
 ---
-description: Format of Contract B, what the build engine and the chat exchange (build plan, progress events, outcome, questions and answers, plan edits), and the contract check that validates it in CI.
+description: Format of Contract B, what the build engine and the chat exchange (build plan, progress events, outcome, questions and answers, plan edits, change requests and plan revisions), and the contract check that validates it in CI.
 sources:
   - packages/wo/website-opportunities/domain/build-contract.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan.mjs
@@ -8,6 +8,7 @@ sources:
   - packages/wo/website-opportunities/domain/build-contract-shapes.mjs
   - packages/wo/website-opportunities/domain/build-contract-scenario-runs.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan-edit.mjs
+  - packages/wo/website-opportunities/domain/build-contract-plan-request.mjs
   - packages/wo/website-opportunities/domain/build-contract-questions.mjs
   - packages/wo/website-opportunities/domain/build-contract-run.mjs
   - scripts/build-contract/check.mjs
@@ -15,7 +16,7 @@ sources:
   - docs/adr/0047-a-failing-build-step-stops-and-reports.md
 ---
 
-# Contract B: build plan, progress, outcome, questions and plan edits
+# Contract B: build plan, progress, outcome, questions, plan edits and change requests
 
 Contract B (#575) is what the build engine and the chat exchange when a site is built from an AI quickstart
 ([ADR 0045](../adr/0045-sites-are-built-from-an-ai-quickstart-not-from-the-demo.md)). The chat renders only from these
@@ -28,6 +29,8 @@ documents and never reads engine internals. Contract A, the declarations an AI q
 | Answer | `tracy-build-answer/v1` | chat | the customer's choice, free text, or a skip |
 | Build plan | `tracy-build-plan/v1` | engine | everything the customer approves before anything is written |
 | Plan edit | `tracy-build-plan-edit/v1` | chat | a change to one or more plan fields; the partial re-run consumes it |
+| Change request | `tracy-build-plan-request/v1` | chat | what the customer wants changed on the plan, in their own words |
+| Plan revision | `tracy-build-plan-revision/v1` | engine | what a change request changed, and what could not be done and why |
 | Progress event | `tracy-build-progress/v1` | engine | a snapshot of the run's steps while it runs |
 | Outcome | `tracy-build-outcome/v1` | engine | how the run ended: `done` or `stopped` |
 
@@ -257,6 +260,39 @@ An edit is valid only against the plan it applies to (`checkPlanEdit(edit, plan)
   included, so a new `look.template` or `look.logo` value with an extra key is rejected; such a problem is reported at
   `plan <place>` with a message starting "after the edit".
 
+## Change request and plan revision
+
+```json
+{
+  "schema": "tracy-build-plan-request/v1",
+  "id": "request-1",
+  "plan": { "id": "plan-sunrise-tennis", "revision": 2 },
+  "text": "Drop the prices page and add a page about the team."
+}
+```
+
+- `text` is what the customer typed, at most **1000** code points (`request.text`, `PLAN_REQUEST_MAX_LENGTH`). An
+  empty, blank or longer text is refused before any model reads it (`request_empty`, `request_too_long`), and a request
+  for another plan or an older revision is stale (`checkPlanRequest(request, plan)`, `request_stale`).
+- The text is data for the plan, never an instruction: it cannot change a rule of the plan gate.
+
+```json
+{
+  "schema": "tracy-build-plan-revision/v1",
+  "request": "request-1",
+  "plan": { "id": "plan-sunrise-tennis", "revision": 3 },
+  "changed": ["The Prices page is removed.", "A Team page is added."],
+  "notDone": [{ "what": "A blog", "reason": "no_recipe", "why": "Your template has no blog page." }]
+}
+```
+
+- `plan` names the plan the request produced: the next revision, or the same revision when nothing changed.
+- `changed` lists, in sentences the customer reads, every real difference between the two revisions, and only those.
+- `notDone` lists what could not be done, each with a `reason` of the closed set `no_recipe` (the template has no page
+  of that kind), `no_data` (nothing of the business fills that section), `fact_missing` (the business does not have
+  that fact), `kept_private` (the customer keeps it off the site), `outside_plan` (a request cannot change it: values,
+  the look, the language and the pictures count are changed with a plan edit) and `why`, a sentence.
+
 ## Progress events and outcome
 
 A run is the full build after approval (`run: {id, kind: "build"}`) or a partial re-run after a plan edit
@@ -354,6 +390,9 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `plan edit` | `schema`, `id`, `plan`, `changes` |
 | `plan reference` | `id`, `revision` |
 | `change` | `field`, `value` |
+| `plan request` | `schema`, `id`, `plan`, `text` |
+| `plan revision` | `schema`, `request`, `plan`, `changed`, `notDone` |
+| `not done entry` | `what`, `reason`, `why` |
 | `progress event` | `schema`, `planId`, `planRevision`, `run`, `seq`, `elapsedSeconds`, `steps` |
 | `outcome` | `schema`, `planId`, `planRevision`, `run`, `result`, `elapsedSeconds`, `steps`, `stopped?`, `cancelled?` |
 | `run` | `id`, `kind`, `edit?` |
@@ -376,23 +415,26 @@ reason in a sentence or two. A test compares this table with the code.
 | `lists[].name` | 64 | the name of a child list of a block |
 | `pages[].name` | 40 | a page name, what its menu item shows |
 | `sources[].name` | 80 | a source name, of a fact, an item or an alternative |
-| `what` | 80 | a left out entry |
+| `what` | 80 | a left out entry, a not done entry |
 | `detail` | 80 | a choice detail |
 | `placeholder` | 80 | a free text placeholder |
 | `look.template.name` | 80 | the template name |
 | `look.logo.source` | 80 | where an own logo came from |
 | `pictures.own.from[]` | 80 | each source of the own photos |
 | `facts[].value` | 200 | a fact value, and a fact alternative's value |
-| `reason` | 200 | block, left out entry, generated pictures and stop report reasons |
+| `reason` | 200 | block, left out entry, generated pictures and stop report reasons; a not done entry's `why` |
 | `said` | 200 | an assumption |
 | `prompt` | 200 | a question |
+| `request.text` | 1000 | the text of a change request |
+| `changed[]` | 200 | each line of what a change request changed |
 
 ## The contract check
 
 `checkBuildDocument(doc)` (WO domain) checks one document by its `schema`, and `checkBuildScenario(scenario)` a whole
 exchange. Both report **every** problem, each as `{at, message}`, for example
 `runs[0].outcome.steps[write].state: done means every step, ending with the write step, completed; this step is pending`.
-`checkAnswer(answer, question)` and `checkPlanEdit(edit, plan)` check those two against what they belong to.
+`checkAnswer(answer, question)`, `checkPlanEdit(edit, plan)` and `checkPlanRequest(request, plan)` check those three
+against what they belong to.
 
 ```
 node scripts/build-contract/check.mjs               every *.build-scenario.json under packages/ and apps/

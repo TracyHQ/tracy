@@ -8,6 +8,12 @@
 // format is documented in `docs/references/build-contract.md`.
 import { BUILD_PLAN_SCHEMA, buildPlanProblems } from './build-contract-plan.mjs'
 import { checkPlanEdit, PLAN_EDIT_SCHEMA } from './build-contract-plan-edit.mjs'
+import {
+  PLAN_REQUEST_SCHEMA,
+  PLAN_REVISION_SCHEMA,
+  planRequestProblems,
+  planRevisionProblems
+} from './build-contract-plan-request.mjs'
 import { ANSWER_SCHEMA, checkAnswer, QUESTION_SCHEMA, questionProblems } from './build-contract-questions.mjs'
 import { OUTCOME_SCHEMA, outcomeProblems, PROGRESS_SCHEMA, progressProblems } from './build-contract-run.mjs'
 import { runsProblems } from './build-contract-scenario-runs.mjs'
@@ -21,7 +27,10 @@ const SINGLE_DOCUMENTS = {
   [BUILD_PLAN_SCHEMA]: buildPlanProblems,
   [QUESTION_SCHEMA]: questionProblems,
   [PROGRESS_SCHEMA]: progressProblems,
-  [OUTCOME_SCHEMA]: outcomeProblems
+  [OUTCOME_SCHEMA]: outcomeProblems,
+  // A change request is checked on its own (shape and length); `checkPlanRequest` also holds it to its plan.
+  [PLAN_REQUEST_SCHEMA]: planRequestProblems,
+  [PLAN_REVISION_SCHEMA]: planRevisionProblems
 }
 const result = (problems) => ({ ok: problems.length === 0, problems })
 

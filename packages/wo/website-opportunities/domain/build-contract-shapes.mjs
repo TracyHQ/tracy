@@ -52,6 +52,9 @@ export const CONTRACT_SHAPES = Object.freeze({
   'plan edit': shape(['schema', 'id', 'plan', 'changes']),
   'plan reference': shape(['id', 'revision']),
   change: shape(['field', 'value']),
+  'plan request': shape(['schema', 'id', 'plan', 'text']),
+  'plan revision': shape(['schema', 'request', 'plan', 'changed', 'notDone']),
+  'not done entry': shape(['what', 'reason', 'why']),
   'progress event': shape(['schema', 'planId', 'planRevision', 'run', 'seq', 'elapsedSeconds', 'steps']),
   outcome: shape(
     ['schema', 'planId', 'planRevision', 'run', 'result', 'elapsedSeconds', 'steps'],
@@ -78,7 +81,9 @@ export const TEXT_LIMITS = Object.freeze({
   'facts[].value': 200,
   reason: 200,
   said: 200,
-  prompt: 200
+  prompt: 200,
+  'request.text': 1000,
+  'changed[]': 200
 })
 
 /** The length a customer sees: code points, so one emoji counts once. */

@@ -28,6 +28,10 @@ const CONTACT_CHOICES = Object.freeze({
   link: 'Your booking or contact link'
 })
 
+/** The left out reason of a contact method chosen without its value; a later plan revision keeps the entry. */
+export const CONTACT_VALUE_MISSING_REASON =
+  'You chose how visitors reach you but gave no value yet, so none is shown. Add it on the plan.'
+
 const answered = (value) => ({ value, sources: [ANSWER_SOURCE], confidence: 'single-source' })
 
 /** The value and sources an answer gives to a conflict: the chosen value's own, or the typed text's. */
@@ -136,8 +140,7 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
         leftOut.push({
           what: CONTACT_CHOICES[answer.choice] ?? 'Your contact detail',
           kind: 'feature',
-          reason:
-            'You chose how visitors reach you but gave no value yet, so none is shown. Add it on the plan.'
+          reason: CONTACT_VALUE_MISSING_REASON
         })
       else settled.facts[contactKindOf(answer.text.trim())] = [answered(answer.text.trim())]
     } else if (question.topic === 'site-language') {

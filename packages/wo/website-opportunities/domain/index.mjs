@@ -162,6 +162,14 @@ export { CONTACT_CHANNEL_KINDS, detailSubjectOf, pageRuleProblems } from './plan
 export { droppedPeopleProblems, peopleBlockFor } from './plan-gate-people.mjs'
 export { WITHHELD_REASON, withheldIdsOf, withheldOfBrief, withWithheld } from './plan-withheld.mjs'
 export { gateEditedPlan } from './plan-edit-gate.mjs'
+export {
+  NOT_DONE_REASONS,
+  PLAN_REQUEST_MAX_LENGTH,
+  PLAN_REQUEST_SCHEMA,
+  PLAN_REVISION_SCHEMA,
+  checkPlanRequest
+} from './build-contract-plan-request.mjs'
+export { NOTHING_TO_CHANGE, PLAN_REQUEST_PROMPT_FILE, revisePlan } from './plan-request.mjs'
 export { ANSWER_SOURCE, settleAnswers } from './plan-answers.mjs'
 export { dataAccountingOf } from './plan-accounting.mjs'
 export { conflictAssumptionsOf } from './plan-conflicts.mjs'
