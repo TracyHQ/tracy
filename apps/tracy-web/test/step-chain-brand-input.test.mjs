@@ -8,6 +8,7 @@ import { test } from 'node:test'
 import { createStepChainSteps } from '../src/step-chain-steps.js'
 
 const brief = { brand: { name: 'Harrow Lane Bakery', colorsFrom: 'logo' } }
+const LOGO = path.join(tmpdir(), 'invented-logo.png')
 const kit = { ref: 'example-court/j6/1.0.0' }
 
 async function setup() {
@@ -64,7 +65,7 @@ test('a brief is stored in the run folder, passed as a brief file with the logo,
   try {
     const ctx = {
       runId: 'file-run',
-      brief: { researchBrief: brief, logoFile: 'invented-logo.png' },
+      brief: { researchBrief: brief, logoFile: LOGO },
       normalized: {}
     }
     await steps.brand(ctx, { kit }, how(1))
@@ -76,7 +77,7 @@ test('a brief is stored in the run folder, passed as a brief file with the logo,
     assert.equal(second[second.indexOf('--brief-file') + 1], file)
     assert.equal(runs[1].text, runs[0].text)
     assert.equal(first.includes('--brief-revision'), false)
-    assert.equal(first[first.indexOf('--logo-file') + 1], path.resolve('invented-logo.png'))
+    assert.equal(first[first.indexOf('--logo-file') + 1], LOGO)
     assert.deepEqual(first.slice(0, 3), ['run', '--kit', kit.ref])
   } finally {
     await rm(recordsDir, { recursive: true, force: true })
@@ -100,7 +101,8 @@ test('both inputs, or neither, are typed errors that are not run again and start
       [{ researchRevisionId: 'rev-9', researchBrief: brief }, 'brand_input_ambiguous'],
       [{ researchRevisionId: 'rev-9', logoFile: 'x.png' }, 'brand_input_ambiguous'],
       [{}, 'brand_input_missing'],
-      [{ logoFile: 'x.png' }, 'brand_input_missing']
+      [{ logoFile: LOGO }, 'brand_input_missing'],
+      [{ researchBrief: brief, logoFile: 'logos/x.png' }, 'brand_logo_path_relative']
     ]
     for (const [given, code] of cases)
       await assert.rejects(
@@ -108,6 +110,27 @@ test('both inputs, or neither, are typed errors that are not run again and start
         (e) => e.code === code && e.noRerun === true
       )
     assert.deepEqual(runs, [])
+  } finally {
+    await rm(recordsDir, { recursive: true, force: true })
+  }
+})
+
+test('a rerun given another brief than the one stored for its run is a coded error, never the old file', async () => {
+  const { steps, runs, recordsDir } = await setup()
+  try {
+    const ctx = { runId: 'changed-run', brief: { researchBrief: brief }, normalized: {} }
+    await steps.brand(ctx, { kit }, how(1))
+    const changed = {
+      ...ctx,
+      brief: { researchBrief: { brand: { ...brief.brand, name: 'Harrow Lane Cakes' } } }
+    }
+    await assert.rejects(
+      steps.brand(changed, { kit }, how(2)),
+      (e) => e.code === 'brand_brief_changed' && e.noRerun === true
+    )
+    assert.equal(runs.length, 1, 'no bench run on a changed brief')
+    await steps.brand(ctx, { kit }, how(2))
+    assert.equal(runs.length, 2, 'the same brief is the normal rerun')
   } finally {
     await rm(recordsDir, { recursive: true, force: true })
   }

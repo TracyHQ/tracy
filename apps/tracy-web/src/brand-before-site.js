@@ -21,8 +21,9 @@
 import { readFile } from 'node:fs/promises'
 import { BrandStepError, brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
 import { STEP_CHAIN_ATTEMPTS, STEP_CHAIN_NO_OUTPUT } from './sites/brief-engines/step-chain.js'
+import { brandInputResolver } from './step-chain-brand-input.js'
+import { chainOf, spendOfRecord } from './brand-before-site-chain.js'
 import {
-  chainSummary,
   detailsOf,
   messageOf,
   recordedInputs,
@@ -33,7 +34,12 @@ import {
 /** The locked prompt the brand bench runs (`brand-step/brand-step.system.md`), recorded with every look record. */
 export const BRAND_STEP_PROMPT = Object.freeze({ file: 'brand-step.system.md', version: 10 })
 
+/** A brand run the customer (or the build) stopped: no failure, its own code. */
+export const BRAND_STEP_STOPPED = 'brand_step_stopped'
+
 let sequence = 0
+/** The input check of the step itself (`brand_input_*`, `brand_logo_path_relative`), run before any step starts. */
+const inputOf = brandInputResolver((message) => new Error(message))
 
 /**
  * One step, at most `STEP_CHAIN_ATTEMPTS` times, one record line per attempt, as the engine's `attempt` does.
@@ -98,24 +104,6 @@ async function attemptStep(run, step, inputs, call) {
   }
 }
 
-/** The spend of the record: unknown (`null`, with the known part) when any line's spend is unknown. */
-function spendOfRecord(record) {
-  const known = record.reduce((sum, l) => sum + (Number.isFinite(l.usd) ? l.usd : Number(l.knownUsd ?? 0)), 0)
-  return record.every((l) => Number.isFinite(l.usd)) ? { usd: known } : { usd: null, knownUsd: known }
-}
-
-/**
- * The chain `dispose` keeps, in the engine's shape (`chainSummary`: `ending`, `stop`, `failedStep`, `totalUsd`,
- * `totalMinutes`, `steps`), which every reader of a kept chain reads. A brand run has no Write step by design, so a run
- * without a stop is complete, never the engine's unfinished build.
- */
-function chainOf(run, stop) {
-  const summary = chainSummary(run.record, stop?.step ?? null, run.now() - run.t0, null, null, stop ?? null)
-  if (stop) return summary
-  const { failedStep: _failed, stop: _stop, ...complete } = summary
-  return { ...complete, ending: 'complete' }
-}
-
 /**
  * @param {{steps: {kit: Function, brand: Function, dispose: Function}, briefOf: (revisionId: string) =>
  *   Promise<object | null>, now?: () => number, readJson?: (file: string) => Promise<object>}} deps `steps`: the step
@@ -123,7 +111,9 @@ function chainOf(run, stop) {
  *   `briefOfRevision` of `brand-step/brand-control.js`)
  * @returns {(input: {revisionId?: string, brief?: object, logoFile?: string, kitRef: string, siteLanguage?: string, signal?: AbortSignal}) =>
  *   Promise<{record: object, records: object[], usd: number | null, knownUsd?: number, prompt: object, runId: string}>}
- * @throws {BrandStepError} `brand_step_failed` (`noRerun`: its attempts are spent) with the record and the stop report
+ * @throws {BrandStepError} `brand_step_failed` (`noRerun`: its attempts are spent) or `brand_step_stopped` (the signal
+ *   stopped it) with the record and the stop report; before any step, a coded `noRerun` error of the input check:
+ *   `brand_input_ambiguous` (both inputs), `brand_input_missing` (neither), `brand_logo_path_relative`
  */
 export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson }) {
   const read = readJson ?? (async (file) => JSON.parse(await readFile(file, 'utf8')))
@@ -136,9 +126,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
     signal
   }) {
     if (!kitRef) throw new TypeError('the brand step needs a kit')
-    if (revisionId && (given || logoFile))
-      throw new TypeError('the brand step takes a research revision or a brief, not both')
-    if (!revisionId && !given) throw new TypeError('the brand step needs a research revision or a brief')
+    inputOf({ brief: { researchRevisionId: revisionId, researchBrief: given, logoFile } })
     const brief = given ?? (await briefOf(revisionId))
     if (!brief)
       throw Object.assign(new Error(`no research brief for revision ${revisionId}`), {
@@ -190,7 +178,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
       stop = brand.stop ?? null
       if (brand.stop)
         throw new BrandStepError(
-          'brand_step_failed',
+          run.signal.aborted ? BRAND_STEP_STOPPED : 'brand_step_failed',
           `the ${brand.stop.step} step stopped: ${brand.stop.error}`,
           { records: run.record, stop: brand.stop },
           { noRerun: true }

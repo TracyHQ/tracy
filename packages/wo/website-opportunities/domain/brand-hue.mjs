@@ -47,13 +47,22 @@ const wcagLinear = (c) => {
 }
 const luminance = ({ r, g, b }) => 0.2126 * wcagLinear(r) + 0.7152 * wcagLinear(g) + 0.0722 * wcagLinear(b)
 
-/** WCAG contrast ratio of two #rrggbb colours, two decimals; null when either is not one. */
-export function contrastOf(a, b) {
+/**
+ * WCAG contrast ratio of two #rrggbb colours, unrounded; null when either is not one. Every threshold is tested on this
+ * value: two decimals would round 2.995:1 up to 3:1.
+ */
+export function contrastRatioOf(a, b) {
   const A = rgbOf(a)
   const B = rgbOf(b)
   if (!A || !B) return null
   const [hi, lo] = [luminance(A), luminance(B)].sort((x, y) => y - x)
-  return +((hi + 0.05) / (lo + 0.05)).toFixed(2)
+  return (hi + 0.05) / (lo + 0.05)
+}
+
+/** WCAG contrast ratio of two #rrggbb colours, two decimals, for display only; null when either is not one. */
+export function contrastOf(a, b) {
+  const ratio = contrastRatioOf(a, b)
+  return ratio === null ? null : +ratio.toFixed(2)
 }
 
 /** A colour as `#rrggbb` in lower case, from `#rrggbb` or `rrggbb`; null when it is not one. */

@@ -237,6 +237,20 @@ test('a failing brand step stops the plan step with a typed error', async () => 
     }),
     (e) => e instanceof PlanComposerError && e.code === 'brand_step_failed'
   )
+  // A brand step the customer stopped keeps its own code: a stop is no failure (second review 13/11).
+  await assert.rejects(
+    buildPlanStep({
+      research: club.research,
+      model: scriptedModel(JSON.stringify(club.reading)),
+      brandStep: async () => {
+        throw Object.assign(new Error('stop pressed'), { code: 'brand_step_stopped', noRerun: true })
+      },
+      blockStore: blockStore(),
+      pageRecipes: pageRecipes(),
+      template: template()
+    }),
+    (e) => e instanceof PlanComposerError && e.code === 'brand_step_stopped' && e.noRerun === true
+  )
 })
 
 test('the plan step asks the profile questions through an answers function and composes with the answers', async () => {

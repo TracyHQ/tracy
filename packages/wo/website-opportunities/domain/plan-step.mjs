@@ -19,8 +19,9 @@ async function brandRecordOf({ brand, brandStep }) {
       record = await brandStep()
     } catch (error) {
       // A brand step that already ran its own second attempt says so (`noRerun`): the step chain does not run it again.
+      // A brand step the customer stopped keeps its own code (`brand_step_stopped`): a stop is no failure.
       throw new PlanComposerError(
-        'brand_step_failed',
+        error?.code === 'brand_step_stopped' ? 'brand_step_stopped' : 'brand_step_failed',
         String(error?.message ?? error),
         { cause: error },
         { noRerun: Boolean(error?.noRerun) }

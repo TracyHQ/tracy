@@ -15,7 +15,7 @@
 import { mkdir, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { brandInputResolver } from './step-chain-brand-input.js'
+import { brandInputResolver, storeBriefOnce } from './step-chain-brand-input.js'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
 import { brandRunDir } from './brand-step/brand-wiring.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
@@ -251,14 +251,12 @@ export function createStepChainSteps(deps) {
       if (input.brief) {
         const briefFile = path.join(await folderOf(ctx), 'brand-input', 'brief.json')
         await mkdir(path.dirname(briefFile), { recursive: true })
-        // 'wx': a rerun finds the file it stored and reads it as it is.
-        await writeFile(briefFile, `${JSON.stringify(input.brief, null, 2)}\n`, { flag: 'wx' }).catch((e) => {
-          if (e?.code !== 'EEXIST') throw e
-        })
+        // Stored once: a rerun with the same brief reads that file; another brief is a coded error.
+        await storeBriefOnce(briefFile, input.brief, stepError)
         source = [
           '--brief-file',
           path.resolve(briefFile),
-          ...(input.logoFile ? ['--logo-file', path.resolve(input.logoFile)] : [])
+          ...(input.logoFile ? ['--logo-file', input.logoFile] : [])
         ]
       } else source = ['--brief-revision', input.revisionId]
       const ran = await benchRun(

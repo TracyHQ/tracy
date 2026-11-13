@@ -1,7 +1,7 @@
 // What the look record reads from the template kit (ticket #616): the themes the template has, the grounds of each
 // theme, and the colour words take on an accent button. Shared by the no hue rule (`brand-look-accent.mjs`) and the
 // adjusted logo colour (`brand-look-adjust.mjs`, D44), so both hold an accent to the same 3:1 checks. Pure.
-import { MIN_RATIO, contrastOf, hexOf } from './brand-hue.mjs'
+import { MIN_RATIO, contrastRatioOf, hexOf } from './brand-hue.mjs'
 
 /** Plain text for an accent button when no text colour of the template reads on it. */
 const PLAIN_WORDS = Object.freeze(['#ffffff', '#000000'])
@@ -33,5 +33,5 @@ export const groundsOf = (kit, theme) =>
  */
 export function wordsOnAccentOf(kit, accent, minRatio = MIN_RATIO) {
   const wordsOn = list(brandColoursOf(kit)?.primary?.wordsOn).map(hexOf).filter(Boolean)
-  return [...wordsOn, ...PLAIN_WORDS].find((w) => contrastOf(w, accent) >= minRatio)
+  return [...wordsOn, ...PLAIN_WORDS].find((w) => contrastRatioOf(w, accent) >= minRatio)
 }

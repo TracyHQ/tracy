@@ -2,6 +2,8 @@
 // on a research revision and a kit only, and the brand file they write becomes the look record. The steps are scripted
 // fakes (no bench, no model, no database); the brand files are invented.
 import assert from 'node:assert/strict'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import test from 'node:test'
 import { createBrandBeforeSite } from '../src/brand-before-site.js'
 
@@ -54,6 +56,7 @@ function fakeSteps(...answers) {
   }
   return { steps, seen }
 }
+const LOGO = path.join(tmpdir(), 'invented-logo.png')
 const files = { 'brand/brand-file.json': brandFile, 'brand-attempt-2/brand-file.json': brandFile }
 const readJson = async (file) => structuredClone(files[file])
 
@@ -141,7 +144,8 @@ const stopOf = async (promise) => {
 test('a stopped signal before the start runs no step and records the attempt as stopped', async () => {
   const { steps, seen } = fakeSteps('brand/brand-file.json')
   const error = await stopOf(run(steps, { signal: AbortSignal.abort(new Error('the build was cancelled')) }))
-  assert.equal(error.code, 'brand_step_failed')
+  assert.equal(error.code, 'brand_step_stopped', 'a customer stop is no failure')
+  assert.equal(error.noRerun, true)
   assert.deepEqual(seen.kit, [])
   assert.deepEqual(seen.brand, [])
   assert.deepEqual(
@@ -157,6 +161,7 @@ test('a signal stopped during an attempt is not run again', async () => {
     throw new Error('the bench was stopped')
   })
   const error = await stopOf(run(steps, { signal: stop.signal }))
+  assert.equal(error.code, 'brand_step_stopped')
   assert.equal(seen.brand.length, 1)
   assert.deepEqual(error.details.stop.step, 'brand')
   assert.equal(error.details.records.at(-1).outcome, 'stopped')
@@ -218,9 +223,9 @@ test('a brief given in memory runs the step without reading a revision, and the 
     },
     readJson
   })
-  const out = await brandBeforeSite({ brief, logoFile: 'invented-logo.png', kitRef: 'example-court@1.0.0' })
+  const out = await brandBeforeSite({ brief, logoFile: LOGO, kitRef: 'example-court@1.0.0' })
   assert.equal(asked, 0)
-  assert.deepEqual(ctxs, [{ researchBrief: brief, logoFile: 'invented-logo.png' }])
+  assert.deepEqual(ctxs, [{ researchBrief: brief, logoFile: LOGO }])
   assert.equal(out.record.accent.hex, '#8a2c6c')
   const line = out.records.find((r) => r.step === 'brand')
   assert.deepEqual(line.inputs.source, { kind: 'brief-file', logo: 'file' })
@@ -230,11 +235,20 @@ test('a brief given in memory runs the step without reading a revision, and the 
   assert.deepEqual(Object.keys(rev.records.find((r) => r.step === 'brand').inputs), ['kit'])
 })
 
-test('a revision and a brief together, or neither, never start a step', async () => {
+test('a revision and a brief together, or neither, or a relative logo path, are coded errors that start no step', async () => {
   const { steps, seen } = fakeSteps('brand/brand-file.json')
   const make = createBrandBeforeSite({ steps, briefOf: async () => brief, readJson })
-  await assert.rejects(make({ revisionId: 'rev-1', brief, kitRef: 'k@1' }), TypeError)
-  await assert.rejects(make({ revisionId: 'rev-1', logoFile: 'x.png', kitRef: 'k@1' }), TypeError)
-  await assert.rejects(make({ kitRef: 'k@1' }), TypeError)
+  const coded = (code) => (e) => e.code === code && e.noRerun === true
+  await assert.rejects(make({ revisionId: 'rev-1', brief, kitRef: 'k@1' }), coded('brand_input_ambiguous'))
+  await assert.rejects(
+    make({ revisionId: 'rev-1', logoFile: LOGO, kitRef: 'k@1' }),
+    coded('brand_input_ambiguous')
+  )
+  await assert.rejects(make({ kitRef: 'k@1' }), coded('brand_input_missing'))
+  await assert.rejects(make({ logoFile: LOGO, kitRef: 'k@1' }), coded('brand_input_missing'))
+  await assert.rejects(
+    make({ brief, logoFile: 'logos/x.png', kitRef: 'k@1' }),
+    coded('brand_logo_path_relative')
+  )
   assert.deepEqual(seen.kit, [])
 })

@@ -10,7 +10,7 @@
 //     light and white on dark as for a logo with no hue, `ACCENT_LOGO_UNREADABLE`; never the template's accent;
 //   - a logo whose colours were never measured: `ACCENT_LOGO_UNMEASURED`, and no plan is composed from it.
 // `accentOfBrandFile` is the one place these rules live.
-import { MIN_RATIO, contrastOf, hexOf, isNeutral } from './brand-hue.mjs'
+import { MIN_RATIO, contrastOf, contrastRatioOf, hexOf, isNeutral } from './brand-hue.mjs'
 import { adjustedAccentOf, adjustedSaid, logoColourOf } from './brand-look-adjust.mjs'
 import { brandColoursOf, themesOf, wordsOnAccentOf } from './brand-look-kit.mjs'
 
@@ -48,10 +48,10 @@ function noHueOf(kit) {
   for (const theme of themes) onAccent[theme] = wordsOnAccentOf(kit, NO_HUE_ACCENT[theme])
   for (const side of list(colours?.sides)) {
     const accent = NO_HUE_ACCENT[side?.groundSide === 'light' ? 'light' : 'dark']
-    const ratio = contrastOf(accent, side?.ground)
+    const ratio = contrastRatioOf(accent, side?.ground)
     if (ratio !== null && ratio < MIN_RATIO)
       return {
-        problem: `the accent ${accent} reads ${ratio}:1 on the ground ${side.ground} of ${side.marker}`
+        problem: `the accent ${accent} reads ${contrastOf(accent, side.ground)}:1 on the ground ${side.ground} of ${side.marker}`
       }
   }
   return { themes, onAccent }

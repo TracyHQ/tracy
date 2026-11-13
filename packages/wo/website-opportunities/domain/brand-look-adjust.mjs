@@ -9,7 +9,7 @@ import {
   MIN_RATIO,
   NEUTRAL_CHROMA,
   chromaOf,
-  contrastOf,
+  contrastRatioOf,
   hexOf,
   hexOfOklch,
   hueDistance,
@@ -45,7 +45,7 @@ export function logoColourOf(brief) {
 function readsOn(kit, theme, hex, minRatio) {
   const words = wordsOnAccentOf(kit, hex, minRatio)
   if (!words) return null
-  return groundsOf(kit, theme).every((g) => contrastOf(hex, g) >= minRatio) ? words : null
+  return groundsOf(kit, theme).every((g) => contrastRatioOf(hex, g) >= minRatio) ? words : null
 }
 
 /** The colours of the logo's hue, the logo's own first, then every lightness, as `#rrggbb` that keep the hue. */
