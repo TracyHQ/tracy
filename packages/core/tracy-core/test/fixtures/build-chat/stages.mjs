@@ -35,6 +35,7 @@ export const RESEARCH = {
         'Name: Sunrise Tennis Club',
         'Phone: 04 000 0000',
         '3 services: Adult coaching, Junior squad, Court hire',
+        'Hours: weekdays 6:00 to 22:00, weekends 8:00 to 18:00',
         'Club story, 2 paragraphs',
         'No prices published'
       ]
@@ -120,6 +121,7 @@ export const STAGES = [
   { name: 'research', from: 'done', take: {} },
   { name: 'questions', from: 'done', take: { questions: true } },
   { name: 'template-choice', from: 'done', take: { plan: true, edits: 0, runs: 0 } },
+  { name: 'plan', from: 'done', take: { plan: true, edits: 0, runs: 0 } },
   { name: 'plan-edit-undo', from: 'done', take: { plan: true, edits: 2, runs: 0 } },
   { name: 'building', from: 'done', take: { plan: true, edits: 2, runs: 1, events: 2 } },
   { name: 'done', from: 'done', take: { plan: true, edits: 2, runs: 1 } },
@@ -131,6 +133,7 @@ export const STAGE_NAMES = [
   'research',
   'questions',
   'template-choice',
+  'plan',
   'plan-edit-undo',
   'building',
   'done',

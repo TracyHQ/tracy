@@ -157,11 +157,11 @@
         "id": "hours",
         "kind": "contact.hours",
         "label": "Opening hours",
-        "value": "Every day, 6:00 to 22:00",
+        "value": "Weekdays 6:00 to 22:00, weekends 8:00 to 18:00",
         "sources": [
           {
-            "kind": "google",
-            "name": "Google Maps"
+            "kind": "website",
+            "name": "Website"
           }
         ]
       }
@@ -493,7 +493,7 @@
       {
         "id": "hours",
         "field": "facts[hours].value",
-        "said": "Google Maps lists the same hours every day; your website shows shorter weekend hours.",
+        "said": "Your website and Google Maps list different opening hours; the hours on your website are used.",
         "alternatives": [
           {
             "value": "Every day, 6:00 to 22:00",

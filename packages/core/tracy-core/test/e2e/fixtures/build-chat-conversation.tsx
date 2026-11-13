@@ -18,10 +18,19 @@ import {
   BuildProgress,
   BuildStopped,
   english,
+  PlanCard,
+  savePlanEdit,
   saveTemplateChoice,
   TemplateCard
 } from '../../../../../ui/tracy-build-chat/src/client/index.tsx'
-import { answerOf, askRequestOf, replyOf, researchRowOf } from '../../../src/build-chat/index.mjs'
+import {
+  answerOf,
+  approvalOf,
+  askRequestOf,
+  planReviewRequestOf,
+  replyOf,
+  researchRowOf
+} from '../../../src/build-chat/index.mjs'
 
 // biome-ignore lint/suspicious/noExplicitAny: test stub of the dsh runtime kit
 type Any = any
@@ -34,10 +43,32 @@ const t = ((key: string, vars?: Record<string, unknown>) =>
 const SID = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
 const sent: unknown[] = []
 const requests: { method: string; url: string; body: unknown }[] = []
+/** What the plan review bar answered: an approval, or the owner took the turn back to ask for changes. */
+const decisions: unknown[] = []
+/** The plan the draft holds, as tracy-web's plan edit door keeps it. */
+let draftPlan: Any = null
 
-/** tracy-web's build draft door as the page sees it: records each request and answers with a draft. */
+/** tracy-web's build draft doors as the page sees them: records each request and answers as the door would. */
 const draftDoor = (async (url: string, init: RequestInit) => {
-  requests.push({ method: String(init.method), url, body: JSON.parse(String(init.body)) })
+  const body = JSON.parse(String(init.body))
+  requests.push({ method: String(init.method), url, body })
+  if (url === '/api/build-draft/plan-edits') {
+    // The door checks the edit against the contract (the runner checks the recorded edit the same way, in Node);
+    // here it applies the fact changes and raises the revision, as the door answers.
+    const edit = body.edit
+    if (edit.plan.revision !== draftPlan.revision)
+      return new Response(JSON.stringify({ code: 'STALE_EDIT' }), { status: 409 })
+    const next = structuredClone(draftPlan)
+    for (const { field, value } of edit.changes) {
+      const id = /^facts\[([^\]]+)\]\.value$/.exec(field)?.[1]
+      const fact = next.facts.find((f: Any) => f.id === id)
+      if (!fact) return new Response(JSON.stringify({ code: 'INVALID_EDIT' }), { status: 422 })
+      fact.value = value
+    }
+    next.revision += 1
+    draftPlan = next
+    return new Response(JSON.stringify({ draft: { id: 'draft-1', plan: draftPlan } }), { status: 200 })
+  }
   return new Response(JSON.stringify({ draft: { id: 'draft-1' } }), { status: 200 })
 }) as Any
 
@@ -111,6 +142,42 @@ function Questions({ questions, onAnswered }: { questions: Any[]; onAnswered: (a
   )
 }
 
+/** The plan review bar: dsh's composer over the one plan review request of the build session. */
+function PlanReview({ plan }: { plan: Any }) {
+  const [carrier] = useState(() => {
+    const request = planReviewRequestOf(plan)
+    const pending = new PendingQuestion(SID as Any, request.questions as Any)
+    const wire = createWaterfallRequest(undefined, undefined, (channel) => pending.detachWaterfall(channel))
+    pending.attachWaterfall(wire.channel)
+    wire.result.then(
+      (reply: Any) => decisions.push(approvalOf(draftPlan, reply) ?? { requestChanges: true }),
+      () => decisions.push({ requestChanges: true })
+    )
+    return pending
+  })
+  const drafts = useState(() => createQuestionDraftStore().create(SID as Any))[0]
+  const useStore = (selector: Any) =>
+    useSyncExternalStore(
+      (l) => drafts.subscribe(l),
+      () => selector(drafts.getSnapshot())
+    )
+  const useQuestionCard = (_key: string, selector?: Any) => {
+    const value = useSyncExternalStore(carrier.subscribe, carrier.getSnapshot)
+    return selector === undefined ? value : selector(value)
+  }
+  return (
+    <QuestionComposer
+      {...({} as Any)}
+      matched={carrier as Any}
+      t={t}
+      useStore={useStore as Any}
+      actions={drafts.actions}
+      useQuestionCard={useQuestionCard as Any}
+      renderSlot={() => null}
+    />
+  )
+}
+
 /** One stage of the build chat: what has arrived so far, drawn in the order of the conversation. */
 function Chat({ stage }: { stage: Any }) {
   const [answers, setAnswers] = useState<Any[]>(stage.answers)
@@ -130,6 +197,15 @@ function Chat({ stage }: { stage: Any }) {
           onChoose={(template) => saveTemplateChoice(template, draftDoor)}
         />
       )}
+      {stage.plan && (
+        <PlanCard
+          plan={stage.plan}
+          t={english}
+          newEditId={() => `edit-${requests.length + 1}`}
+          onEdit={(edit) => savePlanEdit(edit, draftDoor)}
+        />
+      )}
+      {stage.review && <PlanReview plan={stage.plan} />}
       {stage.run?.outcome && <BuildStopped outcome={stage.run.outcome} t={english} />}
       {stage.run && <BuildProgress run={stage.run} t={english} />}
     </main>
@@ -144,8 +220,10 @@ let root: ReturnType<typeof createRoot> | null = null
     root?.unmount()
     sent.length = 0
     requests.length = 0
+    decisions.length = 0
+    draftPlan = stage.plan ?? null
     root = createRoot(document.getElementById('root') as HTMLElement)
     root.render(<Chat stage={stage} />)
   },
-  get: () => ({ sent: [...sent], requests: [...requests] })
+  get: () => ({ sent: [...sent], requests: [...requests], decisions: [...decisions] })
 }

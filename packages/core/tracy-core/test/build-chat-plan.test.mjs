@@ -1,0 +1,140 @@
+// The build chat's plan card as data (#606): what the card shows is read from the Contract B plan alone, a conflicting
+// fact offers both values with the website's first, a choice becomes a structured plan edit that passes the contract,
+// and the plan review bar is one dsh plan review request whose approval names the plan it approves.
+import assert from 'node:assert/strict'
+import { test } from 'node:test'
+import { checkPlanEdit } from '../../../wo/website-opportunities/domain/build-contract-plan-edit.mjs'
+import { approvalOf, planCardOf, planEditOf, planReviewRequestOf } from '../src/build-chat/index.mjs'
+import { STAGES, stageDocuments } from './fixtures/build-chat/stages.mjs'
+
+const plan = () => stageDocuments(STAGES.find((s) => s.name === 'plan')).scenario.plan
+
+test('business facts carry their value and the first source, in plan order', () => {
+  const card = planCardOf(plan())
+  assert.equal(card.name, 'Sunrise Tennis Club')
+  assert.deepEqual(
+    card.facts.map((f) => [f.label, f.value, f.source]),
+    [
+      ['Business name', 'Sunrise Tennis Club', 'Website'],
+      ['Tagline', 'Tennis for every age and level', 'Instagram bio'],
+      ['Main button', 'Book a court', 'Your answer'],
+      ['Phone', '04 000 0000', 'Your answer'],
+      ['Email', 'hello@sunrise-tennis.example', 'Website'],
+      ['Address', '12 Court Lane, Harbour District', 'Google Maps'],
+      ['Opening hours', 'Weekdays 6:00 to 22:00, weekends 8:00 to 18:00', 'Website']
+    ]
+  )
+  assert.equal(card.language, 'en')
+  assert.equal(card.facts[0].field, 'facts[name].value')
+})
+
+test('a fact the sources disagree on offers both values, the website first and selected', () => {
+  const hours = planCardOf(plan()).facts.find((f) => f.id === 'hours')
+  assert.equal(hours.choice.field, 'facts[hours].value')
+  assert.match(hours.choice.said, /different opening hours/)
+  assert.deepEqual(hours.choice.options, [
+    { value: 'Weekdays 6:00 to 22:00, weekends 8:00 to 18:00', source: 'Website', selected: true },
+    { value: 'Every day, 6:00 to 22:00', source: 'Google Maps', selected: false }
+  ])
+  assert.equal(planCardOf(plan()).facts.find((f) => f.id === 'phone').choice, null)
+})
+
+test('the other value is picked: a structured plan edit of the current revision that passes the contract', () => {
+  const p = plan()
+  const edit = planEditOf(p, [{ field: 'facts[hours].value', value: 'Every day, 6:00 to 22:00' }], 'edit-a')
+  assert.deepEqual(edit, {
+    schema: 'tracy-build-plan-edit/v1',
+    id: 'edit-a',
+    plan: { id: 'plan-sunrise-tennis', revision: 1 },
+    changes: [{ field: 'facts[hours].value', value: 'Every day, 6:00 to 22:00' }]
+  })
+  const checked = checkPlanEdit(edit, p)
+  assert.deepEqual(checked.problems, [])
+  const after = planCardOf(checked.plan).facts.find((f) => f.id === 'hours')
+  assert.equal(after.value, 'Every day, 6:00 to 22:00')
+  assert.deepEqual(
+    after.choice.options.map((o) => o.selected),
+    [false, true],
+    'the card follows the returned plan'
+  )
+})
+
+test('pages list their blocks with the data each will hold and the reason', () => {
+  const card = planCardOf(plan())
+  assert.deepEqual(
+    card.pages.map((p) => [p.name, p.blocks.length]),
+    [
+      ['Home', 4],
+      ['About', 2],
+      ['Services', 1],
+      ['Coaches', 1],
+      ['Contact', 2]
+    ]
+  )
+  const [hero, services, reviews, contact] = card.pages[0].blocks
+  assert.deepEqual(hero.holds, { facts: ['Business name', 'Tagline', 'Main button'], counts: [] })
+  assert.deepEqual(services.holds, {
+    services: ['Adult coaching', 'Junior squad', 'Court hire', 'Cardio tennis']
+  })
+  assert.deepEqual(reviews.holds, { facts: [], counts: [{ kind: 'quote', count: 6 }] })
+  assert.match(reviews.reason, /Tracy reviews block/)
+  assert.deepEqual(contact.holds.facts, ['Phone', 'Address', 'Opening hours'])
+  assert.deepEqual(card.pages[1].blocks[1].holds.counts, [{ kind: 'gallery', count: 12 }])
+  assert.deepEqual(card.pages[3].blocks[0].holds.counts, [{ kind: 'person', count: 3 }])
+  assert.deepEqual(
+    card.services.map((s) => [s.label, s.source]),
+    [
+      ['Adult coaching', 'Website'],
+      ['Junior squad', 'Website'],
+      ['Court hire', 'Website'],
+      ['Cardio tennis', 'Instagram post']
+    ]
+  )
+})
+
+test('look, pictures, assumptions and left out come straight from the plan', () => {
+  const card = planCardOf(plan())
+  assert.deepEqual(card.look, {
+    template: 'JA Boxing',
+    accent: '#1f7a4d',
+    logo: { kind: 'own', source: 'Instagram profile picture' }
+  })
+  assert.deepEqual(card.pictures, {
+    own: { frames: 31, from: ['Instagram', 'Website'] },
+    generated: { frames: 2, reason: 'Two spots have no fitting photo; generated pictures show no people.' }
+  })
+  // The conflict is shown at its fact; the other assumptions are listed.
+  assert.deepEqual(
+    card.assumptions.map((a) => a.id),
+    ['language']
+  )
+  assert.deepEqual(
+    card.leftOut.map((l) => l.what),
+    ['Prices page', 'Blog', 'Shop', 'Video in the top banner']
+  )
+  assert.deepEqual(card.counts, { pages: 5, services: 4 })
+})
+
+test('the card holds no written copy: every shown text comes from a plan field', () => {
+  const card = JSON.stringify(planCardOf(plan()))
+  assert.doesNotMatch(card, /"(heading|title|description|body|cta)"/)
+})
+
+test('the plan review bar is one dsh plan review request; only Approve is an approval', () => {
+  const p = plan()
+  const request = planReviewRequestOf(p)
+  assert.equal(request.questions.length, 1)
+  const [q] = request.questions
+  assert.equal(q.intent.kind, 'plan-review')
+  assert.equal(q.intent.approve, 'Approve')
+  assert.equal(q.detail, '# Sunrise Tennis Club: 5 pages, 4 services')
+  assert.deepEqual(
+    q.options.map((o) => o.label),
+    ['Approve', 'Request changes']
+  )
+  assert.deepEqual(approvalOf(p, { answers: [{ id: q.id, selected: ['Approve'] }] }), {
+    plan: { id: 'plan-sunrise-tennis', revision: 1 }
+  })
+  assert.equal(approvalOf(p, { answers: [{ id: q.id, selected: ['Request changes'] }] }), null)
+  assert.equal(approvalOf(p, null), null)
+})

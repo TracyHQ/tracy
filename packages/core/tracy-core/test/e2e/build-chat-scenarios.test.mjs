@@ -15,6 +15,10 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
+import {
+  applyPlanEdit,
+  checkPlanEdit
+} from '../../../../wo/website-opportunities/domain/build-contract-plan-edit.mjs'
 import { RESEARCH, SCENARIOS, STAGES, stageDocuments, TEMPLATES } from '../fixtures/build-chat/stages.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
@@ -47,9 +51,16 @@ function stageView(stage) {
     templates: stage.take.plan === true ? TEMPLATES : null,
     chosen:
       stage.take.plan === true && stage.name !== 'template-choice' ? scenario.plan.look.template.slug : null,
-    run: runs.at(-1) ?? null
+    run: runs.at(-1) ?? null,
+    // The plan card while the plan is read and edited, with the edits received so far applied; the review bar only
+    // while it waits for approval.
+    plan: PLAN_STAGES.has(stage.name) ? (cut.edits ?? []).reduce(applyPlanEdit, cut.plan) : null,
+    review: stage.name === 'plan'
   }
 }
+
+/** The stages that show the plan card before approval. */
+const PLAN_STAGES = new Set(['plan', 'plan-edit-undo'])
 
 /** Helpers each check gets: the page, and readers of what the owner sees and can press. */
 function chatOf(page) {
@@ -96,6 +107,57 @@ async function templateChosen(chat) {
   assert.match(text, /Chosen: JA Boxing/)
   assert.doesNotMatch(text, /JA Kinetic|JA Impact|Coming soon/)
   assert.equal(await chat.button('Use JA Boxing').count(), 0)
+}
+
+/** The plan card: the region named after the plan, and its section by title. */
+function planCard(chat) {
+  const card = chat.page.getByRole('article', { name: 'Sunrise Tennis Club site plan' })
+  return { card, section: (name) => card.getByRole('region', { name, exact: true }) }
+}
+
+/** The plan as read before approval: every section of the card, in labelled values, no written copy. */
+async function planRead(chat) {
+  const { card, section } = planCard(chat)
+  const text = await card.innerText()
+  assert.match(text, /Design: JA Boxing/)
+  const facts = await section('Business facts').innerText()
+  for (const [label, value, source] of [
+    ['Business name', 'Sunrise Tennis Club', 'Website'],
+    ['Tagline', 'Tennis for every age and level', 'Instagram bio'],
+    ['Phone', '04 000 0000', 'Your answer'],
+    ['Address', '12 Court Lane, Harbour District', 'Google Maps'],
+    ['Site language', 'English', 'All sources']
+  ])
+    assert.match(facts, new RegExp(`${label}\\s*${value}\\s*${source}`))
+  const look = await section('Look').innerText()
+  assert.match(look, /Template\s*JA Boxing/)
+  assert.match(look, /Accent colour\s*#1f7a4d/)
+  assert.match(look, /Logo on light\s*Your logo, from Instagram profile picture/)
+  assert.match(look, /Logo on dark\s*Your logo, from Instagram profile picture/)
+  assert.match(await section('Services (4)').innerText(), /Service 4\s*Cardio tennis\s*Instagram post/)
+  const pages = await section('Pages (5)').innerText()
+  for (const name of ['Home', 'About', 'Services', 'Coaches', 'Contact'])
+    assert.match(pages, new RegExp(name))
+  assert.match(pages, /Home\s*4 sections/)
+  assert.match(
+    pages,
+    /Top banner\s*Business name, tagline, main button\s*Your name and booking button come first\./
+  )
+  assert.match(pages, /Reviews\s*6 quotes\s*The template has no reviews block/)
+  assert.match(pages, /Services\s*Adult coaching, Junior squad, Court hire, Cardio tennis\s*From Services/)
+  assert.match(pages, /Coach cards\s*3 people\s*Your three coaches/)
+  assert.match(pages, /Photo gallery\s*12 photos/)
+  const pictures = await section('Pictures').innerText()
+  assert.match(pictures, /Your photos\s*31 photos from Instagram and Website/)
+  assert.match(pictures, /Drawn pictures\s*2 pictures\s*Two spots have no fitting photo/)
+  assert.match(
+    await section('Assumptions').innerText(),
+    /Every source is in English, so the site is in English\./
+  )
+  const left = await section('Left out').innerText()
+  assert.match(left, /Prices page\.\s*No public prices found\./)
+  assert.match(left, /Video in the top banner\.\s*Your videos are upright/)
+  return { card, section }
 }
 
 const CHECKS = {
@@ -172,9 +234,84 @@ const CHECKS = {
     assert.equal(await addSite.getAttribute('href'), '?tab=tracy%3Aadd-site')
     assert.equal(await chat.page.getByRole('group', { name: 'Designs for your site' }).count(), 0)
   },
+  plan: async (chat) => {
+    await answersKept(chat)
+    await templateChosen(chat)
+    const { card } = await planRead(chat)
+    // A conflicting fact: both values with their source, the website's selected.
+    const hours = card.getByRole('radiogroup', { name: 'Opening hours' })
+    const website = hours.getByRole('radio', {
+      name: /Weekdays 6:00 to 22:00, weekends 8:00 to 18:00\s*Website/
+    })
+    const google = hours.getByRole('radio', { name: /Every day, 6:00 to 22:00\s*Google Maps/ })
+    assert.equal(await hours.getByRole('radio').count(), 2)
+    assert.equal(await website.isChecked(), true)
+    assert.equal(await google.isChecked(), false)
+    assert.match(await card.innerText(), /the hours on your website are used/)
+    // Nothing is written anywhere before the owner acts.
+    assert.deepEqual(await chat.page.evaluate(() => window.probe.get().requests), [])
+    // Keyboard: the checked radio takes focus, the arrow key picks the other value; one structured plan edit is sent.
+    await website.focus()
+    await chat.page.keyboard.press('ArrowDown')
+    await chat.page.waitForFunction(() => window.probe.get().requests.length === 1)
+    assert.deepEqual(await chat.page.evaluate(() => window.probe.get().requests), [
+      {
+        method: 'POST',
+        url: '/api/build-draft/plan-edits',
+        body: {
+          edit: {
+            schema: 'tracy-build-plan-edit/v1',
+            id: 'edit-1',
+            plan: { id: 'plan-sunrise-tennis', revision: 1 },
+            changes: [{ field: 'facts[hours].value', value: 'Every day, 6:00 to 22:00' }]
+          }
+        }
+      }
+    ])
+    const [{ body }] = await chat.page.evaluate(() => window.probe.get().requests)
+    const view = await chat.page.evaluate(() => window.probe.view)
+    assert.deepEqual(checkPlanEdit(body.edit, view.plan).problems, [], 'the edit passes the Contract B check')
+    // The card follows the plan the draft answered with.
+    await chat.page.waitForFunction(
+      () => document.querySelector('[data-field="facts[hours].value"] input[value^="Every day"]')?.checked
+    )
+    assert.equal(await website.isChecked(), false)
+    assert.doesNotMatch(await card.innerText(), /not saved/)
+    assert.doesNotMatch(
+      await card.innerText(),
+      /the hours on your website are used/,
+      'the stale assumption goes'
+    )
+    // The plan review bar: Approve and Request changes. Approve only emits the approval; no site write.
+    assert.match(await chat.text(), /Sunrise Tennis Club: 5 pages, 4 services/)
+    assert.equal(await chat.button('Request changes').count(), 1)
+    await chat.button('Approve').click()
+    await chat.page.waitForFunction(() => window.probe.get().decisions.length === 1)
+    assert.deepEqual(await chat.page.evaluate(() => window.probe.get().decisions), [
+      { plan: { id: 'plan-sunrise-tennis', revision: 2 } }
+    ])
+    assert.deepEqual(
+      (await chat.page.evaluate(() => window.probe.get().requests)).map((r) => r.url),
+      ['/api/build-draft/plan-edits'],
+      'approval writes nothing; site creation is the next ticket'
+    )
+    // Request changes hands the turn back to the chat, with no approval.
+    await chat.page.evaluate(
+      (view) => window.probe.mount(view),
+      await chat.page.evaluate(() => window.probe.view)
+    )
+    await chat.button('Request changes').click()
+    await chat.page.waitForFunction(() => window.probe.get().decisions.length === 1)
+    assert.deepEqual(await chat.page.evaluate(() => window.probe.get().decisions), [{ requestChanges: true }])
+    assert.deepEqual(await chat.page.evaluate(() => window.probe.get().requests), [])
+  },
   'plan-edit-undo': async (chat) => {
     await answersKept(chat)
     await templateChosen(chat)
+    // The card reads the plan with the edits received so far: the tagline changed and changed back.
+    const { section } = await planRead(chat)
+    assert.match(await section('Business facts').innerText(), /Tagline\s*Tennis for every age and level/)
+    assert.equal(await chat.button('Approve').count(), 0, 'the review bar waits for the plan stage')
   },
   building: async (chat) => {
     await answersKept(chat)

@@ -20,7 +20,15 @@ const ANSWER_SCHEMA = 'tracy-build-answer/v1'
  */
 export const BUILD_CHAT_STRINGS = {
   'research.title.one': 'Read {count} source',
-  'research.title.other': 'Read {count} sources'
+  'research.title.other': 'Read {count} sources',
+  'review.question': 'Approve this plan?',
+  'review.summary': '{name}: {pages}, {services}',
+  'review.pages.one': '{count} page',
+  'review.pages.other': '{count} pages',
+  'review.services.one': '{count} service',
+  'review.services.other': '{count} services',
+  'review.approve': 'Approve',
+  'review.change': 'Request changes'
 }
 
 /** Translate with the English source; a plugin passes its bound locale instead. */

@@ -35,9 +35,18 @@ export interface ReplyData {
   text: string
   time: number
 }
-export declare const BUILD_CHAT_STRINGS: Readonly<
-  Record<'research.title.one' | 'research.title.other', string>
->
+export type BuildChatStringKey =
+  | 'research.title.one'
+  | 'research.title.other'
+  | 'review.question'
+  | 'review.summary'
+  | 'review.pages.one'
+  | 'review.pages.other'
+  | 'review.services.one'
+  | 'review.services.other'
+  | 'review.approve'
+  | 'review.change'
+export declare const BUILD_CHAT_STRINGS: Readonly<Record<BuildChatStringKey, string>>
 export declare const MAX_QUESTIONS_AT_ONCE: 3
 export declare function researchRowOf(
   research: { summary: string; sources: ResearchSource[] },
@@ -102,3 +111,73 @@ export declare function progressOf(run: { events?: any[]; outcome?: any }): Prog
 // biome-ignore lint/suspicious/noExplicitAny: a Contract B outcome
 export declare function stoppedOf(outcome: any): Stopped | null
 export declare function clockOf(seconds: number): string
+
+export interface PlanChoiceOption {
+  value: string
+  source: string
+  selected: boolean
+}
+export interface PlanFact {
+  id: string
+  field: string
+  label: string
+  value: string
+  source: string
+  /** Set when the sources disagree on this fact: its values, the website's first. */
+  choice: null | { field: string; said: string; options: PlanChoiceOption[] }
+}
+export type BlockHolds =
+  | { services: string[] }
+  | { facts: string[]; counts: { kind: string; count: number }[] }
+export interface PlanCard {
+  planId: string
+  revision: number
+  name: string
+  facts: PlanFact[]
+  language: string
+  look: { template: string; accent: string; logo: { kind: string; source?: string } }
+  services: { id: string; field: string; label: string; source: string }[]
+  pages: {
+    id: string
+    name: string
+    blocks: { id: string; label: string; reason: string; holds: BlockHolds }[]
+  }[]
+  pictures: { own: { frames: number; from: string[] }; generated: { frames: number; reason?: string } }
+  assumptions: { id: string; said: string }[]
+  leftOut: { what: string; kind: string; reason: string }[]
+  counts: { pages: number; services: number }
+}
+export interface PlanChange {
+  field: string
+  value: unknown
+}
+export interface PlanEdit {
+  schema: 'tracy-build-plan-edit/v1'
+  id: string
+  plan: { id: string; revision: number }
+  changes: PlanChange[]
+}
+type BuildChatT = (key: string, vars?: Record<string, unknown>) => string
+// biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+export declare function planCardOf(plan: any): PlanCard
+// biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+export declare function planEditOf(plan: any, changes: PlanChange[], id: string): PlanEdit
+export declare function planReviewRequestOf(
+  // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+  plan: any,
+  t?: BuildChatT
+): {
+  questions: {
+    id: string
+    question: string
+    detail: string
+    options: { label: string }[]
+    intent: { kind: 'plan-review'; approve: string }
+  }[]
+}
+export declare function approvalOf(
+  // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+  plan: any,
+  reply: { answers?: { id: string; selected?: string[] }[] } | null,
+  t?: BuildChatT
+): { plan: { id: string; revision: number } } | null

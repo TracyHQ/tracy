@@ -40,4 +40,5 @@ export {
   replyOf,
   researchRowOf
 } from './conversation.mjs'
+export { approvalOf, planCardOf, planEditOf, planReviewRequestOf } from './plan.mjs'
 export { clockOf, progressOf, stoppedOf, templateChoiceOf, templateOfChoice } from './progress.mjs'

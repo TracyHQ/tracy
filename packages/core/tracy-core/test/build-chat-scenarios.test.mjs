@@ -14,6 +14,7 @@ test('the stages cover every moment of the build chat named in #578', () => {
     'research',
     'questions',
     'template-choice',
+    'plan',
     'plan-edit-undo',
     'building',
     'done',
