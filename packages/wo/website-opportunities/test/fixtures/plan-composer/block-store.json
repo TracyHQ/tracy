@@ -117,6 +117,7 @@
           "name": "icon",
           "kind": "editorial.item_icon",
           "type": "icon",
+          "storage": "image-file",
           "slots": [
             "services-grid.item1.icon",
             "services-grid.item2.icon",

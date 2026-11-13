@@ -39,7 +39,8 @@
             "width": 195,
             "height": 56
           },
-          "slot": "siteSetting-257986166.0"
+          "slot": "siteSetting-257986166.0",
+          "theme": "light"
         },
         {
           "name": "logo-dark",
@@ -49,7 +50,9 @@
             "width": 195,
             "height": 56
           },
-          "slot": "siteSetting-211586990.0"
+          "slot": "siteSetting-211586990.0",
+          "theme": "dark",
+          "variantOf": "logo-light"
         }
       ],
       "itemFields": [
@@ -396,6 +399,11 @@
             "module-157.13",
             "module-157.14",
             "module-157.15"
+          ],
+          "theme": "dark",
+          "for": [
+            "heading-2",
+            "paragraph-2"
           ]
         },
         {
@@ -412,6 +420,12 @@
             "module-157.17",
             "module-157.18",
             "module-157.19"
+          ],
+          "theme": "light",
+          "variantOf": "item-icon",
+          "for": [
+            "heading-2",
+            "paragraph-2"
           ]
         }
       ],
@@ -504,6 +518,14 @@
           "kind": "editorial.navigation_url",
           "type": "link",
           "slot": "module-160.7"
+        },
+        {
+          "name": "try-button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 37,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (37, page /classes/advanced-boxing): at 768, 1440px, page /: 768px 45 (demo 11 characters on 1 line(s)), 1440px 40 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 40 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390px (its box is drawn 0 by 0), so 768px is the narrowest width that draws it | at 1440px, page /classes: 1440px 42 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 42 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390 and 768px (its box is drawn 0 by 0), so 1440px is the narrowest width that draws it | at 768, 1440px, page /classes/advanced-boxing: 768px 45 (demo 11 characters on 1 line(s)), 1440px 37 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 37 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390px (its box is drawn 0 by 0), so 768px is the narrowest width that draws it",
+          "slot": "languageString-256948293.0"
         }
       ],
       "itemFields": [
@@ -524,8 +546,8 @@
           "name": "heading-2",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 35,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 22,
+          "limitFrom": "measured on the running template on 2 pages, the smallest limit taken (22, page /classes): at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /classes: 390px 36 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 34 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 22 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; no box holds the demo words on /classes/advanced-boxing",
           "slots": [
             "article-16.7",
             "article-14.7",
@@ -799,18 +821,90 @@
             "module-163.10",
             "module-163.11"
           ]
-        },
+        }
+      ],
+      "itemLists": [
         {
-          "name": "social-links",
-          "kind": "person.social_url",
-          "type": "link",
-          "slots": [
-            "module-163.12",
-            "module-163.13",
-            "module-163.14",
-            "module-163.15"
-          ],
-          "storage": "html: the person's social profile links, one list per person"
+          "name": "social",
+          "items": {
+            "min": 0,
+            "max": 4
+          },
+          "itemsFrom": {
+            "min": "verified on the running template (home trainers, teams style-1, the layout of all three team blocks): a trainer with no link keeps its picture and name; the empty social row takes no height, so that card's lower panel is shorter than a neighbour's with links",
+            "max": "the links each stored trainer value holds (four: a link with a network glyph each)"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "kind": "person.social_url",
+              "type": "link",
+              "slots": [
+                [
+                  "module-163.12@/html/body/div/a[1]/@href",
+                  "module-163.12@/html/body/div/a[2]/@href",
+                  "module-163.12@/html/body/div/a[3]/@href",
+                  "module-163.12@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-163.13@/html/body/div/a[1]/@href",
+                  "module-163.13@/html/body/div/a[2]/@href",
+                  "module-163.13@/html/body/div/a[3]/@href",
+                  "module-163.13@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-163.14@/html/body/div/a[1]/@href",
+                  "module-163.14@/html/body/div/a[2]/@href",
+                  "module-163.14@/html/body/div/a[3]/@href",
+                  "module-163.14@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-163.15@/html/body/div/a[1]/@href",
+                  "module-163.15@/html/body/div/a[2]/@href",
+                  "module-163.15@/html/body/div/a[3]/@href",
+                  "module-163.15@/html/body/div/a[4]/@href"
+                ]
+              ]
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+              "slots": [
+                [
+                  "module-163.12@/html/body/div/a[1]/i/@class",
+                  "module-163.12@/html/body/div/a[2]/i/@class",
+                  "module-163.12@/html/body/div/a[3]/i/@class",
+                  "module-163.12@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-163.13@/html/body/div/a[1]/i/@class",
+                  "module-163.13@/html/body/div/a[2]/i/@class",
+                  "module-163.13@/html/body/div/a[3]/i/@class",
+                  "module-163.13@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-163.14@/html/body/div/a[1]/i/@class",
+                  "module-163.14@/html/body/div/a[2]/i/@class",
+                  "module-163.14@/html/body/div/a[3]/i/@class",
+                  "module-163.14@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-163.15@/html/body/div/a[1]/i/@class",
+                  "module-163.15@/html/body/div/a[2]/i/@class",
+                  "module-163.15@/html/body/div/a[3]/i/@class",
+                  "module-163.15@/html/body/div/a[4]/i/@class"
+                ]
+              ]
+            }
+          ]
         }
       ],
       "from": {
@@ -1455,6 +1549,23 @@
           "limit": 29,
           "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 768px 57 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the limit is the smallest reading, 29 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.35"
+        },
+        {
+          "name": "stat-page",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "derived": "the page of the row",
+          "keyAt": {
+            "entity": "module-162",
+            "column": "params",
+            "jsonPath": [
+              "menuitem_config",
+              "item_id",
+              14,
+              0
+            ]
+          },
+          "pageType": "classes"
         }
       ],
       "lists": [
@@ -1466,7 +1577,7 @@
           },
           "itemsFrom": {
             "min": "a page with no row of its own shows the masthead's default title and intro (fields default-title and default-intro)",
-            "max": "the most rows a stored parent place holds (14; per place 14)"
+            "max": "the rows the masthead stores, one per page; each row is drawn only on the page its key (menuitem_config.item_id) names, so a build writes the key of the page it creates for the row"
           },
           "fields": [
             {
@@ -1516,6 +1627,156 @@
                   "module-162.28",
                   "module-162.29",
                   "module-162.30"
+                ]
+              ]
+            },
+            {
+              "name": "page",
+              "kind": "editorial.navigation_url",
+              "type": "link",
+              "derived": "the page of the row",
+              "keyAt": [
+                [
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      0,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      1,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      2,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      3,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      4,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      5,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      6,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      7,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      8,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      9,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      10,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      11,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      12,
+                      0
+                    ]
+                  },
+                  {
+                    "entity": "module-162",
+                    "column": "params",
+                    "jsonPath": [
+                      "menuitem_config",
+                      "item_id",
+                      13,
+                      0
+                    ]
+                  }
                 ]
               ]
             }
@@ -1599,8 +1860,8 @@
           "name": "title",
           "kind": "article.title",
           "type": "text",
-          "limit": 31,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 26,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (26, page /pages/j-content/featured-articles): at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/featured-articles: 390px 29 (demo 18 characters on 1 line(s)), 768px 26 (demo 18 characters on 1 line(s)), 1440px 57 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 26 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/author-listting/author/admin: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 33 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-1.15",
             "article-3.15",
@@ -1681,8 +1942,8 @@
           "name": "title",
           "kind": "article.title",
           "type": "text",
-          "limit": 31,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 26,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (26, page /pages/j-content/featured-articles): at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/featured-articles: 390px 29 (demo 18 characters on 1 line(s)), 768px 26 (demo 18 characters on 1 line(s)), 1440px 57 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 26 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/author-listting/author/admin: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 33 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-1.15",
             "article-3.15",
@@ -1747,12 +2008,12 @@
         "component"
       ],
       "items": {
-        "min": 4,
-        "max": 4
+        "min": 1,
+        "max": 7
       },
       "itemsFrom": {
-        "min": "measured by the kit at 390 and 1440 px: at 1440 px a row holds 4 authors, left-packed, so only 4 and 8 fill every row (1 to 3 and 5 to 7 leave a hole in the last row)",
-        "max": "4: of the two counts that fill every row, 8 needs more author records than the 7 the template stores"
+        "min": "measured by the kit at 390 and 1440 px: one author lays out as one card; at 1440 px a row holds 4 authors, left-packed, so 1 to 3 and 5 to 7 leave a hole in the last row, accepted as in the demo, which shows 7",
+        "max": "the places the template stores: 7 author records, all drawn on the authors page"
       },
       "noData": {
         "rule": "hide"
@@ -1812,8 +2073,8 @@
           "name": "title",
           "kind": "article.title",
           "type": "text",
-          "limit": 27,
-          "limitFrom": "kit frame (390px 27, 1440px 43) (on from.kit[7])",
+          "limit": 26,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (26, page /pages/j-content/featured-articles): at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 21 characters on 1 line(s)), 768px 31 (demo 21 characters on 1 line(s)), 1440px 49 (demo 21 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/featured-articles: 390px 30 (demo 21 characters on 1 line(s)), 768px 26 (demo 21 characters on 1 line(s)), 1440px 56 (demo 21 characters on 1 line(s)); the limit is the smallest reading, 26 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 768px 48 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the limit is the smallest reading, 26 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-6.15"
         },
         {
@@ -2038,7 +2299,16 @@
       "noData": {
         "rule": "hide"
       },
-      "fields": [],
+      "fields": [
+        {
+          "name": "try-button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 37,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (37, page /classes/advanced-boxing): at 768, 1440px, page /: 768px 45 (demo 11 characters on 1 line(s)), 1440px 40 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 40 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390px (its box is drawn 0 by 0), so 768px is the narrowest width that draws it | at 1440px, page /classes: 1440px 42 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 42 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390 and 768px (its box is drawn 0 by 0), so 1440px is the narrowest width that draws it | at 768, 1440px, page /classes/advanced-boxing: 768px 45 (demo 11 characters on 1 line(s)), 1440px 37 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 37 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390px (its box is drawn 0 by 0), so 768px is the narrowest width that draws it",
+          "slot": "languageString-256948293.0"
+        }
+      ],
       "itemFields": [
         {
           "name": "name",
@@ -2057,8 +2327,8 @@
           "name": "heading",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 35,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 22,
+          "limitFrom": "measured on the running template on 2 pages, the smallest limit taken (22, page /classes): at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /classes: 390px 36 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 34 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 22 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; no box holds the demo words on /classes/advanced-boxing",
           "slots": [
             "article-2.7",
             "article-14.7",
@@ -2234,6 +2504,14 @@
           "limit": 27,
           "limitFrom": "kit frame (390px 36, 1440px 27)",
           "slot": "contact-1.3"
+        },
+        {
+          "name": "form-heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 38,
+          "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/contact: 390px 38 (demo 18 characters on 1 line(s)), 768px 58 (demo 18 characters on 1 line(s)), 1440px 52 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 38 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "languageString-169039348.0"
         }
       ],
       "from": {
@@ -2779,7 +3057,8 @@
             "width": 120,
             "height": 89
           },
-          "slot": "module-183.3"
+          "slot": "module-183.3",
+          "theme": "dark"
         },
         {
           "name": "quote-author-image-2",
@@ -2789,7 +3068,9 @@
             "width": 120,
             "height": 89
           },
-          "slot": "module-183.4"
+          "slot": "module-183.4",
+          "theme": "light",
+          "variantOf": "quote-author-image"
         },
         {
           "name": "quote-author-name",
@@ -2927,6 +3208,11 @@
             "module-190.13",
             "module-190.14",
             "module-190.15"
+          ],
+          "theme": "dark",
+          "for": [
+            "heading-2",
+            "paragraph-2"
           ]
         },
         {
@@ -2943,6 +3229,12 @@
             "module-190.17",
             "module-190.18",
             "module-190.19"
+          ],
+          "theme": "light",
+          "variantOf": "item-icon",
+          "for": [
+            "heading-2",
+            "paragraph-2"
           ]
         }
       ],
@@ -3104,8 +3396,8 @@
           "name": "title",
           "kind": "article.title",
           "type": "text",
-          "limit": 50,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 768px 61 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the limit is the smallest reading, 50 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 48,
+          "limitFrom": "measured on the running template on 2 pages, the smallest limit taken (48, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point): at 390, 768, 1440px, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 55 (demo 41 characters on 2 line(s)), 768px 48 (demo 41 characters on 1 line(s)), 1440px 54 (demo 41 characters on 2 line(s)); the limit is the smallest reading, 48 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 768px 61 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the limit is the smallest reading, 50 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-18.12",
             "article-19.12",
@@ -3232,22 +3524,138 @@
             "module-178.22",
             "module-178.23"
           ]
-        },
+        }
+      ],
+      "itemLists": [
         {
-          "name": "social-links",
-          "kind": "person.social_url",
-          "type": "link",
-          "slots": [
-            "module-178.24",
-            "module-178.25",
-            "module-178.26",
-            "module-178.27",
-            "module-178.28",
-            "module-178.29",
-            "module-178.30",
-            "module-178.31"
-          ],
-          "storage": "html: the person's social profile links, one list per person"
+          "name": "social",
+          "items": {
+            "min": 0,
+            "max": 4
+          },
+          "itemsFrom": {
+            "min": "verified on the running template (home trainers, teams style-1, the layout of all three team blocks): a trainer with no link keeps its picture and name; the empty social row takes no height, so that card's lower panel is shorter than a neighbour's with links",
+            "max": "the links each stored trainer value holds (four: a link with a network glyph each)"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "kind": "person.social_url",
+              "type": "link",
+              "slots": [
+                [
+                  "module-178.24@/html/body/div/a[1]/@href",
+                  "module-178.24@/html/body/div/a[2]/@href",
+                  "module-178.24@/html/body/div/a[3]/@href",
+                  "module-178.24@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.25@/html/body/div/a[1]/@href",
+                  "module-178.25@/html/body/div/a[2]/@href",
+                  "module-178.25@/html/body/div/a[3]/@href",
+                  "module-178.25@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.26@/html/body/div/a[1]/@href",
+                  "module-178.26@/html/body/div/a[2]/@href",
+                  "module-178.26@/html/body/div/a[3]/@href",
+                  "module-178.26@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.27@/html/body/div/a[1]/@href",
+                  "module-178.27@/html/body/div/a[2]/@href",
+                  "module-178.27@/html/body/div/a[3]/@href",
+                  "module-178.27@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.28@/html/body/div/a[1]/@href",
+                  "module-178.28@/html/body/div/a[2]/@href",
+                  "module-178.28@/html/body/div/a[3]/@href",
+                  "module-178.28@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.29@/html/body/div/a[1]/@href",
+                  "module-178.29@/html/body/div/a[2]/@href",
+                  "module-178.29@/html/body/div/a[3]/@href",
+                  "module-178.29@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.30@/html/body/div/a[1]/@href",
+                  "module-178.30@/html/body/div/a[2]/@href",
+                  "module-178.30@/html/body/div/a[3]/@href",
+                  "module-178.30@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-178.31@/html/body/div/a[1]/@href",
+                  "module-178.31@/html/body/div/a[2]/@href",
+                  "module-178.31@/html/body/div/a[3]/@href",
+                  "module-178.31@/html/body/div/a[4]/@href"
+                ]
+              ]
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+              "slots": [
+                [
+                  "module-178.24@/html/body/div/a[1]/i/@class",
+                  "module-178.24@/html/body/div/a[2]/i/@class",
+                  "module-178.24@/html/body/div/a[3]/i/@class",
+                  "module-178.24@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.25@/html/body/div/a[1]/i/@class",
+                  "module-178.25@/html/body/div/a[2]/i/@class",
+                  "module-178.25@/html/body/div/a[3]/i/@class",
+                  "module-178.25@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.26@/html/body/div/a[1]/i/@class",
+                  "module-178.26@/html/body/div/a[2]/i/@class",
+                  "module-178.26@/html/body/div/a[3]/i/@class",
+                  "module-178.26@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.27@/html/body/div/a[1]/i/@class",
+                  "module-178.27@/html/body/div/a[2]/i/@class",
+                  "module-178.27@/html/body/div/a[3]/i/@class",
+                  "module-178.27@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.28@/html/body/div/a[1]/i/@class",
+                  "module-178.28@/html/body/div/a[2]/i/@class",
+                  "module-178.28@/html/body/div/a[3]/i/@class",
+                  "module-178.28@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.29@/html/body/div/a[1]/i/@class",
+                  "module-178.29@/html/body/div/a[2]/i/@class",
+                  "module-178.29@/html/body/div/a[3]/i/@class",
+                  "module-178.29@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.30@/html/body/div/a[1]/i/@class",
+                  "module-178.30@/html/body/div/a[2]/i/@class",
+                  "module-178.30@/html/body/div/a[3]/i/@class",
+                  "module-178.30@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-178.31@/html/body/div/a[1]/i/@class",
+                  "module-178.31@/html/body/div/a[2]/i/@class",
+                  "module-178.31@/html/body/div/a[3]/i/@class",
+                  "module-178.31@/html/body/div/a[4]/i/@class"
+                ]
+              ]
+            }
+          ]
         }
       ],
       "from": {
@@ -3266,11 +3674,11 @@
       ],
       "items": {
         "min": 1,
-        "max": 1
+        "max": 4
       },
       "itemsFrom": {
-        "min": "the block shows one thing",
-        "max": "the block shows one thing"
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the rows the template stores"
       },
       "noData": {
         "rule": "hide"
@@ -3309,123 +3717,69 @@
           "limit": 30,
           "limitFrom": "kit frame (390px 30, 1440px 54)",
           "slot": "module-180.11"
-        },
+        }
+      ],
+      "lists": [
         {
-          "name": "social-1-social-label",
-          "kind": "contact.social_label",
-          "type": "text",
-          "limit": 40,
-          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
-          "slot": "module-180.3"
-        },
-        {
-          "name": "social-2-social-label",
-          "kind": "contact.social_label",
-          "type": "text",
-          "limit": 40,
-          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
-          "slot": "module-180.4",
-          "optional": true
-        },
-        {
-          "name": "social-3-social-label",
-          "kind": "contact.social_label",
-          "type": "text",
-          "limit": 40,
-          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
-          "slot": "module-180.5",
-          "optional": true
-        },
-        {
-          "name": "social-4-social-label",
-          "kind": "contact.social_label",
-          "type": "text",
-          "limit": 40,
-          "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
-          "slot": "module-180.6",
-          "optional": true
-        },
-        {
-          "name": "social-1-social-url",
-          "kind": "contact.social_url",
-          "type": "link",
-          "slot": "module-180.7"
-        },
-        {
-          "name": "social-2-social-url",
-          "kind": "contact.social_url",
-          "type": "link",
-          "slot": "module-180.8",
-          "optional": true
-        },
-        {
-          "name": "social-3-social-url",
-          "kind": "contact.social_url",
-          "type": "link",
-          "slot": "module-180.9",
-          "optional": true
-        },
-        {
-          "name": "social-4-social-url",
-          "kind": "contact.social_url",
-          "type": "link",
-          "slot": "module-180.10",
-          "optional": true
-        },
-        {
-          "name": "social-1-item-icon",
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "slot": "module-180.12",
-          "frame": {
-            "width": 18,
-            "height": 18
+          "name": "social",
+          "items": {
+            "min": 0,
+            "max": 4
           },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
-        },
-        {
-          "name": "social-2-item-icon",
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "slot": "module-180.13",
-          "optional": true,
-          "frame": {
-            "width": 18,
-            "height": 18
+          "itemsFrom": {
+            "min": "a trainer with no known profile link shows no social row: the hero keeps the picture, name and bio",
+            "max": "the most rows a stored parent place holds (4; per place 4)"
           },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
-        },
-        {
-          "name": "social-3-item-icon",
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "slot": "module-180.14",
-          "optional": true,
-          "frame": {
-            "width": 18,
-            "height": 18
-          },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
-        },
-        {
-          "name": "social-4-item-icon",
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "slot": "module-180.15",
-          "optional": true,
-          "frame": {
-            "width": 18,
-            "height": 18
-          },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
+          "fields": [
+            {
+              "name": "label",
+              "kind": "contact.social_label",
+              "type": "text",
+              "limit": 40,
+              "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+              "slots": [
+                [
+                  "module-180.3",
+                  "module-180.4",
+                  "module-180.5",
+                  "module-180.6"
+                ]
+              ]
+            },
+            {
+              "name": "link",
+              "kind": "contact.social_url",
+              "type": "link",
+              "slots": [
+                [
+                  "module-180.7",
+                  "module-180.8",
+                  "module-180.9",
+                  "module-180.10"
+                ]
+              ]
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+              "slots": [
+                [
+                  "module-180.12",
+                  "module-180.13",
+                  "module-180.14",
+                  "module-180.15"
+                ]
+              ]
+            }
+          ]
         }
       ],
       "from": {
@@ -3628,18 +3982,90 @@
             "module-182.10",
             "module-182.11"
           ]
-        },
+        }
+      ],
+      "itemLists": [
         {
-          "name": "social-links",
-          "kind": "person.social_url",
-          "type": "link",
-          "slots": [
-            "module-182.12",
-            "module-182.13",
-            "module-182.14",
-            "module-182.15"
-          ],
-          "storage": "html: the person's social profile links, one list per person"
+          "name": "social",
+          "items": {
+            "min": 0,
+            "max": 4
+          },
+          "itemsFrom": {
+            "min": "verified on the running template (home trainers, teams style-1, the layout of all three team blocks): a trainer with no link keeps its picture and name; the empty social row takes no height, so that card's lower panel is shorter than a neighbour's with links",
+            "max": "the links each stored trainer value holds (four: a link with a network glyph each)"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "kind": "person.social_url",
+              "type": "link",
+              "slots": [
+                [
+                  "module-182.12@/html/body/div/a[1]/@href",
+                  "module-182.12@/html/body/div/a[2]/@href",
+                  "module-182.12@/html/body/div/a[3]/@href",
+                  "module-182.12@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-182.13@/html/body/div/a[1]/@href",
+                  "module-182.13@/html/body/div/a[2]/@href",
+                  "module-182.13@/html/body/div/a[3]/@href",
+                  "module-182.13@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-182.14@/html/body/div/a[1]/@href",
+                  "module-182.14@/html/body/div/a[2]/@href",
+                  "module-182.14@/html/body/div/a[3]/@href",
+                  "module-182.14@/html/body/div/a[4]/@href"
+                ],
+                [
+                  "module-182.15@/html/body/div/a[1]/@href",
+                  "module-182.15@/html/body/div/a[2]/@href",
+                  "module-182.15@/html/body/div/a[3]/@href",
+                  "module-182.15@/html/body/div/a[4]/@href"
+                ]
+              ]
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+              "slots": [
+                [
+                  "module-182.12@/html/body/div/a[1]/i/@class",
+                  "module-182.12@/html/body/div/a[2]/i/@class",
+                  "module-182.12@/html/body/div/a[3]/i/@class",
+                  "module-182.12@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-182.13@/html/body/div/a[1]/i/@class",
+                  "module-182.13@/html/body/div/a[2]/i/@class",
+                  "module-182.13@/html/body/div/a[3]/i/@class",
+                  "module-182.13@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-182.14@/html/body/div/a[1]/i/@class",
+                  "module-182.14@/html/body/div/a[2]/i/@class",
+                  "module-182.14@/html/body/div/a[3]/i/@class",
+                  "module-182.14@/html/body/div/a[4]/i/@class"
+                ],
+                [
+                  "module-182.15@/html/body/div/a[1]/i/@class",
+                  "module-182.15@/html/body/div/a[2]/i/@class",
+                  "module-182.15@/html/body/div/a[3]/i/@class",
+                  "module-182.15@/html/body/div/a[4]/i/@class"
+                ]
+              ]
+            }
+          ]
         }
       ],
       "from": {
@@ -3775,6 +4201,22 @@
           "kind": "business.video",
           "type": "link",
           "slot": "article-16.12"
+        },
+        {
+          "name": "trial-heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 32 (demo 25 characters on 1 line(s)), 768px 70 (demo 25 characters on 1 line(s)), 1440px 152 (demo 25 characters on 1 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "languageString-76896395.0"
+        },
+        {
+          "name": "schedule-button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 32 (demo 12 characters on 1 line(s)), 768px 70 (demo 12 characters on 1 line(s)), 1440px 114 (demo 12 characters on 1 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "languageString-90793445.0"
         }
       ],
       "lists": [
@@ -3798,6 +4240,11 @@
                 "height": 150
               },
               "storage": "image-file",
+              "theme": "dark",
+              "for": [
+                "title",
+                "description"
+              ],
               "slots": [
                 [
                   "article-16.15",
@@ -3816,6 +4263,12 @@
                 "height": 150
               },
               "storage": "image-file",
+              "theme": "light",
+              "variantOf": "icon",
+              "for": [
+                "title",
+                "description"
+              ],
               "slots": [
                 [
                   "article-16.16",
@@ -4007,6 +4460,14 @@
           "limit": 257,
           "limitFrom": "kit frame (390px 287, 1440px 257)",
           "slot": "module-159.1"
+        },
+        {
+          "name": "try-button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 37,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (37, page /classes/advanced-boxing): at 768, 1440px, page /: 768px 45 (demo 11 characters on 1 line(s)), 1440px 40 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 40 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390px (its box is drawn 0 by 0), so 768px is the narrowest width that draws it | at 1440px, page /classes: 1440px 42 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 42 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390 and 768px (its box is drawn 0 by 0), so 1440px is the narrowest width that draws it | at 768, 1440px, page /classes/advanced-boxing: 768px 45 (demo 11 characters on 1 line(s)), 1440px 37 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 37 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390px (its box is drawn 0 by 0), so 768px is the narrowest width that draws it",
+          "slot": "languageString-256948293.0"
         }
       ],
       "itemFields": [
@@ -4025,8 +4486,8 @@
           "name": "heading-2",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 35,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 22,
+          "limitFrom": "measured on the running template on 2 pages, the smallest limit taken (22, page /classes): at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /classes: 390px 36 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 34 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 22 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; no box holds the demo words on /classes/advanced-boxing",
           "slots": [
             "article-16.7",
             "article-14.7"
@@ -4250,8 +4711,8 @@
           "name": "heading-2",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 31,
-          "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 26,
+          "limitFrom": "measured on the running template on 3 pages, the smallest limit taken (26, page /pages/j-content/featured-articles): at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/featured-articles: 390px 29 (demo 18 characters on 1 line(s)), 768px 26 (demo 18 characters on 1 line(s)), 1440px 57 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 26 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text | at 390, 768, 1440px, page /pages/j-content/author-listting/author/admin: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 33 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-28.7",
             "article-29.7",
@@ -4375,6 +4836,22 @@
             "height": 570
           },
           "slot": "article-18.14"
+        },
+        {
+          "name": "punches-heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 64,
+          "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 64 (demo 13 characters on 3 line(s)), 768px 95 (demo 13 characters on 3 line(s)), 1440px 126 (demo 13 characters on 3 line(s)); the limit is the smallest reading, 64 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "languageString-46373076.0"
+        },
+        {
+          "name": "punches-lead",
+          "kind": "editorial.paragraph",
+          "type": "text",
+          "limit": 46,
+          "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 46 (demo 20 characters on 1 line(s)), 768px 88 (demo 20 characters on 1 line(s)), 1440px 179 (demo 20 characters on 1 line(s)); the limit is the smallest reading, 46 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "languageString-182937349.0"
         }
       ],
       "lists": [

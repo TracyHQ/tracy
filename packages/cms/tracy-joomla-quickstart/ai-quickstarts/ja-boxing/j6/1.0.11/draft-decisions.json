@@ -198,7 +198,16 @@
         "siteSetting-257986166.0": "logo-light",
         "siteSetting-211586990.0": "logo-dark"
       },
-      "menu": "mainmenu"
+      "menu": "mainmenu",
+      "fieldKeys": {
+        "logo-dark": {
+          "theme": "dark",
+          "variantOf": "logo-light"
+        },
+        "logo-light": {
+          "theme": "light"
+        }
+      }
     },
     "block-176": {
       "type": "header",
@@ -226,7 +235,18 @@
       "type": "hero"
     },
     "block-157": {
-      "type": "services"
+      "type": "services",
+      "fieldKeys": {
+        "item-icon": {
+          "theme": "dark",
+          "for": ["heading-2", "paragraph-2"]
+        },
+        "item-icon-2": {
+          "theme": "light",
+          "variantOf": "item-icon",
+          "for": ["heading-2", "paragraph-2"]
+        }
+      }
     },
     "block-160": {
       "type": "services",
@@ -236,6 +256,12 @@
           "name": "button-link",
           "kind": "editorial.navigation_url",
           "type": "link"
+        },
+        {
+          "slot": "languageString-256948293.0",
+          "name": "try-button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
         }
       ],
       "itemLists": [
@@ -266,22 +292,50 @@
     },
     "block-163": {
       "type": "team",
-      "retype": {
-        "module-163.12": {
-          "kind": "person.social_url",
-          "type": "link",
-          "storage": "html: the person's social profile links, one list per person"
-        }
-      },
-      "names": {
-        "module-163.12": "social-links"
-      },
       "fields": [
         {
           "slot": "module-163.19",
           "name": "button-link",
           "kind": "editorial.navigation_url",
           "type": "link"
+        }
+      ],
+      "itemLists": [
+        {
+          "name": "social",
+          "column": "params",
+          "html": {
+            "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
+            "row": "a"
+          },
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "verified on the running template (home trainers, teams style-1, the layout of all three team blocks): a trainer with no link keeps its picture and name; the empty social row takes no height, so that card's lower panel is shorter than a neighbour's with links",
+            "max": "the links each stored trainer value holds (four: a link with a network glyph each)"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "kind": "person.social_url",
+              "type": "link",
+              "xpath": "/html/body/div/a[{1}]/@href"
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "xpath": "/html/body/div/a[{1}]/i/@class",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link"
+            }
+          ]
         }
       ]
     },
@@ -413,10 +467,11 @@
             "min": 0
           },
           "itemsFrom": {
-            "min": "a page with no row of its own shows the masthead's default title and intro (fields default-title and default-intro)"
+            "min": "a page with no row of its own shows the masthead's default title and intro (fields default-title and default-intro)",
+            "max": "the rows the masthead stores, one per page; each row is drawn only on the page its key (menuitem_config.item_id) names, so a build writes the key of the page it creates for the row"
           },
           "exceptRows": {
-            "14": "the classes page row: its intro is the stat panel, declared as the stat fields of the block"
+            "14": "the classes page row: its title and intro are the stat panel, declared as the stat fields of the block and keyed to the classes page type by field stat-page"
           },
           "fields": [
             {
@@ -431,7 +486,19 @@
               "jsonPath": ["menuitem_config", "description", "{1}"],
               "xpath": ["/html/body/div", null]
             }
-          ]
+          ],
+          "key": {
+            "name": "page",
+            "jsonPath": ["menuitem_config", "item_id", "{1}", 0]
+          }
+        }
+      ],
+      "keys": [
+        {
+          "name": "stat-page",
+          "column": "params",
+          "jsonPath": ["menuitem_config", "item_id", 14, 0],
+          "pageType": "classes"
         }
       ]
     },
@@ -505,7 +572,16 @@
       ]
     },
     "block-183": {
-      "type": "about"
+      "type": "about",
+      "fieldKeys": {
+        "quote-author-image": {
+          "theme": "dark"
+        },
+        "quote-author-image-2": {
+          "theme": "light",
+          "variantOf": "quote-author-image"
+        }
+      }
     },
     "block-190": {
       "type": "services",
@@ -516,23 +592,24 @@
           "kind": "editorial.button_label",
           "type": "text"
         }
-      ]
+      ],
+      "fieldKeys": {
+        "item-icon": {
+          "theme": "dark",
+          "for": ["heading-2", "paragraph-2"]
+        },
+        "item-icon-2": {
+          "theme": "light",
+          "variantOf": "item-icon",
+          "for": ["heading-2", "paragraph-2"]
+        }
+      }
     },
     "block-177": {
       "type": "services"
     },
     "block-178": {
       "type": "team",
-      "retype": {
-        "module-178.24": {
-          "kind": "person.social_url",
-          "type": "link",
-          "storage": "html: the person's social profile links, one list per person"
-        }
-      },
-      "names": {
-        "module-178.24": "social-links"
-      },
       "fields": [
         {
           "slot": "module-178.32",
@@ -546,73 +623,92 @@
           "kind": "editorial.navigation_url",
           "type": "link"
         }
+      ],
+      "itemLists": [
+        {
+          "name": "social",
+          "column": "params",
+          "html": {
+            "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
+            "row": "a"
+          },
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "verified on the running template (home trainers, teams style-1, the layout of all three team blocks): a trainer with no link keeps its picture and name; the empty social row takes no height, so that card's lower panel is shorter than a neighbour's with links",
+            "max": "the links each stored trainer value holds (four: a link with a network glyph each)"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "kind": "person.social_url",
+              "type": "link",
+              "xpath": "/html/body/div/a[{1}]/@href"
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "xpath": "/html/body/div/a[{1}]/i/@class",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link"
+            }
+          ]
+        }
       ]
     },
     "block-180": {
       "type": "team",
-      "listsNumbered": ["block-180.social"],
-      "retype": {
-        "module-180.12": {
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "frame": {
-            "width": 18,
-            "height": 18
+      "lists": [
+        {
+          "name": "social",
+          "column": "params",
+          "items": {
+            "min": 0
           },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
-        },
-        "module-180.13": {
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "frame": {
-            "width": 18,
-            "height": 18
+          "itemsFrom": {
+            "min": "a trainer with no known profile link shows no social row: the hero keeps the picture, name and bio"
           },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
-        },
-        "module-180.14": {
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "frame": {
-            "width": 18,
-            "height": 18
-          },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
-        },
-        "module-180.15": {
-          "kind": "editorial.item_icon",
-          "type": "icon",
-          "storage": "class-name",
-          "frame": {
-            "width": 18,
-            "height": 18
-          },
-          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
-          "iconOf": "network"
+          "fields": [
+            {
+              "name": "label",
+              "kind": "contact.social_label",
+              "jsonPath": ["hero", "hero[social-intro][title]", "{1}"]
+            },
+            {
+              "name": "link",
+              "kind": "contact.social_url",
+              "type": "link",
+              "jsonPath": ["hero", "hero[social-intro][link]", "{1}"]
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+              "jsonPath": ["hero", "hero[social-intro][font-icon]", "{1}"]
+            }
+          ]
         }
-      }
+      ]
     },
     "block-181": {
       "type": "gallery"
     },
     "block-182": {
       "type": "team",
-      "retype": {
-        "module-182.12": {
-          "kind": "person.social_url",
-          "type": "link",
-          "storage": "html: the person's social profile links, one list per person"
-        }
-      },
-      "names": {
-        "module-182.12": "social-links"
-      },
       "fields": [
         {
           "slot": "module-182.18",
@@ -625,6 +721,44 @@
           "name": "button-link",
           "kind": "editorial.navigation_url",
           "type": "link"
+        }
+      ],
+      "itemLists": [
+        {
+          "name": "social",
+          "column": "params",
+          "html": {
+            "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
+            "row": "a"
+          },
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "verified on the running template (home trainers, teams style-1, the layout of all three team blocks): a trainer with no link keeps its picture and name; the empty social row takes no height, so that card's lower panel is shorter than a neighbour's with links",
+            "max": "the links each stored trainer value holds (four: a link with a network glyph each)"
+          },
+          "fields": [
+            {
+              "name": "link",
+              "kind": "person.social_url",
+              "type": "link",
+              "xpath": "/html/body/div/a[{1}]/@href"
+            },
+            {
+              "name": "network-icon",
+              "kind": "editorial.item_icon",
+              "type": "icon",
+              "storage": "class-name",
+              "iconOf": "network",
+              "xpath": "/html/body/div/a[{1}]/i/@class",
+              "frame": {
+                "width": 18,
+                "height": 18
+              },
+              "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link"
+            }
+          ]
         }
       ]
     },
@@ -650,6 +784,14 @@
               "jsonPath": ["classes-info", "classes-info{1}", "project_info"]
             }
           ]
+        }
+      ],
+      "fields": [
+        {
+          "slot": "languageString-256948293.0",
+          "name": "try-button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
         }
       ]
     }
@@ -707,12 +849,12 @@
       "id": "author-list",
       "type": "team",
       "items": {
-        "min": 4,
-        "max": 4
+        "min": 1,
+        "max": 7
       },
       "itemsFrom": {
-        "min": "measured by the kit at 390 and 1440 px: at 1440 px a row holds 4 authors, left-packed, so only 4 and 8 fill every row (1 to 3 and 5 to 7 leave a hole in the last row)",
-        "max": "4: of the two counts that fill every row, 8 needs more author records than the 7 the template stores"
+        "min": "measured by the kit at 390 and 1440 px: one author lays out as one card; at 1440 px a row holds 4 authors, left-packed, so 1 to 3 and 5 to 7 leave a hole in the last row, accepted as in the demo, which shows 7",
+        "max": "the places the template stores: 7 author records, all drawn on the authors page"
       }
     },
     {
@@ -748,6 +890,14 @@
             }
           ]
         }
+      ],
+      "fields": [
+        {
+          "slot": "languageString-256948293.0",
+          "name": "try-button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
+        }
       ]
     },
     {
@@ -782,12 +932,17 @@
             {
               "name": "icon",
               "kind": "editorial.item_icon",
-              "jsonPath": ["classes-features", "classes-features{1}", "feature_img"]
+              "jsonPath": ["classes-features", "classes-features{1}", "feature_img"],
+              "theme": "dark",
+              "for": ["title", "description"]
             },
             {
               "name": "icon-light",
               "kind": "editorial.item_icon",
-              "jsonPath": ["classes-features", "classes-features{1}", "feature_img_light"]
+              "jsonPath": ["classes-features", "classes-features{1}", "feature_img_light"],
+              "theme": "light",
+              "variantOf": "icon",
+              "for": ["title", "description"]
             },
             {
               "name": "title",
@@ -848,12 +1003,34 @@
             }
           ]
         }
+      ],
+      "fields": [
+        {
+          "slot": "languageString-76896395.0",
+          "name": "trial-heading",
+          "kind": "editorial.heading",
+          "type": "text"
+        },
+        {
+          "slot": "languageString-90793445.0",
+          "name": "schedule-button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
+        }
       ]
     },
     {
       "match": "^body-about-us_contact$",
       "id": "contact-details",
-      "type": "contact"
+      "type": "contact",
+      "fields": [
+        {
+          "slot": "languageString-169039348.0",
+          "name": "form-heading",
+          "kind": "editorial.heading",
+          "type": "text"
+        }
+      ]
     },
     {
       "match": "^body-about-us_learning-center(--start-\\d+)?$",
@@ -923,6 +1100,20 @@
               "jsonPath": ["learning-features", "learning-features{1}", "learning_link"]
             }
           ]
+        }
+      ],
+      "fields": [
+        {
+          "slot": "languageString-46373076.0",
+          "name": "punches-heading",
+          "kind": "editorial.heading",
+          "type": "text"
+        },
+        {
+          "slot": "languageString-182937349.0",
+          "name": "punches-lead",
+          "kind": "editorial.paragraph",
+          "type": "text"
         }
       ]
     }
@@ -1015,6 +1206,30 @@
     "module-175.3": {
       "as": "fact",
       "why": "the email link's address ('#' in the demo): written from the email fact as a mailto: link by the mapping file (#584)"
+    },
+    "languageString-34322868.0": {
+      "as": "kept",
+      "why": "TPL_CONTACT_VISIT (Visit): the label over the address on the contact page; interface text valid on every site"
+    },
+    "languageString-30910664.0": {
+      "as": "kept",
+      "why": "TPL_OPEN_IN_GOOGLE_MAPS (open in google maps): the label of the map link on the contact page; interface text valid on every site"
+    },
+    "languageString-219823601.0": {
+      "as": "kept",
+      "why": "TPL_CONTACT_EMAIL_PLACEHOLDER (Your email): a placeholder of the contact form; interface text of a form, valid on every site"
+    },
+    "languageString-234398682.0": {
+      "as": "kept",
+      "why": "TPL_CONTACT_MESSAGE_SUBJECT_PLACEHOLDER (Your subject): a placeholder of the contact form; interface text of a form, valid on every site"
+    },
+    "languageString-50724917.0": {
+      "as": "kept",
+      "why": "TPL_CONTACT_NAME_PLACEHOLDER (Your name): a placeholder of the contact form; interface text of a form, valid on every site"
+    },
+    "languageString-139204367.0": {
+      "as": "kept",
+      "why": "TPL_CONTACT_SEND (Submit): the contact form's send button; interface text of a form, valid on every site"
     }
   },
   "notes": [
@@ -1030,7 +1245,7 @@
   "outsideStore": {
     "module-179": {
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     "module-1.0": {
       "as": "not-drawn",
@@ -1077,20 +1292,12 @@
       "why": "TPL_PLAY (play): the hidden accessible name of the video play button (class d-none), interface text valid on every site"
     },
     "languageString-58440578.0": {
-      "as": "override",
-      "why": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER (Your message): the contact form's message placeholder, set by the template's script; a language override of the mapping file, like the form's other placeholders"
+      "as": "kept",
+      "why": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER (Your message): the contact form's message placeholder, set by the template's script; interface text of a form, valid on every site"
     },
     "languageString-112732346.0": {
-      "as": "override",
-      "why": "TPL_FOLLOW_US (Follow us): drawn beside the footer social links at wide widths (class d-hd-inline); demo words, a language override of the mapping file"
-    },
-    "languageString-182937349.0": {
-      "as": "override",
-      "why": "TPL_LEARNING_LEAD_DESC (All you need to know): the lead line over the punch rows of every learning post; demo words, a language override of the mapping file"
-    },
-    "languageString-46373076.0": {
-      "as": "override",
-      "why": "TPL_LEARNING_LEAD_TITLE (The 6 punches): the heading over the punch rows of every learning post; demo words, a language override of the mapping file"
+      "as": "kept",
+      "why": "TPL_FOLLOW_US (Follow us): drawn beside the footer social links at wide widths (class d-hd-inline); a label of the social links, interface text valid on every site, not a fact of the business"
     }
   },
   "removedWithPage": {
@@ -1115,6 +1322,18 @@
     },
     "userProfile": {
       "why": "the blank site step (remove-accounts) deletes every account profile row"
+    }
+  },
+  "references": {
+    "module-159:params:catid.0": {
+      "as": "build-sets",
+      "owner": "#584",
+      "why": "the related classes list (mod_articles_category) lists the articles of category 9, which the blank site deletes; the mapping file names this setting so the build writes the category it files the class pages in, else the block lists nothing"
+    },
+    "module-160:params:catid.0": {
+      "as": "build-sets",
+      "owner": "#584",
+      "why": "the home page class cards (mod_articles_category) list the articles of category 9, which the blank site deletes; the mapping file names this setting so the build writes the category it files the class pages in, else the block lists nothing"
     }
   }
 }

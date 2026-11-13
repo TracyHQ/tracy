@@ -3,21 +3,21 @@
     "blocks": 44,
     "fieldsByType": {
       "image": 34,
-      "text": 177,
-      "link": 44,
-      "icon": 9,
+      "text": 181,
+      "link": 38,
+      "icon": 5,
       "design": 2
     },
     "childFieldsByType": {
-      "text": 15,
-      "icon": 2,
-      "image": 2,
-      "link": 3
+      "text": 16,
+      "link": 8,
+      "icon": 6,
+      "image": 2
     },
     "textLimits": {
-      "kitFrame390": 123,
-      "measuredOnSite": 63,
-      "notDrawn": 6,
+      "kitFrame390": 122,
+      "measuredOnSite": 72,
+      "notDrawn": 3,
       "other": 0,
       "missing": 0
     },
@@ -41,29 +41,38 @@
     "excludedPageGroups": 2,
     "open": {
       "unmeasured": 0,
-      "derived": 52,
-      "unlisted": 11,
+      "derived": 40,
+      "unlisted": 17,
       "undecided": 0,
       "skipped": 2,
-      "notInMap": 5,
+      "notInMap": 2,
       "sparse": 1,
       "problems": 0,
       "omitted": 4,
       "notPlaced": 0,
       "notes": 2,
-      "outsideStore": 29
+      "outsideStore": 27,
+      "sharedPlaces": 73
     },
     "unlistedUnclassified": 0,
+    "references": {
+      "total": 111,
+      "target kept": 4,
+      "field": 84,
+      "build-sets": 2,
+      "keyed": 15,
+      "outsideStore not-drawn": 6
+    },
     "coverage": {
       "total": 1612,
-      "fields": 617,
+      "fields": 623,
       "report": {
-        "derived": 20,
-        "unlisted": 11,
+        "derived": 10,
+        "unlisted": 17,
         "omitted": 4,
         "sparse": 1
       },
-      "outsideStore": 29,
+      "outsideStore": 27,
       "removedWithPage": {
         "article": 868,
         "menuItem": 2,
@@ -92,11 +101,6 @@
     },
     {
       "block": "block-160",
-      "slot": "languageString-256948293.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "block-160",
       "slot": "menuItem-188.0",
       "why": "a menu label: the page title"
     },
@@ -113,61 +117,56 @@
     {
       "block": "news-list",
       "slot": "article-8.15",
-      "why": "a field of body-pages_j-content_category-blog_boxings-finest-moments"
+      "why": "a field of news-post"
     },
     {
       "block": "news-list",
       "slot": "article-9.15",
-      "why": "a field of body-pages_j-content_category-blog_boxings-ultimate-showdown"
+      "why": "a field of news-post"
     },
     {
       "block": "news-list",
       "slot": "article-10.15",
-      "why": "a field of body-pages_j-content_category-blog_boxings-impact-on-culture"
+      "why": "a field of news-post"
     },
     {
       "block": "news-list",
       "slot": "article-11.15",
-      "why": "a field of body-pages_j-content_category-blog_boxing-and-mental-toughness"
+      "why": "a field of news-post"
     },
     {
       "block": "featured-list",
       "slot": "article-8.15",
-      "why": "a field of body-pages_j-content_category-blog_boxings-finest-moments"
+      "why": "a field of news-post"
     },
     {
       "block": "featured-list",
       "slot": "article-9.15",
-      "why": "a field of body-pages_j-content_category-blog_boxings-ultimate-showdown"
+      "why": "a field of news-post"
     },
     {
       "block": "featured-list",
       "slot": "article-10.15",
-      "why": "a field of body-pages_j-content_category-blog_boxings-impact-on-culture"
+      "why": "a field of news-post"
     },
     {
       "block": "featured-list",
       "slot": "article-11.15",
-      "why": "a field of body-pages_j-content_category-blog_boxing-and-mental-toughness"
+      "why": "a field of news-post"
     },
     {
       "block": "block-158",
       "slot": "article-1.15",
-      "why": "a field of body-pages_j-content_category-blog"
+      "why": "a field of news-list"
     },
     {
       "block": "block-158",
       "slot": "article-3.15",
-      "why": "a field of body-pages_j-content_category-blog"
+      "why": "a field of news-list"
     },
     {
       "block": "class-list",
       "slot": "menuItem-188.0",
-      "why": "a field of block-160"
-    },
-    {
-      "block": "class-list",
-      "slot": "languageString-256948293.0",
       "why": "a field of block-160"
     },
     {
@@ -186,41 +185,6 @@
       "why": "a menu label: the page title"
     },
     {
-      "block": "contact-details",
-      "slot": "languageString-34322868.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "contact-details",
-      "slot": "languageString-30910664.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "contact-details",
-      "slot": "languageString-169039348.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "contact-details",
-      "slot": "languageString-50724917.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "contact-details",
-      "slot": "languageString-219823601.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "contact-details",
-      "slot": "languageString-234398682.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "contact-details",
-      "slot": "languageString-139204367.0",
-      "why": "a template string: a language override"
-    },
-    {
       "block": "block-190",
       "slot": "block-157.23",
       "why": "a field of block-157"
@@ -233,22 +197,22 @@
     {
       "block": "learning-list",
       "slot": "article-24.12",
-      "why": "a field of body-pages_j-content_author-listting_author_gene_roberts"
+      "why": "a field of author-profile"
     },
     {
       "block": "learning-list",
       "slot": "article-25.12",
-      "why": "a field of body-pages_j-content_author-listting_author_lorene_bass"
+      "why": "a field of author-profile"
     },
     {
       "block": "learning-list",
       "slot": "article-26.12",
-      "why": "a field of body-pages_j-content_author-listting_author_lorene_bass"
+      "why": "a field of author-profile"
     },
     {
       "block": "learning-list",
       "slot": "article-27.12",
-      "why": "a field of body-pages_j-content_author-listting_author_corey_gibson"
+      "why": "a field of author-profile"
     },
     {
       "block": "block-178",
@@ -266,57 +230,42 @@
       "why": "a field of block-163"
     },
     {
-      "block": "class-detail",
-      "slot": "languageString-90793445.0",
-      "why": "a template string: a language override"
-    },
-    {
-      "block": "class-detail",
-      "slot": "languageString-76896395.0",
-      "why": "a template string: a language override"
-    },
-    {
       "block": "block-159",
       "slot": "menuItem-189.0",
       "why": "a field of block-160"
     },
     {
-      "block": "block-159",
-      "slot": "languageString-256948293.0",
-      "why": "a field of block-160"
-    },
-    {
       "block": "block-191",
       "slot": "article-18.12",
-      "why": "a field of body-about-us_learning-center"
+      "why": "a field of learning-list"
     },
     {
       "block": "block-191",
       "slot": "article-19.12",
-      "why": "a field of body-about-us_learning-center"
+      "why": "a field of learning-list"
     },
     {
       "block": "news-list",
       "slot": "article-12.15",
-      "why": "a field of body-pages_j-content_author-listting_author_gene_roberts",
+      "why": "a field of author-profile",
       "on": "body-pages_j-content_category-blog--start-6"
     },
     {
       "block": "news-list",
       "slot": "article-13.15",
-      "why": "a field of body-pages_j-content_author-listting_author_franklin_wagner",
+      "why": "a field of author-profile",
       "on": "body-pages_j-content_category-blog--start-6"
     },
     {
       "block": "featured-list",
       "slot": "article-12.15",
-      "why": "a field of body-pages_j-content_author-listting_author_gene_roberts",
+      "why": "a field of author-profile",
       "on": "body-pages_j-content_featured-articles--start-6"
     },
     {
       "block": "featured-list",
       "slot": "article-13.15",
-      "why": "a field of body-pages_j-content_author-listting_author_franklin_wagner",
+      "why": "a field of author-profile",
       "on": "body-pages_j-content_featured-articles--start-6"
     },
     {
@@ -406,6 +355,48 @@
     },
     {
       "block": "contact-details",
+      "slot": "languageString-34322868.0",
+      "at": "value",
+      "as": "kept",
+      "why": "TPL_CONTACT_VISIT (Visit): the label over the address on the contact page; interface text valid on every site"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-30910664.0",
+      "at": "value",
+      "as": "kept",
+      "why": "TPL_OPEN_IN_GOOGLE_MAPS (open in google maps): the label of the map link on the contact page; interface text valid on every site"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-50724917.0",
+      "at": "value",
+      "as": "kept",
+      "why": "TPL_CONTACT_NAME_PLACEHOLDER (Your name): a placeholder of the contact form; interface text of a form, valid on every site"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-219823601.0",
+      "at": "value",
+      "as": "kept",
+      "why": "TPL_CONTACT_EMAIL_PLACEHOLDER (Your email): a placeholder of the contact form; interface text of a form, valid on every site"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-234398682.0",
+      "at": "value",
+      "as": "kept",
+      "why": "TPL_CONTACT_MESSAGE_SUBJECT_PLACEHOLDER (Your subject): a placeholder of the contact form; interface text of a form, valid on every site"
+    },
+    {
+      "block": "contact-details",
+      "slot": "languageString-139204367.0",
+      "at": "value",
+      "as": "kept",
+      "why": "TPL_CONTACT_SEND (Submit): the contact form's send button; interface text of a form, valid on every site"
+    },
+    {
+      "block": "contact-details",
       "slot": "contact-1.0",
       "at": "name",
       "as": "not-drawn",
@@ -438,18 +429,6 @@
     {
       "block": "block-180",
       "slot": "block-180.7.icon"
-    },
-    {
-      "block": "block-180",
-      "slot": "block-180.8.icon"
-    },
-    {
-      "block": "block-180",
-      "slot": "block-180.9.icon"
-    },
-    {
-      "block": "block-180",
-      "slot": "block-180.10.icon"
     }
   ],
   "sparse": [
@@ -522,85 +501,85 @@
       "slot": "module-179.0",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.1",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.2",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.3",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.4",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.5",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.6",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.7",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.8",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.9",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.10",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.11",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.12",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "module-179.13",
       "entity": "module-179",
       "as": "not-drawn",
-      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws (fields punches-heading and punches-lead of block learning-post)"
     },
     {
       "slot": "field-1.0",
@@ -623,8 +602,8 @@
     {
       "slot": "languageString-58440578.0",
       "entity": "languageString-58440578",
-      "as": "override",
-      "why": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER (Your message): the contact form's message placeholder, set by the template's script; a language override of the mapping file, like the form's other placeholders"
+      "as": "kept",
+      "why": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER (Your message): the contact form's message placeholder, set by the template's script; interface text of a form, valid on every site"
     },
     {
       "slot": "languageString-10831042.0",
@@ -635,20 +614,8 @@
     {
       "slot": "languageString-112732346.0",
       "entity": "languageString-112732346",
-      "as": "override",
-      "why": "TPL_FOLLOW_US (Follow us): drawn beside the footer social links at wide widths (class d-hd-inline); demo words, a language override of the mapping file"
-    },
-    {
-      "slot": "languageString-182937349.0",
-      "entity": "languageString-182937349",
-      "as": "override",
-      "why": "TPL_LEARNING_LEAD_DESC (All you need to know): the lead line over the punch rows of every learning post; demo words, a language override of the mapping file"
-    },
-    {
-      "slot": "languageString-46373076.0",
-      "entity": "languageString-46373076",
-      "as": "override",
-      "why": "TPL_LEARNING_LEAD_TITLE (The 6 punches): the heading over the punch rows of every learning post; demo words, a language override of the mapping file"
+      "as": "kept",
+      "why": "TPL_FOLLOW_US (Follow us): drawn beside the footer social links at wide widths (class d-hd-inline); a label of the social links, interface text valid on every site, not a fact of the business"
     },
     {
       "slot": "languageString-37868544.0",
@@ -674,5 +641,1299 @@
       "as": "kept",
       "why": "TPL_USERNAME (Username): the login and registration form label, interface text valid on every site; drawn only on those system pages"
     }
-  ]
+  ],
+  "sharedPlaces": [
+    {
+      "place": "menuItem-101.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-152.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-153.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-156.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-157.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-158.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-154.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-159.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-160.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-161.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-162.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-155.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-17",
+          "field": "label",
+          "limit": 28
+        }
+      ]
+    },
+    {
+      "place": "menuItem-163.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-17",
+          "field": "label",
+          "limit": 28
+        }
+      ]
+    },
+    {
+      "place": "menuItem-164.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-165.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-166.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-167.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-169.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-193.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-168.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-194.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-195.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-197.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "menuItem-196.0",
+      "limit": 19,
+      "uses": [
+        {
+          "block": "header",
+          "field": "label",
+          "limit": 19
+        },
+        {
+          "block": "block-187",
+          "field": "label",
+          "limit": 19
+        }
+      ]
+    },
+    {
+      "place": "languageString-256948293.0",
+      "limit": 37,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "try-button-label",
+          "limit": 37
+        },
+        {
+          "block": "class-list",
+          "field": "try-button-label",
+          "limit": 37
+        },
+        {
+          "block": "block-159",
+          "field": "try-button-label",
+          "limit": 37
+        }
+      ]
+    },
+    {
+      "place": "article-16.4",
+      "limit": 35,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "class-list",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "class-detail",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "block-159",
+          "field": "name",
+          "limit": 35
+        }
+      ]
+    },
+    {
+      "place": "article-14.4",
+      "limit": 35,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "class-list",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "block-159",
+          "field": "name",
+          "limit": 35
+        }
+      ]
+    },
+    {
+      "place": "article-2.4",
+      "limit": 35,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "class-list",
+          "field": "name",
+          "limit": 35
+        }
+      ]
+    },
+    {
+      "place": "article-15.4",
+      "limit": 35,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "name",
+          "limit": 35
+        },
+        {
+          "block": "class-list",
+          "field": "name",
+          "limit": 35
+        }
+      ]
+    },
+    {
+      "place": "article-16.7",
+      "limit": 22,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "heading-2",
+          "limit": 22
+        },
+        {
+          "block": "class-list",
+          "field": "heading",
+          "limit": 22
+        },
+        {
+          "block": "block-159",
+          "field": "heading-2",
+          "limit": 22
+        }
+      ]
+    },
+    {
+      "place": "article-14.7",
+      "limit": 22,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "heading-2",
+          "limit": 22
+        },
+        {
+          "block": "class-list",
+          "field": "heading",
+          "limit": 22
+        },
+        {
+          "block": "block-159",
+          "field": "heading-2",
+          "limit": 22
+        }
+      ]
+    },
+    {
+      "place": "article-2.7",
+      "limit": 22,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "heading-2",
+          "limit": 22
+        },
+        {
+          "block": "class-list",
+          "field": "heading",
+          "limit": 22
+        }
+      ]
+    },
+    {
+      "place": "article-15.7",
+      "limit": 22,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "heading-2",
+          "limit": 22
+        },
+        {
+          "block": "class-list",
+          "field": "heading",
+          "limit": 22
+        }
+      ]
+    },
+    {
+      "place": "article-16.0",
+      "limit": 258,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "paragraph-2",
+          "limit": 258
+        },
+        {
+          "block": "class-list",
+          "field": "paragraph",
+          "limit": 258
+        },
+        {
+          "block": "class-detail",
+          "field": "paragraph-2",
+          "limit": 258
+        },
+        {
+          "block": "block-159",
+          "field": "paragraph-2",
+          "limit": 258
+        }
+      ]
+    },
+    {
+      "place": "article-14.0",
+      "limit": 258,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "paragraph-2",
+          "limit": 258
+        },
+        {
+          "block": "class-list",
+          "field": "paragraph",
+          "limit": 258
+        },
+        {
+          "block": "block-159",
+          "field": "paragraph-2",
+          "limit": 258
+        }
+      ]
+    },
+    {
+      "place": "article-2.0",
+      "limit": 258,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "paragraph-2",
+          "limit": 258
+        },
+        {
+          "block": "class-list",
+          "field": "paragraph",
+          "limit": 258
+        }
+      ]
+    },
+    {
+      "place": "article-15.0",
+      "limit": 258,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "paragraph-2",
+          "limit": 258
+        },
+        {
+          "block": "class-list",
+          "field": "paragraph",
+          "limit": 258
+        }
+      ]
+    },
+    {
+      "place": "article-16.8",
+      "limit": 72,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "schedule",
+          "limit": 72
+        },
+        {
+          "block": "class-list",
+          "field": "schedule",
+          "limit": 72
+        },
+        {
+          "block": "block-159",
+          "field": "schedule",
+          "limit": 72
+        }
+      ]
+    },
+    {
+      "place": "article-14.8",
+      "limit": 72,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "schedule",
+          "limit": 72
+        },
+        {
+          "block": "class-list",
+          "field": "schedule",
+          "limit": 72
+        },
+        {
+          "block": "block-159",
+          "field": "schedule",
+          "limit": 72
+        }
+      ]
+    },
+    {
+      "place": "article-2.9",
+      "limit": 72,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "schedule",
+          "limit": 72
+        },
+        {
+          "block": "class-list",
+          "field": "schedule",
+          "limit": 72
+        }
+      ]
+    },
+    {
+      "place": "article-15.8",
+      "limit": 72,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "schedule",
+          "limit": 72
+        },
+        {
+          "block": "class-list",
+          "field": "schedule",
+          "limit": 72
+        }
+      ]
+    },
+    {
+      "place": "article-16.5",
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "image"
+        },
+        {
+          "block": "class-list",
+          "field": "image"
+        },
+        {
+          "block": "class-detail",
+          "field": "image"
+        },
+        {
+          "block": "block-159",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-14.5",
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "image"
+        },
+        {
+          "block": "class-list",
+          "field": "image"
+        },
+        {
+          "block": "block-159",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-2.5",
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "image"
+        },
+        {
+          "block": "class-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-15.5",
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "image"
+        },
+        {
+          "block": "class-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-16.9",
+      "limit": 30,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "days",
+          "limit": 30
+        },
+        {
+          "block": "class-list",
+          "field": "days",
+          "limit": 30
+        },
+        {
+          "block": "block-159",
+          "field": "days",
+          "limit": 30
+        }
+      ]
+    },
+    {
+      "place": "article-14.9",
+      "limit": 30,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "days",
+          "limit": 30
+        },
+        {
+          "block": "class-list",
+          "field": "days",
+          "limit": 30
+        },
+        {
+          "block": "block-159",
+          "field": "days",
+          "limit": 30
+        }
+      ]
+    },
+    {
+      "place": "article-2.10",
+      "limit": 30,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "days",
+          "limit": 30
+        },
+        {
+          "block": "class-list",
+          "field": "days",
+          "limit": 30
+        }
+      ]
+    },
+    {
+      "place": "article-2.12",
+      "limit": 30,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "days",
+          "limit": 30
+        },
+        {
+          "block": "class-list",
+          "field": "days",
+          "limit": 30
+        }
+      ]
+    },
+    {
+      "place": "article-16.10",
+      "limit": 44,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "times",
+          "limit": 44
+        },
+        {
+          "block": "class-list",
+          "field": "times",
+          "limit": 44
+        },
+        {
+          "block": "block-159",
+          "field": "times",
+          "limit": 50
+        }
+      ]
+    },
+    {
+      "place": "article-14.10",
+      "limit": 44,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "times",
+          "limit": 44
+        },
+        {
+          "block": "class-list",
+          "field": "times",
+          "limit": 44
+        },
+        {
+          "block": "block-159",
+          "field": "times",
+          "limit": 50
+        }
+      ]
+    },
+    {
+      "place": "article-2.11",
+      "limit": 44,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "times",
+          "limit": 44
+        },
+        {
+          "block": "class-list",
+          "field": "times",
+          "limit": 44
+        }
+      ]
+    },
+    {
+      "place": "article-2.13",
+      "limit": 44,
+      "uses": [
+        {
+          "block": "block-160",
+          "field": "times",
+          "limit": 44
+        },
+        {
+          "block": "class-list",
+          "field": "times",
+          "limit": 44
+        }
+      ]
+    },
+    {
+      "place": "article-1.15",
+      "limit": 26,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "featured-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "author-profile",
+          "field": "heading-2",
+          "limit": 26
+        }
+      ]
+    },
+    {
+      "place": "article-3.15",
+      "limit": 26,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "featured-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "author-profile",
+          "field": "heading-2",
+          "limit": 26
+        }
+      ]
+    },
+    {
+      "place": "article-4.15",
+      "limit": 26,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "featured-list",
+          "field": "title",
+          "limit": 26
+        }
+      ]
+    },
+    {
+      "place": "article-5.15",
+      "limit": 26,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "featured-list",
+          "field": "title",
+          "limit": 26
+        }
+      ]
+    },
+    {
+      "place": "article-6.15",
+      "limit": 26,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "featured-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "news-post",
+          "field": "title",
+          "limit": 26
+        }
+      ]
+    },
+    {
+      "place": "article-7.15",
+      "limit": 26,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "title",
+          "limit": 26
+        },
+        {
+          "block": "featured-list",
+          "field": "title",
+          "limit": 26
+        }
+      ]
+    },
+    {
+      "place": "article-1.0",
+      "limit": 298,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "featured-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "author-profile",
+          "field": "paragraph",
+          "limit": 298
+        }
+      ]
+    },
+    {
+      "place": "article-3.0",
+      "limit": 298,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "featured-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "author-profile",
+          "field": "paragraph",
+          "limit": 298
+        }
+      ]
+    },
+    {
+      "place": "article-4.0",
+      "limit": 298,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "featured-list",
+          "field": "lead",
+          "limit": 298
+        }
+      ]
+    },
+    {
+      "place": "article-5.0",
+      "limit": 298,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "featured-list",
+          "field": "lead",
+          "limit": 298
+        }
+      ]
+    },
+    {
+      "place": "article-6.0",
+      "limit": 298,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "featured-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "news-post",
+          "field": "lead",
+          "limit": 298
+        }
+      ]
+    },
+    {
+      "place": "article-7.0",
+      "limit": 298,
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "lead",
+          "limit": 298
+        },
+        {
+          "block": "featured-list",
+          "field": "lead",
+          "limit": 298
+        }
+      ]
+    },
+    {
+      "place": "article-1.16",
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "image"
+        },
+        {
+          "block": "featured-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-3.16",
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "image"
+        },
+        {
+          "block": "featured-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-4.16",
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "image"
+        },
+        {
+          "block": "featured-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-5.16",
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "image"
+        },
+        {
+          "block": "featured-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-6.16",
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "image"
+        },
+        {
+          "block": "featured-list",
+          "field": "image"
+        },
+        {
+          "block": "news-post",
+          "field": "image-3"
+        }
+      ]
+    },
+    {
+      "place": "article-7.16",
+      "uses": [
+        {
+          "block": "news-list",
+          "field": "image"
+        },
+        {
+          "block": "featured-list",
+          "field": "image"
+        }
+      ]
+    },
+    {
+      "place": "article-18.12",
+      "limit": 43,
+      "uses": [
+        {
+          "block": "learning-list",
+          "field": "title",
+          "limit": 48
+        },
+        {
+          "block": "learning-post",
+          "field": "title",
+          "limit": 43
+        }
+      ]
+    },
+    {
+      "place": "article-18.13",
+      "uses": [
+        {
+          "block": "learning-list",
+          "field": "image"
+        },
+        {
+          "block": "learning-post",
+          "field": "image"
+        }
+      ]
+    }
+  ],
+  "references": {
+    "total": 111,
+    "byClass": {
+      "target kept": 4,
+      "field": 84,
+      "build-sets": 2,
+      "keyed": 15,
+      "outsideStore not-drawn": 6
+    },
+    "classed": [
+      {
+        "at": "module-159:params:catid.0",
+        "to": "category-9",
+        "as": "build-sets",
+        "why": "the related classes list (mod_articles_category) lists the articles of category 9, which the blank site deletes; the mapping file names this setting so the build writes the category it files the class pages in, else the block lists nothing",
+        "owner": "#584"
+      },
+      {
+        "at": "module-160:params:catid.0",
+        "to": "category-9",
+        "as": "build-sets",
+        "why": "the home page class cards (mod_articles_category) list the articles of category 9, which the blank site deletes; the mapping file names this setting so the build writes the category it files the class pages in, else the block lists nothing",
+        "owner": "#584"
+      }
+    ]
+  }
 }
