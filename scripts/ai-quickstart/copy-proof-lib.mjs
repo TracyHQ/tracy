@@ -6,23 +6,12 @@ import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { EMPTY_HTML } from '../../packages/cms/tracy-joomla-quickstart/scripts/blank-site-empty-fields.mjs'
+import { MODULE_COLUMNS } from '../../packages/wo/website-opportunities/domain/ai-quickstart-placement.mjs'
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const DOOR = 'index.php?option=com_claudecowork&task=api.exec&format=json'
 /** The module columns the plugin's open write accepts on a new module record (measured on 0.24.85). */
-export const MODULE_COLUMNS = Object.freeze([
-  'title',
-  'note',
-  'content',
-  'position',
-  'module',
-  'access',
-  'showtitle',
-  'params',
-  'published',
-  'language',
-  'ordering'
-])
+export { MODULE_COLUMNS }
 
 export function doorOf(base, token) {
   let n = 0
@@ -70,6 +59,29 @@ export function moduleHtml(html, id) {
   const rest = html.slice(start + 1)
   const ends = [rest.search(/id="Mod\d+"/), rest.search(/<div id="t4-/)].filter((i) => i >= 0)
   return rest.slice(0, ends.length ? Math.min(...ends) : undefined)
+}
+
+/** The words an HTML piece shows: tags, scripts, styles and comments left out, white space folded. */
+export const visibleText = (html) =>
+  String(html ?? '')
+    .replace(/<(script|style)\b[\s\S]*?<\/\1>/g, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/<[^>]*$/, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/**
+ * The HTML a template position prints on a page, from the element carrying its class (`t4-<position>`) to the next
+ * element of the layout (`class="t4-`): where a module drawn without its own wrapper (`id="Mod<id>"`: the hero, the
+ * header button, the copyright line) prints.
+ */
+export function positionHtml(html, position) {
+  const start = html.search(new RegExp(`class="[^"]*\\bt4-${position}\\b`))
+  if (start < 0) return null
+  const rest = html.slice(html.indexOf('>', start) + 1)
+  const end = rest.search(/class="t4-|<div id="t4-/)
+  return rest.slice(0, end < 0 ? undefined : end)
 }
 
 /** The anchors that hold no words and no picture: the empty button the blank site leaves when nothing hides it. */
@@ -127,15 +139,49 @@ export function getAt(fields, loc, lib) {
   return loc.xpath ? pieces(lib, [{ value: String(value ?? ''), xpath: loc.xpath }])[0].text : value
 }
 
-/** Cut the parallel lists of a `row` hide to the first `keep` rows, in a module record's fields. */
+/** The row indexes a cut keeps: the first `keep` rows, or the listed indexes (in their order). */
+const keptIndexes = (keep, length) =>
+  Array.isArray(keep) ? keep.filter((i) => i < length) : [...Array(Math.min(keep, length)).keys()]
+
+/**
+ * Cut the rows of a `row` hide in a module record's fields, keeping `keep`: a number (the first rows) or a list of
+ * row indexes (the rows the build wrote, kept in their order). `arrays`: parallel lists read across by index; `keys`:
+ * one row per named key of the parent object, a row's index being its key's place in `keys`.
+ */
 export function cutRows(fields, row, keep) {
   const outer = parse(fields[row.column])
   const inner = row.nestedJson ? parse(outer[row.nestedJson]) : outer
   let node = inner
   for (const step of row.parent) node = node[step]
-  for (const key of row.arrays ?? []) if (Array.isArray(node[key])) node[key] = node[key].slice(0, keep)
+  for (const key of row.arrays ?? [])
+    if (Array.isArray(node[key])) node[key] = keptIndexes(keep, node[key].length).map((i) => node[key][i])
+  if (row.keys) {
+    const kept = keptIndexes(keep, row.keys.length)
+    row.keys.forEach((name, i) => {
+      if (!kept.includes(i)) delete node[name]
+    })
+  }
   if (row.nestedJson) outer[row.nestedJson] = encode(inner)
   return { ...fields, [row.column]: JSON.stringify(outer) }
+}
+
+/**
+ * Where a location of a row lands after a cut kept `kept` (row indexes, in order): the row index after the row's
+ * parent and list name is replaced by its position among the kept rows. A location outside the rows is unchanged.
+ */
+export function movedAfterCut(loc, row, kept) {
+  const path = loc.jsonPath ?? []
+  const depth = row.parent.length
+  const inRows =
+    loc.column === row.column &&
+    (loc.nestedJson ?? null) === (row.nestedJson ?? null) &&
+    row.parent.every((step, i) => path[i] === step) &&
+    (row.arrays ?? []).includes(path[depth]) &&
+    Number.isInteger(path[depth + 1])
+  if (!inRows) return loc
+  const at = kept.indexOf(path[depth + 1])
+  if (at < 0) return null
+  return { ...loc, jsonPath: [...path.slice(0, depth + 1), at, ...path.slice(depth + 2)] }
 }
 
 /** The fields of a copy of a store module: its accepted columns as the store holds them. */
