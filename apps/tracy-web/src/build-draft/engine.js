@@ -61,7 +61,8 @@ export const brandFor = (row, template) =>
  * @param {import('pg').Pool} deps.pool
  * @param {{loadKit: (slug: string) => object | null}} deps.kits the AI quickstart catalogue
  * @param {() => Promise<Function>} deps.buildModel the build model door (`build-model.js`); throws `model_missing`
- * @param {(input: {links: string[], description: string | null}) => Promise<{brief: object, manifest: object[]}>} deps.gather
+ * @param {(input: {links: string[], description: string | null}, context: {accountId?: string}) =>
+ *   Promise<{brief: object, manifest: object[], setAside?: object[]}>} deps.gather
  * @param {(input: {research: object, template: object, kit: object}) => Promise<object | null>} deps.brandStep the
  *   pre site brand step (#616): answers the look record (`tracy-brand-look/v1`)
  * @param {() => number} [deps.now]
@@ -151,7 +152,7 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, now = 
         'research',
         inputs,
         ranWith(
-          (copy, model) => researchStep(copy, { gather, model, kit }),
+          (copy, model) => researchStep(copy, { gather, model, kit, accountId }),
           inputs,
           // The needs profile of a living plan belongs to that plan (the edit gate reads it): kept while one exists.
           // New research makes the brand record stale: the brand step reads the research.

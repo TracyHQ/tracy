@@ -876,8 +876,13 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   state of the latest step with the id of the process that runs it, so a step left running by a restart reads as stopped
   with a fault; the composed plan and its step's done state are one write (`putComposed` with the runner). A failed
   step runs once more with the same inputs, never after a `noRerun` failure; the second failure records `fault` and the
-  owner reads one sentence. Research needs an injected gatherer (none on the server yet: a website opportunity's research
-  runs only on its own rows). The brand step before the site (#616,
+  owner reads one sentence. Research reads the owner's links in memory ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js),
+  wired in `build-draft-wiring.js` `preSiteGatherer`): the Website Opportunities link door judges and guards them, the
+  executor's connectors read the website and social pages (its page, post and charge limits, the account's daily paid
+  run count), Google Place Details reads a matched Google place, and `mergeProfile` / `fromPlace` / `makeSiteBrief`
+  make the brief and `assetManifestOf` the manifest a revision stores. No `wo_*` row is written and no picture is
+  stored: pictures are references by source address. Unread links are set aside with a reason; nothing read is
+  `research_empty`; the whole step is bounded to three minutes. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and
   its look record is kept in `build_draft.brand` (migration 217) for that template; compose only reads it, and new

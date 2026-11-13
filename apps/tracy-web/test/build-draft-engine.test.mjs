@@ -17,6 +17,15 @@ import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
 import { fileDb } from './_db.mjs'
 import {
+  MAPS as GATHER_MAPS,
+  SITE as GATHER_SITE,
+  connector,
+  facebookResult,
+  fakeDomain,
+  runtimeWith,
+  websiteResult
+} from './build-draft-gather-fakes.mjs'
+import {
   KIT_ROOT,
   OWNER,
   actor,
@@ -196,17 +205,76 @@ test(
   }
 )
 
+/** The rows of every `wo_*` table of the test schema, by table. */
+async function woRows() {
+  const { rows } = await db.pool.query(
+    `select table_name from information_schema.tables
+      where table_schema = current_schema() and table_name like 'wo\\_%' and table_type = 'BASE TABLE'`
+  )
+  const counts = {}
+  for (const { table_name: t } of rows)
+    counts[t] = (await db.pool.query(`select count(*)::int as n from "${t}"`)).rows[0].n
+  return counts
+}
+
 test(
-  'research with no gatherer on the server stops with a sentence, and the team gets the fault',
+  'research through the server own gatherer reads the links in memory: no wo_* row is written',
   opts,
   async () => {
-    const s = server({ buildModel: async () => async () => '{}', buildChatOn: async () => true })
-    const { ended } = await s.run('POST', '/research', { links: ['https://larkfen-racquets.example/'] })
+    const { domain } = await fakeDomain({
+      connectors: { website: connector(websiteResult()), facebook: connector(facebookResult()) }
+    })
+    const s = server({
+      ...research(undefined, club.scriptedModel(JSON.stringify(needsReading()))),
+      gatherDoors: {
+        loadDomain: async () => domain,
+        runtime: runtimeWith({ google: 'google-test' }),
+        fetch: async () => assert.fail('no fetch outside the fakes')
+      }
+    })
+    // The account first: its trigger gives it a `wo_principal`, which is the account's, not the research's.
+    await ensureAccount(db.pool, OWNER)
+    const before = await woRows()
+    assert.ok(Object.keys(before).length > 10, 'the WO tables exist in the test schema')
+    const { ended } = await s.run('POST', '/research', {
+      links: [GATHER_SITE, GATHER_MAPS, 'http://localhost:8080/'],
+      description: 'Family bakery, open early.'
+    })
+    assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
+    assert.deepEqual(await woRows(), before, 'no wo_* table changed')
+    const stored = await row(s)
+    assert.equal(stored.research.brief.business.name, 'Hollowmere Bakehouse')
+    assert.equal(stored.research.brief.googlePlace.placeId, 'ChIJinventedHollowmere0001')
+    assert.equal(stored.research.trade, 'food')
+    assert.ok(stored.research.manifest.length >= 2)
+    // Only the owner's private link is set aside; the social page the website links to is read too.
+    assert.deepEqual(stored.research.setAside, [
+      { link: 'http://localhost:8080/', reason: 'a private address, not a page on the internet' }
+    ])
+  }
+)
+
+test(
+  'research whose links read nothing stops with a sentence, and the team gets the fault',
+  opts,
+  async () => {
+    // The server's own gatherer (`preSiteGatherer`), its network doors faked: a link the guard refuses.
+    const { domain } = await fakeDomain()
+    const s = server({
+      buildModel: async () => async () => '{}',
+      buildChatOn: async () => true,
+      gatherDoors: {
+        loadDomain: async () => domain,
+        runtime: runtimeWith(),
+        fetch: async () => assert.fail('no fetch')
+      }
+    })
+    const { ended } = await s.run('POST', '/research', { links: ['https://larkfen.private.example/'] })
     assert.equal(ended.body.state, 'stopped')
     assert.doesNotMatch(ended.body.say, DASHES)
-    assert.doesNotMatch(ended.body.say, /research_unavailable/)
+    assert.doesNotMatch(ended.body.say, /research_empty/)
     assert.equal(ended.body.result, undefined)
-    assert.equal((await row(s)).fault.code, 'research_unavailable')
+    assert.equal((await row(s)).fault.code, 'research_empty')
   }
 )
 

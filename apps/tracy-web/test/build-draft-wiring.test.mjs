@@ -5,7 +5,7 @@
 //   node --test --test-concurrency=1 apps/tracy-web/test/build-draft-wiring.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { draftBrandStep, kitRefOf, noPreSiteResearch } from '../src/build-draft-wiring.js'
+import { draftBrandStep, kitRefOf } from '../src/build-draft-wiring.js'
 
 const template = { slug: 'example-court', name: 'Example Court', version: '1.0.0' }
 const kits = [{ ref: 'example-court/j6/0.9.0' }, { ref: 'example-court/j6/1.0.0' }, { ref: 'other/j6/1.0.0' }]
@@ -47,5 +47,4 @@ test('without a research revision or a kit the step stops with brand_input_missi
   await assert.rejects(step({ research: { revisionId: 'r' }, template: { ...template, version: '9.9.9' } }), {
     code: 'brand_input_missing'
   })
-  await assert.rejects(noPreSiteResearch(), { code: 'research_unavailable', noRerun: true })
 })

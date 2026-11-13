@@ -116,7 +116,7 @@ import { buildDraftRoutes } from './build-draft/route.js'
 import { buildModelDoor } from './build-draft/build-model.js'
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
-import { draftBrandStep, noPreSiteResearch } from './build-draft-wiring.js'
+import { draftBrandStep, preSiteGatherer } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
 import { researchOfRevision } from './opportunities-build/revision-research.js'
@@ -1182,8 +1182,9 @@ export function buildApp(deps) {
     // template starts the brand step of the engine below.
     // The build chat's engine doors (`build-draft/engine-route.js`, #609): research, templates, compose and edit before
     // a site exists, for the dsh tool `tracy_build`. `buildEngine` holds the injected steps: the research gatherer
-    // (none yet: a website opportunity's research runs only on its own rows), the pre site brand step (#616, its own
-    // step chain steps, made on first use) and the build model door.
+    // (the owner's links read in memory with the Website Opportunities collectors, no `wo_*` row; `gatherDoors`
+    // replaces its network doors in tests), the pre site brand step (#616, its own step chain steps, made on first
+    // use) and the build model door.
     const buildEngine = deps.buildEngine ?? {}
     const buildChatOn = buildEngine.buildChatOn ?? (() => uiSwitchOn(deps.pool, BUILD_CHAT_SWITCH))
     const brandSteps = () =>
@@ -1203,7 +1204,16 @@ export function buildApp(deps) {
       pool: deps.pool,
       kits,
       buildModel: buildEngine.buildModel ?? buildModelDoor({ pool: deps.pool, config: deps.config }),
-      gather: buildEngine.gather ?? noPreSiteResearch,
+      gather:
+        buildEngine.gather ??
+        preSiteGatherer({
+          pool: deps.pool,
+          config: deps.config,
+          fetchImpl: deps.fetchImpl,
+          dnsResolve: deps.dnsResolve,
+          ...(deps.now ? { now: deps.now } : {}),
+          overrides: buildEngine.gatherDoors ?? {}
+        }),
       brandStep: buildEngine.brandStep ?? draftBrandStep({ pool: deps.pool, stepsOf: brandSteps }),
       now: deps.now
     })
