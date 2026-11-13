@@ -1,6 +1,13 @@
 # STATUS — tracy-diner (JA Diner → EmDash)
 
-Version 0.1.0, release-ready. All eleven phases are recorded in `checkpoint.json` (a local file, not committed). P6 is recorded with `perf/skill-findings.md` as its evidence because the checkpoint refuses P7 while P6 is unrecorded; its content (skill changes go upstream later) was not done.
+Version 0.1.1: release cut locally (not published) on 2026-11-13 from the release chain; every gate passes, `independent` signed by a fresh session on its own rebuild of the same artifact (D-K3); the source mirror was rebuilt and re-pinned (D-K2); the template kit reads `todo kit-zip-missing` (upload and approval are a person's). 0.1.0 is the published release.
+
+## Next release (doc gaps from the 0.1.1 independent handover; they touch packed files, so 0.1.1 was not re-cut)
+- G1: the recipient tools (`audit.mjs`, `admin-session.mjs`, `admin-roundtrip.mjs`, `forms-check.mjs`, `qa-browser.mjs`) need a Playwright Chromium (`pnpm exec playwright install chromium`); `README.md` / `docs/checks-and-recovery.md` do not say so.
+- G2: `pnpm test` in the shipped package fails 7 of 451: those tests read `contracts/0.1.1` or need the repository checkout (`TRACY_CHECKOUT`); `README.md` must say they run only in the repository.
+- G3: the release README (written by `tools/release.mjs`) runs `tools/bootstrap-site.sh` on the host, where `mint-admin.cjs` cannot load `better-sqlite3`; it works inside the container (`docker exec <container> tools/bootstrap-site.sh …`): say so in the release README template.
+
+Below: the 0.1.0 state.
 
 ## Final state
 - `qa.mjs --browser --visual --visual-fast-gate <run> --artifact <pack> --reviews <dir>` on the final build: `gates: status=pass pass=16`, with ten review receipts. The evidence folders are local and not committed.

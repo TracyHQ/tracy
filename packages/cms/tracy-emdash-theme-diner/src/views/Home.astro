@@ -163,7 +163,7 @@ const galleryOrder = Array.from({ length: galleryCount }, (_, k) => k)
 						<h5 class="dn-label" {...$tb('title')}>{tabs.title}</h5>
 						<h2 class="dn-sub" set:html={cleanHtml(tabs.sub_heading).replace(/<br\s*\/?>/g, '<br> ')} {...$tb('sub_heading')} />
 						<ul class="dn-tabs" role="tablist">
-							{menus.map((m: any, i: number) => <li role="presentation"><button type="button" role="tab" id={`tab-${m.slug}`} aria-controls={`panel-${m.slug}`} aria-selected={i === 0 ? 'true' : 'false'} data-tab={m.slug}>{m.title}</button></li>)}
+							{menus.map((m: any, i: number) => <li role="presentation"><button type="button" role="tab" id={`tab-${m.slug}`} aria-controls={`panel-${m.slug}`} aria-selected={i === 0 ? 'true' : 'false'} data-tab={m.slug} {...stampFor(Astro.request, 'menu', { id: m.id, slug: m.slug })('title')}>{m.title}</button></li>)}
 						</ul>
 						{menus.map((m: any, i: number) => {
 							const $m = stampFor(Astro.request, 'menu', { id: m.id, slug: m.slug })

@@ -223,7 +223,7 @@
 			"source": "text",
 			"target": "string",
 			"label": "Title",
-			"role": "editorial.heading"
+			"role": "editorial.menu_label"
 		},
 		"menu.items": {
 			"source": "group",

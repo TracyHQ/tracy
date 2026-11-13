@@ -1,0 +1,377 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage (emdash)",
+    "version": "1.8.0"
+  },
+  "platform": "emdash",
+  "contract": {
+    "id": "tracy-diner/emdash-0.x/0.1.1",
+    "contentMapSha256": "50b02f416ef171fffde2ca2f1e2ba82f094faeba915208d51c3c60d622a9106f",
+    "presentationLockSha256": null
+  },
+  "measuredAt": "2026-11-13T11:30:14.936Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "bound": {
+    "stamp": 1161,
+    "menu": 201,
+    "entry": 155,
+    "clone": 49,
+    "date": 23,
+    "words": 514,
+    "media": 200,
+    "route": 316,
+    "term": 112
+  },
+  "lockedFiles": [
+    "/brand/bg-icon.png",
+    "/brand/dot.png",
+    "/brand/mask-slideshow.png"
+  ],
+  "pages": {
+    "audited": 33,
+    "inMap": 28,
+    "notInMap": 5,
+    "failed": 0,
+    "failures": [],
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 582,
+      "matched": 574,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 2,
+      "core": 5,
+      "unknown": 1,
+      "catalogue": 0,
+      "ignored": 3
+    },
+    "images": {
+      "total": 128,
+      "matched": 124,
+      "locked": 3,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 146,
+      "matched": 146,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 0,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 2
+    }
+  },
+  "coverage": {
+    "text": 99.5,
+    "images": 100,
+    "links": 100
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "Page # of #",
+      "class": "template",
+      "cause": "words in the template's own source",
+      "evidence": "div.dn-main-grid > div.dn-blog > div.dn-pagination > div.dn-pagination-count",
+      "pages": 2,
+      "firstPage": "/our-blog",
+      "accepted": "Interface wording the template prints around a count or page number (not demo content a customer rewrites); the wording is the template's own and carries no business fact."
+    },
+    {
+      "kind": "text",
+      "value": "Leave blank",
+      "class": "unknown",
+      "cause": "words no slot, menu or source holds",
+      "evidence": "div.dn-wrap > div.dn-contact-form > form.ec-form > div.ec-form-field",
+      "pages": 1,
+      "firstPage": "/contact-us",
+      "accepted": "Label of the Forms plugin's anti-spam field; interface wording, not demo content a customer rewrites."
+    }
+  ],
+  "hygiene": [],
+  "sitePages": [
+    {
+      "entity": "pages.home",
+      "title": "Home",
+      "route": "/",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.contact-us",
+      "title": "Contact Us",
+      "route": "/contact-us",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.offers",
+      "title": "Offers",
+      "route": "/offers",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.about-us",
+      "title": "About Us",
+      "route": "/about-us",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.reservation",
+      "title": "Reservation",
+      "route": "/reservation",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "pages.our-blog",
+      "title": "Our Blog",
+      "route": "/our-blog",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.lorem-ipsum",
+      "title": "Lorem ipsum",
+      "route": "/other/lorem-ipsum",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+      "title": "Cocktail Bar Alchemist set to open at Mediacity in Salford Quays",
+      "route": "/restaurant-news/cocktail-bar-alchemist-set-to-open-at-mediacity-in-salford-quays",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.we-ve-been-nominated-for-the-britain-restaurant-awards",
+      "title": "We've been nominated for the Britain Restaurant Awards",
+      "route": "/restaurant-business/we-ve-been-nominated-for-the-britain-restaurant-awards",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.three-broomsticks-welcomes-new-chef-caleb-nunez",
+      "title": "Three Broomsticks welcomes new chef Caleb Nun\u0119z",
+      "route": "/restaurant-guide/three-broomsticks-welcomes-new-chef-caleb-nunez",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.three-broomsticks-s-autumn-menu-unveiled",
+      "title": "Three Broomsticks's autumn menu unveiled",
+      "route": "/restaurant-news/three-broomsticks-s-autumn-menu-unveiled",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.4-habits-that-can-improve-your-customer-service",
+      "title": "4 Habits That Can Improve Your Customer Service",
+      "route": "/restaurant-business/4-habits-that-can-improve-your-customer-service",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.8-trends-trickling-down-to-mainstream-menus",
+      "title": "8 trends trickling down to mainstream menus",
+      "route": "/restaurant-business/8-trends-trickling-down-to-mainstream-menus",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.starbucks-brings-under-armour-exec-on-board",
+      "title": "Starbucks brings Under Armour exec on board",
+      "route": "/restaurant-business/starbucks-brings-under-armour-exec-on-board",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.inside-olive-garden-s-never-ending-pasta-pass",
+      "title": "Inside Olive Garden's Never Ending Pasta Pass",
+      "route": "/restaurant-business/inside-olive-garden-s-never-ending-pasta-pass",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.century-old-nathan-s-famous-aims-for-youth-with-new-look",
+      "title": "Century-old Nathan\u2019s Famous aims for youth with new look",
+      "route": "/restaurant-business/century-old-nathan-s-famous-aims-for-youth-with-new-look",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.did-ihop-s-publicity-stunt-hurt-applebee-s",
+      "title": "Did IHOP's publicity stunt hurt Applebee's?",
+      "route": "/restaurant-marketing/did-ihop-s-publicity-stunt-hurt-applebee-s",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.buffalo-wild-wings-considers-adding-sports-betting",
+      "title": "Buffalo Wild Wings considers adding sports betting ",
+      "route": "/restaurant-marketing/buffalo-wild-wings-considers-adding-sports-betting",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.this-week-s-restaurant-nightmares-language-people",
+      "title": "This week\u2019s restaurant nightmares: Language, people",
+      "route": "/restaurant-marketing/this-week-s-restaurant-nightmares-language-people",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.jason-alexander-is-kfc-s-new-colonel",
+      "title": "Jason Alexander is KFC\u2019s new colonel",
+      "route": "/restaurant-marketing/jason-alexander-is-kfc-s-new-colonel",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.10-most-alluring-ltos-on-menus-in-july",
+      "title": "10 most alluring LTOs on menus in July ",
+      "route": "/restaurant-news/10-most-alluring-ltos-on-menus-in-july",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+      "title": "Newk\u2019s Eatery steals a dinner booster from supermarkets",
+      "route": "/restaurant-news/newk-s-eatery-steals-a-dinner-booster-from-supermarkets",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+      "title": "This week\u2019s 5 head-spinning restaurant moments: 1 more inch",
+      "route": "/restaurant-news/this-week-s-5-head-spinning-restaurant-moments-1-more-inch",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+      "title": "5 of the summer\u2019s craziest restaurant marketing stunts",
+      "route": "/restaurant-news/5-of-the-summer-s-craziest-restaurant-marketing-stunts",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.burger-king-takes-a-stand-on-the-pink-tax",
+      "title": "Burger King takes a stand on the \u2018pink tax\u2019",
+      "route": "/restaurant-news/burger-king-takes-a-stand-on-the-pink-tax",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+      "title": "Efforts to curb soda consumption bring results on both coasts",
+      "route": "/restaurant-guide/efforts-to-curb-soda-consumption-bring-results-on-both-coasts",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.how-restaurants-can-promote-a-james-beard-recognition",
+      "title": "How restaurants can promote a James Beard recognition",
+      "route": "/restaurant-guide/how-restaurants-can-promote-a-james-beard-recognition",
+      "opens": "live",
+      "status": 200
+    },
+    {
+      "entity": "posts.from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+      "title": "From IHOP to IHOb: Just how big was the chain\u2019s name reveal?",
+      "route": "/restaurant-guide/from-ihop-to-ihob-just-how-big-was-the-chain-s-name-reveal",
+      "opens": "live",
+      "status": 200
+    }
+  ],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/2",
+    "applies": false,
+    "r1": {
+      "facts": 133,
+      "slots": 417,
+      "percent": 31.9
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 5,
+        "keys": [
+          "features_intro.meet-three-broomsticks.items[0].description",
+          "features_intro.meet-three-broomsticks.items[1].description",
+          "happyhours.happy-hours-style-3.hp_info",
+          "happyhours.happy-hours-style-1.hp_info",
+          "happyhours.happy-hours-style-2.hp_info"
+        ]
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 31,
+        "keys": [
+          "slideshow.slideshow.items[0].btn_link1",
+          "slideshow.slideshow.items[0].btn_link2",
+          "slideshow.slideshow.items[1].btn_link1",
+          "slideshow.slideshow.items[1].btn_link2",
+          "features_intro.meet-three-broomsticks.basic_btn_link",
+          "features_intro.meet-three-broomsticks.items[0].btn_link",
+          "features_intro.meet-three-broomsticks.items[1].btn_link",
+          "features_intro.features-style-4.button_link",
+          "features_intro.features-style-4.items[0].link_img",
+          "features_intro.features-style-4.items[1].link_img",
+          "features_intro.features-style-4.items[2].link_img",
+          "features_intro.features-style-4.items[3].link_img"
+        ]
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 0,
+        "keys": []
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 0,
+        "keys": []
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 0,
+        "keys": []
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  }
+}
