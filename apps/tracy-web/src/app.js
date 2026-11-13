@@ -114,6 +114,8 @@ import { seenHintRoutes } from './seen-hints/route.js'
 import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { buildDraftRoutes } from './build-draft/route.js'
 import { buildModelDoor } from './build-draft/build-model.js'
+import { draftPlanForBuild, readEngineDraft } from './build-draft/store.js'
+import { PHOSPHOR_SET, phosphorCatalog } from './lib/picture-paint/icons/phosphor-set.js'
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
 import { draftBrandStep, draftPictureReader, draftPictures, preSiteGatherer } from './build-draft-wiring.js'
@@ -1211,10 +1213,13 @@ export function buildApp(deps) {
       ...(buildEngine.pictureDoors?.imageInfo ? { imageInfo: buildEngine.pictureDoors.imageInfo } : {})
     })
     app.openDraftPicture = draftPictureReader(draftPictureStore)
+    // The build model door and the kits, shared with a step chain run built from an approved draft (#597).
+    app.buildModel = buildEngine.buildModel ?? buildModelDoor({ pool: deps.pool, config: deps.config })
+    app.loadAiqKit = (slug) => kits.loadKit(slug)
     app.buildDraftEngine = createEngine({
       pool: deps.pool,
       kits,
-      buildModel: buildEngine.buildModel ?? buildModelDoor({ pool: deps.pool, config: deps.config }),
+      buildModel: app.buildModel,
       gather:
         buildEngine.gather ??
         preSiteGatherer({
@@ -2289,7 +2294,25 @@ export function buildApp(deps) {
               }),
               picturesStoreDir: defaultStoreDir(),
               fetchImpl: deps.fetchImpl ?? fetch,
-              log: deps.log ?? console
+              log: deps.log ?? console,
+              // A run built from an approved build draft (#597): the draft, the kits, the build model door and the
+              // draft pictures, injected (the build-draft folder is imported by this file only).
+              draft: {
+                readEngineDraft: (accountId) => readEngineDraft(deps.pool, accountId),
+                draftPlanForBuild: (accountId) => draftPlanForBuild(deps.pool, accountId),
+                loadAiqKit: (slug) => app.loadAiqKit?.(slug) ?? null,
+                buildModel: () =>
+                  app.buildModel
+                    ? app.buildModel()
+                    : Promise.reject(
+                        Object.assign(new Error('no build model door'), {
+                          code: 'model_missing',
+                          noRerun: true
+                        })
+                      ),
+                openDraftPicture: (id, opts) => app.openDraftPicture?.(id, opts) ?? null,
+                iconLibrary: () => ({ set: PHOSPHOR_SET, icons: phosphorCatalog() })
+              }
             })
           })
         },

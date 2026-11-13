@@ -12,10 +12,16 @@
 // run, with the run's record (`step-records.json`) beside them, so every step's inputs and outputs outlive the run
 // (ADR 0047, decision 5). Before any model work the chain asks whether every model door it needs can be answered
 // (`doors`, `STEP_CHAIN_MODEL_DOORS`).
+//
+// A run built from an approved build draft (`ctx.brief.draftId`, #597) runs the domain steps of the AI quickstart build
+// instead (`step-chain-draft-steps.js`), through the doors `deps.draft` injects, and ends with the write order. Its
+// Write step is still this file's own.
 import { mkdir, stat, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { brandInputResolver, storeBriefOnce } from './step-chain-brand-input.js'
+import { createDraftSteps } from './step-chain-draft-steps.js'
+import { isDraftRun } from './step-chain-draft-source.js'
 import { runCli as brandCli } from './brand-step/brand-cli.js'
 import { brandRunDir } from './brand-step/brand-wiring.js'
 import { CHAIN_BENCH_CHECK_FAILED, chainBenchFailure } from './lib/chain-bench-verdict.js'
@@ -69,13 +75,16 @@ const stepError = (message, usd = 0) => Object.assign(new Error(message), { usd 
  * @param {{ pool: import('pg').Pool, config: any, secret: string, kitImages: { ensure: Function },
  *   brandWiring: Function, picturesStoreDir: string, fetchImpl?: typeof fetch, sleep?: (ms: number) => Promise<void>,
  *   log?: { warn?: Function, info?: Function }, port?: string | number, recordsDir?: string,
- *   benchCli?: Partial<Record<'brand' | 'plan' | 'copy' | 'pictures', Function>> }} deps `recordsDir`: where each
- *   run's folder, and the record kept in it, live (`defaultRecordsDir`)
+ *   benchCli?: Partial<Record<'brand' | 'plan' | 'copy' | 'pictures', Function>>, draft?: object }} deps `recordsDir`:
+ *   where each run's folder, and the record kept in it, live (`defaultRecordsDir`); `draft`: the doors of a run built
+ *   from a build draft (`createDraftSteps`: `readEngineDraft`, `draftPlanForBuild`, `loadAiqKit`, `buildModel`,
+ *   `openDraftPicture`, `iconLibrary`), injected by `app.js`
  */
 export function createStepChainSteps(deps) {
   const { pool, config, secret, kitImages, brandWiring, picturesStoreDir } = deps
   const { fetchImpl = fetch, sleep = realSleep, log = console } = deps
   const recordsDir = deps.recordsDir ?? defaultRecordsDir()
+  const draft = createDraftSteps(deps.draft ?? {})
   if (!deps.recordsDir) {
     const warning = recordsDirWarning()
     if (warning) log.warn?.(warning)
@@ -212,7 +221,7 @@ export function createStepChainSteps(deps) {
     })
   }
 
-  return {
+  const bench = {
     async validateBase(ctx) {
       const site = await siteByKey(pool, ctx.siteKey)
       const point = site
@@ -388,7 +397,7 @@ export function createStepChainSteps(deps) {
 
     // Before any model work: the doors of STEP_CHAIN_MODEL_DOORS that cannot be answered (unset, switched off, a key that
     // will not open, no model named). None means every door the chain spends is ready.
-    async doors() {
+    async doors(_ctx) {
       return emptyChainDoors(pool, secret)
     },
 
@@ -417,6 +426,27 @@ export function createStepChainSteps(deps) {
           throw error
         }
       log.info?.(`[step-chain] run ${prepared.runId}: record kept`)
+    }
+  }
+  /** A step of a draft run is the assembled one, every other run's the bench's. */
+  const either =
+    (name) =>
+    (ctx, ...rest) =>
+      isDraftRun(ctx) ? draft[name](ctx, ...rest) : bench[name](ctx, ...rest)
+  return {
+    ...bench,
+    assembles: isDraftRun,
+    doors: either('doors'),
+    kit: either('kit'),
+    brand: either('brand'),
+    plan: either('plan'),
+    copy: either('copy'),
+    pictures: either('pictures'),
+    icons: (ctx, ...rest) => draft.icons(ctx, ...rest),
+    order: (ctx, ...rest) => draft.order(ctx, ...rest),
+    async dispose(prepared) {
+      draft.forget(prepared?.runId)
+      return bench.dispose(prepared)
     }
   }
 }
