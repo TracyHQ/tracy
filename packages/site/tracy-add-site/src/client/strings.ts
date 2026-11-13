@@ -645,7 +645,7 @@ export const en: Record<string, string> = {
   // ── Build in the chat (TracyHQ/tracy#602): the creation workspace's build chat, first in the list ──
   chat_build_title: 'Build it in the chat',
   chat_build_desc:
-    'Tell Tracy about your business in the chat. Tracy looks it up, asks what it could not find and builds the site with you.',
+    'Describe your business in the chat. Tracy researches it, asks a few questions and builds the site with you.',
   origin_create: 'Create a new site',
   origin_create_desc: 'Start from a ready-made site. Tracy hosts it and has it ready in a few minutes.',
   // ── Import branch: step 1 ─────────────────────────────────────────────────────────────────────
