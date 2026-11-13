@@ -243,6 +243,11 @@ const GATES: readonly Gate[] = [
   // wrong type, a design value typed as text, a text field without a limit, a block without item counts
   // or a no data rule, or an unknown data kind or block type is caught here, without building a site.
   { name: 'ai-quickstart-contract', script: 'ai-quickstart/check.mjs' },
+  // Contract B (ADRs 0046 and 0047): the build plan, progress events, outcome, questions and plan edits the build
+  // engine and the chat exchange. A plan without per block data items or a look section, an answer that is not one of
+  // its question's choices, or a "done" outcome with a failed or unfinished step is caught here, on the sample
+  // scenarios the chat renders from.
+  { name: 'build-contract', script: 'build-contract/check.mjs' },
   // One schema and conformance corpus for every CMS; drift otherwise surfaces only on sites.
   { name: 'content-api', script: 'check-content-api.mjs' },
   // The public API reference is BUILT from the door's tables, so a route or field leaves it with no file
