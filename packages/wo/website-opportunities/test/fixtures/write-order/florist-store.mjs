@@ -44,6 +44,7 @@ function masthead() {
     lists: [
       {
         name: 'pages',
+        label: 'Page headings',
         items: { min: 0, max: PAGE_ROWS },
         itemsFrom: { min: 'a page without a row shows the default title', max: 'the rows the module stores' },
         fields: [
@@ -99,6 +100,7 @@ function bouquets() {
   const per = (n) => [`article-1.${n}`, `article-2.${n}`, `article-3.${n}`, `article-4.${n}`]
   return {
     id: 'bouquets',
+    itemsLabel: 'Bouquets',
     type: 'services',
     positions: ['content'],
     items: { min: 2, max: 4 },
@@ -125,6 +127,7 @@ function bouquets() {
 function gallery() {
   return {
     id: 'gallery-strip',
+    itemsLabel: 'Gallery photos',
     type: 'gallery',
     positions: ['content'],
     items: { min: 3, max: 6 },
@@ -158,6 +161,7 @@ function contact() {
     lists: [
       {
         name: 'social',
+        label: 'Social links',
         items: { min: 0, max: SOCIAL_ROWS },
         itemsFrom: { min: 'the block lays out without a link', max: 'the rows the module stores' },
         fields: [
@@ -180,6 +184,7 @@ function contact() {
 function footer() {
   return {
     id: 'footer-main',
+    itemsLabel: 'Social links',
     type: 'footer',
     positions: ['footer'],
     items: { min: 0, max: 3 },
@@ -203,6 +208,7 @@ function footer() {
 function detail() {
   return {
     id: 'bouquet-detail',
+    itemsLabel: 'Bouquets',
     type: 'services',
     positions: ['content'],
     items: { min: 1, max: 1 },
