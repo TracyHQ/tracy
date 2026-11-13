@@ -234,3 +234,19 @@ test('missing or malformed declarations are problems, never a throw', () => {
     ['block-store.json', 'page-recipes.json', 'mapping.json']
   )
 })
+
+test('a pending mapping file skips the mapping rules only; the block store rules still hold', () => {
+  const set = valid()
+  const pending = {
+    blockStore: set.blockStore,
+    pageRecipes: set.pageRecipes,
+    mapping: undefined,
+    mappingPending: true
+  }
+  assert.deepEqual(checkAiQuickstartContract(pending).problems, [])
+  delete fieldOf(set, 'hero-home', 'heading').limit
+  const res = checkAiQuickstartContract(pending)
+  assert.equal(res.problems.length, 1)
+  assert.equal(res.problems[0].file, 'block-store.json')
+  assert.equal(checkAiQuickstartContract({ ...pending, mappingPending: false }).ok, false)
+})

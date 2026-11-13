@@ -62,3 +62,44 @@ test('a folder missing one of its three files fails', (t) => {
   assert.equal(res.status, 1)
   assert.match(res.stderr, /mapping\.json: file is missing/)
 })
+
+const PENDING = { $comment: 'The mapping file is written by another ticket.', ticket: '#9999' }
+
+test('a folder that declares its mapping file pending is checked without it, and says so', (t) => {
+  const { dir } = treeWith(t)
+  rmSync(path.join(dir, 'mapping.json'))
+  writeFileSync(path.join(dir, 'mapping.pending.json'), JSON.stringify(PENDING))
+  const res = run(dir)
+  assert.equal(res.status, 0, res.stderr)
+  assert.match(res.stdout, /mapping\.json pending \(#9999\)/)
+  assert.match(res.stdout, /1 AI quickstart\(s\) checked, 0 problem\(s\)/)
+})
+
+test('a pending mapping file still fails on a broken block store', (t) => {
+  const { dir } = treeWith(t, (store) => {
+    delete store.blocks[1].fields[0].limit
+    return store
+  })
+  rmSync(path.join(dir, 'mapping.json'))
+  writeFileSync(path.join(dir, 'mapping.pending.json'), JSON.stringify(PENDING))
+  const res = run(dir)
+  assert.equal(res.status, 1)
+  assert.match(res.stderr, /a text field needs a limit/)
+})
+
+test('a pending marker beside a mapping file fails: the mapping is either pending or written', (t) => {
+  const { dir } = treeWith(t)
+  writeFileSync(path.join(dir, 'mapping.pending.json'), JSON.stringify(PENDING))
+  const res = run(dir)
+  assert.equal(res.status, 1)
+  assert.match(res.stderr, /mapping\.pending\.json: remove the marker, mapping\.json is written/)
+})
+
+test('a pending marker must name the ticket that writes the mapping file', (t) => {
+  const { dir } = treeWith(t)
+  rmSync(path.join(dir, 'mapping.json'))
+  writeFileSync(path.join(dir, 'mapping.pending.json'), JSON.stringify({ $comment: 'later' }))
+  const res = run(dir)
+  assert.equal(res.status, 1)
+  assert.match(res.stderr, /mapping\.pending\.json ticket: name the ticket/)
+})

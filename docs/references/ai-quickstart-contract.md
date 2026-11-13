@@ -26,6 +26,11 @@ The three files sit in one folder. The contract check finds every folder under `
 `packages/cms/tracy-joomla-quickstart/ai-quickstarts/<slug>/j6/<version>/`, apart from `contracts/`, because a
 released contract folder is never edited.
 
+A folder whose mapping file is written by a later ticket holds `mapping.pending.json` in its place, naming that
+ticket (`{"ticket": "#584"}`). The check then reads the block store and the page recipes alone, with every rule of
+those two files, and prints `mapping.json pending (#584)` for the folder. A marker beside a written `mapping.json`
+is a problem, so the marker is removed in the same change that writes the mapping.
+
 A complete invented example (no real template or business) is the test fixture set
 [`packages/wo/website-opportunities/test/fixtures/ai-quickstart/`](../../packages/wo/website-opportunities/test/fixtures/ai-quickstart/).
 The snippets below are excerpts of it.

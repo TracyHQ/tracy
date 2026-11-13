@@ -148,10 +148,12 @@ function pageRecipesProblems(doc, blockIds, report) {
 
 /**
  * Check the three declarations of an AI quickstart together.
- * @param {{blockStore: any, pageRecipes: any, mapping: any}} declarations the parsed JSON files
+ * `mappingPending` (a folder whose mapping file another ticket writes, declared by `mapping.pending.json`) checks
+ * the block store and the page recipes alone; every rule of those two files still holds.
+ * @param {{blockStore: any, pageRecipes: any, mapping: any, mappingPending?: boolean}} declarations the parsed JSON files
  * @returns {{ok: boolean, blocks: number, problems: Array<{file: string, at: string, message: string}>}}
  */
-export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping }) {
+export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping, mappingPending = false }) {
   const problems = []
   const reporter = (file) => (at, message) => {
     problems.push({ file, at, message })
@@ -159,10 +161,11 @@ export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping }) 
   blockStoreProblems(blockStore, reporter(BLOCK_STORE_FILE))
   const blocks = Array.isArray(blockStore?.blocks) ? blockStore.blocks.filter((b) => isName(b?.id)) : []
   pageRecipesProblems(pageRecipes, new Set(blocks.map((b) => b.id)), reporter(PAGE_RECIPES_FILE))
-  mappingProblems(mapping, blocks, {
-    report: reporter(MAPPING_FILE),
-    reportStore: reporter(BLOCK_STORE_FILE)
-  })
+  if (!mappingPending)
+    mappingProblems(mapping, blocks, {
+      report: reporter(MAPPING_FILE),
+      reportStore: reporter(BLOCK_STORE_FILE)
+    })
   return { ok: problems.length === 0, blocks: blocks.length, problems }
 }
 

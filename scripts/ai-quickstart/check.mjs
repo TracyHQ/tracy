@@ -8,6 +8,10 @@
  * place. A folder is any folder under `packages/cms/` that holds a `block-store.json`; the other two files must sit
  * beside it.
  *
+ * A folder whose mapping file is written by a later ticket declares so with `mapping.pending.json`
+ * (`{"ticket": "#<n>"}`) in place of `mapping.json`: the block store and the page recipes are checked alone, and the
+ * line printed for the folder says the mapping is pending. Both files at once is a problem.
+ *
  *   node scripts/ai-quickstart/check.mjs                  every AI quickstart folder in the tree
  *   node scripts/ai-quickstart/check.mjs <folder>...      only those (a template packager's own draft)
  */
@@ -55,13 +59,50 @@ function readDeclaration(dir, file) {
   }
 }
 
+/** The marker of a folder whose mapping file a later ticket writes. */
+export const MAPPING_PENDING_FILE = 'mapping.pending.json'
+
+/** The pending marker's problems and ticket, or null when the folder declares none. */
+function readPending(dir) {
+  if (!existsSync(path.join(dir, MAPPING_PENDING_FILE))) return null
+  if (existsSync(path.join(dir, MAPPING_FILE)))
+    return {
+      problems: [
+        { file: MAPPING_PENDING_FILE, at: '', message: `remove the marker, ${MAPPING_FILE} is written` }
+      ]
+    }
+  const { doc, problem } = readDeclaration(dir, MAPPING_PENDING_FILE)
+  if (problem) return { problems: [problem] }
+  if (typeof doc?.ticket !== 'string' || !/^#\d+$/.test(doc.ticket))
+    return {
+      problems: [
+        {
+          file: MAPPING_PENDING_FILE,
+          at: 'ticket',
+          message: `name the ticket that writes ${MAPPING_FILE}, as "#<number>"`
+        }
+      ]
+    }
+  return { ticket: doc.ticket, problems: [] }
+}
+
 /** The problems of one AI quickstart folder: unreadable files first, then the contract check. */
 export function checkAiQuickstartFolder(dir) {
-  const read = [BLOCK_STORE_FILE, PAGE_RECIPES_FILE, MAPPING_FILE].map((file) => readDeclaration(dir, file))
-  const unreadable = read.filter((r) => r.problem).map((r) => r.problem)
+  const pending = readPending(dir)
+  const files = pending?.ticket
+    ? [BLOCK_STORE_FILE, PAGE_RECIPES_FILE]
+    : [BLOCK_STORE_FILE, PAGE_RECIPES_FILE, MAPPING_FILE]
+  const read = files.map((file) => readDeclaration(dir, file))
+  const unreadable = [...(pending?.problems ?? []), ...read.filter((r) => r.problem).map((r) => r.problem)]
   if (unreadable.length > 0) return { ok: false, blocks: 0, problems: unreadable }
   const [blockStore, pageRecipes, mapping] = read.map((r) => r.doc)
-  return checkAiQuickstartContract({ blockStore, pageRecipes, mapping })
+  const res = checkAiQuickstartContract({
+    blockStore,
+    pageRecipes,
+    mapping,
+    mappingPending: Boolean(pending)
+  })
+  return pending ? { ...res, mappingPending: pending.ticket } : res
 }
 
 function main(argv) {
@@ -74,7 +115,7 @@ function main(argv) {
     for (const problem of res.problems) process.stderr.write(`${rel}/${formatProblem(problem)}\n`)
     problemCount += res.problems.length
     process.stdout.write(
-      `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)\n`
+      `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)${res.mappingPending ? `, ${MAPPING_FILE} pending (${res.mappingPending})` : ''}\n`
     )
   }
   process.stdout.write(
