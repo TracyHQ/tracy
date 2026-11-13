@@ -3,7 +3,9 @@
 // tracy_build rows (the keyed tool view) and, like dsh, the turn tails of ENDED turns only (a `turn/end` event), then
 // the composer chain for a pending question. The
 // events are `tool/call` and `tool/result` in the shape `tracy_build` writes them; the doors are the page's own
-// `fetch`, answered by the runner. `window.probe.load(...)` draws a session, `window.probe.ask(...)` a pending question.
+// `fetch`, answered by the runner. `window.probe.load(...)` draws a session, `window.probe.ask(...)` a pending question,
+// `window.probe.sent()` lists the messages the plugin sent through dsh's session verb (`conversation.sendSession`).
+// The input dock (shown while no question takes the composer) gets dsh's `useChat` over the turns and their data.
 import { useSyncExternalStore } from 'react'
 import { createRoot } from 'react-dom/client'
 import {
@@ -29,7 +31,15 @@ const useVersion = () =>
 
 const entries = new Set<{ options: Any; component: Any }>()
 const definitions: Any[] = []
+const sent: { sessionId: string; text: string; mode: string }[] = []
 const ctx = {
+  conversation: {
+    async sendSession(face: Any, text: string, _attachments: unknown, mode: string) {
+      sent.push({ sessionId: face.id, text, mode })
+      return { kind: 'success' }
+    }
+  },
+  sessions: { binding: (id: string) => ({ session: { id, getSnapshot: () => ({}) } }) },
   effect(fn: () => unknown) {
     fn()
   },
@@ -134,6 +144,36 @@ function Composer() {
   return <Bar matched={entry.matched} />
 }
 
+/** dsh's input dock: its entries over the chat snapshot (turn order, each turn's status and published data). */
+function Dock({ byTurn, turns }: { byTurn: Map<number, Map<string, unknown>>; turns: number[] }) {
+  if (session.pending !== null) return null
+  const timeline = {
+    turnOrder: turns,
+    turns: new Map(
+      turns.map((turn) => [
+        turn,
+        {
+          turn,
+          status: session.events.some((e) => e.type === 'turn/end' && e.data.turn === turn)
+            ? 'closed'
+            : 'open',
+          data: { get: (k: string) => byTurn.get(turn)?.get(k) }
+        }
+      ])
+    )
+  }
+  const useChat = (select: Any) => select({ timeline })
+  return (
+    <div data-dock="">
+      {of('conversation.input.dock').map((e) => {
+        const Entry = e.component
+        const injected = e.options.inject?.(session.id) ?? {}
+        return <Entry key={e.options.id} sessionId={session.id} {...injected} useChat={useChat} />
+      })}
+    </div>
+  )
+}
+
 function Chat() {
   useVersion()
   const byTurn = publish(session.events)
@@ -144,6 +184,7 @@ function Chat() {
       {turns.map((turn) => (
         <Turn key={turn} turn={turn} data={byTurn.get(turn)} last={last} />
       ))}
+      <Dock byTurn={byTurn} turns={turns} />
       <Composer />
     </main>
   )
@@ -171,5 +212,6 @@ createRoot(document.getElementById('root') as HTMLElement).render(<Chat />)
     changed()
   },
   answered: () => [...answered],
+  sent: () => sent.map((m) => ({ ...m })),
   registered: () => [...entries].map((e) => e.options.name)
 }

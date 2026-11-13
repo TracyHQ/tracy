@@ -2,7 +2,10 @@
  * The build chat's cards at the tail of a turn (#609), each fed by what the session's own `tracy_build` calls
  * answered (`definitions.ts`) and by the account's build draft (`sources.ts`):
  *
- * - the template card in the turn whose call offered the templates last; a pick goes through `saveTemplateChoice`;
+ * - the template card in the turn whose call offered the templates last; a pick goes through `saveTemplateChoice`,
+ *   and once it is saved the card says so in the chat as the owner ("I picked JA Boxing."), once, so the agent asks
+ *   for the plan without the owner having to type. A failed save sends nothing; a send the chat refused offers
+ *   Continue to send it again;
  * - the plan card in the turn whose call answered the latest plan revision. The tool answers ids only, so the card
  *   reads the plan itself from the draft, and reads it again when a newer revision arrives. Its edits go through
  *   `savePlanEdit` / `undoPlanEdit`, and the card follows the draft the door answers with. While the plan review bar
@@ -14,7 +17,7 @@
  * registered at all (`index.tsx`).
  */
 import { isBuildChatSession } from '@tracy/core/build-chat'
-import { useEffect, useSyncExternalStore } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { BuildProgress } from './BuildProgress'
 import { BuildStopped } from './BuildStopped'
 import {
@@ -40,6 +43,8 @@ export interface TailDeps {
   runs: BuildRunFeed
   t: () => Translate
   fetch?: typeof fetch
+  /** Sends one message to the chat as the owner (dsh's session verb, the draft untouched). */
+  send?: (sessionId: string, text: string) => Promise<'sent' | 'no-chat' | 'failed'>
 }
 
 export type TailProps = TurnTailOwnerLike & {
@@ -57,22 +62,60 @@ export const newEditId = () =>
 
 const useDraft = (drafts: DraftSource) => useSyncExternalStore(drafts.subscribe, drafts.read, drafts.read)
 
-function TemplateTail({ deps, value }: { deps: TailDeps; value: TemplatesValue }) {
+function TemplateTail({
+  deps,
+  value,
+  sessionId
+}: {
+  deps: TailDeps
+  value: TemplatesValue
+  sessionId: string
+}) {
   const draft = useDraft(deps.drafts)
   useEffect(() => void deps.drafts.load(), [deps.drafts])
+  /** The message to send again when the chat did not take it; null once it went out. */
+  const [unsent, setUnsent] = useState<string | null>(null)
+  const [sending, setSending] = useState(false)
   // The card takes its chosen design once; drawn again (keyed) when the draft answers with one.
   const chosen = draft?.template?.slug ?? null
+  const t = deps.t()
+  /** Says the pick in the chat. Only a press reaches here, so a reload or a new render never sends it again. */
+  const tell = async (text: string) => {
+    setSending(true)
+    const sent = (await deps.send?.(sessionId, text).catch(() => 'failed' as const)) ?? 'no-chat'
+    setSending(false)
+    setUnsent(sent === 'sent' ? null : text)
+  }
   return (
     <TemplateCard
       key={chosen ?? 'open'}
       templates={value.options}
       chosen={chosen}
-      t={deps.t()}
+      t={t}
       onChoose={async (template) => {
         const saved = await saveTemplateChoice(template, deps.fetch)
         if (saved && typeof saved === 'object') deps.drafts.put(saved as never)
+        void tell(t('template.picked', { name: template.name }))
         return saved
       }}
+      next={
+        unsent === null ? null : (
+          <>
+            <span className="tv-bc-grow tv-bc-error" role="status">
+              {t('template.sendFailed')}
+            </span>
+            <button
+              type="button"
+              className="tv-bc-btn"
+              data-primary=""
+              disabled={sending}
+              onClick={() => void tell(unsent)}
+            >
+              {t('template.continue')}
+            </button>
+          </>
+        )
+      }
     />
   )
 }
@@ -143,7 +186,9 @@ export function makeTails(deps: TailDeps) {
   return {
     templates: (props: TailProps) => {
       const value = inBuild(props) ? turnValueOf<TemplatesValue>(props, TEMPLATES_KEY) : null
-      return value === null ? null : <TemplateTail deps={deps} value={value} />
+      return value === null ? null : (
+        <TemplateTail deps={deps} value={value} sessionId={props.sessionId as string} />
+      )
     },
     plan: (props: TailProps) => {
       const value = inBuild(props) ? turnValueOf<PlanValue>(props, PLAN_KEY) : null

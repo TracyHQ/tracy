@@ -101,7 +101,7 @@ function recorder() {
   return { ctx, live, definitions, of }
 }
 
-test('switch on: three turn tails, the review bar ahead of dsh, the tracy_build row', () => {
+test('switch on: three turn tails, the review bar ahead of dsh, the working line, the tracy_build row', () => {
   const r = recorder()
   client.applyWith(r.ctx, { switches: switchBoard(true) })
   assert.deepEqual(
@@ -111,8 +111,12 @@ test('switch on: three turn tails, the review bar ahead of dsh, the tracy_build 
   assert.equal(r.of('conversation.composer')[0].options.priority, -20)
   assert.equal(r.of('tool.call.toolview')[0].options.key, 'tracy_build')
   assert.deepEqual(
+    r.of('conversation.input.dock').map((e) => e.options.id),
+    ['tracy-build-chat-working']
+  )
+  assert.deepEqual(
     r.definitions.map((d) => d.kind),
-    ['tracy_build:templates', 'tracy_build:plan']
+    ['tracy_build:templates', 'tracy_build:plan', 'tracy_build:working']
   )
 })
 
@@ -123,11 +127,11 @@ test('switch off: no visible piece is registered, and turning it off takes them 
   const flipped = recorder()
   const board = switchBoard(true)
   client.applyWith(flipped.ctx, { switches: board })
-  assert.equal(flipped.live.size, 5)
+  assert.equal(flipped.live.size, 6)
   board.flip(false)
   assert.equal(flipped.live.size, 0)
   board.flip(true)
-  assert.equal(flipped.live.size, 5)
+  assert.equal(flipped.live.size, 6)
 })
 
 test('outside a build chat session every piece draws nothing', () => {

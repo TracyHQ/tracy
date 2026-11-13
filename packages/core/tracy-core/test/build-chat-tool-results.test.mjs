@@ -142,6 +142,36 @@ test('an error, a replaced result or a stop never moves the plan', () => {
   assert.equal(after.plan.revision, 1)
 })
 
+test('the fold says a tracy_build call is still working: unanswered or answered running, until another answer', () => {
+  const steps = [
+    call(4, 'w1', { action: 'plan' }),
+    result(4, 'w1', { running: true, say: 'Still working.' }),
+    call(4, 'w2', { action: 'status' }),
+    result(4, 'w2', { look: 'ready' })
+  ]
+  const seen = []
+  steps.reduce((state, event) => {
+    const next = buildToolFoldOf(state, event)
+    seen.push(next.working && { turn: next.working.turn, step: next.working.step })
+    return next
+  }, undefined)
+  assert.deepEqual(seen, [
+    { turn: 4, step: 'plan' },
+    { turn: 4, step: 'plan' },
+    { turn: 4, step: 'status' },
+    null
+  ])
+  const failed = result(5, 'w3', { plan: { id: 'plan-1', revision: 3 } })
+  failed.data.message.isError = true
+  const afterError = [call(5, 'w3', { action: 'plan' }), failed].reduce(buildToolFoldOf, undefined)
+  assert.equal(afterError.working, null, 'an error ends the wait')
+  const other = [call(6, 'w4', { action: 'plan' }), call(6, 'r1', { path: 'a' }, 'read_file')].reduce(
+    buildToolFoldOf,
+    undefined
+  )
+  assert.equal(other.working.step, 'plan', 'another tool never ends it')
+})
+
 test('the plan review request is told by its id alone: dsh drops detail and intent', () => {
   const asked = planReviewRequestOf(plan()).questions.map(({ id, question, options }) => ({
     id,

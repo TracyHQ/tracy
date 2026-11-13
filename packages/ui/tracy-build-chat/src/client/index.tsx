@@ -7,7 +7,11 @@
  * - `conversation.composer` (chain, ahead of dsh's): the plan review bar (`ReviewBar.tsx`), with the living plan card
  *   above it while the review waits (a turn tail shows only once its turn ends);
  * - `tool.call.toolview` keyed `tracy_build`: a quiet row in place of the call's JSON (`BuildToolRow.tsx`);
- * - two conversation node definitions that fold the calls into per turn values (`definitions.ts`).
+ * - `conversation.input.dock`: the same row above the chat input while a call waits (`WorkingDock.tsx`), since dsh
+ *   folds the call's own row into the turn's collapsed process;
+ * - three conversation node definitions that fold the calls into per turn values (`definitions.ts`).
+ *
+ * A template pick is said in the chat as the owner through dsh's session verb (`sendToChat`, the draft untouched).
  *
  * Every visible piece is registered only while the UI switch `chat-build` is on, and draws nothing outside a build
  * chat session (`isBuildChatSession`). The definitions are state only and draw nothing themselves.
@@ -15,13 +19,19 @@
 import { BUILD_TOOL, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
 import { BuildToolRow, type ToolViewProps } from './BuildToolRow'
-import { planDefinition, templatesDefinition } from './definitions'
+import {
+  sendToChat,
+  type ConversationFace,
+  type SessionFace
+} from '../../../../site/tracy-site-tabs/src/client/chat-send'
+import { planDefinition, templatesDefinition, workingDefinition } from './definitions'
 import { createReviewPresence } from './review-presence'
 import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
 import { createDraftSource, EMPTY_BUILD_RUN_FEED, type BuildRunFeed } from './sources'
 import { CSS } from './styles'
 import { en, english, NS, type Translate } from './strings'
 import { LivePlan, makeTails, type TailDeps } from './tails'
+import { WorkingDock, type WorkingDockProps } from './WorkingDock'
 
 export { BuildProgress } from './BuildProgress'
 export { BuildStopped } from './BuildStopped'
@@ -51,6 +61,10 @@ interface ClientContext {
   }
   slots: Slots
   uiConversation: { events: { register: (definition: unknown) => (() => void) | void } }
+  /** dsh's conversation service: its session verb sends a message as the owner. */
+  conversation?: ConversationFace
+  /** dsh's sessions service: the session face of an id. */
+  sessions?: { binding(sessionId: string): { session?: SessionFace } | undefined }
 }
 
 /** What `apply` reads besides the context; a test passes its own. */
@@ -60,7 +74,7 @@ export interface ApplyDeps {
   runs?: BuildRunFeed
 }
 
-export const inject = ['locale', 'slots', 'uiConversation']
+export const inject = ['locale', 'slots', 'uiConversation', 'conversation', 'sessions']
 
 /** Keep one registration while the switch is on, and none while it is off. */
 function whileShown(switches: ApplyDeps['switches'], register: () => () => void): () => void {
@@ -102,11 +116,13 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
     reviews,
     runs: deps.runs ?? EMPTY_BUILD_RUN_FEED,
     t,
-    fetch: deps.fetch
+    fetch: deps.fetch,
+    send: (sessionId, text) =>
+      sendToChat(sessionId, (id) => ctx.sessions?.binding(id)?.session, ctx.conversation, text)
   }
   const tails = makeTails(tailDeps)
 
-  for (const definition of [templatesDefinition, planDefinition])
+  for (const definition of [templatesDefinition, planDefinition, workingDefinition])
     ctx.effect(
       () => ctx.uiConversation.events.register(definition) ?? undefined,
       `tracy-build-chat: ${definition.kind}`
@@ -140,6 +156,19 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
             planCard={<LivePlan deps={tailDeps} />}
           />
         )
+      )
+    )
+  )
+
+  ctx.slots.inject('conversation.input.dock', () =>
+    whileShown(deps.switches, () =>
+      ctx.slots.register(
+        {
+          name: 'conversation.input.dock',
+          id: 'tracy-build-chat-working',
+          inject: (sessionId: string) => ({ sessionId })
+        },
+        (props: WorkingDockProps) => <WorkingDock {...props} t={t()} />
       )
     )
   )

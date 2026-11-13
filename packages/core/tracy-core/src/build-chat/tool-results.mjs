@@ -94,12 +94,13 @@ export function buildToolRowOf(rawArgs, text) {
 /**
  * @typedef {{ turn: number, seq: number, options: any[], none: boolean }} TemplatesSeen
  * @typedef {{ turn: number, seq: number, id: string, revision: number }} PlanSeen
- * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null }}
- *   BuildToolFold
+ * @typedef {{ turn: number, seq: number, step: string }} WorkingSeen
+ * @typedef {{ calls: Readonly<Record<string, string>>, templates: TemplatesSeen | null, plan: PlanSeen | null,
+ *   working: WorkingSeen | null }} BuildToolFold
  */
 
 /** @type {BuildToolFold} */
-const EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null })
+const EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null, working: null })
 
 /** @param {any} content */
 const textOf = (content) =>
@@ -109,21 +110,31 @@ const textOf = (content) =>
 /**
  * Fold one session event into what the session's `tracy_build` calls showed so far: the latest templates offered
  * and the latest plan revision, each with the turn it arrived in. An error, a replaced result (history rewritten)
- * and a stop leave both as they were. Used as the State of a conversation node definition.
+ * and a stop leave both as they were. `working` is the latest call while it waits: not answered yet, or answered
+ * `running` (a long step the agent keeps waiting on with `status`); any other answer, an error included, ends it.
+ * Used as the State of a conversation node definition.
  * @param {BuildToolFold | undefined} state
  * @param {any} event
  * @returns {BuildToolFold}
  */
 export function buildToolFoldOf(state = EMPTY, event) {
   const data = event?.data
-  if (event?.type === 'tool/call' && data?.name === BUILD_TOOL && typeof data.callId === 'string')
-    return { ...state, calls: { ...state.calls, [data.callId]: data.callId } }
+  if (event?.type === 'tool/call' && data?.name === BUILD_TOOL && typeof data.callId === 'string') {
+    const turn = Number(data.turn)
+    const step = argsOf(data.arguments).action
+    const working =
+      Number.isSafeInteger(turn) && turn >= 0
+        ? { turn, seq: Number(event.seq), step: typeof step === 'string' ? step : 'status' }
+        : (state.working ?? null)
+    return { ...state, calls: { ...state.calls, [data.callId]: data.callId }, working }
+  }
   if (event?.type !== 'tool/result' || event.surfaceOp !== 'append') return state
   const message = data?.message
   const callId = message?.source?.callId
-  if (typeof callId !== 'string' || !Object.hasOwn(state.calls, callId) || message?.isError === true)
-    return state
+  if (typeof callId !== 'string' || !Object.hasOwn(state.calls, callId)) return state
+  if (message?.isError === true) return state.working ? { ...state, working: null } : state
   const result = buildToolResultOf(textOf(message.content))
+  if (result?.kind !== 'running' && (state.working ?? null) !== null) state = { ...state, working: null }
   const turn = Number(data.turn)
   const seq = Number(event.seq)
   if (!Number.isSafeInteger(turn) || turn < 0) return state

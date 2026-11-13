@@ -3,7 +3,10 @@
 The build chat (TracyHQ/tracy#602, #609): the chat that builds a new site before the site exists.
 
 - **Browser half** (`src/client/`, `lib/client.js`): the template card, the plan card, the build task list and the
-  notice of a build that could not finish. Behind the UI switch `chat-build`.
+  notice of a build that could not finish. Behind the UI switch `chat-build`. While the plan review waits, the review
+  bar draws the plan card above itself (a turn tail shows only once its turn ends). A saved template pick is said in
+  the chat as the owner ("I picked JA Boxing."), once, so the agent asks for the plan. While a `tracy_build` call
+  waits, the input dock shows "Working on your site plan".
 - **Host half** (`src/host/`, `lib/index.js`): the engine tool `tracy_build` and the guard on the build session's
   questions. It only forwards to tracy-web; it holds no secret and no engine logic.
 

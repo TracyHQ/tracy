@@ -6,7 +6,7 @@
  */
 import { IconCheckOutlineRegular } from '@deepseek-ai/dsh-client-ui-primitives'
 import { type TemplateOption, templateChoiceOf, templateOfChoice } from '@tracy/core/build-chat'
-import { useState } from 'react'
+import { type ReactNode, useState } from 'react'
 import type { Translate } from './strings'
 
 /** Add site, as tab-link opens it from the address of the page the chat is on. */
@@ -19,6 +19,8 @@ export interface TemplateCardProps {
   onChoose: (template: { slug: string; name: string; version: string }) => Promise<unknown> | unknown
   /** The slug already chosen: the card shows it and takes no other choice. */
   chosen?: string | null
+  /** Drawn beside the chosen design: what happens next when the chat could not be told. */
+  next?: ReactNode
   addSiteHref?: string
 }
 
@@ -27,6 +29,7 @@ export function TemplateCard({
   t,
   onChoose,
   chosen = null,
+  next = null,
   addSiteHref = ADD_SITE_HREF
 }: TemplateCardProps) {
   const choice = templateChoiceOf(templates)
@@ -90,10 +93,13 @@ export function TemplateCard({
       </div>
       <div className="tv-bc-tfoot">
         {locked ? (
-          <span className="tv-bc-chip">
-            <IconCheckOutlineRegular aria-hidden />
-            {t('template.chosen', { name: current.name })}
-          </span>
+          <>
+            <span className="tv-bc-chip">
+              <IconCheckOutlineRegular aria-hidden />
+              {t('template.chosen', { name: current.name })}
+            </span>
+            {next}
+          </>
         ) : (
           <>
             <span

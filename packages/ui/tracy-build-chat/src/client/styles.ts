@@ -235,6 +235,8 @@ export const CSS = `
 
 /* The quiet row of one tracy_build call (BuildToolRow): dsh's own process row, the business name beside it */
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
+/* The same row above the chat input while a call waits (WorkingDock) */
+.tv-bc-dock { box-sizing: border-box; width: 100%; padding: 0 4px 4px; min-width: 0; }
 
 /* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
 .tv-bc-review-frame {

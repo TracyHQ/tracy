@@ -88,7 +88,7 @@ const askedReview = () =>
   }))
 
 /** tracy-web's build draft doors, answered in the runner: the draft, the template pick, the plan edits. */
-function draftDoors(plan) {
+function draftDoors(plan, { templateFails = false } = {}) {
   const state = { plan: structuredClone(plan), lastEdit: null, template: null, requests: [] }
   const body = () => ({
     draft: {
@@ -110,6 +110,7 @@ function draftDoors(plan) {
         route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(value) })
       if (url.pathname === '/api/build-draft' && request.method() === 'GET') return json(body())
       if (url.pathname === '/api/build-draft/template') {
+        if (templateFails) return json({ code: 'UNAVAILABLE' }, 503)
         state.template = sent.template
         return json(body())
       }
@@ -146,14 +147,14 @@ const bundled = await build({
 const bundle = bundled.outputFiles.find((f) => f.path.endsWith('.js'))?.text
 
 /** One page with the plugin applied; `hidden` is what `/api/ui` answers. */
-async function open(browser, { viewport, theme = 'light', hidden = [], plan = PLAN }) {
+async function open(browser, { viewport, theme = 'light', hidden = [], plan = PLAN, templateFails = false }) {
   const page = await browser.newPage({ viewport })
   page.setDefaultTimeout(5000)
   const errors = []
   page.on('pageerror', (e) => errors.push(e.message))
   const dark = theme === 'dark' ? ' class="dark" data-ds-dark-theme=""' : ''
   const html = `<!doctype html><html data-theme="${theme}"${dark}><body><div id="root"></div></body></html>`
-  const doors = draftDoors(plan)
+  const doors = draftDoors(plan, { templateFails })
   await page.route('http://build-chat.test/**', (route) => {
     const p = new URL(route.request().url()).pathname
     if (p === '/api/ui')
@@ -225,6 +226,11 @@ test('the real plugin draws the build chat from recorded tracy_build results, ph
           assert.ok(
             doors.state.requests.some((r) => r.method === 'PUT' && r.path === '/api/build-draft/template')
           )
+          // The saved pick moves the chat on by itself: one plain message as the owner, queued, sent once.
+          await page.waitForFunction(() => window.probe.sent().length === 1)
+          assert.deepEqual(await page.evaluate(() => window.probe.sent()), [
+            { sessionId: BUILD, text: 'I picked JA Boxing.', mode: 'queue' }
+          ])
 
           // An inline edit goes through the plan edit door, and the card follows the draft it answers with.
           await card.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
@@ -314,6 +320,87 @@ test('the plan shows while its turn still waits on the review, and once the turn
       assert.deepEqual(errors, [])
       await page.close()
     }
+  } finally {
+    await browser.close()
+  }
+})
+
+test('a pick sends its message once: not again on a new render or a reload, never when the save failed', async () => {
+  const browser = await launch()
+  try {
+    const { page, errors } = await open(browser, { viewport: { width: 1280, height: 800 } })
+    await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+    await page.getByRole('button', { name: 'Use JA Boxing', exact: true }).click()
+    await page.getByText('Chosen: JA Boxing').waitFor()
+    await page.waitForFunction(() => window.probe.sent().length === 1)
+    // The session drawn again (a reload reads the same log): the chosen card shows, nothing more is sent.
+    await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+    await page.getByText('Chosen: JA Boxing').waitFor()
+    await page.waitForTimeout(300)
+    assert.equal((await page.evaluate(() => window.probe.sent())).length, 1)
+    assert.deepEqual(errors, [])
+    await page.close()
+
+    const failing = await open(browser, { viewport: { width: 390, height: 844 }, templateFails: true })
+    await failing.page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+    await failing.page.getByRole('button', { name: 'Use JA Boxing', exact: true }).click()
+    await failing.page.getByText('Your choice was not saved. Try again.').waitFor()
+    await failing.page.waitForTimeout(300)
+    assert.deepEqual(await failing.page.evaluate(() => window.probe.sent()), [])
+    assert.deepEqual(failing.errors, [])
+  } finally {
+    await browser.close()
+  }
+})
+
+test('while a tracy_build call waits, a line above the chat input says work is going on, until it answers', async () => {
+  const browser = await launch()
+  try {
+    const { page, errors } = await open(browser, { viewport: { width: 390, height: 844 } })
+    const base = recordedSession()
+    let seq = 1000
+    const call = (callId, action) => ({
+      type: 'tool/call',
+      seq: ++seq,
+      data: { turn: 4, name: 'tracy_build', callId, arguments: JSON.stringify({ action }) }
+    })
+    const result = (callId, value) => ({
+      type: 'tool/result',
+      seq: ++seq,
+      surfaceOp: 'append',
+      data: {
+        turn: 4,
+        message: {
+          source: { callId },
+          isError: false,
+          content: [{ type: 'text', text: JSON.stringify(value) }]
+        }
+      }
+    })
+    const line = page.locator('[data-dock] [data-build-working]')
+    const show = (events) => page.evaluate(([id, e]) => window.probe.load(id, e), [BUILD, events])
+
+    // The plan call waits on the brand step: the line shows while it is unanswered...
+    const asked = [...base, call('w-plan', 'plan')]
+    await show(asked)
+    await line.waitFor()
+    assert.match(await line.innerText(), /Working on your site plan/)
+    // ...while it answered "still running" and the agent keeps waiting with status...
+    const waiting = [
+      ...asked,
+      result('w-plan', { running: true, say: 'Still working.' }),
+      call('w-status', 'status')
+    ]
+    await show(waiting)
+    await line.waitFor()
+    await show([...asked, result('w-plan', { running: true, say: 'Still working.' })])
+    await line.waitFor()
+    // ...and is gone once the plan is there, and in a turn that ended.
+    await show([...waiting, result('w-status', { plan: { id: PLAN.id, revision: PLAN.revision } })])
+    await line.waitFor({ state: 'detached' })
+    await show([...asked, { type: 'turn/end', seq: ++seq, data: { turn: 4 } }])
+    await line.waitFor({ state: 'detached' })
+    assert.deepEqual(errors, [])
   } finally {
     await browser.close()
   }

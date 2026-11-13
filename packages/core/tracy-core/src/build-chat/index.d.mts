@@ -234,6 +234,8 @@ export interface BuildToolFold {
   calls: Readonly<Record<string, string>>
   templates: { turn: number; seq: number; options: TemplateOption[]; none: boolean } | null
   plan: { turn: number; seq: number; id: string; revision: number } | null
+  /** The latest call while it waits: not answered yet, or answered `running`. */
+  working: { turn: number; seq: number; step: string } | null
 }
 // biome-ignore lint/suspicious/noExplicitAny: a dsh session event, duck-typed
 export declare function buildToolFoldOf(state: BuildToolFold | undefined, event: any): BuildToolFold

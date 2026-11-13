@@ -1,12 +1,14 @@
 /**
  * The seam between the session log and the cards (#609). dsh folds a turn's settled tool calls into one disclosure,
  * so a card cannot be the tool's own row; it is the tail of a turn, as in design inspiration's picks row and the
- * Build plugins' picture card. Two conversation node definitions fold every `tracy_build` call and result of the
+ * Build plugins' picture card. Three conversation node definitions fold every `tracy_build` call and result of the
  * session (`buildToolFoldOf`) in ONE context each, and publish against the turn of the latest answer only:
  *
  * - `tracy_build:templates`: the templates the tool offered last, for the template card;
  * - `tracy_build:plan`: the latest plan id and revision, for the one living plan card. An older turn that carried a
- *   plan loses its value when a newer one arrives, so the history keeps one plan card, never a list of versions.
+ *   plan loses its value when a newer one arrives, so the history keeps one plan card, never a list of versions;
+ * - `tracy_build:working`: the latest call while it waits (unanswered, or answered `running`), for the line that
+ *   says work is going on above the chat input (`WorkingDock.tsx`).
  *
  * Duck-typed: nothing is imported from dsh at run time.
  */
@@ -14,9 +16,11 @@ import { BUILD_TOOL, type BuildToolFold, buildToolFoldOf } from '@tracy/core/bui
 
 export const TEMPLATES_KEY = `${BUILD_TOOL}:templates`
 export const PLAN_KEY = `${BUILD_TOOL}:plan`
+export const WORKING_KEY = `${BUILD_TOOL}:working`
 
 export type TemplatesValue = NonNullable<BuildToolFold['templates']>
 export type PlanValue = NonNullable<BuildToolFold['plan']>
+export type WorkingValue = NonNullable<BuildToolFold['working']>
 
 interface EventLike {
   type: string
@@ -63,6 +67,7 @@ function definitionOf<V extends { turn: number }>(kind: string, pick: (fold: Bui
 
 export const templatesDefinition = definitionOf<TemplatesValue>(TEMPLATES_KEY, (fold) => fold.templates)
 export const planDefinition = definitionOf<PlanValue>(PLAN_KEY, (fold) => fold.plan)
+export const workingDefinition = definitionOf<WorkingValue>(WORKING_KEY, (fold) => fold.working)
 
 /** The owner props dsh hands a turn tail entry; only what the cards read. */
 export interface TurnTailOwnerLike {
