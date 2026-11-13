@@ -12,9 +12,9 @@
 
 ## Decision
 
-1. **No repair agent.** The agent pass after the site check is removed.
+1. **No repair agent.** The agent repair pass is removed.
 2. **A failing step is re-run once from its own saved inputs.** If it fails again, the build stops, the customer is told the build could not finish, and the Tracy team gets a report that names the step and keeps its inputs and outputs.
-3. **"Done" means the site check passed.** A build never reports done, applied or complete otherwise.
+3. **"Done" means every step, ending with the write step, completed; a site check inside the build is deferred.** A build never reports done, applied or complete when a step failed. For this round the checks on a built site (demo strings, dead links, written design fields, text over its limit) run as a tool during local trial runs, not inside a customer build.
 4. **Missing facts are asked from the customer, system faults are not.** A gap in the needs profile becomes a question in the chat; a broken step never does.
 5. **Every step keeps its record** (inputs, outputs, timing, cost) after the run, without a flag.
 
