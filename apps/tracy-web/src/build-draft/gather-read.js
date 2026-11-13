@@ -9,12 +9,23 @@
  * Opportunities media rules, kept under a draft key, one `build_draft_picture` row each), so the manifest names each by
  * an id that opens again, with its real size, type and palette, as a website opportunity's revision does.
  *
- * The owner's description is laid over the profile as the seller's typed bio (`profile-edits.js`, field `bio`), the
- * one typed description the Website Opportunities flow has.
+ * 🔒 THE OWNER'S DESCRIPTION IS A SOURCE, NEVER COPY (decision D46). What the owner typed in the build chat is not laid
+ * over the profile as a bio: the bio based paths (hero, About story, story fact, brand voice) read the sources' own bio.
+ * It guides the trade guess when the sources name no trade, and its sentences are kept out of the brief word for word
+ * (`description-guard.js`). Its facts are not read yet: the business reading has no passage kind for an owner's own
+ * statement and the plan no honest label for one (`DESCRIPTION_FACTS`).
  */
+import { keepDescriptionOut } from './description-guard.js'
 
-/** The longest seller bio (`profile-edits.js` `EDITABLE_PROFILE_FIELDS.bio`). */
-export const BIO_MAX = 1200
+/**
+ * Why the description's facts are not read into the brief (D46): the business reading (`readingSourcesOf`) reads only
+ * bio, post, review and website passages, and the plan names an owner's words only as an answer, which the needs
+ * profile's trust order does not read. Feeding it as one of those would credit the owner's words to a source that
+ * never said them.
+ */
+export const DESCRIPTION_FACTS = Object.freeze({ read: false, reason: 'no_owner_statement_source' })
+
+const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
 /**
  * The brand observations of the executor's brand stage (`place-executor.js` `brand`), from the rows and the profile.
@@ -45,36 +56,32 @@ function brandOf({ rows, media, profile, name, domain, parts, logoPalette }) {
 
 /**
  * The trade of a business known by its links, as Build from my business decides it (`own-site.js`
- * `researchedTrade`): Google's types, else the schema.org type its website states, else its name, else its bio.
+ * `researchedTrade`): Google's types, else the schema.org type its website states, else its name, else its bio, else
+ * what the owner typed in the build chat (`hint`: words read by the same classifier, never copied anywhere).
  */
-export function tradeOf(domain, profile, name, tradeOfWords) {
+export function tradeOf(domain, profile, name, tradeOfWords, hint = null) {
   const google = profile?.googlePlace ?? null
   const byGoogle = google
     ? domain.tradeOfPlace({ primaryType: google.primaryType, types: google.types })
     : 'other'
   const typed = byGoogle !== 'other' ? byGoogle : domain.tradeOfSchemaType(profile?.businessType)
   const named = typed !== 'other' ? typed : tradeOfWords(profile?.name ?? name)
-  return named !== 'other'
-    ? named
-    : tradeOfWords(profile?.bio, Array.isArray(profile?.cuisine) ? profile.cuisine.join(' ') : null)
+  if (named !== 'other') return named
+  const own = tradeOfWords(profile?.bio, Array.isArray(profile?.cuisine) ? profile.cuisine.join(' ') : null)
+  return own !== 'other' || !isText(hint) ? own : tradeOfWords(hint)
 }
 
 /**
- * The owner's opportunity in memory with the description laid in as the seller's typed bio, the profile its sources
- * say (`mergeProfile`, before any decision or typed edit: what the place executor's reading reads), and its trade.
- * @param {{opp: object, rows: object[], googlePlace: object | null, description: string | null, madeAt: string,
- *   domain: object, parts: object}} input
+ * The owner's opportunity in memory, the profile its sources say (`mergeProfile`, before any decision or typed edit:
+ * what the place executor's reading reads), and its trade, the description guiding it when the sources name none.
+ * @param {{opp: object, rows: object[], googlePlace: object | null, description: string | null, domain: object,
+ *   parts: object}} input
  */
-export function profileOfRead({ opp, rows, googlePlace, description, madeAt, domain, parts }) {
-  const bio =
-    typeof description === 'string' && description.trim() ? description.trim().slice(0, BIO_MAX) : null
-  const owned = {
-    ...opp,
-    candidate: { ...opp.candidate, ...(bio ? { profileEdits: { bio: { value: bio, at: madeAt } } } : {}) }
-  }
+export function profileOfRead({ opp, rows, googlePlace, description, domain, parts }) {
+  const owned = { ...opp, candidate: { ...opp.candidate } }
   const merged = parts.mergeProfile(owned, rows)
   if (googlePlace) merged.googlePlace = googlePlace
-  const trade = tradeOf(domain, merged, owned.name, parts.tradeOfWords)
+  const trade = tradeOf(domain, merged, owned.name, parts.tradeOfWords, description)
   if (trade !== 'other') owned.candidate.trade = trade
   return { owned, merged, trade }
 }
@@ -88,7 +95,8 @@ export function profileOfRead({ opp, rows, googlePlace, description, madeAt, dom
  *   named by the brief as `brand.logo`; `logoPalette`: that logo's own colours, measured from its stored copy;
  *   `reading`: the business reading (`gather-reading.js`), laid on the profile as `businessReading`, where a place's
  *   research keeps it
- * @returns {{brief: object, manifest: object[]} | {invalid: object[]}}
+ * @returns {{brief: object, manifest: object[], keptOut: {sentence: string, where: string}[]} | {invalid: object[]}}
+ *   `keptOut`: the description's sentences taken out of the brief (`description-guard.js`)
  */
 export function briefOf({
   opp,
@@ -108,7 +116,6 @@ export function briefOf({
     rows,
     googlePlace,
     description,
-    madeAt,
     domain,
     parts
   })
@@ -120,9 +127,10 @@ export function briefOf({
   // The stored pictures go through the brief read's own filters (junk, near copies) and mapping (`fromPlace`).
   const read = parts.fromPlace({ sources: rows, profile, brand, media, shown: rows })
   const brief = parts.makeSiteBrief(domain, read, { opportunity: parts.opportunityOf(owned), madeAt })
+  const keptOut = keepDescriptionOut(brief, description)
   const checked = domain.validateBrief(brief)
   if (!checked?.ok) return { invalid: checked?.errors ?? [] }
   brief.readiness = domain.briefReadinessOf(brief)
   if (trade !== 'other') brief.trade = trade
-  return { brief, manifest: parts.assetManifestOf(read.media) }
+  return { brief, manifest: parts.assetManifestOf(read.media), keptOut }
 }

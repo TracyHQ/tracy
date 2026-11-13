@@ -18,7 +18,7 @@ import { randomUUID } from 'node:crypto'
 import { EngineStepError } from './engine-steps.js'
 import { linksOf, reasonOf } from './gather-links.js'
 import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
-import { briefOf, profileOfRead } from './gather-read.js'
+import { DESCRIPTION_FACTS, briefOf, profileOfRead } from './gather-read.js'
 import { readingOf } from './gather-reading.js'
 import { NOT_STORED, picturesToStore } from './pictures.js'
 
@@ -144,7 +144,6 @@ export function createPreSiteGatherer(deps) {
       rows: read,
       googlePlace: place.facts,
       description,
-      madeAt,
       domain,
       parts
     })
@@ -188,6 +187,9 @@ export function createPreSiteGatherer(deps) {
       setAside,
       picturesSetAside: pictures.setAside,
       reading: reading.record,
+      // What became of the owner's description (D46): its facts not read yet, and its sentences kept out of the brief.
+      descriptionFacts: DESCRIPTION_FACTS,
+      ...(made.keptOut?.length ? { descriptionKeptOut: made.keptOut } : {}),
       ...(pictures.run ? { pictureRun: pictures.run } : {}),
       ...(logoFile ? { logoFile } : {})
     }

@@ -221,6 +221,27 @@ test('research with a chosen kit gives the needs profile the kit, so answers get
   })
 })
 
+test('research keeps what the owner typed under its own key, with what became of it (D46)', async () => {
+  const model = async () => JSON.stringify(needsReading())
+  const keptOut = [{ sentence: 'We coach every level of racquet player here.', where: 'story.evidence' }]
+  const description = 'We coach every level of racquet player here.'
+  const record = await researchStep(
+    { links: ['https://larkfen-racquets.example/'], description },
+    {
+      gather: async () => ({
+        ...gatheredBrief(),
+        descriptionFacts: { read: false, reason: 'no_owner_statement_source' },
+        descriptionKeptOut: keptOut
+      }),
+      model,
+      kit: null
+    }
+  )
+  assert.equal(record.description, description)
+  assert.deepEqual(record.descriptionFacts, { read: false, reason: 'no_owner_statement_source' })
+  assert.deepEqual(record.descriptionKeptOut, keptOut)
+})
+
 test('the build model door: text and pictures in one call shape; an unset door is model_missing', async () => {
   const sent = []
   const fetchImpl = async (url, init) => {

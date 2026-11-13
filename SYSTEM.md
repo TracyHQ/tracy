@@ -908,7 +908,14 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `businessReading`, so the brief's services, prices, team and story come from it as a revision's do; no
   `wo_cost_ledger` row: each call is held in memory to `/ops/wo` `researchJobCapCents`, and `research.reading` records
   method, reason, calls, tokens and cents. No door, a spent cap, a failure (one rerun) or its own two minutes past: the
-  rules' reading or none, with its reason, never a failed research. Unread links are set aside with a reason; nothing read is
+  rules' reading or none, with its reason, never a failed research. The owner's typed description (decision D46) is a source,
+  never copy: it is not laid in as the seller's bio (the bio based paths read the sources' own bio), it guides the
+  trade guess only when the sources name no trade, and its sentences of five words or more are kept out of the
+  brief's hero, story, story facts, headline line and brand voice evidence word for word
+  ([`build-draft/description-guard.js`](apps/tracy-web/src/build-draft/description-guard.js), each removal in
+  `research.descriptionKeptOut`). Its facts are not read yet (`research.descriptionFacts`,
+  `no_owner_statement_source`): the reading has no passage kind for an owner's statement and the needs profile's trust
+  order does not read the plan's `answer` origin. Unread links are set aside with a reason; nothing read is
   `research_empty`; reading the links is bounded to three minutes and the business reading to two more. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and

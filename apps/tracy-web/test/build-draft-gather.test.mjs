@@ -305,20 +305,93 @@ test('the link guard always gets a DNS resolver, even when the server injects no
   assert.deepEqual([...new Set(handed)], ['function'])
 })
 
-test('the owner description reaches the brief as the seller typed bio', async () => {
+/** Every place of the brief whose text holds `needle`, as a path. */
+function placesOf(value, needle, at = '$', out = []) {
+  if (typeof value === 'string') {
+    if (value.toLowerCase().includes(needle.toLowerCase())) out.push(at)
+  } else if (Array.isArray(value)) value.forEach((v, i) => placesOf(v, needle, `${at}[${i}]`, out))
+  else if (value && typeof value === 'object')
+    for (const [k, v] of Object.entries(value)) placesOf(v, needle, `${at}.${k}`, out)
+  return out
+}
+
+const sectionsOf = (brief) => brief.sitemap.flatMap((p) => p.sections)
+
+test('the owner description is a source to rewrite, never copied into the brief; the website bio is read again (D46)', async () => {
   const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
-  const description = 'Family bakery, rye and sourdough, open early for commuters.'
-  const { brief } = await gatherer(domain)({ links: [SITE], description }, {})
-  const story = brief.sitemap.flatMap((p) => p.sections).find((s) => s.kind === 'story' || s.id === 'story')
-  assert.ok(
-    JSON.stringify(brief).includes(description),
-    `the description is in the brief: ${JSON.stringify(story?.evidence ?? null)}`
+  const description = 'We are a family bakery and we open early for commuters every weekday.'
+  const gathered = await gatherer(domain)({ links: [SITE], description }, {})
+  const { brief } = gathered
+  assert.deepEqual(
+    placesOf(brief, 'open early for commuters'),
+    [],
+    'the typed sentence is in no part of the brief'
   )
+  // The website's own bio is what the bio based paths read again: the story fact, the About evidence, the brand.
+  const bio = 'Sourdough baked before dawn since 2011.'
+  const storyFact = brief.facts.find((f) => f.field === 'story')
+  assert.equal(storyFact?.value?.text, bio)
+  assert.equal(storyFact.evidence[0].source, 'website')
+  const story = sectionsOf(brief).find((s) => s.kind === 'story')
+  assert.deepEqual(story.evidence, [{ quote: bio, source: 'profile.bio' }])
+  assert.equal(brief.brand.evidence?.[0]?.quote, bio)
+  // No owner statement source can carry the description to the reading yet: it is kept, not read, and said so.
+  assert.deepEqual(gathered.descriptionFacts, { read: false, reason: 'no_owner_statement_source' })
+  assert.equal(gathered.descriptionKeptOut, undefined)
   // A description is not a source: with no link to read, the research has nothing.
   await assert.rejects(gatherer(domain)({ links: [], description }, {}), {
     code: 'research_empty',
     noRerun: true
   })
+})
+
+test('a description sentence the sources repeat word for word is kept out of the brief and recorded (D46)', async () => {
+  const { domain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  // The owner typed the website's own bio sentence again, with other case and punctuation, plus a short one.
+  const description = 'sourdough baked, before dawn since 2011!  Come early.'
+  const gathered = await gatherer(domain)({ links: [SITE], description }, {})
+  const { brief } = gathered
+  const sentence = 'Sourdough baked before dawn since 2011'
+  const onSite = brief.facts.filter((f) => f.onSite !== false)
+  assert.deepEqual(placesOf(onSite, sentence), [], 'no fact on the site holds it')
+  assert.deepEqual(
+    placesOf(sectionsOf(brief), sentence),
+    [],
+    'no section copy, evidence, fact or line holds it'
+  )
+  assert.deepEqual(placesOf(brief.brand, sentence), [], 'the brand voice evidence does not hold it')
+  const kept = brief.facts.find((f) => f.field === 'story')
+  assert.equal(kept.onSite, false)
+  assert.ok(kept.reasons.includes('owner-description-verbatim'))
+  const where = gathered.descriptionKeptOut.map((k) => k.where)
+  for (const place of ['fact.story', 'story.evidence', 'brand.evidence'])
+    assert.ok(where.includes(place), `${place} is recorded: ${JSON.stringify(where)}`)
+  assert.ok(
+    gathered.descriptionKeptOut.every((k) => k.sentence === 'sourdough baked, before dawn since 2011!')
+  )
+  // The brief stays valid: research never fails for it.
+  assert.equal(domain.validateBrief(brief).ok, true)
+})
+
+test('the description guides the trade guess when the sources name no trade (D46)', async () => {
+  const plain = () => ({
+    ...websiteResult(),
+    profile: {
+      ...websiteResult().profile,
+      name: 'Hollowmere House',
+      bio: 'Open every day.',
+      businessType: null
+    }
+  })
+  const { domain } = await fakeDomain({ connectors: { website: connector(plain()) } })
+  const none = await gatherer(domain)({ links: [SITE], description: null }, {})
+  assert.equal(none.brief.trade, undefined)
+  const typed = await gatherer(domain)(
+    { links: [SITE], description: 'We run a boxing gym for kids and adults.' },
+    {}
+  )
+  assert.equal(typed.brief.trade, 'fitness')
+  assert.deepEqual(placesOf(typed.brief, 'boxing gym for kids'), [])
 })
 
 test('a read past the time budget is set aside as too slow; what was read by then is kept', async () => {

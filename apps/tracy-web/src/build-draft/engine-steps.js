@@ -73,6 +73,14 @@ export async function researchStep({ links, description }, { gather, model, kit,
     ...(Array.isArray(gathered.setAside) && gathered.setAside.length ? { setAside: gathered.setAside } : {}),
     // How the business was read (`gather-reading.js`): by the model or the rules, why, its calls, tokens and cost.
     ...(gathered.reading && typeof gathered.reading === 'object' ? { reading: gathered.reading } : {}),
+    // What became of the owner's description (D46, `gather-read.js`): the description itself stays under its own key
+    // (`description`); whether its facts were read, and the sentences kept out of the brief word for word.
+    ...(gathered.descriptionFacts && typeof gathered.descriptionFacts === 'object'
+      ? { descriptionFacts: gathered.descriptionFacts }
+      : {}),
+    ...(Array.isArray(gathered.descriptionKeptOut) && gathered.descriptionKeptOut.length
+      ? { descriptionKeptOut: gathered.descriptionKeptOut }
+      : {}),
     // The business logo the gatherer saved as a file (the brand step reads it); kept so a rerun reads the same file.
     ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {}),
     // The research run its stored pictures belong to (`pictures.js`), and the pictures that were not stored, each with
