@@ -25442,38 +25442,6 @@
           "x-internal": true
         }
       },
-      "/api/build-draft/plan": {
-        "put": {
-          "operationId": "put_api_build_draft_plan",
-          "requestBody": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "plan": {
-                      "type": "object"
-                    }
-                  },
-                  "required": ["plan"],
-                  "type": "object"
-                }
-              }
-            },
-            "required": true
-          },
-          "responses": {
-            "200": {}
-          },
-          "security": [
-            {
-              "session": []
-            }
-          ],
-          "tags": ["Accounts & seats"],
-          "x-audience": ["customer", "agent"],
-          "x-internal": true
-        }
-      },
       "/api/build-draft/plan-edits": {
         "post": {
           "operationId": "post_api_build_draft_plan_edits",

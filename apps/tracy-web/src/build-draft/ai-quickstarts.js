@@ -21,13 +21,13 @@
  * `src/contracts/`; a checkout reads the Joomla quickstart package in place.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
-import { createRequire } from 'node:module'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   BLOCK_STORE_FILE,
   MAPPING_FILE,
   PAGE_RECIPES_FILE,
+  TRACY_LIBRARY,
   TRADES,
   checkAiQuickstartContract,
   formatAiQuickstartProblem as formatProblem
@@ -44,14 +44,6 @@ export const KIT_MANIFEST_SCHEMA = 'tracy-ai-quickstart-kit/v1'
 const MAPPING_PENDING_FILE = 'mapping.pending.json'
 const SEGMENT = /^[a-z0-9][a-z0-9._-]*$/i
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
-
-/** The blocks of the Tracy library (WO package, ticket #596): the blocks a plan may place beside a template's own. */
-export function tracyLibrary() {
-  const file = createRequire(import.meta.url).resolve(
-    'website-opportunities/domain/library/tracy-library.json'
-  )
-  return JSON.parse(readFileSync(file, 'utf8')).blocks
-}
 
 const readJson = (file) => {
   try {
@@ -120,7 +112,7 @@ function readKit(dir, slug, library) {
 
 /**
  * The catalogue over one folder of kits. Read once; a new image brings new kits.
- * @param {{root?: string, library?: object[]}} [options] `library`: the Tracy library blocks (default: the WO package's)
+ * @param {{root?: string, library?: object[]}} [options] `library`: the Tracy library blocks (default: `TRACY_LIBRARY`)
  * @returns {{templatesFor: (trade: string) => Array<{slug: string, name: string, version: string, picture: string,
  *   reason: string, quickstart: 'released', fits: true}>, loadKit: (slug: string) => ({template: object,
  *   blockStore: object, pageRecipes: object, mapping: object | null, library: object[]} | null),
@@ -130,7 +122,7 @@ export function aiQuickstartCatalogue({ root = AI_QUICKSTARTS_DIR, library } = {
   let kits = null
   const all = () => {
     if (kits) return kits
-    const blocks = library ?? tracyLibrary()
+    const blocks = library ?? TRACY_LIBRARY
     kits = new Map()
     for (const slug of subdirs(root)) {
       // The newest version of the slug with a kit, across its CMS folders.

@@ -3,36 +3,30 @@
  * the owner's answers, the chosen template and the living plan here. Each door reads the signed-in person and touches
  * only that account's draft. Reads never create an account; starting a draft creates one when the email has none yet,
  * as `seen-hints/route.js` does. The app's global csrfGuard enforces the same-origin JSON write policy.
+ *
+ * 🔒 NO DOOR PUTS A PLAN (#609). A browser or a model cannot write the plan: the build engine puts a composed plan
+ * with `putComposed`, and the edit doors go through the edit gate (`store.js`).
  */
 import { Hono } from 'hono'
 import { json, requireViewer } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
-import {
-  chooseTemplate,
-  createDraft,
-  editPlan,
-  putPlan,
-  readDraft,
-  saveAnswer,
-  undoPlanEdit
-} from './store.js'
+import { chooseTemplate, createDraft, editPlan, readDraft, saveAnswer, undoPlanEdit } from './store.js'
 
 const BASE = '/api/build-draft'
 
 /** Each refusal: its status and the sentence that says what to do next. */
 const REFUSALS = {
   NO_DRAFT: [404, 'Start a draft first: POST /api/build-draft.'],
-  NO_PLAN: [409, 'The draft has no plan yet: put one with PUT /api/build-draft/plan.'],
+  NO_PLAN: [409, 'The draft has no plan yet: the build chat composes one.'],
+  NO_KIT: [409, 'The template of this plan has no AI quickstart kit on this server.'],
   INVALID_REQUEST: [400, 'Send the JSON body this door reads.'],
   INVALID_TEMPLATE: [400, 'Send "template" as {slug, name, version}.'],
   INVALID_ANSWER: [422, 'The answer does not fit its question.'],
-  INVALID_PLAN: [422, 'The plan does not pass the Contract B check.'],
   INVALID_EDIT: [422, 'The edit does not fit the plan.'],
   STALE_EDIT: [
     409,
     'The plan changed since this edit was made: read the draft again and edit its current revision.'
   ],
-  STALE_PLAN: [409, 'The draft already holds this plan at the same or a later revision.'],
   PLAN_EXISTS: [409, 'The draft has a plan: change its look.template with a plan edit.'],
   NOTHING_TO_UNDO: [409, 'There is no plan edit to undo.']
 }
@@ -43,8 +37,10 @@ const REFUSALS = {
  * @param {import('pg').Pool} deps.pool
  * @param {(pool: import('pg').Pool, email: string) => Promise<{id: string}>} deps.ensureAccount - the seats
  *   domain's account upsert, injected by `app.js` (a domain directory imports only `lib/` and `db/`)
+ * @param {{loadKit: (slug: string) => object | null}} deps.kits - the AI quickstart catalogue (`ai-quickstarts.js`)
+ *   the edit gate reads the plan's kit from
  */
-export function buildDraftRoutes({ config, pool, ensureAccount }) {
+export function buildDraftRoutes({ config, pool, ensureAccount, kits }) {
   const app = new Hono()
   const answer = (c, result, okStatus = 200) => {
     if (!result.error) return json(c, { draft: result.draft }, okStatus)
@@ -95,17 +91,13 @@ export function buildDraftRoutes({ config, pool, ensureAccount }) {
     `${BASE}/template`,
     write('template', (id, body) => chooseTemplate(pool, id, body.template))
   )
-  app.put(
-    `${BASE}/plan`,
-    write('plan', (id, body) => putPlan(pool, id, body.plan))
-  )
   app.post(
     `${BASE}/plan-edits`,
-    write('edit', (id, body) => editPlan(pool, id, body.edit))
+    write('edit', (id, body) => editPlan(pool, id, body.edit, kits))
   )
   app.post(
     `${BASE}/plan-undo`,
-    write(null, (id) => undoPlanEdit(pool, id))
+    write(null, (id) => undoPlanEdit(pool, id, kits))
   )
 
   return app

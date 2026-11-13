@@ -5,11 +5,27 @@
  * 🔒 ONE READ PATH. The plan card (through `GET /api/build-draft`) and the build engine (`draftPlanForBuild`) both read
  * `readDraft`, so the plan the owner approved is the plan that gets built. Every write is one transaction holding the
  * account's row (`for update`), so two edits of the same revision cannot both apply.
+ *
+ * 🔒 ONLY THE ENGINE WRITES THE PLAN (#609). No model and no browser puts a plan: the writers are `putComposed` (a
+ * plan that came out of the plan composer and its rules gate) and the gated edits (`editPlan`, `undoPlanEdit`), which
+ * run `gateEditedPlan` with the needs profile the plan was composed from and the kit of the plan's template. The plan
+ * and that profile are written in one transaction, so an edit the rules refuse changes nothing.
  */
-import { checkPlanEdit } from 'website-opportunities/domain'
+import { gateEditedPlan } from 'website-opportunities/domain'
 import { answerProblem, draftShape, planProblem, readTemplate, undoEditOf } from './rules.js'
 
-const COLUMNS = ['questions', 'answers', 'template', 'plan', 'last_edit', 'undo_edit']
+const COLUMNS = [
+  'questions',
+  'answers',
+  'template',
+  'plan',
+  'last_edit',
+  'undo_edit',
+  'needs_profile',
+  'research',
+  'fault',
+  'undo_profile'
+]
 
 /** The account's draft as the doors answer it, or null when it has none. */
 export async function readDraft(pool, accountId) {
@@ -25,6 +41,22 @@ export async function readDraft(pool, accountId) {
 export async function draftPlanForBuild(pool, accountId) {
   const draft = await readDraft(pool, accountId)
   return draft?.plan ? { draftId: draft.id, plan: draft.plan, lastEdit: draft.lastEdit } : null
+}
+
+/**
+ * What the engine keeps beside the plan, never answered by a door: the settled needs profile, the research record and
+ * the last system fault (a team report, never shown to the owner). Null when the account has no draft.
+ * @returns {Promise<{draftId: string, needsProfile: object | null, research: object | null, fault: object | null} | null>}
+ */
+export async function readEngineDraft(pool, accountId) {
+  const { rows } = await pool.query(
+    'select id, needs_profile, research, fault from build_draft where account_id = $1',
+    [accountId]
+  )
+  const row = rows[0]
+  return row
+    ? { draftId: row.id, needsProfile: row.needs_profile, research: row.research, fault: row.fault }
+    : null
 }
 
 /** Start the account's draft, or answer the one it has. No opportunity, no site. */
@@ -88,40 +120,99 @@ export function chooseTemplate(pool, accountId, sent) {
 }
 
 /**
- * Put a newly composed plan as the living plan. The same plan again needs a higher revision, so no revision ever names
- * two plans; the undo and the last edit belong to the plan they edited and are cleared.
+ * Put a plan the plan composer returned (`composePlan`: it passed the rules gate) as the living plan, with the settled
+ * needs profile it was composed from and, when given, the research record. The same plan again needs a higher revision,
+ * so no revision ever names two plans; the undo and the last edit belong to the plan they edited and are cleared.
+ * The only plan writer besides the gated edits: no door calls it with a body a browser sent.
+ * @param {{plan: object, profile: object}} composed what `composePlan` answered
+ * @param {{research?: object}} [extra]
  */
-export function putPlan(pool, accountId, plan) {
+export function putComposed(pool, accountId, { plan, profile } = {}, { research } = {}) {
   const problems = planProblem(plan)
   if (problems) return { error: 'INVALID_PLAN', problems }
+  if (!profile || typeof profile !== 'object' || Array.isArray(profile))
+    return {
+      error: 'INVALID_PLAN',
+      problems: [{ at: 'profile', message: 'a composed plan comes with its needs profile' }]
+    }
   return changeDraft(pool, accountId, (row) => {
     if (row.plan?.id === plan.id && plan.revision <= row.plan.revision)
       return { error: 'STALE_PLAN', revision: row.plan.revision }
-    return { plan, template: plan.look.template, last_edit: null, undo_edit: null }
+    return {
+      plan,
+      needs_profile: profile,
+      template: plan.look.template,
+      last_edit: null,
+      undo_edit: null,
+      undo_profile: null,
+      ...(research === undefined ? {} : { research })
+    }
   })
 }
 
-const applied = (row, edit, undo = null) => {
-  const checked = checkPlanEdit(edit, row.plan)
-  if (!checked.ok) {
-    const stale = checked.problems.some((p) => p.at === 'plan.revision')
-    return { error: stale ? 'STALE_EDIT' : 'INVALID_EDIT', problems: checked.problems }
-  }
-  return { plan: checked.plan, template: checked.plan.look.template, last_edit: edit, undo_edit: undo }
+/** Keep the last system fault of the chat build, for the team. It is never part of what a door answers. */
+export function recordFault(pool, accountId, fault) {
+  return changeDraft(pool, accountId, () => ({ fault: { ...fault, at: new Date().toISOString() } }))
 }
 
-/** Apply a Contract B plan edit to the living plan; its undo replaces the previous one. */
-export function editPlan(pool, accountId, edit) {
+/**
+ * An edit of the living plan held to the rules gate, with `profile` as the plan's needs profile and the kit of the
+ * plan's template. Answers the gated `{plan, profile}` or a refusal whose problems are sentences for the owner.
+ */
+function gatedEdit(row, edit, profile, loadKit) {
+  if (!row.plan || !profile) return { error: 'NO_PLAN' }
+  const kit = loadKit(row.plan.look?.template?.slug)
+  if (!kit) return { error: 'NO_KIT' }
+  const gated = gateEditedPlan({
+    plan: row.plan,
+    edit,
+    profile,
+    blockStore: kit.blockStore,
+    pageRecipes: kit.pageRecipes,
+    library: kit.library
+  })
+  if (gated.ok) return gated
+  const stale = gated.problems.some((p) => p.at === 'plan.revision')
+  return { error: stale ? 'STALE_EDIT' : 'INVALID_EDIT', problems: gated.problems }
+}
+
+/**
+ * Apply a Contract B plan edit to the living plan through the edit gate; the plan and its needs profile change
+ * together. Its undo (the edit back and the profile before) replaces the previous one.
+ * @param {{loadKit: (slug: string) => object | null}} kits the AI quickstart catalogue (`ai-quickstarts.js`)
+ */
+export function editPlan(pool, accountId, edit, { loadKit }) {
   return changeDraft(pool, accountId, (row) => {
-    if (!row.plan) return { error: 'NO_PLAN' }
-    const result = applied(row, edit)
-    return result.error ? result : { ...result, undo_edit: undoEditOf(row.plan, edit) }
+    const gated = gatedEdit(row, edit, row.needs_profile, loadKit)
+    if (gated.error) return gated
+    return {
+      plan: gated.plan,
+      needs_profile: gated.profile,
+      template: gated.plan.look.template,
+      last_edit: edit,
+      undo_edit: undoEditOf(row.plan, edit),
+      undo_profile: row.needs_profile
+    }
   })
 }
 
-/** Take the last plan edit back, once: the undo is applied as an edit and nothing is left to undo. */
-export function undoPlanEdit(pool, accountId) {
-  return changeDraft(pool, accountId, (row) =>
-    row.undo_edit ? applied(row, row.undo_edit) : { error: 'NOTHING_TO_UNDO' }
-  )
+/**
+ * Take the last plan edit back, once: the undo is held to the edit gate like any edit, and the needs profile is put back
+ * exactly as it was before the edit. Nothing is left to undo.
+ * @param {{loadKit: (slug: string) => object | null}} kits
+ */
+export function undoPlanEdit(pool, accountId, { loadKit }) {
+  return changeDraft(pool, accountId, (row) => {
+    if (!row.undo_edit) return { error: 'NOTHING_TO_UNDO' }
+    const gated = gatedEdit(row, row.undo_edit, row.undo_profile, loadKit)
+    if (gated.error) return gated
+    return {
+      plan: gated.plan,
+      needs_profile: row.undo_profile,
+      template: gated.plan.look.template,
+      last_edit: row.undo_edit,
+      undo_edit: null,
+      undo_profile: null
+    }
+  })
 }

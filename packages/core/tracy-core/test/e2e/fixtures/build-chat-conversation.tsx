@@ -221,7 +221,7 @@ function PlanReview({ plan }: { plan: Any }) {
 function Chat({ stage }: { stage: Any }) {
   const [answers, setAnswers] = useState<Any[]>(stage.answers)
   // The plan the chat holds; a newer plan composed in the chat (`probe.putPlan`) replaces it, as tracy-web's
-  // `PUT /api/build-draft/plan` does: no last edit and no undo for the new plan.
+  // engine write `putComposed` does: no last edit and no undo for the new plan.
   const [planDraft, setPlanDraft] = useState<Any>({ plan: stage.plan, lastEdit: null, canUndo: false })
   ;(window as Any).probe.setPlanDraft = setPlanDraft
   const asked = stage.questions.length > 0

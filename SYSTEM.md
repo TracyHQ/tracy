@@ -853,6 +853,16 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   they are: the questions asked with their answers, the chosen template, the one living build plan, the last plan edit
   applied and the edit that undoes it (one step). The plan card (`GET /api/build-draft`) and the build engine
   (`draftPlanForBuild`) read it through the same function ([`build-draft/store.js`](apps/tracy-web/src/build-draft/store.js)).
+  Migration 216 (#609) makes it engine aware: `needs_profile` (the settled needs profile of the living plan), `research`
+  (the research record it was read from), `fault` (the last system fault of the chat build, for the team only, never
+  answered by a door) and `undo_profile` (the profile before the last edit, so an undo restores it exactly). **Only the
+  engine writes the plan**: `putComposed` (a plan the plan composer returned through its rules gate, with its profile)
+  and the gated edits (`POST /api/build-draft/plan-edits`, `/plan-undo`), which run `gateEditedPlan` with the stored
+  profile and the kit of the plan's template, writing plan and profile in one transaction; there is no door that puts a
+  plan. The kits come from the AI quickstart catalogue ([`build-draft/ai-quickstarts.js`](apps/tracy-web/src/build-draft/ai-quickstarts.js)),
+  read from `packages/cms/tracy-joomla-quickstart/ai-quickstarts/` (COPYed to `src/ai-quickstarts/` in the image): a kit
+  is offered for a trade only when its `kit-manifest.json` says released and lists the trade, its mapping is written and
+  the AI quickstart contract check passes.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,

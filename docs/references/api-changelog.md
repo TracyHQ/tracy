@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-13: Only the build engine puts a plan in the build draft
+
+Removed (internal): `PUT /api/build-draft/plan`. A browser or a model can no longer put a plan; the build engine writes a plan the plan composer returned through its rules gate. Changed (internal): `POST /api/build-draft/plan-edits` and `POST /api/build-draft/plan-undo` hold each edit to the rules gate of the AI quickstart build with the needs profile the plan was composed from; a refused edit answers 422 `INVALID_EDIT` with `problems: [{code, at, message}]`, each `message` a sentence for the owner, and changes nothing. New refusal 409 `NO_KIT` when the plan's template has no kit on the server. Public API v1 is unchanged.
+
 ## 2026-11-13: The creation workspace opens a build chat
 
 Added `GET /new/build` (session, customer): a signed-in account opens its own build chat, one conversation per account, allocated through the signed seat door with the creation seat and the build agent only, and is sent to `/new/s/<id>`. Signed out it sends to `/login?next=%2Fnew%2Fbuild`; with the `chat-build` switch off, or when the door refuses, it sends to `/new/` as before. The root landing of a signed-in account with no site now opens `/new/build` instead of `/new/`. Public API v1 is unchanged.
