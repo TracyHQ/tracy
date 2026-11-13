@@ -9,7 +9,8 @@ import {
   askRequestOf,
   MAX_QUESTIONS_AT_ONCE,
   researchRowOf,
-  replyOf
+  replyOf,
+  textTooLongOf
 } from '../src/build-chat/index.mjs'
 import { RESEARCH, SCENARIOS } from './fixtures/build-chat/stages.mjs'
 
@@ -91,4 +92,51 @@ test('the reply shows no time unless an answer carries a real one, so no 1970 ti
   assert.equal(replyOf(QUESTIONS, stamped).time, 1760000000000)
   const bad = SCENARIOS.done.answers.map((a) => ({ ...a, time: 0 }))
   assert.equal('time' in replyOf(QUESTIONS, bad), false)
+})
+
+/** A free text question with no choice: the site name (#593 G4), as Contract B carries it. */
+const SITE_NAME = {
+  schema: 'tracy-build-question/v1',
+  id: 'site-name',
+  topic: 'site-name',
+  prompt: 'Your site will not show the business name we found. What name should your site show instead?',
+  choices: [],
+  freeText: { maxLength: 20, placeholder: 'Type your answer' }
+}
+
+test('a question with no choice is asked as a text box alone, and only a typed answer answers it', () => {
+  const request = askRequestOf([SITE_NAME], [])
+  assert.deepEqual(request.questions, [
+    { id: 'site-name', question: SITE_NAME.prompt, options: [], multiSelect: false }
+  ])
+  const typed = answerOf(SITE_NAME, { id: 'site-name', selected: [], custom: '  Riverside Courts ' })
+  assert.deepEqual(typed, {
+    schema: 'tracy-build-answer/v1',
+    question: 'site-name',
+    text: 'Riverside Courts'
+  })
+  assert.deepEqual(checkAnswer(typed, SITE_NAME).problems, [])
+  for (const item of [{ selected: [] }, { selected: ['Riverside Courts'] }, { selected: [], custom: '   ' }])
+    assert.equal(answerOf(SITE_NAME, { id: 'site-name', ...item }), null, JSON.stringify(item))
+  assert.equal(askRequestOf([SITE_NAME], [typed]), null)
+  const reply = replyOf([SITE_NAME], [typed])
+  assert.deepEqual(reply.questions, [{ id: 'site-name', question: SITE_NAME.prompt, options: [] }])
+  assert.deepEqual(reply.answers, [{ id: 'site-name', selected: [], custom: 'Riverside Courts' }])
+})
+
+test('a typed answer past the free text limit is told apart before it is stored, counted by code point', () => {
+  assert.equal(textTooLongOf(SITE_NAME, { id: 'site-name', selected: [], custom: 'Riverside Courts' }), null)
+  assert.equal(
+    textTooLongOf(SITE_NAME, { id: 'site-name', selected: [], custom: 'Größe Ü Courts 🎾🎾🎾🎾🎾' }),
+    null
+  )
+  assert.deepEqual(
+    textTooLongOf(SITE_NAME, { id: 'site-name', selected: [], custom: ' Riverside Courts and Racquets ' }),
+    { limit: 20, length: 29 }
+  )
+  assert.equal(textTooLongOf(SITE_NAME, { id: 'site-name', selected: [] }), null)
+  assert.equal(
+    textTooLongOf({ ...SITE_NAME, freeText: {} }, { id: 'site-name', selected: [], custom: 'x'.repeat(500) }),
+    null
+  )
 })

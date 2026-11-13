@@ -12,12 +12,40 @@ var BUILD_CHAT_STRINGS = {
   "review.approve": "Approve",
   "review.change": "Request changes"
 };
+var MAX_QUESTIONS_AT_ONCE = 3;
+var choicesOf = (question) => Array.isArray(question?.choices) ? question.choices : [];
+var recommendedOf = (question) => choicesOf(question).find((c) => c.recommended === true);
+function askRequestOf(questions, answers) {
+  const done = new Set((answers ?? []).map((a) => a.question));
+  const open = (questions ?? []).filter((q) => !done.has(q.id)).slice(0, MAX_QUESTIONS_AT_ONCE);
+  if (open.length === 0) return null;
+  return {
+    questions: open.map((q) => {
+      const recommended = recommendedOf(q);
+      return {
+        id: q.id,
+        question: q.prompt,
+        options: choicesOf(q).map(
+          (c) => c.detail ? { label: c.label, description: c.detail } : { label: c.label }
+        ),
+        multiSelect: false,
+        ...recommended ? { recommended: recommended.label } : {}
+      };
+    })
+  };
+}
 function answerOf(question, item) {
   const text2 = item?.custom?.trim() ?? "";
   if (text2 !== "") return { schema: ANSWER_SCHEMA, question: question.id, text: text2 };
   const label = item?.selected?.[0];
-  const choice = question.choices.find((c) => c.label === label);
+  const choice = choicesOf(question).find((c) => c.label === label);
   return choice ? { schema: ANSWER_SCHEMA, question: question.id, choice: choice.id } : null;
+}
+function textTooLongOf(question, item) {
+  const limit = question?.freeText?.maxLength;
+  if (!Number.isInteger(limit)) return null;
+  const length = [...item?.custom?.trim() ?? ""].length;
+  return length > limit ? { limit, length } : null;
 }
 
 // ../../core/tracy-core/src/build-chat/plan.mjs
@@ -189,6 +217,7 @@ var BUILD_POLL_MS = 2e3;
 var BUILD_DOOR_TIMEOUT_MS = 3e4;
 var BUILD_STOPPED_SAY = "Your site plan could not be prepared. The Tracy team has the details and will look into it.";
 var BUILD_RUNNING_SAY = "Still working on it. This can take a minute or two.";
+var tooLongSay = (question, limit) => question?.topic === "site-name" ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.` : `That answer is too long. Please keep it to ${limit} characters or fewer.`;
 var SAY_MAX = 300;
 var BUILD_DESCRIPTION = "tracy_build: the build chat engine. action research {links?, description?} first; templates; plan {request?} after the owner chose a template; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop.";
 var BUILD_PARAMETERS = Object.freeze({
@@ -333,16 +362,20 @@ function createBuildTool({
   }
   async function storeReplies(sessionId, assertion) {
     const replies = repliesOf(eventsOf(sessionId));
-    if (replies.length === 0) return true;
+    if (replies.length === 0) return { again: null };
     const known = questionsOf(sessionId);
     if (known.size === 0) {
       const state = await door(sessionId, assertion, "GET", "/engine");
       if (state?.status === 200) learn(sessionId, state.body?.result);
     }
     const done = setOf(stored, sessionId);
+    const latest = /* @__PURE__ */ new Map();
     for (const reply of replies) {
       const question = known.get(reply.id);
       if (!question) continue;
+      const tooLong = textTooLongOf(question, reply);
+      latest.set(reply.id, tooLong ? { question, limit: tooLong.limit } : null);
+      if (tooLong) continue;
       let answer = answerOf(question, reply);
       if (answer === null && question.skippable === true)
         answer = { schema: "tracy-build-answer/v1", question: question.id, skipped: true };
@@ -354,8 +387,13 @@ ${JSON.stringify(answer)}`;
       if (res === null || res.status >= 500 || res.status === 403 || res.status === 404) return false;
       if (res.status >= 200 && res.status < 300) done.add(key);
     }
-    return true;
+    return { again: [...latest.values()].find(Boolean) ?? null };
   }
+  const askAgain = (ask, say) => ({
+    ask,
+    ...say ? { say } : {},
+    next: `${say ? "Say the sentence in say, then pass" : "Pass"} ask to ask_user_question exactly as given. When the owner has answered, call tracy_build with action plan again.`
+  });
   function refusal(res) {
     const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : void 0;
     if (missing) return { missing: missing.missing, next: missing.next };
@@ -377,6 +415,11 @@ ${JSON.stringify(answer)}`;
   function finished(sessionId, state) {
     if (state?.state === "stopped") return stopped(state.say);
     const result = state?.result ?? {};
+    if (state?.state === "asking") {
+      learn(sessionId, result);
+      if (!result.ask) return stopped();
+      return askAgain(result.ask, typeof state.say === "string" ? ownerSay(state.say) : void 0);
+    }
     if (state?.step === "research") {
       learn(sessionId, result);
       if (!result.profile) return stopped();
@@ -456,7 +499,12 @@ ${JSON.stringify(answer)}`;
     if (origin() === null) return stopped();
     const assertion = actorFor(sessionId);
     if (assertion === null) return stopped();
-    if (!await storeReplies(sessionId, assertion)) return stopped();
+    const replies = await storeReplies(sessionId, assertion);
+    if (replies === false) return stopped();
+    if (replies.again) {
+      const { question, limit } = replies.again;
+      return askAgain(askRequestOf([question], []), tooLongSay(question, limit));
+    }
     const res = await door(sessionId, assertion, request[0], request[1], request[2]);
     if (res === null) return stopped();
     if (res.status < 200 || res.status >= 300) return refusal(res);

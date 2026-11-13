@@ -20,7 +20,7 @@ never registered twice. The tool refuses any session that is not a build chat se
 |---|---|---|
 | `research {links?, description?}` | `POST /research` | `{ profile: { business, counts }, ask? }` |
 | `templates` | `GET /templates` | `{ options: TemplateOption[], none }` |
-| `plan {request?}` | `POST /compose` | `{ plan: { id, revision }, review }` |
+| `plan {request?}` | `POST /compose` | `{ plan: { id, revision }, review }`, or `{ ask, say?, next }` when the owner must answer first |
 | `edit {changes}` | `POST /edit` | `{ plan: { id, revision }, review }` |
 | `status` | `GET /engine` | whatever the running step gives when it finishes |
 
@@ -31,12 +31,17 @@ never registered twice. The tool refuses any session that is not a build chat se
 - **Answers are never retyped by the model.** Before each call the tool reads the `ask_user_question` replies from the
   session log (`tool/call` and `tool/result` events), turns each into a Contract B answer with `answerOf` (an empty
   reply to a skippable question is a skip) and stores it with `PUT /answers`, once per answer.
+- **An open question is not a fault.** A plan that needs the site name first (research keeps the business name off
+  the site and nothing neutral names it) ends `asking`: the tool answers `{ ask, say?, next }`, the agent asks it and
+  calls `plan` again. The site name question has no choice, so `ask` carries `options: []` and dsh's card shows its
+  text box alone. A typed reply longer than its question's `freeText.maxLength` is never stored (dsh's text box sets
+  no limit): the call answers the same `ask` again with `say`, the limit in plain words.
 - **A fault is never a question.** A stopped step, a 403, a missing door, tracy-web unreachable, nobody to act as, or
   a plan without the business's own brand comes back as `{ stopped: true, say }`: one plain sentence, no `ask`.
 - **The guard** (`ctx.tools.guard`): in a build chat session, `ask_user_question` passes only when every question id
-  was issued by the engine for that session (the `questions` of a research result, learned again from `GET /engine`
-  after a restart), or is the plan review request handed out with a plan. The engine decides how many questions; the
-  tool sets no limit.
+  was issued by the engine for that session (the `questions` of a research result or of an `asking` compose, learned
+  again from `GET /engine` after a restart), or is the plan review request handed out with a plan. The engine decides
+  how many questions; the tool sets no limit.
 
 ## Door contract
 
@@ -58,6 +63,7 @@ Typed in [`src/host/doors.ts`](src/host/doors.ts). Every door is under `/api/bui
 | `idle` | `step: null`: nothing started |
 | `running` | `step`: `research`, `compose` or `edit` |
 | `done` | `result`: research `{ profile, questions: BuildQuestion[], ask? }`; compose and edit `{ plan, brand: 'own' \| 'unavailable' }` |
+| `asking` | compose only: `result: { questions: [BuildQuestion], ask }`, `say?`; no fault, the owner answers and the plan is asked for again |
 | `stopped` | `say`: one plain sentence for the owner, after the step's one retry; `reason?` (`brand-unavailable`) for the team |
 
 Headers and refusals:

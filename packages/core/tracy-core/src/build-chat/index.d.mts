@@ -59,6 +59,11 @@ export declare function answerOf(
   question: any,
   item: { id: string; selected: string[]; custom?: string }
 ): BuildAnswer | null
+export declare function textTooLongOf(
+  // biome-ignore lint/suspicious/noExplicitAny: a Contract B question
+  question: any,
+  item: { id: string; selected: string[]; custom?: string }
+): { limit: number; length: number } | null
 // biome-ignore lint/suspicious/noExplicitAny: Contract B documents
 export declare function replyOf(questions: any[], answers: any[], callId?: string): ReplyData
 

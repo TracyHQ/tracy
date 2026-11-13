@@ -7,7 +7,8 @@ import {
   checkBuildDocument,
   checkBuildScenario
 } from '../../../wo/website-opportunities/domain/build-contract.mjs'
-import { STAGE_NAMES, STAGES, stageDocuments } from './fixtures/build-chat/stages.mjs'
+import { answerOf, askRequestOf } from '../src/build-chat/index.mjs'
+import { SCENARIOS, STAGE_NAMES, STAGES, stageDocuments } from './fixtures/build-chat/stages.mjs'
 
 test('the stages cover every moment of the build chat named in #578', () => {
   assert.deepEqual(STAGE_NAMES, [
@@ -21,7 +22,8 @@ test('the stages cover every moment of the build chat named in #578', () => {
     'could-not-finish',
     'stopped-without-rerun',
     'cancelled',
-    'rebuild'
+    'rebuild',
+    'site-name-question'
   ])
   assert.deepEqual(
     STAGES.map((s) => s.name),
@@ -75,4 +77,12 @@ test('the edited value is undone before the build, so the build runs the plan as
       { field: 'facts[tagline].value', value: 'Tennis for every age and level' }
     ]
   )
+})
+
+test('stage site-name-question: the free text question is a card with no button, and the typed reply is its answer', () => {
+  const [question] = stageDocuments(STAGES.find((s) => s.name === 'site-name-question')).loose
+  const card = askRequestOf([question], [])
+  assert.deepEqual(card.questions[0].options, [])
+  const [answer] = SCENARIOS.siteName.answers
+  assert.deepEqual(answerOf(question, { id: question.id, selected: [], custom: answer.text }), answer)
 })

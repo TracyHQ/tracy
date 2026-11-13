@@ -38,7 +38,8 @@ export {
   BUILD_CHAT_STRINGS,
   MAX_QUESTIONS_AT_ONCE,
   replyOf,
-  researchRowOf
+  researchRowOf,
+  textTooLongOf
 } from './conversation.mjs'
 export {
   approvalOf,

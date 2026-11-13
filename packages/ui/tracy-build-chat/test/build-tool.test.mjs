@@ -468,3 +468,121 @@ test('the issued questions are learned again from the engine door after a restar
     text: '04 000 0001'
   })
 })
+
+/** The site name question (#593 G4): free text only, no choice; its limit is the chosen design's. */
+const SITE_NAME = {
+  schema: 'tracy-build-question/v1',
+  id: 'site-name',
+  topic: 'site-name',
+  prompt: 'Your site will not show the business name we found. What name should your site show instead?',
+  choices: [],
+  freeText: { maxLength: 20, placeholder: 'Type your answer' }
+}
+const SITE_NAME_ASK = {
+  questions: [{ id: 'site-name', question: SITE_NAME.prompt, options: [], multiSelect: false }]
+}
+const TOO_LONG_SAY = 'That name is too long for this design. Please keep it to 20 characters or fewer.'
+/** The compose step ended asking the owner for the site name, as `GET /engine` answers it. */
+const composeAsking = (say) => ({
+  step: 'compose',
+  state: 'asking',
+  ...(say ? { say } : {}),
+  result: { questions: [SITE_NAME], ask: SITE_NAME_ASK }
+})
+/** The session log of one `ask_user_question` card per reply, each answered by its typed text, oldest first. */
+const typedReplies = (...texts) =>
+  texts.flatMap((custom, n) => [
+    { type: 'tool/call', data: { name: 'ask_user_question', callId: `name-${n}`, arguments: SITE_NAME_ASK } },
+    {
+      type: 'tool/result',
+      data: {
+        message: {
+          source: { callId: `name-${n}` },
+          content: [
+            { type: 'text', text: JSON.stringify({ answers: [{ id: 'site-name', selected: [], custom }] }) }
+          ]
+        }
+      }
+    }
+  ])
+
+test('a plan that needs the site name hands the question on as ask, then the agent asks for the plan again', async () => {
+  const web = fakeWeb({ 'POST /api/build-draft/compose': { body: composeAsking() } })
+  const tool = toolWith(web)
+  assert.equal(typeof tool.guard(asking(['site-name'])), 'string', 'not issued yet')
+  const answer = await run(tool, { action: 'plan' })
+  assert.equal(answer.stopped, undefined)
+  assert.deepEqual(answer.ask, SITE_NAME_ASK)
+  assert.equal(answer.say, undefined)
+  assert.match(answer.next, /ask_user_question/)
+  assert.match(answer.next, /action plan again/)
+  assert.equal(tool.guard(asking(['site-name'])), undefined, 'issued by the engine, so it passes')
+  assert.equal(typeof tool.guard(asking(['site-name', 'business-name'])), 'string')
+  // A name that did not fit comes with its sentence for the owner.
+  const again = await run(
+    toolWith(fakeWeb({ 'POST /api/build-draft/compose': { body: composeAsking(TOO_LONG_SAY) } })),
+    {
+      action: 'plan'
+    }
+  )
+  assert.equal(again.say, TOO_LONG_SAY)
+  assert.deepEqual(again.ask, SITE_NAME_ASK)
+  assert.match(again.next, /say/)
+})
+
+test('research that issues the site name question lets it through the guard; its typed reply is stored once', async () => {
+  const issued = {
+    step: 'research',
+    state: 'done',
+    result: {
+      profile: PROFILE,
+      questions: [SITE_NAME, PHONE],
+      ask: { questions: [...SITE_NAME_ASK.questions] }
+    }
+  }
+  const events = []
+  const web = fakeWeb({
+    'POST /api/build-draft/research': { body: issued },
+    'PUT /api/build-draft/answers': { body: { draft: {} } },
+    'GET /api/build-draft/templates': { body: { templates: [] } }
+  })
+  const tool = toolWith(web, { events })
+  await run(tool, { action: 'research', description: 'A small tennis club' })
+  assert.equal(tool.guard({ ...asking([]), arguments: SITE_NAME_ASK }), undefined)
+  events.push(...typedReplies('Riverside Courts'))
+  await run(tool, { action: 'templates' })
+  await run(tool, { action: 'templates' })
+  const puts = web.calls.filter((c) => c.method === 'PUT')
+  assert.equal(puts.length, 1)
+  assert.deepEqual(puts[0].body, {
+    question: SITE_NAME,
+    answer: { schema: 'tracy-build-answer/v1', question: 'site-name', text: 'Riverside Courts' }
+  })
+})
+
+test('a typed reply past the limit is not stored: the owner is asked again with the limit, then a shorter one is', async () => {
+  const events = []
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { body: composeAsking() },
+    'PUT /api/build-draft/answers': { body: { draft: {} } }
+  })
+  const tool = toolWith(web, { events })
+  await run(tool, { action: 'plan' })
+  events.push(...typedReplies('Riverside Courts and Racquets'))
+  const again = await run(tool, { action: 'plan' })
+  assert.equal(again.say, TOO_LONG_SAY)
+  assert.deepEqual(again.ask, SITE_NAME_ASK)
+  assert.equal(web.calls.filter((c) => c.method === 'PUT').length, 0, 'never stored')
+  assert.equal(
+    web.calls.filter((c) => c.path.endsWith('/compose')).length,
+    1,
+    'the plan is not asked for meanwhile'
+  )
+  events.push(...typedReplies('Riverside Courts'))
+  await run(tool, { action: 'plan' })
+  const puts = web.calls.filter((c) => c.method === 'PUT')
+  assert.deepEqual(
+    puts.map((c) => c.body.answer.text),
+    ['Riverside Courts']
+  )
+})

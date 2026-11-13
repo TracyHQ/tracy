@@ -200,6 +200,24 @@ const CHECKS = {
     await chat.page.waitForFunction(() => /Book a court, 04 000 0001/.test(document.body.innerText))
     assert.equal(await chat.button('Submit').count(), 0, 'the card is gone, the answer stays')
   },
+  // A question with no choice (the site name, #593 G4): dsh's card shows its text box alone, and the typed name is
+  // the answer.
+  'site-name-question': async (chat) => {
+    await researchCollapsed(chat)
+    const text = await chat.text()
+    assert.match(text, /What name should your site show instead\?/)
+    assert.doesNotMatch(text, /Brindlewick|Sunrise Tennis Club/, 'the held name is never shown')
+    assert.equal(await chat.page.getByRole('radio').count(), 0, 'no button to pick')
+    assert.equal(await chat.page.locator('textarea').count(), 1, 'the text box alone')
+    await chat.page.locator('textarea').fill('Riverside Courts')
+    await chat.button('Submit').click()
+    await chat.page.waitForFunction(() => window.probe.get().sent.length === 1)
+    assert.deepEqual(await chat.sent(), [
+      { schema: 'tracy-build-answer/v1', question: 'site-name', text: 'Riverside Courts' }
+    ])
+    await chat.page.waitForFunction(() => /Riverside Courts/.test(document.body.innerText))
+    assert.equal(await chat.button('Submit').count(), 0, 'the card is gone, the answer stays')
+  },
   'template-choice': async (chat) => {
     await answersKept(chat)
     const group = chat.page.getByRole('group', { name: 'Designs for your site' })

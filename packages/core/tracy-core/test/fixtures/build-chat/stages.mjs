@@ -25,6 +25,10 @@ export const SCENARIOS = {
   ),
   cancelled: read(
     '../../../../../wo/website-opportunities/test/fixtures/build-contract/sunrise-tennis-club-cancelled.build-scenario.json'
+  ),
+  // The club whose name research keeps off the site, asked for a name to show (#593 G4): a question with no choice.
+  siteName: read(
+    '../../../../../wo/website-opportunities/test/fixtures/build-contract/sunrise-tennis-club-site-name.build-scenario.json'
   )
 }
 
@@ -135,7 +139,8 @@ export const STAGES = [
   { name: 'could-not-finish', from: 'stopped', take: { plan: true, runs: 1 } },
   { name: 'stopped-without-rerun', from: 'stoppedOnce', take: { plan: true, runs: 1 } },
   { name: 'cancelled', from: 'cancelled', take: { plan: true, runs: 1 } },
-  { name: 'rebuild', from: 'done', take: { plan: true } }
+  { name: 'rebuild', from: 'done', take: { plan: true } },
+  { name: 'site-name-question', from: 'siteName', take: { questions: true } }
 ]
 
 export const STAGE_NAMES = [
@@ -149,7 +154,8 @@ export const STAGE_NAMES = [
   'could-not-finish',
   'stopped-without-rerun',
   'cancelled',
-  'rebuild'
+  'rebuild',
+  'site-name-question'
 ]
 
 /**

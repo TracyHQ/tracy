@@ -19,9 +19,10 @@
 export interface BuildQuestion {
   schema: 'tracy-build-question/v1'
   id: string
-  topic: 'main-button' | 'contact-method' | 'site-language' | 'fact-conflict'
+  topic: 'main-button' | 'contact-method' | 'site-language' | 'fact-conflict' | 'site-name'
   fact?: string
   prompt: string
+  /** The buttons; an empty list on a `site-name` question, which is free text only. */
   choices: { id: string; label: string; detail?: string; recommended?: boolean }[]
   freeText: { maxLength: number; placeholder?: string }
   skippable?: boolean
@@ -34,7 +35,10 @@ export type BuildAnswer = { schema: 'tracy-build-answer/v1'; question: string } 
   | { skipped: true }
 )
 
-/** One `ask_user_question` request, as `askRequestOf` (`@tracy/core/build-chat`) makes it. */
+/**
+ * One `ask_user_question` request, as `askRequestOf` (`@tracy/core/build-chat`) makes it. A question with no choice has
+ * `options: []`: dsh's card shows its text box alone.
+ */
 export interface AskRequest {
   questions: {
     id: string
@@ -77,10 +81,20 @@ export interface PlanResult {
   lookSources?: { accent?: { from: string; name: string }; logo?: { from: string; name: string } }
 }
 
+/** A compose that needs one more answer from the owner first (the site name, #593 G4): the question to ask. */
+export interface AskingResult {
+  /** The one question the engine issued for this turn. */
+  questions: BuildQuestion[]
+  /** Its card. */
+  ask: AskRequest
+}
+
 /**
  * The state of the session's engine work: what `POST /research`, `POST /compose`, `POST /edit` and `GET /engine`
  * answer. `state: 'done'` carries the step's `result`; `stopped` carries `say`, one plain sentence for the owner
- * (no fault reason, no code), after the step's one retry failed. `step: null` with `state: 'idle'`: nothing started.
+ * (no fault reason, no code), after the step's one retry failed. `asking` is no fault: compose needs the owner's
+ * answer first, its `result` carries the question and `say?` why it is asked again (a name too long for the design).
+ * `step: null` with `state: 'idle'`: nothing started.
  */
 export type EngineState =
   | { step: null; state: 'idle' }
@@ -88,6 +102,7 @@ export type EngineState =
   | { step: 'research'; state: 'done'; result: ResearchResult }
   | { step: 'brand'; state: 'done'; result: { look: 'ready' } }
   | { step: 'compose' | 'edit'; state: 'done'; result: PlanResult }
+  | { step: 'compose'; state: 'asking'; say?: string; result: AskingResult }
   | { step: EngineStep; state: 'stopped'; say: string; reason?: 'brand-unavailable' | string }
 
 /** `POST /api/build-draft/research`: starts research; creates the account's draft when it has none. */

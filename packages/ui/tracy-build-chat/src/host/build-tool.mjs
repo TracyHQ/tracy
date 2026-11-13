@@ -14,8 +14,19 @@
  * missing door, tracy-web unreachable, nobody to act as, a plan without the business's own brand) comes back as
  * `{ stopped: true, say }`: one plain sentence for the owner, no `ask`, no error text, no codes. And the guard refuses
  * any `ask_user_question` of a build session whose question ids the engine did not issue for that session.
+ *
+ * AN OPEN QUESTION IS NOT A FAULT. A plan that needs one more answer from the owner first (the site name, a free text
+ * question with no choice: dsh's card shows its text box alone) comes back as `{ ask, say?, next }`, and a typed reply
+ * longer than its question holds is never stored: the owner is asked again with the limit in plain words.
  */
-import { answerOf, isBuildChatSession, planReviewRequestOf, templateChoiceOf } from '@tracy/core/build-chat'
+import {
+  answerOf,
+  askRequestOf,
+  isBuildChatSession,
+  planReviewRequestOf,
+  templateChoiceOf,
+  textTooLongOf
+} from '@tracy/core/build-chat'
 
 /** How long one call waits for long engine work before it hands back `running`. */
 export const BUILD_WAIT_MS = 90_000
@@ -29,6 +40,16 @@ export const BUILD_STOPPED_SAY =
   'Your site plan could not be prepared. The Tracy team has the details and will look into it.'
 /** Owner facing: said while long work is still running. */
 export const BUILD_RUNNING_SAY = 'Still working on it. This can take a minute or two.'
+
+/**
+ * Owner facing: said when a typed reply is longer than its question holds. Plain English, no dashes.
+ * @param {any} question - Contract B question
+ * @param {number} limit
+ */
+export const tooLongSay = (question, limit) =>
+  question?.topic === 'site-name'
+    ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.`
+    : `That answer is too long. Please keep it to ${limit} characters or fewer.`
 
 /** The longest owner sentence passed through from a door; a longer one is replaced by ours. */
 const SAY_MAX = 300
@@ -256,14 +277,16 @@ export function createBuildTool({
 
   /**
    * Store every reply of the session not stored yet. A reply the answers door refuses (422, 409) is left out; a door
-   * that is not there or a tracy-web that does not answer is a fault, and stops the call.
+   * that is not there or a tracy-web that does not answer is a fault, and stops the call. A typed reply longer than its
+   * question holds is never sent; when it is the owner's latest reply to that question, the call answers the question
+   * again with the limit instead of going on.
    * @param {string} sessionId
    * @param {string} assertion
-   * @returns {Promise<boolean>} false on a fault
+   * @returns {Promise<false | { again: { question: any, limit: number } | null }>} false on a fault
    */
   async function storeReplies(sessionId, assertion) {
     const replies = repliesOf(eventsOf(sessionId))
-    if (replies.length === 0) return true
+    if (replies.length === 0) return { again: null }
     const known = questionsOf(sessionId)
     // After a restart this process knows no issued question: the engine door says them again.
     if (known.size === 0) {
@@ -271,9 +294,14 @@ export function createBuildTool({
       if (state?.status === 200) learn(sessionId, state.body?.result)
     }
     const done = setOf(stored, sessionId)
+    /** @type {Map<string, { question: any, limit: number } | null>} per question: its latest reply did not fit */
+    const latest = new Map()
     for (const reply of replies) {
       const question = known.get(reply.id)
       if (!question) continue
+      const tooLong = textTooLongOf(question, reply)
+      latest.set(reply.id, tooLong ? { question, limit: tooLong.limit } : null)
+      if (tooLong) continue
       let answer = answerOf(question, reply)
       if (answer === null && question.skippable === true)
         answer = { schema: 'tracy-build-answer/v1', question: question.id, skipped: true }
@@ -284,8 +312,19 @@ export function createBuildTool({
       if (res === null || res.status >= 500 || res.status === 403 || res.status === 404) return false
       if (res.status >= 200 && res.status < 300) done.add(key)
     }
-    return true
+    return { again: [...latest.values()].find(Boolean) ?? null }
   }
+
+  /**
+   * One question for the owner, as the model reads it: the card to pass on, and the sentence to say first if any.
+   * @param {any} ask
+   * @param {string} [say]
+   */
+  const askAgain = (ask, say) => ({
+    ask,
+    ...(say ? { say } : {}),
+    next: `${say ? 'Say the sentence in say, then pass' : 'Pass'} ask to ask_user_question exactly as given. When the owner has answered, call tracy_build with action plan again.`
+  })
 
   /**
    * A door answer that is not a 2xx, as the model reads it.
@@ -321,6 +360,12 @@ export function createBuildTool({
   function finished(sessionId, state) {
     if (state?.state === 'stopped') return stopped(state.say)
     const result = state?.result ?? {}
+    // The plan needs one more answer from the owner first (the site name): the question goes on the card.
+    if (state?.state === 'asking') {
+      learn(sessionId, result)
+      if (!result.ask) return stopped()
+      return askAgain(result.ask, typeof state.say === 'string' ? ownerSay(state.say) : undefined)
+    }
     if (state?.step === 'research') {
       learn(sessionId, result)
       if (!result.profile) return stopped()
@@ -417,7 +462,12 @@ export function createBuildTool({
     if (origin() === null) return stopped()
     const assertion = actorFor(sessionId)
     if (assertion === null) return stopped()
-    if (!(await storeReplies(sessionId, assertion))) return stopped()
+    const replies = await storeReplies(sessionId, assertion)
+    if (replies === false) return stopped()
+    if (replies.again) {
+      const { question, limit } = replies.again
+      return askAgain(askRequestOf([question], []), tooLongSay(question, limit))
+    }
 
     const res = await door(sessionId, assertion, request[0], request[1], request[2])
     if (res === null) return stopped()

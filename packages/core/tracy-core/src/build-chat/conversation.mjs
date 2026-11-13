@@ -8,7 +8,9 @@
  * Pure on purpose: no React, no DOM, no dsh import.
  *
  * Questions follow Contract B (`tracy-build-question/v1`, `tracy-build-answer/v1`): the choices are the
- * buttons, every question also takes a typed answer, and an answer names a choice id or carries the text.
+ * buttons, every question also takes a typed answer, and an answer names a choice id or carries the text. A question
+ * with no choice (the site name, `topic: 'site-name'`) is asked with no button: dsh's card then shows its text box
+ * alone, and only a typed answer answers it.
  */
 
 const ANSWER_SCHEMA = 'tracy-build-answer/v1'
@@ -67,8 +69,10 @@ export function researchRowOf(research, t = english) {
   }
 }
 
+/** The choices of a question; none for a free text only question. */
+const choicesOf = (question) => (Array.isArray(question?.choices) ? question.choices : [])
 /** The recommended choice of a question, or undefined. */
-const recommendedOf = (question) => question.choices.find((c) => c.recommended === true)
+const recommendedOf = (question) => choicesOf(question).find((c) => c.recommended === true)
 
 /**
  * One `ask_user_question` request for the questions not answered yet, at most `MAX_QUESTIONS_AT_ONCE`;
@@ -86,7 +90,7 @@ export function askRequestOf(questions, answers) {
       return {
         id: q.id,
         question: q.prompt,
-        options: q.choices.map((c) =>
+        options: choicesOf(q).map((c) =>
           c.detail ? { label: c.label, description: c.detail } : { label: c.label }
         ),
         multiSelect: false,
@@ -106,8 +110,23 @@ export function answerOf(question, item) {
   const text = item?.custom?.trim() ?? ''
   if (text !== '') return { schema: ANSWER_SCHEMA, question: question.id, text }
   const label = item?.selected?.[0]
-  const choice = question.choices.find((c) => c.label === label)
+  const choice = choicesOf(question).find((c) => c.label === label)
   return choice ? { schema: ANSWER_SCHEMA, question: question.id, choice: choice.id } : null
+}
+
+/**
+ * The typed answer's length when it is longer than the question's free text holds (`freeText.maxLength`, counted by
+ * code point as Contract B counts it); null when it fits or nothing was typed. dsh's card sets no limit on its text
+ * box, so the build chat tells the owner before the answer is stored, instead of the answers door refusing it.
+ * @param {any} question - Contract B question
+ * @param {{ id: string, selected: string[], custom?: string }} item - one entry of the card's answer
+ * @returns {{ limit: number, length: number } | null}
+ */
+export function textTooLongOf(question, item) {
+  const limit = question?.freeText?.maxLength
+  if (!Number.isInteger(limit)) return null
+  const length = [...(item?.custom?.trim() ?? '')].length
+  return length > limit ? { limit, length } : null
 }
 
 /**
@@ -128,12 +147,12 @@ export function replyOf(questions, answers, callId = 'build-questions') {
     questions: asked.map((q) => ({
       id: q.id,
       question: q.prompt,
-      options: q.choices.map((c) => ({ label: c.label }))
+      options: choicesOf(q).map((c) => ({ label: c.label }))
     })),
     answers: asked.map((q) => {
       const a = byId.get(q.id)
       if (a.text !== undefined) return { id: q.id, selected: [], custom: a.text }
-      const choice = q.choices.find((c) => c.id === a.choice)
+      const choice = choicesOf(q).find((c) => c.id === a.choice)
       return { id: q.id, selected: choice ? [choice.label] : [] }
     }),
     text: '',
