@@ -86,9 +86,12 @@ counts once), listed in [Text limits](#text-limits).
 }
 ```
 
-- `topic` is `main-button`, `contact-method`, `site-language` (the three agreed cases of spec #577) or `fact-conflict`
-  (facts that disagree between sources); a `fact-conflict` names its `fact`, a fact role.
-- `choices` has at least one entry; at most one is `recommended` (`true` or `false`). `freeText.maxLength` is
+- `topic` is `main-button`, `contact-method`, `site-language` (the three agreed cases of spec #577), `fact-conflict`
+  (facts that disagree between sources) or `site-name` (research keeps the business name off the site and nothing
+  neutral names it: the customer types a name the site may show); a `fact-conflict` names its `fact`, a fact role.
+- `choices` has at least one entry, except on a `site-name` question, whose `choices` is an empty list: the name is
+  the customer's own words, and a choice could show the held name, so a `site-name` question with a choice is
+  rejected. At most one choice is `recommended` (`true` or `false`). `freeText.maxLength` is
   required: every question accepts a free text answer. `freeText.placeholder` is optional, a short text.
   `skippable: true` lets the customer skip it.
 - An answer is `{schema, question, choice}`, `{schema, question, text}` or `{schema, question, skipped: true}`, exactly
@@ -348,6 +351,14 @@ The outcome adds `result`:
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
 
 ### Changes for consumers
+
+- 14/11/2026 (#593), additive: a question may have `topic: "site-name"` with `choices: []` (and only that topic may
+  have no choice); its answer is `{schema, question, text}`. Every earlier document stays valid and the schema stays
+  `tracy-build-question/v1`. A reader that switches on `topic` must handle `site-name`, and one that renders the
+  choices as buttons must show the free text field alone when there is none. The engine stops with
+  `site_name_missing` while the question is open (its `details.question` is the question to ask) and with
+  `site_name_too_long` (`details.limit`) when the name is longer than the template's business name fields. Sample:
+  `sunrise-tennis-club-site-name` in `packages/wo/website-opportunities/test/fixtures/build-contract/`.
 
 - 13/11/2026 (#597), additive: a step may carry `noRerun: true` (failed on attempt 1, stopped without a re-run), and an
   outcome may have `result: "cancelled"` with `cancelled: {teamNotified: false}` and no `stopped`. Every earlier

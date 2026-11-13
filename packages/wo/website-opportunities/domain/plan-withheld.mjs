@@ -6,14 +6,16 @@
 // people?: string[]}`. While the name is held the profile's name is the neutral identity, so the header, the text logo
 // and the page titles show it, and the held name itself (`withheld.names`, read from the profile before it is replaced)
 // is matched as whole words in every value like a held person; without a neutral identity the plan step stops with
-// `site_name_missing` (`plan-preflight.mjs`). A fact, an item of any kind or a row
+// `site_name_missing` (`plan-preflight.mjs`) unless the customer answers the site name question `withWithheld`
+// attaches (`plan-site-name.mjs`). A fact, an item of any kind or a row
 // whose text names a held person is withheld: the model never reads it, the gate refuses it (`withheld_shown`) and the
 // plan lists it as left out with a neutral `what` and `WITHHELD_REASON`. Pure.
 import { nameHeldOf, siteNameOf } from './held-name.mjs'
 import { heldNamesIn, heldPeopleOf } from './held-reviews.mjs'
+import { limitsOf, siteNameMissing, withSiteNameQuestion } from './plan-site-name-question.mjs'
 
 /** Whether nothing names the site: the business name is held and no neutral identity stands in for it (#593 G4). */
-export const siteNameMissing = (withheld) => withheld?.name === true && !withheld.siteName
+export { siteNameMissing }
 
 /** The `site_name_missing` message: the customer is asked for a name the site may show. */
 export const SITE_NAME_MISSING_MESSAGE =
@@ -58,12 +60,27 @@ function keptRows(rows, people) {
     .map((row) => (row?.rows ? { ...row, rows: keptRows(row.rows, people) } : row))
 }
 
+/** The rows of a profile and of its items without those naming a held text (`texts`), nested rows included. */
+export function withoutHeldRows(profile, texts) {
+  const items = Object.fromEntries(
+    Object.entries(profile.items ?? {}).map(([kind, values]) => [
+      kind,
+      list(values).map((item) => (item?.rows ? { ...item, rows: keptRows(item.rows, texts) } : item))
+    ])
+  )
+  return { ...profile, items, ...(profile.rows ? { rows: keptRows(profile.rows, texts) } : {}) }
+}
+
 /**
  * A needs profile as the plan step reads it while its research holds something off the site: `withheld` attached, the
  * neutral identity as the business name, no conflict or question about the held name or naming a held person, and no
- * row naming one. A profile with nothing held stays as it is.
+ * row naming one. Without a neutral identity the site name question comes first among the questions, and rows naming
+ * the held name stay until it is answered (`settleAnswers` drops them unless the customer shows that name). A profile
+ * with nothing held stays as it is.
+ * @param {{limits?: Map<string, number>, blockStore?: object, library?: object[]}} [template] the template's limits
+ *   (`kindLimitsOf`), or its block store and library: the site name answer fits its business name fields
  */
-export function withWithheld(profile, research) {
+export function withWithheld(profile, research, template = {}) {
   if (!research?.withheld || !profile || typeof profile !== 'object') return profile
   const name = research.withheld.name === true
   // The held business name as the profile read it: a value naming it is withheld like one naming a held person.
@@ -92,17 +109,12 @@ export function withWithheld(profile, research) {
         list(c?.values).map((v) => v?.value)
       )
   )
-  const questions = list(profile.questions).filter(
+  const asked = list(profile.questions).filter(
     (q) => !aboutHeld(q?.fact, [q?.prompt, ...list(q?.choices).map((c) => c?.label)])
   )
-  const items = Object.fromEntries(
-    Object.entries(profile.items ?? {}).map(([kind, values]) => [
-      kind,
-      list(values).map((item) => (item?.rows ? { ...item, rows: keptRows(item.rows, people) } : item))
-    ])
-  )
-  const rows = profile.rows ? { rows: keptRows(profile.rows, people) } : {}
-  return { ...profile, facts, items, ...rows, conflicts, questions, withheld }
+  const questions = withSiteNameQuestion(asked, withheld, limitsOf(template))
+  const rowsHeld = siteNameMissing(withheld) ? peopleOf(withheld) : people
+  return { ...withoutHeldRows({ ...profile, facts }, rowsHeld), conflicts, questions, withheld }
 }
 
 /**

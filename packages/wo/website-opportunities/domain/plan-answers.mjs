@@ -5,7 +5,9 @@
 // - `main-button`: the plan's main call to action, the fact `contact.cta_label`;
 // - `contact-method`: a typed phone, email or link becomes that contact fact; a choice without a value is reported in
 //   the plan's left out list, never invented;
-// - `site-language`: the site language (`plan.language`).
+// - `site-language`: the site language (`plan.language`);
+// - `site-name`: the name the site shows while research keeps the business name off it (`plan-site-name.mjs`); a name
+//   longer than the template's business name fields is `site_name_too_long`, with `details.limit`.
 // An answer that does not pass `checkAnswer` against its question, names no question of the profile, answers one
 // twice, or gives a value longer than the template's fields of that kind hold (`kindLimitsOf`; a fact is never
 // shortened, so it would stop the build after approval) is an `answer_invalid` error, never a silent ignore. A
@@ -14,6 +16,7 @@ import { checkAnswer } from './build-contract-questions.mjs'
 import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
+import { settleSiteName, siteNameProblems } from './plan-site-name.mjs'
 
 /** The source id an answer's value carries in the settled profile; its origin `answer` reads "Your answer". */
 export const ANSWER_SOURCE = 'customer-answer'
@@ -91,6 +94,7 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
     throw new PlanComposerError('answer_invalid', 'answers must be a list', {}, { noRerun: true })
   const questions = new Map(list(profile?.questions).map((q) => [q.id, q]))
   const seen = new Set()
+  let tooLong
   answers.forEach((answer, i) => {
     const question = questions.get(answer?.question)
     if (!question)
@@ -108,6 +112,11 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
       !contactKindOf(answer.text.trim())
     )
       problems.push({ at: `answers[${i}].text`, message: 'not a phone number, an email address or a link' })
+    if (question.topic === 'site-name' && typeof answer?.text === 'string') {
+      const named = siteNameProblems(answer.text, limits, `answers[${i}].text`)
+      problems.push(...named.problems)
+      tooLong ??= named.tooLong
+    }
     const fact = answer?.skipped ? null : factOfAnswer(answer, question)
     const limit = fact?.kind ? limits.get(fact.kind) : undefined
     if (limit !== undefined && [...fact.value].length > limit)
@@ -116,6 +125,13 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
         message: `${[...fact.value].length} characters, longer than the ${limit} the template's field holds`
       })
   })
+  if (tooLong)
+    throw new PlanComposerError(
+      'site_name_too_long',
+      `the site name holds ${tooLong.length} characters, the template's business name at most ${tooLong.limit}`,
+      { question: 'site-name', ...tooLong, problems },
+      { noRerun: true }
+    )
   if (problems.length > 0)
     throw new PlanComposerError(
       'answer_invalid',
@@ -143,6 +159,8 @@ export function settleAnswers(profile, answers = [], limits = new Map()) {
           reason: CONTACT_VALUE_MISSING_REASON
         })
       else settled.facts[contactKindOf(answer.text.trim())] = [answered(answer.text.trim())]
+    } else if (question.topic === 'site-name') {
+      if (answer.text !== undefined) settleSiteName(settled, answer.text, answered)
     } else if (question.topic === 'site-language') {
       const tag = answer.text !== undefined ? languageTag(answer.text) : answer.choice
       // A plan language is a tag like `en` or `pt-BR`; a script subtag (`zh-Hant`) keeps its language only.

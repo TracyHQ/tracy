@@ -1,7 +1,8 @@
 // Questions to the customer and their answers, in Contract B (ticket #590, spec #577 "Questions to the customer").
 // A question carries its choices, shown as buttons, and always accepts a free text answer. An answer is valid only
 // against its question: it picks one of the choices, or gives text within the question's limit, or skips a question
-// that may be skipped.
+// that may be skipped. A `site-name` question (#593 G4) asks for a name the site may show when research keeps the
+// business name off the site: it is free text only and carries no choice, since a choice could show the held name.
 
 import { CONTROL_CHARACTER, closedShapeProblems, textLength, textProblems } from './build-contract-shapes.mjs'
 import { isName, isObject, isWhole, label, reporterFor } from './build-contract-shared.mjs'
@@ -9,13 +10,16 @@ import { FACT_ROLES_V3 } from './place-content-roles.mjs'
 
 export const QUESTION_SCHEMA = 'tracy-build-question/v1'
 export const ANSWER_SCHEMA = 'tracy-build-answer/v1'
-/** What a question may be about: the three agreed cases plus facts that disagree between sources. */
+/** What a question may be about: the three agreed cases, facts that disagree between sources, and the site name. */
 export const QUESTION_TOPICS = Object.freeze([
   'main-button',
   'contact-method',
   'site-language',
-  'fact-conflict'
+  'fact-conflict',
+  'site-name'
 ])
+/** The topic of the free text question for a name the site may show: it carries no choice. */
+export const SITE_NAME_TOPIC = 'site-name'
 
 /** Report every problem of one question through `report(at, message)`. */
 export function questionProblems(question, report) {
@@ -34,7 +38,10 @@ export function questionProblems(question, report) {
     'prompt',
     'a question needs the sentence the customer reads'
   )
-  if (!Array.isArray(question.choices) || question.choices.length === 0)
+  if (question.topic === SITE_NAME_TOPIC) {
+    if (!Array.isArray(question.choices) || question.choices.length > 0)
+      report('choices', 'a site-name question is free text only: its choices are an empty list')
+  } else if (!Array.isArray(question.choices) || question.choices.length === 0)
     report('choices', 'a question carries its choices, at least one')
   else {
     const ids = new Set()

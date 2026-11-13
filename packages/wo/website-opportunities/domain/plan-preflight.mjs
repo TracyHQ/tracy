@@ -9,7 +9,8 @@ import { blockProblems, checkAiQuickstartContract, formatProblem } from './ai-qu
 import { lookProblems } from './build-contract-plan-parts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
-import { SITE_NAME_MISSING_MESSAGE, siteNameMissing } from './plan-withheld.mjs'
+import { siteNameMissingError } from './plan-site-name.mjs'
+import { siteNameMissing } from './plan-withheld.mjs'
 
 const LANGUAGE_TAG = /^[a-z]{2,3}(-[A-Z]{2})?$/
 const fail = (code, message, problems) => {
@@ -41,7 +42,8 @@ export function preflightDeclarations({ blockStore, pageRecipes, library = [] })
 
 /** The inputs of the plan the model does not produce, once the context is built (`composerContextOf`). */
 export function preflightContext(context) {
-  if (siteNameMissing(context.profile?.withheld)) fail('site_name_missing', SITE_NAME_MISSING_MESSAGE, [])
+  // The site name question is still open (`details.question`): the chat asks it, then the plan is composed again.
+  if (siteNameMissing(context.profile?.withheld)) throw siteNameMissingError(context.profile)
   const look = []
   lookProblems(context.look, (at, message) => look.push({ at, message }))
   if (look.length > 0)

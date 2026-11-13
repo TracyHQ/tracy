@@ -16,7 +16,12 @@ import { TRUST_ORDER } from './needs-profile-merge.mjs'
 /** The Contract B topics a needs profile asks about (contact conflicts come first, price conflicts last). */
 export const ASKED_TOPICS = Object.freeze(['fact-conflict', 'main-button', 'contact-method', 'site-language'])
 /** How long a free text answer may be, per topic, before the template's own limit (`answer-field-limits.mjs`). */
-const FREE_TEXT_MAX = Object.freeze({ 'main-button': 80, 'contact-method': 120, 'site-language': 40 })
+export const FREE_TEXT_MAX = Object.freeze({
+  'main-button': 80,
+  'contact-method': 120,
+  'site-language': 40,
+  'site-name': 120
+})
 /** Facts that let a visitor reach the business: any one of them means no contact question. */
 export const CONTACT_KINDS = Object.freeze(['contact.phone', 'contact.email', 'contact.cta_url'])
 
@@ -134,7 +139,13 @@ const MAIN_BUTTON_NOT_ASKED = (max) => ({
 })
 
 /** A Contract B question on `topic`; the choice with id `recommended` is marked recommended. */
-const question = (topic, prompt, choices, recommended, maxLength = FREE_TEXT_MAX[topic]) => ({
+export const contractQuestionOf = (
+  topic,
+  prompt,
+  choices,
+  recommended,
+  maxLength = FREE_TEXT_MAX[topic]
+) => ({
   schema: QUESTION_SCHEMA,
   id: topic,
   topic,
@@ -167,7 +178,7 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
   const notes = []
   if (cta.length)
     questions.push(
-      question(
+      contractQuestionOf(
         'main-button',
         'What should the main button on your site ask visitors to do?',
         cta,
@@ -178,7 +189,7 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
   else notes.push(MAIN_BUTTON_NOT_ASKED(max))
   if (!CONTACT_KINDS.some((kind) => has(facts, kind))) {
     questions.push(
-      question(
+      contractQuestionOf(
         'contact-method',
         'We found no phone, email or booking link. How should visitors contact you?',
         [
@@ -192,7 +203,7 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
   }
   if (language?.mixed) {
     questions.push(
-      question(
+      contractQuestionOf(
         'site-language',
         'Your public pages use more than one language. Which language should your site use?',
         language.options.map((tag) => ({ id: tag, label: languageName(tag) })),
