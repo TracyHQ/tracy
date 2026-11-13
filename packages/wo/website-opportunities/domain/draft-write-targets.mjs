@@ -92,7 +92,9 @@ export function targetOf(loc, { kit, site, page, block, item }) {
   const declared = kit.mapping.entities?.[entity]
   const own = blockRecordOf(kit, page, block)
   const placement = kit.mapping.placements?.[block.block]
-  if (own && placement?.entity === entity) return own
+  // An in-place record is written through the blank site contract: a location with no slot has no way there.
+  if (own && placement?.entity === entity)
+    return own.init.kind === 'store' && !loc.slot ? { skip: 'kept_record_without_slot' } : own
   if (list(placement?.holds?.blocks).some((b) => kit.mapping.placements[b]?.entity === entity)) {
     const held = site.heldOf(page, block, entity)
     return held ?? { skip: 'held_block_not_placed' }

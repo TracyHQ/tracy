@@ -30,9 +30,11 @@ function applyHides(state, record) {
     if (written.some(Boolean)) continue
     if (hide.by === 'rows.remove') {
       const link = state.kit.mapping.blocks[record.block].fields[hide.control.at(-1)]
+      // The whole stored value the button sits in: the link's location without its xpath.
+      const { xpath: _piece, ...whole } = link
       if (record.kind === 'copy')
         record.removes.push({
-          loc: { ...link, xpath: undefined },
+          loc: whole,
           xpath: elementOf(link.xpath),
           rule: 'hides.rows.remove'
         })

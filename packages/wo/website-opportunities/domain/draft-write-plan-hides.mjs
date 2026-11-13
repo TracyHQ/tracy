@@ -16,8 +16,17 @@ import { put, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const elementOf = (xpath) => String(xpath ?? '').replace(/\/(@[\w-]+|text\(\)(\[\d+\])?)$/, '')
-const valueAddress = (loc) => addressOf({ ...loc, xpath: undefined })
+/** A location without its xpath: the whole stored value the piece sits in. */
+const withoutXpath = ({ xpath: _xpath, ...loc }) => loc
+const valueAddress = (loc) => addressOf(withoutXpath(loc))
 const indexOf = (element) => Number(/\[(\d+)\]$/.exec(element)?.[1] ?? 1)
+/** An element path with every step indexed (`/ul/li` is `/ul[1]/li[1]`), so paths compare step by step. */
+const indexed = (element) => element.replace(/\/([a-zA-Z][\w-]*)(?=\/|$)/g, '/$1[1]')
+/** Whether a written piece sits in a row element: the element itself or a node inside it, never `li[10]` for `li[1]`. */
+const within = (at, element) => {
+  const [a, e] = [indexed(at), indexed(element)]
+  return a === e || a.startsWith(`${e}/`)
+}
 
 /** Every location of a field of a block: one (a block field), or a list per item (an item field). */
 function locationsOf(block, field) {
@@ -46,7 +55,7 @@ export function omitRows(state, record, hide) {
     const group = parents.get(parent) ?? new Map()
     parents.set(parent, group)
     const filled = written.some(
-      (v) => valueAddress(v.loc) === valueAddress(piece) && elementOf(v.loc.xpath).startsWith(element)
+      (v) => valueAddress(v.loc) === valueAddress(piece) && within(elementOf(v.loc.xpath), element)
     )
     const held = group.get(element) ?? { piece, filled: false }
     held.filled ||= filled
@@ -64,7 +73,7 @@ export function omitRows(state, record, hide) {
       for (const cut of list(record.cuts)) loc = loc && movedAfterCut(loc, cut.row, cut.kept)
       if (!loc) continue
       record.removes.push({
-        loc: { ...loc, xpath: undefined },
+        loc: withoutXpath(loc),
         xpath: elementOf(loc.xpath),
         rule: 'hides.omit'
       })

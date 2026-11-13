@@ -4,6 +4,7 @@
 //
 //   text_over_limit              a text longer than its field's limit, or than its blank contract slot's limit
 //   straight_quote_in_open_slot  a straight double quote sent to a contract slot that opens empty (SLOT_NOT_CONTENT)
+//   slot_missing                 a contract value with no slot, or a slot the blank site contract does not have
 //   empty_text_node              an empty value at a text node (the node would be gone: one space keeps it)
 //   markup_forbidden             markup in a value whose field declares no such inline part, a tag sent through the
 //                                contract, content map markers at an HTML place, or a tag at an ACM data place
@@ -16,8 +17,13 @@
 //   pair_incomplete              one half of a button (label, address) or of an icon pair written without the other
 //   library_html_stale           a library block's HTML that does not show a shown field of the order
 //   library_html_unsafe          a library block's HTML with markup that runs code (script, on* handler, javascript:)
+//   markup_runs_code             any other value written as HTML (an HTML piece, a value with tags or markers, a
+//                                created record's HTML) with markup that runs code, or any value or record column that
+//                                is an address running code (`javascript:`, however its letters are hidden)
+import { decodeEntities, plainOf } from './draft-write-entities.mjs'
 import { DraftWriteError, lengthOf } from './draft-write-error.mjs'
 import { libraryHtmlProblems } from './draft-write-library-check.mjs'
+import { addressRunsCode, runsCodeIn } from './draft-write-markup.mjs'
 import { heldTextsOf, namesHeldInAnyForm } from './plan-withheld.mjs'
 import { placesOfOrder } from './write-order-check.mjs'
 import { markupNotDeclared } from './write-order-check-entries.mjs'
@@ -26,14 +32,20 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const TAG = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
 const MARKER = /\(\(\/?([a-z][a-z0-9]*)\/?\)\)/gi
 /** The words a value shows: markers and tags left out, entities read. */
-export const visibleOf = (text) =>
-  String(text)
-    .replace(MARKER, '')
-    .replace(TAG, '')
-    .replace(/&(amp|lt|gt|quot);/g, 'x')
+export const visibleOf = (text) => decodeEntities(String(text).replace(MARKER, '').replace(TAG, ''))
+/** Whether a value is written as HTML: an HTML piece, or a value carrying tags or markers. */
+const asHtml = (loc, text) => Boolean(loc?.xpath) || /<|\(\(/.test(text)
+
+/** Markup that runs code in a value written as HTML, or an address that runs code anywhere. */
+function codeProblems(at, text, html, report) {
+  const rules = html ? runsCodeIn(text) : addressRunsCode(text) ? ['code_address'] : []
+  if (rules.length) report('markup_runs_code', { ...at, rules, length: lengthOf(text) })
+}
 
 function valueProblems(op, value, ctx, report) {
   const { loc, entry } = value
+  if (op.kind === 'contract.apply' && (typeof loc?.slot !== 'string' || !ctx.kit.slots.has(loc.slot)))
+    report('slot_missing', { op: op.key, entity: loc?.entity ?? null, slot: loc?.slot ?? null, entry })
   if (typeof value.value !== 'string') return
   const at = { op: op.key, entity: loc.entity, slot: loc.slot ?? null, entry }
   const text = value.value
@@ -56,6 +68,15 @@ function valueProblems(op, value, ctx, report) {
   if (loc.nestedJson && !loc.xpath && /<\/?[a-z]/i.test(text))
     report('markup_forbidden', { ...at, via: 'tag_at_codes_place' })
   if (value.rule?.startsWith('icon_class') && !ctx.classes.has(text)) report('icon_not_in_list', at)
+  codeProblems(at, text, asHtml(loc, text), report)
+}
+
+/** The columns and HTML an operation sends besides its values (a created record's title, alias, link, HTML). */
+function columnProblems(op, report) {
+  for (const [column, text] of Object.entries(op.fields ?? {}))
+    if (typeof text === 'string') codeProblems({ op: op.key, column }, text, asHtml(null, text), report)
+  if (typeof op.html === 'string' && op.kind !== 'library.create')
+    codeProblems({ op: op.key, column: 'html' }, op.html, true, report)
 }
 
 function orderProblems(order, { approved, iconKeys }, report) {
@@ -84,7 +105,11 @@ function pictureProblems(op, report) {
   report(/^https?:\/\//i.test(op.ref ?? '') ? 'picture_web_address_only' : 'picture_not_stored', at)
 }
 
-/** The texts of the plan a held name may not reach: every string value, alt text, record title and library HTML. */
+/**
+ * The texts of the plan a held name may not reach: every string value, alt text, record title and library HTML, each
+ * also as a person reads it (`plainOf`: every entity read, accents, zero width characters and tags out, white space
+ * as one space), so `O&#39;Brien`, `Zo&euml;`, `Kim&nbsp;Lee` and `Kim<br>Lee` match the held name.
+ */
 function textsOf(plan) {
   const texts = []
   for (const op of plan.ops) {
@@ -93,7 +118,7 @@ function textsOf(plan) {
     if (op.fields?.title) texts.push(op.fields.title, op.fields.alias)
     if (typeof op.html === 'string') texts.push(op.html, visibleOf(op.html))
   }
-  return texts
+  return texts.flatMap((t) => [t, plainOf(t), plainOf(t, { joined: true })])
 }
 
 /**
@@ -113,15 +138,17 @@ export function guardPlan(plan, ctx) {
   for (const op of plan.ops) {
     if (op.kind === 'picture.upload') pictureProblems(op, report)
     if (op.kind === 'library.create') libraryHtmlProblems(op, report)
+    columnProblems(op, report)
     for (const v of list(op.values)) valueProblems(op, v, guard, report)
   }
   for (const c of list(plan.controls))
     if (c.written.some(Boolean) && !c.written.every(Boolean))
       report('pair_incomplete', { record: c.record, fields: c.fields })
   for (const pair of list(plan.pairs)) report('pair_incomplete', pair)
-  const held = heldTextsOf(ctx.withheld)
+  const heldTexts = heldTextsOf(ctx.withheld)
+  const held = [...new Set(heldTexts.flatMap((t) => [t, plainOf(t)]))]
   if (held.length && namesHeldInAnyForm(textsOf(plan), held))
-    report('held_text_in_value', { count: held.length })
+    report('held_text_in_value', { count: heldTexts.length })
   if (problems.length)
     throw new DraftWriteError(problems[0].code, `${problems.length} problem(s) before any door call`, {
       problems: problems.slice(0, 20),

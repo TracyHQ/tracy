@@ -1,5 +1,6 @@
 // The field entry rules of `checkWriteOrder` (ticket #597): values, data, buttons and limits, read from the order
 // alone. Pure; nothing throws on a malformed order.
+import { attrsOf, tagsOf } from './draft-write-markup.mjs'
 import { DATA_ROLES } from './page-writer-roles.mjs'
 import { SOCIAL_URL_KINDS } from './picture-block-places.mjs'
 import { networkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
@@ -13,19 +14,33 @@ const TEXT_DATA_FROM = new Set(['data', 'answer', 'no-data'])
 const hasValue = (e) => e.value !== undefined && e.value !== null && e.value !== ''
 const asText = (value) => (typeof value === 'number' ? String(value) : value)
 
-const TAG = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi
-const MARKER = /\(\(\/?([a-z][a-z0-9]*)\/?\)\)/gi
 /**
- * Whether a text entry holds markup its field does not declare: a `<`, `>` or marker in a field with no `inline` part,
- * or a tag its `inline` does not list. The write step refuses it before any door (`markup_forbidden`, #597).
+ * Why a text entry holds markup its field does not declare, or null: a `<`, `>` or marker in a field with no `inline`
+ * part (`no_inline`), a tag its `inline` does not list (`tag`), an attribute its emphasis part does not declare, none
+ * declared meaning none allowed (`attribute`), or a tag in the other form than the field's `write` (`form`: a tag in a
+ * `codes` field, a marker in an `html` field). The write step refuses it before any door (`markup_forbidden`, #597);
+ * here the writer can still redo it.
  */
 export function markupNotDeclared(e) {
-  if (typeof e.value !== 'string' || !/[<>]|\(\(/.test(e.value)) return false
+  if (typeof e.value !== 'string' || !/[<>]|\(\(/.test(e.value)) return null
   const inline = e.declared?.inline
-  if (!inline) return true
-  const allowed = new Set([...list(inline.emphasis).map((p) => p.tag), ...list(inline.wrapper)])
-  const tags = [...e.value.matchAll(TAG), ...e.value.matchAll(MARKER)].map((m) => m[1].toLowerCase())
-  return tags.some((t) => !allowed.has(t))
+  if (!inline) return 'no_inline'
+  const declared = new Map()
+  for (const p of list(inline.emphasis))
+    declared.set(p.tag, [...(declared.get(p.tag) ?? []), attrsOf(typeof p.attrs === 'string' ? p.attrs : '')])
+  for (const tag of list(inline.wrapper)) declared.set(tag, [...(declared.get(tag) ?? []), []])
+  const same = (a, b) =>
+    a.length === b.length && a.every(([k, v]) => b.some(([k2, v2]) => k === k2 && v === v2))
+  for (const tag of tagsOf(e.value)) {
+    if (!declared.has(tag.name)) return 'tag'
+    if (!tag.close && !declared.get(tag.name).some((attrs) => same(tag.attrs, attrs))) return 'attribute'
+    if (
+      (inline.write === 'codes' && tag.form === 'tag') ||
+      (inline.write === 'html' && tag.form === 'marker')
+    )
+      return 'form'
+  }
+  return null
 }
 
 /** Every plan id the order names, by id: `{what: 'fact' | 'item' | 'row' | 'source', ...}`. */
@@ -64,8 +79,8 @@ export function entryProblems(places, order, entries, report) {
       } else if (!hasValue(e) && !ACTIONS.has(e.action))
         report('entry_empty', e.place, 'an entry holds a value or an action (hide or fallback)')
       if (e.type === 'design') report('design_field', e.place, 'a design field is never written')
-      if (e.type === 'text' && markupNotDeclared(e))
-        report('markup_forbidden', e.place, 'markup or an angle bracket the field does not declare')
+      const markup = e.type === 'text' ? markupNotDeclared(e) : null
+      if (markup) report('markup_forbidden', e.place, `markup the field does not declare (${markup})`)
       if ((e.type === 'link' || e.type === 'number') && !DATA_FROM.has(e.from))
         report(
           'link_not_from_data',
