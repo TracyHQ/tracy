@@ -1069,6 +1069,31 @@
             "required": ["label", "why"],
             "properties": { "label": { "type": "string" }, "why": { "type": "string" } }
           }
+        },
+        "ownerFacts": {
+          "description": "Optional (D46): facts the owner stated in the build chat whose words the site must not copy. kind owner-fact: the writer says it in words of its own, never as a quote. kind owner-tagline: a tagline the owner stated, with reason awaits_product_decision; it goes nowhere on the site.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "group", "text"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "kind": { "enum": ["owner-fact", "owner-tagline"] },
+              "group": { "type": "string" },
+              "text": { "type": "string", "minLength": 1 },
+              "source": { "type": "object" },
+              "reason": { "enum": ["awaits_product_decision"] }
+            }
+          }
+        },
+        "ownerEchoDropped": {
+          "description": "Optional (D46), for the record: how many copy fields repeated the owner's chat statement and were dropped or kept as facts, and in which groups. Never the text.",
+          "type": "object",
+          "required": ["count", "groups"],
+          "properties": {
+            "count": { "type": "integer", "minimum": 1 },
+            "groups": { "type": "array", "items": { "type": "string" } }
+          }
         }
       }
     }

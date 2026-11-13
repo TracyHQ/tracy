@@ -130,8 +130,15 @@ test("the brief's copy reads the statement's facts, never its words", () => {
   const copy = readingWithoutOwnerQuotes(reading)
   const owner = (list) => (list ?? []).filter((i) => i.source?.kind === 'owner-statement')
   assert.deepEqual(owner(copy.story), [])
-  assert.deepEqual(owner(copy.audience), [])
   assert.deepEqual(owner(copy.facts), [])
+  // An audience is a name (a fact value): it stays, its name its only quote.
+  assert.ok(owner(copy.audience).every((a) => a.quote === a.label))
+  // The story line and the fact the statement gave arrive as facts to say in other words.
+  const read = [...owner(reading.story), ...owner(reading.facts)].map((i) => i.label)
+  assert.deepEqual(
+    (copy.ownerFacts ?? []).filter((f) => f.group !== 'keyMessages').map((f) => f.text),
+    read
+  )
   const kiln = owner(copy.services)[0]
   assert.equal(kiln.quote, kiln.label, 'a service from the statement is described by its name only')
   assert.ok((copy.keyMessages ?? []).every((m) => m.quotes.every((q) => q.source.kind !== 'owner-statement')))

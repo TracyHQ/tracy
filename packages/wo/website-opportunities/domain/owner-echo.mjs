@@ -11,8 +11,11 @@
 //   - it holds, in order though not in a row, at least 60% of one sentence of the statement of weight 5 or more (a
 //     lightly edited sentence), and at least weight 3 of it.
 // A copy text lighter than weight 4 (up to three words: "Pilates", "Kiln space rental") only names a thing and never
-// copies. A run, or a sentence's words, that a public text the item stands on also holds (the bio, a post, a review) is
-// that text's wording, not the owner's: the item quotes it, as it always could.
+// copies. A run of four that a public text the item stands on also holds in a row (the bio, a post, a review) is that
+// text's wording, not the owner's: the item quotes it, as it always could. For the 60% rule only runs of three words or
+// more that the copy, the owner's sentence and one public text all hold in a row are excused; the rest of the copy is
+// then held against the rest of the sentence by the same 60%. Korean is cut at spaces: a particle changed on a word
+// makes it another token and breaks a run, which is accepted (the sentence rule still holds the reworded sentence).
 
 /** The lightest run of shared tokens that is a copy: 4 words. */
 export const ECHO_RUN_WEIGHT = 4
@@ -22,9 +25,11 @@ export const ECHO_SENTENCE_RATIO = 0.6
 const RATIO_SENTENCE_WEIGHT = 5
 const RATIO_MIN_WEIGHT = 3
 
-const HALF = /[\p{Script=Han}\p{Script=Hiragana}]/u
+// By script extensions, so a mark shared by scripts weighs as the script it is written in: the long vowel mark
+// (U+30FC) is Katakana and Hiragana, so it is a quarter like the Katakana around it, never a word of its own.
+const QUARTER = /[\p{scx=Katakana}\p{scx=Thai}\p{scx=Lao}\p{scx=Khmer}\p{scx=Myanmar}]/u
 const UNSPACED =
-  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Thai}\p{Script=Lao}\p{Script=Khmer}\p{Script=Myanmar}]/u
+  /[\p{scx=Han}\p{scx=Hiragana}\p{scx=Katakana}\p{scx=Thai}\p{scx=Lao}\p{scx=Khmer}\p{scx=Myanmar}]/u
 const ZERO_WIDTH = /[​-‍⁠﻿­]/gu
 
 /** A text folded for comparison: compatibility forms, marks, zero width characters and case aside. */
@@ -48,7 +53,7 @@ export function tokensOf(text) {
       }
       if (word) out.push({ t: word, w: 1 })
       word = ''
-      out.push({ t: ch, w: HALF.test(ch) ? 0.5 : 0.25 })
+      out.push({ t: ch, w: QUARTER.test(ch) ? 0.25 : 0.5 })
     }
     if (word) out.push({ t: word, w: 1 })
   }
@@ -110,6 +115,27 @@ function inOrderWeight(a, b) {
   return prev[b.length]
 }
 
+/** The lightest run a public text must share in a row with the copy and the owner's sentence to excuse it: 3 words. */
+const EXCUSE_RUN_WEIGHT = 3
+
+/**
+ * The tokens of `a` a public text excuses (B3): only those inside a run of weight 3 or more that `a`, `b` and the
+ * public text all hold in a row. Common words a long review happens to share, scattered or in pairs, excuse nothing.
+ */
+function unexcused(a, b, publics) {
+  const keys = publics.map(keyOf)
+  const bKey = keyOf(b)
+  const excused = Array.from({ length: a.length }, () => false)
+  for (let i = 0; i < a.length; i++)
+    for (let j = i + 1; j <= a.length; j++) {
+      const run = a.slice(i, j)
+      const k = keyOf(run)
+      if (!bKey.includes(k) || !keys.some((x) => x.includes(k))) break
+      if (weightOf(run) >= EXCUSE_RUN_WEIGHT) for (let n = i; n < j; n++) excused[n] = true
+    }
+  return a.filter((_, n) => !excused[n])
+}
+
 /**
  * Whether a copy text copies the owner (pure, the rule above). `publicTexts`: the quotes of public texts the item
  * stands on (its bio, post or review quote, its mentions); what they hold too is theirs, not the owner's.
@@ -130,8 +156,13 @@ export function copiesOwner(text, echo, publicTexts = []) {
   for (const sentence of echo.sentences) {
     const weight = inOrderWeight(tokens, sentence)
     if (weight < RATIO_MIN_WEIGHT || weight < ECHO_SENTENCE_RATIO * weightOf(sentence)) continue
-    if (own.some((p) => inOrderWeight(tokens, p) >= weight)) continue
-    return { rule: 'sentence', weight }
+    // What a public text holds in a row with both is that text's wording; the rest of the copy is held against the
+    // rest of the owner's sentence by the same rule.
+    const copyRest = unexcused(tokens, sentence, own)
+    const sentenceRest = unexcused(sentence, tokens, own)
+    const rest = inOrderWeight(copyRest, sentenceRest)
+    if (rest >= RATIO_MIN_WEIGHT && rest >= ECHO_SENTENCE_RATIO * weightOf(sentenceRest))
+      return { rule: 'sentence', weight: rest }
   }
   return false
 }

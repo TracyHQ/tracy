@@ -80,8 +80,22 @@ test('the brief names the service the owner stated and copies no run of four wor
   assert.ok(made.reading.story.every((i) => i.source.kind !== 'owner-statement'))
   const echo = ownerEchoOf([STATEMENT])
   assert.equal(echo.sentences.length, 3)
-  // Everything the brief says outside its facts' evidence (research records, never shown).
-  const { facts: _facts, ...rest } = made
+  // The owner's facts arrive (D46): the story line and the fact read from the statement are facts to write from.
+  assert.deepEqual(
+    made.reading.ownerFacts.map((f) => [f.kind, f.group, f.text]),
+    [
+      ['owner-fact', 'story', 'three friends who coach'],
+      ['owner-fact', 'facts', 'free racket fitting for juniors'],
+      ['owner-fact', 'keyMessages', 'free racket fitting']
+    ]
+  )
+  // Everything the brief says outside its evidence: the facts' evidence and the owner's facts (research, never copy).
+  const {
+    facts: _facts,
+    reading: { ownerFacts: _ownerFacts, ...reading },
+    ...rest
+  } = made
+  rest.reading = reading
   const texts = []
   const walk = (v) => {
     if (typeof v === 'string') texts.push(v)
@@ -93,6 +107,14 @@ test('the brief names the service the owner stated and copies no run of four wor
     []
   )
   // The whole markdown is too long for the in-order rule (any long text holds most small words in order): runs only.
+  // The owner's facts are listed apart, marked never to be quoted; everything else holds no run of the owner's words.
   const markdown = renderBriefMarkdown(made)
-  assert.notEqual(copiesOwner(markdown, echo).rule, 'run')
+  const [copy, owned] = markdown.split(/^- What the owner states in the build chat.*$/mu)
+  assert.match(markdown, /never these words, never as a quote/)
+  assert.ok(owned.includes('"three friends who coach"'))
+  const after = owned
+    .split('\n')
+    .filter((l) => !l.startsWith('  - '))
+    .join('\n')
+  assert.notEqual(copiesOwner(`${copy}\n${after}`, echo).rule, 'run')
 })

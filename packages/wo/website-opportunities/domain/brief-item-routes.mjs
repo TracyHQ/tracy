@@ -54,6 +54,12 @@ export const BRIEF_ITEM_ROUTES = Object.freeze({
   'inferred-line': notShown(
     'Tracy concluded it, no source states it: it is carried as an instruction, never as copy.'
   ),
+  'owner-fact': notShown(
+    'A fact the owner stated in the build chat (D46): the writer says it in words of its own, never as a quote.'
+  ),
+  'owner-tagline': notShown(
+    'A tagline the owner stated in the build chat (D46): it waits for a product decision and goes nowhere on the site.'
+  ),
   // Fields of `facts`.
   'fact.name': roles('business.name'),
   'fact.branch': roles('business.name'),
@@ -129,6 +135,8 @@ export function itemKindsOfBrief(brief) {
     add(`fact.${f.field === 'menu' && f.value?.kind === 'menu' ? 'menuLink' : f.field}`)
   for (const i of list(brief?.integrations)) add(`integration.${i.kind}`)
   add('team-member', list(brief?.reading?.team).length)
+  for (const f of list(brief?.reading?.ownerFacts))
+    add(f?.kind === 'owner-tagline' ? 'owner-tagline' : 'owner-fact')
   add('key-message', list(brief?.keyMessages).length)
   add('service-area', list(brief?.business?.serviceAreas).length)
   add('review', list(brief?.googlePlace?.reviews).length)

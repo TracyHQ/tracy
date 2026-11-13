@@ -129,6 +129,8 @@ export const businessReadingCeilingCents = (model, prompt, maxTokens = MAX_OUTPU
  * model, in any passage (`domain/reading-held-passages.mjs`). A held person's sentences (`heldTexts`) are taken out of
  * every passage; the business name while it is held (`nameHeld: true`) is taken out of the statement with its sentences,
  * masked with a neutral stand-in in every other passage, and the message's header names the business by that stand-in.
+ * `heldPeople` (the held people of `heldTexts`, given whenever `heldTexts` is): a held person's first name written
+ * alone is held too; a caller that gives `heldTexts` alone has every one of them read as a person.
  * The statement is left out of the input when it is blank, and `heldTexts` and `nameHeld` when nothing is held, so a
  * reading with neither is the reading it was.
  */
@@ -136,10 +138,13 @@ export function readingInputOf({ profile, google, collected, ownerStatement = nu
   const own = collected.filter((s) => SOURCES.includes(s.source))
   const name = profile.name ?? google?.name ?? null
   const heldTexts = heldTextsOf(withheld ?? {})
+  const heldPeople = (Array.isArray(withheld?.people) ? withheld.people : []).filter(
+    (p) => typeof p === 'string' && p.trim() !== ''
+  )
   const nameHeld = withheld?.name === true && typeof name === 'string' && name.trim() !== ''
   return {
     ...(typeof ownerStatement === 'string' && ownerStatement.trim() ? { ownerStatement } : {}),
-    ...(heldTexts.length ? { heldTexts } : {}),
+    ...(heldTexts.length ? { heldTexts, heldPeople } : {}),
     ...(nameHeld ? { nameHeld: true } : {}),
     bio: profile.bio ?? null,
     websitePages: collected.filter((s) => s.source === 'website').flatMap((s) => s.collected?.pages ?? []),
@@ -166,7 +171,7 @@ export function readingInputOf({ profile, google, collected, ownerStatement = nu
  * quote besides the texts (`readingFactsOf`).
  * @param {{bio?: string | null, posts?: any[], reviews?: any[], websitePages?: any[], name?: string | null, trade?: string | null,
  *   googleTypes?: string[], categories?: {source: string, text: string}[], ownerStatement?: string | null,
- *   heldTexts?: string[], nameHeld?: boolean,
+ *   heldTexts?: string[], heldPeople?: string[], nameHeld?: boolean,
  *   door: {state: string, door?: any, reason?: string}, held?: any,
  *   charge: (spec: object, call: () => Promise<any>) => Promise<any>, fetchImpl?: typeof fetch, now?: () => number,
  *   log?: any}} input
@@ -187,6 +192,7 @@ export async function readBusiness({
   categories = [],
   ownerStatement = null,
   heldTexts = [],
+  heldPeople: givenPeople = null,
   nameHeld = false,
   door,
   held = null,
@@ -196,10 +202,21 @@ export async function readBusiness({
   log = console
 }) {
   const heldName = nameHeld && typeof name === 'string' && name.trim() ? name : null
+  // Without the held people told apart, every held text is read as a person (a first name alone is held too).
+  const heldPeople = Array.isArray(givenPeople) ? givenPeople : heldTexts
   const heldAll = [...heldTexts, ...(heldName ? [heldName] : [])]
-  const sources = readingSourcesOf({ bio, posts, reviews, websitePages, ownerStatement, heldTexts, heldName })
+  const sources = readingSourcesOf({
+    bio,
+    posts,
+    reviews,
+    websitePages,
+    ownerStatement,
+    heldTexts,
+    heldPeople,
+    heldName
+  })
   if (!sources.length) return null
-  const owner = ownerStatementRecordOf(ownerStatement, heldAll)
+  const owner = ownerStatementRecordOf(ownerStatement, heldAll, heldPeople)
   // The business is named by the stand-in while its name is held, in the header and in Google's and social facts.
   const header = heldName ? HELD_NAME_STAND_IN : name
   const done = heldName ? withoutStandIn : (read) => read
@@ -207,6 +224,7 @@ export async function readBusiness({
   const version = businessReadingVersion(ready)
   const facts = heldPassagesOf(readingFactsOf({ googleTypes, categories }), {
     people: heldTexts,
+    heldPeople,
     name: heldName
   })
   const inputHash = inputHashOf(sources, header, trade, facts)
@@ -281,9 +299,9 @@ export async function readBusiness({
  * `{ownerStatement: {read: false, reason: 'held'}}` when every sentence named something held; nothing (`{}`) when the
  * owner typed none (or only spaces). `heldTexts`: the held people and, while it is held, the business name.
  */
-export function ownerStatementRecordOf(statement, heldTexts = []) {
+export function ownerStatementRecordOf(statement, heldTexts = [], heldPeople = []) {
   if (typeof statement !== 'string' || !statement.trim()) return {}
-  const { passage, heldOut, cut } = ownerPassageOf(statement, heldTexts)
+  const { passage, heldOut, cut } = ownerPassageOf(statement, heldTexts, { people: heldPeople })
   return { ownerStatement: passage ? { read: true, heldOut, cut } : { read: false, reason: 'held' } }
 }
 

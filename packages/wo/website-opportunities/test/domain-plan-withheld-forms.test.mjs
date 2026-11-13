@@ -43,8 +43,10 @@ test('a held name in slug form: any separator or none between its words; one wor
     'Pellam  Orrick'
   ])
     assert.deepEqual(heldSlugsIn(text, [HELD]), [HELD], text)
-  // Whole words alone miss the slug: that is why both are asked.
-  assert.deepEqual(heldNamesIn('pellam-orrick-portrait.jpg', [HELD]), [])
+  // Whole words find a name written with a separator; only the slug form finds it written together.
+  assert.deepEqual(heldNamesIn('pellam-orrick-portrait.jpg', [HELD]), [HELD])
+  assert.deepEqual(heldNamesIn('pellamorrick-portrait.jpg', [HELD]), [])
+  assert.deepEqual(heldSlugsIn('pellamorrick-portrait.jpg', [HELD]), [HELD])
   for (const text of ['pellam-portrait.jpg', 'orrick-pellam.jpg', 'https://club.example/img/courts.jpg'])
     assert.deepEqual(heldSlugsIn(text, [HELD]), [], text)
   assert.deepEqual(heldSlugsIn('ann-portrait.jpg', ['Ann']), ['Ann'])

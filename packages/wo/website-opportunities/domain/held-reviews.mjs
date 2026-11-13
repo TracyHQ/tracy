@@ -2,7 +2,7 @@
 // owner, so a review that names them is no testimonial the site may quote. Pure, its one import the held text matcher
 // (`held-text-match.mjs`): the brief and the review sources of the app both read it. A held name is found with accents
 // written or not, in full width letters, with zero width characters inside it, and across any run of spaces (#609).
-import { foldHeld, heldSpansIn } from './held-text-match.mjs'
+import { heldSpansIn } from './held-text-match.mjs'
 
 const nonEmpty = (s) => typeof s === 'string' && s.trim() !== ''
 
@@ -13,23 +13,26 @@ export const heldPeopleOf = (missing) =>
     .flatMap((m) => (m.withheld ?? []).flatMap((w) => w.values ?? []))
     .filter(nonEmpty)
 
-const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-/** The pattern of a held name as whole words in a folded text: any run of spaces or line breaks between its words. */
-const wholePatternOf = (name) => {
-  const body = foldHeld(name).trim().split(/\s+/u).map(escapeRe).join('\\s+')
-  return body ? new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, 'u') : null
-}
-/** The held names a text writes, as whole words (accents, width, zero width characters and case aside). */
-export const heldNamesIn = (text, names) =>
-  names.filter((n) => wholePatternOf(n)?.test(foldHeld(text)) === true)
+/**
+ * The held names a text writes in prose, as whole words (`held-text-match.mjs`, its prose rule): accents, width, zero
+ * width characters and case aside, any run of spaces, line breaks or punctuation between a name's words, no boundary
+ * in a script written without spaces. Privacy first: a held name that is also a common word (`Rose`) is held in any
+ * case here, since what this guards (a review, a value) reaches the site.
+ */
+export const heldNamesIn = (text, names) => namesOf(names, heldSpansIn(text, names, { forms: 'words' }))
 
 /**
- * The held names a text writes in slug form (an address, a file name, an id): a name's letters and digits word by
- * word, any separator or none between them (`pellam-orrick`, `pellam_orrick`, `PellamOrrick`), case and accents
- * ignored. A name of one word stays a whole word; a name of two words or more is distinctive enough to be found inside
- * a longer slug (`pellam-orrick2.jpg`). `held-text-match.mjs heldPatternOf`.
+ * The held names a text writes in any form: in prose, or in slug form (an address, a file name, an id), a name's
+ * words written together as whole tokens of the slug (`pellam-orrick`, `pellam_orrick`, `PellamOrrick`,
+ * `pellam-orrick2.jpg`), case and accents ignored. The text is folded once for every name (`heldSpansIn`).
  */
-export const heldSlugsIn = (text, names) => names.filter((n) => heldSpansIn(text, [n]).length > 0)
+export const heldSlugsIn = (text, names) => namesOf(names, heldSpansIn(text, names))
+
+/** The names found, in the order given. */
+const namesOf = (names, spans) => {
+  const found = new Set(spans.map((s) => s.name))
+  return (Array.isArray(names) ? names : []).filter((n) => found.has(n))
+}
 
 /** The reviews that name someone held off the site, each with `namesHeld` and its text (for `isHeldReviewQuote`). */
 export function reviewsNamingHeld(reviews, names) {

@@ -24,7 +24,7 @@ const sources = readingSourcesOf({ ...RESEARCH, ownerStatement: STATEMENT })
 const read = (answer) => checkBusinessReading(answer, sources, { trade: 'other' })
 const labels = (list) => (list ?? []).map((i) => i.label)
 
-test('a service named in a run of the owner words goes; a short name the owner used stays', () => {
+test('a service name is a fact value: a name the owner typed stays, of any length, and nothing is recorded', () => {
   const r = read({
     services: [
       {
@@ -37,16 +37,14 @@ test('a service named in a run of the owner words goes; a short name the owner u
     ]
   })
   assert.deepEqual(labels(r.services.filter((s) => s.source.kind === 'owner-statement')), [
+    'free racket fitting before the first lesson',
     'Pilates for potters',
     'Racket fitting for juniors'
   ])
-  assert.deepEqual(
-    r.ownerEchoDropped.map((d) => d.group),
-    ['services']
-  )
+  assert.equal(r.ownerEchoDropped, undefined)
 })
 
-test('a key message of the owner is said in words of its own, never in a run of them', () => {
+test('a key message echoing the owner leaves the copy and arrives as a fact to say in other words', () => {
   const r = read({
     keyMessages: [
       {
@@ -65,9 +63,20 @@ test('a key message of the owner is said in words of its own, never in a run of 
   })
   assert.deepEqual(labels(r.keyMessages), ['free fitting for every young player'])
   assert.deepEqual(
-    r.ownerEchoDropped.map((d) => d.label),
-    ['junior gets a free racket fitting']
+    r.ownerFacts.map((f) => [f.kind, f.group, f.text]),
+    [['owner-fact', 'keyMessages', 'junior gets a free racket fitting']]
   )
+  // The record says where and by which rule, never the words.
+  assert.deepEqual(r.ownerEchoDropped, [
+    {
+      group: 'keyMessages',
+      field: 'label',
+      rule: 'run',
+      weight: 6,
+      why: 'copies_owner_statement',
+      kept: 'owner-fact'
+    }
+  ])
 })
 
 const usp = (line, who = '') => ({
@@ -81,21 +90,29 @@ const usp = (line, who = '') => ({
   ]
 })
 
-test('a USP line or who copying the owner goes even when reviews carry the theme', () => {
+test('a USP line copying the owner moves the theme to the facts; a who copying the owner goes alone', () => {
   const kept = read({ uspThemes: [usp('the same teacher stays for the whole course')] })
   assert.deepEqual(labels(kept.uspThemes), ['one teacher from start to finish'])
-  for (const theme of [
-    usp('the same teacher guides you from your first pot'),
-    usp('the same teacher stays for the whole course', 'you from your first pot')
-  ]) {
-    const r = read({ uspThemes: [theme] })
-    assert.equal(r.uspThemes, null)
-    assert.equal(r.uspThemesReason, 'rejected')
-    assert.deepEqual(
-      r.ownerEchoDropped.map((d) => d.group),
-      ['uspThemes']
-    )
-  }
+  const line = read({ uspThemes: [usp('the same teacher guides you from your first pot')] })
+  assert.equal(line.uspThemes, null)
+  assert.equal(line.uspThemesReason, 'rejected')
+  assert.deepEqual(
+    line.ownerFacts.map((f) => [f.group, f.text]),
+    [['uspThemes', 'the same teacher guides you from your first pot']]
+  )
+  assert.deepEqual(
+    line.ownerEchoDropped.map((d) => [d.group, d.field, d.kept]),
+    [['uspThemes', 'line', 'owner-fact']]
+  )
+  const who = read({
+    uspThemes: [usp('the same teacher stays for the whole course', 'you from your first pot')]
+  })
+  assert.deepEqual(labels(who.uspThemes), ['one teacher from start to finish'])
+  assert.equal('who' in who.uspThemes[0], false)
+  assert.deepEqual(
+    who.ownerEchoDropped.map((d) => [d.group, d.field, d.kept]),
+    [['uspThemes', 'who', 'item']]
+  )
 })
 
 test("the brief's view drops a stored theme whose line repeats an owner quote, and a theme left with none is null", () => {
@@ -166,17 +183,12 @@ test('service names the owner stated never join into a run of the owner words in
     ]
   }
   const reading = { method: 'model', ...checkBusinessReading(answer, srcs, { trade: 'fitness' }) }
+  const { profile, brand, media, posts, opportunity, madeAt } = hsc
   assert.deepEqual(reading.ownerEchoDropped, undefined)
   const made = makeSiteBrief(
     domain,
-    {
-      profile: { ...hsc.profile, businessReading: reading },
-      brand: hsc.brand,
-      sources: [],
-      media: hsc.media,
-      posts: hsc.posts
-    },
-    { opportunity: hsc.opportunity, madeAt: hsc.madeAt }
+    { profile: { ...profile, businessReading: reading }, brand, sources: [], media, posts },
+    { opportunity, madeAt }
   )
   assert.ok(made.reading.services.some((s) => s.label === 'Sunrise yoga'))
   assert.match(made.reading.about, /swimming lessons/i)

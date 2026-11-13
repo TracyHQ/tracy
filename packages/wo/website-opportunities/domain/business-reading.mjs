@@ -92,7 +92,8 @@ const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
  * The texts a reading reads, each with the ref an item names it by: the owner's statement typed in the build chat
  * (`owner-statement.mjs`, decision D46: first, so no budget cuts it), the bio, each post, each review (one copy of a
  * review the sources list twice). Template lines are taken out before anything is read.
- * @param {{bio?: string | null, posts?: any[], reviews?: any[], ownerStatement?: string | null, heldTexts?: string[]}}
+ * @param {{bio?: string | null, posts?: any[], reviews?: any[], ownerStatement?: string | null, heldTexts?: string[],
+ *   heldPeople?: string[]}}
  *   input `posts`: `{source, id, url, caption}`; `reviews`: `{author, text, source?}`; `ownerStatement`: what the
  *   owner typed, a passage `{ref: 'owner', kind: 'owner-statement'}` when not blank, less every sentence naming one of
  *   `heldTexts` (the held people) or `heldName` (the business name while it is held); in every other passage a held
@@ -106,14 +107,17 @@ export function readingSourcesOf({
   websitePages = [],
   ownerStatement = null,
   heldTexts = [],
+  heldPeople = null,
   heldName = null
 } = {}) {
-  const held = { people: heldTexts, name: heldName }
+  const persons = Array.isArray(heldPeople) ? heldPeople : heldTexts
+  const held = { people: heldTexts, heldPeople: persons, name: heldName }
   const out = []
-  const { passage } = ownerPassageOf(ownerStatement, [
-    ...heldTexts,
-    ...(nonEmpty(heldName) ? [heldName] : [])
-  ])
+  const { passage } = ownerPassageOf(
+    ownerStatement,
+    [...heldTexts, ...(nonEmpty(heldName) ? [heldName] : [])],
+    { people: persons }
+  )
   if (passage) out.push(passage)
   const bioText = withoutPlaceholders(bio)
   if (bioText) out.push({ ref: 'bio', kind: 'bio', text: bioText.slice(0, MAX_TEXT) })

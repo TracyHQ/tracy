@@ -1456,6 +1456,34 @@ function briefReading(reading, about, assetIds = null) {
     ...(reading.uspThemes?.length ? { uspThemes: reading.uspThemes.map(uspThemeOfReading) } : {}),
     ...(reading.uspThemesDropped?.length
       ? { uspThemesDropped: reading.uspThemesDropped.map((d) => ({ label: d.label, why: d.why })) }
+      : {}),
+    ...ownerFactsOfReading(reading)
+  }
+}
+
+/**
+ * What the brief carries of the owner's chat statement guard (D46, `owner-echo-fields.mjs`): the facts the owner stated
+ * that the writer says in other words (`ownerFacts`, a tagline among them waiting for a product decision), and how many
+ * copy fields echoed the owner, in which groups (`ownerEchoDropped: {count, groups}`, never the text).
+ */
+function ownerFactsOfReading(reading) {
+  const facts = (reading.ownerFacts ?? []).filter((f) => nonEmpty(f?.text))
+  const echoes = reading.ownerEchoDropped ?? []
+  return {
+    ...(facts.length
+      ? {
+          ownerFacts: facts.map((f) => ({
+            id: f.id,
+            kind: f.kind,
+            group: f.group,
+            text: f.text,
+            source: f.source,
+            ...(f.reason ? { reason: f.reason } : {})
+          }))
+        }
+      : {}),
+    ...(echoes.length
+      ? { ownerEchoDropped: { count: echoes.length, groups: [...new Set(echoes.map((d) => d.group))] } }
       : {})
   }
 }
@@ -2225,7 +2253,9 @@ const OWNER_STATEMENT_LABEL = "owner's chat statement (facts only, never copy)"
 
 /** What the business sells, who it is for, its team and story: each item with the words it stands on. */
 function renderReading(r, line, words, brief = {}) {
-  const owner = [r.services, r.team, r.serviceAreas].some((l) => (l ?? []).some(isOwnerStatement))
+  const owner =
+    [r.services, r.team, r.serviceAreas, r.audience].some((l) => (l ?? []).some(isOwnerStatement)) ||
+    Boolean(r.ownerFacts?.length)
   const how =
     r.method === 'model'
       ? owner
@@ -2255,7 +2285,23 @@ function renderReading(r, line, words, brief = {}) {
   )
   list('Story', r.story, (i) => q(i.label))
   list('Facts it states', r.facts, (i) => q(i.label))
+  renderOwnerFacts(r, line)
   line()
+}
+
+/** The facts the owner stated in the build chat (D46): to write from in other words, never quoted; a tagline waits. */
+function renderOwnerFacts(r, line) {
+  const facts = (r.ownerFacts ?? []).filter((f) => f.kind === 'owner-fact')
+  if (facts.length) {
+    line(
+      `- What the owner states in the build chat, facts to write from (say each in words of your own; never these words, never as a quote):`
+    )
+    for (const f of facts) line(`  - ${q(f.text)}`)
+  }
+  if ((r.ownerFacts ?? []).some((f) => f.kind === 'owner-tagline'))
+    line(
+      '- The owner states a tagline in the build chat: it waits for a product decision and goes nowhere on the site.'
+    )
 }
 
 /** What a USP rests on, in words: two reviews or more, one review, or the business's own words. */

@@ -104,7 +104,7 @@ test("the statement's facts are read, and every item from it names the owner sta
   })
 })
 
-test('a label echoing a sentence of the statement word for word is dropped and recorded', () => {
+test('a label echoing a sentence of the statement word for word leaves the copy, its fact kept, and is recorded', () => {
   const sources = readingSourcesOf({ ...RESEARCH, ownerStatement: OWNER_STATEMENT })
   const read = checkBusinessReading(ANSWER_ECHOING_OWNER, sources, { trade: 'other' })
   assert.deepEqual(
@@ -114,10 +114,17 @@ test('a label echoing a sentence of the statement word for word is dropped and r
   assert.deepEqual(read.ownerEchoDropped, [
     {
       group: 'story',
-      label: 'Every class is capped at six students so nobody waits for the wheel',
-      why: 'copies_owner_statement'
+      field: 'label',
+      rule: 'run',
+      weight: 13,
+      why: 'copies_owner_statement',
+      kept: 'owner-fact'
     }
   ])
+  assert.deepEqual(
+    read.ownerFacts.map((f) => [f.kind, f.group, f.text]),
+    [['owner-fact', 'story', 'Every class is capped at six students so nobody waits for the wheel']]
+  )
   // The same answer read without the statement: nothing to echo, so the guard leaves the reading alone.
   const plain = checkBusinessReading(ANSWER_ECHOING_OWNER, readingSourcesOf(RESEARCH), { trade: 'other' })
   assert.equal(plain.ownerEchoDropped, undefined)

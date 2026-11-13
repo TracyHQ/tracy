@@ -152,18 +152,18 @@ const reading = await readBusiness({ ...input, trade, door, held, charge, fetchI
 
 What comes back:
 
-- `input.ownerStatement` is present only when the statement holds words; `input.heldTexts` (the held people) and
-  `input.nameHeld: true` (the business name is held) only when something is held. With neither, the input, the prompt
-  bytes and the reading are exactly what they were.
+- `input.ownerStatement` is present only when the statement holds words; `input.heldTexts` (every held text but the
+  business name), `input.heldPeople` (the held people among them) and `input.nameHeld: true` (the business name is
+  held) only when something is held. With neither, the input, the prompt bytes and the reading are exactly what they
+  were.
 - No held text reaches the model, in any passage and either call (the reading and its USP retry,
-  `reading-held-passages.mjs`). A held text is found in any form (`held-text-match.mjs`: accents written or not,
-  composed or decomposed, full width letters, zero width characters, its words split by spaces, a line break, a
-  sentence end or nothing). In the statement every sentence a held person or the held business name overlaps is taken
-  out, both halves of a name split over two sentences. In every other passage (bio, posts, reviews, website pages,
-  Google's types and social categories) a held person's sentences are taken out and a review they wrote goes whole,
-  while the held business name is masked with the stand-in `[business name]`, which is also how the message's header
-  names the business. The stand-in is a template placeholder, so no quote holding it stands, and copy that writes it
-  is dropped (`reading.standInDropped`).
+  `reading-held-passages.mjs`). In the statement every sentence a held person or the held business name overlaps is
+  taken out, both halves of a name split over two sentences. In every other passage (bio, posts, reviews, website
+  pages, Google's types and social categories) a held person's sentences are taken out and a review they wrote (its
+  author field) goes whole, while the held business name is masked with the stand-in `[business-name-held]`, which is
+  also how the message's header names the business. The stand-in is a token no real copy writes ("Business name
+  registration" is a service and stays); it is a template placeholder, so no quote holding it stands, and copy that
+  writes it, with or without its brackets, is dropped (`reading.standInDropped`: `{group, field, why}`, never the text).
 - The reading reads the statement as one passage `{ref: 'owner', kind: 'owner-statement'}`, first, capped at 1500
   characters like every passage. The model's system message gains one rule (`owner-statement-prompt.mjs`, a draft
   awaiting approval in #600): facts true, wording never copy, and an item read from it named in words of its own.
@@ -175,21 +175,21 @@ What comes back:
   from the quote (`owner-echo.mjs ownerLabelGrounded`): at least half its words are words of the quote, and every
   number and capitalised word of it is in the quote. The rules reading (no model) never reads the statement at all
   (`reading.ownerStatementSkipped`), since rules can only copy.
-- The echo guard (`owner-echo.mjs`): a copy text (an item's label or role, a key message's label, a USP theme's label,
-  line, who and accent, the brief's About line, a needs profile summary) copies the owner when it shares a run of four
-  words in a row with the statement (a script written without spaces counts characters: 8 Han or Hiragana characters,
-  16 Katakana, Thai, Lao, Khmer or Myanmar characters), or holds in order at least 60% of one of its sentences of five
-  words or more. Case, accents, width, punctuation, quote marks, emoji and spacing are folded first, and runs cross
-  sentence ends, bullets and semicolons. A copy text of up to three words only names a thing and passes; what a public
-  quote the item stands on also says is that text's wording and passes. A copy is dropped and listed in
-  `reading.ownerEchoDropped` (`{group, label, why: 'copies_owner_statement'}`); a reading left with no USP theme has
-  `uspThemes: null`, reason `rejected`.
+- The echo guard (`owner-echo.mjs`): a copy text copies the owner when it shares a run of four words in a row with the
+  statement (a script written without spaces counts characters: 8 Han or Hiragana characters, 16 Katakana, Thai, Lao,
+  Khmer or Myanmar characters; a character is classed by its script extensions, so the long vowel mark `ー` weighs as
+  Katakana), or holds in order at least 60% of one of its sentences of five words or more. Case, accents, width,
+  punctuation, quote marks, emoji and spacing are folded first, and runs cross sentence ends, bullets and semicolons. A
+  copy text of up to three words only names a thing and passes. A run of four a public quote the item stands on holds
+  in a row is that text's wording and passes; for the 60% rule only runs of three words or more that the copy, the
+  owner's sentence and one public text all hold in a row are excused, and the rest of the copy is then held against
+  the rest of the sentence by the same 60% (common words a long review shares, scattered, excuse nothing). Korean is cut
+  at spaces: a particle changed on a word breaks a run, which is accepted (the 60% rule still holds a reworded
+  sentence).
 - The place profile files them under the source of kind `owner-statement` (ref `chat`); a story or audience item becomes
-  a quote of kind `owner-statement`, the brief's field `ownerStatement`, never a story or post quote. The brief's copy
-  (`readingWithoutOwnerQuotes`) keeps a service it stated by its name only, and no story, audience, About fact, key
-  message quote or USP quote of it; then it holds what copy is left to the echo guard against every quote of the
-  statement the reading holds. The brief names it as the source "owner's chat statement (facts only, never copy)", and
-  routes its field `fact.ownerStatement` as never shown (`brief-item-routes.mjs`).
+  a quote of kind `owner-statement`, the brief's field `ownerStatement`, never a story or post quote. The brief names it
+  as the source "owner's chat statement (facts only, never copy)", and routes its field `fact.ownerStatement` as never
+  shown (`brief-item-routes.mjs`).
 - The needs profile research (`researchOf`) reads that evidence as the source id `owner-statement` of origin `answer`,
   which the plan shows as "Your answer". The needs profile drops a `quote` item from it, a summary the echo guard calls a
   copy, and never takes its phrases as the business's own words (`voice.ownWords`). Its language never decides the
@@ -197,6 +197,87 @@ What comes back:
   has no language and the plan states its English default as an assumption.
 - Trust order: `website`, `answer`, `google`, `social`. An answer the customer gives to a plan question is applied after
   the merge (`plan-answers.mjs`, source `customer-answer`), so it always wins over the chat statement.
+
+
+### 6.1 Where a held text is found (`held-text-match.mjs`)
+
+Every text is folded once, whatever the number of held texts: compatibility forms, accents and other marks, zero width
+characters and case aside (the kana voicing marks stay: `ガ` is not `カ`). Then:
+
+| Form | Rule | Found | Not found |
+|---|---|---|---|
+| Prose | the held text's words in order, at least one character that is no letter or digit between two words, whole words at both ends | `Brannoch` line break `Vey`, `Ask for Brannoch. Vey runs` | `Fed leeks` for `Ed Lee`, `Normal maps` for `Al Ma` |
+| Script without spaces | a side in Han, Hiragana, Katakana, Thai, Lao, Khmer or Myanmar (the name's or its neighbour's) needs no boundary and no separator; a Hangul name may carry a Hangul particle | `講師は山田花子です`, `ครูสมชายสอน`, `김민지가` | |
+| Glued | inside one run without spaces (a slug, a file name, a handle, an address), the words written together match whole tokens (a token is a run of letters or of digits) | `brannochvey`, `pellam-orrick2.jpg`, `ed-lee.jpg` | `banana-boat.jpg` for `Ana Bo`, `used-leek.jpg` for `Ed Lee` |
+| Common word name (the reading only) | a one word held text that is also a common English given name word (`Will`, `May`, `Rose`; the list is in `held-name-context.mjs`) is held in prose only with a capital: mid sentence always; at a sentence start only next to a title (`Chef`), a role word (`florist`, `is our head baker`), a possessive (`Will's`) or another capitalised name part (`Rose Tan`). In a slug and in an author field it is always held | `Ask Rose about`, `in May and June`, `Rose, our florist`, `rose-portrait.jpg` | `our rose bouquets`, `We will deliver`, `May is our busiest month` |
+| First name alone (the reading only) | a held person's first name written alone is held with a capital (a common one by the row above), in prose, a slug, an address or an author field; never one of two letters or fewer, never for a name in a script without spaces or in Hangul (the family name leads there) | `Ask Brannoch about raku`, `brannoch@example.test` | `brannoch` lower case in prose, `Ed was here` |
+
+`heldNamesIn` (reviews, plan values, the site name: what reaches the site) uses the prose and script rows and no
+common word relaxation: privacy first, a held `Rose` is held in any case there. `heldSlugsIn` adds the glued row. The
+first name row is the reading's only.
+
+Still over-matches, by design (privacy wins): a common word name capitalised mid sentence as a word (`in May` for a
+held `May`); any token of a slug (`rose-tinted.jpg`); a multi word held business name that is a common phrase (`The
+Shop`); accent folding merges distinct names that differ only by accents, Vietnamese names that differ only by tone marks among
+them (the safe direction, accepted); a one word held
+name of two letters in a slug (`bo-staff` for `Bo`). Could now be missed: a common word name at a sentence start with no
+name context (`Will made my bouquet`); a held person's family name alone (`Ms Vey`); a first name written lower case in
+prose; common words of other languages (the list is English); a glued name split by a digit (`Odalys1Brenwick`). When
+unsure the rule holds the name: the sentence goes.
+
+### 6.2 Fact values and copy (`owner-echo-fields.mjs`)
+
+D46 has two duties of equal weight: no copied prose, and the owner's facts arrive. So the guard reads a reading field
+by field, by the reading's own structure, never by guessing from the text:
+
+| Layer | Group | Name or value: never guarded | Copy: guarded | Evidence and records |
+|---|---|---|---|---|
+| Reading | services | label, kind, price | | quote, mentions, id, source, basis |
+| Reading | audience | label | | quote, mentions, id, source, basis |
+| Reading | team | label (the person), role (a title) | | quote, mentions, id, source, reviewsOnly, factId, onSite, photo ids |
+| Reading | serviceAreas | label (places) | | quote, mentions, id, source |
+| Reading | story | | label (needed) | quote, mentions, id, source |
+| Reading | facts | | label (needed) | quote, mentions, id, source |
+| Reading | keyMessages | | label (needed) | quotes, id, basis, decidedBy |
+| Reading | uspThemes | | label and line (needed), accent, who | quotes, id, basis |
+| Reading | subTrade | id | | quotes |
+| Reading | ownerFacts | | | every field: evidence for the writer, never copy |
+| Reading | uspThemesDropped, ownerEchoDropped, standInDropped | | | records |
+| Place profile | facts and quotes filed from the reading | the reading's names and values | | story and audience quotes of the statement are kind `owner-statement` (field `ownerStatement`, never shown) |
+| Brief | `reading` | as the reading | as the reading, and `about` (the About line, guarded whole) | `ownerFacts`, `ownerEchoDropped` |
+| Needs profile | item fields | every role not in `SUMMARY_ROLES` (names, prices, dates, phones, hours rows) | the `SUMMARY_ROLES` (descriptions, bios) | evidence |
+
+`domain-owner-echo-fields.test.mjs` fails when a reading, its brief view or the brief holds a field the table does not
+class. Hours and days, phone, email and the address are fact values: they reach the site through their own structured
+fields, so a phrase such as "open seven days a week" in a story or fact line need not survive as copy; it survives as a
+fact for the writer (below). Whether hours, a phone or an email typed in the chat should reach the needs profile
+directly is not decided and not built.
+
+What the guard does with an echo:
+
+- a copy field that echoes the owner is dropped from its item, and the item stays with its facts (a USP theme keeps its
+  line when only its `who` echoed);
+- when the field is one the item needs (marked "needed" above), the item leaves its group and its fact moves to
+  `reading.ownerFacts` as `{id, kind: 'owner-fact', group, text, source}`; the brief lists these under "What the owner
+  states in the build chat, facts to write from (say each in words of your own; never these words, never as a quote)",
+  and routes them as `owner-fact`, never shown as written;
+- the brief's view (`readingWithoutOwnerQuotes`) also moves there every story line and fact the reading read from the
+  statement, and every key message or USP theme left with no quote but the owner's; a service, an audience and a
+  service area of the statement keep their name with the name as their only quote, a team member keeps name and role;
+- a tagline the owner states (an item of the statement whose quote says tagline, slogan, motto or strapline; English
+  words only) never reaches copy: it is kept as `kind: 'owner-tagline'`, reason `awaits_product_decision`, routed as
+  never shown, and the brief only says one waits. Whether an owner's tagline is the one case where the owner's wording
+  is the fact is an open product question;
+- every echo is recorded in `reading.ownerEchoDropped` as `{group, field, rule, weight, why: 'copies_owner_statement',
+  kept}` (`kept`: `item`, `owner-fact` or `owner-tagline`), never the text. The brief carries
+  `reading.ownerEchoDropped: {count, groups}` and `reading.ownerFacts`.
+
+For the plan step (the other session): it may show the owner, from the brief, "N things you wrote are kept as facts and
+will be said in other words" (`reading.ownerEchoDropped.count`, the groups by name), list `ownerFacts` of kind
+`owner-fact` as "we will say this in our own words", and, for an `owner-tagline`, "your tagline waits for a decision".
+It never shows a field's words as site copy. `ownerEchoDropped` does not reach the needs profile: the needs profile
+reads the research's evidence, not the reading, and records its own drops field by field (`summary_copies_owner`).
+`domain-owner-echo-survival.test.mjs` measures both duties on the invented fixtures.
 
 The `owner` source of the older flow (the value typed on the Profile card, origin `website`) is unchanged and is a
 different key.

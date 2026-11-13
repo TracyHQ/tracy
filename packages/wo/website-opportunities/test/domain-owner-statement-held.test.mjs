@@ -117,12 +117,12 @@ test('with the name and people held, neither call sends a held text, and the hea
   assert.equal(bodies.length, 2)
   for (const body of bodies) {
     const user = body.messages[1].content
-    assert.match(user, /^Business: "\[business name\]"/)
+    assert.match(user, /^Business: "\[business-name-held\]"/)
     assert.doesNotMatch(JSON.stringify(body), /corvane|brannoch|marlow/i)
   }
   const main = bodies[0].messages[1].content
-  assert.match(main, /\[business name\]: pottery classes in Velmora/)
-  assert.match(main, /Kiln day at \[business name\]! Join our glazing workshops/)
+  assert.match(main, /\[business-name-held\]: pottery classes in Velmora/)
+  assert.match(main, /Kiln day at \[business-name-held\]! Join our glazing workshops/)
   assert.match(main, /The same teacher stays for the whole course/)
   assert.doesNotMatch(main, /Proud of my students|explained every step/)
   assert.match(main, /We fire twice a week/)
@@ -135,14 +135,18 @@ test('copy that writes the stand-in never stands, so it never reaches the site a
     uspThemes: [
       {
         label: 'same teacher all course',
-        line: 'the same teacher at [business name] all course',
+        line: 'the same teacher at [business-name-held] all course',
         accent: '',
         who: '',
         quotes: [{ quote: 'The same teacher stays for the whole course', ref: 'review:1' }]
       }
     ],
     story: [
-      { text: '[business name] pottery classes', quote: '[business name]: pottery classes', ref: 'bio' }
+      {
+        text: '[business-name-held] pottery classes',
+        quote: '[business-name-held]: pottery classes',
+        ref: 'bio'
+      }
     ]
   }
   const { reading } = await readWith(held(), answer)
@@ -153,8 +157,8 @@ test('copy that writes the stand-in never stands, so it never reaches the site a
   assert.deepEqual(reading.story, [])
   assert.equal(reading.uspThemes, null)
   assert.ok(reading.standInDropped.some((d) => d.group === 'uspThemes'))
-  assert.doesNotMatch(JSON.stringify(reading), /business name\] all course|corvane/i)
-  assert.equal(HELD_NAME_STAND_IN, '[business name]')
+  assert.doesNotMatch(JSON.stringify(reading), /business-name-held\] all course|corvane/i)
+  assert.equal(HELD_NAME_STAND_IN, '[business-name-held]')
 })
 
 test('nothing held: no held keys in the input, the passages as they were', () => {
