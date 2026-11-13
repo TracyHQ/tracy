@@ -4,6 +4,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
   MEASURE_WIDTHS,
+  limitAcrossPages,
   limitFromReadings,
   planMeasurements,
   shownTextOf
@@ -151,4 +152,40 @@ test('a decision opens each submenu of a menu on a visit of its own', () => {
     openEach: '.submenu-toggle',
     texts: [{ id: 'module-8.0', slot: 'module-8.0', text: 'Opening soon', tight: 'Opening soon' }]
   })
+})
+
+test('a place two store blocks draw is filled on the page of each block', () => {
+  const shared = {
+    blocks: [
+      { id: 'block-7', from: { kit: ['block-7'] }, fields: [{ name: 'heading', slot: 'module-7.0' }] },
+      { id: 'list-8', from: { kit: ['block-8'] }, itemFields: [{ name: 'title', slots: ['module-7.0'] }] }
+    ]
+  }
+  const plan = planMeasurements({
+    unmeasured: [{ block: 'block-7', slot: 'module-7.0' }],
+    blockStore: shared,
+    kit,
+    contentMap
+  })
+  assert.deepEqual(
+    plan.pages.map((p) => [p.path, p.texts.map((t) => t.slot)]),
+    [
+      ['/', ['module-7.0']],
+      ['/about', ['module-7.0']]
+    ]
+  )
+})
+
+test('a place read on several pages takes the smallest limit of any page, and names each page', () => {
+  const home = limitFromReadings({ 390: { limit: 36, demo: 12, lines: 1 } }, '/')
+  const list = limitFromReadings({ 390: { limit: 29, demo: 12, lines: 1 } }, '/classes')
+  const rec = limitAcrossPages([home, list])
+  assert.equal(rec.limit, 29)
+  assert.match(
+    rec.limitFrom,
+    /^measured on the running template on 2 pages, the smallest limit taken \(29, page \/classes\):/
+  )
+  assert.match(rec.limitFrom, /page \/: 390px 36/)
+  assert.deepEqual(limitAcrossPages([home]), home)
+  assert.equal(limitAcrossPages([]), null)
 })

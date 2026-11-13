@@ -22,7 +22,13 @@ import path from 'node:path'
 import { readTextFit } from '../template-kit/lib/read-text-fit.js'
 import { NARROWEST_WIDTH } from './lib/draft-fields.mjs'
 import { readHiddenTexts, readPlaceholderFit, toggleChainOf, wrapTextNodes } from './lib/read-box-state.js'
-import { MEASURE_WIDTHS, limitFromReadings, planMeasurements } from './lib/measure-plan.mjs'
+import {
+  MEASURE_WIDTHS,
+  holdersOf,
+  limitAcrossPages,
+  limitFromReadings,
+  planMeasurements
+} from './lib/measure-plan.mjs'
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 /** Opens a kit page path; a site without URL rewriting serves it under /index.php. */
@@ -37,21 +43,6 @@ async function openPage(page, site, pagePath) {
 const argOf = (argv, name) => {
   const i = argv.indexOf(name)
   return i >= 0 ? argv[i + 1] : undefined
-}
-
-/** The block of the store that declares `slot` as a field, an item field or a child field. */
-function blockHolding(blockStore, slot) {
-  const childHolds = (lists) =>
-    (lists ?? []).some(
-      (l) => l.fields.some((f) => (f.slots ?? []).flat().includes(slot)) || childHolds(l.lists)
-    )
-  const block = blockStore.blocks.find(
-    (b) =>
-      [...b.fields, ...(b.itemFields ?? [])].some((f) => f.slot === slot || (f.slots ?? []).includes(slot)) ||
-      childHolds(b.lists) ||
-      childHolds(b.itemLists)
-  )
-  return block?.id
 }
 
 /** Opens the page of a plan entry and clicks what it names first: a tab's words, then each selector, every match. */
@@ -86,7 +77,10 @@ async function openChain(page, selector, index) {
       .catch(() => {})
 }
 
-/** Reads, on the open page, the texts not yet read at this width (the kit's frame fill, then the fallbacks). */
+/**
+ * Reads, on the open page, the texts not yet read at this width (the kit's frame fill, then the fallbacks). Readings
+ * are kept per page (`readings[path][slot]`), since a place several pages draw is read on each of them.
+ */
 async function readVisit(page, texts, width, readings, hidden) {
   await page.evaluate(() => document.body.setAttribute('data-kit-block', 'ai-quickstart-page'))
   const take = (got) => {
@@ -119,7 +113,7 @@ async function main(argv) {
   const previous = existsSync(file) ? readJson(file) : {}
   const blockStore = readJson(path.join(out, 'block-store.json'))
   const again = Object.keys(previous.limits ?? {}).map((slot) => ({
-    block: blockHolding(blockStore, slot),
+    block: holdersOf(blockStore, slot)[0],
     slot
   }))
   const plan = planMeasurements({
@@ -154,7 +148,9 @@ async function main(argv) {
         for (let v = 0; v < visits; v++) {
           if (!(await openWith(page, site, entry))) continue
           if (entry.openEach) await openChain(page, entry.openEach, v)
-          await readVisit(page, entry.texts, width, readings, hidden)
+          readings[entry.path] ??= {}
+          hidden[entry.path] ??= {}
+          await readVisit(page, entry.texts, width, readings[entry.path], hidden[entry.path])
         }
       }
       await context.close()
@@ -162,18 +158,31 @@ async function main(argv) {
   } finally {
     await browser.close()
   }
+  // One record per page that reads the place; the limit is the smallest of them (limitAcrossPages).
+  const perSlot = new Map()
   for (const { texts, path: pagePath } of plan.pages)
     for (const t of texts) {
+      const read = readings[pagePath]?.[t.slot] ?? {}
       // A width counts as hiding the text only when no visit read it there.
-      const hiddenAt = (hidden[t.slot] ?? []).filter((w) => !readings[t.slot]?.[w])
-      const rec = limitFromReadings(readings[t.slot] ?? {}, pagePath, { hiddenAt })
-      if (rec) limits[t.slot] = rec
-      else
-        notFound.push({
-          slot: t.slot,
-          why: `no shown box on ${pagePath} at ${MEASURE_WIDTHS.join(', ')} px holds the demo words`
-        })
+      const hiddenAt = (hidden[pagePath]?.[t.slot] ?? []).filter((w) => !read[w])
+      const rec = limitFromReadings(read, pagePath, { hiddenAt })
+      const entry = perSlot.get(t.slot) ?? { recs: [], missing: [] }
+      if (rec) entry.recs.push(rec)
+      else entry.missing.push(pagePath)
+      perSlot.set(t.slot, entry)
     }
+  for (const [slot, { recs, missing }] of perSlot) {
+    if (recs.length) {
+      const rec = limitAcrossPages(recs)
+      limits[slot] = missing.length
+        ? { ...rec, limitFrom: `${rec.limitFrom}; no box holds the demo words on ${missing.join(', ')}` }
+        : rec
+    } else
+      notFound.push({
+        slot,
+        why: `no shown box on ${missing.join(', ')} at ${MEASURE_WIDTHS.join(', ')} px holds the demo words`
+      })
+  }
   const doc = {
     $comment:
       'Text limits measured on a running copy of the template by measure-limits.mjs (ticket #583): the smallest reading over the widths that draw the text, read at 390 px unless the layout hides it there. draft.mjs reads them.',

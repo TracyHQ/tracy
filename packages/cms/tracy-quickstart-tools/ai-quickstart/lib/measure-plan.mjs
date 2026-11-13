@@ -37,13 +37,19 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
       skipped.push({ slot, why: 'the demo shows no words there, so no box can be found to fill' })
       continue
     }
-    const kitIds = new Set(kitIdsOf.get(block) ?? [])
-    // The first page that shows the block at 390 px, else at the next wider width (a header button the phone hides).
-    const shows = (w) => (p) => (p.blocks?.[w] ?? []).some((k) => kitIds.has(k))
-    const page = measureOn[slot]?.path
-      ? { path: measureOn[slot].path }
-      : MEASURE_WIDTHS.map((w) => (kit.pages ?? []).find(shows(String(w)))).find(Boolean)
-    if (!page) {
+    // Every store block that draws the place, each on the first page that shows it at 390 px, else at the next
+    // wider width (a header button the phone hides): a place several pages draw is read on each of them.
+    const holders = holdersOf(blockStore, slot)
+    const pagesOf = (id) => {
+      const kitIds = new Set(kitIdsOf.get(id) ?? [])
+      const shows = (w) => (p) => (p.blocks?.[w] ?? []).some((k) => kitIds.has(k))
+      return MEASURE_WIDTHS.map((w) => (kit.pages ?? []).find(shows(String(w)))).find(Boolean)
+    }
+    const found = measureOn[slot]?.path
+      ? [{ path: measureOn[slot].path }]
+      : (holders.length ? holders : [block]).map(pagesOf).filter(Boolean)
+    const paths = [...new Set(found.map((p) => p.path))]
+    if (!paths.length) {
       skipped.push({ slot, why: `no kit page shows ${block} at ${MEASURE_WIDTHS.join(', ')} px` })
       continue
     }
@@ -52,10 +58,12 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
     const click = measureOn[slot]?.click
     const clickSelector = measureOn[slot]?.clickSelector
     const openEach = measureOn[slot]?.openEach
-    const key = JSON.stringify([page.path, click ?? null, clickSelector ?? null, openEach ?? null])
-    const texts = byPath.get(key) ?? []
-    texts.push({ id: slot, slot, text, tight: shownTextOf(mapSlots.get(slot)?.sample, '') })
-    byPath.set(key, texts)
+    for (const pagePath of paths) {
+      const key = JSON.stringify([pagePath, click ?? null, clickSelector ?? null, openEach ?? null])
+      const texts = byPath.get(key) ?? []
+      texts.push({ id: slot, slot, text, tight: shownTextOf(mapSlots.get(slot)?.sample, '') })
+      byPath.set(key, texts)
+    }
   }
   const pages = [...byPath].map(([key, texts]) => {
     const [path, click, clickSelector, openEach] = JSON.parse(key)
@@ -68,6 +76,40 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
     }
   })
   return { pages, skipped }
+}
+
+/** The store blocks that declare `slot` as a field, an item field or a child field, in store order. */
+export function holdersOf(blockStore, slot) {
+  const childHolds = (lists) =>
+    (lists ?? []).some(
+      (l) => (l.fields ?? []).some((f) => (f.slots ?? []).flat().includes(slot)) || childHolds(l.lists)
+    )
+  return (blockStore.blocks ?? [])
+    .filter(
+      (b) =>
+        [...(b.fields ?? []), ...(b.itemFields ?? [])].some(
+          (f) => f.slot === slot || (f.slots ?? []).includes(slot)
+        ) ||
+        childHolds(b.lists) ||
+        childHolds(b.itemLists)
+    )
+    .map((b) => b.id)
+}
+
+/**
+ * The limit of a place read on several pages: the smallest of the pages' limits, so the copy fits every page that
+ * draws it; the record names each page's reading. One page gives its own record unchanged.
+ * @param {Array<{limit: number, limitFrom: string, path?: string}>} records one per page, from `limitFromReadings`
+ */
+export function limitAcrossPages(records) {
+  const recs = records.filter(Boolean)
+  if (recs.length <= 1) return recs[0] ?? null
+  const least = recs.reduce((a, b) => (b.limit < a.limit ? b : a))
+  const page = least.limitFrom.match(/, page ([^:]+):/)?.[1] ?? '?'
+  return {
+    limit: least.limit,
+    limitFrom: `measured on the running template on ${recs.length} pages, the smallest limit taken (${least.limit}, page ${page}): ${recs.map((r) => r.limitFrom.replace(/^measured on the running template /, '')).join(' | ')}`
+  }
 }
 
 /** The widths a limit is read at: the phone, the tablet and the desktop width of the kit. */
