@@ -133,6 +133,19 @@ export { PLAN_EDIT_SCHEMA, applyPlanEdit, checkPlanEdit } from './build-contract
 export { ANSWER_SCHEMA, QUESTION_SCHEMA, QUESTION_TOPICS, checkAnswer } from './build-contract-questions.mjs'
 export { OUTCOME_SCHEMA, PROGRESS_SCHEMA, STEP_KINDS, STEP_STATES } from './build-contract-run.mjs'
 export {
+  PLAN_COMPOSER_PROMPT_FILE,
+  PLAN_COMPOSE_ATTEMPTS,
+  PlanComposerError,
+  buildPlanStep,
+  composePlan,
+  composerContextOf,
+  planComposerRequest
+} from './plan-composer.mjs'
+export { gatePlan } from './plan-gate.mjs'
+export { placeExtraData } from './plan-placement.mjs'
+export { lookOf, picturesOf } from './plan-look-pictures.mjs'
+export { planDataOf } from './plan-data.mjs'
+export {
   neutralItemName,
   SECTION_ACTIONS,
   sectionAction,

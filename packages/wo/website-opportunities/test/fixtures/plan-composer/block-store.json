@@ -1,0 +1,224 @@
+{
+  "$comment": "An invented block store description for an invented template, used by the plan composer tests. No real template or business.",
+  "schema": "tracy-ai-quickstart-block-store/v1",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "template": {
+    "slug": "example-court",
+    "version": "1.0.0"
+  },
+  "blocks": [
+    {
+      "id": "header-main",
+      "type": "header",
+      "positions": ["header"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "cta_label",
+          "kind": "contact.cta_label",
+          "type": "text",
+          "limit": 18
+        },
+        {
+          "name": "cta_link",
+          "kind": "contact.cta_url",
+          "type": "link"
+        },
+        {
+          "name": "sticky",
+          "type": "design"
+        }
+      ]
+    },
+    {
+      "id": "hero-home",
+      "type": "hero",
+      "positions": ["masthead"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "fallback",
+        "fallback": "the template picture"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "business.tagline",
+          "type": "text",
+          "limit": 42
+        },
+        {
+          "name": "photo",
+          "kind": "business.hero_image",
+          "type": "image",
+          "frame": {
+            "width": 1600,
+            "height": 900
+          }
+        },
+        {
+          "name": "background",
+          "type": "design"
+        }
+      ]
+    },
+    {
+      "id": "services-grid",
+      "type": "services",
+      "positions": ["content"],
+      "items": {
+        "min": 2,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "name",
+          "kind": "offering.name",
+          "type": "text",
+          "limit": 24
+        },
+        {
+          "name": "price",
+          "kind": "offering.price",
+          "type": "number"
+        },
+        {
+          "name": "icon",
+          "kind": "editorial.item_icon",
+          "type": "icon"
+        }
+      ]
+    },
+    {
+      "id": "team-cards",
+      "type": "team",
+      "positions": ["content"],
+      "items": {
+        "min": 1,
+        "max": 4
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "name",
+          "kind": "person.name",
+          "type": "text",
+          "limit": 30
+        },
+        {
+          "name": "photo",
+          "kind": "person.image",
+          "type": "image",
+          "frame": {
+            "width": 600,
+            "height": 600
+          }
+        }
+      ]
+    },
+    {
+      "id": "gallery-strip",
+      "type": "gallery",
+      "positions": ["content"],
+      "items": {
+        "min": 3,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [],
+      "itemFields": [
+        {
+          "name": "photo",
+          "kind": "business.gallery_image",
+          "type": "image",
+          "frame": {
+            "width": 800,
+            "height": 800
+          }
+        }
+      ]
+    },
+    {
+      "id": "contact-strip",
+      "type": "contact",
+      "positions": ["content"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "phone",
+          "kind": "contact.phone",
+          "type": "link"
+        },
+        {
+          "name": "address",
+          "kind": "contact.address",
+          "type": "text",
+          "limit": 80
+        },
+        {
+          "name": "hours",
+          "kind": "contact.hours",
+          "type": "text",
+          "limit": 80
+        }
+      ]
+    },
+    {
+      "id": "footer-main",
+      "type": "footer",
+      "positions": ["footer"],
+      "items": {
+        "min": 1,
+        "max": 1
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "copyright",
+          "kind": "business.copyright",
+          "type": "text",
+          "limit": 80
+        }
+      ]
+    }
+  ]
+}

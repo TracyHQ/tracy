@@ -1,0 +1,21 @@
+{
+  "$comment": "Invented page recipes for the invented block store next to this file.",
+  "schema": "tracy-ai-quickstart-page-recipes/v1",
+  "recipes": [
+    {
+      "pageType": "home",
+      "mainBlock": "hero-home",
+      "blocks": ["header-main", "hero-home", "services-grid", "gallery-strip", "contact-strip", "footer-main"]
+    },
+    {
+      "pageType": "team",
+      "mainBlock": "team-cards",
+      "blocks": ["header-main", "team-cards", "footer-main"]
+    },
+    {
+      "pageType": "contact",
+      "mainBlock": "contact-strip",
+      "blocks": ["header-main", "contact-strip", "footer-main"]
+    }
+  ]
+}

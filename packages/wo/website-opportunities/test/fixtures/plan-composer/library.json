@@ -1,0 +1,40 @@
+{
+  "$comment": "An invented Tracy library block for the plan composer tests.",
+  "blocks": [
+    {
+      "id": "tracy-reviews",
+      "type": "reviews",
+      "source": "library",
+      "positions": ["content"],
+      "items": {
+        "min": 1,
+        "max": 6
+      },
+      "noData": {
+        "rule": "hide"
+      },
+      "fields": [
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 30
+        }
+      ],
+      "itemFields": [
+        {
+          "name": "text",
+          "kind": "quote.text",
+          "type": "text",
+          "limit": 220
+        },
+        {
+          "name": "author",
+          "kind": "quote.author_name",
+          "type": "text",
+          "limit": 40
+        }
+      ]
+    }
+  ]
+}
