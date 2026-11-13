@@ -44,6 +44,55 @@
     },
     "module-162.35": {
       "path": "/classes"
+    },
+    "module-162.2": {
+      "path": "/about-us/contact"
+    },
+    "module-162.16": {
+      "path": "/classes"
+    },
+    "module-162.31": {
+      "path": "/classes"
+    },
+    "menuItem-156.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-157.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-158.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-162.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-164.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-165.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-166.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-194.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-195.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+    },
+    "menuItem-196.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
     }
   },
   "sameBoxAs": {
@@ -52,7 +101,8 @@
   },
   "omit": {
     "module-156.7": "the hero's second button: empty in the demo, so the template never draws it and no box can be measured; the blank site keeps it empty",
-    "module-156.8": "the link of the hero's second button, left out with its label"
+    "module-156.8": "the link of the hero's second button, left out with its label",
+    "module-184.0": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1"
   },
   "blocks": {
     "header": {
@@ -97,7 +147,21 @@
       "type": "services"
     },
     "block-160": {
-      "type": "services"
+      "type": "services",
+      "fields": [
+        {
+          "slot": "module-160.7",
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        }
+      ],
+      "sparse": {
+        "article-16.9": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
+        "article-16.10": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
+        "article-2.12": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
+        "article-2.13": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+      }
     },
     "block-161": {
       "type": "call_to_action"
@@ -110,13 +174,32 @@
           "type": "link",
           "storage": "html: the person's social profile links, one list per person"
         }
-      }
+      },
+      "names": {
+        "module-163.12": "social-links"
+      },
+      "fields": [
+        {
+          "slot": "module-163.19",
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        }
+      ]
     },
     "block-165": {
       "type": "steps"
     },
     "block-166": {
-      "type": "gallery"
+      "type": "gallery",
+      "items": {
+        "min": 3,
+        "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured on the running template 1.0.11 with the first 1 to 5 pictures at 390 and 1440 px: at 390 px the gallery is one column at every count; at 1440 px 1 or 2 pictures leave the rest of the three column row empty, 3 fill the row, 4 and 5 lay out as a masonry around the stat card",
+        "max": "the places the template stores: 6 pictures"
+      }
     },
     "block-170": {
       "type": "footer",
@@ -167,7 +250,22 @@
         "module-162.2": "title",
         "module-162.17": "intro",
         "module-162.1": "default-intro",
-        "module-162.0": "default-title"
+        "module-162.0": "default-title",
+        "module-162.16": "stat-title"
+      },
+      "retype": {
+        "module-162.2": {
+          "kind": "editorial.heading",
+          "type": "text"
+        },
+        "module-162.16": {
+          "kind": "editorial.heading",
+          "type": "text"
+        }
+      },
+      "itemsFrom": {
+        "min": "one row per page: the masthead shows the title row of the page it sits on",
+        "max": "one row per page: the masthead shows the title row of the page it sits on"
       }
     },
     "block-17": {
@@ -183,6 +281,10 @@
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a related posts list draws one post (not measured)",
+        "max": "the block's own setting: mod_related_items maximum 2"
       }
     },
     "block-191": {
@@ -190,10 +292,22 @@
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a related posts list draws one post (not measured)",
+        "max": "the block's own setting: mod_related_items maximum 2"
       }
     },
     "block-184": {
-      "type": "pricing"
+      "type": "pricing",
+      "fields": [
+        {
+          "slot": "module-184.1",
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text"
+        }
+      ]
     },
     "block-167": {
       "type": "pricing"
@@ -207,16 +321,35 @@
         "min": 1,
         "max": 4
       },
-      "itemsWhy": "the kit could not measure the minimum (a closed tab); the same layout measured min 1 in the two open tabs (block-167, block-188)"
+      "itemsFrom": {
+        "min": "the kit could not measure the minimum (a closed tab); the same layout measured min 1 in the two open tabs (block-167, block-188)",
+        "max": "the places the template stores: one per demo item"
+      }
     },
     "block-172": {
-      "type": "pricing"
+      "type": "pricing",
+      "fields": [
+        {
+          "slot": "module-172.10",
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text"
+        }
+      ]
     },
     "block-183": {
       "type": "about"
     },
     "block-190": {
-      "type": "services"
+      "type": "services",
+      "fields": [
+        {
+          "slot": "module-190.23",
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
+        }
+      ]
     },
     "block-177": {
       "type": "services"
@@ -229,7 +362,24 @@
           "type": "link",
           "storage": "html: the person's social profile links, one list per person"
         }
-      }
+      },
+      "names": {
+        "module-178.24": "social-links"
+      },
+      "fields": [
+        {
+          "slot": "module-178.32",
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
+        },
+        {
+          "slot": "module-178.33",
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        }
+      ]
     },
     "block-180": {
       "type": "team",
@@ -246,7 +396,24 @@
           "type": "link",
           "storage": "html: the person's social profile links, one list per person"
         }
-      }
+      },
+      "names": {
+        "module-182.12": "social-links"
+      },
+      "fields": [
+        {
+          "slot": "module-182.18",
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text"
+        },
+        {
+          "slot": "module-182.19",
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        }
+      ]
     },
     "block-159": {
       "type": "services"
@@ -269,6 +436,10 @@
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "one post page shows one post",
+        "max": "one post page shows one post"
       }
     },
     {
@@ -279,17 +450,34 @@
     {
       "match": "^body-pages_j-content_author-listting$",
       "id": "author-list",
-      "type": "team"
+      "type": "team",
+      "items": {
+        "min": 4,
+        "max": 7
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 4 or 8 authors (1 to 3 leave a hole in the row at 1440 px)",
+        "max": "the places the template stores: 7 author records (the listing view would show 8); 5 to 7 leave a hole in the last row at 1440 px"
+      }
     },
     {
       "match": "^body-pages_j-content_author-listting_author_",
       "id": "author-profile",
-      "type": "team"
+      "type": "team",
+      "sparse": {
+        "article-1.16": "an article's intro image: 3 of the 6 demo articles listed store one, the others are listed without a picture. It is the image of the item's own post page (block news-post), shown here, not a field of this block."
+      }
     },
     {
       "match": "^body-classes$",
       "id": "class-list",
-      "type": "services"
+      "type": "services",
+      "sparse": {
+        "article-2.10": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
+        "article-2.11": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
+        "article-2.12": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
+        "article-2.13": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+      }
     },
     {
       "match": "^body-classes_",
@@ -299,7 +487,11 @@
         "min": 1,
         "max": 1
       },
-      "listsNumbered": ["article-16.video"]
+      "listsNumbered": ["article-16.video"],
+      "itemsFrom": {
+        "min": "one post page shows one post",
+        "max": "one post page shows one post"
+      }
     },
     {
       "match": "^body-about-us_contact$",
@@ -318,7 +510,85 @@
       "items": {
         "min": 1,
         "max": 1
-      }
+      },
+      "itemsFrom": {
+        "min": "one post page shows one post",
+        "max": "one post page shows one post"
+      },
+      "fields": [
+        {
+          "slot": "article-18.18",
+          "name": "feature-1-video",
+          "kind": "business.video",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.17",
+          "name": "feature-1-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.22",
+          "name": "feature-2-video",
+          "kind": "business.video",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.21",
+          "name": "feature-2-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.26",
+          "name": "feature-3-video",
+          "kind": "business.video",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.25",
+          "name": "feature-3-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.30",
+          "name": "feature-4-video",
+          "kind": "business.video",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.29",
+          "name": "feature-4-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.34",
+          "name": "feature-5-video",
+          "kind": "business.video",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.33",
+          "name": "feature-5-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.38",
+          "name": "feature-6-video",
+          "kind": "business.video",
+          "type": "link"
+        },
+        {
+          "slot": "article-18.37",
+          "name": "feature-6-link",
+          "kind": "editorial.navigation_url",
+          "type": "link"
+        }
+      ]
     }
   ],
   "pageTypes": {
@@ -364,5 +634,61 @@
       "listing": "trainers",
       "item": "trainer"
     }
-  }
+  },
+  "unlisted": {
+    "module-176.2": {
+      "as": "not-drawn",
+      "why": "the module's title: no page draws it at 390, 768 or 1440 px (the only Contact Us drawn is the button, module-176.1), measured on 1.0.11"
+    },
+    "module-156.9": {
+      "as": "not-drawn",
+      "why": "the module's title: no page draws it at 390, 768 or 1440 px, measured on 1.0.11"
+    },
+    "module-168.0": {
+      "as": "not-drawn",
+      "why": "the module's title: no page draws it at 390, 768 or 1440 px, measured on 1.0.11"
+    },
+    "module-17.0": {
+      "as": "not-drawn",
+      "why": "the module's title: the module is set not to show it (showtitle 0)"
+    },
+    "category-8.0": {
+      "as": "not-drawn",
+      "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
+    },
+    "category-9.0": {
+      "as": "not-drawn",
+      "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
+    },
+    "category-10.0": {
+      "as": "not-drawn",
+      "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
+    },
+    "contact-1.0": {
+      "as": "not-drawn",
+      "why": "the contact's name: the contact menu item is set not to show it (show_name 0)"
+    },
+    "module-170.0": {
+      "as": "kept",
+      "why": "the footer logo's link: index.php, the site root, which every site has"
+    },
+    "module-175.0": {
+      "as": "fact",
+      "why": "the phone link's address ('#' in the demo): written from the phone fact as a tel: link by the mapping file (#584)"
+    },
+    "module-175.3": {
+      "as": "fact",
+      "why": "the email link's address ('#' in the demo): written from the email fact as a mailto: link by the mapping file (#584)"
+    }
+  },
+  "notes": [
+    {
+      "about": "block-168",
+      "note": "The copyright footer has no fields: mod_footer draws two language strings. MOD_FOOTER_LINE1 carries the site name and the year, so it follows the site name override; MOD_FOOTER_LINE2 (the Joomla licence notice) is hidden by a language override with an empty value (the kit's hiddenBy). Both are overrides of the mapping file (#584)."
+    },
+    {
+      "about": "page type search",
+      "note": "No recipe for a search results page: no demo page shows a search box (checked on the running 1.0.11 home page: no search form), and the only route to the results page is the template showcase menu item (/pages/j-pages/smart-search), which the blank site removes with every demo menu item. A build that adds a search box later needs a recipe then."
+    }
+  ]
 }

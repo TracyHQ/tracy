@@ -2,17 +2,17 @@
   "summary": {
     "blocks": 44,
     "fieldsByType": {
-      "image": 45,
-      "text": 231,
-      "link": 44,
+      "image": 44,
+      "text": 227,
+      "link": 60,
       "icon": 17,
       "design": 2
     },
     "textLimits": {
-      "kitFrame390": 161,
-      "contentMapFitPhone": 36,
-      "measuredOnSite": 28,
+      "kitFrame390": 152,
+      "measuredOnSite": 69,
       "notDrawn": 6,
+      "other": 0,
       "missing": 0
     },
     "pageTypes": [
@@ -35,15 +35,18 @@
     "excludedPageGroups": 2,
     "open": {
       "unmeasured": 0,
-      "derived": 61,
-      "unlisted": 32,
+      "derived": 65,
+      "unlisted": 11,
       "undecided": 0,
       "skipped": 2,
       "notInMap": 5,
+      "sparse": 9,
       "problems": 0,
-      "omitted": 2,
-      "notPlaced": 0
-    }
+      "omitted": 3,
+      "notPlaced": 0,
+      "notes": 2
+    },
+    "unlistedUnclassified": 0
   },
   "unmeasured": [],
   "derived": [
@@ -333,6 +336,30 @@
       "why": "a field of body-about-us_learning-center"
     },
     {
+      "block": "news-list",
+      "slot": "article-12.15",
+      "why": "a field of body-pages_j-content_author-listting_author_gene_roberts",
+      "on": "body-pages_j-content_category-blog--start-6"
+    },
+    {
+      "block": "news-list",
+      "slot": "article-13.15",
+      "why": "a field of body-pages_j-content_author-listting_author_franklin_wagner",
+      "on": "body-pages_j-content_category-blog--start-6"
+    },
+    {
+      "block": "featured-list",
+      "slot": "article-12.15",
+      "why": "a field of body-pages_j-content_author-listting_author_gene_roberts",
+      "on": "body-pages_j-content_featured-articles--start-6"
+    },
+    {
+      "block": "featured-list",
+      "slot": "article-13.15",
+      "why": "a field of body-pages_j-content_author-listting_author_franklin_wagner",
+      "on": "body-pages_j-content_featured-articles--start-6"
+    },
+    {
       "block": "author-profile",
       "slot": "menuItem-160.0",
       "why": "a menu label: the page title"
@@ -357,162 +384,79 @@
     {
       "block": "block-176",
       "slot": "module-176.2",
-      "at": "title"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "the module's title: no page draws it at 390, 768 or 1440 px (the only Contact Us drawn is the button, module-176.1), measured on 1.0.11"
     },
     {
       "block": "block-156",
       "slot": "module-156.9",
-      "at": "title"
-    },
-    {
-      "block": "block-160",
-      "slot": "module-160.7",
-      "at": "link-btn.params"
-    },
-    {
-      "block": "block-163",
-      "slot": "module-163.19",
-      "at": "link-btn.params"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "the module's title: no page draws it at 390, 768 or 1440 px, measured on 1.0.11"
     },
     {
       "block": "block-170",
       "slot": "module-170.0",
-      "at": "content"
+      "at": "content",
+      "as": "kept",
+      "why": "the footer logo's link: index.php, the site root, which every site has"
     },
     {
       "block": "block-175",
       "slot": "module-175.0",
-      "at": "content"
+      "at": "content",
+      "as": "fact",
+      "why": "the phone link's address ('#' in the demo): written from the phone fact as a tel: link by the mapping file (#584)"
     },
     {
       "block": "block-175",
       "slot": "module-175.3",
-      "at": "content"
+      "at": "content",
+      "as": "fact",
+      "why": "the email link's address ('#' in the demo): written from the email fact as a mailto: link by the mapping file (#584)"
     },
     {
       "block": "block-168",
       "slot": "module-168.0",
-      "at": "title"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "the module's title: no page draws it at 390, 768 or 1440 px, measured on 1.0.11"
     },
     {
       "block": "block-17",
       "slot": "module-17.0",
-      "at": "title"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "the module's title: the module is set not to show it (showtitle 0)"
     },
     {
       "block": "news-list",
       "slot": "category-8.0",
-      "at": "title"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
     },
     {
       "block": "class-list",
       "slot": "category-9.0",
-      "at": "title"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
     },
     {
       "block": "contact-details",
       "slot": "contact-1.0",
-      "at": "name"
-    },
-    {
-      "block": "block-184",
-      "slot": "module-184.1",
-      "at": "main-section.params"
-    },
-    {
-      "block": "block-172",
-      "slot": "module-172.10",
-      "at": "main-section.params"
-    },
-    {
-      "block": "block-190",
-      "slot": "module-190.23",
-      "at": "top-desc.params"
+      "at": "name",
+      "as": "not-drawn",
+      "why": "the contact's name: the contact menu item is set not to show it (show_name 0)"
     },
     {
       "block": "learning-list",
       "slot": "category-10.0",
-      "at": "title"
-    },
-    {
-      "block": "block-178",
-      "slot": "module-178.32",
-      "at": "title-btn.params"
-    },
-    {
-      "block": "block-178",
-      "slot": "module-178.33",
-      "at": "link-btn.params"
-    },
-    {
-      "block": "block-182",
-      "slot": "module-182.18",
-      "at": "title-btn.params"
-    },
-    {
-      "block": "block-182",
-      "slot": "module-182.19",
-      "at": "link-btn.params"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.17",
-      "at": "learning-features.learning-features0.learning_link.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.18",
-      "at": "learning-features.learning-features0.id_video.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.21",
-      "at": "learning-features.learning-features1.learning_link.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.22",
-      "at": "learning-features.learning-features1.id_video.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.25",
-      "at": "learning-features.learning-features2.learning_link.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.26",
-      "at": "learning-features.learning-features2.id_video.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.29",
-      "at": "learning-features.learning-features3.learning_link.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.30",
-      "at": "learning-features.learning-features3.id_video.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.33",
-      "at": "learning-features.learning-features4.learning_link.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.34",
-      "at": "learning-features.learning-features4.id_video.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.37",
-      "at": "learning-features.learning-features5.learning_link.attribs"
-    },
-    {
-      "block": "learning-post",
-      "slot": "article-18.38",
-      "at": "learning-features.learning-features5.id_video.attribs"
+      "at": "title",
+      "as": "not-drawn",
+      "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
     }
   ],
   "undecided": [],
@@ -548,6 +492,99 @@
       "slot": "block-180.10.icon"
     }
   ],
+  "sparse": [
+    {
+      "block": "block-160",
+      "field": "schedule-2",
+      "slots": [
+        "article-16.9",
+        "article-14.9",
+        "article-2.10"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "block-160",
+      "field": "schedule-3",
+      "slots": [
+        "article-16.10",
+        "article-14.10",
+        "article-2.11"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "block-160",
+      "field": "schedule-4",
+      "slots": [
+        "article-2.12"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "block-160",
+      "field": "schedule-5",
+      "slots": [
+        "article-2.13"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "class-list",
+      "field": "schedule-2",
+      "slots": [
+        "article-2.10",
+        "article-14.9",
+        "article-16.9"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "class-list",
+      "field": "schedule-3",
+      "slots": [
+        "article-2.11",
+        "article-14.10",
+        "article-16.10"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "class-list",
+      "field": "schedule-4",
+      "slots": [
+        "article-2.12"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "class-list",
+      "field": "schedule-5",
+      "slots": [
+        "article-2.13"
+      ],
+      "max": 4,
+      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
+    },
+    {
+      "block": "author-profile",
+      "field": "image",
+      "slots": [
+        "article-1.16",
+        "article-3.16",
+        "article-11.16"
+      ],
+      "max": 6,
+      "why": "an article's intro image: 3 of the 6 demo articles listed store one, the others are listed without a picture. It is the image of the item's own post page (block news-post), shown here, not a field of this block."
+    }
+  ],
   "problems": [],
   "omitted": [
     {
@@ -559,7 +596,22 @@
       "block": "block-156",
       "slot": "module-156.8",
       "why": "the link of the hero's second button, left out with its label"
+    },
+    {
+      "block": "block-184",
+      "slot": "module-184.0",
+      "why": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1"
     }
   ],
-  "notPlaced": []
+  "notPlaced": [],
+  "notes": [
+    {
+      "about": "block-168",
+      "note": "The copyright footer has no fields: mod_footer draws two language strings. MOD_FOOTER_LINE1 carries the site name and the year, so it follows the site name override; MOD_FOOTER_LINE2 (the Joomla licence notice) is hidden by a language override with an empty value (the kit's hiddenBy). Both are overrides of the mapping file (#584)."
+    },
+    {
+      "about": "page type search",
+      "note": "No recipe for a search results page: no demo page shows a search box (checked on the running 1.0.11 home page: no search form), and the only route to the results page is the template showcase menu item (/pages/j-pages/smart-search), which the blank site removes with every demo menu item. A build that adds a search box later needs a recipe then."
+    }
+  ]
 }

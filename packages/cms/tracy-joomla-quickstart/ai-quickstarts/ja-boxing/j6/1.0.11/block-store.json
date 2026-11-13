@@ -15,10 +15,16 @@
       "id": "header",
       "type": "header",
       "source": "template",
-      "positions": ["header"],
+      "positions": [
+        "header"
+      ],
       "items": {
         "min": 1,
         "max": 5
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a menu draws as many links as it is given (not measured)",
+        "max": "the menu items the template stores (5)"
       },
       "noData": {
         "rule": "fallback",
@@ -51,7 +57,13 @@
           "name": "label",
           "kind": "editorial.menu_label",
           "type": "text",
-          "slots": ["menuItem-101.0", "menuItem-193.0", "menuItem-167.0", "menuItem-169.0", "menuItem-152.0"],
+          "slots": [
+            "menuItem-101.0",
+            "menuItem-193.0",
+            "menuItem-167.0",
+            "menuItem-169.0",
+            "menuItem-152.0"
+          ],
           "limit": 35,
           "limitFrom": "the narrowest measured menu label: kit frame (390px 35, 1440px 56)"
         },
@@ -63,7 +75,9 @@
         }
       ],
       "from": {
-        "kit": ["header"],
+        "kit": [
+          "header"
+        ],
         "entity": null
       }
     },
@@ -71,10 +85,16 @@
       "id": "block-176",
       "type": "header",
       "source": "template",
-      "positions": ["header-r"],
+      "positions": [
+        "header-r"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -85,7 +105,7 @@
           "kind": "editorial.button_label",
           "type": "text",
           "limit": 66,
-          "limitFrom": "measured at 1440px on the running template, page /: 1440px 66 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the block hides it at 390px (its box is drawn 0 by 0), so 1440px is the narrowest kit width that shows it",
+          "limitFrom": "measured at 1440px on the running template, page /: 1440px 66 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390 and 768px (its box is drawn 0 by 0), so 1440px is the narrowest width that draws it",
           "slot": "module-176.1"
         },
         {
@@ -96,7 +116,9 @@
         }
       ],
       "from": {
-        "kit": ["block-176"],
+        "kit": [
+          "block-176"
+        ],
         "entity": "module-176"
       }
     },
@@ -104,10 +126,16 @@
       "id": "block-187",
       "type": "header",
       "source": "template",
-      "positions": ["off-canvas"],
+      "positions": [
+        "off-canvas"
+      ],
       "items": {
         "min": 1,
         "max": 10
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a menu draws as many links as it is given (not measured)",
+        "max": "the menu items the template stores (10)"
       },
       "noData": {
         "rule": "fallback",
@@ -131,8 +159,8 @@
             "menuItem-195.0",
             "menuItem-196.0"
           ],
-          "limit": 18,
-          "limitFrom": "the narrowest measured menu label: content map fit (phone 18)"
+          "limit": 42,
+          "limitFrom": "the narrowest measured menu label: measured at 390px on the running template, page /: 390px 42 (demo 8 characters on 1 line(s)), 768px 88 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
         },
         {
           "name": "link",
@@ -142,7 +170,9 @@
         }
       ],
       "from": {
-        "kit": ["block-187"],
+        "kit": [
+          "block-187"
+        ],
         "entity": "module-187"
       }
     },
@@ -150,10 +180,16 @@
       "id": "block-156",
       "type": "hero",
       "source": "template",
-      "positions": ["hero"],
+      "positions": [
+        "hero"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -219,7 +255,9 @@
         }
       ],
       "from": {
-        "kit": ["block-156"],
+        "kit": [
+          "block-156"
+        ],
         "entity": "module-156"
       }
     },
@@ -227,10 +265,16 @@
       "id": "block-157",
       "type": "services",
       "source": "template",
-      "positions": ["section-1"],
+      "positions": [
+        "section-1"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -241,7 +285,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 30,
-          "limitFrom": "measured at 390px on the running template, page /: 390px 30 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-157.20"
         },
         {
@@ -256,8 +300,8 @@
           "name": "button-label",
           "kind": "editorial.button_label",
           "type": "text",
-          "limit": 37,
-          "limitFrom": "content map fit (desktop 68, phone 37)",
+          "limit": 31,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 31 (demo 8 characters on 1 line(s)), 768px 65 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-157.23"
         },
         {
@@ -274,7 +318,12 @@
           "type": "text",
           "limit": 36,
           "limitFrom": "kit frame (390px 37, 1440px 36)",
-          "slots": ["module-157.0", "module-157.1", "module-157.2", "module-157.3"]
+          "slots": [
+            "module-157.0",
+            "module-157.1",
+            "module-157.2",
+            "module-157.3"
+          ]
         },
         {
           "name": "paragraph-2",
@@ -282,13 +331,23 @@
           "type": "text",
           "limit": 106,
           "limitFrom": "kit frame (390px 114, 1440px 106)",
-          "slots": ["module-157.4", "module-157.5", "module-157.6", "module-157.7"]
+          "slots": [
+            "module-157.4",
+            "module-157.5",
+            "module-157.6",
+            "module-157.7"
+          ]
         },
         {
           "name": "navigation-url-2",
           "kind": "editorial.navigation_url",
           "type": "link",
-          "slots": ["module-157.8", "module-157.9", "module-157.10", "module-157.11"]
+          "slots": [
+            "module-157.8",
+            "module-157.9",
+            "module-157.10",
+            "module-157.11"
+          ]
         },
         {
           "name": "item-icon",
@@ -299,7 +358,12 @@
             "height": 100
           },
           "storage": "image-file",
-          "slots": ["module-157.12", "module-157.13", "module-157.14", "module-157.15"]
+          "slots": [
+            "module-157.12",
+            "module-157.13",
+            "module-157.14",
+            "module-157.15"
+          ]
         },
         {
           "name": "item-icon-2",
@@ -310,11 +374,18 @@
             "height": 100
           },
           "storage": "image-file",
-          "slots": ["module-157.16", "module-157.17", "module-157.18", "module-157.19"]
+          "slots": [
+            "module-157.16",
+            "module-157.17",
+            "module-157.18",
+            "module-157.19"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-157"],
+        "kit": [
+          "block-157"
+        ],
         "entity": "module-157"
       }
     },
@@ -322,10 +393,16 @@
       "id": "block-160",
       "type": "services",
       "source": "template",
-      "positions": ["section-2"],
+      "positions": [
+        "section-2"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the block's own setting for the number of items it shows"
       },
       "noData": {
         "rule": "hide"
@@ -370,7 +447,7 @@
           "kind": "stat.context",
           "type": "text",
           "limit": 15,
-          "limitFrom": "content map fit (desktop 108, phone 15)",
+          "limitFrom": "measured at 390px on the running template, page /: 390px 17 (demo 9 characters on 1 line(s)), 768px 41 (demo 9 characters on 1 line(s)), 1440px 15 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-160.3"
         },
         {
@@ -378,16 +455,22 @@
           "kind": "stat.value",
           "type": "text",
           "limit": 11,
-          "limitFrom": "measured at 390px on the running template, page /: 390px 11 (demo 4 characters on 1 line(s)), 1440px 31 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /: 390px 11 (demo 4 characters on 1 line(s)), 768px 33 (demo 4 characters on 1 line(s)), 1440px 31 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-160.4"
         },
         {
           "name": "stat-label",
           "kind": "stat.label",
           "type": "text",
-          "limit": 28,
-          "limitFrom": "content map fit (desktop 121, phone 28)",
+          "limit": 29,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 31 (demo 22 characters on 1 line(s)), 768px 56 (demo 22 characters on 1 line(s)), 1440px 29 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-160.5"
+        },
+        {
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "module-160.7"
         }
       ],
       "itemFields": [
@@ -397,15 +480,25 @@
           "type": "text",
           "limit": 35,
           "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
-          "slots": ["article-16.4", "article-14.4", "article-2.4", "article-15.4"]
+          "slots": [
+            "article-16.4",
+            "article-14.4",
+            "article-2.4",
+            "article-15.4"
+          ]
         },
         {
           "name": "heading-2",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 36,
-          "limitFrom": "content map fit of article-2.7 (desktop 36, phone 36)",
-          "slots": ["article-16.7", "article-14.7", "article-2.7", "article-15.7"]
+          "limit": 23,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 36 (demo 12 characters on 1 line(s)), 768px 23 (demo 12 characters on 1 line(s)), 1440px 35 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-16.7",
+            "article-14.7",
+            "article-2.7",
+            "article-15.7"
+          ]
         },
         {
           "name": "link",
@@ -419,7 +512,12 @@
           "type": "text",
           "limit": 258,
           "limitFrom": "kit frame of article-2.0 (390px 258, 1440px 277)",
-          "slots": ["article-16.0", "article-14.0", "article-2.0", "article-15.0"]
+          "slots": [
+            "article-16.0",
+            "article-14.0",
+            "article-2.0",
+            "article-15.0"
+          ]
         },
         {
           "name": "schedule",
@@ -427,23 +525,12 @@
           "type": "text",
           "limit": 72,
           "limitFrom": "kit frame of article-15.8 (390px 72, 1440px 108)",
-          "slots": ["article-16.8", "article-14.8", "article-2.9", "article-15.8"]
-        },
-        {
-          "name": "schedule-2",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 30,
-          "limitFrom": "kit frame (390px 30, 1440px 51)",
-          "slots": ["article-16.9", "article-14.9", "article-2.10"]
-        },
-        {
-          "name": "schedule-3",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 50,
-          "limitFrom": "kit frame of article-2.11 (390px 70, 1440px 50)",
-          "slots": ["article-16.10", "article-14.10", "article-2.11"]
+          "slots": [
+            "article-16.8",
+            "article-14.8",
+            "article-2.9",
+            "article-15.8"
+          ]
         },
         {
           "name": "image",
@@ -453,27 +540,18 @@
             "width": 688,
             "height": 295
           },
-          "slots": ["article-16.5", "article-14.5", "article-2.5", "article-15.5"]
-        },
-        {
-          "name": "schedule-4",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 31,
-          "limitFrom": "kit frame (390px 31, 1440px 41)",
-          "slots": ["article-2.12"]
-        },
-        {
-          "name": "schedule-5",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 44,
-          "limitFrom": "kit frame (390px 72, 1440px 44)",
-          "slots": ["article-2.13"]
+          "slots": [
+            "article-16.5",
+            "article-14.5",
+            "article-2.5",
+            "article-15.5"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-160"],
+        "kit": [
+          "block-160"
+        ],
         "entity": "module-160"
       }
     },
@@ -481,10 +559,16 @@
       "id": "block-161",
       "type": "call_to_action",
       "source": "template",
-      "positions": ["section-3"],
+      "positions": [
+        "section-3"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -532,7 +616,9 @@
         }
       ],
       "from": {
-        "kit": ["block-161"],
+        "kit": [
+          "block-161"
+        ],
         "entity": "module-161"
       }
     },
@@ -540,10 +626,16 @@
       "id": "block-163",
       "type": "team",
       "source": "template",
-      "positions": ["section-4"],
+      "positions": [
+        "section-4"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -572,6 +664,12 @@
           "limit": 32,
           "limitFrom": "kit frame (390px 32, 1440px 150)",
           "slot": "module-163.18"
+        },
+        {
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "module-163.19"
         }
       ],
       "itemFields": [
@@ -583,7 +681,12 @@
             "width": 350,
             "height": 351
           },
-          "slots": ["module-163.0", "module-163.1", "module-163.2", "module-163.3"]
+          "slots": [
+            "module-163.0",
+            "module-163.1",
+            "module-163.2",
+            "module-163.3"
+          ]
         },
         {
           "name": "name",
@@ -591,24 +694,41 @@
           "type": "text",
           "limit": 31,
           "limitFrom": "kit frame of block-163.7 (390px 34, 1440px 31)",
-          "slots": ["module-163.4", "module-163.5", "module-163.6", "module-163.7"]
+          "slots": [
+            "module-163.4",
+            "module-163.5",
+            "module-163.6",
+            "module-163.7"
+          ]
         },
         {
           "name": "navigation-url",
           "kind": "editorial.navigation_url",
           "type": "link",
-          "slots": ["module-163.8", "module-163.9", "module-163.10", "module-163.11"]
+          "slots": [
+            "module-163.8",
+            "module-163.9",
+            "module-163.10",
+            "module-163.11"
+          ]
         },
         {
-          "name": "paragraph-2",
+          "name": "social-links",
           "kind": "person.social_url",
           "type": "link",
-          "slots": ["module-163.12", "module-163.13", "module-163.14", "module-163.15"],
+          "slots": [
+            "module-163.12",
+            "module-163.13",
+            "module-163.14",
+            "module-163.15"
+          ],
           "storage": "html: the person's social profile links, one list per person"
         }
       ],
       "from": {
-        "kit": ["block-163"],
+        "kit": [
+          "block-163"
+        ],
         "entity": "module-163"
       }
     },
@@ -616,10 +736,16 @@
       "id": "block-165",
       "type": "steps",
       "source": "template",
-      "positions": ["section-5"],
+      "positions": [
+        "section-5"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "the kit: a slider or tabs show one item at a time, so one item lays out",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -651,19 +777,31 @@
           "type": "text",
           "limit": 18,
           "limitFrom": "kit frame of block-165.4 (390px 18, 1440px 61)",
-          "slots": ["module-165.2", "module-165.3", "module-165.4", "module-165.5"]
+          "slots": [
+            "module-165.2",
+            "module-165.3",
+            "module-165.4",
+            "module-165.5"
+          ]
         },
         {
           "name": "description",
           "kind": "step.description",
           "type": "text",
-          "limit": 502,
-          "limitFrom": "content map fit (desktop 502, phone 502)",
-          "slots": ["module-165.6", "module-165.7", "module-165.8", "module-165.9"]
+          "limit": 539,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 539 (demo 382 characters on 13 line(s)), 768px 667 (demo 382 characters on 8 line(s)), 1440px 628 (demo 382 characters on 8 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-165.6",
+            "module-165.7",
+            "module-165.8",
+            "module-165.9"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-165"],
+        "kit": [
+          "block-165"
+        ],
         "entity": "module-165"
       }
     },
@@ -671,10 +809,16 @@
       "id": "block-166",
       "type": "gallery",
       "source": "template",
-      "positions": ["section-6"],
+      "positions": [
+        "section-6"
+      ],
       "items": {
-        "min": 6,
+        "min": 3,
         "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured on the running template 1.0.11 with the first 1 to 5 pictures at 390 and 1440 px: at 390 px the gallery is one column at every count; at 1440 px 1 or 2 pictures leave the rest of the three column row empty, 3 fill the row, 4 and 5 lay out as a masonry around the stat card",
+        "max": "the places the template stores: 6 pictures"
       },
       "noData": {
         "rule": "hide"
@@ -685,7 +829,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 33,
-          "limitFrom": "measured at 390px on the running template, page /: 390px 33 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /: 390px 33 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-166.17"
         },
         {
@@ -782,7 +926,9 @@
         }
       ],
       "from": {
-        "kit": ["block-166"],
+        "kit": [
+          "block-166"
+        ],
         "entity": "module-166"
       }
     },
@@ -790,10 +936,16 @@
       "id": "block-170",
       "type": "footer",
       "source": "template",
-      "positions": ["footinfo-1"],
+      "positions": [
+        "footinfo-1"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -811,7 +963,9 @@
         }
       ],
       "from": {
-        "kit": ["block-170"],
+        "kit": [
+          "block-170"
+        ],
         "entity": "module-170"
       }
     },
@@ -819,10 +973,16 @@
       "id": "block-169",
       "type": "newsletter",
       "source": "template",
-      "positions": ["footinfo-2"],
+      "positions": [
+        "footinfo-2"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -846,7 +1006,9 @@
         }
       ],
       "from": {
-        "kit": ["block-169"],
+        "kit": [
+          "block-169"
+        ],
         "entity": "module-169"
       }
     },
@@ -854,10 +1016,16 @@
       "id": "block-171",
       "type": "footer",
       "source": "template",
-      "positions": ["footnav-1"],
+      "positions": [
+        "footnav-1"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the rows the template stores"
       },
       "noData": {
         "rule": "hide"
@@ -870,24 +1038,41 @@
           "type": "text",
           "limit": 40,
           "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
-          "slots": ["module-171.0", "module-171.1", "module-171.2", "module-171.3"]
+          "slots": [
+            "module-171.0",
+            "module-171.1",
+            "module-171.2",
+            "module-171.3"
+          ]
         },
         {
           "name": "social-url",
           "kind": "contact.social_url",
           "type": "link",
-          "slots": ["module-171.4", "module-171.5", "module-171.6", "module-171.7"]
+          "slots": [
+            "module-171.4",
+            "module-171.5",
+            "module-171.6",
+            "module-171.7"
+          ]
         },
         {
           "name": "item-icon",
           "kind": "editorial.item_icon",
           "type": "icon",
           "storage": "class-name",
-          "slots": ["module-171.8", "module-171.9", "module-171.10", "module-171.11"]
+          "slots": [
+            "module-171.8",
+            "module-171.9",
+            "module-171.10",
+            "module-171.11"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-171"],
+        "kit": [
+          "block-171"
+        ],
         "entity": "module-171"
       }
     },
@@ -895,10 +1080,16 @@
       "id": "block-175",
       "type": "contact",
       "source": "template",
-      "positions": ["footnav-2"],
+      "positions": [
+        "footnav-2"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -938,7 +1129,9 @@
         }
       ],
       "from": {
-        "kit": ["block-175"],
+        "kit": [
+          "block-175"
+        ],
         "entity": "module-175"
       }
     },
@@ -946,10 +1139,16 @@
       "id": "block-173",
       "type": "footer",
       "source": "template",
-      "positions": ["footnav-3"],
+      "positions": [
+        "footnav-3"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a menu draws as many links as it is given (not measured)",
+        "max": "the menu items the template stores (2)"
       },
       "noData": {
         "rule": "fallback",
@@ -970,7 +1169,10 @@
           "name": "label",
           "kind": "editorial.menu_label",
           "type": "text",
-          "slots": ["menuItem-191.0", "menuItem-192.0"],
+          "slots": [
+            "menuItem-191.0",
+            "menuItem-192.0"
+          ],
           "limit": 21,
           "limitFrom": "the narrowest measured menu label: kit frame (390px 21, 1440px 30)"
         },
@@ -982,7 +1184,9 @@
         }
       ],
       "from": {
-        "kit": ["block-173"],
+        "kit": [
+          "block-173"
+        ],
         "entity": "module-173"
       }
     },
@@ -990,10 +1194,16 @@
       "id": "block-174",
       "type": "footer",
       "source": "template",
-      "positions": ["footnav-4"],
+      "positions": [
+        "footnav-4"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a menu draws as many links as it is given (not measured)",
+        "max": "the menu items the template stores (4)"
       },
       "noData": {
         "rule": "fallback",
@@ -1014,7 +1224,12 @@
           "name": "label",
           "kind": "editorial.menu_label",
           "type": "text",
-          "slots": ["menuItem-184.0", "menuItem-185.0", "menuItem-186.0", "menuItem-187.0"],
+          "slots": [
+            "menuItem-184.0",
+            "menuItem-185.0",
+            "menuItem-186.0",
+            "menuItem-187.0"
+          ],
           "limit": 20,
           "limitFrom": "the narrowest measured menu label: kit frame (390px 20, 1440px 30)"
         },
@@ -1026,7 +1241,9 @@
         }
       ],
       "from": {
-        "kit": ["block-174"],
+        "kit": [
+          "block-174"
+        ],
         "entity": "module-174"
       }
     },
@@ -1034,17 +1251,25 @@
       "id": "block-168",
       "type": "footer",
       "source": "template",
-      "positions": ["copyright"],
+      "positions": [
+        "copyright"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
       },
       "fields": [],
       "from": {
-        "kit": ["block-168"],
+        "kit": [
+          "block-168"
+        ],
         "entity": "module-168"
       }
     },
@@ -1052,10 +1277,16 @@
       "id": "block-162",
       "type": "hero",
       "source": "template",
-      "positions": ["masthead"],
+      "positions": [
+        "masthead"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "one row per page: the masthead shows the title row of the page it sits on",
+        "max": "one row per page: the masthead shows the title row of the page it sits on"
       },
       "noData": {
         "rule": "fallback",
@@ -1066,9 +1297,9 @@
           "name": "default-title",
           "kind": "business.name",
           "type": "text",
-          "limitFrom": "the same box as module-162.2: content map fit of block-162.7 (desktop 27, phone 27)",
+          "limitFrom": "the same box as module-162.2: measured at 390px on the running template, page /about-us/contact: 390px 20 (demo 16 characters on 1 line(s)), 768px 42 (demo 16 characters on 1 line(s)), 1440px 68 (demo 16 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.0",
-          "limit": 27
+          "limit": 20
         },
         {
           "name": "default-intro",
@@ -1080,10 +1311,10 @@
         },
         {
           "name": "title",
-          "kind": "editorial.menu_label",
+          "kind": "editorial.heading",
           "type": "text",
-          "limit": 27,
-          "limitFrom": "content map fit of block-162.7 (desktop 27, phone 27)",
+          "limit": 20,
+          "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 20 (demo 16 characters on 1 line(s)), 768px 42 (demo 16 characters on 1 line(s)), 1440px 68 (demo 16 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.2"
         },
         {
@@ -1095,19 +1326,19 @@
           "slot": "module-162.17"
         },
         {
-          "name": "stat-menu-label",
-          "kind": "editorial.menu_label",
+          "name": "stat-title",
+          "kind": "editorial.heading",
           "type": "text",
-          "limit": 27,
-          "limitFrom": "content map fit (desktop 27, phone 27)",
+          "limit": 19,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 19 (demo 10 characters on 1 line(s)), 768px 39 (demo 10 characters on 1 line(s)), 1440px 62 (demo 11 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.16"
         },
         {
           "name": "stat-paragraph",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 259,
-          "limitFrom": "content map fit (desktop 259, phone 259)",
+          "limit": 367,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 367 (demo 293 characters on 9 line(s)), 768px 395 (demo 293 characters on 6 line(s)), 1440px 479 (demo 293 characters on 5 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.31"
         },
         {
@@ -1125,7 +1356,7 @@
           "kind": "stat.context",
           "type": "text",
           "limit": 16,
-          "limitFrom": "measured at 390px on the running template, page /classes: 390px 16 (demo 9 characters on 1 line(s)), 1440px 48 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 16 (demo 9 characters on 1 line(s)), 768px 43 (demo 9 characters on 1 line(s)), 1440px 48 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.33"
         },
         {
@@ -1133,7 +1364,7 @@
           "kind": "stat.value",
           "type": "text",
           "limit": 10,
-          "limitFrom": "measured at 390px on the running template, page /classes: 390px 10 (demo 4 characters on 1 line(s)), 1440px 41 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 10 (demo 4 characters on 1 line(s)), 768px 35 (demo 4 characters on 1 line(s)), 1440px 41 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.34"
         },
         {
@@ -1141,12 +1372,14 @@
           "kind": "stat.label",
           "type": "text",
           "limit": 29,
-          "limitFrom": "measured at 390px on the running template, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 768px 57 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-162.35"
         }
       ],
       "from": {
-        "kit": ["block-162"],
+        "kit": [
+          "block-162"
+        ],
         "entity": "module-162"
       }
     },
@@ -1154,10 +1387,16 @@
       "id": "block-17",
       "type": "text",
       "source": "template",
-      "positions": ["breadcrumbs"],
+      "positions": [
+        "breadcrumbs"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a menu draws as many links as it is given (not measured)",
+        "max": "the menu items the template stores (2)"
       },
       "noData": {
         "rule": "fallback",
@@ -1169,7 +1408,10 @@
           "name": "label",
           "kind": "editorial.menu_label",
           "type": "text",
-          "slots": ["menuItem-163.0", "menuItem-155.0"],
+          "slots": [
+            "menuItem-163.0",
+            "menuItem-155.0"
+          ],
           "limit": 28,
           "limitFrom": "the narrowest measured menu label: kit frame (390px 28, 1440px 139)"
         },
@@ -1181,7 +1423,9 @@
         }
       ],
       "from": {
-        "kit": ["block-17"],
+        "kit": [
+          "block-17"
+        ],
         "entity": "module-17"
       }
     },
@@ -1189,10 +1433,16 @@
       "id": "news-list",
       "type": "posts",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 2,
         "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 2, 4, 6 item(s)",
+        "max": "the listing view's page size"
       },
       "noData": {
         "rule": "hide"
@@ -1204,7 +1454,7 @@
           "kind": "article.title",
           "type": "text",
           "limit": 26,
-          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 768px 48 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-1.15",
             "article-3.15",
@@ -1226,7 +1476,14 @@
           "type": "text",
           "limit": 298,
           "limitFrom": "kit frame of article-3.0 (390px 298, 1440px 312)",
-          "slots": ["article-1.0", "article-3.0", "article-4.0", "article-5.0", "article-6.0", "article-7.0"]
+          "slots": [
+            "article-1.0",
+            "article-3.0",
+            "article-4.0",
+            "article-5.0",
+            "article-6.0",
+            "article-7.0"
+          ]
         },
         {
           "name": "image",
@@ -1247,7 +1504,10 @@
         }
       ],
       "from": {
-        "kit": ["body-pages_j-content_category-blog", "body-pages_j-content_category-blog--start-6"],
+        "kit": [
+          "body-pages_j-content_category-blog",
+          "body-pages_j-content_category-blog--start-6"
+        ],
         "entity": "category-8"
       }
     },
@@ -1255,10 +1515,16 @@
       "id": "featured-list",
       "type": "posts",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 2,
         "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 2, 4, 6 item(s)",
+        "max": "the listing view's page size"
       },
       "noData": {
         "rule": "hide"
@@ -1270,7 +1536,7 @@
           "kind": "article.title",
           "type": "text",
           "limit": 26,
-          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 768px 48 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-1.15",
             "article-3.15",
@@ -1292,7 +1558,14 @@
           "type": "text",
           "limit": 298,
           "limitFrom": "kit frame of article-3.0 (390px 298, 1440px 312)",
-          "slots": ["article-1.0", "article-3.0", "article-4.0", "article-5.0", "article-6.0", "article-7.0"]
+          "slots": [
+            "article-1.0",
+            "article-3.0",
+            "article-4.0",
+            "article-5.0",
+            "article-6.0",
+            "article-7.0"
+          ]
         },
         {
           "name": "image",
@@ -1313,7 +1586,10 @@
         }
       ],
       "from": {
-        "kit": ["body-pages_j-content_featured-articles", "body-pages_j-content_featured-articles--start-6"],
+        "kit": [
+          "body-pages_j-content_featured-articles",
+          "body-pages_j-content_featured-articles--start-6"
+        ],
         "entity": null
       }
     },
@@ -1321,10 +1597,16 @@
       "id": "author-list",
       "type": "team",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 4,
-        "max": 8
+        "max": 7
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 4 or 8 authors (1 to 3 leave a hole in the row at 1440 px)",
+        "max": "the places the template stores: 7 author records (the listing view would show 8); 5 to 7 leave a hole in the last row at 1440 px"
       },
       "noData": {
         "rule": "hide"
@@ -1337,7 +1619,15 @@
           "type": "text",
           "limit": 33,
           "limitFrom": "kit frame (390px 33, 1440px 49)",
-          "slots": ["user-44.0", "user-45.0", "user-46.0", "user-47.0", "user-48.0", "user-49.0", "user-51.0"]
+          "slots": [
+            "user-44.0",
+            "user-45.0",
+            "user-46.0",
+            "user-47.0",
+            "user-48.0",
+            "user-49.0",
+            "user-51.0"
+          ]
         },
         {
           "name": "link",
@@ -1347,7 +1637,9 @@
         }
       ],
       "from": {
-        "kit": ["body-pages_j-content_author-listting"],
+        "kit": [
+          "body-pages_j-content_author-listting"
+        ],
         "entity": null
       }
     },
@@ -1355,10 +1647,16 @@
       "id": "news-post",
       "type": "posts",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "one post page shows one post",
+        "max": "one post page shows one post"
       },
       "noData": {
         "rule": "hide"
@@ -1369,7 +1667,7 @@
           "kind": "article.title",
           "type": "text",
           "limit": 26,
-          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 768px 48 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-6.15"
         },
         {
@@ -1472,8 +1770,8 @@
           "name": "lead-11",
           "kind": "article.lead",
           "type": "text",
-          "limit": 506,
-          "limitFrom": "content map fit (desktop 528, phone 506)",
+          "limit": 492,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 492 (demo 468 characters on 11 line(s)), 768px 532 (demo 468 characters on 6 line(s)), 1440px 525 (demo 468 characters on 4 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-6.14"
         },
         {
@@ -1539,10 +1837,16 @@
       "id": "block-158",
       "type": "posts",
       "source": "template",
-      "positions": ["main-bottom-1"],
+      "positions": [
+        "main-bottom-1"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a related posts list draws one post (not measured)",
+        "max": "the block's own setting: mod_related_items maximum 2"
       },
       "noData": {
         "rule": "hide"
@@ -1566,7 +1870,9 @@
         }
       ],
       "from": {
-        "kit": ["block-158"],
+        "kit": [
+          "block-158"
+        ],
         "entity": "module-158"
       }
     },
@@ -1574,10 +1880,16 @@
       "id": "class-list",
       "type": "services",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 2,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 2, 3 item(s)",
+        "max": "the listing view's setting for the number of items per page"
       },
       "noData": {
         "rule": "hide"
@@ -1590,15 +1902,25 @@
           "type": "text",
           "limit": 35,
           "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
-          "slots": ["article-2.4", "article-14.4", "article-15.4", "article-16.4"]
+          "slots": [
+            "article-2.4",
+            "article-14.4",
+            "article-15.4",
+            "article-16.4"
+          ]
         },
         {
           "name": "heading",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 36,
-          "limitFrom": "content map fit (desktop 36, phone 36)",
-          "slots": ["article-2.7", "article-14.7", "article-15.7", "article-16.7"]
+          "limit": 23,
+          "limitFrom": "measured at 390px on the running template, page /classes: 390px 36 (demo 12 characters on 1 line(s)), 768px 23 (demo 12 characters on 1 line(s)), 1440px 35 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-2.7",
+            "article-14.7",
+            "article-15.7",
+            "article-16.7"
+          ]
         },
         {
           "name": "link",
@@ -1612,39 +1934,12 @@
           "type": "text",
           "limit": 72,
           "limitFrom": "kit frame of article-15.8 (390px 72, 1440px 108)",
-          "slots": ["article-2.9", "article-14.8", "article-15.8", "article-16.8"]
-        },
-        {
-          "name": "schedule-2",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 30,
-          "limitFrom": "kit frame of article-16.9 (390px 30, 1440px 51)",
-          "slots": ["article-2.10", "article-14.9", "article-16.9"]
-        },
-        {
-          "name": "schedule-3",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 50,
-          "limitFrom": "kit frame (390px 70, 1440px 50)",
-          "slots": ["article-2.11", "article-14.10", "article-16.10"]
-        },
-        {
-          "name": "schedule-4",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 31,
-          "limitFrom": "kit frame (390px 31, 1440px 41)",
-          "slots": ["article-2.12"]
-        },
-        {
-          "name": "schedule-5",
-          "kind": "offering.schedule",
-          "type": "text",
-          "limit": 44,
-          "limitFrom": "kit frame (390px 72, 1440px 44)",
-          "slots": ["article-2.13"]
+          "slots": [
+            "article-2.9",
+            "article-14.8",
+            "article-15.8",
+            "article-16.8"
+          ]
         },
         {
           "name": "image",
@@ -1654,7 +1949,12 @@
             "width": 688,
             "height": 295
           },
-          "slots": ["article-2.5", "article-14.5", "article-15.5", "article-16.5"]
+          "slots": [
+            "article-2.5",
+            "article-14.5",
+            "article-15.5",
+            "article-16.5"
+          ]
         },
         {
           "name": "paragraph",
@@ -1662,11 +1962,18 @@
           "type": "text",
           "limit": 258,
           "limitFrom": "kit frame (390px 258, 1440px 277)",
-          "slots": ["article-2.0", "article-14.0", "article-15.0", "article-16.0"]
+          "slots": [
+            "article-2.0",
+            "article-14.0",
+            "article-15.0",
+            "article-16.0"
+          ]
         }
       ],
       "from": {
-        "kit": ["body-classes"],
+        "kit": [
+          "body-classes"
+        ],
         "entity": "category-9"
       }
     },
@@ -1674,10 +1981,16 @@
       "id": "contact-details",
       "type": "contact",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -1696,7 +2009,7 @@
           "kind": "editorial.paragraph",
           "type": "text",
           "limit": 29,
-          "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 33 (demo 10 characters on 1 line(s)), 1440px 29 (demo 10 characters on 1 line(s)); the form field's placeholder repeated until it was wider than the field",
+          "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 33 (demo 10 characters on 1 line(s)), 768px 33 (demo 10 characters on 1 line(s)), 1440px 29 (demo 10 characters on 1 line(s)); the form field's placeholder repeated until it was wider than the field",
           "slot": "field-1.1"
         },
         {
@@ -1725,7 +2038,9 @@
         }
       ],
       "from": {
-        "kit": ["body-about-us_contact"],
+        "kit": [
+          "body-about-us_contact"
+        ],
         "entity": "contact-1"
       }
     },
@@ -1733,10 +2048,16 @@
       "id": "block-184",
       "type": "pricing",
       "source": "template",
-      "positions": ["section-1"],
+      "positions": [
+        "section-1"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -1749,14 +2070,6 @@
           "limit": 24,
           "limitFrom": "kit frame (390px 24, 1440px 81)",
           "slot": "module-188.24"
-        },
-        {
-          "name": "heading-2",
-          "kind": "editorial.heading",
-          "type": "text",
-          "limit": 28,
-          "limitFrom": "measured at 390px on the running template, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slot": "module-184.0"
         },
         {
           "name": "paragraph",
@@ -1778,13 +2091,23 @@
           "name": "heading-4",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 45,
-          "limitFrom": "measured at 390px on the running template, page /plans: 390px 45 (demo 12 characters on 1 line(s)), 1440px 94 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 32,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 45 (demo 12 characters on 1 line(s)), 768px 32 (demo 12 characters on 1 line(s)), 1440px 94 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-189.24"
+        },
+        {
+          "name": "heading-5",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 28,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 768px 40 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-184.1"
         }
       ],
       "from": {
-        "kit": ["block-184"],
+        "kit": [
+          "block-184"
+        ],
         "entity": "module-184"
       }
     },
@@ -1792,10 +2115,16 @@
       "id": "block-167",
       "type": "pricing",
       "source": "template",
-      "positions": ["inside:block-184"],
+      "positions": [
+        "inside:block-184"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -1806,9 +2135,14 @@
           "name": "price",
           "kind": "package.price",
           "type": "text",
-          "limit": 30,
-          "limitFrom": "content map fit (desktop 30, phone 30)",
-          "slots": ["module-167.0", "module-167.1", "module-167.2", "module-167.3"]
+          "limit": 15,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-167.0",
+            "module-167.1",
+            "module-167.2",
+            "module-167.3"
+          ]
         },
         {
           "name": "name",
@@ -1816,41 +2150,68 @@
           "type": "text",
           "limit": 26,
           "limitFrom": "kit frame (390px 33, 1440px 26)",
-          "slots": ["module-167.4", "module-167.5", "module-167.6", "module-167.7"]
+          "slots": [
+            "module-167.4",
+            "module-167.5",
+            "module-167.6",
+            "module-167.7"
+          ]
         },
         {
           "name": "period",
           "kind": "package.period",
           "type": "text",
-          "limit": 26,
-          "limitFrom": "content map fit of block-167.9 (desktop 26, phone 34)",
-          "slots": ["module-167.8", "module-167.9", "module-167.10", "module-167.11"]
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-167.8",
+            "module-167.9",
+            "module-167.10",
+            "module-167.11"
+          ]
         },
         {
           "name": "cta-label",
           "kind": "package.cta_label",
           "type": "text",
-          "limit": 19,
-          "limitFrom": "content map fit of block-167.13 (desktop 19, phone 19)",
-          "slots": ["module-167.12", "module-167.13", "module-167.14", "module-167.15"]
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-167.12",
+            "module-167.13",
+            "module-167.14",
+            "module-167.15"
+          ]
         },
         {
           "name": "cta-url",
           "kind": "package.cta_url",
           "type": "link",
-          "slots": ["module-167.16", "module-167.17", "module-167.18", "module-167.19"]
+          "slots": [
+            "module-167.16",
+            "module-167.17",
+            "module-167.18",
+            "module-167.19"
+          ]
         },
         {
           "name": "features-list",
           "kind": "package.features_list",
           "type": "text",
-          "limit": 242,
-          "limitFrom": "content map fit (desktop 242, phone 242)",
-          "slots": ["module-167.20", "module-167.21", "module-167.22", "module-167.23"]
+          "limit": 206,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 245 (demo 131 characters on 7 line(s)), 768px 225 (demo 131 characters on 7 line(s)), 1440px 206 (demo 131 characters on 8 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-167.20",
+            "module-167.21",
+            "module-167.22",
+            "module-167.23"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-184 list block-167.item"],
+        "kit": [
+          "block-184 list block-167.item"
+        ],
         "entity": "module-167"
       }
     },
@@ -1858,10 +2219,16 @@
       "id": "block-188",
       "type": "pricing",
       "source": "template",
-      "positions": ["inside:block-184"],
+      "positions": [
+        "inside:block-184"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -1872,51 +2239,83 @@
           "name": "price",
           "kind": "package.price",
           "type": "text",
-          "limit": 16,
-          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": ["module-188.0", "module-188.1", "module-188.2", "module-188.3"]
+          "limit": 15,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-188.0",
+            "module-188.1",
+            "module-188.2",
+            "module-188.3"
+          ]
         },
         {
           "name": "name",
           "kind": "package.name",
           "type": "text",
-          "limit": 25,
-          "limitFrom": "content map fit (desktop 25, phone 32)",
-          "slots": ["module-188.4", "module-188.5", "module-188.6", "module-188.7"]
+          "limit": 26,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 33 (demo 17 characters on 1 line(s)), 768px 32 (demo 17 characters on 1 line(s)), 1440px 26 (demo 17 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-188.4",
+            "module-188.5",
+            "module-188.6",
+            "module-188.7"
+          ]
         },
         {
           "name": "period",
           "kind": "package.period",
           "type": "text",
-          "limit": 26,
-          "limitFrom": "content map fit (desktop 26, phone 34)",
-          "slots": ["module-188.8", "module-188.9", "module-188.10", "module-188.11"]
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-188.8",
+            "module-188.9",
+            "module-188.10",
+            "module-188.11"
+          ]
         },
         {
           "name": "cta-label",
           "kind": "package.cta_label",
           "type": "text",
-          "limit": 19,
-          "limitFrom": "content map fit (desktop 19, phone 19)",
-          "slots": ["module-188.12", "module-188.13", "module-188.14", "module-188.15"]
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-188.12",
+            "module-188.13",
+            "module-188.14",
+            "module-188.15"
+          ]
         },
         {
           "name": "cta-url",
           "kind": "package.cta_url",
           "type": "link",
-          "slots": ["module-188.16", "module-188.17", "module-188.18", "module-188.19"]
+          "slots": [
+            "module-188.16",
+            "module-188.17",
+            "module-188.18",
+            "module-188.19"
+          ]
         },
         {
           "name": "features-list",
           "kind": "package.features_list",
           "type": "text",
-          "limit": 242,
-          "limitFrom": "content map fit (desktop 242, phone 242)",
-          "slots": ["module-188.20", "module-188.21", "module-188.22", "module-188.23"]
+          "limit": 230,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 288 (demo 155 characters on 8 line(s)), 768px 255 (demo 155 characters on 8 line(s)), 1440px 230 (demo 155 characters on 9 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-188.20",
+            "module-188.21",
+            "module-188.22",
+            "module-188.23"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-184 list block-188.item"],
+        "kit": [
+          "block-184 list block-188.item"
+        ],
         "entity": "module-188"
       }
     },
@@ -1924,10 +2323,16 @@
       "id": "block-189",
       "type": "pricing",
       "source": "template",
-      "positions": ["inside:block-184"],
+      "positions": [
+        "inside:block-184"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "the kit could not measure the minimum (a closed tab); the same layout measured min 1 in the two open tabs (block-167, block-188)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -1938,51 +2343,83 @@
           "name": "price",
           "kind": "package.price",
           "type": "text",
-          "limit": 16,
-          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": ["module-189.0", "module-189.1", "module-189.2", "module-189.3"]
+          "limit": 15,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-189.0",
+            "module-189.1",
+            "module-189.2",
+            "module-189.3"
+          ]
         },
         {
           "name": "name",
           "kind": "package.name",
           "type": "text",
-          "limit": 25,
-          "limitFrom": "content map fit (desktop 25, phone 32)",
-          "slots": ["module-189.4", "module-189.5", "module-189.6", "module-189.7"]
+          "limit": 26,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 33 (demo 17 characters on 1 line(s)), 768px 32 (demo 17 characters on 1 line(s)), 1440px 26 (demo 17 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-189.4",
+            "module-189.5",
+            "module-189.6",
+            "module-189.7"
+          ]
         },
         {
           "name": "period",
           "kind": "package.period",
           "type": "text",
-          "limit": 26,
-          "limitFrom": "content map fit (desktop 26, phone 34)",
-          "slots": ["module-189.8", "module-189.9", "module-189.10", "module-189.11"]
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-189.8",
+            "module-189.9",
+            "module-189.10",
+            "module-189.11"
+          ]
         },
         {
           "name": "cta-label",
           "kind": "package.cta_label",
           "type": "text",
-          "limit": 19,
-          "limitFrom": "content map fit (desktop 19, phone 19)",
-          "slots": ["module-189.12", "module-189.13", "module-189.14", "module-189.15"]
+          "limit": 27,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-189.12",
+            "module-189.13",
+            "module-189.14",
+            "module-189.15"
+          ]
         },
         {
           "name": "cta-url",
           "kind": "package.cta_url",
           "type": "link",
-          "slots": ["module-189.16", "module-189.17", "module-189.18", "module-189.19"]
+          "slots": [
+            "module-189.16",
+            "module-189.17",
+            "module-189.18",
+            "module-189.19"
+          ]
         },
         {
           "name": "features-list",
           "kind": "package.features_list",
           "type": "text",
-          "limit": 242,
-          "limitFrom": "content map fit (desktop 242, phone 242)",
-          "slots": ["module-189.20", "module-189.21", "module-189.22", "module-189.23"]
+          "limit": 251,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 319 (demo 176 characters on 9 line(s)), 768px 288 (demo 176 characters on 9 line(s)), 1440px 251 (demo 176 characters on 10 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-189.20",
+            "module-189.21",
+            "module-189.22",
+            "module-189.23"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-184 list block-189.item"],
+        "kit": [
+          "block-184 list block-189.item"
+        ],
         "entity": "module-189"
       }
     },
@@ -1990,10 +2427,16 @@
       "id": "block-172",
       "type": "pricing",
       "source": "template",
-      "positions": ["section-2"],
+      "positions": [
+        "section-2"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -2006,6 +2449,14 @@
           "limit": 88,
           "limitFrom": "kit frame (390px 88, 1440px 140)",
           "slot": "module-172.11"
+        },
+        {
+          "name": "heading",
+          "kind": "editorial.heading",
+          "type": "text",
+          "limit": 33,
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 37 (demo 9 characters on 1 line(s)), 768px 36 (demo 9 characters on 1 line(s)), 1440px 33 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-172.10"
         }
       ],
       "itemFields": [
@@ -2015,15 +2466,21 @@
           "type": "text",
           "limit": 11,
           "limitFrom": "kit frame (390px 16, 1440px 11)",
-          "slots": ["module-172.0", "module-172.1"]
+          "slots": [
+            "module-172.0",
+            "module-172.1"
+          ]
         },
         {
           "name": "name",
           "kind": "offering.name",
           "type": "text",
           "limit": 35,
-          "limitFrom": "measured at 390px on the running template, page /plans: 390px 35 (demo 9 characters on 1 line(s)), 1440px 61 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": ["module-172.2", "module-172.3"]
+          "limitFrom": "measured at 390px on the running template, page /plans: 390px 35 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 61 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-172.2",
+            "module-172.3"
+          ]
         },
         {
           "name": "price-note",
@@ -2031,7 +2488,10 @@
           "type": "text",
           "limit": 36,
           "limitFrom": "kit frame (390px 41, 1440px 36)",
-          "slots": ["module-172.4", "module-172.5"]
+          "slots": [
+            "module-172.4",
+            "module-172.5"
+          ]
         },
         {
           "name": "cta-label",
@@ -2039,17 +2499,25 @@
           "type": "text",
           "limit": 21,
           "limitFrom": "kit frame (390px 26, 1440px 21)",
-          "slots": ["module-172.6", "module-172.7"]
+          "slots": [
+            "module-172.6",
+            "module-172.7"
+          ]
         },
         {
           "name": "cta-url",
           "kind": "offering.cta_url",
           "type": "link",
-          "slots": ["module-172.8", "module-172.9"]
+          "slots": [
+            "module-172.8",
+            "module-172.9"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-172"],
+        "kit": [
+          "block-172"
+        ],
         "entity": "module-172"
       }
     },
@@ -2057,10 +2525,16 @@
       "id": "block-183",
       "type": "about",
       "source": "template",
-      "positions": ["section-1"],
+      "positions": [
+        "section-1"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -2071,7 +2545,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 32,
-          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-183.7"
         },
         {
@@ -2086,16 +2560,16 @@
           "name": "paragraph-2",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 287,
-          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 287 (demo 255 characters on 7 line(s)), 1440px 329 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 276,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 287 (demo 255 characters on 7 line(s)), 768px 276 (demo 255 characters on 4 line(s)), 1440px 329 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-183.8"
         },
         {
           "name": "quote-text",
           "kind": "quote.text",
           "type": "text",
-          "limit": 581,
-          "limitFrom": "content map fit (desktop 581, phone 581)",
+          "limit": 613,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 613 (demo 559 characters on 15 line(s)), 768px 613 (demo 559 characters on 9 line(s)), 1440px 627 (demo 559 characters on 13 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-183.2"
         },
         {
@@ -2131,7 +2605,7 @@
           "kind": "quote.author_context",
           "type": "text",
           "limit": 48,
-          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 48 (demo 10 characters on 1 line(s)), 1440px 59 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 48 (demo 10 characters on 1 line(s)), 768px 81 (demo 10 characters on 1 line(s)), 1440px 59 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-183.6"
         },
         {
@@ -2146,7 +2620,9 @@
         }
       ],
       "from": {
-        "kit": ["block-183"],
+        "kit": [
+          "block-183"
+        ],
         "entity": "module-183"
       }
     },
@@ -2154,10 +2630,16 @@
       "id": "block-190",
       "type": "services",
       "source": "template",
-      "positions": ["section-1"],
+      "positions": [
+        "section-1"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -2168,7 +2650,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 30,
-          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-190.20"
         },
         {
@@ -2184,6 +2666,14 @@
           "kind": "editorial.navigation_url",
           "type": "link",
           "slot": "module-190.22"
+        },
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 31,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 31 (demo 8 characters on 1 line(s)), 768px 65 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-190.23"
         }
       ],
       "itemFields": [
@@ -2193,7 +2683,12 @@
           "type": "text",
           "limit": 36,
           "limitFrom": "kit frame (390px 37, 1440px 36)",
-          "slots": ["module-190.0", "module-190.1", "module-190.2", "module-190.3"]
+          "slots": [
+            "module-190.0",
+            "module-190.1",
+            "module-190.2",
+            "module-190.3"
+          ]
         },
         {
           "name": "paragraph-2",
@@ -2201,13 +2696,23 @@
           "type": "text",
           "limit": 106,
           "limitFrom": "kit frame (390px 114, 1440px 106)",
-          "slots": ["module-190.4", "module-190.5", "module-190.6", "module-190.7"]
+          "slots": [
+            "module-190.4",
+            "module-190.5",
+            "module-190.6",
+            "module-190.7"
+          ]
         },
         {
           "name": "navigation-url-2",
           "kind": "editorial.navigation_url",
           "type": "link",
-          "slots": ["module-190.8", "module-190.9", "module-190.10", "module-190.11"]
+          "slots": [
+            "module-190.8",
+            "module-190.9",
+            "module-190.10",
+            "module-190.11"
+          ]
         },
         {
           "name": "item-icon",
@@ -2218,7 +2723,12 @@
             "height": 100
           },
           "storage": "image-file",
-          "slots": ["module-190.12", "module-190.13", "module-190.14", "module-190.15"]
+          "slots": [
+            "module-190.12",
+            "module-190.13",
+            "module-190.14",
+            "module-190.15"
+          ]
         },
         {
           "name": "item-icon-2",
@@ -2229,11 +2739,18 @@
             "height": 100
           },
           "storage": "image-file",
-          "slots": ["module-190.16", "module-190.17", "module-190.18", "module-190.19"]
+          "slots": [
+            "module-190.16",
+            "module-190.17",
+            "module-190.18",
+            "module-190.19"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-190"],
+        "kit": [
+          "block-190"
+        ],
         "entity": "module-190"
       }
     },
@@ -2241,10 +2758,16 @@
       "id": "block-177",
       "type": "services",
       "source": "template",
-      "positions": ["section-5"],
+      "positions": [
+        "section-5"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -2259,21 +2782,30 @@
             "width": 704,
             "height": 529
           },
-          "slots": ["module-177.0", "module-177.1"]
+          "slots": [
+            "module-177.0",
+            "module-177.1"
+          ]
         },
         {
           "name": "name",
           "kind": "offering.name",
           "type": "text",
-          "limit": 23,
-          "limitFrom": "content map fit (desktop 23, phone 23)",
-          "slots": ["module-177.2", "module-177.3"]
+          "limit": 55,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 68 (demo 16 characters on 2 line(s)), 768px 91 (demo 16 characters on 2 line(s)), 1440px 55 (demo 16 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-177.2",
+            "module-177.3"
+          ]
         },
         {
           "name": "navigation-url",
           "kind": "editorial.navigation_url",
           "type": "link",
-          "slots": ["module-177.4", "module-177.5"]
+          "slots": [
+            "module-177.4",
+            "module-177.5"
+          ]
         },
         {
           "name": "description",
@@ -2281,15 +2813,21 @@
           "type": "text",
           "limit": 323,
           "limitFrom": "kit frame (390px 337, 1440px 323)",
-          "slots": ["module-177.6", "module-177.7"]
+          "slots": [
+            "module-177.6",
+            "module-177.7"
+          ]
         },
         {
           "name": "paragraph",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 23,
-          "limitFrom": "content map fit (desktop 56, phone 23)",
-          "slots": ["module-177.8", "module-177.9"]
+          "limit": 24,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 24 (demo 13 characters on 1 line(s)), 768px 64 (demo 13 characters on 1 line(s)), 1440px 59 (demo 13 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-177.8",
+            "module-177.9"
+          ]
         },
         {
           "name": "email",
@@ -2297,35 +2835,49 @@
           "type": "text",
           "limit": 27,
           "limitFrom": "kit frame (390px 27, 1440px 60)",
-          "slots": ["module-177.10", "module-177.11"]
+          "slots": [
+            "module-177.10",
+            "module-177.11"
+          ]
         },
         {
           "name": "paragraph-2",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 29,
-          "limitFrom": "content map fit (desktop 65, phone 29)",
-          "slots": ["module-177.12", "module-177.13"]
+          "limit": 32,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 8 characters on 1 line(s)), 768px 77 (demo 8 characters on 1 line(s)), 1440px 70 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-177.12",
+            "module-177.13"
+          ]
         },
         {
           "name": "phone",
           "kind": "contact.phone",
           "type": "text",
-          "limit": 24,
-          "limitFrom": "content map fit of block-177.15 (desktop 24, phone 36)",
-          "slots": ["module-177.14", "module-177.15"]
+          "limit": 36,
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 36 (demo 14 characters on 1 line(s)), 768px 76 (demo 14 characters on 1 line(s)), 1440px 70 (demo 14 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-177.14",
+            "module-177.15"
+          ]
         },
         {
           "name": "paragraph-3",
           "kind": "editorial.paragraph",
           "type": "text",
           "limit": 45,
-          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 45 (demo 15 characters on 1 line(s)), 1440px 81 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
-          "slots": ["module-177.16", "module-177.17"]
+          "limitFrom": "measured at 390px on the running template, page /about-us: 390px 45 (demo 15 characters on 1 line(s)), 768px 86 (demo 15 characters on 1 line(s)), 1440px 81 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "module-177.16",
+            "module-177.17"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-177"],
+        "kit": [
+          "block-177"
+        ],
         "entity": "module-177"
       }
     },
@@ -2333,10 +2885,16 @@
       "id": "learning-list",
       "type": "posts",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 2,
         "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 2, 4, 6 item(s)",
+        "max": "the listing view's page size"
       },
       "noData": {
         "rule": "hide"
@@ -2348,7 +2906,7 @@
           "kind": "article.title",
           "type": "text",
           "limit": 50,
-          "limitFrom": "measured at 390px on the running template, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 768px 61 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "article-18.12",
             "article-19.12",
@@ -2383,7 +2941,10 @@
         }
       ],
       "from": {
-        "kit": ["body-about-us_learning-center", "body-about-us_learning-center--start-6"],
+        "kit": [
+          "body-about-us_learning-center",
+          "body-about-us_learning-center--start-6"
+        ],
         "entity": "category-10"
       }
     },
@@ -2391,15 +2952,36 @@
       "id": "block-178",
       "type": "team",
       "source": "template",
-      "positions": ["section-1"],
+      "positions": [
+        "section-1"
+      ],
       "items": {
         "min": 1,
         "max": 8
       },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4, 5, 6, 7, 8 item(s)",
+        "max": "the places the template stores: one per demo item"
+      },
       "noData": {
         "rule": "hide"
       },
-      "fields": [],
+      "fields": [
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers: 390px 32 (demo 9 characters on 1 line(s)), 768px 69 (demo 9 characters on 1 line(s)), 1440px 150 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-178.32"
+        },
+        {
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "module-178.33"
+        }
+      ],
       "itemFields": [
         {
           "name": "image",
@@ -2424,8 +3006,8 @@
           "name": "name",
           "kind": "person.name",
           "type": "text",
-          "limit": 30,
-          "limitFrom": "content map fit of block-178.12 (desktop 30, phone 32)",
+          "limit": 31,
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers: 390px 34 (demo 17 characters on 1 line(s)), 768px 31 (demo 17 characters on 1 line(s)), 1440px 32 (demo 17 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slots": [
             "module-178.8",
             "module-178.9",
@@ -2453,7 +3035,7 @@
           ]
         },
         {
-          "name": "paragraph",
+          "name": "social-links",
           "kind": "person.social_url",
           "type": "link",
           "slots": [
@@ -2470,7 +3052,9 @@
         }
       ],
       "from": {
-        "kit": ["block-178"],
+        "kit": [
+          "block-178"
+        ],
         "entity": "module-178"
       }
     },
@@ -2478,10 +3062,16 @@
       "id": "block-180",
       "type": "team",
       "source": "template",
-      "positions": ["section-1"],
+      "positions": [
+        "section-1"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "the block shows one thing",
+        "max": "the block shows one thing"
       },
       "noData": {
         "rule": "hide"
@@ -2509,8 +3099,8 @@
           "name": "person-bio",
           "kind": "person.bio",
           "type": "text",
-          "limit": 711,
-          "limitFrom": "content map fit (desktop 711, phone 711)",
+          "limit": 707,
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 707 (demo 602 characters on 19 line(s)), 768px 869 (demo 602 characters on 11 line(s)), 1440px 869 (demo 602 characters on 12 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-180.2"
         },
         {
@@ -2616,7 +3206,9 @@
         }
       ],
       "from": {
-        "kit": ["block-180"],
+        "kit": [
+          "block-180"
+        ],
         "entity": "module-180"
       }
     },
@@ -2624,10 +3216,16 @@
       "id": "block-181",
       "type": "gallery",
       "source": "template",
-      "positions": ["section-2"],
+      "positions": [
+        "section-2"
+      ],
       "items": {
         "min": 1,
         "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4, 5, 6 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -2638,7 +3236,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 34,
-          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-181.18"
         },
         {
@@ -2712,7 +3310,9 @@
         }
       ],
       "from": {
-        "kit": ["block-181"],
+        "kit": [
+          "block-181"
+        ],
         "entity": "module-181"
       }
     },
@@ -2720,10 +3320,16 @@
       "id": "block-182",
       "type": "team",
       "source": "template",
-      "positions": ["section-4"],
+      "positions": [
+        "section-4"
+      ],
       "items": {
         "min": 1,
         "max": 4
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4 item(s)",
+        "max": "the places the template stores: one per demo item"
       },
       "noData": {
         "rule": "hide"
@@ -2734,7 +3340,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 30,
-          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 768px 43 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-182.16"
         },
         {
@@ -2744,6 +3350,20 @@
           "limit": 118,
           "limitFrom": "kit frame (390px 118, 1440px 135)",
           "slot": "module-182.17"
+        },
+        {
+          "name": "button-label",
+          "kind": "editorial.button_label",
+          "type": "text",
+          "limit": 32,
+          "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 32 (demo 9 characters on 1 line(s)), 768px 69 (demo 9 characters on 1 line(s)), 1440px 150 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slot": "module-182.18"
+        },
+        {
+          "name": "button-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "module-182.19"
         }
       ],
       "itemFields": [
@@ -2755,7 +3375,12 @@
             "width": 350,
             "height": 351
           },
-          "slots": ["module-182.0", "module-182.1", "module-182.2", "module-182.3"]
+          "slots": [
+            "module-182.0",
+            "module-182.1",
+            "module-182.2",
+            "module-182.3"
+          ]
         },
         {
           "name": "name",
@@ -2763,24 +3388,41 @@
           "type": "text",
           "limit": 31,
           "limitFrom": "kit frame of block-182.7 (390px 34, 1440px 31)",
-          "slots": ["module-182.4", "module-182.5", "module-182.6", "module-182.7"]
+          "slots": [
+            "module-182.4",
+            "module-182.5",
+            "module-182.6",
+            "module-182.7"
+          ]
         },
         {
           "name": "navigation-url",
           "kind": "editorial.navigation_url",
           "type": "link",
-          "slots": ["module-182.8", "module-182.9", "module-182.10", "module-182.11"]
+          "slots": [
+            "module-182.8",
+            "module-182.9",
+            "module-182.10",
+            "module-182.11"
+          ]
         },
         {
-          "name": "paragraph-2",
+          "name": "social-links",
           "kind": "person.social_url",
           "type": "link",
-          "slots": ["module-182.12", "module-182.13", "module-182.14", "module-182.15"],
+          "slots": [
+            "module-182.12",
+            "module-182.13",
+            "module-182.14",
+            "module-182.15"
+          ],
           "storage": "html: the person's social profile links, one list per person"
         }
       ],
       "from": {
-        "kit": ["block-182"],
+        "kit": [
+          "block-182"
+        ],
         "entity": "module-182"
       }
     },
@@ -2788,10 +3430,16 @@
       "id": "class-detail",
       "type": "services",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "one post page shows one post",
+        "max": "one post page shows one post"
       },
       "noData": {
         "rule": "hide"
@@ -2826,7 +3474,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 27,
-          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 768px 40 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-16.13"
         },
         {
@@ -2834,7 +3482,7 @@
           "kind": "editorial.paragraph",
           "type": "text",
           "limit": 78,
-          "limitFrom": "kit frame (390px 78, 1440px 125) (on body-classes_beginner-boxing)",
+          "limitFrom": "kit frame (390px 78, 1440px 125) (on from.kit[1])",
           "slot": "article-16.14"
         },
         {
@@ -2889,8 +3537,8 @@
           "name": "paragraph-5",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 26,
-          "limitFrom": "kit frame (390px 37, 1440px 26) (on body-classes_group-boxing)",
+          "limit": 195,
+          "limitFrom": "kit frame (390px 197, 1440px 195)",
           "slot": "article-16.32"
         },
         {
@@ -2905,8 +3553,8 @@
           "name": "paragraph-6",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 18,
-          "limitFrom": "kit frame (390px 31, 1440px 18) (on body-classes_private-training)",
+          "limit": 33,
+          "limitFrom": "kit frame (390px 33, 1440px 34)",
           "slot": "article-16.36"
         },
         {
@@ -2921,8 +3569,8 @@
           "name": "paragraph-8",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 17,
-          "limitFrom": "kit frame (390px 33, 1440px 17) (on body-classes_group-boxing)",
+          "limit": 18,
+          "limitFrom": "kit frame (390px 31, 1440px 18)",
           "slot": "article-16.38"
         },
         {
@@ -2937,16 +3585,16 @@
           "name": "heading-9",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 17,
-          "limitFrom": "kit frame (390px 32, 1440px 17) (on body-classes_private-training)",
+          "limit": 18,
+          "limitFrom": "kit frame (390px 34, 1440px 18)",
           "slot": "article-16.42"
         },
         {
           "name": "paragraph-10",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 17,
-          "limitFrom": "kit frame (390px 31, 1440px 17) (on body-classes_private-training)",
+          "limit": 51,
+          "limitFrom": "kit frame (390px 64, 1440px 51)",
           "slot": "article-16.43"
         },
         {
@@ -2969,8 +3617,8 @@
           "name": "heading-10",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 17,
-          "limitFrom": "kit frame (390px 31, 1440px 17) (on body-classes_group-boxing)",
+          "limit": 38,
+          "limitFrom": "kit frame (390px 61, 1440px 38)",
           "slot": "article-16.48"
         },
         {
@@ -2985,8 +3633,8 @@
           "name": "heading-11",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 19,
-          "limitFrom": "content map fit (desktop 19, phone 33) (on body-classes_group-boxing)",
+          "limit": 20,
+          "limitFrom": "kit frame (390px 39, 1440px 20)",
           "slot": "article-16.54"
         },
         {
@@ -3017,8 +3665,8 @@
           "name": "paragraph-17",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 20,
-          "limitFrom": "content map fit (desktop 20, phone 33)",
+          "limit": 17,
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 32 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 17 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-16.50"
         },
         {
@@ -3026,23 +3674,23 @@
           "kind": "editorial.paragraph",
           "type": "text",
           "limit": 17,
-          "limitFrom": "kit frame (390px 31, 1440px 17) (on body-classes_group-boxing)",
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 32 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 17 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-16.58"
         },
         {
           "name": "paragraph-19",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 19,
-          "limitFrom": "content map fit (desktop 19, phone 33)",
+          "limit": 17,
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 9 characters on 1 line(s)), 768px 22 (demo 9 characters on 1 line(s)), 1440px 17 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-16.51"
         },
         {
           "name": "paragraph-20",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 19,
-          "limitFrom": "content map fit (desktop 19, phone 33)",
+          "limit": 17,
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 9 characters on 1 line(s)), 768px 22 (demo 9 characters on 1 line(s)), 1440px 17 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-16.59"
         },
         {
@@ -3296,10 +3944,16 @@
       "id": "block-159",
       "type": "services",
       "source": "template",
-      "positions": ["detail-bottom-1"],
+      "positions": [
+        "detail-bottom-1"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2 item(s)",
+        "max": "the block's own setting for the number of items it shows"
       },
       "noData": {
         "rule": "hide"
@@ -3310,7 +3964,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 31,
-          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 768px 44 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-159.0"
         },
         {
@@ -3329,15 +3983,21 @@
           "type": "text",
           "limit": 35,
           "limitFrom": "kit frame of article-14.4 (390px 37, 1440px 35)",
-          "slots": ["article-16.4", "article-14.4"]
+          "slots": [
+            "article-16.4",
+            "article-14.4"
+          ]
         },
         {
           "name": "heading-2",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 36,
-          "limitFrom": "content map fit of article-2.7 (desktop 36, phone 36)",
-          "slots": ["article-16.7", "article-14.7"]
+          "limit": 35,
+          "limitFrom": "measured at 390px on the running template, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "slots": [
+            "article-16.7",
+            "article-14.7"
+          ]
         },
         {
           "name": "link",
@@ -3351,7 +4011,10 @@
           "type": "text",
           "limit": 258,
           "limitFrom": "kit frame of article-2.0 (390px 258, 1440px 277)",
-          "slots": ["article-16.0", "article-14.0"]
+          "slots": [
+            "article-16.0",
+            "article-14.0"
+          ]
         },
         {
           "name": "schedule",
@@ -3359,7 +4022,10 @@
           "type": "text",
           "limit": 72,
           "limitFrom": "kit frame of article-15.8 (390px 72, 1440px 108)",
-          "slots": ["article-16.8", "article-14.8"]
+          "slots": [
+            "article-16.8",
+            "article-14.8"
+          ]
         },
         {
           "name": "schedule-2",
@@ -3367,7 +4033,10 @@
           "type": "text",
           "limit": 30,
           "limitFrom": "kit frame (390px 30, 1440px 51)",
-          "slots": ["article-16.9", "article-14.9"]
+          "slots": [
+            "article-16.9",
+            "article-14.9"
+          ]
         },
         {
           "name": "schedule-3",
@@ -3375,7 +4044,10 @@
           "type": "text",
           "limit": 50,
           "limitFrom": "kit frame of article-2.11 (390px 70, 1440px 50)",
-          "slots": ["article-16.10", "article-14.10"]
+          "slots": [
+            "article-16.10",
+            "article-14.10"
+          ]
         },
         {
           "name": "image",
@@ -3385,11 +4057,16 @@
             "width": 688,
             "height": 295
           },
-          "slots": ["article-16.5", "article-14.5"]
+          "slots": [
+            "article-16.5",
+            "article-14.5"
+          ]
         }
       ],
       "from": {
-        "kit": ["block-159"],
+        "kit": [
+          "block-159"
+        ],
         "entity": "module-159"
       }
     },
@@ -3397,10 +4074,16 @@
       "id": "block-191",
       "type": "posts",
       "source": "template",
-      "positions": ["main-bottom-2"],
+      "positions": [
+        "main-bottom-2"
+      ],
       "items": {
         "min": 1,
         "max": 2
+      },
+      "itemsFrom": {
+        "min": "the rule default 1: a related posts list draws one post (not measured)",
+        "max": "the block's own setting: mod_related_items maximum 2"
       },
       "noData": {
         "rule": "hide"
@@ -3411,7 +4094,7 @@
           "kind": "editorial.heading",
           "type": "text",
           "limit": 30,
-          "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 768px 42 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "module-191.0"
         },
         {
@@ -3424,7 +4107,9 @@
         }
       ],
       "from": {
-        "kit": ["block-191"],
+        "kit": [
+          "block-191"
+        ],
         "entity": "module-191"
       }
     },
@@ -3432,10 +4117,16 @@
       "id": "author-profile",
       "type": "team",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 1,
         "max": 6
+      },
+      "itemsFrom": {
+        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 1, 2, 3, 4, 5, 6 item(s)",
+        "max": "the listing view's setting for the number of items per page"
       },
       "noData": {
         "rule": "hide"
@@ -3503,8 +4194,8 @@
           "name": "heading-2",
           "kind": "editorial.heading",
           "type": "text",
-          "limit": 34,
-          "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 26,
+          "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 768px 48 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text (on from.kit[2])",
           "slots": [
             "article-28.7",
             "article-29.7",
@@ -3534,16 +4225,6 @@
             "article-3.0",
             "article-11.0"
           ]
-        },
-        {
-          "name": "image",
-          "kind": "article.image",
-          "type": "image",
-          "frame": {
-            "width": 688,
-            "height": 424
-          },
-          "slots": ["article-1.16", "article-3.16", "article-11.16"]
         }
       ],
       "from": {
@@ -3564,10 +4245,16 @@
       "id": "learning-post",
       "type": "posts",
       "source": "template",
-      "positions": ["component"],
+      "positions": [
+        "component"
+      ],
       "items": {
         "min": 1,
         "max": 1
+      },
+      "itemsFrom": {
+        "min": "one post page shows one post",
+        "max": "one post page shows one post"
       },
       "noData": {
         "rule": "hide"
@@ -3578,7 +4265,7 @@
           "kind": "article.title",
           "type": "text",
           "limit": 43,
-          "limitFrom": "kit frame (390px 43, 1440px 51) (on body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing)",
+          "limitFrom": "kit frame (390px 43, 1440px 51) (on from.kit[6])",
           "slot": "article-18.12"
         },
         {
@@ -3729,8 +4416,8 @@
           "name": "paragraph-12",
           "kind": "editorial.paragraph",
           "type": "text",
-          "limit": 273,
-          "limitFrom": "measured at 390px on the running template, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 273 (demo 255 characters on 6 line(s)), 1440px 310 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
+          "limit": 257,
+          "limitFrom": "measured at 390px on the running template, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 273 (demo 255 characters on 6 line(s)), 768px 257 (demo 255 characters on 3 line(s)), 1440px 310 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text",
           "slot": "article-18.2"
         },
         {
@@ -3812,6 +4499,78 @@
             "height": 597
           },
           "slot": "article-18.35"
+        },
+        {
+          "name": "feature-1-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-18.18"
+        },
+        {
+          "name": "feature-1-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "article-18.17"
+        },
+        {
+          "name": "feature-2-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-18.22"
+        },
+        {
+          "name": "feature-2-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "article-18.21"
+        },
+        {
+          "name": "feature-3-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-18.26"
+        },
+        {
+          "name": "feature-3-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "article-18.25"
+        },
+        {
+          "name": "feature-4-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-18.30"
+        },
+        {
+          "name": "feature-4-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "article-18.29"
+        },
+        {
+          "name": "feature-5-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-18.34"
+        },
+        {
+          "name": "feature-5-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "article-18.33"
+        },
+        {
+          "name": "feature-6-video",
+          "kind": "business.video",
+          "type": "link",
+          "slot": "article-18.38"
+        },
+        {
+          "name": "feature-6-link",
+          "kind": "editorial.navigation_url",
+          "type": "link",
+          "slot": "article-18.37"
         }
       ],
       "from": {
