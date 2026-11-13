@@ -1,0 +1,78 @@
+/* The Tracy reviews block (ticket #596). Layout only: every colour, font and corner is a block variable that
+   library-reviews-render.mjs binds to the template design variables declared in tracy-library.json. Never a colour here. */
+.tracy-reviews {
+  color: var(--tracy-reviews-text);
+  font-family: var(--tracy-reviews-bodyFont);
+  margin: 0;
+  padding: 3rem 0;
+}
+.tracy-reviews__heading {
+  font-family: var(--tracy-reviews-headingFont);
+  color: var(--tracy-reviews-heading);
+  margin: 0 0 1.5rem;
+}
+.tracy-reviews__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.tracy-reviews__item {
+  background: var(--tracy-reviews-surface);
+  border: 1px solid var(--tracy-reviews-border);
+  border-radius: var(--tracy-reviews-radius);
+  display: flex;
+  margin: 0;
+  padding: 1.5rem;
+}
+.tracy-reviews__figure {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0;
+  width: 100%;
+}
+.tracy-reviews__stars {
+  color: var(--tracy-reviews-accent);
+  font-size: 1.125rem;
+  letter-spacing: 0.15em;
+  line-height: 1;
+  margin: 0;
+}
+.tracy-reviews__star--off {
+  opacity: 0.3;
+}
+.tracy-reviews__quote {
+  border: 0;
+  flex: 1 1 auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  white-space: pre-line;
+}
+.tracy-reviews__quote p {
+  margin: 0;
+}
+.tracy-reviews__author {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+.tracy-reviews__author a,
+.tracy-reviews__more a {
+  color: var(--tracy-reviews-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.tracy-reviews__author a:hover,
+.tracy-reviews__author a:focus,
+.tracy-reviews__more a:hover,
+.tracy-reviews__more a:focus {
+  color: var(--tracy-reviews-linkHover);
+}
+.tracy-reviews__more {
+  margin: 1.5rem 0 0;
+}

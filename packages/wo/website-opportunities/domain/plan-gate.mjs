@@ -3,6 +3,7 @@
 // - every data item of the plan exists in the needs profile (nothing invented);
 // - a kept block shows at least its minimum and at most its maximum items, of a kind its type shows;
 // - no design typed field is targeted;
+// - a Tracy library block shows only items its content rules accept (`library.mjs`);
 // - each block says why it fits, in words the customer can read;
 // - a page whose main block is missing is dropped, with the reason;
 // - data no block shows is placed in the fixed order of `plan-placement.mjs`, else reported;
@@ -11,6 +12,7 @@
 // second attempt.
 import { BUILD_PLAN_SCHEMA } from './build-contract-plan.mjs'
 import { checkBuildDocument } from './build-contract.mjs'
+import { libraryItemProblem } from './library.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
 import { placeExtraData } from './plan-placement.mjs'
@@ -60,6 +62,13 @@ function blockProblems(block, at, { data, blocks }, problem) {
         'wrong_item_kind',
         `${at}.data[${i}]`,
         `a ${description.type} block cannot show ${entry.kind} item ${JSON.stringify(id)}`
+      )
+    const refused = libraryItemProblem(description, entry.source)
+    if (refused)
+      problem(
+        'library_rule',
+        `${at}.data[${i}]`,
+        `${description.id} does not show ${JSON.stringify(id)}: ${refused}`
       )
   })
   if (itemKind && items < description.items.min)

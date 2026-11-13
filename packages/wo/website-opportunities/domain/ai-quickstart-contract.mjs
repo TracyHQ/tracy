@@ -88,7 +88,8 @@ function noDataProblems(noData, at, report) {
     report(`${at}.fallback`, 'a fallback rule names what the block shows instead')
 }
 
-function blockProblems(block, at, report) {
+/** The problems of one block declaration; `at` is where it sits. Shared with the Tracy library check. */
+export function blockProblems(block, at, report) {
   if (!isObject(block)) return report(at, 'a block must be an object')
   if (!isName(block.id)) report(`${at}.id`, 'a block needs a non-empty id')
   if (!isBlockType(block.type))

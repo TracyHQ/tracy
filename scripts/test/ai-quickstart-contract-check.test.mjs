@@ -103,3 +103,9 @@ test('a pending marker must name the ticket that writes the mapping file', (t) =
   assert.equal(res.status, 1)
   assert.match(res.stderr, /mapping\.pending\.json ticket: name the ticket/)
 })
+
+test('run without folders, the command also checks the Tracy library declaration (#596)', () => {
+  const res = run()
+  assert.equal(res.status, 0, res.stderr)
+  assert.match(res.stdout, /domain\/library\/tracy-library\.json: 1 library block\(s\), 0 problem\(s\)/)
+})

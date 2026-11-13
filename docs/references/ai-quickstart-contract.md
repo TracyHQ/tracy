@@ -5,6 +5,8 @@ sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping.mjs
   - packages/wo/website-opportunities/domain/place-content-roles.mjs
   - scripts/ai-quickstart/check.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-library.mjs
+  - packages/wo/website-opportunities/domain/library/tracy-library.json
   - docs/adr/0045-sites-are-built-from-an-ai-quickstart-not-from-the-demo.md
   - docs/adr/0046-the-model-sees-one-cms-neutral-site-form.md
 ---
@@ -163,6 +165,28 @@ A **location** has the shape a content map slot already uses, so the existing pl
   always 1200 by 630 (`SHARE_IMAGE_FRAME`).
 - **`overrides`**: `settings` (a location and the value written in the blank site: site name, body background) and
   `language` (a language key and its value: system and template strings).
+
+## The Tracy library
+
+Blocks Tracy owns, for data a template has no block for, are declared in
+[`packages/wo/website-opportunities/domain/library/tracy-library.json`](../../packages/wo/website-opportunities/domain/library/tracy-library.json)
+(schema `tracy-ai-quickstart-library/v1`) in the block store format above, and passed to the plan composer as
+`library` (`TRACY_LIBRARY`). Every rule of a block store block holds, plus:
+
+- `source` is `library`.
+- `designVariables` binds each design role the block's stylesheet reads to the template design variables that give it:
+  `{"accent": {"variables": ["--color-primary"]}, "surface": {"variables": ["--bg-item-1", "--body-bg-color"]}}`. The
+  first variable the template sets wins. Only a role that is not a colour (`headingFont`, `bodyFont`, `radius`) may end
+  with a literal `fallback` (a length, a number or a font keyword), so a library block never carries a colour of its own
+  and follows the template in light and dark alike.
+- Each library block type has content rules (`libraryItemProblem`, `domain/library.mjs`). The rules gate refuses an
+  item the block would not show (code `library_rule`) and the extra data placement leaves it out with the reason.
+
+The first library block is `tracy-reviews` (#596): at most six reviews of four or five stars, in the reviewer's own words
+(never cut; a review longer than the text limit is set aside), each named by first name and initial and linked to the
+Google listing. `renderReviewsBlock` (`domain/library-reviews-render.mjs`) returns its markup and its stylesheet.
+
+`checkLibraryDeclaration` checks the file; the command below runs it when called without folders.
 
 ## The contract check
 

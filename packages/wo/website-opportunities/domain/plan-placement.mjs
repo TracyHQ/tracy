@@ -2,10 +2,12 @@
 // (for example reviews) find a block in a fixed order, and what finds none is reported, never dropped silently.
 //   1. a template block of that item's own type: one already on the plan with room, else one of the store not placed;
 //   2. a template block whose fields fit: its type accepts the item's kind and its item fields carry the item's role;
-//   3. a Tracy library block of that type, styled through the template's design variables;
+//   3. a Tracy library block of that type, styled through the template's design variables, for the items its content
+//      rules accept (`library.mjs`: a review of four or five stars, for example);
 //   4. else a left out entry with the reason.
 // Photos are the exception to 4: a photo with no gallery block stays in the pictures pool (`plan-look-pictures.mjs`).
 // Pure: placed pages in, new pages, left out entries and what was placed out.
+import { libraryItemProblem } from './library.mjs'
 import { ITEM_KINDS } from './needs-profile-merge.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { ITEM_NOUNS } from './plan-data.mjs'
@@ -90,13 +92,22 @@ export function placeExtraData(pages, { data, blocks, leftOutIds = new Set() }) 
       'template block whose fields fit',
       (d) => template(d) && accepts(d, kind) && fieldsFit(d, kind)
     )
-    tier(remaining, kind, 'Tracy library block', (d) => d.source === 'library' && ownTypeOf(d, kind))
+    const library = descriptions.filter((d) => d.source === 'library' && ownTypeOf(d, kind))
+    const refusedBy = new Map()
+    for (const item of remaining) {
+      const reasons = library.map((d) => libraryItemProblem(d, data.byId.get(item.id)?.source))
+      if (library.length > 0 && reasons.every(Boolean)) refusedBy.set(item.id, reasons[0])
+    }
+    const fitting = remaining.filter((item) => !refusedBy.has(item.id))
+    tier(fitting, kind, 'Tracy library block', (d) => library.includes(d))
     if (kind === 'gallery') continue
-    for (const item of remaining)
+    for (const item of remaining.filter((i) => refusedBy.has(i.id) || fitting.includes(i)))
       leftOut.push({
         what: item.label,
         kind: 'item',
-        reason: `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
+        reason: refusedBy.has(item.id)
+          ? `Not shown in the Tracy section: ${refusedBy.get(item.id)}.`
+          : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
       })
   }
   return { pages: out, leftOut, placed }

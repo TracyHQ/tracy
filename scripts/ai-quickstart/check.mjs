@@ -12,6 +12,9 @@
  * (`{"ticket": "#<n>"}`) in place of `mapping.json`: the block store and the page recipes are checked alone, and the
  * line printed for the folder says the mapping is pending. Both files at once is a problem.
  *
+ * Run without folders, it also checks the Tracy library (`domain/library/tracy-library.json` of the WO package, ticket
+ * #596): blocks Tracy owns, declared in the block store format, by `checkLibraryDeclaration`.
+ *
  *   node scripts/ai-quickstart/check.mjs                  every AI quickstart folder in the tree
  *   node scripts/ai-quickstart/check.mjs <folder>...      only those (a template packager's own draft)
  */
@@ -26,8 +29,10 @@ import {
   checkAiQuickstartContract,
   formatProblem
 } from '../../packages/wo/website-opportunities/domain/ai-quickstart-contract.mjs'
+import { checkLibraryDeclaration } from '../../packages/wo/website-opportunities/domain/ai-quickstart-library.mjs'
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
+const LIBRARY_PATH = 'packages/wo/website-opportunities/domain/library/tracy-library.json'
 
 function findFolders(dir, found) {
   if (!existsSync(dir)) return found
@@ -105,6 +110,18 @@ export function checkAiQuickstartFolder(dir) {
   return pending ? { ...res, mappingPending: pending.ticket } : res
 }
 
+/** Check the Tracy library declaration, print its line, and return how many problems it has. */
+function checkLibrary() {
+  const dir = path.dirname(path.join(DEFAULT_ROOT, LIBRARY_PATH))
+  const { doc, problem } = readDeclaration(dir, path.basename(LIBRARY_PATH))
+  const res = problem ? { blocks: 0, problems: [problem] } : checkLibraryDeclaration(doc)
+  for (const p of res.problems) process.stderr.write(`${path.dirname(LIBRARY_PATH)}/${formatProblem(p)}\n`)
+  process.stdout.write(
+    `ai-quickstart-contract: ${LIBRARY_PATH}: ${res.blocks} library block(s), ${res.problems.length} problem(s)\n`
+  )
+  return res.problems.length
+}
+
 function main(argv) {
   const folders =
     argv.length > 0 ? argv.map((d) => path.resolve(d)) : discoverAiQuickstartFolders(DEFAULT_ROOT)
@@ -118,6 +135,7 @@ function main(argv) {
       `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)${res.mappingPending ? `, ${MAPPING_FILE} pending (${res.mappingPending})` : ''}\n`
     )
   }
+  if (argv.length === 0) problemCount += checkLibrary()
   process.stdout.write(
     `ai-quickstart-contract: ${folders.length} AI quickstart(s) checked, ${problemCount} problem(s)\n`
   )
