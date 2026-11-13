@@ -25442,6 +25442,98 @@
           "x-internal": true
         }
       },
+      "/api/build-draft/compose": {
+        "post": {
+          "operationId": "post_api_build_draft_compose",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "request": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/edit": {
+        "post": {
+          "operationId": "post_api_build_draft_edit",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "changes": {
+                      "items": {
+                        "required": ["field", "value"],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": ["changes"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/engine": {
+        "get": {
+          "operationId": "get_api_build_draft_engine",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
+          "x-internal": true
+        }
+      },
       "/api/build-draft/plan-edits": {
         "post": {
           "operationId": "post_api_build_draft_plan_edits",
@@ -25490,6 +25582,46 @@
           "x-internal": true
         }
       },
+      "/api/build-draft/research": {
+        "post": {
+          "operationId": "post_api_build_draft_research",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "links": {
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
+          "x-internal": true
+        }
+      },
       "/api/build-draft/template": {
         "put": {
           "operationId": "put_api_build_draft_template",
@@ -25531,6 +25663,25 @@
           ],
           "tags": ["Accounts & seats"],
           "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/templates": {
+        "get": {
+          "operationId": "get_api_build_draft_templates",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            },
+            {
+              "actor": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["agent"],
           "x-internal": true
         }
       },

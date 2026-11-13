@@ -113,6 +113,9 @@ import { onboardingRoutes } from './onboarding/route.js'
 import { seenHintRoutes } from './seen-hints/route.js'
 import { aiQuickstartCatalogue } from './build-draft/ai-quickstarts.js'
 import { buildDraftRoutes } from './build-draft/route.js'
+import { buildModelDoor } from './build-draft/build-model.js'
+import { createEngine } from './build-draft/engine.js'
+import { buildEngineRoutes } from './build-draft/engine-route.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
 import { researchOfRevision } from './opportunities-build/revision-research.js'
@@ -274,6 +277,7 @@ import {
 import { speechRoutes } from './speech/route.js'
 import { widgetRoutes } from './widget/route.js'
 import { buildChatRoutes } from './workspace/build-chat-route.js'
+import { BUILD_CHAT_SWITCH, buildSessionIdFor } from './workspace/build-chat-session.js'
 import { workspaceRoutes } from './workspace/route.js'
 import { onboardingGrant } from './workspace/scope.js'
 import { callSeatDoor } from './workspace/seat-door.js'
@@ -344,6 +348,19 @@ async function visionDoorFor(deps) {
   return model
     ? { url: `${model.baseUrl.replace(/\/+$/, '')}/chat/completions`, key: model.apiKey, model: model.words }
     : null
+}
+
+/**
+ * The research gatherer of the build chat before a site exists (#609): none on this server yet. A website
+ * opportunity's research (`wo_source`, `wo_media`, `wo_profile`) runs only on that opportunity's own rows, so the
+ * research door stops with this fault (the team is told; the owner reads one sentence) until a gatherer that needs no
+ * opportunity is injected as `deps.buildEngine.gather`.
+ */
+async function noPreSiteResearch() {
+  throw Object.assign(new Error('no research gatherer runs before a website opportunity exists'), {
+    code: 'research_unavailable',
+    noRerun: true
+  })
 }
 
 export function buildApp(deps) {
@@ -1172,13 +1189,35 @@ export function buildApp(deps) {
     app.route('/', onboardingRoutes({ config: deps.config, pool: deps.pool, now: deps.now }))
     app.route('/', seenHintRoutes({ config: deps.config, pool: deps.pool }))
     // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists.
+    const kits = deps.aiQuickstarts ?? aiQuickstartCatalogue()
+    const buildSessionIdOf = (email) => buildSessionIdFor(email, deps.config.sessionSecret)
     app.route(
       '/',
-      buildDraftRoutes({
+      buildDraftRoutes({ config: deps.config, pool: deps.pool, ensureAccount, kits, buildSessionIdOf })
+    )
+    // The build chat's engine doors (`build-draft/engine-route.js`, #609): research, templates, compose and edit before
+    // a site exists, for the dsh tool `tracy_build`. `buildEngine` holds the injected steps: the research gatherer
+    // (none yet: a website opportunity's research runs only on its own rows), the pre site brand step (#616, not landed:
+    // none, so compose stops rather than show the template's look) and the build model door.
+    const buildEngine = deps.buildEngine ?? {}
+    app.buildDraftEngine = createEngine({
+      pool: deps.pool,
+      kits,
+      buildModel: buildEngine.buildModel ?? buildModelDoor({ pool: deps.pool, config: deps.config }),
+      gather: buildEngine.gather ?? noPreSiteResearch,
+      brandStep: buildEngine.brandStep ?? (async () => null),
+      now: deps.now
+    })
+    app.route(
+      '/',
+      buildEngineRoutes({
         config: deps.config,
         pool: deps.pool,
         ensureAccount,
-        kits: deps.aiQuickstarts ?? aiQuickstartCatalogue()
+        kits,
+        engine: app.buildDraftEngine,
+        buildSessionIdOf,
+        buildChatOn: buildEngine.buildChatOn ?? (() => uiSwitchOn(deps.pool, BUILD_CHAT_SWITCH))
       })
     )
     // The first-run Welcome popup's animated scenes (`welcome/route.js`), before the dsh catch-all.

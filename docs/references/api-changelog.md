@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-13: The build chat's engine doors run research and compose before a site exists
+
+Added (internal): `POST /api/build-draft/research`, `GET /api/build-draft/templates`, `POST /api/build-draft/compose`, `POST /api/build-draft/edit` and `GET /api/build-draft/engine`, called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session`). Research and compose run in the background and answer an `EngineState` (`idle`, `running`, `done` with `result`, `stopped` with `say`); `GET /engine` reads it again. Refusals: 403 `NOT_BUILD_SESSION`, `BUILD_CHAT_OFF`; 409 `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`, `NO_PLAN`, `STALE_EDIT`; 422 `INVALID_EDIT` with `problems: string[]`; 400 `INVALID_REQUEST`. Changed (internal): the existing build draft doors also accept `x-tracy-actor` with the caller's own build session; another session answers 403 `NOT_BUILD_SESSION`. Public API v1 is unchanged.
+
 ## 2026-11-13: Only the build engine puts a plan in the build draft
 
 Removed (internal): `PUT /api/build-draft/plan`. A browser or a model can no longer put a plan; the build engine writes a plan the plan composer returned through its rules gate. Changed (internal): `POST /api/build-draft/plan-edits` and `POST /api/build-draft/plan-undo` hold each edit to the rules gate of the AI quickstart build with the needs profile the plan was composed from; a refused edit answers 422 `INVALID_EDIT` with `problems: [{code, at, message}]`, each `message` a sentence for the owner, and changes nothing. New refusal 409 `NO_KIT` when the plan's template has no kit on the server. Public API v1 is unchanged.

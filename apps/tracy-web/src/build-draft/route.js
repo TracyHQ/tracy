@@ -8,8 +8,9 @@
  * with `putComposed`, and the edit doors go through the edit gate (`store.js`).
  */
 import { Hono } from 'hono'
-import { json, requireViewer } from '../lib/http.js'
+import { json } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
+import { callerOf } from './caller.js'
 import { chooseTemplate, createDraft, editPlan, readDraft, saveAnswer, undoPlanEdit } from './store.js'
 
 const BASE = '/api/build-draft'
@@ -39,8 +40,9 @@ const REFUSALS = {
  *   domain's account upsert, injected by `app.js` (a domain directory imports only `lib/` and `db/`)
  * @param {{loadKit: (slug: string) => object | null}} deps.kits - the AI quickstart catalogue (`ai-quickstarts.js`)
  *   the edit gate reads the plan's kit from
+ * @param {(email: string) => Promise<string>} deps.buildSessionIdOf - the person's build session id (`workspace/`)
  */
-export function buildDraftRoutes({ config, pool, ensureAccount, kits }) {
+export function buildDraftRoutes({ config, pool, ensureAccount, kits, buildSessionIdOf }) {
   const app = new Hono()
   const answer = (c, result, okStatus = 200) => {
     if (!result.error) return json(c, { draft: result.draft }, okStatus)
@@ -50,9 +52,10 @@ export function buildDraftRoutes({ config, pool, ensureAccount, kits }) {
   }
   /** The account of the signed-in person (created when `create`), null when it has none, or a 401 Response. */
   async function accountOf(c, { create = false } = {}) {
-    const email = await requireViewer(c, config)
-    if (email instanceof Response) return email
-    return create ? (await ensureAccount(pool, email.toLowerCase())).id : principalOf(pool, email)
+    const caller = await callerOf(c, { config, buildSessionIdOf })
+    if (caller.refusal)
+      return json(c, { code: caller.refusal }, caller.refusal === 'NOT_SIGNED_IN' ? 401 : 403)
+    return create ? (await ensureAccount(pool, caller.email)).id : principalOf(pool, caller.email)
   }
   /** A write door: the account, the body's one key, then the store call. */
   const write = (key, run) => async (c) => {

@@ -24,7 +24,8 @@ const COLUMNS = [
   'needs_profile',
   'research',
   'fault',
-  'undo_profile'
+  'undo_profile',
+  'engine'
 ]
 
 /** The account's draft as the doors answer it, or null when it has none. */
@@ -71,9 +72,10 @@ export async function createDraft(pool, accountId) {
 
 /**
  * Change the account's draft in one transaction. `decide(row)` answers `{error, ...}` to refuse, or the columns to
- * write. Answers `{draft}`, `{error: 'NO_DRAFT'}` or the refusal.
+ * write. Answers `{draft}`, `{error: 'NO_DRAFT'}` or the refusal. Also the writer of the engine state
+ * (`engine-store.js`).
  */
-async function changeDraft(pool, accountId, decide) {
+export async function changeDraft(pool, accountId, decide) {
   const client = await pool.connect()
   try {
     await client.query('begin')

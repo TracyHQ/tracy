@@ -1373,6 +1373,80 @@ export const PEOPLE_ROUTES = [
     internal: true,
     answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
   },
+  // src/build-draft/engine-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/research',
+    summary: 'Research my business for the build chat',
+    description:
+      "Body `{links: string[], description?}` (at least one http(s) link or a description; up to 10 links). Starts the research step of the build chat engine (#609) in the background and answers `{step: 'research', state: 'running'}` at once; creates the account's draft when it has none. When it ends, `GET /api/build-draft/engine` answers `result: {profile: {business, counts}, questions, ask?}`: every Contract B question the needs profile issued (no fixed number) and, as `ask`, at most three not answered yet. The research and its needs profile are kept in the draft. A step that fails is run once more with the same inputs (never after a failure marked noRerun); a second failure stops with `say`, one plain sentence, and the fault is kept for the team. 400 `INVALID_REQUEST`. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: {
+      type: 'object',
+      properties: { links: { type: 'array', items: { type: 'string' } }, description: { type: 'string' } }
+    },
+    answers:
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+  },
+  // src/build-draft/engine-route.js
+  {
+    method: 'GET',
+    path: '/api/build-draft/templates',
+    summary: 'The templates the build chat may offer',
+    description:
+      "The released AI quickstart templates fitting the trade research found (`aiQuickstartCatalogue().templatesFor`), in the card shape `{slug, name, version, picture, reason, quickstart, fits}`. No research yet, or no fitting kit, answers an empty list. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    answers: '`{templates: [{slug, name, version, picture, reason, quickstart, fits}]}`'
+  },
+  // src/build-draft/engine-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/compose',
+    summary: 'Compose the build plan of my draft',
+    description:
+      "Body `{request?}`. Starts the compose step in the background (`{step: 'compose', state: 'running'}`): the plan composer reads the stored needs profile, the owner's answers and the chosen template's kit, its rules gate checks the plan, and the plan reaches the draft only that way. The plan carries the business's own colour and logo from the pre site brand step; without one the step stops with `reason: 'brand-unavailable'` and never shows the template's look. Done: `result: {plan, brand: 'own'}`. 409 `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`; 400 `INVALID_REQUEST`. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: { type: 'object', properties: { request: { type: 'string' } } },
+    answers:
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+  },
+  // src/build-draft/engine-route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/edit',
+    summary: 'Change my build plan from the chat',
+    description:
+      "Body `{changes: [{field, value}]}` (1 to 20). Applied as one Contract B plan edit of the plan's current revision through the edit gate, as `POST /api/build-draft/plan-edits` does; answers `{step: 'edit', state: 'done', result: {plan, brand: 'own'}}`. 422 `INVALID_EDIT` with `problems: string[]`, sentences for the owner; 409 `NO_PLAN`, `STALE_EDIT`, `NO_KIT`; 400 `INVALID_REQUEST`. A refused edit changes nothing. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    body: {
+      type: 'object',
+      required: ['changes'],
+      properties: { changes: { type: 'array', items: { type: 'object', required: ['field', 'value'] } } }
+    },
+    answers:
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+  },
+  // src/build-draft/engine-route.js
+  {
+    method: 'GET',
+    path: '/api/build-draft/engine',
+    summary: 'Read the state of the build chat engine',
+    description:
+      "The state of the latest engine step of the account's draft. A step left running by a process that ended is answered as stopped (and its fault kept for the team). Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+    audience: ['agent'],
+    auth: 'session-or-actor',
+    internal: true,
+    answers:
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+  },
   // src/onboarding/route.js
   {
     method: 'GET',

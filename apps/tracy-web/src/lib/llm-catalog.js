@@ -278,6 +278,18 @@ export const LLM_DOORS = [
     drawsPictures: true
   },
   {
+    id: 'buildModel',
+    label: 'Build model',
+    where: 'this process',
+    blurb:
+      'The build chat: reads what the business says about itself (the needs profile) and composes the plan of its new site, before the site exists. One model for its text calls and for its calls that look at pictures. Drawing pictures is a separate door.',
+    needsModel: true,
+    // Vision is REQUIRED: the same door answers the engine's calls that look at pictures (#609), so a text-only model
+    // would fail those calls only. JSON is preferred: every reply is read as one JSON object.
+    requires: ['vision'],
+    prefers: ['json']
+  },
+  {
     id: 'brandAgent',
     label: 'Brand agent',
     where: 'this process',
