@@ -1,13 +1,8 @@
 ---
-description: The write step of a draft run, which plans door operations from the write order, guards them, then runs, reads back, resumes and redoes them on a blank site. Covers the operations, the doors interface, the guards, the conflicts, the read back, the run record and what is unproven.
+description: The write step of a draft run, which plans door operations from the write order, guards them, then runs, reads back, resumes and redoes them on a blank site. Covers the operations, the doors interface, the conflicts, the read back and the run record; the guards are in draft-write-guards.md.
 sources:
   - packages/wo/website-opportunities/domain/draft-write-plan.mjs
   - packages/wo/website-opportunities/domain/draft-write-guards.mjs
-  - packages/wo/website-opportunities/domain/draft-write-library-check.mjs
-  - packages/wo/website-opportunities/domain/draft-write-markup.mjs
-  - packages/wo/website-opportunities/domain/draft-write-tags.mjs
-  - packages/wo/website-opportunities/domain/draft-write-length.mjs
-  - packages/wo/website-opportunities/domain/draft-write-held.mjs
   - packages/wo/website-opportunities/domain/draft-write-coverage.mjs
   - packages/wo/website-opportunities/domain/draft-write-html-rest.mjs
   - packages/wo/website-opportunities/domain/draft-write-plan-hides.mjs
@@ -195,73 +190,10 @@ The hook was chosen over a larger stored value because the plan holds every valu
 florist fixture, beside an order of about 390 KB) and the customer's words: it is kept only where a trial run asks for it. A hook that throws never
 hides the write's own failure. `apps/tracy-web/test/step-chain-draft-write-trial.test.mjs` proves both paths.
 
-## Text limits: one unit
+## Text limits, guards, skips and unproven flags
 
-Every limit counts what a visitor reads, in code points (`visibleLength`, `draft-write-length.mjs`): an inline tag or
-marker that only styles words is nothing, any other tag (`br`, `p`) one space, an entity the character it shows, a run
-of white space one space, no space at either end, NFC. The writer check (`charCount` of `page-copy-check.mjs` is this
-function), the plan limits, the order check and the write guard all count it, so a value the writer and the order check
-let through is never refused at the guard for its length. It is the plugin door's own count (`SlotFit::seenLength`,
-`mb_strlen`), except that the door does not normalise; the plan sends NFC, so they agree. The guard also holds a
-contract slot to the door's count of its `maxCharacters` (`doorLength`, `unit: 'door'`): a text slot stored in a fixed
-width column (`title`, `name`, `alias`, `label`, ...), a link or a picture path counts its raw value, entities and all,
-and the door reads an entity only with its semicolon. Only the guard knows the slots, so only it can refuse that (the
-memory site refuses by the same count). Code points, not grapheme clusters: a flag shows as one glyph but the door
-counts two, and the kit's limits were measured in code points.
-
-Still counted in UTF-16 units elsewhere in the domain (other owners, not changed here): `plan-data.mjs`,
-`pinned-copy.mjs`, `site-answers.mjs`, `neutral-signature.mjs`, `fact-value-kinds.mjs`, `brief.mjs`,
-`ai-quickstart-labels.mjs`, `place-profile.mjs`, `demo-request.mjs`.
-
-## Guards (before any door, `draft-write-guards.mjs`, all noRerun)
-
-| Code | Caught when |
-|---|---|
-| `text_over_limit` | a value is longer than its field limit (`unit: 'visible'`), or than its contract slot's `maxCharacters` as the door counts it (`unit: 'door'`); see "Text limits: one unit" |
-| `straight_quote_in_open_slot` | a straight double quote goes to a contract slot that opens empty |
-| `empty_text_node` | an empty value is sent to a text node (the write sends one space instead) |
-| `markup_forbidden` | a tag is sent through the contract, the map's codes are sent to an HTML place, a tag is sent to a codes place, or a field holds a tag its inline declaration does not list, an attribute its emphasis part does not declare (none declared, none allowed), or a tag in the other form than its `inline.write`, an attribute on a closing tag, a comment, or any markup `runsCodeIn` refuses (`runs_code`). The order check (`checkWriteOrder`, `markupNotDeclared`) catches every field case first, where the writer can still redo it, and the page writer's copy check (`angle_bracket`) before that |
-| `markup_runs_code` | a value written as HTML (an HTML piece, a value with tags or markers, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like), an `on*` handler or an address or style that runs code, in a tag or a marker, in any case, whatever entities, slashes, quotes (a `>` or `)` inside a quoted value) or white space hide it, markup inside an attribute value, or a `((` or `))` no marker reads (`marker_unread`); or any value or record column is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture) (`draft-write-markup.mjs`). Tags and markers are read by one tokenizer (`draft-write-tags.mjs`) that the order check reads them with too |
-| `slot_missing` | a contract value with no slot, or a slot the blank site contract does not have |
-| `icon_not_in_list` | a network class is missing from `networkIconClasses`, or an image icon is missing from the icon library (`iconKeys`; with no library wired, none is in it) |
-| `picture_without_alt` | a shown picture has no alt text |
-| `picture_web_address_only`, `picture_not_stored` | a picture has no stored bytes (an initials picture is drawn instead) |
-| `held_text_in_value` | a held name or person, in any form, is in a value, an alt text, a record column (title, alias, link) or a library block's HTML (`heldInLeaf(text, heldTexts)` of `draft-write-held.mjs`: entities read until the text stops changing, percent escapes read, `+` as a space, then as a person reads it with `plainOf`: accents and zero width characters out, white space as one space, tags read as a space or as nothing; whole words or slug form). Not caught: look-alike letters of another script, another word order, initials |
-| `block_not_approved` | a block is not placed by the approved plan |
-| `pair_incomplete` | one half of a button, or one version of an icon, is written without the other (block or item fields) |
-| `library_html_stale` | a library block's HTML does not show a shown field of the order (the heading, the label, the listing address escaped, each review's text, its reviewer as the block names them, its stars), or is empty |
-| `library_html_unsafe` | a library block's HTML holds markup that runs code (`script`, `iframe`, `style`, an `on*` handler, a `javascript:` address) |
-
-## Skip reasons (in `plan.skipped`)
-
-| Reason | Why |
-|---|---|
-| `left_empty`, `template_fallback`, `place_fallback`, `place_<state>`, `block_hidden` | the order leaves the place empty, to the template, or not shown |
-| `no_candidate_icon`, `gallery_own_photos_only`, `no_fitting_video`, `no_generated_people` | the order's own reason for a picture or icon it does not fill |
-| `address_shared` | another entry already writes the same words at that place (other words: a conflict, see the plan) |
-| `menu_item_is_page_item` | a menu block on the main menu: its items are the page items |
-| `menu_item_without_page`, `menu_item_without_label`, `menu_item_title` | a menu item with no page to link to; one with a page but no label; a menu item title, written by the page |
-| `derived_drawn_by_template` | a derived value the template draws itself |
-| `fact_fanned_out`, `fact_place_missing`, `fact_place_not_on_site`, `text_logo_prints_site_name` | a fact written once at its own place, or with no place on the site |
-| `no_mapping_entry`, `location_unresolved`, `entity_not_declared`, `kept_record_without_slot` | the mapping gives no place the write can reach (`kept_record_without_slot`: a location of a record written in place, its own block's or another's, with no contract slot). A skipped half of a button stops the plan as `pair_incomplete` |
-| `held_block_not_placed`, `foreign_copy_not_placed` | the block holding the place is not placed |
-| `seo_derived_by_template`, `seo_record_not_declared` | the page's search title and description |
-| `accent_variables_not_declared`, `accent_door_missing` | the accent is not written |
-
-## Unproven (flags in `plan.unproven`; the run copies them to its report)
-
-| Code | Why |
-|---|---|
-| `accent_variables_not_declared` | the mapping declares no accent colour variables, so the accent is not written |
-| `accent_door_missing` | the variables exist but no door writes them |
-| `identity_field_no_door` | an identity field (`fromname`) that `site.identity` neither reads nor writes: not sent |
-| `menu_item_link_not_declared` | the contract gives no menu link per page type: a list or plans page gets the featured view |
-| `featured_article_needed` | the home page's featured view needs a featured article, which the build does not make |
-| `created_record_frame` | a created article has no frame from the blank site: its HTML pieces go into the smallest frame that holds them (`draft-write-frame.mjs`); the template's own skeleton, `attribs` layout and `template_style_id` are not known |
-| `article_category_not_declared`, `seo_record_not_declared` | the contract does not say which category an article goes in, or which record holds a page's search texts |
-| `control_shared_by_items`, `omit_row_gap`, `omit_on_record_in_place` | see Hides |
-| `row_form_keys`, `recipe_ordering` | not measured on a real site (contract point 7) |
-| `initials_drawn_as_figure` | the drawer has strokes for A to Z only: a name in another script is drawn as a neutral figure, and the JA Boxing frames have no text slot for the letters |
+How every limit is counted, every guard the plan is held to before any door is called, where markup is caught, who
+escapes a plain value, why an entry is skipped and what is not proven: [draft-write-guards.md](draft-write-guards.md).
 
 The tests are in `packages/wo/website-opportunities/test/domain-draft-write-*.test.mjs` and
 `apps/tracy-web/test/draft-write-*.test.mjs` plus `step-chain-draft-write.test.mjs`.

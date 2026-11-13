@@ -180,12 +180,12 @@ A logo frame (`logo_from_brand_step`) counts as shown: the write step fills it f
 - entries: a value or an action (`entry_empty`); link and number values from the data (`link_not_from_data`); a data
   role text never from the writer (`data_role_written`); a data value names a plan id of the order (`data_unnamed`,
   `data_unknown`) and is that id's value (`data_value_changed`), one fact reading the same everywhere
-  (`data_value_differs`); a network label names its row link's network (`network_label_changed`); text within its
-  limit, counted as a visitor reads it (`visibleLength` of `draft-write-length.mjs`: tags out, entities read, white
-  space as one space, NFC, in code points; the writer and the write guard count the same) (`text_over_limit`); no markup, angle bracket or marker a text field does not declare in its `inline`
-  (`markup_forbidden`, the write step's own guard, caught here first); every main button label is the answer (`main_button_changed`); no button label without a
-  link that opens (`link_dead`); derived links name a page of the order (`derived_without_target`,
-  `derived_target_missing`); no written entry without a place (`entry_unplaced`);
+  (`data_value_differs`); a network label names its row link's network (`network_label_changed`); text within its limit,
+  counted as a visitor reads it (`visibleLength`) (`text_over_limit`); no markup, angle bracket or marker start (`((`
+  and a letter) its field's `inline` does not declare (`markup_forbidden`, a stop; the copy check refuses it first in
+  what the writer wrote, [draft-write-guards.md](draft-write-guards.md)); every main button label is the answer
+  (`main_button_changed`); no button label without a link that opens (`link_dead`); derived links name a page of the
+  order (`derived_without_target`, `derived_target_missing`); no written entry without a place (`entry_unplaced`);
 - pictures and icons: own, generated or none (`picture_source`), never stock (`stock_picture`), naming a file, a `ref`
   or how it is drawn (`picture_without_file`); a `sameAs` names another frame (`same_as_missing`), never itself
   (`same_as_self`) or a frame that is itself a `sameAs` (`same_as_chain`); a hidden network icon hides its link
