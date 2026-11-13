@@ -112,10 +112,23 @@ export function picturePathOf(bytes, mime) {
   return `images/tracy/${hash}.${EXT[mime] ?? 'jpg'}`
 }
 
-/** A record made once: found again by its mark when an earlier attempt made it and died before saving its id. */
+/**
+ * A record made once: found again by its mark when an earlier attempt made it and died before saving its id. In a
+ * revision run (#599) an operation to write again whose record the previous build made updates that record, same id,
+ * with every field a new record would get (its own apply id: `rewrite`, never the build's `create`).
+ */
 export async function madeOnce(op, kind, ctx, fields) {
   const { state } = ctx
-  if (state.ids[op.key] !== undefined) return state.ids[op.key]
+  if (state.ids[op.key] !== undefined) {
+    if (ctx.rewrite?.has(op.key))
+      await ctx.doors.update({
+        applyId: ctx.applyId(op, 'rewrite'),
+        kind,
+        id: state.ids[op.key],
+        fields: fields()
+      })
+    return state.ids[op.key]
+  }
   if (state.pending[op.key]) {
     const found = await ctx.doors.find({ kind, mark: op.mark })
     if (found !== null && found !== undefined) return keep(ctx, op.key, found)

@@ -74,7 +74,9 @@ export function pageFailing(state, context) {
  * and search details take only what this call was asked for.
  */
 export async function callPage(state, { plan, context, model, signal, rewrite }) {
-  const { page, slots, fields } = state
+  const { page, fields } = state
+  // A revision's first call asks only the fields of the blocks it changed (`state.ask`, #599); the rest keep their words.
+  const slots = !rewrite && state.ask ? state.ask : state.slots
   if (signal?.aborted) throw signal.reason ?? new Error('stopped')
   const askedSeo = rewrite ? rewrite.filter((f) => Object.values(SEO_KEYS).includes(f.key)) : null
   const user = pageWriterUser({

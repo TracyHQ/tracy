@@ -44,7 +44,7 @@ export async function writeAll(states, { plan, context, model, signal, others, r
   let rewrite = new Map(states.map((s) => [s, undefined]))
   const rounds = rewriting ? PAGE_WRITE_ATTEMPTS : 1
   for (let n = 0; n < rounds; n++) {
-    const calling = states.filter((s) => s.slots.length > 0 && rewrite.has(s))
+    const calling = states.filter((s) => s.slots.length > 0 && rewrite.has(s) && !(n === 0 && s.reused))
     const settled = await Promise.allSettled(
       calling.map((state) => callPage(state, { plan, context, model, signal, rewrite: rewrite.get(state) }))
     )

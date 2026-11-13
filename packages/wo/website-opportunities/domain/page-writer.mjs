@@ -21,13 +21,10 @@
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount } from './page-copy-check.mjs'
-import { placeLimitsOf } from './field-place-limits.mjs'
-import { PageWriterError, blockDescriptionsOf, knownEntriesOf, pageFieldsOf } from './page-writer-fields.mjs'
+import { writerContextOf, writerFieldsOf } from './page-writer-context.mjs'
+import { PageWriterError } from './page-writer-fields.mjs'
 import { pageOut } from './page-writer-page.mjs'
 import { writeAll } from './page-writer-rounds.mjs'
-import { foreignValuesOf } from './page-writer-rows.mjs'
-import { planDataOf } from './plan-data.mjs'
-import { seoLimitsOf } from './seo-limits.mjs'
 
 export { PageWriterError } from './page-writer-fields.mjs'
 export { readWriterReply, readWriterSeo } from './page-writer-page.mjs'
@@ -76,13 +73,31 @@ function dataOverLimit(fieldsByPage) {
 }
 
 /**
+ * What a revision keeps of a page (#599): its words, and either no first call (`reused`) or a first call asking only
+ * the fields of the blocks it changed (`ask`). The checks run on every page either way.
+ */
+function keptOf(kept, fields) {
+  if (!kept) return { values: {}, seo: undefined }
+  const ask = kept.ask ? fields.filter((f) => f.from === 'writer' && kept.ask.has(f.block)) : []
+  return {
+    values: { ...kept.values },
+    seo: kept.ask ? undefined : kept.seo,
+    ...(ask.length ? { ask } : { reused: true })
+  }
+}
+
+/**
  * Write every page of a plan, in parallel.
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], mapping?: object, others?: object[],
- *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean}} input `plan`: the approved plan
+ *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean, reuse?: Map<string, object>}}
+ *   input `plan`: the approved plan
  *   (`composePlan`); `profile`: the needs profile it was composed from, which holds the item field values and the
  *   business's voice; `mapping`: the template mapping, for its SEO limits; `others`: pages written before by another
  *   writer step (`{id, fields, seo?}`), which this call's pages must not repeat; `rewrite: false` writes once with no
- *   rewrite round (the step chain's second attempt, so a page is written at most twice in one build)
+ *   rewrite round (the step chain's second attempt, so a page is written at most twice in one build); `reuse`: page id ->
+ *   `{values, seo, ask?}`, the words a revision keeps (#599): a page with no `ask` takes no first call; with `ask` (block
+ *   ids) its first call asks those blocks' fields and its search texts only. Every page is checked with the others (its
+ *   own check and the whole site check) like a page just written
  * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[], seo?: object}>, prompt: object}>}
  *   `seo`: the page's search `title` and `description` when the writer wrote them; `attempts`:
  *   one entry per call that page took (1, or 2 after a rewrite); each page's
@@ -99,31 +114,18 @@ export async function writePages({
   others = [],
   model,
   signal,
-  rewrite = true
+  rewrite = true,
+  reuse
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
-  const data = planDataOf(profile)
-  const { byId } = data
-  const blocks = blockDescriptionsOf(blockStore, library)
   const context = {
-    blocks,
-    byId,
-    data,
-    placeLimits: placeLimitsOf(blocks.values()),
-    known: knownEntriesOf(byId, data.rowsById),
-    voice: profile?.voice,
-    seoLimits: seoLimitsOf(mapping),
+    ...writerContextOf({ profile, blockStore, library, mapping }),
     prompt: PAGE_WRITER_PROMPT
   }
   // A row's copy field is checked against the other rows of its own list: it never carries a sibling row's data.
-  const fieldsByPage = plan.pages.map((page) => {
-    const fields = pageFieldsOf(page, context)
-    return fields.map((f) =>
-      f.row && f.from === 'writer' ? { ...f, foreign: foreignValuesOf(f, fields, data) } : f
-    )
-  })
+  const fieldsByPage = plan.pages.map((page) => writerFieldsOf(page, context))
   const over = dataOverLimit(fieldsByPage)
   if (over.length > 0)
     throw new PageWriterError(
@@ -136,8 +138,7 @@ export async function writePages({
     page,
     fields: fieldsByPage[i],
     slots: fieldsByPage[i].filter((f) => f.from === 'writer'),
-    values: {},
-    seo: undefined,
+    ...keptOf(reuse?.get(page.id), fieldsByPage[i]),
     attempts: [],
     unreadable: [],
     failing: []

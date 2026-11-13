@@ -89,13 +89,18 @@ export async function runDraftWrite({ plan, doors, record, openStored, drawIniti
     status: 'running',
     ran: [...state.done],
     unproven: [...list(plan.unproven)],
-    conflicts: [...list(plan.conflicts)]
+    conflicts: [...list(plan.conflicts)],
+    // A revision run (#599): the operations the site already holds from the previous build run nothing.
+    ...(state.kept ? { kept: state.kept.length } : {})
   }
+  const kept = new Set(list(state.kept))
   const ctx = {
     plan,
     doors,
     html: doors.html,
     state,
+    // A revision run's operations that write a record the previous build made: written again in place, same id.
+    rewrite: new Set(list(state.rewrite)),
     report,
     openStored,
     drawInitials,
@@ -104,7 +109,7 @@ export async function runDraftWrite({ plan, doors, record, openStored, drawIniti
     applyId: (op, call) => `${runId}:${op.key}:${call}`
   }
   for (const op of plan.ops) {
-    if (state.done.includes(op.key)) continue
+    if (state.done.includes(op.key) || kept.has(op.key)) continue
     const run = runOf(op)
     if (!run) throw new DraftWriteError('op_unknown', `no way to run ${op.kind}`, { op: op.key })
     for (let attempt = 1; ; attempt++) {

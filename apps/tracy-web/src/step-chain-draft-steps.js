@@ -29,6 +29,7 @@ import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt
 import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
 import { draftWriteStep } from './step-chain-draft-write-step.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
+import { keptModelOf, reuseOf, revisionOf, revisionRecordOf } from './step-chain-draft-revision.js'
 
 /** The build model door's id in `LLM_DOORS`, the only door an assembled run spends. */
 export const ASSEMBLED_MODEL_DOOR = 'buildModel'
@@ -98,16 +99,20 @@ export function createDraftSteps(deps) {
       return { value: { from: 'plan', recorded: { from: 'plan', accent: look?.accent ?? null } }, usd: 0 }
     },
 
-    async plan(ctx) {
+    async plan(ctx, { kit } = {}) {
       const draft = await source.of(ctx)
       const { plan, profile, lastEdit, draftId } = draft
+      // A revision run (#599, `step-chain-draft-revision.js`): the previous build and which pages are written again.
+      const revision = kit ? await revisionOf(deps, ctx, { kit, plan, profile }) : null
       const recorded = {
         draftId,
         plan: plan.id ?? null,
         revision: plan.revision ?? null,
-        pages: plan.pages.length
+        pages: plan.pages.length,
+        ...(revision ? { rebuild: revisionRecordOf(revision) } : {})
       }
-      return { value: { draftId, plan, profile, lastEdit, research: draft.research, recorded }, usd: 0 }
+      const value = { draftId, plan, profile, lastEdit, research: draft.research, revision, recorded }
+      return { value: { ...value, previous: revision?.previous ?? null }, usd: 0 }
     },
 
     async copy(_ctx, { kit, plan }, { signal, attempt = 1 } = {}) {
@@ -120,14 +125,15 @@ export function createDraftSteps(deps) {
         model,
         signal,
         // The frame's second attempt: every page was written once already, so no rewrite round this time.
-        rewrite: attempt <= 1
+        rewrite: attempt <= 1,
+        reuse: reuseOf(plan)
       })
       const recorded = { pages: written.pages.map((p) => ({ id: p.id, calls: p.attempts.length })) }
       return { value: { ...written, recorded }, usd: null, knownUsd: 0 }
     },
 
     async pictures(ctx, { kit, plan }) {
-      const model = await modelOf()
+      const model = keptModelOf(await modelOf(), plan)
       const opened = await withDraftPictures({
         profile: withoutWithheld(plan.profile),
         manifest: plan.research?.manifest,
@@ -148,16 +154,18 @@ export function createDraftSteps(deps) {
         refused: placed.refused.length
       }
       const recorded = {
+        calls: { asked: model.asked, replayed: model.replayed },
         counts: placed.counts,
         leftOut: placed.leftOut,
         difference: placed.difference,
         draft
       }
-      return { value: { ...placed, profile: opened.profile, draft, recorded }, usd: null, knownUsd: 0 }
+      const value = { ...placed, profile: opened.profile, draft, replies: model.replies, recorded }
+      return { value, usd: null, knownUsd: 0 }
     },
 
     async icons(_ctx, { kit, plan, copy, pictures }) {
-      const model = await modelOf()
+      const model = keptModelOf(await modelOf(), plan)
       const icons = await selectBuildIcons({
         plan: plan.plan,
         profile: pictures.profile,
@@ -167,7 +175,8 @@ export function createDraftSteps(deps) {
         model,
         pictureFrames: pictures.frames
       })
-      return { value: { ...icons, recorded: { counts: icons.iconCounts } }, usd: null, knownUsd: 0 }
+      const recorded = { counts: icons.iconCounts, calls: { asked: model.asked, replayed: model.replayed } }
+      return { value: { ...icons, replies: model.replies, recorded }, usd: null, knownUsd: 0 }
     },
 
     async order(ctx, { kit, plan, copy, pictures, icons }) {
@@ -210,7 +219,10 @@ export function createDraftSteps(deps) {
 
     /** The write of a draft run: through the injected site doors, or a typed stop when none are wired. */
     async write(ctx, inputs) {
-      return draftWriteStep(deps.draftWrite, ctx, inputs, { iconLibrary: deps.iconLibrary })
+      return draftWriteStep(deps.draftWrite, ctx, inputs, {
+        iconLibrary: deps.iconLibrary,
+        builds: deps.builds
+      })
     }
   }
 }
