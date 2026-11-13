@@ -27,7 +27,12 @@ export function mismatch(op, what, meant, got, extra = {}) {
   })
 }
 
-const parsed = (value) => {
+/**
+ * The form a column value is compared in: a string that opens with `[` or `{` and parses as JSON is its parsed value
+ * (Joomla stores `params`, `attribs`, `images` as JSON text, and may write it back with other spacing or escaping),
+ * anything else is itself.
+ */
+export const canonicalOf = (value) => {
   if (typeof value !== 'string' || !/^\s*[[{]/.test(value)) return value
   try {
     return JSON.parse(value)
@@ -35,20 +40,26 @@ const parsed = (value) => {
     return value
   }
 }
-/** Whether `got` holds everything `sent` holds: objects by key (the site may add keys), lists and words exactly. */
-function holds(sent, got) {
-  const a = parsed(sent)
-  const b = parsed(got)
-  if (Array.isArray(a)) return Array.isArray(b) && a.length === b.length && a.every((v, i) => holds(v, b[i]))
+/**
+ * Whether `got` holds everything `sent` holds, both read by `canonicalOf`, at any depth: objects by key (the site may
+ * add keys), lists by length and position, every other value as words (`String`, so `1` holds `'1'`, and `null` or
+ * `undefined` hold `''`).
+ */
+export function columnHolds(sent, got) {
+  const a = canonicalOf(sent)
+  const b = canonicalOf(got)
+  if (Array.isArray(a))
+    return Array.isArray(b) && a.length === b.length && a.every((v, i) => columnHolds(v, b[i]))
   if (a && typeof a === 'object')
-    return !!b && typeof b === 'object' && Object.keys(a).every((k) => holds(a[k], b[k]))
+    return !!b && typeof b === 'object' && Object.keys(a).every((k) => columnHolds(a[k], b[k]))
   return String(a ?? '') === String(b ?? '')
 }
 
 /** Every column the record was sent, read back from the row the site holds. */
 export function readSent(row, sent, op) {
   for (const [column, value] of Object.entries(sent))
-    if (!holds(value, row[column])) throw mismatch(op, `column ${column}`, value, row[column], { column })
+    if (!columnHolds(value, row[column]))
+      throw mismatch(op, `column ${column}`, value, row[column], { column })
 }
 
 /** Every value of the op at its location; an element a `removes` took out must be gone. */
@@ -143,8 +154,8 @@ export function readRest(base, row, op, ctx) {
 
 /** A module's pages as the site holds them. */
 export async function readAssignment(op, id, menuids, ctx) {
-  const got = parsed((await ctx.doors.get({ kind: 'moduleAssignment', id })).menuids)
-  if (!holds(menuids, got)) throw mismatch(op, 'pages', menuids, got)
+  const got = canonicalOf((await ctx.doors.get({ kind: 'moduleAssignment', id })).menuids)
+  if (!columnHolds(menuids, got)) throw mismatch(op, 'pages', menuids, got)
 }
 
 /**
