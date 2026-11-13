@@ -114,10 +114,10 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: 2.1.3
-        version: 2.1.3(hono@4.13.11)
+        version: 2.1.3(hono@4.13.16)
       hono:
-        specifier: 4.13.11
-        version: 4.13.11
+        specifier: 4.13.16
+        version: 4.13.16
       playwright:
         specifier: 1.63.0
         version: 1.63.0
@@ -126,7 +126,7 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: 2.1.3
-        version: 2.1.3(hono@4.13.11)
+        version: 2.1.3(hono@4.13.16)
       '@phosphor-icons/core':
         specifier: 2.1.1
         version: 2.1.1
@@ -143,8 +143,8 @@ importers:
         specifier: 2.0.4
         version: 2.0.4
       hono:
-        specifier: 4.13.11
-        version: 4.13.11
+        specifier: 4.13.16
+        version: 4.13.16
       impit:
         specifier: 0.14.7
         version: 0.14.7
@@ -1515,10 +1515,10 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: 2.1.3
-        version: 2.1.3(hono@4.13.11)
+        version: 2.1.3(hono@4.13.16)
       hono:
-        specifier: 4.13.11
-        version: 4.13.11
+        specifier: 4.13.16
+        version: 4.13.16
       pdfjs-dist:
         specifier: 6.3.289
         version: 6.3.289
@@ -19986,12 +19986,6 @@ packages:
     peerDependencies:
       hono: 4.13.11
 
-  '@hono/node-server@2.1.1':
-    resolution: {integrity: sha512-ELuehkj5VCBdgEw9zs+ivkKwyzzUCSQuE96YmiPvn1ECBoZCczbFXJLeEGMTYjphP6gydh4pHMqEYPVMYUVgQg==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      hono: 4.13.11
-
   '@hono/node-server@2.1.3':
     resolution: {integrity: sha512-TA//nWMqPhbfdfneACk6t5a9eqbS9lABEPyKn0/xZTah3H3U2XaVg85rJFl0/Fyit0I552YDHgXGVSf3GwqbUw==}
     engines: {node: '>=20'}
@@ -22889,6 +22883,9 @@ packages:
   '@smithy/core@3.33.3':
     resolution: {integrity: sha512-CsOeKq/9kA3y6VJHt+/+VTCtBaxJ4OTFpgrjIUhPpDIKxBci1k2bJaQASF2h/ELWrulGp+t97DZ0mevfAD8idg==}
     engines: {node: '>=18.0.0'}
+    deprecated: |-
+      Deprecated due to a bug in custom logger data redaction. Upgrade to the latest version. If you used a custom logger with this
+        version, review your logs and rotate any credentials or other secrets. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -26219,6 +26216,10 @@ packages:
 
   hono@4.13.11:
     resolution: {integrity: sha512-/SMX/RQNJn7oNmFwH6DtwDqcrzZU2otm1FD6OJe2cWF6cfy/F8hq0XVBv7xW3FTJshRQwuBnXHDq2kNsdZnshg==}
+    engines: {node: '>=16.9.0'}
+
+  hono@4.13.16:
+    resolution: {integrity: sha512-AOLOEhvrV+iH92xXCnFr/5+3KjPKcI3xP63XJtX5spAnkznPdHijlIsUTpi7/9EhWqrTCekw5c5zh1K+YsVw7A==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -35004,13 +35005,13 @@ snapshots:
     dependencies:
       hono: 4.13.11
 
-  '@hono/node-server@2.1.1(hono@4.13.11)':
-    dependencies:
-      hono: 4.13.11
-
   '@hono/node-server@2.1.3(hono@4.13.11)':
     dependencies:
       hono: 4.13.11
+
+  '@hono/node-server@2.1.3(hono@4.13.16)':
+    dependencies:
+      hono: 4.13.16
 
   '@huanlin/dsh-plugin-better-locale@0.1.0(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis)(@deepseek-ai/dsh-client-locale@0.2.0-rc.2(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis))(@deepseek-ai/dsh-client-ui-primitives@0.2.0-rc.2(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis))(@deepseek-ai/dsh-client-ui-settings@0.2.0-rc.2(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis))(@deepseek-ai/dsh-client-ui-slots@0.2.0-rc.2(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis))(@deepseek-ai/dsh-invariants@0.2.0-rc.2(@deepseek-ai/cordis@vendor+tracy+deepseek-harness+vendor+cordis))(react-dom@18.2.0(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -35559,7 +35560,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.32.0(supports-color@9.4.0)(zod@4.6.6)':
     dependencies:
-      '@hono/node-server': 2.1.1(hono@4.13.11)
+      '@hono/node-server': 2.1.3(hono@4.13.11)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -41501,6 +41502,8 @@ snapshots:
   highlight.js@11.12.0: {}
 
   hono@4.13.11: {}
+
+  hono@4.13.16: {}
 
   hookable@5.5.3: {}
 
