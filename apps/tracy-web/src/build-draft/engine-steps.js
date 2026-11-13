@@ -9,13 +9,15 @@
  * (`wo_source`, `wo_media`, `wo_profile` keyed by the opportunity), so the pre site path stops at this seam until a
  * gatherer that needs no opportunity exists.
  *
- * 🔒 THE PLAN NEVER SHOWS THE TEMPLATE'S LOOK (decision D40). Compose reads the business's own brand from
- * `brandStep({research})` (the pre site brand step, #616). No brand record, or one with no colour of the business's
- * own, is `brand_unavailable`: the step stops before any model call, and the plan composer is never asked to fall
- * back to the template's colour.
+ * 🔒 THE PLAN NEVER SHOWS THE TEMPLATE'S LOOK (decision D40). Compose reads the business's brand from
+ * `brandStep({research, template, kit})`: the pre site brand step of #616 (`brand-before-site.js`), which answers its
+ * look record (`brandLookOf`). The rules of what that record allows are #616's and live in the WO package: the plan
+ * composer refuses no record (`brand_missing`) and a kept template accent no rule covers (`brand_accent_unsettled`)
+ * before any model call, and keeps the template accent only where the product owner's rule says so (no logo at all,
+ * said to the customer). Nothing here re-decides them, and the composer is never asked for its test-only fallback.
  */
 import { randomUUID } from 'node:crypto'
-import { buildNeedsProfile, composePlan, lookOf, researchOf } from 'website-opportunities/domain'
+import { buildNeedsProfile, composePlan, researchOf } from 'website-opportunities/domain'
 
 /** An error of a step, with the code and the rerun rule the WO package's errors carry. */
 export class EngineStepError extends Error {
@@ -58,25 +60,22 @@ export async function researchStep({ links, description }, { gather, model, kit 
   }
 }
 
-/** Whether a brand record carries the business's own accent colour: the look made from it keeps no template colour. */
-function ownBrand(template, brand) {
-  if (!brand || typeof brand !== 'object') return false
-  const { assumptions } = lookOf(template, brand)
-  return !assumptions.some((a) => a.id === 'accent')
+/**
+ * The business's brand record for the chosen template, from the pre site brand step. It runs once per compose, before
+ * the composer: the brand step keeps its own attempts (`brand-before-site.js`), so the compose rerun never runs it again.
+ * @returns {Promise<object | null>} the look record, or null when the step has none
+ */
+export async function brandOf({ research, template }, { brandStep, kit }) {
+  return (await brandStep({ research, template, kit })) ?? null
 }
 
 /**
- * Compose the plan for the chosen template from the needs profile and the owner's answers, with the business's own
- * brand. Answers what `composePlan` answers (the plan passed the rules gate).
- * @param {{research: object, answers: object[], template: object}} inputs
- * @param {{model: Function, kit: object, brandStep: Function}} tools
+ * Compose the plan for the chosen template from the needs profile, the owner's answers and the brand record. Answers
+ * what `composePlan` answers (the plan passed the rules gate and its look check).
+ * @param {{research: object, answers: object[], template: object, brand: object | null}} inputs
+ * @param {{model: Function, kit: object}} tools
  */
-export async function composeStep({ research, answers, template }, { model, kit, brandStep }) {
-  const brand = await brandStep({ research })
-  if (!ownBrand(template, brand))
-    throw new EngineStepError('brand_unavailable', 'no brand of the business own before the site exists', {
-      noRerun: true
-    })
+export async function composeStep({ research, answers, template, brand }, { model, kit }) {
   return composePlan({
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,

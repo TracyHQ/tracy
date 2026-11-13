@@ -116,6 +116,7 @@ import { buildDraftRoutes } from './build-draft/route.js'
 import { buildModelDoor } from './build-draft/build-model.js'
 import { createEngine } from './build-draft/engine.js'
 import { buildEngineRoutes } from './build-draft/engine-route.js'
+import { draftBrandStep, noPreSiteResearch } from './build-draft-wiring.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
 import { researchOfRevision } from './opportunities-build/revision-research.js'
@@ -348,19 +349,6 @@ async function visionDoorFor(deps) {
   return model
     ? { url: `${model.baseUrl.replace(/\/+$/, '')}/chat/completions`, key: model.apiKey, model: model.words }
     : null
-}
-
-/**
- * The research gatherer of the build chat before a site exists (#609): none on this server yet. A website
- * opportunity's research (`wo_source`, `wo_media`, `wo_profile`) runs only on that opportunity's own rows, so the
- * research door stops with this fault (the team is told; the owner reads one sentence) until a gatherer that needs no
- * opportunity is injected as `deps.buildEngine.gather`.
- */
-async function noPreSiteResearch() {
-  throw Object.assign(new Error('no research gatherer runs before a website opportunity exists'), {
-    code: 'research_unavailable',
-    noRerun: true
-  })
 }
 
 export function buildApp(deps) {
@@ -1197,15 +1185,28 @@ export function buildApp(deps) {
     )
     // The build chat's engine doors (`build-draft/engine-route.js`, #609): research, templates, compose and edit before
     // a site exists, for the dsh tool `tracy_build`. `buildEngine` holds the injected steps: the research gatherer
-    // (none yet: a website opportunity's research runs only on its own rows), the pre site brand step (#616, not landed:
-    // none, so compose stops rather than show the template's look) and the build model door.
+    // (none yet: a website opportunity's research runs only on its own rows), the pre site brand step (#616, its own
+    // step chain steps, made on first use) and the build model door.
     const buildEngine = deps.buildEngine ?? {}
+    const brandSteps = () =>
+      createStepChainSteps({
+        pool: deps.pool,
+        config: deps.config,
+        secret: deps.config.sessionSecret,
+        kitImages: kitImagesFor({ pool: deps.pool, config: deps.config, fetchImpl: deps.fetchImpl ?? fetch }),
+        brandWiring: productionWiring(deps.config, {
+          objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch)
+        }),
+        picturesStoreDir: defaultStoreDir(),
+        fetchImpl: deps.fetchImpl ?? fetch,
+        log: deps.log ?? console
+      })
     app.buildDraftEngine = createEngine({
       pool: deps.pool,
       kits,
       buildModel: buildEngine.buildModel ?? buildModelDoor({ pool: deps.pool, config: deps.config }),
       gather: buildEngine.gather ?? noPreSiteResearch,
-      brandStep: buildEngine.brandStep ?? (async () => null),
+      brandStep: buildEngine.brandStep ?? draftBrandStep({ pool: deps.pool, stepsOf: brandSteps }),
       now: deps.now
     })
     app.route(

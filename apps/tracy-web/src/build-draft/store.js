@@ -127,9 +127,11 @@ export function chooseTemplate(pool, accountId, sent) {
  * so no revision ever names two plans; the undo and the last edit belong to the plan they edited and are cleared.
  * The only plan writer besides the gated edits: no door calls it with a body a browser sent.
  * @param {{plan: object, profile: object}} composed what `composePlan` answered
- * @param {{research?: object}} [extra]
+ * @param {{research?: object, runner?: string}} [extra] `runner`: the engine runner whose running compose step this
+ *   ends (`engine.js`): the plan and the step's done state are one write, so a restart can never leave a stored plan
+ *   beside a step that reads as stopped; a step no longer that runner's (`NOT_RUNNING`) writes nothing
  */
-export function putComposed(pool, accountId, { plan, profile } = {}, { research } = {}) {
+export function putComposed(pool, accountId, { plan, profile } = {}, { research, runner } = {}) {
   const problems = planProblem(plan)
   if (problems) return { error: 'INVALID_PLAN', problems }
   if (!profile || typeof profile !== 'object' || Array.isArray(profile))
@@ -140,7 +142,12 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research 
   return changeDraft(pool, accountId, (row) => {
     if (row.plan?.id === plan.id && plan.revision <= row.plan.revision)
       return { error: 'STALE_PLAN', revision: row.plan.revision }
+    if (runner !== undefined && (row.engine?.state !== 'running' || row.engine.runner !== runner))
+      return { error: 'NOT_RUNNING' }
     return {
+      ...(runner === undefined
+        ? {}
+        : { engine: { ...row.engine, state: 'done', endedAt: new Date().toISOString() } }),
       plan,
       needs_profile: profile,
       template: plan.look.template,

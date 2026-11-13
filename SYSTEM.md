@@ -869,6 +869,19 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   person who typed (`x-tracy-actor`) with the build session id (`x-tracy-session`), and stores the owner's question
   replies through `PUT /api/build-draft/answers`. It holds no secret and no engine logic; long engine work is read
   back from `GET /api/build-draft/engine`, never held open in one call.
+  The engine doors live in [`build-draft/engine-route.js`](apps/tracy-web/src/build-draft/engine-route.js); the build
+  draft doors accept the same `x-tracy-actor` with the caller's own build session (`build-draft/caller.js`; any other
+  session answers 403). Research and compose run in the background of the tracy-web process
+  ([`build-draft/engine.js`](apps/tracy-web/src/build-draft/engine.js)): migration 217 adds `build_draft.engine`, the
+  state of the latest step with the id of the process that runs it, so a step left running by a restart reads as stopped
+  with a fault; the composed plan and its step's done state are one write (`putComposed` with the runner). A failed
+  step runs once more with the same inputs, never after a `noRerun` failure; the second failure records `fault` and the
+  owner reads one sentence. Research needs an injected gatherer (none on the server yet: a website opportunity's research
+  runs only on its own rows); compose takes the brand record of #616's brand step before the site
+  ([`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`), which runs on a
+  research revision, so a draft without one stops with `brand_input_missing` and never shows the template's look.
+  The engine's own model calls (needs profile, plan composer) spend the `buildModel` door (Model & AI); the brand step
+  spends the brand bench's doors.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,

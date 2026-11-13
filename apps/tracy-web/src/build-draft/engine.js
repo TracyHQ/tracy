@@ -14,17 +14,25 @@ import { randomUUID } from 'node:crypto'
 import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf } from './engine-state.js'
-import { composeStep, researchStep } from './engine-steps.js'
+import { brandOf, composeStep, researchStep } from './engine-steps.js'
 import { putComposed, recordFault } from './store.js'
 
 /** Which sentence a failure gets, by its code; every other failure is a fault of ours. */
 const SAY_BY_CODE = {
-  brand_unavailable: SAY.brand,
+  brand_missing: SAY.brand,
+  brand_accent_unsettled: SAY.brand,
+  brand_step_failed: SAY.brand,
+  brand_input_missing: SAY.brand,
   research_unusable: SAY.research,
   research_empty: SAY.research,
   research_unavailable: SAY.research
 }
-const REASON_BY_CODE = { brand_unavailable: 'brand-unavailable' }
+const REASON_BY_CODE = {
+  brand_missing: 'brand-unavailable',
+  brand_accent_unsettled: 'brand-unavailable',
+  brand_step_failed: 'brand-unavailable',
+  brand_input_missing: 'brand-unavailable'
+}
 
 /**
  * @param {object} deps
@@ -115,26 +123,17 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, now = 
     /** Compose the plan for the chosen template; it reaches the draft only through `putComposed`. */
     async compose(accountId, { request }, row, kit) {
       const template = kit.template
-      const inputs = {
-        research: row.research,
-        answers: row.answers,
-        template,
-        ...(request ? { request } : {})
-      }
-      return start(
-        accountId,
-        'compose',
-        { ...(request ? { request } : {}), template },
-        ranWith(
-          (copy, model) => composeStep(copy, { model, kit, brandStep }),
-          inputs,
-          async (composed) => {
-            const put = await putComposed(pool, accountId, composed)
-            if (put.error) throw Object.assign(new Error(`putComposed: ${put.error}`), { code: put.error })
-            return {}
-          }
-        )
-      )
+      const inputs = { research: row.research, answers: row.answers, template }
+      return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
+        const model = await buildModel()
+        // The brand step first, once: a failure of it is its own (it already ran its attempts) and stops the step.
+        const brand = await brandOf(inputs, { brandStep, kit })
+        const ran = await runWithRerun((copy) => composeStep(copy, { model, kit }), { ...inputs, brand })
+        if (!ran.ok) return ran
+        const put = await putComposed(pool, accountId, ran.value, { runner })
+        if (put.error) throw Object.assign(new Error(`putComposed: ${put.error}`), { code: put.error })
+        return { ...ran, columns: {} }
+      })
     },
     /** The engine state of the account's draft; a step whose process ended is stopped first. */
     async read(accountId) {
