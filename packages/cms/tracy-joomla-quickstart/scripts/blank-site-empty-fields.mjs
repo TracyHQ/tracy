@@ -46,14 +46,18 @@ function locationsIn(value, out = []) {
   return out
 }
 
-/** The places of a mapping file a blank site empties: field and fact places of surviving records, no design line. */
+/**
+ * The places of a mapping file a blank site empties: field and fact places of surviving records, no design line, and
+ * the places it empties though no build writes them (`emptiedNotWritten`).
+ */
 export function placesToEmpty(mapping) {
   const design = new Set(Object.values(mapping.blocks ?? {}).flatMap((b) => (b.designLines ?? []).map(key)))
   const blocks = Object.values(mapping.blocks ?? {}).flatMap((b) =>
     locationsIn([b.fields, b.itemFields, b.lists, b.itemLists])
   )
   const seen = new Set()
-  return [...blocks, ...locationsIn(mapping.facts ?? {})].filter((loc) => {
+  const emptiedOnly = locationsIn(mapping.emptiedNotWritten ?? [])
+  return [...blocks, ...locationsIn(mapping.facts ?? {}), ...emptiedOnly].filter((loc) => {
     const k = key(loc)
     if (design.has(k) || seen.has(k) || mapping.entities?.[loc.entity]?.created) return false
     seen.add(k)

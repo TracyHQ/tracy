@@ -26,7 +26,8 @@ export function needsBlankSiteContract(dir, rootDir) {
 }
 
 /** The problems of a folder's blank site contract. `mapping` is its parsed mapping file. */
-export function blankSiteContractProblems(dir, mapping, rootDir) {
+/** `emptyHtml` (tests): the function that empties HTML values, in place of the blank site step's php. */
+export function blankSiteContractProblems(dir, mapping, rootDir, { emptyHtml } = {}) {
   const problem = (file, at, message) => [{ file: `${BLANK_CONTRACT_DIR}/${file}`, at, message }]
   const blank = {}
   for (const [name, file] of [
@@ -71,17 +72,31 @@ export function blankSiteContractProblems(dir, mapping, rootDir) {
       }
     ]
   }
-  return checkBlankSiteContract({
-    mapping,
-    blockStore,
-    released: {
-      manifest: json('manifest.json'),
-      contentMap: json('content-map.json'),
-      lock: json('presentation-lock.json'),
-      sha256: Object.fromEntries(
-        BLANK_CONTRACT_FILES.map((f) => [f, createHash('sha256').update(raw[f]).digest('hex')])
-      )
-    },
-    blank
-  })
+  // A mapping location that leads nowhere in the released contract, or no php on PATH (the samples of the emptied
+  // places are made by the blank site step's own php), is a problem line of the gate, not a crash of it.
+  try {
+    return checkBlankSiteContract({
+      mapping,
+      blockStore,
+      released: {
+        manifest: json('manifest.json'),
+        contentMap: json('content-map.json'),
+        lock: json('presentation-lock.json'),
+        sha256: Object.fromEntries(
+          BLANK_CONTRACT_FILES.map((f) => [f, createHash('sha256').update(raw[f]).digest('hex')])
+        )
+      },
+      blank,
+      ...(emptyHtml ? { emptyHtml } : {})
+    })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    return problem(
+      'content-map.json',
+      '',
+      /ENOENT|spawn/.test(message)
+        ? `the samples of the emptied places need php on PATH: ${message.split('\n')[0]}`
+        : `the blank site contract could not be checked: ${message.split('\n')[0]}`
+    )
+  }
 }

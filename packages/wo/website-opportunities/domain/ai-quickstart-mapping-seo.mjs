@@ -1,7 +1,7 @@
 // The SEO and library rules of an AI quickstart mapping file (ticket #584). Pure. Called by `mappingPlaceProblems`
 // (`ai-quickstart-mapping-places.mjs`) with the page recipes.
 //   - `seo.titleLimit` and `seo.descriptionLimit`: the longest title and description, in characters, a positive whole
-//     number each, with `seo.limitsWhy` (search result display limits, not template measurements);
+//     number each, at most 60 and 160 (search result display limits, `SEO_LIMIT_CEILINGS`), with `seo.limitsWhy`;
 //   - every page type of the recipes has its title, description and share image (`seo.pageTypes`), the share image
 //     in the 1200x630 frame, and its share title (`ogTitle`): `{sameAs: "title", locations | derived}`, the value of
 //     the SEO title written where the template prints og:title, never the short heading of the page;
@@ -17,6 +17,9 @@ const isName = (value) => typeof value === 'string' && value.trim() !== ''
 const isLocation = (value) => isObject(value) && locationProblem(value) === null
 const locs = (v) => Array.isArray(v) && v.length > 0 && v.every(isLocation)
 
+/** What a search result shows of a title and a description: a template's limit may be lower, never higher. */
+export const SEO_LIMIT_CEILINGS = Object.freeze({ titleLimit: 60, descriptionLimit: 160 })
+
 /** The SEO limits: `seo.titleLimit`, `seo.descriptionLimit`, positive whole numbers, and why they are what they are. */
 function seoLimitProblems(seo, report) {
   for (const key of ['titleLimit', 'descriptionLimit'])
@@ -24,6 +27,11 @@ function seoLimitProblems(seo, report) {
       report(
         `seo.${key}`,
         `${key}: the longest ${key.replace('Limit', '')} in characters, a positive whole number`
+      )
+    else if (seo[key] > SEO_LIMIT_CEILINGS[key])
+      report(
+        `seo.${key}`,
+        `${key}: at most ${SEO_LIMIT_CEILINGS[key]}, what a search result shows; a template may only lower it`
       )
   if (!isName(seo.limitsWhy))
     report(

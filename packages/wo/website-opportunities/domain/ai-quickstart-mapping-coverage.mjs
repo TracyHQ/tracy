@@ -5,10 +5,16 @@
 //     by exactly the fields that fill it (`filledBy`), within the smallest limit of those fields (`limit`);
 //   - a store field written as a business fact (`{fact}`) has every place it stands for among the fact's places;
 //   - Joomla's global configuration carries the site name and the mail sender name: both are places of the name fact;
-//   - every declared entity is named by a location of the file, or by `notEmptied`;
+//   - a template string the draft report says the build hides (`hiddenStrings`) has its override with the kit's value,
+//     and a language override that hides a string (an empty value) is one of them;
+//   - every declared entity is named by a location of the file, by `emptiedNotWritten`, or by `notEmptied`, and every
+//     record `notEmptied` names is declared;
+//   - `emptiedNotWritten` is `[{entity, column, jsonPath?, why}]`: a place the blank site empties though no build
+//     writes it (a sender identity the site owner sets with the sending mailbox), so no location of the file writes it;
 //   - `notEmptied` is `[{entity, slot? | column?, why}]`, and a place the draft report lists outside the store or
 //     unlisted (other than `kept`, which the draft report itself gives a reason for), on a record the blank site
 //     keeps, that the file does not write, is one `notEmptied` names.
+import { locationKey, locationProblem } from './ai-quickstart-mapping-entry.mjs'
 import { scopesOf } from './ai-quickstart-field-keys.mjs'
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -130,13 +136,36 @@ function notEmptiedProblems(mapping, writers, draftReport, report) {
         'a notEmptied entry is {entity, slot? | column?, why}, a slot of that entity'
       )
   })
-  const named = new Set(writers.map((w) => w.loc.entity))
+  const named = new Set(
+    [...writers.map((w) => w.loc), ...list(mapping.emptiedNotWritten)].map((l) => l?.entity)
+  )
   for (const key of Object.keys(mapping.entities ?? {}))
     if (!named.has(key) && !list(notEmptied).some((n) => n?.entity === key))
       report(
         `entities[${key}]`,
         `no location names ${key}: write it, or say in notEmptied why the blank site keeps it`
       )
+  list(notEmptied).forEach((n, i) => {
+    if (isName(n?.entity) && !Object.hasOwn(mapping.entities ?? {}, n.entity))
+      report(`notEmptied[${i}]`, `entity "${n.entity}" is not declared in entities`)
+  })
+  // A module's title is stored outside its params, often outside the content map, and can hold a demo word (a
+  // trainer's name): a kept module has its title written, or classed in notEmptied (the whole record, its title
+  // column, or the content map slot of its title).
+  for (const [key, e] of Object.entries(mapping.entities ?? {})) {
+    if (e?.kind !== 'module' || e.created || !named.has(key)) continue
+    const written = writers.some((w) => w.loc.entity === key && w.loc.column === 'title' && !w.loc.jsonPath)
+    const classed = list(notEmptied).some(
+      (n) =>
+        n?.entity === key &&
+        (n.column === 'title' || n.slot !== undefined || (n.column ?? n.slot) === undefined)
+    )
+    if (!written && !classed)
+      report(
+        `entities[${key}]`,
+        `the title of ${key} is written by no field: write it, or say in notEmptied (column "title") why the blank site keeps it`
+      )
+  }
   if (!isObject(draftReport)) return
   const written = new Set(writers.map((w) => w.loc.slot).filter(isName))
   const strings = new Set(list(mapping.overrides?.language).map((o) => o?.slot))
@@ -163,10 +192,57 @@ function notEmptiedProblems(mapping, writers, draftReport, report) {
   }
 }
 
+/** The hidden template strings of the draft report, and the language overrides that carry a value. */
+function hiddenStringProblems(mapping, draftReport, report) {
+  if (!isObject(draftReport)) return
+  const hidden = list(draftReport.hiddenStrings)
+  const overrides = list(mapping.overrides?.language)
+  for (const h of hidden)
+    if (!overrides.some((o) => o?.key === h?.constant && o.value === h.value))
+      report(
+        'overrides.language',
+        `${h?.constant} is hidden by the build (the draft report's hiddenStrings): give its override with value ${JSON.stringify(h?.value)}`
+      )
+  overrides.forEach((o, i) => {
+    if (o?.value === '' && !hidden.some((h) => h?.constant === o.key))
+      report(
+        `overrides.language[${i}].value`,
+        `${o.key} is hidden by an empty value no hidden string of the draft report accounts for: decide it in hiddenStrings`
+      )
+  })
+}
+
+/** The places the blank site empties though no build writes them: declared, said why, and written by nothing. */
+function emptiedNotWrittenProblems(mapping, writers, report) {
+  const value = mapping.emptiedNotWritten
+  if (value === undefined) return
+  if (!Array.isArray(value))
+    return report('emptiedNotWritten', 'emptiedNotWritten is a list of {entity, column, jsonPath?, why}')
+  const written = new Set(writers.map((w) => locationKey(w.loc)))
+  value.forEach((e, i) => {
+    const at = `emptiedNotWritten[${i}]`
+    const { why, ...loc } = isObject(e) ? e : {}
+    if (!isObject(e) || locationProblem(loc) !== null || !isName(why))
+      return report(
+        at,
+        'an entry is {entity, column, jsonPath?, why}: a stored place and why no build writes it'
+      )
+    if (!Object.hasOwn(mapping.entities ?? {}, loc.entity))
+      report(at, `entity "${loc.entity}" is not declared in entities`)
+    if (written.has(locationKey(loc)))
+      report(
+        at,
+        `${loc.entity} ${loc.column} is written by the file too: a place is written, or emptied only`
+      )
+  })
+}
+
 /** Every coverage problem of a mapping file (see the head of this file). */
 export function mappingCoverageProblems(mapping, writers, { report, blockStore, draftReport }) {
   const uses = storeUses(blockStore, mapping)
   languageProblems(mapping, uses, report)
   factProblems(mapping, writers, uses, report)
+  hiddenStringProblems(mapping, draftReport, report)
+  emptiedNotWrittenProblems(mapping, writers, report)
   notEmptiedProblems(mapping, writers, draftReport, report)
 }

@@ -8,13 +8,35 @@
 // wraps that part the way the demo does (the content map's `((br/))` and `((span))` markers). Plain words are always
 // valid. `wrapper` lists the block elements the stored value is wrapped in (`p`, a body list `ul` and `li`), which the
 // build keeps around the words. `from` names where the shape was read: `template-kit` (the kit's measured slot), or
-// `content-map` (the markers of the content map sample, for a slot the kit lists without it).
+// `content-map` (the markers of the content map sample, for a slot the kit lists without it). `write` says how a build
+// writes the value through the Claude Cowork door (0.24.85, measured on the blank site): `codes`, the content map's
+// markers as they are (an ACM module's data, which the template turns into tags when it draws); `html`, real tags in
+// the stored HTML (the door's `content.contract` refuses `<` and `>` and writes markers as words, so the build
+// replaces them by tags with `content.get` and `content.update`, or writes the tags where it creates the record).
 import { scopesOf } from './ai-quickstart-field-keys.mjs'
 
 export const EMPHASIS_TAGS = Object.freeze(['br', 'span'])
 export const EMPHASIS_AT = Object.freeze(['start', 'end', 'inside'])
 export const WRAPPER_TAGS = Object.freeze(['p', 'ul', 'li'])
 export const INLINE_FROM = Object.freeze(['template-kit', 'content-map'])
+export const INLINE_WRITE = Object.freeze(['codes', 'html'])
+
+/** The write form a content map slot's value takes (see the head of this file), or null when it is neither. */
+export function inlineWriteOfSlot(slot) {
+  const xpath = typeof slot?.xpath === 'string' && slot.xpath ? slot.xpath : null
+  if (slot?.nestedJson === 'jatools-config' && !xpath) return 'codes'
+  if (xpath && !/\/@[^/]+$/.test(xpath) && slot.nestedJson === undefined) return 'html'
+  return null
+}
+
+/** Where the accent span of a sample sits in its words (`start`, `end`, `inside`), or null when it has none. */
+export function spanAtOfSample(sample) {
+  const words = String(sample ?? '')
+    .replace(/\(\(br\s*\/?\)\)/gi, ' ')
+    .trim()
+  if (!/\(\(span[^()]*\)\)/i.test(words)) return null
+  return /^\(\(span/i.test(words) ? 'start' : /\(\(\/span\)\)$/i.test(words) ? 'end' : 'inside'
+}
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isName = (value) => typeof value === 'string' && value.trim() !== ''
@@ -32,7 +54,7 @@ function emphasisProblem(e) {
 
 /** The problem of an `inline` declaration, or null. */
 export function inlineProblem(inline) {
-  if (!isObject(inline)) return 'inline is {emphasis, wrapper?, from}'
+  if (!isObject(inline)) return 'inline is {emphasis, wrapper?, from, write}'
   if (!Array.isArray(inline.emphasis)) return 'inline.emphasis is a list of emphasis parts (it may be empty)'
   for (const e of inline.emphasis) {
     const problem = emphasisProblem(e)
@@ -46,6 +68,8 @@ export function inlineProblem(inline) {
   if (inline.emphasis.length === 0 && !list(inline.wrapper).length)
     return 'inline declares an emphasis or a wrapper'
   if (!INLINE_FROM.includes(inline.from)) return `inline.from is ${INLINE_FROM.join(' or ')}`
+  if (!INLINE_WRITE.includes(inline.write))
+    return `inline.write is how the build writes the value through the door: ${INLINE_WRITE.join(' or ')}`
   return null
 }
 

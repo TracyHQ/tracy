@@ -15,6 +15,7 @@ import {
   locationProblem
 } from './ai-quickstart-mapping-entry.mjs'
 import { mappingPlaceProblems } from './ai-quickstart-mapping-places.mjs'
+import { LIST_FACT_KINDS, SINGLE_FACT_KINDS } from './needs-profile-merge.mjs'
 
 /** The business facts of the site form, each declared once and fanned out to every place the template shows it. */
 export const BUSINESS_FACTS = Object.freeze({
@@ -215,6 +216,65 @@ function factsProblems(facts, report) {
   }
 }
 
+/** Every business fact kind the business profile holds: each is written as a fact, or classed in notFacts by kind. */
+export const PROFILE_FACT_KINDS = Object.freeze([
+  ...new Set([...SINGLE_FACT_KINDS, ...LIST_FACT_KINDS, ...Object.values(BUSINESS_FACTS)])
+])
+
+/**
+ * `notFacts`: `[{fact, kind?, why}]`, required beside `facts`. A business profile fact kind no key of `facts` writes is
+ * classed by an entry with that `kind`, so a dropped entry (or the whole list) is a problem.
+ */
+function notFactsProblems(mapping, report) {
+  if (mapping.facts === undefined) return
+  const notFacts = mapping.notFacts
+  if (!Array.isArray(notFacts))
+    return report(
+      'notFacts',
+      'notFacts lists each business fact or demo value no fact writes: [{fact, kind?, why}]'
+    )
+  const names = new Set()
+  notFacts.forEach((n, i) => {
+    const at = `notFacts[${i}]`
+    if (!isObject(n) || !isName(n.fact) || !isName(n.why))
+      return report(at, 'a notFacts entry is {fact, kind?, why}')
+    if (names.has(n.fact)) report(at, `"${n.fact}" is classed twice`)
+    names.add(n.fact)
+    if (n.kind !== undefined && !PROFILE_FACT_KINDS.includes(n.kind))
+      report(`${at}.kind`, `a business profile fact kind: one of ${PROFILE_FACT_KINDS.join(', ')}`)
+  })
+  const written = new Set(
+    Object.keys(isObject(mapping.facts) ? mapping.facts : {}).map((f) => BUSINESS_FACTS[f])
+  )
+  for (const kind of PROFILE_FACT_KINDS)
+    if (!written.has(kind) && !notFacts.some((n) => n?.kind === kind))
+      report('notFacts', `${kind} is written by no fact: class it in notFacts with kind "${kind}" and why`)
+  // An entry elsewhere that a notFacts entry classes names it (`notFact`), so dropping the entry is a problem; an
+  // emptiedNotWritten place always does (why no build writes it is that no fact holds it).
+  const refs = [
+    ['notEmptied', mapping.notEmptied],
+    ['emptiedNotWritten', mapping.emptiedNotWritten],
+    ['overrides.language', mapping.overrides?.language],
+    ...Object.entries(isObject(mapping.facts) ? mapping.facts : {}).map(([f, l]) => [`facts.${f}`, l])
+  ]
+  const named = new Set()
+  for (const [key, entries] of refs)
+    (Array.isArray(entries) ? entries : []).forEach((e, i) => {
+      if (isName(e?.notFact)) named.add(e.notFact)
+      if (e?.notFact !== undefined && !names.has(e.notFact))
+        report(`${key}[${i}].notFact`, `names no notFacts entry: "${e.notFact}"`)
+      if (key === 'emptiedNotWritten' && e?.notFact === undefined)
+        report(`${key}[${i}].notFact`, 'name the notFacts entry that says why no fact holds this place')
+    })
+  notFacts.forEach((n, i) => {
+    if (isName(n?.fact) && n.kind === undefined && !named.has(n.fact))
+      report(
+        `notFacts[${i}]`,
+        `"${n.fact}" classes nothing: give its business fact kind, or name it (notFact) where it classes a place`
+      )
+  })
+}
+
 function overridesProblems(overrides, report) {
   if (overrides === undefined) return
   if (!isObject(overrides)) return report('overrides', 'overrides must be {settings, language}')
@@ -263,6 +323,7 @@ export function mappingProblems(mapping, blocks, ctx) {
   for (const id of Object.keys(entries))
     if (!blocks.some((b) => b.id === id)) report(`blocks[${id}]`, `"${id}" is not a block of the store`)
   factsProblems(mapping.facts, report)
+  notFactsProblems(mapping, report)
   if (!isObject(mapping.seo)) report('seo', `seo must give a location for ${SEO_FIELDS.join(', ')}`)
   else if (mapping.seo.pageTypes === undefined)
     for (const name of SEO_FIELDS) {

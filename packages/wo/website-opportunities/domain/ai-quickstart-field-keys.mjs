@@ -5,7 +5,8 @@
 // - `storage` (icon fields): how the template keeps the icon.
 // - `iconOf` (icon fields): what the icon stands for when it is not chosen for item content.
 // - `textOf` (text fields): what the words name when they are not written for the content (#584): `network`, the
-//   display name of the social network of the scope's link ("Facebook"), so they never carry a business's words.
+//   display name of the social network of the scope's link ("Facebook"), so they never carry a business's words; a
+//   social label (`contact.social_label`) beside a link carries it.
 // - `for` (icon fields): the text fields of the same scope the icon illustrates.
 // - `variantOf` + `theme` (icon and image fields): the light and the dark version of one picture.
 // - `transparent` (image and icon fields, #584): `true` when the template draws the picture on a transparent ground
@@ -100,6 +101,15 @@ function scopeProblems(scope, report, { library }) {
         `${at}.transparent`,
         'transparent is true on an image or icon field the template draws on a transparent ground, and absent otherwise'
       )
+    // The words beside a social link name its network, whatever the business: a label left without textOf would be
+    // written as the business's own words.
+    if (
+      field.textOf === undefined &&
+      field.type === 'text' &&
+      field.kind === 'contact.social_label' &&
+      fields.some((f) => f.type === 'link')
+    )
+      report(`${at}.textOf`, 'a social label beside a link names the network of the link: textOf "network"')
     if (field.textOf !== undefined) {
       if (field.type !== 'text' || !TEXT_OF.includes(field.textOf))
         report(

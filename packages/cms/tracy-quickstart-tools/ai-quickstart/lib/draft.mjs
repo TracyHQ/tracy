@@ -5,6 +5,7 @@
 // file (#584) and for a reviewer; the contract check ignores them.
 import { draftBlocks } from './draft-blocks.mjs'
 import { accountForPlaces } from './draft-coverage.mjs'
+import { hiddenStringsOf } from './draft-hidden-strings.mjs'
 import { inlineMarkupReport } from './draft-inline-markup.mjs'
 import { accountForReferences } from './draft-references.mjs'
 import { draftRecipes } from './draft-recipes.mjs'
@@ -39,6 +40,8 @@ export function draftAiQuickstart({ kit, contentMap, lock, decisions = {}, measu
   // What the reviewed decisions tell the mapping file (#584) beside the blocks: how a block without fields is
   // filled, why a page has no recipe.
   report.notes = decisions.notes ?? []
+  // The template strings the build hides, each with the kit's way of hiding it (a language override value).
+  report.hiddenStrings = hiddenStringsOf({ kit, decisions })
   // Every stored place of the content map is a field, a classed report entry, or removed with its page; draft.mjs
   // writes nothing while one is unaccounted (`coverage.unaccounted`).
   const coverage = accountForPlaces({ contentMap, blocks, report, decisions })

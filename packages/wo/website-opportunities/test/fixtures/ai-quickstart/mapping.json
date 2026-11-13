@@ -167,5 +167,45 @@
       }
     ],
     "language": [{ "key": "TPL_EXAMPLE_READ_MORE", "value": "Read more" }]
-  }
+  },
+  "notFacts": [
+    { "fact": "street address", "kind": "contact.address", "why": "invented: the template shows no address" },
+    {
+      "fact": "opening hours",
+      "kind": "contact.hours",
+      "why": "invented: the template shows no opening hours"
+    },
+    {
+      "fact": "founded year",
+      "kind": "business.founded_year",
+      "why": "invented: no place holds a founded year"
+    },
+    {
+      "fact": "booking address",
+      "kind": "contact.cta_url",
+      "why": "invented: each button carries its own link field"
+    }
+  ],
+  "notEmptied": [
+    {
+      "entity": "module-11",
+      "column": "title",
+      "why": "invented: an admin label, the module is set not to show it"
+    },
+    {
+      "entity": "module-12",
+      "column": "title",
+      "why": "invented: an admin label, the module is set not to show it"
+    },
+    {
+      "entity": "module-13",
+      "column": "title",
+      "why": "invented: an admin label, the module is set not to show it"
+    },
+    {
+      "entity": "module-14",
+      "column": "title",
+      "why": "invented: an admin label, the module is set not to show it"
+    }
+  ]
 }

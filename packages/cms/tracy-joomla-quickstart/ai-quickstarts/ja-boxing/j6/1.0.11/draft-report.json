@@ -51,6 +51,7 @@
       "omitted": 4,
       "notPlaced": 0,
       "notes": 2,
+      "hiddenStrings": 1,
       "outsideStore": 27,
       "sharedPlaces": 73
     },
@@ -480,6 +481,15 @@
     {
       "about": "page type search",
       "note": "No recipe for a search results page: no demo page shows a search box (checked on the running 1.0.11 home page: no search form), and the only route to the results page is the template showcase menu item (/pages/j-pages/smart-search), which the blank site removes with every demo menu item. A build that adds a search box later needs a recipe then."
+    }
+  ],
+  "hiddenStrings": [
+    {
+      "constant": "MOD_FOOTER_LINE2",
+      "block": "block-168",
+      "file": "language/overrides/en-GB.override.ini",
+      "value": "",
+      "why": "the Joomla licence notice of the copyright footer (Joomla! is Free Software released under the GNU General Public License.), a platform sentence on every page and no word of the business"
     }
   ],
   "outsideStore": [

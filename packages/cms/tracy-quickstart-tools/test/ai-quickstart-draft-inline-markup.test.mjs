@@ -18,11 +18,19 @@ const DRAFT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../ai-
 
 const contentMap = {
   slots: [
-    { key: 'module-1.0', sample: 'Fresh ((br/))((span class="accent"))bread((/span))' },
+    {
+      key: 'module-1.0',
+      nestedJson: 'jatools-config',
+      sample: 'Fresh ((br/))((span class="accent"))bread((/span))'
+    },
     { key: 'module-1.1', sample: 'Baked every morning' },
-    { key: 'module-2.0', sample: '$4((span))/loaf((/span))' },
+    { key: 'module-2.0', nestedJson: 'jatools-config', sample: '$4((span))/loaf((/span))' },
     { key: 'module-2.1', sample: '$6' },
-    { key: 'module-2.2', sample: '((ul))((li))Rye((/li))((li))Spelt((/li))((/ul))' }
+    {
+      key: 'module-2.2',
+      nestedJson: 'jatools-config',
+      sample: '((ul))((li))Rye((/li))((li))Spelt((/li))((/ul))'
+    }
   ]
 }
 const blocks = [
@@ -147,6 +155,7 @@ test('the generator writes nothing while a field with inline markup has no owned
         type: 'text',
         role: 'editorial.heading',
         jsonPath: ['title'],
+        nestedJson: 'jatools-config',
         sample: 'Fresh ((span))bread((/span))'
       }
     ]

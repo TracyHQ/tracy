@@ -116,6 +116,14 @@ test('textOf "network" names a text field beside a link; any other value or plac
   assertOneProblem(lonely, 'blocks[hero-home].fields[heading].textOf', /no link field in the same block/)
 })
 
+test('a social label beside a link carries textOf "network" (#584)', () => {
+  const set = pending()
+  itemField(set, 'name').kind = 'contact.social_label'
+  assertOneProblem(set, `${GRID}.itemFields[name].textOf`, /a social label beside a link names the network/)
+  itemField(set, 'name').textOf = 'network'
+  assert.deepEqual(checkAiQuickstartContract(set).problems, [])
+})
+
 test('derived is one of the documented forms, never free text', () => {
   const set = pending()
   itemField(set, 'link').derived = 'whatever the build finds'

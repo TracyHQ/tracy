@@ -276,9 +276,11 @@ test('notEmptied: every kept place the file writes nowhere is classed with its r
     'entities[module-15]: no location names module-15: write it, or say in notEmptied why the blank site keeps it',
     'notEmptied: module-12.9 (not-drawn) is kept on the blank site and written by no field: say why in notEmptied'
   ])
+  const titles = set.mapping.notEmptied
   set.mapping.notEmptied = [
     { entity: 'module-15', why: 'invented: trashed, no page places it' },
-    { entity: 'module-12', slot: 'module-13.9', why: 'invented' }
+    { entity: 'module-12', slot: 'module-13.9', why: 'invented' },
+    ...titles
   ]
   assert.deepEqual(problemsOf(set), [
     'notEmptied[1]: a notEmptied entry is {entity, slot? | column?, why}, a slot of that entity',
@@ -315,4 +317,83 @@ test('seo.featuredView names menu item page types of the recipes, and what the b
     /seo.featuredView.needs: what the build keeps on the site: "a published featured article"/
   )
   assert.match(problems, /seo.featuredView.why/)
+})
+
+test('notEmptied names declared records, and a kept module has its title written or classed (#584)', () => {
+  const set = valid()
+  set.mapping.notEmptied.push({ entity: 'module-77', why: 'invented: a record the file never declared' })
+  assert.match(problemsOf(set).join('\n'), /notEmptied\[4\]: entity "module-77" is not declared in entities/)
+  set.mapping.notEmptied = set.mapping.notEmptied.filter(
+    (n) => n.entity !== 'module-11' && n.entity !== 'module-77'
+  )
+  assert.deepEqual(problemsOf(set), [
+    'entities[module-11]: the title of module-11 is written by no field: write it, or say in notEmptied (column "title") why the blank site keeps it'
+  ])
+})
+
+test('emptiedNotWritten: a declared place no location writes, named by its notFacts entry (#584)', () => {
+  const set = valid()
+  set.mapping.entities['acymConfiguration-from_name'] = {
+    kind: 'acymConfiguration',
+    identity: { name: 'from_name' }
+  }
+  set.mapping.emptiedNotWritten = [
+    { entity: 'acymConfiguration-from_name', column: 'value', notFact: 'sender identity', why: 'invented' }
+  ]
+  assert.deepEqual(problemsOf(set), [
+    'emptiedNotWritten[0].notFact: names no notFacts entry: "sender identity"'
+  ])
+  set.mapping.notFacts.push({ fact: 'sender identity', why: 'invented: set with the sending mailbox' })
+  assert.deepEqual(problemsOf(set), [])
+  delete set.mapping.emptiedNotWritten[0].notFact
+  assert.match(problemsOf(set).join('\n'), /emptiedNotWritten\[0\]\.notFact: name the notFacts entry/)
+  assert.match(problemsOf(set).join('\n'), /notFacts\[4\]: "sender identity" classes nothing/)
+  set.mapping.emptiedNotWritten[0].notFact = 'sender identity'
+  set.mapping.facts.name.push({ entity: 'acymConfiguration-from_name', column: 'value', why: 'invented' })
+  assert.match(
+    problemsOf(set).join('\n'),
+    /emptiedNotWritten\[0\]: acymConfiguration-from_name value is written by the file too/
+  )
+  set.mapping.facts.name.pop()
+  set.mapping.emptiedNotWritten = [
+    { entity: 'acymConfiguration-gone', column: 'value', notFact: 'sender identity', why: 'x' }
+  ]
+  assert.match(problemsOf(set).join('\n'), /entity "acymConfiguration-gone" is not declared/)
+})
+
+test('notFacts: every business profile fact kind no fact writes is classed by kind (#584)', () => {
+  const set = valid()
+  delete set.mapping.notFacts
+  assert.match(problemsOf(set).join('\n'), /notFacts: notFacts lists each business fact/)
+  const set2 = valid()
+  set2.mapping.notFacts = set2.mapping.notFacts.filter((n) => n.kind !== 'contact.hours')
+  assert.deepEqual(problemsOf(set2), [
+    'notFacts: contact.hours is written by no fact: class it in notFacts with kind "contact.hours" and why'
+  ])
+  set2.mapping.notFacts.push({ fact: 'hours', kind: 'contact.opening', why: 'invented' })
+  assert.match(problemsOf(set2).join('\n'), /notFacts\[3\]\.kind: a business profile fact kind/)
+})
+
+test('a template string the draft report says the build hides has its empty override (#584)', () => {
+  const set = valid()
+  set.draftReport = { hiddenStrings: [{ constant: 'TPL_EXAMPLE_NOTICE', value: '', why: 'invented' }] }
+  assert.deepEqual(problemsOf(set), [
+    'overrides.language: TPL_EXAMPLE_NOTICE is hidden by the build (the draft report\'s hiddenStrings): give its override with value ""'
+  ])
+  set.mapping.overrides.language.push({ key: 'TPL_EXAMPLE_NOTICE', value: '' })
+  assert.deepEqual(problemsOf(set), [])
+  set.draftReport.hiddenStrings = []
+  assert.deepEqual(problemsOf(set), [
+    'overrides.language[1].value: TPL_EXAMPLE_NOTICE is hidden by an empty value no hidden string of the draft report accounts for: decide it in hiddenStrings'
+  ])
+})
+
+test('the SEO limits are at most what a search result shows (#584)', () => {
+  const set = valid()
+  set.mapping.seo.titleLimit = 70
+  set.mapping.seo.descriptionLimit = 200
+  assert.deepEqual(problemsOf(set), [
+    'seo.titleLimit: titleLimit: at most 60, what a search result shows; a template may only lower it',
+    'seo.descriptionLimit: descriptionLimit: at most 160, what a search result shows; a template may only lower it'
+  ])
 })

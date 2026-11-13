@@ -38,6 +38,11 @@ import {
 import { checkLibraryDeclaration } from '../../packages/wo/website-opportunities/domain/ai-quickstart-library.mjs'
 import { colourLiterals } from '../../packages/wo/website-opportunities/domain/library-style-check.mjs'
 import { blankSiteContractProblems, needsBlankSiteContract } from './check-blank-site-contract.mjs'
+import {
+  demoNetworkProblems,
+  inlineSourceProblems,
+  libraryPositionProblems
+} from './check-source-contract.mjs'
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const LIBRARY_PATH = 'packages/wo/website-opportunities/domain/library/tracy-library.json'
@@ -127,8 +132,13 @@ export function checkAiQuickstartFolder(dir) {
   })
   if (pending) return { ...res, mappingPending: pending.ticket }
   if (!needsBlankSiteContract(dir, DEFAULT_ROOT)) return res
-  const blank = blankSiteContractProblems(dir, mapping, DEFAULT_ROOT)
-  return blank.length ? { ...res, ok: false, problems: [...res.problems, ...blank] } : res
+  const more = [
+    ...libraryPositionProblems(mapping, blockStore, DEFAULT_ROOT),
+    ...demoNetworkProblems(mapping, blockStore, DEFAULT_ROOT),
+    ...inlineSourceProblems(blockStore, DEFAULT_ROOT),
+    ...blankSiteContractProblems(dir, mapping, DEFAULT_ROOT)
+  ]
+  return more.length ? { ...res, ok: false, problems: [...res.problems, ...more] } : res
 }
 
 /** Check the Tracy library declaration, print its line, and return how many problems it has. */

@@ -11,7 +11,7 @@ function factLocation(p, slots) {
   const loc = p.place
     ? locationOf(p.place, slots)
     : { entity: p.entity, column: p.column, ...(p.jsonPath ? { jsonPath: p.jsonPath } : {}) }
-  return { ...loc, ...(p.as ? { as: p.as } : {}), why: p.why }
+  return { ...loc, ...(p.as ? { as: p.as } : {}), ...(p.notFact ? { notFact: p.notFact } : {}), why: p.why }
 }
 
 function factsOf(decisions, slots) {
@@ -105,7 +105,12 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
       return [ref, { entity, column, jsonPath, sets: d.sets, pageType: d.pageType, why: d.why }]
     })
   )
-  const named = entitiesNamed([blocks, facts, overrides.settings, buildSets])
+  const emptiedNotWritten = decisions.emptiedNotWritten ?? []
+  const notEmptied = decisions.notEmptied ?? []
+  // A record the blank site keeps a place of (notEmptied) is declared in the entities table too, so the check can
+  // tell a dropped notEmptied entry from a record the file never meant to name.
+  const named = entitiesNamed([blocks, facts, overrides.settings, buildSets, emptiedNotWritten])
+  for (const n of notEmptied) if (typeof n?.entity === 'string') named.add(n.entity)
   const entities = entitiesTable({
     named,
     contentMap,
@@ -126,7 +131,8 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     ...(decisions.networkIconClasses ? { networkIconClasses: decisions.networkIconClasses } : {}),
     buildSets,
     overrides,
-    notEmptied: decisions.notEmptied ?? [],
+    emptiedNotWritten,
+    notEmptied,
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,

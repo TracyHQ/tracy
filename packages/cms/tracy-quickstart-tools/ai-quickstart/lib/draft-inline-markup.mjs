@@ -60,7 +60,12 @@ export function inlineMarkupReport({ blocks, contentMap, decisions = {}, kit = {
   const fields = inlineMarkupFieldsOf(blocks, contentMap)
   const kitInline = kitInlineOf(kit)
   const samples = new Map((contentMap.slots ?? []).map((s) => [s.key, s.sample]))
-  for (const f of fields) f.ref.inline = inlineOf(f.places, f.markup, kitInline, samples)
+  const slots = new Map((contentMap.slots ?? []).map((s) => [s.key, s]))
+  for (const f of fields)
+    f.ref.inline = {
+      ...inlineOf(f.places, f.markup, kitInline, samples),
+      write: writeFormOfPlaces(f.places, slots, `${f.block}.${f.field}`)
+    }
   const decided = decisions.inlineMarkup ?? {}
   const owners = Object.keys(decided.owners ?? {}).filter((t) => /^#\d+$/.test(t))
   const notes = decided.notes ?? {}
@@ -81,6 +86,37 @@ export function inlineMarkupReport({ blocks, contentMap, decisions = {}, kit = {
 }
 
 const WRAPPERS = ['p', 'ul', 'li']
+
+/**
+ * How a build writes the emphasis of a stored value through the Claude Cowork door (0.24.85), from the content map
+ * slot (measured on the blank site restored on a real Joomla, ticket #584):
+ *   codes  an ACM module's data (`nestedJson: "jatools-config"`, no xpath): the template turns the content map's
+ *          markers (`((br/))`, `((span))`, `((p))`) into tags when it draws, so the value carries the markers and goes
+ *          through `content.contract` as it is;
+ *   html   a text of a stored HTML value (an xpath, no nested JSON): the value holds real tags. `content.contract`
+ *          refuses `<` and `>` (SLOT_NOT_CONTENT) and writes markers as words, which the page prints; the build writes
+ *          the words with markers through `content.contract`, then replaces the markers by the same tags in the stored
+ *          value (`content.get`, `content.update`), or writes the tags itself where it creates the record.
+ */
+export function writeFormOf(slot) {
+  const xpath = typeof slot?.xpath === 'string' && slot.xpath ? slot.xpath : null
+  if (slot?.nestedJson === 'jatools-config' && !xpath) return 'codes'
+  if (xpath && !/\/@[^/]+$/.test(xpath) && slot.nestedJson === undefined) return 'html'
+  return null
+}
+
+/**
+ * The one write form of a field's places; throws when no place has one or two places disagree. A place stored as plain
+ * words beside the others (a row of a list whose other rows are HTML, as a masthead's Typography title) takes theirs.
+ */
+function writeFormOfPlaces(places, slots, name) {
+  const forms = new Set(places.map((p) => writeFormOf(slots.get(p))).filter(Boolean))
+  if (forms.size !== 1)
+    throw new Error(
+      `${name}: its places store inline markup in no single known form (${[...forms].join(', ')})`
+    )
+  return [...forms][0]
+}
 
 /** The kit's `inline` of every slot it lists, by content map key (a kit module slot `block-160.0` is `module-160.0`). */
 function kitInlineOf(kit) {

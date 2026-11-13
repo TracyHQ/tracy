@@ -1451,6 +1451,11 @@
       "why": "TPL_CONTACT_SEND (Submit): the contact form's send button; interface text of a form, valid on every site"
     }
   },
+  "hiddenStrings": {
+    "MOD_FOOTER_LINE2": {
+      "why": "the Joomla licence notice of the copyright footer (Joomla! is Free Software released under the GNU General Public License.), a platform sentence on every page and no word of the business"
+    }
+  },
   "notes": [
     {
       "about": "block-168",

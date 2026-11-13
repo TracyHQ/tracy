@@ -143,7 +143,9 @@ A field whose kind is `editorial.design_element` is a design value and must be t
 - `textOf: "network"` marks a text field whose words are the display name of the social network of the link in the
   same scope ("Facebook" beside a trainer's Facebook link), never words of the business or of the item. The build
   writes the name of the network the link's host names; a row whose link names no known network is not written, as
-  for its icon. It is the label's counterpart of `iconOf`, and needs a `link` field in the same scope.
+  for its icon. It is the label's counterpart of `iconOf`, and needs a `link` field in the same scope. A social label
+  (`kind: "contact.social_label"`) beside a link must carry it: without it the label would be written as the
+  business's own words.
 - `for: [<field name>, ...]` names the text fields the icon illustrates, in the same scope (the block, one item, or one
   row of a child list). An icon at block level needs `for` or `iconOf`: a block level icon naming nothing has no
   content to be chosen from, and the build hides it (`icon_item_undeclared`). Inside an item or a row, the icon
@@ -212,8 +214,8 @@ break in a heading, a styled unit in a price, a paragraph wrapper around a body.
 class `inline-markup-in-text`, `inlineMarkup` in `draft-report.json`) declares it with `inline`:
 
 ```json
-"inline": { "emphasis": [{ "tag": "br" }, { "tag": "span", "attrs": "", "at": "end" }], "from": "template-kit" }
-"inline": { "emphasis": [], "wrapper": ["p", "ul", "li"], "from": "content-map" }
+"inline": { "emphasis": [{ "tag": "br" }, { "tag": "span", "attrs": "", "at": "end" }], "from": "template-kit", "write": "html" }
+"inline": { "emphasis": [], "wrapper": ["p", "ul", "li"], "from": "content-map", "write": "codes" }
 ```
 
 - `emphasis` is the emphasis shape the demo value carries, in the template kit's own notation (`template-kit.json`,
@@ -223,6 +225,26 @@ class `inline-markup-in-text`, `inlineMarkup` in `draft-report.json`) declares i
   sample (`from: "content-map"`). Each part is listed once for the field, whichever of its places carries it.
 - `wrapper` lists the block elements the stored value is wrapped in (`p`, and `ul`, `li` for a body with a highlight
   list).
+- `write` is how the build writes the value through the Claude Cowork door (0.24.85), from how its places store it
+  (measured on the blank site restored on a real Joomla, one write per shape read back on the page):
+  - `codes`: an ACM module's data (`nestedJson: "jatools-config"`, no xpath). The value carries the content map's
+    markers as they are, `((br/))`, `((span))words((/span))`, `((p))words((/p))` (and `((ul))((li))` for a list), and
+    goes through `content.contract` apply unchanged; the template turns them into tags when it draws. Measured: a
+    hero heading `((span))ACE1((/span)) INVENTED GYM` draws `<span>ACE1</span>` in the accent colour, a price
+    `$99.00((span))/class((/span))` draws its unit span, `((p))...((/p))` draws a paragraph.
+  - `html`: a text of a stored HTML value (an xpath, no nested JSON; a module's `main-section` or `introtext`, a
+    custom module's content, an article's extra field, a language string). The stored value holds real tags.
+    `content.contract` refuses `<` and `>` (`SLOT_NOT_CONTENT`), and markers written through it are stored and printed
+    as words (`THE((br/)) ((span))DRILL((/span))` on the page). So the build writes the words with markers through
+    `content.contract`, then reads the record (`content.get {kind, id}`), replaces the written markers, found once in
+    the stored value, by the same tags (`THE<br/> <span>DRILL</span>`), and saves the column (`content.update {apply_id,
+    kind, id, fields}`): the older write step's emphasis stage. Where the build creates the record (an article) or
+    writes a language override, it writes the tags itself. Measured: the heading draws `<br>` and the accent span,
+    an `introtext` span and a custom module's `<br>` likewise.
+  Plain words are always valid in both forms. The check fails a `write` its places' storage does not give, and an
+  accent span `at` the demo values do not have (each place's span position is one the field declares, and each
+  declared one is a place's), in `scripts/ai-quickstart/check-source-contract.mjs`. JA Boxing: 10 fields `codes`,
+  25 `html`.
 - **The rule.** The build keeps the template's wrapper element(s) around the words. The writer supplies words plus an
   optional emphasis part, never markup; the build wraps that part the way the demo does (the content map's markers,
   which a JA ACM block reads; where the demo stores real HTML, as an article field or a page heading does, the same
@@ -234,7 +256,7 @@ class `inline-markup-in-text`, `inlineMarkup` in `draft-report.json`) declares i
 - The check fails a field the draft report lists in the class without `inline`, or whose `inline` leaves out a tag
   the report found in its value (`ai-quickstart-inline.mjs`).
 - The Claude Cowork plugin's `content.contract` apply (0.24.85) refuses `<` and `>` in a value (`SLOT_NOT_CONTENT`):
-  markers carry no angle bracket and pass it; a real HTML element goes through another door, which #597 owns.
+  markers carry no angle bracket and pass it; a real HTML element goes through `content.update` (`write: "html"`).
 
 **A child field is stored on its parent's record.** Every stored place of a child field, and every `keyAt` location, is
 on the record of its parent place (the block's record for `lists`, the item's record for `itemLists`). A place on
@@ -477,8 +499,13 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
 - **`facts`**: each business fact declared once, with every place the template shows it (fan out). Keys: `name`,
   `phone`, `address`, `email`, `social` (a location may add `network`), `logoLight`, `logoDark`. `logoLight` is the logo
   drawn on a light background (the dark mark), `logoDark` the one drawn on a dark background. A fact the template never
-  shows is left out. `notFacts` (`[{fact, why}]`) names each business fact or demo value the template shows nowhere, or
-  shows only through another fact's place, with the reason; together with `facts` it accounts for every demo fact value.
+  shows is left out. `notFacts` (`[{fact, kind?, why}]`) names each business fact or demo value the template shows
+  nowhere, or shows only through another fact's place, with the reason; together with `facts` it accounts for every
+  demo fact value. Every business profile fact kind (`PROFILE_FACT_KINDS`: the site form's facts, such as
+  `contact.hours`, `business.founded_year`, `contact.cta_url`) no key of `facts` writes is classed by an entry with that
+  `kind`. An entry without a kind classes a demo value, and the place it classes names it with `notFact` (a fact place,
+  a `notEmptied`, `emptiedNotWritten` or language override entry); an entry that classes nothing is a problem, so no
+  entry can be dropped unnoticed.
   The check holds the fan out: every place of a store field written as `{fact}` is one of that fact's places, and a
   `globalConfiguration` entity has its `sitename` and `fromname` (Joomla's site name and mail sender name) among the
   places of `name` (`GLOBAL_CONFIGURATION_FACTS`). A place outside the store is caught when it is the last place
@@ -492,7 +519,8 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   - `titleLimit` and `descriptionLimit`: the longest title and description the build writes, in characters, positive
     whole numbers, with `limitsWhy`. They are search result display limits, not template measurements: 60 for a title
     (smaller only when the template prints the browser title somewhere visible with a tighter measured limit, said in
-    `limitsWhy`), 160 for a description. JA Boxing: 60 and 160 (it prints the browser title on no page).
+    `limitsWhy`), 160 for a description; the check fails a larger value (`SEO_LIMIT_CEILINGS`). JA Boxing: 60 and 160
+    (it prints the browser title on no page).
   - per page type, `ogTitle`: `{"sameAs": "title", "locations": [loc]}` (or `"derived"` in place of `locations`), the
     share title (og:title). It is the SEO title, the browser title that carries the business name, never the short
     heading the page shows: the build writes the page's `title` value again at those locations, within `titleLimit`.
@@ -514,7 +542,10 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   the position they use instead, and the class of the template's own page width container a library block's content
   sits in (the write step passes it to the block's render as `containerClass`). Measured on the running template, never
   read off a layout file alone. JA Boxing: `container` (its positions wrap modules in `t4-section-inner container`, and
-  a probe block starts and ends where the template's own headings do at 390, 768 and 1440 px).
+  a probe block starts and ends where the template's own headings do at 390, 768 and 1440 px). The check fails a
+  `position` or a `pageTypes` value that is no position the source contract records (every `position` of its
+  `template-kit.json` and `content-map.json`, the contract `blockStore.draftedBy.kit` names; a position the template
+  lacks publishes a block nowhere, with no error), in `scripts/ai-quickstart/check-source-contract.mjs`.
 - **`buildSets`**: every reference of a kept record to a record the build creates (the draft report classes them
   `build-sets`), by `<entity>:<column>:<path>`: `{entity, column, jsonPath, sets, pageType, why}`, the place the build
   writes the new record's id into (a list's category).
@@ -523,12 +554,26 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   `[{block, field}]` with the smallest `limit` of those fields, a template string a field fills, written once; or
   `keep` with the reason, a string no business word reaches). A language string a store field fills must have its
   entry with its `slot`, `filledBy` exactly the fields that fill it, and a `limit` no larger than the smallest of their
-  limits.
+  limits. A template string the build hides is decided in the draft decisions (`hiddenStrings`, by constant, with
+  why); the draft reads the kit's way of hiding it (`site.fixedTexts[].hiddenBy`, a language override with an empty
+  value) and lists it in the draft report (`hiddenStrings: [{constant, block, file, value, why}]`). The check requires
+  its override with that `value`, and fails an override `value` no hidden string accounts for. JA Boxing:
+  `MOD_FOOTER_LINE2`, the Joomla licence notice of the copyright footer.
 - **`notEmptied`**: `[{entity, slot? | column?, why}]`, what the blank site keeps as the demo has them, though it holds
   demo words: a whole record (a trashed module no block of the store is), one slot of it (a module title no page
   prints), or one column outside the content map (`{"entity": "module-180", "column": "title"}`). Every place the
   draft report lists outside the store or unlisted (other than `kept`, whose reason is in the report) on a module or
   custom field row the file writes nowhere must be named here, and a declared entity no location names must be too.
+  Every record named here is declared in `entities` (a trashed module outside the content map too, from the reviewed
+  decisions), so dropping its entry leaves a declared entity no location names. A kept module's `title` is written,
+  or classed here (the whole record, `column: "title"`, or the slot of its title): a module title is stored outside its
+  params and can hold a demo word (module 180's title is a demo trainer's name).
+- **`emptiedNotWritten`**: `[{entity, column, jsonPath?, notFact, why}]`, places the blank site empties though no
+  build writes them, named by the notFacts entry that says why no fact holds them. No location of the file may write
+  one. JA Boxing: the newsletter's sender name and reply-to name and address (AcyMailing's `from_name`,
+  `replyto_name`, `replyto_email`), the sender identity the site owner sets with the sending mailbox in AcyMailing's
+  configuration, which the door does not write; the blank site empties the demo values (the configuration page loads
+  with them empty, checked on the blank site restored on a real Joomla).
 - **`inlineMarkup`**: `{class, count, owners}`, the class of the fields whose stored value carries inline markup (each
   declares its `inline` in the block store) and its owners: the write step (#597) and the gate (#585).
 - **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,
@@ -539,8 +584,10 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   class the shipped font really draws, confirmed on the running template (a class the font lacks shows a missing glyph
   box). A network missing from the table is treated like a link to no known network: the write step hides the row's
   icon with its link and writes nothing into the row (reason `social_icon_not_in_template`), the same spirit as the
-  rule that an icon with no known network is hidden with its link (`icon-row-links.mjs`). JA Boxing:
-  `{"facebook": "fab fa-facebook", "x": "fab fa-twitter", ...}`; its fonts draw no Threads mark, so `threads` is left out.
+  rule that an icon with no known network is hidden with its link (`icon-row-links.mjs`). The check fails a network
+  the demo draws in such a place (a `fa-<network>` class of the content map sample; `fa-twitter` names `x`) that the
+  table lacks. JA Boxing: `{"facebook": "fab fa-facebook", "x": "fab fa-twitter", ...}`; its fonts draw no Threads
+  mark, so `threads` is left out, and no X mark, so `x` draws the old bird.
 
 The mapping file is generated, never edited by hand: `packages/cms/tracy-quickstart-tools/ai-quickstart/mapping.mjs`
 writes it from the block store, the page recipes, the draft report, the draft decisions, the template's content map and
