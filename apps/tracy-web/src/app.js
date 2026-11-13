@@ -84,7 +84,7 @@ import { readSiteDesign } from './lib/site-design.js'
 import { promptSiteSession, siteSessionAhead } from './lib/site-session-ahead.js'
 import { siteTeamUrl } from './lib/team-invite.js'
 import { TRACY_ICON_SVG } from './lib/tracy-icon.js'
-import { uiSwitchOn } from './lib/ui-setting.js'
+import { readUiHidden, uiSwitchOn } from './lib/ui-setting.js'
 import { isUpdateHost } from './lib/update-host.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { woRuntime } from './lib/wo-ops.js'
@@ -271,6 +271,7 @@ import {
 } from './sites/store.js'
 import { speechRoutes } from './speech/route.js'
 import { widgetRoutes } from './widget/route.js'
+import { buildChatRoutes } from './workspace/build-chat-route.js'
 import { workspaceRoutes } from './workspace/route.js'
 import { onboardingGrant } from './workspace/scope.js'
 import { callSeatDoor } from './workspace/seat-door.js'
@@ -1747,6 +1748,32 @@ export function buildApp(deps) {
     app.widgetNativeUpgrade = widget.nativeUpgrade
     app.get('/api/widget-native/context', widget.nativeContext)
     app.route('/widget', widget)
+  }
+  // The creation workspace's build chat (`workspace/build-chat-route.js`, TracyHQ/tracy#602): `/new/build` asks
+  // the default host's signed seat door for the account's build session, the same door and creation
+  // grant the widget's native handoff above uses. Mounted before the dsh catch-all, which would
+  // otherwise forward `/new/build` to dsh as a page of the creation workspace.
+  if (deps.config && deps.pool) {
+    app.route(
+      '/',
+      buildChatRoutes({
+        config: deps.config,
+        hiddenSwitches: () => readUiHidden(deps.pool),
+        allocate: async (payload) => {
+          const dsh = deps.sites?.dshOf(deps.config.defaultHost)
+          if (!dsh?.origin || !dsh.seatSecret) return null
+          const answer = await callSeatDoor({
+            origin: dsh.origin,
+            secret: dsh.seatSecret,
+            path: '/gateway/seat/session',
+            payload,
+            ...(deps.fetchImpl ? { fetchImpl: deps.fetchImpl } : {})
+          })
+          return answer.ok ? answer.body?.nativeSession : null
+        },
+        ...(deps.log ? { log: deps.log } : {})
+      })
+    )
   }
   if (deps.config) app.route('/', speechRoutes({ config: deps.config, pool: deps.pool ?? null }))
   // Mounted BEFORE workspaceRoutes (the dsh catch-all), same reasoning as seatsRoutes/sitesRoutes

@@ -116,7 +116,12 @@ test('all twelve presets of both bundles open their persona with the identity, t
   assert.equal(ids.length, 12)
   for (const file of PRESET_FILES) {
     const personas = personasOf(file)
-    assert.deepEqual([...personas.keys()].sort(), [...ids].sort(), file)
+    // The build agent (`buildAgent`) is the one preset beside the role cells; its own test is below.
+    assert.deepEqual(
+      [...personas.keys()].filter((id) => id !== matrix.buildAgent.id).sort(),
+      [...ids].sort(),
+      file
+    )
     for (const role of matrix.roles)
       for (const platform of matrix.platforms) {
         const id = `${role.id}-${platform.id}`
@@ -135,6 +140,18 @@ test('all twelve presets of both bundles open their persona with the identity, t
           `${file}: ${id} carries the contract second, first after who Tracy is`
         )
       }
+  }
+})
+
+test('the build agent opens its persona with the identity, then the contract, then its own paragraphs', () => {
+  for (const file of PRESET_FILES) {
+    const lines = /** @type {string} */ (personasOf(file).get(matrix.buildAgent.id)).split('\n')
+    // The generator folds each paragraph into one line and keeps the blank line between them.
+    assert.deepEqual(
+      lines.filter((line) => line !== ''),
+      [brand.trim(), contract.trim(), ...matrix.buildAgent.persona.split('\n\n').map((p) => p.trim())],
+      file
+    )
   }
 })
 

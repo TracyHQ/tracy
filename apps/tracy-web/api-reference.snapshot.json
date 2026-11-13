@@ -1,5 +1,5 @@
 {
-  "recorded": "2026-11-05",
+  "recorded": "2026-11-13",
   "public": {
     "components": {
       "schemas": {
@@ -18732,6 +18732,21 @@
             }
           ],
           "tags": ["Accounts & seats"],
+          "x-audience": ["customer"]
+        }
+      },
+      "/new/build": {
+        "get": {
+          "operationId": "get_new_build",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Platform"],
           "x-audience": ["customer"]
         }
       },
@@ -53650,6 +53665,21 @@
             }
           ],
           "tags": ["Accounts & seats"],
+          "x-audience": ["customer"]
+        }
+      },
+      "/new/build": {
+        "get": {
+          "operationId": "get_new_build",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Platform"],
           "x-audience": ["customer"]
         }
       },

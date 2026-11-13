@@ -159,6 +159,11 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    Website Opportunities: `/api/website-opportunities/*` (`opportunities/`, see §8 "Website Opportunities").
    Public Find of Website Opportunities: `GET /find` (the built page of `packages/web/tracy-wo-find-page`) + `/find/api/*`, **no session, master only**
    ([`public/wo-find-page.js`](apps/tracy-web/src/public/wo-find-page.js), see §8 "Website Opportunities").
+   Build chat of the creation workspace: `GET /new/build`, signed-in session; it asks the default host's dsh seat door for the
+   creation seat plus a `session-build-<uuid>` native session (one per account, an HMAC of the email) running the `site-builder`
+   preset only, then redirects to `/new/s/<id>`; switch `chat-build` off or a refused door → `/new/` as before. The root landing of an
+   account with no site goes here ([`workspace/build-chat-route.js`](apps/tracy-web/src/workspace/build-chat-route.js), #602). The seat
+   door accepting that session, and fencing its tools to research and questions, is a dsh-passwords change still to land.
    Demos for outside builders: `/v1/demos*` on the api host, Bearer **account token** with scope `demos` (not a seat key)
    ([`opportunities-build/public-demos-route.js`](apps/tracy-web/src/opportunities-build/public-demos-route.js), see §8 "Website Opportunities").
 3. **Everything else → the dsh of the host holding the site** (`workspace/`): HTTP and WebSocket proxy, in three scopes

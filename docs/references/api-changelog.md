@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-13: The creation workspace opens a build chat
+
+Added `GET /new/build` (session, customer): a signed-in account opens its own build chat, one conversation per account, allocated through the signed seat door with the creation seat and the build agent only, and is sent to `/new/s/<id>`. Signed out it sends to `/login?next=%2Fnew%2Fbuild`; with the `chat-build` switch off, or when the door refuses, it sends to `/new/` as before. The root landing of a signed-in account with no site now opens `/new/build` instead of `/new/`. Public API v1 is unchanged.
+
 ## 2026-11-13: A build draft holds the answers, template and plan before a site exists
 
 Added (internal): `GET /api/build-draft`, `POST /api/build-draft`, `PUT /api/build-draft/answers`, `PUT /api/build-draft/template`, `PUT /api/build-draft/plan`, `POST /api/build-draft/plan-edits` and `POST /api/build-draft/plan-undo`: the signed-in account's one pre site build draft (#603), holding Contract B questions with their answers, the chosen template `{slug, name, version}` and the one living build plan, with the last plan edit applied and one step of undo. It needs no website opportunity and no site. Refusals answer `code` and `next`: 404 `NO_DRAFT`, 409 `NO_PLAN`, `STALE_EDIT`, `STALE_PLAN`, `PLAN_EXISTS`, `NOTHING_TO_UNDO`, 422 `INVALID_ANSWER`, `INVALID_PLAN`, `INVALID_EDIT` (with `problems`), 400 `INVALID_REQUEST`, `INVALID_TEMPLATE`. Public API v1 is unchanged.

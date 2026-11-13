@@ -79,6 +79,23 @@ export const MISC_ROUTES = [
     internal: false,
     answers: '302 to the documentation host'
   },
+  // src/workspace/build-chat-route.js
+  {
+    method: 'GET',
+    path: '/new/build',
+    summary: 'Open the build chat',
+    description:
+      'Opens the signed-in account’s build chat in its own creation workspace: a conversation that ' +
+      'builds a new site before the site exists. Asks the default host’s signed seat door for the ' +
+      'account’s one build session (the creation seat, the build agent only) and redirects (302, ' +
+      'uncacheable) to `/new/s/<session>`. Repeating it lands in the same conversation. Signed out: 302 to ' +
+      '`/login?next=/new/build`. While the operator’s `chat-build` switch is off, or when the session ' +
+      'cannot be provided, 302 to `/new/`, the creation workspace as before. Reads and changes no site.',
+    audience: ['customer'],
+    auth: 'session',
+    internal: false,
+    answers: '302 to the build chat, or to `/new/`'
+  },
   // src/docs/route.js
   {
     method: 'GET',

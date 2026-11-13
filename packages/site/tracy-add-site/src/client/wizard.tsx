@@ -23,6 +23,7 @@ import { chatDraftAnswers, type chatDraftOf } from './chat-draft.mjs'
 
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { uiSwitches } from '@tracy/core/ui-switches'
+import { BUILD_CHAT_PATH } from '@tracy/core/build-chat'
 import {
   Alert,
   AlertDescription,
@@ -194,6 +195,10 @@ const FORK_ENABLED = false
 /** The operator's switch of Build from my business (`ui-switches/catalogue.json`, default off). */
 const switches = uiSwitches()
 const FROM_BUSINESS = 'site-from-business'
+/** The operator's switch of the build chat (TracyHQ/tracy#602), offered first while it is on. */
+const CHAT_BUILD = 'chat-build'
+/** Leave this page for the build chat: tracy-web's door opens the account's own build session. */
+const openBuildChat = (): void => window.location.assign(BUILD_CHAT_PATH)
 
 /** The flow's stage. `building` and `ready` carry the same `siteKey` — the same site. */
 type Stage =
@@ -433,6 +438,7 @@ export function AddSiteWizard({
     recovering ? 'import' : resuming ? 'business' : (start.origin as Origin)
   )
   const fromBusinessOn = useSyncExternalStore(switches.subscribe, () => switches.isShown(FROM_BUSINESS))
+  const chatBuildOn = useSyncExternalStore(switches.subscribe, () => switches.isShown(CHAT_BUILD))
   const [currentStep, setCurrentStep] = useState<string>(() =>
     recovering || resuming
       ? 'platform'
@@ -1744,6 +1750,12 @@ export function AddSiteWizard({
             <RadioGroup
               value={undefined}
               onValueChange={(value) => {
+                // The build chat is a page of its own: the same chat a person with no site lands in.
+                // This form stays one step back, as the other starts below.
+                if (value === 'chat') {
+                  openBuildChat()
+                  return
+                }
                 if (value === 'business') {
                   setOrigin('business')
                   setCurrentStep('platform')
@@ -1757,6 +1769,14 @@ export function AddSiteWizard({
               }}
               className="gap-2"
             >
+              {chatBuildOn ? (
+                <ChoiceOption
+                  value="chat"
+                  selected={false}
+                  title={t('chat_build_title')}
+                  description={t('chat_build_desc')}
+                />
+              ) : null}
               <ChoiceOption
                 value="create"
                 selected={returnToReview && origin === 'create'}

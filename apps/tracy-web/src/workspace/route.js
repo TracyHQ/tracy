@@ -1,3 +1,4 @@
+import { BUILD_CHAT_PATH } from './build-chat-session.js'
 import { Hono } from 'hono'
 import {
   clearSeatCookie,
@@ -573,7 +574,10 @@ export function workspaceRoutes({
       // is a card with Accept and Decline, and Accept lands in the site itself.
       const invites = pool && seats?.pendingInvitesFor ? await seats.pendingInvitesFor(pool, email) : []
       if (invites.length > 0) return c.redirect(`${ONBOARDING_MOUNT}/?tab=tracy:inbox`, 302)
-      return c.redirect(`${ONBOARDING_MOUNT}/`, 302)
+      // Since TracyHQ/tracy#602 the build chat of that workspace (`workspace/build-chat-route.js`): a person with
+      // no site starts by saying what their business is. It falls back to `/new/` by itself while the
+      // operator's `chat-build` switch is off or the chat cannot be opened.
+      return c.redirect(BUILD_CHAT_PATH, 302)
     }
 
     // dsh-passwords' own password page, where its settings card sends the browser after its Sign

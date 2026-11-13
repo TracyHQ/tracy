@@ -162,6 +162,7 @@ import { openMicrophone } from './voice-capture'
 import { openSpeechLink, pageSite, speechHttpPath, speechSocketUrl } from './voice-link.mjs'
 import { createMicPicker, pageStorage } from './voice-mic.mjs'
 import { sendTrace } from './voice-trace.mjs'
+import { isBuildChatPage } from '@tracy/core/build-chat'
 import { interfaceLocale } from '@tracy/core/interface-languages'
 import { messageLanguage } from '@tracy/core/language'
 
@@ -194,8 +195,13 @@ const SCOPE_ATTR = 'data-tracy-scope'
 /** On <html> while this page's seat is a Viewer (ADR 0028): composer-styles.ts keys the chat box hint on it. */
 const VIEWER_SEAT_ATTR = 'data-tracy-seat-viewer'
 
-/** @returns true inside the creation workspace — signed in, no site, a site about to be made. */
+/**
+ * @returns true inside the creation workspace — signed in, no site, a site about to be made. The
+ * workspace's build chat (TracyHQ/tracy#602) is not that surface: it is an ordinary agent chat with no
+ * site, so it gets no creation-home layout, no start block and no Help-only composer.
+ */
 function isOnboarding(): boolean {
+  if (isBuildChatPage(globalThis.location?.pathname ?? '')) return false
   if (document.querySelector('meta[name="tracy-widget-native"]')) return true
   if (document.querySelector(`meta[name="${AUDIENCE_META}"]`)?.getAttribute('content') === 'onboarding')
     return true

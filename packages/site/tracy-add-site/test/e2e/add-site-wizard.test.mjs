@@ -498,3 +498,19 @@ test('a failed import marks its operation failed without claiming all steps comp
     }
   })
 })
+
+test('Add site lists Build it in the chat first, opens the build chat, and keeps the other ways in (TracyHQ/tracy#602)', async () => {
+  await withPage(async (page) => {
+    await page.goto(`${base}/existing.html`)
+    const chat = page.getByText('Build it in the chat', { exact: true })
+    await chat.waitFor()
+    for (const other of ['Create a new site', 'Import existing site']) {
+      assert.equal(await page.getByText(other, { exact: true }).count(), 1, `${other} is still offered`)
+    }
+    const chatTop = (await chat.boundingBox()).y
+    const createTop = (await page.getByText('Create a new site', { exact: true }).boundingBox()).y
+    assert.ok(chatTop < createTop, 'the build chat is the first way in')
+    await chat.click()
+    await page.waitForURL(`${base}/new/build`)
+  })
+})

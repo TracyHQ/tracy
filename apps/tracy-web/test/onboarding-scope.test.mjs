@@ -260,7 +260,7 @@ test('T01 row 3: signed in, no site, no intent — the creation workspace, bare:
     new Request('http://tracy.test/', { headers: { cookie: await sess('a@x.test'), accept: 'text/html' } })
   )
   assert.equal(res.status, 302)
-  assert.equal(res.headers.get('location'), '/new/')
+  assert.equal(res.headers.get('location'), '/new/build')
 })
 
 test('T01 row 4: signed in, no site, intent — the door is asked for the creation grant, the intent survives the mint', async () => {
@@ -784,7 +784,7 @@ test('a tracy_site pointer the signed-in viewer holds no seat on is forgotten at
     })
   )
   assert.equal(res.status, 302)
-  assert.equal(res.headers.get('location'), '/new/')
+  assert.equal(res.headers.get('location'), '/new/build')
   assert.match(res.headers.get('set-cookie') ?? '', /tracy_site=; .*Max-Age=0/)
   assert.ok(grantCalls >= 1, 'the seat book was asked before the pointer was dropped')
 

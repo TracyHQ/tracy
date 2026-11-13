@@ -35,6 +35,8 @@ import { parsePatch } from '../check-image-profile.ts'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const CAP = 200
+/** The creation workspace's build agent: a preset with no skills (`buildAgent` in the matrix). */
+const BUILD_AGENT = 'site-builder'
 /** The largest catalog any preset may send, in characters (6,695–7,506 on the Designer before). */
 const BUDGET = 5300
 /** What an OpenDesign SKILL.md says when it is only a catalogue entry for a skill kept upstream. */
@@ -142,6 +144,11 @@ function skillRowsOf(file) {
     for (const entry of insert) {
       if (entry?.name !== '@deepseek-ai/dsh-agent-preset') continue
       const skill = (entry.config.plugins ?? []).find((/** @type {any} */ p) => p.id === 'tool-skill')
+      // The build agent (`buildAgent`, TracyHQ/tracy#602) has no skills to choose from, so no catalog.
+      if (entry.config.id === BUILD_AGENT) {
+        assert.equal(skill, undefined, `${file}: the build agent carries no skill catalog`)
+        continue
+      }
       assert.ok(skill, `${file}: ${entry.config.id} has no tool-skill row`)
       out.set(entry.config.id, skill.config)
     }

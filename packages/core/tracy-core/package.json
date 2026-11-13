@@ -31,6 +31,7 @@
     "./input-activity": "./src/input-activity/index.mjs",
     "./input-activity/react": "./src/input-activity/react.mjs",
     "./site-key": "./src/site-key/index.mjs",
+    "./build-chat": "./src/build-chat/index.mjs",
     "./web-path": "./src/web-path/index.mjs",
     "./mention": "./src/mention/index.mjs",
     "./turn-undo": "./src/turn-undo/index.mjs",

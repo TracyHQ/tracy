@@ -822,7 +822,7 @@ test('workspaceRoutes: signed in with no sites, a NAVIGATION opens the creation 
   const cookie = `tracy_sess=${await mintSession('ceo@tracy.ai', routeSessionSecret)}`
   const res = await app.fetch(new Request('http://tracy.test/', { headers: { cookie, accept: 'text/html' } }))
   assert.equal(res.status, 302)
-  assert.equal(res.headers.get('location'), '/new/')
+  assert.equal(res.headers.get('location'), '/new/build')
 })
 
 test('workspaceRoutes: an UNANSWERED invitation opens the creation workspace on the Inbox (C1)', async () => {
@@ -876,7 +876,7 @@ test('workspaceRoutes: a guest landing is for STRANGERS — a signed-in viewer w
   const cookie = `tracy_sess=${await mintSession('ceo@tracy.ai', routeSessionSecret)}`
   const res = await app.fetch(new Request('http://tracy.test/', { headers: { cookie, accept: 'text/html' } }))
   assert.equal(res.status, 302)
-  assert.equal(res.headers.get('location'), '/new/')
+  assert.equal(res.headers.get('location'), '/new/build')
   const stranger = await app.fetch(new Request('http://tracy.test/', { headers: { accept: 'text/html' } }))
   assert.equal(stranger.headers.get('location'), '/demo.tracy.ai/')
 })

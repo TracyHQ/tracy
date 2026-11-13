@@ -70,7 +70,19 @@ function presetRows(file) {
 test('every preset of both bundles that mounts a file tool sets its cap', () => {
   for (const file of PRESET_FILES) {
     const presets = presetRows(file)
-    assert.equal(presets.size, 12, file)
+    // Twelve role presets and the build agent, which mounts no file or shell tool at all (#602).
+    assert.equal(presets.size, 13, file)
+    const build = presets.get('site-builder')
+    assert.ok(build, `${file}: the build agent preset is generated`)
+    for (const row of [
+      'tool-fs',
+      'tool-fs-search',
+      'tool-bash',
+      'tool-jobs',
+      'skill-filesystem',
+      'tracy-webroot-read'
+    ])
+      assert.equal(build.has(row), false, `${file}: the build agent mounts no ${row}`)
     let mounted = 0
     for (const [preset, rows] of presets)
       for (const cap of CAPS) {

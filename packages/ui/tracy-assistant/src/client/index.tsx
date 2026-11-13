@@ -44,6 +44,7 @@ import { siteOfPage } from './chat'
 import { en, NS, type Translate } from './strings'
 import { CSS } from './styles'
 import { OnboardingComposer } from './OnboardingComposer'
+import { helpOnlyComposer } from './onboarding-page'
 import { StartRow, type StartAction } from './StartRow'
 
 /** The operator's switch (`catalogue.json`). */
@@ -122,12 +123,16 @@ export function apply(
     return () => style.remove()
   }, 'tracy-assistant: styles')
 
-  // A native widget has its own import conversation and must keep its agent composer.
-  const onboarding =
-    !document.querySelector('meta[name="tracy-widget-native"]') &&
-    (siteCreationPage(document.baseURI) ||
-      document.querySelector('meta[name="tracy-chat-input-audience"]')?.getAttribute('content') ===
-        'onboarding')
+  // A native widget has its own import conversation and must keep its agent composer, and so does the
+  // creation workspace's build chat (TracyHQ/tracy#602): its session runs the build agent, fenced to
+  // the build tools by the seat door, so its drafts are meant for the agent. `/help` still asks Help.
+  const onboarding = helpOnlyComposer({
+    widget: document.querySelector('meta[name="tracy-widget-native"]') !== null,
+    pathname: globalThis.location?.pathname ?? '',
+    base: document.baseURI,
+    audience:
+      document.querySelector('meta[name="tracy-chat-input-audience"]')?.getAttribute('content') ?? null
+  })
   // chat-input opens the matching tab (onboarding-start.ts); the question lets Create preselect a platform.
   const startFrom = (
     action: StartAction | 'business',
@@ -527,12 +532,3 @@ const restored = new Set<string>()
 
 /** Per session: whether dsh draws its transcript (the chat has begun), as the dock last saw it. */
 const transcriptOpen = new Map<string, boolean>()
-
-/** The page base, rather than the session URL, identifies the creation workspace. */
-function siteCreationPage(base: string): boolean {
-  try {
-    return new URL(base).pathname === '/new/'
-  } catch {
-    return false
-  }
-}
