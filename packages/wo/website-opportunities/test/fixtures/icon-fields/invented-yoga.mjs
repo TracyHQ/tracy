@@ -1,6 +1,6 @@
 // Shared inputs of the icon field tests (ticket #595): an invented yoga studio built on an invented template whose
 // features block is shaped like JA Boxing's (four items, each with a heading, a text and two icon fields of a 100 by
-// 100 frame, the template's two theme files of one icon) and whose demo icons are a boxing glove, a ring, a heavy bag
+// 100 frame, the template's two theme files of one icon, a `variantOf` pair) and whose demo icons are a boxing glove, a ring, a heavy bag
 // and a target. A footer row of social links and a trainer block with block level social icons, as JA Boxing declares
 // them, and a small icon library in the shape of the picture step's (names, tags, categories). Nothing here is a real
 // business, person, template, link or model.
@@ -69,8 +69,8 @@ export const blockStore = () => ({
       itemFields: [
         text('heading-2', 'editorial.heading', 36),
         text('paragraph-2', 'editorial.paragraph', 106),
-        iconField('item-icon'),
-        iconField('item-icon-2')
+        iconField('item-icon', { theme: 'dark' }),
+        iconField('item-icon-2', { theme: 'light', variantOf: 'item-icon' })
       ]
     },
     {

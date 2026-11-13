@@ -1,7 +1,8 @@
 // Social network icons of an AI quickstart build (ticket #595, spec #577). A social icon stands for the network of the
 // link beside it, not for the content of an item, so it is never ranked by a model: code reads the network from the
-// link's host and takes that network's mark from the icon library. A link whose host is no known network, or a mark the
-// library lacks, leaves the icon hidden with the reason. Pure.
+// link's host. A `storage: "class-name"` icon is decided as that network, which the write step writes as the class of the
+// template's own icon font; an `image-file` one takes that network's mark from the icon library. A link whose host is
+// no known network (or, for an image file, a mark the library lacks) leaves the icon hidden with the reason. Pure.
 
 /**
  * The networks code recognises, by host, and the icon library name of each one's mark. `hosts` are the network's own

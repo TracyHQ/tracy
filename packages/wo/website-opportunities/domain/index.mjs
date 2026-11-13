@@ -177,6 +177,7 @@ export { ICON_PAINT_ROLES, ICON_SOURCES, ICON_WEIGHTS, iconCountsOf, iconProblem
 export { wordsOfScope, writtenByScope } from './icon-copy.mjs'
 export { themesOf } from './icon-entry.mjs'
 export { ICON_THEMES, iconScopesOfPlan, isIconField, isNetworkIcon } from './icon-fields.mjs'
+export { linkFieldOf, listLinksOf, rowLinkOf, rowLinksOf } from './icon-row-links.mjs'
 export {
   ICON_KEYWORDS_MAX,
   ICON_KEYWORDS_PROMPT_FILE,

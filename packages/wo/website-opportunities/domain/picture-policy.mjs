@@ -25,6 +25,7 @@ import { isLabelled, PicturePolicyError } from './picture-labelling.mjs'
 import { pictureProblemsOf, videoFits } from './picture-policy-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
+const THEMES = ['light', 'dark']
 const heroFirst = (a, b) => (a.place === 'hero' ? 0 : 1) - (b.place === 'hero' ? 0 : 1)
 
 /** What an own picture adds to its frame: the picture, its label and where it came from. */
@@ -51,6 +52,24 @@ export function approvedCountOf(approved) {
       given: given === undefined ? null : given,
       message: 'the plan approves no valid generated count, so no picture is generated'
     }
+  }
+}
+
+/**
+ * A picture pair holds like an icon pair: its variant names another frame of its scope, that base is no variant
+ * itself, and the two declare different themes ("light" and "dark"). Anything else throws `picture_variant_invalid`.
+ */
+function checkPicturePairs(frames, baseOf) {
+  const byId = new Map(frames.map((f) => [f.id, f]))
+  for (const f of frames.filter((v) => v.variantOf !== undefined)) {
+    const base = byId.get(baseOf(f))
+    const problem =
+      !base || base === f || base.variantOf !== undefined
+        ? 'variantOf names no base frame of its scope'
+        : !THEMES.includes(f.theme) || !THEMES.includes(base.theme) || f.theme === base.theme
+          ? 'a pair declares a light and a dark theme'
+          : null
+    if (problem) throw new PicturePolicyError('picture_variant_invalid', `${f.id}: ${problem}`, { at: f.id })
   }
 }
 
@@ -85,7 +104,7 @@ function placeOwn(frames, usable, take, used) {
  *   approved?: {generated?: {frames?: number}} | null}} input `approved` is the plan's pictures summary
  *   (`plan.pictures`); leave it out only to count a plan before it is approved (`picturesOf`)
  * @returns {{frames: object[], reduced: object[], droppedFrames: Array<{frame: string, item: string, reason: string}>,
- *   counts: {own: number, generated: number, none: number}, notes: object[]}} `droppedFrames`: the frames of the
+ *   counts: {own: number, generated: number, none: number, variants: number}, notes: object[]}} `droppedFrames`: the frames of the
  *   reduced items, which the built site no longer shows
  */
 export function assignPictures({ pages, blocks, data, pictures, approved = null }) {
@@ -101,15 +120,7 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
   const usable = list(pictures).filter((p) => !p.stock)
   const all = framesOfPlan(pages, blocks, data)
   const baseOf = (f) => `${f.id.slice(0, -f.field.length)}${f.variantOf}`
-  const ids = new Set(all.map((f) => f.id))
-  for (const f of all.filter((v) => v.variantOf !== undefined && !ids.has(baseOf(v))))
-    throw new PicturePolicyError(
-      'picture_variant_invalid',
-      `${f.id}: variantOf names no frame of its scope`,
-      {
-        at: f.id
-      }
-    )
+  checkPicturePairs(all, baseOf)
   const frames = all.filter((f) => f.variantOf === undefined)
   const filled = new Map()
   const used = new Set()
@@ -156,8 +167,10 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
         ? { ...frame, ...filled.get(frame.id) }
         : { ...frame, ...filled.get(baseOf(frame)), sameAs: baseOf(frame) }
     )
-  const counts = { own: 0, generated: 0, none: 0 }
-  for (const frame of out) if (!frame.sameAs || frame.source === 'none') counts[frame.source] += 1
+  // One count per picture decision: a pair's variant (`sameAs`) shows its base's decision and is counted in `variants`
+  // only, never in own, generated or none. Every frame is still in `frames`, so declared = decided stays exact.
+  const counts = { own: 0, generated: 0, none: 0, variants: 0 }
+  for (const frame of out) counts[frame.sameAs ? 'variants' : frame.source] += 1
   // The frames of a dropped item leave with it; each is kept here so every declared frame stays accounted for.
   const droppedFrames = all
     .filter((f) => f.item && dropped.has(`${f.page}.${f.block}.${f.item}`))

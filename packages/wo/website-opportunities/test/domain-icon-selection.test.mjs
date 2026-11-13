@@ -109,8 +109,13 @@ test('a ranking failure is a typed error: a name outside the candidates, no mode
 
 test('each icon has a light and a dark version in colour roles, drawn at the declared frame', async () => {
   const result = await select()
-  const sun = at(result, feature(CLASSES[0]))
-  for (const theme of ['light', 'dark']) {
+  // The pair's dark file and its light file: one icon, each in its own theme.
+  for (const [field, theme] of [
+    ['item-icon', 'dark'],
+    ['item-icon-2', 'light']
+  ]) {
+    const sun = at(result, feature(CLASSES[0], field))
+    assert.deepEqual(Object.keys(sun.variants), [theme])
     assert.equal(sun.variants[theme].icon, 'sun')
     assert.deepEqual([sun.variants[theme].width, sun.variants[theme].height], [100, 100])
     assert.equal(sun.variants[theme].paint.glyph, 'accent')
@@ -123,6 +128,13 @@ test('each icon has a light and a dark version in colour roles, drawn at the dec
     }),
     { code: 'icon_policy_broken' }
   )
+  // A field with no declared theme holds both versions: the check cases below start from one.
+  const { theme: _theme, variantOf: _variantOf, ...dark } = at(result, feature(CLASSES[0]))
+  const sun = {
+    ...dark,
+    variants: { light: { ...dark.variants.dark, theme: 'light' }, dark: dark.variants.dark }
+  }
+  assert.deepEqual(iconProblemsOf({ icons: [sun] }, { names: NAMES, demo: DEMO_ICONS }), [])
   const bad = (over) =>
     iconProblemsOf({ icons: [{ ...sun, ...over }] }, { names: NAMES, demo: DEMO_ICONS })[0]?.code
   assert.equal(bad({ source: 'own', picture: 'p1' }), 'icon_holds_picture')

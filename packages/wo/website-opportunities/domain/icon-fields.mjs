@@ -3,16 +3,17 @@
 // `picture-block-places.mjs`), each in its SCOPE, the item it illustrates. Pure: the plan's pages, the block
 // descriptions and the plan data in, the fields grouped by scope out.
 //
-// A scope is one item a block shows (its item fields: JA Boxing's features block gives each of its four items two icon
-// fields, the template's two theme files of one icon), one row of a child list (the row is the item: its own fields are
-// its words), or the block level fields a field names in `for` (the text fields it illustrates). A block level icon
-// field naming nothing has no item to match: it is hidden with `icon_item_undeclared`, never guessed.
+// A scope is one content icon field with the other version of its pair, if it has one: each icon is matched on its own
+// words. In an item or a child list row (the row is the item: its own fields are its words) an icon reads the text
+// fields its `for` names, else every text of its item. At block level an icon reads the text fields its `for` names; a
+// block level icon naming nothing has no item to match: it is hidden with `icon_item_undeclared`, never guessed.
 //
 // A SOCIAL icon is a field that declares `iconOf: "network"` (Contract A), whatever its name. In a child list row it
-// stands for the `link` of that same row (a `contact.social_url` or `person.social_url` field): the row's rank among the
-// links of its item (an `itemLists` row) or of its block (a `lists` row); the written copy of the row's link, when the
-// writer gives one, wins (`icon-selection.mjs`). In an item it stands for that item's social link; at block level for
-// the block's link of its rank among the block's network icons. Without the key, an icon field is a content icon.
+// stands for the `link` of that same row: the row's rank among the usable links of the row's own kind, from its item
+// (`itemLists`) or its block (`lists`), the links that cannot fill a row left out with a note (`icon-row-links.mjs`).
+// When the writer writes any row link of a list, the written links replace the plan's for that whole list
+// (`icon-selection.mjs`). In an item it stands for that item's social link; at block level for the block's link of its
+// rank among the block's network icons, a pair's variant taking its base's. Without the key, an icon is a content icon.
 //
 // `for` names the text fields a content icon illustrates, at every depth: the words it is matched against.
 //
@@ -21,13 +22,8 @@
 // that one version; a field without it takes both. A variant joins its base's scope, so both files take the same
 // icon. A variant naming no field of its scope, or a pair without two different themes, throws `icon_variant_invalid`.
 import { IconSelectionError } from './icon-ranking.mjs'
-import {
-  itemSocialUrlsOf,
-  placesOfBlock,
-  repeatedNames,
-  SOCIAL_URL_KINDS,
-  socialLinksOf
-} from './picture-block-places.mjs'
+import { itemSocialUrlsOf, placesOfBlock, repeatedNames, socialLinksOf } from './picture-block-places.mjs'
+import { linkFieldOf, listLinksOf } from './icon-row-links.mjs'
 import { frameOfField } from './picture-frame-size.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -63,10 +59,10 @@ function checkPairs(prefix, icons) {
   for (const f of icons.filter((i) => i.variantOf !== undefined)) {
     const base = icons.find((i) => i.name === f.variantOf && i !== f)
     const id = `${prefix}.${f.name}`
-    if (!base)
+    if (!base || base.variantOf !== undefined)
       throw new IconSelectionError(
         'icon_variant_invalid',
-        `${id}: variantOf names no icon field of its scope`,
+        `${id}: variantOf names no base icon field of its scope`,
         { at: id }
       )
     if (!ICON_THEMES.includes(base.theme) || !ICON_THEMES.includes(f.theme) || base.theme === f.theme)
@@ -78,26 +74,14 @@ function checkPairs(prefix, icons) {
   }
 }
 
-/** The text fields the content icons of an item or row name in `for`, or null when none names any. */
-function forOf(content) {
-  const names = [...new Set(content.flatMap((f) => list(f.for)))]
-  return names.length ? names : null
+/** The social link of an item place: a footer row's shown link, else the item's own first social link. */
+function itemUrlOf(at, data) {
+  if (at.itemKind === 'social') return at.url ?? null
+  return itemSocialUrlsOf(data.byId.get(at.item))[0] ?? null
 }
 
-/**
- * The social link of an item or row place: a footer row's shown link; an item's own first social link; a row's link of
- * its rank among its item's links (`itemLists`) or its block's (`lists`).
- */
-function urlOf(at, block, data) {
-  if (at.itemKind === 'social' && at.level === 'item') return at.url ?? null
-  if (at.level === 'item') return itemSocialUrlsOf(data.byId.get(at.item))[0] ?? null
-  const links = at.item
-    ? itemSocialUrlsOf(data.byId.get(at.item))
-    : socialLinksOf(block, data).map((l) => l.url)
-  return links[at.rank - 1] ?? null
-}
-/** The name of a row's own link field: the social link the row's network icon stands for. */
-const linkFieldOf = (at) => at.fields.find((f) => SOCIAL_URL_KINDS.includes(f?.kind))?.name ?? null
+/** The field a pair's variant joins (its base), or the field itself. */
+const ownOf = (fields, field) => fields.find((f) => f.name === field.variantOf) ?? field
 
 /**
  * The icon fields of a plan, by scope.
@@ -106,11 +90,13 @@ const linkFieldOf = (at) => at.fields.find((f) => SOCIAL_URL_KINDS.includes(f?.k
  * @param {{byId: Map<string, object>}} data the plan data (`plan-data.mjs`)
  * @returns {Array<{id: string, page: string, block: string, blockId: string, blockType: string,
  *   case: 'content' | 'social' | 'undeclared', item?: string, row?: string, for?: string[],
- *   social?: {url: string | null, linkField?: string}, fields: Array<{id: string, field: string, kind: string, storage: string | null,
+ *   social?: {url: string | null, list?: string, linkField?: string, left?: Array<{link: string, reason: string}>},
+ *   fields: Array<{id: string, field: string, kind: string, storage: string | null,
  *   frame: {width: number, height: number} | null, theme?: 'light' | 'dark'}>}>}
  */
 export function iconScopesOfPlan(pages, blocks, data) {
   const scopes = []
+  const lists = new Map()
   for (const page of list(pages))
     for (const block of list(page?.blocks)) {
       const d = blocks.get(block.block) ?? {}
@@ -138,37 +124,46 @@ export function iconScopesOfPlan(pages, blocks, data) {
         checkPairs(at.prefix, icons)
         const content = icons.filter((f) => !isNetworkIcon(f))
         const network = icons.filter(isNetworkIcon)
-        if (at.level !== 'block') {
-          const names = forOf(content)
-          if (content.length)
-            scope(at.prefix, at, { case: 'content', ...(names ? { for: names } : {}) }, content)
-          const linkField = at.level === 'row' ? linkFieldOf(at) : null
-          const social = { url: urlOf(at, block, data), ...(linkField ? { linkField } : {}) }
-          if (network.length) scope(`${at.prefix}.network`, at, { case: 'social', social }, network)
+        // Content icons: each is matched on its own `for`; only a pair's variant joins its base. At block level an icon
+        // naming no text field has no item to match. A single content icon of an item or row keeps the place's id.
+        const bases = content.filter((f) => f.variantOf === undefined)
+        for (const field of content) {
+          const own = ownOf(content, field)
+          const names = list(own.for)
+          const id = at.level !== 'block' && bases.length === 1 ? at.prefix : `${at.prefix}.${own.name}`
+          if (at.level === 'block' && !names.length) scope(id, at, { case: 'undeclared' }, [field])
+          else scope(id, at, { case: 'content', ...(names.length ? { for: [...names] } : {}) }, [field])
+        }
+        if (!network.length) continue
+        if (at.level === 'item') {
+          scope(`${at.prefix}.network`, at, { case: 'social', social: { url: itemUrlOf(at, data) } }, network)
           continue
         }
-        // Block level: network icons pair with the block's link of their rank; content icons group by the text fields
-        // they name, a variant with its base.
+        if (at.level === 'row') {
+          const place = at.prefix.replace(/\.\d+$/, '')
+          if (!lists.has(place)) lists.set(place, listLinksOf(at, block, data))
+          const { links, left } = lists.get(place)
+          const linkField = linkFieldOf(at.fields)?.name
+          const social = {
+            url: links[at.rank - 1] ?? null,
+            list: place,
+            ...(linkField ? { linkField } : {}),
+            ...(at.rank === 1 && left.length ? { left } : {})
+          }
+          scope(`${at.prefix}.network`, at, { case: 'social', social }, network)
+          continue
+        }
+        // Block level: each network icon takes the block's link of its rank; a pair's variant takes its base's.
         const links = socialLinksOf(block, data)
-        network.forEach((field, rank) => {
-          scope(
-            `${at.prefix}.${field.name}`,
-            at,
-            { case: 'social', social: { url: links[rank]?.url ?? null } },
-            [field]
-          )
-        })
-        for (const field of content) {
-          const own = content.find((f) => f.name === field.variantOf) ?? field
-          if (list(own.for).length)
-            scope(`${at.prefix}.${list(own.for).join('+')}`, at, { case: 'content', for: [...own.for] }, [
-              field
-            ])
-          else scope(`${at.prefix}.${own.name}`, at, { case: 'undeclared' }, [field])
+        const netBases = network.filter((f) => f.variantOf === undefined)
+        for (const field of network) {
+          const own = ownOf(network, field)
+          const url = links[netBases.indexOf(own)]?.url ?? null
+          scope(`${at.prefix}.${own.name}`, at, { case: 'social', social: { url } }, [field])
         }
       }
     }
-  // Block level fields naming the same text fields share one scope, as the two theme files of one item do.
+  // A pair's two fields share one scope: one decision, written in each field's theme.
   const merged = new Map()
   for (const s of scopes) {
     const known = merged.get(s.id)

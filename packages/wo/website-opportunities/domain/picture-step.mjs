@@ -26,7 +26,7 @@ export function blocksOf(blockStore, library = []) {
 /** The frames left without a picture that the customer is told about: every empty frame but the brand step's logo. */
 const leftOutOf = (frames) =>
   frames
-    .filter((f) => f.source === 'none' && f.reason !== 'logo_from_brand_step')
+    .filter((f) => f.source === 'none' && !f.sameAs && f.reason !== 'logo_from_brand_step')
     .map((f) => ({ frame: f.id, reason: f.reason }))
 
 /**

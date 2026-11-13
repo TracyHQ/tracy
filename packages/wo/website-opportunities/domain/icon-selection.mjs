@@ -22,6 +22,7 @@ import { DEFAULT_ICON_LOOK, entryOf } from './icon-entry.mjs'
 import { iconScopesOfPlan } from './icon-fields.mjs'
 import { englishKeywordsOf, isEnglish } from './icon-keywords.mjs'
 import { IconSelectionError, rankIconCandidates } from './icon-ranking.mjs'
+import { rowLinkOf } from './icon-row-links.mjs'
 import { networkOf, socialReasonOf } from './icon-social.mjs'
 
 export { DEFAULT_ICON_LOOK } from './icon-entry.mjs'
@@ -29,14 +30,6 @@ export { DEFAULT_ICON_LOOK } from './icon-entry.mjs'
 export const ALL_HIDDEN_MIN_ITEMS = 4
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
-
-/** The link a social scope stands for: the written link of its own row when the writer gives one, else the plan's. */
-function linkOf(scope, written) {
-  const field = scope.social?.linkField
-  const key = `${scope.page}|${scope.block}|${scope.item ?? ''}|${scope.row ?? ''}`
-  const own = field ? (written.get(key) ?? []).find((c) => c.field === field)?.value : null
-  return isText(own) ? own : (scope.social?.url ?? null)
-}
 
 /**
  * The decision of a social scope: its network (`network`, for a class name field), its library mark (`name`, for an
@@ -56,15 +49,20 @@ function socialChoice(url, names) {
   }
 }
 
-/** The notes a report shows: twin fields that do not say their theme, and a site whose content icons are all hidden. */
-function notesOf(scopes, chosen) {
+/**
+ * The notes a report shows: the links left out of a list's rows (read from the plan, not the copy), with why, and a site
+ * whose content icons are all hidden.
+ */
+function notesOf(scopes, chosen, fromCopy) {
   const notes = []
-  const undeclared = scopes.filter((s) => s.fields.length > 1 && s.fields.some((f) => !f.theme))
-  if (undeclared.length)
+  const left = scopes.flatMap((s) =>
+    fromCopy.has(s.id) ? [] : list(s.social?.left).map((l) => ({ list: s.social.list, ...l }))
+  )
+  if (left.length)
     notes.push({
-      code: 'icon_theme_undeclared',
-      scopes: undeclared.map((s) => s.id),
-      message: 'twin icon fields do not declare their theme: each was given a light and a dark version'
+      code: 'social_links_left_out',
+      links: left,
+      message: `${left.length} social link(s) fill no row: a shortener, no known network, a repeated network or more links than rows`
     })
   const content = scopes.filter((s) => s.case === 'content')
   if (content.length >= ALL_HIDDEN_MIN_ITEMS && content.every((s) => !chosen.get(s.id)?.name)) {
@@ -112,10 +110,14 @@ export async function selectIcons({ plan, data, blocks, copy, iconLibrary, model
   const catalog = contentCatalog(icons)
   const chosen = new Map()
   const content = []
+  const fromCopy = new Set()
   for (const scope of scopes) {
     if (scope.case === 'undeclared') chosen.set(scope.id, { reason: 'icon_item_undeclared' })
-    else if (scope.case === 'social') chosen.set(scope.id, socialChoice(linkOf(scope, written), names))
-    else {
+    else if (scope.case === 'social') {
+      const link = rowLinkOf(scope, written)
+      if (link.written) fromCopy.add(scope.id)
+      chosen.set(scope.id, socialChoice(link.url, names))
+    } else {
       const words = wordsOfScope(scope, written, data)
       if (words.all.length === 0) chosen.set(scope.id, { words: [], reason: 'icon_words_missing' })
       else content.push({ id: scope.id, scope, words })
@@ -174,7 +176,11 @@ export async function selectIcons({ plan, data, blocks, copy, iconLibrary, model
       })
     )
   )
-  const selection = { icons: out, counts: iconCountsOf({ icons: out }), notes: notesOf(scopes, chosen) }
+  const selection = {
+    icons: out,
+    counts: iconCountsOf({ icons: out }),
+    notes: notesOf(scopes, chosen, fromCopy)
+  }
   const problems = iconProblemsOf(selection, { names })
   if (problems.length)
     throw new IconSelectionError('icon_policy_broken', `${problems.length} icon rules broken`, { problems })

@@ -53,7 +53,8 @@ export function writtenByScope(copy, scopes) {
 
 /**
  * The words of one scope in two tiers: its written heading, then its other written text, then its plan data's own
- * words (an item's name leads its tier). A row reads its own entries only.
+ * words (an item's name leads its tier). A row reads its own entries only; an icon with `for` reads the written fields
+ * it names only.
  * @returns {{heading: string[], text: string[], all: string[]}}
  */
 export function wordsOfScope(scope, written, data) {
@@ -62,7 +63,8 @@ export function wordsOfScope(scope, written, data) {
   )
   const heading = copy.filter((c) => HEADING.test(c.kind)).map((c) => c.value)
   const text = copy.filter((c) => !HEADING.test(c.kind)).map((c) => c.value)
-  const entry = scope.item && !scope.row ? data.byId.get(scope.item) : null
+  // An icon whose `for` names its text fields reads those written fields only; the plan data is no field it names.
+  const entry = scope.item && !scope.row && !scope.for ? data.byId.get(scope.item) : null
   if (entry?.what === 'item') {
     const own = Object.entries(entry.source?.fields ?? {}).filter(([, f]) => isText(f?.value))
     heading.push(...own.filter(([k]) => HEADING.test(k)).map(([, f]) => f.value))

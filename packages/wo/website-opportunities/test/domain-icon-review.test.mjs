@@ -56,21 +56,22 @@ test('the icon step reads the fields the page writer returns, and a page with ic
   })
 })
 
-test('twin icon fields: a declared theme takes one version, undeclared twins keep both and are noted, both twins one icon', async () => {
-  const undeclared = await run()
-  const note = undeclared.notes.find((n) => n.code === 'icon_theme_undeclared')
-  assert.ok(note.scopes.includes(`home.home-b1.${CLASSES[0]}`))
-  assert.deepEqual(Object.keys(at(undeclared, feature(CLASSES[0])).variants), ['light', 'dark'])
-  const store = blockStore()
-  store.blocks[0].itemFields[2].theme = 'light'
-  store.blocks[0].itemFields[3].theme = 'dark'
-  const declared = await run({ store })
-  const light = at(declared, feature(CLASSES[0]))
-  const dark = at(declared, feature(CLASSES[0], 'item-icon-2'))
-  assert.deepEqual([Object.keys(light.variants), light.theme], [['light'], 'light'])
+test('a variantOf pair: each field takes its own theme version, both one icon; a lone field takes both themes', async () => {
+  const pair = await run()
+  const dark = at(pair, feature(CLASSES[0]))
+  const light = at(pair, feature(CLASSES[0], 'item-icon-2'))
   assert.deepEqual([Object.keys(dark.variants), dark.theme], [['dark'], 'dark'])
-  assert.equal(light.icon.name, dark.icon.name, 'both twins of a row take the same icon')
-  assert.ok(!declared.notes.find((n) => n.scopes?.includes(`home.home-b1.${CLASSES[0]}`)))
+  assert.deepEqual(
+    [Object.keys(light.variants), light.theme, light.variantOf],
+    [['light'], 'light', 'item-icon']
+  )
+  assert.equal(dark.icon.name, light.icon.name, 'both files of a pair take the same icon')
+  assert.ok(!pair.notes.some((n) => n.code === 'icon_theme_undeclared'))
+  const store = blockStore()
+  store.blocks[0].itemFields.pop()
+  delete store.blocks[0].itemFields[2].theme
+  const lone = at(await run({ store }), feature(CLASSES[0]))
+  assert.deepEqual(Object.keys(lone.variants), ['light', 'dark'])
   store.blocks[0].itemFields[2].theme = 'blue'
   await assert.rejects(run({ store }), { code: 'icon_theme_invalid' })
 })
@@ -170,7 +171,7 @@ test('frames follow Contract A exactly: anything but whole {width, height} is re
   const store = blockStore()
   delete store.blocks[0].itemFields[2].frame
   const free = at(await run({ store }), feature(CLASSES[0]))
-  assert.deepEqual([free.frame, free.variants.light.width], [null, null])
+  assert.deepEqual([free.frame, free.variants.dark.width], [null, null])
   assert.match(free.sizeFrom, /no frame declared/)
   // The picture frames read the same rule.
   const pictures = {
