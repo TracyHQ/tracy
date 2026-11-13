@@ -1,7 +1,7 @@
 {
   "schema": "tracy-build-scenario/v1",
   "name": "sunrise-tennis-club",
-  "summary": "An invented tennis club: two questions, a plan with four services (one only in an Instagram caption), a full build that finishes, a plan edit and the partial re-run it starts.",
+  "summary": "An invented tennis club: two questions, a plan with four services (one only in an Instagram caption) and opening hours its sources disagree on, a full build that finishes, a plan edit and the partial re-run it starts.",
   "questions": [
     {
       "schema": "tracy-build-question/v1",
@@ -493,7 +493,27 @@
       {
         "id": "hours",
         "field": "facts[hours].value",
-        "said": "Google Maps lists the same hours every day."
+        "said": "Google Maps lists the same hours every day; your website shows shorter weekend hours.",
+        "alternatives": [
+          {
+            "value": "Every day, 6:00 to 22:00",
+            "sources": [
+              {
+                "kind": "google",
+                "name": "Google Maps"
+              }
+            ]
+          },
+          {
+            "value": "Weekdays 6:00 to 22:00, weekends 8:00 to 18:00",
+            "sources": [
+              {
+                "kind": "website",
+                "name": "Website"
+              }
+            ]
+          }
+        ]
       }
     ],
     "leftOut": [

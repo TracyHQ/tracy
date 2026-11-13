@@ -3,6 +3,9 @@ description: Format of Contract B, what the build engine and the chat exchange (
 sources:
   - packages/wo/website-opportunities/domain/build-contract.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan.mjs
+  - packages/wo/website-opportunities/domain/build-contract-plan-parts.mjs
+  - packages/wo/website-opportunities/domain/build-contract-shapes.mjs
+  - packages/wo/website-opportunities/domain/build-contract-scenario-runs.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan-edit.mjs
   - packages/wo/website-opportunities/domain/build-contract-questions.mjs
   - packages/wo/website-opportunities/domain/build-contract-run.mjs
@@ -36,6 +39,32 @@ below are excerpts of them.
 
 Data kinds are the roles of `place-content-roles/3` and block types are `BLOCK_TYPES`, as in Contract A.
 
+**Every object is a closed shape**: it accepts only the fields listed for it in [Closed shapes](#closed-shapes), and any
+other key is reported, whatever its name or case. Short texts have a length limit, counted by code point (one emoji
+counts once), listed in [Text limits](#text-limits).
+
+## Build scenario
+
+```json
+{
+  "schema": "tracy-build-scenario/v1",
+  "name": "sunrise-tennis-club",
+  "summary": "An invented tennis club: ...",
+  "questions": [],
+  "answers": [],
+  "plan": {},
+  "edits": [],
+  "runs": [{ "events": [], "outcome": {} }]
+}
+```
+
+- `name` is required; `summary` is an optional note for people reading the sample. `questions`, `answers`, `edits`
+  and `runs` are optional lists, `plan` is required.
+- A question id appears once, and **a question is answered once**; every answer names a question asked.
+- `edits` apply in order, each to the plan revision the previous one produced.
+- Each entry of `runs` holds its progress `events`, its `outcome`, or both. Every document of a run names the scenario's
+  plan, the same `run` and the same `planRevision`.
+
 ## Question and answer
 
 ```json
@@ -55,18 +84,21 @@ Data kinds are the roles of `place-content-roles/3` and block types are `BLOCK_T
 
 - `topic` is `main-button`, `contact-method`, `site-language` (the three agreed cases of spec #577) or `fact-conflict`
   (facts that disagree between sources); a `fact-conflict` names its `fact`, a fact role.
-- `choices` has at least one entry; at most one is `recommended`. `freeText.maxLength` is required: every question
-  accepts a free text answer. `skippable: true` lets the customer skip it.
+- `choices` has at least one entry; at most one is `recommended` (`true` or `false`). `freeText.maxLength` is
+  required: every question accepts a free text answer. `freeText.placeholder` is optional, a short text.
+  `skippable: true` lets the customer skip it.
 - An answer is `{schema, question, choice}`, `{schema, question, text}` or `{schema, question, skipped: true}`, exactly
-  one of the three. It is valid only against its question: the choice is one of its choices, the text is not empty and
-  holds at most `maxLength` characters, and only a skippable question is skipped.
+  one of the three. It is valid only against its question: the choice is one of its choices, the text is not empty,
+  holds no control character (line breaks included) and at most `maxLength` characters counted by code point, and only
+  a skippable question is skipped.
 
 ## Build plan
 
 The plan carries business facts with their sources, pages and their blocks, the data items each block shows, the look
 section, the pictures summary, the assumptions and what was left out. **It carries no written copy**: headings, body
-text and SEO text are written after approval. A block or page holding `heading`, `body`, `text`, `copy`, `lead`,
-`paragraph`, `fields` or `seo` is rejected.
+text and SEO text are written after approval. Every object of the plan is a closed shape, so a key such as `heading`,
+`title`, `description` or `cta` on the plan, a page, a block, a fact, an item, the look section or any of its parts is
+rejected; and labels, reasons and other short texts are held to their [text limits](#text-limits).
 
 ```json
 {
@@ -118,8 +150,24 @@ text and SEO text are written after approval. A block or page holding `heading`,
   `{kind: "own", source}` or `{kind: "text"}` (the business name set as text).
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
   to be generated, at most 6 (`MAX_GENERATED_FRAMES`), with a `reason` when above zero.
-- **`assumptions`**: what was assumed where sources were silent. Each names the plan `field` it set, which must be a
-  field the customer can change, so every assumption is correctable by a plan edit. The list is required, even empty.
+- **`look`** also: an own logo names its `source`; a text logo has none.
+- **`assumptions`**: what was assumed where sources were silent or disagree. Each has a unique `id`, says what was
+  assumed (`said`) and names the plan `field` it set, which must be a field the customer can change, so every
+  assumption is correctable by a plan edit. The list is required, even empty.
+- **`alternatives`** (optional, on an assumption whose `field` is a `facts[<id>].value` or `items[<id>].label`): the
+  values the sources disagree on, so the chat can show the customer the other values. At least two entries, each
+  `{value, sources}` with a distinct `value` (held to the field's text limit) and at least one source. In the plan as
+  composed (revision 1) the field's current value is one of them. A plan edit may set the field to any alternative, or
+  to the customer's own value; after an edit the value need not be among them.
+
+```json
+{ "id": "hours", "field": "facts[hours].value", "said": "Google Maps lists the same hours every day; ...",
+  "alternatives": [
+    { "value": "Every day, 6:00 to 22:00", "sources": [{ "kind": "google", "name": "Google Maps" }] },
+    { "value": "Weekdays 6:00 to 22:00, weekends 8:00 to 18:00", "sources": [{ "kind": "website", "name": "Website" }] }
+  ] }
+```
+
 - **`leftOut`**: what was dropped, each with `kind` (`page`, `block`, `item`, `feature`) and its `reason`. Required,
   even empty.
 
@@ -143,7 +191,8 @@ An edit is valid only against the plan it applies to (`checkPlanEdit(edit, plan)
 - it names that plan's id and its current revision; an edit for an older revision is stale and is not applied;
 - each field appears once, resolves in the plan and is one the customer can change;
 - each new value has the kind the field holds (text for text, a list for a list);
-- the edited plan, revision raised by one (`applyPlanEdit`), still passes the plan check; such a problem is reported at
+- the edited plan, revision raised by one (`applyPlanEdit`), still passes the plan check, closed shapes and text limits
+  included, so a new `look.template` or `look.logo` value with an extra key is rejected; such a problem is reported at
   `plan <place>` with a message starting "after the edit".
 
 ## Progress events and outcome
@@ -156,23 +205,105 @@ A run is the full build after approval (`run: {id, kind: "build"}`) or a partial
 { "id": "generated-pictures", "kind": "pictures", "label": "Generate 2 pictures for empty spots", "state": "running", "attempt": 2 }
 ```
 
-- A step `kind` is `look`, `writer` (with the `page` it writes), `pictures` or `write`. The **write step is the last
-  step, exactly once**. A site check is not a build step this round
+- A step `kind` is `look`, `writer` (with the `page` it writes; only a writer step names a page), `pictures` or
+  `write`. The **write step is the last step, exactly once**. There is at most one writer step per page.
+- **A full build** (`kind: "build"`) carries no plan edit and, before the write step, at least one `look` step, at least
+  one `pictures` step and **one writer step for every page of the plan** (checked against the plan in a scenario).
+- **A partial re-run** (`kind: "partial"`) carries only the steps its plan edit needs, at least one besides the write
+  step: it may omit the look, writer and pictures steps (a colour change re-runs a look step only). Its writer steps
+  name pages of the revision it builds. A site check is not a build step this round
   ([ADR 0047](../adr/0047-a-failing-build-step-stops-and-reports.md), decision 3): a step of kind `site-check` is
   rejected.
 - `state` is `pending` (attempt 0), `running`, `done` or `failed`. A failing step is re-run once, so `attempt` is at
-  most 2; a first failure shows as `running` with attempt 2, and **`failed` means the re-run failed too**.
-- Every event of a run lists the same steps in the same order, and a done step stays done.
+  most 2; a first failure shows as `running` with attempt 2, and **`failed` means the re-run failed too**. A step that
+  failed on its first attempt and then completed on its second is `done` with attempt 2, a valid run.
+- **Parallel group**: in a run, every `look`, `pictures` and `writer` step forms one parallel group: once the plan
+  is approved (or the plan edit applied) they may run at the same time, in any order. The `write` step is not in the group:
+  it runs alone, after every step of the group is done.
+- **A failed step is final**: at most one step of a run is failed, and every later event, and the outcome, still shows
+  it `failed` on attempt 2; the outcome is `stopped` naming that step. In the document where a step is failed and in
+  every later one:
+  - no step is `running` (the build has stopped);
+  - the write step is never `running` and never `done` (unless it is the failed step);
+  - another step may be `done` only if it was `running` or `done` in an earlier event of the same run: steps of the
+    parallel group were running beside the failed one and may have finished; a step that had not started stays
+    `pending` (checked in a scenario, when the run has an earlier event);
+  - when the failed step is the write step, every other step is `done`: they completed before it ran.
+- Every event of a run lists the same steps in the same order, `seq` rises, elapsed time never goes back, and a done
+  step stays done. The outcome lists the same steps as the events and its `elapsedSeconds` is not below the last
+  event's.
 
 The outcome adds `result`:
 
 - **`done`**: every step, ending with the write step, completed. An outcome of done that carries a failed, pending or
   running step is rejected. Done does not depend on a site check.
-- **`stopped`**: exactly one step failed, and `stopped: {step, reason, teamNotified: true}` names it. The chat shows the
-  could not finish state; the Tracy team is told.
+- **`stopped`**: exactly one step failed, and `stopped: {step, reason, teamNotified: true}` names it. The write step is
+  never `done` in a stopped outcome. The chat shows the could not finish state; the Tracy team is told.
 - Any other result, such as `applied` or `complete`, is rejected: a build never reports those.
 
 In a scenario a partial run builds the revision its edit produced, and a writer step names a page of that revision.
+
+## Closed shapes
+
+Each object accepts exactly these fields (`CONTRACT_SHAPES`, `build-contract-shapes.mjs`); `?` marks an optional field.
+Any other key is reported as `"<key>" is not a field of <object>`. A test compares this table with the code.
+
+| Object | Fields |
+|---|---|
+| `build scenario` | `schema`, `name`, `plan`, `summary?`, `questions?`, `answers?`, `edits?`, `runs?` |
+| `scenario run` | `events?`, `outcome?` |
+| `question` | `schema`, `id`, `topic`, `prompt`, `choices`, `freeText`, `fact?`, `skippable?` |
+| `choice` | `id`, `label`, `detail?`, `recommended?` |
+| `free text` | `maxLength`, `placeholder?` |
+| `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
+| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut` |
+| `fact` | `id`, `kind`, `label`, `value`, `sources` |
+| `item` | `id`, `kind`, `label`, `sources`, `count?` |
+| `source` | `kind`, `name` |
+| `page` | `id`, `name`, `pageType`, `blocks` |
+| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason` |
+| `look` | `template`, `accent`, `logo` |
+| `template` | `slug`, `name`, `version` |
+| `logo` | `kind`, `source?` |
+| `pictures` | `own`, `generated` |
+| `own pictures` | `frames`, `from?` |
+| `generated pictures` | `frames`, `reason?` |
+| `assumption` | `id`, `field`, `said`, `alternatives?` |
+| `alternative` | `value`, `sources` |
+| `left out entry` | `what`, `kind`, `reason` |
+| `plan edit` | `schema`, `id`, `plan`, `changes` |
+| `plan reference` | `id`, `revision` |
+| `change` | `field`, `value` |
+| `progress event` | `schema`, `planId`, `planRevision`, `run`, `seq`, `elapsedSeconds`, `steps` |
+| `outcome` | `schema`, `planId`, `planRevision`, `run`, `result`, `elapsedSeconds`, `steps`, `stopped?` |
+| `run` | `id`, `kind`, `edit?` |
+| `step` | `id`, `kind`, `label`, `state`, `attempt`, `page?` |
+| `stop report` | `step`, `reason`, `teamNotified` |
+
+`own pictures.from` is required when `frames` is above zero, `generated pictures.reason` when `frames` is above zero,
+`logo.source` for an own logo, `run.edit` for a partial run, `step.page` for a writer step, `outcome.stopped` for a
+stopped outcome, and `question.fact` for a `fact-conflict`.
+
+## Text limits
+
+The longest text, in code points (`TEXT_LIMITS`, `build-contract-shapes.mjs`). A card shows a label on one line and a
+reason in a sentence or two. A test compares this table with the code.
+
+| Field | Limit | Applies to |
+|---|---|---|
+| `label` | 80 | fact, item, block, step and choice labels; an item alternative's value |
+| `pages[].name` | 40 | a page name, what its menu item shows |
+| `sources[].name` | 80 | a source name, of a fact, an item or an alternative |
+| `what` | 80 | a left out entry |
+| `detail` | 80 | a choice detail |
+| `placeholder` | 80 | a free text placeholder |
+| `look.template.name` | 80 | the template name |
+| `look.logo.source` | 80 | where an own logo came from |
+| `pictures.own.from[]` | 80 | each source of the own photos |
+| `facts[].value` | 200 | a fact value, and a fact alternative's value |
+| `reason` | 200 | block, left out entry, generated pictures and stop report reasons |
+| `said` | 200 | an assumption |
+| `prompt` | 200 | a question |
 
 ## The contract check
 

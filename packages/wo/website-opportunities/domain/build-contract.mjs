@@ -7,9 +7,11 @@
 // also hold each answer to its question, each edit to the plan revision it applies to, and each run to its plan. The
 // format is documented in `docs/references/build-contract.md`.
 import { BUILD_PLAN_SCHEMA, buildPlanProblems } from './build-contract-plan.mjs'
-import { PLAN_EDIT_SCHEMA, checkPlanEdit } from './build-contract-plan-edit.mjs'
-import { ANSWER_SCHEMA, QUESTION_SCHEMA, checkAnswer, questionProblems } from './build-contract-questions.mjs'
-import { OUTCOME_SCHEMA, PROGRESS_SCHEMA, outcomeProblems, progressProblems } from './build-contract-run.mjs'
+import { checkPlanEdit, PLAN_EDIT_SCHEMA } from './build-contract-plan-edit.mjs'
+import { ANSWER_SCHEMA, checkAnswer, QUESTION_SCHEMA, questionProblems } from './build-contract-questions.mjs'
+import { OUTCOME_SCHEMA, outcomeProblems, PROGRESS_SCHEMA, progressProblems } from './build-contract-run.mjs'
+import { runsProblems } from './build-contract-scenario-runs.mjs'
+import { closedShapeProblems } from './build-contract-shapes.mjs'
 import { isName, isObject, label, reporterFor } from './build-contract-shared.mjs'
 
 export const BUILD_SCENARIO_SCHEMA = 'tracy-build-scenario/v1'
@@ -22,8 +24,6 @@ const SINGLE_DOCUMENTS = {
   [OUTCOME_SCHEMA]: outcomeProblems
 }
 const result = (problems) => ({ ok: problems.length === 0, problems })
-const stepIds = (doc) => (Array.isArray(doc?.steps) ? doc.steps.map((s) => s?.id) : [])
-const sameRun = (a, b) => a?.id === b?.id && a?.kind === b?.kind && a?.edit === b?.edit
 
 function questionsAndAnswers(scenario, report) {
   const questions = new Map()
@@ -70,61 +70,6 @@ function plansAndEdits(scenario, report) {
   return { plans, editRevision, planOk: true }
 }
 
-function eventsProblems(run, plan, report) {
-  let previous = null
-  ;(run.events ?? []).forEach((event, i) => {
-    const at = `events[${i}]`
-    progressProblems(event, report.under(at))
-    if (previous) {
-      if (!(event?.seq > previous.seq)) report(`${at}.seq`, 'seq rises with each event of the run')
-      if (event?.elapsedSeconds < previous.elapsedSeconds)
-        report(`${at}.elapsedSeconds`, 'elapsed time never goes back')
-      if (stepIds(event).join() !== stepIds(previous).join())
-        report(`${at}.steps`, 'every event of a run lists the same steps in the same order')
-      previous.steps?.forEach((step, j) => {
-        if (step?.state === 'done' && event?.steps?.[j]?.state !== 'done')
-          report(`${at}.steps[${label(step.id, j)}].state`, 'a done step stays done')
-      })
-    }
-    previous = event
-  })
-  for (const [i, step] of (run.events?.[0]?.steps ?? run.outcome?.steps ?? []).entries())
-    if (step?.kind === 'writer' && plan && !plan.pages.some((page) => page?.id === step.page))
-      report(
-        `steps[${label(step.id, i)}].page`,
-        `${JSON.stringify(step.page)} is not a page of the plan it builds`
-      )
-  return previous
-}
-
-function runsProblems(scenario, plans, editRevision, report) {
-  ;(scenario.runs ?? []).forEach((run, i) => {
-    const runReport = report.under(`runs[${i}]`)
-    if (!isObject(run) || (!Array.isArray(run.events) && run.outcome === undefined))
-      return runReport('', 'a run holds its progress events, its outcome, or both')
-    const docs = [...(run.events ?? []), ...(run.outcome ? [run.outcome] : [])]
-    const first = docs[0]
-    for (const doc of docs) {
-      if (doc?.planId !== scenario.plan?.id)
-        runReport('planId', `every document of the run names plan ${scenario.plan?.id}`)
-      if (doc?.planRevision !== first?.planRevision || !sameRun(doc?.run, first?.run))
-        runReport('run', 'every document of the run names the same run and plan revision')
-    }
-    const plan = plans.get(first?.planRevision)
-    if (!plan) runReport('planRevision', `revision ${first?.planRevision} is not a revision of the plan`)
-    if (first?.run?.kind === 'partial' && editRevision.get(first.run.edit) !== first.planRevision)
-      runReport('run.edit', 'a partial run builds the revision its plan edit produced')
-    const last = eventsProblems(run, plan, runReport)
-    if (run.outcome) {
-      outcomeProblems(run.outcome, runReport.under('outcome'))
-      if (last && stepIds(last).join() !== stepIds(run.outcome).join())
-        runReport('outcome.steps', 'the outcome lists the same steps as the progress events')
-      if (last && run.outcome.elapsedSeconds < last.elapsedSeconds)
-        runReport('outcome.elapsedSeconds', 'the outcome comes after the last progress event')
-    }
-  })
-}
-
 /**
  * Check a build scenario: every document, then answers against questions, edits against the plan, runs against plans.
  * @returns {{ok: boolean, problems: Array<{at: string, message: string}>}}
@@ -141,6 +86,7 @@ export function checkBuildScenario(scenario) {
   for (const key of ['questions', 'answers', 'edits', 'runs'])
     if (scenario[key] !== undefined && !Array.isArray(scenario[key])) report(key, `${key} must be a list`)
   if (problems.length > 0) return result(problems)
+  closedShapeProblems(scenario, 'build scenario', '', report)
   questionsAndAnswers(scenario, report)
   const { plans, editRevision, planOk } = plansAndEdits(scenario, report)
   if (planOk) runsProblems(scenario, plans, editRevision, report)
