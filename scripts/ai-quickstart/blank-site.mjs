@@ -15,7 +15,7 @@
  */
 
 import { createHash } from 'node:crypto'
-import { readFileSync, realpathSync, existsSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import {
   checkBlankSite,
@@ -94,7 +94,9 @@ function produce({ input, out, report: reportFile }) {
     throw new Error(`entries changed that must not: ${changed.map((e) => e.name).join(', ')}`)
   const problems = checkBlankSite(sql)
 
-  writeFileSync(out, blank)
+  // The archive exists only when it passed its own check; a failed run leaves nothing a later step could pick up.
+  if (problems.length) rmSync(out, { force: true })
+  else writeFileSync(out, blank)
   const full = {
     schema: 'tracy-ai-quickstart-blank-site-report/v1',
     source: { file: path.basename(input), sha256: sha256(source), entries: entries.length },
@@ -118,7 +120,7 @@ function produce({ input, out, report: reportFile }) {
     `secrets blanked: ${report.secrets.map((s) => `${s.table} ${s.row} ${s.key}`).join(', ') || 'none'}`
   )
   console.log(`entries copied unchanged: ${full.unchangedEntries} of ${entries.length}`)
-  console.log(`${out}  sha256 ${full.blankSite.sha256}`)
+  if (!problems.length) console.log(`${out}  sha256 ${full.blankSite.sha256}`)
   for (const p of problems) console.log(`not blank: ${p}`)
   return problems.length ? 1 : 0
 }

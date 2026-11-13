@@ -2,7 +2,7 @@
 // archive holding the demo data fixture of tracy-joomla-quickstart and one template file.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
@@ -86,4 +86,24 @@ test('the command refuses to write over its input', (t) => {
   const res = run(installer, '--out', installer)
   assert.equal(res.status, 2)
   assert.match(res.stderr, /--out must not be the input archive/)
+})
+
+test('when the result is not blank the command exits 1 and writes no archive', (t) => {
+  const { dir } = workdir(t)
+  const installer = path.join(dir, 'unreadable.zip')
+  writeFileSync(
+    installer,
+    makeZip([
+      [
+        'installation/sql/mysql/custom.sql',
+        `${DEMO_DATA}\nINSERT INTO \`jos_users\` (\`id\`) VALUES (7);\n`,
+        true
+      ]
+    ])
+  )
+  const out = path.join(dir, 'blank.zip')
+  const res = run(installer, '--out', out)
+  assert.equal(res.status, 1, res.stderr + res.stdout)
+  assert.match(res.stdout, /not blank: .*jos_users/)
+  assert.equal(existsSync(out), false, 'no archive at the output path')
 })
