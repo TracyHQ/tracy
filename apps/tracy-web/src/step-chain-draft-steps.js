@@ -6,10 +6,14 @@
 //   brand     the approved plan's look: the brand step ran before the site (#616), nothing runs again
 //   plan      the approved plan and the profile it was gated with, read from the draft: NO plan is composed
 //   copy      `writePages`: every page in parallel, the page and site copy checks together, one rewrite of the failing
-//             fields, then `copy_check_failed` (noRerun) naming pages and codes
-//   pictures  the draft pictures opened, labelled by ONE vision call, assigned to every frame (`placeBuildPictures`)
+//             fields, then `copy_check_failed` (noRerun) naming pages and codes. 🔒 A PAGE IS WRITTEN AT MOST TWICE IN
+//             ONE BUILD: a failure in the rewrite round is noRerun; a failure before it may be re-run once by the
+//             frame, and that second attempt writes once with no rewrite round (`rewrite: false`)
+//   pictures  the draft pictures opened, labelled by ONE vision call, assigned to every frame (`placeBuildPictures`);
+//             a picture whose own texts name a held text is refused (`refusedPicture`)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
-//   order     the alt text hand-off, `buildWriteOrder`, `checkWriteOrder`
+//   order     the alt text hand-off (`step-chain-draft-alt.js`), `buildWriteOrder`, `checkWriteOrder`
+//   write     not built for a draft run yet: `write_not_ready_for_draft` at once (noRerun), nothing written
 //
 // 🔒 ONE MODEL DOOR. Every model call (the writer, the labelling, the icon keywords and ranking) is made through the
 // build model door (`buildModel`, `lib/llm-catalog.js`), resolved once per step by the injected resolver; no step names
@@ -20,7 +24,8 @@ import { writePages } from 'website-opportunities/domain/page-writer.mjs'
 import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
 import { buildWriteOrder } from 'website-opportunities/domain/write-order.mjs'
 import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.mjs'
-import { altProblemsOf, visionThrough, withAltTexts, withDraftPictures } from './step-chain-draft-pictures.js'
+import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
+import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 
 /** The build model door's id in `LLM_DOORS`, the only door an assembled run spends. */
@@ -40,7 +45,10 @@ export function createDraftSteps(deps) {
   async function modelOf() {
     if (typeof deps.buildModel !== 'function')
       throw draftError('model_missing', 'this server has no build model door for a step chain run')
-    return deps.buildModel()
+    const model = await deps.buildModel()
+    if (typeof model !== 'function')
+      throw draftError('model_missing', 'the build model door answered no model to call')
+    return model
   }
   const declared = (kit) => ({ blockStore: kit.aiq.blockStore, library: list(kit.aiq.library) })
 
@@ -66,7 +74,12 @@ export function createDraftSteps(deps) {
           'aiq_kit_missing',
           `no AI quickstart kit for the template ${wanted?.slug ?? '(none)'}`
         )
-      if (wanted?.version && aiq.template?.version !== wanted.version)
+      if (typeof wanted?.version !== 'string' || wanted.version.trim() === '')
+        throw draftError(
+          'aiq_kit_version_missing',
+          `the approved plan names no version of the template ${wanted?.slug ?? '(none)'}: it cannot be held to a kit`
+        )
+      if (aiq.template?.version !== wanted.version)
         throw draftError(
           'aiq_kit_version_changed',
           `the plan was approved for ${wanted.slug} ${wanted.version}, this server has ${aiq.template?.version}`,
@@ -94,7 +107,7 @@ export function createDraftSteps(deps) {
       return { value: { draftId, plan, profile, lastEdit, research: draft.research, recorded }, usd: 0 }
     },
 
-    async copy(_ctx, { kit, plan }, { signal }) {
+    async copy(_ctx, { kit, plan }, { signal, attempt = 1 } = {}) {
       const model = await modelOf()
       const written = await writePages({
         plan: plan.plan,
@@ -102,7 +115,9 @@ export function createDraftSteps(deps) {
         ...declared(kit),
         mapping: kit.aiq.mapping ?? undefined,
         model,
-        signal
+        signal,
+        // The frame's second attempt: every page was written once already, so no rewrite round this time.
+        rewrite: attempt <= 1
       })
       const recorded = { pages: written.pages.map((p) => ({ id: p.id, calls: p.attempts.length })) }
       return { value: { ...written, recorded }, usd: null, knownUsd: 0 }
@@ -120,9 +135,15 @@ export function createDraftSteps(deps) {
         plan: plan.plan,
         profile: opened.profile,
         ...declared(kit),
-        vision: visionThrough(model, opened.refs)
+        vision: visionThrough(model, opened.refs),
+        refuse: refusedPicture(plan.profile?.withheld, opened.profile)
       })
-      const draft = { used: opened.used, missing: opened.missing }
+      const draft = {
+        used: opened.used,
+        missing: opened.missing,
+        unstored: opened.unstored,
+        refused: placed.refused.length
+      }
       const recorded = {
         counts: placed.counts,
         leftOut: placed.leftOut,
@@ -151,7 +172,8 @@ export function createDraftSteps(deps) {
       const frames = withAltTexts(pictures.frames, {
         profile: pictures.profile,
         language: plan.plan.language,
-        withheld
+        withheld,
+        template: kit.aiq.template
       })
       const order = buildWriteOrder({
         run: { id: ctx.runId ?? null, kind: 'build' },
@@ -177,9 +199,18 @@ export function createDraftSteps(deps) {
       const recorded = {
         pages: order.pages.length,
         pictures: order.pictures.length,
-        icons: order.icons.length
+        icons: order.icons.length,
+        alts: altCountsOf(frames)
       }
       return { value: { order, recorded }, usd: 0 }
+    },
+
+    /** The write of a draft run: not built yet, so it stops at once and writes nothing. */
+    async write() {
+      throw draftError(
+        'write_not_ready_for_draft',
+        'a run built from a draft ends with its write order: the write step for it is not built yet'
+      )
     }
   }
 }

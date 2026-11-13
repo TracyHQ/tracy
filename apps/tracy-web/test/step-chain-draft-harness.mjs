@@ -24,9 +24,24 @@ export const pool = {
   }
 }
 
-/** The engine over the real steps with fake doors; `opened` lists the draft pictures the store was asked for. */
-export async function setUp({ model = fakeBuildModel(), pictureBytes, heldInPlan = false } = {}) {
+/** The approved plan a run is pinned to, as the build chat passes it: `brief.plan`. */
+export const planRefOf = (draft) => ({ id: draft.approved.plan.id, revision: draft.approved.plan.revision })
+
+/**
+ * The engine over the real steps with fake doors; `opened` lists the draft pictures the store was asked for.
+ * `mutate(draft)` changes the stored draft before the run (the brief pins the plan as it then is); `doors` replaces
+ * draft doors; `buildModel` replaces the build model door's resolver.
+ */
+export async function setUp({
+  model = fakeBuildModel(),
+  pictureBytes,
+  heldInPlan = false,
+  mutate,
+  doors = {},
+  buildModel
+} = {}) {
   const draft = await floristDraft({ heldInPlan })
+  if (mutate) await mutate(draft)
   const opened = []
   const reads = { engine: 0, approved: 0, door: 0 }
   const steps = createStepChainSteps({
@@ -41,13 +56,14 @@ export async function setUp({ model = fakeBuildModel(), pictureBytes, heldInPlan
         reads.approved++, accountId === ACCOUNT_ID ? draft.approved : null
       ),
       loadAiqKit: (slug) => (slug === draft.kit.template.slug ? draft.kit : null),
-      buildModel: async () => (reads.door++, model),
+      buildModel: buildModel ?? (async () => (reads.door++, model)),
       openDraftPicture: async (id, { accountId }) => {
         opened.push({ id, accountId })
         const bytes = pictureBytes ? pictureBytes(id) : id === 'draft-picture-3' ? null : Buffer.from(id)
         return bytes ? { id, bytes, mime: 'image/png' } : null
       },
-      iconLibrary: floristIcons
+      iconLibrary: floristIcons,
+      ...doors
     }
   })
   const engine = createStepChainEngine({ steps, applyFor: () => async () => ({}) })
@@ -55,7 +71,7 @@ export async function setUp({ model = fakeBuildModel(), pictureBytes, heldInPlan
     runId: 'run-meadowlight-1',
     accountId: ACCOUNT_ID,
     email: 'owner@meadowlight.example',
-    brief: { draftId: DRAFT_ID },
+    brief: { draftId: DRAFT_ID, plan: planRefOf(draft) },
     signal: new AbortController().signal,
     progress: async () => {}
   }

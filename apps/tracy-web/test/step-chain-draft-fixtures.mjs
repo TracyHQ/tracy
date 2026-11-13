@@ -110,8 +110,9 @@ export async function floristDraft({ heldInPlan = false } = {}) {
   const gallery = needsProfile.items.gallery
   // The two first photos came without a label: the pictures step labels them with one vision call.
   for (const g of gallery.slice(0, 2)) g.label = null
-  // Two pictures stored by the draft research, one of them since pruned; the fourth is not a draft picture.
-  const manifest = gallery.slice(0, 3).map((g, n) => ({
+  // Every photo stored by the draft research, the third since pruned (the store answers nothing for it). A picture
+  // with no stored one behind it is never placed from its web address (`withDraftPictures`).
+  const manifest = gallery.map((g, n) => ({
     id: `draft-picture-${n + 1}`,
     origin: 'draft',
     sha256: String(n + 1).repeat(64),

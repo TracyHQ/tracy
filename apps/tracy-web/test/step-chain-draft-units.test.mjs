@@ -6,17 +6,27 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
-import { altProblemsOf, withAltTexts, withDraftPictures } from '../src/step-chain-draft-pictures.js'
+import {
+  altProblemsOf,
+  visionThrough,
+  withAltTexts,
+  withDraftPictures
+} from '../src/step-chain-draft-pictures.js'
 import { draftSource, isDraftRun } from '../src/step-chain-draft-source.js'
 import { createStepChainSteps } from '../src/step-chain-steps.js'
 
-const plan = { id: 'plan-1', pages: [{ id: 'home', blocks: [] }] }
+const plan = { id: 'plan-1', revision: 3, pages: [{ id: 'home', blocks: [] }] }
 const doors = (over = {}) => ({
-  readEngineDraft: async () => ({ draftId: 'd1', needsProfile: { facts: {} }, research: null }),
+  readEngineDraft: async () => ({ draftId: 'd1', needsProfile: { facts: {} }, research: { manifest: [] } }),
   draftPlanForBuild: async () => ({ draftId: 'd1', plan, lastEdit: null }),
   ...over
 })
-const ctx = (over = {}) => ({ runId: 'r1', accountId: 'a1', brief: { draftId: 'd1' }, ...over })
+const ctx = (over = {}) => ({
+  runId: 'r1',
+  accountId: 'a1',
+  brief: { draftId: 'd1', plan: { id: 'plan-1', revision: 3 } },
+  ...over
+})
 
 test('only a run that names its draft is assembled; any other run keeps the bench chain', () => {
   assert.equal(isDraftRun(ctx()), true)
@@ -37,7 +47,8 @@ test('the draft is read once per run; a changed, missing or unowned draft stops 
   const once = draftSource(doors({ draftPlanForBuild: async () => (reads++, { draftId: 'd1', plan }) }))
   await once.of(ctx())
   await once.of(ctx())
-  assert.equal(reads, 1)
+  // The plan is read on both sides of the engine draft, once per run.
+  assert.equal(reads, 2)
   const codeOf = (d, c = ctx()) =>
     draftSource(d)
       .of(c)
@@ -53,6 +64,54 @@ test('the draft is read once per run; a changed, missing or unowned draft stops 
     true
   ])
   assert.deepEqual(await codeOf({}), ['draft_doors_missing', true])
+})
+
+test('a draft run builds the plan its brief pins or nothing: no pin, another revision, a plan edited mid-read', async () => {
+  const codeOf = (d, c = ctx()) =>
+    draftSource(d)
+      .of(c)
+      .then(
+        () => ['built'],
+        (e) => [e.code, e.noRerun]
+      )
+  assert.deepEqual(await codeOf(doors(), ctx({ brief: { draftId: 'd1' } })), ['draft_plan_ref_missing', true])
+  assert.deepEqual(await codeOf(doors(), ctx({ brief: { draftId: 'd1', plan: { id: 'plan-1' } } })), [
+    'draft_plan_ref_missing',
+    true
+  ])
+  const revised = { ...plan, revision: 4 }
+  assert.deepEqual(
+    await codeOf(doors({ draftPlanForBuild: async () => ({ draftId: 'd1', plan: revised }) })),
+    ['draft_changed', true]
+  )
+  // The plan is edited between the two reads: the first matches the pin, the second does not.
+  let n = 0
+  const moving = async () => ({ draftId: 'd1', plan: (n += 1) === 1 ? plan : revised })
+  assert.deepEqual(await codeOf(doors({ draftPlanForBuild: moving })), ['draft_changed', true])
+  assert.deepEqual(await codeOf(doors()), ['built'])
+})
+
+test('a faulted draft, a draft without research, a plan showing what the profile lacks: typed stops', async () => {
+  const codeOf = (d) =>
+    draftSource(d)
+      .of(ctx())
+      .then(
+        () => ['built'],
+        (e) => [e.code, e.noRerun, e.details]
+      )
+  const engine = { draftId: 'd1', needsProfile: { facts: {} }, research: { manifest: [] } }
+  const [faulted] = [
+    await codeOf(doors({ readEngineDraft: async () => ({ ...engine, fault: { code: 'gather_failed' } }) }))
+  ]
+  assert.deepEqual(faulted, ['draft_faulted', true, { fault: 'gather_failed' }])
+  assert.deepEqual(
+    (await codeOf(doors({ readEngineDraft: async () => ({ ...engine, research: null }) }))).slice(0, 2),
+    ['draft_research_missing', true]
+  )
+  const showing = { ...plan, pages: [{ id: 'home', blocks: [{ id: 'b1', data: ['service-added-later'] }] }] }
+  const mismatch = await codeOf(doors({ draftPlanForBuild: async () => ({ draftId: 'd1', plan: showing }) }))
+  assert.deepEqual(mismatch.slice(0, 2), ['draft_plan_profile_mismatch', true])
+  assert.deepEqual(mismatch[2].ids, ['service-added-later'])
 })
 
 test('the frame runs icons then order after the copy and the pictures, and hands the order to the Write step', async () => {
@@ -124,7 +183,7 @@ test('on a site not in English the alt is the item own label or the site name, n
   ])
 })
 
-test('a draft picture that cannot be opened leaves the profile as a missing picture; others are untouched', async () => {
+test('only stored bytes count: a draft picture not opened and a picture with no stored one both leave the profile', async () => {
   const profile = {
     items: {
       gallery: [
@@ -167,5 +226,54 @@ test('a draft picture that cannot be opened leaves the profile as a missing pict
     `data:image/png;base64,${Buffer.from('x').toString('base64')}`
   )
   const values = out.profile.items.gallery.map((g) => g.fields['business.gallery_image'].value)
-  assert.deepEqual(values, ['https://shop.example/1.jpg', null, 'https://shop.example/3.jpg'])
+  assert.deepEqual(values, ['https://shop.example/1.jpg', null, null])
+  assert.equal(out.unstored, 1)
+})
+
+test('the vision call is never sent a picture whose stored bytes were not opened', async () => {
+  const asked = []
+  const vision = visionThrough(
+    async (r) => (asked.push(r), '{}'),
+    new Map([['https://shop.example/1.jpg', 'data:x']])
+  )
+  await vision({ images: ['https://shop.example/1.jpg'] })
+  assert.deepEqual(asked[0].images, ['data:x'])
+  assert.throws(() => vision({ images: ['https://shop.example/2.jpg'] }), { code: 'picture_not_opened' })
+  assert.equal(asked.length, 1)
+})
+
+test('a long clean label is cut to the alt limit at a word boundary', () => {
+  const long = Array.from({ length: 30 }, (_, i) => `meadow${i}`).join(' ')
+  const [frame] = withAltTexts([{ id: 'f1', source: 'own', label: long }], { profile: {}, language: 'en' })
+  assert.ok([...frame.label].length <= 125, frame.label)
+  assert.ok(long.startsWith(frame.label) && long[frame.label.length] === ' ')
+  assert.equal(frame.altFrom, 'label')
+})
+
+test('the plan the steps read leaves out what the owner keeps off the site', async () => {
+  const held = 'Odile Marchetin'
+  const needsProfile = {
+    facts: {},
+    sources: [{ id: 's1', origin: 'website' }],
+    items: {
+      gallery: [
+        { id: 'g-ok', kind: 'gallery', label: 'Shop', fields: {}, sources: ['s1'] },
+        { id: 'g-held', kind: 'gallery', label: `${held} at the bench`, fields: {}, sources: ['s1'] }
+      ]
+    },
+    withheld: { people: [held] }
+  }
+  const shown = {
+    ...plan,
+    pages: [{ id: 'home', blocks: [{ id: 'b1', data: ['g-ok', 'g-held'] }] }],
+    items: [{ id: 'g-ok' }, { id: 'g-held' }]
+  }
+  const read = await draftSource(
+    doors({
+      readEngineDraft: async () => ({ draftId: 'd1', needsProfile, research: { manifest: [] } }),
+      draftPlanForBuild: async () => ({ draftId: 'd1', plan: shown })
+    })
+  ).of(ctx())
+  assert.deepEqual(read.plan.pages[0].blocks[0].data, ['g-ok'])
+  assert.deepEqual(read.plan.items, [{ id: 'g-ok' }])
 })

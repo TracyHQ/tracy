@@ -34,9 +34,10 @@ test('draft in, write order out: no plan is composed, nothing held reaches the m
   assert.deepEqual(new Set(steps.slice(2, 4)), new Set(['brand:done', 'plan:done']))
   assert.deepEqual(new Set(steps.slice(4, 6)), new Set(['copy:done', 'pictures:done']))
   assert.deepEqual(steps.slice(6), ['icons:done', 'order:done'])
-  // (a) The approved plan is built: no call carries the composer's prompt, and the draft is read once per run.
+  // (a) The approved plan is built: no call carries the composer's prompt, and the draft is read once per run (the
+  // plan on both sides of the engine draft, so a plan edited between the two reads is caught).
   assert.equal(model.requests.filter((r) => r.system === PLAN_COMPOSER_PROMPT).length, 0)
-  assert.deepEqual(reads, { engine: 1, approved: 1, door: 4 })
+  assert.deepEqual(reads, { engine: 1, approved: 2, door: 4 })
   // Every model call of the chain went through the one build model door: the door check, then the writer, the
   // labelling and the icon ranking each resolved it and called what it answered.
   const kinds = model.requests.map((r) =>
@@ -54,7 +55,7 @@ test('draft in, write order out: no plan is composed, nothing held reaches the m
   const { draft } = run.inputs.pictures
   assert.ok(draft.used.includes('draft-picture-1'))
   assert.deepEqual(draft.missing, ['draft-picture-3'])
-  assert.equal(ownershipOf({ id: 'draft-picture-1', origin: 'draft' }, SITE_NAME), 'owner')
+  assert.equal(ownershipOf({ id: 'draft-picture-1', origin: 'draft', source: 'website' }, SITE_NAME), 'owner')
   const own = run.inputs.pictures.frames.filter((f) => f.source === 'own')
   assert.ok(own.length > 0 && run.inputs.pictures.counts.own === own.length)
   // The vision call saw the stored bytes, never the web address, of an opened draft picture.
@@ -69,9 +70,10 @@ test('draft in, write order out: no plan is composed, nothing held reaches the m
     assert.ok(typeof p.alt === 'string' && p.alt.trim() !== '', p.frame)
     assert.ok(!p.alt.includes(HELD_PERSON) && !p.alt.includes(HELD_NAME), p.alt)
   }
-  // The photo the vision call labelled with the held name says the site name instead; the pruned one is hidden.
-  const counter = order.pictures.find((p) => p.frame.includes('counter'))
-  assert.equal(counter.alt, SITE_NAME)
+  // The photo the vision call labelled with the held name is refused: never the owner's own photo on the site; the
+  // pruned one is hidden.
+  assert.equal(run.inputs.pictures.draft.refused, 1)
+  assert.ok(!order.pictures.some((p) => p.source === 'own' && p.frame.includes('counter')))
   assert.ok(order.hidden.some((h) => h.at.includes('window')))
   assert.ok(!order.pictures.some((p) => p.frame.includes('window')))
   assert.deepEqual(heldIn(order), [])
