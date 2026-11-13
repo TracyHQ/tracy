@@ -316,14 +316,33 @@ of the store too. The build uses `blocks`; a variant is a composition the author
 
 ## `mapping.json`
 
-A **location** has the shape a content map slot already uses, so the existing plugin patch functions take it unchanged:
-`{"entity": "module-12", "column": "params", "jsonPath": ["title"], "xpath": "/html/body/p"}`, where `jsonPath` and
-`xpath` are optional. For a block, `entity` names the block's record in the store; the build writes into its copy.
-`entity: "page"` names the page the build creates.
+A **location** has the shape a content map slot already uses, so the existing write functions take it unchanged:
+`{"slot": "module-12.3", "entity": "module-12", "column": "params", "nestedJson": "jatools-config", "jsonPath": ["hero",
+"title", 0], "xpath": "/html/body/div/h2"}`. Only `entity` and `column` are required:
+
+- `slot` names the content map slot the location is, when it is one; its `entity`, `column`, `jsonPath`, `nestedJson`
+  and `xpath` are then the slot's own, byte for byte (the writer of the Claude Cowork plugin takes changes by slot key,
+  `applyJoomlaContract`; test `ai-quickstart-mapping-writes.test.mjs`).
+- `jsonPath` holds keys and list indexes (integers); `nestedJson` names a key of the column whose value is itself a JSON
+  string (a JA ACM block's `jatools-config`), read and written back in the form PHP's `json_encode` writes.
+- `xpath` uses the plugin's convention, a synthetic `/html/body/div` root around the stored HTML. A JA ACM value keeps
+  its HTML in the marker notation (`((div class="x"))`); the xpath reads the HTML the markers stand for.
+- `piece: true` says the xpath names a node inside the slot's stored value (an attribute, a text node, an element): the
+  build reads the value, sets the piece and writes the whole value back under the slot's key. A piece's slot is a
+  whole value, never itself a piece.
+- `as` on a fact place says how the fact is written there: `tel` (a `tel:` link) or `mailto` (a `mailto:` link).
+
+`entity` names a key of **`entities`**, the records the mapping file names, each `{kind, identity, sourceId?}`: the
+content map's own entities (`module`, `field`, `article`, `menuItem`, `languageString`, `siteSetting`...) plus the
+records outside it a place sits on: `globalConfiguration` (`configuration.php`, which the installer writes, so the
+blank site carries no value of it), `templateGlobal` (T4's `local/etc/global.json`) and `acymConfiguration` (by
+`name`). An entity the blank site removes (a page, an article, a contact, a tag, a user) carries `created: true`: the
+build creates its own record, and nothing on it is emptied. `entity: "page"` names the page the build creates.
 
 ```json
 {
   "schema": "tracy-ai-quickstart-mapping/v1",
+  "entities": { "module-13": { "kind": "module", "identity": { "title": "Services" }, "sourceId": 13 } },
   "blocks": {
     "services-grid": {
       "fields": { "heading": { "entity": "module-13", "column": "params", "jsonPath": ["title"] } },
@@ -337,6 +356,7 @@ A **location** has the shape a content map slot already uses, so the existing pl
     "description": { "entity": "page", "column": "metadesc" },
     "shareImage": { "entity": "page", "column": "params", "jsonPath": ["menu-meta-image"] }
   },
+  "library": { "position": "content-bottom" },
   "overrides": {
     "settings": [{ "location": { "entity": "settings", "column": "MetaDesc" }, "value": "" }],
     "language": [{ "key": "TPL_EXAMPLE_READ_MORE", "value": "Read more" }]
@@ -344,22 +364,47 @@ A **location** has the shape a content map slot already uses, so the existing pl
 }
 ```
 
-- **`blocks`**: one entry per store block, nothing else. `fields` gives a location for every field, design fields too.
-  `itemFields` gives a list of locations per item field, one per item, at least `items.max` long. `lists` and
-  `itemLists` map a child list name to `{fields, lists?}`, where each child field gives, per parent place, one location
+- **`blocks`**: one entry per store block, nothing else. `fields` gives an entry for every field, design fields too.
+  `itemFields` gives a list of entries per item field, one per item, at least `items.max` long. `lists` and
+  `itemLists` map a child list name to `{fields, lists?}`, where each child field gives, per parent place, one entry
   per row (`[[loc, loc], [loc], []]`): at least one parent place for `lists`, `items.max` for `itemLists`, and the rows
   of the parent list for a nested list, with the rows within the list's counts and agreeing across its fields. A child
-  field's location on a design line is a design value typed as content, as for any field.
+  field's location on a design line is a design value typed as content, as for any field. An entry is one of:
+  - a location;
+  - `{"fact": "<name>"}`: a field of a business fact kind takes the fact, written at the fact's places (below), so the
+    fact is declared once; a field of a fact kind that is not the business's own fact (a trainer's own link) is listed
+    in `factExceptions` (`[{block, field, why}]`) and takes a location;
+  - `{"derived": "<form>", "keyAt"?, "pageType"?}`: a field the build derives (a page address, the page of a keyed row),
+    with the key place of a row keyed to a page (`keyAt`, the place the build writes the new page id into) and the page
+    type of the row. A derived field may carry a location too, where the build writes what it derives.
 - **`designLines`**: every config line of the block that is design (kept as the template has it). A design field's
   location must be one of them, and a field whose location is one of them must be typed `design`: that is how a design
   value typed as text is caught.
 - **`facts`**: each business fact declared once, with every place the template shows it (fan out). Keys: `name`,
-  `phone`, `address`, `email`, `social` (a location may add `network`), `logoLight`, `logoDark`. A fact the template
-  never shows is left out.
-- **`seo`**: required `title`, `description`, `shareImage`, written on every page the build creates. The share image is
-  always 1200 by 630 (`SHARE_IMAGE_FRAME`).
-- **`overrides`**: `settings` (a location and the value written in the blank site: site name, body background) and
-  `language` (a language key and its value: system and template strings).
+  `phone`, `address`, `email`, `social` (a location may add `network`), `logoLight`, `logoDark`. `logoLight` is the logo
+  drawn on a light background (the dark mark), `logoDark` the one drawn on a dark background. A fact the template never
+  shows is left out. `notFacts` (`[{fact, why}]`) names each business fact or demo value the template shows nowhere, or
+  shows only through another fact's place, with the reason; together with `facts` it accounts for every demo fact value.
+- **`seo`**: the title, description and share image of every page the build creates. Either the single form above
+  (one location each, every page type), or per page type: `shareImageFrame` `{"width": 1200, "height": 630}`, records
+  of the places (`"menuItem": {"title": [loc], "description": [loc, loc], "shareImage": [loc]}`, `"article": {...}`),
+  and `pageTypes` mapping every page type of the recipes to the name of a record or to its own record; a field may be
+  `{"derived": "<what the template draws it from>"}` instead of locations. The share image is always 1200 by 630
+  (`SHARE_IMAGE_FRAME`).
+- **`library`**: `{"position": "<position>", "pageTypes"?: {"<page type>": "<position>"}, "why"}`, the template position
+  the Tracy library blocks are published in, and the page types whose layout lacks it with the position they use
+  instead. Measured on the running template, never read off a layout file alone.
+- **`buildSets`**: every reference of a kept record to a record the build creates (the draft report classes them
+  `build-sets`), by `<entity>:<column>:<path>`: `{entity, column, jsonPath, sets, pageType, why}`, the place the build
+  writes the new record's id into (a list's category).
+- **`overrides`**: `settings` (a location and the value written in the blank site: site name, body background, a
+  template global setting) and `language` (a language key and its value source: `value`, the string written; `filledBy`
+  `[{block, field}]` with the smallest `limit` of those fields, a template string a field fills, written once; or
+  `keep` with the reason, a string no business word reaches).
+- **`notEmptied`**: `[{entity, why}]`, the records the blank site keeps as the demo has them, though they hold demo
+  words: a trashed module no block of the store is, a module no page prints.
+- **`inlineMarkup`**: `{class, count, owners}`, the fields whose stored value carries inline markup and the ticket that
+  decides how such a value is written.
 - **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,
   `{"classes": {"<network>": "<class>"}, "why": "<how the classes were confirmed>"}`. Required when the store has an
   icon field with `iconOf: "network"` and `storage: "class-name"`. Each key is a network the build recognises (the
@@ -370,6 +415,21 @@ A **location** has the shape a content map slot already uses, so the existing pl
   icon with its link and writes nothing into the row (reason `social_icon_not_in_template`), the same spirit as the
   rule that an icon with no known network is hidden with its link (`icon-row-links.mjs`). JA Boxing:
   `{"facebook": "fab fa-facebook", "x": "fab fa-twitter", ...}`; its fonts draw no Threads mark, so `threads` is left out.
+
+The mapping file is generated, never edited by hand: `packages/cms/tracy-quickstart-tools/ai-quickstart/mapping.mjs`
+writes it from the block store, the page recipes, the draft report, the draft decisions, the template's content map and
+the reviewed `mapping-decisions.json` beside them; `ai-quickstart-mapping-reproducible.test.mjs` pins its bytes.
+
+**The blank site empties what the mapping declares.** `scripts/ai-quickstart/blank-site.mjs <installer> --out <zip>
+--mapping <mapping.json>` adds the step `empty-declared-fields`
+(`packages/cms/tracy-joomla-quickstart/scripts/blank-site-empty-fields.mjs`): every field and fact place of a record
+the blank site keeps becomes empty (a whole column, a JSON path, a nested JSON value, an HTML node through
+`empty-html-places.php`), an `UPDATE` that sets such a row is folded into it first, and a design line, a created
+record and a derived entry are left alone. Template Site settings, T4 global settings and template strings live in
+files, so the step adds `templates/<tpl>/local/etc/site/<profile>.json`, `templates/<tpl>/local/etc/global.json` (T4
+reads a local file instead of the shipped one, without merging) and `language/overrides/<tag>.override.ini`. A
+`globalConfiguration` place is written by the installer from what the installation is given, and is reported as such.
+The demo data parser reads `DELETE FROM` statements and keeps them in order.
 
 ## The Tracy library
 
@@ -458,6 +518,8 @@ or a demo picture is none of these; `draft-report.json` carries `references` (to
 - Item counts are required on every block, not only repeating ones, so a missing count is never read as "one".
 - Item fields are a separate list (`itemFields`), so a block's own heading and its items' fields cannot be confused.
 - Design lines live in the mapping file; the block store declares design fields only by `type: "design"`.
-- SEO fields are declared once in the mapping file and apply to every page type, because pages are created by the
-  build, not taken from the demo.
+- SEO fields are declared in the mapping file, not taken from the demo, because pages are created by the build: once
+  for every page type, or per page type when the template stores them on different records (a menu item, an article).
+- A business fact is declared once in `facts` and a field of its kind takes it by `{"fact": "<name>"}`, so one value is
+  never written from two inputs.
 - Page recipes are their own file, so the block store can be regenerated without losing the author's order.
