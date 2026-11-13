@@ -64,9 +64,13 @@ test('two entries with other words for one place: the record own page wins, the 
     !entries.includes('home.home-b5.service-wild-meadow-bouquet.paragraph-2'),
     'the home teaser is not'
   )
-  for (const c of plan.conflicts) assert.deepEqual(Object.keys(c).sort(), ['by', 'entry', 'kept', 'record'])
+  for (const c of plan.conflicts)
+    assert.deepEqual(Object.keys(c).sort(), ['by', 'entry', 'kept', 'record', 'written'])
   const coverage = draftWriteCoverage(site.order, plan)
-  assert.equal(coverage.conflicted, plan.conflicts.length)
+  assert.equal(
+    coverage.conflicted,
+    new Set(plan.conflicts.filter((c) => !c.written).map((c) => c.entry)).size
+  )
   assert.equal(coverage.in, coverage.written + coverage.skipped + coverage.conflicted)
 })
 
@@ -93,7 +97,6 @@ test('the florist plan raises exactly these skip reasons, flags and operation ki
   const set = (values) => [...new Set(values)].sort()
   assert.deepEqual(set(plan.skipped.map((s) => s.reason)), [
     'accent_variables_not_declared',
-    'address_conflict',
     'address_shared',
     'derived_drawn_by_template',
     'fact_fanned_out',

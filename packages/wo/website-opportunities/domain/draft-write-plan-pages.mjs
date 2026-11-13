@@ -2,7 +2,7 @@
 // title, description and share image of each page on the record `mapping.seo.pageTypes` names (a menu item, or the
 // article of an article page), the items of the footer menus, and the category each created article is filed in.
 // Pure; part of `writePlanOf`.
-import { consume, put, recordOf, skip, unproven } from './draft-write-sink.mjs'
+import { conflict, consume, put, recordOf, skip, unproven } from './draft-write-sink.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -81,8 +81,10 @@ export function planPages(state) {
 /**
  * The items of the menu blocks: one menu item per item, its label and its page together. A menu block that draws the
  * main menu (the phone menu) shows the page items `planPages` made: its items make no rival record, and their entries
- * are skipped (`menu_item_is_page_item`), since the page's own item already holds its label and page. Run after
- * `planPages`, so a footer item's page has its main menu item.
+ * are skipped (`menu_item_is_page_item`), since the page's own item already holds its label and page; a label in
+ * other words than the page's menu label is a conflict the page item wins (`address_conflict`, `kept: page_item`).
+ * Two items of another menu for one page make one item: the second is `address_shared`, or `address_conflict` when
+ * its label differs.
  */
 export function planMenuItems(state) {
   const byItem = new Map()
@@ -97,19 +99,27 @@ export function planMenuItems(state) {
     const link = group.find((g) => g.entry.from === 'derived')?.entry
     const target = link?.target?.page
     if (!label || !target) {
-      for (const g of group) skip(state.sink, g.entry.place, 'menu_item_without_page')
-      continue
-    }
-    if (menutype === state.kit.mainMenu) {
-      for (const g of group)
-        skip(state.sink, g.entry.place, 'menu_item_is_page_item', {
-          record: `menuItem:${menutype}:${target}`
-        })
+      const reason = target ? 'menu_item_without_label' : 'menu_item_without_page'
+      for (const g of group) skip(state.sink, g.entry.place, reason)
       continue
     }
     const key = `menuItem:${menutype}:${target}`
-    if (state.sink.records.has(key)) {
-      for (const g of group) skip(state.sink, g.entry.place, 'address_shared', { record: key })
+    // The main menu's item of a page is the page item (`planPages`, its label the page's menu label); another menu's
+    // item of a page already listed there is that item. The same words are shared; other words are a conflict.
+    const main = menutype === state.kit.mainMenu
+    const held = main ? null : state.sink.records.get(key)
+    if (main || held) {
+      const words = main ? state.order.pages.find((p) => p.id === target)?.menu?.label : held.title
+      for (const g of group)
+        if (g.entry === label && words !== undefined && words !== label.value)
+          conflict(state.sink, g.entry.place, {
+            by: main ? `menu:${target}` : held.labelEntry,
+            record: key,
+            address: 'title',
+            kept: main ? 'page_item' : 'first'
+          })
+        else
+          skip(state.sink, g.entry.place, main ? 'menu_item_is_page_item' : 'address_shared', { record: key })
       continue
     }
     const record = recordOf(state.sink, key, {
@@ -119,7 +129,8 @@ export function planMenuItems(state) {
       page: target,
       linkTo: target,
       link: { ref: `page:${target}`, form: 'alias' },
-      title: label.value
+      title: label.value,
+      labelEntry: label.place
     })
     for (const g of group) consume(state.sink, g.entry.place, record.key)
   }

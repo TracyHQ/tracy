@@ -16,7 +16,7 @@ import { siteOf } from './draft-write-site.mjs'
 import { blockRecordOf, placesWithScope } from './draft-write-targets.mjs'
 import { checkWriteOrder } from './write-order-check.mjs'
 
-export { draftWriteCoverage, entriesOfOrder } from './draft-write-coverage.mjs'
+export { draftWriteCoverage, entriesOfOrder, planCountsOf } from './draft-write-coverage.mjs'
 export const DRAFT_WRITE_PLAN_SCHEMA = 'tracy-draft-write-plan/v1'
 
 /** The kinds of record the write creates (`step-chain-draft-write-kinds.js` runs exactly these). */
@@ -155,10 +155,9 @@ export function writePlanOf(order, aiq, options = {}) {
     },
     ops,
     skipped: sink.skipped.filter((s) => !sink.consumed.has(s.entry)),
-    // Two entries with other words for one place: the losing one, its place and the lengths, never the words.
-    conflicts: sink.skipped
-      .filter((s) => s.reason === 'address_conflict' && !sink.consumed.has(s.entry))
-      .map(({ entry, by, record, kept }) => ({ entry, by, record, kept })),
+    // Two entries with other words for one place: one row per losing entry and place, ids only, never the words;
+    // `written`: the entry is written at another place all the same (it fans out to several places).
+    conflicts: [...sink.conflicts.values()].map((c) => ({ ...c, written: sink.consumed.has(c.entry) })),
     unproven: sink.unproven,
     controls: [...sink.records.values()].flatMap((r) =>
       list(r.controls).map((c) => ({ record: r.key, ...c }))

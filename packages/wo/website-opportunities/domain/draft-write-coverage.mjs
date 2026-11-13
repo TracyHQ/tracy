@@ -1,7 +1,13 @@
 // Every entry of the write order accounted for by the write plan (ticket #597): entries in = entries written by exactly
-// one operation + entries skipped with a reason + entries in conflict, none unexplained, none written twice. An entry
-// in conflict (`address_conflict`: another entry wrote other words at the same place) is no plain skip: it is counted
-// and listed apart (`conflicts`), so a report shows it. Pure.
+// one operation + entries skipped with a reason + entries in conflict, none unexplained, none written twice.
+//
+//   written     an operation carries the entry (`op.entries`): its words reach the site at one place at least. An
+//               entry that won one place and lost another is written; its lost place is still a row of
+//               `plan.conflicts` (`written: true`), so a report shows it.
+//   conflicted  no operation carries the entry and it lost a place to other words (`plan.conflicts`): no plain skip,
+//               counted and listed apart.
+//   skipped     no operation carries the entry, it lost no place, and `plan.skipped` gives its reason.
+// Pure.
 import { placesOfOrder } from './write-order-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -40,6 +46,7 @@ export function draftWriteCoverage(order, plan) {
     }
   const reasons = new Map()
   for (const s of plan.skipped) if (!reasons.has(s.entry)) reasons.set(s.entry, s.reason)
+  const lost = new Set(list(plan.conflicts).map((c) => c.entry))
   const out = {
     in: entries.length,
     written: 0,
@@ -56,7 +63,7 @@ export function draftWriteCoverage(order, plan) {
     const n = writers.get(id) ?? 0
     if (n > 1) out.twice.push(id)
     if (n >= 1) out.written += 1
-    else if (reasons.get(id) === 'address_conflict') {
+    else if (lost.has(id)) {
       out.conflicted += 1
       out.conflicts.push(id)
     } else if (reasons.has(id)) {
@@ -67,4 +74,27 @@ export function draftWriteCoverage(order, plan) {
   // An operation that names an entry the order does not have is as wrong as an entry nobody wrote.
   for (const id of writers.keys()) if (!known.has(id)) out.unexplained.push(`unknown:${id}`)
   return out
+}
+
+/**
+ * The counts a run reports, from the plan alone: entries `written` (carried by an operation), `conflicted` (lost a
+ * place and written nowhere) and `skipped` (a reason, no conflict), each entry counted once; `conflicts`: the entry
+ * ids of every conflict row, written or not, never the words.
+ */
+export function planCountsOf(plan) {
+  const written = new Set(list(plan.ops).flatMap((op) => list(op.entries)))
+  const lost = new Set(list(plan.conflicts).map((c) => c.entry))
+  const conflicted = [...lost].filter((id) => !written.has(id))
+  const skipped = new Set(
+    list(plan.skipped)
+      .map((s) => s.entry)
+      .filter((id) => !written.has(id) && !lost.has(id))
+  )
+  return {
+    ops: list(plan.ops).length,
+    written: written.size,
+    skipped: skipped.size,
+    conflicted: conflicted.length,
+    conflicts: [...lost]
+  }
 }
