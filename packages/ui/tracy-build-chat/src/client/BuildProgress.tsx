@@ -52,7 +52,10 @@ export function BuildProgress({ run, t }: BuildProgressProps) {
   const head = [
     p.counts.done > 0 && t('progress.done', { count: p.counts.done }),
     p.counts.running > 0 && t('progress.running', { count: p.counts.running }),
-    p.counts.pending > 0 && p.result !== 'stopped' && t('progress.pending', { count: p.counts.pending }),
+    p.counts.pending > 0 &&
+      p.result !== 'stopped' &&
+      p.result !== 'cancelled' &&
+      t('progress.pending', { count: p.counts.pending }),
     p.counts.failed > 0 && t('progress.failed', { count: p.counts.failed })
   ]
     .filter(Boolean)

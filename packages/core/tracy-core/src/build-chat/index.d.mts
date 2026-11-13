@@ -97,7 +97,7 @@ export interface Progress {
   counts: { done: number; running: number; pending: number; failed: number }
   elapsedSeconds: number
   running: boolean
-  result: null | 'done' | 'stopped'
+  result: null | 'done' | 'stopped' | 'cancelled'
 }
 export interface Stopped {
   step: string
@@ -106,6 +106,12 @@ export interface Stopped {
   siteUnchanged: boolean
   teamNotified: boolean
 }
+export interface Cancelled {
+  siteUnchanged: boolean
+  teamNotified: boolean
+}
+// biome-ignore lint/suspicious/noExplicitAny: a Contract B outcome
+export declare function cancelledOf(outcome: any): Cancelled | null
 // biome-ignore lint/suspicious/noExplicitAny: a Contract B run
 export declare function progressOf(run: { events?: any[]; outcome?: any }): Progress
 // biome-ignore lint/suspicious/noExplicitAny: a Contract B outcome

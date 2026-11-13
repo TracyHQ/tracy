@@ -18,7 +18,14 @@ const read = (file) => JSON.parse(readFileSync(new URL(file, import.meta.url), '
 /** The two Contract B sample scenarios. */
 export const SCENARIOS = {
   done: read('./sunrise-tennis-club-chat.build-scenario.json'),
-  stopped: read('./sunrise-tennis-club-chat-could-not-finish.build-scenario.json')
+  stopped: read('./sunrise-tennis-club-chat-could-not-finish.build-scenario.json'),
+  // Part 3's Contract B samples, read in place (not copied). Their design is the invented "Example Sports" template.
+  stoppedOnce: read(
+    '../../../../../wo/website-opportunities/test/fixtures/build-contract/sunrise-tennis-club-stopped-without-rerun.build-scenario.json'
+  ),
+  cancelled: read(
+    '../../../../../wo/website-opportunities/test/fixtures/build-contract/sunrise-tennis-club-cancelled.build-scenario.json'
+  )
 }
 
 /** What research read, one entry per source the owner linked (the mock's research line). */
@@ -126,6 +133,8 @@ export const STAGES = [
   { name: 'building', from: 'done', take: { plan: true, edits: 2, runs: 1, events: 2 } },
   { name: 'done', from: 'done', take: { plan: true, edits: 2, runs: 1 } },
   { name: 'could-not-finish', from: 'stopped', take: { plan: true, runs: 1 } },
+  { name: 'stopped-without-rerun', from: 'stoppedOnce', take: { plan: true, runs: 1 } },
+  { name: 'cancelled', from: 'cancelled', take: { plan: true, runs: 1 } },
   { name: 'rebuild', from: 'done', take: { plan: true } }
 ]
 
@@ -138,6 +147,8 @@ export const STAGE_NAMES = [
   'building',
   'done',
   'could-not-finish',
+  'stopped-without-rerun',
+  'cancelled',
   'rebuild'
 ]
 

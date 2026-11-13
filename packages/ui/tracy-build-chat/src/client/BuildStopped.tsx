@@ -1,9 +1,9 @@
 /**
- * The notice of a build that could not finish (TracyHQ/tracy#608): one plain sentence naming the step that stopped
+ * The notice of a build that could not finish, or was cancelled (TracyHQ/tracy#608): one plain sentence naming the step that stopped
  * it, what was kept, and whether the team was told. Never the fault reason: that stays with the team (`stoppedOf`).
  * Shown above the task list, which keeps the failed step red and never reads as done.
  */
-import { stoppedOf } from '@tracy/core/build-chat'
+import { cancelledOf, stoppedOf } from '@tracy/core/build-chat'
 import type { Translate } from './strings'
 
 export interface BuildStoppedProps {
@@ -13,6 +13,8 @@ export interface BuildStoppedProps {
 }
 
 export function BuildStopped({ outcome, t }: BuildStoppedProps) {
+  const cancelled = cancelledOf(outcome)
+  if (cancelled !== null) return <BuildCancelled siteUnchanged={cancelled.siteUnchanged} t={t} />
   const s = stoppedOf(outcome)
   if (s === null) return null
   const kept =
@@ -38,6 +40,20 @@ export function BuildStopped({ outcome, t }: BuildStoppedProps) {
           {t('stopped.notified')}
         </p>
       )}
+    </div>
+  )
+}
+
+/** The notice of a build the owner cancelled: neutral, nothing failed, no word about the team. */
+function BuildCancelled({ siteUnchanged, t }: { siteUnchanged: boolean; t: Translate }) {
+  return (
+    <div className="tv-bc-notice" role="status">
+      <div className="tv-bc-notice-head">
+        <span className="tv-bc-sd" data-s="pending" aria-hidden />
+        {t('cancelled.title')}
+      </div>
+      <p>{t('cancelled.body')}</p>
+      {siteUnchanged && <p>{t('stopped.unchanged')}</p>}
     </div>
   )
 }

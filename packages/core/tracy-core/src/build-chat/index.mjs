@@ -48,4 +48,11 @@ export {
   planEditOf,
   planReviewRequestOf
 } from './plan.mjs'
-export { clockOf, progressOf, stoppedOf, templateChoiceOf, templateOfChoice } from './progress.mjs'
+export {
+  cancelledOf,
+  clockOf,
+  progressOf,
+  stoppedOf,
+  templateChoiceOf,
+  templateOfChoice
+} from './progress.mjs'

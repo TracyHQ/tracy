@@ -528,6 +528,43 @@ const CHECKS = {
     assert.match(text, /Book a court, 04 000 0000/)
     await templateChosen(chat)
   },
+  'stopped-without-rerun': async (chat) => {
+    await answersKept(chat)
+    const text = await chat.text()
+    assert.match(text, /Your site is not finished yet/)
+    assert.match(
+      text,
+      /The step "Generate 2 pictures for empty spots" failed, so I stopped instead of showing you a half built site\./
+    )
+    assert.doesNotMatch(text, /failed twice|The picture plan asked/i)
+    const { rows } = await taskList(chat)
+    assert.match(rows[7], /Generate 2 pictures for empty spots\s*Failed$/)
+    assert.match(rows[8], /Put your pages on the site\s*Not started/)
+    assert.match(text, /7 completed\u2002·\u20021 failed/)
+  },
+  cancelled: async (chat) => {
+    await answersKept(chat)
+    const text = await chat.text()
+    assert.match(text, /The build was cancelled/)
+    assert.match(text, /You cancelled this build\. Your plan and your answers are kept\./)
+    assert.match(text, /Your current site is unchanged\./)
+    assert.doesNotMatch(text, /not finished|Failed|failed|Tracy team|notified|Your site is ready/)
+    const { rows, clock } = await taskList(chat)
+    assert.match(text, /7 completed/)
+    assert.doesNotMatch(
+      await chat.page.locator('.tv-bc-todo-progress').innerText(),
+      /failed|pending|in progress/
+    )
+    assert.match(rows[7], /Generate 2 pictures for empty spots\s*Not started/)
+    assert.match(rows[8], /Put your pages on the site\s*Not started/)
+    assert.equal(
+      await chat.page.locator('.tv-bc-todo [data-s="failed"], .tv-bc-notice [data-s="failed"]').count(),
+      0
+    )
+    assert.equal(await clock(), '6:12')
+    await chat.page.waitForTimeout(1100)
+    assert.equal(await clock(), '6:12', 'the clock stops on the outcome')
+  },
   rebuild: answersKept
 }
 

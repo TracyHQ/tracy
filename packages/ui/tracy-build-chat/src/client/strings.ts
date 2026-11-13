@@ -37,6 +37,8 @@ export const en = {
   'stopped.unchanged': 'Your current site is unchanged.',
   'stopped.notified':
     'The Tracy team has been notified and will reply in this chat. You do not need to do anything.',
+  'cancelled.title': 'The build was cancelled',
+  'cancelled.body': 'You cancelled this build. Your plan and your answers are kept.',
   'plan.title': '{name} site plan',
   'plan.design': 'Design: {name}',
   'plan.facts': 'Business facts',

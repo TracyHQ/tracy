@@ -2,7 +2,7 @@
 // drawn from the Contract B progress stream and outcome. A stopped build carries no technical detail to the owner.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { clockOf, progressOf, stoppedOf } from '../src/build-chat/index.mjs'
+import { cancelledOf, clockOf, progressOf, stoppedOf } from '../src/build-chat/index.mjs'
 import { SCENARIOS, STAGES, stageDocuments } from './fixtures/build-chat/stages.mjs'
 
 const stage = (name) => stageDocuments(STAGES.find((s) => s.name === name)).scenario
@@ -63,6 +63,56 @@ test('the stopped notice keeps the work and carries no technical detail', () => 
   })
   assert.ok(!JSON.stringify(s).includes(run.outcome.stopped.reason), 'the fault reason stays with the team')
   assert.equal(stoppedOf(SCENARIOS.done.runs[0].outcome), null, 'a done build has no stopped notice')
+})
+
+test('a step that failed once and was not run again says failed, not failed twice', () => {
+  const run = stage('stopped-without-rerun').runs.at(-1)
+  const p = progressOf(run)
+  assert.equal(p.result, 'stopped')
+  assert.equal(p.items.find((i) => i.state === 'failed').note, 'failed')
+  assert.equal(stoppedOf(run.outcome).twice, false)
+  // Without noRerun, a failed step failed on its second run.
+  const twice = structuredClone(run)
+  for (const s of twice.outcome.steps.filter((x) => x.state === 'failed')) {
+    s.attempt = 2
+    delete s.noRerun
+  }
+  assert.equal(progressOf(twice).items.find((i) => i.state === 'failed').note, 'failed-twice')
+  assert.equal(stoppedOf(twice.outcome).twice, true)
+})
+
+test('a cancelled build is neither done nor failed: finished steps completed, the rest not started, clock stopped', () => {
+  const run = stage('cancelled').runs.at(-1)
+  const p = progressOf(run)
+  assert.equal(p.result, 'cancelled')
+  assert.equal(p.running, false)
+  assert.deepEqual(p.counts, { done: 7, running: 0, pending: 2, failed: 0 })
+  assert.ok(p.items.every((i) => i.state !== 'failed'))
+  assert.deepEqual(
+    p.items.slice(-2).map((i) => i.note),
+    ['not-started', 'not-started']
+  )
+  assert.equal(p.elapsedSeconds, 372)
+  assert.equal(stoppedOf(run.outcome), null, 'a cancel is not a stop')
+})
+
+test('the cancelled notice keeps the plan, leaves the site, and never says the team was told', () => {
+  const run = stage('cancelled').runs.at(-1)
+  assert.deepEqual(cancelledOf(run.outcome), { siteUnchanged: true, teamNotified: false })
+  assert.equal(cancelledOf(stage('stopped-without-rerun').runs.at(-1).outcome), null)
+  assert.equal(cancelledOf(SCENARIOS.done.runs[0].outcome), null)
+})
+
+test('an unknown future result is not done: it stays running, no step is invented as finished', () => {
+  const run = structuredClone(stage('cancelled').runs.at(-1))
+  run.outcome.result = 'paused'
+  delete run.outcome.cancelled
+  const p = progressOf(run)
+  assert.equal(p.result, null)
+  assert.equal(p.running, true)
+  assert.equal(stoppedOf(run.outcome), null)
+  assert.equal(cancelledOf(run.outcome), null)
+  assert.ok(p.items.slice(-2).every((i) => i.state === 'pending' && i.note === null))
 })
 
 test('the clock reads minutes and seconds', () => {

@@ -19,6 +19,8 @@ test('the stages cover every moment of the build chat named in #578', () => {
     'building',
     'done',
     'could-not-finish',
+    'stopped-without-rerun',
+    'cancelled',
     'rebuild'
   ])
   assert.deepEqual(
