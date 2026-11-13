@@ -12,6 +12,7 @@ import {
   evidenceLongEnough,
   provenBy
 } from './needs-profile-grounding.mjs'
+import { MAX_ROW_DEPTH, groundRows } from './needs-profile-rows.mjs'
 
 const FACT_KINDS = new Set([...SINGLE_FACT_KINDS, ...LIST_FACT_KINDS])
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -31,7 +32,9 @@ const REASONS = Object.freeze({
   evidence_not_in_source: 'evidence not found in the source',
   evidence_too_short: `evidence shorter than ${MIN_EVIDENCE_CHARS} letters and digits`,
   value_not_in_evidence: 'the value is not in its evidence',
-  summary_not_in_evidence: 'the summary carries a name, number, price or link its evidence lacks'
+  summary_not_in_evidence: 'the summary carries a name, number, price or link its evidence lacks',
+  row_without_fields: 'the row holds no field the profile keeps',
+  row_too_deep: `a row nested deeper than ${MAX_ROW_DEPTH} levels`
 })
 const drop = (code, what, scope = 'observation') => ({ ...what, code, reason: REASONS[code], scope })
 
@@ -106,6 +109,7 @@ export function modelObservations(reading, sources) {
   const dropped = []
   const facts = []
   const items = []
+  const rows = []
   /** The source `obs` cites when its quote is in that source's words, else null (the drop is recorded). */
   const quoted = (obs, what) => {
     const source = byId.get(obs?.source)
@@ -162,7 +166,16 @@ export function modelObservations(reading, sources) {
       dropped.push(drop('summary_not_in_evidence', { ...at, field: role, value }, 'field'))
       delete fields[role]
     }
-    items.push({ kind: it.kind, fields, source })
+    const kept = groundRows(it.rows, { quoted, drop, dropped, what, source })
+    items.push({ kind: it.kind, fields, source, ...(kept.length ? { rows: kept } : {}) })
   }
-  return { facts, items, dropped }
+  // Rows of the business itself (the lines of its opening times), each citing its own source.
+  const sourceOf = (row) => {
+    const source = byId.get(row?.source)
+    return source ? { id: source.id, origin: source.origin } : null
+  }
+  rows.push(
+    ...groundRows(reading.rows, { quoted, drop, dropped, what: { from: 'model', kind: 'row' }, sourceOf })
+  )
+  return { facts, items, rows, dropped }
 }

@@ -8,6 +8,7 @@
 import { CONFIDENCE_LEVELS } from './fact-confidence.mjs'
 import { samePhone } from './needs-profile-phone.mjs'
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
+import { mergeRows } from './needs-profile-rows.mjs'
 
 /** Source origins, most trusted first: the business's own website, then its Google listing, then social profiles. */
 export const TRUST_ORDER = Object.freeze(['website', 'google', 'social'])
@@ -168,13 +169,19 @@ export function mergeItems(observations, conflicts) {
       }
       const sources = [...new Set(group.map((o) => o.source.id))]
       const label = group.find((o) => o.label)?.label ?? null
+      // The rows its sources state (`needs-profile-rows.mjs`), kept only when there are some.
+      const rows = mergeRows(
+        group.flatMap((o) => (o.rows ?? []).map((r) => ({ ...r, source: o.source }))),
+        id
+      )
       return {
         id,
         kind,
         fields,
         sources,
         confidence: sources.length > 1 ? CORROBORATED : SINGLE_SOURCE,
-        ...(kind === 'gallery' ? { label } : {})
+        ...(kind === 'gallery' ? { label } : {}),
+        ...(rows.length ? { rows } : {})
       }
     })
   }

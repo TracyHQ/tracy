@@ -20,6 +20,7 @@ import { ROLE_VOCABULARY_V3 } from './place-content-roles.mjs'
 import { TRUST_ORDER, mergeFacts, mergeItems } from './needs-profile-merge.mjs'
 import { modelObservations, structuredObservations } from './needs-profile-observations.mjs'
 import { questionsOf, siteLanguageOf } from './needs-profile-questions.mjs'
+import { mergeRows } from './needs-profile-rows.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
 /** The draft prompt (product owner review: #600). Its hash is recorded on every profile it made. */
@@ -121,6 +122,12 @@ export function needsProfileOf(research, reading) {
   const conflicts = []
   const facts = mergeFacts([...structured.facts, ...read.facts], conflicts)
   const items = mergeItems([...read.items, ...structured.items], conflicts)
+  // Rows of the business itself, most trusted source first; the key is present only when a row was kept.
+  const order = (row) => TRUST_ORDER.indexOf(row.source.origin)
+  const rows = mergeRows(
+    [...read.rows].sort((a, b) => order(a) - order(b)),
+    'business'
+  )
   const said = Object.fromEntries(
     list(reading?.languages)
       .filter((l) => isText(l?.source))
@@ -149,6 +156,7 @@ export function needsProfileOf(research, reading) {
     language,
     facts,
     items,
+    ...(rows.length ? { rows } : {}),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
     questions,
     dropped: [...unusableSourcesOf(research), ...structured.dropped, ...read.dropped, ...unread]
