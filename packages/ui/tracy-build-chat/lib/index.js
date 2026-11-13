@@ -439,7 +439,7 @@ ${JSON.stringify(answer)}`;
     }
     return stopped();
   }
-  async function settle(sessionId, assertion, first) {
+  async function settle(sessionId, first) {
     let state = first;
     const start = now();
     while (state?.state === "running") {
@@ -450,6 +450,8 @@ ${JSON.stringify(answer)}`;
           next: "Say the sentence in say, then call tracy_build with action status to keep waiting."
         };
       await sleep(pollMs);
+      const assertion = actorFor(sessionId);
+      if (assertion === null) return stopped();
       const res = await door(sessionId, assertion, "GET", "/engine");
       if (res === null) return stopped();
       if (res.status !== 200) return refusal(res);
@@ -512,7 +514,7 @@ ${JSON.stringify(answer)}`;
       const { options, none } = templateChoiceOf(res.body?.templates);
       return { options, none };
     }
-    return settle(sessionId, assertion, res.body);
+    return settle(sessionId, res.body);
   }
   function guard(execution) {
     if (execution?.name !== "ask_user_question") return void 0;

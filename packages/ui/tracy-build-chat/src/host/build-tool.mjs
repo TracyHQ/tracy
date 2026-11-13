@@ -389,12 +389,13 @@ export function createBuildTool({
   }
 
   /**
-   * Wait on engine work that is still running, up to the bounded time, then shape what is there.
+   * Wait on engine work that is still running, up to the bounded time, then shape what is there. Each poll calls as the
+   * person who typed with an assertion minted for it: one assertion lives a minute (dsh-passwords
+   * `ASSERTION_TTL_SECONDS`), shorter than the wait, and tracy-web refuses an expired one.
    * @param {string} sessionId
-   * @param {string} assertion
    * @param {any} first
    */
-  async function settle(sessionId, assertion, first) {
+  async function settle(sessionId, first) {
     let state = first
     const start = now()
     while (state?.state === 'running') {
@@ -405,6 +406,8 @@ export function createBuildTool({
           next: 'Say the sentence in say, then call tracy_build with action status to keep waiting.'
         }
       await sleep(pollMs)
+      const assertion = actorFor(sessionId)
+      if (assertion === null) return stopped()
       const res = await door(sessionId, assertion, 'GET', '/engine')
       if (res === null) return stopped()
       if (res.status !== 200) return refusal(res)
@@ -476,7 +479,7 @@ export function createBuildTool({
       const { options, none } = templateChoiceOf(res.body?.templates)
       return { options, none }
     }
-    return settle(sessionId, assertion, res.body)
+    return settle(sessionId, res.body)
   }
 
   /**

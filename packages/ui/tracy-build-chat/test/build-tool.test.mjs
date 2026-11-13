@@ -224,6 +224,36 @@ test('long work answers running, and status returns the result when it is done',
   assert.equal(second.stopped, undefined)
 })
 
+test('a wait longer than one assertion lives polls with a fresh assertion, never a stale one', async () => {
+  // The dsh assertion lives 60 seconds (dsh-passwords `ASSERTION_TTL_SECONDS`); tracy-web refuses an older one with
+  // 401. A compose of 70 seconds must still come back as the plan, not as the stopped sentence.
+  let clock = 0
+  const TTL_MS = 60_000
+  const running = { step: 'compose', state: 'running' }
+  const done = { step: 'compose', state: 'done', result: { plan: PLAN, brand: 'own' } }
+  const fresh = (headers) => clock - Number(headers['x-tracy-actor'].split(':')[1]) < TTL_MS
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { status: 202, body: running },
+    'GET /api/build-draft/engine': (_body, calls) => {
+      if (!fresh(calls.at(-1).headers)) return { status: 401, body: { code: 'NOT_SIGNED_IN' } }
+      return { body: clock >= 70_000 ? done : running }
+    }
+  })
+  const tool = createBuildTool({
+    http: web.http,
+    origin: () => ORIGIN,
+    actorFor: () => `assertion-minted-at:${clock}`,
+    eventsOf: () => [],
+    now: () => clock,
+    sleep: async (ms) => {
+      clock += ms
+    }
+  })
+  const answer = await run(tool, { action: 'plan' })
+  assert.equal(answer.stopped, undefined, 'a long wait is not a fault')
+  assert.deepEqual(answer.plan, { id: 'plan-harbour-lane', revision: 1 })
+})
+
 test('a stopped door answer yields stopped with the owner sentence and no ask', async () => {
   const web = fakeWeb({
     'POST /api/build-draft/research': {
