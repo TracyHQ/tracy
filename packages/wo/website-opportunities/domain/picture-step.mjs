@@ -4,6 +4,9 @@
 // #591): the step is re-run once from the same inputs, then the build stops and the report names the `pictures` step.
 // Generating the pictures themselves is the drawer's work; this step only says which frames get one, and how.
 import { ownPicturesOf } from './picture-frames.mjs'
+import { iconProblemsOf } from './icon-check.mjs'
+import { IconSelectionError } from './icon-ranking.mjs'
+import { selectIcons } from './icon-selection.mjs'
 import { unfitReason } from './picture-fit.mjs'
 import { labelOwnPictures, PicturePolicyError } from './picture-labelling.mjs'
 import { approvedCountOf, assignPictures } from './picture-policy.mjs'
@@ -54,15 +57,30 @@ export function differenceOf(assignment, approved, pictures) {
 }
 
 /**
- * Run the pictures step over an approved plan.
+ * Run the pictures step over an approved plan: label the own pictures, assign the picture frames, then select the icon
+ * of every icon typed field from the written copy (`icon-selection.mjs`).
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
- *   pictures?: object[]}} input `pictures` adds own picture records the profile does not hold (a video of the
- *   business's own channel); `vision` is the standard build model's vision call
+ *   pictures?: object[], copy?: {pages: object[]}, iconLibrary?: {set: string, icons: object[]}, model?: Function,
+ *   looks?: object}} input `pictures` adds own picture records the profile does not hold (a video of the business's
+ *   own channel); `vision` is the standard build model's vision call and `model` its text call (the icon ranking;
+ *   `vision` when not given); `copy` is the page writer's output, needed when the plan places an icon field
  * @returns {Promise<{frames: object[], reduced: object[], counts: object, notes: object[], leftOut: object[],
- *   difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null}>} `difference` is
- *   set whenever the placed own or generated count is not the approved one (`differenceOf`)
+ *   difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null,
+ *   icons: object[], iconCounts: object, iconPrompt: object | null}>} `difference` is set whenever the placed own or
+ *   generated count is not the approved one (`differenceOf`)
  */
-export async function picturesStep({ plan, profile, blockStore, library = [], vision, pictures = [] }) {
+export async function picturesStep({
+  plan,
+  profile,
+  blockStore,
+  library = [],
+  vision,
+  pictures = [],
+  copy,
+  iconLibrary,
+  model,
+  looks
+}) {
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PicturePolicyError('plan_missing', 'the pictures step needs an approved plan with pages')
   const data = planDataOf(profile)
@@ -70,15 +88,25 @@ export async function picturesStep({ plan, profile, blockStore, library = [], vi
   const labelling = await labelOwnPictures({ pictures: records, vision })
   // A plan with no pictures summary approved nothing: the count is read as zero and reported (`approvedCountOf`).
   const approved = plan.pictures ?? {}
+  const blocks = blocksOf(blockStore, library)
   const assignment = assignPictures({
     pages: plan.pages,
-    blocks: blocksOf(blockStore, library),
+    blocks,
     data,
     pictures: labelling.pictures,
     approved
   })
+  const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model: model ?? vision, looks })
+  const crossed = iconProblemsOf(icons, { pictureFrames: assignment.frames })
+  if (crossed.length)
+    throw new IconSelectionError('icon_policy_broken', 'an icon field was given a picture', {
+      problems: crossed
+    })
   return {
     ...assignment,
+    icons: icons.icons,
+    iconCounts: icons.counts,
+    iconPrompt: icons.prompt,
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
     labelled: labelling.labelled,

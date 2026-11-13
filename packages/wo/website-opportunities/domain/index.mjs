@@ -159,6 +159,18 @@ export {
 export { gatePlan } from './plan-gate.mjs'
 export { placeExtraData } from './plan-placement.mjs'
 export { lookOf, picturesOf } from './plan-look-pictures.mjs'
+export { CANDIDATES_MAX, contentCatalog, iconCandidates, subjectWordsOf } from './icon-candidates.mjs'
+export { ICON_PAINT_ROLES, ICON_SOURCES, iconCountsOf, iconProblemsOf } from './icon-check.mjs'
+export { iconScopesOfPlan, isIconField } from './icon-fields.mjs'
+export {
+  ICON_RANKING_MAX,
+  ICON_RANKING_PROMPT_FILE,
+  IconSelectionError,
+  iconRankingRequest,
+  rankIconCandidates
+} from './icon-ranking.mjs'
+export { DEFAULT_ICON_LOOK, selectIcons } from './icon-selection.mjs'
+export { SOCIAL_ICON_NAMES, SOCIAL_NETWORKS, networkOf } from './icon-social.mjs'
 export { planDataOf } from './plan-data.mjs'
 export {
   PEOPLE_FRAME_KINDS,
