@@ -5,14 +5,16 @@
 // file (#584) and for a reviewer; the contract check ignores them.
 import { draftBlocks } from './draft-blocks.mjs'
 import { accountForPlaces } from './draft-coverage.mjs'
+import { accountForReferences } from './draft-references.mjs'
 import { draftRecipes } from './draft-recipes.mjs'
 
 export const DRAFT_TOOL = 'tracy-ai-quickstart-draft/1'
 
 /**
- * @param {{kit: object, contentMap: object, decisions?: object, measured?: object, template: {slug: string, version: string}}} input
+ * @param {{kit: object, contentMap: object, lock?: object, decisions?: object, measured?: object, template: {slug: string, version: string}}} input
+ *   `lock`: the contract's presentation-lock.json, whose stored settings are swept for references (draft-references.mjs)
  */
-export function draftAiQuickstart({ kit, contentMap, decisions = {}, measured = {}, template }) {
+export function draftAiQuickstart({ kit, contentMap, lock, decisions = {}, measured = {}, template }) {
   const drafted = draftBlocks({ kit, contentMap, decisions, measured })
   const { blocks, storeIdOf, ...report } = drafted
   const { recipes, excluded } = draftRecipes({ kit, storeIdOf, blocks, decisions })
@@ -39,7 +41,39 @@ export function draftAiQuickstart({ kit, contentMap, decisions = {}, measured = 
   // Every stored place of the content map is a field, a classed report entry, or removed with its page; draft.mjs
   // writes nothing while one is unaccounted (`coverage.unaccounted`).
   const coverage = accountForPlaces({ contentMap, blocks, report, decisions })
-  return { blockStore, pageRecipes, report, coverage }
+  // A stored place several fields use: a build writes it within the smallest of their limits.
+  report.sharedPlaces = sharedPlacesOf(blocks)
+  // Every reference a surviving record makes to another record; draft.mjs writes nothing while one is unaccounted.
+  const references = lock ? accountForReferences({ lock, contentMap, blocks, report, decisions }) : null
+  if (references)
+    report.references = { total: references.total, byClass: references.byClass, classed: references.classed }
+  return { blockStore, pageRecipes, report, coverage, references }
+}
+
+/** Every stored place more than one field uses, with each use and the smallest text limit among them. */
+export function sharedPlacesOf(blocks) {
+  const uses = new Map()
+  const listFields = (lists) => (lists ?? []).flatMap((l) => [...l.fields, ...listFields(l.lists)])
+  for (const b of blocks)
+    for (const f of [
+      ...b.fields,
+      ...(b.itemFields ?? []),
+      ...listFields(b.lists),
+      ...listFields(b.itemLists)
+    ]) {
+      if (f.type === 'design') continue
+      for (const place of new Set([f.slot, ...(f.slots ?? []).flat()].filter(Boolean)))
+        uses.set(place, [
+          ...(uses.get(place) ?? []),
+          { block: b.id, field: f.name, ...(Number.isInteger(f.limit) ? { limit: f.limit } : {}) }
+        ])
+    }
+  return [...uses]
+    .filter(([, list]) => list.length > 1)
+    .map(([place, list]) => {
+      const limits = list.map((u) => u.limit).filter(Number.isInteger)
+      return { place, ...(limits.length ? { limit: Math.min(...limits) } : {}), uses: list }
+    })
 }
 
 /** The child fields of a list of child lists, nested lists included. */
@@ -72,8 +106,15 @@ export function summaryOf({ blockStore, pageRecipes, report, coverage }) {
     textLimits: limits,
     pageTypes: pageRecipes.recipes.map((r) => r.pageType),
     excludedPageGroups: pageRecipes.excluded.length,
-    open: Object.fromEntries(Object.entries(report).map(([k, v]) => [k, Array.isArray(v) ? v.length : v])),
+    open: Object.fromEntries(
+      Object.entries(report)
+        .filter(([k]) => k !== 'references')
+        .map(([k, v]) => [k, Array.isArray(v) ? v.length : v])
+    ),
     unlistedUnclassified: (report.unlisted ?? []).filter((u) => !u.as).length,
+    ...(report.references
+      ? { references: { total: report.references.total, ...report.references.byClass } }
+      : {}),
     ...(coverage ? { coverage: { ...coverage, unaccounted: coverage.unaccounted.length } } : {})
   }
 }
