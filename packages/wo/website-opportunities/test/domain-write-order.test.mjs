@@ -93,14 +93,34 @@ test('link and phone values come from the plan data, never from the writer', () 
 })
 
 test('the answered main button label is kept verbatim although the writer wrote another', () => {
+  // The real writer reports the answered label as data itself: the order keeps it as the answer, nothing written.
+  const home = saved.writers.find((w) => w.page.id === 'home').page
+  const reported = home.fields.find((e) => e.field === 'cta_label')
+  assert.deepEqual(
+    [reported.from, reported.value, reported.data],
+    ['data', ANSWERED_LABEL, 'contact-cta-label']
+  )
   const order = orderOf()
   const labels = entries(order).filter((e) => e.kind === 'contact.cta_label')
   assert.equal(labels.length, 3)
   for (const label of labels) {
-    assert.equal(label.from, 'answer')
-    assert.equal(label.value, ANSWERED_LABEL)
-    assert.equal(label.written, WRITTEN_LABEL)
+    assert.deepEqual(
+      [label.from, label.value, label.data, label.written],
+      ['answer', ANSWERED_LABEL, 'contact-cta-label', undefined]
+    )
   }
+  // A writer entry that wrote other words never wins: the answer stays, `written` keeps the words.
+  const values = fresh()
+  const label = values.writers
+    .find((w) => w.page.id === 'home')
+    .page.fields.find((e) => e.field === 'cta_label')
+  Object.assign(label, { from: 'writer', value: WRITTEN_LABEL })
+  delete label.data
+  const rewritten = entry(orderOf(values), 'home.home-b1.cta_label')
+  assert.deepEqual(
+    [rewritten.from, rewritten.value, rewritten.written],
+    ['answer', ANSWERED_LABEL, WRITTEN_LABEL]
+  )
   const broken = orderOf()
   entry(broken, 'home.home-b1.cta_label').value = 'Order a bouquet Today'
   assert.deepEqual(
