@@ -654,7 +654,7 @@
             {
               "id": "generated-pictures",
               "kind": "pictures",
-              "label": "Generate 2 pictures for empty spots",
+              "label": "Draw 2 pictures for empty spots",
               "state": "pending",
               "attempt": 0
             },
@@ -735,7 +735,7 @@
             {
               "id": "generated-pictures",
               "kind": "pictures",
-              "label": "Generate 2 pictures for empty spots",
+              "label": "Draw 2 pictures for empty spots",
               "state": "pending",
               "attempt": 0
             },
@@ -816,7 +816,7 @@
             {
               "id": "generated-pictures",
               "kind": "pictures",
-              "label": "Generate 2 pictures for empty spots",
+              "label": "Draw 2 pictures for empty spots",
               "state": "running",
               "attempt": 2
             },
@@ -897,7 +897,7 @@
             {
               "id": "generated-pictures",
               "kind": "pictures",
-              "label": "Generate 2 pictures for empty spots",
+              "label": "Draw 2 pictures for empty spots",
               "state": "done",
               "attempt": 2
             },
@@ -979,7 +979,7 @@
           {
             "id": "generated-pictures",
             "kind": "pictures",
-            "label": "Generate 2 pictures for empty spots",
+            "label": "Draw 2 pictures for empty spots",
             "state": "done",
             "attempt": 2
           },
