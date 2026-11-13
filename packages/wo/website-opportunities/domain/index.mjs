@@ -143,7 +143,7 @@ export {
   checkBuildScenario,
   formatProblem as formatBuildContractProblem
 } from './build-contract.mjs'
-export { BUILD_PLAN_SCHEMA, EDITABLE_FIELDS, MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
+export { BUILD_PLAN_SCHEMA, EDITABLE_FIELDS } from './build-contract-plan.mjs'
 export { PLAN_EDIT_SCHEMA, applyPlanEdit, checkPlanEdit } from './build-contract-plan-edit.mjs'
 export { ANSWER_SCHEMA, QUESTION_SCHEMA, QUESTION_TOPICS, checkAnswer } from './build-contract-questions.mjs'
 export { OUTCOME_SCHEMA, PROGRESS_SCHEMA, STEP_KINDS, STEP_STATES } from './build-contract-run.mjs'

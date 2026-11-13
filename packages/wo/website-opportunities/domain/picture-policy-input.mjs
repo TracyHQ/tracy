@@ -1,6 +1,5 @@
 // The inputs of the picture policy (ticket #595, spec #577), checked before any frame is filled: every own picture is
 // labelled, every light and dark pair is well formed, and the generated count the customer approved is read. Pure.
-import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
 import { isLabelled, PicturePolicyError } from './picture-labelling.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -20,11 +19,12 @@ export function checkLabelled(pictures) {
 }
 
 /**
- * The generated count the customer approved. `null` (the plan is being counted, nothing approved yet) allows the cap; an
- * approved count that is missing or not a whole number allows none, and says so in a note.
+ * The generated count the customer approved. `null` (the plan is being counted, nothing approved yet) allows every
+ * drawable frame (no cap per site, D45); an approved count that is missing or not a whole number allows none, and says
+ * so in a note.
  */
 export function approvedCountOf(approved) {
-  if (approved === null || approved === undefined) return { count: MAX_GENERATED_FRAMES, note: null }
+  if (approved === null || approved === undefined) return { count: Number.POSITIVE_INFINITY, note: null }
   const given = approved?.generated?.frames
   if (Number.isInteger(given) && given >= 0) return { count: given, note: null }
   return {

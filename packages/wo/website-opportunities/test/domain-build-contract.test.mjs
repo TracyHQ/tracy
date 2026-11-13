@@ -79,10 +79,13 @@ test('a plan carries no written copy', () => {
 test('the look section and pictures summary are checked', () => {
   const p = plan()
   p.look.accent = 'green'
-  p.pictures.generated.frames = 7
+  p.pictures.generated.frames = 40
   const res = checkBuildDocument(p)
   assertProblem(res, 'look.accent', /#rrggbb/)
-  assertProblem(res, 'pictures.generated.frames', /at most 6 generated frames/)
+  // No cap on generated frames (D45): any whole count stands.
+  assert.ok(!res.problems.some((x) => x.at === 'pictures.generated.frames'), 'forty generated frames stand')
+  p.pictures.generated.frames = -1
+  assertProblem(checkBuildDocument(p), 'pictures.generated', /frames to be generated/)
 })
 
 test('an assumption must be correctable and a left out entry needs its reason', () => {

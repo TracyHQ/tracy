@@ -6,7 +6,6 @@
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-picture-keep-review.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { MAX_GENERATED_FRAMES } from '../domain/build-contract-plan.mjs'
 import { initialsOf } from '../domain/person-avatar.mjs'
 import { unfitReason } from '../domain/picture-fit.mjs'
 import { pictureProblemsOf } from '../domain/picture-policy-check.mjs'
@@ -125,7 +124,7 @@ test('one shared enlargement limit: never enlarged, with a two pixel rounding to
   assert.equal(unfitReason(photo(347, 351), square), 'too_small')
 })
 
-test('one item shown on several pages is drawn once and counted once against the cap', async () => {
+test('one item shown on several pages is drawn once and counted once', async () => {
   const blocks = pictureBlocks()
   const plan = picturePlan()
   plan.pages[1].blocks.push({ id: 'team-b2', type: 'services', block: 'service-cards', data: [...SERVICES] })
@@ -137,5 +136,4 @@ test('one item shown on several pages is drawn once and counted once against the
   const drawn = result.frames.filter((f) => f.source === 'generated' && !f.reuses && !f.sameAs)
   assert.equal(result.counts.generated, drawn.length)
   assert.equal(result.counts.reused, 3, 'three services without a photo are shown twice')
-  assert.ok(drawn.length <= MAX_GENERATED_FRAMES)
 })

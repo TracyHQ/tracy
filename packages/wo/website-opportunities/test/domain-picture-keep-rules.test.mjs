@@ -6,7 +6,6 @@
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-picture-keep-rules.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { MAX_GENERATED_FRAMES } from '../domain/build-contract-plan.mjs'
 import { unfitReason } from '../domain/picture-fit.mjs'
 import { FRAME_SOURCES, pictureProblemsOf } from '../domain/picture-policy-check.mjs'
 import { generationOf } from '../domain/picture-roles.mjs'
@@ -43,7 +42,7 @@ const noCoachPhoto = () => {
   return profile
 }
 
-test('every planned service stays: its own photo first, then a drawn one within the cap', async () => {
+test('every planned service stays: its own photo first, then a drawn one', async () => {
   const result = await run()
   assert.deepEqual(result.reduced, [], 'no service is dropped for want of a photo')
   assert.deepEqual(result.droppedFrames, [])
@@ -56,7 +55,6 @@ test('every planned service stays: its own photo first, then a drawn one within 
       [SERVICES[3], 'generated']
     ]
   )
-  assert.ok(result.counts.generated <= MAX_GENERATED_FRAMES)
   // The plan summary the customer approves keeps every service too.
   const summary = picturesOf(picturePlan().pages, pictureBlocks(), planDataOf(pictureProfile()))
   assert.deepEqual(summary.pages[0].blocks[1].data, [...SERVICES])

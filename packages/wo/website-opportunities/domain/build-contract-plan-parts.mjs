@@ -13,8 +13,6 @@ import {
   shapeOfPath
 } from './build-contract-shared.mjs'
 
-/** At most six generated frames per site (spec #577, pictures). */
-export const MAX_GENERATED_FRAMES = 6
 export const SOURCE_KINDS = Object.freeze(['website', 'google', 'social', 'answer', 'assumption'])
 export const LEFT_OUT_KINDS = Object.freeze(['page', 'block', 'item', 'feature'])
 export const LOGO_KINDS = Object.freeze(['own', 'text'])
@@ -119,11 +117,6 @@ export function picturesProblems(pictures, report) {
   if (!isObject(generated) || !isWhole(generated.frames))
     return report('pictures.generated', 'generated must be {frames, reason}: frames to be generated')
   closedShapeProblems(generated, 'generated pictures', 'pictures.generated', report)
-  if (generated.frames > MAX_GENERATED_FRAMES)
-    report(
-      'pictures.generated.frames',
-      `at most ${MAX_GENERATED_FRAMES} generated frames, not ${generated.frames}`
-    )
   if (generated.frames > 0 || generated.reason !== undefined)
     textProblems(
       generated.reason,

@@ -3,6 +3,9 @@
 // which hold every icon, video and image field the store declares, at every depth, to a decision. Nothing here is a
 // real business, person or link.
 import { writePages } from '../../../domain/page-writer.mjs'
+import { blocksOf } from '../../../domain/picture-step.mjs'
+import { planDataOf } from '../../../domain/plan-data.mjs'
+import { picturesOf } from '../../../domain/plan-look-pictures.mjs'
 import { scriptedWriter } from './invented-yoga.mjs'
 
 const sources = ['site']
@@ -78,7 +81,9 @@ export async function everyBlockPlaced(store, { language = 'en' } = {}) {
       person: items.filter((i) => i.kind === 'person')
     }
   }
-  const plan = { language, pages, pictures: { own: { frames: 0, from: [] }, generated: { frames: 6 } } }
+  // The pictures summary the customer approves, counted by the real picture policy (no cap per site, D45).
+  const { pictures } = picturesOf(pages, blocksOf(store), planDataOf(profile))
+  const plan = { language, pages, pictures }
   const headings = ['Morning stretch', 'Heavy bag rounds', 'Footwork drills', 'Coffee corner']
   let n = 0
   const writer = scriptedWriter((key, slot) =>

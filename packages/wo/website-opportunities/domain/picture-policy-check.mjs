@@ -1,6 +1,5 @@
 // The rules every picture assignment keeps (ticket #595, spec #577), checked on the assignment itself so a later change
 // to the policy cannot break one silently. Pure: an assignment and the pictures it drew on in, the problems out.
-import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
 import { GALLERY_ONLY_OWN, generationOf } from './picture-roles.mjs'
 
 /**
@@ -40,8 +39,8 @@ function initialsProblemOf(frame) {
  * frame; nothing is generated for a gallery; an own picture is
  * labelled, never stock, a photo in an image frame and a fitting video in a video frame; nothing is generated for a
  * frame of a person, a logo or any kind `picture-roles.mjs` never generates, nor for a video frame; every generated
- * picture is asked without people; the business logo is never filled here (the brand step owns it); at most
- * `MAX_GENERATED_FRAMES` are generated, and never more than the approved count.
+ * picture is asked without people; the business logo is never filled here (the brand step owns it); never more
+ * are generated than the approved count (there is no cap per site, D45).
  * @param {{frames: object[]}} assignment the result of `assignPictures`
  * @param {object[]} pictures the picture records the assignment drew on
  * @param {{generated?: number}} [approved] the generated count the customer approved (`approvedCountOf`)
@@ -95,12 +94,6 @@ export function pictureProblemsOf(assignment, pictures, approved = {}) {
     if (frame.source === 'none' && !isText(frame.reason))
       report(frame, 'reason_missing', 'a frame without a picture says why')
   }
-  if (generated > MAX_GENERATED_FRAMES)
-    problems.push({
-      code: 'generated_over_cap',
-      at: 'frames',
-      message: `at most ${MAX_GENERATED_FRAMES} generated frames, not ${generated}`
-    })
   const allowed = approved?.generated
   if (allowed !== undefined && !(Number.isInteger(allowed) && generated <= allowed))
     problems.push({

@@ -9,7 +9,7 @@
 // unmeasured photo, or a frame without a declared size, is not judged.
 //
 // 🔒 ONLY A GALLERY SHOWS FEWER ITEMS. A service, a package, a person or any other item the plan lists is never dropped
-// for want of a photo: its frame is drawn within the cap, or left empty (a person shows their initials). Only a gallery,
+// for want of a photo: its frame is drawn, or left empty (a person shows their initials). Only a gallery,
 // which shows the business's own photos and nothing else, shows fewer rows when its photos run out.
 import { LOGO_FRAME_ROLES } from './picture-roles.mjs'
 import { heroScore, NOT_A_HERO, orientationOf, resolutionGradeOf } from './pictures/asset-labels.mjs'

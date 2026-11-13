@@ -27,7 +27,6 @@ export {
   editableFieldProblem,
   LEFT_OUT_KINDS,
   LOGO_KINDS,
-  MAX_GENERATED_FRAMES,
   SOURCE_KINDS
 } from './build-contract-plan-parts.mjs'
 

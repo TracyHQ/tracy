@@ -154,7 +154,8 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   `accent` is the light theme's colour, or the only theme's colour when the template has one theme (a dark only
   template with a logo of no hue has `accent` white and no `accentDark`).
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
-  to be generated, at most 6 (`MAX_GENERATED_FRAMES`), with a `reason` when above zero.
+  to be generated, with a `reason` when above zero. There is no cap per site (D45): every frame that may be drawn and
+  has no own photo is counted, and an item shown in several frames is drawn once and counted once.
 - **`look`** also: an own logo names its `source`; a text logo has none.
 - **`assumptions`**: what was assumed where sources were silent or disagree. Each has a unique `id`, says what was
   assumed (`said`) and names the plan `field` it set, which must be a field the customer can change, so every

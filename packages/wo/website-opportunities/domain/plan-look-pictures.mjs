@@ -2,7 +2,6 @@
 // Pure: the template, the brand step's record and the placed blocks in, the two plan sections and the assumptions they
 // bring out. The brand step itself is unchanged; this only reads its record (`brand-before-site.mjs`, #616).
 import { isBrandLook, lookOfBrandRecord, logoSourceName } from './brand-before-site.mjs'
-import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
 import { ownPicturesOf } from './picture-frames.mjs'
 import { assignPictures } from './picture-policy.mjs'
 
@@ -91,11 +90,6 @@ const EMPTY_FRAME_REASONS = Object.freeze({
     'picture spots of people',
     'Pictures of people are never generated, so these spots show no picture until you add your own photo.'
   ],
-  generated_cap: [
-    'picture spot',
-    'picture spots',
-    `At most ${MAX_GENERATED_FRAMES} pictures are generated for a site, so these spots stay without a picture.`
-  ],
   no_fitting_video: [
     'video spot',
     'video spots',
@@ -118,8 +112,8 @@ const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
 
 /**
  * The pictures summary, counted by the picture policy (`picture-policy.mjs`, #595): frames filled by the business's own
- * photos (an unlabelled own photo counts: the pictures step labels it before use), and frames to be generated, at most
- * `MAX_GENERATED_FRAMES`, never for a person. Items an image block drops for lack of an own photo leave the pages and
+ * photos (an unlabelled own photo counts: the pictures step labels it before use), and frames to be generated (every frame
+ * that may be drawn and has no own photo, no cap, D45), never for a person. Items an image block drops for lack of an own photo leave the pages and
  * are reported as left out, as are frames that stay without a picture. The pictures step assigns each photo to a frame;
  * this is the count the customer approves.
  * @param {object[]} pages placed pages of the plan

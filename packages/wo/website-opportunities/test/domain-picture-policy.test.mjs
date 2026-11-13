@@ -1,11 +1,10 @@
 // The picture policy of the AI quickstart build (ticket #595): own photos first, labelled before use, fewer gallery items
-// before anything is generated (every other item stays), at most six generated frames, no stock, no generated person, a video never the default
+// before anything is generated (every other item stays), no cap on generated frames (D45), no stock, no generated person, a video never the default
 // hero background, and the source of every frame recorded. Invented club, invented pictures, scripted fake vision.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-picture-policy.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { MAX_GENERATED_FRAMES } from '../domain/build-contract-plan.mjs'
 import { ownPicturesOf } from '../domain/picture-frames.mjs'
 import { PicturePolicyError } from '../domain/picture-labelling.mjs'
 import { FRAME_SOURCES, pictureProblemsOf } from '../domain/picture-policy-check.mjs'
@@ -197,12 +196,12 @@ test('only gallery items are reduced before pictures are generated; every servic
   assert.equal(summary.pictures.generated.frames, result.counts.generated)
 })
 
-test('a site has at most six generated frames, and never more than the plan approved', async () => {
+test('no cap on drawn pictures (D45): every drawable frame without an own photo is drawn, within the approved count', async () => {
   const blocks = pictureBlocks()
   blocks.set('service-cards', { ...blocks.get('service-cards'), items: { min: 4, max: 4 } })
   const plan = picturePlan()
   plan.pages.push(
-    ...['a', 'b', 'c', 'd'].map((n) => ({
+    ...['a', 'b', 'c', 'd', 'e', 'f'].map((n) => ({
       id: `extra-${n}`,
       name: n,
       pageType: 'about',
@@ -211,9 +210,18 @@ test('a site has at most six generated frames, and never more than the plan appr
   )
   const profile = pictureProfile()
   profile.items.gallery = profile.items.gallery.filter((p) => p.id !== 'gallery-terrace')
-  const result = await run({ plan, profile, blockStore: { blocks: [...blocks.values()] } })
-  assert.equal(result.counts.generated, MAX_GENERATED_FRAMES)
-  assert.ok(result.frames.some((f) => f.reason === 'generated_cap'))
+  // The plan counts what it will draw, the customer approves that count, and the step draws exactly it.
+  const summary = picturesOf(plan.pages, blocks, planDataOf(profile))
+  assert.ok(!summary.leftOut.some((e) => /At most/.test(e.reason)), 'no spot is left out for a cap')
+  plan.pictures = summary.pictures
+  const counted = await run({ plan, profile, blockStore: { blocks: [...blocks.values()] } })
+  assert.equal(counted.counts.generated, summary.pictures.generated.frames)
+  assert.ok(counted.counts.generated > 6, `${counted.counts.generated} drawn, more than the old cap of six`)
+  assert.ok(!counted.frames.some((f) => f.reason === 'generated_cap'))
+  const drawable = counted.frames.filter(
+    (f) => f.source === 'none' && !f.people && !f.never && f.place !== 'video'
+  )
+  assert.deepEqual(drawable, [], 'no drawable frame stays empty')
   const approved = picturePlan({ pictures: { own: { frames: 0, from: [] }, generated: { frames: 0 } } })
   const none = await run({ plan: approved })
   assert.equal(none.counts.generated, 0)

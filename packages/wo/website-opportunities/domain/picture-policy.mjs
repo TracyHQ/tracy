@@ -5,8 +5,8 @@
 //   1. own photos, wherever they fit a frame by content and shape (`picture-policy-own.mjs`);
 //   2. fewer gallery items: a gallery drops the items without a fitting own photo while it keeps more than its minimum.
 //      Every other item (a service, a package, a person) stays whether or not it has a photo (`picture-fit.mjs`);
-//   3. generated pictures for the frames still empty, at most six per site and never more than the plan's approved
-//      count. A frame of a person, a logo or a gallery is never generated (`picture-roles.mjs`), and no stock picture is
+//   3. generated pictures for every frame still empty that may be drawn (no cap per site, D45), never more than the
+//      plan's approved count. A frame of a person, a logo or a gallery is never generated (`picture-roles.mjs`), and no stock picture is
 //      ever used. A frame that gets no picture stays empty with its reason, and the write step hides it.
 //
 // 🔒 A PERSON WITHOUT A PHOTO SHOWS THEIR INITIALS (the locked decision on the coach cards): the frame of a named person
@@ -14,7 +14,7 @@
 // never an empty frame, never a drawn person and never another person's photo.
 //
 // ONE DRAWING PER ITEM AND FIELD KIND. An item shown on several pages is drawn once: its other frames of the same kind
-// take the same `generate` and name the drawn frame in `reuses`, and count once against the cap.
+// take the same `generate` and name the drawn frame in `reuses`, and count once.
 //
 // 🔒 A VIDEO IS NEVER THE DEFAULT HERO BACKGROUND. The hero's image frame takes a photo or a generated image, never a
 // video. Only a video frame (a `business.video` link field) takes an own video, and only one that is landscape or near
@@ -26,7 +26,6 @@
 //
 // 🔒 THE BUSINESS LOGO IS THE BRAND STEP'S. A `business.logo` frame is never filled here and never generated; an award or
 // partner logo (`claim.entity_logo`) takes the item's own logo picture or stays empty with a reason.
-import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
 import { framesOfPlan } from './picture-frames.mjs'
 import { reductionsOf } from './picture-fit.mjs'
 import { initialsDecisionOf } from './picture-people.mjs'
@@ -62,9 +61,8 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
   const reduced = reductionsOf(frames, filled, pages, blocks, pictures)
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = frames.filter((f) => !f.item || !dropped.has(`${f.page}.${f.block}.${f.item}`))
-  // 3. Generated pictures, the hero first, within the cap and the approved count.
-  const { count: approvedCount, note } = approvedCountOf(approved)
-  const cap = Math.min(MAX_GENERATED_FRAMES, approvedCount)
+  // 3. Generated pictures, the hero first, within the approved count (no cap per site, D45).
+  const { count: allowed, note } = approvedCountOf(approved)
   let generated = 0
   // One drawing per item and field kind: the item shown again on another page reuses it, counted once.
   const drawings = new Map()
@@ -81,8 +79,7 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
     else if (frame.never) none(frame.never)
     else if (drawings.has(key))
       filled.set(frame.id, { ...filled.get(drawings.get(key)), reuses: drawings.get(key) })
-    else if (generated >= cap)
-      none(generated >= MAX_GENERATED_FRAMES ? 'generated_cap' : 'over_approved_count')
+    else if (generated >= allowed) none('over_approved_count')
     else {
       generated += 1
       const item = frame.item ? data.byId.get(frame.item)?.entry?.label : null
@@ -111,7 +108,9 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
     .filter((f) => f.item && dropped.has(`${f.page}.${f.block}.${f.item}`))
     .map((f) => ({ frame: f.id, item: f.item, reason: 'item_dropped' }))
   const assignment = { frames: out, reduced, droppedFrames, counts, notes: note ? [note] : [] }
-  const problems = pictureProblemsOf(assignment, pictures, { generated: cap })
+  const problems = pictureProblemsOf(assignment, pictures, {
+    generated: Number.isFinite(allowed) ? allowed : undefined
+  })
   if (problems.length)
     throw new PicturePolicyError('picture_policy_broken', `${problems.length} picture rules broken`, {
       problems

@@ -9,7 +9,7 @@
 // business's own photos only, never a drawing; the locked planner rule).
 import { modeOfRole, PLACE_CONTENT_ROLES_V3 } from './place-content-roles.mjs'
 
-/** Roles a build may generate a picture for when no own photo fits (within the cap of six). */
+/** Roles a build may generate a picture for when no own photo fits (every such frame, no cap, D45). */
 export const GENERATED_PICTURE_ROLES = Object.freeze([
   'business.hero_image',
   'offering.image',
