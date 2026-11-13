@@ -10,7 +10,8 @@
  *     `ContentSlots::htmlPatch`, the value read and written in the marker notation when it is in it, and the whole value
  *     is then written under the slot like any other.
  * Writes JSON `[{"row": {...}, "read": "<the value read back at the place>"} | {"error": "..."}, ...]`, the value read back
- * with the plugin's `currentValue` (a piece: the node the xpath names, read with `ContentSlots::slotText`).
+ * with the plugin's `currentValue` (a piece: the node the xpath names, read with `ContentSlots::slotText`). A write whose
+ * `value` is null writes nothing: it reads the slot's value as the plugin reads it (`currentValue`).
  */
 
 $in = json_decode(stream_get_contents(STDIN), true);
@@ -28,6 +29,10 @@ foreach ($in['writes'] as $write) {
         $slot = $write['slot'];
         $row = $write['row'];
         $value = $write['value'];
+        if ($value === null) {
+            $out[] = ['row' => $row, 'read' => $call('currentValue', [$row, $slot])];
+            continue;
+        }
         if (isset($write['piece'])) {
             $stored = $call('currentValue', [$row, $slot]);
             $marked = isMarked($stored);

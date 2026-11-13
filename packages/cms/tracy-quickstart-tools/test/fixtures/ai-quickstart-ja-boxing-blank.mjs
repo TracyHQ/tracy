@@ -2,16 +2,15 @@
 // (`presentation-lock.json`), passed through the real blank site step, and the Claude Cowork plugin release the
 // quickstart pins, whose own functions write a site (`ContentSlots::htmlPatch`, `jsonPatch`, the contract's
 // `changeRow`). Test support only: nothing here is shipped.
-import { execFileSync, spawnSync } from 'node:child_process'
-import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { spawnSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
   emptyDeclaredFieldsStep,
   placesToEmpty
 } from '../../../tracy-joomla-quickstart/scripts/blank-site-empty-fields.mjs'
+import { coworkLib as pinnedCoworkLib } from '../../../tracy-joomla-quickstart/scripts/cowork-lib.mjs'
 import { produceBlankSite } from '../../../tracy-joomla-quickstart/scripts/blank-site.mjs'
 import { parseDump, records, sqlQuote } from '../../../tracy-joomla-quickstart/scripts/joomla-sql-dump.mjs'
 
@@ -76,35 +75,5 @@ export function blankRows(mapping = MAPPING) {
   return { before, after, emptied: new Set(placesToEmpty(mapping).map(placeKey)) }
 }
 
-/**
- * The `lib` folder of the Claude Cowork plugin release the JA Boxing quickstart pins (`apps/tracy-web/src/quickstarts.json`),
- * downloaded once, its sha256 checked, into the temp folder. `TRACY_COWORK_LIB` names an unpacked `lib` folder instead.
- * Returns `{lib}` or `{skip: reason}`.
- */
-export async function coworkLib() {
-  if (process.env.TRACY_COWORK_LIB) return { lib: process.env.TRACY_COWORK_LIB }
-  const pin = readJson('apps/tracy-web/src/quickstarts.json')['quickstart/ja-boxing/j6'].cowork
-  const dir = path.join(tmpdir(), `tracy-cowork-${pin.sha256.slice(0, 16)}`)
-  const lib = path.join(dir, 'administrator/lib')
-  if (existsSync(path.join(lib, 'QuickstartContract.php'))) return { lib }
-  try {
-    const response = await fetch(pin.url)
-    if (!response.ok) throw new Error(`HTTP ${response.status}`)
-    const bytes = Buffer.from(await response.arrayBuffer())
-    const sha = createHash('sha256').update(bytes).digest('hex')
-    if (sha !== pin.sha256) throw new Error(`${pin.file} has sha256 ${sha}, the pin says ${pin.sha256}`)
-    const work = `${dir}.part-${process.pid}`
-    rmSync(work, { recursive: true, force: true })
-    mkdirSync(work, { recursive: true })
-    writeFileSync(path.join(work, pin.file), bytes)
-    execFileSync('unzip', ['-q', '-o', pin.file, 'packages/com_claudecowork.zip'], { cwd: work })
-    execFileSync('unzip', ['-q', '-o', 'packages/com_claudecowork.zip', 'administrator/lib/*'], { cwd: work })
-    if (!existsSync(dir)) renameSync(work, dir)
-    else rmSync(work, { recursive: true, force: true })
-    return { lib }
-  } catch (error) {
-    const reason = `the pinned Claude Cowork plugin ${pin.version} cannot be fetched: ${error.message}`
-    if (process.env.CI) throw new Error(reason)
-    return { skip: reason }
-  }
-}
+/** The pinned Claude Cowork plugin's `lib` folder (`cowork-lib.mjs`). */
+export const coworkLib = () => pinnedCoworkLib('quickstart/ja-boxing/j6')
