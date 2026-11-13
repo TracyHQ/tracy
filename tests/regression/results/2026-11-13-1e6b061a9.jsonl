@@ -1,0 +1,3 @@
+{"id":"REG-PR-591-chain-stop-report-review","verdict":"PASS","commit":"1e6b061a9e2a3a6c760cb3969ee39b9919c8a855","ran_at":"2026-11-13T06:32:11.947Z","evidence":"tests/regression/.runs/2026-11-13-1e6b061a9/REG-PR-591-chain-stop-report-review.log"}
+{"id":"REG-PR-558-chain-file-lifetime","verdict":"PASS","commit":"1e6b061a9e2a3a6c760cb3969ee39b9919c8a855","ran_at":"2026-11-13T06:32:12.286Z","evidence":"tests/regression/.runs/2026-11-13-1e6b061a9/REG-PR-558-chain-file-lifetime.log"}
+{"id":"REG-PR-568-build-progress-and-diagnostics","verdict":"PASS","commit":"1e6b061a9e2a3a6c760cb3969ee39b9919c8a855","ran_at":"2026-11-13T06:32:19.255Z","evidence":"tests/regression/.runs/2026-11-13-1e6b061a9/REG-PR-568-build-progress-and-diagnostics.log"}
