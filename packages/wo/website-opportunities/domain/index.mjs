@@ -249,7 +249,7 @@ export {
   overLimitLeftOut
 } from './plan-data-limits.mjs'
 export { replanRows } from './plan-edit-rows.mjs'
-export { daysAndTimesOf, partKindOf, rowPartsOf, splitMixedPart, unplacedCodeOf } from './schedule-parts.mjs'
+export { daysAndTimesOf, partKindOf, rowPartsOf, splitMixedPart } from './schedule-parts.mjs'
 export { networkNameOf, rowNetworkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
 export { cappedLength, kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
 export { declaredRowFieldsOf, rowFieldAccountOf } from './plan-row-coverage.mjs'

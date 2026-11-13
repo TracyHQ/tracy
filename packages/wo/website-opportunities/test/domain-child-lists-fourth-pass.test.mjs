@@ -1,8 +1,7 @@
-// Child list rows, fourth verification pass (ticket #615): a single part schedule the detector cannot read is never
-// guessed into a field, short day forms and en dash hour ranges are read, an age range is no time, a row price is
-// proven as money, an over long row reports its field, limit and length, and the main button fallback offers only
-// the business's own channels. Invented businesses, the JA Boxing block store read for its declaration; no real
-// model.
+// Child list rows, fourth verification pass (ticket #615): a single part schedule with no clean cut is kept whole,
+// short day forms and en dash hour ranges are read, an age range is no time, a row price is proven as money, an over
+// long row reports its field, limit and length, and the main button fallback offers only the business's own channels.
+// Invented businesses, the JA Boxing block store read for its declaration; no real model.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-child-lists-fourth-pass.test.mjs
 import assert from 'node:assert/strict'
@@ -12,7 +11,7 @@ import { questionsOf } from '../domain/needs-profile-questions.mjs'
 import { writePages } from '../domain/page-writer.mjs'
 import { blocksOf } from '../domain/picture-step.mjs'
 import { planDataOf } from '../domain/plan-data.mjs'
-import { CHILD_LIST_REASONS, planRows } from '../domain/plan-rows.mjs'
+import { planRows } from '../domain/plan-rows.mjs'
 import { partKindOf } from '../domain/schedule-parts.mjs'
 import { boxingStore } from './fixtures/child-lists/boxing-plan.mjs'
 import { scriptedWriter } from './fixtures/icon-fields/invented-yoga.mjs'
@@ -59,7 +58,7 @@ async function written(parts, store) {
   return Object.fromEntries(row.map((f) => [f.field, f.value ?? `<${f.action}>`]))
 }
 
-test('a one part schedule is split into days and times, or dropped with a code, never guessed', async () => {
+test('a one part schedule is split into days and times, or kept whole, never guessed', async () => {
   const store = boxingStore()
   const split = [
     [['Mo-Fr 9:00-17:00'], ['Mo-Fr', '9:00-17:00']],
@@ -73,15 +72,12 @@ test('a one part schedule is split into days and times, or dropped with a code, 
   for (const [parts, [days, times]] of split)
     assert.deepEqual(await written(parts, store), { days, times }, JSON.stringify(parts))
   assert.deepEqual(await written(['Mon', `19${EN_DASH}21`], store), { days: 'Mon', times: `19${EN_DASH}21` })
-  for (const parts of [['Kids 6 to 12'], ['Sunrise class'], ['Mon 9:00 to 17:00, Sat 10:00']]) {
-    const out = planned(parts, store)
-    assert.deepEqual(
-      out.dropped.map((d) => [d.code, d.reason]),
-      [['row_part_unclear', CHILD_LIST_REASONS.row_part_unclear]],
-      JSON.stringify(parts)
-    )
-  }
-  assert.equal(planned(['18:00 Mon'], store).dropped[0].code, 'row_parts_order')
+  // A part with no clean cut is kept whole (`domain-schedule-clean-cut.test.mjs`), never dropped.
+  assert.deepEqual(await written(['Kids 6 to 12'], store), { days: 'Kids 6 to 12', times: '<hide>' })
+  assert.deepEqual(await written(['Sunrise class'], store), { days: 'Sunrise class', times: '<hide>' })
+  const both = 'Mon 9:00 to 17:00, Sat 10:00'
+  assert.deepEqual(await written([both], store), { days: '<hide>', times: both })
+  assert.deepEqual(await written(['18:00 Mon'], store), { days: '<hide>', times: '18:00 Mon' })
   assert.deepEqual(['Kids 6 to 12', 'ages 6-12', 'Sunrise class'].map(partKindOf), [
     'other',
     'other',

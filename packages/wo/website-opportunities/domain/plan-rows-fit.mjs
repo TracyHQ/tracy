@@ -8,14 +8,13 @@
 //   prompt asks for that order).
 // - `row_parts_order`: a schedule written times first (its first part holds a time, a later part none) for a list that
 //   has several fields of that kind: a time is never written into a day field, the row is not shown.
-// - `row_part_unclear`: a schedule of one part the detector reads as neither days nor times, or as both without a
-//   clear split (`schedule-parts.mjs`): the part is never guessed into a field, the row is not shown.
+//   A schedule of one part is always placed (`schedule-parts.mjs`): split cleanly, or kept whole in one field.
 // - `row_value_over_limit`: a part longer than the field it fills holds (the smallest limit of a stored place the
 //   field shares, `field-place-limits.mjs`): a data value is never shortened. Its report entry also says which
 //   `field`, its `limit` and the part's `length`.
 // - A list with a link field of a social kind takes its links by the icon step's rules (`icon-row-links.mjs`): a
 //   shortened link, a host that is no known network, a bare handle and a second link to one network never take a row.
-import { rowPartsOf, unplacedCodeOf } from './schedule-parts.mjs'
+import { rowPartsOf } from './schedule-parts.mjs'
 import { rowLinksOf, linkFieldOf } from './icon-row-links.mjs'
 import { limitOf } from './field-place-limits.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
@@ -32,7 +31,6 @@ export const CHILD_LIST_REASONS = Object.freeze({
   row_parts_over_fields: 'This row has more parts than the section has places for, so it is not shown.',
   row_value_over_limit: 'This row is longer than the section can show, so it is not shown.',
   row_parts_order: 'The times of this row come before its days, so it is not shown.',
-  row_part_unclear: 'It is unclear whether this row gives days or times, so it is not shown.',
   social_link_shortened: 'This is a shortened link, so the network it leads to is unknown.',
   social_network_unknown: 'This link is not on a social network the section can show.',
   social_handle_without_network: 'This handle does not say which network it is on.',
@@ -76,7 +74,7 @@ export function rowMisfitOf(child, values, placeLimits) {
     if (parts.length > own.length) return 'row_parts_over_fields'
     // Schedule parts go days first, times after: a time in the days or a day in the times is never written.
     const placed = rowPartsOf(kind, parts, fields)
-    if (placed === null) return unplacedCodeOf(parts)
+    if (placed === null) return 'row_parts_order'
     for (const [n, part] of placed.entries()) {
       if (part === undefined) continue
       const limit = limitOf(own[n], placeLimits)
