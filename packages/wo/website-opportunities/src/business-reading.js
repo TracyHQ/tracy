@@ -23,6 +23,9 @@ import {
   withListedServiceParts,
   withPostOfferings
 } from '../domain/business-reading.mjs'
+import { OWNER_STATEMENT_RULE, businessReadingSystemOf } from '../domain/owner-statement-prompt.mjs'
+import { OWNER_STATEMENT_KIND, ownerPassageOf } from '../domain/owner-statement.mjs'
+import { heldTextsOf } from '../domain/plan-withheld.mjs'
 import { BudgetExceededError } from './cost-ledger.js'
 import { visionCostCents } from './cost-prices.js'
 import { controlError } from './google-maps-research.js'
@@ -93,9 +96,18 @@ export function businessReadingVersion(door) {
   return `${BUSINESS_READING_VERSION}-${hash.slice(0, 12)}`
 }
 
+// A reading of an owner statement also hashes the owner rule it was read under, so a new rule reads it again.
 const inputHashOf = (sources, name, trade, facts) =>
   createHash('sha256')
-    .update(JSON.stringify([name ?? null, trade ?? null, sources, ...(facts.length ? [facts] : [])]))
+    .update(
+      JSON.stringify([
+        name ?? null,
+        trade ?? null,
+        sources,
+        ...(facts.length ? [facts] : []),
+        ...(sources.some((s) => s.kind === OWNER_STATEMENT_KIND) ? [OWNER_STATEMENT_RULE] : [])
+      ])
+    )
     .digest('hex')
     .slice(0, 24)
 
@@ -110,10 +122,25 @@ export const businessReadingCeilingCents = (model, prompt, maxTokens = MAX_OUTPU
  * The texts and facts a reading reads (`readBusiness`'s input less its trade, door and ledger), from a research's
  * collected source rows (`collected`: the rows that were collected, in the `wo_source` shape), its merged profile and
  * Google's place facts (`google`, or null). Pure: the place executor and the build chat's research both read with it.
+ * `ownerStatement` (decision D46): what the owner typed about the business in the build chat, read as a source whose
+ * facts are true and whose words are never copy (`domain/owner-statement.mjs`). `withheld`: what the owner keeps off
+ * the site (`{name?: true, people?: string[], names?: string[]}`, a research's `withheld`); every sentence of the
+ * statement naming a held person, or the business name while it is held, never reaches the model. Both are left out of
+ * the input when there is no statement, so a reading without one is the reading it was.
  */
-export function readingInputOf({ profile, google, collected }) {
+export function readingInputOf({ profile, google, collected, ownerStatement = null, withheld = null }) {
   const own = collected.filter((s) => SOURCES.includes(s.source))
+  const name = profile.name ?? google?.name ?? null
+  const heldTexts = [
+    ...heldTextsOf(withheld ?? {}),
+    ...(withheld?.name === true && typeof name === 'string' ? [name] : [])
+  ]
+  const owner =
+    typeof ownerStatement === 'string' && ownerStatement.trim()
+      ? { ownerStatement, ...(heldTexts.length ? { heldTexts } : {}) }
+      : {}
   return {
+    ...owner,
     bio: profile.bio ?? null,
     websitePages: collected.filter((s) => s.source === 'website').flatMap((s) => s.collected?.pages ?? []),
     posts: own.flatMap((s) => (s.collected?.posts ?? []).map((p) => ({ source: s.source, ...p }))),
@@ -123,7 +150,7 @@ export function readingInputOf({ profile, google, collected }) {
         (group?.reviews ?? []).map((r) => ({ ...r, source }))
       )
     ],
-    name: profile.name ?? google?.name ?? null,
+    name,
     // What the sub-trade may quote besides the texts: Google's types and each social profile's own category.
     googleTypes: google ? [google.primaryType, ...(Array.isArray(google.types) ? google.types : [])] : [],
     categories: own
@@ -138,11 +165,14 @@ export function readingInputOf({ profile, google, collected }) {
  * `googleTypes` and `categories` (each social profile's own category, `{source, text}`) are what the sub-trade may
  * quote besides the texts (`readingFactsOf`).
  * @param {{bio?: string | null, posts?: any[], reviews?: any[], websitePages?: any[], name?: string | null, trade?: string | null,
- *   googleTypes?: string[], categories?: {source: string, text: string}[],
+ *   googleTypes?: string[], categories?: {source: string, text: string}[], ownerStatement?: string | null,
+ *   heldTexts?: string[],
  *   door: {state: string, door?: any, reason?: string}, held?: any,
  *   charge: (spec: object, call: () => Promise<any>) => Promise<any>, fetchImpl?: typeof fetch, now?: () => number,
  *   log?: any}} input
- * @returns {Promise<object | null>} the reading, or null when there is no text to read
+ * @returns {Promise<object | null>} the reading, or null when there is no text to read; with an owner statement it
+ *   carries `ownerStatement: {read: true, heldOut, cut}` (how many of its sentences were held back, whether it was cut
+ *   at its cap), or `{read: false, reason: 'held'}` when every sentence named something held
  */
 export async function readBusiness({
   bio = null,
@@ -153,6 +183,8 @@ export async function readBusiness({
   trade = null,
   googleTypes = [],
   categories = [],
+  ownerStatement = null,
+  heldTexts = [],
   door,
   held = null,
   charge,
@@ -160,8 +192,9 @@ export async function readBusiness({
   now = Date.now,
   log = console
 }) {
-  const sources = readingSourcesOf({ bio, posts, reviews, websitePages })
+  const sources = readingSourcesOf({ bio, posts, reviews, websitePages, ownerStatement, heldTexts })
   if (!sources.length) return null
+  const owner = ownerRecordOf(ownerStatement, heldTexts)
   const ready = door?.state === 'ready' ? door.door : null
   const version = businessReadingVersion(ready)
   const facts = readingFactsOf({ googleTypes, categories })
@@ -170,6 +203,7 @@ export async function readBusiness({
   if (held?.method === 'model' && held.version === version && held.inputHash === inputHash) {
     const kept = {
       ...held,
+      ...owner,
       uspThemes: held.uspThemes?.length ? held.uspThemes : null,
       ...(!held.uspThemes?.length ? { uspThemesReason: held.uspThemesReason ?? 'not_recorded' } : {}),
       services: withPostOfferings(withListedServiceParts(held.services, sources), sources)
@@ -189,6 +223,7 @@ export async function readBusiness({
     ...readBusinessByRules(sources),
     uspThemes: null,
     uspThemesReason: `rules_${reason}`,
+    ...owner,
     ...extra
   })
   if (!ready) return rules(door?.state === 'unavailable' ? 'unavailable' : 'not_configured')
@@ -206,7 +241,7 @@ export async function readBusiness({
           }),
         tokens: (r) => modelTokensOf([r.usage])
       },
-      () => askText({ door: ready, system: BUSINESS_READING_SYSTEM, text: prompt, fetchImpl })
+      () => askText({ door: ready, system: businessReadingSystemOf(sources), text: prompt, fetchImpl })
     )
   } catch (error) {
     if (error instanceof BudgetExceededError) return rules('budget')
@@ -220,9 +255,16 @@ export async function readBusiness({
   const read = checkBusinessReading(answer.text, sources, { trade, facts })
   if (!read) return rules('unreadable', { model: ready.model })
   return retryUsp(
-    { version, method: 'model', model: ready.model, inputHash, at, ...read },
+    { version, method: 'model', model: ready.model, inputHash, at, ...read, ...owner },
     { ready, sources, name, trade, charge, fetchImpl, log }
   )
+}
+
+/** How the owner's statement was read, for the reading's record; nothing when the owner typed none (or only spaces). */
+function ownerRecordOf(statement, heldTexts) {
+  if (typeof statement !== 'string' || !statement.trim()) return {}
+  const { passage, heldOut, cut } = ownerPassageOf(statement, heldTexts)
+  return { ownerStatement: passage ? { read: true, heldOut, cut } : { read: false, reason: 'held' } }
 }
 
 /**

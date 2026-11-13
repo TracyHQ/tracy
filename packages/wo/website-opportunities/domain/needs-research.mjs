@@ -3,7 +3,9 @@
 // (`wo_revision.asset_manifest`). Pure; ticket #597, gap G7.
 //
 // One research source per platform the brief names, its origin from the needs profile's trust order; what the owner
-// typed on the Profile card (`owner`) is a source of origin `website`, the most trusted.
+// typed on the Profile card (`owner`) is a source of origin `website`, the most trusted; what the owner typed about the
+// business in the build chat (`owner-statement`, decision D46) is the source `owner-statement` of origin `answer`
+// ("Your answer"): the owner's own words, read for their facts, never shown as written.
 //   - a fact with a fact kind of the needs profile (`FIELD_KINDS`) is a structured field of every source its evidence
 //     names, as it is (contact.hours held to the 200 characters of a fact value);
 //   - a fact of a kind the needs profile reads from words (services, team, story, audience, posts, contact channels,
@@ -26,6 +28,7 @@ export const HOURS_LIMIT = 200
 /** The brief's source names (`brief-facts.mjs` evidence, `asset-origin.mjs` source) -> needs profile origin. */
 const ORIGINS = Object.freeze({
   owner: 'website',
+  'owner-statement': 'answer',
   website: 'website',
   google: 'google',
   'google-places': 'google',

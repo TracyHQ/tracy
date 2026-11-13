@@ -37,6 +37,8 @@ function fieldOf(path, fact, sourceKind, food) {
   if (group === 'offerings') return food ? 'menu' : 'services'
   if (group === 'people') return 'team'
   if (group === 'quotes') {
+    // What the owner typed in the build chat (D46): research for the plan to write from, never a story or a post.
+    if (fact.value?.kind === 'owner-statement') return 'ownerStatement'
     const reason = String(fact.derivation?.reason ?? '')
     if (reason.startsWith('audience:')) return 'audience'
     // A summary another platform wrote of its reviews ("Guests praise…", `attribution`) is not the business's story.
@@ -549,7 +551,8 @@ export function renderBriefFacts(brief, line, q) {
   )
   const stated = facts.filter((f) => f.sourceKind !== 'observed')
   const observed = facts.filter((f) => f.sourceKind === 'observed')
-  for (const f of stated) {
+  // The owner's chat statement is research, never a fact line a writer could copy (D46).
+  for (const f of stated.filter((x) => x.field !== 'ownerStatement')) {
     const from = [...new Set(f.evidence.map((e) => e.source))].join(', ')
     // A person only reviews name, shown by rule (`liftReviewPeople`), is named for the owner to check.
     const where = f.onSite

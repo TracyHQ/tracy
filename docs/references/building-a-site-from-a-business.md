@@ -13,6 +13,8 @@ sources:
   - apps/tracy-host/src/demo-qa.js
   - packages/tools/tracy-site-tools/src/host/site-context.mjs
   - packages/site/tracy-site-tabs/src/host/turn-record.mjs
+  - packages/wo/website-opportunities/src/business-reading.js
+  - packages/wo/website-opportunities/domain/owner-statement.mjs
 ---
 
 # Building a whole site from a business
@@ -130,3 +132,47 @@ showcase pages turned into the business's own; the phone layout does not break.
   read, and the light-grey style-3 strip became white on grey (1.11) at the very last check; it also set `max-width` on the brand
   image so the image shrank into the frame's corner. The brief and fix prompts now require each rule to target a single section (id/anchor), never resizing
   images or moving badges; the visual checker treats a badge overlapping a box edge as design (`look/3`).
+
+## 6. The owner's statement in the business reading (decision D46)
+
+What the customer types about their business in the build chat is a **source**: its facts are true, the reading may use
+them, and no sentence of it is ever copied into the site. The caller reads it with the same call the place executor uses,
+adding two parameters:
+
+```js
+const input = readingInputOf({
+  profile, // what the sources say (`mergeProfile`), as before
+  google, // Google's place facts, or null, as before
+  collected, // the collected source rows, as before
+  ownerStatement: description, // what the owner typed in the build chat (string; blank or absent = no change)
+  withheld // the research's `withheld` ({name?: true, people?: string[], names?: string[]}), or null
+})
+const reading = await readBusiness({ ...input, trade, door, held, charge, fetchImpl, now, log })
+```
+
+What comes back:
+
+- `input.ownerStatement` and `input.heldTexts` (the held people, plus the business name while `withheld.name` is true)
+  are present only when the statement holds words; without one the input, the prompt bytes and the reading are exactly
+  what they were.
+- The reading reads the statement as one passage `{ref: 'owner', kind: 'owner-statement'}`, first, capped at 1500
+  characters like every passage. Every sentence naming a held text (whole words or slug form) is taken out before the
+  model sees anything. The model's system message gains one rule (`owner-statement-prompt.mjs`, a draft awaiting
+  approval in #600): facts true, wording never copy.
+- `reading.ownerStatement`: `{read: true, heldOut, cut}` (sentences held back, whether the cap cut it), or
+  `{read: false, reason: 'held'}` when every sentence named something held. Absent when no statement was given.
+- Items read from it carry `source: {kind: 'owner-statement', ref: 'owner'}`. Any item, key message or USP theme whose
+  copy repeats a sentence of five words or more of the statement word for word is dropped and listed in
+  `reading.ownerEchoDropped` (`{group, label, why: 'copies_owner_statement'}`).
+- The place profile files them under the source of kind `owner-statement` (ref `chat`); a story or audience item becomes
+  a quote of kind `owner-statement`, the brief's field `ownerStatement`, never a story or post quote. The brief's copy
+  (`readingWithoutOwnerQuotes`) keeps a service it stated by its name only, and no story, audience, About fact, key
+  message quote or USP quote of it.
+- The needs profile research (`researchOf`) reads that evidence as the source id `owner-statement` of origin `answer`,
+  which the plan shows as "Your answer". The needs profile drops a `quote` item from it, a summary repeating one of its
+  sentences, and never takes its phrases as the business's own words (`voice.ownWords`).
+- Trust order: `website`, `answer`, `google`, `social`. An answer the customer gives to a plan question is applied after
+  the merge (`plan-answers.mjs`, source `customer-answer`), so it always wins over the chat statement.
+
+The `owner` source of the older flow (the value typed on the Profile card, origin `website`) is unchanged and is a
+different key.

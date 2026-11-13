@@ -4,6 +4,7 @@ import { decideGoogleRating, googleRatingOf, ratingPickOf } from './google-ratin
 import { copiedRatingVerdict } from './listing-page.mjs'
 import { offeringKindOf } from './offering-kind.mjs'
 import { withReadingPicks } from './business-reading.mjs'
+import { OWNER_STATEMENT_KIND, OWNER_STATEMENT_SOURCE_REF } from './owner-statement.mjs'
 import { cleanSocialUrl, untrackedUrl } from './social-links.mjs'
 import { brandNameOf } from './brand-social.mjs'
 import { candidateAsRead } from './candidate-as-read.mjs'
@@ -678,6 +679,8 @@ export function placeProfileFromResearch({
   if (reading) {
     const readingVia = (item) => {
       const s = item.source ?? {}
+      // What the owner typed in the build chat is its own source (D46): never the bio, never a platform's words.
+      if (s.kind === OWNER_STATEMENT_KIND) return sourceOf(OWNER_STATEMENT_KIND, OWNER_STATEMENT_SOURCE_REF)
       if (s.kind === 'bio') return profileSource('bio', profile.bio).source
       if (s.kind === 'review')
         return s.source === 'google' || !s.source
@@ -730,11 +733,14 @@ export function placeProfileFromResearch({
       ['story', reading.story]
     ])
       for (const item of items) {
+        // 🔒 The owner's statement is never a story or post quote the site may show (D46): it is filed as what the
+        // owner stated (`kind: 'owner-statement'`, the brief's field `ownerStatement`), research to write from.
+        const owner = item.source?.kind === OWNER_STATEMENT_KIND
         const entry = readingFact(
-          { kind: quoteKind(item), text: item.quote, restrictions: [] },
+          { kind: owner ? OWNER_STATEMENT_KIND : quoteKind(item), text: item.quote, restrictions: [] },
           item,
           group,
-          `${group}: ${item.label}`
+          owner ? `${OWNER_STATEMENT_KIND} ${group}: ${item.label}` : `${group}: ${item.label}`
         )
         if (!doc.quotes.some((q) => q.id === entry.id)) doc.quotes.push(entry)
       }

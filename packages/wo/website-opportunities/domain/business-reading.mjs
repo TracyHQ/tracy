@@ -32,6 +32,7 @@ import { excludedPostOffer, postOfferCandidates } from './post-offerings.mjs'
 import { websiteReadingSources } from './website-reading-sources.mjs'
 import { shownByReviewRule } from './brief-people.mjs'
 import { OFFERING_KIND_NOUNS, alternationOf, formsOf } from './trade-word-classes.mjs'
+import { OWNER_STATEMENT_KIND, ownerPassageOf, withoutOwnerEcho } from './owner-statement.mjs'
 
 // 3: services and audience may stand on repeated mentions, items carry their mentions, facts are read, and the reading
 // also picks the business's sub-trade (`sub-trades.mjs`), reads its Google types and social category, and proposes up
@@ -86,14 +87,26 @@ const withoutPlaceholders = (text) =>
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
 
 /**
- * The texts a reading reads, each with the ref an item names it by: the bio, each post, each review (one copy of a
+ * The texts a reading reads, each with the ref an item names it by: the owner's statement typed in the build chat
+ * (`owner-statement.mjs`, decision D46: first, so no budget cuts it), the bio, each post, each review (one copy of a
  * review the sources list twice). Template lines are taken out before anything is read.
- * @param {{bio?: string | null, posts?: any[], reviews?: any[]}} input `posts`: `{source, id, url, caption}`;
- *   `reviews`: `{author, text, source?}`
- * @returns {{ref: string, kind: 'bio' | 'post' | 'review' | 'website', text: string, url?: string, author?: string, source?: string}[]}
+ * @param {{bio?: string | null, posts?: any[], reviews?: any[], ownerStatement?: string | null, heldTexts?: string[]}}
+ *   input `posts`: `{source, id, url, caption}`; `reviews`: `{author, text, source?}`; `ownerStatement`: what the
+ *   owner typed, a passage `{ref: 'owner', kind: 'owner-statement'}` when not blank, less every sentence naming one of
+ *   `heldTexts` (the held people and the held business name)
+ * @returns {{ref: string, kind: 'owner-statement' | 'bio' | 'post' | 'review' | 'website', text: string, url?: string, author?: string, source?: string}[]}
  */
-export function readingSourcesOf({ bio = null, posts = [], reviews = [], websitePages = [] } = {}) {
+export function readingSourcesOf({
+  bio = null,
+  posts = [],
+  reviews = [],
+  websitePages = [],
+  ownerStatement = null,
+  heldTexts = []
+} = {}) {
   const out = []
+  const { passage } = ownerPassageOf(ownerStatement, heldTexts)
+  if (passage) out.push(passage)
   const bioText = withoutPlaceholders(bio)
   if (bioText) out.push({ ref: 'bio', kind: 'bio', text: bioText.slice(0, MAX_TEXT) })
   for (const p of Array.isArray(posts) ? posts : []) {
@@ -367,7 +380,8 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
   const sub = checkSubTrade(parsed.subTrade, trade, [...facts, ...sources])
   if (sub?.id) out.subTrade = sub
   else if (sub?.dropped) out.subTradeDropped = sub.dropped
-  return out
+  // No copy of the reading repeats a sentence of the owner's statement word for word (D46, `owner-statement.mjs`).
+  return withoutOwnerEcho(out, sources)
 }
 
 const MAX_SUB_TRADE_QUOTES = 3
@@ -476,7 +490,15 @@ function mentionsOf(raw, label, own, byRef) {
   for (const m of Array.isArray(raw) ? raw.slice(0, MAX_MENTIONS * 2) : []) {
     const quote = clean(m?.quote, 400)
     const source = byRef.get(clean(m?.ref, 200))
-    if (!source || source.kind === 'bio' || used.has(source.ref) || !quotedIn(quote, source)) continue
+    // The owner's statement is never a mention: a mention describes a service on the site in its own words (D46).
+    if (
+      !source ||
+      source.kind === 'bio' ||
+      source.kind === OWNER_STATEMENT_KIND ||
+      used.has(source.ref) ||
+      !quotedIn(quote, source)
+    )
+      continue
     if (!want.some((w) => labelQuoted(w, quote))) continue
     used.add(source.ref)
     out.push({
@@ -577,7 +599,7 @@ export function readBusinessByRules(sources) {
   for (const s of sources.filter((x) => x.kind !== 'review'))
     for (const m of s.text.matchAll(AUDIENCE_RE)) add('audience', m[1].replace(/&/g, 'and'), m[0], s)
   out.services = withPostOfferings(out.services, sources)
-  return out
+  return withoutOwnerEcho(out, sources)
 }
 
 /** An explicit own-post offer survives model omissions, with exact evidence and no duplicate or invented label. */

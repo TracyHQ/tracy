@@ -13,6 +13,7 @@ import {
   provenBy
 } from './needs-profile-grounding.mjs'
 import { MAX_ROW_DEPTH, groundRows } from './needs-profile-rows.mjs'
+import { echoSentencesOf, echoesOwner } from './owner-statement.mjs'
 
 const FACT_KINDS = new Set([...SINGLE_FACT_KINDS, ...LIST_FACT_KINDS])
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -34,7 +35,9 @@ const REASONS = Object.freeze({
   value_not_in_evidence: 'the value is not in its evidence',
   summary_not_in_evidence: 'the summary carries a name, number, price or link its evidence lacks',
   row_without_fields: 'the row holds no field the profile keeps',
-  row_too_deep: `a row nested deeper than ${MAX_ROW_DEPTH} levels`
+  row_too_deep: `a row nested deeper than ${MAX_ROW_DEPTH} levels`,
+  owner_statement_not_a_quote: "the owner's chat statement is never a quote the site shows",
+  summary_copies_owner: "the summary repeats a sentence of the owner's chat statement word for word"
 })
 const drop = (code, what, scope = 'observation') => ({ ...what, code, reason: REASONS[code], scope })
 
@@ -155,6 +158,20 @@ export function modelObservations(reading, sources) {
     const source = quoted(it, what)
     if (!source) continue
     const at = { ...what, source: source.id }
+    // 🔒 The owner's chat statement (origin `answer`, D46) gives facts, never words: no quote of it, no summary
+    // repeating one of its sentences of five words or more.
+    if (source.origin === 'answer' && it.kind === 'quote') {
+      dropped.push(drop('owner_statement_not_a_quote', at))
+      continue
+    }
+    if (source.origin === 'answer') {
+      const sentences = echoSentencesOf(byId.get(source.id)?.text)
+      for (const role of SUMMARY_ROLES)
+        if (echoesOwner(fields[role], sentences)) {
+          dropped.push(drop('summary_copies_owner', { ...at, field: role, value: fields[role] }, 'field'))
+          delete fields[role]
+        }
+    }
     // A literal field the quote does not prove drops the whole item; a summary that says more drops that field only.
     const unproven = Object.entries(fields).filter(([role, v]) => !provenBy(role, v, it.evidence))
     const literal = unproven.find(([role]) => !SUMMARY_ROLES.includes(role))

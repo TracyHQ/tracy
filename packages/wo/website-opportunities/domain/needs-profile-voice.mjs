@@ -64,7 +64,9 @@ function phrasesOf(value, name, dropped) {
 export function voiceOf(said, sources, { facts = {}, items = {} } = {}) {
   const dropped = []
   if (!said || typeof said !== 'object') return { voice: null, dropped }
-  const texts = wordsOfSources(sources)
+  // 🔒 The owner's chat statement (origin `answer`, D46) is never a phrase the writer quotes: own words come from the
+  // business's published texts only.
+  const texts = wordsOfSources((Array.isArray(sources) ? sources : []).filter((s) => s?.origin !== 'answer'))
   // Own words keep the casing the source writes them in, found on word boundaries.
   const ownWords = []
   for (const phrase of phrasesOf(said.ownWords, 'ownWords', dropped)) {

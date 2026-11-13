@@ -10,8 +10,17 @@ import { samePhone } from './needs-profile-phone.mjs'
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { mergeRows } from './needs-profile-rows.mjs'
 
-/** Source origins, most trusted first: the business's own website, then its Google listing, then social profiles. */
-export const TRUST_ORDER = Object.freeze(['website', 'google', 'social'])
+/**
+ * Source origins, most trusted first: the business's own website, then what the owner told us in the build chat
+ * (`answer`, the source `owner-statement`, decision D46), then its Google listing, then social profiles.
+ * 🔒 `answer` sits below `website` and above `google`: both are the owner's own words, but the website is the owner's
+ * published, edited record while the chat statement is free prose a model read facts out of, so a disagreement keeps
+ * the website's value as its default; a third party's listing or a social page never outranks the owner. An answer the
+ * customer gives to a plan question is not ranked here at all: `settleAnswers` (`plan-answers.mjs`) writes it over the
+ * merged fact after this merge (source `customer-answer`), so it always wins, and a disagreement between the chat
+ * statement and another source is a conflict the customer settles by such an answer.
+ */
+export const TRUST_ORDER = Object.freeze(['website', 'answer', 'google', 'social'])
 const [CORROBORATED, SINGLE_SOURCE] = CONFIDENCE_LEVELS
 
 /** Business facts the profile holds once (a disagreement is a conflict). */

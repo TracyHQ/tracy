@@ -7,6 +7,7 @@ import { pagePlan } from './page-plan.mjs'
 import { placeProfileFromResearch } from './place-profile-from-research.mjs'
 import { renderSocialFigures, socialFiguresOf } from './agent-prompt.mjs'
 import { aboutLineOf, evidenceCountOf, labelQuoted, withReadingPicks } from './business-reading.mjs'
+import { readingWithoutOwnerQuotes } from './owner-statement.mjs'
 import { inSentence, withoutDashes } from './plain-prose.mjs'
 import {
   factsWithoutHeldQuotes,
@@ -439,10 +440,13 @@ export function buildBrief({
   )
   const siteSocials = savedSiteSocialsOf(saved)
   const socials = bands.socials ? cleanSocials({ ...researchedSocials, ...siteSocials.socials }) : {}
-  const usableReading = readingWithoutHeldReviews(profile.businessReading, {
-    names: heldPeople,
-    held: heldReviews
-  })
+  // The owner's chat statement gives facts, never words (D46): no story, audience or About fact of it, no quote of it.
+  const usableReading = readingWithoutOwnerQuotes(
+    readingWithoutHeldReviews(profile.businessReading, {
+      names: heldPeople,
+      held: heldReviews
+    })
+  )
   // What kind of business of its trade it is (`sub-trades.mjs`): the business reading's pick when its quotes stand, else
   // what Google's types settle, else none. Its words replace the trade's; the template still follows the trade.
   const subTrade = decideSubTrade({

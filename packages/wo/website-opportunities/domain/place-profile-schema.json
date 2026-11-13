@@ -1065,7 +1065,8 @@
           "type": "object",
           "properties": {
             "kind": {
-              "enum": ["story", "post", "tagline", "review", "testimonial", "news"]
+              "description": "owner-statement: what the business owner typed about the business in the build chat (decision D46), research to write from, never a quote the site shows.",
+              "enum": ["story", "post", "tagline", "review", "testimonial", "news", "owner-statement"]
             },
             "text": {
               "type": "string",
