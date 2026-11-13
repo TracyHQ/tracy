@@ -79,7 +79,18 @@ const LANGUAGES = {
     noise: ['geschlossen', 'nach Vereinbarung', 'Kinder 6 bis 12', 'Raum 2', 'mittags']
   },
   es: {
-    days: ['Lun', 'Mar', 'Mi\u00e9', 'Jue', 'Vie', 'S\u00e1b', 'Dom', 'Lunes', 'Viernes', 'Todos los d\u00edas'],
+    days: [
+      'Lun',
+      'Mar',
+      'Mi\u00e9',
+      'Jue',
+      'Vie',
+      'S\u00e1b',
+      'Dom',
+      'Lunes',
+      'Viernes',
+      'Todos los d\u00edas'
+    ],
     joins: ['-', ' a ', ' y ', ', ', '/'],
     clocks: ['9', '18h', '19 h', '10:00', '17:00', 'mediod\u00eda', 'medianoche', '1900'],
     ranges: ['-', ' a ', ' - '],
