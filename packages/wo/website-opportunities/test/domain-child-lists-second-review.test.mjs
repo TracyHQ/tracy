@@ -15,7 +15,10 @@ import { planDataOf } from '../domain/plan-data.mjs'
 import { gateEditedPlan } from '../domain/plan-edit-gate.mjs'
 import { rowsLeftOut } from '../domain/plan-rows-check.mjs'
 import { CHILD_LIST_REASONS, planRows } from '../domain/plan-rows.mjs'
-import { boxingStore } from './fixtures/child-lists/boxing-plan.mjs'
+import {
+  BUSINESS_SOCIAL_BLOCK,
+  businessSocialStore
+} from './fixtures/child-lists/invented-business-social-store.mjs'
 import {
   composeInputs,
   GLAZE,
@@ -54,9 +57,9 @@ test('a business link a social list cannot show is left out with its reason, nev
   const data = planDataOf(profile)
   const ids = [...data.byId].filter(([, e]) => e.kind === 'contact.social_url').map(([id]) => id)
   const pages = [
-    { id: 'home', blocks: [{ id: 'b1', type: 'team', block: 'block-180', data: ['p1', ...ids] }] }
+    { id: 'home', blocks: [{ id: 'b1', type: 'team', block: BUSINESS_SOCIAL_BLOCK, data: ['p1', ...ids] }] }
   ]
-  const out = planRows(pages, blocksOf(boxingStore()), data)
+  const out = planRows(pages, blocksOf(businessSocialStore()), data)
   const left = rowsLeftOut(data, out.planned, out.dropped, new Set())
   const codes = ['social_link_shortened', 'social_network_repeated', 'social_link_over_rows']
   assert.deepEqual(
