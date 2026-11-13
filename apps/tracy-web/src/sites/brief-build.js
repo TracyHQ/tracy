@@ -177,6 +177,8 @@ function withTimeout(promise, ms, message) {
  * @property {string | null} quickstart
  * @property {{id: string, dir: string} | null} contract - null for a release nothing seals: its words stay as released
  * @property {string} email
+ * @property {string | null} [accountId] - the account the run builds for: a step chain run built from a build draft reads
+ *   that account's draft (#597)
  * @property {string} runId - this run's id: the Apply door records every write of the run under it ("Tracy setup")
  * @property {{about: string, goal: string | null, style: string | null}} brief
  * @property {any} normalized - what `normalize` read out of the brief (name, languages, tone, ...)
@@ -608,6 +610,7 @@ export function createBriefBuilds({
         quickstart: input.quickstart,
         contract: input.contract ?? null,
         email: input.email,
+        accountId: input.accountId ?? null,
         runId,
         retryActionId: input.retryActionId ?? null,
         brief: input.brief,

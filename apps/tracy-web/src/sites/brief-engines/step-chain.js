@@ -8,12 +8,18 @@
  *             └─ model doors ─ template kit ─┬─ brand step ────────────────────────┤ all ready?
  *                                            └─ planner ─┬─ Site copy ─────────────┤
  *                                                        └─ Picture manifest ──────┘
+ *                                                                                  ├─ icons ─ write order (an assembled run)
  *                                                                                  └─ Write step
  *
  * Every model door the chain needs is checked first, before any model work: an empty door stops the build up front
  * (ADR 0047, consequences). The template kit is fetched and checked next, before anything forks. The Write step writes
  * the files to the site and nothing else: there is no site check and no repair pass inside a build (ADR 0047, decisions
  * 1 and 3). Every model step reads the research revision the benches read (`brief.researchRevisionId`).
+ *
+ * AN ASSEMBLED RUN (#597): when the steps say a run is assembled from the domain steps (`assembles(ctx)`, a run built
+ * from an approved build draft), two more steps run once the copy and the pictures are both made: `icons` (the icons
+ * follow the written copy and are checked against the placed frames) and `order` (the write order is built and
+ * checked). The Write step is then handed the order beside the other inputs. Any other run keeps the chain above.
  *
  * 🔒 EVERY WRITE GOES THROUGH THE SETUP DOOR UNDER THE RUN'S ID. The Write step is handed one site door,
  * `applyFor(email, runId)` (the Apply door as the person who pressed Build, `applyAs(..., { setupRun })`), so Site changes
@@ -142,6 +148,13 @@ const HALTED = Symbol('the build stopped')
  * @property {(ctx: object, inputs: {kit: any, plan: any, copy: any, brand: any, pictures: any},
  *   how: {signal: AbortSignal, door: {apply: Function}}) => Promise<{value: any, usd?: number | null, knownUsd?: number}>} write - the
  *   Write step; its value carries the write report (`report`), and only a report `done` is a completed step
+ * @property {(ctx: object) => boolean} [assembles] - whether this run runs `icons` and `order` (default: whenever
+ *   `order` is given)
+ * @property {(ctx: object, inputs: {kit: any, plan: any, copy: any, pictures: any}, how: {signal: AbortSignal}) =>
+ *   Promise<{value: any, usd?: number | null}>} [icons] - the icons of an assembled run, after the copy
+ * @property {(ctx: object, inputs: {kit: any, plan: any, copy: any, pictures: any, brand: any, icons?: any},
+ *   how: {signal: AbortSignal}) => Promise<{value: any, usd?: number | null}>} [order] - the write order of an assembled
+ *   run, built and checked
  * @property {(prepared: any) => Promise<void>} [dispose] - keeps the run's record (`prepared.chain`) with what the steps
  *   left behind (files), whatever became of the run
  */
@@ -245,6 +258,9 @@ export function createStepChainEngine({
     }
   }
 
+  /** Whether a run runs the assembled steps after the copy and the pictures (`icons`, `order`). */
+  const assembles = (ctx) => typeof steps.order === 'function' && (steps.assembles?.(ctx) ?? true)
+
   /** The function one step runs: the Write step and the door check carry the engine's own judgement of their answer. */
   const runStep = (step) => (step === 'write' ? writeOnce : step === 'doors' ? doorsOnce : steps[step])
 
@@ -322,6 +338,17 @@ export function createStepChainEngine({
           })
         ])
         run.inputs = { kit, plan: planned.plan, copy: planned.copy, brand, pictures: planned.pictures }
+        if (assembles(ctx)) {
+          const made = { kit, plan: planned.plan, copy: planned.copy, pictures: planned.pictures }
+          if (steps.icons) run.inputs.icons = await attempt(run, ctx, 'icons', made, how)
+          run.inputs.order = await attempt(
+            run,
+            ctx,
+            'order',
+            { ...made, brand, ...(steps.icons ? { icons: run.inputs.icons } : {}) },
+            how
+          )
+        }
         return run
       } catch (error) {
         if (error !== HALTED) throw error

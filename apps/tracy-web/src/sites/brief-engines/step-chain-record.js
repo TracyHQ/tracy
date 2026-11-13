@@ -54,12 +54,14 @@ export function detailsOf(error) {
 }
 
 /**
- * A value as the record keeps it: a template kit by its ref (its document is the kit's own file), a Write step's answer by
+ * A value as the record keeps it: a value that names its own record (`recorded`, the in-memory values of an assembled
+ * run, #597) by that record, a template kit by its ref (its document is the kit's own file), a Write step's answer by
  * its report's status, counts and cause, anything else as it is (file paths, small objects).
  * @param {any} value
  */
 export function recordedValue(value) {
   if (!value || typeof value !== 'object') return value ?? null
+  if (value.recorded !== undefined) return value.recorded
   if (typeof value.ref === 'string' && ('doc' in value || 'contentMap' in value)) return { ref: value.ref }
   if (value.report && typeof value.report === 'object') {
     const { status, counts, cause } = value.report
