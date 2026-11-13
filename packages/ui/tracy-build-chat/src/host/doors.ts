@@ -53,8 +53,10 @@ export interface AskRequest {
 /**
  * `brand` is the pre-site brand step (#616): it runs once research and a template are in the draft (choosing the
  * template starts it), and `POST /compose` starts it instead of composing when the draft has no look record yet.
+ * `revise` is a written change request on a living plan (#617): `POST /compose` with `request` on a draft that holds a
+ * plan starts it.
  */
-export type EngineStep = 'research' | 'brand' | 'compose' | 'edit'
+export type EngineStep = 'research' | 'brand' | 'compose' | 'revise' | 'edit'
 
 /** What research found, small: the business's name and how many facts and services it holds. */
 export interface ProfileSummary {
@@ -86,6 +88,25 @@ export interface PlanResult {
   unchanged?: true
 }
 
+/** One part of a change request that was not done: what, and why in words the owner reads; `reason` is for the team. */
+export interface NotDone {
+  what: string
+  reason: 'no_recipe' | 'no_data' | 'fact_missing' | 'kept_private' | 'outside_plan'
+  why: string
+}
+
+/**
+ * The result of a finished revise step: the plan as it is now and the lines the owner reads, written by the plan step
+ * in English (show `changed` and `why` verbatim, never `reason`). `unchanged: true` is no fault: the same plan, the same
+ * revision, and `notDone` says why.
+ */
+export interface RevisionResult {
+  plan: any
+  brand: 'own'
+  unchanged: boolean
+  revision: { changed: string[]; notDone: NotDone[] }
+}
+
 /** A compose that needs one more answer from the owner first (the site name, #593 G4): the question to ask. */
 export interface AskingResult {
   /** The one question the engine issued for this turn. */
@@ -107,6 +128,7 @@ export type EngineState =
   | { step: 'research'; state: 'done'; result: ResearchResult }
   | { step: 'brand'; state: 'done'; result: { look: 'ready' } }
   | { step: 'compose' | 'edit'; state: 'done'; say?: string; result: PlanResult }
+  | { step: 'revise'; state: 'done'; result: RevisionResult }
   | { step: 'compose'; state: 'asking'; say?: string; result: AskingResult }
   | { step: EngineStep; state: 'stopped'; say: string; reason?: 'brand-unavailable' | string }
 
@@ -118,11 +140,12 @@ export interface ResearchRequest {
 
 /**
  * `POST /api/build-draft/compose`: composes the plan for the chosen template, gated by the rules gate. On a draft that
- * already holds a plan it composes nothing: it answers that plan, `result.unchanged: true`, with `say` (a written
- * change request is not applied yet, #617), unless `restart` is set.
+ * already holds a plan it never composes, unless `restart` is set: with `request` it starts the `revise` step (422
+ * `REQUEST_TOO_LONG` or `REQUEST_EMPTY` with `problems` when the text cannot be read), without one it answers that plan
+ * as it is, `{step: 'compose', state: 'done', say, result: {..., unchanged: true}}`.
  */
 export interface ComposeRequest {
-  /** The owner's request for a larger change, in their words; absent for the first plan. */
+  /** On a living plan: the owner's change request, in their own words, at most 1000 characters. Ignored otherwise. */
   request?: string
   /** Only when the owner asked to start the plan over: discards the living plan and its edits, then composes anew. */
   restart?: boolean

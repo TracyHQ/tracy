@@ -23,7 +23,7 @@ never registered twice. The tool refuses any session that is not a build chat se
 |---|---|---|
 | `research {links?, description?}` | `POST /research` | `{ profile: { business, counts }, ask? }` |
 | `templates` | `GET /templates` | `{ options: TemplateOption[], none }` |
-| `plan {request?, restart?}` | `POST /compose` | `{ plan: { id, revision }, review }`, `{ unchanged: true, say, plan, review, next }` when the draft already holds a plan, or `{ ask, say?, next }` when the owner must answer first |
+| `plan {request?, restart?}` | `POST /compose` | `{ plan: { id, revision }, review }`; on a living plan with `request`: `{ plan, unchanged, revision: { changed, notDone: [{what, why}] }, review, next }`; on a living plan without one: `{ unchanged: true, say, plan, review, next }`; or `{ ask, say?, next }` when the owner must answer first |
 | `edit {changes}` | `POST /edit` | `{ plan: { id, revision }, review }` |
 | `status` | `GET /engine` | whatever the running step gives when it finishes |
 
@@ -39,11 +39,13 @@ never registered twice. The tool refuses any session that is not a build chat se
   calls `plan` again. The site name question has no choice, so `ask` carries `options: []` and dsh's card shows its
   text box alone. A typed reply longer than its question's `freeText.maxLength` is never stored (dsh's text box sets
   no limit): the call answers the same `ask` again with `say`, the limit in plain words.
-- **A living plan is never replaced by a plan call.** On a draft that holds a plan, `plan` composes nothing: it
-  answers the plan as it is, with every value the owner changed on the card, `unchanged: true` and the sentence the
-  owner reads (a written change request is not applied until #617 is wired). Only `restart: true` (the description
-  tells the model: ONLY when the owner clearly asks to start the plan over) discards the plan and its edits and
-  composes a new one.
+- **A living plan is never replaced by a plan call.** On a draft that holds a plan, `plan` never composes. With
+  `request` (at most 1000 characters, checked before it is sent) the engine's `revise` step runs the plan step's
+  `revisePlan` (#617): only what the request names changes, the owner's card edits stay, and the result carries the
+  lines the owner reads (`changed`, word for word, and `notDone` with `why`; the reason codes stay with the engine).
+  Without a request it answers the plan as it is, `unchanged: true`, with the sentence the owner reads. Only
+  `restart: true` (the description tells the model: ONLY when the owner clearly asks to start the plan over) discards
+  the plan and its edits and composes a new one.
 - **A fault is never a question.** A stopped step, a 403, a missing door, tracy-web unreachable, nobody to act as, or
   a plan without the business's own brand comes back as `{ stopped: true, say }`: one plain sentence, no `ask`.
 - **The guard** (`ctx.tools.guard`): in a build chat session, `ask_user_question` passes only when every question id
@@ -59,7 +61,7 @@ Typed in [`src/host/doors.ts`](src/host/doors.ts). Every door is under `/api/bui
 |---|---|---|
 | `POST /research` | `{ links: string[], description?: string }` | `EngineState` (creates the draft when the account has none) |
 | `GET /templates` | | `{ templates: TemplateOption[] }` |
-| `POST /compose` | `{ request?: string, restart?: boolean }` | `EngineState`; on a draft holding a plan, without `restart`: that plan, `done` with `result.unchanged: true` and `say` |
+| `POST /compose` | `{ request?: string, restart?: boolean }` | `EngineState`; on a draft holding a plan, without `restart`: with `request` the `revise` step (done: `result: { plan, brand, unchanged, revision: { changed, notDone: [{what, reason, why}] } }`), without it that plan, `done` with `result.unchanged: true` and `say` |
 | `POST /edit` | `{ changes: { field, value }[] }` | `EngineState` (an edit applies to the current revision) |
 | `GET /engine` | | `EngineState` of the session's latest step |
 | `PUT /answers` (exists) | `{ question: BuildQuestion, answer: BuildAnswer }` | `{ draft }` |
@@ -81,5 +83,6 @@ Headers and refusals:
 | `x-tracy-actor` | the signed assertion for the person who typed (`tracyAssertion.mint` of the session's latest prompter) |
 | `x-tracy-session` | the build session id, `session-build-<uuid>`; tracy-web binds the call to that account's build session |
 | `403` | not this account's build session, or the build chat is switched off: the tool says `stopped` |
+| `422` (compose) | `REQUEST_TOO_LONG`, `REQUEST_EMPTY`: a change request the model could never read; `problems` holds the owner sentence |
 | `409` | `STALE_EDIT` (or any other code): stale, the plan moved on; the tool tells the agent to read `status` and try again. `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`, `NO_PLAN`: a step not taken yet; the tool answers `{ missing, next }` naming the one action to take (research, templates, plan), never a retry |
 | `422` | refused: `{ code, problems: string[] }`, problems the owner can read; never turned into a question |

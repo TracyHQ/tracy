@@ -12,7 +12,8 @@ import { brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
 import * as brands from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-brands.mjs'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildApp } from '../src/app.js'
-import { UNCHANGED_REQUEST_SAY, UNCHANGED_SAY } from '../src/build-draft/engine-state.js'
+import { SAY, UNCHANGED_SAY } from '../src/build-draft/engine-state.js'
+import { REQUEST_EMPTY_SAY, requestTooLongSay } from '../src/build-draft/engine-revise.js'
 import { TEMPLATE_CHANGE_SAY, changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
@@ -560,7 +561,7 @@ test(
 )
 
 test(
-  'compose on a draft that holds a plan keeps it with its edits and says so; only a restart replaces it',
+  'compose with no request on a draft that holds a plan keeps it with its edits; only a restart replaces it',
   opts,
   async () => {
     const model = club.scriptedModel(
@@ -577,22 +578,17 @@ test(
     const revision = edited.body.result.plan.revision
     const before = await row(s)
 
-    // A written change request: the composer is not run, the plan and its edit stay, and the owner reads the truth.
-    for (const [body, say] of [
-      [{ request: 'Make the main button say Join the club' }, UNCHANGED_REQUEST_SAY],
-      [{}, UNCHANGED_SAY]
-    ]) {
-      const answered = await s.call('POST', '/compose', body)
-      assert.equal(answered.status, 200, JSON.stringify(answered.body))
-      assert.equal(answered.body.step, 'compose')
-      assert.equal(answered.body.state, 'done')
-      assert.equal(answered.body.say, say)
-      assert.doesNotMatch(answered.body.say, DASHES)
-      assert.equal(answered.body.result.unchanged, true)
-      assert.equal(answered.body.result.brand, 'own')
-      assert.equal(answered.body.result.plan.revision, revision)
-      assert.equal(answered.body.result.plan.items[0].label, 'Courts and coaching')
-    }
+    // Asked for again with no request: the composer is not run, the plan and its edit stay, and the owner reads it.
+    const answered = await s.call('POST', '/compose', {})
+    assert.equal(answered.status, 200, JSON.stringify(answered.body))
+    assert.equal(answered.body.step, 'compose')
+    assert.equal(answered.body.state, 'done')
+    assert.equal(answered.body.say, UNCHANGED_SAY)
+    assert.doesNotMatch(answered.body.say, DASHES)
+    assert.equal(answered.body.result.unchanged, true)
+    assert.equal(answered.body.result.brand, 'own')
+    assert.equal(answered.body.result.plan.revision, revision)
+    assert.equal(answered.body.result.plan.items[0].label, 'Courts and coaching')
     assert.equal(model.calls.length, 1, 'the composer ran once, for the first plan')
     const after = await row(s)
     assert.deepEqual(after.plan, before.plan)
@@ -612,6 +608,188 @@ test(
     const stored = await row(s)
     assert.deepEqual(stored.plan, replaced)
     assert.deepEqual([stored.last_edit, stored.undo_edit], [null, null])
+  }
+)
+
+/** The fake model's answer to a change request (#617): the changes and the entries not done. */
+const revisionReply = (changes = [], notDone = []) => JSON.stringify({ changes, notDone })
+/** The club's living plan, composed through the doors, with the owner's card edit of its first item. */
+async function editedClub(s) {
+  await researchedClub(s)
+  const composed = (await askPlan(s)).ended.body.result.plan
+  const field = `items[${composed.items[0].id}].label`
+  const edited = await s.call('POST', '/edit', { changes: [{ field, value: 'Courts and coaching' }] })
+  assert.equal(edited.status, 200, JSON.stringify(edited.body))
+  return edited.body.result.plan
+}
+
+test(
+  'a written change request on a living plan is revised by revisePlan: only what it names changes, the card edit stays',
+  opts,
+  async () => {
+    const text = 'Please call the coaches page Our team.'
+    const model = club.scriptedModel(
+      JSON.stringify(club.goodComposition()),
+      revisionReply([
+        {
+          op: 'rename_page',
+          page: 'team',
+          name: 'Our team',
+          request: 'call the coaches page Our team',
+          said: 'x'
+        }
+      ])
+    )
+    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+    const edited = await editedClub(s)
+    const { started, ended } = await s.run('POST', '/compose', { request: text })
+    assert.deepEqual(started.body, { step: 'revise', state: 'running' })
+    assert.equal(ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    assert.equal(ended.body.step, 'revise')
+    const { plan, unchanged, revision, brand } = ended.body.result
+    assert.equal(model.calls.length, 2, 'the composer once, the change request once')
+    assert.equal(JSON.parse(model.calls[1].user).request, text)
+    assert.deepEqual([unchanged, brand], [false, 'own'])
+    assert.equal(plan.id, edited.id)
+    assert.equal(plan.revision, edited.revision + 1)
+    assert.equal(plan.pages.find((p) => p.id === 'team').name, 'Our team')
+    assert.equal(plan.items[0].label, 'Courts and coaching', 'the owner card edit is kept')
+    assert.deepEqual(revision, { changed: ['The Coaches page is now called Our team.'], notDone: [] })
+    const stored = await row(s)
+    assert.deepEqual(stored.plan, plan)
+    assert.deepEqual([stored.last_edit, stored.undo_edit], [null, null])
+    // Read again later, the same answer.
+    assert.deepEqual((await s.call('GET', '/engine')).body, ended.body)
+  }
+)
+
+test(
+  'a change request that changes nothing answers the same plan with what was not done; no fault',
+  opts,
+  async () => {
+    const model = club.scriptedModel(JSON.stringify(club.goodComposition()), revisionReply())
+    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+    const edited = await editedClub(s)
+    const before = await row(s)
+    const { ended } = await s.run('POST', '/compose', { request: 'Make it pop.' })
+    assert.equal(ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    assert.equal(ended.body.result.unchanged, true)
+    assert.equal(ended.body.result.plan.revision, edited.revision)
+    assert.ok(ended.body.result.revision.notDone.length >= 1)
+    for (const entry of ended.body.result.revision.notDone) {
+      assert.equal(typeof entry.why, 'string')
+      assert.doesNotMatch(entry.why, DASHES)
+    }
+    const after = await row(s)
+    assert.deepEqual([after.plan, after.last_edit, after.fault], [before.plan, before.last_edit, null])
+  }
+)
+
+test(
+  'a change request the gate refuses twice stops with one sentence; the fault keeps the problems and the request',
+  opts,
+  async () => {
+    const unlinked = revisionReply([
+      { op: 'remove_page', page: 'contact', request: 'tidy up the menu', said: 'Contact is removed.' }
+    ])
+    const model = club.scriptedModel(JSON.stringify(club.goodComposition()), unlinked, unlinked)
+    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+    await editedClub(s)
+    const before = await row(s)
+    const text = 'Remove all the secondary pages.'
+    const { ended } = await s.run('POST', '/compose', { request: text })
+    assert.deepEqual(ended.body, {
+      step: 'revise',
+      state: 'stopped',
+      say: SAY.revise,
+      reason: 'revise-failed'
+    })
+    assert.doesNotMatch(SAY.revise, DASHES)
+    assert.equal(model.calls.length, 3, 'two attempts of the change request, no rerun after noRerun')
+    const { plan, fault } = await row(s)
+    assert.deepEqual(plan, before.plan, 'the plan stays as it was')
+    assert.equal(fault.code, 'plan_gate_failed')
+    assert.equal(fault.request, text)
+    assert.ok(
+      fault.problems.length > 0 && fault.problems.every((p) => typeof p.code === 'string' && p.message)
+    )
+  }
+)
+
+test('a change request the plan moved past while the model worked writes nothing', opts, async () => {
+  let s
+  const model = club.scriptedModel(JSON.stringify(club.goodComposition()), async () => {
+    // The owner edits the card meanwhile.
+    await changeDraft(db.pool, await s.accountId(), (r) => ({
+      plan: { ...r.plan, revision: r.plan.revision + 1 }
+    }))
+    return revisionReply([
+      {
+        op: 'rename_page',
+        page: 'team',
+        name: 'Our team',
+        request: 'call the coaches page Our team',
+        said: 'x'
+      }
+    ])
+  })
+  s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+  await editedClub(s)
+  const { ended } = await s.run('POST', '/compose', { request: 'Please call the coaches page Our team.' })
+  assert.deepEqual(ended.body, { step: 'revise', state: 'stopped', say: SAY.stale, reason: 'stale' })
+  const stored = await row(s)
+  assert.equal(stored.plan.pages.find((p) => p.id === 'team').name !== 'Our team', true)
+  assert.equal(stored.fault, null, 'a moved plan is no fault')
+})
+
+test('a change request the model could never read is refused at the door, in plain words', opts, async () => {
+  const model = club.scriptedModel(JSON.stringify(club.goodComposition()))
+  const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+  await editedClub(s)
+  const long = await s.call('POST', '/compose', { request: 'a'.repeat(1001) })
+  assert.equal(long.status, 422)
+  assert.deepEqual([long.body.code, long.body.problems], ['REQUEST_TOO_LONG', [requestTooLongSay(1000)]])
+  const blank = await s.call('POST', '/compose', { request: String.fromCodePoint(0x200b) })
+  assert.equal(blank.status, 422)
+  assert.deepEqual(blank.body.problems, [REQUEST_EMPTY_SAY])
+  assert.equal(model.calls.length, 1)
+  assert.equal((await row(s)).fault, null)
+})
+
+test(
+  'the draft keeps the whole settled profile: what the owner keeps off the site stays in it, marked held',
+  opts,
+  async () => {
+    const c = club.goodComposition()
+    c.pages.splice(1, 1)
+    c.assumptions = []
+    const s = server({
+      buildModel: async () => club.scriptedModel(JSON.stringify(c)),
+      brandStep: ownBrand,
+      buildChatOn: async () => true
+    })
+    await researchedClub(s, { research: heldClubResearch('Racket club by the river') })
+    assert.equal((await askPlan(s)).ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    const { needs_profile: kept, plan } = await row(s)
+    assert.ok(kept.withheld, 'the withheld marker is kept')
+    const people = JSON.stringify(kept.items)
+    assert.ok(people.includes('Ilse Varrow'), 'a held person stays in the profile the edit gate reads')
+    assert.equal(JSON.stringify(plan).includes('Ilse Varrow'), false, 'and never in the plan')
+
+    // Bringing the held person back through an edit is refused in Part 3's neutral sentence: no id, no name.
+    const held = Object.values(kept.items)
+      .flat()
+      .find((item) => JSON.stringify(item).includes('Ilse Varrow'))
+    const page = plan.pages.find((p) => p.blocks.some((b) => b.data.length > 0))
+    const block = page.blocks.find((b) => b.data.length > 0)
+    const refused = await s.call('POST', '/edit', {
+      changes: [{ field: `pages[${page.id}].blocks[${block.id}].data`, value: [...block.data, held.id] }]
+    })
+    assert.equal(refused.status, 422, JSON.stringify(refused.body))
+    assert.equal(refused.body.problems.length, 1)
+    assert.match(refused.body.problems[0], /stays off your site/)
+    for (const leak of [held.id, 'Ilse Varrow', 'withheld_shown'])
+      assert.equal(JSON.stringify(refused.body).includes(leak), false, leak)
   }
 )
 

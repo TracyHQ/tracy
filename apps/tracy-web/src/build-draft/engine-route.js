@@ -19,6 +19,7 @@ import { putEndedStep, readEngineRow } from './engine-store.js'
 import { createDraft, editPlan } from './store.js'
 import { readEngineRequest } from './engine-request.js'
 import { callerOf } from './caller.js'
+import { requestRefusalOf } from './engine-revise.js'
 
 const BASE = '/api/build-draft'
 
@@ -33,6 +34,8 @@ const REFUSALS = {
   NO_KIT: [409, 'The chosen template has no AI quickstart kit on this server.'],
   NO_PLAN: [409, 'The draft has no plan yet: POST /api/build-draft/compose.'],
   STALE_EDIT: [409, 'The plan changed meanwhile: read GET /api/build-draft/engine and edit again.'],
+  REQUEST_TOO_LONG: [422, 'Send a change request of at most 1000 characters.'],
+  REQUEST_EMPTY: [422, 'Send the change request the owner typed.'],
   INVALID_EDIT: [422, 'The change does not fit the plan.']
 }
 const refuse = (c, code, extra = {}) => {
@@ -125,6 +128,10 @@ export function buildEngineRoutes({
       if (!chosen) return refuse(c, 'NO_TEMPLATE')
       const kit = kits.loadKit(chosen.slug)
       if (!kit) return refuse(c, 'NO_KIT')
+      // A change request the model could never read (too long, nothing in it) is refused before any step: no fault.
+      const refusal =
+        row.plan && body.request && !body.restart ? requestRefusalOf(row.plan, body.request) : null
+      if (refusal) return refuse(c, refusal.code, { problems: [refusal.say] })
       return answer(c, await engine.compose(accountId, body, row, kit))
     })
   )

@@ -253,9 +253,11 @@ var BUILD_DOOR_TIMEOUT_MS = 3e4;
 var BUILD_STOPPED_SAY = "Your site plan could not be prepared. The Tracy team has the details and will look into it.";
 var BUILD_RUNNING_SAY = "Still working on it. This can take a minute or two.";
 var UNCHANGED_FALLBACK_SAY = "Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.";
+var REQUEST_MAX_LENGTH = 1e3;
+var REQUEST_TOO_LONG_SAY = `That request is too long. Please keep it to ${REQUEST_MAX_LENGTH} characters or fewer.`;
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.` : `That answer is too long. Please keep it to ${limit} characters or fewer.`;
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = "tracy_build: the build chat engine. action research {links?, description?} first; templates; plan {request?} after the owner chose a template; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.";
+var BUILD_DESCRIPTION = "tracy_build: the build chat engine. action research {links?, description?} first; templates; plan after the owner chose a template; plan {request} once a plan exists, with what the owner wants changed in their own words; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.";
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
@@ -268,7 +270,7 @@ var BUILD_PARAMETERS = Object.freeze({
     description: { type: "string", description: "The owner's own words about the business." },
     request: {
       type: "string",
-      description: "For plan: the owner's request for a larger change, in their words."
+      description: "For plan, once a plan exists: the owner's request to change it, in their own words, at most 1000 characters. Only what it names changes."
     },
     restart: {
       type: "boolean",
@@ -465,6 +467,22 @@ ${JSON.stringify(answer)}`;
       if (!result.profile) return stopped();
       return { profile: result.profile, ...result.ask ? { ask: result.ask } : {} };
     }
+    if (state?.step === "revise") {
+      if (result.brand !== "own" || !result.plan) return stopped(state.say);
+      const review = planReviewRequestOf(result.plan);
+      const ids = setOf(reviews, sessionId);
+      for (const q of review.questions) ids.add(q.id);
+      const lines = (v) => Array.isArray(v) ? v.filter((x) => typeof x === "string") : [];
+      const notDone = (Array.isArray(result.revision?.notDone) ? result.revision.notDone : []).filter((e) => typeof e?.what === "string" && typeof e?.why === "string").map((e) => ({ what: e.what, why: e.why }));
+      const unchanged = result.unchanged === true;
+      return {
+        plan: { id: result.plan.id, revision: result.plan.revision },
+        unchanged,
+        revision: { changed: lines(result.revision?.changed), notDone },
+        review,
+        next: `${unchanged ? "Nothing on the plan changed: say so plainly." : "Say what changed using the sentences in revision.changed, word for word."} Then say each entry of revision.notDone with its why. Do not say anything else changed. When an entry asks for the language, a value, the look or the number of pictures, tell the owner they can change it on the plan card. Then pass review to ask_user_question exactly as given.`
+      };
+    }
     if (state?.step === "brand")
       return {
         look: "ready",
@@ -532,6 +550,12 @@ ${JSON.stringify(answer)}`;
         };
       request = ["POST", "/research", { links, ...description !== "" ? { description } : {} }];
     } else if (action === "plan") {
+      if (typeof args.request === "string" && [...args.request.trim()].length > REQUEST_MAX_LENGTH)
+        return {
+          refused: true,
+          say: REQUEST_TOO_LONG_SAY,
+          next: "Say the sentence in say, then wait for the owner to write a shorter request."
+        };
       const asked = text(args.request);
       request = [
         "POST",

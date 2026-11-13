@@ -318,23 +318,22 @@ test('brand unavailable yields stopped: the plan is never composed with the temp
   }
 })
 
-test('plan on a draft that holds a plan: the plan did not change, and the model is told to say so', async () => {
+test('plan with no request on a draft that holds a plan: the plan did not change, and the model is told so', async () => {
   const say =
-    'I cannot change the plan from a written request yet. You can change any value on the plan card, or tell me to start the plan over.'
+    'Your plan is ready on the card. You can change any value on it, tell me what to change, or tell me to start the plan over.'
   const kept = { ...PLAN, revision: 2 }
   const web = fakeWeb({
     'POST /api/build-draft/compose': {
       body: { step: 'compose', state: 'done', say, result: { plan: kept, brand: 'own', unchanged: true } }
     }
   })
-  const answered = await run(toolWith(web), { action: 'plan', request: 'Make the button say Join now' })
+  const answered = await run(toolWith(web), { action: 'plan' })
   assert.equal(answered.unchanged, true)
   assert.equal(answered.say, say)
   assert.deepEqual(answered.plan, { id: kept.id, revision: 2 })
   assert.ok(answered.review, 'the owner can still approve or ask again on the review card')
   assert.match(answered.next, /did not change/)
   assert.match(answered.next, /Never say the plan changed/)
-  assert.deepEqual(web.calls[0].body, { request: 'Make the button say Join now' })
   // A door sentence that is not plain is never passed on.
   const dashed = fakeWeb({
     'POST /api/build-draft/compose': {
@@ -347,6 +346,64 @@ test('plan on a draft that holds a plan: the plan did not change, and the model 
     }
   })
   assert.equal((await run(toolWith(dashed), { action: 'plan' })).say, UNCHANGED_FALLBACK_SAY)
+})
+
+test('plan with a request on a living plan waits on the revise step and hands on its lines, never the codes', async () => {
+  const revised = { ...PLAN, revision: 3 }
+  const notDone = [
+    { what: 'A pink look', reason: 'outside_plan', why: 'The colour is changed on the plan card.' },
+    { what: 'A prices page', reason: 'no_recipe', why: 'Your template has no prices page.' }
+  ]
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { body: { step: 'revise', state: 'running' } },
+    'GET /api/build-draft/engine': {
+      body: {
+        step: 'revise',
+        state: 'done',
+        result: {
+          plan: revised,
+          brand: 'own',
+          unchanged: false,
+          revision: { changed: ['The Coaches page is now called Our team.'], notDone }
+        }
+      }
+    }
+  })
+  const text = 'Call the coaches page Our team, make it pink and add prices.'
+  const answered = await run(toolWith(web), { action: 'plan', request: text })
+  assert.deepEqual(web.calls[0].body, { request: text })
+  assert.deepEqual(answered.plan, { id: revised.id, revision: 3 })
+  assert.equal(answered.unchanged, false)
+  assert.deepEqual(answered.revision, {
+    changed: ['The Coaches page is now called Our team.'],
+    notDone: notDone.map(({ what, why }) => ({ what, why }))
+  })
+  assert.equal(JSON.stringify(answered).includes('outside_plan'), false, 'no reason code reaches the model')
+  assert.ok(answered.review)
+  assert.match(answered.next, /word for word/)
+  assert.match(answered.next, /plan card/)
+  assert.match(answered.next, /Do not say anything else changed/)
+  // Nothing changed: the model says so, and what was not done.
+  const same = fakeWeb({
+    'POST /api/build-draft/compose': {
+      body: {
+        step: 'revise',
+        state: 'done',
+        result: { plan: PLAN, brand: 'own', unchanged: true, revision: { changed: [], notDone } }
+      }
+    }
+  })
+  const nothing = await run(toolWith(same), { action: 'plan', request: 'Make it pop.' })
+  assert.equal(nothing.unchanged, true)
+  assert.match(nothing.next, /Nothing on the plan changed/)
+})
+
+test('a request longer than a change request holds is never sent: the owner is asked again in plain words', async () => {
+  const web = fakeWeb({})
+  const answered = await run(toolWith(web), { action: 'plan', request: 'a'.repeat(1001) })
+  assert.equal(web.calls.length, 0)
+  assert.equal(answered.say, 'That request is too long. Please keep it to 1000 characters or fewer.')
+  assert.match(answered.next, /shorter/)
 })
 
 test('plan sends restart only when it is true: starting over is its own intent', async () => {

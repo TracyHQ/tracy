@@ -180,6 +180,36 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
 }
 
 /**
+ * End the running revise step of `runner` (#609 over #617) with what `revisePlan` answered: a changed plan and its
+ * profile are written with the step's done state in one write, an unchanged one writes the done state only. Written
+ * only while the living plan is still `base` (the plan the request was made for): an edit made meanwhile answers
+ * `STALE_PLAN` and nothing is written. The undo and the last edit belonged to the plan before and are cleared.
+ * @param {{plan: object, profile: object, unchanged: boolean}} revised
+ * @param {{runner: string, base: {id: string, revision: number}, ended: object}} how `ended`: the done state's fields
+ */
+export function putRevised(pool, accountId, { plan, profile, unchanged }, { runner, base, ended }) {
+  if (!unchanged) {
+    const problems = planProblem(plan)
+    if (problems) return { error: 'INVALID_PLAN', problems }
+  }
+  return changeDraft(pool, accountId, (row) => {
+    if (row.engine?.state !== 'running' || row.engine.runner !== runner) return { error: 'NOT_RUNNING' }
+    if (row.plan?.id !== base.id || row.plan?.revision !== base.revision) return { error: 'STALE_PLAN' }
+    const engine = { ...row.engine, ...ended, state: 'done', endedAt: new Date().toISOString() }
+    if (unchanged) return { engine }
+    return {
+      engine,
+      plan,
+      needs_profile: profile,
+      template: plan.look.template,
+      last_edit: null,
+      undo_edit: null,
+      undo_profile: null
+    }
+  })
+}
+
+/**
  * Discard the living plan because the owner asked to start it over (#609, compose `restart`): the plan, its edits and
  * their undo go, the needs profile is research's again, and the plan's template stays chosen. The owner's answers, the
  * research and the brand record are kept. A draft with no plan is left as it is.

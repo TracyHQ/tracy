@@ -30,32 +30,30 @@ export const SAY = Object.freeze({
     'I need a name to show on your site before I can plan it, and I could not find one I am allowed to use. The team can see what happened.',
   links:
     'Please give me at least one link to your website, your Google Maps listing or one of your social pages, so I can read about your business.',
-  interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.'
+  interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.',
+  revise:
+    'I could not make that change, so your plan stays as it was. You can change any value on the plan card, or ask me in other words. The team can see what happened.',
+  stale: 'Your plan changed while I was working on your request, so I left it as it is. Please ask me again.'
 })
 
 /**
- * Said when compose is asked for on a draft that already holds a plan (#609): the plan is kept as it is, with every
- * value the owner changed on it. A written change request cannot be applied yet (Part 3's `revisePlan`, #617, is not
- * wired), so the owner is told so and offered what works. Plain English, no dashes.
+ * Said when the plan is asked for again, with no request, on a draft that already holds a plan (#609): the plan is kept
+ * as it is, with every value the owner changed on it. Plain English, no dashes.
  */
-export const UNCHANGED_REQUEST_SAY =
-  'I cannot change the plan from a written request yet. You can change any value on the plan card, or tell me to start the plan over.'
-/** The same, when no request was written: the plan on the card is the living one. Plain English, no dashes. */
 export const UNCHANGED_SAY =
-  'Your plan is ready on the card. You can change any value on it, or tell me to start the plan over.'
+  'Your plan is ready on the card. You can change any value on it, tell me what to change, or tell me to start the plan over.'
 
 /**
- * The answer of a compose asked for on a draft that holds a plan: the living plan, untouched, marked `unchanged`, with
+ * The answer of a compose asked for, with no request, on a draft that holds a plan: the living plan, untouched, marked `unchanged`, with
  * the sentence the owner reads. Nothing is started and the draft's engine state is not written.
  * @param {object} row the draft row (`engine-store.js readEngineRow`), holding a plan
- * @param {{request?: string}} body the compose request
  */
-export function unchangedOf(row, { request } = {}) {
+export function unchangedOf(row) {
   const lookSources = row.brand?.lookSources
   return {
     step: 'compose',
     state: 'done',
-    say: isText(request) ? UNCHANGED_REQUEST_SAY : UNCHANGED_SAY,
+    say: UNCHANGED_SAY,
     result: { plan: row.plan, brand: 'own', unchanged: true, ...(lookSources ? { lookSources } : {}) }
   }
 }
@@ -148,6 +146,18 @@ export function engineStateOf(row, { kit = null } = {}) {
   }
   // The brand step only prepares the look record the plan is composed from: nothing of it is answered but that it is there.
   if (step === 'brand') return { step, state, result: { look: 'ready' } }
+  // A change request (#617): the plan as it is now, and the lines the owner reads, as Part 3 wrote them.
+  if (step === 'revise')
+    return {
+      step,
+      state,
+      result: {
+        plan: row.plan,
+        brand: 'own',
+        unchanged: engine.unchanged === true,
+        revision: engine.revision ?? { changed: [], notDone: [] }
+      }
+    }
   const lookSources = row.brand?.lookSources
   return { step, state, result: { plan: row.plan, brand: 'own', ...(lookSources ? { lookSources } : {}) } }
 }

@@ -41,6 +41,8 @@ export function faultOf(step, { error, attempts }) {
     attempts,
     ...(error?.noRerun === true ? { noRerun: true } : {}),
     ...(typeof error?.reason === 'string' ? { reason: error.reason } : {}),
+    // A failed change request keeps the owner's own words with the verbatim problems (Part 3 reads real cases).
+    ...(typeof error?.requestText === 'string' ? { request: error.requestText } : {}),
     ...(Array.isArray(error?.details?.problems) ? { problems: error.details.problems.slice(0, 20) } : {})
   }
 }

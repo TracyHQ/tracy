@@ -22,6 +22,7 @@ import {
   SITE_NAME_QUESTION_ID,
   buildNeedsProfile,
   composePlan,
+  composerContextOf,
   researchOf,
   withheldOfBrief,
   withWithheld
@@ -119,7 +120,7 @@ export function planProfileOf(research, kit = null) {
 
 /**
  * Compose the plan for the chosen template from the needs profile, the owner's answers and the brand record. Answers
- * what `composePlan` answers (the plan passed the rules gate and its look check).
+ * what `composePlan` answers (the plan passed the rules gate and its look check), with the whole settled profile.
  *
  * 🔒 NOT `buildPlanStep`. That step builds the needs profile again (one more model call, and new question ids the
  * stored answers no longer name) and settles the brand record itself; here research already built the profile and the
@@ -140,7 +141,7 @@ export async function composeStep({ research, answers, template, brand }, { mode
   const ids = (p) => new Set((Array.isArray(p?.questions) ? p.questions : []).map((q) => q?.id))
   const kept = ids(profile)
   const dropped = [...ids(research?.profile), SITE_NAME_QUESTION_ID].filter((id) => !kept.has(id))
-  return composePlan({
+  const input = {
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,
     library: kit.library,
@@ -148,7 +149,11 @@ export async function composeStep({ research, answers, template, brand }, { mode
     brand,
     profile,
     answers: (Array.isArray(answers) ? answers : []).filter((a) => !dropped.includes(a?.question)),
-    planId: `plan-${randomUUID()}`,
-    model
-  })
+    planId: `plan-${randomUUID()}`
+  }
+  const composed = await composePlan({ ...input, model })
+  // `composePlan` hands on the profile without what the owner keeps off the site (for the page writer). The draft keeps
+  // the settled profile whole, with the `withheld` marker: the edit gate and a change request read it, and a card edit
+  // that shows the held name again must find it. The same pure settling `composePlan` did, no model call.
+  return { ...composed, profile: composerContextOf(input).profile }
 }

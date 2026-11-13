@@ -23,7 +23,8 @@ import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
 import { brandOf, composeStep, researchStep } from './engine-steps.js'
-import { discardPlan, putComposed, recordFault } from './store.js'
+import { discardPlan, putComposed, putRevised, recordFault } from './store.js'
+import { planRequestOf, reviseStep, revisionOf } from './engine-revise.js'
 
 /** The failures that mean the business's own look could not be shown (#616): the owner reads the brand sentence. */
 const BRAND_CODES = new Set([
@@ -58,6 +59,8 @@ export const SAY_CANCELLED =
 /** The stopped state of a fault: one sentence for the owner, and why, by its code. */
 export function stoppedOf(fault) {
   if (fault.code === BRAND_CANCEL_CODE) return { state: 'stopped', say: SAY_CANCELLED, reason: 'cancelled' }
+  // A change request that could not be applied leaves the living plan as it was: the owner reads that, not a stop.
+  if (fault.step === 'revise') return { state: 'stopped', say: SAY.revise, reason: 'revise-failed' }
   const look =
     BRAND_CODES.has(fault.code) ||
     (fault.code === 'plan_gate_failed' && (fault.problems ?? []).some((p) => LOOK_PROBLEMS.has(p?.code)))
@@ -170,6 +173,58 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
     })
   }
 
+  /**
+   * Without a look record for the kit's template, the brand step comes first (or its stopped state answers, when it
+   * already stopped for that template); null when the record is there.
+   */
+  function lookFirst(accountId, row, kit) {
+    if (brandFor(row, kit.template)) return null
+    if (
+      row.engine?.step === 'brand' &&
+      row.engine.state === 'stopped' &&
+      sameTemplate(row.engine, kit.template)
+    )
+      return Promise.resolve({ state: engineStateOf(row) })
+    return brand(accountId, row, kit)
+  }
+
+  /**
+   * Revise the living plan with the owner's written request (`engine-revise.js`), in the background. The plan and its
+   * profile are written only while the plan is still the one the request was made for; otherwise the owner is told and
+   * nothing changes. A failure stops with one sentence and the plan as it was; its fault keeps the request text.
+   */
+  function revise(accountId, row, kit, text) {
+    const template = kit.template
+    const request = planRequestOf(row.plan, text)
+    const base = { id: row.plan.id, revision: row.plan.revision }
+    const inputs = {
+      plan: row.plan,
+      profile: row.needs_profile,
+      request,
+      template,
+      brand: brandFor(row, template)
+    }
+    return start(accountId, 'revise', { request: text, plan: base, template }, async () => {
+      const model = await buildModel()
+      const ran = await runWithRerun((copy) => reviseStep(copy, { model, kit }), inputs)
+      if (!ran.ok) {
+        if (ran.error && typeof ran.error === 'object') ran.error.requestText = text
+        return ran
+      }
+      const ended = { unchanged: ran.value.unchanged === true, revision: revisionOf(ran.value) }
+      const put = await putRevised(pool, accountId, ran.value, { runner, base, ended })
+      if (put.error === 'STALE_PLAN')
+        return {
+          ok: true,
+          attempts: ran.attempts,
+          ended: { state: 'stopped', say: SAY.stale, reason: 'stale' },
+          columns: {}
+        }
+      if (put.error) throw Object.assign(new Error(`putRevised: ${put.error}`), { code: put.error })
+      return { ...ran, columns: {} }
+    })
+  }
+
   return {
     runner,
     /**
@@ -212,15 +267,16 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
      * Compose the plan for the chosen template from the stored brand record; it reaches the draft only through
      * `putComposed`. Without a record for the template, the brand step starts instead (or its stopped state answers).
      *
-     * 🔒 A LIVING PLAN IS NEVER REPLACED SILENTLY (#609). On a draft that holds a plan, compose runs nothing and answers
-     * that plan as it is, with the owner's edits, marked `unchanged` with the sentence the owner reads
-     * (`unchangedOf`): a written change request is not applied until Part 3's `revisePlan` (#617) is wired. Only
-     * `restart` (the owner asked to start the plan over) discards the plan and its edits, then composes as for a first
-     * plan.
+     * 🔒 A LIVING PLAN IS NEVER REPLACED SILENTLY (#609). On a draft that holds a plan, compose never composes: with a
+     * written request it runs the revise step (Part 3's `revisePlan`, #617), which changes only what the request names
+     * and keeps the owner's edits; with no request it answers the plan as it is, marked `unchanged` (`unchangedOf`).
+     * Only `restart` (the owner asked to start the plan over) discards the plan and its edits, then composes as for a
+     * first plan.
      */
     async compose(accountId, { request, restart }, inputRow, kit) {
       let row = inputRow
-      if (row.plan && !restart) return { state: unchangedOf(row, { request }) }
+      if (row.plan && !restart && !request) return { state: unchangedOf(row) }
+      if (row.plan && !restart) return lookFirst(accountId, row, kit) ?? revise(accountId, row, kit, request)
       if (row.plan) {
         // Never under a step this process still runs: that step answers.
         if (jobs.has(accountId)) return { state: { step: row.engine?.step ?? 'compose', state: 'running' } }
@@ -228,18 +284,14 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
         row = await readEngineRow(pool, accountId)
       }
       const template = kit.template
-      const record = brandFor(row, template)
-      if (!record) {
-        // The brand step of this template already stopped: its sentence answers, it is not run again here.
-        if (
-          row.engine?.step === 'brand' &&
-          row.engine.state === 'stopped' &&
-          sameTemplate(row.engine, template)
-        )
-          return { state: engineStateOf(row) }
-        return brand(accountId, row, kit)
+      const first = lookFirst(accountId, row, kit)
+      if (first) return first
+      const inputs = {
+        research: row.research,
+        answers: row.answers,
+        template,
+        brand: brandFor(row, template)
       }
-      const inputs = { research: row.research, answers: row.answers, template, brand: record }
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
         const model = await buildModel()
         const ran = await runWithRerun((copy) => composeStep(copy, { model, kit }), inputs)
