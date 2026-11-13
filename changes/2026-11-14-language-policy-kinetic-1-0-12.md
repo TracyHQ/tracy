@@ -1,0 +1,2 @@
+- **The language policy approves the exact lines of the JA Kinetic 1.0.12 contract** — Joomla T4 batch 1 · `chore/language-policy-kinetic-1-0-12` · 2026-11-14
+  **Affects:** the `language-policy` check of `feat/joomla-t4-batch-1-road-to-live` (#625). The accents are the template's own English demo text in the sealed contract (a person's name, an accented loanword for a CV and a Brazilian city); Vega 1.0.10 and Nova 1.0.12 have none. Merge this, then re-run that branch's check.
