@@ -9,18 +9,23 @@ import { seamLinkOf } from '../built-site-check/part-one-links.mjs'
 import { crawlSite, folderPages, pagePathOf } from '../built-site-check/site-pages.mjs'
 import { folderOf } from './fixtures/built-site-check/florist.mjs'
 
-/** A site of `count` pages, the home page linking to every other one. */
-const siteOf = (count) => async (url) => {
-  const home = new URL(url).pathname === '/'
-  const body = home
-    ? Array.from({ length: count - 1 }, (_, i) => `<a href="/p${i}">P</a>`).join('')
-    : '<p>x</p>'
-  return new Response(body, { status: 200, headers: { 'content-type': 'text/html' } })
-}
+/** A site whose home page links `count - 1` pages; the first of them links one page more when `deeper`. */
+const siteOf =
+  (count, deeper = false) =>
+  async (url) => {
+    const at = new URL(url).pathname
+    const body =
+      at === '/'
+        ? Array.from({ length: count - 1 }, (_, i) => `<a href="/p${i}">P</a>`).join('')
+        : at === '/p0' && deeper
+          ? '<a href="/deeper">D</a>'
+          : '<p>x</p>'
+    return new Response(body, { status: 200, headers: { 'content-type': 'text/html' } })
+  }
 
-test('a crawl stopped exactly at the cap with pages left says capped; one that read every page does not', async () => {
+test('a crawl whose last wave fills the cap exactly, with a page left, says capped; one that read all does not', async () => {
   const base = localBaseOf('http://florist.test/')
-  const exact = await crawlSite(base, { fetchImpl: siteOf(11), max: 10 })
+  const exact = await crawlSite(base, { fetchImpl: siteOf(10, true), max: 10 })
   assert.deepEqual([exact.pages.length, exact.capped], [10, true])
   const all = await crawlSite(base, { fetchImpl: siteOf(10), max: 10 })
   assert.deepEqual([all.pages.length, all.capped], [10, false])
