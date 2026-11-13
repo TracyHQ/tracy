@@ -119,33 +119,36 @@ export function rowContextOf(fields) {
  */
 export const isDataLike = (value) => /\p{N}/u.test(value) || /@|:\/\/|^www\.|\.[a-z]{2,}\//i.test(value)
 
-const depthOf = (id, rowsById) => {
-  let depth = 0
-  for (let at = rowsById.get(id)?.parent; at; at = rowsById.get(at)?.parent) depth += 1
-  return depth
-}
+/** The list instance a row field belongs to: its block, its item, its parent row and its list name. */
+const instanceOf = (f) =>
+  JSON.stringify([f.block, f.item ?? null, String(f.row).split('.').slice(0, -2).join('.'), f.list])
 
 /**
- * The data like values (`isDataLike`) of the rows of the SAME list as a row, for the copy check of the row's copy
- * field (`other_row_data`): the tip of one step must not carry the times of another step's tip. Rows of the same list
- * are told by what the plan data holds: rows at the same depth that hold a data kind this row holds, under the same
- * parent, or of other items for a list of items. The row's own values and its parent rows' values are its own.
+ * The data like values (`isDataLike`) of the OTHER rows of the same list instance as a row field, for the copy check of
+ * the row's copy field (`other_row_data`): the tip of one step must not carry the times of another tip of that step. The
+ * same list instance = the same block, the same item, the same parent row and the same list name; a list of another
+ * block, of another item or under another parent row is another list, and its values are never foreign here. The
+ * row's own values and its parent rows' values are its own.
+ * @param {object} field a field of `pageFieldsOf` (`row`, `list`, `rowData` on a row field)
+ * @param {object[]} fields the fields of the same page
+ * @param {object} data the plan data (`rowsById`)
+ * @returns {string[]}
  */
-export function foreignValuesOf(rowData, data) {
+export function foreignValuesOf(field, fields, data) {
+  if (!field?.row || field.rowData === undefined) return []
   const rowsById = data.rowsById ?? new Map()
-  const self = rowsById.get(rowData)
-  if (!self) return []
   const own = new Set()
-  for (let id = rowData; id; id = rowsById.get(id)?.parent)
+  for (let id = field.rowData; id; id = rowsById.get(id)?.parent)
     for (const parts of Object.values(rowsById.get(id)?.values ?? {})) for (const p of parts) own.add(p)
-  const kinds = new Set(Object.keys(self.values))
-  const depth = depthOf(rowData, rowsById)
+  const at = instanceOf(field)
+  const siblings = new Set(
+    fields
+      .filter((f) => f?.row && f.row !== field.row && f.rowData !== undefined && instanceOf(f) === at)
+      .map((f) => f.rowData)
+  )
   const out = new Set()
-  for (const [id, record] of rowsById) {
-    if (id === rowData || depthOf(id, rowsById) !== depth) continue
-    if (!Object.keys(record.values).some((k) => kinds.has(k))) continue
-    for (const parts of Object.values(record.values))
+  for (const id of siblings)
+    for (const parts of Object.values(rowsById.get(id)?.values ?? {}))
       for (const p of parts) if (!own.has(p) && isDataLike(p)) out.add(p)
-  }
   return [...out]
 }

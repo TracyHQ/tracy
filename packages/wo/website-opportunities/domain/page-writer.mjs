@@ -162,12 +162,13 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
     placeLimits: placeLimitsOf(blocks.values()),
     known: knownValuesOf(byId, data.rowsById)
   }
-  // A row's copy field is checked against the other rows' values: it never carries another row's data.
-  const fieldsByPage = plan.pages.map((page) =>
-    pageFieldsOf(page, context).map((f) =>
-      f.row && f.from === 'writer' ? { ...f, foreign: foreignValuesOf(f.rowData, data) } : f
+  // A row's copy field is checked against the other rows of its own list: it never carries a sibling row's data.
+  const fieldsByPage = plan.pages.map((page) => {
+    const fields = pageFieldsOf(page, context)
+    return fields.map((f) =>
+      f.row && f.from === 'writer' ? { ...f, foreign: foreignValuesOf(f, fields, data) } : f
     )
-  )
+  })
   const over = dataOverLimit(fieldsByPage)
   if (over.length > 0)
     throw new PageWriterError(

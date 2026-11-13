@@ -130,8 +130,24 @@ test('a deterministic writer failure before any call is not marked noRerun', asy
   assert.equal(error.noRerun, undefined)
 })
 
-test('an answered label longer than its field is data_over_limit, a plan matter marked noRerun', async () => {
-  const { plan, profile } = await planWithButton('Reserve a court today')
+test('an answer within the template limit is copied verbatim; a longer one is refused before the plan', async () => {
+  // 18 characters: exactly what the top bar's button holds.
+  const fits = 'Reserve a court!!!'
+  const { plan, profile } = await planWithButton(fits)
+  const model = writer()
+  const { pages } = await writePages({ plan, profile, blockStore: blockStore(), library: library(), model })
+  const label = pages[0].fields.find((f) => f.key === 'home-b1/cta_label')
+  assert.deepEqual([label.from, label.value], ['data', fits])
+  // One character more is refused by the answer settling (answer_invalid), so it never reaches the writer.
+  const refused = await planWithButton(`${fits}!`).catch((e) => e)
+  assert.deepEqual([refused.code, refused.noRerun], ['answer_invalid', true])
+  assert.match(refused.details.problems[0].message, /19 characters, longer than the 18/)
+})
+
+test('a data value longer than its field that still reaches the writer is data_over_limit, marked noRerun', async () => {
+  const { plan, profile } = await planWithButton('Reserve a court!!!')
+  // Past the answer gate (a stored profile edited by hand): the writer still refuses it, at once.
+  profile.facts['contact.cta_label'][0].value = 'Reserve a court today'
   const error = await writePages({
     plan,
     profile,

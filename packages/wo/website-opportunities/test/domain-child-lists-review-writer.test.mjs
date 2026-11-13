@@ -35,38 +35,59 @@ test('a row copy field may name the data of a row of ANOTHER list: only its own 
   assert.equal(copy.pages[0].fields.find((f) => f.key === TIP(grid)).value, 'Sat 10:00 to 12:00')
 })
 
-test('only the rows of the same list count, and only values with a digit, a link or an email', () => {
+test('only the OTHER rows of the same list instance count, and only values with a digit, a link or an email', () => {
   const record = (id, values, parent = null) => [id, { id, owner: 'service-x', parent, values, rows: [] }]
   const data = {
     rowsById: new Map([
       record('step-1', { 'step.title': ['Throw the pot'] }),
       record('step-1-tip', { 'step.description': ['Keep it wet'] }, 'step-1'),
+      record('step-1-tip-2', { 'step.description': ['Rest it 10 minutes'] }, 'step-1'),
       record('step-2', { 'step.title': ['Glaze'] }),
-      record('step-2-tip', { 'step.description': ['Rest it 10 minutes'] }, 'step-2'),
+      record('step-2-tip', { 'step.description': ['Dry it 2 days'] }, 'step-2'),
       record('session-1', { 'offering.schedule': ['Mon', '10:00 to 12:00'] }),
       record('session-2', { 'offering.schedule': ['Sat', '09:00 to 11:00'] }),
-      record('teacher-link', { 'person.social_url': ['https://instagram.com/invented.teacher'] }),
-      record('teacher-link-2', { 'person.social_url': ['https://youtube.com/@invented-teacher'] })
+      record('session-b', { 'offering.schedule': ['Sun', '09:00 to 11:00'] }),
+      record('session-c', { 'offering.schedule': ['Tue', '18:00 to 20:00'] })
     ])
   }
-  // A tip is checked against the other tips only: never the sessions' times or the teacher's links.
-  const foreign = foreignValuesOf('step-1-tip', data)
-  assert.deepEqual(foreign, ['Rest it 10 minutes'])
-  // A session against the other sessions: their times, never a plain day name.
-  assert.deepEqual(foreignValuesOf('session-2', data), ['10:00 to 12:00'])
-  assert.deepEqual(foreignValuesOf('teacher-link', data), ['https://youtube.com/@invented-teacher'])
+  // One page: block b1 item WHEEL lists steps (each with tips) and sessions; item HAND lists sessions; block b2 too.
+  const row = (block, item, list, row, rowData) => ({ block, item, list, row, rowData, from: 'writer' })
+  const fields = [
+    row('b1', WHEEL, 'steps', 'steps.1', 'step-1'),
+    row('b1', WHEEL, 'tips', 'steps.1.tips.1', 'step-1-tip'),
+    row('b1', WHEEL, 'tips', 'steps.1.tips.2', 'step-1-tip-2'),
+    row('b1', WHEEL, 'steps', 'steps.2', 'step-2'),
+    row('b1', WHEEL, 'tips', 'steps.2.tips.1', 'step-2-tip'),
+    row('b1', WHEEL, 'sessions', 'sessions.1', 'session-1'),
+    row('b1', WHEEL, 'sessions', 'sessions.2', 'session-2'),
+    row('b1', HAND, 'sessions', 'sessions.1', 'session-b'),
+    row('b2', WHEEL, 'sessions', 'sessions.1', 'session-c'),
+    { block: 'b1', key: 'b1/title', from: 'writer' }
+  ]
+  const foreign = (i) => foreignValuesOf(fields[i], fields, data)
+  // A tip against the other tips of the SAME step only: never the tips of another step.
+  assert.deepEqual(foreign(1), ['Rest it 10 minutes'])
+  assert.deepEqual(foreign(4), [])
+  // A session against the other sessions of the same item's list: their times, never a plain day name.
+  assert.deepEqual(foreign(6), ['10:00 to 12:00'])
+  // The same times held by another item's list, or by a list of another block, are not this list's.
+  assert.deepEqual(foreign(7), [])
+  assert.deepEqual(foreign(8), [])
+  // A field outside a row has no foreign values.
+  assert.deepEqual(foreign(9), [])
   const field = { name: 'tip', type: 'text', kind: 'step.description', limit: 60 }
-  const codes = (value) => fieldValueProblems(field, value, { foreign }).map((p) => p.code)
-  assert.deepEqual(codes('Sat 10:00 to 12:00'), [])
-  assert.deepEqual(codes('Rest it 10 minutes after'), ['other_row_data'])
+  const codes = (value, i) => fieldValueProblems(field, value, { foreign: foreign(i) }).map((p) => p.code)
+  // A time from a sibling row of the same list still fails ...
+  assert.deepEqual(codes('Mon 10:00 to 12:00', 6), ['other_row_data'])
+  assert.deepEqual(codes('Rest it 10 minutes after', 1), ['other_row_data'])
+  // ... the same time held by a row of another item's list, or of another block, passes.
+  assert.deepEqual(codes('Sat 09:00 to 11:00', 7), [])
+  assert.deepEqual(codes('Sun 09:00 to 11:00', 8), [])
+  assert.deepEqual(codes('Rest it 10 minutes after', 4), [])
   // A phrase of words alone is never data: another step's title may be used freely.
-  assert.deepEqual(foreignValuesOf('step-2', data), [])
-  assert.deepEqual(
-    fieldValueProblems(field, 'Throw the pot first', { foreign: foreignValuesOf('step-2', data) }),
-    []
-  )
+  assert.deepEqual(foreign(3), [])
   assert.match(
-    fieldValueProblems(field, 'Rest it 10 minutes after', { foreign }).at(-1).message,
+    fieldValueProblems(field, 'Rest it 10 minutes after', { foreign: foreign(1) }).at(-1).message,
     /belongs to another row/
   )
 })
