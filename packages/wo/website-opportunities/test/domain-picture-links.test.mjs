@@ -146,13 +146,25 @@ test('own or customer: the stated uploader first, a Google author named as the b
   assert.equal(ownershipOf(places('Pat Visitor'), 'Lantern Hill Racquet Club'), 'unknown')
 })
 
-test("a build draft picture is the owner's own, unless its source states a guest uploaded it (#597)", () => {
-  assert.equal(ownershipOf({ id: 'd1', origin: 'draft', sha256: 'a'.repeat(64) }, null), 'owner')
-  assert.equal(ownershipOf({ id: 'd2', origin: 'draft' }, 'Lantern Hill'), 'owner')
+test('a build draft picture ranks as the same picture would without its origin: only its own channel is the owner (#597)', () => {
+  // The business's own channels and the customer's own upload.
+  for (const source of ['website', 'facebook', 'instagram', 'tiktok', 'youtube', 'owner'])
+    assert.equal(ownershipOf({ id: `d-${source}`, origin: 'draft', source }, 'Lantern Hill'), 'owner', source)
+  // A visitor's photo from a map or review listing stays a visitor's, draft or not.
+  const visitor = { source: 'google', credit: { authors: 'Jane Visitor' } }
+  assert.equal(ownershipOf({ id: 'd1', origin: 'draft', ...visitor }, 'Lantern Hill'), 'unknown')
+  assert.equal(ownershipOf({ id: 'd2', origin: 'draft', source: 'tripadvisor' }, 'Lantern Hill'), 'unknown')
   assert.equal(
-    ownershipOf({ id: 'd3', origin: 'draft', uploaderRole: 'customer' }, 'Lantern Hill'),
+    ownershipOf({ id: 'd3', origin: 'draft', source: 'google', credit: { photoSource: 'review' } }, null),
     'customer'
   )
+  assert.equal(ownershipOf({ id: 'd4', origin: 'draft' }, 'Lantern Hill'), 'unknown')
+  assert.equal(
+    ownershipOf({ id: 'd5', origin: 'draft', uploaderRole: 'customer' }, 'Lantern Hill'),
+    'customer'
+  )
+  for (const m of [{ ...visitor }, { source: 'tripadvisor' }, { source: 'website' }])
+    assert.equal(ownershipOf({ ...m, origin: 'draft' }, 'Lantern Hill'), ownershipOf(m, 'Lantern Hill'))
   assert.equal(ownershipOf({ id: 'p1', origin: 'place' }, null), 'unknown')
 })
 

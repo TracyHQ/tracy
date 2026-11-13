@@ -69,16 +69,30 @@ const planPages = (plan, Failure) => {
  * so the step chain runs it beside the page writers (#597).
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
  *   pictures?: object[]}} input `pictures` adds own picture records the profile does not hold (a video of the
- *   business's own channel); `vision` is the standard build model's vision call (the labelling)
+ *   business's own channel); `vision` is the standard build model's vision call (the labelling); `refuse(picture)`
+ *   true keeps a picture off the site, asked before the labelling and again with the label it got (`refused`: their ids)
  * @returns {Promise<{frames: object[], reduced: object[], droppedFrames: object[], counts: object, notes: object[],
- *   leftOut: object[], difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null}>}
+ *   leftOut: object[], difference: object | null, labelled: string[], refused?: string[],
+ *   prompt: {file: string, sha256: string} | null}>}
  *   `difference` is set whenever the placed own or generated count is not the plan's estimate (`differenceOf`)
  */
-export async function placeBuildPictures({ plan, profile, blockStore, library = [], vision, pictures = [] }) {
+export async function placeBuildPictures({
+  plan,
+  profile,
+  blockStore,
+  library = [],
+  vision,
+  pictures = [],
+  refuse
+}) {
   planPages(plan, PicturePolicyError)
   const data = planDataOf(profile)
-  const records = [...ownPicturesOf(data), ...list(pictures)]
-  const labelling = await labelOwnPictures({ pictures: records, vision })
+  // A refused picture is never shown to the vision call nor placed: its frame has no own photo (the policy decides).
+  const allowed = (p) => typeof refuse !== 'function' || !refuse(p)
+  const records = [...ownPicturesOf(data), ...list(pictures)].filter(allowed)
+  const labelled = await labelOwnPictures({ pictures: records, vision })
+  const refused = labelled.pictures.filter((p) => !allowed(p)).map((p) => p.id)
+  const labelling = { ...labelled, pictures: labelled.pictures.filter(allowed) }
   // The plan's pictures summary is an estimate: it is compared with what is placed (`difference`), never a cap.
   const approved = plan.pictures ?? {}
   const assignment = assignPictures({
@@ -92,6 +106,8 @@ export async function placeBuildPictures({ plan, profile, blockStore, library = 
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
     labelled: labelling.labelled,
+    // Only a step that asks to refuse pictures is told which were.
+    ...(typeof refuse === 'function' ? { refused } : {}),
     prompt: labelling.prompt
   }
 }

@@ -11,7 +11,7 @@
 // whose text names a held person is withheld: the model never reads it, the gate refuses it (`withheld_shown`) and the
 // plan lists it as left out with a neutral `what` and `WITHHELD_REASON`. Pure.
 import { nameHeldOf, siteNameOf } from './held-name.mjs'
-import { heldNamesIn, heldPeopleOf } from './held-reviews.mjs'
+import { heldNamesIn, heldPeopleOf, heldSlugsIn } from './held-reviews.mjs'
 import { limitsOf, siteNameMissing, withSiteNameQuestion } from './plan-site-name-question.mjs'
 
 /** Whether nothing names the site: the business name is held and no neutral identity stands in for it (#593 G4). */
@@ -50,8 +50,32 @@ export function namesHeld(values, people) {
   return values.flat(2).some((v) => typeof v === 'string' && heldNamesIn(v, people).length > 0)
 }
 const fieldValues = (fields) => Object.values(fields ?? {}).map((f) => f?.value)
+
+/** Whether any value names a held text as whole words or in slug form (an address, a file name, an id). */
+export function namesHeldInAnyForm(values, texts) {
+  if (texts.length === 0) return false
+  return values
+    .flat(2)
+    .some(
+      (v) => typeof v === 'string' && (heldNamesIn(v, texts).length > 0 || heldSlugsIn(v, texts).length > 0)
+    )
+}
+
+/** Where a record says nothing it shows: who stated it and how sure, never a text of the site. */
+const NOT_TEXT = new Set(['sources', 'confidence'])
+/** Every text an item holds: its id, label, alt, caption and title, and every field value (addresses and files too). */
+export function itemTextsOf(item) {
+  const out = []
+  const walk = (value, depth) => {
+    if (typeof value === 'string') out.push(value)
+    else if (value && typeof value === 'object' && depth < 6)
+      for (const [key, inner] of Object.entries(value)) if (!NOT_TEXT.has(key)) walk(inner, depth + 1)
+  }
+  walk(item, 0)
+  return out
+}
 const recordValues = (record) =>
-  record?.what === 'fact' ? [record.entry?.value] : fieldValues(record?.source?.fields)
+  record?.what === 'fact' ? [record.entry?.value] : itemTextsOf(record?.source)
 
 /** Rows without those whose text names a held person, nested rows included. */
 function keptRows(rows, people) {
@@ -119,7 +143,9 @@ export function withWithheld(profile, research, template = {}) {
 
 /**
  * The plan ids the owner keeps off the site: the business name facts while the name is held with no neutral identity,
- * and every fact and every item (of any kind, by any of its fields) whose text names a held person.
+ * and every fact and every item (of any kind) whose text names a held text (`namesHeldInAnyForm`): an item by its id,
+ * label, alt, caption, title or any field value, so a photo research says shows a held person, or whose file is
+ * named after one, is withheld whole (its id is never renamed).
  * @param {{byId: Map<string, object>}} data the plan data (`plan-data.mjs`)
  * @param {{name?: boolean, siteName?: string, people?: string[]} | undefined} withheld the needs profile's `withheld`
  * @returns {Set<string>}
@@ -130,8 +156,7 @@ export function withheldIdsOf(data, withheld) {
   const people = heldTextsOf(withheld)
   for (const [id, record] of data.byId) {
     const nameHeld = withheld.name === true && !withheld.siteName && record.kind === 'business.name'
-    const values = recordValues(record)
-    if (nameHeld || namesHeld(values, people)) out.add(id)
+    if (nameHeld || namesHeldInAnyForm(recordValues(record), people)) out.add(id)
   }
   return out
 }
@@ -159,7 +184,7 @@ export function withoutWithheld(profile) {
     Object.entries(profile.facts ?? {}).filter(
       ([kind, values]) =>
         !(withheld.name === true && !withheld.siteName && kind === 'business.name') &&
-        !namesHeld(
+        !namesHeldInAnyForm(
           list(values).map((f) => f?.value),
           people
         )
@@ -168,7 +193,7 @@ export function withoutWithheld(profile) {
   const items = Object.fromEntries(
     Object.entries(profile.items ?? {}).map(([kind, values]) => [
       kind,
-      list(values).filter((item) => !namesHeld(fieldValues(item?.fields), people))
+      list(values).filter((item) => !namesHeldInAnyForm(itemTextsOf(item), people))
     ])
   )
   return { ...profile, facts, items }

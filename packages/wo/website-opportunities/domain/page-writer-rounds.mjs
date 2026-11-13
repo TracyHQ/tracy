@@ -35,16 +35,24 @@ function failingOf(before, own, context) {
   })
 }
 
-/** Every page written in parallel, checked together, its failing fields rewritten once, checked together again. */
-export async function writeAll(states, { plan, context, model, signal, others }) {
+/**
+ * Every page written in parallel, checked together, its failing fields rewritten once, checked together again. With
+ * `rewrite: false` (a build that already wrote these pages once) there is no rewrite round: a page is written at most
+ * twice in one build. A call failing in the rewrite round is `noRerun`: running the step again would write a third time.
+ */
+export async function writeAll(states, { plan, context, model, signal, others, rewrite: rewriting = true }) {
   let rewrite = new Map(states.map((s) => [s, undefined]))
-  for (let n = 0; n < PAGE_WRITE_ATTEMPTS; n++) {
+  const rounds = rewriting ? PAGE_WRITE_ATTEMPTS : 1
+  for (let n = 0; n < rounds; n++) {
     const calling = states.filter((s) => s.slots.length > 0 && rewrite.has(s))
     const settled = await Promise.allSettled(
       calling.map((state) => callPage(state, { plan, context, model, signal, rewrite: rewrite.get(state) }))
     )
     const rejected = settled.find((r) => r.status === 'rejected')
-    if (rejected) throw rejected.reason
+    if (rejected) {
+      if (n > 0 && rejected.reason && typeof rejected.reason === 'object') rejected.reason.noRerun = true
+      throw rejected.reason
+    }
     const checked = n === 0 ? states : states.filter((s) => rewrite.has(s))
     const kept = states.filter((s) => !checked.includes(s)).map(writtenOf)
     const failing = failingOf([...others, ...kept], checked, context)

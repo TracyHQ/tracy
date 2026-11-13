@@ -18,6 +18,26 @@ export const heldNamesIn = (text, names) =>
     new RegExp(`(?<![\\p{L}\\p{N}])${escapeRe(n)}(?![\\p{L}\\p{N}])`, 'iu').test(String(text ?? ''))
   )
 
+/**
+ * The pattern of a held name in slug form: its letters and digits word by word, any separator or none between them
+ * (`pellam-orrick`, `pellam_orrick`, `PellamOrrick`), case ignored. A name of one word stays a whole word; a name of
+ * two words or more is distinctive enough to be found inside a longer slug (`pellam-orrick2.jpg`).
+ */
+function slugPatternOf(name) {
+  const words = String(name ?? '')
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+  if (words.length === 0) return null
+  const body = words.map(escapeRe).join('[^\\p{L}\\p{N}]*')
+  return words.length === 1
+    ? new RegExp(`(?<![\\p{L}\\p{N}])${body}(?![\\p{L}\\p{N}])`, 'iu')
+    : new RegExp(body, 'iu')
+}
+
+/** The held names a text writes in slug form (an address, a file name, an id), `slugPatternOf`. */
+export const heldSlugsIn = (text, names) =>
+  names.filter((n) => slugPatternOf(n)?.test(String(text ?? '')) === true)
+
 /** The reviews that name someone held off the site, each with `namesHeld` and its text (for `isHeldReviewQuote`). */
 export function reviewsNamingHeld(reviews, names) {
   if (!names?.length) return []

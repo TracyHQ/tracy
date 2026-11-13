@@ -78,10 +78,11 @@ function dataOverLimit(fieldsByPage) {
 /**
  * Write every page of a plan, in parallel.
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], mapping?: object, others?: object[],
- *   model: (request: object) => Promise<unknown>, signal?: AbortSignal}} input `plan`: the approved plan
+ *   model: (request: object) => Promise<unknown>, signal?: AbortSignal, rewrite?: boolean}} input `plan`: the approved plan
  *   (`composePlan`); `profile`: the needs profile it was composed from, which holds the item field values and the
  *   business's voice; `mapping`: the template mapping, for its SEO limits; `others`: pages written before by another
- *   writer step (`{id, fields, seo?}`), which this call's pages must not repeat
+ *   writer step (`{id, fields, seo?}`), which this call's pages must not repeat; `rewrite: false` writes once with no
+ *   rewrite round (the step chain's second attempt, so a page is written at most twice in one build)
  * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[], seo?: object}>, prompt: object}>}
  *   `seo`: the page's search `title` and `description` when the writer wrote them; `attempts`:
  *   one entry per call that page took (1, or 2 after a rewrite); each page's
@@ -97,7 +98,8 @@ export async function writePages({
   mapping,
   others = [],
   model,
-  signal
+  signal,
+  rewrite = true
 }) {
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
@@ -140,7 +142,14 @@ export async function writePages({
     unreadable: [],
     failing: []
   }))
-  await writeAll(states, { plan, context, model, signal, others: Array.isArray(others) ? others : [] })
+  await writeAll(states, {
+    plan,
+    context,
+    model,
+    signal,
+    others: Array.isArray(others) ? others : [],
+    rewrite
+  })
   const pages = states.map((s) => ({
     id: s.page.id,
     fields: pageOut(s),
