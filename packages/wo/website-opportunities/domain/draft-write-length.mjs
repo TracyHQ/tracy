@@ -7,11 +7,10 @@
 //                  space included) is one space, no space at either end; then normalised to NFC, so a letter and its
 //                  combining accent count once, as they show.
 //   visibleLength  the visible text in code points: an emoji is one, a flag (two regional indicators) is two.
-//   doorLength     what the plugin compares a slot's `maxCharacters` with: the visible text for a text slot, and the
-//                  raw value in code points for a text slot stored in a fixed width column (title, name, alias, ...),
-//                  a link or a picture path. Not normalised, and an entity is read only with its semicolon, exactly as
-//                  the plugin reads it. The write plan sends NFC text (`draft-write-plan.mjs`), so for a text slot it
-//                  equals the visible length.
+//   doorLength     what the plugin compares a slot's `maxCharacters` with, computed as its PHP computes it
+//                  (`draft-write-door-length.mjs`): close to the visible length for a text slot, but with PHP's own
+//                  tag patterns, entity table, white space and trim; the raw value in code points for a text slot
+//                  stored in a fixed width column (title, name, alias, ...), a link or a picture path.
 //
 // Code points, not grapheme clusters: a family emoji or a flag shows as one glyph and would be one grapheme
 // (`Intl.Segmenter`), but the door counts code points, and the kit's limits were measured in them; counting graphemes
@@ -25,42 +24,27 @@ const INLINE_TAG = new RegExp(
   'gi'
 )
 const OTHER_TAG = /<\s*\/?\s*[a-z][a-z0-9-]*(?:\s[^<>]*)?\/?\s*>|\(\(\/?[a-z][a-z0-9]*(?:\s[^()]*)?\/?\)\)/gi
-/** The white space the plugin folds (PCRE `\s` without Unicode classes, and the no-break space). */
+/**
+ * The white space a visitor reads as one space: the ASCII white space a browser folds, and the no-break space, as the
+ * kit's limits were measured. The door folds more (Unicode white space): `doorLength` counts that apart.
+ */
 const SPACES = /[\t\n\v\f\r \u00a0]+/g
 
-function seen(value, strict) {
+function seen(value) {
   const words = String(value ?? '')
     .replace(INLINE_TAG, '')
     .replace(OTHER_TAG, ' ')
-  return decodeEntities(words, { strict }).replace(SPACES, ' ').trim()
+  return decodeEntities(words).replace(SPACES, ' ').trim()
 }
 const codePoints = (text) => [...text].length
 
 /** The text a visitor reads of a value (see the head of this file). */
-export const visibleTextOf = (value) => seen(value, false).normalize('NFC')
+export const visibleTextOf = (value) => seen(value).normalize('NFC')
 
 /** How many characters a visitor reads: the unit of every text limit. */
 export const visibleLength = (value) => codePoints(visibleTextOf(value))
 
-/** Columns of a fixed width that store a text slot's raw string (the plugin's `FIXED_WIDTH_COLUMNS`). */
-export const FIXED_WIDTH_COLUMNS = Object.freeze([
-  'title',
-  'name',
-  'alias',
-  'label',
-  'con_position',
-  'telephone',
-  'mobile',
-  'email_to'
-])
-
-/** The length the plugin compares a blank site contract slot's `maxCharacters` with. */
-export function doorLength(slot, value) {
-  const raw = String(value ?? '')
-  if (slot?.type !== 'text' || typeof slot.column !== 'string' || FIXED_WIDTH_COLUMNS.includes(slot.column))
-    return codePoints(raw)
-  return codePoints(seen(raw, true))
-}
+export { doorLength, FIXED_WIDTH_COLUMNS } from './draft-write-door-length.mjs'
 
 const nfc = (v) => (typeof v === 'string' ? v.normalize('NFC') : v)
 /**

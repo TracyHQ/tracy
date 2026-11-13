@@ -1,104 +1,10 @@
 // The words a value shows, read the way a browser reads them (ticket #597): every numeric character reference
-// (decimal and hex, with or without its semicolon) and the named ones a value may plausibly carry, so a held name or a
-// `javascript:` address cannot hide behind `&#39;`, `&euml;`, `&colon;` or `&Tab;`. A letter with an accent is
-// decoded from its name (`euml` is `e` with a diaeresis), the rest from a table. A name the table does not know stays
-// as it is, as a browser shows an unknown one. Pure.
+// (decimal and hex, with or without its semicolon) and every HTML5 name (`draft-write-entity-table.mjs`), so a held
+// name or a `javascript:` address cannot hide behind `&#39;`, `&euml;`, `&colon;` or `&Tab;`. A made up letter name
+// with an accent (`&qacute;`) is read as that letter and accent too, so a held name matches in it whatever a browser
+// shows. Any other unknown name stays as it is, as a browser shows it. Pure.
+import { LEGACY_REFERENCES, NAMED_REFERENCES } from './draft-write-entity-table.mjs'
 
-const NAMED = {
-  amp: '&',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  apos: "'",
-  nbsp: '\u00a0',
-  ensp: '\u2002',
-  emsp: '\u2003',
-  thinsp: '\u2009',
-  zwnj: '\u200c',
-  zwj: '\u200d',
-  lrm: '\u200e',
-  rlm: '\u200f',
-  shy: '\u00ad',
-  Tab: '\t',
-  NewLine: '\n',
-  colon: ':',
-  semi: ';',
-  sol: '/',
-  bsol: '\\',
-  lpar: '(',
-  rpar: ')',
-  lsqb: '[',
-  rsqb: ']',
-  lbrack: '[',
-  rbrack: ']',
-  lcub: '{',
-  rcub: '}',
-  lbrace: '{',
-  rbrace: '}',
-  period: '.',
-  comma: ',',
-  excl: '!',
-  quest: '?',
-  num: '#',
-  dollar: '$',
-  percnt: '%',
-  ast: '*',
-  plus: '+',
-  equals: '=',
-  lowbar: '_',
-  grave: '`',
-  verbar: '|',
-  vert: '|',
-  commat: '@',
-  Hat: '^',
-  hyphen: '\u2010',
-  dash: '\u2010',
-  ndash: '\u2013',
-  mdash: '\u2014',
-  lsquo: '\u2018',
-  rsquo: '\u2019',
-  sbquo: '\u201a',
-  ldquo: '\u201c',
-  rdquo: '\u201d',
-  bdquo: '\u201e',
-  laquo: '\u00ab',
-  raquo: '\u00bb',
-  lsaquo: '\u2039',
-  rsaquo: '\u203a',
-  hellip: '\u2026',
-  middot: '\u00b7',
-  bull: '\u2022',
-  prime: '\u2032',
-  copy: '\u00a9',
-  reg: '\u00ae',
-  trade: '\u2122',
-  euro: '\u20ac',
-  pound: '\u00a3',
-  yen: '\u00a5',
-  cent: '\u00a2',
-  sect: '\u00a7',
-  para: '\u00b6',
-  deg: '\u00b0',
-  times: '\u00d7',
-  divide: '\u00f7',
-  szlig: '\u00df',
-  aelig: '\u00e6',
-  AElig: '\u00c6',
-  oelig: '\u0153',
-  OElig: '\u0152',
-  oslash: '\u00f8',
-  Oslash: '\u00d8',
-  eth: '\u00f0',
-  ETH: '\u00d0',
-  thorn: '\u00fe',
-  THORN: '\u00de',
-  dstrok: '\u0111',
-  Dstrok: '\u0110',
-  lstrok: '\u0142',
-  Lstrok: '\u0141',
-  iexcl: '\u00a1',
-  iquest: '\u00bf'
-}
 /** The combining mark of each accent name of HTML's letter entities (`eacute`, `Ouml`, `ccedil`, `scaron`). */
 const ACCENTS = {
   acute: '\u0301',
@@ -115,11 +21,9 @@ const ACCENTS = {
   breve: '\u0306',
   dblac: '\u030b'
 }
-/** The names a browser also reads without their semicolon (the legacy ones). */
-const LEGACY = new Set(['amp', 'lt', 'gt', 'quot', 'nbsp', 'copy', 'reg'])
 
 function named(name) {
-  if (Object.hasOwn(NAMED, name)) return NAMED[name]
+  if (NAMED_REFERENCES.has(name)) return NAMED_REFERENCES.get(name)
   const letter = /^([a-zA-Z])([a-z]+)$/.exec(name)
   if (letter && Object.hasOwn(ACCENTS, letter[2])) return (letter[1] + ACCENTS[letter[2]]).normalize('NFC')
   return null
@@ -131,18 +35,21 @@ function codePoint(n) {
 }
 
 /**
- * A text with every character reference read, as a browser reads it (a legacy name or a number without its
- * semicolon too). `strict`: only references closed by their semicolon, as the plugin's `html_entity_decode` reads
- * them (`draft-write-length.mjs doorLength`).
+ * A text with every character reference read, as a browser reads it: every HTML5 name (`draft-write-entity-table.mjs`),
+ * a legacy name or a number without its semicolon too. The plugin's own reading (semicolon only, PHP's rules) is
+ * `phpEntityDecode` of `draft-write-door-length.mjs`.
  */
-export function decodeEntities(text, { strict = false } = {}) {
+export function decodeEntities(text) {
   return String(text).replace(
     /&(?:#[xX]([0-9a-fA-F]+)(;?)|#(\d+)(;?)|([a-zA-Z][a-zA-Z0-9]*)(;?))/g,
     (m, hex, hexSemi, dec, decSemi, name, semi) => {
-      if (strict && !(hexSemi || decSemi || semi)) return m
       if (hex !== undefined) return codePoint(Number.parseInt(hex, 16))
       if (dec !== undefined) return codePoint(Number(dec))
-      if (!semi && !LEGACY.has(name) && !/^[a-zA-Z](acute|grave|circ|uml|tilde|ring|cedil)$/.test(name))
+      if (
+        !semi &&
+        !LEGACY_REFERENCES.has(name) &&
+        !/^[a-zA-Z](acute|grave|circ|uml|tilde|ring|cedil)$/.test(name)
+      )
         return m
       return named(name) ?? m
     }
