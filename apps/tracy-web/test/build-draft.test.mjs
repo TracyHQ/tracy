@@ -9,7 +9,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { after, before, beforeEach, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { composePlan } from 'website-opportunities/domain'
+import { composePlan, siteNameQuestionOf } from 'website-opportunities/domain'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildApp } from '../src/app.js'
 import { aiQuickstartCatalogue } from '../src/build-draft/ai-quickstarts.js'
@@ -214,6 +214,33 @@ test(
     const second = await call(OWNER, 'PUT', '/answers', { question, answer: text })
     assert.deepEqual(second.body.draft.answers, [text])
     assert.equal(second.body.draft.questions.length, 1)
+  }
+)
+
+test(
+  'a site name answer is typed text with no choice; a choice or a name past the limit is refused',
+  opts,
+  async () => {
+    await call(OWNER, 'POST')
+    const siteName = siteNameQuestionOf(new Map([['business.name', 20]]))
+    assert.deepEqual(siteName.choices, [])
+    const answer = (extra) => ({ schema: 'tracy-build-answer/v1', question: 'site-name', ...extra })
+    const typed = answer({ text: 'Riverside Courts' })
+    const stored = await call(OWNER, 'PUT', '/answers', { question: siteName, answer: typed })
+    assert.equal(stored.status, 200, JSON.stringify(stored.body))
+    assert.deepEqual(stored.body.draft.answers, [typed])
+    for (const wrong of [
+      answer({ choice: 'riverside' }),
+      answer({ text: 'Riverside Courts and Racquets' })
+    ]) {
+      const refused = await call(OWNER, 'PUT', '/answers', { question: siteName, answer: wrong })
+      assert.equal(refused.status, 422, JSON.stringify(wrong))
+      assert.equal(refused.body.code, 'INVALID_ANSWER')
+    }
+    // A site name question that offers a choice could show the held name: it is refused.
+    const offering = { ...siteName, choices: [{ id: 'held', label: 'Some held name' }] }
+    assert.equal((await call(OWNER, 'PUT', '/answers', { question: offering, answer: typed })).status, 422)
+    assert.deepEqual((await call(OWNER, 'GET')).body.draft.answers, [typed])
   }
 )
 

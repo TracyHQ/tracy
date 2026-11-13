@@ -12,7 +12,6 @@ import { brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
 import * as brands from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-brands.mjs'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildApp } from '../src/app.js'
-import { SAY } from '../src/build-draft/engine-state.js'
 import { changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
@@ -49,12 +48,12 @@ after(db.close)
 after(() => rmSync(KIT_ROOT, { recursive: true, force: true }))
 
 /** One running server (one process): its doors, called as the owner's build chat, and its engine. */
-function server(buildEngine = {}) {
+function server(buildEngine = {}, aiQuickstarts = kits) {
   const app = buildApp({
     config,
     pool: db.pool,
     mail: { send: async () => {} },
-    aiQuickstarts: kits,
+    aiQuickstarts,
     buildEngine
   })
   async function call(method, path, body, { as = OWNER, session } = {}) {
@@ -602,23 +601,96 @@ test(
   }
 )
 
+/** The club's kit with a footer field that holds the business name in at most 20 characters. */
+function limitKits() {
+  const loadKit = (slug) => {
+    const kit = kits.loadKit(slug)
+    if (!kit) return kit
+    const blockStore = structuredClone(kit.blockStore)
+    blockStore.blocks
+      .find((b) => b.id === 'footer-main')
+      .fields.push({ name: 'brand', kind: 'business.name', type: 'text', limit: 20 })
+    return { ...kit, blockStore }
+  }
+  return { ...kits, loadKit }
+}
+/** The owner's answer to a question, stored as the tool stores it: through the answers door, once. */
+const answerWith = (s, question, text) =>
+  s.call('PUT', '/answers', {
+    question,
+    answer: { schema: 'tracy-build-answer/v1', question: question.id, text }
+  })
+
 test(
-  'a held name with nothing else to name the site stops before any model call, with its sentence and a fault',
+  'a held name with nothing else to name the site asks the owner for a name, then the plan shows the typed name',
   opts,
   async () => {
-    const model = club.scriptedModel()
+    const c = club.goodComposition()
+    c.pages.splice(1, 1)
+    c.assumptions = []
+    const model = club.scriptedModel(JSON.stringify(c))
     const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
     await researchedClub(s, { research: heldClubResearch(null) })
     const { ended } = await askPlan(s)
-    assert.deepEqual(ended.body, {
-      step: 'compose',
-      state: 'stopped',
-      say: SAY.siteName,
-      reason: 'site-name-missing'
-    })
+    assert.equal(ended.body.step, 'compose')
+    assert.equal(ended.body.state, 'asking')
+    assert.equal('say' in ended.body, false)
+    const [question] = ended.body.result.questions
+    assert.equal(question.id, 'site-name')
+    assert.deepEqual(question.choices, [])
+    assert.deepEqual(ended.body.result.ask.questions, [
+      { id: 'site-name', question: question.prompt, options: [], multiSelect: false }
+    ])
     assert.equal(model.calls.length, 0)
-    const { fault, plan } = await row(s)
-    assert.deepEqual([fault.code, fault.attempts, fault.noRerun], ['site_name_missing', 1, true])
-    assert.equal(plan, null)
+    assert.equal((await row(s)).fault, null, 'an open question is not a fault')
+    assert.equal((await row(s)).plan, null)
+    const stored = await answerWith(s, question, 'Riverside Courts')
+    assert.equal(stored.status, 200, JSON.stringify(stored.body))
+    const again = await askPlan(s)
+    assert.equal(again.ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    const plan = JSON.stringify((await row(s)).plan)
+    for (const held of ['Brindlewick', 'Ilse Varrow', 'Osric Vale'])
+      assert.equal(plan.includes(held), false, held)
+    assert.deepEqual(
+      (await row(s)).plan.facts.filter((f) => f.kind === 'business.name').map((f) => f.value),
+      ['Riverside Courts']
+    )
+  }
+)
+
+test(
+  'a site name longer than the design holds asks again with the limit; a shorter one is planned',
+  opts,
+  async () => {
+    const c = club.goodComposition()
+    c.pages.splice(1, 1)
+    c.assumptions = []
+    const model = club.scriptedModel(JSON.stringify(c))
+    const s = server(
+      { buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true },
+      limitKits()
+    )
+    await researchedClub(s, { research: heldClubResearch(null) })
+    // The research card, read with the chosen template's kit, holds the question to its limit already.
+    await changeDraft(db.pool, await s.accountId(), () => ({ engine: { step: 'research', state: 'done' } }))
+    const card = await s.call('GET', '/engine')
+    const question = card.body.result.questions.find((q) => q.id === 'site-name')
+    assert.equal(question.freeText.maxLength, 20)
+    // An answer stored against an older card (no kit yet, 120 characters) is longer than this design holds.
+    const older = { ...question, freeText: { ...question.freeText, maxLength: 120 } }
+    assert.equal((await answerWith(s, older, 'Riverside Courts and Racquets')).status, 200)
+    const { ended } = await askPlan(s)
+    assert.equal(ended.body.state, 'asking')
+    assert.equal(
+      ended.body.say,
+      'That name is too long for this design. Please keep it to 20 characters or fewer.'
+    )
+    assert.equal(DASHES.test(ended.body.say), false)
+    assert.equal(ended.body.result.questions[0].freeText.maxLength, 20)
+    assert.equal(model.calls.length, 0)
+    assert.equal((await row(s)).fault, null)
+    assert.equal((await answerWith(s, ended.body.result.questions[0], 'Riverside Courts')).status, 200)
+    const again = await askPlan(s)
+    assert.equal(again.ended.body.state, 'done', JSON.stringify((await row(s)).fault))
   }
 )

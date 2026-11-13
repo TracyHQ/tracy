@@ -19,6 +19,7 @@
  */
 import { randomUUID } from 'node:crypto'
 import {
+  SITE_NAME_QUESTION_ID,
   buildNeedsProfile,
   composePlan,
   researchOf,
@@ -100,21 +101,20 @@ export function withheldOfResearch(research) {
 }
 
 /**
- * Whether nothing may name the site: the business name is held and no neutral identity stands in for it (#593 G4).
- * Replaced by `siteNameMissing` of `website-opportunities/domain` once the domain exports it.
- */
-const siteNameMissingOf = (withheld) => withheld?.name === true && !withheld.siteName
-
-/**
  * The needs profile as the plan step reads it (`plan-step.mjs` `buildPlanStep`): with what the owner keeps off the site
  * attached by `withWithheld` (the held name goes by the neutral identity, held people and what names them are
- * withheld, questions about either are dropped). The stored profile as it is when nothing is held. Applied once, to
- * the profile research stored: applying it twice would hold the neutral name itself.
+ * withheld, questions about either are dropped). While the name is held and nothing neutral names the site, the site
+ * name question comes first among its questions, its free text held to the kit's business name limit when a kit is
+ * known (120 characters without one). The stored profile as it is when nothing is held. Applied once, to the profile
+ * research stored: applying it twice would hold the neutral name itself.
  * @param {{profile?: object, withheld?: object, brief?: object} | null | undefined} research
+ * @param {{blockStore?: object, library?: object[]} | null} [kit] the chosen template's kit, when known
  */
-export function planProfileOf(research) {
+export function planProfileOf(research, kit = null) {
   const withheld = withheldOfResearch(research)
-  return withheld ? withWithheld(research?.profile, { withheld }) : research?.profile
+  if (!withheld) return research?.profile
+  const template = kit?.blockStore ? { blockStore: kit.blockStore, library: kit.library ?? [] } : {}
+  return withWithheld(research?.profile, { withheld }, template)
 }
 
 /**
@@ -124,26 +124,22 @@ export function planProfileOf(research) {
  * 🔒 NOT `buildPlanStep`. That step builds the needs profile again (one more model call, and new question ids the
  * stored answers no longer name) and settles the brand record itself; here research already built the profile and the
  * brand step already ran (`engine.js`). So compose does the rest of it exactly as that step does: `withWithheld` on the
- * stored profile, then `composePlan` with the stored brand record. A site nothing may name stops first with
- * `site_name_missing` (`noRerun`), before any model call.
+ * stored profile (with the kit, so the site name answer is held to the template's limit), then `composePlan` with the
+ * stored brand record. `composePlan` itself stops a site nothing may name: `site_name_missing` while the site name
+ * question is open, `site_name_too_long` when the answer is longer than the template holds, both before any model
+ * call and `noRerun` (`engine-asking.js` turns them into a question for the owner).
  * @param {{research: object, answers: object[], template: object, brand: object | null}} inputs
  * @param {{model: Function, kit: object}} tools
  */
 export async function composeStep({ research, answers, template, brand }, { model, kit }) {
-  const profile = planProfileOf(research)
-  // As `buildPlanStep` does: a site nothing may name stops before any model call, and is never run again.
-  if (siteNameMissingOf(profile?.withheld))
-    throw new EngineStepError(
-      'site_name_missing',
-      'the business name is kept off the site and nothing else names the site',
-      { noRerun: true }
-    )
+  const profile = planProfileOf(research, kit)
   // An answer to a question the withheld profile drops (about the held name or a held person) settles nothing that is
-  // shown, and `composePlan` would refuse it as no question of the profile (`answer_invalid`). Any other answer goes on
-  // as it is, so a wrong one is still refused.
+  // shown, and `composePlan` would refuse it as no question of the profile (`answer_invalid`). So does a site name
+  // answer kept from a research that held the name, once the research no longer does. Any other answer goes on as it
+  // is, so a wrong one is still refused.
   const ids = (p) => new Set((Array.isArray(p?.questions) ? p.questions : []).map((q) => q?.id))
   const kept = ids(profile)
-  const dropped = [...ids(research?.profile)].filter((id) => !kept.has(id))
+  const dropped = [...ids(research?.profile), SITE_NAME_QUESTION_ID].filter((id) => !kept.has(id))
   return composePlan({
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,

@@ -1388,7 +1388,7 @@ export const PEOPLE_ROUTES = [
       properties: { links: { type: 'array', items: { type: 'string' } }, description: { type: 'string' } }
     },
     answers:
-      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}`, `{step: 'compose', state: 'asking', say?, result: {questions, ask}}` or `{step, state: 'stopped', say, reason?}`"
   },
   // src/build-draft/engine-route.js
   {
@@ -1408,13 +1408,13 @@ export const PEOPLE_ROUTES = [
     path: '/api/build-draft/compose',
     summary: 'Compose the build plan of my draft',
     description:
-      "Body `{request?}`. Starts the compose step in the background (`{step: 'compose', state: 'running'}`): the plan composer reads the stored needs profile, the owner's answers and the chosen template's kit, its rules gate checks the plan, and the plan reaches the draft only that way. The look comes from the look record the brand step before the site (#616) stored in the draft for the chosen template, and follows its rules (a business with no logo keeps the template accent, said on the plan). Without a record for that template this door starts the brand step instead (`{step: 'brand', state: 'running'}`; done reads `result: {look: 'ready'}`, then compose is asked again), or answers the brand step's stopped state when it already stopped for that template. A missing or broken record, a kept accent no rule covers, or a plan the gate refused for its look stops with `reason: 'brand-unavailable'` and never shows the template's look. Done: `result: {plan, brand: 'own', lookSources?}`. 409 `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`; 400 `INVALID_REQUEST`. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
+      "Body `{request?}`. Starts the compose step in the background (`{step: 'compose', state: 'running'}`): the plan composer reads the stored needs profile, the owner's answers and the chosen template's kit, its rules gate checks the plan, and the plan reaches the draft only that way. The look comes from the look record the brand step before the site (#616) stored in the draft for the chosen template, and follows its rules (a business with no logo keeps the template accent, said on the plan). Without a record for that template this door starts the brand step instead (`{step: 'brand', state: 'running'}`; done reads `result: {look: 'ready'}`, then compose is asked again), or answers the brand step's stopped state when it already stopped for that template. A missing or broken record, a kept accent no rule covers, or a plan the gate refused for its look stops with `reason: 'brand-unavailable'` and never shows the template's look. Done: `result: {plan, brand: 'own', lookSources?}`. While research keeps the business name off the site and nothing neutral names it, the owner is asked for a name first: compose ends `asking` (no fault) with `result: {questions: [the site-name question], ask}`, before any model call, and with `say` (the limit in plain words) when the stored name is longer than the template's business name fields hold; the answer goes through `PUT /api/build-draft/answers` and compose is asked again. 409 `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`; 400 `INVALID_REQUEST`. Called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session` must be that person's `session-build-<uuid>`, else 403 `NOT_BUILD_SESSION`), or by a signed-in browser. 403 `BUILD_CHAT_OFF` when the operator switched the build chat off; 401 `NOT_SIGNED_IN`. Each refusal carries `code` and `next`. Responses are not cached.",
     audience: ['agent'],
     auth: 'session-or-actor',
     internal: true,
     body: { type: 'object', properties: { request: { type: 'string' } } },
     answers:
-      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}`, `{step: 'compose', state: 'asking', say?, result: {questions, ask}}` or `{step, state: 'stopped', say, reason?}`"
   },
   // src/build-draft/engine-route.js
   {
@@ -1432,7 +1432,7 @@ export const PEOPLE_ROUTES = [
       properties: { changes: { type: 'array', items: { type: 'object', required: ['field', 'value'] } } }
     },
     answers:
-      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}`, `{step: 'compose', state: 'asking', say?, result: {questions, ask}}` or `{step, state: 'stopped', say, reason?}`"
   },
   // src/build-draft/engine-route.js
   {
@@ -1445,7 +1445,7 @@ export const PEOPLE_ROUTES = [
     auth: 'session-or-actor',
     internal: true,
     answers:
-      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}` or `{step, state: 'stopped', say, reason?}`"
+      "`EngineState`: `{step: null, state: 'idle'}`, `{step, state: 'running'}`, `{step, state: 'done', result}`, `{step: 'compose', state: 'asking', say?, result: {questions, ask}}` or `{step, state: 'stopped', say, reason?}`"
   },
   // src/onboarding/route.js
   {

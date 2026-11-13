@@ -9,6 +9,10 @@
  *
  * 🔒 A FAULT IS NEVER A QUESTION. A stopped step carries one plain sentence (`say`) for the owner and nothing else
  * the owner sees; what went wrong is the draft's `fault`, for the team.
+ *
+ * 🔒 AN OPEN QUESTION IS NEVER A FAULT. A compose that needs the owner's answer first (the site name, `engine-asking.js`)
+ * ends `asking`: its `result` carries the one question and its card, whatever the draft holds for it (an answer that
+ * did not fit is replaced by the next one), and `say` the sentence that tells the owner why, when there is one.
  */
 import { planProfileOf } from './engine-steps.js'
 
@@ -28,6 +32,10 @@ export const SAY = Object.freeze({
     'Please give me at least one link to your website, your Google Maps listing or one of your social pages, so I can read about your business.',
   interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.'
 })
+
+/** Said when the owner's site name is longer than the chosen design's name fields hold. Plain English, no dashes. */
+export const siteNameTooLongSay = (limit) =>
+  `That name is too long for this design. Please keep it to ${limit} characters or fewer.`
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -63,9 +71,14 @@ export function askOf(questions, answers) {
   }
 }
 
-/** What research found, small: the business's name and how many facts and items of each kind it holds. */
+/**
+ * What research found, small: the business's name and how many facts and items of each kind it holds. Read from the
+ * profile as the plan step reads it (`planProfileOf`): a held name goes by its neutral identity, and with none the
+ * name is empty, so the model is never handed the name the owner keeps off the site.
+ */
 export function profileSummaryOf(profile) {
-  const names = list(profile?.facts?.['business.name'])
+  const held = profile?.withheld?.name === true && !isText(profile.withheld.siteName)
+  const names = held ? [] : list(profile?.facts?.['business.name'])
   const business = names.map((n) => n?.value).find(isText) ?? ''
   const counts = { facts: Object.keys(profile?.facts ?? {}).length }
   for (const [kind, items] of Object.entries(profile?.items ?? {})) counts[kind] = list(items).length
@@ -75,18 +88,26 @@ export function profileSummaryOf(profile) {
 /**
  * The engine state of a draft row (`engine-store.js readEngineRow`) as the doors answer it.
  * @param {object | null} row
+ * @param {{kit?: {blockStore: object, library: object[]} | null}} [options] the chosen template's kit, when the draft
+ *   names one: the site name question is held to its business name limit
  */
-export function engineStateOf(row) {
+export function engineStateOf(row, { kit = null } = {}) {
   const engine = row?.engine
   if (!engine) return { step: null, state: 'idle' }
   const { step, state } = engine
   if (state === 'running') return { step, state }
   if (state === 'stopped')
     return { step, state, say: engine.say ?? SAY.fault, ...(engine.reason ? { reason: engine.reason } : {}) }
+  if (state === 'asking') {
+    const questions = engine.question ? [engine.question] : []
+    const ask = askOf(questions, [])
+    if (!ask) return { step, state: 'stopped', say: SAY.fault }
+    return { step, state, ...(isText(engine.say) ? { say: engine.say } : {}), result: { questions, ask } }
+  }
   if (step === 'research') {
-    const profile = row.research?.profile
     // The questions compose settles: none about what the owner keeps off the site (`planProfileOf`).
-    const questions = list(planProfileOf(row.research)?.questions)
+    const profile = planProfileOf(row.research, kit)
+    const questions = list(profile?.questions)
     const ask = askOf(questions, row.answers)
     return {
       step,

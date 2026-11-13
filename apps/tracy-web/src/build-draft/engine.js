@@ -6,7 +6,8 @@
  * 🔒 A STEP SURVIVES ITS REQUEST, NOT ITS PROCESS. Each runner has an id of its own (one per process). A step left
  * `running` by another runner is a step whose process ended: the next read stops it with a fault (`stopOrphan`), so the
  * chat never waits on it forever. A step that fails twice, or once with `noRerun` (`engine-rerun.js`), is recorded as
- * the draft's fault (`recordFault`) and the owner reads one sentence (`SAY`).
+ * the draft's fault (`recordFault`) and the owner reads one sentence (`SAY`). A compose that needs the owner's answer
+ * (the site name question, `engine-asking.js`) ends `asking` instead: no fault, the question goes on the card.
  *
  * The only plan writer used here is `putComposed`: the plan that comes out of the plan composer and its rules gate.
  *
@@ -20,7 +21,8 @@ import { randomUUID } from 'node:crypto'
 import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf } from './engine-state.js'
-import { brandOf, composeStep, researchStep } from './engine-steps.js'
+import { askingOf } from './engine-asking.js'
+import { brandOf, composeStep, planProfileOf, researchStep } from './engine-steps.js'
 import { putComposed, recordFault } from './store.js'
 
 /** The failures that mean the business's own look could not be shown (#616): the owner reads the brand sentence. */
@@ -40,9 +42,9 @@ const BRAND_CODES = new Set([
 const LOOK_PROBLEMS = new Set(['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
 const RESEARCH_CODES = new Set(['research_unusable', 'research_empty', 'research_unavailable'])
 /**
- * The stops only the owner could lift, and cannot yet (#609, #593 G4): `site_name_missing`, the business name is kept
- * off the site and nothing else names it. Each says its own sentence and is recorded as a fault, since no card can ask
- * for the missing input yet. Once Contract B has a question topic for the site name, this becomes that question.
+ * The stops only the owner could lift, when the failure carries no question to ask (#609, #593 G4):
+ * `site_name_missing` without `details.question`. With its question the step ends `asking` instead
+ * (`engine-asking.js`); this sentence is the fallback, recorded as a fault since no card can ask for the input.
  */
 const OWNER_INPUT_CODES = Object.freeze({
   site_name_missing: { say: 'siteName', reason: 'site-name-missing' }
@@ -108,7 +110,7 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
   async function finish(accountId, step, run) {
     const ran = await run().catch((error) => ({ ok: false, error, attempts: 1 }))
     if (ran.ok) {
-      const ended = await endStep(pool, accountId, runner, { state: 'done' }, ran.columns, now)
+      const ended = await endStep(pool, accountId, runner, ran.ended ?? { state: 'done' }, ran.columns, now)
       // Once the draft names the new research, what it replaced goes (the pictures of older research runs).
       await ran.after?.().catch(() => null)
       return ended
@@ -227,7 +229,11 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
       return start(accountId, 'compose', { ...(request ? { request } : {}), template }, async () => {
         const model = await buildModel()
         const ran = await runWithRerun((copy) => composeStep(copy, { model, kit }), inputs)
-        if (!ran.ok) return ran
+        if (!ran.ok) {
+          // The owner has one more thing to answer (the site name): a question on the card, not a fault.
+          const asking = askingOf(ran.error, () => planProfileOf(row.research, kit))
+          return asking ? { ok: true, attempts: ran.attempts, ended: asking, columns: {} } : ran
+        }
         const { lookSources } = ran.value
         const put = await putComposed(pool, accountId, ran.value, {
           runner,
@@ -237,14 +243,19 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
         return { ...ran, columns: {} }
       })
     },
-    /** The engine state of the account's draft; a step whose process ended is stopped first. */
+    /**
+     * The engine state of the account's draft; a step whose process ended is stopped first. The chosen template's kit,
+     * when there is one, holds the site name question to its limit.
+     */
     async read(accountId) {
       const row = await readEngineRow(pool, accountId)
       if (row?.engine?.state === 'running' && !(row.engine.runner === runner && jobs.has(accountId))) {
         await stopOrphan(pool, accountId, () => false, { state: 'stopped', say: SAY.interrupted }, now)
         return engineStateOf(await readEngineRow(pool, accountId))
       }
-      return engineStateOf(row)
+      const chosen = row?.plan?.look?.template ?? row?.template
+      const kit = chosen?.slug ? kits.loadKit(chosen.slug) : null
+      return engineStateOf(row, { kit })
     },
     /** Resolves when the account's step of this process has ended (tests, and a clean shutdown). */
     settled: (accountId) => jobs.get(accountId) ?? Promise.resolve()

@@ -324,7 +324,7 @@ test('a draft researched before research kept withheld gets it again from its st
   assert.equal(planProfileOf(plain), plain.profile)
 })
 
-test('a held name with nothing else to name the site stops before any model call with its own sentence', async () => {
+test('a held name with nothing else to name the site stops before any model call; with no question its sentence is the fallback', async () => {
   const model = club.scriptedModel()
   await assert.rejects(
     composeHeld({ profile: club.clubProfile(), brief: heldClubBrief(null) }, model),

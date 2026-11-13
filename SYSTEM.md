@@ -877,7 +877,9 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   state of the latest step with the id of the process that runs it, so a step left running by a restart reads as stopped
   with a fault; the composed plan and its step's done state are one write (`putComposed` with the runner). A failed
   step runs once more with the same inputs, never after a `noRerun` failure; the second failure records `fault` and the
-  owner reads one sentence. Research reads the owner's links in memory ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js),
+  owner reads one sentence. A compose that needs the owner's site name first (`site_name_missing`, `site_name_too_long`)
+  records no fault: it ends `asking` with the question ([`build-draft/engine-asking.js`](apps/tracy-web/src/build-draft/engine-asking.js)),
+  and the answer comes back through the same answers door. Research reads the owner's links in memory ([`build-draft/gather.js`](apps/tracy-web/src/build-draft/gather.js),
   wired in `build-draft-gather-wiring.js` `preSiteGatherer`): the Website Opportunities link door judges and guards them, the
   executor's connectors read the website and social pages (its page, post and charge limits, the account's daily paid
   run count), Google Place Details reads a matched Google place, and `mergeProfile` / `fromPlace` / `makeSiteBrief`

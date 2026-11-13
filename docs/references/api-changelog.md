@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-14: The build chat asks the owner for a site name instead of stopping
+
+Changed (internal): `POST /api/build-draft/compose` and `GET /api/build-draft/engine` may answer `{step: 'compose', state: 'asking', say?, result: {questions, ask}}`: while research keeps the business name off the site and nothing neutral names it, compose asks for a name first (the Contract B `site-name` question, free text, `choices: []`), and asks again with `say` when the stored name is longer than the chosen template holds. It is no fault and records none. The research `result.questions` carries the same question, held to the chosen template's limit once a template is chosen, and `result.profile.business` is empty while the name is held. `PUT /api/build-draft/answers` accepts the `site-name` answer `{question, text}`. Public API v1 is unchanged.
+
 ## 2026-11-13: The build chat's engine doors run research and compose before a site exists
 
 Added (internal): `POST /api/build-draft/research`, `GET /api/build-draft/templates`, `POST /api/build-draft/compose`, `POST /api/build-draft/edit` and `GET /api/build-draft/engine`, called by the build chat tool `tracy_build` as the person who typed (`x-tracy-actor`) in their build session (`x-tracy-session`). Research and compose run in the background and answer an `EngineState` (`idle`, `running`, `done` with `result`, `stopped` with `say`); `GET /engine` reads it again. Refusals: 403 `NOT_BUILD_SESSION`, `BUILD_CHAT_OFF`; 409 `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`, `NO_PLAN`, `STALE_EDIT`; 422 `INVALID_EDIT` with `problems: string[]`; 400 `INVALID_REQUEST`. Changed (internal): the existing build draft doors also accept `x-tracy-actor` with the caller's own build session; another session answers 403 `NOT_BUILD_SESSION`. Public API v1 is unchanged.
