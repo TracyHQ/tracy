@@ -20,9 +20,11 @@ Rules:
 1. Use only the ids of `business`. Never name a service, person, review, photo or fact that is not listed there, and
    never change a value. A business with three services shows three services.
 2. Use only blocks of `blocks` and page types of `recipes`. A page keeps its recipe's `mainBlock`; leave out a page
-   whose main block has nothing to show.
+   whose main block has nothing to show. A `template` block goes only on a page whose recipe lists it; a `library`
+   block may go on any page. A block appears at most once on a page.
 3. A block that shows items (services, team, reviews, gallery and so on) shows at least `items.min` and at most
-   `items.max` of them, of the kind its type shows. A block with nothing to show is left out.
+   `items.max` of them, of the kind its type shows. A block with nothing to show is left out. A fact goes into a
+   block that shows items only when that block has a field of the fact's `kind`.
 4. Put first what matters most to this business: the order of `data` in a block is the order shown.
 5. Every block has a `label` (a short name the customer reads, like "Services") and a `reason`: one plain sentence,
    for the customer, saying why this block fits this business. Speak to the customer as "you". No dashes.
@@ -30,7 +32,8 @@ Rules:
 7. List in `assumptions` what you assumed where the sources were silent, each with the plan `field` it sets (for
    example `language`, `facts[contact-hours].value`, `pages[home].name`) and what you assumed, in one sentence.
 8. List in `leftOut` every page, block or item you chose not to show, with the reason in one sentence. For an item,
-   give its id as `item`.
+   give its id as `item`. Never list an item you also show.
+9. Use exactly the keys of the shape below, nothing else, and list an id at most once in a `data` list.
 
 Reply with JSON only, in this shape:
 

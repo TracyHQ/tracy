@@ -5,12 +5,15 @@
 //   3. a Tracy library block of that type, styled through the template's design variables, for the items its content
 //      rules accept (`library.mjs`: a Google review of four or five stars, for example);
 //   4. else a left out entry with the reason.
-// Photos are the exception to 4: a photo with no gallery block stays in the pictures pool (`plan-look-pictures.mjs`).
-// Pure: placed pages in, new pages, left out entries and what was placed out.
+// A photo with no gallery block stays in the pictures pool (`plan-look-pictures.mjs`) and is reported as such. A new
+// template block goes only on a page whose recipe lists it (`plan-placement-pages.mjs`). Facts are placed by
+// `plan-placement-facts.mjs`. Pure: placed pages in, new pages, left out entries (with the ids they name) and what was
+// placed out.
 import { libraryEntryProblem } from './library.mjs'
 import { ITEM_KINDS } from './needs-profile-merge.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { ITEM_NOUNS } from './plan-data.mjs'
+import { extraBlockId, insertBlock, pageFor } from './plan-placement-pages.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const ownTypeOf = (block, kind) => BLOCK_TYPES[block.type]?.itemKind === kind
@@ -26,16 +29,18 @@ const shownIds = (pages) => new Set(pages.flatMap((p) => p.blocks.flatMap((b) =>
 /**
  * Place every item no block shows and the model did not leave out.
  * @param {object[]} pages placed pages: `{id, pageType, blocks: [{id, type, block, source, label, data, reason}]}`
- * @param {{data: object, blocks: Map<string, object>, leftOutIds?: Set<string>}} context `blocks`: id -> description of
- *   every block of the template's store and of the Tracy library
- * @returns {{pages: object[], leftOut: object[], placed: Array<{item: string, page: string, block: string, how: string}>}}
+ * @param {{data: object, blocks: Map<string, object>, recipes?: Map<string, object>, leftOutIds?: Set<string>}} context
+ *   `blocks`: id -> description of every block of the template's store and of the Tracy library; `recipes`: page type
+ *   -> its recipe (without it a new block goes to the home page)
+ * @returns {{pages: object[], leftOut: Array<{what: string, kind: string, reason: string, id: string}>,
+ *   placed: Array<{item: string, page: string, block: string, how: string}>}} each left out entry names the `id` of
+ *   the item it reports (drop it before the plan: Contract B has no such key)
  */
-export function placeExtraData(pages, { data, blocks, leftOutIds = new Set() }) {
+export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new Set() }) {
   const out = structuredClone(pages)
   const shown = shownIds(out)
   const placed = []
   const leftOut = []
-  const home = out.find((p) => p.pageType === 'home') ?? out[0]
   const byKind = new Map()
   for (const item of data.items) {
     if (shown.has(item.id) || leftOutIds.has(item.id)) continue
@@ -61,7 +66,9 @@ export function placeExtraData(pages, { data, blocks, leftOutIds = new Set() }) 
       if (remaining.length === 0) break
       if (remaining.length < Math.max(description.items.min, 1)) continue
       if (placedBlocks.has(description.id) || !fit(description)) continue
-      const id = `${home.id}-extra-${home.blocks.length + 1}`
+      const page = pageFor(out, description, recipes)
+      if (!page) continue
+      const id = extraBlockId(page)
       const taken = remaining.splice(0, description.items.max)
       const noun = ITEM_NOUNS[kind] ?? 'items'
       const block = {
@@ -76,9 +83,8 @@ export function placeExtraData(pages, { data, blocks, leftOutIds = new Set() }) 
             ? `The template has no section for your ${noun}, so they use a Tracy section drawn in the style of your template.`
             : `More of your ${noun}, shown in a section of the template made for them.`
       }
-      const footer = home.blocks.findIndex((b) => b.type === 'footer')
-      home.blocks.splice(footer === -1 ? home.blocks.length : footer, 0, block)
-      for (const item of taken) placed.push({ item: item.id, page: home.id, block: id, how })
+      insertBlock(page, block, recipes?.get(page.pageType))
+      for (const item of taken) placed.push({ item: item.id, page: page.id, block: id, how })
     }
   }
 
@@ -100,14 +106,17 @@ export function placeExtraData(pages, { data, blocks, leftOutIds = new Set() }) 
     }
     const fitting = remaining.filter((item) => !refusedBy.has(item.id))
     tier(fitting, kind, 'Tracy library block', (d) => library.includes(d))
-    if (kind === 'gallery') continue
     for (const item of remaining.filter((i) => refusedBy.has(i.id) || fitting.includes(i)))
       leftOut.push({
+        id: item.id,
         what: item.label,
         kind: 'item',
-        reason: refusedBy.has(item.id)
-          ? `Not shown in the Tracy section: ${refusedBy.get(item.id)}.`
-          : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
+        reason:
+          kind === 'gallery'
+            ? 'No photo section has room for it; it stays with your photos and may fill a picture spot of a page.'
+            : refusedBy.has(item.id)
+              ? `Not shown in the Tracy section: ${refusedBy.get(item.id)}.`
+              : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
       })
   }
   return { pages: out, leftOut, placed }

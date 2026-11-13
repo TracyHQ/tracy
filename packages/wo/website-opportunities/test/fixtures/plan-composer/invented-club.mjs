@@ -9,6 +9,48 @@ const CLUB = json('../needs-profile/tennis-club.json')
 
 export const clubResearch = () => structuredClone(CLUB)
 export const clubProfile = () => needsProfileOf(CLUB.research, CLUB.reading)
+
+/**
+ * The invented club with three more disagreements: a price (asked: an important fact of an item), the head coach's
+ * role (an item field that is never asked) and the founding year (a business fact that is never asked).
+ */
+export function conflictedClubResearch() {
+  const club = clubResearch()
+  const [site, gmaps, insta] = club.research.sources
+  site.text += ' Founded in 1987.'
+  gmaps.fields['business.founded_year'] = '1989'
+  insta.captions.push('Adult group lessons now $28 per session.', 'Say hello to Ilse Varrow, our club coach.')
+  club.reading.facts.push({
+    source: 'site',
+    kind: 'business.founded_year',
+    value: '1987',
+    evidence: 'Founded in 1987.'
+  })
+  club.reading.items.push(
+    {
+      source: 'insta',
+      kind: 'service',
+      fields: { 'offering.name': 'Adult group lessons', 'offering.price': '$28 per session' },
+      evidence: 'Adult group lessons now $28 per session.'
+    },
+    {
+      source: 'insta',
+      kind: 'person',
+      fields: { 'person.name': 'Ilse Varrow', 'person.role': 'club coach' },
+      evidence: 'Ilse Varrow, our club coach.'
+    }
+  )
+  return club
+}
+export const conflictedClubProfile = () => {
+  const club = conflictedClubResearch()
+  return needsProfileOf(club.research, club.reading)
+}
+export const PHONE_QUESTION = 'fact-conflict.facts.contact.phone'
+export const PRICE_QUESTION = 'fact-conflict.items.service.service-adult-group-lessons.offering.price'
+/** A Contract B answer to `question`: `{choice}`, `{text}` or `{skipped: true}`. */
+export const answer = (question, form) => ({ schema: 'tracy-build-answer/v1', question, ...form })
+
 export const blockStore = () => json('./block-store.json')
 export const pageRecipes = () => json('./page-recipes.json')
 export const library = () => json('./library.json').blocks

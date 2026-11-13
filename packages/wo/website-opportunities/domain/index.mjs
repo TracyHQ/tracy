@@ -151,13 +151,19 @@ export {
   PLAN_COMPOSER_PROMPT_FILE,
   PLAN_COMPOSE_ATTEMPTS,
   PlanComposerError,
+  blockMapOf,
   buildPlanStep,
   composePlan,
   composerContextOf,
   planComposerRequest
 } from './plan-composer.mjs'
 export { gatePlan } from './plan-gate.mjs'
+export { gateEditedPlan } from './plan-edit-gate.mjs'
+export { ANSWER_SOURCE, settleAnswers } from './plan-answers.mjs'
+export { dataAccountingOf } from './plan-accounting.mjs'
+export { conflictAssumptionsOf } from './plan-conflicts.mjs'
 export { placeExtraData } from './plan-placement.mjs'
+export { placeExtraFacts } from './plan-placement-facts.mjs'
 export { lookOf, picturesOf } from './plan-look-pictures.mjs'
 export { CANDIDATES_MAX, contentCatalog, iconCandidates, subjectWordsOf } from './icon-candidates.mjs'
 export { ICON_PAINT_ROLES, ICON_SOURCES, iconCountsOf, iconProblemsOf } from './icon-check.mjs'

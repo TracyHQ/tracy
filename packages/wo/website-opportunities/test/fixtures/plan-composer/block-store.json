@@ -94,17 +94,39 @@
           "name": "name",
           "kind": "offering.name",
           "type": "text",
-          "limit": 24
+          "limit": 24,
+          "slots": [
+            "services-grid.item1.name",
+            "services-grid.item2.name",
+            "services-grid.item3.name",
+            "services-grid.item4.name"
+          ]
         },
         {
           "name": "price",
           "kind": "offering.price",
-          "type": "number"
+          "type": "number",
+          "slots": [
+            "services-grid.item1.price",
+            "services-grid.item2.price",
+            "services-grid.item3.price",
+            "services-grid.item4.price"
+          ]
         },
         {
           "name": "icon",
           "kind": "editorial.item_icon",
-          "type": "icon"
+          "type": "icon",
+          "slots": [
+            "services-grid.item1.icon",
+            "services-grid.item2.icon",
+            "services-grid.item3.icon",
+            "services-grid.item4.icon"
+          ],
+          "frame": {
+            "width": 48,
+            "height": 48
+          }
         }
       ]
     },
@@ -132,7 +154,13 @@
           "name": "name",
           "kind": "person.name",
           "type": "text",
-          "limit": 30
+          "limit": 30,
+          "slots": [
+            "team-cards.item1.name",
+            "team-cards.item2.name",
+            "team-cards.item3.name",
+            "team-cards.item4.name"
+          ]
         },
         {
           "name": "photo",
@@ -141,7 +169,13 @@
           "frame": {
             "width": 600,
             "height": 600
-          }
+          },
+          "slots": [
+            "team-cards.item1.photo",
+            "team-cards.item2.photo",
+            "team-cards.item3.photo",
+            "team-cards.item4.photo"
+          ]
         }
       ]
     },
@@ -165,7 +199,15 @@
           "frame": {
             "width": 800,
             "height": 800
-          }
+          },
+          "slots": [
+            "gallery-strip.item1.photo",
+            "gallery-strip.item2.photo",
+            "gallery-strip.item3.photo",
+            "gallery-strip.item4.photo",
+            "gallery-strip.item5.photo",
+            "gallery-strip.item6.photo"
+          ]
         }
       ]
     },

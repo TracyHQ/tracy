@@ -19,11 +19,11 @@ import {
   template
 } from './fixtures/plan-composer/invented-club.mjs'
 
-const contextWith = ({ store = blockStore(), lib = library() } = {}) =>
+const contextWith = ({ store = blockStore(), lib = library(), recipes = pageRecipes() } = {}) =>
   composerContextOf({
     profile: clubProfile(),
     blockStore: store,
-    pageRecipes: pageRecipes(),
+    pageRecipes: recipes,
     library: lib,
     template: template(),
     brand: brand(),
@@ -104,8 +104,10 @@ test('a page without its main block is dropped and reported; with no page left t
   )
   const dropped = result.plan.leftOut.find((e) => e.kind === 'page' && e.what === 'Coaches')
   assert.ok(dropped?.reason)
-  // The coach lost the page that showed him: the team block is placed on the home page instead.
-  assert.ok(result.placed.some((p) => p.item === COACH && p.how === 'template block of its type'))
+  // The coach lost the page that showed him. The team block cannot move to the home page, whose recipe does not list
+  // it, so the coach is reported in the left out list.
+  assert.ok(!result.placed.some((p) => p.item === COACH))
+  assert.ok(result.plan.leftOut.some((e) => e.kind === 'item' && e.what === 'Ilse Varrow'))
 
   const none = goodComposition()
   none.pages = [none.pages[1]]
@@ -142,7 +144,9 @@ test('extra reviews fill a template reviews block first, the rest go to the libr
     fields: [],
     itemFields: [{ name: 'text', kind: 'quote.text', type: 'text', limit: 200 }]
   })
-  const { plan, placed } = gate(goodComposition(), { store })
+  const recipes = pageRecipes()
+  recipes.recipes[0].blocks.splice(4, 0, 'quote-single')
+  const { plan, placed } = gate(goodComposition(), { store, recipes })
   assert.deepEqual(
     placed.map((p) => p.how),
     ['template block of its type', 'Tracy library block']
@@ -181,9 +185,11 @@ test('items with no block of their type go to a template block whose fields fit'
     fields: [],
     itemFields: [{ name: 'name', kind: 'offering.name', type: 'text', limit: 30 }]
   })
+  const recipes = pageRecipes()
+  recipes.recipes[0].blocks.splice(2, 1, 'menu-list')
   const c = goodComposition()
   c.pages[0].blocks.splice(2, 1)
-  const { plan, placed } = gate(c, { store })
+  const { plan, placed } = gate(c, { store, recipes })
   assert.deepEqual(
     new Set(placed.filter((p) => SERVICES.includes(p.item)).map((p) => p.how)),
     new Set(['template block whose fields fit'])

@@ -205,3 +205,30 @@ test('a failing brand step stops the plan step with a typed error', async () => 
     (e) => e instanceof PlanComposerError && e.code === 'brand_step_failed'
   )
 })
+
+test('the plan step asks the profile questions through an answers function and composes with the answers', async () => {
+  const club = clubResearch()
+  const model = scriptedModel(JSON.stringify(club.reading), JSON.stringify(goodComposition()))
+  const asked = []
+  const result = await buildPlanStep({
+    research: club.research,
+    model,
+    brandStep: async () => brand(),
+    answers: (profile) => {
+      asked.push(...profile.questions.map((q) => q.id))
+      return [
+        { schema: 'tracy-build-answer/v1', question: 'fact-conflict.facts.contact.phone', choice: 'value-2' }
+      ]
+    },
+    blockStore: blockStore(),
+    pageRecipes: pageRecipes(),
+    library: library(),
+    template: template(),
+    planId: 'plan-club'
+  })
+  assert.deepEqual(asked, ['fact-conflict.facts.contact.phone', 'main-button'])
+  assert.equal(result.plan.facts.find((f) => f.id === 'contact-phone').value, '+1 555 0142 779')
+  assert.equal(result.needsProfile.facts['contact.phone'][0].value, '+1 555 0142 778')
+  assert.equal(result.profile.facts['contact.phone'][0].value, '+1 555 0142 779')
+  assert.equal(checkBuildDocument(result.plan).ok, true)
+})

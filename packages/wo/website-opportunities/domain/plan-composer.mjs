@@ -3,17 +3,28 @@
 // the needs profile, the block list and the page recipes. The model never sees the demo: it reads the profile's data
 // and the blocks' declared shape, nothing else. The rules gate (`plan-gate.mjs`) then checks the plan.
 //
+// The customer's answers to the profile's questions are applied first (`plan-answers.mjs`). Everything the model does
+// not produce is checked before the call (`plan-preflight.mjs`), with its own error code and no model call.
+//
 // A plan that fails the gate is composed again ONCE, with the gate's problems. A second failure throws a
 // `PlanComposerError` with code `plan_gate_failed` and every problem, for the stop and report rule (ADR 0047, #591).
+// That error carries `noRerun: true`: it already includes its own second attempt, so the step chain does not run the
+// step again. A model call that throws is left as it is, so the step chain may run the step once more.
 //
 // `buildPlanStep` runs the brand step in parallel with the needs profile once research has finished, and composes the
 // plan only after both have finished, so the look section is final before the plan is shown.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { buildNeedsProfile } from './needs-profile.mjs'
-import { conflictAssumptionsOf, modelViewOf, planDataOf } from './plan-data.mjs'
+import { settleAnswers } from './plan-answers.mjs'
+import { PlanComposerError } from './plan-composer-error.mjs'
+import { addItemFieldFacts, conflictAssumptionsOf } from './plan-conflicts.mjs'
+import { modelViewOf, planDataOf } from './plan-data.mjs'
 import { gatePlan } from './plan-gate.mjs'
 import { lookOf } from './plan-look-pictures.mjs'
+import { preflightContext, preflightDeclarations } from './plan-preflight.mjs'
+
+export { PlanComposerError }
 
 /** The draft prompt (product owner review: #600). Its hash is recorded with every plan it composed. */
 export const PLAN_COMPOSER_PROMPT_FILE = 'plan-composer-prompt.md'
@@ -24,15 +35,6 @@ export const PLAN_COMPOSER_PROMPT = readFileSync(
 const PROMPT_SHA256 = createHash('sha256').update(PLAN_COMPOSER_PROMPT).digest('hex')
 /** How many times the model composes: the first attempt and one more with the gate's problems. */
 export const PLAN_COMPOSE_ATTEMPTS = 2
-
-/** A failure of the plan step, with a code the step chain reports (ADR 0047). `details` keeps what the report needs. */
-export class PlanComposerError extends Error {
-  constructor(code, message, details = {}) {
-    super(`${code}: ${message}`)
-    this.code = code
-    this.details = details
-  }
-}
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
@@ -52,12 +54,25 @@ const modelBlockOf = (block) => ({
   itemFields: list(block.itemFields).map(pick)
 })
 
+/** Every block the plan may place, by id: the template's store first, then the Tracy library. */
+export function blockMapOf(blockStore, library = []) {
+  const blocks = new Map()
+  for (const block of list(blockStore?.blocks))
+    blocks.set(block.id, { ...block, source: block.source ?? 'template' })
+  for (const block of list(library))
+    if (!blocks.has(block.id)) blocks.set(block.id, { ...block, source: 'library' })
+  return blocks
+}
+
 /**
- * What the composer works from: the profile's data with plan ids, every block of the store and of the Tracy library,
- * the recipes, the look and the assumptions the profile and the look bring.
+ * What the composer works from: the profile's data with plan ids (after the customer's answers), every block of the
+ * store and of the Tracy library, the recipes, the look and the assumptions the profile and the look bring. `profile`
+ * in the result is the settled profile: the page writer reads its item fields.
+ * @throws {PlanComposerError} `answer_invalid` when an answer does not fit its question
  */
 export function composerContextOf({
-  profile,
+  profile: given,
+  answers = [],
   blockStore,
   pageRecipes,
   library = [],
@@ -65,13 +80,11 @@ export function composerContextOf({
   brand,
   planId = 'plan'
 }) {
-  const data = planDataOf(profile)
-  const blocks = new Map()
-  for (const block of list(blockStore?.blocks))
-    blocks.set(block.id, { ...block, source: block.source ?? 'template' })
-  for (const block of list(library))
-    if (!blocks.has(block.id)) blocks.set(block.id, { ...block, source: 'library' })
-  const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r.pageType, r]))
+  const settled = settleAnswers(given, answers)
+  const profile = settled.profile
+  const data = addItemFieldFacts(profile, planDataOf(profile))
+  const blocks = blockMapOf(blockStore, library)
+  const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))
   const { look, assumptions: lookAssumptions } = lookOf(template, brand)
   const language = isText(profile?.language?.value) ? profile.language.value : 'en'
   const languageAssumption = isText(profile?.language?.value)
@@ -83,14 +96,18 @@ export function composerContextOf({
           said: 'No source showed its language, so the site is in English.'
         }
       ]
+  const conflicts = conflictAssumptionsOf(profile, data)
   return {
     planId,
+    profile,
     language,
     data,
     blocks,
     recipes,
     look,
-    assumptions: [...conflictAssumptionsOf(profile, data), ...lookAssumptions, ...languageAssumption]
+    assumptions: [...conflicts.assumptions, ...lookAssumptions, ...languageAssumption],
+    leftOut: settled.leftOut,
+    conflicts: conflicts.accounting
   }
 }
 
@@ -126,12 +143,16 @@ export function readComposerReply(reply) {
 /**
  * Compose the plan: one model call, the gate, and at most one more call with the gate's problems.
  * @param {Parameters<typeof composerContextOf>[0] & {model: (request: object) => Promise<unknown>}} input
- * @returns {Promise<{plan: object, attempts: Array<{problems: object[]}>, placed: object[], prompt: object}>}
+ * @returns {Promise<{plan: object, profile: object, attempts: Array<{problems: object[]}>, placed: object[],
+ *   accounting: object, conflicts: object[], prompt: object}>} `profile`: the profile after the answers, for the page
+ *   writer; `accounting`: where every fact and item went; `conflicts`: how every conflict of the profile is settled
  */
 export async function composePlan(input) {
   if (typeof input?.model !== 'function')
-    throw new PlanComposerError('model_missing', 'no build model was given')
+    throw new PlanComposerError('model_missing', 'no build model was given', {}, { noRerun: true })
+  preflightDeclarations(input)
   const context = composerContextOf(input)
+  preflightContext(context)
   const attempts = []
   let problems = []
   for (let n = 0; n < PLAN_COMPOSE_ATTEMPTS; n++) {
@@ -146,8 +167,11 @@ export async function composePlan(input) {
     if (gated.ok)
       return {
         plan: gated.plan,
+        profile: context.profile,
         attempts,
         placed: gated.placed,
+        accounting: gated.accounting,
+        conflicts: context.conflicts,
         prompt: { file: PLAN_COMPOSER_PROMPT_FILE, sha256: PROMPT_SHA256 }
       }
     problems = gated.problems
@@ -155,17 +179,20 @@ export async function composePlan(input) {
   throw new PlanComposerError(
     'plan_gate_failed',
     `the composed plan failed the rules gate ${PLAN_COMPOSE_ATTEMPTS} times`,
-    { problems, attempts }
+    { problems, attempts },
+    { noRerun: true }
   )
 }
 
 /**
  * The plan step after research: the needs profile and the brand step run in parallel, then the plan is composed.
- * @param {{research: object, model: Function, brandStep: () => Promise<object | null>} &
- *   Omit<Parameters<typeof composerContextOf>[0], 'profile' | 'brand'>} input `brandStep` runs the existing brand step
- *   and resolves to its record
+ * @param {{research: object, model: Function, brandStep: () => Promise<object | null>,
+ *   answers?: object[] | ((profile: object) => object[] | Promise<object[]>)} &
+ *   Omit<Parameters<typeof composerContextOf>[0], 'profile' | 'brand' | 'answers'>} input `brandStep` runs the existing
+ *   brand step and resolves to its record; `answers` are the customer's answers, or a function that asks the
+ *   profile's questions and resolves to them
  */
-export async function buildPlanStep({ research, model, brandStep, ...rest }) {
+export async function buildPlanStep({ research, model, brandStep, answers = [], ...rest }) {
   if (typeof brandStep !== 'function')
     throw new PlanComposerError('brand_step_missing', 'no brand step was given')
   // Started first and not awaited: the brand step runs while the needs profile is built.
@@ -173,6 +200,7 @@ export async function buildPlanStep({ research, model, brandStep, ...rest }) {
     throw new PlanComposerError('brand_step_failed', String(error?.message ?? error), { cause: error })
   })
   const [profile, brand] = await Promise.all([buildNeedsProfile({ research, model }), brandRun])
-  const composed = await composePlan({ ...rest, profile, brand, model })
-  return { profile, brand, ...composed }
+  const given = typeof answers === 'function' ? await answers(profile) : answers
+  const composed = await composePlan({ ...rest, profile, answers: given, brand, model })
+  return { needsProfile: profile, brand, ...composed }
 }

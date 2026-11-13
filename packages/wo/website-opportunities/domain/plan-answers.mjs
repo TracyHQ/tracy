@@ -1,0 +1,131 @@
+// The customer's answers to the needs profile's questions, applied before the plan is composed (ticket #593). Pure: a
+// profile and Contract B answers in, a settled copy of the profile out; the profile given is never changed.
+// - `fact-conflict`: the fact (or item field) takes the chosen value with that value's sources, or the typed value with
+//   the source `answer`, and the conflict is settled (`chosen`), so the plan shows no assumption for it;
+// - `main-button`: the plan's main call to action, the fact `contact.cta_label`;
+// - `contact-method`: a typed phone, email or link becomes that contact fact; a choice without a value is reported in
+//   the plan's left out list, never invented;
+// - `site-language`: the site language (`plan.language`).
+// An answer that does not pass `checkAnswer` against its question, names no question of the profile, or answers one
+// twice is an `answer_invalid` error, never a silent ignore. A question without an answer keeps its default.
+import { checkAnswer } from './build-contract-questions.mjs'
+import { languageTag } from './needs-profile-questions.mjs'
+import { conflictPlace } from './plan-conflicts.mjs'
+import { PlanComposerError } from './plan-composer-error.mjs'
+
+/** The source id an answer's value carries in the settled profile; its origin `answer` reads "Your answer". */
+export const ANSWER_SOURCE = 'customer-answer'
+const list = (value) => (Array.isArray(value) ? value : [])
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const PLAN_TAG = /^[a-z]{2,3}(-[A-Z]{2})?$/
+const LINK = /^https?:\/\/\S+$/i
+const PHONE = /^\+?[\d\s().-]{6,}$/
+const CONTACT_CHOICES = Object.freeze({
+  phone: 'Your phone number',
+  email: 'Your email address',
+  link: 'Your booking or contact link'
+})
+
+const answered = (value) => ({ value, sources: [ANSWER_SOURCE], confidence: 'single-source' })
+
+/** The value and sources an answer gives to a conflict: the chosen value's own, or the typed text's. */
+function conflictValue(answer, question, conflict) {
+  if (answer.text !== undefined) return answered(answer.text.trim())
+  const choice = question.choices.find((c) => c.id === answer.choice)
+  const index = question.choices.indexOf(choice)
+  const value = list(conflict.values).find((v) => v.value === choice.label) ?? list(conflict.values)[index]
+  return { value: value.value, sources: [...value.sources], confidence: 'single-source' }
+}
+
+function settleConflict(profile, conflict, fact) {
+  const place = conflictPlace(conflict)
+  if (place.scope === 'fact') profile.facts[place.kind] = [{ ...profile.facts[place.kind]?.[0], ...fact }]
+  else if (place.scope === 'item') {
+    const item = list(profile.items?.[place.kind]).find((i) => i.id === place.id)
+    if (item) item.fields[place.role] = { ...item.fields[place.role], ...fact }
+  }
+  conflict.chosen = fact.value
+  conflict.chosenBy = 'answer'
+}
+
+/** The contact fact a typed contact answer gives, or null when the text is not a phone, an email or a link. */
+function contactKindOf(text) {
+  if (EMAIL.test(text)) return 'contact.email'
+  if (LINK.test(text)) return 'contact.cta_url'
+  if (PHONE.test(text)) return 'contact.phone'
+  return null
+}
+
+/**
+ * Apply the customer's answers to a copy of the profile.
+ * @param {object} profile a needs profile (`needs-profile.mjs`)
+ * @param {object[]} [answers] Contract B answers (`tracy-build-answer/v1`)
+ * @returns {{profile: object, leftOut: object[], answered: string[]}} `answered`: the ids of the questions answered
+ * @throws {PlanComposerError} `answer_invalid` with `details.problems`
+ */
+export function settleAnswers(profile, answers = []) {
+  const problems = []
+  if (!Array.isArray(answers))
+    throw new PlanComposerError('answer_invalid', 'answers must be a list', {}, { noRerun: true })
+  const questions = new Map(list(profile?.questions).map((q) => [q.id, q]))
+  const seen = new Set()
+  answers.forEach((answer, i) => {
+    const question = questions.get(answer?.question)
+    if (!question)
+      return problems.push({ at: `answers[${i}].question`, message: 'not a question of the profile' })
+    if (seen.has(question.id))
+      problems.push({ at: `answers[${i}]`, message: 'the question is answered twice' })
+    seen.add(question.id)
+    for (const p of checkAnswer(answer, question).problems)
+      problems.push({ at: `answers[${i}]${p.at ? `.${p.at}` : ''}`, message: p.message })
+    if (question.topic === 'site-language' && answer?.text !== undefined && !languageTag(answer.text))
+      problems.push({ at: `answers[${i}].text`, message: 'not a language Tracy can read' })
+    if (
+      question.topic === 'contact-method' &&
+      typeof answer?.text === 'string' &&
+      !contactKindOf(answer.text.trim())
+    )
+      problems.push({ at: `answers[${i}].text`, message: 'not a phone number, an email address or a link' })
+  })
+  if (problems.length > 0)
+    throw new PlanComposerError(
+      'answer_invalid',
+      `${problems.length} answer problem(s)`,
+      { problems },
+      { noRerun: true }
+    )
+  const settled = structuredClone(profile)
+  settled.facts ??= {}
+  const leftOut = []
+  for (const answer of answers) {
+    if (answer.skipped) continue
+    const question = questions.get(answer.question)
+    if (question.topic === 'fact-conflict') {
+      const conflict = settled.conflicts.find((c) => c.question === question.id)
+      if (conflict) settleConflict(settled, conflict, conflictValue(answer, question, conflict))
+    } else if (question.topic === 'main-button') {
+      const label = answer.text?.trim() ?? question.choices.find((c) => c.id === answer.choice).label
+      settled.facts['contact.cta_label'] = [answered(label)]
+    } else if (question.topic === 'contact-method') {
+      if (answer.text === undefined)
+        leftOut.push({
+          what: CONTACT_CHOICES[answer.choice] ?? 'Your contact detail',
+          kind: 'feature',
+          reason:
+            'You chose how visitors reach you but gave no value yet, so none is shown. Add it on the plan.'
+        })
+      else settled.facts[contactKindOf(answer.text.trim())] = [answered(answer.text.trim())]
+    } else if (question.topic === 'site-language') {
+      const tag = answer.text !== undefined ? languageTag(answer.text) : answer.choice
+      // A plan language is a tag like `en` or `pt-BR`; a script subtag (`zh-Hant`) keeps its language only.
+      settled.language = {
+        ...settled.language,
+        value: PLAN_TAG.test(tag) ? tag : tag.split('-')[0],
+        chosenBy: 'answer'
+      }
+    }
+  }
+  if (answers.some((a) => !a.skipped))
+    settled.sources = [...list(settled.sources), { id: ANSWER_SOURCE, origin: 'answer' }]
+  return { profile: settled, leftOut, answered: answers.filter((a) => !a.skipped).map((a) => a.question) }
+}

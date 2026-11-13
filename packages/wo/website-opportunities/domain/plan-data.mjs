@@ -8,7 +8,8 @@ import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 export const SOURCE_NAMES = Object.freeze({
   website: 'Website',
   google: 'Google listing',
-  social: 'Social profile'
+  social: 'Social profile',
+  answer: 'Your answer'
 })
 /** How the customer reads each business fact of the needs profile. */
 export const FACT_LABELS = Object.freeze({
@@ -19,6 +20,7 @@ export const FACT_LABELS = Object.freeze({
   'contact.address': 'Address',
   'contact.hours': 'Opening hours',
   'contact.cta_url': 'Booking link',
+  'contact.cta_label': 'Main button',
   'contact.social_url': 'Social link'
 })
 /** How the customer reads a group of items of one kind, plural (`plan-placement.mjs` reasons, left out entries). */
@@ -40,13 +42,13 @@ export const ITEM_NOUNS = Object.freeze({
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 /** A plan id from a data kind: `contact.cta_url` gives `contact-cta-url` (a plan field path splits on dots). */
-const idOf = (kind) => kind.replace(/[._]+/g, '-')
-const short = (value, max = 60) => {
+export const idOf = (kind) => kind.replace(/[._]+/g, '-')
+export const short = (value, max = 60) => {
   const text = String(value).trim().replace(/\s+/g, ' ')
   return text.length <= max ? text : `${text.slice(0, max - 3).trimEnd()}...`
 }
 
-function sourcesOf(ids, origins) {
+export function sourcesOf(ids, origins) {
   const seen = new Set()
   const out = []
   for (const id of list(ids)) {
@@ -103,10 +105,15 @@ export function planDataOf(profile) {
   return { facts, items, byId }
 }
 
-/** What the model reads of the business: every fact and item by plan id, with its values; never a source's text. */
+/**
+ * What the model reads of the business: every fact and item by plan id, with its values; never a source's text. A fact
+ * that stands for a field of an item (`plan-conflicts.mjs`) is not listed: the model reads it among the item's fields.
+ */
 export function modelViewOf(data) {
   return {
-    facts: data.facts.map(({ id, kind, label, value }) => ({ id, kind, label, value })),
+    facts: data.facts
+      .filter(({ id }) => !data.byId.get(id).itemField)
+      .map(({ id, kind, label, value }) => ({ id, kind, label, value })),
     items: data.items.map(({ id, kind, label }) => {
       const fields = data.byId.get(id).source.fields ?? {}
       return {
@@ -117,20 +124,4 @@ export function modelViewOf(data) {
       }
     })
   }
-}
-
-/** The assumptions a profile brings: each fact whose sources disagree shows the default it took, to correct. */
-export function conflictAssumptionsOf(profile, data) {
-  const out = []
-  for (const conflict of list(profile?.conflicts)) {
-    const fact = data.facts.find((f) => data.byId.get(f.id).source.conflict === conflict.id)
-    if (!fact) continue
-    const others = list(conflict.values).filter((v) => v.value !== fact.value).length
-    out.push({
-      id: conflict.id,
-      field: `facts[${fact.id}].value`,
-      said: `Your sources disagree on the ${fact.label.toLowerCase()} (${others + 1} values). The one from the most trusted source is used.`
-    })
-  }
-  return out
 }
