@@ -2,7 +2,7 @@
 // as content and whose key reads as layout (a gutter, a column count, a class), or that the template's decisions
 // name. They are typed `design` and carry no data kind, so a build never writes text into them (ADR 0046 decision
 // 2; JA Boxing 1.0.11 crashed four pages when two such values were written as text). Every other unshown value of
-// the record is reported in `unlisted`, for the mapping file to keep or empty.
+// the record is reported in `unlisted`, with its class when the decisions give one (`classOf`).
 import { baseNameOf } from './draft-block-fields.mjs'
 
 export const DESIGN_KEY =
@@ -22,6 +22,20 @@ export function designKeyOf(slot) {
   )
 }
 
+/**
+ * What an unlisted value is, as the template's decisions classify it (`decisions.unlisted[<content map key>]`):
+ * `not-drawn` (stored, never shown: a module title its chrome hides), `kept` (left as the template has it, valid on
+ * every site), `fact` (written from a business fact by the mapping file) or `override` (written by an override of
+ * the mapping file). A value shown to visitors is not classified here: it becomes a field (`fields` of the block's
+ * decision). Unclassified entries are counted in the summary.
+ */
+export const UNLISTED_CLASSES = Object.freeze(['not-drawn', 'kept', 'fact', 'override'])
+function classOf(decided) {
+  if (!decided) return {}
+  if (!UNLISTED_CLASSES.includes(decided.as)) return { as: null, why: `unknown class ${decided.as}` }
+  return { as: decided.as, why: decided.why }
+}
+
 /** The design fields of the block's record, reporting every other unshown value of it. */
 export function designFieldsOf({ entity, used, inLists, decision, ctx, alloc, out, id }) {
   const fields = []
@@ -37,7 +51,7 @@ export function designFieldsOf({ entity, used, inLists, decision, ctx, alloc, ou
         slot: slot.key,
         designFrom: where
       })
-    else out.unlisted.push({ block: id, slot: slot.key, at: where })
+    else out.unlisted.push({ block: id, slot: slot.key, at: where, ...classOf(ctx.unlisted?.[slot.key]) })
   }
   return fields
 }

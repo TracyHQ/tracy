@@ -468,3 +468,58 @@ test('the report keeps what a merged page left open: its unlisted, derived and n
   assert.ok(res.derived.some((d) => d.block === 'post-body' && d.slot === 'languageString-9.0'))
   assert.ok(res.notInMap.some((n) => n.block === 'post-body' && n.slot === 'article-2.9'))
 })
+
+test('an unlisted value carries the class its decision gives; an unknown class is no class', () => {
+  const res = draft({ unlisted: { 'module-20.8': { as: 'not-drawn', why: 'invented: a hidden note' } } })
+  assert.deepEqual(
+    res.unlisted.find((u) => u.slot === 'module-20.8'),
+    { block: 'block-20', slot: 'module-20.8', at: 'note.', as: 'not-drawn', why: 'invented: a hidden note' }
+  )
+  const bad = draft({ unlisted: { 'module-20.8': { as: 'maybe', why: 'x' } } })
+  assert.equal(bad.unlisted.find((u) => u.slot === 'module-20.8').as, null)
+})
+
+test('a merged page does not list again a value at a place the store block already declares or lists', () => {
+  const at = (key, entity, jsonPath, role = 'editorial.paragraph') => ({
+    key,
+    entity,
+    type: 'text',
+    role,
+    column: 'attribs',
+    jsonPath: [jsonPath]
+  })
+  const map = {
+    slots: [
+      at('article-1.1', 'article-1', 'title', 'editorial.heading'),
+      at('article-1.2', 'article-1', 'hidden-note'),
+      at('article-2.5', 'article-2', 'title', 'editorial.heading'),
+      at('article-2.6', 'article-2', 'hidden-note'),
+      at('article-2.7', 'article-2', 'only-here')
+    ]
+  }
+  const body = (id, entity, slots) => ({
+    id,
+    role: 'page-body',
+    source: { entity },
+    slots,
+    lists: [],
+    frames: []
+  })
+  const res = draftBlocks({
+    kit: {
+      blocks: [
+        body('body-one', 'article-1', [text('article-1.1', 'editorial.heading', 30, KIT_390(30))]),
+        body('body-two', 'article-2', [])
+      ]
+    },
+    contentMap: map,
+    decisions: { groups: [{ match: '^body-', id: 'post-body', type: 'posts' }] }
+  })
+  assert.deepEqual(
+    res.unlisted.map((u) => [u.slot, u.on ?? null]),
+    [
+      ['article-1.2', null],
+      ['article-2.7', 'body-two']
+    ]
+  )
+})

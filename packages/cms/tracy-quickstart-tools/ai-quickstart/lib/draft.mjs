@@ -56,6 +56,7 @@ export function summaryOf({ blockStore, pageRecipes, report }) {
     textLimits: limits,
     pageTypes: pageRecipes.recipes.map((r) => r.pageType),
     excludedPageGroups: pageRecipes.excluded.length,
-    open: Object.fromEntries(Object.entries(report).map(([k, v]) => [k, Array.isArray(v) ? v.length : v]))
+    open: Object.fromEntries(Object.entries(report).map(([k, v]) => [k, Array.isArray(v) ? v.length : v])),
+    unlistedUnclassified: (report.unlisted ?? []).filter((u) => !u.as).length
   }
 }

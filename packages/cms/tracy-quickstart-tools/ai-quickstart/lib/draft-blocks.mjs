@@ -16,6 +16,7 @@ const emptyReport = () => ({
   undecided: [],
   skipped: [],
   notInMap: [],
+  sparse: [],
   problems: [],
   omitted: []
 })
@@ -50,15 +51,31 @@ function placeOf(field, mapSlots) {
   return key.replace(/^[^.]+/, '')
 }
 
-/** The report lists a merged page fills: what that page leaves open is open for the store block too. */
-const MERGED_REPORT_KEYS = ['unmeasured', 'derived', 'unlisted', 'notInMap', 'omitted', 'problems']
+/**
+ * The report lists a merged page fills: what that page leaves open is open for the store block too. Its problems
+ * and unmeasured texts are not: the store block keeps the first page's fields and items, and takes from the others
+ * only their limits (`mergeLimits`).
+ */
+const MERGED_REPORT_KEYS = ['derived', 'unlisted', 'notInMap', 'omitted']
 
-/** Adds a merged page's open entries to the report, once per block and slot, naming the page (`on`). */
-function mergeReport(out, scratch, memberId) {
+/**
+ * Adds a merged page's open entries to the report, once per block and slot, naming the page (`on`). An unlisted
+ * value at a stored place the store block already declares as a field, or already lists, is the same value on
+ * another page of the layout and is not listed again.
+ */
+function mergeReport(out, scratch, memberId, store, mapSlots) {
+  const placesOf = (list) => new Set(list.map((f) => placeOf(f, mapSlots)))
+  const declared = placesOf([...store.fields, ...(store.itemFields ?? [])])
+  const listed = placesOf(out.unlisted.filter((u) => u.block === store.id))
   for (const key of MERGED_REPORT_KEYS)
     for (const entry of scratch[key] ?? []) {
       const same = (e) => e.block === entry.block && (e.slot ?? e.problem) === (entry.slot ?? entry.problem)
-      if (key === 'unmeasured' || out[key].some(same)) continue
+      if (out[key].some(same)) continue
+      if (key === 'unlisted') {
+        const place = placeOf(entry, mapSlots)
+        if (declared.has(place) || listed.has(place)) continue
+        listed.add(place)
+      }
       out[key].push({ ...entry, on: memberId })
     }
 }
@@ -109,6 +126,7 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
   const omit = decisions.omit ?? {}
   const ctx = {
     omit,
+    unlisted: decisions.unlisted ?? {},
     mapSlots,
     slotsByEntity,
     frames,
@@ -133,7 +151,7 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
     if (existing) {
       const scratch = { ...emptyReport(), nested: [] }
       mergeLimits(existing, draftOne(kb, id, decision, ctx, scratch), kb.id, mapSlots)
-      mergeReport(out, scratch, kb.id)
+      mergeReport(out, scratch, kb.id, existing, mapSlots)
       existing.from.kit.push(kb.id)
       storeIdOf[kb.id] = id
       continue

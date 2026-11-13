@@ -2,7 +2,8 @@
 // kit blocks become store blocks and passes the template's decision for each; this sorts the block's slots into
 // fields, item fields and design fields.
 //
-// Decision keys read here (all optional except `type`): `type`, `noData`, `items`, `position`, `nav` (the block's
+// Decision keys read here (all optional except `type`): `type`, `noData`, `items` with `itemsFrom` (draft-items.mjs),
+// `sparse` (an item field stored for fewer items than the maximum, and what it is instead), `position`, `nav` (the block's
 // menu labels are its items), `listsAsFields` (a repeating list whose one row is chosen per placed block, e.g. a
 // masthead with a row per page), `listsNumbered` (a second repeating list written as numbered fields), `names`
 // (content map key -> field name), `design` (content map keys that are design values), `fields` (unlisted content map
@@ -18,6 +19,7 @@ import {
 } from './draft-block-fields.mjs'
 import { mapKeyOf } from './draft-fields.mjs'
 import { designFieldsOf } from './draft-design-fields.mjs'
+import { applyItems, maxSourceOf, minSourceOf } from './draft-items.mjs'
 
 const neutral = (key) => String(key).replace(/^module-/, 'block-')
 const entityOf = (id) => mapKeyOf(String(id).split('.')[0])
@@ -48,6 +50,7 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   const fields = []
   const itemFields = []
   let items = null
+  let itemsFrom = null
   const used = new Set()
   const nav = []
   const derived = (slot, why) => {
@@ -146,7 +149,10 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
         }
       }
     })
-    if (!asFields) items = { min: list.min, max: list.max }
+    if (!asFields) {
+      items = { min: list.min, max: list.max }
+      itemsFrom = { min: minSourceOf(list), max: maxSourceOf(list) }
+    }
   }
   for (const f of own ? (kb.frames ?? []) : []) {
     if (used.has(f.id) || inLists.has(f.id) || !ctx.mapSlots.has(mapKeyOf(f.id))) continue
@@ -188,18 +194,23 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
       derived: 'the page address'
     })
     items = { min: 1, max: nav.length }
+    itemsFrom = {
+      min: 'the rule default 1: a menu draws as many links as it is given (not measured)',
+      max: `the menu items the template stores (${nav.length})`
+    }
   }
   fields.push(...designFieldsOf({ entity, used, inLists, decision, ctx, alloc, out, id }))
   block.positions = [
     position ?? decision.position ?? kb.source?.position ?? (kb.role === 'page-body' ? 'component' : kb.role)
   ]
-  block.items = decision.items ?? items ?? { min: 1, max: 1 }
+  // Keys in reading order: the counts sit before the no data rule, as the format lists them.
+  block.items = null
+  block.itemsFrom = null
   block.noData = decision.noData ?? { rule: 'hide' }
   block.fields = fields
   if (itemFields.length) block.itemFields = itemFields
+  applyItems(block, decision, { items, from: itemsFrom }, out)
   block.from = { kit: [own ? kb.id : `${kb.id} list ${lists[0].id}`], entity }
   if (!decision.type) out.undecided.push(id)
-  if (block.items.min === null)
-    out.problems.push({ block: id, problem: 'item minimum not measured by the kit' })
   return block
 }
