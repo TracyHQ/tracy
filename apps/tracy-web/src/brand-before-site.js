@@ -22,6 +22,7 @@ import { readFile } from 'node:fs/promises'
 import { BrandStepError, brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
 import { STEP_CHAIN_ATTEMPTS, STEP_CHAIN_NO_OUTPUT } from './sites/brief-engines/step-chain.js'
 import {
+  chainSummary,
   detailsOf,
   messageOf,
   recordedInputs,
@@ -104,6 +105,18 @@ function spendOfRecord(record) {
 }
 
 /**
+ * The chain `dispose` keeps, in the engine's shape (`chainSummary`: `ending`, `stop`, `failedStep`, `totalUsd`,
+ * `totalMinutes`, `steps`), which every reader of a kept chain reads. A brand run has no Write step by design, so a run
+ * without a stop is complete, never the engine's unfinished build.
+ */
+function chainOf(run, stop) {
+  const summary = chainSummary(run.record, stop?.step ?? null, run.now() - run.t0, null, null, stop ?? null)
+  if (stop) return summary
+  const { failedStep: _failed, stop: _stop, ...complete } = summary
+  return { ...complete, ending: 'complete' }
+}
+
+/**
  * @param {{steps: {kit: Function, brand: Function, dispose: Function}, briefOf: (revisionId: string) =>
  *   Promise<object | null>, now?: () => number, readJson?: (file: string) => Promise<object>}} deps `steps`: the step
  *   chain's steps (`createStepChainSteps`); `briefOf`: the stored research brief of a revision (for example
@@ -149,6 +162,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
     }
     const run = { now, t0: now(), signal: halt, record: [] }
     const how = (attempt) => ({ signal: halt, attempt })
+    let stop = null
     try {
       const kit = await attemptStep(run, 'kit', {}, (inputs, n) => steps.kit(ctx, inputs, how(n)))
       const brand = kit.stop
@@ -156,6 +170,14 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
         : await attemptStep(run, 'brand', { kit: kit.value, ...extra }, async (inputs, n) => {
             const ran = await steps.brand(ctx, inputs, how(n))
             const file = ran?.value?.file
+            // A value without a brand file is no output: a failed attempt, never a success without a record.
+            if (ran?.value !== undefined && ran?.value !== null && !file)
+              throw Object.assign(new Error('the brand step wrote no brand file'), {
+                code: STEP_CHAIN_NO_OUTPUT,
+                usd: ran.usd,
+                knownUsd: ran.knownUsd,
+                value: ran.value
+              })
             if (!file) return ran
             // Reading the file is part of the attempt: a failure keeps the spend of the run that wrote it.
             try {
@@ -165,6 +187,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
               throw Object.assign(error, { usd: ran.usd, knownUsd: ran.knownUsd, value: { file } })
             }
           })
+      stop = brand.stop ?? null
       if (brand.stop)
         throw new BrandStepError(
           'brand_step_failed',
@@ -175,7 +198,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
       const record = brand.value.record
       return { record, records: run.record, ...spendOfRecord(run.record), prompt: BRAND_STEP_PROMPT, runId }
     } finally {
-      await steps.dispose({ runId, chain: run.record })
+      await steps.dispose({ runId, chain: chainOf(run, stop) })
     }
   }
 }

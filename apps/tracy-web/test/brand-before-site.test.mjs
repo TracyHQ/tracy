@@ -81,7 +81,7 @@ test('the brand step runs on the research revision and the kit, and its brand fi
   assert.equal(out.usd, 0.25)
   assert.equal(seen.disposed.length, 1)
   assert.equal(seen.disposed[0].runId, out.runId)
-  assert.equal(seen.disposed[0].chain.length, 2)
+  assert.equal(seen.disposed[0].chain.steps.length, 2)
 })
 
 test('a failing run is run once more; a second failure stops and still keeps both record lines', async () => {
@@ -108,7 +108,7 @@ test('a failing run is run once more; a second failure stops and still keeps bot
     }),
     (e) => e.code === 'brand_step_failed' && e.noRerun === true
   )
-  assert.equal(twice.seen.disposed[0].chain.length, 3)
+  assert.equal(twice.seen.disposed[0].chain.steps.length, 3)
 })
 
 test('no research brief, no run', async () => {
@@ -176,7 +176,7 @@ test('a kit step that throws gets a record line, is run once more, and stops the
       ['kit', 'failed', 'kit_missing']
     ]
   )
-  assert.equal(seen.disposed[0].chain.length, 2)
+  assert.equal(seen.disposed[0].chain.steps.length, 2)
 })
 
 test('a brand file that is not one is not run again, and its run keeps its spend and its file', async () => {

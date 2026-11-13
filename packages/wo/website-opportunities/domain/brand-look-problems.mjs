@@ -11,18 +11,10 @@ import {
 } from './brand-look-accent.mjs'
 import { isNeutral } from './brand-hue.mjs'
 import { LOGO_MADE } from './brand-before-site.mjs'
+import { templateLookWordsOf } from './brand-look-said.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const lower = (value) => (typeof value === 'string' ? value.trim().toLowerCase() : '')
-/** Words naming the template's (or the demo's) colour, and its logo. */
-const OF_TEMPLATE = String.raw`(?:template|demo)(?:'s)?`
-const LOOK_WORDS = (things) =>
-  new RegExp(
-    String.raw`\b${OF_TEMPLATE}\s+(?:${things})\b|\b(?:${things})\s+of\s+the\s+(?:template|demo)\b`,
-    'i'
-  )
-const COLOUR_WORDS = LOOK_WORDS('accent|colou?rs?')
-const LOGO_WORDS = LOOK_WORDS('logos?')
 /** The black and white accents a logo with no hue may give: one theme (black or white), or both. */
 const NO_HUE_PAIRS = [
   [NO_HUE_ACCENT.light, ''],
@@ -38,7 +30,7 @@ const NO_HUE_PAIRS = [
  *   at no lightness, D44), or not black on light and white on dark (a no logo plan keeps the template's own accent, neutral or not);
  * - `template_logo`: the template's logo, or a logo whose kind disagrees with its recorded source;
  * - `template_look_said`: a line naming the template's (or demo's) logo, or its colour or accent value outside the no
- *   logo case.
+ *   logo case (`brand-look-said.mjs`); the value may be named when it is the business's own colour (`sameAsTemplate`).
  * @param {{plan: object, template: {slug?: string, name?: string, accent?: string},
  *   lookSources?: {accent?: {from: string}, logo?: {from: string}}}} input `lookSources` as `composePlan` returns them;
  *   without them the template's accent and a black or white accent are problems
@@ -80,11 +72,12 @@ export function lookProblemsOf({ plan, template, lookSources }) {
     add('template_logo', 'look.logo', "the logo is the template's own")
   else if (logoFrom && (look.logo?.kind === 'text') !== (logoFrom === LOGO_MADE))
     add('template_logo', 'look.logo', `a ${look.logo?.kind} logo cannot come from ${logoFrom}`)
+  const says = templateLookWordsOf(template)
   list(plan?.assumptions).forEach((assumption, i) => {
     const said = String(assumption?.said ?? '')
-    const namesColour =
-      (templateAccent && said.toLowerCase().includes(templateAccent)) || COLOUR_WORDS.test(said)
-    if (LOGO_WORDS.test(said) || (namesColour && !noLogo))
+    // The business's own colour that is the template's accent may be named; the template's words never.
+    const namesColour = (says.value(said) && !ownColour) || says.colour(said)
+    if (says.logo(said) || (namesColour && !noLogo))
       add(
         'template_look_said',
         `assumptions[${assumption?.id ?? i}]`,
