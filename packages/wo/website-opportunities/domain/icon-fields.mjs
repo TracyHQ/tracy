@@ -8,17 +8,26 @@
 // its words), or the block level fields a field names in `for` (the text fields it illustrates). A block level icon
 // field naming nothing has no item to match: it is hidden with `icon_item_undeclared`, never guessed.
 //
-// A SOCIAL icon is a field that declares `iconOf: "network"` (Contract A), whatever its name. In an item or a row it
-// stands for that item's social link; at block level it pairs with the social link field of its name prefix
-// (`social-1-item-icon` beside `social-1-social-url`), else with the block's link of its rank among the block's network
-// icons. Without the key, an icon field is a content icon.
+// A SOCIAL icon is a field that declares `iconOf: "network"` (Contract A), whatever its name. In a child list row it
+// stands for the `link` of that same row (a `contact.social_url` or `person.social_url` field): the row's rank among the
+// links of its item (an `itemLists` row) or of its block (a `lists` row); the written copy of the row's link, when the
+// writer gives one, wins (`icon-selection.mjs`). In an item it stands for that item's social link; at block level for
+// the block's link of its rank among the block's network icons. Without the key, an icon field is a content icon.
 //
-// THEME. An icon field may declare `theme: "light"` or `theme: "dark"`: the theme the file it stores is shown in (the
-// template's two files of one icon, `item-icon` and `item-icon-2`). A field declaring it takes exactly that one
-// version; a field without it takes both, and twin fields of one scope without it are noted `icon_theme_undeclared`
-// by the selection. Both twins of a scope always take the same icon.
+// `for` names the text fields a content icon illustrates, at every depth: the words it is matched against.
+//
+// THEME. A light and dark pair is a base field and its other version, `variantOf: "<base name>"`, both declaring
+// `theme` ("light" or "dark", different): the theme the file it stores is shown in. A field declaring it takes exactly
+// that one version; a field without it takes both. A variant joins its base's scope, so both files take the same
+// icon. A variant naming no field of its scope, or a pair without two different themes, throws `icon_variant_invalid`.
 import { IconSelectionError } from './icon-ranking.mjs'
-import { placesOfBlock, repeatedNames, SOCIAL_URL, socialLinksOf } from './picture-block-places.mjs'
+import {
+  itemSocialUrlsOf,
+  placesOfBlock,
+  repeatedNames,
+  SOCIAL_URL_KINDS,
+  socialLinksOf
+} from './picture-block-places.mjs'
 import { frameOfField } from './picture-frame-size.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -30,8 +39,6 @@ export const ICON_THEMES = Object.freeze(['light', 'dark'])
 export const isIconField = (field) => field?.type === 'icon' || field?.kind === ICON_KIND
 /** Whether an icon field stands for a social network (Contract A `iconOf: "network"`). */
 export const isNetworkIcon = (field) => field?.iconOf === 'network'
-/** The name prefix of a block level field: `social-1-item-icon` gives `social-1-`, `item-icon-3` gives ''. */
-const prefixOf = (name) => /^(.*?-\d+-)/.exec(String(name))?.[1] ?? ''
 
 /** One icon field's record: its id, frame (Contract A's shape, else a typed error) and declared theme. */
 function fieldOf(prefix, f) {
@@ -46,17 +53,51 @@ function fieldOf(prefix, f) {
     kind: f.kind ?? ICON_KIND,
     storage: f.storage ?? null,
     frame,
-    ...(f.theme ? { theme: f.theme } : {})
+    ...(f.theme ? { theme: f.theme } : {}),
+    ...(f.variantOf ? { variantOf: f.variantOf } : {})
   }
 }
 
-/** The social link of an item or row place: the shown link itself, or the item's own social link field. */
-function urlOf(at, data) {
-  if (at.itemKind === 'social') return at.url ?? null
-  if (at.level !== 'item') return null
-  const url = data.byId.get(at.item)?.source?.fields?.[SOCIAL_URL]?.value
-  return typeof url === 'string' && url.trim() ? url : null
+/** A pair holds when its variant names an icon field of the same place and both declare different themes. */
+function checkPairs(prefix, icons) {
+  for (const f of icons.filter((i) => i.variantOf !== undefined)) {
+    const base = icons.find((i) => i.name === f.variantOf && i !== f)
+    const id = `${prefix}.${f.name}`
+    if (!base)
+      throw new IconSelectionError(
+        'icon_variant_invalid',
+        `${id}: variantOf names no icon field of its scope`,
+        { at: id }
+      )
+    if (!ICON_THEMES.includes(base.theme) || !ICON_THEMES.includes(f.theme) || base.theme === f.theme)
+      throw new IconSelectionError(
+        'icon_variant_invalid',
+        `${id}: a pair declares a light and a dark theme`,
+        { at: id }
+      )
+  }
 }
+
+/** The text fields the content icons of an item or row name in `for`, or null when none names any. */
+function forOf(content) {
+  const names = [...new Set(content.flatMap((f) => list(f.for)))]
+  return names.length ? names : null
+}
+
+/**
+ * The social link of an item or row place: a footer row's shown link; an item's own first social link; a row's link of
+ * its rank among its item's links (`itemLists`) or its block's (`lists`).
+ */
+function urlOf(at, block, data) {
+  if (at.itemKind === 'social' && at.level === 'item') return at.url ?? null
+  if (at.level === 'item') return itemSocialUrlsOf(data.byId.get(at.item))[0] ?? null
+  const links = at.item
+    ? itemSocialUrlsOf(data.byId.get(at.item))
+    : socialLinksOf(block, data).map((l) => l.url)
+  return links[at.rank - 1] ?? null
+}
+/** The name of a row's own link field: the social link the row's network icon stands for. */
+const linkFieldOf = (at) => at.fields.find((f) => SOCIAL_URL_KINDS.includes(f?.kind))?.name ?? null
 
 /**
  * The icon fields of a plan, by scope.
@@ -65,7 +106,7 @@ function urlOf(at, data) {
  * @param {{byId: Map<string, object>}} data the plan data (`plan-data.mjs`)
  * @returns {Array<{id: string, page: string, block: string, blockId: string, blockType: string,
  *   case: 'content' | 'social' | 'undeclared', item?: string, row?: string, for?: string[],
- *   social?: {url: string | null}, fields: Array<{id: string, field: string, kind: string, storage: string | null,
+ *   social?: {url: string | null, linkField?: string}, fields: Array<{id: string, field: string, kind: string, storage: string | null,
  *   frame: {width: number, height: number} | null, theme?: 'light' | 'dark'}>}>}
  */
 export function iconScopesOfPlan(pages, blocks, data) {
@@ -94,32 +135,37 @@ export function iconScopesOfPlan(pages, blocks, data) {
             `${at.prefix} declares ${repeated.join(', ')} twice: two icon fields would share one id`,
             { at: at.prefix, fields: repeated }
           )
+        checkPairs(at.prefix, icons)
         const content = icons.filter((f) => !isNetworkIcon(f))
         const network = icons.filter(isNetworkIcon)
         if (at.level !== 'block') {
-          if (content.length) scope(at.prefix, at, { case: 'content' }, content)
-          if (network.length)
-            scope(`${at.prefix}.network`, at, { case: 'social', social: { url: urlOf(at, data) } }, network)
+          const names = forOf(content)
+          if (content.length)
+            scope(at.prefix, at, { case: 'content', ...(names ? { for: names } : {}) }, content)
+          const linkField = at.level === 'row' ? linkFieldOf(at) : null
+          const social = { url: urlOf(at, block, data), ...(linkField ? { linkField } : {}) }
+          if (network.length) scope(`${at.prefix}.network`, at, { case: 'social', social }, network)
           continue
         }
-        // Block level: network icons pair with a link; content icons group by the text fields they name.
+        // Block level: network icons pair with the block's link of their rank; content icons group by the text fields
+        // they name, a variant with its base.
         const links = socialLinksOf(block, data)
-        const prefixes = [
-          ...new Set(at.fields.filter((f) => f.kind === SOCIAL_URL).map((f) => prefixOf(f.name)))
-        ]
         network.forEach((field, rank) => {
-          const paired = prefixes.indexOf(prefixOf(field.name))
-          const link = links[paired >= 0 && prefixOf(field.name) ? paired : rank]
-          scope(`${at.prefix}.${field.name}`, at, { case: 'social', social: { url: link?.url ?? null } }, [
-            field
-          ])
+          scope(
+            `${at.prefix}.${field.name}`,
+            at,
+            { case: 'social', social: { url: links[rank]?.url ?? null } },
+            [field]
+          )
         })
-        for (const field of content)
-          if (list(field.for).length)
-            scope(`${at.prefix}.${list(field.for).join('+')}`, at, { case: 'content', for: [...field.for] }, [
+        for (const field of content) {
+          const own = content.find((f) => f.name === field.variantOf) ?? field
+          if (list(own.for).length)
+            scope(`${at.prefix}.${list(own.for).join('+')}`, at, { case: 'content', for: [...own.for] }, [
               field
             ])
-          else scope(`${at.prefix}.${field.name}`, at, { case: 'undeclared' }, [field])
+          else scope(`${at.prefix}.${own.name}`, at, { case: 'undeclared' }, [field])
+        }
       }
     }
   // Block level fields naming the same text fields share one scope, as the two theme files of one item do.

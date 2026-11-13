@@ -5,7 +5,7 @@
 //
 // Declared instances: a block field once per placed block, an item field once per shown item, a child list field once
 // per row the list may hold (`items.max`) per parent place, nested lists likewise.
-// Decided: icons = library + social + hidden with a reason; images and videos = own + generated + none with a reason,
+// Decided: icons = library + social mark + network class + hidden with a reason; images and videos = own + generated + none with a reason,
 // plus the frames of a dropped item (`droppedFrames`).
 import { shownItemsOf } from './picture-block-places.mjs'
 
@@ -97,7 +97,14 @@ export function mediaAccountOf(declared, step) {
   const icons = list(step.icons).map((i) => ({
     id: i.id,
     source: i.source === 'library' ? (i.case === 'social' ? 'social' : 'library') : i.source,
-    reason: i.source === 'none' ? i.reason : i.case === 'social' ? 'social' : 'library'
+    reason:
+      i.source === 'none'
+        ? i.reason
+        : i.source === 'network'
+          ? 'network'
+          : i.case === 'social'
+            ? 'social'
+            : 'library'
   }))
   return {
     icon: account(declared.icon, icons),

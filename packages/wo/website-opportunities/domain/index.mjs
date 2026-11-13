@@ -208,7 +208,14 @@ export {
   ownPicturesOf
 } from './picture-frames.mjs'
 export { fitsFrame, unfitReason } from './picture-fit.mjs'
-export { placesOfBlock, repeatedNames, shownItemsOf, socialLinksOf } from './picture-block-places.mjs'
+export {
+  itemSocialUrlsOf,
+  placesOfBlock,
+  repeatedNames,
+  SOCIAL_URL_KINDS,
+  shownItemsOf,
+  socialLinksOf
+} from './picture-block-places.mjs'
 export { declaredMediaOf, mediaAccountOf, mediaKindOf } from './picture-declared.mjs'
 export { frameOfField } from './picture-frame-size.mjs'
 export {

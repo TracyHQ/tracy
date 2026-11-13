@@ -58,9 +58,9 @@ test('a yoga studio on a boxing template keeps no demo icon; each icon follows i
   assert.match(model.calls[0].system, /^DRAFT, not approved\. .*#600/)
   const counts = iconCountsOf(result)
   console.log(
-    `icon fields: ${counts.fields} = ${counts.library} from the library + ${counts.social} social + ${counts.hidden} hidden with a reason, ${counts.unexplained} unexplained`
+    `icon fields: ${counts.fields} = ${counts.library} from the library + ${counts.social} social marks + ${counts.network} network classes + ${counts.hidden} hidden with a reason, ${counts.unexplained} unexplained`
   )
-  assert.equal(counts.fields, counts.library + counts.social + counts.hidden)
+  assert.equal(counts.fields, counts.library + counts.social + counts.network + counts.hidden)
   assert.equal(counts.unexplained, 0)
 })
 
@@ -139,18 +139,24 @@ test('each icon has a light and a dark version in colour roles, drawn at the dec
   assert.equal(bad({ variants: { light: sun.variants.light } }), 'icon_variant_missing')
 })
 
-test('social icons are the network mark of their link, never ranked by content', async () => {
+test('social icons are the network of their link, a class name of the template font, never ranked by content', async () => {
   const model = scriptedModel(firstCandidate())
   const result = await select({ model })
   const footer = result.icons.filter((i) => i.block === 'home-b3')
   assert.deepEqual(
-    footer.map((i) => [i.source, i.icon?.name ?? i.reason, i.network]),
+    footer.map((i) => [i.source, i.reason, i.network, 'icon' in i]),
     [
-      ['library', 'instagram-logo', 'instagram'],
-      ['none', 'social_network_unknown', null]
+      ['network', 'the instagram network of its link', 'instagram', false],
+      ['none', 'social_network_unknown', null, false]
     ]
   )
-  assert.equal(at(result, 'home.home-b2.social-1-item-icon').icon.name, 'instagram-logo')
+  assert.deepEqual(
+    [
+      at(result, 'home.home-b2.social-1-item-icon').source,
+      at(result, 'home.home-b2.social-1-item-icon').network
+    ],
+    ['network', 'instagram']
+  )
   assert.equal(at(result, 'home.home-b2.social-2-item-icon').reason, 'no_social_link')
   const asked = JSON.parse(model.calls[0].user).items.map((i) => i.id)
   assert.ok(

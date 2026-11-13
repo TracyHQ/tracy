@@ -11,19 +11,28 @@
 // for an item field, and `<page>.<block>[.<item>].<list>.<n>[.<list>.<n>].<field>` for a row field (`n` from 1).
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
-/** The data kind of a social link. */
+/** The data kind of a business's social link. */
 export const SOCIAL_URL = 'contact.social_url'
+/** The data kinds of a social link: the business's own, and a person's (a trainer card's links). */
+export const SOCIAL_URL_KINDS = Object.freeze([SOCIAL_URL, 'person.social_url'])
+const isSocialKind = (kind) => SOCIAL_URL_KINDS.includes(kind)
 
-/** The social links a placed block shows, in its data order: social link facts, and items holding one. */
+/** The social links of one plan item, in order: each social link field's value, one link or a list of them. */
+export function itemSocialUrlsOf(entry) {
+  const fields = entry?.source?.fields ?? {}
+  return SOCIAL_URL_KINDS.flatMap((kind) => {
+    const value = fields[kind]?.value
+    return (Array.isArray(value) ? value : [value]).filter(isText)
+  })
+}
+
+/** The social links a placed block shows, in its data order: social link facts, and every link of the items. */
 export function socialLinksOf(block, data) {
   const out = []
   for (const id of list(block?.data)) {
     const entry = data.byId.get(id)
-    if (entry?.what === 'fact' && entry.kind === SOCIAL_URL) out.push({ id, url: entry.entry.value })
-    else if (entry?.what === 'item') {
-      const url = entry.source?.fields?.[SOCIAL_URL]?.value
-      if (isText(url)) out.push({ id, url })
-    }
+    if (entry?.what === 'fact' && isSocialKind(entry.kind)) out.push({ id, url: entry.entry.value })
+    else if (entry?.what === 'item') for (const url of itemSocialUrlsOf(entry)) out.push({ id, url })
   }
   return out
 }
@@ -49,7 +58,7 @@ function rowsOf(owner, keys, parent, out) {
       const max = Number.isInteger(child?.items?.max) && child.items.max > 0 ? child.items.max : 0
       for (let n = 1; n <= max; n++) {
         const row = parent.row ? `${parent.row}.${child.name}.${n}` : `${child.name}.${n}`
-        out.push({ ...parent, level: 'row', row, list: child.name, fields: list(child.fields) })
+        out.push({ ...parent, level: 'row', row, rank: n, list: child.name, fields: list(child.fields) })
         rowsOf(child, ['lists'], { ...parent, row }, out)
       }
     }
@@ -60,7 +69,8 @@ function rowsOf(owner, keys, parent, out) {
  * Every place of one placed block, at every depth: the block itself (`level: 'block'`, its `fields`), each shown item
  * (`level: 'item'`, the `itemFields`), each row of its `lists`, and each row of its `itemLists` per shown item.
  * @returns {Array<{level: 'block' | 'item' | 'row', prefix: string, item?: string, itemKind?: string,
- *   url?: string | null, row?: string, list?: string, fields: object[]}>} `prefix` is the id of the place, its
+ *   url?: string | null, row?: string, rank?: number, list?: string, fields: object[]}>} `rank` is a row's place in
+ *   its list, from 1 `prefix` is the id of the place, its
  *   fields' ids are `<prefix>.<field name>`
  */
 export function placesOfBlock(page, block, description, data) {

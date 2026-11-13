@@ -52,7 +52,8 @@ export function pictureProblemsOf(assignment, pictures, approved = {}) {
         report(frame, 'video_in_image_frame', 'an image frame never takes a video')
     }
     if (frame.source === 'generated') {
-      generated += 1
+      // The variant of a pair shows its base's picture: one picture, counted once.
+      if (!frame.sameAs) generated += 1
       if (frame.people) report(frame, 'generated_person', 'a picture of a person is never generated')
       if (frame.place === 'video') report(frame, 'generated_video', 'a video is never generated')
       else if (!frame.people && frame.kind && !generationOf(frame.kind).may)

@@ -12,6 +12,10 @@
 // video. Only a video frame (a `business.video` link field) takes an own video, and only one that is landscape or near
 // square with no text printed over it; otherwise it stays empty. A video is never generated.
 //
+// A LIGHT AND DARK PAIR IS ONE PICTURE. The variant of a pair (Contract A `variantOf`, a logo or a signature kept in two
+// files) is not filled on its own: it takes its base frame's decision, marked `sameAs` the base, and a generated one is
+// drawn and counted once.
+//
 // 🔒 THE BUSINESS LOGO IS THE BRAND STEP'S. A `business.logo` frame is never filled here and never generated; an award or
 // partner logo (`claim.entity_logo`) takes the item's own logo picture or stays empty with a reason.
 import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
@@ -95,7 +99,18 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
       }
     )
   const usable = list(pictures).filter((p) => !p.stock)
-  const frames = framesOfPlan(pages, blocks, data)
+  const all = framesOfPlan(pages, blocks, data)
+  const baseOf = (f) => `${f.id.slice(0, -f.field.length)}${f.variantOf}`
+  const ids = new Set(all.map((f) => f.id))
+  for (const f of all.filter((v) => v.variantOf !== undefined && !ids.has(baseOf(v))))
+    throw new PicturePolicyError(
+      'picture_variant_invalid',
+      `${f.id}: variantOf names no frame of its scope`,
+      {
+        at: f.id
+      }
+    )
+  const frames = all.filter((f) => f.variantOf === undefined)
   const filled = new Map()
   const used = new Set()
   placeOwn(
@@ -132,11 +147,19 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
       })
     }
   }
-  const out = kept.map((frame) => ({ ...frame, ...filled.get(frame.id) }))
+  // A pair's variant follows its base, in the place the base holds in the order.
+  const keptIds = new Set(kept.map((f) => f.id))
+  const out = all
+    .filter((f) => (f.variantOf === undefined ? keptIds.has(f.id) : keptIds.has(baseOf(f))))
+    .map((frame) =>
+      frame.variantOf === undefined
+        ? { ...frame, ...filled.get(frame.id) }
+        : { ...frame, ...filled.get(baseOf(frame)), sameAs: baseOf(frame) }
+    )
   const counts = { own: 0, generated: 0, none: 0 }
-  for (const frame of out) counts[frame.source] += 1
+  for (const frame of out) if (!frame.sameAs || frame.source === 'none') counts[frame.source] += 1
   // The frames of a dropped item leave with it; each is kept here so every declared frame stays accounted for.
-  const droppedFrames = frames
+  const droppedFrames = all
     .filter((f) => f.item && dropped.has(`${f.page}.${f.block}.${f.item}`))
     .map((f) => ({ frame: f.id, item: f.item, reason: 'item_dropped' }))
   const assignment = { frames: out, reduced, droppedFrames, counts, notes: note ? [note] : [] }

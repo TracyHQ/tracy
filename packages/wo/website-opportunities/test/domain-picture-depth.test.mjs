@@ -83,7 +83,25 @@ test('JA Boxing with every block placed: every declared icon, video and image fi
   // A row has no written words yet (the writer writes no child list field): its icon is hidden, with the reason.
   const row = result.icons.find((i) => i.id === 'class-detail.b1.features.1.icon')
   assert.deepEqual([row.source, row.reason], ['none', 'icon_words_missing'])
-  assert.ok(result.icons.some((i) => i.case === 'social' && i.source === 'library'))
+  // The network icons of JA Boxing are class names of its icon font: decided as the network of the row's own link, or
+  // hidden when that row has no link; never a library pick, never a ranked one.
+  const network = result.icons.filter((i) => i.case === 'social')
+  assert.ok(network.length > 0 && network.every((i) => i.storage === 'class-name'))
+  assert.ok(network.every((i) => i.source === 'network' || i.source === 'none'))
+  const rows = network.filter((i) => i.row)
+  const split = {}
+  for (const i of rows)
+    split[i.source === 'network' ? 'network class' : i.reason] =
+      (split[i.source === 'network' ? 'network class' : i.reason] ?? 0) + 1
+  console.log(`JA Boxing network icons in rows: ${rows.length}; ${JSON.stringify(split)}`)
+  assert.equal(rows.length, 68)
+  assert.ok(split['network class'] > 0 && split.no_social_link > 0)
+  // A row's icon names the network of that same row's link.
+  const second = result.icons.find((i) => i.id === 'block-163.b1.block-163-item-1.social.2.network-icon')
+  assert.deepEqual(
+    [second.source, second.network, second.link],
+    ['network', 'tiktok', 'https://www.tiktok.com/@example.member']
+  )
 })
 
 test('the invented templates: declared = decided as well', async () => {

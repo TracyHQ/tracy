@@ -7,8 +7,9 @@
 //      data, and filters the library down to candidates (`icon-candidates.mjs`). On a site not written in English the
 //      build model first gives English keywords for every item in one call (`icon-keywords.mjs`). The model then only
 //      ranks the candidates (`icon-ranking.mjs`); a name outside them is a failure, never a pick.
-//   2. A social icon (`iconOf: "network"`) stands for its link's network: code takes the network's mark
-//      (`icon-social.mjs`), no model.
+//   2. A social icon (`iconOf: "network"`) stands for its link's network (`icon-social.mjs`), no model: a
+//      `storage: "class-name"` field is decided as the network itself, which the write step writes as the class of the
+//      template's own icon font (never a library pick); an `image-file` one takes the network's library mark.
 //   3. Each icon is written in the theme its field declares, or in both (`icon-entry.mjs`), painted in colour roles
 //      (ADR 0043 section 1a: never a colour value) and drawn at the frame the block store declares.
 //   4. No candidate, an empty ranking, or an icon its section already shows: the field is hidden with the reason.
@@ -29,13 +30,30 @@ export const ALL_HIDDEN_MIN_ITEMS = 4
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
-/** The decision of a social scope: its network's mark, or hidden with why. */
+/** The link a social scope stands for: the written link of its own row when the writer gives one, else the plan's. */
+function linkOf(scope, written) {
+  const field = scope.social?.linkField
+  const key = `${scope.page}|${scope.block}|${scope.item ?? ''}|${scope.row ?? ''}`
+  const own = field ? (written.get(key) ?? []).find((c) => c.field === field)?.value : null
+  return isText(own) ? own : (scope.social?.url ?? null)
+}
+
+/**
+ * The decision of a social scope: its network (`network`, for a class name field), its library mark (`name`, for an
+ * image file field, when the library has it), or hidden with why.
+ */
 function socialChoice(url, names) {
+  const link = isText(url) ? url : null
   const reason = socialReasonOf(url)
-  if (reason) return { reason }
+  if (reason) return { reason, link }
   const net = networkOf(url)
-  if (!names.has(net.icon)) return { reason: 'social_icon_not_in_library', network: net.network }
-  return { name: net.icon, network: net.network, by: 'network', reason: `the ${net.network} mark` }
+  return {
+    network: net.network,
+    link,
+    by: 'network',
+    ...(names.has(net.icon) ? { name: net.icon } : { markMissing: true }),
+    reason: `the ${net.network} network of its link`
+  }
 }
 
 /** The notes a report shows: twin fields that do not say their theme, and a site whose content icons are all hidden. */
@@ -96,7 +114,7 @@ export async function selectIcons({ plan, data, blocks, copy, iconLibrary, model
   const content = []
   for (const scope of scopes) {
     if (scope.case === 'undeclared') chosen.set(scope.id, { reason: 'icon_item_undeclared' })
-    else if (scope.case === 'social') chosen.set(scope.id, socialChoice(scope.social?.url, names))
+    else if (scope.case === 'social') chosen.set(scope.id, socialChoice(linkOf(scope, written), names))
     else {
       const words = wordsOfScope(scope, written, data)
       if (words.all.length === 0) chosen.set(scope.id, { words: [], reason: 'icon_words_missing' })

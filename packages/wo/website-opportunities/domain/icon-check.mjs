@@ -1,15 +1,20 @@
 // The rules every icon of a build keeps (ticket #595, spec #577), checked on the selection itself so a later change to
 // the selection cannot break one silently. Pure: the selected icon fields in, the problems out, plus the accounting
-// (`iconCountsOf`): icon fields total = filled from the library + social + hidden with a reason, nothing unexplained.
-import { SOCIAL_ICON_NAMES } from './icon-social.mjs'
+// (`iconCountsOf`): icon fields total = filled from the library + social marks + network classes + hidden with a
+// reason, nothing unexplained.
+import { SOCIAL_ICON_NAMES, SOCIAL_NETWORKS } from './icon-social.mjs'
 
 /**
  * The colour roles an icon is painted in (ADR 0043 section 1a, the role vocabulary of the picture step's
  * `lib/picture-paint/paint.js`): resolved from the Design system when the site is written, never a colour value.
  */
 export const ICON_PAINT_ROLES = Object.freeze(['accent', 'on-accent', 'text', 'on-dark', 'surface'])
-/** Where an icon field's icon comes from: the icon library, or none (hidden, with the reason). */
-export const ICON_SOURCES = Object.freeze(['library', 'none'])
+/**
+ * Where an icon field's icon comes from: the icon library, the network of its link (a class name network icon, which
+ * the write step writes as the template font's class), or none (hidden, with the reason).
+ */
+export const ICON_SOURCES = Object.freeze(['library', 'network', 'none'])
+const NETWORKS = new Set(SOCIAL_NETWORKS.map((n) => n.network))
 /** The weights of the icon set (Phosphor's six, `lib/picture-paint/icons/phosphor-set.js`). */
 export const ICON_WEIGHTS = Object.freeze(['thin', 'light', 'regular', 'bold', 'fill', 'duotone'])
 const ROLES = new Set(ICON_PAINT_ROLES)
@@ -110,6 +115,14 @@ export function iconProblemsOf(selection, { names, demo = {}, pictureFrames = []
       report('icon_demo_left', 'the demo icon of the template is never kept')
     if (own.some((v) => COLOUR_LITERAL.test(v)))
       report('icon_colour_literal', 'an icon is painted in roles only')
+    if (entry.source === 'network') {
+      if (entry.case !== 'social' || entry.storage !== 'class-name')
+        report('icon_network_not_class', 'only a class name network icon is decided as its network')
+      if (!NETWORKS.has(entry.network)) report('icon_network_unknown', `${entry.network} is no known network`)
+      if (entry.icon || entry.variants)
+        report('icon_network_with_icon', 'a network class holds no library icon')
+      continue
+    }
     if (entry.source === 'none') {
       if (!isText(entry.reason)) report('icon_reason_missing', 'a hidden icon says why')
       if (entry.icon || entry.variants) report('icon_hidden_with_icon', 'a hidden icon holds no icon')
@@ -128,12 +141,16 @@ export function iconProblemsOf(selection, { names, demo = {}, pictureFrames = []
   return problems
 }
 
-/** The accounting of a selection: every icon field is filled from the library (content or social) or hidden with a reason. */
+/**
+ * The accounting of a selection: every icon field is filled from the library (content or social mark), decided as its
+ * link's network (a class name), or hidden with a reason.
+ */
 export function iconCountsOf(selection) {
-  const counts = { fields: 0, library: 0, social: 0, hidden: 0, unexplained: 0 }
+  const counts = { fields: 0, library: 0, social: 0, network: 0, hidden: 0, unexplained: 0 }
   for (const entry of selection?.icons ?? []) {
     counts.fields += 1
     if (entry.source === 'library') counts[entry.case === 'social' ? 'social' : 'library'] += 1
+    else if (entry.source === 'network' && isText(entry.network)) counts.network += 1
     else if (entry.source === 'none' && isText(entry.reason)) counts.hidden += 1
     else counts.unexplained += 1
   }

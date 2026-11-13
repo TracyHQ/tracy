@@ -50,7 +50,8 @@ function placeOf(block, field, level) {
  * @param {{byId: Map<string, {what: string, kind: string}>}} data the plan data (`plan-data.mjs`)
  * @returns {Array<{id: string, page: string, block: string, blockId: string, blockType: string, field: string,
  *   kind: string | null, place: 'hero' | 'block' | 'item' | 'row' | 'video', item?: string, itemKind?: string,
- *   row?: string, shape: 'landscape' | 'portrait' | 'square' | 'unknown', people: boolean, never?: string}>} `shape`
+ *   row?: string, theme?: 'light' | 'dark', variantOf?: string, shape: 'landscape' | 'portrait' | 'square' | 'unknown',
+ *   people: boolean, never?: string}>} `shape`
  *   is the frame's own, from its declared `frame` size (Contract A); `never` is set when the frame's kind is never
  *   generated (`picture-roles.mjs`), with the reason it records when no own picture fills it. A frame declared in
  *   another shape than Contract A's, or two fields of one name in one place, throw a `PicturePolicyError`.
@@ -88,6 +89,9 @@ export function framesOfPlan(pages, blocks, data) {
             place,
             ...(at.item ? { item: at.item, itemKind: at.itemKind } : {}),
             ...(at.row ? { row: at.row } : {}),
+            // A light and dark pair (Contract A): the variant names its base field; the policy gives both one picture.
+            ...(field.theme ? { theme: field.theme } : {}),
+            ...(field.variantOf ? { variantOf: field.variantOf } : {}),
             shape: orientationOf(frame?.width, frame?.height),
             people: PEOPLE.has(field.kind) || (at.itemKind === 'person' && place === 'item'),
             ...(generation.may || place === 'video' ? {} : { never: generation.reason })

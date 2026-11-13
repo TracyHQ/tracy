@@ -18,7 +18,7 @@ export const themesOf = (field) => (field.theme ? [field.theme] : ['light', 'dar
  * @param {object} scope an icon scope (`iconScopesOfPlan`)
  * @param {object} field one of its fields
  * @param {{name?: string, reason: string, by?: string, network?: string | null, words?: string[],
- *   keywords?: string[]}} chosen what the selection decided for the scope
+ *   keywords?: string[], link?: string | null, markMissing?: boolean}} chosen what the selection decided for the scope
  * @param {{set: string, look: typeof DEFAULT_ICON_LOOK}} context
  */
 export function entryOf(scope, field, chosen, { set, look }) {
@@ -35,10 +35,16 @@ export function entryOf(scope, field, chosen, { set, look }) {
     ...(scope.item ? { item: scope.item } : {}),
     ...(scope.row ? { row: scope.row } : {}),
     ...(field.theme ? { theme: field.theme } : {}),
-    ...(scope.social ? { network: chosen.network ?? null } : {}),
+    ...(field.variantOf ? { variantOf: field.variantOf } : {}),
+    ...(scope.social ? { network: chosen.network ?? null, link: chosen.link ?? null } : {}),
     ...(chosen.words ? { words: chosen.words } : {}),
     ...(chosen.keywords ? { keywords: chosen.keywords } : {})
   }
+  // A network icon kept as a class of the template's icon font: the write step writes the network's class.
+  if (scope.case === 'social' && field.storage === 'class-name' && chosen.network)
+    return { ...base, source: 'network', by: 'network', reason: chosen.reason }
+  if (scope.case === 'social' && chosen.network && !chosen.name)
+    return { ...base, source: 'none', reason: 'social_icon_not_in_library' }
   if (!chosen.name) return { ...base, source: 'none', reason: chosen.reason }
   const paint = (theme) => look?.[theme] ?? {}
   const version = (theme) => ({
