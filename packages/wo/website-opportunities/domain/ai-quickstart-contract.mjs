@@ -14,7 +14,7 @@ import {
 } from './ai-quickstart-field-keys.mjs'
 import { inlineCoverageProblems, inlineShapeProblems } from './ai-quickstart-inline.mjs'
 import { itemsOfStoreProblems } from './ai-quickstart-items-of.mjs'
-import { labelProblem } from './ai-quickstart-labels.mjs'
+import { labelProblem, pageLabelProblems } from './ai-quickstart-labels.mjs'
 import { mappingProblems } from './ai-quickstart-mapping.mjs'
 import { ROLE_VOCABULARY_V3, isBlockType, isRole } from './place-content-roles.mjs'
 
@@ -311,8 +311,10 @@ export function checkAiQuickstartContract({
   blockStoreProblems(blockStore, reporter(BLOCK_STORE_FILE))
   const blocks = Array.isArray(blockStore?.blocks) ? blockStore.blocks.filter((b) => isName(b?.id)) : []
   pageRecipesProblems(pageRecipes, new Set(blocks.map((b) => b.id)), reporter(PAGE_RECIPES_FILE))
-  if (isObject(blockStore) && Array.isArray(blockStore.blocks))
+  if (isObject(blockStore) && Array.isArray(blockStore.blocks)) {
     keyedPageTypeProblems(blockStore, pageRecipes, reporter(BLOCK_STORE_FILE))
+    pageLabelProblems(blockStore, pageRecipes, reporter(BLOCK_STORE_FILE))
+  }
   if (!mappingPending)
     mappingProblems(mapping, blocks, {
       report: reporter(MAPPING_FILE),

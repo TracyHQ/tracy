@@ -20,3 +20,56 @@ export function labelProblem(value) {
   if (/[.:;!?]$/.test(value)) return 'a label is a noun phrase, with no closing punctuation'
   return null
 }
+
+/** Every list label of a block: its `itemsLabel` and the `label` of each child list, with where it sits. */
+function labelsOf(block) {
+  const out = []
+  if (typeof block.itemsLabel === 'string')
+    out.push({ at: `blocks[${block.id}].itemsLabel`, label: block.itemsLabel })
+  const walk = (lists, key, above) =>
+    (Array.isArray(lists) ? lists : []).forEach((l) => {
+      const at = `${above}.${key}[${l?.name}]`
+      if (typeof l?.label === 'string') out.push({ at: `${at}.label`, label: l.label })
+      walk(l?.lists, 'lists', at)
+    })
+  walk(block.lists, 'lists', `blocks[${block.id}]`)
+  walk(block.itemLists, 'itemLists', `blocks[${block.id}]`)
+  return out
+}
+
+/**
+ * No two lists one page shows carry the same label (#584): an editor or a form showing the rows of one page by their
+ * labels could not tell them apart ("Social links" for a trainer's links and the business's own). A page is a page
+ * type of the recipes, with every block of its recipe and of its variants.
+ */
+export function pageLabelProblems(blockStore, pageRecipes, report) {
+  const blocks = new Map(
+    (Array.isArray(blockStore?.blocks) ? blockStore.blocks : [])
+      .filter((b) => b && typeof b.id === 'string')
+      .map((b) => [b.id, b])
+  )
+  const seen = new Set()
+  for (const recipe of Array.isArray(pageRecipes?.recipes) ? pageRecipes.recipes : []) {
+    const ids = new Set([
+      ...(recipe?.blocks ?? []),
+      ...(recipe?.variants ?? []).flatMap((v) => v?.blocks ?? [])
+    ])
+    const byLabel = new Map()
+    for (const id of ids)
+      for (const l of labelsOf(blocks.get(id) ?? {})) {
+        const key = l.label.toLowerCase()
+        byLabel.set(key, [...(byLabel.get(key) ?? []), l])
+      }
+    for (const [, same] of byLabel) {
+      if (same.length < 2) continue
+      const where = same.map((l) => l.at)
+      const once = where.join(' ')
+      if (seen.has(once)) continue
+      seen.add(once)
+      report(
+        where[1],
+        `"${same[1].label}" is also the label of ${where.filter((_, i) => i !== 1).join(', ')} on the ${recipe.pageType} page: one page's lists carry distinct labels`
+      )
+    }
+  }
+}

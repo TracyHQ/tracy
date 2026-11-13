@@ -318,6 +318,14 @@ list).
 | `fields` | the fields of one row, with the same rules as any field (type, kind, limit, frame) |
 | `lists` | optional: child lists of each row |
 
+**Distinct labels on one page.** No two lists one page shows carry the same label (`itemsLabel` and child list
+`label`, compared without case): the blocks of a page type's recipe and of its variants. An editor showing the rows of
+a page by their labels could not tell "Social links" of a trainer card from the business's own. JA Boxing: the plans
+tabs are "Credit bundles", "Memberships" and "Kids credit bundles" (after their tab titles) with "Credit bundle
+features", "Membership features" and "Kids credit bundle features"; the footer's links are "Business social links";
+the trainer cards' and the trainer's own links "Trainer social links", and the more trainers cards beside the trainer
+"More trainers" with "More trainers' social links".
+
 **Stored places per parent place.** A child field's `slots` is one entry per parent place, each the stored places of its
 rows in row order, `[]` for a place that stores none. Above, the four class records store 2, 1, 1 and 0 rows. The
 parent places are the block itself (one place) for `lists`, the stored item places (in the order of the item fields'

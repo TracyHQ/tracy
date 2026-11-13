@@ -362,7 +362,7 @@
       "itemLists": [
         {
           "name": "social",
-          "label": "Social links",
+          "label": "Trainer social links",
           "column": "params",
           "html": {
             "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
@@ -422,7 +422,7 @@
       "type": "newsletter"
     },
     "block-171": {
-      "itemsLabel": "Social links",
+      "itemsLabel": "Business social links",
       "type": "footer",
       "fieldKeys": {
         "social-label": {
@@ -623,12 +623,12 @@
       ]
     },
     "block-167": {
-      "itemsLabel": "Membership plans",
+      "itemsLabel": "Credit bundles",
       "type": "pricing",
       "itemLists": [
         {
           "name": "features",
-          "label": "Plan features",
+          "label": "Credit bundle features",
           "column": "params",
           "html": {
             "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
@@ -653,12 +653,12 @@
       ]
     },
     "block-188": {
-      "itemsLabel": "Membership plans",
+      "itemsLabel": "Memberships",
       "type": "pricing",
       "itemLists": [
         {
           "name": "features",
-          "label": "Plan features",
+          "label": "Membership features",
           "column": "params",
           "html": {
             "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
@@ -683,7 +683,7 @@
       ]
     },
     "block-189": {
-      "itemsLabel": "Membership plans",
+      "itemsLabel": "Kids credit bundles",
       "type": "pricing",
       "items": {
         "min": 1,
@@ -696,7 +696,7 @@
       "itemLists": [
         {
           "name": "features",
-          "label": "Plan features",
+          "label": "Kids credit bundle features",
           "column": "params",
           "html": {
             "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
@@ -788,7 +788,7 @@
       "itemLists": [
         {
           "name": "social",
-          "label": "Social links",
+          "label": "Trainer social links",
           "column": "params",
           "html": {
             "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
@@ -830,7 +830,7 @@
       "lists": [
         {
           "name": "social",
-          "label": "Social links",
+          "label": "Trainer social links",
           "column": "params",
           "items": {
             "min": 0
@@ -870,7 +870,7 @@
     },
     "block-181": { "itemsLabel": "Training videos", "type": "gallery" },
     "block-182": {
-      "itemsLabel": "Trainers",
+      "itemsLabel": "More trainers",
       "type": "team",
       "fields": [
         {
@@ -889,7 +889,7 @@
       "itemLists": [
         {
           "name": "social",
-          "label": "Social links",
+          "label": "More trainers' social links",
           "column": "params",
           "html": {
             "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
@@ -1064,7 +1064,7 @@
       "itemsOf": {
         "block": "news-list",
         "select": "the posts the page's person wrote",
-        "why": "an author page lists the posts written by its person (checked on the demo: admin lists posts 1, 3 and 11, newest first); every post the build creates is an item of news-list"
+        "why": "the author view (menu item 165, layout list) lists the newest articles the page's person wrote, in any category, at most num_intro_articles (6). On the demo the admin page lists six: three template documentation articles in Uncategorised (17 Typography, 28 Offline pages, 29 Error page, places of this block's items only because admin wrote them) and posts 1, 3 and 11; the blank site deletes every demo article and no build creates documentation articles. A build creates a person's articles as posts (items of news-list), so its author page lists that person's posts. The view selects by author, not by category: an article of another block (a class, a learning post) written by the same account is listed there too, so a build that writes classes or learning posts under a person's account shows them on that person's author page"
       },
       "type": "team",
       "sparse": {

@@ -45,3 +45,14 @@ test('a block with item fields names its items; a block without them carries no 
     'blocks[services-grid].itemsLabel: name what a person calls the rows: a short noun phrase in sentence case'
   ])
 })
+
+test('no two lists one page shows carry the same label (#584)', () => {
+  const set = valid()
+  assert.deepEqual(problemsOf(set), [])
+  blockOf(set, 'footer-main').lists[0].label = 'Baking days'
+  assert.deepEqual(problemsOf(set), [
+    'blocks[footer-main].lists[opening-hours].label: "Baking days" is also the label of blocks[services-grid].itemLists[sessions].label on the home page: one page\'s lists carry distinct labels'
+  ])
+  blockOf(set, 'footer-main').lists[0].label = 'bakes'
+  assert.match(problemsOf(set).join('\n'), /"bakes" is also the label of blocks\[services-grid\]\.itemsLabel/)
+})
