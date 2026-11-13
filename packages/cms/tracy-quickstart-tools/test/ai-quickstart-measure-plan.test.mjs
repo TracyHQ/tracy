@@ -66,7 +66,10 @@ test('a limit is the smallest reading over the widths, and needs a reading at 39
     '/'
   )
   assert.equal(rec.limit, 24)
-  assert.match(rec.limitFrom, /^measured at 390px on the running template, page \/: 390px 31 .*1440px 24/)
+  assert.match(
+    rec.limitFrom,
+    /^measured on the running template at 390, 1440px, page \/: 390px 31 .*1440px 24 .*; the limit is the smallest reading, 24 at 1440px;/
+  )
   assert.equal(limitFromReadings({ 1440: { limit: 24, demo: 11, lines: 1 } }, '/'), null)
 })
 
@@ -91,7 +94,11 @@ test('a text the phone layout hides is measured at the narrowest width that draw
   const readings = { 768: { limit: 14, demo: 10, lines: 1 }, 1440: { limit: 18, demo: 10, lines: 1 } }
   const rec = limitFromReadings(readings, '/', { hiddenAt: [390] })
   assert.equal(rec.limit, 14)
-  assert.match(rec.limitFrom, /^measured at 768px on the running template, page \/: 768px 14 .*1440px 18/)
+  assert.match(
+    rec.limitFrom,
+    /^measured on the running template at 768, 1440px, page \/: 768px 14 .*1440px 18/
+  )
+  assert.match(rec.limitFrom, /the limit is the smallest reading, 14 at 768px/)
   assert.match(rec.limitFrom, /hides it at 390px/)
   assert.equal(limitFromReadings(readings, '/'), null, 'a text not read at 390 px and not hidden there')
 })
@@ -126,6 +133,22 @@ test('a decision can open a menu by a selector before the slot is read', () => {
   assert.deepEqual(plan.pages[0], {
     path: '/',
     clickSelector: '#menu-toggle',
+    texts: [{ id: 'module-8.0', slot: 'module-8.0', text: 'Opening soon', tight: 'Opening soon' }]
+  })
+})
+
+test('a decision opens each submenu of a menu on a visit of its own', () => {
+  const plan = planMeasurements({
+    unmeasured: [{ block: 'block-8', slot: 'module-8.0' }],
+    blockStore,
+    kit,
+    contentMap,
+    measureOn: { 'module-8.0': { path: '/', clickSelector: '#menu-toggle', openEach: '.submenu-toggle' } }
+  })
+  assert.deepEqual(plan.pages[0], {
+    path: '/',
+    clickSelector: '#menu-toggle',
+    openEach: '.submenu-toggle',
     texts: [{ id: 'module-8.0', slot: 'module-8.0', text: 'Opening soon', tight: 'Opening soon' }]
   })
 })

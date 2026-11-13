@@ -12,8 +12,9 @@ export const shownTextOf = (sample, joiner = ' ') =>
 
 /**
  * `measureOn` (the template's decisions) names, per content map key, another page to read the slot on and what to
- * open first (`{path, click, clickSelector}`: the words of a tab, or CSS selectors clicked in turn, every match, such
- * as a menu toggle and its submenu toggles): a price in
+ * open first (`{path, click, clickSelector, openEach}`: the words of a tab, CSS selectors clicked in turn, every
+ * match, such as a menu toggle, and `openEach`, a selector of submenu toggles opened one at a time on a visit of their
+ * own, with the toggles of the items they sit in, since such toggles close each other): a price in
  * a closed tab, a masthead row only one page shows, a phone menu that slides in.
  * Each text carries `tight`: its words as a phone shows them when a forced line break is hidden there ("WHATTO
  * BRING" for "WHAT<br>TO BRING").
@@ -50,14 +51,21 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
     // line heading), so the text may take the lines the demo shows, no more.
     const click = measureOn[slot]?.click
     const clickSelector = measureOn[slot]?.clickSelector
-    const key = JSON.stringify([page.path, click ?? null, clickSelector ?? null])
+    const openEach = measureOn[slot]?.openEach
+    const key = JSON.stringify([page.path, click ?? null, clickSelector ?? null, openEach ?? null])
     const texts = byPath.get(key) ?? []
     texts.push({ id: slot, slot, text, tight: shownTextOf(mapSlots.get(slot)?.sample, '') })
     byPath.set(key, texts)
   }
   const pages = [...byPath].map(([key, texts]) => {
-    const [path, click, clickSelector] = JSON.parse(key)
-    return { path, ...(click ? { click } : {}), ...(clickSelector ? { clickSelector } : {}), texts }
+    const [path, click, clickSelector, openEach] = JSON.parse(key)
+    return {
+      path,
+      ...(click ? { click } : {}),
+      ...(clickSelector ? { clickSelector } : {}),
+      ...(openEach ? { openEach } : {}),
+      texts
+    }
   })
   return { pages, skipped }
 }
@@ -84,6 +92,7 @@ export function limitFromReadings(readings, path, { hiddenAt = [] } = {}) {
   const narrowest = widths[0]
   if (narrowest !== NARROWEST_WIDTH && !hidden.has(NARROWEST_WIDTH)) return null
   const limit = Math.min(...widths.map((w) => readings[w].limit))
+  const at = widths.find((w) => readings[w].limit === limit)
   const how = widths.some((w) => readings[w].how === 'placeholder')
     ? `the form field's placeholder repeated until it was wider than the field`
     : 'the box filled until the text needed more lines than the demo shows, grew the page or pushed another text'
@@ -97,6 +106,6 @@ export function limitFromReadings(readings, path, { hiddenAt = [] } = {}) {
       : `; the layout hides it at ${[...hidden].sort((a, b) => a - b).join(' and ')}px (its box is drawn 0 by 0), so ${narrowest}px is the narrowest width that draws it`
   return {
     limit,
-    limitFrom: `measured at ${narrowest}px on the running template, page ${path}: ${parts.join(', ')}; ${how}${hiddenNote}`
+    limitFrom: `measured on the running template at ${widths.join(', ')}px, page ${path}: ${parts.join(', ')}; the limit is the smallest reading, ${limit} at ${at}px; ${how}${hiddenNote}`
   }
 }

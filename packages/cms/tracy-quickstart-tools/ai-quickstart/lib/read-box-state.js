@@ -87,3 +87,23 @@ export function readPlaceholderFit({ texts }) {
   }
   return out
 }
+
+/**
+ * The toggles to click, outermost first, to open the submenu of toggle `index` of `selector` alone: the toggles of
+ * the menu items it sits in, then itself. Submenu toggles of a menu close each other, so each submenu is opened on
+ * its own visit of the page.
+ * @param {{selector: string, index: number}} o
+ * @returns {number[]}
+ */
+export function toggleChainOf({ selector, index }) {
+  const toggles = [...document.querySelectorAll(selector)]
+  const target = toggles[index]
+  if (!target) return []
+  const itemOf = (t) => t.closest('li') ?? t.parentElement
+  const chain = toggles
+    .map((t, i) => ({ t, i }))
+    .filter(({ t, i }) => i !== index && itemOf(t)?.contains(target))
+    .sort((a, b) => (itemOf(a.t).contains(itemOf(b.t)) ? -1 : 1))
+    .map(({ i }) => i)
+  return [...chain, index]
+}
