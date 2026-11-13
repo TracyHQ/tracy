@@ -106,6 +106,7 @@ const decisions = {
       lists: [
         {
           name: 'pages',
+          label: 'Page headings',
           column: 'params',
           items: { min: 0 },
           itemsFrom: { min: 'invented' },
@@ -120,6 +121,7 @@ const decisions = {
       itemLists: [
         {
           name: 'social',
+          label: 'Social links',
           column: 'params',
           html: { jsonPath: ['team', 'info', '{0}'], row: 'a' },
           items: { min: 0 },

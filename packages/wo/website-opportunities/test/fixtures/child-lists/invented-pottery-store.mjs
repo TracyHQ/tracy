@@ -20,6 +20,7 @@ export function potteryStore() {
   block('services-grid').itemLists = [
     {
       name: 'sessions',
+      label: 'Wheel sessions',
       items: { min: 0, max: 2 },
       itemsFrom: {
         min: 'invented: a card without a session row',
@@ -32,6 +33,7 @@ export function potteryStore() {
     },
     {
       name: 'steps',
+      label: 'Steps',
       items: { min: 0, max: 3 },
       itemsFrom: { min: 'invented: a card without steps', max: 'invented: the most steps a card stores' },
       fields: [
@@ -49,6 +51,7 @@ export function potteryStore() {
       lists: [
         {
           name: 'tips',
+          label: 'Tips',
           items: { min: 0, max: 1 },
           itemsFrom: { min: 'invented: a step without a tip', max: 'invented: one tip per step' },
           fields: [
@@ -66,6 +69,7 @@ export function potteryStore() {
   block('team-cards').itemLists = [
     {
       name: 'links',
+      label: 'Profile links',
       items: { min: 0, max: 2 },
       itemsFrom: { min: 'invented: a card without links', max: 'invented: two links per card' },
       fields: [
@@ -85,6 +89,7 @@ export function potteryStore() {
   block('footer-main').lists = [
     {
       name: 'hours',
+      label: 'Opening hours',
       items: { min: 0, max: 2 },
       itemsFrom: { min: 'invented: the footer without lines', max: 'invented: two stored lines' },
       fields: [text('line', 'offering.schedule', 32, places(['footer-main.block'], 'line', [2]))]

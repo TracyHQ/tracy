@@ -80,6 +80,7 @@ const kit = {
 }
 const calendar = {
   name: 'sessions',
+  label: 'Baking sessions',
   column: 'attribs',
   items: { min: 0 },
   itemsFrom: { min: 'invented: a card lays out with no session row' },
@@ -97,9 +98,11 @@ const draft = (block) =>
   })
 
 test('a child list of each item lists, per item place, the rows that place stores', () => {
-  const res = draft({ itemLists: [calendar] })
+  const res = draft({ itemsLabel: 'Bakes', itemLists: [calendar] })
   const [block] = res.blocks
+  assert.equal(block.itemsLabel, 'Bakes')
   const [list] = block.itemLists
+  assert.equal(list.label, 'Baking sessions')
   assert.deepEqual(list.items, { min: 0, max: 2 })
   assert.match(list.itemsFrom.max, /most rows a stored parent place holds \(2; per place 2, 1, 0\)/)
   assert.deepEqual(
@@ -126,6 +129,15 @@ test('a child list of each item lists, per item place, the rows that place store
 test('a child list without a stated minimum is reported, never guessed', () => {
   const res = draft({ itemLists: [{ ...calendar, items: {}, itemsFrom: {} }] })
   assert.match(res.problems[0].problem, /child list sessions: state its minimum/)
+})
+
+test('a child list without a label is reported', () => {
+  const { label: _label, ...unlabelled } = calendar
+  const res = draft({ itemLists: [unlabelled] })
+  assert.deepEqual(
+    res.problems.map((p) => p.problem),
+    ['child list sessions: name what a person calls its rows (label)']
+  )
 })
 
 test('a row that stores only some fields of the list is reported', () => {
@@ -210,6 +222,7 @@ test('a nested child list reads its rows inside each row of its parent list', ()
           lists: [
             {
               name: 'steps',
+              label: 'Steps',
               column: 'attribs',
               items: { min: 1 },
               itemsFrom: { min: 'invented: one step lays out' },
@@ -217,6 +230,7 @@ test('a nested child list reads its rows inside each row of its parent list', ()
               lists: [
                 {
                   name: 'points',
+                  label: 'Points',
                   column: 'attribs',
                   items: { min: 1 },
                   itemsFrom: { min: 'invented: one point lays out' },

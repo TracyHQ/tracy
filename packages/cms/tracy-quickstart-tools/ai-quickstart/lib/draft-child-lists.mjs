@@ -210,7 +210,8 @@ export function draftChildLists(decls, parents, depth, ctx, report) {
       report.problem(
         `child list ${decl.name}: state its minimum and where it comes from (items.min, itemsFrom.min)`
       )
-    const list = { name: decl.name, items, itemsFrom, fields }
+    if (!decl.label) report.problem(`child list ${decl.name}: name what a person calls its rows (label)`)
+    const list = { name: decl.name, label: decl.label, items, itemsFrom, fields }
     if (decl.lists?.length) {
       const rowParents = parents.flatMap((p, i) =>
         rowsPerParent[i].map(([row]) => ({ entity: p.entity, fixed: { ...p.fixed, [depth]: row } }))

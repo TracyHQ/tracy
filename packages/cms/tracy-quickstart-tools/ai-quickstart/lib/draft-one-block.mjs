@@ -259,7 +259,9 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   if (itemFields.length) block.itemFields = itemFields
   applyItems(block, decision, { items, from: itemsFrom }, out)
   for (const key of ['lists', 'itemLists']) if (childLists[key].length) block[key] = childLists[key]
-  // Whose records the items are, and in which order the block lists them (draft-items-of.mjs).
+  // What a person calls the block's items (a short noun phrase), then whose records they are and in which order
+  // the block lists them (draft-items-of.mjs).
+  if (block.itemFields && decision.itemsLabel) block.itemsLabel = decision.itemsLabel
   applyItemsOf(block, decision)
   const itemPlaces = (block.itemFields ?? []).find((f) => Array.isArray(f.slots))?.slots.map(entityOf)
   if (block.itemLists && repeating && itemPlaces && itemPlaces.join() !== repeating.shown.join())

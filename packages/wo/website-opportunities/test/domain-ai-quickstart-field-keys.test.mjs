@@ -44,6 +44,7 @@ function withKeyedRows(set) {
   hero.lists = [
     {
       name: 'pages',
+      label: 'Page headings',
       items: { min: 0, max: 2 },
       itemsFrom: { min: 'invented: a page with no row shows the default title', max: 'invented: two rows' },
       fields: [

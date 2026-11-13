@@ -5,6 +5,7 @@
   "blocks": [
     {
       "id": "tracy-reviews",
+      "itemsLabel": "Reviews",
       "type": "reviews",
       "source": "library",
       "positions": ["content"],

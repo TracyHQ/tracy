@@ -72,6 +72,7 @@
     },
     {
       "id": "services-grid",
+      "itemsLabel": "Services",
       "type": "services",
       "positions": ["content"],
       "items": {
@@ -133,6 +134,7 @@
     },
     {
       "id": "team-cards",
+      "itemsLabel": "Coaches",
       "type": "team",
       "positions": ["content"],
       "items": {
@@ -182,6 +184,7 @@
     },
     {
       "id": "gallery-strip",
+      "itemsLabel": "Gallery photos",
       "type": "gallery",
       "positions": ["content"],
       "items": {
@@ -237,6 +240,7 @@
         },
         {
           "name": "hours",
+          "label": "Opening hours",
           "kind": "contact.hours",
           "type": "text",
           "limit": 80

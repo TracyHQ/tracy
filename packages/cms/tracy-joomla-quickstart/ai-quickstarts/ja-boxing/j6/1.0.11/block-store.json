@@ -96,6 +96,7 @@
           "derived": "the page address"
         }
       ],
+      "itemsLabel": "Main menu items",
       "itemsOrder": {
         "by": "menu",
         "direction": "asc",
@@ -210,6 +211,7 @@
           "derived": "the page address"
         }
       ],
+      "itemsLabel": "Phone menu items",
       "itemsOrder": {
         "by": "menu",
         "direction": "asc",
@@ -471,6 +473,7 @@
           ]
         }
       ],
+      "itemsLabel": "Workout highlights",
       "from": {
         "kit": [
           "block-157"
@@ -674,6 +677,7 @@
       "itemLists": [
         {
           "name": "calendar",
+          "label": "Class days",
           "items": {
             "min": 0,
             "max": 2
@@ -726,6 +730,7 @@
           ]
         }
       ],
+      "itemsLabel": "Classes",
       "itemsOrder": {
         "by": "title",
         "direction": "asc",
@@ -925,6 +930,7 @@
       "itemLists": [
         {
           "name": "social",
+          "label": "Social links",
           "items": {
             "min": 0,
             "max": 4
@@ -1006,6 +1012,7 @@
           ]
         }
       ],
+      "itemsLabel": "Trainers",
       "from": {
         "kit": [
           "block-163"
@@ -1101,6 +1108,7 @@
           }
         }
       ],
+      "itemsLabel": "Steps",
       "from": {
         "kit": [
           "block-165"
@@ -1241,6 +1249,7 @@
           ]
         }
       ],
+      "itemsLabel": "Gallery photos",
       "from": {
         "kit": [
           "block-166"
@@ -1402,6 +1411,7 @@
           "iconOf": "network"
         }
       ],
+      "itemsLabel": "Social links",
       "from": {
         "kit": [
           "block-171"
@@ -1527,6 +1537,7 @@
           "derived": "the page address"
         }
       ],
+      "itemsLabel": "Class links",
       "from": {
         "kit": [
           "block-173"
@@ -1584,6 +1595,7 @@
           "derived": "the page address"
         }
       ],
+      "itemsLabel": "Footer links",
       "from": {
         "kit": [
           "block-174"
@@ -1734,6 +1746,7 @@
       "lists": [
         {
           "name": "pages",
+          "label": "Page headings",
           "items": {
             "min": 0,
             "max": 14
@@ -2010,6 +2023,7 @@
           "derived": "the page address"
         }
       ],
+      "itemsLabel": "Breadcrumb links",
       "itemsOrder": {
         "by": "path",
         "direction": "asc",
@@ -2105,6 +2119,7 @@
           ]
         }
       ],
+      "itemsLabel": "Posts",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -2192,6 +2207,7 @@
           ]
         }
       ],
+      "itemsLabel": "Featured posts",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -2259,6 +2275,7 @@
           "derived": "the item page address"
         }
       ],
+      "itemsLabel": "Authors",
       "from": {
         "kit": [
           "body-pages_j-content_author-listting"
@@ -2409,6 +2426,7 @@
       "lists": [
         {
           "name": "points",
+          "label": "Key points",
           "items": {
             "min": 1,
             "max": 4
@@ -2629,6 +2647,7 @@
       "itemLists": [
         {
           "name": "calendar",
+          "label": "Class days",
           "items": {
             "min": 0,
             "max": 2
@@ -2681,6 +2700,7 @@
           ]
         }
       ],
+      "itemsLabel": "Classes",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -2945,6 +2965,7 @@
       "itemLists": [
         {
           "name": "features",
+          "label": "Plan features",
           "items": {
             "min": 1,
             "max": 10
@@ -3008,6 +3029,7 @@
           ]
         }
       ],
+      "itemsLabel": "Membership plans",
       "from": {
         "kit": [
           "block-184 list block-167.item"
@@ -3112,6 +3134,7 @@
       "itemLists": [
         {
           "name": "features",
+          "label": "Plan features",
           "items": {
             "min": 1,
             "max": 10
@@ -3175,6 +3198,7 @@
           ]
         }
       ],
+      "itemsLabel": "Membership plans",
       "from": {
         "kit": [
           "block-184 list block-188.item"
@@ -3279,6 +3303,7 @@
       "itemLists": [
         {
           "name": "features",
+          "label": "Plan features",
           "items": {
             "min": 1,
             "max": 10
@@ -3342,6 +3367,7 @@
           ]
         }
       ],
+      "itemsLabel": "Membership plans",
       "from": {
         "kit": [
           "block-184 list block-189.item"
@@ -3453,6 +3479,7 @@
           ]
         }
       ],
+      "itemsLabel": "Price options",
       "from": {
         "kit": [
           "block-172"
@@ -3733,6 +3760,7 @@
           ]
         }
       ],
+      "itemsLabel": "Workout highlights",
       "from": {
         "kit": [
           "block-190"
@@ -3875,6 +3903,7 @@
           ]
         }
       ],
+      "itemsLabel": "Training programs",
       "from": {
         "kit": [
           "block-177"
@@ -3941,6 +3970,7 @@
           ]
         }
       ],
+      "itemsLabel": "Learning posts",
       "from": {
         "kit": [
           "body-about-us_learning-center",
@@ -4039,6 +4069,7 @@
       "itemLists": [
         {
           "name": "social",
+          "label": "Social links",
           "items": {
             "min": 0,
             "max": 4
@@ -4168,6 +4199,7 @@
           ]
         }
       ],
+      "itemsLabel": "Trainers",
       "from": {
         "kit": [
           "block-178"
@@ -4254,6 +4286,7 @@
       "lists": [
         {
           "name": "social",
+          "label": "Social links",
           "items": {
             "min": 0,
             "max": 4
@@ -4432,6 +4465,7 @@
           ]
         }
       ],
+      "itemsLabel": "Training videos",
       "from": {
         "kit": [
           "block-181"
@@ -4546,6 +4580,7 @@
       "itemLists": [
         {
           "name": "social",
+          "label": "Social links",
           "items": {
             "min": 0,
             "max": 4
@@ -4627,6 +4662,7 @@
           ]
         }
       ],
+      "itemsLabel": "Trainers",
       "from": {
         "kit": [
           "block-182"
@@ -4807,6 +4843,7 @@
       "lists": [
         {
           "name": "features",
+          "label": "Class features",
           "items": {
             "min": 1,
             "max": 4
@@ -4897,6 +4934,7 @@
         },
         {
           "name": "exercises",
+          "label": "Exercises",
           "items": {
             "min": 1,
             "max": 4
@@ -4955,6 +4993,7 @@
           "lists": [
             {
               "name": "steps",
+              "label": "Exercise steps",
               "items": {
                 "min": 1,
                 "max": 5
@@ -5149,6 +5188,7 @@
       "itemLists": [
         {
           "name": "calendar",
+          "label": "Class days",
           "items": {
             "min": 0,
             "max": 1
@@ -5191,6 +5231,7 @@
           ]
         }
       ],
+      "itemsLabel": "Related classes",
       "itemsOrder": {
         "by": "title",
         "direction": "asc",
@@ -5386,6 +5427,7 @@
           ]
         }
       ],
+      "itemsLabel": "Author's posts",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -5524,6 +5566,7 @@
       "lists": [
         {
           "name": "benefits",
+          "label": "Benefits",
           "items": {
             "min": 1,
             "max": 8
@@ -5556,6 +5599,7 @@
         },
         {
           "name": "punches",
+          "label": "Punches",
           "items": {
             "min": 1,
             "max": 6

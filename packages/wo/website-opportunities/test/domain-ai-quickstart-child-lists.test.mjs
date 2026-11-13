@@ -117,6 +117,7 @@ test('a nested child list stores its rows per row of its parent list', () => {
   hours(set).lists = [
     {
       name: 'notes',
+      label: 'Notes',
       items: { min: 0, max: 1 },
       itemsFrom: { min: 'invented: a line without a note', max: 'invented: one note per line' },
       fields: [

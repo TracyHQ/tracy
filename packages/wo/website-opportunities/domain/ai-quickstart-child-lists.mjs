@@ -8,6 +8,8 @@
 // Pure helpers shared by the block store rules (`ai-quickstart-contract.mjs`) and the mapping rules
 // (`ai-quickstart-mapping.mjs`). Format: docs/references/ai-quickstart-contract.md.
 
+import { labelProblem } from './ai-quickstart-labels.mjs'
+
 export const CHILD_LIST_KEYS = Object.freeze(['lists', 'itemLists'])
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
@@ -75,13 +77,15 @@ export function childListProblems(owner, at, scope, rules) {
   }
   for (const { key, list, at: listAt } of childListsOf(owner, at, scope.keys)) {
     if (!isObject(list)) {
-      report(listAt, 'a child list must be an object {name, items, itemsFrom, fields}')
+      report(listAt, 'a child list must be an object {name, label, items, itemsFrom, fields}')
       continue
     }
     if (!isName(list.name)) report(`${listAt}.name`, 'a child list needs a non-empty name')
     else if (scope.names.has(list.name))
       report(listAt, `name ${JSON.stringify(list.name)} appears twice in the block`)
     else scope.names.add(list.name)
+    const labelled = labelProblem(list.label)
+    if (labelled) report(`${listAt}.label`, labelled)
     rules.itemsProblems(list.items, `${listAt}.items`, report)
     if (!isObject(list.itemsFrom) || !isName(list.itemsFrom.min) || !isName(list.itemsFrom.max))
       report(`${listAt}.itemsFrom`, 'a child list states where each count comes from: itemsFrom {min, max}')

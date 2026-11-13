@@ -14,6 +14,7 @@ import {
 } from './ai-quickstart-field-keys.mjs'
 import { inlineCoverageProblems, inlineShapeProblems } from './ai-quickstart-inline.mjs'
 import { itemsOfStoreProblems } from './ai-quickstart-items-of.mjs'
+import { labelProblem } from './ai-quickstart-labels.mjs'
 import { mappingProblems } from './ai-quickstart-mapping.mjs'
 import { ROLE_VOCABULARY_V3, isBlockType, isRole } from './place-content-roles.mjs'
 
@@ -123,6 +124,11 @@ export function blockProblems(block, at, report, { library = false } = {}) {
   const names = new Set()
   fieldListProblems(block, 'fields', at, report, names)
   fieldListProblems(block, 'itemFields', at, report, names)
+  if (Array.isArray(block.itemFields) && block.itemFields.length) {
+    const labelled = labelProblem(block.itemsLabel)
+    if (labelled) report(`${at}.itemsLabel`, labelled)
+  } else if (block.itemsLabel !== undefined)
+    report(`${at}.itemsLabel`, 'itemsLabel names the items of a block with item fields')
   storedPlaceProblems(block, at, report, library)
   childListProblems(
     block,

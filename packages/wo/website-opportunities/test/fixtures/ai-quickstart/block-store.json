@@ -36,6 +36,7 @@
     },
     {
       "id": "services-grid",
+      "itemsLabel": "Bakes",
       "type": "services",
       "positions": ["content"],
       "items": { "min": 2, "max": 3 },
@@ -73,6 +74,7 @@
       "itemLists": [
         {
           "name": "sessions",
+          "label": "Baking days",
           "items": { "min": 0, "max": 2 },
           "itemsFrom": {
             "min": "invented: a card lays out with no session row",
@@ -107,6 +109,7 @@
       "lists": [
         {
           "name": "opening-hours",
+          "label": "Opening hours",
           "items": { "min": 2, "max": 2 },
           "itemsFrom": {
             "min": "invented: the footer column draws both stored lines",

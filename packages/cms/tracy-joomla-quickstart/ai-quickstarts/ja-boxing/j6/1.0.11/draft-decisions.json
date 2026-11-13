@@ -219,6 +219,7 @@
   },
   "blocks": {
     "header": {
+      "itemsLabel": "Main menu items",
       "itemsOrder": { "by": "menu", "direction": "asc", "from": "the main menu (mainmenu) in its own order" },
       "type": "header",
       "position": "header",
@@ -257,6 +258,7 @@
       ]
     },
     "block-187": {
+      "itemsLabel": "Phone menu items",
       "itemsOrder": {
         "by": "menu",
         "direction": "asc",
@@ -278,6 +280,7 @@
       "type": "hero"
     },
     "block-157": {
+      "itemsLabel": "Workout highlights",
       "type": "services",
       "fieldKeys": {
         "item-icon": {
@@ -292,6 +295,7 @@
       }
     },
     "block-160": {
+      "itemsLabel": "Classes",
       "itemsOrder": {
         "by": "title",
         "direction": "asc",
@@ -320,6 +324,7 @@
       "itemLists": [
         {
           "name": "calendar",
+          "label": "Class days",
           "column": "attribs",
           "items": {
             "min": 0
@@ -344,6 +349,7 @@
       "type": "call_to_action"
     },
     "block-163": {
+      "itemsLabel": "Trainers",
       "type": "team",
       "fields": [
         {
@@ -356,6 +362,7 @@
       "itemLists": [
         {
           "name": "social",
+          "label": "Social links",
           "column": "params",
           "html": {
             "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
@@ -392,10 +399,9 @@
         }
       ]
     },
-    "block-165": {
-      "type": "steps"
-    },
+    "block-165": { "itemsLabel": "Steps", "type": "steps" },
     "block-166": {
+      "itemsLabel": "Gallery photos",
       "type": "gallery",
       "items": {
         "min": 3,
@@ -416,6 +422,7 @@
       "type": "newsletter"
     },
     "block-171": {
+      "itemsLabel": "Social links",
       "type": "footer",
       "fieldKeys": {
         "social-label": {
@@ -473,6 +480,7 @@
       "type": "contact"
     },
     "block-173": {
+      "itemsLabel": "Class links",
       "type": "footer",
       "nav": true,
       "noData": {
@@ -481,6 +489,7 @@
       }
     },
     "block-174": {
+      "itemsLabel": "Footer links",
       "type": "footer",
       "nav": true,
       "noData": {
@@ -520,6 +529,7 @@
       "lists": [
         {
           "name": "pages",
+          "label": "Page headings",
           "column": "params",
           "items": {
             "min": 0
@@ -561,6 +571,7 @@
       ]
     },
     "block-17": {
+      "itemsLabel": "Breadcrumb links",
       "itemsOrder": {
         "by": "path",
         "direction": "asc",
@@ -612,10 +623,12 @@
       ]
     },
     "block-167": {
+      "itemsLabel": "Membership plans",
       "type": "pricing",
       "itemLists": [
         {
           "name": "features",
+          "label": "Plan features",
           "column": "params",
           "html": {
             "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
@@ -640,10 +653,12 @@
       ]
     },
     "block-188": {
+      "itemsLabel": "Membership plans",
       "type": "pricing",
       "itemLists": [
         {
           "name": "features",
+          "label": "Plan features",
           "column": "params",
           "html": {
             "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
@@ -668,6 +683,7 @@
       ]
     },
     "block-189": {
+      "itemsLabel": "Membership plans",
       "type": "pricing",
       "items": {
         "min": 1,
@@ -680,6 +696,7 @@
       "itemLists": [
         {
           "name": "features",
+          "label": "Plan features",
           "column": "params",
           "html": {
             "jsonPath": ["features-intro", "features-intro[item-info]", "{0}"],
@@ -704,6 +721,7 @@
       ]
     },
     "block-172": {
+      "itemsLabel": "Price options",
       "type": "pricing",
       "fields": [
         {
@@ -727,6 +745,7 @@
       }
     },
     "block-190": {
+      "itemsLabel": "Workout highlights",
       "type": "services",
       "fields": [
         {
@@ -748,10 +767,9 @@
         }
       }
     },
-    "block-177": {
-      "type": "services"
-    },
+    "block-177": { "itemsLabel": "Training programs", "type": "services" },
     "block-178": {
+      "itemsLabel": "Trainers",
       "type": "team",
       "fields": [
         {
@@ -770,6 +788,7 @@
       "itemLists": [
         {
           "name": "social",
+          "label": "Social links",
           "column": "params",
           "html": {
             "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
@@ -811,6 +830,7 @@
       "lists": [
         {
           "name": "social",
+          "label": "Social links",
           "column": "params",
           "items": {
             "min": 0
@@ -848,10 +868,9 @@
         }
       ]
     },
-    "block-181": {
-      "type": "gallery"
-    },
+    "block-181": { "itemsLabel": "Training videos", "type": "gallery" },
     "block-182": {
+      "itemsLabel": "Trainers",
       "type": "team",
       "fields": [
         {
@@ -870,6 +889,7 @@
       "itemLists": [
         {
           "name": "social",
+          "label": "Social links",
           "column": "params",
           "html": {
             "jsonPath": ["teams", "teams-intro[data]", "teams-intro[data][team-info]", "{0}"],
@@ -907,6 +927,7 @@
       ]
     },
     "block-159": {
+      "itemsLabel": "Related classes",
       "itemsOrder": {
         "by": "title",
         "direction": "asc",
@@ -921,6 +942,7 @@
       "itemLists": [
         {
           "name": "calendar",
+          "label": "Class days",
           "column": "attribs",
           "items": {
             "min": 0
@@ -958,6 +980,7 @@
     {
       "match": "^body-pages_j-content_category-blog(--start-\\d+)?$",
       "id": "news-list",
+      "itemsLabel": "Posts",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -980,6 +1003,7 @@
       "lists": [
         {
           "name": "points",
+          "label": "Key points",
           "column": "fulltext",
           "items": {
             "min": 1
@@ -1001,6 +1025,7 @@
     {
       "match": "^body-pages_j-content_featured-articles(--start-\\d+)?$",
       "id": "featured-list",
+      "itemsLabel": "Featured posts",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -1016,6 +1041,7 @@
     {
       "match": "^body-pages_j-content_author-listting$",
       "id": "author-list",
+      "itemsLabel": "Authors",
       "type": "team",
       "items": {
         "min": 1,
@@ -1029,6 +1055,7 @@
     {
       "match": "^body-pages_j-content_author-listting_author_",
       "id": "author-profile",
+      "itemsLabel": "Author's posts",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -1047,6 +1074,7 @@
     {
       "match": "^body-classes$",
       "id": "class-list",
+      "itemsLabel": "Classes",
       "itemsOrder": {
         "by": "published",
         "direction": "desc",
@@ -1056,6 +1084,7 @@
       "itemLists": [
         {
           "name": "calendar",
+          "label": "Class days",
           "column": "attribs",
           "items": {
             "min": 0
@@ -1105,6 +1134,7 @@
       "lists": [
         {
           "name": "features",
+          "label": "Class features",
           "column": "attribs",
           "items": {
             "min": 1
@@ -1142,6 +1172,7 @@
         },
         {
           "name": "exercises",
+          "label": "Exercises",
           "column": "attribs",
           "items": {
             "min": 1
@@ -1169,6 +1200,7 @@
           "lists": [
             {
               "name": "steps",
+              "label": "Exercise steps",
               "column": "attribs",
               "items": {
                 "min": 1
@@ -1219,6 +1251,7 @@
     {
       "match": "^body-about-us_learning-center(--start-\\d+)?$",
       "id": "learning-list",
+      "itemsLabel": "Learning posts",
       "type": "posts"
     },
     {
@@ -1236,6 +1269,7 @@
       "lists": [
         {
           "name": "benefits",
+          "label": "Benefits",
           "column": "fulltext",
           "items": {
             "min": 1
@@ -1254,6 +1288,7 @@
         },
         {
           "name": "punches",
+          "label": "Punches",
           "column": "attribs",
           "items": {
             "min": 1

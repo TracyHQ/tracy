@@ -6,6 +6,7 @@ sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-field-keys.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-inline.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-items-of.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-labels.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping-seo.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping-coverage.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
@@ -92,6 +93,7 @@ The snippets below are excerpts of it.
 | `noData` | required: `{"rule": "hide"}`, or `{"rule": "fallback", "fallback": "<what the block shows instead>"}` |
 | `fields` | the block's own fields, written once per placed block |
 | `itemFields` | optional: the fields of one item of a repeating block, written once per item |
+| `itemsLabel` | required on a block with `itemFields`, absent otherwise: what a person calls its items, a short English noun phrase in sentence case of at most 40 characters (`Classes`, `Membership plans`), no closing punctuation. It is the words a form or an editor shows above the items |
 | `lists` | optional: child lists of the block itself (the steps of a post page), see [Child lists](#child-lists) |
 | `itemLists` | optional: child lists inside each item of a repeating block (the calendar rows of a class card) |
 
@@ -256,6 +258,7 @@ list).
   "id": "class-cards",
   "type": "services",
   "items": { "min": 1, "max": 4 },
+  "itemsLabel": "Classes",
   "itemFields": [
     { "name": "name", "kind": "offering.name", "type": "text", "limit": 30,
       "slots": ["article-1.0", "article-2.0", "article-3.0", "article-4.0"] }
@@ -263,6 +266,7 @@ list).
   "itemLists": [
     {
       "name": "sessions",
+      "label": "Class days",
       "items": { "min": 0, "max": 2 },
       "itemsFrom": { "min": "a card lays out with no session row", "max": "the most rows a stored item holds" },
       "fields": [
@@ -277,6 +281,7 @@ list).
 | Key | Rule |
 |---|---|
 | `name` | unique in the block, across its fields, item fields and child lists |
+| `label` | required: what a person calls its rows, with the rules of `itemsLabel` (`Class days`, `Exercise steps`) |
 | `items` | `{min, max}` as for a block; `min` may be 0 (a card with no session row) |
 | `itemsFrom` | required: `{min, max}`, where each count comes from |
 | `fields` | the fields of one row, with the same rules as any field (type, kind, limit, frame) |
@@ -306,6 +311,7 @@ A nested list stores its rows per row of its parent list:
 "lists": [
   {
     "name": "exercises",
+    "label": "Exercises",
     "items": { "min": 1, "max": 2 },
     "itemsFrom": { "min": "one exercise lays out as one card", "max": "the most rows a stored parent place holds" },
     "fields": [{ "name": "title", "kind": "editorial.heading", "type": "text", "limit": 18,
@@ -313,6 +319,7 @@ A nested list stores its rows per row of its parent list:
     "lists": [
       {
         "name": "steps",
+        "label": "Exercise steps",
         "items": { "min": 1, "max": 3 },
         "itemsFrom": { "min": "one step is one bullet", "max": "the most rows a stored parent place holds" },
         "fields": [{ "name": "step", "kind": "editorial.paragraph", "type": "text", "limit": 24,
