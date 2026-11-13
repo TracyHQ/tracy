@@ -230,18 +230,18 @@ test('a block without lists has no lists on the card, and the sample shows its o
   const services = card.pages.find((pg) => pg.id === 'services').blocks[0]
   assert.deepEqual(services.lists, [
     {
-      head: 'Adult coaching, sessions',
+      head: 'Adult coaching',
       rows: [{ label: 'Tuesday and Thursday, 18:00 to 19:00' }, { label: 'Saturday, 9:00 to 10:00' }]
     }
   ])
 })
 
-test('a list shows its rows by label, in plan order, headed by its item and name', () => {
+test('a list shows its rows by label, in plan order, headed by its item label only', () => {
   const { plan: p, block } = withLists([
     { name: 'sessions', item: 's1', rows: [{ data: 'row-b' }, { data: 'row-a' }] }
   ])
   assert.deepEqual(block().lists, [
-    { head: 'Adult coaching, sessions', rows: [{ label: 'Beginners' }, { label: 'Tuesday, 18:00' }] }
+    { head: 'Adult coaching', rows: [{ label: 'Beginners' }, { label: 'Tuesday, 18:00' }] }
   ])
   // The card renders the plan's order as given: reversing the block's data changes nothing about the lists.
   p.pages.find((pg) => pg.id === 'services').blocks[0].data.reverse()
@@ -252,7 +252,7 @@ test('a row that points at a fact shows its value, and one that points at a page
   const { block } = withLists([
     { name: 'links', rows: [{ data: 'phone' }, { page: 'about' }, { data: 'unknown-id' }] }
   ])
-  assert.deepEqual(block().lists, [{ head: 'Links', rows: [{ label: '04 000 0000' }, { label: 'About' }] }])
+  assert.deepEqual(block().lists, [{ rows: [{ label: '04 000 0000' }, { label: 'About' }] }])
 })
 
 test('nested lists keep their level, and a list planned empty shows nothing', () => {
@@ -273,10 +273,17 @@ test('nested lists keep their level, and a list planned empty shows nothing', ()
   ])
   assert.deepEqual(block().lists, [
     {
-      head: 'Steps',
-      rows: [{ label: 'Tuesday, 18:00', lists: [{ head: 'Notes', rows: [{ label: 'Beginners' }] }] }]
+      rows: [{ label: 'Tuesday, 18:00', lists: [{ rows: [{ label: 'Beginners' }] }] }]
     }
   ])
+})
+
+test('no technical list name reaches the card data or its rendered text', () => {
+  const card = JSON.stringify(planCardOf(plan()))
+  for (const name of ['sessions', 'links']) assert.doesNotMatch(card, new RegExp(name, 'i'))
+  const { block } = withLists([{ name: 'links', rows: [{ data: 'phone' }] }])
+  assert.doesNotMatch(JSON.stringify(block()), /links/i)
+  assert.equal('head' in block().lists[0], false)
 })
 
 test('the rows report of dropped rows reaches the card as left out reasons, never as codes', () => {

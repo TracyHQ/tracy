@@ -84,7 +84,7 @@ function BlockLists({ lists }: { lists: BlockList[] }) {
       {lists.map((l, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: lists come in the plan's order and have no id
         <section key={i} className="tv-bc-list">
-          <div className="tv-bc-lh">{l.head}</div>
+          {l.head && <div className="tv-bc-lh">{l.head}</div>}
           <ul className="tv-bc-rows">
             {l.rows.map((r, j) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: two rows may read the same

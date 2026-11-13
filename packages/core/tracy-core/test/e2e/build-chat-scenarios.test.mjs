@@ -147,11 +147,8 @@ async function planRead(chat) {
   assert.match(pages, /Reviews\s*6 quotes\s*The template has no reviews block/)
   assert.match(pages, /Services\s*Adult coaching, Junior squad, Court hire, Cardio tennis\s*From Services/)
   // The Services block's child list: its heading and rows under the block line; the list planned empty shows nothing.
-  assert.match(
-    pages,
-    /Adult coaching, sessions\s*Tuesday and Thursday, 18:00 to 19:00\s*Saturday, 9:00 to 10:00/
-  )
-  assert.doesNotMatch(pages, /Junior squad, sessions/)
+  assert.match(pages, /Adult coaching\s*Tuesday and Thursday, 18:00 to 19:00\s*Saturday, 9:00 to 10:00/)
+  assert.doesNotMatch(pages, /sessions/i)
   assert.match(pages, /Coach cards\s*3 people\s*Your three coaches/)
   assert.match(pages, /Photo gallery\s*12 photos/)
   const pictures = await section('Pictures').innerText()

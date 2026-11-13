@@ -65,10 +65,10 @@ function holdsOf(block, plan, serviceIds) {
 }
 
 const MAX_LIST_DEPTH = 3
-const capitalised = (text) => text.charAt(0).toUpperCase() + text.slice(1)
 
 /**
- * The child lists of one block as the card shows them: each list headed by its item's label and its name, each row by
+ * The child lists of one block as the card shows them: each list headed by its item's label (a list of the block itself has no heading; the list's technical `name` is
+ * never shown, and the plan has no owner readable list label yet), each row by
  * the label of the row it names, the value of the fact it names or the name of the page it names. A row that names
  * nothing the plan holds is left out (never invented), and a list with no rows is not shown. Rows keep the plan's
  * order; nested lists follow their row, at most three levels deep.
@@ -86,7 +86,7 @@ function listsOf(lists, plan, depth = 1) {
     }
     if (rows.length === 0) continue
     const item = list.item ? plan.items.find((i) => i.id === list.item) : null
-    out.push({ head: item ? `${item.label}, ${list.name}` : capitalised(list.name), rows })
+    out.push(item ? { head: item.label, rows } : { rows })
   }
   return out
 }

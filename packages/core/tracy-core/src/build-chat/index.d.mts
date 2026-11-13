@@ -131,7 +131,8 @@ export type BlockHolds =
   | { facts: string[]; counts: { kind: string; count: number }[] }
 /** One child list of a block as the card shows it; a list planned empty is not on the card. */
 export interface BlockList {
-  head: string
+  /** The item's label for a list inside an item; absent for a list of the block itself. */
+  head?: string
   rows: { label: string; lists?: BlockList[] }[]
 }
 export interface PlanCard {
