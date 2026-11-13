@@ -33,7 +33,7 @@
     "needs": ["postgres"],
     "tests": [
       "finished pictures do not hide the still running page texts",
-      "stopped write diagnostics survive terminal persistence and temporary-file disposal",
+      "a Write step that stops twice keeps its diagnostics and record on the row, and the record still goes to dispose",
       "zero-turn unmeasured checks remain distinct from a passing nothing-to-send repair",
       "oversized and hostile reports remain bounded without losing overall failure counts",
       "Ops distinguishes base installed while content action runs from a completed content build"

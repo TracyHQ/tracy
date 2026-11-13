@@ -2617,11 +2617,23 @@ the template list is repo config, and `STEP_CHAIN_ENABLED=1` is the environment'
 anything is claimed when the template is not enabled (409 `STEP_CHAIN_OFF`) or the revision is not the caller's (404); otherwise
 the host creates the base site from the quickstart and the brief-build run frame (`sites/brief-build.js`) starts with the revision
 as the row's brief. The frame picks the step chain engine (`sites/brief-engines/step-chain.js`) for it, with no per-step caps (#478): the
-frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps, the brand cost cap and the 9b windows do not
-apply to it (its bench runs start with `--no-caps`; step 9 gets `chainRepairLimits`). The ten-minute native repair-turn cap still applies independently. A 2 hour outer deadline bounds the
-steps: a step still going then is stopped, its best version used, no new 9b work starts, and the Write step still runs inside a
-15 minute window (a soft failure; the run's hard stop is about 2 h 15 min). Lost-run
-detection (stale lease, the queue's attempt count) is unchanged. While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
+frame's 25 minute run and apply cuts, the USD budgets of the planner, writer and picture steps and the brand cost cap do not
+apply to it (its bench runs start with `--no-caps`). A 2 hour outer deadline bounds the steps; the Write step has a further
+15 minute window (the run's hard stop is about 2 h 15 min). Lost-run
+detection (stale lease, the queue's attempt count) is unchanged.
+**Failure policy (ADR 0047, #591).** Before any model work the engine asks whether every model door the chain spends can be
+answered (`STEP_CHAIN_MODEL_DOORS` in `step-chain-steps.js`: brand agent and reviewer, planner, writer, picture picker, looker
+and drawer; the optional icon ranker is not among them); an empty door stops the build up front. A step that fails (it throws,
+or the Write step's report is not `done`) is re-run once from the same inputs; a second failure, or a step stopped by the
+deadline, stops the whole build: the steps still running are stopped, nothing later starts, nothing is written, the row ends
+`failed` with the sentence the customer is told (`STEP_CHAIN_STOPPED_MESSAGE`), and `timings.chain` ends `stopped` with
+`failedStep` and `stop` (the step, its attempts, its inputs, its output and the error) for the Tracy team. There are no
+stand-in files and no "best version": a run ends `complete`, and the row `applied`, only when every step, ending with the
+Write step, completed. The Write step is the write step alone (`write-step/write-step.js` inside the site recovery guard): no
+site check and no 9b repair pass run inside a build. Each attempt of each step is a record line (time, USD, outcome,
+inputs, output); the run's files live in a folder of their own under the step records folder (`TRACY_STEP_CHAIN_RECORDS_DIR`,
+default in the system's temporary directory) and stay there after the run with the record (`step-records.json`), with no flag.
+While the host creates the site, the engine fetches and checks the template kit, then runs the brand step
 and the planner side by side, then the writer (with Copy check) and the picture step side by side; each is a run of its bench,
 queued through the bench's own command line on the revision and played by the bench worker this server runs
 (`step-chain-steps.js`), so its prompts, checkers, doors and spend records are the bench's. Parallel steps persist
@@ -2631,8 +2643,8 @@ The write step retains a structural diagnostic summary in `site_brief.timings.ch
 read through the existing staff-only `/api/ops/wo/chain-builds` raw measurement. It records first/final check statuses,
 group counts and bounded fault identities, repair status, skip codes, turn counts and timing stages, including early
 stopped writes. The summary is limited to 8 KiB and explicitly marks truncation. It excludes raw errors, reasons,
-prompts, measured values, credentials, external URLs and local filesystem paths. Temporary full reports are still
-removed normally; no new store or read door is introduced. Earlier runs without the summary remain unknown.
+prompts, measured values, credentials, external URLs and local filesystem paths. The full write report stays in the run's
+folder with the run record; no new read door is introduced. Earlier runs without the summary remain unknown.
 The brand boundary receives the
 frame's selected primary site language. Only when the research has no brand voice, it supplies that language name alone
 in the brand run's input and records `brand-brief-language/1` in `brief_source`; it invents no tone, preserves an authored voice,

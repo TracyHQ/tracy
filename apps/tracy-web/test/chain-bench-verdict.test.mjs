@@ -34,7 +34,7 @@ test('a completed model run with remaining check failures is not a successful ch
   )
 })
 
-test('checked planner failures preserve best content for writing but prevent complete handover', async () => {
+test('checked planner failures twice stop the build: the best content is reported, never written', async () => {
   const best = { file: 'best-plan.json' }
   const received = []
   const engine = createStepChainEngine({
@@ -69,15 +69,16 @@ test('checked planner failures preserve best content for writing but prevent com
     }
   })
   const ctx = { runId: 'chain-1', email: 'owner@example.test', signal: new AbortController().signal }
-  const prepared = await engine.prepare(ctx)
-  const result = await engine.apply(ctx, prepared)
-  assert.deepEqual(received, [best, best, best])
-  assert.equal(result.wrote, 3)
-  assert.equal(result.chain.ending, 'soft-failure')
-  assert.equal(result.chain.failedStep, 'plan')
-  assert.equal(result.chain.totalUsd, 0.25)
-  assert.equal(result.chain.steps.find((s) => s.step === 'plan').outcome, 'failed, best version used')
-  assert.equal(chainQaPassed({ state: 'applied', timings: { chain: result.chain } }), false)
+  const stopped = await engine.prepare(ctx).catch((error) => error)
+  assert.deepEqual(received, [], 'no later step is given the rejected plan')
+  assert.equal(stopped.chain.ending, 'stopped')
+  assert.equal(stopped.chain.failedStep, 'plan')
+  assert.equal(stopped.chain.totalUsd, 0.5, 'both attempts are counted')
+  assert.deepEqual(
+    [stopped.stop.code, stopped.stop.output, stopped.stop.attempts],
+    [CHAIN_BENCH_CHECK_FAILED, best, 2]
+  )
+  assert.equal(chainQaPassed({ state: 'failed', timings: { chain: stopped.chain } }), false)
 })
 
 test('final QA rejects unresolved upstream checks while keeping verified fallback semantics', () => {

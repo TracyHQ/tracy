@@ -20,9 +20,10 @@ for (const status of ['done', 'stopped']) {
     })
     const ctx = { runId: 'diagnostic-test', signal: new AbortController().signal }
     const prepared = await engine.prepare(ctx)
-    const result = await engine.apply(ctx, prepared)
-    assert.deepEqual(result.chain.steps.find((s) => s.step === 'write').diagnostics, diagnostics)
-    assert.equal(result.chain.ending, status === 'done' ? 'complete' : 'soft-failure')
+    // A Write step that stops twice stops the build (ADR 0047): its measurement travels on the stop error.
+    const result = await engine.apply(ctx, prepared).catch((error) => error)
+    assert.deepEqual(result.chain.steps.findLast((s) => s.step === 'write').diagnostics, diagnostics)
+    assert.equal(result.chain.ending, status === 'done' ? 'complete' : 'stopped')
   })
 }
 

@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-558-chain-file-lifetime",
   "kind": "fix",
-  "title": "Parallel chain bench exports are all removed on disposal",
+  "title": "Parallel chain bench exports share one run folder, kept with the run record on disposal",
   "pr": 558,
   "area": "wo/resources",
   "cms": ["any"],
@@ -11,11 +11,11 @@
     "Start Brand and Planner concurrently with deterministic bench doors, write their real exported files, then dispose the chain."
   ],
   "expect": [
-    "Both exports share the same owned temporary directory.",
-    "Both exported directories are absent after disposal; cancellation remains supported."
+    "Both exports share the same run folder under the step records folder.",
+    "After disposal both exports are still there, with the run record beside them (ADR 0047, decision 5); cancellation remains supported."
   ],
   "selectors": {},
-  "fence": "Remove only the current chain owned scratch directory; preserve explicit evidence retention.",
+  "fence": "Disposal keeps the run folder and writes the run record; it deletes nothing.",
   "run": {
     "cmd": [
       "node",
@@ -24,7 +24,10 @@
       "apps/tracy-web/test/step-chain-file-lifetime.test.mjs",
       "apps/tracy-web/test/step-chain-bench-cancellation.test.mjs"
     ],
-    "tests": ["parallel brand and planner exports share one directory and disposal removes both"],
+    "tests": [
+      "parallel brand and planner exports share one run folder, and disposal keeps them with the record",
+      "a run that stopped before any step made a file still keeps its record"
+    ],
     "needs": []
   }
 }

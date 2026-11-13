@@ -682,8 +682,8 @@ export function createBriefBuilds({
       // The writes are over, failed or not: what they left on the webroot is the run's (SC-3).
       if (held) await holdWebroot('close', ctx, runCap.webrootMs)
       if (applyError) throw applyError
-      // 🔒 A STEP CHAIN RUN ENDS AS A FINISHED BUILD, WHATEVER STEP FAILED (#483, ADR 0044): the site is handed over with
-      // what was written, and how the run ended is kept for staff (`timings.chain`), never said to the customer.
+      // 🔒 A STEP CHAIN RUN THAT GETS HERE COMPLETED EVERY STEP (ADR 0047): a step that failed twice made `apply` (or
+      // `prepare`) throw, and the row ended `failed` above. How the run went is kept for staff (`timings.chain`).
       if (report && /** @type {any} */ (report).chain) {
         time('afterUpMs', now() - upAt)
         // The base site is a step of the measurement: from the press until the host had it up (`provisionedAt` is the
@@ -737,7 +737,12 @@ export function createBriefBuilds({
         })
       )
     } catch (error) {
-      await inTurn(() => updateBrief(pool, siteKey, { timings: timingsNow() })).catch(() => {})
+      // A stopped step chain build (ADR 0047) carries its final measurement and the report for the Tracy team: the row
+      // keeps them, and its error is the sentence the customer is told (`brief-engines/step-chain.js`).
+      const chain = /** @type {any} */ (error)?.chain
+      await inTurn(() => updateBrief(pool, siteKey, { timings: timingsNow(chain ? { chain } : {}) })).catch(
+        () => {}
+      )
       await fail(siteKey, error)
     } finally {
       // The run is over: what it started stops, and nothing it names from now on reaches the row.
@@ -757,7 +762,13 @@ export function createBriefBuilds({
       } else if (preparing && engine.dispose) {
         // Given up on before it handed anything back: whatever it hands back later is cleared then.
         const dispose = engine.dispose
-        preparing.then((late) => dispose(late)).catch(() => {})
+        // A `prepare` that stopped hands back what it left on its error (`prepared`), so its record is kept too.
+        preparing
+          .then(
+            (late) => dispose(late),
+            (error) => (error?.prepared ? dispose(error.prepared) : undefined)
+          )
+          .catch(() => {})
       }
     }
   }

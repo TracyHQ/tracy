@@ -8,11 +8,11 @@
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "Run chain-bench-verdict.test.mjs sequentially with Node 24. Exhaust checked planner output, run its best content through the chain engine and evaluate the same terminal QA predicate used by the demo runner."
+    "Run chain-bench-verdict.test.mjs sequentially with Node 24. A planner that exhausts its checks twice stops the chain engine, and the same terminal QA predicate used by the demo runner is evaluated on the stopped record."
   ],
   "expect": [
     "Planner, copy and picture standing failures produce an explicit failed step.",
-    "The best planner output still reaches the writer, picture step and final write, retaining its recorded cost.",
+    "A planner that fails its checks twice stops the build (ADR 0047): its best content is kept in the stop report, never given to a later step or written, and both attempts' cost is recorded.",
     "A successful final write does not pass QA when upstream checks remain; valid verified fallback behavior is preserved."
   ],
   "selectors": {},
@@ -27,7 +27,7 @@
     ],
     "tests": [
       "a completed model run with remaining check failures is not a successful chain step",
-      "checked planner failures preserve best content for writing but prevent complete handover",
+      "checked planner failures twice stop the build: the best content is reported, never written",
       "final QA rejects unresolved upstream checks while keeping verified fallback semantics"
     ],
     "needs": []

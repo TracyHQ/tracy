@@ -1,8 +1,9 @@
 /**
  * The step chain as one build (#483, spec #472): the brief-build run frame with the step chain engine, picked for a build
  * whose quickstart template is allow-listed while the master switch is on. Real Postgres; the model steps, the write step
- * and its site check are doubles at the edge, so what is asserted is what an operator or owner would see: which engine
- * ran, in which order the steps could start, which run the writes were recorded under, and how the run ended.
+ * are doubles at the edge (scripted fakes that fail once, fail twice, or answer), so what is asserted is what an operator
+ * or owner would see: which engine ran, in which order the steps could start, which run the writes were recorded under,
+ * how the run ended, and what the Tracy team is handed when a build stops (ADR 0047, #591).
  *
  *   TEST_DATABASE_URL=… node --test --test-concurrency=1 apps/tracy-web/test/step-chain-build.test.mjs
  */
@@ -14,7 +15,11 @@ import { hostCall, hostJob } from '../src/host/client.js'
 import { STEP_CHAIN_WORKFLOW } from '../src/lib/step-chain-switch.js'
 import { readActivityV2 } from '../src/sites/activity-v2.js'
 import { createBriefBuilds } from '../src/sites/brief-build.js'
-import { createStepChainEngine } from '../src/sites/brief-engines/step-chain.js'
+import {
+  createStepChainEngine,
+  STEP_CHAIN_DOORS_EMPTY,
+  STEP_CHAIN_STOPPED_MESSAGE
+} from '../src/sites/brief-engines/step-chain.js'
 import { stepNineDiagnostics } from '../src/step-chain-write-diagnostics.js'
 import { briefOf } from '../src/sites/brief-store.js'
 import { writeComponent } from '../src/sites/store.js'
@@ -82,6 +87,22 @@ function fakeSteps(over = {}) {
   }
 }
 
+/**
+ * A scripted step that fails its first `times` calls (each with `error`, which may carry the `value` it still made and
+ * the `usd` it spent), then answers `answer`. `calls` counts every call and keeps the inputs each was given.
+ */
+function failing(times, answer, error = () => new Error('the step failed')) {
+  const calls = []
+  const step = async (_ctx, inputs) => {
+    calls.push(inputs)
+    if (calls.length <= times) throw error(calls.length)
+    return answer
+  }
+  return Object.assign(step, { calls })
+}
+
+const outcomesOf = (record, step) => record.steps.filter((s) => s.step === step).map((s) => s.outcome)
+
 function builds(pool, engines, extra = {}) {
   return createBriefBuilds({
     pool,
@@ -127,41 +148,47 @@ test(
 )
 
 test(
-  'stopped write diagnostics survive terminal persistence and temporary-file disposal',
+  'a Write step that stops twice keeps its diagnostics and record on the row, and the record still goes to dispose',
   dbOpts,
   async () => {
     const diagnostic = stepNineDiagnostics({
-      report: { status: 'stopped', writeStatus: 'done', cause: { code: 'STEP_NINE_CHECK_FAILED' } },
-      firstCheck: { status: 'unmeasured', groups: [{ name: 'read-back', status: 'unmeasured', checked: 0 }] },
-      siteCheck: { status: 'unmeasured', groups: [{ name: 'read-back', status: 'unmeasured', checked: 0 }] },
-      repair: { status: 'incomplete', turns: [], checks: 1 },
+      report: { status: 'stopped', writeStatus: 'done', cause: { code: 'INSPECT_REFUSED' } },
       writersSettled: true
     })
-    let disposed = false
+    let disposed = null
     const { steps } = fakeSteps({
       write: async () => ({
         value: {
           report: {
             status: 'stopped',
             counts: { written: 2 },
-            cause: { reason: 'Final check did not pass' }
+            cause: { code: 'INSPECT_REFUSED', reason: 'the plugin refused inspect' }
           },
           diagnostics: diagnostic
         },
         usd: 0
       })
     })
-    steps.dispose = async () => {
-      disposed = true
+    steps.dispose = async (prepared) => {
+      disposed = prepared
     }
     const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
     const b = builds(db.pool, { [STEP_CHAIN_WORKFLOW]: chain })
     await b.start(chainInput())
-    await untilSettled(b, 'harbourpadel.tracy.test')
+    const done = await untilSettled(b, 'harbourpadel.tracy.test')
+    assert.equal(done.state, 'failed')
     const row = await briefOf(db.pool, 'harbourpadel.tracy.test')
-    assert.equal(row.timings.chain.ending, 'soft-failure')
-    assert.deepEqual(row.timings.chain.steps.find((s) => s.step === 'write').diagnostics, diagnostic)
-    assert.equal(disposed, true)
+    assert.equal(row.timings.chain.ending, 'stopped')
+    const writes = row.timings.chain.steps.filter((s) => s.step === 'write')
+    assert.deepEqual(
+      writes.map((s) => [s.attempt, s.outcome]),
+      [
+        [1, 'failed, re-running'],
+        [2, 'failed']
+      ]
+    )
+    assert.deepEqual(writes[1].diagnostics, diagnostic)
+    assert.equal(disposed?.chain?.ending, 'stopped', 'the record is handed to dispose')
   }
 )
 
@@ -360,15 +387,16 @@ test(
 )
 
 test(
-  'a failing picture step still writes the plan, copy and brand, and the run ends as a soft failure',
+  'a step that fails once is re-run exactly once from the same inputs, and the build continues to done',
   dbOpts,
   async () => {
     const { pool } = db
+    const pictures = failing(1, { value: { file: 'mapping.json' }, usd: 1.5 }, () =>
+      Object.assign(new Error('SITE_PICTURES_DOOR: the looker answered nothing'), { usd: 0.2 })
+    )
     let handed = null
-    const { steps, log } = fakeSteps({
-      pictures: async () => {
-        throw new Error('SITE_PICTURES_DOOR: the looker answered nothing')
-      },
+    const { steps } = fakeSteps({
+      pictures,
       write: async (_ctx, inputs) => {
         handed = inputs
         return { value: { report: { status: 'done', counts: { written: 30 } } }, usd: 0 }
@@ -378,141 +406,158 @@ test(
     const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
     await b.start(chainInput())
     const done = await untilSettled(b, 'harbourpadel.tracy.test')
-    assert.equal(done.state, 'applied', 'handed over as a normal finished build')
-    assert.equal(done.error, null, 'nothing is said to the operator or the owner')
-    assert.ok(log.includes('write:end'))
-    // No picture file: the Write step's closing ladder empties every kept picture slot instead of leaving the demo's.
-    assert.equal(handed.pictures, null)
-    assert.deepEqual(handed.plan, { file: 'plan.json' })
-    assert.deepEqual(handed.brand, { file: 'brand-file.json' })
+    assert.equal(done.state, 'applied')
+    assert.equal(done.error, null)
+    assert.equal(pictures.calls.length, 2, 'run exactly twice')
+    assert.deepEqual(pictures.calls[1], pictures.calls[0], 'the re-run is given the same inputs')
+    assert.deepEqual(handed.pictures, { file: 'mapping.json' }, 'the re-run output is what is written')
     const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
-    assert.equal(record.ending, 'soft-failure')
-    assert.equal(record.failedStep, 'pictures')
-    assert.match(record.steps.find((s) => s.step === 'pictures').error, /looker answered nothing/)
+    assert.equal(record.ending, 'complete')
+    assert.equal(record.failedStep, undefined)
+    assert.deepEqual(outcomesOf(record, 'pictures'), ['failed, re-running', 'done'])
+    const [first, second] = record.steps.filter((s) => s.step === 'pictures')
+    assert.match(first.error, /looker answered nothing/)
+    assert.deepEqual([first.usd, second.usd], [0.2, 1.5], 'each attempt keeps what it cost')
+    assert.equal(record.totalUsd, 2.05)
   }
 )
 
 test(
-  'a planner that made nothing still lets the Write step run, with the brand and no plan or copy, so no demo is left',
+  'a step that fails twice stops the build: nothing later starts, the customer is told, and the report names the step with its inputs and output',
   dbOpts,
   async () => {
     const { pool } = db
-    let written = null
-    const { steps, log } = fakeSteps({
-      plan: async () => {
-        throw new Error('SITE_PLANNER_DOOR: no model')
-      },
-      write: async (_ctx, inputs) => {
-        written = inputs
-        return { value: { report: { status: 'done', counts: { written: 0 } } }, usd: 0 }
-      }
-    })
+    const plan = failing(2, null, (n) =>
+      Object.assign(new Error(`the planner run ended failed (${n})`), {
+        value: { file: `plan-v${n}.json` },
+        usd: 0.1
+      })
+    )
+    const { steps, log } = fakeSteps({ plan })
     const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
     const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
     await b.start(chainInput())
     const done = await untilSettled(b, 'harbourpadel.tracy.test')
-    assert.equal(done.state, 'applied')
-    for (const step of ['copy', 'pictures']) assert.ok(!log.includes(`${step}:start`), `${step} had no plan`)
-    assert.deepEqual(
-      { plan: written.plan, copy: written.copy, pictures: written.pictures, brand: written.brand },
-      { plan: null, copy: null, pictures: null, brand: { file: 'brand-file.json' } },
-      'the Write step runs with what exists, the stand-ins fill the rest'
-    )
+    assert.equal(done.state, 'failed', 'never applied')
+    assert.equal(done.error, STEP_CHAIN_STOPPED_MESSAGE, 'the customer is told the build could not finish')
+    assert.equal(plan.calls.length, 2)
+    for (const step of ['copy', 'pictures', 'write'])
+      assert.ok(!log.includes(`${step}:start`), `${step} never starts after the stop`)
     const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
-    assert.equal(record.ending, 'soft-failure')
+    assert.equal(record.ending, 'stopped')
     assert.equal(record.failedStep, 'plan')
-    const outcome = Object.fromEntries(
-      record.steps.filter((s) => s.step !== 'site').map((s) => [s.step, s.outcome])
-    )
-    assert.deepEqual(outcome, {
-      kit: 'done',
-      brand: 'done',
-      plan: 'failed',
-      copy: 'skipped',
-      pictures: 'skipped',
-      write: 'done'
+    assert.deepEqual(outcomesOf(record, 'plan'), ['failed, re-running', 'failed'])
+    assert.deepEqual(record.stop, {
+      step: 'plan',
+      attempts: 2,
+      error: 'the planner run ended failed (2)',
+      inputs: { kit: { ref: 'ja-boxing/j6/1.0.11' } },
+      output: { file: 'plan-v2.json' }
     })
+    assert.equal(record.totalUsd, 0.3, 'the brand and both planner attempts are counted')
   }
 )
 
 test(
-  'a writer whose versions the checks all rejected hands over its best one, which the Write step uses',
+  'a step stopped by the build stopping elsewhere is recorded as stopped and is not re-run',
   dbOpts,
   async () => {
     const { pool } = db
-    let written = null
+    let brandCalls = 0
     const { steps } = fakeSteps({
-      copy: async () => {
-        throw Object.assign(new Error('the copy run ended failed: 3 failures standing'), {
-          value: { file: 'site-copy.json' },
-          usd: 0.07
-        })
-      },
-      write: async (_ctx, inputs) => {
-        written = inputs
-        return { value: { report: { status: 'done', counts: { written: 9 } } }, usd: 0 }
-      }
+      brand: (_ctx, _inputs, { signal }) =>
+        new Promise((_resolve, reject) => {
+          brandCalls += 1
+          signal.addEventListener('abort', () => reject(new Error('stopped by the build')))
+        }),
+      plan: failing(2, null)
     })
     const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
     const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
     await b.start(chainInput())
-    await untilSettled(b, 'harbourpadel.tracy.test')
-    assert.deepEqual(written.copy, { file: 'site-copy.json' })
+    assert.equal((await untilSettled(b, 'harbourpadel.tracy.test')).state, 'failed')
+    assert.equal(brandCalls, 1)
     const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
-    assert.equal(record.failedStep, 'copy')
-    const copy = record.steps.find((s) => s.step === 'copy')
-    assert.deepEqual([copy.outcome, copy.usd], ['failed, best version used', 0.07])
+    assert.deepEqual(outcomesOf(record, 'brand'), ['stopped'])
+    assert.equal(record.stop.step, 'plan', 'the report names the step that failed, not the one it stopped')
   }
 )
 
+test('a template kit that cannot be read twice stops the build before any other step', dbOpts, async () => {
+  const { pool } = db
+  const kit = failing(2, null, () => new Error('no readable template kit for ja-boxing/j6/9.9.9'))
+  const { steps, log } = fakeSteps({ kit })
+  const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+  const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
+  await b.start(chainInput())
+  assert.equal((await untilSettled(b, 'harbourpadel.tracy.test')).state, 'failed')
+  assert.deepEqual(log, ['kit:start', 'kit:start'], 'the kit twice, and nothing else without it')
+  const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
+  assert.deepEqual([record.ending, record.failedStep, kit.calls.length], ['stopped', 'kit', 2])
+})
+
+test('an empty model door stops the build before any model work starts', dbOpts, async () => {
+  const { pool } = db
+  const { steps, log } = fakeSteps()
+  steps.doors = async () => [{ door: 'siteWriter', state: 'unassigned' }]
+  let disposed = null
+  steps.dispose = async (prepared) => {
+    disposed = prepared
+  }
+  const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
+  const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
+  await b.start(chainInput())
+  const done = await untilSettled(b, 'harbourpadel.tracy.test')
+  assert.equal(done.state, 'failed')
+  assert.equal(done.error, STEP_CHAIN_STOPPED_MESSAGE)
+  assert.deepEqual(log, [], 'no step ran, the kit included')
+  const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
+  assert.deepEqual([record.ending, record.failedStep], ['stopped', 'doors'])
+  assert.equal(record.stop.code, STEP_CHAIN_DOORS_EMPTY)
+  assert.deepEqual(record.stop.output, { empty: [{ door: 'siteWriter', state: 'unassigned' }] })
+  await until(() => disposed !== null)
+  assert.equal(disposed.chain.failedStep, 'doors', 'a build stopped in prepare still keeps its record')
+})
+
 test(
-  'a template kit that cannot be read hands the base site over as created, ending as a soft failure at the kit',
+  'a Write step that stops or throws twice ends the build failed at the write; once is re-run and the build is done',
   dbOpts,
   async () => {
     const { pool } = db
-    const { steps, log } = fakeSteps({
-      kit: async () => {
-        throw new Error('no readable template kit for ja-boxing/j6/9.9.9')
+    const stopReport = async () => ({
+      value: {
+        report: { status: 'stopped', cause: { code: 'CONTRACT_MISMATCH', reason: 'another contract' } }
       }
     })
-    const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
-    const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
-    await b.start(chainInput())
-    assert.equal((await untilSettled(b, 'harbourpadel.tracy.test')).state, 'applied')
-    assert.deepEqual(log, ['kit:start'], 'nothing runs without the kit')
-    const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
-    assert.deepEqual([record.ending, record.failedStep], ['soft-failure', 'kit'])
-  }
-)
-
-test(
-  'a Write step that stops or throws still hands the site over, ending as a soft failure at the write',
-  dbOpts,
-  async () => {
-    const { pool } = db
-    for (const [siteKey, write] of [
-      [
-        'stop.tracy.test',
-        async () => ({
-          value: {
-            report: { status: 'stopped', cause: { code: 'CONTRACT_MISMATCH', reason: 'another contract' } }
-          }
-        })
-      ],
+    const doneReport = { value: { report: { status: 'done', counts: { written: 4 } } }, usd: 0 }
+    let reportCalls = 0
+    for (const [siteKey, write, state, outcomes] of [
+      ['stop.tracy.test', stopReport, 'failed', ['failed, re-running', 'failed']],
       [
         'throw.tracy.test',
-        async () => {
-          throw new Error('the site door threw')
-        }
+        failing(2, doneReport, () => new Error('the site door threw')),
+        'failed',
+        ['failed, re-running', 'failed']
+      ],
+      [
+        'once.tracy.test',
+        async () => ((reportCalls += 1), reportCalls === 1 ? stopReport() : doneReport),
+        'applied',
+        ['failed, re-running', 'done']
       ]
     ]) {
       const { steps } = fakeSteps({ write })
       const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
       const b = builds(pool, { joomla: cmsEngine(), [STEP_CHAIN_WORKFLOW]: chain })
       await b.start(chainInput({ siteKey }))
-      assert.equal((await untilSettled(b, siteKey)).state, 'applied')
+      assert.equal((await untilSettled(b, siteKey)).state, state, siteKey)
       const { chain: record } = (await briefOf(pool, siteKey)).timings
-      assert.equal(record.failedStep, 'write', siteKey)
+      assert.deepEqual(outcomesOf(record, 'write'), outcomes, siteKey)
+      if (state === 'failed') {
+        assert.deepEqual([record.ending, record.failedStep], ['stopped', 'write'], siteKey)
+        assert.equal(record.stop.step, 'write')
+        assert.ok(record.stop.inputs.plan, 'the write report names its inputs')
+      } else assert.equal(record.ending, 'complete')
     }
   }
 )
@@ -598,13 +643,13 @@ test('a retried chain base-site duration excludes the previous failed attempt', 
 })
 
 test(
-  'the customer is told "working" until the chain has handed the site over, a soft failure included',
+  'the customer is told "working" until the chain has handed the site over, a re-run step included',
   dbOpts,
   async () => {
     const { pool } = db
-    for (const [siteKey, failing] of [
+    for (const [siteKey, rerun] of [
       ['held.tracy.test', null],
-      ['held-soft.tracy.test', 'pictures']
+      ['held-rerun.tracy.test', 'pictures']
     ]) {
       let release
       const writing = new Promise((resolve) => {
@@ -615,13 +660,7 @@ test(
         entered = resolve
       })
       const { steps } = fakeSteps({
-        ...(failing
-          ? {
-              [failing]: async () => {
-                throw new Error('no pictures')
-              }
-            }
-          : {}),
+        ...(rerun ? { [rerun]: failing(1, { value: { file: 'mapping.json' }, usd: 0 }) } : {}),
         write: async () => {
           entered()
           await writing
@@ -638,7 +677,7 @@ test(
       const done = await untilSettled(b, siteKey)
       assert.equal(done.state, 'applied')
       assert.equal(done.error, null)
-      assert.equal((await briefOf(pool, siteKey)).timings.chain.ending, failing ? 'soft-failure' : 'complete')
+      assert.equal((await briefOf(pool, siteKey)).timings.chain.ending, 'complete')
     }
   }
 )
@@ -652,11 +691,11 @@ test(
     const { steps } = fakeSteps({
       write: async () => {
         seen = (await briefOf(pool, 'harbourpadel.tracy.test')).timings.chain
-        throw Object.assign(new Error('x'), { fatal: true })
+        return { value: { report: { status: 'done', counts: { written: 1 } } }, usd: 0 }
       }
     })
     const chain = createStepChainEngine({ steps, applyFor: () => async () => ({ ok: true }) })
-    // A hard failure: the engine's apply escapes the frame (a deadline, a crash), which no soft-failure record covers.
+    // A hard failure: the engine's apply escapes the frame (a deadline, a crash) with no stop record of its own.
     const hard = {
       ...chain,
       apply: async (ctx, prepared) => (
@@ -697,7 +736,7 @@ test("a chain build past the frame's old 25 minute cut is not cut (#478)", dbOpt
 })
 
 test(
-  'at the 2 hour deadline the steps still running are stopped, the Write step runs and the site is handed over (#478)',
+  'at the 2 hour deadline the steps still running are stopped, not re-run, and the build stops without writing (#478)',
   dbOpts,
   async () => {
     const { pool } = db
@@ -709,22 +748,19 @@ test(
       timerMs = ms
       return () => {}
     }
-    const written = []
-    const { steps } = fakeSteps({
+    let pictureCalls = 0
+    const { steps, log } = fakeSteps({
       // The pictures step never ends on its own: only the deadline's signal frees it.
       pictures: (_ctx, _inputs, { signal }) =>
         new Promise((_resolve, reject) => {
+          pictureCalls += 1
           clock += 119 * 60_000
           signal.addEventListener('abort', () => {
             clock += 1 * 60_000
             reject(Object.assign(new Error('stopped at the deadline'), { usd: 0.4 }))
           })
           setImmediate(() => fire())
-        }),
-      write: async (_ctx, inputs, how) => {
-        written.push({ ...inputs, limits: how.limits })
-        return { value: { report: { status: 'done', counts: { written: 7 } } }, usd: 0.3 }
-      }
+        })
     })
     const chain = createStepChainEngine({
       steps,
@@ -736,14 +772,12 @@ test(
     await b.start(chainInput())
     const done = await untilSettled(b, 'harbourpadel.tracy.test')
     assert.equal(timerMs, 2 * 60 * 60_000)
-    assert.equal(done.state, 'applied')
-    assert.equal(done.error, null)
-    assert.equal(written.length, 1, 'the Write step ran after the deadline')
-    assert.equal(written[0].pictures, null, 'the stopped step made nothing')
-    assert.deepEqual(written[0].limits, { stopNewWorkMs: 0, returnByMs: 15 * 60_000 }, 'no new 9b work')
+    assert.equal(done.state, 'failed')
+    assert.equal(done.error, STEP_CHAIN_STOPPED_MESSAGE)
+    assert.equal(pictureCalls, 1, 'a step stopped by the deadline is not re-run')
+    assert.ok(!log.includes('write:start'), 'nothing is written after the deadline')
     const { chain: record } = (await briefOf(pool, 'harbourpadel.tracy.test')).timings
-    assert.deepEqual([record.ending, record.failedStep], ['soft-failure', 'pictures'])
-    assert.equal(record.steps.find((s) => s.step === 'pictures').outcome, 'stopped')
-    assert.equal(record.steps.find((s) => s.step === 'write').outcome, 'done')
+    assert.deepEqual([record.ending, record.failedStep], ['stopped', 'pictures'])
+    assert.deepEqual(outcomesOf(record, 'pictures'), ['stopped'])
   }
 )

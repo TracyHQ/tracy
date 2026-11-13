@@ -359,7 +359,7 @@ export function createDemoRunner(deps) {
             humanAccepted: false,
             chain: {
               briefState: statusOf(chainRun?.state, ['applied', 'failed', 'cancelled']),
-              ending: statusOf(measured?.ending, ['complete', 'soft-failure', 'running']),
+              ending: statusOf(measured?.ending, ['complete', 'soft-failure', 'stopped', 'running']),
               writeOutcome: statusOf(write?.outcome, ['done', 'failed', 'stopped', 'skipped'])
             }
           }

@@ -1,11 +1,14 @@
-// Parallel bench exports belong to one owned directory and must all disappear when that chain is disposed.
+// A chain run's files and its record outlive the run, with no flag (ADR 0047, decision 5; #591): parallel bench exports
+// share one folder under the step records folder, and disposal writes the run's record beside them instead of deleting.
 import assert from 'node:assert/strict'
-import { access, rm, writeFile } from 'node:fs/promises'
+import { access, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
-import { createStepChainSteps } from '../src/step-chain-steps.js'
+import { createStepChainSteps, STEP_RECORDS_FILE } from '../src/step-chain-steps.js'
 
-test('parallel brand and planner exports share one directory and disposal removes both', async () => {
+test('parallel brand and planner exports share one run folder, and disposal keeps them with the record', async () => {
+  const recordsDir = await mkdtemp(path.join(tmpdir(), 'step-chain-records-test-'))
   const exports = new Map()
   const cli = (name) => async (argv, io) => {
     if (argv[0] === 'run') io.out(`${name}-run`)
@@ -28,6 +31,7 @@ test('parallel brand and planner exports share one directory and disposal remove
       }
     },
     benchCli: { brand: cli('brand'), plan: cli('plan') },
+    recordsDir,
     log: {}
   })
   const ctx = { runId: 'parallel-owned-files', brief: { researchRevisionId: 'revision' } }
@@ -37,13 +41,34 @@ test('parallel brand and planner exports share one directory and disposal remove
       steps.brand(ctx, { kit: { ref: 'test-kit' } }, opts),
       steps.plan(ctx, { kit: { ref: 'test-kit' } }, opts)
     ])
+    assert.equal(path.dirname(exports.get('brand')), path.dirname(exports.get('plan')))
+    const runDir = path.dirname(exports.get('brand'))
+    assert.equal(path.dirname(runDir), recordsDir, 'the run folder is under the step records folder')
+    const chain = {
+      ending: 'complete',
+      steps: [{ step: 'brand', attempt: 1, outcome: 'done', usd: 0, minutes: 0 }]
+    }
+    await steps.dispose({ runId: ctx.runId, chain })
     await access(brand.value.file)
     await access(plan.value.file)
-    await steps.dispose(ctx)
-    for (const dir of exports.values()) await assert.rejects(access(dir), { code: 'ENOENT' })
-    assert.equal(path.dirname(exports.get('brand')), path.dirname(exports.get('plan')))
+    const kept = JSON.parse(await readFile(path.join(runDir, STEP_RECORDS_FILE), 'utf8'))
+    assert.deepEqual(kept, { runId: ctx.runId, chain })
   } finally {
-    await steps.dispose(ctx)
-    for (const dir of exports.values()) await rm(path.dirname(dir), { recursive: true, force: true })
+    await rm(recordsDir, { recursive: true, force: true })
+  }
+})
+
+test('a run that stopped before any step made a file still keeps its record', async () => {
+  const recordsDir = await mkdtemp(path.join(tmpdir(), 'step-chain-records-test-'))
+  const steps = createStepChainSteps({ config: {}, pool: {}, recordsDir, log: {} })
+  try {
+    const chain = { ending: 'stopped', failedStep: 'doors', steps: [] }
+    await steps.dispose({ runId: 'stopped-before-work', chain })
+    const kept = JSON.parse(
+      await readFile(path.join(recordsDir, 'run-stopped-before-work', STEP_RECORDS_FILE), 'utf8')
+    )
+    assert.equal(kept.chain.failedStep, 'doors')
+  } finally {
+    await rm(recordsDir, { recursive: true, force: true })
   }
 })

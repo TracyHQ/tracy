@@ -32,7 +32,11 @@ const stepsOf = (minutes, usd) => [
 ]
 
 /** A brief row the way the run frame leaves it after a chain build. */
-async function seedBuild(pool, siteKey, { at, minutes, usd, ending = 'complete', failedStep, label = null }) {
+async function seedBuild(
+  pool,
+  siteKey,
+  { at, minutes, usd, ending = 'complete', failedStep, label = null, state = 'applied' }
+) {
   if (label) {
     await pool.query(
       "insert into site (site_key, label, host, created_at) values ($1, $2, 'local', '2020-01-01')",
@@ -48,8 +52,8 @@ async function seedBuild(pool, siteKey, { at, minutes, usd, ending = 'complete',
   }
   await pool.query(
     `insert into site_brief (site_key, platform, quickstart, brief, state, timings, created_at)
-     values ($1, 'joomla', 'quickstart/ja-boxing/j6', '{}'::jsonb, 'applied', $2::jsonb, $3)`,
-    [siteKey, JSON.stringify({ wrote: 3, chain }), at]
+     values ($1, 'joomla', 'quickstart/ja-boxing/j6', '{}'::jsonb, $4, $2::jsonb, $3)`,
+    [siteKey, JSON.stringify({ wrote: 3, chain }), at, state]
   )
 }
 
@@ -91,6 +95,24 @@ test('one row per chain build, newest first, with template, start, totals and en
     ]
   )
 })
+
+test(
+  'a build that stopped at a step that failed twice reads as failed at that step (ADR 0047)',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    await seedBuild(pool, 'stopped.tracy.site', {
+      at: '2026-11-06T10:00:00Z',
+      minutes: 9,
+      usd: 0.4,
+      ending: 'stopped',
+      failedStep: 'plan',
+      state: 'failed'
+    })
+    const { builds } = await listChainBuilds(pool, CONFIG)
+    assert.deepEqual([builds[0].ending, builds[0].failedStep], ['failed', 'plan'])
+  }
+)
 
 test('a run far above the usual duration is highlighted, and only then', dbOpts, async () => {
   const { pool } = db

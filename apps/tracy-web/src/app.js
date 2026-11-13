@@ -2173,7 +2173,6 @@ export function buildApp(deps) {
               }),
               picturesStoreDir: defaultStoreDir(),
               fetchImpl: deps.fetchImpl ?? fetch,
-              keepFiles: process.env.STEP_CHAIN_KEEP_FILES === '1',
               log: deps.log ?? console
             })
           })

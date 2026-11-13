@@ -99,7 +99,10 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
         ? 'failed'
         : chain.ending === 'complete'
           ? 'complete'
-          : 'soft-failure'
+          : // A build that stopped at a step that failed twice (ADR 0047) is a failed build, at that step.
+            chain.ending === 'stopped'
+            ? 'failed'
+            : 'soft-failure'
     const underway = Array.isArray(chain.running) ? chain.running.map(String) : []
     // A dead worker leaves its last progress snapshot, not a terminal measurement. Its settlement is
     // immutable on new rows; legacy updated_at can include later edits and is only an upper bound.
@@ -151,7 +154,9 @@ export async function listChainBuilds(pool, config, { limit = CHAIN_BUILDS_LIMIT
       ending,
       failedStep:
         ending === 'failed'
-          ? (underway[0] ?? 'write')
+          ? typeof chain.failedStep === 'string'
+            ? chain.failedStep
+            : (underway[0] ?? 'write')
           : ending !== 'running' && typeof chain.failedStep === 'string'
             ? chain.failedStep
             : null,
