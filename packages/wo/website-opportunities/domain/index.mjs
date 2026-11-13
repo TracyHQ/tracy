@@ -146,6 +146,15 @@ export { placeExtraData } from './plan-placement.mjs'
 export { lookOf, picturesOf } from './plan-look-pictures.mjs'
 export { planDataOf } from './plan-data.mjs'
 export {
+  PAGE_WRITER_PROMPT_FILE,
+  PAGE_WRITE_ATTEMPTS,
+  PageWriterError,
+  readWriterReply,
+  writePages
+} from './page-writer.mjs'
+export { blockDescriptionsOf, pageSlotsOf, pageWriterUser, slotKey } from './page-writer-request.mjs'
+export { WRITER_FIELD_TYPES, charCount, checkPageCopy, fieldValueProblems } from './page-copy-check.mjs'
+export {
   neutralItemName,
   SECTION_ACTIONS,
   sectionAction,
