@@ -62,7 +62,7 @@ test('a build result starts a revision of its own plan on its own kit only, fini
     copy: { pages: [], prompt: null },
     replies: [],
     state: { mark: {}, ids: {}, paths: {}, pending: {}, done: [] },
-    ops: []
+    ops: [{ key: 'article:service-a', kind: 'article.create', hash: 'a'.repeat(64), addresses: [] }]
   })
   assert.equal(build.schema, BUILD_RESULT_SCHEMA)
   const next = { plan: { id: 'plan-larkspur', revision: 2 }, kit: 'ja-boxing@1.0.11' }
