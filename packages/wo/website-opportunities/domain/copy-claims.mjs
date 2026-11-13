@@ -11,9 +11,12 @@
 //     `40%`), in six languages, digits or number words; a count of locations passes when it is the count of known
 //     addresses;
 //   - an award or a superlative (`award-winning`, `#1`, `voted`, `best in`, `certified`, `Preisgekrönt`, `primé`,
-//     `galardonado`, `premiato`, `premiado`, "trusted by thousands", `ISO 9001`) no known value says.
+//     `galardonado`, `premiato`, `premiado`, "trusted by thousands", `ISO 9001`) no known value says; an award word
+//     passes in a sentence that names an award the profile holds (`awards`);
+//   - the claims of `copy-claims-more.mjs`: "the best ... in town", "over 500", a count of three digits or more.
 // Pure: a text and the known facts in, the claims the facts do not hold out.
 import { NUMBER_WORD, numberWordValue } from './copy-number-words.mjs'
+import { moreClaimsOf } from './copy-claims-more.mjs'
 import { timesOf } from './needs-profile-grounding.mjs'
 
 const B = String.raw`(?<![\p{L}\p{N}])`
@@ -59,11 +62,13 @@ export const KNOWN_EVERY_DAY = re(
   'iu'
 )
 
-const HOUR = String.raw`(\d{1,2})(?:[:.h](\d{2}))?(?!\d)\s*(a\.?m\.?|p\.?m\.?|h(?!\p{L})|Uhr${E})?`
+/** `am` and `pm` end where the word ends: "2 amici", "5 amis" and "4 ampoules" name no hour (#594 review W1). */
+const HALF = String.raw`(?:a\.?m\.?|p\.?m\.?)(?![\p{L}\p{N}])`
+const HOUR = String.raw`(\d{1,2})(?:[:.h](\d{2}))?(?!\d)\s*(${HALF}|h(?!\p{L})|Uhr${E})?`
 const SEP = String.raw`\s*[-\u2013]\s*|\s+(?:to|till|until|bis|à|a|al|alle|às|ao|au)\s+`
 const RANGE = re(String.raw`${B}${HOUR}(?:${SEP})${HOUR}`)
 const CLOCK = re(
-  String.raw`${B}(\d{1,2})(?:(?:[:.h](\d{2}))(?!\d)\s*(a\.?m\.?|p\.?m\.?)?|(?!\d)\s*(a\.?m\.?|p\.?m\.?|h(?!\p{L})|Uhr${E}))`
+  String.raw`${B}(\d{1,2})(?:(?:[:.h](\d{2}))(?!\d)\s*(${HALF})?|(?!\d)\s*(${HALF}|h(?!\p{L})|Uhr${E}))`
 )
 const BARE = re(String.raw`${B}(\d{1,2})(?!\d)`)
 const OPENING = re(
@@ -127,6 +132,16 @@ const plainKey = (text) =>
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .trim()
+/** The sentence of `text` around position `at`. */
+const sentenceAt = (text, at) => {
+  const start = Math.max(...['.', '!', '?', '\n'].map((c) => text.lastIndexOf(c, at - 1))) + 1
+  const ends = ['.', '!', '?', '\n'].map((c) => text.indexOf(c, at)).filter((i) => i !== -1)
+  return text.slice(start, ends.length ? Math.min(...ends) : text.length)
+}
+/** Whether a sentence names an award the profile holds ("Winner of the Golden Crust Award", #594 review W2). */
+const namesKnownAward = (sentence, awards = []) =>
+  awards.some((a) => plainKey(a).length > 0 && plainKey(sentence).includes(plainKey(a)))
+
 /** What a known value must say to prove an award: a one-word award by its stem (`certified` by `certification`). */
 const awardKey = (award) => {
   const key = plainKey(award)
@@ -137,7 +152,7 @@ const awardKey = (award) => {
  * The claims of `text` the known facts do not hold.
  * @param {string} text written copy, its emails, links, phones and money already taken out
  * @param {{numbers: Set<string>, hours: Set<number>, everyDay: boolean, allDay: boolean, addresses: number,
- *   text: string}} facts what the plan data holds (`page-writer-data-guard.mjs`); `text` is every value, plain
+ *   text: string, awards?: string[]}} facts what the plan data holds (`page-writer-data-guard.mjs`); `text` is every value, plain
  * @returns {Array<{what: 'hours' | 'year' | 'number' | 'award', text: string}>}
  */
 export function claimsOf(text, facts) {
@@ -164,6 +179,12 @@ export function claimsOf(text, facts) {
   for (const m of [...rest.matchAll(FOR_YEARS), ...rest.matchAll(PERCENT)])
     if (counted(m[1])) fail('number', m[0])
   const known = plainKey(facts.text)
-  for (const award of rest.match(AWARD) ?? []) if (!known.includes(awardKey(award))) fail('award', award)
-  return found
+  for (const m of rest.matchAll(AWARD))
+    if (!known.includes(awardKey(m[0])) && !namesKnownAward(sentenceAt(rest, m.index), facts.awards))
+      fail('award', m[0])
+  // A claim the rules above found already ("2,000 happy customers") is not reported again by its number.
+  const more = moreClaimsOf(rest, facts, known).filter((c) =>
+    c.what === 'award' ? !found.some((f) => f.what === 'award') : !found.some((f) => f.text.includes(c.key))
+  )
+  return [...found, ...more.map(({ what, text: written }) => ({ what, text: written }))]
 }

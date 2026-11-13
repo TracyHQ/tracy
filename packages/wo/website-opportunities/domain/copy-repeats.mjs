@@ -54,8 +54,8 @@ export function selfDescribingOf(text, patterns = SELF_DESCRIBING) {
  * @param {Array<{where: string, text: string}>} entries the written texts, in the order they are read
  * @param {{facts?: Iterable<unknown>, short?: (entry: object, words: string[]) => boolean, factSlack?: number}}
  *   [options] `facts`: the business values a shared run may lie inside; `short`: whether a sentence is a label (a
- *   button, a menu entry, a short heading), which may be the same on every page: the whole sentence rule skips it,
- *   the five word run rule still holds; `factSlack`: a sentence that is a business value of two words or more plus at most this
+ *   button, a menu entry, a short heading), which may be the same on every page: both rules skip it;
+ *   `factSlack`: a sentence that is a business value of two words or more plus at most this
  *   many other words ("Visit us at <address>.") is no repeat. Both off by default (the step chain's W06).
  * @returns {Array<{entry: object, words: string[], hit: {other: {where: string}, run: string} | null}>}
  */
@@ -79,14 +79,9 @@ export function repeatsOf(entries, { facts = [], short = () => false, factSlack 
       const id = n++
       let hit = null
       const full = words.join(' ')
-      const exempt = isFactSentence(words)
-      if (
-        words.length >= MIN_EQUAL_WORDS &&
-        whole.has(full) &&
-        !isFact(full) &&
-        !exempt &&
-        !short(entry, words)
-      )
+      // A label is exempt from both rules: "Book your free trial class" may be the button of every page (#594 W3).
+      const exempt = isFactSentence(words) || short(entry, words)
+      if (words.length >= MIN_EQUAL_WORDS && whole.has(full) && !isFact(full) && !exempt)
         hit = { other: whole.get(full), run: full }
       for (let i = 0; !hit && !exempt && i + RUN_WORDS <= words.length; i++) {
         const run = words.slice(i, i + RUN_WORDS).join(' ')

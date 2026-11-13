@@ -23,7 +23,8 @@ export const tokenKey = (value) =>
 
 const NUMBER = String.raw`\d+(?:[.,']\d+)*`
 const CODES = 'USD|EUR|GBP|AUD|CAD|CHF|JPY|AED|SGD|NZD|HKD|INR|VND|SEK|NOK|DKK|PLN|CZK|BRL|MXN|ZAR'
-const CURRENCY = String.raw`\p{Sc}|(?<!\p{L})(?:${CODES})(?!\p{L})`
+/** `R$` is the Brazilian real, its own currency: `$1.200,50` is never proven by `R$ 1.200,50`. */
+const CURRENCY = String.raw`(?<!\p{L})R\$|\p{Sc}|(?<!\p{L})(?:${CODES})(?!\p{L})`
 const CURRENCY_WORD = String.raw`(?:dollars?|euros?|pounds?|dirhams?|francs?|yen|rupees?|kronor|kroner|reais|dong)(?!\p{L})`
 /** An amount written as money: a currency sign or code before or after it, or a currency word after it. */
 export const MONEY = new RegExp(
@@ -33,6 +34,7 @@ export const MONEY = new RegExp(
 
 /** A sign or a word as its ISO code, so the three ways of writing one currency compare equal. */
 const SAME_CURRENCY = {
+  R$: 'BRL',
   $: 'USD',
   dollar: 'USD',
   '€': 'EUR',
@@ -55,6 +57,7 @@ const SAME_CURRENCY = {
 export function currencyOf(written) {
   const w = String(written).trim()
   if (/^[A-Z]{3}$/i.test(w)) return w.toUpperCase()
+  if (/^r\$$/i.test(w)) return 'BRL'
   const word = w.toLowerCase().replace(/s$/, '')
   return SAME_CURRENCY[w] ?? SAME_CURRENCY[word] ?? SAME_CURRENCY[w.toLowerCase()] ?? w.toLowerCase()
 }
@@ -64,8 +67,9 @@ export const joinThousands = (text) => String(text).replace(/(?<=\d)[   ](?=\
 
 /**
  * The value of one written number: one or two digits after the last separator are the decimals (`20.5`, `15,00`); a
- * group of exactly three digits after a separator groups thousands (`1,200`, `1.200`). Any other grouping (`1,2345`)
- * is no amount (NaN), so it proves nothing.
+ * group of exactly three digits after a separator groups thousands (`1,200`, `1.200`), and the Indian grouping writes
+ * two digit groups before the last three (`1,20,000` is 120000). Any other grouping (`1,2345`) is no amount (NaN), so
+ * it proves nothing.
  */
 export function amountOf(written) {
   const groups = written.split(/[.,']/)
@@ -73,22 +77,43 @@ export function amountOf(written) {
   const last = groups.at(-1)
   const decimals = last.length <= 2
   const whole = decimals ? groups.slice(0, -1) : groups
-  const grouped = whole.length === 1 || (whole[0].length <= 3 && whole.slice(1).every((g) => g.length === 3))
+  const thousands = whole[0].length <= 3 && whole.slice(1).every((g) => g.length === 3)
+  const indian =
+    whole.length >= 3 &&
+    whole[0].length <= 2 &&
+    whole.at(-1).length === 3 &&
+    whole.slice(1, -1).every((g) => g.length === 2)
+  const grouped = whole.length === 1 || thousands || indian
   if (!grouped || (!decimals && last.length !== 3)) return Number.NaN
   return Number(whole.join('')) + (decimals ? Number(last) / 10 ** last.length : 0)
 }
 
 /** Every number written in `text`, as an amount. */
 const amountsOf = (text) => (String(text).match(new RegExp(NUMBER, 'g')) ?? []).map(amountOf)
+/** The other end of a price range takes the currency of the written one: `$20-45` is $20 and $45, `20-45 €` too. */
+const TO = String.raw`\s*(?:[-\u2013]|to|bis|à|a|al)\s*`
+const RANGE_AFTER = new RegExp(
+  String.raw`(${CURRENCY})\s?${NUMBER}${TO}(${NUMBER})(?!\s?(?:${CURRENCY}|\d))`,
+  'giu'
+)
+const RANGE_BEFORE = new RegExp(String.raw`(?<![\d.,])(${NUMBER})${TO}${NUMBER}\s?(${CURRENCY})`, 'giu')
 /**
- * The money `text` writes, thousands spaces joined: `{amount, currency, text}` for each match, `currency` the ISO code.
+ * The money `text` writes, thousands spaces joined: `{amount, currency, text}` for each match, `currency` the ISO code,
+ * and the bare end of a range (`$20-45`) in the currency of the other end.
  */
-export const moneyOf = (text) =>
-  [...joinThousands(text).matchAll(MONEY)].map((m) => ({
+export const moneyOf = (text) => {
+  const joined = joinThousands(text)
+  const money = [...joined.matchAll(MONEY)].map((m) => ({
     amount: amountOf(m[2] ?? m[3]),
     currency: currencyOf(m[1] ?? m[4]),
     text: m[0]
   }))
+  for (const m of joined.matchAll(RANGE_AFTER))
+    money.push({ amount: amountOf(m[2]), currency: currencyOf(m[1]), text: m[2] })
+  for (const m of joined.matchAll(RANGE_BEFORE))
+    money.push({ amount: amountOf(m[1]), currency: currencyOf(m[2]), text: m[1] })
+  return money
+}
 /** The amounts `text` writes as money only (`$35`, `15,00 €`, `20 EUR`, `20 dollars`). */
 export const moneyIn = (text) => moneyOf(text).map((m) => m.amount)
 /** `text` with every amount written as money taken out: a year or a name is never proven by a price. */
@@ -101,12 +126,15 @@ const CURRENCY_TOKEN = new RegExp(String.raw`^(?:${CODES}|${CURRENCY_WORD})$`, '
 /**
  * Whether a price `value` is in `evidence`: each of its money written as the same money in the quote, each bare amount
  * of it (`20`) written as money of any currency there (never an equal number that is not a price, `20` in "a 20 minute
- * class"), and its other words.
+ * class"), and its other words. A price written as a range, a deal or with a percentage (`$20-45`, `2 for £15`,
+ * `€49 plus 19% VAT`) is proven by the same words in the evidence, its money the same money.
  */
 export function priceIn(rawValue, rawEvidence) {
   const [value, evidence] = [joinThousands(rawValue), joinThousands(rawEvidence)]
   const quoted = moneyOf(evidence)
   const money = moneyOf(value)
+  const sameText = ` ${tokenKey(evidence)} `.includes(` ${tokenKey(value)} `)
+  if (sameText && money.length > 0 && money.every((m) => quoted.some((q) => sameMoney(m, q)))) return true
   const bare = amountsOf(withoutMoney(value))
   const words = tokenKey(evidence).split(' ')
   const ownWords = (tokenKey(value).match(/\p{L}+/gu) ?? []).filter((w) => !CURRENCY_TOKEN.test(w))

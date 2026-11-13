@@ -5,8 +5,8 @@
 //                          rule of `copy-repeats.mjs`: five words in a row, or the same sentence of three words or more;
 //                          a run inside a business value, such as the address, is no repeat, nor a sentence that is a
 //                          business value plus four other words at most; a label (a button, a menu entry, a field of
-//                          40 characters or less, a heading of four words or less) may be the same whole sentence on
-//                          every page, a body sentence may not);
+//                          60 characters or less that is no body text and no heading, a heading of four words or less) may be the
+//                          same on every page and neither rule holds it, a body sentence may not, in any field);
 //   seo_title_not_unique   a page title another page already has.
 // The earlier one is kept and the later one is the offender, in page order: so the page that repeats is the page that
 // is rewritten, by the writer's own one rewrite (`page-writer.mjs`). Pure.
@@ -18,14 +18,22 @@ import { titleKey } from './seo-limits.mjs'
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
-/** Labels: a button, a menu entry, a short badge, any field of at most this many characters. */
-const LABEL_LIMIT = 40
+/** Labels: a button, a menu entry, a short badge, any field of at most this many characters that is no body text. */
+const LABEL_LIMIT = 60
 const LABEL_KIND = /(?:button|menu|newsletter|cta|social|map)_label$|\.badge$/
 const HEADING_KIND = /\.heading$|\.tagline$/
+/** Body text: a short field of these kinds is still body copy, held to both repeat rules. */
+const BODY_KIND = /\.(?:paragraph|text|card_text|description|body|intro|summary|quote|bio|answer|excerpt)$/
 const HEADING_WORDS = 4
-/** A label may be the same whole sentence on every page ("Book now", "Contact us today"); five words in a row still repeat. */
+/**
+ * A label may be the same on every page ("Book your free trial class", "Contact us today"): neither repeat rule holds
+ * it. A body sentence is never a label, however short its field ("We love what we do." on five pages repeats), and a
+ * heading is one only at four words or less.
+ */
 const isLabel = (entry, words) =>
-  (Number.isInteger(entry.limit) && entry.limit <= LABEL_LIMIT) ||
+  (Number.isInteger(entry.limit) &&
+    entry.limit <= LABEL_LIMIT &&
+    !(typeof entry.kind === 'string' && (BODY_KIND.test(entry.kind) || HEADING_KIND.test(entry.kind)))) ||
   (typeof entry.kind === 'string' && LABEL_KIND.test(entry.kind)) ||
   (words.length <= HEADING_WORDS &&
     (typeof entry.kind === 'string' ? HEADING_KIND.test(entry.kind) : !/[.!?]\s*$/.test(entry.text)))

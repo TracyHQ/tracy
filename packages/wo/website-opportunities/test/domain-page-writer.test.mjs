@@ -293,8 +293,12 @@ test('a label may be the same on every page; a body sentence may not', async () 
     failing([{ key: 'b', kind: 'editorial.button_label', limit: 60, value: 'Book your trial class' }]),
     []
   )
+  // A body sentence repeats however short its field (#594 review W3); a label of 60 characters or less does not.
+  assert.deepEqual(failing([{ key: 'c', kind: 'editorial.paragraph', limit: 30, value: 'Book a class.' }]), [
+    'c'
+  ])
   assert.deepEqual(
-    failing([{ key: 'c', kind: 'editorial.paragraph', limit: 30, value: 'Book a class.' }]),
+    failing([{ key: 'l', kind: 'promo.link_text', limit: 60, value: 'See all our class times' }]),
     []
   )
   assert.deepEqual(
