@@ -74,9 +74,14 @@ test('a gallery picture frame that is no gallery item takes a free own photo; on
 })
 
 test('a block level frame of the one person its block shows is that person: own photo, else initials', async () => {
-  const withPhoto = await run(extended())
+  const alone = extended()
+  alone.plan.pages[1].blocks = alone.plan.pages[1].blocks.filter((b) => b.id !== 'team-b1')
+  const withPhoto = await run(alone)
   const portrait = frame(withPhoto, 'team.team-b3.portrait')
   assert.deepEqual([portrait.person, portrait.source], [COACH, 'own'])
+  // Beside the coach card on the same page, the one photo is shown once: the feature shows the initials.
+  const besideCard = frame(await run(extended()), 'team.team-b3.portrait')
+  assert.deepEqual([besideCard.source, besideCard.substitute.initials], ['initials', 'IV'])
   const profile = pictureProfile()
   delete profile.items.person[0].fields['person.image']
   const without = frame(await run({ profile, ...extended() }), 'team.team-b3.portrait')
@@ -86,13 +91,13 @@ test('a block level frame of the one person its block shows is that person: own 
   )
 })
 
-test('initials keep the script of the name; a Latin accent folds to its base letter', () => {
+test('initials keep the script of the name; a Latin accent, stroke or ligature folds to its base letter', () => {
   const cases = [
     ['Ilse Varrow', 'IV'],
     ['李小龙', '李'],
     ['Иван Петров', 'ИП'],
-    ['Øyvind Ærø', 'ØÆ'],
-    ['Łukasz Żak', 'ŁZ'],
+    ['Øyvind Ærø', 'OA'],
+    ['Łukasz Żak', 'LZ'],
     ['Élodie Dupont', 'ED'],
     ['  ', '']
   ]
@@ -124,8 +129,35 @@ test('one shared enlargement limit: never enlarged, with a two pixel rounding to
   assert.equal(unfitReason(photo(347, 351), square), 'too_small')
 })
 
-test('one item shown on several pages is drawn once and counted once', async () => {
+test('the two pixel tolerance holds for the width and the height each on its own', () => {
+  const frame = (width, height) => ({
+    place: 'item',
+    shape: width > height ? 'landscape' : 'portrait',
+    size: { width, height }
+  })
+  const photo = (width, height) => ({ media: 'photo', content: 'venue-exterior', width, height })
+  assert.equal(unfitReason(photo(1440, 510), frame(1440, 512)), null, 'two pixels short in height')
+  assert.equal(unfitReason(photo(1438, 512), frame(1440, 512)), null, 'two pixels short in width')
+  assert.equal(unfitReason(photo(1440, 508), frame(1440, 512)), 'too_small', 'four pixels short in height')
+  assert.equal(unfitReason(photo(100, 1000), frame(102, 1020)), 'too_small', 'twenty pixels short in height')
+  assert.equal(unfitReason(photo(300, 1600), frame(304, 1600)), 'too_small', 'four pixels short in width')
+  assert.equal(
+    unfitReason(photo(2000, 900), frame(1440, 512)),
+    null,
+    'larger in both: cut down, never enlarged'
+  )
+})
+
+test('one item shown on several pages in the same shape is drawn once and counted once', async () => {
   const blocks = pictureBlocks()
+  // A drawing is reused only in a frame of the same declared shape (`picture-reuse.mjs`).
+  const cards = blocks.get('service-cards')
+  blocks.set('service-cards', {
+    ...cards,
+    itemFields: cards.itemFields.map((f) =>
+      f.name === 'photo' ? { ...f, frame: { width: 800, height: 600 } } : f
+    )
+  })
   const plan = picturePlan()
   plan.pages[1].blocks.push({ id: 'team-b2', type: 'services', block: 'service-cards', data: [...SERVICES] })
   const result = await run({ blocks, plan })

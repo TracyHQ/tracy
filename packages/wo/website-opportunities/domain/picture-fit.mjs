@@ -14,7 +14,6 @@
 import { LOGO_FRAME_ROLES } from './picture-roles.mjs'
 import { heroScore, NOT_A_HERO, orientationOf, resolutionGradeOf } from './pictures/asset-labels.mjs'
 import { enlargedPast } from './pictures/enlarge-limit.mjs'
-import { cropBox } from './pictures/placement.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const LOGO_FRAMES = new Set(LOGO_FRAME_ROLES)
@@ -24,12 +23,14 @@ const OPPOSITE = Object.freeze({ landscape: 'portrait', portrait: 'landscape' })
 export const orientation = (p) =>
   p.orientation && p.orientation !== 'unknown' ? p.orientation : orientationOf(p.width, p.height)
 
-/** Whether a measured photo is too small for a sized frame: its largest crop of the frame's shape is narrower. */
+/**
+ * Whether a measured photo is too small for a sized frame: filling the frame would enlarge it, on its width or on its
+ * height, each side held on its own to the rounding tolerance (`enlargedPast`).
+ */
 function tooSmall(picture, frame) {
   const { width, height } = frame.size ?? {}
   if (!width || !height || !(picture.width > 0) || !(picture.height > 0)) return false
-  const box = cropBox(picture.width, picture.height, width / height)
-  return enlargedPast(width, box.width)
+  return enlargedPast(width, picture.width) || enlargedPast(height, picture.height)
 }
 
 /**

@@ -30,8 +30,12 @@ export function personOfFrame(frame, block, data) {
   return people.length === 1 && named(data, people[0]) ? people[0] : null
 }
 
-/** The initials decision of a frame of a named person: `{source: 'initials', substitute}`. */
+/** The initials decision of a frame of a named person (its name field, else its label): `{source: 'initials', substitute}`. */
 export function initialsDecisionOf(frame, data) {
-  const label = data.byId.get(frame.person)?.entry?.label
+  const held = data.byId.get(frame.person)
+  // The item's own name field wins over its display label, which may carry a role ("Coach Mia").
+  const name = held?.source?.fields?.['person.name']
+  const own = typeof name === 'string' ? name : name?.value
+  const label = typeof own === 'string' && own.trim() !== '' ? own : held?.entry?.label
   return { source: 'initials', substitute: avatarSubstitute({ personId: frame.person, label }, frame.size) }
 }
