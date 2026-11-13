@@ -83,7 +83,7 @@ test('every dash the rule bans fails: figure, en, em, horizontal bar and minus s
 })
 
 test('the limit counts code points, the unit of Contract A field limits', () => {
-  assert.equal(charCount('Hồ'), 2)
+  assert.equal(charCount('Zo\u00eb'), 3)
   assert.equal(charCount('\u{1F3BE}\u{1F3BE}'), 2)
   assert.deepEqual(codes({ ...heading, limit: 2 }, '\u{1F3BE}\u{1F3BE}'), [])
 })
