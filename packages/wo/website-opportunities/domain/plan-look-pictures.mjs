@@ -105,6 +105,11 @@ const EMPTY_FRAME_REASONS = Object.freeze({
     'logo spot',
     'logo spots',
     'A logo of another organisation is never drawn, so these spots stay empty until you add the logo.'
+  ],
+  gallery_own_photos_only: [
+    'gallery photo spot',
+    'gallery photo spots',
+    'A gallery shows only your own photos, so these spots stay empty until you add a photo.'
   ]
 })
 /** A label that stands in, for counting only, for an own photo the pictures step labels before it places it. */

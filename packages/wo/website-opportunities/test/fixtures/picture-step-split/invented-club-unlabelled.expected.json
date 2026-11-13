@@ -53,6 +53,27 @@
       }
     },
     {
+      "id": "home.home-b2.service-adult-group-lessons.photo",
+      "page": "home",
+      "block": "home-b2",
+      "blockId": "service-cards",
+      "blockType": "services",
+      "field": "photo",
+      "kind": "offering.image",
+      "place": "item",
+      "item": "service-adult-group-lessons",
+      "itemKind": "service",
+      "shape": "unknown",
+      "people": false,
+      "source": "generated",
+      "generate": {
+        "blockType": "services",
+        "item": "Adult group lessons",
+        "people": false,
+        "stock": false
+      }
+    },
+    {
       "id": "home.home-b2.service-court-hire.photo",
       "page": "home",
       "block": "home-b2",
@@ -72,6 +93,27 @@
       "from": ["Website"]
     },
     {
+      "id": "home.home-b2.service-cardio-tennis.photo",
+      "page": "home",
+      "block": "home-b2",
+      "blockId": "service-cards",
+      "blockType": "services",
+      "field": "photo",
+      "kind": "offering.image",
+      "place": "item",
+      "item": "service-cardio-tennis",
+      "itemKind": "service",
+      "shape": "unknown",
+      "people": false,
+      "source": "generated",
+      "generate": {
+        "blockType": "services",
+        "item": "Cardio tennis",
+        "people": false,
+        "stock": false
+      }
+    },
+    {
       "id": "home.home-b3.gallery-https-brindlewick-tennis-example-img-courts-jpg.photo",
       "page": "home",
       "block": "home-b3",
@@ -88,7 +130,12 @@
       "picture": "gallery-https-brindlewick-tennis-example-img-courts-jpg",
       "ref": "https://brindlewick-tennis.example/img/courts.jpg",
       "label": "Invented label of gallery-https-brindlewick-tennis-example-img-courts-jpg",
-      "from": ["Website"]
+      "from": ["Website"],
+      "size": {
+        "width": 800,
+        "height": 800
+      },
+      "never": "gallery_own_photos_only"
     },
     {
       "id": "home.home-b3.gallery-https-images-example-brindlewick-clubhouse-jpg.photo",
@@ -107,7 +154,12 @@
       "picture": "gallery-https-images-example-brindlewick-clubhouse-jpg",
       "ref": "https://images.example/brindlewick/clubhouse.jpg",
       "label": "Clubhouse terrace",
-      "from": ["Google listing"]
+      "from": ["Google listing"],
+      "size": {
+        "width": 800,
+        "height": 800
+      },
+      "never": "gallery_own_photos_only"
     },
     {
       "id": "home.home-b3.gallery-https-images-example-brindlewick-cardio-jpg.photo",
@@ -126,7 +178,12 @@
       "picture": "gallery-https-images-example-brindlewick-cardio-jpg",
       "ref": "https://images.example/brindlewick/cardio.jpg",
       "label": "Players at a cardio tennis evening",
-      "from": ["Social profile"]
+      "from": ["Social profile"],
+      "size": {
+        "width": 800,
+        "height": 800
+      },
+      "never": "gallery_own_photos_only"
     },
     {
       "id": "team.team-b1.person-ilse-varrow.photo",
@@ -146,40 +203,21 @@
       "picture": "person-ilse-varrow:person.image",
       "ref": "https://brindlewick-tennis.example/img/coach.jpg",
       "label": "Invented label of person-ilse-varrow:person.image",
-      "from": ["Website"]
+      "from": ["Website"],
+      "size": {
+        "width": 600,
+        "height": 600
+      }
     }
   ],
-  "reduced": [
-    {
-      "page": "home",
-      "block": "home-b2",
-      "item": "service-cardio-tennis",
-      "reason": "no_own_photo"
-    },
-    {
-      "page": "home",
-      "block": "home-b2",
-      "item": "service-adult-group-lessons",
-      "reason": "no_own_photo"
-    }
-  ],
-  "droppedFrames": [
-    {
-      "frame": "home.home-b2.service-adult-group-lessons.photo",
-      "item": "service-adult-group-lessons",
-      "reason": "item_dropped"
-    },
-    {
-      "frame": "home.home-b2.service-cardio-tennis.photo",
-      "item": "service-cardio-tennis",
-      "reason": "item_dropped"
-    }
-  ],
+  "reduced": [],
+  "droppedFrames": [],
   "counts": {
     "own": 6,
-    "generated": 1,
+    "generated": 3,
     "none": 1,
-    "variants": 0
+    "variants": 0,
+    "initials": 0
   },
   "notes": [],
   "icons": [],
@@ -206,7 +244,7 @@
     },
     "placed": {
       "own": 6,
-      "generated": 1
+      "generated": 3
     },
     "unplaced": [
       {

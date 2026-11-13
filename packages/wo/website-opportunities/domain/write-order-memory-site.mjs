@@ -56,7 +56,12 @@ export function memorySite({ failOn = [] } = {}) {
     for (const p of list(order.pictures))
       if (p.source === 'none') counts.skipped += 1
       else {
-        pictures.set(p.frame, p.file ?? p.ref ?? { generate: p.generate })
+        pictures.set(
+          p.frame,
+          p.file ??
+            p.ref ??
+            (p.source === 'initials' ? { initials: p.substitute.initials } : { generate: p.generate })
+        )
         counts.written += 1
       }
     const icons = new Map()

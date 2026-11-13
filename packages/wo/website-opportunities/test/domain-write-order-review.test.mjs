@@ -70,7 +70,8 @@ test('a text logo takes the business name; a generated picture has an alt text',
     ['home.home-b3.photo', 'Example Larkspur Florist'],
     ['home.home-b3.photo-dark', 'Example Larkspur Florist'],
     ['home.home-b4.service-wild-meadow-bouquet.photo', 'Wild meadow bouquet'],
-    ['home.home-b4.service-seasonal-posy.photo', 'Seasonal posy']
+    ['home.home-b4.service-seasonal-posy.photo', 'Seasonal posy'],
+    ['home.home-b4.service-wedding-table-set.photo', 'Wedding table set']
   ])
 })
 
@@ -85,12 +86,17 @@ test('list counts are keyed by the full path, so a nested list of the same name 
 test('a repeating block below its minimum with a fallback rule takes state fallback, written by the memory site', async () => {
   const values = fresh()
   storeBlock(values, 'bouquets').noData = { rule: 'fallback', fallback: 'the template bouquets' }
-  values.pictures.reduced = [{ page: 'home', block: 'home-b4', item: 'service-seasonal-posy', reason: 'x' }]
+  values.pictures.reduced = ['service-seasonal-posy', 'service-wedding-table-set'].map((item) => ({
+    page: 'home',
+    block: 'home-b4',
+    item,
+    reason: 'x'
+  }))
   const order = buildWriteOrder(values)
   const block = blockOf(order, 'home', 'bouquets')
   assert.deepEqual(
     [block.state, block.reason, block.fallback, block.counts.shown, block.items.map((i) => i.state)],
-    ['fallback', 'list_below_min', 'the template bouquets', 0, ['hidden', 'hidden']]
+    ['fallback', 'list_below_min', 'the template bouquets', 0, ['hidden', 'hidden', 'hidden']]
   )
   assert.ok(order.hidden.some((h) => h.at === 'home.home-b4' && h.fallback === 'the template bouquets'))
   assert.deepEqual(checkWriteOrder(order), [])

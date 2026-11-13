@@ -38,7 +38,8 @@ test('the memory site applies the order: pages, menu, block copy and fields', as
     bouquets.items.map((i) => [i.index, i.fields.name, i.fields.price, i.fields.more?.page ?? null]),
     [
       [0, 'Wild meadow bouquet', '$42', 'bouquet'],
-      [1, 'Seasonal posy', '$28', null]
+      [1, 'Seasonal posy', '$28', null],
+      [2, 'Wedding table set', '$180', null]
     ]
   )
   const contact = home.blocks.find((b) => b.block === 'contact-strip')

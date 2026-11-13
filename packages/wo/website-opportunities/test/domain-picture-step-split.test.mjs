@@ -1,7 +1,9 @@
 // The pictures step split in two for the step chain (#597): `placeBuildPictures` (labelling and picture assignment, no
 // copy) runs beside the page writers, `selectBuildIcons` (icons from the written copy, checked against the picture
 // frames of the same plan) after them. Run in turn, the two give exactly the output the one call `picturesStep` gave
-// before the split: `fixtures/picture-step-split/*.expected.json` were written by the unsplit step and are frozen.
+// before the split: `fixtures/picture-step-split/*.expected.json` were written by the unsplit step and are frozen (written
+// again once by the unsplit step when the kept picture rules of #595 changed the output: every service stays, a frame
+// records its declared size, a gallery frame is never generated, and the counts name the initials frames).
 // Invented fixtures, scripted fake models only.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-picture-step-split.test.mjs

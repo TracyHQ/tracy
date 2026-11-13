@@ -1,10 +1,13 @@
 // The rules every picture assignment keeps (ticket #595, spec #577), checked on the assignment itself so a later change
 // to the policy cannot break one silently. Pure: an assignment and the pictures it drew on in, the problems out.
 import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
-import { generationOf } from './picture-roles.mjs'
+import { GALLERY_ONLY_OWN, generationOf } from './picture-roles.mjs'
 
-/** Where a frame's picture comes from: an own picture, a generated one, or none (with the reason). */
-export const FRAME_SOURCES = Object.freeze(['own', 'generated', 'none'])
+/**
+ * Where a frame's picture comes from: an own picture, a generated one, the initials of the named person it shows, or
+ * none (with the reason).
+ */
+export const FRAME_SOURCES = Object.freeze(['own', 'generated', 'initials', 'none'])
 const SOURCES = new Set(FRAME_SOURCES)
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
@@ -18,8 +21,22 @@ export function videoFits(picture) {
   )
 }
 
+const isGallery = (frame) =>
+  frame.never === GALLERY_ONLY_OWN || frame.itemKind === 'gallery' || frame.blockType === 'gallery'
+
+/** The problem of an initials frame: it shows a named person item, with the initials avatar of that person. */
+function initialsProblemOf(frame) {
+  if (!frame.people || frame.itemKind !== 'person' || !frame.item)
+    return ['initials_not_a_person', 'initials are shown only in the frame of a named person']
+  const s = frame.substitute
+  if (s?.kind !== 'initials-avatar' || !isText(s.initials) || s.personId !== frame.item)
+    return ['initials_missing', 'an initials frame carries the initials avatar of its person']
+  return null
+}
+
 /**
- * The problems of an assignment, empty when it keeps every rule: every frame records its source; an own picture is
+ * The problems of an assignment, empty when it keeps every rule: every frame records its source; an initials frame
+ * shows a named person with that person's initials avatar; nothing is generated for a gallery; an own picture is
  * labelled, never stock, a photo in an image frame and a fitting video in a video frame; nothing is generated for a
  * frame of a person, a logo or any kind `picture-roles.mjs` never generates, nor for a video frame; every generated
  * picture is asked without people; the business logo is never filled here (the brand step owns it); at most
@@ -58,8 +75,14 @@ export function pictureProblemsOf(assignment, pictures, approved = {}) {
       if (frame.place === 'video') report(frame, 'generated_video', 'a video is never generated')
       else if (!frame.people && frame.kind && !generationOf(frame.kind).may)
         report(frame, 'generated_never', `a picture of kind ${frame.kind} is never generated`)
+      if (isGallery(frame))
+        report(frame, 'generated_gallery', 'a gallery shows only own photos, never a drawn one')
       if (frame.generate?.people !== false || frame.generate?.stock !== false)
         report(frame, 'generated_unbounded', 'a generated picture is asked without people and without stock')
+    }
+    if (frame.source === 'initials') {
+      const problem = initialsProblemOf(frame)
+      if (problem) report(frame, ...problem)
     }
     if (frame.source === 'none' && !isText(frame.reason))
       report(frame, 'reason_missing', 'a frame without a picture says why')

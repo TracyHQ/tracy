@@ -5,13 +5,13 @@
 //
 // 🔒 NEVER GENERATED: a picture of a person (it would be an invented face), a logo (the brand step owns the business's
 // logo; an award or partner logo is the other entity's own mark, never drawn), the template's design values, an icon
-// (icons come from the icon library, `icon-selection.mjs`), a map and a video.
+// (icons come from the icon library, `icon-selection.mjs`), a map, a video and a gallery picture (a gallery shows the
+// business's own photos only, never a drawing; the locked planner rule).
 import { modeOfRole, PLACE_CONTENT_ROLES_V3 } from './place-content-roles.mjs'
 
 /** Roles a build may generate a picture for when no own photo fits (within the cap of six). */
 export const GENERATED_PICTURE_ROLES = Object.freeze([
   'business.hero_image',
-  'business.gallery_image',
   'offering.image',
   'event.image',
   'article.image',
@@ -28,8 +28,12 @@ export const NEVER_GENERATED_ROLES = Object.freeze({
   'editorial.design_element': 'design_value',
   'editorial.item_icon': 'icon_from_icon_library',
   'contact.map': 'map_not_generated',
-  'business.video': 'no_fitting_video'
+  'business.video': 'no_fitting_video',
+  'business.gallery_image': 'gallery_own_photos_only'
 })
+
+/** The reason a frame of a gallery records when no own photo fills it: a gallery is never drawn. */
+export const GALLERY_ONLY_OWN = NEVER_GENERATED_ROLES['business.gallery_image']
 
 /** Roles whose frame shows a person. */
 export const PEOPLE_ROLES = Object.freeze(

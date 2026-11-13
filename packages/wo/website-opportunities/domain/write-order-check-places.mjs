@@ -4,7 +4,7 @@ import { SEO_DESCRIPTION_LIMIT, SEO_TITLE_LIMIT } from './write-order-pages.mjs'
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const STATES = new Set(['show', 'hidden', 'fallback'])
-const PICTURE_SOURCES = new Set(['own', 'generated', 'none'])
+const PICTURE_SOURCES = new Set(['own', 'generated', 'initials', 'none'])
 const prefixOf = (id) => String(id).replace(/\.[^.]+$/, '')
 const length = (text) => [...String(text)].length
 
@@ -35,7 +35,7 @@ export function pictureProblems(order, report) {
   const byFrame = new Map(pictures.map((p) => [p.frame, p]))
   for (const p of pictures) {
     if (!PICTURE_SOURCES.has(p.source))
-      report('picture_source', p.frame, `${p.source} is not own, generated or none`)
+      report('picture_source', p.frame, `${p.source} is not own, generated, initials or none`)
     if (p.stock === true || p.generate?.stock === true)
       report('stock_picture', p.frame, 'a stock picture is never used')
     if (p.sameAs !== undefined) {
@@ -49,6 +49,8 @@ export function pictureProblems(order, report) {
       report('picture_without_file', p.frame, 'an own picture names its file')
     if (p.source === 'generated' && !p.file && !p.generate)
       report('picture_without_file', p.frame, 'a generated picture names its file or how it is drawn')
+    if (p.source === 'initials' && !p.substitute?.initials)
+      report('picture_without_file', p.frame, 'an initials picture names the letters it shows')
   }
 }
 

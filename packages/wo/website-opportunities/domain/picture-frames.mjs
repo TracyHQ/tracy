@@ -13,7 +13,7 @@
 import { placesOfBlock, repeatedNames } from './picture-block-places.mjs'
 import { frameOfField } from './picture-frame-size.mjs'
 import { PicturePolicyError } from './picture-labelling.mjs'
-import { generationOf, PEOPLE_ROLES } from './picture-roles.mjs'
+import { GALLERY_ONLY_OWN, generationOf, PEOPLE_ROLES } from './picture-roles.mjs'
 import { orientationOf } from './pictures/asset-labels.mjs'
 
 /** Field kinds whose frame shows a person: a picture of a person is never generated for one. */
@@ -42,6 +42,14 @@ function placeOf(block, field, level) {
   return block.type === 'hero' ? 'hero' : 'block'
 }
 
+/** Why a frame is never generated, or null: its kind's reason, or a frame of a gallery (block or item), never drawn. */
+function neverOf(block, field, at, place) {
+  if (place === 'video') return null
+  const generation = generationOf(field.kind)
+  if (!generation.may) return generation.reason
+  return block.type === 'gallery' || at.itemKind === 'gallery' ? GALLERY_ONLY_OWN : null
+}
+
 /**
  * Every picture frame of the plan, in page order, at every depth (`picture-block-places.mjs`): block level frames,
  * the rows of the block's child lists, then each shown item's frames and its child list rows.
@@ -51,8 +59,8 @@ function placeOf(block, field, level) {
  * @returns {Array<{id: string, page: string, block: string, blockId: string, blockType: string, field: string,
  *   kind: string | null, place: 'hero' | 'block' | 'item' | 'row' | 'video', item?: string, itemKind?: string,
  *   row?: string, theme?: 'light' | 'dark', variantOf?: string, shape: 'landscape' | 'portrait' | 'square' | 'unknown',
- *   people: boolean, never?: string}>} `shape`
- *   is the frame's own, from its declared `frame` size (Contract A); `never` is set when the frame's kind is never
+ *   size?: {width: number, height: number}, people: boolean, never?: string}>} `shape` and `size`
+ *   are the frame's own, from its declared `frame` size (Contract A); `never` is set when the frame's kind is never
  *   generated (`picture-roles.mjs`), with the reason it records when no own picture fills it. A frame declared in
  *   another shape than Contract A's, or two fields of one name in one place, throw a `PicturePolicyError`.
  */
@@ -77,7 +85,7 @@ export function framesOfPlan(pages, blocks, data) {
             throw new PicturePolicyError('picture_frame_invalid', `${at.prefix}.${field.name}: ${problem}`, {
               at: `${at.prefix}.${field.name}`
             })
-          const generation = generationOf(field.kind)
+          const never = neverOf(block, field, at, place)
           frames.push({
             id: `${at.prefix}.${field.name}`,
             page: page.id,
@@ -93,8 +101,9 @@ export function framesOfPlan(pages, blocks, data) {
             ...(field.theme ? { theme: field.theme } : {}),
             ...(field.variantOf ? { variantOf: field.variantOf } : {}),
             shape: orientationOf(frame?.width, frame?.height),
+            ...(frame ? { size: frame } : {}),
             people: PEOPLE.has(field.kind) || (at.itemKind === 'person' && place === 'item'),
-            ...(generation.may || place === 'video' ? {} : { never: generation.reason })
+            ...(never ? { never } : {})
           })
         }
       }

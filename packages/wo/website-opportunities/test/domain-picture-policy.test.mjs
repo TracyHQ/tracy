@@ -1,5 +1,5 @@
-// The picture policy of the AI quickstart build (ticket #595): own photos first, labelled before use, fewer image items
-// before anything is generated, at most six generated frames, no stock, no generated person, a video never the default
+// The picture policy of the AI quickstart build (ticket #595): own photos first, labelled before use, fewer gallery items
+// before anything is generated (every other item stays), at most six generated frames, no stock, no generated person, a video never the default
 // hero background, and the source of every frame recorded. Invented club, invented pictures, scripted fake vision.
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-picture-policy.test.mjs
@@ -174,26 +174,26 @@ test('a free own photo fills a block frame only when its shape fits the frame', 
   assert.equal(frame(square, 'team.team-b2.photo').picture, 'gallery-tall')
 })
 
-test('image items are reduced before pictures are generated', async () => {
-  const result = await run()
-  // Four services, one with an own photo, the block needs two: two are dropped, one is generated.
+test('only gallery items are reduced before pictures are generated; every service stays', async () => {
+  // The courts photo reads as a text graphic and fits no gallery frame; the strip needs two of its three photos.
+  const blocks = pictureBlocks()
+  blocks.set('gallery-strip', { ...blocks.get('gallery-strip'), items: { min: 2, max: 6 } })
+  const profile = pictureProfile()
+  profile.items.gallery.find((p) => p.id === PHOTOS[0]).content = 'text-graphic'
+  const result = await run({ profile, blockStore: { blocks: [...blocks.values()] } })
   assert.deepEqual(
-    result.reduced.map((r) => r.item),
-    [SERVICES[3], SERVICES[1]]
+    result.reduced.map((r) => [r.item, r.reason]),
+    [[PHOTOS[0], 'own_photo_unfit']]
   )
-  const services = result.frames.filter((f) => f.block === 'home-b2')
   assert.deepEqual(
-    services.map((f) => [f.item, f.source]),
-    [
-      [SERVICES[0], 'generated'],
-      [SERVICES[2], 'own']
-    ]
+    result.frames.filter((f) => f.block === 'home-b2').map((f) => f.item),
+    [...SERVICES]
   )
-  // The plan summary counts the same way and takes the dropped items out of the pages it shows.
-  const data = planDataOf(pictureProfile())
-  const summary = picturesOf(picturePlan().pages, pictureBlocks(), data)
-  assert.deepEqual(summary.pages[0].blocks[1].data, [SERVICES[0], SERVICES[2]])
-  assert.equal(summary.leftOut.filter((e) => e.kind === 'item').length, 2)
+  // The plan summary counts the same way and takes only the dropped gallery photo out of the pages it shows.
+  const summary = picturesOf(picturePlan().pages, blocks, planDataOf(profile))
+  assert.deepEqual(summary.pages[0].blocks[1].data, [...SERVICES])
+  assert.deepEqual(summary.pages[0].blocks[2].data, PHOTOS.slice(1))
+  assert.equal(summary.leftOut.filter((e) => e.kind === 'item').length, 1)
   assert.equal(summary.pictures.generated.frames, result.counts.generated)
 })
 
@@ -226,7 +226,7 @@ test('no stock photo and no generated picture of a person appears', async () => 
   const result = await run({ profile })
   assert.ok(!result.frames.some((f) => f.picture === 'gallery-stock-racket'))
   const coach = result.frames.find((f) => f.people)
-  assert.deepEqual([coach.source, coach.reason], ['none', 'no_generated_people'])
+  assert.deepEqual([coach.source, coach.substitute.initials], ['initials', 'IV'])
   for (const f of result.frames.filter((f) => f.source === 'generated'))
     assert.deepEqual([f.generate.people, f.generate.stock], [false, false])
   const broken = { frames: [{ ...coach, source: 'generated', generate: { people: false, stock: false } }] }

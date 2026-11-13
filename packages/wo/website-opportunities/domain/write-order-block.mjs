@@ -42,7 +42,8 @@ function pictureOf(frame, field, data) {
     ...(theme ? { theme } : {}),
     ...(sameAs ? { sameAs } : {}),
     ...(reason ? { reason } : {}),
-    ...(generate ? { generate } : {})
+    ...(generate ? { generate } : {}),
+    ...(frame.substitute ? { substitute: frame.substitute } : {})
   }
 }
 

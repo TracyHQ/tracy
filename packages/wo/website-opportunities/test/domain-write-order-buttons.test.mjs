@@ -72,12 +72,16 @@ test('an item page address is the page that shows only that item, never a page t
       .find((p) => p.id === pageId)
       .blocks.find((b) => b.id === blockId)
       .items.map((i) => [i.id, i.fields.find((e) => e.field === 'link')?.target?.page])
-  const [wild, posy] = saved.approval.profile.items.service.map((s) => s.id)
+  const [wild, posy, wedding] = saved.approval.profile.items.service.map((s) => s.id)
   assert.deepEqual(targets('classes', 'classes-b3'), [
     [wild, 'class'],
     [posy, 'class-2']
   ])
-  assert.deepEqual(targets('home', 'home-b4'), [[wild, 'class']])
+  // The wedding table set has no photo and no page of its own: it stays listed, with no page to link to.
+  assert.deepEqual(targets('home', 'home-b4'), [
+    [wild, 'class'],
+    [wedding, undefined]
+  ])
   assert.deepEqual(orderOf().derived, order.derived)
 })
 

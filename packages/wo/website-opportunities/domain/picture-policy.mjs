@@ -4,9 +4,15 @@
 //
 //   1. own photos, wherever they fit a frame by content and shape (an item's own photo in its item frame, then a gallery
 //      photo the plan does not show elsewhere in the hero and the other block frames);
-//   2. fewer image items: an item block drops the items without a fitting own photo while it keeps more than its minimum;
+//   2. fewer gallery items: a gallery drops the items without a fitting own photo while it keeps more than its minimum.
+//      Every other item (a service, a package, a person) stays whether or not it has a photo (`picture-fit.mjs`);
 //   3. generated pictures for the frames still empty, at most six per site and never more than the plan's approved
-//      count. A frame of a person or a logo is never generated (`picture-roles.mjs`), and no stock picture is ever used.
+//      count. A frame of a person, a logo or a gallery is never generated (`picture-roles.mjs`), and no stock picture is
+//      ever used. A frame that gets no picture stays empty with its reason, and the write step hides it.
+//
+// 🔒 A PERSON WITHOUT A PHOTO SHOWS THEIR INITIALS (the locked decision on the coach cards): the frame of a named person
+// with no own photo of them takes `source: 'initials'` and the substitute of `person-avatar.mjs`, never an empty frame,
+// never a drawn person and never another person's photo.
 //
 // 🔒 A VIDEO IS NEVER THE DEFAULT HERO BACKGROUND. The hero's image frame takes a photo or a generated image, never a
 // video. Only a video frame (a `business.video` link field) takes an own video, and only one that is landscape or near
@@ -19,6 +25,7 @@
 // 🔒 THE BUSINESS LOGO IS THE BRAND STEP'S. A `business.logo` frame is never filled here and never generated; an award or
 // partner logo (`claim.entity_logo`) takes the item's own logo picture or stays empty with a reason.
 import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
+import { avatarSubstitute } from './person-avatar.mjs'
 import { framesOfPlan } from './picture-frames.mjs'
 import { fitsFrame, heroFit, reductionsOf } from './picture-fit.mjs'
 import { isLabelled, PicturePolicyError } from './picture-labelling.mjs'
@@ -36,6 +43,15 @@ const own = (picture) => ({
   label: picture.label,
   from: list(picture.from)
 })
+
+/** The initials of the named person a people frame shows, or null when the frame names no person item. */
+function initialsOf(frame, data) {
+  if (frame.itemKind !== 'person' || !frame.item) return null
+  const label = data.byId.get(frame.item)?.entry?.label
+  if (typeof label !== 'string' || label.trim() === '') return null
+  const substitute = avatarSubstitute({ personId: frame.item, label }, frame.size)
+  return substitute.initials ? { source: 'initials', substitute } : null
+}
 
 /**
  * The generated count the customer approved. `null` (the plan is being counted, nothing approved yet) allows the cap; an
@@ -104,7 +120,7 @@ function placeOwn(frames, usable, take, used) {
  *   approved?: {generated?: {frames?: number}} | null}} input `approved` is the plan's pictures summary
  *   (`plan.pictures`); leave it out only to count a plan before it is approved (`picturesOf`)
  * @returns {{frames: object[], reduced: object[], droppedFrames: Array<{frame: string, item: string, reason: string}>,
- *   counts: {own: number, generated: number, none: number, variants: number}, notes: object[]}} `droppedFrames`: the frames of the
+ *   counts: {own: number, generated: number, initials: number, none: number, variants: number}, notes: object[]}} `droppedFrames`: the frames of the
  *   reduced items, which the built site no longer shows
  */
 export function assignPictures({ pages, blocks, data, pictures, approved = null }) {
@@ -133,7 +149,7 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
     },
     used
   )
-  // 2. Fewer image items before anything is generated.
+  // 2. Fewer gallery items before anything is generated; every other item stays.
   const reduced = reductionsOf(frames, filled, pages, blocks, pictures)
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = frames.filter((f) => !f.item || !dropped.has(`${f.page}.${f.block}.${f.item}`))
@@ -145,7 +161,8 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
     if (filled.has(frame.id)) continue
     const none = (reason) => filled.set(frame.id, { source: 'none', reason })
     if (frame.place === 'video') none('no_fitting_video')
-    else if (frame.people) none('no_generated_people')
+    else if (frame.people)
+      filled.set(frame.id, initialsOf(frame, data) ?? { source: 'none', reason: 'no_generated_people' })
     else if (frame.never) none(frame.never)
     else if (generated >= cap)
       none(generated >= MAX_GENERATED_FRAMES ? 'generated_cap' : 'over_approved_count')
@@ -169,7 +186,7 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
     )
   // One count per picture decision: a pair's variant (`sameAs`) shows its base's decision and is counted in `variants`
   // only, never in own, generated or none. Every frame is still in `frames`, so declared = decided stays exact.
-  const counts = { own: 0, generated: 0, none: 0, variants: 0 }
+  const counts = { own: 0, generated: 0, initials: 0, none: 0, variants: 0 }
   for (const frame of out) counts[frame.sameAs ? 'variants' : frame.source] += 1
   // The frames of a dropped item leave with it; each is kept here so every declared frame stays accounted for.
   const droppedFrames = all

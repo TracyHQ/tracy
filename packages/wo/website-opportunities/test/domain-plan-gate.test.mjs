@@ -205,7 +205,7 @@ test('the plan carries the look, the pictures summary, the assumptions and the l
     logo: { kind: 'own', source: 'Instagram profile' }
   })
   // Frames: the hero photo, three gallery photos and one coach photo. Three own photos, the hero generated, and the
-  // coach's spot stays without a picture: a picture of a person is never generated (#595).
+  // coach's spot shows the coach's initials: a picture of a person is never generated, and is not left out (#595).
   assert.deepEqual(plan.pictures.own, { frames: 3, from: ['Website', 'Google listing', 'Social profile'] })
   assert.equal(plan.pictures.generated.frames, 1)
   assert.ok(plan.pictures.generated.reason)
@@ -216,7 +216,7 @@ test('the plan carries the look, the pictures summary, the assumptions and the l
   )
   assert.deepEqual(
     plan.leftOut.map((e) => e.what),
-    ['Prices page', '1 picture spot of a person']
+    ['Prices page']
   )
   assert.equal(PHOTOS.length, 3)
 })

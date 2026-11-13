@@ -17,9 +17,13 @@ const values = (order) => placesOfOrder(order).flatMap(({ place }) => place.fiel
 
 test('a picture reduction below the minimum hides the whole block with list_below_min, never padded', () => {
   const input = fresh()
-  input.pictures.reduced = [
-    { page: 'home', block: 'home-b4', item: 'service-seasonal-posy', reason: 'no_own_photo' }
-  ]
+  // A reduction of the write order's own vocabulary: the pictures step only reduces a gallery, so two items are named.
+  input.pictures.reduced = ['service-seasonal-posy', 'service-wedding-table-set'].map((item) => ({
+    page: 'home',
+    block: 'home-b4',
+    item,
+    reason: 'no_own_photo'
+  }))
   const order = buildWriteOrder(input)
   const bouquets = blockOf(order, 'home', 'bouquets')
   assert.deepEqual([bouquets.state, bouquets.reason], ['hidden', 'list_below_min'])
@@ -29,7 +33,8 @@ test('a picture reduction below the minimum hides the whole block with list_belo
     bouquets.items.map((i) => [i.id, i.state, i.fields.length]),
     [
       ['service-wild-meadow-bouquet', 'hidden', 0],
-      ['service-seasonal-posy', 'hidden', 0]
+      ['service-seasonal-posy', 'hidden', 0],
+      ['service-wedding-table-set', 'hidden', 0]
     ]
   )
   // The dropped item takes its writer fields, pictures and icons with it.

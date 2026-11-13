@@ -21,7 +21,9 @@ const hasValue = (e) => e.value !== undefined && e.value !== null && e.value !==
 /** Whether a place shows anything of its own. */
 export const placeShows = (place) =>
   place.fields.some(hasValue) ||
-  place.pictures.some((p) => p.source === 'own' || p.source === 'generated' || p.reason === LOGO) ||
+  place.pictures.some(
+    (p) => p.source === 'own' || p.source === 'generated' || p.source === 'initials' || p.reason === LOGO
+  ) ||
   place.icons.some((i) => i.source !== 'none')
 
 function hide(place, reason, hidden) {
