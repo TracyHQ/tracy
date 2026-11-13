@@ -17,6 +17,9 @@ import { partKindOf } from '../domain/schedule-parts.mjs'
 import { boxingStore } from './fixtures/child-lists/boxing-plan.mjs'
 import { scriptedWriter } from './fixtures/icon-fields/invented-yoga.mjs'
 
+// Written by code point so the source holds no dash or invisible space.
+const EN_DASH = String.fromCodePoint(0x2013)
+const SPACES = [' ', String.fromCodePoint(0xa0), String.fromCodePoint(0x202f)]
 const sources = ['site']
 const site = [{ id: 'site', origin: 'website' }]
 const profileOf = (parts) => ({
@@ -63,13 +66,13 @@ test('a one part schedule is split into days and times, or dropped with a code, 
     [['Lun-Ven 18h30'], ['Lun-Ven', '18h30']],
     [['M/W/F 6pm'], ['M/W/F', '6pm']],
     [['Tu & Th 18:00'], ['Tu & Th', '18:00']],
-    [['Sat 10–12'], ['Sat', '10–12']],
+    [[`Sat 10${EN_DASH}12`], ['Sat', `10${EN_DASH}12`]],
     [['Sat 10-12'], ['Sat', '10-12']],
     [['Sat 10 to 12'], ['Sat', '10 to 12']]
   ]
   for (const [parts, [days, times]] of split)
     assert.deepEqual(await written(parts, store), { days, times }, JSON.stringify(parts))
-  assert.deepEqual(await written(['Mon', '19–21'], store), { days: 'Mon', times: '19–21' })
+  assert.deepEqual(await written(['Mon', `19${EN_DASH}21`], store), { days: 'Mon', times: `19${EN_DASH}21` })
   for (const parts of [['Kids 6 to 12'], ['Sunrise class'], ['Mon 9:00 to 17:00, Sat 10:00']]) {
     const out = planned(parts, store)
     assert.deepEqual(
@@ -121,7 +124,7 @@ test('a row price is proven only as money, the way an item price is', () => {
   assert.equal(rowProvenBy('offering.price', '$20', 'Drop in $20.00 per class'), true)
   assert.equal(rowProvenBy('offering.price', '$20', 'Drop in $20 per class'), true)
   // A space, a no-break space or a narrow no-break space groups thousands.
-  for (const space of [' ', ' ', ' ']) {
+  for (const space of SPACES) {
     assert.equal(provenBy('package.price', `1${space}200 €`, `Annual plan 1${space}200 € paid once`), true)
     assert.equal(provenBy('package.price', '€1,200', `Annual plan 1${space}200 € paid once`), true)
     assert.equal(rowProvenBy('package.price', `1${space}200 €`, 'Annual plan €1,200 paid once'), true)
