@@ -115,8 +115,13 @@ export function saveAnswer(pool, accountId, { question, answer }) {
   }))
 }
 
+/** Said when a plan edit would move the living plan to another template. Plain English, no dashes. */
+export const TEMPLATE_CHANGE_SAY =
+  'This plan is made for the design you chose, and I cannot move it to another design yet.'
+
 /**
- * Choose the template before a plan exists; afterwards the plan's `look.template` is changed by a plan edit. Only a
+ * Choose the template before a plan exists; afterwards the template stays the plan's (a plan edit that moves it is
+ * refused, `TEMPLATE_CHANGE_SAY`), and a restart of the plan keeps it too. Only a
  * template the catalogue offers now for the draft's researched trade (same slug and version) is stored: a draft with
  * no researched trade is offered nothing.
  * @param {{templatesFor: (trade: string) => Array<{slug: string, version: string}>}} kits the AI quickstart catalogue
@@ -174,6 +179,25 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
   })
 }
 
+/**
+ * Discard the living plan because the owner asked to start it over (#609, compose `restart`): the plan, its edits and
+ * their undo go, the needs profile is research's again, and the plan's template stays chosen. The owner's answers, the
+ * research and the brand record are kept. A draft with no plan is left as it is.
+ */
+export function discardPlan(pool, accountId) {
+  return changeDraft(pool, accountId, (row) => {
+    if (!row.plan) return {}
+    return {
+      plan: null,
+      template: row.plan.look?.template ?? row.template,
+      needs_profile: row.research?.profile ?? null,
+      last_edit: null,
+      undo_edit: null,
+      undo_profile: null
+    }
+  })
+}
+
 /** Keep the last system fault of the chat build, for the team. It is never part of what a door answers. */
 export function recordFault(pool, accountId, fault) {
   return changeDraft(pool, accountId, () => ({ fault: { ...fault, at: new Date().toISOString() } }))
@@ -185,6 +209,16 @@ export function recordFault(pool, accountId, fault) {
  */
 function gatedEdit(row, edit, profile, loadKit) {
   if (!row.plan || !profile) return { error: 'NO_PLAN' }
+  // The plan's blocks, its brand record and its gate all belong to the plan's template: moving the plan to another
+  // template would keep them all and build a broken site. Refused, in the owner's words (#609).
+  const current = row.plan.look?.template
+  const moved = (Array.isArray(edit?.changes) ? edit.changes : []).some(
+    (ch) =>
+      ch?.field === 'look.template' &&
+      (ch.value?.slug !== current?.slug || ch.value?.version !== current?.version)
+  )
+  if (moved)
+    return { error: 'INVALID_EDIT', problems: [{ at: 'look.template', message: TEMPLATE_CHANGE_SAY }] }
   const kit = loadKit(row.plan.look?.template?.slug)
   if (!kit) return { error: 'NO_KIT' }
   const gated = gateEditedPlan({

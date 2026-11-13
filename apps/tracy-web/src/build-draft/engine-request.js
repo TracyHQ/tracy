@@ -41,10 +41,18 @@ const READERS = {
     if (!description || (read.length === 0 && !description.value)) return null
     return { links: [...new Set(read)], ...(description.value ? { description: description.value } : {}) }
   },
-  /** `{request?}`: the owner's words for a larger change. */
+  /**
+   * `{request?, restart?}`: the owner's words for a larger change; `restart: true` only when the owner asked to start the
+   * plan over (it discards the living plan and its edits).
+   */
   compose(body) {
     const request = optionalText(body.request, MAX_REQUEST)
-    return request ? (request.value ? { request: request.value } : {}) : null
+    if (!request) return null
+    if (body.restart !== undefined && typeof body.restart !== 'boolean') return null
+    return {
+      ...(request.value ? { request: request.value } : {}),
+      ...(body.restart ? { restart: true } : {})
+    }
   },
   /** `{changes: {field, value}[]}`: one simple change or a few, each naming a field of the plan. */
   edit(body) {

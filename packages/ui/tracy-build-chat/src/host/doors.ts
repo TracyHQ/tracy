@@ -79,6 +79,11 @@ export interface PlanResult {
   brand: 'own' | 'unavailable'
   /** Where the plan's accent and logo came from, as the plan composer answered them (#616). */
   lookSources?: { accent?: { from: string; name: string }; logo?: { from: string; name: string } }
+  /**
+   * Compose only: `true` when the draft already held a plan and compose kept it as it is, with the owner's edits
+   * (#609). Nothing was composed; the answer's `say` tells the owner so.
+   */
+  unchanged?: true
 }
 
 /** A compose that needs one more answer from the owner first (the site name, #593 G4): the question to ask. */
@@ -101,7 +106,7 @@ export type EngineState =
   | { step: EngineStep; state: 'running' }
   | { step: 'research'; state: 'done'; result: ResearchResult }
   | { step: 'brand'; state: 'done'; result: { look: 'ready' } }
-  | { step: 'compose' | 'edit'; state: 'done'; result: PlanResult }
+  | { step: 'compose' | 'edit'; state: 'done'; say?: string; result: PlanResult }
   | { step: 'compose'; state: 'asking'; say?: string; result: AskingResult }
   | { step: EngineStep; state: 'stopped'; say: string; reason?: 'brand-unavailable' | string }
 
@@ -111,10 +116,16 @@ export interface ResearchRequest {
   description?: string
 }
 
-/** `POST /api/build-draft/compose`: composes the plan for the chosen template, gated by the rules gate. */
+/**
+ * `POST /api/build-draft/compose`: composes the plan for the chosen template, gated by the rules gate. On a draft that
+ * already holds a plan it composes nothing: it answers that plan, `result.unchanged: true`, with `say` (a written
+ * change request is not applied yet, #617), unless `restart` is set.
+ */
 export interface ComposeRequest {
   /** The owner's request for a larger change, in their words; absent for the first plan. */
   request?: string
+  /** Only when the owner asked to start the plan over: discards the living plan and its edits, then composes anew. */
+  restart?: boolean
 }
 
 /** `POST /api/build-draft/edit`: one simple change applied to the current plan revision. */

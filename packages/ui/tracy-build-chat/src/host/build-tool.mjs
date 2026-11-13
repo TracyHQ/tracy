@@ -42,6 +42,13 @@ export const BUILD_STOPPED_SAY =
 export const BUILD_RUNNING_SAY = 'Still working on it. This can take a minute or two.'
 
 /**
+ * Owner facing: said when the plan was kept as it is (compose on a draft that holds a plan) and the door gave no plain
+ * sentence of its own. Plain English, no dashes.
+ */
+export const UNCHANGED_FALLBACK_SAY =
+  'Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.'
+
+/**
  * Owner facing: said when a typed reply is longer than its question holds. Plain English, no dashes.
  * @param {any} question - Contract B question
  * @param {number} limit
@@ -55,7 +62,7 @@ export const tooLongSay = (question, limit) =>
 const SAY_MAX = 300
 
 export const BUILD_DESCRIPTION =
-  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan {request?} after the owner chose a template; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop.'
+  'tracy_build: the build chat engine. action research {links?, description?} first; templates; plan {request?} after the owner chose a template; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.'
 
 export const BUILD_PARAMETERS = Object.freeze({
   type: 'object',
@@ -70,6 +77,11 @@ export const BUILD_PARAMETERS = Object.freeze({
     request: {
       type: 'string',
       description: "For plan: the owner's request for a larger change, in their words."
+    },
+    restart: {
+      type: 'boolean',
+      description:
+        'For plan: true ONLY when the owner clearly asks to start the plan over. It throws away the current plan and every change made to it. Never set it for a change request.'
     },
     changes: {
       type: 'array',
@@ -123,10 +135,10 @@ const text = (value) => (typeof value === 'string' ? value.trim().slice(0, TEXT_
  * @param {unknown} said
  * @returns {string}
  */
-function ownerSay(said) {
+function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
   return typeof said === 'string' && said.trim() !== '' && said.length <= SAY_MAX && !/[–—]/.test(said)
     ? said.trim()
-    : BUILD_STOPPED_SAY
+    : fallback
 }
 
 const stopped = (/** @type {unknown} */ said = undefined) => ({ stopped: true, say: ownerSay(said) })
@@ -383,7 +395,17 @@ export function createBuildTool({
       const review = planReviewRequestOf(result.plan)
       const ids = setOf(reviews, sessionId)
       for (const q of review.questions) ids.add(q.id)
-      return { plan: { id: result.plan.id, revision: result.plan.revision }, review }
+      const plan = { id: result.plan.id, revision: result.plan.revision }
+      // The draft already held a plan: it was kept as it is, with the owner's edits (#609). Nothing was composed.
+      if (result.unchanged === true)
+        return {
+          unchanged: true,
+          say: ownerSay(state.say, UNCHANGED_FALLBACK_SAY),
+          plan,
+          review,
+          next: 'The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then pass review to ask_user_question exactly as given. Call plan with restart true only if the owner clearly asks to start the plan over.'
+        }
+      return { plan, review }
     }
     return stopped()
   }
@@ -447,7 +469,12 @@ export function createBuildTool({
       request = ['POST', '/research', { links, ...(description !== '' ? { description } : {}) }]
     } else if (action === 'plan') {
       const asked = text(args.request)
-      request = ['POST', '/compose', asked !== '' ? { request: asked } : {}]
+      // Starting over is its own intent: sent only when the model set restart to true.
+      request = [
+        'POST',
+        '/compose',
+        { ...(asked !== '' ? { request: asked } : {}), ...(args.restart === true ? { restart: true } : {}) }
+      ]
     } else if (action === 'edit') {
       const changes = (Array.isArray(args.changes) ? args.changes : []).filter(
         (/** @type {any} */ c) => c && typeof c === 'object' && typeof c.field === 'string' && 'value' in c

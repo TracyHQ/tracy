@@ -50,6 +50,9 @@ test('the request bodies are read into plain inputs, and anything else is refuse
   assert.deepEqual(readEngineRequest('compose', { request: 'Add a page for events' }), {
     request: 'Add a page for events'
   })
+  assert.deepEqual(readEngineRequest('compose', { restart: true }), { restart: true })
+  assert.deepEqual(readEngineRequest('compose', { restart: false }), {})
+  assert.equal(readEngineRequest('compose', { restart: 'yes' }), null)
   assert.deepEqual(
     readEngineRequest('edit', { changes: [{ field: 'items[x].label', value: 'Y', extra: 1 }] }),
     {

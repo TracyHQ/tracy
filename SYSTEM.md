@@ -860,7 +860,11 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   engine writes the plan**: `putComposed` (a plan the plan composer returned through its rules gate, with its profile)
   and the gated edits (`POST /api/build-draft/plan-edits`, `/plan-undo`), which run `gateEditedPlan` with the stored
   profile and the kit of the plan's template, writing plan and profile in one transaction; there is no door that puts a
-  plan. The kits come from the AI quickstart catalogue ([`build-draft/ai-quickstarts.js`](apps/tracy-web/src/build-draft/ai-quickstarts.js)),
+  plan. A compose on a draft that holds a plan composes nothing: it answers that plan as it is, with the owner's
+  edits, `result.unchanged: true` and a sentence for the owner (a written change request is not applied until #617's
+  `revisePlan` is wired); only `restart: true`, sent when the owner asks to start the plan over, discards the plan and
+  its edits (`discardPlan`) and composes anew. A plan never moves to another template: the template door answers
+  `PLAN_EXISTS` and a plan edit of `look.template` is refused. The kits come from the AI quickstart catalogue ([`build-draft/ai-quickstarts.js`](apps/tracy-web/src/build-draft/ai-quickstarts.js)),
   read from `packages/cms/tracy-joomla-quickstart/ai-quickstarts/` (COPYed to `src/ai-quickstarts/` in the image): a kit
   is offered for a trade only when its `kit-manifest.json` says released and lists the trade, its mapping is written and
   the AI quickstart contract check passes.

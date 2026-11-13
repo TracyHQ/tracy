@@ -20,10 +20,10 @@
 import { randomUUID } from 'node:crypto'
 import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js'
 import { faultOf, runWithRerun } from './engine-rerun.js'
-import { SAY, engineStateOf } from './engine-state.js'
+import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
 import { brandOf, composeStep, planProfileOf, researchStep } from './engine-steps.js'
-import { putComposed, recordFault } from './store.js'
+import { discardPlan, putComposed, recordFault } from './store.js'
 
 /** The failures that mean the business's own look could not be shown (#616): the owner reads the brand sentence. */
 const BRAND_CODES = new Set([
@@ -211,8 +211,22 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
     /**
      * Compose the plan for the chosen template from the stored brand record; it reaches the draft only through
      * `putComposed`. Without a record for the template, the brand step starts instead (or its stopped state answers).
+     *
+     * 🔒 A LIVING PLAN IS NEVER REPLACED SILENTLY (#609). On a draft that holds a plan, compose runs nothing and answers
+     * that plan as it is, with the owner's edits, marked `unchanged` with the sentence the owner reads
+     * (`unchangedOf`): a written change request is not applied until Part 3's `revisePlan` (#617) is wired. Only
+     * `restart` (the owner asked to start the plan over) discards the plan and its edits, then composes as for a first
+     * plan.
      */
-    async compose(accountId, { request }, row, kit) {
+    async compose(accountId, { request, restart }, inputRow, kit) {
+      let row = inputRow
+      if (row.plan && !restart) return { state: unchangedOf(row, { request }) }
+      if (row.plan) {
+        // Never under a step this process still runs: that step answers.
+        if (jobs.has(accountId)) return { state: { step: row.engine?.step ?? 'compose', state: 'running' } }
+        await discardPlan(pool, accountId)
+        row = await readEngineRow(pool, accountId)
+      }
       const template = kit.template
       const record = brandFor(row, template)
       if (!record) {

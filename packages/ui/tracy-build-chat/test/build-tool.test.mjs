@@ -8,7 +8,14 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { BUILD_RUNNING_SAY, BUILD_STOPPED_SAY, createBuildTool } from '../src/host/build-tool.mjs'
+import {
+  BUILD_DESCRIPTION,
+  BUILD_PARAMETERS,
+  BUILD_RUNNING_SAY,
+  BUILD_STOPPED_SAY,
+  UNCHANGED_FALLBACK_SAY,
+  createBuildTool
+} from '../src/host/build-tool.mjs'
 
 const SESSION = 'session-build-0f3c2a8e-1b2d-4c5e-8f90-a1b2c3d4e5f6'
 const ORIGIN = 'https://tracy.example'
@@ -309,6 +316,53 @@ test('brand unavailable yields stopped: the plan is never composed with the temp
     })
     assert.deepEqual(web.calls[0].body, { request: 'Make it feel calm' })
   }
+})
+
+test('plan on a draft that holds a plan: the plan did not change, and the model is told to say so', async () => {
+  const say =
+    'I cannot change the plan from a written request yet. You can change any value on the plan card, or tell me to start the plan over.'
+  const kept = { ...PLAN, revision: 2 }
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': {
+      body: { step: 'compose', state: 'done', say, result: { plan: kept, brand: 'own', unchanged: true } }
+    }
+  })
+  const answered = await run(toolWith(web), { action: 'plan', request: 'Make the button say Join now' })
+  assert.equal(answered.unchanged, true)
+  assert.equal(answered.say, say)
+  assert.deepEqual(answered.plan, { id: kept.id, revision: 2 })
+  assert.ok(answered.review, 'the owner can still approve or ask again on the review card')
+  assert.match(answered.next, /did not change/)
+  assert.match(answered.next, /Never say the plan changed/)
+  assert.deepEqual(web.calls[0].body, { request: 'Make the button say Join now' })
+  // A door sentence that is not plain is never passed on.
+  const dashed = fakeWeb({
+    'POST /api/build-draft/compose': {
+      body: {
+        step: 'compose',
+        state: 'done',
+        say: `Kept ${String.fromCodePoint(0x2014)} as is`,
+        result: { plan: kept, brand: 'own', unchanged: true }
+      }
+    }
+  })
+  assert.equal((await run(toolWith(dashed), { action: 'plan' })).say, UNCHANGED_FALLBACK_SAY)
+})
+
+test('plan sends restart only when it is true: starting over is its own intent', async () => {
+  const web = fakeWeb({ 'POST /api/build-draft/compose': { body: { step: 'compose', state: 'running' } } })
+  const tool = toolWith(web, { waitMs: 0 })
+  await run(tool, { action: 'plan', restart: true })
+  await run(tool, { action: 'plan', restart: 'yes', request: 'Start again' })
+  await run(tool, { action: 'plan', restart: false })
+  assert.deepEqual(
+    web.calls.map((c) => c.body),
+    [{ restart: true }, { request: 'Start again' }, {}]
+  )
+  const restart = BUILD_PARAMETERS.properties.restart
+  assert.equal(restart.type, 'boolean')
+  assert.match(restart.description, /ONLY when the owner clearly asks to start the plan over/)
+  assert.match(BUILD_DESCRIPTION, /restart/)
 })
 
 test('plan waits on the brand step it started, then says to ask for the plan again', async () => {

@@ -33,6 +33,33 @@ export const SAY = Object.freeze({
   interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.'
 })
 
+/**
+ * Said when compose is asked for on a draft that already holds a plan (#609): the plan is kept as it is, with every
+ * value the owner changed on it. A written change request cannot be applied yet (Part 3's `revisePlan`, #617, is not
+ * wired), so the owner is told so and offered what works. Plain English, no dashes.
+ */
+export const UNCHANGED_REQUEST_SAY =
+  'I cannot change the plan from a written request yet. You can change any value on the plan card, or tell me to start the plan over.'
+/** The same, when no request was written: the plan on the card is the living one. Plain English, no dashes. */
+export const UNCHANGED_SAY =
+  'Your plan is ready on the card. You can change any value on it, or tell me to start the plan over.'
+
+/**
+ * The answer of a compose asked for on a draft that holds a plan: the living plan, untouched, marked `unchanged`, with
+ * the sentence the owner reads. Nothing is started and the draft's engine state is not written.
+ * @param {object} row the draft row (`engine-store.js readEngineRow`), holding a plan
+ * @param {{request?: string}} body the compose request
+ */
+export function unchangedOf(row, { request } = {}) {
+  const lookSources = row.brand?.lookSources
+  return {
+    step: 'compose',
+    state: 'done',
+    say: isText(request) ? UNCHANGED_REQUEST_SAY : UNCHANGED_SAY,
+    result: { plan: row.plan, brand: 'own', unchanged: true, ...(lookSources ? { lookSources } : {}) }
+  }
+}
+
 /** Said when the owner's site name is longer than the chosen design's name fields hold. Plain English, no dashes. */
 export const siteNameTooLongSay = (limit) =>
   `That name is too long for this design. Please keep it to ${limit} characters or fewer.`

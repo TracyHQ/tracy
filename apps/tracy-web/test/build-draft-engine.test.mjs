@@ -12,7 +12,8 @@ import { brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
 import * as brands from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-brands.mjs'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildApp } from '../src/app.js'
-import { changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
+import { UNCHANGED_REQUEST_SAY, UNCHANGED_SAY } from '../src/build-draft/engine-state.js'
+import { TEMPLATE_CHANGE_SAY, changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
 import { fileDb } from './_db.mjs'
@@ -463,10 +464,15 @@ test(
     const { ended } = await s.run('POST', '/compose', {})
     assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
     assert.equal(seen.length, 1)
-    // No record (new research writes none): the next compose runs the brand step again.
+    // No record (new research writes none) while the plan lives: compose keeps the plan and runs nothing.
     await changeDraft(db.pool, id, () => ({ brand: null }))
-    assert.equal((await s.run('POST', '/compose', {})).ended.body.step, 'brand')
+    const kept = await s.run('POST', '/compose', {})
+    assert.equal(kept.started.body.result.unchanged, true)
+    assert.equal(seen.length, 1)
+    // Starting over discards the plan: with no record, the brand step runs again first.
+    assert.equal((await s.run('POST', '/compose', { restart: true })).ended.body.step, 'brand')
     assert.equal(seen.length, 2)
+    assert.equal((await row(s)).plan, null, 'the restart discarded the plan')
   }
 )
 
@@ -489,6 +495,8 @@ test(
 
     const twice = club.scriptedModel(boom, boom)
     const t = server({ buildModel: async () => twice, brandStep: ownBrand, buildChatOn: async () => true })
+    // A draft holding a plan never composes again: the failing case starts without one.
+    await changeDraft(db.pool, await t.accountId(), () => ({ plan: null }))
     const { ended } = await askPlan(t)
     assert.equal(ended.body.state, 'stopped')
     assert.equal(ended.body.reason, undefined)
@@ -537,10 +545,73 @@ test(
     assert.equal(edited.body.step, 'edit')
     assert.equal(edited.body.result.plan.revision, composed.revision + 1)
     assert.equal(edited.body.result.plan.items[0].label, 'Courts and coaching')
+    // Moving the plan to another template is refused in the owner's words; the plan stays on its own.
+    const moved = await s.call('POST', '/edit', {
+      changes: [{ field: 'look.template', value: { ...composed.look.template, slug: 'example-harbour' } }]
+    })
+    assert.equal(moved.status, 422)
+    assert.deepEqual(moved.body.problems, [TEMPLATE_CHANGE_SAY])
+    assert.equal((await row(s)).plan.look.template.slug, composed.look.template.slug)
     const refused = await s.call('POST', '/edit', { changes: [{ field: 'look.accent', value: 'red' }] })
     assert.equal(refused.status, 422)
     assert.ok(refused.body.problems.length > 0 && refused.body.problems.every((p) => typeof p === 'string'))
     assert.equal((await s.call('POST', '/edit', { changes: [] })).status, 400)
+  }
+)
+
+test(
+  'compose on a draft that holds a plan keeps it with its edits and says so; only a restart replaces it',
+  opts,
+  async () => {
+    const model = club.scriptedModel(
+      JSON.stringify(club.goodComposition()),
+      JSON.stringify(club.goodComposition())
+    )
+    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+    await researchedClub(s)
+    const composed = (await askPlan(s)).ended.body.result.plan
+    const item = composed.items[0].id
+    const field = `items[${item}].label`
+    const edited = await s.call('POST', '/edit', { changes: [{ field, value: 'Courts and coaching' }] })
+    assert.equal(edited.status, 200, JSON.stringify(edited.body))
+    const revision = edited.body.result.plan.revision
+    const before = await row(s)
+
+    // A written change request: the composer is not run, the plan and its edit stay, and the owner reads the truth.
+    for (const [body, say] of [
+      [{ request: 'Make the main button say Join the club' }, UNCHANGED_REQUEST_SAY],
+      [{}, UNCHANGED_SAY]
+    ]) {
+      const answered = await s.call('POST', '/compose', body)
+      assert.equal(answered.status, 200, JSON.stringify(answered.body))
+      assert.equal(answered.body.step, 'compose')
+      assert.equal(answered.body.state, 'done')
+      assert.equal(answered.body.say, say)
+      assert.doesNotMatch(answered.body.say, DASHES)
+      assert.equal(answered.body.result.unchanged, true)
+      assert.equal(answered.body.result.brand, 'own')
+      assert.equal(answered.body.result.plan.revision, revision)
+      assert.equal(answered.body.result.plan.items[0].label, 'Courts and coaching')
+    }
+    assert.equal(model.calls.length, 1, 'the composer ran once, for the first plan')
+    const after = await row(s)
+    assert.deepEqual(after.plan, before.plan)
+    assert.deepEqual(after.last_edit, before.last_edit, 'the edit can still be undone')
+    assert.deepEqual(after.engine, before.engine, 'the answer starts and records no step')
+
+    // A restart is a separate intent: the plan and its edits are discarded and a new plan is composed.
+    assert.equal((await s.call('POST', '/compose', { restart: 'yes' })).status, 400)
+    const { started, ended } = await s.run('POST', '/compose', { restart: true })
+    assert.deepEqual(started.body, { step: 'compose', state: 'running' })
+    assert.equal(ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    assert.equal(ended.body.result.unchanged, undefined)
+    const replaced = ended.body.result.plan
+    assert.notEqual(replaced.id, composed.id)
+    assert.notEqual(replaced.items[0].label, 'Courts and coaching', 'the edit went with the old plan')
+    assert.equal(model.calls.length, 2)
+    const stored = await row(s)
+    assert.deepEqual(stored.plan, replaced)
+    assert.deepEqual([stored.last_edit, stored.undo_edit], [null, null])
   }
 )
 

@@ -29,7 +29,10 @@ const REFUSALS = {
     409,
     'The plan changed since this edit was made: read the draft again and edit its current revision.'
   ],
-  PLAN_EXISTS: [409, 'The draft has a plan: change its look.template with a plan edit.'],
+  PLAN_EXISTS: [
+    409,
+    'This plan is made for the design you chose, and I cannot move it to another design yet.'
+  ],
   NOTHING_TO_UNDO: [409, 'There is no plan edit to undo.']
 }
 

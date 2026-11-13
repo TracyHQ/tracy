@@ -252,9 +252,10 @@ var BUILD_POLL_MS = 2e3;
 var BUILD_DOOR_TIMEOUT_MS = 3e4;
 var BUILD_STOPPED_SAY = "Your site plan could not be prepared. The Tracy team has the details and will look into it.";
 var BUILD_RUNNING_SAY = "Still working on it. This can take a minute or two.";
+var UNCHANGED_FALLBACK_SAY = "Your plan has not changed. You can change any value on the plan card, or tell me to start the plan over.";
 var tooLongSay = (question, limit) => question?.topic === "site-name" ? `That name is too long for this design. Please keep it to ${limit} characters or fewer.` : `That answer is too long. Please keep it to ${limit} characters or fewer.`;
 var SAY_MAX = 300;
-var BUILD_DESCRIPTION = "tracy_build: the build chat engine. action research {links?, description?} first; templates; plan {request?} after the owner chose a template; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop.";
+var BUILD_DESCRIPTION = "tracy_build: the build chat engine. action research {links?, description?} first; templates; plan {request?} after the owner chose a template; plan {restart: true} ONLY when the owner clearly asks to start the plan over; edit {changes:[{field,value}]} for one simple change; status to keep waiting when a result says running. Pass ask and review to ask_user_question exactly as given. stopped: say its sentence and stop. unchanged: say its sentence; the plan did not change.";
 var BUILD_PARAMETERS = Object.freeze({
   type: "object",
   properties: {
@@ -268,6 +269,10 @@ var BUILD_PARAMETERS = Object.freeze({
     request: {
       type: "string",
       description: "For plan: the owner's request for a larger change, in their words."
+    },
+    restart: {
+      type: "boolean",
+      description: "For plan: true ONLY when the owner clearly asks to start the plan over. It throws away the current plan and every change made to it. Never set it for a change request."
     },
     changes: {
       type: "array",
@@ -306,8 +311,8 @@ var MISSING_STEPS = Object.freeze({
 var LINKS_MAX = 10;
 var TEXT_MAX = 2e3;
 var text = (value) => typeof value === "string" ? value.trim().slice(0, TEXT_MAX) : "";
-function ownerSay(said) {
-  return typeof said === "string" && said.trim() !== "" && said.length <= SAY_MAX && !/[–—]/.test(said) ? said.trim() : BUILD_STOPPED_SAY;
+function ownerSay(said, fallback = BUILD_STOPPED_SAY) {
+  return typeof said === "string" && said.trim() !== "" && said.length <= SAY_MAX && !/[–—]/.test(said) ? said.trim() : fallback;
 }
 var stopped = (said = void 0) => ({ stopped: true, say: ownerSay(said) });
 function argsOf(value) {
@@ -470,7 +475,16 @@ ${JSON.stringify(answer)}`;
       const review = planReviewRequestOf(result.plan);
       const ids = setOf(reviews, sessionId);
       for (const q of review.questions) ids.add(q.id);
-      return { plan: { id: result.plan.id, revision: result.plan.revision }, review };
+      const plan = { id: result.plan.id, revision: result.plan.revision };
+      if (result.unchanged === true)
+        return {
+          unchanged: true,
+          say: ownerSay(state.say, UNCHANGED_FALLBACK_SAY),
+          plan,
+          review,
+          next: "The plan did not change. Say the sentence in say. Never say the plan changed or that the request was applied. Then pass review to ask_user_question exactly as given. Call plan with restart true only if the owner clearly asks to start the plan over."
+        };
+      return { plan, review };
     }
     return stopped();
   }
@@ -519,7 +533,11 @@ ${JSON.stringify(answer)}`;
       request = ["POST", "/research", { links, ...description !== "" ? { description } : {} }];
     } else if (action === "plan") {
       const asked = text(args.request);
-      request = ["POST", "/compose", asked !== "" ? { request: asked } : {}];
+      request = [
+        "POST",
+        "/compose",
+        { ...asked !== "" ? { request: asked } : {}, ...args.restart === true ? { restart: true } : {} }
+      ];
     } else if (action === "edit") {
       const changes = (Array.isArray(args.changes) ? args.changes : []).filter(
         (c) => c && typeof c === "object" && typeof c.field === "string" && "value" in c
