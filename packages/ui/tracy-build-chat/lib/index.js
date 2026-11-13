@@ -5,6 +5,7 @@ var BUILD_CHAT_STRINGS = {
   "research.title.other": "Read {count} sources",
   "review.question": "Approve this plan?",
   "review.summary": "{name}: {pages}, {services}",
+  "review.summary.one": "{name}: {part}",
   "review.pages.one": "{count} page",
   "review.pages.other": "{count} pages",
   "review.services.one": "{count} service",
@@ -111,6 +112,36 @@ function rowLabelOf(row, plan) {
   const found = (plan.rows ?? []).find((r) => r.id === id)?.label ?? plan.facts.find((f) => f.id === id)?.value ?? plan.items.find((i) => i.id === id)?.label;
   return found ?? null;
 }
+function plainWordsOf(what) {
+  const text2 = String(what ?? "").replace(new RegExp("(\\p{L})-(?=\\p{L})", "gu"), "$1 ");
+  return text2.charAt(0).toUpperCase() + text2.slice(1);
+}
+function pluralOf(word) {
+  const lower = new RegExp("^\\p{Lu}\\p{Lu}", "u").test(word) ? word : word.charAt(0).toLowerCase() + word.slice(1);
+  if (/(s|x|z|ch|sh)$/i.test(lower)) return `${lower}es`;
+  if (/[^aeiou]y$/i.test(lower)) return `${lower.slice(0, -1)}ies`;
+  return `${lower}s`;
+}
+function leftOutOf(leftOut) {
+  const lines = [];
+  const byKey = /* @__PURE__ */ new Map();
+  for (const l of leftOut ?? []) {
+    const what = plainWordsOf(l.what);
+    const key = JSON.stringify([what, l.kind, l.reason]);
+    const seen = byKey.get(key);
+    if (seen) seen.count += 1;
+    else {
+      const line = { what, kind: l.kind, reason: l.reason, count: 1 };
+      byKey.set(key, line);
+      lines.push(line);
+    }
+  }
+  return lines.map(({ count, ...line }) => {
+    if (count === 1) return line;
+    const what = /\s/.test(line.what) ? `${line.what} (${count})` : `${count} ${pluralOf(line.what)}`;
+    return { ...line, what, count };
+  });
+}
 function planCardOf(plan) {
   const disputed = new Map(
     (plan.assumptions ?? []).filter((a) => Array.isArray(a.alternatives) && /^facts\[[^\]]+\]\.value$/.test(a.field)).map((a) => [a.field, a])
@@ -171,7 +202,7 @@ function planCardOf(plan) {
     },
     // A disputed fact is settled at the fact itself; every other assumption is listed.
     assumptions: (plan.assumptions ?? []).filter((a) => !disputed.has(a.field)).map((a) => ({ id: a.id, said: a.said })),
-    leftOut: (plan.leftOut ?? []).map((l) => ({ what: l.what, kind: l.kind, reason: l.reason })),
+    leftOut: leftOutOf(plan.leftOut),
     counts: { pages: plan.pages.length, services: services.length }
   };
 }
@@ -181,13 +212,17 @@ function planReviewRequestOf(plan, t = english) {
   const services = t(counts.services === 1 ? "review.services.one" : "review.services.other", {
     count: counts.services
   });
+  const parts = [counts.pages > 0 ? pages : null, counts.services > 0 ? services : null].filter(
+    (p) => p !== null
+  );
+  const summary = parts.length === 2 ? t("review.summary", { name: name2, pages, services }) : parts.length === 1 ? t("review.summary.one", { name: name2, part: parts[0] }) : name2;
   const approve = t("review.approve");
   return {
     questions: [
       {
         id: REVIEW_ID,
         question: t("review.question"),
-        detail: `# ${t("review.summary", { name: name2, pages, services })}`,
+        detail: `# ${summary}`,
         options: [{ label: approve }, { label: t("review.change") }],
         intent: { kind: "plan-review", approve }
       }
@@ -203,7 +238,7 @@ function templateChoiceOf(templates) {
 }
 
 // ../../core/tracy-core/src/build-chat/tool-results.mjs
-var EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null });
+var EMPTY = Object.freeze({ calls: Object.freeze({}), templates: null, plan: null, working: null });
 
 // ../../core/tracy-core/src/build-chat/index.mjs
 var BUILD_SESSION = /^session-build-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
