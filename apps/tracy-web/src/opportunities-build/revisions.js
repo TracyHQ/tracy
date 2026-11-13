@@ -35,6 +35,7 @@ import { closedListOf } from 'website-opportunities/domain/pictures/picture-link
 import { withSocialStats } from 'website-opportunities/src/place-social-stats.js'
 import { approvedSocialStatsOf } from 'website-opportunities/src/approved-research.js'
 import { snapshotProfileOf } from 'website-opportunities/src/places.js'
+import { assetManifestOf } from './asset-manifest.js'
 import { qualityHash } from './quality-dossier.js'
 import { makeBuildChoice, withBuildChoice } from './build-choice.js'
 import { markActionWorkStarted, withLogoResearch } from './logo-research.js'
@@ -432,22 +433,7 @@ async function createBaseRevision(pool, args) {
       revisionId: id,
       at: madeAt
     })
-    const manifest = read.media.map(
-      ({ id, origin, kind, category, sha256, mime, width, height, source, sourceUrl, postId, credit }) => ({
-        id,
-        ...(origin ? { origin } : {}),
-        kind,
-        category,
-        sha256,
-        mime,
-        width,
-        height,
-        source,
-        sourceUrl,
-        postId: postId ?? null,
-        credit: credit ?? null
-      })
-    )
+    const manifest = assetManifestOf(read.media)
     let frozen = {
       id,
       opportunity_id: opp.id,
