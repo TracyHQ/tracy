@@ -33,7 +33,7 @@ export interface ReplyData {
   questions: { id: string; question: string; options: { label: string }[] }[]
   answers: { id: string; selected: string[]; custom?: string }[]
   text: string
-  time: number
+  time?: number
 }
 export type BuildChatStringKey =
   | 'research.title.one'

@@ -39,7 +39,7 @@ export const CSS = `
 }
 
 /* Template choice card */
-.tv-bc-card { border-radius: var(--radius-lg, 16px); padding: 12px; }
+.tv-bc-card { border-radius: 16px; padding: 12px; }
 .tv-bc-tgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .tv-bc-tpl {
   display: flex; flex-direction: column; gap: 8px; padding: 8px; text-align: left; cursor: pointer;
@@ -51,7 +51,8 @@ export const CSS = `
 .tv-bc-thumb {
   display: block; width: 100%; aspect-ratio: 16 / 10; border-radius: 8px; object-fit: cover; background: var(--muted);
 }
-.tv-bc-nm { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+.tv-bc-nm { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; font-weight: 500; overflow-wrap: normal; }
+.tv-bc-nm .tv-bc-badge { white-space: nowrap; }
 .tv-bc-why { color: var(--muted-foreground); font-size: 12.5px; line-height: 1.45; }
 .tv-bc-tfoot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 10px; }
 .tv-bc-grow { flex: 1; min-width: 160px; }
@@ -62,6 +63,11 @@ export const CSS = `
   .tv-bc-tgrid { grid-template-columns: 1fr; }
   .tv-bc-tpl { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 4px 10px; align-items: start; }
   .tv-bc-tpl .tv-bc-thumb { grid-row: span 2; aspect-ratio: 4 / 3; }
+}
+/* Under about 360px the picture sits above the text, so name and badge keep a whole line */
+@container (max-width: 360px) {
+  .tv-bc-tpl { display: flex; flex-direction: column; gap: 8px; }
+  .tv-bc-tpl .tv-bc-thumb { aspect-ratio: 16 / 10; }
 }
 
 /* Status dot: grey waiting, green done, red failed, a terracotta ring turning while it runs */
@@ -80,7 +86,7 @@ export const CSS = `
 @media (prefers-reduced-motion: reduce) { .tv-bc-sd[data-s="running"]::before { animation: none; } }
 
 /* Build task list: dsh TodoPanel's shape with a clock in its head */
-.tv-bc-todo { border-radius: var(--radius-lg, 16px); padding: 6px 12px 8px; }
+.tv-bc-todo { border-radius: 16px; padding: 6px 12px 8px; }
 .tv-bc-todo-head {
   display: flex; align-items: center; gap: 10px; min-height: 30px; width: 100%; padding: 0; border: 0;
   background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer;
@@ -103,18 +109,25 @@ export const CSS = `
 .tv-bc-todo li[data-s="done"] .tv-bc-c, .tv-bc-todo li[data-note="not-started"] .tv-bc-c { color: var(--muted-foreground); }
 .tv-bc-todo li[data-s="failed"] .tv-bc-c { color: var(--destructive); }
 .tv-bc-todo .tv-bc-r { margin-left: auto; color: var(--muted-foreground); font-size: 12px; white-space: nowrap; }
-@container (max-width: 560px) { .tv-bc-todo ul { max-height: 132px; } }
+/* Narrow: the summary wraps under the title instead of being cut, the clock stays, and every row shows in full */
+@container (max-width: 560px) {
+  .tv-bc-todo-head { flex-wrap: wrap; row-gap: 0; }
+  .tv-bc-todo-title { flex: 1 1 auto; }
+  .tv-bc-todo-progress { order: 5; flex: 1 0 100%; white-space: normal; overflow: visible; text-overflow: clip; padding-left: 24px; }
+  .tv-bc-todo ul { max-height: none; overflow-y: visible; }
+}
 
 /* Could not finish notice */
-.tv-bc-notice { border-radius: var(--radius-lg, 16px); padding: 12px 14px; }
+.tv-bc-notice { border-radius: 16px; padding: 12px 14px; }
 .tv-bc-notice-head { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .tv-bc-notice p { margin: 6px 0 0; }
 .tv-bc-notice ul { margin: 6px 0 0; padding-left: 18px; }
 .tv-bc-notice li { margin: 2px 0; }
-.tv-bc-notice .tv-bc-team { display: flex; align-items: center; gap: 4px; margin-top: 8px; }
+.tv-bc-notice .tv-bc-team { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.tv-bc-team svg { flex: none; }
 
 /* Plan card: labelled values in sections, the approved mock's plan card */
-.tv-bc-plan { border-radius: var(--radius-lg, 16px); overflow: hidden; }
+.tv-bc-plan { border-radius: 16px; overflow: hidden; }
 .tv-bc-plan-h {
   display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 12px 14px;
   border-bottom: 1px solid var(--border);
@@ -160,7 +173,7 @@ export const CSS = `
   flex: 1; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--ring); border-radius: 8px;
   background: var(--card); color: inherit; font: inherit; outline: none;
 }
-.tv-bc-src { font-size: 11.5px; color: var(--muted-foreground); white-space: nowrap; }
+.tv-bc-src { font-size: 11.5px; color: var(--muted-foreground); white-space: nowrap; overflow-wrap: normal; word-break: keep-all; }
 .tv-bc-note { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); margin-top: 2px; }
 .tv-bc-swatch {
   width: 14px; height: 14px; border-radius: 4px; flex: none;
@@ -199,6 +212,14 @@ export const CSS = `
   .tv-bc-kv .tv-bc-k { padding-top: 6px; padding-bottom: 0; }
   .tv-bc-page li { grid-template-columns: 18px minmax(0, 1fr); }
   .tv-bc-page li .tv-bc-val { grid-column: 2; }
-  .tv-bc-src { white-space: normal; text-align: right; }
+  /* A source never breaks inside a word: when the row is narrow it drops under the value */
+  .tv-bc-val-row { flex-wrap: wrap; row-gap: 0; }
+  .tv-bc-opt { flex-wrap: wrap; row-gap: 0; }
+  .tv-bc-opt .tv-bc-v { flex: 1 1 0; }
+  .tv-bc-opt .tv-bc-src { padding: 0 0 4px 24px; }
+  .tv-bc-src { order: 3; flex: 1 0 100%; text-align: left; }
+  .tv-bc-val > div.tv-bc-val-row:has(.tv-bc-src) { padding-right: 0; }
+  .tv-bc-edit { flex-wrap: wrap; row-gap: 6px; }
+  .tv-bc-edit input { flex: 1 0 100%; }
 }
 `

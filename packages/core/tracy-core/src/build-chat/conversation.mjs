@@ -119,6 +119,9 @@ export function answerOf(question, item) {
 export function replyOf(questions, answers, callId = 'build-questions') {
   const byId = new Map((answers ?? []).map((a) => [a.question, a]))
   const asked = (questions ?? []).filter((q) => byId.has(q.id))
+  // The time of the reply is the latest real time an answer carries; Contract B answers carry none today, and then
+  // the reply has no time at all, so nothing misleading (such as 1970) is shown.
+  const times = asked.map((q) => byId.get(q.id).time).filter((n) => Number.isFinite(n) && n > 0)
   return {
     callId,
     outcome: 'answered',
@@ -134,6 +137,6 @@ export function replyOf(questions, answers, callId = 'build-questions') {
       return { id: q.id, selected: choice ? [choice.label] : [] }
     }),
     text: '',
-    time: 0
+    ...(times.length > 0 ? { time: Math.max(...times) } : {})
   }
 }

@@ -83,3 +83,12 @@ test('the given answers stay in the conversation as one reply, in the words the 
   ])
   assert.deepEqual(typed.answers[1], { id: 'phone', selected: [], custom: '04 000 0001' })
 })
+
+test('the reply shows no time unless an answer carries a real one, so no 1970 time can appear', () => {
+  const none = replyOf(QUESTIONS, SCENARIOS.done.answers)
+  assert.equal('time' in none, false)
+  const stamped = SCENARIOS.done.answers.map((a, i) => (i === 0 ? { ...a, time: 1760000000000 } : a))
+  assert.equal(replyOf(QUESTIONS, stamped).time, 1760000000000)
+  const bad = SCENARIOS.done.answers.map((a) => ({ ...a, time: 0 }))
+  assert.equal('time' in replyOf(QUESTIONS, bad), false)
+})
