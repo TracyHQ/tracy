@@ -17,6 +17,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { buildNeedsProfile } from './needs-profile.mjs'
 import { settleAnswers } from './plan-answers.mjs'
+import { kindLimitsOf } from './answer-field-limits.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { addItemFieldFacts, conflictAssumptionsOf } from './plan-conflicts.mjs'
 import { modelViewOf, planDataOf } from './plan-data.mjs'
@@ -80,10 +81,10 @@ export function composerContextOf({
   brand,
   planId = 'plan'
 }) {
-  const settled = settleAnswers(given, answers)
+  const blocks = blockMapOf(blockStore, library)
+  const settled = settleAnswers(given, answers, kindLimitsOf(blocks.values()))
   const profile = settled.profile
   const data = addItemFieldFacts(profile, planDataOf(profile))
-  const blocks = blockMapOf(blockStore, library)
   const recipes = new Map(list(pageRecipes?.recipes).map((r) => [r?.pageType, r]))
   const { look, assumptions: lookAssumptions } = lookOf(template, brand)
   const language = isText(profile?.language?.value) ? profile.language.value : 'en'
@@ -201,7 +202,10 @@ export async function buildPlanStep({ research, model, brandStep, answers = [], 
   const brandRun = (async () => brandStep())().catch((error) => {
     throw new PlanComposerError('brand_step_failed', String(error?.message ?? error), { cause: error })
   })
-  const [profile, brand] = await Promise.all([buildNeedsProfile({ research, model }), brandRun])
+  const [profile, brand] = await Promise.all([
+    buildNeedsProfile({ research, model, blockStore: rest.blockStore, library: rest.library }),
+    brandRun
+  ])
   const given = typeof answers === 'function' ? await answers(profile) : answers
   const composed = await composePlan({ ...rest, profile, answers: given, brand, model })
   return { needsProfile: profile, brand, ...composed }

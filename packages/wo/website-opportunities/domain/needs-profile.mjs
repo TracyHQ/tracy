@@ -20,6 +20,7 @@ import { ROLE_VOCABULARY_V3 } from './place-content-roles.mjs'
 import { TRUST_ORDER, mergeFacts, mergeItems } from './needs-profile-merge.mjs'
 import { modelObservations, structuredObservations } from './needs-profile-observations.mjs'
 import { questionsOf, siteLanguageOf } from './needs-profile-questions.mjs'
+import { kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
 import { mergeRows } from './needs-profile-rows.mjs'
 
 export const NEEDS_PROFILE_SCHEMA = 'tracy-needs-profile/v1'
@@ -105,8 +106,10 @@ export function readModelReply(reply) {
  * The needs profile from research and the model's reading of it. Pure: the same inputs give the same profile.
  * @param {{sources: object[]}} research
  * @param {{facts?: object[], items?: object[], pictures?: object[], languages?: object[]}} reading
+ * @param {{blockStore?: object, library?: object[]}} [template] the template's block store and the Tracy library, when
+ *   known: a typed answer and every offered choice then fit the template's fields (`answer-field-limits.mjs`)
  */
-export function needsProfileOf(research, reading) {
+export function needsProfileOf(research, reading, { blockStore, library } = {}) {
   const sources = sourcesOf(research)
   const structured = structuredObservations(sources)
   const read = modelObservations(reading ?? {}, sources)
@@ -134,7 +137,8 @@ export function needsProfileOf(research, reading) {
       .map((l) => [l.source, l.language])
   )
   const language = siteLanguageOf(sources, said)
-  const { questions, accounting } = questionsOf({ facts, items, conflicts, sources, language })
+  const limits = blockStore ? kindLimitsOf(storeBlocksOf(blockStore, library)) : undefined
+  const { questions, accounting } = questionsOf({ facts, items, conflicts, sources, language, limits })
   // Every conflict says whether a question asks it (`question`) or why none does (`notAsked`).
   const asked = new Map(
     accounting.map((a) => [a.conflict, a.question ? { question: a.question } : { notAsked: a.reason }])
@@ -166,11 +170,12 @@ export function needsProfileOf(research, reading) {
 /**
  * The needs profile step: one call to the standard build model, then `needsProfileOf`.
  * @param {{research: object, model: (request: {system: string, user: string, format: 'json'}) => Promise<unknown>}} input
- *   `model` is the build model the step chain hands the step (a scripted fake in tests).
+ *   `model` is the build model the step chain hands the step (a scripted fake in tests). `blockStore` and `library`
+ *   (optional) are the template's: see `needsProfileOf`.
  */
-export async function buildNeedsProfile({ research, model }) {
+export async function buildNeedsProfile({ research, model, blockStore, library }) {
   if (typeof model !== 'function') throw new NeedsProfileError('model_missing', 'no build model was given')
   const sources = sourcesOf(research)
   const reading = readModelReply(await model(needsProfileRequest(sources)))
-  return needsProfileOf(research, reading)
+  return needsProfileOf(research, reading, { blockStore, library })
 }

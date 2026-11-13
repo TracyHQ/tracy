@@ -26,51 +26,47 @@ import { scriptedWriter } from './fixtures/icon-fields/invented-yoga.mjs'
 
 const TIP = (grid) => `${grid}/${WHEEL}/steps.1.tips.1/tip`
 
-test('a row copy field that carries another row data is sent back once, then fails the copy check', async () => {
+test('a row copy field may name the data of a row of ANOTHER list: only its own list is checked', async () => {
   const { plan, profile } = await composePlan(composeInputs())
   const grid = plan.pages[0].blocks.find((b) => b.block === 'services-grid').id
-  // The tip of the first step names the times of the second session: data of another row.
+  // The tip of the first step names the times of a session: a session is not a tip, so this is no other row's data.
   const model = scriptedWriter((key) => (key === TIP(grid) ? 'Sat 10:00 to 12:00' : 'Calm practice'))
-  await assert.rejects(writePages({ plan, profile, blockStore: potteryStore(), model }), (error) => {
-    assert.equal(error.code, 'copy_check_failed')
-    const tip = error.details.failing.find((f) => f.key === TIP(grid))
-    assert.ok(tip.problems.some((p) => p.code === 'other_row_data'))
-    return true
-  })
-  // Words of its own row are fine.
-  const own = scriptedWriter((key) => (key === TIP(grid) ? 'Wedge the clay first' : 'Calm practice'))
-  const copy = await writePages({ plan, profile, blockStore: potteryStore(), model: own })
-  assert.equal(copy.pages[0].fields.find((f) => f.key === TIP(grid)).value, 'Wedge the clay first')
+  const copy = await writePages({ plan, profile, blockStore: potteryStore(), model })
+  assert.equal(copy.pages[0].fields.find((f) => f.key === TIP(grid)).value, 'Sat 10:00 to 12:00')
 })
 
-test('only data like values of other rows count: times and phrases, never a plain word or a short name', () => {
+test('only the rows of the same list count, and only values with a digit, a link or an email', () => {
   const record = (id, values, parent = null) => [id, { id, owner: 'service-x', parent, values, rows: [] }]
   const data = {
     rowsById: new Map([
       record('step-1', { 'step.title': ['Throw the pot'] }),
       record('step-1-tip', { 'step.description': ['Keep it wet'] }, 'step-1'),
       record('step-2', { 'step.title': ['Glaze'] }),
+      record('step-2-tip', { 'step.description': ['Rest it 10 minutes'] }, 'step-2'),
       record('session-1', { 'offering.schedule': ['Mon', '10:00 to 12:00'] }),
-      record('teacher-link', { 'person.social_url': ['https://instagram.com/invented.teacher'] })
+      record('session-2', { 'offering.schedule': ['Sat', '09:00 to 11:00'] }),
+      record('teacher-link', { 'person.social_url': ['https://instagram.com/invented.teacher'] }),
+      record('teacher-link-2', { 'person.social_url': ['https://youtube.com/@invented-teacher'] })
     ])
   }
+  // A tip is checked against the other tips only: never the sessions' times or the teacher's links.
   const foreign = foreignValuesOf('step-1-tip', data)
-  assert.deepEqual(foreign.sort(), ['10:00 to 12:00', 'https://instagram.com/invented.teacher'].sort())
+  assert.deepEqual(foreign, ['Rest it 10 minutes'])
+  // A session against the other sessions: their times, never a plain day name.
+  assert.deepEqual(foreignValuesOf('session-2', data), ['10:00 to 12:00'])
+  assert.deepEqual(foreignValuesOf('teacher-link', data), ['https://youtube.com/@invented-teacher'])
   const field = { name: 'tip', type: 'text', kind: 'step.description', limit: 60 }
   const codes = (value) => fieldValueProblems(field, value, { foreign }).map((p) => p.code)
-  assert.deepEqual(codes('Dry the bowl before you glaze it'), [])
-  assert.deepEqual(codes('Come back every Mon'), [])
-  assert.deepEqual(codes('Sat 10:00 to 12:00'), ['other_row_data'])
-  // A phrase of three words or more is data too, matched whole: its own words alone are fine.
-  const steps = foreignValuesOf('step-2', data)
-  assert.ok(steps.includes('Throw the pot'))
+  assert.deepEqual(codes('Sat 10:00 to 12:00'), [])
+  assert.deepEqual(codes('Rest it 10 minutes after'), ['other_row_data'])
+  // A phrase of words alone is never data: another step's title may be used freely.
+  assert.deepEqual(foreignValuesOf('step-2', data), [])
   assert.deepEqual(
-    fieldValueProblems(field, 'Throw the pot first', { foreign: steps }).map((p) => p.code),
-    ['other_row_data']
+    fieldValueProblems(field, 'Throw the pot first', { foreign: foreignValuesOf('step-2', data) }),
+    []
   )
-  assert.deepEqual(fieldValueProblems(field, 'Throw gently', { foreign: steps }), [])
   assert.match(
-    fieldValueProblems(field, 'Sat 10:00 to 12:00', { foreign }).at(-1).message,
+    fieldValueProblems(field, 'Rest it 10 minutes after', { foreign }).at(-1).message,
     /belongs to another row/
   )
 })

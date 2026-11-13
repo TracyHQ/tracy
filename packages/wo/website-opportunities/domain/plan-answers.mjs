@@ -6,10 +6,12 @@
 // - `contact-method`: a typed phone, email or link becomes that contact fact; a choice without a value is reported in
 //   the plan's left out list, never invented;
 // - `site-language`: the site language (`plan.language`).
-// An answer that does not pass `checkAnswer` against its question, names no question of the profile, or answers one
-// twice is an `answer_invalid` error, never a silent ignore. A question without an answer keeps its default.
+// An answer that does not pass `checkAnswer` against its question, names no question of the profile, answers one
+// twice, or gives a value longer than the template's fields of that kind hold (`kindLimitsOf`; a fact is never
+// shortened, so it would stop the build after approval) is an `answer_invalid` error, never a silent ignore. A
+// question without an answer keeps its default.
 import { checkAnswer } from './build-contract-questions.mjs'
-import { languageTag } from './needs-profile-questions.mjs'
+import { languageTag, MAIN_BUTTON_KIND } from './needs-profile-questions.mjs'
 import { conflictPlace } from './plan-conflicts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 
@@ -56,14 +58,30 @@ function contactKindOf(text) {
   return null
 }
 
+/** The fact an answer gives, as `{kind, value, at}`, or null when it gives none. */
+function factOfAnswer(answer, question) {
+  const text = typeof answer?.text === 'string' ? answer.text.trim() : undefined
+  if (question.topic === 'main-button') {
+    const value = text ?? question.choices.find((c) => c.id === answer?.choice)?.label
+    return value === undefined
+      ? null
+      : { kind: MAIN_BUTTON_KIND, value, at: text === undefined ? 'choice' : 'text' }
+  }
+  if (text === undefined) return null
+  if (question.topic === 'contact-method') return { kind: contactKindOf(text), value: text, at: 'text' }
+  if (question.topic === 'fact-conflict') return { kind: question.fact, value: text, at: 'text' }
+  return null
+}
+
 /**
  * Apply the customer's answers to a copy of the profile.
  * @param {object} profile a needs profile (`needs-profile.mjs`)
  * @param {object[]} [answers] Contract B answers (`tracy-build-answer/v1`)
+ * @param {Map<string, number>} [limits] the template's smallest text limit per data kind (`kindLimitsOf`)
  * @returns {{profile: object, leftOut: object[], answered: string[]}} `answered`: the ids of the questions answered
  * @throws {PlanComposerError} `answer_invalid` with `details.problems`
  */
-export function settleAnswers(profile, answers = []) {
+export function settleAnswers(profile, answers = [], limits = new Map()) {
   const problems = []
   if (!Array.isArray(answers))
     throw new PlanComposerError('answer_invalid', 'answers must be a list', {}, { noRerun: true })
@@ -86,6 +104,13 @@ export function settleAnswers(profile, answers = []) {
       !contactKindOf(answer.text.trim())
     )
       problems.push({ at: `answers[${i}].text`, message: 'not a phone number, an email address or a link' })
+    const fact = answer?.skipped ? null : factOfAnswer(answer, question)
+    const limit = fact?.kind ? limits.get(fact.kind) : undefined
+    if (limit !== undefined && [...fact.value].length > limit)
+      problems.push({
+        at: `answers[${i}].${fact.at}`,
+        message: `${[...fact.value].length} characters, longer than the ${limit} the template's field holds`
+      })
   })
   if (problems.length > 0)
     throw new PlanComposerError(

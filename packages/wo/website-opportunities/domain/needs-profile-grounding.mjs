@@ -5,7 +5,9 @@
 // - LITERAL fields must be found inside the quote: every business fact (name, founded year, phone, email, address,
 //   hours, links) and, for an item, its name, its price, a quote's text and author, and any field not listed below.
 //   Text compares on letters and digits only, whole words (a number with its separators is one word), case and
-//   spacing aside; a phone compares as a number
+//   spacing aside; an address compares on letters and digits, whole words, its punctuation aside; a price compares by
+//   amount (`$20` is `$20.00`, `€15` is `15,00 €`, never `$120`), its currency signs and words inside the quote too;
+//   a phone compares as a number
 //   (`samePhone`); an email or a link compares as written, case aside. Hours may be rewritten as days and times
 //   (`Mo-Fr 07:00-22:00` for "Monday to Friday 7am to 10pm"): then every time in the value must be a time of the quote.
 // - SUMMARY fields (`SUMMARY_ROLES`: a description, a duration or period, a role, a bio) may reword the quote, but
@@ -52,6 +54,32 @@ export const tokensIn = (value, evidence) => {
   return key !== '' && ` ${tokenKey(evidence)} `.includes(` ${key} `)
 }
 
+/**
+ * The amounts written in `text`: `20`, `20.00` and `20,00` are 20, `1,200` and `1.200` are 1200, `20,50` is 20.5. A
+ * separator before exactly two final digits marks the cents; any other separator groups thousands.
+ */
+function amountsOf(text) {
+  return (String(text).match(/\d+(?:[.,']\d+)*/g) ?? []).map((n) => {
+    const cents = /[.,](\d{2})$/.exec(n)
+    const whole = (cents ? n.slice(0, -3) : n).replace(/[.,']/g, '')
+    return Number(whole) + (cents ? Number(cents[1]) / 100 : 0)
+  })
+}
+
+/** Whether a price `value` is in `evidence`: the same amounts, its currency signs and its words. */
+function priceIn(value, evidence) {
+  const amounts = amountsOf(value)
+  const quoted = new Set(amountsOf(evidence))
+  const words = tokenKey(evidence).split(' ')
+  const ownWords = tokenKey(value).match(/\p{L}+/gu) ?? []
+  return (
+    amounts.length > 0 &&
+    amounts.every((a) => quoted.has(a)) &&
+    currencies(value).every((c) => evidence.includes(c)) &&
+    ownWords.every((w) => words.includes(w))
+  )
+}
+
 /** The times written in `text`, in minutes after midnight: `07:00`, `7.30`, `7am`, `10 pm`. */
 function timesOf(text) {
   const times = []
@@ -70,8 +98,10 @@ function literalIn(role, value, evidence) {
   if (role === 'contact.phone') return phonesIn(evidence).some((p) => samePhone(p, value))
   if (role === 'contact.email') return lower(evidence).includes(lower(value))
   if (role.endsWith('_url')) return linkless(evidence).includes(urlKey(value))
+  if (PRICE_ROLES.has(role)) return priceIn(value, evidence)
+  if (role === 'contact.address')
+    return ` ${textKey(evidence)} `.includes(` ${textKey(value)} `) && textKey(value) !== ''
   const words = tokensIn(value, evidence)
-  if (PRICE_ROLES.has(role)) return words && currencies(value).every((c) => evidence.includes(c))
   if (role === 'contact.hours' && !words) {
     const [said, quoted] = [timesOf(value), new Set(timesOf(evidence))]
     return said.length > 0 && said.every((t) => quoted.has(t))

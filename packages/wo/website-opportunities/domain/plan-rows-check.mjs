@@ -113,10 +113,11 @@ export function rowListProblems(pages, blocks, data, problem) {
 
 /**
  * The left out entries of the profile's rows the plan does not show, each naming its row `id` and the reason of the
- * code that dropped it (`CHILD_LIST_REASONS`). A row goes with what holds it: a row of an item left out or of an item
- * no page shows (`shownItems`, when given), or of a parent row not shown, is reported with it, never twice.
+ * code that dropped it (`CHILD_LIST_REASONS`); then every fact a list dropped (a social link) that no list and no block
+ * shows, as a `feature`. A row goes with what holds it: a row of an item left out or of an item no page shows (`shown`:
+ * every id the pages' blocks hold, when given), or of a parent row not shown, is reported with it, never twice.
  */
-export function rowsLeftOut(data, planned, dropped, leftOutIds, shownItems = null) {
+export function rowsLeftOut(data, planned, dropped, leftOutIds, shown = null) {
   const why = new Map()
   for (const d of dropped)
     if (d.row && d.code !== 'row_field_undeclared' && !why.has(d.row)) why.set(d.row, d)
@@ -125,13 +126,35 @@ export function rowsLeftOut(data, planned, dropped, leftOutIds, shownItems = nul
     if (planned.has(record.id)) continue
     if (record.parent !== null && !planned.has(record.parent)) continue
     if (record.owner !== null && leftOutIds.has(record.owner)) continue
-    if (record.owner !== null && shownItems && !shownItems.has(record.owner)) continue
+    if (record.owner !== null && shown && !shown.has(record.owner)) continue
     out.push({
       id: record.id,
       what: record.entry.label,
       kind: 'item',
       reason: why.get(record.id)?.reason ?? NO_LIST_REASON
     })
+  }
+  for (const [id, d] of why) {
+    const fact = data.byId.get(id)
+    if (fact?.what !== 'fact' || planned.has(id) || shown?.has(id) || leftOutIds.has(id)) continue
+    // The fact's own value (the link itself) tells the customer which one; held to the 80 character `what` limit.
+    const value = String(fact.entry.value)
+    const what = [...value].length > 80 ? `${[...value].slice(0, 79).join('')}\u2026` : value
+    out.push({ id, what, kind: 'feature', reason: d.reason })
+  }
+  return out
+}
+
+/** One left out entry per list left below its minimum (`list_below_min`), named by its block's label. */
+export function listsBelowMinLeftOut(dropped, pages) {
+  const labels = new Map(list(pages).flatMap((p) => list(p.blocks).map((b) => [`${p.id}|${b.id}`, b.label])))
+  const seen = new Set()
+  const out = []
+  for (const d of dropped) {
+    const key = `${d.page}|${d.block}|${d.list}`
+    if (d.code !== 'list_below_min' || seen.has(key)) continue
+    seen.add(key)
+    out.push({ what: labels.get(`${d.page}|${d.block}`) ?? d.block, kind: 'block', reason: d.reason })
   }
   return out
 }

@@ -13,11 +13,13 @@
 //   such a block, so it is not hidden.
 // - Item N of a block's data is written to stored place N (Contract A: `slots` per item, in item order). So the block's
 //   items are put in the order of the places that hold their rows, the item with the most rows in the place that stores
-//   the most (`placeOrder`), and each item's rows stop at what ITS place stores and at `items.max`; the rows beyond are
-//   reported (`row_beyond_stored_places`, `row_over_max`).
+//   the most (`placeOrder`, counting the rows that pass the fit), and each item's rows stop at what ITS place stores
+//   and at `items.max`; the rows beyond are reported (`row_beyond_stored_places`, `row_over_max`). After a customer's
+//   edit the customer's order is kept (`keepOrder`) and the rows are cut at the places the items land in.
+// - A fact a block holds only for its lists (a social link) that no row shows leaves the block's data and is reported.
 import { placeLimitsOf } from './field-place-limits.mjs'
 import { rowsPerPlace } from './ai-quickstart-child-lists.mjs'
-import { fitCandidates, reported } from './plan-rows-fit.mjs'
+import { fitCandidates, reported, withoutUnshownFacts } from './plan-rows-fit.mjs'
 
 export { CHILD_LIST_REASONS } from './plan-rows-fit.mjs'
 /** The `derived` value of a link field that the write step fills with the page of its row (Contract A). */
@@ -143,22 +145,21 @@ function plannedBlock(page, block, d, pages, ctx) {
   const children = list(d.itemLists)
   const shown = shownItemIds(block, ctx.data)
   const own = shown.map((item) => children.map((c) => ownRows(ctx.data.rowsOf(item), c, ctx)))
-  const order = children.length
-    ? placeOrder(
-        own.map((o) => o.map((r) => r.length)),
-        children
-      )
-    : shown.map((_, i) => i)
+  // Rows that would survive the fit (length, parts, links) are what an item brings to a place.
+  const counts = own.map((o) =>
+    o.map((rows, l) => fitCandidates(children[l], rows, maxOf(children[l]), ctx.limits).kept.length)
+  )
+  const order = children.length && !ctx.keepOrder ? placeOrder(counts, children) : shown.map((_, i) => i)
   const items = order.map((i) => shown[i])
   let n = 0
-  const data = list(block.data).map((id) => (ctx.data.byId.get(id)?.what === 'item' ? items[n++] : id))
+  const ordered = list(block.data).map((id) => (ctx.data.byId.get(id)?.what === 'item' ? items[n++] : id))
   children.forEach((child, l) => {
     items.forEach((item, place) => {
       const at = { page: page.id, block: block.id, item, list: child.name }
       lists.push({ name: child.name, item, rows: plannedList(child, own[order[place]][l], place, at, ctx) })
     })
   })
-  return { ...block, data, lists }
+  return { ...block, data: withoutUnshownFacts(ordered, lists, d, ctx.data.byId, listKindsOf), lists }
 }
 
 /**
@@ -166,13 +167,15 @@ function plannedBlock(page, block, d, pages, ctx) {
  * @param {object[]} pages the plan's pages
  * @param {Map<string, object>} blocks block id -> description
  * @param {object} data the plan data (`planDataOf`, with its rows)
+ * @param {{keepOrder?: boolean}} [options] `keepOrder`: keep the blocks' item order as given (a customer's edit sets
+ *   it) and cut each item's rows at the place it lands in; the automatic place order is for composing only
  * @returns {{pages: object[], dropped: object[], planned: Set<string>}} a block declaring child lists gets `lists`
  *   (`[{name, item?, rows: [{data} | {page}, lists?]}]`, empty rows when no business row fits) and its items in place
  *   order; `dropped`: the rows report, each entry with its `code` and `reason` (`CHILD_LIST_REASONS`); `planned`: the
  *   row ids
  */
-export function planRows(pages, blocks, data) {
-  const ctx = { data, dropped: [], planned: new Set(), limits: placeLimitsOf(blocks.values()) }
+export function planRows(pages, blocks, data, { keepOrder = false } = {}) {
+  const ctx = { data, dropped: [], planned: new Set(), limits: placeLimitsOf(blocks.values()), keepOrder }
   const out = pages.map((page) => ({
     ...page,
     blocks: page.blocks.map((block) => {

@@ -1,6 +1,7 @@
 // Questions that ask the customer to confirm a fact about their own business where the sources disagree (ticket #592,
 // product decision of 13/11). Pure rules, no model. Only important facts are asked; every other conflict stays in
 // `conflicts` with its trust order default and the reason it was not asked.
+import { cappedLength } from './answer-field-limits.mjs'
 import { QUESTION_SCHEMA } from './build-contract-questions.mjs'
 import { primaryRoleOf } from './needs-profile-merge.mjs'
 
@@ -48,7 +49,7 @@ function itemNameOf(conflict, items) {
 }
 
 /** One Contract B `fact-conflict` question for `conflict`; its id follows the conflict's place, so it is stable. */
-function conflictQuestion(conflict, { items, sources }) {
+function conflictQuestion(conflict, { items, sources, limits }) {
   const rule = IMPORTANT_CONFLICTS[conflict.kind]
   const byId = new Map(sources.map((s) => [s.id, s]))
   const item = itemNameOf(conflict, items)
@@ -65,7 +66,10 @@ function conflictQuestion(conflict, { items, sources }) {
       detail: `From ${listOf([...new Set(v.sources.map((id) => whereFrom(byId.get(id))))])}`,
       ...(v.value === conflict.default ? { recommended: true } : {})
     })),
-    freeText: { maxLength: rule.maxLength, placeholder: 'Type the right value' }
+    freeText: {
+      maxLength: cappedLength(rule.maxLength, conflict.kind, limits),
+      placeholder: 'Type the right value'
+    }
   }
 }
 
@@ -73,7 +77,7 @@ function conflictQuestion(conflict, { items, sources }) {
  * The conflicts worth asking, as questions grouped `contact` and `price` (each in `IMPORTANT_CONFLICTS` order, then
  * in conflict order), and for every conflict whether it was asked: `{conflict, question}` or `{conflict, reason}`.
  */
-export function conflictQuestionsOf({ conflicts = [], items = {}, sources = [] }) {
+export function conflictQuestionsOf({ conflicts = [], items = {}, sources = [], limits }) {
   const asked = { contact: [], price: [] }
   const accounting = []
   const ordered = [...conflicts].sort((a, b) => rankOf(a.kind) - rankOf(b.kind))
@@ -83,7 +87,7 @@ export function conflictQuestionsOf({ conflicts = [], items = {}, sources = [] }
       accounting.push({ conflict: conflict.id, reason: NOT_IMPORTANT })
       continue
     }
-    const q = conflictQuestion(conflict, { items, sources })
+    const q = conflictQuestion(conflict, { items, sources, limits })
     asked[rule.group].push(q)
     accounting.push({ conflict: conflict.id, question: q.id })
   }

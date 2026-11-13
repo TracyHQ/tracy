@@ -197,13 +197,23 @@ and a block without `lists` shows no rows.
   `lists[].name` limit. `rows` may be empty: a list with no business data is planned empty, never filled with invented
   rows.
 - **Item N of a block's `data` is written to stored place N.** The rules put a block's items in the order of the
-  places that hold their rows (the item with the most rows in the place that stores the most), so the order of `data`
-  is the place order; no extra key says it.
+  places that hold their rows (the item with the most rows that fit in the place that stores the most), so the order
+  of `data` is the place order; no extra key says it. After a customer's plan edit the customer's item order is kept,
+  and each item's rows are cut at the place it lands in, the rows that no longer fit reported as left out.
 - **A planned row** is `{data}`, a row or a fact of the plan (a social link fact is one row of a links list), or
   `{page}`, a page of the plan, for a list whose rows are keyed to pages. It may hold `lists`, the nested lists of
   that row, at most three levels deep. A row appears once per list.
 - How many rows a list shows, and which data kinds a row may hold, come from the block store; the rules gate holds the
   plan to them (`plan-rows-check.mjs`). The contract check holds the shape: closed objects, known ids, text limits.
+- **Left out entries the rules add** (no new key or kind): a row not shown is kind `item`; a business fact a list
+  cannot show (a shortened or repeated social link, one beyond the rows a list holds) is kind `feature`; a list left
+  under its `items.min` is kind `block` (its label); a fact or item longer than the field of its block is taken off
+  that block before anything is written (`data_over_limit`) and, when no other block shows it, is kind `feature` or
+  `item`. A customer's answer is never dropped that way: it is held to the template's limits when it is settled, and
+  the gate reports one too long as the problem `answer_over_limit`.
+- A row field declaring `textOf: "network"` (Contract A) names the network of the row's link: the writer fills it from
+  the link with the icon step's network detection (`from: 'data'`), never sends it to the model, and hides it when
+  the row has no usable link.
 
 ## Plan edit
 

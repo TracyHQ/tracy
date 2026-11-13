@@ -214,11 +214,26 @@ export {
   roomOf,
   storedRowsOf
 } from './plan-rows.mjs'
-export { NO_LIST_REASON, fitCandidates, rowMisfitOf } from './plan-rows-fit.mjs'
+export {
+  NO_LIST_REASON,
+  fitCandidates,
+  rowMisfitOf,
+  takesData,
+  withoutUnshownFacts
+} from './plan-rows-fit.mjs'
 export { limitOf, placeLimitsOf, placesOfField } from './field-place-limits.mjs'
-export { rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
+export { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
+export {
+  answerOverLimitProblems,
+  DATA_OVER_LIMIT_REASON,
+  dropOverLimitData,
+  overLimitLeftOut
+} from './plan-data-limits.mjs'
+export { replanRows } from './plan-edit-rows.mjs'
+export { networkNameOf, rowNetworkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
+export { cappedLength, kindLimitsOf, storeBlocksOf } from './answer-field-limits.mjs'
 export { declaredRowFieldsOf, rowFieldAccountOf } from './plan-row-coverage.mjs'
-export { foreignValuesOf, rowContextOf, rowFieldsOf } from './page-writer-rows.mjs'
+export { foreignValuesOf, isDataLike, rowContextOf, rowFieldsOf } from './page-writer-rows.mjs'
 export {
   MAX_ROW_DEPTH,
   MAX_ROW_PARTS,

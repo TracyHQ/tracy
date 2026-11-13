@@ -112,7 +112,7 @@ test('a row id another item uses takes a free id: no row is lost to a name', () 
   assert.equal(data.byId.get('service-boxing-row-1').what, 'item')
 })
 
-test('a row longer than its field, or with more parts than fields, is dropped with a reason; written order is kept', async () => {
+test('a row too long, with more parts than fields, or with its times before its days is dropped with a reason', async () => {
   const { research, reading: read } = pottery()
   research.sources[0].text +=
     ' Thu, 18:00 to 20:30 with a long cooldown. Fri, 08:00, 09:00, 10:00. Sat late, 21:00 to 22:00.'
@@ -122,7 +122,8 @@ test('a row longer than its field, or with more parts than fields, is dropped wi
       evidence: 'Thu, 18:00 to 20:30 with a long cooldown'
     },
     { fields: { 'offering.schedule': ['Fri', '08:00', '09:00'] }, evidence: 'Fri, 08:00, 09:00, 10:00' },
-    { fields: { 'offering.schedule': ['21:00 to 22:00', 'Sat late'] }, evidence: 'Sat late, 21:00 to 22:00' }
+    { fields: { 'offering.schedule': ['21:00 to 22:00', 'Sat late'] }, evidence: 'Sat late, 21:00 to 22:00' },
+    { fields: { 'offering.schedule': ['Sat late', '21:00 to 22:00'] }, evidence: 'Sat late, 21:00 to 22:00' }
   ]
   const { plan, rows } = await composePlan(composeInputs(needsProfileOf(research, read)))
   const grid = plan.pages[0].blocks.find((b) => b.block === 'services-grid')
@@ -130,13 +131,15 @@ test('a row longer than its field, or with more parts than fields, is dropped wi
     rows.filter((d) => d.item === HAND).map((d) => [d.code, d.row]),
     [
       ['row_value_over_limit', `${HAND}-row-1`],
-      ['row_parts_over_fields', `${HAND}-row-2`]
+      ['row_parts_over_fields', `${HAND}-row-2`],
+      ['row_parts_order', `${HAND}-row-3`]
     ]
   )
-  // Two parts of one kind fill its fields in the order the source writes them: never reordered by guess.
+  // The parts fill the fields days first: a time is never written into the days, and parts are never reordered.
   assert.deepEqual(grid.lists.find((l) => l.name === 'sessions' && l.item === HAND).rows, [
-    { data: `${HAND}-row-3` }
+    { data: `${HAND}-row-4` }
   ])
+  assert.ok(plan.leftOut.some((e) => e.reason === CHILD_LIST_REASONS.row_parts_order))
   assert.ok(plan.leftOut.some((e) => e.reason === CHILD_LIST_REASONS.row_value_over_limit))
 })
 
