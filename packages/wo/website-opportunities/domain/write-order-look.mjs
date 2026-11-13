@@ -1,5 +1,6 @@
 // What the write order reads from the look and from the template's mapping file (ticket #597, Contract A #584). Pure.
 //
+//   look.accentDark        the plan's dark theme accent (#616), carried with the plan's accent.
 //   look.logo              a text logo (`kind: 'text'`) shows the business name: the order fills `text` with it.
 //   networkIconClasses     optional `{classes: {<network>: "<class>"}, why}`: a class-name network icon takes its
 //                          network's class (`className`); a network the table lacks has no mark in the template, so its
@@ -10,13 +11,24 @@
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const isObject = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
 
-/** The order's look, with the business name as the text of a text logo. */
-export function lookOf(look, plan, facts) {
+/**
+ * The look the order carries: the look step's value, or the plan's look. The plan's dark theme accent
+ * (`accentDark`, #616) goes with it whenever the look's accent is the plan's own.
+ */
+function baseLookOf(look, plan) {
+  const dark = plan?.look?.accentDark
   const base = look ?? {
     accent: plan?.look?.accent ?? null,
     accentFrom: null,
     logo: plan?.look?.logo ?? null
   }
+  if (!isText(dark) || base.accentDark !== undefined || base.accent !== plan.look.accent) return base
+  return { ...base, accentDark: dark }
+}
+
+/** The order's look, with the business name as the text of a text logo. */
+export function lookOf(look, plan, facts) {
+  const base = baseLookOf(look, plan)
   const logo = base.logo
   if (!isObject(logo) || logo.kind !== 'text' || isText(logo.text)) return base
   const name = facts.find((f) => f.kind === 'business.name' && isText(f.value))?.value

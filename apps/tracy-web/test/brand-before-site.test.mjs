@@ -45,6 +45,7 @@ function fakeSteps(...answers) {
       })
       const next = answers.shift()
       if (next instanceof Error) throw next
+      if (typeof next === 'function') return next(how)
       return { value: { file: next }, usd: 0.25 }
     },
     async dispose(prepared) {
@@ -80,7 +81,7 @@ test('the brand step runs on the research revision and the kit, and its brand fi
   assert.equal(out.usd, 0.25)
   assert.equal(seen.disposed.length, 1)
   assert.equal(seen.disposed[0].runId, out.runId)
-  assert.equal(seen.disposed[0].chain.length, 1)
+  assert.equal(seen.disposed[0].chain.length, 2)
 })
 
 test('a failing run is run once more; a second failure stops and still keeps both record lines', async () => {
@@ -92,8 +93,12 @@ test('a failing run is run once more; a second failure stops and still keeps bot
     [1, 2]
   )
   assert.deepEqual(
-    out.records.map((r) => r.outcome),
-    ['failed', 'done']
+    out.records.map((r) => [r.step, r.outcome]),
+    [
+      ['kit', 'done'],
+      ['brand', 'failed, re-running'],
+      ['brand', 'done']
+    ]
   )
   const twice = fakeSteps(new Error('first'), new Error('second'))
   await assert.rejects(
@@ -103,7 +108,7 @@ test('a failing run is run once more; a second failure stops and still keeps bot
     }),
     (e) => e.code === 'brand_step_failed' && e.noRerun === true
   )
-  assert.equal(twice.seen.disposed[0].chain.length, 2)
+  assert.equal(twice.seen.disposed[0].chain.length, 3)
 })
 
 test('no research brief, no run', async () => {
@@ -116,4 +121,82 @@ test('no research brief, no run', async () => {
     (e) => e.code === 'brief_missing'
   )
   assert.equal(seen.brand.length, 0)
+})
+
+const run = (steps, input = {}) =>
+  createBrandBeforeSite({ steps, briefOf: async () => brief, readJson })({
+    revisionId: 'rev-1',
+    kitRef: 'example-court@1.0.0',
+    ...input
+  })
+const stopOf = async (promise) => {
+  try {
+    await promise
+  } catch (error) {
+    return error
+  }
+  assert.fail('the brand step did not stop')
+}
+
+test('a stopped signal before the start runs no step and records the attempt as stopped', async () => {
+  const { steps, seen } = fakeSteps('brand/brand-file.json')
+  const error = await stopOf(run(steps, { signal: AbortSignal.abort(new Error('the build was cancelled')) }))
+  assert.equal(error.code, 'brand_step_failed')
+  assert.deepEqual(seen.kit, [])
+  assert.deepEqual(seen.brand, [])
+  assert.deepEqual(
+    error.details.records.map((r) => [r.step, r.attempt, r.outcome, r.error]),
+    [['kit', 1, 'stopped', 'the build was cancelled']]
+  )
+})
+
+test('a signal stopped during an attempt is not run again', async () => {
+  const stop = new AbortController()
+  const { steps, seen } = fakeSteps(() => {
+    stop.abort(new Error('cancelled'))
+    throw new Error('the bench was stopped')
+  })
+  const error = await stopOf(run(steps, { signal: stop.signal }))
+  assert.equal(seen.brand.length, 1)
+  assert.deepEqual(error.details.stop.step, 'brand')
+  assert.equal(error.details.records.at(-1).outcome, 'stopped')
+})
+
+test('a kit step that throws gets a record line, is run once more, and stops the brand step unrun', async () => {
+  const { steps, seen } = fakeSteps('brand/brand-file.json')
+  steps.kit = async () => {
+    throw Object.assign(new Error('kit not found'), { code: 'kit_missing' })
+  }
+  const error = await stopOf(run(steps))
+  assert.equal(seen.brand.length, 0)
+  assert.deepEqual(
+    error.details.records.map((r) => [r.step, r.outcome, r.code]),
+    [
+      ['kit', 'failed, re-running', 'kit_missing'],
+      ['kit', 'failed', 'kit_missing']
+    ]
+  )
+  assert.equal(seen.disposed[0].chain.length, 2)
+})
+
+test('a brand file that is not one is not run again, and its run keeps its spend and its file', async () => {
+  files['bad/brand-file.json'] = { kind: 'brand-file', version: 9 }
+  const { steps, seen } = fakeSteps('bad/brand-file.json', 'brand/brand-file.json')
+  const error = await stopOf(run(steps))
+  assert.equal(seen.brand.length, 1)
+  const line = error.details.records.at(-1)
+  assert.equal(line.outcome, 'failed')
+  assert.equal(line.code, 'brand_file_unreadable')
+  assert.equal(line.usd, 0.25)
+  assert.deepEqual(line.output, { file: 'bad/brand-file.json' })
+})
+
+test('an unknown spend stays unknown, with the known part beside it', async () => {
+  const { steps } = fakeSteps(() => ({ value: { file: 'brand/brand-file.json' }, usd: null, knownUsd: 0.1 }))
+  const out = await run(steps)
+  assert.equal(out.records.at(-1).usd, null)
+  assert.equal(out.records.at(-1).knownUsd, 0.1)
+  assert.equal(out.usd, null)
+  assert.equal(out.knownUsd, 0.1)
+  assert.deepEqual(out.prompt, { file: 'brand-step.system.md', version: 10 })
 })

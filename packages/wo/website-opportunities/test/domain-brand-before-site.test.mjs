@@ -91,7 +91,7 @@ test('no logo at all: the made logo and the template accent, each said and recor
   const record = brandLookOf(quaysidePianoCare())
   assert.equal(record.accent.from, 'template-accent-no-logo')
   assert.equal(record.accent.hex, TEMPLATE_ACCENT)
-  assert.deepEqual(record.logo, { kind: 'text', from: 'business-name', mark: 'icon' })
+  assert.deepEqual(record.logo, { kind: 'made', from: 'made-temporary', mark: 'icon', mediaId: null })
   const { plan, lookSources } = await compose(record).run
   assert.equal(plan.look.accent, TEMPLATE_ACCENT)
   assert.equal(plan.look.accentDark, undefined)
@@ -105,17 +105,19 @@ test('no logo at all: the made logo and the template accent, each said and recor
     [
       [
         'look.logo',
-        "No logo was found, so one was made for you: a simple icon of your trade with your business name, in the template's accent colour."
+        "No logo was found, so a temporary one was made for you: a simple icon of your trade beside your business name, in the template's accent colour. Send us your logo to replace it."
       ]
     ]
   )
   assert.equal(checkBuildDocument(plan).ok, true)
   assert.deepEqual(lookProblemsOf({ plan, template: template(), lookSources }), [])
-  // The same plan with a source that is not the no logo case shows the template's look: flagged.
+  // The same plan with a source that is not the no logo case (here the tests' fallback) shows the template's look.
   assert.deepEqual(
-    lookProblemsOf({ plan, template: template(), lookSources: { accent: { from: 'logo' } } }).map(
-      (p) => p.code
-    ),
+    lookProblemsOf({
+      plan,
+      template: template(),
+      lookSources: { accent: { from: 'template-fallback' } }
+    }).map((p) => p.code),
     ['template_accent', 'template_look_said']
   )
 })

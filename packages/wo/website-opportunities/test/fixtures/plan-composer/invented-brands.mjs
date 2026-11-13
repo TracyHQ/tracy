@@ -124,7 +124,12 @@ export const saltmarshKayaks = () => ({
 })
 
 /** An invented template kit with a light and a dark theme, and the colours its accent buttons take for words. */
-export const lightAndDarkKit = ({ wordsOn = ['#ffffff', '#000000'], lightGround = '#fafafa' } = {}) => ({
+/** `themes` keeps only some of its sides: `['dark']` for a dark only template. */
+export const lightAndDarkKit = ({
+  wordsOn = ['#ffffff', '#000000'],
+  lightGround = '#fafafa',
+  themes = ['light', 'dark']
+} = {}) => ({
   ref: 'example-court@1.0.0',
   doc: {
     site: {
@@ -133,7 +138,7 @@ export const lightAndDarkKit = ({ wordsOn = ['#ffffff', '#000000'], lightGround 
         sides: [
           { marker: 'base', ground: lightGround, groundSide: 'light' },
           { marker: '[data-theme="dark"]', ground: '#141414', groundSide: 'dark' }
-        ]
+        ].filter((side) => themes.includes(side.groundSide))
       }
     }
   }

@@ -169,6 +169,7 @@ export {
   BRAND_FILE_VERSION,
   BRAND_LOOK_SCHEMA,
   BrandStepError,
+  LOGO_MADE,
   brandLookOf,
   isBrandLook,
   lookOfBrandRecord
@@ -181,7 +182,6 @@ export {
   NO_HUE_ACCENT,
   accentOfBrandFile
 } from './brand-look-accent.mjs'
-export { BRAND_STEP_ATTEMPTS, BRAND_STEP_PROMPT, runBrandBeforeSite } from './brand-before-site-run.mjs'
 export { lookProblemsOf } from './brand-look-problems.mjs'
 export {
   CANDIDATES_MAX,

@@ -151,6 +151,8 @@ rejected; and labels, reasons and other short texts are held to their [text limi
   `{kind: "own", source}` or `{kind: "text"}` (the business name set as text). An optional `accentDark` (`#rrggbb`,
   #616) is the accent of the dark theme when it differs from the light one: a logo with no hue gives black on the
   light theme (`accent`) and white on the dark theme (`accentDark`). Without it, `accent` is worn on both themes.
+  `accent` is the light theme's colour, or the only theme's colour when the template has one theme (a dark only
+  template with a logo of no hue has `accent` white and no `accentDark`).
 - **`pictures`**: `own.frames` filled by the business's own photos (with `from`, the sources), and `generated.frames`
   to be generated, at most 6 (`MAX_GENERATED_FRAMES`), with a `reason` when above zero.
 - **`look`** also: an own logo names its `source`; a text logo has none.

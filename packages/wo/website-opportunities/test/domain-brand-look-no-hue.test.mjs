@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import { checkBuildDocument } from '../domain/build-contract.mjs'
-import { BrandStepError, brandLookOf } from '../domain/brand-before-site.mjs'
+import { BrandStepError, brandLookOf, lookOfBrandRecord } from '../domain/brand-before-site.mjs'
 import { chromaOf, contrastOf, isNeutral } from '../domain/brand-hue.mjs'
 import { lookProblemsOf } from '../domain/brand-look-problems.mjs'
 import { composePlan } from '../domain/plan-composer.mjs'
@@ -67,24 +67,56 @@ test('a black and grey logo on a light and dark template: black on light, white 
     ),
     ['neutral_accent']
   )
-  const single = { ...plan, look: { ...plan.look, accentDark: undefined } }
-  assert.deepEqual(
-    lookProblemsOf({ plan: single, template: template(), lookSources }).map((p) => p.code),
-    ['neutral_accent']
-  )
-})
-
-test('3:1 holds: no template words colour reads on the accent, or a light theme ground too dark for black', () => {
-  for (const kit of [lightAndDarkKit({ wordsOn: ['#555555'] }), lightAndDarkKit({ lightGround: '#3a3a3a' })])
-    assert.throws(
-      () => brandLookOf({ ...inkwellBindery(), kit }),
-      (e) => e instanceof BrandStepError && e.code === 'brand_file_unreadable' && /reads/.test(e.message)
+  // Not black on light and white on dark: grey, or the same black on both, is flagged.
+  for (const look of [
+    { accent: '#808080', accentDark: '#ffffff' },
+    { accent: '#000000', accentDark: '#000000' }
+  ])
+    assert.deepEqual(
+      lookProblemsOf({
+        plan: { ...plan, look: { ...plan.look, ...look } },
+        template: template(),
+        lookSources
+      }).map((p) => p.code),
+      ['neutral_accent']
     )
 })
 
-test('without the kit the pair is still black and white, with no words colour chosen', () => {
-  const record = brandLookOf(inkwellBindery())
-  assert.equal(record.accent.hex, '#000000')
-  assert.equal(record.accent.dark, '#ffffff')
-  assert.equal(record.accent.onAccent, undefined)
+test('3:1 holds: plain words when no template words colour reads; a ground too dark for black stops', () => {
+  const plain = brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ wordsOn: ['#555555'] }) })
+  // #555555 reads on white (the dark theme accent) but not on black: plain white there.
+  assert.deepEqual(plain.accent.onAccent, { light: '#ffffff', dark: '#555555' })
+  assert.throws(
+    () => brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ lightGround: '#3a3a3a' }) }),
+    (e) => e instanceof BrandStepError && e.code === 'brand_file_unreadable' && /reads/.test(e.message)
+  )
+})
+
+test('a template with one theme gets that theme colour only: black for light only, white for dark only', () => {
+  const light = brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ themes: ['light'] }) })
+  assert.equal(light.accent.hex, '#000000')
+  assert.equal(light.accent.dark, undefined)
+  const dark = brandLookOf({ ...inkwellBindery(), kit: lightAndDarkKit({ themes: ['dark'] }) })
+  assert.equal(dark.accent.hex, '#ffffff')
+  assert.equal(dark.accent.dark, undefined)
+  assert.deepEqual(dark.accent.onAccent, { dark: '#000000' })
+  const { look, assumptions } = lookOfBrandRecord(template(), dark)
+  assert.equal(look.accent, '#ffffff')
+  assert.equal('accentDark' in look, false)
+  assert.equal(assumptions[0].said, 'Your logo has no colour, so buttons and links are white.')
+})
+
+test('without the kit a logo with no hue is not read: the themes and the button words are unknown', () => {
+  assert.throws(
+    () => brandLookOf(inkwellBindery()),
+    (e) => e instanceof BrandStepError && e.code === 'brand_file_unreadable' && e.noRerun === true
+  )
+})
+
+test('logo colours written without # are read as the step reads them', () => {
+  const bare = inkwellBindery()
+  bare.brief.brand.colors = bare.brief.brand.colors.map((c) => ({ ...c, hex: c.hex.slice(1) }))
+  assert.equal(brandLookOf({ ...bare, kit: lightAndDarkKit() }).accent.from, 'logo-without-hue')
+  assert.equal(isNeutral('8a8a8a'), true)
+  assert.equal(contrastOf('000000', 'ffffff'), 21)
 })

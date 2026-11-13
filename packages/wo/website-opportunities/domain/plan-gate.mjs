@@ -16,6 +16,7 @@
 //   store declares (`plan-rows-check.mjs`), and every row not shown is reported in the left out list;
 // - the plan it returns passes the Contract B check (`build-contract.mjs`).
 // Composition in, `{ok, problems, plan, placed, accounting}` out.
+import { lookProblemsOf } from './brand-look-problems.mjs'
 import { BUILD_PLAN_SCHEMA } from './build-contract-plan.mjs'
 import { checkBuildDocument } from './build-contract.mjs'
 import { dataAccountingOf } from './plan-accounting.mjs'
@@ -160,6 +161,11 @@ export function gatePlan(composition, context) {
     ]
   }
   for (const p of checkBuildDocument(plan).problems) problem('contract_b', p.at, p.message)
+  // The plan never shows the template's look for approval (#616): its accent, its logo, or a line naming them, written
+  // by the model or not. Off only for the template fallback of the tests (`allowTemplateLook`).
+  if (!context.allowTemplateLook)
+    for (const p of lookProblemsOf({ plan, template: context.template, lookSources: context.lookSources }))
+      problem(p.code, p.at, p.message)
   if (problems.length > 0) return { ok: false, problems }
   return { ok: true, problems, plan, placed, accounting, rows: [...limited.dropped, ...rows.dropped] }
 }

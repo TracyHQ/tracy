@@ -147,32 +147,22 @@ test('without a brand record no plan is composed; the template fallback lives be
   assert.equal(checkBuildDocument(plan).ok, true)
 })
 
-test('after research the brand step runs in parallel with the needs profile and has finished before the plan', async () => {
+test('after research the brand record is settled before the needs profile is asked, then the plan is composed', async () => {
   const club = clubResearch()
   const seen = []
-  let brandDone = false
-  let release
-  const brandStep = () => {
-    seen.push('brand started')
-    return new Promise((resolve) => {
-      release = () => {
-        brandDone = true
-        seen.push('brand finished')
-        resolve(brand())
-      }
-    })
+  const brandStep = async () => {
+    seen.push('brand step ran')
+    return brand()
   }
   const model = scriptedModel(
     (request) => {
       assert.equal(request.system, NEEDS_PROFILE_PROMPT)
-      seen.push(`needs profile called, brand finished: ${brandDone}`)
-      // The brand step finishes only after the needs profile call began: the two run at the same time.
-      setTimeout(release, 5)
+      seen.push('needs profile called')
       return JSON.stringify(club.reading)
     },
     (request) => {
       assert.equal(request.system, PLAN_COMPOSER_PROMPT)
-      seen.push(`plan composed, brand finished: ${brandDone}`)
+      seen.push('plan composed')
       return JSON.stringify(goodComposition())
     }
   )
@@ -186,15 +176,49 @@ test('after research the brand step runs in parallel with the needs profile and 
     template: template(),
     planId: 'plan-club'
   })
-  assert.deepEqual(seen, [
-    'brand started',
-    'needs profile called, brand finished: false',
-    'brand finished',
-    'plan composed, brand finished: true'
-  ])
+  assert.deepEqual(seen, ['brand step ran', 'needs profile called', 'plan composed'])
   assert.equal(result.plan.look.accent, '#1f7a4d')
   assert.equal(result.profile.schema, 'tracy-needs-profile/v1')
   assert.equal(checkBuildDocument(result.plan).ok, true)
+})
+
+test('a plan step with no brand record stops with brand_missing before any model call', async () => {
+  const club = clubResearch()
+  for (const input of [{ brandStep: async () => null }, { brand: null }, { brand: { kind: 'brand-file' } }]) {
+    let calls = 0
+    const model = async () => {
+      calls += 1
+      return JSON.stringify(club.reading)
+    }
+    await assert.rejects(
+      buildPlanStep({
+        research: club.research,
+        model,
+        ...input,
+        blockStore: blockStore(),
+        pageRecipes: pageRecipes(),
+        template: template()
+      }),
+      (e) => e instanceof PlanComposerError && e.code === 'brand_missing' && e.noRerun === true
+    )
+    assert.equal(calls, 0)
+  }
+})
+
+test('a brand record given to the plan step is used as it is, with no brand step', async () => {
+  const club = clubResearch()
+  const model = scriptedModel(JSON.stringify(club.reading), JSON.stringify(goodComposition()))
+  const result = await buildPlanStep({
+    research: club.research,
+    model,
+    brand: brand(),
+    blockStore: blockStore(),
+    pageRecipes: pageRecipes(),
+    library: library(),
+    template: template(),
+    planId: 'plan-club'
+  })
+  assert.equal(result.plan.look.accent, '#1f7a4d')
 })
 
 test('a failing brand step stops the plan step with a typed error', async () => {

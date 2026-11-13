@@ -23,7 +23,8 @@ memorySite({ failOn }) -> { apply(order) -> Promise<{ report, site }>, calls, si
 - `aiq`: `{ref, blockStore, library, pageRecipes?, mapping?, template: {slug, name, version}, aiQuickstart?: {version}}`.
 - `approval`: `{plan, profile}`, the approved plan and the profile it was gated with (after any edit).
 - `look`: the look step's value `{accent, accentFrom, logo}`; left out, the plan's look is copied. A text logo
-  (`kind: 'text'`) takes the business name as its `text`.
+  (`kind: 'text'`) takes the business name as its `text`. The plan's `accentDark` (#616) is carried whenever the
+  look's accent is the plan's own.
 - `writers`: one value per `writer:<page>` step, `{page, prompt}` (`writePages` on a one page plan), or one
   `writePages` result `{pages, prompt}`.
 - `pictures`: the pictures step's value with `frames` (each with `file` once the pictures are fetched or drawn) and

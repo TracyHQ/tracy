@@ -9,13 +9,10 @@
 // A plan that fails the gate is composed again ONCE, with the gate's problems. A second failure throws a
 // `PlanComposerError` with code `plan_gate_failed` and every problem, for the stop and report rule (ADR 0047, #591).
 // That error carries `noRerun: true`: it already includes its own second attempt, so the step chain does not run the
-// step again. A model call that throws is left as it is, so the step chain may run the step once more.
-//
-// `buildPlanStep` runs the brand step in parallel with the needs profile once research has finished, and composes the
-// plan only after both have finished, so the look section is final before the plan is shown.
+// step again. A model call that throws is left as it is, so the step chain may run the step once more. `buildPlanStep`
+// (`plan-step.mjs`) settles the brand record, builds the needs profile, then composes the plan.
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
-import { buildNeedsProfile } from './needs-profile.mjs'
 import { settleAnswers } from './plan-answers.mjs'
 import { kindLimitsOf } from './answer-field-limits.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
@@ -26,6 +23,7 @@ import { lookOf } from './plan-look-pictures.mjs'
 import { preflightContext, preflightDeclarations } from './plan-preflight.mjs'
 
 export { PlanComposerError }
+export { buildPlanStep } from './plan-step.mjs'
 
 /** The draft prompt (product owner review: #600). Its hash is recorded with every plan it composed. */
 export const PLAN_COMPOSER_PROMPT_FILE = 'plan-composer-prompt.md'
@@ -114,6 +112,8 @@ export function composerContextOf({
     recipes,
     look,
     lookSources,
+    template,
+    allowTemplateLook,
     assumptions: [...conflicts.assumptions, ...lookAssumptions, ...languageAssumption],
     leftOut: settled.leftOut,
     conflicts: conflicts.accounting
@@ -195,34 +195,4 @@ export async function composePlan(input) {
     { problems, attempts },
     { noRerun: true }
   )
-}
-
-/**
- * The plan step after research: the needs profile and the brand step run in parallel, then the plan is composed.
- * @param {{research: object, model: Function, brandStep: () => Promise<object | null>,
- *   answers?: object[] | ((profile: object) => object[] | Promise<object[]>)} &
- *   Omit<Parameters<typeof composerContextOf>[0], 'profile' | 'brand' | 'answers'>} input `brandStep` runs the existing
- *   brand step and resolves to its record (`runBrandBeforeSite(...).record`, #616); `answers` are the customer's
- *   answers, or a function that asks the profile's questions and resolves to them
- */
-export async function buildPlanStep({ research, model, brandStep, answers = [], ...rest }) {
-  if (typeof brandStep !== 'function')
-    throw new PlanComposerError('brand_step_missing', 'no brand step was given')
-  // Started first and not awaited: the brand step runs while the needs profile is built.
-  const brandRun = (async () => brandStep())().catch((error) => {
-    // A brand step that already ran twice (`runBrandBeforeSite`) is not run again by the step chain.
-    throw new PlanComposerError(
-      'brand_step_failed',
-      String(error?.message ?? error),
-      { cause: error },
-      { noRerun: Boolean(error?.noRerun) }
-    )
-  })
-  const [profile, brand] = await Promise.all([
-    buildNeedsProfile({ research, model, blockStore: rest.blockStore, library: rest.library }),
-    brandRun
-  ])
-  const given = typeof answers === 'function' ? await answers(profile) : answers
-  const composed = await composePlan({ ...rest, profile, answers: given, brand, model })
-  return { needsProfile: profile, brand, ...composed }
 }

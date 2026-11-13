@@ -10,7 +10,8 @@ export const NEUTRAL_CHROMA = 0.03
 export const MIN_RATIO = 3
 
 function rgbOf(hex) {
-  const m = /^#([0-9a-f]{6})$/i.exec(String(hex ?? ''))
+  // As the brand step reads a colour (`parseHexColour`): six hex digits, with or without the `#`.
+  const m = /^#?([0-9a-f]{6})$/i.exec(String(hex ?? ''))
   if (!m) return null
   const n = Number.parseInt(m[1], 16)
   return { r: n >> 16, g: (n >> 8) & 255, b: n & 255 }
@@ -21,7 +22,7 @@ const oklabLinear = (c) => {
   return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
 }
 
-/** OKLCH chroma of a #rrggbb colour, or null when it is not one. */
+/** OKLCH chroma of a #rrggbb colour (or rrggbb), or null when it is not one. */
 export function chromaOf(hex) {
   const c = rgbOf(hex)
   if (!c) return null
@@ -54,3 +55,6 @@ export function contrastOf(a, b) {
   const [hi, lo] = [luminance(A), luminance(B)].sort((x, y) => y - x)
   return +((hi + 0.05) / (lo + 0.05)).toFixed(2)
 }
+
+/** A colour as `#rrggbb` in lower case, from `#rrggbb` or `rrggbb`; null when it is not one. */
+export const hexOf = (value) => (rgbOf(value) ? `#${String(value).replace(/^#/, '').toLowerCase()}` : null)

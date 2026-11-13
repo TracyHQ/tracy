@@ -1,22 +1,41 @@
 // The look check of a plan (ticket #616): a plan never shows the template's accent colour or logo for approval, except
-// the template's accent for a business with no logo (the product owner's rule of 13/11), recorded as such. Usable in
-// tests and by the gate. Pure.
-import { ACCENT_LOGO_WITHOUT_HUE, ACCENT_NO_LOGO, NO_HUE_ACCENT } from './brand-look-accent.mjs'
+// the template's accent for a business with no logo (the product owner's rule of 13/11), recorded as such. The plan
+// gate runs it on every composed plan (`plan-gate.mjs`), so a line the model writes is held to it too. Pure.
+import {
+  ACCENT_FROM_LOGO,
+  ACCENT_LOGO_WITHOUT_HUE,
+  ACCENT_NO_LOGO,
+  NO_HUE_ACCENT
+} from './brand-look-accent.mjs'
 import { isNeutral } from './brand-hue.mjs'
+import { LOGO_MADE } from './brand-before-site.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const lower = (value) => (typeof value === 'string' ? value.trim().toLowerCase() : '')
-/** A sentence that names the template's colour or logo. */
-const TEMPLATE_LOOK_WORDS =
-  /\btemplate(?:'s)?\s+(?:accent|colou?rs?|logo)\b|\b(?:accent|colou?rs?|logo)\s+of\s+the\s+template\b/i
+/** Words naming the template's (or the demo's) colour, and its logo. */
+const OF_TEMPLATE = String.raw`(?:template|demo)(?:'s)?`
+const LOOK_WORDS = (things) =>
+  new RegExp(
+    String.raw`\b${OF_TEMPLATE}\s+(?:${things})\b|\b(?:${things})\s+of\s+the\s+(?:template|demo)\b`,
+    'i'
+  )
+const COLOUR_WORDS = LOOK_WORDS('accent|colou?rs?')
+const LOGO_WORDS = LOOK_WORDS('logos?')
+/** The black and white accents a logo with no hue may give: one theme (black or white), or both. */
+const NO_HUE_PAIRS = [
+  [NO_HUE_ACCENT.light, ''],
+  [NO_HUE_ACCENT.dark, ''],
+  [NO_HUE_ACCENT.light, NO_HUE_ACCENT.dark]
+]
 
 /**
  * Every problem of the plan's look:
- * - `template_accent`: the template's accent while the recorded source is not the no logo case;
- * - `neutral_accent`: a black, grey or white accent whose source is not a logo without hue, or one that is not black
- *   on the light theme and white on the dark theme (`accent`, `accentDark`);
- * - `template_logo`: the template's logo;
- * - `template_look_said`: an assumption line naming the template's colour or logo, or its accent value, outside the no
+ * - `template_accent`: the template's accent while the recorded source is neither the no logo case nor the logo whose
+ *   own colour it is;
+ * - `neutral_accent`: a black, grey or white accent whose source is not a logo without hue, or not black on light and
+ *   white on dark (a no logo plan keeps the template's own accent, neutral or not);
+ * - `template_logo`: the template's logo, or a logo whose kind disagrees with its recorded source;
+ * - `template_look_said`: a line naming the template's (or demo's) logo, or its colour or accent value outside the no
  *   logo case.
  * @param {{plan: object, template: {slug?: string, name?: string, accent?: string},
  *   lookSources?: {accent?: {from: string}, logo?: {from: string}}}} input `lookSources` as `composePlan` returns them;
@@ -27,17 +46,22 @@ export function lookProblemsOf({ plan, template, lookSources }) {
   const problems = []
   const add = (code, at, message) => problems.push({ code, at, message })
   const look = plan?.look ?? {}
+  const accent = lower(look.accent)
+  const accentDark = lower(look.accentDark)
   const templateAccent = lower(template?.accent)
   const from = lookSources?.accent?.from
   const noLogo = from === ACCENT_NO_LOGO
-  if (templateAccent && [lower(look.accent), lower(look.accentDark)].includes(templateAccent) && !noLogo)
+  // A logo whose own colour is the template's accent wears it as the business's colour, recorded as such.
+  const ownColour = from === ACCENT_FROM_LOGO && lookSources?.accent?.sameAsTemplate === true
+  if (templateAccent && [accent, accentDark].includes(templateAccent) && !noLogo && !ownColour)
     add(
       'template_accent',
       'look.accent',
-      `the accent is the template's own ${templateAccent}, and the business has a logo`
+      `the accent is the template's own ${templateAccent}, not the logo's`
     )
-  if (isNeutral(lower(look.accent)) || isNeutral(lower(look.accentDark))) {
-    const pair = lower(look.accent) === NO_HUE_ACCENT.light && lower(look.accentDark) === NO_HUE_ACCENT.dark
+  const keptNoLogo = noLogo && accent === templateAccent && !accentDark
+  if ((isNeutral(accent) || isNeutral(accentDark)) && !keptNoLogo) {
+    const pair = NO_HUE_PAIRS.some(([a, d]) => a === accent && d === accentDark)
     if (from !== ACCENT_LOGO_WITHOUT_HUE || !pair)
       add(
         'neutral_accent',
@@ -46,17 +70,21 @@ export function lookProblemsOf({ plan, template, lookSources }) {
       )
   }
   const logoNames = [lower(template?.name), lower(template?.slug)].filter(Boolean)
-  if (
-    look.logo?.kind === 'own' &&
-    (lookSources?.logo?.from === 'template' || logoNames.includes(lower(look.logo.source)))
-  )
+  const logoFrom = lookSources?.logo?.from
+  if (look.logo?.kind === 'own' && (logoFrom === 'template' || logoNames.includes(lower(look.logo.source))))
     add('template_logo', 'look.logo', "the logo is the template's own")
+  else if (logoFrom && (look.logo?.kind === 'text') !== (logoFrom === LOGO_MADE))
+    add('template_logo', 'look.logo', `a ${look.logo?.kind} logo cannot come from ${logoFrom}`)
   list(plan?.assumptions).forEach((assumption, i) => {
     const said = String(assumption?.said ?? '')
-    const named =
-      (templateAccent && said.toLowerCase().includes(templateAccent)) || TEMPLATE_LOOK_WORDS.test(said)
-    if (named && !noLogo)
-      add('template_look_said', `assumptions[${i}]`, "an assumption line names the template's colour or logo")
+    const namesColour =
+      (templateAccent && said.toLowerCase().includes(templateAccent)) || COLOUR_WORDS.test(said)
+    if (LOGO_WORDS.test(said) || (namesColour && !noLogo))
+      add(
+        'template_look_said',
+        `assumptions[${assumption?.id ?? i}]`,
+        "a line names the template's colour or logo: say where the business's own look came from"
+      )
   })
   return problems
 }

@@ -1,17 +1,104 @@
-// The brand step before the site exists (ticket #616): the step chain's OWN brand step, run outside a build. It is the
-// locked brand bench (`brand-step/`, prompt v10) exactly as a build runs it (`run --kit <ref> --brief-revision <id>`):
-// it reads the stored research brief of a research revision and the template kit, never a site, so nothing here
-// replaces or re-decides it. This adapter only gives the step chain's `kit` and `brand` steps (`createStepChainSteps`)
-// a context of their own, reads the brand file the run wrote, and hands it to `runBrandBeforeSite` (rerun once, then
-// stop; one record line per attempt), keeping the record with the step's files like a build does (`dispose`).
+// The brand step before the site exists (ticket #616): the step chain's OWN kit and brand steps, run outside a build.
+// The brand step is the locked brand bench (`brand-step/`, prompt v10) exactly as a build runs it (`run --kit <ref>
+// --brief-revision <id>`): it reads the stored research brief of a research revision and the template kit, never a
+// site, so nothing here replaces or re-decides it. This adapter gives the two steps (`createStepChainSteps`) a context
+// of their own, reads the brand file the run wrote as the look record (`brandLookOf`), and keeps the record with the
+// step's files like a build does (`dispose`).
+//
+// The attempts are the engine's (`step-chain.js`): at most `STEP_CHAIN_ATTEMPTS` per step, no rerun of an error marked
+// `noRerun` or of an attempt under a stopped signal, and record lines of the engine's shape, written with the engine's
+// own record helpers (`step-chain-record.js`). The engine's `attempt` itself is a closure inside
+// `createStepChainEngine`, bound to a whole build run (its stop, halt, progress snapshots and the parallel plan branch),
+// and is not exported: `attemptStep` below mirrors it for a run of two steps, and a test compares its lines with lines
+// the engine itself writes.
 //
 // The bench spends three model doors, all the bench's own and unchanged: the brand agent (`brandAgent`: tool calls and
 // vision, several turns per run), the brand reviewer (`brandReviewer`: vision, one call per look it judges) and the
 // picture door for drawn icons (`seedImage`, one call per drawing attempt, only when an icon is drawn).
 import { readFile } from 'node:fs/promises'
-import { runBrandBeforeSite } from 'website-opportunities/domain/brand-before-site-run.mjs'
+import { BrandStepError, brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
+import { STEP_CHAIN_ATTEMPTS, STEP_CHAIN_NO_OUTPUT } from './sites/brief-engines/step-chain.js'
+import {
+  detailsOf,
+  messageOf,
+  recordedInputs,
+  recordedValue,
+  spendOf
+} from './sites/brief-engines/step-chain-record.js'
+
+/** The locked prompt the brand bench runs (`brand-step/brand-step.system.md`), recorded with every look record. */
+export const BRAND_STEP_PROMPT = Object.freeze({ file: 'brand-step.system.md', version: 10 })
 
 let sequence = 0
+
+/**
+ * One step, at most `STEP_CHAIN_ATTEMPTS` times, one record line per attempt, as the engine's `attempt` does.
+ * @returns {Promise<{value: any} | {stop: object}>}
+ */
+async function attemptStep(run, step, inputs, call) {
+  for (let n = 1; ; n += 1) {
+    const start = run.now()
+    try {
+      // A run already stopped starts no step: the attempt is recorded as stopped.
+      if (run.signal.aborted) throw run.signal.reason ?? new Error('the brand step stopped')
+      const answer = await call(structuredClone(inputs), n)
+      if (answer?.value === undefined || answer?.value === null)
+        throw Object.assign(new Error(`the ${step} step answered no value`), {
+          code: STEP_CHAIN_NO_OUTPUT,
+          usd: answer?.usd,
+          knownUsd: answer?.knownUsd
+        })
+      run.record.push({
+        step,
+        attempt: n,
+        startMs: start - run.t0,
+        endMs: run.now() - run.t0,
+        ...spendOf(answer),
+        outcome: 'done',
+        inputs: recordedInputs(inputs),
+        output: recordedValue(answer.value)
+      })
+      return { value: answer.value }
+    } catch (error) {
+      const stopped = run.signal.aborted
+      const last = stopped || error?.noRerun === true || n >= STEP_CHAIN_ATTEMPTS
+      const line = {
+        step,
+        attempt: n,
+        startMs: start - run.t0,
+        endMs: run.now() - run.t0,
+        ...spendOf(error),
+        outcome: stopped ? 'stopped' : last ? 'failed' : 'failed, re-running',
+        ...(typeof error?.code === 'string' ? { code: error.code } : {}),
+        error: messageOf(error),
+        ...detailsOf(error),
+        inputs: recordedInputs(inputs),
+        output: recordedValue(error?.value ?? null)
+      }
+      run.record.push(line)
+      if (last) {
+        const { code, error: said, details, inputs: given, output } = line
+        return {
+          stop: {
+            step,
+            attempts: n,
+            ...(code ? { code } : {}),
+            error: said,
+            ...(details !== undefined ? { details } : {}),
+            inputs: given,
+            output
+          }
+        }
+      }
+    }
+  }
+}
+
+/** The spend of the record: unknown (`null`, with the known part) when any line's spend is unknown. */
+function spendOfRecord(record) {
+  const known = record.reduce((sum, l) => sum + (Number.isFinite(l.usd) ? l.usd : Number(l.knownUsd ?? 0)), 0)
+  return record.every((l) => Number.isFinite(l.usd)) ? { usd: known } : { usd: null, knownUsd: known }
+}
 
 /**
  * @param {{steps: {kit: Function, brand: Function, dispose: Function}, briefOf: (revisionId: string) =>
@@ -19,7 +106,8 @@ let sequence = 0
  *   chain's steps (`createStepChainSteps`); `briefOf`: the stored research brief of a revision (for example
  *   `briefOfRevision` of `brand-step/brand-control.js`)
  * @returns {(input: {revisionId: string, kitRef: string, siteLanguage?: string, signal?: AbortSignal}) =>
- *   Promise<{record: object, records: object[], usd: number, prompt: object, runId: string}>}
+ *   Promise<{record: object, records: object[], usd: number | null, knownUsd?: number, prompt: object, runId: string}>}
+ * @throws {BrandStepError} `brand_step_failed` (`noRerun`: its attempts are spent) with the record and the stop report
  */
 export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson }) {
   const read = readJson ?? (async (file) => JSON.parse(await readFile(file, 'utf8')))
@@ -41,27 +129,35 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
       normalized: siteLanguage ? { languages: [siteLanguage] } : {},
       signal: halt
     }
-    const inputs = { revisionId, kit: kitRef, ...(siteLanguage ? { siteLanguage } : {}) }
-    let records = []
+    const run = { now, t0: now(), signal: halt, record: [] }
+    const how = (attempt) => ({ signal: halt, attempt })
     try {
-      const kit = (await steps.kit(ctx)).value
-      const out = await runBrandBeforeSite({
-        brief,
-        kit,
-        inputs,
-        now,
-        run: async ({ attempt }) => {
-          const ran = await steps.brand(ctx, { kit }, { signal: halt, attempt })
-          return { brandFile: await read(ran.value.file), usd: ran.usd, file: ran.value.file }
-        }
-      })
-      records = out.records
-      return { ...out, runId }
-    } catch (error) {
-      records = error?.details?.records ?? records
-      throw error
+      const kit = await attemptStep(run, 'kit', {}, (inputs, n) => steps.kit(ctx, inputs, how(n)))
+      const brand = kit.stop
+        ? kit
+        : await attemptStep(run, 'brand', { kit: kit.value }, async (inputs, n) => {
+            const ran = await steps.brand(ctx, inputs, how(n))
+            const file = ran?.value?.file
+            if (!file) return ran
+            // Reading the file is part of the attempt: a failure keeps the spend of the run that wrote it.
+            try {
+              const record = brandLookOf({ brandFile: await read(file), brief, kit: kit.value })
+              return { ...ran, value: { file, record } }
+            } catch (error) {
+              throw Object.assign(error, { usd: ran.usd, knownUsd: ran.knownUsd, value: { file } })
+            }
+          })
+      if (brand.stop)
+        throw new BrandStepError(
+          'brand_step_failed',
+          `the ${brand.stop.step} step stopped: ${brand.stop.error}`,
+          { records: run.record, stop: brand.stop },
+          { noRerun: true }
+        )
+      const record = brand.value.record
+      return { record, records: run.record, ...spendOfRecord(run.record), prompt: BRAND_STEP_PROMPT, runId }
     } finally {
-      await steps.dispose({ runId, chain: records })
+      await steps.dispose({ runId, chain: run.record })
     }
   }
 }
