@@ -1,0 +1,43 @@
+{
+  "name": "@tracy/dsh-build-chat",
+  "version": "0.1.0",
+  "description": "The build chat's own cards: the template choice, the build task list with its timer, and the notice of a build that could not finish",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "scripts": {
+    "build": "node scripts/build-client.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ],
+      "platform": "web"
+    }
+  },
+  "devDependencies": {
+    "@deepseek-ai/dsh-client-ui-primitives": "workspace:*",
+    "@types/react": "^19.2.0",
+    "esbuild": "^0.25.0",
+    "react": "^19.2.0",
+    "typescript": "^5.9.0"
+  },
+  "dependencies": {
+    "@tracy/core": "workspace:^"
+  },
+  "license": "MIT"
+}

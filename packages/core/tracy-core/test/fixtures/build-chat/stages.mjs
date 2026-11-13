@@ -67,6 +67,50 @@ export const RESEARCH = {
   ]
 }
 
+/** A placeholder page picture (an inline drawing, no request): a nav bar, a banner and three tiles. */
+const PICTURE = `data:image/svg+xml,${encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="100" viewBox="0 0 160 100"><rect width="160" height="100" fill="#e6e6e6"/>' +
+    '<rect x="8" y="8" width="144" height="6" rx="2" fill="#c8c8c8"/><rect x="8" y="20" width="144" height="46" rx="3" fill="#b4b4b4"/>' +
+    '<rect x="8" y="72" width="44" height="20" rx="2" fill="#c8c8c8"/><rect x="58" y="72" width="44" height="20" rx="2" fill="#c8c8c8"/>' +
+    '<rect x="108" y="72" width="44" height="20" rx="2" fill="#c8c8c8"/></svg>'
+)}`
+
+/**
+ * The templates the build session weighed for the business (the mock's template card). Not a Contract B document:
+ * the session lists the released AI quickstarts and says which fit. Only JA Boxing has a released AI quickstart this
+ * round; the other two fit the trade but are not ready, so the card must never show them.
+ */
+export const TEMPLATES = [
+  {
+    slug: 'ja-boxing',
+    name: 'JA Boxing',
+    version: '1.0.0',
+    picture: PICTURE,
+    reason: 'Built for sports clubs: classes, coaches and a booking button up front.',
+    quickstart: 'released',
+    fits: true,
+    recommended: true
+  },
+  {
+    slug: 'ja-kinetic',
+    name: 'JA Kinetic',
+    version: '1.0.0',
+    picture: PICTURE,
+    reason: 'Strong for fitness timetables; less room for coach profiles.',
+    quickstart: 'none',
+    fits: true
+  },
+  {
+    slug: 'ja-impact',
+    name: 'JA Impact',
+    version: '1.0.0',
+    picture: PICTURE,
+    reason: 'Clean club layout; no reviews section, so reviews move to Home.',
+    quickstart: 'none',
+    fits: true
+  }
+]
+
 /**
  * `take` names what of the scenario has arrived: `questions` only (before a plan exists), or the plan with the
  * first `edits` plan edits and the first `runs` runs; `events` cuts the last run to its first events, with no

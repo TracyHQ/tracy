@@ -52,3 +52,53 @@ export declare function answerOf(
 ): BuildAnswer | null
 // biome-ignore lint/suspicious/noExplicitAny: Contract B documents
 export declare function replyOf(questions: any[], answers: any[], callId?: string): ReplyData
+
+export interface TemplateOption {
+  slug: string
+  name: string
+  version: string
+  picture: string
+  reason: string
+  quickstart: string
+  fits: boolean
+  recommended?: boolean
+}
+export interface TemplateChoice {
+  options: TemplateOption[]
+  chosen: string | null
+  none: boolean
+}
+export declare function templateChoiceOf(templates: TemplateOption[] | undefined): TemplateChoice
+export declare function templateOfChoice(option: TemplateOption): {
+  slug: string
+  name: string
+  version: string
+}
+
+export type ProgressState = 'done' | 'running' | 'pending' | 'failed'
+export interface ProgressItem {
+  id: string
+  label: string
+  state: ProgressState
+  note: null | 'failed' | 'failed-twice' | 'not-started'
+}
+export interface Progress {
+  kind: 'build' | 'partial'
+  items: ProgressItem[]
+  counts: { done: number; running: number; pending: number; failed: number }
+  elapsedSeconds: number
+  running: boolean
+  result: null | 'done' | 'stopped'
+}
+export interface Stopped {
+  step: string
+  twice: boolean
+  writtenPages: number
+  siteUnchanged: boolean
+  teamNotified: boolean
+}
+// biome-ignore lint/suspicious/noExplicitAny: a Contract B run
+export declare function progressOf(run: { events?: any[]; outcome?: any }): Progress
+// biome-ignore lint/suspicious/noExplicitAny: a Contract B outcome
+export declare function stoppedOf(outcome: any): Stopped | null
+export declare function clockOf(seconds: number): string

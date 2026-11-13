@@ -1063,6 +1063,28 @@ importers:
         specifier: ^5.9.0
         version: 5.9.3
 
+  packages/ui/tracy-build-chat:
+    dependencies:
+      '@tracy/core':
+        specifier: workspace:^
+        version: link:../../core/tracy-core
+    devDependencies:
+      '@deepseek-ai/dsh-client-ui-primitives':
+        specifier: workspace:*
+        version: link:../../../vendor/tracy/deepseek-harness/packages/client/ui-primitives
+      '@types/react':
+        specifier: ^19.2.0
+        version: 19.2.18
+      esbuild:
+        specifier: ^0.25.0
+        version: 0.25.12
+      react:
+        specifier: ^19.2.0
+        version: 19.2.8
+      typescript:
+        specifier: ^5.9.0
+        version: 5.9.3
+
   packages/ui/tracy-chat-input:
     dependencies:
       '@tracy/ui':

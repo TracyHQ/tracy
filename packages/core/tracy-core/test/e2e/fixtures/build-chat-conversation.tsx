@@ -14,6 +14,13 @@ import { createQuestionDraftStore } from '../../../../../../vendor/tracy/deepsee
 import { QuestionComposer } from '../../../../../../vendor/tracy/deepseek-harness/packages/client/ui-user-questions/src/client/QuestionComposer.tsx'
 import { QuestionReplyBubble } from '../../../../../../vendor/tracy/deepseek-harness/packages/client/ui-user-questions/src/client/QuestionReplyView.tsx'
 import { en as questionEn } from '../../../../../../vendor/tracy/deepseek-harness/packages/client/ui-user-questions/src/client/locales.ts'
+import {
+  BuildProgress,
+  BuildStopped,
+  english,
+  saveTemplateChoice,
+  TemplateCard
+} from '../../../../../ui/tracy-build-chat/src/client/index.tsx'
 import { answerOf, askRequestOf, replyOf, researchRowOf } from '../../../src/build-chat/index.mjs'
 
 // biome-ignore lint/suspicious/noExplicitAny: test stub of the dsh runtime kit
@@ -26,6 +33,13 @@ const t = ((key: string, vars?: Record<string, unknown>) =>
 
 const SID = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
 const sent: unknown[] = []
+const requests: { method: string; url: string; body: unknown }[] = []
+
+/** tracy-web's build draft door as the page sees it: records each request and answers with a draft. */
+const draftDoor = (async (url: string, init: RequestInit) => {
+  requests.push({ method: String(init.method), url, body: JSON.parse(String(init.body)) })
+  return new Response(JSON.stringify({ draft: { id: 'draft-1' } }), { status: 200 })
+}) as Any
 
 /** The research line: dsh's tool row, its open state owned here as the chat owns it. */
 function ResearchLine({ research }: { research: Any }) {
@@ -108,17 +122,30 @@ function Chat({ stage }: { stage: Any }) {
       {asked && answers.length > 0 && (
         <QuestionReplyBubble data={replyOf(stage.questions, answers) as Any} t={t} />
       )}
+      {stage.templates && (
+        <TemplateCard
+          templates={stage.templates}
+          chosen={stage.chosen}
+          t={english}
+          onChoose={(template) => saveTemplateChoice(template, draftDoor)}
+        />
+      )}
+      {stage.run?.outcome && <BuildStopped outcome={stage.run.outcome} t={english} />}
+      {stage.run && <BuildProgress run={stage.run} t={english} />}
     </main>
   )
 }
 
 let root: ReturnType<typeof createRoot> | null = null
 ;(window as Any).probe = {
+  view: null as Any,
   mount(stage: Any) {
+    ;(window as Any).probe.view = stage
     root?.unmount()
     sent.length = 0
+    requests.length = 0
     root = createRoot(document.getElementById('root') as HTMLElement)
     root.render(<Chat stage={stage} />)
   },
-  get: () => ({ sent: [...sent] })
+  get: () => ({ sent: [...sent], requests: [...requests] })
 }

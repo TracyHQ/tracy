@@ -1,0 +1,2 @@
+- **Build chat progress: a task list in plain words with a timer, ending with the write step, and a plain notice when a build could not finish that keeps the work and shows no fault detail** — Tracy team · #608 · `feat/ai-quickstart-575` · 2026-11-13
+  **Affects:** `@tracy/dsh-build-chat` gains `BuildProgress` and `BuildStopped` (not loaded by any bundle until #609). `@tracy/core/build-chat` gains `progressOf`, `stoppedOf` and `clockOf`, pure functions of Contract B progress and outcome. New strings in namespace `tracy-build-chat` (English only; translations follow in #613).

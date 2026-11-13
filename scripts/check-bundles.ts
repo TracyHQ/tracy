@@ -35,6 +35,8 @@ const BUNDLED = [
   // and committed `lib/client.js` model as tracy-locale-vi.
   'packages/locale/tracy-locales',
   'packages/ui/tracy-chat-input',
+  // Added 13/11/2026 with the package (#605, #608): the build chat cards. No bundle names it yet (#609 wires it).
+  'packages/ui/tracy-build-chat',
   // Added 30/08/2026. This package has had `scripts/build-client.mjs` and a committed `lib/client.js`
   // since it was created, but was never named here — so the Settings page bundle could go stale with no
   // gate knowing, exactly the failure this gate exists to stop.

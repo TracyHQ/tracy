@@ -15,7 +15,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
-import { RESEARCH, SCENARIOS, STAGES } from '../fixtures/build-chat/stages.mjs'
+import { RESEARCH, SCENARIOS, STAGES, stageDocuments, TEMPLATES } from '../fixtures/build-chat/stages.mjs'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(here, '../../../../..')
@@ -36,11 +36,18 @@ const THEMES = ['light', 'dark']
 function stageView(stage) {
   const scenario = SCENARIOS[stage.from]
   const asked = stage.take.questions === true || stage.take.plan === true
+  const { scenario: cut } = stageDocuments(stage)
+  const runs = cut?.runs ?? []
   return {
     name: stage.name,
     research: RESEARCH,
     questions: asked ? scenario.questions : [],
-    answers: stage.take.plan === true ? scenario.answers : []
+    answers: stage.take.plan === true ? scenario.answers : [],
+    // The template card from the template stage on; chosen once the plan has been edited or built.
+    templates: stage.take.plan === true ? TEMPLATES : null,
+    chosen:
+      stage.take.plan === true && stage.name !== 'template-choice' ? scenario.plan.look.template.slug : null,
+    run: runs.at(-1) ?? null
   }
 }
 
@@ -67,6 +74,28 @@ async function answersKept(chat) {
   const text = await chat.text()
   assert.match(text, /Book a court, 04 000 0000/)
   assert.equal(await chat.button('Submit').count(), 0, 'no question is asked again')
+}
+
+/** The task list: its rows in plain words, never a site check, never code. */
+async function taskList(chat) {
+  const list = chat.page.getByRole('region', { name: 'Building your site' })
+  const rows = await list.locator('li').allInnerTexts()
+  assert.equal(rows.length, 9)
+  assert.match(rows.at(-1), /^Put your pages on the site/, 'the write step is the last task')
+  assert.ok(
+    rows.every((r) => !/check|verify/i.test(r)),
+    'no site check step'
+  )
+  assert.equal(await chat.page.locator('#root code, #root pre').count(), 0, 'no code is shown')
+  return { list, rows, clock: () => list.getByRole('timer', { name: 'Elapsed time' }).innerText() }
+}
+
+/** The template card once chosen: JA Boxing only, locked. */
+async function templateChosen(chat) {
+  const text = await chat.text()
+  assert.match(text, /Chosen: JA Boxing/)
+  assert.doesNotMatch(text, /JA Kinetic|JA Impact|Coming soon/)
+  assert.equal(await chat.button('Use JA Boxing').count(), 0)
 }
 
 const CHECKS = {
@@ -105,13 +134,97 @@ const CHECKS = {
     await chat.page.waitForFunction(() => /Book a court, 04 000 0001/.test(document.body.innerText))
     assert.equal(await chat.button('Submit').count(), 0, 'the card is gone, the answer stays')
   },
-  'template-choice': answersKept,
-  'plan-edit-undo': answersKept,
-  building: answersKept,
-  done: answersKept,
+  'template-choice': async (chat) => {
+    await answersKept(chat)
+    const group = chat.page.getByRole('group', { name: 'Designs for your site' })
+    const cards = group.getByRole('button')
+    assert.equal(await cards.count(), 1, 'only the released, fitting template')
+    const card = await cards.first().innerText()
+    assert.match(card, /JA Boxing/)
+    assert.match(card, /Recommended/)
+    assert.match(card, /Built for sports clubs: classes, coaches and a booking button up front\./)
+    assert.equal(await group.locator('img').count(), 1, 'the card has its picture')
+    await group.locator('img').evaluate((img) => img.decode())
+    assert.ok((await group.locator('img').evaluate((img) => img.naturalWidth)) > 0, 'the picture loads')
+    assert.doesNotMatch(await chat.text(), /JA Kinetic|JA Impact|Coming soon/)
+    assert.match(await chat.text(), /You can change the design later\./)
+    // Keyboard: the choose action is reached with Tab and pressed with Enter.
+    const use = chat.button('Use JA Boxing')
+    await use.focus()
+    await chat.page.keyboard.press('Enter')
+    await chat.page.waitForFunction(() => /Chosen: JA Boxing/.test(document.body.innerText))
+    assert.deepEqual(await chat.page.evaluate(() => window.probe.get().requests), [
+      {
+        method: 'PUT',
+        url: '/api/build-draft/template',
+        body: { template: { slug: 'ja-boxing', name: 'JA Boxing', version: '1.0.0' } }
+      }
+    ])
+    // Nothing fits: the owner is told, and pointed to Add site.
+    await chat.page.evaluate((view) => window.probe.mount(view), {
+      ...(await chat.page.evaluate(() => window.probe.view)),
+      templates: []
+    })
+    await chat.page.waitForFunction(() =>
+      /No ready design fits your business yet\./.test(document.body.innerText)
+    )
+    const addSite = chat.page.getByRole('link', { name: 'Open Add site' })
+    assert.equal(await addSite.getAttribute('href'), '?tab=tracy%3Aadd-site')
+    assert.equal(await chat.page.getByRole('group', { name: 'Designs for your site' }).count(), 0)
+  },
+  'plan-edit-undo': async (chat) => {
+    await answersKept(chat)
+    await templateChosen(chat)
+  },
+  building: async (chat) => {
+    await answersKept(chat)
+    const { rows, clock } = await taskList(chat)
+    const text = await chat.text()
+    assert.match(text, /1 completed\u2002·\u20025 in progress\u2002·\u20023 pending/)
+    assert.doesNotMatch(text, /Your site is not finished yet|Failed/)
+    assert.ok(rows.length === 9)
+    const first = await clock()
+    assert.match(first, /^0:3[89]$/)
+    await chat.page.waitForFunction(
+      (before) => document.querySelector('[role="timer"]')?.textContent !== before,
+      first,
+      { timeout: 2500 }
+    )
+  },
+  done: async (chat) => {
+    await answersKept(chat)
+    const { clock } = await taskList(chat)
+    assert.match(await chat.text(), /9 completed/)
+    assert.equal(await clock(), '7:28')
+    await chat.page.waitForTimeout(1100)
+    assert.equal(await clock(), '7:28', 'the clock stops on the outcome')
+    assert.doesNotMatch(await chat.text(), /not finished|Failed/)
+    assert.doesNotMatch(await chat.page.locator('.tv-bc-todo-progress').innerText(), /in progress|pending/)
+  },
   'could-not-finish': async (chat) => {
     await researchCollapsed(chat)
     assert.equal(await chat.button('Submit').count(), 0)
+    const text = await chat.text()
+    assert.match(text, /Your site is not finished yet/)
+    assert.match(
+      text,
+      /The step "Draw 2 pictures for empty spots" failed twice, so I stopped instead of showing you a half built site\./
+    )
+    assert.match(text, /Kept: your plan, your answers and the 5 written pages\./)
+    assert.match(text, /Your current site is unchanged\./)
+    assert.match(text, /The Tracy team has been notified and will reply in this chat\./)
+    assert.doesNotMatch(
+      text,
+      /Picture generation failed on both attempts|generated-pictures|Your site is ready/
+    )
+    const { rows, clock } = await taskList(chat)
+    assert.match(text, /7 completed\u2002·\u20021 failed/)
+    assert.match(rows[7], /Draw 2 pictures for empty spots\s*Failed twice/)
+    assert.match(rows[8], /Put your pages on the site\s*Not started/)
+    assert.equal(await clock(), '6:12')
+    // Answers and plan are kept: the answers stay in the conversation, the chosen template stays chosen.
+    assert.match(text, /Book a court, 04 000 0000/)
+    await templateChosen(chat)
   },
   rebuild: answersKept
 }
