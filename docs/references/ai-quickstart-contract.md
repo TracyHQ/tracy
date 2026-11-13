@@ -3,6 +3,8 @@ description: Format of the three declarations an AI quickstart carries (block st
 sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-contract.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping.mjs
+  - packages/wo/website-opportunities/domain/ai-quickstart-field-keys.mjs
+  - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
   - packages/wo/website-opportunities/domain/place-content-roles.mjs
   - scripts/ai-quickstart/check.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-library.mjs
@@ -89,7 +91,7 @@ The snippets below are excerpts of it.
 
 Keys a draft records for the mapping file and for a reviewer: `slot` on a field (its stored place, a content map
 key), `slots` on an item field (its stored place per item, in item order), `derived` on an item field that has no
-stored place (what it is derived from: `"the item page address"`), `designFrom` on a design field (the config line it
+stored place (what it is derived from, one of the forms in [Field keys beyond the type](#field-keys-beyond-the-type)), `designFrom` on a design field (the config line it
 is), `limitFrom` (where a limit came from), `itemsFrom` (`{min, max}`: where each item count came from). The check
 reads them without the mapping file:
 
@@ -130,6 +132,77 @@ A field whose kind is `editorial.design_element` is a design value and must be t
   social links of a footer or a trainer card). The build writes that network's class in the template's icon font, the
   font the template ships; with no network known for the link, the icon is hidden with its link. The item content rule
   above does not apply to it.
+- `for: [<field name>, ...]` names the text fields the icon illustrates, in the same scope (the block, one item, or one
+  row of a child list). An icon at block level needs `for` or `iconOf`: a block level icon naming nothing has no
+  content to be chosen from, and the build hides it (`icon_item_undeclared`). Inside an item or a row, the icon
+  illustrates that item's text fields, so `for` is optional there; when given, every name must be a text field of the
+  same scope.
+- **Light and dark versions.** A template that keeps one icon (or one picture, such as a signature or a logo) in two
+  files declares two fields: the base field, and its other version with `variantOf: "<base field name>"`. Both carry
+  `theme`: `"dark"` is the version drawn when the page shows its dark colour scheme (a dark ground; JA Boxing's body
+  class `dark-active`, its default), `"light"` the version drawn on the light scheme (`light-active`, a white ground).
+  Verified on the running JA Boxing site by switching the scheme. The check requires: the variant names a field of the
+  same scope with the same `type`, `storage`, `frame` and `for`; both members carry a `theme`, and the two differ; a
+  `theme` on a field outside a pair is a problem.
+
+```json
+{ "name": "item-icon", "kind": "editorial.item_icon", "type": "icon", "storage": "image-file",
+  "frame": { "width": 64, "height": 64 }, "theme": "dark", "for": ["heading", "paragraph"] },
+{ "name": "item-icon-2", "kind": "editorial.item_icon", "type": "icon", "storage": "image-file",
+  "frame": { "width": 64, "height": 64 }, "theme": "light", "variantOf": "item-icon", "for": ["heading", "paragraph"] }
+```
+
+### Field keys beyond the type
+
+| Key | On | Allowed values |
+|---|---|---|
+| `storage` | icon fields only; required on a template block's icon | `"image-file"`, `"class-name"` |
+| `iconOf` | icon fields | `"network"` |
+| `for` | icon fields | text field names of the same scope |
+| `variantOf` | icon and image fields | the name of the base field of the same scope |
+| `theme` | both members of a pair, required there | `"light"`, `"dark"` |
+| `derived` | a field with no stored place | `"the item page address"`, `"the page address"`, `"the page of the row"` |
+| `keyAt` | required with `derived: "the page of the row"` | the location(s) where the row's page key is stored, see below |
+| `pageType` | optional, with `keyAt` on a block field | a `pageType` of the page recipes whose recipe places the block |
+
+Any other value of these keys is a problem; `derived` is never free text.
+
+**A row keyed to a page.** Some blocks key a stored row to a page by a stored record id (the masthead title rows of JA
+Boxing are keyed by `menuitem_config.item_id[i]`: each row is the title shown on one page). Such a list carries a link
+field `derived: "the page of the row"` whose `keyAt` gives, per parent place, one location per row, matching the rows
+of the list's other fields, each on the parent place's record. The build writes the id of the page it creates into that
+location. A block field keyed the same way (one stat row of the masthead keyed to the classes page) gives a single
+location and may name the page type it points at with `pageType`.
+
+```json
+{ "name": "page", "kind": "editorial.navigation_url", "type": "link", "derived": "the page of the row",
+  "keyAt": [[{ "entity": "module-12", "column": "params", "jsonPath": ["rows", "page", 0] },
+             { "entity": "module-12", "column": "params", "jsonPath": ["rows", "page", 1] }]] }
+```
+
+**A piece of a stored HTML value** is written `<content map key>@<xpath>`: `module-163.12@/html/body/div/a[1]/@href`
+is the first link inside the HTML that slot `module-163.12` stores. A trainer card's social links are a child list
+(`itemLists`) whose rows are the links of that one value, each row a `link` and its network icon
+(`iconOf: "network"`, `storage: "class-name"`).
+
+**A child field is stored on its parent's record.** Every stored place of a child field, and every `keyAt` location, is
+on the record of its parent place (the block's record for `lists`, the item's record for `itemLists`). A place on
+another record is a problem: the build would write a row into a record the item is not.
+
+**A place shared by several fields** is written within the smallest text limit of the fields that use it. The check
+counts such places (`N stored place(s) shared by several fields` in its output; `sharedPlacesOf` lists them with the
+limit a build uses), and a place two fields type differently (design excepted) is a problem.
+
+**Videos.** A video frame is a `link` field of kind `business.video`; no `media: "video"` key exists. JA Boxing
+declares 4 such fields with 17 stored places (6 video items of the video block, 1 lead video and 4 exercise videos of
+the class page, 6 punch videos of the learning post).
+
+**Template strings that are content.** A language or template string the template draws whose words depend on the
+business (a section heading, a button label) is a field of the block that draws it, its stored place the language
+string (`languageString-<n>.0`) and its limit measured on every page that shows it. It is one value for the whole
+site: every block drawing the string shares the place, and the shared place rule above applies. A string that is
+interface text valid on every site (a form placeholder, "Submit") stays out of the store as `unlisted` with
+`as: "kept"` and a reason.
 
 ### Child lists
 
@@ -346,6 +419,16 @@ class (`outsideStore` in the draft decisions, by content map key or by entity: a
 or a record of an entity kind the blank site step removes (`removedWithPage`). It writes nothing while one slot is
 none of these, and `draft-report.json` carries the totals per class (`summary.coverage`), which add up to the slots
 of the content map.
+
+**References to other records.** A surviving record's settings may point at another record: a menu item id, an
+`Itemid=` link, a category, article, user or tag id, a demo picture path. After the blank site step deletes that
+record, the block lists nothing, links nowhere or shows a demo picture. The draft reads the contract's
+`presentation-lock.json` and accounts for every such reference (`lib/draft-references.mjs`) as one of: a keyed field
+(its `keyAt`), a field, design field or report entry at the slot that stores it, a value of a record outside the store
+with a class, a reference to a record the blank site keeps (`target kept`), or a reference the draft decisions class
+under `references` by `<entity>:<column>:<path>`: `build-sets` (the build writes the new record's id; `owner` names the
+ticket, `#<n>`), `kept` or `not-drawn`, each with a reason. It writes nothing while one reference to a deleted record
+or a demo picture is none of these; `draft-report.json` carries `references` (totals by class and the classed list).
 
 ## Choices made where spec #576 is silent
 

@@ -35,6 +35,8 @@
    - `rewrite`: page copy or an illustration; a build may write the business's own words or photo over it.
    - `keep`: the template's own stays: `editorial.design_element`, `editorial.item_icon`, `editorial.navigation_url`.
      Amended on 13/11/2026: this does not apply to a build from an AI quickstart, where icon typed fields are filled from the icon library by the item's own content (ticket #595).
+     The fill rule is in the [AI quickstart contract](../references/ai-quickstart-contract.md#icon-fields): a library
+     icon chosen for the item's content, or hidden, never the demo icon.
 3. **`customize` and `fit.replace` are derived from the role** in a version 3 map. They stay on the slot so every
    reader keeps working, but the contract check refuses a slot where they disagree with the role:
    `customize: "keep"` exactly when the role decides `keep`; a picture's `fit.replace` is `keep` for a kept role,
