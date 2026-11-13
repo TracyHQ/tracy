@@ -1170,7 +1170,7 @@ export function buildApp(deps) {
     app.route('/', onboardingRoutes({ config: deps.config, pool: deps.pool, now: deps.now }))
     app.route('/', seenHintRoutes({ config: deps.config, pool: deps.pool }))
     // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists.
-    app.route('/', buildDraftRoutes({ config: deps.config, pool: deps.pool }))
+    app.route('/', buildDraftRoutes({ config: deps.config, pool: deps.pool, ensureAccount }))
     // The first-run Welcome popup's animated scenes (`welcome/route.js`), before the dsh catch-all.
     app.route('/', welcomeSceneRoutes({ config: deps.config }))
   }

@@ -5,7 +5,6 @@
  * as `seen-hints/route.js` does. The app's global csrfGuard enforces the same-origin JSON write policy.
  */
 import { Hono } from 'hono'
-import { ensureAccount } from '../seats/store.js'
 import { json, requireViewer } from '../lib/http.js'
 import { principalOf } from '../lib/wo-principal.js'
 import {
@@ -38,8 +37,14 @@ const REFUSALS = {
   NOTHING_TO_UNDO: [409, 'There is no plan edit to undo.']
 }
 
-/** @param {{config: {sessionSecret: string}, pool: import('pg').Pool}} deps */
-export function buildDraftRoutes({ config, pool }) {
+/**
+ * @param {object} deps
+ * @param {{sessionSecret: string}} deps.config
+ * @param {import('pg').Pool} deps.pool
+ * @param {(pool: import('pg').Pool, email: string) => Promise<{id: string}>} deps.ensureAccount - the seats
+ *   domain's account upsert, injected by `app.js` (a domain directory imports only `lib/` and `db/`)
+ */
+export function buildDraftRoutes({ config, pool, ensureAccount }) {
   const app = new Hono()
   const answer = (c, result, okStatus = 200) => {
     if (!result.error) return json(c, { draft: result.draft }, okStatus)
