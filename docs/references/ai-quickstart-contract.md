@@ -388,24 +388,46 @@ build creates its own record, and nothing on it is emptied. `entity: "page"` nam
   drawn on a light background (the dark mark), `logoDark` the one drawn on a dark background. A fact the template never
   shows is left out. `notFacts` (`[{fact, why}]`) names each business fact or demo value the template shows nowhere, or
   shows only through another fact's place, with the reason; together with `facts` it accounts for every demo fact value.
+  The check holds the fan out: every place of a store field written as `{fact}` is one of that fact's places, and a
+  `globalConfiguration` entity has its `sitename` and `fromname` (Joomla's site name and mail sender name) among the
+  places of `name` (`GLOBAL_CONFIGURATION_FACTS`). A place outside the store is caught when it is the last place
+  naming its entity, or when the draft report classes it `fact`.
 - **`seo`**: the title, description and share image of every page the build creates. Either the single form above
   (one location each, every page type), or per page type: `shareImageFrame` `{"width": 1200, "height": 630}`, records
-  of the places (`"menuItem": {"title": [loc], "description": [loc, loc], "shareImage": [loc]}`, `"article": {...}`),
-  and `pageTypes` mapping every page type of the recipes to the name of a record or to its own record; a field may be
-  `{"derived": "<what the template draws it from>"}` instead of locations. The share image is always 1200 by 630
-  (`SHARE_IMAGE_FRAME`).
-- **`library`**: `{"position": "<position>", "pageTypes"?: {"<page type>": "<position>"}, "why"}`, the template position
-  the Tracy library blocks are published in, and the page types whose layout lacks it with the position they use
-  instead. Measured on the running template, never read off a layout file alone.
+  of the places (`"menuItem": {"title": [loc], "description": [loc, loc], "shareImage": [loc], "ogTitle": {...}}`,
+  `"article": {...}`), and `pageTypes` mapping every page type of the recipes to the name of a record or to its own
+  record; a field may be `{"derived": "<what the template draws it from>"}` instead of locations. The share image is
+  always 1200 by 630 (`SHARE_IMAGE_FRAME`). Both forms declare:
+  - `titleLimit` and `descriptionLimit`: the longest title and description the build writes, in characters, positive
+    whole numbers, with `limitsWhy`. They are search result display limits, not template measurements: 60 for a title
+    (smaller only when the template prints the browser title somewhere visible with a tighter measured limit, said in
+    `limitsWhy`), 160 for a description. JA Boxing: 60 and 160 (it prints the browser title on no page).
+  - per page type, `ogTitle`: `{"sameAs": "title", "locations": [loc]}` (or `"derived"` in place of `locations`), the
+    share title (og:title). It is the SEO title, the browser title that carries the business name, never the short
+    heading the page shows: the build writes the page's `title` value again at those locations, within `titleLimit`.
+    On T4 an empty og_title falls back to the article title on an article page and to the contact's name on the
+    contact page, so JA Boxing writes it on every page (a menu item's `params.og_title`, an article's
+    `attribs.og_title`).
+- **`library`**: `{"position": "<position>", "pageTypes"?: {"<page type>": "<position>"}, "containerClass": "<class>",
+  "why"}`, the template position the Tracy library blocks are published in, the page types whose layout lacks it with
+  the position they use instead, and the class of the template's own page width container a library block's content
+  sits in (the write step passes it to the block's render as `containerClass`). Measured on the running template, never
+  read off a layout file alone. JA Boxing: `container` (its positions wrap modules in `t4-section-inner container`, and
+  a probe block starts and ends where the template's own headings do at 390, 768 and 1440 px).
 - **`buildSets`**: every reference of a kept record to a record the build creates (the draft report classes them
   `build-sets`), by `<entity>:<column>:<path>`: `{entity, column, jsonPath, sets, pageType, why}`, the place the build
   writes the new record's id into (a list's category).
 - **`overrides`**: `settings` (a location and the value written in the blank site: site name, body background, a
   template global setting) and `language` (a language key and its value source: `value`, the string written; `filledBy`
   `[{block, field}]` with the smallest `limit` of those fields, a template string a field fills, written once; or
-  `keep` with the reason, a string no business word reaches).
-- **`notEmptied`**: `[{entity, why}]`, the records the blank site keeps as the demo has them, though they hold demo
-  words: a trashed module no block of the store is, a module no page prints.
+  `keep` with the reason, a string no business word reaches). A language string a store field fills must have its
+  entry with its `slot`, `filledBy` exactly the fields that fill it, and a `limit` no larger than the smallest of their
+  limits.
+- **`notEmptied`**: `[{entity, slot? | column?, why}]`, what the blank site keeps as the demo has them, though it holds
+  demo words: a whole record (a trashed module no block of the store is), one slot of it (a module title no page
+  prints), or one column outside the content map (`{"entity": "module-180", "column": "title"}`). Every place the
+  draft report lists outside the store or unlisted (other than `kept`, whose reason is in the report) on a module or
+  custom field row the file writes nowhere must be named here, and a declared entity no location names must be too.
 - **`inlineMarkup`**: `{class, count, owners}`, the fields whose stored value carries inline markup and the ticket that
   decides how such a value is written.
 - **`networkIconClasses`**: the template's table from a social network to the class of its own icon font,

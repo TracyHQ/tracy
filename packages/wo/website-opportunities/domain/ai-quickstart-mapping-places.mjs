@@ -5,17 +5,18 @@
 //     creates because the blank site deletes the demo one);
 //   - one writer per stored place: a place written by two entries is a problem, unless every entry is a field of a
 //     place the block store declares shared (the build writes it once, within the smallest limit);
-//   - every page type of the recipes has its title, description and share image (`seo.pageTypes`), the share image
-//     in the 1200x630 frame;
-//   - the library position names a template position (`library.position`, with per page type exceptions);
+//   - the SEO limits, the SEO fields of every page type and the library: `ai-quickstart-mapping-seo.mjs`;
+//   - no place falls out of the file unnoticed (language strings, fact places, notEmptied):
+//     `ai-quickstart-mapping-coverage.mjs`;
 //   - every build-sets reference and every unlisted `fact` place of the draft report is set by the mapping file;
 //   - a store with a network icon kept as a class name (`iconOf: "network"`, `storage: "class-name"`) has the
 //     template's table from network to icon class (`networkIconClasses`), its networks those the build recognises.
 import { locationKey, locationProblem } from './ai-quickstart-mapping-entry.mjs'
 import { scopesOf, sharedPlacesOf } from './ai-quickstart-field-keys.mjs'
 import { SOCIAL_NETWORKS } from './icon-social.mjs'
+import { mappingCoverageProblems } from './ai-quickstart-mapping-coverage.mjs'
+import { libraryProblems, seoProblems } from './ai-quickstart-mapping-seo.mjs'
 
-const SEO_FIELDS = ['title', 'description', 'shareImage']
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isName = (value) => typeof value === 'string' && value.trim() !== ''
 const isLocation = (value) => isObject(value) && locationProblem(value) === null
@@ -70,41 +71,6 @@ function oneWriterProblems(writers, blockStore, report) {
         `the stored place of ${list[0].at} has ${list.length} writers (${list.map((w) => w.writer).join(', ')}): one writer per place, unless the block store declares it shared`
       )
   }
-}
-
-function seoProblems(seo, pageRecipes, report) {
-  if (!isObject(seo) || seo.pageTypes === undefined) return
-  const frame = seo.shareImageFrame
-  if (!(isObject(frame) && frame.width === 1200 && frame.height === 630))
-    report('seo.shareImageFrame', 'the share image frame is {width: 1200, height: 630}')
-  const locs = (v) => Array.isArray(v) && v.length > 0 && v.every(isLocation)
-  const types = (Array.isArray(pageRecipes?.recipes) ? pageRecipes.recipes : []).map((r) => r?.pageType)
-  for (const type of types.filter(isName)) {
-    const at = `seo.pageTypes[${type}]`
-    const decl = seo.pageTypes?.[type]
-    const record = isName(decl) ? seo[decl] : decl
-    if (!isObject(record)) {
-      report(at, `page type "${type}" has no SEO fields: name a record of seo or declare them`)
-      continue
-    }
-    for (const name of SEO_FIELDS) {
-      const v = record[name]
-      if (!(locs(v) || (isObject(v) && isName(v.derived))))
-        report(
-          `${at}.${name}`,
-          `${name}: a list of locations, or {derived} with what the template draws it from`
-        )
-    }
-  }
-}
-
-function libraryProblems(library, pageRecipes, report) {
-  if (!isObject(library) || !isName(library.position))
-    return report('library.position', 'name the template position the Tracy library blocks are published in')
-  const types = new Set((pageRecipes?.recipes ?? []).map((r) => r?.pageType))
-  for (const [type, position] of Object.entries(library.pageTypes ?? {}))
-    if (!types.has(type) || !isName(position))
-      report(`library.pageTypes[${type}]`, 'a page type of the recipes, with the position it uses instead')
 }
 
 function draftReportProblems(mapping, writers, draftReport, report) {
@@ -170,4 +136,5 @@ export function mappingPlaceProblems(mapping, { report, blockStore, pageRecipes,
   libraryProblems(mapping.library, pageRecipes, report)
   draftReportProblems(mapping, writers, draftReport, report)
   networkIconProblems(mapping.networkIconClasses, blockStore, report)
+  mappingCoverageProblems(mapping, writers, { report, blockStore, draftReport })
 }

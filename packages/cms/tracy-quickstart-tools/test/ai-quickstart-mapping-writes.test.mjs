@@ -31,7 +31,7 @@ const SAME_KEYS = ['entity', 'column', 'jsonPath', 'nestedJson']
 function slotLocations(value, found = []) {
   if (Array.isArray(value)) for (const v of value) slotLocations(v, found)
   else if (value && typeof value === 'object') {
-    if (typeof value.slot === 'string' && typeof value.entity === 'string') found.push(value)
+    if (typeof value.slot === 'string' && typeof value.column === 'string') found.push(value)
     for (const v of Object.values(value)) slotLocations(v, found)
   }
   return found

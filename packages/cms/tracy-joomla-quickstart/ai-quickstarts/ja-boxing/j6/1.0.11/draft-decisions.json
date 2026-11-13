@@ -1305,8 +1305,8 @@
       "why": "a category title: com_content is set not to show category titles (show_category_title 0) and the menu item does not override it"
     },
     "contact-1.0": {
-      "as": "not-drawn",
-      "why": "the contact's name: the contact menu item is set not to show it (show_name 0)"
+      "as": "fact",
+      "why": "the contact's name: the contact page does not show it (show_name 0), but with Open Graph on T4 prints it as og:title and the meta title when og_title is empty; written from the name fact by the mapping file (#584)"
     },
     "module-170.0": {
       "as": "kept",

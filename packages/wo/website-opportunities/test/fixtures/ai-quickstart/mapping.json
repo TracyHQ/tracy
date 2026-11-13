@@ -9,7 +9,7 @@
     "settings": { "kind": "globalConfiguration", "identity": { "file": "configuration.php" } },
     "template-style-9": { "kind": "templateStyle", "identity": { "template": "example" } }
   },
-  "library": { "position": "content-bottom" },
+  "library": { "position": "content-bottom", "containerClass": "container" },
   "blocks": {
     "header-main": {
       "fields": {
@@ -133,7 +133,7 @@
     }
   },
   "facts": {
-    "name": [{ "entity": "settings", "column": "sitename" }],
+    "name": [{ "entity": "settings", "column": "sitename" }, { "entity": "settings", "column": "fromname" }],
     "phone": [
       { "entity": "module-11", "column": "params", "jsonPath": ["phone"] },
       { "entity": "module-14", "column": "params", "jsonPath": ["phone"] }
@@ -151,6 +151,9 @@
     "logoDark": [{ "entity": "template-style-9", "column": "params", "jsonPath": ["logo-dark"] }]
   },
   "seo": {
+    "titleLimit": 60,
+    "descriptionLimit": 160,
+    "limitsWhy": "invented: search result display limits",
     "title": { "entity": "page", "column": "title" },
     "description": { "entity": "page", "column": "metadesc" },
     "shareImage": { "entity": "page", "column": "params", "jsonPath": ["menu-meta-image"] }

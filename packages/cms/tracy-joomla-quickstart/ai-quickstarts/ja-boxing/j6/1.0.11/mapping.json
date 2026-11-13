@@ -11361,6 +11361,12 @@
         "entity": "acymConfiguration-replyto_name",
         "column": "value",
         "why": "the reply-to name of the newsletter"
+      },
+      {
+        "slot": "contact-1.0",
+        "entity": "contact-1",
+        "column": "name",
+        "why": "the contact's name: the contact page does not show it (show_name 0), but with Open Graph on T4 prints it as og:title and the meta title when the menu item's og_title is empty (checked on the running 1.0.11 site); the build creates the contact record, and its name is the business name"
       }
     ],
     "phone": [
@@ -11571,7 +11577,7 @@
     },
     {
       "fact": "newsletter mail settings",
-      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold one placeholder Gmail address, which is no business word of the demo; they are the mailbox mail is sent from and bounces go to, set by whoever configures sending, never shown on a page. The reply-to name and address subscribers read are places of the name and email facts"
+      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold one placeholder mail address. It is the technical sending mailbox (the address mail is sent from and bounces go to), set by whoever configures sending and never shown on a page; it is not a business fact. The sender name and the reply-to name and address subscribers read follow the business facts (places of name and email)"
     }
   ],
   "seo": {
@@ -11579,6 +11585,9 @@
       "width": 1200,
       "height": 630
     },
+    "titleLimit": 60,
+    "descriptionLimit": 160,
+    "limitsWhy": "Search result display limits, not template measurements: a search result shows about 60 characters of a title and about 160 of a description. JA Boxing prints the browser title on no page (the page heading is its own field), so no tighter measured limit applies. The share title (ogTitle) is the SEO title, so the title limit applies to it too.",
     "menuItem": {
       "title": [
         {
@@ -11613,7 +11622,19 @@
             "og_img"
           ]
         }
-      ]
+      ],
+      "ogTitle": {
+        "sameAs": "title",
+        "locations": [
+          {
+            "entity": "page",
+            "column": "params",
+            "jsonPath": [
+              "og_title"
+            ]
+          }
+        ]
+      }
     },
     "article": {
       "title": [
@@ -11639,7 +11660,19 @@
             "og_img"
           ]
         }
-      ]
+      ],
+      "ogTitle": {
+        "sameAs": "title",
+        "locations": [
+          {
+            "entity": "page",
+            "column": "attribs",
+            "jsonPath": [
+              "og_title"
+            ]
+          }
+        ]
+      }
     },
     "pageTypes": {
       "home": "menuItem",
@@ -11667,10 +11700,14 @@
         },
         "shareImage": {
           "derived": "the picture of the first post the page lists"
+        },
+        "ogTitle": {
+          "sameAs": "title",
+          "derived": "the person's name and role, the author page's title"
         }
       }
     },
-    "why": "Checked on the running 1.0.11 site with the T4 Open Graph setting on: a page made from a menu item prints page_title as its title, menu-meta_description as its description and og_img as og:image; an article prints article_page_title, metadesc and its own og_img (else the og_img of the menu item it is reached through). JA Boxing ships Open Graph off; the override system_opengraph turns it on."
+    "why": "Checked on the running 1.0.11 site with the T4 Open Graph setting on: a page made from a menu item prints page_title as its title, menu-meta_description as its description and og_img as og:image; an article prints article_page_title, metadesc and its own og_img (else the og_img of the menu item it is reached through). JA Boxing ships Open Graph off; the override system_opengraph turns it on. With Open Graph on, T4 prints og:title and the meta title (name=\"title\") from og_title: a menu item's params, an article's attribs (checked: a value set there is printed). Left empty, it falls back to the browser title on a category or featured page, to the article title on an article, and to the contact's name on the contact page; the build writes each page's SEO title (the browser title, which carries the business name) into ogTitle too (sameAs: title), so the share title is never the short heading of the page and no fallback is drawn."
   },
   "library": {
     "position": "section-6",
@@ -11680,7 +11717,8 @@
       "learning-post": "main-bottom-1",
       "author": "main-bottom-1"
     },
-    "why": "Measured on the running 1.0.11 site by publishing a probe block in section-6, main-bottom-1 and section-5 on every page: section-6 renders on the home layout (home, about, trainers, trainer, plans) and on the default layout (news, featured posts, authors, classes, contact, learning center), last before the footer, in the t4section chrome; an article page (detail-article layout: a post, a class, a learning post, an author page) has no section-6 and renders main-bottom-1 instead. section-5 renders on the home layout only and without a container."
+    "why": "Measured on the running 1.0.11 site by publishing a probe block in section-6, main-bottom-1 and section-5 on every page: section-6 renders on the home layout (home, about, trainers, trainer, plans) and on the default layout (news, featured posts, authors, classes, contact, learning center), last before the footer, in the t4section chrome; an article page (detail-article layout: a post, a class, a learning post, an author page) has no section-6 and renders main-bottom-1 instead. section-5 renders on the home layout only and without a container. Container class: each of these positions wraps its modules in t4-section-inner container, and the template's own modules there add section-inner > container inside it; a probe block measured at 390, 768 and 1440 px starts and ends where the template module's heading does whether its content sits in a container div or not (16/358, 40/688, 16/1408 px), so the library block keeps the template's own class, container.",
+    "containerClass": "container"
   },
   "networkIconClasses": {
     "classes": {
@@ -11982,6 +12020,41 @@
     {
       "entity": "module-164",
       "why": "the JA Google Map module (position map) is printed only when other_contact_map_modal is on, and no block of the store holds it: no build places it"
+    },
+    {
+      "entity": "module-1",
+      "slot": "module-1.0",
+      "why": "the title of the Main Menu module (showtitle 1): its position sidebar-right is in no layout of the template, so no page prints it (all 95 demo pages read on 1.0.11); template words, no business word"
+    },
+    {
+      "entity": "module-16",
+      "slot": "module-16.0",
+      "why": "the title of the Login Form module (showtitle 1): its position sidebar-right is in no layout of the template, so no page prints it (all 95 demo pages read on 1.0.11); template words, no business word"
+    },
+    {
+      "entity": "module-17",
+      "slot": "module-17.0",
+      "why": "the title of the Breadcrumbs module: set not to show it (showtitle 0), printed on no page; template words, no business word"
+    },
+    {
+      "entity": "module-156",
+      "slot": "module-156.9",
+      "why": "the hero module's title Hero (showtitle 1): the hero position prints no module title, so no page prints it (all 95 demo pages read on 1.0.11); template words, no business word"
+    },
+    {
+      "entity": "module-168",
+      "slot": "module-168.0",
+      "why": "the copyright module's title (showtitle 1): the copyright position prints no module title, so no page prints it (all 95 demo pages read on 1.0.11); template words, no business word"
+    },
+    {
+      "entity": "module-176",
+      "slot": "module-176.2",
+      "why": "the title Contact Us of the header button module (showtitle 1): the header-r position prints no module title, so no page prints it (all 95 demo pages read on 1.0.11); the button label is a field (module-176.1)"
+    },
+    {
+      "entity": "module-180",
+      "column": "title",
+      "why": "the trainer hero module's title holds a demo trainer's name; the module is set not to show it (showtitle 0) and no page prints it (all 95 demo pages read on 1.0.11: the name on the trainer pages is the trainer article's own). It is outside the content map, so no place empties it; the build copies the module and never shows its title"
     }
   ],
   "inlineMarkup": {
