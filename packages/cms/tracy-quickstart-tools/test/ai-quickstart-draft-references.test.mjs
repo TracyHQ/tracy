@@ -180,3 +180,25 @@ test('the generator writes nothing while a reference is unaccounted', (t) => {
   run()
   assert.equal(existsSync(path.join(out, 'block-store.json')), true)
 })
+
+test('the generator refuses a contract folder without a presentation lock', (t) => {
+  const root = mkdtempSync(path.join(tmpdir(), 'ai-quickstart-references-'))
+  t.after(() => rmSync(root, { recursive: true, force: true }))
+  const contract = path.join(root, 'contract')
+  const out = path.join(root, 'out')
+  mkdirSync(contract)
+  mkdirSync(out)
+  writeFileSync(path.join(contract, 'template-kit.json'), JSON.stringify(kit))
+  writeFileSync(path.join(contract, 'content-map.json'), JSON.stringify(contentMap))
+  writeFileSync(path.join(contract, 'manifest.json'), '{}')
+  writeFileSync(path.join(out, 'draft-decisions.json'), JSON.stringify(decisions))
+  assert.throws(
+    () => execFileSync(process.execPath, [DRAFT, '--contract', contract, '--out', out], { stdio: 'pipe' }),
+    (err) => {
+      assert.equal(err.status, 1)
+      assert.match(String(err.stderr), /presentation-lock\.json is missing: .* nothing written/)
+      return true
+    }
+  )
+  assert.equal(existsSync(path.join(out, 'block-store.json')), false)
+})

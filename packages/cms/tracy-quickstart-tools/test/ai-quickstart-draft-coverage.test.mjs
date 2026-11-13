@@ -119,6 +119,7 @@ test('the generator writes nothing while a slot is unaccounted', (t) => {
   writeFileSync(path.join(contract, 'template-kit.json'), JSON.stringify(kit))
   writeFileSync(path.join(contract, 'content-map.json'), JSON.stringify(contentMap))
   writeFileSync(path.join(contract, 'manifest.json'), '{}')
+  writeFileSync(path.join(contract, 'presentation-lock.json'), JSON.stringify({ entities: {} }))
   writeFileSync(path.join(out, 'draft-decisions.json'), JSON.stringify({ ...decisions, outsideStore: {} }))
   const run = () =>
     execFileSync(process.execPath, [DRAFT, '--contract', contract, '--out', out], { stdio: 'pipe' })

@@ -29,13 +29,22 @@ function main(argv) {
     process.stderr.write('usage: draft.mjs --contract <contract folder> --out <AI quickstart folder>\n')
     process.exit(2)
   }
+  // The reference sweep reads the contract's presentation lock; a contract without one would be drafted with no
+  // reference accounted for, so the draft refuses instead of skipping the sweep.
+  const lockFile = path.join(contract, 'presentation-lock.json')
+  if (!existsSync(lockFile)) {
+    process.stderr.write(
+      `${lockFile} is missing: the references of surviving records cannot be accounted for without the contract's presentation lock; nothing written.\n`
+    )
+    process.exit(1)
+  }
   const manifest = readJson(path.join(contract, 'manifest.json'), {})
   const decisions = readJson(path.join(out, 'draft-decisions.json'), {})
   const measuredDoc = readJson(path.join(out, 'measured-limits.json'), { limits: {} })
   const result = draftAiQuickstart({
     kit: readJson(path.join(contract, 'template-kit.json')),
     contentMap: readJson(path.join(contract, 'content-map.json')),
-    lock: readJson(path.join(contract, 'presentation-lock.json'), null),
+    lock: readJson(lockFile),
     decisions,
     measured: measuredDoc.limits ?? {},
     template: {
