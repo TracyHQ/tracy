@@ -108,6 +108,9 @@ COPY packages/fleet/tracy-fleet-operation/scripts/provision/quickstarts.json ./s
 # directories copied whole here, so no file needs its own line.
 COPY packages/cms/tracy-joomla-quickstart/contracts ./src/contracts
 COPY packages/cms/tracy-wordpress-quickstart/contracts ./src/contracts
+# The AI quickstart kits the build chat offers and composes plans from (#609, `build-draft/ai-quickstarts.js`):
+# `<slug>/<cms dir>/<version>/` with the block store, page recipes, mapping and `kit-manifest.json`.
+COPY packages/cms/tracy-joomla-quickstart/ai-quickstarts ./src/ai-quickstarts
 # An EmDash theme's measurement files (`contracts/<version>/design-system-measurement.json`, the
 # Template Design System Readiness check's built-site rules, #1313), laid out as the quickstart ones:
 # `<slug>/<cms dir of the tag>/<version>/`.
