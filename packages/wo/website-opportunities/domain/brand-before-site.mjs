@@ -11,7 +11,8 @@ import {
   ACCENT_LOGO_UNREADABLE,
   ACCENT_LOGO_WITHOUT_HUE,
   ACCENT_NO_LOGO,
-  accentOfBrandFile
+  accentOfBrandFile,
+  researchLogoIdOf
 } from './brand-look-accent.mjs'
 import { unreadableSaid } from './brand-look-adjust.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
@@ -91,10 +92,13 @@ export function brandLookOf({ brandFile, brief, kit, minRatio }) {
   const material = brandFile.logo?.material
   const mark = brandFile.logo?.mark?.decision
   if (!isText(mark)) throw unreadable('logo.mark.decision is missing')
-  const mediaId = isObject(material) && isText(material.mediaId) ? material.mediaId : null
+  const usedId = isObject(material) && isText(material.mediaId) ? material.mediaId : null
+  // A logo the research found but the step did not use (its safe version writes `material: null`) is still the
+  // business's logo: a made logo says so ("could not be used"), never "no logo was found".
+  const mediaId = usedId ?? researchLogoIdOf(brief)
   const chosen = brief?.brand?.logoResearch?.chosen
   const logo =
-    mediaId && !madeLogo(brandFile)
+    usedId && !madeLogo(brandFile)
       ? {
           kind: 'own',
           from: isText(chosen?.source) ? chosen.source : 'unknown',

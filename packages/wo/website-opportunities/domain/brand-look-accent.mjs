@@ -1,7 +1,7 @@
 // The accent of the look record, read from the brand step's brand file (ticket #616). The locked brand step decides
 // the accent of a logo with a hue (`new-accent`, lifted by code when dark or pale). When it keeps the template's accent
 // (`kept-template`), the product owner's rules of 13/11 decide here, in code around the locked step, never in its prompt:
-//   - no logo at all: the template's own accent stays (the drawn icon wears it too), recorded as `ACCENT_NO_LOGO`;
+//   - no logo at all (research found none; a logo found but not used by the step counts as a logo): the template's own accent stays (the drawn icon wears it too), recorded as `ACCENT_NO_LOGO`;
 //   - a logo in black, white or grey only (no colour of it has a hue): black on a light theme and white on a dark theme,
 //     for the themes the template has, recorded as `ACCENT_LOGO_WITHOUT_HUE`, never the template's accent;
 //   - the kept accent is itself a colour measured from the logo: the business's own colour, `ACCENT_FROM_LOGO`;
@@ -27,6 +27,17 @@ export const NO_HUE_ACCENT = Object.freeze({ light: '#000000', dark: '#ffffff' }
 
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 const list = (value) => (Array.isArray(value) ? value : [])
+
+/**
+ * The id of the logo the research found, whether or not the brand step used it: `logoResearch.chosen.mediaId`, else the
+ * stored `brand.logo` id. Null only when research found no logo at all.
+ */
+export function researchLogoIdOf(brief) {
+  const brand = brief?.brand
+  const chosen = brand?.logoResearch?.chosen?.mediaId
+  if (isText(chosen)) return chosen
+  return isText(brand?.logo) ? brand.logo : null
+}
 
 /** The colours measured from the business's logo, as the brief holds them; empty when they were not measured. */
 function logoColoursOf(brief) {
@@ -93,7 +104,10 @@ export function accentOfBrandFile({ brandFile, brief, kit, minRatio = MIN_RATIO 
   if (colours.decision !== 'kept-template')
     return { problem: `colours.decision ${JSON.stringify(colours.decision)}` }
   const kept = hexOf(colours.accent)
-  if (!brandFile?.logo?.material) {
+  // No logo at all means research found none: a found logo the step could not use (its safe version writes no
+  // material) still has colours, and the rules below read them.
+  const hasLogo = Boolean(brandFile?.logo?.material) || researchLogoIdOf(brief) !== null
+  if (!hasLogo) {
     if (!kept) return { problem: 'a kept accent without a #rrggbb colours.accent' }
     return plain(kept, ACCENT_NO_LOGO)
   }
