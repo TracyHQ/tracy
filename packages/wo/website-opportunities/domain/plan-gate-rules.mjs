@@ -26,7 +26,11 @@ export function factFieldProblems(block, description, at, data, problem) {
   block.data.forEach((id, i) => {
     const entry = data.byId.get(id)
     if (entry?.what !== 'fact' || entry.itemField) return
-    const fits = (description.fields ?? []).some((f) => f?.type !== 'design' && f?.kind === entry.kind)
+    // A row field of a list of the block itself counts: a social link fact is one row of a links list (#615).
+    const rowFields = (description.lists ?? []).flatMap((l) => l?.fields ?? [])
+    const fits = [...(description.fields ?? []), ...rowFields].some(
+      (f) => f?.type !== 'design' && f?.kind === entry.kind
+    )
     if (!fits)
       problem(
         'fact_without_field',

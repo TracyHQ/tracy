@@ -10,6 +10,8 @@
 // - a page whose main block is missing is dropped, with the reason;
 // - data no block shows is placed in the fixed order of `plan-placement.mjs` and `plan-placement-facts.mjs`, else
 //   reported, and every fact and item is accounted for (`plan-accounting.mjs`, code `data_unaccounted`);
+// - the rows of every child list are set by rules from the business's rows (`plan-rows.mjs`), held to what the block
+//   store declares (`plan-rows-check.mjs`), and every row not shown is reported in the left out list;
 // - the plan it returns passes the Contract B check (`build-contract.mjs`).
 // Composition in, `{ok, problems, plan, placed, accounting}` out.
 import { BUILD_PLAN_SCHEMA } from './build-contract-plan.mjs'
@@ -20,6 +22,8 @@ import { compositionProblems } from './plan-gate-rules.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
 import { placeExtraData } from './plan-placement.mjs'
 import { placeExtraFacts } from './plan-placement-facts.mjs'
+import { planRows } from './plan-rows.mjs'
+import { rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 
@@ -66,7 +70,8 @@ const withoutId = ({ id: _id, ...entry }) => entry
  *   look: object, assumptions: object[], leftOut?: object[]}} context `assumptions` and `leftOut`: those the profile,
  *   the answers and the look bring
  * @returns {{ok: boolean, problems: Array<{code: string, at: string, message: string}>, plan?: object,
- *   placed?: object[], accounting?: ReturnType<typeof dataAccountingOf>}}
+ *   placed?: object[], accounting?: ReturnType<typeof dataAccountingOf>, rows?: object[]}} `rows`: the rows and row
+ *   fields the rules dropped, each with its `code` (`CHILD_LIST_REASONS`, `plan-rows.mjs`)
  */
 export function gatePlan(composition, context) {
   const problems = []
@@ -95,8 +100,12 @@ export function gatePlan(composition, context) {
   const after = new Set(pictures.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   const reduced = facts.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)).filter((id) => !after.has(id))
   for (const id of [...items.leftOut, ...facts.leftOut].map((e) => e.id).concat(reduced)) leftOutIds.add(id)
+  const rows = planRows(pictures.pages, context.blocks, context.data)
+  rowListProblems(rows.pages, context.blocks, context.data, problem)
+  const rowsOut = rowsLeftOut(context.data, rows.planned, rows.dropped, leftOutIds)
+  for (const entry of rowsOut) leftOutIds.add(entry.id)
   const placed = [...items.placed, ...facts.placed]
-  const accounting = dataAccountingOf({ data: context.data, pages: pictures.pages, placed, leftOutIds })
+  const accounting = dataAccountingOf({ data: context.data, pages: rows.pages, placed, leftOutIds })
   for (const id of accounting.unexplained)
     problem('data_unaccounted', `data[${id}]`, `${JSON.stringify(id)} is shown nowhere and not left out`)
   const fromModel = modelLeftOut.map(({ item, what, kind, reason }) => {
@@ -111,7 +120,8 @@ export function gatePlan(composition, context) {
     language: context.language,
     facts: context.data.facts,
     items: context.data.items,
-    pages: pictures.pages,
+    ...(list(context.data.rows).length ? { rows: context.data.rows } : {}),
+    pages: rows.pages,
     look: context.look,
     pictures: pictures.pictures,
     assumptions: [
@@ -126,10 +136,11 @@ export function gatePlan(composition, context) {
       ...dropped.leftOut,
       ...items.leftOut.map(withoutId),
       ...facts.leftOut.map(withoutId),
-      ...pictures.leftOut
+      ...pictures.leftOut,
+      ...rowsOut.map(withoutId)
     ]
   }
   for (const p of checkBuildDocument(plan).problems) problem('contract_b', p.at, p.message)
   if (problems.length > 0) return { ok: false, problems }
-  return { ok: true, problems, plan, placed, accounting }
+  return { ok: true, problems, plan, placed, accounting, rows: rows.dropped }
 }

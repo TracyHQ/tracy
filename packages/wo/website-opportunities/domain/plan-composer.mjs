@@ -144,7 +144,8 @@ export function readComposerReply(reply) {
  * Compose the plan: one model call, the gate, and at most one more call with the gate's problems.
  * @param {Parameters<typeof composerContextOf>[0] & {model: (request: object) => Promise<unknown>}} input
  * @returns {Promise<{plan: object, profile: object, attempts: Array<{problems: object[]}>, placed: object[],
- *   accounting: object, conflicts: object[], prompt: object}>} `profile`: the profile after the answers, for the page
+ *   accounting: object, rows: object[], conflicts: object[], prompt: object}>} `rows`: the child list rows and row
+ *   fields the gate's rules dropped, with their codes (`plan-rows.mjs`) `profile`: the profile after the answers, for the page
  *   writer; `accounting`: where every fact and item went; `conflicts`: how every conflict of the profile is settled
  */
 export async function composePlan(input) {
@@ -171,6 +172,7 @@ export async function composePlan(input) {
         attempts,
         placed: gated.placed,
         accounting: gated.accounting,
+        rows: gated.rows,
         conflicts: context.conflicts,
         prompt: { file: PLAN_COMPOSER_PROMPT_FILE, sha256: PROMPT_SHA256 }
       }

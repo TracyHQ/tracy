@@ -4,6 +4,7 @@ sources:
   - packages/wo/website-opportunities/domain/build-contract.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan-parts.mjs
+  - packages/wo/website-opportunities/domain/build-contract-plan-rows.mjs
   - packages/wo/website-opportunities/domain/build-contract-shapes.mjs
   - packages/wo/website-opportunities/domain/build-contract-scenario-runs.mjs
   - packages/wo/website-opportunities/domain/build-contract-plan-edit.mjs
@@ -169,7 +170,36 @@ rejected; and labels, reasons and other short texts are held to their [text limi
 ```
 
 - **`leftOut`**: what was dropped, each with `kind` (`page`, `block`, `item`, `feature`) and its `reason`. Required,
-  even empty.
+  even empty. A row the plan does not show is reported with kind `item`.
+
+### Child list rows (optional)
+
+A block of the template may hold lists inside it or inside each of its items (Contract A child lists: the session
+times of a class card, the steps of a project). Two **optional** keys carry their rows; a plan without them is valid,
+and a block without `lists` shows no rows.
+
+```json
+"rows": [
+  { "id": "service-wheel-basics-row-1", "label": "Tue and Thu, 18:00 to 20:00",
+    "sources": [{ "kind": "website", "name": "Website" }] }
+],
+"pages": [{ "id": "home", "blocks": [
+  { "id": "home-b3", "block": "classes-grid", "data": ["service-wheel-basics"],
+    "lists": [{ "name": "sessions", "item": "service-wheel-basics",
+                "rows": [{ "data": "service-wheel-basics-row-1" }] }] }
+] }]
+```
+
+- **`rows`** (on the plan): the rows the business stated, each `{id, label, sources}`, in the same id space as facts
+  and items. A label is held to the `label` limit. A block's `data` never names a row.
+- **`lists`** (on a block): one entry per child list of the block, `{name, rows}`, and per item for a list inside
+  each item, `{name, item, rows}` where `item` is an item of the block's `data`. `rows` may be empty: a list with no
+  business data is planned empty, never filled with invented rows.
+- **A planned row** is `{data}`, a row or a fact of the plan (a social link fact is one row of a links list), or
+  `{page}`, a page of the plan, for a list whose rows are keyed to pages. It may hold `lists`, the nested lists of
+  that row, at most three levels deep. A row appears once per list.
+- How many rows a list shows, and which data kinds a row may hold, come from the block store; the rules gate holds the
+  plan to them (`plan-rows-check.mjs`). The contract check holds the shape: closed objects, known ids, text limits.
 
 ## Plan edit
 
@@ -256,12 +286,15 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 | `choice` | `id`, `label`, `detail?`, `recommended?` |
 | `free text` | `maxLength`, `placeholder?` |
 | `answer` | `schema`, `question`, `choice?`, `text?`, `skipped?` |
-| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut` |
+| `plan` | `schema`, `id`, `revision`, `language`, `facts`, `items`, `pages`, `look`, `pictures`, `assumptions`, `leftOut`, `rows?` |
 | `fact` | `id`, `kind`, `label`, `value`, `sources` |
 | `item` | `id`, `kind`, `label`, `sources`, `count?` |
 | `source` | `kind`, `name` |
 | `page` | `id`, `name`, `pageType`, `blocks` |
-| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason` |
+| `block` | `id`, `type`, `block`, `source`, `label`, `data`, `reason`, `lists?` |
+| `row` | `id`, `label`, `sources` |
+| `child list` | `name`, `rows`, `item?` |
+| `planned row` | `data?`, `page?`, `lists?` |
 | `look` | `template`, `accent`, `logo` |
 | `template` | `slug`, `name`, `version` |
 | `logo` | `kind`, `source?` |
@@ -282,7 +315,7 @@ Any other key is reported as `"<key>" is not a field of <object>`. A test compar
 
 `own pictures.from` is required when `frames` is above zero, `generated pictures.reason` when `frames` is above zero,
 `logo.source` for an own logo, `run.edit` for a partial run, `step.page` for a writer step, `outcome.stopped` for a
-stopped outcome, and `question.fact` for a `fact-conflict`.
+stopped outcome, and `question.fact` for a `fact-conflict`. A `planned row` names exactly one of `data` and `page`.
 
 ## Text limits
 

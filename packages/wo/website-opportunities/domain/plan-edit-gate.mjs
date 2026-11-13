@@ -3,7 +3,8 @@
 // the edit with `applyPlanEdit` (inside `checkPlanEdit`), then runs the gate's count, kind, main block, fact field and
 // library checks on the edited plan, and counts the pictures summary again (`picturesOf`, #595). Problems are worded
 // for the customer. A changed fact value is written back to the needs profile, item fields included, so the page
-// writer reads the customer's value.
+// writer reads the customer's value. The child list rows follow the edited data: they are planned again by the same
+// rules (`plan-rows.mjs`, an item taken off a block takes its rows with it) and held to the block store.
 import { checkPlanEdit } from './build-contract-plan-edit.mjs'
 import { checkBuildDocument } from './build-contract.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
@@ -14,6 +15,8 @@ import { ITEM_NOUNS, planDataOf } from './plan-data.mjs'
 import { blockItemProblems } from './plan-gate-items.mjs'
 import { factFieldProblems } from './plan-gate-rules.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
+import { planRows } from './plan-rows.mjs'
+import { rowListProblems } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const FACT_VALUE = /^facts\[([^\]]+)\]\.value$/
@@ -63,7 +66,15 @@ function profileAfterEdit(profile, edit) {
  */
 export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, library = [] }) {
   const failed = (problems) => ({ ok: false, plan: null, profile: null, problems })
-  const checked = checkPlanEdit(edit, plan)
+  // The rows are planned again after the edit, so the edit is checked on the plan without them.
+  const bare = {
+    ...plan,
+    pages: list(plan?.pages).map((p) => ({
+      ...p,
+      blocks: list(p?.blocks).map(({ lists: _lists, ...block }) => block)
+    }))
+  }
+  const checked = checkPlanEdit(edit, Array.isArray(plan?.pages) ? bare : plan)
   if (!checked.ok)
     return failed(
       checked.problems.map((p) => ({
@@ -104,6 +115,12 @@ export function gateEditedPlan({ plan, edit, profile, blockStore, pageRecipes, l
       factFieldProblems(block, description, at, data, report)
     }
   }
+  if (problems.length > 0) return failed(problems)
+  next.pages = planRows(next.pages, blocks, data).pages
+  const label = (at) => next.pages.flatMap((p) => p.blocks).find((b) => at.includes(`blocks[${b.id}]`))?.label
+  rowListProblems(next.pages, blocks, data, (code, at) =>
+    problems.push({ code, at, message: `The ${label(at) ?? 'changed'} section cannot show these rows.` })
+  )
   if (problems.length > 0) return failed(problems)
   // The pictures summary follows the edited pages; a generated count the customer lowered is kept.
   const counted = picturesOf(next.pages, blocks, data).pictures

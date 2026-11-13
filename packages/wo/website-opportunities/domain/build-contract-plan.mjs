@@ -10,6 +10,7 @@ import {
   picturesProblems,
   sourcesProblems
 } from './build-contract-plan-parts.mjs'
+import { blockListsProblems, rowDataProblems } from './build-contract-plan-rows.mjs'
 import { closedShapeProblems, textProblems } from './build-contract-shapes.mjs'
 import { idListProblems, isName, isObject, isWhole, label } from './build-contract-shared.mjs'
 import {
@@ -81,7 +82,8 @@ function blockDataProblems(block, at, known, report) {
   block.data.forEach((id, i) => {
     const entry = known.get(id)
     if (!isName(id)) return
-    if (!entry) return report(`${at}.data[${i}]`, `${JSON.stringify(id)} is not a fact or item of the plan`)
+    if (!entry || entry.what === 'row')
+      return report(`${at}.data[${i}]`, `${JSON.stringify(id)} is not a fact or item of the plan`)
     if (entry.what === 'item' && isBlockType(block.type) && !allowed.includes(entry.kind))
       report(
         `${at}.data[${i}]`,
@@ -92,7 +94,7 @@ function blockDataProblems(block, at, known, report) {
   })
 }
 
-function blockProblems(block, at, known, report) {
+function blockProblems(block, at, known, pageIds, report) {
   if (!isObject(block))
     return report(at, 'a block must be an object {id, type, block, source, label, data, reason}')
   closedShapeProblems(block, 'block', at, report)
@@ -113,12 +115,14 @@ function blockProblems(block, at, known, report) {
     'a block needs the reason it fits, in words the customer can read'
   )
   blockDataProblems(block, at, known, report)
+  blockListsProblems(block, at, known, pageIds, report)
 }
 
 function pagesProblems(plan, known, report) {
   if (!Array.isArray(plan.pages) || plan.pages.length === 0)
     return report('pages', 'pages must list at least one page')
   const pageIds = new Set()
+  const planPages = new Set(plan.pages.map((p) => p?.id).filter(isName))
   plan.pages.forEach((page, i) => {
     const at = `pages[${label(page?.id, i)}]`
     if (!isObject(page)) return report(at, 'a page must be an object {id, name, pageType, blocks}')
@@ -136,7 +140,7 @@ function pagesProblems(plan, known, report) {
       if (!isName(block?.id)) report(`${blockAt}.id`, 'a block needs a non-empty id')
       else if (blockIds.has(block.id)) report(`${blockAt}.id`, 'block id appears twice on the page')
       else blockIds.add(block.id)
-      blockProblems(block, blockAt, known, report)
+      blockProblems(block, blockAt, known, planPages, report)
     })
   })
 }
@@ -152,6 +156,7 @@ export function buildPlanProblems(plan, report) {
   if (typeof plan.language !== 'string' || !LANGUAGE_TAG.test(plan.language))
     report('language', 'language is the site language as a tag like "en" or "pt-BR"')
   const known = dataProblems(plan, report)
+  rowDataProblems(plan, known, report)
   pagesProblems(plan, known, report)
   lookProblems(plan.look, report)
   picturesProblems(plan.pictures, report)
