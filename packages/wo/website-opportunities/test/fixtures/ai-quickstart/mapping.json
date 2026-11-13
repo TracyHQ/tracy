@@ -1,0 +1,92 @@
+{
+  "$comment": "An invented mapping file for the invented block store next to this file. Locations use the content map shape (entity, column, jsonPath, xpath).",
+  "schema": "tracy-ai-quickstart-mapping/v1",
+  "blocks": {
+    "header-main": {
+      "fields": {
+        "cta_label": { "entity": "module-11", "column": "params", "jsonPath": ["button-text"] },
+        "cta_link": { "entity": "module-11", "column": "params", "jsonPath": ["button-link"] },
+        "sticky": { "entity": "module-11", "column": "params", "jsonPath": ["sticky"] }
+      },
+      "designLines": [{ "entity": "module-11", "column": "params", "jsonPath": ["sticky"] }]
+    },
+    "hero-home": {
+      "fields": {
+        "heading": { "entity": "module-12", "column": "params", "jsonPath": ["title"] },
+        "lead": {
+          "entity": "module-12",
+          "column": "params",
+          "jsonPath": ["description"],
+          "xpath": "/html/body/p"
+        },
+        "photo": { "entity": "module-12", "column": "params", "jsonPath": ["image"] },
+        "background": { "entity": "module-12", "column": "params", "jsonPath": ["bg-color"] }
+      },
+      "designLines": [
+        { "entity": "module-12", "column": "params", "jsonPath": ["bg-color"] },
+        { "entity": "module-12", "column": "params", "jsonPath": ["columns"] }
+      ]
+    },
+    "services-grid": {
+      "fields": {
+        "heading": { "entity": "module-13", "column": "params", "jsonPath": ["title"] }
+      },
+      "itemFields": {
+        "name": [
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "0", "name"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "1", "name"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "2", "name"] }
+        ],
+        "price": [
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "0", "price"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "1", "price"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "2", "price"] }
+        ],
+        "icon": [
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "0", "icon"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "1", "icon"] },
+          { "entity": "module-13", "column": "params", "jsonPath": ["items", "2", "icon"] }
+        ]
+      },
+      "designLines": [{ "entity": "module-13", "column": "params", "jsonPath": ["layout"] }]
+    },
+    "footer-main": {
+      "fields": {
+        "copyright": { "entity": "module-14", "column": "content" }
+      }
+    }
+  },
+  "facts": {
+    "name": [{ "entity": "settings", "column": "sitename" }],
+    "phone": [
+      { "entity": "module-11", "column": "params", "jsonPath": ["phone"] },
+      { "entity": "module-14", "column": "params", "jsonPath": ["phone"] }
+    ],
+    "email": [{ "entity": "module-14", "column": "params", "jsonPath": ["email"] }],
+    "social": [
+      {
+        "network": "instagram",
+        "entity": "module-14",
+        "column": "params",
+        "jsonPath": ["social", "0", "link"]
+      }
+    ],
+    "logoLight": [{ "entity": "template-style-9", "column": "params", "jsonPath": ["logo"] }],
+    "logoDark": [{ "entity": "template-style-9", "column": "params", "jsonPath": ["logo-dark"] }]
+  },
+  "seo": {
+    "title": { "entity": "page", "column": "title" },
+    "description": { "entity": "page", "column": "metadesc" },
+    "shareImage": { "entity": "page", "column": "params", "jsonPath": ["menu-meta-image"] }
+  },
+  "overrides": {
+    "settings": [
+      { "location": { "entity": "settings", "column": "MetaDesc" }, "value": "" },
+      {
+        "location": { "entity": "template-style-9", "column": "params", "jsonPath": ["body-bg"] },
+        "value": ""
+      }
+    ],
+    "language": [{ "key": "TPL_EXAMPLE_READ_MORE", "value": "Read more" }]
+  }
+}

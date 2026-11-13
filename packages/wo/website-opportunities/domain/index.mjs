@@ -47,6 +47,7 @@ export { planSlotFill, provisionalAssessment, SLOT_FILL_VERSION } from './slot-f
 export {
   ARTICLE_ROLES,
   BASE_FILES,
+  BLOCK_TYPES,
   CONTENT_MAP_ROLE_VOCABULARY_VERSIONS,
   DEFAULT_NEUTRAL_BY_ROLE,
   EDITORIAL_ROLES,
@@ -67,6 +68,7 @@ export {
   ROLE_VOCABULARY_VERSIONS,
   SLOT_ROLES_SCHEMA_VERSION,
   baseHashOf,
+  isBlockType,
   isEditorialRole,
   isFactRole,
   isGroupKind,
@@ -101,6 +103,15 @@ export {
   slotFitOf,
   slotFitOfContentMap
 } from './content-map-fit.mjs'
+export {
+  AI_QUICKSTART_FIELD_TYPES,
+  BLOCK_STORE_FILE,
+  MAPPING_FILE,
+  PAGE_RECIPES_FILE,
+  checkAiQuickstartContract,
+  formatProblem as formatAiQuickstartProblem
+} from './ai-quickstart-contract.mjs'
+export { BUSINESS_FACTS, SEO_FIELDS, SHARE_IMAGE_FRAME } from './ai-quickstart-mapping.mjs'
 export {
   neutralItemName,
   SECTION_ACTIONS,

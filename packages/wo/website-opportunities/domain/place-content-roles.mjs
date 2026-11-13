@@ -419,6 +419,43 @@ export const GROUP_KINDS_V3 = Object.freeze({
   gallery: Object.freeze({ allowedKinds: ['gallery'], requiredRoles: ['business.gallery_image'] })
 })
 
+/**
+ * Block types of an AI quickstart's block store (ADR 0046): what one block of a template shows, so a build matches
+ * business data to blocks without reading the template. `itemKind` is the group kind (`GROUP_KINDS_V3`) of the items a
+ * repeating block shows, or null for a block that shows one thing. A block type is added here, never in a template's
+ * block store description.
+ */
+export const BLOCK_TYPES = Object.freeze({
+  header: Object.freeze({ itemKind: null }),
+  footer: Object.freeze({ itemKind: null }),
+  hero: Object.freeze({ itemKind: null }),
+  about: Object.freeze({ itemKind: null }),
+  text: Object.freeze({ itemKind: null }),
+  call_to_action: Object.freeze({ itemKind: null }),
+  contact: Object.freeze({ itemKind: null }),
+  map: Object.freeze({ itemKind: null }),
+  video: Object.freeze({ itemKind: null }),
+  newsletter: Object.freeze({ itemKind: null }),
+  services: Object.freeze({ itemKind: 'service' }),
+  menu: Object.freeze({ itemKind: 'menu_item' }),
+  pricing: Object.freeze({ itemKind: 'package' }),
+  schedule: Object.freeze({ itemKind: 'service' }),
+  team: Object.freeze({ itemKind: 'person' }),
+  stats: Object.freeze({ itemKind: 'stat_item' }),
+  steps: Object.freeze({ itemKind: 'step' }),
+  reviews: Object.freeze({ itemKind: 'quote' }),
+  claims: Object.freeze({ itemKind: 'claim' }),
+  faq: Object.freeze({ itemKind: 'faq' }),
+  events: Object.freeze({ itemKind: 'event' }),
+  posts: Object.freeze({ itemKind: 'post' }),
+  gallery: Object.freeze({ itemKind: 'gallery' })
+})
+
+/** Whether `value` is a block type of the AI quickstart block store (`BLOCK_TYPES`). */
+export function isBlockType(value) {
+  return typeof value === 'string' && Object.hasOwn(BLOCK_TYPES, value)
+}
+
 /** Whether `kind` is a group kind of the vocabulary `version` (default: the version capture writes). */
 export function isGroupKind(kind, version = ROLE_VOCABULARY_VERSION) {
   const kinds = version === ROLE_VOCABULARY_V3 ? GROUP_KINDS_V3 : GROUP_KINDS

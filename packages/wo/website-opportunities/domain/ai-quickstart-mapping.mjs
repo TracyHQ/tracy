@@ -1,0 +1,168 @@
+// The mapping file half of the AI quickstart contract check (ADR 0046 decision 2, ticket #581): where each field and
+// each business fact is written, which config lines are design, the SEO fields and the overrides. Called by
+// `checkAiQuickstartContract` (`ai-quickstart-contract.mjs`) with the blocks of the block store.
+//
+// A location has the shape a content map slot already uses, so the existing write functions take it unchanged:
+//   { "entity": "module-160", "column": "params", "jsonPath": ["main-section"], "xpath": "/html/body/div" }
+// `jsonPath` and `xpath` are optional; `entity: "page"` names the page the build creates (the SEO fields).
+
+/** The business facts of the site form, each declared once and fanned out to every place the template shows it. */
+export const BUSINESS_FACTS = Object.freeze({
+  name: 'business.name',
+  phone: 'contact.phone',
+  address: 'contact.address',
+  email: 'contact.email',
+  social: 'contact.social_url',
+  logoLight: 'business.logo',
+  logoDark: 'business.logo'
+})
+/** The SEO fields every page type carries; the share image is always this frame. */
+export const SEO_FIELDS = Object.freeze(['title', 'description', 'shareImage'])
+export const SHARE_IMAGE_FRAME = Object.freeze({ width: 1200, height: 630 })
+export const MAPPING_SCHEMA = 'tracy-ai-quickstart-mapping/v1'
+
+const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+const isName = (value) => typeof value === 'string' && value.trim() !== ''
+
+/** Why `loc` is not a location, or null when it is one. */
+function locationProblem(loc) {
+  if (!isObject(loc)) return 'a location must be an object {entity, column, jsonPath?, xpath?}'
+  if (!isName(loc.entity) || !isName(loc.column)) return 'a location needs an entity and a column'
+  if (loc.jsonPath !== undefined && !(Array.isArray(loc.jsonPath) && loc.jsonPath.every(isName)))
+    return 'jsonPath must be a list of keys'
+  if (loc.xpath !== undefined && !isName(loc.xpath)) return 'xpath must be a non-empty string'
+  return null
+}
+
+const locationKey = (loc) => JSON.stringify([loc.entity, loc.column, loc.jsonPath ?? [], loc.xpath ?? ''])
+
+function checkLocation(loc, at, report) {
+  const problem = locationProblem(loc)
+  if (problem) report(at, problem)
+  return !problem
+}
+
+function blockMappingProblems(block, entry, ctx) {
+  const at = `blocks[${block.id}]`
+  if (!isObject(entry)) return ctx.report(at, `no mapping for block "${block.id}"`)
+  const designLines = new Set()
+  if (entry.designLines !== undefined) {
+    if (!Array.isArray(entry.designLines))
+      ctx.report(`${at}.designLines`, 'designLines must be a list of locations')
+    else
+      entry.designLines.forEach((loc, i) => {
+        if (checkLocation(loc, `${at}.designLines[${i}]`, ctx.report)) designLines.add(locationKey(loc))
+      })
+  }
+  const storeFields = Array.isArray(block.fields) ? block.fields.filter((f) => isName(f?.name)) : []
+  const storeItemFields = Array.isArray(block.itemFields)
+    ? block.itemFields.filter((f) => isName(f?.name))
+    : []
+  const maxItems = Number.isInteger(block.items?.max) ? block.items.max : 1
+
+  const judge = (field, loc, fieldAt, storeAt) => {
+    if (!checkLocation(loc, fieldAt, ctx.report)) return
+    const isDesignLine = designLines.has(locationKey(loc))
+    if (field.type === 'design' && !isDesignLine)
+      ctx.report(fieldAt, `design field "${field.name}" is not one of the block's designLines`)
+    if (field.type !== 'design' && typeof field.type === 'string' && isDesignLine)
+      ctx.reportStore(
+        `${storeAt}.type`,
+        `design value typed as ${field.type}: its location is a design line, type it design`
+      )
+  }
+
+  const mapped = isObject(entry.fields) ? entry.fields : {}
+  if (entry.fields !== undefined && !isObject(entry.fields))
+    ctx.report(`${at}.fields`, 'fields must map a field name to a location')
+  for (const field of storeFields) {
+    const fieldAt = `${at}.fields[${field.name}]`
+    if (!Object.hasOwn(mapped, field.name)) ctx.report(fieldAt, `no location for field "${field.name}"`)
+    else judge(field, mapped[field.name], fieldAt, `blocks[${block.id}].fields[${field.name}]`)
+  }
+  for (const name of Object.keys(mapped))
+    if (!storeFields.some((f) => f.name === name))
+      ctx.report(`${at}.fields[${name}]`, `"${name}" is not a field of the block`)
+
+  const mappedItems = isObject(entry.itemFields) ? entry.itemFields : {}
+  for (const field of storeItemFields) {
+    const fieldAt = `${at}.itemFields[${field.name}]`
+    const locs = mappedItems[field.name]
+    if (!Array.isArray(locs)) {
+      ctx.report(fieldAt, `no locations for item field "${field.name}": one per item, up to max`)
+      continue
+    }
+    if (locs.length < maxItems) ctx.report(fieldAt, `${locs.length} locations for max ${maxItems} items`)
+    locs.forEach((loc, i) =>
+      judge(field, loc, `${fieldAt}[${i}]`, `blocks[${block.id}].itemFields[${field.name}]`)
+    )
+  }
+  for (const name of Object.keys(mappedItems))
+    if (!storeItemFields.some((f) => f.name === name))
+      ctx.report(`${at}.itemFields[${name}]`, `"${name}" is not an item field of the block`)
+}
+
+function factsProblems(facts, report) {
+  if (facts === undefined) return
+  if (!isObject(facts)) return report('facts', 'facts must map a business fact to its locations')
+  for (const [fact, locs] of Object.entries(facts)) {
+    const at = `facts.${fact}`
+    if (!Object.hasOwn(BUSINESS_FACTS, fact)) {
+      report(
+        at,
+        `${JSON.stringify(fact)} is not a business fact: one of ${Object.keys(BUSINESS_FACTS).join(', ')}`
+      )
+      continue
+    }
+    if (!Array.isArray(locs) || locs.length === 0) {
+      report(at, 'a business fact lists every place the template shows it')
+      continue
+    }
+    locs.forEach((loc, i) => checkLocation(loc, `${at}[${i}]`, report))
+  }
+}
+
+function overridesProblems(overrides, report) {
+  if (overrides === undefined) return
+  if (!isObject(overrides)) return report('overrides', 'overrides must be {settings, language}')
+  const list = (key, check) => {
+    const entries = overrides[key]
+    if (entries === undefined) return
+    if (!Array.isArray(entries)) return report(`overrides.${key}`, `overrides.${key} must be a list`)
+    entries.forEach((entry, i) => check(entry, `overrides.${key}[${i}]`))
+  }
+  list('settings', (entry, at) => {
+    if (!isObject(entry)) return report(at, 'a setting override is {location, value}')
+    checkLocation(entry.location, `${at}.location`, report)
+    if (typeof entry.value !== 'string') report(`${at}.value`, 'a setting override needs a string value')
+  })
+  list('language', (entry, at) => {
+    if (!isObject(entry) || !isName(entry.key)) return report(at, 'a language override is {key, value}')
+    if (typeof entry.value !== 'string') report(`${at}.value`, 'a language override needs a string value')
+  })
+}
+
+/**
+ * Every problem of a mapping file against the blocks of its block store.
+ * @param {any} mapping the parsed mapping file
+ * @param {any[]} blocks the store's blocks that have an id
+ * @param {{report: Function, reportStore: Function}} ctx report into the mapping file, or into the block store
+ */
+export function mappingProblems(mapping, blocks, ctx) {
+  const { report } = ctx
+  if (!isObject(mapping)) return report('', 'the mapping file must be a JSON object')
+  if (mapping.schema !== MAPPING_SCHEMA) report('schema', `schema must be "${MAPPING_SCHEMA}"`)
+  const entries = isObject(mapping.blocks) ? mapping.blocks : {}
+  if (!isObject(mapping.blocks)) report('blocks', 'blocks must map a block id to its fields')
+  for (const block of blocks) blockMappingProblems(block, entries[block.id], ctx)
+  for (const id of Object.keys(entries))
+    if (!blocks.some((b) => b.id === id)) report(`blocks[${id}]`, `"${id}" is not a block of the store`)
+  factsProblems(mapping.facts, report)
+  if (!isObject(mapping.seo)) report('seo', `seo must give a location for ${SEO_FIELDS.join(', ')}`)
+  else
+    for (const name of SEO_FIELDS) {
+      if (mapping.seo[name] === undefined) report(`seo.${name}`, 'missing location')
+      else checkLocation(mapping.seo[name], `seo.${name}`, report)
+    }
+  overridesProblems(mapping.overrides, report)
+}

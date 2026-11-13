@@ -1,0 +1,59 @@
+{
+  "$comment": "An invented block store description (ADR 0046) for an invented template, used by the contract check tests. No real template or business.",
+  "schema": "tracy-ai-quickstart-block-store/v1",
+  "roleVocabularyVersion": "place-content-roles/3",
+  "template": { "slug": "example-template", "version": "1.0.0" },
+  "blocks": [
+    {
+      "id": "header-main",
+      "type": "header",
+      "positions": ["header"],
+      "items": { "min": 1, "max": 1 },
+      "noData": { "rule": "hide" },
+      "fields": [
+        { "name": "cta_label", "kind": "contact.cta_label", "type": "text", "limit": 18 },
+        { "name": "cta_link", "kind": "contact.cta_url", "type": "link" },
+        { "name": "sticky", "type": "design" }
+      ]
+    },
+    {
+      "id": "hero-home",
+      "type": "hero",
+      "positions": ["masthead", "content-top"],
+      "items": { "min": 1, "max": 1 },
+      "noData": { "rule": "fallback", "fallback": "editorial heading over the template picture" },
+      "fields": [
+        { "name": "heading", "kind": "business.tagline", "type": "text", "limit": 42 },
+        { "name": "lead", "kind": "business.summary", "type": "text", "limit": 160 },
+        {
+          "name": "photo",
+          "kind": "business.hero_image",
+          "type": "image",
+          "frame": { "width": 1600, "height": 900 }
+        },
+        { "name": "background", "type": "design" }
+      ]
+    },
+    {
+      "id": "services-grid",
+      "type": "services",
+      "positions": ["content"],
+      "items": { "min": 2, "max": 3 },
+      "noData": { "rule": "hide" },
+      "fields": [{ "name": "heading", "kind": "editorial.heading", "type": "text", "limit": 30 }],
+      "itemFields": [
+        { "name": "name", "kind": "offering.name", "type": "text", "limit": 24 },
+        { "name": "price", "kind": "offering.price", "type": "number" },
+        { "name": "icon", "kind": "editorial.item_icon", "type": "icon" }
+      ]
+    },
+    {
+      "id": "footer-main",
+      "type": "footer",
+      "positions": ["footer"],
+      "items": { "min": 1, "max": 1 },
+      "noData": { "rule": "hide" },
+      "fields": [{ "name": "copyright", "kind": "business.copyright", "type": "text", "limit": 80 }]
+    }
+  ]
+}
