@@ -1,14 +1,14 @@
 // The rendered pages the built site check reads (ticket #601): crawled from a locally built site's base address, or
 // read from a folder of saved rendered pages (so a test needs no site). A page is `{path, url, status, html, note?}`;
 // `path` is the page's address below the base, `/` for the home page, without Joomla's `index.php` part.
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { lstatSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { linksOf, treeOf } from './html-read.mjs'
 import { fetchLocal, onBase, pooled } from './local-fetch.mjs'
 
 export const MAX_PAGES = 200
 export const CONCURRENCY = 4
-const ASSET =
+export const ASSET =
   /\.(css|js|mjs|json|xml|txt|png|jpe?g|gif|webp|avif|svg|ico|pdf|zip|gz|woff2?|ttf|mp4|webm|mp3)$/i
 
 /** A page address below the base: `/`, `/about`, `/services/coaching`. */
@@ -20,7 +20,7 @@ export function pagePathOf(pathname, basePath = '/') {
     // A broken escape stays as it is written.
   }
   const root = basePath.replace(/\/$/, '')
-  if (root && p.startsWith(root)) p = p.slice(root.length)
+  if (root && (p === root || p.startsWith(`${root}/`))) p = p.slice(root.length)
   p = p
     .replace(/^\/index\.php(?=\/|$)/, '')
     .replace(/\/index\.php$/, '')
@@ -30,22 +30,36 @@ export function pagePathOf(pathname, basePath = '/') {
   return p
 }
 
-/** The pages of a folder of saved rendered pages: `index.html` is the home page, `about.html` is `/about`. */
-export function pagesOfFolder(dir) {
-  const out = []
+/**
+ * The pages of a folder of saved rendered pages: `index.html` is the home page, `about.html` is `/about`. A symbolic
+ * link is never followed (it may lead out of the folder, or loop), and at most `max` pages are read: `capped` says so.
+ */
+export function folderPages(dir, { max = MAX_PAGES } = {}) {
+  const pages = []
+  let capped = false
+  let links = 0
   const walk = (d) => {
     for (const name of readdirSync(d).sort()) {
       const file = path.join(d, name)
-      if (statSync(file).isDirectory()) walk(file)
-      else if (/\.html?$/i.test(name)) {
+      const stat = lstatSync(file)
+      if (stat.isSymbolicLink()) links++
+      else if (stat.isDirectory()) walk(file)
+      else if (stat.isFile() && /\.html?$/i.test(name)) {
+        if (pages.length >= max) {
+          capped = true
+          return
+        }
         const rel = path.relative(dir, file).split(path.sep).join('/')
-        out.push({ path: pagePathOf(`/${rel}`), url: rel, status: 200, html: readFileSync(file, 'utf8') })
+        pages.push({ path: pagePathOf(`/${rel}`), url: rel, status: 200, html: readFileSync(file, 'utf8') })
       }
     }
   }
   walk(dir)
-  return out
+  return { pages, capped, links }
 }
+
+/** The pages of a folder (`folderPages`), the list only. */
+export const pagesOfFolder = (dir, options) => folderPages(dir, options).pages
 
 /** The page addresses a page links to on the base. */
 function nextOf(page, base) {
@@ -89,5 +103,7 @@ export async function crawlSite(base, { seeds = [], max = MAX_PAGES, limit = CON
     pages.push(...fresh)
     wave = fresh.filter((p) => p.status === 200).flatMap((p) => nextOf(p, base))
   }
+  // Stopped at the cap with a page still unread: the crawl was cut short even when the last wave fitted exactly.
+  if (wave.some((u) => !seen.has(u))) capped = true
   return { pages, capped }
 }

@@ -7,6 +7,10 @@ sources:
   - scripts/built-site-check/check-limits.mjs
   - scripts/built-site-check/check-pages.mjs
   - scripts/built-site-check/part-one.mjs
+  - scripts/built-site-check/part-one-links.mjs
+  - scripts/built-site-check/limit-measure.mjs
+  - scripts/built-site-check/held-mask.mjs
+  - scripts/built-site-check/inputs.mjs
 ---
 
 # The built site check
@@ -21,18 +25,32 @@ walks every module of `apps/tracy-web/src` and of the domain and proves none rea
 
 ```
 node scripts/built-site-check/run.mjs (--site <local base address> | --pages <folder>) \
-  [--plan <file>] [--kit <dir>] [--write-result <file>] [--stored <file>] --out <report.json>
+  [--plan <file>] [--kit <dir>] [--write-result <file>] [--write-order <file>] [--stored <file>] \
+  [--demo-content <file>] --out <report.json>
 ```
 
 | Input | What it is |
 |---|---|
 | `--site` | The base address of a locally built site. Only `localhost`, `127.x`, `::1`, `*.localhost`, `*.test` and `*.ddev.site` are read; any other host is refused before a request. Only GET is sent; a redirect off the base is not followed (the page keeps its redirect status, note `redirect_off_base`). Never point it at a customer site. |
-| `--pages` | A folder of saved rendered pages instead: `index.html` is the home page, `about.html` is `/about`. |
+| `--pages` | A folder of saved rendered pages instead: `index.html` is the home page, `about.html` is `/about`. A symbolic link in it is never followed, and at most 200 pages are read. |
 | `--plan` | The approved plan: the approval `{plan, profile}` or the plan alone. The held names come from `profile.withheld`. |
-| `--kit` | The AI quickstart kit folder: `block-store.json`, `mapping.json`, `blank-site-contract/content-map.json` (Contract A, [ai-quickstart-contract.md](ai-quickstart-contract.md)). |
-| `--write-result` | The write step's result `{plan, report}`: the write plan `tracy-draft-write-plan/v1` with its write order, and the run report (`ran`, `unproven`, `conflicts`). A write plan alone is read as fully run. See [draft-write-step.md](draft-write-step.md). |
+| `--kit` | The AI quickstart kit folder: `block-store.json`, `mapping.json`, `blank-site-contract/content-map.json` (Contract A, [ai-quickstart-contract.md](ai-quickstart-contract.md)). The released content map beside it (`contracts/<slug>/<j>/<version>/content-map.json`) gives the routes of the template's demo pages. |
+| `--write-result` | The write step's result `{order, plan, report}`: the write order `tracy-write-order/v1`, the write plan `tracy-draft-write-plan/v1` and the run report (`ran`, `unproven`, `conflicts`). `{plan, report}` or a write plan alone is read too (a plan alone as fully run), but then the order must come with `--write-order`. See [draft-write-step.md](draft-write-step.md). |
+| `--write-order` | The write order, when the write result does not hold it. The write plan keeps only the order's ids (`order: {run, plan, template}`), and the limits check needs the order's entries. An order of another run than the plan's is refused (`write_order_mismatch`). |
+| `--demo-content` | The template's released content map, when it is not beside the kit. |
 | `--stored` | Optional: `{slots: {<slot>: <value>}}`, the blank site contract slots read back from the built site after the build (the `read` door). |
 | `--out` | The JSON report; a readable summary is written next to it as `.txt`. |
+
+### What a trial run saves for the tool
+
+The write step's value today is `{report, recorded}` (`apps/tracy-web/src/step-chain-draft-write-step.js`): neither the
+write plan nor the write order is in it. A trial run saves three files, all from the write step's inputs and run:
+
+- `order.json`: the write order the step read (`inputs.order.order`);
+- `write.json`: `{order, plan, report}`, the order again, the write plan `writePlanOf` made, and the run report;
+- `plan.json`: the approval `{plan, profile}` (`inputs.plan`), for the plan's pages and the held names.
+
+With `write.json` holding the order, `--write-order` is not needed.
 
 The crawl starts at the home page and the plan's page addresses, follows links on the base, reads at most 200 pages
 and at most 4 at a time (`capped: true` in the report when it stopped early). Exit code 0 when the tool ran, whatever
@@ -43,22 +61,26 @@ error.
 
 `tracy-built-site-check/v1`: `source` (kind, pages read, every page that answered another status than 200),
 `counts` (per check, `null` when it did not run) and `checks`. Each check is `{status: 'ran', notes, findings}` or
-`{status: 'not_run', reason}`. A check that cannot run says so; it never passes silently. A check that throws is
-`not_run` with the error's code, never its message.
+`{status: 'not_run', reason}`. A check that cannot run says so; it never passes silently. A check that examined
+nothing while there was something to examine is `not_run` too: limits with written text fields none of which was found
+on a page (`nothing_measured`) or whose values name no entry of the order (`write_order_unmatched`); design and limits
+when the run report lists none of the plan's operations (`nothing_ran`); design with a kit that declares no design
+place (`no_design_place`); pages with a plan of no page (`plan_has_no_pages`); demo and links with no page read
+(`no_rendered_page`). A check that throws is `not_run` with the error's code, never its message.
 
 Every finding has `kind`, `page` (a site address, or a plan page id for a plan page) and `place`.
 
 | Check | Kind | Place and fields |
 |---|---|---|
 | `demo` | `demo_text`, `demo_image` | Part 1's place; `excerpt`: the template's demo sentence or picture file, at most 80 characters |
-| `links` | `missing_page`, `anchor_missing`, `demo_page` | Part 1's place; `href`: the path only, no host, no query |
+| `links` | `missing_page`, `anchor_missing`, `demo_page` | Part 1's place, kept to its known keys; `href`: the path and anchor only, no host, no query; a mail or phone link as its scheme only (`mailto:`) |
 | `design` | `design_field_written` | `{op, entity, block, field, slot}`; `source: 'write'` (sent by an operation that ran) or `'stored'` (read back, not the blank value, with `lengths`) |
 | `design` | `icon_class_not_allowed` | an icon class value sent outside the mapping's `networkIconClasses`; `allowed`: how many are |
 | `limits` | `text_over_limit` | `{entry, place, block, field, element}` or `slot`; `limit`, `limitFrom`, `length`; `source: 'rendered'` or `'stored'` |
 | `pages` | `plan_page_missing` | `{pageType, path}`; `status` when the address answered something else, `null` when nothing was there |
 | `pages` | `plan_menu_item_missing` | `{menu, path}`: `main`, or the menu type of another menu the write made |
 | `pages` | `site_page_not_in_plan` | a page read on the site whose address is not under a plan page (a demo leftover) |
-| `pages` | `site_menu_item_not_in_plan` | a menu link to such a page; `excerpt`: its label, at most 40 characters |
+| `pages` | `site_menu_item_not_in_plan` | a menu link to such a page; `excerpt`: its label, at most 40 characters, only when the template's demo content declares that address; else `labelLength` only |
 
 ## Design typed
 
@@ -71,30 +93,49 @@ A place is design typed when it is any of:
 
 The write order never has an entry for a design field (`write-order-check.mjs`, `design_field`), so any write at a
 design place is one no order entry approved. An icon class sent outside the mapping's `networkIconClasses` is reported
-too. Two sources are read: the operations of the write result that ran, and the stored slots (`--stored`) against the
+too. A write location overlaps a design location when both name the same record and column and one path is the start
+of the other: a write of the whole `params` column, of a parent (`['gallery']`) or of a path under a design line is a
+design write. Two sources are read: the operations of the write result that ran, and the stored slots (`--stored`) against the
 blank site's `sample` value. A design value is not visible text, so the rendered pages are not read for it.
 
 ## Limits
 
-For every text entry the write wrote, the element showing it is found on the rendered pages (its own page first): the
-innermost element whose visible words hold the first 24 characters of what was written, across inline tags, entities
-read; of several, the one closest in length to what was written. Its words are counted one per code point
-(`charCount` of `page-copy-check.mjs`, the unit of every limit of the domain) against the smaller of the kit's
-declared limit and the order's limit for the field. A written field found on no page is listed in `notLocated` and in
-the notes. With `--stored`, the stored value of the field's slot is counted too.
+The order's entries are indexed by their `place` (`home.home-b2.button-label`), the id every write value names
+(`entry`); SEO values (`seo:home.title`, `seo:home.description`) are text entries with the order's SEO limits, share
+images, pictures and icons are indexed and skipped. For every text entry the write wrote, the field's own run is found
+on the rendered pages (its own page first): in the innermost element whose visible words hold the first 24 characters
+of what was written, across inline tags, entities read, the run is the words from where the field starts for as long
+as they are the written words. Other words of that element (a label before it, a tail the template adds) are not the
+field's. Of several places, the longest run. An SEO title is read in its own page's `title`, a description in its
+description meta. A run is counted one per code point (`charCount` of `page-copy-check.mjs`, the unit of every limit
+of the domain; the domain does not normalise to NFC before counting, so neither does this tool) against the smaller of
+the kit's declared limit and the order's limit for the field. A written field found on no page is listed in
+`notLocated` and in the notes. With `--stored`, the stored value of the field's slot is counted too.
+
+On the invented florist of the draft write tests (the real write order and write plan on the real JA Boxing kit), all
+89 written text fields (77 block fields and 12 SEO values) are measured on pages invented from the plan's values
+(`scripts/test/built-site-check-real-plan.test.mjs`).
 
 ## Privacy
 
 The report quotes template text only: a demo excerpt, a leftover menu label. It gives the lengths and the field of a
 text over its limit, never its words, and never the value of a design field. Every string of the report goes through
-`maskHeld` with the plan's held names: a held name, in any form (case, accents, slug), is written `[held]`.
+`held-mask.mjs` with the plan's held names: character references and percent escapes are read first, then the
+domain's `maskHeld` (case, accents, slug), then two forms it does not find: a digit between the words of a held name
+(`Odalys1Brenwick`) and a one word held name of 4 letters or more inside a token of a path or a slug
+(`brenwickflowers`). A held name is written `[held]`. A one word held name glued to a capitalised word in prose
+(`Brenwicks`) is not found.
 
 ## What it cannot see
 
 - A design value from the rendered page: only what the write sent and what the site stores.
 - Which menu a rendered menu link belongs to. A menu item is matched by the page it opens, so an item of another menu
   linking a page the main menu also links is found by either.
-- A field the template shows in other words than written (cut, rewritten by a filter): it is `notLocated`.
+- A field the template shows in other words than written (rewritten by a filter): it is `notLocated`. A field the
+  template cuts short is measured as shown.
+- A text kept short by CSS (`text-overflow`, a line clamp): no browser runs.
+- A page reached only by a query address (a site without search engine friendly addresses): the crawl follows paths
+  and reads a query link as its path. Part 1 gets the query in `links` and can `probe` it.
 - Pages no link and no plan address reaches, and anything drawn by script after load (no browser runs).
 - Pages a site answers only to a signed in visitor.
 
@@ -107,13 +148,20 @@ The demo scan and the link check are the Part 1 release gate's (#585, #586); thi
 
 ```js
 demoScan({ pages, kit }) -> Promise<Array<{ kind: 'demo_text' | 'demo_image', page, place, excerpt }>>
-linkCheck({ pages, base, expected: { paths } }) -> Promise<Array<{
+linkCheck({ pages, base, expected: { paths }, links, probe }) -> Promise<Array<{
   kind: 'missing_page' | 'anchor_missing' | 'demo_page', page, place, href }>>
 ```
 
-`pages` are `[{path, url, status, html}]`; `kit` is `{blockStore, mapping, contentMap}`; `base` is the site's base
-address; `expected.paths` are the plan's page addresses (a link to a demo page the plan does not have is
-`demo_page`). Menu links and in page anchors that point nowhere are the link check's.
+`pages` are `[{path, url, status, html}]`; `kit` is `{blockStore, mapping, contentMap, demoRoutes}`; `base` is the
+site's base address; `expected.paths` are the plan's page addresses (a link to a demo page the plan does not have is
+`demo_page`). `links` is every link of every page read, resolved by `part-one-links.mjs`:
+`{page, href, url, path, query, hash, kind, menu}`, `kind` one of `page`, `asset` (a file under the base, which the
+crawl does not read), `anchor`, `scheme` (mail, phone), `other_site`; a link with a query string keeps it, so
+`index.php?option=com_content&view=article&id=3` is not taken for the home page. The link's words are never handed on.
+`probe(url)` reads one address of the local site again with the tool's guards and answers `{status, note?}`, so a
+query or asset link can be judged; it is `null` for a folder of saved pages. Menu links and in page anchors that point
+nowhere are the link check's. What comes back is shaped: `place` keeps only `element`, `block`, `field`, `slot`, `menu`
+and `anchor`, each a plain value of at most 40 characters.
 
 Tests: `scripts/test/built-site-check-*.test.mjs`, on an invented florist (`scripts/test/fixtures/built-site-check/`).
 The tool has not been run on a real built site yet.

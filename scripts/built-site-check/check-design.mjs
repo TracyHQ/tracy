@@ -14,6 +14,25 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const locKey = (loc) =>
   `${loc?.entity ?? ''}|${loc?.column ?? ''}|${JSON.stringify(loc?.jsonPath ?? [])}|${loc?.xpath ?? ''}`
 
+/** Whether one list is the start of the other (an empty list is the start of every list). */
+const prefixEither = (a, b) => {
+  const n = Math.min(a.length, b.length)
+  for (let i = 0; i < n; i++) if (String(a[i]) !== String(b[i])) return false
+  return true
+}
+const xpathEither = (a, b) => !a || !b || a === b || a.startsWith(`${b}/`) || b.startsWith(`${a}/`)
+
+/**
+ * Whether a write location and a design location overlap: the same record and column, and one path is the start of
+ * the other. A write of the whole column, or of a parent (`['gallery']`), replaces the design line under it; a write
+ * deeper than a design line changes part of it.
+ */
+export function overlaps(write, design) {
+  if (!write?.entity || write.entity !== design.entity || (write.column ?? '') !== (design.column ?? ''))
+    return false
+  return prefixEither(list(write.jsonPath), list(design.jsonPath)) && xpathEither(write.xpath, design.xpath)
+}
+
 /** Every design typed place of a kit: by slot and by location, each `{block, field, slot}`. */
 export function designPlacesOf(kit) {
   const bySlot = new Map()
@@ -21,7 +40,7 @@ export function designPlacesOf(kit) {
   const add = (loc, at) => {
     if (!loc || typeof loc !== 'object') return
     if (typeof loc.slot === 'string') bySlot.set(loc.slot, { ...at, slot: loc.slot })
-    if (loc.entity) byLoc.set(locKey(loc), { ...at, slot: loc.slot ?? null })
+    if (loc.entity) byLoc.set(locKey(loc), { ...at, slot: loc.slot ?? null, loc })
   }
   for (const block of list(kit.blockStore?.blocks))
     for (const f of [...list(block.fields), ...list(block.itemFields)])
@@ -53,7 +72,9 @@ function writeFindings(write, places, kit, entries) {
   const classes = iconClassesOf(kit)
   for (const op of write.ops)
     for (const v of list(op.values)) {
-      const hit = places.bySlot.get(v.loc?.slot) ?? places.byLoc.get(locKey(v.loc))
+      const near = [...places.byLoc.values()].find((p) => overlaps(v.loc, p.loc))
+      const found = places.bySlot.get(v.loc?.slot) ?? places.byLoc.get(locKey(v.loc)) ?? near
+      const hit = found ? { block: found.block, field: found.field, slot: found.slot } : null
       const page = entries?.get(v.entry)?.page ?? op.page ?? null
       if (hit)
         out.push({
@@ -113,9 +134,22 @@ export function checkDesign({ kit, write, stored, entries }) {
       reason: 'no_write_result_or_stored_values: nothing says what was written',
       findings: []
     }
+  if (write?.plan?.ops?.length && !write.ops.length && !stored)
+    return {
+      status: 'not_run',
+      reason: "nothing_ran: the run report lists none of the write plan's operations",
+      findings: []
+    }
   const places = designPlacesOf(kit)
+  if (!places.bySlot.size && !places.byLoc.size)
+    return {
+      status: 'not_run',
+      reason: 'no_design_place: the kit declares no design field, design line or design element',
+      findings: []
+    }
   const findings = write ? writeFindings(write, places, kit, entries) : []
-  const notes = []
+  const values = write ? write.ops.reduce((n, op) => n + list(op.values).length, 0) : 0
+  const notes = write ? [`${values} written value(s) checked`] : []
   if (stored) {
     const s = storedFindings(stored, places, kit)
     findings.push(...s.out)

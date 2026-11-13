@@ -64,6 +64,13 @@ test('links to a missing page, a dead anchor and a demo page are reported, as a 
   assert.deepEqual(given.expected.paths, ['/', '/bouquets', '/visit-us'])
   assert.equal(given.base, 'http://pages.invalid/')
   assert.ok(given.pages.every((p) => typeof p.html === 'string' && !('tree' in p)))
+  const home = given.links.filter((l) => l.page === '/')
+  assert.ok(home.some((l) => l.path === '/visit-us' && l.kind === 'page' && l.menu === true))
+  assert.ok(
+    home.every((l) => !('label' in l)),
+    'the link words are never handed on'
+  )
+  assert.equal(given.probe, null, 'a folder of saved pages has nothing to probe')
 })
 
 test('near miss: no broken link gives no finding', async () => {

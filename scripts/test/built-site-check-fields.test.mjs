@@ -91,7 +91,7 @@ test('a text field whose rendered words run over its declared limit is reported 
   assert.equal(found[0].page, '/bouquets')
   assert.deepEqual(found[0].place, {
     entry: 'services.intro.paragraph',
-    place: 'services.intro',
+    place: 'services.intro.paragraph',
     block: 'intro-text',
     field: 'paragraph',
     element: 'p'
@@ -112,20 +112,53 @@ test('near miss: entities and an emoji count one character each, so a field at i
     .values.map((v) => (v.entry === 'services.intro.paragraph' ? { ...v, value: 'Hand tied bouquets' } : v))
   const report = await reportOf({ files, write: writeResult({ values }) })
   assert.deepEqual(report.checks.limits.findings, [])
-  assert.match(report.checks.limits.notes[0], /^3 written text field/)
+  assert.match(report.checks.limits.notes[0], /^3 of 3 written text field/)
 })
 
-test('the template stretching a field on the page is measured on the page, across inline tags', async () => {
+/** The bouquets page with the paragraph field written as `words` inside `wrap` (the words in place of `$`). */
+function sharedElement(words, wrap) {
   const files = pages()
-  files['index.html'] = files['index.html'].replace(
-    '<h1>Fresh <em>tulips</em> every morning</h1>',
-    '<h1>Fresh <em>tulips</em> every morning, and a demo tail that the template adds</h1>'
+  files['bouquets.html'] = files['bouquets.html'].replace(
+    '<p>Hand tied bouquets for weddings, birthdays and quiet thank you notes</p>',
+    wrap.replace('$', words)
   )
-  const report = await reportOf({ files })
-  const over = report.checks.limits.findings.find((f) => f.place.field === 'heading')
-  assert.equal(over.page, '/')
-  assert.equal(over.place.element, 'h1')
-  assert.ok(over.length > 40)
+  const values = writeResult()
+    .plan.ops.at(-1)
+    .values.map((v) => (v.entry === 'services.intro.paragraph' ? { ...v, value: words } : v))
+  return reportOf({ files, write: writeResult({ values }) })
+}
+const paragraph = (report) => report.checks.limits.findings.filter((f) => f.place.field === 'paragraph')
+const SIXTY = 'Hand tied bouquets for weddings and birthdays, every day: ok'
+
+test('near miss: a field at its limit sharing its element with other words is measured alone', async () => {
+  assert.equal([...SIXTY].length, 60)
+  const wrap = '<p><strong>Our work:</strong> $ and a tail the template adds after it.</p>'
+  const report = await sharedElement(SIXTY, wrap)
+  assert.equal(report.checks.limits.status, 'ran')
+  assert.deepEqual(paragraph(report), [])
+})
+
+test('a field one over its limit sharing its element with other words is reported with its own length', async () => {
+  const wrap = '<p><strong>Our work:</strong> $ and a tail the template adds after it.</p>'
+  const found = paragraph(await sharedElement(`${SIXTY}!`, wrap))
+  assert.deepEqual(
+    found.map((f) => [f.page, f.place.element, f.length, f.limit]),
+    [['/bouquets', 'p', 61, 60]]
+  )
+})
+
+test('a field split across inline tags is measured as one run; one the template cuts short is measured as shown', async () => {
+  const split = paragraph(
+    await sharedElement(`${SIXTY}!`, '<p>$</p>'.replace('$', `<em>Hand</em> ${SIXTY.slice(5)}!`))
+  )
+  assert.equal(split[0]?.length, 61)
+  const files = pages()
+  files['bouquets.html'] = files['bouquets.html'].replace(
+    'Hand tied bouquets for weddings, birthdays and quiet thank you notes',
+    'Hand tied bouquets for weddings, birthdays and quie...'
+  )
+  const cut = await reportOf({ files })
+  assert.deepEqual(paragraph(cut), [], 'the page shows 51 characters of the field')
 })
 
 test('a written field found on no page is named as not located, never passed silently', async () => {
@@ -147,7 +180,11 @@ test('the limits check cannot run without a write result or without its write or
   const none = await reportOf({ write: null })
   assert.match(none.checks.limits.reason, /^write_result_missing/)
   const bare = writeResult()
-  delete bare.plan.order
+  delete bare.order
   const noOrder = await reportOf({ write: bare })
   assert.match(noOrder.checks.limits.reason, /^write_order_missing/)
+  const other = writeResult()
+  other.order = { ...other.order, run: { id: 'run-another', kind: 'build' } }
+  const mismatch = await reportOf({ write: other })
+  assert.match(mismatch.checks.limits.reason, /^write_order_mismatch/)
 })

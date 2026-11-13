@@ -47,6 +47,21 @@ test('one command on saved pages writes a JSON report and a readable summary, ex
   for (const out of [JSON.stringify(report), text]) assert.ok(!foldHeld(out).includes('brenwick'))
 })
 
+test('the write order given apart from the write result is read with --write-order', async () => {
+  const { at, args } = inputs()
+  const { order, ...rest } = writeResult()
+  writeFileSync(at('plan-only.json'), JSON.stringify(rest))
+  writeFileSync(at('order.json'), JSON.stringify(order))
+  const base = args.slice(0, 4)
+  const without = [...base, '--write-result', at('plan-only.json'), '--pages', at('pages')]
+  assert.equal(await main([...without, '--out', at('a.json')], { log: quiet }), 0)
+  const a = JSON.parse(readFileSync(at('a.json'), 'utf8'))
+  assert.match(a.checks.limits.reason, /^write_order_missing/)
+  const given = [...without, '--write-order', at('order.json'), '--out', at('b.json')]
+  assert.equal(await main(given, { log: quiet }), 0)
+  assert.equal(JSON.parse(readFileSync(at('b.json'), 'utf8')).counts.limits, 1)
+})
+
 test('one command on a local base address crawls it with GET only', async () => {
   const { at, args } = inputs()
   const files = pages()

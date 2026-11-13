@@ -57,6 +57,7 @@ export const kit = () => ({
       why: 'invented'
     }
   },
+  demoRoutes: ['demo-classes'],
   contentMap: {
     slots: [
       { key: 'module-10.0', entity: 'module-10', column: 'title', sample: 'Demo hero heading' },
@@ -85,40 +86,26 @@ export const approval = () => ({
   profile: { withheld: { people: [HELD_PERSON], names: [] } }
 })
 
-const entry = (key, field, limit) => ({ key, place: key.replace(/\.[^.]+$/, ''), field, type: 'text', limit })
+// The real shapes (`write-order.mjs`, `draft-write-plan.mjs`): an entry's `place` is the id a write value names it by
+// (`home.hero.heading`), its `key` is another form (`hero/heading`); the write plan keeps only the order's ids.
+const entry = (place, field, limit) => ({
+  key: place.split('.').slice(1).join('/'),
+  place,
+  field,
+  type: 'text',
+  limit
+})
 const block = (id, store, fields) => ({ id, block: store, at: id, fields, items: [], lists: [] })
+const RUN = { id: 'run-florist', kind: 'build' }
+const menuOp = (key, page, fields) => ({ key, kind: 'menuItem.create', page, fields, values: [] })
 
 /** The write plan and its run report; `values` adds or replaces values of the in-place apply. */
 export const writeResult = ({ values, ran } = {}) => {
   const ops = [
-    {
-      key: 'menu:home',
-      kind: 'menuItem.create',
-      page: 'home',
-      fields: { title: 'Home', alias: 'home', menutype: 'mainmenu', home: 1 },
-      values: []
-    },
-    {
-      key: 'menu:services',
-      kind: 'menuItem.create',
-      page: 'services',
-      fields: { title: 'Bouquets', alias: 'bouquets', menutype: 'mainmenu' },
-      values: []
-    },
-    {
-      key: 'menu:contact',
-      kind: 'menuItem.create',
-      page: 'contact',
-      fields: { title: 'Visit us', alias: 'visit-us', menutype: 'mainmenu' },
-      values: []
-    },
-    {
-      key: 'menu:footer:contact',
-      kind: 'menuItem.create',
-      page: 'contact',
-      fields: { title: 'Find us', alias: 'find-us', menutype: 'footermenu' },
-      values: []
-    },
+    menuOp('menu:home', 'home', { title: 'Home', alias: 'home', menutype: 'mainmenu', home: 1 }),
+    menuOp('menu:services', 'services', { title: 'Bouquets', alias: 'bouquets', menutype: 'mainmenu' }),
+    menuOp('menu:contact', 'contact', { title: 'Visit us', alias: 'visit-us', menutype: 'mainmenu' }),
+    menuOp('menu:footer:contact', 'contact', { title: 'Find us', alias: 'find-us', menutype: 'footermenu' }),
     {
       key: 'apply:module-10',
       kind: 'contract.apply',
@@ -142,6 +129,12 @@ export const writeResult = ({ values, ran } = {}) => {
     }
   ]
   const order = {
+    schema: 'tracy-write-order/v1',
+    run: RUN,
+    plan: { id: 'plan-1', revision: 1, language: 'en' },
+    seo: { title: 60, description: 160 },
+    pictures: [],
+    icons: [],
     pages: [
       { id: 'home', blocks: [block('home.hero', 'hero-main', [entry('home.hero.heading', 'heading', 40)])] },
       {
@@ -156,8 +149,10 @@ export const writeResult = ({ values, ran } = {}) => {
       { id: 'contact', blocks: [] }
     ]
   }
+  const ids = { run: RUN, plan: order.plan, template: { slug: 'quillhaven', version: '1.0.0' } }
   return {
-    plan: { schema: 'tracy-draft-write-plan/v1', mainMenu: 'mainmenu', order, ops },
+    order,
+    plan: { schema: 'tracy-draft-write-plan/v1', mainMenu: 'mainmenu', order: ids, ops },
     report: { status: 'done', ran: ran ?? ops.map((o) => o.key) }
   }
 }

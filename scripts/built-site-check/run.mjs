@@ -5,13 +5,14 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkBuiltSite, summaryOf } from './check-built-site.mjs'
 import { approvalOf, expectedPagesOf, loadKit, writeResultOf } from './inputs.mjs'
-import { BuiltSiteCheckError, localBaseOf } from './local-fetch.mjs'
+import { BuiltSiteCheckError, fetchLocal, localBaseOf } from './local-fetch.mjs'
 import { loadPartOne } from './part-one.mjs'
-import { crawlSite, pagesOfFolder } from './site-pages.mjs'
+import { crawlSite, folderPages } from './site-pages.mjs'
 
 export const HELP = `Usage:
   node scripts/built-site-check/run.mjs (--site <local base address> | --pages <folder>)
-    [--plan <file>] [--kit <dir>] [--write-result <file>] [--stored <file>] --out <report.json>
+    [--plan <file>] [--kit <dir>] [--write-result <file>] [--write-order <file>] [--stored <file>]
+    [--demo-content <file>] --out <report.json>
 
 Checks a site just built from an AI quickstart during a LOCAL TRIAL RUN and writes a report
 (<report.json> and a readable <report>.txt). It decides nothing and is never part of a build.
@@ -22,14 +23,19 @@ Checks a site just built from an AI quickstart during a LOCAL TRIAL RUN and writ
   --pages         a folder of saved rendered pages instead (index.html is the home page)
   --plan          the approved plan, {plan, profile} or the plan alone (held names come from it)
   --kit           the AI quickstart kit folder (block-store.json, mapping.json, blank-site-contract/)
-  --write-result  the write step's result, {plan: <write plan>, report: <run report>}, or the write plan
+  --write-result  the write step's result, {order, plan, report}: the write order, the write plan and
+                  the run report (or {plan, report}, or the write plan alone)
+  --write-order   the write order (tracy-write-order/v1) when the write result does not hold it; the
+                  write plan keeps only its ids, and the limits check needs its entries
   --stored        optional: {slots: {<slot>: <value>}} read back from the built site after the build
+  --demo-content  the template's released content map, whose page routes are its demo pages (found
+                  beside the kit by default)
   --out           where to write the JSON report
 
 Exit code 0 when the tool ran, whatever it found; 1 when it could not run; 2 on a usage error.
 A check that cannot run says not_run with its reason.`
 
-const FLAGS = ['site', 'pages', 'plan', 'kit', 'write-result', 'stored', 'out']
+const FLAGS = ['site', 'pages', 'plan', 'kit', 'write-result', 'write-order', 'stored', 'demo-content', 'out']
 
 export function argsOf(argv) {
   const out = {}
@@ -69,15 +75,16 @@ export async function main(argv, { fetchImpl, partOne, log = console.log } = {})
   }
   try {
     const approval = args.plan ? approvalOf(readJson(args.plan, 'plan_unreadable')) : { plan: null, held: [] }
+    const order = args['write-order'] ? readJson(args['write-order'], 'write_order_unreadable') : null
     const write = args['write-result']
-      ? writeResultOf(readJson(args['write-result'], 'write_result_unreadable'))
+      ? writeResultOf(readJson(args['write-result'], 'write_result_unreadable'), { order })
       : null
     if (args['write-result'] && !write)
       throw new BuiltSiteCheckError('write_result_unreadable', 'no write plan in it')
     let kit = null
     if (args.kit) {
       try {
-        kit = loadKit(args.kit)
+        kit = loadKit(args.kit, { demoContent: args['demo-content'] ?? null })
       } catch (error) {
         throw new BuiltSiteCheckError('kit_unreadable', `kit_unreadable: ${error?.code ?? 'error'}`)
       }
@@ -86,18 +93,23 @@ export async function main(argv, { fetchImpl, partOne, log = console.log } = {})
     let base
     let pages
     let capped = false
+    let probe = null
     if (args.site) {
       base = localBaseOf(args.site)
       // The plan's pages are read even when no page links to them, so a missing one answers its own status.
       const seeds = approval.plan ? expectedPagesOf(approval.plan, write).map((e) => e.path) : []
       ;({ pages, capped } = await crawlSite(base, { seeds, fetchImpl }))
+      probe = async (url) => {
+        const { status, note } = await fetchLocal(base, url, { fetchImpl })
+        return note ? { status, note } : { status }
+      }
       if (!pages.some((p) => p.status > 0))
         throw new BuiltSiteCheckError('site_unreachable', 'the site answered nothing')
     } else {
       if (!existsSync(args.pages))
         throw new BuiltSiteCheckError('pages_missing', 'the pages folder does not exist')
       base = new URL('http://pages.invalid/')
-      pages = pagesOfFolder(args.pages)
+      ;({ pages, capped } = folderPages(args.pages))
     }
     const { demoScan, linkCheck } = partOne ?? (await loadPartOne())
     const report = await checkBuiltSite({
@@ -111,7 +123,8 @@ export async function main(argv, { fetchImpl, partOne, log = console.log } = {})
       kit,
       stored,
       demoScan,
-      linkCheck
+      linkCheck,
+      probe
     })
     writeFileSync(args.out, `${JSON.stringify(report, null, 2)}\n`)
     const text = summaryOf(report)

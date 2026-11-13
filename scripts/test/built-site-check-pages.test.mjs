@@ -1,7 +1,7 @@
 // Pages and menu items of the plan missing on the built site, and demo leftovers the plan does not have (#601).
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { pages } from './fixtures/built-site-check/florist.mjs'
+import { approval, pages } from './fixtures/built-site-check/florist.mjs'
 import { kindsOf, reportOf } from './fixtures/built-site-check/report-of.mjs'
 
 test('near miss: every plan page and main menu item is found, by address, through index.php and a trailing slash', async () => {
@@ -76,5 +76,33 @@ test('without a write result the aliases are made from the page names as the wri
   assert.deepEqual(
     report.checks.pages.findings.filter((f) => f.kind.startsWith('plan_')),
     []
+  )
+})
+
+test('a leftover menu item at an address the demo content does not declare: its length, never its words', async () => {
+  const files = pages()
+  files['index.html'] = files['index.html'].replace(
+    '<li><a href="/demo-classes">Boxing classes</a></li>',
+    '<li><a href="/our-story">Our story, told by the owner</a></li>'
+  )
+  const report = await reportOf({ files })
+  const item = report.checks.pages.findings.find((f) => f.kind === 'site_menu_item_not_in_plan')
+  assert.deepEqual([item.place.path, item.labelLength, item.excerpt], ['/our-story', 28, undefined])
+  assert.ok(!JSON.stringify(report).includes('told by the owner'))
+})
+
+test('a page named with an accent is found at the address Joomla writes without it', async () => {
+  const a = approval()
+  a.plan.pages[1].name = 'Café posies'
+  const files = pages()
+  for (const name of Object.keys(files))
+    files[name] = files[name].replaceAll('/bouquets/', '/cafe-posies').replaceAll('/bouquets', '/cafe-posies')
+  files['cafe-posies.html'] = files['bouquets.html']
+  delete files['bouquets.html']
+  const report = await reportOf({ files, approval: a, write: null })
+  assert.deepEqual(
+    report.checks.pages.findings.filter((f) => f.page === 'services'),
+    [],
+    'café-posies (slugOf) and cafe-posies (the site) are one address'
   )
 })

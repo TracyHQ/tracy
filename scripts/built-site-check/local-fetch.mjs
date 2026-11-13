@@ -4,7 +4,7 @@
 
 const LOCAL_SUFFIXES = ['.localhost', '.test', '.ddev.site']
 const MAX_REDIRECTS = 3
-const MAX_BYTES = 5 * 1024 * 1024
+export const MAX_BYTES = 5 * 1024 * 1024
 const TIMEOUT_MS = 15000
 
 export class BuiltSiteCheckError extends Error {
@@ -48,9 +48,30 @@ export function localBaseOf(text) {
   return url
 }
 
-/** Whether an address is on the base's origin and under its path. */
-export const onBase = (url, base) =>
-  url.origin === base.origin && url.pathname.startsWith(base.pathname.replace(/\/$/, '') || '/')
+/** Whether an address is on the base's origin and under its path: `/site/` takes `/site` and `/site/a`, not `/site-b`. */
+export function onBase(url, base) {
+  if (url.origin !== base.origin) return false
+  const root = base.pathname.replace(/\/$/, '')
+  return !root || url.pathname === root || url.pathname.startsWith(`${root}/`)
+}
+
+/** At most MAX_BYTES of a body, read as a stream and cut there: a huge page is never read whole. */
+export async function bodyOf(res, max = MAX_BYTES) {
+  const reader = res.body?.getReader?.()
+  if (!reader) return { text: '', capped: false }
+  const chunks = []
+  let size = 0
+  while (size < max) {
+    const { done, value } = await reader.read()
+    if (done) break
+    chunks.push(value)
+    size += value.byteLength
+  }
+  const capped = size >= max
+  if (capped) await reader.cancel().catch(() => {})
+  const bytes = Buffer.concat(chunks).subarray(0, max)
+  return { text: new TextDecoder().decode(bytes), capped }
+}
 
 /**
  * One page of the base, GET only, redirects followed only on the base.
@@ -71,6 +92,7 @@ export async function fetchLocal(base, address, { fetchImpl = fetch } = {}) {
       return { status: 0, html: '', url: url.href, note: `unreachable: ${error?.name ?? 'error'}` }
     }
     if (res.status >= 300 && res.status < 400 && res.headers.get('location')) {
+      await res.body?.cancel?.().catch(() => {})
       const next = new URL(res.headers.get('location'), url)
       if (!onBase(next, base))
         return { status: res.status, html: '', url: url.href, note: 'redirect_off_base' }
@@ -78,8 +100,17 @@ export async function fetchLocal(base, address, { fetchImpl = fetch } = {}) {
       continue
     }
     const type = res.headers.get('content-type') ?? ''
-    const text = /html|^$/.test(type) ? await res.text() : ''
-    return { status: res.status, html: text.slice(0, MAX_BYTES), url: url.href }
+    if (!/html|^$/.test(type)) {
+      await res.body?.cancel?.().catch(() => {})
+      return { status: res.status, html: '', url: url.href }
+    }
+    const body = await bodyOf(res)
+    return {
+      status: res.status,
+      html: body.text,
+      url: url.href,
+      ...(body.capped ? { note: 'body_capped' } : {})
+    }
   }
   return { status: 0, html: '', url: url.href, note: 'too_many_redirects' }
 }

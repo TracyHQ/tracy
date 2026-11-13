@@ -1,27 +1,18 @@
 // The built site check (ticket #601): every check on the rendered pages of a site built from an AI quickstart, for
 // local trial runs. It reports; it decides nothing. A build is done when its write step completed (ADR 0047), and no
 // part of the build calls this tool. Each check says `ran` with its findings, or `not_run` with the reason.
-import { maskHeld } from '../../packages/wo/website-opportunities/domain/held-text-match.mjs'
 import { checkDesign } from './check-design.mjs'
 import { checkLimits } from './check-limits.mjs'
 import { checkPages } from './check-pages.mjs'
+import { HELD, redacted } from './held-mask.mjs'
 import { linksOf, treeOf } from './html-read.mjs'
 import { entriesOf, expectedPagesOf, otherMenuItemsOf } from './inputs.mjs'
 import { checkDemo, checkLinks } from './part-one.mjs'
+import { seamLinksOf } from './part-one-links.mjs'
 
 export const REPORT_SCHEMA = 'tracy-built-site-check/v1'
-export const HELD = '[held]'
+export { HELD, redacted }
 export const CHECKS = ['demo', 'links', 'design', 'limits', 'pages']
-
-/** Every string of a value with every held name, in any form, replaced by `[held]`. */
-export function redacted(value, held) {
-  if (!held.length) return value
-  if (typeof value === 'string') return maskHeld(value, held, HELD)
-  if (Array.isArray(value)) return value.map((v) => redacted(v, held))
-  if (value && typeof value === 'object')
-    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, redacted(v, held)]))
-  return value
-}
 
 /** A check that threw: `not_run` with its code, never its message (which may quote the site). */
 const failed = (error) => ({
@@ -40,10 +31,11 @@ async function safely(run) {
 /**
  * Check a built site.
  * @param {{pages: object[], base: URL, source: object, plan?: object, held?: string[], write?: object, kit?: object,
- *   stored?: object, demoScan?: Function | null, linkCheck?: Function | null, capped?: boolean}} input
+ *   stored?: object, demoScan?: Function | null, linkCheck?: Function | null, capped?: boolean,
+ *   probe?: Function | null}} input `probe(url)`: one address of the local site read again (null for a folder)
  */
 export async function checkBuiltSite(input) {
-  const { base, plan, write, kit, stored, demoScan = null, linkCheck = null } = input
+  const { base, plan, write, kit, stored, demoScan = null, linkCheck = null, probe = null } = input
   const held = (input.held ?? []).filter(Boolean)
   const pages = input.pages.map((p) => {
     const tree = p.status === 200 && p.html ? treeOf(p.html) : null
@@ -51,16 +43,24 @@ export async function checkBuiltSite(input) {
     return { ...p, abs, tree, links: tree ? linksOf(tree) : [] }
   })
   const plain = input.pages.map(({ path, url, status, html }) => ({ path, url, status, html }))
+  const read = pages.filter((p) => p.tree).length
   const expected = plan ? expectedPagesOf(plan, write) : null
   const pathOf = new Map((expected ?? []).map((e) => [e.page, e.path]))
-  const entries = write?.plan?.order ? entriesOf(write.plan.order) : null
+  const entries = write?.order ? entriesOf(write.order) : null
+  const links = seamLinksOf(pages, base)
   const checks = {
-    demo: await safely(() => checkDemo({ demoScan, pages: plain, kit })),
-    links: await safely(() => checkLinks({ linkCheck, pages: plain, base, expected })),
+    demo: await safely(() => checkDemo({ demoScan, pages: plain, kit, read })),
+    links: await safely(() => checkLinks({ linkCheck, pages: plain, base, expected, links, probe, read })),
     design: await safely(() => checkDesign({ kit, write, stored, entries })),
     limits: await safely(() => checkLimits({ write, entries, kit, pages, pathOf, stored })),
     pages: await safely(() =>
-      checkPages({ expected, others: otherMenuItemsOf(write, expected ?? []), pages, base })
+      checkPages({
+        expected,
+        others: otherMenuItemsOf(write, expected ?? []),
+        pages,
+        base,
+        demoRoutes: kit?.demoRoutes ?? []
+      })
     )
   }
   const report = {
