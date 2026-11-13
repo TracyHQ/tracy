@@ -329,6 +329,36 @@ test('an edit the plan refuses comes back with owner readable problems, not as a
   assert.equal(answer.ask, undefined)
 })
 
+test('a 409 that names a missing step says which step to take; only a stale edit says retry', async () => {
+  const cases = [
+    ['plan', 'POST /api/build-draft/compose', 'NO_RESEARCH', 'research', /action research/],
+    ['plan', 'POST /api/build-draft/compose', 'NO_TEMPLATE', 'template', /action templates/],
+    ['plan', 'POST /api/build-draft/compose', 'NO_KIT', 'template', /another one/],
+    ['edit', 'POST /api/build-draft/edit', 'NO_PLAN', 'plan', /action plan/]
+  ]
+  for (const [action, route, code, missing, next] of cases) {
+    const web = fakeWeb({ [route]: { status: 409, body: { code, next: 'for a developer' } } })
+    const answer = await run(toolWith(web), {
+      action,
+      ...(action === 'edit' ? { changes: [{ field: 'pages[home].name', value: 'Home' }] } : {})
+    })
+    assert.equal(answer.missing, missing, code)
+    assert.match(answer.next, next, code)
+    assert.equal(answer.stale, undefined, code)
+    assert.equal(
+      web.calls.filter((c) => c.path === new URL(`${ORIGIN}${route.split(' ')[1]}`).pathname).length,
+      1
+    )
+  }
+  const stale = fakeWeb({ 'POST /api/build-draft/edit': { status: 409, body: { code: 'STALE_EDIT' } } })
+  const answer = await run(toolWith(stale), {
+    action: 'edit',
+    changes: [{ field: 'pages[home].name', value: 'H' }]
+  })
+  assert.equal(answer.stale, true)
+  assert.equal(answer.missing, undefined)
+})
+
 /** One `ask_user_question` dispatch as dsh's tool guard sees it. */
 const asking = (ids, sessionId = SESSION) => ({
   name: 'ask_user_question',

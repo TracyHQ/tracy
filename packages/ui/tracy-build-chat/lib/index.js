@@ -211,6 +211,28 @@ var BUILD_PARAMETERS = Object.freeze({
   required: ["action"]
 });
 var DOOR = "/api/build-draft";
+var MISSING_STEPS = Object.freeze({
+  NO_DRAFT: {
+    missing: "research",
+    next: "Nothing is researched yet. Call tracy_build with action research and the owner's links or words."
+  },
+  NO_RESEARCH: {
+    missing: "research",
+    next: "Nothing is researched yet. Call tracy_build with action research and the owner's links or words."
+  },
+  NO_TEMPLATE: {
+    missing: "template",
+    next: "No template is chosen yet. Call tracy_build with action templates, let the owner pick one on the card, then call plan."
+  },
+  NO_KIT: {
+    missing: "template",
+    next: "The chosen template cannot be built here. Call tracy_build with action templates and let the owner pick another one."
+  },
+  NO_PLAN: {
+    missing: "plan",
+    next: "There is no plan yet. Call tracy_build with action plan after the owner chose a template."
+  }
+});
 var LINKS_MAX = 10;
 var TEXT_MAX = 2e3;
 var text = (value) => typeof value === "string" ? value.trim().slice(0, TEXT_MAX) : "";
@@ -329,6 +351,8 @@ ${JSON.stringify(answer)}`;
     return true;
   }
   function refusal(res) {
+    const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : void 0;
+    if (missing) return { missing: missing.missing, next: missing.next };
     if (res.status === 409)
       return {
         stale: true,

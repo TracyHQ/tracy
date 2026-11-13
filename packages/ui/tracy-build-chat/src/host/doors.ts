@@ -8,7 +8,8 @@
  *   prompter of the session) and `x-tracy-session` (the build session id, `session-build-<uuid>`), so tracy-web binds
  *   the call to that account's build session and draft;
  * - answers 403 when the session is not that account's build session or the build chat is switched off, 409 when
- *   the draft moved on (a stale plan revision), 422 when a request is refused, with `problems` the owner can read.
+ *   the draft moved on (`STALE_EDIT`, a stale plan revision) or a step was not taken yet (`NO_DRAFT`, `NO_RESEARCH`,
+ *   `NO_TEMPLATE`, `NO_KIT`, `NO_PLAN`), 422 when a request is refused, with `problems` the owner can read.
  *
  * Long work (research needs one model call for the needs profile; compose up to two) never holds a request open:
  * a door answers the engine state at once, `running` while the step works, and `GET /engine` reads it again.

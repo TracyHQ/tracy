@@ -63,6 +63,33 @@ export const BUILD_PARAMETERS = Object.freeze({
 })
 
 const DOOR = '/api/build-draft'
+
+/**
+ * The 409 codes of the engine doors that name a step the build has not taken yet (`engine-route.js` of tracy-web):
+ * what is missing and the one action that takes it. Never a stale plan, so never "retry".
+ */
+const MISSING_STEPS = Object.freeze({
+  NO_DRAFT: {
+    missing: 'research',
+    next: "Nothing is researched yet. Call tracy_build with action research and the owner's links or words."
+  },
+  NO_RESEARCH: {
+    missing: 'research',
+    next: "Nothing is researched yet. Call tracy_build with action research and the owner's links or words."
+  },
+  NO_TEMPLATE: {
+    missing: 'template',
+    next: 'No template is chosen yet. Call tracy_build with action templates, let the owner pick one on the card, then call plan.'
+  },
+  NO_KIT: {
+    missing: 'template',
+    next: 'The chosen template cannot be built here. Call tracy_build with action templates and let the owner pick another one.'
+  },
+  NO_PLAN: {
+    missing: 'plan',
+    next: 'There is no plan yet. Call tracy_build with action plan after the owner chose a template.'
+  }
+})
 const LINKS_MAX = 10
 const TEXT_MAX = 2_000
 
@@ -264,6 +291,9 @@ export function createBuildTool({
    * @param {{ status: number, body: any }} res
    */
   function refusal(res) {
+    // A 409 that names a step not taken yet is not a stale plan: the agent takes that step, it does not retry.
+    const missing = res.status === 409 ? MISSING_STEPS[res.body?.code] : undefined
+    if (missing) return { missing: missing.missing, next: missing.next }
     if (res.status === 409)
       return {
         stale: true,

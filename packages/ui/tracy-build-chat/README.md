@@ -67,5 +67,5 @@ Headers and refusals:
 | `x-tracy-actor` | the signed assertion for the person who typed (`tracyAssertion.mint` of the session's latest prompter) |
 | `x-tracy-session` | the build session id, `session-build-<uuid>`; tracy-web binds the call to that account's build session |
 | `403` | not this account's build session, or the build chat is switched off: the tool says `stopped` |
-| `409` | stale: the plan moved on; the tool tells the agent to read `status` and try again |
+| `409` | `STALE_EDIT` (or any other code): stale, the plan moved on; the tool tells the agent to read `status` and try again. `NO_DRAFT`, `NO_RESEARCH`, `NO_TEMPLATE`, `NO_KIT`, `NO_PLAN`: a step not taken yet; the tool answers `{ missing, next }` naming the one action to take (research, templates, plan), never a retry |
 | `422` | refused: `{ code, problems: string[] }`, problems the owner can read; never turned into a question |
