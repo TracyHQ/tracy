@@ -32,6 +32,9 @@ export function draftAiQuickstart({ kit, contentMap, decisions = {}, measured = 
     recipes.flatMap((r) => [...r.blocks, ...(r.variants ?? []).flatMap((v) => v.blocks)])
   )
   report.notPlaced = blocks.filter((b) => !placed.has(b.id)).map((b) => b.id)
+  // What the reviewed decisions tell the mapping file (#584) beside the blocks: how a block without fields is
+  // filled, why a page has no recipe.
+  report.notes = decisions.notes ?? []
   return { blockStore, pageRecipes, report }
 }
 

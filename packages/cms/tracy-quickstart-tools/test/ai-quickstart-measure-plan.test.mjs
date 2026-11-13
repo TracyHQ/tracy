@@ -114,3 +114,18 @@ test('a block no page shows at 390 px is opened on a page that shows it at a wid
 test('the tight form of a sample joins the words a hidden line break splits', () => {
   assert.equal(shownTextOf('WHAT((br/))((span))TO BRING((/span))', ''), 'WHATTO BRING')
 })
+
+test('a decision can open a menu by a selector before the slot is read', () => {
+  const plan = planMeasurements({
+    unmeasured: [{ block: 'block-8', slot: 'module-8.0' }],
+    blockStore,
+    kit,
+    contentMap,
+    measureOn: { 'module-8.0': { path: '/', clickSelector: '#menu-toggle' } }
+  })
+  assert.deepEqual(plan.pages[0], {
+    path: '/',
+    clickSelector: '#menu-toggle',
+    texts: [{ id: 'module-8.0', slot: 'module-8.0', text: 'Opening soon', tight: 'Opening soon' }]
+  })
+})

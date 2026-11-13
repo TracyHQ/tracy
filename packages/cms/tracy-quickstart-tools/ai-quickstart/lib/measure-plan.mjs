@@ -11,8 +11,10 @@ export const shownTextOf = (sample, joiner = ' ') =>
     .trim()
 
 /**
- * `measureOn` (the template's decisions) names, per content map key, another page to read the slot on and the words
- * of a tab to open first (`{path, click}`): a price in a closed tab, a masthead row only one page shows.
+ * `measureOn` (the template's decisions) names, per content map key, another page to read the slot on and what to
+ * open first (`{path, click, clickSelector}`: the words of a tab, or CSS selectors clicked in turn, every match, such
+ * as a menu toggle and its submenu toggles): a price in
+ * a closed tab, a masthead row only one page shows, a phone menu that slides in.
  * Each text carries `tight`: its words as a phone shows them when a forced line break is hidden there ("WHATTO
  * BRING" for "WHAT<br>TO BRING").
  * @param {{unmeasured: {block: string, slot: string}[], blockStore: object, kit: object, contentMap: object, measureOn?: object}} input
@@ -47,14 +49,15 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
     // No `lines` from the content map: its fit of these slots is the box of a whole section (13 lines for a two
     // line heading), so the text may take the lines the demo shows, no more.
     const click = measureOn[slot]?.click
-    const key = JSON.stringify([page.path, click ?? null])
+    const clickSelector = measureOn[slot]?.clickSelector
+    const key = JSON.stringify([page.path, click ?? null, clickSelector ?? null])
     const texts = byPath.get(key) ?? []
     texts.push({ id: slot, slot, text, tight: shownTextOf(mapSlots.get(slot)?.sample, '') })
     byPath.set(key, texts)
   }
   const pages = [...byPath].map(([key, texts]) => {
-    const [path, click] = JSON.parse(key)
-    return click ? { path, click, texts } : { path, texts }
+    const [path, click, clickSelector] = JSON.parse(key)
+    return { path, ...(click ? { click } : {}), ...(clickSelector ? { clickSelector } : {}), texts }
   })
   return { pages, skipped }
 }

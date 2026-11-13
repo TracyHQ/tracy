@@ -82,16 +82,20 @@ function mergeReport(out, scratch, memberId, store, mapSlots) {
 
 /**
  * Several kit blocks of one layout (the bodies of pages of one type) are one store block. A text field takes the
- * least limit measured on any of those pages, so copy fits every page of the type.
+ * least limit measured on any of those pages, so copy fits every page of the type. The source names the page by its
+ * place in the block's `from.kit` list, not by its kit id, which may carry a demo person's name.
  */
-export function mergeLimits(store, member, memberId, mapSlots) {
+export function mergeLimits(store, member, memberIndex, mapSlots) {
   for (const key of ['fields', 'itemFields']) {
     const byPlace = new Map((member[key] ?? []).map((f) => [placeOf(f, mapSlots), f]))
     for (const field of store[key] ?? []) {
       const other = byPlace.get(placeOf(field, mapSlots))
       if (field.type !== 'text' || !Number.isInteger(other?.limit)) continue
       if (!Number.isInteger(field.limit) || other.limit < field.limit)
-        Object.assign(field, { limit: other.limit, limitFrom: `${other.limitFrom} (on ${memberId})` })
+        Object.assign(field, {
+          limit: other.limit,
+          limitFrom: `${other.limitFrom} (on from.kit[${memberIndex}])`
+        })
     }
   }
 }
@@ -150,7 +154,7 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
     const existing = blocks.find((b) => b.id === id)
     if (existing) {
       const scratch = { ...emptyReport(), nested: [] }
-      mergeLimits(existing, draftOne(kb, id, decision, ctx, scratch), kb.id, mapSlots)
+      mergeLimits(existing, draftOne(kb, id, decision, ctx, scratch), existing.from.kit.length, mapSlots)
       mergeReport(out, scratch, kb.id, existing, mapSlots)
       existing.from.kit.push(kb.id)
       storeIdOf[kb.id] = id

@@ -74,9 +74,17 @@ async function main(argv) {
         deviceScaleFactor: 1
       })
       const page = await context.newPage()
-      for (const { path: pagePath, click, texts } of plan.pages) {
+      for (const { path: pagePath, click, clickSelector, texts } of plan.pages) {
         if (!(await openPage(page, site, pagePath))) continue
         if (click) await page.getByText(click, { exact: true }).first().click()
+        // Each selector in turn, every element it matches in page order (a menu toggle, then its submenu toggles).
+        // A toggle a width does not draw (a phone menu button on the desktop) leaves the texts undrawn there.
+        for (const selector of [clickSelector ?? []].flat())
+          for (const el of await page.locator(selector).all())
+            await el
+              .click({ timeout: 2000 })
+              .then(() => page.waitForTimeout(400))
+              .catch(() => {})
         await page.evaluate(() => document.body.setAttribute('data-kit-block', 'ai-quickstart-page'))
         const fit = (key) =>
           page.evaluate(readTextFit, {

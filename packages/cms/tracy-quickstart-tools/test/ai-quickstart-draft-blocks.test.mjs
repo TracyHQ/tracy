@@ -457,6 +457,11 @@ test('merged pages of one layout line their fields up by stored place, not by th
   const [block] = res.blocks
   assert.equal(block.fields.find((f) => f.slot === 'article-1.1').limit, 25)
   assert.equal(block.fields.find((f) => f.slot === 'article-1.2').limit, 150)
+  assert.match(
+    block.fields.find((f) => f.slot === 'article-1.2').limitFrom,
+    /\(on from\.kit\[1\]\)$/,
+    'the page is named by its place in from.kit, not by its kit id'
+  )
 })
 
 test('the report keeps what a merged page left open: its unlisted, derived and not mapped values', () => {

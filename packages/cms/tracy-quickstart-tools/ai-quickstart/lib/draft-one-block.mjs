@@ -185,8 +185,10 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
         limit: least.limit,
         limitFrom: `the narrowest measured menu label: ${least.limitFrom}`
       })
+    // Every label is offered for measuring: a submenu label may be folded away where the top level is drawn.
     else
-      out.unmeasured.push({ block: id, field: 'label', slot: nav[0].id, limitFrom: 'no menu label measured' })
+      for (const s of nav)
+        out.unmeasured.push({ block: id, field: 'label', slot: s.id, limitFrom: 'no menu label measured' })
     itemFields.push(label, {
       name: 'link',
       kind: 'editorial.navigation_url',
