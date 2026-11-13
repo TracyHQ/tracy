@@ -37,16 +37,16 @@ test('a sibling the write did not name must read the same after it: entities, el
   for (const content of [
     '<p>Caf&amp;eacute; one</p><p>New words</p><ul><li>a</li><li>b</li></ul>',
     '<p>Cafe one</p><p>New words</p><ul><li>a</li><li>b</li></ul>',
-    '<p>Café one</p><p>New words</p><ul><li>a</li></ul>',
-    '<p class="x">Café one</p><p>New words</p><ul><li>a</li><li>b</li></ul>',
-    '<p>Café one</p><p>New words</p><ul><li>b</li><li>a</li></ul>'
+    '<p>Caf\u00e9 one</p><p>New words</p><ul><li>a</li></ul>',
+    '<p class="x">Caf\u00e9 one</p><p>New words</p><ul><li>a</li><li>b</li></ul>',
+    '<p>Caf\u00e9 one</p><p>New words</p><ul><li>b</li><li>a</li></ul>'
   ])
     assert.deepEqual(
       code(() => readRest(before, { content }, write, { html })),
       ['read_back_mismatch', 'untouched value']
     )
   // The same words in another spelling are no change: `&eacute;` and the letter read alike.
-  const same = { content: '<p>Café one</p><p>New words</p><ul><li>a</li><li>b</li></ul>' }
+  const same = { content: '<p>Caf\u00e9 one</p><p>New words</p><ul><li>a</li><li>b</li></ul>' }
   assert.deepEqual(
     code(() => readRest(before, same, write, { html })),
     ['passed']
@@ -119,9 +119,10 @@ test('the run counts give written, skipped and conflicted apart, each entry once
   const report = await runOn(blankSite())
   const c = draftWriteCoverage(florist.order, floristPlan)
   assert.deepEqual(
-    [report.counts.written, report.counts.conflicted, report.counts.ops],
-    [c.written, c.conflicted, floristPlan.ops.length]
+    [report.counts.written, report.counts.skipped, report.counts.conflicted, report.counts.ops],
+    [c.written, c.skipped, c.conflicted, floristPlan.ops.length]
   )
+  assert.equal(report.counts.written + report.counts.skipped + report.counts.conflicted, c.in)
   assert.equal(report.counts.conflicts.length, new Set(floristPlan.conflicts.map((x) => x.entry)).size)
   assert.ok(!floristPlan.skipped.some((s) => s.reason === 'address_conflict'))
 })

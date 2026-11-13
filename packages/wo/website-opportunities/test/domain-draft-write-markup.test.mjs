@@ -94,22 +94,30 @@ test('guard markup_runs_code: an address that runs code, in any value or record 
 })
 
 test('held names reach no value as entities, accents, zero width or spaced forms', () => {
-  assert.equal(decodeEntities('O&#39;Brien &amp; Zo&euml; &#x45;&#235;'), "O'Brien & Zoë Eë")
-  assert.equal(plainOf('Kim&nbsp;​Lee'), 'Kim Lee')
+  assert.equal(decodeEntities('O&#39;Brien &amp; Zo&euml; &#x45;&#235;'), "O'Brien & Zo\u00eb E\u00eb")
+  assert.equal(plainOf('Kim&nbsp;\u200bLee'), 'Kim Lee')
   const aiq = site.aiq
   const library = (order) => order.pages.flatMap((p) => p.blocks).find((b) => b.source === 'library')
   for (const [name, written] of [
     ["Rory O'Brien", 'Rory O&#39;Brien'],
     ["Rory O'Brien", 'Rory O&#x27;Brien'],
     ['Ana & Bo Ltd', 'Ana &amp; Bo Ltd'],
-    ['Zoë Hart', 'Zo&euml; Hart'],
-    ['Zoë Hart', 'Zo&#235; Hart'],
-    ['Zoë Hart', 'Zoë Hart'],
+    ['Zo\u00eb Hart', 'Zo&euml; Hart'],
+    ['Zo\u00eb Hart', 'Zo&#235; Hart'],
+    ['Zo\u00eb Hart', 'Zoe\u0308 Hart'],
     ['Kim Lee', 'Kim&nbsp;Lee'],
     ['Kim Lee', 'Kim  \n Lee'],
-    ['Kim Lee', 'Ki​m Lee'],
+    ['Kim Lee', 'Ki\u200bm Lee'],
     ['Kim Lee', 'Kim<br>Lee']
   ]) {
+    // In a value of a copy, then in a library block's HTML.
+    const p = structuredClone(plan)
+    valueWhere(p, (_, v) => v.entry === HTML_HEADING).value = written
+    assert.throws(
+      () => guardPlan(p, { order: site.order, kit, withheld: { names: [name] } }),
+      (error) => error.code === 'held_text_in_value',
+      JSON.stringify(written)
+    )
     const order = structuredClone(site.order)
     library(order).library.html += `<p>${written}</p>`
     assert.throws(

@@ -6,8 +6,9 @@
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-draft-write-invariants.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { guardPlan } from '../domain/draft-write-guards.mjs'
 import { draftWriteCoverage, writePlanOf } from '../domain/draft-write-plan.mjs'
-import { site } from './fixtures/draft-write/guarded.mjs'
+import { kit, plan as floristPlan, site } from './fixtures/draft-write/guarded.mjs'
 
 const NAMED = new Set([
   'key',
@@ -97,6 +98,20 @@ test('a value of an in-place record whose location has no slot is skipped at pla
     () => writePlanOf(site.order, aiq, { stored: site.stored }),
     (error) => error.code === 'pair_incomplete' && error.noRerun === true
   )
+})
+
+test('guard slot_missing: a contract value with no slot, or one the contract lacks, never reaches a door', () => {
+  for (const slot of [undefined, '', 'module-99999.0']) {
+    const p = structuredClone(floristPlan)
+    const v = p.ops.find((op) => op.kind === 'contract.apply').values[0]
+    if (slot === undefined) delete v.loc.slot
+    else v.loc.slot = slot
+    assert.throws(
+      () => guardPlan(p, { order: site.order, kit }),
+      (error) => error.noRerun && error.details.problems.some((x) => x.code === 'slot_missing'),
+      String(slot)
+    )
+  }
 })
 
 test('the omit hide tells row 1 from row 10: a list of eleven rows keeps exactly the rows it fills', async () => {
