@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-625-t4-batch-1-audio-and-code-coverage",
+  "kind": "feat",
+  "title": "A Joomla audio track bound to an article keeps its owner and track through capture and the write step, and content coverage reads editable words beside literal code without accepting changed words",
+  "pr": 625,
+  "area": "quickstart/readiness",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test --test-timeout=120000 packages/cms/tracy-quickstart-tools/test/audio-source-readers.test.mjs apps/tracy-web/test/step-chain-audio.test.mjs packages/cms/tracy-quickstart-tools/test/content-coverage-code-projection.test.mjs",
+    "S2: Read the exit code and the fail and skipped counts."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures and 0 skipped tests.",
+    "The audio readers test reports ok: native and jPlayer audio keep their owner and track occurrences without picture aliases.",
+    "The audio step chain test reports ok: the postwrite step reaches the host's audio reader before the site check.",
+    "The code projection tests report ok, including the negative ones: different editable words, nested units, attribute slots and changed sidecar words still fail."
+  ],
+  "selectors": {
+    "audio readers": "packages/cms/tracy-quickstart-tools/",
+    "step chain": "apps/tracy-web/src/",
+    "content coverage": "packages/cms/tracy-quickstart-tools/"
+  },
+  "evidence": "14/11/2026: before this branch a JA Joomla T4 audio track bound to an article could be captured as a picture alias and the write step did not read it back, and content coverage reported editable words next to literal PRE code as holes.",
+  "fence": "The audio readers and the postwrite step chain on fixtures, and the content coverage projection on fixture units. Not exercised: a live capture against a running site, or a customer site created from these quickstarts.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-timeout=120000",
+      "packages/cms/tracy-quickstart-tools/test/audio-source-readers.test.mjs",
+      "apps/tracy-web/test/step-chain-audio.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/content-coverage-code-projection.test.mjs"
+    ],
+    "tests": [
+      "audio capability readers preserve native and initialized jPlayer owner/track occurrences",
+      "audio postwrite step chain reaches its existing host reader before site check",
+      "article121.7 projects editable strong markup without including immutable CODE words",
+      "different editable words still fail the same-word guard",
+      "nested units and directive ownership differences remain fail-closed",
+      "attribute slots stay outside whole-unit projection",
+      "projected markup obeys existing map precedence and rejects changed sidecar words"
+    ],
+    "needs": []
+  }
+}
