@@ -339,7 +339,7 @@ before(async () => {
           ? String(request.path).startsWith('/site/')
             ? { workspace: { workspaceId: 'ws-site', path: request.path, sessionIds: ['s-old-1', 's-old-2'] }, created: false }
             : { workspace: { workspaceId: 'ws-personal', path: request.path, title: 'hash' }, created: true }
-          : body.method === 'session/create' && /^(session-widget-|wo-demo-)/.test(String(request.sessionId))
+          : body.method === 'session/create' && /^(session-widget-|session-build-|wo-demo-)/.test(String(request.sessionId))
             ? { sessionId: request.sessionId }
           : body.method === 'session/cancel'
             ? { accepted: true }
@@ -975,6 +975,35 @@ test('native onboarding allocation stays behind the signed door and records only
     assert.ok(dshCalls.every(c => ['workspace/create', 'workspace/rename', 'session/create'].includes(c.method)));
     for (const c of dshCalls.filter(c => c.method === 'session/create'))
       assert.deepEqual(c.args, { request: { workspaceId: 'ws-personal', sessionId, agentPreset: 'designer-wordpress' } });
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('the build chat is allocated behind the signed door with the build agent only (TracyHQ/tracy#602)', async () => {
+  const lane = homed as Lane;
+  const root = mkdtempSync(path.join(os.tmpdir(), 'dshpw-build-home-'));
+  const sessionId = 'session-build-55555555-5555-4555-8555-555555555555';
+  const grant = { role: 'editor', email: 'builder@example.test', site: '~onboarding', home: root,
+    folders: [], toolsets: ['content'], nativeSession: { sessionId, agentPreset: 'site-builder' } };
+  try {
+    dshCalls = [];
+    assert.equal((await call(lane, '/gateway/seat/session', JSON.stringify(grant))).status, 403);
+    for (const wider of [
+      { ...grant, toolsets: ['content', 'code'] },
+      { ...grant, nativeSession: { sessionId, agentPreset: 'developer-wordpress' } },
+    ]) assert.equal((await signed(lane, '/gateway/seat/session', wider)).status, 400);
+    assert.equal(dshCalls.length, 0, 'a refused grant reaches nothing in dsh');
+    const response = await signed(lane, '/gateway/seat/session', grant);
+    assert.equal(response.status, 200, response.body);
+    const body = JSON.parse(response.body) as { username: string; nativeSession: { sessionId: string; workspaceId: string } };
+    assert.deepEqual(body.nativeSession, { sessionId, workspaceId: 'ws-personal' });
+    const user = lane.db.getUserByUsername(body.username)!;
+    assert.deepEqual(tracyStoreOf(lane.db)?.honouredGrants(user.id), [sessionId]);
+    const perms = lane.db.getPermissions(user.id)!;
+    assert.deepEqual(perms.allowed_folders, [path.join(root, body.username)]);
+    assert.equal(perms.allow_git_download, false);
+    assert.equal(perms.allow_workspace_create, false);
+    for (const c of dshCalls.filter(c => c.method === 'session/create'))
+      assert.deepEqual(c.args, { request: { workspaceId: 'ws-personal', sessionId, agentPreset: 'site-builder' } });
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 

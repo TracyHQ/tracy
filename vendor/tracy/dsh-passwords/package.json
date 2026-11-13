@@ -1,6 +1,6 @@
 {
   "name": "dsh-passwords",
-  "version": "2.7.7-tracy.19",
+  "version": "2.7.7-tracy.20",
   "description": "dsh-passwords: a server-grade gateway that turns DeepSeek Harness into a multi-tenant platform — remote access + automatic HTTPS, per-subuser permissions & quotas, sandbox enforcement, first-run setup, SQLite auth with at-rest encryption, rate-limit and audit log (bilingual zh/en UI)",
   "type": "module",
   "main": "dist/index.js",

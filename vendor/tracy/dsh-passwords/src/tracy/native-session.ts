@@ -1,10 +1,28 @@
 /** Optional native onboarding allocation, reachable only through the signed seat door. */
 import type { WorkspaceRpc } from './seat-home.js';
+import { BUILD_AGENT_PRESET } from './build-agent.js';
 
 export interface NativeSessionRequest {
   sessionId: string;
   agentPreset: string;
 }
+
+const UUID = '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}';
+
+/**
+ * The native sessions the creation workspace may hold, each with its own ID prefix and the ONLY
+ * presets that prefix may run. The pairing is the grant: a widget session never runs the build
+ * agent, and the build chat never runs a site agent (whose tools reach files and a shell).
+ *
+ * - `session-widget-` — the landing page widget's handoff (2.7.7-tracy.11), one of three designers.
+ * - `session-build-` — the creation workspace's build chat (TracyHQ/tracy#602), the build agent
+ *   only, and whatever it runs it dispatches only the build tools (`build-agent.ts`). The seat
+ *   itself stays the creation seat below, so the chat gains no folder, toolset or site.
+ */
+const NATIVE_SESSIONS: readonly { id: RegExp; presets: readonly string[] }[] = [
+  { id: new RegExp(`^session-widget-${UUID}$`, 'i'), presets: ['designer-wordpress', 'designer-joomla', 'designer-emdash'] },
+  { id: new RegExp(`^session-build-${UUID}$`, 'i'), presets: [BUILD_AGENT_PRESET] },
+];
 
 /** Validate before the seat door creates folders or mutates any permissions. */
 export function nativeSessionRequest(payload: Record<string, unknown>): NativeSessionRequest | null {
@@ -12,19 +30,20 @@ export function nativeSessionRequest(payload: Record<string, unknown>): NativeSe
   const raw = payload.nativeSession;
   if (raw === null || typeof raw !== 'object' || Array.isArray(raw)) throw new Error('INVALID_NATIVE_SESSION');
   const value = raw as Record<string, unknown>;
+  const kind = typeof value.sessionId === 'string'
+    ? NATIVE_SESSIONS.find((entry) => entry.id.test(value.sessionId as string))
+    : undefined;
   if (payload.role !== 'editor' || payload.site !== '~onboarding' ||
       typeof payload.email !== 'string' || payload.email.trim() === '' ||
       typeof payload.home !== 'string' || payload.home.trim() === '' ||
       !Array.isArray(payload.folders) || payload.folders.length !== 0 ||
       !Array.isArray(payload.toolsets) || payload.toolsets.length !== 1 || payload.toolsets[0] !== 'content' ||
       Object.keys(value).some(key => key !== 'sessionId' && key !== 'agentPreset') ||
-      typeof value.sessionId !== 'string' ||
-      !/^session-widget-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.sessionId) ||
-      typeof value.agentPreset !== 'string' ||
-      !['designer-wordpress', 'designer-joomla', 'designer-emdash'].includes(value.agentPreset)) {
+      kind === undefined ||
+      typeof value.agentPreset !== 'string' || !kind.presets.includes(value.agentPreset)) {
     throw new Error('INVALID_NATIVE_SESSION');
   }
-  return { sessionId: value.sessionId, agentPreset: value.agentPreset };
+  return { sessionId: value.sessionId as string, agentPreset: value.agentPreset };
 }
 
 /**

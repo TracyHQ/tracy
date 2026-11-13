@@ -358,3 +358,23 @@ build stage audits clean too: `fast-uri` ^3.1.9, `undici` ^8.12.2, `zod` ^4.6.6.
 `npm-shrinkwrap.json` regenerated: only `body-parser` 1.20.8 → 1.20.9, the two MCP packages, `fast-uri`, `undici` and
 `zod` changed; `npm audit` on it reports 0 (with and without dev).
 No source change; upstream core untouched.
+
+## Addendum 13/11/2026 — the build chat through the signed door (`2.7.7-tracy.20`)
+
+H7 `nativeSession` now admits a second pairing beside the widget's: a session ID `session-build-<UUID>` runs
+exactly the preset `site-builder`, the creation workspace's build agent (TracyHQ/tracy#602). The pairing is the
+grant: a `session-widget-` ID still runs only the three designer presets, and a `session-build-` ID runs nothing
+else. The seat shape is unchanged for both: editor, a verified email, site `~onboarding`, a private home, empty
+folders and toolsets exactly `content`. No upstream core edit, no new hook, no toolset widened.
+
+What a build session may CALL is fenced by the session, not by the preset it happens to run (a blank session's
+preset can be switched from the browser, and Tracy's bundle registers site tools for every session):
+`src/tracy/build-agent.ts` names the build tools (`web_search`, `web_fetch`, `ask_user_question`; later
+tickets add the plan and build tools there) and the existing H19 guard in `seat-tool-guard.ts` refuses every
+other tool of a `session-build-` session, its children, or any `site-builder` session before the tool body.
+On `agent/created` the same file masks those tools from the agent's view when dsh can (a courtesy; the guard
+is the fence). The preset itself is Tracy's (`buildAgent` in `config/mode-matrix.json`).
+
+Test: the two build cases in `test/tracy/native-session.test.ts` (every wider preset, prefix and seat refused),
+`test/tracy/build-agent.test.ts` (the fence, through the real guard) and the build allocation case in
+`seat-door.test.ts`.

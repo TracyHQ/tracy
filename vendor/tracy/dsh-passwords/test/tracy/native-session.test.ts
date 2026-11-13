@@ -33,3 +33,38 @@ test('native refusal or wrong ID never records a grant; grant conflict never ret
   assert.equal(writes, 0);
   await assert.rejects(ensureNativeSession(grant.nativeSession, 'own-workspace', async () => ({ ok: true, value: { sessionId } }), () => false), /GRANT_REFUSED/);
 });
+
+// The creation workspace's build chat (TracyHQ/tracy#602): its own session prefix and exactly one preset.
+const buildId = 'session-build-33333333-3333-4333-8333-333333333333';
+const build = { ...grant, nativeSession: { sessionId: buildId, agentPreset: 'site-builder' } };
+
+test('the build chat is allocated with the build agent preset and the same narrow seat grant', () => {
+  assert.deepEqual(nativeSessionRequest(build), build.nativeSession);
+});
+
+test('the build chat grants nothing wider than the build: other presets, prefixes and seats are refused', () => {
+  const refused: Record<string, unknown>[] = [
+    // A build session never runs a site agent, and a widget session never runs the build agent.
+    { nativeSession: { sessionId: buildId, agentPreset: 'designer-wordpress' } },
+    { nativeSession: { sessionId: buildId, agentPreset: 'developer-joomla' } },
+    { nativeSession: { sessionId, agentPreset: 'site-builder' } },
+    // No other session prefix, no casing trick, no preset that merely starts like the build one.
+    { nativeSession: { sessionId: buildId.replace('build', 'builds'), agentPreset: 'site-builder' } },
+    { nativeSession: { sessionId: `${buildId}-x`, agentPreset: 'site-builder' } },
+    { nativeSession: { sessionId: buildId, agentPreset: 'site-builder-wide' } },
+    { nativeSession: { sessionId: buildId, agentPreset: 'Site-Builder' } },
+    // The seat stays the creation seat: content only, no folders, no site, no other role.
+    { toolsets: ['content', 'code'] },
+    { toolsets: ['content', 'site'] },
+    { toolsets: ['lifecycle'] },
+    { toolsets: [] },
+    { folders: ['/site/other'] },
+    { site: 'other.example.test' },
+    { role: 'owner' },
+    { nativeSession: { ...build.nativeSession, cwd: '/site/other' } },
+    { nativeSession: { ...build.nativeSession, toolsets: ['code'] } },
+  ];
+  for (const change of refused) {
+    assert.throws(() => nativeSessionRequest({ ...build, ...change }), /INVALID_NATIVE_SESSION/, JSON.stringify(change));
+  }
+});

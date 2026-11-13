@@ -1,5 +1,6 @@
 // Tracy H19: recheck live seat authority at the native tool body's monotonic dispatch boundary.
 import { t } from '../i18n.js';
+import { buildToolRefusal, hideNonBuildTools } from './build-agent.js';
 
 type Agent = { id: string; session: { header: { parentSession?: string } } };
 type Message = { source?: { kind?: string; prompter?: { user?: string }; [key: string]: unknown } };
@@ -8,7 +9,11 @@ interface GuardContext {
   on(name: 'agent/pre-step', listener: (event: { agent: Agent; messages: readonly Message[] }, next: () => Promise<{ kind: string }>) => Promise<{ kind: string }>): unknown;
   on(name: 'agent/created', listener: (event: { agent: Agent; source: string }) => void): unknown;
   get(name: 'agents'): { get(id: string): Agent | undefined; isOwnedBy(id: string, owner: Agent): boolean } | undefined;
-  tools: { guard(check: (execution: Readonly<Execution>) => string | undefined): () => void };
+  tools: {
+    guard(check: (execution: Readonly<Execution>) => string | undefined): () => void;
+    /** The tools one agent sees now; absent on an older dsh, which only loses the build chat's courtesy mask. */
+    schemas?(agent: Agent): readonly { name: string }[];
+  };
 }
 interface Authority {
   getUserByUsername(name: string): { id: number; role: string } | null;
@@ -22,6 +27,8 @@ export function installTracySeatToolGuard(ctx: GuardContext, database: Authority
   const initialChildren = new WeakSet<Agent>();
   const creators = new WeakMap<Agent, Agent>();
   ctx.on('agent/created', ({ agent, source }) => {
+    // The build chat (TracyHQ/tracy#602) is not shown what it may not call; the guard below refuses it either way.
+    if (typeof ctx.tools.schemas === 'function') hideNonBuildTools(agent, (a) => ctx.tools.schemas!(a as Agent));
     const parentId = agent.session.header.parentSession;
     if (parentId === undefined) return;
     const registry = ctx.get('agents');
@@ -58,6 +65,9 @@ export function installTracySeatToolGuard(ctx: GuardContext, database: Authority
     return decision;
   });
   ctx.tools.guard(({ agent, name }) => {
+    // A build session dispatches only the build tools, whatever its seat could otherwise run.
+    const outsideBuild = buildToolRefusal(agent, name);
+    if (outsideBuild !== undefined) return outsideBuild;
     if (!CODE_TOOLS.has(name)) return undefined;
     const deny = () => t('en', 'gw.sandboxDenied');
     const actor = agent === undefined ? undefined : actors.get(agent);
