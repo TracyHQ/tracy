@@ -12,7 +12,14 @@
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount, checkPageCopy } from './page-copy-check.mjs'
-import { PageWriterError, blockDescriptionsOf, knownValuesOf, pageFieldsOf } from './page-writer-fields.mjs'
+import { sharedPlacesOf } from './ai-quickstart-field-keys.mjs'
+import {
+  PageWriterError,
+  blockDescriptionsOf,
+  knownValuesOf,
+  pageFieldsOf,
+  sharedLimitsOf
+} from './page-writer-fields.mjs'
 import { pageWriterUser } from './page-writer-request.mjs'
 import { planDataOf } from './plan-data.mjs'
 
@@ -79,17 +86,22 @@ async function writePage({ plan, page, fields, context, model, signal }) {
     rewrite = failing
   }
   const failing = attempts.at(-1)?.failing ?? []
-  const out = fields.map(({ key, block, item, field, from, value, data, action, fallback }) => ({
-    key,
-    block,
-    ...(item ? { item } : {}),
-    field: field.name,
-    kind: field.kind,
-    from,
-    ...(from === 'writer' ? { value: values[key] } : {}),
-    ...(from === 'data' ? { value, data } : {}),
-    ...(from === 'no-data' ? { action, ...(fallback === undefined ? {} : { fallback }) } : {})
-  }))
+  const out = fields.map(
+    ({ key, block, item, row, list, field, from, value, data, action, fallback, derived }) => ({
+      key,
+      block,
+      ...(item ? { item } : {}),
+      ...(row ? { row, list } : {}),
+      field: field.name,
+      kind: field.kind,
+      from,
+      ...(from === 'writer' ? { value: values[key] } : {}),
+      ...(from === 'data' ? { value, data } : {}),
+      ...(from === 'no-data'
+        ? { action, ...(fallback === undefined ? {} : { fallback }), ...(derived ? { derived } : {}) }
+        : {})
+    })
+  )
   return { id: page.id, fields: out, attempts, failing }
 }
 
@@ -114,7 +126,7 @@ function dataOverLimit(fieldsByPage) {
  *   Promise<unknown>, signal?: AbortSignal}} input `plan`: the approved plan (`composePlan`); `profile`: the needs
  *   profile it was composed from, which holds the item field values
  * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[]}>, prompt: object}>} each page's
- *   text fields in block order: `{key, block, item?, field, kind, from}` plus `value` for `from: 'writer'` (written by
+ *   text fields in block order: `{key, block, item?, row?, list?, field, kind, from}` plus `value` for `from: 'writer'` (written by
  *   the model) and `from: 'data'` (copied, with `data`: the plan id it came from), or `action` (`hide` | `fallback`)
  *   and `fallback` for `from: 'no-data'`
  */
@@ -122,8 +134,15 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
   if (typeof model !== 'function') throw new PageWriterError('model_missing', 'no build model was given')
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
     throw new PageWriterError('plan_missing', 'the plan has no pages to write')
-  const { byId } = planDataOf(profile)
-  const context = { blocks: blockDescriptionsOf(blockStore, library), byId, known: knownValuesOf(byId) }
+  const data = planDataOf(profile)
+  const { byId } = data
+  const context = {
+    blocks: blockDescriptionsOf(blockStore, library),
+    byId,
+    data,
+    sharedLimits: sharedLimitsOf(sharedPlacesOf(blockStore)),
+    known: knownValuesOf(byId, data.rowsById)
+  }
   const fieldsByPage = plan.pages.map((page) => pageFieldsOf(page, context))
   const over = dataOverLimit(fieldsByPage)
   if (over.length > 0)

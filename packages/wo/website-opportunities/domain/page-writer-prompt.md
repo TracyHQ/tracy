@@ -17,7 +17,9 @@ The user message is JSON with:
   values its data fields display next to your copy, exactly as given) and its `fields`. `data` and `shows` are
   context: refer to them, never repeat them as a field of yours, never change them. Each field has a `key`, a
   `name`, a `type` (always `text`), a data `kind`, and a `limit`: the most characters it holds. A field with an
-  `item` belongs to that item of the block's data.
+  `item` belongs to that item of the block's data. A field with a `row` belongs to one row of a list inside the block
+  (a session of a class, a step of a project); the block's `rows` give each row's own data (`fields` by data kind) or
+  the page it stands for (`page`). Write a row field about its own row only.
 - `rewrite` (only on a second call): the fields that failed the check, with what you wrote and why it failed. Write
   only those fields again, and fix every problem.
 

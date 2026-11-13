@@ -201,6 +201,28 @@ export {
   socialReasonOf
 } from './icon-social.mjs'
 export { planDataOf } from './plan-data.mjs'
+export { rowDataOf, rowValuesOf } from './plan-row-data.mjs'
+export {
+  CHILD_LIST_REASONS,
+  PAGE_ROW,
+  fitsList,
+  isPageKeyed,
+  listKindsOf,
+  planRows,
+  storedRowsOf
+} from './plan-rows.mjs'
+export { rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
+export { declaredRowFieldsOf, rowFieldAccountOf } from './plan-row-coverage.mjs'
+export { rowContextOf, rowFieldsOf } from './page-writer-rows.mjs'
+export {
+  MAX_ROW_DEPTH,
+  MAX_ROW_PARTS,
+  groundRows,
+  isRowRole,
+  mergeRows,
+  partsOf
+} from './needs-profile-rows.mjs'
+export { MAX_LIST_DEPTH, blockListsProblems, rowDataProblems } from './build-contract-plan-rows.mjs'
 export {
   PEOPLE_FRAME_KINDS,
   VIDEO_KIND,

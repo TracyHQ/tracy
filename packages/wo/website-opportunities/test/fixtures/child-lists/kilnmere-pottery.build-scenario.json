@@ -1,0 +1,411 @@
+{
+  "schema": "tracy-build-scenario/v1",
+  "name": "Kilnmere Clay Studio, child list rows",
+  "summary": "An invented pottery studio whose plan carries child list rows: session times, steps with a nested tip, a teacher's profile links and opening lines (#615).",
+  "plan": {
+    "schema": "tracy-build-plan/v1",
+    "id": "plan-kilnmere",
+    "revision": 1,
+    "language": "en",
+    "facts": [
+      {
+        "id": "business-name",
+        "kind": "business.name",
+        "label": "Business name",
+        "value": "Kilnmere Clay Studio",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "contact-phone",
+        "kind": "contact.phone",
+        "label": "Phone",
+        "value": "+1 555 0142",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "contact-address",
+        "kind": "contact.address",
+        "label": "Address",
+        "value": "14 Larchwick Lane, Example Town",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      }
+    ],
+    "items": [
+      {
+        "id": "service-wheel-basics",
+        "kind": "service",
+        "label": "Wheel basics",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-hand-building",
+        "kind": "service",
+        "label": "Hand building",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-glaze-night",
+        "kind": "service",
+        "label": "Glaze night",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "person-odile-brannoch",
+        "kind": "person",
+        "label": "Odile Brannoch",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      }
+    ],
+    "rows": [
+      {
+        "id": "business-row-1",
+        "label": "Tue to Fri 10:00 to 21:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "business-row-2",
+        "label": "Sat 09:00 to 17:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "business-row-3",
+        "label": "Sun 12:00 to 16:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-wheel-basics-row-1",
+        "label": "Tue and Thu, 18:00 to 20:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-wheel-basics-row-2",
+        "label": "Sat, 10:00 to 12:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-wheel-basics-row-3",
+        "label": "Sun, 14:00 to 16:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-wheel-basics-row-4",
+        "label": "Wedge the clay",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-wheel-basics-row-4-row-1",
+        "label": "pressing out every air pocket",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-wheel-basics-row-5",
+        "label": "Center on the wheel",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "service-hand-building-row-1",
+        "label": "Wed, 19:00 to 21:00",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "person-odile-brannoch-row-1",
+        "label": "https://social.example/kilnmere.odile",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "person-odile-brannoch-row-2",
+        "label": "https://video.example/odile-throws",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "id": "home",
+        "name": "Home",
+        "pageType": "home",
+        "blocks": [
+          {
+            "id": "home-b1",
+            "type": "hero",
+            "block": "hero-home",
+            "source": "template",
+            "label": "Top banner",
+            "data": ["business-name"],
+            "reason": "Your studio name comes first."
+          },
+          {
+            "id": "home-b2",
+            "type": "services",
+            "block": "services-grid",
+            "source": "template",
+            "label": "Classes",
+            "data": ["service-wheel-basics", "service-hand-building", "service-glaze-night"],
+            "reason": "Your three classes with their times.",
+            "lists": [
+              {
+                "name": "sessions",
+                "item": "service-wheel-basics",
+                "rows": [
+                  {
+                    "data": "service-wheel-basics-row-1"
+                  },
+                  {
+                    "data": "service-wheel-basics-row-2"
+                  }
+                ]
+              },
+              {
+                "name": "sessions",
+                "item": "service-hand-building",
+                "rows": [
+                  {
+                    "data": "service-hand-building-row-1"
+                  }
+                ]
+              },
+              {
+                "name": "sessions",
+                "item": "service-glaze-night",
+                "rows": []
+              },
+              {
+                "name": "steps",
+                "item": "service-wheel-basics",
+                "rows": [
+                  {
+                    "data": "service-wheel-basics-row-4",
+                    "lists": [
+                      {
+                        "name": "tips",
+                        "rows": [
+                          {
+                            "data": "service-wheel-basics-row-4-row-1"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "data": "service-wheel-basics-row-5",
+                    "lists": [
+                      {
+                        "name": "tips",
+                        "rows": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "name": "steps",
+                "item": "service-hand-building",
+                "rows": []
+              },
+              {
+                "name": "steps",
+                "item": "service-glaze-night",
+                "rows": []
+              }
+            ]
+          },
+          {
+            "id": "home-b3",
+            "type": "contact",
+            "block": "contact-strip",
+            "source": "template",
+            "label": "Contact",
+            "data": ["contact-phone", "contact-address"],
+            "reason": "Visitors can call or find you."
+          },
+          {
+            "id": "home-b4",
+            "type": "footer",
+            "block": "footer-main",
+            "source": "template",
+            "label": "Footer",
+            "data": ["business-name"],
+            "reason": "Your name at the end of every page.",
+            "lists": [
+              {
+                "name": "hours",
+                "rows": [
+                  {
+                    "data": "business-row-1"
+                  },
+                  {
+                    "data": "business-row-2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "team",
+        "name": "Teacher",
+        "pageType": "team",
+        "blocks": [
+          {
+            "id": "team-b1",
+            "type": "team",
+            "block": "team-cards",
+            "source": "template",
+            "label": "Teacher",
+            "data": ["person-odile-brannoch"],
+            "reason": "Your teacher and where she shares her work.",
+            "lists": [
+              {
+                "name": "links",
+                "item": "person-odile-brannoch",
+                "rows": [
+                  {
+                    "data": "person-odile-brannoch-row-1"
+                  },
+                  {
+                    "data": "person-odile-brannoch-row-2"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "look": {
+      "template": {
+        "slug": "example-court",
+        "name": "Example Court",
+        "version": "1.0.0"
+      },
+      "accent": "#1f7a4d",
+      "logo": {
+        "kind": "own",
+        "source": "Instagram profile"
+      }
+    },
+    "pictures": {
+      "own": {
+        "frames": 0,
+        "from": []
+      },
+      "generated": {
+        "frames": 1,
+        "reason": "Some picture spots have no fitting photo of yours."
+      }
+    },
+    "assumptions": [],
+    "leftOut": [
+      {
+        "what": "1 picture spot of a person",
+        "kind": "feature",
+        "reason": "Pictures of people are never generated, so these spots show no picture until you add your own photo."
+      },
+      {
+        "what": "Sun 12:00 to 16:00",
+        "kind": "item",
+        "reason": "The section that shows these has room for fewer rows than you have."
+      },
+      {
+        "what": "Sun, 14:00 to 16:00",
+        "kind": "item",
+        "reason": "The section that shows these has room for fewer rows than you have."
+      }
+    ]
+  }
+}

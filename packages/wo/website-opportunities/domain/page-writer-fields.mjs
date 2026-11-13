@@ -11,6 +11,7 @@
 // their declared shape only; a stray demo or example value on a block or a field is never read.
 import { WRITER_FIELD_TYPES } from './page-copy-check.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
+import { rowFieldsOf } from './page-writer-rows.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const textOf = (value) =>
@@ -38,11 +39,19 @@ export function blockDescriptionsOf(blockStore, library = []) {
   return blocks
 }
 
-/** The key of a field: `<block>/<field>`, or `<block>/<item>/<field>` for an item field. */
+/**
+ * The key of a field: `<block>/<field>`, or `<block>/<item>/<field>` for an item field. A child list row field is
+ * keyed by its row too: `<block>[/<item>]/<row>/<field>` (`page-writer-rows.mjs`).
+ */
 export const slotKey = (blockId, fieldName, itemId) =>
   itemId === undefined ? `${blockId}/${fieldName}` : `${blockId}/${itemId}/${fieldName}`
 
-const declared = ({ name, type, kind, limit }) => ({ name, type, ...(kind ? { kind } : {}), limit })
+const declared = ({ name, type, kind, limit }, shared) => ({
+  name,
+  type,
+  ...(kind ? { kind } : {}),
+  limit: Number.isInteger(shared) && Number.isInteger(limit) ? Math.min(limit, shared) : limit
+})
 
 /** The origin of a text field (`data` or `copy`), or false for a field the writer never fills. */
 function originOf(field, at) {
@@ -86,14 +95,18 @@ function noDataOf(description) {
 
 /**
  * Every text field of one page, with its origin: every text field of every block, and every text item field once per
- * item the block shows. Design, image, icon, link and number fields are never listed: the writer fills text only.
+ * item the block shows. Design, image, icon, link and number fields of a block or an item are never listed: the writer
+ * fills text only. Then every declared field of every planned child list row (`page-writer-rows.mjs`), with `row`.
  * @param {object} page a page of the plan (`plan.pages[]`)
- * @param {{blocks: Map<string, object>, byId: Map<string, object>}} context `byId`: the plan data (`planDataOf`)
- * @returns {Array<{key: string, page: string, block: string, item?: string, field: object,
- *   from: 'writer' | 'data' | 'no-data', value?: string, data?: string, action?: 'hide' | 'fallback',
- *   fallback?: string}>}
+ * @param {{blocks: Map<string, object>, byId: Map<string, object>, data?: object, sharedLimits?: Map<string, number>}}
+ *   context `byId`: the plan data (`planDataOf`); `data`: the whole plan data, its rows included; `sharedLimits`: the
+ *   smallest limit of the stored places a field shares with others, by `<block>/<field>` (`sharedLimitsOf`),
+ *   applied to child list row fields (block and item fields keep their declared limit, as before #615)
+ * @returns {Array<{key: string, page: string, block: string, item?: string, row?: string, field: object,
+ *   from: 'writer' | 'data' | 'no-data', value?: string, data?: string,
+ *   action?: 'hide' | 'fallback' | 'derived' | 'network' | 'pictures', fallback?: string}>}
  */
-export function pageFieldsOf(page, { blocks, byId }) {
+export function pageFieldsOf(page, { blocks, byId, data = { byId }, sharedLimits = new Map() }) {
   const out = []
   for (const block of list(page.blocks)) {
     const description = blocks.get(block.block)
@@ -118,7 +131,30 @@ export function pageFieldsOf(page, { blocks, byId }) {
     for (const field of list(description.fields)) add(field)
     const items = list(block.data).filter((id) => byId.get(id)?.what === 'item')
     for (const item of items) for (const field of list(description.itemFields)) add(field, item)
+    const base = (field, item, row) => ({
+      key: slotKey(block.id, `${row}/${field.name}`, item),
+      page: page.id,
+      block: block.id,
+      ...(item === undefined ? {} : { item }),
+      field: declared(field, sharedLimits.get(`${block.block}/${field.name}`))
+    })
+    out.push(...rowFieldsOf(block, description, { data, base, originOf }))
   }
+  return out
+}
+
+/**
+ * The smallest text limit of every field whose stored place another field also uses (Contract A: a shared place is
+ * written within the smallest limit of its fields), by `<block>/<field>`.
+ */
+export function sharedLimitsOf(shared) {
+  const out = new Map()
+  for (const { limit, uses } of shared)
+    if (Number.isInteger(limit))
+      for (const use of uses) {
+        const key = `${use.block}/${use.field}`
+        out.set(key, Math.min(limit, out.get(key) ?? limit))
+      }
   return out
 }
 
@@ -126,11 +162,12 @@ export function pageFieldsOf(page, { blocks, byId }) {
 export const pageSlotsOf = (page, context) => pageFieldsOf(page, context).filter((f) => f.from === 'writer')
 
 /** Every value of the plan data as text (facts and item fields), for the guard against invented data in copy. */
-export function knownValuesOf(byId) {
+export function knownValuesOf(byId, rowsById = new Map()) {
   const values = []
   for (const entry of byId.values()) {
     if (entry.what === 'fact') values.push(textOf(entry.entry.value))
     else for (const f of Object.values(entry.source?.fields ?? {})) values.push(textOf(f?.value))
   }
+  for (const row of rowsById.values()) values.push(...Object.values(row.values).flat())
   return values.filter((v) => v !== null)
 }
