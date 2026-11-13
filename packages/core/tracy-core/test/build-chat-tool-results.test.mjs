@@ -50,6 +50,8 @@ test('every result shape the tool returns is told apart', () => {
   assert.equal(buildToolResultOf(JSON.stringify({ refused: true, next: 'x' })).kind, 'quiet')
   assert.equal(buildToolResultOf(JSON.stringify({ stale: true, next: 'x' })).kind, 'quiet')
   assert.equal(buildToolResultOf(JSON.stringify({ idle: true, next: 'x' })).kind, 'quiet')
+  assert.equal(buildToolResultOf(JSON.stringify({ missing: 'template', next: 'x' })).kind, 'quiet')
+  assert.equal(buildToolResultOf(JSON.stringify({ look: 'ready', next: 'x' })).kind, 'quiet')
   assert.equal(buildToolResultOf('not json'), null)
   assert.equal(
     buildToolResultOf(JSON.stringify({ plan: { id: 'p' } })),

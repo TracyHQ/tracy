@@ -45,7 +45,16 @@ export function buildToolResultOf(text) {
   if (!isObject(value)) return null
   if (value.stopped === true) return { kind: 'stopped' }
   if (value.running === true) return { kind: 'running' }
-  if (value.refused === true || value.stale === true || value.idle === true) return { kind: 'quiet' }
+  // Answers meant only for the model: a refusal, a stale plan, nothing started, a step not taken yet, the brand step
+  // done and the plan to be asked for again.
+  if (
+    value.refused === true ||
+    value.stale === true ||
+    value.idle === true ||
+    typeof value.missing === 'string' ||
+    value.look === 'ready'
+  )
+    return { kind: 'quiet' }
   if (isObject(value.plan)) {
     const { id, revision } = value.plan
     return typeof id === 'string' && Number.isInteger(revision) ? { kind: 'plan', id, revision } : null
