@@ -899,7 +899,9 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   row id with origin `draft`; `app.openDraftPicture(id)` opens one again; a picture not stored is out of the manifest,
   in `research.picturesSetAside` with its reason. Once a research step's record is in the draft, the rows and objects of
   older research runs are pruned; an account deletion drops the rows but not the objects (no object cleanup hook yet).
-  The business logo (`place-logo.js` rule) is written from its stored copy as a file in `build-draft-logos/` beside the
+  The business logo (`place-logo.js` rule) is measured from its stored copy (`media-info.js` `logoPaletteOf`, as the
+  executor's brand stage does), so the brief's brand carries the logo's own colours (`colorsFrom: 'logo'`, `accent`),
+  and written from that copy as a file in `build-draft-logos/` beside the
   brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. Unread links are set aside with a reason; nothing read is
   `research_empty`; the whole step is bounded to three minutes. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own

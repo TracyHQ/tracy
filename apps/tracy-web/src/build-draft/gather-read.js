@@ -16,13 +16,18 @@
 /** The longest seller bio (`profile-edits.js` `EDITABLE_PROFILE_FIELDS.bio`). */
 export const BIO_MAX = 1200
 
-/** The brand observations of the executor's brand stage (`executor.js` `brand`), from the rows and the profile. */
-function brandOf({ rows, media, profile, name, domain, parts }) {
+/**
+ * The brand observations of the executor's brand stage (`place-executor.js` `brand`), from the rows and the profile.
+ * With the chosen logo's own colours (`logoPalette`), the colours are the logo's alone (`colorsFrom: 'logo'`, its
+ * `accent`), as a website opportunity's brief has them: the brand step's icon and accent rules read exactly those.
+ */
+function brandOf({ rows, media, profile, name, domain, parts, logoPalette }) {
   const collectedFrom = (pick) =>
     rows.some((r) => pick(r.source) && ['complete', 'partial'].includes(r.status))
   const observe = (origin, pick) => ({
     ...domain.brandFromSocial({
       palette: parts.mergePalettes(media.filter((m) => pick(m.source))),
+      logoPalette,
       bio: profile.bio ?? null,
       name: profile.name ?? name,
       avatarUrl: profile.avatarUrl ?? null
@@ -57,8 +62,9 @@ export function tradeOf(domain, profile, name, tradeOfWords) {
 /**
  * The brief and manifest of what was read.
  * @param {{opp: object, rows: object[], media?: object[], googlePlace: object | null, description: string | null,
- *   madeAt: string, domain: object, parts: object, logoResearch?: object | null}} input `media`: the stored pictures
- *   (`pictures.js`), as rows; `logoResearch`: the chosen logo (`gather.js` `logoOf`), named by the brief as `brand.logo`
+ *   madeAt: string, domain: object, parts: object, logoResearch?: object | null, logoPalette?: object[] | null}} input
+ *   `media`: the stored pictures (`pictures.js`), as rows; `logoResearch`: the chosen logo (`gather.js` `logoOf`),
+ *   named by the brief as `brand.logo`; `logoPalette`: that logo's own colours, measured from its stored copy
  * @returns {{brief: object, manifest: object[]} | {invalid: object[]}}
  */
 export function briefOf({
@@ -70,7 +76,8 @@ export function briefOf({
   madeAt,
   domain,
   parts,
-  logoResearch = null
+  logoResearch = null,
+  logoPalette = null
 }) {
   const bio =
     typeof description === 'string' && description.trim() ? description.trim().slice(0, BIO_MAX) : null
@@ -83,7 +90,7 @@ export function briefOf({
   const trade = tradeOf(domain, merged, owned.name, parts.tradeOfWords)
   if (trade !== 'other') owned.candidate.trade = trade
   const profile = parts.decideProfile(merged, owned, null)
-  const observed = brandOf({ rows, media, profile, name: owned.name, domain, parts })
+  const observed = brandOf({ rows, media, profile, name: owned.name, domain, parts, logoPalette })
   // The chosen logo rides on the brand as a place's research does (`briefBrand`: `brand.logo` and `logoResearch`).
   const brand = logoResearch ? { ...observed, logoResearch } : observed
   // The stored pictures go through the brief read's own filters (junk, near copies) and mapping (`fromPlace`).

@@ -14,7 +14,7 @@ import { withPhoneDecision } from 'website-opportunities/src/business-phones.js'
 import { withRatingDecision } from 'website-opportunities/src/business-rating.js'
 import { fairShare, mergeCollected, mergePalettes, mergeProfile } from 'website-opportunities/src/executor.js'
 import { EXT, createMediaStore } from 'website-opportunities/src/media-store.js'
-import { imageInfoWith } from 'website-opportunities/src/media-info.js'
+import { imageInfoWith, logoPaletteOf } from 'website-opportunities/src/media-info.js'
 import { chooseLogo, logoHintsOf } from 'website-opportunities/src/place-logo.js'
 import { createLinkFields, saveListingSource } from 'website-opportunities/src/link-fields.js'
 import { createPinnedFetch } from 'website-opportunities/src/pinned-fetch.js'
@@ -63,7 +63,9 @@ export const preSiteParts = Object.freeze({
   tradeOfWords,
   assetManifestOf,
   logoHintsOf,
-  chooseLogo
+  chooseLogo,
+  // The chosen logo's own colours, read finer than a photo's (the executor's brand stage, `logoPaletteOfStored`).
+  logoPaletteOf
 })
 
 /**

@@ -142,7 +142,7 @@ export function createPreSiteGatherer(deps) {
       madeAt: new Date(now()).toISOString(),
       domain,
       parts,
-      ...(logo ? { logoResearch: logo.research } : {})
+      ...(logo ? { logoResearch: logo.research, logoPalette: logo.palette } : {})
     })
     if (made.invalid)
       throw new EngineStepError(
@@ -183,7 +183,10 @@ async function storedPicturesOf({ deps, parts, rows, accountId, domain, domainDe
  * (`place-logo.js`: the sources' logo hints, then `chooseLogo`, which trusts only what a page says of itself), among the
  * hints whose picture was stored; the file is written from that stored copy (`writeLogo`). A logo not found or not
  * stored is no file and no logo in the brief: the brand step then follows its own rule for a business without one.
- * @returns {Promise<{file: string, research: {status: 'found', chosen: object, candidates: object[]}} | null>}
+ * The logo's own colours are measured from the same stored bytes (`media-info.js` `logoPaletteOf`, as the executor's
+ * brand stage does from its stored copy): null when they cannot be read.
+ * @returns {Promise<{file: string, research: {status: 'found', chosen: object, candidates: object[]},
+ *   palette: object[] | null} | null>}
  */
 async function logoOf({ deps, parts, rows, stored, name, context }) {
   if (!deps.writeLogo || !deps.pictures?.open) return null
@@ -198,5 +201,9 @@ async function logoOf({ deps, parts, rows, stored, name, context }) {
   if (!chosen?.mediaId) return null
   const picture = await deps.pictures.open(chosen.mediaId, { accountId: context.accountId }).catch(() => null)
   const file = (await deps.writeLogo(picture).catch(() => null)) ?? null
-  return file ? { file, research: { status: 'found', chosen, candidates } } : null
+  if (!file) return null
+  const palette = parts.logoPaletteOf
+    ? ((await parts.logoPaletteOf(picture.bytes).catch(() => null)) ?? null)
+    : null
+  return { file, research: { status: 'found', chosen, candidates }, palette }
 }

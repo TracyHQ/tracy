@@ -383,6 +383,35 @@ test('the logo file is written from its stored copy; anything that is not a stor
   rmSync(dir, { recursive: true, force: true })
 })
 
+test('the brief carries the colours measured from the stored logo, where the brand step reads them', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
+  const withLogo = { ...websiteResult(), logos: [{ url: LOGO, via: 'jsonld-logo' }] }
+  const { domain } = await fakeDomain({ connectors: { website: connector(withLogo) } })
+  // An invented logo of one deep green, and an invented website photo of a warm brown.
+  const served = { [LOGO]: await pngOf(120, 40, { r: 20, g: 110, b: 70 }) }
+  for (const m of withLogo.media) served[m.url] = await pngOf(640, 480, { r: 180, g: 92, b: 60 })
+  const store = storing(domain, served)
+  const gathered = await gatherer(domain, { ...store.doors, logoDir: dir })(
+    { links: [SITE], description: null },
+    { accountId: 'acc-1' }
+  )
+  const { brand } = gathered.brief
+  assert.equal(brand.logo, brand.logoResearch.chosen.mediaId, 'the brief names its logo')
+  // The brand step's icon and accent rules read `brief.brand.colorsFrom` and `brief.brand.colors` (`brand-step/`).
+  assert.equal(brand.colorsFrom, 'logo')
+  assert.ok(
+    brand.colors.some((c) => c.hex.toLowerCase() === '#146e46'),
+    `the logo green is among the colours: ${JSON.stringify(brand.colors)}`
+  )
+  assert.equal(
+    brand.colors.some((c) => c.hex.toLowerCase() === '#b45c3c'),
+    false,
+    'a photograph says nothing about the brand once the logo is measured'
+  )
+  assert.ok(brand.evidence.some((e) => /from the logo/.test(e.detail ?? '')))
+  rmSync(dir, { recursive: true, force: true })
+})
+
 test('research keeps the logo the website names as a file, from its stored copy; no logo hint, no file', async () => {
   const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
   const withLogo = { ...websiteResult(), logos: [{ url: LOGO, via: 'jsonld-logo' }] }
