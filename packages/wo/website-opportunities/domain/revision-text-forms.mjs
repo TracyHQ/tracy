@@ -1,45 +1,18 @@
 // The text matching of a plan revision (ticket #599): whether a stored value names a text, on every leaf string of the
 // value (an object's keys too), in every form a person or a browser reads it. Pure.
 //
-// A leaf is read as it is, with its character references read until nothing changes (`W&amp;#101;nna`), percent
-// decoded (`wenna%20clout`), and each of those as the write guard reads a value (`plainOf`: tags and markers out or read
-// as a space, accents and zero width characters out, white space as one space). A text is matched as whole words in any
-// case and accent, or in slug form (`namesHeldInAnyForm`). The write guard's own forms are imported, not copied: the
-// helper the write step adds for held matching on leaf strings replaces `formsOf` once it lands.
+// A leaf is read in every plain form of the write guard's own helper (`plainFormsOf` of `draft-write-held.mjs`, #597:
+// references read until stable, each percent run read, tags and markers out or read as a space, accents and zero width
+// characters out, white space as one space). A text is matched as whole words in any case and accent, or in slug form
+// (`namesHeldInAnyForm`). Unlike that helper's `leafStringsOf`, the leaves here include object keys and numbers: a
+// record key or a path key can name a held person.
 import { createHash } from 'node:crypto'
-import { decodeEntities, plainOf } from './draft-write-entities.mjs'
+import { plainFormsOf } from './draft-write-held.mjs'
+import { plainOf } from './draft-write-entities.mjs'
 import { namesHeldInAnyForm } from './plan-withheld.mjs'
 
-const DECODE_ROUNDS = 5
-
-/** A text with its character references read until it stops changing. */
-function decodedStable(text) {
-  let out = String(text)
-  for (let i = 0; i < DECODE_ROUNDS; i++) {
-    const next = decodeEntities(out)
-    if (next === out) break
-    out = next
-  }
-  return out
-}
-
-/** A text percent decoded, or as it is when it is no valid percent encoding. */
-function percentDecoded(text) {
-  try {
-    return decodeURIComponent(String(text).replace(/\+/g, ' '))
-  } catch {
-    return String(text)
-  }
-}
-
 /** Every form of one text the matching reads. */
-export function formsOf(text) {
-  const raw = String(text)
-  const bases = [...new Set([raw, decodedStable(raw), percentDecoded(decodedStable(raw))])]
-  return [...new Set(bases.flatMap((t) => [t, plainOf(t), plainOf(t, { joined: true })]))].filter(
-    (t) => t !== ''
-  )
-}
+export const formsOf = (text) => plainFormsOf(text).filter((t) => t !== '')
 
 /** Every leaf string of a value: strings, numbers as text, and the keys of its objects. */
 export function leavesOf(value, out = []) {
