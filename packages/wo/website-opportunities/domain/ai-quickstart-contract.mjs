@@ -5,9 +5,17 @@
 // The format is documented in `docs/references/ai-quickstart-contract.md`. Data kinds are roles of the vocabulary
 // `place-content-roles/3`; block types are `BLOCK_TYPES`, both in `place-content-roles.mjs`.
 import { CHILD_LIST_KEYS, childListProblems } from './ai-quickstart-child-lists.mjs'
+import {
+  KEYED,
+  fieldKeyProblems,
+  scopesOf,
+  sharedPlaceProblems,
+  sharedPlacesOf
+} from './ai-quickstart-field-keys.mjs'
 import { mappingProblems } from './ai-quickstart-mapping.mjs'
 import { ROLE_VOCABULARY_V3, isBlockType, isRole } from './place-content-roles.mjs'
 
+export { sharedPlacesOf }
 export const BLOCK_STORE_FILE = 'block-store.json'
 export const PAGE_RECIPES_FILE = 'page-recipes.json'
 export const MAPPING_FILE = 'mapping.json'
@@ -120,6 +128,7 @@ export function blockProblems(block, at, report, { library = false } = {}) {
     { keys: CHILD_LIST_KEYS, places: (key) => (key === 'lists' ? 1 : itemPlacesOf(block)), names },
     { report, fieldProblems, itemsProblems }
   )
+  fieldKeyProblems(block, at, report, { library })
 }
 
 /**
@@ -210,6 +219,28 @@ function blockStoreProblems(store, report) {
     blockProblems(block, at, report)
   })
   insideProblems(store, ids, report)
+  sharedPlaceProblems(store, report)
+}
+
+/** A field keyed to a page type (`pageType`) names a page type whose recipe places its block. */
+function keyedPageTypeProblems(store, recipes, report) {
+  const placedOn = new Map(
+    (Array.isArray(recipes?.recipes) ? recipes.recipes : [])
+      .filter((r) => isName(r?.pageType))
+      .map((r) => [r.pageType, Array.isArray(r.blocks) ? r.blocks : []])
+  )
+  store.blocks.forEach((block, b) => {
+    if (!isObject(block)) return
+    for (const scope of scopesOf(block, `blocks[${label(block.id, b)}]`))
+      scope.fields.forEach((field, i) => {
+        if (!isObject(field) || field.derived !== KEYED || field.pageType === undefined) return
+        if (!placedOn.get(field.pageType)?.includes(block.id))
+          report(
+            `${scope.at(field, i)}.pageType`,
+            `no recipe of page type ${JSON.stringify(field.pageType)} places block ${block.id}`
+          )
+      })
+  })
 }
 
 function pageRecipesProblems(doc, blockIds, report) {
@@ -251,7 +282,8 @@ function pageRecipesProblems(doc, blockIds, report) {
  * only the rules that read the mapping file; every rule the block store and the page recipes answer alone still
  * holds, including the stored place rules (`storedPlaceProblems`).
  * @param {{blockStore: any, pageRecipes: any, mapping: any, mappingPending?: boolean}} declarations the parsed JSON files
- * @returns {{ok: boolean, blocks: number, problems: Array<{file: string, at: string, message: string}>}}
+ * @returns {{ok: boolean, blocks: number, sharedPlaces: number, problems: Array<{file: string, at: string, message: string}>}}
+ *   `sharedPlaces`: stored places more than one field uses; a build writes them within the smallest limit
  */
 export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping, mappingPending = false }) {
   const problems = []
@@ -261,12 +293,15 @@ export function checkAiQuickstartContract({ blockStore, pageRecipes, mapping, ma
   blockStoreProblems(blockStore, reporter(BLOCK_STORE_FILE))
   const blocks = Array.isArray(blockStore?.blocks) ? blockStore.blocks.filter((b) => isName(b?.id)) : []
   pageRecipesProblems(pageRecipes, new Set(blocks.map((b) => b.id)), reporter(PAGE_RECIPES_FILE))
+  if (isObject(blockStore) && Array.isArray(blockStore.blocks))
+    keyedPageTypeProblems(blockStore, pageRecipes, reporter(BLOCK_STORE_FILE))
   if (!mappingPending)
     mappingProblems(mapping, blocks, {
       report: reporter(MAPPING_FILE),
       reportStore: reporter(BLOCK_STORE_FILE)
     })
-  return { ok: problems.length === 0, blocks: blocks.length, problems }
+  const sharedPlaces = isObject(blockStore) ? sharedPlacesOf(blockStore).length : 0
+  return { ok: problems.length === 0, blocks: blocks.length, problems, sharedPlaces }
 }
 
 /** One line per problem, the way the gate prints them: `<file> <at>: <message>`. */

@@ -59,6 +59,7 @@
           "name": "icon",
           "kind": "editorial.item_icon",
           "type": "icon",
+          "storage": "image-file",
           "frame": { "width": 48, "height": 48 },
           "slots": ["module-13.7", "module-13.8", "module-13.9"]
         },

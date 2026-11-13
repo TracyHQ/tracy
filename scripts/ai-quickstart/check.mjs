@@ -160,7 +160,7 @@ function main(argv) {
     for (const problem of res.problems) process.stderr.write(`${rel}/${formatProblem(problem)}\n`)
     problemCount += res.problems.length
     process.stdout.write(
-      `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)${res.mappingPending ? `, ${MAPPING_FILE} pending (${res.mappingPending})` : ''}\n`
+      `ai-quickstart-contract: ${rel}: ${res.blocks} block(s), ${res.problems.length} problem(s)${res.sharedPlaces ? `, ${res.sharedPlaces} stored place(s) shared by several fields (a build writes the smallest limit)` : ''}${res.mappingPending ? `, ${MAPPING_FILE} pending (${res.mappingPending})` : ''}\n`
     )
   }
   if (argv.length === 0) problemCount += checkLibrary() + checkLibraryStyles()

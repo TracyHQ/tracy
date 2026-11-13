@@ -272,7 +272,6 @@ const pendingOf = (set) => ({
 test('an item field stored for fewer items than the block takes fails from the block store alone', () => {
   const set = valid()
   const services = blockOf(set, 'services-grid')
-  for (const field of services.itemFields) field.slots = ['item-1.0', 'item-2.0', 'item-3.0']
   assert.deepEqual(checkAiQuickstartContract(pendingOf(set)).problems, [])
   services.itemFields.find((f) => f.name === 'price').slots.pop()
   assertOneProblem(pendingOf(set), {
