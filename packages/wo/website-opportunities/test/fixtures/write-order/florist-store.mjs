@@ -161,7 +161,7 @@ function contact() {
     lists: [
       {
         name: 'social',
-        label: 'Social links',
+        label: 'Contact social links',
         items: { min: 0, max: SOCIAL_ROWS },
         itemsFrom: { min: 'the block lays out without a link', max: 'the rows the module stores' },
         fields: [
@@ -184,7 +184,7 @@ function contact() {
 function footer() {
   return {
     id: 'footer-main',
-    itemsLabel: 'Social links',
+    itemsLabel: 'Footer social links',
     type: 'footer',
     positions: ['footer'],
     items: { min: 0, max: 3 },
