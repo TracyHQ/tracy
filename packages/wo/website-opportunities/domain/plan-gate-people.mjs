@@ -35,7 +35,8 @@ export function peopleBlockFor(count, composition, { blocks, recipes, data }) {
 /**
  * Report, once per plan, the model leaving out every person of the business while a block of the template can show
  * them. The message names the block with the most room and how many of the people it can show: the others are left
- * out with a reason, as the gate accepts.
+ * out with a reason, as the gate accepts. A person left out at the customer's request (`context.askedOff`) is no such
+ * case.
  */
 export function droppedPeopleProblems(composition, context, problem) {
   const { data } = context
@@ -43,7 +44,11 @@ export function droppedPeopleProblems(composition, context, problem) {
   if (people.length === 0) return
   const shown = new Set(composition.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   if (people.some((p) => shown.has(p.id))) return
-  const at = list(composition.leftOut).findIndex((e) => people.some((p) => p.id === e?.item))
+  // A person the customer asked to take off (a revision's `askedOff` reasons, `plan-request.mjs`) stays off.
+  const asked = context.askedOff ?? new Set()
+  const at = list(composition.leftOut).findIndex(
+    (e) => people.some((p) => p.id === e?.item) && !asked.has(e?.reason)
+  )
   const fit = at === -1 ? null : peopleBlockFor(people.length, composition, context)
   if (!fit) return
   const n = people.length

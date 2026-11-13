@@ -275,8 +275,10 @@ An edit is valid only against the plan it applies to (`checkPlanEdit(edit, plan)
 ```
 
 - `text` is what the customer typed, at most **1000** code points (`request.text`, `PLAN_REQUEST_MAX_LENGTH`). An
-  empty, blank or longer text is refused before any model reads it (`request_empty`, `request_too_long`), and a request
-  for another plan or an older revision is stale (`checkPlanRequest(request, plan)`, `request_stale`).
+  empty or blank text, a text with no visible character (only format characters such as zero width spaces or a byte
+  order mark, or combining marks attached to nothing), or a longer text is refused before any model reads it
+  (`request_empty`, `request_too_long`), and a request for another plan or any other revision (0 included) is stale
+  (`checkPlanRequest(request, plan)`, `request_stale`).
 - The text is data for the plan, never an instruction: it cannot change a rule of the plan gate.
 
 ```json
@@ -290,7 +292,16 @@ An edit is valid only against the plan it applies to (`checkPlanEdit(edit, plan)
 ```
 
 - `plan` names the plan the request produced: the next revision, or the same revision when nothing changed.
-- `changed` lists, in sentences the customer reads, every real difference between the two revisions, and only those.
+- `changed` lists, in sentences the customer reads, the real differences between the two revisions, and only those:
+  each is written by code from the difference (in English, as the gate's own reasons), never by the model, and names
+  the final state of what it describes (a page renamed twice shows its last name). Code writes one line for: a page
+  removed, added, renamed, the page order, a section removed, added, its data, the order of a page's sections, the data
+  no longer shown, the data newly shown, the data shown again that the customer took off earlier ("Now shown again:
+  ..., which you had taken off earlier."), and a changed pictures estimate (photos of the customer used, pictures
+  drawn). Pages and sections are matched by id: a revision keeps the id of every page and section it keeps; a new one
+  gets an id tagged with the revision (`services-r3`, `home-r3-b8`), never one this plan used before. Two changes have
+  no line: an assumption dropped because its page or section was removed (the removal has its line), and a left out
+  entry renamed after the customer's own label for its item.
 - `notDone` lists what could not be done, each with a `reason` of the closed set `no_recipe` (the template has no page
   of that kind), `no_data` (nothing of the business fills that section), `fact_missing` (the business does not have
   that fact), `kept_private` (the customer keeps it off the site), `outside_plan` (a request cannot change it: values,

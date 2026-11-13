@@ -21,9 +21,12 @@ export const NOT_DONE_REASONS = Object.freeze([
   'outside_plan'
 ])
 
-/** The plan a document names: `{id, revision}`. */
-function planReferenceProblems(ref, at, report) {
-  if (!isObject(ref) || !isName(ref.id) || !isWhole(ref.revision, 1))
+/**
+ * The plan a document names: `{id, revision}`. A request may name any whole revision (0 included): one that is not the
+ * plan's current revision is stale (`checkPlanRequest`), not malformed.
+ */
+function planReferenceProblems(ref, at, report, first = 1) {
+  if (!isObject(ref) || !isName(ref.id) || !isWhole(ref.revision, first))
     return report(at, `${at} names the plan: {id, revision}`)
   closedShapeProblems(ref, 'plan reference', at, report)
 }
@@ -34,7 +37,9 @@ export function planRequestProblems(request, report) {
   closedShapeProblems(request, 'plan request', '', report)
   if (request.schema !== PLAN_REQUEST_SCHEMA) report('schema', `schema must be "${PLAN_REQUEST_SCHEMA}"`)
   if (!isName(request.id)) report('id', 'a change request needs a non-empty id')
-  planReferenceProblems(request.plan, 'plan', report)
+  planReferenceProblems(request.plan, 'plan', report, 0)
+  if (isName(request.text) && visibleTextOf(request.text) === '')
+    return report('text', 'a change request needs the text the customer typed: it has no visible character')
   textProblems(
     request.text,
     'text',
@@ -66,8 +71,18 @@ export function checkPlanRequest(request, plan) {
   return { ok: problems.length === 0, problems }
 }
 
-/** Whether a request text is empty or only white space; its length otherwise, in code points. */
-export const requestTextLength = (text) => (isName(text) ? textLength(text) : 0)
+/**
+ * A text without what shows nothing: format characters (zero width spaces and joiners, a byte order mark) and combining
+ * marks attached to no character (at the start, or after white space), trimmed.
+ */
+export const visibleTextOf = (text) =>
+  String(text)
+    .replace(/\p{Cf}/gu, '')
+    .replace(/(^|\s)\p{M}+/gu, '$1')
+    .trim()
+
+/** 0 when a request text is missing or shows no visible character; its length otherwise, in code points. */
+export const requestTextLength = (text) => (isName(text) && visibleTextOf(text) !== '' ? textLength(text) : 0)
 
 /** Every problem of a plan revision: the request it answers, the plan it produced, what changed and what was not done. */
 export function planRevisionProblems(doc, report) {

@@ -4,7 +4,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { checkBuildDocument } from '../domain/build-contract.mjs'
 import { PLAN_REQUEST_PROMPT, revisePlan } from '../domain/plan-request.mjs'
-import { REQUESTED_OFF_REASON } from '../domain/plan-request-apply.mjs'
+import { REQUESTED_OFF_REASON } from '../domain/plan-request-taken-off.mjs'
 import { REMOVED_PAGE_REASON } from '../domain/plan-request-settled.mjs'
 import { PHOTOS, SERVICES } from './fixtures/plan-composer/invented-club.mjs'
 import { answer, firstPlan, revision } from './fixtures/plan-composer/plan-request.mjs'
@@ -64,8 +64,9 @@ test('a request to add a page the template has a recipe for returns a revised pl
   }
   const { input } = revision(first, 'Could you add a page with our lessons?', answer([add]))
   const result = await revisePlan(input)
-  assert.deepEqual(pageIds(result.plan), ['home', 'services', 'team', 'contact'])
-  assert.deepEqual(result.changed, ['A Lessons page is added after Home.'])
+  // A page the revision adds gets an id tagged with the revision, so it never takes an id the plan used before.
+  assert.deepEqual(pageIds(result.plan), ['home', 'services-r2', 'team', 'contact'])
+  assert.deepEqual(result.changed, ['A Lessons page is added.'])
   ok(result.plan)
 })
 
@@ -112,7 +113,7 @@ test('a request to change the order of pages returns a revised plan that passes 
   )
   const result = await revisePlan(input)
   assert.deepEqual(pageIds(result.plan), ['home', 'contact', 'team'])
-  assert.deepEqual(result.changed, ['Contact now comes before Coaches.'])
+  assert.deepEqual(result.changed, ['The pages are now in this order: Home, Contact, Coaches.'])
   ok(result.plan)
 })
 
@@ -140,12 +141,13 @@ test('the result lists what changed in words the customer can read, and passes t
     ])
   )
   const result = await revisePlan(input)
-  assert.deepEqual(result.changed, ['Coaches is now called Our team.'])
+  // The line is written by code from the real difference, never the model's `said`.
+  assert.deepEqual(result.changed, ['The Coaches page is now called Our team.'])
   assert.deepEqual(result.revision, {
     schema: 'tracy-build-plan-revision/v1',
     request: 'request-1',
     plan: { id: 'plan-club', revision: 2 },
-    changed: ['Coaches is now called Our team.'],
+    changed: ['The Coaches page is now called Our team.'],
     notDone: []
   })
   ok(result.revision)

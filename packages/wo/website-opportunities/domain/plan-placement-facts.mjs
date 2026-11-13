@@ -59,7 +59,7 @@ const placesFor = (description, kind) =>
  * @returns {{pages: object[], leftOut: object[], placed: Array<{item: string, page: string, block: string,
  *   how: string}>}} each left out entry names the fact `id` it reports
  */
-export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new Set() }) {
+export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new Set(), idTag }) {
   const out = structuredClone(pages)
   const placed = []
   const leftOut = []
@@ -84,7 +84,7 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
         const page = pageFor(out, description, recipes)
         if (!page) continue
         const block = {
-          id: extraBlockId(page),
+          id: extraBlockId(page, idTag),
           type: description.type,
           block: description.id,
           source: 'template',

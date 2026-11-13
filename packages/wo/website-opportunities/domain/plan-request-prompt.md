@@ -18,20 +18,30 @@ Rules:
 
 1. Change only what the request asks for. Everything else stays as it is, including what the customer changed on the
    plan before. When the request asks for something that contradicts an earlier change, follow the request.
-2. Every change quotes, in `request`, the words of the customer's request that ask for it, exactly as typed. A change
-   no words of the request ask for is not made.
+2. Every change quotes, in `request`, whole words of the customer's request that ask for it, exactly as typed: at
+   least two words, or the whole request when it is one word. Quote, for each change, the words that ask for that
+   change: one quote serves changes to one page or one section only, unless it is the whole request. A change no words
+   of the request ask for is not made.
 3. Use only the ids of `business`, the blocks of `blocks` and the page types of `recipes`. Never name a service, person,
    review, photo, award, number or fact that is not in `business`.
 4. Every page, block, label and reason follows the rules of the first plan: a page keeps its recipe's main block, a
    block shows between its `items.min` and `items.max` items of its kind, a block appears once per page, no dashes.
-5. Write `said`, `what` and `why` for the customer, in the site `language`, one short sentence each, speaking to the
-   customer as "you".
-6. What you cannot do goes in `notDone` with one `reason`: `no_recipe` (the template has no page of that kind),
+   Never remove a page's main block or empty it: remove the page when the request asks for that, or report the wish
+   in `notDone` with `outside_plan`. Give every page its own name. Do not add a page the plan already has.
+5. Change only the pages and blocks of `plan`, by their `id`: a page or block your answer adds cannot be the target of
+   another change in the same answer.
+6. Something the customer took off the plan before (shown nowhere, or left out because they asked) is shown again only
+   when the request names it. Otherwise report the wish in `notDone` with `outside_plan`.
+7. You write no line saying what changed: the customer reads lines written from the real difference. Write `what` and
+   `why` of `notDone` for the customer, in the site `language`, one short sentence each, speaking to the customer as
+   "you".
+8. What you cannot do goes in `notDone` with one `reason`: `no_recipe` (the template has no page of that kind),
    `no_data` (the business has nothing to fill that section), `fact_missing` (the business does not have that fact),
    `kept_private` (the customer keeps it off the site), `outside_plan` (a plan cannot change it: a value, a colour, the
-   logo, the language and the pictures count are changed on the plan card). Never repeat a private name or an invented
-   claim in `what` or `why`.
-7. When nothing of the request can be done, reply with no `changes` and say why in `notDone`.
+   logo, the language and the pictures count are changed on the plan card). Never repeat a private name, a word of it,
+   the template's name or an invented claim (a number, a price, an award, "the most ...") in a page name, a label, a
+   reason, `what` or `why`.
+9. When nothing of the request can be done, reply with no `changes` and say why in `notDone`.
 
 The changes you may make (`op`):
 
@@ -46,10 +56,10 @@ Reply with JSON only, in this shape:
 ```json
 {
   "changes": [
-    { "op": "remove_page", "page": "<page id>", "request": "<words of the request>", "said": "The Prices page is removed." }
+    { "op": "remove_page", "page": "<page id>", "request": "<words of the request>" }
   ],
   "notDone": [
-    { "what": "A page about your awards", "reason": "fact_missing", "why": "No source mentions an award.", "request": "<words of the request>" }
+    { "what": "A page about your awards", "reason": "fact_missing", "why": "No source mentions an award." }
   ]
 }
 ```

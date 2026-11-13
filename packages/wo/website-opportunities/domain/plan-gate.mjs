@@ -46,13 +46,19 @@ import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-
 const list = (value) => (Array.isArray(value) ? value : [])
 
 const withoutId = ({ id: _id, ...entry }) => entry
+/** A left out entry named by the plan's own label of its id, when a revision gives one (`context.labels`). */
+const namedBy = (labels) => (entry) =>
+  labels?.has(entry.id) ? withoutId({ ...entry, what: labels.get(entry.id) }) : withoutId(entry)
 
 /**
  * Gate a composed plan.
  * @param {object} composition the model's reply (`plan-composer-prompt.md`)
  * @param {{planId: string, language: string, data: object, blocks: Map<string, object>, recipes: Map<string, object>,
- *   look: object, assumptions: object[], leftOut?: object[]}} context `assumptions` and `leftOut`: those the profile,
- *   the answers and the look bring
+ *   look: object, assumptions: object[], leftOut?: object[], givenIds?: object[], idTag?: string,
+ *   labels?: Map<string, string>, askedOff?: Set<string>}} context `assumptions` and `leftOut`: those the profile,
+ *   the answers and the look bring; `givenIds`, `idTag`, `labels` and `askedOff` only on a revision
+ *   (`plan-request.mjs`): the ids the plan keeps (`pagesOf`), the tag of new ids, the plan's own item labels that name
+ *   its left out entries, and the left out reasons of what the customer asked to take off (`plan-gate-people.mjs`)
  * @returns {{ok: boolean, problems: Array<{code: string, at: string, message: string}>, plan?: object,
  *   placed?: object[], accounting?: ReturnType<typeof dataAccountingOf>, rows?: object[]}} `rows`: the rows and row
  *   fields the rules dropped, the lists below their minimum and the data too long for its field, each with its `code`
@@ -80,7 +86,13 @@ export function gatePlan(composition, context) {
   // What the owner keeps off the site is never placed, and the plan reports it as left out (`plan-withheld.mjs`).
   const withheld = [...(context.data.withheld ?? [])].filter((id) => !leftOutIds.has(id))
   for (const id of withheld) leftOutIds.add(id)
-  const placement = { data: context.data, blocks: context.blocks, recipes: context.recipes, leftOutIds }
+  const placement = {
+    data: context.data,
+    blocks: context.blocks,
+    recipes: context.recipes,
+    leftOutIds,
+    idTag: context.idTag
+  }
   // A channel a block holds beyond its places is placed again or left out with the reason (`plan-gate-contact.mjs`).
   const items = placeExtraData(trimChannelOverflow(dropped.pages, context), placement)
   const facts = placeExtraFacts(items.pages, placement)
@@ -118,7 +130,7 @@ export function gatePlan(composition, context) {
     const record = context.data.byId.get(item)
     const label = context.data.withheld?.has(item)
       ? withheldWhatOf(record, context.profile?.withheld)
-      : record.entry.label
+      : (context.labels?.get(item) ?? record.entry.label)
     return { what: label, kind: record.what === 'fact' ? 'feature' : 'item', reason }
   })
   const kept = ({ id }) =>
@@ -139,11 +151,11 @@ export function gatePlan(composition, context) {
       ...fromModel,
       ...list(context.leftOut),
       ...dropped.leftOut,
-      ...items.leftOut.map(withoutId),
-      ...facts.leftOut.map(withoutId),
+      ...items.leftOut.map(namedBy(context.labels)),
+      ...facts.leftOut.map(namedBy(context.labels)),
       ...pictures.leftOut,
       ...emptied.leftOut,
-      ...rowsOut.map(withoutId),
+      ...rowsOut.map(namedBy(context.labels)),
       ...listsBelowMinLeftOut(rows.dropped, rows.pages)
     ]
   }

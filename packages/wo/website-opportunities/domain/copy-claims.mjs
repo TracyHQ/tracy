@@ -35,6 +35,8 @@ export const numbersOf = (text) =>
 
 const LOCATIONS = String.raw`locations?|branch(?:es)?|Standorte?n?|Filialen?|agences?|succursales?|sedes?|sucursales?|sedi|filiali|unidades|filiais`
 const NOUNS = String.raw`members?|clients?|customers?|students?|awards?|reviews?|projects?|Mitglieder[n]?|Kunden|Schüler(?:innen|n)?|Studenten|Auszeichnungen|Bewertungen|Projekte[n]?|membres|adhérents|élèves|étudiants|avis|projets|socios|miembros|clientes|alumnos|estudiantes|premios|reseñas|proyectos|soci|membri|clienti|studenti|allievi|premi|recensioni|progetti|sócios|membros|alunos|prémios|prêmios|avaliações|projetos`
+/** The counted nouns of a count claim, in six languages (read by `plan-request-claims.mjs` too). */
+export const COUNT_NOUNS = NOUNS
 const EXPERIENCE = String.raw`years?\s+(?:of\s+)?(?:experience|in\s+business)|Jahren?\s+Erfahrung|ans\s+d['’]expérience|años\s+de\s+experiencia|anni\s+di\s+esperienza|anos\s+de\s+experiência`
 const COUNT = re(
   String.raw`${B}${NUM}\s*\+?\s+(?:[\p{L}-]+\s+)?(${LOCATIONS}|${NOUNS})${E}|${B}${NUM}\s*\+?\s+(?:${EXPERIENCE})${E}`

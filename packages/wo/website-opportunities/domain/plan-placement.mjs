@@ -37,7 +37,7 @@ const shownIds = (pages) => new Set(pages.flatMap((p) => p.blocks.flatMap((b) =>
  *   placed: Array<{item: string, page: string, block: string, how: string}>}} each left out entry names the `id` of
  *   the item it reports (drop it before the plan: Contract B has no such key)
  */
-export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new Set() }) {
+export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new Set(), idTag }) {
   const out = structuredClone(pages)
   const shown = shownIds(out)
   const placed = []
@@ -69,7 +69,7 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
       if (placedBlocks.has(description.id) || !fit(description)) continue
       const page = pageFor(out, description, recipes)
       if (!page) continue
-      const id = extraBlockId(page)
+      const id = extraBlockId(page, idTag)
       const taken = remaining.splice(0, description.items.max)
       const noun = ITEM_NOUNS[kind] ?? 'items'
       const block = {

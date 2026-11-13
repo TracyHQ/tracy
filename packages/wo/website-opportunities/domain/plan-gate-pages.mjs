@@ -7,12 +7,19 @@ const list = (value) => (Array.isArray(value) ? value : [])
 /**
  * The pages as the plan holds them, with ids, and each page's index in the composition. A block the model left with no
  * data is left out, as the gate's messages ask (`no_data` is never sent back); a page whose main block is missing or
- * empty is dropped with its reason.
+ * empty is dropped with its reason. A first composition's ids follow the positions (`home`, `home-b2`). A revision
+ * (`plan-request.mjs`) gives `givenIds`, per composition page `{page, blocks}` with `null` for what it adds, and
+ * `idTag` (`r<revision>`): a page or block it keeps keeps its id, and a new one gets an id with the tag, so it never
+ * takes an id this plan used before.
  */
-export function pagesOf(composition, { recipes, blocks }) {
+export function pagesOf(composition, { recipes, blocks, givenIds, idTag }) {
   const pages = []
   const leftOut = []
-  const ids = new Set()
+  const ids = new Set(
+    list(givenIds)
+      .map((g) => g?.page)
+      .filter(Boolean)
+  )
   const index = new Map()
   for (const [i, page] of composition.pages.entries()) {
     const recipe = recipes.get(page.pageType)
@@ -24,13 +31,17 @@ export function pagesOf(composition, { recipes, blocks }) {
       })
       continue
     }
-    let id = page.pageType
-    for (let n = 2; ids.has(id); n++) id = `${page.pageType}-${n}`
+    const given = givenIds?.[i]
+    const base = given ? `${page.pageType}-${idTag}` : page.pageType
+    let id = given?.page ?? base
+    if (!given?.page) for (let n = 2; ids.has(id); n++) id = `${base}-${n}`
     ids.add(id)
     index.set(id, i)
+    const blockId = (j) =>
+      given?.blocks?.[j] ?? (given?.page ? `${id}-${idTag}-b${j + 1}` : `${id}-b${j + 1}`)
     const kept = page.blocks.flatMap((b, j) => {
       const d = blocks.get(b.block)
-      const block = { id: `${id}-b${j + 1}`, type: d.type, block: d.id, source: d.source ?? 'template' }
+      const block = { id: blockId(j), type: d.type, block: d.id, source: d.source ?? 'template' }
       return b.data.length ? [{ ...block, label: b.label, data: [...b.data], reason: b.reason }] : []
     })
     pages.push({ id, name: page.name, pageType: page.pageType, blocks: kept })

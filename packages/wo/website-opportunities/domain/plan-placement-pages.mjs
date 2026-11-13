@@ -41,9 +41,10 @@ export function insertBlock(page, block, recipe) {
   page.blocks.splice(footer === -1 ? page.blocks.length : footer, 0, block)
 }
 
-/** A new id for a block the gate adds to `page`. */
-export function extraBlockId(page) {
+/** A new id for a block the gate adds to `page`; a revision's `tag` (`r<revision>`) keeps it off every earlier id. */
+export function extraBlockId(page, tag) {
+  const base = tag ? `${page.id}-${tag}-extra` : `${page.id}-extra`
   let n = page.blocks.length + 1
-  while (page.blocks.some((b) => b.id === `${page.id}-extra-${n}`)) n += 1
-  return `${page.id}-extra-${n}`
+  while (page.blocks.some((b) => b.id === `${base}-${n}`)) n += 1
+  return `${base}-${n}`
 }
