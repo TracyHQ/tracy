@@ -132,7 +132,7 @@ test('JA Boxing: the real icon step draws every planned social row from the link
       .filter((f) => f.row && f.field === 'link' && f.from === 'data')
       .map((f) => ({ at: [p.id, f.block, f.item, f.row].filter(Boolean).join('.'), link: f.value }))
   )
-  assert.equal(rows.length, 66)
+  assert.equal(rows.length, 68)
   for (const { at, link } of rows) {
     const icon = icons.find((i) => i.id === `${at}.network-icon`)
     assert.equal(icon?.network, networkOf(link).network, at)
@@ -147,7 +147,7 @@ test('JA Boxing block-180 follows the kind its store declares (a store question,
   const list = plan.pages.find((p) => p.id === 'block-180').blocks[0].lists.find((l) => l.name === 'social')
   assert.deepEqual(
     list.rows.map((r) => r.data),
-    ['contact-social-url', 'contact-social-url-2']
+    ['block-180-item-1-row-1', 'block-180-item-1-row-2', 'block-180-item-1-row-3', 'block-180-item-1-row-4']
   )
   assert.equal(CLUB_LINKS.length, 2)
 })
