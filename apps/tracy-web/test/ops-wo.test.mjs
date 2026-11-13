@@ -927,10 +927,13 @@ test('the Live Queue sets the current site score beside the latest demo’s own 
     demo: { score: 92, measuredAt: '2026-11-12T09:00:00.000Z' }
   })
   // No build: no demo; the old score stays as research measured it.
-  assert.deepEqual(doc.opportunities.find((r) => r.name !== 'Anan Saigon' && r.pagespeed?.old?.score === 41).pagespeed, {
-    old: { score: 41, measuredAt: new Date(NOW_ISO).toISOString() },
-    demo: { reason: 'no_demo' }
-  })
+  assert.deepEqual(
+    doc.opportunities.find((r) => r.name !== 'Anan Saigon' && r.pagespeed?.old?.score === 41).pagespeed,
+    {
+      old: { score: 41, measuredAt: new Date(NOW_ISO).toISOString() },
+      demo: { reason: 'no_demo' }
+    }
+  )
   // A demo PageSpeed could not reach keeps its reason, never a number.
   pool.state.builds[0].built_pagespeed = { url: 'http://anan.tracy.test:51710/', reason: 'not_public' }
   const again = await (await requestWo({ pool })).json()
