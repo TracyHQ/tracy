@@ -4,14 +4,18 @@
 //   B. every content map place whose demo value holds a demo business fact (mapping-decisions demoFacts) is a fact
 //      place, a field the build writes, a record the build creates, or a place the draft report classes;
 //   C. every stored place has one writer unless the block store shares it (the contract check), and every
-//      build-sets reference of the draft report is set.
+//      build-sets reference of the draft report is set;
+//   D. after the blank site step every place of a kept record is empty and its address still names exactly one node
+//      (the demo rows as the contract holds them, through the real step).
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { checkAiQuickstartContract } from '../../../wo/website-opportunities/domain/ai-quickstart-contract.mjs'
 import { writersOf } from '../../../wo/website-opportunities/domain/ai-quickstart-mapping-places.mjs'
+import { blankRows, mappingLocations, PHP_SKIP, placeKey } from './fixtures/ai-quickstart-ja-boxing-blank.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../../..')
 const DIR = path.join(ROOT, 'packages/cms/tracy-joomla-quickstart/ai-quickstarts/ja-boxing/j6/1.0.11')
@@ -120,4 +124,55 @@ test('C. the mapping passes the contract check with the draft report: one writer
   assert.deepEqual(res.problems, [])
   const buildSets = report.references.classed.filter((r) => r.as === 'build-sets').map((r) => r.at)
   assert.deepEqual(Object.keys(mapping.buildSets).sort(), buildSets.sort())
+})
+
+// The address of a location resolved the way the plugin loads a stored value (`ContentSlots::html`), marker notation
+// read as the HTML it stands for: [nodes found, their text trimmed].
+const RESOLVE = `
+$in = json_decode(stream_get_contents(STDIN), true); $out = [];
+foreach ($in as $e) {
+  $h = $e['html'];
+  if (strpos($h, '<') === false && strpos($h, '((') !== false) $h = preg_replace('/\\(\\((\\/?[a-zA-Z][^()]*?)\\)\\)/', '<$1>', $h);
+  $d = new DOMDocument('1.0', 'UTF-8'); libxml_use_internal_errors(true);
+  $d->loadHTML('<?xml encoding="UTF-8"><html><body><div id="contract-root">' . $h . '</div></body></html>', LIBXML_NONET);
+  $n = (new DOMXPath($d))->query($e['xpath']);
+  $out[] = [$n === false ? -1 : $n->length, $n && $n->length ? trim($n->item(0)->textContent) : null];
+}
+echo json_encode($out);`
+
+test('D. after the blank site step every place of a kept record is empty and still names exactly one node', {
+  skip: PHP_SKIP
+}, (t) => {
+  const rows = blankRows(mapping)
+  const html = []
+  const bad = []
+  let plain = 0
+  for (const { at, loc } of mappingLocations(mapping)) {
+    const row = rows.after.get(loc.entity)
+    if (!row) continue
+    let value = row[loc.column]
+    if (loc.jsonPath) {
+      let doc = JSON.parse(value)
+      if (loc.nestedJson) doc = JSON.parse(doc[loc.nestedJson])
+      for (const step of loc.jsonPath) doc = doc?.[step]
+      value = doc
+    }
+    const emptied = rows.emptied.has(placeKey(loc))
+    if (!loc.xpath) {
+      plain += 1
+      if (typeof value !== 'string' || (emptied && value.trim() !== ''))
+        bad.push(`${at}: ${JSON.stringify(value)}`)
+    } else html.push({ at, emptied, html: value, xpath: loc.xpath })
+  }
+  const found = JSON.parse(execFileSync('php', ['-r', RESOLVE], { input: JSON.stringify(html) }))
+  found.forEach(([count, text], i) => {
+    const e = html[i]
+    if (count !== 1 || (e.emptied && text !== ''))
+      bad.push(`${e.at} ${e.xpath}: ${count} node(s), ${JSON.stringify(text)}`)
+  })
+  t.diagnostic(
+    JSON.stringify({ plain, html: html.length, emptiedHtml: html.filter((e) => e.emptied).length })
+  )
+  assert.deepEqual(bad, [])
+  assert.ok(html.length > 250, `${html.length} HTML addresses`)
 })

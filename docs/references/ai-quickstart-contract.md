@@ -321,8 +321,11 @@ A **location** has the shape a content map slot already uses, so the existing wr
 "title", 0], "xpath": "/html/body/div/h2"}`. Only `entity` and `column` are required:
 
 - `slot` names the content map slot the location is, when it is one; its `entity`, `column`, `jsonPath`, `nestedJson`
-  and `xpath` are then the slot's own, byte for byte (the writer of the Claude Cowork plugin takes changes by slot key,
-  `applyJoomlaContract`; test `ai-quickstart-mapping-writes.test.mjs`).
+  and `xpath` are then the slot's own, byte for byte. The Claude Cowork plugin writes a site by slot key
+  (`content.contract` apply: `checkValue`, then `changeRow` with `ContentSlots::htmlPatch` and `jsonPatch`); test
+  `ai-quickstart-mapping-writes.test.mjs` runs the plugin release the quickstart pins on the demo rows as the blank site
+  step leaves them, for a plain slot, an xpath piece, an attribute piece, a nested JSON place, a child list row, a fact
+  place and every text node place, and reads each value back.
 - `jsonPath` holds keys and list indexes (integers); `nestedJson` names a key of the column whose value is itself a JSON
   string (a JA ACM block's `jatools-config`), read and written back in the form PHP's `json_encode` writes.
 - `xpath` uses the plugin's convention, a synthetic `/html/body/div` root around the stored HTML. A JA ACM value keeps
@@ -430,6 +433,14 @@ files, so the step adds `templates/<tpl>/local/etc/site/<profile>.json`, `templa
 reads a local file instead of the shipped one, without merging) and `language/overrides/<tag>.override.ini`. A
 `globalConfiguration` place is written by the installer from what the installation is given, and is reported as such.
 The demo data parser reads `DELETE FROM` statements and keeps them in order.
+
+**Every emptied place stays addressable.** After the step, each declared address still names exactly one node, so the
+build writes into it: an attribute keeps its name with an empty value, an element keeps its tag and attributes and
+loses its children (the plugin writes an element as a whole unit), and a text node (`p/text()`, `text()[2]` after a
+`<span>`) keeps its own leading and trailing white space, or one space when it had none. An empty text node is not
+written out, so its address, and the index of every text node after it, would be gone; white space draws nothing and
+keeps both. A place counts as empty when its value, trimmed, is empty. Test D of `ai-quickstart-mapping-sweep.test.mjs`
+runs the step on the demo rows and resolves every address of the mapping file.
 
 ## The Tracy library
 
