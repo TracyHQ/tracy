@@ -19,6 +19,14 @@ import { chooseLogo, logoHintsOf } from 'website-opportunities/src/place-logo.js
 import { createLinkFields, saveListingSource } from 'website-opportunities/src/link-fields.js'
 import { createPinnedFetch } from 'website-opportunities/src/pinned-fetch.js'
 import { withProfileEdits } from 'website-opportunities/src/profile-edits.js'
+import {
+  businessReadingDoorFor,
+  readBusiness,
+  readingInputOf
+} from 'website-opportunities/src/business-reading.js'
+import { BudgetExceededError } from 'website-opportunities/src/cost-ledger.js'
+import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
+import { DEFAULT_WO_OPS_SETTINGS } from 'website-opportunities/src/wo-settings.js'
 import { SOCIAL_SOURCES, SOURCES, refsOfCandidate, refsOfUrls } from 'website-opportunities/src/sources.js'
 import { cleanProfileLinks } from 'website-opportunities/domain/social-links.mjs'
 import { createPreSiteGatherer } from './build-draft/gather.js'
@@ -65,7 +73,13 @@ export const preSiteParts = Object.freeze({
   logoHintsOf,
   chooseLogo,
   // The chosen logo's own colours, read finer than a photo's (the executor's brand stage, `logoPaletteOfStored`).
-  logoPaletteOf
+  logoPaletteOf,
+  // The business reading of the place executor's profile stage (`gather-reading.js`), and what its cost is held to.
+  readBusiness,
+  readingInputOf,
+  modelTokensOf,
+  BudgetExceededError,
+  defaultJobCapCents: DEFAULT_WO_OPS_SETTINGS.researchJobCapCents
 })
 
 /**
@@ -159,7 +173,10 @@ export const draftPictureReader =
  * The default research gatherer of the build chat (#609): the owner's links read with the Website Opportunities
  * domain's own collectors, on this server's `/ops/wo` keys and settings, through the crawl fetch that refuses private
  * addresses at connect time (`pinned-fetch.js`); the pictures stored as draft pictures (`pictures`, `draftPictures`).
- * `overrides` replaces any door (tests: the domain's network doors, the objects, the measuring).
+ * The business is read by the model /ops assigns to "WO editorial" (`businessReadingDoorFor`, door `woEditorial`), its
+ * call sent through the server's own fetch as the executor's is (`apiFetch`); a server without a database has no door.
+ * `overrides` replaces any door (tests: the domain's network doors, the objects, the measuring, `readingDoor` and
+ * `readingFetch` for the reading's model).
  * @param {{pool: import('pg').Pool, config: object, pictures?: object | null, fetchImpl?: typeof fetch,
  *   dnsResolve?: Function, now?: () => number, overrides?: object}} deps
  */
@@ -206,7 +223,19 @@ export function preSiteGatherer({
     writeLogo: createLogoWriter({ dir: overrides.logoDir ?? draftLogoDir(config), ext: EXT }),
     fetch,
     ...(resolve ? { resolve } : {}),
+    readingDoor:
+      overrides.readingDoor ??
+      (pool
+        ? () =>
+            businessReadingDoorFor(
+              pool,
+              config?.sessionSecret,
+              (host ??= createTracyWoHost({ pool, config }))
+            )
+        : null),
+    readingFetch: overrides.readingFetch ?? fetchImpl ?? globalThis.fetch,
     now,
-    ...(overrides.budgetMs ? { budgetMs: overrides.budgetMs } : {})
+    ...(overrides.budgetMs ? { budgetMs: overrides.budgetMs } : {}),
+    ...(overrides.readingBudgetMs ? { readingBudgetMs: overrides.readingBudgetMs } : {})
   })
 }

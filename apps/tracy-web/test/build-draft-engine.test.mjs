@@ -210,6 +210,27 @@ test(
   }
 )
 
+/** An invented model door for the business reading, and the provider answering it (`readingModel`). */
+const READING_DOOR = {
+  state: 'ready',
+  door: {
+    url: 'https://llm.example/v1/chat/completions',
+    key: 'test-key',
+    model: 'invented-model',
+    effort: 'off'
+  }
+}
+async function readingModel(_url, init) {
+  const prompt = JSON.parse(init.body).messages[1].content
+  const answer = prompt.includes('[bio]')
+    ? { services: [{ name: 'Sourdough', quote: 'Sourdough baked before dawn', ref: 'bio' }] }
+    : { uspThemes: [] }
+  return Response.json({
+    choices: [{ message: { content: JSON.stringify(answer) }, finish_reason: 'stop' }],
+    usage: { prompt_tokens: 400, completion_tokens: 100, total_tokens: 500 }
+  })
+}
+
 /** The rows of every `wo_*` table of the test schema, by table. */
 async function woRows() {
   const { rows } = await db.pool.query(
@@ -251,7 +272,10 @@ test(
       gatherDoors: {
         loadDomain: async () => domain,
         runtime: runtimeWith({ google: 'google-test' }),
-        fetch: async () => assert.fail('no fetch outside the fakes')
+        fetch: async () => assert.fail('no fetch outside the fakes'),
+        // The business reading runs too, on an invented model: it writes no ledger row of a place job either.
+        readingDoor: async () => READING_DOOR,
+        readingFetch: readingModel
       },
       pictureDoors: { objects }
     })
@@ -269,6 +293,12 @@ test(
     assert.equal(stored.research.brief.business.name, 'Hollowmere Bakehouse')
     assert.equal(stored.research.brief.googlePlace.placeId, 'ChIJinventedHollowmere0001')
     assert.equal(stored.research.trade, 'food')
+    assert.deepEqual(
+      [stored.research.reading.method, stored.research.reading.model],
+      ['model', 'invented-model'],
+      JSON.stringify(stored.research.reading)
+    )
+    assert.ok(stored.research.brief.reading.services.some((i) => i.label === 'Sourdough'))
     // Only the owner's private link is set aside; the social page the website links to is read too.
     assert.deepEqual(stored.research.setAside, [
       { link: 'http://localhost:8080/', reason: 'a private address, not a page on the internet' }

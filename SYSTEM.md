@@ -902,8 +902,14 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   The business logo (`place-logo.js` rule) is measured from its stored copy (`media-info.js` `logoPaletteOf`, as the
   executor's brand stage does), so the brief's brand carries the logo's own colours (`colorsFrom: 'logo'`, `accent`),
   and written from that copy as a file in `build-draft-logos/` beside the
-  brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. Unread links are set aside with a reason; nothing read is
-  `research_empty`; the whole step is bounded to three minutes. The brand step before the site (#616,
+  brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. The business
+  is then read by the place executor's own reading step ([`build-draft/gather-reading.js`](apps/tracy-web/src/build-draft/gather-reading.js)
+  over `business-reading.js` `readBusiness` / `readingInputOf`, model door `woEditorial`) and laid on the profile as
+  `businessReading`, so the brief's services, prices, team and story come from it as a revision's do; no
+  `wo_cost_ledger` row: each call is held in memory to `/ops/wo` `researchJobCapCents`, and `research.reading` records
+  method, reason, calls, tokens and cents. No door, a spent cap, a failure (one rerun) or its own two minutes past: the
+  rules' reading or none, with its reason, never a failed research. Unread links are set aside with a reason; nothing read is
+  `research_empty`; reading the links is bounded to three minutes and the business reading to two more. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and
   its look record is kept in `build_draft.brand` (migration 217) for that template; compose only reads it, and new

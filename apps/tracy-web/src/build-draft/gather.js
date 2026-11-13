@@ -5,7 +5,7 @@
  * door it reads through is injected (`build-draft-gather-wiring.js` `preSiteGatherer`), so tests run it on fakes.
  *
  *   links -> judged (`gather-links.js`) -> Google place facts, listing pages, website and social pages read
- *   (`gather-sources.js`) -> brief and manifest (`gather-read.js`)
+ *   (`gather-sources.js`) -> the business reading (`gather-reading.js`) -> brief and manifest (`gather-read.js`)
  *
  * The pictures the sources collected are stored as draft pictures (`pictures.js`), within the same deadline: the
  * manifest names only stored copies, and a picture not stored is set aside with its reason (`picturesSetAside`).
@@ -18,14 +18,16 @@ import { randomUUID } from 'node:crypto'
 import { EngineStepError } from './engine-steps.js'
 import { linksOf, reasonOf } from './gather-links.js'
 import { boundedFetch, isCollected, readSources, withinTime } from './gather-sources.js'
-import { briefOf } from './gather-read.js'
+import { briefOf, profileOfRead } from './gather-read.js'
+import { readingOf } from './gather-reading.js'
 import { NOT_STORED, picturesToStore } from './pictures.js'
 
 const NO_STORE = NOT_STORED.store_unavailable
 
 /**
  * Three minutes: a plain crawl of the executor's 40 website pages (15 s a page at worst, most answer in under one)
- * and one paid social run fit, and the owner waiting in the chat hears back within one short wait.
+ * and one paid social run fit, and the owner waiting in the chat hears back within one short wait. The business
+ * reading has its own two minutes after it (`READING_BUDGET_MS`), so the whole step ends within five.
  */
 export const GATHER_BUDGET_MS = 180_000
 
@@ -55,10 +57,13 @@ const unreadOf = (rows, pasted) =>
  *   linkFields: Function, listingRowOf: (listings: object[]) => Promise<object | null>,
  *   paidRunAllowed: (accountId: string | null) => Promise<boolean>, parts: object, fetch: typeof fetch,
  *   pictures?: {store: Function, open: Function} | null, writeLogo?: Function, resolve?: Function,
- *   now?: () => number, budgetMs?: number}} deps
+ *   readingDoor?: () => Promise<object>, readingFetch?: typeof fetch, readingBudgetMs?: number,
+ *   now?: () => number, budgetMs?: number, log?: Console}} deps `readingDoor`: the business reading's model door
+ *   (`woEditorial`); `readingFetch`: the fetch its model call goes out through
  * @returns {(input: {links: string[], description: string | null}, context?: {accountId?: string}) =>
  *   Promise<{brief: object, manifest: object[], setAside: Array<{link: string, reason: string}>,
- *   picturesSetAside: Array<{url: string, reason: string}>, pictureRun?: string, logoFile?: string}>}
+ *   picturesSetAside: Array<{url: string, reason: string}>, pictureRun?: string, logoFile?: string,
+ *   reading: object}>} `reading`: how the business was read (`gather-reading.js` record)
  */
 export function createPreSiteGatherer(deps) {
   const { parts, now = Date.now, budgetMs = GATHER_BUDGET_MS } = deps
@@ -133,15 +138,39 @@ export function createPreSiteGatherer(deps) {
     // opportunity's brief does from its place's `logoResearch`): the brand step refuses a logo file the brief does not
     // name (`BRAND_LOGO_NO_ID`).
     const logo = await logoOf({ deps, parts, rows: read, stored: pictures.rows, name: opp.name, context })
+    const madeAt = new Date(now()).toISOString()
+    const subject = profileOfRead({
+      opp,
+      rows: read,
+      googlePlace: place.facts,
+      description,
+      madeAt,
+      domain,
+      parts
+    })
+    const reading = await readingOf({
+      parts,
+      readingDoor: deps.readingDoor,
+      fetch: deps.readingFetch,
+      rows: read,
+      profile: subject.merged,
+      google: place.facts,
+      trade: subject.trade === 'other' ? null : subject.trade,
+      capCents: settings?.researchJobCapCents ?? parts.defaultJobCapCents,
+      now,
+      ...(deps.readingBudgetMs ? { budgetMs: deps.readingBudgetMs } : {}),
+      ...(deps.log ? { log: deps.log } : {})
+    })
     const made = briefOf({
       opp,
       rows: read,
       media: pictures.rows,
       googlePlace: place.facts,
       description,
-      madeAt: new Date(now()).toISOString(),
+      madeAt,
       domain,
       parts,
+      reading: reading.reading,
       ...(logo ? { logoResearch: logo.research, logoPalette: logo.palette } : {})
     })
     if (made.invalid)
@@ -158,6 +187,7 @@ export function createPreSiteGatherer(deps) {
       manifest: made.manifest,
       setAside,
       picturesSetAside: pictures.setAside,
+      reading: reading.record,
       ...(pictures.run ? { pictureRun: pictures.run } : {}),
       ...(logoFile ? { logoFile } : {})
     }
