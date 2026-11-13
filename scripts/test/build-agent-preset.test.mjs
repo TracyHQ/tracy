@@ -71,6 +71,22 @@ test('the instructions say what the build chat must do, in plain words with no d
   assert.doesNotMatch(p, /[–—]/, 'no em or en dash')
 })
 
+test('the persona has no dash and tells the agent never to write one', () => {
+  const em = String.fromCodePoint(0x2014)
+  const en = String.fromCodePoint(0x2013)
+  const p = agent.persona
+  assert.ok(!p.includes(em) && !p.includes(en), 'no em or en dash in the persona')
+  assert.match(p, /never use an em dash or an en dash in a reply\. use a comma or a full stop instead\./i)
+  for (const file of PRESET_FILES) {
+    const yml = readFileSync(join(ROOT, file), 'utf8')
+    assert.match(
+      yml.slice(yml.indexOf('- id: preset-site-builder')),
+      /Never use an em dash or an en dash/,
+      file
+    )
+  }
+})
+
 test('both bundles carry the generated build agent with the build engine row', () => {
   for (const file of PRESET_FILES) {
     const yml = readFileSync(join(ROOT, file), 'utf8')
