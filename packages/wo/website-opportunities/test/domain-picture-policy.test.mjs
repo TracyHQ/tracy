@@ -117,7 +117,7 @@ test('a video is never the default hero background, and only a fitting video fil
   }
   // Without a video frame in the template, a video is never placed, even as the hero.
   const blocks = pictureBlocks()
-  blocks.get('hero-video').fields = blocks.get('hero-video').fields.filter((f) => f.media !== 'video')
+  blocks.get('hero-video').fields = blocks.get('hero-video').fields.filter((f) => f.kind !== 'business.video')
   const noFrame = await run({ pictures: [clubVideo()], blockStore: { blocks: [...blocks.values()] } })
   assert.ok(!noFrame.frames.some((f) => f.picture === 'video-rally'))
   // A hero with no photo of its own is generated as an image, not filled with the video.

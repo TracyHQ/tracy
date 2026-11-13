@@ -67,6 +67,38 @@ export function lookOf(template, brand) {
   return { look: { template: { slug, name, version }, accent, logo }, assumptions }
 }
 
+/** Why the plan drops an item of an image block, as the customer reads it (`picture-fit.mjs` reasons). */
+const ITEM_REASONS = Object.freeze({
+  no_own_photo:
+    'It has no photo of yours, and its section is complete without it, so no picture is generated for it.',
+  stock_only:
+    'Its only photo is a stock photo, and Tracy never adds a stock photo; its section is complete without it.',
+  own_photo_unfit:
+    'Its photo does not fit the picture spot of its section, and the section is complete without it.'
+})
+/** Picture spots that stay empty, by reason: how one and several are named, and why, as the customer reads it. */
+const EMPTY_FRAME_REASONS = Object.freeze({
+  no_generated_people: [
+    'picture spot of a person',
+    'picture spots of people',
+    'Pictures of people are never generated, so these spots show no picture until you add your own photo.'
+  ],
+  generated_cap: [
+    'picture spot',
+    'picture spots',
+    `At most ${MAX_GENERATED_FRAMES} pictures are generated for a site, so these spots stay without a picture.`
+  ],
+  no_fitting_video: [
+    'video spot',
+    'video spots',
+    'No video of yours is landscape or near square without words printed over it, so these spots show no video.'
+  ],
+  no_own_logo: [
+    'logo spot',
+    'logo spots',
+    'A logo of another organisation is never drawn, so these spots stay empty until you add the logo.'
+  ]
+})
 /** A label that stands in, for counting only, for an own photo the pictures step labels before it places it. */
 const TO_BE_LABELLED = 'to be labelled'
 const count = (n, one, many) => `${n} ${n === 1 ? one : many}`
@@ -95,28 +127,15 @@ export function picturesOf(pages, blocks, data) {
       ...(counts.generated > 0 ? { reason: 'Some picture spots have no fitting photo of yours.' } : {})
     }
   }
-  const leftOut = reduced.map(({ item }) => ({
+  const leftOut = reduced.map(({ item, reason }) => ({
     what: data.byId.get(item)?.entry?.label ?? item,
     kind: 'item',
-    reason:
-      'It has no photo of yours, and its section is complete without it, so no picture is generated for it.'
+    reason: ITEM_REASONS[reason] ?? ITEM_REASONS.no_own_photo
   }))
-  const none = (reason) => frames.filter((f) => f.source === 'none' && f.reason === reason).length
-  const people = none('no_generated_people')
-  if (people > 0)
-    leftOut.push({
-      what: count(people, 'picture spot of a person', 'picture spots of people'),
-      kind: 'feature',
-      reason:
-        'Pictures of people are never generated, so these spots show no picture until you add your own photo.'
-    })
-  const capped = none('generated_cap')
-  if (capped > 0)
-    leftOut.push({
-      what: count(capped, 'picture spot', 'picture spots'),
-      kind: 'feature',
-      reason: `At most ${MAX_GENERATED_FRAMES} pictures are generated for a site, so these spots stay without a picture.`
-    })
+  for (const [reason, [one, many, said]] of Object.entries(EMPTY_FRAME_REASONS)) {
+    const n = frames.filter((f) => f.source === 'none' && f.reason === reason).length
+    if (n > 0) leftOut.push({ what: count(n, one, many), kind: 'feature', reason: said })
+  }
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = list(pages).map((page) => ({
     ...page,

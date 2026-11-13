@@ -2,24 +2,26 @@
 // Pure: the plan's frames, the labelled own pictures and the count the customer approved in, every frame with its
 // recorded source out. The order is fixed:
 //
-//   1. own photos, wherever they fit a frame (an item's own photo in its item frame, then a gallery photo the plan does
-//      not show elsewhere in the hero and the other block frames);
-//   2. fewer image items: an item block drops the items without an own photo while it keeps more than its minimum;
+//   1. own photos, wherever they fit a frame by content and shape (an item's own photo in its item frame, then a gallery
+//      photo the plan does not show elsewhere in the hero and the other block frames);
+//   2. fewer image items: an item block drops the items without a fitting own photo while it keeps more than its minimum;
 //   3. generated pictures for the frames still empty, at most six per site and never more than the plan's approved
-//      count. A frame of a person is never generated, and no stock picture is ever used.
+//      count. A frame of a person or a logo is never generated (`picture-roles.mjs`), and no stock picture is ever used.
 //
 // 🔒 A VIDEO IS NEVER THE DEFAULT HERO BACKGROUND. The hero's image frame takes a photo or a generated image, never a
-// video. Only a frame the template marks as a video frame takes an own video, and only one that is landscape or near
+// video. Only a video frame (a `business.video` link field) takes an own video, and only one that is landscape or near
 // square with no text printed over it; otherwise it stays empty. A video is never generated.
+//
+// 🔒 THE BUSINESS LOGO IS THE BRAND STEP'S. A `business.logo` frame is never filled here and never generated; an award or
+// partner logo (`claim.entity_logo`) takes the item's own logo picture or stays empty with a reason.
 import { MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
 import { framesOfPlan } from './picture-frames.mjs'
+import { fitsFrame, heroFit, reductionsOf } from './picture-fit.mjs'
 import { isLabelled, PicturePolicyError } from './picture-labelling.mjs'
 import { pictureProblemsOf, videoFits } from './picture-policy-check.mjs'
-import { heroScore, NOT_A_HERO, orientationOf, resolutionGradeOf } from './pictures/asset-labels.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-const orientation = (p) =>
-  p.orientation && p.orientation !== 'unknown' ? p.orientation : orientationOf(p.width, p.height)
+const heroFirst = (a, b) => (a.place === 'hero' ? 0 : 1) - (b.place === 'hero' ? 0 : 1)
 
 /** What an own picture adds to its frame: the picture, its label and where it came from. */
 const own = (picture) => ({
@@ -30,51 +32,58 @@ const own = (picture) => ({
   from: list(picture.from)
 })
 
-/** Whether a photo may fill a hero or block frame: a photograph of the business that fits the frame's shape, never a
- * logo or a text graphic. */
-function fitsFree(picture, frame) {
-  if (picture.media !== 'photo' || NOT_A_HERO.has(picture.content)) return false
-  const shape = orientation(picture)
-  if (frame.place === 'hero' && shape === 'portrait') return false
-  // A photo fits a frame of its own shape or a square one; a landscape frame never takes a portrait photo, nor back.
-  const opposite = { landscape: 'portrait', portrait: 'landscape' }
-  return opposite[frame.shape] !== shape
+/**
+ * The generated count the customer approved. `null` (the plan is being counted, nothing approved yet) allows the cap; an
+ * approved count that is missing or not a whole number allows none, and says so in a note.
+ */
+export function approvedCountOf(approved) {
+  if (approved === null || approved === undefined) return { count: MAX_GENERATED_FRAMES, note: null }
+  const given = approved?.generated?.frames
+  if (Number.isInteger(given) && given >= 0) return { count: given, note: null }
+  return {
+    count: 0,
+    note: {
+      code: 'approved_count_invalid',
+      given: given === undefined ? null : given,
+      message: 'the plan approves no valid generated count, so no picture is generated'
+    }
+  }
 }
 
-/** How well a photo fits the hero, by the shared hero score of its labels. */
-const heroFit = (p) =>
-  heroScore({
-    orientation: orientation(p),
-    quality: p.quality ?? resolutionGradeOf(p.width, p.height),
-    content: p.content
-  })
-
-/** Frames whose items are dropped: per item block, the items without an own photo while it keeps more than its min. */
-function reductionsOf(frames, filled, pages, blocks) {
-  const reduced = []
-  for (const page of list(pages))
-    for (const block of list(page.blocks)) {
-      const mine = frames.filter((f) => f.block === block.id && f.page === page.id && f.place === 'item')
-      const shown = [...new Set(mine.map((f) => f.item))]
-      const bare = shown.filter((item) => mine.some((f) => f.item === item && !f.people && !filled.has(f.id)))
-      const min = Math.max(1, Number(blocks.get(block.block)?.items?.min ?? 1))
-      let count = shown.length
-      for (const item of bare.reverse()) {
-        if (count <= min) break
-        count -= 1
-        reduced.push({ page: page.id, block: block.id, item, reason: 'no_own_photo' })
-      }
-    }
-  return reduced
+/** Step 1: own pictures in item frames, video frames, then the free gallery photos (the hero first, by fit). */
+function placeOwn(frames, usable, take, used) {
+  const free = (p) => !used.has(p.id)
+  for (const frame of frames.filter((f) => f.place === 'item' && f.never !== 'logo_from_brand_step')) {
+    const mine = usable.filter((p) => p.item === frame.item && free(p) && fitsFrame(p, frame))
+    const picture = mine.find((p) => p.id === frame.item) ?? mine[0]
+    if (picture) take(frame, picture)
+  }
+  for (const frame of frames.filter((f) => f.place === 'video')) {
+    const videos = usable.filter((p) => videoFits(p) && free(p))
+    const video = videos.find((p) => frame.item && p.item === frame.item) ?? videos[0]
+    if (video) take(frame, video)
+  }
+  const shownItems = new Set(frames.map((f) => f.item).filter(Boolean))
+  const gallery = usable.filter((p) => p.itemKind === 'gallery' && !shownItems.has(p.item))
+  const freeFrames = frames
+    .filter((f) => (f.place === 'hero' || f.place === 'block') && !f.never)
+    .sort(heroFirst)
+  for (const frame of freeFrames) {
+    const fits = gallery.filter((p) => free(p) && fitsFrame(p, frame))
+    if (frame.place === 'hero') fits.sort((a, b) => heroFit(b) - heroFit(a))
+    if (fits[0]) take(frame, fits[0])
+  }
 }
 
 /**
  * Assign a picture to every frame of the plan. Every own picture must be labelled first (`labelOwnPictures`).
  * @param {{pages: object[], blocks: Map<string, object>, data: object, pictures: object[],
- *   approved?: {generated?: {frames?: number}}}} input `approved` is the plan's pictures summary (`plan.pictures`)
- * @returns {{frames: object[], reduced: object[], counts: {own: number, generated: number, none: number}}}
+ *   approved?: {generated?: {frames?: number}} | null}} input `approved` is the plan's pictures summary
+ *   (`plan.pictures`); leave it out only to count a plan before it is approved (`picturesOf`)
+ * @returns {{frames: object[], reduced: object[], counts: {own: number, generated: number, none: number},
+ *   notes: object[]}}
  */
-export function assignPictures({ pages, blocks, data, pictures, approved }) {
+export function assignPictures({ pages, blocks, data, pictures, approved = null }) {
   const unlabelled = list(pictures).filter((p) => !p.stock && !isLabelled(p))
   if (unlabelled.length)
     throw new PicturePolicyError(
@@ -88,51 +97,31 @@ export function assignPictures({ pages, blocks, data, pictures, approved }) {
   const frames = framesOfPlan(pages, blocks, data)
   const filled = new Map()
   const used = new Set()
-  const take = (frame, picture) => {
-    used.add(picture.id)
-    filled.set(frame.id, own(picture))
-  }
-  // 1. Own pictures: an item's own photo, a fitting video, then free gallery photos (the hero first, by fit).
-  for (const frame of frames.filter((f) => f.place === 'item')) {
-    const mine = usable.filter((p) => p.item === frame.item && p.media === 'photo' && !used.has(p.id))
-    const picture = mine.find((p) => p.id === frame.item) ?? mine[0]
-    if (picture) take(frame, picture)
-  }
-  for (const frame of frames.filter((f) => f.place === 'video')) {
-    const video = usable.find((p) => videoFits(p) && !used.has(p.id))
-    if (video) take(frame, video)
-  }
-  const shownItems = new Set(frames.map((f) => f.item).filter(Boolean))
-  const free = usable.filter((p) => p.itemKind === 'gallery' && !shownItems.has(p.item))
-  const freeFrames = frames
-    .filter((f) => f.place === 'hero' || f.place === 'block')
-    .sort((a, b) => (a.place === 'hero' ? 0 : 1) - (b.place === 'hero' ? 0 : 1))
-  for (const frame of freeFrames) {
-    const fits = free.filter((p) => !used.has(p.id) && fitsFree(p, frame))
-    if (frame.place === 'hero') fits.sort((a, b) => heroFit(b) - heroFit(a))
-    if (fits[0]) take(frame, fits[0])
-  }
+  placeOwn(
+    frames,
+    usable,
+    (frame, picture) => {
+      used.add(picture.id)
+      filled.set(frame.id, own(picture))
+    },
+    used
+  )
   // 2. Fewer image items before anything is generated.
-  const reduced = reductionsOf(frames, filled, pages, blocks)
+  const reduced = reductionsOf(frames, filled, pages, blocks, pictures)
   const dropped = new Set(reduced.map((r) => `${r.page}.${r.block}.${r.item}`))
   const kept = frames.filter((f) => !f.item || !dropped.has(`${f.page}.${f.block}.${f.item}`))
   // 3. Generated pictures, the hero first, within the cap and the approved count.
-  const approvedCount = Number(approved?.generated?.frames)
-  const cap = Math.min(
-    MAX_GENERATED_FRAMES,
-    Number.isFinite(approvedCount) ? approvedCount : MAX_GENERATED_FRAMES
-  )
+  const { count: approvedCount, note } = approvedCountOf(approved)
+  const cap = Math.min(MAX_GENERATED_FRAMES, approvedCount)
   let generated = 0
-  const order = [...kept].sort((a, b) => (a.place === 'hero' ? 0 : 1) - (b.place === 'hero' ? 0 : 1))
-  for (const frame of order) {
+  for (const frame of [...kept].sort(heroFirst)) {
     if (filled.has(frame.id)) continue
-    if (frame.place === 'video') filled.set(frame.id, { source: 'none', reason: 'no_fitting_video' })
-    else if (frame.people) filled.set(frame.id, { source: 'none', reason: 'no_generated_people' })
+    const none = (reason) => filled.set(frame.id, { source: 'none', reason })
+    if (frame.place === 'video') none('no_fitting_video')
+    else if (frame.people) none('no_generated_people')
+    else if (frame.never) none(frame.never)
     else if (generated >= cap)
-      filled.set(frame.id, {
-        source: 'none',
-        reason: generated >= MAX_GENERATED_FRAMES ? 'generated_cap' : 'over_approved_count'
-      })
+      none(generated >= MAX_GENERATED_FRAMES ? 'generated_cap' : 'over_approved_count')
     else {
       generated += 1
       const item = frame.item ? data.byId.get(frame.item)?.entry?.label : null
@@ -145,8 +134,8 @@ export function assignPictures({ pages, blocks, data, pictures, approved }) {
   const out = kept.map((frame) => ({ ...frame, ...filled.get(frame.id) }))
   const counts = { own: 0, generated: 0, none: 0 }
   for (const frame of out) counts[frame.source] += 1
-  const assignment = { frames: out, reduced, counts }
-  const problems = pictureProblemsOf(assignment, pictures)
+  const assignment = { frames: out, reduced, counts, notes: note ? [note] : [] }
+  const problems = pictureProblemsOf(assignment, pictures, { generated: cap })
   if (problems.length)
     throw new PicturePolicyError('picture_policy_broken', `${problems.length} picture rules broken`, {
       problems

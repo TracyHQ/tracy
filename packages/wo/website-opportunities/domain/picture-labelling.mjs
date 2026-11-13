@@ -59,18 +59,30 @@ function readReply(reply) {
   return new Map(value.pictures.filter((p) => isText(p?.id)).map((p) => [p.id, p]))
 }
 
+/**
+ * Whether text is printed over a picture: `true` from research or from the vision reply wins; `false` only when one of
+ * them says so and neither says `true`; otherwise unknown (`undefined`), which the video check refuses.
+ */
+function burnedInTextOf(picture, answer) {
+  if (picture.burnedInText === true || answer.burnedInText === true) return true
+  if (answer.burnedInText === false || picture.burnedInText === false) return false
+  return undefined
+}
+
 /** One picture with the vision call's answer, or null when the answer cannot label it. */
 function labelled(picture, answer) {
   if (!isText(answer?.label) || !CONTENT.has(answer?.content)) return null
   const measured = orientationOf(picture.width, picture.height)
   const orientation =
     measured !== 'unknown' ? measured : ORIENTATIONS.has(answer.orientation) ? answer.orientation : 'unknown'
+  const { burnedInText: _research, ...rest } = picture
+  const burnedInText = burnedInTextOf(picture, answer)
   return {
-    ...picture,
+    ...rest,
     label: answer.label.trim().replace(/\s+/g, ' '),
     content: answer.content,
     people: answer.people === true || answer.content === 'team' || answer.content === 'people-in-action',
-    burnedInText: answer.burnedInText === true,
+    ...(burnedInText === undefined ? {} : { burnedInText }),
     orientation,
     labelledBy: 'vision'
   }

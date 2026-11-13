@@ -1,7 +1,7 @@
 // Shared inputs of the picture policy tests (ticket #595): the invented tennis club of the plan composer tests with a
 // few more invented pictures (a free terrace photo, a club crest, a stock photo, a coach photo, a video), an invented
-// template with a hero video frame and service cards with a photo per item, and a plan placing them. Nothing here is a
-// real business, person, template or supplier picture.
+// template with a hero video frame (a `business.video` link field, as Contract A declares one) and service cards with
+// a photo per item, and a plan placing them. Nothing here is a real business, person, template or supplier picture.
 import { blockStore, clubProfile, COACH, PHOTOS, SERVICES } from '../plan-composer/invented-club.mjs'
 
 export { COACH, PHOTOS, SERVICES }
@@ -19,7 +19,7 @@ export function pictureBlocks() {
     fields: [
       { name: 'heading', kind: 'business.tagline', type: 'text', limit: 60 },
       image('photo', 'business.hero_image'),
-      image('clip', 'business.hero_image', { media: 'video' })
+      { name: 'clip', kind: 'business.video', type: 'link' }
     ],
     itemFields: []
   })
