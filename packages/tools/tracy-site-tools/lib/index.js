@@ -24959,6 +24959,14 @@ var catalogue_default = {
       defaultOn: false
     },
     {
+      id: "chat-build",
+      group: "right-tabs",
+      label: "Build in the chat",
+      hint: "The build chat of the creation workspace: a person with no site lands in it after signing in, and Add site offers it first. They say what their business is and the build agent researches it and asks what it could not find. Off: they land in the creation workspace as before, Add site shows only its other starts, and /new/build opens nothing.",
+      drawnBy: "Tracy",
+      defaultOn: true
+    },
+    {
       id: "site-from-business",
       group: "right-tabs",
       label: "Build from my business",
