@@ -57,10 +57,21 @@ export function tradeOf(domain, profile, name, tradeOfWords) {
 /**
  * The brief and manifest of what was read.
  * @param {{opp: object, rows: object[], media?: object[], googlePlace: object | null, description: string | null,
- *   madeAt: string, domain: object, parts: object}} input `media`: the stored pictures (`pictures.js`), as rows
+ *   madeAt: string, domain: object, parts: object, logoResearch?: object | null}} input `media`: the stored pictures
+ *   (`pictures.js`), as rows; `logoResearch`: the chosen logo (`gather.js` `logoOf`), named by the brief as `brand.logo`
  * @returns {{brief: object, manifest: object[]} | {invalid: object[]}}
  */
-export function briefOf({ opp, rows, media = [], googlePlace, description, madeAt, domain, parts }) {
+export function briefOf({
+  opp,
+  rows,
+  media = [],
+  googlePlace,
+  description,
+  madeAt,
+  domain,
+  parts,
+  logoResearch = null
+}) {
   const bio =
     typeof description === 'string' && description.trim() ? description.trim().slice(0, BIO_MAX) : null
   const owned = {
@@ -72,7 +83,9 @@ export function briefOf({ opp, rows, media = [], googlePlace, description, madeA
   const trade = tradeOf(domain, merged, owned.name, parts.tradeOfWords)
   if (trade !== 'other') owned.candidate.trade = trade
   const profile = parts.decideProfile(merged, owned, null)
-  const brand = brandOf({ rows, media, profile, name: owned.name, domain, parts })
+  const observed = brandOf({ rows, media, profile, name: owned.name, domain, parts })
+  // The chosen logo rides on the brand as a place's research does (`briefBrand`: `brand.logo` and `logoResearch`).
+  const brand = logoResearch ? { ...observed, logoResearch } : observed
   // The stored pictures go through the brief read's own filters (junk, near copies) and mapping (`fromPlace`).
   const read = parts.fromPlace({ sources: rows, profile, brand, media, shown: rows })
   const brief = parts.makeSiteBrief(domain, read, { opportunity: parts.opportunityOf(owned), madeAt })

@@ -129,6 +129,10 @@ export function createPreSiteGatherer(deps) {
       domainDeps,
       remaining
     })
+    // The logo is chosen and written before the brief is made, so the brief names it (`brand.logo`, as a website
+    // opportunity's brief does from its place's `logoResearch`): the brand step refuses a logo file the brief does not
+    // name (`BRAND_LOGO_NO_ID`).
+    const logo = await logoOf({ deps, parts, rows: read, stored: pictures.rows, name: opp.name, context })
     const made = briefOf({
       opp,
       rows: read,
@@ -137,7 +141,8 @@ export function createPreSiteGatherer(deps) {
       description,
       madeAt: new Date(now()).toISOString(),
       domain,
-      parts
+      parts,
+      ...(logo ? { logoResearch: logo.research } : {})
     })
     if (made.invalid)
       throw new EngineStepError(
@@ -147,14 +152,7 @@ export function createPreSiteGatherer(deps) {
           noRerun: true
         }
       )
-    const logoFile = await logoFileOf({
-      deps,
-      parts,
-      rows: read,
-      stored: pictures.rows,
-      brief: made.brief,
-      context
-    })
+    const logoFile = logo?.file ?? null
     return {
       brief: made.brief,
       manifest: made.manifest,
@@ -180,13 +178,14 @@ async function storedPicturesOf({ deps, parts, rows, accountId, domain, domainDe
 }
 
 /**
- * The business's logo as a file the brand step reads (`brand-before-site.js` `logoFile`), or null. The logo is the one
- * Website Opportunities' own rule picks without a vision model (`place-logo.js`: the sources' logo hints, then
- * `chooseLogo`, which trusts only what a page says of itself), among the hints whose picture was stored; the file is
- * written from that stored copy (`writeLogo`). A logo not found or not stored is no file: the brand step then follows
- * its own rule for a business without one.
+ * The business's logo as a file the brand step reads (`brand-before-site.js` `logoFile`), and the logo research the
+ * brief names it by, or null. The logo is the one Website Opportunities' own rule picks without a vision model
+ * (`place-logo.js`: the sources' logo hints, then `chooseLogo`, which trusts only what a page says of itself), among the
+ * hints whose picture was stored; the file is written from that stored copy (`writeLogo`). A logo not found or not
+ * stored is no file and no logo in the brief: the brand step then follows its own rule for a business without one.
+ * @returns {Promise<{file: string, research: {status: 'found', chosen: object, candidates: object[]}} | null>}
  */
-async function logoFileOf({ deps, parts, rows, stored, brief, context }) {
+async function logoOf({ deps, parts, rows, stored, name, context }) {
   if (!deps.writeLogo || !deps.pictures?.open) return null
   const byUrl = new Map(stored.map((m) => [m.source_url, m]))
   const candidates = parts.logoHintsOf(rows).flatMap((h) => {
@@ -195,8 +194,9 @@ async function logoFileOf({ deps, parts, rows, stored, brief, context }) {
       ? [{ mediaId: m.id, url: h.url, via: h.via, source: h.source, width: m.width, height: m.height }]
       : []
   })
-  const { chosen } = parts.chooseLogo(candidates, { name: brief?.business?.name })
+  const { chosen } = parts.chooseLogo(candidates, { name })
   if (!chosen?.mediaId) return null
   const picture = await deps.pictures.open(chosen.mediaId, { accountId: context.accountId }).catch(() => null)
-  return (await deps.writeLogo(picture).catch(() => null)) ?? null
+  const file = (await deps.writeLogo(picture).catch(() => null)) ?? null
+  return file ? { file, research: { status: 'found', chosen, candidates } } : null
 }

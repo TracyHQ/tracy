@@ -395,6 +395,14 @@ test('research keeps the logo the website names as a file, from its stored copy;
   )
   assert.equal(path.dirname(gathered.logoFile), dir)
   assert.deepEqual(new Uint8Array(readFileSync(gathered.logoFile)), logo)
+  // The brand step refuses a logo file its brief does not name (`BRAND_LOGO_NO_ID`): the brief names the stored logo.
+  const named = gathered.brief.brand?.logo
+  assert.match(named ?? '', /\S/, 'the brief names its logo')
+  assert.equal(gathered.brief.brand.logoResearch?.chosen?.mediaId, named)
+  assert.ok(
+    gathered.brief.assets.some((a) => a.id === named),
+    'the named logo is one of the brief assets'
+  )
   assert.equal(
     store.asked.filter((a) => a.url === LOGO).length,
     1,
@@ -406,5 +414,6 @@ test('research keeps the logo the website names as a file, from its stored copy;
     { accountId: 'acc-1' }
   )
   assert.equal(none.logoFile, undefined)
+  assert.equal(none.brief.brand?.logo, undefined, 'no logo file, no logo in the brief')
   rmSync(dir, { recursive: true, force: true })
 })
