@@ -31,6 +31,8 @@ const BRAND_CODES = new Set([
   'brand_file_unreadable',
   'brand_input_missing',
   'brand_input_ambiguous',
+  'brand_logo_path_relative',
+  'brand_brief_changed',
   // A brand step that ended without a brand file (`step-chain.js` `STEP_CHAIN_NO_OUTPUT`, after its one rerun).
   'STEP_CHAIN_NO_OUTPUT'
 ])
@@ -38,8 +40,14 @@ const BRAND_CODES = new Set([
 const LOOK_PROBLEMS = new Set(['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
 const RESEARCH_CODES = new Set(['research_unusable', 'research_empty', 'research_unavailable'])
 
+/** The brand step ended because the OWNER cancelled it: nothing broke, so it is neither a brand nor a team fault. */
+const BRAND_CANCEL_CODE = 'brand_step_stopped'
+export const SAY_CANCELLED =
+  'I stopped as you asked. Your answers are kept, and you can continue when you are ready.'
+
 /** The stopped state of a fault: one sentence for the owner, and why, by its code. */
 export function stoppedOf(fault) {
+  if (fault.code === BRAND_CANCEL_CODE) return { state: 'stopped', say: SAY_CANCELLED, reason: 'cancelled' }
   const look =
     BRAND_CODES.has(fault.code) ||
     (fault.code === 'plan_gate_failed' && (fault.problems ?? []).some((p) => LOOK_PROBLEMS.has(p?.code)))
@@ -96,7 +104,8 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
       return ended
     }
     const fault = faultOf(step, ran)
-    await recordFault(pool, accountId, fault)
+    // An owner cancel is not a fault the team needs to see.
+    if (fault.code !== BRAND_CANCEL_CODE) await recordFault(pool, accountId, fault)
     return endStep(pool, accountId, runner, stoppedOf(fault), {}, now)
   }
 

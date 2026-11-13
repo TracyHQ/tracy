@@ -12,7 +12,7 @@ import { STEP_ATTEMPTS, faultOf, runWithRerun } from '../src/build-draft/engine-
 import { readEngineRequest } from '../src/build-draft/engine-request.js'
 import { MAX_QUESTIONS_AT_ONCE, SAY, askOf, engineStateOf } from '../src/build-draft/engine-state.js'
 import { researchStep } from '../src/build-draft/engine-steps.js'
-import { brandFor, stoppedOf } from '../src/build-draft/engine.js'
+import { SAY_CANCELLED, brandFor, stoppedOf } from '../src/build-draft/engine.js'
 import { KIT_ROOT, gatheredBrief, kits, needsReading } from './build-draft-engine-fixtures.mjs'
 
 after(() => rmSync(KIT_ROOT, { recursive: true, force: true }))
@@ -106,13 +106,25 @@ test('a stopped step says one plain sentence and nothing else; every sentence ha
   assert.deepEqual(engineStateOf(null), { step: null, state: 'idle' })
 })
 
+test('an owner cancel of the brand step stops with its own plain sentence, not the brand fault one', () => {
+  const stopped = stoppedOf({ code: 'brand_step_stopped' })
+  assert.equal(stopped.state, 'stopped')
+  assert.equal(stopped.reason, 'cancelled')
+  assert.equal(stopped.say, SAY_CANCELLED)
+  assert.notEqual(stopped.say, SAY.brand)
+  assert.doesNotMatch(stopped.say, /team can see/)
+  assert.doesNotMatch(stopped.say, DASHES)
+})
+
 test('a failure of the business look stops with the brand sentence; the gate look codes count, others do not', () => {
   const brand = { state: 'stopped', say: SAY.brand, reason: 'brand-unavailable' }
   for (const code of [
     'brand_missing',
     'brand_step_failed',
     'brand_file_unreadable',
-    'brand_logo_colours_unmeasured'
+    'brand_logo_colours_unmeasured',
+    'brand_logo_path_relative',
+    'brand_brief_changed'
   ])
     assert.deepEqual(stoppedOf({ code }), brand, code)
   for (const look of ['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])

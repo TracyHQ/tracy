@@ -3,7 +3,7 @@
  * facts with their source, the look section, services, pages and the data each block will hold with its reason, the
  * pictures summary, the assumptions and what was left out. It shows no written copy: copy is written after approval.
  *
- * A value a Contract B plan edit can change (a fact, a service name, the accent colour, the number of drawn pictures)
+ * A value a Contract B plan edit can change (a fact, a service name, the accent colour)
  * is a button: pressed, it turns into an editor; Enter or Save sends one structured plan edit (`onEdit`), Escape or
  * Cancel puts the value back, and focus returns to the value either way. Values a plan edit cannot set as text (the
  * language, the template, the logo, what a block holds, your photos) are shown, not offered. A fact the sources
@@ -397,14 +397,14 @@ export function PlanCard({
             </Value>
           </Row>
           <Row label={t('plan.pictures.drawn')}>
-            <EditableValue
-              ctx={ctx}
+            {/* An estimate the picture step redraws from the owner's photos, so editing it would change nothing:
+                shown, not offered, although the contract still lists the field as editable. */}
+            <Value
               field="pictures.generated.frames"
-              label={t('plan.pictures.drawn')}
-              current={card.pictures.generated.frames}
-              text={drawn}
               {...(card.pictures.generated.reason ? { note: card.pictures.generated.reason } : {})}
-            />
+            >
+              {drawn}
+            </Value>
           </Row>
         </div>
       </Section>

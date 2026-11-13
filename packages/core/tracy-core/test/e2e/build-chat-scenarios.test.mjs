@@ -153,7 +153,7 @@ async function planRead(chat) {
   assert.match(pages, /Photo gallery\s*12 photos/)
   const pictures = await section('Pictures').innerText()
   assert.match(pictures, /Your photos\s*31 photos from Instagram and Website/)
-  assert.match(pictures, /Drawn pictures\s*2 pictures\s*Two spots have no fitting photo/)
+  assert.match(pictures, /Drawn pictures\s*About 2 pictures\s*Two spots have no fitting photo/)
   assert.match(
     await section('Assumptions').innerText(),
     /Every source is in English, so the site is in English\./
@@ -338,10 +338,15 @@ const CHECKS = {
       'items[s1].label',
       'items[s2].label',
       'items[s3].label',
-      'items[s4].label',
+      'items[s4].label'
+    ])
+    for (const field of [
+      'language',
+      'look.template',
+      'look.logo',
+      'pages[home].blocks[h2].data',
       'pictures.generated.frames'
     ])
-    for (const field of ['language', 'look.template', 'look.logo', 'pages[home].blocks[h2].data'])
       assert.equal(await at(field).locator('button').count(), 0, `${field} is shown, not offered`)
     assert.equal(await undo.isDisabled(), true, 'nothing to undo yet')
 
