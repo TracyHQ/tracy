@@ -25362,6 +25362,195 @@
           "x-audience": ["customer"]
         }
       },
+      "/api/build-draft": {
+        "get": {
+          "operationId": "get_api_build_draft",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        },
+        "post": {
+          "operationId": "post_api_build_draft",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/answers": {
+        "put": {
+          "operationId": "put_api_build_draft_answers",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "answer": {
+                      "type": "object"
+                    },
+                    "question": {
+                      "type": "object"
+                    }
+                  },
+                  "required": ["question", "answer"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/plan": {
+        "put": {
+          "operationId": "put_api_build_draft_plan",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "plan": {
+                      "type": "object"
+                    }
+                  },
+                  "required": ["plan"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/plan-edits": {
+        "post": {
+          "operationId": "post_api_build_draft_plan_edits",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "edit": {
+                      "type": "object"
+                    }
+                  },
+                  "required": ["edit"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/plan-undo": {
+        "post": {
+          "operationId": "post_api_build_draft_plan_undo",
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
+      "/api/build-draft/template": {
+        "put": {
+          "operationId": "put_api_build_draft_template",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "template": {
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "string"
+                        }
+                      },
+                      "required": ["slug", "name", "version"],
+                      "type": "object"
+                    }
+                  },
+                  "required": ["template"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer", "agent"],
+          "x-internal": true
+        }
+      },
       "/api/config": {
         "get": {
           "operationId": "get_api_config",

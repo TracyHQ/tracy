@@ -1283,6 +1283,109 @@ export const PEOPLE_ROUTES = [
     },
     answers: '`{hints: ["site-tour" | "voice-tip" | "welcome"]}`'
   },
+  // src/build-draft/route.js
+  {
+    method: 'GET',
+    path: '/api/build-draft',
+    summary: 'Read my pre site build draft',
+    description:
+      "The signed-in account's build draft (#603): the Contract B questions asked and their answers, the chosen template `{slug, name, version}`, the one living build plan (`tracy-build-plan/v1`), the last plan edit applied (`lastEdit`) and whether one undo is offered (`canUndo`). It is the one source of the plan card and of the plan the build engine runs. An account with no draft answers `{draft: null}`; a read never creates an account. 401 `NOT_SIGNED_IN`.",
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    answers:
+      '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt} | null}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft',
+    summary: 'Start my pre site build draft',
+    description:
+      "Starts the signed-in account's build draft, with no website opportunity and no site; one draft per account, so a second call answers the same draft (200 instead of 201). Creates the account row when the session has none yet. No body. 401 `NOT_SIGNED_IN`; 403 `CSRF_ORIGIN`.",
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'PUT',
+    path: '/api/build-draft/answers',
+    summary: 'Keep an answer to a build question',
+    description:
+      'Body `{question, answer}`: a Contract B question (`tracy-build-question/v1`) and its answer (`tracy-build-answer/v1`), held to each other by the Contract B check. A later answer to the same question replaces the earlier one. 400 `INVALID_REQUEST`; 422 `INVALID_ANSWER` with `problems: [{at, message}]`. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.',
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    body: {
+      type: 'object',
+      required: ['question', 'answer'],
+      properties: { question: { type: 'object' }, answer: { type: 'object' } }
+    },
+    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'PUT',
+    path: '/api/build-draft/template',
+    summary: 'Choose the template of my build draft',
+    description:
+      'Body `{template: {slug, name, version}}`: the template chosen before a plan exists. Once the draft has a plan, its `look.template` is changed by a plan edit instead: 409 `PLAN_EXISTS`. 400 `INVALID_REQUEST` or `INVALID_TEMPLATE`. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.',
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    body: {
+      type: 'object',
+      required: ['template'],
+      properties: {
+        template: {
+          type: 'object',
+          required: ['slug', 'name', 'version'],
+          properties: { slug: { type: 'string' }, name: { type: 'string' }, version: { type: 'string' } }
+        }
+      }
+    },
+    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'PUT',
+    path: '/api/build-draft/plan',
+    summary: 'Put a newly composed build plan in my draft',
+    description:
+      "Body `{plan}`: a build plan (`tracy-build-plan/v1`) that passes the Contract B check becomes the living plan; the draft's template follows its `look.template`, and the last edit and the undo are cleared. The same plan id needs a higher revision than the one held: 409 `STALE_PLAN` with `revision`. 400 `INVALID_REQUEST`; 422 `INVALID_PLAN` with `problems`. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.",
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    body: { type: 'object', required: ['plan'], properties: { plan: { type: 'object' } } },
+    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/plan-edits',
+    summary: 'Apply a structured edit to my build plan',
+    description:
+      "Body `{edit}`: a Contract B plan edit (`tracy-build-plan-edit/v1`) of the living plan's current revision, checked with `checkPlanEdit`; the plan becomes the edited plan (revision raised by one) and `lastEdit` the edit. Its undo replaces the previous one: one step. 409 `NO_PLAN`; 409 `STALE_EDIT` with `problems` for an edit of another revision; 422 `INVALID_EDIT` with `problems`; 400 `INVALID_REQUEST`. A refused edit changes nothing. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.",
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    body: { type: 'object', required: ['edit'], properties: { edit: { type: 'object' } } },
+    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+  },
+  // src/build-draft/route.js
+  {
+    method: 'POST',
+    path: '/api/build-draft/plan-undo',
+    summary: 'Undo the last edit of my build plan',
+    description:
+      'Takes the last applied plan edit back, once: the values before it are put back as a Contract B plan edit `undo-<edit id>`, so the revision keeps rising and `lastEdit` is that undo. No body. 409 `NOTHING_TO_UNDO` when there is no edit to undo or it was already undone. Every door: 401 `NOT_SIGNED_IN`; 404 `NO_DRAFT` before a draft is started; each refusal carries `code` and `next` (a sentence). Responses are not cached.',
+    audience: ['customer', 'agent'],
+    auth: 'session',
+    internal: true,
+    answers: '`{draft: {id, questions, answers, template, plan, lastEdit, canUndo, createdAt, updatedAt}}`'
+  },
   // src/onboarding/route.js
   {
     method: 'GET',

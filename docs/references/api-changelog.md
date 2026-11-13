@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-13: A build draft holds the answers, template and plan before a site exists
+
+Added (internal): `GET /api/build-draft`, `POST /api/build-draft`, `PUT /api/build-draft/answers`, `PUT /api/build-draft/template`, `PUT /api/build-draft/plan`, `POST /api/build-draft/plan-edits` and `POST /api/build-draft/plan-undo`: the signed-in account's one pre site build draft (#603), holding Contract B questions with their answers, the chosen template `{slug, name, version}` and the one living build plan, with the last plan edit applied and one step of undo. It needs no website opportunity and no site. Refusals answer `code` and `next`: 404 `NO_DRAFT`, 409 `NO_PLAN`, `STALE_EDIT`, `STALE_PLAN`, `PLAN_EXISTS`, `NOTHING_TO_UNDO`, 422 `INVALID_ANSWER`, `INVALID_PLAN`, `INVALID_EDIT` (with `problems`), 400 `INVALID_REQUEST`, `INVALID_TEMPLATE`. Public API v1 is unchanged.
+
 ## 2026-11-11: Builds refused before their work are given back
 
 Changed `GET /api/website-opportunities/demo/usage` (internal) and the daily cap of `POST /api/website-opportunities/:id/demo/build` and `POST /api/website-opportunities/demo/builds/bulk`: a build is still counted when it is accepted, but one that fails before any billable work (no site, chat or build model run, and no paid photo labelling or logo research run of its own: `BRIEF_NOT_READY`, a template or choice no longer offered) is given back once, on the UTC day and count (demo or own site) it was charged on. A build that reached its create step, or whose brief made a paid labelling call or queued its own logo research, stays counted. A brief with no photographs to label, or only cached labels and no other paid call, makes no paid call.

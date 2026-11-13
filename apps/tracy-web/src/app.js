@@ -111,6 +111,7 @@ import { notificationsRoutes } from './notifications/route.js'
 import { unsubscribeHeadersFor } from './notifications/unsubscribe.js'
 import { onboardingRoutes } from './onboarding/route.js'
 import { seenHintRoutes } from './seen-hints/route.js'
+import { buildDraftRoutes } from './build-draft/route.js'
 import { welcomeSceneRoutes } from './welcome/route.js'
 import { agentDemoCapabilities, agentDemoCreateContext } from './opportunities-build/agent-demo.js'
 import { researchOfRevision } from './opportunities-build/revision-research.js'
@@ -1167,6 +1168,8 @@ export function buildApp(deps) {
     // The Getting started screen's account flag (`onboarding/route.js`), before the dsh catch-all.
     app.route('/', onboardingRoutes({ config: deps.config, pool: deps.pool, now: deps.now }))
     app.route('/', seenHintRoutes({ config: deps.config, pool: deps.pool }))
+    // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists.
+    app.route('/', buildDraftRoutes({ config: deps.config, pool: deps.pool }))
     // The first-run Welcome popup's animated scenes (`welcome/route.js`), before the dsh catch-all.
     app.route('/', welcomeSceneRoutes({ config: deps.config }))
   }

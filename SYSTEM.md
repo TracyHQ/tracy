@@ -843,6 +843,11 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `account_seen_hint` keeps the seen marks for step 2 of the tour (`site-tour`) and the voice hint (`voice-tip`), primary
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
   is checked at the write door and by an SQL constraint. The existing `assistant_tip_seen` still keeps the separate `/help` hint.
+  `build_draft` (migration 215, #603): the pre site build draft of the chat that builds a site before the site exists,
+  one per account (deleted with it), needing no website opportunity and no site. It holds the Contract B documents as
+  they are: the questions asked with their answers, the chosen template, the one living build plan, the last plan edit
+  applied and the edit that undoes it (one step). The plan card (`GET /api/build-draft`) and the build engine
+  (`draftPlanForBuild`) read it through the same function ([`build-draft/store.js`](apps/tracy-web/src/build-draft/store.js)).
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
   row; inputs frozen by a trigger; at most one queued row, by a unique index), `site_planner_round` (rounds 0 to 2: plan, check,
   failure list sent), `site_planner_turn` (one row per model call, append-only; an opened kit image is stored as a reference,
