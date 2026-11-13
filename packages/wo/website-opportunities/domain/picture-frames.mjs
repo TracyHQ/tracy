@@ -10,6 +10,9 @@
 // profiles) is treated as its own. A source that knows a picture is stock marks it (`stock: true` or `origin: 'stock'`)
 // and the flag is honoured: the picture is never placed. Nothing in research or the needs profile sets that flag yet, and
 // no detector guesses it.
+import { placesOfBlock, repeatedNames } from './picture-block-places.mjs'
+import { frameOfField } from './picture-frame-size.mjs'
+import { PicturePolicyError } from './picture-labelling.mjs'
 import { generationOf, PEOPLE_ROLES } from './picture-roles.mjs'
 import { orientationOf } from './pictures/asset-labels.mjs'
 
@@ -30,56 +33,67 @@ const isFrame = (field) => field?.type === 'image' || isVideoFrame(field)
 
 /**
  * Where a frame sits: `hero` (a picture field of a hero block), `block` (another block level picture field), `item`
- * (a picture field of one item a block shows) or `video` (a video frame, a `business.video` link field).
+ * (a picture field of one item a block shows), `row` (a picture field of a child list row) or `video` (a video frame,
+ * a `business.video` link field, at any depth).
  */
-function placeOf(block, field, isItem) {
+function placeOf(block, field, level) {
   if (isVideoFrame(field)) return 'video'
-  if (isItem) return 'item'
+  if (level === 'item' || level === 'row') return level
   return block.type === 'hero' ? 'hero' : 'block'
 }
 
 /**
- * Every picture frame of the plan, in page order: block level frames first, then each shown item's frames.
+ * Every picture frame of the plan, in page order, at every depth (`picture-block-places.mjs`): block level frames,
+ * the rows of the block's child lists, then each shown item's frames and its child list rows.
  * @param {object[]} pages placed pages of the plan (`plan.pages`)
  * @param {Map<string, object>} blocks block id -> its description (block store or library)
  * @param {{byId: Map<string, {what: string, kind: string}>}} data the plan data (`plan-data.mjs`)
  * @returns {Array<{id: string, page: string, block: string, blockId: string, blockType: string, field: string,
- *   kind: string | null, place: 'hero' | 'block' | 'item' | 'video', item?: string, itemKind?: string,
- *   shape: 'landscape' | 'portrait' | 'square' | 'unknown', people: boolean, never?: string}>} `shape` is the
- *   frame's own, from its declared `frame` size (contract A); `never` is set when the frame's kind is never generated
- *   (`picture-roles.mjs`), with the reason it records when no own picture fills it
+ *   kind: string | null, place: 'hero' | 'block' | 'item' | 'row' | 'video', item?: string, itemKind?: string,
+ *   row?: string, shape: 'landscape' | 'portrait' | 'square' | 'unknown', people: boolean, never?: string}>} `shape`
+ *   is the frame's own, from its declared `frame` size (Contract A); `never` is set when the frame's kind is never
+ *   generated (`picture-roles.mjs`), with the reason it records when no own picture fills it. A frame declared in
+ *   another shape than Contract A's, or two fields of one name in one place, throw a `PicturePolicyError`.
  */
 export function framesOfPlan(pages, blocks, data) {
   const frames = []
   for (const page of list(pages)) {
     for (const block of list(page?.blocks)) {
       const description = blocks.get(block.block) ?? {}
-      const frame = (field, item) => {
-        const place = placeOf(block, field, Boolean(item))
-        const generation = generationOf(field.kind)
-        const base = `${page.id}.${block.id}`
-        frames.push({
-          id: item ? `${base}.${item.id}.${field.name}` : `${base}.${field.name}`,
-          page: page.id,
-          block: block.id,
-          blockId: block.block,
-          blockType: block.type,
-          field: field.name,
-          kind: field.kind ?? null,
-          place,
-          ...(item ? { item: item.id, itemKind: item.kind } : {}),
-          shape: orientationOf(field.frame?.width, field.frame?.height),
-          people: PEOPLE.has(field.kind) || (item?.kind === 'person' && place === 'item'),
-          ...(generation.may || place === 'video' ? {} : { never: generation.reason })
-        })
+      for (const at of placesOfBlock(page, block, description, data)) {
+        const fields = at.fields.filter(isFrame)
+        const repeated = repeatedNames(fields)
+        if (repeated.length)
+          throw new PicturePolicyError(
+            'picture_field_repeated',
+            `${at.prefix} declares ${repeated.join(', ')} twice: two frames would share one id`,
+            { at: at.prefix, fields: repeated }
+          )
+        for (const field of fields) {
+          const place = placeOf(block, field, at.level)
+          const { frame, problem } = frameOfField(field)
+          if (problem)
+            throw new PicturePolicyError('picture_frame_invalid', `${at.prefix}.${field.name}: ${problem}`, {
+              at: `${at.prefix}.${field.name}`
+            })
+          const generation = generationOf(field.kind)
+          frames.push({
+            id: `${at.prefix}.${field.name}`,
+            page: page.id,
+            block: block.id,
+            blockId: block.block,
+            blockType: block.type,
+            field: field.name,
+            kind: field.kind ?? null,
+            place,
+            ...(at.item ? { item: at.item, itemKind: at.itemKind } : {}),
+            ...(at.row ? { row: at.row } : {}),
+            shape: orientationOf(frame?.width, frame?.height),
+            people: PEOPLE.has(field.kind) || (at.itemKind === 'person' && place === 'item'),
+            ...(generation.may || place === 'video' ? {} : { never: generation.reason })
+          })
+        }
       }
-      for (const field of list(description.fields).filter(isFrame)) frame(field, null)
-      const items = list(block.data)
-        .map((id) => ({ id, entry: data.byId.get(id) }))
-        .filter((d) => d.entry?.what === 'item')
-        .map((d) => ({ id: d.id, kind: d.entry.kind }))
-      for (const item of items)
-        for (const field of list(description.itemFields).filter(isFrame)) frame(field, item)
     }
   }
   return frames

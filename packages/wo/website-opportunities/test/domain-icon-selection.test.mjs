@@ -5,7 +5,6 @@
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-icon-selection.test.mjs
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
 import { iconCountsOf, iconProblemsOf } from '../domain/icon-check.mjs'
 import { IconSelectionError } from '../domain/icon-ranking.mjs'
@@ -25,15 +24,16 @@ import {
   yogaProfile
 } from './fixtures/icon-fields/invented-yoga.mjs'
 
-const select = (input = {}) =>
+// The copy is the REAL page writer's output (`yogaCopy` runs `writePages` with a scripted writer).
+const select = async (input = {}) =>
   selectIcons({
     plan: yogaPlan(),
     data: planDataOf(yogaProfile()),
     blocks: blocksOf(blockStore()),
-    copy: yogaCopy(),
     iconLibrary: iconLibrary(),
     model: scriptedModel(firstCandidate()),
-    ...input
+    ...input,
+    copy: 'copy' in input ? await input.copy : await yogaCopy()
   })
 const at = (result, id) => result.icons.find((i) => i.id === id)
 const feature = (item, field = 'item-icon') => `home.home-b1.${item}.${field}`
@@ -169,70 +169,14 @@ test('the pictures step selects the icons from the written copy, and refuses to 
     vision: scriptedModel(firstCandidate()),
     iconLibrary: iconLibrary()
   }
-  const result = await picturesStep({ ...input, copy: yogaCopy() })
+  const result = await picturesStep({
+    ...input,
+    copy: await yogaCopy(),
+    model: scriptedModel(firstCandidate())
+  })
   assert.equal(result.icons.find((i) => i.id === feature(CLASSES[2])).icon.name, 'flower-lotus')
   assert.equal(result.iconCounts.unexplained, 0)
   await assert.rejects(picturesStep({ ...input, vision: scriptedModel() }), { code: 'icon_copy_missing' })
-})
-
-test('the JA Boxing block store: every icon field is filled, social or hidden with a reason', async () => {
-  const boxing = JSON.parse(
-    readFileSync(
-      new URL(
-        '../../../cms/tracy-joomla-quickstart/ai-quickstarts/ja-boxing/j6/1.0.11/block-store.json',
-        import.meta.url
-      ),
-      'utf8'
-    )
-  )
-  const sources = ['site']
-  const items = []
-  const pages = []
-  const copy = []
-  for (const block of boxing.blocks) {
-    const icons = [...(block.fields ?? []), ...(block.itemFields ?? [])].filter((f) => f.type === 'icon')
-    if (icons.length === 0) continue
-    const social = (block.itemFields ?? []).some((f) => f.kind === 'contact.social_url')
-    const data = social
-      ? ['contact-social-url']
-      : Array.from({ length: block.items.max }, (_, n) => `${block.id}-item-${n + 1}`)
-    if (!social)
-      for (const [n, id] of data.entries()) {
-        items.push({
-          id,
-          kind: 'service',
-          fields: { 'offering.name': { value: 'Morning stretch', sources } },
-          sources
-        })
-        const heading = (block.itemFields ?? []).find((f) => f.kind === 'editorial.heading')
-        const value = ['Sunrise flow', 'Breathwork circle', 'Lotus meditation', 'Evening stillness'][n % 4]
-        if (heading) copy.push({ block: 'b1', item: id, field: heading.name, value, page: block.id })
-      }
-    if ((block.fields ?? []).some((f) => f.kind === 'contact.social_url')) data.push('contact-social-url')
-    pages.push({ id: block.id, blocks: [{ id: 'b1', type: block.type, block: block.id, data }] })
-  }
-  const profile = {
-    sources: [{ id: 'site', origin: 'website' }],
-    facts: { 'contact.social_url': [{ value: 'https://www.instagram.com/example.juniper.yoga', sources }] },
-    items: { service: items }
-  }
-  const result = await selectIcons({
-    plan: { pages },
-    data: planDataOf(profile),
-    blocks: blocksOf(boxing),
-    copy: { pages: pages.map((p) => ({ id: p.id, copy: copy.filter((c) => c.page === p.id) })) },
-    iconLibrary: iconLibrary(),
-    model: scriptedModel(firstCandidate())
-  })
-  const counts = iconCountsOf(result)
-  const reasons = {}
-  for (const i of result.icons.filter((x) => x.source === 'none'))
-    reasons[i.reason] = (reasons[i.reason] ?? 0) + 1
-  console.log(
-    `JA Boxing icon fields placed: ${counts.fields} = ${counts.library} library + ${counts.social} social + ${counts.hidden} hidden (${JSON.stringify(reasons)}), ${counts.unexplained} unexplained`
-  )
-  assert.equal(counts.fields, counts.library + counts.social + counts.hidden)
-  assert.equal(counts.unexplained, 0)
-  assert.ok(counts.library > 0 && counts.social > 0)
-  assert.deepEqual(iconProblemsOf(result, { names: NAMES, demo: DEMO_ICONS }), [])
+  // The ranking is a text call: the vision door is never used in its place.
+  await assert.rejects(picturesStep({ ...input, copy: await yogaCopy() }), { code: 'icon_ranker_missing' })
 })

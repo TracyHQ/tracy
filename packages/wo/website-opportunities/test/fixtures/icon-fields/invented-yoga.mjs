@@ -4,7 +4,10 @@
 // and a target. A footer row of social links and a trainer block with block level social icons, as JA Boxing declares
 // them, and a small icon library in the shape of the picture step's (names, tags, categories). Nothing here is a real
 // business, person, template, link or model.
-export { scriptedModel } from '../plan-composer/invented-club.mjs'
+import { writePages } from '../../../domain/page-writer.mjs'
+import { scriptedModel } from '../plan-composer/invented-club.mjs'
+
+export { scriptedModel }
 
 /** The template's demo icon files and the library names that copy them: none may be left on a built site. */
 export const DEMO_ICONS = Object.freeze({
@@ -31,6 +34,14 @@ export const iconLibrary = () => ({
     icon('flower-lotus', ['meditation', 'spirituality', 'calm']),
     icon('leaf', ['tea', 'herbal', 'plants']),
     icon('person-simple-tai-chi', ['yoga', 'stretch', 'balance']),
+    // Phosphor's own tags of these five, for the scoring cases of the review (#595): a number word or a body verb must
+    // not outrank the heading.
+    icon('tooth', ['teeth', 'dentistry', 'medical', 'medicine', 'doctor', 'cavity']),
+    icon('dice-six', ['die', 'rolling', 'gamble', 'gambling', 'casino', 'gaming', '6']),
+    icon('number-one', ['1', 'numbers', 'numerals']),
+    icon('train', ['vehicles', 'subway', 'light rail', 'public transit', 'transportation', 'commuter']),
+    icon('users-three', ['user', 'group', 'team', 'community', 'people', 'profiles', 'accounts', 'contacts']),
+    icon('coffee', ['tea', 'java', 'beverages', 'drinks', 'cafe', 'cup', 'mug', 'espresso']),
     icon('instagram-logo', ['social', 'photos'], ['brands']),
     icon('facebook-logo', ['social'], ['brands'])
   ]
@@ -71,7 +82,13 @@ export const blockStore = () => ({
       itemFields: [
         text('social-label', 'contact.social_label', 40),
         { name: 'social-url', kind: 'contact.social_url', type: 'link' },
-        { name: 'item-icon', kind: 'editorial.item_icon', type: 'icon', storage: 'class-name' }
+        {
+          name: 'item-icon',
+          kind: 'editorial.item_icon',
+          type: 'icon',
+          storage: 'class-name',
+          iconOf: 'network'
+        }
       ]
     },
     {
@@ -83,8 +100,20 @@ export const blockStore = () => ({
         text('person-name', 'person.name', 36),
         { name: 'social-1-social-url', kind: 'contact.social_url', type: 'link' },
         { name: 'social-2-social-url', kind: 'contact.social_url', type: 'link', optional: true },
-        { name: 'social-1-item-icon', kind: 'editorial.item_icon', type: 'icon', storage: 'class-name' },
-        { name: 'social-2-item-icon', kind: 'editorial.item_icon', type: 'icon', storage: 'class-name' }
+        {
+          name: 'social-1-item-icon',
+          kind: 'editorial.item_icon',
+          type: 'icon',
+          storage: 'class-name',
+          iconOf: 'network'
+        },
+        {
+          name: 'social-2-item-icon',
+          kind: 'editorial.item_icon',
+          type: 'icon',
+          storage: 'class-name',
+          iconOf: 'network'
+        }
       ]
     },
     {
@@ -166,40 +195,45 @@ export const yogaPlan = () => ({
   pictures: { own: { frames: 0, from: [] }, generated: { frames: 0 } }
 })
 
-/** The written headings and texts, as the page writer returns them (`writePages`). */
+/** The headings and texts the scripted writer writes for each class. */
 export const HEADINGS = {
   'class-sunrise': ['Sunrise flow', 'A slow practice as the day begins.'],
   'class-breath': ['Breathwork circle', 'Learn to slow down and steady each breath.'],
   'class-lotus': ['Lotus meditation', 'Sit still and settle the mind.'],
   'class-passes': ['Studio passes', 'Ten visits, shared with a friend.']
 }
-export const yogaCopy = (headings = HEADINGS) => ({
-  pages: [
-    {
-      id: 'home',
-      copy: CLASSES.flatMap((item) => [
-        {
-          key: `home-b1/${item}/heading-2`,
-          block: 'home-b1',
-          item,
-          field: 'heading-2',
-          value: headings[item][0]
-        },
-        {
-          key: `home-b1/${item}/paragraph-2`,
-          block: 'home-b1',
-          item,
-          field: 'paragraph-2',
-          value: headings[item][1]
-        }
-      ])
-    },
-    {
-      id: 'class',
-      copy: [{ key: 'class-b1/heading-3', block: 'class-b1', field: 'heading-3', value: 'Evening wind down' }]
-    }
-  ]
-})
+
+/** A scripted page writer: each slot key it is asked gets the text `write(key, slot)` gives, cut to its limit. */
+export const scriptedWriter = (write) => {
+  const calls = []
+  const model = async (request) => {
+    calls.push(request)
+    const user = JSON.parse(request.user)
+    const fields = {}
+    for (const block of user.blocks)
+      for (const slot of block.fields) {
+        const text = write(slot.key, slot) ?? 'Calm practice'
+        fields[slot.key] = text.slice(0, slot.limit ?? text.length)
+      }
+    return JSON.stringify({ fields })
+  }
+  return Object.assign(model, { calls })
+}
+
+/** The written copy of a plan, from the REAL page writer (`writePages`) with a scripted writer of these headings. */
+export function yogaCopy(
+  headings = HEADINGS,
+  { plan = yogaPlan(), profile = yogaProfile(), store = blockStore() } = {}
+) {
+  const write = (key) => {
+    const [, item, field] = key.split('/')
+    if (headings[item] && field === 'heading-2') return headings[item][0]
+    if (headings[item] && field === 'paragraph-2') return headings[item][1]
+    if (key === 'class-b1/heading-3') return 'Evening wind down'
+    return 'Calm practice'
+  }
+  return writePages({ plan, profile, blockStore: store, model: scriptedWriter(write) })
+}
 
 /** A fake build model ranking each item's first candidate, with per item overrides (a list, or a function of it). */
 export const firstCandidate =

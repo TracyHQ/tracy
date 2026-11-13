@@ -66,7 +66,7 @@ function placeOwn(frames, usable, take, used) {
   const shownItems = new Set(frames.map((f) => f.item).filter(Boolean))
   const gallery = usable.filter((p) => p.itemKind === 'gallery' && !shownItems.has(p.item))
   const freeFrames = frames
-    .filter((f) => (f.place === 'hero' || f.place === 'block') && !f.never)
+    .filter((f) => (f.place === 'hero' || f.place === 'block' || f.place === 'row') && !f.never)
     .sort(heroFirst)
   for (const frame of freeFrames) {
     const fits = gallery.filter((p) => free(p) && fitsFrame(p, frame))
@@ -80,8 +80,9 @@ function placeOwn(frames, usable, take, used) {
  * @param {{pages: object[], blocks: Map<string, object>, data: object, pictures: object[],
  *   approved?: {generated?: {frames?: number}} | null}} input `approved` is the plan's pictures summary
  *   (`plan.pictures`); leave it out only to count a plan before it is approved (`picturesOf`)
- * @returns {{frames: object[], reduced: object[], counts: {own: number, generated: number, none: number},
- *   notes: object[]}}
+ * @returns {{frames: object[], reduced: object[], droppedFrames: Array<{frame: string, item: string, reason: string}>,
+ *   counts: {own: number, generated: number, none: number}, notes: object[]}} `droppedFrames`: the frames of the
+ *   reduced items, which the built site no longer shows
  */
 export function assignPictures({ pages, blocks, data, pictures, approved = null }) {
   const unlabelled = list(pictures).filter((p) => !p.stock && !isLabelled(p))
@@ -134,7 +135,11 @@ export function assignPictures({ pages, blocks, data, pictures, approved = null 
   const out = kept.map((frame) => ({ ...frame, ...filled.get(frame.id) }))
   const counts = { own: 0, generated: 0, none: 0 }
   for (const frame of out) counts[frame.source] += 1
-  const assignment = { frames: out, reduced, counts, notes: note ? [note] : [] }
+  // The frames of a dropped item leave with it; each is kept here so every declared frame stays accounted for.
+  const droppedFrames = frames
+    .filter((f) => f.item && dropped.has(`${f.page}.${f.block}.${f.item}`))
+    .map((f) => ({ frame: f.id, item: f.item, reason: 'item_dropped' }))
+  const assignment = { frames: out, reduced, droppedFrames, counts, notes: note ? [note] : [] }
   const problems = pictureProblemsOf(assignment, pictures, { generated: cap })
   if (problems.length)
     throw new PicturePolicyError('picture_policy_broken', `${problems.length} picture rules broken`, {

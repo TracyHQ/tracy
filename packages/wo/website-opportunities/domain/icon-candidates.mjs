@@ -14,6 +14,25 @@ const NOT_A_SUBJECT = new Set(
     ' '
   )
 )
+/**
+ * Common words and number words: they say how often or how many, not what an item is about, so they never call an icon
+ * (`every six months` never calls `dice-six`, `one to one` never calls `number-one`).
+ */
+export const ICON_STOP_WORDS = Object.freeze(
+  new Set(
+    [
+      'zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen',
+      'seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety hundred thousand million',
+      'first second third fourth fifth sixth seventh eighth ninth tenth once twice half double single',
+      'every each all any some many much most very just only also about into onto over under than then',
+      'this that these those there here have has had are was were will can may might not but out off get got',
+      'make made makes take takes give gives come comes keep keeps start starts per its own new best',
+      'why how what when where who which choose offer offers service services quality trust experience'
+    ]
+      .join(' ')
+      .split(' ')
+  )
+)
 
 /** A word's forms a library name or tag may hold: the word and its singular. */
 const formsOf = (word) => {
@@ -37,36 +56,52 @@ export function subjectWordsOf(texts) {
   const out = []
   for (const text of texts)
     for (const word of foldWords(text))
-      if (word.length > 2 && !NOT_A_SUBJECT.has(word) && !out.includes(word)) out.push(word)
+      if (word.length > 2 && !NOT_A_SUBJECT.has(word) && !ICON_STOP_WORDS.has(word) && !out.includes(word))
+        out.push(word)
   return out
 }
 
 /**
- * An item's candidates: library icons whose name holds one of its words (an earlier word first), then icons whose tags
- * hold them (more and earlier words first). At most {@link CANDIDATES_MAX}; empty when no word calls any icon.
- * @param {string[]} words `subjectWordsOf`'s answer
+ * The subject of an item in two tiers: the words of its heading, then the words of its other text.
+ * @param {{heading?: string[], text?: string[]}} texts
+ * @returns {{words: string[], lead: number}} `lead`: how many of the first `words` are heading words
+ */
+export function subjectOf({ heading = [], text = [] }) {
+  const lead = subjectWordsOf(heading)
+  const words = subjectWordsOf([...heading, ...text])
+  return { words, lead: lead.length }
+}
+
+/**
+ * An item's candidates: library icons whose name or tags hold one of its words. A heading word outranks any number of
+ * body words; within a tier a name match counts twice a tag match and an earlier word more than a later one. At most
+ * {@link CANDIDATES_MAX}; empty when no word calls any icon.
+ * @param {string[] | {words: string[], lead: number}} subject `subjectOf`'s answer, or bare words (one tier)
  * @param {Array<{name: string, tags?: string[]}>} catalog `contentCatalog`'s answer
  * @returns {string[]}
  */
-export function iconCandidates(words, catalog) {
-  const score = (hits) => hits.reduce((sum, at) => sum + (100 - at), 0)
-  const byName = []
-  const byTag = []
+export function iconCandidates(subject, catalog) {
+  const words = Array.isArray(subject) ? subject : (subject?.words ?? [])
+  const lead = Array.isArray(subject) ? words.length : (subject?.lead ?? words.length)
+  const scored = []
   for (const icon of catalog) {
     const parts = icon.name.split('-')
     const tags = new Set((icon.tags ?? []).map((t) => String(t).toLowerCase()))
-    const named = []
-    const tagged = []
+    let heading = 0
+    let body = 0
     words.forEach((word, at) => {
       const forms = formsOf(word)
-      if (forms.some((f) => parts.includes(f))) named.push(at)
-      else if (forms.some((f) => tags.has(f))) tagged.push(at)
+      const hit = forms.some((f) => parts.includes(f)) ? 2 : forms.some((f) => tags.has(f)) ? 1 : 0
+      if (!hit) return
+      if (at < lead) heading += hit * 100 - at
+      else body += hit * 100 - at
     })
-    if (named.length)
-      byName.push({ name: icon.name, score: score(named) * 10 + score(tagged) - parts.length })
-    else if (tagged.length) byTag.push({ name: icon.name, score: score(tagged) })
+    if (heading || body) scored.push({ name: icon.name, heading, body, parts: parts.length })
   }
-  const sorted = (list) =>
-    list.sort((a, z) => z.score - a.score || (a.name < z.name ? -1 : 1)).map((s) => s.name)
-  return [...sorted(byName), ...sorted(byTag)].slice(0, CANDIDATES_MAX)
+  return scored
+    .sort(
+      (a, z) => z.heading - a.heading || z.body - a.body || a.parts - z.parts || (a.name < z.name ? -1 : 1)
+    )
+    .slice(0, CANDIDATES_MAX)
+    .map((s) => s.name)
 }

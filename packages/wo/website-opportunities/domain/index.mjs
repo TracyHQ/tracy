@@ -165,9 +165,25 @@ export { conflictAssumptionsOf } from './plan-conflicts.mjs'
 export { placeExtraData } from './plan-placement.mjs'
 export { placeExtraFacts } from './plan-placement-facts.mjs'
 export { lookOf, picturesOf } from './plan-look-pictures.mjs'
-export { CANDIDATES_MAX, contentCatalog, iconCandidates, subjectWordsOf } from './icon-candidates.mjs'
-export { ICON_PAINT_ROLES, ICON_SOURCES, iconCountsOf, iconProblemsOf } from './icon-check.mjs'
-export { iconScopesOfPlan, isIconField } from './icon-fields.mjs'
+export {
+  CANDIDATES_MAX,
+  ICON_STOP_WORDS,
+  contentCatalog,
+  iconCandidates,
+  subjectOf,
+  subjectWordsOf
+} from './icon-candidates.mjs'
+export { ICON_PAINT_ROLES, ICON_SOURCES, ICON_WEIGHTS, iconCountsOf, iconProblemsOf } from './icon-check.mjs'
+export { wordsOfScope, writtenByScope } from './icon-copy.mjs'
+export { themesOf } from './icon-entry.mjs'
+export { ICON_THEMES, iconScopesOfPlan, isIconField, isNetworkIcon } from './icon-fields.mjs'
+export {
+  ICON_KEYWORDS_MAX,
+  ICON_KEYWORDS_PROMPT_FILE,
+  englishKeywordsOf,
+  iconKeywordsRequest,
+  isEnglish
+} from './icon-keywords.mjs'
 export {
   ICON_RANKING_MAX,
   ICON_RANKING_PROMPT_FILE,
@@ -175,8 +191,14 @@ export {
   iconRankingRequest,
   rankIconCandidates
 } from './icon-ranking.mjs'
-export { DEFAULT_ICON_LOOK, selectIcons } from './icon-selection.mjs'
-export { SOCIAL_ICON_NAMES, SOCIAL_NETWORKS, networkOf } from './icon-social.mjs'
+export { ALL_HIDDEN_MIN_ITEMS, DEFAULT_ICON_LOOK, selectIcons } from './icon-selection.mjs'
+export {
+  AMBIGUOUS_SHORTENERS,
+  SOCIAL_ICON_NAMES,
+  SOCIAL_NETWORKS,
+  networkOf,
+  socialReasonOf
+} from './icon-social.mjs'
 export { planDataOf } from './plan-data.mjs'
 export {
   PEOPLE_FRAME_KINDS,
@@ -186,6 +208,9 @@ export {
   ownPicturesOf
 } from './picture-frames.mjs'
 export { fitsFrame, unfitReason } from './picture-fit.mjs'
+export { placesOfBlock, repeatedNames, shownItemsOf, socialLinksOf } from './picture-block-places.mjs'
+export { declaredMediaOf, mediaAccountOf, mediaKindOf } from './picture-declared.mjs'
+export { frameOfField } from './picture-frame-size.mjs'
 export {
   GENERATED_PICTURE_ROLES,
   LOGO_FRAME_ROLES,

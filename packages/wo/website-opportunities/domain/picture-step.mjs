@@ -62,11 +62,14 @@ export function differenceOf(assignment, approved, pictures) {
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
  *   pictures?: object[], copy?: {pages: object[]}, iconLibrary?: {set: string, icons: object[]}, model?: Function,
  *   looks?: object}} input `pictures` adds own picture records the profile does not hold (a video of the business's
- *   own channel); `vision` is the standard build model's vision call and `model` its text call (the icon ranking;
- *   `vision` when not given); `copy` is the page writer's output, needed when the plan places an icon field
+ *   own channel); `vision` is the standard build model's vision call (the labelling) and `model` its text call (the
+ *   icon keywords and ranking; required when the plan places a content icon field, `icon_ranker_missing` otherwise,
+ *   never the vision call); `copy` is the page writer's output, needed when the plan places an icon field
  * @returns {Promise<{frames: object[], reduced: object[], counts: object, notes: object[], leftOut: object[],
  *   difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null,
- *   icons: object[], iconCounts: object, iconPrompt: object | null}>} `difference` is set whenever the placed own or
+ *   icons: object[], iconCounts: object, iconPrompt: object | null, iconKeywordsPrompt: object | null,
+ *   droppedFrames: object[]}>} `notes` holds the assignment's notes and the icon selection's
+ *   (`icon_theme_undeclared`, `icons_all_hidden`) `difference` is set whenever the placed own or
  *   generated count is not the approved one (`differenceOf`)
  */
 export async function picturesStep({
@@ -96,7 +99,8 @@ export async function picturesStep({
     pictures: labelling.pictures,
     approved
   })
-  const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model: model ?? vision, looks })
+  // The icon keywords and ranking are TEXT calls: they take `model` only, never the vision door.
+  const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model, looks })
   const crossed = iconProblemsOf(icons, { pictureFrames: assignment.frames })
   if (crossed.length)
     throw new IconSelectionError('icon_policy_broken', 'an icon field was given a picture', {
@@ -107,6 +111,8 @@ export async function picturesStep({
     icons: icons.icons,
     iconCounts: icons.counts,
     iconPrompt: icons.prompt,
+    iconKeywordsPrompt: icons.keywordsPrompt,
+    notes: [...assignment.notes, ...icons.notes],
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
     labelled: labelling.labelled,

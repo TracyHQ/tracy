@@ -7,6 +7,7 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { test } from 'node:test'
+import { declaredMediaOf } from '../domain/picture-declared.mjs'
 import { framesOfPlan } from '../domain/picture-frames.mjs'
 import { pictureProblemsOf } from '../domain/picture-policy-check.mjs'
 import {
@@ -55,7 +56,11 @@ test('every business.video link field of the JA Boxing block store is a video fr
       fields
         .filter((f) => f.kind === 'business.video')
         .map((f) => ({ block: block.id, field: f.name, where }))
-    const own = [...mine('block', block.fields ?? []), ...mine('item', block.itemFields ?? [])]
+    // Child list rows hold videos too (the class page's exercises, the learning page's punches).
+    const rows = [...(block.lists ?? []), ...(block.itemLists ?? [])].flatMap((l) =>
+      mine('row', l.fields ?? [])
+    )
+    const own = [...mine('block', block.fields ?? []), ...mine('item', block.itemFields ?? []), ...rows]
     if (own.length === 0) continue
     declared.push(...own)
     // An invented item per place the block holds, so every item field is counted once per item.
@@ -66,10 +71,10 @@ test('every business.video link field of the JA Boxing block store is a video fr
   const profile = { sources: [{ id: 'site', origin: 'website' }], facts: {}, items: { gallery: items } }
   const frames = framesOfPlan(pages, blocksOf(boxing), planDataOf(profile))
   const videoFrames = frames.filter((f) => f.kind === 'business.video')
-  const expected = declared.reduce(
-    (sum, d) => sum + (d.where === 'item' ? boxing.blocks.find((b) => b.id === d.block).items.max : 1),
-    0
-  )
+  // Held to the declaration at every depth, enumerated straight from the block store (`picture-declared.mjs`).
+  const instances = declaredMediaOf(pages, blocksOf(boxing), planDataOf(profile)).video
+  const expected = instances.length
+  assert.deepEqual(videoFrames.map((f) => f.id).sort(), [...instances].sort())
   console.log(
     `business.video: ${declared.length} declared fields, ${expected} frames expected, ${videoFrames.length} seen`
   )

@@ -5,13 +5,16 @@
  * order decides". No database: the engine's `prepare` runs with step doubles; the pictures step is the real domain step
  * with the real icon library (Phosphor) and a scripted fake build model over an invented dental practice.
  *
- * The written copy is handed to the pictures step here as the copy step's output would be: today the engine runs the
- * copy and pictures steps side by side, so the wiring that gives the pictures step the copy is still to come.
+ * The written copy is the REAL page writer's output (`writePages`, a scripted writer), handed to the pictures step as
+ * the copy step's output would be: today the engine runs the copy and pictures steps side by side, so the wiring that
+ * gives the pictures step the copy is still to come (#597). The ranking is a text call: the step takes `model`, never
+ * the vision door in its place.
  *
  *   node --test --test-concurrency=1 apps/tracy-web/test/step-chain-icon-selection.test.mjs
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { writePages } from 'website-opportunities/domain/page-writer.mjs'
 import { picturesStep } from 'website-opportunities/domain/picture-step.mjs'
 import { PHOSPHOR_SET, phosphorCatalog } from '../src/lib/picture-paint/icons/phosphor-set.js'
 import { createStepChainEngine, STEP_CHAIN_STOPPED } from '../src/sites/brief-engines/step-chain.js'
@@ -41,6 +44,7 @@ const blockStore = {
       fields: [],
       itemFields: [
         { name: 'heading-2', kind: 'editorial.heading', type: 'text', limit: 36 },
+        { name: 'paragraph-2', kind: 'editorial.paragraph', type: 'text', limit: 106 },
         ...['item-icon', 'item-icon-2'].map((name) => ({
           name,
           kind: 'editorial.item_icon',
@@ -62,17 +66,20 @@ const plan = {
   ],
   pictures: { own: { frames: 0, from: [] }, generated: { frames: 0 } }
 }
-const copy = {
-  pages: [
-    {
-      id: 'home',
-      copy: [
-        { block: 'home-b1', item: ITEMS[0], field: 'heading-2', value: 'Tooth whitening' },
-        { block: 'home-b1', item: ITEMS[1], field: 'heading-2', value: 'Emergency first aid' }
-      ]
-    }
-  ]
+/** What the scripted writer writes: a heading and a text per service; a body number word must not call an icon. */
+const WRITTEN = {
+  [`home-b1/${ITEMS[0]}/heading-2`]: 'Teeth cleaning',
+  [`home-b1/${ITEMS[0]}/paragraph-2`]: 'A gentle clean every six months.',
+  [`home-b1/${ITEMS[1]}/heading-2`]: 'Emergency first aid',
+  [`home-b1/${ITEMS[1]}/paragraph-2`]: 'Seen the same day, one to one.'
 }
+const writer = async (request) => {
+  const fields = {}
+  for (const block of JSON.parse(request.user).blocks)
+    for (const slot of block.fields) fields[slot.key] = WRITTEN[slot.key] ?? 'Gentle care'
+  return JSON.stringify({ fields })
+}
+const copy = await writePages({ plan, profile, blockStore, model: writer })
 const iconLibrary = { set: PHOSPHOR_SET, icons: phosphorCatalog() }
 
 /** A fake build model: each call answers with the next scripted answer, a function of the request. */
@@ -98,7 +105,7 @@ function engineWith(model) {
       plan: answer({ file: 'plan.json' }),
       copy: answer({ file: 'copy.json' }),
       pictures: async () => ({
-        value: await picturesStep({ plan, profile, blockStore, vision: model, copy, iconLibrary }),
+        value: await picturesStep({ plan, profile, blockStore, vision: model, model, copy, iconLibrary }),
         usd: 0
       }),
       write: answer({ report: { status: 'done' } })
@@ -137,7 +144,8 @@ test('a missing ranker stops the build too: on this path it never falls back to 
       plan: async () => ({ value: {}, usd: 0 }),
       copy: async () => ({ value: {}, usd: 0 }),
       pictures: async () => ({
-        value: await picturesStep({ plan, profile, blockStore, copy, iconLibrary }),
+        // A vision door is given and still no text model: the ranking never falls back to the vision door.
+        value: await picturesStep({ plan, profile, blockStore, vision: async () => ({}), copy, iconLibrary }),
         usd: 0
       }),
       write: async () => ({ value: { report: { status: 'done' } }, usd: 0 })
@@ -157,7 +165,10 @@ test('a ranking that passes on the re-run fills the icons from the library by ea
   const run = await engineWith(model).prepare(ctx())
   const icons = run.inputs.pictures.icons
   const named = (item) => icons.find((i) => i.id === `home.home-b1.${item}.item-icon`).icon.name
-  assert.equal(named(ITEMS[0]), 'tooth')
+  assert.equal(named(ITEMS[0]), 'tooth', 'the heading leads: every six months never calls dice-six')
+  const asked = model.calls[1] && JSON.parse(model.calls[1].user).items
+  assert.ok(!asked[0].candidates.includes('dice-six'))
+  assert.equal(asked[0].candidates[0], 'tooth')
   assert.equal(named(ITEMS[1]), 'first-aid')
   assert.ok(icons.every((i) => i.source === 'library' && i.variants.light && i.variants.dark))
   assert.ok(!icons.some((i) => i.icon.name === 'boxing-glove'))

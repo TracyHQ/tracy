@@ -10,6 +10,8 @@ import { SOCIAL_ICON_NAMES } from './icon-social.mjs'
 export const ICON_PAINT_ROLES = Object.freeze(['accent', 'on-accent', 'text', 'on-dark', 'surface'])
 /** Where an icon field's icon comes from: the icon library, or none (hidden, with the reason). */
 export const ICON_SOURCES = Object.freeze(['library', 'none'])
+/** The weights of the icon set (Phosphor's six, `lib/picture-paint/icons/phosphor-set.js`). */
+export const ICON_WEIGHTS = Object.freeze(['thin', 'light', 'regular', 'bold', 'fill', 'duotone'])
 const ROLES = new Set(ICON_PAINT_ROLES)
 const SOCIAL = new Set(SOCIAL_ICON_NAMES)
 const COLOUR_LITERAL = /#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(|\boklch\(|\bcolor-mix\(/i
@@ -24,17 +26,45 @@ function valuesOf(value, out = []) {
   return out
 }
 
+const VARIANT_KEYS = new Set(['theme', 'icon', 'set', 'weight', 'width', 'height', 'paint'])
+const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+
+/** The paint of one version: `{glyph: <role>, plate: null | {role: <role>}}` and nothing else. */
+function paintProblems(paint, theme, report) {
+  if (!isObject(paint)) return report('icon_paint_shape', `the ${theme} version has no paint {glyph, plate}`)
+  const extra = Object.keys(paint).filter((k) => k !== 'glyph' && k !== 'plate')
+  if (extra.length)
+    report('icon_paint_shape', `the ${theme} paint holds ${extra.join(', ')}: only glyph and plate`)
+  if (!ROLES.has(paint.glyph))
+    report('icon_paint_role_unknown', `${JSON.stringify(paint.glyph)} is not a colour role`)
+  if (paint.plate === null || paint.plate === undefined) return
+  if (!isObject(paint.plate)) return report('icon_paint_shape', `the ${theme} plate is null or {role}`)
+  const plateExtra = Object.keys(paint.plate).filter((k) => k !== 'role')
+  if (plateExtra.length)
+    report('icon_paint_shape', `the ${theme} plate holds ${plateExtra.join(', ')}: a plate is {role} only`)
+  if (!ROLES.has(paint.plate.role))
+    report('icon_paint_role_unknown', `${JSON.stringify(paint.plate.role)} is not a colour role`)
+}
+
 function variantProblems(entry, report) {
-  for (const theme of ['light', 'dark']) {
+  const themes = entry.theme ? [entry.theme] : ['light', 'dark']
+  if (!ICON_WEIGHTS.includes(entry.icon?.weight))
+    report('icon_weight_unknown', `${JSON.stringify(entry.icon?.weight)} is not a weight of the icon set`)
+  for (const theme of Object.keys(entry.variants ?? {}))
+    if (!themes.includes(theme)) report('icon_variant_extra', `a ${theme} version its field does not store`)
+  for (const theme of themes) {
     const v = entry.variants?.[theme]
     if (!v) {
       report('icon_variant_missing', `no ${theme} version`)
       continue
     }
+    const extra = Object.keys(v).filter((k) => !VARIANT_KEYS.has(k))
+    if (extra.length) report('icon_variant_shape', `the ${theme} version holds ${extra.join(', ')}`)
     if (v.icon !== entry.icon?.name)
       report('icon_variant_mismatch', `the ${theme} version draws another icon`)
-    for (const role of [v.paint?.glyph, v.paint?.plate?.role].filter((r) => r !== undefined && r !== null))
-      if (!ROLES.has(role)) report('icon_paint_role_unknown', `${JSON.stringify(role)} is not a colour role`)
+    if (v.weight !== entry.icon?.weight)
+      report('icon_weight_unknown', `the ${theme} version is drawn in another weight`)
+    paintProblems(v.paint, theme, report)
     const frame = entry.frame
     if (frame && (v.width !== frame.width || v.height !== frame.height))
       report(
@@ -46,8 +76,9 @@ function variantProblems(entry, report) {
 
 /**
  * The problems of an icon selection, empty when it keeps every rule: every field records its source; a library icon
- * is a name of the library (a network mark for a social field, never one for a content field) with a light and a dark
- * version in colour roles at the declared frame size; a hidden field says why. No icon field holds a photo, a
+ * is a name of the library (a network mark for a social field, never one for a content field) in a weight of the set,
+ * with a version for its declared theme (or a light and a dark one when it declares none) painted in colour roles only
+ * (`{glyph, plate: null | {role}}`, no other key) at the declared frame size; a hidden field says why. No icon field holds a photo, a
  * generated picture, a demo icon reference or a colour literal.
  * @param {{icons: object[]}} selection the result of `selectIcons`
  * @param {{names?: Iterable<string>, demo?: {refs?: string[], names?: string[]}, pictureFrames?: object[]}} [against]
