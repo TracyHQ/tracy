@@ -233,11 +233,12 @@ test('the site language follows the public sources; mixed sources default to the
     return c
   })
   assert.equal(mixed.profile.language.value, 'en')
-  assert.deepEqual(mixed.profile.language.options, ['en', 'es'])
+  // The region is kept: the option is the tag the source gave.
+  assert.deepEqual(mixed.profile.language.options, ['en', 'es-ES'])
   const asked = mixed.profile.questions.find((q) => q.topic === 'site-language')
   assert.deepEqual(
     asked.choices.map((o) => o.label),
-    ['English', 'Spanish']
+    ['English', 'European Spanish']
   )
   assert.deepEqual(
     asked.choices.filter((c) => c.recommended).map((c) => c.id),
@@ -283,13 +284,8 @@ test('a model fact with no evidence in its source, an unknown source or an unkno
   })
   const profile = needsProfileOf(research, reading)
   assert.deepEqual(
-    profile.dropped.map((d) => d.reason),
-    [
-      'evidence not found in the source',
-      'unknown source',
-      'not a fact kind of the needs profile',
-      'evidence not found in the source'
-    ]
+    profile.dropped.map((d) => d.code),
+    ['evidence_not_in_source', 'unknown_source', 'unknown_kind', 'evidence_not_in_source']
   )
   assert.equal(profile.facts['contact.email'].length, 1)
   assert.ok(!names(profile, 'service').includes('Padel'))

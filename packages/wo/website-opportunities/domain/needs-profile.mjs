@@ -40,13 +40,34 @@ export class NeedsProfileError extends Error {
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
 
-/** The sources of `research`, checked; throws `research_unusable` when none can be read. */
+const usable = (s) => isText(s?.id) && TRUST_ORDER.includes(s?.origin)
+
+/**
+ * The sources of `research`, checked; throws `research_unusable` when none can be read, or when two sources share an
+ * id (their observations could not be told apart, so they are never collapsed into one).
+ */
 export function sourcesOf(research) {
-  const sources = list(research?.sources).filter((s) => isText(s?.id) && TRUST_ORDER.includes(s?.origin))
+  const sources = list(research?.sources).filter(usable)
   if (sources.length === 0)
     throw new NeedsProfileError('research_unusable', 'no source with an id and a known origin')
+  const ids = sources.map((s) => s.id)
+  const twice = ids.find((id, n) => ids.indexOf(id) !== n)
+  if (twice !== undefined)
+    throw new NeedsProfileError('research_unusable', `two sources share the id "${twice}"`)
   return sources
 }
+
+/** The sources of `research` set aside (no id, or an origin outside the trust order), as `dropped` entries. */
+const unusableSourcesOf = (research) =>
+  list(research?.sources)
+    .filter((s) => !usable(s))
+    .map((s) => ({
+      from: 'research',
+      source: isText(s?.id) ? s.id : null,
+      code: 'source_unusable',
+      reason: 'a source without an id or with an origin outside the trust order',
+      scope: 'observation'
+    }))
 
 /** The request of the one model call: the prompt, and the words of every source (never the template or the demo). */
 export function needsProfileRequest(sources) {
@@ -105,6 +126,14 @@ export function needsProfileOf(research, reading) {
       .map((l) => [l.source, l.language])
   )
   const language = siteLanguageOf(sources, said)
+  const unread = language.unread.map(({ source, said: word, from }) => ({
+    from,
+    source,
+    value: word,
+    code: 'language_not_recognised',
+    reason: 'the language is neither a language tag nor an unambiguous language name',
+    scope: 'field'
+  }))
   return {
     schema: NEEDS_PROFILE_SCHEMA,
     roleVocabularyVersion: ROLE_VOCABULARY_V3,
@@ -116,7 +145,7 @@ export function needsProfileOf(research, reading) {
     items,
     conflicts,
     questions: questionsOf({ facts, language }),
-    dropped: read.dropped
+    dropped: [...unusableSourcesOf(research), ...structured.dropped, ...read.dropped, ...unread]
   }
 }
 

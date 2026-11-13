@@ -6,6 +6,7 @@
 // - Values that disagree are never settled here: they are kept as a conflict for the customer to choose, and the
 //   default shown until then follows the trust order (`TRUST_ORDER`).
 import { CONFIDENCE_LEVELS } from './fact-confidence.mjs'
+import { samePhone } from './needs-profile-phone.mjs'
 import { GROUP_KINDS_V3 } from './place-content-roles.mjs'
 
 /** Source origins, most trusted first: the business's own website, then its Google listing, then social profiles. */
@@ -46,7 +47,6 @@ const text = (value) =>
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, ' ')
     .trim()
-const digits = (value) => String(value).replace(/\D+/g, '')
 const url = (value) =>
   String(value)
     .trim()
@@ -54,13 +54,15 @@ const url = (value) =>
     .replace(/^https?:\/\//, '')
     .replace(/^www\./, '')
     .replace(/\/+$/, '')
+/** The comparison keys the observations reuse to ground a value in its quote (`needs-profile-grounding.mjs`). */
+export { text as textKey, url as urlKey }
 
-/** Whether two values of data kind `kind` say the same thing. A phone may carry a country code the other lacks. */
+/**
+ * Whether two values of data kind `kind` say the same thing. Phones compare as numbers (`samePhone`: trunk 0,
+ * country code and extension aside); the value shown stays the one written by the most trusted source.
+ */
 export function sameValue(kind, a, b) {
-  if (kind === 'contact.phone') {
-    const [x, y] = [digits(a), digits(b)].sort((p, q) => p.length - q.length)
-    return x === y || (x.length >= 7 && y.endsWith(x))
-  }
+  if (kind === 'contact.phone') return samePhone(a, b)
   if (kind.endsWith('_url') || kind === 'business.gallery_image') return url(a) === url(b)
   return text(a) === text(b)
 }

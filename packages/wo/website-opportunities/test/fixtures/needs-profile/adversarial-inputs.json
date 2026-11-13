@@ -1,0 +1,44 @@
+{
+  "note": "An invented pottery studio with research that breaks the rules on purpose: unhandled field kinds, values that are not text, a review without text, a rating given as an object, a picture without a ref, and a source of an unknown origin. No real business, place, person or account.",
+  "research": {
+    "sources": [
+      {
+        "id": "web",
+        "origin": "website",
+        "language": "en",
+        "text": "Sunfold Pottery. Call us today for a class. Wheel throwing for beginners, $40 a session.",
+        "fields": {
+          "business.name": "Sunfold Pottery",
+          "business.tagline": "Clay for everyone",
+          "contact.phone": 12345678,
+          "contact.email": ["hello@sunfold-pottery.example", null, "  "]
+        },
+        "pictures": [
+          {
+            "id": "w1",
+            "ref": "https://sunfold-pottery.example/img/wheel.jpg",
+            "alt": "A wheel in the studio"
+          },
+          { "id": "w2", "alt": "A kiln with no picture file" }
+        ]
+      },
+      {
+        "id": "maps",
+        "origin": "google",
+        "fields": {
+          "contact.phone": "+971 4 111 2222",
+          "contact.whatsapp": "+971 50 000 0000",
+          "contact.hours": { "mo": "09:00-17:00" }
+        },
+        "reviews": [
+          { "author": "Tamsin Orrow", "text": "Patient teachers and a calm studio.", "rating": 5 },
+          { "author": "Brec Aldane", "text": "Lovely glazes.", "rating": { "stars": 4 } },
+          { "author": "Quiet Visitor", "rating": 3 },
+          { "author": "Odd Rating", "text": "Good evening classes.", "rating": [4] }
+        ],
+        "pictures": [{ "id": "m1" }, { "id": "m2", "ref": "https://images.example/sunfold/shelf.jpg" }]
+      },
+      { "id": "clips", "origin": "tiktok", "text": "Glaze night!" }
+    ]
+  }
+}

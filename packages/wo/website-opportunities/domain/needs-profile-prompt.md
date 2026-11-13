@@ -12,6 +12,13 @@ Rules:
    value over another, never fix a value that looks wrong. Two sources giving different phone numbers are two facts.
 2. Every fact and item carries `evidence`: the shortest exact passage of that source's words that states it, copied
    character for character. A fact you cannot quote is not reported. Never use knowledge from outside the sources.
+   The value must be inside its evidence, and the evidence must contain the whole value:
+   - copy literally, as the source writes it: a name, a phone number, an email, an address, a link, a year, a price,
+     an item's name, a quote's text and author. A fact whose value is not in its evidence is thrown away;
+   - you may word in your own short words only `offering.description`, `offering.duration_or_unit`, `package.period`,
+     `person.role` and `person.bio`, and only with what the evidence says: never a name, number, price, email or link
+     the evidence does not contain. A field that adds one is thrown away;
+   - make the evidence long enough to hold the value and what it is about, never a single word or letter.
 3. Read every caption. A service, class, product or price mentioned only in a social caption is reported like one on
    the website.
 4. Use only these kinds:
@@ -20,10 +27,12 @@ Rules:
    - items: `service` (fields `offering.name`, `offering.description`, `offering.price`, `offering.duration_or_unit`),
      `package` (fields `package.name`, `package.price`, `package.period`), `person` (fields `person.name`,
      `person.role`, `person.bio`), `quote` (fields `quote.text`, `quote.author_name`).
-   Write `contact.hours` as days and times, for example `Mo-Fr 07:00-22:00; Sa 08:00-18:00`.
+   Write `contact.hours` as days and times, for example `Mo-Fr 07:00-22:00; Sa 08:00-18:00`, using only times the
+   evidence states (`7am` in the evidence may be written `07:00`).
    A price is written only when the source states it.
 5. For every picture with an `alt` or a caption that says what it shows, give a short label of what it shows.
-6. For every source, give the language its words are written in, as a two letter code.
+6. For every source, give the language its words are written in, as a language tag: a two letter code (`en`), with
+   the region when the words show it (`pt-BR`). Never a language name.
 
 Reply with JSON only, no other words:
 
