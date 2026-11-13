@@ -20,7 +20,7 @@
 // record `{restore, done}` so a crashed restore resumes; each is read back; a failing place is tried twice, then the
 // restore stops (`restore_failed`, noRerun). Doors as `step-chain-draft-write.js` lists them.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
-import { placeHolds } from 'website-opportunities/domain/revision-place-value.mjs'
+import { placeHolds } from './step-chain-draft-place-value.js'
 import { checkUnchanged, restorePlanOf } from './step-chain-draft-restore-plan.js'
 
 export { restorePlanOf }

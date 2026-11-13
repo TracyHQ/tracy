@@ -3,7 +3,7 @@
 // check that a place still holds what the revision wrote (else it was edited outside Tracy: `restore_site_changed`).
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { heldFormsOf, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
-import { placeHolds } from 'website-opportunities/domain/revision-place-value.mjs'
+import { placeHolds } from './step-chain-draft-place-value.js'
 import { isHeldBefore } from './step-chain-draft-journal.js'
 import { holdsSent, holdsWrote } from './step-chain-draft-wrote.js'
 

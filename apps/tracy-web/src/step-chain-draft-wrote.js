@@ -1,9 +1,9 @@
 // The hashes of what a draft run wrote at each place of the site (#599): `state.wrote` (the last value per place, in the
-// form the read back compares it by, `revision-place-value.mjs`) and `state.shapes` (the keys of a JSON value), kept by
+// form the read back compares it by, `step-chain-draft-place-value.js`) and `state.shapes` (the keys of a JSON value), kept by
 // `wroteDoors` for every draft run, and by the journal of a revision run (`step-chain-draft-journal.js`) before each
 // call. A place a revision run writes twice keeps the earlier values it sent in `undo.sent`, so a crash between the two
 // writes is never taken for an edit made outside Tracy.
-import { placeHashOf, placeShapeOf } from 'website-opportunities/domain/revision-place-value.mjs'
+import { placeHashOf, placeShapeOf } from './step-chain-draft-place-value.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 

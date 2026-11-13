@@ -1,12 +1,13 @@
-// The form a revision compares a place by (#599, `revision-place-value.mjs`) agrees with the write step's own read
-// back (`readSent`, whose `holds` is not exported), case by case: a value the read back accepts after the write is a
-// value Tracy left there, and a value it refuses is an edit made outside Tracy.
+// The form a revision compares a place by (#599, `step-chain-draft-place-value.js`) agrees with the write step's own read
+// back (`readSent` and its `columnHolds`), case by case, also when only the hash and the keys of the sent value are kept:
+// a value the read back accepts after the write is a value Tracy left there, and a value it refuses is an edit made
+// outside Tracy.
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/draft-revision-place-value.test.mjs
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { placeHashOf, placeHolds, placeShapeOf } from 'website-opportunities/domain/revision-place-value.mjs'
-import { readSent } from '../src/step-chain-draft-write-check.js'
+import { placeHashOf, placeHolds, placeShapeOf } from '../src/step-chain-draft-place-value.js'
+import { columnHolds, readSent } from '../src/step-chain-draft-write-check.js'
 
 const J = (o, ...rest) => JSON.stringify(o, ...rest)
 /** [sent, held]: a record column as sent and as the site holds it. */
@@ -56,6 +57,7 @@ test('a record column: the place form holds exactly what the read back accepts',
     const same = placeHashOf(place, held, shape) === placeHashOf(place, sent, shape)
     assert.equal(same, accepted, `${J(sent)} held as ${J(held)}`)
     assert.equal(placeHolds(place, sent, held), accepted, `${J(sent)} held as ${J(held)}`)
+    assert.equal(columnHolds(sent, held), accepted, `${J(sent)} held as ${J(held)}`)
   }
 })
 

@@ -3,7 +3,7 @@
 // `wroteDoors` (every draft run, a first build too): before each write, the hash of the value it sends is kept per
 // place in the run record (`state.wrote`), with the keys of a JSON value (`state.shapes`), so the build result says
 // what the site should hold at every place the build, or a build before it, wrote. The hash is taken in the form the
-// write step's read back compares that place by (`revision-place-value.mjs`): a site that stores a JSON column its own
+// write step's read back compares that place by (`step-chain-draft-place-value.js`): a site that stores a JSON column its own
 // way (re-encoded, keys added) holds what Tracy wrote. A place is named, never its text:
 //   record:<kind>:<id>:<column>   assignment:<module id>   slot:<slot key>   identity:<field>
 //
@@ -25,7 +25,7 @@
 // be written, or the value before this run journaled. Any other value was written outside Tracy, and the run stops
 // (`site_changed_outside`, noRerun, naming the place, never the text). A place no build wrote is free on first touch.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
-import { placeHolds } from 'website-opportunities/domain/revision-place-value.mjs'
+import { placeHolds } from './step-chain-draft-place-value.js'
 import { namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { holdsSent, holdsWrote, keepWrote, wroteDoors } from './step-chain-draft-wrote.js'
 

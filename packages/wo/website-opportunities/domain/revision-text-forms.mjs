@@ -9,6 +9,7 @@
 import { createHash } from 'node:crypto'
 import { plainFormsOf } from './draft-write-held.mjs'
 import { plainOf } from './draft-write-entities.mjs'
+import { heldPersonFormsOf } from './held-person-forms.mjs'
 import { namesHeldInAnyForm } from './plan-withheld.mjs'
 
 /** Every form of one text the matching reads. */
@@ -46,10 +47,16 @@ export function withShortForms(texts) {
   return [...out]
 }
 
-/** Every held text of a profile's `withheld`, the people with their short forms, the held business name as it is. */
+/**
+ * Every held text of a profile's `withheld`: each person in the forms `heldPersonFormsOf` gives (the name, the first name
+ * alone under the reading's rule, the short forms; a first name that is also a common word is left out, as there), the
+ * held business name as it is.
+ */
 export const heldFormsOf = (withheld) => [
-  ...withShortForms(Array.isArray(withheld?.people) ? withheld.people : []),
-  ...(Array.isArray(withheld?.names) ? withheld.names : [])
+  ...new Set([
+    ...(Array.isArray(withheld?.people) ? withheld.people : []).flatMap((p) => heldPersonFormsOf(p).forms),
+    ...(Array.isArray(withheld?.names) ? withheld.names : [])
+  ])
 ]
 
 /** The forms a text itself is matched by: as it is and as a person reads it. */

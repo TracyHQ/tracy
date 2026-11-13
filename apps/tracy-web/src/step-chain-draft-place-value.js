@@ -1,8 +1,10 @@
 // How a revision compares what a place of the site holds with what a build wrote there (#599). A site may store a
 // value in its own form: Joomla's Registry re-encodes a JSON column (key order, escaped slashes, spacing) and adds the
 // keys it defaults, on Tracy's write and again on every save of the record by the owner. The write step's read back
-// (`holds()` in `apps/tracy-web/src/step-chain-draft-write-check.js`, not exported) accepts that; every later
-// comparison of a place mirrors exactly the tolerance of the read back of that place's kind, no looser:
+// (`columnHolds` and `canonicalOf` of `step-chain-draft-write-check.js`) accepts that; every later comparison of a place
+// mirrors exactly the tolerance of the read back of that place's kind, no looser. A comparison with what was sent is
+// `columnHolds` itself; a comparison with a build's hash (the sent value is not kept, only its keys) reads the value
+// held now in the keys Tracy wrote, with `canonicalOf` at every level, so it agrees with `columnHolds`:
 //
 //   record and module pages (`record:<kind>:<id>:<column>`, `assignment:<id>`)   the `holds` form: a value that starts
 //     with `{` or `[` and parses is read as JSON; an object is compared on the keys Tracy wrote only (`shapeOf` the sent
@@ -14,16 +16,7 @@
 // So a site's own re-encoding is never taken for an owner's edit, and an owner's edit of a value Tracy wrote (a value
 // inside the JSON, a word of a text) is. What no comparison sees: a key the owner adds to a JSON column by hand.
 import { createHash } from 'node:crypto'
-
-/** A text that reads as JSON, parsed; any other value as it is (the read back's `parsed`). */
-function parsed(value) {
-  if (typeof value !== 'string' || !/^\s*[[{]/.test(value)) return value
-  try {
-    return JSON.parse(value)
-  } catch {
-    return value
-  }
-}
+import { canonicalOf as parsed, columnHolds } from './step-chain-draft-write-check.js'
 
 /** The keys and list lengths of a sent value (sorted keys, `0` for a leaf): what the comparison looks at. */
 export function shapeOf(value) {
@@ -39,13 +32,13 @@ export function shapeOf(value) {
 }
 
 /** A value read in a shape: the leaves as text, a part that does not fit the shape as null. */
-export function canonicalOf(value, shape = 0) {
+export function shapedOf(value, shape = 0) {
   const b = parsed(value)
   if (Array.isArray(shape))
-    return Array.isArray(b) && b.length === shape.length ? b.map((x, i) => canonicalOf(x, shape[i])) : null
+    return Array.isArray(b) && b.length === shape.length ? b.map((x, i) => shapedOf(x, shape[i])) : null
   if (shape && typeof shape === 'object')
     return b && typeof b === 'object'
-      ? Object.fromEntries(Object.keys(shape).map((k) => [k, canonicalOf(b[k], shape[k])]))
+      ? Object.fromEntries(Object.keys(shape).map((k) => [k, shapedOf(b[k], shape[k])]))
       : null
   return String(b ?? '')
 }
@@ -75,9 +68,11 @@ export function placeHashOf(place, value, shape = null) {
           : JSON.stringify(value)
     )
   if (kind === 'text') return sha(String(value ?? ''))
-  return sha(JSON.stringify(canonicalOf(value, shape ?? 0)))
+  return sha(JSON.stringify(shapedOf(value, shape ?? 0)))
 }
 
 /** Whether `got` holds `sent` at a place, as the read back of that place's kind reads it. */
 export const placeHolds = (place, sent, got) =>
-  placeHashOf(place, got, placeShapeOf(place, sent)) === placeHashOf(place, sent, placeShapeOf(place, sent))
+  placeKindOf(place) === 'holds'
+    ? columnHolds(sent, got)
+    : placeHashOf(place, got) === placeHashOf(place, sent)

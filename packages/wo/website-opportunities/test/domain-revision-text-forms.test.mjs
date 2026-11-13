@@ -49,10 +49,12 @@ test('every leaf of a value is read: nested strings, numbers and object keys', (
   ])
 })
 
-test('a held person is also held by first name and initial, and by initial and last name; a held business name is not cut', () => {
+test('a held person is also held by first name, by first name and initial, and by initial and last name; a held business name is not cut', () => {
   assert.deepEqual(withShortForms([HELD]), [HELD, 'Wenna C', 'W Clout'])
   const forms = heldFormsOf({ people: [HELD], names: ['Larkspur Blooms'] })
-  assert.deepEqual(forms, [HELD, 'Wenna C', 'W Clout', 'Larkspur Blooms'])
+  assert.deepEqual(forms, [HELD, 'Wenna', 'Wenna C', 'W Clout', 'Larkspur Blooms'])
+  assert.ok(namesAnyIn('Ask Wenna about the bouquet.', forms))
+  assert.deepEqual(heldFormsOf({ people: ['Will Hartley'] }), ['Will Hartley', 'Will H', 'W Hartley'])
   assert.ok(namesAnyIn('<a href="#">Wenna C.</a>', forms))
   assert.ok(namesAnyIn('by W. Clout', forms))
   assert.ok(!namesAnyIn('Larkspur B. is a shop', forms))

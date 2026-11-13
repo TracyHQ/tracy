@@ -125,7 +125,7 @@ wrote, shapes, undo}`. `wrote` is kept by every draft write, a first build too (
 last written at each place, by name (`record:<kind>:<id>:<column>`, `assignment:<module id>`, `slot:<key>`,
 `identity:<field>`), carried from build to build; a revision's journal keeps it too, saved before the call.
 
-**The form a place is compared in** (`revision-place-value.mjs`). A site stores some values its own way: Joomla's
+**The form a place is compared in** (`step-chain-draft-place-value.js`). A site stores some values its own way: Joomla's
 Registry re-encodes a params, attribs or images column (key order, escaped slashes, spacing) and adds keys it
 defaults, on Tracy's write and again whenever the owner saves the record. The write step's read back accepts that, so
 every later comparison mirrors the read back of the place's kind exactly, no looser:
@@ -151,11 +151,12 @@ inside its JSON, a module's pages, a slot, the site identity), then a resume: ev
 stays (`draft-revision-crash-owner.test.mjs`, plain and JSON normalising site).
 
 **Held texts.** What the revision holds reaches the write as `previous.write.hold` (`{texts, ids}`, set by the write
-step of the draft steps: held people with their short forms, the held business name, the ids of the held items). A key
+step of the draft steps: held people in the forms of `heldPersonFormsOf`, the held business name, the ids of the held items). A key
 of the previous record that names a held text is not carried; `baseIds` keeps it masked; every key, ref and path of
 the report is masked (`maskHeld`: `held:<12 hex>`). The undo journal never keeps a value before that names a held text:
-`HELD_BEFORE` stands in. A held person also matches by first name and last initial (`Wenna C.`, as a reviews block
-signs a review) and by first initial and last name. Its apply ids start with the build ref `<runId>:r<revision>:w<seq>` (a first build keeps the plain run id), so the earlier build, or the same revision before a
+`HELD_BEFORE` stands in. A held person also matches by first name alone under the reading's rule (not a first name that
+is also a common word, such as `Will`), by first name and last initial (`Wenna C.`, as a reviews block signs a review)
+and by first initial and last name (`heldFormsOf` reads `heldPersonFormsOf`, `domain/held-person-forms.mjs`). Its apply ids start with the build ref `<runId>:r<revision>:w<seq>` (a first build keeps the plain run id), so the earlier build, or the same revision before a
 restore, is never mistaken for it. `write_record_stale` still protects: the earlier build's record never runs the new
 plan, and a revision's record never runs another revision. Guards, the redo once rule and resume are those of the
 write step, on the partial order.
