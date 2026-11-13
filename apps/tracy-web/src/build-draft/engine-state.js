@@ -60,6 +60,10 @@ export function unchangedOf(row, { request } = {}) {
   }
 }
 
+/** Said when the owner's site name holds markup, markdown or a control character, or is empty. Plain English. */
+export const SITE_NAME_INVALID_SAY =
+  'That name has characters I cannot use. Please type the name as plain text.'
+
 /** Said when the owner's site name is longer than the chosen design's name fields hold. Plain English, no dashes. */
 export const siteNameTooLongSay = (limit) =>
   `That name is too long for this design. Please keep it to ${limit} characters or fewer.`

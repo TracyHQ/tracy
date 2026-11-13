@@ -7,7 +7,7 @@
  * `running` by another runner is a step whose process ended: the next read stops it with a fault (`stopOrphan`), so the
  * chat never waits on it forever. A step that fails twice, or once with `noRerun` (`engine-rerun.js`), is recorded as
  * the draft's fault (`recordFault`) and the owner reads one sentence (`SAY`). A compose that needs the owner's answer
- * (the site name question, `engine-asking.js`) ends `asking` instead: no fault, the question goes on the card.
+ * (a site name question, `engine-asking.js`) ends `asking` instead: no fault, the question goes on the card.
  *
  * The only plan writer used here is `putComposed`: the plan that comes out of the plan composer and its rules gate.
  *
@@ -22,7 +22,7 @@ import { endStep, readEngineRow, startStep, stopOrphan } from './engine-store.js
 import { faultOf, runWithRerun } from './engine-rerun.js'
 import { SAY, engineStateOf, unchangedOf } from './engine-state.js'
 import { askingOf } from './engine-asking.js'
-import { brandOf, composeStep, planProfileOf, researchStep } from './engine-steps.js'
+import { brandOf, composeStep, researchStep } from './engine-steps.js'
 import { discardPlan, putComposed, recordFault } from './store.js'
 
 /** The failures that mean the business's own look could not be shown (#616): the owner reads the brand sentence. */
@@ -245,7 +245,7 @@ export function createEngine({ pool, kits, buildModel, gather, brandStep, pruneP
         const ran = await runWithRerun((copy) => composeStep(copy, { model, kit }), inputs)
         if (!ran.ok) {
           // The owner has one more thing to answer (the site name): a question on the card, not a fault.
-          const asking = askingOf(ran.error, () => planProfileOf(row.research, kit))
+          const asking = askingOf(ran.error)
           return asking ? { ok: true, attempts: ran.attempts, ended: asking, columns: {} } : ran
         }
         const { lookSources } = ran.value

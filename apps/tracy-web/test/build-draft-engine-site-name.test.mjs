@@ -10,7 +10,12 @@ import { after, test } from 'node:test'
 import { rmSync } from 'node:fs'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { askingOf } from '../src/build-draft/engine-asking.js'
-import { SAY, engineStateOf, siteNameTooLongSay } from '../src/build-draft/engine-state.js'
+import {
+  SAY,
+  SITE_NAME_INVALID_SAY,
+  engineStateOf,
+  siteNameTooLongSay
+} from '../src/build-draft/engine-state.js'
 import { composeStep, planProfileOf } from '../src/build-draft/engine-steps.js'
 import { stoppedOf } from '../src/build-draft/engine.js'
 import { KIT_ROOT, kits } from './build-draft-engine-fixtures.mjs'
@@ -118,7 +123,7 @@ test('compose with the question open answers an owner turn that asks it, not a s
   )
   assert.equal(error.code, 'site_name_missing')
   assert.equal(model.calls.length, 0)
-  const asking = askingOf(error, () => planProfileOf(heldResearch(), kit))
+  const asking = askingOf(error)
   assert.equal(asking.state, 'asking')
   assert.equal(asking.question.id, 'site-name')
   assert.equal(asking.question.freeText.maxLength, LIMIT)
@@ -148,7 +153,7 @@ test('a name longer than the template holds asks again with the limit in plain w
     (e) => e
   )
   assert.equal(error.code, 'site_name_too_long')
-  const asking = askingOf(error, () => planProfileOf(heldResearch(), kit))
+  const asking = askingOf(error)
   assert.equal(asking.state, 'asking')
   assert.equal(asking.say, 'That name is too long for this design. Please keep it to 20 characters or fewer.')
   assert.equal(asking.say, siteNameTooLongSay(LIMIT))
@@ -164,16 +169,48 @@ test('a name longer than the template holds asks again with the limit in plain w
   assert.equal(state.result.ask.questions[0].id, 'site-name')
 })
 
+test('a name the site cannot show as plain text asks again in plain words, from the question the error carries', async () => {
+  const kit = limitKit()
+  for (const typed of ['<b>Courts</b>', '**Courts**']) {
+    const error = await compose(heldResearch(), [nameAnswer(typed)], club.scriptedModel(), kit).then(
+      () => assert.fail('compose must not proceed'),
+      (e) => e
+    )
+    assert.equal(error.code, 'site_name_invalid', typed)
+    // The question comes from the error itself, never rebuilt from a profile.
+    const asking = askingOf(error)
+    assert.equal(asking.state, 'asking')
+    assert.deepEqual(asking.question, error.details.question)
+    assert.equal(asking.say, SITE_NAME_INVALID_SAY)
+    assert.equal(DASHES.test(asking.say), false)
+  }
+  // A too long name is asked again from its error's question too, held to the limit.
+  const tooLong = await compose(
+    heldResearch(),
+    [nameAnswer('Riverside Courts and Racquets')],
+    club.scriptedModel(),
+    kit
+  ).then(
+    () => assert.fail('compose must not proceed'),
+    (e) => e
+  )
+  const again = askingOf(tooLong)
+  assert.equal(again.question.id, tooLong.details.questionId)
+  assert.equal(again.question.freeText.maxLength, LIMIT)
+})
+
 test('any other failure is not an owner turn; site_name_missing without its question still stops', () => {
   for (const code of ['answer_invalid', 'plan_gate_failed', 'model_missing'])
     assert.equal(
-      askingOf(Object.assign(new Error(code), { code }), () => heldResearch().profile),
+      askingOf(
+        Object.assign(new Error(code), {
+          code,
+          details: { question: { id: 'site-name', topic: 'site-name' } }
+        })
+      ),
       null
     )
-  assert.equal(
-    askingOf(Object.assign(new Error('x'), { code: 'site_name_missing' }), () => ({})),
-    null
-  )
+  assert.equal(askingOf(Object.assign(new Error('x'), { code: 'site_name_missing' })), null)
   assert.deepEqual(stoppedOf({ code: 'site_name_missing' }), {
     state: 'stopped',
     say: SAY.siteName,
