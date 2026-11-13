@@ -4,14 +4,16 @@
 // text graphic, or as portrait) keeps it out of a frame it does not fit.
 //
 // 🔒 A PHOTO IS NEVER ENLARGED INTO A FRAME. A frame that declares its size (Contract A `frame`) takes a measured photo
-// only when the largest crop of the frame's shape is at least the frame's width: the photo is cut down, never blown up
-// (the locked planner rule "never enlarged"). An unmeasured photo, or a frame without a declared size, is not judged.
+// only when the largest crop of the frame's shape is at least the frame's width, within the rounding tolerance of
+// `pictures/enlarge-limit.mjs`: the photo is cut down, never blown up (the locked planner rule "never enlarged"). An
+// unmeasured photo, or a frame without a declared size, is not judged.
 //
 // 🔒 ONLY A GALLERY SHOWS FEWER ITEMS. A service, a package, a person or any other item the plan lists is never dropped
 // for want of a photo: its frame is drawn within the cap, or left empty (a person shows their initials). Only a gallery,
 // which shows the business's own photos and nothing else, shows fewer rows when its photos run out.
 import { LOGO_FRAME_ROLES } from './picture-roles.mjs'
 import { heroScore, NOT_A_HERO, orientationOf, resolutionGradeOf } from './pictures/asset-labels.mjs'
+import { enlargedPast } from './pictures/enlarge-limit.mjs'
 import { cropBox } from './pictures/placement.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -22,15 +24,12 @@ const OPPOSITE = Object.freeze({ landscape: 'portrait', portrait: 'landscape' })
 export const orientation = (p) =>
   p.orientation && p.orientation !== 'unknown' ? p.orientation : orientationOf(p.width, p.height)
 
-/** The most a photo may be enlarged to fill a frame: not at all. */
-export const MAX_OWN_ENLARGE = 1
-
 /** Whether a measured photo is too small for a sized frame: its largest crop of the frame's shape is narrower. */
 function tooSmall(picture, frame) {
   const { width, height } = frame.size ?? {}
   if (!width || !height || !(picture.width > 0) || !(picture.height > 0)) return false
   const box = cropBox(picture.width, picture.height, width / height)
-  return width / box.width > MAX_OWN_ENLARGE
+  return enlargedPast(width, box.width)
 }
 
 /**

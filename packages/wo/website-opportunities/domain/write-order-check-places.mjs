@@ -21,6 +21,8 @@ export function stateProblems(places, order, report) {
     ;(place.state === 'show' ? shown : notShown).add(place.at)
     for (const g of list(place.lists)) if (g.state !== 'show' && isText(g.at)) notShown.add(g.at)
   }
+  // An empty picture frame of a shown place is listed hidden too (`hideEmptyPictures`).
+  for (const p of list(order?.pictures)) if (p.state === 'hidden') notShown.add(p.frame)
   for (const h of list(order?.hidden))
     if (!notShown.has(h.at))
       report(
@@ -51,6 +53,16 @@ export function pictureProblems(order, report) {
       report('picture_without_file', p.frame, 'a generated picture names its file or how it is drawn')
     if (p.source === 'initials' && !p.substitute?.initials)
       report('picture_without_file', p.frame, 'an initials picture names the letters it shows')
+    if (p.source === 'initials' && p.substitute?.personId !== p.person)
+      report('initials_person', p.frame, 'an initials picture shows the initials of its own person')
+    if (p.person && p.source === 'none')
+      report(
+        'person_picture_empty',
+        p.frame,
+        'the frame of a named person shows their photo or their initials'
+      )
+    if (p.source === 'none' && p.reason !== 'logo_from_brand_step' && p.state !== 'hidden')
+      report('picture_empty_shown', p.frame, 'an empty picture frame is hidden, so the demo picture goes')
   }
 }
 

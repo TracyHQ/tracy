@@ -13,6 +13,7 @@
 import { placesOfBlock, repeatedNames } from './picture-block-places.mjs'
 import { frameOfField } from './picture-frame-size.mjs'
 import { PicturePolicyError } from './picture-labelling.mjs'
+import { personOfFrame } from './picture-people.mjs'
 import { GALLERY_ONLY_OWN, generationOf, PEOPLE_ROLES } from './picture-roles.mjs'
 import { orientationOf } from './pictures/asset-labels.mjs'
 
@@ -59,7 +60,8 @@ function neverOf(block, field, at, place) {
  * @returns {Array<{id: string, page: string, block: string, blockId: string, blockType: string, field: string,
  *   kind: string | null, place: 'hero' | 'block' | 'item' | 'row' | 'video', item?: string, itemKind?: string,
  *   row?: string, theme?: 'light' | 'dark', variantOf?: string, shape: 'landscape' | 'portrait' | 'square' | 'unknown',
- *   size?: {width: number, height: number}, people: boolean, never?: string}>} `shape` and `size`
+ *   size?: {width: number, height: number}, people: boolean, person?: string, never?: string}>} `person`: the named
+ *   person item a people frame shows (`picture-people.mjs`); `shape` and `size`
  *   are the frame's own, from its declared `frame` size (Contract A); `never` is set when the frame's kind is never
  *   generated (`picture-roles.mjs`), with the reason it records when no own picture fills it. A frame declared in
  *   another shape than Contract A's, or two fields of one name in one place, throw a `PicturePolicyError`.
@@ -86,6 +88,8 @@ export function framesOfPlan(pages, blocks, data) {
               at: `${at.prefix}.${field.name}`
             })
           const never = neverOf(block, field, at, place)
+          const people = PEOPLE.has(field.kind) || (at.itemKind === 'person' && place === 'item')
+          const person = personOfFrame({ people, place, item: at.item, itemKind: at.itemKind }, block, data)
           frames.push({
             id: `${at.prefix}.${field.name}`,
             page: page.id,
@@ -102,7 +106,8 @@ export function framesOfPlan(pages, blocks, data) {
             ...(field.variantOf ? { variantOf: field.variantOf } : {}),
             shape: orientationOf(frame?.width, frame?.height),
             ...(frame ? { size: frame } : {}),
-            people: PEOPLE.has(field.kind) || (at.itemKind === 'person' && place === 'item'),
+            people,
+            ...(person ? { person } : {}),
             ...(never ? { never } : {})
           })
         }

@@ -83,7 +83,8 @@ export function boxingComposition(profile) {
 
 /**
  * The saved step values of the boxing florist build, ready for `buildWriteOrder`.
- * @param {{profile?: object, composition?: object, label?: string, write?: Function}} [options]
+ * @param {{profile?: object, composition?: object, label?: string, write?: Function, generated?: number}} [options]
+ *   `generated`: the generated picture count the customer approved, in place of the composed plan's
  */
 export async function boxingFloristBuild(options = {}) {
   const research = options.profile ?? boxingProfile()
@@ -117,6 +118,8 @@ export async function boxingFloristBuild(options = {}) {
     writers.push({ page: out.pages[0], prompt: out.prompt })
   }
   const label = (request) => visionReply(JSON.parse(request.user).pictures.map((p) => p.id))
+  if (options.generated !== undefined)
+    plan.pictures = { ...plan.pictures, generated: { frames: options.generated } }
   const pictures = await picturesStep({
     plan,
     profile,

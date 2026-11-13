@@ -53,14 +53,18 @@ export function memorySite({ failOn = [] } = {}) {
       throw new MemorySiteError('order_invalid', `${problems.length} problem(s)`, { problems })
     const counts = { written: 0, skipped: 0 }
     const pictures = new Map()
+    // A hidden empty frame is counted with `hidden`; the site removes its demo picture.
     for (const p of list(order.pictures))
-      if (p.source === 'none') counts.skipped += 1
+      if (p.state === 'hidden') pictures.set(p.frame, { hidden: true })
+      else if (p.source === 'none') counts.skipped += 1
       else {
         pictures.set(
           p.frame,
           p.file ??
             p.ref ??
-            (p.source === 'initials' ? { initials: p.substitute.initials } : { generate: p.generate })
+            (p.source === 'initials'
+              ? { initials: p.substitute.initials }
+              : { generate: p.generate, ...(p.reuses ? { reuses: p.reuses } : {}) })
         )
         counts.written += 1
       }

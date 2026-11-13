@@ -2,7 +2,8 @@
  * The initials avatar: the neutral substitute of a person picture whose person has no portrait in the brief (TracyHQ/tracy
  * #134, ADR 0040). The letters are drawn from vector strokes, not from a font: a host without fonts (the build image) would
  * draw a font's letters as empty boxes, and two hosts with different fonts would draw different pictures. Only A to Z have
- * strokes (`initialsOf` of the domain folds a name to them); with none, a neutral head-and-shoulders figure is drawn.
+ * strokes (`initialsOf` of the domain folds an accented Latin letter to them; a letter of another script has none); with
+ * none, a neutral head-and-shoulders figure is drawn.
  * The picture fills the whole frame of the slot, so the template's box and shape stay as designed.
  */
 import { createHash } from 'node:crypto'

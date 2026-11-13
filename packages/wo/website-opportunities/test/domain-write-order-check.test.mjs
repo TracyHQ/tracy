@@ -84,6 +84,8 @@ test('a sameAs is never itself or a chain; a share image is never a hidden pictu
       .sort(),
     [
       'hides_link_foreign',
+      // The share picture set to none in a shown place is an empty frame left shown as well.
+      'picture_empty_shown',
       'same_as_chain',
       'same_as_self',
       'share_image_none',

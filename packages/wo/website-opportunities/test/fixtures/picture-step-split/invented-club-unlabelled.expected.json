@@ -207,7 +207,8 @@
       "size": {
         "width": 600,
         "height": 600
-      }
+      },
+      "person": "person-ilse-varrow"
     }
   ],
   "reduced": [],
@@ -217,7 +218,8 @@
     "generated": 3,
     "none": 1,
     "variants": 0,
-    "initials": 0
+    "initials": 0,
+    "reused": 0
   },
   "notes": [],
   "icons": [],

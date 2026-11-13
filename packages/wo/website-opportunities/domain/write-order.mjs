@@ -9,7 +9,7 @@ import { dataIndexOf } from './write-order-data.mjs'
 import { WriteOrderError } from './write-order-error.mjs'
 import { writerPlaceOf } from './write-order-fields.mjs'
 import { declarationsOf, positionOf, refuseInput, writtenPagesOf } from './write-order-input.mjs'
-import { settleBlock } from './write-order-hide.mjs'
+import { hideEmptyPictures, settleBlock } from './write-order-hide.mjs'
 import { joinLibraryBlock } from './write-order-library.mjs'
 import { classedIcons, libraryPositionOf, lookOf } from './write-order-look.mjs'
 import { menuOf, pagesInOrder, seoLimitsOf, seoOf } from './write-order-pages.mjs'
@@ -120,6 +120,7 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
       }
       for (const g of block.lists) g.rows.forEach(visit)
     }
+  hideEmptyPictures(placed, hidden)
   const shownPictures = placed.flatMap((p) => p.pictures)
   const fileOf = new Map(shownPictures.filter((p) => p.file).map((p) => [p.frame, p.file]))
   for (const picture of shownPictures)

@@ -24,6 +24,7 @@ function altOf(frame, data) {
 function pictureOf(frame, field, data) {
   const { id, page, block, item, row, place, source, ref, file, label, theme, sameAs, reason, generate } =
     frame
+  const person = frame.person ? data.byId.get(frame.person)?.entry?.label : null
   return {
     frame: id,
     page,
@@ -38,12 +39,15 @@ function pictureOf(frame, field, data) {
     ...(ref ? { ref } : {}),
     ...(source === 'own' ? { alt: label ?? null } : {}),
     ...(source === 'generated' ? { alt: altOf(frame, data) } : {}),
+    ...(source === 'initials' ? { alt: person ?? null } : {}),
+    ...(frame.person ? { person: frame.person } : {}),
     size: field.frame ? { width: field.frame.width, height: field.frame.height } : null,
     ...(theme ? { theme } : {}),
     ...(sameAs ? { sameAs } : {}),
     ...(reason ? { reason } : {}),
     ...(generate ? { generate } : {}),
-    ...(frame.substitute ? { substitute: frame.substitute } : {})
+    ...(frame.substitute ? { substitute: frame.substitute } : {}),
+    ...(frame.reuses ? { reuses: frame.reuses } : {})
   }
 }
 

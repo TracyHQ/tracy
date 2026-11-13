@@ -6,25 +6,30 @@
 /** At most this many letters: a first and a last name. */
 const MAX_LETTERS = 2
 
+/** The first letter of a word, upper case, in the word's own script; a Latin letter with an accent folds to its base. */
+function firstLetterOf(word) {
+  // One letter even when its upper case is two (a sharp s is SS).
+  const letter = [...[...word][0].toUpperCase()][0]
+  const base = letter.normalize('NFD').replace(/\p{M}/gu, '')
+  return /^\p{Script=Latin}$/u.test(base) ? base : letter.normalize('NFC')
+}
+
 /**
- * The initials of a person's name: the first letter of the first and of the last word, folded to A to Z (an accented
- * letter keeps its base letter). Words that start with no such letter are skipped; a name with none gives "".
+ * The initials of a person's name: the first letter of the first and of the last word, in the name's own script (a
+ * Chinese, Cyrillic or Greek letter stays itself, as do Latin letters with no base letter such as O with stroke, AE or
+ * L with stroke), a Latin letter with an accent folded to its base letter (E acute is E). Words that start with no
+ * letter are skipped; a name with none gives "".
  * @param {unknown} name
  * @returns {string}
  */
 export function initialsOf(name) {
   const words = String(name ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toUpperCase()
-    .split(/[^A-Z0-9]+/)
-    .filter((w) => /^[A-Z]/.test(w))
+    .normalize('NFC')
+    .split(/[^\p{L}\p{M}\p{N}]+/u)
+    .filter((w) => /^\p{L}/u.test(w))
   if (!words.length) return ''
   const picked = words.length === 1 ? [words[0]] : [words[0], words[words.length - 1]]
-  return picked
-    .map((w) => w[0])
-    .join('')
-    .slice(0, MAX_LETTERS)
+  return picked.slice(0, MAX_LETTERS).map(firstLetterOf).join('')
 }
 
 /**

@@ -182,7 +182,7 @@ test('5. a picture pair holds like an icon pair: two different themes, a base th
 test('6. pair counts follow one rule: one count per picture, a variant counted apart', () => {
   const result = pictures(bakeryStore())
   // The logo pair (left to the brand step) and the illustration pair (generated): one decision each, two variants.
-  assert.deepEqual(result.counts, { own: 0, generated: 1, initials: 0, none: 1, variants: 2 })
+  assert.deepEqual(result.counts, { own: 0, generated: 1, initials: 0, none: 1, variants: 2, reused: 0 })
   assert.equal(result.frames.length, 4)
 })
 

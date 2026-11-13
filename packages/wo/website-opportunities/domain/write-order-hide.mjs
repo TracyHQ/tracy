@@ -10,7 +10,9 @@
 //   block  a repeating block with fewer items shown than its `items.min` is hidden (`list_below_min`), or takes its
 //          declared fallback when its no data rule is `fallback` (state `fallback`: the template or the CMS fills it,
 //          e.g. a menu rebuilt from the pages); a block declaring content and showing none is hidden (`no_data`). A logo
-//          frame counts as shown: the write step fills it from the order's look.
+//          frame counts as shown: the write step fills it from the order's look;
+//   picture an empty picture frame of a shown place is hidden with its reason (`hideEmptyPictures`): the place keeps
+//          its text, the writer removes the demo picture.
 // A hidden place keeps no entries, pictures or icons: they leave with it, but stays in the order with its declared
 // fields, so the order itself accounts for every field. `hidden` lists every place not shown, and only those.
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -157,6 +159,21 @@ export function settleBlock(block, description, { dropped, hidden }) {
     block.lists.some((g) => g.rows.some((r) => r.state === 'show'))
   if (!anything) return hideBlock(block, 'no_data', hidden)
   block.state = 'show'
+}
+
+/**
+ * Record every empty picture frame of a shown place as hidden (state `hidden`, listed in `hidden` with `picture: true`
+ * and the frame's reason), so a writer removes the template's demo picture there. A logo frame is not empty: the write
+ * step fills it from the order's look.
+ * @param {object[]} places every place of the order
+ */
+export function hideEmptyPictures(places, hidden) {
+  for (const place of places.filter((p) => p.state === 'show'))
+    for (const picture of place.pictures)
+      if (picture.source === 'none' && picture.reason !== LOGO) {
+        picture.state = 'hidden'
+        hidden.push({ at: picture.frame, reason: picture.reason ?? 'picture_empty', picture: true })
+      }
 }
 
 /** Hide a whole block with its items and rows. */

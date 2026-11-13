@@ -26,17 +26,18 @@ const isGallery = (frame) =>
 
 /** The problem of an initials frame: it shows a named person item, with the initials avatar of that person. */
 function initialsProblemOf(frame) {
-  if (!frame.people || frame.itemKind !== 'person' || !frame.item)
+  if (!frame.people || !frame.person)
     return ['initials_not_a_person', 'initials are shown only in the frame of a named person']
   const s = frame.substitute
-  if (s?.kind !== 'initials-avatar' || !isText(s.initials) || s.personId !== frame.item)
+  if (s?.kind !== 'initials-avatar' || !isText(s.initials) || s.personId !== frame.person)
     return ['initials_missing', 'an initials frame carries the initials avatar of its person']
   return null
 }
 
 /**
- * The problems of an assignment, empty when it keeps every rule: every frame records its source; an initials frame
- * shows a named person with that person's initials avatar; nothing is generated for a gallery; an own picture is
+ * The problems of an assignment, empty when it keeps every rule: every frame records its source; the frame of a named
+ * person is never empty, and an initials frame carries that person's initials avatar; a reused drawing names a drawn
+ * frame; nothing is generated for a gallery; an own picture is
  * labelled, never stock, a photo in an image frame and a fitting video in a video frame; nothing is generated for a
  * frame of a person, a logo or any kind `picture-roles.mjs` never generates, nor for a video frame; every generated
  * picture is asked without people; the business logo is never filled here (the brand step owns it); at most
@@ -50,6 +51,9 @@ export function pictureProblemsOf(assignment, pictures, approved = {}) {
   const problems = []
   const report = (frame, code, message) => problems.push({ code, at: frame.id, message })
   let generated = 0
+  const drawn = new Set(
+    (assignment?.frames ?? []).filter((f) => f.source === 'generated' && !f.reuses).map((f) => f.id)
+  )
   for (const frame of assignment?.frames ?? []) {
     if (!SOURCES.has(frame.source)) {
       report(frame, 'source_missing', 'the frame records no source')
@@ -69,8 +73,10 @@ export function pictureProblemsOf(assignment, pictures, approved = {}) {
         report(frame, 'video_in_image_frame', 'an image frame never takes a video')
     }
     if (frame.source === 'generated') {
-      // The variant of a pair shows its base's picture: one picture, counted once.
-      if (!frame.sameAs) generated += 1
+      // The variant of a pair, and a reused drawing, show another frame's picture: one picture, counted once.
+      if (!frame.sameAs && !frame.reuses) generated += 1
+      if (frame.reuses && !drawn.has(frame.reuses))
+        report(frame, 'reuse_unknown', `${frame.reuses} is no drawn frame of the assignment`)
       if (frame.people) report(frame, 'generated_person', 'a picture of a person is never generated')
       if (frame.place === 'video') report(frame, 'generated_video', 'a video is never generated')
       else if (!frame.people && frame.kind && !generationOf(frame.kind).may)
@@ -84,6 +90,8 @@ export function pictureProblemsOf(assignment, pictures, approved = {}) {
       const problem = initialsProblemOf(frame)
       if (problem) report(frame, ...problem)
     }
+    if (frame.source === 'none' && frame.person)
+      report(frame, 'person_frame_empty', 'the frame of a named person shows their photo or their initials')
     if (frame.source === 'none' && !isText(frame.reason))
       report(frame, 'reason_missing', 'a frame without a picture says why')
   }
