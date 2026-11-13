@@ -206,15 +206,36 @@ characters and case aside (the kana voicing marks stay: `ガ` is not `カ`). The
 
 | Form | Rule | Found | Not found |
 |---|---|---|---|
-| Prose | the held text's words in order, at least one character that is no letter or digit between two words, whole words at both ends | `Brannoch` line break `Vey`, `Ask for Brannoch. Vey runs` | `Fed leeks` for `Ed Lee`, `Normal maps` for `Al Ma` |
+| Prose | the held text's words in order, at least one character that is no letter or digit between two words the held text writes apart (a space), whole words at both ends | `Brannoch` line break `Vey`, `Ask for Brannoch. Vey runs` | `Fed leeks` for `Ed Lee`, `Normal maps` for `Al Ma` |
+| Prose, joined part | between two words the held text joins inside one part (an apostrophe or a hyphen, no space: `O'Neill`, `Jean-Luc`) any separator or none | `Siobhan ONeill`, `Siobhan O Neill`, `Siobhan O-Neill`, `JeanLuc Marchand`, `Jeanluc Marchand`, `Jean Luc Marchand` for `Siobhan O'Neill`, `Jean-Luc Marchand` | `Siobhanoneills` (not a whole word), `Ajeanluc Marchand` |
+| Whole glued token in prose | a held text of several words written together as one whole token (`heldNamesIn` too) | `SiobhanONeill`, `@pellamorrickvey`, `pellamorrick-portrait.jpg` | `xpellamorrick-portrait.jpg` |
 | Script without spaces | a side in Han, Hiragana, Katakana, Thai, Lao, Khmer or Myanmar (the name's or its neighbour's) needs no boundary and no separator; a Hangul name may carry a Hangul particle | `講師は山田花子です`, `ครูสมชายสอน`, `김민지가` | |
 | Glued | inside one run without spaces (a slug, a file name, a handle, an address), the words written together match whole tokens (a token is a run of letters or of digits) | `brannochvey`, `pellam-orrick2.jpg`, `ed-lee.jpg` | `banana-boat.jpg` for `Ana Bo`, `used-leek.jpg` for `Ed Lee` |
 | Common word name (the reading only) | a one word held text that is also a common English given name word (`Will`, `May`, `Rose`; the list is in `held-name-context.mjs`) is held in prose only with a capital: mid sentence always; at a sentence start only next to a title (`Chef`), a role word (`florist`, `is our head baker`), a possessive (`Will's`) or another capitalised name part (`Rose Tan`). In a slug and in an author field it is always held | `Ask Rose about`, `in May and June`, `Rose, our florist`, `rose-portrait.jpg` | `our rose bouquets`, `We will deliver`, `May is our busiest month` |
 | First name alone (the reading only) | a held person's first name written alone is held with a capital (a common one by the row above), in prose, a slug, an address or an author field; never one of two letters or fewer, never for a name in a script without spaces or in Hangul (the family name leads there) | `Ask Brannoch about raku`, `brannoch@example.test` | `brannoch` lower case in prose, `Ed was here` |
 
-`heldNamesIn` (reviews, plan values, the site name: what reaches the site) uses the prose and script rows and no
-common word relaxation: privacy first, a held `Rose` is held in any case there. `heldSlugsIn` adds the glued row. The
-first name row is the reading's only.
+`heldNamesIn` (reviews, plan values, the site name: what reaches the site) uses the prose, joined part, whole token and
+script rows and no common word relaxation: privacy first, a held `Rose` is held in any case there. `heldSlugsIn` adds
+the glued row. The first name row is the reading's only; a caller that matches plain texts gets the forms of one held
+person from `held-person-forms.mjs heldPersonFormsOf` (full name, the first name alone under that rule, `First L`,
+`F Last`; a common word first name is left out, `firstCased`, since only the matcher's capital rule can hold it).
+
+`domain-held-text-forms-corpus.test.mjs` holds the reviewer's differential corpus: eight invented names, twenty four
+forms each, three sentences around them, in the default forms and in prose only (1152 trials, none lost against the
+first matcher of #609), and the near misses that must stay refused.
+
+Which rules each caller of the matcher reads (a first name written alone is held only where marked):
+
+| Caller | Matcher | Rules | First name alone |
+|---|---|---|---|
+| The reading's passages and the owner's statement (`reading-held-passages.mjs`, `owner-statement.mjs ownerPassageOf`) | `heldSpansIn` with `people`, `casedCommon` | every row | held |
+| Plan withheld ids and values (`plan-withheld.mjs`, every plain form for ids) | `heldNamesIn`, `heldSlugsIn` | prose, joined part, whole token, glued, script | slips |
+| Picture alt texts and labels (`step-chain-draft-alt.js`, `step-chain-draft-pictures.js`) | `namesHeldInAnyForm` | as above | slips |
+| Review sources (`held-reviews.mjs heldReviewsSplit`, `brief.mjs`, `review-sources.js`, `quickstart-reviews.js`) | `heldNamesIn` | prose, joined part, whole token, script | slips |
+| The write guard (`draft-write-held.mjs heldInLeaf`) | `namesHeldInAnyForm` on every plain form | as plan withheld | slips |
+| The revision text forms (`revision-text-forms.mjs heldFormsOf`) | `namesHeldInAnyForm` with `First L`, `F Last` | as plan withheld | slips (short forms held) |
+| The plan request guard (`plan-request-guard.mjs`) | `namesHeld` plus every word of a held text no shown value holds | as plan withheld | held (as a word) |
+| The built site check (`scripts/built-site-check/held-mask.mjs`) | `maskHeld` plus a digit split and a one word slug token | default forms | slips |
 
 Still over-matches, by design (privacy wins): a common word name capitalised mid sentence as a word (`in May` for a
 held `May`); any token of a slug (`rose-tinted.jpg`); a multi word held business name that is a common phrase (`The
@@ -232,10 +253,10 @@ by field, by the reading's own structure, never by guessing from the text:
 
 | Layer | Group | Name or value: never guarded | Copy: guarded | Evidence and records |
 |---|---|---|---|---|
-| Reading | services | label, kind, price | | quote, mentions, id, source, basis |
-| Reading | audience | label | | quote, mentions, id, source, basis |
-| Reading | team | label (the person), role (a title) | | quote, mentions, id, source, reviewsOnly, factId, onSite, photo ids |
-| Reading | serviceAreas | label (places) | | quote, mentions, id, source |
+| Reading | services | label, kind, price (while name shaped) | | quote, mentions, id, source, basis |
+| Reading | audience | label (while name shaped) | | quote, mentions, id, source, basis |
+| Reading | team | label (the person), role (a title), while name shaped | | quote, mentions, id, source, reviewsOnly, factId, onSite, photo ids |
+| Reading | serviceAreas | label (places, while name shaped) | | quote, mentions, id, source |
 | Reading | story | | label (needed) | quote, mentions, id, source |
 | Reading | facts | | label (needed) | quote, mentions, id, source |
 | Reading | keyMessages | | label (needed) | quotes, id, basis, decidedBy |
@@ -252,6 +273,32 @@ class. Hours and days, phone, email and the address are fact values: they reach 
 fields, so a phrase such as "open seven days a week" in a story or fact line need not survive as copy; it survives as a
 fact for the writer (below). Whether hours, a phone or an email typed in the chat should reach the needs profile
 directly is not decided and not built.
+
+A name or value field is exempt only while it has the shape of one (`owner-name-shape.mjs`). Weights count as the echo
+guard counts them (a word 1, a Han character 1/2, a Thai one 1/4):
+
+| Field | Heaviest name | Why this limit |
+|---|---|---|
+| services.label | 8 | `Deep tissue sports massage` (4), `Free local delivery over 30 dollars` (6) and a five or six word service pass; the reviewer's sentences (11 to 16 words) do not |
+| services.price | 6 | `$69 monthly`, `30 dollars per hour`: a price and its period |
+| audience.label | 6 | `office workers and weekend runners` (5); `We welcome tired parents who deserve a proper hour of quiet for themselves` (13) does not |
+| team.label | 5 | a person's name, particles included (`Mira de la Solent`); `Mira Solent is the lovely gentle woman ...` (15) does not |
+| team.role | 6 | `head therapist and founder since 2011` (6); `lovely gentle woman who runs this place with all her heart` (11) does not |
+| serviceAreas.label | 6 | `North Velmora and South Velmora` (5) |
+
+The limits read only items the owner's statement stands on (a public text's long name is that text's). For every item,
+a name that copies the owner by a run of weight 7 or more, or holds in order 60% of an owner sentence of weight 8 or
+more and weight 7 of it, is prose (`NAME_ECHO_LIMITS`): an owner item's name is taken from the owner's words, so six
+words taken whole always pass, and seven taken whole (`free racket fitting before the first lesson`) are the owner's
+prose. Three cheap signals read owner items too: a value at the reading's 80 character cap ending inside a word
+(`cut`), a word of three lower case letters or more ending a sentence followed by more words (`two-sentences`; `Rd.
+Velmora` stays), and, English only, a value of four words or more opening with a subject pronoun or with `is`, `are`,
+`was` or `were` after its first one or two words (`clause`; `people who are new` stays). A field that fails is
+recorded in `ownerEchoDropped` with `why: 'owner_prose_in_name_field'` and its rule (`words`, `run`, `sentence`, `cut`,
+`two-sentences`, `clause`); a label (needed) moves the item's fact to `ownerFacts`; a role or a price leaves the item
+and becomes an owner fact of its own (`field: 'role'`). No fact is cut mid word: a value at the cap is cut back to
+whole words (`wholeWordsOf`). `domain-owner-name-shape.test.mjs` tests both sides of every field and every signal;
+the survival table gains a fixture with sentences typed into names (all facts survive, none left in any field).
 
 What the guard does with an echo:
 
@@ -278,6 +325,14 @@ will be said in other words" (`reading.ownerEchoDropped.count`, the groups by na
 It never shows a field's words as site copy. `ownerEchoDropped` does not reach the needs profile: the needs profile
 reads the research's evidence, not the reading, and records its own drops field by field (`summary_copies_owner`).
 `domain-owner-echo-survival.test.mjs` measures both duties on the invented fixtures.
+
+Not built yet: `ownerFacts` stop at the brief (`brief.mjs ownerFactsOfReading`, read by its markdown and routed as
+never shown). The needs profile reads the statement again as the source `owner-statement` and holds no `ownerFacts`,
+the plan data (`plan-data.mjs planDataOf`) has no entry for one, and the page writer's request (`page-writer-request.mjs
+pageWriterUser`) carries none. Nothing checks the page writer's output against the owner's words yet:
+`owner-echo.mjs echoProblemsIn(values, ownerStatement, {publicTexts})` returns `{field, rule, weight}` per copying value
+(never the text), for the copy check of the write step to call, with the plan's item names and values among
+`publicTexts` (a service name the owner typed is a fact value).
 
 The `owner` source of the older flow (the value typed on the Profile card, origin `website`) is unchanged and is a
 different key.

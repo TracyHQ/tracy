@@ -10,6 +10,7 @@
 // attaches (`plan-site-name.mjs`). A fact, an item of any kind or a row
 // whose text names a held person is withheld: the model never reads it, the gate refuses it (`withheld_shown`) and the
 // plan lists it as left out with a neutral `what` and `WITHHELD_REASON`. Pure.
+import { heldInLeaf } from './draft-write-held.mjs'
 import { nameHeldOf, siteNameOf } from './held-name.mjs'
 import { heldNamesIn, heldPeopleOf, heldSlugsIn } from './held-reviews.mjs'
 import { limitsOf, siteNameMissing, withSiteNameQuestion } from './plan-site-name-question.mjs'
@@ -145,7 +146,8 @@ export function withWithheld(profile, research, template = {}) {
  * The plan ids the owner keeps off the site: the business name facts while the name is held with no neutral identity,
  * and every fact and every item (of any kind) whose text names a held text (`namesHeldInAnyForm`): an item by its id,
  * label, alt, caption, title or any field value, so a photo research says shows a held person, or whose file is
- * named after one, is withheld whole (its id is never renamed).
+ * named after one, is withheld whole (its id is never renamed). Each text is read in every plain form of the write
+ * guard (`draft-write-held.mjs heldInLeaf`: entities read until stable, percent escapes read, `O&amp;#39;Neill`).
  * @param {{byId: Map<string, object>}} data the plan data (`plan-data.mjs`)
  * @param {{name?: boolean, siteName?: string, people?: string[]} | undefined} withheld the needs profile's `withheld`
  * @returns {Set<string>}
@@ -156,7 +158,10 @@ export function withheldIdsOf(data, withheld) {
   const people = heldTextsOf(withheld)
   for (const [id, record] of data.byId) {
     const nameHeld = withheld.name === true && !withheld.siteName && record.kind === 'business.name'
-    if (nameHeld || namesHeldInAnyForm(recordValues(record), people)) out.add(id)
+    const named = recordValues(record)
+      .flat(2)
+      .some((v) => heldInLeaf(v, people))
+    if (nameHeld || named) out.add(id)
   }
   return out
 }

@@ -43,9 +43,12 @@ test('a held name in slug form: any separator or none between its words; one wor
     'Pellam  Orrick'
   ])
     assert.deepEqual(heldSlugsIn(text, [HELD]), [HELD], text)
-  // Whole words find a name written with a separator; only the slug form finds it written together.
+  // Whole words find a name written with a separator, or written together as one whole token (privacy first); only
+  // the slug form finds it split over several tokens of a run.
   assert.deepEqual(heldNamesIn('pellam-orrick-portrait.jpg', [HELD]), [HELD])
-  assert.deepEqual(heldNamesIn('pellamorrick-portrait.jpg', [HELD]), [])
+  assert.deepEqual(heldNamesIn('pellamorrick-portrait.jpg', [HELD]), [HELD])
+  assert.deepEqual(heldNamesIn('pellamorrick2-portrait.jpg', [HELD]), [HELD])
+  assert.deepEqual(heldNamesIn('xpellamorrick-portrait.jpg', [HELD]), [])
   assert.deepEqual(heldSlugsIn('pellamorrick-portrait.jpg', [HELD]), [HELD])
   for (const text of ['pellam-portrait.jpg', 'orrick-pellam.jpg', 'https://club.example/img/courts.jpg'])
     assert.deepEqual(heldSlugsIn(text, [HELD]), [], text)

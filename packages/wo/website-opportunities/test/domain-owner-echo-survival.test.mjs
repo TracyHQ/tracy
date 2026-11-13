@@ -1,5 +1,6 @@
 // The two duties of D46 measured on the invented fixtures (#609): every legitimate fact the owner typed survives (in
-// its group, or as a fact the writer says in other words), and no copy field the site may say repeats the owner. The
+// its group, or as a fact the writer says in other words), no copy field the site may say repeats the owner, and no
+// name or value field holds an owner sentence. The
 // table is printed; run alone to read it:
 //
 //   node --test --test-concurrency=1 packages/wo/website-opportunities/test/domain-owner-echo-survival.test.mjs
@@ -8,6 +9,7 @@ import { test } from 'node:test'
 import { checkBusinessReading, readingSourcesOf } from '../domain/business-reading.mjs'
 import { copiesOwner, ownerEchoOf } from '../domain/owner-echo.mjs'
 import { ECHO_GROUPS, copyFieldsOf } from '../domain/owner-echo-fields.mjs'
+import { NAME_ECHO_LIMITS, NAME_SHAPE_LIMITS } from '../domain/owner-name-shape.mjs'
 import { readingWithoutOwnerQuotes } from '../domain/owner-statement.mjs'
 import { MASSAGE_ANSWER, MASSAGE_BIO, MASSAGE_STATEMENT } from './fixtures/owner-statement/massage-studio.mjs'
 import {
@@ -17,6 +19,28 @@ import {
   RESEARCH
 } from './fixtures/owner-statement/research.mjs'
 
+// The massage studio again, with owner sentences typed into every name and value field (#609, finding 1).
+const PROSE = [
+  'We treat each visitor like family and never rush anyone out the door',
+  'We welcome tired parents who deserve a proper hour of quiet for themselves',
+  'Mira Solent is the gentle woman who runs this place with all her heart'
+]
+const PROSE_ANSWER = {
+  ...MASSAGE_ANSWER,
+  services: [...MASSAGE_ANSWER.services, { name: PROSE[0], quote: PROSE[0], ref: 'owner' }],
+  audience: [...MASSAGE_ANSWER.audience, { label: PROSE[1], quote: PROSE[1], ref: 'owner' }],
+  // A service area written as a sentence is dropped by the reading's own area rule first (`areaQuoteOk`), so it is
+  // tested in `domain-owner-name-shape.test.mjs`, not counted here.
+  team: [
+    {
+      name: PROSE[2],
+      role: 'gentle woman who runs this place with all her heart',
+      quote: PROSE[2],
+      ref: 'owner'
+    }
+  ]
+}
+
 const FIXTURES = [
   {
     name: 'massage studio',
@@ -25,7 +49,13 @@ const FIXTURES = [
     answer: MASSAGE_ANSWER
   },
   { name: 'pottery, rewritten', statement: OWNER_STATEMENT, input: RESEARCH, answer: ANSWER_READING_OWNER },
-  { name: 'pottery, echoing', statement: OWNER_STATEMENT, input: RESEARCH, answer: ANSWER_ECHOING_OWNER }
+  { name: 'pottery, echoing', statement: OWNER_STATEMENT, input: RESEARCH, answer: ANSWER_ECHOING_OWNER },
+  {
+    name: 'massage, sentences in names',
+    statement: `${MASSAGE_STATEMENT} ${PROSE.join('. ')}.`,
+    input: { bio: MASSAGE_BIO },
+    answer: PROSE_ANSWER
+  }
 ]
 const KEY = { services: 'name', team: 'name', story: 'text', serviceAreas: 'text', facts: 'text' }
 const norm = (t) => String(t ?? '').toLowerCase()
@@ -52,6 +82,19 @@ const echoesOf = (reading, echo) =>
     )
   )
 
+/** Every name or value field left that holds an owner sentence: more than its limit, or a run of the owner's. */
+const sentencesInNamesOf = (reading, echo, statement) =>
+  Object.entries(NAME_SHAPE_LIMITS).flatMap(([group, fields]) =>
+    (Array.isArray(reading[group]) ? reading[group] : []).flatMap((i) =>
+      Object.entries(fields).filter(
+        ([f, limit]) =>
+          typeof i[f] === 'string' &&
+          (copiesOwner(i[f], echo, [], NAME_ECHO_LIMITS) ||
+            (i[f].split(/\s+/u).length > limit && statement.toLowerCase().includes(i[f].toLowerCase())))
+      )
+    )
+  )
+
 test('every owner fact survives the reading and the brief view, and no copy repeats the owner', () => {
   const rows = []
   for (const f of FIXTURES) {
@@ -68,14 +111,17 @@ test('every owner fact survives the reading and the brief view, and no copy repe
       inReading: items.filter((i) => survives(read, i)).length,
       inBrief: items.filter((i) => survives(view, i)).length,
       copiedInReading: echoesOf(read, echo).length,
-      copiedInBrief: echoesOf(view, echo).length
+      copiedInBrief: echoesOf(view, echo).length,
+      sentencesInNames: [read, view].flatMap((r) => sentencesInNamesOf(r, echo, f.statement)).length
     }
     rows.push(row)
     assert.equal(row.inReading, row.factsIn, `${f.name}: facts lost in the reading`)
     assert.equal(row.inBrief, row.factsIn, `${f.name}: facts lost in the brief view`)
     assert.equal(row.copiedInReading, 0, f.name)
     assert.equal(row.copiedInBrief, 0, f.name)
+    assert.equal(row.sentencesInNames, 0, f.name)
   }
   console.table(rows)
   assert.equal(rows[0].factsIn, 10, 'the massage studio: eleven items, one USP line the ladder finds generic')
+  assert.equal(rows[3].factsIn, 12, 'the sentences: two more items, one team member replaced')
 })

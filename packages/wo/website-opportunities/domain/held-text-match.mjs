@@ -5,13 +5,16 @@
 //
 // 🔒 THE RULE (section 6 of `docs/references/building-a-site-from-a-business.md`).
 //   - PROSE. A held text is its words in order, with at least one character that is no letter or digit between two
-//     words (a space, a line break, a sentence end, a hyphen), and whole words at both ends: `Ed Lee` is not in
-//     `Fed leeks`. A side written in a script without spaces (Han, Japanese, Thai, Lao, Khmer, Myanmar), on the name
+//     words the held text writes apart (a space, a line break, a sentence end, a hyphen), and whole words at both ends:
+//     `Ed Lee` is not in `Fed leeks`. Between two words the held text joins inside one part (an apostrophe or a hyphen,
+//     no space: `O'Neill`, `Jean-Luc`) the separator may be any or none (`ONeill`, `O Neill`, `JeanLuc`, `Jean Luc`). A side written in a script without spaces (Han, Japanese, Thai, Lao, Khmer, Myanmar), on the name
 //     or on its neighbour, needs no boundary and no separator (`講師は山田花子です`, `ครูสมชายสอน`); a Hangul name may
 //     carry a Hangul particle (`김민지가`).
 //   - GLUED. Inside one run of characters without spaces (a slug, a file name, a handle, an address), the held text's
 //     words written together match whole tokens of that run (`brannochvey`, `pellam-orrick2.jpg`, `@brenwick`), never
-//     parts of a token (`banana-boat.jpg` holds no `Ana Bo`). A token is a run of letters or a run of digits.
+//     parts of a token (`banana-boat.jpg` holds no `Ana Bo`). A token is a run of letters or a run of digits. In prose
+//     only (`forms: 'words'`) a held text of several words written together is held as one whole token (`SiobhanONeill`,
+//     `@siobhanoneill`), never inside a longer one.
 //   - COMMON WORDS (`casedCommon`, the reading's passages). A held text of one word that is also a common word (`Will`,
 //     `May`, `Rose`) is held in prose only when written with a capital: mid sentence always, at the start of a sentence
 //     only next to a title, a role word, a possessive or another capitalised name part. Lower case it is a word. In a
@@ -46,17 +49,27 @@ export const foldHeld = (text) =>
     .normalize('NFC')
 
 const isText = (v) => typeof v === 'string' && v.trim() !== ''
-const wordsOf = (name) =>
-  foldHeld(name)
-    .split(/[^\p{L}\p{N}]+/u)
-    .filter(Boolean)
+/** A held text's folded words, and for each pair whether one part joins them (no space between: `o'neill`). */
+function wordsOf(name) {
+  const words = []
+  const joined = []
+  for (const part of foldHeld(name).split(/\s+/u))
+    part
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter(Boolean)
+      .forEach((w, k) => {
+        if (words.length) joined.push(k > 0)
+        words.push(w)
+      })
+  return { words, joined }
+}
 
 /** The prose pattern of a held text's words (the rule above), or null. */
-function prosePatternOf(words) {
+function prosePatternOf({ words, joined }) {
   let body = words[0]
   for (let i = 1; i < words.length; i++) {
-    const unspaced = UNSPACED.test(words[i - 1].at(-1)) || UNSPACED.test(words[i][0])
-    body += `${unspaced ? '[^\\p{L}\\p{N}]*' : '[^\\p{L}\\p{N}]+'}${words[i]}`
+    const free = joined[i - 1] || UNSPACED.test(words[i - 1].at(-1)) || UNSPACED.test(words[i][0])
+    body += `${free ? '[^\\p{L}\\p{N}]*' : '[^\\p{L}\\p{N}]+'}${words[i]}`
   }
   const first = words[0][0]
   const last = words.at(-1).at(-1)
@@ -71,19 +84,19 @@ function prosePatternOf(words) {
  */
 export function heldEntriesOf(names, { people = [], casedCommon = false } = {}) {
   const out = []
-  const add = (name, words, cased) =>
-    out.push({ name, words, glued: words.join(''), prose: prosePatternOf(words), cased })
+  const add = (name, of, cased) =>
+    out.push({ name, words: of.words, glued: of.words.join(''), prose: prosePatternOf(of), cased })
   for (const name of (Array.isArray(names) ? names : []).filter(isText)) {
-    const words = wordsOf(name)
-    if (words.length) add(name, words, casedCommon && words.length === 1 && isCommonNameWord(words[0]))
+    const of = wordsOf(name)
+    if (of.words.length) add(name, of, casedCommon && of.words.length === 1 && isCommonNameWord(of.words[0]))
   }
   for (const person of (Array.isArray(people) ? people : []).filter(isText)) {
     const parts = person.trim().split(/\s+/u)
-    const words = wordsOf(parts[0])
-    const letters = words.join('')
-    if (parts.length < 2 || !words.length || UNSPACED.test(letters) || HANGUL.test(letters)) continue
+    const of = wordsOf(parts[0])
+    const letters = of.words.join('')
+    if (parts.length < 2 || !of.words.length || UNSPACED.test(letters) || HANGUL.test(letters)) continue
     if ([...letters].length <= 2) continue
-    add(person, words, isCommonNameWord(letters) ? 'common' : 'first')
+    add(person, of, isCommonNameWord(letters) ? 'common' : 'first')
   }
   return out
 }
@@ -114,7 +127,8 @@ function casedStands(entry, text, start, end) {
 
 /**
  * Every place a held text is written in a text, as `{start, end, name}` spans of the text as written (pure). Options:
- * `people` and `casedCommon` (`heldEntriesOf`), or `entries` already compiled; `forms: 'words'` finds prose only;
+ * `people` and `casedCommon` (`heldEntriesOf`), or `entries` already compiled; `forms: 'words'` finds prose only
+ * (and a held text of several words written as one whole token);
  * `asName`: the text is a name (an author), so a cased entry needs no capital and no context.
  */
 export function heldSpansIn(text, names, opts = {}) {
@@ -130,7 +144,7 @@ export function heldSpansIn(text, names, opts = {}) {
       const f = at[m.index + m[0].length]
       if (!e.cased || opts.asName || casedStands(e, original, s, f)) push(e, m.index, m.index + m[0].length)
     }
-  if (opts.forms === 'words') return spans
+  const words = opts.forms === 'words'
   for (const chunk of folded.matchAll(/\S+/gu)) {
     const slug = SLUG_LIKE.test(chunk[0])
     const tokens = [...chunk[0].matchAll(/\p{L}+|\p{N}+/gu)].map((t) => ({
@@ -139,12 +153,13 @@ export function heldSpansIn(text, names, opts = {}) {
       f: chunk.index + t.index + t[0].length
     }))
     for (const e of entries) {
-      // A cased entry, or one of one word, is glued only in a slug; one of several words in any run.
+      // A cased entry, or one of one word, is glued only in a slug; one of several words in any run. In prose only
+      // (`words`) a held text is glued as one whole token, never joined over several.
       if ((e.cased || e.words.length === 1) && !slug && !opts.asName) continue
       for (let i = 0; i < tokens.length; i++) {
         if (!e.glued.startsWith(tokens[i].t)) continue
         let joined = ''
-        for (let j = i; j < tokens.length && joined.length < e.glued.length; j++) {
+        for (let j = i; j < (words ? i + 1 : tokens.length) && joined.length < e.glued.length; j++) {
           joined += tokens[j].t
           if (joined === e.glued) push(e, tokens[i].s, tokens[j].f)
         }

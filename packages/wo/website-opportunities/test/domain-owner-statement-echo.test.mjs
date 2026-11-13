@@ -24,7 +24,7 @@ const sources = readingSourcesOf({ ...RESEARCH, ownerStatement: STATEMENT })
 const read = (answer) => checkBusinessReading(answer, sources, { trade: 'other' })
 const labels = (list) => (list ?? []).map((i) => i.label)
 
-test('a service name is a fact value: a name the owner typed stays, of any length, and nothing is recorded', () => {
+test('a service name is a fact value while it has a name shape: up to six words taken whole stay, unrecorded', () => {
   const r = read({
     services: [
       {
@@ -33,15 +33,35 @@ test('a service name is a fact value: a name the owner typed stays, of any lengt
         ref: 'owner'
       },
       { name: 'Pilates for potters', quote: 'We teach Pilates for potters too.', ref: 'owner' },
-      { name: 'Racket fitting for juniors', quote: 'Every junior gets a free racket fitting', ref: 'owner' }
+      { name: 'Racket fitting for juniors', quote: 'Every junior gets a free racket fitting', ref: 'owner' },
+      {
+        name: 'free racket fitting first lesson',
+        quote: 'free racket fitting before the first lesson',
+        ref: 'owner'
+      }
     ]
   })
   assert.deepEqual(labels(r.services.filter((s) => s.source.kind === 'owner-statement')), [
-    'free racket fitting before the first lesson',
     'Pilates for potters',
-    'Racket fitting for juniors'
+    'Racket fitting for juniors',
+    'free racket fitting first lesson'
   ])
-  assert.equal(r.ownerEchoDropped, undefined)
+  // Seven of the owner's words in a row are the owner's prose (`owner-name-shape.mjs`): the fact arrives for the
+  // writer to say in other words, and the record says why, never the text.
+  assert.deepEqual(
+    r.ownerFacts.map((f) => [f.group, f.text]),
+    [['services', 'free racket fitting before the first lesson']]
+  )
+  assert.deepEqual(r.ownerEchoDropped, [
+    {
+      group: 'services',
+      field: 'label',
+      rule: 'run',
+      weight: 7,
+      why: 'owner_prose_in_name_field',
+      kept: 'owner-fact'
+    }
+  ])
 })
 
 test('a key message echoing the owner leaves the copy and arrives as a fact to say in other words', () => {
