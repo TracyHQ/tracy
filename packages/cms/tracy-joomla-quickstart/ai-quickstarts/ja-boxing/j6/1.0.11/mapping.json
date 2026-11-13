@@ -11564,6 +11564,14 @@
     {
       "fact": "copyright line",
       "why": "MOD_FOOTER_LINE1 prints the year and the site name, a place of the name fact; it carries no other business word"
+    },
+    {
+      "fact": "footer logo media hint",
+      "why": "the footer logo image (module 170) also carries data-path, the media manager's hint to the demo file local-images:/joomlart/logo/item-1.png; no page draws it and the content map has no place for it. The blank site empties the drawn src (a place of logoDark), so no demo logo shows; the hint stays as the demo has it. Checked on the blank site restored on a real Joomla"
+    },
+    {
+      "fact": "newsletter mail settings",
+      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold the placeholder demo@gmail.com, which is no business word of the demo; they are the mailbox mail is sent from and bounces go to, set by whoever configures sending, never shown on a page. The reply-to name and address subscribers read are places of the name and email facts"
     }
   ],
   "seo": {
