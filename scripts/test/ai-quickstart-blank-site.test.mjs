@@ -2,11 +2,15 @@
 // archive holding the demo data fixture of tracy-joomla-quickstart and one template file.
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
+import {
+  mappingFile,
+  releasedContract
+} from '../../packages/cms/tracy-joomla-quickstart/test/fixtures/blank-site/contract.mjs'
 import { makeZip } from '../../packages/cms/tracy-joomla-quickstart/test/fixtures/blank-site/make-zip.mjs'
 import {
   listEntries,
@@ -106,4 +110,71 @@ test('when the result is not blank the command exits 1 and writes no archive', (
   assert.equal(res.status, 1, res.stderr + res.stdout)
   assert.match(res.stdout, /not blank: .*jos_users/)
   assert.equal(existsSync(out), false, 'no archive at the output path')
+})
+
+/** The invented released contract and mapping file of the fixture, written into the work folder. */
+function contractFiles(dir) {
+  const { manifest, contentMap, lock } = releasedContract()
+  const released = path.join(dir, 'released')
+  mkdirSync(released)
+  for (const [name, doc] of [
+    ['manifest.json', manifest],
+    ['content-map.json', contentMap],
+    ['presentation-lock.json', lock]
+  ])
+    writeFileSync(path.join(released, name), `${JSON.stringify(doc, null, 2)}\n`)
+  const mapping = path.join(dir, 'mapping.json')
+  writeFileSync(mapping, JSON.stringify(mappingFile()))
+  return { released, mapping }
+}
+
+test('--contract writes the blank site contract, the same bytes each run, and needs --mapping', (t) => {
+  const { dir, installer } = workdir(t)
+  const { released, mapping } = contractFiles(dir)
+  const alone = run(
+    installer,
+    '--out',
+    path.join(dir, 'b.zip'),
+    '--contract',
+    released,
+    '--contract-out',
+    dir
+  )
+  assert.equal(alone.status, 2)
+  assert.match(alone.stderr, /--contract needs --mapping/)
+  const half = run(installer, '--out', path.join(dir, 'b.zip'), '--mapping', mapping, '--contract', released)
+  assert.equal(half.status, 2)
+  assert.match(half.stderr, /--contract and --contract-out go together/)
+
+  const files = ['manifest.json', 'content-map.json', 'presentation-lock.json']
+  const runs = ['1', '2'].map((n) => {
+    const out = path.join(dir, `contract-${n}`)
+    const report = path.join(dir, `report-${n}.json`)
+    const res = run(
+      installer,
+      '--out',
+      path.join(dir, `blank-${n}.zip`),
+      '--report',
+      report,
+      '--mapping',
+      mapping,
+      '--contract',
+      released,
+      '--contract-out',
+      out
+    )
+    assert.equal(res.status, 0, res.stderr + res.stdout)
+    assert.match(res.stdout, /blank site contract ja-bakery-blank\/j6\/1.0.3: 3 records removed/)
+    return {
+      bytes: files.map((f) => readFileSync(path.join(out, f), 'utf8')),
+      report: JSON.parse(readFileSync(report, 'utf8'))
+    }
+  })
+  assert.deepEqual(runs[0].bytes, runs[1].bytes)
+  const made = runs[0].report.blankSiteContract
+  assert.equal(made.id, 'ja-bakery-blank/j6/1.0.3')
+  assert.deepEqual(made.removed, ['article-1', 'category-8', 'menuItem-102'])
+  assert.equal(made.opened, 1)
+  const map = JSON.parse(runs[0].bytes[1])
+  assert.deepEqual(map.slots.find((s) => s.key === 'module-90.0').opensEmpty, true)
 })

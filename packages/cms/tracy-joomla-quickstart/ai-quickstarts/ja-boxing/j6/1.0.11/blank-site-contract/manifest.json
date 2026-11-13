@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-boxing-blank/j6/1.0.11",
+  "platform": "joomla",
+  "template": "ja_boxing",
+  "quickstart": {
+    "product": "ja-boxing",
+    "platform": "joomla",
+    "version": "1.0.11",
+    "cms": {
+      "version": "6.1.1"
+    },
+    "template": "ja_boxing",
+    "parts": {
+      "installer": {
+        "file": "ja-boxing-j6-quickstart-1.0.11.zip",
+        "bytes": 67430156,
+        "sha256": "d99d292e60acf0537407fb3a0dc3d7dddb22f7ed8e169281099e3c71dcc10c36"
+      }
+    },
+    "createdAt": "2026-11-04T20:32:27.256Z",
+    "builtFrom": {
+      "from": "quickstart/ja-boxing/j6@1.0.10",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 11 files replaced (templates/ja_boxing/AGENTS.md, templates/ja_boxing/templateDetails.xml, templates/ja_boxing/docs, templates/ja_boxing/html, templates/ja_boxing/etc, templates/ja_boxing/language); 1 installed language files (language/en-GB/en-GB.tpl_ja_boxing.ini)"
+    },
+    "release": "quickstart/ja-boxing/j6"
+  },
+  "coworkContractVersion": "0.24.83",
+  "mode": "content-recommendation",
+  "blankSiteOf": {
+    "contract": "ja-boxing/j6/1.0.11",
+    "files": {
+      "manifest.json": "0fa084ae9aa9ded5d60596ff20a000385460cfeb63365b89df3065a42be01cef",
+      "content-map.json": "1cef392b292b18261ec68c13f8c15329f938aa20a9adafb741d1b74a8dde0dc8",
+      "presentation-lock.json": "72b0c2ad80b2c59c3ba06e30ee3a70219d6cf9a74aae052f6489d6242527eda9"
+    },
+    "removed": 100,
+    "opened": 401,
+    "why": "The released contract restricted to the records the blank site keeps; each slot the blank site empties has the blank value as its sample and may be filled (opensEmpty)."
+  }
+}

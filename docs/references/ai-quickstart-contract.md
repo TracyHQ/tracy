@@ -546,6 +546,82 @@ written out, so its address, and the index of every text node after it, would be
 keeps both. A place counts as empty when its value, trimmed, is empty. Test D of `ai-quickstart-mapping-sweep.test.mjs`
 runs the step on the demo rows and resolves every address of the mapping file.
 
+## The blank site contract
+
+**The build binds the blank site to the blank site contract, never to the released contract.** The Claude Cowork
+plugin writes a site only through `content.contract` apply on a bound site, and its bind finds every entity of the
+contract by its identity, refusing a site where one is missing (`Missing or ambiguous entity`). The released contract
+of the template (`packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/<version>/`) names every demo page,
+article, category, contact and account, and the blank site deletes them, so binding it fails. The released contract
+is sealed and never edited; the blank site contract is a new artifact in the AI quickstart folder:
+
+```
+<AI quickstart folder>/blank-site-contract/manifest.json          id <slug>-blank/<cms>/<version>, blankSiteOf
+<AI quickstart folder>/blank-site-contract/content-map.json
+<AI quickstart folder>/blank-site-contract/presentation-lock.json
+```
+
+It is made by the blank site command, in the same run as the blank site:
+
+```
+node scripts/ai-quickstart/blank-site.mjs <human quickstart .zip> --out <blank site .zip> \
+  --mapping <folder>/mapping.json \
+  --contract packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/<version> --contract-out <folder>/blank-site-contract
+```
+
+What it holds (`packages/cms/tracy-joomla-quickstart/scripts/blank-site-contract.mjs`):
+
+- **The records the blank site keeps.** A record is removed when the blank site step deleted its row, when the step
+  emptied its whole table, or when its identity names a removed record (a profile line of a deleted account). The
+  command reads this from the demo data before and after the step, and refuses to write when the contract's own rows
+  (`lockDump`) give another answer. The content map keeps the entities and slots of the kept records and drops every
+  entry naming a removed one; the lock keeps their rows, the module assignments the step did not remove, the access
+  rules of kept records, an inventory count of 0 for a kind with no kept record (the plugin reads the count through
+  the entities it resolves), and the sha256 of each file the blank site adds under a locked folder (T4's
+  `local/etc/global.json`).
+- **Identity as the blank site stores it.** A module title is both a content place and part of the identity, so each
+  identity field is read from the blank row; modules whose five identity fields then agree carry their `id`, the rule
+  of the capture tool.
+- **Each emptied place opens empty** (`blank-site-contract-samples.mjs`). The plugin compares a written value with the
+  slot's `sample`: it refuses to fill a slot whose sample is empty (`Content cannot activate an empty slot`) unless the
+  slot carries the plugin's own `opensEmpty`, and refuses to empty a slot whose sample is not
+  (`Content cannot remove an occupied slot`). A slot the mapping file names as a whole place gets `sample: ""` and
+  `opensEmpty: true`. A slot holding pieces (an HTML value whose nodes the build writes) gets as its sample the
+  released sample with those pieces emptied by `empty-html-places.php`, byte for byte the value the blank site stores,
+  and stays occupied. Every other slot is the released one. So the contract says what the blank site holds and carries
+  no demo text the blank site no longer has.
+
+What that means for a write, measured through the real door of a blank site (#584):
+
+| Write | Blank site contract |
+|---|---|
+| fill an emptied place | written |
+| change it later | written |
+| empty it again | written; a text node takes one space, since an empty string takes the node away (`HTML slot is missing or ambiguous`) |
+| leave a place empty | send nothing for it, or send `""` |
+| empty a slot that holds pieces | refused, `SLOT_EMPTY_STATE` |
+| a straight double quote in a place that opens empty | refused, `SLOT_NOT_CONTENT` (the plugin's rule for an opened slot): write typographic quotes |
+| a module title the blank site emptied | Joomla saves no module without a title (`Module must have a title`): write the title in the same apply as the first other value of that module |
+| a slot of a record the blank site removed | refused, `SLOT_UNKNOWN`; the build writes the records it creates with the open writes (`content.batch`) |
+
+The plugin's receiver corrections (`lib/slot-corrections.json`, `lib/hideable-slots.json`) are keyed by the released
+contract id and its content map hash, so they do not apply to the blank site contract: its slots carry the released
+limits only, and `rows.remove` removes a node of an HTML value but no reviewed row.
+
+**The contract check guards it.** For a Joomla AI quickstart folder with a written mapping file,
+`node scripts/ai-quickstart/check.mjs` requires `blank-site-contract/` and checks it against the released contract
+its `blankSiteOf.contract` names (`blank-site-contract-check.mjs`): the id; the sha256 of each released file (a
+changed release means making the blank site contract again); the entities, in released order and equal but for
+identity; every slot equal to the released one, or, for a place the blank site empties, opened as above; no removed
+record named anywhere; every mapping location on a kept record has its slot, and none on a record the build creates.
+
+**The door proof.** `scripts/ai-quickstart/door-proof.mjs <AI quickstart folder>` proves on a throwaway blank site that
+the build writes through the real door (gate #585). The site runs the plugin release the quickstart pins, its
+`contract` parameter names the blank site contract and that profile is on disk; the URL and the site token come from
+the environment (`TRACY_DOOR_URL`, `TRACY_DOOR_TOKEN`). It binds, writes one place of every address kind and every text
+node place in one apply, reads each back, checks three refusals (a removed record, an unknown slot, emptying an
+occupied slot), empties a filled place again, and checks the home address does not turn into a server error.
+
 ## The Tracy library
 
 Blocks Tracy owns, for data a template has no block for, are declared in

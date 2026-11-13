@@ -22,6 +22,9 @@
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/draft-report.json",
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/measured-limits.json",
       "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/mapping.json",
+      // The blank site contract is written by `blank-site.mjs --contract` and checked against the released contract
+      // it is made from; the plugin hashes its bytes, so a formatter pass would make it another contract.
+      "!packages/cms/tracy-joomla-quickstart/ai-quickstarts/**/blank-site-contract/**",
       // Theme docs inventory written by the skill's `generate-docs.mjs`, whose `--check` compares it byte
       // for byte: a formatter pass makes that gate report it stale (measured 27/09 on wp-ja-vega).
       "!packages/cms/tracy-wordpress-theme/**/docs/generated/**",

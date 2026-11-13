@@ -12,6 +12,10 @@
  * (`{"ticket": "#<n>"}`) in place of `mapping.json`: the block store and the page recipes are checked alone, and the
  * line printed for the folder says the mapping is pending. Both files at once is a problem.
  *
+ * A Joomla AI quickstart folder whose mapping file is written also carries its blank site contract
+ * (`blank-site-contract/`, ticket #584), checked against the released contract it names
+ * (`check-blank-site-contract.mjs`).
+ *
  * Run without folders, it also checks the Tracy library (`domain/library/tracy-library.json` of the WO package, ticket
  * #596): blocks Tracy owns, declared in the block store format, by `checkLibraryDeclaration`; and every stylesheet of
  * the library folder for colour literals (`colourLiterals`, the check the block's own tests run), since a library block
@@ -33,6 +37,7 @@ import {
 } from '../../packages/wo/website-opportunities/domain/ai-quickstart-contract.mjs'
 import { checkLibraryDeclaration } from '../../packages/wo/website-opportunities/domain/ai-quickstart-library.mjs'
 import { colourLiterals } from '../../packages/wo/website-opportunities/domain/library-style-check.mjs'
+import { blankSiteContractProblems, needsBlankSiteContract } from './check-blank-site-contract.mjs'
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const LIBRARY_PATH = 'packages/wo/website-opportunities/domain/library/tracy-library.json'
@@ -120,7 +125,10 @@ export function checkAiQuickstartFolder(dir) {
     mappingPending: Boolean(pending),
     draftReport: report?.doc
   })
-  return pending ? { ...res, mappingPending: pending.ticket } : res
+  if (pending) return { ...res, mappingPending: pending.ticket }
+  if (!needsBlankSiteContract(dir, DEFAULT_ROOT)) return res
+  const blank = blankSiteContractProblems(dir, mapping, DEFAULT_ROOT)
+  return blank.length ? { ...res, ok: false, problems: [...res.problems, ...blank] } : res
 }
 
 /** Check the Tracy library declaration, print its line, and return how many problems it has. */
