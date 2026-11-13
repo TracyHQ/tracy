@@ -1,6 +1,6 @@
 // The steps of a step chain run assembled from an approved build draft (#597): the domain steps of the AI quickstart
-// build in the chain's frame (`sites/brief-engines/step-chain.js`), up to the write order. The Write step is not here:
-// it stays the bench chain's (`step-chain-steps.js`) while the real write is redesigned.
+// build in the chain's frame (`sites/brief-engines/step-chain.js`), from the kit to the write order and its write on
+// the blank site (`write` below). A run not built from a draft keeps the bench chain's steps (`step-chain-steps.js`).
 //
 //   kit       the AI quickstart kit of the approved plan's template (`loadAiqKit`), no model
 //   brand     the approved plan's look: the brand step ran before the site (#616), nothing runs again
@@ -13,7 +13,8 @@
 //             a picture whose own texts name a held text is refused (`refusedPicture`)
 //   icons     `selectBuildIcons` over the written copy and the placed frames
 //   order     the alt text hand-off (`step-chain-draft-alt.js`), `buildWriteOrder`, `checkWriteOrder`
-//   write     not built for a draft run yet: `write_not_ready_for_draft` at once (noRerun), nothing written
+//   write     `draftWriteStep`: the write plan (every guard before any door) run on the blank site through the doors
+//             `deps.draftWrite` injects; with none, `write_not_ready_for_draft` at once (noRerun), nothing written
 //
 // 🔒 ONE MODEL DOOR. Every model call (the writer, the labelling, the icon keywords and ranking) is made through the
 // build model door (`buildModel`, `lib/llm-catalog.js`), resolved once per step by the injected resolver; no step names
@@ -26,6 +27,7 @@ import { buildWriteOrder } from 'website-opportunities/domain/write-order.mjs'
 import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.mjs'
 import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
 import { refusedPicture, visionThrough, withDraftPictures } from './step-chain-draft-pictures.js'
+import { draftWriteStep } from './step-chain-draft-write-step.js'
 import { draftError, draftSource } from './step-chain-draft-source.js'
 
 /** The build model door's id in `LLM_DOORS`, the only door an assembled run spends. */
@@ -36,7 +38,8 @@ const list = (value) => (Array.isArray(value) ? value : [])
 
 /**
  * @param {{readEngineDraft?: Function, draftPlanForBuild?: Function, loadAiqKit?: (slug: string) => object | null,
- *   buildModel?: () => Promise<Function>, openDraftPicture?: Function, iconLibrary?: () => object}} deps
+ *   buildModel?: () => Promise<Function>, openDraftPicture?: Function, iconLibrary?: () => object,
+ *   draftWrite?: object}} deps `draftWrite`: the site doors of the write step (`step-chain-draft-write-step.js`)
  *   `buildModel`: the build model door's resolver (`build-draft/build-model.js` `buildModelDoor`), which throws
  *   `model_missing` when the door has no provider
  */
@@ -205,12 +208,9 @@ export function createDraftSteps(deps) {
       return { value: { order, recorded }, usd: 0 }
     },
 
-    /** The write of a draft run: not built yet, so it stops at once and writes nothing. */
-    async write() {
-      throw draftError(
-        'write_not_ready_for_draft',
-        'a run built from a draft ends with its write order: the write step for it is not built yet'
-      )
+    /** The write of a draft run: through the injected site doors, or a typed stop when none are wired. */
+    async write(ctx, inputs) {
+      return draftWriteStep(deps.draftWrite, ctx, inputs)
     }
   }
 }

@@ -444,8 +444,9 @@ export function createStepChainSteps(deps) {
     pictures: either('pictures'),
     icons: (ctx, ...rest) => draft.icons(ctx, ...rest),
     order: (ctx, ...rest) => draft.order(ctx, ...rest),
-    // The write of a draft run is not built yet: it stops at once, typed, writing nothing (one attempt, `noRerun`).
-    write: (ctx, ...rest) => (isDraftRun(ctx) ? draft.write(ctx) : bench.write(ctx, ...rest)),
+    // The write of a draft run writes its write order through the injected site doors (`draftWrite`); with none it
+    // stops at once, typed, writing nothing (one attempt, `noRerun`). Every other run keeps the bench write.
+    write: (ctx, ...rest) => (isDraftRun(ctx) ? draft.write(ctx, ...rest) : bench.write(ctx, ...rest)),
     async dispose(prepared) {
       draft.forget(prepared?.runId)
       return bench.dispose(prepared)
