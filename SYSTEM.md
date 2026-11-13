@@ -877,9 +877,12 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   with a fault; the composed plan and its step's done state are one write (`putComposed` with the runner). A failed
   step runs once more with the same inputs, never after a `noRerun` failure; the second failure records `fault` and the
   owner reads one sentence. Research needs an injected gatherer (none on the server yet: a website opportunity's research
-  runs only on its own rows); compose takes the brand record of #616's brand step before the site
-  ([`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`), which runs on a
-  research revision, so a draft without one stops with `brand_input_missing` and never shows the template's look.
+  runs only on its own rows). The brand step before the site (#616,
+  [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
+  `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and
+  its look record is kept in `build_draft.brand` (migration 217) for that template; compose only reads it, and new
+  research clears it. It runs on a research revision, so a draft without one stops with `brand_input_missing` and
+  never shows the template's look.
   The engine's own model calls (needs profile, plan composer) spend the `buildModel` door (Model & AI); the brand step
   spends the brand bench's doors.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's

@@ -88,5 +88,8 @@ export function engineStateOf(row) {
       result: { profile: profileSummaryOf(profile), questions, ...(ask ? { ask } : {}) }
     }
   }
-  return { step, state, result: { plan: row.plan, brand: 'own' } }
+  // The brand step only prepares the look record the plan is composed from: nothing of it is answered but that it is there.
+  if (step === 'brand') return { step, state, result: { look: 'ready' } }
+  const lookSources = row.brand?.lookSources
+  return { step, state, result: { plan: row.plan, brand: 'own', ...(lookSources ? { lookSources } : {}) } }
 }

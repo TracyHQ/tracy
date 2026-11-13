@@ -376,6 +376,11 @@ ${JSON.stringify(answer)}`;
       if (!result.profile) return stopped();
       return { profile: result.profile, ...result.ask ? { ask: result.ask } : {} };
     }
+    if (state?.step === "brand")
+      return {
+        look: "ready",
+        next: "The business look is ready. Call tracy_build with action plan again now, with the same request."
+      };
     if (state?.step === "compose" || state?.step === "edit") {
       if (result.brand !== "own" || !result.plan) return stopped(state.say);
       const review = planReviewRequestOf(result.plan);

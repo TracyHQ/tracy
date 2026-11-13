@@ -46,7 +46,11 @@ export interface AskRequest {
 }
 
 /** The engine steps a door can run. */
-export type EngineStep = 'research' | 'compose' | 'edit'
+/**
+ * `brand` is the pre-site brand step (#616): it runs once research and a template are in the draft (choosing the
+ * template starts it), and `POST /compose` starts it instead of composing when the draft has no look record yet.
+ */
+export type EngineStep = 'research' | 'brand' | 'compose' | 'edit'
 
 /** What research found, small: the business's name and how many facts and services it holds. */
 export interface ProfileSummary {
@@ -69,6 +73,8 @@ export interface PlanResult {
   plan: any
   /** `own` when the plan carries the business's own colour and logo; `unavailable` is a stop, never a stand-in. */
   brand: 'own' | 'unavailable'
+  /** Where the plan's accent and logo came from, as the plan composer answered them (#616). */
+  lookSources?: { accent?: { from: string; name: string }; logo?: { from: string; name: string } }
 }
 
 /**
@@ -80,6 +86,7 @@ export type EngineState =
   | { step: null; state: 'idle' }
   | { step: EngineStep; state: 'running' }
   | { step: 'research'; state: 'done'; result: ResearchResult }
+  | { step: 'brand'; state: 'done'; result: { look: 'ready' } }
   | { step: 'compose' | 'edit'; state: 'done'; result: PlanResult }
   | { step: EngineStep; state: 'stopped'; say: string; reason?: 'brand-unavailable' | string }
 

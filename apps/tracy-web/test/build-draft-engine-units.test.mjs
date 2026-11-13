@@ -12,6 +12,7 @@ import { STEP_ATTEMPTS, faultOf, runWithRerun } from '../src/build-draft/engine-
 import { readEngineRequest } from '../src/build-draft/engine-request.js'
 import { MAX_QUESTIONS_AT_ONCE, SAY, askOf, engineStateOf } from '../src/build-draft/engine-state.js'
 import { researchStep } from '../src/build-draft/engine-steps.js'
+import { brandFor, stoppedOf } from '../src/build-draft/engine.js'
 import { KIT_ROOT, gatheredBrief, kits, needsReading } from './build-draft-engine-fixtures.mjs'
 
 after(() => rmSync(KIT_ROOT, { recursive: true, force: true }))
@@ -103,6 +104,39 @@ test('a stopped step says one plain sentence and nothing else; every sentence ha
   )
   for (const say of Object.values(SAY)) assert.doesNotMatch(say, DASHES)
   assert.deepEqual(engineStateOf(null), { step: null, state: 'idle' })
+})
+
+test('a failure of the business look stops with the brand sentence; the gate look codes count, others do not', () => {
+  const brand = { state: 'stopped', say: SAY.brand, reason: 'brand-unavailable' }
+  for (const code of [
+    'brand_missing',
+    'brand_step_failed',
+    'brand_file_unreadable',
+    'brand_accent_unsettled'
+  ])
+    assert.deepEqual(stoppedOf({ code }), brand, code)
+  for (const look of ['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
+    assert.deepEqual(
+      stoppedOf({ code: 'plan_gate_failed', problems: [{ code: 'x' }, { code: look }] }),
+      brand,
+      look
+    )
+  assert.deepEqual(stoppedOf({ code: 'plan_gate_failed', problems: [{ code: 'items_order' }] }), {
+    state: 'stopped',
+    say: SAY.fault
+  })
+  assert.equal(stoppedOf({ code: 'research_empty' }).say, SAY.research)
+  // The stored record serves only the template it ran on.
+  const row = {
+    brand: { record: { schema: 'tracy-brand-look/v1' }, template: { slug: 'ja-a', version: '1.0.0' } }
+  }
+  assert.equal(brandFor(row, { slug: 'ja-a', version: '1.0.0' }), row.brand.record)
+  assert.equal(brandFor(row, { slug: 'ja-a', version: '1.0.1' }), null)
+  assert.deepEqual(
+    engineStateOf({ engine: { step: 'brand', state: 'done' }, brand: row.brand }),
+    { step: 'brand', state: 'done', result: { look: 'ready' } },
+    'the brand step answers nothing of the record'
+  )
 })
 
 test('the rerun rule: once more with the same inputs, never after noRerun, a fault after the second failure', async () => {

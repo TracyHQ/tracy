@@ -1176,18 +1176,16 @@ export function buildApp(deps) {
     // The Getting started screen's account flag (`onboarding/route.js`), before the dsh catch-all.
     app.route('/', onboardingRoutes({ config: deps.config, pool: deps.pool, now: deps.now }))
     app.route('/', seenHintRoutes({ config: deps.config, pool: deps.pool }))
-    // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists.
     const kits = deps.aiQuickstarts ?? aiQuickstartCatalogue()
     const buildSessionIdOf = (email) => buildSessionIdFor(email, deps.config.sessionSecret)
-    app.route(
-      '/',
-      buildDraftRoutes({ config: deps.config, pool: deps.pool, ensureAccount, kits, buildSessionIdOf })
-    )
+    // The pre site build draft (`build-draft/route.js`, #603): answers, template and plan before a site exists; choosing a
+    // template starts the brand step of the engine below.
     // The build chat's engine doors (`build-draft/engine-route.js`, #609): research, templates, compose and edit before
     // a site exists, for the dsh tool `tracy_build`. `buildEngine` holds the injected steps: the research gatherer
     // (none yet: a website opportunity's research runs only on its own rows), the pre site brand step (#616, its own
     // step chain steps, made on first use) and the build model door.
     const buildEngine = deps.buildEngine ?? {}
+    const buildChatOn = buildEngine.buildChatOn ?? (() => uiSwitchOn(deps.pool, BUILD_CHAT_SWITCH))
     const brandSteps = () =>
       createStepChainSteps({
         pool: deps.pool,
@@ -1211,6 +1209,19 @@ export function buildApp(deps) {
     })
     app.route(
       '/',
+      buildDraftRoutes({
+        config: deps.config,
+        pool: deps.pool,
+        ensureAccount,
+        kits,
+        buildSessionIdOf,
+        // Only while the build chat is on: the brand step spends the brand bench's model doors.
+        templateChosen: async (accountId) =>
+          (await buildChatOn()) ? app.buildDraftEngine.brandIfDue(accountId) : null
+      })
+    )
+    app.route(
+      '/',
       buildEngineRoutes({
         config: deps.config,
         pool: deps.pool,
@@ -1218,7 +1229,7 @@ export function buildApp(deps) {
         kits,
         engine: app.buildDraftEngine,
         buildSessionIdOf,
-        buildChatOn: buildEngine.buildChatOn ?? (() => uiSwitchOn(deps.pool, BUILD_CHAT_SWITCH))
+        buildChatOn
       })
     )
     // The first-run Welcome popup's animated scenes (`welcome/route.js`), before the dsh catch-all.

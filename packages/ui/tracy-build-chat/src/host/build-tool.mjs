@@ -67,6 +67,7 @@ const DOOR = '/api/build-draft'
 /**
  * The 409 codes of the engine doors that name a step the build has not taken yet (`engine-route.js` of tracy-web):
  * what is missing and the one action that takes it. Never a stale plan, so never "retry".
+ * @type {Readonly<Record<string, {missing: string, next: string}>>}
  */
 const MISSING_STEPS = Object.freeze({
   NO_DRAFT: {
@@ -325,6 +326,12 @@ export function createBuildTool({
       if (!result.profile) return stopped()
       return { profile: result.profile, ...(result.ask ? { ask: result.ask } : {}) }
     }
+    // The brand step (#616) prepares the business's own look the plan is composed from; the plan is asked for again.
+    if (state?.step === 'brand')
+      return {
+        look: 'ready',
+        next: 'The business look is ready. Call tracy_build with action plan again now, with the same request.'
+      }
     if (state?.step === 'compose' || state?.step === 'edit') {
       // 13/11/2026: a plan is never composed with the template's colour or logo standing in for the business's own.
       if (result.brand !== 'own' || !result.plan) return stopped(state.say)

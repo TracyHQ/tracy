@@ -41,8 +41,17 @@ const REFUSALS = {
  * @param {{loadKit: (slug: string) => object | null}} deps.kits - the AI quickstart catalogue (`ai-quickstarts.js`)
  *   the edit gate reads the plan's kit from
  * @param {(email: string) => Promise<string>} deps.buildSessionIdOf - the person's build session id (`workspace/`)
+ * @param {(accountId: string) => Promise<unknown>} [deps.templateChosen] - called after a template is chosen: the
+ *   build chat's engine starts the brand step there once the draft has research (`engine.js brandIfDue`)
  */
-export function buildDraftRoutes({ config, pool, ensureAccount, kits, buildSessionIdOf }) {
+export function buildDraftRoutes({
+  config,
+  pool,
+  ensureAccount,
+  kits,
+  buildSessionIdOf,
+  templateChosen = async () => {}
+}) {
   const app = new Hono()
   const answer = (c, result, okStatus = 200) => {
     if (!result.error) return json(c, { draft: result.draft }, okStatus)
@@ -92,7 +101,15 @@ export function buildDraftRoutes({ config, pool, ensureAccount, kits, buildSessi
   )
   app.put(
     `${BASE}/template`,
-    write('template', (id, body) => chooseTemplate(pool, id, body.template))
+    write('template', async (id, body) => {
+      const chosen = await chooseTemplate(pool, id, body.template)
+      // The brand step runs in the background; a failure of it is its own engine state, never this door's answer.
+      if (!chosen.error)
+        await templateChosen(id).catch((error) =>
+          console.error('[build-draft] brand step not started:', error)
+        )
+      return chosen
+    })
   )
   app.post(
     `${BASE}/plan-edits`,

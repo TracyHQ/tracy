@@ -73,19 +73,36 @@ function server(buildEngine = {}) {
 
 const row = async (s) =>
   (await db.pool.query('select * from build_draft where account_id = $1', [await s.accountId()])).rows[0]
-/** A draft researched as the invented club (its stored needs profile) with the club's template chosen. */
-async function researchedClub(_server) {
+/** The invented club's research record, as the research step stores it. */
+const clubResearch = () => ({
+  links: ['https://brindlewick-tennis.example/'],
+  trade: 'fitness',
+  profile: club.clubProfile()
+})
+/**
+ * A draft researched as the invented club (its stored needs profile) with the club's template chosen; with `brand`,
+ * the brand step's record for that template is stored too.
+ */
+async function researchedClub(_server, { brand } = {}) {
   const { id } = await ensureAccount(db.pool, OWNER)
   await createDraft(db.pool, id)
   const { accent: _accent, ...template } = club.template()
   await changeDraft(db.pool, id, () => ({
-    research: {
-      links: ['https://brindlewick-tennis.example/'],
-      trade: 'fitness',
-      profile: club.clubProfile()
-    },
-    template
+    research: clubResearch(),
+    template,
+    ...(brand
+      ? { brand: { record: brand, template: { slug: template.slug, version: template.version } } }
+      : {})
   }))
+}
+/**
+ * Ask for the plan as the tool does: a draft without a look record for its template runs the brand step first, and
+ * the plan is asked for again once it is done.
+ */
+async function askPlan(s, body = {}) {
+  const first = await s.run('POST', '/compose', body)
+  if (first.ended.body.step !== 'brand' || first.ended.body.state !== 'done') return first
+  return s.run('POST', '/compose', body)
 }
 const research = (gather, model) => ({
   gather,
@@ -213,8 +230,8 @@ test(
     // The server's own brand step: the draft research holds no research revision for it.
     const s = server({ buildModel: async () => model, buildChatOn: async () => true })
     await researchedClub(s)
-    const { started, ended } = await s.run('POST', '/compose', {})
-    assert.equal(started.body.state, 'running')
+    const { started, ended } = await askPlan(s)
+    assert.deepEqual(started.body, { step: 'brand', state: 'running' }, 'compose starts the brand step first')
     assert.equal(ended.body.state, 'stopped')
     assert.equal(ended.body.reason, 'brand-unavailable')
     assert.equal(model.calls.length, 0)
@@ -229,7 +246,9 @@ test(
       [async () => recordOf(brands.saltmarshKayaks()), 'brand_accent_unsettled']
     ]) {
       const t = server({ buildModel: async () => model, brandStep, buildChatOn: async () => true })
-      assert.equal((await t.run('POST', '/compose', {})).ended.body.reason, 'brand-unavailable', code)
+      // A brand step that stopped for this template answers again as stopped: the next case starts afresh.
+      await changeDraft(db.pool, await t.accountId(), () => ({ engine: null, brand: null }))
+      assert.equal((await askPlan(t)).ended.body.reason, 'brand-unavailable', code)
       assert.equal((await row(t)).fault.code, code)
       assert.equal((await row(t)).plan, null)
     }
@@ -248,7 +267,7 @@ test(
       buildChatOn: async () => true
     })
     await researchedClub(s)
-    const { ended } = await s.run('POST', '/compose', {})
+    const { ended } = await askPlan(s)
     assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
     const { plan } = ended.body.result
     assert.equal(plan.look.logo.kind, 'text', 'the temporary logo is a text logo on the plan')
@@ -260,14 +279,47 @@ test('compose with the own brand puts a gated plan with the business colour in t
   const model = club.scriptedModel(JSON.stringify(club.goodComposition()))
   const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
   await researchedClub(s)
-  const { ended } = await s.run('POST', '/compose', {})
+  const { ended } = await askPlan(s)
   assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
   assert.equal(ended.body.result.brand, 'own')
   const { plan } = ended.body.result
   assert.equal(plan.look.accent, '#1f7a4d', 'the business colour, not the template accent #225588')
   assert.deepEqual((await row(s)).plan, plan)
   assert.equal(model.calls.length, 1)
+  // Where the accent and the logo came from, as the composer answered them, kept and answered untouched.
+  assert.equal(typeof ended.body.result.lookSources?.accent?.from, 'string')
+  assert.deepEqual((await row(s)).brand.lookSources, ended.body.result.lookSources)
 })
+
+test(
+  'choosing a template after research runs the brand step early and keeps its record; compose only reads it',
+  opts,
+  async () => {
+    const model = club.scriptedModel(JSON.stringify(club.goodComposition()))
+    const seen = []
+    const brandStep = async (input) => (seen.push(input), club.brand())
+    const s = server({ buildModel: async () => model, brandStep, buildChatOn: async () => true })
+    const { id } = await ensureAccount(db.pool, OWNER)
+    await createDraft(db.pool, id)
+    await changeDraft(db.pool, id, () => ({ research: clubResearch() }))
+    const { accent: _accent, ...template } = club.template()
+    const chosen = await s.call('PUT', '/template', { template })
+    assert.equal(chosen.status, 200, JSON.stringify(chosen.body))
+    await s.engine.settled(id)
+    const read = await s.call('GET', '/engine')
+    assert.deepEqual(read.body, { step: 'brand', state: 'done', result: { look: 'ready' } })
+    assert.deepEqual((await row(s)).brand.record, club.brand())
+    assert.equal(model.calls.length, 0, 'the brand step spends none of the build model')
+    // Compose reads the stored record: one run, no brand step again.
+    const { ended } = await s.run('POST', '/compose', {})
+    assert.equal(ended.body.state, 'done', JSON.stringify(ended.body))
+    assert.equal(seen.length, 1)
+    // No record (new research writes none): the next compose runs the brand step again.
+    await changeDraft(db.pool, id, () => ({ brand: null }))
+    assert.equal((await s.run('POST', '/compose', {})).ended.body.step, 'brand')
+    assert.equal(seen.length, 2)
+  }
+)
 
 test(
   'a failure is run once more with the same inputs; a second failure stops and is recorded',
@@ -281,14 +333,14 @@ test(
     const once = club.scriptedModel(boom, JSON.stringify(club.goodComposition()))
     const s = server({ buildModel: async () => once, brandStep, buildChatOn: async () => true })
     await researchedClub(s)
-    assert.equal((await s.run('POST', '/compose', {})).ended.body.state, 'done')
+    assert.equal((await askPlan(s)).ended.body.state, 'done')
     assert.equal(seen.length, 1, 'the brand step runs once: it keeps its own attempts')
     assert.equal(once.calls.length, 2)
     assert.deepEqual(once.calls[0], once.calls[1], 'the rerun read exactly the inputs of the first run')
 
     const twice = club.scriptedModel(boom, boom)
     const t = server({ buildModel: async () => twice, brandStep: ownBrand, buildChatOn: async () => true })
-    const { ended } = await t.run('POST', '/compose', {})
+    const { ended } = await askPlan(t)
     assert.equal(ended.body.state, 'stopped')
     assert.equal(ended.body.reason, undefined)
     assert.deepEqual([(await row(t)).fault.code, (await row(t)).fault.attempts], ['step_failed', 2])
@@ -299,7 +351,7 @@ test('a failure that says noRerun is never run again; a missing model stops at o
   const unreadable = club.scriptedModel('not json', 'still not json')
   const s = server({ buildModel: async () => unreadable, brandStep: ownBrand, buildChatOn: async () => true })
   await researchedClub(s)
-  const { ended } = await s.run('POST', '/compose', {})
+  const { ended } = await askPlan(s)
   assert.equal(ended.body.state, 'stopped')
   assert.equal(unreadable.calls.length, 2, 'the composer own two attempts, no third')
   assert.deepEqual([(await row(s)).fault.code, (await row(s)).fault.attempts], ['plan_gate_failed', 1])
@@ -311,7 +363,7 @@ test('a failure that says noRerun is never run again; a missing model stops at o
     brandStep: ownBrand,
     buildChatOn: async () => true
   })
-  const stopped = (await missing.run('POST', '/compose', {})).ended.body
+  const stopped = (await askPlan(missing)).ended.body
   assert.equal(stopped.state, 'stopped')
   assert.equal(stopped.ask, undefined, 'a system fault is never a question')
   assert.equal((await row(missing)).fault.code, 'model_missing')
@@ -327,7 +379,7 @@ test(
       buildChatOn: async () => true
     })
     await researchedClub(s)
-    const composed = (await s.run('POST', '/compose', {})).ended.body.result.plan
+    const composed = (await askPlan(s)).ended.body.result.plan
     const item = composed.items[0].id
     const edited = await s.call('POST', '/edit', {
       changes: [{ field: `items[${item}].label`, value: 'Courts and coaching' }]
@@ -351,7 +403,7 @@ test('a step left running by a process that ended reads as stopped, with a fault
     brandStep: ownBrand,
     buildChatOn: async () => true
   })
-  await researchedClub(s)
+  await researchedClub(s, { brand: club.brand() })
   assert.equal((await s.call('POST', '/compose', {})).body.state, 'running')
   assert.equal((await s.call('GET', '/engine')).body.state, 'running', 'the same process still runs it')
   const restarted = server({ buildChatOn: async () => true })

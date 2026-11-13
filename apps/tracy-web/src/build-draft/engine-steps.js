@@ -61,8 +61,8 @@ export async function researchStep({ links, description }, { gather, model, kit 
 }
 
 /**
- * The business's brand record for the chosen template, from the pre site brand step. It runs once per compose, before
- * the composer: the brand step keeps its own attempts (`brand-before-site.js`), so the compose rerun never runs it again.
+ * The business's look record for the chosen template, from the pre site brand step (#616). It runs as the engine's own
+ * `brand` step, once research and a template are in the draft; the step keeps its own attempts, so nothing reruns it.
  * @returns {Promise<object | null>} the look record, or null when the step has none
  */
 export async function brandOf({ research, template }, { brandStep, kit }) {

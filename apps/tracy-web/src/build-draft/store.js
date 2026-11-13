@@ -25,7 +25,8 @@ const COLUMNS = [
   'research',
   'fault',
   'undo_profile',
-  'engine'
+  'engine',
+  'brand'
 ]
 
 /** The account's draft as the doors answer it, or null when it has none. */
@@ -127,11 +128,12 @@ export function chooseTemplate(pool, accountId, sent) {
  * so no revision ever names two plans; the undo and the last edit belong to the plan they edited and are cleared.
  * The only plan writer besides the gated edits: no door calls it with a body a browser sent.
  * @param {{plan: object, profile: object}} composed what `composePlan` answered
- * @param {{research?: object, runner?: string}} [extra] `runner`: the engine runner whose running compose step this
- *   ends (`engine.js`): the plan and the step's done state are one write, so a restart can never leave a stored plan
- *   beside a step that reads as stopped; a step no longer that runner's (`NOT_RUNNING`) writes nothing
+ * @param {{research?: object, runner?: string, lookSources?: object}} [extra] `runner`: the engine runner whose running
+ *   compose step this ends (`engine.js`): the plan and the step's done state are one write, so a restart can never leave
+ *   a stored plan beside a step that reads as stopped; a step no longer that runner's (`NOT_RUNNING`) writes nothing.
+ *   `lookSources`: where the plan's accent and logo came from, as `composePlan` answered them, kept with the brand record
  */
-export function putComposed(pool, accountId, { plan, profile } = {}, { research, runner } = {}) {
+export function putComposed(pool, accountId, { plan, profile } = {}, { research, runner, lookSources } = {}) {
   const problems = planProblem(plan)
   if (problems) return { error: 'INVALID_PLAN', problems }
   if (!profile || typeof profile !== 'object' || Array.isArray(profile))
@@ -154,7 +156,8 @@ export function putComposed(pool, accountId, { plan, profile } = {}, { research,
       last_edit: null,
       undo_edit: null,
       undo_profile: null,
-      ...(research === undefined ? {} : { research })
+      ...(research === undefined ? {} : { research }),
+      ...(lookSources === undefined ? {} : { brand: { ...row.brand, lookSources } })
     }
   })
 }

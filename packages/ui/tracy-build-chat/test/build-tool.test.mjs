@@ -281,6 +281,35 @@ test('brand unavailable yields stopped: the plan is never composed with the temp
   }
 })
 
+test('plan waits on the brand step it started, then says to ask for the plan again', async () => {
+  const web = fakeWeb({
+    'POST /api/build-draft/compose': { body: { step: 'brand', state: 'running' } },
+    'GET /api/build-draft/engine': [
+      { body: { step: 'brand', state: 'running' } },
+      { body: { step: 'brand', state: 'done', result: { look: 'ready' } } }
+    ]
+  })
+  const answered = await run(toolWith(web), { action: 'plan' })
+  assert.equal(answered.look, 'ready')
+  assert.match(answered.next, /action plan again/)
+  assert.equal(answered.stopped, undefined)
+  // A brand step that stopped is a stop with its sentence, never a plan with the template look.
+  const stoppedWeb = fakeWeb({
+    'POST /api/build-draft/compose': {
+      body: {
+        step: 'brand',
+        state: 'stopped',
+        say: 'We could not read your brand yet.',
+        reason: 'brand-unavailable'
+      }
+    }
+  })
+  assert.deepEqual(await run(toolWith(stoppedWeb), { action: 'plan' }), {
+    stopped: true,
+    say: 'We could not read your brand yet.'
+  })
+})
+
 test('templates come back as the card options; edit forwards changes and returns the review', async () => {
   const option = {
     slug: 'ja-sport',
