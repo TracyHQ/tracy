@@ -2,7 +2,7 @@
  * The blank site of an AI quickstart (ADR 0045, ticket #582): the template with its design intact, no pages, an empty
  * menu, every demo block unassigned and kept in the block store, no account or secret of the source site.
  *
- * These tests read the demo data of an invented quickstart (`fixtures/blank-site/custom.sql`) the way the installer
+ * These tests read the demo data of an invented quickstart (`fixtures/blank-site/custom.sql.txt`) the way the installer
  * would import it, and check what a site built from the result would hold.
  */
 
@@ -13,7 +13,7 @@ import { test } from 'node:test'
 import { BLANK_SITE_STEPS, checkBlankSite, produceBlankSite } from '../scripts/blank-site.mjs'
 import { parseDump, records } from '../scripts/joomla-sql-dump.mjs'
 
-const FIXTURE = readFileSync(new URL('./fixtures/blank-site/custom.sql', import.meta.url), 'utf8')
+const FIXTURE = readFileSync(new URL('./fixtures/blank-site/custom.sql.txt', import.meta.url), 'utf8')
 const blank = () => {
   const { sql, report } = produceBlankSite(FIXTURE)
   return { sql, report, dump: parseDump(sql) }

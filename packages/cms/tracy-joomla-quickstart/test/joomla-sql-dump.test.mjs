@@ -18,7 +18,7 @@ import {
   updates
 } from '../scripts/joomla-sql-dump.mjs'
 
-const FIXTURE = readFileSync(new URL('./fixtures/blank-site/custom.sql', import.meta.url), 'utf8')
+const FIXTURE = readFileSync(new URL('./fixtures/blank-site/custom.sql.txt', import.meta.url), 'utf8')
 
 test('a dump nobody changed is written back byte for byte', () => {
   assert.equal(serializeDump(parseDump(FIXTURE)), FIXTURE)

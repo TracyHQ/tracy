@@ -16,7 +16,7 @@ import {
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const COMMAND = path.join(ROOT, 'scripts/ai-quickstart/blank-site.mjs')
 const DEMO_DATA = readFileSync(
-  path.join(ROOT, 'packages/cms/tracy-joomla-quickstart/test/fixtures/blank-site/custom.sql'),
+  path.join(ROOT, 'packages/cms/tracy-joomla-quickstart/test/fixtures/blank-site/custom.sql.txt'),
   'utf8'
 )
 
