@@ -36,18 +36,42 @@ function applySameBox(blocks, sameBoxAs, out) {
   }
 }
 
-/** The place of a field's slot within its record: `article-14.7` -> `.7`, so pages of one layout line up. */
-const placeOf = (field) => String(field.slot ?? field.slots?.[0] ?? '').replace(/^[^.]+/, '')
+/**
+ * The place of a field within its record, so pages of one layout line up: where the content map stores it (column,
+ * JSON path, XPath), since two articles of one layout number their slots differently when one stores a row more
+ * (`article-2.13` is a schedule row where `article-16.13` is a heading). The slot number stands in only for a slot the
+ * content map does not describe.
+ */
+function placeOf(field, mapSlots) {
+  const key = String(field.slot ?? field.slots?.[0] ?? '')
+  const slot = mapSlots?.get(key)
+  if (slot && (slot.column || slot.jsonPath || slot.xpath))
+    return JSON.stringify([slot.column ?? '', slot.jsonPath ?? [], slot.xpath ?? ''])
+  return key.replace(/^[^.]+/, '')
+}
+
+/** The report lists a merged page fills: what that page leaves open is open for the store block too. */
+const MERGED_REPORT_KEYS = ['unmeasured', 'derived', 'unlisted', 'notInMap', 'omitted', 'problems']
+
+/** Adds a merged page's open entries to the report, once per block and slot, naming the page (`on`). */
+function mergeReport(out, scratch, memberId) {
+  for (const key of MERGED_REPORT_KEYS)
+    for (const entry of scratch[key] ?? []) {
+      const same = (e) => e.block === entry.block && (e.slot ?? e.problem) === (entry.slot ?? entry.problem)
+      if (key === 'unmeasured' || out[key].some(same)) continue
+      out[key].push({ ...entry, on: memberId })
+    }
+}
 
 /**
  * Several kit blocks of one layout (the bodies of pages of one type) are one store block. A text field takes the
  * least limit measured on any of those pages, so copy fits every page of the type.
  */
-export function mergeLimits(store, member, memberId) {
+export function mergeLimits(store, member, memberId, mapSlots) {
   for (const key of ['fields', 'itemFields']) {
-    const byPlace = new Map((member[key] ?? []).map((f) => [placeOf(f), f]))
+    const byPlace = new Map((member[key] ?? []).map((f) => [placeOf(f, mapSlots), f]))
     for (const field of store[key] ?? []) {
-      const other = byPlace.get(placeOf(field))
+      const other = byPlace.get(placeOf(field, mapSlots))
       if (field.type !== 'text' || !Number.isInteger(other?.limit)) continue
       if (!Number.isInteger(field.limit) || other.limit < field.limit)
         Object.assign(field, { limit: other.limit, limitFrom: `${other.limitFrom} (on ${memberId})` })
@@ -108,7 +132,8 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
     const existing = blocks.find((b) => b.id === id)
     if (existing) {
       const scratch = { ...emptyReport(), nested: [] }
-      mergeLimits(existing, draftOne(kb, id, decision, ctx, scratch), kb.id)
+      mergeLimits(existing, draftOne(kb, id, decision, ctx, scratch), kb.id, mapSlots)
+      mergeReport(out, scratch, kb.id)
       existing.from.kit.push(kb.id)
       storeIdOf[kb.id] = id
       continue

@@ -362,3 +362,109 @@ test('a text drawn in the same box as a measured one takes its limit and says wh
   assert.match(name.limitFrom, /^the same box as module-20.0: kit frame/)
   assert.ok(!res.unmeasured.some((u) => u.slot === 'module-20.3'))
 })
+
+/** Two invented page bodies of one layout whose records number their stored values differently. */
+function mergedBodies() {
+  const map = {
+    slots: [
+      {
+        key: 'article-1.1',
+        entity: 'article-1',
+        type: 'text',
+        role: 'editorial.heading',
+        column: 'attribs',
+        jsonPath: ['intro-title']
+      },
+      {
+        key: 'article-1.2',
+        entity: 'article-1',
+        type: 'text',
+        role: 'editorial.paragraph',
+        column: 'attribs',
+        jsonPath: ['outro']
+      },
+      {
+        key: 'article-2.1',
+        entity: 'article-2',
+        type: 'text',
+        role: 'editorial.paragraph',
+        column: 'attribs',
+        jsonPath: ['extra']
+      },
+      {
+        key: 'article-2.2',
+        entity: 'article-2',
+        type: 'text',
+        role: 'editorial.heading',
+        column: 'attribs',
+        jsonPath: ['intro-title']
+      },
+      {
+        key: 'article-2.3',
+        entity: 'article-2',
+        type: 'text',
+        role: 'editorial.paragraph',
+        column: 'attribs',
+        jsonPath: ['outro']
+      },
+      {
+        key: 'article-2.4',
+        entity: 'article-2',
+        type: 'text',
+        role: 'editorial.paragraph',
+        column: 'attribs',
+        jsonPath: ['legacy-note']
+      }
+    ]
+  }
+  const body = (id, entity, slots) => ({
+    id,
+    role: 'page-body',
+    source: { entity },
+    slots,
+    lists: [],
+    frames: []
+  })
+  const kit = {
+    blocks: [
+      body('body-one', 'article-1', [
+        text('article-1.1', 'editorial.heading', 40, KIT_390(40)),
+        text('article-1.2', 'editorial.paragraph', 200, KIT_390(200))
+      ]),
+      body('body-two', 'article-2', [
+        text('article-2.2', 'editorial.heading', 25, KIT_390(25)),
+        text('article-2.3', 'editorial.paragraph', 150, KIT_390(150)),
+        text('languageString-9.0', 'editorial.button_label', 20, KIT_390(20)),
+        text('article-2.9', 'editorial.paragraph', 20, KIT_390(20))
+      ])
+    ]
+  }
+  map.slots.push({
+    key: 'languageString-9.0',
+    entity: 'languageString-9',
+    type: 'text',
+    role: 'editorial.button_label'
+  })
+  return draftBlocks({
+    kit,
+    contentMap: map,
+    decisions: { groups: [{ match: '^body-', id: 'post-body', type: 'posts' }] }
+  })
+}
+
+test('merged pages of one layout line their fields up by stored place, not by the number of the slot', () => {
+  const res = mergedBodies()
+  const [block] = res.blocks
+  assert.equal(block.fields.find((f) => f.slot === 'article-1.1').limit, 25)
+  assert.equal(block.fields.find((f) => f.slot === 'article-1.2').limit, 150)
+})
+
+test('the report keeps what a merged page left open: its unlisted, derived and not mapped values', () => {
+  const res = mergedBodies()
+  assert.ok(
+    res.unlisted.some((u) => u.block === 'post-body' && u.slot === 'article-2.4' && u.on === 'body-two'),
+    JSON.stringify(res.unlisted)
+  )
+  assert.ok(res.derived.some((d) => d.block === 'post-body' && d.slot === 'languageString-9.0'))
+  assert.ok(res.notInMap.some((n) => n.block === 'post-body' && n.slot === 'article-2.9'))
+})
