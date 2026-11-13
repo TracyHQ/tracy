@@ -7,7 +7,8 @@
  * its values as a choice, the website's first. The plan carries no written copy, and neither does the card.
  *
  * `planEditOf` turns a change into the structured plan edit (`tracy-build-plan-edit/v1`) the chat sends; the card then
- * follows the plan tracy-web answers with. `planReviewRequestOf` is the one request dsh's plan review bar
+ * follows the plan tracy-web answers with. `planChangeOf` reads an in place editor's text into one change, and
+ * `changedFieldsOf` reads from the draft which values were just changed (#607). `planReviewRequestOf` is the one request dsh's plan review bar
  * (ui-user-questions PlanReviewPanel) draws, and `approvalOf` reads its answer. Pure: no React, no DOM, no dsh import.
  */
 import { BUILD_CHAT_STRINGS } from './conversation.mjs'
@@ -146,6 +147,39 @@ export function planEditOf(plan, changes, id) {
     plan: { id: plan.id, revision: plan.revision },
     changes: changes.map((c) => ({ field: c.field, value: c.value }))
   }
+}
+
+/**
+ * The change an in place editor's text makes to one field, or null when there is nothing to send: an empty or
+ * unchanged text, or a count that is not a whole number of zero or more. A count field holds a number; every other
+ * editable value is text.
+ * @param {string} field - the plan field
+ * @param {string | number} current - the field's value now
+ * @param {string} text - what the owner typed
+ * @returns {{ field: string, value: string | number } | null}
+ */
+export function planChangeOf(field, current, text) {
+  const typed = String(text ?? '').trim()
+  if (typed === '') return null
+  if (typeof current === 'number') {
+    if (!/^\d+$/.test(typed)) return null
+    const value = Number(typed)
+    return value === current ? null : { field, value }
+  }
+  return typed === current ? null : { field, value: typed }
+}
+
+/**
+ * The plan fields the owner just changed, read from the draft rather than from the card's memory, so a card drawn
+ * again from the draft still shows them. They are the draft's last edit while that edit can still be undone and the
+ * plan is the revision it made; after an undo, or once a newer plan arrives from the chat, nothing is highlighted.
+ * @param {{ plan: any, lastEdit?: any, canUndo?: boolean }} draft
+ * @returns {string[]}
+ */
+export function changedFieldsOf({ plan, lastEdit = null, canUndo = false }) {
+  if (!canUndo || !lastEdit?.plan || !plan) return []
+  if (lastEdit.plan.id !== plan.id || lastEdit.plan.revision + 1 !== plan.revision) return []
+  return (lastEdit.changes ?? []).map((c) => c.field)
 }
 
 /**

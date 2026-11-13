@@ -15,6 +15,7 @@ import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { build } from 'esbuild'
+import { buildPlanProblems } from '../../../../wo/website-opportunities/domain/build-contract-plan.mjs'
 import {
   applyPlanEdit,
   checkPlanEdit
@@ -309,9 +310,170 @@ const CHECKS = {
     await answersKept(chat)
     await templateChosen(chat)
     // The card reads the plan with the edits received so far: the tagline changed and changed back.
-    const { section } = await planRead(chat)
+    const { card, section } = await planRead(chat)
     assert.match(await section('Business facts').innerText(), /Tagline\s*Tennis for every age and level/)
     assert.equal(await chat.button('Approve').count(), 0, 'the review bar waits for the plan stage')
+    const view = await chat.page.evaluate(() => window.probe.view)
+    const requests = () => chat.page.evaluate(() => window.probe.get().requests)
+    const at = (field) => card.locator(`[data-field="${field}"]`)
+    const focusedName = () =>
+      chat.page.evaluate(() => document.activeElement?.getAttribute('aria-label') ?? '')
+    const undo = card.getByRole('button', { name: 'Undo last change' })
+
+    // What a Contract B plan edit can change is a button named after its field; nothing else looks editable.
+    const editable = await card
+      .getByRole('button', { name: /^Edit / })
+      .evaluateAll((buttons) => buttons.map((b) => b.closest('[data-field]').dataset.field))
+    assert.deepEqual(editable, [
+      'facts[name].value',
+      'facts[tagline].value',
+      'facts[button].value',
+      'facts[phone].value',
+      'facts[email].value',
+      'facts[address].value',
+      'look.accent',
+      'items[s1].label',
+      'items[s2].label',
+      'items[s3].label',
+      'items[s4].label',
+      'pictures.generated.frames'
+    ])
+    for (const field of ['language', 'look.template', 'look.logo', 'pages[home].blocks[h2].data'])
+      assert.equal(await at(field).locator('button').count(), 0, `${field} is shown, not offered`)
+    assert.equal(await undo.isDisabled(), true, 'nothing to undo yet')
+
+    // Keyboard: Tab reaches the value, Enter opens its editor, Escape puts it back and focus returns.
+    const tagline = card.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' })
+    await card.getByRole('button', { name: /^Edit Business name/ }).focus()
+    await chat.page.keyboard.press('Tab')
+    assert.equal(await focusedName(), 'Edit Tagline: Tennis for every age and level')
+    await chat.page.keyboard.press('Enter')
+    const input = card.getByRole('textbox', { name: 'New value for Tagline' })
+    assert.equal(await input.inputValue(), 'Tennis for every age and level')
+    assert.equal(await focusedName(), 'New value for Tagline', 'the editor takes focus')
+    await input.fill('Something else')
+    await chat.page.keyboard.press('Escape')
+    assert.equal(await input.count(), 0)
+    assert.equal(await focusedName(), 'Edit Tagline: Tennis for every age and level', 'focus is back')
+    assert.deepEqual(await requests(), [], 'a cancelled edit sends nothing')
+
+    // Enter saves: one structured plan edit of the current revision, without a chat message.
+    await chat.page.keyboard.press('Enter')
+    await input.fill('Tennis for every age')
+    await chat.page.keyboard.press('Enter')
+    await chat.page.waitForFunction(() => window.probe.get().requests.length === 1)
+    const [saved] = await requests()
+    assert.deepEqual(saved, {
+      method: 'POST',
+      url: '/api/build-draft/plan-edits',
+      body: {
+        edit: {
+          schema: 'tracy-build-plan-edit/v1',
+          id: 'edit-1',
+          plan: { id: 'plan-sunrise-tennis', revision: 3 },
+          changes: [{ field: 'facts[tagline].value', value: 'Tennis for every age' }]
+        }
+      }
+    })
+    assert.deepEqual(checkPlanEdit(saved.body.edit, view.plan).problems, [])
+    assert.deepEqual(await chat.sent(), [], 'no chat message')
+    // The card follows the returned draft: the new value, highlighted, and one undo on offer.
+    await at('facts[tagline].value').and(chat.page.locator('[data-changed]')).waitFor()
+    assert.match(await at('facts[tagline].value').innerText(), /^Tennis for every age\s*Changed/)
+    assert.equal(
+      (await at('facts[tagline].value').getByRole('button').getAttribute('aria-describedby')) !== null,
+      true
+    )
+    assert.equal(await focusedName(), 'Edit Tagline: Tennis for every age', 'focus is back on the value')
+    assert.equal(await card.locator('[data-changed]').count(), 1, 'only the changed value is highlighted')
+    assert.equal(await undo.isEnabled(), true)
+    // The highlight comes from the draft, so a card drawn again from it shows the same.
+    await chat.page.evaluate(() => window.probe.reload())
+    assert.equal(await card.locator('[data-changed][data-field="facts[tagline].value"]').count(), 1)
+    assert.equal(await undo.isEnabled(), true)
+
+    // One step of undo: the previous value is back, nothing is highlighted, and undo is no longer offered.
+    await undo.click()
+    await chat.page.waitForFunction(() => window.probe.get().requests.length === 2)
+    assert.deepEqual((await requests())[1], { method: 'POST', url: '/api/build-draft/plan-undo', body: {} })
+    await chat.page.waitForFunction(() => !document.querySelector('[data-changed]'))
+    assert.match(
+      await section('Business facts').innerText(),
+      /Tagline\s*Tennis for every age and level\s*Instagram bio/
+    )
+    assert.equal(await undo.isDisabled(), true)
+    assert.equal(await tagline.count(), 1)
+
+    // A renamed service is one change to its item; the Services page and the Services block on Home follow.
+    const beforeRename = await chat.page.evaluate(() => window.probe.get().plan)
+    assert.equal(beforeRename.revision, 5, 'the edit and its undo each raised the revision')
+    await card.getByRole('button', { name: 'Edit Service 2: Junior squad' }).click()
+    await card.getByRole('textbox', { name: 'New value for Service 2' }).fill('Junior academy')
+    await card.getByRole('button', { name: 'Save', exact: true }).click()
+    await chat.page.waitForFunction(() => window.probe.get().requests.length === 3)
+    const rename = (await requests())[2].body.edit
+    assert.deepEqual(rename.changes, [{ field: 'items[s2].label', value: 'Junior academy' }])
+    assert.deepEqual(
+      checkPlanEdit(rename, beforeRename).problems,
+      [],
+      'the rename passes the Contract B check'
+    )
+    await at('items[s2].label').and(chat.page.locator('[data-changed]')).waitFor()
+    assert.match(await section('Services (4)').innerText(), /Service 2\s*Junior academy\s*Changed/)
+    const pages = await section('Pages (5)').innerText()
+    assert.match(
+      pages,
+      /Home[\s\S]*Services\s*Adult coaching, Junior academy, Court hire, Cardio tennis\s*From Services/
+    )
+    assert.match(
+      pages,
+      /Services\s*1 section[\s\S]*Adult coaching, Junior academy, Court hire, Cardio tennis/
+    )
+    assert.doesNotMatch(await card.innerText(), /Junior squad/)
+
+    // A stale or refused save says so and changes nothing.
+    await chat.page.evaluate(() => window.probe.refuseEdits())
+    await card.getByRole('button', { name: 'Edit Phone: 04 000 0000' }).click()
+    await card.getByRole('textbox', { name: 'New value for Phone' }).fill('04 000 0002')
+    await chat.page.keyboard.press('Enter')
+    await card.getByRole('alert').waitFor()
+    assert.match(await card.getByRole('alert').innerText(), /Your change was not saved\. Try again\./)
+    assert.match(await section('Business facts').innerText(), /Phone\s*04 000 0000/)
+    assert.equal(
+      await card.locator('[data-changed][data-field="items[s2].label"]').count(),
+      1,
+      'the last change stands'
+    )
+
+    // A page added through the chat arrives as a newer plan: the card draws it in place, one plan, no versions.
+    const added = structuredClone(await chat.page.evaluate(() => window.probe.get().plan))
+    added.revision += 1
+    added.pages.push({
+      id: 'lessons',
+      name: 'Lessons',
+      pageType: 'contact',
+      blocks: [
+        {
+          id: 'l1',
+          type: 'contact',
+          block: 'contact-form',
+          source: 'template',
+          label: 'Lesson request',
+          data: ['email'],
+          reason: 'You asked for a page to request a lesson.'
+        }
+      ]
+    })
+    const problems = []
+    buildPlanProblems(added, (where, message) => problems.push(`${where}: ${message}`))
+    assert.deepEqual(problems, [], 'the newer plan passes the plan check')
+    await chat.page.evaluate((plan) => window.probe.putPlan(plan), added)
+    await section('Pages (6)').waitFor()
+    assert.match(await section('Pages (6)').innerText(), /Lessons\s*1 section\s*Lesson request/)
+    assert.equal(await chat.page.getByRole('article').count(), 1, 'one living plan')
+    assert.doesNotMatch(await chat.text(), /[Vv]ersion|[Rr]evision/, 'no version list')
+    assert.equal(await card.locator('[data-changed]').count(), 0)
+    assert.equal(await undo.isDisabled(), true)
   },
   building: async (chat) => {
     await answersKept(chat)

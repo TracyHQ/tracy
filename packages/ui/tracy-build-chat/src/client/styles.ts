@@ -21,6 +21,8 @@ export const CSS = `
 .tv-bc-btn:hover { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
 .tv-bc-btn[data-primary] { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
 .tv-bc-btn[data-primary]:hover { background: color-mix(in oklab, var(--primary-foreground) 8%, var(--primary)); }
+.tv-bc-btn[data-ghost] { border-color: transparent; background: transparent; }
+.tv-bc-btn[data-ghost]:hover:not(:disabled) { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
 .tv-bc-btn:disabled { opacity: .45; cursor: default; }
 .tv-bc-btn:focus-visible, .tv-bc-tpl:focus-visible, .tv-bc-todo-head:focus-visible {
   outline: 1px solid var(--ring); outline-offset: 0;
@@ -119,6 +121,7 @@ export const CSS = `
 }
 .tv-bc-plan-t { margin: 0; font-weight: 600; font-size: 15px; flex: 1 1 auto; min-width: 0; }
 .tv-bc-chip[data-plain] { border-color: var(--border); color: var(--muted-foreground); }
+.tv-bc-chip[data-accent] { border-color: color-mix(in oklab, var(--primary) 45%, var(--card)); color: var(--primary); }
 .tv-bc-plan-err { margin: 0; padding: 8px 14px; border-bottom: 1px solid var(--border); }
 .tv-bc-plan-sec { padding: 10px 14px 12px; border-bottom: 1px solid var(--border); }
 .tv-bc-plan-sec:last-child { border-bottom: 0; }
@@ -132,6 +135,31 @@ export const CSS = `
 .tv-bc-val { padding: 4px 0; min-width: 0; }
 .tv-bc-val-row { display: flex; align-items: center; gap: 8px; min-height: 22px; }
 .tv-bc-v { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+/* A value the owner can change: the whole row is a button, a pencil on hover, the just changed value tinted */
+.tv-bc-val-edit {
+  width: calc(100% + 16px); min-height: 30px; margin: 0 -8px; padding: 4px 8px; border-radius: 8px;
+  border: 1px solid transparent; background: transparent; color: inherit; font: inherit; text-align: left; cursor: text;
+}
+.tv-bc-val:has(> .tv-bc-val-edit) { padding: 0; }
+.tv-bc-val-edit:hover:not([aria-disabled]) { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
+.tv-bc-val-edit:focus-visible { outline: 1px solid var(--ring); outline-offset: 0; }
+.tv-bc-val-edit[aria-disabled] { cursor: default; }
+.tv-bc-pen { display: grid; place-items: center; flex: none; color: var(--muted-foreground); opacity: 0; }
+.tv-bc-val-edit:hover .tv-bc-pen, .tv-bc-val-edit:focus-visible .tv-bc-pen { opacity: 1; }
+@media (hover: none) { .tv-bc-pen { opacity: .6; } }
+.tv-bc-val[data-changed] > .tv-bc-val-edit, .tv-bc-val[data-changed] .tv-bc-opt[data-checked] {
+  background: color-mix(in oklab, var(--primary) 16%, var(--card));
+  border-color: color-mix(in oklab, var(--primary) 35%, transparent);
+}
+.tv-bc-val[data-changed] .tv-bc-pen { opacity: 0; }
+.tv-bc-val[data-editing] { padding: 2px 0; }
+/* A value shown, not offered, keeps its source in line with the sources of editable values beside it */
+.tv-bc-val > div.tv-bc-val-row:has(.tv-bc-src) { padding-right: 21px; }
+.tv-bc-edit { display: flex; gap: 6px; align-items: center; }
+.tv-bc-edit input {
+  flex: 1; min-width: 0; height: 30px; padding: 0 8px; border: 1px solid var(--ring); border-radius: 8px;
+  background: var(--card); color: inherit; font: inherit; outline: none;
+}
 .tv-bc-src { font-size: 11.5px; color: var(--muted-foreground); white-space: nowrap; }
 .tv-bc-note { font-size: 12.5px; line-height: 1.45; color: var(--muted-foreground); margin-top: 2px; }
 .tv-bc-swatch {

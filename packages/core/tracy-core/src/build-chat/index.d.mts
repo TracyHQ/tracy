@@ -162,6 +162,19 @@ type BuildChatT = (key: string, vars?: Record<string, unknown>) => string
 export declare function planCardOf(plan: any): PlanCard
 // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
 export declare function planEditOf(plan: any, changes: PlanChange[], id: string): PlanEdit
+export declare function planChangeOf(
+  field: string,
+  current: string | number,
+  text: string
+): { field: string; value: string | number } | null
+/** A build draft as tracy-web's draft doors answer it: the living plan, its last edit, whether one undo is offered. */
+export interface PlanDraft {
+  // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
+  plan: any
+  lastEdit?: PlanEdit | null
+  canUndo?: boolean
+}
+export declare function changedFieldsOf(draft: PlanDraft): string[]
 export declare function planReviewRequestOf(
   // biome-ignore lint/suspicious/noExplicitAny: a Contract B plan
   plan: any,

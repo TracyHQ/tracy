@@ -75,7 +75,14 @@ export const en = {
   'plan.assumptions': 'Assumptions',
   'plan.leftOut': 'Left out',
   'plan.and': '{first} and {last}',
-  'plan.saveFailed': 'Your change was not saved. Try again.'
+  'plan.saveFailed': 'Your change was not saved. Try again.',
+  'plan.edit': 'Edit {label}: {value}',
+  'plan.newValue': 'New value for {label}',
+  'plan.save': 'Save',
+  'plan.cancel': 'Cancel',
+  'plan.changed': 'Changed',
+  'plan.undo': 'Undo',
+  'plan.undoLabel': 'Undo last change'
 } as const
 
 export type StringKey = keyof typeof en

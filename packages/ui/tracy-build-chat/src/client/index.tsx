@@ -13,7 +13,12 @@ import { en, NS } from './strings'
 export { BuildProgress } from './BuildProgress'
 export { BuildStopped } from './BuildStopped'
 export { PlanCard } from './PlanCard'
-export { BUILD_DRAFT_PLAN_EDITS_PATH, savePlanEdit } from './save-plan-edit'
+export {
+  BUILD_DRAFT_PLAN_EDITS_PATH,
+  BUILD_DRAFT_PLAN_UNDO_PATH,
+  savePlanEdit,
+  undoPlanEdit
+} from './save-plan-edit'
 export { saveTemplateChoice } from './save-template'
 export { english, NS as BUILD_CHAT_NS } from './strings'
 export { ADD_SITE_HREF, TemplateCard } from './TemplateCard'

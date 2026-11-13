@@ -21,8 +21,13 @@ import {
   PlanCard,
   savePlanEdit,
   saveTemplateChoice,
-  TemplateCard
+  TemplateCard,
+  undoPlanEdit
 } from '../../../../../ui/tracy-build-chat/src/client/index.tsx'
+import {
+  parseFieldPath,
+  resolveFieldPath
+} from '../../../../../wo/website-opportunities/domain/build-contract-shared.mjs'
 import {
   answerOf,
   approvalOf,
@@ -45,31 +50,65 @@ const sent: unknown[] = []
 const requests: { method: string; url: string; body: unknown }[] = []
 /** What the plan review bar answered: an approval, or the owner took the turn back to ask for changes. */
 const decisions: unknown[] = []
-/** The plan the draft holds, as tracy-web's plan edit door keeps it. */
-let draftPlan: Any = null
+/** The draft as tracy-web's build draft store keeps it: the living plan, its last edit and the one undo. */
+const draft: { plan: Any; lastEdit: Any; undo: Any } = { plan: null, lastEdit: null, undo: null }
+/** A door that refuses every edit as stale, for the failed save check. */
+let refuseEdits = false
+
+const answer = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status })
+const draftBody = () => ({
+  draft: { id: 'draft-1', plan: draft.plan, lastEdit: draft.lastEdit, canUndo: draft.undo !== null }
+})
+/** The one undo of an edit, made as tracy-web's `undoEditOf` makes it: each changed field back to its value before. */
+const undoEditOf = (before: Any, edit: Any) => ({
+  schema: edit.schema,
+  id: `undo-${edit.id}`,
+  plan: { id: edit.plan.id, revision: edit.plan.revision + 1 },
+  changes: edit.changes.map(({ field }: Any) => ({
+    field,
+    value: structuredClone(resolveFieldPath(before, parseFieldPath(field)).value)
+  }))
+})
+/**
+ * Apply an edit as the store does (`store.js` `applied`): a stale revision is refused, a field that does not resolve
+ * is invalid, else each change is set and the revision rises. The full Contract B check needs Node, so the runner runs
+ * `checkPlanEdit` on every recorded edit instead.
+ */
+function applied(edit: Any) {
+  if (edit.plan.id !== draft.plan.id || edit.plan.revision !== draft.plan.revision)
+    return answer({ code: 'STALE_EDIT' }, 409)
+  const next = structuredClone(draft.plan)
+  for (const { field, value } of edit.changes) {
+    const found = resolveFieldPath(next, parseFieldPath(field))
+    if (!found.found) return answer({ code: 'INVALID_EDIT' }, 422)
+    found.parent[found.key] = structuredClone(value)
+  }
+  next.revision += 1
+  draft.plan = next
+  draft.lastEdit = edit
+  return null
+}
 
 /** tracy-web's build draft doors as the page sees them: records each request and answers as the door would. */
 const draftDoor = (async (url: string, init: RequestInit) => {
   const body = JSON.parse(String(init.body))
   requests.push({ method: String(init.method), url, body })
   if (url === '/api/build-draft/plan-edits') {
-    // The door checks the edit against the contract (the runner checks the recorded edit the same way, in Node);
-    // here it applies the fact changes and raises the revision, as the door answers.
-    const edit = body.edit
-    if (edit.plan.revision !== draftPlan.revision)
-      return new Response(JSON.stringify({ code: 'STALE_EDIT' }), { status: 409 })
-    const next = structuredClone(draftPlan)
-    for (const { field, value } of edit.changes) {
-      const id = /^facts\[([^\]]+)\]\.value$/.exec(field)?.[1]
-      const fact = next.facts.find((f: Any) => f.id === id)
-      if (!fact) return new Response(JSON.stringify({ code: 'INVALID_EDIT' }), { status: 422 })
-      fact.value = value
-    }
-    next.revision += 1
-    draftPlan = next
-    return new Response(JSON.stringify({ draft: { id: 'draft-1', plan: draftPlan } }), { status: 200 })
+    if (refuseEdits) return answer({ code: 'STALE_EDIT' }, 409)
+    const before = draft.plan
+    const refused = applied(body.edit)
+    if (refused) return refused
+    draft.undo = undoEditOf(before, body.edit)
+    return answer(draftBody())
   }
-  return new Response(JSON.stringify({ draft: { id: 'draft-1' } }), { status: 200 })
+  if (url === '/api/build-draft/plan-undo') {
+    if (draft.undo === null) return answer({ code: 'NOTHING_TO_UNDO' }, 409)
+    const refused = applied(draft.undo)
+    if (refused) return refused
+    draft.undo = null
+    return answer(draftBody())
+  }
+  return answer({ draft: { id: 'draft-1' } })
 }) as Any
 
 /** The research line: dsh's tool row, its open state owned here as the chat owns it. */
@@ -150,7 +189,7 @@ function PlanReview({ plan }: { plan: Any }) {
     const wire = createWaterfallRequest(undefined, undefined, (channel) => pending.detachWaterfall(channel))
     pending.attachWaterfall(wire.channel)
     wire.result.then(
-      (reply: Any) => decisions.push(approvalOf(draftPlan, reply) ?? { requestChanges: true }),
+      (reply: Any) => decisions.push(approvalOf(draft.plan, reply) ?? { requestChanges: true }),
       () => decisions.push({ requestChanges: true })
     )
     return pending
@@ -181,6 +220,10 @@ function PlanReview({ plan }: { plan: Any }) {
 /** One stage of the build chat: what has arrived so far, drawn in the order of the conversation. */
 function Chat({ stage }: { stage: Any }) {
   const [answers, setAnswers] = useState<Any[]>(stage.answers)
+  // The plan the chat holds; a newer plan composed in the chat (`probe.putPlan`) replaces it, as tracy-web's
+  // `PUT /api/build-draft/plan` does: no last edit and no undo for the new plan.
+  const [planDraft, setPlanDraft] = useState<Any>({ plan: stage.plan, lastEdit: null, canUndo: false })
+  ;(window as Any).probe.setPlanDraft = setPlanDraft
   const asked = stage.questions.length > 0
   return (
     <main data-stage={stage.name}>
@@ -199,10 +242,13 @@ function Chat({ stage }: { stage: Any }) {
       )}
       {stage.plan && (
         <PlanCard
-          plan={stage.plan}
+          plan={planDraft.plan}
+          lastEdit={planDraft.lastEdit}
+          canUndo={planDraft.canUndo}
           t={english}
           newEditId={() => `edit-${requests.length + 1}`}
           onEdit={(edit) => savePlanEdit(edit, draftDoor)}
+          onUndo={() => undoPlanEdit(draftDoor)}
         />
       )}
       {stage.review && <PlanReview plan={stage.plan} />}
@@ -221,9 +267,28 @@ let root: ReturnType<typeof createRoot> | null = null
     sent.length = 0
     requests.length = 0
     decisions.length = 0
-    draftPlan = stage.plan ?? null
+    draft.plan = stage.plan ?? null
+    draft.lastEdit = null
+    draft.undo = null
+    refuseEdits = false
     root = createRoot(document.getElementById('root') as HTMLElement)
     root.render(<Chat stage={stage} />)
   },
-  get: () => ({ sent: [...sent], requests: [...requests], decisions: [...decisions] })
+  get: () => ({ sent: [...sent], requests: [...requests], decisions: [...decisions], plan: draft.plan }),
+  /** The draft read again from the door, as a reload of the card would: the plan, its last edit and the undo. */
+  reload() {
+    const { draft: d } = draftBody()
+    ;(window as Any).probe.setPlanDraft({ plan: d.plan, lastEdit: d.lastEdit, canUndo: d.canUndo })
+  },
+  /** A newer plan composed in the chat (a page added) becomes the one living plan. */
+  putPlan(plan: Any) {
+    draft.plan = plan
+    draft.lastEdit = null
+    draft.undo = null
+    ;(window as Any).probe.setPlanDraft({ plan, lastEdit: null, canUndo: false })
+  },
+  /** From now on the door refuses every plan edit as stale (409). */
+  refuseEdits() {
+    refuseEdits = true
+  }
 }

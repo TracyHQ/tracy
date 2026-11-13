@@ -4,7 +4,14 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { checkPlanEdit } from '../../../wo/website-opportunities/domain/build-contract-plan-edit.mjs'
-import { approvalOf, planCardOf, planEditOf, planReviewRequestOf } from '../src/build-chat/index.mjs'
+import {
+  approvalOf,
+  changedFieldsOf,
+  planCardOf,
+  planChangeOf,
+  planEditOf,
+  planReviewRequestOf
+} from '../src/build-chat/index.mjs'
 import { STAGES, stageDocuments } from './fixtures/build-chat/stages.mjs'
 
 const plan = () => stageDocuments(STAGES.find((s) => s.name === 'plan')).scenario.plan
@@ -137,4 +144,65 @@ test('the plan review bar is one dsh plan review request; only Approve is an app
   })
   assert.equal(approvalOf(p, { answers: [{ id: q.id, selected: ['Request changes'] }] }), null)
   assert.equal(approvalOf(p, null), null)
+})
+
+// In place editing (#607): which values were just changed, and the change an editor's text makes.
+
+const tagline = (p) =>
+  planEditOf(p, [{ field: 'facts[tagline].value', value: 'Tennis for every age' }], 'edit-t')
+
+test('the value just changed is the last edit, while it can still be undone and applies to this revision', () => {
+  const p = plan()
+  const edit = tagline(p)
+  const after = checkPlanEdit(edit, p).plan
+  assert.deepEqual(changedFieldsOf({ plan: after, lastEdit: edit, canUndo: true }), ['facts[tagline].value'])
+  // Undone: the draft keeps the undo as its last edit but offers no undo, so nothing is highlighted.
+  assert.deepEqual(changedFieldsOf({ plan: after, lastEdit: edit, canUndo: false }), [])
+  // A newer plan (a page added through the chat): the edit belongs to an older revision.
+  assert.deepEqual(changedFieldsOf({ plan: { ...after, revision: 5 }, lastEdit: edit, canUndo: true }), [])
+  assert.deepEqual(
+    changedFieldsOf({ plan: { ...after, id: 'plan-other' }, lastEdit: edit, canUndo: true }),
+    []
+  )
+  assert.deepEqual(changedFieldsOf({ plan: p, lastEdit: null, canUndo: false }), [])
+  assert.deepEqual(changedFieldsOf({ plan: p }), [])
+})
+
+test('an editor text becomes one change: text trimmed, a count a whole number, nothing when empty or unchanged', () => {
+  assert.deepEqual(planChangeOf('facts[tagline].value', 'Old', '  New tagline '), {
+    field: 'facts[tagline].value',
+    value: 'New tagline'
+  })
+  assert.equal(planChangeOf('facts[tagline].value', 'Old', '   '), null)
+  assert.equal(planChangeOf('facts[tagline].value', 'Old', ' Old '), null)
+  assert.deepEqual(planChangeOf('pictures.generated.frames', 2, ' 3 '), {
+    field: 'pictures.generated.frames',
+    value: 3
+  })
+  assert.deepEqual(planChangeOf('pictures.generated.frames', 2, '0'), {
+    field: 'pictures.generated.frames',
+    value: 0
+  })
+  assert.equal(planChangeOf('pictures.generated.frames', 2, '2'), null)
+  assert.equal(planChangeOf('pictures.generated.frames', 2, '2.5'), null)
+  assert.equal(planChangeOf('pictures.generated.frames', 2, 'two'), null)
+  assert.equal(planChangeOf('pictures.generated.frames', 2, '-1'), null)
+})
+
+test('a renamed service is one change, and every block that shows the services reads the new name', () => {
+  const p = plan()
+  const edit = planEditOf(p, [planChangeOf('items[s2].label', 'Junior squad', 'Junior academy')], 'edit-r')
+  const checked = checkPlanEdit(edit, p)
+  assert.deepEqual(checked.problems, [])
+  const card = planCardOf(checked.plan)
+  assert.equal(card.services.find((s) => s.id === 's2').label, 'Junior academy')
+  const servicesOf = (page) =>
+    card.pages.find((x) => x.id === page).blocks.find((b) => 'services' in b.holds).holds
+  for (const page of ['home', 'services'])
+    assert.deepEqual(servicesOf(page).services, [
+      'Adult coaching',
+      'Junior academy',
+      'Court hire',
+      'Cardio tennis'
+    ])
 })
