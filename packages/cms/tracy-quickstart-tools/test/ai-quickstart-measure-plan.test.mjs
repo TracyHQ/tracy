@@ -6,6 +6,7 @@ import {
   MEASURE_WIDTHS,
   limitAcrossPages,
   limitFromReadings,
+  pieceTextOf,
   planMeasurements,
   shownTextOf
 } from '../ai-quickstart/lib/measure-plan.mjs'
@@ -188,4 +189,65 @@ test('a place read on several pages takes the smallest limit of any page, and na
   assert.match(rec.limitFrom, /page \/: 390px 36/)
   assert.deepEqual(limitAcrossPages([home]), home)
   assert.equal(limitAcrossPages([]), null)
+})
+
+test('a piece of a stored HTML value shows the words of its own element', () => {
+  const sample =
+    '((ul))\n\t((li))Fresh ((br/))bread((/li))\n\t((li))Warm ((span))soup((/span))((/li))\n((/ul))'
+  assert.equal(pieceTextOf(sample, '/html/body/ul/li[1]'), 'Fresh bread')
+  assert.equal(pieceTextOf(sample, '/html/body/ul/li[2]'), 'Warm soup')
+  assert.equal(pieceTextOf(sample, '/html/body/ul/li[3]'), null)
+  assert.equal(pieceTextOf(sample, '/html/body/ul/li[1]/@class'), null)
+})
+
+test('a piece is filled with its own words, on the page and tab its stored value is read on', () => {
+  const map = {
+    slots: [{ key: 'module-9.0', sample: '((ul))((li))Fresh bread((/li))((li))Warm soup((/li))((/ul))' }]
+  }
+  const store = {
+    blocks: [
+      {
+        id: 'block-9',
+        from: { kit: ['block-9'] },
+        itemLists: [
+          {
+            name: 'lines',
+            fields: [
+              { name: 'line', slots: [['module-9.0@/html/body/ul/li[1]', 'module-9.0@/html/body/ul/li[2]']] }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  const plan = planMeasurements({
+    unmeasured: [
+      { block: 'block-9', slot: 'module-9.0@/html/body/ul/li[1]' },
+      { block: 'block-9', slot: 'module-9.0@/html/body/ul/li[2]' }
+    ],
+    blockStore: store,
+    kit,
+    contentMap: map,
+    measureOn: { 'module-9.0': { path: '/menu', click: 'Lunch' } }
+  })
+  assert.deepEqual(plan.pages, [
+    {
+      path: '/menu',
+      click: 'Lunch',
+      texts: [
+        {
+          id: 'module-9.0@/html/body/ul/li[1]',
+          slot: 'module-9.0@/html/body/ul/li[1]',
+          text: 'Fresh bread',
+          tight: 'Fresh bread'
+        },
+        {
+          id: 'module-9.0@/html/body/ul/li[2]',
+          slot: 'module-9.0@/html/body/ul/li[2]',
+          text: 'Warm soup',
+          tight: 'Warm soup'
+        }
+      ]
+    }
+  ])
 })

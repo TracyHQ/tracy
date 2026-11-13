@@ -10,6 +10,60 @@ export const shownTextOf = (sample, joiner = ' ') =>
     .replace(/\s+/g, ' ')
     .trim()
 
+const VOID_ELEMENTS = new Set(['br', 'hr', 'img', 'input', 'meta', 'link', 'source', 'wbr'])
+
+/**
+ * The words one piece of a stored HTML value shows: `xpath` (`/html/body/ul/li[2]`, element steps only) walked over
+ * the content map sample's markers (`((ul))((li))...((/li))((/ul))`). Null for a piece that is no element of the
+ * sample or names an attribute (`.../@href`), which shows no words.
+ */
+export function pieceTextOf(sample, xpath) {
+  const steps = String(xpath ?? '')
+    .split('/')
+    .filter(Boolean)
+  if (steps.some((st) => !/^[a-z][\w-]*(\[\d+\])?$/i.test(st))) return null
+  const root = { tag: '#root', children: [] }
+  const open = [root]
+  for (const part of String(sample ?? '').split(/(\(\([^)]*\)\))/)) {
+    const marker = part.match(/^\(\((\/?)([a-z][\w-]*)([^)]*?)(\/?)\)\)$/i)
+    const top = open[open.length - 1]
+    if (!marker) {
+      if (part) top.children.push(part)
+      continue
+    }
+    const [, closing, name, , selfClosing] = marker
+    const tag = name.toLowerCase()
+    if (closing) {
+      const at = open.map((n) => n.tag).lastIndexOf(tag)
+      if (at > 0) open.length = at
+    } else {
+      const node = { tag, children: [] }
+      top.children.push(node)
+      if (!selfClosing && !VOID_ELEMENTS.has(tag)) open.push(node)
+    }
+  }
+  // The stored value is the body of the document the xpath reads.
+  let node = {
+    tag: '#doc',
+    children: [{ tag: 'html', children: [{ tag: 'body', children: root.children }] }]
+  }
+  for (const st of steps) {
+    const [, name, index] = st.match(/^([a-z][\w-]*)(?:\[(\d+)\])?$/i)
+    const same = node.children.filter((c) => typeof c !== 'string' && c.tag === name.toLowerCase())
+    node = same[Number(index ?? 1) - 1]
+    if (!node) return null
+  }
+  const words = (n) => (typeof n === 'string' ? n : n.children.map(words).join(n.tag === 'br' ? ' ' : ''))
+  return shownTextOf(words(node))
+}
+
+/** The words a stored place shows: a content map slot's sample, or a piece of it (`<key>@<xpath>`). */
+function placeTextOf(mapSlots, slot, joiner) {
+  const at = String(slot).indexOf('@')
+  if (at < 0) return shownTextOf(mapSlots.get(slot)?.sample, joiner)
+  return pieceTextOf(mapSlots.get(slot.slice(0, at))?.sample, slot.slice(at + 1)) ?? ''
+}
+
 /**
  * `measureOn` (the template's decisions) names, per content map key, another page to read the slot on and what to
  * open first (`{path, click, clickSelector, openEach}`: the words of a tab, CSS selectors clicked in turn, every
@@ -32,7 +86,9 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
   for (const { block, slot } of unmeasured) {
     if (seen.has(slot)) continue
     seen.add(slot)
-    const text = shownTextOf(mapSlots.get(slot)?.sample)
+    // A piece of a stored HTML value (`<key>@<xpath>`) is read where the value is.
+    const on = measureOn[slot] ?? measureOn[String(slot).split('@')[0]]
+    const text = placeTextOf(mapSlots, slot)
     if (!text) {
       skipped.push({ slot, why: 'the demo shows no words there, so no box can be found to fill' })
       continue
@@ -45,8 +101,8 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
       const shows = (w) => (p) => (p.blocks?.[w] ?? []).some((k) => kitIds.has(k))
       return MEASURE_WIDTHS.map((w) => (kit.pages ?? []).find(shows(String(w)))).find(Boolean)
     }
-    const found = measureOn[slot]?.path
-      ? [{ path: measureOn[slot].path }]
+    const found = on?.path
+      ? [{ path: on.path }]
       : (holders.length ? holders : [block]).map(pagesOf).filter(Boolean)
     const paths = [...new Set(found.map((p) => p.path))]
     if (!paths.length) {
@@ -55,13 +111,13 @@ export function planMeasurements({ unmeasured, blockStore, kit, contentMap, meas
     }
     // No `lines` from the content map: its fit of these slots is the box of a whole section (13 lines for a two
     // line heading), so the text may take the lines the demo shows, no more.
-    const click = measureOn[slot]?.click
-    const clickSelector = measureOn[slot]?.clickSelector
-    const openEach = measureOn[slot]?.openEach
+    const click = on?.click
+    const clickSelector = on?.clickSelector
+    const openEach = on?.openEach
     for (const pagePath of paths) {
       const key = JSON.stringify([pagePath, click ?? null, clickSelector ?? null, openEach ?? null])
       const texts = byPath.get(key) ?? []
-      texts.push({ id: slot, slot, text, tight: shownTextOf(mapSlots.get(slot)?.sample, '') })
+      texts.push({ id: slot, slot, text, tight: placeTextOf(mapSlots, slot, '') })
       byPath.set(key, texts)
     }
   }

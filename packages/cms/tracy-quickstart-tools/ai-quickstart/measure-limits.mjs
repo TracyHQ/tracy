@@ -112,10 +112,10 @@ async function main(argv) {
   const file = path.join(out, 'measured-limits.json')
   const previous = existsSync(file) ? readJson(file) : {}
   const blockStore = readJson(path.join(out, 'block-store.json'))
-  const again = Object.keys(previous.limits ?? {}).map((slot) => ({
-    block: holdersOf(blockStore, slot)[0],
-    slot
-  }))
+  // A slot the store no longer declares (a value re-declared as a list of pieces) is not read again.
+  const again = Object.keys(previous.limits ?? {})
+    .map((slot) => ({ block: holdersOf(blockStore, slot)[0], slot }))
+    .filter((t) => t.block)
   const plan = planMeasurements({
     unmeasured: [...(readJson(path.join(out, 'draft-report.json')).unmeasured ?? []), ...again],
     blockStore,
