@@ -2,7 +2,7 @@
 // by the link slot of its label's row or anchor, by a link slot of its block that holds the address the kit measured, by a menu
 // item when a menu module prints it, or inside a slot of words. Several links can share one address (a card's picture and name).
 import { isDeepStrictEqual } from 'node:util'
-import { isAudioSlot } from '../../../../packages/wo/website-opportunities/domain/audio-source.mjs'
+import { isAudioSlot } from 'website-opportunities/domain/audio-source.mjs'
 import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { ownTwin } from './kit-buttons.js'
 

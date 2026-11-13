@@ -1,4 +1,4 @@
-import { audioDecisionProblem } from '../../../../../packages/wo/website-opportunities/domain/audio-source.mjs'
+import { audioDecisionProblem } from 'website-opportunities/domain/audio-source.mjs'
 import { arr, has, obj, str } from './rule-set.js'
 
 // R10d links

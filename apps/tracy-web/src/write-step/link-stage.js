@@ -10,7 +10,7 @@ import { foreignItemLinks } from './item-page-links.js'
 import {
   audioDecisionProblem,
   isAudioSlot
-} from '../../../../packages/wo/website-opportunities/domain/audio-source.mjs'
+} from 'website-opportunities/domain/audio-source.mjs'
 import { keptBlocks } from './owner-table.js'
 import { audioBindingMatches, linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
