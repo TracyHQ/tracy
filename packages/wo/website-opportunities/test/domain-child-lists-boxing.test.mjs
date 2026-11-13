@@ -140,9 +140,9 @@ test('JA Boxing: the real icon step draws every planned social row from the link
 })
 
 test('JA Boxing block-180 follows the kind its store declares (a store question, not the wanted result)', () => {
-  // block-180 is a trainer hero whose social list declares contact.social_url today, so it lists the club's own links.
-  // The Contract A team will declare person.social_url there (#584); the rules read the declared kind and need no
-  // change then (the invented store test in `domain-child-lists-social.test.mjs` shows a single person block list).
+  // block-180 is a trainer hero whose social list declares person.social_url (#584), so it lists the trainer's own
+  // links, the rows of its one item, and not the club's (the invented store test in
+  // `domain-child-lists-social.test.mjs` shows a single person block list).
   const { plan } = boxingPlan()
   const list = plan.pages.find((p) => p.id === 'block-180').blocks[0].lists.find((l) => l.name === 'social')
   assert.deepEqual(
