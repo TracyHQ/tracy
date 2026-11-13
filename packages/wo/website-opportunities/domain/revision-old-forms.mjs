@@ -7,7 +7,7 @@
 //   - a number (no letter, fewer than seven digits: a price, a count): as a whole number token only, so `$42` names
 //     `42` and `42.00` but not `2042`, `4.42` or `10:42` (a token joins digits by `.`, `,` and `:`);
 //   - a phone (no letter, seven digits or more): by its digits, a leading trunk zero dropped, inside any run of phone
-//     characters (`+44 100 214 5525` names `0100 214 5525`), and as the held matcher reads it;
+//     characters (`+44 20 7946 0525` names `020 7946 0525`), and as the held matcher reads it;
 //   - an address (`https://`, `www.`): without its scheme, `www.` and a closing slash;
 //   - any text: with apostrophes and hyphens dropped and `ß` read as `ss` on both sides (`OHara` names `O'Hara`).
 // Not searched (a writer would only reach them past the copy check): plurals, one word of a longer name, a phone or a
