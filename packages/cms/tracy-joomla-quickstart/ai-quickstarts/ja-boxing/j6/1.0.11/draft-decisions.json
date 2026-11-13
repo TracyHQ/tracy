@@ -396,6 +396,11 @@
     },
     "block-171": {
       "type": "footer",
+      "fieldKeys": {
+        "social-label": {
+          "textOf": "network"
+        }
+      },
       "retype": {
         "module-171.8": {
           "kind": "editorial.item_icon",

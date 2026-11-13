@@ -1225,7 +1225,8 @@
             "module-171.1",
             "module-171.2",
             "module-171.3"
-          ]
+          ],
+          "textOf": "network"
         },
         {
           "name": "social-url",
