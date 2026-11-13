@@ -146,6 +146,16 @@ test('own or customer: the stated uploader first, a Google author named as the b
   assert.equal(ownershipOf(places('Pat Visitor'), 'Lantern Hill Racquet Club'), 'unknown')
 })
 
+test("a build draft picture is the owner's own, unless its source states a guest uploaded it (#597)", () => {
+  assert.equal(ownershipOf({ id: 'd1', origin: 'draft', sha256: 'a'.repeat(64) }, null), 'owner')
+  assert.equal(ownershipOf({ id: 'd2', origin: 'draft' }, 'Lantern Hill'), 'owner')
+  assert.equal(
+    ownershipOf({ id: 'd3', origin: 'draft', uploaderRole: 'customer' }, 'Lantern Hill'),
+    'customer'
+  )
+  assert.equal(ownershipOf({ id: 'p1', origin: 'place' }, null), 'unknown')
+})
+
 test('a brief asset: text links win, then the model in the list, else general; nothing looked is null, not a guess', () => {
   const vision = {
     subject: 'service-in-action',

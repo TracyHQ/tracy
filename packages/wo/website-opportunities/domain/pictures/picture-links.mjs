@@ -190,12 +190,14 @@ function withoutLinks(text) {
 }
 
 /**
- * Who published a photo, cheaply: the uploader its source states, else a Google author whose name is the business's own.
+ * Who published a photo, cheaply: the uploader its source states, else a picture of the build draft (origin `draft`:
+ * the customer's own, stored by the build chat's research, #597), else a Google author whose name is the business's own.
  * @returns {'owner' | 'customer' | 'unknown'}
  */
 export function ownershipOf(m, businessName) {
   const stated = uploaderRoleOf(m)
   if (stated !== 'unknown') return stated
+  if (m?.origin === 'draft') return 'owner'
   const name = fold(businessName).trim()
   if (!name) return 'unknown'
   const authors = creditTextOf(m)
