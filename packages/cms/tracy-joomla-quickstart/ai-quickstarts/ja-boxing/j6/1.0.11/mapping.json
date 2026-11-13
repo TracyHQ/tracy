@@ -11571,7 +11571,7 @@
     },
     {
       "fact": "newsletter mail settings",
-      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold the placeholder demo@gmail.com, which is no business word of the demo; they are the mailbox mail is sent from and bounces go to, set by whoever configures sending, never shown on a page. The reply-to name and address subscribers read are places of the name and email facts"
+      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold one placeholder Gmail address, which is no business word of the demo; they are the mailbox mail is sent from and bounces go to, set by whoever configures sending, never shown on a page. The reply-to name and address subscribers read are places of the name and email facts"
     }
   ],
   "seo": {

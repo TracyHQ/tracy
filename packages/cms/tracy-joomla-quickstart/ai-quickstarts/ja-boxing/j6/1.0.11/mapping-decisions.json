@@ -149,7 +149,7 @@
     },
     {
       "fact": "newsletter mail settings",
-      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold the placeholder demo@gmail.com, which is no business word of the demo; they are the mailbox mail is sent from and bounces go to, set by whoever configures sending, never shown on a page. The reply-to name and address subscribers read are places of the name and email facts"
+      "why": "AcyMailing's bounce_email, cron_sendto, from_email and the forward_to of its bounce rules hold one placeholder Gmail address, which is no business word of the demo; they are the mailbox mail is sent from and bounces go to, set by whoever configures sending, never shown on a page. The reply-to name and address subscribers read are places of the name and email facts"
     }
   ],
   "seo": {
@@ -290,11 +290,11 @@
     }
   ],
   "demoFacts": {
-    "$comment": "The demo values of each business fact, as the template's own demo content holds them; the sweep test reads every content map place for them.",
+    "$comment": "The demo values of each business fact, as the template's own demo content holds them (an address without its top level domain, which every place holding it still contains); the sweep test reads every content map place for them.",
     "name": ["JA Boxing", "Getfit", "Gitfit"],
     "phone": ["(239) 555-0108"],
     "address": ["4517 Washington Ave", "Manchester, Kentucky 39495"],
-    "email": ["sale@getfit.com", "sale@no-reply.com"],
+    "email": ["sale@getfit", "sale@no-reply"],
     "logo": ["images/joomlart/logo/item-1.png", "images/joomlart/logo/item-2.png"]
   }
 }
