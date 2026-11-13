@@ -277,7 +277,16 @@ export {
 } from './picture-labelling.mjs'
 export { FRAME_SOURCES, pictureProblemsOf, videoFits } from './picture-policy-check.mjs'
 export { approvedCountOf, assignPictures } from './picture-policy.mjs'
-export { blocksOf, differenceOf, picturesStep } from './picture-step.mjs'
+export { blocksOf, differenceOf, picturesStep, placePictures, selectBuildIcons } from './picture-step.mjs'
+export {
+  buildEngineSteps,
+  contractRunOf,
+  contractStepOf,
+  contractStepsOf,
+  outcomeOf,
+  progressEventOf
+} from './build-run-events.mjs'
+export { researchOf } from './needs-research.mjs'
 export {
   PAGE_WRITER_PROMPT_FILE,
   PAGE_WRITE_ATTEMPTS,
