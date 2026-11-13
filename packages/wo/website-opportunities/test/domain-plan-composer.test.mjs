@@ -83,7 +83,8 @@ test('a plan that fails the gate is composed again once, with the problems, and 
   assert.deepEqual(second.problems, [
     {
       at: 'pages[0].blocks[2].data[4]',
-      message: '"service-padel-nights" is not a fact or item of the needs profile'
+      message:
+        '"service-padel-nights" is not a fact or item of the needs profile: take it out of this block, and leave the block out when it then shows nothing'
     }
   ])
   assert.equal(checkBuildDocument(plan).ok, true)

@@ -17,6 +17,7 @@
 //   (`plan-gate-people.mjs`).
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 import { contactChannelProblems } from './plan-gate-contact.mjs'
+import { TAKE_OUT } from './plan-gate-items.mjs'
 import { droppedPeopleProblems } from './plan-gate-people.mjs'
 import { itemPageTypesOf } from './write-order-targets.mjs'
 
@@ -55,7 +56,7 @@ function repeatedItems(page, at, context, problem) {
         problem(
           'item_repeated_on_page',
           `${at}.blocks[${j}].data[${k}]`,
-          `${JSON.stringify(id)} is shown by block ${page.blocks[seen.get(id)].block} of this page already: an item appears in one block of a page`
+          `${JSON.stringify(id)} is shown by block ${page.blocks[seen.get(id)].block} of this page already: an item appears in one block of a page, so ${TAKE_OUT}`
         )
       else seen.set(id, j)
     })
@@ -64,6 +65,8 @@ function repeatedItems(page, at, context, problem) {
 
 function blockRules(block, at, context, problem) {
   const { data, blocks } = context
+  // A block with no data is left out of the plan (`plan-gate.mjs`), so no rule of what it shows applies.
+  if (block.data.length === 0) return
   const type = blocks.get(block.block)?.type
   const kindOf = (id) => data.byId.get(id)?.kind
   if (type === 'newsletter') {
@@ -87,7 +90,7 @@ function blockRules(block, at, context, problem) {
       problem(
         'withheld_shown',
         `${at}.data[${k}]`,
-        `${JSON.stringify(id)} is kept off the site at the owner's request: never show it`
+        `${JSON.stringify(id)} is kept off the site at the owner's request: never show it; ${TAKE_OUT}`
       )
   })
 }

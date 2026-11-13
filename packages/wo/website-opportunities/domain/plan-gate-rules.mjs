@@ -3,11 +3,11 @@
 // - every id names a fact or item of the needs profile, of a kind the block shows, within its counts
 //   (`plan-gate-items.mjs`); a fact inside an item block needs a field of that fact's kind in the block;
 // - a template block sits only on a page type whose recipe lists it, and at most once per page (Contract A declares
-//   no repetition, so none is allowed);
+//   no repetition, so none is allowed); a block left with no data is left out, never a problem;
 // - `targets` names fields of the block and never a design typed field;
 // - an item the model leaves out is not also shown; customer text carries no dash;
 // - the page rules restored from the locked planner (`plan-gate-page-rules.mjs`).
-import { blockItemProblems } from './plan-gate-items.mjs'
+import { TAKE_OUT, blockItemProblems } from './plan-gate-items.mjs'
 import { pageRuleProblems } from './plan-gate-page-rules.mjs'
 import { BLOCK_TYPES } from './place-content-roles.mjs'
 import { fitsRecipe } from './plan-placement-pages.mjs'
@@ -37,7 +37,7 @@ export function factFieldProblems(block, description, at, data, problem) {
       problem(
         'fact_without_field',
         `${at}.data[${i}]`,
-        `block ${description.id} has no field for ${entry.kind}: a fact goes in an item block only where it has a field`
+        `block ${description.id} has no field for ${entry.kind}: a fact goes in an item block only where it has a field; ${TAKE_OUT}`
       )
   })
 }
@@ -62,18 +62,15 @@ function blockProblems(block, at, page, context, problem) {
     if (!isText(block[key]))
       problem(key === 'reason' ? 'no_reason' : 'reply_shape', `${at}.${key}`, `a block needs its ${key}`)
     else dashFree(block[key], `${at}.${key}`, problem)
-  if (block.data.length === 0)
-    return problem(
-      'no_data',
-      `${at}.data`,
-      'a kept block shows at least one data item; leave the block out otherwise'
-    )
+  // A block with no data is left out of the plan (`plan-gate.mjs` `pagesOf`): following a message that takes an id
+  // out of a block never fails the second attempt on an empty block (#593 review G2).
+  if (block.data.length === 0) return
   block.data.forEach((id, i) => {
     if (data.byId.get(id)?.itemField)
       problem(
         'item_field_fact',
         `${at}.data[${i}]`,
-        `${JSON.stringify(id)} is a field of an item: show the item`
+        `${JSON.stringify(id)} is a field of an item: show the item instead, and leave the block out when it then shows nothing`
       )
   })
   blockItemProblems(block, description, at, data, problem)

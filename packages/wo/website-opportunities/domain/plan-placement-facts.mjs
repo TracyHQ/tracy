@@ -1,7 +1,8 @@
 // Fact placement of the rules gate (ticket #593): a business fact no block of the composed plan shows (a phone, opening
 // hours, the main button's words) finds a block in a fixed order, and a fact that finds none is reported in the left
 // out list, never dropped silently:
-//   1. a block on the plan that declares a field of the fact's data kind with room for one more value of that kind;
+//   1. a block on the plan with room for one more value of the fact's data kind: its fields of that kind, and the rows
+//      of its lists (`factSlotsFor`); a contact channel never goes into a block that needs items;
 //   2. a facts only block of the store not on the plan (a contact strip, say) that declares such a field, added to a
 //      page whose recipe lists it (`plan-placement-pages.mjs`);
 //   3. else a left out entry with the reason (no place of that kind, or every place taken already).
@@ -16,6 +17,40 @@ const list = (value) => (Array.isArray(value) ? value : [])
 export const slotsFor = (description, kind) =>
   list(description?.fields).filter((f) => f?.type !== 'design' && f?.kind === kind).length
 const factsOnly = (description) => !BLOCK_TYPES[description.type]?.itemKind
+const hasKind = (fields, kind) => list(fields).some((f) => f?.type !== 'design' && f?.kind === kind)
+
+/** The fact kinds of a contact channel: phone, email, address, booking link, social profile. */
+export const CONTACT_CHANNEL_KINDS = Object.freeze([
+  'contact.phone',
+  'contact.email',
+  'contact.address',
+  'contact.cta_url',
+  'contact.social_url'
+])
+
+/**
+ * How many facts of data kind `kind` a block shows: 0 for a block that needs items; its own fields, plus one place
+ * per item for an item field and one per row for a list field (a social link is one row of a links list).
+ */
+export function factSlotsFor(description, kind) {
+  if (!description || !factsOnly(description)) return 0
+  const items = hasKind(description.itemFields, kind) ? (description.items?.max ?? 0) : 0
+  const rows = list(description.lists)
+    .filter((l) => hasKind(l?.fields, kind))
+    .reduce((n, l) => n + (l?.items?.max ?? 0), 0)
+  return slotsFor(description, kind) + items + rows
+}
+
+/**
+ * The places the placement may fill: those of `factSlotsFor`; in a block that needs items, its own fields, but never
+ * for a contact channel (the listing link of a reviews block is the review site's, not the business's social link).
+ */
+const placesFor = (description, kind) =>
+  !description || factsOnly(description)
+    ? factSlotsFor(description, kind)
+    : CONTACT_CHANNEL_KINDS.includes(kind)
+      ? 0
+      : slotsFor(description, kind)
 
 /**
  * Place every fact no block shows and the model did not leave out.
@@ -37,14 +72,14 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
     for (const page of out)
       for (const block of page.blocks) {
         if (home) break
-        const room = slotsFor(blocks.get(block.block), fact.kind)
+        const room = placesFor(blocks.get(block.block), fact.kind)
         const used = block.data.filter((id) => kindOf(id) === fact.kind).length
         if (room > used) home = { page, block, how: 'block on the plan with a field for it' }
       }
     if (!home)
       for (const description of blocks.values()) {
         if (description.source === 'library' || !factsOnly(description)) continue
-        if (slotsFor(description, fact.kind) === 0) continue
+        if (factSlotsFor(description, fact.kind) === 0) continue
         if (out.some((p) => p.blocks.some((b) => b.block === description.id))) continue
         const page = pageFor(out, description, recipes)
         if (!page) continue
@@ -69,7 +104,7 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
     } else {
       // True of the template: its places for the kind may all be taken (three addresses, one address place).
       const label = fact.label.toLowerCase()
-      const full = [...blocks.values()].some((d) => d.source !== 'library' && slotsFor(d, fact.kind) > 0)
+      const full = [...blocks.values()].some((d) => d.source !== 'library' && placesFor(d, fact.kind) > 0)
       leftOut.push({
         id: fact.id,
         what: fact.label,

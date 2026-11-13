@@ -7,7 +7,7 @@ import { isBrandLook } from './brand-before-site.mjs'
 import { buildNeedsProfile } from './needs-profile.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { composePlan } from './plan-composer.mjs'
-import { withWithheld } from './plan-withheld.mjs'
+import { SITE_NAME_MISSING_MESSAGE, siteNameMissing, withWithheld } from './plan-withheld.mjs'
 
 /** The brand record of the step: the one given, or the one `brandStep` resolves to. */
 async function brandRecordOf({ brand, brandStep }) {
@@ -41,6 +41,9 @@ async function brandRecordOf({ brand, brandStep }) {
  *   asks the profile's questions and resolves to them; the rest goes to `composePlan`
  */
 export async function buildPlanStep({ research, model, brand, brandStep, answers = [], ...rest }) {
+  // A site nothing may name stops before any model call: the customer is asked for a name to show.
+  if (siteNameMissing(research?.withheld))
+    throw new PlanComposerError('site_name_missing', SITE_NAME_MISSING_MESSAGE, {}, { noRerun: true })
   const record = await brandRecordOf({ brand, brandStep })
   // What the owner keeps off the site rides on the profile (`plan-withheld.mjs`).
   const built = await buildNeedsProfile({

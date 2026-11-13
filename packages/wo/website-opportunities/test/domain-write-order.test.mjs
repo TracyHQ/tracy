@@ -85,6 +85,12 @@ test('link and phone values come from the plan data, never from the writer', () 
     ['from', 'action'].map((k) => entry(order, 'home.home-b4.service-seasonal-posy.more')[k]),
     ['no-data', 'hide']
   )
+  // A DATA field the plan holds no value for (the florist gives no opening hours) follows its block's no data rule
+  // too: the contact block hides, so the field is hidden, with no reason of a derived link (#593 review G6).
+  assert.deepEqual(
+    ['from', 'action', 'fallback', 'reason'].map((k) => entry(order, 'contact.contact-b2.hours')[k]),
+    ['no-data', 'hide', undefined, undefined]
+  )
   const broken = orderOf()
   Object.assign(entry(broken, 'home.home-b6.phone'), { from: 'writer', value: '+1 555 0199 999' })
   assert.deepEqual(

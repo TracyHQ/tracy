@@ -1,13 +1,15 @@
 // What the plan composer checks before it calls the model (ticket #593). Everything the model does not produce is
 // checked here, so a problem the model cannot fix is never sent back to it: the block store and the page recipes
 // (Contract A, which also keeps demo text out of what the model reads, and gives a design field no data kind), the
-// Tracy library blocks, the look (template, accent colour, logo), the site language, the pictures inputs, and a needs
+// Tracy library blocks, a name the site may show (`site_name_missing` while the business name is held with no neutral
+// identity), the look (template, accent colour, logo), the site language, the pictures inputs, and a needs
 // profile with at least one usable fact. Each failure has its own code and `noRerun`: running the step again on the
 // same inputs cannot change it.
 import { blockProblems, checkAiQuickstartContract, formatProblem } from './ai-quickstart-contract.mjs'
 import { lookProblems } from './build-contract-plan-parts.mjs'
 import { PlanComposerError } from './plan-composer-error.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
+import { SITE_NAME_MISSING_MESSAGE, siteNameMissing } from './plan-withheld.mjs'
 
 const LANGUAGE_TAG = /^[a-z]{2,3}(-[A-Z]{2})?$/
 const fail = (code, message, problems) => {
@@ -39,6 +41,7 @@ export function preflightDeclarations({ blockStore, pageRecipes, library = [] })
 
 /** The inputs of the plan the model does not produce, once the context is built (`composerContextOf`). */
 export function preflightContext(context) {
+  if (siteNameMissing(context.profile?.withheld)) fail('site_name_missing', SITE_NAME_MISSING_MESSAGE, [])
   const look = []
   lookProblems(context.look, (at, message) => look.push({ at, message }))
   if (look.length > 0)

@@ -5,6 +5,9 @@
 import { libraryEntryProblem } from './library.mjs'
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
 
+/** How a message that asks for an id to go says what happens to a block left with nothing to show. */
+export const TAKE_OUT = 'take it out of this block, and leave the block out when it then shows nothing'
+
 /**
  * Report the data problems of one block of the composition.
  * @param {{data: string[]}} block the composed block
@@ -23,7 +26,7 @@ export function blockItemProblems(block, description, at, data, problem) {
       return problem(
         'invented_item',
         `${at}.data[${i}]`,
-        `${JSON.stringify(id)} is not a fact or item of the needs profile`
+        `${JSON.stringify(id)} is not a fact or item of the needs profile: ${TAKE_OUT}`
       )
     if (entry.what !== 'item') return
     items += 1
@@ -31,14 +34,14 @@ export function blockItemProblems(block, description, at, data, problem) {
       return problem(
         'wrong_item_kind',
         `${at}.data[${i}]`,
-        `a ${description.type} block cannot show ${entry.kind} item ${JSON.stringify(id)}`
+        `a ${description.type} block cannot show ${entry.kind} item ${JSON.stringify(id)}: ${TAKE_OUT}`
       )
     const refused = libraryEntryProblem(description, entry)
     if (refused)
       problem(
         'library_rule',
         `${at}.data[${i}]`,
-        `${description.id} does not show ${JSON.stringify(id)}: ${refused}`
+        `${description.id} does not show ${JSON.stringify(id)}: ${refused}; ${TAKE_OUT}`
       )
   })
   if (itemKind && items < description.items.min)

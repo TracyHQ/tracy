@@ -11,7 +11,10 @@
 // - data no block shows is placed in the fixed order of `plan-placement.mjs` and `plan-placement-facts.mjs`, else
 //   reported, and every fact and item is accounted for (`plan-accounting.mjs`, code `data_unaccounted`);
 // - a fact or item too long for the field of its block it would fill leaves that block, reported
-//   (`plan-data-limits.mjs`, code `data_over_limit`), so the page writer never stops on it;
+//   (`plan-data-limits.mjs`, code `data_over_limit`), so the page writer never stops on it; a block left with nothing
+//   leaves the plan, and a main block left with nothing is a `data_over_limit` problem (`plan-emptied-blocks.mjs`);
+// - a block the model sends with no data is left out, as the messages that take an id out of a block ask
+//   (`plan-gate-pages.mjs`); a model assumption naming what the owner keeps off the site is dropped;
 // - the rows of every child list are set by rules from the business's rows (`plan-rows.mjs`), held to what the block
 //   store declares (`plan-rows-check.mjs`), and every row not shown is reported in the left out list;
 // - the page rules (`plan-gate-page-rules.mjs`) hold for the composition and again after placement;
@@ -25,6 +28,7 @@ import { replyShapeProblems } from './plan-gate-reply.mjs'
 import { compositionProblems } from './plan-gate-rules.mjs'
 import { trimChannelOverflow } from './plan-gate-contact.mjs'
 import { pageRuleProblems } from './plan-gate-page-rules.mjs'
+import { keptAssumptionsOf, pagesOf } from './plan-gate-pages.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
 import { placeExtraData } from './plan-placement.mjs'
 import { placeExtraFacts } from './plan-placement-facts.mjs'
@@ -34,45 +38,12 @@ import {
   dropOverLimitData,
   overLimitLeftOut
 } from './plan-data-limits.mjs'
+import { dropEmptiedBlocks } from './plan-emptied-blocks.mjs'
 import { planRows } from './plan-rows.mjs'
 import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-
-/** The pages as the plan holds them, with ids; a page whose main block is missing is dropped with its reason. */
-function pagesOf(composition, { recipes, blocks }) {
-  const pages = []
-  const leftOut = []
-  const ids = new Set()
-  for (const page of composition.pages) {
-    const recipe = recipes.get(page.pageType)
-    if (!page.blocks.some((b) => b.block === recipe.mainBlock)) {
-      leftOut.push({
-        what: page.name,
-        kind: 'page',
-        reason: 'There was nothing to show in the main section of this page.'
-      })
-      continue
-    }
-    let id = page.pageType
-    for (let n = 2; ids.has(id); n++) id = `${page.pageType}-${n}`
-    ids.add(id)
-    const kept = page.blocks.map((b, j) => {
-      const d = blocks.get(b.block)
-      const block = { id: `${id}-b${j + 1}`, type: d.type, block: d.id, source: d.source ?? 'template' }
-      return { ...block, label: b.label, data: [...b.data], reason: b.reason }
-    })
-    pages.push({ id, name: page.name, pageType: page.pageType, blocks: kept })
-  }
-  return { pages, leftOut }
-}
-
-/** Whether an assumption's field is on a page the plan keeps: one about a dropped page goes with the page. */
-function onKeptPage(field, pages) {
-  const page = /^pages\[([^\]]+)\]/.exec(field)?.[1]
-  return page === undefined || pages.some((p) => p.id === page)
-}
 
 const withoutId = ({ id: _id, ...entry }) => entry
 
@@ -122,8 +93,11 @@ export function gatePlan(composition, context) {
   const reduced = facts.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)).filter((id) => !after.has(id))
   for (const id of [...items.leftOut, ...facts.leftOut].map((e) => e.id).concat(reduced)) leftOutIds.add(id)
   // A fact or item too long for the field it would fill leaves that block before any row is planned.
-  const limited = dropOverLimitData(pictures.pages, context.blocks, context.data)
-  for (const p of answerOverLimitProblems(limited.dropped)) problem(p.code, p.at, p.message)
+  const overLimit = dropOverLimitData(pictures.pages, context.blocks, context.data)
+  for (const p of answerOverLimitProblems(overLimit.dropped)) problem(p.code, p.at, p.message)
+  // A block it empties leaves the plan, or is reported when it is the page's main block (`plan-emptied-blocks.mjs`).
+  const emptied = dropEmptiedBlocks(pictures.pages, overLimit, context, dropped.index, problem)
+  const limited = { pages: emptied.pages, dropped: overLimit.dropped }
   // A value left off a shown item is taken off the item the page writer reads (the composer's settled profile).
   clearOverLimitValues(limited.dropped, context.data)
   const rows = planRows(limited.pages, context.blocks, context.data)
@@ -142,7 +116,9 @@ export function gatePlan(composition, context) {
   const fromModel = [...modelLeftOut, ...withheldOut].map(({ item, what, kind, reason }) => {
     if (item === undefined) return { what, kind, reason }
     const record = context.data.byId.get(item)
-    const label = context.data.withheld?.has(item) ? withheldWhatOf(record) : record.entry.label
+    const label = context.data.withheld?.has(item)
+      ? withheldWhatOf(record, context.profile?.withheld)
+      : record.entry.label
     return { what: label, kind: record.what === 'fact' ? 'feature' : 'item', reason }
   })
   const kept = ({ id }) =>
@@ -158,12 +134,7 @@ export function gatePlan(composition, context) {
     pages: rows.pages,
     look: context.look,
     pictures: pictures.pictures,
-    assumptions: [
-      ...context.assumptions,
-      ...list(composition.assumptions)
-        .map((a, i) => ({ id: `model-${i + 1}`, field: a.field, said: a.said }))
-        .filter((a) => onKeptPage(a.field, pictures.pages))
-    ],
+    assumptions: [...context.assumptions, ...keptAssumptionsOf(composition, pictures.pages, context)],
     leftOut: [
       ...fromModel,
       ...list(context.leftOut),
@@ -171,6 +142,7 @@ export function gatePlan(composition, context) {
       ...items.leftOut.map(withoutId),
       ...facts.leftOut.map(withoutId),
       ...pictures.leftOut,
+      ...emptied.leftOut,
       ...rowsOut.map(withoutId),
       ...listsBelowMinLeftOut(rows.dropped, rows.pages)
     ]

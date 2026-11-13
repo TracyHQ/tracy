@@ -106,12 +106,17 @@ test('a held business name is never shown, and a review naming a held person goe
   assert.deepEqual([...contextOf({ people: ['Osr'] }).data.withheld], [])
 })
 
+/** An invented neutral identity: a site whose name is held goes by it. */
+const NEUTRAL = 'Racket club by the river'
+
 test('the profile composePlan hands the page writer holds nothing the owner keeps off the site', async () => {
   const c = withoutTeam()
   c.pages[0].blocks[1].data = ['contact-hours']
   c.pages[0].blocks[5].data = ['contact-phone']
   const { profile } = await composePlan({
-    profile: withWithheld(clubProfile(), { withheld: { name: true, people: ['Ilse Varrow', 'Osric Vale'] } }),
+    profile: withWithheld(clubProfile(), {
+      withheld: { name: true, siteName: NEUTRAL, people: ['Ilse Varrow', 'Osric Vale'] }
+    }),
     blockStore: blockStore(),
     pageRecipes: pageRecipes(),
     library: library(),
@@ -123,7 +128,11 @@ test('the profile composePlan hands the page writer holds nothing the owner keep
   const ids = [...planDataOf(profile).byId.keys()]
   assert.equal(ids.includes(COACH), false)
   assert.equal(ids.includes('quote-my-two-kids-love-the-junior-coaching'), false)
-  assert.equal('business.name' in profile.facts, false)
+  // The held name goes by the neutral identity; without one the step stops earlier (`site_name_missing`).
+  assert.deepEqual(
+    profile.facts['business.name'].map((f) => f.value),
+    [NEUTRAL]
+  )
   assert.ok(
     ids.includes('contact-phone') && ids.includes('quote-friendly-coaches-and-the-courts-are-always-swept')
   )

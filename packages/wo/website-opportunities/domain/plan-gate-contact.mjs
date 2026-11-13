@@ -7,31 +7,10 @@
 // counts. A channel beyond the free places of the page is no problem: it is shown elsewhere, or placed, or left out
 // with the reason by the gate's placement (`plan-placement-facts.mjs`), after `trimChannelOverflow` took off what a
 // block holds beyond its places.
-import { BLOCK_TYPES } from './place-content-roles.mjs'
-import { slotsFor } from './plan-placement-facts.mjs'
+import { CONTACT_CHANNEL_KINDS, factSlotsFor } from './plan-placement-facts.mjs'
 import { recipeBlocksOf } from './plan-placement-pages.mjs'
 
-/** The fact kinds of a contact channel: phone, email, address, booking link, social profile. */
-export const CONTACT_CHANNEL_KINDS = Object.freeze([
-  'contact.phone',
-  'contact.email',
-  'contact.address',
-  'contact.cta_url',
-  'contact.social_url'
-])
-
-const list = (value) => (Array.isArray(value) ? value : [])
-const hasKind = (fields, kind) => list(fields).some((f) => f?.type !== 'design' && f?.kind === kind)
-
-/** How many facts of data kind `kind` a block shows: 0 for a block that needs items. */
-export function factSlotsFor(description, kind) {
-  if (!description || BLOCK_TYPES[description.type]?.itemKind) return 0
-  const items = hasKind(description.itemFields, kind) ? (description.items?.max ?? 0) : 0
-  const rows = list(description.lists)
-    .filter((l) => hasKind(l?.fields, kind))
-    .reduce((n, l) => n + (l?.items?.max ?? 0), 0)
-  return slotsFor(description, kind) + items + rows
-}
+export { CONTACT_CHANNEL_KINDS, factSlotsFor }
 
 /** The ids of `kind` a block shows within its places, in data order. */
 const shownOf = (block, kind, { data, blocks }) =>
