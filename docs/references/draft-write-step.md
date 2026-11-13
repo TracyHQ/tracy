@@ -1,12 +1,13 @@
 ---
-description: The write step of a draft run, which plans door operations from the write order, guards them, then runs, reads back, resumes and redoes them on a blank site. Covers the operations, the doors interface, the guards, the read back, the run record, the memory site's rules and what is unproven.
+description: The write step of a draft run, which plans door operations from the write order, guards them, then runs, reads back, resumes and redoes them on a blank site. Covers the operations, the doors interface, the guards, the conflicts, the read back, the run record and what is unproven.
 sources:
   - packages/wo/website-opportunities/domain/draft-write-plan.mjs
   - packages/wo/website-opportunities/domain/draft-write-guards.mjs
   - packages/wo/website-opportunities/domain/draft-write-library-check.mjs
+  - packages/wo/website-opportunities/domain/draft-write-markup.mjs
+  - packages/wo/website-opportunities/domain/draft-write-coverage.mjs
+  - packages/wo/website-opportunities/domain/draft-write-html-rest.mjs
   - packages/wo/website-opportunities/domain/draft-write-plan-hides.mjs
-  - packages/wo/website-opportunities/domain/write-order-memory-doors.mjs
-  - packages/wo/website-opportunities/domain/write-order-memory-rules.mjs
   - apps/tracy-web/src/step-chain-draft-write.js
   - apps/tracy-web/src/step-chain-draft-write-kinds.js
   - apps/tracy-web/src/step-chain-draft-write-check.js
@@ -34,13 +35,16 @@ mainMenu, order, ops, skipped, conflicts, unproven, controls}`.
 - Every operation names the order entries it writes (`entries`) and the contract rules it follows (`rules`).
 - Every value names its entry or its rule.
 - `draftWriteCoverage(order, plan)` proves that each entry is written by exactly one operation, skipped with a
-  reason, or lost a conflict (`in = written + skipped + conflicted`, none unexplained, none written twice).
+  reason, or lost a conflict (`in = written + skipped + conflicted`, none unexplained, none written twice). An entry
+  is **written** when an operation carries it (its words reach the site at one place at least), even when it lost
+  another place; **conflicted** when it lost a place and no operation carries it; **skipped** otherwise, with its
+  reason. `planCountsOf(plan)` gives the same three counts from the plan alone, each entry once.
 - The plan stops before any operation when the order fails `checkWriteOrder` (`order_invalid`), when the kit has no
   blank contract slots (`kit_missing`: every slot guard would turn off), and when a created record is of a kind the
   write has no shape for (`record_kind_unsupported`: only `menuItem`, `article`, `category` and `contact` are made).
 
 Coverage of the JA Boxing florist fixture (`node --test` of `domain-draft-write-plan.test.mjs` prints it): 280
-entries in, 142 written, 130 skipped, 8 conflicted, none unexplained, none written twice; 64 operations.
+entries in, 142 written, 124 skipped, 14 conflicted, none unexplained, none written twice; 64 operations.
 
 Run order:
 
@@ -64,13 +68,17 @@ draw in the page order. Each copy and created record carries a mark (the note of
 which a resumed run uses to find it again.
 
 - A menu block on the main menu writes no menu items of its own: its entries are the page items
-  (`menu_item_is_page_item`).
+  (`menu_item_is_page_item`); a label in other words than the page's menu label is a conflict the page item wins
+  (`kept: 'page_item'`). Two items of another menu for one page make one item: the same label is `address_shared`,
+  another label a conflict (`kept: 'first'`).
 - The category a list shows is titled after the list page of its page type (the page whose recipe's main block
   lists it), never the home page.
 - Two entries with other words for one place: the entry of the record's own subject page wins (a service page's own
-  paragraph over the home page teaser of it); otherwise the first one. The loser is in `plan.conflicts`
-  (`{entry, by, record, kept: 'own_page' | 'first'}`, ids only, never the words) and in the run report. Two entries
-  with the same words for one place: the second is skipped, `address_shared`.
+  paragraph over the home page teaser of it); otherwise the first one. `plan.conflicts` has one row per losing entry
+  and place, however often it lost it: `{entry, by, record, kept: 'own_page' | 'first' | 'page_item', written}`, ids
+  only, never the words; `written: true` when the entry is written at another place (a fact or a field that fans
+  out). Conflicts are never in `plan.skipped`. Two entries with the same words for one place: the second is skipped,
+  `address_shared`.
 
 ### Hides (`draft-write-plan-copies.mjs`, `draft-write-plan-hides.mjs`)
 
@@ -119,29 +127,10 @@ The rest of `deps.draftWrite`:
 - `blankContract(kit)`: the blank site contract's content map, which `loadAiqKit` does not load.
 - `drawInitials(draw)`: optional; the default is `lib/initials-avatar.js`.
 
-### The memory site (`write-order-memory-doors.mjs`)
-
-It implements these doors over the blank site contract's lock rows and content map, and refuses what the plugin
-refuses (`write-order-memory-rules.mjs`), so a plan or a step that breaks a rule fails its test:
-
-| Call | Refusal | Rule |
-|---|---|---|
-| every write | `APPLY_ID_REQUIRED` | no apply id; a replayed apply id answers the first answer again and changes nothing |
-| `contract` | `REVISION_REQUIRED`, `REVISION_STALE` | the revision moves on every write |
-| `contract` | `SLOT_UNKNOWN` | no such slot |
-| `contract` | `SLOT_NOT_CONTENT` | `<` or `>`; a straight double quote in a slot that opens empty |
-| `contract` | `HTML_SLOT_MISSING` | an empty string at a text node |
-| `contract` | `SLOT_EMPTY_STATE` | filling a slot whose sample is empty and that does not open empty, or emptying an occupied one |
-| `contract` | `SLOT_TOO_LONG` | over the slot's `maxCharacters` |
-| `contract` | `MARKERS_PRINTED_AS_WORDS` | content map markers at an HTML slot (memory only: the real site stores them and prints them as words) |
-| `contract` | `SLOT_NOT_REMOVABLE` | a `removes` slot that is not an element of an HTML value |
-| `contract` | `MODULE_TITLE_REQUIRED` | a module whose title the blank site emptied, written without its title in the same apply |
-| `update` | `NOT_FOUND`, `KIND_UNKNOWN` | no such record or module of an assignment; an unknown kind |
-| `update` | `TITLE_REQUIRED`, `MODULE_TITLE_REQUIRED` | a new article or category with no title, a contact with no name, a module with no title (Joomla's table check; not measured in #584, the plugin's code for it is not stated) |
-| `html` | `HTML_SLOT_MISSING` | an xpath naming no node or more than one |
-
-An HTML value is parsed as an HTML parser reads it: an unclosed `li` or `p` ends where the next one opens (a stored
-list value is written as `((li))` rows without end tags). A piece reads as its node's text.
+The tests run every plan on a memory site that refuses what the plugin refuses:
+[draft-write-memory-site.md](draft-write-memory-site.md). A door error with no code of its own (`door_failed`, the
+memory site's scripted failure) is a failed call: the operation is redone once, then the write stops with
+`redo_failed`.
 
 ## Running, reading back, resuming, redoing
 
@@ -153,13 +142,25 @@ list value is written as `((li))` rows without end tags). A piece reads as its n
 - An operation already `done` is skipped. A record marked `pending` is first looked up by its mark, then made.
 - After its calls every operation reads back what they changed: a made or patched record's sent columns and every
   value at its location (an HTML piece as its node's text, a removed element as gone), a module's pages, a contract
-  apply's slots and removed slots, an upload's bytes (`media`), the site identity. A difference stops the write with
-  `read_back_mismatch` (noRerun): it names the operation, the entity, slot, column and lengths, never the text.
+  apply's slots and removed slots, an upload's bytes (`media`), the site identity.
+- The untouched parts too: for every stored HTML value the operation wrote pieces of (a copy, a created record, a
+  patched record), the value before and the value the site holds are read by the step's own reader
+  (`draft-write-html-rest.mjs`, apart from the piece functions it checks), every element a piece names left out and
+  every removed element gone, and must be equal. A piece function that escapes a sibling's entity twice, drops or
+  moves a sibling, or closes a paragraph elsewhere is caught here (`what: 'untouched value'`, `at`: the element path).
+  A contract apply's value is read by its slots only.
+- A read back difference is redone once like any failing operation (a site may answer late); a second difference stops
+  the write with `read_back_mismatch` (noRerun). It names the operation, the entity, slot, column and lengths, never
+  the text.
 - A failing operation is tried twice (`DRAFT_WRITE_ATTEMPTS`). After that, or at once for a typed stop inside an
   operation (`ref_unresolved`, `initials_drawer_missing`, `record_kind_unsupported`), the write stops with
   `redo_failed` (noRerun) and the stop's code as `cause`. An operation of no known kind stops it with `op_unknown`.
 - Every stop carries the report: the operations that ran (`ran`), the one that failed (`failed`), the conflicts and the
-  unproven flags. A `fatal` error (the process went away) is passed on as it is, with the same report.
+  unproven flags. A `fatal` error (the process went away) is passed on as it is, with the same report. A
+  `write_record_stale` report names what the stale record had done (`stale: {plan, revision, done, made, pending}`,
+  operation keys only).
+- A run that ends reports `counts: {ops, written, skipped, conflicted, conflicts}` (`planCountsOf`), and the step's
+  `recorded` summary carries `conflicts: {count, entries}`: the entry ids, never the words.
 
 ## Guards (before any door, `draft-write-guards.mjs`, all noRerun)
 
@@ -168,11 +169,13 @@ list value is written as `((li))` rows without end tags). A piece reads as its n
 | `text_over_limit` | a value is longer than its field limit, or than its contract slot's `maxCharacters` |
 | `straight_quote_in_open_slot` | a straight double quote goes to a contract slot that opens empty |
 | `empty_text_node` | an empty value is sent to a text node (the write sends one space instead) |
-| `markup_forbidden` | a tag is sent through the contract, the map's codes are sent to an HTML place, a tag is sent to a codes place, or a field holds a tag its inline declaration does not list. The order check (`checkWriteOrder`) catches a stray `<` or `>` in a text entry first, and the page writer's copy check (`angle_bracket`) before that, where the writer can still redo it |
+| `markup_forbidden` | a tag is sent through the contract, the map's codes are sent to an HTML place, a tag is sent to a codes place, or a field holds a tag its inline declaration does not list, an attribute its emphasis part does not declare (none declared, none allowed), or a tag in the other form than its `inline.write`. The order check (`checkWriteOrder`, `markupNotDeclared`) catches every field case first, where the writer can still redo it, and the page writer's copy check (`angle_bracket`) before that |
+| `markup_runs_code` | a value written as HTML (an HTML piece, a value with tags or markers, a created record's HTML) holds a code element (`script`, `iframe`, `style`, `svg` and the like), an `on*` handler or an address or style that runs code, in a tag or a marker, in any case, whatever entities, slashes or white space hide it; or any value or record column is an address that runs code (`javascript:`, `vbscript:`, `data:` other than a picture) (`draft-write-markup.mjs`) |
+| `slot_missing` | a contract value with no slot, or a slot the blank site contract does not have |
 | `icon_not_in_list` | a network class is missing from `networkIconClasses`, or an image icon is missing from the icon library (`iconKeys`; with no library wired, none is in it) |
 | `picture_without_alt` | a shown picture has no alt text |
 | `picture_web_address_only`, `picture_not_stored` | a picture has no stored bytes (an initials picture is drawn instead) |
-| `held_text_in_value` | a held name or person, in any form, is in a value, an alt text, a record title or a library block's HTML |
+| `held_text_in_value` | a held name or person, in any form, is in a value, an alt text, a record title or a library block's HTML; both sides are also read as a person reads them (`plainOf`: every reference decoded, accents and zero width characters out, white space as one space, tags read as a space or as nothing) |
 | `block_not_approved` | a block is not placed by the approved plan |
 | `pair_incomplete` | one half of a button, or one version of an icon, is written without the other (block or item fields) |
 | `library_html_stale` | a library block's HTML does not show a shown field of the order (the heading, the label, the listing address escaped, each review's text, its reviewer as the block names them, its stars), or is empty |
@@ -184,13 +187,12 @@ list value is written as `((li))` rows without end tags). A piece reads as its n
 |---|---|
 | `left_empty`, `template_fallback`, `place_fallback`, `place_<state>`, `block_hidden` | the order leaves the place empty, to the template, or not shown |
 | `no_candidate_icon`, `gallery_own_photos_only`, `no_fitting_video`, `no_generated_people` | the order's own reason for a picture or icon it does not fill |
-| `address_shared` | another entry already writes the same words at that place |
-| `address_conflict` | another entry writes other words at that place and wins (listed in `plan.conflicts`, counted apart) |
+| `address_shared` | another entry already writes the same words at that place (other words: a conflict, see the plan) |
 | `menu_item_is_page_item` | a menu block on the main menu: its items are the page items |
-| `menu_item_without_page`, `menu_item_title` | a menu item with no page to link to; a menu item title, written by the page |
+| `menu_item_without_page`, `menu_item_without_label`, `menu_item_title` | a menu item with no page to link to; one with a page but no label; a menu item title, written by the page |
 | `derived_drawn_by_template` | a derived value the template draws itself |
 | `fact_fanned_out`, `fact_place_missing`, `fact_place_not_on_site`, `text_logo_prints_site_name` | a fact written once at its own place, or with no place on the site |
-| `no_mapping_entry`, `location_unresolved`, `entity_not_declared`, `kept_record_without_slot` | the mapping gives no place the write can reach |
+| `no_mapping_entry`, `location_unresolved`, `entity_not_declared`, `kept_record_without_slot` | the mapping gives no place the write can reach (`kept_record_without_slot`: a location of a record written in place, its own block's or another's, with no contract slot). A skipped half of a button stops the plan as `pair_incomplete` |
 | `held_block_not_placed`, `foreign_copy_not_placed` | the block holding the place is not placed |
 | `seo_derived_by_template`, `seo_record_not_declared` | the page's search title and description |
 | `accent_variables_not_declared`, `accent_door_missing` | the accent is not written |
