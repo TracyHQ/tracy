@@ -10,7 +10,11 @@ import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
 import { test } from 'node:test'
 
-import { emptyDeclaredFieldsStep, placesToEmpty } from '../scripts/blank-site-empty-fields.mjs'
+import {
+  emptyDeclaredFieldsStep,
+  emptyHtmlByPhp,
+  placesToEmpty
+} from '../scripts/blank-site-empty-fields.mjs'
 import { BLANK_SITE_STEPS, produceBlankSite } from '../scripts/blank-site.mjs'
 import { parseDump, records, sqlQuote } from '../scripts/joomla-sql-dump.mjs'
 
@@ -175,3 +179,73 @@ test('a place the demo data does not hold fails the step instead of being skippe
     /no text at/
   )
 })
+
+// Each address resolved the way the writer loads a stored value (`ContentSlots::html`: a root div): [count, text].
+const RESOLVE = `
+$in = json_decode(stream_get_contents(STDIN), true); $out = [];
+foreach ($in as $e) {
+  $d = new DOMDocument('1.0', 'UTF-8'); libxml_use_internal_errors(true);
+  $d->loadHTML('<?xml encoding="UTF-8"><html><body><div id="contract-root">' . $e['html'] . '</div></body></html>', LIBXML_NONET);
+  $n = (new DOMXPath($d))->query($e['xpath']);
+  $out[] = [$n === false ? -1 : $n->length, $n && $n->length ? $n->item(0)->textContent : null];
+}
+echo json_encode($out);`
+const resolve = (entries) =>
+  JSON.parse(spawnSync('php', ['-r', RESOLVE], { input: JSON.stringify(entries) }).stdout.toString())
+
+// The shapes of the text node places the blank site emptied into nothing before (#584 review): a button label, a
+// paragraph that is the value's own first text before a block, a stat line whose words sit around a span, a
+// paragraph after a heading, and two fact links side by side. Invented words.
+const TEXT_PLACES = [
+  ['<a href="#" class="btn">Book a loaf</a>', ['/html/body/div/a/text()']],
+  [
+    'Bread baked slowly, every night.\r\n\r\n<div class="actions"><a class="btn" href="#">our story</a></div>',
+    ['/html/body/div/text()', '/html/body/div/div/a/text()']
+  ],
+  [
+    'Twelve hours of rest for every dough.\r\n\r\n<div class="mt-3">\r\n\t<img src="images/a.png" class="me-3"/>\r\n\t' +
+      '<div class="d-block">Baked for <span class="text-primary">2k</span> early risers</div>\r\n</div>',
+    [
+      '/html/body/div/text()',
+      '/html/body/div/div/div/text()[1]',
+      '/html/body/div/div/div/span/text()',
+      '/html/body/div/div/div/text()[2]'
+    ]
+  ],
+  [
+    '<h4>Join the <span>Crumb</span> list</h4>\r\n<p>Fresh loaves each week.</p>',
+    ['/html/body/div/p/text()']
+  ],
+  [
+    '<a href="#" class="lead">(555) 010-0000</a>\r\n<p class="mb-3">1 Invented Lane</p>\r\n<a href="#">hi@crumb.example</a>',
+    ['/html/body/div/a[1]/text()', '/html/body/div/a[2]/text()']
+  ]
+]
+
+test(
+  'an emptied text node place still names exactly one node, empty, and its siblings keep their index',
+  needsPhp,
+  () => {
+    const entries = TEXT_PLACES.map(([html, xpaths]) => ({ html, xpaths }))
+    const marked = TEXT_PLACES.map(([html, xpaths]) => ({
+      html: html.replace(/<(\/?[a-zA-Z][^<>]*?)>/g, '(($1))'),
+      xpaths
+    }))
+    const emptied = emptyHtmlByPhp([...entries, ...marked])
+    emptied.forEach((r, i) => {
+      assert.equal(r.error, undefined)
+      const { xpaths } = i < entries.length ? entries[i] : marked[i - entries.length]
+      const html = r.html.replace(/\(\((\/?[a-zA-Z][^()]*?)\)\)/g, '<$1>')
+      const found = resolve(xpaths.map((xpath) => ({ html, xpath })))
+      found.forEach(([count, text], j) => {
+        assert.equal(count, 1, `${xpaths[j]} names one node in ${JSON.stringify(r.html)}`)
+        assert.equal(text.trim(), '', `${xpaths[j]} is empty`)
+      })
+    })
+    assert.equal(emptied[0].html, '<a href="#" class="btn"> </a>')
+    assert.equal(
+      emptied[2].html,
+      '\r\n\r\n<div class="mt-3">\r\n\t<img src="images/a.png" class="me-3">\r\n\t<div class="d-block"> <span class="text-primary"> </span> </div>\r\n</div>'
+    )
+  }
+)

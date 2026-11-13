@@ -7,7 +7,7 @@
  * content slots load it (`unit-markup.php`: a synthetic `/html/body/div` root), so the xpaths of the content map and
  * of the mapping file resolve to the same node. Each xpath must name exactly one node:
  *   an attribute         its value becomes empty (`href=""`);
- *   a text node          its text becomes empty;
+ *   a text node          its words go, its own white space stays (one space when it had none), see blankText();
  *   the root div         the whole value becomes empty;
  *   any other element    it keeps its tag and attributes and loses its children (`<h2 class="x"></h2>`).
  * Every node is found before anything changes, so one xpath never shifts another. The result is the root div's
@@ -15,19 +15,53 @@
  *
  * A JA ACM block stores its HTML in the marker notation the content map also uses (`((div class="x"))...((/div))`,
  * no angle bracket): such a value is read as the HTML its markers stand for and written back in markers.
+ *
+ * Required by another script (a test that writes through the plugin), it only defines its functions.
  */
+
+/** Whether a stored value is in the marker notation. */
+function isMarked(string $html): bool
+{
+    return strpos($html, '<') === false && strpos($html, '((') !== false;
+}
+
+/** The HTML the markers of a value stand for. */
+function fromMarkers(string $html): string
+{
+    return preg_replace('/\(\((\/?[a-zA-Z][^()]*?)\)\)/', '<$1>', $html);
+}
+
+/** HTML written back in markers. */
+function toMarkers(string $html): string
+{
+    return preg_replace('/<(\/?[a-zA-Z][^<>]*?)>/', '(($1))', $html);
+}
 
 function emptied(string $html, array $xpaths): array
 {
-    $marked = strpos($html, '<') === false && strpos($html, '((') !== false;
-    if ($marked) {
-        $html = preg_replace('/\(\((\/?[a-zA-Z][^()]*?)\)\)/', '<$1>', $html);
-    }
-    $result = emptiedHtml($html, $xpaths);
+    $marked = isMarked($html);
+    $result = emptiedHtml($marked ? fromMarkers($html) : $html, $xpaths);
     if ($marked && isset($result['html'])) {
-        $result['html'] = preg_replace('/<(\/?[a-zA-Z][^<>]*?)>/', '(($1))', $result['html']);
+        $result['html'] = toMarkers($result['html']);
     }
     return $result;
+}
+
+/**
+ * What an emptied text node holds: its own leading and trailing white space, or one space when it had none. An empty
+ * text node is not written out, so `p/text()`, or `text()[2]` after a `<span>`, would name no node once the value is
+ * saved, and the writer (the Claude Cowork plugin's `ContentSlots::htmlPatch`, which sets the text node an xpath
+ * names) would have nothing to write into. White space draws nothing, keeps the node, and keeps every sibling index.
+ */
+function blankText(string $text): string
+{
+    if (trim($text) === '') {
+        return $text === '' ? ' ' : $text;
+    }
+    preg_match('/^\s*/u', $text, $lead);
+    preg_match('/\s*$/u', $text, $trail);
+    $blank = $lead[0] . $trail[0];
+    return $blank === '' ? ' ' : $blank;
 }
 
 function emptiedHtml(string $html, array $xpaths): array
@@ -50,8 +84,10 @@ function emptiedHtml(string $html, array $xpaths): array
         if ($node === $root) {
             return ['html' => ''];
         }
-        if ($node instanceof DOMAttr || $node instanceof DOMText) {
+        if ($node instanceof DOMAttr) {
             $node->nodeValue = '';
+        } elseif ($node instanceof DOMText) {
+            $node->nodeValue = blankText($node->data);
         } elseif ($node instanceof DOMElement) {
             while ($node->firstChild) {
                 $node->removeChild($node->firstChild);
@@ -67,6 +103,9 @@ function emptiedHtml(string $html, array $xpaths): array
     return ['html' => $out];
 }
 
+if (realpath($_SERVER['SCRIPT_FILENAME'] ?? '') !== __FILE__) {
+    return;
+}
 $entries = json_decode(stream_get_contents(STDIN), true);
 if (!is_array($entries)) {
     fwrite(STDERR, "empty-html-places.php: stdin is not a JSON list\n");
