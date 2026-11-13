@@ -152,7 +152,10 @@ export function fixedLinkLabels(kit) {
     for (const id of new Set(ids)) pathsOf.get(id)?.push(p.path)
   }
   const pagedBases = new Set(
-    (kit.pages ?? []).map((p) => resultPage(p.path)).filter((r) => r?.start).map((r) => r.base)
+    (kit.pages ?? [])
+      .map((p) => resultPage(p.path))
+      .filter((r) => r?.start)
+      .map((r) => r.base)
   )
   let fixed = 0
   for (const b of kit.blocks) {

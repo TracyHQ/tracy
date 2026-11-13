@@ -1,7 +1,7 @@
 // Postwrite audio uses the host's existing pageMeasures read, after settings and route changes.
 import { audioSourceIdentity } from 'website-opportunities/domain/audio-source.mjs'
 import { pagePath } from '../lib/hidden-page-links.js'
-import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf, hostPath } from '../site-check/page-chunks.js'
+import { callPages, CALL_BUDGET_MS, CALL_TIMEOUT_MS, chunksOf, hostPath } from '../lib/page-chunks.js'
 
 const each = (value) => (Array.isArray(value) ? value : [])
 const widths = [1440, 390]

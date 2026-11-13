@@ -48,7 +48,7 @@ function titleOf(page, { blocks, samples, slotsOfEntity, ownersOf, menuItemOf, d
   // An image's text alternative is read aloud, never printed as the page's heading.
   const same = (id) =>
     samples.get(id)?.type === 'text' &&
-    !/_alt$/.test(samples.get(id).jsonPath?.at(-1) ?? '') &&
+    !String(samples.get(id).jsonPath?.at(-1) ?? '').endsWith('_alt') &&
     normText(samples.get(id).sample) === text
   // The page reading took the title from a parameter of the page's menu item (Joomla `page_title`): that field is it,
   // even when the item's own title holds the same words.

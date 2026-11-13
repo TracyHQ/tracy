@@ -7,10 +7,7 @@ import { contentMapKey } from '../lib/site-copy/contract-mapping.js'
 import { goneRowSlots } from './hide-rows.js'
 import { iconsOf } from './kit-slot-routes.js'
 import { foreignItemLinks } from './item-page-links.js'
-import {
-  audioDecisionProblem,
-  isAudioSlot
-} from 'website-opportunities/domain/audio-source.mjs'
+import { audioDecisionProblem, isAudioSlot } from 'website-opportunities/domain/audio-source.mjs'
 import { keptBlocks } from './owner-table.js'
 import { audioBindingMatches, linkDoors } from './link-doors.js'
 import { failed, lineOrder, lineResult } from './link-lines.js'
