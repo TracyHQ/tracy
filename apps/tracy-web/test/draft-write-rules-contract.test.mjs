@@ -95,7 +95,8 @@ test('rule 4: codes are written at an ACM data place (the hero title), real tags
   const hero = JSON.parse(JSON.parse(moduleOf(memory, 'copy:home.home-b3').params)['jatools-config'])
   assert.equal(hero.hero['hero[title]'][0], 'Wild((span))blooms((/span))')
   const stored = JSON.parse(moduleOf(memory, 'copy:home.home-b4').params)['main-section']
-  assert.equal(stored, 'Fresh<br/><span>daily</span>')
+  // The tags as the writer wrote them: the HTML functions write back a tag they did not change as it was read.
+  assert.equal(stored, 'Fresh<br><span>daily</span>')
   // A piece reads as its node's text, never the raw value written.
   assert.equal(memory.doors.html.get(stored, '/html/body/div'), 'Freshdaily')
 })

@@ -59,7 +59,13 @@ export async function draftWriteStep(wiring, ctx, inputs, { iconLibrary } = {}) 
     return {
       value: {
         report,
-        recorded: { ops: plan.ops.length, ran: report.ran.length, unproven: report.unproven }
+        recorded: {
+          ops: plan.ops.length,
+          ran: report.ran.length,
+          unproven: report.unproven,
+          // Two entries with other words for one place: how many lost a place, and which (entry ids, never the words).
+          conflicts: { count: report.counts.conflicts.length, entries: report.counts.conflicts }
+        }
       },
       usd: 0
     }

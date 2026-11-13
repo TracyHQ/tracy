@@ -5,7 +5,10 @@
 //
 // The door interface rule the memory site also holds the step to: every write carries an apply id, one per door call,
 // and a replayed apply id answers the first answer again and changes nothing (the real client keeps it: the plugin's
-// `content.contract` takes a `request_id` retry key, its `content.update` keeps none).
+// `content.contract` takes a `request_id` retry key, its `content.update` keeps none). The answer is kept with the door
+// and a hash of the payload: an apply id replayed at another door or with another payload is refused
+// (`APPLY_ID_REUSED`), since that is a step bug, not a retry. A contract apply's `expectedRevision` is not part of the
+// payload: a retry reads the revision again.
 //
 // Pure apart from its own memory. Scripted failures: `fail` (the n-th mutating call throws before it acts, a door that
 // may pass when asked again) and `crash` (`n` or `{at: n, before?}`: the n-th mutating call acts, or does not when
@@ -21,6 +24,17 @@ const list = (value) => (Array.isArray(value) ? value : [])
 const START = { module: 1000, menuItem: 2000, article: 3000, category: 4000, contact: 5000 }
 const IDENTITY = ['sitename', 'MetaDesc', 'sitename_pagetitles']
 const sha256 = (bytes) => createHash('sha256').update(bytes).digest('hex')
+/** A payload's hash: its JSON with keys sorted, bytes by their own hash. */
+const payloadHash = (payload) =>
+  sha256(
+    JSON.stringify(payload, (_, v) =>
+      v instanceof Uint8Array
+        ? `bytes:${sha256(v)}`
+        : v && typeof v === 'object' && !Array.isArray(v)
+          ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1)))
+          : v
+    )
+  )
 
 /**
  * @param {{lock: object, contentMap: object, fail?: number[], crash?: number | {at: number, before?: boolean}}} input the
@@ -37,13 +51,25 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
   const identity = {}
   const next = { ...START }
   const state = { calls: 0, log: [], revision: 1, answers: new Map() }
-  /** Every mutating call counts; a replayed apply id answers again; a scripted failure acts first (fail: before). */
-  const act = (name, applyId, check, run) => {
+  /**
+   * Every mutating call counts; a replayed apply id answers again (same door, same payload) or is refused; a scripted
+   * failure acts first (fail: before).
+   */
+  const act = (name, applyId, payload, check, run) => {
     if (typeof applyId !== 'string' || applyId === '')
       throw new DoorRefusal('APPLY_ID_REQUIRED', `${name} has no apply id`)
     state.calls += 1
     const n = state.calls
-    if (state.answers.has(applyId)) return structuredClone(state.answers.get(applyId))
+    const hash = payloadHash(payload)
+    if (state.answers.has(applyId)) {
+      const first = state.answers.get(applyId)
+      if (first.door !== name || first.hash !== hash)
+        throw new DoorRefusal(
+          'APPLY_ID_REUSED',
+          `${applyId} was first used ${first.door === name ? 'with another payload' : `at ${first.door}`}`
+        )
+      return structuredClone(first.out)
+    }
     const dies = (when) =>
       Object.assign(new Error(`scripted crash ${when} call ${n}`), { fatal: true, code: 'crash' })
     if (fail.includes(n))
@@ -52,7 +78,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
     if (crash?.at === n && crash.before) throw dies('before')
     const out = run()
     state.revision += 1
-    state.answers.set(applyId, structuredClone(out))
+    state.answers.set(applyId, { door: name, hash, out: structuredClone(out) })
     state.log.push(name)
     if (crash === n || (crash?.at === n && !crash.before)) throw dies('after')
     return out
@@ -80,6 +106,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
       return act(
         `update ${kind}`,
         applyId,
+        { kind, id: Number(id), fields },
         () => checkUpdate({ kind, id, fields }, records),
         () => {
           if (kind === 'moduleAssignment') {
@@ -103,7 +130,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
           { expectedRevision, changes, removes },
           { slots, revision: state.revision, modules: records.module }
         )
-      return act('content.contract', applyId, check, () => {
+      return act('content.contract', applyId, { changes, removes }, check, () => {
         for (const [key, value] of Object.entries(changes)) {
           const slot = slots.get(key)
           slot.current = String(value)
@@ -123,6 +150,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
       return act(
         'media.upload',
         applyId,
+        { path, bytes: new Uint8Array(bytes) },
         () => {},
         () => {
           uploads.set(path, Buffer.from(bytes))
@@ -138,6 +166,7 @@ export function memoryDoors({ lock, contentMap, fail = [], crash = null }) {
       return act(
         'site.identity',
         applyId,
+        { fields },
         () => {},
         () => {
           for (const [key, value] of Object.entries(fields)) if (IDENTITY.includes(key)) identity[key] = value

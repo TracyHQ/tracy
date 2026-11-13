@@ -21,6 +21,7 @@
 // Every write carries its own apply id; the client answers a replayed id with its first answer. A door error marked
 // `fatal` (the process going away) is never retried: the run record says where to resume.
 import { createHash } from 'node:crypto'
+import { planCountsOf } from 'website-opportunities/domain/draft-write-coverage.mjs'
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { runOf } from './step-chain-draft-write-kinds.js'
 
@@ -53,7 +54,20 @@ function stateOf(record, plan) {
         plan: { plan: mark.plan, revision: mark.revision }
       }),
       {
-        report: { status: 'failed', ran: [], unproven: [], failed: { op: null, code: 'write_record_stale' } }
+        // What the stale record had done on the site: nothing of this plan ran, but that half site is named.
+        report: {
+          status: 'failed',
+          ran: [],
+          unproven: [],
+          failed: { op: null, code: 'write_record_stale' },
+          stale: {
+            plan: state.mark?.plan ?? null,
+            revision: state.mark?.revision ?? null,
+            done: [...state.done],
+            made: Object.keys(state.ids),
+            pending: Object.keys(state.pending)
+          }
+        }
       }
     )
   state.mark = mark
@@ -127,10 +141,6 @@ export async function runDraftWrite({ plan, doors, record, openStored, drawIniti
     report.ran.push(op.key)
     await ctx.save()
   }
-  const written = plan.ops.reduce((n, op) => n + list(op.entries).length, 0)
-  return {
-    ...report,
-    status: 'done',
-    counts: { written, skipped: plan.skipped.length, ops: plan.ops.length }
-  }
+  // Each entry counted once: written by an operation, conflicted (lost its place, written nowhere) or skipped.
+  return { ...report, status: 'done', counts: planCountsOf(plan) }
 }

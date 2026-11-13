@@ -26,21 +26,27 @@ test('every write needs an apply id; a replayed one answers again and changes no
     memory.doors.update({ kind: 'article', id: 0, fields: { title: 'A' } }),
     refused('APPLY_ID_REQUIRED')
   )
-  const first = await memory.doors.update({
-    applyId: 'same',
-    kind: 'article',
-    id: 0,
-    fields: { title: 'Roses' }
-  })
-  const again = await memory.doors.update({
-    applyId: 'same',
-    kind: 'article',
-    id: 0,
-    fields: { title: 'Tulips' }
-  })
+  const call = { applyId: 'same', kind: 'article', id: 0, fields: { title: 'Roses' } }
+  const first = await memory.doors.update(structuredClone(call))
+  const again = await memory.doors.update(structuredClone(call))
   assert.deepEqual(again, first)
   assert.equal(memory.site.records.article.size, 1)
   assert.equal(memory.site.records.article.get(first.id).title, 'Roses')
+  // The same apply id with another payload, or at another door, is a step bug: refused, nothing changes.
+  await assert.rejects(
+    memory.doors.update({ ...call, fields: { title: 'Tulips' } }),
+    refused('APPLY_ID_REUSED')
+  )
+  await assert.rejects(
+    memory.doors.identity({ applyId: 'same', fields: { sitename: 'X' } }),
+    refused('APPLY_ID_REUSED')
+  )
+  await assert.rejects(
+    memory.doors.contract({ applyId: 'same', expectedRevision: 1, changes: {} }),
+    refused('APPLY_ID_REUSED')
+  )
+  assert.equal(memory.site.records.article.get(first.id).title, 'Roses')
+  assert.deepEqual(await memory.doors.readIdentity(), {})
 })
 
 test('content.contract: REVISION_REQUIRED, REVISION_STALE; the revision moves on every write', async () => {

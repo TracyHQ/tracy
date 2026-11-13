@@ -46,6 +46,10 @@ test('with doors the step writes the order and its report is done', async () => 
   assert.equal(answer.value.report.status, 'done')
   assert.equal(answer.value.recorded.ops, floristPlan.ops.length)
   assert.equal(answer.value.recorded.ran, floristPlan.ops.length)
+  // The conflicts in the recorded summary: their count and entry ids, never the words.
+  const lost = [...new Set(floristPlan.conflicts.map((c) => c.entry))]
+  assert.deepEqual(answer.value.recorded.conflicts, { count: lost.length, entries: lost })
+  assert.ok(lost.length > 0)
   assert.equal(answer.usd, 0)
   const clean = blankSite()
   await writeOf(wiringOf(clean))({ runId: 'r2' }, inputs())

@@ -77,7 +77,7 @@ export function baseFieldsOf(op, ctx) {
 }
 
 /** A created record's empty HTML values given the frame their pieces name (`created_record_frame`). */
-function framed(fields, op, ctx) {
+export function framed(fields, op, ctx) {
   if (!op.kind.endsWith('.create')) return fields
   const groups = new Map()
   for (const v of list(op.values))

@@ -4,22 +4,32 @@
 // file (`/html/body/div/a[1]/text()`, `.../@href`, `.../p`) must name exactly one node, else the call is refused with
 // `HTML_SLOT_MISSING` ("HTML slot is missing or ambiguous"); reading a piece returns the node's text (an attribute's
 // value, an element's text), never the raw value written. Only the xpath forms the mapping file uses are read: element
-// steps with an optional `[n]`, then `text()` (`[n]`) or `@name`. Pure.
+// steps with an optional `[n]`, then `text()` (`[n]`) or `@name`. Every character reference is read
+// (`draft-write-entities.mjs`), and a node the edit did not change is written back as it was read, so an edit never
+// alters its siblings (`Caf&eacute;` stays as it is). Pure.
+import { decodeEntities } from './draft-write-entities.mjs'
 
 const VOID = new Set(['br', 'img', 'hr', 'input', 'meta', 'link', 'source', 'wbr', 'area', 'col', 'embed'])
-/** Elements whose end tag is implied by the next one of the same name, inside the nearest of these parents. */
-const IMPLIED = { li: ['ul', 'ol'], p: ['div', 'section', 'blockquote', 'li', 'td', 'th'] }
-const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', '#39': "'" }
-const decode = (text) =>
-  text.replace(/&(#x[0-9a-f]+|#\d+|[a-z0-9]+);/gi, (m, name) => {
-    if (name[0] === '#')
-      return String.fromCodePoint(
-        name[1] === 'x' ? Number.parseInt(name.slice(2), 16) : Number(name.slice(1))
-      )
-    return ENTITIES[name] ?? m
-  })
+/** An open `li` ends where the next `li` opens, inside the nearest list. */
+const LI_FENCE = ['ul', 'ol']
+/** An open `p` ends where one of these opens (the HTML parser's rule), inside the nearest of the fences. */
+const P_CLOSERS = new Set(
+  'address article aside blockquote details dialog div dl fieldset figcaption figure footer form h1 h2 h3 h4 h5 h6 header hgroup hr main menu nav ol p pre section table ul'.split(
+    ' '
+  )
+)
+const P_FENCE = ['td', 'th', 'caption', 'table', 'button', 'object', 'template', 'marquee', 'applet']
 const escText = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 const escAttr = (text) => text.replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+/** A text node keeps the text it was read from: written back as it was while its words are unchanged. */
+const textNode = (raw) => ({ type: 'text', text: decodeEntities(raw), raw })
+
+/** Close the open `name` element above the last fence, if any: what an HTML parser does before `next` opens. */
+function closeImplied(stack, name, fence) {
+  const open = stack.findLastIndex((n) => n.name === name)
+  const fenced = stack.findLastIndex((n) => fence.includes(n.name))
+  if (open > 0 && open > fenced) stack.length = open
+}
 
 class PieceRefusal extends Error {
   constructor(xpath, found) {
@@ -36,7 +46,7 @@ export function parseHtml(html) {
     /<!--[\s\S]*?-->|<\/([a-zA-Z][\w-]*)\s*>|<([a-zA-Z][\w-]*)((?:\s+[^\s=/>]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*)\s*(\/?)>/g
   let last = 0
   for (let m = re.exec(html); m; m = re.exec(html)) {
-    if (m.index > last) stack.at(-1).children.push({ type: 'text', text: decode(html.slice(last, m.index)) })
+    if (m.index > last) stack.at(-1).children.push(textNode(html.slice(last, m.index)))
     last = re.lastIndex
     if (m[0].startsWith('<!--')) stack.at(-1).children.push({ type: 'raw', text: m[0] })
     else if (m[1]) {
@@ -45,22 +55,19 @@ export function parseHtml(html) {
       if (at > 0) stack.length = at
     } else {
       const attrs = [...m[3].matchAll(/([^\s=/>]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g)].map(
-        (a) => [a[1].toLowerCase(), decode(a[2] ?? a[3] ?? a[4] ?? '')]
+        (a) => [a[1].toLowerCase(), decodeEntities(a[2] ?? a[3] ?? a[4] ?? '')]
       )
-      const node = { type: 'element', name: m[2].toLowerCase(), attrs, children: [] }
-      // An unclosed `li` (or `p`) ends where its next sibling opens, as an HTML parser reads it (`((li))` rows of a
-      // stored list value are written without their end tags).
-      const scope = IMPLIED[node.name]
-      if (scope) {
-        const open = stack.findLastIndex((n) => n.name === node.name)
-        const fence = stack.findLastIndex((n) => scope.includes(n.name))
-        if (open > 0 && open > fence) stack.length = open
-      }
+      const node = { type: 'element', name: m[2].toLowerCase(), attrs, children: [], open: m[0] }
+      node.read = JSON.stringify(attrs)
+      // An unclosed `li` ends where the next one opens (`((li))` rows of a stored list value are written without their
+      // end tags); an unclosed `p` where a block opens (`div`, `ul`, another `p`), as an HTML parser reads them.
+      if (node.name === 'li') closeImplied(stack, 'li', LI_FENCE)
+      if (P_CLOSERS.has(node.name)) closeImplied(stack, 'p', P_FENCE)
       stack.at(-1).children.push(node)
       if (!m[4] && !VOID.has(node.name)) stack.push(node)
     }
   }
-  if (last < html.length) stack.at(-1).children.push({ type: 'text', text: decode(html.slice(last)) })
+  if (last < html.length) stack.at(-1).children.push(textNode(html.slice(last)))
   return root
 }
 
@@ -68,12 +75,15 @@ export function parseHtml(html) {
 export function serializeHtml(nodes) {
   return nodes
     .map((n) => {
-      if (n.type === 'text') return escText(n.text)
+      if (n.type === 'text')
+        return n.raw !== undefined && decodeEntities(n.raw) === n.text ? n.raw : escText(n.text)
       if (n.type === 'raw') return n.text
       const attrs = n.attrs.map(([k, v]) => ` ${k}="${escAttr(v)}"`).join('')
-      return VOID.has(n.name)
-        ? `<${n.name}${attrs}/>`
-        : `<${n.name}${attrs}>${serializeHtml(n.children)}</${n.name}>`
+      const open = n.open && n.read === JSON.stringify(n.attrs) ? n.open : null
+      if (VOID.has(n.name)) return open ?? `<${n.name}${attrs}/>`
+      // A non-void element read as closed by its own tag (`<span/>`) holds nothing: written back as it was read.
+      if (open?.endsWith('/>') && n.children.length === 0) return open
+      return `${open ?? `<${n.name}${attrs}>`}${serializeHtml(n.children)}</${n.name}>`
     })
     .join('')
 }

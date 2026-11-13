@@ -5,8 +5,13 @@
 // uploaded path. A difference stops the write with `read_back_mismatch`, naming the operation, the column or slot and
 // lengths, never the customer's text.
 import { createHash } from 'node:crypto'
-import { getAt, movedAfterCut } from 'website-opportunities/domain/draft-write-codec.mjs'
+import { addressOf, getAt, movedAfterCut } from 'website-opportunities/domain/draft-write-codec.mjs'
 import { DraftWriteError, lengthOf } from 'website-opportunities/domain/draft-write-error.mjs'
+import {
+  elementStepsOf,
+  movedAfterRemove,
+  restOf
+} from 'website-opportunities/domain/draft-write-html-rest.mjs'
 import { resolved } from './step-chain-draft-write-ops.js'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -87,6 +92,52 @@ export function readValues(row, op, ctx) {
       present = false
     }
     if (present) throw mismatch(op, 'removed element', '', 'present', { column: r.loc.column })
+  }
+}
+
+/** A location without its xpath: the whole stored value its pieces sit in. */
+const wholeOf = ({ xpath: _xpath, ...loc }) => loc
+
+/**
+ * The untouched parts of every HTML value the op wrote pieces of: the value before the write (`base`) and the value the
+ * site holds (`row`) read apart from the piece functions (`restOf`), every element a piece names left out, every
+ * element a `removes` took out gone; they must be equal. A fault of the piece functions that changes a sibling (an
+ * entity escaped twice, a node dropped or moved) stops the write here, typed.
+ */
+export function readRest(base, row, op, ctx) {
+  const groups = new Map()
+  for (const v of list(op.values)) {
+    if (!v.loc.xpath) continue
+    const at = wholeOf(v.loc)
+    const group = groups.get(addressOf(at)) ?? { at, masks: [], drops: [] }
+    group.masks.push(elementStepsOf(v.loc.xpath))
+    groups.set(addressOf(at), group)
+  }
+  for (const r of list(op.removes)) groups.get(addressOf(r.loc))?.drops.push(elementStepsOf(r.xpath))
+  for (const { at, masks, drops } of groups.values()) {
+    // A piece at the wrapper itself writes the whole value: nothing is left untouched.
+    if (masks.some((m) => m.length === 0)) continue
+    let moved = at
+    for (const cut of list(op.cuts)) moved = moved && movedAfterCut(moved, cut.row, cut.kept)
+    if (!moved) continue
+    const after = masks.map((m) => drops.reduce((steps, d) => movedAfterRemove(steps, d), m))
+    let before
+    let got
+    try {
+      before = restOf(getAt(base, at, ctx.html) ?? '', masks, drops)
+      got = restOf(getAt(row, moved, ctx.html) ?? '', after)
+    } catch (error) {
+      throw mismatch(op, 'untouched value', '', error?.code ?? 'unreadable', { column: at.column })
+    }
+    const k = before.findIndex((x, n) => x !== got[n])
+    const i = k === -1 ? Math.min(before.length, got.length) : k
+    if (k !== -1 || before.length !== got.length)
+      throw mismatch(op, 'untouched value', before[i] ?? '', got[i] ?? '', {
+        entity: at.entity ?? null,
+        column: at.column,
+        // Where the values part: an element path of the value, never its words.
+        at: (before[i] ?? got[i] ?? '').split(/[ #]/)[0]
+      })
   }
 }
 

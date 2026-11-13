@@ -9,6 +9,7 @@ import {
   readAssignment,
   readContract,
   readIdentity,
+  readRest,
   readSent,
   readUpload,
   readValues
@@ -16,17 +17,20 @@ import {
 import {
   baseFieldsOf,
   copyColumns,
+  framed,
   madeOnce,
   picturePathOf,
   resolved,
   writtenFields
 } from './step-chain-draft-write-ops.js'
 
-async function made(op, kind, fields, ctx) {
+/** Make a record once and read it back; `base`: its fields before the op's values, for the untouched parts. */
+async function made(op, kind, fields, ctx, base) {
   const id = await madeOnce(op, kind, ctx, () => fields)
   const row = await ctx.doors.get({ kind, id })
   readSent(row, fields, op)
   readValues(row, op, ctx)
+  if (base) readRest(base, row, op, ctx)
   return id
 }
 
@@ -44,12 +48,13 @@ export const RUN = {
   async create(op, ctx) {
     if (!CREATED_KINDS.includes(op.recordKind))
       throw new DraftWriteError('record_kind_unsupported', `${op.key} is a ${op.recordKind}`, { op: op.key })
-    await made(op, op.recordKind, writtenFields(baseFieldsOf(op, ctx), op, ctx), ctx)
+    const base = framed(baseFieldsOf(op, ctx), op, ctx)
+    await made(op, op.recordKind, writtenFields(base, op, ctx), ctx, base)
   },
   async 'module.copy'(op, ctx) {
     const source = copyColumns(await ctx.doors.get({ kind: 'module', id: op.source.id }))
     const base = { ...source, note: op.mark, ...(op.ordering ? { ordering: op.ordering } : {}) }
-    await made(op, 'module', writtenFields(base, op, ctx), ctx)
+    await made(op, 'module', writtenFields(base, op, ctx), ctx, base)
   },
   async 'module.assign'(op, ctx) {
     const id = ctx.state.ids[op.record] ?? op.sourceId
@@ -92,6 +97,7 @@ export const RUN = {
     const after = await ctx.doors.get({ kind: op.recordKind, id: op.sourceId })
     readSent(after, sent, op)
     readValues(after, op, ctx)
+    readRest(row, after, op, ctx)
   },
   async 'picture.upload'(op, ctx) {
     const key = `picture:${op.picture}`
