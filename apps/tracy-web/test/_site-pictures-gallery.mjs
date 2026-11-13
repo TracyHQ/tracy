@@ -193,10 +193,14 @@ function fakeLooker(reject, once = new Set()) {
  * Code's round 0 and the finished round, on a layout and a photo set.
  * @param {Set<string>} reject frames the looker always rejects
  * @param {string} runId
- * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean }} [opts] `draw`: the run
- *   has a (fake) drawer door
+ * @param {{ layout?: any[], photos?: Map<string, Buffer>, once?: Set<string>, draw?: boolean, lookAhead?: number }} [opts]
+ *   `draw`: the run has a (fake) drawer door; `lookAhead`: the finisher's look-ahead (ladder-step.js LOOK_AHEAD)
  */
-export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, once, draw = false } = {}) {
+export async function finished(
+  reject,
+  runId,
+  { layout = LAYOUT, photos = TALL, once, draw = false, lookAhead } = {}
+) {
   const PHOTOS = photos
   const k = kit(layout)
   const p = plan(layout)
@@ -261,7 +265,8 @@ export async function finished(reject, runId, { layout = LAYOUT, photos = TALL, 
           fetchImpl: looker.fetchImpl
         })
       : null,
-    drawer: { model: draw ? DRAWER_MODEL : null, snapshot: null, promptSha256: prompts.roles.drawing }
+    drawer: { model: draw ? DRAWER_MODEL : null, snapshot: null, promptSha256: prompts.roles.drawing },
+    ...(lookAhead === undefined ? {} : { lookAhead })
   })
   const out = await finisher.finish(doc, { lastRound: true })
   const files = { ...measured }
