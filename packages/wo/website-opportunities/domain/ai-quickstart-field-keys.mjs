@@ -4,6 +4,8 @@
 //
 // - `storage` (icon fields): how the template keeps the icon.
 // - `iconOf` (icon fields): what the icon stands for when it is not chosen for item content.
+// - `textOf` (text fields): what the words name when they are not written for the content (#584): `network`, the
+//   display name of the social network of the scope's link ("Facebook"), so they never carry a business's words.
 // - `for` (icon fields): the text fields of the same scope the icon illustrates.
 // - `variantOf` + `theme` (icon and image fields): the light and the dark version of one picture.
 // - `derived`: what a field with no stored place is derived from, one of `DERIVED_FORMS`.
@@ -12,6 +14,7 @@
 
 export const ICON_STORAGE = Object.freeze(['image-file', 'class-name'])
 export const ICON_OF = Object.freeze(['network'])
+export const TEXT_OF = Object.freeze(['network'])
 export const THEMES = Object.freeze(['light', 'dark'])
 /** The documented forms of `derived`. Anything else is a stored place left undeclared. */
 export const DERIVED_FORMS = Object.freeze({
@@ -89,6 +92,18 @@ function scopeProblems(scope, report, { library }) {
         `${at}.iconOf`,
         `${JSON.stringify(field.iconOf)} is not an iconOf value of an icon field: ${quoted(ICON_OF)}`
       )
+    if (field.textOf !== undefined) {
+      if (field.type !== 'text' || !TEXT_OF.includes(field.textOf))
+        report(
+          `${at}.textOf`,
+          `${JSON.stringify(field.textOf)} is not a textOf value of a text field: ${quoted(TEXT_OF)}`
+        )
+      else if (!fields.some((f) => f.type === 'link'))
+        report(
+          `${at}.textOf`,
+          `textOf "network" names the network of a link: no link field in the same ${noun}`
+        )
+    }
     if (field.for !== undefined) {
       if (!icon || !Array.isArray(field.for) || field.for.length === 0)
         report(`${at}.for`, 'for is a non-empty list of the text fields an icon field illustrates')

@@ -11,7 +11,7 @@
 //     "lists": [ ...a nested list, whose patterns may use {1} (the parent row) and {2} (its own row) ] }
 // A field may also give `xpath` (with the same placeholders; a list of alternatives, null for a place stored without
 // one), `kind` and `type`; without them the content map role
-// of its first place decides, as for any field. The keys of FIELD_KEYS (`storage`, `iconOf`, `frame`, `theme`,
+// of its first place decides, as for any field. The keys of FIELD_KEYS (`storage`, `iconOf`, `textOf`, `frame`, `theme`,
 // `variantOf`, `for`, ...) are copied onto the drafted field as the decision gives them.
 //
 // Two more decision keys of a list:
@@ -30,6 +30,7 @@ import { fieldTypeOf, limitOf } from './draft-fields.mjs'
 export const FIELD_KEYS = Object.freeze([
   'storage',
   'iconOf',
+  'textOf',
   'frame',
   'frameFrom',
   'theme',

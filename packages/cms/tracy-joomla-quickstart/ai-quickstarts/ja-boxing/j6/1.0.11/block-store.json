@@ -3896,6 +3896,7 @@
               "type": "text",
               "limit": 40,
               "limitFrom": "not drawn at any width: an icon link's label: the link shows only its network icon, the label is its accessible name",
+              "textOf": "network",
               "slots": [
                 [
                   "module-180.3",
@@ -3907,7 +3908,7 @@
             },
             {
               "name": "link",
-              "kind": "contact.social_url",
+              "kind": "person.social_url",
               "type": "link",
               "slots": [
                 [

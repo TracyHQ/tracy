@@ -129,14 +129,7 @@
       }
     ]
   },
-  "factExceptions": [
-    {
-      "block": "block-180",
-      "list": "social",
-      "field": "link",
-      "why": "the trainer page's social links are the trainer's own profiles, filled from the trainer's item, not the business's links"
-    }
-  ],
+  "factExceptions": [],
   "notFacts": [
     {
       "fact": "map location",

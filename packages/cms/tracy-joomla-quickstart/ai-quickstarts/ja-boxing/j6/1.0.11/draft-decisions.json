@@ -786,11 +786,12 @@
             {
               "name": "label",
               "kind": "contact.social_label",
+              "textOf": "network",
               "jsonPath": ["hero", "hero[social-intro][title]", "{1}"]
             },
             {
               "name": "link",
-              "kind": "contact.social_url",
+              "kind": "person.social_url",
               "type": "link",
               "jsonPath": ["hero", "hero[social-intro][link]", "{1}"]
             },

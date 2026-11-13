@@ -100,6 +100,21 @@ test('iconOf takes a documented value only', () => {
   assertOneProblem(set, `${GRID}.itemFields[icon].iconOf`, /"network"/)
 })
 
+test('textOf "network" names a text field beside a link; any other value or place is a problem', () => {
+  const set = pending()
+  itemField(set, 'name').textOf = 'network'
+  assert.deepEqual(checkAiQuickstartContract(set).problems, [], 'the grid items carry a link field')
+  itemField(set, 'name').textOf = 'brand'
+  assertOneProblem(set, `${GRID}.itemFields[name].textOf`, /"network"/)
+  const other = pending()
+  itemField(other, 'icon').textOf = 'network'
+  assertOneProblem(other, `${GRID}.itemFields[icon].textOf`, /textOf value of a text field/)
+  const lonely = pending()
+  const hero = blockOf(lonely, 'hero-home')
+  hero.fields.find((f) => f.name === 'heading').textOf = 'network'
+  assertOneProblem(lonely, 'blocks[hero-home].fields[heading].textOf', /no link field in the same block/)
+})
+
 test('derived is one of the documented forms, never free text', () => {
   const set = pending()
   itemField(set, 'link').derived = 'whatever the build finds'

@@ -133,6 +133,10 @@ A field whose kind is `editorial.design_element` is a design value and must be t
   footer or a trainer card). The build engine reads the network of that link: with `storage: "class-name"` it writes
   that network's class in the template's own icon font, with `storage: "image-file"` the icon library's mark of that
   network; it is never chosen by item content, so the item content rule above does not apply to it.
+- `textOf: "network"` marks a text field whose words are the display name of the social network of the link in the
+  same scope ("Facebook" beside a trainer's Facebook link), never words of the business or of the item. The build
+  writes the name of the network the link's host names; a row whose link names no known network is not written, as
+  for its icon. It is the label's counterpart of `iconOf`, and needs a `link` field in the same scope.
 - `for: [<field name>, ...]` names the text fields the icon illustrates, in the same scope (the block, one item, or one
   row of a child list). An icon at block level needs `for` or `iconOf`: a block level icon naming nothing has no
   content to be chosen from, and the build hides it (`icon_item_undeclared`). Inside an item or a row, the icon
@@ -159,6 +163,7 @@ A field whose kind is `editorial.design_element` is a design value and must be t
 |---|---|---|
 | `storage` | icon fields only; required on a template block's icon | `"image-file"`, `"class-name"` |
 | `iconOf` | icon fields | `"network"` |
+| `textOf` | text fields with a `link` field in the same scope | `"network"` |
 | `for` | icon fields | text field names of the same scope |
 | `variantOf` | icon and image fields | the name of the base field of the same scope |
 | `theme` | both members of a pair, required there | `"light"`, `"dark"` |
