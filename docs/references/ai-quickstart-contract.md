@@ -5,6 +5,7 @@ sources:
   - packages/wo/website-opportunities/domain/ai-quickstart-mapping.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-field-keys.mjs
   - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-references.mjs
+  - packages/cms/tracy-quickstart-tools/ai-quickstart/lib/draft-inline-markup.mjs
   - packages/wo/website-opportunities/domain/place-content-roles.mjs
   - scripts/ai-quickstart/check.mjs
   - packages/wo/website-opportunities/domain/ai-quickstart-library.mjs
@@ -183,6 +184,13 @@ location and may name the page type it points at with `pageType`.
 is the first link inside the HTML that slot `module-163.12` stores. A trainer card's social links are a child list
 (`itemLists`) whose rows are the links of that one value, each row a `link` and its network icon
 (`iconOf: "network"`, `storage: "class-name"`).
+
+**Inline markup inside a text value.** A text field's stored value may carry inline markup: an accent span or a line
+break in a heading, a styled unit in a price, a paragraph wrapper around a body. This version of the format does not
+describe that markup; the draft lists every such field in `draft-report.json` (`inlineMarkup`: one class, its owner
+tickets #584 and #585, the fields). Meanwhile a build writes a field whose place is an xpath piece as text inside the
+element that piece names, and for any other text field replaces the words of the stored value and keeps its outer
+wrapper element; no check enforces this yet.
 
 **A child field is stored on its parent's record.** Every stored place of a child field, and every `keyAt` location, is
 on the record of its parent place (the block's record for `lists`, the item's record for `itemLists`). A place on

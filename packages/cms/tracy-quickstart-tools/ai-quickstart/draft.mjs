@@ -66,6 +66,13 @@ function main(argv) {
     )
     process.exit(1)
   }
+  if (!result.inlineMarkup.owned) {
+    process.stderr.write(
+      `${result.inlineMarkup.entry.count} text field(s) store inline markup and no owned class holds them; nothing written:\n${result.inlineMarkup.entry.fields.map((f) => `  ${f.block} ${f.list ? `${f.list}/` : ''}${f.field} (${f.markup.join(', ')})`).join('\n')}\n` +
+        'Name the class in draft-decisions.json: inlineMarkup {class, why, owners: {"#<ticket>": "<what it owns>"}}.\n'
+    )
+    process.exit(1)
+  }
   write(path.join(out, 'block-store.json'), result.blockStore)
   write(path.join(out, 'page-recipes.json'), result.pageRecipes)
   const summary = summaryOf(result)

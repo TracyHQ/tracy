@@ -55,6 +55,10 @@
       "sharedPlaces": 73
     },
     "unlistedUnclassified": 0,
+    "inlineMarkup": {
+      "class": "inline-markup-in-text",
+      "fields": 35
+    },
     "references": {
       "total": 111,
       "target kept": 4,
@@ -1933,6 +1937,290 @@
         "as": "build-sets",
         "why": "the home page class cards (mod_articles_category) list the articles of category 9, which the blank site deletes; the mapping file names this setting so the build writes the category it files the class pages in, else the block lists nothing",
         "owner": "#584"
+      }
+    ]
+  },
+  "inlineMarkup": {
+    "class": "inline-markup-in-text",
+    "why": "The stored value of these text fields carries markup around or between its words: an accent span or a line break in a heading, a styled unit span in a price, a paragraph wrapper around a body. This version of the block store format does not describe that markup, so it is declared here as one class with owners instead of being modelled field by field.",
+    "owners": {
+      "#584": "how the mapping file writes a value that carries inline markup (which wrapper and which inner element keep the template's look)",
+      "#585": "the gate that catches a broken look when such a value is written as plain words"
+    },
+    "count": 35,
+    "fields": [
+      {
+        "block": "block-156",
+        "field": "heading",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-157",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-160",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-160",
+        "field": "heading-2",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-163",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-165",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-165",
+        "field": "description",
+        "markup": [
+          "li",
+          "p",
+          "ul"
+        ],
+        "note": "Running rich text, not a child list: each step's stored value is a body, one paragraph followed by a highlight list (ul.list-highlight, five lines in each of the four stored values), and its limit was measured on that whole body. The list is a part of the body's markup, kept with the paragraph by the owners of this class, not a list of rows of the step."
+      },
+      {
+        "block": "block-166",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-169",
+        "field": "heading",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-175",
+        "field": "address",
+        "markup": [
+          "br"
+        ]
+      },
+      {
+        "block": "block-162",
+        "field": "stat-title",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-162",
+        "list": "pages",
+        "field": "title",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-162",
+        "list": "pages",
+        "field": "intro",
+        "markup": [
+          "br"
+        ]
+      },
+      {
+        "block": "block-158",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "class-list",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-184",
+        "field": "heading-5",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-167",
+        "field": "price",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-188",
+        "field": "price",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-189",
+        "field": "price",
+        "markup": [
+          "span"
+        ]
+      },
+      {
+        "block": "block-172",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-183",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-183",
+        "field": "quote-text",
+        "markup": [
+          "p"
+        ]
+      },
+      {
+        "block": "block-190",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-177",
+        "field": "name",
+        "markup": [
+          "br"
+        ]
+      },
+      {
+        "block": "block-177",
+        "field": "description",
+        "markup": [
+          "p"
+        ]
+      },
+      {
+        "block": "block-180",
+        "field": "person-bio",
+        "markup": [
+          "li",
+          "p",
+          "ul"
+        ],
+        "note": "Running rich text, not a child list: the trainer's stored biography is one paragraph followed by a highlight list (ul.list-highlight h4, four lines), and its limit was measured on that whole body. The list is a part of the body's markup, kept with the paragraph by the owners of this class, not a list of rows of the trainer."
+      },
+      {
+        "block": "block-180",
+        "field": "person-name-2",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-181",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-182",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "class-detail",
+        "field": "heading-2",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "class-detail",
+        "field": "heading-3",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-159",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-159",
+        "field": "heading-2",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "block-191",
+        "field": "heading",
+        "markup": [
+          "br",
+          "span"
+        ]
+      },
+      {
+        "block": "learning-post",
+        "field": "punches-heading",
+        "markup": [
+          "span"
+        ]
       }
     ]
   }

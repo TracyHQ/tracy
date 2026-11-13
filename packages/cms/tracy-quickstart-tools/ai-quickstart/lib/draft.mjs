@@ -5,6 +5,7 @@
 // file (#584) and for a reviewer; the contract check ignores them.
 import { draftBlocks } from './draft-blocks.mjs'
 import { accountForPlaces } from './draft-coverage.mjs'
+import { inlineMarkupReport } from './draft-inline-markup.mjs'
 import { accountForReferences } from './draft-references.mjs'
 import { draftRecipes } from './draft-recipes.mjs'
 
@@ -47,7 +48,11 @@ export function draftAiQuickstart({ kit, contentMap, lock, decisions = {}, measu
   const references = lock ? accountForReferences({ lock, contentMap, blocks, report, decisions }) : null
   if (references)
     report.references = { total: references.total, byClass: references.byClass, classed: references.classed }
-  return { blockStore, pageRecipes, report, coverage, references }
+  // Text fields whose stored value carries inline markup the format does not describe, under one owned class;
+  // draft.mjs writes nothing while the class has no owner ticket.
+  const inlineMarkup = inlineMarkupReport({ blocks, contentMap, decisions })
+  report.inlineMarkup = inlineMarkup.entry
+  return { blockStore, pageRecipes, report, coverage, references, inlineMarkup }
 }
 
 /** Every stored place more than one field uses, with each use and the smallest text limit among them. */
@@ -108,10 +113,13 @@ export function summaryOf({ blockStore, pageRecipes, report, coverage }) {
     excludedPageGroups: pageRecipes.excluded.length,
     open: Object.fromEntries(
       Object.entries(report)
-        .filter(([k]) => k !== 'references')
+        .filter(([k]) => k !== 'references' && k !== 'inlineMarkup')
         .map(([k, v]) => [k, Array.isArray(v) ? v.length : v])
     ),
     unlistedUnclassified: (report.unlisted ?? []).filter((u) => !u.as).length,
+    ...(report.inlineMarkup
+      ? { inlineMarkup: { class: report.inlineMarkup.class, fields: report.inlineMarkup.count } }
+      : {}),
     ...(report.references
       ? { references: { total: report.references.total, ...report.references.byClass } }
       : {}),

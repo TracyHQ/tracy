@@ -1442,5 +1442,17 @@
       "owner": "#584",
       "why": "the home page class cards (mod_articles_category) list the articles of category 9, which the blank site deletes; the mapping file names this setting so the build writes the category it files the class pages in, else the block lists nothing"
     }
+  },
+  "inlineMarkup": {
+    "class": "inline-markup-in-text",
+    "why": "The stored value of these text fields carries markup around or between its words: an accent span or a line break in a heading, a styled unit span in a price, a paragraph wrapper around a body. This version of the block store format does not describe that markup, so it is declared here as one class with owners instead of being modelled field by field.",
+    "owners": {
+      "#584": "how the mapping file writes a value that carries inline markup (which wrapper and which inner element keep the template's look)",
+      "#585": "the gate that catches a broken look when such a value is written as plain words"
+    },
+    "notes": {
+      "block-165.description": "Running rich text, not a child list: each step's stored value is a body, one paragraph followed by a highlight list (ul.list-highlight, five lines in each of the four stored values), and its limit was measured on that whole body. The list is a part of the body's markup, kept with the paragraph by the owners of this class, not a list of rows of the step.",
+      "block-180.person-bio": "Running rich text, not a child list: the trainer's stored biography is one paragraph followed by a highlight list (ul.list-highlight h4, four lines), and its limit was measured on that whole body. The list is a part of the body's markup, kept with the paragraph by the owners of this class, not a list of rows of the trainer."
+    }
   }
 }
