@@ -1,0 +1,1064 @@
+{
+  "schema": "tracy-build-scenario/v1",
+  "name": "sunrise-tennis-club",
+  "summary": "An invented tennis club: two questions, a plan with four services (one only in an Instagram caption), a full build that finishes, a plan edit and the partial re-run it starts.",
+  "questions": [
+    {
+      "schema": "tracy-build-question/v1",
+      "id": "main-button",
+      "topic": "main-button",
+      "prompt": "What should visitors do first on your site?",
+      "choices": [
+        {
+          "id": "book",
+          "label": "Book a court",
+          "detail": "Your Instagram bio links to bookings",
+          "recommended": true
+        },
+        {
+          "id": "call",
+          "label": "Call",
+          "detail": "04 000 0000"
+        },
+        {
+          "id": "whatsapp",
+          "label": "WhatsApp"
+        },
+        {
+          "id": "form",
+          "label": "Send a form"
+        }
+      ],
+      "freeText": {
+        "maxLength": 80,
+        "placeholder": "Type your answer"
+      }
+    },
+    {
+      "schema": "tracy-build-question/v1",
+      "id": "phone",
+      "topic": "fact-conflict",
+      "fact": "contact.phone",
+      "prompt": "Two sources show different phone numbers. Which is correct?",
+      "choices": [
+        {
+          "id": "website",
+          "label": "04 000 0000",
+          "detail": "From your website",
+          "recommended": true
+        },
+        {
+          "id": "maps",
+          "label": "04 000 0009",
+          "detail": "From Google Maps"
+        }
+      ],
+      "freeText": {
+        "maxLength": 40,
+        "placeholder": "Type the correct number"
+      }
+    }
+  ],
+  "answers": [
+    {
+      "schema": "tracy-build-answer/v1",
+      "question": "main-button",
+      "choice": "book"
+    },
+    {
+      "schema": "tracy-build-answer/v1",
+      "question": "phone",
+      "choice": "website"
+    }
+  ],
+  "plan": {
+    "schema": "tracy-build-plan/v1",
+    "id": "plan-sunrise-tennis",
+    "revision": 1,
+    "language": "en",
+    "facts": [
+      {
+        "id": "name",
+        "kind": "business.name",
+        "label": "Business name",
+        "value": "Sunrise Tennis Club",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "tagline",
+        "kind": "business.tagline",
+        "label": "Tagline",
+        "value": "Tennis for every age and level",
+        "sources": [
+          {
+            "kind": "social",
+            "name": "Instagram bio"
+          }
+        ]
+      },
+      {
+        "id": "button",
+        "kind": "contact.cta_label",
+        "label": "Main button",
+        "value": "Book a court",
+        "sources": [
+          {
+            "kind": "answer",
+            "name": "Your answer"
+          }
+        ]
+      },
+      {
+        "id": "phone",
+        "kind": "contact.phone",
+        "label": "Phone",
+        "value": "04 000 0000",
+        "sources": [
+          {
+            "kind": "answer",
+            "name": "Your answer"
+          },
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "email",
+        "kind": "contact.email",
+        "label": "Email",
+        "value": "hello@sunrise-tennis.example",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "address",
+        "kind": "contact.address",
+        "label": "Address",
+        "value": "12 Court Lane, Harbour District",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "hours",
+        "kind": "contact.hours",
+        "label": "Opening hours",
+        "value": "Every day, 6:00 to 22:00",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      }
+    ],
+    "items": [
+      {
+        "id": "s1",
+        "kind": "service",
+        "label": "Adult coaching",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          },
+          {
+            "kind": "social",
+            "name": "Instagram"
+          }
+        ]
+      },
+      {
+        "id": "s2",
+        "kind": "service",
+        "label": "Junior squad",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          },
+          {
+            "kind": "social",
+            "name": "Instagram"
+          }
+        ]
+      },
+      {
+        "id": "s3",
+        "kind": "service",
+        "label": "Court hire",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          },
+          {
+            "kind": "social",
+            "name": "Instagram"
+          }
+        ]
+      },
+      {
+        "id": "s4",
+        "kind": "service",
+        "label": "Cardio tennis",
+        "sources": [
+          {
+            "kind": "social",
+            "name": "Instagram post"
+          }
+        ]
+      },
+      {
+        "id": "c1",
+        "kind": "person",
+        "label": "Coach Ana",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "c2",
+        "kind": "person",
+        "label": "Coach Ben",
+        "sources": [
+          {
+            "kind": "website",
+            "name": "Website"
+          }
+        ]
+      },
+      {
+        "id": "c3",
+        "kind": "person",
+        "label": "Coach Chloe",
+        "sources": [
+          {
+            "kind": "social",
+            "name": "Instagram"
+          }
+        ]
+      },
+      {
+        "id": "r1",
+        "kind": "quote",
+        "label": "Maya R., 5 stars",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "kind": "quote",
+        "label": "Tom B., 5 stars",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "kind": "quote",
+        "label": "Lena K., 4 stars",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "r4",
+        "kind": "quote",
+        "label": "Omar S., 5 stars",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "r5",
+        "kind": "quote",
+        "label": "Ines P., 5 stars",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "r6",
+        "kind": "quote",
+        "label": "Jon D., 4 stars",
+        "sources": [
+          {
+            "kind": "google",
+            "name": "Google Maps"
+          }
+        ]
+      },
+      {
+        "id": "photos",
+        "kind": "gallery",
+        "label": "Photos of courts and classes",
+        "sources": [
+          {
+            "kind": "social",
+            "name": "Instagram"
+          }
+        ],
+        "count": 12
+      }
+    ],
+    "pages": [
+      {
+        "id": "home",
+        "name": "Home",
+        "pageType": "home",
+        "blocks": [
+          {
+            "id": "h1",
+            "type": "hero",
+            "block": "hero-home",
+            "source": "template",
+            "label": "Top banner",
+            "data": ["name", "tagline", "button"],
+            "reason": "Your name and booking button come first."
+          },
+          {
+            "id": "h2",
+            "type": "services",
+            "block": "services-grid",
+            "source": "template",
+            "label": "Services",
+            "data": ["s1", "s2", "s3", "s4"],
+            "reason": "All four services you offer."
+          },
+          {
+            "id": "h3",
+            "type": "reviews",
+            "block": "tracy-reviews",
+            "source": "library",
+            "label": "Reviews",
+            "data": ["r1", "r2", "r3", "r4", "r5", "r6"],
+            "reason": "The template has no reviews block, so your Google reviews use the Tracy reviews block."
+          },
+          {
+            "id": "h4",
+            "type": "contact",
+            "block": "contact-strip",
+            "source": "template",
+            "label": "Contact strip",
+            "data": ["phone", "address", "hours"],
+            "reason": "Visitors can reach you from the first page."
+          }
+        ]
+      },
+      {
+        "id": "about",
+        "name": "About",
+        "pageType": "about",
+        "blocks": [
+          {
+            "id": "a1",
+            "type": "about",
+            "block": "about-story",
+            "source": "template",
+            "label": "Our story",
+            "data": ["name"],
+            "reason": "Your website tells the club story."
+          },
+          {
+            "id": "a2",
+            "type": "gallery",
+            "block": "gallery-grid",
+            "source": "template",
+            "label": "Photo gallery",
+            "data": ["photos"],
+            "reason": "Your Instagram has many photos of the courts."
+          }
+        ]
+      },
+      {
+        "id": "services",
+        "name": "Services",
+        "pageType": "services",
+        "blocks": [
+          {
+            "id": "v1",
+            "type": "services",
+            "block": "services-list",
+            "source": "template",
+            "label": "One section each",
+            "data": ["s1", "s2", "s3", "s4"],
+            "reason": "Each service gets its own section."
+          }
+        ]
+      },
+      {
+        "id": "coaches",
+        "name": "Coaches",
+        "pageType": "team",
+        "blocks": [
+          {
+            "id": "t1",
+            "type": "team",
+            "block": "team-cards",
+            "source": "template",
+            "label": "Coach cards",
+            "data": ["c1", "c2", "c3"],
+            "reason": "Your three coaches; initials where there is no photo."
+          }
+        ]
+      },
+      {
+        "id": "contact",
+        "name": "Contact",
+        "pageType": "contact",
+        "blocks": [
+          {
+            "id": "n1",
+            "type": "contact",
+            "block": "contact-form",
+            "source": "template",
+            "label": "Contact form",
+            "data": ["email"],
+            "reason": "Messages are sent to your email."
+          },
+          {
+            "id": "n2",
+            "type": "map",
+            "block": "map-hours",
+            "source": "template",
+            "label": "Map and hours",
+            "data": ["address", "hours"],
+            "reason": "Visitors can find the courts."
+          }
+        ]
+      }
+    ],
+    "look": {
+      "template": {
+        "slug": "example-sports-template",
+        "name": "Example Sports",
+        "version": "1.0.0"
+      },
+      "accent": "#1f7a4d",
+      "logo": {
+        "kind": "own",
+        "source": "Instagram profile picture"
+      }
+    },
+    "pictures": {
+      "own": {
+        "frames": 31,
+        "from": ["Instagram", "Website"]
+      },
+      "generated": {
+        "frames": 2,
+        "reason": "Two spots have no fitting photo; generated pictures show no people."
+      }
+    },
+    "assumptions": [
+      {
+        "id": "language",
+        "field": "language",
+        "said": "Every source is in English, so the site is in English."
+      },
+      {
+        "id": "hours",
+        "field": "facts[hours].value",
+        "said": "Google Maps lists the same hours every day."
+      }
+    ],
+    "leftOut": [
+      {
+        "what": "Prices page",
+        "kind": "page",
+        "reason": "No public prices found."
+      },
+      {
+        "what": "Blog",
+        "kind": "page",
+        "reason": "Your website has no posts."
+      },
+      {
+        "what": "Shop",
+        "kind": "page",
+        "reason": "You do not sell products online."
+      },
+      {
+        "what": "Video in the top banner",
+        "kind": "feature",
+        "reason": "Your videos are upright; a photo looks better on computers."
+      }
+    ]
+  },
+  "edits": [
+    {
+      "schema": "tracy-build-plan-edit/v1",
+      "id": "edit-1",
+      "plan": {
+        "id": "plan-sunrise-tennis",
+        "revision": 1
+      },
+      "changes": [
+        {
+          "field": "items[s2].label",
+          "value": "Junior academy"
+        }
+      ]
+    }
+  ],
+  "runs": [
+    {
+      "events": [
+        {
+          "schema": "tracy-build-progress/v1",
+          "planId": "plan-sunrise-tennis",
+          "planRevision": 1,
+          "run": {
+            "id": "run-1",
+            "kind": "build"
+          },
+          "seq": 1,
+          "elapsedSeconds": 0,
+          "steps": [
+            {
+              "id": "look",
+              "kind": "look",
+              "label": "Set up the design with your colours",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write-home",
+              "kind": "writer",
+              "label": "Write Home",
+              "page": "home",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "write-about",
+              "kind": "writer",
+              "label": "Write About",
+              "page": "about",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "write-services",
+              "kind": "writer",
+              "label": "Write Services",
+              "page": "services",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "write-coaches",
+              "kind": "writer",
+              "label": "Write Coaches",
+              "page": "coaches",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "write-contact",
+              "kind": "writer",
+              "label": "Write Contact",
+              "page": "contact",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "own-photos",
+              "kind": "pictures",
+              "label": "Place your photos (31)",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "generated-pictures",
+              "kind": "pictures",
+              "label": "Generate 2 pictures for empty spots",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "write",
+              "kind": "write",
+              "label": "Put your pages on the site",
+              "state": "pending",
+              "attempt": 0
+            }
+          ]
+        },
+        {
+          "schema": "tracy-build-progress/v1",
+          "planId": "plan-sunrise-tennis",
+          "planRevision": 1,
+          "run": {
+            "id": "run-1",
+            "kind": "build"
+          },
+          "seq": 2,
+          "elapsedSeconds": 38,
+          "steps": [
+            {
+              "id": "look",
+              "kind": "look",
+              "label": "Set up the design with your colours",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-home",
+              "kind": "writer",
+              "label": "Write Home",
+              "page": "home",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write-about",
+              "kind": "writer",
+              "label": "Write About",
+              "page": "about",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write-services",
+              "kind": "writer",
+              "label": "Write Services",
+              "page": "services",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write-coaches",
+              "kind": "writer",
+              "label": "Write Coaches",
+              "page": "coaches",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write-contact",
+              "kind": "writer",
+              "label": "Write Contact",
+              "page": "contact",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "own-photos",
+              "kind": "pictures",
+              "label": "Place your photos (31)",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "generated-pictures",
+              "kind": "pictures",
+              "label": "Generate 2 pictures for empty spots",
+              "state": "pending",
+              "attempt": 0
+            },
+            {
+              "id": "write",
+              "kind": "write",
+              "label": "Put your pages on the site",
+              "state": "pending",
+              "attempt": 0
+            }
+          ]
+        },
+        {
+          "schema": "tracy-build-progress/v1",
+          "planId": "plan-sunrise-tennis",
+          "planRevision": 1,
+          "run": {
+            "id": "run-1",
+            "kind": "build"
+          },
+          "seq": 3,
+          "elapsedSeconds": 261,
+          "steps": [
+            {
+              "id": "look",
+              "kind": "look",
+              "label": "Set up the design with your colours",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-home",
+              "kind": "writer",
+              "label": "Write Home",
+              "page": "home",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-about",
+              "kind": "writer",
+              "label": "Write About",
+              "page": "about",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-services",
+              "kind": "writer",
+              "label": "Write Services",
+              "page": "services",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-coaches",
+              "kind": "writer",
+              "label": "Write Coaches",
+              "page": "coaches",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-contact",
+              "kind": "writer",
+              "label": "Write Contact",
+              "page": "contact",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "own-photos",
+              "kind": "pictures",
+              "label": "Place your photos (31)",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "generated-pictures",
+              "kind": "pictures",
+              "label": "Generate 2 pictures for empty spots",
+              "state": "running",
+              "attempt": 2
+            },
+            {
+              "id": "write",
+              "kind": "write",
+              "label": "Put your pages on the site",
+              "state": "pending",
+              "attempt": 0
+            }
+          ]
+        },
+        {
+          "schema": "tracy-build-progress/v1",
+          "planId": "plan-sunrise-tennis",
+          "planRevision": 1,
+          "run": {
+            "id": "run-1",
+            "kind": "build"
+          },
+          "seq": 4,
+          "elapsedSeconds": 401,
+          "steps": [
+            {
+              "id": "look",
+              "kind": "look",
+              "label": "Set up the design with your colours",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-home",
+              "kind": "writer",
+              "label": "Write Home",
+              "page": "home",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-about",
+              "kind": "writer",
+              "label": "Write About",
+              "page": "about",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-services",
+              "kind": "writer",
+              "label": "Write Services",
+              "page": "services",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-coaches",
+              "kind": "writer",
+              "label": "Write Coaches",
+              "page": "coaches",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-contact",
+              "kind": "writer",
+              "label": "Write Contact",
+              "page": "contact",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "own-photos",
+              "kind": "pictures",
+              "label": "Place your photos (31)",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "generated-pictures",
+              "kind": "pictures",
+              "label": "Generate 2 pictures for empty spots",
+              "state": "done",
+              "attempt": 2
+            },
+            {
+              "id": "write",
+              "kind": "write",
+              "label": "Put your pages on the site",
+              "state": "running",
+              "attempt": 1
+            }
+          ]
+        }
+      ],
+      "outcome": {
+        "schema": "tracy-build-outcome/v1",
+        "planId": "plan-sunrise-tennis",
+        "planRevision": 1,
+        "run": {
+          "id": "run-1",
+          "kind": "build"
+        },
+        "result": "done",
+        "elapsedSeconds": 448,
+        "steps": [
+          {
+            "id": "look",
+            "kind": "look",
+            "label": "Set up the design with your colours",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write-home",
+            "kind": "writer",
+            "label": "Write Home",
+            "page": "home",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write-about",
+            "kind": "writer",
+            "label": "Write About",
+            "page": "about",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write-services",
+            "kind": "writer",
+            "label": "Write Services",
+            "page": "services",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write-coaches",
+            "kind": "writer",
+            "label": "Write Coaches",
+            "page": "coaches",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write-contact",
+            "kind": "writer",
+            "label": "Write Contact",
+            "page": "contact",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "own-photos",
+            "kind": "pictures",
+            "label": "Place your photos (31)",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "generated-pictures",
+            "kind": "pictures",
+            "label": "Generate 2 pictures for empty spots",
+            "state": "done",
+            "attempt": 2
+          },
+          {
+            "id": "write",
+            "kind": "write",
+            "label": "Put your pages on the site",
+            "state": "done",
+            "attempt": 1
+          }
+        ]
+      }
+    },
+    {
+      "events": [
+        {
+          "schema": "tracy-build-progress/v1",
+          "planId": "plan-sunrise-tennis",
+          "planRevision": 2,
+          "run": {
+            "id": "run-2",
+            "kind": "partial",
+            "edit": "edit-1"
+          },
+          "seq": 1,
+          "elapsedSeconds": 0,
+          "steps": [
+            {
+              "id": "write-services",
+              "kind": "writer",
+              "label": "Rewrite the Services page",
+              "page": "services",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write-home",
+              "kind": "writer",
+              "label": "Update the Services section on Home",
+              "page": "home",
+              "state": "running",
+              "attempt": 1
+            },
+            {
+              "id": "write",
+              "kind": "write",
+              "label": "Put the 2 changed pages on the site",
+              "state": "pending",
+              "attempt": 0
+            }
+          ]
+        },
+        {
+          "schema": "tracy-build-progress/v1",
+          "planId": "plan-sunrise-tennis",
+          "planRevision": 2,
+          "run": {
+            "id": "run-2",
+            "kind": "partial",
+            "edit": "edit-1"
+          },
+          "seq": 2,
+          "elapsedSeconds": 57,
+          "steps": [
+            {
+              "id": "write-services",
+              "kind": "writer",
+              "label": "Rewrite the Services page",
+              "page": "services",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write-home",
+              "kind": "writer",
+              "label": "Update the Services section on Home",
+              "page": "home",
+              "state": "done",
+              "attempt": 1
+            },
+            {
+              "id": "write",
+              "kind": "write",
+              "label": "Put the 2 changed pages on the site",
+              "state": "running",
+              "attempt": 1
+            }
+          ]
+        }
+      ],
+      "outcome": {
+        "schema": "tracy-build-outcome/v1",
+        "planId": "plan-sunrise-tennis",
+        "planRevision": 2,
+        "run": {
+          "id": "run-2",
+          "kind": "partial",
+          "edit": "edit-1"
+        },
+        "result": "done",
+        "elapsedSeconds": 92,
+        "steps": [
+          {
+            "id": "write-services",
+            "kind": "writer",
+            "label": "Rewrite the Services page",
+            "page": "services",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write-home",
+            "kind": "writer",
+            "label": "Update the Services section on Home",
+            "page": "home",
+            "state": "done",
+            "attempt": 1
+          },
+          {
+            "id": "write",
+            "kind": "write",
+            "label": "Put the 2 changed pages on the site",
+            "state": "done",
+            "attempt": 1
+          }
+        ]
+      }
+    }
+  ]
+}

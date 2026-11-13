@@ -121,7 +121,20 @@ export {
   needsProfileRequest
 } from './needs-profile.mjs'
 export { TRUST_ORDER } from './needs-profile-merge.mjs'
-export { MAX_QUESTIONS, QUESTION_TOPICS } from './needs-profile-questions.mjs'
+export {
+  MAX_QUESTIONS,
+  QUESTION_TOPICS as NEEDS_PROFILE_QUESTION_TOPICS
+} from './needs-profile-questions.mjs'
+export {
+  BUILD_SCENARIO_SCHEMA,
+  checkBuildDocument,
+  checkBuildScenario,
+  formatProblem as formatBuildContractProblem
+} from './build-contract.mjs'
+export { BUILD_PLAN_SCHEMA, EDITABLE_FIELDS, MAX_GENERATED_FRAMES } from './build-contract-plan.mjs'
+export { PLAN_EDIT_SCHEMA, applyPlanEdit, checkPlanEdit } from './build-contract-plan-edit.mjs'
+export { ANSWER_SCHEMA, QUESTION_SCHEMA, QUESTION_TOPICS, checkAnswer } from './build-contract-questions.mjs'
+export { OUTCOME_SCHEMA, PROGRESS_SCHEMA, STEP_KINDS, STEP_STATES } from './build-contract-run.mjs'
 export {
   neutralItemName,
   SECTION_ACTIONS,
