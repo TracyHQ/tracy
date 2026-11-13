@@ -4,7 +4,8 @@
  * in the REAL conversation of a build session from the session's own `tracy_build` calls (#609):
  *
  * - `conversation.chat.turnTail`: the template card, the one living plan card and the build run (`tails.tsx`);
- * - `conversation.composer` (chain, ahead of dsh's): the plan review bar (`ReviewBar.tsx`);
+ * - `conversation.composer` (chain, ahead of dsh's): the plan review bar (`ReviewBar.tsx`), with the living plan card
+ *   above it while the review waits (a turn tail shows only once its turn ends);
  * - `tool.call.toolview` keyed `tracy_build`: a quiet row in place of the call's JSON (`BuildToolRow.tsx`);
  * - two conversation node definitions that fold the calls into per turn values (`definitions.ts`).
  *
@@ -15,11 +16,12 @@ import { BUILD_TOOL, isBuildChatSession } from '@tracy/core/build-chat'
 import { uiSwitches } from '@tracy/core/ui-switches'
 import { BuildToolRow, type ToolViewProps } from './BuildToolRow'
 import { planDefinition, templatesDefinition } from './definitions'
+import { createReviewPresence } from './review-presence'
 import { ReviewBar, type PendingReview, selectPlanReview } from './ReviewBar'
 import { createDraftSource, EMPTY_BUILD_RUN_FEED, type BuildRunFeed } from './sources'
 import { CSS } from './styles'
 import { en, english, NS, type Translate } from './strings'
-import { makeTails } from './tails'
+import { LivePlan, makeTails, type TailDeps } from './tails'
 
 export { BuildProgress } from './BuildProgress'
 export { BuildStopped } from './BuildStopped'
@@ -94,7 +96,15 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
 
   const t = (): Translate => ctx.locale.bind?.(NS) ?? english
   const drafts = createDraftSource(deps.fetch)
-  const tails = makeTails({ drafts, runs: deps.runs ?? EMPTY_BUILD_RUN_FEED, t, fetch: deps.fetch })
+  const reviews = createReviewPresence()
+  const tailDeps: TailDeps = {
+    drafts,
+    reviews,
+    runs: deps.runs ?? EMPTY_BUILD_RUN_FEED,
+    t,
+    fetch: deps.fetch
+  }
+  const tails = makeTails(tailDeps)
 
   for (const definition of [templatesDefinition, planDefinition])
     ctx.effect(
@@ -121,7 +131,15 @@ export function applyWith(ctx: ClientContext, deps: ApplyDeps): void {
       ctx.slots.register(
         // Ahead of dsh's question composer (0) and the ask form's pointer (-10).
         { name: 'conversation.composer', priority: -20, select: selectPlanReview },
-        ({ matched }: { matched: PendingReview }) => <ReviewBar matched={matched} drafts={drafts} t={t()} />
+        ({ matched }: { matched: PendingReview }) => (
+          <ReviewBar
+            matched={matched}
+            drafts={drafts}
+            t={t()}
+            reviews={reviews}
+            planCard={<LivePlan deps={tailDeps} />}
+          />
+        )
       )
     )
   )

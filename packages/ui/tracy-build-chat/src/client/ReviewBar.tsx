@@ -9,6 +9,11 @@
  * that request, ahead of dsh's composer, and draws the panel's shape again: the plan's name as the header, its
  * summary read from the draft, the two options as the agent passed them. The answer is the one dsh's panel sends,
  * `{ answers: [{ id, selected: [label] }] }`, so `approvalOf` reads it unchanged.
+ *
+ * THE PLAN SHOWS ABOVE THE BAR. dsh draws a turn's tail, where the plan card lives, only once the turn ends, and the
+ * turn that asks the review waits for the answer. So the bar draws the living plan card itself (`planCard`), scrolled
+ * in its own box, and marks the session in `reviews` so the plan tail stands aside: one plan card, before and while
+ * the owner decides, with its inline edits and undo.
  */
 import { Button } from '@deepseek-ai/dsh-client-ui-primitives'
 import {
@@ -17,7 +22,8 @@ import {
   planCardOf,
   planReviewRequestOf
 } from '@tracy/core/build-chat'
-import { useEffect, useState, useSyncExternalStore } from 'react'
+import { type ReactNode, useEffect, useState, useSyncExternalStore } from 'react'
+import type { ReviewPresence } from './review-presence'
 import type { DraftSource } from './sources'
 import type { Translate } from './strings'
 
@@ -49,14 +55,21 @@ export function selectPlanReview({
 export function ReviewBar({
   matched,
   drafts,
-  t
+  t,
+  reviews,
+  planCard
 }: {
   matched: PendingReview
   drafts: DraftSource
   t: Translate
+  /** Marks this session's bar as shown, so the plan tail stands aside. */
+  reviews?: ReviewPresence
+  /** The living plan card, drawn above the bar. */
+  planCard?: ReactNode
 }) {
   const draft = useSyncExternalStore(drafts.subscribe, drafts.read, drafts.read)
   useEffect(() => void drafts.load(), [drafts])
+  useEffect(() => reviews?.show(matched.sessionId), [reviews, matched.sessionId])
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
   const question = matched.questions[0]
@@ -80,6 +93,7 @@ export function ReviewBar({
 
   return (
     <div className="tv-bc-review-frame" data-plan-review-key={matched.key}>
+      {planCard && <div className="tv-bc-review-plan">{planCard}</div>}
       <section className="tv-bc-review" aria-label={question.question} aria-busy={busy}>
         <div className="tv-bc-review-strip">
           {name === null ? question.question : t('plan.title', { name })}

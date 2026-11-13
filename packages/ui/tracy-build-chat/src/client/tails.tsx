@@ -5,7 +5,9 @@
  * - the template card in the turn whose call offered the templates last; a pick goes through `saveTemplateChoice`;
  * - the plan card in the turn whose call answered the latest plan revision. The tool answers ids only, so the card
  *   reads the plan itself from the draft, and reads it again when a newer revision arrives. Its edits go through
- *   `savePlanEdit` / `undoPlanEdit`, and the card follows the draft the door answers with;
+ *   `savePlanEdit` / `undoPlanEdit`, and the card follows the draft the door answers with. While the plan review bar
+ *   shows, the bar draws this card instead (`LivePlan`, `review-presence.ts`): dsh draws a tail only once its turn
+ *   ends, and the turn that asks the review waits for the answer;
  * - the task list and the stop notice in the session's last turn, once a build run exists (`BuildRunFeed`).
  *
  * Every tail draws nothing outside a build chat session. The switch `chat-build` decides whether they are
@@ -26,12 +28,15 @@ import {
 import { PlanCard } from './PlanCard'
 import { savePlanEdit, undoPlanEdit } from './save-plan-edit'
 import { saveTemplateChoice } from './save-template'
+import type { ReviewPresence } from './review-presence'
 import type { BuildRunFeed, DraftSource } from './sources'
 import type { Translate } from './strings'
 import { TemplateCard } from './TemplateCard'
 
 export interface TailDeps {
   drafts: DraftSource
+  /** The sessions whose plan review bar shows; the plan tail stands aside for it. */
+  reviews: ReviewPresence
   runs: BuildRunFeed
   t: () => Translate
   fetch?: typeof fetch
@@ -72,10 +77,13 @@ function TemplateTail({ deps, value }: { deps: TailDeps; value: TemplatesValue }
   )
 }
 
-function PlanTail({ deps, value }: { deps: TailDeps; value: PlanValue }) {
+/**
+ * The one living plan card, read from the draft. `revision` names the plan revision the chat answered last: a newer
+ * one makes the card read the draft again. Its edits answer the draft. Drawn by the plan tail and by the review bar.
+ */
+export function LivePlan({ deps, revision }: { deps: TailDeps; revision?: string }) {
   const draft = useDraft(deps.drafts)
-  // A newer revision from the chat (a compose or an edit) is read again; the card's own edits answer the draft.
-  useEffect(() => void deps.drafts.load(), [deps.drafts, value.id, value.revision])
+  useEffect(() => void deps.drafts.load(), [deps.drafts, revision])
   if (!draft?.plan) return null
   const follow = async (request: Promise<Awaited<ReturnType<typeof savePlanEdit>>>) => {
     const next = await request
@@ -93,6 +101,14 @@ function PlanTail({ deps, value }: { deps: TailDeps; value: PlanValue }) {
       newEditId={newEditId}
     />
   )
+}
+
+function PlanTail({ deps, value, sessionId }: { deps: TailDeps; value: PlanValue; sessionId: string }) {
+  const read = () => deps.reviews.has(sessionId)
+  const reviewing = useSyncExternalStore(deps.reviews.subscribe, read, read)
+  // The review bar shows the card while the owner reviews it: one living plan card, never two.
+  if (reviewing) return null
+  return <LivePlan deps={deps} revision={`${value.id}:${value.revision}`} />
 }
 
 const noChat: NonNullable<TailProps['useChat']> = (select) => select({ timeline: { turnOrder: [] } })
@@ -131,7 +147,9 @@ export function makeTails(deps: TailDeps) {
     },
     plan: (props: TailProps) => {
       const value = inBuild(props) ? turnValueOf<PlanValue>(props, PLAN_KEY) : null
-      return value === null ? null : <PlanTail deps={deps} value={value} />
+      return value === null ? null : (
+        <PlanTail deps={deps} value={value} sessionId={props.sessionId as string} />
+      )
     },
     run: (props: TailProps) =>
       inBuild(props) ? (

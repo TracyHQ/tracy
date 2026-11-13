@@ -1,6 +1,7 @@
 // The build chat plugin's REAL entry over a recorded session (#609): `apply` of `@tracy/dsh-build-chat` registers into
 // a small stand in for dsh's slot host and conversation engine, and this page draws what it registered: per turn the
-// tracy_build rows (the keyed tool view) and the turn tails, then the composer chain for a pending question. The
+// tracy_build rows (the keyed tool view) and, like dsh, the turn tails of ENDED turns only (a `turn/end` event), then
+// the composer chain for a pending question. The
 // events are `tool/call` and `tool/result` in the shape `tracy_build` writes them; the doors are the page's own
 // `fetch`, answered by the runner. `window.probe.load(...)` draws a session, `window.probe.ask(...)` a pending question.
 import { useSyncExternalStore } from 'react'
@@ -78,6 +79,8 @@ const answered: unknown[] = []
 
 function Turn({ turn, data, last }: { turn: number; data: Map<string, unknown> | undefined; last: number }) {
   const calls = session.events.filter((e) => e.type === 'tool/call' && e.data.turn === turn)
+  // dsh draws a turn's tail only once the turn ended (ui-chat turn-tail.ts publishes on turn/end).
+  const ended = session.events.some((e) => e.type === 'turn/end' && e.data.turn === turn)
   const useChat = (select: Any) => select({ timeline: { turnOrder: [...Array(last + 1).keys()] } })
   const owner = {
     sessionId: session.id,
@@ -112,10 +115,11 @@ function Turn({ turn, data, last }: { turn: number; data: Map<string, unknown> |
           </div>
         )
       })}
-      {of('conversation.chat.turnTail').map((e) => {
-        const Tail = e.component
-        return <Tail key={e.options.id} {...owner} />
-      })}
+      {ended &&
+        of('conversation.chat.turnTail').map((e) => {
+          const Tail = e.component
+          return <Tail key={e.options.id} {...owner} />
+        })}
     </section>
   )
 }

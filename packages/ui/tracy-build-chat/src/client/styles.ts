@@ -237,7 +237,11 @@ export const CSS = `
 .tv-bc-toolrow-sum { margin-left: 6px; color: var(--muted-foreground); overflow-wrap: normal; word-break: keep-all; }
 
 /* The plan review bar (ReviewBar): the shape of dsh's plan review panel, in Tracy tokens */
-.tv-bc-review-frame { display: flex; justify-content: center; padding: 6px 16px 10px; container-type: inline-size; }
+.tv-bc-review-frame {
+  display: flex; flex-direction: column; gap: 8px; padding: 6px 16px 10px; container-type: inline-size;
+}
+/* The living plan card above the bar while the review waits: it scrolls in its own box, the chat keeps its room */
+.tv-bc-review-plan { max-height: 50vh; overflow-y: auto; overscroll-behavior: contain; border-radius: 16px; }
 .tv-bc-review {
   box-sizing: border-box; display: flex; flex-direction: column; width: 100%; overflow: hidden;
   border: 1px solid var(--border); border-radius: 16px; background: var(--card); color: var(--card-foreground);

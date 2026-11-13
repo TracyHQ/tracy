@@ -34,8 +34,11 @@ const OTHER = 'session-1a2b3c4d-4b5a-4968-8778-695a4b3c2d1e'
 const PLAN = stageDocuments(STAGES.find((s) => s.name === 'plan')).scenario.plan
 const NAME = 'Sunrise Tennis Club'
 
-/** The session log of a build chat: research, templates, a plan, then an edit asked in the chat. */
-function recordedSession() {
+/**
+ * The session log of a build chat: research, templates, a plan, then an edit asked in the chat. Every turn has ended
+ * unless `running` names one still in progress (dsh draws the tail of an ended turn only).
+ */
+function recordedSession({ running = null } = {}) {
   let seq = 0
   const call = (turn, callId, args) => ({
     type: 'tool/call',
@@ -55,20 +58,34 @@ function recordedSession() {
       }
     }
   })
+  const end = (turn) => (turn === running ? [] : [{ type: 'turn/end', seq: ++seq, data: { turn } }])
   const review = planReviewRequestOf(PLAN)
   return [
     call(0, 'c-research', { action: 'research', links: ['https://sunrise-tennis.example'] }),
     result(0, 'c-research', { profile: { business: NAME, counts: { services: 4 } } }),
+    ...end(0),
     call(1, 'c-templates', { action: 'templates' }),
     result(1, 'c-templates', { options: TEMPLATES, none: false }),
+    ...end(1),
     call(2, 'c-plan', { action: 'plan' }),
     result(2, 'c-plan', { plan: { id: PLAN.id, revision: PLAN.revision }, review }),
+    ...end(2),
     call(3, 'c-edit', { action: 'edit', changes: [{ field: 'look.accent', value: '#1f7a4d' }] }),
     result(3, 'c-edit', { plan: { id: PLAN.id, revision: PLAN.revision }, review }),
     call(3, 'c-stale', { action: 'edit', changes: [] }),
-    result(3, 'c-stale', { stale: true, next: 'The plan changed meanwhile.' })
+    result(3, 'c-stale', { stale: true, next: 'The plan changed meanwhile.' }),
+    ...end(3)
   ]
 }
+
+/** The plan review request as dsh's question tool passes it to the browser: no detail, no intent. */
+const askedReview = () =>
+  planReviewRequestOf(PLAN).questions.map(({ id, question, options }) => ({
+    id,
+    question,
+    options,
+    multiSelect: false
+  }))
 
 /** tracy-web's build draft doors, answered in the runner: the draft, the template pick, the plan edits. */
 function draftDoors(plan) {
@@ -223,13 +240,7 @@ test('the real plugin draws the build chat from recorded tracy_build results, ph
           assert.match(await card.innerText(), /Tennis for every age/)
 
           // The plan review request as dsh's question tool passes it: no detail, no intent. The bar still claims it.
-          const asked = planReviewRequestOf(PLAN).questions.map(({ id, question, options }) => ({
-            id,
-            question,
-            options,
-            multiSelect: false
-          }))
-          await page.evaluate((qs) => window.probe.ask(qs), asked)
+          await page.evaluate((qs) => window.probe.ask(qs), askedReview())
           const bar = page.getByRole('region', { name: 'Approve this plan?' })
           await bar.waitFor()
           assert.match(await bar.innerText(), new RegExp(`${NAME} site plan`))
@@ -255,6 +266,54 @@ test('the real plugin draws the build chat from recorded tracy_build results, ph
           assert.deepEqual(errors, [])
           await page.close()
         })
+  } finally {
+    await browser.close()
+  }
+})
+
+test('the plan shows while its turn still waits on the review, and once the turn ends there is one plan card', async () => {
+  const browser = await launch()
+  try {
+    for (const viewport of [
+      { width: 390, height: 844 },
+      { width: 1280, height: 800 }
+    ]) {
+      const { page, errors, doors } = await open(browser, { viewport })
+      // The turn that answered the latest plan asks the review and has not ended: dsh draws none of its tail.
+      await page.evaluate(
+        ([id, events]) => window.probe.load(id, events),
+        [BUILD, recordedSession({ running: 3 })]
+      )
+      await page.evaluate((qs) => window.probe.ask(qs), askedReview())
+      const bar = page.getByRole('region', { name: 'Approve this plan?' })
+      await bar.waitFor()
+      const card = page.getByRole('article', { name: `${NAME} site plan` })
+      await card.waitFor()
+      assert.equal(await page.getByRole('article').count(), 1, 'one plan card, with the review bar')
+      assert.equal(await page.locator('[data-turn="3"]').getByRole('article').count(), 0, 'no tail yet')
+      assert.ok(await card.isVisible(), 'the plan is in sight with the bar')
+
+      // Its inline edit and undo work there.
+      const undo = card.getByRole('button', { name: 'Undo last change' })
+      assert.equal(await undo.isDisabled(), true, 'nothing to undo yet')
+      await card.getByRole('button', { name: 'Edit Tagline: Tennis for every age and level' }).click()
+      await card.getByRole('textbox', { name: 'New value for Tagline' }).fill('Tennis for every age')
+      await page.keyboard.press('Enter')
+      await card.locator('[data-changed][data-field]').first().waitFor()
+      assert.ok(doors.state.requests.some((r) => r.path === '/api/build-draft/plan-edits'))
+      assert.equal(await undo.isDisabled(), false, 'the last edit can be taken back')
+
+      await bar.getByRole('button', { name: 'Approve', exact: true }).click()
+      await page.waitForFunction(() => window.probe.answered().length === 1)
+
+      // The answer is in and the turn ends: the bar is gone, the card stands at the turn's tail, once.
+      await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+      await page.locator('[data-turn="3"]').getByRole('article').waitFor()
+      assert.equal(await bar.count(), 0)
+      assert.equal(await page.getByRole('article').count(), 1, 'exactly one plan card after the turn')
+      assert.deepEqual(errors, [])
+      await page.close()
+    }
   } finally {
     await browser.close()
   }
