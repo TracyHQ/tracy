@@ -11,9 +11,31 @@
 //     "lists": [ ...a nested list, whose patterns may use {1} (the parent row) and {2} (its own row) ] }
 // A field may also give `xpath` (with the same placeholders; a list of alternatives, null for a place stored without
 // one), `kind` and `type`; without them the content map role
-// of its first place decides, as for any field.
+// of its first place decides, as for any field. The keys of FIELD_KEYS (`storage`, `iconOf`, `frame`, `theme`,
+// `variantOf`, `for`, ...) are copied onto the drafted field as the decision gives them.
+//
+// Two more decision keys of a list:
+//   "key": {"name": "page", "jsonPath": ["menuitem_config", "item_id", "{1}", 0]}
+//     each row is keyed to a page: the draft adds a link field derived as "the page of the row" whose `keyAt` gives,
+//     per parent place and row, where the key is stored on the parent record (a `{d}` element alone becomes the row
+//     number).
+//   "html": {"jsonPath": [...], "row": "a"}
+//     the rows are pieces of one stored HTML value of the parent place (the social links of a trainer, kept as one
+//     paragraph): one row per element `row` the stored value holds, each field a place `<content map key>@<xpath>`
+//     (its `xpath` with `{1}` the row, counted from 1). The HTML value is claimed by the list, so it is no other field.
 import { frameOf } from './draft-block-fields.mjs'
 import { fieldTypeOf, limitOf } from './draft-fields.mjs'
+
+/** Decision keys copied onto a drafted child field as given. */
+export const FIELD_KEYS = Object.freeze([
+  'storage',
+  'iconOf',
+  'frame',
+  'frameFrom',
+  'theme',
+  'variantOf',
+  'for'
+])
 
 const escape = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
@@ -92,8 +114,40 @@ function childField(decl, perPlace, ctx, report) {
     if (frame) field.frame = frame
     if (type === 'icon') field.storage = first?.type === 'image' ? 'image-file' : 'class-name'
   }
+  for (const key of FIELD_KEYS) if (decl[key] !== undefined) field[key] = decl[key]
   field.slots = perPlace
   return field
+}
+
+/** A pattern element filled with the rows of the lists above it; an element that is one placeholder is a number. */
+export function filledPath(pattern, rows) {
+  return (pattern ?? []).map((element) => {
+    const whole = String(element).match(/^\{(\d)\}$/)
+    if (whole && rows[whole[1]] !== undefined) return Number(rows[whole[1]])
+    return typeof element === 'string' ? element.replace(/\{(\d)\}/g, (m, d) => rows[d] ?? m) : element
+  })
+}
+
+/** The rows of an HTML list in one parent place: the pieces of its stored HTML value, one per element `row`. */
+function htmlRowsOf(decl, entity, fixed, ctx) {
+  const want = JSON.stringify(filledPath(decl.html.jsonPath, fixed).map(String))
+  const slot = (ctx.slotsByEntity.get(entity) ?? []).find(
+    (s) =>
+      (!decl.column || s.column === decl.column) &&
+      !s.xpath &&
+      JSON.stringify((s.jsonPath ?? []).map(String)) === want
+  )
+  if (!slot) return { rows: [], slot: null }
+  const count = (
+    String(slot.sample ?? '').match(new RegExp(`\\(\\(${escape(decl.html.row)}[\\s)]`, 'g')) ?? []
+  ).length
+  const rows = Array.from({ length: count }, (_, r) => [
+    String(r),
+    Object.fromEntries(
+      (decl.fields ?? []).map((f) => [f.name, `${slot.key}@${String(f.xpath).replace('{1}', String(r + 1))}`])
+    )
+  ])
+  return { rows, slot: slot.key }
 }
 
 /**
@@ -107,7 +161,11 @@ function childField(decl, perPlace, ctx, report) {
 export function draftChildLists(decls, parents, depth, ctx, report) {
   const lists = []
   for (const decl of decls ?? []) {
-    const rowsPerParent = parents.map((p) => rowsOf(decl, p.entity, depth, p.fixed, ctx))
+    const html = decl.html ? parents.map((p) => htmlRowsOf(decl, p.entity, p.fixed, ctx)) : null
+    for (const h of html ?? []) if (h.slot) report.claim(h.slot)
+    const rowsPerParent = html
+      ? html.map((h) => h.rows)
+      : parents.map((p) => rowsOf(decl, p.entity, depth, p.fixed, ctx))
     const perPlaceOf = (name) => rowsPerParent.map((rows) => rows.map(([, f]) => f[name]).filter(Boolean))
     const counts = rowsPerParent.map((rows) => rows.length)
     for (const [p, rows] of rowsPerParent.entries())
@@ -125,6 +183,20 @@ export function draftChildLists(decls, parents, depth, ctx, report) {
       for (const key of perPlace.flat()) report.claim(key)
       fields.push(childField(f, perPlace, ctx, report))
     }
+    if (decl.key)
+      fields.push({
+        name: decl.key.name ?? 'page',
+        kind: 'editorial.navigation_url',
+        type: 'link',
+        derived: 'the page of the row',
+        keyAt: rowsPerParent.map((rows, p) =>
+          rows.map(([row]) => ({
+            entity: parents[p].entity,
+            column: decl.key.column ?? decl.column,
+            jsonPath: filledPath(decl.key.jsonPath, { ...parents[p].fixed, [depth]: row })
+          }))
+        )
+      })
     const most = counts.length ? Math.max(...counts) : 0
     const items = { min: decl.items?.min ?? null, max: decl.items?.max ?? most }
     const itemsFrom = {

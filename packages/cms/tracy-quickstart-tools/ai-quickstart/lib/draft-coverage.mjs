@@ -20,7 +20,8 @@ export function fieldPlacesOf(blocks) {
       if (f.slot) places.add(f.slot)
       for (const s of f.slots ?? []) places.add(s)
     }
-    for (const s of [...childPlacesOf(b.lists), ...childPlacesOf(b.itemLists)]) places.add(s)
+    // A place inside a stored HTML value (`<key>@<xpath>`) accounts for that value.
+    for (const s of [...childPlacesOf(b.lists), ...childPlacesOf(b.itemLists)]) places.add(s.split('@')[0])
   }
   return places
 }

@@ -185,7 +185,12 @@ export function draftBlocks({ kit, contentMap, decisions = {}, measured = {} }) 
     kitEntries: kitEntriesOf(kit),
     menuBlocks: contentMap.menuBlocks ?? {},
     decisionOf,
-    storeKitIds
+    storeKitIds,
+    // The store block a kit block is drafted into, so a report names a store block, never a kit page.
+    storeIdOfKit: (kitId) => {
+      const kb = (kit.blocks ?? []).find((b) => b.id === kitId)
+      return (kb && decided(kb).id) ?? kitId
+    }
   }
   const out = { ...emptyReport(), nested: [] }
   const blocks = []

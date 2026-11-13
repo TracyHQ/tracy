@@ -8,8 +8,10 @@
 // masthead with a row per page), `listsNumbered` (a second repeating list written as numbered fields), `names`
 // (content map key -> field name), `design` (content map keys that are design values), `fields` (unlisted content map
 // slots added as fields: `{slot, name, kind, type}`), `retype` (content map key -> `{kind, type, storage}`: a value
-// the content map stores under the wrong role, such as a list of social links kept as one HTML paragraph), `lists` and
-// `itemLists` (child lists, draft-child-lists.mjs: their places are taken out of every other field and report list).
+// the content map stores under the wrong role), `lists` and `itemLists` (child lists, draft-child-lists.mjs: their
+// places are taken out of every other field and report list), `keys` (block fields keyed to a page:
+// `{name, column, jsonPath, pageType}`), `fieldKeys` (field name -> keys set on the drafted field: `theme`,
+// `variantOf`, `for`).
 import {
   baseNameOf,
   fieldOf,
@@ -69,18 +71,21 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   const menu = decision.nav ? menuOf(decision, entity, ctx) : null
   const menuLabels = (menu?.items ?? []).map((i) => i.label?.slot).filter(Boolean)
   const repeating = lists.find((l) => l.rowKind === 'items' && Array.isArray(l.shown))
+  // The item places of a block whose items are rows of its own record (a team module's people): item i is the
+  // block's record with `{0}` = i in the patterns of its child lists.
+  const slotRows =
+    !repeating && lists.find((l) => l.rowKind === 'slots' && Array.isArray(l.rows) && l.rows.length > 1)
+  const itemParents = repeating
+    ? repeating.shown.map((e) => ({ entity: e, fixed: {} }))
+    : slotRows
+      ? slotRows.rows.map((_, i) => ({ entity, fixed: { 0: String(i) } }))
+      : []
   const childLists = {
     lists: draftChildLists(decision.lists, [{ entity, fixed: {} }], 1, ctx, childReport),
-    itemLists: draftChildLists(
-      decision.itemLists,
-      (repeating?.shown ?? []).map((e) => ({ entity: e, fixed: {} })),
-      1,
-      ctx,
-      childReport
-    )
+    itemLists: draftChildLists(decision.itemLists, itemParents, 1, ctx, childReport)
   }
-  if (decision.itemLists?.length && !repeating)
-    childReport.problem('itemLists need a repeating list of records (a kit list of rowKind items)')
+  if (decision.itemLists?.length && !itemParents.length)
+    childReport.problem('itemLists need a repeating list (a kit list of rowKind items, or of slot rows)')
   const derived = (slot, why) => {
     if (!out.derived.some((d) => d.block === id && d.slot === slot))
       out.derived.push({ block: id, slot, why })
@@ -112,10 +117,23 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
     for (const s of [...(kb.slots ?? []), ...(kb.demoOwned ?? [])]) {
       if (!s.id || used.has(s.id) || inLists.has(s.id) || nav.some((n) => n.id === s.id)) continue
       if (claimed.has(mapKeyOf(s.id)) || menuLabels.includes(s.id)) continue
+      // A slot the decision declares as a field of this block (a template string the block draws) is that field.
+      if ((decision.fields ?? []).some((f) => f.slot === mapKeyOf(s.id))) continue
       if (s.ownedBy && s.ownedBy !== kb.id && ctx.storeKitIds.has(s.ownedBy))
-        derived(s.id, `a field of ${s.ownedBy}`)
+        derived(s.id, `a field of ${ctx.storeIdOfKit?.(s.ownedBy) ?? s.ownedBy}`)
       else if (isDerivedSlot(s.id) && decision.nav && s.id.startsWith('menuItem-')) nav.push(s)
-      else if (isDerivedSlot(s.id))
+      else if (s.id.startsWith('languageString-') && ctx.unlisted?.[mapKeyOf(s.id)]) {
+        // A template string the decisions class (interface text valid on every site): listed with its class.
+        const decided = ctx.unlisted[mapKeyOf(s.id)]
+        if (!out.unlisted.some((u) => u.block === id && u.slot === mapKeyOf(s.id)))
+          out.unlisted.push({
+            block: id,
+            slot: mapKeyOf(s.id),
+            at: 'value',
+            as: decided.as,
+            why: decided.why
+          })
+      } else if (isDerivedSlot(s.id))
         derived(
           s.id,
           s.id.startsWith('menuItem-')
@@ -216,6 +234,18 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
     items = drafted.items
     itemsFrom = drafted.itemsFrom
   }
+  // A block field keyed to a page (a masthead row fixed to one page type): where its key is stored on the record.
+  for (const key of decision.keys ?? [])
+    fields.push({
+      name: alloc(key.name),
+      kind: 'editorial.navigation_url',
+      type: 'link',
+      derived: 'the page of the row',
+      keyAt: { entity, column: key.column, jsonPath: key.jsonPath },
+      ...(key.pageType ? { pageType: key.pageType } : {})
+    })
+  // Keys a decision sets on a drafted field by name: a light and dark pair, the text fields an icon illustrates.
+  for (const field of [...fields, ...itemFields]) Object.assign(field, decision.fieldKeys?.[field.name])
   fields.push(...designFieldsOf({ entity, used, inLists, decision, ctx, alloc, out, id }))
   block.positions = [
     position ?? decision.position ?? kb.source?.position ?? (kb.role === 'page-body' ? 'component' : kb.role)
@@ -229,7 +259,7 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   applyItems(block, decision, { items, from: itemsFrom }, out)
   for (const key of ['lists', 'itemLists']) if (childLists[key].length) block[key] = childLists[key]
   const itemPlaces = (block.itemFields ?? []).find((f) => Array.isArray(f.slots))?.slots.map(entityOf)
-  if (block.itemLists && itemPlaces && itemPlaces.join() !== (repeating?.shown ?? []).join())
+  if (block.itemLists && repeating && itemPlaces && itemPlaces.join() !== repeating.shown.join())
     childReport.problem(
       'itemLists: the item places of the item fields and of the child lists are not in one order'
     )
