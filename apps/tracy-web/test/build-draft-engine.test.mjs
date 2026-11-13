@@ -12,6 +12,7 @@ import { brandLookOf } from 'website-opportunities/domain/brand-before-site.mjs'
 import * as brands from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-brands.mjs'
 import * as club from '../../../packages/wo/website-opportunities/test/fixtures/plan-composer/invented-club.mjs'
 import { buildApp } from '../src/app.js'
+import { SAY } from '../src/build-draft/engine-state.js'
 import { changeDraft, createDraft, putComposed } from '../src/build-draft/store.js'
 import { ensureAccount } from '../src/seats/store.js'
 import { buildSessionIdFor } from '../src/workspace/build-chat-session.js'
@@ -33,6 +34,7 @@ import {
   actor,
   config,
   gatheredBrief,
+  heldClubBrief,
   kits,
   needsReading
 } from './build-draft-engine-fixtures.mjs'
@@ -94,12 +96,12 @@ const clubResearch = () => ({
  * A draft researched as the invented club (its stored needs profile) with the club's template chosen; with `brand`,
  * the brand step's record for that template is stored too.
  */
-async function researchedClub(_server, { brand } = {}) {
+async function researchedClub(_server, { brand, research = clubResearch() } = {}) {
   const { id } = await ensureAccount(db.pool, OWNER)
   await createDraft(db.pool, id)
   const { accent: _accent, ...template } = club.template()
   await changeDraft(db.pool, id, () => ({
-    research: clubResearch(),
+    research,
     template,
     ...(brand
       ? { brand: { record: brand, template: { slug: template.slug, version: template.version } } }
@@ -577,3 +579,46 @@ test('the composed plan and the done state of its step are one write', opts, asy
   assert.equal(read.body.state, 'done')
   assert.equal(read.body.result.plan.id, composed.plan.id)
 })
+
+/** A draft researched before research kept `withheld`: only its stored brief holds the name and people off the site. */
+const heldClubResearch = (siteName) => ({ ...clubResearch(), brief: heldClubBrief(siteName) })
+
+test(
+  'compose holds what the owner keeps off the site: the stored plan never shows the held name or people',
+  opts,
+  async () => {
+    const c = club.goodComposition()
+    c.pages.splice(1, 1)
+    c.assumptions = []
+    const model = club.scriptedModel(JSON.stringify(c))
+    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+    await researchedClub(s, { research: heldClubResearch('Racket club by the river') })
+    const { ended } = await askPlan(s)
+    assert.equal(ended.body.state, 'done', JSON.stringify((await row(s)).fault))
+    const stored = JSON.stringify((await row(s)).plan)
+    for (const held of ['Brindlewick', 'Ilse Varrow', 'Osric Vale'])
+      assert.equal(stored.includes(held), false, held)
+    assert.match(stored, /Racket club by the river/)
+  }
+)
+
+test(
+  'a held name with nothing else to name the site stops before any model call, with its sentence and a fault',
+  opts,
+  async () => {
+    const model = club.scriptedModel()
+    const s = server({ buildModel: async () => model, brandStep: ownBrand, buildChatOn: async () => true })
+    await researchedClub(s, { research: heldClubResearch(null) })
+    const { ended } = await askPlan(s)
+    assert.deepEqual(ended.body, {
+      step: 'compose',
+      state: 'stopped',
+      say: SAY.siteName,
+      reason: 'site-name-missing'
+    })
+    assert.equal(model.calls.length, 0)
+    const { fault, plan } = await row(s)
+    assert.deepEqual([fault.code, fault.attempts, fault.noRerun], ['site_name_missing', 1, true])
+    assert.equal(plan, null)
+  }
+)

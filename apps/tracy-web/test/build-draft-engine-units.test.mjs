@@ -11,9 +11,9 @@ import { buildModelDoor, modelCallOf } from '../src/build-draft/build-model.js'
 import { STEP_ATTEMPTS, faultOf, runWithRerun } from '../src/build-draft/engine-rerun.js'
 import { readEngineRequest } from '../src/build-draft/engine-request.js'
 import { MAX_QUESTIONS_AT_ONCE, SAY, askOf, engineStateOf } from '../src/build-draft/engine-state.js'
-import { researchStep } from '../src/build-draft/engine-steps.js'
+import { composeStep, planProfileOf, researchStep } from '../src/build-draft/engine-steps.js'
 import { SAY_CANCELLED, brandFor, stoppedOf } from '../src/build-draft/engine.js'
-import { KIT_ROOT, gatheredBrief, kits, needsReading } from './build-draft-engine-fixtures.mjs'
+import { KIT_ROOT, gatheredBrief, heldClubBrief, kits, needsReading } from './build-draft-engine-fixtures.mjs'
 
 after(() => rmSync(KIT_ROOT, { recursive: true, force: true }))
 
@@ -250,4 +250,123 @@ test('the build model door: text and pictures in one call shape; an unset door i
     code: 'model_missing',
     noRerun: true
   })
+})
+
+/** The invented club's held name and people, and the neutral identity its brief gives a site it may not name. */
+const HELD_NAME = 'Brindlewick'
+const HELD_PEOPLE = ['Ilse Varrow', 'Osric Vale']
+const NEUTRAL = 'Racket club by the river'
+/** The club's composition without its team page: the held coach has no place on the site. */
+const withoutTeam = () => {
+  const c = club.goodComposition()
+  c.pages.splice(1, 1)
+  c.assumptions = []
+  return c
+}
+const composeHeld = (research, model) =>
+  composeStep(
+    { research, answers: [], template: club.template(), brand: club.brand() },
+    { model, kit: kits.loadKit(club.template().slug) }
+  )
+
+/** The gathered club of the engine fixtures, its name and people held as the held club brief holds them. */
+function heldGathered() {
+  const gathered = gatheredBrief()
+  const { facts, missing, sitemap } = heldClubBrief(NEUTRAL)
+  gathered.brief.facts = gathered.brief.facts.map((f) => (f.field === 'name' ? { ...f, ...facts[0] } : f))
+  Object.assign(gathered.brief, { missing, sitemap })
+  return gathered
+}
+
+test('research keeps what the owner keeps off the site, for compose to read', async () => {
+  const model = async () => JSON.stringify(needsReading())
+  const held = await researchStep(
+    { links: ['https://larkfen-racquets.example/'] },
+    { gather: async () => heldGathered(), model, kit: null }
+  )
+  assert.deepEqual(held.withheld, { name: true, siteName: NEUTRAL, people: HELD_PEOPLE })
+  const shown = await researchStep(
+    { links: ['https://larkfen-racquets.example/'] },
+    { gather: async () => gatheredBrief(), model, kit: null }
+  )
+  assert.equal('withheld' in shown, false, 'nothing held, no key')
+})
+
+test('compose shows a held name by its neutral identity and never shows the held name or held people', async () => {
+  const model = club.scriptedModel(JSON.stringify(withoutTeam()))
+  const composed = await composeHeld(
+    { profile: club.clubProfile(), withheld: { name: true, siteName: NEUTRAL, people: HELD_PEOPLE } },
+    model
+  )
+  assert.equal(model.calls.length, 1)
+  for (const call of model.calls)
+    for (const held of [HELD_NAME, ...HELD_PEOPLE]) assert.equal(call.user.includes(held), false, held)
+  const plan = JSON.stringify(composed.plan)
+  for (const held of [HELD_NAME, ...HELD_PEOPLE]) assert.equal(plan.includes(held), false, held)
+  assert.deepEqual(
+    composed.plan.facts.filter((f) => f.kind === 'business.name').map((f) => f.value),
+    [NEUTRAL]
+  )
+  assert.equal(
+    composed.plan.items.some((i) => i.id === club.COACH),
+    false
+  )
+})
+
+test('a draft researched before research kept withheld gets it again from its stored brief', async () => {
+  const legacy = { profile: club.clubProfile(), brief: heldClubBrief(NEUTRAL) }
+  assert.deepEqual(planProfileOf(legacy).withheld.siteName, NEUTRAL)
+  const model = club.scriptedModel(JSON.stringify(withoutTeam()))
+  const plan = JSON.stringify((await composeHeld(legacy, model)).plan)
+  for (const held of [HELD_NAME, ...HELD_PEOPLE]) assert.equal(plan.includes(held), false, held)
+  // Nothing held and no brief: the stored profile as it is.
+  const plain = { profile: club.clubProfile() }
+  assert.equal(planProfileOf(plain), plain.profile)
+})
+
+test('a held name with nothing else to name the site stops before any model call with its own sentence', async () => {
+  const model = club.scriptedModel()
+  await assert.rejects(
+    composeHeld({ profile: club.clubProfile(), brief: heldClubBrief(null) }, model),
+    (error) => error.code === 'site_name_missing' && error.noRerun === true
+  )
+  assert.equal(model.calls.length, 0)
+  const stopped = stoppedOf({ code: 'site_name_missing' })
+  assert.deepEqual(stopped, { state: 'stopped', say: SAY.siteName, reason: 'site-name-missing' })
+  assert.notEqual(stopped.say, SAY.fault)
+  assert.notEqual(stopped.say, SAY.brand)
+})
+
+/** The club's profile with one more question, invented, that names a held person. */
+function profileAskingAboutHeld() {
+  const profile = club.clubProfile()
+  const phone = profile.questions.find((q) => q.topic === 'main-button')
+  profile.questions.push({ ...phone, id: 'q-held', prompt: 'Should Ilse Varrow lead the main button?' })
+  return profile
+}
+
+test('the question card leaves out questions about what the owner keeps off the site', () => {
+  const profile = profileAskingAboutHeld()
+  const stateOf = (research) =>
+    engineStateOf({ engine: { step: 'research', state: 'done' }, research, answers: [] })
+  const ids = (state) => state.result.questions.map((q) => q.id)
+  const all = ids(stateOf({ profile }))
+  assert.ok(all.includes('q-held'))
+  assert.deepEqual(
+    ids(stateOf({ profile, withheld: { people: ['Ilse Varrow'] } })),
+    all.filter((id) => id !== 'q-held')
+  )
+})
+
+test('an answer to a question the withheld profile drops is left out; any other unknown answer is still refused', async () => {
+  const research = { profile: profileAskingAboutHeld(), withheld: { people: HELD_PEOPLE } }
+  const answer = (question) => ({ schema: 'tracy-build-answer/v1', question, text: 'Book a court' })
+  const run = (answers, model) =>
+    composeStep(
+      { research, answers, template: club.template(), brand: club.brand() },
+      { model, kit: kits.loadKit(club.template().slug) }
+    )
+  const ok = await run([answer('q-held')], club.scriptedModel(JSON.stringify(withoutTeam())))
+  assert.equal(ok.plan.schema, 'tracy-build-plan/v1')
+  await assert.rejects(run([answer('q-never-asked')], club.scriptedModel()), { code: 'answer_invalid' })
 })

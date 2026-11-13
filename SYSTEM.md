@@ -854,7 +854,8 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   applied and the edit that undoes it (one step). The plan card (`GET /api/build-draft`) and the build engine
   (`draftPlanForBuild`) read it through the same function ([`build-draft/store.js`](apps/tracy-web/src/build-draft/store.js)).
   Migration 216 (#609) makes it engine aware: `needs_profile` (the settled needs profile of the living plan), `research`
-  (the research record it was read from), `fault` (the last system fault of the chat build, for the team only, never
+  (the research record it was read from, with `withheld`: the held business name and people, which compose puts on
+  the needs profile with `withWithheld` before `composePlan`, so the plan never shows them), `fault` (the last system fault of the chat build, for the team only, never
   answered by a door) and `undo_profile` (the profile before the last edit, so an undo restores it exactly). **Only the
   engine writes the plan**: `putComposed` (a plan the plan composer returned through its rules gate, with its profile)
   and the gated edits (`POST /api/build-draft/plan-edits`, `/plan-undo`), which run `gateEditedPlan` with the stored

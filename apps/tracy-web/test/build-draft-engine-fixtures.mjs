@@ -66,6 +66,27 @@ export const gatheredBrief = () => ({
   manifest: []
 })
 
+/**
+ * The invented tennis club's brief (the club of the plan composer fixtures) with its name decided off the site and two
+ * people held, in the shape `researchOf` reads. `siteName`: the neutral identity, the home page title made without the
+ * name (`siteNameOf`); null gives a brief with no such title.
+ */
+export const heldClubBrief = (siteName) => ({
+  facts: [
+    {
+      id: 'f-name',
+      field: 'name',
+      value: 'Brindlewick Tennis Club',
+      evidence: [],
+      onSite: false,
+      decidedBy: 'rule',
+      reasons: ['name-differs-from-own-marks']
+    }
+  ],
+  missing: [{ field: 'team', withheld: [{ values: ['Ilse Varrow', 'Osric Vale'] }] }],
+  ...(siteName ? { sitemap: [{ slug: 'home', seo: { title: siteName } }] } : {})
+})
+
 /** The needs profile model's scripted reading of that research. */
 export const needsReading = () => ({
   languages: [{ source: 'website', language: 'en' }],

@@ -39,6 +39,14 @@ const BRAND_CODES = new Set([
 /** The rules gate's look problems (D40, D42): a plan that failed the gate on them stops like a missing brand. */
 const LOOK_PROBLEMS = new Set(['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
 const RESEARCH_CODES = new Set(['research_unusable', 'research_empty', 'research_unavailable'])
+/**
+ * The stops only the owner could lift, and cannot yet (#609, #593 G4): `site_name_missing`, the business name is kept
+ * off the site and nothing else names it. Each says its own sentence and is recorded as a fault, since no card can ask
+ * for the missing input yet. Once Contract B has a question topic for the site name, this becomes that question.
+ */
+const OWNER_INPUT_CODES = Object.freeze({
+  site_name_missing: { say: 'siteName', reason: 'site-name-missing' }
+})
 
 /** The brand step ended because the OWNER cancelled it: nothing broke, so it is neither a brand nor a team fault. */
 const BRAND_CANCEL_CODE = 'brand_step_stopped'
@@ -52,6 +60,8 @@ export function stoppedOf(fault) {
     BRAND_CODES.has(fault.code) ||
     (fault.code === 'plan_gate_failed' && (fault.problems ?? []).some((p) => LOOK_PROBLEMS.has(p?.code)))
   if (look) return { state: 'stopped', say: SAY.brand, reason: 'brand-unavailable' }
+  const owner = Object.hasOwn(OWNER_INPUT_CODES, fault.code) ? OWNER_INPUT_CODES[fault.code] : null
+  if (owner) return { state: 'stopped', say: SAY[owner.say], reason: owner.reason }
   // Nothing to read at all (a description alone): the owner is asked for a link.
   if (fault.code === 'research_empty' && fault.reason === 'no_links')
     return { state: 'stopped', say: SAY.links }

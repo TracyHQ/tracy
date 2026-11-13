@@ -10,6 +10,7 @@
  * 🔒 A FAULT IS NEVER A QUESTION. A stopped step carries one plain sentence (`say`) for the owner and nothing else
  * the owner sees; what went wrong is the draft's `fault`, for the team.
  */
+import { planProfileOf } from './engine-steps.js'
 
 /** The chat card shows at most three questions at a time (`MAX_QUESTIONS_AT_ONCE` of `@tracy/core/build-chat`). */
 export const MAX_QUESTIONS_AT_ONCE = 3
@@ -21,6 +22,8 @@ export const SAY = Object.freeze({
     'I could not read enough about your business from what you gave me, so I stopped here. The team can see what happened.',
   brand:
     'I could not read your own brand colour and logo yet, so I stopped before showing you a plan. The team can see what happened.',
+  siteName:
+    'I need a name to show on your site before I can plan it, and I could not find one I am allowed to use. The team can see what happened.',
   links:
     'Please give me at least one link to your website, your Google Maps listing or one of your social pages, so I can read about your business.',
   interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.'
@@ -82,7 +85,8 @@ export function engineStateOf(row) {
     return { step, state, say: engine.say ?? SAY.fault, ...(engine.reason ? { reason: engine.reason } : {}) }
   if (step === 'research') {
     const profile = row.research?.profile
-    const questions = list(profile?.questions)
+    // The questions compose settles: none about what the owner keeps off the site (`planProfileOf`).
+    const questions = list(planProfileOf(row.research)?.questions)
     const ask = askOf(questions, row.answers)
     return {
       step,

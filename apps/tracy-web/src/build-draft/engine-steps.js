@@ -18,7 +18,13 @@
  * said to the customer). Nothing here re-decides them, and the composer is never asked for its test-only fallback.
  */
 import { randomUUID } from 'node:crypto'
-import { buildNeedsProfile, composePlan, researchOf } from 'website-opportunities/domain'
+import {
+  buildNeedsProfile,
+  composePlan,
+  researchOf,
+  withheldOfBrief,
+  withWithheld
+} from 'website-opportunities/domain'
 
 /** An error of a step, with the code and the rerun rule the WO package's errors carry. */
 export class EngineStepError extends Error {
@@ -47,7 +53,8 @@ export async function researchStep({ links, description }, { gather, model, kit,
   if (!gathered?.brief || typeof gathered.brief !== 'object')
     throw new EngineStepError('research_empty', 'the research gave no brief')
   const manifest = Array.isArray(gathered.manifest) ? gathered.manifest : []
-  const { sources } = researchOf(gathered.brief, { manifest })
+  // What the owner keeps off the site (a held business name, held people) rides on the record: compose reads it.
+  const { sources, withheld } = researchOf(gathered.brief, { manifest })
   const profile = await buildNeedsProfile({
     research: { sources },
     model,
@@ -60,6 +67,7 @@ export async function researchStep({ links, description }, { gather, model, kit,
     brief: gathered.brief,
     manifest,
     profile,
+    ...(withheld ? { withheld } : {}),
     ...(Array.isArray(gathered.setAside) && gathered.setAside.length ? { setAside: gathered.setAside } : {}),
     // The business logo the gatherer saved as a file (the brand step reads it); kept so a rerun reads the same file.
     ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {}),
@@ -82,20 +90,68 @@ export async function brandOf({ research, template }, { brandStep, kit }) {
 }
 
 /**
+ * What the owner keeps off the site, for a research record (`researchOf`'s `withheld`): the one the record holds, or,
+ * for a record researched before research kept it, the one its stored brief gives (`withheldOfBrief`). Null when
+ * nothing is held.
+ * @param {{withheld?: object, brief?: object} | null | undefined} research
+ */
+export function withheldOfResearch(research) {
+  return research?.withheld ?? withheldOfBrief(research?.brief).withheld ?? null
+}
+
+/**
+ * Whether nothing may name the site: the business name is held and no neutral identity stands in for it (#593 G4).
+ * Replaced by `siteNameMissing` of `website-opportunities/domain` once the domain exports it.
+ */
+const siteNameMissingOf = (withheld) => withheld?.name === true && !withheld.siteName
+
+/**
+ * The needs profile as the plan step reads it (`plan-step.mjs` `buildPlanStep`): with what the owner keeps off the site
+ * attached by `withWithheld` (the held name goes by the neutral identity, held people and what names them are
+ * withheld, questions about either are dropped). The stored profile as it is when nothing is held. Applied once, to
+ * the profile research stored: applying it twice would hold the neutral name itself.
+ * @param {{profile?: object, withheld?: object, brief?: object} | null | undefined} research
+ */
+export function planProfileOf(research) {
+  const withheld = withheldOfResearch(research)
+  return withheld ? withWithheld(research?.profile, { withheld }) : research?.profile
+}
+
+/**
  * Compose the plan for the chosen template from the needs profile, the owner's answers and the brand record. Answers
  * what `composePlan` answers (the plan passed the rules gate and its look check).
+ *
+ * 🔒 NOT `buildPlanStep`. That step builds the needs profile again (one more model call, and new question ids the
+ * stored answers no longer name) and settles the brand record itself; here research already built the profile and the
+ * brand step already ran (`engine.js`). So compose does the rest of it exactly as that step does: `withWithheld` on the
+ * stored profile, then `composePlan` with the stored brand record. A site nothing may name stops first with
+ * `site_name_missing` (`noRerun`), before any model call.
  * @param {{research: object, answers: object[], template: object, brand: object | null}} inputs
  * @param {{model: Function, kit: object}} tools
  */
 export async function composeStep({ research, answers, template, brand }, { model, kit }) {
+  const profile = planProfileOf(research)
+  // As `buildPlanStep` does: a site nothing may name stops before any model call, and is never run again.
+  if (siteNameMissingOf(profile?.withheld))
+    throw new EngineStepError(
+      'site_name_missing',
+      'the business name is kept off the site and nothing else names the site',
+      { noRerun: true }
+    )
+  // An answer to a question the withheld profile drops (about the held name or a held person) settles nothing that is
+  // shown, and `composePlan` would refuse it as no question of the profile (`answer_invalid`). Any other answer goes on
+  // as it is, so a wrong one is still refused.
+  const ids = (p) => new Set((Array.isArray(p?.questions) ? p.questions : []).map((q) => q?.id))
+  const kept = ids(profile)
+  const dropped = [...ids(research?.profile)].filter((id) => !kept.has(id))
   return composePlan({
     blockStore: kit.blockStore,
     pageRecipes: kit.pageRecipes,
     library: kit.library,
     template,
     brand,
-    profile: research.profile,
-    answers,
+    profile,
+    answers: (Array.isArray(answers) ? answers : []).filter((a) => !dropped.includes(a?.question)),
     planId: `plan-${randomUUID()}`,
     model
   })
