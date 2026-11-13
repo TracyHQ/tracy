@@ -108,7 +108,12 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
     const fitting = remaining.filter((item) => !refusedBy.has(item.id))
     tier(fitting, kind, 'Tracy library block', (d) => library.includes(d))
     // Fewer items than every template block of their kind needs (one coach, team blocks of two or more, D43).
-    const mins = descriptions.filter((d) => template(d) && accepts(d, kind)).map((d) => d.items.min)
+    // Counted over the blocks a page the plan keeps may hold, so the reason is true of this plan.
+    const reachable = (d) =>
+      onPlan().some(({ block }) => block.block === d.id) || pageFor(out, d, recipes) !== null
+    const mins = descriptions
+      .filter((d) => template(d) && accepts(d, kind) && reachable(d))
+      .map((d) => d.items.min)
     const fewer = mins.length > 0 && remaining.length < Math.min(...mins) ? Math.min(...mins) : 0
     for (const item of remaining.filter((i) => refusedBy.has(i.id) || fitting.includes(i)))
       leftOut.push({
@@ -121,7 +126,7 @@ export function placeExtraData(pages, { data, blocks, recipes, leftOutIds = new 
             : refusedBy.has(item.id)
               ? `Not shown in the Tracy section: ${refusedBy.get(item.id)}.`
               : fewer
-                ? `Every section of the template for your ${ITEM_NOUNS[kind] ?? 'items'} shows at least ${fewer}, and you have ${remaining.length}; nobody is made up to fill it.`
+                ? `Every section of the template for your ${ITEM_NOUNS[kind] ?? 'items'} on the pages of your site shows at least ${fewer}, and you have ${remaining.length}; nobody is made up to fill it.`
                 : `No section of the template or of the Tracy library can show more of your ${ITEM_NOUNS[kind] ?? 'items'}.`
       })
   }

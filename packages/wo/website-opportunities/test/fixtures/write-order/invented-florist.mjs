@@ -93,7 +93,12 @@ export const floristComposition = (services, photos) => ({
           ['contact-cta-url', 'contact-cta-label'],
           'Ordering stays one click away.'
         ),
-        block('contact-strip', 'Contact', ['contact-phone', 'contact-address'], 'Visitors can find you.'),
+        block(
+          'contact-strip',
+          'Contact',
+          ['contact-phone', 'contact-email', 'contact-address'],
+          'Visitors can find you.'
+        ),
         block('footer-main', 'Footer', ['business-name'], 'Your name at the end of every page.')
       ]
     }

@@ -86,13 +86,38 @@ test('JA Boxing, no person: no team block; two people: as before', () => {
   assert.deepEqual(teamBlocks(result.plan), ['block-178'])
 })
 
+test('JA Boxing, twelve people and a home block of four: the message says how many fit, once, and the gate accepts it', () => {
+  const names = Array.from({ length: 12 }, (_, n) => `Fern Hollis ${String.fromCharCode(65 + n)}`)
+  const profile = florist(...names)
+  const ids = profile.items.person.map((p) => p.id)
+  const all = boxingComposition(profile)
+  all.leftOut.push(...ids.map((item) => ({ item, reason: 'The team section is full.' })))
+  const refused = gatePlan(all, boxing(profile)).problems
+  assert.deepEqual(
+    refused.map((p) => [p.code, p.at]),
+    [['person_dropped_block_fits', 'leftOut[0].item']]
+  )
+  assert.match(refused[0].message, /block block-163 on page "Home" can show up to 4 of your 12 people/)
+  // Doing what the message says passes: four shown in that block, the other eight left out with a reason.
+  const done = boxingComposition(profile)
+  done.pages[0].blocks.push(block('block-163', ids.slice(0, 4)))
+  done.leftOut.push(...ids.slice(4).map((item) => ({ item, reason: 'The team section shows four.' })))
+  const result = gatePlan(done, boxing(profile))
+  assert.equal(result.ok, true, JSON.stringify(result.problems))
+  assert.deepEqual(showing(result.plan, ids[0]), ['home/block-163'])
+  assert.equal(result.plan.leftOut.filter((e) => e.kind === 'item' && names.includes(e.what)).length, 8)
+})
+
 test('a template whose every team block needs two leaves the one person out, with the reason', () => {
   const store = blockStore()
   store.blocks.find((b) => b.id === 'team-cards').items.min = 2
+  // The home page may hold the team block, so the reason speaks of a block a kept page could hold.
+  const recipes = pageRecipes()
+  recipes.recipes[0].blocks.push('team-cards')
   const context = composerContextOf({
     profile: clubProfile(),
     blockStore: store,
-    pageRecipes: pageRecipes(),
+    pageRecipes: recipes,
     library: library(),
     template: template(),
     brand: brand(),
@@ -109,7 +134,7 @@ test('a template whose every team block needs two leaves the one person out, wit
       what: 'Ilse Varrow',
       kind: 'item',
       reason:
-        'Every section of the template for your team members shows at least 2, and you have 1; nobody is made up to fill it.'
+        'Every section of the template for your team members on the pages of your site shows at least 2, and you have 1; nobody is made up to fill it.'
     }
   )
   // The model may leave the person out itself: no block fits, so it is no problem.

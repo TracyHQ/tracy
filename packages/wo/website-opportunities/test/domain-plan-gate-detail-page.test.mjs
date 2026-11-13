@@ -83,6 +83,28 @@ test('another item shown twice on a detail page is still a repeat', () => {
   assert.deepEqual(repeats(c), ['pages[3].blocks[2].data[0]'])
 })
 
+test('a page whose main block holds many shows one item there: no subject, so two more blocks repeating it fail', () => {
+  const context = detailContext()
+  // An invented plans page: its main block (services-grid) holds up to many and its page type is no per item page.
+  context.recipes.set('plans', {
+    pageType: 'plans',
+    mainBlock: 'services-grid',
+    blocks: ['header-main', 'services-grid', 'services-list', 'service-detail', 'footer-main']
+  })
+  const c = goodComposition()
+  c.pages.push({
+    pageType: 'plans',
+    name: 'Plans',
+    blocks: [
+      block('services-grid', [SERVICES[0]]),
+      block('services-list', [SERVICES[0]]),
+      block('service-detail', [SERVICES[0]])
+    ]
+  })
+  assert.equal(detailSubjectOf(c.pages[3], context), null)
+  assert.deepEqual(repeats(c, context), ['pages[3].blocks[1].data[0]', 'pages[3].blocks[2].data[0]'])
+})
+
 test('a list page still shows an item once: the home page is no detail page', () => {
   const c = goodComposition()
   c.pages[0].blocks.splice(3, 0, block('services-list', [SERVICES[3], SERVICES[0]]))

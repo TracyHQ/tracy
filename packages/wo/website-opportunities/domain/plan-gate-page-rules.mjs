@@ -2,15 +2,13 @@
 // P21), read once the reply has its shape. Each problem has a code and a message the model reads on its second
 // attempt (`plan-composer.mjs`: one more composition, then stop and report).
 // - `item_repeated_on_page` (P21): an item (a service, a person, a review) is shown by one block of a page, never two;
-//   except the subject of a detail page, which its page describes in several blocks (a class and its schedule). A
-//   detail page is a page whose recipe's main block, in the plan, shows exactly one item, whatever the block's declared
-//   maximum (a trainer page with one trainer); a page of a type the template repeats per item (`itemPageTypesOf`) or
-//   whose main block holds one item at most is one as soon as that block shows its item. Its subject is that item. Any
-//   other item shown twice on it is still a problem;
-// - `contact_channel_missing` (P13): every contact channel the business has is on the contact page (the page whose
-//   recipe's main block is a `contact` block), in a block with a field of that channel's kind; a block every recipe
-//   lists (a header, a footer) is drawn on every page, so kept on any page it counts. A channel no block the contact
-//   page may hold has a field for is not asked (Contract A gives it no place there);
+//   except the subject of a detail page, which its page describes in several blocks (a class and its schedule). A page
+//   is a detail page when (a) its type is one the template repeats per item (`itemPageTypesOf`, the write order's
+//   reading of `pages` and `variants`), (b) its recipe's main block declares one item at most, or (c) its recipe's
+//   main block shows people and shows exactly one person in the plan (a trainer page). Its subject is the one item its
+//   main block shows. Any other item shown twice on it is still a problem;
+// - `contact_channel_missing` (P13): every contact channel goes on the contact page while a block of it has a free
+//   place for it (`plan-gate-contact.mjs`);
 // - `form_without_destination` (P16): a `newsletter` block (a form) is kept only when the business has an email its
 //   answers can go to;
 // - `map_without_address` (P14): a `map` block is kept only when it shows the business's address fact;
@@ -18,28 +16,11 @@
 // - `person_dropped_block_fits` (D43, was P6): the people are not left out while a block can show them
 //   (`plan-gate-people.mjs`).
 import { BLOCK_TYPES, GROUP_KINDS_V3 } from './place-content-roles.mjs'
+import { contactChannelProblems } from './plan-gate-contact.mjs'
 import { droppedPeopleProblems } from './plan-gate-people.mjs'
+import { itemPageTypesOf } from './write-order-targets.mjs'
 
-/** The fact kinds of a contact channel: phone, email, address, booking link, social profile. */
-export const CONTACT_CHANNEL_KINDS = Object.freeze([
-  'contact.phone',
-  'contact.email',
-  'contact.address',
-  'contact.cta_url',
-  'contact.social_url'
-])
-
-const list = (value) => (Array.isArray(value) ? value : [])
-
-/** The data kinds a block has a field for: its fields, item fields and the row fields of its own lists. */
-export function fieldKindsOf(description) {
-  const fields = [
-    ...list(description?.fields),
-    ...list(description?.itemFields),
-    ...list(description?.lists).flatMap((l) => list(l?.fields))
-  ]
-  return new Set(fields.filter((f) => f?.type !== 'design' && f?.kind).map((f) => f.kind))
-}
+export { CONTACT_CHANNEL_KINDS } from './plan-gate-contact.mjs'
 
 /** Whether a block may show an item of `kind`: an item of the wrong kind is `wrong_item_kind`, reported once. */
 function shows(description, kind) {
@@ -47,11 +28,7 @@ function shows(description, kind) {
   return Boolean(itemKind && GROUP_KINDS_V3[itemKind].allowedKinds.includes(kind))
 }
 
-/**
- * The one item a detail page describes, or null: the one item its recipe's main block shows in the plan. Covers the
- * page types the template repeats per item (`itemPageTypesOf`) and main blocks of one item at most, whose main block
- * shows one item by construction, and any page whose main block happens to show one (a trainer page).
- */
+/** The one item a detail page describes, or null (see the header: cases a, b and c). */
 export function detailSubjectOf(page, { data, blocks, recipes }) {
   const main = blocks.get(recipes.get(page.pageType)?.mainBlock)
   if (!main) return null
@@ -59,7 +36,10 @@ export function detailSubjectOf(page, { data, blocks, recipes }) {
     .filter((b) => b.block === main.id)
     .flatMap((b) => b.data)
     .filter((id) => data.byId.get(id)?.what === 'item' && shows(main, data.byId.get(id).kind))
-  return shown.length === 1 ? shown[0] : null
+  if (shown.length !== 1) return null
+  const perItem = itemPageTypesOf([...recipes.values()]).has(page.pageType)
+  const person = shows(main, 'person') && data.byId.get(shown[0]).kind === 'person'
+  return perItem || main.items?.max === 1 || person ? shown[0] : null
 }
 
 function repeatedItems(page, at, context, problem) {
@@ -80,40 +60,6 @@ function repeatedItems(page, at, context, problem) {
       else seen.set(id, j)
     })
   )
-}
-
-function contactChannels(composition, context, problem) {
-  const { data, blocks, recipes } = context
-  const all = [...recipes.values()]
-  const everyPage = new Set(
-    list(all[0]?.blocks).filter((id) => all.every((r) => list(r?.blocks).includes(id)))
-  )
-  const siteWide = composition.pages.flatMap((p) => p.blocks.filter((b) => everyPage.has(b.block)))
-  const library = [...blocks.values()].filter((b) => b.source === 'library').map((b) => b.id)
-  const channels = data.facts.filter(
-    (f) =>
-      CONTACT_CHANNEL_KINDS.includes(f.kind) && !data.byId.get(f.id).itemField && !data.withheld?.has(f.id)
-  )
-  composition.pages.forEach((page, i) => {
-    const recipe = recipes.get(page.pageType)
-    if (blocks.get(recipe?.mainBlock)?.type !== 'contact') return
-    const places = new Set(
-      [...list(recipe.blocks), ...library].flatMap((id) => [...fieldKindsOf(blocks.get(id))])
-    )
-    const shown = new Set(
-      [...page.blocks, ...siteWide].flatMap((b) => {
-        const kinds = fieldKindsOf(blocks.get(b.block))
-        return b.data.filter((id) => kinds.has(data.byId.get(id)?.kind))
-      })
-    )
-    for (const fact of channels)
-      if (places.has(fact.kind) && !shown.has(fact.id))
-        problem(
-          'contact_channel_missing',
-          `pages[${i}]`,
-          `${JSON.stringify(fact.id)} (${fact.label}) is not on the contact page: every contact channel of the business goes on it, in a block with a field for it`
-        )
-  })
 }
 
 function blockRules(block, at, context, problem) {
@@ -154,6 +100,6 @@ export function pageRuleProblems(composition, context, problem) {
       if (context.blocks.has(block.block)) blockRules(block, `pages[${i}].blocks[${j}]`, context, problem)
     })
   })
-  contactChannels(composition, context, problem)
+  contactChannelProblems(composition, context, problem)
   droppedPeopleProblems(composition, context, problem)
 }

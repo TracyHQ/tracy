@@ -71,7 +71,7 @@ test('a held person is never shown: the gate refuses it, the model never reads i
   )
   assert.deepEqual(
     result.plan.leftOut.filter((e) => e.reason === WITHHELD_REASON),
-    [{ what: 'Ilse Varrow', kind: 'item', reason: WITHHELD_REASON }]
+    [{ what: 'A team member you keep private', kind: 'item', reason: WITHHELD_REASON }]
   )
   assert.equal(
     result.plan.pages.some((p) => p.blocks.some((b) => b.data.includes(COACH))),

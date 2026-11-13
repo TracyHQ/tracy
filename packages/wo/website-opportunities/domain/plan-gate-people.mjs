@@ -12,39 +12,44 @@ const showsPeople = (d) =>
   GROUP_KINDS_V3[BLOCK_TYPES[d?.type]?.itemKind]?.allowedKinds?.includes('person') ?? false
 
 /**
- * The first block and kept page that can show `count` people: a template block that shows people, whose minimum is
- * at most `count`, on a page of the plan whose recipe lists it, not on that page yet or there with room. Null when no
- * block of the template can.
- * @returns {{block: string, page: string} | null}
+ * The block and kept page with the most room for people, when the business has `count` of them: a template block that
+ * shows people, whose minimum is at most `count`, on a page of the plan whose recipe lists it, not on that page yet or
+ * there with room. Null when no block of the template can. `room` is how many it can show, at most `count`.
+ * @returns {{block: string, page: string, room: number} | null}
  */
 export function peopleBlockFor(count, composition, { blocks, recipes, data }) {
+  let best = null
   for (const d of blocks.values()) {
     if ((d.source ?? 'template') !== 'template' || !showsPeople(d) || d.items.min > count) continue
     for (const page of composition.pages) {
       if (!fitsRecipe(d, recipes.get(page.pageType))) continue
       const there = page.blocks.find((b) => b.block === d.id)
       const people = list(there?.data).filter((id) => data.byId.get(id)?.kind === 'person').length
-      if (!there || people < d.items.max) return { block: d.id, page: page.name }
+      const room = Math.min(d.items.max - people, count)
+      if (room > 0 && room > (best?.room ?? 0)) best = { block: d.id, page: page.name, room }
     }
   }
-  return null
+  return best
 }
 
-/** Report the model leaving out every person of the business while a block of the template can show them. */
+/**
+ * Report, once per plan, the model leaving out every person of the business while a block of the template can show
+ * them. The message names the block with the most room and how many of the people it can show: the others are left
+ * out with a reason, as the gate accepts.
+ */
 export function droppedPeopleProblems(composition, context, problem) {
   const { data } = context
   const people = data.items.filter((i) => i.kind === 'person' && !data.withheld?.has(i.id))
   if (people.length === 0) return
   const shown = new Set(composition.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
   if (people.some((p) => shown.has(p.id))) return
-  const fit = peopleBlockFor(people.length, composition, context)
+  const at = list(composition.leftOut).findIndex((e) => people.some((p) => p.id === e?.item))
+  const fit = at === -1 ? null : peopleBlockFor(people.length, composition, context)
   if (!fit) return
-  list(composition.leftOut).forEach((entry, i) => {
-    if (data.byId.get(entry?.item)?.kind !== 'person' || data.withheld?.has(entry.item)) return
-    problem(
-      'person_dropped_block_fits',
-      `leftOut[${i}].item`,
-      `${JSON.stringify(entry.item)} is left out while block ${fit.block} can show ${people.length} ${people.length === 1 ? 'person' : 'people'} on page ${JSON.stringify(fit.page)}: show the people there, never leave them out because another team block needs more`
-    )
-  })
+  const n = people.length
+  problem(
+    'person_dropped_block_fits',
+    `leftOut[${at}].item`,
+    `your people are left out while block ${fit.block} on page ${JSON.stringify(fit.page)} can show up to ${fit.room} of your ${n} ${n === 1 ? 'person' : 'people'}: show ${fit.room === n ? (n === 1 ? 'that person' : 'them') : `${fit.room} of them`} there${fit.room < n ? ' and leave the others out with a reason' : ''}; never leave people out because another team block needs more`
+  )
 }

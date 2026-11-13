@@ -14,6 +14,7 @@
 //   (`plan-data-limits.mjs`, code `data_over_limit`), so the page writer never stops on it;
 // - the rows of every child list are set by rules from the business's rows (`plan-rows.mjs`), held to what the block
 //   store declares (`plan-rows-check.mjs`), and every row not shown is reported in the left out list;
+// - the page rules (`plan-gate-page-rules.mjs`) hold for the composition and again after placement;
 // - the plan it returns passes the Contract B check (`build-contract.mjs`).
 // Composition in, `{ok, problems, plan, placed, accounting}` out.
 import { lookProblemsOf } from './brand-look-problems.mjs'
@@ -22,6 +23,8 @@ import { checkBuildDocument } from './build-contract.mjs'
 import { dataAccountingOf } from './plan-accounting.mjs'
 import { replyShapeProblems } from './plan-gate-reply.mjs'
 import { compositionProblems } from './plan-gate-rules.mjs'
+import { trimChannelOverflow } from './plan-gate-contact.mjs'
+import { pageRuleProblems } from './plan-gate-page-rules.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
 import { placeExtraData } from './plan-placement.mjs'
 import { placeExtraFacts } from './plan-placement-facts.mjs'
@@ -32,7 +35,7 @@ import {
   overLimitLeftOut
 } from './plan-data-limits.mjs'
 import { planRows } from './plan-rows.mjs'
-import { WITHHELD_REASON } from './plan-withheld.mjs'
+import { WITHHELD_REASON, withheldWhatOf } from './plan-withheld.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
@@ -107,8 +110,12 @@ export function gatePlan(composition, context) {
   const withheld = [...(context.data.withheld ?? [])].filter((id) => !leftOutIds.has(id))
   for (const id of withheld) leftOutIds.add(id)
   const placement = { data: context.data, blocks: context.blocks, recipes: context.recipes, leftOutIds }
-  const items = placeExtraData(dropped.pages, placement)
+  // A channel a block holds beyond its places is placed again or left out with the reason (`plan-gate-contact.mjs`).
+  const items = placeExtraData(trimChannelOverflow(dropped.pages, context), placement)
   const facts = placeExtraFacts(items.pages, placement)
+  // The page rules hold for the plan after placement too: a problem here is the gate's own placement.
+  pageRuleProblems({ pages: facts.pages, leftOut: modelLeftOut }, context, problem)
+  if (problems.length > 0) return { ok: false, problems }
   const pictures = picturesOf(facts.pages, context.blocks, context.data)
   // Items the pictures summary takes off a page (no own photo) are reported in its left out list.
   const after = new Set(pictures.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))
@@ -135,7 +142,8 @@ export function gatePlan(composition, context) {
   const fromModel = [...modelLeftOut, ...withheldOut].map(({ item, what, kind, reason }) => {
     if (item === undefined) return { what, kind, reason }
     const record = context.data.byId.get(item)
-    return { what: record.entry.label, kind: record.what === 'fact' ? 'feature' : 'item', reason }
+    const label = context.data.withheld?.has(item) ? withheldWhatOf(record) : record.entry.label
+    return { what: label, kind: record.what === 'fact' ? 'feature' : 'item', reason }
   })
   const kept = ({ id }) =>
     !context.data.withheld?.has(id) && !context.data.withheld?.has(context.data.rowsById?.get(id)?.owner)

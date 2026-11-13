@@ -4,7 +4,7 @@
 //   1. a block on the plan that declares a field of the fact's data kind with room for one more value of that kind;
 //   2. a facts only block of the store not on the plan (a contact strip, say) that declares such a field, added to a
 //      page whose recipe lists it (`plan-placement-pages.mjs`);
-//   3. else a left out entry with the reason.
+//   3. else a left out entry with the reason (no place of that kind, or every place taken already).
 // A design typed field never counts: it carries no data kind (Contract A). A fact that stands for an item field
 // (`plan-conflicts.mjs`) is shown with its item and never placed here. Pure: pages in, new pages, left out entries
 // (with the ids they name) and what was placed out.
@@ -13,7 +13,7 @@ import { extraBlockId, insertBlock, pageFor } from './plan-placement-pages.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 /** How many values of data kind `kind` a block's own fields hold. */
-const slotsFor = (description, kind) =>
+export const slotsFor = (description, kind) =>
   list(description?.fields).filter((f) => f?.type !== 'design' && f?.kind === kind).length
 const factsOnly = (description) => !BLOCK_TYPES[description.type]?.itemKind
 
@@ -66,13 +66,19 @@ export function placeExtraFacts(pages, { data, blocks, recipes, leftOutIds = new
       home.block.data.push(fact.id)
       shown.add(fact.id)
       placed.push({ item: fact.id, page: home.page.id, block: home.block.id, how: home.how })
-    } else
+    } else {
+      // True of the template: its places for the kind may all be taken (three addresses, one address place).
+      const label = fact.label.toLowerCase()
+      const full = [...blocks.values()].some((d) => d.source !== 'library' && slotsFor(d, fact.kind) > 0)
       leftOut.push({
         id: fact.id,
         what: fact.label,
         kind: 'feature',
-        reason: `No section of the template has a place for your ${fact.label.toLowerCase()}.`
+        reason: full
+          ? `Every place the template has for your ${label} on the pages of your site is taken already.`
+          : `No section of the template has a place for your ${label}.`
       })
+    }
   }
   return { pages: out, leftOut, placed }
 }

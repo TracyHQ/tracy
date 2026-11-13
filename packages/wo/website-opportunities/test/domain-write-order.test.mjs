@@ -79,9 +79,10 @@ test('link and phone values come from the plan data, never from the writer', () 
     ['from', 'value', 'data'].map((k) => entry(order, 'home.home-b4.service-wild-meadow-bouquet.price')[k]),
     ['data', '$42', 'service-wild-meadow-bouquet']
   )
-  // A link the plan data does not hold follows the block's no data rule.
+  // A link the plan data does not hold follows the block's no data rule (a service with no page of its own; the
+  // contact page shows the email now, as P13 asks).
   assert.deepEqual(
-    ['from', 'action'].map((k) => entry(order, 'contact.contact-b2.email')[k]),
+    ['from', 'action'].map((k) => entry(order, 'home.home-b4.service-seasonal-posy.more')[k]),
     ['no-data', 'hide']
   )
   const broken = orderOf()

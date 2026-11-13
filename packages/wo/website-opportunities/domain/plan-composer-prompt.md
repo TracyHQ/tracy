@@ -35,15 +35,18 @@ Rules:
    give its id as `item`. Never list an item you also show.
 9. Use exactly the keys of the shape below, nothing else, and list an id at most once in a `data` list.
 10. The same item (a service, a person, a review, a photo) is shown by one block of a page, never by two. Another
-    block of that page takes a job of its own or is left out.
+    block of that page takes a job of its own or is left out. A page about one item (its main block shows only that
+    item) may show that item again in its other blocks.
 11. Every contact channel the business has (phone, email, address, booking link, each social profile) goes on the
-    contact page (the page whose main block is a `contact` block), in a block with a field of that channel's `kind`.
+    contact page (the page whose main block is a `contact` block), in a block with a free field of that channel's
+    `kind`. A channel with no free field left there is placed elsewhere or left out with a reason.
     A block every recipe lists (a header, a footer) shows on every page, so a channel it holds counts.
 12. A `newsletter` block is a form: keep it only when the business has an email its answers can go to.
 13. A `map` block shows the business's address fact; without an address, leave it out.
 14. What the owner keeps off the site is not in `business`: never name it.
 15. When the business has fewer people than a team block needs, show them in another block that can hold that many,
-    on a page whose recipe lists it. Leave them out only when no block can, and never add people to fill a block.
+    on a page whose recipe lists it; when it holds fewer than you have, show as many as it holds and leave the others
+    out with a reason. Leave them all out only when no block can, and never add people to fill a block.
 
 Reply with JSON only, in this shape:
 
