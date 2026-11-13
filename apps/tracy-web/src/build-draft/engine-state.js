@@ -21,6 +21,8 @@ export const SAY = Object.freeze({
     'I could not read enough about your business from what you gave me, so I stopped here. The team can see what happened.',
   brand:
     'I could not read your own brand colour and logo yet, so I stopped before showing you a plan. The team can see what happened.',
+  links:
+    'Please give me at least one link to your website, your Google Maps listing or one of your social pages, so I can read about your business.',
   interrupted: 'My work on this was interrupted, so I stopped here. The team can see what happened.'
 })
 

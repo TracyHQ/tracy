@@ -60,7 +60,9 @@ export async function researchStep({ links, description }, { gather, model, kit,
     brief: gathered.brief,
     manifest,
     profile,
-    ...(Array.isArray(gathered.setAside) && gathered.setAside.length ? { setAside: gathered.setAside } : {})
+    ...(Array.isArray(gathered.setAside) && gathered.setAside.length ? { setAside: gathered.setAside } : {}),
+    // The business logo the gatherer saved as a file (the brand step reads it); kept so a rerun reads the same file.
+    ...(isText(gathered.logoFile) ? { logoFile: gathered.logoFile } : {})
   }
 }
 

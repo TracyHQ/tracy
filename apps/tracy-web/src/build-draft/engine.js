@@ -29,7 +29,8 @@ const BRAND_CODES = new Set([
   'brand_logo_colours_unmeasured',
   'brand_step_failed',
   'brand_file_unreadable',
-  'brand_input_missing'
+  'brand_input_missing',
+  'brand_input_ambiguous'
 ])
 /** The rules gate's look problems (D40, D42): a plan that failed the gate on them stops like a missing brand. */
 const LOOK_PROBLEMS = new Set(['template_accent', 'neutral_accent', 'template_logo', 'template_look_said'])
@@ -41,6 +42,9 @@ export function stoppedOf(fault) {
     BRAND_CODES.has(fault.code) ||
     (fault.code === 'plan_gate_failed' && (fault.problems ?? []).some((p) => LOOK_PROBLEMS.has(p?.code)))
   if (look) return { state: 'stopped', say: SAY.brand, reason: 'brand-unavailable' }
+  // Nothing to read at all (a description alone): the owner is asked for a link.
+  if (fault.code === 'research_empty' && fault.reason === 'no_links')
+    return { state: 'stopped', say: SAY.links }
   return { state: 'stopped', say: RESEARCH_CODES.has(fault.code) ? SAY.research : SAY.fault }
 }
 

@@ -6,12 +6,14 @@
 // research revision and a template kit (`{revisionId, kitRef, siteLanguage}`) and answers the look record. The brand
 // bench reads its brief from that revision (`--brief-revision`, a `wo_revision` row) and spends its own doors
 // (`brandAgent`, `brandReviewer`, `seedImage`), not the build model. A draft researched before any website opportunity
-// holds no such revision, so until the research gatherer stores one (`research.revisionId`), the step answers
-// `brand_input_missing` and compose stops: the plan never shows the template's look in its place.
+// holds no such revision: the step takes the draft's research brief instead (`--brief-file`, #616) with the logo file
+// the gatherer saved, and a draft without a brief or a known kit answers `brand_input_missing`.
 import { createBrandBeforeSite } from './brand-before-site.js'
 import { briefOfRevision } from './lib/bench-sql.js'
 import { readableKits } from './lib/template-kit-source.js'
 import { randomUUID } from 'node:crypto'
+import { existsSync } from 'node:fs'
+import path from 'node:path'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { apifyDaySpent } from 'website-opportunities/src/apify-budget.js'
 import { fromPlace, makeSiteBrief, opportunityOf } from 'website-opportunities/src/brief-research.js'
@@ -19,13 +21,24 @@ import { withNameDecision } from 'website-opportunities/src/business-name.js'
 import { withHoursDecision } from 'website-opportunities/src/business-hours.js'
 import { withPhoneDecision } from 'website-opportunities/src/business-phones.js'
 import { withRatingDecision } from 'website-opportunities/src/business-rating.js'
-import { fairShare, mergeCollected, mergePalettes, mergeProfile } from 'website-opportunities/src/executor.js'
+import {
+  EXT,
+  IMAGE_MAX_BYTES,
+  fairShare,
+  mergeCollected,
+  mergePalettes,
+  mergeProfile
+} from 'website-opportunities/src/executor.js'
+import { withMediaAdmission } from 'website-opportunities/src/media-admission.js'
+import { chooseLogo, logoHintsOf } from 'website-opportunities/src/place-logo.js'
 import { createLinkFields, saveListingSource } from 'website-opportunities/src/link-fields.js'
 import { createPinnedFetch } from 'website-opportunities/src/pinned-fetch.js'
 import { withProfileEdits } from 'website-opportunities/src/profile-edits.js'
 import { SOCIAL_SOURCES, SOURCES, refsOfCandidate, refsOfUrls } from 'website-opportunities/src/sources.js'
 import { cleanProfileLinks } from 'website-opportunities/domain/social-links.mjs'
 import { createPreSiteGatherer } from './build-draft/gather.js'
+import { createLogoSaver } from './build-draft/logo-file.js'
+import { kitImagesDirOf } from './lib/template-kit-images.js'
 import { tradeOfWords } from './lib/wo-revision-choice.js'
 import { woRuntime } from './lib/wo-ops.js'
 import { assetManifestOf } from './opportunities-build/asset-manifest.js'
@@ -63,8 +76,17 @@ export const preSiteParts = Object.freeze({
   opportunityOf,
   decideProfile,
   tradeOfWords,
-  assetManifestOf
+  assetManifestOf,
+  logoHintsOf,
+  chooseLogo
 })
+
+/**
+ * Where the build chat's research keeps the business logo files: `build-draft-logos` beside the brand bench's run
+ * folders (`brand-step/brand-wiring.js` `brandRunDir`: next to the kit image cache, under the configured readiness
+ * directory, else the OS temp directory).
+ */
+export const draftLogoDir = (config) => path.join(path.dirname(kitImagesDirOf(config)), 'build-draft-logos')
 
 /**
  * The fields of a Google place the link door matched, for `createLinkFields` (`candidateFields`): the identity and
@@ -148,6 +170,14 @@ export function preSiteGatherer({ pool, config, fetchImpl, dnsResolve, now = Dat
         return !(await apifyDaySpent(host, pool, accountId, now()))
       }),
     parts: preSiteParts,
+    saveLogo:
+      overrides.saveLogo ??
+      createLogoSaver({
+        dir: overrides.logoDir ?? draftLogoDir(config),
+        admit: withMediaAdmission,
+        maxBytes: IMAGE_MAX_BYTES,
+        ext: EXT
+      }),
     fetch,
     ...(resolve ? { resolve } : {}),
     now,
@@ -164,19 +194,25 @@ export function kitRefOf(template, kits = readableKits()) {
 }
 
 /**
- * The engine's `brandStep({research, template})` over #616's step. `stepsOf()` makes the step chain's steps
- * (`createStepChainSteps`), only once a run can start, so a server whose drafts never reach it builds no bench wiring.
+ * The engine's `brandStep({research, template})` over #616's step, on the draft's own research: the brief the gatherer
+ * made and, when one was found, the business logo file it saved (`research.logoFile`), never a research revision.
+ * `stepsOf()` makes the step chain's steps (`createStepChainSteps`), only once a run can start, so a server whose
+ * drafts never reach it builds no bench wiring. A logo file gone from the disk is not passed: the step then follows
+ * its own rule for a business without a logo.
  * @param {{pool: import('pg').Pool, stepsOf: () => object, brandBeforeSite?: Function, kitRefOf?: Function}} deps
  */
 export function draftBrandStep({ pool, stepsOf, brandBeforeSite, kitRefOf: refOf = kitRefOf }) {
   let run = brandBeforeSite ?? null
   return async ({ research, template }) => {
-    const revisionId = research?.revisionId
-    if (!revisionId)
-      throw fault('brand_input_missing', 'the draft research holds no research revision for the brand step')
+    const brief = research?.brief
+    if (!brief || typeof brief !== 'object')
+      throw fault('brand_input_missing', 'the draft research holds no brief for the brand step')
     const kitRef = refOf(template)
     if (!kitRef)
-      throw fault('brand_input_missing', `no step chain kit for ${template?.slug} ${template?.version}`)
+      throw fault(
+        'brand_input_missing',
+        `no template kit on this server for ${template?.slug ?? 'the template'} ${template?.version ?? ''}`.trim()
+      )
     run ??= createBrandBeforeSite({
       steps: stepsOf(),
       briefOf: async (id) => {
@@ -184,8 +220,15 @@ export function draftBrandStep({ pool, stepsOf, brandBeforeSite, kitRefOf: refOf
         return found.ok ? found.brief : null
       }
     })
+    const logoFile =
+      typeof research.logoFile === 'string' && existsSync(research.logoFile) ? research.logoFile : null
     const language = research.profile?.language?.value
-    const { record } = await run({ revisionId, kitRef, ...(language ? { siteLanguage: language } : {}) })
+    const { record } = await run({
+      brief,
+      ...(logoFile ? { logoFile } : {}),
+      kitRef,
+      ...(language ? { siteLanguage: language } : {})
+    })
     return record
   }
 }

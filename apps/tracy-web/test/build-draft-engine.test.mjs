@@ -278,6 +278,31 @@ test(
   }
 )
 
+test('a description with no link stops and asks the owner for a link, in plain words', opts, async () => {
+  const { domain } = await fakeDomain()
+  const s = server({
+    buildModel: async () => async () => '{}',
+    buildChatOn: async () => true,
+    gatherDoors: {
+      loadDomain: async () => domain,
+      runtime: runtimeWith(),
+      fetch: async () => assert.fail('no fetch')
+    }
+  })
+  const { ended } = await s.run('POST', '/research', { description: 'A family bakery that opens early.' })
+  assert.equal(ended.body.state, 'stopped')
+  assert.match(
+    ended.body.say,
+    /at least one link to your website, your Google Maps listing or one of your social pages/
+  )
+  assert.doesNotMatch(ended.body.say, DASHES)
+  const { fault } = await row(s)
+  assert.deepEqual(
+    [fault.code, fault.reason, fault.noRerun, fault.attempts],
+    ['research_empty', 'no_links', true, 1]
+  )
+})
+
 test(
   'templates come from the catalogue for the researched trade; none researched is an empty list',
   opts,

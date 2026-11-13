@@ -58,6 +58,11 @@ export function createPreSiteGatherer(deps) {
     const started = now()
     const remaining = () => budgetMs - (now() - started)
     const deadline = AbortSignal.timeout(budgetMs)
+    // A description alone is not a source: the owner is asked for a link (`stoppedOf`, reason `no_links`).
+    if (!links?.length)
+      throw Object.assign(new EngineStepError('research_empty', 'no link was given', { noRerun: true }), {
+        reason: 'no_links'
+      })
     const [domain, { keys, settings }] = await Promise.all([deps.loadDomain(), deps.runtime()])
     const domainDeps = {
       fetch: boundedFetch(deps.fetch, deadline),
@@ -124,6 +129,28 @@ export function createPreSiteGatherer(deps) {
           noRerun: true
         }
       )
-    return { brief: made.brief, manifest: made.manifest, setAside }
+    const logoFile = await logoFileOf({ deps, parts, rows: read, brief: made.brief, domain, domainDeps })
+    return { brief: made.brief, manifest: made.manifest, setAside, ...(logoFile ? { logoFile } : {}) }
   }
+}
+
+/**
+ * The business's logo as a file the brand step reads (`brand-before-site.js` `logoFile`), or null. The logo is the one
+ * Website Opportunities' own rule picks without a vision model (`place-logo.js`: the sources' logo hints, then
+ * `chooseLogo`, which trusts only what a page says of itself); `saveLogo` downloads it with the media admission rules.
+ * A logo not found or refused is no file: the brand step then follows its own rule for a business without one.
+ */
+async function logoFileOf({ deps, parts, rows, brief, domain, domainDeps }) {
+  if (!deps.saveLogo) return null
+  const candidates = parts.logoHintsOf(rows).map((h) => ({
+    mediaId: h.url,
+    url: h.url,
+    via: h.via,
+    source: h.source,
+    width: null,
+    height: null
+  }))
+  const { chosen } = parts.chooseLogo(candidates, { name: brief?.business?.name })
+  if (!chosen?.url) return null
+  return (await deps.saveLogo(chosen.url, { domain, deps: domainDeps }).catch(() => null)) ?? null
 }

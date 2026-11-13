@@ -4,7 +4,13 @@
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/build-draft-gather.test.mjs
 import assert from 'node:assert/strict'
+import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { test } from 'node:test'
+import { EXT, IMAGE_MAX_BYTES } from 'website-opportunities/src/executor.js'
+import { withMediaAdmission } from 'website-opportunities/src/media-admission.js'
+import { createLogoSaver } from '../src/build-draft/logo-file.js'
 import { researchOf } from 'website-opportunities/domain'
 import { preSiteGatherer } from '../src/build-draft-wiring.js'
 import { assetManifestOf } from '../src/opportunities-build/asset-manifest.js'
@@ -20,6 +26,7 @@ import {
   websiteResult
 } from './build-draft-gather-fakes.mjs'
 
+const LOGO = 'https://hollowmere-bakehouse.example/img/hollowmere-logo.png'
 const noFetch = async () => assert.fail('no fetch outside the fakes')
 
 function gatherer(domain, { keys = {}, settings = {}, paid = async () => true, ...rest } = {}) {
@@ -206,4 +213,49 @@ test('a listing page is read once and kept as the private listing source, throug
   // A listing page that does not answer is set aside; with nothing else, nothing was read.
   domain.readListingPage = async () => ({ ok: false, reason: 'blocked' })
   await assert.rejects(gatherer(domain)({ links: [listing], description: null }), { code: 'research_empty' })
+})
+
+/** Invented bytes that sniff as a PNG: the signature and a few made-up bytes after it. */
+const PNG = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 1, 2, 3, 4, 5, 6, 7, 8])
+
+test('the logo is saved as a file through the media admission rules; anything else is refused', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
+  const { domain } = await fakeDomain()
+  const asked = []
+  const answer = { status: 200, bytes: PNG, truncated: false }
+  domain.fetchLimited = async (url, deps) => (
+    asked.push({ url, maxBytes: deps.maxBytes, fetch: deps.fetch }), answer
+  )
+  const save = createLogoSaver({ dir, admit: withMediaAdmission, maxBytes: IMAGE_MAX_BYTES, ext: EXT })
+  const fakeFetch = async () => assert.fail('fetchLimited is the fake here')
+  const file = await save(LOGO, { domain, deps: { fetch: fakeFetch } })
+  assert.equal(path.dirname(file), dir)
+  assert.match(path.basename(file), /^[0-9a-f]{64}\.png$/)
+  assert.deepEqual(new Uint8Array(readFileSync(file)), PNG)
+  assert.deepEqual(asked, [{ url: LOGO, maxBytes: IMAGE_MAX_BYTES, fetch: fakeFetch }])
+  // Not an image, cut short, or refused by the guard: no file.
+  answer.bytes = new TextEncoder().encode('<html>not a picture</html>')
+  assert.equal(await save(LOGO, { domain, deps: {} }), null)
+  Object.assign(answer, { bytes: PNG, truncated: true })
+  assert.equal(await save(LOGO, { domain, deps: {} }), null)
+  domain.fetchLimited = async () => {
+    throw Object.assign(new Error('blocked'), { code: 'URL_BLOCKED' })
+  }
+  assert.equal(await save(LOGO, { domain, deps: {} }), null)
+  rmSync(dir, { recursive: true, force: true })
+})
+
+test('research keeps the logo the website names as a file for the brand step; no logo hint, no file', async () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'draft-logo-'))
+  const withLogo = { ...websiteResult(), logos: [{ url: LOGO, via: 'jsonld-logo' }] }
+  const { domain } = await fakeDomain({ connectors: { website: connector(withLogo) } })
+  domain.fetchLimited = async () => ({ status: 200, bytes: PNG, truncated: false })
+  const gathered = await gatherer(domain, { logoDir: dir })({ links: [SITE], description: null })
+  assert.equal(path.dirname(gathered.logoFile), dir)
+  assert.ok(existsSync(gathered.logoFile))
+  const { domain: plain } = await fakeDomain({ connectors: { website: connector(websiteResult()) } })
+  plain.fetchLimited = async () => assert.fail('no logo to download')
+  const none = await gatherer(plain, { logoDir: dir })({ links: [SITE], description: null })
+  assert.equal(none.logoFile, undefined)
+  rmSync(dir, { recursive: true, force: true })
 })

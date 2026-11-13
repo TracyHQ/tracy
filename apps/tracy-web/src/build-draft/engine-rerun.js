@@ -40,6 +40,7 @@ export function faultOf(step, { error, attempts }) {
     message: String(error?.message ?? error),
     attempts,
     ...(error?.noRerun === true ? { noRerun: true } : {}),
+    ...(typeof error?.reason === 'string' ? { reason: error.reason } : {}),
     ...(Array.isArray(error?.details?.problems) ? { problems: error.details.problems.slice(0, 20) } : {})
   }
 }

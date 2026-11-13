@@ -880,14 +880,15 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   wired in `build-draft-wiring.js` `preSiteGatherer`): the Website Opportunities link door judges and guards them, the
   executor's connectors read the website and social pages (its page, post and charge limits, the account's daily paid
   run count), Google Place Details reads a matched Google place, and `mergeProfile` / `fromPlace` / `makeSiteBrief`
-  make the brief and `assetManifestOf` the manifest a revision stores. No `wo_*` row is written and no picture is
-  stored: pictures are references by source address. Unread links are set aside with a reason; nothing read is
+  make the brief and `assetManifestOf` the manifest a revision stores. No `wo_*` row is written; pictures are
+  references by source address, except the business logo (`place-logo.js` rule), saved as a file in `build-draft-logos/`
+  beside the brand bench run folders for the brand step, which reads the draft's brief and that file, never a revision. Unread links are set aside with a reason; nothing read is
   `research_empty`; the whole step is bounded to three minutes. The brand step before the site (#616,
   [`build-draft-wiring.js`](apps/tracy-web/src/build-draft-wiring.js) over `brand-before-site.js`) is the engine's own
   `brand` step: choosing a template on a researched draft starts it (compose starts it when the record is missing), and
   its look record is kept in `build_draft.brand` (migration 217) for that template; compose only reads it, and new
-  research clears it. It runs on a research revision, so a draft without one stops with `brand_input_missing` and
-  never shows the template's look.
+  research clears it. On a draft it runs on the research brief (`--brief-file`), so a draft without a brief or a known kit stops with
+  `brand_input_missing` and never shows the template's look.
   The engine's own model calls (needs profile, plan composer) spend the `buildModel` door (Model & AI); the brand step
   spends the brand bench's doors.
   Site planner bench (migrations 189 and 190, §8 *Site planner bench*): `site_planner_run` (one run, also the durable queue's
