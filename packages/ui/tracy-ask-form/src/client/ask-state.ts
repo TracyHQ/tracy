@@ -10,6 +10,7 @@
  * keeps asking it — the customer is never left with a pointer to a tab that does not exist.
  */
 
+import { isBuildChatSession } from '@tracy/core/build-chat'
 import {
   type AskDraft,
   type AskForm,
@@ -433,7 +434,14 @@ export function createAskController({
     const sessionId = sidebar.getSnapshot().sessionId
     const entry = sessionId === undefined ? undefined : status.getSnapshot().get(sessionId)
     const pending = questionOf(entry?.pendingInteraction)
-    if (pending !== null && !opened.has(takeKey(pending)) && sidebar.isTabEnabled(tabId)) {
+    // The build chat asks in the conversation (#604): its questions are part of the exchange, so no tab
+    // opens and nothing is taken; dsh's question card asks them and its reply stays in the chat.
+    if (
+      pending !== null &&
+      !isBuildChatSession(pending.sessionId) &&
+      !opened.has(takeKey(pending)) &&
+      sidebar.isTabEnabled(tabId)
+    ) {
       try {
         const before = activeTab()
         sidebar.openTab({ type: tabId }, { sessionId: pending.sessionId })

@@ -31,3 +31,12 @@ export function isBuildChatPage(pathname) {
   const match = /^\/new\/s\/([^/?#]+)\/?$/.exec(typeof pathname === 'string' ? pathname : '')
   return match !== null && isBuildChatSession(match[1])
 }
+
+export {
+  answerOf,
+  askRequestOf,
+  BUILD_CHAT_STRINGS,
+  MAX_QUESTIONS_AT_ONCE,
+  replyOf,
+  researchRowOf
+} from './conversation.mjs'

@@ -687,3 +687,17 @@ test('controller: a request answered in another session leaves this session’s 
   assert.deepEqual(column.closed, [], 'the s2 tab is not the answered request’s')
   stop()
 })
+
+test('controller: a build chat session keeps its questions in the conversation, the tab never opens (#604)', async () => {
+  const build = 'session-build-0f1e2d3c-4b5a-4968-8778-695a4b3c2d1e'
+  const h = harness({ sessionId: build })
+  const stop = h.controller.start()
+  await h.ready()
+  h.setPending({ [build]: pending({ sessionId: build }) })
+  assert.equal(h.opens.length, 0, 'no Questions tab for the build chat')
+  assert.equal(h.controller.getSnapshot().taken.size, 0, 'nothing is taken, so dsh’s question card asks')
+  h.switchSession('s1')
+  h.setPending({ s1: pending() })
+  assert.equal(h.opens.length, 1, 'any other session still gets the tab')
+  stop()
+})
