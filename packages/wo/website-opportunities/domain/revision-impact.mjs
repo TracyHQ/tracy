@@ -23,6 +23,7 @@
 // no longer placed), an item. No measured door removes a record, so the plan step stops on any of them.
 import { writerContextOf, writerRequestsOf } from './page-writer-context.mjs'
 import { withoutWithheld } from './plan-withheld.mjs'
+import { oldValuesNamedIn } from './revision-old-forms.mjs'
 import { oldTextHitsOf, oldValuesOf } from './revision-old-values.mjs'
 import { heldFormsOf, namesAnyIn } from './revision-text-forms.mjs'
 import { makesRecord } from './revision-write-delta.mjs'
@@ -161,7 +162,9 @@ export function revisionImpactOf({ previous, next, blockStore, library = [], map
   const oldValues = oldValuesOf(previous, next, before, after)
   // A kept model reply (a picture label, an icon ranking) that names an old value or a held text is asked again.
   out.staleReplies = list(previous.replies)
-    .filter((r) => namesAnyIn(r?.reply ?? null, [...oldValues, ...held]))
+    .filter(
+      (r) => oldValuesNamedIn(r?.reply ?? null, oldValues).length > 0 || namesAnyIn(r?.reply ?? null, held)
+    )
     .map((r) => r.key)
   for (const hit of oldTextHitsOf(live, oldValues)) {
     const reasons = pageReasons.get(hit.page)

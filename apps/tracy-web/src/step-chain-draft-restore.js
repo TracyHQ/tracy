@@ -20,6 +20,7 @@
 // record `{restore, done}` so a crashed restore resumes; each is read back; a failing place is tried twice, then the
 // restore stops (`restore_failed`, noRerun). Doors as `step-chain-draft-write.js` lists them.
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
+import { placeHolds } from 'website-opportunities/domain/revision-place-value.mjs'
 import { checkUnchanged, restorePlanOf } from './step-chain-draft-restore-plan.js'
 
 export { restorePlanOf }
@@ -38,13 +39,14 @@ async function restorePlace(place, doors, applyId) {
     await doors.update({ applyId, kind: place.kind, id: place.id, fields: place.fields })
     const row = await doors.get({ kind: place.kind, id: place.id })
     for (const [column, value] of Object.entries(place.fields))
-      if ((row[column] ?? null) !== value) throw mismatch(place)
+      if (!placeHolds(`record:${place.kind}:${place.id}:${column}`, value, row[column] ?? null))
+        throw mismatch(place)
   } else if (place.type === 'assignment') {
     // A module with no pages before is set to none: Joomla shows a module with no assignment row on no page.
     const menuids = JSON.stringify(place.menuids ?? [])
     await doors.update({ applyId, kind: 'moduleAssignment', id: Number(place.id), fields: { menuids } })
-    if ((await doors.get({ kind: 'moduleAssignment', id: Number(place.id) })).menuids !== menuids)
-      throw mismatch(place)
+    const got = (await doors.get({ kind: 'moduleAssignment', id: Number(place.id) })).menuids
+    if (!placeHolds(`assignment:${Number(place.id)}`, menuids, got)) throw mismatch(place)
   } else if (place.type === 'slots') {
     const { revision } = await doors.inspect()
     await doors.contract({ applyId, expectedRevision: revision, changes: place.slots, removes: [] })
@@ -54,11 +56,43 @@ async function restorePlace(place, doors, applyId) {
     await doors.identity({ applyId, fields: place.fields })
     const got = await doors.readIdentity()
     for (const [key, value] of Object.entries(place.fields))
-      if ((got[key] ?? null) !== value) throw mismatch(place)
+      if (!placeHolds(`identity:${key}`, value, got[key] ?? null)) throw mismatch(place)
   }
 }
 
-const stop = (code, message, details = {}, report = {}) =>
+/**
+ * Every place written back once and read back, each checked first for an edit made outside Tracy (`state`: the run's
+ * `{wrote, shapes}`; `changed`: the code of that stop), the done places kept in `record.state.done` so a crashed write
+ * back resumes; a failing place is tried twice, then `failed` (noRerun).
+ */
+export async function writeBack({ places, doors, record, state, applyId, failed, changed }) {
+  for (const place of places) {
+    if (record.state.done.includes(place.key)) continue
+    await checkUnchanged(place, doors, state, changed)
+    for (let attempt = 1; ; attempt++) {
+      try {
+        await restorePlace(place, doors, applyId(place))
+        break
+      } catch (error) {
+        if (error?.fatal) throw error
+        if (attempt >= ATTEMPTS)
+          throw new DraftWriteError(
+            failed,
+            `${place.key} failed ${attempt} time(s)`,
+            {
+              place: place.key,
+              cause: error?.code ?? null
+            },
+            { noRerun: true }
+          )
+      }
+    }
+    record.state.done.push(place.key)
+    await record.save?.(record.state)
+  }
+}
+
+export const stop = (code, message, details = {}, report = {}) =>
   Object.assign(new DraftWriteError(code, message, details, { noRerun: true }), {
     report: { status: 'failed', restored: 0, unproven: [], ...report }
   })
@@ -100,31 +134,26 @@ export async function restoreBuild({ build, previous = null, doors, record, runI
       recorded: record.state.restore ?? null
     })
   const seq = build.write.state.seq ?? 1
-  const wrote = build.write.state.wrote ?? {}
-  for (const place of plan.places) {
-    if (record.state.done.includes(place.key)) continue
-    await checkUnchanged(place, doors, wrote)
-    for (let attempt = 1; ; attempt++) {
-      try {
-        await restorePlace(place, doors, `${runId}:restore:w${seq}:${place.key}`)
-        break
-      } catch (error) {
-        if (error?.fatal) throw error
-        if (attempt >= ATTEMPTS)
-          throw new DraftWriteError('restore_failed', `${place.key} failed ${attempt} time(s)`, {
-            place: place.key,
-            cause: error?.code ?? null
-          })
-      }
-    }
-    record.state.done.push(place.key)
-    await record.save?.(record.state)
-  }
+  await writeBack({
+    places: plan.places,
+    doors,
+    record,
+    state: build.write.state,
+    applyId: (place) => `${runId}:restore:w${seq}:${place.key}`,
+    failed: 'restore_failed'
+  })
   const current = {
     ...before,
     restoredFrom: build.ref,
     write: { ...before.write, state: { ...before.write.state, seq: seq + 1 } }
   }
-  await builds.keep(current, ctx)
+  if ((await builds.keep(current, ctx, { expected: build.ref })) === false)
+    throw stop(
+      'previous_build_not_current',
+      'another run changed the build the site holds during the restore',
+      {
+        expected: build.ref
+      }
+    )
   return { status: 'done', restored: plan.places.length, current, left: plan.left }
 }

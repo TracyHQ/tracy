@@ -2,7 +2,8 @@
 // run of the new plan revision from the build the site holds (`ctx.brief.rebuildFrom`: that build's ref). The steps
 // are the draft run's; what a revision changes:
 //   plan      checks the ref is the build the site holds NOW (`deps.builds.current(ctx)`: any other ref is
-//             `previous_build_not_current`), reads that build (`deps.builds.read(ref, ctx)`), checks it can be revised
+//             `previous_build_not_current`) and that no other run is unfinished on the site (`deps.builds.unfinished`:
+//             `previous_run_unfinished`), reads that build (`deps.builds.read(ref, ctx)`), checks it can be revised
 //             (`revisionBaseProblem`: missing, unreadable, unfinished, another plan or kit: a typed stop, noRerun,
 //             nothing written: the site then needs a full build on a new blank site), and works out which pages the
 //             writer writes again (`revisionImpactOf`). A previous build with no kept copy writes every page again,
@@ -36,7 +37,9 @@ const MESSAGES = {
   previous_build_other_kit: 'the stored build was written from another kit',
   previous_build_doors_missing:
     'this server keeps no builds to revise, or cannot say which build a site holds',
-  previous_build_not_current: 'the site holds another build than this ref'
+  previous_build_not_current: 'the site holds another build than this ref',
+  previous_run_unfinished:
+    'another run on this site stopped half way: resume it or abandon it (`abandonRun`) first'
 }
 const failOf = (code, ref, extra = {}) =>
   draftError(
@@ -59,7 +62,7 @@ async function storedBuild(deps, ref, ctx) {
  * other run. A build that cannot be revised is a typed stop before any model work.
  */
 export async function revisionOf(deps, ctx, { kit, plan, profile }) {
-  if (!isRevisionRun(ctx)) return null
+  if (!isRevisionRun(ctx)) return firstBuildCheck(deps, ctx)
   const ref = ctx.brief.rebuildFrom
   if (typeof deps.builds?.read !== 'function' || typeof deps.builds?.current !== 'function')
     throw failOf('previous_build_doors_missing', ref)
@@ -67,6 +70,9 @@ export async function revisionOf(deps, ctx, { kit, plan, profile }) {
     .then(() => deps.builds.current(ctx))
     .catch(() => null)
   if (current !== ref) throw failOf('previous_build_not_current', ref, { current: current ?? null })
+  const unfinished = typeof deps.builds.unfinished === 'function' ? await deps.builds.unfinished(ctx) : null
+  if (unfinished && unfinished.runId !== (ctx.runId ?? null))
+    throw failOf('previous_run_unfinished', ref, { run: unfinished.runId ?? null })
   const build = await storedBuild(deps, ref, ctx)
   const code = revisionBaseProblem(build, { plan, kit: kit.ref })
   if (code) throw failOf(code, ref)
@@ -100,6 +106,22 @@ export async function revisionOf(deps, ctx, { kit, plan, profile }) {
   const stale = new Set(impact.staleReplies)
   const replies = list(build.replies).filter((r) => !stale.has(r.key))
   return { previous: build, impact, replies }
+}
+
+/**
+ * A full build (no `rebuildFrom`) writes every record anew: on a site that already holds a build it would make every
+ * page, module and menu item twice. It stops before any model call (`site_already_built`, noRerun). A site the caller
+ * reset to blank (a new blank site) has no current build: `builds.current(ctx)` answers null.
+ */
+async function firstBuildCheck(deps, ctx) {
+  if (typeof deps.builds?.current !== 'function') return null
+  const current = await deps.builds.current(ctx)
+  if (current === null || current === undefined) return null
+  throw draftError(
+    'site_already_built',
+    `the site already holds the build ${current}: revise it (rebuildFrom) or build on a new blank site`,
+    { current }
+  )
 }
 
 /** What the record keeps of a revision: the pages written again with why, the pages kept, never any words. */

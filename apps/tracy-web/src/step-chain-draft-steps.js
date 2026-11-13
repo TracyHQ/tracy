@@ -35,7 +35,8 @@ const list = (value) => (Array.isArray(value) ? value : [])
  * @param {{readEngineDraft?: Function, draftPlanForBuild?: Function, loadAiqKit?: (slug: string) => object | null,
  *   buildModel?: () => Promise<Function>, openDraftPicture?: Function, iconLibrary?: () => object,
  *   draftWrite?: object, builds?: object}} deps `draftWrite`: the site doors of the write step
- *   (`step-chain-draft-write-step.js`); `builds`: the build store of revisions (`{read, keep, current}`,
+ *   (`step-chain-draft-write-step.js`); `builds`: the build store of revisions
+ *   (`{read, keep, current, begin, unfinished, end, forget}`,
  *   `docs/references/draft-revision-run.md`)
  *   `buildModel`: the build model door's resolver (`build-draft/build-model.js` `buildModelDoor`), which throws
  *   `model_missing` when the door has no provider

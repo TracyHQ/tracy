@@ -14,6 +14,9 @@ import {
 import { visionReply } from '../../../packages/wo/website-opportunities/test/fixtures/picture-policy/invented-pictures.mjs'
 import { createDraftSteps } from '../src/step-chain-draft-steps.js'
 import { memoryDoors } from 'website-opportunities/domain/write-order-memory-doors.mjs'
+import { buildStoreOf } from './draft-revision-store.mjs'
+
+export { buildStoreOf }
 
 export const ACCOUNT = 'account-larkspur'
 export const DRAFT = 'draft-larkspur-1'
@@ -125,19 +128,6 @@ export const blankSite = (script = {}) =>
   memoryDoors({ lock: site.kit.lock, contentMap: site.kit.blankContract, ...script })
 
 const kitOf = () => ({ ...site.aiq, template: { slug: 'ja-boxing', version: '1.0.11' } })
-
-/**
- * The build store of one site over a Map of builds by ref (`deps.builds`): `keep` stores a build and makes it the build
- * the site holds (`builds.currentRef`), `current` answers that ref.
- */
-export const buildStoreOf = (builds) => ({
-  read: async (ref) => structuredClone(builds.get(ref) ?? null),
-  keep: async (build) => {
-    builds.set(build.ref, structuredClone(build))
-    builds.currentRef = build.ref
-  },
-  current: async () => builds.currentRef ?? null
-})
 
 /**
  * The doors of the draft steps over a draft, a model, a memory site and the stores of builds and run records.

@@ -85,6 +85,7 @@ export function revisionStateOf(previous, plan, delta, held) {
     kept: [...delta.same],
     rewrite: delta.rewrite.map((r) => r.key),
     wrote: { ...before.wrote },
+    shapes: { ...before.shapes },
     undo: emptyUndo()
   }
 }
@@ -123,7 +124,11 @@ export async function runRevisionWrite({ plan, previous, doors, record, runId, o
   try {
     report = await runDraftWrite({
       plan,
-      doors: journaledDoors(doors, record, { previousWrote: previous.state.wrote ?? {}, held: hold.texts }),
+      doors: journaledDoors(doors, record, {
+        previousWrote: previous.state.wrote ?? {},
+        previousShapes: previous.state.shapes ?? {},
+        held: hold.texts
+      }),
       record,
       openStored,
       drawInitials,

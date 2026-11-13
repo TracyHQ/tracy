@@ -12,11 +12,12 @@
 //   - a flag of the write report (`held_file_left_on_site`) is kept in the step's value and record, for the caller.
 import { createHash } from 'node:crypto'
 import { withoutWithheld } from 'website-opportunities/domain/plan-withheld.mjs'
-import { heldFormsOf } from 'website-opportunities/domain/revision-text-forms.mjs'
+import { heldFormsOf, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
 import { buildWriteOrder } from 'website-opportunities/domain/write-order.mjs'
 import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.mjs'
 import { altCountsOf, altProblemsOf, withAltTexts } from './step-chain-draft-alt.js'
 import { wroteDoors } from './step-chain-draft-journal.js'
+import { restorePlanOf } from './step-chain-draft-restore-plan.js'
 import { draftError } from './step-chain-draft-source.js'
 import { draftWriteStep } from './step-chain-draft-write-step.js'
 
@@ -87,10 +88,82 @@ async function withBytesHash(stored, open) {
   return out
 }
 
+/**
+ * The build store as the write step uses it: `keep` stores the build with its profile read without what it holds (the
+ * hold list itself stays: it enforces the hold), sets it as the site's build only over the expected one (compare and
+ * set), ends the run (`builds.end`), and forgets the builds before it that only a refused restore could reach
+ * (`forgetHeld`).
+ */
+function guardedStore(builds, ctx, expected) {
+  if (typeof builds?.keep !== 'function') return builds
+  return {
+    ...builds,
+    async keep(whole, c) {
+      const build = { ...whole, profile: withoutWithheld(whole.profile) }
+      if ((await builds.keep(build, c, { expected })) === false)
+        throw draftError(
+          'previous_build_not_current',
+          'another run changed the build the site holds while this run wrote: this build is not the site build',
+          { expected, ref: build.ref }
+        )
+      await builds.end?.(ctx.runId ?? null, c)
+      await forgetHeld(builds, build, c)
+    }
+  }
+}
+
+/**
+ * A build whose restore is refused (it would show a held text, or remove a record) is the end of its line: the builds
+ * before it were reachable only through that restore, and each that names a text this build holds is forgotten (`builds.forget(ref, ctx, {reason})`: the
+ * store keeps the ref and the reason, nothing else).
+ */
+async function forgetHeld(builds, build, ctx) {
+  if (typeof builds.forget !== 'function' || !restorePlanOf(build).stop) return
+  const held = heldFormsOf(build.profile?.withheld)
+  if (!held.length) return
+  const seen = new Set()
+  for (let ref = build.previous; ref && !seen.has(ref); ) {
+    seen.add(ref)
+    const before = await builds.read?.(ref, ctx)
+    if (!before) break
+    if (namesAnyIn(before, held)) await builds.forget(ref, ctx, { reason: 'restore_shows_held_text' })
+    ref = before.previous
+  }
+}
+
+/**
+ * The check right before a run's first door call: the site still holds the build the run starts from
+ * (`builds.current`, null for a first build: `previous_build_not_current`), and a revision marks itself as the site's
+ * unfinished run (`builds.begin`, compare and set: another run marked is `previous_run_unfinished`). Nothing is called
+ * on the site before both pass.
+ */
+const siteCheckOf = (builds, ctx, previous) => async () => {
+  const expected = previous?.ref ?? null
+  if (typeof builds?.current === 'function') {
+    const now = (await builds.current(ctx)) ?? null
+    if (now !== expected)
+      throw draftError(
+        'previous_build_not_current',
+        'the site holds another build than this run starts from',
+        {
+          expected,
+          current: now
+        }
+      )
+  }
+  if (!previous || typeof builds?.begin !== 'function') return
+  if ((await builds.begin({ runId: ctx.runId ?? null, from: expected }, ctx)) === false)
+    throw draftError('previous_run_unfinished', 'another run is still unfinished on this site', {
+      run: (await builds.unfinished?.(ctx))?.runId ?? null
+    })
+}
+
 /** The write step, with its wiring (above). */
 export async function writeStep(deps, ctx, inputs) {
   const wiring = deps.draftWrite
-  const chain = { iconLibrary: deps.iconLibrary, builds: deps.builds }
+  const previous = inputs.plan?.previous
+  const builds = guardedStore(deps.builds, ctx, previous?.ref ?? null)
+  const chain = { iconLibrary: deps.iconLibrary, builds }
   if (typeof wiring?.doors !== 'function') return draftWriteStep(wiring, ctx, inputs, chain)
   const record = (await wiring.record?.(ctx)) ?? {}
   const wired = {
@@ -100,13 +173,13 @@ export async function writeStep(deps, ctx, inputs) {
     stored: async (order, c) =>
       withBytesHash(await wiring.stored?.(order, c), (id) => wiring.openStored(id, c))
   }
-  const previous = inputs.plan?.previous
   const plan = previous
     ? {
         ...inputs.plan,
         previous: { ...previous, write: { ...previous.write, hold: holdOf(inputs.plan.profile) } }
       }
     : inputs.plan
+  await siteCheckOf(deps.builds, ctx, previous)()
   const answer = await draftWriteStep(wired, ctx, { ...inputs, plan }, chain)
   const flags = list(answer?.value?.report?.flags)
   if (flags.length) {

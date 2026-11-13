@@ -5,13 +5,16 @@
 // requests alone keeps its words, and the site keeps the old value. So every value the revision changed or took away
 // is listed with its old text (`oldValuesOf`): each fact, item label and item field of the plan and the profile, the
 // name the site shows, each page name, and each leaf of every writer request's data view (`data:<id>`), by a stable
-// path, never by its text. Every kept word is then scanned for those old texts in any form (`textsNamedIn`: case,
-// references, accents, slug), and a block that quotes one is written again (`old_text_in_copy`).
+// path, never by its text. A value the blocks of the same entry still show (a plan label changed while the item's name,
+// which its data view shows, stays) is not old: no word quoting it shows anything the site no longer says. Every kept word is then scanned
+// for those old texts in any form (`oldValuesNamedIn`: case, references, accents, slug, number tokens, phone digits,
+// addresses without a scheme, apostrophes and hyphens dropped), and a block that quotes one is written again
+// (`old_text_in_copy`).
 //
 // A short or common old value (fewer than four letters and digits, or one word of letters) also matches where the
 // words mean something else (a price `5`, a name that is a common word). Correctness wins over cost: the block is
 // written again all the same, and the reason says the match was weak (`old_text_in_copy:short`).
-import { textsNamedIn } from './revision-text-forms.mjs'
+import { oldValuesNamedIn } from './revision-old-forms.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const text = (value) =>
@@ -61,8 +64,20 @@ export function oldValuesOf(previous, next, before, after) {
   const was = revisionValuesOf(previous, before)
   const now = revisionValuesOf(next, after)
   const out = new Set()
-  for (const [path, value] of was) if (now.get(path) !== value) out.add(value)
+  for (const [path, value] of was)
+    if (now.get(path) !== value && !stillShown(now, path, value)) out.add(value)
   return [...out]
+}
+
+/** The plan or profile id a value path belongs to (`item:<id>.label`, `profile-item:<kind>:<id>.<field>`, `data:<id>`). */
+const entityOf = (path) => /^(?:item:|data:|profile-item:[^:]+:)([^.[]+)/.exec(path)?.[1] ?? null
+
+/** Whether the blocks that show the same entry still show a value (its data view in a writer request of the new plan). */
+function stillShown(now, path, value) {
+  const id = entityOf(path)
+  if (!id) return false
+  for (const [p, v] of now) if (v === value && p.startsWith(`data:${id}`)) return true
+  return false
 }
 
 /** Whether an old text is short or common enough to match words that mean something else. */
@@ -86,13 +101,13 @@ export function oldTextHitsOf(kept, old) {
     const blocks = new Map()
     for (const f of list(page?.fields)) {
       if (f?.from !== 'writer') continue
-      const named = textsNamedIn(f.value, old)
+      const named = oldValuesNamedIn(f.value, old)
       if (!named.length) continue
       const block = String(f.key).split('/')[0]
       const why = reasonOf(named)
       if (blocks.get(block) !== 'old_text_in_copy') blocks.set(block, why)
     }
-    const seoNamed = textsNamedIn(page?.seo ?? null, old)
+    const seoNamed = oldValuesNamedIn(page?.seo ?? null, old)
     const seo = seoNamed.length ? reasonOf(seoNamed) : null
     if (blocks.size || seo) out.push({ page: id, blocks, seo })
   }

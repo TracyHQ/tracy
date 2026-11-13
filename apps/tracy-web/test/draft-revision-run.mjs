@@ -77,8 +77,7 @@ export async function revisionRun(
 }
 
 /** Revision 2 built in full on a new blank site. */
-export async function freshBuild(revised, { writer = {}, pictures } = {}) {
-  const memory = blankSite()
+export async function freshBuild(revised, { writer = {}, pictures, memory = blankSite() } = {}) {
   const model = revisionModel(writer)
   const run = await runBuild({
     steps: stepsOf({ draft: draftOf(revised), model, memory, pictures }),
@@ -121,10 +120,11 @@ export function restoredTo(memory, snapshot, build) {
 }
 
 /** Every case of the matrix: the counts a revision run gives, and whether its site is the full build's (`writer`: the
- * fake writer's options, `cross` for one that quotes what another block shows). */
-export async function matrixRow(name, { writer = {} } = {}) {
+ * fake writer's options, `cross` for one that quotes what another block shows; `site`: makes each blank site, a site
+ * that stores JSON its own way for one, `draft-revision-site-forms.mjs`). */
+export async function matrixRow(name, { writer = {}, site: blank = blankSite } = {}) {
   const leak = name === 'hold a reviewer' ? leakOf(HELD_PERSON) : undefined
-  const first = await firstBuild({ leak, writer })
+  const first = await firstBuild({ leak, writer, memory: blank() })
   const revised = revisedBy(name, { ...EDITS, ...MORE_EDITS })
   const partial = await revisionRun(first, revised, { writer })
   const row = {
@@ -134,7 +134,7 @@ export async function matrixRow(name, { writer = {} } = {}) {
     pages: partial.model.pages
   }
   if (partial.error) return { ...row, stop: partial.error.code }
-  const fresh = await freshBuild(revised, { writer })
+  const fresh = await freshBuild(revised, { writer, memory: blank() })
   const impact = partial.run.plan.revision.impact
   const delta = partial.run.write.report.delta
   const equal = sameSite(first.memory, fresh.memory, delta.orphaned)

@@ -3,7 +3,11 @@
 // check that a place still holds what the revision wrote (else it was edited outside Tracy: `restore_site_changed`).
 import { DraftWriteError } from 'website-opportunities/domain/draft-write-error.mjs'
 import { heldFormsOf, namesAnyIn } from 'website-opportunities/domain/revision-text-forms.mjs'
-import { isHeldBefore, valueHashOf } from './step-chain-draft-journal.js'
+import { placeHolds } from 'website-opportunities/domain/revision-place-value.mjs'
+import { isHeldBefore } from './step-chain-draft-journal.js'
+import { holdsSent, holdsWrote } from './step-chain-draft-wrote.js'
+
+const list = (value) => (Array.isArray(value) ? value : [])
 
 /** What the restore of a revision's build must put back, or why it cannot. */
 export function restorePlanOf(build) {
@@ -12,7 +16,9 @@ export function restorePlanOf(build) {
   const base = new Set(state.baseIds)
   const made = Object.keys(state.ids ?? {}).filter((k) => !base.has(k))
   const { records, assignments, slots, removed, identity, uploads } = state.undo
-  if (made.length || removed.length) return { stop: 'restore_needs_removal', made, removed, places: [] }
+  // `making`: a make sent by a run that crashed before it saved the made id (the abandon of an unfinished run).
+  if (made.length || removed.length || list(state.undo.making).length)
+    return { stop: 'restore_needs_removal', made: [...made, ...list(state.undo.making)], removed, places: [] }
   // A place the revision wrote over held a text the owner now keeps off the site: writing it back would show it again.
   const held = heldFormsOf(build.profile?.withheld)
   const before = [records, assignments, slots, identity]
@@ -73,18 +79,19 @@ async function heldNow(place, doors) {
   )
 }
 
-/** A place that holds neither what the revision wrote nor its value before was edited outside Tracy: a typed stop. */
-export async function checkUnchanged(place, doors, wrote) {
+/**
+ * A place that holds neither what the run wrote (`state`: `{wrote, shapes}`) nor its value before was edited outside
+ * Tracy: a typed stop (`code`: `restore_site_changed` for a restore, `site_changed_outside` for an abandon).
+ */
+export async function checkUnchanged(place, doors, state, code = 'restore_site_changed') {
   for (const [name, [now, before]] of Object.entries(await heldNow(place, doors))) {
-    const hash = valueHashOf(now)
-    if (!wrote[name] || hash === wrote[name] || hash === valueHashOf(before)) continue
+    if (!state.wrote?.[name] || holdsWrote(name, now, state) || placeHolds(name, before, now)) continue
+    if (holdsSent(name, now, state.undo)) continue
     throw Object.assign(
       new DraftWriteError(
-        'restore_site_changed',
-        `${name} was edited outside Tracy after the revision`,
-        {
-          place: name
-        },
+        code,
+        `${name} was edited outside Tracy after the run wrote it`,
+        { place: name },
         { noRerun: true }
       ),
       { report: { status: 'failed', restored: 0, changed: name } }
