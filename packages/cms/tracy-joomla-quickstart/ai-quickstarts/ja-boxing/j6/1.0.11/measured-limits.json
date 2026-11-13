@@ -8,307 +8,330 @@
   ],
   "measuredOn": "JA Boxing j6 human quickstart 1.0.11 (the release this contract describes, template ja_boxing 1.1.0), restored locally",
   "limits": {
-    "module-176.1": {
-      "limit": 66,
-      "limitFrom": "measured at 1440px on the running template, page /: 1440px 66 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390 and 768px (its box is drawn 0 by 0), so 1440px is the narrowest width that draws it"
+    "menuItem-152.0": {
+      "limit": 39,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 39 (demo 5 characters on 1 line(s)), 768px 84 (demo 5 characters on 1 line(s)), 1440px 62 (demo 5 characters on 1 line(s)); the limit is the smallest reading, 39 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-157.20": {
-      "limit": 30,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-157.23": {
-      "limit": 31,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 31 (demo 8 characters on 1 line(s)), 768px 65 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-160.3": {
-      "limit": 15,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 17 (demo 9 characters on 1 line(s)), 768px 41 (demo 9 characters on 1 line(s)), 1440px 15 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-160.4": {
-      "limit": 11,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 11 (demo 4 characters on 1 line(s)), 768px 33 (demo 4 characters on 1 line(s)), 1440px 31 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-160.5": {
-      "limit": 29,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 31 (demo 22 characters on 1 line(s)), 768px 56 (demo 22 characters on 1 line(s)), 1440px 29 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-16.7": {
-      "limit": 35,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-165.6": {
-      "limit": 539,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 539 (demo 382 characters on 13 line(s)), 768px 667 (demo 382 characters on 8 line(s)), 1440px 628 (demo 382 characters on 8 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-166.17": {
-      "limit": 33,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 33 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-162.33": {
-      "limit": 16,
-      "limitFrom": "measured at 390px on the running template, page /classes: 390px 16 (demo 9 characters on 1 line(s)), 768px 43 (demo 9 characters on 1 line(s)), 1440px 48 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-162.34": {
-      "limit": 10,
-      "limitFrom": "measured at 390px on the running template, page /classes: 390px 10 (demo 4 characters on 1 line(s)), 768px 35 (demo 4 characters on 1 line(s)), 1440px 41 (demo 4 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-162.35": {
-      "limit": 29,
-      "limitFrom": "measured at 390px on the running template, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 768px 57 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-2.7": {
-      "limit": 23,
-      "limitFrom": "measured at 390px on the running template, page /classes: 390px 36 (demo 12 characters on 1 line(s)), 768px 23 (demo 12 characters on 1 line(s)), 1440px 35 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-1.15": {
-      "limit": 31,
-      "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-6.15": {
-      "limit": 26,
-      "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 28 (demo 21 characters on 1 line(s)), 768px 48 (demo 21 characters on 1 line(s)), 1440px 26 (demo 21 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-6.14": {
-      "limit": 492,
-      "limitFrom": "measured at 390px on the running template, page /pages/j-content/blog-detail: 390px 492 (demo 468 characters on 11 line(s)), 768px 532 (demo 468 characters on 6 line(s)), 1440px 525 (demo 468 characters on 4 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "field-1.1": {
-      "limit": 29,
-      "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 33 (demo 10 characters on 1 line(s)), 768px 33 (demo 10 characters on 1 line(s)), 1440px 29 (demo 10 characters on 1 line(s)); the form field's placeholder repeated until it was wider than the field"
-    },
-    "module-189.24": {
-      "limit": 32,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 45 (demo 12 characters on 1 line(s)), 768px 32 (demo 12 characters on 1 line(s)), 1440px 94 (demo 12 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-184.1": {
-      "limit": 28,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 768px 40 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-167.0": {
-      "limit": 15,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-167.8": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-167.12": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-167.20": {
-      "limit": 206,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 245 (demo 131 characters on 7 line(s)), 768px 225 (demo 131 characters on 7 line(s)), 1440px 206 (demo 131 characters on 8 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-188.4": {
-      "limit": 26,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 33 (demo 17 characters on 1 line(s)), 768px 32 (demo 17 characters on 1 line(s)), 1440px 26 (demo 17 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-188.8": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-188.12": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-188.20": {
-      "limit": 230,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 288 (demo 155 characters on 8 line(s)), 768px 255 (demo 155 characters on 8 line(s)), 1440px 230 (demo 155 characters on 9 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-189.4": {
-      "limit": 26,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 33 (demo 17 characters on 1 line(s)), 768px 32 (demo 17 characters on 1 line(s)), 1440px 26 (demo 17 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-189.8": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-189.12": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-189.20": {
-      "limit": 251,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 319 (demo 176 characters on 9 line(s)), 768px 288 (demo 176 characters on 9 line(s)), 1440px 251 (demo 176 characters on 10 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-172.2": {
-      "limit": 35,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 35 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 61 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-172.10": {
-      "limit": 33,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 37 (demo 9 characters on 1 line(s)), 768px 36 (demo 9 characters on 1 line(s)), 1440px 33 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-188.0": {
-      "limit": 15,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-189.0": {
-      "limit": 15,
-      "limitFrom": "measured at 390px on the running template, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-183.7": {
-      "limit": 32,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-183.8": {
-      "limit": 276,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 287 (demo 255 characters on 7 line(s)), 768px 276 (demo 255 characters on 4 line(s)), 1440px 329 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-183.2": {
-      "limit": 613,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 613 (demo 559 characters on 15 line(s)), 768px 613 (demo 559 characters on 9 line(s)), 1440px 627 (demo 559 characters on 13 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-183.6": {
-      "limit": 48,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 48 (demo 10 characters on 1 line(s)), 768px 81 (demo 10 characters on 1 line(s)), 1440px 59 (demo 10 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-190.20": {
-      "limit": 30,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-190.23": {
-      "limit": 31,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 31 (demo 8 characters on 1 line(s)), 768px 65 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-177.2": {
-      "limit": 55,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 68 (demo 16 characters on 2 line(s)), 768px 91 (demo 16 characters on 2 line(s)), 1440px 55 (demo 16 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-177.8": {
-      "limit": 24,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 24 (demo 13 characters on 1 line(s)), 768px 64 (demo 13 characters on 1 line(s)), 1440px 59 (demo 13 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-177.12": {
-      "limit": 32,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 32 (demo 8 characters on 1 line(s)), 768px 77 (demo 8 characters on 1 line(s)), 1440px 70 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-177.14": {
-      "limit": 36,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 36 (demo 14 characters on 1 line(s)), 768px 76 (demo 14 characters on 1 line(s)), 1440px 70 (demo 14 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-177.16": {
+    "menuItem-153.0": {
       "limit": 45,
-      "limitFrom": "measured at 390px on the running template, page /about-us: 390px 45 (demo 15 characters on 1 line(s)), 768px 86 (demo 15 characters on 1 line(s)), 1440px 81 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 45 (demo 5 characters on 1 line(s)), 768px 93 (demo 5 characters on 1 line(s)); the limit is the smallest reading, 45 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "article-18.12": {
+    "menuItem-156.0": {
+      "limit": 44,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 44 (demo 10 characters on 1 line(s)), 768px 90 (demo 10 characters on 1 line(s)); the limit is the smallest reading, 44 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "menuItem-157.0": {
+      "limit": 45,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 45 (demo 17 characters on 1 line(s)), 768px 92 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 45 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "menuItem-158.0": {
       "limit": 50,
-      "limitFrom": "measured at 390px on the running template, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 768px 61 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 50 (demo 12 characters on 1 line(s)), 768px 104 (demo 12 characters on 1 line(s)); the limit is the smallest reading, 50 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-178.8": {
-      "limit": 31,
-      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers: 390px 34 (demo 17 characters on 1 line(s)), 768px 31 (demo 17 characters on 1 line(s)), 1440px 32 (demo 17 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-154.0": {
+      "limit": 44,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 44 (demo 7 characters on 1 line(s)), 768px 91 (demo 7 characters on 1 line(s)); the limit is the smallest reading, 44 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-178.32": {
-      "limit": 32,
-      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers: 390px 32 (demo 9 characters on 1 line(s)), 768px 69 (demo 9 characters on 1 line(s)), 1440px 150 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-162.0": {
+      "limit": 42,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 42 (demo 12 characters on 1 line(s)), 768px 88 (demo 12 characters on 1 line(s)); the limit is the smallest reading, 42 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-180.2": {
-      "limit": 707,
-      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 707 (demo 602 characters on 19 line(s)), 768px 869 (demo 602 characters on 11 line(s)), 1440px 869 (demo 602 characters on 12 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-164.0": {
+      "limit": 46,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 46 (demo 17 characters on 1 line(s)), 768px 96 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 46 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-181.18": {
-      "limit": 34,
-      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-165.0": {
+      "limit": 49,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 49 (demo 15 characters on 1 line(s)), 768px 101 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 49 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-182.16": {
-      "limit": 30,
-      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 768px 43 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-166.0": {
+      "limit": 48,
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 48 (demo 11 characters on 1 line(s)), 768px 101 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 48 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "module-182.18": {
-      "limit": 32,
-      "limitFrom": "measured at 390px on the running template, page /about-us/our-trainers/darlene-robertson: 390px 32 (demo 9 characters on 1 line(s)), 768px 69 (demo 9 characters on 1 line(s)), 1440px 150 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-167.0": {
+      "limit": 26,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 26 (demo 7 characters on 1 line(s)), 768px 26 (demo 7 characters on 1 line(s)), 1440px 62 (demo 7 characters on 1 line(s)); the limit is the smallest reading, 26 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "article-16.13": {
-      "limit": 27,
-      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 768px 40 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-169.0": {
+      "limit": 26,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 26 (demo 5 characters on 1 line(s)), 768px 26 (demo 5 characters on 1 line(s)), 1440px 61 (demo 5 characters on 1 line(s)); the limit is the smallest reading, 26 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
-    "article-16.50": {
-      "limit": 17,
-      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 32 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 17 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-16.58": {
-      "limit": 17,
-      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 32 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 17 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-16.51": {
-      "limit": 17,
-      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 9 characters on 1 line(s)), 768px 22 (demo 9 characters on 1 line(s)), 1440px 17 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-16.59": {
-      "limit": 17,
-      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 9 characters on 1 line(s)), 768px 22 (demo 9 characters on 1 line(s)), 1440px 17 (demo 9 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-159.0": {
-      "limit": 31,
-      "limitFrom": "measured at 390px on the running template, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 768px 44 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-191.0": {
-      "limit": 30,
-      "limitFrom": "measured at 390px on the running template, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 768px 42 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-28.7": {
-      "limit": 33,
-      "limitFrom": "measured at 390px on the running template, page /pages/j-content/author-listting/author/admin: 390px 36 (demo 13 characters on 1 line(s)), 768px 33 (demo 13 characters on 1 line(s)), 1440px 36 (demo 13 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "article-18.2": {
-      "limit": 257,
-      "limitFrom": "measured at 390px on the running template, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 273 (demo 255 characters on 6 line(s)), 768px 257 (demo 255 characters on 3 line(s)), 1440px 310 (demo 255 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-162.2": {
-      "limit": 20,
-      "limitFrom": "measured at 390px on the running template, page /about-us/contact: 390px 20 (demo 16 characters on 1 line(s)), 768px 42 (demo 16 characters on 1 line(s)), 1440px 68 (demo 16 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-162.16": {
-      "limit": 19,
-      "limitFrom": "measured at 390px on the running template, page /classes: 390px 19 (demo 10 characters on 1 line(s)), 768px 39 (demo 10 characters on 1 line(s)), 1440px 62 (demo 11 characters on 3 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
-    },
-    "module-162.31": {
-      "limit": 367,
-      "limitFrom": "measured at 390px on the running template, page /classes: 390px 367 (demo 293 characters on 9 line(s)), 768px 395 (demo 293 characters on 6 line(s)), 1440px 479 (demo 293 characters on 5 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    "menuItem-193.0": {
+      "limit": 37,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 37 (demo 5 characters on 1 line(s)), 768px 79 (demo 5 characters on 1 line(s)), 1440px 60 (demo 5 characters on 1 line(s)); the limit is the smallest reading, 37 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
     "menuItem-194.0": {
       "limit": 44,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 44 (demo 15 characters on 1 line(s)), 768px 91 (demo 15 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+      "limitFrom": "measured on the running template at 390, 768px, page /: 390px 44 (demo 15 characters on 1 line(s)), 768px 91 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 44 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
     "menuItem-195.0": {
       "limit": 48,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 48 (demo 12 characters on 1 line(s)), 768px 100 (demo 12 characters on 1 line(s)), 1440px 59 (demo 12 characters on 2 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 48 (demo 12 characters on 1 line(s)), 768px 100 (demo 12 characters on 1 line(s)), 1440px 59 (demo 12 characters on 2 line(s)); the limit is the smallest reading, 48 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     },
     "menuItem-196.0": {
       "limit": 42,
-      "limitFrom": "measured at 390px on the running template, page /: 390px 42 (demo 8 characters on 1 line(s)), 768px 88 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 42 (demo 8 characters on 1 line(s)), 768px 88 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the limit is the smallest reading, 42 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-176.1": {
+      "limit": 66,
+      "limitFrom": "measured on the running template at 1440px, page /: 1440px 66 (demo 10 characters on 1 line(s)); the limit is the smallest reading, 66 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text; the layout hides it at 390 and 768px (its box is drawn 0 by 0), so 1440px is the narrowest width that draws it"
+    },
+    "module-157.20": {
+      "limit": 30,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-157.23": {
+      "limit": 31,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 31 (demo 8 characters on 1 line(s)), 768px 65 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the limit is the smallest reading, 31 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-160.3": {
+      "limit": 15,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 17 (demo 9 characters on 1 line(s)), 768px 41 (demo 9 characters on 1 line(s)), 1440px 15 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 15 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-160.4": {
+      "limit": 11,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 11 (demo 4 characters on 1 line(s)), 768px 33 (demo 4 characters on 1 line(s)), 1440px 31 (demo 4 characters on 1 line(s)); the limit is the smallest reading, 11 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-160.5": {
+      "limit": 29,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 31 (demo 22 characters on 1 line(s)), 768px 56 (demo 22 characters on 1 line(s)), 1440px 29 (demo 22 characters on 1 line(s)); the limit is the smallest reading, 29 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.7": {
+      "limit": 35,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 36 (demo 15 characters on 1 line(s)), 768px 39 (demo 15 characters on 1 line(s)), 1440px 35 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 35 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-165.6": {
+      "limit": 539,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 539 (demo 382 characters on 13 line(s)), 768px 667 (demo 382 characters on 8 line(s)), 1440px 628 (demo 382 characters on 8 line(s)); the limit is the smallest reading, 539 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-166.17": {
+      "limit": 33,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 33 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 33 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-2.7": {
+      "limit": 36,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /: 390px 36 (demo 12 characters on 1 line(s)), 768px 40 (demo 12 characters on 1 line(s)), 1440px 36 (demo 12 characters on 1 line(s)); the limit is the smallest reading, 36 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.33": {
+      "limit": 16,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 16 (demo 9 characters on 1 line(s)), 768px 43 (demo 9 characters on 1 line(s)), 1440px 48 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 16 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.34": {
+      "limit": 10,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 10 (demo 4 characters on 1 line(s)), 768px 35 (demo 4 characters on 1 line(s)), 1440px 41 (demo 4 characters on 1 line(s)); the limit is the smallest reading, 10 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.35": {
+      "limit": 29,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 29 (demo 22 characters on 1 line(s)), 768px 57 (demo 22 characters on 1 line(s)), 1440px 63 (demo 22 characters on 1 line(s)); the limit is the smallest reading, 29 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.16": {
+      "limit": 19,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 19 (demo 10 characters on 1 line(s)), 768px 39 (demo 10 characters on 1 line(s)), 1440px 62 (demo 11 characters on 3 line(s)); the limit is the smallest reading, 19 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-162.31": {
+      "limit": 258,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes: 390px 258 (demo 255 characters on 7 line(s)), 768px 276 (demo 255 characters on 9 line(s)), 1440px 277 (demo 255 characters on 4 line(s)); the limit is the smallest reading, 258 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-1.15": {
+      "limit": 31,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 18 characters on 1 line(s)), 768px 31 (demo 18 characters on 1 line(s)), 1440px 50 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-6.15": {
+      "limit": 31,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog: 390px 34 (demo 21 characters on 1 line(s)), 768px 31 (demo 21 characters on 1 line(s)), 1440px 49 (demo 21 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-6.14": {
+      "limit": 492,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/blog-detail: 390px 492 (demo 468 characters on 11 line(s)), 768px 532 (demo 468 characters on 6 line(s)), 1440px 525 (demo 468 characters on 4 line(s)); the limit is the smallest reading, 492 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "field-1.1": {
+      "limit": 29,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/contact: 390px 33 (demo 10 characters on 1 line(s)), 768px 33 (demo 10 characters on 1 line(s)), 1440px 29 (demo 10 characters on 1 line(s)); the limit is the smallest reading, 29 at 1440px; the form field's placeholder repeated until it was wider than the field"
+    },
+    "module-162.2": {
+      "limit": 20,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/contact: 390px 20 (demo 16 characters on 1 line(s)), 768px 42 (demo 16 characters on 1 line(s)), 1440px 68 (demo 16 characters on 3 line(s)); the limit is the smallest reading, 20 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.24": {
+      "limit": 32,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 45 (demo 12 characters on 1 line(s)), 768px 32 (demo 12 characters on 1 line(s)), 1440px 94 (demo 12 characters on 1 line(s)); the limit is the smallest reading, 32 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-184.1": {
+      "limit": 28,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 28 (demo 21 characters on 1 line(s)), 768px 40 (demo 21 characters on 1 line(s)), 1440px 47 (demo 21 characters on 2 line(s)); the limit is the smallest reading, 28 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-167.0": {
+      "limit": 15,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 15 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-167.8": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 27 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-167.12": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 27 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-167.20": {
+      "limit": 206,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 245 (demo 131 characters on 7 line(s)), 768px 225 (demo 131 characters on 7 line(s)), 1440px 206 (demo 131 characters on 8 line(s)); the limit is the smallest reading, 206 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-188.4": {
+      "limit": 26,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 33 (demo 17 characters on 1 line(s)), 768px 32 (demo 17 characters on 1 line(s)), 1440px 26 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 26 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-188.8": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 27 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-188.12": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 27 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-188.20": {
+      "limit": 230,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 288 (demo 155 characters on 8 line(s)), 768px 255 (demo 155 characters on 8 line(s)), 1440px 230 (demo 155 characters on 9 line(s)); the limit is the smallest reading, 230 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.4": {
+      "limit": 26,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 33 (demo 17 characters on 1 line(s)), 768px 32 (demo 17 characters on 1 line(s)), 1440px 26 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 26 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.8": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 34 (demo 18 characters on 1 line(s)), 768px 33 (demo 18 characters on 1 line(s)), 1440px 27 (demo 18 characters on 1 line(s)); the limit is the smallest reading, 27 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.12": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 32 (demo 11 characters on 1 line(s)), 768px 31 (demo 11 characters on 1 line(s)), 1440px 27 (demo 11 characters on 1 line(s)); the limit is the smallest reading, 27 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.20": {
+      "limit": 251,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 319 (demo 176 characters on 9 line(s)), 768px 288 (demo 176 characters on 9 line(s)), 1440px 251 (demo 176 characters on 10 line(s)); the limit is the smallest reading, 251 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-172.2": {
+      "limit": 35,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 35 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 61 (demo 9 characters on 2 line(s)); the limit is the smallest reading, 35 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-172.10": {
+      "limit": 33,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 37 (demo 9 characters on 1 line(s)), 768px 36 (demo 9 characters on 1 line(s)), 1440px 33 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 33 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-188.0": {
+      "limit": 15,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 15 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-189.0": {
+      "limit": 15,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /plans: 390px 16 (demo 13 characters on 2 line(s)), 768px 15 (demo 13 characters on 2 line(s)), 1440px 28 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 15 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.7": {
+      "limit": 32,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 32 (demo 9 characters on 1 line(s)), 768px 47 (demo 9 characters on 1 line(s)), 1440px 92 (demo 9 characters on 2 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.8": {
+      "limit": 276,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 287 (demo 255 characters on 7 line(s)), 768px 276 (demo 255 characters on 4 line(s)), 1440px 329 (demo 255 characters on 3 line(s)); the limit is the smallest reading, 276 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.2": {
+      "limit": 613,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 613 (demo 559 characters on 15 line(s)), 768px 613 (demo 559 characters on 9 line(s)), 1440px 627 (demo 559 characters on 13 line(s)); the limit is the smallest reading, 613 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-183.6": {
+      "limit": 48,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 48 (demo 10 characters on 1 line(s)), 768px 81 (demo 10 characters on 1 line(s)), 1440px 59 (demo 10 characters on 1 line(s)); the limit is the smallest reading, 48 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-190.20": {
+      "limit": 30,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 30 (demo 11 characters on 1 line(s)), 768px 42 (demo 11 characters on 1 line(s)), 1440px 55 (demo 11 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-190.23": {
+      "limit": 31,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 31 (demo 8 characters on 1 line(s)), 768px 65 (demo 8 characters on 1 line(s)), 1440px 65 (demo 8 characters on 1 line(s)); the limit is the smallest reading, 31 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-177.2": {
+      "limit": 55,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 68 (demo 16 characters on 2 line(s)), 768px 91 (demo 16 characters on 2 line(s)), 1440px 55 (demo 16 characters on 2 line(s)); the limit is the smallest reading, 55 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-177.8": {
+      "limit": 24,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 24 (demo 13 characters on 1 line(s)), 768px 64 (demo 13 characters on 1 line(s)), 1440px 59 (demo 13 characters on 1 line(s)); the limit is the smallest reading, 24 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-177.12": {
+      "limit": 32,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 32 (demo 8 characters on 1 line(s)), 768px 77 (demo 8 characters on 1 line(s)), 1440px 70 (demo 8 characters on 1 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-177.14": {
+      "limit": 36,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 36 (demo 14 characters on 1 line(s)), 768px 76 (demo 14 characters on 1 line(s)), 1440px 70 (demo 14 characters on 1 line(s)); the limit is the smallest reading, 36 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-177.16": {
+      "limit": 45,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us: 390px 45 (demo 15 characters on 1 line(s)), 768px 86 (demo 15 characters on 1 line(s)), 1440px 81 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 45 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-18.12": {
+      "limit": 50,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/learning-center: 390px 70 (demo 41 characters on 2 line(s)), 768px 61 (demo 41 characters on 2 line(s)), 1440px 50 (demo 41 characters on 1 line(s)); the limit is the smallest reading, 50 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-178.8": {
+      "limit": 31,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers: 390px 34 (demo 17 characters on 1 line(s)), 768px 31 (demo 17 characters on 1 line(s)), 1440px 32 (demo 17 characters on 1 line(s)); the limit is the smallest reading, 31 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-178.32": {
+      "limit": 32,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers: 390px 32 (demo 9 characters on 1 line(s)), 768px 69 (demo 9 characters on 1 line(s)), 1440px 150 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-180.2": {
+      "limit": 707,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 707 (demo 602 characters on 19 line(s)), 768px 869 (demo 602 characters on 11 line(s)), 1440px 869 (demo 602 characters on 12 line(s)); the limit is the smallest reading, 707 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-181.18": {
+      "limit": 34,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 34 (demo 13 characters on 1 line(s)), 768px 46 (demo 13 characters on 1 line(s)), 1440px 58 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 34 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-182.16": {
+      "limit": 30,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 30 (demo 13 characters on 1 line(s)), 768px 43 (demo 13 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-182.18": {
+      "limit": 32,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/our-trainers/darlene-robertson: 390px 32 (demo 9 characters on 1 line(s)), 768px 69 (demo 9 characters on 1 line(s)), 1440px 150 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 32 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.13": {
+      "limit": 27,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 27 (demo 12 characters on 1 line(s)), 768px 40 (demo 12 characters on 1 line(s)), 1440px 56 (demo 13 characters on 2 line(s)); the limit is the smallest reading, 27 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.50": {
+      "limit": 17,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 32 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 17 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 17 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.58": {
+      "limit": 17,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 32 (demo 15 characters on 1 line(s)), 768px 22 (demo 15 characters on 1 line(s)), 1440px 17 (demo 15 characters on 1 line(s)); the limit is the smallest reading, 17 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.51": {
+      "limit": 17,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 31 (demo 9 characters on 1 line(s)), 768px 22 (demo 9 characters on 1 line(s)), 1440px 17 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 17 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-16.59": {
+      "limit": 17,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 31 (demo 9 characters on 1 line(s)), 768px 22 (demo 9 characters on 1 line(s)), 1440px 17 (demo 9 characters on 1 line(s)); the limit is the smallest reading, 17 at 1440px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-159.0": {
+      "limit": 31,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /classes/advanced-boxing: 390px 31 (demo 12 characters on 1 line(s)), 768px 44 (demo 12 characters on 1 line(s)), 1440px 54 (demo 12 characters on 2 line(s)); the limit is the smallest reading, 31 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "module-191.0": {
+      "limit": 30,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/category-blog/never-boxed-before: 390px 30 (demo 10 characters on 1 line(s)), 768px 42 (demo 10 characters on 1 line(s)), 1440px 55 (demo 10 characters on 2 line(s)); the limit is the smallest reading, 30 at 390px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-28.7": {
+      "limit": 33,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /pages/j-content/author-listting/author/admin: 390px 36 (demo 13 characters on 1 line(s)), 768px 33 (demo 13 characters on 1 line(s)), 1440px 36 (demo 13 characters on 1 line(s)); the limit is the smallest reading, 33 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
+    },
+    "article-18.2": {
+      "limit": 257,
+      "limitFrom": "measured on the running template at 390, 768, 1440px, page /about-us/learning-center/every-champ-was-a-beginner-at-some-point: 390px 273 (demo 255 characters on 6 line(s)), 768px 257 (demo 255 characters on 3 line(s)), 1440px 310 (demo 255 characters on 3 line(s)); the limit is the smallest reading, 257 at 768px; the box filled until the text needed more lines than the demo shows, grew the page or pushed another text"
     }
   },
-  "notFound": [
-    {
-      "slot": "menuItem-156.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    },
-    {
-      "slot": "menuItem-157.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    },
-    {
-      "slot": "menuItem-158.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    },
-    {
-      "slot": "menuItem-162.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    },
-    {
-      "slot": "menuItem-164.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    },
-    {
-      "slot": "menuItem-165.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    },
-    {
-      "slot": "menuItem-166.0",
-      "why": "no shown box on / at 390, 768, 1440 px holds the demo words"
-    }
-  ]
+  "notFound": []
 }

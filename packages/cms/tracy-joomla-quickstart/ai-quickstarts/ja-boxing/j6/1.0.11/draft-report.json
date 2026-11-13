@@ -2,15 +2,21 @@
   "summary": {
     "blocks": 44,
     "fieldsByType": {
-      "image": 44,
-      "text": 227,
-      "link": 60,
-      "icon": 17,
+      "image": 34,
+      "text": 177,
+      "link": 44,
+      "icon": 9,
       "design": 2
     },
+    "childFieldsByType": {
+      "text": 15,
+      "icon": 2,
+      "image": 2,
+      "link": 3
+    },
     "textLimits": {
-      "kitFrame390": 152,
-      "measuredOnSite": 69,
+      "kitFrame390": 123,
+      "measuredOnSite": 63,
       "notDrawn": 6,
       "other": 0,
       "missing": 0
@@ -35,18 +41,37 @@
     "excludedPageGroups": 2,
     "open": {
       "unmeasured": 0,
-      "derived": 65,
+      "derived": 52,
       "unlisted": 11,
       "undecided": 0,
       "skipped": 2,
       "notInMap": 5,
-      "sparse": 9,
+      "sparse": 1,
       "problems": 0,
-      "omitted": 3,
+      "omitted": 4,
       "notPlaced": 0,
-      "notes": 2
+      "notes": 2,
+      "outsideStore": 29
     },
-    "unlistedUnclassified": 0
+    "unlistedUnclassified": 0,
+    "coverage": {
+      "total": 1612,
+      "fields": 617,
+      "report": {
+        "derived": 20,
+        "unlisted": 11,
+        "omitted": 4,
+        "sparse": 1
+      },
+      "outsideStore": 29,
+      "removedWithPage": {
+        "article": 868,
+        "menuItem": 2,
+        "tag": 2,
+        "userProfile": 58
+      },
+      "unaccounted": 0
+    }
   },
   "unmeasured": [],
   "derived": [
@@ -59,56 +84,6 @@
       "block": "header",
       "slot": "block-176.1",
       "why": "a field of block-176"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-101.0",
-      "why": "a field of header"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-159.0",
-      "why": "a field of body-pages_j-content_author-listting_author_admin"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-160.0",
-      "why": "a field of body-pages_j-content_author-listting_author_admin"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-161.0",
-      "why": "a field of body-pages_j-content_author-listting_author_admin"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-163.0",
-      "why": "a field of block-17"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-167.0",
-      "why": "a field of header"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-169.0",
-      "why": "a field of header"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-193.0",
-      "why": "a field of header"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-168.0",
-      "why": "a field of body-about-us_contact"
-    },
-    {
-      "block": "block-187",
-      "slot": "menuItem-197.0",
-      "why": "a field of block-178"
     },
     {
       "block": "block-160",
@@ -129,21 +104,6 @@
       "block": "block-160",
       "slot": "menuItem-190.0",
       "why": "a menu label: the page title"
-    },
-    {
-      "block": "block-173",
-      "slot": "menuItem-188.0",
-      "why": "a field of block-160"
-    },
-    {
-      "block": "block-173",
-      "slot": "menuItem-189.0",
-      "why": "a field of block-160"
-    },
-    {
-      "block": "block-173",
-      "slot": "menuItem-190.0",
-      "why": "a field of block-160"
     },
     {
       "block": "block-17",
@@ -494,86 +454,6 @@
   ],
   "sparse": [
     {
-      "block": "block-160",
-      "field": "schedule-2",
-      "slots": [
-        "article-16.9",
-        "article-14.9",
-        "article-2.10"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "block-160",
-      "field": "schedule-3",
-      "slots": [
-        "article-16.10",
-        "article-14.10",
-        "article-2.11"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "block-160",
-      "field": "schedule-4",
-      "slots": [
-        "article-2.12"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "block-160",
-      "field": "schedule-5",
-      "slots": [
-        "article-2.13"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "class-list",
-      "field": "schedule-2",
-      "slots": [
-        "article-2.10",
-        "article-14.9",
-        "article-16.9"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "class-list",
-      "field": "schedule-3",
-      "slots": [
-        "article-2.11",
-        "article-14.10",
-        "article-16.10"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "class-list",
-      "field": "schedule-4",
-      "slots": [
-        "article-2.12"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
-      "block": "class-list",
-      "field": "schedule-5",
-      "slots": [
-        "article-2.13"
-      ],
-      "max": 4,
-      "why": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-    },
-    {
       "block": "author-profile",
       "field": "image",
       "slots": [
@@ -601,6 +481,11 @@
       "block": "block-184",
       "slot": "module-184.0",
       "why": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1"
+    },
+    {
+      "block": "learning-post",
+      "slot": "module-179.14",
+      "why": "the kit matched these words to module 179, which is trashed in the demo (published -2) and drawn on no page; the learning post draws the same words from the template string TPL_LEARNING_LEAD_DESC (languageString-182937349, outside the store, an override)"
     }
   ],
   "notPlaced": [],
@@ -612,6 +497,182 @@
     {
       "about": "page type search",
       "note": "No recipe for a search results page: no demo page shows a search box (checked on the running 1.0.11 home page: no search form), and the only route to the results page is the template showcase menu item (/pages/j-pages/smart-search), which the blank site removes with every demo menu item. A build that adds a search box later needs a recipe then."
+    }
+  ],
+  "outsideStore": [
+    {
+      "slot": "category-2.0",
+      "entity": "category-2",
+      "as": "kept",
+      "why": "the Uncategorised category, which the blank site step keeps as Joomla's default category: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+    },
+    {
+      "slot": "module-1.0",
+      "entity": "module-1",
+      "as": "not-drawn",
+      "why": "the title of the Main Menu module, which sits in position sidebar-right: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px) (the menus drawn are the header and the off-canvas module 187)"
+    },
+    {
+      "slot": "module-16.0",
+      "entity": "module-16",
+      "as": "not-drawn",
+      "why": "the title of the Login Form module, which sits in position sidebar-right: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the words Login Form drawn on the login page are its masthead row"
+    },
+    {
+      "slot": "module-179.0",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.1",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.2",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.3",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.4",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.5",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.6",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.7",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.8",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.9",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.10",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.11",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.12",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "module-179.13",
+      "entity": "module-179",
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    {
+      "slot": "field-1.0",
+      "entity": "field-1",
+      "as": "kept",
+      "why": "the label of the contact form's phone field (custom field 1, com_contact.mail): interface text valid on every site; its placeholder is field-1.1 of block contact-details"
+    },
+    {
+      "slot": "languageString-231238131.0",
+      "entity": "languageString-231238131",
+      "as": "not-drawn",
+      "why": "T4_OFF_CANVAS_TITLE (Sidebar Menu): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+    },
+    {
+      "slot": "languageString-166748343.0",
+      "entity": "languageString-166748343",
+      "as": "not-drawn",
+      "why": "TPL_CLOSE (Close): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the Close words a page carries are the CMS's own JCLOSE string in its script options"
+    },
+    {
+      "slot": "languageString-58440578.0",
+      "entity": "languageString-58440578",
+      "as": "override",
+      "why": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER (Your message): the contact form's message placeholder, set by the template's script; a language override of the mapping file, like the form's other placeholders"
+    },
+    {
+      "slot": "languageString-10831042.0",
+      "entity": "languageString-10831042",
+      "as": "kept",
+      "why": "TPL_DETAILS (Details): interface text valid on every site, not drawn as visible text on any kit page"
+    },
+    {
+      "slot": "languageString-112732346.0",
+      "entity": "languageString-112732346",
+      "as": "override",
+      "why": "TPL_FOLLOW_US (Follow us): drawn beside the footer social links at wide widths (class d-hd-inline); demo words, a language override of the mapping file"
+    },
+    {
+      "slot": "languageString-182937349.0",
+      "entity": "languageString-182937349",
+      "as": "override",
+      "why": "TPL_LEARNING_LEAD_DESC (All you need to know): the lead line over the punch rows of every learning post; demo words, a language override of the mapping file"
+    },
+    {
+      "slot": "languageString-46373076.0",
+      "entity": "languageString-46373076",
+      "as": "override",
+      "why": "TPL_LEARNING_LEAD_TITLE (The 6 punches): the heading over the punch rows of every learning post; demo words, a language override of the mapping file"
+    },
+    {
+      "slot": "languageString-37868544.0",
+      "entity": "languageString-37868544",
+      "as": "not-drawn",
+      "why": "TPL_NO_SUPPORT_GROUP: a warning about an unsupported listing option, no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+    },
+    {
+      "slot": "languageString-135820122.0",
+      "entity": "languageString-135820122",
+      "as": "kept",
+      "why": "TPL_PASSWORD (Password): the login and registration form label, interface text valid on every site; drawn only on those system pages"
+    },
+    {
+      "slot": "languageString-27872773.0",
+      "entity": "languageString-27872773",
+      "as": "kept",
+      "why": "TPL_PLAY (play): the hidden accessible name of the video play button (class d-none), interface text valid on every site"
+    },
+    {
+      "slot": "languageString-44242957.0",
+      "entity": "languageString-44242957",
+      "as": "kept",
+      "why": "TPL_USERNAME (Username): the login and registration form label, interface text valid on every site; drawn only on those system pages"
     }
   ]
 }

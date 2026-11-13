@@ -84,12 +84,16 @@ The snippets below are excerpts of it.
 | `noData` | required: `{"rule": "hide"}`, or `{"rule": "fallback", "fallback": "<what the block shows instead>"}` |
 | `fields` | the block's own fields, written once per placed block |
 | `itemFields` | optional: the fields of one item of a repeating block, written once per item |
+| `lists` | optional: child lists of the block itself (the steps of a post page), see [Child lists](#child-lists) |
+| `itemLists` | optional: child lists inside each item of a repeating block (the calendar rows of a class card) |
 
-Optional keys a draft records for the mapping file and for a reviewer: `slot` on a field (its stored place, a
-content map key), `slots` on an item field (its stored place per item, in item order), `designFrom` on a design field
-(the config line it is), `limitFrom` (where a limit came from), `itemsFrom` (`{min, max}`: where each item count came
-from). The check reads two of them without the mapping file:
+Keys a draft records for the mapping file and for a reviewer: `slot` on a field (its stored place, a content map
+key), `slots` on an item field (its stored place per item, in item order), `derived` on an item field that has no
+stored place (what it is derived from: `"the item page address"`), `designFrom` on a design field (the config line it
+is), `limitFrom` (where a limit came from), `itemsFrom` (`{min, max}`: where each item count came from). The check
+reads them without the mapping file:
 
+- every item field lists its stored places (`slots`) or says what it is derived from (`derived`);
 - an item field with `slots` needs at least `items.max` of them: every item has the field, so every item has one shape;
 - a field that is not typed `design` but carries `designFrom`, or shares its `slot` with a design field of the block,
   is a design value typed as content.
@@ -101,11 +105,111 @@ A field is `{name, kind, type, ...}`, its name unique within the block:
 | `text` | `kind`, `limit` | `limit` = most characters at the narrowest width, measured on the template |
 | `link` | `kind` | |
 | `image` | `kind`, `frame: {width, height}` | the picture's frame in pixels |
-| `icon` | `kind` | |
+| `icon` | `kind`, `frame: {width, height}` | the box the icon is drawn in, in pixels, so the build can size it; see [Icon fields](#icon-fields) |
 | `number` | `kind` | |
 | `design` | nothing; carries no `kind` | a design value of the template. **A build never writes it** |
 
 A field whose kind is `editorial.design_element` is a design value and must be typed `design`.
+
+### Icon fields
+
+- An icon field is filled only with an icon from the build's icon library, the picture step of
+  [ADR 0043](../adr/0043-picture-step-manifest-check-and-fallback-ladder.md). It is never a photo, never a generated
+  picture, and never the template's demo icon.
+- The icon is chosen for the content of its own item (the item's heading and text), so it means what the item says.
+- It is written in a light and a dark version and painted in the template's colour roles (ADR 0043 section 1a), so it
+  keeps the template's icon style.
+- When no library icon fits, the icon is hidden, or the field's own no data rule applies; the demo icon is never
+  kept. For builds from an AI quickstart this replaces the `keep` treatment of `editorial.item_icon` in
+  [ADR 0040](../adr/0040-place-content-roles-v3-role-is-the-single-keep-decider.md).
+- An icon field declares its `frame`; the check fails an icon field without one.
+- `storage` says how the template keeps the icon: `image-file` (a picture path) or `class-name` (a class of the
+  template's own icon font, such as a social network glyph).
+- `iconOf: "network"` marks an icon that stands for the social network of its item's link, not for item content (the
+  social links of a footer or a trainer card). The build writes that network's class in the template's icon font, the
+  font the template ships; with no network known for the link, the icon is hidden with its link. The item content rule
+  above does not apply to it.
+
+### Child lists
+
+A **child list** is a list inside a block or inside each item of a repeating block, with its own fields and counts: the
+calendar rows of each class card, the steps of an exercise on a class page. `lists` holds the child lists of the block
+itself, `itemLists` those of each item. A child list's rows may carry child lists of their own (`lists` on the child
+list).
+
+```json
+{
+  "id": "class-cards",
+  "type": "services",
+  "items": { "min": 1, "max": 4 },
+  "itemFields": [
+    { "name": "name", "kind": "offering.name", "type": "text", "limit": 30,
+      "slots": ["article-1.0", "article-2.0", "article-3.0", "article-4.0"] }
+  ],
+  "itemLists": [
+    {
+      "name": "sessions",
+      "items": { "min": 0, "max": 2 },
+      "itemsFrom": { "min": "a card lays out with no session row", "max": "the most rows a stored item holds" },
+      "fields": [
+        { "name": "day", "kind": "offering.schedule", "type": "text", "limit": 20,
+          "slots": [["article-1.4", "article-1.6"], ["article-2.4"], ["article-3.4"], []] }
+      ]
+    }
+  ]
+}
+```
+
+| Key | Rule |
+|---|---|
+| `name` | unique in the block, across its fields, item fields and child lists |
+| `items` | `{min, max}` as for a block; `min` may be 0 (a card with no session row) |
+| `itemsFrom` | required: `{min, max}`, where each count comes from |
+| `fields` | the fields of one row, with the same rules as any field (type, kind, limit, frame) |
+| `lists` | optional: child lists of each row |
+
+**Stored places per parent place.** A child field's `slots` is one entry per parent place, each the stored places of its
+rows in row order, `[]` for a place that stores none. Above, the four class records store 2, 1, 1 and 0 rows. The
+parent places are the block itself (one place) for `lists`, the stored item places (in the order of the item fields'
+`slots`) for `itemLists`, and every row of the parent list, place after place, for a nested list. A child field with no
+stored place says what it is derived from (`derived`). The check holds, with the mapping file written or pending:
+
+- every child field lists one entry per parent place;
+- the fields of one list agree row for row (the same rows per parent place);
+- every parent place stores between `min` and `max` rows (a stored row above `max` would never be written), and one
+  place stores `max` (a maximum no place stores is a claim nothing can write).
+
+**More rows than a parent place stores.** The build writes a business's rows into the stored places of the parent place
+the item is written to, in order, and drops the rows beyond them; it gives the item with the most rows the parent
+place that stores the most. A stored place the business does not fill must be left empty: emptying every declared place
+is the blank site step the mapping file brings (#584), so it is declared here even when no business fills it. So `max` is the most rows a business item can show, and a parent
+place storing fewer shows fewer.
+
+**A child list on a block that shows one thing** (a post page): `lists` with one parent place, `slots` with one entry.
+A nested list stores its rows per row of its parent list:
+
+```json
+"lists": [
+  {
+    "name": "exercises",
+    "items": { "min": 1, "max": 2 },
+    "itemsFrom": { "min": "one exercise lays out as one card", "max": "the most rows a stored parent place holds" },
+    "fields": [{ "name": "title", "kind": "editorial.heading", "type": "text", "limit": 18,
+                 "slots": [["article-9.10", "article-9.20"]] }],
+    "lists": [
+      {
+        "name": "steps",
+        "items": { "min": 1, "max": 3 },
+        "itemsFrom": { "min": "one step is one bullet", "max": "the most rows a stored parent place holds" },
+        "fields": [{ "name": "step", "kind": "editorial.paragraph", "type": "text", "limit": 24,
+                     "slots": [["article-9.11", "article-9.12", "article-9.13"], ["article-9.21"]] }]
+      }
+    ]
+  }
+]
+```
+
+Paragraphs of running article text are not a list: they stay single fields of the block, one per stored place.
 
 ## `page-recipes.json`
 
@@ -154,7 +258,11 @@ A **location** has the shape a content map slot already uses, so the existing pl
 ```
 
 - **`blocks`**: one entry per store block, nothing else. `fields` gives a location for every field, design fields too.
-  `itemFields` gives a list of locations per item field, one per item, at least `items.max` long.
+  `itemFields` gives a list of locations per item field, one per item, at least `items.max` long. `lists` and
+  `itemLists` map a child list name to `{fields, lists?}`, where each child field gives, per parent place, one location
+  per row (`[[loc, loc], [loc], []]`): at least one parent place for `lists`, `items.max` for `itemLists`, and the rows
+  of the parent list for a nested list, with the rows within the list's counts and agreeing across its fields. A child
+  field's location on a design line is a design value typed as content, as for any field.
 - **`designLines`**: every config line of the block that is design (kept as the template has it). A design field's
   location must be one of them, and a field whose location is one of them must be typed `design`: that is how a design
   value typed as text is caught.
@@ -226,6 +334,17 @@ node scripts/ai-quickstart/check.mjs <folder>...     only those (a draft before 
 It runs in CI as gate `ai-quickstart-contract` of `scripts/check-all.ts`. Its unit tests are
 `packages/wo/website-opportunities/test/domain-ai-quickstart-contract.test.mjs` (one case per failure kind) and
 `scripts/test/ai-quickstart-contract-check.test.mjs` (the command).
+
+## Every stored place is accounted for (the draft)
+
+Anything a visitor can see that is not declared is invisible to the system: the blank site step does not empty it and
+the build does not overwrite it. The draft (`packages/cms/tracy-quickstart-tools/ai-quickstart/draft.mjs`) therefore
+accounts for every slot of the content map as exactly one of: a field place (a field, an item field or a child field),
+a report entry with a class (`derived`, `unlisted` with `as`, `omitted`, `sparse`), a value outside the store with a
+class (`outsideStore` in the draft decisions, by content map key or by entity: a trashed module, a template string),
+or a record of an entity kind the blank site step removes (`removedWithPage`). It writes nothing while one slot is
+none of these, and `draft-report.json` carries the totals per class (`summary.coverage`), which add up to the slots
+of the content map.
 
 ## Choices made where spec #576 is silent
 

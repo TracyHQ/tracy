@@ -54,45 +54,125 @@
     "module-162.31": {
       "path": "/classes"
     },
+    "menuItem-101.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-152.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-153.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
     "menuItem-156.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-157.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-158.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-154.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-159.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-160.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-161.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-162.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-155.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-163.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-164.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-165.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-166.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-167.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-169.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-193.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-168.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-194.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-195.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
+    },
+    "menuItem-197.0": {
+      "path": "/",
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     },
     "menuItem-196.0": {
       "path": "/",
-      "clickSelector": ["#triggerButton", ".t4-offcanvas .sub-menu-toggle"]
+      "clickSelector": ["#triggerButton"],
+      "openEach": ".t4-offcanvas .sub-menu-toggle"
     }
   },
   "sameBoxAs": {
@@ -102,7 +182,8 @@
   "omit": {
     "module-156.7": "the hero's second button: empty in the demo, so the template never draws it and no box can be measured; the blank site keeps it empty",
     "module-156.8": "the link of the hero's second button, left out with its label",
-    "module-184.0": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1"
+    "module-184.0": "the module's title: the module is set not to show it (showtitle 0), and the heading drawn in its place is module-184.1",
+    "module-179.14": "the kit matched these words to module 179, which is trashed in the demo (published -2) and drawn on no page; the learning post draws the same words from the template string TPL_LEARNING_LEAD_DESC (languageString-182937349, outside the store, an override)"
   },
   "blocks": {
     "header": {
@@ -116,7 +197,8 @@
       "names": {
         "siteSetting-257986166.0": "logo-light",
         "siteSetting-211586990.0": "logo-dark"
-      }
+      },
+      "menu": "mainmenu"
     },
     "block-176": {
       "type": "header",
@@ -156,12 +238,28 @@
           "type": "link"
         }
       ],
-      "sparse": {
-        "article-16.9": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
-        "article-16.10": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
-        "article-2.12": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
-        "article-2.13": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-      }
+      "itemLists": [
+        {
+          "name": "calendar",
+          "column": "attribs",
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "Private Training (article-15) stores no calendar row and its card lays out without one: no row is drawn and the schedule line (field schedule) stands alone, seen on the home page cards at 390 and 1440 px"
+          },
+          "fields": [
+            {
+              "name": "days",
+              "jsonPath": ["classes-info", "classes-info{1}", "project_label"]
+            },
+            {
+              "name": "times",
+              "jsonPath": ["classes-info", "classes-info{1}", "project_info"]
+            }
+          ]
+        }
+      ]
     },
     "block-161": {
       "type": "call_to_action"
@@ -211,7 +309,53 @@
       "type": "newsletter"
     },
     "block-171": {
-      "type": "footer"
+      "type": "footer",
+      "retype": {
+        "module-171.8": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        },
+        "module-171.9": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        },
+        "module-171.10": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        },
+        "module-171.11": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        }
+      }
     },
     "block-175": {
       "type": "contact"
@@ -247,17 +391,11 @@
         "fallback": "the page title, and no intro line"
       },
       "names": {
-        "module-162.2": "title",
-        "module-162.17": "intro",
         "module-162.1": "default-intro",
         "module-162.0": "default-title",
         "module-162.16": "stat-title"
       },
       "retype": {
-        "module-162.2": {
-          "kind": "editorial.heading",
-          "type": "text"
-        },
         "module-162.16": {
           "kind": "editorial.heading",
           "type": "text"
@@ -266,7 +404,36 @@
       "itemsFrom": {
         "min": "one row per page: the masthead shows the title row of the page it sits on",
         "max": "one row per page: the masthead shows the title row of the page it sits on"
-      }
+      },
+      "lists": [
+        {
+          "name": "pages",
+          "column": "params",
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "a page with no row of its own shows the masthead's default title and intro (fields default-title and default-intro)"
+          },
+          "exceptRows": {
+            "14": "the classes page row: its intro is the stat panel, declared as the stat fields of the block"
+          },
+          "fields": [
+            {
+              "name": "title",
+              "kind": "editorial.heading",
+              "jsonPath": ["menuitem_config", "title", "{1}"],
+              "xpath": ["/html/body/div", null]
+            },
+            {
+              "name": "intro",
+              "kind": "editorial.paragraph",
+              "jsonPath": ["menuitem_config", "description", "{1}"],
+              "xpath": ["/html/body/div", null]
+            }
+          ]
+        }
+      ]
     },
     "block-17": {
       "type": "text",
@@ -383,7 +550,53 @@
     },
     "block-180": {
       "type": "team",
-      "listsNumbered": ["block-180.social"]
+      "listsNumbered": ["block-180.social"],
+      "retype": {
+        "module-180.12": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        },
+        "module-180.13": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        },
+        "module-180.14": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        },
+        "module-180.15": {
+          "kind": "editorial.item_icon",
+          "type": "icon",
+          "storage": "class-name",
+          "frame": {
+            "width": 18,
+            "height": 18
+          },
+          "frameFrom": "measured on the running template 1.0.11: the glyph is drawn in an 18 by 18 px box at 390 and 768 px (24 by 24 at 1440 px in the footer), inside a 48 by 48 px link",
+          "iconOf": "network"
+        }
+      }
     },
     "block-181": {
       "type": "gallery"
@@ -416,7 +629,29 @@
       ]
     },
     "block-159": {
-      "type": "services"
+      "type": "services",
+      "itemLists": [
+        {
+          "name": "calendar",
+          "column": "attribs",
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "Private Training (article-15) stores no calendar row and its card lays out without one: no row is drawn and the schedule line (field schedule) stands alone, seen on the home page cards at 390 and 1440 px"
+          },
+          "fields": [
+            {
+              "name": "days",
+              "jsonPath": ["classes-info", "classes-info{1}", "project_label"]
+            },
+            {
+              "name": "times",
+              "jsonPath": ["classes-info", "classes-info{1}", "project_info"]
+            }
+          ]
+        }
+      ]
     }
   },
   "groups": [
@@ -440,7 +675,27 @@
       "itemsFrom": {
         "min": "one post page shows one post",
         "max": "one post page shows one post"
-      }
+      },
+      "lists": [
+        {
+          "name": "points",
+          "column": "fulltext",
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "one bullet of the article's list"
+          },
+          "fields": [
+            {
+              "name": "point",
+              "kind": "article.lead",
+              "jsonPath": [],
+              "xpath": "/html/body/div/ul/li[{1}]/text()"
+            }
+          ]
+        }
+      ]
     },
     {
       "match": "^body-pages_j-content_featured-articles(--start-\\d+)?$",
@@ -453,11 +708,11 @@
       "type": "team",
       "items": {
         "min": 4,
-        "max": 7
+        "max": 4
       },
       "itemsFrom": {
-        "min": "measured by the kit at 390 and 1440 px: the layout is acceptable with 4 or 8 authors (1 to 3 leave a hole in the row at 1440 px)",
-        "max": "the places the template stores: 7 author records (the listing view would show 8); 5 to 7 leave a hole in the last row at 1440 px"
+        "min": "measured by the kit at 390 and 1440 px: at 1440 px a row holds 4 authors, left-packed, so only 4 and 8 fill every row (1 to 3 and 5 to 7 leave a hole in the last row)",
+        "max": "4: of the two counts that fill every row, 8 needs more author records than the 7 the template stores"
       }
     },
     {
@@ -472,12 +727,28 @@
       "match": "^body-classes$",
       "id": "class-list",
       "type": "services",
-      "sparse": {
-        "article-2.10": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
-        "article-2.11": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
-        "article-2.12": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule).",
-        "article-2.13": "a calendar row stored in the class article's classes-info subform: the demo classes store 0, 1, 1 and 2 rows (Private Training stores none and its card lays out without one). It is a list inside each item, which block store format v1 cannot declare; the build leaves the rows out and writes the class's schedule line (field schedule)."
-      }
+      "itemLists": [
+        {
+          "name": "calendar",
+          "column": "attribs",
+          "items": {
+            "min": 0
+          },
+          "itemsFrom": {
+            "min": "Private Training (article-15) stores no calendar row and its card lays out without one: no row is drawn and the schedule line (field schedule) stands alone, seen on the classes page cards at 390 and 1440 px"
+          },
+          "fields": [
+            {
+              "name": "days",
+              "jsonPath": ["classes-info", "classes-info{1}", "project_label"]
+            },
+            {
+              "name": "times",
+              "jsonPath": ["classes-info", "classes-info{1}", "project_info"]
+            }
+          ]
+        }
+      ]
     },
     {
       "match": "^body-classes_",
@@ -491,7 +762,93 @@
       "itemsFrom": {
         "min": "one post page shows one post",
         "max": "one post page shows one post"
-      }
+      },
+      "names": {
+        "module-16.11": "lead-video-picture",
+        "article-16.11": "lead-video-picture",
+        "article-16.12": "lead-video"
+      },
+      "lists": [
+        {
+          "name": "features",
+          "column": "attribs",
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "a feature row is drawn per stored row; the class pages store 4 rows each and one row lays out as one card of the features grid"
+          },
+          "fields": [
+            {
+              "name": "icon",
+              "kind": "editorial.item_icon",
+              "jsonPath": ["classes-features", "classes-features{1}", "feature_img"]
+            },
+            {
+              "name": "icon-light",
+              "kind": "editorial.item_icon",
+              "jsonPath": ["classes-features", "classes-features{1}", "feature_img_light"]
+            },
+            {
+              "name": "title",
+              "kind": "editorial.heading",
+              "jsonPath": ["classes-features", "classes-features{1}", "feature_title"]
+            },
+            {
+              "name": "description",
+              "kind": "offering.description",
+              "jsonPath": ["classes-features", "classes-features{1}", "feature_desc"]
+            }
+          ]
+        },
+        {
+          "name": "exercises",
+          "column": "attribs",
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "an exercise row is drawn per stored row (picture, video, title, steps); one row lays out as one card"
+          },
+          "fields": [
+            {
+              "name": "picture",
+              "jsonPath": ["exer-features", "exer-features{1}", "exer_img"]
+            },
+            {
+              "name": "video",
+              "kind": "business.video",
+              "type": "link",
+              "jsonPath": ["exer-features", "exer-features{1}", "exer_video_id"]
+            },
+            {
+              "name": "title",
+              "kind": "editorial.heading",
+              "jsonPath": ["exer-features", "exer-features{1}", "feature_title"]
+            }
+          ],
+          "lists": [
+            {
+              "name": "steps",
+              "column": "attribs",
+              "items": {
+                "min": 1
+              },
+              "itemsFrom": {
+                "min": "each demo exercise stores at least 3 steps; one step is one bullet of the exercise's list"
+              },
+              "fields": [
+                {
+                  "name": "step",
+                  "kind": "editorial.paragraph",
+                  "jsonPath": ["exer-features", "exer-features{1}", "feature_desc"],
+                  "xpath": "/html/body/div/ul/li[{2}]/text()"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     {
       "match": "^body-about-us_contact$",
@@ -515,78 +872,57 @@
         "min": "one post page shows one post",
         "max": "one post page shows one post"
       },
-      "fields": [
+      "lists": [
         {
-          "slot": "article-18.18",
-          "name": "feature-1-video",
-          "kind": "business.video",
-          "type": "link"
+          "name": "benefits",
+          "column": "fulltext",
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "one bullet of the benefits list; the list draws as many bullets as it holds"
+          },
+          "fields": [
+            {
+              "name": "benefit",
+              "kind": "editorial.paragraph",
+              "jsonPath": [],
+              "xpath": "/html/body/div/div/div[2]/ul/li[{1}]/text()"
+            }
+          ]
         },
         {
-          "slot": "article-18.17",
-          "name": "feature-1-link",
-          "kind": "editorial.navigation_url",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.22",
-          "name": "feature-2-video",
-          "kind": "business.video",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.21",
-          "name": "feature-2-link",
-          "kind": "editorial.navigation_url",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.26",
-          "name": "feature-3-video",
-          "kind": "business.video",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.25",
-          "name": "feature-3-link",
-          "kind": "editorial.navigation_url",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.30",
-          "name": "feature-4-video",
-          "kind": "business.video",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.29",
-          "name": "feature-4-link",
-          "kind": "editorial.navigation_url",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.34",
-          "name": "feature-5-video",
-          "kind": "business.video",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.33",
-          "name": "feature-5-link",
-          "kind": "editorial.navigation_url",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.38",
-          "name": "feature-6-video",
-          "kind": "business.video",
-          "type": "link"
-        },
-        {
-          "slot": "article-18.37",
-          "name": "feature-6-link",
-          "kind": "editorial.navigation_url",
-          "type": "link"
+          "name": "punches",
+          "column": "attribs",
+          "items": {
+            "min": 1
+          },
+          "itemsFrom": {
+            "min": "one punch row is one card of the grid (picture, title, video, link)"
+          },
+          "fields": [
+            {
+              "name": "picture",
+              "jsonPath": ["learning-features", "learning-features{1}", "learning_thumb"]
+            },
+            {
+              "name": "title",
+              "kind": "editorial.heading",
+              "jsonPath": ["learning-features", "learning-features{1}", "learning_title"]
+            },
+            {
+              "name": "video",
+              "kind": "business.video",
+              "type": "link",
+              "jsonPath": ["learning-features", "learning-features{1}", "id_video"]
+            },
+            {
+              "name": "link",
+              "kind": "editorial.navigation_url",
+              "type": "link",
+              "jsonPath": ["learning-features", "learning-features{1}", "learning_link"]
+            }
+          ]
         }
       ]
     }
@@ -690,5 +1026,95 @@
       "about": "page type search",
       "note": "No recipe for a search results page: no demo page shows a search box (checked on the running 1.0.11 home page: no search form), and the only route to the results page is the template showcase menu item (/pages/j-pages/smart-search), which the blank site removes with every demo menu item. A build that adds a search box later needs a recipe then."
     }
-  ]
+  ],
+  "outsideStore": {
+    "module-179": {
+      "as": "not-drawn",
+      "why": "module 179 (The 6 Punches) is trashed in the demo (published -2): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px), and it is no block of the store, so no build places it. Its row stays trashed in the blank site; its words match the article text of the learning posts and the template strings TPL_LEARNING_LEAD_TITLE and TPL_LEARNING_LEAD_DESC, which are what the page draws"
+    },
+    "module-1.0": {
+      "as": "not-drawn",
+      "why": "the title of the Main Menu module, which sits in position sidebar-right: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px) (the menus drawn are the header and the off-canvas module 187)"
+    },
+    "module-16.0": {
+      "as": "not-drawn",
+      "why": "the title of the Login Form module, which sits in position sidebar-right: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the words Login Form drawn on the login page are its masthead row"
+    },
+    "field-1.0": {
+      "as": "kept",
+      "why": "the label of the contact form's phone field (custom field 1, com_contact.mail): interface text valid on every site; its placeholder is field-1.1 of block contact-details"
+    },
+    "category-2": {
+      "as": "kept",
+      "why": "the Uncategorised category, which the blank site step keeps as Joomla's default category: no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+    },
+    "languageString-231238131.0": {
+      "as": "not-drawn",
+      "why": "T4_OFF_CANVAS_TITLE (Sidebar Menu): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+    },
+    "languageString-166748343.0": {
+      "as": "not-drawn",
+      "why": "TPL_CLOSE (Close): no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px); the Close words a page carries are the CMS's own JCLOSE string in its script options"
+    },
+    "languageString-10831042.0": {
+      "as": "kept",
+      "why": "TPL_DETAILS (Details): interface text valid on every site, not drawn as visible text on any kit page"
+    },
+    "languageString-37868544.0": {
+      "as": "not-drawn",
+      "why": "TPL_NO_SUPPORT_GROUP: a warning about an unsupported listing option, no kit page draws it (all 50 kit pages read on 1.0.11 at 390 and 1440 px)"
+    },
+    "languageString-135820122.0": {
+      "as": "kept",
+      "why": "TPL_PASSWORD (Password): the login and registration form label, interface text valid on every site; drawn only on those system pages"
+    },
+    "languageString-44242957.0": {
+      "as": "kept",
+      "why": "TPL_USERNAME (Username): the login and registration form label, interface text valid on every site; drawn only on those system pages"
+    },
+    "languageString-27872773.0": {
+      "as": "kept",
+      "why": "TPL_PLAY (play): the hidden accessible name of the video play button (class d-none), interface text valid on every site"
+    },
+    "languageString-58440578.0": {
+      "as": "override",
+      "why": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER (Your message): the contact form's message placeholder, set by the template's script; a language override of the mapping file, like the form's other placeholders"
+    },
+    "languageString-112732346.0": {
+      "as": "override",
+      "why": "TPL_FOLLOW_US (Follow us): drawn beside the footer social links at wide widths (class d-hd-inline); demo words, a language override of the mapping file"
+    },
+    "languageString-182937349.0": {
+      "as": "override",
+      "why": "TPL_LEARNING_LEAD_DESC (All you need to know): the lead line over the punch rows of every learning post; demo words, a language override of the mapping file"
+    },
+    "languageString-46373076.0": {
+      "as": "override",
+      "why": "TPL_LEARNING_LEAD_TITLE (The 6 punches): the heading over the punch rows of every learning post; demo words, a language override of the mapping file"
+    }
+  },
+  "removedWithPage": {
+    "article": {
+      "why": "the blank site step (remove-pages, packages/cms/tracy-joomla-quickstart/scripts/blank-site.mjs) deletes every article"
+    },
+    "menuItem": {
+      "why": "the blank site step (remove-pages, packages/cms/tracy-joomla-quickstart/scripts/blank-site.mjs) deletes every site menu item"
+    },
+    "category": {
+      "why": "the blank site step (remove-pages, packages/cms/tracy-joomla-quickstart/scripts/blank-site.mjs) deletes every category but the system ones and Uncategorised",
+      "except": ["category-2"]
+    },
+    "tag": {
+      "why": "the blank site step (remove-pages, packages/cms/tracy-joomla-quickstart/scripts/blank-site.mjs) deletes every tag but the root"
+    },
+    "contact": {
+      "why": "the blank site step (remove-pages, packages/cms/tracy-joomla-quickstart/scripts/blank-site.mjs) deletes every contact"
+    },
+    "user": {
+      "why": "the blank site step (remove-accounts) deletes every account"
+    },
+    "userProfile": {
+      "why": "the blank site step (remove-accounts) deletes every account profile row"
+    }
+  }
 }
