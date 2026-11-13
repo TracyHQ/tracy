@@ -22144,6 +22144,72 @@
       "sha256": "7333d03274ee1f6f74ce44af34dfa0aa514f7d635b13cce7451b33bf8dbc1664",
       "count": 2,
       "reason": "Exact line of the approved JA Restaurant EmDash 1.0.2 template kit: the template's own English menu text, which uses accented French culinary words (entree, creme brulee, creme fraiche). The release zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "e4fc12fd9079576ac15e840b24459b43bb9cf9ebef6c59c8a2b3de6cbd2e2b07",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "9684eebb7c3f379cb2f3e3f633e76f8a867a002182c099ee50de9c1d58d19883",
+      "count": 27,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "2ce2df947274b7a158bbd2da19daf5b3b9726aa5e44a7bc138b19a18b7fb330e",
+      "count": 28,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "60096fbedfab896d7a4f98ac7407e85d571280b66ff3d72462d5f0717e770b28",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "31b5a5328c40f48b81d45342646c70fea4068b11c62ad9473d60ef1794c3f68a",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "7e2a4b334515bbd7b0f66b6e51f516f5367a5e58f770389c07a2e1dfb940705e",
+      "count": 2,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "a70ed088f67c494fe0c2f4c5872f524bec10140729e6b300fd533fde333fc8fe",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "4598a2534610e75691f9d0d17db91e4293131c8c4f895a47c235edfebf144a40",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "a6aea7d84f0c020a4a2c08397e57de5a83471345ee83e9a1cde8ee3a574716ac",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "f9422ff6f8fe223f2e865b39377c6db0074d16dbe4cd27fb3a13eafe83e12ad6",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
+    },
+    {
+      "path": "packages/cms/tracy-emdash-theme-diner/contracts/0.1.1/template-kit.json",
+      "sha256": "348f6cf649bda8761703f3b949211b74fea10c4b69da7df4b97c2ddd886a20d5",
+      "count": 1,
+      "reason": "Exact line of the approved JA Diner EmDash 0.1.1 template kit: demo text of the source design (JA Diner), which spells cafe with an accent and the chef name Caleb Nunez with a Polish e. The release asset template-kit-tracy-diner-0.1.1.zip carries this file byte for byte, so the file is not edited."
     }
   ],
   "objects": [
