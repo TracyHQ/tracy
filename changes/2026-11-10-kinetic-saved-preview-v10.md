@@ -1,2 +1,2 @@
-- **Link the saved Kinetic preview probe v10 measurement for its exact released version.** — template readiness maintainer · `fix/ja-kinetic-readiness` · 2026-11-10
+- **Link the saved Kinetic preview probe v10 measurement for its exact released version.** — template readiness maintainer · #625 · `fix/ja-kinetic-readiness` · 2026-11-10
   **Affects:** JA Kinetic Joomla 1.0.11 Design system readiness. The unchanged saved measurement and its checksum are linked in both design registries. Existing native-mode and preview parity results are reused; derived SCREEN-1, IDENT-1 and MODE-2 remain unmeasurable. This changes no template kit, approval, image pin or quickstart version and is not a new measurement or deployed verdict.

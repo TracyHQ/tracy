@@ -1,3 +1,3 @@
-- **JA Kinetic 1.0.12 is in range of its design-system slot contract** — template readiness maintainers · PR pending · `feat/ja-kinetic-t4-road-to-live` · 2026-11-12
+- **JA Kinetic 1.0.12 is in range of its design-system slot contract** — template readiness maintainers · #625 · `feat/ja-kinetic-t4-road-to-live` · 2026-11-12
   **Affects:** the Design system button on JA Kinetic 1.0.12 sites (`templates/joomla-ja-kinetic-source.json` `maxVersion` 1.0.11 → 1.0.12). Older versions are unchanged.
   **Why / Measured:** the static readiness check on the 1.0.12 pack passes CSS-1 (46 of 46 palette stylesheets read the slot, 1109 reads) and CSS-2; SLOT-2 failed only because the range stopped at 1.0.11 and passes after the move. `design-templates` and `templates` gates and the ds-slot suite (673 tests) pass.

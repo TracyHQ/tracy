@@ -1,4 +1,4 @@
-- **Wait for finite page animations and preserve partial field measurements and picture alts** — template readiness · `fix/joomla-t4-readiness` · 2026-11-09
+- **Wait for finite page animations and preserve partial field measurements and picture alts** — template readiness · #625 · `fix/joomla-t4-readiness` · 2026-11-09
   **Affects:** template preparation and picture export. Screenshot capture waits up to ten seconds for finite entrance animations after page walking; decorative loops do not hold the shot. Partial field measurements preserve unselected results on disk. Title selection prefers one measured H1 and leaves two measured H1 fields ambiguous. Layout file placement preserves picture alts and writes all bound slots; unsupported layout hide/painted/backdrop exports report a problem instead of emitting a partial write.
   **Validation:** 157 focused cases passed, including generated-page Chromium fixtures. No live-template readiness result or release acceptance is established by these checks.
 

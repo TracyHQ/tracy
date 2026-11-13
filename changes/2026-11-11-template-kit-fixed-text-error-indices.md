@@ -1,3 +1,3 @@
-- **Keep fixed CMS text measurement errors attached to retained entries after filtering candidates.** — Template readiness maintainers · `fix/ja-nova-readiness` · 2026-11-11
+- **Keep fixed CMS text measurement errors attached to retained entries after filtering candidates.** — Template readiness maintainers · #625 · `fix/ja-nova-readiness` · 2026-11-11
   **Affects:** Template-kit site generation now remaps measurement error paths when non-CMS candidates are removed, and omits errors belonging only to those removed candidates. Genuine unreadable or invalid measurements remain errors; the skipped-measurement path is unchanged.
   **Measured:** The focused regression failed on the original filtering behavior. The affected fixed-text test file passes after correction, including null measurements, unrelated errors and unchanged input evidence.

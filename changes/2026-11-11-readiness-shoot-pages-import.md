@@ -1,3 +1,3 @@
-- **Allow the Joomla screenshot helpers to load without a process global.** — template readiness maintainer · `fix/ja-impact-readiness` · 2026-11-11
+- **Allow the Joomla screenshot helpers to load without a process global.** — template readiness maintainer · #625 · `fix/ja-impact-readiness` · 2026-11-11
   **Affects:** Consumers importing the stock `shoot-pages.mjs` helpers in an embedded JavaScript host. The CLI entry guard now checks that `process` exists before reading its arguments; ordinary command-line usage and screenshot helpers are unchanged.
   **Why / Measured:** Two focused pure tests cover a process-absent module import and the existing no-arguments CLI usage exit of 2. No browser, screenshot or template visual acceptance is claimed.
