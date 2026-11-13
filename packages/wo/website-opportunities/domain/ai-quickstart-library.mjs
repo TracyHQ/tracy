@@ -76,7 +76,7 @@ export function checkLibraryDeclaration(library) {
     if (isName(block?.id) && ids.has(block.id))
       report(`${at}.id`, `block id ${JSON.stringify(block.id)} appears twice`)
     if (isName(block?.id)) ids.add(block.id)
-    blockProblems(block, at, report)
+    blockProblems(block, at, report, { library: true })
     if (!isObject(block)) return
     if (block.source !== 'library') report(`${at}.source`, 'a Tracy library block declares source "library"')
     designVariablesProblems(block.designVariables, `${at}.designVariables`, report)

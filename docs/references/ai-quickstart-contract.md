@@ -93,7 +93,8 @@ stored place (what it is derived from: `"the item page address"`), `designFrom` 
 is), `limitFrom` (where a limit came from), `itemsFrom` (`{min, max}`: where each item count came from). The check
 reads them without the mapping file:
 
-- every item field lists its stored places (`slots`) or says what it is derived from (`derived`);
+- every item field of a template block lists its stored places (`slots`) or says what it is derived from (`derived`);
+  a Tracy library block stores nothing in the template, so its fields have no places;
 - an item field with `slots` needs at least `items.max` of them: every item has the field, so every item has one shape;
 - a field that is not typed `design` but carries `designFrom`, or shares its `slot` with a design field of the block,
   is a design value typed as content.

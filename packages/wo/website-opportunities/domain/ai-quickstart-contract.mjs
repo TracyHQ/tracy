@@ -92,8 +92,11 @@ function noDataProblems(noData, at, report) {
     report(`${at}.fallback`, 'a fallback rule names what the block shows instead')
 }
 
-/** The problems of one block declaration; `at` is where it sits. Shared with the Tracy library check. */
-export function blockProblems(block, at, report) {
+/**
+ * The problems of one block declaration; `at` is where it sits. Shared with the Tracy library check, which passes
+ * `library`: a library block stores nothing in the template, so its fields have no stored places.
+ */
+export function blockProblems(block, at, report, { library = false } = {}) {
   if (!isObject(block)) return report(at, 'a block must be an object')
   if (!isName(block.id)) report(`${at}.id`, 'a block needs a non-empty id')
   if (!isBlockType(block.type))
@@ -110,7 +113,7 @@ export function blockProblems(block, at, report) {
   const names = new Set()
   fieldListProblems(block, 'fields', at, report, names)
   fieldListProblems(block, 'itemFields', at, report, names)
-  storedPlaceProblems(block, at, report)
+  storedPlaceProblems(block, at, report, library)
   childListProblems(
     block,
     at,
@@ -134,17 +137,17 @@ export function itemPlacesOf(block) {
 /**
  * The rules a block store answers alone from the stored places a draft records (`slot` on a field, `slots` on an
  * item field: one per item). They hold whether the mapping file is written or pending: an item field with no stored
- * places that is not derived, an item field stored for fewer items than the block takes, and a design line typed as
+ * places that is not derived (a template block), an item field stored for fewer items than the block takes, and a design line typed as
  * content.
  */
-function storedPlaceProblems(block, at, report) {
+function storedPlaceProblems(block, at, report, library) {
   const fields = Array.isArray(block.fields) ? block.fields.filter(isObject) : []
   const itemFields = Array.isArray(block.itemFields) ? block.itemFields.filter(isObject) : []
   const max = Number.isInteger(block.items?.max) ? block.items.max : null
   for (const field of itemFields) {
     const fieldAt = `${at}.itemFields[${label(field.name, '?')}].slots`
     if (field.slots === undefined) {
-      if (!isName(field.derived))
+      if (!library && !isName(field.derived))
         report(
           fieldAt,
           'an item field lists its stored place per item (slots), or says what it is derived from (derived)'
