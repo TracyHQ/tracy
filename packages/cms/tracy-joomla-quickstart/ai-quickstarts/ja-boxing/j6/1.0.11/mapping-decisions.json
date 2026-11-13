@@ -396,7 +396,7 @@
           "parent": ["menuitem_config"],
           "arrays": ["background", "description", "item_id", "title"]
         },
-        "why": "the masthead keeps one row of settings per page (menuitem_config), printed only on that page; a row of a page the build does not make is taken out so no row names a page the site lacks"
+        "why": "the one masthead copy keeps one row of settings (menuitem_config) for each page the build makes that places it, each printed only on the page its item_id names; the build writes the rows it fills at their demo row indexes, then cuts every row it did not write out of the copy, keeping the written rows in their order, so no row keys a demo page id the site may reuse for another page"
       }
     ],
     "block-163": [
@@ -951,6 +951,9 @@
   },
   "placements": {
     "header": {
+      "layout": {
+        "why": "the T4 header draws the main menu (megamenu) from the template layout on every page: no module record holds it, so there is nothing to copy, write or assign; its words are the menu items the build creates"
+      },
       "menu": {
         "menutype": "mainmenu",
         "why": "the header draws the main menu (T4 megamenu, mainmenu): the build creates the page menu items in this menu"
@@ -958,7 +961,7 @@
     },
     "block-176": {
       "entity": "module-176",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "no",
         "why": "the module is set to show its title (showtitle 1), but the header-r position of the layout prints no module title"
@@ -966,7 +969,7 @@
     },
     "block-187": {
       "entity": "module-187",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "no",
         "why": "the module is set not to show its title (showtitle 0) and no page prints it"
@@ -978,7 +981,7 @@
     },
     "block-170": {
       "entity": "module-170",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "no",
         "why": "the module is set not to show its title (showtitle 0) and no page prints it"
@@ -986,7 +989,7 @@
     },
     "block-169": {
       "entity": "module-169",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "no",
         "why": "the module is set not to show its title (showtitle 0) and no page prints it"
@@ -994,7 +997,7 @@
     },
     "block-175": {
       "entity": "module-175",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "content",
         "field": { "block": "block-175", "name": "heading" },
@@ -1003,7 +1006,7 @@
     },
     "block-173": {
       "entity": "module-173",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "content",
         "field": { "block": "block-173", "name": "heading" },
@@ -1016,7 +1019,7 @@
     },
     "block-174": {
       "entity": "module-174",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "content",
         "field": { "block": "block-174", "name": "heading" },
@@ -1029,7 +1032,7 @@
     },
     "block-168": {
       "entity": "module-168",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "no",
         "why": "the module is set to show its title (showtitle 1), but the copyright position of the layout prints no module title"
@@ -1037,7 +1040,7 @@
     },
     "block-17": {
       "entity": "module-17",
-      "assign": "pages",
+      "assign": "recipe-pages",
       "title": {
         "drawn": "aria-label",
         "why": "the breadcrumbs print the module title as the aria-label of their nav element (measured), never as visible words; the kept title Breadcrumbs is interface words valid on every site"
@@ -1127,21 +1130,21 @@
     },
     "block-171": {
       "entity": "module-171",
-      "assign": "pages",
+      "assign": "every-page",
       "title": {
         "drawn": "no",
         "why": "the module is set not to show its title (showtitle 0) and no page prints it"
       },
-      "why": "one copy for every page: the footer social rows are cut on the copy with content.update, since the plugin refuses a row removal on the blank site contract (no reviewed row of it)"
+      "why": "one copy for the whole site, assigned to every page (\"[0]\"): every recipe places it, as the demo assigns the module to every page. Its social rows are cut on the copy with content.update, since the plugin refuses a row removal on the blank site contract (no reviewed row of it)"
     },
     "block-162": {
       "entity": "module-162",
-      "assign": "page",
+      "assign": "recipe-pages",
       "title": {
         "drawn": "no",
         "why": "the module is set not to show its title (showtitle 0) and no page prints it"
       },
-      "why": "one copy per page holding the one masthead row keyed to that page (listsAsFields): the other rows are cut on the copy, so no row names a page the site lacks"
+      "why": "one copy for the site, as the demo has one masthead module: it holds one row of menuitem_config for every page the build makes that places the masthead, each row keyed to its page (item_id), and is assigned to exactly those pages (the home layout prints the masthead position too, measured, so \"[0]\" would draw it on the home page). The build writes each row at its mapping locations (the demo row index), then cuts every row it did not write"
     },
     "block-158": {
       "entity": "module-158",

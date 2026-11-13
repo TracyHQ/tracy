@@ -252,7 +252,7 @@
   "placements": {
     "header-main": {
       "entity": "module-11",
-      "assign": "pages",
+      "assign": "every-page",
       "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
     },
     "hero-home": {
@@ -267,7 +267,7 @@
     },
     "footer-main": {
       "entity": "module-14",
-      "assign": "pages",
+      "assign": "every-page",
       "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
     }
   }

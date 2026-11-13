@@ -9,22 +9,46 @@
 //     bound blank site contract, and assigned to the pages that place it.
 //   - `created`: a page body. The build creates the records it shows (articles, a contact, menu items).
 // The mapping file says, per copy and in-place block, in `placements: {"<block id>": entry}`:
-//   - `entity`: the store record copied or written (a copy: a module); `assign`: `page` (the page it is placed on)
-//     or `pages` (every page whose recipe places it); an in-place block is assigned to `pages`;
+//   - `entity`: the store record copied or written (a copy: a module), and `assign` (`ASSIGN`), the module assignment:
+//       `page`         a copy only: one copy for every page whose recipe places the block, assigned `"[<page id>]"`;
+//       `every-page`   one record (one copy, or the in-place store record) assigned `"[0]"`: every page of the site,
+//                      including a detail page with no menu item of its own; only a block every recipe places;
+//       `recipe-pages` one record assigned `"[<id>, <id>...]"`, the pages whose recipe places it; a detail page with
+//                      no menu item of its own prints it only when the menu item Joomla gives that page is listed;
+//     an in-place entry with no `entity` is drawn by the template layout itself (the T4 header): `layout: {why}`,
+//     and has no record to assign;
 //   - `title`: `{drawn, field?, why}` whether a page draws the module title, and as what (`TITLE_DRAWN`); a title
 //     drawn as `content` or `tab-label` names the store field written there;
 //   - `resets`: `[{location, from, why}]` the inherited settings each copy must change (`RESET_SOURCES`): a
 //     `buildSets` place or a `hides` setting of the block on the copy's record, the `position` the copy takes from
 //     its container, an `ordering` from the recipe, a `demo` value;
-//   - `inside` (a block placed `inside:<id>`) and `holds` (that container): the container copy draws the copies of
-//     its position assigned to the page, so a held copy takes the position written at `holds.position`;
-//   - `menu`: `{menutype, why}` the menu a menu block draws, where the build creates its items.
+//   - `inside` and `holds`: the container rules (`ai-quickstart-placement-container.mjs`);
+//   - `menu`: `{menutype, why}` the menu a menu block draws, a menutype of a menu item entity of the mapping file;
+//     the build creates its items there.
 import { locationKey, locationProblem } from './ai-quickstart-mapping-entry.mjs'
+import { containerProblems } from './ai-quickstart-placement-container.mjs'
 
 export const PLACEMENTS = Object.freeze(['copy', 'in-place', 'created'])
 export const TITLE_DRAWN = Object.freeze(['content', 'tab-label', 'aria-label', 'no'])
 export const RESET_SOURCES = Object.freeze(['buildSets', 'hides', 'container', 'recipe', 'demo'])
-const ASSIGN = ['page', 'pages']
+export const ASSIGN = Object.freeze(['page', 'every-page', 'recipe-pages'])
+const IN_PLACE_ASSIGN = ['every-page', 'recipe-pages']
+/** The columns of a module record a copy carries (the plugin's open write accepts them on a new module). */
+export const MODULE_COLUMNS = Object.freeze([
+  'title',
+  'note',
+  'content',
+  'position',
+  'module',
+  'access',
+  'showtitle',
+  'params',
+  'published',
+  'language',
+  'ordering'
+])
+/** The kept records a created block may write besides the records the build creates: written once, in place. */
+const CREATED_BLOCK_KEPT_KINDS = ['languageString', 'field']
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value)
 const isName = (value) => typeof value === 'string' && value.trim() !== ''
@@ -38,10 +62,6 @@ const locationsIn = (value, out = []) => {
 }
 const blockLocations = (entry) =>
   locationsIn(['fields', 'itemFields', 'lists', 'itemLists'].map((k) => entry?.[k]))
-const insideOf = (block) =>
-  each(block.positions)
-    .find((p) => typeof p === 'string' && p.startsWith('inside:'))
-    ?.slice('inside:'.length)
 
 function titleProblems(entry, at, { mapping, report }) {
   const title = entry.title
@@ -70,6 +90,11 @@ function resetProblems(entry, at, { id, mapping, report }) {
     if (problem) return report(`${rAt}.location`, problem)
     if (r.location.entity !== entry.entity)
       report(`${rAt}.location`, `a reset is a setting of the copied record ${entry.entity}`)
+    else if (!MODULE_COLUMNS.includes(r.location.column))
+      report(
+        `${rAt}.location`,
+        `a module record has no column ${r.location.column}: a reset names one of ${MODULE_COLUMNS.join(', ')}`
+      )
     if (!RESET_SOURCES.includes(r.from))
       report(`${rAt}.from`, `from must be one of ${RESET_SOURCES.join(', ')}`)
     if (!isName(r.why)) report(`${rAt}.why`, 'a reset says why the copy changes it')
@@ -96,34 +121,20 @@ function resetProblems(entry, at, { id, mapping, report }) {
   }
 }
 
-function containerProblems(block, entry, at, { entries, report }) {
-  const container = insideOf(block)
-  if (container !== undefined) {
-    if (entry.inside?.block !== container || !isName(entry.inside?.why))
-      report(
-        `${at}.inside`,
-        `the block is placed inside ${container}: inside is {block: "${container}", why}`
-      )
-    if (!each(entries[container]?.holds?.blocks).includes(block.id))
-      report(`${at}.inside`, `the placement of ${container} does not hold ${block.id}`)
-    if (!each(entry.resets).some((r) => r?.from === 'container' && r.location?.column === 'position'))
-      report(`${at}.resets`, 'a held copy takes the position of its container copy: a reset from container')
-  } else if (entry.inside !== undefined) report(`${at}.inside`, 'the block is placed inside no other block')
-  if (entry.holds === undefined) return
-  const holds = entry.holds
-  if (!Array.isArray(holds?.blocks) || !isName(holds.why) || locationProblem(holds.position))
-    return report(`${at}.holds`, 'holds is {blocks, position: <location>, why}')
-  if (holds.position.entity !== entry.entity)
-    report(`${at}.holds.position`, `the position the container draws is a setting of ${entry.entity}`)
-}
-
 /** Every placement problem of a written mapping file. */
-export function placementProblems(mapping, blocks, { report, reportStore }) {
+export function placementProblems(mapping, blocks, ctx) {
+  const { report, reportStore } = ctx
   const entries = isObject(mapping.placements) ? mapping.placements : {}
   if (mapping.placements !== undefined && !isObject(mapping.placements))
     report('placements', 'placements maps a block id to how it is placed')
   const byId = new Map(blocks.map((b) => [b.id, b]))
   const entityOf = new Map()
+  const recipes = each(ctx.pageRecipes?.recipes).filter((r) => isObject(r) && Array.isArray(r.blocks))
+  const menutypes = new Set(
+    Object.values(isObject(mapping.entities) ? mapping.entities : {})
+      .filter((e) => e?.kind === 'menuItem' && isName(e.identity?.menutype))
+      .map((e) => e.identity.menutype)
+  )
   for (const block of blocks) {
     if (!PLACEMENTS.includes(block.placement)) {
       reportStore(`blocks[${block.id}].placement`, `placement must be one of ${PLACEMENTS.join(', ')}`)
@@ -133,6 +144,7 @@ export function placementProblems(mapping, blocks, { report, reportStore }) {
     const entry = entries[block.id]
     if (block.placement === 'created') {
       if (entry !== undefined) report(at, 'a created block places no store record')
+      createdRecordProblems(block, mapping, report)
       continue
     }
     if (!isObject(entry)) {
@@ -140,22 +152,27 @@ export function placementProblems(mapping, blocks, { report, reportStore }) {
       continue
     }
     const record = mapping.entities?.[entry.entity]
-    if (entry.entity === undefined) {
-      if (block.placement === 'copy') report(`${at}.entity`, 'a copy names the store record it copies')
-    } else if (!isObject(record) || record.created)
+    if (entry.entity === undefined) layoutProblems(block, entry, at, report)
+    else if (!isObject(record) || record.created)
       report(`${at}.entity`, `${JSON.stringify(entry.entity)} is no record the blank site keeps`)
     else {
       entityOf.set(block.id, entry.entity)
+      if (entry.layout !== undefined)
+        report(`${at}.layout`, 'a block that names its store record is not drawn by the layout')
       if (block.placement === 'copy' && record.kind !== 'module')
         report(`${at}.entity`, 'a copy is a copy of a module')
-      if (!ASSIGN.includes(entry.assign) || (block.placement === 'in-place' && entry.assign !== 'pages'))
-        report(`${at}.assign`, `assign is page or pages; a block written in place is assigned to pages`)
+      assignProblems(block, entry, at, { recipes, report })
       if (record.kind === 'module') titleProblems(entry, at, { mapping, report })
       if (record.identity?.module === 'mod_menu' && entry.menu === undefined)
         report(`${at}.menu`, 'a menu block names the menu it draws')
     }
     if (entry.menu !== undefined && (!isName(entry.menu?.menutype) || !isName(entry.menu?.why)))
       report(`${at}.menu`, 'menu is {menutype, why}')
+    else if (entry.menu !== undefined && !menutypes.has(entry.menu.menutype))
+      report(
+        `${at}.menu.menutype`,
+        `"${entry.menu.menutype}" is no menu the kit knows (the menutype of a menu item entity: ${[...menutypes].join(', ') || 'none'})`
+      )
     if (block.placement !== 'copy') {
       if (entry.resets !== undefined) report(`${at}.resets`, 'only a copy resets what it inherits')
       for (const h of each(mapping.hides?.[block.id]))
@@ -165,11 +182,63 @@ export function placementProblems(mapping, blocks, { report, reportStore }) {
             'a row removal runs on a copy: the plugin refuses it on the blank site contract'
           )
     } else resetProblems(entry, at, { id: block.id, mapping, report })
-    containerProblems(block, entry, at, { entries, report })
+    containerProblems(block, entry, at, { entries, byId, report })
   }
   for (const id of Object.keys(entries))
     if (!byId.has(id)) report(`placements[${id}]`, `"${id}" is not a block of the store`)
   copyRecordProblems(mapping, blocks, entityOf, report)
+}
+
+/**
+ * An in-place entry with no `entity` is drawn by the template layout on every page (the T4 header): it says so with
+ * `layout: {why}`, and has no record to assign, no title and nothing to reset. A copy always names its record.
+ */
+function layoutProblems(block, entry, at, report) {
+  if (block.placement === 'copy') return report(`${at}.entity`, 'a copy names the store record it copies')
+  if (!isName(entry.layout?.why))
+    return report(
+      `${at}.layout`,
+      'an in-place block names its store record (entity, assign), or the layout draws it: layout is {why}'
+    )
+  for (const key of ['assign', 'title', 'resets', 'holds', 'inside'])
+    if (entry[key] !== undefined)
+      report(`${at}.${key}`, `a block the layout draws has no record, so no ${key}`)
+}
+
+/**
+ * `assign` (`ASSIGN`): a copy takes any of the three, an in-place store record `every-page` or `recipe-pages`. A block
+ * assigned to every page must be one every recipe places: `"[0]"` prints it on every page of the site.
+ */
+function assignProblems(block, entry, at, { recipes, report }) {
+  const allowed = block.placement === 'in-place' ? IN_PLACE_ASSIGN : ASSIGN
+  if (!allowed.includes(entry.assign))
+    return report(
+      `${at}.assign`,
+      `assign is ${ASSIGN.join(', ')}; a block written in place is one record, assigned to every-page or recipe-pages`
+    )
+  if (entry.assign !== 'every-page') return
+  const without = recipes.filter((r) => !r.blocks.includes(block.id)).map((r) => r.pageType)
+  if (without.length)
+    report(
+      `${at}.assign`,
+      `every-page ("[0]") prints the block on every page, but the recipes of ${without.join(', ')} do not place it: assign it to recipe-pages`
+    )
+}
+
+/**
+ * A created block writes the records the build creates, and the kept records written once in place beside them (a
+ * site language string, a custom field): never a store module, which is a copy or an in-place block of its own.
+ */
+function createdRecordProblems(block, mapping, report) {
+  for (const loc of blockLocations(mapping.blocks?.[block.id])) {
+    const record = mapping.entities?.[loc.entity]
+    if (record?.created || CREATED_BLOCK_KEPT_KINDS.includes(record?.kind)) continue
+    report(
+      `blocks[${block.id}]`,
+      `a created block writes ${loc.entity}, a record the build does not create (only ${CREATED_BLOCK_KEPT_KINDS.join(' or ')} records are kept beside them)`
+    )
+    break
+  }
 }
 
 /**

@@ -71,7 +71,50 @@ test('a copy copies a module the blank site keeps; an in-place block is assigned
   assertProblem(missing, /placements\[hero-home\]\.entity: a copy names the store record it copies/)
   const assign = valid()
   assign.mapping.placements['header-main'].assign = 'page'
-  assertProblem(assign, /placements\[header-main\]\.assign: assign is page or pages/)
+  assertProblem(
+    assign,
+    /placements\[header-main\]\.assign: assign is page, every-page, recipe-pages; a block written in place is one record/
+  )
+  const old = valid()
+  old.mapping.placements['hero-home'].assign = 'pages'
+  assertProblem(old, /placements\[hero-home\]\.assign: assign is page, every-page, recipe-pages/)
+})
+
+test('every-page ("[0]") is only for a block every recipe places; recipe-pages lists the pages that place it', () => {
+  const set = valid()
+  set.mapping.placements['hero-home'].assign = 'every-page'
+  assertProblem(
+    set,
+    /placements\[hero-home\]\.assign: every-page \("\[0\]"\) prints the block on every page, but the recipes of services do not place it: assign it to recipe-pages/
+  )
+  set.mapping.placements['hero-home'].assign = 'recipe-pages'
+  assert.deepEqual(problemsOf(set), [])
+  const inPlace = valid()
+  inPlace.mapping.placements['footer-main'].assign = 'recipe-pages'
+  assert.deepEqual(problemsOf(inPlace), [])
+})
+
+test('an in-place block with no record is drawn by the layout, and says so', () => {
+  const set = valid()
+  delete set.mapping.placements['header-main'].entity
+  assertProblem(
+    set,
+    /placements\[header-main\]\.layout: an in-place block names its store record \(entity, assign\), or the layout draws it: layout is \{why\}/
+  )
+  set.mapping.placements['header-main'] = { layout: { why: 'invented: the layout draws the header' } }
+  set.mapping.notEmptied.push({ entity: 'module-11', why: 'invented: no block writes it' })
+  assert.ok(!problemsOf(set).some((p) => p.includes('placements[header-main]')), problemsOf(set).join('\n'))
+  set.mapping.placements['header-main'].assign = 'every-page'
+  assertProblem(
+    set,
+    /placements\[header-main\]\.assign: a block the layout draws has no record, so no assign/
+  )
+  const both = valid()
+  both.mapping.placements['header-main'].layout = { why: 'invented' }
+  assertProblem(
+    both,
+    /placements\[header-main\]\.layout: a block that names its store record is not drawn by the layout/
+  )
 })
 
 test('a module title drawn as content names the store field written at that title', () => {
@@ -136,7 +179,7 @@ test('only a copy resets, and a row removal runs only on a copy', () => {
   assertProblem(set, /placements\[header-main\]\.resets: only a copy resets what it inherits/)
   const rows = valid()
   blockOf(rows, 'services-grid').placement = 'in-place'
-  rows.mapping.placements['services-grid'].assign = 'pages'
+  rows.mapping.placements['services-grid'].assign = 'every-page'
   assertProblem(rows, /hides\[services-grid\]: a row removal runs on a copy/)
 })
 
@@ -165,6 +208,47 @@ test('a block placed inside a container names it, the container holds it, and th
   assertProblem(set, /placements\[services-grid\]\.holds: holds is \{blocks, position: <location>, why\}/)
 })
 
+test('a container holds only the blocks placed inside it, and only a held block takes a container reset', () => {
+  const set = valid()
+  set.mapping.placements['services-grid'].holds = {
+    blocks: ['hero-home'],
+    position: { entity: 'module-13', column: 'params', jsonPath: ['position'] },
+    why: 'invented'
+  }
+  assertProblem(
+    set,
+    /placements\[services-grid\]\.holds: hero-home is not placed inside:services-grid, so services-grid does not hold it/
+  )
+  const reset = valid()
+  reset.mapping.placements['hero-home'].resets = [
+    { location: { entity: 'module-12', column: 'position' }, from: 'container', why: 'invented' }
+  ]
+  assertProblem(
+    reset,
+    /placements\[hero-home\]\.resets: only a block placed inside a container takes a reset from container/
+  )
+})
+
+test('a reset names a column a module record has', () => {
+  const set = valid()
+  set.mapping.placements['hero-home'].resets = [
+    { location: { entity: 'module-12', column: 'colour' }, from: 'demo', why: 'invented' }
+  ]
+  assertProblem(set, /placements\[hero-home\]\.resets\[0\]\.location: a module record has no column colour/)
+})
+
+test('a created block writes only created records, a language string or a custom field', () => {
+  const set = valid()
+  blockOf(set, 'services-grid').placement = 'created'
+  delete set.mapping.placements['services-grid']
+  assertProblem(
+    set,
+    /blocks\[services-grid\]: a created block writes module-13, a record the build does not create/
+  )
+  set.mapping.entities['module-13'].created = true
+  assert.ok(!problemsOf(set).some((p) => p.includes('a created block writes')), problemsOf(set).join('\n'))
+})
+
 test('a menu block names the menu it draws', () => {
   const set = valid()
   set.mapping.entities['module-14'].identity.module = 'mod_menu'
@@ -172,6 +256,16 @@ test('a menu block names the menu it draws', () => {
   set.mapping.placements['footer-main'].menu = { menutype: '' }
   assertProblem(set, /placements\[footer-main\]\.menu: menu is \{menutype, why\}/)
   set.mapping.placements['footer-main'].menu = { menutype: 'footer', why: 'invented: the footer menu' }
+  assertProblem(
+    set,
+    /placements\[footer-main\]\.menu\.menutype: "footer" is no menu the kit knows \(the menutype of a menu item entity: none\)/
+  )
+  set.mapping.entities['menuItem-1'] = {
+    kind: 'menuItem',
+    identity: { path: 'home', menutype: 'footer' },
+    sourceId: 1
+  }
+  set.mapping.notEmptied.push({ entity: 'menuItem-1', why: 'invented: the footer menu item the demo keeps' })
   assert.deepEqual(problemsOf(set), [])
 })
 
@@ -193,7 +287,11 @@ test('JA Boxing: every block is a copy, written in place or created, and the dec
   assert.deepEqual([count('copy'), count('in-place'), count('created')], [24, 10, 10])
   assert.equal(count('copy') + count('in-place') + count('created'), set.blockStore.blocks.length)
   assert.deepEqual(checkAiQuickstartContract(set).problems, [])
-  // The two copies that need no plugin change for their row removal.
+  // The two copies that need no plugin change for their row removal: one record each, for the whole site.
   for (const id of ['block-171', 'block-162'])
     assert.equal(set.blockStore.blocks.find((b) => b.id === id).placement, 'copy')
+  assert.equal(set.mapping.placements['block-171'].assign, 'every-page')
+  assert.equal(set.mapping.placements['block-162'].assign, 'recipe-pages')
+  assert.equal(set.mapping.placements['block-17'].assign, 'recipe-pages')
+  assert.ok(set.mapping.placements.header.layout.why)
 })
