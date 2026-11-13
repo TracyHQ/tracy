@@ -131,10 +131,9 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
       throw Object.assign(new Error(`no research brief for revision ${revisionId}`), {
         code: 'brief_missing'
       })
-    // What the record lines say about the input: its kind and name, never the brief itself.
-    const source = revisionId
-      ? { kind: 'revision', revisionId }
-      : { kind: 'brief-file', logo: logoFile ? 'file' : 'none' }
+    // The revision path records exactly what the engine records (`{kit}`); only a brief file names its input kind
+    // (never the brief itself).
+    const extra = revisionId ? {} : { source: { kind: 'brief-file', logo: logoFile ? 'file' : 'none' } }
     sequence += 1
     // A run id of its own, so the step's files and record never mix with a build's.
     const runId = `brand-before-site-${now()}-${sequence}`
@@ -154,7 +153,7 @@ export function createBrandBeforeSite({ steps, briefOf, now = Date.now, readJson
       const kit = await attemptStep(run, 'kit', {}, (inputs, n) => steps.kit(ctx, inputs, how(n)))
       const brand = kit.stop
         ? kit
-        : await attemptStep(run, 'brand', { kit: kit.value, source }, async (inputs, n) => {
+        : await attemptStep(run, 'brand', { kit: kit.value, ...extra }, async (inputs, n) => {
             const ran = await steps.brand(ctx, inputs, how(n))
             const file = ran?.value?.file
             if (!file) return ran

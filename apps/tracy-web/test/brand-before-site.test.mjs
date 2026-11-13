@@ -227,10 +227,7 @@ test('a brief given in memory runs the step without reading a revision, and the 
   assert.equal(JSON.stringify(line.inputs).includes('Harrow Lane'), false)
   assert.equal(seen.brand[0].revision, undefined)
   const rev = await run(fakeSteps('brand/brand-file.json').steps)
-  assert.deepEqual(rev.records.find((r) => r.step === 'brand').inputs.source, {
-    kind: 'revision',
-    revisionId: 'rev-1'
-  })
+  assert.deepEqual(Object.keys(rev.records.find((r) => r.step === 'brand').inputs), ['kit'])
 })
 
 test('a revision and a brief together, or neither, never start a step', async () => {
