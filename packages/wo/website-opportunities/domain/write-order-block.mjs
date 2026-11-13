@@ -2,7 +2,8 @@
 // lists, every place with its declared fields and their entries, and the pictures and icons of the place. Which places
 // show is decided after (`write-order-hide.mjs`). Pure.
 import { placesOfBlock } from './picture-block-places.mjs'
-import { entryOf, isEntryField } from './write-order-fields.mjs'
+import { settleButtons } from './write-order-buttons.mjs'
+import { entryOf, isEntryField, keepBase } from './write-order-fields.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isPicture = (field) =>
@@ -11,8 +12,16 @@ const isPicture = (field) =>
 export const listKeyOf = (row) => row.replace(/\.\d+$/, '')
 const declaredOf = (fields) => fields.map(({ name, type }) => ({ name, type }))
 
+/** The words a picture shows: its own label, else the item it pictures, else the business. */
+function altOf(frame, data) {
+  if (frame.label) return frame.label
+  const item = frame.item ? data.byId.get(frame.item) : null
+  if (item?.entry?.label) return item.entry.label
+  return data.facts.find((f) => f.kind === 'business.name')?.value ?? null
+}
+
 /** A picture of the order from a frame of the pictures step, with the declared size of its field. */
-function pictureOf(frame, field) {
+function pictureOf(frame, field, data) {
   const { id, page, block, item, row, place, source, ref, file, label, theme, sameAs, reason, generate } =
     frame
   return {
@@ -28,6 +37,7 @@ function pictureOf(frame, field) {
     ...(file ? { file } : {}),
     ...(ref ? { ref } : {}),
     ...(source === 'own' ? { alt: label ?? null } : {}),
+    ...(source === 'generated' ? { alt: altOf(frame, data) } : {}),
     size: field.frame ? { width: field.frame.width, height: field.frame.height } : null,
     ...(theme ? { theme } : {}),
     ...(sameAs ? { sameAs } : {}),
@@ -37,15 +47,16 @@ function pictureOf(frame, field) {
 }
 
 /**
- * The page of every planned row keyed to a page (#615 `plan-rows.mjs`: `block.lists[].rows[].page`), by
- * `<item>|<row id>`, the row id of the pictures step (`<list>.<n>`, nested `<list>.<n>.<list>.<n>`).
+ * Every planned row (#615 `plan-rows.mjs`: `block.lists[].rows[]`, with the plan id it holds, `data`, or the page it
+ * is keyed to, `page`), by `<item>|<row id>`, the row id of the pictures step (`<list>.<n>`, nested
+ * `<list>.<n>.<list>.<n>`).
  */
-function plannedRowPagesOf(block) {
+function plannedRowsOf(block) {
   const pages = new Map()
   const walk = (planned, item, prefix) =>
     list(planned?.rows).forEach((row, k) => {
       const id = prefix ? `${prefix}.${planned.name}.${k + 1}` : `${planned.name}.${k + 1}`
-      if (typeof row?.page === 'string') pages.set(`${item ?? ''}|${id}`, row.page)
+      pages.set(`${item ?? ''}|${id}`, { page: row?.page, data: row?.data })
       for (const nested of list(row?.lists)) walk(nested, item, id)
     })
   for (const planned of list(block.lists)) walk(planned, planned.item, '')
@@ -62,12 +73,13 @@ function placeOf(at, ctx) {
     const placeId = `${at.prefix}.${field.name}`
     if (isPicture(field)) {
       const frame = ctx.frames.get(placeId)
-      if (frame) pictures.push(pictureOf(frame, field))
+      if (frame) pictures.push(pictureOf(frame, field, ctx.data))
     } else if (field.type === 'icon') {
       const icon = ctx.icons.get(placeId)
       if (icon) icons.push(icon)
     } else if (isEntryField(field)) fields.push(entryOf(at, field, ctx))
   }
+  settleButtons(fields, at.fields, { answer: ctx.answer, keep: keepBase })
   return { at: at.prefix, declared: declaredOf(at.fields), fields, pictures, icons }
 }
 
@@ -79,13 +91,14 @@ function placeOf(at, ctx) {
  * @param {object} ctx `{data, frames, icons, written, answer, pages}`
  */
 export function blockPlacesOf(page, block, description, ctx) {
-  const placeCtx = { ...ctx, page, rowPages: plannedRowPagesOf(block) }
+  const placeCtx = { ...ctx, page, plannedRows: plannedRowsOf(block) }
   const out = { own: null, items: [], lists: [] }
   const groups = new Map()
   const rowOf = (at, owner) => {
     const key = listKeyOf(at.row)
     if (!groups.has(`${at.item ?? ''}|${key}`)) {
       const group = {
+        at: at.prefix.replace(/\.\d+$/, ''),
         list: key,
         name: at.list,
         ...(at.item === undefined ? {} : { item: at.item }),

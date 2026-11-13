@@ -1,28 +1,60 @@
 // The field entries of the write order (ticket #597): one entry per declared non-design field of a place (a block, an
-// item, a child list row), each saying where its value comes from. Pure.
+// item, a child list row), each saying where its value comes from. Pure. The order's own keys (`BASE_KEYS`: the place,
+// the declared kind, type and `from`, the limit of its smallest stored place, its stored slots) always win over any key
+// a writer entry carries.
 //
-//   text    the writer's entry for the place, passed through with every key it carries (`row` and `list` of the child
-//           list work, #615, included); a place the writer did not write follows the block's no data rule, with
-//           `reason: 'not_written'`. A main button label (`contact.cta_label`) the customer answered is the answer,
-//           character for character (`from: 'answer'`), whatever the writer wrote (`written` keeps it).
-//   link    from the plan data only, never from the writer: a fact of the field's kind the block shows, or the item's
-//   number  own field value. A social link beside a network icon takes the icon's link, and is hidden with the icon.
-//   derived a link the build makes (`DERIVED_FORMS`): the target page is resolved here, the address by the write step.
+//   copy    a text the model writes (`page-writer-roles.mjs` copy roles): the writer's value; a place the writer did
+//           not write follows the block's no data rule (`reason: 'not_written'`). A main button label the customer
+//           answered (`contact.cta_label`, or a label paired with a `contact.cta_url` link: `write-order-buttons.mjs`)
+//           is the answer, character for character (`from: 'answer'`), whatever the writer wrote (`written`).
+//   data    a text of a data role, a link or a number: the plan data only, never the writer (`write-order-data.mjs`).
+//           A child list row takes the value the writer copied from the row's data (#615). A social link beside a
+//           network icon takes the icon's link, and is hidden with the icon. A row text declared `textOf: "network"`
+//           is the display name of the network of the row's link.
+//   derived a link the build makes (`DERIVED_FORMS`): the target page is resolved here (`write-order-targets.mjs`).
 // Image fields, video frames and icon fields are not entries: the pictures and the icons of the order hold them.
-import { KEYED } from './ai-quickstart-field-keys.mjs'
+import { limitOf, placesOfField } from './field-place-limits.mjs'
+import { DATA_ROLES } from './page-writer-roles.mjs'
 import { isVideoFrame } from './picture-frames.mjs'
 import { SOCIAL_URL_KINDS } from './picture-block-places.mjs'
 import { ANSWER_SOURCE } from './plan-answers.mjs'
+import { networkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
+import { dataIdOf, dataValueOf, valueText } from './write-order-data.mjs'
+import { targetOf } from './write-order-targets.mjs'
 
 const list = (value) => (Array.isArray(value) ? value : [])
 const isText = (value) => typeof value === 'string' && value.trim() !== ''
-const valueText = (value) =>
-  typeof value === 'number' && Number.isFinite(value) ? String(value) : isText(value) ? value : null
+/** The keys of an entry the order sets itself; a writer entry never overrides them. */
+export const BASE_KEYS = Object.freeze([
+  'key',
+  'place',
+  'field',
+  'kind',
+  'type',
+  'limit',
+  'slots',
+  'declared',
+  'row',
+  'list',
+  'button'
+])
+/** The Contract A field keys the order reads; any other key a field declares is carried untouched (`declared`). */
+const READ_KEYS = new Set(
+  'name kind type slot slots limit limitFrom derived keyAt pageType for textOf frame frameFrom theme variantOf storage iconOf designFrom items itemsFrom'.split(
+    ' '
+  )
+)
+const declaredKeysOf = (field) => {
+  const other = Object.entries(field).filter(([k]) => !READ_KEYS.has(k))
+  return other.length ? { declared: structuredClone(Object.fromEntries(other)) } : {}
+}
+/** An entry with only the order's own keys, before its value is decided. */
+export const keepBase = (e) =>
+  Object.fromEntries(BASE_KEYS.filter((k) => e[k] !== undefined).map((k) => [k, e[k]]))
 
 /** Whether a field is written by the order's field entries (not a picture, a video, an icon or a design value). */
 export const isEntryField = (field) =>
   field?.type === 'text' || ((field?.type === 'link' || field?.type === 'number') && !isVideoFrame(field))
-/** Whether a field stands for a network (Contract A `iconOf: "network"`). */
 const isNetworkIcon = (field) => field?.type === 'icon' && field.iconOf === 'network'
 const isSocialLink = (field) => field?.type === 'link' && SOCIAL_URL_KINDS.includes(field.kind)
 
@@ -42,48 +74,83 @@ export function noDataOf(description) {
     : { action: 'hide' }
 }
 
-const baseOf = (at, field) => ({
+const baseOf = (at, field, ctx) => ({
   key: [at.block, at.item, at.row, field.name].filter(Boolean).join('/'),
   place: `${at.prefix}.${field.name}`,
   field: field.name,
   kind: field.kind,
   type: field.type,
-  ...(field.type === 'text' ? { limit: field.limit } : {}),
+  ...(field.type === 'text' ? { limit: limitOf(field, ctx.placeLimits) } : {}),
+  slots: placesOfField(field),
+  ...declaredKeysOf(field),
   ...(at.row ? { row: at.row, list: at.listKey } : {})
 })
+const noData = (base, at, reason) => ({
+  ...base,
+  from: 'no-data',
+  ...noDataOf(at.description),
+  ...(reason ? { reason } : {})
+})
+
+/** The plan id a planned row holds (#615), never guessed from its value; undefined off a row. */
+const rowDataOf = (at, ctx) =>
+  at.row ? (ctx.plannedRows?.get(`${at.item ?? ''}|${at.row}`)?.data ?? null) : undefined
+
+/** A data value: the plan's, or for a row the one the writer copied from the row's own data (#615). */
+function dataOf(at, field, ctx, base) {
+  if (!at.row) return dataValueOf(at, field, ctx.data)
+  const copied = ctx.written.get(base.place)
+  if (copied?.from !== 'data' || valueText(copied.value) === null) return null
+  return { value: valueText(copied.value), data: rowDataOf(at, ctx) ?? copied.data ?? null }
+}
+
+/** The value and plan id of the social link of a place: the network icon's link, held by the place's own data. */
+function socialLinkOf(at, field, ctx, icon) {
+  const copied = dataOf(at, field, ctx, { place: `${at.prefix}.${field.name}` })
+  // A planned row names the plan id it holds; only a row the plan did not plan (a plan before #615) is matched to the
+  // fact holding exactly its link.
+  if (at.row) {
+    const value = copied?.value ?? icon.link
+    return { value, data: rowDataOf(at, ctx) ?? copied?.data ?? dataIdOf(value, at, ctx.data) }
+  }
+  return { value: icon.link, data: dataIdOf(icon.link, at, ctx.data) }
+}
+
+/** A row label naming the network of the row's link (Contract A `textOf: "network"`): data, never copy. */
+function networkTextOf(at, base, ctx) {
+  const field = at.fields.find(isSocialLink)
+  const link = field ? linkEntryOf(at, field, ctx) : null
+  const name = link?.from === 'data' ? networkNameOf(link.value) : null
+  if (name === null) return { ...base, from: 'no-data', action: 'hide', reason: 'network_unknown' }
+  return { ...base, from: 'data', value: name, textOf: TEXT_OF_NETWORK, data: link.data }
+}
 
 function textEntryOf(at, field, ctx) {
-  const base = baseOf(at, field)
+  const base = baseOf(at, field, ctx)
+  if (field.textOf === TEXT_OF_NETWORK) return networkTextOf(at, base, ctx)
+  if (DATA_ROLES.includes(field.kind)) {
+    const found = dataOf(at, field, ctx, base)
+    return found ? { ...base, from: 'data', ...found } : noData(base, at)
+  }
   const written = ctx.written.get(base.place)
   if (field.kind === 'contact.cta_label' && ctx.answer !== null) {
     const kept = written?.from === 'writer' && written.value !== ctx.answer ? { written: written.value } : {}
     return { ...base, from: 'answer', value: ctx.answer, data: 'contact-cta-label', ...kept }
   }
-  if (!written) return { ...base, from: 'no-data', ...noDataOf(at.description), reason: 'not_written' }
-  const { key: _key, block: _block, item: _item, field: _field, ...rest } = written
-  return { ...base, ...rest }
+  if (!written) return noData(base, at, 'not_written')
+  // A writer entry's own extra keys (`writtenBy`) pass through; the order's keys and the value keys are its own.
+  const extras = { ...written }
+  for (const k of [...BASE_KEYS, 'block', 'item', 'page', 'from', 'value', 'data', 'action', 'fallback'])
+    delete extras[k]
+  if (written.from === 'no-data' || !hasText(written.value))
+    return {
+      ...extras,
+      ...noData(base, at),
+      ...(written.action === 'fallback' ? { action: 'fallback', fallback: written.fallback } : {})
+    }
+  return { ...extras, ...base, from: 'writer', value: written.value }
 }
-
-/** The plan data value of a link or number field, with the plan id it came from. */
-function dataValueOf(at, field, data) {
-  if (at.row) return null
-  if (at.item !== undefined) {
-    const entry = data.byId.get(at.item)
-    if (entry?.what === 'fact')
-      return entry.kind === field.kind && isText(entry.entry.value)
-        ? { value: entry.entry.value, data: at.item }
-        : null
-    const raw = entry?.source?.fields?.[field.kind]?.value
-    const value = valueText(Array.isArray(raw) ? raw.find(isText) : raw)
-    return value === null ? null : { value, data: at.item }
-  }
-  for (const id of list(at.blockData)) {
-    const entry = data.byId.get(id)
-    if (entry?.what === 'fact' && entry.kind === field.kind && isText(entry.entry.value))
-      return { value: entry.entry.value, data: id }
-  }
-  return null
-}
+const hasText = (value) => valueText(value) !== null
 
 /** The network icon a social link field stands beside: the one of its row or item, or the one of its rank. */
 function networkIconOf(at, field, ctx) {
@@ -94,55 +161,30 @@ function networkIconOf(at, field, ctx) {
   return icon ? (ctx.icons.get(`${at.prefix}.${icon.name}`) ?? null) : null
 }
 
-/** The plan id of a link value: the fact holding it, else the item of the place. */
-function dataIdOf(value, at, data) {
-  for (const [id, entry] of data.byId) if (entry.what === 'fact' && entry.entry.value === value) return id
-  return at.item ?? null
-}
-
 function linkEntryOf(at, field, ctx) {
-  const base = baseOf(at, field)
+  const base = baseOf(at, field, ctx)
   const icon = isSocialLink(field) ? networkIconOf(at, field, ctx) : null
   if (icon) {
     if (icon.source === 'none' || !isText(icon.link))
-      return { ...base, from: 'no-data', action: 'hide', reason: 'network_icon_hidden', icon: icon.id }
-    return { ...base, from: 'data', value: icon.link, data: dataIdOf(icon.link, at, ctx.data), icon: icon.id }
+      return {
+        ...base,
+        from: 'no-data',
+        action: 'hide',
+        reason: icon.reason === 'social_icon_not_in_template' ? icon.reason : 'network_icon_hidden',
+        icon: icon.id
+      }
+    return { ...base, from: 'data', ...socialLinkOf(at, field, ctx, icon), icon: icon.id }
   }
-  // A child list row takes the value the writer copied from the row's own data (#615); never a written value.
-  const copied = at.row ? ctx.written.get(base.place) : null
-  if (copied?.from === 'data' && valueText(copied.value) !== null)
-    return { ...base, from: 'data', value: valueText(copied.value), data: copied.data ?? null }
-  const found = dataValueOf(at, field, ctx.data)
-  return found
-    ? { ...base, from: 'data', ...found }
-    : { ...base, from: 'no-data', ...noDataOf(at.description) }
-}
-
-/** The page a derived link opens, or null. `pages`: the plan pages in order, the home page first. */
-function targetOf(at, field, ctx) {
-  const { pages, page } = ctx
-  if (field.derived === KEYED) {
-    if (at.row) {
-      const planned = ctx.rowPages?.get(`${at.item ?? ''}|${at.row}`)
-      if (planned !== undefined) return pages.some((p) => p.id === planned) ? planned : null
-      // A plan without planned rows (before #615): row n of a list keyed to the pages is the n-th page.
-      return ctx.rowPages?.size ? null : (pages[at.rank - 1]?.id ?? null)
-    }
-    if (field.pageType !== undefined) return pages.find((p) => p.pageType === field.pageType)?.id ?? null
-    return page.id
-  }
-  if (at.item === undefined) return null
-  if (field.derived === 'the page address' && pages.some((p) => p.id === at.item)) return at.item
-  const own = pages.find(
-    (p) => p.id !== page.id && list(p.blocks).some((b) => list(b.data).length === 1 && b.data[0] === at.item)
-  )
-  return own?.id ?? null
+  const found = dataOf(at, field, ctx, base)
+  return found ? { ...base, from: 'data', ...found } : noData(base, at)
 }
 
 function derivedEntryOf(at, field, ctx) {
-  const base = baseOf(at, field)
+  const base = baseOf(at, field, ctx)
   const page = targetOf(at, field, ctx)
   if (page === null) return { ...base, from: 'no-data', action: 'hide', reason: 'derived_target_missing' }
+  if (page === ctx.page.id && field.derived === 'the item page address')
+    return { ...base, from: 'no-data', action: 'hide', reason: 'derived_self' }
   return { ...base, from: 'derived', derived: field.derived, target: { page } }
 }
 
@@ -152,7 +194,7 @@ function derivedEntryOf(at, field, ctx) {
  *   fields: object[], description: object, blockData: string[]}} at the place
  * @param {object} field its declared field (`isEntryField`)
  * @param {{written: Map<string, object>, icons: Map<string, object>, data: object, answer: string | null,
- *   pages: object[], page: object}} ctx
+ *   pages: object[], page: object, placeLimits: Map<string, number>}} ctx
  */
 export function entryOf(at, field, ctx) {
   if (field.derived !== undefined) return derivedEntryOf(at, field, ctx)

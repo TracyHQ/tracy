@@ -54,7 +54,12 @@ test('home first, exactly one; menu labels and SEO from the plan page names and 
     shareImage: { frame: 'home.home-b3.photo', source: 'generated' }
   })
   assert.equal(page(order, 'bouquet').seo.title, 'Wild meadow bouquet | Example Larkspur Florist')
-  assert.equal(page(order, 'bouquet').seo.shareImage, null)
+  // A page without a picture of its own shares the home page's picture.
+  assert.deepEqual(page(order, 'bouquet').seo.shareImage, {
+    frame: 'home.home-b3.photo',
+    source: 'generated',
+    from: 'home'
+  })
 })
 
 test('link and phone values come from the plan data, never from the writer', () => {
@@ -123,11 +128,11 @@ test('a sameAs variant takes its base picture file; pictures are own, generated 
   })
   assert.deepEqual([...new Set(order.pictures.map((p) => p.source))].sort(), ['generated', 'own'])
   assert.deepEqual(checkWriteOrder(order), [])
-  order.pictures[0].source = 'stock'
+  order.pictures[2].source = 'stock'
   order.pictures[1].sameAs = 'home.nowhere.photo'
   assert.deepEqual(
     checkWriteOrder(order).map((p) => p.code),
-    ['picture_source', 'same_as_missing']
+    ['same_as_missing', 'picture_source']
   )
 })
 

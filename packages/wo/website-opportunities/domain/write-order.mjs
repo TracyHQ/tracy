@@ -2,48 +2,24 @@
 // values of the run and nothing else. Pure: the approved plan with its profile, the AI quickstart declarations, the
 // look, every writer page, the pictures and the icons in; one `tracy-write-order/v1` document out, the write step's
 // only input. Spec: docs/references/write-order.md. The check is `checkWriteOrder` (`write-order-check.mjs`).
+import { placeLimitsOf } from './field-place-limits.mjs'
 import { planDataOf } from './plan-data.mjs'
 import { blockPlacesOf } from './write-order-block.mjs'
-import { answeredLabelOf, writerPlaceOf } from './write-order-fields.mjs'
+import { dataIndexOf } from './write-order-data.mjs'
+import { WriteOrderError } from './write-order-error.mjs'
+import { writerPlaceOf } from './write-order-fields.mjs'
+import { declarationsOf, positionOf, refuseInput, writtenPagesOf } from './write-order-input.mjs'
 import { settleBlock } from './write-order-hide.mjs'
 import { joinLibraryBlock } from './write-order-library.mjs'
-import { menuOf, pagesInOrder, seoOf } from './write-order-pages.mjs'
-import { ANSWER_SOURCE } from './plan-answers.mjs'
+import { classedIcons, libraryPositionOf, lookOf } from './write-order-look.mjs'
+import { menuOf, pagesInOrder, seoLimitsOf, seoOf } from './write-order-pages.mjs'
+import { itemPageTypesOf } from './write-order-targets.mjs'
 
+export { NO_RERUN, WriteOrderError } from './write-order-error.mjs'
+export { answerLimitOf } from './write-order-buttons.mjs'
 export const WRITE_ORDER_SCHEMA = 'tracy-write-order/v1'
 
 const list = (value) => (Array.isArray(value) ? value : [])
-
-/** A write order that cannot be built from the inputs given, with a code the step chain reports (ADR 0047). */
-export class WriteOrderError extends Error {
-  constructor(code, message, details = {}) {
-    super(`${code}: ${message}`)
-    this.code = code
-    this.details = details
-  }
-}
-
-/** Block id -> declaration: the template's block store first, then the Tracy library blocks it lacks. */
-function declarationsOf(aiq) {
-  const blocks = new Map()
-  for (const block of list(aiq?.blockStore?.blocks)) blocks.set(block.id, block)
-  for (const block of list(aiq?.library))
-    if (!blocks.has(block.id)) blocks.set(block.id, { ...block, source: 'library' })
-  return blocks
-}
-
-/** The written pages by id, from `writer:<page>` step values (`{page}`) or one `writePages` result (`{pages}`). */
-function writtenPagesOf(writers) {
-  const pages = list(writers).flatMap((w) => (w?.page ? [w.page] : list(w?.pages)))
-  return new Map(pages.map((p) => [p.id, p]))
-}
-
-const positionOf = (description, blocks, i) => ({
-  request: list(description.positions)[0] ?? null,
-  declared: list(description.positions),
-  afterBlock: blocks[i - 1]?.id ?? null,
-  beforeBlock: blocks[i + 1]?.id ?? null
-})
 
 /**
  * Build the write order.
@@ -64,6 +40,7 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
   if (!Array.isArray(pictures?.frames))
     throw new WriteOrderError('pictures_missing', 'the write order needs the frames of the pictures step')
   const declarations = declarationsOf(aiq)
+  const answer = refuseInput(plan, aiq, profile)
   const data = planDataOf(profile)
   const written = writtenPagesOf(writers)
   const missing = plan.pages.filter((p) => !written.has(p.id)).map((p) => p.id)
@@ -75,7 +52,7 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
   for (const [pageId, page] of written)
     for (const entry of list(page.fields)) writtenByPlace.set(writerPlaceOf(pageId, entry), entry)
   const frames = new Map(pictures.frames.map((f) => [f.id, f]))
-  const iconEntries = list(icons?.icons ?? pictures.icons)
+  const iconEntries = classedIcons(list(icons?.icons ?? pictures.icons), aiq?.mapping)
   const iconsById = new Map(iconEntries.map((i) => [i.id, i]))
   const dropped = new Map(
     list(pictures.reduced).map((r) => [`${r.page}.${r.block}.${r.item}`, 'item_dropped'])
@@ -86,8 +63,10 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
     frames,
     icons: iconsById,
     written: writtenByPlace,
-    answer: answeredLabelOf(profile),
-    pages
+    answer,
+    pages,
+    placeLimits: placeLimitsOf(declarations.values()),
+    itemPageTypes: itemPageTypesOf(aiq?.pageRecipes)
   }
   const hidden = []
   const used = new Set()
@@ -103,7 +82,12 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
         type: description.type,
         source: description.source === 'library' ? 'library' : 'template',
         order: i,
-        position: positionOf(description, page.blocks, i),
+        position: positionOf(
+          description,
+          page.blocks,
+          i,
+          description.source === 'library' ? libraryPositionOf(aiq?.mapping, page.pageType) : undefined
+        ),
         ...places.own,
         items: places.items,
         lists: places.lists
@@ -151,7 +135,21 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
   for (const icon of shownIcons)
     if (icon.case === 'social' && icon.source === 'none' && links.has(icon.id))
       icon.hidesLink = links.get(icon.id)
-  for (const page of orderPages) page.seo = seoOf(page, page.home, data.facts, shownPictures)
+  const index = dataIndexOf(data, profile)
+  const orderLook = lookOf(look, plan, index.facts)
+  const limits = seoLimitsOf(aiq?.mapping)
+  for (const page of orderPages)
+    page.seo = seoOf(page, {
+      home: page.home,
+      facts: index.facts,
+      pictures: shownPictures,
+      homeShare:
+        orderPages[0].seo?.shareImage?.frame && !orderPages[0].seo.shareImage.from
+          ? orderPages[0].seo.shareImage
+          : null,
+      logo: orderLook?.logo,
+      limits
+    })
   const unplaced = [...writtenByPlace.entries()]
     // A row field the writer leaves to the pictures or the icon step is held by `pictures` or `icons`.
     .filter(([, entry]) => entry.action !== 'pictures' && entry.action !== 'network')
@@ -169,15 +167,12 @@ export function buildWriteOrder({ run, aiq, approval, look, writers, pictures, i
       slug: aiq?.template?.slug ?? null,
       version: aiq?.template?.version ?? null,
       kitRef: aiq?.ref ?? null,
-      aiQuickstart: { version: aiq?.aiQuickstart?.version ?? aiq?.template?.version ?? null }
+      aiQuickstart: { version: aiq?.aiQuickstart?.version ?? aiq?.template?.version ?? null },
+      ...(aiq?.mapping ? { mapping: structuredClone(aiq.mapping) } : {})
     },
-    look: look ?? { accent: plan.look?.accent ?? null, accentFrom: null, logo: plan.look?.logo ?? null },
-    facts: data.facts.map(({ id, kind, value }) => ({
-      kind,
-      value,
-      data: id,
-      ...(list(data.byId.get(id)?.source?.sources).includes(ANSWER_SOURCE) ? { from: 'answer' } : {})
-    })),
+    look: orderLook,
+    seo: limits,
+    ...index,
     pages: orderPages,
     pictures: shownPictures,
     icons: shownIcons,

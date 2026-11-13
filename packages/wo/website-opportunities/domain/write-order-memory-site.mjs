@@ -7,12 +7,16 @@ import { checkWriteOrder, placesOfOrder } from './write-order-check.mjs'
 const list = (value) => (Array.isArray(value) ? value : [])
 const hasValue = (e) => e.value !== undefined && e.value !== null && e.value !== ''
 
-/** A failure of the memory site, scripted or because the order is invalid. */
+/**
+ * A failure of the memory site, scripted or because the order is invalid. An invalid order fails the same way on every
+ * call (`noRerun: true`); a scripted failure stands for a write call that may pass when run again.
+ */
 export class MemorySiteError extends Error {
   constructor(code, message, details = {}) {
     super(`${code}: ${message}`)
     this.code = code
     this.details = details
+    this.noRerun = code === 'order_invalid'
   }
 }
 

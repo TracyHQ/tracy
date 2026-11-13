@@ -3,14 +3,16 @@
 //
 //   item   hidden when the pictures step dropped it (`item_dropped`), a library block sets it aside (its reason) or
 //          it shows nothing at all (`item_empty`, e.g. a network link hidden with its icon);
-//   row    hidden when it holds nothing (`row_empty`: no written or data value, no own or generated picture, no icon),
-//          or when its parent row is hidden (`parent_hidden`);
+//   row    hidden when it holds nothing (`row_empty`: no written or data value, no own or generated picture, no icon;
+//          `social_icon_not_in_template` when its network has no class in the template), or with its parent row, item
+//          or block (`parent_hidden`);
 //   list   hidden with all its rows when fewer rows show than its declared minimum (`list_below_min`);
 //   block  a repeating block with fewer items shown than its `items.min` is hidden (`list_below_min`), or takes its
 //          declared fallback when its no data rule is `fallback` (state `fallback`: the template or the CMS fills it,
 //          e.g. a menu rebuilt from the pages); a block declaring content and showing none is hidden (`no_data`). A logo
 //          frame counts as shown: the write step fills it from the order's look.
-// A hidden place keeps no entries, pictures or icons: they leave with it, and `hidden` lists every place not shown.
+// A hidden place keeps no entries, pictures or icons: they leave with it, but stays in the order with its declared
+// fields, so the order itself accounts for every field. `hidden` lists every place not shown, and only those.
 const list = (value) => (Array.isArray(value) ? value : [])
 /** A logo frame is filled by the write step from the order's look (the brand step's logo, or the name as text). */
 const LOGO = 'logo_from_brand_step'
@@ -31,22 +33,41 @@ function hide(place, reason, hidden) {
   hidden.push({ at: place.at, reason })
 }
 
-/** The declared counts of a child list by its name, at any depth. */
+/** The path of a child list without its row ranks: `exercises.2.steps` is `exercises.steps`. */
+const pathOf = (key) => key.replace(/\.\d+(?=\.|$)/g, '')
+
+/** The declared counts of every child list by its full path (`lists:` or `itemLists:` then the names), at any depth. */
 function listCountsOf(description) {
   const counts = new Map()
-  const walk = (owner) => {
-    for (const child of [...list(owner?.lists), ...list(owner?.itemLists)]) {
-      counts.set(child.name, child.items ?? { min: 0, max: 0 })
-      walk(child)
+  const walk = (children, prefix) => {
+    for (const child of list(children)) {
+      const path = `${prefix}${prefix.endsWith(':') ? '' : '.'}${child.name}`
+      counts.set(path, child.items ?? { min: 0, max: 0 })
+      walk(child.lists, path)
     }
   }
-  walk(description)
+  walk(description?.lists, 'lists:')
+  walk(description?.itemLists, 'itemLists:')
   return counts
+}
+const countsKeyOf = (group) => `${group.item === undefined ? 'lists:' : 'itemLists:'}${pathOf(group.list)}`
+
+/** Hide every row of some lists with their parent (`parent_hidden`), each listed in `hidden`. */
+function hideRows(groups, reason, hidden) {
+  for (const group of groups) {
+    for (const row of group.rows) if (row.state !== 'hidden') hide(row, reason, hidden)
+    group.state = 'hidden'
+    group.counts = { ...group.counts, shown: 0 }
+  }
 }
 
 /** Rows, then lists against their minimum; nested lists after their parent rows. */
 function settleLists(groups, description, hidden) {
   const counts = listCountsOf(description)
+  // A row whose network the template has no class for says so, rather than that it is empty.
+  const emptyReason = (row) =>
+    row.icons.find((i) => i.source === 'none' && i.reason === 'social_icon_not_in_template')?.reason ??
+    'row_empty'
   const hiddenRows = new Set()
   const depth = (g) => g.list.split('.').length
   for (const group of [...groups].sort((a, b) => depth(a) - depth(b))) {
@@ -54,17 +75,17 @@ function settleLists(groups, description, hidden) {
     for (const row of group.rows) {
       if (parent !== null && hiddenRows.has(`${group.item ?? ''}|${parent}`))
         hide(row, 'parent_hidden', hidden)
-      else if (!placeShows(row)) hide(row, 'row_empty', hidden)
+      else if (!placeShows(row)) hide(row, emptyReason(row), hidden)
       else row.state = 'show'
       if (row.state === 'hidden') hiddenRows.add(`${group.item ?? ''}|${row.row}`)
     }
-    const items = counts.get(group.name) ?? { min: 0, max: group.rows.length }
+    const items = counts.get(countsKeyOf(group)) ?? { min: 0, max: group.rows.length }
     const shown = group.rows.filter((r) => r.state === 'show').length
     group.counts = { min: items.min, max: items.max, shown }
     group.state = shown >= items.min && shown > 0 ? 'show' : 'hidden'
     if (shown < items.min) {
       group.reason = 'list_below_min'
-      hidden.push({ at: group.rows[0]?.at.replace(/\.\d+$/, '') ?? group.list, reason: 'list_below_min' })
+      hidden.push({ at: group.at, reason: 'list_below_min' })
       for (const row of group.rows.filter((r) => r.state === 'show')) {
         hide(row, 'list_below_min', hidden)
         hiddenRows.add(`${group.item ?? ''}|${row.row}`)
@@ -86,14 +107,14 @@ export function settleBlock(block, description, { dropped, hidden }) {
     const reason = dropped.get(item.at) ?? item.setAside
     if (reason) {
       hide(item, reason, hidden)
-      item.lists = []
+      hideRows(item.lists, 'parent_hidden', hidden)
     } else {
       settleLists(item.lists, description, hidden)
       const rows = item.lists.some((g) => g.rows.some((r) => r.state === 'show'))
       if (placeShows(item) || rows) item.state = 'show'
       else {
         hide(item, 'item_empty', hidden)
-        item.lists = []
+        hideRows(item.lists, 'parent_hidden', hidden)
       }
     }
   }
@@ -115,7 +136,11 @@ export function settleBlock(block, description, { dropped, hidden }) {
       block.state = 'fallback'
       block.reason = 'list_below_min'
       block.fallback = description.noData.fallback
-      for (const item of shownItems) hide(item, 'list_below_min', hidden)
+      for (const item of shownItems) {
+        hide(item, 'list_below_min', hidden)
+        hideRows(item.lists, 'parent_hidden', hidden)
+      }
+      hideRows(block.lists, 'parent_hidden', hidden)
       block.counts.shown = 0
       hidden.push({ at: block.at, reason: 'list_below_min', fallback: description.noData.fallback })
       return
@@ -136,7 +161,9 @@ export function settleBlock(block, description, { dropped, hidden }) {
 export function hideBlock(block, reason, hidden) {
   hide(block, reason, hidden)
   if (block.counts) block.counts.shown = 0
-  for (const item of block.items) if (item.state !== 'hidden') hide(item, reason, [])
-  for (const item of block.items) item.lists = []
-  block.lists = []
+  for (const item of block.items) {
+    if (item.state !== 'hidden') hide(item, 'parent_hidden', hidden)
+    hideRows(item.lists, 'parent_hidden', hidden)
+  }
+  hideRows(block.lists, 'parent_hidden', hidden)
 }
