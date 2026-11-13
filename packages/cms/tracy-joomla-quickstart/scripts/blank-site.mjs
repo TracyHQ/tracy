@@ -133,7 +133,7 @@ export function produceBlankSite(sql, { steps = BLANK_SITE_STEPS } = {}) {
 /** Everything that keeps `sql` from being a blank site, one sentence each; empty when it is one. */
 export function checkBlankSite(sql) {
   const dump = parseDump(sql)
-  const problems = []
+  const problems = [...dump.unparsed]
   for (const r of records(dump, 'menu').filter(isSiteMenuItem))
     problems.push(`site menu item ${r.id} (${r.title})`)
   const site = new Set(

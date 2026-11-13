@@ -12,7 +12,10 @@
  * per line).
  */
 
-const STATEMENT = /^(INSERT INTO|UPDATE) `([^`]+)`/gm
+// Any case, indented, and the INSERT forms mysqldump or a hand edit may use.
+const STATEMENT = /^[ \t]*(INSERT(?: IGNORE)? INTO|REPLACE INTO|UPDATE) `([^`]+)`/gim
+// A data statement left in a text part was not read; the dump cannot be trusted to say what rows it holds.
+const DATA_LINE = /^[ \t]*(?:insert|replace|update|delete)\b[^\n]*/gim
 const PREFIX = '#__'
 const UNESCAPE = { n: '\n', r: '\r', t: '\t', 0: '\0', Z: '\x1a', b: '\b' }
 
@@ -20,6 +23,7 @@ const UNESCAPE = { n: '\n', r: '\r', t: '\t', 0: '\0', Z: '\x1a', b: '\b' }
 export function parseDump(sql) {
   const parts = []
   const createColumns = new Map()
+  const unparsed = []
   let at = 0
   for (;;) {
     STATEMENT.lastIndex = at
@@ -28,11 +32,14 @@ export function parseDump(sql) {
     if (textEnd > at) {
       const text = sql.slice(at, textEnd)
       readCreateColumns(text, createColumns)
+      for (const line of text.matchAll(DATA_LINE))
+        unparsed.push(`unparsed statement: ${line[0].trim().slice(0, 60)}`)
       parts.push({ kind: 'text', text })
     }
     if (!m) break
     const table = m[2].startsWith(PREFIX) ? m[2].slice(PREFIX.length) : m[2]
-    if (m[1] === 'UPDATE') {
+    if (!m[2].startsWith(PREFIX)) unparsed.push(`statement on table ${m[2]} without the #__ prefix`)
+    if (m[1].toUpperCase() === 'UPDATE') {
       const end = statementEnd(sql, m.index)
       const text = sql.slice(m.index, end)
       parts.push({ kind: 'update', table, text, id: updateTargetId(text) })
@@ -44,7 +51,7 @@ export function parseDump(sql) {
       delete part.endsAt
     }
   }
-  return { parts }
+  return { parts, unparsed }
 }
 
 /** The dump as text again. A part or row nobody changed is the text it was read from. */
@@ -133,7 +140,7 @@ function readCreateColumns(text, into) {
 }
 
 function readInsert(sql, start, table, createColumns) {
-  const values = sql.indexOf('VALUES', start)
+  const values = sql.slice(start).search(/\bVALUES\b/i) + start
   const head = sql.slice(start, values + 'VALUES'.length)
   const listed = head.slice(head.indexOf('`', head.indexOf('`') + 1) + 1, -'VALUES'.length)
   const columns = listed.includes('(')

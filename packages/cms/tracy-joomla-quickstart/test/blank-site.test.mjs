@@ -205,3 +205,36 @@ test('the steps are a list a later ticket can extend', () => {
   const { report } = produceBlankSite(FIXTURE, { steps: [...BLANK_SITE_STEPS, extra] })
   assert.ok(report.steps.mark.parts > 0)
 })
+
+test('a data statement the parser cannot read fails the check instead of staying as silent text', () => {
+  const blankSql = blank().sql
+  const forms = {
+    'a table with a literal prefix':
+      "INSERT INTO `jos_users` (`id`, `username`) VALUES (7,'invented-user');\n",
+    'a statement without a backticked table': "REPLACE INTO jos_session VALUES ('invented-session');\n",
+    'an indented delete': '  delete from `#__users` where `id` = 7;\n',
+    'an update of a literal prefix table': "UPDATE `jos_users` SET `username` = 'invented-user';\n"
+  }
+  for (const [label, statement] of Object.entries(forms)) {
+    const problems = checkBlankSite(blankSql + statement)
+    assert.ok(
+      problems.some((p) => p.includes('unparsed') || p.includes('without the #__ prefix')),
+      `${label}: ${JSON.stringify(problems)}`
+    )
+  }
+  assert.deepEqual(checkBlankSite(blankSql), [], 'a clean blank site has no such problem')
+})
+
+test('insert forms in other cases are read like the plain one, so their rows are removed', () => {
+  const extra =
+    '\n  insert ignore into `#__users` (`id`, `name`, `username`, `email`, `password`, `otpKey`) VALUES \n' +
+    "(7,'Invented','invented-user','invented@example.test','invented-hash','');\n" +
+    "REPLACE INTO `#__session` (`session_id`) VALUES ('invented-session');\n"
+  const { sql, dump } = (() => {
+    const out = produceBlankSite(FIXTURE + extra)
+    return { sql: out.sql, dump: parseDump(out.sql) }
+  })()
+  assert.deepEqual(records(dump, 'users'), [])
+  assert.deepEqual(records(dump, 'session'), [])
+  assert.deepEqual(checkBlankSite(sql), [])
+})
