@@ -37,6 +37,6 @@
     },
     "removed": 100,
     "opened": 401,
-    "why": "The released contract restricted to the records the blank site keeps; each slot the blank site empties has the blank value as its sample and may be filled (opensEmpty)."
+    "why": "The released contract restricted to the records the blank site keeps; each slot the blank site empties has the blank value as its sample and may be filled (opensEmpty), and each slot the build writes takes the limit of the kit field stored there and no keep flag."
   }
 }

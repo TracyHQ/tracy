@@ -184,3 +184,13 @@ export function mappingFile() {
     facts: {}
   }
 }
+
+/** The block store beside the mapping file: the kit's limit of the hero heading, smaller than the released cap. */
+export function blockStoreFile() {
+  return {
+    blocks: [
+      { id: 'block-90', fields: [{ name: 'heading', type: 'text', limit: 32, slot: 'module-90.0' }] },
+      { id: 'block-news', fields: [{ name: 'paragraph', type: 'text', limit: 200, slot: 'article-1.0' }] }
+    ]
+  }
+}

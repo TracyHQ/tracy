@@ -893,7 +893,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 76,
+      "maxCharacters": 29,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -924,11 +924,7 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 45,
-          "phone": 45
-        },
-        "maxCharacters": 45,
+        "maxCharacters": 29,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -940,7 +936,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 128,
+      "maxCharacters": 58,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -966,11 +962,7 @@
           "desktop": 1,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 59,
-          "phone": 86
-        },
-        "maxCharacters": 59,
+        "maxCharacters": 58,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -982,7 +974,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 82,
+      "maxCharacters": 45,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -1008,10 +1000,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 71,
-          "phone": 45
-        },
         "maxCharacters": 45,
         "casing": "none",
         "overflow": "rewrite"
@@ -1024,7 +1012,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 84,
+      "maxCharacters": 35,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -1055,11 +1043,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 68,
-          "phone": 43
-        },
-        "maxCharacters": 43,
+        "maxCharacters": 35,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -1155,7 +1139,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1185,10 +1169,6 @@
         "lines": {
           "desktop": 2,
           "phone": 1
-        },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
         },
         "maxCharacters": 36,
         "casing": "none",
@@ -1202,7 +1182,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1233,10 +1213,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -1249,7 +1225,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1280,10 +1256,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -1296,7 +1268,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1327,10 +1299,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -1343,7 +1311,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1374,11 +1342,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -1390,7 +1354,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1421,11 +1385,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -1437,7 +1397,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1468,11 +1428,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -1484,7 +1440,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -1515,11 +1471,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -1546,7 +1498,6 @@
         "item": 0,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -1570,7 +1521,6 @@
         "item": 1,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -1594,7 +1544,6 @@
         "item": 2,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -1618,7 +1567,6 @@
         "item": 3,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -1636,7 +1584,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.0",
@@ -1646,7 +1593,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1671,7 +1618,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.1",
@@ -1681,7 +1627,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1706,7 +1652,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.2",
@@ -1716,7 +1661,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1741,7 +1686,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.3",
@@ -1751,7 +1695,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1776,7 +1720,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.0",
@@ -1786,7 +1729,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1811,7 +1754,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.1",
@@ -1821,7 +1763,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1846,7 +1788,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.2",
@@ -1856,7 +1797,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1881,7 +1822,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-157.item.3",
@@ -1891,7 +1831,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -1907,7 +1847,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -1931,11 +1871,7 @@
           "desktop": 17,
           "phone": 13
         },
-        "maxChars": {
-          "desktop": 1122,
-          "phone": 468
-        },
-        "maxCharacters": 468,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -1947,7 +1883,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 366,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -1971,11 +1907,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 259,
-          "phone": 259
-        },
-        "maxCharacters": 259,
+        "maxCharacters": 366,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -1994,7 +1926,6 @@
       ],
       "xpath": "/html/body/div/div/a/@href",
       "label": "The workout / top-desc",
-      "customize": "keep",
       "role": "editorial.navigation_url",
       "opensEmpty": true
     },
@@ -2004,7 +1935,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2028,11 +1959,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 68,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 31,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2044,7 +1971,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -2068,11 +1995,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 118,
-          "phone": 36
-        },
-        "maxCharacters": 36,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2084,7 +2007,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 184,
+      "maxCharacters": 118,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2107,11 +2030,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 134,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 118,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2123,7 +2042,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -2147,11 +2066,7 @@
           "desktop": 12,
           "phone": 9
         },
-        "maxChars": {
-          "desktop": 936,
-          "phone": 387
-        },
-        "maxCharacters": 387,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2163,7 +2078,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 257,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2186,11 +2101,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 255,
-          "phone": 255
-        },
-        "maxCharacters": 255,
+        "maxCharacters": 257,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2202,7 +2113,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -2226,11 +2137,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 37,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2242,7 +2149,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 369,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2266,11 +2173,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 259,
-          "phone": 259
-        },
-        "maxCharacters": 259,
+        "maxCharacters": 369,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2328,7 +2231,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 15,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2357,10 +2260,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 108,
-          "phone": 15
-        },
         "maxCharacters": 15,
         "casing": "none",
         "overflow": "rewrite"
@@ -2373,7 +2272,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 11,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2397,7 +2296,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 64,
+      "maxCharacters": 29,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -2426,11 +2325,7 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 121,
-          "phone": 28
-        },
-        "maxCharacters": 28,
+        "maxCharacters": 29,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2442,7 +2337,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 52,
+      "maxCharacters": 34,
       "requiresEvidence": false,
       "jsonPath": [
         "title-btn"
@@ -2465,11 +2360,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 80,
-          "phone": 40
-        },
-        "maxCharacters": 40,
+        "maxCharacters": 34,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2487,7 +2378,6 @@
         "link-btn"
       ],
       "label": "Our Classes / link-btn",
-      "customize": "keep",
       "role": "editorial.navigation_url",
       "opensEmpty": true
     },
@@ -2497,7 +2387,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 52,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "cta",
@@ -2528,11 +2418,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 52,
-          "phone": 29
-        },
-        "maxCharacters": 29,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2544,7 +2430,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 39,
       "requiresEvidence": false,
       "jsonPath": [
         "cta",
@@ -2575,11 +2461,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 129,
-          "phone": 43
-        },
-        "maxCharacters": 43,
+        "maxCharacters": 39,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2635,7 +2517,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 64,
+      "maxCharacters": 35,
       "requiresEvidence": false,
       "jsonPath": [
         "cta",
@@ -2667,11 +2549,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 172,
-          "phone": 43
-        },
-        "maxCharacters": 43,
+        "maxCharacters": 35,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2707,7 +2585,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "default-title"
@@ -2730,7 +2608,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "default-description"
@@ -2753,7 +2631,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 52,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -2784,11 +2662,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 33,
-          "phone": 33
-        },
-        "maxCharacters": 33,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2800,7 +2674,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -2831,11 +2705,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 28,
-          "phone": 26
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2847,7 +2717,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -2878,11 +2748,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 33,
-          "phone": 33
-        },
-        "maxCharacters": 33,
+        "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2894,7 +2760,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -2925,11 +2791,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 28,
-          "phone": 28
-        },
-        "maxCharacters": 28,
+        "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -2941,7 +2803,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -2972,11 +2834,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 29,
-          "phone": 29
-        },
-        "maxCharacters": 29,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -2988,7 +2846,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3019,11 +2877,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 27,
-          "phone": 27
-        },
-        "maxCharacters": 27,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3035,7 +2889,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3065,11 +2919,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 10,
-          "phone": 10
-        },
-        "maxCharacters": 10,
+        "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3081,7 +2931,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3112,11 +2962,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 29
-        },
-        "maxCharacters": 29,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3128,7 +2974,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3159,11 +3005,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 33,
-          "phone": 33
-        },
-        "maxCharacters": 33,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3175,7 +3017,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3206,11 +3048,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 36,
-          "phone": 30
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3222,7 +3060,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3253,11 +3091,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 47
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3269,7 +3103,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3300,11 +3134,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 28
-        },
-        "maxCharacters": 28,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3316,7 +3146,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3347,11 +3177,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 32,
-          "phone": 28
-        },
-        "maxCharacters": 28,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3363,7 +3189,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 20,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3394,11 +3220,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 31
-        },
-        "maxCharacters": 31,
+        "maxCharacters": 20,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3410,7 +3232,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 19,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3441,11 +3263,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 27,
-          "phone": 27
-        },
-        "maxCharacters": 27,
+        "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -3457,7 +3275,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3488,11 +3306,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3504,7 +3318,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3535,11 +3349,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3551,7 +3361,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3582,11 +3392,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3598,7 +3404,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3629,11 +3435,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3645,7 +3447,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3676,11 +3478,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3692,7 +3490,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3723,11 +3521,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3739,7 +3533,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3770,11 +3564,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3786,7 +3576,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3817,11 +3607,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3833,7 +3619,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3864,11 +3650,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3880,7 +3662,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3911,11 +3693,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3927,7 +3705,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -3958,11 +3736,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -3974,7 +3748,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4005,11 +3779,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -4021,7 +3791,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4052,11 +3822,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -4068,7 +3834,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 168,
+      "maxCharacters": 123,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4099,11 +3865,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 200,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 123,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -4115,7 +3877,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 258,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4146,11 +3908,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 259,
-          "phone": 259
-        },
-        "maxCharacters": 259,
+        "maxCharacters": 258,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -4210,7 +3968,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 16,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4236,7 +3994,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 10,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4262,7 +4020,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 64,
+      "maxCharacters": 29,
       "requiresEvidence": false,
       "jsonPath": [
         "menuitem_config",
@@ -4484,7 +4242,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4516,10 +4274,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -4532,7 +4286,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4564,10 +4318,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 33
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -4580,7 +4330,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4612,10 +4362,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -4628,7 +4374,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4660,11 +4406,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 32
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -4692,7 +4434,6 @@
         "item": 0,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -4717,7 +4458,6 @@
         "item": 1,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -4742,7 +4482,6 @@
         "item": 2,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -4767,7 +4506,6 @@
         "item": 3,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -4776,7 +4514,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4802,7 +4540,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4828,7 +4566,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4854,7 +4592,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -4880,7 +4618,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -4904,11 +4642,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 36,
-          "phone": 36
-        },
-        "maxCharacters": 36,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -4920,7 +4654,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 184,
+      "maxCharacters": 118,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -4943,11 +4677,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 134,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 118,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -4959,7 +4689,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "title-btn"
@@ -4982,11 +4712,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 149,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -5004,7 +4730,6 @@
         "link-btn"
       ],
       "label": "Our trainers / link-btn",
-      "customize": "keep",
       "role": "editorial.navigation_url",
       "opensEmpty": true
     },
@@ -5014,7 +4739,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5040,11 +4765,7 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 56,
-          "phone": 38
-        },
-        "maxCharacters": 38,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5104,7 +4825,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 18,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5135,11 +4856,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 14,
-          "phone": 14
-        },
-        "maxCharacters": 14,
+        "maxCharacters": 18,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -5151,7 +4868,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 18,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5182,11 +4899,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 5,
-          "phone": 5
-        },
-        "maxCharacters": 5,
+        "maxCharacters": 18,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -5198,7 +4911,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 18,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5229,11 +4942,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 8,
-          "phone": 8
-        },
-        "maxCharacters": 8,
+        "maxCharacters": 18,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -5245,7 +4954,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 18,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5276,11 +4985,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 11,
-          "phone": 11
-        },
-        "maxCharacters": 11,
+        "maxCharacters": 18,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -5292,7 +4997,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 784,
+      "maxCharacters": 539,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5323,11 +5028,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 502,
-          "phone": 502
-        },
-        "maxCharacters": 502,
+        "maxCharacters": 539,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5339,7 +5040,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 784,
+      "maxCharacters": 539,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5370,11 +5071,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 502,
-          "phone": 502
-        },
-        "maxCharacters": 502,
+        "maxCharacters": 539,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5386,7 +5083,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 784,
+      "maxCharacters": 539,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5417,11 +5114,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 502,
-          "phone": 502
-        },
-        "maxCharacters": 502,
+        "maxCharacters": 539,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5433,7 +5126,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 784,
+      "maxCharacters": 539,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -5464,11 +5157,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 502,
-          "phone": 502
-        },
-        "maxCharacters": 502,
+        "maxCharacters": 539,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5480,7 +5169,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 13,
       "requiresEvidence": true,
       "jsonPath": [
         "gallery",
@@ -5511,11 +5200,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 12,
-          "phone": 22
-        },
-        "maxCharacters": 12,
+        "maxCharacters": 13,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5527,7 +5212,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -5558,10 +5243,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 31
-        },
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
@@ -5574,7 +5255,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 142,
+      "maxCharacters": 68,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -5605,11 +5286,7 @@
           "desktop": 2,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 80,
-          "phone": 74
-        },
-        "maxCharacters": 74,
+        "maxCharacters": 68,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -5955,7 +5632,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 125,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -5982,7 +5659,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 125,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -6009,7 +5686,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 125,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -6036,7 +5713,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 125,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -6063,7 +5740,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 125,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -6090,7 +5767,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 125,
       "requiresEvidence": false,
       "jsonPath": [
         "gallery",
@@ -6117,7 +5794,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 33,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -6141,11 +5818,7 @@
           "desktop": 9,
           "phone": 4
         },
-        "maxChars": {
-          "desktop": 693,
-          "phone": 168
-        },
-        "maxCharacters": 168,
+        "maxCharacters": 33,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6157,7 +5830,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 186,
+      "maxCharacters": 84,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -6180,11 +5853,7 @@
           "desktop": 2,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 128,
-          "phone": 85
-        },
-        "maxCharacters": 85,
+        "maxCharacters": 84,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6196,7 +5865,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 64,
+      "maxCharacters": 35,
       "requiresEvidence": false,
       "jsonPath": [
         "title-btn"
@@ -6224,11 +5893,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 172,
-          "phone": 43
-        },
-        "maxCharacters": 43,
+        "maxCharacters": 35,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -6260,7 +5925,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -6291,11 +5956,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 30
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 15,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6307,7 +5968,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -6338,11 +5999,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 30
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 15,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6354,7 +6011,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -6385,11 +6042,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 30
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 15,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6401,7 +6054,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -6432,11 +6085,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 30
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 15,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6448,7 +6097,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6479,11 +6128,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 25,
-          "phone": 32
-        },
-        "maxCharacters": 25,
+        "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6495,7 +6140,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6525,10 +6170,6 @@
         "lines": {
           "desktop": 1,
           "phone": 1
-        },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 35
         },
         "maxCharacters": 26,
         "casing": "none",
@@ -6542,7 +6183,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6573,10 +6214,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 35
-        },
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
@@ -6589,7 +6226,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6620,11 +6257,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 27,
-          "phone": 35
-        },
-        "maxCharacters": 27,
+        "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6636,7 +6269,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6667,11 +6300,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6683,7 +6312,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6714,11 +6343,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6730,7 +6355,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6761,11 +6386,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6777,7 +6398,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6808,11 +6429,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -6824,7 +6441,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6855,11 +6472,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -6871,7 +6484,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6902,11 +6515,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -6918,7 +6527,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6949,11 +6558,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -6965,7 +6570,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -6996,11 +6601,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -7012,7 +6613,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7038,7 +6639,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7064,7 +6665,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7090,7 +6691,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7116,7 +6717,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((li))\n((/ul))",
-      "maxCharacters": 282,
+      "maxCharacters": 175,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7147,11 +6748,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 242,
-          "phone": 242
-        },
-        "maxCharacters": 242,
+        "maxCharacters": 175,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -7162,7 +6759,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((li))\n((/ul))",
-      "maxCharacters": 330,
+      "maxCharacters": 200,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7193,11 +6790,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 280,
-          "phone": 280
-        },
-        "maxCharacters": 280,
+        "maxCharacters": 200,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -7208,7 +6801,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((/ul))",
-      "maxCharacters": 372,
+      "maxCharacters": 225,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7239,11 +6832,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 316,
-          "phone": 316
-        },
-        "maxCharacters": 316,
+        "maxCharacters": 225,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -7254,7 +6843,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((/ul))",
-      "maxCharacters": 426,
+      "maxCharacters": 250,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7285,11 +6874,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 358,
-          "phone": 358
-        },
-        "maxCharacters": 358,
+        "maxCharacters": 250,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -7300,7 +6885,7 @@
       "column": "title",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 42,
       "requiresEvidence": false,
       "label": "Credit Bundles / title",
       "role": "editorial.heading",
@@ -7320,11 +6905,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 14,
-          "phone": 14
-        },
-        "maxCharacters": 14,
+        "maxCharacters": 42,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7350,7 +6931,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 86,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "introtext"
@@ -7374,11 +6955,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 54,
-          "phone": 50
-        },
-        "maxCharacters": 50,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7390,7 +6967,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 194,
+      "maxCharacters": 109,
       "requiresEvidence": false,
       "jsonPath": [
         "introtext"
@@ -7414,11 +6991,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 114,
-          "phone": 111
-        },
-        "maxCharacters": 111,
+        "maxCharacters": 109,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7517,11 +7090,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 8,
-          "phone": 8
-        },
-        "maxCharacters": 8,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7564,11 +7133,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 9,
-          "phone": 9
-        },
-        "maxCharacters": 9,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7611,11 +7176,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 7,
-          "phone": 7
-        },
-        "maxCharacters": 7,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7658,11 +7219,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 8,
-          "phone": 8
-        },
-        "maxCharacters": 8,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7766,7 +7323,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "social",
@@ -7775,7 +7332,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Footer Social / font-icon 1",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-171.social.0",
@@ -7793,7 +7349,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "social",
@@ -7802,7 +7358,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Footer Social / font-icon 2",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-171.social.1",
@@ -7820,7 +7375,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "social",
@@ -7829,7 +7384,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Footer Social / font-icon 3",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-171.social.2",
@@ -7847,7 +7401,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "social",
@@ -7856,7 +7410,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Footer Social / font-icon 4",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-171.social.3",
@@ -7874,7 +7427,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 11,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -7905,11 +7458,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 10,
-          "phone": 16
-        },
-        "maxCharacters": 10,
+        "maxCharacters": 11,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7921,7 +7470,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 11,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -7952,11 +7501,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 10,
-          "phone": 15
-        },
-        "maxCharacters": 10,
+        "maxCharacters": 11,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -7968,7 +7513,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 35,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -7999,11 +7544,7 @@
           "desktop": 9,
           "phone": 4
         },
-        "maxChars": {
-          "desktop": 774,
-          "phone": 188
-        },
-        "maxCharacters": 188,
+        "maxCharacters": 35,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8015,7 +7556,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 35,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8046,11 +7587,7 @@
           "desktop": 9,
           "phone": 4
         },
-        "maxChars": {
-          "desktop": 774,
-          "phone": 188
-        },
-        "maxCharacters": 188,
+        "maxCharacters": 35,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8062,7 +7599,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 88,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8092,10 +7629,6 @@
         "lines": {
           "desktop": 1,
           "phone": 1
-        },
-        "maxChars": {
-          "desktop": 36,
-          "phone": 41
         },
         "maxCharacters": 36,
         "casing": "none",
@@ -8109,7 +7642,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8140,11 +7673,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 32,
-          "phone": 37
-        },
-        "maxCharacters": 32,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8156,7 +7685,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 21,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8187,11 +7716,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 29,
-          "phone": 33
-        },
-        "maxCharacters": 29,
+        "maxCharacters": 21,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -8203,7 +7728,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 21,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8234,11 +7759,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 29,
-          "phone": 33
-        },
-        "maxCharacters": 29,
+        "maxCharacters": 21,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -8250,7 +7771,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8276,7 +7797,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8302,7 +7823,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 33,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -8326,10 +7847,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 33,
-          "phone": 33
-        },
         "maxCharacters": 33,
         "casing": "none",
         "overflow": "rewrite"
@@ -8342,7 +7859,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 176,
+      "maxCharacters": 88,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -8365,11 +7882,7 @@
           "desktop": 2,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 142,
-          "phone": 92
-        },
-        "maxCharacters": 92,
+        "maxCharacters": 88,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8381,7 +7894,7 @@
       "column": "title",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 14,
       "requiresEvidence": false,
       "label": "CLASSES / title",
       "role": "editorial.heading",
@@ -8401,11 +7914,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 7,
-          "phone": 14
-        },
-        "maxCharacters": 7,
+        "maxCharacters": 14,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -8417,7 +7926,7 @@
       "column": "title",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 16,
       "requiresEvidence": false,
       "label": "SITE MAP / title",
       "role": "editorial.heading",
@@ -8437,11 +7946,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 22,
-          "phone": 15
-        },
-        "maxCharacters": 15,
+        "maxCharacters": 16,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -8458,7 +7963,6 @@
       "xpath": "/html/body/div/a[1]/@href",
       "label": "GET IN TOUCH",
       "role": "editorial.navigation_url",
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -8467,7 +7971,7 @@
       "column": "content",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 25,
       "requiresEvidence": false,
       "xpath": "/html/body/div/a[1]/text()",
       "label": "GET IN TOUCH",
@@ -8493,11 +7997,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 24,
-          "phone": 35
-        },
-        "maxCharacters": 24,
+        "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8509,7 +8009,7 @@
       "column": "content",
       "type": "text",
       "sample": "",
-      "maxCharacters": 114,
+      "maxCharacters": 50,
       "requiresEvidence": false,
       "xpath": "/html/body/div/p",
       "label": "GET IN TOUCH",
@@ -8535,11 +8035,7 @@
           "desktop": 2,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 60,
-          "phone": 72
-        },
-        "maxCharacters": 60,
+        "maxCharacters": 50,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8556,7 +8052,6 @@
       "xpath": "/html/body/div/a[2]/@href",
       "label": "GET IN TOUCH",
       "role": "editorial.navigation_url",
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -8565,7 +8060,7 @@
       "column": "content",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "xpath": "/html/body/div/a[2]/text()",
       "label": "GET IN TOUCH",
@@ -8591,11 +8086,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 36
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8607,7 +8098,7 @@
       "column": "title",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 23,
       "requiresEvidence": false,
       "label": "GET IN TOUCH / title",
       "role": "editorial.heading",
@@ -8627,11 +8118,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 22,
-          "phone": 31
-        },
-        "maxCharacters": 22,
+        "maxCharacters": 23,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -8648,7 +8135,6 @@
       "xpath": "/html/body/div/a/@href",
       "label": "Contact Us",
       "role": "editorial.navigation_url",
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -8657,7 +8143,7 @@
       "column": "content",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 66,
       "requiresEvidence": false,
       "xpath": "/html/body/div/a/text()",
       "label": "Contact Us",
@@ -8673,10 +8159,7 @@
         "lines": {
           "desktop": 1
         },
-        "maxChars": {
-          "desktop": 17
-        },
-        "maxCharacters": 17,
+        "maxCharacters": 66,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -8813,7 +8296,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 52,
+      "maxCharacters": 55,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8844,11 +8327,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 23,
-          "phone": 23
-        },
-        "maxCharacters": 23,
+        "maxCharacters": 55,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8860,7 +8339,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 55,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8891,11 +8370,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 29
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 55,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -8922,7 +8397,6 @@
         "item": 0,
         "kind": "service"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -8946,7 +8420,6 @@
         "item": 1,
         "kind": "service"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -8955,7 +8428,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 634,
+      "maxCharacters": 323,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8986,11 +8459,7 @@
           "desktop": 4,
           "phone": 8
         },
-        "maxChars": {
-          "desktop": 328,
-          "phone": 368
-        },
-        "maxCharacters": 328,
+        "maxCharacters": 323,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9002,7 +8471,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 362,
+      "maxCharacters": 323,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9033,11 +8502,7 @@
           "desktop": 3,
           "phone": 5
         },
-        "maxChars": {
-          "desktop": 240,
-          "phone": 220
-        },
-        "maxCharacters": 220,
+        "maxCharacters": 323,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9049,7 +8514,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 24,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9080,11 +8545,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 56,
-          "phone": 23
-        },
-        "maxCharacters": 23,
+        "maxCharacters": 24,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9096,7 +8557,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 24,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9122,7 +8583,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9153,10 +8614,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 60,
-          "phone": 27
-        },
         "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
@@ -9169,7 +8626,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9195,7 +8652,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9226,11 +8683,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 65,
-          "phone": 29
-        },
-        "maxCharacters": 29,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9242,7 +8695,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9268,7 +8721,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9299,11 +8752,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 24,
-          "phone": 36
-        },
-        "maxCharacters": 24,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9315,7 +8764,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9346,11 +8795,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 24,
-          "phone": 36
-        },
-        "maxCharacters": 24,
+        "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9362,7 +8807,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 45,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9393,11 +8838,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 78,
-          "phone": 43
-        },
-        "maxCharacters": 43,
+        "maxCharacters": 45,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -9409,7 +8850,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 45,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9827,7 +9268,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -9859,10 +9300,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -9875,7 +9312,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -9907,10 +9344,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 33
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -9923,7 +9356,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -9955,10 +9388,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -9971,7 +9400,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10003,11 +9432,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 32
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -10019,7 +9444,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10051,11 +9476,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 32
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -10067,7 +9488,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10099,10 +9520,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -10115,7 +9532,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10147,10 +9564,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 33
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -10163,7 +9576,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10194,10 +9607,6 @@
         "lines": {
           "desktop": 1,
           "phone": 1
-        },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
         },
         "maxCharacters": 31,
         "casing": "none",
@@ -10227,7 +9636,6 @@
         "item": 0,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10252,7 +9660,6 @@
         "item": 1,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10277,7 +9684,6 @@
         "item": 2,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10302,7 +9708,6 @@
         "item": 3,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10327,7 +9732,6 @@
         "item": 4,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10352,7 +9756,6 @@
         "item": 5,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10377,7 +9780,6 @@
         "item": 6,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10402,7 +9804,6 @@
         "item": 7,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -10411,7 +9812,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10437,7 +9838,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10463,7 +9864,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10489,7 +9890,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10515,7 +9916,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10541,7 +9942,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10567,7 +9968,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10593,7 +9994,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -10619,7 +10020,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "title-btn"
@@ -10642,11 +10043,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 149,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -10664,7 +10061,6 @@
         "link-btn"
       ],
       "label": "Our trainers / link-btn",
-      "customize": "keep",
       "role": "editorial.navigation_url",
       "opensEmpty": true
     },
@@ -11217,7 +10613,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 88,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -11248,10 +10644,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 51,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -11264,7 +10656,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 1224,
+      "maxCharacters": 707,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -11295,11 +10687,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 711,
-          "phone": 711
-        },
-        "maxCharacters": 711,
+        "maxCharacters": 707,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11342,11 +10730,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 8,
-          "phone": 8
-        },
-        "maxCharacters": 8,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11389,11 +10773,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 7,
-          "phone": 7
-        },
-        "maxCharacters": 7,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11436,11 +10816,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 9,
-          "phone": 9
-        },
-        "maxCharacters": 9,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11483,11 +10859,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 8,
-          "phone": 8
-        },
-        "maxCharacters": 8,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11591,7 +10963,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -11620,11 +10992,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 41,
-          "phone": 41
-        },
-        "maxCharacters": 41,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11636,7 +11004,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -11645,7 +11013,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / font-icon 1",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-180.social.0",
@@ -11663,7 +11030,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -11672,7 +11039,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / font-icon 2",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-180.social.1",
@@ -11690,7 +11056,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -11699,7 +11065,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / font-icon 3",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-180.social.2",
@@ -11717,7 +11082,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -11726,7 +11091,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / font-icon 4",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-180.social.3",
@@ -11744,7 +11108,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -11775,11 +11139,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 35
-        },
-        "maxCharacters": 31,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11791,7 +11151,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -11822,10 +11182,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 32,
-          "phone": 37
-        },
         "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
@@ -11838,7 +11194,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -11869,11 +11225,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 35
-        },
-        "maxCharacters": 31,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11885,7 +11237,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -11916,11 +11268,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 36
-        },
-        "maxCharacters": 31,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -11932,7 +11280,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -11963,10 +11311,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 32,
-          "phone": 37
-        },
         "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
@@ -11979,7 +11323,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -12010,11 +11354,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 33,
-          "phone": 37
-        },
-        "maxCharacters": 33,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -12452,7 +11792,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 34,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -12476,11 +11816,7 @@
           "desktop": 9,
           "phone": 4
         },
-        "maxChars": {
-          "desktop": 756,
-          "phone": 184
-        },
-        "maxCharacters": 184,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -12492,7 +11828,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 186,
+      "maxCharacters": 84,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -12515,11 +11851,7 @@
           "desktop": 2,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 128,
-          "phone": 85
-        },
-        "maxCharacters": 85,
+        "maxCharacters": 84,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -12531,7 +11863,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 52,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "title-btn"
@@ -12559,11 +11891,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 151,
-          "phone": 38
-        },
-        "maxCharacters": 38,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -12791,7 +12119,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -12823,10 +12151,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -12839,7 +12163,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -12871,10 +12195,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 33
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -12887,7 +12207,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 50,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -12919,10 +12239,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 31,
-          "phone": 34
-        },
         "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
@@ -12935,7 +12251,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -12967,11 +12283,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 30,
-          "phone": 32
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 31,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -12999,7 +12311,6 @@
         "item": 0,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -13024,7 +12335,6 @@
         "item": 1,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -13049,7 +12359,6 @@
         "item": 2,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -13074,7 +12383,6 @@
         "item": 3,
         "kind": "person"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -13083,7 +12391,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -13109,7 +12417,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -13135,7 +12443,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -13161,7 +12469,7 @@
       "column": "params",
       "type": "text",
       "sample": "((div class=\"list-social\"))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n\t((a href=\"\"))((i class=\"\"))((/i))((/a))\n((/div))",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "teams",
@@ -13187,7 +12495,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -13211,11 +12519,7 @@
           "desktop": 1,
           "phone": 5
         },
-        "maxChars": {
-          "desktop": 37,
-          "phone": 225
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 30,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -13227,7 +12531,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 184,
+      "maxCharacters": 118,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -13250,11 +12554,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 134,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 118,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13266,7 +12566,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "title-btn"
@@ -13289,11 +12589,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 149,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -13311,7 +12607,6 @@
         "link-btn"
       ],
       "label": "More trainers / link-btn",
-      "customize": "keep",
       "role": "editorial.navigation_url",
       "opensEmpty": true
     },
@@ -13364,7 +12659,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 287,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -13390,11 +12685,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 255,
-          "phone": 255
-        },
-        "maxCharacters": 255,
+        "maxCharacters": 287,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13406,7 +12697,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 1138,
+      "maxCharacters": 613,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -13437,11 +12728,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 581,
-          "phone": 581
-        },
-        "maxCharacters": 581,
+        "maxCharacters": 613,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13535,7 +12822,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 52,
+      "maxCharacters": 40,
       "requiresEvidence": true,
       "jsonPath": [
         "hero",
@@ -13566,11 +12853,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 48,
-          "phone": 39
-        },
-        "maxCharacters": 39,
+        "maxCharacters": 40,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13582,7 +12865,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 48,
       "requiresEvidence": false,
       "jsonPath": [
         "hero",
@@ -13613,11 +12896,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 57,
-          "phone": 46
-        },
-        "maxCharacters": 46,
+        "maxCharacters": 48,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13629,7 +12908,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -13653,11 +12932,7 @@
           "desktop": 2,
           "phone": 9
         },
-        "maxChars": {
-          "desktop": 58,
-          "phone": 387
-        },
-        "maxCharacters": 58,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -13669,7 +12944,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 276,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -13692,11 +12967,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 255,
-          "phone": 255
-        },
-        "maxCharacters": 255,
+        "maxCharacters": 276,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13743,7 +13014,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 62,
+      "maxCharacters": 28,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -13767,11 +13038,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 45,
-          "phone": 45
-        },
-        "maxCharacters": 45,
+        "maxCharacters": 28,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13783,7 +13050,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 170,
+      "maxCharacters": 84,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -13806,10 +13073,6 @@
           "desktop": 2,
           "phone": 2
         },
-        "maxChars": {
-          "desktop": 130,
-          "phone": 84
-        },
         "maxCharacters": 84,
         "casing": "none",
         "overflow": "rewrite"
@@ -13822,7 +13085,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -13848,7 +13111,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -13874,7 +13137,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -13900,7 +13163,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -13926,7 +13189,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -13957,11 +13220,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 25,
-          "phone": 32
-        },
-        "maxCharacters": 25,
+        "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -13973,7 +13232,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14004,10 +13263,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 35
-        },
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
@@ -14020,7 +13275,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14051,10 +13306,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 35
-        },
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
@@ -14067,7 +13318,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14098,11 +13349,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 27,
-          "phone": 35
-        },
-        "maxCharacters": 27,
+        "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14114,7 +13361,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14145,11 +13392,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14161,7 +13404,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14192,11 +13435,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14208,7 +13447,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14239,11 +13478,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14255,7 +13490,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14286,11 +13521,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14302,7 +13533,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14333,11 +13564,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -14349,7 +13576,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14380,11 +13607,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -14396,7 +13619,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14427,11 +13650,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -14443,7 +13662,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14474,11 +13693,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -14490,7 +13705,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14516,7 +13731,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14542,7 +13757,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14568,7 +13783,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14594,7 +13809,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((li))\n((/ul))",
-      "maxCharacters": 282,
+      "maxCharacters": 175,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14625,11 +13840,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 242,
-          "phone": 242
-        },
-        "maxCharacters": 242,
+        "maxCharacters": 175,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -14640,7 +13851,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((li))\n((/ul))",
-      "maxCharacters": 330,
+      "maxCharacters": 200,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14671,11 +13882,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 280,
-          "phone": 280
-        },
-        "maxCharacters": 280,
+        "maxCharacters": 200,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -14686,7 +13893,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((/ul))",
-      "maxCharacters": 372,
+      "maxCharacters": 225,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14717,11 +13924,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 316,
-          "phone": 316
-        },
-        "maxCharacters": 316,
+        "maxCharacters": 225,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -14732,7 +13935,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((/ul))",
-      "maxCharacters": 426,
+      "maxCharacters": 250,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14763,11 +13966,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 358,
-          "phone": 358
-        },
-        "maxCharacters": 358,
+        "maxCharacters": 250,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -14778,7 +13977,7 @@
       "column": "title",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 24,
       "requiresEvidence": false,
       "label": "Memberships / title",
       "role": "editorial.heading",
@@ -14798,11 +13997,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 11,
-          "phone": 11
-        },
-        "maxCharacters": 11,
+        "maxCharacters": 24,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14814,7 +14009,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -14840,7 +14035,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -14866,7 +14061,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -14892,7 +14087,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 48,
+      "maxCharacters": 15,
       "requiresEvidence": true,
       "jsonPath": [
         "features-intro",
@@ -14918,7 +14113,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 54,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14949,11 +14144,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 25,
-          "phone": 32
-        },
-        "maxCharacters": 25,
+        "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -14965,7 +14156,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -14996,10 +14187,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 35
-        },
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
@@ -15012,7 +14199,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15043,10 +14230,6 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 35
-        },
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
@@ -15059,7 +14242,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 26,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15090,11 +14273,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 27,
-          "phone": 35
-        },
-        "maxCharacters": 27,
+        "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -15106,7 +14285,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15137,11 +14316,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -15153,7 +14328,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15184,11 +14359,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -15200,7 +14371,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15231,11 +14402,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -15247,7 +14414,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15278,11 +14445,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 26,
-          "phone": 34
-        },
-        "maxCharacters": 26,
+        "maxCharacters": 27,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -15294,7 +14457,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15325,11 +14488,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -15341,7 +14500,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15372,11 +14531,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -15388,7 +14543,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15419,11 +14574,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -15435,7 +14586,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 27,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15466,11 +14617,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 19,
-          "phone": 19
-        },
-        "maxCharacters": 19,
+        "maxCharacters": 27,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -15482,7 +14629,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15508,7 +14655,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15534,7 +14681,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15560,7 +14707,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15586,7 +14733,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((li))\n((/ul))",
-      "maxCharacters": 282,
+      "maxCharacters": 175,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15617,11 +14764,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 242,
-          "phone": 242
-        },
-        "maxCharacters": 242,
+        "maxCharacters": 175,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -15632,7 +14775,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((li))\n((/ul))",
-      "maxCharacters": 330,
+      "maxCharacters": 200,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15663,11 +14806,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 280,
-          "phone": 280
-        },
-        "maxCharacters": 280,
+        "maxCharacters": 200,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -15678,7 +14817,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((li))\n((/ul))",
-      "maxCharacters": 372,
+      "maxCharacters": 225,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15709,11 +14848,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 316,
-          "phone": 316
-        },
-        "maxCharacters": 316,
+        "maxCharacters": 225,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -15724,7 +14859,7 @@
       "column": "params",
       "type": "text",
       "sample": "((ul))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n\t((li))\n((/ul))",
-      "maxCharacters": 426,
+      "maxCharacters": 250,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15755,11 +14890,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 358,
-          "phone": 358
-        },
-        "maxCharacters": 358,
+        "maxCharacters": 250,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -15770,7 +14901,7 @@
       "column": "title",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "label": " Kids credits / title",
       "role": "editorial.heading",
@@ -15790,11 +14921,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 13,
-          "phone": 13
-        },
-        "maxCharacters": 13,
+        "maxCharacters": 32,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -15806,7 +14933,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15836,10 +14963,6 @@
         "lines": {
           "desktop": 2,
           "phone": 1
-        },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
         },
         "maxCharacters": 36,
         "casing": "none",
@@ -15853,7 +14976,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15884,10 +15007,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -15900,7 +15019,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15931,10 +15050,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -15947,7 +15062,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 36,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15978,10 +15093,6 @@
           "desktop": 2,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 38,
-          "phone": 36
-        },
         "maxCharacters": 36,
         "casing": "none",
         "overflow": "rewrite"
@@ -15994,7 +15105,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16025,11 +15136,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16041,7 +15148,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16072,11 +15179,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16088,7 +15191,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16119,11 +15222,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16135,7 +15234,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 196,
+      "maxCharacters": 106,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16166,11 +15265,7 @@
           "desktop": 4,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 112,
-          "phone": 117
-        },
-        "maxCharacters": 112,
+        "maxCharacters": 106,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16197,7 +15292,6 @@
         "item": 0,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -16221,7 +15315,6 @@
         "item": 1,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -16245,7 +15338,6 @@
         "item": 2,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -16269,7 +15361,6 @@
         "item": 3,
         "kind": "business"
       },
-      "customize": "keep",
       "opensEmpty": true
     },
     {
@@ -16287,7 +15378,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.0",
@@ -16297,7 +15387,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16322,7 +15412,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.1",
@@ -16332,7 +15421,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16357,7 +15446,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.2",
@@ -16367,7 +15455,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16392,7 +15480,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.3",
@@ -16402,7 +15489,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16427,7 +15514,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.0",
@@ -16437,7 +15523,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16462,7 +15548,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.1",
@@ -16472,7 +15557,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16497,7 +15582,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.2",
@@ -16507,7 +15591,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16532,7 +15616,6 @@
       ],
       "nestedJson": "jatools-config",
       "label": "The workout / img-light-icon",
-      "customize": "keep",
       "role": "editorial.item_icon",
       "group": {
         "id": "module-190.item.3",
@@ -16542,7 +15625,7 @@
       "fit": {
         "measured": false,
         "kind": "icon",
-        "replace": "keep",
+        "replace": "icon",
         "transparent": true,
         "source": {
           "width": 150,
@@ -16558,7 +15641,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -16582,11 +15665,7 @@
           "desktop": 17,
           "phone": 13
         },
-        "maxChars": {
-          "desktop": 1122,
-          "phone": 468
-        },
-        "maxCharacters": 468,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16598,7 +15677,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 530,
+      "maxCharacters": 366,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -16622,11 +15701,7 @@
           "desktop": 3,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 259,
-          "phone": 259
-        },
-        "maxCharacters": 259,
+        "maxCharacters": 366,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16645,7 +15720,6 @@
       ],
       "xpath": "/html/body/div/div/a/@href",
       "label": "The workout / top-desc",
-      "customize": "keep",
       "role": "editorial.navigation_url",
       "opensEmpty": true
     },
@@ -16655,7 +15729,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 31,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -16679,11 +15753,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 68,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 31,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -16695,7 +15765,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 30,
       "requiresEvidence": false,
       "jsonPath": [
         "main-section"
@@ -16719,11 +15789,7 @@
           "desktop": 9,
           "phone": 5
         },
-        "maxChars": {
-          "desktop": 675,
-          "phone": 205
-        },
-        "maxCharacters": 205,
+        "maxCharacters": 30,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16735,7 +15801,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 184,
+      "maxCharacters": 118,
       "requiresEvidence": false,
       "jsonPath": [
         "top-desc"
@@ -16758,11 +15824,7 @@
           "desktop": 2,
           "phone": 3
         },
-        "maxChars": {
-          "desktop": 134,
-          "phone": 129
-        },
-        "maxCharacters": 129,
+        "maxCharacters": 118,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -16809,7 +15871,7 @@
       "column": "params",
       "type": "text",
       "sample": "",
-      "maxCharacters": 40,
+      "maxCharacters": 29,
       "requiresEvidence": false,
       "jsonPath": [
         "hint"
@@ -16841,7 +15903,7 @@
       "column": "value",
       "type": "text",
       "sample": "",
-      "maxCharacters": 70,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "label": "TPL_CLASSES_TRIAL (template string, en-GB)",
       "role": "editorial.heading",
@@ -16861,11 +15923,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 155,
-          "phone": 39
-        },
-        "maxCharacters": 39,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -16891,7 +15949,7 @@
       "column": "value",
       "type": "text",
       "sample": "",
-      "maxCharacters": 56,
+      "maxCharacters": 38,
       "requiresEvidence": false,
       "label": "TPL_CONTACT_EMAIL_FORM (template string, en-GB)",
       "role": "editorial.heading",
@@ -16911,11 +15969,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 51,
-          "phone": 37
-        },
-        "maxCharacters": 37,
+        "maxCharacters": 38,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -17081,7 +16135,7 @@
       "column": "value",
       "type": "text",
       "sample": "",
-      "maxCharacters": 60,
+      "maxCharacters": 46,
       "requiresEvidence": false,
       "label": "TPL_LEARNING_LEAD_DESC (template string, en-GB)",
       "role": "editorial.paragraph",
@@ -17101,11 +16155,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 175,
-          "phone": 44
-        },
-        "maxCharacters": 44,
+        "maxCharacters": 46,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -17117,7 +16167,7 @@
       "column": "value",
       "type": "text",
       "sample": "",
-      "maxCharacters": 46,
+      "maxCharacters": 64,
       "requiresEvidence": false,
       "xpath": "/html/body/div",
       "label": "TPL_LEARNING_LEAD_TITLE (template string, en-GB)",
@@ -17138,11 +16188,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 55,
-          "phone": 30
-        },
-        "maxCharacters": 30,
+        "maxCharacters": 64,
         "casing": "none",
         "overflow": "rewrite"
       },
@@ -17273,7 +16319,7 @@
       "column": "value",
       "type": "text",
       "sample": "",
-      "maxCharacters": 44,
+      "maxCharacters": 32,
       "requiresEvidence": false,
       "label": "TPL_SEE_SCHEDULE (template string, en-GB)",
       "role": "editorial.button_label",
@@ -17293,11 +16339,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 117,
-          "phone": 38
-        },
-        "maxCharacters": 38,
+        "maxCharacters": 32,
         "casing": "upper",
         "overflow": "rewrite"
       },
@@ -17309,7 +16351,7 @@
       "column": "value",
       "type": "text",
       "sample": "",
-      "maxCharacters": 42,
+      "maxCharacters": 37,
       "requiresEvidence": false,
       "label": "TPL_TRY_CLASS (template string, en-GB)",
       "role": "editorial.button_label",
@@ -17329,11 +16371,7 @@
           "desktop": 1,
           "phone": 1
         },
-        "maxChars": {
-          "desktop": 64,
-          "phone": 42
-        },
-        "maxCharacters": 42,
+        "maxCharacters": 37,
         "casing": "upper",
         "overflow": "rewrite"
       },

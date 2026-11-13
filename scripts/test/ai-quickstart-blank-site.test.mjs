@@ -8,6 +8,7 @@ import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
 import {
+  blockStoreFile,
   mappingFile,
   releasedContract
 } from '../../packages/cms/tracy-joomla-quickstart/test/fixtures/blank-site/contract.mjs'
@@ -125,6 +126,8 @@ function contractFiles(dir) {
     writeFileSync(path.join(released, name), `${JSON.stringify(doc, null, 2)}\n`)
   const mapping = path.join(dir, 'mapping.json')
   writeFileSync(mapping, JSON.stringify(mappingFile()))
+  // The opened slots take the kit's limits from the block store beside the mapping file.
+  writeFileSync(path.join(dir, 'block-store.json'), JSON.stringify(blockStoreFile()))
   return { released, mapping }
 }
 

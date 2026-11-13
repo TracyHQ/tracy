@@ -606,8 +606,29 @@ What that means for a write, measured through the real door of a blank site (#58
 | a slot of a record the blank site removed | refused, `SLOT_UNKNOWN`; the build writes the records it creates with the open writes (`content.batch`) |
 
 The plugin's receiver corrections (`lib/slot-corrections.json`, `lib/hideable-slots.json`) are keyed by the released
-contract id and its content map hash, so they do not apply to the blank site contract: its slots carry the released
-limits only, and `rows.remove` removes a node of an HTML value but no reviewed row.
+contract id and its content map hash, so they do not apply to the blank site contract. The blank site contract carries
+the corrected state itself, by rule (`blank-site-contract-fit.mjs`), for every slot the build writes:
+
+- **The kit's limit is the door's limit.** A released `fit.maxCharacters` is the box of the demo words (a button
+  label "Book now" gives 17); the plugin relaxes such a box only while the slot holds its demo sample (a limit no more
+  than the sample's visible length plus 3), and an opened slot's sample is empty, so the box would bind. The slot takes
+  the limit of the kit field stored there (`block-store.json`; a place several fields share, the smallest), as the
+  receiver correction does ("the kit's limit in place of the slot's fit"): `fit.maxCharacters` and the slot's own
+  `maxCharacters` (the capture tool's cap) become that limit, and `fit.maxChars` goes. A slot holding pieces takes the
+  sum of its text pieces' limits, a space between them and the words its blank value keeps, since the door counts the
+  whole value: each piece's own limit is the build's to keep. A text slot a link or an icon class is stored in takes
+  the address ceiling of the released link slots (2048). Where the receiver correction and the kit disagree (35 of the
+  74 places both name for 1.0.11; the correction was read from an older kit), the kit wins: it is the reviewed
+  measurement of 1.0.11 on the running template.
+- **No keep flag.** A kept icon the blank site empties (`fit.replace: "keep"`) takes `fit.replace: "icon"`, the
+  correction's own state for the same 16 icons of module 157 and module 190 ("a kept icon that takes a transparent
+  drawing"): the door then takes a picture whose corner is transparent. The capture hint `customize: "keep"`, which no
+  door reads, goes.
+
+The check fails a written slot whose door limit differs from the kit's limit for the place, or that keeps a keep flag.
+`scripts/ai-quickstart/door-limits.mjs <folder>` proves it on a throwaway blank site: a value of exactly the kit's
+limit is written into every whole text place in one apply, and the limit plus one is refused (`SLOT_TOO_LONG`) for
+each. `rows.remove` removes a node of an HTML value but no reviewed row.
 
 **The contract check guards it.** For a Joomla AI quickstart folder with a written mapping file,
 `node scripts/ai-quickstart/check.mjs` requires `blank-site-contract/` and checks it against the released contract

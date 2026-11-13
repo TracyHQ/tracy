@@ -179,13 +179,15 @@ const withoutRemoved = (map, gone) =>
  * The blank site contract: `{id, removed, files: {name: text}}`. `before`/`after` as for `removedEntities`;
  * `released` names the sha256 of each released contract file it is made from; `addedFiles` maps each file the blank
  * site adds to the installer (`produceBlankSite(...).files`) to its sha256; `mapping` is the AI quickstart's mapping
- * file, whose places the blank site empties (`emptyHtml` as for `emptiedSamples`).
+ * file, whose places the blank site empties, and `blockStore` the block store beside it, whose limits the opened
+ * slots take (`emptyHtml` as for `emptiedSamples`).
  */
 export function blankSiteContract({
   manifest,
   contentMap,
   lock,
   mapping,
+  blockStore,
   before,
   after,
   released,
@@ -202,7 +204,12 @@ export function blankSiteContract({
   const afterPairs = pairsOf(afterDump)
 
   const keptSlots = contentMap.slots.filter((s) => !gone.has(s.entity))
-  const emptied = emptiedSamples({ mapping, slots: keptSlots, ...(emptyHtml ? { emptyHtml } : {}) })
+  const emptied = emptiedSamples({
+    mapping,
+    blockStore,
+    slots: keptSlots,
+    ...(emptyHtml ? { emptyHtml } : {})
+  })
   const map = {}
   for (const [k, v] of Object.entries(contentMap)) {
     if (k === 'entities') map[k] = kept
@@ -264,7 +271,7 @@ export function blankSiteContract({
       files: released,
       removed: removed.length,
       opened: emptied.size,
-      why: 'The released contract restricted to the records the blank site keeps; each slot the blank site empties has the blank value as its sample and may be filled (opensEmpty).'
+      why: 'The released contract restricted to the records the blank site keeps; each slot the blank site empties has the blank value as its sample and may be filled (opensEmpty), and each slot the build writes takes the limit of the kit field stored there and no keep flag.'
     }
   }
   const text = (v) => `${JSON.stringify(v, null, 2)}\n`

@@ -8,6 +8,8 @@
  * - its slots are the released slots of those entities, byte for byte, but for each slot the blank site empties: its
  *   sample is the value the blank site leaves there and it opens empty (`blank-site-contract-samples.mjs`), so no
  *   demo text the blank site no longer has is left in it, and no other slot changed;
+ * - each slot the build writes holds a text to the kit's limit for its place and carries no keep flag
+ *   (`blank-site-contract-fit.mjs`): the door refuses no value the kit allows;
  * - its lock rows are the released rows of the kept entities with the places the blank site empties empty (the step
  *   run on the contract's own rows), so the lock holds no demo text the blank site no longer has;
  * - no entity the blank site removes is named anywhere in it;
@@ -24,6 +26,7 @@ import {
   lockDump,
   removedEntities
 } from './blank-site-contract.mjs'
+import { writableSlotProblems } from './blank-site-contract-fit.mjs'
 import { blankSlot, emptiedSamples } from './blank-site-contract-samples.mjs'
 import { mappingLocations } from './door-proof-cases.mjs'
 
@@ -44,10 +47,10 @@ function namesOf(value, keys, at, found) {
 }
 
 /**
- * @param {{ mapping: object, released: {manifest, contentMap, lock, sha256: Record<string,string>},
+ * @param {{ mapping: object, blockStore: object, released: {manifest, contentMap, lock, sha256: Record<string,string>},
  *   blank: {manifest, contentMap, lock}, emptyHtml?: Function }} input
  */
-export function checkBlankSiteContract({ mapping, released, blank, emptyHtml }) {
+export function checkBlankSiteContract({ mapping, blockStore, released, blank, emptyHtml }) {
   const problems = []
   const add = (file, at, message) => problems.push({ file: `${BLANK_CONTRACT_DIR}/${file}`, at, message })
   const id = blankSiteContractId(released.manifest.id)
@@ -99,7 +102,12 @@ export function checkBlankSiteContract({ mapping, released, blank, emptyHtml }) 
       add('content-map.json', `entities[${e.key}].identity`, 'must keep the released identity fields')
   }
   const keptSlots = released.contentMap.slots.filter((s) => !gone.has(s.entity))
-  const emptied = emptiedSamples({ mapping, slots: keptSlots, ...(emptyHtml ? { emptyHtml } : {}) })
+  const emptied = emptiedSamples({
+    mapping,
+    blockStore,
+    slots: keptSlots,
+    ...(emptyHtml ? { emptyHtml } : {})
+  })
   const blankSlots = blank.contentMap.slots ?? []
   if (json(blankSlots.map((s) => s.key)) !== json(keptSlots.map((s) => s.key)))
     add(
@@ -109,6 +117,9 @@ export function checkBlankSiteContract({ mapping, released, blank, emptyHtml }) 
     )
   else
     keptSlots.forEach((s, i) => {
+      if (emptied.has(s.key))
+        for (const why of writableSlotProblems(blankSlots[i], emptied.get(s.key).limit))
+          add('content-map.json', `slots[${s.key}]`, `the build writes it, but ${why}`)
       if (json(blankSlots[i]) === json(blankSlot(s, emptied))) return
       add(
         'content-map.json',

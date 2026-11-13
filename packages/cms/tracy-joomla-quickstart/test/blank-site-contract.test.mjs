@@ -1,15 +1,16 @@
 // The blank site contract (#584): the released contract restricted to the records the blank site keeps, each slot the
 // blank site empties opened (its sample the blank value, `opensEmpty`), and the check that guards it. On the invented
-// demo data fixture and the invented contract beside it; no php: HTML pieces are emptied by a stand-in.
+// demo data fixture and the invented contract beside it. HTML pieces are emptied by the real `empty-html-places.php`.
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import { BLANK_SITE_STEPS, produceBlankSite } from '../scripts/blank-site.mjs'
 import { blankSiteContract, blankSiteContractId } from '../scripts/blank-site-contract.mjs'
 import { checkBlankSiteContract } from '../scripts/blank-site-contract-check.mjs'
 import { blankSlot, emptiedSamples } from '../scripts/blank-site-contract-samples.mjs'
-import { emptyDeclaredFieldsStep } from '../scripts/blank-site-empty-fields.mjs'
-import { mappingFile, releasedContract } from './fixtures/blank-site/contract.mjs'
+import { emptyDeclaredFieldsStep, emptyHtmlByPhp } from '../scripts/blank-site-empty-fields.mjs'
+import { blockStoreFile, mappingFile, releasedContract } from './fixtures/blank-site/contract.mjs'
 
 const DEMO = readFileSync(new URL('./fixtures/blank-site/custom.sql.txt', import.meta.url), 'utf8')
 const SHAS = {
@@ -17,15 +18,33 @@ const SHAS = {
   'content-map.json': '2'.repeat(64),
   'presentation-lock.json': '3'.repeat(64)
 }
-// Stands in for `empty-html-places.php` on the one kind of value these tests give it.
-const emptyHtml = (entries) => entries.map((e) => ({ html: e.html.replace(/>[^<]*</g, '><') }))
+// The fixture's own places hold no HTML piece, so only the piece test runs php: it fails on CI without php, and skips
+// with the reason on a laptop (as blank-site-empty-fields.test.mjs).
+const emptyHtml = emptyHtmlByPhp
+const needsPhp = {
+  skip:
+    spawnSync('php', ['-v']).status === 0
+      ? false
+      : process.env.CI
+        ? assert.fail('empty-html-places.php runs under `php`, and this CI host has none on PATH')
+        : 'empty-html-places.php runs under `php`, and this host has none on PATH'
+}
+const blockStore = blockStoreFile()
 
 function make() {
   const released = releasedContract()
   const mapping = mappingFile()
   const steps = [...BLANK_SITE_STEPS, emptyDeclaredFieldsStep({ mapping, readFile: () => null, emptyHtml })]
   const after = produceBlankSite(DEMO, { steps }).sql
-  const made = blankSiteContract({ ...released, mapping, before: DEMO, after, released: SHAS, emptyHtml })
+  const made = blankSiteContract({
+    ...released,
+    mapping,
+    blockStore,
+    before: DEMO,
+    after,
+    released: SHAS,
+    emptyHtml
+  })
   const blank = {
     manifest: JSON.parse(made.files['manifest.json']),
     contentMap: JSON.parse(made.files['content-map.json']),
@@ -35,7 +54,7 @@ function make() {
 }
 
 const check = ({ released, mapping, blank }) =>
-  checkBlankSiteContract({ mapping, released: { ...released, sha256: SHAS }, blank, emptyHtml })
+  checkBlankSiteContract({ mapping, blockStore, released: { ...released, sha256: SHAS }, blank, emptyHtml })
 
 test('the id is the released one with -blank, under the plugin rule for a profile id', () => {
   assert.equal(blankSiteContractId('ja-bakery/j6/1.0.3'), 'ja-bakery-blank/j6/1.0.3')
@@ -70,48 +89,67 @@ test('it keeps the records the blank site keeps and names none it removes', () =
   assert.equal(blank.manifest.blankSiteOf.opened, 1)
 })
 
-test('a place the blank site empties opens empty; every other slot is the released one', () => {
+test('a place the blank site empties opens empty, at the kit limit; every other slot is the released one', () => {
   const { released, blank } = make()
   const [heading, title, footer] = blank.contentMap.slots
   assert.equal(heading.sample, '')
   assert.equal(heading.opensEmpty, true)
+  assert.equal(heading.maxCharacters, 32, 'the kit limit of the heading, not the released cap of 40')
   assert.deepEqual(
-    { ...heading, sample: 'Bread, slowly', opensEmpty: undefined },
+    { ...heading, sample: 'Bread, slowly', opensEmpty: undefined, maxCharacters: 40 },
     { ...released.contentMap.slots[0], opensEmpty: undefined }
   )
   assert.deepEqual(title, released.contentMap.slots[1])
   assert.deepEqual(footer, released.contentMap.slots[2])
 })
 
-test('pieces of an HTML slot leave the slot occupied: its sample is the emptied value, and it does not open empty', () => {
-  const slot = {
-    key: 'module-5.0',
-    entity: 'module-5',
-    column: 'content',
-    type: 'text',
-    sample: '<h2>Rye</h2><a href="#">More</a>'
-  }
-  const mapping = {
-    entities: { 'module-5': { kind: 'module', sourceId: 5 } },
-    blocks: {
-      b: {
-        fields: {
-          title: [
-            {
-              entity: 'module-5',
-              column: 'content',
-              slot: 'module-5.0',
-              xpath: '/html/body/div/h2',
-              piece: true
-            }
-          ]
+test(
+  'pieces of an HTML slot leave the slot occupied: its sample is the emptied value, and it does not open empty',
+  needsPhp,
+  () => {
+    const slot = {
+      key: 'module-5.0',
+      entity: 'module-5',
+      column: 'content',
+      type: 'text',
+      sample: '<h2>Rye</h2><a href="#">More</a>'
+    }
+    const mapping = {
+      entities: { 'module-5': { kind: 'module', sourceId: 5 } },
+      blocks: {
+        b: {
+          fields: {
+            title: [
+              {
+                entity: 'module-5',
+                column: 'content',
+                slot: 'module-5.0',
+                xpath: '/html/body/div/h2',
+                piece: true
+              }
+            ]
+          }
         }
       }
     }
+    const store = {
+      blocks: [
+        {
+          id: 'b',
+          fields: [{ name: 'title', type: 'text', limit: 20, slot: 'module-5.0@/html/body/div/h2' }]
+        }
+      ]
+    }
+    const emptied = emptiedSamples({ mapping, blockStore: store, slots: [slot], emptyHtml })
+    // Only the named heading is emptied: the link text no mapping place names stays, and the door counts it with the
+    // heading's limit (20, a space, and the 4 kept characters).
+    assert.deepEqual(blankSlot(slot, emptied), {
+      ...slot,
+      sample: '<h2></h2><a href="#">More</a>',
+      maxCharacters: 25
+    })
   }
-  const emptied = emptiedSamples({ mapping, slots: [slot], emptyHtml })
-  assert.deepEqual(blankSlot(slot, emptied), { ...slot, sample: '<h2></h2><a href="#"></a>' })
-})
+)
 
 test('two runs give the same bytes', () => {
   assert.deepEqual(make().made.files, make().made.files)
@@ -142,6 +180,16 @@ test('the check names each way a blank site contract goes wrong', () => {
       'an emptied place that does not open',
       (b) => delete b.contentMap.slots[0].opensEmpty,
       /the blank site empties it/
+    ],
+    [
+      'an opened place the door holds to a demo box',
+      (b) => (b.contentMap.slots[0].maxCharacters = 8),
+      /the door holds it to 8 characters, the kit's limit for the place is 32/
+    ],
+    [
+      'an opened place that keeps a keep flag',
+      (b) => (b.contentMap.slots[0].customize = 'keep'),
+      /carries customize "keep"/
     ],
     [
       'a slot changed that the blank site keeps',

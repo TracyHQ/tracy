@@ -59,8 +59,21 @@ export function blankSiteContractProblems(dir, mapping, rootDir) {
     BLANK_CONTRACT_FILES.map((f) => [f, readFileSync(path.join(releasedDir, f))])
   )
   const json = (f) => JSON.parse(raw[f].toString('utf8'))
+  let blockStore
+  try {
+    blockStore = JSON.parse(readFileSync(path.join(dir, 'block-store.json'), 'utf8'))
+  } catch (error) {
+    return [
+      {
+        file: 'block-store.json',
+        at: '',
+        message: `unreadable: ${error instanceof Error ? error.message : error}`
+      }
+    ]
+  }
   return checkBlankSiteContract({
     mapping,
+    blockStore,
     released: {
       manifest: json('manifest.json'),
       contentMap: json('content-map.json'),

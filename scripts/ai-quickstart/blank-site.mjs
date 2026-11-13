@@ -110,7 +110,7 @@ function check(file) {
 }
 
 /** The blank site contract (`blank-site-contract.mjs`) of a released contract folder and the step's demo data. */
-function contractOf(folder, mapping, before, after, files) {
+function contractOf(folder, mapping, blockStore, before, after, files) {
   const raw = Object.fromEntries(BLANK_CONTRACT_FILES.map((f) => [f, readFileSync(path.join(folder, f))]))
   const json = (f) => JSON.parse(raw[f].toString('utf8'))
   const input = {
@@ -127,6 +127,7 @@ function contractOf(folder, mapping, before, after, files) {
   const made = blankSiteContract({
     ...input,
     mapping,
+    blockStore,
     before,
     after,
     released: Object.fromEntries(BLANK_CONTRACT_FILES.map((f) => [f, sha256(raw[f])])),
@@ -164,7 +165,10 @@ function produce({ input, out, report: reportFile, mapping: mappingFile, contrac
     : BLANK_SITE_STEPS
   const demo = readEntry(source, DEMO_DATA).toString('utf8')
   const { sql, report, files } = produceBlankSite(demo, { steps })
-  const made = contract ? contractOf(contract, mapping, demo, sql, files) : null
+  const blockStore = contract
+    ? JSON.parse(readFileSync(path.join(path.dirname(mappingFile), 'block-store.json'), 'utf8'))
+    : null
+  const made = contract ? contractOf(contract, mapping, blockStore, demo, sql, files) : null
   let blank = replaceEntry(source, DEMO_DATA, Buffer.from(sql, 'utf8'))
   if (files.size) blank = addEntries(blank, [...files], { like: DEMO_DATA })
 
