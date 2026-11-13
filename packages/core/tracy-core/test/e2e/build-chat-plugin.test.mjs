@@ -88,14 +88,14 @@ const askedReview = () =>
   }))
 
 /** tracy-web's build draft doors, answered in the runner: the draft, the template pick, the plan edits. */
-function draftDoors(plan, { templateFails = false } = {}) {
+function draftDoors(plan, { templateFails = false, canUndo = null } = {}) {
   const state = { plan: structuredClone(plan), lastEdit: null, template: null, requests: [] }
   const body = () => ({
     draft: {
       id: 'draft-1',
       plan: state.plan,
       lastEdit: state.lastEdit,
-      canUndo: state.lastEdit !== null,
+      canUndo: canUndo ?? state.lastEdit !== null,
       template: state.template
     }
   })
@@ -147,14 +147,17 @@ const bundled = await build({
 const bundle = bundled.outputFiles.find((f) => f.path.endsWith('.js'))?.text
 
 /** One page with the plugin applied; `hidden` is what `/api/ui` answers. */
-async function open(browser, { viewport, theme = 'light', hidden = [], plan = PLAN, templateFails = false }) {
+async function open(
+  browser,
+  { viewport, theme = 'light', hidden = [], plan = PLAN, templateFails = false, canUndo = null }
+) {
   const page = await browser.newPage({ viewport })
   page.setDefaultTimeout(5000)
   const errors = []
   page.on('pageerror', (e) => errors.push(e.message))
   const dark = theme === 'dark' ? ' class="dark" data-ds-dark-theme=""' : ''
   const html = `<!doctype html><html data-theme="${theme}"${dark}><body><div id="root"></div></body></html>`
-  const doors = draftDoors(plan, { templateFails })
+  const doors = draftDoors(plan, { templateFails, canUndo })
   await page.route('http://build-chat.test/**', (route) => {
     const p = new URL(route.request().url()).pathname
     if (p === '/api/ui')
@@ -400,6 +403,53 @@ test('while a tracy_build call waits, a line above the chat input says work is g
     await line.waitFor({ state: 'detached' })
     await show([...asked, { type: 'turn/end', seq: ++seq, data: { turn: 4 } }])
     await line.waitFor({ state: 'detached' })
+    assert.deepEqual(errors, [])
+  } finally {
+    await browser.close()
+  }
+})
+
+test('Undo with no last edit is disabled and out of the Tab order; left out lines are grouped in plain words; a zero count is not summed up', async () => {
+  const browser = await launch()
+  try {
+    const plan = structuredClone(PLAN)
+    const photo = 'The gallery block shows up to six photos.'
+    plan.leftOut = [
+      ...Array.from({ length: 37 }, () => ({ what: 'Photo', kind: 'item', reason: photo })),
+      { what: 'match-report page', kind: 'page', reason: 'No article item is available for this page.' }
+    ]
+    plan.items = plan.items.filter((i) => i.kind !== 'service')
+    for (const page of plan.pages)
+      for (const block of page.blocks)
+        block.data = (block.data ?? []).filter(
+          (id) => plan.items.some((i) => i.id === id) || plan.facts.some((f) => f.id === id)
+        )
+    // A draft that claims an undo but holds no last edit: nothing to take back.
+    const { page, errors } = await open(browser, {
+      viewport: { width: 390, height: 844 },
+      plan,
+      canUndo: true
+    })
+    await page.evaluate(([id, events]) => window.probe.load(id, events), [BUILD, recordedSession()])
+    const card = page.getByRole('article')
+    await card.waitFor()
+    const undo = card.getByRole('button', { name: 'Undo last change' })
+    assert.equal(await undo.isDisabled(), true)
+    assert.equal(await undo.evaluate((b) => b.tabIndex < 0 || b.disabled), true)
+
+    const leftOut = card.getByRole('region', { name: 'Left out', exact: true })
+    const text = await leftOut.innerText()
+    assert.match(text, /37 photos\.\s*The gallery block shows up to six photos\./)
+    assert.equal(text.match(/gallery block/g).length, 1, 'one line for the same reason')
+    assert.match(text, /Match report page\./)
+    assert.doesNotMatch(text, /match-report/)
+
+    await page.evaluate((qs) => window.probe.ask(qs), askedReview())
+    const bar = page.getByRole('region', { name: 'Approve this plan?' })
+    await bar.waitFor()
+    await page.waitForFunction(() => /5 pages/.test(document.body.innerText))
+    assert.doesNotMatch(await bar.innerText(), /0 services|, $/m)
+    assert.match(await bar.innerText(), new RegExp(`${NAME}: 5 pages$`, 'm'))
     assert.deepEqual(errors, [])
   } finally {
     await browser.close()

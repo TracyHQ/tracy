@@ -166,7 +166,8 @@ export interface PlanCard {
   }[]
   pictures: { own: { frames: number; from: string[] }; generated: { frames: number; reason?: string } }
   assumptions: { id: string; said: string }[]
-  leftOut: { what: string; kind: string; reason: string }[]
+  /** One line per distinct thing and reason; `count` when several were left out for the same reason. */
+  leftOut: { what: string; kind: string; reason: string; count?: number }[]
   counts: { pages: number; services: number }
 }
 export interface PlanChange {

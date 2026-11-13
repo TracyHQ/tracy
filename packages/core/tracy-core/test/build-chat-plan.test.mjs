@@ -325,3 +325,37 @@ test('a dropped row keeps only its reason: field, limit and length never reach t
   })
   assert.deepEqual(planCardOf(p).leftOut, [{ what: 'Tuesday, 18:00', kind: 'item', reason }])
 })
+
+test('left out: the same reason is one line with its count, and a page slug reads as plain words', () => {
+  const p = plan()
+  const photo = 'The gallery block shows up to six photos, so this photo does not fit in it.'
+  const slugReason = 'No article item is available for the page main block.'
+  p.leftOut = [
+    ...Array.from({ length: 37 }, () => ({ what: 'Photo', kind: 'item', reason: photo })),
+    { what: 'match-report page', kind: 'page', reason: slugReason },
+    { what: 'Video in the top banner', kind: 'feature', reason: 'Upright videos do not fit the banner.' },
+    { what: 'Video in the top banner', kind: 'feature', reason: 'Upright videos do not fit the banner.' }
+  ]
+  assert.deepEqual(planCardOf(p).leftOut, [
+    { what: '37 photos', kind: 'item', reason: photo, count: 37 },
+    { what: 'Match report page', kind: 'page', reason: slugReason },
+    {
+      what: 'Video in the top banner (2)',
+      kind: 'feature',
+      reason: 'Upright videos do not fit the banner.',
+      count: 2
+    }
+  ])
+})
+
+test('the review summary leaves a count of zero out', () => {
+  const p = plan()
+  p.items = p.items.filter((i) => i.kind !== 'service')
+  for (const page of p.pages)
+    for (const block of page.blocks)
+      block.data = (block.data ?? []).filter(
+        (id) => p.items.some((i) => i.id === id) || p.facts.some((f) => f.id === id)
+      )
+  assert.equal(planReviewRequestOf(p).questions[0].detail, '# Sunrise Tennis Club: 5 pages')
+  assert.equal(planReviewRequestOf(plan()).questions[0].detail, '# Sunrise Tennis Club: 5 pages, 4 services')
+})

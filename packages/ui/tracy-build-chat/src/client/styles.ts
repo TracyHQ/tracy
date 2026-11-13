@@ -24,6 +24,8 @@ export const CSS = `
 .tv-bc-btn[data-ghost] { border-color: transparent; background: transparent; }
 .tv-bc-btn[data-ghost]:hover:not(:disabled) { background: color-mix(in oklab, var(--foreground) 5%, var(--card)); }
 .tv-bc-btn:disabled { opacity: .45; cursor: default; }
+/* A quiet action with nothing to do (Undo with no last edit) reads as unavailable, not as plain text */
+.tv-bc-btn[data-ghost]:disabled { color: var(--muted-foreground); }
 .tv-bc-btn:focus-visible, .tv-bc-tpl:focus-visible, .tv-bc-todo-head:focus-visible {
   outline: 1px solid var(--ring); outline-offset: 0;
 }

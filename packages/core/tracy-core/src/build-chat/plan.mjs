@@ -105,6 +105,52 @@ function rowLabelOf(row, plan) {
 }
 
 /**
+ * A left out label in plain words. The engine may name a page by its slug ("news-post page"): hyphens between letters
+ * become spaces and the first letter is upper case ("News post page"). A proper owner readable label should come from
+ * the contract; until it carries one, no slug reaches the card.
+ * @param {string} what
+ */
+function plainWordsOf(what) {
+  const text = String(what ?? '').replace(/(\p{L})-(?=\p{L})/gu, '$1 ')
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+/** "photos" for "Photo": the plural of a one word label, the first letter lower case unless it is an acronym. */
+function pluralOf(word) {
+  const lower = /^\p{Lu}\p{Lu}/u.test(word) ? word : word.charAt(0).toLowerCase() + word.slice(1)
+  if (/(s|x|z|ch|sh)$/i.test(lower)) return `${lower}es`
+  if (/[^aeiou]y$/i.test(lower)) return `${lower.slice(0, -1)}ies`
+  return `${lower}s`
+}
+
+/**
+ * What was left out, one line per distinct thing and reason, in plan order: 37 photos left out for the same reason
+ * are one line, "37 photos", with `count`. A label of several words is not made plural by guesswork; it takes its
+ * count after it, "Video in the top banner (2)". A plural label should come from the contract.
+ * @param {any[]} leftOut
+ */
+function leftOutOf(leftOut) {
+  const lines = []
+  const byKey = new Map()
+  for (const l of leftOut ?? []) {
+    const what = plainWordsOf(l.what)
+    const key = JSON.stringify([what, l.kind, l.reason])
+    const seen = byKey.get(key)
+    if (seen) seen.count += 1
+    else {
+      const line = { what, kind: l.kind, reason: l.reason, count: 1 }
+      byKey.set(key, line)
+      lines.push(line)
+    }
+  }
+  return lines.map(({ count, ...line }) => {
+    if (count === 1) return line
+    const what = /\s/.test(line.what) ? `${line.what} (${count})` : `${count} ${pluralOf(line.what)}`
+    return { ...line, what, count }
+  })
+}
+
+/**
  * The plan card's content.
  * @param {any} plan - a Contract B plan
  */
@@ -175,7 +221,7 @@ export function planCardOf(plan) {
     assumptions: (plan.assumptions ?? [])
       .filter((a) => !disputed.has(a.field))
       .map((a) => ({ id: a.id, said: a.said })),
-    leftOut: (plan.leftOut ?? []).map((l) => ({ what: l.what, kind: l.kind, reason: l.reason })),
+    leftOut: leftOutOf(plan.leftOut),
     counts: { pages: plan.pages.length, services: services.length }
   }
 }
@@ -240,13 +286,23 @@ export function planReviewRequestOf(plan, t = english) {
   const services = t(counts.services === 1 ? 'review.services.one' : 'review.services.other', {
     count: counts.services
   })
+  // A count of zero is left out: "2 pages", never "2 pages, 0 services".
+  const parts = [counts.pages > 0 ? pages : null, counts.services > 0 ? services : null].filter(
+    (p) => p !== null
+  )
+  const summary =
+    parts.length === 2
+      ? t('review.summary', { name, pages, services })
+      : parts.length === 1
+        ? t('review.summary.one', { name, part: parts[0] })
+        : name
   const approve = t('review.approve')
   return {
     questions: [
       {
         id: REVIEW_ID,
         question: t('review.question'),
-        detail: `# ${t('review.summary', { name, pages, services })}`,
+        detail: `# ${summary}`,
         options: [{ label: approve }, { label: t('review.change') }],
         intent: { kind: 'plan-review', approve }
       }

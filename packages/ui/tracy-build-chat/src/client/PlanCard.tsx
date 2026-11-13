@@ -260,7 +260,8 @@ export function PlanCard({
           className="tv-bc-btn"
           data-ghost=""
           aria-label={t('plan.undoLabel')}
-          disabled={!draft.canUndo || busy}
+          // Nothing to take back without a last edit: disabled, so it is neither pressed nor reached by Tab.
+          disabled={!draft.canUndo || !draft.lastEdit || busy}
           onClick={() => {
             setEditing(null)
             void follow(onUndo)
@@ -423,7 +424,7 @@ export function PlanCard({
         <Section title={t('plan.leftOut')}>
           <ul className="tv-bc-dropped">
             {card.leftOut.map((l) => (
-              <li key={l.what}>
+              <li key={`${l.what}\n${l.reason}`} data-count={l.count}>
                 <span className="tv-bc-x">
                   <IconCloseOutlineRegular aria-hidden />
                 </span>

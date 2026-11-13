@@ -25,6 +25,7 @@ export const BUILD_CHAT_STRINGS = {
   'research.title.other': 'Read {count} sources',
   'review.question': 'Approve this plan?',
   'review.summary': '{name}: {pages}, {services}',
+  'review.summary.one': '{name}: {part}',
   'review.pages.one': '{count} page',
   'review.pages.other': '{count} pages',
   'review.services.one': '{count} service',
