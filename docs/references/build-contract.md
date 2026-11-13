@@ -207,9 +207,11 @@ and a block without `lists` shows no rows.
   plan to them (`plan-rows-check.mjs`). The contract check holds the shape: closed objects, known ids, text limits.
 - **Left out entries the rules add** (no new key or kind): a row not shown is kind `item`; a business fact a list
   cannot show (a shortened or repeated social link, one beyond the rows a list holds) is kind `feature`; a list left
-  under its `items.min` is kind `block` (its label); a fact or item longer than the field of its block is taken off
-  that block before anything is written (`data_over_limit`) and, when no other block shows it, is kind `feature` or
-  `item`. A customer's answer is never dropped that way: it is held to the template's limits when it is settled, and
+  under its `items.min` is kind `block` (its label); a fact longer than the field of its block, or an item whose
+  naming value is (a required role of its kind), is taken off that block before anything is written
+  (`data_over_limit`) and, when no other block shows it, is kind `feature` or `item`; an over long optional value of
+  an item leaves only that value off (the field follows its no-data rule), reported as kind `feature`
+  ("Schedule of Invented Boxing"). A customer's answer is never dropped that way: it is held to the template's limits when it is settled, and
   the gate reports one too long as the problem `answer_over_limit`.
 - A row field declaring `textOf: "network"` (Contract A) names the network of the row's link: the writer fills it from
   the link with the icon step's network detection (`from: 'data'`), never sends it to the model, and hides it when

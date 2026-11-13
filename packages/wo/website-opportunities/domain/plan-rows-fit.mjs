@@ -12,6 +12,7 @@
 //   field shares, `field-place-limits.mjs`): a data value is never shortened.
 // - A list with a link field of a social kind takes its links by the icon step's rules (`icon-row-links.mjs`): a
 //   shortened link, a host that is no known network, a bare handle and a second link to one network never take a row.
+import { rowPartsOf } from './schedule-parts.mjs'
 import { rowLinksOf, linkFieldOf } from './icon-row-links.mjs'
 import { limitOf } from './field-place-limits.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
@@ -59,9 +60,6 @@ export const takesData = (f) =>
   typeof f?.kind === 'string' &&
   roleOrigin(f.kind) === 'data'
 const dataFields = (child) => list(child?.fields).filter(takesData)
-/** Whether a part holds a time of day: `18:00`, `7.30`, `9h30`, `6 pm`. */
-const hasTime = (part) => /\b\d{1,2}[:.h]\d{2}\b|\b\d{1,2}\s*(?:a\.?m|p\.?m)\b/i.test(part)
-
 /** Why the row values (data kind -> parts) cannot fill a row of `child`, or null when they can. */
 export function rowMisfitOf(child, values, placeLimits) {
   const fields = dataFields(child)
@@ -69,9 +67,11 @@ export function rowMisfitOf(child, values, placeLimits) {
     const own = fields.filter((f) => f.kind === kind)
     if (own.length === 0) continue
     if (parts.length > own.length) return 'row_parts_over_fields'
-    if (own.length > 1 && hasTime(parts[0]) && parts.slice(1).some((p) => !hasTime(p)))
-      return 'row_parts_order'
-    if (parts.some((part, n) => charCount(part) > limitOf(own[n], placeLimits))) return 'row_value_over_limit'
+    // Schedule parts go days first, times after: a time in the days or a day in the times is never written.
+    const placed = rowPartsOf(kind, parts, fields)
+    if (placed === null) return 'row_parts_order'
+    if (placed.some((part, n) => part !== undefined && charCount(part) > limitOf(own[n], placeLimits)))
+      return 'row_value_over_limit'
   }
   return null
 }

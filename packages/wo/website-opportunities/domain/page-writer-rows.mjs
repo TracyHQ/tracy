@@ -15,6 +15,7 @@
 //
 // A row's place id is `<list>.<n>`, nested `<list>.<n>.<list>.<n>` (n from 1), the row id of the pictures step
 // (`picture-block-places.mjs`), so the icon step reads the written row text by it (`icon-copy.mjs`).
+import { rowPartsOf } from './schedule-parts.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
 import { rowNetworkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
 
@@ -45,7 +46,8 @@ function originOfRowField(field, values, rank, originOf, at, fields) {
   const text = field?.type === 'text'
   const origin = text ? originOf(field, at) : roleOrigin(field?.kind) === 'not-text' ? 'none' : 'data'
   if (origin === 'copy') return { from: 'writer' }
-  const part = values[field?.kind]?.[rank]
+  // A schedule row's parts are placed days first, times after (`schedule-parts.mjs`): a time only row fills the times.
+  const part = rowPartsOf(field?.kind, values[field?.kind], fields ?? [])?.[rank]
   return part === undefined ? { from: 'no-data', action: 'hide' } : { from: 'data', value: part }
 }
 

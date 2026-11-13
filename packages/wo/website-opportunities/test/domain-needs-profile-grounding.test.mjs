@@ -12,13 +12,32 @@ test('a price compares by amount: cents, decimal comma and currency position asi
   assert.equal(proven('offering.price', '$20', 'Drop in class $20.00 per visit'), true)
   assert.equal(proven('offering.price', '€15', 'Monthly 15,00 € for members'), true)
   assert.equal(proven('package.price', '$1,200', 'Year pass $1,200'), true)
-  assert.equal(proven('offering.price', '20', 'price 20:'), true)
+  assert.equal(proven('offering.price', '20', 'Drop in 20 EUR'), true)
   assert.equal(proven('offering.price', '$20', 'Drop in class $120 per visit'), false)
   assert.equal(proven('offering.price', '120', 'Drop in class $20 per visit'), false)
   assert.equal(proven('offering.price', '20 EUR', 'Classes 20,50 EUR'), false)
   // The currency sign and the words of the value must be in the quote too.
   assert.equal(proven('offering.price', '€20', 'Drop in class $20.00 per visit'), false)
   assert.equal(proven('offering.price', '$20 per month', 'Drop in class $20.00 per visit'), false)
+})
+
+test('a price is proven only by money in the quote, its decimals read as decimals', () => {
+  // One or two digits after the last separator are decimals: 7.5 is not 75, 9,5 is not 95, 1.5 is not 15.
+  assert.equal(proven('offering.price', '$7.5', 'Pass $75'), false)
+  assert.equal(proven('offering.price', '€9,5', 'Pass 95 €'), false)
+  assert.equal(proven('offering.price', '$1.5', 'Locker $15'), false)
+  assert.equal(proven('offering.price', '$20.5', 'Locker $205'), false)
+  assert.equal(proven('offering.price', '$1200', 'Year pass $1,200'), true)
+  // An equal number that is not written as money proves nothing.
+  assert.equal(proven('offering.price', '$20', 'A 20 minute class, $35 per visit'), false)
+  assert.equal(proven('offering.price', '$3', '3 classes a week for $45'), false)
+  assert.equal(proven('package.price', '$99', '$9.90 or 99 points'), false)
+  assert.equal(proven('offering.price', '20', 'price 20:'), false)
+  assert.equal(proven('offering.price', '$45', '3 classes for $45'), true)
+  assert.equal(proven('offering.price', '20', 'Drop in 20 dollars'), true)
+  // And a price never proves a year.
+  assert.equal(proven('business.founded', '2010', 'Year pass $2010'), false)
+  assert.equal(proven('business.founded', '2010', 'Founded in 2010, passes from $20'), true)
 })
 
 test('an address compares on its words and digits, its punctuation aside, never part of a number', () => {

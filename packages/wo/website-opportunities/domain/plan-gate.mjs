@@ -24,7 +24,12 @@ import { compositionProblems } from './plan-gate-rules.mjs'
 import { picturesOf } from './plan-look-pictures.mjs'
 import { placeExtraData } from './plan-placement.mjs'
 import { placeExtraFacts } from './plan-placement-facts.mjs'
-import { answerOverLimitProblems, dropOverLimitData, overLimitLeftOut } from './plan-data-limits.mjs'
+import {
+  answerOverLimitProblems,
+  clearOverLimitValues,
+  dropOverLimitData,
+  overLimitLeftOut
+} from './plan-data-limits.mjs'
 import { planRows } from './plan-rows.mjs'
 import { listsBelowMinLeftOut, rowListProblems, rowsLeftOut } from './plan-rows-check.mjs'
 
@@ -107,6 +112,8 @@ export function gatePlan(composition, context) {
   // A fact or item too long for the field it would fill leaves that block before any row is planned.
   const limited = dropOverLimitData(pictures.pages, context.blocks, context.data)
   for (const p of answerOverLimitProblems(limited.dropped)) problem(p.code, p.at, p.message)
+  // A value left off a shown item is taken off the item the page writer reads (the composer's settled profile).
+  clearOverLimitValues(limited.dropped, context.data)
   const rows = planRows(limited.pages, context.blocks, context.data)
   rowListProblems(rows.pages, context.blocks, context.data, problem)
   const shown = new Set(rows.pages.flatMap((p) => p.blocks.flatMap((b) => b.data)))

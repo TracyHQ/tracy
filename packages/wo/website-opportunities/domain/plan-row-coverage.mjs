@@ -16,6 +16,7 @@
 // not hold is `empty`: with the code of the business row cut from that place when there was one
 // (`row_beyond_stored_places`, `row_over_max`, `social_link_over_rows`), else `no_business_row` (the place stays
 // empty, never invented); a design field is `design`.
+import { rowPartsOf } from './schedule-parts.mjs'
 import { takesData } from './plan-rows-fit.mjs'
 import { firstRowOf, roomOf, shownItemIds } from './plan-rows.mjs'
 import { rowNetworkNameOf, TEXT_OF_NETWORK } from './row-network-text.mjs'
@@ -42,7 +43,7 @@ function expectedOf(child, values) {
     // Ranked as the page writer ranks the fields of a kind (`page-writer-rows.mjs`).
     const k = rank.get(field?.kind) ?? 0
     if (field?.textOf === undefined) rank.set(field?.kind, k + 1)
-    return takesData(field) ? values[field.kind]?.[k] : undefined
+    return takesData(field) ? rowPartsOf(field.kind, values[field.kind], list(child.fields))?.[k] : undefined
   })
 }
 

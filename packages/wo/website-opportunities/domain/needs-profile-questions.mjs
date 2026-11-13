@@ -2,7 +2,8 @@
 //
 // The site language follows the language the business uses publicly. There is no fixed number of questions, but only
 // important ones are asked (product decision of 13/11): the customer confirms an important fact the sources disagree
-// on (`needs-profile-conflict-questions.mjs`), picks the main button goal (always), gives a contact method when no
+// on (`needs-profile-conflict-questions.mjs`), picks the main button goal (always, unless the template's button
+// holds less than any label offered), gives a contact method when no
 // source gave one, and picks the site language when the public sources mix languages. Any other conflict is shown on
 // the plan with its trust order default, never asked.
 //
@@ -111,6 +112,22 @@ function ctaChoices(facts) {
   return choices
 }
 
+/**
+ * The generic main button labels offered when none of the found ones fits the template's button, shortest last, per
+ * site language (by primary subtag; a language without its own list takes the English one).
+ */
+const MAIN_BUTTON_FALLBACKS = Object.freeze({ en: ['Contact', 'Call', 'Go'] })
+const fallbackLabelsOf = (language) =>
+  MAIN_BUTTON_FALLBACKS[primary(String(language?.value ?? 'en'))] ?? MAIN_BUTTON_FALLBACKS.en
+/** The needs profile's note when the main button is not asked about: its field is shorter than every fallback. */
+const MAIN_BUTTON_NOT_ASKED = (max) => ({
+  from: 'rules',
+  kind: MAIN_BUTTON_KIND,
+  code: 'main_button_not_asked',
+  reason: `the template's main button holds ${max} characters, fewer than any label Tracy offers, so the page writer words it`,
+  scope: 'question'
+})
+
 /** A Contract B question on `topic`; the choice with id `recommended` is marked recommended. */
 const question = (topic, prompt, choices, recommended, maxLength = FREE_TEXT_MAX[topic]) => ({
   schema: QUESTION_SCHEMA,
@@ -134,17 +151,27 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
   const asked = conflictQuestionsOf({ conflicts, items, sources, limits })
   const questions = [...asked.contact]
   const max = cappedLength(FREE_TEXT_MAX['main-button'], MAIN_BUTTON_KIND, limits)
-  const fitting = ctaChoices(facts).filter((c) => [...c.label].length <= max)
-  const cta = fitting.length ? fitting : [{ id: 'contact', label: 'Contact' }]
-  questions.push(
-    question(
-      'main-button',
-      'What should the main button on your site ask visitors to do?',
-      cta,
-      cta[0].id,
-      max
+  // Never offer a choice the answer settling would reject, and never a question without one (Contract B): when no
+  // label fits the template's button, the first generic fallback that fits is offered. A button shorter than every
+  // fallback (a store error) is not asked about: the writer words it, and the profile says why.
+  const fits = (c) => [...c.label].length <= max
+  const fitting = ctaChoices(facts).filter(fits)
+  const fallback = fallbackLabelsOf(language)
+    .map((label) => ({ id: 'contact', label }))
+    .find(fits)
+  const cta = fitting.length ? fitting : fallback ? [fallback] : []
+  const notes = []
+  if (cta.length)
+    questions.push(
+      question(
+        'main-button',
+        'What should the main button on your site ask visitors to do?',
+        cta,
+        cta[0].id,
+        max
+      )
     )
-  )
+  else notes.push(MAIN_BUTTON_NOT_ASKED(max))
   if (!CONTACT_KINDS.some((kind) => has(facts, kind))) {
     questions.push(
       question(
@@ -170,5 +197,5 @@ export function questionsOf({ facts, items, conflicts, sources, language, limits
     )
   }
   questions.push(...asked.price)
-  return { questions, accounting: asked.accounting }
+  return { questions, accounting: asked.accounting, notes }
 }

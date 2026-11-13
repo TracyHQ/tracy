@@ -6,6 +6,7 @@
 import { dataAccountingOf } from './plan-accounting.mjs'
 import {
   answerOverLimitProblems,
+  clearOverLimitValues,
   DATA_OVER_LIMIT_REASON,
   dropOverLimitData,
   overLimitLeftOut
@@ -36,6 +37,7 @@ export function replanRows(next, blocks, data, edited, changed, problems) {
       at: `facts[${d.id}].value`,
       message: `This value has ${d.length} characters; the section shows at most ${d.limit}.`
     })
+  clearOverLimitValues(limited.dropped, edited)
   const rows = planRows(limited.pages, blocks, data, { keepOrder: true })
   next.pages = rows.pages
   const label = (at) => next.pages.flatMap((p) => p.blocks).find((b) => at.includes(`blocks[${b.id}]`))?.label

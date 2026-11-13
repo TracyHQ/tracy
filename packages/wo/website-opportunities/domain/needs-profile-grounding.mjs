@@ -6,7 +6,9 @@
 //   hours, links) and, for an item, its name, its price, a quote's text and author, and any field not listed below.
 //   Text compares on letters and digits only, whole words (a number with its separators is one word), case and
 //   spacing aside; an address compares on letters and digits, whole words, its punctuation aside; a price compares by
-//   amount (`$20` is `$20.00`, `€15` is `15,00 €`, never `$120`), its currency signs and words inside the quote too;
+//   amount against the amounts the quote writes as money (`$20` is `$20.00`, `€15` is `15,00 €`, never `$120`, never
+//   the 20 of "a 20 minute class"), its currency signs and words inside the quote too; any other literal ignores the
+//   amounts written as money (a year is never proven by `$2010`);
 //   a phone compares as a number
 //   (`samePhone`); an email or a link compares as written, case aside. Hours may be rewritten as days and times
 //   (`Mo-Fr 07:00-22:00` for "Monday to Friday 7am to 10pm"): then every time in the value must be a time of the quote.
@@ -54,22 +56,45 @@ export const tokensIn = (value, evidence) => {
   return key !== '' && ` ${tokenKey(evidence)} `.includes(` ${key} `)
 }
 
+const NUMBER = String.raw`\d+(?:[.,']\d+)*`
+const CURRENCY = String.raw`\p{Sc}|(?<!\p{L})(?:USD|EUR|GBP|AUD|CAD|CHF|JPY|AED|SGD|NZD|HKD|INR|VND|SEK|NOK|DKK|PLN|CZK|BRL|MXN|ZAR)(?!\p{L})`
+const CURRENCY_WORD = String.raw`(?:dollars?|euros?|pounds?|dirhams?|francs?|yen|rupees?|kronor|kroner|reais|dong)(?!\p{L})`
+/** An amount written as money: a currency sign or code before or after it, or a currency word after it. */
+const MONEY = new RegExp(
+  String.raw`(?:${CURRENCY})\s?(${NUMBER})|(${NUMBER})\s?(?:${CURRENCY}|${CURRENCY_WORD})`,
+  'giu'
+)
+
 /**
- * The amounts written in `text`: `20`, `20.00` and `20,00` are 20, `1,200` and `1.200` are 1200, `20,50` is 20.5. A
- * separator before exactly two final digits marks the cents; any other separator groups thousands.
+ * The value of one written number: one or two digits after the last separator are the decimals (`20.5`, `15,00`); a
+ * group of exactly three digits after a separator groups thousands (`1,200`, `1.200`). Any other grouping (`1,2345`)
+ * is no amount (NaN), so it proves nothing.
  */
-function amountsOf(text) {
-  return (String(text).match(/\d+(?:[.,']\d+)*/g) ?? []).map((n) => {
-    const cents = /[.,](\d{2})$/.exec(n)
-    const whole = (cents ? n.slice(0, -3) : n).replace(/[.,']/g, '')
-    return Number(whole) + (cents ? Number(cents[1]) / 100 : 0)
-  })
+function amountOf(written) {
+  const groups = written.split(/[.,']/)
+  if (groups.length === 1) return Number(written)
+  const last = groups.at(-1)
+  const decimals = last.length <= 2
+  const whole = decimals ? groups.slice(0, -1) : groups
+  const grouped = whole.length === 1 || (whole[0].length <= 3 && whole.slice(1).every((g) => g.length === 3))
+  if (!grouped || (!decimals && last.length !== 3)) return Number.NaN
+  return Number(whole.join('')) + (decimals ? Number(last) / 10 ** last.length : 0)
 }
 
-/** Whether a price `value` is in `evidence`: the same amounts, its currency signs and its words. */
+/** Every number written in `text`, as an amount. */
+const amountsOf = (text) => (String(text).match(new RegExp(NUMBER, 'g')) ?? []).map(amountOf)
+/** The amounts `text` writes as money only (`$35`, `15,00 €`, `20 EUR`, `20 dollars`). */
+const moneyIn = (text) => [...String(text).matchAll(MONEY)].map((m) => amountOf(m[1] ?? m[2]))
+/** `text` with every amount written as money taken out: a year or a name is never proven by a price. */
+const withoutMoney = (text) => String(text).replace(MONEY, ' ')
+
+/**
+ * Whether a price `value` is in `evidence`: each of its amounts written as MONEY in the quote (never an equal number
+ * that is not a price, `20` in "a 20 minute class"), its currency signs and its words.
+ */
 function priceIn(value, evidence) {
   const amounts = amountsOf(value)
-  const quoted = new Set(amountsOf(evidence))
+  const quoted = new Set(moneyIn(evidence))
   const words = tokenKey(evidence).split(' ')
   const ownWords = tokenKey(value).match(/\p{L}+/gu) ?? []
   return (
@@ -99,11 +124,13 @@ function literalIn(role, value, evidence) {
   if (role === 'contact.email') return lower(evidence).includes(lower(value))
   if (role.endsWith('_url')) return linkless(evidence).includes(urlKey(value))
   if (PRICE_ROLES.has(role)) return priceIn(value, evidence)
+  // Any other literal is never proven by an amount the quote writes as money (`2010` by "$2010").
+  const quote = withoutMoney(evidence)
   if (role === 'contact.address')
-    return ` ${textKey(evidence)} `.includes(` ${textKey(value)} `) && textKey(value) !== ''
-  const words = tokensIn(value, evidence)
+    return ` ${textKey(quote)} `.includes(` ${textKey(value)} `) && textKey(value) !== ''
+  const words = tokensIn(value, quote)
   if (role === 'contact.hours' && !words) {
-    const [said, quoted] = [timesOf(value), new Set(timesOf(evidence))]
+    const [said, quoted] = [timesOf(value), new Set(timesOf(quote))]
     return said.length > 0 && said.every((t) => quoted.has(t))
   }
   return words

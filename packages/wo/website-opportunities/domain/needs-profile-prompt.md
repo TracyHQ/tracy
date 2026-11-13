@@ -38,8 +38,9 @@ Rules:
    of a post the business wrote) and `person.social_url` (one profile link of a person per row), and its own
    `evidence`, which holds every word of every value of the row, under the same rules as any fact. When the source
    writes a value in parts set apart, such as the days and the times of one session, give it as a list of those parts,
-   the days first and then the times, whatever order the source writes them in (`["Tue and Thu", "18:00 to 20:00"]`).
-   A row may hold `rows` of its own (the steps of one project). Never write a row the source does not state.
+   the days first and then the times, whatever order the source writes them in (`["Tue and Thu", "18:00 to 20:00"]`,
+   `["Lundi", "18h30 à 20h"]`); a session with only times gives the times alone (`["18:00 to 19:30"]`). A row may hold
+   `rows` of its own (the steps of one project). Never write a row the source does not state.
 6. For every picture with an `alt` or a caption that says what it shows, give a short label of what it shows.
 7. For every source, give the language its words are written in, as a language tag: a two letter code (`en`), with
    the region when the words show it (`pt-BR`). Never a language name.

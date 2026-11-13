@@ -138,7 +138,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
   )
   const language = siteLanguageOf(sources, said)
   const limits = blockStore ? kindLimitsOf(storeBlocksOf(blockStore, library)) : undefined
-  const { questions, accounting } = questionsOf({ facts, items, conflicts, sources, language, limits })
+  const { questions, accounting, notes } = questionsOf({ facts, items, conflicts, sources, language, limits })
   // Every conflict says whether a question asks it (`question`) or why none does (`notAsked`).
   const asked = new Map(
     accounting.map((a) => [a.conflict, a.question ? { question: a.question } : { notAsked: a.reason }])
@@ -163,7 +163,7 @@ export function needsProfileOf(research, reading, { blockStore, library } = {}) 
     ...(rows.length ? { rows } : {}),
     conflicts: conflicts.map((c) => ({ ...c, ...asked.get(c.id) })),
     questions,
-    dropped: [...unusableSourcesOf(research), ...structured.dropped, ...read.dropped, ...unread]
+    dropped: [...unusableSourcesOf(research), ...structured.dropped, ...read.dropped, ...unread, ...notes]
   }
 }
 
