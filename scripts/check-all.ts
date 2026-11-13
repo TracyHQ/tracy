@@ -239,6 +239,10 @@ const GATES: readonly Gate[] = [
   // (stale `baseHash`) or that leaves an evidence slot with no fact role (ADR 0037), fills a demo from
   // the wrong slot map with no error.
   { name: 'slot-roles', script: 'slot-roles/check.mjs' },
+  // An AI quickstart's block store description, page recipes and mapping file (ADR 0046): a field with a
+  // wrong type, a design value typed as text, a text field without a limit, a block without item counts
+  // or a no data rule, or an unknown data kind or block type is caught here, without building a site.
+  { name: 'ai-quickstart-contract', script: 'ai-quickstart/check.mjs' },
   // One schema and conformance corpus for every CMS; drift otherwise surfaces only on sites.
   { name: 'content-api', script: 'check-content-api.mjs' },
   // The public API reference is BUILT from the door's tables, so a route or field leaves it with no file

@@ -20,6 +20,7 @@ new doc **cannot** quietly end up with nothing pointing to it.
 |---|---|
 | [Adding a demo machine](references/adding-a-demo-machine.md) | Adding another machine to hold quickstart demos (DEMO_HOSTS) — the four things a new machine must have, and the four failures measured while building tracy-fleet-01 on 23/09/2026. |
 | [AI capabilities audit — 8 November 2026](references/ai-capabilities-audit-2026-11-08.md) | Evidence, fixes and remaining acceptance work for Tracy AI capabilities outside Voice. |
+| [AI quickstart contract: block store description, page recipes, mapping file](references/ai-quickstart-contract.md) | Format of the three declarations an AI quickstart carries (block store description, page recipes, mapping file) and the contract check that validates them in CI. |
 | [Tracy API changelog](references/api-changelog.md) | Dated changelog of the public Tracy API (the reference at docs.tracy.ai/api/reference/) — what was added, changed or removed, and when; the api-spec gate holds it to the committed snapshot. |
 | [Apply in the "Tell Tracy about your site" popup](references/apply-popup-site-description.md) | "Apply" in the "Tell Tracy about your site" popup — text and images following the customer's words, made while the site is installing and written to the site as soon as it is up; its shape, the language / fact / image rules, the three engines WordPress · Joomla · EmDash, measurements against "I will do it later", and known limits. |
 | [Ask the council before settling a plan](references/ask-the-council.md) | Ask the council (Codex gpt-6-astra) before settling a decision in a plan — when to ask, how to ask, and installing the claude-council plugin and Codex on a new machine. |
@@ -117,6 +118,9 @@ Numbering rules and the inheritance register: [adr/README.md](adr/README.md).
 | [0042. Site writer trial bench: the site-copy/1 contract and the copy check](adr/0042-site-writer-trial-bench-copy-contract-and-check.md) | 0042. Site writer trial bench: the site-copy/1 contract and the copy check |
 | [0043. Picture step: the site-pictures/1 manifest, the picture check and the fallback ladder](adr/0043-picture-step-manifest-check-and-fallback-ladder.md) | 0043. Picture step: the site-pictures/1 manifest, the picture check and the fallback ladder |
 | [0044. Write step and site check: one writer, one owner per slot, removal instead of hiding](adr/0044-write-step-and-site-check.md) | 0044. Write step and site check: one writer, one owner per slot, removal instead of hiding |
+| [0045. Sites are built from an AI quickstart, not by rewriting the demo](adr/0045-sites-are-built-from-an-ai-quickstart-not-from-the-demo.md) | 0045. Sites are built from an AI quickstart, not by rewriting the demo |
+| [0046. The model sees one CMS neutral site form; each template maps it](adr/0046-the-model-sees-one-cms-neutral-site-form.md) | 0046. The model sees one CMS neutral site form; each template maps it |
+| [0047. A failing build step stops and reports; no repair agent](adr/0047-a-failing-build-step-stops-and-reports.md) | 0047. A failing build step stops and reports; no repair agent |
 
 ## READMEs next to the code
 
