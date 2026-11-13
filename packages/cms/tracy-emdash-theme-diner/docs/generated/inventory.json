@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-diner",
     "label": "JA Diner",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "locales": {
     "default": "en",
@@ -965,6 +965,7 @@
     "src/lib/prose-text.ts",
     "src/lib/public-origin.ts",
     "src/lib/stamps.ts",
+    "src/lib/tel.ts",
     "src/lib/ui-words.ts",
     "src/lib/ui.ts",
     "src/lib/utils.ts",
@@ -992,9 +993,9 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:7a1ec752715daaa9a161fd45da67f6dd85a078f84c170c47a8f2868c0409fe51",
-    "package.json": "sha256:cae4f0e41663abae2681b4a1b4a3eb749337b7ad6adc0d04283fd61ce0b2a0e9",
+    "package.json": "sha256:887b4b02fa0a4c58c03ed728d947fb673c28094279f4dcca37484d0096d38a45",
     "pnpm-lock.yaml": "sha256:339daf44e378f8a7fa25e1eadaa17324022675b7f33887d213d5d68221d35a71",
-    "seed/field-map.json": "sha256:2aabae887448cdae62e7c9e2e6c0cd70e6a4b1a507b4d744fd63c64de2e06911",
+    "seed/field-map.json": "sha256:0d2efe032532872c9e5be488e75f1bfc92ca9744c38c5fb070af2e7e3099b6dd",
     "seed/media-map.json": "sha256:8ae8d2c1418af210d859f9b9223b78b5b07311ed977933a63a50b7f7fe0e4b17",
     "seed/seed.json": "sha256:5ac02a17ac52e79c1c89f4b2dc773310391ab30cc81f73ad08224c159b14d04a",
     "src/components/site/AboutFeatures.astro": "sha256:e4fb4ab66774a010e077529b1693d4d331a9b19ad435c65ce52705b5af97bec7",
@@ -1003,7 +1004,7 @@
     "src/components/site/AboutTeam.astro": "sha256:d082cc646277d82d1338531417f44f171945f940d8b7d51f71d22c5ed475246f",
     "src/components/site/BlogListCard.astro": "sha256:1207957ef36857d47cf5c5dfcbf7666a63eca0e75ea8d4e818f43e3f35945616",
     "src/components/site/BrandLogo.astro": "sha256:aebc041719be81813fcf9e040c3da26efadc21a3df296ecdd438cd107b8c4e64",
-    "src/components/site/Footer.astro": "sha256:e7f82ccfe842ae7d6a0bcb8ed3c6640f391e5906057cd93cb8557a18f564d1a6",
+    "src/components/site/Footer.astro": "sha256:1a80b70aebfd907e13d672e80ca4985e9e13454024423eb0429fa3426b989f06",
     "src/components/site/FormWords.astro": "sha256:c0788926837498f7e35d50aa48aae89181f80f60b017e2dd1511ecf24f0ae457",
     "src/components/site/Header.astro": "sha256:613fe5ce2b8d1c71af9d21bcee1ee017a1e24c12febc0420d10f807a437c9cdb",
     "src/components/site/PageOwner.astro": "sha256:d13983fefe942ab01a3e54089557972eb869be5d0cb39bc721921a774bd143bd",
@@ -1040,6 +1041,7 @@
     "src/lib/prose-text.ts": "sha256:13755292b7abdbc64a511467e36966a9536a9b22d882ccf65319c4e63b4a5f33",
     "src/lib/public-origin.ts": "sha256:b79178cd485af15bf5454d6c4cdedbd1529bca8bb2ece3f5690f620a9b05d60d",
     "src/lib/stamps.ts": "sha256:ac0b01f5b8e9fc82191d432dbc1d7dee58aeef38e30f07bd37f60c619ae28b8f",
+    "src/lib/tel.ts": "sha256:e4d78945f79f6e0f18ef5e21efe402133d4556fe3030885ca95907d8144c1077",
     "src/lib/ui-words.ts": "sha256:e3e5d1dab8b3b981efd7b180c95e7bfa1ad573dc65252198c8c006814e3eecbf",
     "src/lib/ui.ts": "sha256:f83d530f9d9b2c5107f21e14bb2bac40a9cca39733f2b661003250a2fe1171a9",
     "src/lib/utils.ts": "sha256:0ca01a948ba414a7c7348bda63bf68803a73dbbb6f10b6e8183280e405d3aa13",
@@ -1047,7 +1049,7 @@
     "src/middleware.ts": "sha256:c0ff3fefec37876df4f95f487c479cbd9fbcc8971affe2a1b69a765f2ef59cb0",
     "src/pages/[...path].astro": "sha256:56de83d89f6bdd50745bd8bbeb2d1391caa1d358f6a8ce6e77bc681ed22740b4",
     "src/pages/404.astro": "sha256:29234280a3170d62d82536d68e3766c17f5a59cd137bf0ae6b971e24137a488f",
-    "src/styles/global.css": "sha256:cfdf938139ac4974e28e8211bc323ba7660057060081b56defda0677e284a5b0",
+    "src/styles/global.css": "sha256:21ecb93f81fa7e6370f3c3b7d4f50ce53d2eb327be6419343d8076e35fb8bd47",
     "src/styles/pages/about.css": "sha256:d3813b4bf3d224d86ed0ace8bab77407460de36af368adf5ef7ee3e404497562",
     "src/styles/pages/blog.css": "sha256:2fa9641c09355d6f23b105138035594904666037660269e2e30c0c12eeec24f1",
     "src/styles/pages/contact.css": "sha256:87dfada2fcd57c13136109bf0918978d8a6bbb0dd891a953de667e51115cb57f",
@@ -1058,13 +1060,13 @@
     "src/views/About.astro": "sha256:f2aa2852e264f9daf11be875f0eec2bd3ade3f9b00ba91f9634ab2222c76bf4d",
     "src/views/BlogList.astro": "sha256:78f3f0c9384d836a7fec77631798302d7acf875b0e26718d05f871fdc222754d",
     "src/views/Contact.astro": "sha256:bb770a92fb44d9171506eb3c8abb1ab881ee25ce00321aa896ed7cfc16079ebe",
-    "src/views/Home.astro": "sha256:bc014bd8ff5a2e33cc19443ac6c9769513082192357566aab73a7c9de828ce38",
+    "src/views/Home.astro": "sha256:63e01a9940bd6fb1ba6c02dd2740b48634ebbf56e5b50ce46a48df4053367c27",
     "src/views/NotFound.astro": "sha256:9810312dfc16f7e5a0b2e516e07ab2a84de3a1341cf728c355caa31f50ee07b4",
     "src/views/Offers.astro": "sha256:cf6b5498cc021210e3ea0b4036453a51dae530419df9b2447e9531204c9a77e2",
     "src/views/Post.astro": "sha256:a5fa4522bb20f852d6eb24a4342a95937bc5bc55e2d1ea390f1d3efd89f0fe42",
     "src/views/Reservation.astro": "sha256:5e440bdc7da0eadcc0096e5dea40a4c67b65cf888bf3d19a5caf9114c83cb6e5",
     "src/views/Search.astro": "sha256:0f82d395c783589958a7051a04a06970a9d8f0bf43884d8a16aa7c388f04aa1f",
-    "template.config.json": "sha256:6909fb8c573a103453116613dced7ffd351eb79f11b2710381f94a76d5a136ee",
+    "template.config.json": "sha256:26b410ec8031e64f22ba1a6cb6eba0a07c3807dcbf48909eb82d751ee666ce73",
     "tools/forms.json": "sha256:b338c304ed95527ce5ac509a14e080734d616136c4a899053b62f24084445409",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

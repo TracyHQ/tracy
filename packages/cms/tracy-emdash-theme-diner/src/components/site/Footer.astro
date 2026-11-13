@@ -3,6 +3,7 @@ import type { Chrome } from '@/lib/chrome'
 import { stampFor } from '@/lib/stamps'
 import { fill } from '@/lib/i18n'
 import { liveLinks } from '@/lib/link-gate'
+import { telHref } from '@/lib/tel'
 
 interface Props {
   chrome: Chrome
@@ -33,7 +34,7 @@ const lines = (v: unknown) =>
 			</div>
 			<div>
 				<h3 {...$c('footer_contact_title')}>{site.footer_contact_title}.</h3>
-				<p {...$c('footer_phone')}>{lines(site.footer_phone).map((l, i) => <>{i > 0 && <br />}{l}</>)}</p>
+				<p {...$c('footer_phone')}>{lines(site.footer_phone).map((l, i) => <>{i > 0 && <br />}{telHref(l) ? <a href={telHref(l)!}>{l}</a> : l}</>)}</p>
 				{site.footer_email && <a href={`mailto:${site.footer_email}`} {...$c('footer_email')}>{site.footer_email}</a>}
 			</div>
 		</div>
