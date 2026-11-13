@@ -26,8 +26,8 @@ import { createPlaceRunner } from './place-executor.js'
 import { claimPlaceJob } from './place-jobs.js'
 import { isPlaceholderName, nameClaimsOf, withNameDecision } from './business-name.js'
 import { candidateAsRead } from '../domain/candidate-as-read.mjs'
-import { videoSize } from '../domain/video-size.mjs'
 import { withMediaAdmission } from './media-admission.js'
+import { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES, createMediaStore } from './media-store.js'
 import { LISTING_SOURCE, refsOfCandidate, refsOfUrls, SOCIAL_SOURCES, SOURCES } from './sources.js'
 
 const { hoursDisagree } = await import(pathToFileURL(path.join(WO_DOMAIN_DIR, 'opening-hours.mjs')).href)
@@ -56,23 +56,11 @@ export const EXECUTOR_LOCK_ID = 7_243_040
 const RESUMABLE = new Set(['timeout', 'rate_limited', 'quota'])
 const MEDIA_BUDGET = 300
 const WEBSITE_PAGES = 40
-export const IMAGE_MAX_BYTES = 25 * 1024 * 1024
-export const VIDEO_MAX_BYTES = 200 * 1024 * 1024
 const PLACE_FACTS_MAX_AGE_MS = 30 * 24 * 3600 * 1000
 const PLACE_PHOTOS_MAX = 10
 /** `wo_media.source` of a photo from the restaurant's Google Places listing. */
 export const GOOGLE_PLACES_SOURCE = 'google-places'
-/** The most of a caption or alt text kept with a picture: the picture planner reads its opening. */
-const TEXT_MAX = 2000
-export const EXT = {
-  'image/jpeg': 'jpg',
-  'image/png': 'png',
-  'image/gif': 'gif',
-  'image/webp': 'webp',
-  'image/avif': 'avif',
-  'video/mp4': 'mp4',
-  'video/webm': 'webm'
-}
+export { EXT, IMAGE_MAX_BYTES, VIDEO_MAX_BYTES }
 const FEATURE_OFF = Object.freeze({
   state: 'paused',
   lastError: { code: 'FEATURE_OFF' },
@@ -576,107 +564,9 @@ export function createExecutor({
     keyPrefix: `opportunities/${opp.account_id}/${opp.id}`
   })
 
-  /** The media row of one collected item (`owner`: `opportunityOwner`, or a place's in `place-executor.js`). */
-  function mediaRecord(domain, owner, m) {
-    return withMediaAdmission(m.kind === 'video' ? 'video' : 'image', () =>
-      admittedMediaRecord(domain, owner, m)
-    )
-  }
-
-  async function admittedMediaRecord(domain, owner, m) {
-    const declared = m.kind === 'video' ? 'video' : 'image'
-    const base = {
-      ...owner.fields,
-      kind: declared,
-      category: domain.classifyMedia({ caption: m.caption, alt: m.alt, url: m.url }),
-      caption: typeof m.caption === 'string' ? m.caption.slice(0, TEXT_MAX) : null,
-      alt: typeof m.alt === 'string' ? m.alt.slice(0, TEXT_MAX) : null,
-      source: m.source,
-      sourceUrl: m.url,
-      postId: typeof m.postId === 'string' ? m.postId : null,
-      postedAt:
-        m.postedAt && !Number.isNaN(Date.parse(m.postedAt)) ? new Date(m.postedAt).toISOString() : null
-    }
-    const reference = (reason) => ({
-      ...base,
-      status: 'reference',
-      reason,
-      sha256: domain.sha256Hex(new TextEncoder().encode(`ref:${m.url}`))
-    })
-    if (!objects) return reference('store_unavailable')
-    // A connector may name a larger copy first (Facebook's photo page, an image host's original) and keep
-    // the copy as seen in `fallbackUrl`: when the large one does not answer, is too large or is not a
-    // readable picture, the small one is still the restaurant's photo. `sourceUrl` stays the item's
-    // address (what `knownMediaUrls` and a supersede match); `labels.fetchedFrom` names the copy stored.
-    const candidates = [
-      m.url,
-      ...(typeof m.fallbackUrl === 'string' && m.fallbackUrl !== m.url ? [m.fallbackUrl] : [])
-    ]
-    let failure = 'download_failed'
-    for (const url of candidates) {
-      let got
-      try {
-        got = await domain.fetchLimited(url, {
-          ...domainDeps,
-          maxBytes: declared === 'video' ? VIDEO_MAX_BYTES : IMAGE_MAX_BYTES,
-          timeoutMs: 60_000
-        })
-      } catch (error) {
-        if (error?.code === 'URL_BLOCKED') return reference('url_blocked')
-        continue
-      }
-      if (!got || got.status >= 400 || got.truncated) {
-        failure = got?.truncated ? 'too_large' : 'download_failed'
-        continue
-      }
-      const record = await storedRecord(domain, owner, base, got.bytes, reference)
-      if (record.status === 'stored') {
-        if (url !== m.url) record.labels = { ...record.labels, fetchedFrom: url }
-        return record
-      }
-      if (!['not_media', 'image_unreadable'].includes(record.reason)) return record
-      failure = record.reason
-    }
-    return reference(failure)
-  }
-
-  /** The `wo_media` row of downloaded bytes: sniffed, measured, stored by sha256; `reference(reason)` otherwise. */
-  async function storedRecord(domain, owner, base, bytes, reference) {
-    const mime = domain.sniffMime(bytes)
-    const kind = mime?.startsWith('image/') ? 'image' : mime?.startsWith('video/') ? 'video' : null
-    if (!kind || !EXT[mime]) return reference('not_media')
-    let info = { width: null, height: null, palette: null, dhash: null, features: null }
-    if (kind === 'image') {
-      try {
-        info = await imageInfo(bytes)
-      } catch {
-        return reference('image_unreadable')
-      }
-    } else {
-      // A video's size from its own header, so its brief asset has an orientation and a grade (null when unreadable).
-      info = { ...info, ...videoSize(bytes) }
-    }
-    const sha256 = domain.sha256Hex(bytes)
-    // A place's picture goes to the shared bucket when this deployment has one (`opportunities/place-media-store.js`).
-    const objectKey =
-      (owner.shared && objects?.sharedKey?.({ ...base, sha256 }, EXT[mime])) ||
-      `${owner.keyPrefix}/${sha256}.${EXT[mime]}`
-    if (!objects || !(await objects.put(objectKey, bytes, mime))) return reference('store_failed')
-    return {
-      ...base,
-      kind,
-      status: 'stored',
-      sha256,
-      objectKey,
-      mime,
-      bytes: bytes.length,
-      width: info.width,
-      height: info.height,
-      palette: info.palette,
-      dhash: info.dhash ?? null,
-      labels: info.features ? { features: info.features } : null
-    }
-  }
+  // The media row of one collected item and of downloaded bytes (`media-store.js`), shared with the build chat's
+  // research before a site exists.
+  const { mediaRecord, storedRecord } = createMediaStore({ objects, imageInfo, domainDeps })
 
   /**
    * Photos of the Google Places listing (`googlePlacesPhotos` on), stored like any collected picture. Each keeps its
