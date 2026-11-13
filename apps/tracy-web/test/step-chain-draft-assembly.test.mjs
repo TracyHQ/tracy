@@ -5,74 +5,22 @@
 //
 //   node --test --test-concurrency=1 apps/tracy-web/test/step-chain-draft-assembly.test.mjs
 import assert from 'node:assert/strict'
-import { mkdtempSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import path from 'node:path'
-import { after, test } from 'node:test'
+import { test } from 'node:test'
 import { PAGE_WRITER_PROMPT } from 'website-opportunities/domain/page-writer.mjs'
 import { PLAN_COMPOSER_PROMPT } from 'website-opportunities/domain/plan-composer.mjs'
 import { ownershipOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { checkWriteOrder } from 'website-opportunities/domain/write-order-check.mjs'
 import { createStepChainEngine, STEP_CHAIN_STOPPED } from '../src/sites/brief-engines/step-chain.js'
 import { createStepChainSteps } from '../src/step-chain-steps.js'
+import { pool, records, setUp } from './step-chain-draft-harness.mjs'
 import {
   ACCOUNT_ID,
-  DRAFT_ID,
   HELD_NAME,
   HELD_PERSON,
   SITE_NAME,
   fakeBuildModel,
-  floristDraft,
-  floristIcons
+  heldIn
 } from './step-chain-draft-fixtures.mjs'
-
-const records = mkdtempSync(path.join(tmpdir(), 'step-chain-draft-'))
-after(() => rmSync(records, { recursive: true, force: true }))
-
-/** A pool no assembled step may use: every query fails the test. */
-const pool = {
-  async query(sql) {
-    throw new Error(`no query expected on an assembled run: ${sql}`)
-  }
-}
-
-/** The engine over the real steps with fake doors; `opened` lists the draft pictures the store was asked for. */
-async function setUp({ model = fakeBuildModel(), pictureBytes } = {}) {
-  const draft = await floristDraft()
-  const opened = []
-  const reads = { engine: 0, approved: 0, door: 0 }
-  const steps = createStepChainSteps({
-    pool,
-    config: {},
-    secret: 's'.repeat(32),
-    log: {},
-    recordsDir: records,
-    draft: {
-      readEngineDraft: async (accountId) => (reads.engine++, accountId === ACCOUNT_ID ? draft.engine : null),
-      draftPlanForBuild: async (accountId) => (
-        reads.approved++, accountId === ACCOUNT_ID ? draft.approved : null
-      ),
-      loadAiqKit: (slug) => (slug === draft.kit.template.slug ? draft.kit : null),
-      buildModel: async () => (reads.door++, model),
-      openDraftPicture: async (id, { accountId }) => {
-        opened.push({ id, accountId })
-        const bytes = pictureBytes ? pictureBytes(id) : id === 'draft-picture-3' ? null : Buffer.from(id)
-        return bytes ? { id, bytes, mime: 'image/png' } : null
-      },
-      iconLibrary: floristIcons
-    }
-  })
-  const engine = createStepChainEngine({ steps, applyFor: () => async () => ({}) })
-  const ctx = {
-    runId: 'run-meadowlight-1',
-    accountId: ACCOUNT_ID,
-    email: 'owner@meadowlight.example',
-    brief: { draftId: DRAFT_ID },
-    signal: new AbortController().signal,
-    progress: async () => {}
-  }
-  return { engine, steps, ctx, draft, model, opened, reads }
-}
 
 test('draft in, write order out: no plan is composed, nothing held reaches the model, the order passes its check', async () => {
   // The vision call labels the first photo with the held reviewer's name: the alt hand-off must not carry it.
@@ -96,10 +44,8 @@ test('draft in, write order out: no plan is composed, nothing held reaches the m
   )
   assert.deepEqual([...new Set(kinds)].sort(), ['icons', 'vision', 'writer'])
   // (b) No request to the model names the held business name or the held reviewer.
-  const sent = JSON.stringify(model.requests)
-  assert.ok(!sent.includes(HELD_NAME), 'the held business name reached the model')
-  assert.ok(!sent.includes(HELD_PERSON), 'the held reviewer reached the model')
-  assert.ok(sent.includes(SITE_NAME))
+  assert.deepEqual(heldIn(model.requests), [])
+  assert.ok(JSON.stringify(model.requests).includes(SITE_NAME))
   // (c) One copy step, every page at most two writer calls (the first writing and one rewrite).
   assert.equal(run.record.filter((r) => r.step === 'copy').length, 1)
   for (const page of run.inputs.copy.pages) assert.ok(page.attempts.length <= 2, page.id)
@@ -128,6 +74,7 @@ test('draft in, write order out: no plan is composed, nothing held reaches the m
   assert.equal(counter.alt, SITE_NAME)
   assert.ok(order.hidden.some((h) => h.at.includes('window')))
   assert.ok(!order.pictures.some((p) => p.frame.includes('window')))
+  assert.deepEqual(heldIn(order), [])
   // The record keeps the in-memory values by their own small record, never the whole profile.
   assert.ok(!JSON.stringify(run.record).includes(HELD_PERSON))
   await engine.dispose(run)

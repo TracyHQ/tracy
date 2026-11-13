@@ -35,8 +35,56 @@ export const floristKit = () => ({
   library: TRACY_LIBRARY
 })
 
-/** The approved draft: `{engine, approved}` as `readEngineDraft` and `draftPlanForBuild` answer them. */
-export async function floristDraft() {
+const held = (value) => ({ value, sources: ['site'], confidence: 'single-source' })
+/** A held fact and two held reviews, each with a portrait, as research would store them beside the plan. */
+const HELD_FACT = 'business.story'
+const HELD_ITEMS = [
+  {
+    id: 'quote-held-name',
+    kind: 'quote',
+    fields: {
+      'quote.text': held(`${HELD_NAME} made the flowers for our wedding tables.`),
+      'quote.author_name': held('Tamsin Vale'),
+      'quote.author_image': held('https://larkspur-florist.example/img/review-tamsin.jpg')
+    },
+    sources: ['site']
+  },
+  {
+    id: 'quote-held-person-portrait',
+    kind: 'quote',
+    fields: {
+      'quote.text': held('A posy for every season, always fresh.'),
+      'quote.author_name': held(HELD_PERSON),
+      'quote.author_image': held('https://larkspur-florist.example/img/review-pellam.jpg')
+    },
+    sources: ['site']
+  }
+]
+
+/**
+ * The held business name and the held person in every form a stored profile has them: a fact naming the business, a
+ * review quoting the name, reviews by the held person (the profile's own and one more with a portrait), and the
+ * profile's `withheld` (`names`, `people`). With `inPlan`, the stored plan shows that held data too (a plan stored
+ * before the owner held it): the chain must still keep it from every model call and from the write order.
+ */
+function holdEverywhere(needsProfile, plan, inPlan) {
+  needsProfile.facts[HELD_FACT] = [held(`${HELD_NAME} has tied flowers in Ambermoor since 1998.`)]
+  needsProfile.items.quote.push(...structuredClone(HELD_ITEMS))
+  if (!inPlan) return plan
+  const out = structuredClone(plan)
+  const home = out.pages[0]
+  const reviews = home.blocks.find((b) => b.block === 'tracy-reviews')
+  const ownQuote = needsProfile.items.quote.find((q) => q.fields['quote.author_name']?.value === HELD_PERSON)
+  reviews.data.push(ownQuote.id, ...HELD_ITEMS.map((i) => i.id))
+  home.blocks.find((b) => b.block === 'masthead').data.push(HELD_FACT.replace('.', '-'))
+  return out
+}
+
+/**
+ * The approved draft: `{engine, approved}` as `readEngineDraft` and `draftPlanForBuild` answer them.
+ * @param {{heldInPlan?: boolean}} [options] `heldInPlan`: the stored plan shows the held data (`holdEverywhere`)
+ */
+export async function floristDraft({ heldInPlan = false } = {}) {
   const kit = floristKit()
   const withheld = { name: true, siteName: SITE_NAME, people: [HELD_PERSON] }
   const profile = withWithheld(floristProfile(), { withheld }, kit)
@@ -58,6 +106,7 @@ export async function floristDraft() {
     model: scriptedModel(JSON.stringify(floristComposition(services, photos)))
   })
   const needsProfile = composerContextOf(input).profile
+  const approvedPlan = holdEverywhere(needsProfile, plan, heldInPlan)
   const gallery = needsProfile.items.gallery
   // The two first photos came without a label: the pictures step labels them with one vision call.
   for (const g of gallery.slice(0, 2)) g.label = null
@@ -78,7 +127,7 @@ export async function floristDraft() {
       research: { brief: {}, manifest, profile: needsProfile },
       fault: null
     },
-    approved: { draftId: DRAFT_ID, plan, lastEdit: null }
+    approved: { draftId: DRAFT_ID, plan: approvedPlan, lastEdit: null }
   }
 }
 
@@ -128,3 +177,14 @@ export function fakeBuildModel({ label = () => undefined, writer } = {}) {
 }
 
 export { floristIcons }
+
+/** Text folded to lower case words, so a held name is found in a slug (`pellam-orrick`) as in prose. */
+export const folded = (text) =>
+  ` ${String(text)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()} `
+
+/** The held texts found in `value` (any JSON), folded: none means nothing held is in it. */
+export const heldIn = (value) =>
+  [HELD_NAME, HELD_PERSON].filter((h) => folded(JSON.stringify(value)).includes(folded(h)))
