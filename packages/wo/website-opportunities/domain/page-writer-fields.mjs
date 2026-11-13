@@ -6,11 +6,16 @@
 //                    (Contract A `noData`: `hide`, or `fallback` with what shows instead); never asked of the model
 //   from: 'writer'   a COPY field: the model writes it (a slot)
 //
+// One copy role is kept verbatim (#597): a `contact.cta_label` block field whose block data holds the main button label
+// the customer answered (`settleAnswers`, source `customer-answer`) is `from: 'data'` with that exact value; the model
+// never rewrites it. A label the customer did not answer stays copy.
+//
 // Data comes only from the plan data the block shows (`block.data`, plan ids of `planDataOf`): a fact of the field's
 // kind for a block field, the item's own field value for an item field. The block store and the library are read for
 // their declared shape only; a stray demo or example value on a block or a field is never read.
 import { limitOf } from './field-place-limits.mjs'
 import { WRITER_FIELD_TYPES } from './page-copy-check.mjs'
+import { ANSWER_SOURCE } from './plan-answers.mjs'
 import { roleOrigin } from './page-writer-roles.mjs'
 import { rowFieldsOf } from './page-writer-rows.mjs'
 
@@ -23,12 +28,16 @@ const textOf = (value) =>
       : null
 const isText = (value) => textOf(value) !== null && textOf(value).trim() !== ''
 
-/** A failure of the writer, with a code the step chain reports (ADR 0047, #591). `details` keeps what the report needs. */
+/**
+ * A failure of the writer, with a code the step chain reports (ADR 0047, #591). `details` keeps what the report needs.
+ * `noRerun: true` when the writer already made its own second attempt: the engine stops at once (#597).
+ */
 export class PageWriterError extends Error {
-  constructor(code, message, details = {}) {
+  constructor(code, message, details = {}, { noRerun = false } = {}) {
     super(`${code}: ${message}`)
     this.code = code
     this.details = details
+    if (noRerun) this.noRerun = true
   }
 }
 
@@ -88,6 +97,26 @@ function dataValueOf({ field, block, item, byId }) {
   return undefined
 }
 
+/** The copy roles the customer's own answer fixes word for word, when the block's plan data holds that answer. */
+export const ANSWERED_COPY_ROLES = Object.freeze(['contact.cta_label'])
+
+/** The customer's answered value of a copy field (`ANSWERED_COPY_ROLES`) from the block's plan data, else undefined. */
+function answeredValueOf({ field, block, item, byId }) {
+  if (item !== undefined || !ANSWERED_COPY_ROLES.includes(field.kind)) return undefined
+  for (const id of list(block.data)) {
+    const entry = byId.get(id)
+    if (
+      entry?.what === 'fact' &&
+      entry.kind === field.kind &&
+      list(entry.source?.sources).includes(ANSWER_SOURCE) &&
+      typeof entry.entry.value === 'string' &&
+      entry.entry.value.trim() !== ''
+    )
+      return { value: entry.entry.value, data: id }
+  }
+  return undefined
+}
+
 function noDataOf(description) {
   const rule = description?.noData?.rule === 'fallback' ? 'fallback' : 'hide'
   return rule === 'fallback'
@@ -124,7 +153,10 @@ export function pageFieldsOf(page, { blocks, byId, data = { byId }, placeLimits 
         ...(item === undefined ? {} : { item }),
         field: declared(field, placeLimits)
       }
-      if (origin === 'copy') return out.push({ ...base, from: 'writer' })
+      if (origin === 'copy') {
+        const answered = answeredValueOf({ field, block, item, byId })
+        return out.push(answered ? { ...base, from: 'data', ...answered } : { ...base, from: 'writer' })
+      }
       const found = dataValueOf({ field, block, item, byId })
       out.push(
         found ? { ...base, from: 'data', ...found } : { ...base, from: 'no-data', ...noDataOf(description) }

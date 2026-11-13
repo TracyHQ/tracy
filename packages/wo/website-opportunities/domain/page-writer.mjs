@@ -7,9 +7,9 @@
 // Right after a page is written the pure copy check (`page-copy-check.mjs`) measures every field against its declared
 // type and limit, and holds that copy carries no phone number, email address, URL or price the plan data does not hold
 // (`invented_data`), and that a child list row's copy carries no value of another row (`other_row_data`). Only the
-// failing fields go back to the model, in ONE more call for that page. A field that still fails
-// throws a `PageWriterError` with code `copy_check_failed` and every failing field, for the stop and report rule
-// (ADR 0047, #591).
+// failing fields go back to the model, in ONE more call for that page. A field that still fails throws a
+// `PageWriterError` with code `copy_check_failed`, every failing field and the `attempts` made, marked `noRerun`: the
+// writer made its own second attempt, so the build stops at once (ADR 0047, #591; #597).
 import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { charCount, checkPageCopy } from './page-copy-check.mjs'
@@ -121,7 +121,8 @@ function dataOverLimit(fieldsByPage) {
  * @param {{plan: object, profile: object, blockStore: object, library?: object[], model: (request: object) =>
  *   Promise<unknown>, signal?: AbortSignal}} input `plan`: the approved plan (`composePlan`); `profile`: the needs
  *   profile it was composed from, which holds the item field values
- * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[]}>, prompt: object}>} each page's
+ * @returns {Promise<{pages: Array<{id: string, fields: object[], attempts: object[]}>, prompt: object}>} `attempts`:
+ *   one entry per call that page took (1, or 2 after a rewrite); each page's
  *   text fields in block order: `{key, block, item?, row?, list?, field, kind, from}` plus `value` for `from: 'writer'` (written by
  *   the model) and `from: 'data'` (copied, with `data`: the plan id it came from), or `action` (`hide` | `fallback`)
  *   and `fallback` for `from: 'no-data'`
@@ -160,11 +161,14 @@ export async function writePages({ plan, profile, blockStore, library = [], mode
   if (rejected) throw rejected.reason
   const pages = settled.map((s) => s.value)
   const failing = pages.flatMap((p) => p.failing.map((f) => ({ page: p.id, ...f })))
+  // The writer already made its own second attempt (the rewrite): the engine does not run it twice more (#597, Q4).
+  // `attempts` is how many calls the most tried page took, the attempt the build reports for the step.
   if (failing.length > 0)
     throw new PageWriterError(
       'copy_check_failed',
       `${failing.length} field(s) still fail the copy check after one rewrite: ${failing.map((f) => f.key).join(', ')}`,
-      { failing, pages }
+      { failing, pages, attempts: Math.max(...pages.map((p) => p.attempts.length)) },
+      { noRerun: true }
     )
   return {
     pages: pages.map(({ id, fields, attempts }) => ({ id, fields, attempts })),

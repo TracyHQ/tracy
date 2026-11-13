@@ -1,7 +1,8 @@
 // The pictures step of an AI quickstart build (ticket #595, spec #577): label the own pictures, then assign a picture to
-// every frame of the approved plan. Labelling comes first, always: no picture is placed without a label. A labelling
-// failure throws `PicturePolicyError` (`picture_labelling_failed`) for the step chain's stop and report rule (ADR 0047,
-// #591): the step is re-run once from the same inputs, then the build stops and the report names the `pictures` step.
+// every frame of the approved plan (`placePictures`); the icons follow the written copy (`selectBuildIcons`, #597).
+// Labelling comes first, always: no picture is placed without a label. A labelling failure throws `PicturePolicyError`
+// (`picture_labelling_failed`) for the step chain's stop and report rule (ADR 0047, #591): the step is re-run once
+// from the same inputs, then the build stops and the report names the `pictures` step.
 // Generating the pictures themselves is the drawer's work; this step only says which frames get one, and how.
 import { ownPicturesOf } from './picture-frames.mjs'
 import { iconProblemsOf } from './icon-check.mjs'
@@ -56,66 +57,99 @@ export function differenceOf(assignment, approved, pictures) {
   return { approved: want, placed, unplaced, empty: leftOutOf(assignment.frames) }
 }
 
-/**
- * Run the pictures step over an approved plan: label the own pictures, assign the picture frames, then select the icon
- * of every icon typed field from the written copy (`icon-selection.mjs`).
- * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
- *   pictures?: object[], copy?: {pages: object[]}, iconLibrary?: {set: string, icons: object[]}, model?: Function,
- *   looks?: object}} input `pictures` adds own picture records the profile does not hold (a video of the business's
- *   own channel); `vision` is the standard build model's vision call (the labelling) and `model` its text call (the
- *   icon keywords and ranking; required when the plan places a content icon field, `icon_ranker_missing` otherwise,
- *   never the vision call); `copy` is the page writer's output, needed when the plan places an icon field
- * @returns {Promise<{frames: object[], reduced: object[], counts: object, notes: object[], leftOut: object[],
- *   difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null,
- *   icons: object[], iconCounts: object, iconPrompt: object | null, iconKeywordsPrompt: object | null,
- *   droppedFrames: object[]}>} `notes` holds the assignment's notes and the icon selection's
- *   (`icon_theme_undeclared`, `icons_all_hidden`) `difference` is set whenever the placed own or
- *   generated count is not the approved one (`differenceOf`)
- */
-export async function picturesStep({
-  plan,
-  profile,
-  blockStore,
-  library = [],
-  vision,
-  pictures = [],
-  copy,
-  iconLibrary,
-  model,
-  looks
-}) {
+/** An approved plan has pages; `Failure` is the error class of the calling step. */
+const planPages = (plan, Failure) => {
   if (!Array.isArray(plan?.pages) || plan.pages.length === 0)
-    throw new PicturePolicyError('plan_missing', 'the pictures step needs an approved plan with pages')
+    throw new Failure('plan_missing', 'the pictures step needs an approved plan with pages')
+}
+
+/**
+ * Place the pictures of an approved plan: label the own pictures, then assign a picture to every frame. Needs no copy,
+ * so the step chain runs it beside the page writers (#597).
+ * @param {{plan: object, profile: object, blockStore: object, library?: object[], vision: Function,
+ *   pictures?: object[]}} input `pictures` adds own picture records the profile does not hold (a video of the
+ *   business's own channel); `vision` is the standard build model's vision call (the labelling)
+ * @returns {Promise<{frames: object[], reduced: object[], droppedFrames: object[], counts: object, notes: object[],
+ *   leftOut: object[], difference: object | null, labelled: string[], prompt: {file: string, sha256: string} | null}>}
+ *   `difference` is set whenever the placed own or generated count is not the approved one (`differenceOf`)
+ */
+export async function placePictures({ plan, profile, blockStore, library = [], vision, pictures = [] }) {
+  planPages(plan, PicturePolicyError)
   const data = planDataOf(profile)
   const records = [...ownPicturesOf(data), ...list(pictures)]
   const labelling = await labelOwnPictures({ pictures: records, vision })
   // A plan with no pictures summary approved nothing: the count is read as zero and reported (`approvedCountOf`).
   const approved = plan.pictures ?? {}
-  const blocks = blocksOf(blockStore, library)
   const assignment = assignPictures({
     pages: plan.pages,
-    blocks,
+    blocks: blocksOf(blockStore, library),
     data,
     pictures: labelling.pictures,
     approved
   })
-  // The icon keywords and ranking are TEXT calls: they take `model` only, never the vision door.
-  const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model, looks })
-  const crossed = iconProblemsOf(icons, { pictureFrames: assignment.frames })
-  if (crossed.length)
-    throw new IconSelectionError('icon_policy_broken', 'an icon field was given a picture', {
-      problems: crossed
-    })
   return {
     ...assignment,
-    icons: icons.icons,
-    iconCounts: icons.counts,
-    iconPrompt: icons.prompt,
-    iconKeywordsPrompt: icons.keywordsPrompt,
-    notes: [...assignment.notes, ...icons.notes],
     leftOut: leftOutOf(assignment.frames),
     difference: differenceOf(assignment, approved, labelling.pictures),
     labelled: labelling.labelled,
     prompt: labelling.prompt
   }
+}
+
+/**
+ * Select the icon of every icon typed field from the written copy (`icon-selection.mjs`), AFTER the page writers, then
+ * cross-check it against the placed picture frames: an icon field given a picture is `icon_policy_broken`.
+ * @param {{plan: object, profile: object, blockStore: object, library?: object[], copy?: {pages: object[]},
+ *   iconLibrary?: {set: string, icons: object[]}, model?: Function, looks?: object, pictureFrames: object[]}} input
+ *   `model` is the standard build model's text call (the icon keywords and ranking; required when the plan places a
+ *   content icon field, `icon_ranker_missing` otherwise, never the vision call); `copy` is the page writers' output,
+ *   needed when the plan places an icon field; `pictureFrames` the `frames` of `placePictures`
+ * @returns {Promise<{icons: object[], iconCounts: object, notes: object[], iconPrompt: object | null,
+ *   iconKeywordsPrompt: object | null}>} `notes`: the icon selection's (`icon_theme_undeclared`, `icons_all_hidden`)
+ */
+export async function selectBuildIcons({
+  plan,
+  profile,
+  blockStore,
+  library = [],
+  copy,
+  iconLibrary,
+  model,
+  looks,
+  pictureFrames
+}) {
+  planPages(plan, IconSelectionError)
+  if (!Array.isArray(pictureFrames))
+    throw new IconSelectionError(
+      'picture_frames_missing',
+      'the icons are checked against the placed picture frames: give the frames of placePictures'
+    )
+  const data = planDataOf(profile)
+  const blocks = blocksOf(blockStore, library)
+  // The icon keywords and ranking are TEXT calls: they take `model` only, never the vision door.
+  const icons = await selectIcons({ plan, data, blocks, copy, iconLibrary, model, looks })
+  const crossed = iconProblemsOf(icons, { pictureFrames })
+  if (crossed.length)
+    throw new IconSelectionError('icon_policy_broken', 'an icon field was given a picture', {
+      problems: crossed
+    })
+  return {
+    icons: icons.icons,
+    iconCounts: icons.counts,
+    notes: icons.notes,
+    iconPrompt: icons.prompt,
+    iconKeywordsPrompt: icons.keywordsPrompt
+  }
+}
+
+/**
+ * The whole pictures step in one call, as before the step chain split it (#597): `placePictures`, then
+ * `selectBuildIcons` over its frames. Same inputs and same output as the two run in turn; `notes` holds the
+ * assignment's notes, then the icon selection's.
+ * @returns {Promise<object>} the fields of both results
+ */
+export async function picturesStep(input) {
+  const placed = await placePictures(input)
+  const icons = await selectBuildIcons({ ...input, pictureFrames: placed.frames })
+  return { ...placed, ...icons, notes: [...placed.notes, ...icons.notes] }
 }
