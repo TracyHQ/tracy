@@ -1944,8 +1944,7 @@
     "class": "inline-markup-in-text",
     "why": "The stored value of these text fields carries markup around or between its words: an accent span or a line break in a heading, a styled unit span in a price, a paragraph wrapper around a body. This version of the block store format does not describe that markup, so it is declared here as one class with owners instead of being modelled field by field.",
     "owners": {
-      "#584": "how the mapping file writes a value that carries inline markup (which wrapper and which inner element keep the template's look)",
-      "#585": "the gate that catches a broken look when such a value is written as plain words"
+      "#585": "how a value that carries inline markup is written (which wrapper and which inner element keep the template's look; the mapping file of #584 gives each such field the location of its stored element and leaves the markup to this ticket), and the gate that catches a broken look when such a value is written as plain words"
     },
     "count": 35,
     "fields": [
