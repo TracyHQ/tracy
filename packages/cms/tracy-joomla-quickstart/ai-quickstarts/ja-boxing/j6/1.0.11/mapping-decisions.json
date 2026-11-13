@@ -345,7 +345,7 @@
         "control": ["button-label", "navigation-url"],
         "by": "rows.remove",
         "slots": ["module-157.22", "module-157.23"],
-        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow); rows.remove takes the element out. Measured on the blank site: the element left the value and the page"
+        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow): the element is taken out of the value, by the plugin's rows.remove for a block written in place, by the build on the value it writes for a copy. Measured on the blank site: the element left the value and the page"
       },
       {
         "rows": "items",
@@ -363,7 +363,7 @@
             "features-intro[title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-160": [
@@ -426,7 +426,7 @@
             "teams-intro[data][title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       },
       {
         "rows": "social",
@@ -445,7 +445,7 @@
           "parent": ["features-intro"],
           "arrays": ["features-intro[description]", "features-intro[title]"]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-166": [
@@ -470,7 +470,7 @@
           "parent": ["gallery", "isotope[gallery]"],
           "arrays": ["isotope[gallery][alt]", "isotope[gallery][img]", "isotope[gallery][selectitem]"]
         },
-        "why": "the template prints one card for every row its lists hold (gallery), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (gallery), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-167": [
@@ -497,7 +497,7 @@
             "features-intro[title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       },
       {
         "rows": "features",
@@ -516,7 +516,7 @@
           "parent": ["social"],
           "arrays": ["social-intro[font-icon]", "social-intro[link]", "social-intro[title]"]
         },
-        "why": "the template prints one card for every row its lists hold (social: an empty row is an empty circle linking to the home page), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (social: an empty row is an empty circle linking to the home page), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-172": [
@@ -541,7 +541,7 @@
             "features-intro[title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-176": [
@@ -549,7 +549,7 @@
         "control": ["button-label", "button-link"],
         "by": "rows.remove",
         "slots": ["module-176.0", "module-176.1"],
-        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow); rows.remove takes the element out. Measured on the blank site: the element left the value and the page"
+        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow): the element is taken out of the value, by the plugin's rows.remove for a block written in place, by the build on the value it writes for a copy. Measured on the blank site: the element left the value and the page"
       }
     ],
     "block-177": [
@@ -574,7 +574,7 @@
             "features-intro[intro-img]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-178": [
@@ -604,7 +604,7 @@
             "teams-intro[data][title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       },
       {
         "rows": "social",
@@ -623,7 +623,7 @@
           "parent": ["hero"],
           "arrays": ["hero[social-intro][font-icon]", "hero[social-intro][link]", "hero[social-intro][title]"]
         },
-        "why": "the template prints one card for every row its lists hold (hero social: an empty row is an empty circle linking to the home page), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (hero social: an empty row is an empty circle linking to the home page), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-181": [
@@ -648,7 +648,7 @@
           "parent": ["features-intro"],
           "arrays": ["features-intro[img-icon]", "features-intro[link]", "features-intro[title]"]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ],
     "block-182": [
@@ -678,7 +678,7 @@
             "teams-intro[data][title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (teams), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       },
       {
         "rows": "social",
@@ -710,7 +710,7 @@
             "features-intro[title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       },
       {
         "rows": "features",
@@ -742,7 +742,7 @@
             "features-intro[title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       },
       {
         "rows": "features",
@@ -755,7 +755,7 @@
         "control": ["button-label", "navigation-url"],
         "by": "rows.remove",
         "slots": ["module-190.22", "module-190.23"],
-        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow); rows.remove takes the element out. Measured on the blank site: the element left the value and the page"
+        "why": "the button is an element of the stored HTML value, printed as stored (an empty one is a box with an arrow): the element is taken out of the value, by the plugin's rows.remove for a block written in place, by the build on the value it writes for a copy. Measured on the blank site: the element left the value and the page"
       },
       {
         "rows": "items",
@@ -773,7 +773,7 @@
             "features-intro[title]"
           ]
         },
-        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; the rows are the plugin's reviewed rows of the released contract, which the blank site keeps unchanged"
+        "why": "the template prints one card for every row its lists hold (features-intro), filled or not, so an unfilled row prints an empty card; every block holding such rows is a copy, so the build cuts the rows it does not fill out of the copy's parallel lists (content.update) and the copy prints only the rows left (measured)"
       }
     ]
   },
@@ -934,6 +934,11 @@
       "entity": "module-191",
       "column": "title",
       "why": "the module's title (More Blogs) is the label the site's administrator sees in the module list: the module is set not to show it (showtitle 0) and no page prints it; it names the block, not the business, so the blank site keeps it"
+    },
+    {
+      "entity": "module-187",
+      "column": "title",
+      "why": "the module's title (Offcanvas) is the label the site's administrator sees in the module list: the module is set not to show it (showtitle 0) and no page prints it; it names the block, not the business, so the blank site keeps it. The phone menu writes no other place of the module: its items are the main menu items the build creates"
     }
   ],
   "demoFacts": {
@@ -943,5 +948,415 @@
     "address": ["4517 Washington Ave", "Manchester, Kentucky 39495"],
     "email": ["sale@getfit", "sale@no-reply"],
     "logo": ["images/joomlart/logo/item-1.png", "images/joomlart/logo/item-2.png"]
+  },
+  "placements": {
+    "header": {
+      "menu": {
+        "menutype": "mainmenu",
+        "why": "the header draws the main menu (T4 megamenu, mainmenu): the build creates the page menu items in this menu"
+      }
+    },
+    "block-176": {
+      "entity": "module-176",
+      "assign": "pages",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set to show its title (showtitle 1), but the header-r position of the layout prints no module title"
+      }
+    },
+    "block-187": {
+      "entity": "module-187",
+      "assign": "pages",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "menu": {
+        "menutype": "mainmenu",
+        "why": "the phone menu (mod_menu) shows the main menu the header shows; its items are the ones the build creates for the header"
+      }
+    },
+    "block-170": {
+      "entity": "module-170",
+      "assign": "pages",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-169": {
+      "entity": "module-169",
+      "assign": "pages",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-175": {
+      "entity": "module-175",
+      "assign": "pages",
+      "title": {
+        "drawn": "content",
+        "field": { "block": "block-175", "name": "heading" },
+        "why": "the module shows its title (showtitle 1): the footer prints it as the heading of the contact column"
+      }
+    },
+    "block-173": {
+      "entity": "module-173",
+      "assign": "pages",
+      "title": {
+        "drawn": "content",
+        "field": { "block": "block-173", "name": "heading" },
+        "why": "the module shows its title (showtitle 1): the footer prints it as the heading of the menu column"
+      },
+      "menu": {
+        "menutype": "classes",
+        "why": "the module shows the classes menu, which the blank site keeps empty: it draws nothing until the build creates the class menu items in it (measured)"
+      }
+    },
+    "block-174": {
+      "entity": "module-174",
+      "assign": "pages",
+      "title": {
+        "drawn": "content",
+        "field": { "block": "block-174", "name": "heading" },
+        "why": "the module shows its title (showtitle 1): the footer prints it as the heading of the menu column"
+      },
+      "menu": {
+        "menutype": "site-map",
+        "why": "the module shows the site-map menu, which the blank site keeps empty: it draws nothing until the build creates its menu items in it"
+      }
+    },
+    "block-168": {
+      "entity": "module-168",
+      "assign": "pages",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set to show its title (showtitle 1), but the copyright position of the layout prints no module title"
+      }
+    },
+    "block-17": {
+      "entity": "module-17",
+      "assign": "pages",
+      "title": {
+        "drawn": "aria-label",
+        "why": "the breadcrumbs print the module title as the aria-label of their nav element (measured), never as visible words; the kept title Breadcrumbs is interface words valid on every site"
+      }
+    },
+    "block-156": {
+      "entity": "module-156",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set to show its title (showtitle 1), but the hero position of the layout prints no module title"
+      }
+    },
+    "block-157": {
+      "entity": "module-157",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-160": {
+      "entity": "module-160",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-160", "column": "params", "jsonPath": ["catid", 0] },
+          "from": "buildSets",
+          "why": "a copy keeps the demo category 9, which the blank site removed: it lists nothing and prints an empty section (measured: about 376 px with only the section button left). The build writes the category it files the class pages in on every copy"
+        },
+        {
+          "location": { "entity": "module-160", "column": "params", "jsonPath": ["section-link"] },
+          "from": "hides",
+          "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        }
+      ]
+    },
+    "block-161": {
+      "entity": "module-161",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-163": {
+      "entity": "module-163",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-163", "column": "params", "jsonPath": ["section-link"] },
+          "from": "hides",
+          "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        }
+      ]
+    },
+    "block-165": {
+      "entity": "module-165",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-166": {
+      "entity": "module-166",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-166", "column": "params", "jsonPath": ["section-link"] },
+          "from": "hides",
+          "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        }
+      ]
+    },
+    "block-171": {
+      "entity": "module-171",
+      "assign": "pages",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "why": "one copy for every page: the footer social rows are cut on the copy with content.update, since the plugin refuses a row removal on the blank site contract (no reviewed row of it)"
+    },
+    "block-162": {
+      "entity": "module-162",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "why": "one copy per page holding the one masthead row keyed to that page (listsAsFields): the other rows are cut on the copy, so no row names a page the site lacks"
+    },
+    "block-158": {
+      "entity": "module-158",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-184": {
+      "entity": "module-184",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "holds": {
+        "blocks": ["block-167", "block-188", "block-189"],
+        "position": {
+          "entity": "module-184",
+          "column": "params",
+          "nestedJson": "jatools-config",
+          "jsonPath": ["container-tabs", "container-tabs[position]", 0]
+        },
+        "why": "the container draws every module of the position it names that is assigned to the page. Two copies naming one position each draw the tabs of both (measured); a position of its own per container copy, written here and as the position of the copies it holds, keeps two plans blocks on one page apart (measured)"
+      }
+    },
+    "block-167": {
+      "entity": "module-167",
+      "assign": "page",
+      "title": {
+        "drawn": "tab-label",
+        "field": { "block": "block-184", "name": "heading-3" },
+        "why": "the plans container prints the title of each module it holds as the label of that module tab (measured on a copy: the copy title was the tab label)"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-167", "column": "position" },
+          "from": "container",
+          "why": "the copy takes the position its container copy draws (holds.position of block-184), so two plans containers on one page each draw their own tabs"
+        }
+      ],
+      "inside": {
+        "block": "block-184",
+        "why": "the plans container (acm container-tabs) draws every module of its position that is assigned to the page; a copy of this block placed alone draws nowhere"
+      }
+    },
+    "block-188": {
+      "entity": "module-188",
+      "assign": "page",
+      "title": {
+        "drawn": "tab-label",
+        "field": { "block": "block-184", "name": "heading" },
+        "why": "the plans container prints the title of each module it holds as the label of that module tab (measured on a copy: the copy title was the tab label)"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-188", "column": "position" },
+          "from": "container",
+          "why": "the copy takes the position its container copy draws (holds.position of block-184), so two plans containers on one page each draw their own tabs"
+        }
+      ],
+      "inside": {
+        "block": "block-184",
+        "why": "the plans container (acm container-tabs) draws every module of its position that is assigned to the page; a copy of this block placed alone draws nowhere"
+      }
+    },
+    "block-189": {
+      "entity": "module-189",
+      "assign": "page",
+      "title": {
+        "drawn": "tab-label",
+        "field": { "block": "block-184", "name": "heading-4" },
+        "why": "the plans container prints the title of each module it holds as the label of that module tab (measured on a copy: the copy title was the tab label)"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-189", "column": "position" },
+          "from": "container",
+          "why": "the copy takes the position its container copy draws (holds.position of block-184), so two plans containers on one page each draw their own tabs"
+        }
+      ],
+      "inside": {
+        "block": "block-184",
+        "why": "the plans container (acm container-tabs) draws every module of its position that is assigned to the page; a copy of this block placed alone draws nowhere"
+      }
+    },
+    "block-172": {
+      "entity": "module-172",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-183": {
+      "entity": "module-183",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-183", "column": "ordering" },
+          "from": "recipe",
+          "why": "the about recipe places it in section-1 with block-190; modules sharing a position draw in their ordering, so the build writes an ordering on each copy that follows the recipe order"
+        }
+      ]
+    },
+    "block-190": {
+      "entity": "module-190",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-190", "column": "ordering" },
+          "from": "recipe",
+          "why": "the about recipe places it in section-1 with block-183; modules sharing a position draw in their ordering, so the build writes an ordering on each copy that follows the recipe order"
+        }
+      ]
+    },
+    "block-177": {
+      "entity": "module-177",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    },
+    "block-178": {
+      "entity": "module-178",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-178", "column": "params", "jsonPath": ["section-link"] },
+          "from": "hides",
+          "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        }
+      ]
+    },
+    "block-180": {
+      "entity": "module-180",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-180", "column": "title" },
+          "from": "demo",
+          "why": "the store title is a demo trainer name; the page never prints it, but a copy would show it in the module list the site owner reads, so the build writes the copy a title naming the page it is placed on"
+        }
+      ]
+    },
+    "block-181": {
+      "entity": "module-181",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-181", "column": "params", "jsonPath": ["section-link"] },
+          "from": "hides",
+          "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        }
+      ]
+    },
+    "block-182": {
+      "entity": "module-182",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-182", "column": "params", "jsonPath": ["section-link"] },
+          "from": "hides",
+          "why": "a copy keeps the store setting section-link on: with the button left empty the section prints a box with an arrow linking to the home page, so the hides entry of the block applies to every copy whose button is empty"
+        }
+      ]
+    },
+    "block-159": {
+      "entity": "module-159",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      },
+      "resets": [
+        {
+          "location": { "entity": "module-159", "column": "params", "jsonPath": ["catid", 0] },
+          "from": "buildSets",
+          "why": "a copy keeps the demo category 9, which the blank site removed: it lists nothing. The build writes the category it files the class pages in on every copy"
+        }
+      ]
+    },
+    "block-191": {
+      "entity": "module-191",
+      "assign": "page",
+      "title": {
+        "drawn": "no",
+        "why": "the module is set not to show its title (showtitle 0) and no page prints it"
+      }
+    }
   }
 }

@@ -15,6 +15,7 @@ import {
   locationProblem
 } from './ai-quickstart-mapping-entry.mjs'
 import { mappingPlaceProblems } from './ai-quickstart-mapping-places.mjs'
+import { placementProblems } from './ai-quickstart-placement.mjs'
 import { LIST_FACT_KINDS, SINGLE_FACT_KINDS } from './needs-profile-merge.mjs'
 
 /** The business facts of the site form, each declared once and fanned out to every place the template shows it. */
@@ -332,4 +333,5 @@ export function mappingProblems(mapping, blocks, ctx) {
     }
   overridesProblems(mapping.overrides, report)
   mappingPlaceProblems(mapping, ctx)
+  placementProblems(mapping, blocks, ctx)
 }

@@ -219,6 +219,7 @@
   },
   "blocks": {
     "header": {
+      "placement": "in-place",
       "itemsLabel": "Main menu items",
       "itemsOrder": { "by": "menu", "direction": "asc", "from": "the main menu (mainmenu) in its own order" },
       "type": "header",
@@ -244,6 +245,7 @@
       }
     },
     "block-176": {
+      "placement": "in-place",
       "type": "header",
       "names": {
         "module-176.1": "button-label"
@@ -258,6 +260,7 @@
       ]
     },
     "block-187": {
+      "placement": "in-place",
       "itemsLabel": "Phone menu items",
       "itemsOrder": {
         "by": "menu",
@@ -277,9 +280,11 @@
       }
     },
     "block-156": {
+      "placement": "copy",
       "type": "hero"
     },
     "block-157": {
+      "placement": "copy",
       "itemsLabel": "Workout highlights",
       "type": "services",
       "fieldKeys": {
@@ -295,6 +300,7 @@
       }
     },
     "block-160": {
+      "placement": "copy",
       "itemsLabel": "Classes",
       "itemsOrder": {
         "by": "title",
@@ -346,9 +352,11 @@
       ]
     },
     "block-161": {
+      "placement": "copy",
       "type": "call_to_action"
     },
     "block-163": {
+      "placement": "copy",
       "itemsLabel": "Trainers",
       "type": "team",
       "fields": [
@@ -399,8 +407,9 @@
         }
       ]
     },
-    "block-165": { "itemsLabel": "Steps", "type": "steps" },
+    "block-165": { "placement": "copy", "itemsLabel": "Steps", "type": "steps" },
     "block-166": {
+      "placement": "copy",
       "itemsLabel": "Gallery photos",
       "type": "gallery",
       "items": {
@@ -413,15 +422,18 @@
       }
     },
     "block-170": {
+      "placement": "in-place",
       "type": "footer",
       "names": {
         "module-170.1": "logo"
       }
     },
     "block-169": {
+      "placement": "in-place",
       "type": "newsletter"
     },
     "block-171": {
+      "placement": "copy",
       "itemsLabel": "Business social links",
       "type": "footer",
       "fieldKeys": {
@@ -477,9 +489,11 @@
       }
     },
     "block-175": {
+      "placement": "in-place",
       "type": "contact"
     },
     "block-173": {
+      "placement": "in-place",
       "itemsLabel": "Class links",
       "type": "footer",
       "nav": true,
@@ -489,6 +503,7 @@
       }
     },
     "block-174": {
+      "placement": "in-place",
       "itemsLabel": "Footer links",
       "type": "footer",
       "nav": true,
@@ -498,9 +513,11 @@
       }
     },
     "block-168": {
+      "placement": "in-place",
       "type": "footer"
     },
     "block-162": {
+      "placement": "copy",
       "type": "hero",
       "listsAsFields": ["block-162.page"],
       "items": {
@@ -571,6 +588,7 @@
       ]
     },
     "block-17": {
+      "placement": "in-place",
       "itemsLabel": "Breadcrumb links",
       "itemsOrder": {
         "by": "path",
@@ -590,6 +608,7 @@
       }
     },
     "block-158": {
+      "placement": "copy",
       "type": "posts",
       "items": {
         "min": 1,
@@ -601,6 +620,7 @@
       }
     },
     "block-191": {
+      "placement": "copy",
       "type": "posts",
       "items": {
         "min": 1,
@@ -612,6 +632,7 @@
       }
     },
     "block-184": {
+      "placement": "copy",
       "type": "pricing",
       "fields": [
         {
@@ -623,6 +644,7 @@
       ]
     },
     "block-167": {
+      "placement": "copy",
       "itemsLabel": "Credit bundles",
       "type": "pricing",
       "itemLists": [
@@ -653,6 +675,7 @@
       ]
     },
     "block-188": {
+      "placement": "copy",
       "itemsLabel": "Memberships",
       "type": "pricing",
       "itemLists": [
@@ -683,6 +706,7 @@
       ]
     },
     "block-189": {
+      "placement": "copy",
       "itemsLabel": "Kids credit bundles",
       "type": "pricing",
       "items": {
@@ -721,6 +745,7 @@
       ]
     },
     "block-172": {
+      "placement": "copy",
       "itemsLabel": "Price options",
       "type": "pricing",
       "fields": [
@@ -733,6 +758,7 @@
       ]
     },
     "block-183": {
+      "placement": "copy",
       "type": "about",
       "fieldKeys": {
         "quote-author-image": {
@@ -745,6 +771,7 @@
       }
     },
     "block-190": {
+      "placement": "copy",
       "itemsLabel": "Workout highlights",
       "type": "services",
       "fields": [
@@ -767,8 +794,9 @@
         }
       }
     },
-    "block-177": { "itemsLabel": "Training programs", "type": "services" },
+    "block-177": { "placement": "copy", "itemsLabel": "Training programs", "type": "services" },
     "block-178": {
+      "placement": "copy",
       "itemsLabel": "Trainers",
       "type": "team",
       "fields": [
@@ -826,6 +854,7 @@
       ]
     },
     "block-180": {
+      "placement": "copy",
       "type": "team",
       "lists": [
         {
@@ -868,8 +897,9 @@
         }
       ]
     },
-    "block-181": { "itemsLabel": "Training videos", "type": "gallery" },
+    "block-181": { "placement": "copy", "itemsLabel": "Training videos", "type": "gallery" },
     "block-182": {
+      "placement": "copy",
       "itemsLabel": "More trainers",
       "type": "team",
       "fields": [
@@ -927,6 +957,7 @@
       ]
     },
     "block-159": {
+      "placement": "copy",
       "itemsLabel": "Related classes",
       "itemsOrder": {
         "by": "title",
@@ -980,6 +1011,7 @@
     {
       "match": "^body-pages_j-content_category-blog(--start-\\d+)?$",
       "id": "news-list",
+      "placement": "created",
       "itemsLabel": "Posts",
       "itemsOrder": {
         "by": "published",
@@ -991,6 +1023,7 @@
     {
       "match": "^body-pages_j-content_(category-blog_|blog-detail$)",
       "id": "news-post",
+      "placement": "created",
       "type": "posts",
       "items": {
         "min": 1,
@@ -1025,6 +1058,7 @@
     {
       "match": "^body-pages_j-content_featured-articles(--start-\\d+)?$",
       "id": "featured-list",
+      "placement": "created",
       "itemsLabel": "Featured posts",
       "itemsOrder": {
         "by": "published",
@@ -1041,6 +1075,7 @@
     {
       "match": "^body-pages_j-content_author-listting$",
       "id": "author-list",
+      "placement": "created",
       "itemsLabel": "Authors",
       "type": "team",
       "items": {
@@ -1055,6 +1090,7 @@
     {
       "match": "^body-pages_j-content_author-listting_author_",
       "id": "author-profile",
+      "placement": "created",
       "itemsLabel": "Author's posts",
       "itemsOrder": {
         "by": "published",
@@ -1074,6 +1110,7 @@
     {
       "match": "^body-classes$",
       "id": "class-list",
+      "placement": "created",
       "itemsLabel": "Classes",
       "itemsOrder": {
         "by": "published",
@@ -1116,6 +1153,7 @@
     {
       "match": "^body-classes_",
       "id": "class-detail",
+      "placement": "created",
       "type": "services",
       "items": {
         "min": 1,
@@ -1238,6 +1276,7 @@
     {
       "match": "^body-about-us_contact$",
       "id": "contact-details",
+      "placement": "created",
       "type": "contact",
       "fields": [
         {
@@ -1251,12 +1290,14 @@
     {
       "match": "^body-about-us_learning-center(--start-\\d+)?$",
       "id": "learning-list",
+      "placement": "created",
       "itemsLabel": "Learning posts",
       "type": "posts"
     },
     {
       "match": "^body-about-us_learning-center_",
       "id": "learning-post",
+      "placement": "created",
       "type": "posts",
       "items": {
         "min": 1,

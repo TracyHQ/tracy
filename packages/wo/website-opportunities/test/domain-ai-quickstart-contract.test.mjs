@@ -302,7 +302,8 @@ test('a design line typed as content fails from the block store alone', () => {
 test('a block placed inside a block the store lacks fails', () => {
   const set = valid()
   blockOf(set, 'footer-main').positions = ['inside:services-grid']
-  assert.deepEqual(checkAiQuickstartContract(set).problems, [])
+  // The block store rule alone: the mapping file's placement of a held block is checked in the placement tests.
+  assert.deepEqual(checkAiQuickstartContract(pendingOf(set)).problems, [])
   blockOf(set, 'footer-main').positions = ['inside:nowhere']
   assertOneProblem(pendingOf(set), {
     file: 'block-store.json',

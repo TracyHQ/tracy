@@ -11,16 +11,19 @@
 // `by` is how the build takes it off the page, one of `HIDE_WAYS`:
 //   - `empty`: the build writes "" into every location of the named fields, label and address together; the template
 //     prints the control only when they hold words;
-//   - `rows.remove`: the build names `slots` (content map keys) in one `rows.remove` of the plugin, which takes their
-//     element out of the stored HTML value; every location of the named fields is one of them and has an xpath;
+//   - `rows.remove`: the button is an element of a stored HTML value; every location of the named fields is one of
+//     `slots` (content map keys) and has an xpath. On a block written in place the build names the slots in one
+//     `rows.remove` of the plugin; on a copy (`placement`, `ai-quickstart-placement.mjs`) it takes the element out of
+//     the value it writes on the copy (`content.update`);
 //   - `setting`: the build writes `value` at `location` (a record setting no content map slot holds) with
 //     `content.get` and `content.update`;
 //   - `omit`: the rows are pieces of one stored value; the build leaves a row it does not fill out of the value it
 //     writes (every location of the list's fields is a piece);
-//   - `row`: the rows are reviewed rows of the template's stored lists (`row: {entity, column, nestedJson?, parent,
-//     arrays | keys}`, the shape of the plugin's reviewed rows, or a list of them): parallel lists read across by
-//     index, or one row per key; the build names every slot of a row it does not fill in one `rows.remove`. Every
-//     location of the named fields lies in one of them.
+//   - `row`: the rows are the template's stored lists (`row: {entity, column, nestedJson?, parent, arrays | keys}`, or
+//     a list of them): parallel lists read across by index, or one row per key. Every block holding such rows is a
+//     copy: the build cuts the rows it does not fill out of the copy's lists (`content.update`), and the copy prints
+//     only the rows left (measured, `scripts/ai-quickstart/copy-proof.mjs`). The plugin refuses a row removal on the
+//     blank site contract (no reviewed row of it). Every location of the named fields lies in one of the rows.
 // Only places on a record the blank site keeps need an entry: the build writes a created record with what it has.
 import { locationProblem } from './ai-quickstart-mapping-entry.mjs'
 

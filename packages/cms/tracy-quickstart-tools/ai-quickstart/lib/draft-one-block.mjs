@@ -11,7 +11,7 @@
 // the content map stores under the wrong role), `lists` and `itemLists` (child lists, draft-child-lists.mjs: their
 // places are taken out of every other field and report list), `keys` (block fields keyed to a page:
 // `{name, column, jsonPath, pageType}`), `fieldKeys` (field name -> keys set on the drafted field: `theme`,
-// `variantOf`, `for`).
+// `variantOf`, `for`), `placement` (`copy`, `in-place` or `created`: how the build writes the block).
 import { applyItemsOf } from './draft-items-of.mjs'
 import {
   baseNameOf,
@@ -251,6 +251,8 @@ export function draftOne(kb, id, decision, ctx, out, { lists = kb.lists ?? [], o
   block.positions = [
     position ?? decision.position ?? kb.source?.position ?? (kb.role === 'page-body' ? 'component' : kb.role)
   ]
+  // How the build writes the block (#584): a copy per placed block, the store record in place, or records it creates.
+  if (decision.placement !== undefined) block.placement = decision.placement
   // Keys in reading order: the counts sit before the no data rule, as the format lists them.
   block.items = null
   block.itemsFrom = null

@@ -248,5 +248,27 @@
       "column": "title",
       "why": "invented: an admin label, the module is set not to show it"
     }
-  ]
+  ],
+  "placements": {
+    "header-main": {
+      "entity": "module-11",
+      "assign": "pages",
+      "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
+    },
+    "hero-home": {
+      "entity": "module-12",
+      "assign": "page",
+      "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
+    },
+    "services-grid": {
+      "entity": "module-13",
+      "assign": "page",
+      "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
+    },
+    "footer-main": {
+      "entity": "module-14",
+      "assign": "pages",
+      "title": { "drawn": "no", "why": "invented: the module is set not to show its title" }
+    }
+  }
 }

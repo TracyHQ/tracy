@@ -18,6 +18,7 @@
       "positions": [
         "header"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 24
@@ -117,6 +118,7 @@
       "positions": [
         "header-r"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 1
@@ -158,6 +160,7 @@
       "positions": [
         "off-canvas"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 24
@@ -241,6 +244,7 @@
       "positions": [
         "hero"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 1
@@ -338,6 +342,7 @@
       "positions": [
         "section-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -494,6 +499,7 @@
       "positions": [
         "section-2"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -772,6 +778,7 @@
       "positions": [
         "section-3"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 1
@@ -839,6 +846,7 @@
       "positions": [
         "section-4"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -1037,6 +1045,7 @@
       "positions": [
         "section-5"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -1136,6 +1145,7 @@
       "positions": [
         "section-6"
       ],
+      "placement": "copy",
       "items": {
         "min": 3,
         "max": 6
@@ -1278,6 +1288,7 @@
       "positions": [
         "footinfo-1"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 1
@@ -1316,6 +1327,7 @@
       "positions": [
         "footinfo-2"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 1
@@ -1370,6 +1382,7 @@
       "positions": [
         "footnav-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -1442,6 +1455,7 @@
       "positions": [
         "footnav-2"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 1
@@ -1510,6 +1524,7 @@
       "positions": [
         "footnav-3"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 5
@@ -1569,6 +1584,7 @@
       "positions": [
         "footnav-4"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 4
@@ -1627,6 +1643,7 @@
       "positions": [
         "copyright"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 1
@@ -1653,6 +1670,7 @@
       "positions": [
         "masthead"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 1
@@ -2012,6 +2030,7 @@
       "positions": [
         "breadcrumbs"
       ],
+      "placement": "in-place",
       "items": {
         "min": 1,
         "max": 2
@@ -2073,6 +2092,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 2,
         "max": 6
@@ -2161,6 +2181,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 2,
         "max": 6
@@ -2260,6 +2281,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 1,
         "max": 7
@@ -2311,6 +2333,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 1,
         "max": 1
@@ -2500,6 +2523,7 @@
       "positions": [
         "main-bottom-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 2
@@ -2557,6 +2581,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 2,
         "max": 4
@@ -2743,6 +2768,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 1,
         "max": 1
@@ -2818,6 +2844,7 @@
       "positions": [
         "section-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 1
@@ -2899,6 +2926,7 @@
       "positions": [
         "inside:block-184"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -3069,6 +3097,7 @@
       "positions": [
         "inside:block-184"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -3239,6 +3268,7 @@
       "positions": [
         "inside:block-184"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -3409,6 +3439,7 @@
       "positions": [
         "section-2"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 2
@@ -3522,6 +3553,7 @@
       "positions": [
         "section-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 1
@@ -3654,6 +3686,7 @@
       "positions": [
         "section-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -3810,6 +3843,7 @@
       "positions": [
         "section-5"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 2
@@ -3955,6 +3989,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 2,
         "max": 6
@@ -4023,6 +4058,7 @@
       "positions": [
         "section-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 8
@@ -4251,6 +4287,7 @@
       "positions": [
         "section-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -4401,6 +4438,7 @@
       "positions": [
         "section-2"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 6
@@ -4520,6 +4558,7 @@
       "positions": [
         "section-4"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 4
@@ -4718,6 +4757,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 1,
         "max": 1
@@ -5100,6 +5140,7 @@
       "positions": [
         "detail-bottom-1"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 2
@@ -5309,6 +5350,7 @@
       "positions": [
         "main-bottom-2"
       ],
+      "placement": "copy",
       "items": {
         "min": 1,
         "max": 2
@@ -5366,6 +5408,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 1,
         "max": 6
@@ -5510,6 +5553,7 @@
       "positions": [
         "component"
       ],
+      "placement": "created",
       "items": {
         "min": 1,
         "max": 1

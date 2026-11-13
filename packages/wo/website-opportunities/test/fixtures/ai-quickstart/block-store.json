@@ -8,6 +8,7 @@
       "id": "header-main",
       "type": "header",
       "positions": ["header"],
+      "placement": "in-place",
       "items": { "min": 1, "max": 1 },
       "noData": { "rule": "hide" },
       "fields": [
@@ -20,6 +21,7 @@
       "id": "hero-home",
       "type": "hero",
       "positions": ["masthead", "content-top"],
+      "placement": "copy",
       "items": { "min": 1, "max": 1 },
       "noData": { "rule": "fallback", "fallback": "editorial heading over the template picture" },
       "fields": [
@@ -39,6 +41,7 @@
       "itemsLabel": "Bakes",
       "type": "services",
       "positions": ["content"],
+      "placement": "copy",
       "items": { "min": 2, "max": 3 },
       "noData": { "rule": "hide" },
       "fields": [{ "name": "heading", "kind": "editorial.heading", "type": "text", "limit": 30 }],
@@ -103,6 +106,7 @@
       "id": "footer-main",
       "type": "footer",
       "positions": ["footer"],
+      "placement": "in-place",
       "items": { "min": 1, "max": 1 },
       "noData": { "rule": "hide" },
       "fields": [{ "name": "copyright", "kind": "business.copyright", "type": "text", "limit": 80 }],

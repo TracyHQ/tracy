@@ -109,7 +109,11 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
   const notEmptied = decisions.notEmptied ?? []
   // A record the blank site keeps a place of (notEmptied) is declared in the entities table too, so the check can
   // tell a dropped notEmptied entry from a record the file never meant to name.
-  const named = entitiesNamed([blocks, facts, overrides.settings, buildSets, emptiedNotWritten])
+  // The store record of every copy and in-place block is declared too (`placements`, #584).
+  const placed = Object.values(decisions.placements ?? {})
+    .filter((p) => typeof p?.entity === 'string')
+    .map((p) => ({ entity: p.entity, column: 'id' }))
+  const named = entitiesNamed([blocks, facts, overrides.settings, buildSets, emptiedNotWritten, placed])
   for (const n of notEmptied) if (typeof n?.entity === 'string') named.add(n.entity)
   const entities = entitiesTable({
     named,
@@ -134,6 +138,7 @@ export function draftMapping({ blockStore, report, contentMap, draftDecisions, d
     emptiedNotWritten,
     notEmptied,
     hides: decisions.hides ?? {},
+    ...(decisions.placements ? { placements: decisions.placements } : {}),
     inlineMarkup: report.inlineMarkup
       ? {
           class: report.inlineMarkup.class,

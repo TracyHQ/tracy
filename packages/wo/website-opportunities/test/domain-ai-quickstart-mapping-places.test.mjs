@@ -166,6 +166,14 @@ test('with a draft report, every build-sets reference and every fact place it cl
   set.mapping.buildSets = {
     'module-13:params:catid.0': { entity: 'module-13', column: 'params', jsonPath: ['catid', 0] }
   }
+  // A copy of the block inherits the setting: its placement resets it (ai-quickstart-placement.mjs).
+  set.mapping.placements['services-grid'].resets = [
+    {
+      location: { entity: 'module-13', column: 'params', jsonPath: ['catid', 0] },
+      from: 'buildSets',
+      why: 'invented: the copy lists the category the build writes'
+    }
+  ]
   set.mapping.facts.phone.push({
     slot: 'module-14.9',
     entity: 'module-14',
